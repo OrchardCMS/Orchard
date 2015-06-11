@@ -1,0 +1,9 @@
+﻿<Placement>
+    <Place Parts_MediaProcessing_ImageProfile_Edit="Content:before.5"/>
+    <Match DisplayType="Detail">
+        <Place Parts_MediaProcessing_ImageProfile="Header:5"/>
+    </Match>
+    <Match DisplayType="Summary">
+        <Place Parts_MediaProcessing_ImageProfile="Header:5"/>
+    </Match>
+</Placement>

@@ -1,0 +1,15 @@
+﻿@model Orchard.Core.Containers.ViewModels.ContainableViewModel
+<fieldset>
+    @if (Model.ShowContainerPicker) {
+        <span>
+            @Html.LabelFor(m => m.ContainerId, T("Member of"))
+            @Html.DropDownListFor(m => m.ContainerId, Model.AvailableContainers)
+        </span>
+    }
+    @if (Model.ShowPositionEditor) {
+        <span>
+            @Html.LabelFor(m => m.Position, T("Position"))
+            @Html.TextBoxFor(m => m.Position, new {@class = "text text-small"})
+        </span>
+    }
+</fieldset>

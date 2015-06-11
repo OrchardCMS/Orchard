@@ -1,0 +1,36 @@
+﻿@using Orchard.MediaLibrary.Models
+@{
+    MediaPart mediaPart = Model.ContentPart;
+    var mediaUrl = mediaPart.MediaUrl;
+}           
+
+<div class="title">
+    <em>@T("Title:")</em>
+    <span>@mediaPart.Title</span>
+</div>
+@if (HasText(mediaUrl)) {
+<div class="file-name">
+    <em>@T("Filename:")</em>
+    <span><a href="@mediaUrl">@HttpUtility.UrlDecode(Path.GetFileName(mediaUrl))</a></span>
+</div>
+}
+<div class="mime-type">
+    <em>@T("Mime Type:")</em>
+    <span>@mediaPart.MimeType</span>
+</div>
+@if (HasText(mediaPart.Caption)) {
+    <div class="caption">
+        <em>@T("Caption:")</em>
+        <span>@mediaPart.Caption</span>
+    </div>
+}
+@if (HasText(mediaPart.AlternateText)) {
+    <div class="alternate-text">
+        <em>@T("Alternate Text:")</em>
+        <span>@mediaPart.AlternateText</span>
+    </div>
+}
+<div class="publication-status">
+    <em>@T("Status:")</em>
+    <span>@T("{0}", mediaPart.ContentItem.VersionRecord.Published ? "Published" : "Draft")</span>
+</div>

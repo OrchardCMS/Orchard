@@ -1,0 +1,6 @@
+﻿.navicon-settings {
+background-image:url(images/menu.settings.png) !important;
+}
+.navicon-settings:hover {
+background-position:0 -30px !important;
+}

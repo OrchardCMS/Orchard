@@ -1,0 +1,114 @@
+﻿@model Orchard.MultiTenancy.ViewModels.TenantAddViewModel
+
+@{
+    Layout.Title = T("Add New Tenant").ToString();
+
+    Script.Require("jQuery").AtFoot();
+    Script.Include(Url.Content("~/Themes/TheAdmin/Scripts/admin.js")).AtFoot();
+    Script.Include("multi-tenancy.admin.js").AtFoot();
+}
+
+@using (Html.BeginFormAntiForgeryPost()) { 
+    @Html.ValidationSummary()
+    <fieldset>
+        <div>
+            <label for="@Html.FieldIdFor(m => m.Name)">@T("Name")</label>
+            @Html.TextBoxFor(m => m.Name, new { @class = "text" })
+            <span class="hint">@T("The name of the tenant as it will be displayed in the admin.")</span>
+        </div>        
+        <div>
+            <label for="@Html.FieldIdFor(m => m.RequestUrlHost)">@T("Host")</label>
+            @Html.TextBoxFor(m => m.RequestUrlHost, new { @class = "text medium" })
+            <span class="hint">@T("Example: If host is \"orchardproject.net\", the tenant site URL is \"http://orchardproject.net/\"")</span>
+            <span class="hint">@T("You may define multiple domains using the comma (,) as a separator. Use the '*.' prefix to map all subdomains.")</span>
+        </div>
+        <div>
+            <label for="@Html.FieldIdFor(m => m.RequestUrlPrefix)">@T("URL prefix")</label>
+            @Html.TextBoxFor(m => m.RequestUrlPrefix, new { @class = "text medium" })
+            <span class="hint">@T("(Optional) Example: If prefix is \"site1\", the tenant URL prefix is \"http://orchardproject.net/site1\"")</span>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>@T("Database Setup")</legend>
+         <div>
+            @Html.RadioButtonFor(svm => svm.DataProvider, "", new { id = "tenantDatabaseOption" })
+            <label for="tenantDatabaseOption" class="forcheckbox">@T("Allow the tenant to set up the database")</label>
+        </div>
+        <div>
+            @Html.RadioButtonFor(svm => svm.DataProvider, "SqlCe", new { id = "builtinDatabaseOption" })
+            <label for="builtinDatabaseOption" class="forcheckbox">@T("Use built-in data storage (SQL Server Compact)")</label>
+        </div>
+        <div>
+            @Html.RadioButtonFor(svm => svm.DataProvider, "SqlServer", new { id = "sqlDatabaseOption" })
+            <label for="sqlDatabaseOption" class="forcheckbox">@T("Use an existing SQL Server (or SQL Express) database")</label>
+            <div class="options">
+                <span data-controllerid="sqlDatabaseOption">
+                    <label for="DatabaseConnectionString">@T("Connection string")</label>
+                    @Html.EditorFor(svm => svm.DatabaseConnectionString)
+                    <span class="hint">@T("Example:") @T("Data Source=sqlServerName;Initial Catalog=dbName;Persist Security Info=True;User ID=userName;Password=password")</span>
+                </span>
+                <span data-controllerid="sqlDatabaseOption">
+                    <label for="DatabaseTablePrefix">@T("Database Table Prefix")</label>
+                    @Html.EditorFor(svm => svm.DatabaseTablePrefix)
+                </span>
+            </div>
+        </div>
+    </fieldset>
+    
+    <fieldset class="available-extensions">
+        <label for="@Html.FieldIdFor(m => m.Themes)">@T("Available Themes")</label>
+        <div>
+            <span class="hint">@T("Select the Themes which should be available for this tenant. If none is selected, they will all be available.")</span>
+            
+            <ol>
+                <li>
+                    <input type="checkbox" class="select-all" id="select-all-themes" />
+                    <label class="forcheckbox" for="select-all-themes">@("Select all")</label>
+                </li>
+
+                @for (var i = 0; i < Model.Themes.Count; i++) {
+                    <li>
+                        @{
+                            var theme = Model.Themes[i];
+                            @Html.CheckBox(Html.FieldNameFor(m => m.Themes[i].Checked), Model.Themes[i].Checked, new { id = Html.FieldIdFor(x => x.Themes[i]) })
+                            <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Themes[i])">@Model.Themes[i].ThemeName</label>
+                            @Html.HiddenFor(m => m.Themes[i].ThemeId)
+                            @Html.HiddenFor(m => m.Themes[i].ThemeName)
+                        }
+                    </li>
+                }
+            </ol>
+
+        </div>  
+    </fieldset>
+    
+   <fieldset class="available-extensions">
+        <label for="@Html.FieldIdFor(m => m.Modules)">@T("Available Modules")</label>
+        <div>
+            <span class="hint">@T("Select the Modules which should be available for this tenant. If none is selected, they will all be available.")</span>
+
+            <ol>
+                <li>
+                    <input type="checkbox" class="select-all" id="select-all-modules" />
+                    <label class="forcheckbox" for="select-all-modules">@("Select all")</label>
+                </li>
+
+                @for (var i = 0; i < Model.Modules.Count; i++) {
+                <li>
+                    @{
+                        var theme = Model.Modules[i];
+                        @Html.CheckBox(Html.FieldNameFor(m => m.Modules[i].Checked), Model.Modules[i].Checked, new { id = Html.FieldIdFor(x => x.Modules[i]) })
+                        <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Modules[i])">@Model.Modules[i].ModuleName</label>
+                        @Html.HiddenFor(m => m.Modules[i].ModuleId)
+                        @Html.HiddenFor(m => m.Modules[i].ModuleName)
+                    }
+                </li>
+                }
+            </ol>
+        </div>  
+    </fieldset>   
+    
+    <fieldset>
+        <button class="primaryAction" type="submit">@T("Save")</button>
+    </fieldset>
+ }

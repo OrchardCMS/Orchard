@@ -1,0 +1,29 @@
+﻿@using Orchard.Comments.Models
+@using Orchard.ContentManagement
+
+@{
+    CommentPart comment = Model.ContentPart;
+    CommentsPart comments = comment.CommentedOnContentItem.As<CommentsPart>();
+
+    var children = New.List(Items: Model.Items);
+    children.Classes.Add("comments");
+
+    Model.Classes.Add("comment");
+    Model.Classes.Add("comment-"+comment.Id);
+    var tag = Tag(Model, "article");
+}
+@tag.StartElement
+    <header>
+        <h4>
+            <span class="who">@Display.CommentAuthor(ContentPart: comment)</span>
+            <span class="when">@Display.CommentMetadata(ContentPart: comment)</span>
+            @if (comments.ThreadedComments) {
+                <span class="reply">@Display.CommentReplyButton(ContentPart: comment)</span>
+            }
+        </h4>
+    </header>
+
+    @Display.CommentText(ContentPart: Model.ContentPart, ContentItem: Model.ContentItem)
+
+    @Display(children)
+@tag.EndElement

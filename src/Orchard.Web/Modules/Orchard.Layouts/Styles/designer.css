@@ -1,0 +1,321 @@
+﻿.zone-content {
+    padding: 3px;
+}
+
+.canvas-toolbar ol li {
+    float: left;
+    margin-right: 1em;
+}
+
+.canvas-toolbar a.icon {
+    color: #000;
+    font-size: 1.5em;
+    line-height: 1.5em;
+}
+
+.layout-editor .canvas {
+    padding: 0;
+    min-height: 5em;
+}
+
+    .layout-editor .canvas .snippet {
+        padding: 1em;
+        background: #f3f4f5;
+        -ms-border-radius: 4px;
+        border-radius: 8px;
+    }
+
+        .layout-editor .canvas .snippet em {
+            font-style: italic;
+        }
+
+    .layout-editor .canvas .table {
+        background: none repeat scroll 0 0 #fafafa;
+        border: 1px solid #bdbcbc;
+        margin: 0 0 0.3em;
+        padding: 20px 0.3em 20px 0;
+        position: relative;
+    }
+
+    .layout-editor .canvas > .table {
+        -ms-border-radius: 4px;
+        border-radius: 4px;
+        -webkit-box-shadow: 2px 5px 15px #525252;
+        -ms-box-shadow: 2px 5px 15px #525252;
+        box-shadow: 3px 2px 10px #e7e7e7;
+    }
+
+    .layout-editor .canvas .x-root {
+        min-height: 100px;
+        position: relative;
+        padding: 23px 0 42px 0;
+    }
+
+    .layout-editor .canvas .x-column {
+        background-color: #fafafa;
+    }
+
+    .layout-editor .canvas .x-container.x-root > a.add {
+        background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEXSURBVDhPrdVPSwJBHMbxTVl9Ab6DpKMnX0ewVFCgd99IeBXBi7c6BB0KPIfgK5AudSi03kGHhLxZ32f/5LQ7qwPNA5/xJ86sM/tnNihJHV3cY4mPlOo7dKA+TjnDO773eMMpSlPFELbBuwygsYWMYBvgQhP5kwi2jq42OEacGhawdZQZsqi29ZFXhBWaEzTx3xwh0gG1XF+JdHX6aMRft5lCt4U84gFKC1/IfjuEmVDNCvnz4Zr8uE8t+QDeooPp6uiEmpmnn4rqXlIGY7STMo5ZKy9qbpGfusn1tpEbLXkCX4mPpSujqdr+UVxn+ITfZ9rro5dF96Ots4tLFOJ9+8ribYM1o+39Atd4xjql+grnsLwCguAHjCrBxU/oR+AAAAAASUVORK5CYII=');
+        width: 20px;
+        height: 20px;
+        left: 50%;
+        bottom: 0;
+    }
+
+        .layout-editor .canvas .x-container.x-root > a.add.start {
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAANYSURBVHhe5dvJjwxhHMbxsURsYx3hgpMZS4hIuMzBhTiIsziIhISjcLDExUXmYr1aDv4DDuKAAwcHEiEYMyTcEEYMY52E8X2ql/Ty09Xd9dbW75N80jWTeave9523ut+qfmtSV/xZgs1YgxVF8zEL06CM4zs+4xVeYhB38R65yyacwzNMRKR9nMVGZDrzcAxDsBriwgscxVxkJoswgC+wKh2HUZxCD1KLzt+T0LlrVTIJ36A6lN5LEstKPIRVqTQ8QB8SyUH8hFWRNKlO+xFbJuM8rINnyRmork4zA9dhHTCLrkF1dhK9wdyEdaAsu4HIb45Tkaf/fC3VfQrazgVYO86T02gre2DtMI92o6WshiYZ1s7yaAyr0FR0hXgf1o7y7B6auvo9AGsHnWAfGkbX6R9gFXYlLFYZV95hDsqpnTEdhq7uOjW6OXOosFkfXc/rMtPqOZfCYpVx6RO6EaRyBOxFpm40xJQFUFvrMgyrx1wLi1XGteeoiu7hWX8Yh7BYZeKwAeVTYGfx1acEbS51wLbiq08J2qyZkT4a3ha3k0jYcTQ8k4iOs1gjoB9JNT5LUZv71QFrgx/9zDp1gO7w+po+dUBvYbvtaCi1IixWmUaipFcdsLCw7WV61AGzC9tepltD6Dei3D2NOgyjJsrH5rhGQNoNSDMT6gDdL/M1Y753wFd1wMfCtpcZUQdoPU6UlC4vmxUWq0wjUTKsDtCSFl8zpA7QaixfM6iPQM0EdStcnZFEwj52ow7rZvMHwUxQd0mf6jee5TFGS//1O8VXn1LV5vWofXeNS1isMnHQF8BVeQLrD10Li1XGtUcIUvnGd7X46kPMts5E3F+MSlisMi7pBvB0BKkcAT+gJTGdHrXxV2GzPt59PW5F62mswp1gF0KjmZrXS2SUZdAM0dpRHo1gKVrKDvyFtcM8URu2o614vVBS0TlzBdaO8+Aymj7v/xevF0uXogXHl2AdKIsuItIiaSuaNepROOuAWaJzvnKG6zxboRmVdfA0qU5bkEiW4zasiqThFjR3STyaK7yBVakkvIbqkGq06vIENNuyKhkHHes4MvXNtjpCj7XG/ejsEZSXumY1uXl4OvIsqYlYj8/rmV8tzi6tTdYibT17rKGd4OPzXV3/APplq+e/m5jfAAAAAElFTkSuQmCC');
+            width: 64px;
+            height: 64px;
+            left: 50%;
+            top: 32%;
+            display: block;
+        }
+
+    .layout-editor .canvas .x-grid .drag-handle {
+        cursor: move;
+        left: 11px;
+        position: absolute;
+        right: 0;
+        top: 0;
+        z-index: 25;
+    }
+
+    .layout-editor .canvas > .x-grid .drag-handle a {
+        color: #646464;
+    }
+
+    .layout-editor .canvas > .x-grid .drag-handle {
+        -ms-border-radius: 0;
+        border-radius: 3px 3px 0 0;
+    }
+
+    .layout-editor .canvas .x-grid .grid-toolbar {
+        background: none;
+        margin: 0;
+        padding: 0 0.5em 0 0;
+    }
+
+    .layout-editor .canvas .x-grid .drag-handle:hover a.remove,
+    .layout-editor .canvas .x-grid .drag-handle:hover a.edit {
+    }
+
+    .layout-editor .canvas .x-row {
+        position: relative;
+        margin: 0;
+        padding-left: 20px;
+    }
+
+        .layout-editor .canvas .x-row .row-toolbar {
+            display: none;
+        }
+
+            .layout-editor .canvas .x-row .row-toolbar.sortable {
+                cursor: move;
+                -ms-border-radius: 3px;
+                border-radius: 3px;
+                bottom: 6px;
+                left: 8px;
+                top: 1px;
+                width: 10px;
+                padding: 5px 4px 2px 1px;
+                z-index: 5;
+                position: absolute;
+                cursor: move;
+                background: transparent;
+            }
+
+            .layout-editor .canvas .x-row .row-toolbar a {
+                display: block;
+                margin: 0;
+                width: 16px;
+            }
+
+        .layout-editor .canvas .x-row .x-column {
+            padding: 0.5em;
+            position: relative;
+        }
+
+            .layout-editor .canvas .x-row .x-column .ui-resizable-handle {
+                background: #e4e4e4;
+                height: 100%;
+                width: 7px;
+                top: 0;
+                -ms-border-radius: 25px;
+                border-radius: 25px;
+                -ms-opacity: 0.75;
+                opacity: 0.75;
+            }
+
+                .layout-editor .canvas .x-row .x-column .ui-resizable-handle:hover {
+                    -ms-opacity: 1;
+                    opacity: 1;
+                }
+
+            .layout-editor .canvas .x-row .x-column .ui-resizable-e {
+                right: -10px;
+            }
+
+            .layout-editor .canvas .x-row .x-column .toolbar.column-toolbar {
+                position: absolute;
+                top: 1px;
+                right: 1px;
+                left: 1px;
+                cursor: move;
+                background: none;
+                display: none;
+            }
+
+            .layout-editor .canvas .x-row .x-column.highlight {
+                border: 1px solid #90a664;
+            }
+
+            .layout-editor .canvas .x-row .x-column .column-container {
+                border: 1px dashed #bdbcbc;
+                min-height: 5em;
+                padding: 2.1em 27px 24px;
+            }
+
+            .layout-editor .canvas .x-row .x-column.templated .element.container {
+                padding-top: 0.5em;
+            }
+
+    .layout-editor .canvas .x-container a.add {
+        display: none;
+        width: 20px;
+        height: 20px;
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
+        background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEXSURBVDhPrdVPSwJBHMbxTVl9Ab6DpKMnX0ewVFCgd99IeBXBi7c6BB0KPIfgK5AudSi03kGHhLxZ32f/5LQ7qwPNA5/xJ86sM/tnNihJHV3cY4mPlOo7dKA+TjnDO773eMMpSlPFELbBuwygsYWMYBvgQhP5kwi2jq42OEacGhawdZQZsqi29ZFXhBWaEzTx3xwh0gG1XF+JdHX6aMRft5lCt4U84gFKC1/IfjuEmVDNCvnz4Zr8uE8t+QDeooPp6uiEmpmnn4rqXlIGY7STMo5ZKy9qbpGfusn1tpEbLXkCX4mPpSujqdr+UVxn+ITfZ9rro5dF96Ots4tLFOJ9+8ribYM1o+39Atd4xjql+grnsLwCguAHjCrBxU/oR+AAAAAASUVORK5CYII=');
+        -ms-opacity: 0.3;
+        opacity: 0.3;
+        z-index: 1200;
+    }
+
+        .layout-editor .canvas .x-container a.add:hover {
+            -ms-opacity: 1;
+            opacity: 1;
+        }
+
+    .layout-editor .canvas .toolbar {
+        padding: 0 0.6em;
+        background: #e4e4e4;
+        border: none;
+    }
+
+        .layout-editor .canvas .toolbar a {
+            color: #646464;
+            margin-right: 1.5em;
+            line-height: 2em;
+        }
+
+    .layout-editor .canvas .name {
+        display: block;
+        color: #9da0a4;
+        padding: 0 7px;
+        float: left;
+    }
+
+    .layout-editor .canvas article.element-box {
+        position: relative;
+        padding: 0.7em 0 0 0;
+    }
+
+        .layout-editor .canvas article.element-box > header {
+            padding: 0 0.5em 0 0.5em;
+            -ms-border-radius: 2px;
+            border-radius: 2px;
+            background: #9e9e9e;
+            color: #fff;
+            cursor: move;
+            position: absolute;
+            top: -23px;
+            left: 0;
+            right: 0;
+            height: 27px;
+            display: none;
+            z-index: 1;
+        }
+
+        .layout-editor .canvas article.element-box .element-overlay {
+            background: #333a26;
+            -ms-opacity: 0.12;
+            opacity: 0.12;
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 1px;
+            bottom: -5px;
+            display: none;
+            cursor: move;
+            -ms-border-radius: 0 0 2px 2px;
+            border-radius: 0 0 2px 2px;
+        }
+
+        .layout-editor .canvas article.element-box:hover .element-overlay {
+            display: block;
+        }
+
+        .layout-editor .canvas article.element-box:hover > header {
+            display: block;
+        }
+
+        .layout-editor .canvas article.element-box > header a {
+            color: #fff;
+        }
+
+        .layout-editor .canvas article.element-box > header .actions a {
+            margin-right: 0.5em;
+            line-height: 2em;
+        }
+
+        .layout-editor .canvas article.element-box > header .name {
+            line-height: 2.5em;
+        }
+
+    .layout-editor .canvas .sortable-placeholder {
+        display: block;
+        height: 2.5em;
+        padding: 0.5em;
+        border: 1px dashed #bdbcbc;
+    }
+
+    .layout-editor .canvas .x-row .x-column .x-holder .x-container-widget .x-grid {
+        background: none repeat scroll 0 0 #fafafa;
+        border: 1px solid #bdbcbc;
+        margin: 27px 0 0;
+        position: relative;
+    }
+
+    .layout-editor .canvas .x-container-widget .x-grid .grid-toolbar {
+        padding: 0 0.5em 0 0.5em;
+    }
+
+.layout-editor .trash {
+    display: none;
+}
+
+.layout-editor .element-component {
+    background: #e5e5e5;
+    padding: 0.5em;
+    -ms-opacity: .3;
+    opacity: .3;
+}
+
+.layout-editor .element-snippet {
+    background: #e5e5e5;
+    padding: 0.5em;
+}
+
+.element.element-label label {
+    font-weight: bold;
+}
+
+.media-element {
+    overflow: hidden;
+}
+
+textarea.text.large {
+    width: 98%;
+}

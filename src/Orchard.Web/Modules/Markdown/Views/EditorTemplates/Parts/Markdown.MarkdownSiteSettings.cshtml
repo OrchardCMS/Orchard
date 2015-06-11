@@ -1,0 +1,10 @@
+@model Markdown.Models.MarkdownSiteSettingsPart
+
+<fieldset>
+    <legend>@T("Markdown")</legend>
+    <div>
+        @Html.EditorFor(m => m.UseMarkdownForBlogs) 
+        <label class="forcheckbox" for="@Html.FieldIdFor(m => m.UseMarkdownForBlogs)">@T("Use Markdown to write Blog Post")</label>
+        <span class="hint">@T("Enable to change the default editor for all blog posts to Markdown.")</span>
+    </div>
+</fieldset>

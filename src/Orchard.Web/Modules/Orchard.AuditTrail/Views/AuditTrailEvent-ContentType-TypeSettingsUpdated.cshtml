@@ -1,0 +1,31 @@
+﻿@using Orchard.AuditTrail.Helpers
+@using Orchard.AuditTrail.Services.Models
+@{
+    Style.Include("audittrail-contentdefinition-event.css");
+}
+@{
+    var eventData = (IDictionary<string, object>) Model.EventData;
+    var contentTypeName = eventData.Get<string>("ContentTypeName");
+    var diff = (DiffDictionary<string, string>) Model.Diff ?? new DiffDictionary<string, string>();
+}
+<section class="audittrail-contenttype-eventsummary">
+    @T("Settings for the content type {0} were changed:", Html.ContentTypeEditLink(contentTypeName))
+    <table class="items">
+        <thead>
+            <tr>
+                <th>@T("Setting")</th>
+                <th>@T("From")</th>
+                <th>@T("To")</th>
+            </tr>
+        </thead>
+        <tbody class="audittrail-category">
+            @foreach (var setting in diff) {
+                <tr>
+                    <td>@setting.Key</td>
+                    <td>@setting.Value.OldValue.OrIfEmpty(T("[Empty]"))</td>
+                    <td>@setting.Value.NewValue.OrIfEmpty(T("[Empty]"))</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</section>

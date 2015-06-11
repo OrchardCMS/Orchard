@@ -1,0 +1,47 @@
+﻿@model Orchard.Taxonomies.Settings.TaxonomyFieldSettings
+@{
+    Script.Include("admin-taxonomy-field-settings.js").AtFoot();
+}
+<fieldset>
+    <label>@T("Select a taxonomy")</label>  
+    <select id="@Html.FieldIdFor(m => m.Taxonomy)" name="@Html.FieldNameFor(m => m.Taxonomy)">
+        @Html.SelectOption(-1, false, T("Choose a taxonomy ...").ToString())
+        @foreach ( var taxonomy in Model.Taxonomies.OrderBy(t => t.Name) ) {
+            @Html.SelectOption(taxonomy.Name, Model.Taxonomy == taxonomy.Name, taxonomy.Name)
+        }
+    </select>
+    @Html.ValidationMessageFor(m => m.Taxonomy)
+</fieldset>
+
+<fieldset>
+    <label>@T("Restrictions")</label>  
+    <div class="help">
+        <div class="content">
+            @Html.CheckBoxFor(m => m.LeavesOnly) <label class="forcheckbox" for="@Html.FieldIdFor(m => m.LeavesOnly)">@T("Restrict selectable elements to leaves (parent / child terms) only")</label>  
+        </div>
+        <a class="help" title="@T("A leaf is the last descendant in a parent/child hierarchy")"></a>
+    </div>
+    @Html.CheckBoxFor(m => m.SingleChoice) <label class="forcheckbox" for="@Html.FieldIdFor(m => m.SingleChoice)">@T("Allow only one term to be selected")</label>
+</fieldset>
+
+<fieldset>
+    <div>
+        @Html.CheckBoxFor(m => m.Required) <label for="@Html.FieldIdFor(m => m.Required)" class="forcheckbox">@T("Required")</label>
+        <span class="hint">@T("Check if the field is required.")</span>
+    </div>
+</fieldset>
+
+<fieldset class="autocomplete-settings">
+    <label>@T("Autocomplete")</label>  
+    @Html.CheckBoxFor(m => m.Autocomplete) <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Autocomplete)">@T("Enable Autocomplete")</label>
+    <div class="allow-custom-terms-wrapper">
+        @Html.CheckBoxFor(m => m.AllowCustomTerms) <label class="forcheckbox" for="@Html.FieldIdFor(m => m.AllowCustomTerms)">@T("Allow new terms to be created")</label>
+    </div>
+</fieldset>
+
+<fieldset>
+    <label for="@Html.FieldIdFor(m => m.Hint)">@T("Help text")</label>
+    @Html.TextAreaFor(m => m.Hint, new { @class = "text medium", rows = "5" } )
+    <span class="hint">@T("The help text is written under the field when authors are editing the content item.")</span>
+    @Html.ValidationMessageFor(m => m.Hint)
+</fieldset>

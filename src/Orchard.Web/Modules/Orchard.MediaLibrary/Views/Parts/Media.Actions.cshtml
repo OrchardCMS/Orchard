@@ -1,0 +1,34 @@
+﻿@using Orchard.ContentManagement
+@using Orchard.Core.Contents;
+@using Orchard.Core.Contents.Settings
+@{
+    ContentItem contentItem = Model.ContentItem;
+    var draftable = contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable;
+}
+
+<div id="media-actions">
+    @if (Authorizer.Authorize(Permissions.EditContent, contentItem)) {
+        @Html.Link(T("Edit").Text, Url.ItemEditUrl(contentItem), new { @class = "button", id = "edit-media-link" })
+    }
+    @if (Authorizer.Authorize(Permissions.PublishContent, contentItem) && draftable) {        
+        if (contentItem.HasPublished()) {
+            @Html.AntiForgeryTokenValueOrchardLink(T("Unpublish").Text, Url.Action("Unpublish", "Admin", new { Area = "Contents", contentItem.Id }), new { @class = "button", itemprop = "UnsafeUrl" })
+        }
+        else {
+            @Html.AntiForgeryTokenValueOrchardLink(T("Publish").Text, Url.Action("Publish", "Admin", new { Area = "Contents", contentItem.Id }), new { @class = "button", itemprop = "UnsafeUrl" })
+        }
+    }
+</div>
+
+<script type="text/javascript">
+    //<![CDATA[
+    // update the returnUrl from javascript to get the main window's location
+    $('#media-actions .button').each(function () {
+        var self = $(this);
+        var href = self.attr('href');
+        var containsQueryString = href.indexOf("?") >= 0;
+        var returnUrl = href + (containsQueryString ? "&" : "?") + "returnUrl=" + encodeURIComponent(window.location);
+        self.attr('href', returnUrl);
+    });
+    //]]>
+</script>

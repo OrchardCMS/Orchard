@@ -1,0 +1,101 @@
+﻿<button id="preset">@T("Preset")</button>
+@{
+    Script.Include("caman/caman.full.min.js"); 
+}
+
+@using (Script.Foot()) {
+    
+    <script type="text/javascript">
+    //<![CDATA[
+
+        jQuery(function ($) {
+            $.imageEditor.registerPlugin(function () {
+                console.log('initiliazing preset');
+                var canvas,
+                    host = $.imageEditor,
+                    imageSrc;
+
+                $('#preset-filters a').on('click', function() {
+                    apply($(this).data('preset'));
+                });
+
+                // save resize
+                $('#preset-apply').on('click', function () {
+                    $('#preset-options').hide();
+                    host.hideOptions();
+                });
+
+                // cancel resizing
+                $('#preset-cancel').on('click', function () {
+                    host.image.src = imageSrc;
+                    
+                    $('#preset-options').hide();
+                    host.hideOptions();
+                });
+
+                $('#preset').on("click", function () {
+                    console.log('preset clicked');
+
+                    imageSrc = host.image.src;
+                    // remove previously generated thumbnails
+                    $('.preset-thumb').remove();
+
+                    $('#preset-filters a').each(function() {
+                        var localImage = new Image();
+                        var filter = $(this).data('preset');
+                        var link = $(this);
+                        localImage.onload = function () {
+                            var thumb = document.createElement('canvas');
+                            $(thumb).addClass('preset-thumb');
+                            var ratio = host.image.width / host.image.height;
+                            if (ratio >= 1) { // large image, constraint width
+                                thumb.width = 100;
+                                thumb.height = 100 / ratio;
+                            } else {
+                                thumb.width = 100 * ratio;
+                                thumb.height = 100;
+                            }
+
+                            var context = thumb.getContext('2d');
+                            context.drawImage(localImage, 0, 0, host.image.width, host.image.height, 0, 0, thumb.width, thumb.height);
+                            
+                            Caman(thumb, function () {
+                                this[filter]().render(function () {
+                                    link.append(thumb);
+                                    // host.image.src = canvas.toDataURL('image/png');
+                                });
+                            });
+                        };
+
+                        localImage.src = imageSrc;
+                    });
+                    
+                    $('#preset-options').show();
+                    host.showOptions();
+                });
+
+                function apply(value) {
+                    var image = new Image();
+                    image.onload = function () {
+                            canvas = document.createElement('canvas');
+                            canvas.width = host.image.width;
+                            canvas.height = host.image.height;
+
+                        var context = canvas.getContext('2d');
+                        context.drawImage(image, 0, 0, host.image.width, host.image.height, 0, 0, canvas.width, canvas.height);
+
+                        Caman(canvas, function () {
+                            this[value]().render(function () {
+                                host.image.src = canvas.toDataURL('image/png');
+                            });
+                        });
+                    };
+
+                    image.src = imageSrc;
+                }
+            });
+        });
+    //]]>    
+
+    </script>
+}

@@ -1,0 +1,290 @@
+Orchard Project - Copyright .NET Foundation
+
+Orchard includes works distributed under the licenses listed below. The full text for most of the licenses listed below can be found in the LICENSE.txt file accompanying each work. The original copyright notices have been preserved within the respective files and or packages. Please refer to the specific files and/or packages for more detailed information about the authors, copyright notices, and licenses.
+
+Antlr
+-----
+Website:      http://www.antlr.org/
+Copyright:    Copyright (c) 2003-2008 Terence Parr
+License:      New BSD
+
+ASP.NET MVC
+-----
+Website:      http://aspnet.codeplex.com/wikipage?title=MVC&referringTitle=Home
+Copyright:    Copyright (c) 2008-2011 Microsoft Corporation
+License:      MICROSOFT ASP.NET MODEL VIEW CONTROLLER 3 EULA
+              http://go.microsoft.com/fwlink/?LinkID=207621
+
+Autofac
+-------
+Website:      http://code.google.com/p/autofac/
+Copyright:    Copyright (c) 2007-2008 Autofac Contributors
+              http://code.google.com/p/autofac/wiki/Contributing
+License:      MIT
+
+Autofac Contrib
+-----
+Website:      http://code.google.com/p/autofac/
+Copyright:    Copyright (c) 2007-2008 Autofac Contributors
+License:      http://code.google.com/p/autofac/source/browse/trunk/contrib/AutofacContrib%20License.txt
+
+Castle
+-----
+Website:      http://www.castleproject.org/container/index.html
+Copyright:    Copyright (c) 2004-2009 Castle Project
+License:      Apache Software Foundation License 2.0
+
+Clay
+----
+Website:      http://clay.codeplex.com/
+Copyright:    Copyright (c) 2010 Louis Dejardin
+License:      MS-PL
+
+CodeMirror
+----------
+Website:      http://codemirror.net/2/
+Copyright:    Copyright (C) 2011 by Marijn Haverbeke
+License:      MIT
+
+Console Shim
+-----
+Website:      https://github.com/kayahr/console-shim
+Copyright:    Copyright (C) 2011 Klaus Reimer <k@ailis.de>
+License:      MIT
+
+DLR
+---
+Website:      http://dlr.codeplex.com
+Copyright:    Copyright (c) Microsoft Corporation
+License:      Apache Software Foundation License 2.0
+
+DotNetZip
+-----
+Website:      http://dotnetzip.codeplex.com/
+Copyright:    
+License:      MS-PL
+
+Eric Meyer's Reset CSS
+-----
+Website:      http://meyerweb.com/eric/tools/css/reset/
+Copyright:    Copyright (C) 1995-2005 Eric A. and Kathryn S. Meyer
+License:      Public domain
+
+Fam Fam Fam Silk Icons
+-----
+Website:      http://famfamfam.com/lab/icons/silk/
+Copyright:    Copyright (c) 2005-2006 Mark James
+License:      CC Attribution 2.5 http://creativecommons.org/licenses/by/2.5/
+
+Fluent NHibernate
+-----
+Website:      http://fluentnhibernate.org/
+Copyright:    Copyright (c) 2008-2009 James Gregory and contributors
+License:      New BSD
+
+FluentPath
+-----
+Website:      http://fluentpath.codeplex.com/
+Copyright:    Copyright (c) 2011 Bertrand Le Roy
+License:      MS-PL
+
+Font Awesome
+-----
+Author: 			Dave Gandy
+Website: 			http://fontawesome.io
+License: 			MIT License
+
+History.js
+-----
+Website:      https://github.com/browserstate/history.js
+Copyright:    Copyright (c) 2011, Benjamin Arthur Lupton
+Licence:      BSD
+
+Html Agility Pack
+-----
+Website:      http://htmlagilitypack.codeplex.com/
+Copyright:    Copyright (c) 2003-20010 Simon Mourier
+License:      MS-PL
+
+html5shim
+-----
+Website:      http://code.google.com/p/html5shim/
+License:      MIT
+
+IESI Collections
+-----
+Website:      http://www.codeproject.com/KB/recipes/sets.aspx
+Copyright:    Copyright (c) 2002-2004 Jason Smith
+License:      http://www.codeproject.com/info/Licenses.aspx
+              distributed with NHibernate under LGPL 2.1
+
+Image Resizer
+-----
+Author:       Brice Lambson
+Website:      https://imageresizer.codeplex.com
+Copyright:    Copyright (c) 2012 Imazen
+License:      Freedom license
+  
+jQuery
+-----
+Website:      http://jquery.com
+Copyright:    Copyright (c) 2010 John Resig, http://jquery.com
+License:      MIT
+
+jQuery Colorbox 
+-----
+Website:      http://www.jacklmoore.com/colorbox/
+Copyright:    (c) 2013 Jack Moore - jacklmoore.com/colorbox
+License:      MIT
+
+jQuery File Upload
+-----
+Website:      https://blueimp.net
+Copyright:    Copyright 2010, Sebastian Tschan
+License       MIT
+
+jQuery UI (Core, Widget, Datepicker)
+-----
+Website:      http://docs.jquery.com/UI
+Copyright:    Copyright (c) 2010 lib/jquery.ui/AUTHORS.txt (http://jqueryui.com/about)
+License:      MIT
+
+jQuery Calendar
+-----
+Website:      http://keith-wood.name/calendars.html
+Author:       Keith Wood
+License:      MIT
+
+jQuery Date/Time Entry
+-----
+Website:      http://keith-wood.name/datetimeEntry.html
+Copyright:    Keith Wood
+License:      MIT
+
+jQuery ScrollTo
+-----
+Website:      http://flesler.blogspot.com
+Copyright:    Copyright (c) 2007-2009 Ariel Flesler
+License:      MIT
+
+jsPlumb
+-----
+Website:      http://jsplumb.org
+Copyright:    Copyright (c) 2010 - 2013 Simon Porritt (http://jsplumb.org)
+License:      MIT
+
+Knockout
+-----
+Website:      http://knockoutjs.com/
+Copyright:    Copyright (c) Steven Sanderson
+License:      MIT
+
+Log4Net
+-----
+Website:      http://logging.apache.org/log4net/index.html
+Copyright:    Copyright (c) 2007 Apache Software Foundation
+License:      Apache Software Foundation License 2.0
+
+Lucene.net
+-----
+Website:      http://incubator.apache.org/projects/lucene.net.html
+Copyright:    Copyright (c) 2009 Apache Software Foundation
+License:      Apache Software Foundation License 2.0
+
+Mono Class Library
+-----
+Website:      http://www.mono-project.com/The_Class_Library
+Copyright:    Xamarin
+License:      MIT
+
+Moq
+-----
+Website:      http://code.google.com/p/moq/
+Copyright:    Copyright (c) 2007. Clarius Consulting, Manas Technology Solutions, InSTEDD
+License:      New BSD
+ 
+MySQL Connectors
+-----
+Copyright:    Copyright (c) 2004, 2011, Oracle and/or its affiliates
+License:      GNU GENERAL PUBLIC LICENSE Version 2; Oracle’s Free and Open Source Software ("FOSS") License Exception
+
+In order to comply with Section 2(a) of the FOSS License Exception, .NET Foundation hereby offers any recipient of this package a machine-readable copy of the corresponding source code for Oracle's MySQL Client Libraries upon written demand.  This offer is good for three years.
+
+NHibernate, NHibernate Linq
+-----
+Website:      http://nhforge.org 
+Copyright:    Copyright (C) 2003 - 2009 NHibernate Project
+License:      LGPL 2.1
+
+NHibernate Lambda Extensions
+-----
+Website:      http://code.google.com/p/nhlambdaextensions/
+Copyright:    Unknown http://code.google.com/p/nhlambdaextensions/people/list
+License:      LGPL 2.1
+
+NProgress
+-----
+Website:      http://ricostacruz.com/nprogress/
+Copyright:    Copyright (c) 2013-2014 Rico Sta. Cruz
+License:      MIT
+
+NuGet
+-----
+Website:      http://nuget.codeplex.com
+Copyright:    Copyright 2010-2011 Outercurve Foundation
+License:      Apache Software Foundation License 2.0
+
+nUnit
+-----
+Website:      http://www.nunit.org/index.php
+Copyright:    Copyright (c) 2002-2007 NUnit.org
+              Portions Copyright (c) 2002-2008 Charlie Poole or Copyright (c) 2002-2004 James W. Newkirk, Michael C. Two, Alexei A. Vorontsov or Copyright (c) 2000-2002 Philip A. Craig
+License:      Derived from zlib: http://nunit.org/index.php?p=license&r=2.4
+
+Microsoft SQL Server Compact 4.0
+-----
+Website:      http://www.microsoft.com
+Copyright:    Copyright (c) 2011 Microsoft Corporation
+License:      Custom EULA - http://www.microsoft.com/web/webpi/eula/SQLCE_EULA_ENU.rtf
+
+Microsoft Xml Document Transformation 1.0.0.0
+-----
+Website:      http://www.microsoft.com
+Copyright:    Copyright Microsoft Corporation
+License:      Custom EULA - http://www.microsoft.com/web/webpi/eula/microsoft_web_xmltransform.htm
+
+StackExchange.Redis
+------
+Websites:     https://github.com/StackExchange/StackExchange.Redis
+Copyright:    Copyright (c) 2014 Stack Exchange
+License:      MIT - https://raw.githubusercontent.com/StackExchange/StackExchange.Redis/master/LICENSE
+
+SlowCheetah
+-----
+Website:      https://github.com/sayedihashimi/package-web/
+Copyright:    Copyright 2013 Sayed Ibrahim Hashimi
+License:      Apache 2.0
+
+SpecFlow
+-----
+Website:      http://www.specflow.org/
+Copyright:    Copyright (c) 2009 TechTalk
+License:      New BSD
+
+TinyMCE
+-----
+WebSite:      http://tinymce.moxiecode.com/
+Copyright:    Copyright (c) 2003-2009 Moxiecode Systems AB
+License:      LGPL 2.1
+
+WCat
+-----
+WebSite:      http://www.iis.net/community/default.aspx?tabid=34&i=1466&g=6
+Copyright:    Copyright (c) 2007 Microsoft
+License:      "Free"
+
+YUI
+-----
+Website:      http://developer.yahoo.com/yui/
+Copyright:    Copyright (c) 2010, Yahoo! Inc.
+License:      New BSD

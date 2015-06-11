@@ -1,0 +1,14 @@
+﻿Name: Migrations
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardproject.net
+Version: 1.9.0
+OrchardVersion: 1.9
+Description: Data migration commands.
+FeatureDescription: Data migration commands.
+Category: Developer
+Features:
+    DatabaseUpdate:
+        Name: Database Update
+        Description: Commands for updating the database schema according to the definition of the "Record" classes in code.
+        Category: Developer

@@ -1,0 +1,17 @@
+﻿<Placement>
+  <Place Dialog_CloseButton="Sidebar:30"
+         Breadcrumbs_ContentItem="Content:before"
+         ListNavigation="Sidebar:29"/>
+  
+  <Match DisplayType="SummaryAdmin">
+    <Place Parts_Container_Contained_SummaryAdmin="Actions:10"
+           Parts_Container_ItemCount_SummaryAdmin="-"/>
+  </Match>
+  <Match DisplayType="SummaryAdminCondensed">
+    <Place Parts_Container_Contained_SummaryAdmin="Actions:10"
+           Parts_Contents_Publish_SummaryAdmin="Actions:5"
+           Parts_Contents_Clone_SummaryAdmin="Actions:6"
+           Parts_Container_ItemCount_SummaryAdmin="-"
+           Parts_Common_Body_Summary="-"/>
+  </Match>
+</Placement>

@@ -1,0 +1,8 @@
+﻿<Placement>
+  <Place Parts_Navigation_Menu_Edit="Content:9"/>
+  <Place Parts_Navigation_AdminMenu_Edit="Content:9.1"/>
+  <Place Parts_MenuItem_Edit="Content:10"/>
+  <Place Parts_MenuWidget_Edit="Content:10"/>
+  <Place Parts_MenuWidget="Content"/>
+  <Place Parts_ShapeMenuItemPart_Edit="Content:10"/>
+</Placement>

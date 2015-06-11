@@ -1,0 +1,50 @@
+﻿@model Orchard.Azure.MediaServices.ViewModels.Tasks.CreateThumbnailViewModel
+@{
+    var imageTypes = new[] {"MemoryBMP", "Bmp", "Emf", "Wmf", "Gif", "Jpeg", "Png", "Tiff", "Exif", "Icon"};
+    var imageTypeOptions = imageTypes.Select(x => new SelectListItem {Text = x, Value = x, Selected = Model.Type == x});
+}
+<fieldset>
+    <legend>@T("Thumbnail")</legend>
+    <div class="form-requiredUploads">
+        @Html.LabelFor(m => m.Width)
+        @Html.TextBoxFor(m => m.Width, new { @class = "text small" })
+        <span class="hint">@T("Sets the width in pixels to be used for the thumbnail. An asterisk (*) character used in place of a width in pixels means to maintain aspect ratio based on the height of the first video source stream.")</span>
+        @Html.ValidationMessageFor(m => m.Width)
+    </div>
+    <div class="form-requiredUploads">
+        @Html.LabelFor(m => m.Height)
+        @Html.TextBoxFor(m => m.Height, new { @class = "text small" })
+        <span class="hint">@T("Sets the height in pixels to be used for the thumbnail. An asterisk (*) character used in place of a height in pixels means to maintain aspect ratio based on the width of the first video source stream.")</span>
+        @Html.ValidationMessageFor(m => m.Height)
+    </div>
+    <div class="form-requiredUploads">
+        @Html.LabelFor(m => m.Type)
+        @Html.DropDownListFor(m => m.Type, imageTypeOptions)
+        <span class="hint">@T("Indicates the image format type of the output file.")</span>
+        @Html.ValidationMessageFor(m => m.Type)
+    </div>
+    <div class="form-requiredUploads">
+        @Html.LabelFor(m => m.FileName)
+        @Html.TextBoxFor(m => m.FileName, new { @class = "text large" })
+        <span class="hint">@T("Specifies the file name of the generated thumbnail image. The following replaceable fields can be used: {OriginalFilename}, {ThumbnailTime}, {Size}, {ThumbnailIndex}, {DefaultExtension}.")</span>
+        @Html.ValidationMessageFor(m => m.FileName)
+    </div>
+    <div class="form-requiredUploads">
+        @Html.LabelFor(m => m.StartTime)
+        @Html.TextBoxFor(m => m.StartTime, new { @class = "text small" })
+        <span class="hint">@T("A string value that indicates the start time in a video that will correspond with a sequence of thumbnails generated from the video. If no step is specified, this value is the sole time on which a generated thumbnail is based. The format of the string for the time value is: [hours]:[minutes]:[seconds].")</span>
+        @Html.ValidationMessageFor(m => m.StartTime)
+    </div>
+    <div class="form-requiredUploads">
+        @Html.LabelFor(m => m.Step)
+        @Html.TextBoxFor(m => m.Step, new { @class = "text small" })
+        <span class="hint">@T("A string value that describes the time increments in a video at which thumbnail images will be generated, if generating a sequence of thumbnails. The format of the string for the time value is: [hours]:[minutes]:[seconds].")</span>
+        @Html.ValidationMessageFor(m => m.Step)
+    </div>
+    <div class="form-requiredUploads">
+        @Html.LabelFor(m => m.StopTime)
+        @Html.TextBoxFor(m => m.StopTime, new { @class = "text small" })
+        <span class="hint">@T("A string value that describes the end point in a video, if generating a sequence of thumbnails. The format of the string for the time value is: [hours]:[minutes]:[seconds].")</span>
+        @Html.ValidationMessageFor(m => m.StopTime)
+    </div>
+</fieldset>

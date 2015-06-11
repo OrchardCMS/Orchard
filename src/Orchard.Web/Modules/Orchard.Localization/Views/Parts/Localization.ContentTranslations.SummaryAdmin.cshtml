@@ -1,0 +1,22 @@
+﻿@using Orchard.Core.Contents;
+@using Orchard.Localization.Models;
+@if (AuthorizedFor(Permissions.PublishContent)) {
+Style.Require("LocalizationAdmin");
+IEnumerable<LocalizationPart> localizations  = Model.Localizations;
+var localizationLinks = Html.UnorderedList(localizations, (c, i) => Html.ItemEditLink(c.Culture.Culture, c), "localizations");
+<div class="content-localization">
+    @if (Model.Culture != null) {
+    <div class="content-culture">@T("Culture: {0}", Model.Culture)</div>
+    } else {
+    <div class="content-culture">@T("Culture: {0}", T("Undefined"))</div>
+    }
+    @if (localizations.Count() > 0)
+    {
+    <div class="content-localizations"><h4>@T("Translations:")</h4>@localizationLinks</div>
+    }
+    @if (Model.Culture != null && !((IEnumerable<string>)Model.SiteCultures).All(c => c == Model.Culture || localizations.Any(l => c == l.Culture.Culture)))
+    {
+    <div class="add-localization">@Html.ActionLink(T("+ New translation").Text, "Translate", "Admin", new { area = "Orchard.Localization", id = Model.Id }, null)</div>
+    }
+</div>
+}

@@ -1,0 +1,57 @@
+﻿@model Orchard.Core.Common.ViewModels.DateTimeEditor
+
+@{
+    Style.Require("jQueryCalendars_Picker");
+    Style.Require("jQueryUI_Calendars_Picker");
+    Style.Require("jQueryTimeEntry");
+    Style.Require("jQueryDateTimeEditor");
+
+    Script.Require("jQueryCalendars_All").AtFoot();
+    Script.Require("jQueryCalendars_Picker_Ext").AtFoot();
+    Script.Require("jQueryTimeEntry").AtFoot();
+}
+
+@if (Model.ShowDate) {
+    <label class="forpicker" for="@Html.FieldIdFor(m => Model.Date)">@T("Date")</label>
+    <span class="date">@Html.TextBoxFor(m => m.Date, new { placeholder = T("Date").Text, @class = "text" })</span>
+}
+
+@if (Model.ShowTime) {
+    <label class="forpicker" for="@Html.FieldIdFor(m => Model.Time)">@T("Time")</label>
+    <span class="time">@Html.TextBoxFor(m => m.Time, new { placeholder = T("Time").Text, @class = "text" })</span>
+}
+
+@if (Model.ShowDate) { <text>@Html.ValidationMessageFor(m => m.Date)</text> }
+@if (Model.ShowTime) { <text>@Html.ValidationMessageFor(m => m.Time)</text> }
+
+@using (Script.Foot()) {
+
+    @* Generate the localization scripts. *@
+    if (Model.ShowDate) { @Display.CalendarsPickerLocalization() }
+    if (Model.ShowTime) { @Display.TimeEntryLocalization() }
+
+    <script type="text/javascript">
+        //<![CDATA[
+        $(function () {
+
+            @if (Model.ShowDate) {
+                <text>
+                $("#@Html.FieldIdFor(m => Model.Date)").calendarsPicker({
+                    showAnim: "",
+                    renderer: $.extend({}, $.calendarsPicker.themeRollerRenderer, {
+                        picker: "<div {popup:start} id='ui-datepicker-div'{popup:end} class='ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all{inline:start} ui-datepicker-inline{inline:end}'><div class='ui-datepicker-header ui-widget-header ui-helper-clearfix ui-corner-all'>{link:prev}{link:today}{link:next}</div>{months}{popup:start}{popup:end}<div class='ui-helper-clearfix'></div></div>",
+                        month: "<div class='ui-datepicker-group'><div class='ui-datepicker-month ui-helper-clearfix'>{monthHeader:MM yyyy}</div><table class='ui-datepicker-calendar'><thead>{weekHeader}</thead><tbody>{weeks}</tbody></table></div>"
+                    })
+                });
+                </text>
+            }
+
+            @if (Model.ShowTime) {
+                <text>
+                $("#@Html.FieldIdFor(m => Model.Time)").timeEntry();
+                </text>
+            }
+        });
+        //]]>
+    </script>
+}

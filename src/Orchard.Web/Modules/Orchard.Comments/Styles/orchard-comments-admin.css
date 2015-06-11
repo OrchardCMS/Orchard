@@ -1,0 +1,20 @@
+﻿table.items .actions {
+    white-space:nowrap;   
+}
+table.items tr {
+    background:#fff;   
+}
+table.items tr.anonymous {
+    background:#fff;   
+}
+.anonymous-commenter-id,
+.authenticated-commenter-id {
+    font-style:italic;
+}
+
+/* For margin on the comments table list. */
+/* Need to revisit */
+.orchard-comments .items 
+{
+    margin-top: 10px;
+}

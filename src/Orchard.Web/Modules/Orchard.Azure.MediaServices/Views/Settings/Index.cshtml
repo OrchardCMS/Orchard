@@ -1,0 +1,46 @@
+﻿@model Orchard.Azure.MediaServices.ViewModels.Settings.SettingsViewModel
+
+@{
+    Style.Require("jQueryUI_Orchard");
+    Style.Require("FontAwesome");
+    Style.Include("cloudmedia-admin-settings.css", "cloudmedia-admin-settings.min.css");
+    Style.Include("cloudmedia-tabs.css", "cloudmedia-tabs.min.css");
+
+    Script.Require("JQuery").AtFoot();
+    Script.Require("jQueryUI").AtFoot();
+    Script.Require("jQueryUI_Tabs").AtFoot();
+    Script.Include("~/Modules/Orchard.MediaLibrary/Scripts/knockout-2.3.0.js").AtFoot();
+    Script.Include("cloudmedia-admin-settings.js").AtFoot();
+
+    Layout.Title = T("Microsoft Azure Media Settings");
+}
+
+@using (Html.BeginFormAntiForgeryPost()) {
+    @Html.ValidationSummary()
+
+    <div id="tabs" class="tabs-container">
+        <ul>
+            <li><a href="#settings-general">@T("General")</a></li>
+            <li><a href="#settings-encoding-presets">@T("Encoding")</a></li>
+            @*TODO: Encryption is disabled for now. Uncomment when we need it again.*@
+            @*<li><a href="#settings-encryption">@T("Encryption")</a></li>*@
+            <li><a href="#settings-subtitle-languages">@T("Subtitle languages")</a></li>
+        </ul>
+
+        <div id="settings-general">
+            @Html.EditorFor(m => m.General)
+        </div>
+        <div id="settings-encoding-presets">
+            @Html.EditorFor(m => m.EncodingSettings)
+        </div>
+        @*TODO: Encryption is disabled for now. Uncomment when we need it again.*@
+        @*<div id="settings-encryption">
+            @Html.EditorFor(m => m.EncryptionSettings)
+        </div>*@
+        <div id="settings-subtitle-languages">
+            @Html.EditorFor(m => m.SubtitleLanguages)
+        </div>
+    </div>
+
+    <button id="save-button" type="submit" formaction="@Url.Action("Save")">@T("Save")</button>
+}

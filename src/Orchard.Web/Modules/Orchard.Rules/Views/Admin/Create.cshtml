@@ -1,0 +1,18 @@
+﻿@model Orchard.Rules.ViewModels.CreateRuleViewModel
+@{
+    Layout.Title = T("Create New Rule").Text;
+}
+
+@using (Html.BeginFormAntiForgeryPost()) {
+    @Html.ValidationSummary()
+
+<fieldset>
+    @Html.LabelFor(m => m.Name)
+    @Html.TextBoxFor(m => m.Name, new { @class = "text medium" }) 
+    <span class="hint">@T("The name of the Rule")</span>
+</fieldset>
+
+<fieldset>
+    <button class="primaryAction" type="submit">@T("Save")</button>
+</fieldset>
+}

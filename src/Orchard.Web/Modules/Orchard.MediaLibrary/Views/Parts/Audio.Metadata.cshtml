@@ -1,0 +1,9 @@
+﻿@using Orchard.MediaLibrary.Models
+@{
+    AudioPart audioPart = Model.ContentPart;
+}           
+
+<div class="audio-length">
+    <em>@T("Length:")</em>
+    <span>@T("{0}:{1}", Math.Floor((float)audioPart.Length / 60), Math.Floor((float)audioPart.Length % 60).ToString("00") )</span>
+</div>

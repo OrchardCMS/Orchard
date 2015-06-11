@@ -1,0 +1,6 @@
+﻿@using Orchard.Comments.Models
+@{
+    CommentPart comment = Model.ContentPart;
+}
+
+@Html.LinkOrDefault(comment.Author, comment.SiteName, new { rel = "nofollow" })

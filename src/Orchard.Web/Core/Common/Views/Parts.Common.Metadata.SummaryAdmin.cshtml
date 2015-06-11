@@ -1,0 +1,12 @@
+﻿@using Orchard.ContentManagement;
+@using Orchard.Core.Common.Models;
+@{
+    CommonPart commonPart = Model.ContentPart;
+    DateTime? modifiedUtc = commonPart.As<CommonPart>() == null ? null : commonPart.As<CommonPart>().ModifiedUtc;
+}
+<ul class="pageStatus">
+    <li>@if (modifiedUtc.HasValue) {
+        @T("Last modified: {0}", Display.DateTimeRelative(DateTimeUtc: modifiedUtc.Value))}&nbsp;&#124;&nbsp;
+    </li>
+    <li>@Display.CommonMetadataOwner(ContentPart: Model.ContentPart)</li>
+    </ul>

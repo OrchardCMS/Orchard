@@ -1,0 +1,21 @@
+﻿@using Orchard.MediaLibrary.ViewModels
+@{
+    MediaManagerIndexViewModel viewModel = Model.MediaManagerIndexViewModel;
+    
+}
+        <label for="filterMediaType">@T("Show")</label>
+        <select id="filterMediaType" name="FilteredMediaType" data-bind="selectedOptions: mediaType">
+            @Html.SelectOption("", true, T("Any (show all)").ToString())
+            @foreach (var mediaType in viewModel.MediaTypes) {
+                @Html.SelectOption(mediaType.Name, false, mediaType.DisplayName)
+            }
+        </select>
+
+        <label for="orderMedia">@T("Ordered by")</label>
+        <select data-bind="selectedOptions: orderMedia" id="orderMedia" name="OrderMedia">
+            @Html.SelectOption("title", false, T("title").ToString())
+            @Html.SelectOption("created", true, T("recently created").ToString())
+            @Html.SelectOption("published", false, T("recently published").ToString())
+            @Html.SelectOption("modified", false, T("recently modified").ToString())
+        </select>
+        

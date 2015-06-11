@@ -1,0 +1,22 @@
+﻿@using Orchard.Layouts.Models
+@model Orchard.Layouts.ViewModels.EditElementBlueprintViewModel
+@{
+    Style.Include("element-editor.css");
+    Script.Require("jQuery");
+    Script.Include("element-editor.js");
+    Layout.LocalNavigation.Add(New.ElementEditor_LocalNav(Tabs: Model.Tabs));
+}
+@Html.ValidationSummary()
+@Html.HiddenFor(m => m.TypeName)
+@Html.HiddenFor(m => m.ElementData)
+@foreach (var tab in Model.Tabs) {
+    var id = String.Format("element-{0}", tab.ToLowerInvariant());
+    <div id="@id" class="tab-view">
+        @foreach (var editor in Model.EditorResult.Editors) {
+            var position = ShapePosition.Parse((String) editor.Metadata.Position);
+            if (position.Name == tab) {
+                @Display(editor)
+            }
+        }
+    </div>
+}

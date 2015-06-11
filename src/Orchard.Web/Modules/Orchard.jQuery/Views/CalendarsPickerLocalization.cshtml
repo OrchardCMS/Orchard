@@ -1,0 +1,178 @@
+﻿@using Orchard.Localization.Services
+@using Orchard.Utility.Extensions;
+@using System.Globalization
+@using System.Web.Hosting;
+
+@{
+    // Prevent the shape from being rendered twice in the same request.
+    if (WorkContext.GetState<object>("CalendarsPickerLocalization") != null) {
+        return;
+    }
+
+    WorkContext.SetState("CalendarsPickerLocalization", new object());
+
+    Script.Require("jQueryCalendars_All");
+
+    var dateTimeFormatProvider = WorkContext.Resolve<IDateTimeFormatProvider>();
+    var calendarManager = WorkContext.Resolve<ICalendarManager>();
+
+    var currentCulture = CultureInfo.GetCultureInfo(WorkContext.CurrentCulture);
+    var currentCalendar = currentCulture.Calendar;
+    if (!String.IsNullOrEmpty(WorkContext.CurrentCalendar)) {
+        currentCalendar = calendarManager.GetCalendarByName(WorkContext.CurrentCalendar);
+    }
+
+    // Map the .NET calendar implementation in use to one of the jQuery Calendars implementations, using Gregorian as the default fallback.
+    // NOTE: The following .NET calendars are lack corresponding implementations in jQuery Calendars at this time:
+    // * ChineseLunisolarCalendar
+    // * JapaneseCalendar
+    // * JapaneseLunisolarCalendar
+    // * KoreanCalendar
+    // * KoreanLunisolarCalendar
+    // * TaiwanLunisolarCalendar
+    string calendarName = "gregorian";
+    switch (WorkContext.CurrentCalendar) {
+        case "HebrewCalendar":
+            calendarName = "hebrew";
+            break;
+        case "HijriCalendar":
+            calendarName = "islamic";
+            break;
+        case "JulianCalendar":
+            calendarName = "julian";
+            break;
+        case "PersianCalendar":
+            calendarName = "persian";
+            break;
+        case "TaiwanCalendar":
+            calendarName = "taiwan";
+            break;
+        case "ThaiBuddhistCalendar":
+            calendarName = "thai";
+            break;
+        case "UmAlQuraCalendar":
+            calendarName = "ummalqura";
+            break;
+    }
+
+    string includedLocalization = null;
+
+    // If we're using the Gregorian calendar we can reliably localize it using with
+    // values obtained from IDateTimeFormatProvider (which by default uses the CultureDateTimeFormatProvider
+    // implementation which uses the localizations built into the .NET Framework). If
+    // using a different calendar, it's more reliable to use the appropriate localization
+    // shipped with jQuery Calendars if there is one, and only fall back on IDateTimeFormatProvider
+    // if necessary.
+    if (calendarName != "gregorian") {
+        // Include the appropriate calendar module.
+        Script.Include(String.Format("calendars/jquery.calendars.{0}.min.js", calendarName), String.Format("calendars/jquery.calendars.{0}.js", calendarName)).AtFoot();
+
+        // Look for a matching localization module and include it if found.
+        var c = currentCulture;
+        do {
+            var localizationFileName = String.Format("calendars/jquery.calendars.{0}-{1}.js", calendarName, c.Name);
+            if (File.Exists(HostingEnvironment.MapPath(String.Format("~/Modules/Orchard.jQuery/Scripts/{0}", localizationFileName)))) {
+                Script.Include(localizationFileName).AtFoot();
+                includedLocalization = c.Name;
+                break;
+            }
+            c = c.Parent;
+        } while (c != c.Parent);
+    }
+
+    // Determine the date format to use (convert from short date format string of current culture into jQuery Calendars format string).
+    // http://msdn.microsoft.com/en-us/library/8kb3ddd4.aspx
+    // http://keith-wood.name/calendarsPicker.html#format
+    var dateFormat = dateTimeFormatProvider.ShortDateFormat.ReplaceAll(new Dictionary<string, string>() {
+        {"dddd", "DD" },
+        {"ddd", "D" },
+        {"MMMM", "MM" },
+        {"MMM", "M" },
+        {"MM", "mm" },
+        {"M", "m" },
+        {"yyyyy", "yyyy" }, // Five-digit year is not supported by jQuery Calendars; convert to four-digit.
+        {"yyyy", "yyyy" }, // Four-digit year included to not be touched by three-digit year replacement below.
+        {"yyy", "yyyy" }, // Three-digit year is not supported by jQuery Calendars; convert to four-digit.
+        {"yy", "yy" }, // Two-digit year included to not be touched by one-digit year replacement below.
+        {"y", "yy"  }, // Year without leading zero is not supported by jQuery Calendars; convert to two-digit.
+        {"gg", "" }, // Period and era are not supported by jQuery Calendars.
+        {"g", ""  },// Period and era are not supported by jQuery Calendars.
+        {"K", "" }, // Time zone is not supported by jQuery Calendars.
+    });
+}
+
+@functions {
+    private string FormatJsList(string[] strings) {
+        return String.Join(", ", strings.Select(s => String.Format("'{0}'", HttpUtility.JavaScriptStringEncode(s.Trim()))));
+    }
+}
+
+<script type="text/javascript">
+    //<![CDATA[
+    $(function() {
+
+        var dateFormat = '@HttpUtility.JavaScriptStringEncode(dateFormat)';
+        var calendarName = '@HttpUtility.JavaScriptStringEncode(calendarName)';
+        var localizationName = '';
+
+        @if (includedLocalization != null) {
+            <text>localizationName = '@HttpUtility.JavaScriptStringEncode(includedLocalization)';</text>
+        }
+        else {
+            // No localization module was loaded. Instead we initialize the default calendar
+            // localization with values obtained from IDateTimeFormatProvider.
+            var monthNames = FormatJsList(dateTimeFormatProvider.MonthNames.ToArray());
+            var monthNamesShort = FormatJsList(dateTimeFormatProvider.MonthNamesShort.ToArray());
+            var dayNames = FormatJsList(dateTimeFormatProvider.DayNames.ToArray());
+            var dayNamesShort = FormatJsList(dateTimeFormatProvider.DayNamesShort.ToArray());
+            var dayNamesMin = FormatJsList(dateTimeFormatProvider.DayNamesMin.ToArray());
+            var firstDay = Convert.ToInt32(dateTimeFormatProvider.FirstDay);
+            <text>
+        localizationName = '@HttpUtility.JavaScriptStringEncode(currentCulture.Name)';
+        $.calendars.calendars.@(calendarName).prototype.regionalOptions[localizationName] = {
+            monthNames: [@Html.Raw(monthNames)], // Names of months for drop-down and formatting
+            monthNamesShort: [@Html.Raw(monthNamesShort)], // Short namese of months
+            dayNames: [@Html.Raw(dayNames)], // Names of days
+            dayNamesShort: [@Html.Raw(dayNamesShort)], // Short names of days
+            dayNamesMin: [@Html.Raw(dayNamesMin)], // Column headings for days starting at Sunday
+            dateFormat: '@HttpUtility.JavaScriptStringEncode(dateFormat)', // See format options on parseDate
+            firstDay: @firstDay, // First day of the week
+            isRTL: @(currentCulture.TextInfo.IsRightToLeft ? "true" : "false") // True if right-to-left language, false if left-to-right
+            };
+        </text>
+        }
+
+        $.calendarsPicker.regionalOptions[localizationName] = {
+            prevText: '@HttpUtility.JavaScriptStringEncode(T("Prev").Text)', // Display text for previous month link
+            prevStatus: '@HttpUtility.JavaScriptStringEncode(T("Show the previous month").Text)', // Tooltip text for previous month link
+            prevJumpText: '@HttpUtility.JavaScriptStringEncode(T("<<").Text)', // Display text for previous year link
+            prevJumpStatus: '@HttpUtility.JavaScriptStringEncode(T("Show the previous year").Text)', // Tooltip text for previous year link
+            nextText: '@HttpUtility.JavaScriptStringEncode(T("Next").Text)', // Display text for next month link
+            nextStatus: '@HttpUtility.JavaScriptStringEncode(T("Show the next month").Text)', // Tooltip text for next month link
+            nextJumpText: '@HttpUtility.JavaScriptStringEncode(T(">>").Text)', // Display text for next year link
+            nextJumpStatus: '@HttpUtility.JavaScriptStringEncode(T("Show the next year").Text)', // Tooltip text for next year link
+            currentText: '@HttpUtility.JavaScriptStringEncode(T("Current").Text)', // Display text for current month link
+            currentStatus: '@HttpUtility.JavaScriptStringEncode(T("Show the current month").Text)', // Tooltip text for current month link
+            todayText: '@HttpUtility.JavaScriptStringEncode(T("Today").Text)', // Display text for today link
+            todayStatus: '@HttpUtility.JavaScriptStringEncode(T("Show today's month").Text)', // Tooltip text for today link
+            clearText: '@HttpUtility.JavaScriptStringEncode(T("Clear").Text)', // Display text for clear link
+            clearStatus: '@HttpUtility.JavaScriptStringEncode(T("Clear the date field").Text)', // Tooltip text for clear link
+            closeText: '@HttpUtility.JavaScriptStringEncode(T("Done").Text)', // Display text for close link
+            closeStatus: '@HttpUtility.JavaScriptStringEncode(T("Close the datepicker").Text)', // Tooltip text for close link
+            yearStatus: '@HttpUtility.JavaScriptStringEncode(T("Change the year").Text)', // Tooltip text for year drop-down
+            monthStatus: '@HttpUtility.JavaScriptStringEncode(T("Change the month").Text)', // Tooltip text for month drop-down
+            weekText: '@HttpUtility.JavaScriptStringEncode(T("Wk").Text)', // Display text for week of the year column header
+            weekStatus: '@HttpUtility.JavaScriptStringEncode(T("Week of the year").Text)', // Tooltip text for week of the year column header
+            dayStatus: '@HttpUtility.JavaScriptStringEncode(T(String.Format("Select {0}", dateFormat)).Text)', // Tooltip text for selectable days
+            defaultStatus: '@HttpUtility.JavaScriptStringEncode(T("Select a date").Text)', // Tooltip text for areas of  the datepicker not covered by one of the other statuses above
+            isRTL: @(currentCulture.TextInfo.IsRightToLeft ? "true" : "false") // True if right-to-left language, false if left-to-right
+            };
+
+        $.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions[localizationName]);
+        $.calendarsPicker.setDefaults({
+            calendar: $.calendars.instance(calendarName, localizationName),
+            dateFormat: dateFormat
+        });
+    })
+    //]]>
+</script>

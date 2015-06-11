@@ -1,0 +1,142 @@
+﻿.custom_details legend {
+    font-size: small;
+}
+.custom_details {
+    padding-left: 30px;
+}
+.orchard-packaging #main .contentItems p {
+    margin:0;
+}
+.extensionName {
+    float:left;
+}
+.extensionName.installed {
+    background: url("images/installed.gif") no-repeat 0px 8px #fff;
+    padding:0 0 0 60px;
+}
+.contentItems .related {
+    padding:6px 0 0 0;
+}
+.contentItems .properties {
+    float: left;
+    clear: both;
+}
+.contentItems .pageStatus {
+    margin: .8em 0;
+    color: #666;
+}
+.iconThumbnail {
+    padding-left: 70px;
+}
+.screenshotThumbnail {
+    padding-left: 191px;
+}
+.column {
+    float: left;
+    position: relative;
+}
+.extensionThumbnail {
+    margin-left: -100%;
+}
+.iconThumbnail .extensionThumbnail {
+    width: 70px;
+    right: 70px;
+    height: 50px;
+}
+.screenshotThumbnail .extensionThumbnail {
+    width: 191px;
+    right: 191px;
+    height: 128px;
+}
+.extensionDetails {
+    width: 100%;
+}
+.iconThumbnail .thumbnail {
+    width: 50px; 
+    height: 50px;
+}
+.screenshotThumbnail .thumbnail {
+    width: 171px; 
+    height: 128px;
+}
+.properties li p {
+    float: left;
+}
+.rating {width:130px;}
+.ratings {
+    float: right;
+    background:url(../Content/Images/stars.png) repeat-x;
+    height: 14px;
+    width: 75px;
+    display: block;
+    margin:3px 0 0 0;
+}
+.score {
+    background: url(../Content/Images/stars.png) repeat-x 0 -14px;
+    position: absolute;
+    width: 45px;
+}
+.search-actions {
+    float: right;
+    display: inline;
+    height: auto;
+    padding-top: 0;
+}
+.update-actions {
+    float: right;
+    display: inline;
+    height: auto;
+    padding-top: 0;
+}
+
+/* RTL */
+
+.dir-rtl .custom_details {
+    padding-left: inherit;
+    padding-right: 30px;
+}
+.dir-rtl .extensionName {
+    float:right;
+}
+.dir-rtl .extensionName.installed {
+    padding:0 60px 0 0;
+}
+.dir-rtl .contentItems .properties {
+    float: right;
+    clear: both;
+}
+.dir-rtl .iconThumbnail {
+    padding-left: inherit;
+    padding-right: 70px;
+}
+.dir-rtl .screenshotThumbnail {
+    padding-left: inherit;
+    padding-right: 191px;
+}
+.dir-rtl .column {
+    float: right;
+}
+.dir-rtl .extensionThumbnail {
+    margin-left: inherit;
+    margin-right: -100%;
+}
+.dir-rtl .iconThumbnail .extensionThumbnail {
+    right: inherit;
+    left: 70px;
+}
+.dir-rtl .screenshotThumbnail .extensionThumbnail {
+    right: inherit;
+    left: 191px;
+}
+.dir-rtl .properties li p {
+    float: right;
+}
+.dir-rtl .ratings {
+    float: left;
+}
+.dir-rtl .search-actions {
+    float: left;
+}
+.dir-rtl .update-actions {
+    float: left;
+}

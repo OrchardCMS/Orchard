@@ -1,0 +1,33 @@
+﻿@model Orchard.ContentPicker.Settings.ContentPickerFieldSettings
+
+<fieldset>
+    <div>
+        @Html.CheckBoxFor(m => m.Required) <label for="@Html.FieldIdFor(m => m.Required)" class="forcheckbox">@T("A content item is required")</label>
+        <span class="hint">@T("Check to ensure the user is providing at least one content item.")</span>
+    </div>
+</fieldset>
+<fieldset>
+    <div>
+        @Html.CheckBoxFor(m => m.Multiple) <label for="@Html.FieldIdFor(m => m.Multiple)" class="forcheckbox">@T("Allow multiple content items")</label>
+        <span class="hint">@T("Check to allow the user to select multiple content items.")</span>
+    </div>
+</fieldset>
+<fieldset>
+    <label for="@Html.FieldIdFor(m => m.Hint)">@T("Help text")</label>
+    @Html.TextAreaFor(m => m.Hint, new { @class = "text medium", rows = "5" } )
+    <span class="hint">@T("The help text is written under the field when authors are selecting content items.")</span>
+    @Html.ValidationMessageFor(m => m.Hint)
+</fieldset>
+<fieldset>
+    <div>
+        @Html.CheckBoxFor(m => m.ShowContentTab) <label for="@Html.FieldIdFor(m => m.ShowContentTab)" class="forcheckbox">@T("Show Content tab")</label>
+        <span class="hint">@T("Uncheck to hide the Content tab from the picker window.")</span>
+    </div>
+</fieldset>
+<fieldset>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.DisplayedContentTypes)">@T("Content Types and Parts")</label>
+        @Html.TextBoxFor(m => m.DisplayedContentTypes) 
+        <span class="hint">@T("A comma separated value of all the content types or content parts to display.")</span>
+    </div>
+</fieldset>

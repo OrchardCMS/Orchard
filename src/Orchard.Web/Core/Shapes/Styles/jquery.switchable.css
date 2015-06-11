@@ -1,0 +1,48 @@
+﻿.switch-for-switchable {
+	margin:0 0;
+    overflow:auto;
+}
+.switch-for-switchable .switch-button-group {
+	float:right;
+	padding:4px 0;
+}
+.switch-for-switchable .switch-button {
+	background: #F5F5F5;
+	border:1px solid #999999;
+	color:#2D2F25;
+	cursor:pointer;
+	display:block;
+	float:left;
+	text-align:center;
+	height:24px;
+	width:24px;
+}
+.switch-for-switchable .summary-view {
+	background:url("images/summary-view.gif") no-repeat left top;
+	border-right:1px solid #bcbcbc;
+	border-radius:2px 0 0 2px;
+	-moz-border-radius:2px 0 0 2px;
+	-webkit-border-radius:2px 0 0 2px;
+}
+.switch-for-switchable.summary-switched .summary-view {
+	background:url("images/summary-view-on.gif") no-repeat left top;
+	border-color:#487328;
+	cursor:default;
+}
+.switch-for-switchable .detail-view {
+	background:url("images/detail-view.gif") no-repeat left top;
+	border-right:1px solid #898989;
+	border-radius:0 2px 2px 0;
+	-moz-border-radius:0 2px 2px 0;
+	-webkit-border-radius:0 2px 2px 0;	
+}
+.switch-for-switchable.detail-switched .detail-view {
+	background:url("images/detail-view-on.gif") no-repeat left top;
+	border-color:#487328;
+	cursor:default;
+}
+
+/* RTL */
+.dir-rtl .switch-for-switchable .switch-button-group {
+    float: left;
+}

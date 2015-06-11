@@ -1,0 +1,125 @@
+﻿html { background:none !important }
+
+body {
+  color: #333; 
+  background:#f3f4f5;
+  font-family: Segoe UI,Trebuchet,Arial,Sans-Serif;
+  line-height:1.6em;
+  padding:12px;
+  width:640px;
+  min-width:640px;
+  margin: 0 auto;
+}
+
+#orchardmediapicker * { font:100% normal Segoe UI,Trebuchet,Arial,Sans-Serif; }
+
+#orchardmediapicker #tabs { padding: 0 0 12px 0; }
+
+#orchardmediapicker a, #orchardmediapicker a:link, #orchardmediapicker a:visited, #orchardmediapicker a:hover, #orchardmediapicker a:active, #orchardmediapicker a:focus {
+    color:#1e5d7d;
+    text-decoration:none;
+}
+
+#file-details, #image-preview, #gallery {
+    /*border:1px solid #ff0000;*/
+    width:340px;
+    min-height:430px;
+    float:left;
+    }
+
+#file-details {
+    float:right;
+    width:220px;
+    }
+
+#file-list {
+    border:1px solid #bdbcbc;
+    height:325px;
+    max-width:340px;
+    max-height:325px;
+    margin:9px 0 0 0;
+    overflow:scroll;
+    overflow-y:scroll;
+    overflow-x:hidden;
+    }
+    
+.media-largepreview
+{
+    width: 300px;
+    height: 300px;
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;    
+}
+table.items td.media-thumbnail
+{
+    width: 100px;
+    height: 100px;
+    text-align: center;
+    vertical-align: middle;
+    padding: 2px 2px;
+}
+.media-thumbnail img 
+{
+    display: none; /*revealed by javascript after scaling*/
+}
+.media-details { vertical-align: middle; }
+
+.media-folder {}
+
+/*.media-item:hover, .selected:hover { background-color: #f3f5ef; }*/
+
+.media-item:hover, .selected:hover { cursor:pointer; }
+
+.selected { background: #dee4cf; }
+
+.throbber { display: none }
+
+
+/*jQuery UI overrides
+***************************************************************/
+#orchardmediapicker .ui-corner-all { -moz-border-radius: 2px; }
+
+/* Component containers
+----------------------------------*/
+#orchardmediapicker .ui-widget-header { border: none; border-bottom: 1px solid #e4e5e6; background:#f3f4f5; }
+
+
+/* Interaction states
+----------------------------------*/
+#orchardmediapicker .ui-state-default, #orchardmediapicker .ui-tabs-selected { border:1px solid #f5f5f5; background:none; }
+#orchardmediapicker .ui-tabs-selected, #orchardmediapicker li.ui-state-default:hover { background: #fff; }
+
+
+/* Tabs
+----------------------------------*/
+#orchardmediapicker .ui-tabs .ui-tabs-nav { list-style: none; position: relative; padding: 8px 18px 0px 18px; }
+#orchardmediapicker .ui-tabs .ui-tabs-nav li { position: relative; border:1px solid #e4e5e6; float: left; border-bottom-width: 0 !important; margin: 0 2px -1px 0; padding: 0;  }
+#orchardmediapicker .ui-tabs .ui-tabs-nav li a { float: left; text-decoration: none; padding: 8px 16px; font-size:15px; line-height:22px; }
+#orchardmediapicker .ui-tabs .ui-tabs-nav li.ui-tabs-selected a, .ui-tabs .ui-tabs-nav li.ui-state-disabled a, .ui-tabs .ui-tabs-nav li.ui-state-processing a { color: #3A822E; }
+
+/* Forms
+***************************************************************/
+
+form              { margin: 0; padding: 0; }
+legend            { font-weight: normal; border:none; }
+fieldset          { padding:0; margin: 0; border: 0px solid #dbdbdb; }
+#orchardmediapicker label { font-weight:normal; display:block; padding: 0 0 0 0; margin:12px 0 2px 0; }
+#orchardmediapicker label.forcheckbox { display: inline; margin: 10px 0 0 4px; }
+#orchardmediapicker .actions { margin:12px 0 0 0; clear:both; text-align:left; }
+
+#orchardmediapicker .text-box,
+#orchardmediapicker .text {
+    width:90%;
+}
+
+#orchardmediapicker input[type=checkbox] { clear: both; }
+
+.image-width, .image-height {float:left; width:90px;}
+
+#orchardmediapicker .image-width .text, #orchardmediapicker .image-height .text, #orchardmediapicker #folderName {width:60%;}
+
+
+.clearboth {
+    clear:both;
+}

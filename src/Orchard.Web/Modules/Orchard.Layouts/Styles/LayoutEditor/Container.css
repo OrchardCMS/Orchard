@@ -1,0 +1,45 @@
+﻿.layout-editor .layout-container > .layout-element-wrapper > .layout-container-children-placeholder {
+  display: none;
+  flex-direction: column;
+  margin: 11px;
+  min-height: 80px;
+  border: 1px dashed rgba(124, 124, 124, 0.4);
+  border-radius: 4px;
+  padding: 12px;
+  justify-content: center;
+  font-size: 13px;
+  font-style: italic;
+  opacity: 0.6;
+  text-align: center;
+}
+.layout-editor .layout-container > .layout-element-wrapper > .layout-children {
+  padding: 12px;
+}
+.layout-editor .layout-container > .layout-element-wrapper > .layout-children > .layout-element:not(.layout-container) + .layout-element:not(.layout-container) {
+  margin-top: 12px;
+}
+.layout-editor .layout-container > .layout-element-wrapper > .layout-children > .ui-sortable-helper:first-child + .layout-element:not(.layout-container) {
+  margin-top: 0;
+}
+.layout-editor .layout-container > .layout-element-wrapper.layout-container-empty > .layout-container-children-placeholder {
+  display: flex;
+}
+.layout-editor .layout-container > .layout-element-wrapper.layout-container-empty > .layout-children {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+.layout-editor:not(.layout-editor-dragging) .layout-container.layout-element-focused > .layout-element-wrapper > .layout-children > .layout-element:not(.layout-element-active) {
+  border: 1px dashed rgba(124, 124, 124, 0.6);
+}
+.layout-editor:not(.layout-editor-dragging) .layout-container.layout-element-focused > .layout-element-wrapper > .layout-children > .layout-element:not(.layout-element-active) > .layout-element-wrapper {
+  margin: -1px;
+}
+.layout-editor:not(.layout-editor-dragging) .layout-container.layout-element-focused > .layout-element-wrapper > .layout-children > .layout-container + .layout-container:not(.layout-element-active) {
+  border-top: 0;
+}
+.layout-editor:not(.layout-editor-dragging) .layout-container.layout-element-focused > .layout-element-wrapper > .layout-children > .layout-container + .layout-container:not(.layout-element-active) > .layout-element-wrapper {
+  margin-top: 0;
+}

@@ -1,0 +1,21 @@
+﻿Name: Designer Tools
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardproject.net
+Version: 1.9.0
+OrchardVersion: 1.9
+Description: Contains designer tools to ease the Themes development process
+FeatureName: Shape Tracing
+Category: Designer
+FeatureDescription: Displays all currently displayed shapes and some information to customize them
+Dependencies: Orchard.jQuery
+Features:
+    UrlAlternates:
+        Name: Url Alternates
+        Category: Designer
+        Description: Adds shape alternates for specific urls
+    WidgetAlternates:
+        Name: Widget Alternates
+        Category: Designer
+        Description: Adds shape alternates for content types stereotyped as widgets, allowing to customize shapes by widget and zone
+        Dependencies: Orchard.Widgets

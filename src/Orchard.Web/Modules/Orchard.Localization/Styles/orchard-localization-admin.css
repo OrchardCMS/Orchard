@@ -1,0 +1,46 @@
+﻿.summary .content-localization {
+    margin: .7em 0;
+} 
+.content-localization .culture-selected {
+    margin-bottom:.5em;
+}
+.culture-selection .content-localizations li {
+    font-size:.9em;
+}
+.content-localization .content-localizations>* {
+    display:inline;
+}
+.content-localization .content-localizations .localizations li {
+    border-bottom:0;
+    display:inline;
+    margin-left:.5em;
+    padding:0;
+}
+.content-localization .content-localizations li::after {
+    content:",";
+}
+.content-localization .content-localizations li:last-child::after {
+    content:"";
+}
+.culture-selection fieldset {
+    padding-top:0;
+}
+
+.culture-selection label {
+    padding-top:0;
+    display: inline;
+}
+
+.culture-selection dl {
+    margin:.2em 0;
+}
+.culture-selection dt {
+    color:#4C4C4C;
+}
+.culture-selection dt, .culture-selection dd, .culture-selection ul {
+    display:inline;
+}
+.culture-selection .content-localization .content-localizations {
+    clear:none;
+    float:none;
+}

@@ -1,0 +1,43 @@
+﻿@using Orchard.Environment.Descriptor.Models
+
+@{
+    Script.Require("OrchardMarkdown");
+    Style.Require("OrchardMarkdown");
+
+    var idPostfix = Html.FieldIdFor(m => m);
+    var shellDescriptor = WorkContext.Resolve<ShellDescriptor>();
+    var mediaLibraryEnabled = shellDescriptor.Features.Any(x => x.Name == "Orchard.MediaLibrary");
+
+    if (mediaLibraryEnabled) {
+        Script.Require("jQueryColorBox");
+        Script.Require("OrchardMarkdown-MediaLibrary");
+        Style.Require("jQueryColorBox");
+    }
+    else {
+        Script.Require("OrchardMarkdown-MediaPicker");
+    }
+
+    var textAreaAttributes = new Dictionary<string, object> {
+        {"id", "wmd-input" + "-" + idPostfix},
+        {"class", "wmd-input"},
+        {"data-mediapicker-uploadpath", Model.AddMediaPath},
+        {"data-mediapicker-title", T("Insert/Update Media")}
+    };
+
+    // The markdown editor itself doesn't seem to (yet) support autofocus, but we'll set it on the textarea nonetheless.
+    if (Model.AutoFocus == true) {
+        textAreaAttributes["autofocus"] = "autofocus";
+    }
+}
+
+<div class="wmd-box has-grip">
+    <div class="wmd-innerbox">
+        <div class="wmd-editor-box">
+            <div id="wmd-button-bar-@idPostfix" class="wmd-button-bar"></div>
+            @Html.TextArea("Text", (string)Model.Text, 25, 80, textAreaAttributes)
+        </div>
+        <div class="wmd-preview-box">
+            <div id="wmd-preview-@idPostfix" class="wmd-panel wmd-preview"></div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,63 @@
+﻿@using Orchard.Autoroute
+@using Orchard.Environment.Configuration
+@using Orchard.Mvc.Extensions
+@model Orchard.Autoroute.ViewModels.AutoroutePartEditViewModel
+
+@if(Model.Settings.DefaultPatternIndex == -1) {
+    <div class="message message-Error">@T("The current Content Type does not have a default Autoroute Pattern. Please edit the settings first.")</div>
+    return;
+}
+
+@{
+    var defaultPattern = Model.Settings.Patterns[Model.Settings.DefaultPatternIndex];
+    var urlPrefix = WorkContext.Resolve<ShellSettings>().RequestUrlPrefix;
+    if (!String.IsNullOrWhiteSpace(urlPrefix)) {
+        urlPrefix += "/";
+    }
+}
+
+@if (!Model.PromoteToHomePage) {
+    <fieldset class="permalink">
+        <label>@T("Permalink")</label>
+        @if (Model.Settings.AllowCustomPattern) {
+            <span class="permalink-definition" dir="ltr">
+                <span>@Url.MakeAbsolute("/")@urlPrefix</span>
+                <span>@Html.TextBoxFor(m => m.CurrentUrl, new { @class = "text is-url" })</span>
+            </span>
+            <span class="hint">@T("Save the current item and leave the input empty to have it automatically generated using the pattern {0} e.g., {1}", defaultPattern.Name, defaultPattern.Description)</span>
+        }
+        else {
+            var hintClass = string.Empty;
+            if (!string.IsNullOrEmpty(Model.CurrentUrl)) {
+                hintClass = "hint";
+                <span>@Url.MakeAbsolute("/")@urlPrefix@Model.CurrentUrl</span>
+            }
+
+            if (string.IsNullOrEmpty(Model.CurrentUrl)
+                || (!string.IsNullOrEmpty(Model.CurrentUrl) && Model.Settings.AutomaticAdjustmentOnEdit)) {
+                <span class="@hintClass">@T("Save the current item and the url will be generated using the pattern {0} e.g., {1}", defaultPattern.Name, defaultPattern.Description)</span>
+            }
+        }
+        @if (!String.IsNullOrEmpty(Model.CurrentUrl)) {
+            <span>
+                @Html.Link(
+                    T("View").Text,
+                    Url.MakeAbsolute("/") + urlPrefix + Model.CurrentUrl.TrimStart('/'),
+                    new { target = "_blank" })
+            </span>
+        }
+
+    </fieldset>
+    if (AuthorizedFor(Permissions.SetHomePage)) {
+         <fieldset>
+             <span class="checkbox-and-label">
+                 @Html.EditorFor(m => m.PromoteToHomePage)
+                 <label for="@Html.FieldIdFor(m => m.PromoteToHomePage)" class="forcheckbox">@T("Set as home page")</label>
+             </span>
+             <span class="hint">@T("Check to promote this content as the home page")</span>
+         </fieldset>
+     }
+}
+else {
+    <span>@T("This content is the current home page")</span>
+}

@@ -1,0 +1,22 @@
+﻿Name: Tags
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardproject.net
+Version: 1.9.0
+OrchardVersion: 1.9
+Features:
+    Orchard.Tags:
+        Name: Tags
+        Description: The tags module is providing basic tagging for arbitrary content types. 
+        Dependencies: Settings, Orchard.jQuery
+        Category: Navigation
+    Orchard.Tags.Feeds:
+        Name: Tags Feeds
+        Description: Adds tags to the RSS feeds. 
+        Dependencies: Orchard.Tags, Feeds
+        Category: Syndication
+	Orchard.Tags.TagCloud:
+        Name: Tag Cloud
+        Description: Adds a tag cloud widget. 
+        Dependencies: Orchard.Tags, Orchard.Autoroute
+        Category: Navigation

@@ -1,0 +1,200 @@
+﻿/* Reset
+***************************************************************/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td, button, submit {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    font-weight: inherit;
+    font-style: inherit;
+    font-size: 100%;
+    font-family: inherit;
+    vertical-align: baseline;
+}
+
+/* Remember focus styles! */
+:focus { outline: 0; }
+
+body { line-height: 1; color: black; background: white; }
+ol, ul { list-style: none; }
+
+/* Tables still need 'cellspacing="0"' in the markup */
+table { border-collapse: separate; border-spacing: 0; }
+caption, th, td { text-align: left; font-weight: normal; }
+
+blockquote:before, blockquote:after,
+q:before, q:after { content: ""; }
+blockquote, q { quotes: "" ""; }
+
+/* HTML 5 elements as block */  
+header, footer, aside, nav, article { display: block; }
+/* end: reset */
+
+/* Clearing Floats
+***************************************************************/
+
+.group:after, .zone-content:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
+
+
+/* General
+***************************************************************/
+
+/* Default font settings. 
+The font-size 81.3% sets the base font to 13px 
+
+Pixels   EMs         Percent    Points
+1px      0.077em     7.7%       1pt
+2px      0.154em     15.4%      2pt
+3px      0.231em     23.1%      3pt
+4px      0.308em     30.8%      3pt
+5px      0.385em     38.5%      4pt
+6px      0.462em     46.2%      5pt
+7px      0.538em     53.8%      5pt
+8px      0.615em     61.5%      6pt
+9px      0.692em     69.2%      7pt
+10px     0.769em     76.9%      8pt
+11px     0.846em     84.6%      8pt
+12px     0.923em     92.3%      9pt
+13px     1em         100%       10pt
+14px     1.077em     107.7%     11pt
+15px     1.154em     115.4%     11pt
+16px     1.231em     123.1%     12pt
+17px     1.308em     130.8%     13pt
+18px     1.385em     138.5%     14pt
+19px     1.462em     146.2%     14pt
+20px     1.538em     153.8%     15pt
+21px     1.615em     161.5%     16pt
+22px     1.692em     169.2%     17pt
+23px     1.769em     176.9%     17pt
+24px     1.846em     184.6%     18pt
+*/
+
+html, body { height:100%; }
+
+html {
+    color:#333;
+}
+
+body {
+  font-size: 81.3%;
+  color: #333; 
+  font-family: Segoe UI,Trebuchet,Arial,Sans-Serif;
+  line-height:1.6em;
+  margin:0 auto;  
+  padding:0;
+}
+
+/*Hide shape tracing*/
+#shape-tracing-container {display:none;}
+
+/* Headings */
+h1,h2,h3,h4,h5,h6 { font-weight: normal;}
+
+h1 { font-size: 1.769em; }
+h2 { font-size: 1.308em; }
+h3 { font-size: 1.231em; }
+h4 { font-size: 1.154em; }
+h5 { font-size: 1.077em; }
+h6 { font-size: 1em; }
+
+h1, h2, h3, h4, h5, legend {
+    padding:.6px 0;
+    font-style: normal;
+    font-weight:normal;
+}
+
+h1 img, h2 img, h3 img, 
+h4 img, h5 img, h6 img {
+  margin: 0;
+}
+
+.small { width:4em; }
+.medium { width:26em; }
+.large { width:99% }
+
+select, textarea, input[type=text] {
+    padding: 3px;
+    border: 1px solid #bdbcbc;
+}
+
+button {
+    background: #6a7b42;
+    border: 1px solid #487328;
+    color: #fff;
+    cursor: pointer;
+    display: inline-block;
+    font: 12px Arial,Helvetica,sans-serif;
+    padding: 4px 10px 4px 10px;
+    /*position: relative;*/
+    text-align: center;
+    text-decoration: none;
+    font-size: 12px;
+    /*----CSS3 properties----*/
+    -webkit-text-shadow: rgba(40,53,9,.2) 0px 0px 1px;
+    text-shadow: rgba(40,53,9,.2) 0px 0px 1px;
+    -webkit-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.2);
+    -moz-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.2);
+    box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.2);
+    /*----In ie the first couplet sets the alpha value so 00=transparent and ff=opaque)----*/
+    filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ff9bb36c', endColorstr='#ff809f43');
+    background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(155, 179, 108, 1.0)), to(rgba(128, 159, 67, 1.0)));
+    background: -moz-linear-gradient(top, rgba(155, 179, 108, 1.0), rgba(128, 159, 67, 1.0));
+    /*test - base green in pallet is 155,179,108*/
+    background: -moz-linear-gradient(top, rgba(155, 179, 108, 1.0), rgba(133, 154, 93, 1.0));
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    margin-bottom: 5px;
+}
+
+button, .button, a.button {
+    background:#6a7b42;
+    border:1px solid #487328;
+    color:#fff;
+    cursor: pointer;
+    display: inline-block;
+    font: 12px Arial,Helvetica,sans-serif;
+    padding: 5px 14px 5px 14px;
+    
+    /*position: relative;*/
+    text-align: center;
+    text-decoration: none;
+    
+    /*----CSS3 properties----*/
+     text-shadow: rgba(40,53,9,.2) 0px 0px 1px;
+    -webkit-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.2); 
+    -moz-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.2); 
+     box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.2);
+
+     
+    /*----In ie the first couplet sets the alpha value so 00=transparent and ff=opaque)----*/    
+     filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ff9bb36c',  endColorstr='#ff809f43');	
+     background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(155, 179, 108, 1.0)), to(rgba(128, 159, 67, 1.0)));    
+     background: -moz-linear-gradient(top, rgba(155, 179, 108, 1.0), rgba(128, 159, 67, 1.0));
+
+     /*test - base green in pallet is 155,179,108*/
+     background: -moz-linear-gradient(top, rgba(155, 179, 108, 1.0), rgba(133, 154, 93, 1.0));
+        
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+     border-radius: 2px;
+}
+
+.button, a.button /* For link buttons */
+{
+   padding: 5px 14px 5px 14px; 
+}

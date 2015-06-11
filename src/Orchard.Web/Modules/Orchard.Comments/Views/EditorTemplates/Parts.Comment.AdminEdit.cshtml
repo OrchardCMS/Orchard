@@ -1,0 +1,44 @@
+﻿@model CommentPart
+
+@using Orchard.Comments.Models;
+
+<fieldset class="who">
+    <ol>
+        <li>
+            @Html.LabelFor(m => m.Author, T("Name"))
+            @Html.TextBoxFor(m => m.Author, new { @class = "text medium"})
+            <span class="hint">@T("The author's name.")</span>
+        </li>
+        <li>
+            @Html.LabelFor(m => m.Email, T("Email"))
+            @Html.TextBoxFor(m => m.Email, new { @class = "text medium"})
+            <span class="hint">@T("The email address the author has provided with the comment.")</span>
+        </li>
+        <li>
+            @Html.LabelFor(m => m.SiteName, T("Url"))
+            @Html.TextBoxFor(m => m.SiteName, new { @class = "text large"})
+            <span class="hint">@T("The website url the author has provided with the comment.")</span>
+        </li>
+    </ol>
+    </fieldset>
+<fieldset class="what">
+    <div>
+        @Html.LabelFor(m => m.CommentText, T("Comment"))
+        @Html.TextAreaFor(m => m.CommentText, new { rows = 10, cols = 30, @class = "comment-text" })
+        <span class="hint">@T("The body of the comment.")</span>
+        @Html.HiddenFor(m => m.RepliedOn)
+        @Html.HiddenFor(m => m.Id)
+    </div>
+</fieldset>
+
+<fieldset>
+    <button class="primaryAction" type="submit" name="submit.Save" value="save" >@T("Save")</button>
+    <button class="primaryAction" type="submit" name="submit.Save" value="delete" itemprop="RemoveUrl">@T("Delete")</button>
+    @if (Model.Status == CommentStatus.Approved) {
+        <button class="primaryAction" type="submit" name="submit.Save" value="moderate">@T("Moderate")</button>
+    }
+    
+    @if (Model.Status == CommentStatus.Pending) {
+        <button class="primaryAction" type="submit" name="submit.Save" value="approve">@T("Approve")</button>
+    }
+</fieldset>

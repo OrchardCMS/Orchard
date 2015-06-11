@@ -1,0 +1,774 @@
+﻿/*
+Theme: Theme Machine
+Author: Orchard Team – http://www.orchardproject.net
+Copyright: 2010, Orchard. All Rights Reserved
+*/
+
+
+/*  Color Palette
+**************************************************************
+
+Background: #fff
+Borders: #dbdbdb
+Text: #434343
+Secondary Text: #999999
+Main Accent: #999
+Links: #5f97af
+*/
+
+
+
+/* Reset
+***************************************************************/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    font-weight: inherit;
+    font-style: inherit;
+    font-size: 100%;
+    font-family: inherit;
+    vertical-align: baseline;
+}
+
+/* Remember focus styles! */
+:focus { outline: 0; }
+
+ol, ul { list-style: none; }
+
+/* Tables still need 'cellspacing="0"' in the markup */
+table { border-collapse: separate; border-spacing: 0; }
+caption, th, td { text-align: left; font-weight: normal; }
+
+blockquote:before, blockquote:after,
+q:before, q:after { content: ""; }
+blockquote, q { quotes: "" ""; }
+
+/* HTML 5 elements as block */  
+header, footer, aside, nav, article { display: block; }
+
+
+
+/* Clearing Floats
+***************************************************************/
+
+.group:after 
+{
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
+
+.zone:after, .widget-control:after /* .zone:after self clears every zone container - .widget-control:after self clears any floats used in a widget */
+{
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
+
+
+
+/* General
+***************************************************************/
+
+/* Default font settings. 
+The font-size 81.3% sets the base font to 13px 
+
+Pixels     EMs         Percent Points
+6px     0.462em     46.2%     5pt
+7px     0.538em     53.8%     5pt
+8px     0.615em     61.5%     6pt
+9px     0.692em     69.2%     7pt
+10px     0.769em     76.9%     8pt
+11px     0.846em     84.6%     8pt
+12px     0.923em     92.3%     9pt
+13px     1em         100%     10pt
+14px     1.077em     107.7%     11pt
+15px     1.154em     115.4%     11pt
+16px     1.231em     123.1%     12pt
+17px     1.308em     130.8%     13pt
+18px     1.385em     138.5%     14pt
+19px     1.462em     146.2%     14pt
+20px     1.538em     153.8%     15pt
+21px     1.615em     161.5%     16pt
+22px     1.692em     169.2%     17pt
+23px     1.769em     176.9%     17pt
+24px     1.846em     184.6%     18pt
+*/
+
+body  {
+  line-height: 1; 
+  font-size: 81.3%;
+  color: #434343; 
+  background: #fff;
+  font-family: Tahoma, "Helvetica Neue", Arial, Helvetica, sans-serif;
+}
+
+/* Headings */
+h1,h2,h3,h4,h5,h6 { font-weight: normal; margin:.6em 0;}
+
+h1 { font-size: 1.308em; }
+h2 { font-size: 1.231em; }
+h3 { font-size: 1.154em; }
+h4 { font-size: 1.077em; }
+h5 { font-size: 1em; }
+h6 { font-size: 1em; }
+
+h1 img, h2 img, h3 img, 
+h4 img, h5 img, h6 img {
+  margin: 0;
+}
+
+/* Aside Headings */
+aside h1 { font-size: 1.154em; }
+aside h2 { font-size: 1.077em; }
+aside h3 { font-size: 1em; }
+aside h4 { font-size: 1em; }
+aside h5 { font-size: 1em; }
+aside h6 { font-size: 1em; }
+
+/* Lists */
+li ul, 
+li ol       { margin:0 1.5em; }
+ul, ol      { margin: 1.5em; line-height: 1.538em; }
+
+ul          { list-style-type: disc; }
+ol          { list-style-type: decimal; }
+
+dl          { margin: 0 0 1.5em 0; }
+dl dt       { font-weight: bold; }
+dd          { margin-left: 1.5em;}
+
+/* Text elements */
+p           { margin: 0 0 1em; line-height: 1.538em; }
+p img.left  { float: left; margin: 0.923em 0.923em 0.923em 0; padding: 0; }
+p img.right { float: right; margin: 0.923em 0 0.923em 0.923em; }
+
+a:focus, 
+a:hover     { text-decoration: underline; }
+a           { color: #5f97af; text-decoration: none; }
+
+blockquote  { margin: 0.923em; color: #666; font-style: italic; }
+strong      { font-weight: bold; }
+em,dfn      { font-style: italic; }
+dfn         { font-weight: bold; }
+sup, sub    { line-height: 0; }
+
+abbr, 
+acronym     { border-bottom: 1px dotted #666; }
+address     { margin: 0 0 0.923em; font-style: italic; }
+del         { color:#666; }
+
+pre         { margin: 0.923em 0; white-space: pre; }
+pre,code,tt { font: 1em 'andale mono', 'lucida console', monospace; line-height: 1.462em; }
+
+
+
+/* Forms
+***************************************************************/
+
+form              { margin: 0; padding: 0;}
+legend            { font-size: 1.231em; font-weight: normal; border:none;}
+fieldset          { padding:6px 0 0; margin:0 0 12px 0; border: 0px solid #dbdbdb; }
+label             { font-weight:normal; display:block; padding: 0 0 0.3em 0; }
+label.forcheckbox { margin:0 0 0 .4em; display:inline; }
+
+input[type="text"], input[type="password"] {
+    display: block;
+    padding: 0.3em;
+}
+
+input[type="checkbox"] {
+    margin:.2em 0 1.2em 0;
+}
+
+fieldset ol     { list-style-type:none; padding: 0; margin: 0; }
+fieldset ol li  { margin: 0 0 6px 0; }
+
+form.inline, form.inline fieldset { /* todo: (heskew) need something other than .inline ... */
+    display:inline;
+}
+
+form.inline fieldset {
+    margin:0;
+}
+
+input[type="checkbox"]:focus, input[type="radio"]:focus {
+    outline:1px dotted #666d51;
+}
+
+input[readonly] {
+    background-color: #EBEBE4;
+    color: #545454;
+}
+
+legend span {
+    font-weight:normal;
+}
+label span {
+    font-weight:normal;
+}
+label input {
+    vertical-align:text-top;
+}
+.hint {
+    display:block;
+    font-size: 0.846em;
+    color:#999;
+    margin-top: 3px;
+    padding: 3px;
+}
+/* todo: (heskew) try to get .text on stuff like .text-box */
+select, textarea, input.text, input.textMedium, input.text-small, input.text-box {
+    font-family:inherit;
+    padding:3px;
+    border:1px solid #bdbcbc;
+    font-family:inherit;
+    font-size:inherit;
+}
+input.text, input.textMedium, input.text-box {
+    line-height:1.2em;
+}
+/*Are we using the two classes below?*/
+input.text-small, input.text.small {
+    width:4em;
+}
+input.textMedium, input.text.medium {
+    width:26em;
+}
+select {
+    padding:1px;	
+}
+select:focus, textarea:focus, input.text:focus, input.text-box:focus, input.text-small:focus, input.textMedium:focus  {
+    border-color:#666d51;
+}
+input.check-box {
+    margin-left:0;
+    vertical-align:-.1em;
+}
+input.large.text, textarea, fieldset {
+    clear:both;
+}
+
+textarea {
+    min-height:8em;
+}
+
+/* Structure
+***************************************************************/
+#layout-wrapper { }
+
+#layout-header, #layout-featured, #layout-before-main, #layout-main, #layout-footer, #layout-after-main, #layout-tripel {
+    width:960px;
+    margin:0 auto;
+}
+
+/* Navigation */
+#layout-navigation 
+{
+    width: 960px;
+    margin: 0 auto;
+    display: block;
+    border-bottom: 1px solid #dbdbdb;
+}
+
+nav ul 
+{
+    padding: 0px;
+    margin: 0px;
+}
+
+    nav ul li
+    {
+        border:1px solid #dbdbdb;
+        background:#f6f6f6;
+        display:block;
+        margin:0 2px -1px 0;
+    }
+    nav > ul li.current 
+    {
+        border-bottom: 1px solid #fff;
+        background:#fff;
+    }
+    nav ul li a 
+    {
+        padding:0 18px;
+        display:block;
+        color: #333;
+        font-size: 1.077em;
+        text-decoration:none;
+        line-height:24px;
+    }
+
+
+/* first level */
+nav > ul > li { float:left; }
+nav > ul > li > a { float:left; }
+nav > ul > li:hover > ul { display:block; }
+nav > ul > li:hover { }
+
+/* second level */
+nav > ul > li > ul { margin: 24px 0px 0px -1px; padding:0px; display:none; position:absolute; border: 1px solid #dbdbdb;}
+nav > ul > li > ul > li { list-style-type:none; margin:0px; border: none;}
+nav > ul > li > ul > li > a { display:block; text-decoration:none;}
+nav > ul > li > ul > li:hover > a { }
+
+nav > ul > li > ul > li:hover > ul { display:block; }
+
+/* third level */
+nav > ul > li > ul > li > ul { margin: -20px -1px 0px 90% ; padding:0px; display:none; position:absolute; border: 1px solid #dbdbdb; }
+nav > ul > li > ul > li > ul > li { list-style-type:none; margin:0px; border: none;}
+nav > ul > li > ul > li > ul > li > a { display:block; text-decoration:none;}
+nav > ul > li > ul > li > ul > li:hover > a { }
+
+/* deeper levels */
+nav > ul > li > ul > li > ul ul { display:none; }
+
+/* Breadcrumb */
+nav ul.breadcrumb 
+{
+    border:none;
+    display: inline-block;
+    margin: -9px;
+}
+
+    nav ul.breadcrumb li
+    {
+        border:none;
+        background:none;
+        display:block;
+        margin:0 2px -1px 0;
+    }
+
+    nav ul.breadcrumb li:after
+    {
+        content: "/"
+    }
+    
+    nav ul.breadcrumb li.last:after
+    {
+        content: ""
+    }
+
+        nav ul.breadcrumb li a 
+        {
+            padding:0 9px;
+            display:block;
+            color: #5F97AF;
+            font-size: 100%;
+        }
+        
+        nav ul.breadcrumb li a:hover
+        {
+            text-decoration: underline;
+        }
+        
+#layout-header {}
+    #branding 
+    {   
+        font-family: 'Lobster', Tahoma, Arial, Helvetica, sans-serif;
+        font-size: 2.9em;
+        padding: 0;
+        margin: 0;
+    }
+    #branding a 
+    {
+        text-decoration:none;
+        color: #434343;
+    }
+#layout-navigation {}
+#layout-featured {}
+#layout-before-main {}
+#layout-main {}
+    #aside-first {}
+    #layout-content {}
+        #messages {}
+        #before-content {}
+        #content {}
+        #after-content {}
+    #aside-second {}
+#layout-after-main {}
+#layout-tripel {}
+    #tripel-first {}
+    #tripel-second {}
+    #tripel-third {}
+#layout-footer {}
+    #footer-quad {}
+        #footer-quad-first {}
+        #footer-quad-second {}
+        #footer-quad-third {}        
+        #footer-quad-forth {}
+    #footer-sig {}
+    
+/* Zones */
+.zone 
+{
+    padding: 12px;
+    
+    /*  Enable this to see zone visualizations
+    background-color: yellow;
+    box-shadow:inset 0 0 1px purple;
+    -moz-box-shadow:inset 0 0 1px purple;
+    -webkit-box-shadow:inset 0 0 1px purple;
+    */
+} 
+.zone-header { padding: 30px 0 30px 12px; position: relative; }
+.zone-navigation { padding: 0; }
+.zone-featured {}
+.zone-before-main {}
+.zone-aside-first {}
+.zone-messages {}
+.zone-before-content {}
+.zone-content {}
+.zone-after-content {}
+.zone-aside-second {}
+.zone-after-main {}
+.zone-tripel-first {}
+.zone-tripel-second {}
+.zone-tripel-third {}
+.zone-footer-quad-first {}
+.zone-footer-quad-second {}
+.zone-footer-quad-third {}
+.zone-footer-quad-fourth {}
+.zone-footer { color: #999999; }
+
+
+
+/* Main
+***************************************************************/
+
+/* Content lists and details */
+.content-description { font-size: 1.154em; }
+.content-items { padding: 0; margin: 0; list-style: none; }
+.content-items li { padding: 0; margin: 0; }
+.content-items .content-item { border-top: 1px solid #dbdbdb; padding: 6px 0 6px 0; }
+.content-items .content-item header {}
+.content-items .content-item header h1 { font-size: 1.308em; color:#434343; }
+.content-items .content-item header h1 a { color: #434343; }
+.content-items .content-item header h1 a:hover {}
+
+/* Tags */
+.tags { margin-top: 12px; }
+.tags a { background-color: #dbdbdb; padding: 3px 6px; color: #434343; }
+.tags a:hover { background-color: #434343; color: #fff; }
+
+/* Metadata */
+.metadata { margin: 0 0 12px 0; color: #999; font-size: 0.846em; }
+.metadata .published { display: inline; margin: 0 6px 0 0; }
+.metadata .comment-count { display: inline; }
+.meta {}
+
+/* Comments */
+#comments { margin: 24px 0 0 0; padding: 0; }
+.comment-form { margin: 24px 0 0 0; padding: 0; }
+.comments { margin: 0; padding: 0; list-style: none; }
+.comments li { margin: 12px 0 0 0; padding: 12px; border: 1px solid #dbdbdb; }
+.comment { margin: 0; padding: 0; }
+.comment h4 { font-size: 1.077em; }
+.comment .who {}
+.comment .what {}
+.comment .reply { float: right;}
+.comment #add-comment {}
+.comment-form #comment-by { font-size: 1.231em; font-weight: normal; margin: 0 0 1.2em 0; border:none; }
+.comment-form .comment-text { width: 33.2em; }
+.comment-form input[type="text"] { width: 32em; }
+.comment-form li { border: inherit; margin: inherit; padding: inherit}
+.comment-disabled {}
+.comment-count { font-size: 1.231em; }
+
+/* Confirmations */
+.message, .validation-summary-errors { margin:10px 0 4px 0; padding:4px; }
+.messages a { font-weight:bold; }
+.message-Information { background:#e6f1c9; /* green */ border:1px solid #cfe493; color:#062232; }
+.message-Warning { background:#fdf5bc; /* yellow */ border:1px solid #ffea9b; }
+.critical.message, .validation-summary-errors, .message-Error { background:#e68585; /* red */ border:1px solid #990808; color:#fff; }
+
+
+/* Secondary
+***************************************************************/
+
+/* Aside Zones */
+/* If zone 1 is on */
+.aside-1 #layout-content { float: right; width: 600px; }
+.aside-1 .aside-first { float: left; width: 360px; }
+
+/* If zone 2 is on */
+.aside-2 #layout-content { float: left; width: 600px; }
+.aside-2 .aside-second { float: right; width: 360px; }
+
+/* If zones 1, 2 are on */
+.aside-12 #layout-content { width: 600px; }
+.aside-12 .aside-first, .aside-12 .aside-second { width: 180px; }
+.aside-12 .aside-first, .aside-12 .aside-second, .aside-12 #layout-content { float:left; }
+
+/* Tripel Zones*/
+#layout-tripel > div { float:left; width:960px; }
+
+/*2 zones on */
+.tripel-12 #layout-tripel > div { width:480px; } /* If zones 1, 2 are on */
+.tripel-23 #layout-tripel > div { width:480px; } /* If zones 2, 3 are on */
+.tripel-13 #layout-tripel > div { width:480px; } /* If zones 1, 3 are on */
+
+/*3 zones on */
+.tripel-123 #layout-tripel > div { width:320px; } /* If zones 1, 2, 3 are on */
+
+/* Quad Footer Zones */
+#footer-quad > div { float:left; width:240px; }
+
+/*1 zone on */
+.split-1 #footer-quad-first { width:960px; } /* If zone 1 is on */
+.split-2 #footer-quad-second { width:960px; } /* If zone 2 is on */
+.split-3 #footer-quad-third { width:960px; } /* If zone 3 is on */
+.split-4 #footer-quad-fourth { width:960px; } /* If zone 4 is on */
+
+/*2 zones on */
+.split-12 #footer-quad-first, .split-12 #footer-quad-second { width:480px; } /* If zones 1, 2 are on */
+.split-13 #footer-quad-first, .split-13 #footer-quad-third { width:480px; } /* If zones 1, 3 are on */
+.split-14 #footer-quad-first, .split-14 #footer-quad-fourth { width:480px; } /* If zones 1, 4 are on */
+.split-23 #footer-quad-second, .split-23 #footer-quad-third { width:480px; } /* If zones 2, 3 are on */
+.split-24 #footer-quad-second, .split-24 #footer-quad-fourth { width:480px; } /* If zones 2, 4 are on */
+.split-34 #footer-quad-third, .split-34 #footer-quad-fourth { width:480px; } /* If zones 3, 4 are on */
+
+/*3 zones on */
+.split-234 #footer-quad-second { width:480px; } /* If zones 2, 3, 4 are on */
+.split-134 #footer-quad-first { width:480px; } /* If zones 1, 3, 4 are on */
+.split-124 #footer-quad-fourth { width:480px; } /* If zones 1, 2, 4 are on */
+.split-123 #footer-quad-third { width:480px; } /* If zones 1, 2, 3 are on */
+
+/*3 zones on - alternate layout*/
+/*.split-123 #footer-quad-first, .split-123 #footer-quad-second, .split-123 #footer-quad-third { width:320px; }*/ /* If zones 1, 2, 3 are on */
+/*.split-124 #footer-quad-first, .split-124 #footer-quad-second, .split-124 #footer-quad-fourth { width:320px; }*/ /* If zones 1, 2, 4 are on */
+/*.split-134 #footer-quad-first, .split-134 #footer-quad-third, .split-134 #footer-quad-fourth { width:320px; }*/ /* If zones 1, 3, 4 are on */
+/*.split-234 #footer-quad-second, .split-234 #footer-quad-third, .split-234 #footer-quad-fourth { width:320px; }*/ /* If zones 2, 3, 4 are on */
+
+
+
+/* Widgets
+***************************************************************/
+.widgets {}
+.widget h1 { font-size: 1.077em; }
+
+/* Edit Mode Widgets */
+/* These are the edit controls that appear when you're logged-in */
+.widget-control { position: relative; border: 1px dotted #5f97af; }
+.widget-control .manage-actions { position:absolute; top: 0px; right: 0px; }
+.widget-control .manage-actions a { display: block; background-color: #dbdbdb; color: #434343; padding: 3px 6px;  }
+.widget-control .manage-actions a:hover { background-color: #434343; color: #fff; text-decoration: none; }
+
+/* Content Mode */
+.content-control { border: 1px dotted #5f97af; overflow:auto; position: relative; }
+.content-control .manage-actions { position:absolute; top: 0px; right: 0px; }
+.content-control .manage-actions a { display: block; background-color: #dbdbdb; color: #434343; padding: 3px 6px;  }
+.content-control .manage-actions a:hover { background-color: #434343; color: #fff; text-decoration: none; }
+
+
+
+/* Pager
+***************************************************************/
+
+.pager { list-style: none; padding: 0; margin: 12px 0 0 0; }
+.pager li { float: left; padding: 0 12px 0 0; margin: 0; }
+.pager a, .pager span { font-size: 1.077em; display: block; background-color: #dbdbdb; padding: 6px 6px; color: #434343;}
+.pager a:hover { background-color: #434343; color: #fff; }
+.pager span { background-color:inherit; }
+
+
+/* Misc
+***************************************************************/
+
+.small      { font-size: 0.615em; margin-bottom: 1.875em; line-height: 1.875em; }
+.large      { font-size: 1.231em; line-height: 2.231em; margin-bottom: 1.25em; }
+.hide       { display: none; }
+
+.quiet      { color: #666; }
+.loud       { color: #000; }
+.highlight  { background:#ff0; }
+.added      { background:#060; color: #fff; }
+.removed    { background:#900; color: #fff; }
+
+.first      { margin-left:0; padding-left:0; }
+.last       { margin-right:0; padding-right:0; }
+.top        { margin-top:0; padding-top:0; }
+.bottom     { margin-bottom:0; padding-bottom:0; }
+
+.credits { float: left; }
+.user-display { float: left; padding: 0 12px; }
+.user-display .welcome {}
+.user-display .user-actions {}
+
+.login-form { margin: 24px 0 0 0; }
+
+
+
+/* CSS 3 Enhancements 
+***************************************************************/
+
+input[type="submit"], input[type="button"], button, .button, .button:link, .button:visited {
+    color:#333;
+    background:#F5F5F5;
+    background: -webkit-gradient(linear, left top, left bottom, from(#F5F5F5), to(#cbcbcb));
+    background:-moz-linear-gradient(top , #F5F5F5, #cbcbcb);
+    border:1px solid #999;
+    cursor:pointer;
+    margin:.2em 0 2em 0;
+    padding:.3em 1.8em;
+    text-align:center;
+}
+
+input[type="submit"]:hover, input[type="button"]:hover,
+input[type="submit"]:active, input[type="button"]:active,
+input[type="submit"]:focus, input[type="button"]:focus,
+button:hover, .button:hover,
+button:active, .button:active,
+button:focus, .button:focus {
+    text-decoration:none; 
+    background: #ebebeb;
+    background: -webkit-gradient(linear, left top, left bottom, from(#e1e1e1), to(#ebebeb));
+    background:-moz-linear-gradient(top , #e1e1e1, #ebebeb);
+}
+
+/* Tag Cloud
+***************************************************************/
+.tag-cloud li {
+    list-style: none;
+    display: inline;
+}
+
+.tag-cloud-tag-1 {
+    font-size: 1em;
+}
+
+.tag-cloud-tag-2 {
+    font-size: 1.1em;
+}
+
+.tag-cloud-tag-3 {
+    font-size: 1.2em;
+}
+
+.tag-cloud-tag-4 {
+    font-size: 1.4em;
+}
+
+.tag-cloud-tag-5 {
+    font-size: 1.5em;
+}
+
+
+/* RTL */
+
+/* General
+***************************************************************/
+/* Text elements */
+.dir-rtl p img.left  { float: right; margin: 0.923em 0 0.923em 0.923em; }
+.dir-rtl p img.right { float: left; margin: 0.923em 0.923em 0.923em 0; }
+
+.dir-rtl address     { margin: 0 0.923em 0.923em 0; }
+
+
+/* Structure
+***************************************************************/
+
+.dir-rtl nav ul 
+{
+}
+
+    .dir-rtl nav ul li
+    {
+        margin:0 0 -1px 2px ;
+    }
+
+
+/* first level */
+.dir-rtl nav > ul > li { float:right; }
+.dir-rtl nav > ul > li > a { float:right; }
+
+/* second level */
+.dir-rtl nav > ul > li > ul { margin: 24px -1px 0px 0; }
+
+/* third level */
+.dir-rtl nav > ul > li > ul > li > ul { margin: -20px 90% 0px -1px; }
+
+/* Breadcrumb */
+.dir-rtl nav ul.breadcrumb 
+{
+}
+
+    .dir-rtl nav ul.breadcrumb li
+    {
+        margin:0 0 -1px 2px;
+    }
+
+.dir-rtl .zone-header { padding: 30px 12px 30px 0; }
+
+
+/* Main
+***************************************************************/
+
+/* Metadata */
+.dir-rtl .metadata .published { display: inline; margin: 0 0 0 6px; }
+
+/* Comments */
+.dir-rtl .comment .reply { float: right;}
+
+/* Secondary
+***************************************************************/
+
+/* Aside Zones */
+/* If zone 1 is on */
+.dir-rtl .aside-1 #layout-content { float: left; }
+.dir-rtl .aside-1 .aside-first { float: right; }
+
+/* If zone 2 is on */
+.dir-rtl .aside-2 #layout-content { float: right; }
+.dir-rtl .aside-2 .aside-second { float: left; }
+
+/* If zones 1, 2 are on */
+.dir-rtl .aside-12 .aside-first, .aside-12 .aside-second, .aside-12 #layout-content { float:right; }
+
+/* Tripel Zones*/
+.dir-rtl #layout-tripel > div { float:right; }
+
+/* Quad Footer Zones */
+.dir-rtl #footer-quad > div { float:right; }
+
+
+/* Widgets
+***************************************************************/
+
+/* Edit Mode Widgets */
+/* These are the edit controls that appear when you're logged-in */
+.dir-rtl .widget-control .manage-actions { right: inherit;left: 0px; }
+
+/* Content Mode */
+.dir-rtl .content-control .manage-actions { right: inherit;left: 0px; }
+
+
+
+/* Pager
+***************************************************************/
+
+.dir-rtl .pager li { float: right; padding: 0 0 0 12px; }
+
+
+/* Misc
+***************************************************************/
+
+.dir-rtl .first      { margin-right:0; padding-right:0;margin-left:inherit; padding-left:inherit; }
+.dir-rtl .last       { margin-right:inherit; padding-right:inherit;margin-left:0; padding-left:0; }
+
+.dir-rtl .credits { float: right; }
+.dir-rtl .user-display { float: right; }

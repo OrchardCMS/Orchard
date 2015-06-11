@@ -1,0 +1,435 @@
+﻿/* Reset
+***************************************************************/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td, button, submit {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    font-weight: inherit;
+    font-style: inherit;
+    font-size: 100%;
+    font-family: inherit;
+    vertical-align: baseline;
+}
+
+/* Remember focus styles! */
+:focus { outline: 0; }
+
+body { line-height: 1; color: black; background: rgb(243, 244, 245); }
+ol, ul { list-style: none; }
+
+/* Tables still need 'cellspacing="0"' in the markup */
+table { border-collapse: separate; border-spacing: 0; }
+caption, th, td { text-align: left; font-weight: normal; }
+
+blockquote:before, blockquote:after,
+q:before, q:after { content: ""; }
+blockquote, q { quotes: "" ""; }
+
+/* HTML 5 elements as block */  
+header, footer, aside, nav, article { display: block; }
+/* end: reset */
+
+/* Clearing Floats
+***************************************************************/
+
+.group:after, .zone-content:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
+
+
+/* General
+***************************************************************/
+
+/* Default font settings. 
+The font-size 81.3% sets the base font to 13px 
+
+Pixels   EMs         Percent    Points
+1px      0.077em     7.7%       1pt
+2px      0.154em     15.4%      2pt
+3px      0.231em     23.1%      3pt
+4px      0.308em     30.8%      3pt
+5px      0.385em     38.5%      4pt
+6px      0.462em     46.2%      5pt
+7px      0.538em     53.8%      5pt
+8px      0.615em     61.5%      6pt
+9px      0.692em     69.2%      7pt
+10px     0.769em     76.9%      8pt
+11px     0.846em     84.6%      8pt
+12px     0.923em     92.3%      9pt
+13px     1em         100%       10pt
+14px     1.077em     107.7%     11pt
+15px     1.154em     115.4%     11pt
+16px     1.231em     123.1%     12pt
+17px     1.308em     130.8%     13pt
+18px     1.385em     138.5%     14pt
+19px     1.462em     146.2%     14pt
+20px     1.538em     153.8%     15pt
+21px     1.615em     161.5%     16pt
+22px     1.692em     169.2%     17pt
+23px     1.769em     176.9%     17pt
+24px     1.846em     184.6%     18pt
+*/
+
+html, body { height:100%; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }
+
+html {
+    color:#333;
+}
+
+body {
+  font-size: 81.3%;
+  color: #333; 
+  font-family: Segoe UI,Trebuchet,Arial,Sans-Serif;
+  line-height:1.6em;
+  margin:0 auto;  
+  padding:30px;
+}
+
+/*Hide shape tracing*/
+#shape-tracing-container {display:none;}
+
+/* Headings */
+h1,h2,h3,h4,h5,h6 { font-weight: normal;}
+
+h1 { font-size: 1.769em; }
+h2 { font-size: 1.308em; }
+h3 { font-size: 1.231em; }
+h4 { font-size: 1.154em; }
+h5 { font-size: 1.077em; }
+h6 { font-size: 1em; }
+
+h1, h2, h3, h4, h5, legend {
+    padding:.6px 0;
+    font-style: normal;
+    font-weight:normal;
+}
+
+h1 img, h2 img, h3 img, 
+h4 img, h5 img, h6 img {
+  margin: 0;
+}
+
+.small { width:4em; }
+.medium { width:26em; }
+.large { width:99% }
+
+#content {
+    background-color: #fff;
+    padding: 16px 24px;
+    margin:8px 0 0 0;
+    border: 1px solid #e4e5e6;
+    clear:both;
+   
+     /*CSS3 properties*/
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+     border-radius: 2px;
+}
+
+/* Forms
+***************************************************************/
+
+form              { margin: 0; padding: 0;}
+legend            { font-size: 1.231em; font-weight: normal; border:none;}
+fieldset          { padding:6px 0 0; margin:0 0 12px 0; border: 0px solid #dbdbdb; }
+label             { font-weight:normal; display:block; padding: 0 0 0.3em 0; }
+label.forcheckbox { margin:0 0 0 .4em; display:inline; }
+label.required:after {margin-left: 1ex; content: "*"; color: red; }  
+
+form.inline, form.inline fieldset { /* todo: (heskew) need something other than .inline ... */
+    display:inline;
+}
+form.inline fieldset {
+    margin:0;
+}
+.bulk-actions {
+    display:inline;
+    height:auto;
+    margin:0 4px 0 0;
+    padding:0 0 0 0;
+}
+
+input[type="checkbox"]:focus, input[type="radio"]:focus {
+    outline:1px dotted #666d51;
+}
+
+input[readonly] {
+    background-color: #EBEBE4;
+    color: #545454;
+}
+
+legend span {
+    font-weight:normal;
+}
+.bulk-actions label, .bulk-items h3, label.sub {
+    display:inline;
+}
+label.bulk-order {
+    text-transform:lowercase;
+}
+label span {
+    font-weight:normal;
+}
+label input {
+    vertical-align:text-top;
+}
+.hint {
+    display:block;
+    font-size:0.923em;
+    color:#7c7c7c;
+}
+/* todo: (heskew) try to get .text on stuff like .text-box */
+select, textarea, input.text, input.textMedium, input.text-small, input.text-box {
+    font-family:inherit;
+    padding:3px;
+    border:1px solid #bdbcbc;
+    font-family:inherit;
+    font-size:inherit;
+}
+input.text, input.textMedium, input.text-box {
+    line-height:1.2em;
+}
+/*Are we using the two classes below?*/
+input.text-small, input.text.small {
+    width:4em;
+}
+input.textMedium, input.text.medium {
+    width:26em;
+}
+select {
+    padding:1px;	
+}
+select:focus, textarea:focus, input.text:focus, input.text-box:focus, input.text-small:focus, input.textMedium:focus  {
+    border-color:#666d51;
+}
+input.check-box {
+    margin-left:0;
+    vertical-align:-.1em;
+}
+input.large.text, textarea, fieldset {
+    clear:both;
+}
+
+textarea {
+    min-height:8em;
+}
+#main input.large.text, #main textarea {
+    width:99%;
+}
+#main .primary input.large.text, #main .primary textarea {
+    margin:0;
+    padding:4px;
+    width:98.8%;
+}
+/* todo: (heskew) move editor specific style elsewhere */
+.primary .mceEditor {
+    display:block;
+    margin:0;
+}
+
+/*----buttons----*/
+button.remove, .remove.button, .remove.button:link, .remove.button:visited {
+    background-color:#DECCCA;
+    background-image:url(images/tableHeaderBackgroundRed.gif);
+    border-color:#d6c9c7;
+    color:#5c3732;
+}
+button.remove:hover, .remove.button:hover,
+button.remove:active, .remove.button:active,
+button.remove:focus, .remove.button:focus {
+    background:#8f7c79;
+    border-color:#6e5551;
+    color:#faedeb;
+}
+button.remove:focus::-moz-focus-inner, .remove.button:focus::-moz-focus-inner {
+    border-color:#8f7c79;
+}
+.delete.button {
+    float:right;
+}
+.button.grey {
+        color:#5d615d;
+        background:#f5f5f5;
+        border:1px solid #999;
+
+        /*CSS3 properties*/
+        text-shadow:none;
+        
+        -webkit-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0); 
+        -moz-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0); 
+        box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0);
+        
+        /*----In ie the first couplet sets the alpha value so 00=transparent and ff=opaque)----*/    
+        filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#fff5f5f5',  endColorstr='#ffd9d9d9');
+        background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(245, 245, 245, 1.0)), to(rgba(217, 217, 217, 1.0)));   
+        background: -moz-linear-gradient(top, rgba(245, 245, 245, 1.0), rgba(217, 217, 217, 1.0));
+        
+        -webkit-border-radius: 2px;
+        -moz-border-radius: 2px;
+         border-radius: 2px;	
+}
+button, .button, a.button {
+    background:#6a7b42;
+    border:1px solid #487328;
+    color:#fff;
+    cursor: pointer;
+    display: inline-block;
+    font: 12px Arial,Helvetica,sans-serif;
+    padding: 5px 14px 5px 14px;
+    
+    /*position: relative;*/
+    text-align: center;
+    text-decoration: none;
+    
+    /*----CSS3 properties----*/
+     text-shadow: rgba(40,53,9,.2) 0px 0px 1px;
+    -webkit-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.2); 
+    -moz-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.2); 
+     box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.2);
+
+     
+    /*----In ie the first couplet sets the alpha value so 00=transparent and ff=opaque)----*/    
+     filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ff9bb36c',  endColorstr='#ff809f43');	
+     background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(155, 179, 108, 1.0)), to(rgba(128, 159, 67, 1.0)));    
+     background: -moz-linear-gradient(top, rgba(155, 179, 108, 1.0), rgba(128, 159, 67, 1.0));
+
+     /*test - base green in pallet is 155,179,108*/
+     background: -moz-linear-gradient(top, rgba(155, 179, 108, 1.0), rgba(133, 154, 93, 1.0));
+        
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+     border-radius: 2px;
+}
+
+.button, a.button /* For link buttons */
+{
+   padding: 5px 14px 5px 14px; 
+}
+
+button, input.button, x:-moz-any-link {
+    padding: 3px 14px 3px 14px;
+    }
+
+button:hover, .button:hover, a.button:hover {
+    border-color:#3a822e;
+    color:#eefcec;
+    text-decoration:none; 
+    background: #809f43;
+    
+    /*CSS3 properties*/  
+     filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ff6e7f45',  endColorstr='#ff6a7b42');
+     background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(110, 127, 69, 1.0)), to(rgba(106, 123, 66, 1.0)));    
+     background: -moz-linear-gradient(top, rgba(110, 127, 69, 1.0), rgba(106, 123, 66, 1.0));
+}
+
+button:active, .buton:active, a.button:active {
+    text-decoration:none; 
+    background:#6a7b42;
+    border:1px solid #487328;
+    color:#fff;
+
+    /*CSS3 properties*/
+    text-shadow: rgba(0,0,0,.5) 0px 0px 1px;
+     filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ff9bb36c',  endColorstr='#ff809f43');	
+     background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(155, 179, 108, 1.0)), to(rgba(128, 159, 67, 1.0)));   
+     background: -moz-linear-gradient(top, rgba(155, 179, 108, 1.0), rgba(128, 159, 67, 1.0));
+}
+button:focus::-moz-focus-inner, .button:focus::-moz-focus-inner {
+  border: 1px dotted transparent;
+}
+/*disabled*/
+.button.disabled, .button.disabled:visited, .button.disabled:hover, .button.disabled:active, .button.disabled:focus {
+    background-color:#eee;
+    border:1px solid #ababab;
+    color:#ababab;
+    cursor:default;
+    
+    filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ffeeeeee',  endColorstr='#ffeeeeee');
+    background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(238, 238, 238, 1.0)), to(rgba(238, 238, 238, 1.0)));   
+    background: -moz-linear-gradient(top, rgba(238, 238, 238, 1.0), rgba(238, 238, 238, 1.0));
+    
+    text-shadow: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+/* and allow all of that button style to be undone and beyond - to look like a link */
+button.link {
+    background:none;
+    border:0;
+    padding:inherit;
+    text-shadow:none;
+    -webkit-box-shadow:none; 
+    -moz-box-shadow:none; 
+    box-shadow:none;
+    filter:none;	
+    -webkit-border-radius:0;
+    -moz-border-radius:0;
+    border-radius:0;
+}
+.cancel {
+    margin:0 0 0 .93em;
+}
+.manage {
+    float:right;
+    margin-bottom: 16px;
+}
+.actions {
+    clear:right;
+    padding:0;
+    text-align:right;
+}
+.item-properties.actions {
+    margin: -10px 0 10px 0;
+}
+.contentItems .actions li {
+    background:inherit;
+    border:0;
+    padding:0;
+}
+.actions .construct {
+    float:left;
+}
+.actions .destruct {
+    float:right;
+}
+.manage a.button {
+    float:right;
+    height:inherit;
+    margin-left:4px;
+}
+
+.options 
+{
+    margin: 12px 0px 12px 0px;
+}
+
+.options span /* This is just a fix. We need to fix the base HTML */
+{
+    display: block;
+    margin: 12px 0 0 0;
+}
+
+.options span.hint /* This is just a fix. We need to fix the base HTML */
+{
+    display: block;
+    margin: 0 0 0 0;
+}
+
+.options input[type="text"] /* This is just a fix. We need to fix the base HTML */
+{
+    width:26em;
+}

@@ -1,0 +1,141 @@
+﻿@using Orchard.ContentManagement
+@model Orchard.MediaLibrary.ViewModels.OEmbedViewModel
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    @{
+        Script.Require("jQuery").AtFoot();
+        Script.Require("jQueryUI").AtFoot();
+
+        Style.Include("orchard-medialibrary-admin.css");
+        Style.Include("orchard-mediaproviders-admin.css");
+
+        Style.Require("FontAwesome");
+        Style.Include("orchard-oembed-admin.css");
+
+        string type = null;
+        string url = null;
+        string html = null;
+        string title = null;
+        string width = null;
+        string height = null;
+        string thumbnail = null;
+        string description = null;
+
+        if (Model.Content != null) {
+            var oembed = Model.Content.Root;
+            type = oembed.El("type");
+            url = oembed.El("url");
+            html = oembed.El("html");
+            title = oembed.El("title");
+            width = oembed.El("width");
+            height = oembed.El("height");
+            thumbnail = oembed.Element("thumbnail") != null
+                ? oembed.Element("thumbnail").Value
+                : oembed.Element("thumbnail_url") != null
+                ? oembed.Element("thumbnail_url").Value
+                : null;
+            description = oembed.El("description");
+        }
+    }
+
+    @Display.Metas()
+    @Display.HeadScripts()
+    @Display.HeadLinks()
+    @Display.StyleSheetLinks()
+</head>
+<body>
+
+    <div id="oembed-main">
+        <div class="query-container">
+            @using (Html.BeginFormAntiForgeryPost()) {
+                <fieldset>
+                    <legend>@T("Please enter the URL of the embeddable media you want to integrate (requires an oEmbed compatible media provider such as YouTube):")</legend>
+                    <div id="icon">
+                        <button type="submit" class="icon-download">@T("Preview")</button>
+                    </div>
+                    <div id="query">
+                        <input name="url" type="text" autofocus=autofocus autofocus=autofocus placeholder="@T("media url")" value="@Model.Url" />
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>@T("If that is not enough to extract the embedding information, you may manually enter the embed code:")</legend>
+                    <div>
+                        <label for="type">@T("Type")</label>
+                        <select id="type" name="type">
+                            <option value="video" @(type == "video" ? "selected" : "")>@T("Video")</option>
+                            <option value="photo" @(type == "photo" ? "selected" : "")>@T("Photo")</option>
+                            <option value="link" @(type == "link" ? "selected" : "")>@T("Link")</option>
+                            <option value="rich" @(type == "rich" ? "selected" : "")>@T("Rich")</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="title">@T("Title")</label>
+                        <input class="text large" type="text" name="title" id="title" value="@title" />
+                    </div>
+                    <div>
+                        <label for="description">@T("Description or caption")</label>
+                        <input class="text large" type="text" name="description" id="description" value="@description" />
+                    </div>
+                    <div>
+                        <label for="html">@T("Embed HTML")</label>
+                        <input class="text large" type="text" name="html" id="html" value="@html" />
+                    </div>
+                    <div>
+                        <label for="thumbnail">@T("Thumbnail URL")</label>
+                        <input class="text large" type="text" name="thumbnail" id="thumbnail" value="@thumbnail" />
+                    </div>
+                    <br/>
+                    <div>
+                        <label for="width">@T("Width")</label>
+                        <input class="text small" type="text" name="width" id="width" value="@width" /> @T("px")
+                        <label for="thumbnail">@T("Height")</label>
+                        <input class="text small" type="text" name="haight" id="height" value="@height" /> @T("px")
+                    </div>
+                    <br/>
+                    <button type="submit">@T("Preview")</button>
+                </fieldset>
+        }
+        </div>
+
+        @if (Model.Content != null) {
+            switch (type) {
+                case "photo":
+                    <img src="@url" width="@width" height="@height" />
+                    break;
+                case "video":
+                    @Html.Raw(html)
+                    break;
+                case "link":
+                    if (!String.IsNullOrWhiteSpace(url)) {
+                        <a href="@url">@title</a>
+                    }
+                    else {
+                        @title
+                    }
+                    break;
+                case "rich":
+                    @Html.Raw(html)
+                    break;
+            }
+
+            if (String.IsNullOrWhiteSpace(html) && !String.IsNullOrEmpty(thumbnail)) {
+                <div class="media-thumbnail">
+                    <img src="@thumbnail" />
+                </div>
+            }
+
+            using (Html.BeginFormAntiForgeryPost(Url.Action("MediaPost"))) {
+                @Html.Hidden("url", Model.Url)
+                @Html.Hidden("folderPath", Model.FolderPath)
+                @Html.Hidden("document", Model.Content.ToString())
+                <br/>
+                <button type="submit">@("Import")</button>
+            }
+        }
+
+    </div>
+    @Display.FootScripts()
+</body>
+</html>

@@ -1,0 +1,60 @@
+﻿@model Orchard.Packaging.ViewModels.PackagingInstallViewModel
+@using Orchard.Environment.Extensions.Models;
+@using Orchard.Packaging.ViewModels;
+@using System.Linq;
+
+@{
+    Style.Require("PackagingAdmin");
+
+    Layout.Title = T("{0} - {1} Details", Model.ExtensionDescriptor.Name, Model.ExtensionDescriptor.Version).ToString();
+}
+
+@using (Html.BeginFormAntiForgeryPost(Url.Action("InstallPackageDetails", "PackagingServices", new { packageId = Request.QueryString["packageId"], version = Request.QueryString["version"], sourceId = Request.QueryString["sourceId"], redirectUrl = Request.QueryString["redirectUrl"] }))) {
+
+    @Html.HiddenFor(m => m.ExtensionDescriptor.Id)
+
+    if (Model.Recipes != null && Model.Recipes.Count > 0) {
+        <fieldset>
+            <legend>@T("Pick the recipes you want to run").ToString()</legend>
+
+            @{ var recipeIndex = 0; }
+            @foreach (PackagingInstallRecipeViewModel recipe in Model.Recipes) {
+                <div>
+                    @Html.HiddenFor(m => m.Recipes[recipeIndex].Recipe.Name)
+
+                    @Html.EditorFor(m => m.Recipes[recipeIndex].Execute)
+
+                    <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Recipes[recipeIndex].Execute)">@recipe.Recipe.Name</label>
+
+                    @{ recipeIndex++; }
+                </div>
+            }
+        </fieldset>
+    }
+
+    <fieldset>
+        <legend>@T("Pick the features you want enabled").ToString()</legend>
+
+        @{ var featureIndex = 0; }
+        @foreach (PackagingInstallFeatureViewModel feature in Model.Features) {
+            <div>
+                @Html.HiddenFor(m => m.Features[featureIndex].FeatureDescriptor.Id)
+                @Html.HiddenFor(m => m.Features[featureIndex].FeatureDescriptor.Name)
+
+                @Html.EditorFor(m => m.Features[featureIndex].Enable)
+
+                <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Features[featureIndex].Enable)">
+                    @if (!string.IsNullOrEmpty(@feature.FeatureDescriptor.Name)) {
+                        @feature.FeatureDescriptor.Name
+                    } else {
+                        @feature.FeatureDescriptor.Id
+                    }
+                </label>
+
+                @{ featureIndex++; }
+            </div>
+        }
+    </fieldset>
+
+    <button class="primaryAction" type="submit">@T("Ok")</button>
+}

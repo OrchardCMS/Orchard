@@ -1,0 +1,76 @@
+﻿@model Orchard.Warmup.ViewModels.WarmupViewModel
+@using Orchard.Utility.Extensions;
+@using Orchard.Warmup.Models;
+
+@{ 
+    Style.Include("orchard-warmup-admin.css");
+    Layout.Title = T("Performance").ToString(); 
+}
+
+
+@using (Html.BeginFormAntiForgeryPost()) {
+    @Html.ValidationSummary()
+
+<p>@T("The paths below will be requested using {0} as a base url. You can change the base url on the {1}. ", @Html.Link(WorkContext.CurrentSite.BaseUrl, WorkContext.CurrentSite.BaseUrl), @Html.ActionLink(T("General Settings page").Text, "Index", new { controller = "Admin", area = "Settings" }))</p>
+
+<fieldset>
+    <div>
+        @Html.TextAreaFor(m => m.Settings.Urls, new { @class = "text medium" })
+        <span class="hint">@T("This must be a set of relative paths, e.g., /, /About. Please ensure that you enter only one path per line.")</span>
+    </div>
+</fieldset>
+<fieldset>
+    <div>
+        @Html.EditorFor(m => m.Settings.Scheduled)
+        <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Settings.Scheduled)">@T("Generate warmup pages periodically")</label>
+    </div>
+    <div data-controllerid="@Html.FieldIdFor(m => m.Settings.Scheduled)">
+        @T("Every") 
+        @Html.TextBoxFor(m => m.Settings.Delay, new { @class = "text small" }) 
+        @T("minutes")
+        @Html.ValidationMessage("Delay", "*")
+    </div>
+    <div>
+        @Html.EditorFor(m => m.Settings.OnPublish)
+        <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Settings.OnPublish)">@T("Generate warmup pages any time some content is published")</label>
+    </div>
+</fieldset>
+
+    if (Model.ReportEntries.Any()) {
+<fieldset>
+    <h3>@T("Status")</h3>
+    <table class="items" summary="@T("This is a table of the reports in your application")">
+        <colgroup>
+            <col id="Col1" />
+            <col id="Col2" />
+            <col id="Col3" />
+            <col id="Col4" />
+        </colgroup>
+        <thead>
+            <tr>
+                <th scope="col">@T("Path")</th>
+                <th scope="col">@T("Status")</th>
+                <th scope="col">@T("Date generated")</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        @foreach (var reportEntry in Model.ReportEntries) {
+        <tr>
+            <td class="status-@(reportEntry.StatusCode != 200 ? "error" : "ok")" >
+                @Html.Link(Html.Encode(reportEntry.RelativeUrl), reportEntry.RelativeUrl, new { target = "_blank" })
+            </td>
+            <td>
+                @reportEntry.StatusCode
+            </td>
+            <td>
+                @Display.DateTimeRelative(DateTimeUtc: reportEntry.CreatedUtc).ToString()
+            </td>
+        </tr>
+        }
+    </table>
+</fieldset>
+    }
+<fieldset>
+    <button class="primaryAction" name="submit" value="@T("Save")" type="submit">@T("Save")</button>
+</fieldset>    
+}

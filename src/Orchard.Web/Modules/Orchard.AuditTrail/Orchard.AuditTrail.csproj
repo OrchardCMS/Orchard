@@ -1,0 +1,373 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{3DD574CD-9C5D-4A45-85E1-EBBA64C22B5F}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Orchard.AuditTrail</RootNamespace>
+    <AssemblyName>Orchard.AuditTrail</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <TargetFrameworkProfile />
+    <UseIISExpress>false</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\newtonsoft.json\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate, Version=4.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\nhibernate\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.ComponentModel.DataAnnotations">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Mvc, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="xmldiffpatch, Version=1.0.8.28, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\xmldiffpatch\xmldiffpatch.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Placement.info" />
+    <Content Include="Recipes\audit-trail.recipe.xml" />
+    <Content Include="Scripts\audittrail-recyclebin.js" />
+    <Content Include="Scripts\audittrail-expando.js" />
+    <Content Include="Scripts\audittrail-checkall.js" />
+    <Content Include="Scripts\audittrail-disabledcontent.js" />
+    <Content Include="Styles\audittrail-content-event.css" />
+    <Content Include="Styles\audittrail-recycle-bin.css" />
+    <Content Include="Styles\audittrail-display.css" />
+    <Content Include="Styles\audittrail-disabledcontent.css" />
+    <Content Include="Styles\audittrail-part.css" />
+    <Content Include="Styles\audittrail-contentdefinition-event.css" />
+    <Content Include="Styles\audittrail-settings-event.css" />
+    <Content Include="Styles\audittrail-settings.css" />
+    <Content Include="Styles\menu.audit-trail-admin.css" />
+    <Content Include="Web.config" />
+    <Content Include="Scripts\Web.config" />
+    <Content Include="Styles\Web.config" />
+    <Content Include="Properties\AssemblyInfo.cs" />
+    <Content Include="Module.txt" />
+    <Content Include="Views\Parts.Contents.AuditTrail.SummaryAdmin.cshtml" />
+    <Content Include="Views\DefinitionTemplates\AuditTrailPartSettings.cshtml" />
+    <Content Include="Views\Parts.AuditTrail.Link.cshtml" />
+    <Content Include="Views\Parts.AuditTrail.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentType-PartSettingsUpdated.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts.AuditTrailTrimmingSettings.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentPart-Created.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentPart-FieldAdded.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentPart-FieldRemoved.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentPart-FieldSettingsUpdated.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentPart-PartSettingsUpdated.SummaryAdmin.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentPart-Removed.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentType-Created.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentType-PartAdded.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentType-PartRemoved.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentType-Removed.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentType-TypeSettingsUpdated.SummaryAdmin.cshtml" />
+    <Content Include="Views\AuditTrailEvent-Role-PermissionAdded.cshtml" />
+    <Content Include="Views\AuditTrailEvent-Role-PermissionRemoved.cshtml" />
+    <Content Include="Views\AuditTrailEvent-Role-Created.cshtml" />
+    <Content Include="Views\AuditTrailEvent-Role-Renamed.cshtml" />
+    <Content Include="Views\AuditTrailEvent-User.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts.AuditTrailSettings.cshtml" />
+    <Content Include="Views\AuditTrailEvent-User-LoginFailed..cshtml" />
+    <Content Include="Views\AuditTrailFilter-Common-User.cshtml" />
+    <Content Include="Views\AuditTrailFilter-ContentType.cshtml" />
+    <Content Include="Views\AuditTrailFilter-Common-Date-From.cshtml" />
+    <Content Include="Views\AuditTrailFilter-ContentItem.cshtml" />
+    <Content Include="Views\AuditTrailFilter-Common-Category.cshtml" />
+    <Content Include="Views\Content\Detail.cshtml" />
+    <Content Include="Views\AuditTrailEvent-Content.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\AuditTrailFilter.cshtml" />
+    <Content Include="Views\AuditTrailFilter-Common-Date-To.cshtml" />
+    <Content Include="Views\AuditTrailEvent-AuditTrailSettings-EventsChanged.SummaryAdmin.cshtml" />
+    <Content Include="Views\AuditTrailEvent-AuditTrailSettings-EventsChanged.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentType-TypeDisplayNameUpdated.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentType-TypeSettingsUpdated.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentType-PartSettingsUpdated.SummaryAdmin.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentType-FieldSettingsUpdated.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentType-FieldSettingsUpdated.SummaryAdmin.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentPart-PartSettingsUpdated.cshtml" />
+    <Content Include="Views\AuditTrailEvent-Role-Removed.cshtml" />
+    <Content Include="Views\AuditTrailEvent-Role-UserAdded.cshtml" />
+    <Content Include="Views\AuditTrailEvent-Role-UserRemoved.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentPart-DescriptionChanged.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentPart-FieldSettingsUpdated.SummaryAdmin.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentType-Imported.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentPart-Imported.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentPart-Imported.SummaryAdmin.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentType-Imported.SummaryAdmin.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
+      <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
+      <Name>Orchard.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\Orchard.Core.csproj">
+      <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
+      <Name>Orchard.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.ContentTypes\Orchard.ContentTypes.csproj">
+      <Project>{0e7646e8-fe8f-43c1-8799-d97860925ec4}</Project>
+      <Name>Orchard.ContentTypes</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.ImportExport\Orchard.ImportExport.csproj">
+      <Project>{fe5c5947-d2d5-42c5-992a-13d672946135}</Project>
+      <Name>Orchard.ImportExport</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Roles\Orchard.Roles.csproj">
+      <Project>{d10ad48f-407d-4db5-a328-173ec7cb010f}</Project>
+      <Name>Orchard.Roles</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.TaskLease\Orchard.TaskLease.csproj">
+      <Project>{3f72a4e9-7b72-4260-b010-c16ec54f9baf}</Project>
+      <Name>Orchard.TaskLease</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Users\Orchard.Users.csproj">
+      <Project>{79aed36e-abd0-4747-93d3-8722b042454b}</Project>
+      <Name>Orchard.Users</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Menus\AuditTrailAdminMenu.cs" />
+    <Compile Include="Menus\RecycleBinAdminMenu.cs" />
+    <Compile Include="Providers\AuditTrail\AuditTrailEventSettingEventData.cs" />
+    <Compile Include="Providers\AuditTrail\AuditTrailManagerExtensions.cs" />
+    <Compile Include="ViewModels\RecycleBinCommand.cs" />
+    <Compile Include="Controllers\RecycleBinController.cs" />
+    <Compile Include="Controllers\ContentController.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Helpers\ControllerExtensions.cs" />
+    <Compile Include="Helpers\HttpRequestExtensions.cs" />
+    <Compile Include="Services\IRecycleBin.cs" />
+    <Compile Include="Services\RecycleBin.cs" />
+    <Compile Include="ViewModels\RecycleBinViewModel.cs" />
+    <Compile Include="Drivers\AuditTrailTrimmingSettingsPartDriver.cs" />
+    <Compile Include="Drivers\AuditTrailSettingsPartDriver.cs" />
+    <Compile Include="Handlers\AuditTrailTrimmingSettingsPartHandler.cs" />
+    <Compile Include="Helpers\FiltersExtensions.cs" />
+    <Compile Include="Helpers\DateTimeExtensions.cs" />
+    <Compile Include="Helpers\SettingsDictionaryExtensions.cs" />
+    <Compile Include="Helpers\HtmlExtensions.cs" />
+    <Compile Include="Helpers\XmlHelper.cs" />
+    <Compile Include="Helpers\StringExtensions.cs" />
+    <Compile Include="ImportExport\AuditTrailExportStep.cs" />
+    <Compile Include="ImportExport\AuditTrailExportHandler.cs" />
+    <Compile Include="ImportExport\AuditTrailImportHandler.cs" />
+    <Compile Include="Models\AuditTrailEventRecordResult.cs" />
+    <Compile Include="Models\AuditTrailTrimmingSettingsPart.cs" />
+    <Compile Include="Providers\AuditTrail\AuditTrailTrimmingSettingsEventProvider.cs" />
+    <Compile Include="Providers\AuditTrail\AuditTrailSettingsEventProvider.cs" />
+    <Compile Include="Providers\ContentDefinition\Shapes\ContentPartImportedEventShape.cs" />
+    <Compile Include="Providers\ContentDefinition\Shapes\ContentTypeImportedEventShape.cs" />
+    <Compile Include="Services\Models\AuditTrailSettingsContext.cs" />
+    <Compile Include="Services\CommonAuditTrailEventHandler.cs" />
+    <Compile Include="Services\AuditTrailEventHandlerBase.cs" />
+    <Compile Include="Services\IAuditTrailSettingsEventHandler.cs" />
+    <Compile Include="Services\Models\DisplayFilterContext.cs" />
+    <Compile Include="Services\Models\QueryFilterContext.cs" />
+    <Compile Include="Providers\Content\ContentAuditTrailEventShapes.cs" />
+    <Compile Include="Services\DiffGramAnalyzer.cs" />
+    <Compile Include="Services\Models\DiffNode.cs" />
+    <Compile Include="Services\Models\DiffType.cs" />
+    <Compile Include="Services\Models\Filters.cs" />
+    <Compile Include="Services\IDiffGramAnalyzer.cs" />
+    <Compile Include="Services\AuditTrailTrimmingBackgroundTask.cs" />
+    <Compile Include="Providers\AuditTrail\AuditTrailFilterShapes.cs" />
+    <Compile Include="Shapes\AuditTrailEventShapeAlteration.cs" />
+    <Compile Include="Providers\ContentDefinition\Shapes\ContentTypeFieldSettingsUpdatedEventShape.cs" />
+    <Compile Include="Providers\ContentDefinition\Shapes\ContentPartSettingsUpdatedEventShape.cs" />
+    <Compile Include="Providers\ContentDefinition\Shapes\ContentTypePartSettingsUpdatedEventShape.cs" />
+    <Compile Include="Providers\ContentDefinition\Shapes\ContentTypeSettingsUpdatedEventShape.cs" />
+    <Compile Include="Providers\AuditTrail\AuditTrailSettingsEventShape.cs" />
+    <Compile Include="Services\Models\Diff.cs" />
+    <Compile Include="Services\Models\DiffDictionary.cs" />
+    <Compile Include="ViewModels\AuditTrailCategorySettingsViewModel.cs" />
+    <Compile Include="ViewModels\AuditTrailEventDescriptorSettingViewModel.cs" />
+    <Compile Include="ViewModels\AuditTrailEventSettingsViewModel.cs" />
+    <Compile Include="ViewModels\AuditTrailTrimmingSettingsViewModel.cs" />
+    <Compile Include="ViewModels\AuditTrailSettingsViewModel.cs" />
+    <Compile Include="Drivers\ContentsDriver.cs" />
+    <Compile Include="Handlers\AuditTrailSettingsPartHandler.cs" />
+    <Compile Include="Models\AuditTrailEventSetting.cs" />
+    <Compile Include="Models\AuditTrailSettingsPart.cs" />
+    <Compile Include="Providers\ContentDefinition\ContentDefinitionEventHandler.cs" />
+    <Compile Include="Providers\ContentDefinition\GlobalContentDefinitionEditorEvents.cs" />
+    <Compile Include="Providers\ContentDefinition\ContentPartAuditTrailEventProvider.cs" />
+    <Compile Include="Providers\ContentDefinition\ContentTypeAuditTrailEventProvider.cs" />
+    <Compile Include="Providers\Content\AuditTrailEventHandler.cs" />
+    <Compile Include="Helpers\EventDataExtensions.cs" />
+    <Compile Include="Services\Models\AuditTrailFilterParameters.cs" />
+    <Compile Include="Providers\Roles\RoleEventHandler.cs" />
+    <Compile Include="Providers\Roles\RoleAuditTrailEventProvider.cs" />
+    <Compile Include="Providers\Users\UserAuditTrailEventProvider.cs" />
+    <Compile Include="Providers\Users\UserEventHandler.cs" />
+    <Compile Include="Settings\AuditTrailPartSettings.cs" />
+    <Compile Include="Settings\AuditTrailPartSettingsEvents.cs" />
+    <Compile Include="ViewModels\AuditTrailEventSummaryViewModel.cs" />
+    <Compile Include="Drivers\AuditTrailPartDriver.cs" />
+    <Compile Include="Helpers\EventNameExtensions.cs" />
+    <Compile Include="Models\AuditTrailPart.cs" />
+    <Compile Include="Services\AuditTrailEventDisplayBuilder.cs" />
+    <Compile Include="Services\EventDataSerializer.cs" />
+    <Compile Include="Services\IAuditTrailEventDisplayBuilder.cs" />
+    <Compile Include="Services\IEventDataSerializer.cs" />
+    <Compile Include="ViewModels\AuditTrailDetailsViewModel.cs" />
+    <Compile Include="Providers\Content\GlobalContentHandler.cs" />
+    <Compile Include="Services\Models\AuditTrailEventDescriptor.cs" />
+    <Compile Include="Services\Models\AuditTrailCategoryDescriptor.cs" />
+    <Compile Include="Services\Models\DescribeContext.cs" />
+    <Compile Include="Services\Models\DescribeFor.cs" />
+    <Compile Include="Services\Models\AuditTrailContext.cs" />
+    <Compile Include="Services\Models\AuditTrailCreateContext.cs" />
+    <Compile Include="Services\AuditTrailEventProviderBase.cs" />
+    <Compile Include="Providers\Content\ContentAuditTrailEventProvider.cs" />
+    <Compile Include="Services\IAuditTrailEventHandler.cs" />
+    <Compile Include="Services\IAuditTrailEventProvider.cs" />
+    <Compile Include="ViewModels\AuditTrailCommentViewModel.cs" />
+    <Compile Include="ViewModels\CommonAuditTrailFilterViewModel.cs" />
+    <Compile Include="Services\Models\AuditTrailOrderBy.cs" />
+    <Compile Include="ViewModels\AuditTrailViewModel.cs" />
+    <Compile Include="Migrations.cs" />
+    <Compile Include="Models\AuditTrailEventRecord.cs" />
+    <Compile Include="Permissions.cs" />
+    <Compile Include="Services\AuditTrailManager.cs" />
+    <Compile Include="Services\IAuditTrailManager.cs" />
+    <Compile Include="ViewModels\RemovedContentItemViewModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Admin\Detail.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Admin\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\AuditTrailEvent.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\AuditTrailEvent-Content.SummaryAdmin.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\AuditTrailEvent-AuditTrailSettings-TrimmingSettingsChanged.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts.AuditTrail.Comment.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\AuditTrailEventActions.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\AuditTrailEventActions-Content-Published.SummaryAdmin.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\RecycleBin\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\AuditTrailEventActions-Content-Removed.SummaryAdmin.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\AuditTrailEvent-Content-Restored.SummaryAdmin.cshtml" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target> -->
+  <Target Name="AfterBuild" DependsOnTargets="AfterBuildCompiler">
+    <PropertyGroup>
+      <AreasManifestDir>$(ProjectDir)\..\Manifests</AreasManifestDir>
+    </PropertyGroup>
+    <!-- If this is an area child project, uncomment the following line:
+    <CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Child" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" />
+    -->
+    <!-- If this is an area parent project, uncomment the following lines:
+    <CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Parent" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" />
+    <CopyAreaManifests ManifestPath="$(AreasManifestDir)" CrossCopy="false" RenameViews="true" />
+    -->
+  </Target>
+  <Target Name="AfterBuildCompiler" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(ProjectDir)\..\$(ProjectName)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>45979</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>
+          </IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>True</UseCustomServer>
+          <CustomServerUrl>http://orchard.codeplex.com</CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

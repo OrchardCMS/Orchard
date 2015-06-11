@@ -1,0 +1,6 @@
+﻿.navicon-upgrade-to-1-7 {
+background-image:url(images/menu.upgrade.png) !important;
+}
+.navicon-upgrade-to-1-7:hover {
+background-position:0 -30px !important;
+}

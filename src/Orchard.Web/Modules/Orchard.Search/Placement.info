@@ -1,0 +1,11 @@
+﻿<Placement>
+    <Place Parts_AdminSearch_SiteSettings="Content:1"/>
+    <Place Parts_Search_SiteSettings="Content:1"/>
+    <Place Parts_Search_SearchForm="Content:1"/>
+
+  <Place
+    Parts_Search_MediaLibrary_Actions="Actions:6"
+    Parts_Search_MediaLibrary_Navigation="Navigation:1"
+  />
+  
+</Placement>

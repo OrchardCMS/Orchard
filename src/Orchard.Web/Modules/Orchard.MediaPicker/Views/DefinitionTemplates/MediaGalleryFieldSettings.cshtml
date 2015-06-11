@@ -1,0 +1,33 @@
+﻿@model Orchard.MediaPicker.Settings.MediaGalleryFieldSettings
+
+<fieldset>
+    <div>
+        @Html.CheckBoxFor(m => m.Required) <label for="@Html.FieldIdFor(m => m.Required)" class="forcheckbox">@T("A media is required")</label>
+        <span class="hint">@T("Check to ensure the user is providing at least one media.")</span>
+    </div>
+</fieldset>
+<fieldset>
+    <div>
+        <input name="ext-@Html.FieldNameFor(m => m)" id="ext-@Html.FieldIdFor(m => m)" type="checkbox" @if (!String.IsNullOrWhiteSpace(Model.AllowedExtensions)) { <text>checked="checked"</text> } />
+        <label for="ext-@Html.FieldIdFor(m => m)" class="forcheckbox">@T("Allow only specific extensions")</label>
+    </div>
+    <div data-controllerid="ext-@Html.FieldIdFor(m => m)">
+        <div>
+            @Html.TextBoxFor(m => m.AllowedExtensions, new { @class = "text medium" })
+            <span class="hint">@T("You can define a set of extensions the user will be able to pick, separated by spaces, e.g. jpg png gif")</span>
+            <span class="hint">@T("Leave it empty if you don't want to apply any restriction.")</span>
+        </div>
+    </div>
+</fieldset>
+<fieldset>
+    <div>
+        @Html.CheckBoxFor(m => m.Multiple) <label for="@Html.FieldIdFor(m => m.Multiple)" class="forcheckbox">@T("Allow multiple media items")</label>
+        <span class="hint">@T("Check to allow the user to select multiple media items.")</span>
+    </div>
+</fieldset>
+<fieldset>
+    <label for="@Html.FieldIdFor(m => m.Hint)">@T("Help text")</label>
+    @Html.TextAreaFor(m => m.Hint, new { @class = "text medium", rows = "5" } )
+    <span class="hint">@T("The help text is written under the field when authors are selecting media items.")</span>
+    @Html.ValidationMessageFor(m => m.Hint)
+</fieldset>

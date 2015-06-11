@@ -1,0 +1,21 @@
+﻿@{
+    var pageTitle = T("Search Content");
+    Layout.Title = pageTitle;
+}
+
+@using (Html.BeginFormAntiForgeryPost(Url.Action("index", new { controller = "admin", area = "Orchard.Search" }), FormMethod.Get)) {
+    <label for="search-text">@T("Search")</label>
+    @Html.TextBox("searchText", (string)Model.SearchText, new { @class = "text medium", autofocus = "autofocus" })
+
+    <button type="submit">@T("Search")</button>
+
+    <fieldset class="contentItems bulk-items">
+        @Display(Model.ContentItems)
+    </fieldset>
+        
+    if (HasText(Model.SearchText) && Model.ContentItems.Items.Count == 0) {
+         @T("There are no results")
+    }
+
+    @Display(Model.Pager)
+}

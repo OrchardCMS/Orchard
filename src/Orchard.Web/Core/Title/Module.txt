@@ -1,0 +1,9 @@
+﻿Name: Title
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardproject.net
+Version: 1.9.0
+OrchardVersion: 1.9
+Description: The title module enables content items to have titles.
+FeatureDescription: Title content part.
+Category: Core

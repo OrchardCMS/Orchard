@@ -1,0 +1,42 @@
+﻿@using Orchard.ContentManagement;
+@using Orchard.Core.Common.Models;
+@using Orchard.PublishLater.Models;
+@{
+    PublishLaterPart publishLaterPart = Model.ContentPart;
+    DateTime? versionPublishedUtc = publishLaterPart.As<CommonPart>() == null ? null : publishLaterPart.As<CommonPart>().VersionPublishedUtc;
+}
+<ul class="pageStatus">
+    @* Published or not *@
+    @if (publishLaterPart.HasPublished()) {
+        <li><img class="icon" src="@Href("~/Modules/Orchard.PublishLater/Content/Admin/images/online.gif")" alt="@T("Online")" title="@T("The page is currently online")" /> </li>
+        <li>@T("Published")&nbsp;&#124;&nbsp;</li>
+    }
+    else {
+        <li><img class="icon" src="@Href("~/Modules/Orchard.PublishLater/Content/Admin/images/offline.gif")" alt="@T("Offline")" title="@T("The page is currently offline")" /> </li>
+        <li>@T("Not Published")&nbsp;&#124;&nbsp;</li>
+    }
+
+    @* Does the page have a draft *@
+    @if (publishLaterPart.HasDraft()) {
+        <li><img class="icon" src="@Href("~/Modules/Orchard.PublishLater/Content/Admin/images/draft.gif")" alt="@T("Draft")" title="@T("The page has a draft")" /></li>
+        <li>@T("Draft")&nbsp;&#124;&nbsp;</li>
+    }
+    else {
+        <li>@T("No Draft")&nbsp;&#124;&nbsp;</li>
+    }
+
+    @if ((((DateTime?)Model.ScheduledPublishUtc).HasValue && ((DateTime?)Model.ScheduledPublishUtc).Value > DateTime.UtcNow) || (publishLaterPart.IsPublished() && versionPublishedUtc.HasValue)) {
+        if (publishLaterPart.IsPublished() && versionPublishedUtc.HasValue) {
+            <li>@T("Published: {0}", Display.DateTimeRelative(DateTimeUtc: versionPublishedUtc.Value))</li>
+            <li>&nbsp;&#124;&nbsp;</li>
+        }
+        else {
+            <li><img class="icon" src="@Href("~/Modules/Orchard.PublishLater/Content/Admin/images/scheduled.gif")" alt="@T("Scheduled")" title="@T("The page is scheduled for publishing")" /></li>
+            <li>@T("Scheduled")&#58;&nbsp;</li>
+            <li>
+                @Display.DateTime(DateTimeUtc: ((DateTime?)Model.ScheduledPublishUtc).Value, CustomFormat: null)
+                &nbsp;&#124;&nbsp;
+            </li>
+        }
+    }
+</ul>

@@ -1,0 +1,14 @@
+﻿@using Orchard.Utility.Extensions
+
+@{ Layout.Title = T("Migrate Content Picker").ToString(); }
+
+@using (Html.BeginFormAntiForgeryPost()) {
+    Html.ValidationSummary();
+    <fieldset>
+        <legend>@T("Migrating Content Picker:")</legend>
+        <span class="hint">@T("This migration step will move your content picker menu items to their new location.")</span>
+    </fieldset>
+    <fieldset>
+        <button type="submit">@T("Migrate")</button>
+    </fieldset>
+}

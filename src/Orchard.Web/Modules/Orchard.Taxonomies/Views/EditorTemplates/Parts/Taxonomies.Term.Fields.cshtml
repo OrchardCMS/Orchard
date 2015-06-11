@@ -1,0 +1,12 @@
+﻿@model Orchard.Taxonomies.Models.TermPart
+
+@Html.ValidationSummary()
+<fieldset>
+    @Html.CheckBoxFor(m => m.Selectable, new { @class = "" }) <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Selectable)">@T("Selectable")</label>
+    <span class="hint">@T("Uncheck if users should not be able to select this term")</span>
+</fieldset>
+<fieldset>
+    @Html.LabelFor(m => m.Weight)
+    @Html.TextBoxFor(m => m.Weight, new { @class = "text small" }) 
+    <span class="hint">@T("If specified, it will be used to sort terms at the same level")</span>
+</fieldset>

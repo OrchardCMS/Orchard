@@ -1,0 +1,6 @@
+﻿<Placement>
+    <Place Widget_DeleteButton="Sidebar:25"/>
+    <Place Parts_Widgets_LayerPart="Content:1"/>
+    <Place Parts_Widgets_WidgetPart="Content:1"/>
+    <Place Parts_Widgets_WidegetBagPart="Content:5"/>
+</Placement>

@@ -1,0 +1,39 @@
+﻿@using Orchard.Utility.Extensions;
+@using Orchard.Media.Helpers;
+
+@{
+    string name = Model.ContentField.DisplayName;  
+}
+<p class="media-picker-field media-picker-field-@name.HtmlClassify()">
+    @if (Html.IsPicture((string)Model.ContentField.Url)) {
+        <img src="@Url.Content(Model.ContentField.Url)"@if (!String.IsNullOrWhiteSpace(Model.ContentField.Class)) {
+                 <text> class="@Model.ContentField.Class"</text>
+             }@if (!String.IsNullOrWhiteSpace(Model.ContentField.Style)) {
+                 <text> style="@Model.ContentField.Style"</text>
+             }@if (!String.IsNullOrWhiteSpace(Model.ContentField.AlternateText)) {
+                 <text> alt="@Model.ContentField.AlternateText"</text>
+             }@if (!String.IsNullOrWhiteSpace(Model.ContentField.Alignment)) {
+                 <text> align="@Model.ContentField.Alignment"</text>
+             }@if (Model.ContentField.Width > 0) {
+                 <text> width="@Model.ContentField.Width"</text>
+             }@if (Model.ContentField.Height > 0) {
+                 <text> height="@Model.ContentField.Height"</text>
+             }/>
+    }
+    else if (!String.IsNullOrWhiteSpace(Model.ContentField.Url)) {
+        <a href="@Url.Content(Model.ContentField.Url)" class="value">@name</a>
+    }
+</p>
+
+@* Other available properties *@
+@* 
+    Alternate Text: @Model.ContentField.AlternateText
+    Class: @Model.ContentField.Class
+    Style: @Model.ContentField.Style
+    Alignment @Model.ContentField.Alignment
+    Width: @Model.ContentField.Width
+    Height: @Model.ContentField.Height
+    
+    You can also display an image using this example, and add the attributes you need:
+    <img src="@Url.Content(Model.ContentField.Url)" />
+*@

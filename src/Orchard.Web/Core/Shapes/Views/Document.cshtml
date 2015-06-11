@@ -1,0 +1,27 @@
+﻿@using Orchard.Localization
+@using Orchard.Mvc.Html;
+@using Orchard.UI.Resources;
+@{
+    RegisterLink(new LinkEntry {Type = "image/x-icon", Rel = "shortcut icon", Href = Url.Content("~/modules/orchard.themes/Content/orchard.ico")});
+    Script.Require("Html5Shiv").UseCondition("lt IE 9").AtHead();
+
+    string title = Convert.ToString(Model.Title);
+    string siteName = Convert.ToString(WorkContext.CurrentSite.SiteName);
+    bool isRtl = WorkContext.CurrentCultureInfo().TextInfo.IsRightToLeft;
+    Html.AddPageClassNames("dir-" + (isRtl ? "rtl" : "ltr"));
+}
+<!DOCTYPE html> 
+<html lang="@WorkContext.CurrentCulture" class="static @Html.ClassForPage()" dir="@(isRtl?"rtl":"ltr")"> 
+<head> 
+    <meta charset="utf-8" />
+    <title>@Html.Title(title, siteName)</title> 
+    @Display(Model.Head)
+    <script>(function(d){d.className="dyn"+d.className.substring(6,d.className.length);})(document.documentElement);</script> 
+    <script>window.isRTL = @(isRtl.ToString().ToLowerInvariant());</script>
+</head> 
+<body>
+@* Layout (template) is in the Body zone @ the default position (nothing, zero, zilch) *@
+@Display(Model.Body)
+@Display(Model.Tail)
+</body>
+</html>

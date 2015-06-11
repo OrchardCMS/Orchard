@@ -1,0 +1,109 @@
+﻿@using Orchard.ContentManagement;
+@using Orchard.Core.Contents;
+@using Orchard.Utility.Extensions;
+@using Orchard.Widgets.Models;
+@{
+    Style.Require("WidgetsAdmin");
+    IEnumerable<WidgetPart> widgets = Model.Widgets;
+    IEnumerable<string> zones = Model.Zones;
+    var returnUrl = Request.RawUrl;
+}
+<ol>
+    @foreach (string zone in zones) {
+        int count = widgets.Where(w => w.Zone == zone).Count();
+        MvcHtmlString classAttr = null;
+        if (count == 0) {
+            classAttr = new MvcHtmlString("class=\"widgets-none\"");
+        }
+        <li @classAttr>
+            <h2>@zone</h2>
+            <div class="widgets-actions">
+                @Html.ActionLink(T("Add").Text, "ChooseWidget", new { layerId = Model.CurrentLayer.Id, zone, returnUrl }, new { @class = "button grey" })
+            </div>
+            <ul class="widgets-zone-widgets">
+                @if (count > 0) {
+                    int i = 0;
+                    foreach (WidgetPart widget in widgets.Where(w => w.Zone == zone).OrderBy(w => w.Position, new Orchard.UI.FlatPositionComparer())) {
+                        <li class="widgets-@(widget.LayerId == Model.CurrentLayer.Id ? "this" : "other")-layer widgets-layer-@widget.LayerId@(i == 0 ? " first" : (i == count ? " last" : ""))">
+                            @using (Html.BeginFormAntiForgeryPost()) {
+                                <h3>@Html.ActionLink(HasText(widget.Title) ? widget.Title : widget.TypeDefinition.DisplayName, "EditWidget", new { @widget.Id, returnUrl })</h3><div class="contentType"> - @widget.TypeDefinition.DisplayName</div>
+                                <div class="widgets-actions">
+                                    @if (widget.HasPublished()) {
+                                        if (widget.HasDraft()) {
+                                            if (Authorizer.Authorize(Permissions.PublishContent, widget)) {
+                                                @Html.Link(T("Publish Draft").Text, Url.Action("Publish", "Admin", new { area = "Contents", id = widget.ContentItem.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "UnsafeUrl" })
+                                                @T(" | ")
+                                            }
+                                        }
+
+                                        if (Authorizer.Authorize(Permissions.PublishContent, widget)) {
+                                            @Html.Link(T("Unpublish").Text, Url.Action("Unpublish", "Admin", new { area = "Contents", id = widget.ContentItem.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "UnsafeUrl" })
+                                            @T(" | ")
+                                        }
+                                    }
+                                    else {
+                                        if (Authorizer.Authorize(Permissions.PublishContent, widget)) {
+                                            @Html.Link(T("Publish").Text, Url.Action("Publish", "Admin", new { area = "Contents", id = widget.ContentItem.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "UnsafeUrl" })
+                                            @T(" | ")
+                                        }
+                                    }
+                                    
+                                    @if (widget.LayerId != Model.CurrentLayer.Id) {
+                                        <button name="moveHere" class="link" type="submit" value="1">@T("Move to current layer")</button>
+                                    }
+                                    else { /* it could be useful to remove the widget regardless of the layer it's on but there's no place in the current UI for this and "Move to current layer" */
+                                        <button name="moveOut" class="link" type="submit" value="1" itemprop="RemoveUrl">@T("Remove")</button>
+                                    }
+                                </div>
+                                <div class="widgets-move-somewhere">
+                                    <button name="moveUp" @(new MvcHtmlString(i == 0 ? "disabled='disabled'" : "")) class="widgets-move widgets-move-up" type="submit" title="@T("Move up")" value="1">@T("Move up")</button>
+                                    <button name="moveDown" @(new MvcHtmlString(++i == count ? "disabled='disabled'" : "")) class="widgets-move widgets-move-down" type="submit" title="@T("Move down")" value="1">@T("Move down")</button>
+                                </div>
+                                @Html.Hidden("widgetId", widget.Id)
+                                @Html.Hidden("returnUrl", returnUrl)
+                            }
+                        </li>
+                    }
+                }
+            </ul>
+            </li>
+    }
+</ol>
+
+@*
+@{
+    Script.Require("ShapesBase");
+    ContentPart contentPart = Model.ContentPart;
+}
+@if (contentPart.HasPublished()) {
+    @Html.ItemDisplayLink(T("View").Text, (ContentItem)Model.ContentPart.ContentItem)
+    @T(" | ")
+
+    if (contentPart.HasDraft()) {
+        if (Authorizer.Authorize(Permissions.PublishContent, contentPart)) {
+            @Html.Link(T("Publish Draft").Text, Url.Action("Publish", "Admin", new { area = "Contents", id = contentPart.ContentItem.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "UnsafeUrl" })
+            @T(" | ")
+
+            @Html.ActionLink(T("Preview").Text, "Preview", "Item", new { area = "Contents", id = ((ContentItem)Model.ContentPart.ContentItem).Id }, new { })
+            @T(" | ")
+        }
+    }
+
+    if (Authorizer.Authorize(Permissions.PublishContent, contentPart)) {
+        @Html.Link(T("Unpublish").Text, Url.Action("Unpublish", "Admin", new { area = "Contents", id = contentPart.ContentItem.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "UnsafeUrl" })
+        @T(" | ")
+    }
+}
+else {
+    if (contentPart.HasDraft()) {
+        @Html.ActionLink(T("Preview").Text, "Preview", "Item", new { area = "Contents", id = ((ContentItem)Model.ContentPart.ContentItem).Id }, new { })
+        @T(" | ")
+    }
+
+    if (Authorizer.Authorize(Permissions.PublishContent, contentPart)) {
+        @Html.Link(T("Publish").Text, Url.Action("Publish", "Admin", new { area = "Contents", id = contentPart.ContentItem.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "UnsafeUrl" })
+        @T(" | ")
+    }
+}
+
+*@

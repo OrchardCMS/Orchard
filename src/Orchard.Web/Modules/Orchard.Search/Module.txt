@@ -1,0 +1,29 @@
+﻿Name: Search
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardproject.net
+Version: 1.9.0
+OrchardVersion: 1.9
+Description: The search module enables the management of the search index and provides the front-end searching user interface.
+
+Features:
+    Orchard.Search:
+        Name: Search
+        Description: Standard interface to Orchard's built-in search.
+        Dependencies: Orchard.Indexing
+        Category: Search
+    Orchard.Search.Content:
+        Name: Admin Content Search
+        Description: Provides a Content Search tab in Admin.
+        Dependencies: Contents, Orchard.Search
+        Category: Search
+    Orchard.Search.ContentPicker:
+        Name: Content Picker Search
+        Description: Provides a search tab in Content Picker.
+        Dependencies: Orchard.ContentPicker, Orchard.Search
+        Category: Search
+    Orchard.Search.MediaLibrary:
+        Name: Media Library Search
+        Description: Provides search menu item in the Media Library explorer.
+        Dependencies: Orchard.MediaLibrary, Orchard.Search
+        Category: Search

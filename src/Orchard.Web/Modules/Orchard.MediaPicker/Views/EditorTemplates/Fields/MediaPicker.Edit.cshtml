@@ -1,0 +1,92 @@
+﻿@model Orchard.MediaPicker.Fields.MediaPickerField
+@using Orchard.MediaPicker.Settings
+
+@{
+    Script.Require("jQuery").AtFoot();
+    var settings = Model.PartFieldDefinition.Settings.GetModel<MediaPickerFieldSettings>();
+}
+
+<fieldset>
+    <label for="@Html.FieldIdFor(m => m.Url)" @if(settings.Required) { <text>class="required"</text> }>@Model.DisplayName</label>
+    @Html.TextBoxFor(m => m.Url, new { @class = "text medium", @readonly = "readonly" }) <span id="btn-@Html.FieldIdFor(m => m.Url)" class="button">@T("Browse")</span>
+    
+    @if(!settings.Required) {
+        <span id="clear-@Html.FieldIdFor(m => m.Url)" class="button">@T("Clear")</span>    
+    }
+    
+    @if (HasText(settings.Hint)) {
+    <span class="hint">@settings.Hint</span>
+    }
+    @Html.HiddenFor(m => m.AlternateText)
+    @Html.HiddenFor(m => m.Class)
+    @Html.HiddenFor(m => m.Style)
+    @Html.HiddenFor(m => m.Alignment)
+    @Html.HiddenFor(m => m.Width)
+    @Html.HiddenFor(m => m.Height)
+
+</fieldset>
+
+@using (Script.Foot()) {
+
+<script type="text/javascript">
+//<![CDATA[
+
+    jQuery('#clear-@Html.FieldIdFor(m => m.Url)').click(function () {
+        jQuery('#@Html.FieldIdFor(m => m.Url)').val('');
+    });
+
+    jQuery('#btn-@Html.FieldIdFor(m => m.Url)').click(function () {
+        
+        var currentImageUrl  = $('#@Html.FieldIdFor(m => m.Url)').val();
+        if (currentImageUrl && currentImageUrl.length > 2 && currentImageUrl.substr(0, 2) == "~/") {
+            currentImageUrl = '@Url.Content("~/")' + currentImageUrl.substr(2);
+        }
+        
+        jQuery('#btn-@Html.FieldIdFor(m => m.Url)').trigger("orchard-admin-pickimage-open", {
+            img: {
+                src: currentImageUrl,
+                "class": $('#@Html.FieldIdFor(m => m.Class)').val(),
+                style: $('#@Html.FieldIdFor(m => m.Style)').val(),
+                alt: $('#@Html.FieldIdFor(m => m.AlternateText)').val(),
+                width: $('#@Html.FieldIdFor(m => m.Width)').val(),
+                height: $('#@Html.FieldIdFor(m => m.Height)').val(),
+                align: $('#@Html.FieldIdFor(m => m.Alignment)').val()
+            },
+            uploadMediaPath: 'images',
+            callback: function (data) {
+                var applicationPath = '@Url.RequestContext.HttpContext.Request.ApplicationPath.ToLower()';
+                if (!/\/$/.test(applicationPath)) {
+                    applicationPath += '/';
+                }
+
+                var url = data.img.src;
+
+                if (url.substr(0, 4) != "http") {
+                    url = '~/' + url.substr(applicationPath.length);
+                }
+
+                jQuery('#@Html.FieldIdFor(m => m.Url)').val(url);
+
+                var alternateText = data.img.alt;
+                jQuery('#@Html.FieldIdFor(m => m.AlternateText)').val(alternateText);
+
+                var _class = data.img['class'];
+                jQuery('#@Html.FieldIdFor(m => m.Class)').val(_class);
+
+                var style = data.img.style;
+                jQuery('#@Html.FieldIdFor(m => m.Style)').val(style);
+
+                var align = data.img.align;
+                jQuery('#@Html.FieldIdFor(m => m.Alignment)').val(align);
+
+                var width = data.img.width || "0";
+                jQuery('#@Html.FieldIdFor(m => m.Width)').val(width);
+
+                var height = data.img.height || "0";
+                jQuery('#@Html.FieldIdFor(m => m.Height)').val(height);
+            }
+        });
+    });
+//]]>
+</script>
+}

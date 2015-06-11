@@ -1,0 +1,209 @@
+﻿.wmd-button {
+    width: 20px;
+    height: 20px;
+    padding-left: 2px;
+    padding-right: 3px;
+    position: absolute;
+    display: inline-block;
+    list-style: none;
+    cursor: pointer;
+}
+
+    .wmd-button > span {
+        background-image: url(../Content/Admin/Images/wmd-buttons.png);
+        background-repeat: no-repeat;
+        background-position: 0 0;
+        width: 20px;
+        height: 20px;
+        display: inline-block;
+    }
+
+.wmd-button-row {
+    position: relative;
+    margin: 10px 5px 5px 5px;
+    padding: 0;
+    height: 20px;
+}
+
+.wmd-input {
+    font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;
+    padding: 3px;
+    line-height: 1.2;
+}
+
+#main .wmd-editor-box textarea.wmd-input {
+    display: block;
+    margin-bottom: 0;
+    width: 97%;
+    min-width: 400px;
+    height: 80%;
+    resize: horizontal;
+}
+
+.wmd-box {
+    display: table;
+    position: relative;
+    height: 400px;
+    width: 99%;
+}
+
+.wmd-innerbox {
+    height: 100%;
+    display: table-row;
+}
+
+.wmd-editor-box {
+    width: 49%;
+    display: table-cell;
+    height: 100%;
+    vertical-align: top;
+}
+
+.wmd-preview-box {
+    width: 49%;
+    display: table-cell;
+    padding: 0;
+    height: 100%;
+    vertical-align: top;
+}
+
+.wmd-preview {
+    border: 2px dotted #CCC;
+    padding: 3px;
+    margin-top: 34px;
+    height: 80%;
+    overflow-x: auto;
+    overflow-y: scroll;
+}
+
+.wmd-prompt-dialog {
+    border: solid 1px #ccc;
+    background-color: white;
+}
+
+/* Grippie */
+
+div.grippie {
+    background: #EEEEEE url(../Content/Admin/Images/grippie.png) no-repeat scroll center 2px;
+    border-color: #DDDDDD;
+    border-style: solid;
+    border-width: 0 1px 1px;
+    cursor: s-resize;
+    height: 9px;
+    margin-top: 9px;
+    overflow: hidden;
+}
+
+.wmd-preview {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 18px;
+    color: rgb(51, 51, 51);
+}
+
+    .wmd-preview h1 {
+        margin-bottom: 30px !important;
+        margin-top: 30px !important;
+        font-size: 30px !important;
+    }
+
+    .wmd-preview h2 {
+        margin-bottom: 14px !important;
+        margin-top: 24px !important;
+        font-size: 24px !important;
+        font-weight: bold;
+    }
+
+    .wmd-preview p {
+        line-height: 1.3em !important;
+        margin-bottom: 14px !important;
+    }
+    
+    .wmd-preview b, .wmd-preview strong {
+        font-weight: bold !important;
+    }
+
+    .wmd-preview em {
+        font-style: italic !important;
+    }
+    
+    .wmd-preview ol {
+        list-style: decimal !important;
+        margin-left: 20px !important;
+    }
+
+    .wmd-preview ul, .wmd-preview ol  {
+        margin-bottom: 14px !important;
+    }
+        .wmd-preview ul li {
+            margin-left: 10px !important;
+        }
+
+.wmd-preview code, .wmd-preview pre {
+    font-family: Consolas, "Courier New",monospace !important;
+    font-size: 12px !important;
+    color: #333333 !important;
+    line-height: 18px !important;
+    background-color: #f5f5f5 !important;
+    border: 1px solid #e1e1e8 !important;
+    border-radius: 3px !important;
+}
+
+.wmd-preview code {
+    
+}
+
+.wmd-preview pre {
+    display: block !important;
+    padding: 8.5px !important;
+    margin: 0 0 9px !important;
+    -webkit-border-radius: 4px !important;
+    -moz-border-radius: 4px !important;
+    border-radius: 4px !important;
+    white-space: pre !important;
+    -ms-word-break: break-all !important;
+    word-break: break-all !important;
+    -ms-word-wrap: break-word !important;
+    word-wrap: break-word !important;
+}
+
+.wmd-preview pre code {
+    border: none !important;
+}
+
+.wmd-preview dt{
+    margin-left: 0 !important;
+    font-weight: bold !important;
+} 
+
+.wmd-preview dd {
+    margin-left: 10px !important;
+   
+}
+
+
+/* RTL */
+
+.dir-rtl .wmd-button {
+    padding-left: 3px;
+    padding-right: 2px;
+}
+
+.dir-rtl .wmd-preview ol {
+    margin-left: inherit !important;
+    margin-right: 20px !important;
+}
+
+.dir-rtl .wmd-preview ul li {
+    margin-left: inherit !important;
+    margin-right: 10px !important;
+}
+
+.dir-rtl .wmd-preview pre {
+    margin: 0 9px 9px 0 !important;
+}
+
+.dir-rtl .wmd-preview dd {
+    margin-left: inherit !important;
+    margin-right: 10px !important;
+}

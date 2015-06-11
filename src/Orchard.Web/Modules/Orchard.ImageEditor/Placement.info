@@ -1,0 +1,24 @@
+﻿<Placement>
+
+  <Match DisplayType="SummaryAdmin">
+    <Place Parts_Image_Editor="Footer:6" />
+  </Match>
+  
+  <!-- ImagePart -->
+  <Match DisplayType="Detail">
+    <Place Parts_Image_Editor_Crop="Buttons:5"/>
+    <Place Parts_Image_Editor_CropOptions="Options"/>
+    <Place Parts_Image_Editor_Resize="Buttons:6"/>
+    <Place Parts_Image_Editor_ResizeOptions="Options"/>
+    <Place Parts_Image_Editor_Rotate="Buttons:7"/>
+    <Place Parts_Image_Editor_RotateOptions="Options"/>
+
+    <Place Parts_Image_Editor_Filter="Buttons:7"/>
+    <Place Parts_Image_Editor_FilterOptions="Options"/>
+
+    <Place Parts_Image_Editor_Effects="Buttons:8"/>
+    <Place Parts_Image_Editor_EffectsOptions="Options"/>
+
+  </Match>
+
+</Placement>

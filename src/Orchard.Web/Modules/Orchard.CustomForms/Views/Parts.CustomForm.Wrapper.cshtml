@@ -1,0 +1,22 @@
+﻿@{
+    dynamic editor = Model.Editor;
+    
+    if (TempData.ContainsKey("CustomFormWidget.InvalidCustomFormState")) {
+        editor = TempData["CustomFormWidget.InvalidCustomFormState"];
+    }
+  
+    // remove default Save/Publish buttons
+    editor.Zones["Sidebar"].Items.Clear();
+}
+
+@using (Html.BeginFormAntiForgeryPost(Url.Action("Create", "Item", new { area = "Orchard.CustomForms", id = Model.ContentItem.Id }))) {
+    @Html.ValidationSummary()
+    // Model is a Shape, calling Display() so that it is rendered using the most specific template for its Shape type
+    @Display(editor)
+
+    @Html.Hidden("returnUrl", Request.RawUrl);
+
+    <fieldset class="submit-button">
+        <button type="submit" name="submit.Save" value="submit.Save">@Model.ContentPart.SubmitButtonText</button>
+    </fieldset>
+}

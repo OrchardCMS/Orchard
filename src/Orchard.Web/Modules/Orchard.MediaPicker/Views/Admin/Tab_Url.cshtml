@@ -1,0 +1,88 @@
+﻿@model Orchard.Media.ViewModels.MediaFolderEditViewModel
+@using Orchard.Media.Extensions;
+@using Orchard.Media.Helpers;
+@using Orchard.Media.Services;
+@using Orchard.Media.Models;
+@using Orchard.UI.Resources;
+@{
+    var uploadAction = Url.Action("AddFromClient", "Admin", new { area = "Orchard.Media" });
+    // media directory to save uploaded files into
+    var mediaPath = Request["uploadpath"];
+}
+        <div id="image-preview">
+            <img alt="" id="img-loader" style="display:none" src="" />
+            <div class="media-largepreview">
+                <img alt="@T("Preview of Image")" id="img-preview" src="@Url.Content("~/modules/orchard.mediapicker/Styles/images/imagepreview.png")" onload="jQuery.mediaPicker.scalePreview(this)" />
+            </div>
+            <div>
+                <label for="img-src">@T("URL for the image resource")</label>
+                <input class="text" type="text" id="img-src" />
+            </div>
+            <div>
+                @using(Html.BeginFormAntiForgeryPost(uploadAction, FormMethod.Post, new { id = "img-uploadform", enctype = "multipart/form-data", onsubmit="jQuery.mediaPicker.uploadMedia(this)"})) { 
+                    <input type="hidden" name="MediaPath" value="@mediaPath" />
+                    <label for="fileUpload">@T("Upload an image from your computer")</label>
+                    <input type="file" name="fileUpload" id="fileUpload"  />
+                    <input class="button" type="submit" id="upload" value="Upload" />
+                }
+				<img id="img-indicator" src="@Url.Content("~/modules/orchard.mediapicker/Styles/images/synchronizing.gif")" alt="" class="throbber" />
+            </div>
+
+        </div>
+        <div id="file-details">
+            <fieldset>
+            <ol>
+                <li>
+                <label for="img-alt">@T("Alternative Text")</label>
+                <input class="text" type="text" id="img-alt" />
+                </li>
+
+                <li>
+                <label for="img-class">@T("Class")</label>
+                <input class="text" type="text" id="img-class" />
+                </li>
+
+                <li>
+                <label for="img-style">@T("Style")</label>
+                <input class="text" type="text" id="img-style" />
+                </li>
+
+                <li>
+                <label for="img-align">@T("Alignment")</label>
+                <select id="img-align">
+                    <option value="">None</option>
+                    <option value="left">Left</option>
+                    <option value="right">Right</option>
+                    <option value="top">Top</option>
+                    <option value="texttop">Text Top</option>
+                    <option value="middle">Middle</option>
+                    <option value="absmiddle">AbsMiddle</option>
+                    <option value="bottom">Bottom</option>
+                    <option value="absbottom">AbsBottom</option>
+                    <option value="baseline">Baseline</option>
+                </select>
+                </li>
+
+                <li class="group">
+                <div class="image-width">
+                    <label for="img-width">@T("Width")</label>
+                    <input class="text" type="text" id="img-width" />&nbsp;x
+                </div>
+                <div class="image-height">
+                    <label for="img-height">@T("Height")</label>
+                    <input class="text" type="text" id="img-height" />
+                </div>
+                </li>
+
+                <li>
+                <input type="checkbox" id="img-lock" checked="checked" />
+                <label class="forcheckbox" for="img-lock">@T("Lock Aspect Ratio")</label>
+                </li>
+
+                <li class="actions">
+                <input type="button" id="img-insert" class="button disabled" value="@T("Insert")" data-edittext="@T("Update")" />
+                <input type="button" id="img-cancel" class="button" value="@T("Cancel")" />
+                </li>
+                </ol>
+            </fieldset>
+        </div>

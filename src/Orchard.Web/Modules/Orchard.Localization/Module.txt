@@ -1,0 +1,33 @@
+﻿Name: Localization
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardproject.net
+Version: 1.9.0
+OrchardVersion: 1.9
+Description: The localization module enables the localization of content items.
+Features:
+	Orchard.Localization:
+		Description: Enables localization of content items.
+		Category: Content
+		Dependencies: Settings
+		Name: Content Localization
+	Orchard.Localization.DateTimeFormat:
+		Description: Enables PO-based translation of date/time formats and names of days and months.
+		Category: Content
+		Name: Date/Time Format Translation
+		Dependencies: Orchard.Localization
+	Orchard.Localization.CultureSelector:
+		Description: Enables culture picker services, and also the admin culture picker.
+		Category: Content
+		Name: Culture Picker
+		Dependencies: Orchard.Localization, Orchard.Alias
+	Orchard.Localization.Transliteration:
+		Description: Enables transliteration of content.
+		Category: Content
+		Name: Transliteration
+		Dependencies: Orchard.Localization
+	Orchard.Localization.Transliteration.SlugGeneration:
+		Description: Enables transliteration of the autoroute slug when creating a piece of content.
+		Category: Content
+		Name: URL Transliteration
+		Dependencies: Orchard.Localization.Transliteration, Orchard.Autoroute

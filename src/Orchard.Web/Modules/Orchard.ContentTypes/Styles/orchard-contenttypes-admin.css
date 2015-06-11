@@ -1,0 +1,173 @@
+﻿.orchard-contenttypes #main h2 {
+    margin:42px 0 0;
+    border-bottom:1px solid #ccc;
+}
+
+.orchard-contenttypes .summary .properties h3 {
+    display: inline;
+}
+
+.orchard-contenttypes .summary .properties .stereotype {
+    color: #7c7c7c;
+}
+
+#main .properties p {
+    margin:0;
+}
+
+.manage.add-to-type {
+    margin-top:-32px;
+}
+.manage-part {
+    margin-bottom:1em;
+}
+.manage-part h3,
+.manage-field h3 {
+    border-bottom:1px solid #EAEAEA;
+    display:relative;
+    line-height:1.4em;
+    padding-bottom:0;
+    padding-top:0;
+}
+.manage-part h3,
+.manage-field h3,
+.manage-part h4,
+.manage-type .manage-field .details,
+.manage-type .manage-part .manage-field,
+.manage-type .manage-part .settings {
+    padding-left:20px;
+}
+.manage-type .manage-field .settings {
+    padding-bottom:10px;
+    padding-left:0;
+}
+.manage-part h4 {
+    padding-left:0;
+}
+.manage-part .manage-field h4 {
+    line-height:1.8em;
+    padding-bottom:0;
+    padding-left:15px;
+}
+.manage-type .manage-part .manage,
+.manage-type .manage-field .manage,
+.manage-part .manage-field .manage {
+    margin-top:-2.4em;
+}
+.manage-field .details,
+.manage-part .details {
+    overflow:auto;
+}
+.manage-part .manage.minor {
+    margin:0 0 -1.2em;
+}
+.manage-part label,
+.manage-field label {
+    font-weight:normal;
+}
+.manage-field fieldset,
+.manage-part fieldset {
+    margin:.5em 0 1em;
+    padding:0;
+}
+.manage-field .settings {
+    margin:0 0 0 15px;
+    padding-left:0;
+}
+
+.manage-part .description {
+    color: #7c7c7c;
+    font-size: 0.8em;
+    margin-right: 50px;
+}
+
+.manage-part .settings {
+    overflow:auto;
+}
+.manage-part .settings fieldset {
+    padding-left:0;
+}
+
+fieldset.action {
+    margin-top:2em;
+}
+
+/* should pull this back into the base admin theme css, w/out the .manage-part of course */
+.manage-part dl {
+    margin:0 0 1em;
+    overflow:auto;
+    padding:6px 0 0;
+}
+.manage-part dt,
+.manage-part dd {
+    float:left;
+}
+.manage-part dt {
+    clear:left;
+}
+.manage-part dt::after {
+    content:":";
+}
+.manage-part dd {
+    font-style:italic;
+    padding-left:.5em;
+}
+.manage-part dl dl {
+    font-size:1em;
+    margin:0;
+    padding:0;
+}
+.manage-part dd dt {
+    clear:left;
+    float:left;
+}
+.manage-part dd dd {
+    float:left;
+    padding-left:.5em;
+}
+
+.available-parts .part.hint {
+    display: block;
+    margin-left: 29px;
+    line-height: 16px;
+    margin-bottom: 2px;
+}
+
+
+/* PLACEMENT EDITOR */
+
+#placement li {
+    margin-bottom: 10px;
+    padding: 0px;
+    border: 1px solid #eee;
+}
+
+    #placement li .shape-type {
+        cursor: move;
+        background-color: #eee;
+        background: #EEE url(images/move.gif) no-repeat 10px 15px;
+        height: 30px;
+        padding: 10px 0px 0px 30px; 
+    }
+
+    #placement li .shape-editor {
+        padding: 10px;
+        background: white;
+    }
+
+#save-message {
+    display: none;
+    margin-bottom: 10px;
+}
+
+#placement fieldset 
+{
+    float: inherit;  /* prevent bad layout if float is defined to left in specific parts, e.g. datetimepicker */
+    height: auto;
+}
+
+.placement-placeholder {
+    background: #FDF5BC;
+    border: 1px solid #FDF5BC;
+    height: 100px;
+}

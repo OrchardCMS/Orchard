@@ -1,0 +1,38 @@
+﻿@model Orchard.Comments.Models.CommentSettingsPart
+@using Orchard.Messaging.Services;
+
+@{
+    var messageManager = WorkContext.Resolve<IMessageManager>();
+    var emailEnabled = messageManager.GetAvailableChannelServices().Contains("email");
+}
+
+
+<fieldset>
+    <legend>@T("Comments")</legend>
+    <div>
+        @Html.EditorFor(m => m.ModerateComments)
+        <label class="forcheckbox" for="CommentSettings_ModerateComments">@T("Comments must be approved before they appear")</label>
+        @Html.ValidationMessage("ModerateComments", "*")
+        <span class="hint">@T("Check if you want to manually approve comments before they can be displayed.")</span>
+    </div>
+
+    <div>
+        <label for="CommentSettings_ClosedCommentsDelay">@T("Automatically close comments after")</label>
+        @Html.TextBoxFor(m => m.ClosedCommentsDelay, new { @class = "text small" }) @T("days")
+        @Html.ValidationMessage("ClosedCommentsDelay", "*")
+        <span class="hint">@T("Number of days after comments are automatically closed. Leave to 0 to have them always available.")</span>
+    </div>
+
+    <div>
+        @if (emailEnabled) {
+            @Html.EditorFor(m => m.NotificationEmail, new { disabled = emailEnabled ? "" : "disabled" })
+            <label class="forcheckbox" for="CommentSettings_NotificationEmail">@T("Notification email")</label>
+            @Html.ValidationMessage("NotificationEmail", "*")
+            <span class="hint">@T("Check to send comment notification emails to the commented content author at their account’s email address.")</span>
+        }
+        else {
+            <div class="message message-Warning">@T("The option to send comment notifications is available when an email module is activated.")</div>
+        }
+    </div>
+
+</fieldset>

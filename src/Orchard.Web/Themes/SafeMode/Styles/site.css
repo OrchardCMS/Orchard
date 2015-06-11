@@ -1,0 +1,339 @@
+﻿/* Reset
+***************************************************************/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td, button, submit {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    font-weight: inherit;
+    font-style: inherit;
+    font-size: 100%;
+    font-family: inherit;
+    vertical-align: baseline;
+}
+
+/* Remember focus styles! */
+:focus { outline: 0; }
+
+body { line-height: 1; color: black; background: white; }
+ol, ul { list-style: none; }
+
+/* Tables still need 'cellspacing="0"' in the markup */
+table { border-collapse: separate; border-spacing: 0; }
+caption, th, td { text-align: left; font-weight: normal; }
+
+blockquote:before, blockquote:after,
+q:before, q:after { content: ""; }
+blockquote, q { quotes: "" ""; }
+
+/* HTML 5 elements as block */  
+header, footer, aside, nav, article { display: block; }
+/* end: reset */
+
+/*Defaults
+----------------------------------------------------------*/
+
+html {height: 100%;}
+
+body {
+    font: normal 100% Segoe UI,Trebuchet,Arial,Sans-Serif;
+    height: 100%;
+    text-align:left;
+    color:#333;
+}
+
+/* ---------- Headings and defaults ---------- */
+
+h1,h2,h3,h4,h5,h6,legend {font-weight:normal; font-style: normal;}
+
+h1 {font-size: 160%;}
+h2 {font-size: 145%;}
+h3 {font-size: 130%;}
+h4 {font-size: 120%;}
+h5 {font-size: 105%;}
+
+#setUpHeader {font-size: 145%;}
+
+.hint {
+    font-size:60%;
+    font-style:italic;
+}
+
+#header {
+    background:#2d2f25 url(images/backgroundHeader.gif) no-repeat bottom right;
+    width:100%;
+    height:50px;
+    margin-bottom:40px;
+}
+
+#branding{
+    background:url(images/orchardLogo.gif) no-repeat;
+    display:block;
+    height:60px;
+    margin:0 0 0 20px;
+}
+
+
+#branding h1{
+    font-size: 140%;
+    color:#fff;
+    padding:8px 0 0 40px;
+}
+
+
+#main {
+    margin:0 auto 40px;
+    width:600px;
+}
+
+
+/* Forms
+----------------------------------------------------------*/
+
+input[type="text"], 
+input[type="password"] {
+    border:1px solid #DDDEDF;
+    display: block;
+}
+
+form {
+    border:1px solid #DDDEDF;
+    padding:10px 0;
+    background:transparent url(images/backgroundVines.gif) no-repeat right bottom;
+    
+    /*----CSS3 properties----*/        
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+     border-radius: 2px;
+}
+
+form h2 {
+    font-size: 105%;
+    margin:20px 20px 0;
+}
+
+fieldset.data {
+    margin-bottom:16px;
+}
+
+fieldset div {
+    margin:20px 20px 32px 20px;
+}
+fieldset.data div {
+    margin:10px 20px 16px 20px;
+}
+    
+legend {
+    font-size: 105%;
+    font-weight:500;
+    border:none;
+    padding:10px 20px 0;
+}
+fieldset.data legend {
+    padding-bottom:10px;
+}
+
+label {
+    display:block;
+}
+
+label.forcheckbox {
+    display:inline;
+}
+
+fieldset.data span label {
+    margin-top:8px;
+}
+
+input[type="text"],
+input[type="password"] {
+    border-color:#ccc;
+    padding:4px;
+    width:98%;
+}
+
+select {
+    padding:3px;
+    border:1px solid #bdbcbc;
+    width:100%;
+}
+
+/*----buttons----*/
+button.remove, .remove.button, .remove.button:link, .remove.button:visited {
+    background-color:#DECCCA;
+    background-image:url(images/tableHeaderBackgroundRed.gif);
+    border-color:#d6c9c7;
+    color:#5c3732;
+}
+button.remove:hover, .remove.button:hover,
+button.remove:active, .remove.button:active,
+button.remove:focus, .remove.button:focus {
+    background:#8f7c79;
+    border-color:#6e5551;
+    color:#faedeb;
+}
+button.remove:focus::-moz-focus-inner, .remove.button:focus::-moz-focus-inner {
+    border-color:#8f7c79;
+}
+.delete.button {
+    float:right;
+}
+.button.disabled, .button.disabled:visited, .button.disabled:hover, .button.disabled:active, .button.disabled:focus {
+	background:#eee;
+	border:1px solid #ababab;
+	color:#ababab;
+	cursor:default;
+	text-shadow: none;
+	box-shadow: none;
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+}
+button, .button, a.button {
+    background:#6a7b42;
+    border:1px solid #487328;
+    color:#fff;
+    cursor: pointer;
+    display: inline-block;
+    font: 90% Arial,Helvetica,sans-serif;
+    padding: 4px 14px 2px 14px; /*ie9*/
+    text-align: center;
+    text-decoration: none;
+    vertical-align: middle;
+    
+    /*----CSS3 properties----*/
+     text-shadow: rgba(40,53,9,.2) 0px 0px 1px;
+    -webkit-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.2); 
+    -moz-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.2); 
+     box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.2);
+
+  
+    /*----In ie the first couplet sets the alpha value so 00=transparent and ff=opaque)----*/    
+     filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ff9bb36c',  endColorstr='#ff809f43');	
+	 background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(155, 179, 108, 1.0)), to(rgba(128, 159, 67, 1.0)));    
+     background: -moz-linear-gradient(top, rgba(155, 179, 108, 1.0), rgba(128, 159, 67, 1.0));
+
+        
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+     border-radius: 2px;
+}
+button, input.button, x:-moz-any-link {
+    padding: 2px 14px 2px 14px;
+    }
+button:hover, .button:hover, a.button:hover {
+    border-color:#3a822e;
+    color:#eefcec;
+    text-decoration:none; 
+    background: #809f43;
+    
+    /*CSS3 properties*/  
+     filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ff6e7f45',  endColorstr='#ff6a7b42');
+     background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(110, 127, 69, 1.0)), to(rgba(106, 123, 66, 1.0)));    
+     background: -moz-linear-gradient(top, rgba(110, 127, 69, 1.0), rgba(106, 123, 66, 1.0));
+}
+button:active, .buton:active, a.button:active {
+    text-decoration:none; 
+    background:#6a7b42;
+    border:1px solid #487328;
+    color:#fff;
+
+    /*CSS3 properties*/
+    text-shadow: rgba(0,0,0,.5) 0px 0px 1px;
+     filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ff9bb36c',  endColorstr='#ff809f43');	
+	 background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(155, 179, 108, 1.0)), to(rgba(128, 159, 67, 1.0)));   
+     background: -moz-linear-gradient(top, rgba(155, 179, 108, 1.0), rgba(128, 159, 67, 1.0));
+}
+button:focus::-moz-focus-inner, .button:focus::-moz-focus-inner {
+  border: 1px dotted transparent;
+}
+
+
+.setupButton {
+    margin:0 0 20px 20px;
+    padding:4px 28px;
+    font-size: 105%;
+    font-weight:600;
+ }
+
+/* Confirmations, Messages and the like
+***************************************************************/
+#throbber {
+    display:none;
+}
+#throbber .curtain 
+{
+    position:fixed;
+    left:0;
+    top:0;
+    width:100%;
+    height:100%;
+    background-color:#3e4d45;
+    opacity: 0.9;
+    filter:alpha(opacity=90);
+}
+#throbber .curtain-content 
+{
+    position:absolute;
+    left:0;
+    top:0;
+    width:100%;
+    height:100%;
+}
+#throbber .curtain-content div {
+    text-align:center;
+    padding:250px;
+    color:White;
+}
+.message, .validation-summary-errors {
+    margin:10px 0 4px 0;
+    padding:4px;
+}
+messages div.message {
+    clear:both;
+}
+span.message {
+    display:block;
+    margin:4px 0 4px 4px;
+}
+.messages a {
+    font-weight:bold;
+}
+/* todo: (heskew) what else (other inputs) needs this? */
+.critical.message, .validation-summary-errors,
+.input-validation-error.text-box, .input-validation-error.text {
+    border:1px solid #990808;
+}
+.critical.message, .validation-summary-errors {
+    background:#e68585; /* red */
+    color:#fff;
+}
+.message-Information {
+    background:#e6f1c9; /* green */
+    border:1px solid #cfe493;
+    color:#062232;
+}
+.message-Warning {
+    background:#fdf5bc; /* yellow */
+    border:1px solid #ffea9b;
+}
+.message-Error {
+    background:#e68585; /* red */
+    border:1px solid #990808;
+    color:#fff;
+}.debug.message {
+    background:#eee;
+    border:1px dashed #D2D6C6;
+    color:#7a7a7a;
+    margin:20px 0 14px 0;
+}
+.debug.message:before {
+    content:"DEBUG » ";
+}

@@ -1,0 +1,21 @@
+﻿@model Orchard.Blogs.ViewModels.RecentBlogPostsViewModel
+
+@using Orchard.Blogs.Models;
+@using Orchard.ContentManagement;
+
+<fieldset>
+    <div>
+        @Html.LabelFor(m => m.BlogId, T("For Blog"))
+        <select id="@Html.FieldIdFor(m => m.BlogId)" name="@Html.FieldNameFor(m => m.BlogId)">
+		@foreach(BlogPart blog in Model.Blogs) {
+            @Html.SelectOption(Model.BlogId, blog.ContentItem.Id, blog.Name)
+		}
+		</select>
+        <span class="hint">@T("Select which blog you want to display the recent posts for")</span>
+    </div>
+    <div>
+        @Html.LabelFor(m => m.Count, T("Count"))
+        @Html.TextBoxFor(m => m.Count, new { @class = "text small"})
+        <span class="hint">@T("Number of posts to display. Zero for all.")</span>
+    </div>
+</fieldset>

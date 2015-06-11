@@ -1,0 +1,21 @@
+﻿Name: Widgets
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardproject.net
+Version: 1.9.0
+OrchardVersion: 1.9
+Description: An implementation of widgets for Orchard.
+FeatureDescription: An implementation of widgets.
+Category: Widget
+Dependencies: Orchard.Scripting, Orchard.Themes
+Features:
+    Orchard.Widgets.PageLayerHinting:
+        Name: Page Layer Hinting
+        Description: Adds a notification after creating a new Page with a direct link to create a Widget Layer for that specific page by URL.
+        Dependencies: Orchard.Widgets
+        Category: Widget
+    Orchard.Widgets.ControlWrapper:
+        Name: Widget Control Wrapper
+        Description: Add an Edit button on the front-end for authenticated users
+        Category: Widget
+        Dependencies: Orchard.Widgets

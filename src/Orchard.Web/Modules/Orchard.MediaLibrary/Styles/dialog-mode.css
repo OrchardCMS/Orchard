@@ -1,0 +1,21 @@
+﻿.media-library-modal-window #header, 
+.media-library-modal-window #menu,
+.media-library-modal-window #footer {
+    display: none;
+}
+
+.media-library-modal-window #media-library-main-selection-select {
+    display: inherit;
+}
+
+.media-library-modal-window #main {
+    margin-left: 20px;
+}
+
+.media-library-modal-window #layout-content {
+    background-image: none;
+}
+
+.media-library-modal-window #layout-main {
+    background: #f3f4f5;
+}

@@ -1,0 +1,18 @@
+﻿Name: Roles
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardproject.net
+Version: 1.9.0
+OrchardVersion: 1.9
+Description: The roles module is adding the ability to assign roles to users. It's also providing a set of default roles for which other modules can define default permissions.
+Features:
+    Orchard.Roles:
+		Name: Roles
+		Description: Standard user roles.
+		Category: Core
+		Dependencies: Orchard.Users
+	Orchard.Roles.Workflows:
+		Name: Roles Workflows Activities
+        Description: Provides a role based activities.
+		Category: Workflows
+		Dependencies: Orchard.Roles, Orchard.Workflows

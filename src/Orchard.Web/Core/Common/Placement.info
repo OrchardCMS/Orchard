@@ -1,0 +1,37 @@
+﻿<Placement>
+    <!-- available display shapes -->
+    <!--
+    Parts_Common_Body
+    Parts_Common_Body_Summary
+    Parts_Common_Metadata
+    Parts_Common_Metadata_Summary
+    Parts_Common_Metadata_SummaryAdmin
+    Fields_Common_Text
+    -->
+    <!-- edit shapes getting default placements -->
+    <!-- edit "shape" -->
+    <Place Parts_Common_Body_Edit="Content:2"/>
+    <Place Parts_Common_Owner_Edit="Content:20"/>
+    <Place Parts_Common_Date_Edit="Content:18"/>
+    <Place Parts_Common_Container_Edit="Content:20"/>
+    <Place Fields_Common_Text_Edit="Content:2.5"/>
+    <!-- default positioning -->
+    <!-- show summary for all DisplayType by default -->
+    <Place Parts_Common_Body_Summary="Content:5"/>
+    <!-- with text fields a little before -->
+    <Place Fields_Common_Text="Content:2.5"/>
+    <Match DisplayType="Detail">
+        <!-- hide summary, show full content, for Detail -->
+        <Place Parts_Common_Body_Summary="-"
+               Parts_Common_Body="Content:5"
+               Parts_Common_Metadata="Meta:2"/>
+    </Match>
+    <Match DisplayType="Summary">
+        <Place Parts_Common_Metadata_Summary="Meta:2"/>
+    </Match>
+    <Match DisplayType="SummaryAdmin">
+        <Place Parts_Common_Body_Summary="-"
+               Parts_Common_Metadata_SummaryAdmin="Meta:5"
+               Fields_Common_Text="-"/>
+    </Match>
+</Placement>

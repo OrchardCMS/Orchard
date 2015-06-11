@@ -1,0 +1,37 @@
+﻿.content-localization {
+    overflow:hidden;
+}
+.content-localization .content-localizations,
+.content-localization .add-localization {
+    clear:right;
+    float:right;
+}
+.content-localization .content-localizations {
+    font-size:.9em;
+}
+.content-localization .content-localizations li,
+.content-localization .add-localization {
+    display:inline;
+    list-style: none;
+    line-height:0;
+    margin: 0 .2em;
+}
+.content-localization .content-localizations li::after {
+    content:",";
+}
+.content-localization .content-localizations li:last-child::after {
+    content:"";
+}
+.content-localization .content-localizations>* {
+    display:inline;
+}
+.content-localization .localizations {
+    margin:0;
+}
+
+.content-localization .content-localizations li::after {
+    content:", ";
+}
+.content-localization .content-localizations li:last-child::after {
+    content:"";
+}

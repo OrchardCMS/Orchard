@@ -1,0 +1,6 @@
+﻿@using Orchard.MediaLibrary.ViewModels
+@{
+    MediaManagerIndexViewModel viewModel = Model.MediaManagerIndexViewModel;
+    
+}
+                <li><a href="#" data-bind="click: selectRecent, css: { selected: !displayed() }" id="button-recent"><i class="icon-time"></i>@T("Recent")</a>

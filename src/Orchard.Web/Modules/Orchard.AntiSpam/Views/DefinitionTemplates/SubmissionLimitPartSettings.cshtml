@@ -1,0 +1,21 @@
+﻿@model SubmissionLimitPartSettings
+@using Orchard.AntiSpam.Settings;
+
+<fieldset>
+    <div>
+        @Html.TextBoxFor(m => m.Limit, new { @class = "text small"})
+        <span class="hint">@T("The number of allowed submissions.")</span>
+    </div>
+</fieldset>
+<fieldset>
+    <div>
+        <select name="@Html.FieldNameFor(m => m.Unit)" size="1">
+            @Html.SelectOption(Model.Unit, (int)SubmissionLimitUnit.Day, T("Day").Text)
+            @Html.SelectOption(Model.Unit, (int)SubmissionLimitUnit.Hour, T("Hour").Text)
+            @Html.SelectOption(Model.Unit, (int)SubmissionLimitUnit.Month, T("Month").Text)
+            @Html.SelectOption(Model.Unit, (int)SubmissionLimitUnit.Year, T("Year").Text)
+            @Html.SelectOption(Model.Unit, (int)SubmissionLimitUnit.Overall, T("Overall").Text)
+        </select>
+        <span class="hint">@T("The period to take into account.")</span>
+    </div>
+</fieldset>

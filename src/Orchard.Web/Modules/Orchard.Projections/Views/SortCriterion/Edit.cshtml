@@ -1,0 +1,32 @@
+﻿@model SortCriterionEditViewModel
+@using Orchard.Projections.Models;
+@using Orchard.Projections.ViewModels;
+           
+@{
+    Layout.Title = T("Edit Sort Criterion - {0}", Model.SortCriterion.Name);
+}
+
+@Html.ValidationSummary()
+
+<h2>@Model.SortCriterion.Name</h2>
+<span class="hint">@Model.SortCriterion.Description</span>
+
+@using (Html.BeginFormAntiForgeryPost()) {
+
+<fieldset>
+    @Html.LabelFor(m => m.Description, T("Description"))
+    @Html.TextBoxFor(m => m.Description, new { @class = "text medium" })
+    <span class="hint">@T("You may optionally give a description to this sort criterion, to be used in the dashboard screens.")</span>
+</fieldset>
+
+    @* Render the dynamic form *@    
+<fieldset>
+    @DisplayChildren(Model.Form)
+</fieldset>
+    
+    @Display.TokenHint()
+
+<fieldset>
+    <button class="primaryAction" type="submit">@T("Save")</button>
+</fieldset>
+}

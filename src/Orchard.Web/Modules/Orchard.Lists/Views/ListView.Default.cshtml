@@ -1,0 +1,49 @@
+﻿@using Orchard.Core.Containers.Models
+@{
+    var container = (ContainerPart) Model.Container;
+    var contentItems = (IList<dynamic>)Model.ContentItems;
+}
+@if (!contentItems.Any()) {
+    <div class="message info">@T("'{0}' has no content items.", Model.ContainerDisplayName)</div>
+}
+else {
+    <div id="ajaxError" class="message error">@T("There was an error updating the positions. Please try again.")</div>
+    <fieldset class="contentItems bulk-items">
+        <table class="items content-list" summary="List Content Items">
+            <colgroup>
+                @if (container.EnablePositioning) {
+                    <col id="Col1" />
+                }
+                <col id="Col2" />
+            </colgroup>
+            <thead>
+                <tr>
+                    @if (container.EnablePositioning) {
+                        <th scope="col">&nbsp;&darr;</th>
+                    }
+                    <th scope="col" class="summary">
+                        <label><input type="checkbox" class="toggle-all" />@T("Items")</label>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var contentItem in contentItems) {
+                    <tr class="published" data-content-id="@contentItem.ContentItem.Id">
+                        @if (container.EnablePositioning) {
+                            <td>&nbsp;</td>
+                        }
+                        <td>
+                            @Display(contentItem)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </fieldset>
+}
+<div class="edit-item-sidebar">
+    <fieldset class="pager">
+        @Display(Model.Pager)
+    </fieldset>
+    @Display.Dialog_CloseButton()
+</div>

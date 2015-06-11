@@ -1,0 +1,14 @@
+﻿@*
+    Model:
+      ContentPart
+*@
+
+@using Orchard.ContentManagement;
+@using Orchard.Core.Common.Models;
+@using Orchard.Security;
+@{
+    CommonPart commonPart = Model.ContentPart;
+    // owner isn't really who last modified this, is it?
+    IUser owner = commonPart.As<CommonPart>() == null ? null : commonPart.As<CommonPart>().Owner;
+}
+@T("By {0}", owner == null ? T("unknown").ToString() : Convert.ToString(Html.ItemDisplayText(owner)))

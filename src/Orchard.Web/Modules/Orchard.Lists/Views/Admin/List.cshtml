@@ -1,0 +1,42 @@
+﻿@using Orchard.ContentManagement.MetaData.Models
+@using Orchard.Core.Containers.Models
+@using Orchard.ContentManagement;
+@{
+    Style.Require("jQueryColorBox");
+    Style.Include("nprogress.css", "nprogress.min.css");
+    Style.Include("common-admin.css", "common-admin.min.css");
+    Style.Include("list-admin.css", "list-admin.min.css");
+    Script.Require("ContentPicker").AtFoot();
+    Script.Require("jQueryUI_Sortable").AtFoot();
+    Script.Require("jQueryColorBox");
+    Script.Include("nprogress.js", "nprogress.min.js").AtFoot();
+    Script.Include("orchard-lists-admin.js", "orchard-lists-admin.min.js").AtFoot();
+
+    var containerId = ((int?)Model.ContainerId).GetValueOrDefault();
+    var container = ((ContentItem)Model.Container).As<ContainerPart>();
+    var itemContentTypes = (IList<ContentTypeDefinition>)Model.ItemContentTypes;
+
+    Layout.Title = T("Manage {0}", Model.ContainerDisplayName);
+}
+<div id="listManagement" @if (container.EnablePositioning) { <text>class="sortable"</text> }
+     data-baseurl="@WorkContext.CurrentSite.BaseUrl"
+     data-itemtypes="@String.Join(",", itemContentTypes.Select(x => x.Name))"
+     data-update-url="@Url.Action("UpdatePositions", "Admin", new { containerId = Model.ContainerId, page = Model.Pager.Page, pageSize = Model.Pager.PageSize })"
+     data-insert-url="@Url.Action("Insert", "Admin", new { containerId = Model.ContainerId, page = Model.Pager.Page, pageSize = Model.Pager.PageSize })"
+     data-refresh-url="@Url.Action("List", "Admin", new { containerId = Model.ContainerId, page = Model.Pager.Page, pageSize = Model.Pager.PageSize })"
+     data-dragdrop="@container.EnablePositioning.ToString().ToLower()">
+    @Display.Breadcrumbs_ContentItem(ContentItem: Model.Container, ContainerAccessor: Model.ContainerAccessor)
+    @Display.Parts_Container_Manage(
+        ContainerDisplayName: Model.ContainerDisplayName, 
+        ContainerContentType: Model.ContainerContentType, 
+        ContainerId: containerId,
+        ItemContentTypes: itemContentTypes)
+    @using (Html.BeginFormAntiForgeryPost()) {
+        @Display.Parts_Container_BulkActions(Options: Model.Options, Container: container)
+        @Display.ListViewButtons(Providers: Model.ListViewProviders, ActiveProvider: Model.ListViewProvider)
+        @Display(Model.ListView)
+    }
+</div>
+@if (Model.ListNavigation != null) {
+    @Display(Model.ListNavigation)
+}

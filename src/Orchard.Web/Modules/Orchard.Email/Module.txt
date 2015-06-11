@@ -1,0 +1,17 @@
+﻿Name: Email Messaging
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardproject.net
+Version: 1.9.0
+OrchardVersion: 1.9
+Description: The Email Messaging module adds Email sending functionalities.
+Features:
+    Orchard.Email:
+        Name: Email Messaging
+        Description: Email Messaging services.
+        Category: Messaging
+    Orchard.Email.Workflows:
+        Name: Email Workflows Activities
+        Description: Provides email sending activities.
+        Category: Workflows
+        Dependencies: Orchard.Email, Orchard.Workflows

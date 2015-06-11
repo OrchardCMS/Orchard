@@ -1,0 +1,21 @@
+﻿@using Orchard.ContentManagement
+@using Orchard.MediaLibrary.Models
+@using Orchard.Utility.Extensions
+@{
+    ContentItem contentItem = Model.ContentItem;
+    var media = contentItem.As<MediaPart>();
+    var oembed = contentItem.As<OEmbedPart>();
+    string thumbnail = oembed["thumbnail_url"] ?? oembed["thumbnail"];
+}
+
+@if (!String.IsNullOrEmpty(thumbnail)) {
+    <div class="media-thumbnail media-thumbnail-@contentItem.ContentType.HtmlClassify() mime-type-@media.MimeType.HtmlClassify()">
+        <img src="@thumbnail" />
+        @*<img src="@Display.ResizeMediaUrl(Width: 200, Height: 200, Mode: "crop", Alignment: "middlecenter", Path: oembed["thumbnail_url"])" />*@
+    </div>
+}
+else {
+    <div class="media-thumbnail media-thumbnail-@contentItem.ContentType.HtmlClassify() mime-type-@media.MimeType.HtmlClassify()">
+        @Html.Raw(oembed["html"])
+    </div>
+}

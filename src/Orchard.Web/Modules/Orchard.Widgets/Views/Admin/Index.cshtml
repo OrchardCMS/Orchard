@@ -1,0 +1,19 @@
+﻿@{
+    Style.Require("WidgetsAdmin");
+    Layout.Title = T("Widgets").ToString();
+}
+@Display.WidgetPlacement_Orphans(OrphanWidgets: Model.OrphanWidgets)
+<div id="widgets" class="group">
+    @Display.WidgetFiltersControl(Layers: Model.Layers, CurrentLayer: Model.CurrentLayer, Cultures: Model.Cultures, CurrentCulture: Model.CurrentCulture)
+    <div id="layout-widgets-placement">
+        @Display.WidgetPlacement(Widgets: Model.Widgets, Zones: Model.Zones, OrphanZones: Model.OrphanZones, CurrentLayer: Model.CurrentLayer)
+    </div>
+    <div id="layout-widgets-assistance">
+        <div id="widgets-assistance">
+            <div class="widgets-container">
+                @Display.WidgetLayerVisibility(Layers: Model.Layers, CurrentLayer: Model.CurrentLayer)
+                @Display.WidgetSimplePreview(ZonePreviewImage: Model.ZonePreviewImage, CurrentTheme: Model.CurrentTheme)
+            </div>
+        </div>
+    </div>
+</div>

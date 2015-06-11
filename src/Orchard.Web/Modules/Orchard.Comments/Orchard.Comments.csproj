@@ -1,0 +1,228 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{14C049FD-B35B-415A-A824-87F26B26E7FD}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Orchard.Comments</RootNamespace>
+    <AssemblyName>Orchard.Comments</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <TargetFrameworkProfile />
+    <UseIISExpress>false</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>..\..\..\OrchardBasicCorrectness.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Activities\CloseCommentsActivity.cs" />
+    <Compile Include="AdminMenu.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\CommentController.cs" />
+    <Compile Include="Migrations.cs" />
+    <Compile Include="Drivers\CommentPartDriver.cs" />
+    <Compile Include="Drivers\CommentsContainerPartDriver.cs" />
+    <Compile Include="Drivers\CommentSettingsPartDriver.cs" />
+    <Compile Include="Drivers\CommentsPartDriver.cs" />
+    <Compile Include="Projections\CommentsFilter.cs" />
+    <Compile Include="ResourceManifest.cs" />
+    <Compile Include="Rules\CommentsActions.cs" />
+    <Compile Include="Rules\CommentsForms.cs" />
+    <Compile Include="Services\CommentsCountProcessor.cs" />
+    <Compile Include="Services\ICommentsCountProcessor.cs" />
+    <Compile Include="Settings\CommentsPartSettings.cs" />
+    <Compile Include="Settings\CommentsPartSettingsEvents.cs" />
+    <Compile Include="Shapes.cs" />
+    <Compile Include="Models\CommentPart.cs" />
+    <Compile Include="Handlers\CommentPartHandler.cs" />
+    <Compile Include="Models\CommentStatus.cs" />
+    <Compile Include="Models\CommentsContainerPart.cs" />
+    <Compile Include="Feeds\CommentedOnContainerFeedQuery.cs" />
+    <Compile Include="Feeds\CommentedOnFeedQuery.cs" />
+    <Compile Include="Feeds\CommentFeedItemBuilder.cs" />
+    <Compile Include="Models\CommentPartRecord.cs" />
+    <Compile Include="Models\CommentsPartRecord.cs" />
+    <Compile Include="Services\CreateCommentContext.cs" />
+    <Compile Include="Services\ICommentService.cs" />
+    <Compile Include="Tokens\CommentTokens.cs" />
+    <Compile Include="ViewModels\CommentCountViewModel.cs" />
+    <Compile Include="Models\CommentSettingsPart.cs" />
+    <Compile Include="Handlers\CommentSettingsPartHandler.cs" />
+    <Compile Include="Handlers\CommentsPartHandler.cs" />
+    <Compile Include="Models\CommentsPart.cs" />
+    <Compile Include="Permissions.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\CommentService.cs" />
+    <Compile Include="ViewModels\CommentsDetailsViewModel.cs" />
+    <Compile Include="ViewModels\CommentsIndexViewModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Module.txt" />
+    <Content Include="Styles\images\menu.comments.png" />
+    <Content Include="Styles\menu.comments-admin.css" />
+    <Content Include="Styles\orchard-comments-admin.css" />
+    <Content Include="Styles\workflows-activity-close-comments.css" />
+    <Content Include="Views\Admin\Details.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
+      <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
+      <Name>Orchard.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\Orchard.Core.csproj">
+      <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
+      <Name>Orchard.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Tokens\Orchard.Tokens.csproj">
+      <Project>{6f759635-13d7-4e94-bcc9-80445d63f117}</Project>
+      <Name>Orchard.Tokens</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Workflows\Orchard.Workflows.csproj">
+      <Project>{7059493c-8251-4764-9c1e-2368b8b485bc}</Project>
+      <Name>Orchard.Workflows</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Admin\Edit.cshtml" />
+    <Content Include="Views\Admin\Index.cshtml" />
+    <Content Include="Views\Parts.CommentForm.cshtml" />
+    <Content Include="Views\Parts.Comments.Count.cshtml" />
+    <Content Include="Views\Parts.Comments.Count.SummaryAdmin.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts.Comments.Comments.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts.Comments.SiteSettings.cshtml" />
+    <Content Include="Views\Parts.ListOfComments.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Placement.info">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\CommentAuthor.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\CommentMetadata.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts.Comment.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts.Comment.AdminEdit.cshtml" />
+    <Content Include="Views\CommentReplyButton.cshtml" />
+    <Content Include="Views\DefinitionTemplates\CommentsPartSettings.cshtml" />
+    <Content Include="Views\Parts.Comment.SummaryAdmin.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts.Comment.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\CommentText.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Template.Comment.Notification.cshtml" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target> -->
+  <Target Name="AfterBuild" DependsOnTargets="AfterBuildCompiler">
+    <PropertyGroup>
+      <AreasManifestDir>$(ProjectDir)\..\Manifests</AreasManifestDir>
+    </PropertyGroup>
+    <!-- If this is an area child project, uncomment the following line:
+    <CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Child" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" />
+    -->
+    <!-- If this is an area parent project, uncomment the following lines:
+    <CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Parent" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" />
+    <CopyAreaManifests ManifestPath="$(AreasManifestDir)" CrossCopy="false" RenameViews="true" />
+    -->
+  </Target>
+  <Target Name="AfterBuildCompiler" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(ProjectDir)\..\$(ProjectName)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>9316</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>
+          </IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>True</UseCustomServer>
+          <CustomServerUrl>http://orchard.codeplex.com</CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

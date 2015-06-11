@@ -1,0 +1,5 @@
+﻿@model Orchard.Core.Common.DateEditor.DateEditorViewModel
+<fieldset class="createdutc-datetime">
+    <label for="@Html.FieldIdFor(m => Model.Editor.Date)">@T("Created On")</label>
+    @Html.EditorFor(m => Model.Editor)
+</fieldset>

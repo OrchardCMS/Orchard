@@ -1,0 +1,22 @@
+﻿@using Orchard.MediaLibrary.Models
+@using Orchard.Utility.Extensions;
+@{
+    MediaPart mediaPart = Model.ContentItem.MediaPart;
+    var contentTypeClassName = mediaPart.ContentItem.ContentType.HtmlClassify();
+}
+<article class="media-item media-item-summary @contentTypeClassName">
+    <header>
+        @Display(Model.Header)
+        @if (Model.Meta != null) {
+            <div class="metadata">
+            @Display(Model.Meta)
+            </div>
+        }
+    </header>
+    @Display(Model.Content)
+    @if(Model.Footer != null) {
+    <footer>
+        @Display(Model.Footer)
+    </footer>
+    }
+</article>

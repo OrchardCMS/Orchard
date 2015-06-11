@@ -1,0 +1,120 @@
+﻿<button id="filters">@T("Filters")</button>
+@{
+    Script.Include("caman/caman.full.min.js"); 
+}
+
+@using (Script.Foot()) {
+    
+    <script type="text/javascript">
+    //<![CDATA[
+
+        jQuery(function ($) {
+            $.imageEditor.registerPlugin(function () {
+                console.log('initiliazing filters');
+                var canvas,
+                    host = $.imageEditor,
+                    imageSrc;
+
+                $(".slider").each(function() {
+                    var self = $(this);
+                    var min = self.data('min');
+                    var max = self.data('max');
+                    var input = self.siblings('input');
+                    var step = self.data('step') || 1;
+                    
+                    $(this).slider({
+                        min: min,
+                        max: max,
+                        step: step,
+                        value: 0,
+                        change: function(ev, ui) {
+                            apply();
+                        },
+                        slide: function(ev, ui) {
+                            input.val(ui.value);
+                        }
+                    });
+                });
+
+                $('.filter > input').on("keyup paste", function() {
+                    $(this).siblings('.slider').each(function () {
+                        var self = $(this);
+                        var min = self.data('min');
+                        var max = self.data('max');
+                        self.slider({ value: Math.min(max, Math.max(min, +$(this).val())) });
+                    });
+                });
+                
+                // save resize
+                $('#filters-apply').on('click', function () {
+                    $('#filters-options').hide();
+                    host.hideOptions();
+                });
+
+                // cancel resizing
+                $('#filters-cancel').on('click', function () {
+                    host.image.src = imageSrc;
+                    
+                    $('#filters-options').hide();
+                    host.hideOptions();
+                });
+
+                $('#filters').on("click", function () {
+                    console.log('filters clicked');
+
+                    applying = true; // prevent filters from begin applyed when initializing value
+                    $('.filter > input').val(0);
+                    $(".slider").slider({ value: 0 });
+                    applying = false;
+                    imageSrc = host.image.src;
+
+                    $('#filters-options').show();
+                    host.showOptions();
+                });
+
+                var applying = false;
+                function apply() {
+                    if (applying) {
+                        return;
+                    }
+
+                    applying = true;
+                    console.log('applying filters');
+                    var image = new Image();
+                    image.onload = function () {
+                            canvas = document.createElement('canvas');
+                            canvas.width = host.image.width;
+                            canvas.height = host.image.height;
+
+                        var context = canvas.getContext('2d');
+                        context.drawImage(image, 0, 0, host.image.width, host.image.height, 0, 0, canvas.width, canvas.height);
+
+                        Caman(canvas, function () {
+                            // apply filters
+                            var caman = this;
+                            $('.slider').each(function () {
+                                var self = $(this);
+                                var input = self.siblings('input');
+                                var filter = self.data('filter');
+                                var value = input.val();
+                                if (value != 0) {
+                                    console.log(filter + '(' + value +')');
+                                    caman[filter](value);
+                                }
+                            });
+                            
+                            caman.render(function () {
+                                host.image.src = canvas.toDataURL('image/png');
+                                applying = false;
+                            });
+                        });
+                    };
+
+                    image.src = imageSrc;
+                }
+            });
+        });
+    //]]>    
+
+    </script>
+}

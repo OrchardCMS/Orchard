@@ -1,0 +1,68 @@
+@model Orchard.MediaProcessing.ViewModels.AdminIndexViewModel
+@using Orchard.MediaProcessing.ViewModels
+@{
+    Layout.Title = T("Profiles").ToString();
+    
+    var index = 0;
+
+	var pageSizes = new List<int?>() { 10, 50, 100 };
+	var defaultPageSize = WorkContext.CurrentSite.PageSize;
+	if(!pageSizes.Contains(defaultPageSize)) { 
+		pageSizes.Add(defaultPageSize);
+	}
+}
+
+@using (Html.BeginFormAntiForgeryPost()) { 
+    @Html.ValidationSummary()
+    <div class="manage">@Html.ActionLink(T("Add a new Media Profile").ToString(), "Create", new { Area = "Contents", id = "ImageProfile", returnurl = HttpContext.Current.Request.RawUrl }, new { @class = "button primaryAction" })</div>
+
+    <fieldset class="bulk-actions">
+        <label for="publishActions">@T("Actions:")</label>
+        <select id="publishActions" name="@Html.NameOf(m => m.Options.BulkAction)">
+            @Html.SelectOption(Model.Options.BulkAction, ImageProfilesBulkAction.None, T("Choose action...").ToString())
+            @Html.SelectOption(Model.Options.BulkAction, ImageProfilesBulkAction.Delete, T("Delete").ToString())
+        </select>
+        <button type="submit" name="submit.BulkEdit" value="@T("Apply")">@T("Apply")</button>
+    </fieldset>
+    <fieldset class="bulk-actions">
+		<input type="hidden" name="Page" value="1" />
+		<label for="pageSize">@T("Show:")</label>
+		<select id="pageSize" name="PageSize">
+			@Html.SelectOption((int)Model.Pager.PageSize, 0, T("All").ToString())
+			@foreach(int size in pageSizes.OrderBy(p => p)) {
+				@Html.SelectOption((int)Model.Pager.PageSize, size, size.ToString())
+			}
+		</select>
+        <button type="submit" name="submit.Filter" value="@T("Filter")">@T("Filter")</button>
+    </fieldset>
+    <fieldset>		
+        <table class="items">
+            <thead>
+                <tr>
+                    <th scope="col" class="checkbox">&nbsp;&darr;</th>
+                    <th scope="col">@T("Name")</th>
+                    <th scope="col" class="actions">&nbsp;</th>
+                </tr>
+            </thead>
+            @foreach (var entry in Model.ImageProfiles) { 
+                <tr>
+                    <td>
+                        <input type="hidden" value="@Model.ImageProfiles[index].ImageProfileId" name="@Html.NameOf(m => m.ImageProfiles[index].ImageProfileId)"/>
+                        <input type="checkbox" value="true" name="@Html.NameOf(m => m.ImageProfiles[index].IsChecked)"/>
+                    </td>
+                    <td>
+                        @Html.ActionLink(entry.Name, "Edit", new { id = entry.ImageProfileId }) 
+                    </td>
+                    <td>
+                        @Html.ActionLink(T("Properties").ToString(), "Edit", new { Area = "Contents", id = entry.ImageProfileId, returnurl = HttpContext.Current.Request.RawUrl }) |
+                        @Html.ActionLink(T("Edit").ToString(), "Edit", new { id = entry.ImageProfileId }) |
+                        @Html.ActionLink(T("Delete").ToString(), "Delete", new { id = entry.ImageProfileId }, new { itemprop = "RemoveUrl UnsafeUrl" })
+                        @*@Html.ActionLink(T("Preview").ToString(), "Preview", new { id = entry.ImageProfileId })*@
+                    </td>
+                </tr>
+                index++;
+            }
+        </table>
+	@Display(Model.Pager)
+    </fieldset>
+} 

@@ -1,0 +1,46 @@
+﻿@model Orchard.Fields.Settings.LinkFieldSettings
+@using Orchard.Fields.Settings;
+
+<fieldset>
+    <div>
+        <label class="forpicker" for="@Html.FieldIdFor(m => m.TargetMode)">@T("Target")</label>    
+        <select id="@Html.FieldIdFor(m => m.TargetMode)" name="@Html.FieldNameFor(m => m.TargetMode)">
+            @Html.SelectOption(TargetMode.None, Model.TargetMode == TargetMode.None, T("No target").ToString())
+            @Html.SelectOption(TargetMode.NewWindow, Model.TargetMode == TargetMode.NewWindow, T("Open link in new window").ToString())
+            @Html.SelectOption(TargetMode.Parent, Model.TargetMode == TargetMode.Parent, T("Open link in the parent frameset").ToString())
+            @Html.SelectOption(TargetMode.Top, Model.TargetMode == TargetMode.Top, T("Open link in the full body of the window").ToString())
+            @Html.SelectOption(TargetMode.UserChoice, Model.TargetMode == TargetMode.UserChoice, T("Allow the user to choose").ToString())
+        </select> 
+    </div>
+</fieldset>
+<fieldset>
+    <div>
+        @Html.CheckBoxFor(m => m.Required) <label for="@Html.FieldIdFor(m => m.Required)" class="forcheckbox">@T("Required")</label>
+        <span class="hint">@T("Whether the url is required.")</span>
+    </div>
+</fieldset>
+<fieldset>
+    <div>
+        <label class="forpicker" for="@Html.FieldIdFor(m => m.LinkTextMode)">@T("Link text")</label>    
+        <select id="@Html.FieldIdFor(m => m.LinkTextMode)" name="@Html.FieldNameFor(m => m.LinkTextMode)">
+            @Html.SelectOption(LinkTextMode.Optional, Model.LinkTextMode == LinkTextMode.Optional, T("Optional").ToString())
+            @Html.SelectOption(LinkTextMode.Required, Model.LinkTextMode == LinkTextMode.Required, T("Required").ToString())
+            @Html.SelectOption(LinkTextMode.Static, Model.LinkTextMode == LinkTextMode.Static, T("Static").ToString(), new { id = Html.FieldIdFor(m => m.LinkTextMode) + "-static" })
+            @Html.SelectOption(LinkTextMode.Url, Model.LinkTextMode == LinkTextMode.Url, T("Url").ToString())
+        </select> 
+        <span class="hint">@T("Define how the title field should behave in the editor.")</span>
+    </div>
+    <div class="editor-field" data-controllerid="@(Html.FieldIdFor(m => m.LinkTextMode) + "-static")">
+        @Html.TextBoxFor(m => m.StaticText, new { @class = "text medium" })
+        <span class="hint">@T("The title to display for the link")</span>
+        @Html.ValidationMessageFor(m => m.Hint)
+    </div>
+</fieldset>
+<fieldset>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.Hint)">@T("Help text")</label>
+        @Html.TextAreaFor(m => m.Hint, new { @class = "text medium", rows = "5" } )
+        <span class="hint">@T("The help text is written under the field.")</span>
+        @Html.ValidationMessageFor(m => m.Hint)
+    </div>
+</fieldset>

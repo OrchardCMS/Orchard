@@ -1,0 +1,49 @@
+﻿@using Orchard.Modules.Extensions;
+@using Orchard.Mvc.Html;
+@using Orchard.Modules.ViewModels;
+@using Orchard.Environment.Extensions.Models;
+@using Orchard.Utility.Extensions;
+
+@{
+    Script.Require("ShapesBase").AtFoot();
+    
+    Orchard.Modules.Models.ModuleEntry module = Model.Module;
+    var moduleClasses = module.IsRecentlyInstalled ? "class=\"recentlyInstalledModule\"" : String.Empty;
+}
+
+<div class="summary">
+    @if (module.Notifications != null && module.Notifications.Count > 0) {
+        <div class="notifications">
+            @foreach (var notification in module.Notifications) {
+                <h5>@Html.Raw(notification)</h5>
+            }
+        </div>
+    }
+    <div class="properties">
+        <h2 @Html.Raw(moduleClasses)>
+            @module.Descriptor.Name<span> - @T("Version: {0}", !String.IsNullOrEmpty(module.Descriptor.Version) ? module.Descriptor.Version : T("1.0").ToString())</span>
+        </h2>
+
+        @Html.ActionLink(
+            T("Uninstall").Text,
+            "UninstallModule",
+            "PackagingServices",
+            new { ModuleId = module.Descriptor.Id, ReturnUrl = Request.ToUrlString(), Area = "Orchard.Packaging" },
+            new { itemprop = "RemoveUrl UnsafeUrl" })
+
+        @if (!String.IsNullOrEmpty(module.Descriptor.Description)) {
+            <p>@module.Descriptor.Description</p>
+        }
+
+        <ul class="pageStatus" style="color:#666; margin:.6em 0 0 0;">
+            @{ var features = module.Descriptor.Features; }
+            <li>@T("Features: {0}", MvcHtmlString.Create(String.Join(", ", features.Select(f => Html.Link(String.IsNullOrEmpty(f.Name) ? f.Id : f.Name, String.Format("{0}#{1}", Url.Action("features", new { area = "Orchard.Modules" }), f.Id.AsFeatureId(n => T(n)))).ToString()).OrderBy(s => s).ToArray())))</li>
+            <li>&nbsp;&#124;&nbsp;@T("Author: {0}", !String.IsNullOrEmpty(module.Descriptor.Author) ? module.Descriptor.Author : T("Unknown").ToString())</li>
+            <li>
+                &nbsp;&#124;&nbsp;@T("Website: ")
+                @if (!String.IsNullOrEmpty(module.Descriptor.WebSite)) { <a href="@module.Descriptor.WebSite">@module.Descriptor.WebSite</a> }
+                else { @T("Unknown").ToString() }
+            </li>
+        </ul>
+    </div>
+</div>

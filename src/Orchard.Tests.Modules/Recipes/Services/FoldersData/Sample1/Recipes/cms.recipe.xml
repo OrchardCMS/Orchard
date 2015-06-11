@@ -1,0 +1,46 @@
+﻿<?xml version="1.0"?>
+<Orchard>
+  <Recipe>
+    <Name>cms</Name>
+    <Description>a sample Orchard recipe describing a cms</Description>
+    <Author>orchard</Author>
+    <WebSite>http://orchardproject.net</WebSite>
+    <Tags>tag1, tag2</Tags>
+    <Version>1.1</Version>
+    <IsSetupRecipe>true</IsSetupRecipe>
+  </Recipe>
+
+  <!-- Steps -->
+  <Module packageId="module1" repository="somerepo" version="1.1" />
+
+  <Feature disable="f1, f2" enable="f3,f4" />
+
+  <Metadata>
+    <Types>
+      <Blog creatable="true">
+        <Body format="abodyformat"/>
+      </Blog>
+    </Types>
+    <Parts>
+    </Parts>
+  </Metadata>
+
+  <Command>
+    command1
+    command2
+    command3
+  </Command>
+
+  <Settings>
+    <SiteSettingsPart PageSize="30" />
+    <CommentSettingsPart />
+  </Settings>
+
+  <Migration features="f2,f4"/>
+
+  <Theme packageId="theme1" repository="somerepo" />
+
+  <Custom1 attr1="value1" />
+  <Custom2 attr2="value2" />
+</Orchard>
+

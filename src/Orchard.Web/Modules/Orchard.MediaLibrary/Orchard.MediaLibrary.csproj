@@ -1,0 +1,428 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{73A7688A-5BD3-4F7E-ADFA-CE36C5A10E3B}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Orchard.MediaLibrary</RootNamespace>
+    <AssemblyName>Orchard.MediaLibrary</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <TargetFrameworkProfile />
+    <UseIISExpress>false</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\newtonsoft.json\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.ComponentModel.DataAnnotations">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\knockout-2.3.0.js" />
+    <Content Include="Scripts\media-library-picker.js" />
+    <Content Include="Scripts\media-library.js" />
+    <Content Include="Scripts\modal-window.js" />
+    <Content Include="Scripts\history.js" />
+    <Content Include="Styles\font-awesome\css\font-awesome.css" />
+    <Content Include="Styles\font-awesome\css\font-awesome.min.css" />
+    <Content Include="Styles\font-awesome\font\fontawesome-webfont.svg" />
+    <Content Include="Styles\Images\menu.media.png" />
+    <Content Include="Styles\menu.media-library-admin.css" />
+    <Content Include="Styles\menu.oembed-mediaproviders.css" />
+    <Content Include="Styles\orchard-oembed-admin.css" />
+    <Content Include="Styles\menu.websearch-mediaproviders.css" />
+    <Content Include="Styles\menu.clientstorage-mediaproviders.css" />
+    <Content Include="Styles\dialog-mode.css" />
+    <Content Include="Styles\media-library-picker-admin.css" />
+    <Content Include="Styles\Images\folders-loader.gif" />
+    <Content Include="Styles\Images\loading.gif" />
+    <Content Include="Styles\Images\processing.gif" />
+    <Content Include="Styles\orchard-clientstorage-admin.css" />
+    <Content Include="Styles\Images\ajax-loader.gif" />
+    <Content Include="Styles\orchard-websearch-admin.css" />
+    <Content Include="Styles\orchard-mediaproviders-admin.css" />
+    <Content Include="Styles\orchard-medialibrary-admin.css" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Scripts\Web.config" />
+    <Content Include="Styles\Web.config" />
+    <Compile Include="Drivers\VectorImagePartDriver.cs" />
+    <Compile Include="Factories\VectorImageFactory.cs" />
+    <Compile Include="Models\VectorImagePart.cs" />
+    <Compile Include="Models\IMediaFolder.cs" />
+    <Compile Include="MediaFileName\MediaFileNameDriver.cs" />
+    <Compile Include="MediaFileName\MediaFileNameEditorSettings.cs" />
+    <Compile Include="MediaFileName\MediaFileNameEditorViewModel.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="Module.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
+      <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
+      <Name>Orchard.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\Orchard.Core.csproj">
+      <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
+      <Name>Orchard.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Tokens\Orchard.Tokens.csproj">
+      <Project>{6f759635-13d7-4e94-bcc9-80445d63f117}</Project>
+      <Name>Orchard.Tokens</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Drivers\MediaLibraryExplorerPartDriver.cs" />
+    <Compile Include="ModalAdminFilter.cs" />
+    <Compile Include="AdminMenu.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\ClientStorageController.cs" />
+    <Compile Include="Controllers\OEmbedController.cs" />
+    <Compile Include="Controllers\FolderController.cs" />
+    <Compile Include="Controllers\WebSearchController.cs" />
+    <Compile Include="Drivers\AudioPartDriver.cs" />
+    <Compile Include="Drivers\OEmbedPartDriver.cs" />
+    <Compile Include="Drivers\MediaLibraryPickerFieldDriver.cs" />
+    <Compile Include="Drivers\DocumentPartDriver.cs" />
+    <Compile Include="Drivers\VideoPartDriver.cs" />
+    <Compile Include="Drivers\ImagePartDriver.cs" />
+    <Compile Include="Factories\AudioFactory.cs" />
+    <Compile Include="Factories\DocumentFactory.cs" />
+    <Compile Include="Factories\VideoFactory.cs" />
+    <Compile Include="Factories\ImageFactory.cs" />
+    <Compile Include="Factories\IMediaFactory.cs" />
+    <Compile Include="Factories\IMediaFactorySelector.cs" />
+    <Compile Include="Factories\MediaFactorySelectorResult.cs" />
+    <Compile Include="Fields\MediaLibraryPickerField.cs" />
+    <Compile Include="Handlers\MediaLibraryPickerFieldHandler.cs" />
+    <Compile Include="Handlers\MediaPartHandler.cs" />
+    <Compile Include="Drivers\MediaPartDriver.cs" />
+    <Compile Include="Handlers\WebSearchSettingsPartHandler.cs" />
+    <Compile Include="Migrations.cs" />
+    <Compile Include="Models\AudioPart.cs" />
+    <Compile Include="Models\FolderHierarchy.cs" />
+    <Compile Include="Models\MediaFile.cs" />
+    <Compile Include="Models\MediaFolder.cs" />
+    <Compile Include="Models\MediaLibraryExplorerPart.cs" />
+    <Compile Include="Models\WebSearchSettingsPart.cs" />
+    <Compile Include="Models\ImagePart.cs" />
+    <Compile Include="Models\DocumentPart.cs" />
+    <Compile Include="Models\VideoPart.cs" />
+    <Compile Include="Models\OEmbedPart.cs" />
+    <Compile Include="Models\MediaPart.cs" />
+    <Compile Include="Models\MediaPartRecord.cs" />
+    <Compile Include="Permissions.cs" />
+    <Compile Include="Providers\ClientStorageMenu.cs" />
+    <Compile Include="Providers\OEmbedMenu.cs" />
+    <Compile Include="Providers\WebSearchMenu.cs" />
+    <Compile Include="ResourceManifest.cs" />
+    <Compile Include="Services\IMediaLibraryService.cs" />
+    <Compile Include="Services\MediaLibraryService.cs" />
+    <Compile Include="Services\Shapes.cs" />
+    <Compile Include="Services\XmlRpcHandler.cs" />
+    <Compile Include="Settings\MediaLibraryPickerFieldEditorEvents.cs" />
+    <Compile Include="Settings\MediaLibraryPickerFieldSettings.cs" />
+    <Compile Include="Tokens\FieldTokens.cs" />
+    <Compile Include="ViewModels\MediaManagerChildFoldersViewModel.cs" />
+    <Compile Include="ViewModels\ImportMediaViewModel.cs" />
+    <Compile Include="ViewModels\MediaLibraryPickerFieldViewModel.cs" />
+    <Compile Include="ViewModels\MediaManagerMediaItemsViewModel.cs" />
+    <Compile Include="ViewModels\MediaManagerFolderCreateViewModel.cs" />
+    <Compile Include="ViewModels\MediaManagerFolderEditViewModel.cs" />
+    <Compile Include="ViewModels\MediaManagerImportViewModel.cs" />
+    <Compile Include="ViewModels\MediaManagerIndexViewModel.cs" />
+    <Compile Include="ViewModels\OEmbedViewModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Admin\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Media.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Media.Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ClientStorage\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Admin\Import.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\WebSearch\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Folder\Create.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Folder\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Media-Image.Thumbnail.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Media.Thumbnail.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Admin\MediaItems.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Media-Video.Thumbnail.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\Media.SummaryAdmin.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Placement.info">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts.Media.Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\Image.SummaryAdmin.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\Image.Metadata.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\Media.Actions.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Media.SummaryAdmin.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\Video.Metadata.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\Video.SummaryAdmin.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Media-Audio.Thumbnail.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Media-Document.Thumbnail.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\Audio.Metadata.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\Audio.SummaryAdmin.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\Document.Metadata.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\Document.SummaryAdmin.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\DefinitionTemplates\MediaLibraryPickerFieldSettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Fields\MediaLibraryPicker.Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Fields\MediaLibraryPicker.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Fields\MediaLibraryPicker.SummaryAdmin.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\Audio.Summary.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\Document.Summary.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\Image.Summary.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\Video.Summary.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\Audio.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\Document.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\Image.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\Video.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\OEmbed\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\OEmbed.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\OEmbed.Metadata.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\OEmbed.Summary.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\OEmbed.SummaryAdmin.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Media-OEmbed.Thumbnail.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts\WebSearch.WebSearchSettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Media.Raw.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\font-awesome\font\fontawesome-webfont.eot" />
+    <Content Include="Styles\font-awesome\font\fontawesome-webfont.ttf" />
+    <Content Include="Styles\font-awesome\font\fontawesome-webfont.woff" />
+    <Content Include="Styles\font-awesome\font\FontAwesome.otf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Media.Summary.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\MediaLibrary.Actions.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\MediaLibrary.Navigation.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Fields\MediaLibraryPicker.Summary.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Admin\ChildFolders.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\MediaLibraryPicker.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\DefinitionTemplates\MediaFileNameEditorSettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\Media.Edit.FileName.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\VectorImage.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\VectorImage.Metadata.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\VectorImage.Summary.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\VectorImage.SummaryAdmin.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Media-VectorImage.Thumbnail.cshtml" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>Styles\orchard-medialibrary-admin.css</ApplicationManifest>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target> -->
+  <Target Name="AfterBuild" DependsOnTargets="AfterBuildCompiler">
+    <PropertyGroup>
+      <AreasManifestDir>$(ProjectDir)\..\Manifests</AreasManifestDir>
+    </PropertyGroup>
+    <!-- If this is an area child project, uncomment the following line:
+    <CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Child" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" />
+    -->
+    <!-- If this is an area parent project, uncomment the following lines:
+    <CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Parent" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" />
+    <CopyAreaManifests ManifestPath="$(AreasManifestDir)" CrossCopy="false" RenameViews="true" />
+    -->
+  </Target>
+  <Target Name="AfterBuildCompiler" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(ProjectDir)\..\$(ProjectName)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>45979</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>
+          </IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>True</UseCustomServer>
+          <CustomServerUrl>http://orchard.codeplex.com</CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

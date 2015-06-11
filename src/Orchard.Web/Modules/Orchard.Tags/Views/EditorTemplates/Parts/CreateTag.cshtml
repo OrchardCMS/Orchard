@@ -1,0 +1,13 @@
+﻿@model Orchard.Tags.ViewModels.TagsAdminCreateViewModel
+@{
+    Style.Require("TagsAdmin");
+}
+@using (Html.BeginFormAntiForgeryPost()) { 
+    <fieldset>
+        @Html.LabelFor(m => m.TagName, T("New Tag Name"))
+        @Html.TextBoxFor(m => m.TagName, new { @class = "text", placeholder = T("New Tag Name"), @required = "required" })
+    </fieldset>
+    <fieldset>
+        <button class="primaryAction" type="submit" name="submit.Create" value="yes">@T("Add Tag")</button>
+    </fieldset>
+}

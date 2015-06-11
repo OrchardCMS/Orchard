@@ -1,0 +1,2 @@
+﻿@model dynamic
+@if (Model.CurrentUser != null) {<div id="login">@T("User:") @Html.ItemDisplayText((Orchard.ContentManagement.IContent)Model.CurrentUser) | @Html.ActionLink(T("Logout").ToString(), "LogOff", new { Area = "Orchard.Users", Controller = "Account", ReturnUrl = Href("~/") })</div>}

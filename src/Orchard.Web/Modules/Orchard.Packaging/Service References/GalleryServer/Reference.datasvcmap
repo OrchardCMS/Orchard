@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="680b6c18-74a9-42fd-978e-d9d9c1c396d2" xmlns="urn:schemas-microsoft-com:xml-dataservicemap">
+  <MetadataSources>
+    <MetadataSource Address="http://packages.orchardproject.net/FeedService.svc/FeedService.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="service.edmx" MetadataType="Edmx" ID="0ee65dc8-3919-409c-a84e-c78cc88d0597" SourceId="1" SourceUrl="http://packages.orchardproject.net/FeedService.svc/FeedService.svc" />
+  </Metadata>
+  <Extensions />
+</ReferenceGroup>

@@ -1,0 +1,82 @@
+﻿<button id="resize">@T("Resize")</button>
+
+@using (Script.Foot()) {
+    
+    <script type="text/javascript">
+    //<![CDATA[
+
+        jQuery(function ($) {
+            $.imageEditor.registerPlugin(function () {
+                console.log('initializing resize');
+                var host = $.imageEditor;
+
+                var oldWidth, oldHeight, ratio;
+                
+                // save resize
+                $('#resize-apply').on('click', function () {
+
+                    var newWidth = $("#resize-width").val();
+                    var newHeight = $("#resize-height").val();
+
+                    console.log(newWidth, newHeight);
+
+                    var image = new Image();
+                    image.onload = function () {
+                        var canvas = document.createElement('canvas');
+                        $(host.image).css({
+                            width: canvas.width = newWidth,
+                            height: canvas.height = newHeight
+                        });
+                        var context = canvas.getContext('2d');
+                        context.drawImage(image, 0, 0, oldWidth, oldHeight, 0, 0, newWidth, newHeight);
+                        host.image.src = canvas.toDataURL("image/png");
+                    };
+
+                    image.src = host.image.src;
+
+                    $('#resize-options').hide();
+                    host.hideOptions();
+                });
+
+                // cancel resizing
+                $('#resize-cancel').on('click', function () {
+                    $('#resize-options').hide();
+                    host.hideOptions();
+                });
+
+                $('#resize').on("click", function () {
+                    console.log('resize clicked');
+
+                    $('#resize-width').val(oldWidth = host.image.width);
+                    $('#resize-height').val(oldHeight = host.image.height);
+
+                    ratio = oldWidth / oldHeight;
+                    console.log({ width: oldWidth, height: oldHeight, ratio: ratio });
+
+                    $('#resize-options').show();
+                    host.showOptions();
+
+                    // focus and select current width
+                    $("#resize-width").focus();
+                    $("#resize-width").select();
+                });
+
+                $('#resize-width').on("keyup paste", function () {
+                    var newWidth = +$(this).val();
+                    if ($('#resize-maintain').prop('checked')) {
+                        $('#resize-height').val(Math.floor(newWidth / ratio));
+                    }
+                });
+
+                $('#resize-height').on("keyup paste", function () {
+                    var newHeight = +$(this).val();
+                    if ($('#resize-maintain').prop('checked')) {
+                        $('#resize-width').val(Math.floor(newHeight * ratio));
+                    }
+                });
+            });
+        });
+    //]]>    
+
+    </script>
+}

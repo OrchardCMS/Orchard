@@ -1,0 +1,31 @@
+﻿@using Orchard.Core.Contents
+@using Orchard.MediaLibrary.Fields
+@using Orchard.Utility.Extensions;
+
+@{
+    var field = (MediaLibraryPickerField) Model.ContentField;
+    string name = field.DisplayName;
+    var mediaParts = field.MediaParts;
+
+    var returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString();
+}
+<span class="name">@name:</span>
+<p class="media-library-picker-field media-library-picker-field-@name.HtmlClassify()">
+    
+    @if (mediaParts.Any()) {
+        foreach (var contentItem in mediaParts) {
+            if (Authorizer.Authorize(Permissions.EditContent, contentItem)) {
+                <a href="@Url.ItemEditUrl(contentItem, new {returnUrl})">
+                    @Display(BuildDisplay(contentItem, "Thumbnail"))
+                </a>
+            }
+            else {
+                @Display(BuildDisplay(contentItem, "Thumbnail"))
+            }
+        }
+    }
+    else {
+        <span class="value">@T("No media items.")</span>
+    }
+</p>
+

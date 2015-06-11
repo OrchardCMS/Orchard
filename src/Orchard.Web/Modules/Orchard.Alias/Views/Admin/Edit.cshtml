@@ -1,0 +1,28 @@
+@{
+    Layout.Title = T("Edit Alias");
+}
+
+@using (Html.BeginFormAntiForgeryPost()) {
+    @Html.ValidationSummary()
+<fieldset>
+    <legend>@T("Edit alias")</legend>
+    <div>
+        <label for="aliasPath">@T("Alias Path")</label>
+        @Html.TextBox("aliasPath", null, new { @class = "text large" })
+        @Html.ValidationMessage("aliasPath")
+        <span class="hint">@T("The path of the alias e.g., my-blog/my-post")</span>
+    </div>
+    <div>
+        <label for="routePath">@T("Route Path")</label>
+        @Html.TextBox("routePath", null, new { @class = "text medium" })
+        @Html.ValidationMessage("routePath")
+        <span class="hint">@T("The actual route Orchard should call when the path is requested e.g., Blogs/Blog/Item?blogId=18")</span>
+    </div>
+</fieldset>
+<fieldset>
+    <div>
+        <button class="primaryAction" type="submit">@T("Save")</button>
+        @Html.ActionLink(T("Cancel").ToString(), "Index", new { }, new { @class = "button" })
+    </div>
+</fieldset>
+ }

@@ -1,0 +1,161 @@
+﻿@model Orchard.MediaLibrary.ViewModels.ImportMediaViewModel
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    @{
+        Script.Require("jQuery").AtFoot();
+        Script.Require("jQueryUI").AtFoot();
+
+        Style.Include("orchard-medialibrary-admin.css");
+        Style.Include("orchard-mediaproviders-admin.css");
+        Style.Include("orchard-clientstorage-admin.css");
+
+        Script.Require("jQueryFileUpload").AtFoot();
+        Script.Include("knockout-2.3.0.js").AtFoot();
+    }
+
+    @Display.Metas()
+    @Display.HeadScripts()
+    @Display.HeadLinks()
+    @Display.StyleSheetLinks()
+</head>
+<body>
+    
+    <div id="clientstorage-main">
+        <div id="message">@T("Click here, Drop files or Paste images")</div>
+        <div id="fileupload">
+            <input type="file" name="files[]" multiple="multiple">
+            <ul id="fileupload-transfers" data-bind="foreach: transfers">
+                <li data-bind="css: status()" class="transfer">
+                    <div class="media-thumbnail" data-bind="html: thumbnail(), visible: status() == 'success'"></div>
+                    <div class="ui-progress-bar" id="progress-bar" data-bind="visible: status() != 'success'">
+                        <span class="ui-label" data-bind="text: label"></span>
+                        <div class="ui-progress" data-bind="style: { width: progress() + '%' }">
+                        </div>
+                    </div>
+                </li>
+            </ul>
+
+        </div>
+
+    </div>
+    
+    
+    @using(Script.Foot()) {
+    <script type="text/javascript">
+    //<![CDATA[
+        $(function () {
+
+            function transferViewModel(filename, size) {
+                var self = this;
+                
+                self.filename = filename;
+                self.size = size;
+                self.label = ko.observable();
+                self.status = ko.observable('transition');
+                self.progress = ko.observable(0);
+                self.thumbnail = ko.observable();
+            }
+
+            function clientStorageViewModel() {
+                var self = this;
+                
+                self.transfers = ko.observableArray([]);
+
+                self.upload = function(file) {
+                    var transfer = new transferViewModel(file.name, file.size);
+                    self.transfers.push(transfer);
+                    return transfer;
+                };
+            }
+            
+            var viewModel = new clientStorageViewModel();
+            ko.applyBindings(viewModel);
+
+            $('#fileupload').click(function() {
+                console.log('click');
+                $('#fileupload > input').trigger('click');
+            });
+
+            $('#fileupload > input').click(function(event) {
+                event.stopPropagation();
+            });
+            
+            // Add drag-n-drop HTML5 support
+            $('#fileupload').fileupload({
+                url: '@Url.Action("Upload", "ClientStorage")',
+                autoUpload: true,
+                formData: {
+                    folderPath: '@Html.Raw(HttpUtility.JavaScriptStringEncode(Model.FolderPath))',
+                    type: '@HttpUtility.JavaScriptStringEncode(Model.Type)',
+                    __RequestVerificationToken: '@Html.AntiForgeryTokenValueOrchard()'
+                },
+                done: function (e, data) {
+                    console.log(data.result);
+                },
+                progressall: function (e, data) {
+                    var progress = Math.floor(data.loaded / data.total * 100, 10);
+                    $('#progress .bar').css('width', progress + '%');
+                },
+                // The add callback is invoked as soon as files are added to the fileupload
+                // widget (via file input selection, drag & drop or add API call).
+                // See the basic file upload widget for more information:
+                add: function (e, data) {
+                    var self = $(this);
+                    
+                    if (!data.files.length) {
+                        return;
+                    }
+
+                    var filesLength = data.files.length;
+                    for (var i = 0; i < filesLength; i++) {
+                        var file = data.files[i];
+                        data.context = viewModel.upload(file);
+                    }
+                    
+                    
+                    data.submit();
+                },
+                // Callback for upload progress events:
+                progress: function (e, data) {
+                    if (data.context) {
+                        var progress = Math.floor(data.loaded / data.total * 100);
+                        data.context.progress(progress);
+                        data.context.label(data.context.filename + ' - ' + progress + '%');
+                    }
+                },
+                pasteZone: window.parent.document,
+                paste: function (e, data) {
+                    $.each(data.files, function (index, file) {
+                        //console.log('Pasted file type: ' + file.type);
+                    });
+                    return true;
+                },
+                done: function(e, data) {
+                    var result = data.result[0];
+                    data.context.label('@HttpUtility.JavaScriptStringEncode(T("Loading thumbnail...").Text)');
+                    
+                    
+                    var url = '@HttpUtility.JavaScriptStringEncode(Url.Action("MediaItem", "Admin"))/' + result.id + '?displayType=Thumbnail';
+
+                    $.ajax({
+                        type: "GET",
+                        url: url,
+                    }).done(function(html) {
+                        data.context.thumbnail(html);
+                        data.context.status('success');
+                    });
+                },
+                fail: function(e, data) {
+                    data.context.status('error');
+                }
+            });
+        })
+    //]]>
+    </script>
+    }
+    
+    @Display.FootScripts()
+</body>
+</html>

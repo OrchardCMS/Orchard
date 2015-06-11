@@ -1,0 +1,10 @@
+﻿@using Orchard.ContentManagement
+@using Orchard.MediaLibrary.Models
+@{
+    VideoPart videoPart = Model.ContentPart;
+}           
+
+<div class="video-length">
+    <em>@T("Length:")</em>
+    <span>@T("{0}:{1}", Math.Floor((float)videoPart.Length / 60), Math.Floor((float)videoPart.Length % 60).ToString("00") )</span>
+</div>

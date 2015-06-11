@@ -1,0 +1,121 @@
+﻿<Placement>
+  <Place Parts_Media_Edit="Content:6"/>
+  <Place Parts_Media_Edit_FileName="Content:6"/>
+
+  <!-- Raw Media -->
+  <Match DisplayType="Raw">
+    <Place Parts_Image="Content"
+           Parts_Video="Content"
+           Parts_Audio="Content"
+           Parts_Document="Content"
+           Parts_OEmbed="Content"
+            />
+  </Match>
+  
+  <!-- MediaPart -->
+  <Match DisplayType="SummaryAdmin">
+    <Place Parts_Media_SummaryAdmin="Meta:5"
+           Parts_Media_Actions="Footer"
+            />
+  </Match>
+
+  <!-- ImagePart -->
+  <Match DisplayType="Summary">
+    <Place Parts_Image_Summary="Content:5" />
+  </Match>
+
+  <Match DisplayType="SummaryAdmin">
+    <Place Parts_Image_Metadata="Meta:6"
+           Parts_Image_SummaryAdmin="Header"
+           />
+  </Match>
+
+  <Match DisplayType="Detail">
+    <Place Parts_Image="Content:5" />
+  </Match>
+
+  <!-- VideoPart -->
+  <Match DisplayType="Summary">
+    <Place Parts_Video_Summary="Content:5" />
+  </Match>
+
+  <Match DisplayType="SummaryAdmin">
+    <Place Parts_Video_Metadata="Meta:6"
+           Parts_Video_SummaryAdmin="Header"
+           />
+  </Match>
+
+  <Match DisplayType="Detail">
+    <Place Parts_Video="Content:5" />
+  </Match>
+
+  <!-- DocumentPart -->
+  <Match DisplayType="Summary">
+    <Place Parts_Document_Summary="Content:5" />
+  </Match>
+
+  <Match DisplayType="SummaryAdmin">
+    <Place Parts_Document_Metadata="Meta:6"
+           Parts_Document_SummaryAdmin="Header"
+           />
+  </Match>
+
+  <Match DisplayType="Detail">
+    <Place Parts_Document="Content:5" />
+  </Match>
+
+  <!-- AudioPart -->
+  <Match DisplayType="Summary">
+    <Place Parts_Audio_Summary="Content:5" />
+  </Match>
+
+  <Match DisplayType="SummaryAdmin">
+    <Place Parts_Audio_Metadata="Meta:6"
+           Parts_Audio_SummaryAdmin="Header"
+           />
+  </Match>
+
+  <Match DisplayType="Detail">
+    <Place Parts_Audio="Content:5" />
+  </Match>
+
+
+  <!-- Media Library Picker Field -->
+  <Place Fields_MediaLibraryPicker_Edit="Content:2.3"/>
+
+  <Match DisplayType="Detail">
+    <Place Fields_MediaLibraryPicker="Content:after"/>
+  </Match>
+
+  <Match DisplayType="Summary">
+    <Place Fields_MediaLibraryPicker_Summary="-"/>
+  </Match>
+  
+  <Match DisplayType="SummaryAdmin">
+    <Place Fields_MediaLibraryPicker_SummaryAdmin="Content:after"/>
+  </Match>
+
+
+  <!-- OEmbedPart -->
+  <Match DisplayType="Summary">
+    <Place Parts_OEmbed_Summary="Content:5" />
+  </Match>
+
+  <Match DisplayType="SummaryAdmin">
+    <Place Parts_OEmbed_Metadata="Meta:4"
+           Parts_OEmbed_SummaryAdmin="Header"
+           />
+  </Match>
+
+  <Match DisplayType="Detail">
+    <Place Parts_OEmbed="Content:5" />
+  </Match>  
+  
+  
+  <!-- Explorer -->
+  <Place
+    Parts_MediaLibrary_Actions="Actions:5"
+    Parts_MediaLibrary_Navigation="Navigation:5"
+  />
+  
+</Placement>

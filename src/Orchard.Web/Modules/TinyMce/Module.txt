@@ -1,0 +1,10 @@
+﻿Name: TinyMce
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardproject.net
+Version: 1.9.0
+OrchardVersion: 1.9
+Description: The TinyMCE module enables rich text contents to be created using a "What You See Is What You Get" user interface.
+FeatureDescription: TinyMCE HTML WYSIWYG editor.
+FeatureDependencies: Orchard.jQuery
+Category: Input Editor

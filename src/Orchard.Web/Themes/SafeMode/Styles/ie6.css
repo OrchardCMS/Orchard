@@ -1,0 +1,23 @@
+﻿#branding 
+{
+    height:50px;
+    margin:0 0 0 20px;
+    background:transparent url(images/orchardLogo.gif) no-repeat scroll 0 0;
+}
+
+#branding h1 {
+    padding:8px 0 0 38px;
+}
+
+/* Forms
+----------------------------------------------------------*/
+
+legend {
+    color:#333;
+}
+
+#AdminPassword, .text-box, .text {
+    border:1px solid #DDDEDF;
+    padding:4px;
+    width:98%;
+}

@@ -1,0 +1,94 @@
+﻿@using Orchard.Widgets.Models;
+@{
+    Style.Require("WidgetsAdmin");
+    Script.Require("jQuery");
+    IEnumerable<LayerPart> layers = Model.Layers;
+}
+@functions {
+    static string EncodeLineBreaks(string text) {
+		if (!String.IsNullOrEmpty(text)){
+			return text.Replace(Environment.NewLine, "\\\\n");
+		}
+	
+		return text;
+    }
+}
+<script type="text/javascript">
+//<![CDATA[
+    document.write("<div id=\"widgets-layer-visibility\"><h3>@T("All Layers:") <a href=\"#\" id=\"widgets-layer-visibility-toggle-all\">@T("Hide All")</a></h3></div>");
+//]]>
+</script>
+@using(Script.Foot()) {
+<script type="text/javascript">
+//<![CDATA[
+    (function ($) {
+        var currentLayerId = @Model.CurrentLayer.Id;
+        var layers = [
+        @foreach (var layer in layers) {
+            <text>{"name":"@layer.Name","description":"@EncodeLineBreaks(layer.Description)","id":@layer.Id}@(layer != layers.Last() ? "," : "")</text>
+        }
+        ];
+        var visWrapper = $("#widgets-layer-visibility");
+        var visContainer = $("<ul></ul>");
+
+        var widgetPlacement = $("#widgets-zones");
+        for (var i = 0; i < layers.length; i++) {
+            var layersWidgets = widgetPlacement.find(".widgets-layer-" + layers[i].id);
+            var layer = "";
+
+            if (layersWidgets.length > 0) {
+                layer = $("<li title=\"" + layers[i].description + "\" class=\"widgets-" + ((layers[i].id == currentLayerId && "this") || "other") + "-layer\">" + layers[i].name + "</li>");
+                layer.data("widgets", layersWidgets);
+                layersWidgets.each(function() {
+                    $(this).data("widgets-vis-control", layer);
+                });
+            } else {
+                layer = $("<li title=\"" + layers[i].description + "\" class=\"widgets-empty-layer" + ((layers[i].id == currentLayerId && " widgets-this-layer") || "") + "\">" + layers[i].name + " <span>[empty]</span></li>");
+            }
+
+            visContainer.append(layer);
+        }
+        $(document).on("click", "#widgets-layer-visibility .widgets-other-layer", function() {
+            var _this = $(this);
+            _this.toggleClass("off");
+            if (_this.hasClass("off")) {
+                _this.data("widgets").hide();
+            } else {
+                _this.data("widgets").show();
+            }
+        });
+        $(document).on("hover", "#widgets-layer-visibility .widgets-other-layer", function() {
+            $(this).data("widgets").toggleClass("on");
+        });
+        $(document).on("hover", "#widgets-zones .widgets-other-layer", function() {
+            var layer = $(this).data("widgets-vis-control");
+            layer.toggleClass("on");
+            layer.data("widgets").toggleClass("on");
+        });
+        $(document).on("click", "#widgets-layer-visibility-toggle-all", function() {
+            var showAllText = "@T("Show All")";
+            var isShowAll = ($("#widgets-layer-visibility-toggle-all").text() == showAllText);
+
+            var layers = $("#widgets-layer-visibility .widgets-other-layer");
+            for (var i = 0; i < layers.length; i++) {
+                var _this = $(layers[i]);
+                if (isShowAll) {
+                    _this.removeClass("off");
+                    _this.data("widgets").show();
+                } else {
+                    _this.addClass("off");
+                    _this.data("widgets").hide();
+                }
+            }
+            if (isShowAll) {
+                $("#widgets-layer-visibility-toggle-all").text("@T("Hide All")");
+            } else {
+                $("#widgets-layer-visibility-toggle-all").text(showAllText);
+            }
+        });
+
+        visWrapper.append(visContainer);
+    })(jQuery);
+//]]>
+</script>
+}

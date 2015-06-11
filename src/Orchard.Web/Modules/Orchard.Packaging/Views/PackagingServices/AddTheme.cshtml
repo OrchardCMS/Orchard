@@ -1,0 +1,10 @@
+﻿@{ Layout.Title = T("Install a theme from your computer").ToString(); }
+
+@using (Html.BeginFormAntiForgeryPost(Url.Action("InstallLocally", "PackagingServices", new { redirectUrl = HttpContext.Current.Request["returnUrl"] }), FormMethod.Post, new { enctype = "multipart/form-data" })) {
+    @Html.ValidationSummary();
+    <fieldset>
+        <label for="ModulePackage">@T("Theme Package")</label>
+        <input type="file" id="ThemePackage" size="64" name="ThemePackage" />
+    </fieldset>
+    <button type="submit" class="primaryAction">@T("Install")</button>
+}

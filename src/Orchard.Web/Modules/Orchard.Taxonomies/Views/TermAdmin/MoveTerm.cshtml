@@ -1,0 +1,23 @@
+@model MoveTermViewModel
+@using Orchard.Taxonomies.ViewModels;
+
+@using Orchard.Taxonomies.Helpers;
+
+@using (Html.BeginFormAntiForgeryPost()) {
+    @Html.ValidationSummary()
+    <fieldset>
+        @Html.Hidden("TermIds", string.Join(",", Model.TermIds))
+        <label for="@Html.FieldIdFor(m => m.SelectedTermId)">@T("Parent term")</label>
+        <select id="@Html.FieldIdFor(m => m.SelectedTermId)" name="@Html.FieldNameFor(m => m.SelectedTermId)">
+            @Html.SelectOption(-1, false, T("- None -").ToString())
+            @foreach (var term in Model.Terms) {
+                <option @if (term.Id == Model.SelectedTermId) { <text>selected="selected"</text> }  value="@term.Id">@for (var i = 1; i <= term.GetLevels(); i++) { <span class="gap">&nbsp;</span> }@term.Name</option>
+            }
+        </select> 
+        <span class="hint">@T("By selecting a parent term you can create hierarchies")</span>
+
+    </fieldset>
+    <fieldset>
+        <button class="primaryAction" type="submit">@T("Select")</button>
+    </fieldset>
+}

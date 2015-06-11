@@ -1,0 +1,10 @@
+﻿Name: Import Export
+Path: ImportExport
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardproject.net
+Version: 1.9.0
+OrchardVersion: 1.9
+Description: Provides content item data import and export capability.
+FeatureDescription: Imports and exports content item data
+Category: Content

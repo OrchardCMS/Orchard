@@ -1,0 +1,13 @@
+﻿@using Orchard.ContentManagement
+@using Orchard.MediaLibrary.Models
+@using Orchard.Utility.Extensions
+@model dynamic
+           
+@{
+    ContentItem contentItem = Model.ContentItem;
+    var media = contentItem.As<MediaPart>();
+    var audio = contentItem.As<AudioPart>();
+}
+
+@* Don't render the audio tag as thumbnails or the whole file is downloaded automatically by browsers *@
+<div class="media-thumbnail media-thumbnail-@contentItem.ContentType.HtmlClassify() mime-type-@media.MimeType.HtmlClassify()" />

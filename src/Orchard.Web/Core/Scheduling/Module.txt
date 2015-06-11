@@ -1,0 +1,9 @@
+﻿Name: Scheduling
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardproject.net
+Version: 1.9.0
+OrchardVersion: 1.9
+Description: The scheduling module enables background task scheduling. 
+FeatureDescription: Scheduled background tasks.
+Category: Core

@@ -1,0 +1,36 @@
+﻿<?xml version="1.0"?>
+<Orchard>
+  <Recipe>
+    <Name>Core</Name>
+    <Description>A recipe providing only the core Orchard framework, with limited end-user functionality. This is useful for development scenarios.</Description>
+    <Author>The Orchard Team</Author>
+    <WebSite>http://orchardproject.net</WebSite>
+    <Tags>developer</Tags>
+    <Version>1.0</Version>
+    <IsSetupRecipe>true</IsSetupRecipe>
+  </Recipe>
+
+  <Feature disable="Feeds, Containers" 
+           enable="Orchard.jQuery,Orchard.Alias,Orchard.Autoroute" />
+  
+  <Metadata>
+    <Types>
+        <Page ContentTypeSettings.Draftable="True">
+            <BodyPart />
+        </Page>
+    </Types>
+    <Parts>
+      <BodyPart BodyPartSettings.FlavorDefault="html" />
+    </Parts>
+  </Metadata>
+
+  <Settings />
+
+  <Migration features="*" />
+  
+  <Command>
+    menu create /MenuName:"Main Menu"
+    page create /Slug:"welcome-to-orchard" /Title:"Welcome to Orchard!" /Path:"welcome-to-orchard" /Homepage:true /Publish:true /Text:"Welcome To Orchard!"
+    menuitem create /MenuPosition:"0" /MenuText:"Home" /Url:"~/" /MenuName:"Main Menu"
+  </Command>
+</Orchard>

@@ -1,0 +1,79 @@
+﻿@model Orchard.Fields.Settings.InputFieldSettings
+@using Orchard.Fields.Settings;
+
+<fieldset>
+    <div>
+    	<label class="forpicker" for="@Html.FieldIdFor(m => m.Type)">@T("Input type")</label>    
+        <select id="@Html.FieldIdFor(m => m.Type)" name="@Html.FieldNameFor(m => m.Type)">
+            @Html.SelectOption(Orchard.Fields.Settings.InputType.Text, Model.Type == Orchard.Fields.Settings.InputType.Text, T("Text").ToString(), new { id = Html.FieldIdFor(m => m.Type) + "-text" })
+            @Html.SelectOption(Orchard.Fields.Settings.InputType.Url, Model.Type == Orchard.Fields.Settings.InputType.Url, T("Url").ToString())
+            @Html.SelectOption(Orchard.Fields.Settings.InputType.Tel, Model.Type == Orchard.Fields.Settings.InputType.Tel, T("Tel").ToString())
+            @Html.SelectOption(Orchard.Fields.Settings.InputType.Email, Model.Type == Orchard.Fields.Settings.InputType.Email, T("Email").ToString())
+        </select> 
+        <span class="hint">@T("Defines what format should be applied to the text.")</span>
+    </div>
+	<div class="editor-field" data-controllerid="@(Html.FieldIdFor(m => m.Type) + "-text")">
+        <label class="forpicker" for="@Html.FieldIdFor(m => m.Pattern)">@T("Pattern")</label>
+        @Html.TextBoxFor(m => m.Pattern, new { @class = "text medium" })
+        @Html.ValidationMessageFor(m => m.Pattern)
+        <span class="hint">@T("Declaring what pattern should be used for validating a field’s value, in the form of a regular expression. (optional)")</span>
+	</div>
+</fieldset>
+<fieldset>
+	<div class="editor-field">
+        <label class="forpicker" for="@Html.FieldIdFor(m => m.Title)">@T("Title")</label>
+        @Html.TextBoxFor(m => m.Title, new { @class = "text"})
+        @Html.ValidationMessageFor(m => m.Title)
+        <span class="hint">@T("The title attribute of the field. (optional)")</span>
+	</div>
+</fieldset>
+<fieldset>
+    <div>
+        @Html.CheckBoxFor(m => m.Required) <label for="@Html.FieldIdFor(m => m.Required)" class="forcheckbox">@T("Required")</label>
+        <span class="hint">@T("Check if the field is required.")</span>
+    </div>
+</fieldset>
+<fieldset>
+    <div>
+        @Html.CheckBoxFor(m => m.AutoFocus) <label for="@Html.FieldIdFor(m => m.AutoFocus)" class="forcheckbox">@T("Autofocus")</label>
+        <span class="hint">@T("Whether focus should be set to this field as soon as it has loaded.")</span>
+    </div>
+</fieldset>
+<fieldset>
+    <div>
+        @Html.CheckBoxFor(m => m.AutoComplete) <label for="@Html.FieldIdFor(m => m.AutoComplete)" class="forcheckbox">@T("Automatic completion")</label>
+        <span class="hint">@T("An option to turn off automatic form completion of values. Leave unchecked to disable automatic completion.")</span>
+    </div>
+</fieldset>
+<fieldset>
+	<div class="editor-field">
+        <label class="forpicker" for="@Html.FieldIdFor(m => m.Placeholder)">@T("Watermark")</label>
+        @Html.TextBoxFor(m => m.Placeholder, new { @class = "text" })
+        @Html.ValidationMessageFor(m => m.Placeholder)
+        <span class="hint">@T("A hint to display when the input is empty. (optional)")</span>
+	</div>
+</fieldset>
+<fieldset>
+	<div class="editor-field">
+    <label class="forpicker" for="@Html.FieldIdFor(m => m.EditorCssClass)">@T("Editor css class")</label>
+        @Html.TextBoxFor(m => m.EditorCssClass, new { @class = "text" })
+        @Html.ValidationMessageFor(m => m.EditorCssClass)
+        <span class="hint">@T("The css class to use for the editor. (optional)")</span>
+	</div>
+</fieldset>
+<fieldset>
+	<div class="editor-field">
+        <label class="forpicker" for="@Html.FieldIdFor(m => m.MaxLength)">@T("Maximum length")</label>
+        @Html.TextBoxFor(m => m.MaxLength, new { @class = "text small" })
+        @Html.ValidationMessageFor(m => m.MaxLength)
+        <span class="hint">@T("The maximum number of chars allowed. (optional)")</span>
+	</div>
+</fieldset>
+<fieldset>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.Hint)">@T("Help text")</label>
+        @Html.TextAreaFor(m => m.Hint, new { @class = "text medium", rows = "5" })
+        <span class="hint">@T("The help text is written under the field when the user is entering a value.")</span>
+        @Html.ValidationMessageFor(m => m.Hint)
+    </div>
+</fieldset>

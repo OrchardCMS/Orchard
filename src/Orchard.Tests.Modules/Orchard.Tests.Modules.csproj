@@ -1,0 +1,353 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{6CB3EB30-F725-45C0-9742-42599BA8E8D2}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Orchard.Tests.Modules</RootNamespace>
+    <AssemblyName>Orchard.Tests.Modules</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>..\OrchardBasicCorrectness.ruleset</CodeAnalysisRuleSet>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Autofac, Version=2.1.13.813, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\autofac\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Core, Version=3.2.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\castle\net45\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentNHibernate, Version=1.0.0.0, Culture=neutral, PublicKeyToken=8aa435e3cb308880, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\nhibernate\FluentNHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentPath">
+      <HintPath>..\..\lib\fluentpath\FluentPath.dll</HintPath>
+    </Reference>
+    <Reference Include="Iesi.Collections, Version=1.0.1.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\nhibernate\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="Ionic.Zip">
+      <HintPath>..\..\lib\dotnetzip\Ionic.Zip.dll</HintPath>
+    </Reference>
+    <Reference Include="IronRuby, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\dlr\IronRuby.dll</HintPath>
+    </Reference>
+    <Reference Include="IronRuby.Libraries">
+      <HintPath>..\..\lib\dlr\IronRuby.Libraries.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Dynamic, Version=1.1.0.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\dlr\Microsoft.Dynamic.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Scripting, Version=1.1.0.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\dlr\Microsoft.Scripting.dll</HintPath>
+    </Reference>
+    <Reference Include="Moq, Version=4.0.812.4, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\moq\Moq.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\newtonsoft.json\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate, Version=3.3.1.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\nhibernate\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.Core, Version=1.0.11220.104, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\nuget\NuGet.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework, Version=2.5.2.9222, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\nunit\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\..\lib\sqlce\System.Data.SqlServerCe.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Abstractions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Routing">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Autoroute\DefaultSlugServiceTests.cs" />
+    <Compile Include="CodeGeneration\Commands\CodeGenerationCommandsTests.cs" />
+    <Compile Include="Comments\Services\CommentServiceTests.cs" />
+    <Compile Include="DesignerTools\Services\ObjectDumperTests.cs" />
+    <Compile Include="Email\EmailChannelTests.cs" />
+    <Compile Include="ImageProcessing\ImageProcessingTests.cs" />
+    <Compile Include="ImportExport\Services\ImportExportServiceTests.cs" />
+    <Compile Include="Indexing\IndexingTaskExecutorTests.cs" />
+    <Compile Include="Indexing\LuceneIndexProviderTests.cs" />
+    <Compile Include="Indexing\LuceneSearchBuilderTests.cs" />
+    <Compile Include="Media\Extensions\MediaHelpersTests.cs" />
+    <Compile Include="Media\Services\MediaServiceTests.cs" />
+    <Compile Include="Packaging\Services\FileBasedProjectSystemTests.cs" />
+    <Compile Include="Packaging\Services\FolderUpdaterTests.cs" />
+    <Compile Include="Packaging\Services\PackageInstallerTests.cs" />
+    <Compile Include="Recipes\RecipeHandlers\ModuleRecipeHandlerTest.cs" />
+    <Compile Include="Recipes\RecipeHandlers\ThemeRecipeHandlerTest.cs" />
+    <Compile Include="Recipes\Services\RecipeManagerTests.cs" />
+    <Compile Include="Scripting.Dlr\EvaluatorTests.cs" />
+    <Compile Include="Scripting\EvaluatorTestsBase.cs" />
+    <Compile Include="Scripting\EvaluatorTests.cs" />
+    <Compile Include="Scripting\ParserTests.cs" />
+    <Compile Include="Scripting\TokenizerTests.cs" />
+    <Compile Include="Scripting\SimpleScriptingTests.cs" />
+    <Compile Include="DatabaseEnabledTestsBase.cs" />
+    <Compile Include="Media\Extensions\LongExtensionsTests.cs" />
+    <Compile Include="Packaging\Services\PackageBuilderTests.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Roles\Controllers\AdminControllerTests.cs" />
+    <Compile Include="Roles\Services\RoleServiceTests.cs" />
+    <Compile Include="Migrations\SchemaCommandGeneratorTests.cs" />
+    <Compile Include="Scripting.Dlr\ScriptingTests.cs" />
+    <Compile Include="Settings\Blueprint\ShellDescriptorManagerTests.cs" />
+    <Compile Include="Stubs\MessageChannelSelectorStub.cs" />
+    <Compile Include="Stubs\ShapeDisplayStub.cs" />
+    <Compile Include="Tags\Services\TagsServiceTests.cs" />
+    <Compile Include="Themes\Services\ThemeServiceTests.cs" />
+    <Compile Include="Users\Controllers\AccountControllerTests.cs" />
+    <Compile Include="Users\Services\UserServiceTests.cs" />
+    <Compile Include="Users\ShellSettingsUtility.cs" />
+    <Compile Include="Values.cs" />
+    <Compile Include="Users\Services\MembershipServiceTests.cs" />
+    <Compile Include="Warmup\WebDownloaderTests.cs" />
+    <Compile Include="Warmup\WarmupUpdaterTests.cs" />
+    <Compile Include="Widgets\RuleEngine\UrlRuleProviderTest.cs" />
+    <Compile Include="Widgets\Services\WidgetsServiceTest.cs" />
+    <Compile Include="Widgets\WidgetsTests.cs" />
+    <Compile Include="Workflows\Activities\WebRequestActivityTests.cs" />
+    <Compile Include="XmlRpc\Controllers\LiveWriterControllerTests.cs" />
+    <Compile Include="XmlRpc\Controllers\HomeControllerTests.cs" />
+    <Compile Include="XmlRpc\Services\XmlRpcReaderTests.cs" />
+    <Compile Include="XmlRpc\Services\XmlRpcWriterTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Orchard.Tests\Orchard.Framework.Tests.csproj">
+      <Project>{ABC826D4-2FA1-4F2F-87DE-E6095F653810}</Project>
+      <Name>Orchard.Framework.Tests</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Web\Core\Orchard.Core.csproj">
+      <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
+      <Name>Orchard.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Web\Modules\Lucene\Lucene.csproj">
+      <Project>{D5D447D7-EF8E-43A6-B9A4-3B025DD9F45D}</Project>
+      <Name>Lucene</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Autoroute\Orchard.Autoroute.csproj">
+      <Project>{66fccd76-2761-47e3-8d11-b45d0001ddaa}</Project>
+      <Name>Orchard.Autoroute</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.CodeGeneration\Orchard.CodeGeneration.csproj">
+      <Project>{C0C45321-B51D-4D8D-9B7B-AA4C2E0B2962}</Project>
+      <Name>Orchard.CodeGeneration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Comments\Orchard.Comments.csproj">
+      <Project>{14C049FD-B35B-415A-A824-87F26B26E7FD}</Project>
+      <Name>Orchard.Comments</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.DesignerTools\Orchard.DesignerTools.csproj">
+      <Project>{4A4595EF-6C37-4F99-96ED-4AE0B9E438D3}</Project>
+      <Name>Orchard.DesignerTools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Email\Orchard.Email.csproj">
+      <Project>{05660f47-d649-48bd-9ded-df4e01e7cff9}</Project>
+      <Name>Orchard.Email</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.ImportExport\Orchard.ImportExport.csproj">
+      <Project>{FE5C5947-D2D5-42C5-992A-13D672946135}</Project>
+      <Name>Orchard.ImportExport</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Indexing\Orchard.Indexing.csproj">
+      <Project>{EA2B9121-EF54-40A6-A53E-6593C86EE696}</Project>
+      <Name>Orchard.Indexing</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.MediaProcessing\Orchard.MediaProcessing.csproj">
+      <Project>{08191FCD-7258-4F19-95FB-AEC3DE77B2EB}</Project>
+      <Name>Orchard.MediaProcessing</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Media\Orchard.Media.csproj">
+      <Project>{D9A7B330-CD22-4DA1-A95A-8DE1982AD8EB}</Project>
+      <Name>Orchard.Media</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Modules\Orchard.Modules.csproj">
+      <Project>{17F86780-9A1F-4AA1-86F1-875EEC2730C7}</Project>
+      <Name>Orchard.Modules</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Packaging\Orchard.Packaging.csproj">
+      <Project>{DFD137A2-DDB5-4D22-BE0D-FA9AD4C8B059}</Project>
+      <Name>Orchard.Packaging</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Recipes\Orchard.Recipes.csproj">
+      <Project>{FC1D74E8-7A4D-48F4-83DE-95C6173780C4}</Project>
+      <Name>Orchard.Recipes</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Roles\Orchard.Roles.csproj">
+      <Project>{D10AD48F-407D-4DB5-A328-173EC7CB010F}</Project>
+      <Name>Orchard.Roles</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Scripting.Dlr\Orchard.Scripting.Dlr.csproj">
+      <Project>{2AD6973D-C7BB-416E-89FE-EEE34664E05F}</Project>
+      <Name>Orchard.Scripting.Dlr</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Scripting\Orchard.Scripting.csproj">
+      <Project>{99002B65-86F7-415E-BF4A-381AA8AB9CCC}</Project>
+      <Name>Orchard.Scripting</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Setup\Orchard.Setup.csproj">
+      <Project>{8c7fcbc2-e6e1-405e-bfb5-d8d9e67a09c4}</Project>
+      <Name>Orchard.Setup</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Tags\Orchard.Tags.csproj">
+      <Project>{5D0F00F0-26C9-4785-AD61-B85710C60EB0}</Project>
+      <Name>Orchard.Tags</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Themes\Orchard.Themes.csproj">
+      <Project>{CDE24A24-01D3-403C-84B9-37722E18DFB7}</Project>
+      <Name>Orchard.Themes</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Users\Orchard.Users.csproj">
+      <Project>{79aed36e-abd0-4747-93d3-8722b042454b}</Project>
+      <Name>Orchard.Users</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.WarmUp\Orchard.Warmup.csproj">
+      <Project>{9CD5C81F-5828-4384-8474-2E2BE71D5EDD}</Project>
+      <Name>Orchard.Warmup</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Widgets\Orchard.Widgets.csproj">
+      <Project>{194D3CCC-1153-474D-8176-FDE8D7D0D0BD}</Project>
+      <Name>Orchard.Widgets</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Workflows\Orchard.Workflows.csproj">
+      <Project>{7059493C-8251-4764-9C1E-2368B8B485BC}</Project>
+      <Name>Orchard.Workflows</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard\Orchard.Framework.csproj">
+      <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
+      <Name>Orchard.Framework</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Packaging\Services\Hello.World.csproj.txt" />
+    <EmbeddedResource Include="Recipes\Services\FoldersData\Sample1\Module.txt" />
+    <EmbeddedResource Include="Recipes\Services\FoldersData\Sample1\Recipes\cms.recipe.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  -->
+  <Target Name="CopySqlCeBinaries">
+    <ItemGroup>
+      <SqlCeBinariesx86 Include="$(ProjectDir)..\..\lib\sqlce\x86\**\*" />
+      <SqlCeBinariesx64 Include="$(ProjectDir)..\..\lib\sqlce\amd64\**\*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(SqlCeBinariesx86)" DestinationFolder="$(OutputPath)\x86\%(RecursiveDir)" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(SqlCeBinariesx64)" DestinationFolder="$(OutputPath)\amd64\%(RecursiveDir)" SkipUnchangedFiles="true" />
+  </Target>
+  <Target Name="AfterBuild">
+    <CallTarget Targets="CopySqlCeBinaries" />
+  </Target>
+</Project>

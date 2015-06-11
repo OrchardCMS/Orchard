@@ -1,0 +1,16 @@
+﻿@using Orchard.Layouts.Elements
+@using Orchard.Layouts.Helpers
+@{
+    var element = (Column) Model.Element;
+    var columnSpan = element.Width;
+    var columnOffset = element.Offset;
+    var columnOffsetCss = columnOffset > 0 ? "offset-" + columnOffset : default(string);
+    var tagBuilder = TagBuilderExtensions.CreateElementTagBuilder(Model);
+    
+    tagBuilder.AddCssClass("cell");
+    tagBuilder.AddCssClass(String.Concat("span-", columnSpan));
+    tagBuilder.AddCssClass(columnOffsetCss);
+}
+@tagBuilder.StartElement
+@DisplayChildren(Model)
+@tagBuilder.EndElement

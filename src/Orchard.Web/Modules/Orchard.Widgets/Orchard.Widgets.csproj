@@ -1,0 +1,224 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{194D3CCC-1153-474D-8176-FDE8D7D0D0BD}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Orchard.Widgets</RootNamespace>
+    <AssemblyName>Orchard.Widgets</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>false</UseIISExpress>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>..\..\..\OrchardBasicCorrectness.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AdminMenu.cs" />
+    <Compile Include="Commands\LayerCommands.cs" />
+    <Compile Include="Commands\WidgetCommands.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="ControlWrapper.cs" />
+    <Compile Include="Drivers\LayerPartDriver.cs" />
+    <Compile Include="Handlers\DisplayedContentItemHandler.cs" />
+    <Compile Include="Handlers\LayerHintHandler.cs" />
+    <Compile Include="Drivers\WidgetPartDriver.cs" />
+    <Compile Include="Migrations.cs" />
+    <Compile Include="Handlers\LayerPartHandler.cs" />
+    <Compile Include="Handlers\WidgetPartHandler.cs" />
+    <Compile Include="Models\LayerPart.cs" />
+    <Compile Include="Models\LayerPartRecord.cs" />
+    <Compile Include="Models\WidgetPart.cs" />
+    <Compile Include="Models\WidgetPartRecord.cs" />
+    <Compile Include="Permissions.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Filters\WidgetFilter.cs" />
+    <Compile Include="ResourceManifest.cs" />
+    <Compile Include="RuleEngine\AuthenticatedRuleProvider.cs" />
+    <Compile Include="RuleEngine\BuiltinRuleProvider.cs" />
+    <Compile Include="RuleEngine\ContentDisplayedRuleProvider.cs" />
+    <Compile Include="RuleEngine\RuleManager.cs" />
+    <Compile Include="RuleEngine\UrlRuleProvider.cs" />
+    <Compile Include="Services\IRuleManager.cs" />
+    <Compile Include="Services\IRuleProvider.cs" />
+    <Compile Include="Services\IWidgetsService.cs" />
+    <Compile Include="Services\LayerResolverSelector.cs" />
+    <Compile Include="Services\RuleContext.cs" />
+    <Compile Include="Services\WidgetsService.cs" />
+    <Compile Include="Shapes.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\Admin\images\edit.png" />
+    <Content Include="Content\Admin\images\moveup.gif" />
+    <Content Include="Content\Admin\images\movedown.gif" />
+    <Content Include="Module.txt" />
+    <Content Include="Styles\images\all-zones-on.gif" />
+    <Content Include="Styles\images\all-zones.gif" />
+    <Content Include="Styles\images\arrows.png" />
+    <Content Include="Styles\images\eye.png" />
+    <Content Include="Styles\images\menu.widgets.png" />
+    <Content Include="Styles\images\widget-zones-on.gif" />
+    <Content Include="Styles\images\widget-zones.gif" />
+    <Content Include="Styles\menu.widgets-admin.css" />
+    <Content Include="Styles\orchard-widgets-admin.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Placement.info">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\Orchard.Core.csproj">
+      <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
+      <Name>Orchard.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
+      <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
+      <Name>Orchard.Framework</Name>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Scripting\Orchard.Scripting.csproj">
+      <Project>{99002B65-86F7-415E-BF4A-381AA8AB9CCC}</Project>
+      <Name>Orchard.Scripting</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Themes\Orchard.Themes.csproj">
+      <Project>{CDE24A24-01D3-403C-84B9-37722E18DFB7}</Project>
+      <Name>Orchard.Themes</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Admin\AddLayer.cshtml" />
+    <Content Include="Views\Admin\AddWidget.cshtml" />
+    <Content Include="Views\Admin\EditWidget.cshtml" />
+    <Content Include="Views\Admin\EditLayer.cshtml" />
+    <Content Include="Views\Admin\Index.cshtml" />
+    <Content Include="Views\Widget.Edit.cshtml" />
+    <Content Include="Views\Widget.cshtml" />
+    <Content Include="Views\Widget.ControlWrapper.cshtml" />
+    <Content Include="Views\Widget.Wrapper.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts.Widgets.LayerPart.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts.Widgets.WidgetPart.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Widget.DeleteButton.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Admin\ChooseWidget.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\WidgetFiltersControl.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\WidgetPlacement.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\WidgetSimplePreview.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\WidgetLayerVisibility.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\WidgetPlacement.Zones.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\WidgetPlacement.Orphans.cshtml" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target> -->
+  <Target Name="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(ProjectDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>48009</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>
+          </IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>True</UseCustomServer>
+          <CustomServerUrl>http://orchard.codeplex.com</CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

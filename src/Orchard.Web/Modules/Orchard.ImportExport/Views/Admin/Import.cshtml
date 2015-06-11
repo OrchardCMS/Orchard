@@ -1,0 +1,16 @@
+﻿@model Orchard.ImportExport.ViewModels.ImportViewModel
+
+@{ 
+	Layout.Title = T("Import").ToString(); 
+
+    using (Html.BeginFormAntiForgeryPost(Url.Action("Import", new { area = "Orchard.ImportExport" }), FormMethod.Post, new { enctype = "multipart/form-data" })) {
+        @Html.ValidationSummary();
+		<p>@T("Choose a recipe file to import. Please consider {0} or backing up your data first.", 
+		     @Html.Link(T("exporting").Text, Url.Action("Export", "Admin", new { area = "Orchard.ImportExport" })))</p>
+        <fieldset>
+            <label for="RecipeFile">@T("Recipe File:")</label>
+            <input type="file" id="RecipeFile" size="64" name="RecipeFile" value="Browse..." />
+        </fieldset>
+        <button type="submit" class="primaryAction">@T("Import")</button>
+    }
+}

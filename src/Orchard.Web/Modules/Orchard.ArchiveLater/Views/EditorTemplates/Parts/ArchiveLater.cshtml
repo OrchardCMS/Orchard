@@ -1,0 +1,39 @@
+﻿@using System.Web.Mvc.Html;
+
+@model Orchard.ArchiveLater.ViewModels.ArchiveLaterViewModel
+
+<style type="text/css">
+    /* TODO: Extract to resource (Decorum). */
+
+    .edit-item-sidebar .archive-later-datetime {
+        margin-bottom: 2em;        
+    }
+
+    .edit-item-sidebar .archive-later-datetime legend {
+        margin-bottom: 0.5em;
+    }
+
+    .edit-item-sidebar .archive-later-datetime div {
+        margin-bottom: 0.5em;
+    }
+</style>
+
+<fieldset class="archive-later-datetime">
+    <legend>@T("Archive Settings")</legend>
+    <div>
+        @Html.CheckBoxFor(m => m.ArchiveLater)
+        <label class="forcheckbox" for="@Html.FieldIdFor(m => m.ArchiveLater)">@T("Archive Later")</label>
+    </div>
+    @Html.EditorFor(m => m.Editor)
+</fieldset>
+
+@using(Script.Foot()) {
+    <script type="text/javascript">
+        //<![CDATA[
+        $(function () {
+            $('#@Html.FieldIdFor(m => m.Editor.Date)').focus(function () { $('#@Html.FieldIdFor(m => m.ArchiveLater)').attr("checked", "checked") });
+            $('#@Html.FieldIdFor(m => m.Editor.Time)').focus(function () { $('#@Html.FieldIdFor(m => m.ArchiveLater)').attr("checked", "checked") });
+        })
+        //]]>
+    </script>
+}

@@ -1,0 +1,84 @@
+@model Orchard.Rules.ViewModels.RulesIndexViewModel
+@using Orchard.Rules.Models;
+@using Orchard.Rules.ViewModels;
+
+@{
+    Style.Include("admin-rules.css");
+    
+    var ruleIndex = 0;
+
+	var pageSizes = new List<int?>() { 10, 50, 100 };
+	var defaultPageSize = WorkContext.CurrentSite.PageSize;
+	if(!pageSizes.Contains(defaultPageSize)) { 
+		pageSizes.Add(defaultPageSize);
+	}
+}
+
+<h1>@Html.TitleForPage(T("Manage Rules").ToString()) </h1>
+@using (Html.BeginFormAntiForgeryPost()) { 
+    @Html.ValidationSummary()
+    <div class="manage">@Html.ActionLink(T("Add a new Rule").ToString(), "Create", new { }, new { @class = "button primaryAction" })</div>
+
+    <fieldset class="bulk-actions">
+        <label for="publishActions">@T("Actions:")</label>
+        <select id="publishActions" name="@Html.NameOf(m => m.Options.BulkAction)">
+            @Html.SelectOption(Model.Options.BulkAction, RulesBulkAction.None, T("Choose action...").ToString())
+            @Html.SelectOption(Model.Options.BulkAction, RulesBulkAction.Enable, T("Enable").ToString()) 
+            @Html.SelectOption(Model.Options.BulkAction, RulesBulkAction.Disable, T("Disable").ToString())
+            @Html.SelectOption(Model.Options.BulkAction, RulesBulkAction.Delete, T("Delete").ToString())
+        </select>
+        <button type="submit" name="submit.BulkEdit" value="@T("Apply")">@T("Apply")</button>
+    </fieldset>
+    <fieldset class="bulk-actions">
+		<label for="filterResults">@T("Sort by:")</label>
+        <select id="filterResults" name="@Html.NameOf(m => m.Options.Order)">
+            @Html.SelectOption(Model.Options.Order, RulesOrder.Name, T("Name").ToString())
+        </select>
+		<input type="hidden" name="Page" value="1" />
+		<label for="pageSize">@T("Show:")</label>
+		<select id="pageSize" name="PageSize">
+			@Html.SelectOption((int)Model.Pager.PageSize, 0, T("All").ToString())
+			@foreach(int size in pageSizes.OrderBy(p => p)) {
+				@Html.SelectOption((int)Model.Pager.PageSize, size, size.ToString())
+			}
+		</select>
+        <button type="submit" name="submit.Filter" value="@T("Filter")">@T("Filter")</button>
+    </fieldset>
+    <fieldset>		
+        <table class="items">
+            <thead>
+                <tr>
+                    <th scope="col"><input type="checkbox" class="check-all"/></th>
+                    <th scope="col">@T("Name")</th>
+                    <th scope="col">@T("Creation")</th>
+                    <th scope="col">&nbsp;</th>
+                </tr>
+            </thead>
+            @foreach (var entry in Model.Rules) { 
+			<tr>
+                <td class="status-@(entry.Rule.Enabled ? "enabled" : "disabled")">
+                    <input type="hidden" value="@Model.Rules[ruleIndex].Rule.Id" name="@Html.NameOf(m => m.Rules[ruleIndex].RuleId)"/>
+                    <input type="checkbox" value="true" name="@Html.NameOf(m => m.Rules[ruleIndex].IsChecked)"/>
+                </td>
+                <td>
+                    @Html.ActionLink(entry.Rule.Name, "Edit", new { entry.Rule.Id }) 
+                </td>
+                <td>
+					&nbsp;
+                </td>
+                <td>
+                    @Html.ActionLink(T("Edit").ToString(), "Edit", new { entry.Rule.Id }) |
+                    @Html.ActionLink(T("Delete").ToString(), "Delete", new { entry.Rule.Id }, new { itemprop = "RemoveUrl UnsafeUrl" }) |
+                    @if(entry.Rule.Enabled == false) {
+                        @Html.ActionLink(T("Enable").ToString(), "Enable", new { entry.Rule.Id })
+                    } else {
+                        @Html.ActionLink(T("Disable").ToString(), "Disable", new { entry.Rule.Id })
+                    }
+                </td>
+            </tr>
+            ruleIndex++;
+			}
+        </table>
+	@Display(Model.Pager)
+    </fieldset>
+} 

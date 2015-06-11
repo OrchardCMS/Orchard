@@ -1,0 +1,48 @@
+﻿@using Orchard.Core.Contents.ViewModels;
+@{
+    var typeDisplayName = Model.TypeDisplayName;
+    var pageTitle = T("Manage Templates");
+    var createLinkText = T("Create New Template");
+    if (!string.IsNullOrWhiteSpace(typeDisplayName)) {
+        pageTitle = T("Manage {0}s", typeDisplayName);
+        createLinkText = T("Create New {0}", typeDisplayName);
+    }
+
+    Layout.Title = pageTitle;
+}
+
+<div class="manage">
+    @Html.ActionLink(createLinkText.Text, "Create", new { Area = "Orchard.Templates", Id = (string)Model.Options.SelectedFilter }, new { @class = "button primaryAction" })
+</div>
+@using (Html.BeginFormAntiForgeryPost()) {
+    <fieldset class="bulk-actions">
+        <label for="publishActions">@T("Actions:")</label>
+        <select id="publishActions" name="Options.BulkAction">
+            @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.None, T("Choose action...").ToString())
+            @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.PublishNow, T("Publish Now").ToString())
+            @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.Unpublish, T("Unpublish").ToString())
+            @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.Remove, T("Delete").ToString())
+        </select>
+        <button type="submit" name="submit.BulkEdit" value="yes">@T("Apply")</button>
+    </fieldset>
+    <fieldset class="bulk-actions">
+        <label for="filterResults" class="bulk-filter">@T("Show")</label>
+        <select id="filterResults" name="Options.SelectedFilter">
+            @Html.SelectOption((string)Model.Options.SelectedFilter, "", T("any (show all)").ToString())
+            @foreach(var filterOption in Model.Options.FilterOptions) {
+                @Html.SelectOption((string)Model.Options.SelectedFilter, (string)filterOption.Key, (string)filterOption.Value)
+            }
+        </select>
+        <label for="orderResults" class="bulk-order">@T("Ordered by")</label>
+        <select id="orderResults" name="Options.OrderBy">
+            @Html.SelectOption((ContentsOrder)Model.Options.OrderBy, ContentsOrder.Created, T("recently created").ToString())
+            @Html.SelectOption((ContentsOrder)Model.Options.OrderBy, ContentsOrder.Modified, T("recently modified").ToString())
+            @Html.SelectOption((ContentsOrder)Model.Options.OrderBy, ContentsOrder.Published, T("recently published").ToString())
+        </select>
+        <button type="submit" name="submit.Filter" value="yes please">@T("Apply")</button>
+    </fieldset>
+    <fieldset class="contentItems bulk-items">
+@Display(Model.ContentItems)
+    </fieldset>
+@Display(Model.Pager)
+}

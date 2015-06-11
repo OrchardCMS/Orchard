@@ -1,0 +1,35 @@
+﻿@using Orchard.ContentManagement
+@using Orchard.ContentPicker.Fields
+@using Orchard.Utility.Extensions;
+
+@{
+    var field = (ContentPickerField) Model.ContentField;
+    string name = field.DisplayName;
+    var contentItems = field.ContentItems;
+    var unpublishedContentItems = (IEnumerable<ContentItem>)Model.UnpublishedContentItems;
+}
+<p class="content-picker-field content-picker-field-@name.HtmlClassify()">
+    <span class="name">@name:</span>
+    @if(contentItems.Any()) {
+        foreach(var contentItem in contentItems) {
+            <span class="value">@Html.ItemEditLink(contentItem)</span>
+            if(contentItem != contentItems.Last()) {
+                <span>,</span>
+            }
+        }
+    }
+    else {
+        <span class="value">@T("No published content items.")</span>
+    }
+
+    @if (unpublishedContentItems.Any()) {
+        <span>@T(" | ") @T("Not Published"):</span>
+        foreach (var contentItem in unpublishedContentItems) {
+            <span class="value">@Html.ItemEditLink(contentItem)</span>
+            if (contentItem != unpublishedContentItems.Last()) {
+                <span>,</span>
+            }
+        }
+    }
+</p>
+

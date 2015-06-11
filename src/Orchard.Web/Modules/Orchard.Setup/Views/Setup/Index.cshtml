@@ -1,0 +1,92 @@
+﻿@model Orchard.Setup.ViewModels.SetupViewModel
+@{
+	Script.Require("jQuery");
+    Script.Require("ShapesBase");
+    Script.Include("setup.js");
+}
+<h1>@Html.TitleForPage(T("Get Started").ToString())</h1>
+
+@using (Html.BeginFormAntiForgeryPost()) {
+@Html.ValidationSummary()
+<h2>@T("Please answer a few questions to configure your site.")</h2>
+<fieldset class="site">
+    <div>
+        <label for="SiteName">@T("What is the name of your site?")</label>
+        @Html.TextBoxFor(svm => svm.SiteName, new { autofocus = "autofocus" })
+    </div>
+    <div>
+        <label for="AdminUsername">@T("Choose a user name:")</label>
+        @Html.EditorFor(svm => svm.AdminUsername)
+    </div>
+    <div>
+        <label for="AdminPassword">@T("Choose a password:")</label>
+        @Html.PasswordFor(svm => svm.AdminPassword, new { @class = "text single-line" })
+    </div>
+    <div>
+        <label for="ConfirmAdminPassword">@T("Confirm the password:")</label>
+        @Html.PasswordFor(svm => svm.ConfirmPassword, new { @class = "text single-line" })
+    </div>
+</fieldset>
+if (!Model.DatabaseIsPreconfigured) {
+<fieldset class="data">
+    <legend>@T("How would you like to store your data?")</legend>
+        @Html.ValidationMessage("DatabaseOptions", "Unable to setup data storage")
+    <div>
+        @Html.RadioButtonFor(svm => svm.DatabaseProvider, Orchard.Setup.Controllers.SetupDatabaseType.Builtin.ToString(), new { id = "builtin" })
+        <label for="builtin" class="forcheckbox">@T("Use built-in data storage (SQL Server Compact)")</label>
+    </div>
+    <div>
+        @Html.RadioButtonFor(svm => svm.DatabaseProvider, Orchard.Setup.Controllers.SetupDatabaseType.SqlServer.ToString(), new { id = "sqlserver" })
+        <label for="sqlserver" class="forcheckbox">@T("Use an existing SQL Server, SQL Express database")</label>
+    </div>
+    <div>
+        @Html.RadioButtonFor(svm => svm.DatabaseProvider, Orchard.Setup.Controllers.SetupDatabaseType.MySql.ToString(), new { id = "mysql" })
+        <label for="mysql" class="forcheckbox">@T("Use an existing MySql database")</label>
+    </div>
+    <div data-controllerid="builtin" data-defaultstate="hidden">
+        <label for="DatabaseConnectionString">@T("Connection string")</label>
+        @Html.EditorFor(svm => svm.DatabaseConnectionString)
+            
+        <span data-controllerid="sqlserver" class="hint databaseTypeHint">
+            @T("Data Source=sqlServerName;Initial Catalog=dbName;Persist Security Info=True;User ID=userName;Password=password")
+        </span>
+
+        <span data-controllerid="mysql" class="hint databaseTypeHint">
+            @T("Data Source=serverName;Database=dbName;User Id=userName;Password=password")
+        </span>
+
+        <br /><br />
+        <label for="DatabaseTablePrefix">@T("Database Table Prefix")</label>
+        @Html.EditorFor(svm => svm.DatabaseTablePrefix)
+    </div>
+
+</fieldset>
+}
+<fieldset>
+	<legend>@T("Choose an Orchard Recipe")</legend>
+	<div>@T("Orchard Recipes allow you to setup your site with additional pre-configured options, features and settings out of the box")</div>	
+	<div>
+        <select id="@Html.FieldIdFor(m => m.Recipe)" name="@Html.FieldNameFor(m => m.Recipe)" class="recipe">
+        @foreach(var recipe in Model.Recipes) {
+            @Html.SelectOption(Model.Recipe, recipe.Name, recipe.Name, new { recipedescription = recipe.Description })
+        }
+        </select>
+    </div>
+	<div id="recipedescription">@Model.RecipeDescription</div>
+</fieldset>
+<div id="throbber">
+    <div class="curtain"></div>
+    <div class="curtain-content">
+        <div>
+            <h1 id="setUpHeader">@T("Cooking Orchard Recipe ...")</h1>
+            <p>
+                <img src="@Href("../../content/synchronizing.gif")" alt="" />
+            </p>
+        </div>
+    </div>
+</div>
+    
+<fieldset>
+    <button class="primaryAction setupButton" type="submit">@T("Finish Setup")</button>
+</fieldset>
+}

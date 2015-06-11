@@ -1,0 +1,6 @@
+﻿@using Orchard.Comments.Models
+@{
+    CommentPart comment = Model.ContentPart;
+}
+
+<p class="text">@(new MvcHtmlString(Html.Encode(comment.Record.CommentText).Replace("\r\n", "<br />\r\n")))</p>

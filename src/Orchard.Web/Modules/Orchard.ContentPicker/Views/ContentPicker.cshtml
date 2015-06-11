@@ -1,0 +1,111 @@
+﻿@{
+    // these need to be in the head because MediaBrowser.js defines a callback that the thumbnail images call when they load,
+    // which could happen as soon as they render.
+    Style.Require("jQueryUI_Orchard").AtHead();
+    Script.Require("jQueryUI_Tabs").AtHead();
+
+    SetMeta("IE=edge,chrome=1", httpEquiv: "X-UA-Compatible");
+    Style.Include("~/themes/theadmin/styles/site.css");
+    Style.Include("~/themes/theadmin/styles/ie.css").UseCondition("gte IE 9").SetAttribute("media", "screen, projection");
+    Style.Include("~/themes/theadmin/styles/ie8.css").UseCondition("IE 8").SetAttribute("media", "screen, projection");
+    Style.Include("~/themes/theadmin/styles/ie7.css").UseCondition("lte IE 7").SetAttribute("media", "screen, projection");
+
+    Script.Include("ContentPicker.js");
+    Style.Include("ContentPicker.css");
+    
+}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>@T("Select Content Item")</title>
+    @Display.Metas()
+    @Display.HeadScripts()
+    @Display.HeadLinks()
+    @Display.StyleSheetLinks()
+</head>
+<body id="orchard-content-picker">
+
+    <script type="text/javascript">
+        $.extend({
+            contentPicker: {}
+        });
+            
+        $.contentPicker.cannotPerformMsg="@T("Cannot perform requested operation")";
+        $.contentPicker.accessDeniedMsg="@T("Authentication timed-out: please log-on again")";
+        $.contentPicker.logonUrl="@Url.Action("LogOn", new { Controller = "Account", Area = "Orchard.Users" })";
+    </script>
+
+    @Display.ContentPickerNavigation()
+    
+    <div class="content-picker-tab">
+    @Display(Model.Tab)
+    </div>
+
+@using(Script.Foot()) {
+<script type="text/javascript">
+//<![CDATA[
+    $(".select").on("click", function () {
+        try {
+            var container = $(this).closest("[data-id]");
+            var result = {
+                id: container.data("id"),
+                displayText: container.data("display-text"),
+                editLink: container.data("edit-link"),
+                editUrl: container.data("edit-url"),
+                adminUrl: container.data("admin-url"),
+                displayLink: container.data("display-link"),
+                published: container.data("published"),
+            };
+
+            window.opener.jQuery[query("callback")](result);
+        } catch (ex) {
+            alert($.contentPicker.cannotPerformMsg);
+            alert(ex);
+        }
+        window.close();
+    });
+
+    $("ul a").each(function () {
+        var self = $(this);
+        var link = self.attr("href");
+        var url = link.split("?");
+
+        // if the link doesn't define the "callback" query string, then append it
+        // n.b., pagers already append it
+        if (url.length == 1 || query("callback", "?" + url[1]).length == 0) {
+            link = link + "?callback=" + query("callback");
+            self.attr("href", link);
+        }
+        
+        if (url.length == 1 || query("part", "?" + url[1]).length == 0) {
+            link = link + "&part=" + query("part");
+            self.attr("href", link);
+        }
+
+        if (url.length == 1 || query("field", "?" + url[1]).length == 0) {
+            link = link + "&field=" + query("field");
+            self.attr("href", link);
+        }
+    });
+    
+    // get a querystring value
+    function query(name, querystring) {
+        name = name.toLowerCase();
+        var search = querystring || location.search;
+        var parts = search.replace("?", "").replace("#", "").split("&");
+        for (var i = 0, l = parts.length; i < l; i++) {
+            var part = parts[i];
+            var eqIndex = part.indexOf("=");
+            if (eqIndex !== -1 && part.substr(0, eqIndex).toLowerCase() === name) {
+                return part.substr(eqIndex + 1);
+            }
+        }
+        return [];
+    }
+//]]>
+</script>
+}
+
+    @Display.FootScripts()
+</body>
+</html>

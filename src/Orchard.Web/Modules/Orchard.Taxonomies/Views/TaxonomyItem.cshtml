@@ -1,0 +1,36 @@
+﻿@* 
+    This shape is displayed for a TermPart when in a Taxonomy details page
+    Its children are the element shapes in the list.
+    Alternates:
+    - TaxonomyItem__[HtmlClassifiedTaxonomyName]
+    - TaxonomyItem__[HtmlClassifiedTaxonomyName]__[HtmlClassifiedTermName]
+*@
+
+@{
+    IEnumerable<dynamic> items = Model.Items;
+
+    if (items.Any()) {
+        Model.Classes.Add("parent");
+    }
+
+    var tag = Tag(Model, "li");
+    @tag.StartElement
+
+    @* 
+    - morphing the shape to keep Model untouched and 
+    - provide a simple way to customize the shape 
+    *@
+    
+    Model.Metadata.Alternates.Clear();
+    Model.Metadata.Type = "TaxonomyItemLink";
+    @Display(Model)
+
+    @* render child elements *@
+    
+    if (items.Any()) {
+        <ul>
+            @DisplayChildren(Model)
+        </ul>
+    }
+    @tag.EndElement
+}

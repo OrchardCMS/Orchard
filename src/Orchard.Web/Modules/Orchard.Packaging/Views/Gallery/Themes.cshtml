@@ -1,0 +1,112 @@
+﻿@model Orchard.Packaging.ViewModels.PackagingExtensionsViewModel
+@using Orchard.Packaging.ViewModels;
+@using System.Linq;
+
+@{
+    Style.Require("PackagingAdmin");
+
+    Layout.Title = T("Themes").ToString();
+}
+
+@using (Html.BeginFormAntiForgeryPost(Url.Action("Themes", "Gallery"))) {
+    <fieldset class="bulk-actions bulk-actions-auto">
+        <label for="sourceId">@T("Show")</label>
+        <select id="sourceId" name="@Html.NameOf(m => m.Options.SourceId)">
+            @Html.SelectOption(Model.Options.SourceId, null, T("All feeds").ToString())
+            @foreach (var source in Model.Sources) {
+                @Html.SelectOption(Model.Options.SourceId, source.Id, source.FeedTitle)
+            }
+        </select>
+    </fieldset>
+
+    <fieldset class="bulk-actions bulk-actions-auto">
+        <label for="filterResults">@T("Sort by:")</label>
+        <select id="filterResults" name="@Html.NameOf(m => m.Options.Order)">
+            @Html.SelectOption(Model.Options.Order, PackagingExtensionsOrder.Downloads, T("Downloads").ToString())
+            @Html.SelectOption(Model.Options.Order, PackagingExtensionsOrder.Ratings, T("Ratings").ToString())
+            @Html.SelectOption(Model.Options.Order, PackagingExtensionsOrder.Alphanumeric, T("Alphanumeric").ToString())
+        </select>
+
+        <button id="apply-bulk-actions" class="apply-bulk-actions-auto" type="submit">@T("Apply")</button>
+    </fieldset>
+
+    <fieldset class="search-actions">
+        <input type="text" id="searchText" class="text single-line" name="@Html.NameOf(m => m.Options.SearchText)" value="@Model.Options.SearchText" />
+
+        <button type="submit">@T("Search")</button>
+    </fieldset>
+
+    if (Model.Extensions.Count() > 0) {
+        <ul class="contentItems theme">
+        @foreach (var item in Model.Extensions) {
+            <li>
+                @{
+            string extensionClass = "iconThumbnail";
+            string iconUrl = item.IconUrl;
+            if (!string.IsNullOrWhiteSpace(@item.FirstScreenshot)) {
+                iconUrl = @item.FirstScreenshot;
+                extensionClass = "screenshotThumbnail";
+            } else if (string.IsNullOrWhiteSpace(iconUrl)) {
+                iconUrl = Href("../../Content/Images/imagePlaceholder.png");
+                extensionClass = "screenshotThumbnail";
+            }
+                }
+
+                <div class="summary">
+                 @if (item.Notifications != null && item.Notifications.Count > 0) {
+                                <div class="notifications">
+                                @foreach (string notification in item.Notifications) {
+                                    <h5>@Html.Raw(notification)</h5>
+                                }
+                                </div>
+                            }
+                </div>
+                <div class="@extensionClass">
+                    <div class="extensionDetails column">
+                    <div class="extensionName @if (item.Installed) {<text>installed</text>}">
+                        <h2>@item.Title<span> - @T("Version: {0}", item.Version)</span></h2>
+                    </div>
+
+                        <div class="related">
+                            @Html.ActionLink(T("Install").ToString(), "InstallGallery", "PackagingServices", new RouteValueDictionary { { "packageId", item.PackageId }, { "version", item.Version }, { "sourceId", item.Source.Id }, { "redirectUrl", HttpContext.Current.Request.RawUrl } }, null)@T(" | ")
+                            <a href="@item.PackageStreamUri">@T("Download")</a>
+                        </div>
+
+                        <div class="properties">
+                            @{
+                            var description = item.Description ?? T("(No description)").Text;
+                        }
+                            <p>@Html.Raw(Html.Encode(description).Replace("\n", "<br />"))</p>
+                            <p>
+                                @if (!string.IsNullOrWhiteSpace(item.GalleryDetailsUrl)) {
+                                    <a href="@item.GalleryDetailsUrl">@T("more...")</a>
+                                }
+                            </p>
+                            <ul class="pageStatus group">
+                                <li>@T("Last Updated: {0}", item.LastUpdated)</li>
+                                <li>&nbsp;&#124;&nbsp;@T("Author: {0}", !string.IsNullOrEmpty(item.Authors) ? item.Authors : T("Unknown").ToString())</li>
+                                <li>&nbsp;&#124;&nbsp;@T("Downloads: {0}", item.DownloadCount)</li>
+                                <li>&nbsp;&#124;&nbsp;@T("Website: ")
+                                    @if (!string.IsNullOrEmpty(item.ProjectUrl)) { <a href="@item.ProjectUrl">@item.ProjectUrl</a> } else { @T("Unknown").ToString() }
+                                </li>
+                                <li class="rating">&nbsp;&#124;&nbsp;@T("Rating: ")
+                                        <div class="ratings" style="width:@(15 * 5)px" title="@T("Rating: {0} out of 5 ({1} total).", item.Rating, item.RatingsCount)">
+                                            <div class="score" style="width:@(15 * (item.Rating))px">&nbsp;</div>
+                                        </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="extensionThumbnail column">
+                        <img src="@iconUrl" class="thumbnail" alt="theme" />
+                    </div>
+                </div>
+            </li>}
+        </ul>
+    } else {
+        <p>@T("No themes available.").ToString()</p>
+    }
+
+    @Display(Model.Pager)
+}

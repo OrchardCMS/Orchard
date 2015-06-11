@@ -1,0 +1,10 @@
+﻿Name: Common
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardproject.net
+Version: 1.9.0
+OrchardVersion: 1.9
+Description: The common module introduces content parts that are going to be used by most content types (common, body, identity).
+FeatureDescription: Core content parts.
+Dependencies: Settings
+Category: Core

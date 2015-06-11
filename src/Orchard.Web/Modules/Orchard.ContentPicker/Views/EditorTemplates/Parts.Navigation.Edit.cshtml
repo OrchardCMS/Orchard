@@ -1,0 +1,43 @@
+﻿@model Orchard.ContentPicker.ViewModels.NavigationPartViewModel
+@using Orchard.ContentManagement
+
+@{
+    var contentManager = WorkContext.Resolve<IContentManager>();
+}
+<fieldset>
+    <label>@T("Menu Items")</label>
+    <span class="hint">@T("The menu items linking to this content item.")</span>
+    @if(Model.ContentMenuItems.Any()) {
+        <ul>
+            @foreach(var menuPart in Model.ContentMenuItems) {
+                var menuContentItem = contentManager.Get(menuPart.Menu.Id);
+                var menuName = Html.ItemDisplayText(menuContentItem).ToString();
+                <li>
+                    <div><span>@menuPart.MenuText</span> @T("on") <span>@Html.ActionLink(menuName, "Index", "Admin", new { area = "Navigation", menuId = menuContentItem.Id }, new {}) </span></div>
+                </li>
+            }
+        </ul>
+    }
+    else {
+        @T("Not displayed in any menu.")        
+    }
+    
+</fieldset>
+<fieldset>
+    @Html.EditorFor(m => m.AddMenuItem)
+    <label for="@Html.FieldIdFor(m => m.AddMenuItem)" class="forcheckbox">@T("Add on a menu")</label>
+    <div data-controllerid="@Html.FieldIdFor(m => m.AddMenuItem)">
+        <select id="@Html.FieldIdFor(m => m.CurrentMenuId)" name="@Html.FieldNameFor(m => m.CurrentMenuId)">
+            @foreach (ContentItem menu in Model.Menus) {
+                @Html.SelectOption(Model.CurrentMenuId, menu.Id, Html.ItemDisplayText(menu).ToString())
+            }
+        </select>
+        <span class="hint">@T("Select which menu you want the content item to be added on.")</span>
+
+        <label for="MenuText">@T("Menu text")</label>
+        @Html.TextBoxFor(m => m.MenuText, new { @class = "text single-line" })
+        <span class="hint">@T("The text that should appear in the menu.")</span>
+    </div>
+
+    
+</fieldset>

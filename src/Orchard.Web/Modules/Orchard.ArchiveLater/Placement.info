@@ -1,0 +1,6 @@
+﻿<Placement>
+    <Place Parts_ArchiveLater_Edit="Sidebar:2"/>
+    <Match DisplayType="SummaryAdmin">
+        <Place Parts_ArchiveLater_Metadata_SummaryAdmin="Meta:2"/>
+    </Match>
+</Placement>

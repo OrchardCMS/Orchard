@@ -1,0 +1,20 @@
+﻿@model Orchard.Tags.Models.TagCloudPart
+
+<fieldset>
+    <legend>Tag Cloud</legend>
+
+    <div class="group">
+        @Html.LabelFor(model => model.Buckets)
+        @Html.TextBoxFor(model => model.Buckets, new { @class = "text small" })
+        @Html.ValidationMessageFor(model => model.Buckets)
+        <span class="hint">@T("The number of buckets determines how many different sizes of tags will get rendered in the cloud.")</span>
+    </div>
+
+    <div class="group">
+        @Html.LabelFor(model => model.Slug)
+        @Html.TextBoxFor(model => model.Slug, new { @class = "text medium" })
+        @Html.ValidationMessageFor(model => model.Slug)
+        <span class="hint">@T("Enter the slug of the container for which you want the tag cloud, e.g. blog, /, or leave empty for the cloud to be scoped to the whole site. ")</span>
+    </div>
+
+</fieldset>

@@ -1,0 +1,68 @@
+﻿@using Orchard.Utility.Extensions
+@model Orchard.ImportExport.ViewModels.ExportViewModel
+
+@{ Layout.Title = T("Export").ToString(); }
+
+@using (Html.BeginFormAntiForgeryPost()) {
+    Html.ValidationSummary();
+    <fieldset>
+        <legend>@T("Choose the types to include in the export file:")</legend>
+        <ol>
+            @{var contentTypeIndex = 0;}
+            @foreach (var contentTypeEntry in Model.ContentTypes) {
+                <li>
+                    <input type="hidden" value="@Model.ContentTypes[contentTypeIndex].ContentTypeName" name="@Html.NameOf(m => m.ContentTypes[contentTypeIndex].ContentTypeName)"/>
+                    <input type="checkbox" value="true" name="@Html.NameOf(m => m.ContentTypes[contentTypeIndex].IsChecked)" id="@Html.NameOf(m => m.ContentTypes[contentTypeIndex].IsChecked)" />
+                    <label class="forcheckbox" for="@Html.NameOf(m => m.ContentTypes[contentTypeIndex].IsChecked)">@Model.ContentTypes[contentTypeIndex].ContentTypeName.CamelFriendly()</label>
+                </li>
+                contentTypeIndex = contentTypeIndex + 1;
+            }
+        </ol>
+    </fieldset>
+    <hr />
+    <fieldset>
+        <legend>@T("Choose what to save for these types:")</legend>
+        <div>
+            @Html.EditorFor(m => m.Metadata) 
+            <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Metadata)">@T("Metadata")</label>
+            <span class="hint">@T("Metadata is the definition of your content types: what parts and fields they have, with what settings.")</span>
+        </div>
+        <div>
+            @Html.EditorFor(m => m.Data)
+            <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Data)">@T("Data")</label>
+            <span class="hint">@T("Data is the actual content of your site.")</span>
+        </div>
+        <div>
+            <p>@T("Version History")</p>
+            @Html.RadioButtonFor(m => m.DataImportChoice, "Published", new { id = "Published", Checked = "Checked" })
+            <label for="@Html.FieldIdFor(m => m.DataImportChoice)" class="forcheckbox">@T("Only Published Versions")</label>
+            <br />
+            @Html.RadioButtonFor(m => m.DataImportChoice, "Draft", new { id = "Draft" })
+            <label for="@Html.FieldIdFor(m => m.DataImportChoice)" class="forcheckbox">@T("Only Drafts")</label>
+        </div>
+        <div>
+            @Html.EditorFor(m => m.SiteSettings)
+            <label class="forcheckbox" for="@Html.FieldIdFor(m => m.SiteSettings)">@T("Site Settings")</label><br />
+            <span class="hint">@T("Please verify that you are not exporting confidential information, such as passwords or application keys.")</span>
+        </div>     
+    </fieldset>
+
+    if (Model.CustomSteps.Any()) {
+         <fieldset>
+             <legend>@T("Choose the custom steps to execute in the export file:")</legend>
+             <ol>
+                 @{ var customStepIndex = 0; }
+                 @foreach (var customStepEntry in Model.CustomSteps) {
+                     <li>
+                         <input type="hidden" value="@Model.CustomSteps[customStepIndex].CustomStep" name="@Html.NameOf(m => m.CustomSteps[customStepIndex].CustomStep)"/>
+                         <input type="checkbox" value="true" name="@Html.NameOf(m => m.CustomSteps[customStepIndex].IsChecked)" id="@Html.NameOf(m => m.CustomSteps[customStepIndex].IsChecked)" />
+                         <label class="forcheckbox" for="@Html.NameOf(m => m.CustomSteps[customStepIndex].IsChecked)">@Model.CustomSteps[customStepIndex].CustomStep.CamelFriendly()</label>
+                     </li>
+                     customStepIndex = customStepIndex + 1;
+                 }
+             </ol>
+         </fieldset>
+     }
+
+    <button type="submit" class="primaryAction">@T("Export")</button>
+}

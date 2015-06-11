@@ -1,0 +1,11 @@
+@{
+    Layout.Title = T("Manage Queries");
+    Style.Include("admin-projections.css");
+}
+
+@if (Model.Items.Count == 0) {
+    @T("The query returned no results")
+}
+else {
+    @Display(Model);
+}

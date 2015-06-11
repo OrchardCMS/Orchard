@@ -1,0 +1,28 @@
+﻿@using Orchard.ContentManagement
+@using Orchard.MediaLibrary.Models
+@{
+    OEmbedPart oembedPart = Model.ContentPart;
+    var mediaPart = ((ContentItem)Model.ContentItem).As<MediaPart>();
+    string thumbnail = oembedPart["thumbnail_url"] ?? oembedPart["thumbnail"];
+}
+
+@switch (oembedPart["type"]) {
+    case "photo" :
+        <img src="@oembedPart["url"]" width="@oembedPart["width"]" height="@oembedPart["height"]" />
+        break;
+    case "video":
+        @Html.Raw(oembedPart["html"])
+        break;
+    case "link":
+        <a href="@oembedPart["url"]">@Html.ItemDisplayText(mediaPart)</a>
+        break;
+    case "rich":
+        @Html.Raw(oembedPart["html"])
+        break;
+}
+
+@if (!String.IsNullOrEmpty(thumbnail)) {
+    <div class="media-thumbnail">
+        <img src="@thumbnail" />
+    </div>
+}

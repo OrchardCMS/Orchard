@@ -1,0 +1,14 @@
+﻿@using Orchard.Search.ViewModels;
+
+@{
+    Style.Require("Search");
+}
+
+
+@using(Html.BeginForm("index", "search", new { area = "Orchard.Search" }, FormMethod.Get, new { @class = "search-form" })) { 
+    <fieldset>
+        @Html.TextBox("q", (SearchViewModel)Model.ViewModel.Query)
+        @Html.Hidden("culture", WorkContext.CurrentCulture)
+        <button type="submit">@T("Search")</button>
+    </fieldset>
+}

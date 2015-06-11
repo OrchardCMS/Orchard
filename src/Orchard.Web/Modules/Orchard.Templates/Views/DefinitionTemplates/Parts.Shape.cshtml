@@ -1,0 +1,26 @@
+﻿@model Orchard.Templates.ViewModels.ShapePartViewModel
+@{
+    Style.Include("~/modules/orchard.templates/scripts/codemirror/lib/codemirror.css");
+    Style.Include("template-editor.css");
+    Script.Require("jQuery");
+    Script.Include("codemirror/lib/codemirror.js");
+    Script.Include("codemirror/mode/xml/xml.js");
+    Script.Include("codemirror/mode/javascript/javascript.js");
+    Script.Include("codemirror/mode/css/css.js");
+    Script.Include("codemirror/mode/htmlmixed/htmlmixed.js");
+    Script.Include("codemirror/mode/htmlembedded/htmlembedded.js");
+    Script.Include("template-editor.js");
+}
+
+<fieldset>
+    <div>
+        @Html.LabelFor(m => m.Name, T("Name"))
+        @Html.TextBoxFor(m => m.Name, new { @class = "text medium" })
+        <span class="hint">@T("The name of this template, which can be used to reference from code (as when using shape type names) and tokens.")</span>
+    </div>
+</fieldset>
+<fieldset>
+    <div>
+        @Html.TextAreaFor(m => m.Template, new { @class = "text large code-editor" })
+    </div>
+</fieldset>

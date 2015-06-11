@@ -1,0 +1,35 @@
+﻿@using Orchard.ContentManagement
+@using Orchard.DynamicForms.Elements
+@using Orchard.Layouts.Helpers
+@{
+    Style.Include("forms.css");
+}
+@{
+    var contentItem = (ContentItem) Model.ContentItem;
+    var element = (Form) Model.Element;
+    var tagBuilder = TagBuilderExtensions.CreateElementTagBuilder(Model);
+    var formName = element.Name;
+    var formAction = String.IsNullOrWhiteSpace(element.Action) ? Url.Action("Submit", "Form", new { area = "Orchard.DynamicForms"}) : element.Action;
+    var formMethod = !String.IsNullOrWhiteSpace(element.Method) ? element.Method : "POST";
+    
+    tagBuilder.AddCssClass("dynamic-form");
+
+    if (element.EnableClientValidation == true) {
+        Script.Require("jQuery").AtFoot();
+        Script.Include("lib/jquery.validate.js", "lib/jquery.validate.min.js").AtFoot();
+        Script.Include("lib/jquery.validate.unobtrusive.js", "lib/jquery.validate.unobtrusive.min.js").AtFoot();
+        Script.Include("lib/jquery.validate.unobtrusive.additional.js").AtFoot();
+
+        Html.EnableUnobtrusiveJavaScript();
+        Html.EnableClientValidation();
+    }
+
+}
+@tagBuilder.StartElement
+<form action="@formAction" method="@formMethod" enctype="multipart/form-data">
+    @DisplayChildren(Model)
+    <input type="hidden" name="formName" value="@formName" />
+    <input type="hidden" name="contentId" value="@contentItem.Id" />
+    @Html.AntiForgeryToken()
+</form>
+@tagBuilder.EndElement

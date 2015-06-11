@@ -1,0 +1,220 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{0E7646E8-FE8F-43C1-8799-D97860925EC4}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Orchard.ContentTypes</RootNamespace>
+    <AssemblyName>Orchard.ContentTypes</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>false</UseIISExpress>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>..\..\..\OrchardBasicCorrectness.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AdminMenu.cs" />
+    <Compile Include="Events\ContentFieldAttachedContext.cs" />
+    <Compile Include="Events\ContentFieldDetachedContext.cs" />
+    <Compile Include="Events\ContentPartAttachedContext.cs" />
+    <Compile Include="Events\ContentPartContext.cs" />
+    <Compile Include="Events\ContentPartCreatedContext.cs" />
+    <Compile Include="Events\ContentPartDetachedContext.cs" />
+    <Compile Include="Events\ContentPartFieldContext.cs" />
+    <Compile Include="Events\ContentPartImportedContext.cs" />
+    <Compile Include="Events\ContentPartImportingContext.cs" />
+    <Compile Include="Events\ContentPartRemovedContext.cs" />
+    <Compile Include="Events\ContentTypeContext.cs" />
+    <Compile Include="Events\ContentTypeCreatedContext.cs" />
+    <Compile Include="Events\ContentTypeImportedContext.cs" />
+    <Compile Include="Events\ContentTypeImportingContext.cs" />
+    <Compile Include="Events\ContentTypePartContext.cs" />
+    <Compile Include="Events\ContentTypeRemovedContext.cs" />
+    <Compile Include="Events\IContentDefinitionEventHandler.cs" />
+    <Compile Include="Extensions\MetadataExtensions.cs" />
+    <Compile Include="Migrations.cs" />
+    <Compile Include="ResourceManifest.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Services\ContentTypePlacementStrategy.cs" />
+    <Compile Include="Services\DefaultStereotypesProvider.cs" />
+    <Compile Include="Services\IPlacementService.cs" />
+    <Compile Include="Services\IStereotypesProvider.cs" />
+    <Compile Include="Services\PlacementService.cs" />
+    <Compile Include="Services\StereotypeService.cs" />
+    <Compile Include="Settings\EditorEvents.cs" />
+    <Compile Include="Settings\PlacementSettings.cs" />
+    <Compile Include="ViewModels\AddPartsViewModel.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Permissions.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\ContentDefinitionService.cs" />
+    <Compile Include="Services\IContentDefinitionService.cs" />
+    <Compile Include="ViewModels\AddFieldViewModel.cs" />
+    <Compile Include="ViewModels\ContentTypeSettingsViewModel.cs" />
+    <Compile Include="ViewModels\EditFieldNameViewModel.cs" />
+    <Compile Include="ViewModels\CreatePartViewModel.cs" />
+    <Compile Include="ViewModels\EditFieldViewModel.cs" />
+    <Compile Include="ViewModels\EditPartFieldViewModel.cs" />
+    <Compile Include="ViewModels\EditPartViewModel.cs" />
+    <Compile Include="ViewModels\EditPlacementViewModel.cs" />
+    <Compile Include="ViewModels\EditTypePartViewModel.cs" />
+    <Compile Include="ViewModels\ListContentPartsViewModel.cs" />
+    <Compile Include="ViewModels\RemoveFieldViewModel.cs" />
+    <Compile Include="ViewModels\RemovePartViewModel.cs" />
+    <Compile Include="ViewModels\CreateTypeViewModel.cs" />
+    <Compile Include="ViewModels\EditTypeViewModel.cs" />
+    <Compile Include="ViewModels\ListContentsViewModel.cs" />
+    <Compile Include="ViewModels\ListContentTypesViewModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Module.txt" />
+    <Content Include="Scripts\admin-contenttypes.js" />
+    <Content Include="Styles\Images\menu.contenttypes.png" />
+    <Content Include="Styles\Images\move.gif" />
+    <Content Include="Styles\menu.contenttypes-admin.css" />
+    <Content Include="Styles\orchard-contenttypes-admin.css" />
+    <Content Include="Views\Admin\AddFieldTo.cshtml" />
+    <Content Include="Views\Admin\AddPartsTo.cshtml" />
+    <Content Include="Views\Admin\CreatePart.cshtml" />
+    <Content Include="Views\Admin\ListParts.cshtml" />
+    <Content Include="Views\Admin\RemoveFieldFrom.cshtml" />
+    <Content Include="Views\Admin\RemovePartFrom.cshtml" />
+    <Content Include="Views\Admin\Create.cshtml" />
+    <Content Include="Views\Admin\EditPart.cshtml" />
+    <Content Include="Views\Admin\Edit.cshtml" />
+    <Content Include="Views\Admin\List.cshtml" />
+    <Content Include="Views\DisplayTemplates\EditTypeViewModel.cshtml" />
+    <Content Include="Views\DisplayTemplates\EditPartViewModel.cshtml" />
+    <Content Include="Views\DisplayTemplates\Field.cshtml" />
+    <Content Include="Views\DisplayTemplates\Fields.cshtml" />
+    <Content Include="Views\DisplayTemplates\Settings.cshtml" />
+    <Content Include="Views\EditorTemplates\TypePartField.cshtml" />
+    <Content Include="Views\EditorTemplates\TypePartFields.cshtml" />
+    <Content Include="Views\EditorTemplates\Field.cshtml" />
+    <Content Include="Views\EditorTemplates\Fields.cshtml" />
+    <Content Include="Views\EditorTemplates\TypePart.cshtml" />
+    <Content Include="Views\EditorTemplates\TypeParts.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
+      <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
+      <Name>Orchard.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\Orchard.Core.csproj">
+      <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
+      <Name>Orchard.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Themes\Orchard.Themes.csproj">
+      <Project>{CDE24A24-01D3-403C-84B9-37722E18DFB7}</Project>
+      <Name>Orchard.Themes</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Admin\EditField.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\DefinitionTemplates\ContentTypeSettingsViewModel.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Admin\EditPlacement.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\DefinitionTemplates\ContentPartSettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target> -->
+  <Target Name="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(ProjectDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>9983</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>
+          </IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>True</UseCustomServer>
+          <CustomServerUrl>http://orchard.codeplex.com</CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

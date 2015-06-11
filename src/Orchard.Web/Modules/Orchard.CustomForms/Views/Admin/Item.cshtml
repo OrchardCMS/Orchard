@@ -1,0 +1,30 @@
+﻿@using Orchard.Core.Contents.ViewModels;
+@using Orchard.Utility.Extensions;
+
+@{
+    Model.List.Classes.Add("content-items");
+}
+
+@if (Model.List.Items.Count > 0) {
+    using (Html.BeginFormAntiForgeryPost(Url.Action("List", "Admin", new { area = "Contents", id = "" }))) {
+        <fieldset class="bulk-actions">
+            <label for="publishActions">@T("Actions:")</label>
+            <select id="publishActions" name="Options.BulkAction">
+                @Html.SelectOption(ContentsBulkAction.None, ContentsBulkAction.None, T("Choose action...").ToString())
+                @Html.SelectOption(ContentsBulkAction.None, ContentsBulkAction.PublishNow, T("Publish Now").ToString())
+                @Html.SelectOption(ContentsBulkAction.None, ContentsBulkAction.Unpublish, T("Unpublish").ToString())
+                @Html.SelectOption(ContentsBulkAction.None, ContentsBulkAction.Remove, T("Delete").ToString())
+            </select>
+            @Html.Hidden("returnUrl", ViewContext.RequestContext.HttpContext.Request.ToUrlString())
+            <button type="submit" name="submit.BulkEdit" value="yes">@T("Apply")</button>
+        </fieldset>
+        <fieldset class="contentItems bulk-items">
+            @Display(Model.List)
+        </fieldset>
+    }
+}
+else {
+    <div class="info message">@T("There are no submissions for this form.")</div>
+}
+
+@Display(Model.Pager)

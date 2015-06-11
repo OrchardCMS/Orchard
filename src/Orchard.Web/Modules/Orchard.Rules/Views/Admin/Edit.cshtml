@@ -1,0 +1,108 @@
+﻿@model Orchard.Rules.ViewModels.EditRuleViewModel
+
+@{
+    Layout.Title = T("Edit Rule").Text;
+    Style.Include("admin-rules.css");
+}
+
+@using (Html.BeginFormAntiForgeryPost())
+{
+    @Html.ValidationSummary()
+
+    <fieldset>
+        @Html.LabelFor(m => m.Name)
+        @Html.TextBoxFor(m => m.Name, new { @class = "text medium" }) 
+        <span class="hint">@T("The name of the Rule")</span>
+    </fieldset>
+
+    <fieldset class="bulk-actions">
+    <h2>@T("Events")</h2>
+    </fieldset>
+
+    <div class="manage">
+    @Html.ActionLink(T("Add a new Event").Text, "Add", new { controller = "Event", id = Model.Id }, new { @class = "button primaryAction" })
+    </div>
+
+    <table class="items">
+        <thead>
+            <tr>
+                <th scope="col" >@T("Description")</th>
+                <th scope="col" class="actions">&nbsp;</th>
+            </tr>
+        </thead>
+    @foreach (var ev in Model.Events)
+    {
+        <tr>
+            <td>@ev.DisplayText</td>
+            <td>
+                @Html.ActionLink(T("Edit").Text, "Edit", new { controller = "Event", id = Model.Id, category = ev.Category, type = ev.Type, eventId = ev.EventRecordId }) |
+                @Html.ActionLink(T("Delete").Text, "Delete", new { controller = "Event", id = Model.Id, eventId = ev.EventRecordId }, new { itemprop = "RemoveUrl UnsafeUrl" })
+            </td>    
+        </tr>
+    }
+    </table>
+
+    @* Render a button at the bottom only if there are several actions in the table *@
+    if (Model.Events.Count() > 5)
+    {
+        <div class="manage">
+        @Html.ActionLink(T("Add a new Event").Text, "Add", new { controller = "Event", id = Model.Id }, new { @class = "button primaryAction" })
+        </div>
+    }
+    
+    <fieldset>
+
+    <fieldset class="bulk-actions">
+    <h2>@T("Actions")</h2>
+    </fieldset>
+
+    <div class="manage">
+    @Html.ActionLink(T("Add a new Action").Text, "Add", new { controller = "Action", id = Model.Id }, new { @class = "button primaryAction" })
+    </div>
+
+    <table class="items">
+        <thead>
+            <tr>
+                <th scope="col" >@T("Description")</th>
+                <th scope="col" class="actions">&nbsp;</th>
+            </tr>
+        </thead>
+    @foreach (var action in Model.Actions)
+    {
+        <tr>
+            <td>@action.DisplayText</td>
+            <td>
+                @Html.ActionLink(T("Edit").Text, "Edit", new { controller = "Action", id = Model.Id, category = action.Category, type = action.Type, actionId = action.ActionRecordId }) |
+                @Html.ActionLink(T("Delete").Text, "Delete", new { controller = "Action", id = Model.Id, actionId = action.ActionRecordId }, new { itemprop = "RemoveUrl UnsafeUrl" }) |
+                @if(action != Model.Actions.First()) {
+                    @Html.ActionLink(T("Up").Text, "Move", new { controller = "Admin", id = Model.Id, direction = "up", actionId = action.ActionRecordId }) @:|
+                }
+                @if(action != Model.Actions.Last()) {
+                    @Html.ActionLink(T("Down").Text, "Move", new { controller = "Admin", id = Model.Id, direction = "down", actionId = action.ActionRecordId })
+                }
+            </td>    
+        </tr>
+    }
+    </table>
+
+    @* Render a button at the bottom only if there are several actions in the table *@
+    @if (Model.Actions.Count() > 5)
+    {
+        <div class="manage">
+        @Html.ActionLink(T("Add a new Action").Text, "Add", new { controller = "Action", id = Model.Id }, new { @class = "button primaryAction" })
+        </div>
+    }
+	    
+    </fieldset>
+
+    <fieldset>
+        <button class="primaryAction" type="submit" name="submit.Save" value="submit.Save" >@T("Save")</button>
+        @if (!Model.Enabled) {
+            <button class="primaryAction" type="submit" name="submit.SaveAndEnable" value="submit.SaveAndEnable" >@T("Save and Enable")</button>
+        }
+        else {
+            @Html.HiddenFor(m => m.Enabled)
+        }
+    </fieldset>
+    
+}

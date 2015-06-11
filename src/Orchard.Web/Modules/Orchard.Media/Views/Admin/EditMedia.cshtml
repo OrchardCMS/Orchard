@@ -1,0 +1,69 @@
+﻿@model Orchard.Media.ViewModels.MediaItemEditViewModel
+@using Orchard.Media.Extensions;
+@using Orchard.Media.Helpers;
+@using Orchard.Media.Models;
+@{
+    Style.Require("MediaAdmin");
+    Layout.Title = T("Edit Media - {0}", Model.Name).ToString();
+    var isPicture = Html.IsPicture(Model.Name);
+    var embedHTML = isPicture ?
+        "<img src=\"" + Model.PublicUrl + "\"/>" :
+        "<a href=\"" + Model.PublicUrl + "\">" + Model.Name + "</a>";
+}
+
+<div class="breadCrumbs">
+<p>@Html.ActionLink(T("Media Folders").ToString(), "Index") &#62; 
+    @foreach (FolderNavigation navigation in MediaHelpers.GetFolderNavigationHierarchy(Model.MediaPath)) {
+        @Html.ActionLink(navigation.FolderName, "Edit",
+                  new {name = navigation.FolderName, mediaPath = navigation.FolderPath}) <text>&#62; </text>
+    }
+    @T("Edit Media")</p>
+ </div>
+
+<div class="sections clearBoth">
+    <div class="primary">
+        @if (isPicture) {
+            <div>
+                <img src="@Model.PublicUrl" class="previewImage"/>
+            </div>
+        }
+        else {
+            <a href="@Model.PublicUrl">@Model.Name</a>
+        }
+        @* todo: make these real (including markup) *@
+        <div>
+            @* <label>@T("Dimensions: <span>500 x 375 pixels</span>")</label> *@
+
+            <label>@T("Size: <span>{0}</span>", Model.Size.ToFriendlySizeString())</label>
+               
+            <label>@T("Added on: <span>{0}</span>", Model.LastUpdated)</label>
+        </div>
+
+        <div>
+            <label for="embedPath">@T("Embed:")</label>
+            <input id="embedPath" class="text medium" name="embedPath" type="text" readonly="readonly" value="@embedHTML" />
+            <span class="hint">@T("Copy this html to add this media file to your site.")</span>
+        </div>
+
+        @using (Html.BeginFormAntiForgeryPost()) {
+            @Html.ValidationSummary()
+            <fieldset>
+                <div>
+                    <label for="Name">@T("Name")</label>
+                    <input id="Name" name="Name" type="hidden" value="@Model.Name"/>
+                    <input id="NewName" class="text medium" name="NewName" type="text" value="@Model.Name"/>
+                </div>
+                <div>
+                    <input type="hidden" id="LastUpdated" name="LastUpdated" value="@Model.LastUpdated"/>
+                    <input type="hidden" id="Size" name="Size" value="@Model.Size"/>
+                    <input type="hidden" id="FolderName" name="FolderName" value="@Model.FolderName"/>
+                    <input type="hidden" id="MediaPath" name="MediaPath" value="@Model.MediaPath" />
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <button class="primaryAction" type="submit" name="submit.Save" value="@T("Save")">@T("Save")</button>
+            </fieldset>
+        }
+    </div>
+</div>

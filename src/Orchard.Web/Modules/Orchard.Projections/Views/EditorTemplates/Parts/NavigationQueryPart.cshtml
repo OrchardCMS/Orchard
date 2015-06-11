@@ -1,0 +1,37 @@
+﻿@model NavigationQueryPartEditViewModel
+@using Orchard.Projections.Models;
+@using Orchard.Projections.ViewModels;
+
+@{
+    var selectedQueryRecordId = -1;
+}
+
+<fieldset>
+    @Html.LabelFor(m => m.QueryRecordId, T("For Query"))
+    <select id="@Html.FieldIdFor(m => m.QueryRecordId)" name="@Html.FieldNameFor(m => m.QueryRecordId)">
+        @foreach (QueryPart queryRecord in Model.Queries.OrderBy(x => x.Name)) {
+                @Html.SelectOption(Model.QueryRecordId, queryRecord.Id.ToString(), @queryRecord.Name)
+                if (Model.QueryRecordId == queryRecord.Id.ToString()) {
+                    selectedQueryRecordId = queryRecord.Id;
+                }
+        }
+    </select>
+    @if (selectedQueryRecordId != -1) {
+        @Html.ActionLink(T("Edit Query").Text, "Edit", new { area = "Orchard.Projections", id = selectedQueryRecordId }, new { })
+    }
+    <span class="hint">@T("The query to use to create menu items.")</span>
+</fieldset>
+
+<fieldset>
+    <div>
+        @Html.LabelFor(m => m.Items, T("Items to display"))
+        @Html.TextBoxFor(m => m.Items, new { @class = "text small" })
+        <span class="hint">@T("The number of items to display. Enter 0 for no limit.")</span>
+    </div>
+
+    <div>
+        @Html.LabelFor(m => m.Skip, T("Offset"))
+        @Html.TextBoxFor(m => m.Skip, new { @class = "text small" })
+        <span class="hint">@T("The number of items to skip (e.g., if 2 is entered, the first 2 items won't be diplayed).")</span>
+    </div>
+</fieldset>

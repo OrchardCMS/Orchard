@@ -1,0 +1,42 @@
+﻿@model Orchard.Tags.ViewModels.TagsAdminEditViewModel
+@using Orchard.ContentManagement;
+@using Orchard.Utility.Extensions;
+
+@{ Layout.Title = T("Manage tag: {0}", Model.TagName).ToString(); }
+
+@using (Html.BeginFormAntiForgeryPost()) { 
+    @Html.ValidationSummary()  
+    <fieldset>
+        @Html.HiddenFor(m=>m.Id)
+        @Html.LabelFor(m => m.TagName, T("Tag Name"))
+        @Html.TextBoxFor(m=>m.TagName, new { @class = "text" })
+    </fieldset>
+
+    <fieldset>
+        <button class="primaryAction" type="submit">@T("Save")</button>
+    </fieldset>
+}
+<h2>@T("Content items tagged with {0}", Model.TagName)</h2>
+@if (ViewData["ContentItems"] == null) {
+    <p>@T("There is nothing tagged with {0}", Model.TagName)</p>
+}
+else {
+    <table class="items">
+        <colgroup>
+            <col id="Col1" />
+            <col id="Col2" />
+        </colgroup>
+        <thead>
+            <tr>
+                <th scope="col">@T("Content Type")</th>
+                <th scope="co2">@T("Name")</th>
+            </tr>
+        </thead>
+        @foreach (IContent content in (IEnumerable<IContent>)ViewData["ContentItems"]) { 
+        <tr>
+            <td>@content.ContentItem.ContentType.CamelFriendly()</td>
+            <td>@Html.ItemEditLink(content.ContentItem)</td>
+        </tr>
+        }
+    </table>
+}

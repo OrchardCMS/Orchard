@@ -1,0 +1,6 @@
+﻿@using Orchard.Comments.Models
+@{
+    CommentPart comment = Model.ContentPart;
+}
+
+@T("said") <time datetime="@comment.CommentDateUtc.GetValueOrDefault().ToString("yyyy-MM-ddTHH:mm:ss.fffffffZ")">@Html.Link((string)Display.DateTimeRelative(DateTimeUtc: comment.CommentDateUtc.GetValueOrDefault()).ToString(), @Url.RouteUrl(comment.CommentedOnContentItemMetadata.DisplayRouteValues) + "#comment-" + comment.Id)</time>

@@ -1,0 +1,58 @@
+﻿@model Orchard.PublishLater.ViewModels.PublishLaterViewModel
+
+@using Orchard.ContentManagement;
+@using Orchard.Core.Contents;
+@using Orchard.Utility.Extensions;
+
+@if (Authorizer.Authorize(Permissions.PublishContent, Model.ContentItem)) {
+
+    <style type="text/css">
+        /* TODO: Extract to resource (Decorum). */
+
+        .publish-later-datetime {
+            float: left;
+            clear: none;
+            white-space: nowrap;
+            vertical-align: middle;
+        }
+
+        .publish-later-datetime legend {
+            display: none;
+        }
+
+        .publish-later-datetime button {
+            margin-left: 4px;
+        }
+
+        /* RTL */
+        .dir-rtl .publish-later-datetime {
+            float: right;
+        }
+
+        .dir-rtl .publish-later-datetime button {
+            margin-left: inherit;
+            margin-right: 4px;
+        }
+    </style>
+    
+    <fieldset class="publish-later-datetime">
+        <legend>@T("Publish")</legend>
+        @Html.HiddenFor(m => m.Editor.ShowDate)
+        @Html.HiddenFor(m => m.Editor.ShowTime)
+        @Html.EditorFor(m => m.Editor)
+        <button type="submit" name="submit.Save" value="submit.PublishLater">@T("Publish Later")</button>
+    </fieldset>
+
+    using (Script.Foot()) {
+        <script type="text/javascript">
+            //<![CDATA[
+            $(function () {
+                // TODO: Does the below actually do anything? Where is the Command_PublishLater field?
+                $('#@Html.FieldIdFor(m => m.Editor.Date)').focus(function () { $('#@ViewData.TemplateInfo.GetFullHtmlFieldId("Command_PublishLater")').attr("checked", "checked") });
+                $('#@Html.FieldIdFor(m => m.Editor.Time)').focus(function () { $('#@ViewData.TemplateInfo.GetFullHtmlFieldId("Command_PublishLater")').attr("checked", "checked") });
+            })
+            //]]>
+        </script>
+    }
+
+}

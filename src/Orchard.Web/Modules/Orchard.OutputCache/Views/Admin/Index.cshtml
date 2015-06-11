@@ -1,0 +1,110 @@
+﻿@model Orchard.OutputCache.ViewModels.IndexViewModel
+           
+@{
+    Layout.Title = T("Cache Settings");
+
+    // Group configurations by feature name.
+    var featureRouteConfigs =
+        Model.RouteConfigs
+            .GroupBy(x => x.FeatureName)
+            .ToDictionary(x => x.Key, x => x.Select(y => y));
+}
+
+@using (Html.BeginFormAntiForgeryPost())
+{
+    @Html.ValidationSummary()
+
+    <fieldset>
+        <label>@T("Default Cache Duration")</label>
+        @Html.TextBoxFor(m => m.DefaultCacheDuration, new { @class = "text small" })
+        <span class="hint">@T("Number of seconds that items should be cached on the server before being regenerated.")</span>
+    </fieldset>
+
+    <fieldset>
+        <label>@T("Default Cache Grace Time")</label>
+        @Html.TextBoxFor(m => m.DefaultCacheGraceTime, new { @class = "text small" })
+        <span class="hint">@T("Number of seconds past duration that stale items can be served from cache while regenaration is in progress. Enter 0 to disable grace time by default.")</span>
+    </fieldset>
+
+    <fieldset>
+        <label>@T("Max Age")</label>
+        @Html.TextBoxFor(m => m.DefaultMaxAge, new { @class = "text small" })
+        <span class="hint">@T("When defined, a cache-control header with a max-age property will be added. Use this in order to enable kernel cache on IIS.")</span>
+    </fieldset>
+
+    <fieldset>
+        <label>@T("Vary by Query String Parameters")</label>
+        @Html.TextBoxFor(m => m.VaryByQueryStringParameters, new { @class = "text medium" })
+        <span class="hint">@T("When defined, using comma separated values, sets caching to vary by the specified query string parameters. Leave empty to vary by all query string parameters.")</span>
+    </fieldset>
+    
+    <fieldset>
+        <label>@T("Vary by Request Headers")</label>
+        @Html.TextBoxFor(m => m.VaryByRequestHeaders, new { @class = "text medium" })
+        <span class="hint">@T("When defined, using comma separated values, sets caching to vary by the specified request headers.")</span>
+    </fieldset>
+    
+    <fieldset>
+        <label>@T("Ignored URLs")</label>
+        @Html.TextAreaFor(m => m.IgnoredUrls, new { @class = "text medium" })
+        <span class="hint">@T("Specifies a set of paths relative to tenant root (e.g. '/' or '/About') for which caching should not be done. Enter one path per line.")</span>
+        <span class="hint">@T("You can add comments by starting a line with #.")</span>
+    </fieldset>
+
+    <fieldset>
+        <label>@T("Advanced Settings")</label>
+
+        @Html.CheckBoxFor(m => m.IgnoreNoCache)
+        <label for="@Html.FieldIdFor(m => m.IgnoreNoCache)" class="forcheckbox">@T("Ignore no-cache headers")</label>
+        @Html.Hint(T("When checked, requests containing a 'Content-Cache: no-cache' header will still return cached values if available."))
+
+        @Html.CheckBoxFor(m => m.VaryByCulture)
+        <label for="@Html.FieldIdFor(m => m.VaryByCulture)" class="forcheckbox">@T("Vary by culture")</label>
+        @Html.Hint(T("When checked, caching will vary by request culture. For better performance, leave this unchecked if your site uses only one culture."))
+
+        @Html.CheckBoxFor(m => m.CacheAuthenticatedRequests)
+        <label for="@Html.FieldIdFor(m => m.CacheAuthenticatedRequests)" class="forcheckbox">@T("Cache authenticated requests")</label>
+        @Html.Hint(T("When checked, caching will apply even if the user is authenticated. When unchecked, caching will be bypassed for authenticated requests."))
+
+        @Html.CheckBoxFor(m => m.VaryByAuthenticationState)
+        <label for="@Html.FieldIdFor(m => m.VaryByAuthenticationState)" class="forcheckbox">@T("Vary by authentication state")</label>
+        @Html.Hint(T("When checked (and 'Cache authenticated requests' is also checked) caching will vary by whether the user is authenticated or not. This is useful if content is rendered differently for authenticated vs. anonymous users."))
+
+        @Html.CheckBoxFor(m => m.DebugMode)
+        <label for="@Html.FieldIdFor(m => m.DebugMode)" class="forcheckbox">@T("Render caching information in cached pages")</label>
+
+    </fieldset>
+
+    foreach (var feature in featureRouteConfigs.Keys) {
+        <h2>@T(feature)</h2>
+        <table class="items">
+            <thead>
+                <tr>
+                    <th scope="col" style="width: 100%;">@T("Route")</th>
+                    <th scope="col">@T("Priority")</th>
+                    <th scope="col">@T("Duration (*)")</th>
+                    <th scope="col">@T("Grace Time (**)")</th>
+                </tr>
+            </thead>
+            @foreach (var routeConfig in featureRouteConfigs[feature]) {
+                var index = Model.RouteConfigs.IndexOf(routeConfig);
+            <tr>
+                <td style="width: 100%;">@routeConfig.Url</td>
+                <td>@routeConfig.Priority</td>    
+                <td>
+                    @Html.TextBoxFor(m => m.RouteConfigs[index].Duration, new { @class = "text small" })
+                </td>
+                <td>
+                    @Html.TextBoxFor(m => m.RouteConfigs[index].GraceTime, new { @class = "text small" })
+                </td>
+                @Html.HiddenFor(m => m.RouteConfigs[index].RouteKey)
+            </tr>
+            }
+        </table>
+    }
+    
+    <span class="hint">@T("* Leave Duration column empty to use default duration, enter 0 to disable caching for the route.")</span>
+    <span class="hint">@T("** Leave Grace Time column empty to use default grace time, enter 0 to disable grace time for the route.")</span>
+
+    <button class="primaryAction" type="submit" style="margin-top: 1em;">@T("Save")</button>
+}

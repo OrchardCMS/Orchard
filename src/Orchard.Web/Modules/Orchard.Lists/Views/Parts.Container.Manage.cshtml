@@ -1,0 +1,21 @@
+﻿@using Orchard.ContentManagement.MetaData.Models
+@{
+    var containerId = (int) Model.ContainerId;
+    var itemContentTypes = (IList<ContentTypeDefinition>)Model.ItemContentTypes;
+}
+<div class="item-properties actions">
+    <p>
+        @Html.ActionLink(T("{0} Properties", (string)Model.ContainerDisplayName).ToString(), "Edit", new { Area = "Contents", Id = (int)Model.ContainerId, ReturnUrl = Html.ViewContext.HttpContext.Request.RawUrl })
+    </p>
+</div>
+<div class="manage">
+    @if (itemContentTypes.Any()) {
+        foreach (var contentType in itemContentTypes) {
+        @Html.ActionLink(T("New {0}", contentType.DisplayName).ToString(), "Create", "Admin", new { area = "Contents", id = contentType.Name, containerId }, new { @class = "button primaryAction create-content" })
+        }
+    }
+    else {
+        @Html.ActionLink(T("New Content").ToString(), "Create", "Admin", new { area = "Contents", containerId }, new { @class = "button primaryAction create-content" })
+    }
+    <a id="chooseItems" href="#" class="button primaryAction">@T("Choose Items")</a>
+</div>

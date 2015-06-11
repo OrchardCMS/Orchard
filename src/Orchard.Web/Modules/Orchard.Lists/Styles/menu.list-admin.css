@@ -1,0 +1,22 @@
+﻿.navicon-list,
+.navicon-lists,
+.section-new .subnavicon-list,
+.nav-list > h3 > a,
+.nav-list-definition > h3 > a {
+    background-image:url(images/menu.list.png) !important;
+}
+
+.navicon-list:hover,
+.navicon-lists:hover,
+.nav-list > h3 > a:hover,
+.nav-list-definition > h3 > a:hover {
+    background-position:0 -30px !important;
+}
+
+.navicon-lists {
+    background-image:url(images/menu.list.png) !important;
+}
+
+.navicon-lists:hover {
+    background-position:0 -30px !important;
+}

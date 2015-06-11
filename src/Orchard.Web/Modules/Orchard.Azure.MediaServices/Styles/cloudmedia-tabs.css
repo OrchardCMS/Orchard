@@ -1,0 +1,25 @@
+#tabs {
+  display: none;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  font-family: inherit;
+  font-size: inherit;
+}
+#tabs ul {
+  background: none;
+  border-top: 0;
+  border-right: 0;
+  border-left: 0;
+  border-radius: 0;
+  padding: 0;
+}
+#tabs ul li {
+  margin-right: 6px;
+  border-radius: 0;
+}
+#tabs .ui-tabs-panel {
+  border: 1px solid #aaaaaa;
+  border-top: 0;
+  border-radius: 0;
+}

@@ -1,0 +1,50 @@
+﻿@model Orchard.MediaProcessing.ViewModels.AdminEditViewModel
+@{
+    Layout.Title = T("Edit Media Profile - {0}", Model.Name).Text;
+}
+
+@using (Html.BeginFormAntiForgeryPost())
+{
+    @Html.ValidationSummary()
+
+    <fieldset class="bulk-actions">
+        <h2>@T("Filters")</h2>
+    </fieldset>
+
+    <div class="manage">
+        @Html.ActionLink(T("Add a new Filter").Text, "Add", new { controller = "Filter", id = Model.Id }, new { @class = "button primaryAction" })
+    </div>
+    
+    <table class="items">
+        <thead>
+            <tr>
+                <th scope="col" >@T("Description")</th>
+                <th scope="col" class="actions">&nbsp;</th>
+            </tr>
+        </thead>
+        @foreach (var filter in Model.Filters)
+        {
+            <tr>
+                <td>@filter.DisplayText</td>
+                <td>
+                    @Html.ActionLink(T("Edit").Text, "Edit", new { controller = "Filter", id = Model.Id, category = filter.Category, type = filter.Type, filterId = filter.FilterRecordId }) |
+                    @Html.ActionLink(T("Delete").Text, "Delete", new { controller = "Filter", id = Model.Id, filterId = filter.FilterRecordId }, new { itemprop = "RemoveUrl UnsafeUrl" }) |
+                    @if (filter != Model.Filters.First()) {
+                        @Html.ActionLink(T("Up").Text, "Move", new { controller = "Admin", id = Model.Id, direction = "up", filterId = filter.FilterRecordId }) @:|
+                    }
+                    @if (filter != Model.Filters.Last()) {
+                        @Html.ActionLink(T("Down").Text, "Move", new { controller = "Admin", id = Model.Id, direction = "down", filterId = filter.FilterRecordId })
+                    }
+
+                </td>    
+            </tr>
+        }
+    </table>
+    
+    <span class="hint">@T("Usage example: ")@("@Display.MediaUrl(Profile: \"")@Model.Name@("\", Path: Model.ContentItem.Contact.Picture.Url)")</span>
+        
+    <fieldset>
+        @*@Html.ActionLink(T("Preview").ToString(), "Preview", new { Model.Id }, new { @class = "button" })*@
+        @Html.ActionLink(T("Close").ToString(), "Index", new { }, new { @class = "button" })
+    </fieldset>
+}

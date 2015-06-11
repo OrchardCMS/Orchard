@@ -1,0 +1,617 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Orchard.Core</RootNamespace>
+    <AssemblyName>Orchard.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <TargetFrameworkProfile />
+    <UseIISExpress>false</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>..\..\OrchardBasicCorrectness.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\lib\aspnetmvc\System.Web.WebPages.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Common\Controllers\ErrorController.cs" />
+    <Compile Include="Common\DateEditor\DateEditorSettings.cs" />
+    <Compile Include="Common\OwnerEditor\OwnerEditorSettings.cs" />
+    <Compile Include="Common\OwnerEditor\OwnerEditorDriver.cs" />
+    <Compile Include="Common\DateEditor\DateEditorDriver.cs" />
+    <Compile Include="Common\Drivers\IdentityPartDriver.cs" />
+    <Compile Include="Common\DateEditor\DateEditorHandler.cs" />
+    <Compile Include="Common\Handlers\IdentityPartHandler.cs" />
+    <Compile Include="Common\Models\CommonPartVersionRecord.cs" />
+    <Compile Include="Common\Models\IdentityPartRecord.cs" />
+    <Compile Include="Common\Models\IdentityPart.cs" />
+    <Compile Include="Common\ResourceManifest.cs" />
+    <Compile Include="Common\Routes.cs" />
+    <Compile Include="Common\Services\FlavorService.cs" />
+    <Compile Include="Common\Services\IdentifierResolverSelector.cs" />
+    <Compile Include="Common\Services\IFlavorService.cs" />
+    <Compile Include="Common\Services\TextFieldFilter.cs" />
+    <Compile Include="Common\Services\XmlRpcHandler.cs" />
+    <Compile Include="Common\DateEditor\DateEditorViewModel.cs" />
+    <Compile Include="Common\Settings\TextFieldSettingsEvents.cs" />
+    <Compile Include="Common\Settings\TextFieldSettings.cs" />
+    <Compile Include="Common\Utilities\DateUtils.cs" />
+    <Compile Include="Common\ViewModels\DateTimeEditor.cs" />
+    <Compile Include="Common\ViewModels\TextFieldDriverViewModel.cs" />
+    <Compile Include="Common\ViewModels\TextFieldSettingsEventsViewModel.cs" />
+    <Compile Include="Containers\Controllers\ItemController.cs" />
+    <Compile Include="Containers\Drivers\ContainablePartDriver.cs" />
+    <Compile Include="Containers\Drivers\ContainerPartDriver.cs" />
+    <Compile Include="Common\Migrations.cs" />
+    <Compile Include="Common\Drivers\BodyPartDriver.cs" />
+    <Compile Include="Common\Drivers\CommonPartDriver.cs" />
+    <Compile Include="Common\Drivers\TextFieldDriver.cs" />
+    <Compile Include="Containers\Drivers\ContainerWidgetPartDriver.cs" />
+    <Compile Include="Containers\Extensions\ContentDefinitionManagerExtensions.cs" />
+    <Compile Include="Containers\Drivers\CustomPropertiesDriver.cs" />
+    <Compile Include="Containers\Extensions\ContentQueryExtensions.cs" />
+    <Compile Include="Containers\Handlers\ContainablePartHandler.cs" />
+    <Compile Include="Containers\Handlers\ContainerPartHandler.cs" />
+    <Compile Include="Containers\Handlers\ContainerWidgetPartHandler.cs" />
+    <Compile Include="Containers\ListViews\CondensedListView.cs" />
+    <Compile Include="Containers\ListViews\DefaultListView.cs" />
+    <Compile Include="Containers\Migrations.cs" />
+    <Compile Include="Containers\Models\ContainablePart.cs" />
+    <Compile Include="Containers\Models\OrderByDirection.cs" />
+    <Compile Include="Containers\Models\ContainerPart.cs" />
+    <Compile Include="Common\Shapes.cs" />
+    <Compile Include="Common\Fields\TextField.cs" />
+    <Compile Include="Containers\Models\ContainerWidgetPart.cs" />
+    <Compile Include="Containers\Models\CustomPropertiesPart.cs" />
+    <Compile Include="Containers\Services\ContainerService.cs" />
+    <Compile Include="Containers\Services\ListViewProvider.cs" />
+    <Compile Include="Containers\Services\ListViewService.cs" />
+    <Compile Include="Containers\Services\Randomizer.cs" />
+    <Compile Include="Containers\Settings\ContainerSettings.cs" />
+    <Compile Include="Containers\Settings\ContainableSettings.cs" />
+    <Compile Include="Containers\ViewModels\ContainableViewModel.cs" />
+    <Compile Include="Containers\ViewModels\ContainerViewModel.cs" />
+    <Compile Include="Containers\ViewModels\ContainerTypePartSettingsViewModel.cs" />
+    <Compile Include="Containers\ViewModels\ContainerWidgetViewModel.cs" />
+    <Compile Include="Contents\ControlWrapper.cs" />
+    <Compile Include="Contents\Security\AuthorizationEventHandler.cs" />
+    <Compile Include="Common\Services\BbcodeFilter.cs" />
+    <Compile Include="Common\Services\ICommonService.cs" />
+    <Compile Include="Common\Services\CommonService.cs" />
+    <Compile Include="Common\Settings\BodySettings.cs" />
+    <Compile Include="Common\ViewModels\ContainerEditorViewModel.cs" />
+    <Compile Include="Contents\Controllers\ItemController.cs" />
+    <Compile Include="Contents\Drivers\ContentsDriver.cs" />
+    <Compile Include="Contents\DynamicPermissions.cs" />
+    <Compile Include="Contents\Extensions\MetaDataExtensions.cs" />
+    <Compile Include="Contents\Handlers\ContentsHandler.cs" />
+    <Compile Include="Contents\Permissions.cs" />
+    <Compile Include="Contents\Settings\ContentTypeSettings.cs" />
+    <Compile Include="Contents\Settings\ContentPartSettings.cs" />
+    <Compile Include="Contents\Shapes.cs" />
+    <Compile Include="Contents\ViewModels\PublishContentViewModel.cs" />
+    <Compile Include="Dashboard\Services\CompilationErrorBanner.cs" />
+    <Compile Include="Navigation\Commands\MenuCommands.cs" />
+    <Compile Include="Navigation\Drivers\AdminMenuPartDriver.cs" />
+    <Compile Include="Navigation\Drivers\MenuItemPartDriver.cs" />
+    <Compile Include="Navigation\Drivers\MenuWidgetPartDriver.cs" />
+    <Compile Include="Navigation\Drivers\ShapeMenuItemPartDriver.cs" />
+    <Compile Include="Navigation\DynamicPermissions.cs" />
+    <Compile Include="Navigation\Handlers\AdminMenuPartHandler.cs" />
+    <Compile Include="Navigation\Handlers\MenuHandler.cs" />
+    <Compile Include="Navigation\Handlers\MenuItemPartHandler.cs" />
+    <Compile Include="Navigation\Handlers\MenuWidgetPartHandler.cs" />
+    <Compile Include="Navigation\Models\AdminMenuPart.cs" />
+    <Compile Include="Navigation\Models\AdminMenuPartRecord.cs" />
+    <Compile Include="Navigation\Models\MenuWidgetPart.cs" />
+    <Compile Include="Navigation\Models\ShapeMenuItemPart.cs" />
+    <Compile Include="Navigation\Security\AuthorizationEventHandler.cs" />
+    <Compile Include="Navigation\Services\AdminMenuNavigationProvider.cs" />
+    <Compile Include="Navigation\Services\DefaultMenuManager.cs" />
+    <Compile Include="Navigation\Services\IMenuManager.cs" />
+    <Compile Include="Navigation\Services\DefaultMenuProvider.cs" />
+    <Compile Include="Navigation\Services\NavigationManager.cs" />
+    <Compile Include="Navigation\Settings\AdminMenuPartTypeSettings.cs" />
+    <Compile Include="Contents\ViewModels\ListContentsViewModel.cs" />
+    <Compile Include="Contents\ViewModels\ListContentTypesViewModel.cs" />
+    <Compile Include="Navigation\ViewModels\MenuPartViewModel.cs" />
+    <Compile Include="Navigation\ViewModels\MenuWidgetViewModel.cs" />
+    <Compile Include="Reports\AdminMenu.cs" />
+    <Compile Include="Reports\Controllers\AdminController.cs" />
+    <Compile Include="Reports\Routes.cs" />
+    <Compile Include="Navigation\Migrations.cs" />
+    <Compile Include="Reports\ViewModels\DisplayReportViewModel.cs" />
+    <Compile Include="Reports\ViewModels\ReportsAdminIndexViewModel.cs" />
+    <Compile Include="Common\Utilities\LazyField.cs" />
+    <Compile Include="Common\Handlers\CommonPartHandler.cs" />
+    <Compile Include="Common\Models\CommonPart.cs" />
+    <Compile Include="Common\Handlers\BodyPartHandler.cs" />
+    <Compile Include="Common\Models\BodyPart.cs" />
+    <Compile Include="Common\Models\BodyPartRecord.cs" />
+    <Compile Include="Common\Models\CommonPartRecord.cs" />
+    <Compile Include="Common\ViewModels\BodyEditorViewModel.cs" />
+    <Compile Include="Common\OwnerEditor\OwnerEditorViewModel.cs" />
+    <Compile Include="Contents\AdminMenu.cs" />
+    <Compile Include="Contents\Controllers\AdminController.cs" />
+    <Compile Include="Dashboard\AdminMenu.cs" />
+    <Compile Include="Dashboard\Controllers\AdminController.cs" />
+    <Compile Include="Dashboard\Routes.cs" />
+    <Compile Include="Feeds\Controllers\FeedController.cs" />
+    <Compile Include="Feeds\IFeedManager.cs" />
+    <Compile Include="Feeds\Rss\Routes.cs" />
+    <Compile Include="Feeds\Services\FeedFilter.cs" />
+    <Compile Include="Feeds\Services\FeedManager.cs" />
+    <Compile Include="Feeds\StandardBuilders\ItemInspector.cs" />
+    <Compile Include="Feeds\StandardQueries\ContainerFeedQuery.cs" />
+    <Compile Include="Feeds\StandardBuilders\CorePartsFeedItemBuilder.cs" />
+    <Compile Include="Feeds\IFeedBuilder.cs" />
+    <Compile Include="Feeds\IFeedBuilderProvider.cs" />
+    <Compile Include="Feeds\IFeedQuery.cs" />
+    <Compile Include="Feeds\IFeedQueryProvider.cs" />
+    <Compile Include="Feeds\IFeedItemBuilder.cs" />
+    <Compile Include="Feeds\Models\FeedContext.cs" />
+    <Compile Include="Feeds\Models\FeedItem.cs" />
+    <Compile Include="Feeds\Models\FeedResponse.cs" />
+    <Compile Include="Feeds\Rss\RssFeedBuilder.cs" />
+    <Compile Include="Feeds\Rss\RssResult.cs" />
+    <Compile Include="Navigation\AdminMenu.cs" />
+    <Compile Include="Navigation\Controllers\AdminController.cs" />
+    <Compile Include="Navigation\Models\MenuItemPart.cs" />
+    <Compile Include="Navigation\Models\MenuPart.cs" />
+    <Compile Include="Navigation\Drivers\MenuPartDriver.cs" />
+    <Compile Include="Navigation\Handlers\MenuPartHandler.cs" />
+    <Compile Include="Navigation\Permissions.cs" />
+    <Compile Include="Navigation\Models\MenuPartRecord.cs" />
+    <Compile Include="Navigation\Services\IMenuService.cs" />
+    <Compile Include="Navigation\Services\MainMenuService.cs" />
+    <Compile Include="Navigation\ViewModels\CreateMenuItemViewModel.cs" />
+    <Compile Include="Navigation\ViewModels\MenuItemEntry.cs" />
+    <Compile Include="Navigation\ViewModels\NavigationManagementViewModel.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Scheduling\Migrations.cs" />
+    <Compile Include="Scheduling\Models\ScheduledTaskRecord.cs" />
+    <Compile Include="Scheduling\Services\ScheduledTaskManager.cs" />
+    <Compile Include="Scheduling\Services\ScheduledTaskExecutor.cs" />
+    <Compile Include="Scheduling\Models\Task.cs" />
+    <Compile Include="Settings\Commands\SiteSettingsCommands.cs" />
+    <Compile Include="Settings\Permissions.cs" />
+    <Compile Include="Settings\ResourceManifest.cs" />
+    <Compile Include="Settings\Migrations.cs" />
+    <Compile Include="Settings\Drivers\SiteSettingsPartDriver.cs" />
+    <Compile Include="Settings\Routes.cs" />
+    <Compile Include="Settings\Tokens\SettingsTokens.cs" />
+    <Compile Include="Settings\ViewModels\SiteCulturesViewModel.cs" />
+    <Compile Include="Settings\Metadata\ContentDefinitionManager.cs" />
+    <Compile Include="Settings\Metadata\Records\ContentFieldDefinitionRecord.cs" />
+    <Compile Include="Settings\Metadata\Records\ContentPartDefinitionRecord.cs" />
+    <Compile Include="Settings\Metadata\Records\ContentPartFieldDefinitionRecord.cs" />
+    <Compile Include="Settings\Metadata\Records\ContentTypeDefinitionRecord.cs" />
+    <Compile Include="Settings\Metadata\Records\ContentTypePartDefinitionRecord.cs" />
+    <Compile Include="Settings\State\Records\ShellFeatureStateRecord.cs" />
+    <Compile Include="Settings\State\Records\ShellStateRecord.cs" />
+    <Compile Include="Settings\State\ShellStateManager.cs" />
+    <Compile Include="Settings\Descriptor\Records\ShellFeatureRecord.cs" />
+    <Compile Include="Settings\Descriptor\Records\ShellParameterRecord.cs" />
+    <Compile Include="Settings\Descriptor\Records\ShellDescriptorRecord.cs" />
+    <Compile Include="Settings\Descriptor\ShellDescriptorManager.cs" />
+    <Compile Include="Settings\AdminMenu.cs" />
+    <Compile Include="Settings\Controllers\AdminController.cs" />
+    <Compile Include="Settings\Handlers\SiteSettingsPartHandler.cs" />
+    <Compile Include="Settings\Models\SiteSettingsPart.cs" />
+    <Compile Include="Settings\Services\SiteService.cs" />
+    <Compile Include="Settings\ViewModels\SiteSettingsPartViewModel.cs" />
+    <Compile Include="Shapes\ResourceManifest.cs" />
+    <Compile Include="Shapes\CoreShapes.cs" />
+    <Compile Include="Shapes\DateTimeShapes.cs" />
+    <Compile Include="Title\Drivers\TitlePartDriver.cs" />
+    <Compile Include="Title\Handlers\TitlePartHandler.cs" />
+    <Compile Include="Title\Migrations.cs" />
+    <Compile Include="Title\Models\TitlePart.cs" />
+    <Compile Include="Title\Models\TitlePartRecord.cs" />
+    <Compile Include="XmlRpc\Controllers\HomeController.cs" />
+    <Compile Include="XmlRpc\Controllers\LiveWriterController.cs" />
+    <Compile Include="XmlRpc\IXmlRpcDriver.cs" />
+    <Compile Include="XmlRpc\IXmlRpcHandler.cs" />
+    <Compile Include="XmlRpc\Models\ModelBinderProvider.cs" />
+    <Compile Include="XmlRpc\Models\XRpcArray.cs" />
+    <Compile Include="XmlRpc\Models\XRpcData.cs" />
+    <Compile Include="XmlRpc\Models\XRpcMethodCall.cs" />
+    <Compile Include="XmlRpc\Models\XRpcMethodResponse.cs" />
+    <Compile Include="XmlRpc\Models\XRpcStruct.cs" />
+    <Compile Include="XmlRpc\Services\IXmlRpcReader.cs" />
+    <Compile Include="XmlRpc\Services\IXmlRpcWriter.cs" />
+    <Compile Include="XmlRpc\Services\XmlRpcReader.cs" />
+    <Compile Include="XmlRpc\Services\XmlRpcWriter.cs" />
+    <Compile Include="XmlRpc\XmlRpcContext.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Common\Module.txt" />
+    <Content Include="Common\Styles\datetime-editor.css" />
+    <Content Include="Common\Views\DefinitionTemplates\BodyTypePartSettings.cshtml" />
+    <Content Include="Common\Views\DefinitionTemplates\BodyPartSettings.cshtml" />
+    <Content Include="Common\Views\Fields.Common.Text.cshtml" />
+    <Content Include="Common\Views\Parts.Common.Body.SummaryAdmin.cshtml" />
+    <Content Include="Common\Views\Parts.Common.Metadata.cshtml" />
+    <Content Include="Common\Views\CommonMetadataOwner.cshtml" />
+    <Content Include="Containers\Module.txt" />
+    <Content Include="Contents\Styles\images\menu.content.png" />
+    <Content Include="Contents\Styles\menu.content-admin.css" />
+    <Content Include="Contents\Views\Admin\Create.cshtml" />
+    <Content Include="Contents\Views\Admin\Edit.cshtml" />
+    <Content Include="Contents\Views\Admin\List.cshtml" />
+    <Content Include="Dashboard\styles\menu.dashboard-admin.css" />
+    <Content Include="Dashboard\styles\images\menu.dashboard.png" />
+    <Content Include="Feeds\Views\Feed.cshtml" />
+    <Content Include="Contents\Views\Parts.Contents.Publish.cshtml" />
+    <Content Include="Contents\Views\Parts.Contents.Publish.SummaryAdmin.cshtml" />
+    <Content Include="Common\Views\EditorTemplates\Fields.Common.Text.Edit.cshtml" />
+    <Content Include="Common\Views\EditorTemplates\Parts.Common.Container.cshtml" />
+    <Content Include="Common\Views\Body.Editor.cshtml" />
+    <Content Include="Contents\Module.txt" />
+    <Content Include="Contents\Views\Admin\CreatableTypeList.cshtml" />
+    <Content Include="Navigation\Scripts\jquery.mjs.nestedSortable.js" />
+    <Content Include="Navigation\Scripts\navigation-admin.js" />
+    <Content Include="Navigation\Styles\images\move.gif" />
+    <Content Include="Navigation\Styles\navigation-admin.css" />
+    <Content Include="Navigation\Styles\images\menu.navigation.png" />
+    <Content Include="Navigation\Styles\menu.navigation-admin.css" />
+    <Content Include="Reports\Module.txt" />
+    <Content Include="Reports\Styles\images\menu.reports.png" />
+    <Content Include="Reports\Styles\menu.reports-admin.css" />
+    <Content Include="Reports\Views\Admin\Display.cshtml" />
+    <Content Include="Reports\Views\Admin\Index.cshtml" />
+    <Content Include="Settings\Module.txt" />
+    <Content Include="Settings\Styles\admin.css" />
+    <Content Include="Settings\Styles\images\menu.settings.png" />
+    <Content Include="Settings\Styles\menu.settings-admin.css" />
+    <Content Include="Settings\Views\Admin\Index.cshtml" />
+    <Content Include="Settings\Views\Admin\Culture.cshtml" />
+    <Content Include="Contents\Views\Content.Edit.cshtml" />
+    <Content Include="Settings\Placement.info" />
+    <Content Include="Settings\Views\DisplayTemplates\CurrentCulture.cshtml" />
+    <Content Include="Settings\Views\DisplayTemplates\RemovableCulture.cshtml" />
+    <Content Include="Shapes\Module.txt" />
+    <Content Include="Shapes\Scripts\base.js" />
+    <Content Include="Shapes\Scripts\html5.js" />
+    <Content Include="Shapes\Scripts\jquery.switchable.js" />
+    <Content Include="Shapes\Styles\Images\detail-view-on.gif" />
+    <Content Include="Shapes\Styles\Images\detail-view.gif" />
+    <Content Include="Shapes\Styles\Images\summary-view-on.gif" />
+    <Content Include="Shapes\Styles\Images\summary-view.gif" />
+    <Content Include="Shapes\Styles\Images\toolBarActiveButtonBackground.gif" />
+    <Content Include="Shapes\Styles\Images\toolBarBackground.gif" />
+    <Content Include="Shapes\Styles\Images\toolBarHoverButtonBackground.gif" />
+    <Content Include="Shapes\Styles\jquery.switchable.css" />
+    <Content Include="Shapes\Styles\special.css" />
+    <Content Include="Shapes\Views\HeadPreload.cshtml" />
+    <Content Include="Shapes\Views\Message.cshtml" />
+    <Content Include="Shapes\Views\NotFound.cshtml" />
+    <Content Include="Title\Module.txt" />
+    <Content Include="XmlRpc\Module.txt" />
+    <Content Include="Settings\Views\EditorTemplates\Parts.Settings.SiteSettingsPart.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Orchard\Orchard.Framework.csproj">
+      <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
+      <Name>Orchard.Framework</Name>
+      <Private>True</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Common\Views\Parts.Common.Body.cshtml" />
+    <Content Include="Common\Views\EditorTemplates\Parts.Common.Body.cshtml" />
+    <Content Include="Common\Views\Parts.Common.Owner.Edit.cshtml" />
+    <Content Include="Feeds\Module.txt" />
+    <Content Include="Navigation\Module.txt" />
+    <Content Include="Scheduling\Module.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Dashboard\Module.txt" />
+    <Content Include="Dashboard\Views\Admin\Index.cshtml" />
+    <Content Include="Navigation\Views\Admin\Index.cshtml" />
+    <Content Include="Navigation\Views\EditorTemplates\Parts.Navigation.Menu.Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Common\Views\Parts.Common.Body.Summary.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="Views\Gamma\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Contents\Views\Content.cshtml" />
+    <Content Include="Contents\Views\Content.SummaryAdmin.cshtml" />
+    <Content Include="Shapes\Views\Document.cshtml" />
+    <Content Include="Shapes\Views\User.cshtml" />
+    <Content Include="Shapes\Views\Header.cshtml" />
+    <Content Include="Shapes\Views\Layout.cshtml" />
+    <Content Include="Shapes\Views\Menu.cshtml" />
+    <Content Include="Shapes\Views\MenuItem.cshtml" />
+    <Content Include="Common\Placement.info" />
+    <Content Include="Common\Views\Parts.Common.Metadata.Summary.cshtml" />
+    <Content Include="Contents\Placement.info">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Contents\Views\Content.ControlWrapper.cshtml" />
+    <Content Include="Navigation\Placement.info" />
+    <Content Include="Contents\Views\Content.Summary.cshtml" />
+    <Content Include="Contents\Views\Content.SaveButton.cshtml" />
+    <Content Include="Contents\Views\Content.PublishButton.cshtml" />
+    <Content Include="Shapes\Scripts\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Shapes\Styles\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Settings\Styles\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Containers\Placement.info" />
+    <Content Include="Containers\Views\EditorTemplates\Container.cshtml" />
+    <Content Include="Containers\Views\DefinitionTemplates\ContainerPartSettings.cshtml" />
+    <Content Include="Containers\Views\DefinitionTemplates\ContainerTypePartSettingsViewModel.cshtml" />
+    <Content Include="Containers\Views\EditorTemplates\Containable.cshtml" />
+    <Content Include="Containers\Views\EditorTemplates\CustomProperties.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Shapes\Views\ShapeResult\Display.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Shapes\Views\LocalMenu.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Shapes\Views\LocalMenuItem.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Dashboard\styles\Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Contents\Styles\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Navigation\Styles\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Reports\Styles\Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Common\Views\Parts.Common.Metadata.SummaryAdmin.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Navigation\Views\EditorTemplates\Parts.Navigation.AdminMenu.Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Navigation\Views\DefinitionTemplates\AdminMenuPartTypeSettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Common\Views\Parts.Common.Date.Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Common\Views\DefinitionTemplates\DateEditorSettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Common\Views\DefinitionTemplates\OwnerEditorSettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Title\Placement.info" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Title\Views\EditorTemplates\Parts.Title.TitlePart.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Title\Views\Parts.Title.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Title\Views\Parts.Title_Summary.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Title\Views\Parts.Title_SummaryAdmin.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Shapes\Views\ErrorPage.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Containers\Views\Parts.Container.Contained.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Common\Views\DefinitionTemplates\TextFieldSettingsEventsViewModel.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Common\Views\Body-Textarea.Editor.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Shapes\Views\ShapeResult\DisplayPartial.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Common\Views\Body-Wide.Editor.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Common\Views\Body-Large.Editor.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Common\Views\Body-Small.Editor.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Navigation\Scripts\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Navigation\Views\Admin\CreateMenuItem.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Navigation\Views\MenuItem.Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Navigation\Views\EditorTemplates\Parts.MenuItem.Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Navigation\Views\EditorTemplates\Parts.MenuWidget.Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Navigation\Views\Parts.MenuWidget.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Shapes\Views\Breadcrumb.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Shapes\Views\MenuItemLink.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Navigation\Views\MenuItemLink-HtmlMenuItem.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Navigation\Views\Content-Menu.Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Navigation\Views\Menu.DeleteButton.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Navigation\Views\Menu.Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Navigation\Views\EditorTemplates\Parts.ShapeMenuItemPart.Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Navigation\Views\MenuItemLink-ShapeMenuItem.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Contents\Views\Parts.Contents.Clone.SummaryAdmin.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Contents\Views\Item\Display.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Contents\Views\Item\Preview.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Containers\Views\EditorTemplates\ListViewPicker.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Containers\Views\DefinitionTemplates\ContainableTypePartSettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Common\Views\EditorTemplates\DateTimeEditor.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Common\Styles\Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Containers\Views\EditorTemplates\ContainerWidget.cshtml" />
+    <Content Include="Containers\Views\Parts.ContainerWidget.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Common\Views\EditorTemplates\Flavor.cshtml" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target> -->
+  <Target Name="AfterBuild" DependsOnTargets="AfterBuildCompiler">
+    <PropertyGroup>
+      <AreasManifestDir>$(ProjectDir)\..\Manifests</AreasManifestDir>
+    </PropertyGroup>
+    <!-- If this is an area child project, uncomment the following line:
+    <CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Child" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" />
+    -->
+    <!-- If this is an area parent project, uncomment the following lines:
+    <CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Parent" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" />
+    <CopyAreaManifests ManifestPath="$(AreasManifestDir)" CrossCopy="false" RenameViews="true" />
+    -->
+  </Target>
+  <Target Name="AfterBuildCompiler" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(ProjectDir)\..\$(ProjectName)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>53609</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>
+          </IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>True</UseCustomServer>
+          <CustomServerUrl>http://orchard.codeplex.com</CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

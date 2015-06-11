@@ -1,0 +1,105 @@
+@model Orchard.ContentTypes.ViewModels.EditPlacementViewModel
+@{
+    Style.Require("ContentTypesAdmin");
+    Script.Require("jQueryUI_Sortable");
+    Layout.Title = T("Edit Placement - {0}", Model.ContentTypeDefinition.DisplayName).ToString();
+
+    var hiddenShapes = Model.AllPlacements.Where(x => String.IsNullOrEmpty(x.PlacementSettings.Zone) && (String.IsNullOrWhiteSpace(x.PlacementSettings.Position) || x.PlacementSettings.Position == "-"));
+}
+
+<div id="save-message" class="message message-Warning">@T("You need to hit \"Save\" in order to save your changes.")</div>
+
+@using (Html.BeginFormAntiForgeryPost()) {
+    @Html.ValidationSummary()
+
+
+    <ul id="placement">
+        @for (int i = 0; i < Model.AllPlacements.Count; i++ ) {
+
+            var placement = Model.AllPlacements[i].PlacementSettings;
+
+            if(placement.Zone != "Content") {
+                continue;
+            }
+            
+            <li data-shape-type="@placement.ShapeType" data-shape-differentiator="@placement.Differentiator" data-shape-zone="Content" data-shape-position="@placement.Position">
+                <div class="shape-type"><h3>@placement.ShapeType @placement.Differentiator</h3></div>
+                @try {
+                    <div class="shape-editor">@Display(Model.AllPlacements[i].Shape)</div>
+                }
+                catch {
+                }
+                
+                @*  @shape.Position @(Model.PlacementSettings.Any(x => x.Equals(shape)))*@
+                @Html.HiddenFor(m => m.AllPlacements[i].PlacementSettings.ShapeType, new { @class = "type" })
+                @Html.HiddenFor(m => m.AllPlacements[i].PlacementSettings.Differentiator, new { @class = "differentiator" })
+                @Html.HiddenFor(m => m.AllPlacements[i].PlacementSettings.Zone, new { @class = "zone" })
+                @Html.HiddenFor(m => m.AllPlacements[i].PlacementSettings.Position, new { @class = "position" })
+            </li>
+        }
+    </ul>
+    
+    <fieldset class="action">
+        <button class="primaryAction" type="submit" name="submit.Save" value="Save">@T("Save")</button>
+        <button class="primaryAction" type="submit" name="submit.Restore" value="Restore" itemprop="RemoveUrl">@T("Restore")</button>
+    </fieldset>
+
+}
+
+@using (Script.Foot()) {
+<script type="text/javascript">
+//<![CDATA[
+    (function ($) {
+
+        var assignPositions = function () {
+            var position = 0;
+            $('.type').each(function () {
+                var input = $(this);
+                reAssignIdName(input, position);  // type
+
+                input = input.next();
+                reAssignIdName(input, position);  // differentiator
+
+                input = input.next();
+                reAssignIdName(input, position);  // zone
+
+                input = input.next();
+                reAssignIdName(input, position);  // position
+
+                input.val(++position);
+            });
+        };
+
+        var reAssignIdName = function (input, pos) {
+            var name = input.attr('name');
+            input.attr('name', name.replace(new RegExp("\\[.*\\]", 'gi'), '[' + pos + ']'));
+
+            var id = input.attr('id');
+            input.attr('id', id.replace(new RegExp('_.*__', 'i'), '_' + pos + '__'));
+        };
+
+        assignPositions();
+        
+        var startPos;
+
+        $('#placement').sortable({
+            placeholder: "placement-placeholder",
+            start: function (event, ui) {
+                var self = $(ui.item);
+                startPos = self.prevAll().size();
+            },
+            stop: function (event, ui) {
+                assignPositions();
+                $('#save-message').show();
+
+            }
+        });
+
+        $('.shape-editor *').attr('disabled', 'disabled');
+
+        $("#placement").disableSelection();
+
+    })(jQuery);
+//]]>
+</script>
+}

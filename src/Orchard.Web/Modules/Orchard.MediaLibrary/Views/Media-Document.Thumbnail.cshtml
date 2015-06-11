@@ -1,0 +1,12 @@
+﻿@using Orchard.ContentManagement
+@using Orchard.MediaLibrary.Models
+@using Orchard.Utility.Extensions
+@model dynamic
+           
+@{
+    ContentItem contentItem = Model.ContentItem;
+    var media = contentItem.As<MediaPart>();
+    var document = contentItem.As<DocumentPart>();
+}
+
+<div class="media-thumbnail media-thumbnail-@contentItem.ContentType.HtmlClassify() mime-type-@media.MimeType.HtmlClassify()"></div>

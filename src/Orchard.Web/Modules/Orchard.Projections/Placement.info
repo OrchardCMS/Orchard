@@ -1,0 +1,18 @@
+﻿<Placement>
+  <Place Parts_ProjectionPart_Edit="Content:5"/>
+  <Place Parts_ProjectionPart_List="Content:5"/>
+  <Place Parts_ProjectionPart_Pager="Content:after"/>
+
+  <Place Parts_NavigationQueryPart_Edit="Content:5"/>
+  <Place Parts_NavigationQueryPart="-"/>
+
+  <Match DisplayType="Detail" ContentType="ProjectionPage">
+    <Place Parts_Common_Metadata="-" />
+  </Match>
+
+  <Match DisplayType="SummaryAdmin">
+    <Place Parts_ProjectionPart_List="-" />
+    <Place Parts_ProjectionPart_Pager="-" />
+  </Match>
+
+</Placement>

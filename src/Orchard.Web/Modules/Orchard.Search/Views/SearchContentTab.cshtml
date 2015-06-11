@@ -1,0 +1,20 @@
+﻿@{
+    var pageTitle = T("Search Content");
+    Layout.Title = pageTitle;
+}
+
+@using (Html.BeginFormAntiForgeryPost()) {
+    <fieldset class="bulk-actions">
+        <label for="search-text">@T("Search")</label>
+        @Html.TextBox("searchText", (string)Model.SearchText, new { @class = "text medium", autofocus = "autofocus" })
+
+        <button type="submit">@T("Search")</button>
+    </fieldset>
+    
+    <fieldset class="contentItems bulk-items">
+        @Display(Model.ContentItems)
+    </fieldset>
+        
+    @Display(Model.Pager)
+}
+

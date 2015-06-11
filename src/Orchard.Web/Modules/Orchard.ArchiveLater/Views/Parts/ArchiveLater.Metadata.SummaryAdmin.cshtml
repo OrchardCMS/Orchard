@@ -1,0 +1,11 @@
+﻿@using Orchard.Mvc.Html;
+
+@if ((Model.IsPublished && Model.ScheduledArchiveUtc != null && Model.ScheduledArchiveUtc > DateTime.UtcNow)) { 
+<ul class="pageStatus">
+    <li>
+        <img class="icon" src="@Href("~/Modules/Orchard.ArchiveLater/Content/Admin/images/scheduled.gif")" alt="@T("Scheduled")" title="@T("The page is scheduled for archiving")" />@T("Unpublish on")
+        @Display.DateTime(DateTimeUtc: (DateTime)Model.ScheduledArchiveUtc, CustomFormat: null)
+        &nbsp;&#124;&nbsp;
+    </li>
+</ul>
+} 

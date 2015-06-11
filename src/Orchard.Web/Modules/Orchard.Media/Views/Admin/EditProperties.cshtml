@@ -1,0 +1,29 @@
+﻿@model Orchard.Media.ViewModels.MediaFolderEditPropertiesViewModel
+@using Orchard.Media.Helpers;
+@using Orchard.Media.Models;
+@{
+    Style.Require("MediaAdmin");
+    Layout.Title = T("Folder Properties").ToString();
+}
+
+<div class="breadCrumbs">
+<p>@Html.ActionLink(T("Media Folders").ToString(), "Index") &#62; 
+    @foreach (FolderNavigation navigation in MediaHelpers.GetFolderNavigationHierarchy(Model.MediaPath)) {
+        @Html.ActionLink(navigation.FolderName, "Edit",
+                  new {name = navigation.FolderName, mediaPath = navigation.FolderPath}) <text>&#62;</text>
+    } 
+    @T("Folder Properties")</p>
+</div>    
+    
+@using (Html.BeginFormAntiForgeryPost()) { 
+    @Html.ValidationSummary()
+    <fieldset>
+        <label for="Name">@T("Folder Name:")</label>
+        <input id="MediaPath" name="MediaPath" type="hidden" value="@Model.MediaPath" />
+        <input id="Name" class="text medium" name="Name" type="text" value="@Model.Name" />
+    </fieldset>
+    <fieldset>        
+        <button class="primaryAction" type="submit" name="submit.Save" value="@T("Save")">@T("Save")</button>
+        <button type="submit" name="submit.Delete" value="@T("Delete")" itemprop="RemoveUrl">@T("Delete")</button>
+    </fieldset>
+}

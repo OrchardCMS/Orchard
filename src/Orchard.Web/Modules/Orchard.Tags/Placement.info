@@ -1,0 +1,13 @@
+﻿<Placement>
+    <Place Parts_Tags_Edit="Content:7"/>
+    <Match DisplayType="Detail">
+        <Place Parts_Tags_ShowTags="Header:after.7"/>
+    </Match>
+    <Match DisplayType="Summary">
+        <Place Parts_Tags_ShowTags="Header:after.7"/>
+    </Match>
+
+  <Place Parts_TagCloud="Content:5"/>
+  <Place Parts_TagCloud_Edit="Content:7"/>
+  
+</Placement>

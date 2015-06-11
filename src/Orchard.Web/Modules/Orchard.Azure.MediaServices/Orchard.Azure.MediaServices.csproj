@@ -1,0 +1,604 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{14A96B1A-9DC9-44C8-A675-206329E15263}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Orchard.Azure.MediaServices</RootNamespace>
+    <AssemblyName>Orchard.Azure.MediaServices</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <TargetFrameworkProfile />
+    <UseIISExpress>false</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="FluentNHibernate">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\nhibernate\FluentNHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="HtmlAgilityPack">
+      <HintPath>..\..\..\..\lib\htmlagilitypack\HtmlAgilityPack.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Data.Edm">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\windowsazure\Microsoft.Data.Edm.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Data.OData">
+      <HintPath>..\..\..\..\lib\windowsazure\Microsoft.Data.OData.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Data.Services.Client">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\windowsazure\Microsoft.Data.Services.Client.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Practices.TransientFaultHandling.Core">
+      <HintPath>..\..\..\..\lib\windowsazure\Microsoft.Practices.TransientFaultHandling.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Configuration">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\windowsazure\Microsoft.WindowsAzure.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Diagnostics">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\windowsazure\Microsoft.WindowsAzure.Diagnostics.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.MediaServices.Client">
+      <HintPath>..\..\..\..\lib\windowsazure\Microsoft.WindowsAzure.MediaServices.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Storage">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\windowsazure\Microsoft.WindowsAzure.Storage.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\newtonsoft.json\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NHibernate">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\nhibernate\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.ComponentModel.DataAnnotations">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Spatial">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\windowsazure\System.Spatial.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Helpers">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Razor">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Web.WebPages">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\expressInstall.swf" />
+    <Content Include="Content\MSAdaptiveStreamingPlugin.swf" />
+    <Content Include="Content\StrobeMediaPlayback.swf" />
+    <Compile Include="Models\EncodingPreset.cs" />
+    <Compile Include="Shapes\CloudVideoPlayerShape.cs" />
+    <Compile Include="Helpers\BitExtensions.cs" />
+    <Compile Include="Infrastructure\Assets\AssetDriverResult.cs" />
+    <Compile Include="Drivers\ThumbnailAssetDriver.cs" />
+    <Compile Include="Helpers\FileSizeFormatProvider.cs" />
+    <Compile Include="Infrastructure\Assets\AssetDriver.cs" />
+    <Compile Include="Helpers\NamespaceHelper.cs" />
+    <Content Include="gulpfile.js" />
+    <Content Include="Images\Loader1.GIF" />
+    <Content Include="Images\Thumbnail-Placeholder2.png" />
+    <Content Include="Images\Thumbnail-Placeholder1.png" />
+    <Content Include="Placement.info">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Readme.txt" />
+    <Content Include="Scripts\cloudmedia-admin-common.js" />
+    <Content Include="Scripts\cloudmedia-admin-job.js" />
+    <Content Include="Scripts\cloudmedia-admin-settings.js" />
+    <Content Include="Scripts\cloudmedia-autorefresh.js" />
+    <Content Include="Scripts\cloudmedia-edit-asset-video.js" />
+    <Content Include="Scripts\cloudmedia-edit-asset.js" />
+    <Content Include="Scripts\cloudmedia-edit-cloudvideopart-direct.js" />
+    <Content Include="Scripts\cloudmedia-edit-cloudvideopart-proxied.js" />
+    <Content Include="Scripts\cloudmedia-edit-cloudvideopart.js" />
+    <Content Include="Scripts\cloudmedia-metadata-cloudvideopart.js" />
+    <Content Include="Scripts\cloudmedia-videoplayer-data.js" />
+    <Content Include="Scripts\cloudmedia-videoplayer-injectors-alt.js" />
+    <Content Include="Scripts\cloudmedia-videoplayer-injectors-dash.js" />
+    <Content Include="Scripts\cloudmedia-videoplayer-injectors-html5.js" />
+    <Content Include="Scripts\cloudmedia-videoplayer-injectors-smp.js" />
+    <Content Include="Scripts\cloudmedia-videoplayer-injectors.js" />
+    <Content Include="Scripts\cloudmedia-videoplayer-main.js" />
+    <Content Include="Scripts\lib\console-shim.min.js" />
+    <Content Include="Scripts\lib\console-shim.js" />
+    <Content Include="Scripts\lib\dash.all.js" />
+    <Content Include="Scripts\lib\dash.min.js" />
+    <Content Include="Scripts\lib\jquery.blockui.js" />
+    <Content Include="Scripts\cloudmedia-admin-job.ts" />
+    <Content Include="Scripts\cloudmedia-admin-common.ts" />
+    <Content Include="Scripts\cloudmedia-autorefresh.ts" />
+    <Content Include="Scripts\cloudmedia-edit-asset-video.ts" />
+    <Content Include="Scripts\cloudmedia-edit-asset.ts" />
+    <Content Include="Scripts\cloudmedia-edit-cloudvideopart-direct.ts" />
+    <Content Include="Scripts\cloudmedia-edit-cloudvideopart.ts" />
+    <Content Include="Scripts\cloudmedia-edit-cloudvideopart-proxied.ts" />
+    <Content Include="Scripts\cloudmedia-metadata-cloudvideopart.ts" />
+    <Content Include="Scripts\lib\jquery.fileupload-process.js" />
+    <Content Include="Scripts\lib\jquery.fileupload-validate.js" />
+    <Content Include="Scripts\lib\jquery.fileupload.js" />
+    <Content Include="Scripts\lib\jstree.js" />
+    <Content Include="Scripts\lib\jstree.min.js" />
+    <Content Include="Scripts\lib\moment.js" />
+    <Content Include="Scripts\lib\moment.min.js" />
+    <Content Include="Scripts\lib\swfobject.js" />
+    <Content Include="Scripts\lib\uri.js" />
+    <Content Include="Styles\cloudmedia-admin-asset.css">
+      <DependentUpon>cloudmedia-admin-asset.less</DependentUpon>
+    </Content>
+    <Content Include="Styles\cloudmedia-admin-asset.min.css">
+      <DependentUpon>cloudmedia-admin-asset.css</DependentUpon>
+    </Content>
+    <Content Include="Scripts\lib\underscore.js" />
+    <Content Include="Scripts\lib\underscore.min.js" />
+    <Content Include="Styles\cloudmedia-admin-job.css">
+      <DependentUpon>cloudmedia-admin-job.less</DependentUpon>
+    </Content>
+    <Content Include="Styles\cloudmedia-admin-job.min.css">
+      <DependentUpon>cloudmedia-admin-job.less</DependentUpon>
+    </Content>
+    <Content Include="Styles\cloudmedia-admin-selecttask.css">
+      <DependentUpon>cloudmedia-admin-selecttask.less</DependentUpon>
+    </Content>
+    <Content Include="Styles\cloudmedia-admin-selecttask.min.css">
+      <DependentUpon>cloudmedia-admin-selecttask.less</DependentUpon>
+    </Content>
+    <Content Include="Styles\cloudmedia-admin-settings.css">
+      <DependentUpon>cloudmedia-admin-settings.less</DependentUpon>
+    </Content>
+    <Content Include="Styles\cloudmedia-admin-settings.min.css">
+      <DependentUpon>cloudmedia-admin-settings.less</DependentUpon>
+    </Content>
+    <Content Include="Styles\cloudmedia-edit-assets.css">
+      <DependentUpon>cloudmedia-edit-assets.less</DependentUpon>
+    </Content>
+    <Content Include="Styles\cloudmedia-edit-assets.min.css">
+      <DependentUpon>cloudmedia-edit-assets.css</DependentUpon>
+    </Content>
+    <Content Include="Styles\cloudmedia-edit-cloudvideopart.css">
+      <DependentUpon>cloudmedia-edit-cloudvideopart.less</DependentUpon>
+    </Content>
+    <Content Include="Styles\cloudmedia-edit-cloudvideopart.min.css">
+      <DependentUpon>cloudmedia-edit-cloudvideopart.css</DependentUpon>
+    </Content>
+    <Content Include="Styles\cloudmedia-edit-jobs.css">
+      <DependentUpon>cloudmedia-edit-jobs.less</DependentUpon>
+    </Content>
+    <Content Include="Styles\cloudmedia-edit-jobs.min.css">
+      <DependentUpon>cloudmedia-edit-jobs.less</DependentUpon>
+    </Content>
+    <Content Include="Styles\cloudmedia-progress.css">
+      <DependentUpon>cloudmedia-progress.less</DependentUpon>
+    </Content>
+    <Content Include="Styles\cloudmedia-progress.min.css">
+      <DependentUpon>cloudmedia-progress.less</DependentUpon>
+    </Content>
+    <Content Include="Styles\cloudmedia-tabs.css">
+      <DependentUpon>cloudmedia-tabs.less</DependentUpon>
+    </Content>
+    <Content Include="Styles\cloudmedia-tabs.min.css">
+      <DependentUpon>cloudmedia-tabs.css</DependentUpon>
+    </Content>
+    <Content Include="Styles\cloudmedia-videoplayer.css">
+      <DependentUpon>cloudmedia-videoplayer.less</DependentUpon>
+    </Content>
+    <Content Include="Styles\cloudmedia-videoplayer.min.css">
+      <DependentUpon>cloudmedia-videoplayer.css</DependentUpon>
+    </Content>
+    <Content Include="Styles\Images\AssetTreeView.png" />
+    <Content Include="Styles\Lib\JsTree\themes\default\32px.png" />
+    <Content Include="Styles\Lib\JsTree\themes\default\40px.png" />
+    <Content Include="Styles\Lib\JsTree\themes\default\style.css" />
+    <Content Include="Styles\Lib\JsTree\themes\default\style.min.css" />
+    <Content Include="Styles\Lib\JsTree\themes\default\throbber.gif" />
+    <Content Include="Styles\menu.cloudmedia-mediaproviders.css">
+      <DependentUpon>menu.cloudmedia-mediaproviders.less</DependentUpon>
+    </Content>
+    <Content Include="Styles\menu.cloudmedia-mediaproviders.less" />
+    <Content Include="Styles\cloudmedia-edit-cloudvideopart.less" />
+    <Content Include="Styles\menu.cloudmedia-mediaproviders.min.css">
+      <DependentUpon>menu.cloudmedia-mediaproviders.css</DependentUpon>
+    </Content>
+    <Content Include="Web.config" />
+    <Content Include="Scripts\Web.config" />
+    <Content Include="Styles\Web.config" />
+    <Content Include="Properties\AssemblyInfo.cs" />
+    <Content Include="Module.txt" />
+    <Content Include="Scripts\cloudmedia-videoplayer-data.ts" />
+    <Content Include="Scripts\cloudmedia-videoplayer-injectors-dash.ts" />
+    <Content Include="Scripts\cloudmedia-videoplayer-injectors-html5.ts" />
+    <Content Include="Scripts\cloudmedia-videoplayer-injectors-alt.ts" />
+    <Content Include="Scripts\cloudmedia-videoplayer-injectors-smp.ts" />
+    <Content Include="Scripts\cloudmedia-videoplayer-injectors.ts" />
+    <Content Include="Scripts\cloudmedia-videoplayer-main.ts" />
+    <Content Include="Scripts\typings\moment.d.ts" />
+    <Content Include="Scripts\typings\underscore.d.ts" />
+    <Content Include="Scripts\typings\uri.d.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
+      <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
+      <Name>Orchard.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\Orchard.Core.csproj">
+      <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
+      <Name>Orchard.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.MediaLibrary\Orchard.MediaLibrary.csproj">
+      <Project>{73a7688a-5bd3-4f7e-adfa-ce36c5a10e3b}</Project>
+      <Name>Orchard.MediaLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.PublishLater\Orchard.PublishLater.csproj">
+      <Project>{c889167c-e52c-4a65-a419-224b3d1b957d}</Project>
+      <Name>Orchard.PublishLater</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.TaskLease\Orchard.TaskLease.csproj">
+      <Project>{3f72a4e9-7b72-4260-b010-c16ec54f9baf}</Project>
+      <Name>Orchard.TaskLease</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Controllers\AssetController.cs" />
+    <Compile Include="Helpers\AssetExtensions.cs" />
+    <Compile Include="Helpers\BooleanExtensions.cs" />
+    <Compile Include="Infrastructure\Assets\IAssetDriver.cs" />
+    <Compile Include="Drivers\VideoAssetDriver.cs" />
+    <Compile Include="Models\Assets\EncoderMetadata\Metadata.cs" />
+    <Compile Include="Models\Assets\EncoderMetadata\AudioTrack.cs" />
+    <Compile Include="Models\Assets\EncoderMetadata\AssetFile.cs" />
+    <Compile Include="Models\Assets\EncoderMetadata\VideoTrack.cs" />
+    <Compile Include="Models\Assets\MezzanineAsset.cs" />
+    <Compile Include="Services\Rendering\CloudVideoFilter.cs" />
+    <Compile Include="Services\Wams\WamsAssetInfo.cs" />
+    <Compile Include="ViewModels\Media\AssetUploadViewModel.cs" />
+    <Compile Include="Events\FeatureEventHandler.cs" />
+    <Compile Include="Helpers\StringExtensions.cs" />
+    <Compile Include="Infrastructure\Mappings\PersistenceConfiguration.cs" />
+    <Compile Include="Models\Assets\DynamicVideoAsset.cs" />
+    <Compile Include="Models\Jobs\Job.cs" />
+    <Compile Include="Models\Jobs\Task.cs" />
+    <Compile Include="Models\Records\TaskRecord.cs" />
+    <Compile Include="Models\Jobs\JobStatus.cs" />
+    <Compile Include="Models\Jobs\FinishedJobContext.cs" />
+    <Compile Include="Models\Assets\ThumbnailAsset.cs" />
+    <Compile Include="Permissions.cs" />
+    <Compile Include="Services\Jobs\JobManager.cs" />
+    <Compile Include="Services\Jobs\IJobManager.cs" />
+    <Content Include="Services\Tasks\Providers\CreateThumbnailTaskProvider.cs" />
+    <Compile Include="Services\Tasks\Providers\EncryptTaskProvider.cs" />
+    <Compile Include="Services\Tasks\TaskOutput.cs" />
+    <Compile Include="Services\Tasks\TaskConnections.cs" />
+    <Compile Include="Services\Tasks\TaskInput.cs" />
+    <Compile Include="Services\Tasks\TaskConfiguration.cs" />
+    <Compile Include="Services\Wams\IWamsClient.cs" />
+    <Compile Include="Services\Wams\MediaProcessorName.cs" />
+    <Compile Include="Services\Wams\MissingSettingsBanner.cs" />
+    <Compile Include="Services\Wams\WamsLocatorCategory.cs" />
+    <Compile Include="Services\Wams\WamsUploadProgressInfo.cs" />
+    <Compile Include="ViewModels\Media\AssetViewModel.cs" />
+    <Compile Include="Models\Assets\DisplayLocator.cs" />
+    <Compile Include="ViewModels\Media\WamsAssetViewModel.cs" />
+    <Compile Include="ViewModels\Settings\EncodingPresetsSettingsViewModel.cs" />
+    <Compile Include="ViewModels\Settings\EncryptionSettingsViewModel.cs" />
+    <Compile Include="ViewModels\Settings\GeneralSettingsViewModel.cs" />
+    <Compile Include="ViewModels\Settings\SubtitleLanguagesSettingsViewModel.cs" />
+    <Compile Include="ViewModels\Tasks\EncryptViewModel.cs" />
+    <Compile Include="Services\Wams\WamsLocators.cs" />
+    <Compile Include="ViewModels\Tasks\EncodeViewModel.cs" />
+    <Compile Include="ViewModels\Tasks\CreateThumbnailViewModel.cs" />
+    <Compile Include="ViewModels\Jobs\JobViewModel.cs" />
+    <Compile Include="Controllers\JobController.cs" />
+    <Compile Include="Services\Tasks\TaskProviderBase.cs" />
+    <Compile Include="Services\Jobs\JobProcessor.cs" />
+    <Compile Include="Models\Records\JobRecord.cs" />
+    <Compile Include="Helpers\EnumExtensions.cs" />
+    <Compile Include="Services\Tasks\Providers\EncodeTaskProvider.cs" />
+    <Compile Include="Services\Tasks\ITaskProvider.cs" />
+    <Compile Include="Models\Assets\AssetPublishState.cs" />
+    <Compile Include="Models\Assets\AssetPublishStatus.cs" />
+    <Compile Include="Models\Records\AssetRecord.cs" />
+    <Compile Include="Models\Assets\AssetUploadState.cs" />
+    <Compile Include="Models\Assets\AssetUploadStatus.cs" />
+    <Compile Include="Models\Assets\PublishAction.cs" />
+    <Compile Include="Navigation\AdminMenu.cs" />
+    <Compile Include="Controllers\SettingsController.cs" />
+    <Compile Include="Controllers\MediaController.cs" />
+    <Compile Include="Handlers\CloudMediaSettingsPartHandler.cs" />
+    <Compile Include="Handlers\CloudVideoPartHandler.cs" />
+    <Compile Include="Drivers\CloudVideoPartDriver.cs" />
+    <Compile Include="Migrations.cs" />
+    <Compile Include="Models\Assets\Asset.cs" />
+    <Compile Include="Models\Assets\SubtitleAsset.cs" />
+    <Compile Include="Models\CloudMediaSettingsPart.cs" />
+    <Compile Include="Navigation\MediaMenu.cs" />
+    <Compile Include="Services\Assets\AssetStorageProvider.cs" />
+    <Compile Include="Models\Assets\VideoAsset.cs" />
+    <Compile Include="Models\CloudVideoPart.cs" />
+    <Compile Include="Services\Assets\AssetFactory.cs" />
+    <Compile Include="Services\Assets\AssetManager.cs" />
+    <Compile Include="Services\Assets\AssetUploader.cs" />
+    <Compile Include="Services\TempFiles\LocalTempFileManager.cs" />
+    <Compile Include="Services\TempFiles\ITempFileManager.cs" />
+    <Compile Include="Services\Assets\IAssetFactory.cs" />
+    <Compile Include="Services\Assets\IAssetStorageProvider.cs" />
+    <Compile Include="Services\Assets\IAssetManager.cs" />
+    <Compile Include="Services\Wams\WamsClient.cs" />
+    <Compile Include="Services\Wams\WamsLocatorInfo.cs" />
+    <Compile Include="ViewModels\Media\TemporaryFileViewModel.cs" />
+    <Compile Include="ViewModels\Media\CloudVideoPartViewModel.cs" />
+    <Compile Include="ViewModels\Settings\SettingsViewModel.cs" />
+    <Content Include="Views\EditorTemplates\TaskSettings\Encode.cshtml" />
+    <Content Include="Views\Job\SelectTask.cshtml" />
+    <Content Include="Views\Job\Index.cshtml" />
+    <Content Include="Views\OpenJobsTable.cshtml" />
+    <Content Include="Views\FrameBuster.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\CloudVideoEditor.Proxied.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Settings\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\cloudmedia-admin-settings.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Media\Import.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\CloudVideoEditor.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Media\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Media-CloudVideo.Thumbnail.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\CloudVideo.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\CloudVideo.Metadata.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\CloudVideo.Summary.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\CloudVideo.SummaryAdmin.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\typings\jquery.d.ts" />
+    <Content Include="Scripts\typings\jqueryui.d.ts" />
+    <Content Include="Scripts\typings\knockout.d.ts" />
+    <Content Include="Scripts\cloudmedia-admin-settings.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\CloudVideo.Edit.Assets.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\CloudVideo.Edit.Jobs.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Job\Create.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\cloudmedia-admin-job.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\TaskSettingsEditor.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\TaskSettings\Thumbnail.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\TaskSettings\Encrypt.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\cloudmedia-tabs.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Images\Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Images\Thumbnail-Placeholder.psd" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\GeneralSettingsViewModel.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\EncodingSettingsViewModel.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\EncryptionSettingsViewModel.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\SubtitleLanguagesSettingsViewModel.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\CloudVideo.Edit.UnpublishButton.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\cloudmedia-progress.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\cloudmedia-edit-assets.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\cloudmedia-edit-jobs.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\cloudmedia-admin-selecttask.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\CloudVideoEditor.Direct.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts\CloudVideo.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Asset\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Assets\Video.Files.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\cloudmedia-admin-asset.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\CloudVideoPlayer.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\CloudVideo.Raw.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\cloudmedia-videoplayer.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Asset.Edit.General.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Asset.Edit.Locators.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Assets\Video.Preview.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Assets\Thumbnail.Preview.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\Strobe Media Playback Notice.docx" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\lib\MPEG Dash Notice.docx" />
+    <Content Include="Styles\cloudmedia-admin-settings.css.map">
+      <DependentUpon>cloudmedia-admin-settings.css</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target> -->
+  <Target Name="AfterBuild" DependsOnTargets="AfterBuildCompiler">
+    <PropertyGroup>
+      <AreasManifestDir>$(ProjectDir)\..\Manifests</AreasManifestDir>
+    </PropertyGroup>
+    <!-- If this is an area child project, uncomment the following line:
+    <CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Child" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" />
+    -->
+    <!-- If this is an area parent project, uncomment the following lines:
+    <CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Parent" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" />
+    <CopyAreaManifests ManifestPath="$(AreasManifestDir)" CrossCopy="false" RenameViews="true" />
+    -->
+  </Target>
+  <Target Name="AfterBuildCompiler" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(ProjectDir)\..\$(ProjectName)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>45979</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>
+          </IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>True</UseCustomServer>
+          <CustomServerUrl>http://orchard.codeplex.com</CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

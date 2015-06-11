@@ -1,0 +1,67 @@
+﻿<parameters>
+	<!-- Prompts where to copy the content files and takes a web site path (such as "contoso.com/app") -->
+	<parameter name="Application Path" description="Full site path where you would like to install your application (i.e., Default Web Site/orchard)" defaultValue="Default Web Site/orchard" tags="iisapp">
+		<parameterEntry type="ProviderPath" scope="iisapp" match="Orchard" />
+	</parameter>
+
+	<!-- This is the parameter that is used to set ACLs, it's set to the application path filled in by the user -->
+	<parameter name="SetAclParameter1" description="Hidden - automatically sets write access for the app" defaultValue="{Application Path}/App_Data" tags="Hidden">
+		<parameterEntry type="ProviderPath" scope="setAcl" match="Orchard/App_Data" /> 
+	</parameter>
+
+	<parameter name="SetAclParameter2" description="Hidden - automatically sets write access for the app" defaultValue="{Application Path}/Media" tags="Hidden">
+		<parameterEntry type="ProviderPath" scope="setAcl" match="Orchard/Media" /> 
+	</parameter>
+
+	<parameter name="SetAclParameter3" description="Hidden - automatically sets write access for the app" defaultValue="{Application Path}/bin/HostRestart" tags="Hidden">
+		<parameterEntry type="ProviderPath" scope="setAcl" match="Orchard/bin/HostRestart" /> 
+	</parameter>
+
+       	<!-- Prompts for database server name, this is used in the connection string parameter later -->
+	<parameter name="Database Server" description="Location of your database server (i.e. server name, IP address, or server\instance)" defaultValue=".\SQLEXPRESS" tags="SQL, dbServer">
+	</parameter>
+
+	<!-- Prompts for the database name and fills it into the database scripts -->
+	<parameter name="Database Name" description="Name of the database for Orchard." defaultValue="orchard" tags="SQL, dbName">
+		<parameterEntry type="TextFile" scope="install.sql" match="PlaceHolderForDb" />
+	</parameter>	
+
+        <!-- Prompts for the database username and fills it into the database scripts.
+	The SQL tag indicates it is a parameter required for SQL, the DbUsername tag indicates this is a Db username -->
+	<parameter name="Database Username" description="User name to access you application database." defaultValue="orcharduser" tags="SQL, DbUsername">
+		<parameterEntry type="TextFile" scope="install.sql" match="PlaceHolderForUser" />
+	</parameter>
+
+        <!-- Prompts for the database password and fills it into the database scripts.
+	The SQL tag indicates it is a parameter required for SQL, the DbUserPassword tag indicates this is a Db password -->
+	<parameter name="Database Password" description="Password for the Database Username." tags="New, Password, SQL, DbUserPassword">
+		<parameterEntry type="TextFile" scope="install.sql" match="PlaceHolderForPassword" />
+	</parameter>
+
+	<!-- Prompts for the admin creds and uses it for the administrator connection string. This is used to create a login and assign permissions. 
+        The SQL tag indicates it is a parameter required for SQL. The DbAdminUsername tag indicates it should be used when the user is creating a new database. 
+        If they're not, it can be filled in with the DbUsername value. -->
+	<parameter name="Database Administrator" description="Administrator user name for your database  This is used to create the database and user if the don't already exist." defaultValue="sa" tags="SQL, dbAdminUsername">
+	</parameter>
+
+	<!-- Prompts for the admin password and uses it for the administrator connection string.  
+        This is use to create a login and assign permissions. The SQL tag indicates it is a parameter required for SQL. 
+        The DbAdminPassword tag indicates it should be used when the user is creating a new database. If they're not, it can be filled in with the DbUserPassword value. -->
+	<parameter name="Database Administrator Password" description="Password for the database administrator account." tags="New, Password, SQL, dbAdminPassword">
+	</parameter>
+	
+	<parameter name="Admin Connection String SqlServer" 
+	tags="SQLConnectionString, AdminConnectionString, Hidden, Validate" description="Automatically sets the connection string for the connection request." 
+	defaultValue="Data Source={Database Server};Initial Catalog={Database Name};User Id={Database Administrator};Password={Database Administrator Password}">
+		<parameterEntry type="ProviderPath" scope="dbfullsql" match="install.sql" /> 
+	</parameter>
+	
+	<parameter name="Non-Admin Connection String SqlServer" 
+	tags="SQLConnectionString, UserConnectionString, Hidden" description="Automatically sets the connection string for the connection request." 
+	defaultValue="Data Source={Database Server};Initial Catalog={Database Name};User Id={Database Username};Password={Database Password}">
+	</parameter>
+	
+	<parameter name="Orchard Connection String" friendlyName="Orchard Connection String" description="Orchard SQL Data Connection String Setting" defaultValue="" tags="Sql, SqlCE, SingleLineConnectionString, Hidden">
+		<parameterEntry kind="TextFile" scope="\\Settings\.txt$" match="(?&lt;=\s*DataConnectionString:\s+)[^\s].*[^\r\n]" /> 
+	</parameter>	
+</parameters>

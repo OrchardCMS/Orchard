@@ -1,0 +1,46 @@
+﻿<Placement>
+    <!-- available display shapes -->
+    <!--
+        Parts_Blogs_Blog_Manage
+        Parts_Blogs_Blog_Description
+        Parts_Blogs_Blog_BlogPostCount
+        Parts_Blogs_BlogPost_List -> when in the blog detail display the blog post list is currently hard-coded to Content:5 to enable the current state of blog paging
+        Parts_Blogs_BlogPost_List_Admin
+    -->
+    <!-- widget and edit shapes just get default placement -->
+    <!-- edit "shapes" -->
+    <Place Parts_Blogs_Blog_Fields="Content:2"/>
+    <Place Parts_Blogs_BlogArchives_Edit="Content:5"/>
+    <Place Parts_Blogs_RecentBlogPosts_Edit="Content:5"/>
+    <Place Blog_DeleteButton="Sidebar:25" />
+    <!-- widgets -->
+    <Place Parts_Blogs_BlogArchives="Content"/>
+    <Place Parts_Blogs_RecentBlogPosts="Content"/>
+    <!-- default positioning -->
+    <Match ContentType="Blog">
+        <Match DisplayType="Detail">
+            <!-- blog posts currently added to the blog within the controller into Content:5 <Place Parts_Blogs_BlogPost_List="Content:5" /> but...
+                 ...placing it in in the Content zone as it's currently implemented to light up the RSS feed for the blog... -->
+            <!-- Parts_Blogs_RemotePublishing is made available with the "Remote Blog Publishing" feature -->
+            <Place Parts_Blogs_BlogPost_List="Content"
+                   Parts_Blogs_Blog_Description="Content:before"
+                   Parts_Blogs_RemotePublishing="Content"/>
+        </Match>
+        <Match DisplayType="DetailAdmin">
+            <Place Parts_Blogs_BlogPost_List_Admin="Content:5"
+                   Parts_Blogs_Blog_Manage="Actions"
+                   Parts_Blogs_Blog_Description="Actions:after"/>
+        </Match>
+        <Match DisplayType="Summary">
+            <Place Parts_Blogs_Blog_Description="Content:before"
+                   Parts_Blogs_Blog_BlogPostCount="Meta:3"/>
+        </Match>
+        <Match DisplayType="SummaryAdmin">
+          <Place Parts_Blogs_Blog_SummaryAdmin="Actions:10"/>
+          <Place Parts_Blogs_Blog_Description="Content:before"/>
+        </Match>
+    </Match>
+  <Match ContentType="BlogPost">
+    <Place Parts_Contents_Publish_SummaryAdmin="-"/>
+  </Match>
+</Placement>

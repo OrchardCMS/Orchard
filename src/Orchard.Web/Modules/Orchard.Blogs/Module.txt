@@ -1,0 +1,16 @@
+﻿Name: Blogs
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardproject.net
+Version: 1.9.0
+OrchardVersion: 1.9
+Description: The Orchard Blogs module is implementing basic blogging features. 
+FeatureDescription: A simple web log.
+Dependencies: Shapes, Common, Feeds, Navigation, Orchard.Widgets, Orchard.jQuery, Orchard.PublishLater, Orchard.Autoroute
+Category: Content
+Features:
+    Orchard.Blogs.RemotePublishing:
+        Name: Remote Blog Publishing
+        Description: Blog easier using a dedicated MetaWeblogAPI-compatible publishing tool.
+        Dependencies: XmlRpc, Orchard.Autoroute, Orchard.ContentPicker
+        Category: Content Publishing

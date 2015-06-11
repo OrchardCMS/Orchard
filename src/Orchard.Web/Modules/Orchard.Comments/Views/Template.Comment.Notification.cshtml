@@ -1,0 +1,24 @@
+﻿@using Orchard.Comments.Models;
+
+@{
+    CommentPart commentPart = Model.CommentPart;
+    string approveUrl = Model.CommentApproveUrl;
+    string moderateUrl = Model.CommentModerateUrl;
+    string deleteUrl = Model.CommentDeleteUrl;
+}
+<br />
+
+@T("A new comment is available.") <br />
+@T("From: {0}", commentPart.UserName) <br/>
+@T("Site: {0}", commentPart.SiteName) <br />
+@T("Email: {0}", commentPart.Email) <br />
+@T("Comment: {0}", commentPart.CommentText) <br />
+
+@if (commentPart.Status == CommentStatus.Pending) {
+    @T("The comment is moderated. <a href=\"{0}\">Approve</a> ", approveUrl)
+}
+@if (commentPart.Status == CommentStatus.Approved) {
+    @T("The comment is public. <a href=\"{0}\">Unapprove</a> ", moderateUrl)
+}
+@T("<a href=\"{0}\">Delete</a> ", deleteUrl)
+

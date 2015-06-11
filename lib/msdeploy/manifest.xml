@@ -1,0 +1,7 @@
+<MSDeploy.iisApp>
+  <iisapp path="Orchard" managedRuntimeVersion="v4.0" />
+	<setAcl path="Orchard/App_Data" setAclAccess="Modify" />
+	<setAcl path="Orchard/Media" setAclAccess="Modify" />
+	<setAcl path="Orchard/bin/HostRestart" setAclAccess="Modify" />
+	<dbFullSql path="install.sql" />
+</MSDeploy.iisApp>

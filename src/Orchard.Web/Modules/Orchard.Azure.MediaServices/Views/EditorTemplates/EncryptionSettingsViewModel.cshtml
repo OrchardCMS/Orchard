@@ -1,0 +1,12 @@
+﻿@model Orchard.Azure.MediaServices.ViewModels.Settings.EncryptionSettingsViewModel
+<fieldset>
+    <legend>@T("Encryption settings")</legend>
+    <div class="form-requiredUploads">
+        @Html.LabelFor(m => m.KeySeedValue, T("Key seed value"))
+        @Html.TextBoxFor(m => m.KeySeedValue, new { @class = "text large" })
+    </div>
+    <div class="form-requiredUploads">
+        @Html.LabelFor(m => m.LicenseAcquisitionUrl, T("License acquisition URL"))
+        @Html.TextBoxFor(m => m.LicenseAcquisitionUrl, new { @class = "text large" })
+    </div>
+</fieldset>

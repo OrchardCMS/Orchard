@@ -1,0 +1,9 @@
+@model Orchard.Media.Models.MediaSettingsPartRecord
+
+<fieldset>
+    <legend>@T("Media")</legend>
+    <div>
+        @Html.LabelFor(m => m.UploadAllowedFileTypeWhitelist, T("Upload allowed file types (list of extensions separated by spaces)")) 
+        @Html.TextBoxFor(m => m.UploadAllowedFileTypeWhitelist, new { @class = "text medium" }) 
+    </div>
+</fieldset>

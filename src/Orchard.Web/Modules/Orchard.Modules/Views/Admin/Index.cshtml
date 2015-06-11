@@ -1,0 +1,36 @@
+﻿@model Orchard.Modules.ViewModels.ModulesIndexViewModel
+@using Orchard.Modules.Models;
+@using Orchard.Mvc.Html;
+
+@{
+    Style.Require("ModulesAdmin");
+
+    Layout.Title = T("Modules").ToString();
+}
+
+
+@using (Html.BeginFormAntiForgeryPost(Url.Action("Index", "Admin"))) {
+    <fieldset class="search-actions">
+        <input type="text" id="searchText" class="text single-line" name="@Html.NameOf(m => m.Options.SearchText)" value="@Model.Options.SearchText" />
+
+        <button type="submit">@T("Search").ToString()</button>
+    </fieldset>
+
+    if (Model.InstallModules) {
+        <span>@Html.ActionLink(T("Install a module from your computer").ToString(), "AddModule", "PackagingServices", new { area = "Orchard.Packaging", returnUrl = HttpContext.Current.Request.RawUrl }, null)</span>
+    }
+
+    if (Model.Modules.Any()) {
+        <ul class="contentItems">
+            @foreach (ModuleEntry module in Model.Modules.OrderBy(m => m.Descriptor.Name)) {
+                <li>@Display.ModuleEntry(Module: module)</li>
+            }
+        </ul>
+    }
+    else {
+        <p>@T("No modules available").ToString()</p>
+    }
+
+    @Display(Model.Pager)
+}
+

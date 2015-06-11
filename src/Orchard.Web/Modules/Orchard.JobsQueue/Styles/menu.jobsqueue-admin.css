@@ -1,0 +1,7 @@
+﻿.navicon-jobs-queue {
+    background-image: url(./images/menu.jobsqueue.png) !important;
+}
+
+.navicon-jobs-queue:hover {
+    background-position: 0 -30px !important;
+}

@@ -1,0 +1,14 @@
+﻿@using Orchard.ContentManagement;
+
+@Display.CloudVideoPlayer(
+    ContentPart: Model.ContentPart,
+    ContentItem: Model.ContentPart.ContentItem,
+    AlternateText: Model.ContentPart.As<Orchard.MediaLibrary.Models.MediaPart>().AlternateText,
+    AssetId: null,
+    IgnoreIncludeInPlayer: false,
+    AllowPrivateUrls: false,
+    PlayerWidth: 600,
+    PlayerHeight: 400,
+    ApplyMediaQueries: true,
+    AutoPlay: false
+)

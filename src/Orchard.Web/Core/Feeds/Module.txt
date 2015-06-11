@@ -1,0 +1,9 @@
+﻿Name: Feeds
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardproject.net
+Version: 1.9.0
+OrchardVersion: 1.9
+Description: The Feeds module is providing RSS feeds to content items.
+FeatureDescription: RSS feeds for content items.
+Category: Syndication

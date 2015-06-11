@@ -1,0 +1,212 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{CB70A642-8CEC-4DDE-8C9F-AD08900EC98D}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Themes</RootNamespace>
+    <AssemblyName>Themes</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <TargetFrameworkProfile />
+    <UseIISExpress>false</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>..\..\OrchardBasicCorrectness.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TheAdmin\Scripts\admin.js" />
+    <Content Include="TheAdmin\Styles\ie.css" />
+    <Content Include="TheAdmin\Styles\ie7.css" />
+    <Content Include="TheAdmin\Styles\ie8.css" />
+    <Content Include="TheAdmin\Styles\images\adminNavBackground.gif" />
+    <Content Include="TheAdmin\Styles\images\error.gif" />
+    <Content Include="TheAdmin\Styles\images\icon-advisory.png" />
+    <Content Include="TheAdmin\Styles\images\icon-contribute.png" />
+    <Content Include="TheAdmin\Styles\images\icon-docs.png" />
+    <Content Include="TheAdmin\Styles\images\icon-friends.png" />
+    <Content Include="TheAdmin\Styles\images\icon-gallery.png" />
+    <Content Include="TheAdmin\Styles\images\icon-settings.png" />
+    <Content Include="TheAdmin\Styles\images\info.gif" />
+    <Content Include="TheAdmin\Styles\images\menu-default.png" />
+    <Content Include="TheAdmin\Styles\images\menu-glyph.png" />
+    <Content Include="TheAdmin\Styles\images\menuClosed.gif" />
+    <Content Include="TheAdmin\Styles\images\menuClosedHover.gif" />
+    <Content Include="TheAdmin\Styles\images\menuOpen.gif" />
+    <Content Include="TheAdmin\Styles\images\menuOpenHover.gif" />
+    <Content Include="TheAdmin\Styles\images\vinesBackgroundBottom.gif" />
+    <Content Include="TheAdmin\Styles\images\menu-filter.png" />
+    <Content Include="TheThemeMachine\Styles\Site.css" />
+    <Content Include="TheThemeMachine\Theme.png" />
+    <Content Include="TheThemeMachine\Theme.txt" />
+    <Content Include="SafeMode\Content\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="SafeMode\Styles\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="TheAdmin\Views\Pager.cshtml" />
+    <Content Include="TheAdmin\Views\OrchardVersion.cshtml" />
+    <Content Include="TheThemeMachine\ThemeZonePreview.png" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="TheAdmin\Views\Menu.cshtml" />
+    <Content Include="TheThemeMachine\Views\Branding.cshtml" />
+    <Content Include="TheThemeMachine\Views\BadgeOfHonor.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TheAdmin\Styles\images\icons.png" />
+    <Content Include="TheAdmin\Styles\images\tableHeaderBackgroundRed.gif" />
+    <Content Include="TheAdmin\Styles\site.css" />
+    <Content Include="TheAdmin\Theme.txt" />
+    <Content Include="TheAdmin\Views\Layout.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TheAdmin\Styles\images\icons.psd" />
+    <Content Include="SafeMode\Content\orchard.ico" />
+    <Content Include="SafeMode\Styles\ie6.css" />
+    <Content Include="SafeMode\Styles\images\backgroundHeader.gif" />
+    <Content Include="SafeMode\Styles\images\backgroundVines.gif" />
+    <Content Include="SafeMode\Styles\images\orchardLogo.gif" />
+    <Content Include="SafeMode\Styles\site.css" />
+    <Content Include="SafeMode\Theme.png" />
+    <Content Include="SafeMode\Theme.txt" />
+    <Content Include="SafeMode\Views\Layout.cshtml" />
+    <Content Include="TheAdmin\Styles\images\backgroundGradient.gif" />
+    <Content Include="TheAdmin\Styles\images\backgroundHeader.gif" />
+    <Content Include="TheAdmin\Styles\images\orchardLogo.gif" />
+    <Content Include="TheAdmin\Theme.png" />
+    <Content Include="TheAdmin\Views\User.cshtml" />
+    <Content Include="TheAdmin\Views\Header.cshtml" />
+    <Content Include="TheThemeMachine\Views\Layout.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TheThemeMachine\Styles\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TheAdmin\Scripts\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TheAdmin\Styles\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TheThemeMachine\Placement.info" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TheAdmin\Views\LocalMenu.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TheAdmin\Views\Title.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Orchard\Orchard.Framework.csproj">
+      <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
+      <Name>Orchard.Framework</Name>
+      <Private>True</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TheThemeMachine\Views\Pager.cshtml" />
+    <Content Include="TheThemeMachine\Views\Pager.First.cshtml" />
+    <Content Include="TheThemeMachine\Views\Pager.Last.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TheAdmin\Views\ErrorPage.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TheAdmin\Views\AdminCultureSelector.cshtml" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target> -->
+  <Target Name="AfterBuild" DependsOnTargets="AfterBuildCompiler">
+    <PropertyGroup>
+      <AreasManifestDir>$(ProjectDir)\..\Manifests</AreasManifestDir>
+    </PropertyGroup>
+  </Target>
+  <Target Name="AfterBuildCompiler" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(ProjectDir)\..\$(ProjectName)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>False</AutoAssignPort>
+          <DevelopmentServerPort>30320</DevelopmentServerPort>
+          <DevelopmentServerVPath>/OrchardLocal</DevelopmentServerVPath>
+          <IISUrl>
+          </IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>True</UseCustomServer>
+          <CustomServerUrl>http://orchard.codeplex.com</CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

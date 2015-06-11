@@ -1,0 +1,28 @@
+﻿@model Orchard.MediaLibrary.ViewModels.MediaManagerFolderEditViewModel
+@{
+    Style.Require("MediaManagerAdmin");
+
+    Layout.Title = T("Edit a Folder").ToString();
+}
+
+<div class="breadCrumbs">
+<p>@Html.ActionLink(T("Media Library").ToString(), "Index", "Admin", new { area = "Orchard.MediaLibrary" }, new {}) &#62; 
+        @foreach (var folder in Model.FolderPath.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)) { 
+            @folder <text>&#62;</text>
+        }
+</p>
+</div> 
+
+@using (Html.BeginFormAntiForgeryPost()) { 
+    @Html.ValidationSummary()
+    <fieldset>
+        <label for="Name">@T("Folder Name")</label>
+        @Html.TextBoxFor(m => m.Name, new { @class = "text medium", autofocus = "autofocus"})
+        @Html.HiddenFor(m => m.FolderPath)
+    </fieldset>
+    <fieldset>
+        <button class="primaryAction" type="submit" name="submit.Save" value="@T("Save")">@T("Save")</button>
+        <button class="primaryAction" type="submit" name="submit.Delete" value="@T("Delete")" itemprop="RemoveUrl">@T("Delete")</button>
+        @Html.ActionLink(T("Cancel").ToString(), "Index", "Admin", new { area = "Orchard.MediaLibrary" }, new { @class= "button"})
+    </fieldset>
+ }

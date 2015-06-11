@@ -1,0 +1,11 @@
+﻿<Placement>
+  <Place Parts_ReCaptcha_Fields="Content:20"/>
+  <Match DisplayType="SummaryAdmin">
+    <Place Parts_SpamFilter_Metadata_SummaryAdmin="Meta:2"/>
+    <Place Parts_SpamFilter_Metadata_Actions="Actions:1"/>
+  </Match>
+
+  <Place Parts_AntiSpam_AkismetSettings="Content:9"/>
+  <Place Parts_AntiSpam_TypePadSettings="Content:10"/>
+  <Place Parts_JavaScriptAntiSpam_Edit="Content:5"/>
+</Placement>

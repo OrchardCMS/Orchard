@@ -1,0 +1,28 @@
+﻿@using Orchard.ImageEditor.Models
+@{
+    ImageEditorPart imageEditorPart = Model.ContentPart;
+}
+
+<div id="resize-options" style="display: none">
+    <fieldset>
+        <div>
+            <input id="resize-maintain" type="checkbox" checked="checked" >
+            <label for="resize-maintain" class="forcheckbox">@T("Maintain proportions")</label>
+        </div>
+        <div>
+            <label for="resize-width">@T("Width")</label>
+            <input id="resize-width" value="@imageEditorPart.ImagePart.Width" class="text small">
+            <span class="hint">@T("The width of the new image in pixels.")</span>
+        </div>
+        <div>
+            <label for="resize-height">@T("Height")</label>
+            <input id="resize-height" value="@imageEditorPart.ImagePart.Height" class="text small">
+            <span class="hint">@T("The height of the new image in pixels.")</span>
+        </div>
+    </fieldset>
+
+    <button id="resize-apply">@T("Apply")</button>
+    <button id="resize-cancel">@T("Cancel")</button>
+
+</div>
+

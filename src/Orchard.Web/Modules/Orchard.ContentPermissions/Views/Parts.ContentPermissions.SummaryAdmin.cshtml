@@ -1,0 +1,14 @@
+﻿@using Orchard.ContentPermissions.Models;
+
+@{
+    Style.Include("orchard-contentpermissions-admin.css");
+    ContentPermissionsPart contentPart = Model.ContentPart;
+}
+
+@if (contentPart.Enabled) {
+
+    <div class="permission">
+        <img class="icon" src="@Href("~/Modules/Orchard.ContentPermissions/Styles/Images/lock.gif")" alt="@T("Permissions applied")" title="@T("Permissions applied")" /> 
+        @T("Protected")
+    </div>
+}

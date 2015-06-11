@@ -1,0 +1,44 @@
+﻿@{
+    if (Model.IgnoreShapeTracer != null && (bool)Model.IgnoreShapeTracer) {
+        @Display(Model.Metadata.ChildContent)
+        return;
+    }
+    
+    Script.Require("jQueryUI").AtHead();
+    Script.Include("orchard-designertools-shapetracing.js").AtHead();
+    Script.Include("jquery.scrollTo-1.4.4.min.js").AtHead();
+    Style.Include("orchard-designertools-shapetracing.css");
+    
+    // Code Mirror
+    Script.Include("CodeMirror/codemirror.js");
+    Style.Include("CodeMirror/codemirror.css");
+    Script.Include("CodeMirror/razor.js");
+    Style.Include("CodeMirror/razor.css");
+    Script.Include("CodeMirror/javascript.js");
+    Style.Include("CodeMirror/javascript.css");
+    Script.Include("CodeMirror/css.js");
+    Style.Include("CodeMirror/css.css");
+    Script.Include("CodeMirror/htmlmixed.js");
+    
+    Script.Include("jquery.tmpl.min.js");
+}
+
+<script class="shape-tracing-wrapper" shape-id="@Model.ShapeId" shape-type="@Model.Metadata.Type" shape-hint="@Model.Hint"></script>@Display(Model.Metadata.ChildContent)<script class="shape-tracing-wrapper" end-of="@Model.ShapeId"></script>
+    @{
+        Layout.Zones["Tail"].Add(
+            New.ShapeTracingMeta(
+                ShapeType: Model.Metadata.Type,
+                Template: Model.Template,
+                OriginalTemplate: Model.OriginalTemplate,
+                TemplateContent: Model.TemplateContent, 
+                DisplayType: Model.Metadata.DisplayType, 
+                Position: Model.Metadata.Position, 
+                PlacementSource: Model.Metadata.PlacementSource, 
+                PlacementContent: Model.PlacementContent, 
+                Alternates: Model.Metadata.Alternates, 
+                Wrappers: Model.Metadata.Wrappers, 
+                ChildContent: Model.Metadata.ChildContent,
+                ShapeId: Model.ShapeId,
+                Dump: Model._Dump
+        ));
+    }

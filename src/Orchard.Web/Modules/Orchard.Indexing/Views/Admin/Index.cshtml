@@ -1,0 +1,72 @@
+﻿@model Orchard.Indexing.ViewModels.IndexViewModel
+@using Orchard.Indexing.Services;
+
+@{ Layout.Title = T("Indexes").ToString(); }
+
+@if (Model.IndexEntries.Any()) {
+    using (Html.BeginFormAntiForgeryPost()) {
+    <fieldset class="contentItems bulk-items">
+        <ul>
+            @foreach (var index in Model.IndexEntries) {
+                <li>
+                <div class="summary">
+                    <div class="properties">
+                        @*<input type="checkbox" value="@contentItem.Id" name="itemIds"/>*@
+                        <h2>@index.IndexName</h2>
+                        <div class="metadata">
+                            <ul class="pageStatus">
+                                <li>@T("{0} document(s)", index.DocumentCount)</li>
+                            
+                                @if (index.LastUpdateUtc != DateTime.MinValue) {
+                                    <li>&nbsp;|&nbsp;</li>
+                                    <li>@T("Updated {0}", Display.DateTimeRelative(DateTimeUtc: index.LastUpdateUtc))</li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="related">
+                        @Html.ActionLink(T("Update").Text, "Update", "Admin", new {area = "Orchard.Indexing", id = index.IndexName} , new { itemprop = "UnsafeUrl"}) |
+                        @Html.ActionLink(T("Rebuild").Text, "Rebuild", "Admin", new {area = "Orchard.Indexing", id = index.IndexName} , new { itemprop = "UnsafeUrl"}) |
+                        @Html.ActionLink(T("Delete").Text, "Delete", "Admin", new {area = "Orchard.Indexing", id = index.IndexName} , new { itemprop = "RemoveUrl UnsafeUrl"})
+                    </div>
+                    <div class="primary">
+                        @if (index.LastUpdateUtc == DateTime.MinValue) {
+                            <p>@T("The search index has not been built yet.")</p>
+                        } 
+
+                        @if (index.Fields == null || !index.Fields.Any()) {
+                            <p>@T("No fields.")</p>
+                        }
+                        else {
+                            <p>@T("Fields: {0}.", string.Join(T(", ").Text, index.Fields))</p>
+                        } 
+                        @switch (index.IndexingStatus) {
+                            case IndexingStatus.Rebuilding:
+                                <p>@T("The indexing process is currently being rebuilt.");</p>
+                                break;
+                            case IndexingStatus.Updating:
+                                <p>@T("The indexing process is currently being updated.");</p>
+                                break;
+                            case IndexingStatus.Unavailable:
+                                <p>@T("The index is currently not available. Try to rebuild it.")</p>
+                                break;
+                        }
+                    </div>
+                </div>
+            </li>
+            }
+        </ul>
+
+    </fieldset>
+    }
+} else
+    {
+        <div>@T("There is currently no index.")</div>
+    }
+
+@if (Model.IndexProvider != null) {
+
+     <fieldset>
+         @Html.ActionLink(T("Create").Text, "Create", "Admin", new {area = "Orchard.Indexing", @class = "button"})
+     </fieldset>
+ }

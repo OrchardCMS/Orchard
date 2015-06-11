@@ -1,0 +1,25 @@
+﻿@using Orchard.Utility.Extensions;
+@using Orchard.Widgets.Models;
+@{
+    Style.Require("WidgetsAdmin");
+    IEnumerable<WidgetPart> widgets = Model.Widgets;
+    IEnumerable<string> zones = Model.Zones;
+    IEnumerable<string> orphanZones = Model.OrphanZones;
+    var returnUrl = Request.RawUrl;
+}
+<div id="widgets-placement">
+    <div id="widgets-layers" class="widgets-container detail-view switchable">
+        <div id="widgets-zones" class="widgets-listed">
+            @Display.WidgetPlacement_Zones(Widgets: Model.Widgets, Zones: Model.Zones, CurrentLayer: Model.CurrentLayer)
+        </div>
+        @if (orphanZones.Count() > 0) {
+            <div id="widgets-zones-orphans-container">
+                <h3>@T("Zones for other enabled themes.")</h3>
+                <p>@T("Widgets in these zones will not appear anywhere when your currently active theme is applied. They might still appear in selectively applied (e.g. mobile) themes.")</p>
+                <div id="widgets-zones-orphans" class="widgets-listed">
+                    @Display.WidgetPlacement_Zones(Widgets: Model.Widgets, Zones: Model.OrphanZones, CurrentLayer: Model.CurrentLayer)
+                </div>
+            </div>
+        }
+    </div> 
+</div>

@@ -1,0 +1,19 @@
+﻿<Placement>
+    <!-- available display shapes -->
+    <!--
+        Parts_Localization_ContentTranslations
+        Parts_Localization_ContentTranslations_Summary
+        Parts_Localization_ContentTranslations_SummaryAdmin
+    -->
+    <!-- edit shape just gets default placement -->
+    <Place Parts_Localization_ContentTranslations_Edit="Content:0"/>
+    <Match DisplayType="Detail">
+        <Place Parts_Localization_ContentTranslations="Content:2"/>
+    </Match>
+    <Match DisplayType="Summary">
+        <Place Parts_Localization_ContentTranslations_Summary="Content:2"/>
+    </Match>
+    <Match DisplayType="SummaryAdmin">
+        <Place Parts_Localization_ContentTranslations_SummaryAdmin="Content:5"/>
+    </Match>
+</Placement>

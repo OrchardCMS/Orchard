@@ -1,0 +1,512 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{7354DF37-934B-46CF-A13C-455D5F5F5413}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Orchard.Specs</RootNamespace>
+    <AssemblyName>Orchard.Specs</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>..\OrchardBasicCorrectness.ruleset</CodeAnalysisRuleSet>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Autofac, Version=2.1.13.813, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\autofac\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Core, Version=3.2.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\castle\net45\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentNHibernate, Version=1.0.0.0, Culture=neutral, PublicKeyToken=8aa435e3cb308880, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\nhibernate\FluentNHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentPath, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\fluentpath\FluentPath.dll</HintPath>
+    </Reference>
+    <Reference Include="HtmlAgilityPack, Version=1.3.9.1, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\htmlagilitypack\HtmlAgilityPack.dll</HintPath>
+    </Reference>
+    <Reference Include="Iesi.Collections, Version=1.0.1.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\nhibernate\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\..\lib\log4net\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate, Version=3.3.1.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\nhibernate\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework, Version=2.5.2.9222, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\nunit\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Routing">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="TechTalk.SpecFlow, Version=1.2.0.0, Culture=neutral, PublicKeyToken=0778194805d6db41, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\specflow\TechTalk.SpecFlow.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Admin.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Admin.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Autoroute.feature.cs">
+      <DependentUpon>Autoroute.feature</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Bindings\BindingBase.cs" />
+    <Compile Include="Bindings\CommandLine.cs" />
+    <Compile Include="Bindings\ContentRights.cs" />
+    <Compile Include="Bindings\Settings.cs" />
+    <Compile Include="Bindings\HtmlNodeExtensions.cs" />
+    <Compile Include="Bindings\OrchardSiteFactory.cs" />
+    <Compile Include="Bindings\UsersPermissionsAndRoles.cs" />
+    <Compile Include="Blogs.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Blogs.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Boolean.feature.cs">
+      <DependentUpon>Boolean.feature</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Comments.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Comments.feature</DependentUpon>
+    </Compile>
+    <Compile Include="ContentRights.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ContentRights.feature</DependentUpon>
+    </Compile>
+    <Compile Include="ContentTypes.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ContentTypes.feature</DependentUpon>
+    </Compile>
+    <Compile Include="DateTime.feature.cs">
+      <DependentUpon>DateTime.feature</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Enumeration.feature.cs">
+      <DependentUpon>Enumeration.feature</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Input.feature.cs">
+      <DependentUpon>Input.feature</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Link.feature.cs">
+      <DependentUpon>Link.feature</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="MediaPicker.feature.cs">
+      <DependentUpon>MediaPicker.feature</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Numeric.feature.cs">
+      <DependentUpon>Numeric.feature</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Tags.feature.cs">
+      <DependentUpon>Tags.feature</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Hosting\ExtensionDeploymentOptions.cs" />
+    <Compile Include="Hosting\MessageSink.cs" />
+    <Compile Include="Hosting\HostingTraceListener.cs" />
+    <Compile Include="Hosting\TraceEnabledDataServicesProviderFactory.cs" />
+    <Compile Include="Hosting\Simple.Web\HelloYetAgainHandler.cs" />
+    <Compile Include="Hosting\RequestExtensions.cs" />
+    <Compile Include="Hosting\RequestDetails.cs" />
+    <Compile Include="Hosting\Simple.Web\Global.asax.cs" />
+    <Compile Include="Lists.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Lists.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Media.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Media.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Modules.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Modules.feature</DependentUpon>
+    </Compile>
+    <Compile Include="MultiTenancy.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MultiTenancy.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Pages.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Pages.feature</DependentUpon>
+    </Compile>
+    <Compile Include="PermissionModel.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PermissionModel.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Setup.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Setup.feature</DependentUpon>
+    </Compile>
+    <Compile Include="SiteCompilation.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SiteCompilation.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Users.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Users.feature</DependentUpon>
+    </Compile>
+    <Compile Include="UsingSpecFlow.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>UsingSpecFlow.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Util\PathExtensions.cs" />
+    <Compile Include="Hosting\Orchard.Web\Global.asax.cs" />
+    <Compile Include="Hosting\SerializableDelegate.cs" />
+    <Compile Include="Bindings\WebAppHosting.cs" />
+    <Compile Include="Hosting\WebHost.cs" />
+    <Compile Include="Hosting\WebHostAgent.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Bindings\SanityCheck.cs" />
+    <Compile Include="WebHosting.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WebHosting.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Widgets.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Widgets.feature</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Hosting\Orchard.Web\Web.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Hosting\Orchard.Web\Core\Web.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Hosting\Orchard.Web\Themes\Web.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hosting\Orchard.Web\Config\Sites.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="Admin.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Admin.feature.cs</LastGenOutput>
+    </None>
+    <None Include="App.Config" />
+    <None Include="Autoroute.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Autoroute.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Blogs.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Blogs.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Boolean.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Boolean.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Comments.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Comments.feature.cs</LastGenOutput>
+    </None>
+    <None Include="ContentRights.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>ContentRights.feature.cs</LastGenOutput>
+    </None>
+    <None Include="ContentTypes.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>ContentTypes.feature.cs</LastGenOutput>
+    </None>
+    <Content Include="Content\orchard.core.po" />
+    <None Include="DateTime.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>DateTime.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Enumeration.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Enumeration.feature.cs</LastGenOutput>
+    </None>
+    <WebConfigsToTransform Include="Hosting\Orchard.Web\Config\HostComponents.config">
+      <SubType>Designer</SubType>
+    </WebConfigsToTransform>
+    <None Include="Hosting\Orchard.Web\Config\HostComponents.Debug.config">
+      <DependentUpon>HostComponents.config</DependentUpon>
+    </None>
+    <None Include="Hosting\Orchard.Web\Config\HostComponents.Release.config">
+      <DependentUpon>HostComponents.config</DependentUpon>
+    </None>
+    <None Include="Input.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Input.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Link.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Link.feature.cs</LastGenOutput>
+    </None>
+    <None Include="MediaPicker.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>MediaPicker.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Numeric.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Numeric.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Tags.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Tags.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Lists.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Lists.feature.cs</LastGenOutput>
+    </None>
+    <None Include="PermissionModel.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>PermissionModel.feature.cs</LastGenOutput>
+    </None>
+    <Content Include="Hosting\TemplateConfigs\DisableDynamicCompilation.HostComponents.config">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hosting\TemplateConfigs\ForceDynamicCompilation.HostComponents.config">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="SiteCompilation.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>SiteCompilation.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Hosting\Orchard.Web\Config\Diagnostics.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <Content Include="Hosting\Simple.Web\Web.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hosting\Orchard.Web\Config\Host.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="Media.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Media.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Modules.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Modules.feature.cs</LastGenOutput>
+    </None>
+    <None Include="MultiTenancy.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>MultiTenancy.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Pages.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Pages.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Users.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Users.feature.cs</LastGenOutput>
+    </None>
+    <None Include="WebHosting.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>WebHosting.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Setup.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Setup.feature.cs</LastGenOutput>
+    </None>
+    <None Include="UsingSpecFlow.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>UsingSpecFlow.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Widgets.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Widgets.feature.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Orchard.Web\Core\Orchard.Core.csproj">
+      <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
+      <Name>Orchard.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Roles\Orchard.Roles.csproj">
+      <Project>{D10AD48F-407D-4DB5-A328-173EC7CB010F}</Project>
+      <Name>Orchard.Roles</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Setup\Orchard.Setup.csproj">
+      <Project>{8C7FCBC2-E6E1-405E-BFB5-D8D9E67A09C4}</Project>
+      <Name>Orchard.Setup</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Users\Orchard.Users.csproj">
+      <Project>{79AED36E-ABD0-4747-93D3-8722B042454B}</Project>
+      <Name>Orchard.Users</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Web\Orchard.Web.csproj">
+      <Project>{50B779EA-EC00-4699-84C0-03B395C365D2}</Project>
+      <Name>Orchard.Web</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard\Orchard.Framework.csproj">
+      <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
+      <Name>Orchard.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tools\Orchard\Orchard.csproj">
+      <Project>{33B1BC8D-E292-4972-A363-22056B207156}</Project>
+      <Name>Orchard</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Hosting\Simple.Web\Content\Static.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hosting\Orchard.Web\Global.asax">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hosting\Simple.Web\Global.asax">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hosting\Simple.Web\Simple\Cookie-Show.aspx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hosting\Simple.Web\Simple\Cookie-Set.aspx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hosting\Simple.Web\Simple\Redir.aspx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hosting\Simple.Web\Simple\Results.aspx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hosting\Simple.Web\Simple\Page.aspx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hosting\Simple.Web\Static.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

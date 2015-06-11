@@ -1,0 +1,38 @@
+﻿@model Orchard.Themes.ViewModels.ThemesIndexViewModel
+@using Orchard.Themes.Models
+@using Orchard.Mvc.Html
+
+@{
+    Style.Require("ThemesAdmin");
+    Layout.Title = T("Themes").ToString();
+}
+
+@if (Model.CurrentTheme == null) {
+    <p>
+        @T("There is no current theme in the application. The built-in theme will be used.")<br />
+        @Html.ActionLink(T("Install a new Theme").ToString(), "Install")
+    </p>
+}
+else {
+    <h3 id="currentThemeTitle">@T("Current Theme")</h3>
+
+    @Display.ThemeEntry_Current(Theme: Model.CurrentTheme)
+}
+
+<div id="installedBar" class="group">
+    <h3>@T("Available")</h3>
+    @if (Model.InstallThemes) {
+        @Html.ActionLink(T("Install a theme from your computer").ToString(), "AddTheme", "PackagingServices", new { area = "Orchard.Packaging", returnUrl = HttpContext.Current.Request.RawUrl }, null)
+    }
+</div>
+
+@if (Model.Themes == null || Model.Themes.Count() <= 0) {
+    <p>@T("There are no additional themes installed.")</p>
+}
+else {
+    <ul class="templates">
+        @foreach (var themeEntry in Model.Themes) {
+            <li>@Display.ThemeEntry(Theme: themeEntry)</li>
+        }
+    </ul>
+}

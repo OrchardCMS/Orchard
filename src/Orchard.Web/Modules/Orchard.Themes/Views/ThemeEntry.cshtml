@@ -1,0 +1,74 @@
+﻿@using Orchard.Themes.Models
+@using Orchard.Mvc.Html
+@using Orchard.Environment.Extensions.Models
+@using Orchard.Utility.Extensions;
+
+@{
+    Script.Require("ShapesBase").AtFoot();
+    
+    Orchard.Themes.Models.ThemeEntry theme = Model.Theme;
+    var themeClasses = theme.IsRecentlyInstalled ? "class=\"recentlyInstalledTheme\"" : String.Empty;
+}
+
+<div>
+    <h3 @Html.Raw(themeClasses)>@theme.Name</h3>
+
+    @Html.Image(Href(Html.ThemePath((ExtensionDescriptor)theme.Descriptor, "/Theme.png")), Html.Encode((string)theme.Name), null)
+    @using (Html.BeginFormAntiForgeryPost(Url.Action("Activate"), FormMethod.Post, new { @class = "inline" })) {
+        @Html.Hidden("themeId", (string)theme.Descriptor.Id)
+        <button type="submit" title="@T("Activate")">@T("Set Current")</button>
+    }
+
+    @using (Html.BeginFormAntiForgeryPost(Url.Action("Preview"), FormMethod.Post, new { @class = "inline" })) {
+        @Html.Hidden("themeId", (string)theme.Descriptor.Id)
+        <button type="submit" title="@T("Preview")">@T("Preview")</button>
+    }
+
+    <p class="themeInfo smallText">
+        @T("By") @theme.Descriptor.Author<br />
+        @T("Version:") @theme.Descriptor.Version<br />
+        @theme.Descriptor.Description<br />
+        @if (theme.Descriptor.WebSite != null) {
+            <a href="@theme.Descriptor.WebSite">@theme.Descriptor.WebSite</a><br />
+        }
+    </p>
+
+    @if (theme.Notifications != null && theme.Notifications.Count > 0) {
+        <ul class="notifications">
+            @foreach (string notification in theme.Notifications) {
+                <li>@notification</li>
+            }
+        </ul>
+    }
+
+    @if (theme.Enabled) {
+        using (Html.BeginFormAntiForgeryPost(Url.Action("Disable"), FormMethod.Post, new { @class = "inline link" })) {
+            @Html.Hidden("themeId", (string)theme.Descriptor.Id)
+            <button type="submit" class="disable" title="Disable">@T("Disable")</button>
+        }
+    }
+    else {
+        using (Html.BeginFormAntiForgeryPost(Url.Action("Enable"), FormMethod.Post, new { @class = "inline link" })) {
+            @Html.Hidden("themeId", (string)theme.Descriptor.Id)
+            <button type="submit" class="enable" title="Enable">@T("Enable")</button>
+        }
+    }
+
+    @if (theme.NeedsUpdate) {
+        <span> | </span>
+        using (Html.BeginFormAntiForgeryPost(Url.Action("Update"), FormMethod.Post, new { @class = "inline link" })) {
+            @Html.Hidden("themeId", (string)theme.Descriptor.Id)
+            <button type="submit" class="update">@T("Update")</button> <br />
+        }
+    }
+
+    @if (theme.CanUninstall) {
+        <span> | </span>
+        @Html.ActionLink(
+            T("Uninstall").Text,
+            "UninstallTheme",
+            "PackagingServices",
+            new { ThemeId = theme.Descriptor.Id, ReturnUrl = Request.ToUrlString(), Area = "Orchard.Packaging" },
+            new { itemprop = "RemoveUrl UnsafeUrl" })
+    }
+</div>

@@ -1,0 +1,199 @@
+﻿@model Orchard.MediaPicker.ViewModels.MediaGalleryFieldViewModel
+@using Orchard.Environment.Configuration
+@using Orchard.MediaPicker.Settings;
+
+@{
+    Style.Include("media-gallery-admin");
+    Script.Require("jQueryUI_Sortable").AtFoot();
+    
+    var settings = Model.Field.PartFieldDefinition.Settings.GetModel<MediaGalleryFieldSettings>();
+    var descriminator = Html.FieldIdFor(m => m.Field.Items);
+    var safeDescriminator = descriminator.Replace("-", "_");
+        
+    var baseUrl = Url.Content("~/") + WorkContext.Resolve<ShellSettings>().RequestUrlPrefix;
+}
+
+<fieldset>
+    <label @if(settings.Required) { <text>class="required"</text> }>@Model.Field.DisplayName</label>
+    @if (HasText(settings.Hint)) {
+    <span class="hint">@settings.Hint</span>
+    }
+
+    <div id="save-message-@descriminator" class="message message-Warning media-gallery-message">@T("You need to save your changes.")</div>
+    <table id="media-gallery-@descriminator" class="items media-gallery" summary="@Model.Field.DisplayName">
+        <colgroup>
+            <col id="Col1" style="width:20px" />
+            <col id="Col2" />
+            <col id="Col3" />
+        </colgroup>
+        <thead>
+            <tr>
+                <th scope="col" >&nbsp;&darr;</th>
+                <th scope="col">@T("Media")</th>
+                <th scope="col">&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var media in Model.Items) {
+                <tr>
+                    <td>&nbsp;</td>
+                    <td>
+                        <span data-url="@media.Url" data-alt="@media.AlternateText" data-class="@media.Class" data-style="@media.Style" data-align="@media.Alignment" data-width="@media.Width" data-height="@media.Height" data-fieldid="@descriminator" class="media-gallery-item"><a title="@T("Edit")" class="media-gallery-edit" href="#">@media.Url</a></span>
+                    </td>
+                    <td>
+                        <span data-url="@media.Url" class="media-gallery-remove button grey">@T("Remove")</span>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <span id="btn-@descriminator" class="button">@T("Add")</span>
+    
+    @Html.HiddenFor(m => m.SelectedItems)
+</fieldset>
+
+@using (Script.Foot()) {
+<script type="text/javascript">
+//<![CDATA[
+
+    (function($) {
+
+        var required = @(settings.Required ? "true" : "false");
+        var multiple = @(settings.Multiple ? "true" : "false");
+        var addButton = $('#btn-@descriminator');
+        var @(safeDescriminator)_Template = '<tr><td>&nbsp;</td><td><span data-url="{url}" data-alt="{alt}" data-class="{class}" data-style="{style}" data-align="{align}" data-width="{width}" data-height="{height}" data-fieldid="@descriminator" class="media-gallery-item"><a title="@T("Edit")" class="media-gallery-edit" href="#">{url}</a></span></td><td><span class="media-gallery-remove button grey">@T("Remove")</span></td></tr>';
+        
+        var refreshIds = function() {
+            var id = $('#@Html.FieldIdFor(m => m.SelectedItems)');
+            var selectedItems = [];
+            $("span[data-fieldid = @descriminator]").each(function() {
+                selectedItems.push(extractModel(this));
+            });
+
+            id.val(JSON.stringify(selectedItems));
+            
+            // can new items be added ?
+            if(!multiple && selectedItems.length > 0) {
+                addButton.hide();    
+            }
+            else {
+                addButton.show();
+            }
+        };
+
+        refreshIds();
+        
+        // adding a new item
+        addButton.click(function() {
+            addButton.trigger("orchard-admin-pickimage-open", {
+                callback: function(data) {
+                    
+                    var template = @(safeDescriminator)_Template
+                        .replace( /\{url\}/g , formatUrl(data.img.src))
+                        .replace( /\{alt\}/g , data.img.alt)
+                        .replace( /\{class\}/g , data.img['class'])
+                        .replace( /\{style\}/g , data.img.style)
+                        .replace( /\{align\}/g , data.img.align)
+                        .replace( /\{width\}/g , data.img.width || '0')
+                        .replace( /\{height\}/g , data.img.height || '0');
+                    
+                    var content = $(template);
+                    $('#media-gallery-@descriminator tbody').append(content);
+
+                    refreshIds();
+                    $('#save-message-@descriminator').show();
+                },
+                baseUrl: '@baseUrl'
+            });
+        });
+
+        // editing an item
+        $(".items.media-gallery").on("click", ".media-gallery-edit", function() {
+            var img = extractModel($(this).parent());
+            if (img.Url && img.Url.length > 2 && img.Url.substr(0, 2) == "~/") {
+                img.Url = '@baseUrl' + img.Url.substr(2);
+            }
+
+            var tr = $(this).closest('tr');
+            
+            $(this).trigger("orchard-admin-pickimage-open", {
+                img: {
+                    src: img.Url,
+                    alt: img.AlternateText,
+                    'class': img.Class,
+                    style: img.Style,
+                    align: img.Alignment,
+                    width: img.Width,
+                    height: img.Height
+                },
+                baseUrl: '@baseUrl',
+                //uploadMediaPath: 'images',
+                callback: function (data) {
+                    
+                    var template = @(safeDescriminator)_Template
+                         .replace( /\{url\}/g , formatUrl(data.img.src))
+                         .replace( /\{alt\}/g , data.img.alt)
+                         .replace( /\{class\}/g , data.img['class'])
+                         .replace( /\{style\}/g , data.img.style)
+                         .replace( /\{align\}/g , data.img.align)
+                         .replace( /\{width\}/g , data.img.width || '0')
+                         .replace( /\{height\}/g , data.img.height || '0');
+                    
+                    var content = $(template);
+                    tr.after(content);
+                    tr.remove();
+
+                    refreshIds();
+                    $('#save-message-@descriminator').show();
+                }
+            });
+        });
+        
+        $('#media-gallery-@descriminator').on("click", ".media-gallery-remove", function() {
+            $(this).closest('tr').remove();
+            refreshIds();
+            $('#save-message-@descriminator').show();
+        });
+            
+        $("#media-gallery-@descriminator tbody").sortable({
+            handle: 'td:first',
+            stop: function(event, ui) {
+                refreshIds();
+                $('#save-message-@descriminator').show();
+            }
+        }).disableSelection();
+        
+        function formatUrl(url) {
+            var applicationPath = '@HttpUtility.JavaScriptStringEncode(Url.RequestContext.HttpContext.Request.ApplicationPath.ToLower())';
+        
+            if (!/\/$/.test(applicationPath)) {
+                applicationPath += '/';
+            }
+        
+            if (url.substr(0, 4) != "http") {
+                return '~/' + url.substr(applicationPath.length);
+            }
+
+            return url;
+        }
+        
+        function extractModel(dom) {
+            dom = $(dom);
+
+            return {
+                Url: dom.data('url'),
+                AlternateText: dom.data('alt'),
+                Class: dom.data('class'),
+                Style: dom.data('style'),
+                Alignment: dom.data('align'),
+                Height: dom.data('height'),
+                Width: dom.data('width')
+            };
+        }
+        
+
+    })(jQuery);
+//]]>
+</script>
+}

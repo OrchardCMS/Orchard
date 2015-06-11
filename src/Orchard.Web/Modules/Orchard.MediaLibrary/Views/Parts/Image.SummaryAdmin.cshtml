@@ -1,0 +1,10 @@
+﻿@using Orchard.ContentManagement
+@using Orchard.MediaLibrary.Models
+@{
+    ImagePart imagePart = Model.ContentPart;
+    var mediaPart = ((ContentItem)Model.ContentItem).As<MediaPart>();
+}           
+
+@* Use a 200x200 profile in order to reuse the general thumbnail *@
+<img width="120" height="120" alt="@mediaPart.AlternateText" src="@Display.ResizeMediaUrl(Width: 200, Height: 200, Mode: "crop", Alignment: "middlecenter", Path: mediaPart.MediaUrl)" />
+

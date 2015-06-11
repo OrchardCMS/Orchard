@@ -1,0 +1,48 @@
+﻿@model Orchard.MediaPicker.Settings.MediaPickerFieldSettings
+
+<fieldset>
+    <div>
+        @Html.CheckBoxFor(m => m.Required) <label for="@Html.FieldIdFor(m => m.Required)" class="forcheckbox">@T("The media is required")</label>
+        <span class="hint">@T("Check to ensure the user is providing a valid media for this field.")</span>
+    </div>
+</fieldset>
+<fieldset>
+    <div>
+        <input name="ext-@Html.FieldNameFor(m => m)" id="ext-@Html.FieldIdFor(m => m)" type="checkbox" @if (!String.IsNullOrWhiteSpace(Model.AllowedExtensions)) { <text>checked="checked"</text> } />
+        <label for="ext-@Html.FieldIdFor(m => m)" class="forcheckbox">@T("Allow only specific extensions")</label>
+    </div>
+    <div data-controllerid="ext-@Html.FieldIdFor(m => m)">
+        <div>
+            @Html.TextBoxFor(m => m.AllowedExtensions, new { @class = "text medium" })
+            <span class="hint">@T("You can define a set of extensions the user will be able to pick, separated by spaces, e.g. jpg png gif")</span>
+            <span class="hint">@T("Leave it empty if you don't want to apply any restriction.")</span>
+        </div>
+    </div>
+</fieldset>
+<fieldset>
+    <div>
+        <input name="custom-@Html.FieldNameFor(m => m)" id="custom-@Html.FieldIdFor(m => m)" type="checkbox" @if (!String.IsNullOrWhiteSpace(Model.Custom1 ?? "" + Model.Custom2 ?? "" + Model.Custom3 ?? "")) { <text>checked="checked"</text> } />
+        <label for="custom-@Html.FieldIdFor(m => m)" class="forcheckbox">@T("Provide custom parameters")</label>
+    </div>
+    <div data-controllerid="custom-@Html.FieldIdFor(m => m)">
+        <span class="hint">@T("Custom parameters can be used if your own views.")</span>
+        <div>
+            <label for="@Html.FieldIdFor(m => m.Custom1)">@T("Custom1")</label>
+            @Html.TextBoxFor(m => m.Custom1, new { @class = "text medium" })
+        </div>
+        <div>
+            <label for="@Html.FieldIdFor(m => m.Custom2)">@T("Custom2")</label>
+            @Html.TextBoxFor(m => m.Custom2, new { @class = "text medium" })
+        </div>
+        <div>
+            <label for="@Html.FieldIdFor(m => m.Custom3)">@T("Custom3")</label>
+            @Html.TextBoxFor(m => m.Custom3, new { @class = "text medium" })
+        </div>
+    </div>
+</fieldset>
+<fieldset>
+    <label for="@Html.FieldIdFor(m => m.Hint)">@T("Help text")</label>
+    @Html.TextAreaFor(m => m.Hint, new { @class = "text medium", rows = "5" } )
+    <span class="hint">@T("The help text is written under the field when authors are selecting a media.")</span>
+    @Html.ValidationMessageFor(m => m.Hint)
+</fieldset>

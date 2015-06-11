@@ -1,0 +1,125 @@
+﻿.dyn #TargetContainerId,
+.dyn #SortBy,
+.dyn #SortByDirection {
+    display: none
+}
+
+fieldset.contentItems {
+    border: none;
+}
+
+table.content-list thead .summary {
+    padding: 5px 17px;
+}
+
+table.content-list thead .summary input[type='checkbox'] {
+    margin-right: 7px;
+}
+
+.sortable table.content-list tbody tr td:nth-child(1) {
+    background: url(images/move.gif) no-repeat 12px center;
+    cursor: move;
+}
+
+#listManagement table.items td {
+    padding: 8px 17px;
+}
+
+#Col1 {
+     width: 20px;
+}
+
+#ajaxError {
+    display: none;
+}
+
+#listViewName {
+    display: none;
+}
+
+.hidden-content-state {
+    display: none;
+}
+
+tr.published a.content-item {
+    background: url('images/online.gif') no-repeat;
+    padding-left: 25px;
+}
+
+tr.unpublished a.content-item {
+    background: url('images/offline.gif') no-repeat;
+    padding-left: 25px;
+}
+
+tr.published a.content-item-unpublish {
+    display: inline;
+}
+
+tr.published a.content-item-publish {
+    display: none;
+}
+
+tr.unpublished a.content-item-unpublish {
+    display: none;
+}
+
+tr.unpublished a.content-item-publish {
+    display: inline;
+}
+
+.ui-sortable-helper .content-list-remove {
+    display: none;
+}
+
+ul.list-commands li {
+    display: inline;
+}
+
+.switch-button-group-wrapper {
+    clear: both;
+}
+
+ul.switch-button-group {
+    float: right;
+}
+
+ul.switch-button-group li.switch-button {
+    float: left;
+    width: 24px;
+    height: 24px;
+    display: block;
+    border: 1px solid #bcbcbc;
+    -ms-border-radius: 2px 0 0 2px;
+    border-radius: 2px 0 0 2px;
+    background:no-repeat;
+    cursor: pointer;
+}
+
+ul.switch-button-group li.switch-button.active {
+    border-color: #487328;
+    background-position: 0 -24px;
+}
+
+ul.switch-button-group li.switch-button.default {
+    background-image: url(./images/view.default.png);
+}
+
+ul.switch-button-group li.switch-button.condensed {
+    background-image: url(./images/view.condensed.png);
+}
+
+ul.switch-button-group:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
+
+.summary-condensed {
+    padding: 0;
+}
+
+.summary-condensed h3 {
+    font-size: 1em;
+}

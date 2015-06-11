@@ -1,0 +1,116 @@
+
+==context==
+
+WorkContext.Layout == Layout shape
+
+==shapes==
+
+(IShape)
+.Metadata (ShapeMetadata)
+ .Type
+ .DisplayType
+ .Position
+ .Prefix
+ .Wrappers
+ .Alternates
+ .WasExecuted
+ .ChildContent
+
+Document [:Layout]
+
+Layout (Body) (.Wrappers[Document])
+.Zones (meta-property)
+.Title
+
+Zone
+.ZoneName
+
+Menu (in Body.Navigation)
+.MenuName
+
+MenuItem
+-Text
+-Href
+-RouteValues
+-Item (clr object)
+
+List: ul|ol + li*
+.Items (meta-property, bound to shape children or passed in)
+.Id
+.Classes
+.Attributes
+.ItemClasses
+.ItemAttributes
+
+Content (a single content item)
+.Zones (meta-property)
+.ContentItem (clr object)
+.Path (from Orchard.Core.Routable(.Handlers.RoutePartHandler))
+.Slug (*necessary?* from Orchard.Core.Routable(.Handlers.RoutePartHandler))
+.Title (from Orchard.Core.Routable(.Handlers.RoutePartHandler))
+.Description (from Orchard.Blogs(.Handlers.BlogPartHandler))
+
+PlaceChildContent
+.Source (another shape, presumed rendered)
+
+Partial
+.TemplateName
+.Model (optional - default use current)
+
+DisplayTemplate
+.TemplateName
+.Model (optional - default use current)
+.Prefix (optional - default use current)
+
+EditorTemplate
+.TemplateName
+.Model (optional - default use current)
+.Prefix (optional - default use current)
+
+
+(todo: find usage)
+Pager
+-CurrentPage
+-RouteValues
+-Count
+?PageSize ?? 1
+
+(todo: update)
+Parts/Content
+
+Fields/Content
+
+"Items_Content"
+"Items_Content_Summary"
+"Items_Content_Edit"
+
+base + "__" + id
+base + "__" + contenttype
+
+
+==template discovery strategy==
+Items/Content.cshtml -> "Content"
+Items/Content.Summary.cshtml -> "Content_Summary"
+Items/Content.Edit.cshtml -> "Content_Edit"
+Items/Content-Page.cshtml -> "Content__Page"
+Items/Content-45.cshtml -> "Content__45"
+Items/Content-45.Summary.cshtml -> "Content_Summary__45"
+Items/Content.Summary-45.cshtml -> "Content_Summary__Page"
+Items/Page.cshtml -> "Content__Page"
+
+Items/BlogPost.cshtml -> "Content__BlogPost"
+Items/BlogPost.Summary.cshtml -> "Content_Summary__BlogPost"
+Items/BlogPost.Edit.cshtml -> "Content_Edit__BlogPost"
+
+Widgets-TwitterThing.cshtml -> "Widget__TwitterThing"
+
+Items/User.cshtml -> "Items_User"
+
+Parts/Yarg -> "Parts_Yarg"
+Parts/Yarg-BlogPost -> "Parts_Yarg__BlogPost"
+
+==template discovery strategy==
+
+==templates==
+Header
+Footer

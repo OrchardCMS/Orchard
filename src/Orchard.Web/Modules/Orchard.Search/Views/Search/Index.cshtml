@@ -1,0 +1,21 @@
+﻿@model Orchard.Search.ViewModels.SearchViewModel
+@{
+    Style.Require("Search");
+
+    IEnumerable<object> searchResults = Model.ContentItems;
+    Model.ContentItems.Classes.Add("content-items");
+    Model.ContentItems.Classes.Add("search-results");
+}
+<h1>@Html.TitleForPage(T("Search").Text)</h1>
+
+@if (HasText(Model.Query)) {
+    if (!searchResults.Any()) { 
+        <p class="search-summary">@T.Plural("There is <em>one</em> result", "<em>zero</em> results", searchResults.Count())</p>
+    } else { 
+        <p class="search-summary">@T.Plural("There is <em>one</em> result", "<em>{1} - {2}</em> of <em>{0}</em> results", Model.TotalItemCount, Model.StartPosition, Model.EndPosition)</p>
+    }
+}
+@if (searchResults != null && searchResults.Any()) {
+    @Display(searchResults)
+    @Display(Model.Pager)
+} 

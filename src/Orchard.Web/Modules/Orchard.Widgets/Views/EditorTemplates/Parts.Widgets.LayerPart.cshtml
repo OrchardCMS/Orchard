@@ -1,0 +1,19 @@
+﻿@model Orchard.Widgets.Models.LayerPart
+
+<fieldset>
+    @Html.LabelFor(layer => layer.Name, T("Name"))
+    @Html.TextBoxFor(layer => layer.Name, new { @class = "text single-line" })
+    <span class="hint">@T("The name of the Layer as it will be displayed in the admin pages.")</span>
+</fieldset>
+
+<fieldset>
+    @Html.LabelFor(layer => layer.Description, T("Description"))
+    @Html.TextAreaFor(layer => layer.Description)
+    <span class="hint">@T("Some text describing the purpose of this Layer.")</span>
+</fieldset>
+
+<fieldset>
+    @Html.LabelFor(layer => layer.LayerRule, T("Layer Rule"))
+    @Html.TextAreaFor(layer => layer.LayerRule, new { spellcheck = "false" })
+    <span class="hint">@T("An expression that evaluates to true when the widgets in this layer must be displayed. See <a href=\"http://docs.orchardproject.net/Documentation/Managing-widgets#AddingaLayer\">http://docs.orchardproject.net/Documentation/Managing-widgets#AddingaLayer</a> for more information.")</span>
+</fieldset>

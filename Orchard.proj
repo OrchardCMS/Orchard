@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- Initialization -->
+
+  <PropertyGroup>
+    <LibFolder>$(MSBuildProjectDirectory)\lib</LibFolder>
+    <SrcFolder>$(MSBuildProjectDirectory)\src</SrcFolder>
+    <BuildFolder>$(MSBuildProjectDirectory)\build</BuildFolder>
+    <MsBuildTasksFolder>$(MSBuildProjectDirectory)\buildtasks</MsBuildTasksFolder>
+    <ArtifactsFolder>$(MSBuildProjectDirectory)\artifacts</ArtifactsFolder>
+    <SqlCeFolder>$(MSBuildProjectDirectory)\lib\sqlce</SqlCeFolder>
+    <SourceArtifactFolder>$(ArtifactsFolder)\Source</SourceArtifactFolder>
+    <MsDeployArtifactFolder>$(ArtifactsFolder)\MsDeploy</MsDeployArtifactFolder>
+    <GalleryArtifactFolder>$(ArtifactsFolder)\Gallery</GalleryArtifactFolder>
+    <ModulesSrcFolder>$(MSBuildProjectDirectory)\src\Orchard.Web\Modules</ModulesSrcFolder>
+    <OrchardCoreSrcFolder>$(MSBuildProjectDirectory)\src\Orchard.Web\Core</OrchardCoreSrcFolder>
+    <ThemesSrcFolder>$(MSBuildProjectDirectory)\src\Orchard.Web\Themes</ThemesSrcFolder>
+
+    <CompileFolder>$(BuildFolder)\Compile</CompileFolder>
+    <WebSitesFolder>$(CompileFolder)\_PublishedWebsites</WebSitesFolder>
+    <StageFolder>$(BuildFolder)\Stage</StageFolder>
+    <MsDeployFolder>$(BuildFolder)\MsDeploy</MsDeployFolder>
+    <PrecompiledFolder>$(BuildFolder)\Precompiled</PrecompiledFolder>
+    <ProfilingFolder>$(BuildFolder)\Profiling</ProfilingFolder>
+    <GalleryFolder>$(BuildFolder)\Gallery</GalleryFolder>
+
+    <BuildPlatform Condition="$(ProgramW6432) != ''">x64</BuildPlatform>
+    <BuildPlatform Condition="$(BuildPlatform) == ''">x86</BuildPlatform>
+
+    <!-- TeamCity build number -->
+    <Version>$(BUILD_NUMBER)</Version>
+  </PropertyGroup>
+
+  <Import Project="$(LibFolder)\msbuild\MSBuild.Community.Tasks.Targets"/>
+
+  <!-- Coordinating Targets -->
+
+  <Target Name ="Build">
+    <CallTarget Targets="Clean"/>
+    <CallTarget Targets="Compile"/>
+    <CallTarget Targets="Test"/>
+    <CallTarget Targets="Package"/> 
+  </Target>
+
+  <Target Name="FastBuild">
+    <CallTarget Targets="Clean"/>
+    <CallTarget Targets="Compile"/>
+    <CallTarget Targets="Package"/>
+  </Target>
+
+  <Target Name="FullBuild">
+    <CallTarget Targets="Clean"/>
+    <CallTarget Targets="TypeScript"/>
+    <CallTarget Targets="Compile"/>
+    <CallTarget Targets="Test"/>
+    <CallTarget Targets="Package"/>
+    <CallTarget Targets="Spec"/>
+    <CallTarget Targets="Gallery"/>
+  </Target>
+
+  <Target Name="FastPackage">
+    <CallTarget Targets="Clean"/>
+    <CallTarget Targets="Compile"/>
+    <CallTarget Targets="Package"/>
+    <CallTarget Targets="Gallery"/>
+  </Target>
+
+  <Target Name="Package">
+    <CallTarget Targets="Package-Stage"/>
+    <CallTarget Targets="Package-MsDeploy"/>
+    <CallTarget Targets="Package-Zip"/>
+  </Target>
+
+  <Target Name="Precompiled">
+    <CallTarget Targets="Clean"/>
+    <CallTarget Targets="Compile"/>
+    <CallTarget Targets="Package-Stage"/>
+    <CallTarget Targets="Package-Precompiled"/>
+  </Target>
+  
+  <Target Name="Profiling">
+    <CallTarget Targets="Clean"/>
+    <CallTarget Targets="Compile"/>
+    <CallTarget Targets="Package-Stage"/>
+    <CallTarget Targets="Profiling-Stage"/>
+    <CallTarget Targets="Profiling-Setup"/>
+  </Target>
+
+  <Target Name="Gallery">
+    <CallTarget Targets="Gallery-Stage"/>
+    <CallTarget Targets="Gallery-Setup"/>
+  </Target>
+
+  <Target Name="AzureBuild">
+    <MSBuild Projects="AzurePackage.proj" Targets="Build">
+    </MSBuild>
+  </Target>
+
+  <Target Name="AzureCIBuild">
+    <MSBuild Projects="AzurePackage.proj" Targets="CIBuild">
+    </MSBuild>
+  </Target>
+
+  <!-- Building -->
+
+  <Target Name="Clean">
+    <MSBuild Projects="$(SrcFolder)\Orchard.sln" Targets="Clean" />
+    <RemoveDir Directories="$(BuildFolder)" ContinueOnError="true"/>
+    <RemoveDir Directories="$(ArtifactsFolder)" />
+  </Target>
+
+  <Target Name ="Compile">
+    <!-- Compile to "OutputFolder" -->
+    <MSBuild
+      Projects="$(SrcFolder)\Orchard.sln"
+      Targets="Build"
+      Properties="Configuration=Release;OutputPath=$(CompileFolder)" />
+    <!-- Compile to "regular" output folder for devs using VS locally -->
+    <MSBuild
+      Projects="$(SrcFolder)\Orchard.sln"
+      Targets="Build"/>
+  </Target>
+
+  <Target Name ="CompileMsBuildTasks">
+    <MSBuild
+      Projects="$(SrcFolder)\Tools\MSBuild.Orchard.Tasks\MSBuild.Orchard.Tasks.csproj"
+      Targets="Build"
+      Properties="Configuration=Release;OutputPath=$(MsBuildTasksFolder)" />
+  </Target>
+
+  <Target Name="TypeScript" DependsOnTargets="CompileMsBuildTasks">
+    <ItemGroup>
+      <TypeScriptSources Include="$(SrcFolder)\**\Scripts\**\*.ts"/>
+    </ItemGroup>
+    <CompileTypeScriptFiles
+      InputFiles="@(TypeScriptSources)"
+      CompilerPath="$(LibFolder)\typescript\tsc.exe"
+      CompilerOptions="--target ES5">
+      <Output TaskParameter="OutputFiles" ItemName="Content" />
+    </CompileTypeScriptFiles>
+  </Target>
+
+  <!-- Testing -->
+
+  <Target Name ="Test">
+    <!-- TeamCity support -->
+    <ItemGroup>
+      <NUnitAddinFiles Include="$(teamcity_dotnet_nunitaddin)-2.5.2.*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(NUnitAddinFiles)" DestinationFolder="$(LibFolder)\nunit\addins" />
+
+    <!-- Run unit test assemblies -->
+    <CreateItem Include="$(CompileFolder)\*.Tests.*dll">
+      <Output TaskParameter="Include" ItemName="TestAssemblies" />
+    </CreateItem>
+
+    <NUnit Assemblies="@(TestAssemblies)" ToolPath="$(LibFolder)\nunit" WorkingDirectory="$(CompileFolder)" OutputXmlFile="$(BuildFolder)\Orchard.Tests.xml" />
+  </Target>
+
+  <Target Name ="Spec" DependsOnTargets="Package-Stage">
+    <!-- TeamCity support -->
+    <ItemGroup>
+      <NUnitAddinFiles Include="$(teamcity_dotnet_nunitaddin)-2.5.2.*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(NUnitAddinFiles)" DestinationFolder="$(LibFolder)\nunit\addins" />
+
+    <CreateItem Include="$(CompileFolder)\*.Specs.dll">
+      <Output TaskParameter="Include" ItemName="SpecAssemblies" />
+    </CreateItem>
+    <NUnit Assemblies="@(SpecAssemblies)" ToolPath="$(LibFolder)\nunit" />
+  </Target>
+
+  <!-- Packaging (Stage) -->
+
+  <UsingTask AssemblyFile="$(LibFolder)\slowcheetah\SlowCheetah.Xdt.dll" TaskName="SlowCheetah.Xdt.TransformXml" />
+
+  <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.FilterModuleBinaries" />
+  <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.FileUpdateLines" />
+  <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.ValidateExtensionProjectFiles" />
+  <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.XmlDelete" />
+  <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.CompileTypeScriptFiles" />
+
+  <Target Name="Package-Stage" DependsOnTargets="Compile">
+    <CallTarget Targets="CompileMsBuildTasks"/>
+    <CallTarget Targets="ValidateProjectFiles"/>
+
+    <ItemGroup>
+      <SqlCe-Native-Binaries-x86 Include="$(SqlCeFolder)\x86\**\*"/>
+      <SqlCe-Native-Binaries-amd64 Include="$(SqlCeFolder)\amd64\**\*"/>
+      <Stage-Orchard-Web-Bins Include="$(WebSitesFolder)\Orchard.Web\bin\*"/>
+      <Stage-Bin-Exclude Include="$(WebSitesFolder)\**\bin\**\*" />
+      <Stage-Web Include="$(WebSitesFolder)\Orchard.Web\**\*;$(SrcFolder)\Orchard.Web\*.csproj;" Exclude="$(SrcFolder)\Orchard.Web\Orchard.Web.csproj;$(SrcFolder)\Orchard.Web\**\*.Release.config;$(SrcFolder)\Orchard.Web\**\*.Debug.config"/>
+      <Stage-Web-Config Include="$(SrcFolder)\Orchard.Web\**\*.config" Exclude="$(SrcFolder)\Orchard.Web\**\*.Release.config;$(SrcFolder)\Orchard.Web\**\*.Debug.config"/>
+      <Stage-Media Include="$(SrcFolder)\Orchard.Web\Media\OrchardLogo.png" />
+      <Stage-PoFiles Include="$(SrcFolder)\Orchard.Web\**\*.po" />
+      <Stage-Core Include="$(WebSitesFolder)\Orchard.Core\**\*" Exclude="$(WebSitesFolder)\Orchard.Core\**\bin\**\*" />
+     
+      <!-- Get list of module names from the module definition files within ModulesSrcFolder -->
+      <Stage-Modules-Definitions Include="$(ModulesSrcFolder)\**\Module.txt" />
+      <Stage-Modules-Directories Include="@(Stage-Modules-Definitions->DirectoryName())"  />
+      <Stage-Modules-Names Include="@(Stage-Modules-Directories->'%(Filename)%(Extension)')"  />
+     
+      <!-- Get list of theme names from the theme definition files within ThemesSrcFolder -->
+      <Stage-Themes-Definitions Include="$(ThemesSrcFolder)\**\Theme.txt" />
+      <Stage-Themes-Directories Include="@(Stage-Themes-Definitions->DirectoryName())"  />
+      <Stage-Themes-Names Include="@(Stage-Themes-Directories->'%(Filename)%(Extension)')"  />
+      	 
+      <Stage-License Include="$(MSBuildProjectDirectory)\*.txt" />
+      <Stage-Build Include="$(MSBuildProjectDirectory)\*.proj;$(MSBuildProjectDirectory)\*.cmd" />
+    </ItemGroup>
+    
+    <ItemGroup>
+	  <!-- Note. We could add recursion (\..\) before the module/theme name thus avoiding the need for custom metadata
+	       and simplifing the copy tasks further below. However this can result in folders being incorrectly copied if 
+		   a module or theme contains a subfolder with the same name as another module or theme. -->
+      <Stage-Modules Include="$(WebSitesFolder)\%(Stage-Modules-Names.Identity)\**\*" Exclude="@(Stage-Bin-Exclude)">
+        <ModuleName>%(Stage-Modules-Names.Identity)</ModuleName>	  
+      </Stage-Modules>
+      <Stage-Modules-Binaries Include="$(WebSitesFolder)\%(Stage-Modules-Names.Identity)\**\bin\**\*">
+        <ModuleName>%(Stage-Modules-Names.Identity)</ModuleName>	  
+      </Stage-Modules-Binaries>
+      <Stage-Modules-Sources Include="$(ModulesSrcFolder)\**\*.csproj;$(ModulesSrcFolder)\**\*.cs"/>
+      <Stage-Themes-Default Include="$(WebSitesFolder)\Themes\%(Stage-Themes-Names.Identity)\**\*">
+        <ThemeName>%(Stage-Themes-Names.Identity)</ThemeName>
+      </Stage-Themes-Default>
+      <Stage-Themes-Custom Include="$(WebSitesFolder)\%(Stage-Themes-Names.Identity)\**\*" Exclude="@(Stage-Bin-Exclude)">
+        <ThemeName>%(Stage-Themes-Names.Identity)</ThemeName>
+      </Stage-Themes-Custom>
+	  <!-- Note. Binaries are not copied for themes in the default Themes project. -->
+      <Stage-Themes-Binaries Include="$(WebSitesFolder)\%(Stage-Themes-Names.Identity)\**\bin\**\*">
+        <ThemeName>%(Stage-Themes-Names.Identity)</ThemeName>
+      </Stage-Themes-Binaries>
+      <Stage-Themes-Sources Include="$(ThemesSrcFolder)\**\*.csproj;$(ThemesSrcFolder)\**\*.cs" Exclude="$(ThemesSrcFolder)\*.*"/>
+    </ItemGroup>
+
+    <!-- Copying module binaries is somewhat tricky: From a module "bin" directory, we
+         only want to include the files that are _not_ already present in 
+         the "Orchard.Web\Bin" folder. -->
+    <FilterModuleBinaries
+      ModulesBinaries="@(Stage-Modules-Binaries)"
+      OrchardWebBinaries="@(Stage-Orchard-Web-Bins)">
+      <Output TaskParameter="ExcludedBinaries" ItemName="FilterModuleBinaries-ExcludedBinaries"/>
+    </FilterModuleBinaries>
+    <FilterModuleBinaries
+      ModulesBinaries="@(Stage-Themes-Binaries)"
+      OrchardWebBinaries="@(Stage-Orchard-Web-Bins)">
+      <Output TaskParameter="ExcludedBinaries" ItemName="FilterThemeBinaries-ExcludedBinariesFromThemes"/>
+    </FilterModuleBinaries>
+
+    <ItemGroup>
+      <Stage-Modules-Binaries-Unique Include="@(Stage-Modules-Binaries)"  Exclude="@(FilterModuleBinaries-ExcludedBinaries)"/>
+      <Stage-Themes-Binaries-Unique Include="@(Stage-Themes-Binaries)"  Exclude="@(FilterThemeBinaries-ExcludedBinariesFromThemes)"/>
+    </ItemGroup>
+
+    <Copy SourceFiles="@(Stage-Web);@(Stage-Web-Config);@(Stage-License)" DestinationFolder="$(StageFolder)\%(RecursiveDir)"/>
+    <Copy SourceFiles="@(Stage-Media)" DestinationFolder="$(StageFolder)\Media"/>
+    <Copy SourceFiles="@(Stage-PoFiles)" DestinationFolder="$(StageFolder)\%(RecursiveDir)"/>
+    <Copy SourceFiles="@(SqlCe-Native-Binaries-x86)" DestinationFolder="$(StageFolder)\bin\x86\%(RecursiveDir)"/>
+    <Copy SourceFiles="@(SqlCe-Native-Binaries-amd64)" DestinationFolder="$(StageFolder)\bin\amd64\%(RecursiveDir)"/>
+    <Copy SourceFiles="@(Stage-Core)" DestinationFolder="$(StageFolder)\Core\%(RecursiveDir)"/>
+    <Copy SourceFiles="@(Stage-Modules)" DestinationFiles="@(Stage-Modules->'$(StageFolder)\Modules\%(ModuleName)\%(RecursiveDir)%(Filename)%(Extension)')"/>
+    <Copy SourceFiles="@(Stage-Modules-Binaries-Unique)" DestinationFiles="@(Stage-Modules-Binaries-Unique->'$(StageFolder)\Modules\%(ModuleName)\%(RecursiveDir)%(Filename)%(Extension)')"/>
+    <Copy SourceFiles="@(Stage-Modules-Sources)" DestinationFolder="$(StageFolder)\Modules\%(RecursiveDir)"/>
+    <Copy SourceFiles="@(Stage-Themes-Default)" DestinationFiles="@(Stage-Themes-Default->'$(StageFolder)\Themes\%(ThemeName)\%(RecursiveDir)%(Filename)%(Extension)')"/>
+    <Copy SourceFiles="@(Stage-Themes-Custom)" DestinationFiles="@(Stage-Themes-Custom->'$(StageFolder)\Themes\%(ThemeName)\%(RecursiveDir)%(Filename)%(Extension)')"/>
+    <Copy SourceFiles="@(Stage-Themes-Binaries-Unique)" DestinationFiles="@(Stage-Themes-Binaries-Unique->'$(StageFolder)\Themes\%(ThemeName)\%(RecursiveDir)%(Filename)%(Extension)')"/>
+    <Copy SourceFiles="@(Stage-Themes-Sources)" DestinationFolder="$(StageFolder)\Themes\%(RecursiveDir)"/>
+
+    <MakeDir Directories="$(StageFolder)\App_Data"/>
+    <WriteLinesToFile File="$(StageFolder)\App_Data\_marker.txt" Lines="some_text" Overwrite="true"/>
+
+    <!-- extra processing of the staged config files -->
+    <TransformXml 
+      Source="$(StageFolder)\Web.Config"
+      Transform="$(SrcFolder)\Orchard.Web\Web.Release.Config"
+      Destination="$(StageFolder)\Web.Config"
+    />
+
+    <TransformXml 
+      Source="$(StageFolder)\Config\HostComponents.Config"
+      Transform="$(SrcFolder)\Orchard.Web\Config\HostComponents.Release.Config"
+      Destination="$(StageFolder)\Config\HostComponents.Config"
+    />
+
+    <TransformXml 
+      Source="$(StageFolder)\Config\log4net.Config"
+      Transform="$(SrcFolder)\Orchard.Web\Config\log4net.Release.Config"
+      Destination="$(StageFolder)\Config\log4net.Config"
+    />
+    
+    <!-- move over extra non-content files the csproj referenced -->
+    <Copy SourceFiles="@(StageProjectAlteration-ExtraFiles->'$(SrcFolder)\Orchard.Web\%(Identity)')"
+        DestinationFolder="$(StageFolder)\%(RecursiveDir)"/>
+
+  </Target>
+
+  <!-- Packaging (MsDeploy) -->
+  <Target Name="Package-MsDeploy">
+    <ItemGroup>
+      <!--<MsDeploy-Folder-Input Include="$(StageFolder)\**\*" Exclude="$(StageFolder)\**\bin\**\*.pdb;$(StageFolder)\**\bin\**\*.xml" />-->
+
+      <MsDeploy-Exclude-Modules Include="
+        $(StageFolder)\**\Modules\Orchard.Media\**;
+        $(StageFolder)\**\Modules\Orchard.MediaPicker\**;
+        $(StageFolder)\**\Modules\Orchard.Rules\**;
+        " />
+
+      <MsDeploy-Folder-Input Include="$(StageFolder)\**\*" Exclude="$(StageFolder)\**\bin\**\*.xml;$(StageFolder)\**\obj\**\*;@(MsDeploy-Exclude-Modules)" />
+      <MsDeploy-Parameters Include="$(LibFolder)\msdeploy\*.xml;$(LibFolder)\msdeploy\*.sql"/>
+    </ItemGroup>
+
+    <Copy SourceFiles="@(MsDeploy-Folder-Input)"
+        DestinationFolder="$(MsDeployFolder)\Orchard\%(RecursiveDir)"/>
+    <Copy SourceFiles="@(MsDeploy-Parameters)"
+        DestinationFolder="$(MsDeployFolder)"/>
+
+    <MakeDir Directories="$(MsDeployFolder)\Orchard\bin\HostRestart"/>
+  </Target>
+
+  <!-- Packaging (Precompiled) -->
+  <Target Name="Package-Precompiled">
+    <ItemGroup>
+      <Precompiled-Exclude-Source Include="$(StageFolder)\**\*.cs;$(StageFolder)\**\*.csproj;$(StageFolder)\**\*.csproj.user" />
+      <Precompiled-Folder-Input Include="$(StageFolder)\**\*" Exclude="$(StageFolder)\**\bin\**\*.xml;$(StageFolder)\Modules\**\Tests\**;$(StageFolder)\Modules\**\Specs\**;$(StageFolder)\**\obj\**\*;@(Precompiled-Exclude-Source)" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(Precompiled-Folder-Input)"
+        DestinationFolder="$(PrecompiledFolder)\%(RecursiveDir)"/>
+
+    <MakeDir Directories="$(PrecompiledFolder)\bin\HostRestart"/>
+  </Target>
+  <Target Name="Package-Zip">
+    <ItemGroup>
+    
+      <Zip-Exclude Include="
+        $(MSBuildProjectDirectory)\src\**\bin\**\*;
+        $(MSBuildProjectDirectory)\src\**\obj\**\*;
+        $(MSBuildProjectDirectory)\**\App_Data\**\*;
+        $(MSBuildProjectDirectory)\**\_ReSharper*\**\*;
+        $(MSBuildProjectDirectory)\**\*.sln.cache;
+        $(MSBuildProjectDirectory)\**\*.suo;
+        $(MSBuildProjectDirectory)\**\*.user;
+        $(MSBuildProjectDirectory)\**\*.patch;
+        $(MSBuildProjectDirectory)\**\*.hgignore;
+        $(MSBuildProjectDirectory)\**\*.hg*\**\*;
+        $(LibFolder)\nunit\addins\**\*;
+        " Exclude="$(MSBuildProjectDirectory)\src\Orchard.Azure\Orchard.Azure.CloudService\*Content\**\*" />
+
+      <Zip-Stage Include="$(StageFolder)\**\*" />
+
+      <Zip-MsDeploy Include="$(MsDeployFolder)\**\*" />
+
+      <Zip-Source Include="
+        $(MSBuildProjectDirectory)\lib\**\*;
+        $(MSBuildProjectDirectory)\src\**\*;
+        $(MSBuildProjectDirectory)\*.txt;
+        $(MSBuildProjectDirectory)\*.proj;
+        $(MSBuildProjectDirectory)\*.cmd;
+        " Exclude="@(Zip-Exclude)" />
+
+    </ItemGroup>
+
+    <MakeDir Directories="$(MsDeployArtifactFolder);$(SourceArtifactFolder)"/>
+
+    <PropertyGroup>
+      <ZipVersionFileSuffix Condition="$(Version) != ''">.$(Version)</ZipVersionFileSuffix>
+      <ZipVersionFileSuffix Condition="$(Version) == ''"></ZipVersionFileSuffix>
+    </PropertyGroup>
+
+    <Zip Files="@(Zip-MsDeploy)" WorkingDirectory="$(MsDeployFolder)" ZipFileName="$(MsDeployArtifactFolder)\Orchard.Web$(ZipVersionFileSuffix).zip" />
+    <Zip Files="@(Zip-Source)" WorkingDirectory="$(MSBuildProjectDirectory)" ZipFileName="$(SourceArtifactFolder)\Orchard.Source$(ZipVersionFileSuffix).zip" />
+  </Target>
+
+  <!-- Profiling -->
+
+  <Target Name="Profiling-Stage">
+    <ItemGroup>
+      <Profiling-Web Include="$(StageFolder)\**\*" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(Profiling-Web)" DestinationFolder="$(ProfilingFolder)\%(RecursiveDir)"/>
+
+    <XmlUpdate XmlFileName="$(ProfilingFolder)\web.config"
+      XPath="/configuration/system.web/trust/@level"
+      Value="Full" />
+
+  </Target>
+
+  <Target Name="Profiling-Setup">
+    <ReadLinesFromFile File="$(SrcFolder)\Orchard.Profile\profiling-setup-commands.txt">
+      <Output TaskParameter="Lines" ItemName="ProfilingSetupCommands"/>
+    </ReadLinesFromFile>
+
+    <Exec Command="$(ProfilingFolder)\bin\Orchard.exe %(ProfilingSetupCommands.Identity)" WorkingDirectory="$(ProfilingFolder)"/>
+  </Target>
+
+  <!-- Gallery Packaging -->
+
+  <Target Name="Gallery-Stage">
+    <ItemGroup>
+      <Gallery-Web Include="$(StageFolder)\**\*" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(Gallery-Web)" DestinationFolder="$(GalleryFolder)\%(RecursiveDir)"/>
+  </Target>
+
+  <Target Name="Gallery-Setup">
+    <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; setup /SiteName:Gallery /AdminUsername:admin /AdminPassword:gallery-secret /DatabaseProvider:SqlCe" WorkingDirectory="$(GalleryFolder)"/>
+    <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; feature enable Orchard.Packaging" WorkingDirectory="$(GalleryFolder)"/>
+    <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.Media &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
+    <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.MediaPicker &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
+    <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.Rules &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
+  </Target>
+
+  <!-- ValidateProjectFiles-->
+  <Target Name="ValidateProjectFiles">
+    <CallTarget Targets="CompileMsBuildTasks"/>
+
+    <ItemGroup>
+      <Validate-ProjectFiles 
+        Include="$(ModulesSrcFolder)\**\*.csproj;$(ThemesSrcFolder)\**\*.csproj;$(OrchardCoreSrcFolder)\Orchard.Core.csproj"
+        Exclude="$(ModulesSrcFolder)\**\*.Specs.csproj"
+        />
+    </ItemGroup>
+
+    <ValidateExtensionProjectFiles Files="@(Validate-ProjectFiles)"/>
+
+  </Target>
+
+  <!-- SetVersion -->
+  <!-- Update all AssemblyInfo.cs and module.txt files to contain $(Version) -->
+  <Target Name="SetVersion" Condition="$(Version) != ''">
+    <CallTarget Targets="CompileMsBuildTasks"/>
+
+    <ItemGroup>
+      <Version-AssemblyInfos Include="$(SrcFolder)\**\AssemblyInfo.cs" />
+      <Version-Modules Include="$(SrcFolder)\**\Module.txt" />
+      <Version-Themes Include="$(SrcFolder)\**\Theme.txt" />
+    </ItemGroup>
+
+    <FileUpdateLines Files="@(Version-Modules)"
+        Regex="^(orchardversion|version)(\s*):(\s*)(.*)"
+        ReplacementText="${1}${2}:${3}$(Version)"
+        IgnoreCase="True"/>
+
+    <FileUpdateLines Files="@(Version-Themes)"
+          Regex="^(orchardversion|version)(\s*):(\s*)(.*)"
+          ReplacementText="${1}${2}:${3}$(Version)"
+          IgnoreCase="True"/>
+
+    <FileUpdateLines Files="@(Version-AssemblyInfos)"
+        Regex="^\[assembly:(\s)*(AssemblyVersion|AssemblyFileVersion)(\s)*\(&quot;(.*)&quot;\)(\s)*\]"
+        ReplacementText="[assembly:${1}${2}${3}(&quot;$(Version)&quot;)${5}]"
+        IgnoreCase="True"/>
+  </Target>
+</Project>

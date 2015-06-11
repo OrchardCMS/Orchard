@@ -1,0 +1,15 @@
+﻿@{
+    var htmlAttributes = new Dictionary<string, object> {
+        {"class", "text small"}
+    };
+
+    if (Model.Required == true) {
+        htmlAttributes["required"] = "required";
+    }
+
+    if (Model.AutoFocus == true) {
+        htmlAttributes["autofocus"] = "autofocus";
+    }
+}
+
+@Html.TextBox("Text", (string)Model.Text, htmlAttributes)

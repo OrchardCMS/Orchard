@@ -1,0 +1,58 @@
+﻿@model Orchard.AuditTrail.ViewModels.AuditTrailSettingsViewModel
+@{
+    Style.Include("audittrail-settings.css");
+    Script.Require("ShapesBase");
+    Script.Include("audittrail-checkall.js").AtFoot();
+}
+<section class="audittrail-settings-section">
+    <h2>@T("Events to record in the audit trail")</h2>
+    <table class="audittrail-events-table items">
+        <thead>
+            <tr>
+                <th class="event-name">@T("Event")</th>
+                <th>@T("Description")</th>
+                <th class="audittrail-event-enabled-cell">
+                    <label>
+                        @T("Enabled")
+                    </label>
+                </th>
+            </tr>
+        </thead>
+        @{ var i = 0; }
+        @foreach (var category in Model.Categories) {
+            <tbody class="audittrail-category-body check-all-container">
+                <tr>
+                    <th colspan="2">
+                        @category.Name
+                        <input type="hidden" name="AuditTrailSettingsPart.Categories[@i].Category" value="@category.Category" />
+                    </th>
+                    <th class="audittrail-event-enabled-cell">
+                        <input type="checkbox" class="check-all-master" />
+                    </th>
+                </tr>
+                @{ var j = 0; }
+                @foreach (var e in category.Events) {
+                    var checkboxId = String.Format("Event{0}{1}", i, j);
+                    <tr>
+                        <td>
+                            <input type="hidden" name="AuditTrailSettingsPart.Categories[@i].Events[@j].Event" value="@e.Event" />
+                            @e.Name
+                        </td>
+                        <td>@e.Description</td>
+                        <td class="audittrail-event-enabled-cell">
+                            <input id="@checkboxId" type="checkbox" class="check-all-slave" name="AuditTrailSettingsPart.Categories[@i].Events[@j].IsEnabled" value="@Boolean.TrueString" @if (e.IsEnabled || e.IsMandatory) { <text> checked="checked" </text>  } @if (e.IsMandatory) { <text> disabled="disabled" </text>  } />
+                        </td>
+                    </tr>
+                    j++;
+                }
+            </tbody>
+            i++;
+        }
+    </table>
+    <h2>@T("Client IP address logging")</h2>
+    <div>
+        @Html.CheckBoxFor(m => m.EnableClientIpAddressLogging)
+        @Html.LabelFor(m => m.EnableClientIpAddressLogging, T("Enable client IP address logging").Text, new { @class = "forcheckbox" })
+        <span class="hint">@T("When enabled, the client IP address will be recorded in audit trail event records.")</span>
+    </div>
+</section>

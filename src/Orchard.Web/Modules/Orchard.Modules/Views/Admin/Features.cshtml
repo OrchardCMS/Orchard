@@ -1,0 +1,151 @@
+﻿@model FeaturesViewModel
+@using Orchard.Localization;
+@using Orchard.Modules.Extensions;
+@using Orchard.Modules.ViewModels;
+@using Orchard.Utility.Extensions;
+@using Orchard.Modules.Models;
+
+@{
+    Style.Require("ModulesAdmin");
+    Style.Require("Switchable");
+    Script.Require("Switchable").AtFoot();
+    Script.Include("features.admin.js", "features.admin.min.js").AtFoot();
+
+    Layout.Title = T("Modules").ToString();
+}
+
+@if (Model.Features.Any()) {
+    using (Html.BeginFormAntiForgeryPost()) {
+    @Html.Hidden("submit.BulkExecute")
+    @Html.Hidden("force", true)
+    @Html.Hidden("featureIds")
+    <div class="bulk-actions-wrapper">
+        <fieldset class="bulk-actions">
+            <label for="search-box">@T("Filter:")</label>
+            <input id="search-box" class="text" type="text" autofocus="autofocus" />
+        </fieldset>
+        <fieldset class="bulk-actions">
+            <label for="publishActions">@T("Actions:")</label>
+            <select id="publishActions" name="bulkAction">
+                @Html.SelectOption(Model.BulkAction, FeaturesBulkAction.None, T("Choose action...").ToString())
+                @Html.SelectOption(Model.BulkAction, FeaturesBulkAction.Enable, T("Enable").ToString())
+                @Html.SelectOption(Model.BulkAction, FeaturesBulkAction.Disable, T("Disable").ToString())
+                @Html.SelectOption(Model.BulkAction, FeaturesBulkAction.Update, T("Update").ToString())
+                @Html.SelectOption(Model.BulkAction, FeaturesBulkAction.Toggle, T("Toggle").ToString())
+            </select>
+            <button type="submit" name="submit.BulkExecute" value="yes">@T("Execute")</button>
+        </fieldset>
+    </div>
+
+    <ul class="features summary-view switchable">
+        @{
+        var featureGroups = Model.Features.OrderBy(f => f.Descriptor.Category, new DoghouseComparer("Core")).GroupBy(f => f.Descriptor.Category).ToList();
+        foreach (var featureGroup in featureGroups) {
+            if (!featureGroup.Any(x => Model.IsAllowed(x.Descriptor.Extension))) {
+                continue;
+            }
+            var categoryName = LocalizedString.TextOrDefault(featureGroup.First().Descriptor.Category, T("Uncategorized"));
+            var categoryClassName = string.Format("category {0}", Html.Encode(categoryName.ToString().HtmlClassify()));
+            if (featureGroup == featureGroups.First()) {
+                categoryClassName += " first";
+            }
+            if (featureGroup == featureGroups.Last()) {
+                categoryClassName += " last";
+            }
+
+            <li class="@categoryClassName">
+                <h2>@categoryName</h2>
+                <ul>
+                    @{
+            var features = featureGroup.OrderBy(f => f.Descriptor.Name);
+            foreach (var feature in features) {
+                if (!Model.IsAllowed(feature.Descriptor.Extension)) {
+                    continue;
+                }
+                //hmmm...I feel like I've done this before...
+                var featureId = feature.Descriptor.Id.AsFeatureId(n => T(n));
+                var featureName = string.IsNullOrEmpty(feature.Descriptor.Name) ? feature.Descriptor.Id : feature.Descriptor.Name;
+                var featureState = feature.IsEnabled ? "enabled" : "disabled";
+                var featureClassName = string.Format("feature {0}", featureState + (feature.NeedsUpdate ? " update" : String.Empty));
+                if (feature == features.First()) {
+                    featureClassName += " first";
+                }
+                if (feature == features.Last()) {
+                    featureClassName += " last";
+                }
+
+                if (feature.IsRecentlyInstalled) {
+                    featureClassName += " recentlyInstalledFeature";
+                }
+
+                var dependencies = (from d in feature.Descriptor.Dependencies
+                                    select (from f in Model.Features where f.Descriptor.Id.Equals(d, StringComparison.OrdinalIgnoreCase) select f).SingleOrDefault()).Where(f => f != null).OrderBy(f => f.Descriptor.Name);
+                var missingDependencies = feature.Descriptor.Dependencies
+                    .Where(d => !Model.Features.Any(f => f.Descriptor.Id.Equals(d, StringComparison.OrdinalIgnoreCase)));
+                var showDisable = categoryName.ToString() != "Core";
+                var showEnable = Model.IsAllowed(feature.Descriptor.Extension) && !missingDependencies.Any() && feature.Descriptor.Id != "Orchard.Setup";
+
+                if (missingDependencies.Any()) {
+                    featureClassName += " missingDependencies";
+                }
+
+                <li class="@featureClassName" id="@featureId" title="@T("{0} is {1}", Html.AttributeEncode(featureName), featureState)">
+                    <div class="summary">
+                        <div class="properties">
+                            <h3>
+                                @if ((showEnable && !feature.IsEnabled) || (showDisable && feature.IsEnabled)) {
+                                    <label>
+                                        <input type="checkbox" name="featureIds" value="@feature.Descriptor.Id" />
+                                        @featureName
+                                    </label>
+                                }
+                                else {
+                                    @featureName
+                                }
+                            </h3>
+                            <p class="description" title="@feature.Descriptor.Description">@feature.Descriptor.Description</p>
+                            @if (feature.Descriptor.Dependencies != null && feature.Descriptor.Dependencies.Any()) {
+                                <div class="dependencies">
+                                    <h4>@T("Depends on:")</h4>
+                                    @Html.UnorderedList(dependencies,
+                            (s, i) => Html.Link(string.IsNullOrEmpty(s.Descriptor.Name) ? s.Descriptor.Id : s.Descriptor.Name, string.Format("#{0}", s.Descriptor.Id.AsFeatureId(n => T(n)))),
+                        "",
+                        "dependency",
+                        "")
+                                </div>}
+                            @if (missingDependencies.Any()) {
+                                <div class="missingdependencies">
+                                    <h4>@T("Missing:")</h4>
+                                    @Html.UnorderedList(missingDependencies, (s, i) => MvcHtmlString.Create(s), "", "missingdependency", "")
+                                </div>}
+                        </div>
+                        <div class="actions">
+                            @if (showDisable && feature.IsEnabled) {
+                                var dependantsJoined = string.Join(", ", feature.DependentFeatures.Select(f => f.Name));
+                                <a href="#" data-feature-id="@feature.Descriptor.Id" data-feature-action="@FeaturesBulkAction.Disable" data-feature-force="true" data-feature-dependants="@dependantsJoined">@T("Disable")</a>
+                            }
+
+                            @if (showEnable && !feature.IsEnabled) {
+                                <a href="#" data-feature-id="@feature.Descriptor.Id" data-feature-action="@FeaturesBulkAction.Enable" data-feature-force="true">@T("Enable")</a>
+                            }
+
+                            @if (feature.NeedsUpdate) {
+                                <a href="#" data-feature-id="@feature.Descriptor.Id" data-feature-action="@FeaturesBulkAction.Update" data-feature-force="false">@T("Update")</a>
+                            }
+                        </div>
+                    </div>
+                </li>}
+                    }
+                </ul>
+            </li>}
+    }
+</ul>}
+
+    using (Script.Foot()) {
+        <script type="text/javascript">
+        //<![CDATA[
+            var confirmDisableMessage = '@T("Disabling this feature will also disable the following dependent features. Are you sure you want to continue?")';
+        //]]>
+        </script>
+    }
+}

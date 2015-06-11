@@ -1,0 +1,25 @@
+﻿Name: Packaging
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardproject.net
+Version: 1.9.0
+OrchardVersion: 1.9
+Description: The packaging module enables packaging modules using the OPC format.
+FeatureDescription: Commands for creating/installing local modules.
+Category: Packaging
+Features:
+    PackagingServices:
+        Name: Packaging commands
+        Description: Core services for packaging using the OPC format.
+        Category: Packaging
+        Dependencies: Orchard.Packaging
+    Gallery:
+        Name: Gallery
+        Description: Module gallery management.
+        Category: Packaging
+        Dependencies: PackagingServices
+    Gallery.Updates:
+        Name: Package Updates
+        Description: Manages updates for packages.
+        Category: Packaging
+        Dependencies: Gallery

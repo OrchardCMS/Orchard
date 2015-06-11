@@ -1,0 +1,81 @@
+@using Orchard.CustomForms.ViewModels
+@using Orchard.Utility.Extensions
+@model Orchard.CustomForms.ViewModels.CustomFormIndexViewModel
+
+@{
+    var formIndex = 0;
+
+	var pageSizes = new List<int?>() { 10, 50, 100 };
+	var defaultPageSize = WorkContext.CurrentSite.PageSize;
+	if(!pageSizes.Contains(defaultPageSize)) { 
+		pageSizes.Add(defaultPageSize);
+	}
+}
+
+<h1>@Html.TitleForPage(T("Manage Custom Forms").ToString()) </h1>
+@using (Html.BeginFormAntiForgeryPost()) { 
+    @Html.ValidationSummary()
+    <div class="manage">@Html.ActionLink(T("Add a new Custom Form").ToString(), "Create", "Admin", new { area = "Contents", id = "CustomForm", returUrl = Request.RawUrl }, new { @class = "button primaryAction" })</div>
+
+    <fieldset class="bulk-actions">
+        <label for="publishActions">@T("Actions:")</label>
+        <select id="publishActions" name="@Html.NameOf(m => m.Options.BulkAction)">
+            @Html.SelectOption(Model.Options.BulkAction, CustomFormBulkAction.None, T("Choose action...").ToString())
+            @Html.SelectOption(Model.Options.BulkAction, CustomFormBulkAction.Publish, T("Publish").ToString()) 
+            @Html.SelectOption(Model.Options.BulkAction, CustomFormBulkAction.Unpublish, T("Unpublish").ToString())
+            @Html.SelectOption(Model.Options.BulkAction, CustomFormBulkAction.Delete, T("Delete").ToString())
+        </select>
+        <button type="submit" name="submit.BulkEdit" value="@T("Apply")">@T("Apply")</button>
+    </fieldset>
+    <fieldset class="bulk-actions">
+		<label for="filterResults">@T("Sort by:")</label>
+        <select id="filterResults" name="@Html.NameOf(m => m.Options.Order)">
+            @Html.SelectOption(Model.Options.Order, CustomFormOrder.Creation, T("Creation date").ToString())
+        </select>
+		<input type="hidden" name="Page" value="1" />
+		<label for="pageSize">@T("Show:")</label>
+		<select id="pageSize" name="PageSize">
+			@Html.SelectOption((int)Model.Pager.PageSize, 0, T("All").ToString())
+			@foreach(int size in pageSizes.OrderBy(p => p)) {
+				@Html.SelectOption((int)Model.Pager.PageSize, size, size.ToString())
+			}
+		</select>
+        <button type="submit" name="submit.Filter" value="@T("Filter")">@T("Filter")</button>
+    </fieldset>
+    <fieldset>		
+        <table class="items">
+            <thead>
+                <tr>
+                    <th scope="col"><input type="checkbox" class="check-all"/></th>
+                    <th scope="col">@T("Title")</th>
+                    <th scope="col">@T("Content Type")</th>
+                    <th scope="col">&nbsp;</th>
+                </tr>
+            </thead>
+            @foreach (var entry in Model.CustomForms) { 
+			<tr>
+                <td>
+                    <input type="hidden" value="@Model.CustomForms[formIndex].CustomForm.Id" name="@Html.NameOf(m => m.CustomForms[formIndex].CustomForm.Id)"/>
+                    <input type="checkbox" value="true" name="@Html.NameOf(m => m.CustomForms[formIndex].IsChecked)"/>
+                </td>
+                <td>
+                    @Html.ItemEditLink(entry.CustomForm.Title, entry.CustomForm.ContentItem)
+                    @if (entry.CustomForm.ContentItem.ContentType == "CustomFormWidget") {
+                        @T("-")<text> </text>@T("Widget")
+                    }
+                </td>
+                <td>
+                    @entry.CustomForm.ContentType.CamelFriendly()
+                </td>
+                <td>
+                    @Html.ItemEditLink(T("Edit").Text, entry.CustomForm.ContentItem) @T(" | ")
+                    @Html.Link(T("Delete").Text, Url.ItemRemoveUrl(entry.CustomForm.ContentItem, new { returnUrl = Request.RawUrl }), new { itemprop = "RemoveUrl UnsafeUrl" }) @T(" | ")
+                    @Html.ActionLink(T("Submissions").Text, "Item", "Admin", new { area = "Orchard.CustomForms", id = entry.CustomForm.Id }, new { })
+                </td>
+            </tr>
+                formIndex++;
+            }
+        </table>
+	@Display(Model.Pager)
+    </fieldset>
+} 

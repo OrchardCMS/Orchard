@@ -1,0 +1,145 @@
+﻿@model NavigationManagementViewModel
+@using Orchard.Core.Navigation.ViewModels;
+@using Orchard.Utility.Extensions;
+
+@{ 
+    Layout.Title = T("Navigation").ToString();
+    Style.Include("navigation-admin.css");
+
+    Script.Require("jQueryUI_Sortable").AtFoot();
+    Script.Include("jquery.mjs.nestedSortable.js").AtFoot();
+    Script.Include("navigation-admin.js").AtFoot();
+
+    var hasPermission = Authorizer.Authorize(Orchard.Core.Navigation.Permissions.ManageMenus);
+}
+
+<div id="save-message" class="message message-Warning">@T("You need to hit \"Save All\" in order to save your changes.")</div>
+
+<div id="display-menu-controls">
+    @if (Model.Menus.Any()) {
+        using (Html.BeginForm("Index", "Admin", FormMethod.Get, new { area = "Navigation" })) {
+            <fieldset class="bulk-actions-auto">
+                <label for="menuId">@T("Current Menu:")</label>
+                <select id="menuId" name="menuId">
+                    @foreach (var menu in Model.Menus) {
+                        @Html.SelectOption(Model.CurrentMenu.Id, menu.Id, Convert.ToString(Html.ItemDisplayText(menu)))
+                    }
+                </select>
+                @if (hasPermission) { 
+                    @Html.ActionLink(T("Edit").Text, "Edit", "Admin", new { area = "Contents", id = Model.CurrentMenu.Id, returnUrl = Url.Action("Index", "Admin", new { area = "Navigation", menuId = Model.CurrentMenu.Id }) }, new { @class = "button" })
+                }
+            </fieldset>
+        }
+    }
+    @if (hasPermission) { 
+    <div id="navigation-menu-add">
+        @Html.Link(T("Add a new menu...").Text, Url.Action("Create", "Admin", new { area = "Contents", id = "Menu", returnUrl = Request.RawUrl }))
+    </div>
+    }
+</div>
+
+
+@using (Html.BeginFormAntiForgeryPost()) {
+    @Html.Hidden("menuId", Model.CurrentMenu.Id)
+    <div class="sections">
+        <div class="primary">
+            <div class="container">
+                <div class="navigation-menu">
+                    @if (Model.MenuItemEntries.Any()) {
+                        @RenderMenuItems(Model.MenuItemEntries, 0)
+                    }
+                    else {
+                        <h2>@T("The menu is empty")</h2>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="secondary">
+            <ul class="menu-items-zone">
+                @foreach (var descriptor in Model.MenuItemDescriptors.OrderBy(x => x.DisplayName)) {
+                    <li>
+                        <div class="menu-item-description"><h2>@T(descriptor.DisplayName.CamelFriendly())</h2>
+                            @if (!string.IsNullOrWhiteSpace(descriptor.Description)) {
+                                <span class="hint">@T(descriptor.Description)</span>
+                            }
+                        </div>
+                        <div class="menu-item-actions">@Html.ActionLink(T("Add").Text, "CreateMenuItem", "Admin", new { area = "Navigation", id = descriptor.Type, menuId = Model.CurrentMenu.Id, returnUrl = Request.RawUrl }, new { @class = "button grey" })</div>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+    
+    <fieldset class="actions">
+        <button id="saveButton" type="submit" class="button">@T("Save All")</button>
+    </fieldset>
+}
+
+
+@helper RenderMenuItems(IList<MenuItemEntry> menuItems, int index) {
+            
+    @:<ol> 
+
+    // store current level to detect lowerb or upper level
+    int currentLevel = Model.MenuItemEntries[index].Position.Split('.').Length - 1;
+    bool first = true;
+
+    for (int i = index; i < Model.MenuItemEntries.Count; i++) {
+
+        var menuPartEntry = Model.MenuItemEntries[i];
+        var level = menuPartEntry.Position.Split('.').Length - 1; // 0 is for root level
+
+        if (level > currentLevel) {
+            // render sub level, then continue to next element
+            @RenderMenuItems(menuItems, i) 
+    
+            var j = i;
+            while (j < Model.MenuItemEntries.Count && Model.MenuItemEntries[j].Position.Split('.').Length - 1 > currentLevel) { j++; };
+            i = j - 1;
+            continue;
+        }
+
+        if (level == currentLevel) {
+            if (!first) {
+                @:</li>
+            }
+
+            first = false;
+    
+            @:<li class="navigation-menu-item" data-index="@i">
+        
+                <div>
+                    <h2>@menuPartEntry.Text</h2>
+                    <span class="navigation-type">(@menuPartEntry.ContentItem.TypeDefinition.DisplayName)</span>
+                    <span class="navigation-position"><input type="text" class="text" name="@Html.NameOf(m => m.MenuItemEntries[i].Position)" value="@menuPartEntry.Position" /></span>
+                    <span class="navigation-actions">
+                        <input type="hidden" name="@Html.NameOf(m => m.MenuItemEntries[i].MenuItemId)" value="@menuPartEntry.MenuItemId" />
+                        @Html.ItemEditLink(T("Edit").Text, menuPartEntry.ContentItem, new { returnUrl = Request.RawUrl })@T(" | ")
+                        @Html.ActionLink(T("Delete").Text, "Delete", new { id = menuPartEntry.MenuItemId }, new { @class = "remove", itemprop = "RemoveUrl UnsafeUrl" })
+                    </span>
+                </div>
+            
+            continue;
+        }
+
+        // done with current level
+        if (level < currentLevel) {
+            @:</li>
+            break;
+        }
+    }
+    @:</ol>
+}
+
+@using (Script.Foot()) {
+<script type="text/javascript">
+//<![CDATA[
+    var leaveConfirmation = '@T("Some items where not saved.")';
+
+    $('#menuId').change(function () {
+        $(this).parents('form').submit();
+    });
+//]]>
+</script>
+}

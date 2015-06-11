@@ -1,0 +1,36 @@
+﻿@model Orchard.MultiTenancy.ViewModels.TenantsIndexViewModel
+@using Orchard.Environment.Configuration
+@using Orchard.MultiTenancy.Extensions;
+
+@{
+    Style.Require("MultiTenancyAdmin");
+    Layout.Title = T("List of Site's Tenants").ToString();
+}
+
+<div class="manage">@Html.ActionLink(T("Add a Tenant").ToString(), "Add", new {area = "Orchard.MultiTenancy"}, new { @class = "button primaryAction" })</div>
+<ul class="contentItems tenants">
+    @foreach (var tenant in Model.TenantSettings) { 
+    <li class="tenant @tenant.State">
+        <div class="summary">
+            <div class="properties">
+                <h3>@tenant.Name @if (!string.IsNullOrEmpty(tenant.RequestUrlHost)) {
+                    var tenantClone = new ShellSettings(tenant);
+                    foreach (var t in tenant.RequestUrlHost.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)) {
+                        tenantClone.RequestUrlHost = t;
+                        var url = Url.Tenant(tenantClone); 
+                        <span class="tenantHost"> - @Html.Link(url, url)</span>
+                    }
+                }
+                </h3>
+            </div>
+            <div class="related">
+                @if (!string.Equals(tenant.Name, "default", StringComparison.OrdinalIgnoreCase)) { //todo: (heskew) base this off the view model so logic on what can be removed and have its state changed stays in the controller
+                    var t = tenant;
+                    @Html.DisplayFor(m => t, string.Format("ActionsFor{0}", tenant.State.ToString()), "") @T(" | ")
+                }
+                @Html.ActionLink(T("Edit").ToString(), "Edit", new {name = tenant.Name, area = "Orchard.MultiTenancy"}) 
+            </div>
+        </div>
+    </li>
+    }
+</ul>

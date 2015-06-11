@@ -1,0 +1,14 @@
+﻿@model Orchard.MediaLibrary.ViewModels.MediaLibraryPickerFieldViewModel
+@using Orchard.MediaLibrary.Settings;
+@{
+    var settings = Model.Field.PartFieldDefinition.Settings.GetModel<MediaLibraryPickerFieldSettings>();
+}
+@Display.MediaLibraryPicker(
+    FieldName: Html.FieldNameFor(m => m.SelectedIds),
+    DisplayName: Model.Field.DisplayName,
+    Multiple: settings.Multiple,
+    Required: settings.Required,
+    Hint: settings.Hint,
+    ContentItems: Model.ContentItems,
+    PromptOnNavigate: true,
+    ShowSaveWarning: true)

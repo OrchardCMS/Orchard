@@ -1,0 +1,27 @@
+﻿@using Orchard.Utility.Extensions;
+@using Orchard.Widgets.Models;
+@{
+    Style.Require("WidgetsAdmin");
+    IEnumerable<WidgetPart> widgets = Model.OrphanWidgets;
+    var returnUrl = Request.RawUrl;
+}
+@if (widgets.Count() > 0) {
+<div id="widgets-orphans" class="widgets-container widgets-listed message-Warning">
+    <h3>@T("Widgets with problems.")</h3>
+    <p>@T("These widgets aren't going to appear anywhere because they're missing the CommonPart from their content type. To fix these widgets, if you still want to keep them around, start by fixing their <a href=\"{0}\">Content Types</a>.", Url.Action("Index", "Admin", new { area = "Orchard.ContentTypes" }))</p>
+    <ul>
+        @foreach (WidgetPart widget in widgets) {
+            <li class="@(widget == widgets.First() ? "first" : (widget == widgets.Last() ? "last" : ""))">
+                @using (Html.BeginFormAntiForgeryPost()) {
+                    <h3>@Html.ActionLink(HasText(widget.Title) ? widget.Title : widget.TypeDefinition.DisplayName, "EditWidget", new { @widget.Id, returnUrl })</h3>
+                    <div class="widgets-actions">
+                        <button name="moveOut" class="link" type="submit" value="1" itemprop="RemoveUrl">@T("Remove")</button>
+                    </div>
+                    @Html.Hidden("widgetId", widget.Id)
+                    @Html.Hidden("returnUrl", returnUrl)
+                }
+            </li>
+        }
+    </ul>
+</div>
+}

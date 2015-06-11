@@ -1,0 +1,10 @@
+﻿@model Orchard.Rules.ViewModels.EditEventViewModel
+           
+@{
+    Layout.Title = T("Edit Event - {0}", Model.Event.Name);
+}
+
+@Html.ValidationSummary()
+<h2>@Model.Event.Description</h2>
+@Display(Model.Form)
+

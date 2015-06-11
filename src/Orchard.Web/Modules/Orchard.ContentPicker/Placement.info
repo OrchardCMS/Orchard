@@ -1,0 +1,14 @@
+﻿<Placement>
+  <Place Fields_ContentPicker_Edit="Content:2.3"/>
+  <Place Parts_Navigation_Edit="Content:10"/>
+  <Place Parts_ContentMenuItem_Edit="Content:10"/>
+
+  <Match DisplayType="Detail">
+    <Place Fields_ContentPicker="Content:after"/>
+  </Match>
+
+  <Match DisplayType="SummaryAdmin">
+    <Place Fields_ContentPicker_SummaryAdmin="Content:after"/>
+  </Match>
+
+</Placement>

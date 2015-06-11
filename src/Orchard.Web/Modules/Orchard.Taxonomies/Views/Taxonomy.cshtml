@@ -1,0 +1,21 @@
+﻿@*
+    This is the actual shape which is rendered when a taxonomy is rendered.
+    It it called directly from Parts_TaxonomyPart.
+    Alternates:
+    - Taxonomy__[HtmlClassifiedName]
+*@
+@{
+    var tag = Tag(Model, "ul");
+    IList<dynamic> items = Model.Items;
+
+    if (items.Any()) {
+        items[0].Classes.Add("first");
+        items[items.Count - 1].Classes.Add("last");
+    }    
+}
+<div>
+    @tag.StartElement
+        @* see MenuItem shape template *@
+        @DisplayChildren(Model)
+    @tag.EndElement
+</div>

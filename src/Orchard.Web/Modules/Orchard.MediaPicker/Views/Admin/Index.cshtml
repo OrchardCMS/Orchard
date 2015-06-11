@@ -1,0 +1,54 @@
+﻿@using Orchard.Media.Extensions;
+@using Orchard.Media.Helpers;
+@using Orchard.Media.Services;
+@using Orchard.Media.Models;
+@using Orchard.UI.Resources;
+@{
+    // these need to be in the head because MediaBrowser.js defines a callback that the thumbnail images call when they load,
+    // which could happen as soon as they render.
+    Style.Require("jQueryUI_Orchard").AtHead();
+    Script.Require("jQueryUI_Tabs").AtHead();
+    Script.Include("MediaBrowser.js").AtHead();
+
+    SetMeta("IE=edge,chrome=1", httpEquiv: "X-UA-Compatible");
+    Style.Include("~/themes/theadmin/styles/site.css");
+    Style.Include("~/themes/theadmin/styles/ie.css").UseCondition("gte IE 9").SetAttribute("media", "screen, projection");
+    Style.Include("~/themes/theadmin/styles/ie8.css").UseCondition("IE 8").SetAttribute("media", "screen, projection");
+    Style.Include("~/themes/theadmin/styles/ie7.css").UseCondition("lte IE 7").SetAttribute("media", "screen, projection");
+    Style.Include("mediapicker.css");
+
+}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>@T("Pick Image")</title>
+    @Display.Metas()
+    @Display.HeadScripts()
+    @Display.HeadLinks()
+    @Display.StyleSheetLinks()
+</head>
+<body id="orchardmediapicker">
+
+<script type="text/javascript">
+ $.mediaPicker.cannotPerformMsg="@T("Cannot perform requested operation")";
+ $.mediaPicker.accessDeniedMsg="@T("Authentication timed-out: please log-on again")";
+ $.mediaPicker.logonUrl="@Url.Action("LogOn", new { Controller = "Account", Area = "Orchard.Users" })";
+</script>
+
+<div id="tabs" class="group">
+    <ul>
+        <li><a href="#tab-url" data-edittext="@T("Update/Upload Image")" data-edittext-content="true">@T("Insert/Upload Image")</a></li>
+        <li><a href="#tab-gallery">@T("Browse Media")</a></li>
+    </ul>
+    <div id="tab-url">
+@Html.Partial("Tab_Url", (object)Model)
+    </div>
+    <div id="tab-gallery">
+@Html.Partial("Tab_Gallery", (object)Model)
+    </div>
+</div>
+
+
+@Display.FootScripts()
+</body>
+</html>

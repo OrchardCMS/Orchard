@@ -1,0 +1,61 @@
+﻿@using Orchard.Search.ViewModels
+@model SearchSettingsViewModel
+@{
+    Script.Require("jQuery");
+    Script.Include("orchard-search-settings.js");
+}
+<fieldset>
+    <legend>@T("Admin Search")</legend>
+    <div>
+        <label>@T("Indexes")</label>
+
+        @if (Model.Entries != null && Model.Entries.Any()) {
+            if (String.IsNullOrWhiteSpace(Model.SelectedIndex)) {
+                Model.Entries.Insert(0, new IndexSettingsEntry { Index = "" });
+            }
+
+            <select id="selectIndex" name="@Html.NameFor(m => m.SelectedIndex)">
+                @foreach (var modelEntry in Model.Entries) {
+                    @Html.SelectOption(Model.SelectedIndex, modelEntry.Index, modelEntry.Index)
+                }
+            </select>
+            <span class="hint">@T("Select which index to use in search queries.")</span>
+
+            <label>@T("Fields")</label>
+            <ul class="search-fields" data-selected-index="@Model.SelectedIndex">
+                @{var entryIndex = 0;}
+                @foreach (var modelEntry in Model.Entries) {
+                    @Html.HiddenFor(m => m.Entries[entryIndex].Index)
+                    <li data-index="@modelEntry.Index">
+                        @if (modelEntry.Fields != null && modelEntry.Fields.Any()) {
+                            <ul>
+                                @{ var fieldIndex = 0;}
+                                @foreach (var fieldEntry in Model.Entries[entryIndex].Fields) {
+                                    <li>
+                                        @Html.EditorFor(m => m.Entries[entryIndex].Fields[fieldIndex].Selected)
+                                        @Html.HiddenFor(m => m.Entries[entryIndex].Fields[fieldIndex].Field)
+                                        <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Entries[entryIndex].Fields[fieldIndex].Selected)">@Model.Entries[entryIndex].Fields[fieldIndex].Field</label>
+                                    </li>
+                                    fieldIndex++;
+                                }
+                            </ul>
+                        }
+                    </li>
+                        entryIndex++;
+                }
+            </ul>
+            <span class="hint">@T("Check any property which should be used for search queries.")</span>
+
+        }
+        else {
+            <span class="hint">@T("There is currently no index to search from. Please update your index, and check if some indexable content exists.")</span>
+        }
+    </div>
+    <div>
+        <label>@T("Localization")</label>
+        @Html.EditorFor(m => m.FilterCulture)
+        <label class="forcheckbox" for="@Html.FieldIdFor(m => m.FilterCulture)">@T("Narrow search to current culture only")</label>
+        <span class="hint">@T("If checked, search results will only include content items localized in the current culture of the request.")</span>
+    </div>
+
+</fieldset>

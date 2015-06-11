@@ -1,0 +1,106 @@
+﻿@model CommentsIndexViewModel
+@using Orchard.Comments.Models
+@using Orchard.Comments.ViewModels;
+@using Orchard.Mvc.Html;
+@using Orchard.Utility.Extensions
+
+@{
+    Style.Require("Admin");
+    Script.Require("ShapesBase");
+
+    Layout.Title = T("Comments").ToString();
+}
+
+@using(Html.BeginFormAntiForgeryPost()) { 
+    @Html.ValidationSummary()
+    <fieldset class="bulk-actions">
+        <label for="publishActions">@T("Actions:")</label>
+        <select id="publishActions" name="@Html.NameOf(m => m.Options.BulkAction)">
+            @Html.SelectOption(Model.Options.BulkAction, CommentIndexBulkAction.None, T("Choose action...").ToString())
+            @Html.SelectOption(Model.Options.BulkAction, CommentIndexBulkAction.Approve, T("Approve").ToString()) 
+            @Html.SelectOption(Model.Options.BulkAction, CommentIndexBulkAction.Unapprove, T("Unapprove").ToString())
+            @Html.SelectOption(Model.Options.BulkAction, CommentIndexBulkAction.Delete, T("Delete").ToString())
+        </select>
+        <button type="submit" name="submit.BulkEdit" value="@T("Apply")">@T("Apply")</button>
+    </fieldset>
+    <fieldset class="bulk-actions">
+        <label for="filterResults">@T("Filter:")</label>
+        <select id="filterResults" name="@Html.NameOf(m => m.Options.Filter)">
+            @Html.SelectOption(Model.Options.Filter, CommentIndexFilter.All, T("All Comments").ToString())
+            @Html.SelectOption(Model.Options.Filter, CommentIndexFilter.Approved, T("Approved Comments").ToString())
+            @Html.SelectOption(Model.Options.Filter, CommentIndexFilter.Pending, T("Pending Comments").ToString())
+        </select>
+        <button type="submit" name="submit.Filter" value="@T("Apply")">@T("Apply")</button>
+    </fieldset>
+    <fieldset>
+        <table class="items" summary="@T("This is a table of the comments in your application")">
+            <colgroup>
+                <col id="Col1" />
+                <col id="Col2" />
+                <col id="Col3" />
+                <col id="Col4" />
+                <col id="Col5" />
+                <col id="Col6" />
+            </colgroup>
+            <thead>
+                <tr>
+                    <th scope="col"><input type="checkbox" class="check-all"/></th>
+                    <th scope="col">@T("Status")</th>
+                    <th scope="col">@T("Author")</th>
+                    <th scope="col">@T("Comment")</th>
+                    <th scope="col">@T("Commented On")</th>
+                    <th scope="col">@T("Actions")</th>
+                </tr>
+            </thead>
+            @{var commentIndex = 0;}
+            @foreach (var commentEntry in Model.Comments) {
+                var commentClass = "";
+                if (!HasText(commentEntry.Comment.UserName)) {
+                    commentClass = "anonymous";
+                }
+            <tr itemscope="itemscope" itemid="@Model.Comments[commentIndex].Comment.Id" itemtype="http://orchardproject.net/data/Comment" class="@commentClass">
+                <td>
+                    <input type="hidden" value="@Model.Comments[commentIndex].Comment.Id" name="@Html.NameOf(m => m.Comments[commentIndex].Comment.Id)"/>
+                    <input type="checkbox" value="true" name="@Html.NameOf(m => m.Comments[commentIndex].IsChecked)"/>
+                </td>
+                <td>
+                    @if (commentEntry.Comment.Status == CommentStatus.Pending) { @T("Pending") } 
+                    else { @T("Approved") }
+                </td>
+                <td>
+                    <div>@commentEntry.Comment.Author</div>
+                    @if (HasText(commentEntry.Comment.UserName) && commentEntry.Comment.Author != commentEntry.Comment.UserName) {
+                        <div class="authenticated-commenter-id">@commentEntry.Comment.UserName</div>
+                    }
+                </td>
+                <td>
+                    @* would ideally have permalinks for individual comments *@
+                    <p><a href="@Url.ItemDisplayUrl(commentEntry.CommentedOn)#comments"><time>@Display.DateTime(DateTimeUtc: commentEntry.Comment.CommentDateUtc.GetValueOrDefault())</time></a></p>
+                    @if (commentEntry.Comment.CommentText != null) {
+                        var ellipsized = Html.Ellipsize(commentEntry.Comment.CommentText, 500);
+                        var paragraphed = new HtmlString(ellipsized.ToHtmlString().Replace("\r\n", "</p><p>"));
+                        <p>@paragraphed</p>
+                    }
+                    else {
+                        @T("[Empty]")
+                    }
+                </td>
+                <td>@Html.ItemDisplayLink(commentEntry.CommentedOn)</td>
+                <td>
+                    <div class="actions">
+                        @if (commentEntry.Comment.Status != CommentStatus.Approved) {
+                            <a href="@Url.Action("Approve", new {commentEntry.Comment.Id, returnUrl = Request.ToUrlString()})" itemprop="ApproveUrl UnsafeUrl">@T("Approve")</a>@T(" | ")
+                        }
+                        else {
+                            <a href="@Url.Action("Unapprove", new {commentEntry.Comment.Id, returnUrl = Request.ToUrlString()})" itemprop="UnapproveUrl UnsafeUrl">@T("Unapprove")</a>@T(" | ")
+                        }
+                        <a href="@Url.Action("Edit", new {commentEntry.Comment.Id})" title="@T("Edit")">@T("Edit")</a>@T(" | ")
+                        <a href="@Url.Action("Delete", new {commentEntry.Comment.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString()})" itemprop="RemoveUrl UnsafeUrl">@T("Delete")</a>
+                    </div>
+                </td>            </tr>
+            commentIndex = commentIndex + 1;
+            } 
+        </table>
+        @Display(Model.Pager)
+    </fieldset>
+} 

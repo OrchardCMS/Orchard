@@ -1,0 +1,9 @@
+﻿@using Orchard.AuditTrail.Helpers
+@{
+    var eventData = (IDictionary<string, object>) Model.EventData;
+    var contentTypeName = eventData.Get<string>("ContentTypeName");
+    var contentTypeDisplayName = eventData.Get<string>("ContentTypeDisplayName");
+}
+<section class="audittrail-contenttype-eventsummary">
+    @T("The content type <strong>{0}</strong> was removed.", contentTypeName)
+</section>

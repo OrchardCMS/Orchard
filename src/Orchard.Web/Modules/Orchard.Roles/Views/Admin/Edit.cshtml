@@ -1,0 +1,67 @@
+@model RoleEditViewModel
+@using Orchard.Roles.ViewModels;
+
+@{ Layout.Title = T("Edit Role").ToString(); }
+
+@using(Html.BeginFormAntiForgeryPost()) {
+    @Html.ValidationSummary();
+    <fieldset>
+        <legend>@T("Information")</legend>
+        <label for="pageTitle">@T("Role Name:")</label>
+        @if (Model.Name == "Administrator") { // the one special case
+            <input id="Name" class="text" type="text" value="@Model.Name" readonly="readonly" />
+            <input class="text" name="Name" type="hidden" value="@Model.Name" />
+        }
+        else {
+            <input id="Name" class="text" name="Name" type="text" value="@Model.Name" />
+        }
+        <input type="hidden" value="@Model.Id" name="Id" />
+    </fieldset>
+    <fieldset>
+        <legend>@T("Permissions")</legend>
+        @foreach (var category in Model.RoleCategoryPermissions.Keys) {
+        <fieldset>
+            <legend>@category</legend>
+            <table class="items">
+                <colgroup>
+                    <col id="Col1" />
+                    <col id="Col2" />
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th scope="col">@T("Permission")</th>
+                        <th scope="col">@T("Allow")</th>
+                        <th scope="col">@T("Effective")</th>
+                    </tr>
+                </thead>
+                @foreach (var permission in Model.RoleCategoryPermissions[category]) {
+                <tr>
+                    <td>@T(permission.Description)</td>
+                    <td style="width:60px;">
+                        @if (Model.CurrentPermissions.Contains(permission.Name)) {
+                            <input type="checkbox" value="true" name="Checkbox.@permission.Name" checked="checked"/>
+                         } 
+                         else {
+                            <input type="checkbox" value="true" name="Checkbox.@permission.Name"/>
+                        }
+                    </td>    
+                    <td style="width:60px;">
+                    @if (Model.EffectivePermissions.Contains(permission.Name)) {
+                            <input type="checkbox" disabled="disabled" name="Effective.@permission.Name" checked="checked"/>
+                     } else {
+                            <input type="checkbox" disabled="disabled" name="Effective.@permission.Name"/>
+                        }
+                    </td>                
+                </tr>
+                }
+            </table>
+            </fieldset>
+            }
+    </fieldset>
+    <fieldset>
+        <button class="primaryAction" type="submit" name="submit.Save" value="@T("Save")">@T("Save")</button>
+        @if (Model.Name != "Administrator") {
+        <button type="submit" name="submit.Delete" value="@T("Delete")" itemprop="RemoveUrl">@T("Delete")</button>
+        }
+    </fieldset>
+}

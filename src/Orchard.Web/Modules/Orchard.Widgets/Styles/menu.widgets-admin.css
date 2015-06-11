@@ -1,0 +1,6 @@
+﻿.navicon-widgets {
+background-image:url(images/menu.widgets.png) !important;
+}
+.navicon-widgets:hover {
+background-position:0 -30px !important;
+}

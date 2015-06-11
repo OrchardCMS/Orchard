@@ -1,0 +1,33 @@
+﻿Name: Custom Forms
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardcustomforms.codeplex.com
+Version: 1.9.0
+OrchardVersion: 1.9
+Description: Create custom forms like contact forms using layouts.
+Features:
+    Orchard.DynamicForms:
+        Name: Dynamic Forms
+        Description: Create custom forms like contact forms using layouts.
+        Category: Forms
+        Dependencies: Orchard.Layouts, Orchard.Scripting.CSharp, Orchard.Tokens, Orchard.Workflows, Orchard.Users, Orchard.Fields, Common
+    Orchard.DynamicForms.AntiSpam:
+        Name: Anti-Spam Elements
+        Description: Provides anti-spam elements to protect your content from malicious submissions.
+        Category: Forms
+        Dependencies: Orchard.DynamicForms, Orchard.AntiSpam
+    Orchard.DynamicForms.Taxonomies:
+        Name: Taxonomy Element
+        Description: Adds a Taxonomy form element to the sytem.
+        Category: Forms
+        Dependencies: Orchard.DynamicForms, Orchard.Taxonomies
+    Orchard.DynamicForms.Projections:
+        Name: Query Element
+        Description: Adds a Query form element to the sytem.
+        Category: Forms
+        Dependencies: Orchard.DynamicForms, Orchard.Projections
+    Orchard.DynamicForms.ImportExport:
+        Name: Dynamic Forms Import Export
+        Description: Enables the import and export of form submissions.
+        Category: Forms
+        Dependencies: Orchard.DynamicForms, Orchard.ImportExport

@@ -1,0 +1,11 @@
+﻿@model Orchard.Scripting.CSharp.Settings.ScriptValidationPartSettings
+
+@Display.TokenHint()
+
+<fieldset>
+    <label for="@Html.FieldIdFor(m => m.Script)">@T("Script")</label>
+    <div>
+        @Html.TextAreaFor(m => m.Script, new { @class = "text medium", rows = "5" })
+        <span class="hint">@T("The script to run everytime the content item is edited. You can use ContentItem, Services, WorkContext, T() and AddModelError().")</span>
+    </div>
+</fieldset>

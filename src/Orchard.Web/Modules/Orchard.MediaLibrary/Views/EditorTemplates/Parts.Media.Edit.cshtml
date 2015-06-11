@@ -1,0 +1,13 @@
+﻿@model Orchard.MediaLibrary.Models.MediaPart
+           
+<fieldset>
+    @Html.LabelFor(m => m.Caption, T("Caption"))
+    @Html.TextAreaFor(m => m.Caption, new { @class = "text large"})
+    <span class="hint">@T("The caption describes the media in a general context.")</span>
+</fieldset>
+
+<fieldset>
+    @Html.LabelFor(m => m.AlternateText, T("Alternate Text"))
+    @Html.TextBoxFor(m => m.AlternateText, new { @class = "text large"})
+    <span class="hint">@T("The alternate text is used when the media can't be rendered in a browser.")</span>
+</fieldset>

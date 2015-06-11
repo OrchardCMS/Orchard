@@ -1,0 +1,137 @@
+﻿@using System.Net.Mail
+@model Orchard.Email.Models.SmtpSettingsPart
+@{
+    var smtpClient = new SmtpClient();
+}
+
+<fieldset>
+    <legend>@T("Email")</legend>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.Address)">@T("Sender email address")</label>
+        @Html.TextBoxFor(m => m.Address, new { @class = "text medium", placeholder = Model.AddressPlaceholder })
+        @Html.ValidationMessage("Address", "*")
+        <span class="hint">@T("The default email address to use as a sender.")</span>
+    </div>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.Host)">@T("Host name")</label>
+        @Html.TextBoxFor(m => m.Host, new { placeholder = smtpClient.Host, @class = "text medium" })
+        @Html.ValidationMessage("Host", "*")
+        <span class="hint">@T("The SMTP server domain, e.g. <i>smtp.mailprovider.com</i>.")</span>
+    </div>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.Port)">@T("Port number")</label>
+        @Html.TextBoxFor(m => m.Port, new { placeholder = smtpClient.Port, @class = "text small" })
+        @Html.ValidationMessage("Port", "*")
+        <span class="hint">@T("The SMTP server port, usually 25.")</span>
+    </div>
+    <div>
+        @Html.EditorFor(m => m.EnableSsl)
+        <label for="@Html.FieldIdFor(m => m.EnableSsl)" class="forcheckbox">@T("Enable SSL communications")</label>
+        @Html.ValidationMessage("EnableSsl", "*")
+        <span class="hint">@T("Check if the SMTP server requires SSL communications.")</span>
+    </div>
+    <div>
+        @Html.EditorFor(m => m.RequireCredentials)
+        <label for="@Html.FieldIdFor(m => m.RequireCredentials)" class="forcheckbox">@T("Require credentials")</label>
+        @Html.ValidationMessage("RequireCredentials", "*")
+    </div>
+    <div data-controllerid="@Html.FieldIdFor(m => m.RequireCredentials)">
+        <div>
+            <label for="@Html.FieldIdFor(m => m.UserName)">@T("User name")</label>
+            @Html.TextBoxFor(m => m.UserName, new { @class = "text" })
+            @Html.ValidationMessage("UserName", "*")
+            <span class="hint">@T("The username for authentication.")</span>
+        </div>
+        <div>
+            <label for="@Html.FieldIdFor(m => m.Password)">@T("Password")</label>
+            @Html.TextBoxFor(m => m.Password, new { type = "password", @class = "text medium" })
+            @Html.ValidationMessage("Password", "*")
+            <span class="hint">@T("The password for authentication.")</span>
+        </div>
+    </div>
+</fieldset>
+<fieldset>
+    <legend>@T("Test those settings:")</legend>
+    <div>
+        <label for="emailtestto">@T("To:")</label>
+        <input type="text" id="emailtestto" class="large text" />
+    </div>
+    <div>
+        <label for="emailtestbcc">@T("Bcc:")</label>
+        <input type="text" id="emailtestbcc" class="large text" />
+    </div>
+    <div>
+        <label for="emailtestcc">@T("CC:")</label>
+        <input type="text" id="emailtestcc" class="large text" />
+    </div>
+    <div>
+        <label for="emailtestreplyto">@T("Reply To:")</label>
+        <input type="text" id="emailtestreplyto" class="large text" />
+    </div>
+    <div>
+        <label for="emailtestsubject">@T("Subject:")</label>
+        <input type="text" id="emailtestsubject" class="large text" />
+    </div>
+    <div>
+        <textarea id="emailtestbody"></textarea>
+    </div>
+    <div>
+        <button type="button" id="emailtestsend" class="button grey">@T("Send")</button>
+    </div>
+    <div id="emailtesterror" class="message-Error" style="display:none;"></div>
+    <div id="emailtestinfo" class="message-Information" style="display:none;"></div>
+    @using (Script.Foot()) {
+        <script type="text/javascript">
+            $(function () {
+                var url = "@Url.Action("TestSettings", "EmailAdmin", new {area = "Orchard.Email"})",
+                    error = $("#emailtesterror"),
+                    info = $("#emailtestinfo"),
+                    from = $("#@Html.FieldIdFor(m => m.Address)"),
+                    host = $("#@Html.FieldIdFor(m => m.Host)"),
+                    port = $("#@Html.FieldIdFor(m => m.Port)"),
+                    enableSsl = $("#@Html.FieldIdFor(m => m.EnableSsl)"),
+                    requireCredentials = $("#@Html.FieldIdFor(m => m.RequireCredentials)"),
+                    userName = $("#@Html.FieldIdFor(m => m.UserName)"),
+                    password = $("#@Html.FieldIdFor(m => m.Password)"),
+                    to = $("#emailtestto"),
+                    subject = $("#emailtestsubject"),
+                    body = $("#emailtestbody"),
+                    replyto = $("#emailtestreplyto"),
+                    bcc = $("#emailtestbcc"),
+                    cc = $("#emailtestcc");
+
+                $("#emailtestsend").click(function () {
+                    $.post(url, {
+                        from: from.val(),
+                        host: host.val(),
+                        port: port.val(),
+                        enableSsl: enableSsl.prop("checked"),
+                        requireCredentials: requireCredentials.prop("checked"),
+                        userName: userName.val(),
+                        password: password.val(),
+                        to: to.val(),
+                        subject: subject.val(),
+                        body: body.val(),
+                        replyto: replyto.val(),
+                        bcc: bcc.val(),
+                        cc: cc.val(),
+                        __RequestVerificationToken: to.closest("form").find("input[name=__RequestVerificationToken]").val()
+                    })
+                    .fail(function (data) {
+                        error.html(data.statusText).show();
+                        info.hide();
+                    })
+                    .done(function (data) {
+                        if (data.error) {
+                            error.html(data.error).show();
+                            info.hide();
+                        } else {
+                            info.html(data.status).show();
+                            error.hide();
+                        }
+                    });
+                });
+            });
+        </script>
+    }
+</fieldset>

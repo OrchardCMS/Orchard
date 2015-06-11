@@ -1,0 +1,73 @@
+﻿@using Orchard.Utility.Extensions;
+@using Orchard.DesignerTools.Services;
+
+@functions {
+    string FormatShapeName(string shape) {
+        string shapeType = Model.ShapeType;
+        string displayType = Model.DisplayType;
+        
+        if(!String.IsNullOrWhiteSpace(displayType)) {
+            if(shape.StartsWith(shapeType + "_" + displayType)) {
+                shape = shapeType + shape.Substring(shapeType.Length + displayType.Length + 1) + "_" + displayType; 
+            }
+        }
+        
+        return shape.Replace("__", "-").Replace("_", ".");
+    }
+    
+    string FormatShapeFilename(string shape, string themeId) {
+        shape = FormatShapeName(shape);
+        return "~/Themes/" + themeId + "/Views/" + shape.Replace("__", "-").Replace("_", ".") + ".cshtml";
+    }
+    
+    string RemoveBeacons(string htmlContent) {
+        var regex = new System.Text.RegularExpressions.Regex(@"<script\sclass=""shape-tracing-wrapper(.*?)</script>");
+        return regex.Replace(htmlContent, String.Empty);
+    }
+
+    string RemoveEmptyLines(string htmlContent) {
+        var regex = new System.Text.RegularExpressions.Regex(@"[\r\n]+");
+        return regex.Replace(htmlContent, System.Environment.NewLine);
+    }
+}
+
+
+<script type="text/javascript">
+shapeTracingMetadataHost[@Model.ShapeId] = {};
+
+shapeTracingMetadataHost[@Model.ShapeId].shape = { 
+    type: '@Model.ShapeType', 
+    template: '@Model.Template', 
+    originalTemplate: '@Model.OriginalTemplate',
+    displayType: '@(String.IsNullOrEmpty((string)Model.DisplayType) ? T("n/a").Text : Model.DisplayType.ToString())',
+    position: '@(String.IsNullOrEmpty((string)Model.Position) ? T("n/a").Text : Model.Position.ToString())',
+    placement: '@(String.IsNullOrEmpty((string)Model.PlacementSource) ? T("n/a").Text : Model.PlacementSource.ToString())',
+    alternates: [
+        @foreach (var alternate in (new[] { (string)Model.ShapeType }).Concat((List<string>)Model.Alternates))
+        {
+        <text>{</text>
+        <text>filename: '@FormatShapeFilename(alternate, WorkContext.CurrentTheme.Id)',</text>
+        <text>alternate: '@FormatShapeName(alternate)',</text> 
+        <text>template: '@Model.Template',</text>
+        <text>returnUrl: '@Context.Request.RawUrl'</text>
+        <text>},</text>
+        }
+    ],
+    wrappers: [
+        @foreach (var wrapper in Model.Wrappers) {
+            if (wrapper == "ShapeTracingWrapper") { continue; }
+        <text>{ filename: '@FormatShapeFilename(wrapper, WorkContext.CurrentTheme.Id)' },
+        </text>
+        }
+    ],
+    html: '@Html.Raw(ObjectDumper.FormatJsonValue(RemoveEmptyLines(RemoveBeacons(Display(Model.ChildContent).ToString()))))',
+    templateContent: '@Html.Raw(ObjectDumper.FormatJsonValue(String.IsNullOrWhiteSpace((string)Model.TemplateContent) ? @T("Content not available as coming from source code.").ToString() : (string)Model.TemplateContent))',
+    model: { @(new MvcHtmlString((string)@Model.Dump)) }
+};
+
+@if (!String.IsNullOrEmpty((string)Model.PlacementSource) && (WorkContext.HttpContext.Items[(string)Model.PlacementSource] == null)) {
+    WorkContext.HttpContext.Items[(string)Model.PlacementSource] = new object();
+<text>shapeTracingMetadataHost.placement['@Model.PlacementSource.ToString()'] = '@HttpUtility.JavaScriptStringEncode((string)Model.PlacementContent)'; </text>
+}
+
+</script>

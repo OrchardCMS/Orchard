@@ -1,0 +1,323 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{954CA994-D204-468B-9D69-51F6AD3E1C29}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>TinyMce</RootNamespace>
+    <AssemblyName>TinyMce</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <TargetFrameworkProfile />
+    <UseIISExpress>false</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Module.txt" />
+    <Content Include="Scripts\langs\ar.js" />
+    <Content Include="Scripts\langs\ar_SA.js" />
+    <Content Include="Scripts\langs\az.js" />
+    <Content Include="Scripts\langs\be.js" />
+    <Content Include="Scripts\langs\bg_BG.js" />
+    <Content Include="Scripts\langs\bn_BD.js" />
+    <Content Include="Scripts\langs\bs.js" />
+    <Content Include="Scripts\langs\ca.js" />
+    <Content Include="Scripts\langs\cs.js" />
+    <Content Include="Scripts\langs\cy.js" />
+    <Content Include="Scripts\langs\da.js" />
+    <Content Include="Scripts\langs\de.js" />
+    <Content Include="Scripts\langs\de_AT.js" />
+    <Content Include="Scripts\langs\dv.js" />
+    <Content Include="Scripts\langs\el.js" />
+    <Content Include="Scripts\langs\en_CA.js" />
+    <Content Include="Scripts\langs\en_GB.js" />
+    <Content Include="Scripts\langs\es.js" />
+    <Content Include="Scripts\langs\et.js" />
+    <Content Include="Scripts\langs\eu.js" />
+    <Content Include="Scripts\langs\fa.js" />
+    <Content Include="Scripts\langs\fi.js" />
+    <Content Include="Scripts\langs\fo.js" />
+    <Content Include="Scripts\langs\fr_FR.js" />
+    <Content Include="Scripts\langs\gd.js" />
+    <Content Include="Scripts\langs\gl.js" />
+    <Content Include="Scripts\langs\he_IL.js" />
+    <Content Include="Scripts\langs\hr.js" />
+    <Content Include="Scripts\langs\hu_HU.js" />
+    <Content Include="Scripts\langs\hy.js" />
+    <Content Include="Scripts\langs\id.js" />
+    <Content Include="Scripts\langs\is_IS.js" />
+    <Content Include="Scripts\langs\it.js" />
+    <Content Include="Scripts\langs\ja.js" />
+    <Content Include="Scripts\langs\ka_GE.js" />
+    <Content Include="Scripts\langs\kk.js" />
+    <Content Include="Scripts\langs\km_KH.js" />
+    <Content Include="Scripts\langs\ko_KR.js" />
+    <Content Include="Scripts\langs\lb.js" />
+    <Content Include="Scripts\langs\lt.js" />
+    <Content Include="Scripts\langs\lv.js" />
+    <Content Include="Scripts\langs\ml.js" />
+    <Content Include="Scripts\langs\ml_IN.js" />
+    <Content Include="Scripts\langs\mn_MN.js" />
+    <Content Include="Scripts\langs\nb_NO.js" />
+    <Content Include="Scripts\langs\nl.js" />
+    <Content Include="Scripts\langs\pl.js" />
+    <Content Include="Scripts\langs\pt_BR.js" />
+    <Content Include="Scripts\langs\pt_PT.js" />
+    <Content Include="Scripts\langs\ro.js" />
+    <Content Include="Scripts\langs\ru.js" />
+    <Content Include="Scripts\langs\si_LK.js" />
+    <Content Include="Scripts\langs\sk.js" />
+    <Content Include="Scripts\langs\sl_SI.js" />
+    <Content Include="Scripts\langs\sr.js" />
+    <Content Include="Scripts\langs\sv_SE.js" />
+    <Content Include="Scripts\langs\ta.js" />
+    <Content Include="Scripts\langs\ta_IN.js" />
+    <Content Include="Scripts\langs\tg.js" />
+    <Content Include="Scripts\langs\th_TH.js" />
+    <Content Include="Scripts\langs\tr_TR.js" />
+    <Content Include="Scripts\langs\tt.js" />
+    <Content Include="Scripts\langs\ug.js" />
+    <Content Include="Scripts\langs\uk.js" />
+    <Content Include="Scripts\langs\uk_UA.js" />
+    <Content Include="Scripts\langs\vi.js" />
+    <Content Include="Scripts\langs\vi_VN.js" />
+    <Content Include="Scripts\langs\zh_CN.js" />
+    <Content Include="Scripts\langs\zh_TW.js" />
+    <Content Include="Scripts\license.txt" />
+    <Content Include="Scripts\orchard-tinymce.js" />
+    <Content Include="Scripts\plugins\advlist\plugin.min.js" />
+    <Content Include="Scripts\plugins\anchor\plugin.min.js" />
+    <Content Include="Scripts\plugins\autolink\plugin.min.js" />
+    <Content Include="Scripts\plugins\autoresize\plugin.min.js" />
+    <Content Include="Scripts\plugins\autosave\plugin.min.js" />
+    <Content Include="Scripts\plugins\bbcode\plugin.min.js" />
+    <Content Include="Scripts\plugins\charmap\plugin.min.js" />
+    <Content Include="Scripts\plugins\code\plugin.min.js" />
+    <Content Include="Scripts\plugins\colorpicker\plugin.min.js" />
+    <Content Include="Scripts\plugins\contextmenu\plugin.min.js" />
+    <Content Include="Scripts\plugins\directionality\plugin.min.js" />
+    <Content Include="Scripts\plugins\emoticons\img\smiley-cool.gif" />
+    <Content Include="Scripts\plugins\emoticons\img\smiley-cry.gif" />
+    <Content Include="Scripts\plugins\emoticons\img\smiley-embarassed.gif" />
+    <Content Include="Scripts\plugins\emoticons\img\smiley-foot-in-mouth.gif" />
+    <Content Include="Scripts\plugins\emoticons\img\smiley-frown.gif" />
+    <Content Include="Scripts\plugins\emoticons\img\smiley-innocent.gif" />
+    <Content Include="Scripts\plugins\emoticons\img\smiley-kiss.gif" />
+    <Content Include="Scripts\plugins\emoticons\img\smiley-laughing.gif" />
+    <Content Include="Scripts\plugins\emoticons\img\smiley-money-mouth.gif" />
+    <Content Include="Scripts\plugins\emoticons\img\smiley-sealed.gif" />
+    <Content Include="Scripts\plugins\emoticons\img\smiley-smile.gif" />
+    <Content Include="Scripts\plugins\emoticons\img\smiley-surprised.gif" />
+    <Content Include="Scripts\plugins\emoticons\img\smiley-tongue-out.gif" />
+    <Content Include="Scripts\plugins\emoticons\img\smiley-undecided.gif" />
+    <Content Include="Scripts\plugins\emoticons\img\smiley-wink.gif" />
+    <Content Include="Scripts\plugins\emoticons\img\smiley-yell.gif" />
+    <Content Include="Scripts\plugins\emoticons\plugin.min.js" />
+    <Content Include="Scripts\plugins\example\dialog.html" />
+    <Content Include="Scripts\plugins\example\plugin.min.js" />
+    <Content Include="Scripts\plugins\example_dependency\plugin.min.js" />
+    <Content Include="Scripts\plugins\fullpage\plugin.min.js" />
+    <Content Include="Scripts\plugins\fullscreen\plugin.min.js" />
+    <Content Include="Scripts\plugins\hr\plugin.min.js" />
+    <Content Include="Scripts\plugins\image\plugin.min.js" />
+    <Content Include="Scripts\plugins\importcss\plugin.min.js" />
+    <Content Include="Scripts\plugins\insertdatetime\plugin.min.js" />
+    <Content Include="Scripts\plugins\layer\plugin.min.js" />
+    <Content Include="Scripts\plugins\legacyoutput\plugin.min.js" />
+    <Content Include="Scripts\plugins\link\plugin.min.js" />
+    <Content Include="Scripts\plugins\lists\plugin.min.js" />
+    <Content Include="Scripts\plugins\medialibrary\plugin.js" />
+    <Content Include="Scripts\plugins\medialibrary\plugin.min.js">
+      <DependentUpon>plugin.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\plugins\mediapicker\plugin.js" />
+    <Content Include="Scripts\plugins\mediapicker\plugin.min.js">
+      <DependentUpon>plugin.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\plugins\media\moxieplayer.swf" />
+    <Content Include="Scripts\plugins\media\plugin.min.js" />
+    <Content Include="Scripts\plugins\nonbreaking\plugin.min.js" />
+    <Content Include="Scripts\plugins\noneditable\plugin.min.js" />
+    <Content Include="Scripts\plugins\pagebreak\plugin.min.js" />
+    <Content Include="Scripts\plugins\paste\plugin.min.js" />
+    <Content Include="Scripts\plugins\preview\plugin.min.js" />
+    <Content Include="Scripts\plugins\print\plugin.min.js" />
+    <Content Include="Scripts\plugins\save\plugin.min.js" />
+    <Content Include="Scripts\plugins\searchreplace\plugin.min.js" />
+    <Content Include="Scripts\plugins\spellchecker\plugin.min.js" />
+    <Content Include="Scripts\plugins\tabfocus\plugin.min.js" />
+    <Content Include="Scripts\plugins\table\plugin.min.js" />
+    <Content Include="Scripts\plugins\template\plugin.min.js" />
+    <Content Include="Scripts\plugins\textcolor\plugin.min.js" />
+    <Content Include="Scripts\plugins\textpattern\plugin.min.js" />
+    <Content Include="Scripts\plugins\visualblocks\css\visualblocks.css" />
+    <Content Include="Scripts\plugins\visualblocks\plugin.min.js" />
+    <Content Include="Scripts\plugins\visualchars\plugin.min.js" />
+    <Content Include="Scripts\plugins\wordcount\plugin.min.js" />
+    <Content Include="Scripts\skins\orchardlightgray\content.inline.min.css" />
+    <Content Include="Scripts\skins\orchardlightgray\content.min.css" />
+    <Content Include="Scripts\skins\orchardlightgray\fonts\tinymce-small.svg" />
+    <Content Include="Scripts\skins\orchardlightgray\fonts\tinymce.svg" />
+    <Content Include="Scripts\skins\orchardlightgray\img\anchor.gif" />
+    <Content Include="Scripts\skins\orchardlightgray\img\loader.gif" />
+    <Content Include="Scripts\skins\orchardlightgray\img\object.gif" />
+    <Content Include="Scripts\skins\orchardlightgray\img\trans.gif" />
+    <Content Include="Scripts\skins\orchardlightgray\skin.ie7.min.css" />
+    <Content Include="Scripts\skins\lightgray\content.inline.min.css" />
+    <Content Include="Scripts\skins\lightgray\content.min.css" />
+    <Content Include="Scripts\skins\lightgray\fonts\tinymce-small.svg" />
+    <Content Include="Scripts\skins\lightgray\fonts\tinymce.svg" />
+    <Content Include="Scripts\skins\lightgray\img\anchor.gif" />
+    <Content Include="Scripts\skins\lightgray\img\loader.gif" />
+    <Content Include="Scripts\skins\lightgray\img\object.gif" />
+    <Content Include="Scripts\skins\lightgray\img\trans.gif" />
+    <Content Include="Scripts\skins\lightgray\skin.ie7.min.css" />
+    <Content Include="Scripts\skins\lightgray\skin.min.css" />
+    <Content Include="Scripts\skins\orchardlightgray\skin.min.css" />
+    <Content Include="Scripts\themes\modern\theme.min.js" />
+    <Content Include="Scripts\tinymce.min.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ResourceManifest.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\TinyMceShapeDisplayEvent.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Body-Html.Editor.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
+      <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
+      <Name>Orchard.Framework</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\langs\readme.md" />
+    <Content Include="Scripts\skins\lightgray\fonts\tinymce-small.eot" />
+    <Content Include="Scripts\skins\lightgray\fonts\tinymce-small.ttf" />
+    <Content Include="Scripts\skins\lightgray\fonts\tinymce-small.woff" />
+    <Content Include="Scripts\skins\lightgray\fonts\tinymce.eot" />
+    <Content Include="Scripts\skins\lightgray\fonts\tinymce.ttf" />
+    <Content Include="Scripts\skins\lightgray\fonts\tinymce.woff" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\skins\orchardlightgray\fonts\tinymce-small.eot" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\skins\orchardlightgray\fonts\tinymce-small.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\skins\orchardlightgray\fonts\tinymce-small.woff" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\skins\orchardlightgray\fonts\tinymce.eot" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\skins\orchardlightgray\fonts\tinymce.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\skins\orchardlightgray\fonts\tinymce.woff" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target> -->
+  <Target Name="AfterBuild" DependsOnTargets="AfterBuildCompiler">
+    <PropertyGroup>
+      <AreasManifestDir>$(ProjectDir)\..\Manifests</AreasManifestDir>
+    </PropertyGroup>
+    <!-- If this is an area child project, uncomment the following line:
+    <CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Child" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" />
+    -->
+    <!-- If this is an area parent project, uncomment the following lines:
+    <CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Parent" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" />
+    <CopyAreaManifests ManifestPath="$(AreasManifestDir)" CrossCopy="false" RenameViews="true" />
+    -->
+  </Target>
+  <Target Name="AfterBuildCompiler" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(ProjectDir)\..\$(ProjectName)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>53593</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>
+          </IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>True</UseCustomServer>
+          <CustomServerUrl>http://orchard.codeplex.com</CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

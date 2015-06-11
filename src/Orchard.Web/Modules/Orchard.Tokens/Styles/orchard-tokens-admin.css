@@ -1,0 +1,67 @@
+﻿.tokenized-popup 
+{
+    position:absolute;
+    background: url('images/tokensPopup.gif');
+    background-repeat: no-repeat;
+    width:10px;
+    height:10px;
+    cursor: pointer;
+    
+    padding-right:8px;
+    margin-top:10px;
+    right:100%;
+}
+
+.token-wrapper {
+    position:relative;
+}
+
+.token-wrapper > div {
+    float:left; 
+    left:100%;
+    position: absolute;
+    margin-bottom: 0px;
+}
+
+    .token-wrapper span[role="status"] {
+        display: none;
+    }
+.ui-autocomplete 
+{
+	max-height: 12em;
+    background: white;
+    border: 1px solid #BDBCBC;
+    width: 700px;
+    overflow :auto;
+}
+
+.ui-autocomplete .acdesc
+{
+    padding-right: 5px;
+    float: right;
+}
+	
+.ui-autocomplete .acvalue
+{
+    left: 150px;
+    position: absolute;
+}
+	
+.ui-autocomplete .accategory
+{
+    font-weight: bold;
+}
+
+.ui-autocomplete li a {
+	
+	padding-left: 5px;
+    background-color: transparent;
+    color: #333;
+}
+
+.ui-autocomplete li:hover {
+    background-color: #eee;
+    color: white;
+    cursor: pointer;
+}
+

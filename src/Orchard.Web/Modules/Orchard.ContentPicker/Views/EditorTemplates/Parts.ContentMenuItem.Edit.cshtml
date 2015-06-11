@@ -1,0 +1,38 @@
+﻿@using Orchard.Environment.Configuration
+@model Orchard.ContentPicker.ViewModels.ContentMenuItemEditViewModel
+@{
+    Script.Require("ContentPicker").AtFoot();
+    var title = Model.Part.Content == null ? new HtmlString(T("Empty").Text) : Html.ItemDisplayText(Model.Part.Content);
+}
+<fieldset>
+    <label>@T("Content Item")</label>
+    <span id="title-@Html.FieldIdFor(m => m.ContentItemId)" class="content-picker-title">@title</span>
+    <span id="btn-@Html.FieldIdFor(m => m.ContentItemId)" class="button">@T("Browse")</span>
+
+    @Html.HiddenFor(m => m.ContentItemId)
+    <span class="hint">@T("Select the Content Item to display in the menu.")</span>
+</fieldset>
+
+@using(Script.Foot()) {
+<script type="text/javascript">
+//<![CDATA[
+    jQuery('#btn-@Html.FieldIdFor(m => m.ContentItemId)').click(function() {
+        jQuery('#btn-@Html.FieldIdFor(m => m.ContentItemId)').trigger("orchard-admin-contentpicker-open", {
+            callback: function(data) {
+
+                jQuery('#@Html.FieldIdFor(m => m.ContentItemId)').val(data.id);
+
+                jQuery('#title-@Html.FieldIdFor(m => m.ContentItemId)').text(data.displayText);
+
+                // define the menu text if it's empty
+                var menuText = jQuery('#MenuPart_MenuText');
+                if (menuText.val().length == 0) {
+                    menuText.val(data.displayText);
+                }
+            },
+            baseUrl: '@HttpUtility.JavaScriptStringEncode(Url.Content("~/" + WorkContext.Resolve<ShellSettings>().RequestUrlPrefix))'
+        });
+    });
+//]]>
+</script>
+}

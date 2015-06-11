@@ -1,0 +1,79 @@
+﻿@using Orchard.Utility.Extensions
+
+@{
+    Script.Require("jQuery");
+    Layout.Title = T("Migrate Media Files").ToString();
+}
+
+<fieldset>
+    <legend>@T("Migrating Media Files:")</legend>
+    <span class="hint">@T("This migration step will create and organize new Media Content Items based on the media files in your ~/Media folder.")</span>
+    @if (ViewBag.CanMigrate) {
+        <span class="hint">@T("Before importing, please ensure the server has the expected mime types already registered as explained here: <a href=\"http://www.iis.net/configreference/system.webserver/staticcontent/mimemap\">http://www.iis.net/configreference/system.webserver/staticcontent/mimemap</a>")</span>
+    }
+</fieldset>
+<fieldset>
+    @if (ViewBag.CanMigrate) {
+        <button type="button" class="button" id="button-migrate">@T("Migrate")</button>
+        
+        <div class="message message-Warning" id="message-progress" style="display: none"></div>
+    }
+</fieldset>
+
+@using (Html.BeginFormAntiForgeryPost(Url.Action("MediaPicker", "Media"))) {
+    <fieldset>
+        <legend>@T("Migrating Media Picker Fields:")</legend>
+        <span class="hint">@T("This migration step will migrate your Media Picker and Media Gallery Picker fields to the new Media Library Field.")</span>
+        @if (!ViewBag.CanMigrateFields) {
+            <span class="hint">@T("Before migrating fields, please migrate all the Media files.")</span>
+        }
+    </fieldset>
+    <fieldset>
+        @if (ViewBag.CanMigrateFields) {
+            <button type="submit">@T("Migrate")</button>
+        }
+    </fieldset>
+    
+}
+
+@using (Script.Foot()) {
+    <script type="text/javascript">
+        $(function() {
+            var importMediaUrl = '@HttpUtility.JavaScriptStringEncode(Url.Action("ImportMedia", "Media"))';
+            var antiForgeryToken = '@HttpUtility.JavaScriptStringEncode(Html.AntiForgeryTokenValueOrchard().ToString())';
+            var endMessage = '@HttpUtility.JavaScriptStringEncode(T("All media files have been processed").Text)';
+            
+            $('#button-migrate').click(function () {
+                var remaining = 1;
+                $('#message-progress').show();
+
+                var iID = setInterval(function() {
+                    $.ajax({
+                        type: 'POST',
+                        url: importMediaUrl,
+                        async: false,
+                        data: {
+                            __RequestVerificationToken: antiForgeryToken
+                        },
+                        success: function(data) {
+                            console.log('media remaining: ' + data);
+                            remaining = data;
+                        },
+                        fail: function(result) {
+                            remaining = 0;
+                            console.log("An error occured: " + result);
+                        }
+                    });
+
+                    $('#message-progress').text('' + remaining + ' files remaining ...');
+
+                    if (remaining == 0) {
+                        clearInterval(iID);
+                        $('#message-progress').text(endMessage);
+                    }
+                }, 100);
+                
+            });
+        });
+    </script>
+}

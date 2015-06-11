@@ -1,0 +1,23 @@
+﻿@using Orchard.ContentManagement
+@using Orchard.MediaLibrary.Models
+@{
+    ImagePart imagePart = Model.ContentPart;
+    
+    // do not show the editor if the image is not local
+    if (String.IsNullOrEmpty(imagePart.As<MediaPart>().MediaUrl)) {
+        return;
+    }
+}           
+
+@Html.ActionLink(T("Image Editor").Text, "Index", "Admin", new { id = imagePart.Id, area = "Orchard.ImageEditor" }, new { id="edit-image-link", @class="button"})
+
+<script type="text/javascript">
+    //<![CDATA[
+    // update the returnUrl from javascript to get the main window's location
+    $('#edit-image-link').each(function() {
+        var self = $(this);
+        var returnUrl = self.attr('href') + '?returnUrl=' + encodeURIComponent(window.location);
+        self.attr('href', returnUrl);
+    });
+//]]>
+</script>

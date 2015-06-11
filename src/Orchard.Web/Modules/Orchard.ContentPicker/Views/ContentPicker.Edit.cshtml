@@ -1,0 +1,66 @@
+﻿@using Orchard.ContentManagement
+@using Orchard.Environment.Configuration
+@{
+    Script.Require("ContentPicker").AtFoot();
+    Script.Require("jQueryUI_Sortable").AtFoot();
+    Style.Include("content-picker-admin.css");
+
+    var required = ((bool?)Model.Required) ?? false;
+    var multiple = ((bool?)Model.Multiple) ?? false;
+    var displayName = (string)Model.DisplayName ?? "";
+    var idsFieldId = (string)Model.IdsFieldId ?? "";
+    var selectedItemsFieldName = (string)Model.SelectedItemsFieldName ?? "";
+    var contentItems = (IEnumerable<ContentItem>)Model.ContentItems;
+    var hint = (string) Model.Hint;
+    var partName = Model.PartName;
+    var fieldName = Model.FieldName;
+    var baseUrl = Url.Content("~/") + WorkContext.Resolve<ShellSettings>().RequestUrlPrefix;
+    var types = String.Join(",", (IEnumerable<string>)Model.Types ?? Enumerable.Empty<string>());
+}
+
+<fieldset class="content-picker-field"
+          data-required="@required.ToString().ToLower()"
+          data-multiple="@multiple.ToString().ToLower()"
+          data-selected-items-fieldname="@selectedItemsFieldName"
+          data-base-url="@baseUrl"
+          data-part-name="@HttpUtility.JavaScriptStringEncode(partName)"
+          data-field-name="@HttpUtility.JavaScriptStringEncode(fieldName)"
+          data-remove-text="@T("Remove")"
+          data-not-published-text="@T("Not Published")"
+          data-types="@types">
+    @if (!String.IsNullOrWhiteSpace(displayName)) {
+        <label @if (required) { <text> class="required" </text>  }>@displayName</label>
+    }
+    <div class="message message-Warning content-picker-message">@T("You need to save your changes.")</div>
+    <table class="items content-picker" summary="@displayName">
+        <colgroup>
+            <col id="Col1" style="width:20px" />
+            <col id="Col2" />
+            <col id="Col3" />
+        </colgroup>
+        <thead>
+            <tr>
+                <th scope="col">&nbsp;&darr;</th>
+                <th scope="col">@T("Content Item")</th>
+                <th scope="col">&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var contentItem in contentItems) {
+                <tr>
+                    <td>&nbsp;</td>
+                    <td>
+                        <span data-id="@contentItem.Id" data-fieldid="@idsFieldId" class="content-picker-item">@Html.ItemEditLink(contentItem) @if (!contentItem.HasPublished()){<text> - </text>@T("Not Published")}</span>
+                    </td>
+                    <td>
+                        <span data-id="@contentItem.Id" class="content-picker-remove button grey">@T("Remove")</span>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <span class="button add">@T("Add")</span>
+    <input type="hidden" name="@selectedItemsFieldName" />
+    <span class="hint">@hint</span>
+</fieldset>

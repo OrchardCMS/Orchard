@@ -1,0 +1,10 @@
+﻿@{
+    Style.Include("admin-usertask");
+    IEnumerable<string> actions = Model.Actions;
+}
+
+<fieldset class="usertask-button">
+    @foreach (var action in actions) {
+        <button type="submit" name="submit.Save" value="usertask-@action">@T(action)</button>
+    }
+</fieldset>

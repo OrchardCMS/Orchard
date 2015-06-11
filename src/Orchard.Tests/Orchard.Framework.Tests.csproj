@@ -1,0 +1,399 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{ABC826D4-2FA1-4F2F-87DE-E6095F653810}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Orchard.Tests</RootNamespace>
+    <AssemblyName>Orchard.Framework.Tests</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>..\OrchardBasicCorrectness.ruleset</CodeAnalysisRuleSet>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Autofac, Version=2.1.13.813, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\autofac\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac.Integration.Web, Version=3.0.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\autofac\Autofac.Integration.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Core, Version=3.2.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\castle\net45\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentNHibernate, Version=1.0.0.0, Culture=neutral, PublicKeyToken=8aa435e3cb308880, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\nhibernate\FluentNHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="Iesi.Collections, Version=1.0.1.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\nhibernate\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="IronRuby, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\dlr\IronRuby.dll</HintPath>
+    </Reference>
+    <Reference Include="IronRuby.Libraries">
+      <HintPath>..\..\lib\dlr\IronRuby.Libraries.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\log4net\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Dynamic, Version=1.1.0.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\dlr\Microsoft.Dynamic.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Scripting">
+      <HintPath>..\..\lib\dlr\Microsoft.Scripting.dll</HintPath>
+    </Reference>
+    <Reference Include="Moq, Version=4.0.812.4, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\moq\Moq.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\lib\newtonsoft.json\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate, Version=3.3.1.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\nhibernate\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework, Version=2.5.2.9222, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\nunit\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\..\lib\sqlce\System.Data.SqlServerCe.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Abstractions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\aspnetwebapi\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Routing">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.XML" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Caching\CacheScopeTests.cs" />
+    <Compile Include="Caching\CacheTests.cs" />
+    <Compile Include="Caching\ClockCachingTests.cs" />
+    <Compile Include="Commands\CommandHandlerDescriptorBuilderTests.cs" />
+    <Compile Include="Commands\CommandHandlerTests.cs" />
+    <Compile Include="Commands\CommandManagerTests.cs" />
+    <Compile Include="ContentManagement\ContentHelpers.cs" />
+    <Compile Include="ContentManagement\ContentIdentityTests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ContentManagement\ContentQueryTests.cs" />
+    <Compile Include="ContentManagement\Handlers\LambdaPartHandler.cs" />
+    <Compile Include="ContentManagement\HqlExpressionTests.cs" />
+    <Compile Include="ContentManagement\DynamicContentQueryTests.cs" />
+    <Compile Include="ContentManagement\DefaultContentManagerTests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ContentManagement\Drivers\FieldStorage\FieldStorageProviderSelectorTests.cs" />
+    <Compile Include="ContentManagement\Drivers\FieldStorage\InfosetFieldStorageProviderTests.cs" />
+    <Compile Include="ContentManagement\DynamicContentItemTests.cs" />
+    <Compile Include="ContentManagement\Handlers\ContentHandlerTests.cs" />
+    <Compile Include="ContentManagement\Handlers\DeltaPartHandler.cs" />
+    <Compile Include="ContentManagement\Handlers\EpsilonPartHandler.cs" />
+    <Compile Include="ContentManagement\Handlers\GammaPartHandler.cs" />
+    <Compile Include="ContentManagement\Handlers\ModelBuilderTests.cs" />
+    <Compile Include="ContentManagement\ImportContentSessionTests.cs" />
+    <Compile Include="ContentManagement\InfosetHelperTests.cs" />
+    <Compile Include="ContentManagement\MetaData\Builders\ContentTypeDefinitionBuilderTests.cs" />
+    <Compile Include="ContentManagement\MetaData\Services\ContentDefinitionReaderTests.cs" />
+    <Compile Include="ContentManagement\MetaData\Services\ContentDefinitionWriterTests.cs" />
+    <Compile Include="ContentManagement\Models\AlphaPart.cs" />
+    <Compile Include="ContentManagement\Handlers\AlphaPartHandler.cs" />
+    <Compile Include="ContentManagement\Models\BetaPart.cs" />
+    <Compile Include="ContentManagement\Handlers\BetaPartHandler.cs" />
+    <Compile Include="ContentManagement\Models\LambdaPart.cs" />
+    <Compile Include="ContentManagement\Models\DeltaPart.cs" />
+    <Compile Include="ContentManagement\Models\EpsilonPart.cs" />
+    <Compile Include="ContentManagement\Models\FlavoredPart.cs" />
+    <Compile Include="ContentManagement\Handlers\FlavoredPartHandler.cs" />
+    <Compile Include="ContentManagement\Models\GammaPart.cs" />
+    <Compile Include="ContentManagement\Models\Phi.cs" />
+    <Compile Include="ContentManagement\Models\StyledPart.cs" />
+    <Compile Include="ContentManagement\Models\StyledHandler.cs" />
+    <Compile Include="ContentManagement\Handlers\Coordinators\ContentPartDriverCoordinatorTests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ContentManagement\Records\LambdaRecord.cs" />
+    <Compile Include="ContentManagement\Records\MegaRecord.cs" />
+    <Compile Include="ContentManagement\Records\DeltaRecord.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ContentManagement\Records\EpsilonRecord.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ContentManagement\Records\GammaRecord.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ContentManagement\XmlHelperTests.cs" />
+    <Compile Include="DatabaseEnabledTestsBase.cs" />
+    <Compile Include="DataMigration\SchemaBuilderTests.cs" />
+    <Compile Include="DataMigration\DataMigrationTests.cs" />
+    <Compile Include="DataMigration\Utilities\NullInterpreter.cs" />
+    <Compile Include="DataUtility.cs" />
+    <Compile Include="Data\Builders\SessionFactoryBuilderTests.cs" />
+    <Compile Include="Data\ProviderUtilities.cs" />
+    <Compile Include="Data\RepositoryTests.cs" />
+    <Compile Include="Data\ProvidersTests.cs" />
+    <Compile Include="Data\Bags\SettingsTests.cs" />
+    <Compile Include="Data\StubLocator.cs" />
+    <Compile Include="DisplayManagement\ArgsUtility.cs" />
+    <Compile Include="DisplayManagement\CompositeTests.cs" />
+    <Compile Include="DisplayManagement\Descriptors\LocationParserTests.cs" />
+    <Compile Include="DisplayManagement\NilTests.cs" />
+    <Compile Include="DisplayManagement\ZoneHoldingTests.cs" />
+    <Compile Include="DisplayManagement\DefaultDisplayManagerTests.cs" />
+    <Compile Include="ContainerTestBase.cs" />
+    <Compile Include="DisplayManagement\Descriptors\BasicShapeTemplateHarvesterTests.cs" />
+    <Compile Include="DisplayManagement\Descriptors\StylesheetBindingStrategyTests.cs" />
+    <Compile Include="DisplayManagement\Descriptors\DefaultShapeTableManagerTests.cs" />
+    <Compile Include="DisplayManagement\Descriptors\InMemoryWebSiteFolder.cs" />
+    <Compile Include="DisplayManagement\Descriptors\PlacementFileParserTests.cs" />
+    <Compile Include="DisplayManagement\Descriptors\ShapeAttributeBindingStrategyTests.cs" />
+    <Compile Include="DisplayManagement\ShapeFactoryTests.cs" />
+    <Compile Include="DisplayManagement\SubsystemTests.cs" />
+    <Compile Include="DisplayManagement\ShapeHelperTests.cs" />
+    <Compile Include="Environment\AutofacUtil\AutofacTests.cs" />
+    <Compile Include="Environment\AutofacUtil\DynamicProxy2\DynamicProxyTests.cs" />
+    <Compile Include="Environment\DefaultWorkContextAccessorTests.cs" />
+    <Compile Include="Environment\Extensions\ExtensionLoaderCoordinatorTests.cs" />
+    <Compile Include="Environment\Features\FeatureManagerTests.cs" />
+    <Compile Include="Environment\Loaders\DynamicExtensionLoaderTests.cs" />
+    <Compile Include="Environment\State\DefaultProcessingEngineTests.cs" />
+    <Compile Include="Environment\RunningShellTableTests.cs" />
+    <Compile Include="Environment\StubHostEnvironment.cs" />
+    <Compile Include="Environment\Utility\Build.cs" />
+    <Compile Include="Environment\Warmup\WarmupUtilityTests.cs" />
+    <Compile Include="FileSystems\AppData\AppDataFolderTests.cs" />
+    <Compile Include="Environment\Configuration\DefaultTenantManagerTests.cs" />
+    <Compile Include="Environment\DefaultCompositionStrategyTests.cs" />
+    <Compile Include="Environment\DefaultOrchardHostTests.cs" />
+    <Compile Include="Environment\DefaultOrchardShellTests.cs" />
+    <Compile Include="Environment\OrchardStarterTests.cs" />
+    <Compile Include="Environment\ShellBuilders\DefaultShellContainerFactoryTests.cs" />
+    <Compile Include="Environment\ShellBuilders\DefaultShellContextFactoryTests.cs" />
+    <Compile Include="FileSystems\LockFile\LockFileManagerTests.cs" />
+    <Compile Include="FileSystems\Dependencies\AssemblyProbingFolderTests.cs" />
+    <Compile Include="FileSystems\Dependencies\DependenciesFolderTests.cs" />
+    <Compile Include="FileSystems\VirtualPath\DefaultVirtualPathProviderTests.cs" />
+    <Compile Include="Localization\CurrentCultureWorkContextTests.cs" />
+    <Compile Include="Localization\CultureManagerTests.cs" />
+    <Compile Include="Localization\DateTimePartsTests.cs" />
+    <Compile Include="Localization\DefaultDateLocalizationServicesTests.cs" />
+    <Compile Include="Localization\DefaultDateFormatterTests.cs" />
+    <Compile Include="Stubs\StubCultureSelector.cs" />
+    <Compile Include="Localization\TestHelpers.cs" />
+    <Compile Include="Logging\OrchardFileAppenderTests.cs" />
+    <Compile Include="Messaging\MessagingChannelStub.cs" />
+    <Compile Include="Mvc\Html\HtmlHelperExtensionsTests.cs" />
+    <Compile Include="Mvc\Routes\ShellRouteTests.cs" />
+    <Compile Include="Mvc\Routes\UrlPrefixTests.cs" />
+    <Compile Include="Records\BigRecord.cs" />
+    <Compile Include="Security\DefaultEncryptionServiceTests.cs" />
+    <Compile Include="Services\JsonConverterTests.cs" />
+    <Compile Include="Storage\FileSystemStorageProviderTests.cs" />
+    <Compile Include="Stubs\InMemoryWebSiteFolder.cs" />
+    <Compile Include="Stubs\StubHttpContextAccessor.cs" />
+    <Compile Include="Stubs\StubWorkContextAccessor.cs" />
+    <Compile Include="Stubs\StubExtensionManager.cs" />
+    <Compile Include="Stubs\StubReportsCoordinator.cs" />
+    <Compile Include="Stubs\StubVirtualPathProvider.cs" />
+    <Compile Include="Stubs\StubFileSystem.cs" />
+    <Compile Include="Stubs\StubAppDataFolder.cs" />
+    <Compile Include="Stubs\StubVirtualPathMonitor.cs" />
+    <Compile Include="Stubs\StubCacheManager.cs" />
+    <Compile Include="Stubs\StubWebSiteFolder.cs" />
+    <Compile Include="Time\TimeZoneSelectorTests.cs" />
+    <Compile Include="UI\Resources\ResourceManagerTests.cs" />
+    <Compile Include="UI\ShapeTests.cs" />
+    <Compile Include="Utility\ContainerExtensions.cs" />
+    <Compile Include="Environment\TestDependencies\TestDependency.cs" />
+    <Compile Include="Environment\Blueprint\DefaultShellDescriptorCacheTests.cs" />
+    <Compile Include="EventsTests.cs" />
+    <Compile Include="Events\EventTests.cs" />
+    <Compile Include="Environment\Extensions\ExtensionFoldersTests.cs" />
+    <Compile Include="Environment\Extensions\ExtensionManagerTests.cs" />
+    <Compile Include="Environment\Extensions\ExtensionTypes\StubTypes.cs" />
+    <Compile Include="Localization\NullLocalizerTests.cs" />
+    <Compile Include="Logging\LoggingModuleTests.cs" />
+    <Compile Include="Mvc\OrchardControllerFactoryTests.cs" />
+    <Compile Include="Mvc\RouteCollectionPublisherTests.cs" />
+    <Compile Include="Mvc\Routes\StandardExtensionRouteProviderTests.cs" />
+    <Compile Include="Tasks\SweepGeneratorTests.cs" />
+    <Compile Include="UI\Admin\AdminAuthorizationFilterTests.cs" />
+    <Compile Include="UI\Admin\AdminThemeSelectorTests.cs" />
+    <Compile Include="UI\Navigation\MenuFilterTests.cs" />
+    <Compile Include="UI\Notify\NotifierTests.cs" />
+    <Compile Include="UI\Notify\NotifyFilterTests.cs" />
+    <Compile Include="Services\ClockTests.cs" />
+    <Compile Include="Stubs\StubClock.cs" />
+    <Compile Include="Stubs\StubContainerProvider.cs" />
+    <Compile Include="FakeTests.cs" />
+    <Compile Include="FluentDbTests.cs" />
+    <Compile Include="LinqToNHibernateTests.cs" />
+    <Compile Include="Records\BarRecord.cs" />
+    <Compile Include="Records\FooRecord.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Stubs\StubHttpContext.cs" />
+    <Compile Include="UI\Navigation\MenuItemComparerTests.cs" />
+    <Compile Include="UI\Navigation\NavigationManagerTests.cs" />
+    <Compile Include="UI\Navigation\PositionComparerTests.cs" />
+    <Compile Include="Utility\Extensions\HttpRequestExtensionsTests.cs" />
+    <Compile Include="Utility\Extensions\RouteValueDictionaryExtensionsTests.cs" />
+    <Compile Include="Utility\Extensions\StringExtensionsTests.cs" />
+    <Compile Include="Utility\ReflectOnTests.cs" />
+    <Compile Include="Utility\ReflectTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Orchard.Web\Core\Orchard.Core.csproj">
+      <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
+      <Name>Orchard.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard\Orchard.Framework.csproj">
+      <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
+      <Name>Orchard.Framework</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Environment\Extensions\FoldersData\Sample1\Module.txt" />
+    <EmbeddedResource Include="Environment\Extensions\FoldersData\Sample2\Two.txt" />
+    <EmbeddedResource Include="Environment\Extensions\FoldersData\Sample3\Module.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Environment\Extensions\FoldersData\Sample4\Module.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Environment\Extensions\FoldersData\Sample5\Module.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Environment\Extensions\FoldersData\Sample6\Module.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Environment\Extensions\FoldersData\Sample7\Module.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  -->
+  <Target Name="CopySqlCeBinaries">
+    <ItemGroup>
+      <SqlCeBinariesx86 Include="$(ProjectDir)..\..\lib\sqlce\x86\**\*" />
+      <SqlCeBinariesx64 Include="$(ProjectDir)..\..\lib\sqlce\amd64\**\*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(SqlCeBinariesx86)" DestinationFolder="$(OutputPath)\x86\%(RecursiveDir)" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(SqlCeBinariesx64)" DestinationFolder="$(OutputPath)\amd64\%(RecursiveDir)" SkipUnchangedFiles="true" />
+  </Target>
+  <Target Name="AfterBuild">
+    <CallTarget Targets="CopySqlCeBinaries" />
+  </Target>
+</Project>

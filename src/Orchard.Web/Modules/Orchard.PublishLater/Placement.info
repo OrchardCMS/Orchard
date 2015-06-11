@@ -1,0 +1,15 @@
+﻿<Placement>
+    <!-- available display shapes -->
+    <!--
+    Parts_PublishLater_Metadata
+    Parts_PublishLater_Metadata_Summary
+    Parts_PublishLater_Metadata_SummaryAdmin
+    -->
+    <!-- edit shape just get default placement -->
+    <!-- edit "shape" -->
+    <Place Parts_PublishLater_Edit="Sidebar:25"/><!-- immediately following the contents module's Publish Now button -->
+    <!-- default positioning -->
+    <Match DisplayType="SummaryAdmin">
+        <Place Parts_PublishLater_Metadata_SummaryAdmin="Meta:1"/>
+    </Match>
+</Placement>

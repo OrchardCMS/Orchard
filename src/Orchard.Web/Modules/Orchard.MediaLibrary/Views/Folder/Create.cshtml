@@ -1,0 +1,30 @@
+﻿@model Orchard.MediaLibrary.ViewModels.MediaManagerFolderCreateViewModel
+@{
+    Layout.Title = T("Add a Folder").ToString();
+}
+
+<div class="breadCrumbs">
+    <p>@Html.ActionLink(T("Media Library").ToString(), "Index", "Admin", new { area = "Orchard.MediaLibrary" }, new {}) &#62; 
+    @if (Model.FolderPath != null) {
+        foreach (var folder in Model.FolderPath.Split('/')) {
+             if (!String.IsNullOrEmpty(folder)) {
+                 @Html.ActionLink(folder, "Edit", new {folderPath = folder})
+                 <text>&#62;</text>
+             }
+         }
+    }
+    @T("Add a Folder") </p>
+</div> 
+
+@using (Html.BeginFormAntiForgeryPost()) { 
+    @Html.ValidationSummary()
+    <fieldset>
+        <label for="Name">@T("Folder Name")</label>
+        <input id="Name" class="text medium" name="Name" type="text" autofocus="autofocus"/>
+        @Html.HiddenFor(m => m.FolderPath)
+    </fieldset>
+    <fieldset>
+        <button class="primaryAction" type="submit">@T("Save")</button>
+        @Html.ActionLink(T("Cancel").ToString(), "Index", "Admin", new { area = "Orchard.MediaLibrary", folderPath = Model.FolderPath }, new { @class= "button"})
+    </fieldset>
+ }

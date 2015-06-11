@@ -1,0 +1,19 @@
+﻿@model Orchard.Taxonomies.Settings.TermPartSettings
+<fieldset>
+    <label for="@Html.FieldIdFor(m => m.ChildDisplayType)">@T("Child display type")</label>
+    @Html.TextBoxFor(m => m.ChildDisplayType, new { @class = "text medium" })
+    <span class="hint">@T("The display type to apply to child items when displaying the details of this taxonomy term.")</span>
+    @Html.ValidationMessageFor(m => m.ChildDisplayType)
+</fieldset>
+<fieldset>
+    <label>@T("Pagination")</label>
+    <div class="content">
+        @Html.CheckBoxFor(m => m.OverrideDefaultPagination)
+        <label class="forcheckbox" for="@Html.FieldIdFor(m => m.OverrideDefaultPagination)">@T("Override the default page size")</label>
+    </div>
+    <div data-controllerid="@Html.FieldIdFor(m => m.OverrideDefaultPagination)">
+        <label for="@Html.FieldIdFor(m => m.PageSize)">@T("Number of items per page")</label>
+        @Html.TextBoxFor(m => m.PageSize, new { @class = "text small" })
+        <span class="hint">@T("Determines the number of items that are shown per page.")</span>
+    </div>
+</fieldset>

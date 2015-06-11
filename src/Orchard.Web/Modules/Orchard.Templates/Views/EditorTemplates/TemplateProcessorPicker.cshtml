@@ -1,0 +1,7 @@
+﻿@using Orchard.Templates.Services
+@{
+    var processors = (IList<ITemplateProcessor>)ViewBag.AvailableProcessors;
+    var currentValue = ViewData.TemplateInfo.FormattedModelValue as string;
+    var options = processors.Select(x => new SelectListItem() {Text = x.Type, Value = x.Type, Selected = x.Type == currentValue});
+}
+@Html.DropDownList("", options)

@@ -1,0 +1,19 @@
+﻿.site-cultures {
+    font-size:1.4em;
+    line-height:1.8em;
+    overflow:auto;
+}
+.site-cultures li {
+    clear:left;
+    float:left;
+    overflow:auto;
+    padding:1px 6px;
+    margin:0 0 0 1em;
+}
+.site-cultures li:hover {
+    background:#EAEAEA;
+}
+.site-cultures div {
+    float:left;
+    width:8em;
+}

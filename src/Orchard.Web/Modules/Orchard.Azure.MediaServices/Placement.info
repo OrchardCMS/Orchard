@@ -1,0 +1,24 @@
+﻿<Placement>
+
+  <Match DisplayType="Raw">
+    <Place Parts_CloudVideo_Raw="Content" />
+  </Match>
+
+  <Place Parts_CloudVideo_Edit="Content:2" />
+  <Place CloudVideo_Edit_UnpublishButton="Sidebar:24" />
+
+  <Match DisplayType="Summary">
+    <Place Parts_CloudVideo_Summary="Content:5" />
+  </Match>
+
+  <Match DisplayType="SummaryAdmin" ContentPart="CloudVideoPart">
+    <Place Parts_CloudVideo_Metadata="Meta:6"
+           Parts_CloudVideo_SummaryAdmin="Header"
+           Parts_PublishLater_Metadata_SummaryAdmin="-"/>
+  </Match>
+
+  <Match DisplayType="Detail">
+    <Place Parts_CloudVideo="Content:5" />
+  </Match>
+
+</Placement>

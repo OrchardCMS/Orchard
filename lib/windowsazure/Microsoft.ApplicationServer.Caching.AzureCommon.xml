@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>Microsoft.ApplicationServer.Caching.AzureCommon</name>
+  </assembly>
+  <members>
+    <member name="T:Microsoft.ApplicationServer.Caching.AzureCommon.CacheDiagnostics">
+      <summary>Used to configure cache diagnostics.</summary>
+    </member>
+    <member name="M:Microsoft.ApplicationServer.Caching.AzureCommon.CacheDiagnostics.ConfigureDiagnostics(Microsoft.WindowsAzure.Diagnostics.DiagnosticMonitorConfiguration)">
+      <summary>Configures cache diagnostics using the specified diagnostic monitor configuration. This uses the diagnostic configuration setting to update any dynamic changes.</summary>
+      <returns>Returns <see cref="T:Microsoft.WindowsAzure.Diagnostics.DiagnosticMonitorConfiguration" />.</returns>
+      <param name="diagnosticMonitorConfig">DiagnosticMonitorConfiguration object used to start the diagnostic service.</param>
+    </member>
+    <member name="M:Microsoft.ApplicationServer.Caching.AzureCommon.CacheDiagnostics.ConfigureDiagnostics(System.String,Microsoft.WindowsAzure.Diagnostics.DiagnosticMonitorConfiguration)">
+      <summary>Configures cache diagnostics using the specified diagnostic monitor configuration. This uses the diagnostic configuration setting to update any dynamic changes.</summary>
+      <returns>Returns <see cref="T:Microsoft.WindowsAzure.Diagnostics.DiagnosticMonitorConfiguration" />.</returns>
+      <param name="diagnosticsStorageAccountConfigurationSettingName">Connection string to the storage account that stores the diagnostic monitor configuration in the wad-control-container blob.</param>
+      <param name="diagnosticMonitorConfig">DiagnosticMonitorConfiguration object used to start the diagnostic service.</param>
+    </member>
+    <member name="M:Microsoft.ApplicationServer.Caching.AzureCommon.CacheDiagnostics.ConfigureMemcacheShimCrashDumps(Microsoft.WindowsAzure.Diagnostics.DiagnosticMonitorConfiguration)">
+      <summary>Configures memcache shim diagnostics using the specified diagnostic monitor configuration.</summary>
+      <returns>Returns <see cref="T:Microsoft.WindowsAzure.Diagnostics.DiagnosticMonitorConfiguration" />.</returns>
+      <param name="diagnosticMonitorConfig">DiagnosticMonitorConfiguration object used to start the diagnostic service.</param>
+    </member>
+  </members>
+</doc>

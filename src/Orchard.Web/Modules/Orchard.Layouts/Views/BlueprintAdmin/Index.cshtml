@@ -1,0 +1,43 @@
+﻿@model Orchard.Layouts.ViewModels.BlueprintsIndexViewModel
+@{
+    Layout.Title = T("Elements");
+}
+<div class="manage">
+    @Html.ActionLink(T("Create").Text, "Create", "BlueprintAdmin", new { area = "Orchard.Layouts" }, new { @class = "button primaryAction" })
+</div>
+@using (Html.BeginFormAntiForgeryPost()) {
+    <fieldset class="bulk-actions">
+        <label for="publishActions">@T("Actions:")</label>
+        <select id="publishActions" name="Options.BulkAction">
+            @Html.SelectOption("", false, T("Choose action...").ToString())
+            @Html.SelectOption("Delete", false, T("Delete").ToString())
+        </select>
+        <button type="submit" name="submit.BulkEdit" value="yes">@T("Apply")</button>
+    </fieldset>
+    <table class="items">
+        <thead>
+            <tr>
+                <th><input type="checkbox" class="check-all" /></th>
+                <th>@T("Display Name")</th>
+                <th>@T("Name")</th>
+                <th>@T("Base Element")</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var blueprint in Model.Blueprints) {
+                <tr>
+                    <td><input type="checkbox" value="@blueprint.Id" name="blueprintIds" /></td>
+                    <td>@blueprint.ElementDisplayName</td>
+                    <td>@blueprint.ElementTypeName</td>
+                    <td>@blueprint.BaseElementTypeName</td>
+                    <td>
+                        @Html.ActionLink(T("Edit").Text, "Edit", "BlueprintAdmin", new { id = blueprint.Id, area = "Orchard.Layouts" }, null) @T(" | ")
+                        @Html.ActionLink(T("Properties").Text, "Properties", "BlueprintAdmin", new { id = blueprint.Id, area = "Orchard.Layouts" }, null) @T(" | ")
+                        @Html.ActionLink(T("Remove").Text, "Delete", "BlueprintAdmin", new { id = blueprint.Id, area = "Orchard.Layouts" }, new { itemprop = "RemoveUrl UnsafeUrl" })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

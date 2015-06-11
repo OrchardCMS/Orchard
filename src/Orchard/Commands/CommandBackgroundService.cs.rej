@@ -1,0 +1,11 @@
+--- CommandBackgroundService.cs
++++ CommandBackgroundService.cs
+@@ -1,7 +1,7 @@
+ using Orchard.Tasks;
+ 
+ namespace Orchard.Commands {
+-    public class CommandBackgroundService : IBackgroundService {
++    class CommandBackgroundService : IBackgroundService {
+         public void Sweep() {
+             // Don't run any background service in command line
+         }

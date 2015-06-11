@@ -1,0 +1,73 @@
+﻿@model SpamFilterPartSettings
+@using Orchard.AntiSpam.Settings;
+
+@Display.TokenHint()
+
+<fieldset>
+    <label>@T("When should items for this content type be categorized as Spam ?")</label>
+    <div>
+        <input type="radio" name="@Html.FieldNameFor(m => m.Action)" id="radio-1" value="@SpamFilterAction.One" @if (Model.Action == SpamFilterAction.One) { <text>checked="checked"</text> } />
+        <label for="radio-1" class="forcheckbox">@T("At least one filter reports spam")</label>
+    </div>
+    <div>
+        <input type="radio" name="@Html.FieldNameFor(m => m.Action)" id="radio-2" value="@SpamFilterAction.AllOrNothing" @if (Model.Action == SpamFilterAction.AllOrNothing) { <text>checked="checked"</text> } />
+        <label for="radio-2" class="forcheckbox">@T("All filters report spam")</label>
+    </div>
+</fieldset>
+
+<fieldset>
+    <div>
+        @Html.EditorFor(m => m.DeleteSpam)
+        <label class="forcheckbox" for="@Html.FieldIdFor(m => m.DeleteSpam)">@T("Delete spam when found")</label>
+        <span class="hint">@T("Enable to have spam automatically deleted when found. You won't be able to find false positive.")</span>
+    </div>
+</fieldset>
+
+<fieldset>
+    <label for="@Html.FieldIdFor(m => m.UrlPattern)">@T("Url")</label>
+    <div>
+        @Html.TextBoxFor(m => m.UrlPattern, new { @class = "text large tokenized" })
+        <span class="hint">@T("The front page or home URL of the instance making the request. For a blog or wiki this would be the front page. Note: Must be a full URI, including http://.")</span>
+    </div>
+</fieldset>
+
+
+<fieldset>
+    <label for="@Html.FieldIdFor(m => m.PermalinkPattern)">@T("Permalink")</label>
+    <div>
+        @Html.TextBoxFor(m => m.PermalinkPattern, new { @class = "text large tokenized" })
+        <span class="hint">@T("The permanent location of the entry the content item was submitted to.")</span>
+    </div>
+</fieldset>
+
+<fieldset>
+    <label for="@Html.FieldIdFor(m => m.CommentAuthorPattern)">@T("Author")</label>
+    <div>
+        @Html.TextBoxFor(m => m.CommentAuthorPattern, new { @class = "text large tokenized" })
+        <span class="hint">@T("Name submitted with the content item.")</span>
+    </div>
+</fieldset>
+
+<fieldset>
+    <label for="@Html.FieldIdFor(m => m.CommentAuthorEmailPattern)">@T("Author's email")</label>
+    <div>
+        @Html.TextBoxFor(m => m.CommentAuthorEmailPattern, new { @class = "text large tokenized" })
+        <span class="hint">@T("Email address submitted with the content item.")</span>
+    </div>
+</fieldset>
+
+<fieldset>
+    <label for="@Html.FieldIdFor(m => m.CommentAuthorUrlPattern)">@T("Author's url")</label>
+    <div>
+        @Html.TextBoxFor(m => m.CommentAuthorUrlPattern, new { @class = "text large tokenized" })
+        <span class="hint">@T("URL submitted with the content item.")</span>
+    </div>
+</fieldset>
+
+<fieldset>
+    <label for="@Html.FieldIdFor(m => m.CommentContentPattern)">@T("Comment content")</label>
+    <div>
+        @Html.TextBoxFor(m => m.CommentContentPattern, new { @class = "text large tokenized" })
+        <span class="hint">@T("The content that was submitted.")</span>
+    </div>
+</fieldset>

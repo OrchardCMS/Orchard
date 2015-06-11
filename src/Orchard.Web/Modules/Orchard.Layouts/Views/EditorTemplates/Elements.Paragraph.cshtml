@@ -1,0 +1,9 @@
+﻿@model Orchard.Layouts.ViewModels.ParagraphEditorViewModel
+@{
+    Script.Include("AutoFocus.js");
+}
+<fieldset class="autofocus">
+    @Html.LabelFor(m => m.Text, T("Body"))
+    @Html.TextAreaFor(m => m.Text, 25, 80, new { @class = "text large tokenized", autofocus = "autofocus" })
+    @Html.Hint(T("Note: HTML markup will be rendered unencoded."))
+</fieldset>

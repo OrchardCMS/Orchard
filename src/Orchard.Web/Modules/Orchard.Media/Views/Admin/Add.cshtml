@@ -1,0 +1,56 @@
+﻿@model Orchard.Media.ViewModels.MediaItemAddViewModel
+@using Orchard.Media.Helpers;
+@using Orchard.Media.Models;
+@{
+    Style.Require("MediaAdmin");
+
+    Layout.Title = T("Add Media").ToString();
+}
+
+<div class="breadCrumbs">
+<p>@Html.ActionLink(T("Media Folders").ToString(), "Index") &#62; 
+    @foreach (FolderNavigation navigation in MediaHelpers.GetFolderNavigationHierarchy(Model.MediaPath)) { 
+        @Html.ActionLink(navigation.FolderName, "Edit", new {name = navigation.FolderName, mediaPath = navigation.FolderPath}) <text>&#62;</text>
+     } 
+    @T("Add Media")</p>
+</div>
+
+@using (Html.BeginForm("Add", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" })) { 
+    @Html.ValidationSummary()
+    <fieldset>
+        <label for="pageTitle">@T("File Path <span> - multiple files must be in a zipped folder</span>")</label>
+        <input id="MediaItemPath" name="MediaItemPath" type="file" value="@T("Browse")" size="64"/>
+
+        @Html.LabelFor(m => m.ExtractZip, T("Extract Zip"))
+        @Html.CheckBoxFor(m => m.ExtractZip)
+
+        <span class="hint">@T("After your files have been uploaded, you can edit the titles and descriptions.")</span>
+        <input type="hidden" id="FolderName" name="FolderName" value="@Model.FolderName" />
+        <input type="hidden" id="MediaPath" name="MediaPath" value="@Model.MediaPath" />
+    </fieldset>
+    <fieldset>
+        <button class="primaryAction" type="submit">@T("Upload")</button>
+        @Html.AntiForgeryTokenOrchard()
+    </fieldset>
+}
+
+@using(Script.Foot()) {
+<script type="text/javascript">
+//<![CDATA[
+    $(function () {
+        $('#MediaItemPath').change(function () {
+            var $in = $(this);
+            var allowedExtensions = ' @Model.AllowedExtensions ';
+            var filename = $in.val();
+            var ext = filename.slice(filename.lastIndexOf(".")).toLowerCase();
+            var allowed = allowedExtensions == '  ' || allowedExtensions.indexOf(ext) != -1;
+
+            if(!allowed) {
+                $('#messages>div').append($('<div class="message message-Error">@T("Can't upload file. Supported file types are {0}.", Model.AllowedExtensions).Text</div>'));
+                return false;
+            }
+        });
+    })
+//]]>
+</script>
+}

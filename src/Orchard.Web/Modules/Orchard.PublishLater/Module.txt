@@ -1,0 +1,11 @@
+﻿Name: Publish Later
+Path: PublishLater
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardproject.net
+Version: 1.9.0
+OrchardVersion: 1.9
+Description: The PublishLater module introduces draft creation and scheduled publishing functionality.
+FeatureDescription: Draft creation and scheduled publishing.
+Category: Content
+Dependencies: Common, Scheduling

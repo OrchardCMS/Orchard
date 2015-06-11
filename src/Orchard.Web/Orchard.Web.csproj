@@ -1,0 +1,283 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{50B779EA-EC00-4699-84C0-03B395C365D2}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Orchard.Web</RootNamespace>
+    <AssemblyName>Orchard.Web</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort>44300</IISExpressSSLPort>
+    <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
+    <IISExpressWindowsAuthentication>disabled</IISExpressWindowsAuthentication>
+    <IISExpressUseClassicPipelineMode>false</IISExpressUseClassicPipelineMode>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>..\OrchardBasicCorrectness.ruleset</CodeAnalysisRuleSet>
+    <FilesToIncludeForPublish>AllFilesInProjectFolder</FilesToIncludeForPublish>
+    <PackageAsSingleFile>false</PackageAsSingleFile>
+    <ExcludeGeneratedDebugSymbol>false</ExcludeGeneratedDebugSymbol>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <FilesToIncludeForPublish>AllFilesInProjectFolder</FilesToIncludeForPublish>
+    <PackageAsSingleFile>false</PackageAsSingleFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Autofac, Version=2.6.3.862, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\autofac\Autofac.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb">
+      <HintPath>..\..\lib\owin\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\lib\aspnetmvc\Microsoft.Web.Infrastructure.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\lib\newtonsoft.json\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MySql.Data, Version=6.5.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\mysql\MySql.Data.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NuGet.Core, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\lib\nuget\NuGet.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.ComponentModel.DataAnnotations">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\..\lib\sqlce\System.Data.SqlServerCe.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\aspnetmvc\System.Web.Helpers.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\aspnetmvc\System.Web.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\aspnetmvc\System.Web.WebPages.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\aspnetmvc\System.Web.WebPages.Deployment.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\aspnetmvc\System.Web.WebPages.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Web.Mobile" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Global.asax" />
+    <Content Include="Refresh.html" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Orchard.WarmupStarter\Orchard.WarmupStarter.csproj">
+      <Project>{5C0D5249-AEF5-4BB6-8F5F-057B91AC2D7A}</Project>
+      <Name>Orchard.WarmupStarter</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard\Orchard.Framework.csproj">
+      <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
+      <Name>Orchard.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tools\Orchard\Orchard.csproj">
+      <Project>{33B1BC8D-E292-4972-A363-22056B207156}</Project>
+      <Name>Orchard</Name>
+    </ProjectReference>
+    <ProjectReference Include="Core\Orchard.Core.csproj">
+      <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
+      <Name>Orchard.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Config\Host.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Config\Sites.config" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ItemGroup>
+    <WebConfigsToTransform Include="Config\log4net.config">
+      <DestinationRelativePath>Config\log4net.config</DestinationRelativePath>
+      <Exclude>False</Exclude>
+      <TransformFileFolder>$(TransformWebConfigIntermediateLocation)\original</TransformFileFolder>
+      <TransformFile>Config\log4net.$(Configuration).config</TransformFile>
+      <TransformOriginalFolder>$(TransformWebConfigIntermediateLocation)\original</TransformOriginalFolder>
+      <TransformOriginalFile>$(TransformWebConfigIntermediateLocation)\original\%(DestinationRelativePath)</TransformOriginalFile>
+      <TransformOutputFile>$(TransformWebConfigIntermediateLocation)\transformed\%(DestinationRelativePath)</TransformOutputFile>
+      <TransformScope>$(_PackageTempDir)\%(DestinationRelativePath)</TransformScope>
+      <SubType>Designer</SubType>
+    </WebConfigsToTransform>
+    <None Include="Config\log4net.Debug.config">
+      <DependentUpon>log4net.config</DependentUpon>
+    </None>
+    <None Include="Config\log4net.Release.config">
+      <DependentUpon>log4net.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <WebConfigsToTransform Include="Config\HostComponents.config">
+      <DestinationRelativePath>Config\HostComponents.config</DestinationRelativePath>
+      <Exclude>False</Exclude>
+      <TransformFileFolder>$(TransformWebConfigIntermediateLocation)\original</TransformFileFolder>
+      <TransformFile>Config\HostComponents.$(Configuration).config</TransformFile>
+      <TransformOriginalFolder>$(TransformWebConfigIntermediateLocation)\original</TransformOriginalFolder>
+      <TransformOriginalFile>$(TransformWebConfigIntermediateLocation)\original\%(DestinationRelativePath)</TransformOriginalFile>
+      <TransformOutputFile>$(TransformWebConfigIntermediateLocation)\transformed\%(DestinationRelativePath)</TransformOutputFile>
+      <TransformScope>$(_PackageTempDir)\%(DestinationRelativePath)</TransformScope>
+      <SubType>Designer</SubType>
+    </WebConfigsToTransform>
+    <None Include="Config\HostComponents.Debug.config">
+      <DependentUpon>HostComponents.config</DependentUpon>
+    </None>
+    <None Include="Config\HostComponents.Release.config">
+      <DependentUpon>HostComponents.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+  </ItemGroup>
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>False</AutoAssignPort>
+          <DevelopmentServerPort>30321</DevelopmentServerPort>
+          <DevelopmentServerVPath>/OrchardLocal</DevelopmentServerVPath>
+          <IISUrl>http://localhost:30322/OrchardLocal</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+		 Other similar extension points exist, see Microsoft.Common.targets.
+	<Target Name="BeforeBuild">
+	</Target> -->
+  <Target Name="ExcludeRootBinariesDeployment">
+    <ItemGroup>
+      <RootBinFiles Include="bin\*">
+        <InProject>false</InProject>
+      </RootBinFiles>
+    </ItemGroup>
+    <PropertyGroup>
+      <ExcludeFilesFromDeployment>@(RootBinFiles->'Modules\**\bin\%(Filename)%(Extension)');@(RootBinFiles->'Themes\**\%(Filename)%(Extension)');@(RootBinFiles->'Core\**\bin\%(Filename)%(Extension)');**\*.Debug.config;**\*.Release.config;**\obj\**;**\bin\*.xml;**\*.cs;**\*.csproj;Modules\**\Tests\**;Modules\**\Specs\**;Themes\bin\**;**\.hgignore;**\.hgtags;**\.hg\**;**\.gitignore;**\.git\**;**\*.csproj.user;Properties\**\*;App_Data\Dependencies\*;App_Data\RecipeQueue\*;App_Data\Logs\*;App_Data\**\mappings.bin;App_Data\**\cache.dat;App_Data\**\hrestart.txt</ExcludeFilesFromDeployment>
+    </PropertyGroup>
+  </Target>
+  <Target Name="ExcludeRootBinariesPackage" DependsOnTargets="ExcludeRootBinariesDeployment" BeforeTargets="ExcludeFilesFromPackage">
+    <ItemGroup>
+      <ExcludeFromPackageFiles Include="$(ExcludeFilesFromDeployment)" />
+    </ItemGroup>
+  </Target>
+  <Target Name="CopySqlCeBinaries">
+    <ItemGroup>
+      <SqlCeBinariesx86 Include="$(ProjectDir)..\..\lib\sqlce\x86\**\*" />
+      <SqlCeBinariesx64 Include="$(ProjectDir)..\..\lib\sqlce\amd64\**\*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(SqlCeBinariesx86)" DestinationFolder="$(OutputPath)\x86\%(RecursiveDir)" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(SqlCeBinariesx64)" DestinationFolder="$(OutputPath)\amd64\%(RecursiveDir)" SkipUnchangedFiles="true" />
+  </Target>
+  <Target Name="AfterBuild" DependsOnTargets="MvcBuildViews">
+    <PropertyGroup>
+      <AreasManifestDir>$(ProjectDir)\..\Manifests</AreasManifestDir>
+    </PropertyGroup>
+    <CallTarget Targets="ExcludeRootBinariesDeployment" />
+    <CallTarget Targets="CopySqlCeBinaries" />
+    <!-- If this is an area child project, uncomment the following line:
+		<CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Child" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" />
+		-->
+    <!-- If this is an area parent project, uncomment the following lines:
+		<CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Parent" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" />
+		<CopyAreaManifests ManifestPath="$(AreasManifestDir)" CrossCopy="false" RenameViews="true" />
+		-->
+  </Target>
+</Project>

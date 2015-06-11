@@ -1,0 +1,120 @@
+﻿@model Orchard.MediaLibrary.ViewModels.MediaManagerIndexViewModel
+
+@{
+    var viewModel = Model;
+
+    Script.Require("ShapesBase").AtFoot();
+    Style.Require("MediaManagerAdmin");
+    Script.Require("jQuery").AtFoot();
+    Script.Require("jQueryUI_Droppable").AtFoot();
+    Script.Include("knockout-2.3.0.js").AtFoot();
+    Script.Include("history.js").AtFoot();
+    Script.Include("media-library.js").AtFoot();
+    Style.Require("FontAwesome");
+
+    Layout.Title = T("Media Library");
+}
+
+<div id="media-library" data-draft-text="@T("Draft")">
+    <div id="media-library-toolbar">
+        <a href="#" data-bind="visible: displayed(), click: importMedia" class="button" id="button-import">@T("Import")</a>
+        <a href="#" data-bind="visible: displayed(), attr: { href: '@HttpUtility.JavaScriptStringEncode(Url.Action("Edit", "Folder", new { area = "Orchard.MediaLibrary"}))?folderPath=' + encodeURIComponent(displayed()) }" class="button"  id="button-edit-folder">@T("Edit Folder")</a>
+        <a href="#" data-bind="attr: { href: '@HttpUtility.JavaScriptStringEncode(Url.Action("Create", "Folder", new { area = "Orchard.MediaLibrary"}))?folderPath=' + encodeURIComponent(displayed() ? displayed() : '') }" class="button"  id="button-create-folder">@T("Create Folder")</a>
+        
+        @Display(Model.CustomActionsShapes)
+    </div>
+    <div id="media-library-main">
+        <div id="media-library-main-navigation">
+            <ul>
+                    
+                @Display(Model.CustomNavigationShapes)
+
+                <li id="media-library-main-navigation-tree">
+                    <ul data-bind="template: { name: 'media-folder-template', foreach: mediaFolders, afterRender: afterRenderMediaFolderTemplate}">
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <div id="media-library-main-list-wrapper">
+            <div id="media-library-main-list" data-bind="event: { scroll: scrolled }, css: { pending: pendingRequest() }">
+                <ul data-bind="foreach: results">
+                    <li data-bind="css: cssClass">
+                        <div class="thumbnail" data-bind="html: data.thumbnail">
+                        </div>
+                        <div class="media-library-main-list-overlay">
+                            <p class="title" data-bind="text: data.title"></p>
+                            <p class="publication-status" data-bind="text: publicationStatus"></p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div id="media-library-main-editor">
+            <div id="media-library-main-editor-focus" data-bind="with: focus">
+                <h1>@T("PROPERTIES")</h1>
+                <div class="summary" data-bind="html: summary">
+                    
+                </div>
+            </div>
+            <article>
+                <header>
+                    <div id="media-library-main-selection" data-bind="visible: selection().length > 0">
+                        <h1>@T("SELECTION")</h1>
+                        <ul data-bind="foreach: selection">
+                            <li data-bind="css: cssClass">
+                                <div class="thumbnail selection" data-bind="html: data.thumbnail, click: $parent.focus">
+                                </div>
+                            </li>
+                        </ul>
+                        <div id="media-library-main-selection-actions">
+                            <button id="delete-selection-button">@T("Delete")</button>
+                            <button id="clone-selection-button" data-bind="visible: selection().length == 1">@T("Clone")</button>
+                        </div>
+                    </div>
+                </header>
+                <footer>
+                    <div id="media-library-main-selection-select">
+                        <button class="button-select" data-bind="visible: selection().length > 0">@T("Select")</button>
+                        <button class="button-cancel">@T("Cancel")</button>
+                    </div>
+                </footer>
+            </article>
+        </div>
+    </div>
+</div>
+
+
+@using (Script.Foot()) {
+<script type="text/javascript">
+//<![CDATA[
+var mediaLibrarySettings = {
+    mediaItemActionUrl: '@HttpUtility.JavaScriptStringEncode(Url.Action("MediaItem", "Admin"))',
+    mediaItemsActionUrl: '@HttpUtility.JavaScriptStringEncode(Url.Action("MediaItems", "Admin"))',
+    recentMediaItemsActionUrl: '@HttpUtility.JavaScriptStringEncode(Url.Action("RecentMediaItems", "Admin"))',
+    childFolderListingActionUrl: '@HttpUtility.JavaScriptStringEncode(Url.Action("ChildFolders", "Admin"))',
+    importActionUrl: '@HttpUtility.JavaScriptStringEncode(Url.Action("Import", "Admin"))',
+    moveActionUrl: '@Url.Action("Move", "Folder", new {area = "Orchard.MediaLibrary"})',
+    deleteActionUrl: '@Url.Action("Delete", "Admin", new {area = "Orchard.MediaLibrary"})',
+    cloneActionUrl: '@Url.Action("Clone", "Admin", new {area = "Orchard.MediaLibrary"})',
+    hasFolderPath: @(viewModel.FolderPath != null ? "true" : "false"),
+    folderPath: '@HttpUtility.JavaScriptStringEncode(viewModel.FolderPath)',
+    deleteConfirmationMessage: '@HttpUtility.JavaScriptStringEncode(T("Are you sure you want to delete these media items ?").Text)',
+    cloneConfirmationMessage: '@HttpUtility.JavaScriptStringEncode(T("Are you sure you want to clone this media item ?").Text)',
+    errorMessage: '@HttpUtility.JavaScriptStringEncode(T("An unexpected error occured, please refresh the page and try again.").Text)',
+    antiForgeryToken: '@Html.AntiForgeryTokenValueOrchard()',
+    childFolders: (@Display.Partial(TemplateName: "ChildFolders", Model: viewModel.ChildFoldersViewModel))['childFolders']
+};
+//]]>
+</script>
+<script type="text/html" id="media-folder-template">
+    <li>
+        <div class="media-library-folder" data-bind="css: { 'in-progress': $root.pendingRequest() }">
+            <div class="media-library-folder-title" data-bind="click: folderClicked, attr: { 'data-media-path': folderPath() }, css: {selected: isSelected()}">
+                <a href="#" class="media-library-navigation-folder-link"><i data-bind="    css: {'icon-folder-open-alt': isExpanded(), 'icon-folder-close-alt': !isExpanded()}"></i><span data-bind="    text: name"></span></a>
+            </div>
+            <ul data-bind="template: { name: 'media-folder-template', foreach: childFolders, afterRender: afterRenderMediaFolderTemplate}, visible: isExpanded()">
+            </ul>
+        </div>
+    </li>
+</script>
+}

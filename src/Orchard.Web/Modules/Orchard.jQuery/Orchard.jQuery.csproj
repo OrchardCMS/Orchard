@@ -1,0 +1,632 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{8F116B06-1C0E-4E4C-9A0A-D2FAB851E768}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Orchard.jQuery</RootNamespace>
+    <AssemblyName>Orchard.jQuery</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <TargetFrameworkProfile />
+    <UseIISExpress>false</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>..\..\..\OrchardBasicCorrectness.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\calendars\jquery.calendars-af.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-am.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-ar-DZ.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-ar-EG.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-ar.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-az.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-bg.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-bs.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-ca.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-cs.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-da.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-de-CH.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-de.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-el.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-en-AU.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-en-GB.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-en-NZ.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-eo.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-es-AR.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-es-PE.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-es.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-et.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-eu.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-fa.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-fi.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-fo.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-fr-CH.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-fr.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-gl.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-gu.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-he.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-hi-IN.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-hr.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-hu.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-hy.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-id.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-is.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-it.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-ja.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-ka.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-km.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-ko.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-lt.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-lv.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-me-ME.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-me.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-mk.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-ml.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-ms.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-mt.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-nl-BE.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-nl.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-no.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-pl.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-pt-BR.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-rm.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-ro.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-ru.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-sk.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-sl.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-sq.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-sr-SR.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-sr.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-sv.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-ta.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-th.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-tr.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-tt.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-uk.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-ur.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-vi.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-zh-CN.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-zh-HK.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-zh-TW.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.all.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.all.min.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.coptic.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.coptic.min.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.ethiopian-am.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.ethiopian.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.ethiopian.min.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.hebrew-he.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.hebrew.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.hebrew.min.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.islamic-ar.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.islamic-fa.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.islamic.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.islamic.min.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.julian.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.julian.min.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.lang.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.lang.min.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.mayan.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.mayan.min.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.min.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.nepali-ne.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.nepali.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.nepali.min.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.persian-fa.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.persian.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.persian.min.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-af.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-am.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-ar-DZ.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-ar-EG.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-ar.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-az.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-bg.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-bs.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-ca.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-cs.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-da.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-de-CH.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-de.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-el.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-en-AU.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-en-GB.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-en-NZ.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-eo.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-es-AR.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-es-PE.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-es.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-et.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-eu.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-fa.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-fi.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-fo.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-fr-CH.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-fr.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-gl.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-gu.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-he.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-hi-IN.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-hr.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-hu.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-hy.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-id.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-is.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-it.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-ja.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-ka.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-km.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-ko.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-lt.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-lv.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-me-ME.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-me.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-mk.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-ml.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-ms.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-mt.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-nl-BE.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-nl.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-no.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-pl.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-pt-BR.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-rm.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-ro.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-ru.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-sk.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-sl.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-sq.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-sr-SR.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-sr.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-sv.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-ta.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-th.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-tr.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-tt.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-uk.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-ur.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-vi.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-zh-CN.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-zh-HK.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-zh-TW.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker.ext.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker.ext.min.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker.lang.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker.lang.min.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker.min.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.plus.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.plus.min.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.taiwan-zh-TW.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.taiwan.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.taiwan.min.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.thai-th.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.thai.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.thai.min.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.ummalqura-ar.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.ummalqura.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.ummalqura.min.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.validation.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.validation.min.js" />
+    <Content Include="Scripts\colorbox\jquery.colorbox-ar.js" />
+    <Content Include="Scripts\colorbox\jquery.colorbox-bg.js" />
+    <Content Include="Scripts\colorbox\jquery.colorbox-ca.js" />
+    <Content Include="Scripts\colorbox\jquery.colorbox-cs.js" />
+    <Content Include="Scripts\colorbox\jquery.colorbox-da.js" />
+    <Content Include="Scripts\colorbox\jquery.colorbox-de.js" />
+    <Content Include="Scripts\colorbox\jquery.colorbox-es.js" />
+    <Content Include="Scripts\colorbox\jquery.colorbox-et.js" />
+    <Content Include="Scripts\colorbox\jquery.colorbox-fa.js" />
+    <Content Include="Scripts\colorbox\jquery.colorbox-fi.js" />
+    <Content Include="Scripts\colorbox\jquery.colorbox-fr.js" />
+    <Content Include="Scripts\colorbox\jquery.colorbox-gl.js" />
+    <Content Include="Scripts\colorbox\jquery.colorbox-gr.js" />
+    <Content Include="Scripts\colorbox\jquery.colorbox-he.js" />
+    <Content Include="Scripts\colorbox\jquery.colorbox-hr.js" />
+    <Content Include="Scripts\colorbox\jquery.colorbox-hu.js" />
+    <Content Include="Scripts\colorbox\jquery.colorbox-id.js" />
+    <Content Include="Scripts\colorbox\jquery.colorbox-it.js" />
+    <Content Include="Scripts\colorbox\jquery.colorbox-ja.js" />
+    <Content Include="Scripts\colorbox\jquery.colorbox-kr.js" />
+    <Content Include="Scripts\colorbox\jquery.colorbox-lt.js" />
+    <Content Include="Scripts\colorbox\jquery.colorbox-lv.js" />
+    <Content Include="Scripts\colorbox\jquery.colorbox-my.js" />
+    <Content Include="Scripts\colorbox\jquery.colorbox-nl.js" />
+    <Content Include="Scripts\colorbox\jquery.colorbox-no.js" />
+    <Content Include="Scripts\colorbox\jquery.colorbox-pl.js" />
+    <Content Include="Scripts\colorbox\jquery.colorbox-pt-br.js" />
+    <Content Include="Scripts\colorbox\jquery.colorbox-ro.js" />
+    <Content Include="Scripts\colorbox\jquery.colorbox-ru.js" />
+    <Content Include="Scripts\colorbox\jquery.colorbox-si.js" />
+    <Content Include="Scripts\colorbox\jquery.colorbox-sk.js" />
+    <Content Include="Scripts\colorbox\jquery.colorbox-sr.js" />
+    <Content Include="Scripts\colorbox\jquery.colorbox-sv.js" />
+    <Content Include="Scripts\colorbox\jquery.colorbox-tr.js" />
+    <Content Include="Scripts\colorbox\jquery.colorbox-uk.js" />
+    <Content Include="Scripts\colorbox\jquery.colorbox-zh-CN.js" />
+    <Content Include="Scripts\colorbox\jquery.colorbox-zh-TW.js" />
+    <Content Include="Scripts\jquery-1.11.1.js" />
+    <Content Include="Scripts\jquery-1.11.1.min.js" />
+    <Content Include="Scripts\jquery-migrate-1.2.1.js" />
+    <Content Include="Scripts\jquery-migrate-1.2.1.min.js" />
+    <Content Include="Scripts\colorbox\jquery.colorbox.min.js" />
+    <Content Include="Scripts\colorbox\jquery.colorbox.js" />
+    <Content Include="Scripts\jquery.cookie.js" />
+    <Content Include="Scripts\jquery.cookie.min.js">
+      <DependentUpon>jquery.cookie.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\jquery.plugin.js" />
+    <Content Include="Scripts\jquery.plugin.min.js" />
+    <Content Include="Scripts\timeentry\jquery.timeentry-ar.js" />
+    <Content Include="Scripts\timeentry\jquery.timeentry-ca.js" />
+    <Content Include="Scripts\timeentry\jquery.timeentry-cs.js" />
+    <Content Include="Scripts\timeentry\jquery.timeentry-de.js" />
+    <Content Include="Scripts\timeentry\jquery.timeentry-es.js" />
+    <Content Include="Scripts\timeentry\jquery.timeentry-fa.js" />
+    <Content Include="Scripts\timeentry\jquery.timeentry-fr.js" />
+    <Content Include="Scripts\timeentry\jquery.timeentry-hu.js" />
+    <Content Include="Scripts\timeentry\jquery.timeentry-is.js" />
+    <Content Include="Scripts\timeentry\jquery.timeentry-it.js" />
+    <Content Include="Scripts\timeentry\jquery.timeentry-ja.js" />
+    <Content Include="Scripts\timeentry\jquery.timeentry-lt.js" />
+    <Content Include="Scripts\timeentry\jquery.timeentry-lv.js" />
+    <Content Include="Scripts\timeentry\jquery.timeentry-nl.js" />
+    <Content Include="Scripts\timeentry\jquery.timeentry-pl.js" />
+    <Content Include="Scripts\timeentry\jquery.timeentry-pt.js" />
+    <Content Include="Scripts\timeentry\jquery.timeentry-ro.js" />
+    <Content Include="Scripts\timeentry\jquery.timeentry-ru.js" />
+    <Content Include="Scripts\timeentry\jquery.timeentry-sk.js" />
+    <Content Include="Scripts\timeentry\jquery.timeentry-sv.js" />
+    <Content Include="Scripts\timeentry\jquery.timeentry-tr.js" />
+    <Content Include="Scripts\timeentry\jquery.timeentry-vi.js" />
+    <Content Include="Scripts\timeentry\jquery.timeentry-zh-CN.js" />
+    <Content Include="Scripts\timeentry\jquery.timeentry-zh-TW.js" />
+    <Content Include="Scripts\timeentry\jquery.timeentry.js" />
+    <Content Include="Scripts\timeentry\jquery.timeentry.min.js" />
+    <Content Include="Scripts\ui\accordion.js" />
+    <Content Include="Scripts\ui\accordion.min.js">
+      <DependentUpon>accordion.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\autocomplete.js" />
+    <Content Include="Scripts\ui\autocomplete.min.js">
+      <DependentUpon>autocomplete.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\button.js" />
+    <Content Include="Scripts\ui\button.min.js">
+      <DependentUpon>button.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\core.js" />
+    <Content Include="Scripts\ui\core.min.js">
+      <DependentUpon>core.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\datepicker.js" />
+    <Content Include="Scripts\ui\datepicker.min.js">
+      <DependentUpon>datepicker.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\dialog.js" />
+    <Content Include="Scripts\ui\dialog.min.js">
+      <DependentUpon>dialog.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\draggable.js" />
+    <Content Include="Scripts\ui\draggable.min.js">
+      <DependentUpon>draggable.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\droppable.js" />
+    <Content Include="Scripts\ui\droppable.min.js">
+      <DependentUpon>droppable.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\effect-blind.js" />
+    <Content Include="Scripts\ui\effect-blind.min.js">
+      <DependentUpon>effect-blind.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\effect-bounce.js" />
+    <Content Include="Scripts\ui\effect-bounce.min.js">
+      <DependentUpon>effect-bounce.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\effect-clip.js" />
+    <Content Include="Scripts\ui\effect-clip.min.js">
+      <DependentUpon>effect-clip.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\effect-drop.js" />
+    <Content Include="Scripts\ui\effect-drop.min.js">
+      <DependentUpon>effect-drop.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\effect-explode.js" />
+    <Content Include="Scripts\ui\effect-explode.min.js">
+      <DependentUpon>effect-explode.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\effect-fade.js" />
+    <Content Include="Scripts\ui\effect-fade.min.js">
+      <DependentUpon>effect-fade.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\effect-fold.js" />
+    <Content Include="Scripts\ui\effect-fold.min.js">
+      <DependentUpon>effect-fold.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\effect-highlight.js" />
+    <Content Include="Scripts\ui\effect-highlight.min.js">
+      <DependentUpon>effect-highlight.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\effect-puff.js" />
+    <Content Include="Scripts\ui\effect-puff.min.js">
+      <DependentUpon>effect-puff.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\effect-pulsate.js" />
+    <Content Include="Scripts\ui\effect-pulsate.min.js">
+      <DependentUpon>effect-pulsate.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\effect-scale.js" />
+    <Content Include="Scripts\ui\effect-scale.min.js">
+      <DependentUpon>effect-scale.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\effect-shake.js" />
+    <Content Include="Scripts\ui\effect-shake.min.js">
+      <DependentUpon>effect-shake.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\effect-size.js" />
+    <Content Include="Scripts\ui\effect-size.min.js">
+      <DependentUpon>effect-size.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\effect-slide.js" />
+    <Content Include="Scripts\ui\effect-slide.min.js">
+      <DependentUpon>effect-slide.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\effect-transfer.js" />
+    <Content Include="Scripts\ui\effect-transfer.min.js">
+      <DependentUpon>effect-transfer.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\effect.js" />
+    <Content Include="Scripts\ui\effect.min.js">
+      <DependentUpon>effect.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\jquery-ui.js" />
+    <Content Include="Scripts\ui\jquery-ui.min.js" />
+    <Content Include="Scripts\ui\menu.js" />
+    <Content Include="Scripts\ui\menu.min.js">
+      <DependentUpon>menu.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\mouse.js" />
+    <Content Include="Scripts\ui\mouse.min.js">
+      <DependentUpon>mouse.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\position.js" />
+    <Content Include="Scripts\ui\position.min.js">
+      <DependentUpon>position.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\progressbar.js" />
+    <Content Include="Scripts\ui\progressbar.min.js">
+      <DependentUpon>progressbar.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\resizable.js" />
+    <Content Include="Scripts\ui\resizable.min.js">
+      <DependentUpon>resizable.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\selectable.js" />
+    <Content Include="Scripts\ui\selectable.min.js">
+      <DependentUpon>selectable.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\selectmenu.js" />
+    <Content Include="Scripts\ui\selectmenu.min.js">
+      <DependentUpon>selectmenu.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\slider.js" />
+    <Content Include="Scripts\ui\slider.min.js">
+      <DependentUpon>slider.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\sortable.js" />
+    <Content Include="Scripts\ui\sortable.min.js">
+      <DependentUpon>sortable.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\spinner.js" />
+    <Content Include="Scripts\ui\spinner.min.js">
+      <DependentUpon>spinner.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\tabs.js" />
+    <Content Include="Scripts\ui\tabs.min.js">
+      <DependentUpon>tabs.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\tooltip.js" />
+    <Content Include="Scripts\ui\tooltip.min.js">
+      <DependentUpon>tooltip.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\widget.js" />
+    <Content Include="Scripts\ui\widget.min.js">
+      <DependentUpon>widget.js</DependentUpon>
+    </Content>
+    <Content Include="Styles\colorbox.css" />
+    <Content Include="Styles\jquery-datetime-editor.css" />
+    <Content Include="Styles\images\calendar-blue.gif" />
+    <Content Include="Styles\images\calendar-green.gif" />
+    <Content Include="Styles\images\calendar.gif" />
+    <Content Include="Styles\images\colorbox\border.png" />
+    <Content Include="Styles\images\colorbox\controls.png" />
+    <Content Include="Styles\images\colorbox\loading.gif" />
+    <Content Include="Styles\images\colorbox\loading_background.png" />
+    <Content Include="Scripts\jquery.fileupload.js" />
+    <Content Include="Scripts\jquery.fileupload.min.js">
+      <DependentUpon>jquery.fileupload.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\jquery.iframe-transport.js" />
+    <Content Include="Scripts\jquery.iframe-transport.min.js">
+      <DependentUpon>jquery.iframe-transport.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\jquery.utils.js" />
+    <Content Include="Styles\images\spinnerBlue.png" />
+    <Content Include="Styles\images\spinnerBlueBig.png" />
+    <Content Include="Styles\images\spinnerDefault.png" />
+    <Content Include="Styles\images\spinnerDefaultBig.png" />
+    <Content Include="Styles\images\spinnerGem.png" />
+    <Content Include="Styles\images\spinnerGemBig.png" />
+    <Content Include="Styles\images\spinnerGreen.png" />
+    <Content Include="Styles\images\spinnerGreenBig.png" />
+    <Content Include="Styles\images\spinnerOrange.png" />
+    <Content Include="Styles\images\spinnerOrangeBig.png" />
+    <Content Include="Styles\images\spinnerSquare.png" />
+    <Content Include="Styles\images\spinnerSquareBig.png" />
+    <Content Include="Styles\images\spinnerText.png" />
+    <Content Include="Styles\images\spinnerTextBig.png" />
+    <Content Include="Styles\images\spinnerUpDown.png" />
+    <Content Include="Styles\images\spinnerUpDownBig.png" />
+    <Content Include="Styles\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Styles\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="Styles\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="Styles\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Styles\images\ui-bg_glass_75_dadada_1x400.png" />
+    <Content Include="Styles\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="Styles\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Styles\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <Content Include="Styles\images\ui-icons_222222_256x240.png" />
+    <Content Include="Styles\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Styles\images\ui-icons_454545_256x240.png" />
+    <Content Include="Styles\images\ui-icons_888888_256x240.png" />
+    <Content Include="Styles\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Styles\jquery-ui.css" />
+    <Content Include="Styles\jquery-ui.min.css" />
+    <Content Include="Styles\jquery-ui.structure.css" />
+    <Content Include="Styles\jquery-ui.structure.min.css" />
+    <Content Include="Styles\jquery-ui.theme.css" />
+    <Content Include="Styles\jquery-ui.theme.min.css" />
+    <Content Include="Styles\jquery.calendars.picker.css" />
+    <Content Include="Styles\jquery.timeentry.css" />
+    <Content Include="Styles\ui.calendars.picker.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
+      <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
+      <Name>Orchard.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\Orchard.Core.csproj">
+      <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
+      <Name>Orchard.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Module.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ResourceManifest.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\CalendarsPickerLocalization.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\TimeEntryLocalization.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\DateTimeEditor.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\jquery-1.11.1.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\jquery.cookie.min.js.map">
+      <DependentUpon>jquery.cookie.min.js</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target> -->
+  <Target Name="AfterBuild" DependsOnTargets="AfterBuildCompiler">
+    <PropertyGroup>
+      <AreasManifestDir>$(ProjectDir)\..\Manifests</AreasManifestDir>
+    </PropertyGroup>
+    <!-- If this is an area child project, uncomment the following line:
+    <CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Child" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" />
+    -->
+    <!-- If this is an area parent project, uncomment the following lines:
+    <CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Parent" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" />
+    <CopyAreaManifests ManifestPath="$(AreasManifestDir)" CrossCopy="false" RenameViews="true" />
+    -->
+  </Target>
+  <Target Name="AfterBuildCompiler" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(ProjectDir)\..\$(ProjectName)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>16146</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>
+          </IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>True</UseCustomServer>
+          <CustomServerUrl>http://orchard.codeplex.com/</CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

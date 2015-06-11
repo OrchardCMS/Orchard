@@ -1,0 +1,51 @@
+﻿@using System.Globalization
+@using Orchard.Alias
+@using Orchard.ContentManagement
+@using Orchard.ContentManagement.Aspects
+@using Orchard.Localization.Services
+@{
+    var localizableAspects = Enumerable.Empty<ILocalizableAspect>();
+    
+    var homePage = GetByPath(string.Empty);
+
+    if (homePage != null) {
+        var localizationService = WorkContext.Resolve<ILocalizationService>();
+        localizableAspects = localizationService.GetLocalizations(homePage).Concat<ILocalizableAspect>(new[] { homePage.As<ILocalizableAspect>() });
+    }
+}
+@if (localizableAspects.Any()) {
+<div>
+    <ul>
+        @foreach (var localization in localizableAspects) {
+            var culture = CultureInfo.GetCultureInfo(localization.Culture);
+
+            <li>
+                @if (localization.Culture.Equals(WorkContext.CurrentCulture, StringComparison.InvariantCultureIgnoreCase)) {
+                    <a href="@Url.ItemDisplayUrl(localization)">@T("{0} (current)", culture.DisplayName)</a>
+                }
+                else {
+                    <a href="@Url.ItemDisplayUrl(localization)">@T("{0}", culture.DisplayName)</a>
+                }
+            </li>
+        }
+    </ul>
+</div>
+}
+@functions{
+    public IContent GetByPath(string aliasPath) {
+        var contentRouting = WorkContext.Resolve<IAliasService>().Get(aliasPath);
+
+        if (contentRouting == null)
+            return null;
+
+        object id;
+        if (contentRouting.TryGetValue("id", out id)) {
+            int contentId;
+            if (int.TryParse(id as string, out contentId)) {
+                return WorkContext.Resolve<IContentManager>().Get(contentId);
+            }
+        }
+
+        return null;
+    }
+}

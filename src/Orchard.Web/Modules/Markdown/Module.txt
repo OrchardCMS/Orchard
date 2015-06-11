@@ -1,0 +1,10 @@
+﻿Name: Markdown
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardproject.net
+Version: 1.9.0
+OrchardVersion: 1.9
+Description: The Markdown module enables rich text contents to be created using the Markdown syntax.
+FeatureDescription: Markdown editor.
+Category: Input Editor
+Dependencies: Common

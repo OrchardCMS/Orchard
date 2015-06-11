@@ -1,0 +1,54 @@
+﻿@model Orchard.Autoroute.Settings.AutorouteSettings
+@using Orchard.Utility.Extensions;
+
+@{
+    Style.Require("AutorouteSettings");
+}
+@*<fieldset>
+    <div>
+        @Html.CheckBoxFor(m => m.PerItemConfiguration)
+        <label class="forcheckbox" for="@Html.FieldIdFor(m => m.PerItemConfiguration)">@T("Per item configuration")</label>
+        <span class="hint">@T("Allow the user to change the pattern on each item")</span>
+    </div>
+</fieldset>
+*@<fieldset>
+    <div>
+        @Html.CheckBoxFor(m => m.AllowCustomPattern)
+        <label class="forcheckbox" for="@Html.FieldIdFor(m => m.AllowCustomPattern)">@T("Allow custom patterns")</label>
+        <span class="hint">@T("Allow the user to change the pattern on each item")</span>
+    </div>
+</fieldset>
+<fieldset>
+    <div>
+        @Html.CheckBoxFor(m => m.AutomaticAdjustmentOnEdit)
+        <label class="forcheckbox" for="@Html.FieldIdFor(m => m.AutomaticAdjustmentOnEdit)">@T("Automatically regenerate when editing content")</label>
+        <span class="hint">@T("This option will cause the Url to automatically be regenerated when you edit existing content and publish it again, otherwise it will always keep the old route, or you have to perform bulk update in the Autoroute admin.")</span>
+    </div>
+</fieldset>
+<fieldset>
+    <label>@T("Patterns:")</label>
+    <table class="items autoroute-settings-patterns">
+        <tr>
+            <th class="autoroute-settings-default">@T("Default")</th>
+            <th class="autoroute-settings-name">@T("Name")<span class="hint">@T("Name of the pattern")</span></th>
+            <th class="autoroute-settings-pat">@T("Pattern")<span class="hint">@T("The definition of the pattern")</span></th>
+            <th class="autoroute-settings-desc">@T("Description")<span class="hint">@T("The description of the pattern, displayed in the editor")</span></th>
+            <th class="autoroute-settings-actions">&nbsp;</th>
+        </tr>
+
+        @for (int index = 0; index < Model.Patterns.Count; index++) {
+            <tr>
+                <td>@Html.RadioButtonFor(m => m.DefaultPatternIndex, index, new { @class = "radio" })</td>
+                <td>@Html.TextBoxFor(m => m.Patterns[index].Name, new { @class = "text"})</td>
+                <td>@Html.TextBoxFor(m => m.Patterns[index].Pattern, new { @class = "tokenized text" })</td>
+                <td>@Html.TextBoxFor(m => m.Patterns[index].Description, new { @class = "text" })</td>
+                <td>&nbsp;</td>
+            </tr>
+        }
+        
+        <tr>
+        </tr>
+    </table>
+</fieldset>
+
+@Display.TokenHint()

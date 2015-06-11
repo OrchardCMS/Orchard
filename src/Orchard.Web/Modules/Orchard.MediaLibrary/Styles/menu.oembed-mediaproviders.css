@@ -1,0 +1,19 @@
+﻿.navicon-media-url:before {
+    font-family: FontAwesome;
+    font-weight: normal;
+    font-style: normal;
+    display: inline-block;
+    text-decoration: inherit;
+    content: '\f01a';
+    font-size: 14px;
+    color: black;
+    padding-right: 5px;
+}
+
+
+/* RTL */
+
+.dir-rtl .navicon-media-url:before {
+    padding-right: inherit;
+    padding-left: 5px;
+}

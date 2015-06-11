@@ -1,0 +1,30 @@
+﻿@model FilterAddViewModel
+@using Orchard.Projections.Models;
+@using Orchard.Projections.ViewModels;
+           
+@{
+    Layout.Title = T("Add a Filter");
+}
+
+@if (!Model.Filters.Any()) {
+    <h3>@T("There are no currently available filters")</h3>
+}
+
+@foreach (var filter in Model.Filters.OrderBy(x => x.Name.Text)) {
+    <h2>@filter.Name</h2>
+    
+    <table class="items">
+        <thead>
+            <tr>
+                <th scope="col" style="width:300px">@T("Name")</th>
+                <th scope="col">@T("Description")</th>
+            </tr>
+        </thead>
+        @foreach (var descriptor in filter.Descriptors) {
+        <tr>
+            <td>@Html.ActionLink(descriptor.Name.Text, "Edit", new { id = Model.Id, category = descriptor.Category, type = descriptor.Type })</td>
+            <td>@descriptor.Description</td>    
+        </tr>
+        }
+    </table>
+}

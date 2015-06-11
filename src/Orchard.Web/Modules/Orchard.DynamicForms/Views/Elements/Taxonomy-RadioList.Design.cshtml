@@ -1,0 +1,19 @@
+﻿@using Orchard.DynamicForms.Elements
+@using Orchard.Layouts.Helpers
+@{
+    var element = (Taxonomy)Model.Element;
+    var tagBuilder = TagBuilderExtensions.CreateElementTagBuilder(Model, "ol");
+}
+@if (element.ShowLabel) {
+    <label>@Html.Raw(element.Label)</label>
+}
+@tagBuilder.StartElement
+@foreach (var option in Model.TermOptions) {
+    <li>
+        <label>
+            <input type="radio" name="@element.Name" value="@option.Value" />
+            @option.Text
+        </label>
+    </li>
+}
+@tagBuilder.EndElement

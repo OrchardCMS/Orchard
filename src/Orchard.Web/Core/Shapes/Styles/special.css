@@ -1,0 +1,39 @@
+﻿.managewrapper,
+.managewrapper .manage {
+    border:1px dashed #ccc;
+    z-index:9999;
+}
+.managewrapper:hover,
+.managewrapper:hover .manage {
+    border-color:#8f8f8f;
+}
+.managewrapper {
+    padding:2px 0;
+    position:relative;
+}
+.managewrapper .manage {
+    border-style:solid;
+    border-top:0;
+    border-right:0;
+    display:none;
+    margin:0;
+    overflow:hidden;
+    position:absolute;
+    right:0;
+    top:0;
+}
+.managewrapper:hover .manage {
+    display:block;
+}
+.managewrapper .manage a {
+    background-color:#4687ad;
+    color:#fff;
+    display:block;
+    font:14px/14px Segoe UI,Trebuchet,Arial,Sans-Serif;
+    height:16px;
+    padding:1px 3px;
+}
+.managewrapper .manage a:hover {
+    background-color:#ffac40;
+    color:#fff;
+}

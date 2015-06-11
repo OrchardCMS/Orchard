@@ -1,0 +1,6 @@
+﻿@using Orchard.ContentManagement;
+
+@using (Html.BeginFormAntiForgeryPost(Url.Action("Create", "Item", new { area = "Orchard.CustomForms", id = Model.ContentPart.ContentType }))) {
+    @Html.ValidationSummary()
+    @Display(Model.Editor)
+}

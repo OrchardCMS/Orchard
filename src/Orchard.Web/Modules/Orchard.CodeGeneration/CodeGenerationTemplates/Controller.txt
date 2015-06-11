@@ -1,0 +1,16 @@
+﻿using System.Web.Mvc;
+using Orchard.Localization;
+using Orchard;
+
+namespace $$ModuleName$$.Controllers {
+    public class $$ControllerName$$ : Controller {
+        public IOrchardServices Services { get; set; }
+
+        public $$ControllerName$$(IOrchardServices services) {
+            Services = services;
+            T = NullLocalizer.Instance;
+        }
+
+        public Localizer T { get; set; }
+    }
+}

@@ -1,0 +1,9 @@
+﻿Name: XmlRpc
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardproject.net
+Version: 1.9.0
+OrchardVersion: 1.9
+Description: The XmlRpc module enables creation of contents from client applications such as LiveWriter.
+FeatureDescription: XML-RPC opt-in implementation.
+Category: Content Publishing

@@ -1,0 +1,30 @@
+﻿<Placement>
+  <!-- Input -->
+  <Place Fields_Input_Edit="Content:2.4"/>
+  <Place Fields_Input="Content:after"/>
+
+  <!-- Numeric -->
+  <Place Fields_Numeric_Edit="Content:2.9"/>
+  <Place Fields_Numeric="Content:after"/>
+
+  <!-- Link -->
+  <Place Fields_Link_Edit="Content:2.8"/>
+  <Place Fields_Link="Content:after"/>
+
+  <!-- Enumeration -->
+  <Place Fields_Enumeration_Edit="Content:2.7"/>
+  <Place Fields_Enumeration="Content:after"/>
+
+  <!-- Boolean -->
+  <Place Fields_Boolean_Edit="Content:2.6"/>
+  <Place Fields_Boolean="Content:after"/>
+
+  <!-- DateTime -->
+  <Place Fields_DateTime_Edit="Content:2.5"/>
+  <Place Fields_DateTime="Content:after"/>
+
+  <Match DisplayType="SummaryAdmin">
+    <Place Fields_DateTime="Content"/>
+  </Match>
+
+</Placement>

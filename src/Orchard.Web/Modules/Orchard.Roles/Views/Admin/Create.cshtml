@@ -1,0 +1,42 @@
+@model RoleCreateViewModel
+@using Orchard.Roles.ViewModels;
+
+@{ Layout.Title = T("Add Role").ToString(); }
+
+@using (Html.BeginFormAntiForgeryPost()) {
+    @Html.ValidationSummary();
+    <fieldset>
+        <legend>@T("Information")</legend>
+        <label for="pageTitle">@T("Role Name:")</label>
+        <input id="Name" class="text" name="Name" type="text" value="@Model.Name" />
+    </fieldset>
+    <fieldset>
+        <legend>@T("Permissions")</legend>
+        @foreach (var featureName in Model.FeaturePermissions.Keys) {
+        <fieldset>
+            <legend>@T("{0} Module", featureName)</legend>
+            <table class="items">
+                <colgroup>
+                    <col id="Permission" />
+                    <col id="Allow" />
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th scope="col">@T("Permission")</th>
+                        <th scope="col">@T("Allow")</th>
+                    </tr>
+                </thead>
+                @foreach (var permission in Model.FeaturePermissions[featureName]) {
+                <tr>
+                    <td>@permission.Description</td>
+                    <td style="width:60px;"><input type="checkbox" value="true" name="Checkbox.@permission.Name"/></td>
+                </tr>
+                }
+            </table>
+        </fieldset>
+        }
+    </fieldset>
+    <fieldset>
+        <button class="primaryAction" type="submit">@T("Save")</button>
+    </fieldset>
+}

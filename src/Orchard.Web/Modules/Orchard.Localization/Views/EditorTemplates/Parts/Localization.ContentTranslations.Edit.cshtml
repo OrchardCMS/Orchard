@@ -1,0 +1,117 @@
+﻿@model Orchard.Localization.ViewModels.EditLocalizationViewModel
+@using System.Globalization
+@{
+    Style.Require("LocalizationAdmin");
+}
+<fieldset class="localization culture-selection">
+    <label for="@Html.FieldIdFor(m => m.SelectedCulture)">@T("Content Localization")</label>
+    <div>
+        @*Brand new content item*@
+        @if (Model.ContentItem.ContentItem.Id == 0) {
+            if (Model.MasterContentItem == null) {
+                @T("This is the <em>{0}</em> variation of the content",
+                    BuildSelectedCultureList(
+                        Html.FieldIdFor(m => m.SelectedCulture),
+                        Html.FieldNameFor(m => m.SelectedCulture),
+                        Model.MissingCultures,
+                        Model.SelectedCulture))
+            }
+            else {
+                @T("This is the <em>{0}</em> variation of {1}",
+                    BuildSelectedCultureList(
+                        Html.FieldIdFor(m => m.SelectedCulture),
+                        Html.FieldNameFor(m => m.SelectedCulture),
+                        Model.MissingCultures,
+                        Model.SelectedCulture),
+                    Html.ItemEditLink(Model.MasterContentItem))
+            }
+        }
+
+        @if (Model.ContentItem.ContentItem.Id > 0) {
+            if (string.IsNullOrEmpty(Model.SelectedCulture)) {
+                @T("This content currently has no culture associated to it, please select a culture to associate to this piece of content: {0}",
+                    BuildSelectedCultureList(
+                        Html.FieldIdFor(m => m.SelectedCulture),
+                        Html.FieldNameFor(m => m.SelectedCulture),
+                        Model.MissingCultures,
+                        Model.SelectedCulture))
+            }
+            else {
+                @T("This is the <em>{0}</em> variation of the content",
+                    Html.Encode(Model.SelectedCulture))
+
+                if (Model.ContentLocalizations.Localizations.Any()) {
+                    <dl class="content-localization">
+                        <dt>@T("Other translations:")</dt>
+                        <dd class="content-localizations">
+                            @Html.UnorderedList(Model.ContentLocalizations.Localizations, (c, i) =>
+                                Html.ItemEditLink(c.Culture.Culture, c), "localizations")
+                        </dd>
+                    </dl>
+                }
+
+                if (Model.MissingCultures.Any()) {
+                    var contentItemId = Model.MasterContentItem != null ? Model.MasterContentItem.Id : Model.ContentItem.Id;
+
+                    <div class="add-localization">@Html.ActionLink(T("+ New translation").Text, "Translate", "Admin", new {area = "Orchard.Localization", id = contentItemId}, null)</div>
+                }
+
+                @Html.Hidden(Html.FieldNameFor(m => m.SelectedCulture), Model.SelectedCulture)
+            }
+        }
+    </div>
+</fieldset>
+
+
+
+@functions{
+    private string BuildSelectedCultureList(string id, string name, IEnumerable<string> siteCultures, string culture) {
+        TagBuilder selectTag = new TagBuilder("select");
+        selectTag.Attributes["id"] = id;
+        selectTag.Attributes["name"] = name;
+
+        foreach (var siteCulture in siteCultures) {
+            TagBuilder optionTag = new TagBuilder("option");
+            optionTag.Attributes["data-content-dir"] = CultureInfo.GetCultureInfo(siteCulture).TextInfo.IsRightToLeft ? "rtl" : "ltr";
+
+            if (siteCulture == culture) {
+                optionTag.Attributes["selected"] = "selected";
+            }
+            optionTag.SetInnerText(siteCulture);
+            selectTag.InnerHtml += optionTag.ToString();
+        }
+
+        return selectTag.ToString();
+    }
+}
+@using (Script.Foot()) {
+    <script type="text/javascript">
+//<![CDATA[
+    (function($) {
+        "use strict";
+
+        var culture = $("#@Html.FieldIdFor(m => m.SelectedCulture)");
+
+        function flipCulture() {
+            var optionDirectionality = $("option:selected", culture).attr("data-content-dir");
+            var contentZone = $(".zone-content");
+            if (contentZone.hasClass(optionDirectionality))
+                return;
+
+            var oldClass = optionDirectionality === "ltr" ? "rtl" : "";
+
+            contentZone.removeClass("content-" + oldClass);
+            contentZone.addClass("content-" + optionDirectionality);
+
+            $(document).trigger("localization.ui.directionalitychanged", optionDirectionality);
+        }
+
+        culture.change(function () {
+            flipCulture();
+        });
+
+        flipCulture();
+    })(jQuery);
+//]]>
+    </script>
+}

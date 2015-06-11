@@ -1,0 +1,49 @@
+﻿@using Orchard.Localization.Services
+@using Orchard.Utility.Extensions;
+@using System.Globalization
+@using System.Web.Hosting;
+
+@{
+    // Prevent the shape from being rendered twice in the same request.
+    if (WorkContext.GetState<object>("TimeEntryLocalization") != null) {
+        return;
+    }
+
+    WorkContext.SetState("TimeEntryLocalization", new object());
+
+    Script.Require("jQueryTimeEntry");
+
+    var currentCulture = CultureInfo.GetCultureInfo(WorkContext.CurrentCulture);
+    var dateTimeFormatProvider = WorkContext.Resolve<IDateTimeFormatProvider>();
+    var amPmNames = FormatJsList(dateTimeFormatProvider.AmPmDesignators.ToArray());
+}
+
+@functions {
+    private string FormatJsList(string[] strings) {
+        return String.Join(", ", strings.Select(s => String.Format("'{0}'", HttpUtility.JavaScriptStringEncode(s.Trim()))));
+    }
+}
+
+<script type="text/javascript">
+    //<![CDATA[
+    $(function() {
+        $.timeEntry.regionalOptions['@HttpUtility.JavaScriptStringEncode(currentCulture.Name)'] = {
+            show24Hours: @(dateTimeFormatProvider.Use24HourTime ? "true" : "false"),
+            separator: '@HttpUtility.JavaScriptStringEncode(dateTimeFormatProvider.TimeSeparator)',
+            ampmPrefix: '@HttpUtility.JavaScriptStringEncode(dateTimeFormatProvider.AmPmPrefix)',
+            ampmNames: [@Html.Raw(amPmNames)],
+            spinnerTexts: [
+                '@HttpUtility.JavaScriptStringEncode(T("Now").Text)',
+                '@HttpUtility.JavaScriptStringEncode(T("Previous field").Text)',
+                '@HttpUtility.JavaScriptStringEncode(T("Next field").Text)',
+                '@HttpUtility.JavaScriptStringEncode(T("Increment").Text)',
+                '@HttpUtility.JavaScriptStringEncode(T("Decrement").Text)'
+            ]
+        };
+        $.timeEntry.setDefaults($.timeEntry.regionalOptions['@HttpUtility.JavaScriptStringEncode(currentCulture.Name)']);
+        $.timeEntry.setDefaults({
+            spinnerImage: '@HttpUtility.JavaScriptStringEncode(Url.Content("~/Modules/Orchard.jQuery/Styles/images/spinnerDefault.png"))'
+        });
+    })
+    //]]>
+</script>

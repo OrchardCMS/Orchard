@@ -1,0 +1,21 @@
+﻿@model Orchard.Users.ViewModels.UserCreateViewModel
+<fieldset>
+    @Html.LabelFor(m => m.UserName, T("User Name"))
+    @Html.TextBoxFor(m=>m.UserName, new { @class = "text medium" })
+    @Html.ValidationMessageFor(m=>m.UserName, "*")
+</fieldset>
+<fieldset>
+    @Html.LabelFor(m => m.Email, T("Email"))
+    @Html.TextBoxFor(m=>m.Email, new { @class = "text medium" })
+    @Html.ValidationMessageFor(m=>m.Email, "*")
+</fieldset>
+<fieldset>
+    @Html.LabelFor(m => m.Password, T("Password"))
+    @Html.PasswordFor(m=>m.Password, new { @class = "text medium" })
+    @Html.ValidationMessageFor(m=>m.Password, "*")
+</fieldset>
+<fieldset>
+    @Html.LabelFor(m => m.ConfirmPassword, T("Confirm Password"))
+    @Html.PasswordFor(m=>m.ConfirmPassword, new { @class = "text medium" })
+    @Html.ValidationMessageFor(m=>m.ConfirmPassword, "*")
+</fieldset>

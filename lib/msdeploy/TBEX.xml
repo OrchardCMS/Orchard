@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<WebPlatform>
+  <Links>
+    <AddLink InDashboard="True" InLearn="True">
+      <Title>Getting Started with Orchard</Title>
+      <Description>Welcome to the Orchard community! We want your experience with your new site to be as smooth as possible. Please read this to get started...</Description>
+      <Uri>http://docs.orchardproject.net/Documentation/Getting-Started</Uri>
+      <ImageUri>http://orchardproject.net/Themes/OrchardProject.Net/Images/orchardicon.png</ImageUri>
+    </AddLink>
+    <AddLink InDashboard="True" InLearn="True">
+      <Title>Free Pluralsight Training on Orchard</Title>
+      <Description>Watch Pluralsight's free introduction to Orchard course.</Description>
+      <Uri>http://www.pluralsight-training.net/microsoft/players/PSODPlayer.aspx?author=kevin-kuebler&amp;name=introduction-to-orchard&amp;mode=live&amp;clip=0&amp;course=orchard-fundamentals</Uri>
+      <ImageUri>http://orchardproject.net/Themes/OrchardProject.Net/Images/orchardicon.png</ImageUri>
+    </AddLink>
+    <AddLink InDashboard="True" InLearn="True">
+      <Title>More documentation</Title>
+      <Description>We have documentation available on a variety of topics.</Description>
+      <Uri>http://docs.orchardproject.net</Uri>
+      <ImageUri>http://orchardproject.net/Themes/OrchardProject.Net/Images/orchardicon.png</ImageUri>
+    </AddLink>
+    <AddLink InDashboard="True" InLearn="True">
+      <Title>More videos</Title>
+      <Description>Learn through these great video tutorials.</Description>
+      <Uri>http://docs.orchardproject.net/Documentation/Orchard-TV</Uri>
+      <ImageUri>http://orchardproject.net/Themes/OrchardProject.Net/Images/orchardicon.png</ImageUri>
+    </AddLink>
+	<AddLink InDashboard="True">
+      <Title>Orchard Gallery</Title>
+      <Description>Hundreds of free modules and themes are available from our gallery.</Description>
+      <Uri>http://gallery.orchardproject.net/</Uri>
+      <ImageUri>http://orchardproject.net/Themes/OrchardProject.Net/Images/orchardicon.png</ImageUri>
+    </AddLink>
+    <AddLink InDashboard="True">
+      <Title>Orchard Forums</Title>
+      <Description>If you have questions, suggestions or just want to hang out with other Orchard users and experts, please visit our forums.</Description>
+      <Uri>http://orchard.codeplex.com/discussions</Uri>
+      <ImageUri>http://orchardproject.net/Themes/OrchardProject.Net/Images/orchardicon.png</ImageUri>
+    </AddLink>
+  </Links>
+  <Ribbon>
+    <AddRibbonButton>
+      <Label>Admin</Label> 
+      <Uri>/admin</Uri>
+      <ImageUri>http://orchardproject.net/Themes/OrchardProject.Net/Images/orchardicon.png</ImageUri> 
+     </AddRibbonButton>
+    <AddRibbonButton>
+      <Label>Add Module</Label> 
+      <Uri>/Packaging/Gallery/Modules</Uri>
+      <ImageUri>http://orchardproject.net/Themes/OrchardProject.Net/Images/o.png</ImageUri> 
+     </AddRibbonButton>
+    <AddRibbonButton>
+      <Label>Add Theme</Label> 
+      <Uri>/Packaging/Gallery/Themes</Uri> 
+      <ImageUri>http://orchardproject.net/Themes/OrchardProject.Net/Images/o.png</ImageUri> 
+     </AddRibbonButton>
+  </Ribbon>
+  <PathProtection>
+    <AllowPath AllowNested="True">
+      <RelativePath>modules</RelativePath>
+    </AllowPath>
+    <AllowPath AllowNested="True">
+      <RelativePath>themes</RelativePath>
+    </AllowPath>
+    <AllowPath AllowNested="True">
+      <RelativePath>media</RelativePath>
+    </AllowPath>
+    <AllowPath AllowNested="False">
+      <RelativePath>web.config</RelativePath>
+    </AllowPath>
+    <ProtectPath>
+      <RelativePath>*</RelativePath>
+    </ProtectPath>
+  </PathProtection>
+</WebPlatform>
