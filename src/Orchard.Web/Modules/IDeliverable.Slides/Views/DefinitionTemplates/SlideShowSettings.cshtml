@@ -1,0 +1,27 @@
+﻿@model IDeliverable.Slides.ViewModels.SlideShowSettingsViewModel
+@{
+    Style.Include("admin-slideshow-part.css");
+    Script.Require("jQuery");
+    Script.Include("admin-slideshow-part.js");
+}
+@{
+    var engineOptions = Model.AvailableEngines.Select(x => new SelectListItem {Text = x.DisplayName.Text, Value = x.Name, Selected = x.Name == Model.Engine}).ToList();
+}
+<fieldset>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Engine, T("Engine"))
+        @Html.DropDownListFor(m => m.Engine, engineOptions, new { @class = "engine-picker" })
+        <span class="hint">@T("The slide show engine to use to present the slides.")</span>
+    </div>
+</fieldset>
+
+@foreach (var engine in Model.AvailableEngines) {
+    var editor = Model.EngineSettingsEditors[engine.Name];
+
+    if (editor != null) {
+        <div class="engine-settings-editor" data-engine="@engine.Name">
+            <h4>@engine.DisplayName</h4>
+            @Display(editor)
+        </div>
+    }
+}

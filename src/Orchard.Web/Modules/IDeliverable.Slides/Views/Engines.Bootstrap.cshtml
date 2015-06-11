@@ -1,0 +1,51 @@
+﻿@using IDeliverable.Slides.Engines.Bootstrap
+@{
+    var engine = (Bootstrap)Model.Engine;
+    var id = (string)Model.SlideShowId;
+    var slideShowId = String.Format("SlideShow-{0}", id);
+    var slides = (IList<dynamic>)Model.Slides;
+
+    if (slides.Any())
+    {
+        <div id="@slideShowId" class="carousel slide"
+             data-ride="carousel"
+             data-interval="@engine.Interval"
+             data-wrap="@engine.Wrap.ToString().ToLower()"
+             data-keyboard="@engine.Keyboard.ToString().ToLower()"
+             data-pause="@engine.Pause">
+            @if (engine.Indicators)
+            {
+                <!-- Indicators -->
+                <ol class="carousel-indicators">
+                    @for (var i = 0; i < slides.Count; i++)
+                    {
+                        <li data-target="#@slideShowId" data-slide-to="@i" @if (i == 0) { <text> class="active" </text>    }></li>
+                    }
+                </ol>
+            }
+
+            <!-- Wrapper for slides -->
+            <div class="carousel-inner" role="listbox">
+                @for (var i = 0; i < slides.Count; i++)
+                {
+                    <div class="item @if(i == 0){<text>active</text>}">
+                        @Display(slides[i])
+                    </div>
+                }
+            </div>
+
+            @if (engine.Controls)
+            {
+                <!-- Controls -->
+                <a class="left carousel-control" href="#@slideShowId" role="button" data-slide="prev">
+                    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                    <span class="sr-only">@T("Previous")</span>
+                </a>
+                <a class="right carousel-control" href="#@slideShowId" role="button" data-slide="next">
+                    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                    <span class="sr-only">@T("Next")</span>
+                </a>
+            }
+        </div>
+    }
+}

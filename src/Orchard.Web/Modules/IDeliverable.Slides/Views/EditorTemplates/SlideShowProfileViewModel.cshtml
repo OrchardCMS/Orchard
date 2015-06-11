@@ -1,0 +1,35 @@
+﻿@model IDeliverable.Slides.ViewModels.SlideShowProfileViewModel
+@{
+    Style.Include("admin-slideshow-part.css");
+    Script.Require("jQuery");
+    Script.Include("admin-slideshow-part.js");
+    Script.Require("ShapesBase");
+}
+@{
+    var engineOptions = Model.AvailableEngines.Select(x => new SelectListItem {Text = x.DisplayName.Text, Value = x.Name, Selected = x.Name == Model.SelectedEngine}).ToList();
+}
+<fieldset>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Name, T("Profile Name").Text, new { @class = "required" })
+        @Html.TextBoxFor(m => m.Name, new { @class = "text medium" })
+    </div>
+</fieldset>
+
+<fieldset>
+    <div class="form-group">
+        @Html.LabelFor(m => m.SelectedEngine, T("Engine").Text, new { @class = "required" })
+        @Html.DropDownListFor(m => m.SelectedEngine, engineOptions, new { @class = "engine-picker" })
+        <span class="hint">@T("The slide show engine to use to present the slides.")</span>
+    </div>
+</fieldset>
+
+@foreach (var engine in Model.AvailableEngines) {
+    var editor = Model.EngineSettingsEditors[engine.Name];
+
+    if (editor != null) {
+        <div class="engine-settings-editor" data-engine="@engine.Name">
+            <h3>@engine.DisplayName</h3>
+            @Display(editor)
+        </div>
+    }
+}

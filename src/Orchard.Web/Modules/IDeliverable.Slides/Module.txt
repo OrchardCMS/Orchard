@@ -1,0 +1,24 @@
+﻿Name: Slides
+AntiForgery: enabled
+Author: IDeliverable
+Website: http://www.ideliverable.com
+Version: 1.0
+OrchardVersion: 1.9
+Status: Delivered
+Description: Provides slide show features, enabling users to turn content items into slide shows and add slide show elements to layouts.
+Features:
+    IDeliverable.Slides:
+        Name: Slides
+        Description: Turn content items into slide shows.
+        Category: Content
+        Dependencies: Orchard.Layouts, Orchard.jQuery, Orchard.MediaLibrary
+    IDeliverable.Slides.Projections:
+        Name: Projection Slides
+        Description: Adds a Projection Slides Provider to the system.
+        Category: Content
+        Dependencies: IDeliverable.Slides, Orchard.Projections, Orchard.Forms
+    IDeliverable.Slides.Lists:
+        Name: List Slides
+        Description: Adds a List Slides Provider to the system.
+        Category: Content
+        Dependencies: IDeliverable.Slides, Orchard.Lists

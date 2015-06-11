@@ -1,0 +1,25 @@
+﻿@{
+    Style.Include("admin-slide-type-browser.css");
+    Layout.Title = T("Add Slides");
+
+    var dialogMode = Model.DialogMode == true;
+    var returnUrl = (string)Model.ReturnUrl;
+}
+<div class="slide-type-browser">
+    <ul>
+        <li>
+            <a class="slide-type" href="@Url.Action("Create", "SlideFactory", new { returnUrl = returnUrl, dialog = dialogMode, area = "IDeliverable.Slides" })">
+                <h2>@T("Create Slide")</h2>
+                @Html.Hint(T("Create a new regular, free-form slide."))
+            </a>
+            <a class="slide-type" href="@Url.Action("ImageSlides", "SlideFactory", new { returnUrl = returnUrl, dialog = dialogMode, area = "IDeliverable.Slides" })">
+                <h2>@T("Create Slides From Images")</h2>
+                @Html.Hint(T("Creates multiple slides from image elements."))
+            </a>
+            <a class="slide-type" href="@Url.Action("ContentSlides", "SlideFactory", new { returnUrl = returnUrl, dialog = dialogMode, area = "IDeliverable.Slides" })">
+                <h2>@T("Create Slides From Content Items")</h2>
+                @Html.Hint(T("Creates multiple slides from content item elements."))
+            </a>
+        </li>
+    </ul>
+</div>

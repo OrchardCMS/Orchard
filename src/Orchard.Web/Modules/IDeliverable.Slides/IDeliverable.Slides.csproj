@@ -1,0 +1,412 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{F5C14E1E-E2B4-4851-BB27-06B97818C4FA}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>IDeliverable.Slides</RootNamespace>
+    <AssemblyName>IDeliverable.Slides</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <TargetFrameworkProfile />
+    <UseIISExpress>false</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\newtonsoft.json\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.ComponentModel.DataAnnotations">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\aspnetwebapi\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Engines\JCarousel\Scripts\modernizr.transitions.js" />
+    <Content Include="Engines\JCarousel\Styles\engine-jcarousel.css" />
+    <Content Include="Scripts\admin-slideshow-part.js" />
+    <Content Include="Scripts\admin-slides-part.js" />
+    <Content Include="Engines\JCarousel\Scripts\engine-jcarousel.js" />
+    <Content Include="Engines\JCarousel\Scripts\jquery.jcarousel.js" />
+    <Content Include="Engines\JCarousel\Scripts\jquery.jcarousel.min.js" />
+    <Content Include="Styles\admin-slideshow-part.css" />
+    <Content Include="Styles\admin-slides-part.css" />
+    <Content Include="Styles\admin-style-type-browser.css" />
+    <Content Include="Web.config" />
+    <Content Include="Scripts\Web.config" />
+    <Content Include="Styles\Web.config" />
+    <Content Include="Properties\AssemblyInfo.cs" />
+    <Content Include="Module.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
+      <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
+      <Name>Orchard.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\Orchard.Core.csproj">
+      <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
+      <Name>Orchard.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Forms\Orchard.Forms.csproj">
+      <Project>{642a49d7-8752-4177-80d6-bfbbcfad3de0}</Project>
+      <Name>Orchard.Forms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Layouts\Orchard.Layouts.csproj">
+      <Project>{6bd8b2fa-f2e3-4ac8-a4c3-2925a653889a}</Project>
+      <Name>Orchard.Layouts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.MediaLibrary\Orchard.MediaLibrary.csproj">
+      <Project>{73a7688a-5bd3-4f7e-adfa-ce36c5a10e3b}</Project>
+      <Name>Orchard.MediaLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Projections\Orchard.Projections.csproj">
+      <Project>{5531e894-d259-45a3-aa61-26dbe720c1ce}</Project>
+      <Name>Orchard.Projections</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\..\..\..\IDeliveable.LicensingFramework\FileBasedLicenseAccessor.cs">
+      <Link>Licensing\FileBasedLicenseAccessor.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\..\IDeliveable.LicensingFramework\HttpRequestExtensions.cs">
+      <Link>Licensing\HttpRequestExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\..\IDeliveable.LicensingFramework\ILicense.cs">
+      <Link>Licensing\ILicense.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\..\IDeliveable.LicensingFramework\ILicenseAccessor.cs">
+      <Link>Licensing\ILicenseAccessor.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\..\IDeliveable.LicensingFramework\ILicenseFileService.cs">
+      <Link>Licensing\ILicenseFileService.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\..\IDeliveable.LicensingFramework\ILicenseValidator.cs">
+      <Link>Licensing\ILicenseValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\..\IDeliveable.LicensingFramework\IProductManifestManager.cs">
+      <Link>Licensing\IProductManifestManager.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\..\IDeliveable.LicensingFramework\IProductManifestProvider.cs">
+      <Link>Licensing\IProductManifestProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\..\IDeliveable.LicensingFramework\License.cs">
+      <Link>Licensing\License.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\..\IDeliveable.LicensingFramework\LicenseControllerBase.cs">
+      <Link>Licensing\LicenseControllerBase.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\..\IDeliveable.LicensingFramework\LicenseFile.cs">
+      <Link>Licensing\LicenseFile.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\..\IDeliveable.LicensingFramework\LicenseFileService.cs">
+      <Link>Licensing\LicenseFileService.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\..\IDeliveable.LicensingFramework\LicenseValidationError.cs">
+      <Link>Licensing\LicenseValidationError.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\..\IDeliveable.LicensingFramework\LicenseValidationException.cs">
+      <Link>Licensing\LicenseValidationException.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\..\IDeliveable.LicensingFramework\LicenseValidationInfo.cs">
+      <Link>Licensing\LicenseValidationInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\..\IDeliveable.LicensingFramework\LicenseValidationOptions.cs">
+      <Link>Licensing\LicenseValidationOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\..\IDeliveable.LicensingFramework\LicenseValidationResult.cs">
+      <Link>Licensing\LicenseValidationResult.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\..\IDeliveable.LicensingFramework\LicenseValidationToken.cs">
+      <Link>Licensing\LicenseValidationToken.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\..\IDeliveable.LicensingFramework\LicenseValidator.cs">
+      <Link>Licensing\LicenseValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\..\IDeliveable.LicensingFramework\LicenseViewModel.cs">
+      <Link>Licensing\LicenseViewModel.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\..\IDeliveable.LicensingFramework\ProductManifest.cs">
+      <Link>Licensing\ProductManifest.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\..\IDeliveable.LicensingFramework\ProductManifestManager.cs">
+      <Link>Licensing\ProductManifestManager.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\..\IDeliveable.LicensingFramework\ProductManifestProviderBase.cs">
+      <Link>Licensing\ProductManifestProviderBase.cs</Link>
+    </Compile>
+    <Compile Include="AdminMenu.cs" />
+    <Compile Include="Controllers\LicenseController.cs" />
+    <Compile Include="Controllers\SlideShowProfileController.cs" />
+    <Compile Include="Drivers\SlideShowElementDriver.cs" />
+    <Compile Include="Filters\DialogAttribute.cs" />
+    <Compile Include="Handlers\SlideShowSettingsPartHandler.cs" />
+    <Compile Include="Helpers\LicenseAccessorExtensions.cs" />
+    <Compile Include="Helpers\StorageExtensions.cs" />
+    <Compile Include="Helpers\EngineDataHelper.cs" />
+    <Compile Include="Models\SlideShowProfile.cs" />
+    <Compile Include="Providers\ListSlidesProvider.cs" />
+    <Compile Include="Providers\ProjectionSlidesProvider.cs" />
+    <Compile Include="Services\ContentPartStorage.cs" />
+    <Compile Include="Services\ElementStorage.cs" />
+    <Compile Include="Services\ISlidesProviderManager.cs" />
+    <Compile Include="Services\ISlidesProvider.cs" />
+    <Compile Include="Providers\DefaultSlidesProvider.cs" />
+    <Compile Include="Services\IStorage.cs" />
+    <Compile Include="Services\SlidesProductManifest.cs" />
+    <Compile Include="Services\SlidesProvider.cs" />
+    <Compile Include="Services\SlidesProviderManager.cs" />
+    <Compile Include="ViewModels\ListSlidesProviderViewModel.cs" />
+    <Compile Include="ViewModels\ProjectionSlidesProviderViewModel.cs" />
+    <Compile Include="ViewModels\DefaultSlidesProviderViewModel.cs" />
+    <Compile Include="ViewModels\SlideShowProfileIndexViewModel.cs" />
+    <Compile Include="Models\SlideShowSettingsPart.cs" />
+    <Compile Include="Routes.cs" />
+    <Compile Include="ViewModels\LayoutEditorViewModel.cs" />
+    <Compile Include="Controllers\SlideShowElementController.cs" />
+    <Compile Include="Controllers\SlideShowPartController.cs" />
+    <Compile Include="Controllers\SlideFactoryController.cs" />
+    <Compile Include="Elements\SlideShow.cs" />
+    <Compile Include="Engines\Bootstrap\Bootstrap.cs" />
+    <Compile Include="Handlers\SlideShowElementHandler.cs" />
+    <Compile Include="Helpers\UrlStringExtensions.cs" />
+    <Compile Include="Services\Engine.cs" />
+    <Compile Include="Services\EngineManager.cs" />
+    <Compile Include="Services\IEngine.cs" />
+    <Compile Include="Engines\JCarousel\JCarousel.cs" />
+    <Compile Include="Services\IEngineManager.cs" />
+    <Compile Include="Services\Updater.cs" />
+    <Compile Include="ViewModels\SlideShowElementViewModel.cs" />
+    <Compile Include="ViewModels\SlideShowProfileViewModel.cs" />
+    <Compile Include="ViewModels\SlideShowSettingsViewModel.cs" />
+    <Compile Include="ViewModels\ContentSlidesFactoryViewModel.cs" />
+    <Compile Include="ViewModels\ImageSlidesFactoryViewModel.cs" />
+    <Compile Include="ViewModels\SlideShowPartViewModel.cs" />
+    <Compile Include="Controllers\SlideController.cs" />
+    <Compile Include="Drivers\SlideShowPartDriver.cs" />
+    <Compile Include="Migrations.cs" />
+    <Compile Include="Models\SlideShowPart.cs" />
+    <Compile Include="Services\ISlidesSerializer.cs" />
+    <Compile Include="Handlers\SlideShowPartHandler.cs" />
+    <Compile Include="Models\Slide.cs" />
+    <Compile Include="Services\XmlSlidesSerializer.cs" />
+    <Compile Include="ViewModels\SlideEditorViewModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts.SlideShow.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Placement.info">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\SlideFactory\Create.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\SlideEditorViewModel.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Slide\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts.SlideShow.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Engines\JCarousel\Scripts\Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Engines\JCarousel\Styles\Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts.SlideShow.Summary.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts.SlideShow.SummaryAdmin.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\SlideFactory\ImageSlides.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\SlideFactory\ContentSlides.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\DefinitionTemplates\SlideShowSettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Engines.JCarousel.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Engines.JCarousel.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Engines.Bootstrap.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Engines.Bootstrap.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\SlideShow.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\SlideShow.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Elements.SlideShow.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\SlideShowElement\Browse.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\SlideShowElement\Create.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\SlideShowElement\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\SlidesFactorySelector.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\SlideShowProfile\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\SlideShowProfile\Create.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\SlideShowProfileViewModel.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\SlideShowProfile\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\SlidesProviders.Projection.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\SlidesProviders.List.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\SlidesProviders.Slides.Part.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\SlidesProviders.Slides.Element.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts.SlideShow.InvalidLicense.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\License\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\SlideShowProfile\InvalidLicense.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Slides.InvalidLicense.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts.SlideShow.Edit.InvalidLicense.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\SlideShow.InvalidLicense.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\SlideShow.InvalidLicense.Design.cshtml" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target> -->
+  <Target Name="AfterBuild" DependsOnTargets="AfterBuildCompiler">
+    <PropertyGroup>
+      <AreasManifestDir>$(ProjectDir)\..\Manifests</AreasManifestDir>
+    </PropertyGroup>
+    <!-- If this is an area child project, uncomment the following line:
+    <CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Child" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" />
+    -->
+    <!-- If this is an area parent project, uncomment the following lines:
+    <CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Parent" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" />
+    <CopyAreaManifests ManifestPath="$(AreasManifestDir)" CrossCopy="false" RenameViews="true" />
+    -->
+  </Target>
+  <Target Name="AfterBuildCompiler" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(ProjectDir)\..\$(ProjectName)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>45979</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>
+          </IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>True</UseCustomServer>
+          <CustomServerUrl>http://orchard.codeplex.com</CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

@@ -1,0 +1,38 @@
+﻿@model IDeliverable.Slides.Engines.Bootstrap.Bootstrap
+@{
+    var pauseList = new[] { "", "hover" };
+    var pauseOptions = pauseList.Select(x => new SelectListItem { Text = x, Value = x, Selected = x == Model.Pause }).ToList();
+}
+<div class="message message-Information">@T("This engine requires a Bootstrap powered theme in order to function properly.")</div>
+<fieldset>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Interval, T("Interval"))
+        @Html.TextBoxFor(m => m.Interval, new { @class = "text medium" })
+        @Html.Hint(T("The interval in milliseconds to wait before showing the next slide."))
+    </div>
+    <div class="form-group">
+        @Html.CheckBoxFor(m => m.Controls)
+        @Html.LabelFor(m => m.Controls, T("Show Controls").Text, new { @class = "forcheckbox" })
+        @Html.Hint(T("Check this option to show the next and prev control buttons."))
+    </div>
+    <div class="form-group">
+        @Html.CheckBoxFor(m => m.Indicators)
+        @Html.LabelFor(m => m.Indicators, T("Show Indicators").Text, new { @class = "forcheckbox" })
+        @Html.Hint(T("Check this option to the show indicators."))
+    </div>
+    <div class="form-group">
+        @Html.CheckBoxFor(m => m.Wrap)
+        @Html.LabelFor(m => m.Wrap, T("Wrap").Text, new { @class = "forcheckbox" })
+        @Html.Hint(T("Whether the carousel should cycle continuously or have hard stops."))
+    </div>
+    <div class="form-group">
+        @Html.CheckBoxFor(m => m.Keyboard)
+        @Html.LabelFor(m => m.Keyboard, T("Keyboard").Text, new { @class = "forcheckbox" })
+        @Html.Hint(T("Whether the carousel should react to keyboard events."))
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Pause, T("Pause"))
+        @Html.DropDownListFor(m => m.Pause, pauseOptions)
+        @Html.Hint(T("Pauses the cycling of the carousel on mouseenter and resumes the cycling of the carousel on mouseleave."))
+    </div>
+</fieldset>

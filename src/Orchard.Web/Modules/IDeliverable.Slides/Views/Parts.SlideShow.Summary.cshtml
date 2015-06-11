@@ -1,0 +1,33 @@
+﻿@{
+    Style.Include("~/Modules/Orchard.Layouts/Styles/default-grid.css");
+    Style.Include("~/Modules/IDeliverable.Slides/Engines/jCarousel/Styles/engine-jcarousel.css");
+    Script.Require("jQuery");
+    Script.Include("~/Modules/IDeliverable.Slides/Engines/jCarousel/Scripts/jquery.jcarousel.js", "~/Modules/IDeliverable.Slides/Engines/jCarousel/Scripts/jquery.jcarousel.min.js");
+    Script.Include("~/Modules/IDeliverable.Slides/Engines/jCarousel/Scripts/engine-jcarousel.js");
+}
+@{
+    var slides = (IList<dynamic>)Model.Slides;
+
+    if (slides.Any())
+    {
+        <!-- Wrapper -->
+        <div class="jcarousel-wrapper">
+
+            <!-- Carousel -->
+            <div class="jcarousel">
+                <ul>
+                    @foreach (var slide in slides)
+                    {
+                        <li>
+                            @Display(slide)
+                        </li>
+                    }
+                </ul>
+            </div>
+
+            <!-- Controls -->
+            <a class="jcarousel-prev" href="#">@T("Prev")</a>
+            <a class="jcarousel-next" href="#">@T("Next")</a>
+        </div>
+    }
+}

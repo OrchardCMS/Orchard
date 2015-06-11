@@ -1,0 +1,46 @@
+﻿@model IDeliverable.Slides.ViewModels.DefaultSlidesProviderViewModel
+@{
+    Style.Include("~/Modules/Orchard.Layouts/Styles/default-grid.css");
+    Style.Include("admin-slides-part.css");
+    Script.Require("jQuery");
+    Script.Require("jQueryUI_Sortable");
+    Script.Require("ShapesBase");
+    Script.Include("admin-slides-part.js");
+}
+@{
+    var slides = Model.Slides.ToArray();
+
+    if (!slides.Any())
+    {
+        <div class="message message-Information">@T("No slides have been added yet.")</div>
+    }
+    else
+    {
+        <div class="slides-wrapper interactive">
+            <div class="dirty-message message message-Warning">@T("You have unsaved changes.")</div>
+            <div class="group">
+                <ul class="slides">
+                    @{ var slideIndex = 0;}
+                    @foreach (var slide in slides)
+                    {
+                        <li>
+                            <input type="hidden" name="@Html.FieldNameFor(m => m.Indices)" value="@slideIndex" />
+                            <div class="slide-wrapper">
+                                <div class="slide-preview">
+                                    @Display(slide)
+                                </div>
+                            </div>
+                            <div class="actions">
+                                @Html.ActionLink(T("Edit").Text, "EditSlide", "SlideShowElement", new { session = Model.SessionKey, index = slideIndex, dialog = true, area = "IDeliverable.Slides" }, null)
+                                @T(" | ")
+                                @Html.ActionLink(T("Delete").Text, "DeleteSlide", "SlideShowElement", new { Session = Model.SessionKey, index = slideIndex, dialog = true, area = "IDeliverable.Slides" }, new { data_unsafe_url = T("Are you sure you want to delete this slide?") })
+                            </div>
+                        </li>
+                        ++slideIndex;
+                    }
+                </ul>
+            </div>
+        </div>
+    }
+    @Display.SlidesFactorySelector(DialogMode: true, ReturnUrl: Url.Action("AddSlides", "SlideShowElement", new { session = Model.SessionKey, area = "IDeliverable.Slides" }));
+}

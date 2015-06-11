@@ -1,0 +1,58 @@
+﻿@using IDeliverable.Slides.Engines.JCarousel
+@{
+    var engine = (JCarousel)Model.Engine;
+
+    if (engine.Transitions)
+    {
+        Script.Include("~/Modules/IDeliverable.Slides/Engines/jCarousel/Scripts/modernizr.transitions.js");
+    }
+    
+    Style.Include("~/Modules/IDeliverable.Slides/Engines/jCarousel/Styles/engine-jcarousel.css");
+    Script.Require("jQuery");
+    Script.Include("~/Modules/IDeliverable.Slides/Engines/jCarousel/Scripts/jquery.jcarousel.js", "~/Modules/IDeliverable.Slides/Engines/jCarousel/Scripts/jquery.jcarousel.min.js");
+    Script.Include("~/Modules/IDeliverable.Slides/Engines/jCarousel/Scripts/engine-jcarousel.js");
+}
+@{
+    var slides = (IList<dynamic>)Model.Slides;
+
+    if (slides.Any())
+    {
+        <!-- Wrapper -->
+    <div class="jcarousel-engine"
+         data-autostart="@engine.AutoStart.ToString().ToLower()"
+         data-interval="@engine.Interval"
+         data-transitions="@engine.Transitions.ToString().ToLower()"
+         data-vertical="@engine.Vertical.ToString().ToLower()"
+         data-center="@engine.Center.ToString().ToLower()"
+         data-easing="@engine.Easing"
+         data-wrap="@engine.Wrap">
+
+        <!-- Carousel -->
+        <div class="jcarousel">
+            <ul>
+                @foreach (var slide in slides)
+                {
+                    <li>
+                        @Display(slide)
+                    </li>
+                }
+            </ul>
+        </div>
+
+        @if (engine.Controls)
+        {
+                <!-- Controls -->
+            <a class="jcarousel-prev" href="#">@T("Prev")</a>
+            <a class="jcarousel-next" href="#">@T("Next")</a>
+        }
+
+        @if (engine.Pagination)
+        {
+                <!-- Pagination -->
+            <div class="jcarousel-pagination">
+                <!-- Pagination items will be generated in here -->
+            </div>
+        }
+    </div>
+    }
+}

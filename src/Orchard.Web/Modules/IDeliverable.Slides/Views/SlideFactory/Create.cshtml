@@ -1,0 +1,11 @@
+﻿@model IDeliverable.Slides.ViewModels.SlideEditorViewModel
+@{
+    Layout.Title = T("Create Slide");
+}
+@using (Html.BeginFormAntiForgeryPost()) {
+    @Html.EditorForModel()
+    <fieldset>
+        <button type="submit" name="submit.Save" value="submit.Save">@T("Create")</button>
+        <a class="button" href="@Model.ReturnUrl">@T("Cancel")</a>
+    </fieldset>
+}

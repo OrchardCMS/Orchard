@@ -1,0 +1,18 @@
+﻿<Placement>
+    <Place Parts_SlideShow_Edit="Content:3"/>
+    
+    <Match DisplayType="Detail">
+        <Place Parts_SlideShow="Content:3"/>
+    </Match>
+
+    <Match DisplayType="Summary">
+        <Place Parts_SlideShow_Summary="Content:3"/>
+    </Match>
+
+    <Match DisplayType="SummaryAdmin">
+        <Place Parts_SlideShow_SummaryAdmin="Content:3"/>
+    </Match>
+
+    <Place Parts_SlideShow_InvalidLicense="Content:0"/>
+    <Place Parts_SlideShow_Edit_InvalidLicense="Content:0"/>
+</Placement>

@@ -1,0 +1,28 @@
+﻿@model IDeliverable.Slides.ViewModels.BrowseElementSlideTypesViewModel
+@{
+    Style.Include("admin-slide-type-browser.css");
+}
+@{
+    Layout.Title = T("Add Slides");
+}
+<div class="slide-type-browser">
+    <ul>
+        <li>
+            <a class="slide-type" href="@Url.Action("Create", "Slide", new { id = Model.Session, area = "IDeliverable.Slides" })">
+                <h2>@T("Create Slide")</h2>
+                @Html.Hint(T("Create a new regular, free-form slide."))
+            </a>
+            <a class="slide-type" href="@Url.Action("ImageSlides", "SlideFactory", new { id = Model.Session, area = "IDeliverable.Slides" })">
+                <h2>@T("Create Image Slides")</h2>
+                @Html.Hint(T("Creates multiple slides based on image elements."))
+            </a>
+            <a class="slide-type" href="@Url.Action("ContentSlides", "SlideFactory", new { id = Model.Session, area = "IDeliverable.Slides" })">
+                <h2>@T("Create Content Slides")</h2>
+                @Html.Hint(T("Creates multiple slides based on content item elements."))
+            </a>
+        </li>
+    </ul>
+    <fieldset>
+        <a class="button" href="@Url.ItemEditUrl(Model.Part)">@T("Cancel")</a>
+    </fieldset>
+</div>

@@ -1,0 +1,51 @@
+﻿@model IDeliverable.Slides.ViewModels.DefaultSlidesProviderViewModel
+@{
+    Style.Include("~/Modules/Orchard.Layouts/Styles/default-grid.css");
+    Style.Include("admin-slides-part.css");
+    Script.Require("jQuery");
+    Script.Require("jQueryUI_Sortable");
+    Script.Require("ShapesBase");
+    Script.Include("admin-slides-part.js");
+}
+@{
+    var part = Model.Part;
+    var contentId = part.Id;
+    var isNewItem = contentId == 0;
+}
+@if (isNewItem) {
+    <div class="message message-Information">@T("You need to save your content item before you can add slides.")</div>
+}
+else {
+    var slides = Model.Slides.ToArray();
+
+    if (!slides.Any()) {
+        <div class="message message-Information">@T("No slides have been added yet.")</div>
+    }
+    else {
+        <div class="slides-wrapper interactive">
+            <div class="dirty-message message message-Warning">@T("You have unsaved changes.")</div>
+            <div class="group">
+                <ul class="slides">
+                    @{ var slideIndex = 0;}
+                    @foreach (var slide in slides) {
+                        <li>
+                            <input type="hidden" name="@Html.FieldNameFor(m => m.Indices)" value="@slideIndex" />
+                            <div class="slide-wrapper">
+                                <div class="slide-preview">
+                                    @Display(slide)
+                                </div>
+                            </div>
+                            <div class="actions">
+                                @Html.ActionLink(T("Edit").Text, "EditSlide", "SlideShowPart", new { id = contentId, index = slideIndex, area = "IDeliverable.Slides" }, null)
+                                @T(" | ")
+                                @Html.ActionLink(T("Delete").Text, "DeleteSlide", "SlideShowPart", new { id = contentId, index = slideIndex, area = "IDeliverable.Slides" }, new { data_unsafe_url = T("Are you sure you want to delete this slide?") })
+                            </div>
+                        </li>
+                        ++slideIndex;
+                    }
+                </ul>
+            </div>
+        </div>
+    }
+    @Display.SlidesFactorySelector(ReturnUrl: Url.Action("AddSlides", "SlideShowPart", new { id = contentId, area = "IDeliverable.Slides" }));
+}

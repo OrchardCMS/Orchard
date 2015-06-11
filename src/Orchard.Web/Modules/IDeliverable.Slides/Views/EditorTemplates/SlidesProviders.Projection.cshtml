@@ -1,0 +1,20 @@
+﻿@model IDeliverable.Slides.ViewModels.ProjectionSlidesProviderViewModel
+@if (!Model.QueryOptions.Any())
+{
+    <div class="message message-Information">@T("No Queryies have been created yet.")</div>
+}
+else
+{
+    <fieldset>
+        <div class="form-group">
+            @Html.LabelFor(m => m.SelectedQueryId, T("Query"))
+            @Html.DropDownListFor(m => m.SelectedQueryId, Model.QueryOptions)
+            @Html.Hint(T("Select the query to render as a projection of slides."))
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.DisplayType, T("Display Type"))
+            @Html.TextBoxFor(m => m.DisplayType, new { @class = "text" })
+            @Html.Hint(T("The display type to use when rendering each content item slide."))
+        </div>
+    </fieldset>
+}

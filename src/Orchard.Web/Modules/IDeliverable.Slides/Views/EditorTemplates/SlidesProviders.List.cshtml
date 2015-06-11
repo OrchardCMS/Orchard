@@ -1,0 +1,21 @@
+﻿@using Orchard.ContentManagement
+@model IDeliverable.Slides.ViewModels.ListSlidesProviderViewModel
+@Display.ContentPicker_Edit(
+    Required: false,
+    Multiple: false,
+    DisplayName: T("List").Text,
+    IdsFieldId: Html.FieldIdFor(m => m.SelectedListId),
+    SelectedItemsFieldName: Html.FieldNameFor(m => m.SelectedListId),
+    ContentItems: Model.SelectedList != null ? new[] { Model.SelectedList } : Enumerable.Empty<ContentItem>(),
+    Hint: T("Select the list to project as slides.").Text,
+    Types: new[] { "ContainerPart" },
+    PartName: "",
+    FieldName: ""
+)
+<fieldset>
+    <div class="form-group">
+        @Html.LabelFor(m => m.DisplayType, T("Display Type"))
+        @Html.TextBoxFor(m => m.DisplayType, new { @class = "text" })
+        @Html.Hint(T("The display type to use when rendering each content item slide."))
+    </div>
+</fieldset>

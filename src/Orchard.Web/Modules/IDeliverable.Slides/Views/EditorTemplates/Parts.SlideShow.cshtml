@@ -1,0 +1,36 @@
+﻿@model IDeliverable.Slides.ViewModels.SlideShowPartViewModel
+@{
+    Script.Require("ShapesBase");
+}
+@{
+    var profileOptions = Model.AvailableProfiles.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString(), Selected = x.Id == Model.ProfileId });
+    var providerOptions = Model.AvailableProviders.Values.Select(x => new SelectListItem { Text = x.Provider.DisplayName.Text, Value = x.Provider.Name.ToString(), Selected = x.Provider.Name == Model.ProviderName });
+}
+<fieldset>
+    <div class="form-group">
+        @Html.LabelFor(m => m.ProfileId, T("Slide Show Profile"))
+        @Html.DropDownListFor(m => m.ProfileId, profileOptions, "")
+        @Html.Hint(T("Select the slide show player profile to use when presenting the slides. <a href=\"{0}\">Click here</a> to manage your profiles.", Url.Action("Index", "SlideShowProfile", new { area = "IDeliverable.Slides" })))
+    </div>
+</fieldset>
+
+<fieldset>
+    <div class="form-group">
+        @Html.LabelFor(m => m.ProviderName, T("Slides Provider"))
+        <select name="@Html.FieldNameFor(m => m.ProviderName)">
+            @foreach (var option in providerOptions)
+            {
+                <option id="@option.Value" value="@option.Value" @if (option.Selected) { <text> selected="selected" </text> }>@option.Text</option>
+            }
+        </select>
+        @Html.Hint(T("Select the provider that will provide the slides to the slide show."))
+    </div>
+</fieldset>
+@foreach (var provider in Model.AvailableProviders)
+{
+    var providerName = (string)provider.Value.Provider.Name;
+    var id = providerName;
+    <div data-controllerid="@id">
+        @Display(provider.Value)
+    </div>
+}

@@ -1,0 +1,12 @@
+﻿@model IDeliverable.Slides.ViewModels.SlideShowProfileViewModel
+@{
+    Layout.Title = T("Create Slide Show Profile");
+}
+@Html.ValidationSummary()
+@using (Html.BeginFormAntiForgeryPost()) {
+    @Html.EditorForModel()
+    <fieldset>
+        <button type="submit">@T("Create")</button>
+        @Html.ActionLink(T("Cancel").Text, "Index", "SlideShowProfile", new { area = "IDeliverable.Slides" }, new { @class = "button" })
+    </fieldset>
+}

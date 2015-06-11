@@ -1,0 +1,57 @@
+﻿@model IDeliverable.Slides.Engines.JCarousel.JCarousel
+@{
+    Script.Require("ShapesBase");
+}
+@{
+    var easingList = new[] { "linear", "ease" };
+    var wrapList = new[] { "", "first", "last", "both", "circular" };
+    var easingOptions = easingList.Select(x => new SelectListItem { Text = x, Value = x, Selected = x == Model.Easing }).ToList();
+    var wrapOptions = wrapList.Select(x => new SelectListItem { Text = x, Value = x, Selected = x == Model.Wrap }).ToList();
+}
+<fieldset>
+    <div class="form-group">
+        @Html.CheckBoxFor(m => m.AutoStart)
+        @Html.LabelFor(m => m.AutoStart, T("Auto Start").Text, new { @class = "forcheckbox" })
+        @Html.Hint(T("Check this option to have the slide show start automatically."))
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Interval, T("Interval"))
+        @Html.TextBoxFor(m => m.Interval, new { @class = "text medium" })
+        @Html.Hint(T("The interval in milliseconds to wait before showing the next slide."))
+    </div>
+    <div class="form-group">
+        @Html.CheckBoxFor(m => m.Controls)
+        @Html.LabelFor(m => m.Controls, T("Show Controls").Text, new { @class = "forcheckbox" })
+        @Html.Hint(T("Check this option to show the next and prev control buttons."))
+    </div>
+    <div class="form-group">
+        @Html.CheckBoxFor(m => m.Pagination)
+        @Html.LabelFor(m => m.Pagination, T("Show Pagination").Text, new { @class = "forcheckbox" })
+        @Html.Hint(T("Check this option to the show pager buttons."))
+    </div>
+    <div class="form-group">
+        @Html.CheckBoxFor(m => m.Transitions)
+        @Html.LabelFor(m => m.Transitions, T("Use Transitions").Text, new { @class = "forcheckbox" })
+        @Html.Hint(T("Check this option to use transitions. Note: this only works for browsers that support CSS transforms."))
+    </div>
+    <div class="form-group">
+        @Html.CheckBoxFor(m => m.Vertical)
+        @Html.LabelFor(m => m.Vertical, T("Vertical").Text, new { @class = "forcheckbox" })
+        @Html.Hint(T("Whether the carousel appears in vertical orientation. Changes the carousel from a left/right style to a up/down style carousel."))
+    </div>
+    <div class="form-group">
+        @Html.CheckBoxFor(m => m.Center)
+        @Html.LabelFor(m => m.Center, T("Center").Text, new { @class = "forcheckbox" })
+        @Html.Hint(T("Wether the targeted item should be centered inside the root element. Note: This feature is experimental and may not work with all setups."))
+    </div>
+    <div class="form-group" data-controllerid="@Html.FieldIdFor(m => m.Transitions)">
+        @Html.LabelFor(m => m.Easing, T("Easing"))
+        @Html.DropDownListFor(m => m.Easing, easingOptions)
+        @Html.Hint(T("The transition-timing-function."))
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Wrap, T("Wrap"))
+        @Html.DropDownListFor(m => m.Wrap, wrapOptions)
+        @Html.Hint(T("Specify whether to wrap at the first or last item (or both) and jump back to the start/end."))
+    </div>
+</fieldset>

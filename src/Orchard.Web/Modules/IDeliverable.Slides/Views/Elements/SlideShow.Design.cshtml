@@ -1,0 +1,20 @@
+﻿@{
+    Style.Include("~/Modules/Orchard.Layouts/Styles/default-grid.css");
+    Style.Include("admin-slides-part.css");
+    Script.Require("jQuery");
+    Script.Require("jQueryUI_Sortable");
+    Script.Require("ShapesBase");
+    Script.Include("admin-slides-part.js");
+}
+@{
+    var slides = (IList<dynamic>)Model.Slides;
+    if (!slides.Any()) {
+        <div class="message message-Information">@T("No slides have been added yet.")</div>
+    }
+    else {
+        var firstSlide = slides.First();
+        <div class="slides-wrapper img-responsive">
+            @Display(firstSlide)
+        </div>
+    }
+}
