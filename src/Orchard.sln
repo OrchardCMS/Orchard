@@ -263,13 +263,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IDeliverable.Star", "IDeliverable.Star", "{35CE9047-8A48-4EFA-A30C-93C5A8E564A4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IDeliverable.Licensing.Service", "IDeliverable.LicensingService\IDeliverable.Licensing.Service.csproj", "{6014E7AC-C979-4D50-B8D9-5FD9DC8CA641}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IDeliverable.Licensing.Service", "IDeliverable\IDeliverable.Licensing.Service\IDeliverable.Licensing.Service.csproj", "{6014E7AC-C979-4D50-B8D9-5FD9DC8CA641}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IDeliverable.Licensing", "IDeliverable.LicensingFramework\IDeliverable.Licensing.csproj", "{7E439CB7-1ACE-435F-A8F3-5BB929423E34}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IDeliverable.Licensing", "IDeliverable\IDeliverable.Licensing\IDeliverable.Licensing.csproj", "{7E439CB7-1ACE-435F-A8F3-5BB929423E34}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IDeliverable.Slides", "Orchard.Web\Modules\IDeliverable.Slides\IDeliverable.Slides.csproj", "{F5C14E1E-E2B4-4851-BB27-06B97818C4FA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IDeliverable.Licensing.Orchard", "IDeliverable.Licensing.Orchard\IDeliverable.Licensing.Orchard.csproj", "{F1467A6B-2397-447B-BE90-766D192EC3D9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IDeliverable.Licensing.Orchard", "IDeliverable\IDeliverable.Licensing.Orchard\IDeliverable.Licensing.Orchard.csproj", "{F1467A6B-2397-447B-BE90-766D192EC3D9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
