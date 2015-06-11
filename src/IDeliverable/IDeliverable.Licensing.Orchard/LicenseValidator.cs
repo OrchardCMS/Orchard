@@ -132,6 +132,9 @@ namespace IDeliverable.Licensing.Orchard
                 var productManifest = _productManifestManager.FindByProductId(productId);
                 var token = _licenseAccessor.GetLicenseValidationToken(productManifest);
 
+                if (token == null)
+                    return null;
+
                 if (token.GetIsWithinRenewalInterval())
                 {
                     context.Monitor(_clock.When(token.RenewalInterval));

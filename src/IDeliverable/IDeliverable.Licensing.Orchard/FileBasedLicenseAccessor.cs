@@ -1,3 +1,4 @@
+using System;
 using Orchard.Caching;
 
 namespace IDeliverable.Licensing.Orchard
@@ -43,6 +44,10 @@ namespace IDeliverable.Licensing.Orchard
         public LicenseValidationToken GetLicenseValidationToken(ProductManifest productManifest)
         {
             var licenseFile = GetLicenseFile(productManifest);
+
+            if (String.IsNullOrWhiteSpace(licenseFile.LicenseValidationToken))
+                return null;
+
             var serializedToken = licenseFile.LicenseValidationToken;
             var token = LicenseValidationToken.Deserialize(serializedToken);
 
