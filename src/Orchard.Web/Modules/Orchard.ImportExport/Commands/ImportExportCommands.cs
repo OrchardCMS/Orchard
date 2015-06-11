@@ -75,7 +75,7 @@ namespace Orchard.ImportExport.Commands {
 
             var versionOption = VersionHistoryOptions.Published;
 
-            if (!Enum.TryParse(Version, out versionOption)) {
+            if (!String.IsNullOrEmpty(Version) && !Enum.TryParse(Version, out versionOption)) {
                 Context.Output.WriteLine(T("Invalid version option"));
                 return;
             }
