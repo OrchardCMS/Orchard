@@ -1,4 +1,5 @@
 ﻿using IDeliverable.Licensing;
+using IDeliverable.Licensing.Orchard;
 using IDeliverable.Slides.Services;
 
 namespace IDeliverable.Slides.Helpers

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using IDeliverable.Licensing;
+using IDeliverable.Licensing.Orchard;
 using IDeliverable.Slides.Helpers;
 using IDeliverable.Slides.Models;
 using IDeliverable.Slides.Services;

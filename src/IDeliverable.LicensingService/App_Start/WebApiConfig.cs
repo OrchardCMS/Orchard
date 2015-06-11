@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace IDeliverable.LicensingService
+namespace IDeliverable.Licensing.Service
 {
     public static class WebApiConfig
     {

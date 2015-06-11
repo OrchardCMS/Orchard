@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace IDeliverable.Licensing
+namespace IDeliverable.Licensing.Orchard
 {
     public class ProductManifestManager : IProductManifestManager
     {

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace IDeliverable.Licensing
+namespace IDeliverable.Licensing.Orchard
 {
     public class LicenseFile
     {

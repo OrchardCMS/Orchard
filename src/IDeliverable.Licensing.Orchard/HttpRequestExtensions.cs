@@ -1,6 +1,6 @@
 using System.Web;
 
-namespace IDeliverable.Licensing
+namespace IDeliverable.Licensing.Orchard
 {
     public static class HttpRequestExtensions
     {

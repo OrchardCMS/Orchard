@@ -11,10 +11,10 @@ using System.Net.Http.Headers;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Description;
-using IDeliverable.LicensingService.Areas.HelpPage.ModelDescriptions;
-using IDeliverable.LicensingService.Areas.HelpPage.Models;
+using IDeliverable.Licensing.Service.Areas.HelpPage.ModelDescriptions;
+using IDeliverable.Licensing.Service.Areas.HelpPage.Models;
 
-namespace IDeliverable.LicensingService.Areas.HelpPage
+namespace IDeliverable.Licensing.Service.Areas.HelpPage
 {
     public static class HelpPageConfigurationExtensions
     {

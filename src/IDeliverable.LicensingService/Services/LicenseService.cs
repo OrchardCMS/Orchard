@@ -5,11 +5,9 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using IDeliverable.LicensingService.Exceptions;
-using IDeliverable.LicensingService.Models;
 using Newtonsoft.Json.Linq;
 
-namespace IDeliverable.LicensingService.Services
+namespace IDeliverable.Licensing.Service.Services
 {
     public class LicenseService : ILicenseService
     {

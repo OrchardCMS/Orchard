@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
 using IDeliverable.Licensing;
+using IDeliverable.Licensing.Orchard;
 using IDeliverable.Slides.Helpers;
 using IDeliverable.Slides.Models;
 using IDeliverable.Slides.Services;

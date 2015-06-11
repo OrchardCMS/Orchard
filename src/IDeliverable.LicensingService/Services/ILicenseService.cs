@@ -1,6 +1,4 @@
-﻿using IDeliverable.LicensingService.Models;
-
-namespace IDeliverable.LicensingService.Services
+﻿namespace IDeliverable.Licensing.Service.Services
 {
     public interface ILicenseService
     {

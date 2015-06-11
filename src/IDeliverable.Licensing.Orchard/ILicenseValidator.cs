@@ -1,6 +1,6 @@
 using Orchard;
 
-namespace IDeliverable.Licensing
+namespace IDeliverable.Licensing.Orchard
 {
     public interface ILicenseValidator : IDependency
     {

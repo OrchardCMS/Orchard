@@ -3,7 +3,7 @@ using System.Text;
 using System.Web;
 using System.Web.Http.Description;
 
-namespace IDeliverable.LicensingService.Areas.HelpPage
+namespace IDeliverable.Licensing.Service.Areas.HelpPage
 {
     public static class ApiDescriptionExtensions
     {

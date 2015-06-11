@@ -1,7 +1,7 @@
 using Orchard;
 using Orchard.Caching;
 
-namespace IDeliverable.Licensing
+namespace IDeliverable.Licensing.Orchard
 {
     public interface ILicenseFileService : IDependency
     {

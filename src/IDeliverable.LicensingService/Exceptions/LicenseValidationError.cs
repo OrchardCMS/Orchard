@@ -1,4 +1,4 @@
-namespace IDeliverable.LicensingService.Exceptions
+namespace IDeliverable.Licensing.Service.Exceptions
 {
     public enum LicenseValidationError
     {

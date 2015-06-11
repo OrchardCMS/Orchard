@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace IDeliverable.LicensingService.Exceptions
+namespace IDeliverable.Licensing.Service.Exceptions
 {
     public class LicenseValidationException : Exception
     {

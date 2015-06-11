@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using IDeliverable.Licensing;
+using IDeliverable.Licensing.Orchard;
 
 namespace IDeliverable.Slides.Services
 {

@@ -10,7 +10,7 @@ using Orchard.Caching;
 using Orchard.Mvc;
 using Orchard.Services;
 
-namespace IDeliverable.Licensing
+namespace IDeliverable.Licensing.Orchard
 {
     public class LicenseValidator : ILicenseValidator
     {

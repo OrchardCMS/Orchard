@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using IDeliverable.Licensing;
+using IDeliverable.Licensing.Orchard;
 using IDeliverable.Slides.Elements;
 using IDeliverable.Slides.Helpers;
 using IDeliverable.Slides.Models;
@@ -85,7 +85,7 @@ namespace IDeliverable.Slides.Drivers
             return Editor(context, slidesEditor);
         }
 
-        protected override void OnDisplaying(SlideShow element, ElementDisplayingContext context)
+        protected override void OnDisplaying(SlideShow element, ElementDisplayContext context)
         {
             if (!_licenseValidator.ValidateLicense(_licenseAccessor.GetSlidesLicense()).IsValid) {
                 context.ElementShape.Metadata.Alternates.Clear();

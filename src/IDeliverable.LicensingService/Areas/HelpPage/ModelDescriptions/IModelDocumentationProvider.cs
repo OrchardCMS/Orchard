@@ -1,7 +1,7 @@
 using System;
 using System.Reflection;
 
-namespace IDeliverable.LicensingService.Areas.HelpPage.ModelDescriptions
+namespace IDeliverable.Licensing.Service.Areas.HelpPage.ModelDescriptions
 {
     public interface IModelDocumentationProvider
     {

@@ -1,9 +1,7 @@
 ﻿using System.Web.Http;
-using IDeliverable.LicensingService.Exceptions;
-using IDeliverable.LicensingService.Models;
-using IDeliverable.LicensingService.Services;
+using IDeliverable.Licensing.Service.Services;
 
-namespace IDeliverable.LicensingService.Controllers
+namespace IDeliverable.Licensing.Service.Controllers
 {
     public class LicenseController : ApiController
     {

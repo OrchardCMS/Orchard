@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Web.Mvc;
-using IDeliverable.Licensing;
 using Orchard;
 using Orchard.Localization;
 using Orchard.Security;
 using Orchard.UI.Admin;
 
-namespace IDeliverable.Slides.Controllers
+namespace IDeliverable.Licensing.Orchard
 {
     [Admin]
     public abstract class LicenseControllerBase : Controller
@@ -20,9 +19,9 @@ namespace IDeliverable.Slides.Controllers
         }
 
         protected abstract ProductManifest ProductManifest { get; }
-        protected IOrchardServices Services { get; private set; }
-        protected ILicenseValidator LicenseValidator { get; private set; }
-        protected ILicenseAccessor LicenseAccessor { get; private set; }
+        protected IOrchardServices Services { get; }
+        protected ILicenseValidator LicenseValidator { get; }
+        protected ILicenseAccessor LicenseAccessor { get; }
 
         public Localizer T { get; set; }
 

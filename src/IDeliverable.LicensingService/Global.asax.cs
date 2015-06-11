@@ -7,7 +7,7 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 
-namespace IDeliverable.LicensingService
+namespace IDeliverable.Licensing.Service
 {
     public class WebApiApplication : System.Web.HttpApplication
     {

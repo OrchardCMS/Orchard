@@ -1,4 +1,3 @@
-using System;
 using Newtonsoft.Json;
 
 namespace IDeliverable.Licensing
@@ -6,6 +5,18 @@ namespace IDeliverable.Licensing
     public class LicenseValidationInfo
     {
         public static readonly LicenseValidationInfo Empty = new LicenseValidationInfo();
+
+        private LicenseValidationInfo()
+        {
+        }
+
+        public LicenseValidationInfo(int productId, string hostname, string licenseKey, long issuedUtcTicks)
+        {
+            ProductId = productId;
+            Hostname = hostname;
+            LicenseKey = licenseKey;
+            IssuedUtcTicks = issuedUtcTicks;
+        }
 
         public int ProductId { get; set; }
         public string Hostname { get; set; }

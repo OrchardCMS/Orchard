@@ -1,7 +1,7 @@
 using System.Web.Http;
 using System.Web.Mvc;
 
-namespace IDeliverable.LicensingService.Areas.HelpPage
+namespace IDeliverable.Licensing.Service.Areas.HelpPage
 {
     public class HelpPageAreaRegistration : AreaRegistration
     {

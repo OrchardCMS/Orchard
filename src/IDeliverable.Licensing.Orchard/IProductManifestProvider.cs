@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Orchard;
 
-namespace IDeliverable.Licensing
+namespace IDeliverable.Licensing.Orchard
 {
     public interface IProductManifestProvider : IDependency
     {

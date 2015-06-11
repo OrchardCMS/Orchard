@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 
-namespace IDeliverable.LicensingService.Areas.HelpPage.ModelDescriptions
+namespace IDeliverable.Licensing.Service.Areas.HelpPage.ModelDescriptions
 {
     internal static class ModelNameHelper
     {

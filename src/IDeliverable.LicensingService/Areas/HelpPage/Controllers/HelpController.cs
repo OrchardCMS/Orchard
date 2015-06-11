@@ -1,10 +1,10 @@
 using System;
 using System.Web.Http;
 using System.Web.Mvc;
-using IDeliverable.LicensingService.Areas.HelpPage.ModelDescriptions;
-using IDeliverable.LicensingService.Areas.HelpPage.Models;
+using IDeliverable.Licensing.Service.Areas.HelpPage.ModelDescriptions;
+using IDeliverable.Licensing.Service.Areas.HelpPage.Models;
 
-namespace IDeliverable.LicensingService.Areas.HelpPage.Controllers
+namespace IDeliverable.Licensing.Service.Areas.HelpPage.Controllers
 {
     /// <summary>
     /// The controller that will handle requests for the help page.

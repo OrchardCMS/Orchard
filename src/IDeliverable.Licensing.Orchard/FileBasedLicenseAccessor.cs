@@ -1,6 +1,6 @@
 using Orchard.Caching;
 
-namespace IDeliverable.Licensing
+namespace IDeliverable.Licensing.Orchard
 {
     public class FileBasedLicenseAccessor : ILicenseAccessor
     {

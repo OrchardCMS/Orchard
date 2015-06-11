@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 using Orchard.Caching;
 using Orchard.FileSystems.AppData;
 
-namespace IDeliverable.Licensing
+namespace IDeliverable.Licensing.Orchard
 {
     public class LicenseFileService : ILicenseFileService
     {

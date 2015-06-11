@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace IDeliverable.LicensingService.Controllers
+namespace IDeliverable.Licensing.Service.Controllers
 {
     public class HomeController : Controller
     {

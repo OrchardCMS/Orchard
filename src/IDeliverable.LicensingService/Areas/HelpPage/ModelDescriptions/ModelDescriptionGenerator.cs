@@ -11,7 +11,7 @@ using System.Web.Http.Description;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 
-namespace IDeliverable.LicensingService.Areas.HelpPage.ModelDescriptions
+namespace IDeliverable.Licensing.Service.Areas.HelpPage.ModelDescriptions
 {
     /// <summary>
     /// Generates model descriptions for given types.

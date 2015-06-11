@@ -8,17 +8,32 @@ namespace IDeliverable.Licensing
 {
     public class LicenseValidationToken
     {
-        public static readonly LicenseValidationToken Empty = new LicenseValidationToken { Info = LicenseValidationInfo.Empty, };
-        
-        public static LicenseValidationToken CreateLocalHostToken(int productId) {
-            return new LicenseValidationToken {
-                Info = new LicenseValidationInfo {
-                    Hostname = "localhost",
-                    ProductId = productId,
-                    LicenseKey = "localhost",
-                }
-            };
+        public static readonly LicenseValidationToken Empty = new LicenseValidationToken (LicenseValidationInfo.Empty, signature: "");
+
+        public static LicenseValidationToken CreateLocalHostToken(int productId)
+        {
+            return new LicenseValidationToken(new LicenseValidationInfo
+            (
+                productId,
+                hostname: "localhost",
+                licenseKey: "localhost",
+                issuedUtcTicks: DateTime.UtcNow.Ticks
+            ),
+            signature: "");
         }
+
+        public static LicenseValidationToken Create(LicenseValidationInfo info, X509Certificate2 cert)
+        {
+            var data = info.ToString();
+            var bytes = Encoding.UTF8.GetBytes(data);
+            var privateKey = (RSACryptoServiceProvider)cert.PrivateKey;
+            var signatureBytes = privateKey.SignData(bytes, "md5");
+            var signature = Convert.ToBase64String(signatureBytes);
+
+            return new LicenseValidationToken(info, signature);
+        }
+
+        public static LicenseValidationToken CreateInvalidLicenseToken(LicenseValidationError error) => new LicenseValidationToken(error);
 
         public static LicenseValidationToken Parse(string value)
         {
@@ -64,6 +79,17 @@ namespace IDeliverable.Licensing
 
             var bytes = Convert.FromBase64String(cert);
             return bytes;
+        }
+
+        public LicenseValidationToken(LicenseValidationInfo info, string signature)
+        {
+            Info = info;
+            Signature = signature;
+        }
+
+        private LicenseValidationToken(LicenseValidationError error)
+        {
+            Error = error;
         }
 
         public LicenseValidationError? Error { get; set; }

@@ -17,7 +17,7 @@ namespace IDeliverable.Slides.Handlers {
 
         private void SetupLazyFields(ActivatedContentContext context, SlideShowPart part)
         {
-            part._profileField.Loader(() => {
+            part._profileField.Loader(value => {
                 var profiles = _services.WorkContext.CurrentSite.As<SlideShowSettingsPart>().Profiles.ToDictionary(x => x.Id);
                 var profile = part.ProfileId != null && profiles.ContainsKey(part.ProfileId.Value) ? profiles[part.ProfileId.Value] : default(SlideShowProfile);
                 return profile;
