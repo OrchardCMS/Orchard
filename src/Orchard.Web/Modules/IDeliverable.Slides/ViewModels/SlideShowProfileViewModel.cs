@@ -6,8 +6,6 @@ namespace IDeliverable.Slides.ViewModels
 {
     public class SlideShowProfileViewModel
     {
-        public int Id { get; set; }
-
         [Required]
         public string Name { get; set; }
 

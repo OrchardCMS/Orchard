@@ -3,7 +3,7 @@ using Orchard.ContentManagement.Utilities;
 
 namespace IDeliverable.Slides.Models
 {
-    public class SlideShowPart : ContentPart
+    public class SlideShowPart : ContentPart, ISlideShow
     {
         internal readonly LazyField<SlideShowProfile> _profileField = new LazyField<SlideShowProfile>();
 

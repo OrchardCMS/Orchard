@@ -5,6 +5,7 @@ using System.Linq;
 using IDeliverable.Licensing.Orchard;
 using IDeliverable.Slides.Helpers;
 using IDeliverable.Slides.Models;
+using IDeliverable.Slides.Providers;
 using IDeliverable.Slides.Services;
 using IDeliverable.Slides.ViewModels;
 using Orchard;
@@ -48,7 +49,8 @@ namespace IDeliverable.Slides.Drivers
             return ContentShape("Parts_SlideShow_Edit", () =>
             {
                 var storage = new ContentPartStorage(part);
-                var providerShapes = Enumerable.ToDictionary(_providerManager.BuildEditors(shapeHelper, storage, context: part), (Func<dynamic, string>)(x => (string)x.Provider.Name));
+                var slidesProviderContext = new SlidesProviderContext(part, part, storage);
+                var providerShapes = Enumerable.ToDictionary(_providerManager.BuildEditors(shapeHelper, slidesProviderContext), (Func<dynamic, string>)(x => (string)x.Provider.Name));
 
                 var viewModel = new SlideShowPartViewModel
                 {
@@ -63,7 +65,7 @@ namespace IDeliverable.Slides.Drivers
                 {
                     if (updater.TryUpdateModel(viewModel, Prefix, new[] { "ProfileId", "ProviderName" }, null))
                     {
-                        providerShapes = Enumerable.ToDictionary(_providerManager.UpdateEditors(shapeHelper, storage, new Updater(updater, Prefix), context: part), (Func<dynamic, string>)(x => (string)x.Provider.Name));
+                        providerShapes = Enumerable.ToDictionary(_providerManager.UpdateEditors(shapeHelper, slidesProviderContext, new Updater(updater, Prefix)), (Func<dynamic, string>)(x => (string)x.Provider.Name));
                         part.ProfileId = viewModel.ProfileId;
                         part.ProviderName = viewModel.ProviderName;
                         viewModel.AvailableProviders = providerShapes;
@@ -108,7 +110,8 @@ namespace IDeliverable.Slides.Drivers
         {
             var provider = !String.IsNullOrWhiteSpace(part.ProviderName) ? _providerManager.GetProvider(part.ProviderName) : default(ISlidesProvider);
             var storage = new ContentPartStorage(part);
-            return provider == null ? new List<dynamic>() : new List<dynamic>(provider.BuildSlides(shapeHelper, storage));
+            var slidesProviderContext = new SlidesProviderContext(part, part, storage);
+            return provider == null ? new List<dynamic>() : new List<dynamic>(provider.BuildSlides(shapeHelper, slidesProviderContext));
         }
     }
 }

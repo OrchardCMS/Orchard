@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using IDeliverable.Slides.Providers;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Layouts.Framework.Elements;
@@ -31,10 +32,10 @@ namespace IDeliverable.Slides.Services
             get { return GetType().Name; }
         }
 
-        public abstract dynamic BuildEditor(dynamic shapeFactory, IStorage storage, dynamic context = null);
+        public abstract dynamic BuildEditor(dynamic shapeFactory, SlidesProviderContext context);
 
-        public abstract dynamic UpdateEditor(dynamic shapeFactory, IStorage storage, IUpdateModel updater, dynamic context = null);
+        public abstract dynamic UpdateEditor(dynamic shapeFactory, SlidesProviderContext context, IUpdateModel updater);
 
-        public abstract IEnumerable<dynamic> BuildSlides(dynamic shapeFactory, IStorage storage);
+        public abstract IEnumerable<dynamic> BuildSlides(dynamic shapeFactory, SlidesProviderContext context);
     }
 }

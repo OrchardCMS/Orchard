@@ -72,7 +72,7 @@ namespace IDeliverable.Slides.Controllers
             return RedirectToEditor(viewModel.ReturnUrl, slidesKey);
         }
 
-        public ActionResult ImageSlides(string returnUrl)
+        public ActionResult MediaSlides(string returnUrl)
         {
             var viewModel = new ImageSlidesFactoryViewModel
             {
@@ -82,7 +82,7 @@ namespace IDeliverable.Slides.Controllers
         }
 
         [HttpPost]
-        public ActionResult ImageSlides(string returnUrl, string imageIds)
+        public ActionResult MediaSlides(string returnUrl, string imageIds)
         {
             if (imageIds == null)
             {
@@ -93,8 +93,8 @@ namespace IDeliverable.Slides.Controllers
                 });
             }
 
-            var images = LoadContentItems<ImagePart>(imageIds).ToList();
-            var slides = images.Select(CreateSlide).ToList();
+            var mediaItems = LoadContentItems<MediaPart>(imageIds).ToList();
+            var slides = mediaItems.Select(CreateSlide).ToList();
             var slidesKey = _objectStore.GenerateKey();
 
             _objectStore.Set(slidesKey, slides);
@@ -127,16 +127,28 @@ namespace IDeliverable.Slides.Controllers
             return RedirectToEditor(viewModel.ReturnUrl, slidesKey);
         }
 
-        private Slide CreateSlide(ImagePart image)
+        private Slide CreateSlide(MediaPart mediaItem)
         {
-            var elementDescriptor = _elementManager.GetElementDescriptorByType<Image>();
-            var element = (Image)_elementFactory.Activate(elementDescriptor);
-
-            element.MediaId = image.Id;
+            var element = CreateElementFromMediaItem(mediaItem);
+            
             return new Slide
             {
                 LayoutData = _layoutSerializer.Serialize(new[] { CreateCanvas(element) }),
             };
+        }
+
+        private Element CreateElementFromMediaItem(MediaPart mediaItem)
+        {
+            if (mediaItem.Is<ImagePart>())
+            {
+                return _elementManager.ActivateElement<Image>(x => x.MediaId = mediaItem.Id);
+            }
+            else if (mediaItem.Is<VectorImagePart>())
+            {
+                return _elementManager.ActivateElement<VectorImage>(x => x.MediaId = mediaItem.Id);
+            }
+
+            return _elementManager.ActivateElement<MediaItem>(x => x.MediaItemIds = new[] { mediaItem.Id });
         }
 
         private Slide CreateSlide(IContent content, string displayType)

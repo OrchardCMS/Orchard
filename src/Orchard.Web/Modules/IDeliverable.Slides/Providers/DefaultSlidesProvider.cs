@@ -1,12 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
-using IDeliverable.Slides.Elements;
 using IDeliverable.Slides.Helpers;
 using IDeliverable.Slides.Models;
 using IDeliverable.Slides.Services;
 using IDeliverable.Slides.ViewModels;
 using Orchard.ContentManagement;
-using Orchard.Layouts.Framework.Drivers;
 using Orchard.Layouts.Services;
 using Orchard.Localization;
 
@@ -28,22 +26,20 @@ namespace IDeliverable.Slides.Providers
             get { return T("Default"); }
         }
 
-        public override dynamic BuildEditor(dynamic shapeFactory, IStorage storage, dynamic context = null)
+        public override dynamic BuildEditor(dynamic shapeFactory, SlidesProviderContext context)
         {
-            return UpdateEditor(shapeFactory, storage, updater: null, context: context);
+            return UpdateEditor(shapeFactory, context, updater: null);
         }
 
-        public override dynamic UpdateEditor(dynamic shapeFactory, IStorage storage, IUpdateModel updater, dynamic context = null)
+        public override dynamic UpdateEditor(dynamic shapeFactory, SlidesProviderContext context, IUpdateModel updater)
         {
-            var slidesData = storage.RetrieveSlidesData();
+            var slidesData = context.Storage.RetrieveSlidesData();
             var slides = _serializer.Deserialize(slidesData).ToList();
-            var slideShapes = slides.Select(x => _layoutManager.RenderLayout(x.LayoutData)).ToList();
-            var elementContext = context as ElementEditorContext;
+            var slideShapes = slides.Select(x => _layoutManager.RenderLayout(x.LayoutData, content: context.Content)).ToList();
             var viewModel = new DefaultSlidesProviderViewModel
             {
-                Part = context as SlideShowPart,
-                Element = elementContext != null ? (SlideShow)elementContext.Element : default(SlideShow),
-                SessionKey = elementContext != null ? elementContext.Session : default(string),
+                SlideShow = context.SlideShow,
+                SessionKey = context.ElementSessionKey,
                 Slides = slideShapes
             };
 
@@ -55,19 +51,19 @@ namespace IDeliverable.Slides.Providers
                     var newSlides = new List<Slide>(currentSlides.Count);
 
                     newSlides.AddRange(viewModel.Indices.Select(index => currentSlides[index]));
-                    storage.StoreSlidesData(_serializer.Serialize(newSlides));
+                    context.Storage.StoreSlidesData(_serializer.Serialize(newSlides));
                 }
             }
 
-            var templateName = viewModel.Part != null ? "SlidesProviders.Slides.Part" : "SlidesProviders.Slides.Element";
+            var templateName = context.SlideShow is SlideShowPart ? "SlidesProviders.Slides.Part" : "SlidesProviders.Slides.Element";
             return shapeFactory.EditorTemplate(TemplateName: templateName, Model: viewModel, Prefix: Prefix);
         }
 
-        public override IEnumerable<dynamic> BuildSlides(dynamic shapeFactory, IStorage storage)
+        public override IEnumerable<dynamic> BuildSlides(dynamic shapeFactory, SlidesProviderContext context)
         {
-            var slidesData = storage.RetrieveSlidesData();
+            var slidesData = context.Storage.RetrieveSlidesData();
             var slides = _serializer.Deserialize(slidesData).ToList();
-            var slideShapes = slides.Select(x => _layoutManager.RenderLayout(x.LayoutData));
+            var slideShapes = slides.Select(x => _layoutManager.RenderLayout(x.LayoutData, content: context.Content));
             return slideShapes;
         }
     }
