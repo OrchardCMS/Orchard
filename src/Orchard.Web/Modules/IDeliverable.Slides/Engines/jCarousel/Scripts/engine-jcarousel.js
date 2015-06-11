@@ -1,6 +1,7 @@
-(function ($) {
-
-    $(".jcarousel-engine").each(function () {
+(function ($)
+{
+    $(".jcarousel-engine").each(function ()
+    {
         var engine = $(this);
         var autoStart = engine.data("autostart");
         var interval = engine.data("interval") || 3000;
@@ -20,6 +21,7 @@
                 easing: easing
             } : false
         })
+
         .jcarouselAutoscroll({
             interval: interval,
             target: "+=1",
@@ -35,10 +37,10 @@
         });
 
         engine.find(".jcarousel-pagination").jcarouselPagination({
-            item: function (page) {
+            item: function (page)
+            {
                 return "<a href=\"#" + page + "\">" + page + "</a>";
             }
         });
     });
-
 })(jQuery);

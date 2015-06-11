@@ -2,11 +2,11 @@
 @model IDeliverable.Slides.ViewModels.DefaultSlidesProviderViewModel
 @{
     Style.Include("~/Modules/Orchard.Layouts/Styles/default-grid.css");
-    Style.Include("admin-slides-part.css");
+    Style.Include("Admin.css", "Admin.min.css");
     Script.Require("jQuery");
     Script.Require("jQueryUI_Sortable");
     Script.Require("ShapesBase");
-    Script.Include("admin-slides-part.js");
+    Script.Include("Admin.js", "Admin.min.js");
 }
 @{
     var part = (SlideShowPart)Model.SlideShow;

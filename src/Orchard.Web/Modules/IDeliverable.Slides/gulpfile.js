@@ -38,16 +38,28 @@ gulp.task("watch", ["watchLess", "watchJs"], function () {
  * LESS/CSS compilation tasks.
  */
 
-var srcLessLib = [
+var srcLessAdmin = [
+    "Assets/Less/*.less"
+];
+
+var srcLessEngineBootstrap = [
     "Engines/Bootstrap/Styles/carousel.less"
 ];
 
+var srcLessEngineJCarousel = [
+    "Engines/JCarousel/Styles/engine-jcarousel.less"
+];
+
 gulp.task("buildLess", function () {
-    return lessPipelineFrom(gulp.src(srcLessLib), "Styles", "Engine.Bootstrap.css");
+    return merge([
+        lessPipelineFrom(gulp.src(srcLessAdmin), "Styles", "Admin.css"),
+        lessPipelineFrom(gulp.src(srcLessEngineBootstrap), "Styles", "Engine.Bootstrap.css"),
+        lessPipelineFrom(gulp.src(srcLessEngineJCarousel), "Styles", "Engine.JCarousel.css")
+    ]);
 });
 
 gulp.task("watchLess", function () {
-    var watcher = gulp.watch([srcLessLib], ["buildLess"]);
+    var watcher = gulp.watch([srcLessEngineBootstrap, srcLessEngineJCarousel], ["buildLess"]);
     watcher.on("change", function (event) {
         console.log("LESS file " + event.path + " was " + event.type + ", running the 'buildLess' task...");
     });
@@ -74,17 +86,31 @@ function lessPipelineFrom(inputStream, outputFolder, outputFile) {
  * JavaScript compilation tasks.
  */
 
-var srcJsLib = [
+var srcJsAdmin = [
+    "Assets/JavaScript/*.js"
+];
+
+var srcJsEngineBootstrap = [
     "Engines/Bootstrap/Scripts/transition.js",
 	"Engines/Bootstrap/Scripts/carousel.js"
 ];
 
+var srcJsEngineJCarousel = [
+    "Engines/JCarousel/Scripts/modernizr.transitions.js",
+    "Engines/JCarousel/Scripts/jquery.jcarousel.js",
+    "Engines/JCarousel/Scripts/engine-jcarousel.js"
+];
+
 gulp.task("buildJs", function () {
-    return jsPipelineFrom(gulp.src(srcJsLib), "Scripts", "Engine.Bootstrap.js");
+    return merge([
+        jsPipelineFrom(gulp.src(srcJsAdmin), "Scripts", "Admin.js"),
+        jsPipelineFrom(gulp.src(srcJsEngineBootstrap), "Scripts", "Engine.Bootstrap.js"),
+        jsPipelineFrom(gulp.src(srcJsEngineJCarousel), "Scripts", "Engine.JCarousel.js"),
+    ]);
 });
 
 gulp.task("watchJs", function () {
-    var watcher = gulp.watch([srcJsLib], ["buildJs"]);
+    var watcher = gulp.watch([srcJsEngineBootstrap, srcJsEngineJCarousel], ["buildJs"]);
     watcher.on("change", function (event) {
         console.log("JavaScript file " + event.path + " was " + event.type + ", running the 'buildJs' task...");
     });

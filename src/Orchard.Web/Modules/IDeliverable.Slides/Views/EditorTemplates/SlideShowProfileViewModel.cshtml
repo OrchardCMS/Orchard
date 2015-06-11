@@ -1,9 +1,9 @@
 ﻿@model IDeliverable.Slides.ViewModels.SlideShowProfileViewModel
 @{
-    Style.Include("admin-slideshow-part.css");
+    Style.Include("Admin.css", "Admin.min.css");
     Script.Require("jQuery");
-    Script.Include("admin-slideshow-part.js");
     Script.Require("ShapesBase");
+    Script.Include("Admin.js", "Admin.min.js");
 }
 @{
     var engineOptions = Model.AvailableEngines.Select(x => new SelectListItem {Text = x.DisplayName.Text, Value = x.Name, Selected = x.Name == Model.SelectedEngine}).ToList();

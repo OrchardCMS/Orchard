@@ -1,9 +1,8 @@
 ﻿@{
     Style.Include("~/Modules/Orchard.Layouts/Styles/default-grid.css");
-    Style.Include("~/Modules/IDeliverable.Slides/Engines/jCarousel/Styles/engine-jcarousel.css");
+    Style.Include("Engine.JCarousel.css", "Engine.JCarousel.min.css");
     Script.Require("jQuery");
-    Script.Include("~/Modules/IDeliverable.Slides/Engines/jCarousel/Scripts/jquery.jcarousel.js", "~/Modules/IDeliverable.Slides/Engines/jCarousel/Scripts/jquery.jcarousel.min.js");
-    Script.Include("~/Modules/IDeliverable.Slides/Engines/jCarousel/Scripts/engine-jcarousel.js");
+    Script.Include("Engine.JCarousel.js", "Engine.JCarousel.min.js");
 }
 @{
     var slides = (IList<dynamic>)Model.Slides;

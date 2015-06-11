@@ -89,20 +89,27 @@
     <Content Include="Engines\Bootstrap\Scripts\carousel.js" />
     <Content Include="Engines\Bootstrap\Scripts\transition.js" />
     <Content Include="Engines\JCarousel\Scripts\modernizr.transitions.js" />
-    <Content Include="Engines\JCarousel\Styles\engine-jcarousel.css" />
+    <None Include="Engines\JCarousel\Styles\engine-jcarousel.less" />
     <Content Include="gulpfile.js" />
-    <Content Include="Scripts\admin-slideshow-part.js" />
-    <Content Include="Scripts\admin-slides-part.js" />
+    <Content Include="Assets\JavaScript\admin-slideshow-part.js" />
+    <Content Include="Assets\JavaScript\admin-slides-part.js" />
     <Content Include="Engines\JCarousel\Scripts\engine-jcarousel.js" />
     <Content Include="Engines\JCarousel\Scripts\jquery.jcarousel.js" />
-    <Content Include="Engines\JCarousel\Scripts\jquery.jcarousel.min.js" />
+    <Content Include="Scripts\Admin.js" />
+    <Content Include="Scripts\Admin.min.js" />
     <Content Include="Scripts\Engine.Bootstrap.js" />
     <Content Include="Scripts\Engine.Bootstrap.min.js" />
-    <Content Include="Styles\admin-slideshow-part.css" />
-    <Content Include="Styles\admin-slides-part.css" />
-    <Content Include="Styles\admin-style-type-browser.css" />
+    <Content Include="Scripts\Engine.JCarousel.js" />
+    <Content Include="Scripts\Engine.JCarousel.min.js" />
+    <None Include="Assets\Less\admin-slideshow-part.less" />
+    <None Include="Assets\Less\admin-slides-part.less" />
+    <None Include="Assets\Less\admin-style-type-browser.less" />
+    <Content Include="Styles\Admin.css" />
+    <Content Include="Styles\Admin.min.css" />
     <Content Include="Styles\Engine.Bootstrap.css" />
     <Content Include="Styles\Engine.Bootstrap.min.css" />
+    <Content Include="Styles\Engine.JCarousel.css" />
+    <Content Include="Styles\Engine.JCarousel.min.css" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
@@ -231,12 +238,6 @@
     <Content Include="Views\Parts.SlideShow.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Engines\JCarousel\Scripts\Web.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Engines\JCarousel\Styles\Web.config" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Parts.SlideShow.Summary.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -328,12 +329,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Elements\SlideShow.InvalidLicense.Design.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Engines\Bootstrap\Scripts\Web.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Engines\Bootstrap\Styles\Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Engines\Bootstrap\Styles\carousel.less" />
