@@ -90,6 +90,7 @@
     <Content Include="Engines\Bootstrap\Scripts\transition.js" />
     <Content Include="Engines\JCarousel\Scripts\modernizr.transitions.js" />
     <None Include="Engines\JCarousel\Styles\engine-jcarousel.less" />
+    <Content Include="Fonts\glyphicons-halflings-regular.svg" />
     <Content Include="gulpfile.js" />
     <Content Include="Assets\JavaScript\admin-slideshow-part.js" />
     <Content Include="Assets\JavaScript\admin-slides-part.js" />
@@ -177,6 +178,7 @@
     <Compile Include="Services\ISlidesProvider.cs" />
     <Compile Include="Providers\DefaultSlidesProvider.cs" />
     <Compile Include="Services\IStorage.cs" />
+    <Compile Include="Services\InvalidLicenseKeyBanner.cs" />
     <Compile Include="Services\SlidesProductManifest.cs" />
     <Compile Include="Services\SlidesProvider.cs" />
     <Compile Include="Services\SlidesProviderContext.cs" />
@@ -378,7 +380,12 @@
   <ItemGroup>
     <Content Include="Engines\Bootstrap\Styles\wells.less" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Fonts\glyphicons-halflings-regular.woff2" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="Fonts\Web.config" />
   </ItemGroup>
