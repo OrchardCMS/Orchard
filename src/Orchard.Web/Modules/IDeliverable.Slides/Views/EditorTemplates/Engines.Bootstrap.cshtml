@@ -3,7 +3,6 @@
     var pauseList = new[] { "", "hover" };
     var pauseOptions = pauseList.Select(x => new SelectListItem { Text = x, Value = x, Selected = x == Model.Pause }).ToList();
 }
-<div class="message message-Information">@T("This engine requires a Bootstrap powered theme in order to function properly.")</div>
 <fieldset>
     <div class="form-group">
         @Html.LabelFor(m => m.Interval, T("Interval"))

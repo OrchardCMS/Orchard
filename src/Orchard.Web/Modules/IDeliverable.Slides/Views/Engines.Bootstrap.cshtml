@@ -1,5 +1,10 @@
 ﻿@using IDeliverable.Slides.Engines.Bootstrap
 @{
+    Script.Require("jQuery");
+    Style.Include("Engine.Bootstrap.css", "Engine.Bootstrap.min.css");
+    Script.Include("Engine.Bootstrap.js", "Engine.Bootstrap.min.js");
+}
+@{
     var engine = (Bootstrap)Model.Engine;
     var id = (string)Model.SlideShowId;
     var slideShowId = String.Format("SlideShow-{0}", id);
@@ -19,7 +24,7 @@
                 <ol class="carousel-indicators">
                     @for (var i = 0; i < slides.Count; i++)
                     {
-                        <li data-target="#@slideShowId" data-slide-to="@i" @if (i == 0) { <text> class="active" </text>    }></li>
+                        <li data-target="#@slideShowId" data-slide-to="@i" @if (i == 0) { <text> class="active" </text> }></li>
                     }
                 </ol>
             }

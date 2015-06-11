@@ -51,6 +51,7 @@
     <Reference Include="Autofac, Version=3.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\lib\autofac\Autofac.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -76,21 +77,32 @@
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Abstractions" />
     <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.WebPages.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Engines\Bootstrap\Scripts\carousel.js" />
+    <Content Include="Engines\Bootstrap\Scripts\transition.js" />
     <Content Include="Engines\JCarousel\Scripts\modernizr.transitions.js" />
     <Content Include="Engines\JCarousel\Styles\engine-jcarousel.css" />
+    <Content Include="gulpfile.js" />
     <Content Include="Scripts\admin-slideshow-part.js" />
     <Content Include="Scripts\admin-slides-part.js" />
     <Content Include="Engines\JCarousel\Scripts\engine-jcarousel.js" />
     <Content Include="Engines\JCarousel\Scripts\jquery.jcarousel.js" />
     <Content Include="Engines\JCarousel\Scripts\jquery.jcarousel.min.js" />
+    <Content Include="Scripts\Engine.Bootstrap.js" />
+    <Content Include="Scripts\Engine.Bootstrap.min.js" />
     <Content Include="Styles\admin-slideshow-part.css" />
     <Content Include="Styles\admin-slides-part.css" />
     <Content Include="Styles\admin-style-type-browser.css" />
+    <Content Include="Styles\Engine.Bootstrap.css" />
+    <Content Include="Styles\Engine.Bootstrap.min.css" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
@@ -109,26 +121,32 @@
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
       <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
       <Name>Orchard.Framework</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Core\Orchard.Core.csproj">
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Forms\Orchard.Forms.csproj">
       <Project>{642a49d7-8752-4177-80d6-bfbbcfad3de0}</Project>
       <Name>Orchard.Forms</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Layouts\Orchard.Layouts.csproj">
       <Project>{6bd8b2fa-f2e3-4ac8-a4c3-2925a653889a}</Project>
       <Name>Orchard.Layouts</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.MediaLibrary\Orchard.MediaLibrary.csproj">
       <Project>{73a7688a-5bd3-4f7e-adfa-ce36c5a10e3b}</Project>
       <Name>Orchard.MediaLibrary</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Projections\Orchard.Projections.csproj">
       <Project>{5531e894-d259-45a3-aa61-26dbe720c1ce}</Project>
       <Name>Orchard.Projections</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -310,6 +328,64 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Elements\SlideShow.InvalidLicense.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Engines\Bootstrap\Scripts\Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Engines\Bootstrap\Styles\Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Engines\Bootstrap\Styles\carousel.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="package.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Engines\Bootstrap\Styles\mixins\vendor-prefixes.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Engines\Bootstrap\Styles\variables.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Engines\Bootstrap\Styles\mixins.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Engines\Bootstrap\Styles\mixins\alerts.less" />
+    <Content Include="Engines\Bootstrap\Styles\mixins\background-variant.less" />
+    <Content Include="Engines\Bootstrap\Styles\mixins\border-radius.less" />
+    <Content Include="Engines\Bootstrap\Styles\mixins\buttons.less" />
+    <Content Include="Engines\Bootstrap\Styles\mixins\center-block.less" />
+    <Content Include="Engines\Bootstrap\Styles\mixins\clearfix.less" />
+    <Content Include="Engines\Bootstrap\Styles\mixins\forms.less" />
+    <Content Include="Engines\Bootstrap\Styles\mixins\gradients.less" />
+    <Content Include="Engines\Bootstrap\Styles\mixins\grid-framework.less" />
+    <Content Include="Engines\Bootstrap\Styles\mixins\grid.less" />
+    <Content Include="Engines\Bootstrap\Styles\mixins\hide-text.less" />
+    <Content Include="Engines\Bootstrap\Styles\mixins\image.less" />
+    <Content Include="Engines\Bootstrap\Styles\mixins\labels.less" />
+    <Content Include="Engines\Bootstrap\Styles\mixins\list-group.less" />
+    <Content Include="Engines\Bootstrap\Styles\mixins\nav-divider.less" />
+    <Content Include="Engines\Bootstrap\Styles\mixins\nav-vertical-align.less" />
+    <Content Include="Engines\Bootstrap\Styles\mixins\opacity.less" />
+    <Content Include="Engines\Bootstrap\Styles\mixins\pagination.less" />
+    <Content Include="Engines\Bootstrap\Styles\mixins\panels.less" />
+    <Content Include="Engines\Bootstrap\Styles\mixins\progress-bar.less" />
+    <Content Include="Engines\Bootstrap\Styles\mixins\reset-filter.less" />
+    <Content Include="Engines\Bootstrap\Styles\mixins\resize.less" />
+    <Content Include="Engines\Bootstrap\Styles\mixins\responsive-visibility.less" />
+    <Content Include="Engines\Bootstrap\Styles\mixins\size.less" />
+    <Content Include="Engines\Bootstrap\Styles\mixins\tab-focus.less" />
+    <Content Include="Engines\Bootstrap\Styles\mixins\table-row.less" />
+    <Content Include="Engines\Bootstrap\Styles\mixins\text-emphasis.less" />
+    <Content Include="Engines\Bootstrap\Styles\mixins\text-overflow.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Engines\Bootstrap\Styles\wells.less" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Fonts\Web.config" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
