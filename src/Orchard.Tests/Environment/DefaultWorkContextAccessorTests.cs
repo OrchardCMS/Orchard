@@ -1,5 +1,6 @@
 ﻿using System.Web;
 using Autofac;
+using Moq;
 using NUnit.Framework;
 using Orchard.Environment;
 using Orchard.Mvc;
@@ -27,6 +28,13 @@ namespace Orchard.Tests.Environment {
             container.Mock<IHttpContextAccessor>()
                 .Setup(x => x.Current())
                 .Returns(() => _httpContextCurrent);
+
+            container.Mock<IHttpContextAccessor>()
+                .Setup(x => x.CreateContext(It.IsAny<ILifetimeScope>()))
+                .Returns(() => new StubHttpContext());
+
+            container.Mock<IWorkContextEvents>()
+                .Setup(x => x.Started());
         }
 
         [Test]

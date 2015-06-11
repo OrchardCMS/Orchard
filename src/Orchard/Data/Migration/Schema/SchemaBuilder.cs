@@ -28,6 +28,13 @@ namespace Orchard.Data.Migration.Schema {
         public Func<string, string> FormatPrefix {
             get { return _formatPrefix; }
         }
+
+        /// <summary>
+        /// Translate Table name into database table name - including prefixes
+        /// </summary>
+        public virtual string TableDbName(string srcTable) {
+            return _interpreter.PrefixTableName(String.Concat(FormatPrefix(FeaturePrefix), srcTable));
+        }
       
         public SchemaBuilder CreateTable(string name, Action<CreateTableCommand> table) {
             var createTable = new CreateTableCommand(String.Concat(_formatPrefix(_featurePrefix), name));

@@ -22,7 +22,7 @@
                 <label for="menuId">@T("Current Menu:")</label>
                 <select id="menuId" name="menuId">
                     @foreach (var menu in Model.Menus) {
-                        @Html.SelectOption(Model.CurrentMenu.Id, menu.Id, Convert.ToString(Html.ItemDisplayText(menu)))
+                        @Html.SelectOption(Model.CurrentMenu.Id, menu.Id, Convert.ToString(Html.ItemDisplayText(menu, false)))
                     }
                 </select>
                 @if (hasPermission) { 
@@ -134,12 +134,12 @@
 
 @using (Script.Foot()) {
 <script type="text/javascript">
-//<![CDATA[
-    var leaveConfirmation = '@T("Some items where not saved.")';
+    //<![CDATA[
+    var leaveConfirmation = '@HttpUtility.JavaScriptStringEncode(T("Some items where not saved.").Text)';
 
     $('#menuId').change(function () {
         $(this).parents('form').submit();
     });
-//]]>
+    //]]>
 </script>
 }

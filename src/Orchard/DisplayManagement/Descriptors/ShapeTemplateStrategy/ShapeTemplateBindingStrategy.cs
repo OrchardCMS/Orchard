@@ -179,8 +179,8 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy {
 
         private ControllerContext CreateControllerContext() {
             var controller = new StubController();
-            var httpContext = _workContextAccessor.GetContext().Resolve<HttpContextBase>();
-            var requestContext = _workContextAccessor.GetContext().Resolve<RequestContext>();
+            var httpContext = _workContextAccessor.GetContext().HttpContext;
+            var requestContext = httpContext.Request.RequestContext;
             var routeData = requestContext.RouteData;
 
             routeData.DataTokens["IWorkContextAccessor"] = _workContextAccessor;

@@ -3,6 +3,7 @@ using System.Web;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Mvc;
+using Orchard.Mvc.Extensions;
 using Orchard.Services;
 using Orchard.Utility.Extensions;
 
@@ -41,7 +42,7 @@ namespace Orchard.Environment {
             // current request can be processed correctly.  So, we redirect to the same URL, so that the
             // new request will come to the newly started AppDomain.
             var httpContext = _httpContextAccessor.Current();
-            if (httpContext != null) {
+            if (!httpContext.IsBackgroundContext()) {
                 // Don't redirect posts...
                 if (httpContext.Request.RequestType == "GET") {
                     httpContext.Response.Redirect(HttpContext.Current.Request.ToUrlString(), true /*endResponse*/);
