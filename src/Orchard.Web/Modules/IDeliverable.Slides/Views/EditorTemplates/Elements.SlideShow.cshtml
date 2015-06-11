@@ -9,7 +9,7 @@
 <fieldset>
     <div class="form-group">
         @Html.LabelFor(m => m.ProfileId, T("Slide Show Profile"))
-        @Html.DropDownListFor(m => m.ProfileId, profileOptions, "")
+        @Html.DropDownListFor(m => m.ProfileId, profileOptions, T("(Default)").Text)
         @Html.Hint(T("Select the slide show player profile to use when presenting the slides."))
     </div>
 </fieldset>

@@ -1,0 +1,23 @@
+﻿@model IDeliverable.Slides.ViewModels.ImageSlidesFactoryViewModel
+@{
+    Layout.Title = T("Create Image Slides");
+}
+@using (Html.BeginFormAntiForgeryPost()) {
+    <fieldset>
+        <div>
+            @Display.MediaLibraryPicker(
+                Required: false,
+                Multiple: true,
+                DisplayName: T("Images").Text,
+                FieldName: "ImageIds",
+                ContentItems: null,
+                Hint: "",
+                PromptOnNavigate: false,
+                ShowSaveWarning: false)
+        </div>
+    </fieldset>
+    <fieldset>
+        <button type="submit">@T("Save")</button>
+        <a class="button" href="@Model.ReturnUrl">@T("Cancel")</a>
+    </fieldset>
+}

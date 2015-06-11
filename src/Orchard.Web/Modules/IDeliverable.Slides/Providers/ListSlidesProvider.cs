@@ -5,7 +5,6 @@ using IDeliverable.Slides.Helpers;
 using IDeliverable.Slides.Services;
 using IDeliverable.Slides.ViewModels;
 using Orchard.ContentManagement;
-using Orchard.Core.Containers.Models;
 using Orchard.Core.Containers.Services;
 using Orchard.Environment.Extensions;
 using Orchard.Layouts.Helpers;
@@ -30,18 +29,18 @@ namespace IDeliverable.Slides.Providers
             get { return T("List"); }
         }
 
-        public override dynamic BuildEditor(dynamic shapeFactory, IStorage storage, dynamic context = null)
+        public override dynamic BuildEditor(dynamic shapeFactory, SlidesProviderContext context)
         {
-            return UpdateEditor(shapeFactory, storage, updater: null, context: context);
+            return UpdateEditor(shapeFactory, context: context, updater: null);
         }
 
-        public override dynamic UpdateEditor(dynamic shapeFactory, IStorage storage, IUpdateModel updater, dynamic context = null)
+        public override dynamic UpdateEditor(dynamic shapeFactory, SlidesProviderContext context, IUpdateModel updater)
         {
-            var selectedListId = storage.RetrieveListId();
+            var selectedListId = context.Storage.RetrieveListId();
             var viewModel = new ListSlidesProviderViewModel
             {
                 SelectedListId = selectedListId.ToString(),
-                DisplayType = storage.RetrieveProjectionSlidesDisplayType()
+                DisplayType = context.Storage.RetrieveProjectionSlidesDisplayType()
             };
 
             if (updater != null)
@@ -49,8 +48,8 @@ namespace IDeliverable.Slides.Providers
                 if (updater.TryUpdateModel(viewModel, Prefix, null, new[] { "SelectedList" }))
                 {
                     selectedListId = ParseInt32Array(viewModel.SelectedListId);
-                    storage.StoreListId(selectedListId);
-                    storage.StoreListSlidesDisplayType(viewModel.DisplayType.TrimSafe());
+                    context.Storage.StoreListId(selectedListId);
+                    context.Storage.StoreListSlidesDisplayType(viewModel.DisplayType.TrimSafe());
                 }
             }
 
@@ -58,14 +57,14 @@ namespace IDeliverable.Slides.Providers
             return shapeFactory.EditorTemplate(TemplateName: "SlidesProviders.List", Model: viewModel, Prefix: Prefix);
         }
 
-        public override IEnumerable<dynamic> BuildSlides(dynamic shapeFactory, IStorage storage)
+        public override IEnumerable<dynamic> BuildSlides(dynamic shapeFactory, SlidesProviderContext context)
         {
-            var listId = storage.RetrieveListId();
+            var listId = context.Storage.RetrieveListId();
 
             if (listId == null)
                 yield break;
 
-            var displayType = storage.RetrieveProjectionSlidesDisplayType();
+            var displayType = context.Storage.RetrieveProjectionSlidesDisplayType();
             var contentItems = _containerService.GetContentItems(listId.Value).ToList();
 
             foreach (var contentItem in contentItems)

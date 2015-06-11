@@ -5,7 +5,7 @@ using Orchard.Layouts.Helpers;
 
 namespace IDeliverable.Slides.Elements
 {
-    public class SlideShow : Element
+    public class SlideShow : Element, ISlideShow
     {
         internal readonly LazyField<SlideShowProfile> _profileField = new LazyField<SlideShowProfile>();
 

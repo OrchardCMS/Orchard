@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
-using IDeliverable.Licensing;
 using IDeliverable.Licensing.Orchard;
 using IDeliverable.Slides.Helpers;
 using IDeliverable.Slides.Models;
@@ -141,7 +140,7 @@ namespace IDeliverable.Slides.Controllers
             settingsPart.StoreProfile(profile);
             _services.Notifier.Information(T("That slide show profile has been updated."));
 
-            return RedirectToAction("Edit", new { id = viewModel.Id });
+            return RedirectToAction("Edit", new { id = id });
         }
 
         [HttpPost]

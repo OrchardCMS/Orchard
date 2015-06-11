@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using IDeliverable.Slides.Providers;
 using Orchard.ContentManagement;
 
 namespace IDeliverable.Slides.Services
@@ -24,12 +25,12 @@ namespace IDeliverable.Slides.Services
             return GetProviders().SingleOrDefault(x => x.Name == name);
         }
 
-        public IEnumerable<dynamic> BuildEditors(dynamic shapeFactory, IStorage storage, dynamic context = null)
+        public IEnumerable<dynamic> BuildEditors(dynamic shapeFactory, SlidesProviderContext context)
         {
             var providers = GetProviders().ToList();
             var editorShapes = providers.Select(x =>
             {
-                var shape = x.BuildEditor(shapeFactory, storage, context);
+                var shape = x.BuildEditor(shapeFactory, context);
                 shape.Provider = x;
                 return shape;
             });
@@ -37,12 +38,12 @@ namespace IDeliverable.Slides.Services
             return editorShapes;
         }
 
-        public IEnumerable<dynamic> UpdateEditors(dynamic shapeFactory, IStorage storage, IUpdateModel updater, dynamic context = null)
+        public IEnumerable<dynamic> UpdateEditors(dynamic shapeFactory, SlidesProviderContext context, IUpdateModel updater)
         {
             var providers = GetProviders().ToList();
             var editorShapes = providers.Select(x =>
             {
-                var shape = x.UpdateEditor(shapeFactory, storage, updater, context);
+                var shape = x.UpdateEditor(shapeFactory, context, updater);
                 shape.Provider = x;
                 return shape;
             });

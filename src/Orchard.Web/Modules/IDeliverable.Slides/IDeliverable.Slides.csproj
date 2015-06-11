@@ -141,6 +141,7 @@
     <Compile Include="Helpers\LicenseAccessorExtensions.cs" />
     <Compile Include="Helpers\StorageExtensions.cs" />
     <Compile Include="Helpers\EngineDataHelper.cs" />
+    <Compile Include="Models\ISlideShow.cs" />
     <Compile Include="Models\SlideShowProfile.cs" />
     <Compile Include="Providers\ListSlidesProvider.cs" />
     <Compile Include="Providers\ProjectionSlidesProvider.cs" />
@@ -153,6 +154,7 @@
     <Compile Include="Services\IStorage.cs" />
     <Compile Include="Services\SlidesProductManifest.cs" />
     <Compile Include="Services\SlidesProvider.cs" />
+    <Compile Include="Services\SlidesProviderContext.cs" />
     <Compile Include="Services\SlidesProviderManager.cs" />
     <Compile Include="ViewModels\ListSlidesProviderViewModel.cs" />
     <Compile Include="ViewModels\ProjectionSlidesProviderViewModel.cs" />

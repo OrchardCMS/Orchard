@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using IDeliverable.Slides.Providers;
 using Orchard;
 using Orchard.ContentManagement;
 
@@ -8,7 +9,7 @@ namespace IDeliverable.Slides.Services
     {
         IEnumerable<ISlidesProvider> GetProviders();
         ISlidesProvider GetProvider(string name);
-        IEnumerable<dynamic> BuildEditors(dynamic shapeFactory, IStorage storage, dynamic context = null);
-        IEnumerable<dynamic> UpdateEditors(dynamic shapeFactory, IStorage storage, IUpdateModel updater, dynamic context = null);
+        IEnumerable<dynamic> BuildEditors(dynamic shapeFactory, SlidesProviderContext context);
+        IEnumerable<dynamic> UpdateEditors(dynamic shapeFactory, SlidesProviderContext context, IUpdateModel updater);
     }
 }

@@ -1,4 +1,5 @@
-﻿@model IDeliverable.Slides.ViewModels.DefaultSlidesProviderViewModel
+﻿@using IDeliverable.Slides.Models
+@model IDeliverable.Slides.ViewModels.DefaultSlidesProviderViewModel
 @{
     Style.Include("~/Modules/Orchard.Layouts/Styles/default-grid.css");
     Style.Include("admin-slides-part.css");
@@ -8,7 +9,7 @@
     Script.Include("admin-slides-part.js");
 }
 @{
-    var part = Model.Part;
+    var part = (SlideShowPart)Model.SlideShow;
     var contentId = part.Id;
     var isNewItem = contentId == 0;
 }

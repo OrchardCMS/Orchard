@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using IDeliverable.Licensing;
 using IDeliverable.Licensing.Orchard;
 using IDeliverable.Slides.Elements;
 using IDeliverable.Slides.Helpers;
 using IDeliverable.Slides.Models;
+using IDeliverable.Slides.Providers;
 using IDeliverable.Slides.Services;
 using IDeliverable.Slides.ViewModels;
 using Orchard;
@@ -51,7 +53,8 @@ namespace IDeliverable.Slides.Drivers
                 return Editor(context, context.ShapeFactory.Slides_InvalidLicense());
 
             var storage = new ElementStorage(element);
-            var providerShapes = Enumerable.ToDictionary(_providerManager.BuildEditors(context.ShapeFactory, storage, context: context), (Func<dynamic, string>)(x => (string)x.Provider.Name));
+            var slidesProvidercontext = new SlidesProviderContext(context.Content, element, storage, context.Session);
+            var providerShapes = Enumerable.ToDictionary(_providerManager.BuildEditors(context.ShapeFactory, slidesProvidercontext), (Func<dynamic, string>)(x => (string)x.Provider.Name));
 
             var viewModel = new SlideShowElementViewModel
             {
@@ -71,7 +74,7 @@ namespace IDeliverable.Slides.Drivers
                     if (context.ElementData.ContainsKey("SlideShowSlides"))
                         storage.StoreSlidesData(context.ElementData["SlideShowSlides"]);
 
-                    providerShapes = Enumerable.ToDictionary(_providerManager.UpdateEditors(context.ShapeFactory, storage, new Updater(context.Updater, Prefix), context: element), (Func<dynamic, string>)(x => (string)x.Provider.Name));
+                    providerShapes = Enumerable.ToDictionary(_providerManager.UpdateEditors(context.ShapeFactory, slidesProvidercontext, new Updater(context.Updater, Prefix)), (Func<dynamic, string>)(x => (string)x.Provider.Name));
                     element.ProfileId = viewModel.ProfileId;
                     element.ProviderName = viewModel.ProviderName;
                     viewModel.AvailableProviders = providerShapes;
@@ -94,7 +97,7 @@ namespace IDeliverable.Slides.Drivers
                 return;
             }
                 
-            var slideShapes = GetSlides(element);
+            var slideShapes = GetSlides(element, context);
             var engine = _engineManager.GetEngine(element.Profile);
             var engineShape = engine.BuildDisplay(_services.New);
 
@@ -106,11 +109,12 @@ namespace IDeliverable.Slides.Drivers
             context.ElementShape.Engine = engineShape;
         }
 
-        private IList<dynamic> GetSlides(SlideShow element)
+        private IList<dynamic> GetSlides(SlideShow element, ElementDisplayContext context)
         {
             var provider = !String.IsNullOrWhiteSpace(element.ProviderName) ? _providerManager.GetProvider(element.ProviderName) : default(ISlidesProvider);
             var storage = new ElementStorage(element);
-            return provider == null ? new List<dynamic>() : new List<dynamic>(provider.BuildSlides(_services.New, storage));
+            var slidesProviderContext = new SlidesProviderContext(context.Content, element, storage);
+            return provider == null ? new List<dynamic>() : new List<dynamic>(provider.BuildSlides(_services.New, slidesProviderContext));
         }
     }
 }

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
@@ -33,41 +32,41 @@ namespace IDeliverable.Slides.Providers
             get { return T("Projection"); }
         }
 
-        public override dynamic BuildEditor(dynamic shapeFactory, IStorage storage, dynamic context = null)
+        public override dynamic BuildEditor(dynamic shapeFactory, SlidesProviderContext context)
         {
-            return UpdateEditor(shapeFactory, storage, updater: null, context: context);
+            return UpdateEditor(shapeFactory, context: context, updater: null);
         }
 
-        public override dynamic UpdateEditor(dynamic shapeFactory, IStorage storage, IUpdateModel updater, dynamic context = null)
+        public override dynamic UpdateEditor(dynamic shapeFactory, SlidesProviderContext context, IUpdateModel updater)
         {
             var viewModel = new ProjectionSlidesProviderViewModel
             {
                 QueryOptions = GetQueries().ToList(),
-                SelectedQueryId = storage.RetrieveQueryId(),
-                DisplayType = storage.RetrieveProjectionSlidesDisplayType()
+                SelectedQueryId = context.Storage.RetrieveQueryId(),
+                DisplayType = context.Storage.RetrieveProjectionSlidesDisplayType()
             };
 
             if (updater != null)
             {
                 if (updater.TryUpdateModel(viewModel, Prefix, new[] { "SelectedQueryId", "DisplayType" }, null))
                 {
-                    storage.StoreQueryId(viewModel.SelectedQueryId);
-                    storage.StoreProjectionSlidesDisplayType(viewModel.DisplayType.TrimSafe());
+                    context.Storage.StoreQueryId(viewModel.SelectedQueryId);
+                    context.Storage.StoreProjectionSlidesDisplayType(viewModel.DisplayType.TrimSafe());
                 }
             }
 
             return shapeFactory.EditorTemplate(TemplateName: "SlidesProviders.Projection", Model: viewModel, Prefix: Prefix);
         }
 
-        public override IEnumerable<dynamic> BuildSlides(dynamic shapeFactory, IStorage storage)
+        public override IEnumerable<dynamic> BuildSlides(dynamic shapeFactory, SlidesProviderContext context)
         {
-            var queryId = storage.RetrieveQueryId();
+            var queryId = context.Storage.RetrieveQueryId();
 
             if (queryId == null)
                 yield break;
 
             var query = _contentManager.Get<QueryPart>(queryId.Value);
-            var displayType = storage.RetrieveProjectionSlidesDisplayType();
+            var displayType = context.Storage.RetrieveProjectionSlidesDisplayType();
             var contentItems = _projectionManager.GetContentItems(query.Id).ToList();
 
             foreach (var contentItem in contentItems)
