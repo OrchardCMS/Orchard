@@ -13,8 +13,13 @@
         @Display(New.LayoutEditor_Template_Properties(ElementTypeName: "fieldset", Items: additionalItems))
         <li class="layout-panel-item layout-panel-action" title="@T("Delete fieldset (Del)")" ng-click="delete(element)"><i class="fa fa-remove"></i></li>
     </ul>
+    <fieldset class="layout-children clearfix" ng-model="element.children" ui-sortable="sortableOptions">
+        <legend>{{element.legend}}</legend>
+        <div class="clearfix" ng-repeat="child in element.children" ng-class="getClasses(child)" ng-mouseenter="child.setIsActive(true)" ng-mouseleave="child.setIsActive(false)" ng-click="click(child, $event)" tabindex="{{$id}}">
+            <orc-layout-child element="child" />
+        </div>
+    </fieldset>
     <div class="layout-container-children-placeholder">
         Drag an element from the toolbox and drop it here to add content.
     </div>
-    @Display(New.LayoutEditor_Template_Children())
 </div>
