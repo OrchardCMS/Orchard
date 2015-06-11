@@ -2,7 +2,7 @@ using Orchard;
 
 namespace IDeliverable.Licensing.Orchard
 {
-    public interface ILicenseValidator : IDependency
+    public interface ILicenseValidator
     {
         /// <summary>
         /// Returns a value indicating wether the specified license information is valid or not.

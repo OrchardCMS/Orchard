@@ -4,7 +4,7 @@ using Orchard;
 
 namespace IDeliverable.Licensing.Orchard
 {
-    public interface IProductManifestManager : IDependency
+    public interface IProductManifestManager
     {
         IEnumerable<ProductManifest> GetProductManifests();
         ProductManifest FindByProductId(int productId);

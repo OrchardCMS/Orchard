@@ -1,9 +1,8 @@
 using System.Collections.Generic;
-using Orchard;
 
 namespace IDeliverable.Licensing.Orchard
 {
-    public interface IProductManifestProvider : IDependency
+    public interface IProductManifestProvider
     {
         IEnumerable<ProductManifest> GetProductManifests();
     }
