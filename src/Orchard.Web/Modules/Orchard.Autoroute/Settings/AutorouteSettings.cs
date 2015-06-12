@@ -65,9 +65,11 @@ namespace Orchard.Autoroute.Settings {
                 //We split the values from the radio button returned values
                 int i = 0;
                 foreach (DefaultPattern defaultPattern in _defaultPatterns) {
-                    if (defaultPattern.Culture.Split('|').Count() > 1) {
-                        _defaultPatterns[i].PatternIndex = defaultPattern.Culture.Split('|').Last();
-                        _defaultPatterns[i].Culture = defaultPattern.Culture.Split('|').First();
+                    if (defaultPattern.Culture != null) {
+                        if (defaultPattern.Culture.Split('|').Count() > 1) {
+                            _defaultPatterns[i].PatternIndex = defaultPattern.Culture.Split('|').Last();
+                            _defaultPatterns[i].Culture = defaultPattern.Culture.Split('|').First();
+                        }
                     }
                     i++;
                 }
@@ -80,9 +82,11 @@ namespace Orchard.Autoroute.Settings {
                 //We split the values from the radio button returned values
                 int i = 0;
                 foreach (DefaultPattern defaultPattern in _defaultPatterns) {
-                    if (defaultPattern.Culture.Split('|').Count() > 1) {
-                        _defaultPatterns[i].PatternIndex = defaultPattern.Culture.Split('|').Last();
-                        _defaultPatterns[i].Culture = defaultPattern.Culture.Split('|').First();
+                    if (defaultPattern.Culture != null) {
+                        if (defaultPattern.Culture.Split('|').Count() > 1) {
+                            _defaultPatterns[i].PatternIndex = defaultPattern.Culture.Split('|').Last();
+                            _defaultPatterns[i].Culture = defaultPattern.Culture.Split('|').First();
+                        }
                     }
                     i++;
                 }
