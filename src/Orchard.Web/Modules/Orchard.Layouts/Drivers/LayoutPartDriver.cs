@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
@@ -11,6 +12,7 @@ using Orchard.Layouts.Helpers;
 using Orchard.Layouts.Models;
 using Orchard.Layouts.Services;
 using Orchard.Layouts.ViewModels;
+using Orchard.Logging;
 
 namespace Orchard.Layouts.Drivers {
     public class LayoutPartDriver : ContentPartDriver<LayoutPart> {
@@ -22,6 +24,7 @@ namespace Orchard.Layouts.Drivers {
         private readonly IShapeDisplay _shapeDisplay;
         private readonly ILayoutModelMapper _mapper;
         private readonly ILayoutEditorFactory _layoutEditorFactory;
+        private readonly HashSet<string> _stack;
 
         public LayoutPartDriver(
             ILayoutSerializer serializer,
@@ -30,7 +33,7 @@ namespace Orchard.Layouts.Drivers {
             ILayoutManager layoutManager,
             Lazy<IContentPartDisplay> contentPartDisplay,
             IShapeDisplay shapeDisplay,
-            ILayoutModelMapper mapper, 
+            ILayoutModelMapper mapper,
             ILayoutEditorFactory layoutEditorFactory) {
 
             _serializer = serializer;
@@ -41,20 +44,43 @@ namespace Orchard.Layouts.Drivers {
             _shapeDisplay = shapeDisplay;
             _mapper = mapper;
             _layoutEditorFactory = layoutEditorFactory;
+            _stack = new HashSet<string>();
+
+            Logger = NullLogger.Instance;
         }
+
+        public ILogger Logger { get; set; }
 
         protected override DriverResult Display(LayoutPart part, string displayType, dynamic shapeHelper) {
             return Combined(
                 ContentShape("Parts_Layout", () => {
+                    if (DetectRecursion(part, "Parts_Layout"))
+                        return shapeHelper.Parts_Layout_Recursive();
+
                     var elements = _layoutManager.LoadElements(part);
                     var layoutRoot = _elementDisplay.DisplayElements(elements, part, displayType: displayType);
                     return shapeHelper.Parts_Layout(LayoutRoot: layoutRoot);
                 }),
                 ContentShape("Parts_Layout_Summary", () => {
+                    if (DetectRecursion(part, "Parts_Layout_Summary"))
+                        return shapeHelper.Parts_Layout_Summary_Recursive();
+
                     var layoutShape = _contentPartDisplay.Value.BuildDisplay(part);
                     var layoutHtml = _shapeDisplay.Display(layoutShape);
                     return shapeHelper.Parts_Layout_Summary(LayoutHtml: layoutHtml);
                 }));
+        }
+
+        private bool DetectRecursion(LayoutPart part, string shapeName) {
+            var key = String.Format("{0}:{1}", shapeName, part.Id);
+
+            if (_stack.Contains(key)) {
+                Logger.Debug(String.Format("Detected recursive layout rendering of layout with ID = {0} and shape = {1}", part.Id, shapeName));
+                return true;
+            }
+
+            _stack.Add(key);
+            return false;
         }
 
         protected override DriverResult Editor(LayoutPart part, dynamic shapeHelper) {
@@ -85,7 +111,7 @@ namespace Orchard.Layouts.Drivers {
                     part.LayoutData = _serializer.Serialize(elementInstances);
                     part.TemplateId = viewModel.LayoutEditor.TemplateId;
                     part.SessionKey = viewModel.LayoutEditor.SessionKey;
-                    viewModel.LayoutEditor.Data = _mapper.ToEditorModel(part.LayoutData, new DescribeElementsContext {Content = part}).ToJson();
+                    viewModel.LayoutEditor.Data = _mapper.ToEditorModel(part.LayoutData, new DescribeElementsContext { Content = part }).ToJson();
                 }
 
                 return shapeHelper.EditorTemplate(TemplateName: "Parts.Layout", Model: viewModel, Prefix: Prefix);
