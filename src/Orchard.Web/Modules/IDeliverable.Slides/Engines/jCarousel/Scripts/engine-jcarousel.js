@@ -10,8 +10,9 @@
         var wrap = engine.data("wrap");
         var vertical = engine.data("vertical");
         var center = engine.data("center");
+        var carousel = engine.find("> .jcarousel");
 
-        engine.find(".jcarousel")
+        carousel
             .on("jcarousel:create jcarousel:reload", function ()
             {
                 var element = $(this);
@@ -35,15 +36,17 @@
             autostart: autoStart
         });
 
-        engine.find(".jcarousel-prev").jcarouselControl({
-            target: "-=1"
+        engine.find("> .jcarousel-prev").jcarouselControl({
+            target: "-=1",
+            carousel: carousel
         });
 
-        engine.find(".jcarousel-next").jcarouselControl({
-            target: "+=1"
+        engine.find("> .jcarousel-next").jcarouselControl({
+            target: "+=1",
+            carousel: carousel
         });
 
-        engine.find(".jcarousel-pagination")
+        engine.find("> .jcarousel-pagination")
             .on("jcarouselpagination:active", "a", function ()
             {
                 $(this).addClass("active");
