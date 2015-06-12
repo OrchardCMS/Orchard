@@ -314,9 +314,11 @@
     <Compile Include="Controllers\TemplateController.cs" />
     <Compile Include="Drivers\CanvasElementDriver.cs" />
     <Compile Include="Drivers\ShapeElementDriver.cs" />
+    <Compile Include="Drivers\BreakElementDriver.cs" />
     <Compile Include="Elements\Canvas.cs" />
     <Compile Include="Elements\ContentElement.cs" />
     <Compile Include="Elements\Shape.cs" />
+    <Compile Include="Elements\Break.cs" />
     <Compile Include="Filters\TokensFilter.cs" />
     <Compile Include="Framework\Drivers\ImportContentContextWrapper.cs" />
     <Compile Include="Framework\Drivers\IContentImportSession.cs" />
@@ -529,6 +531,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Styles\Lib\FontAwesome\Fonts\fontawesome-webfont.woff2" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Break.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
