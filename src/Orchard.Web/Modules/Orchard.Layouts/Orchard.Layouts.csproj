@@ -535,6 +535,10 @@
   <ItemGroup>
     <Content Include="Views\Elements\Break.cshtml" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts.Layout.Recursive.cshtml" />
+    <Content Include="Views\Parts.Layout.Summary.Recursive.cshtml" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
