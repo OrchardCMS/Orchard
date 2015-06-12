@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using Orchard;
+using IDeliverable.Licensing.Orchard.Models;
 
-namespace IDeliverable.Licensing.Orchard
+namespace IDeliverable.Licensing.Orchard.Services
 {
     public interface IProductManifestManager
     {

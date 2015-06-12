@@ -1,34 +1,38 @@
-﻿using System;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
+using IDeliverable.Licensing.Orchard.Helpers;
+using IDeliverable.Licensing.Orchard.Models;
+using IDeliverable.Licensing.Orchard.Services;
+using IDeliverable.Licensing.Orchard.ViewModels;
 using Orchard;
 using Orchard.Localization;
 using Orchard.Security;
 using Orchard.UI.Admin;
 
-namespace IDeliverable.Licensing.Orchard
+namespace IDeliverable.Licensing.Orchard.Controllers
 {
     [Admin]
     public abstract class LicenseControllerBase : Controller
     {
-        protected  LicenseControllerBase(IOrchardServices services, ILicenseValidator licenseValidator, ILicenseAccessor licenseAccessor)
+        private readonly ILicenseFileManager _licenseFileManager;
+
+        protected LicenseControllerBase(IOrchardServices services)
         {
             Services = services;
-            LicenseValidator = licenseValidator;
-            LicenseAccessor = licenseAccessor;
+            LicenseValidator = ServiceFactory.Current.Resolve<ILicenseValidator>();
+            _licenseFileManager = ServiceFactory.Current.Resolve<ILicenseFileManager>();
             T = NullLocalizer.Instance;
         }
 
         protected abstract ProductManifest ProductManifest { get; }
         protected IOrchardServices Services { get; }
         protected ILicenseValidator LicenseValidator { get; }
-        protected ILicenseAccessor LicenseAccessor { get; }
 
         public Localizer T { get; set; }
 
         public ActionResult Index()
         {
-            var license = LicenseAccessor.GetLicense(ProductManifest);
-            var licenseValidationResult = !String.IsNullOrWhiteSpace(license.Key) ? LicenseValidator.ValidateLicense(license, LicenseValidationOptions.RefreshToken | LicenseValidationOptions.SkipLocalRequests) : default(LicenseValidationResult);
+            var license = LicenseValidator.GetLicense(ProductManifest);
+            var licenseValidationResult = LicenseValidator.ValidateLicense(license, Models.LicenseValidationOptions.RefreshToken | Models.LicenseValidationOptions.SkipLocalRequests);
             var viewModel = new LicenseViewModel
             {
                 Key = license.Key,
@@ -45,7 +49,9 @@ namespace IDeliverable.Licensing.Orchard
             if (!ModelState.IsValid)
                 return View(viewModel);
 
-            LicenseAccessor.UpdateLicense(ProductManifest, viewModel.Key?.Trim());
+            var file = _licenseFileManager.Load(ProductManifest.ExtensionName);
+            file.LicenseKey = viewModel.Key?.Trim();
+            _licenseFileManager.Save(file);
             return RedirectToAction("Index");
         }
 

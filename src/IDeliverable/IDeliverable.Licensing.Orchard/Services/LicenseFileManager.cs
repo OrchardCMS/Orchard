@@ -2,35 +2,36 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using IDeliverable.Licensing.Orchard.Models;
 using Orchard.Caching;
 using Orchard.FileSystems.AppData;
 
-namespace IDeliverable.Licensing.Orchard
+namespace IDeliverable.Licensing.Orchard.Services
 {
-    public class LicenseFileService : ILicenseFileService
+    public class LicenseFileManager : ILicenseFileManager
     {
         private readonly IAppDataFolder _appDataFolder;
 
-        public LicenseFileService(IAppDataFolder appDataFolder)
+        public LicenseFileManager(IAppDataFolder appDataFolder)
         {
             _appDataFolder = appDataFolder;
         }
 
-        public LicenseFile Load(string name)
+        public LicenseFile Load(string extensionName)
         {
-            var path = GetPath(name);
+            var path = GetRelativePath(extensionName);
             if (!_appDataFolder.FileExists(path))
-                return new LicenseFile(name);
+                return LicenseFile.CreateNullInstance(extensionName);
 
             using (var reader = new StreamReader(_appDataFolder.OpenFile(path)))
             {
-                return Parse(name, reader.ReadToEndAsync().Result);
+                return Parse(extensionName, reader.ReadToEndAsync().Result);
             }
         }
 
         public void Save(LicenseFile file)
         {
-            var path = GetPath(file.Name);
+            var path = GetRelativePath(file.ExtensionName);
 
             using (var writer = new StreamWriter(_appDataFolder.CreateFile(path)))
             {
@@ -43,15 +44,20 @@ namespace IDeliverable.Licensing.Orchard
 
         public IVolatileToken WhenPathChanges(string extensionName)
         {
-            return _appDataFolder.WhenPathChanges(GetPath(extensionName));
+            return _appDataFolder.WhenPathChanges(GetRelativePath(extensionName));
         }
 
-        private string GetPath(string moduleName)
+        public string GetRelativePath(string extensionName)
         {
-            return $"Licenses/{moduleName}.lic";
+            return $"Licenses/{extensionName}.lic";
         }
 
-        private LicenseFile Parse(string name, string text)
+        public string GetPhysicalPath(string extensionName)
+        {
+            return _appDataFolder.MapPath(GetRelativePath(extensionName));
+        }
+
+        private static LicenseFile Parse(string name, string text)
         {
             if (String.IsNullOrWhiteSpace(text))
                 return new LicenseFile(name);

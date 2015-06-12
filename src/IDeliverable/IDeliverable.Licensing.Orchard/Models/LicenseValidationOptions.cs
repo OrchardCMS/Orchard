@@ -1,6 +1,6 @@
 using System;
 
-namespace IDeliverable.Licensing
+namespace IDeliverable.Licensing.Orchard.Models
 {
     [Flags]
     public enum LicenseValidationOptions

@@ -1,4 +1,6 @@
-﻿namespace IDeliverable.Licensing.Orchard
+﻿using IDeliverable.Licensing.Orchard.Models;
+
+namespace IDeliverable.Licensing.Orchard.ViewModels
 {
     public class LicenseViewModel
     {

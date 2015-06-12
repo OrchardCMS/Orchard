@@ -2,7 +2,7 @@
 using System.Web.Mvc;
 using IDeliverable.Licensing;
 using IDeliverable.Licensing.Orchard;
-using IDeliverable.Slides.Helpers;
+using IDeliverable.Licensing.Orchard.Services;
 using Orchard;
 using Orchard.Localization;
 using Orchard.UI.Admin.Notification;
@@ -13,19 +13,17 @@ namespace IDeliverable.Slides.Services
     public class InvalidLicenseKeyBanner : Component, INotificationProvider
     {
         private readonly ILicenseValidator _licenseValidator;
-        private readonly ILicenseAccessor _licenseAccessor;
         private readonly UrlHelper _urlHelper;
 
-        public InvalidLicenseKeyBanner(ILicenseValidator licenseValidator, ILicenseAccessor licenseAccessor, UrlHelper urlHelper)
+        public InvalidLicenseKeyBanner(UrlHelper urlHelper)
         {
-            _licenseValidator = licenseValidator;
-            _licenseAccessor = licenseAccessor;
+            _licenseValidator = ServiceFactory.Current.Resolve<ILicenseValidator>();
             _urlHelper = urlHelper;
         }
 
         public IEnumerable<NotifyEntry> GetNotifications()
         {
-            var token = _licenseValidator.ValidateLicense(_licenseAccessor.GetSlidesLicense());
+            var token = _licenseValidator.ValidateLicense(SlidesProductManifestProvider.ProductManifest);
             if (!token.IsValid)
             {
                 var url = _urlHelper.Action("Index", "License", new { area = "IDeliverable.Slides" });

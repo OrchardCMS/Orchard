@@ -1,6 +1,6 @@
-﻿@using IDeliverable.Licensing.Orchard
+﻿@using IDeliverable.Licensing.Orchard.Helpers
 @using Orchard.Utility.Extensions
-@model LicenseViewModel
+@model IDeliverable.Licensing.Orchard.ViewModels.LicenseViewModel
 @{
     Layout.Title = T("Slide Show License");
 }
@@ -8,7 +8,7 @@
 {
     if (Model.IsValid)
     {
-        if (Model.LicenseValidationResult.Token.IsLocalHost)
+        if (Model.LicenseValidationResult.IsLocalHost)
         {
             <div class="message message-Information">@T("License key validation is skipped for local requests.")</div>
         }

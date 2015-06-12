@@ -54,22 +54,31 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FileBasedLicenseAccessor.cs" />
-    <Compile Include="HttpRequestExtensions.cs" />
-    <Compile Include="ILicenseAccessor.cs" />
-    <Compile Include="ILicenseFileService.cs" />
-    <Compile Include="ILicenseValidator.cs" />
-    <Compile Include="IProductManifestManager.cs" />
-    <Compile Include="IProductManifestProvider.cs" />
-    <Compile Include="LicenseControllerBase.cs" />
-    <Compile Include="LicenseFile.cs" />
-    <Compile Include="LicenseFileService.cs" />
-    <Compile Include="LicenseValidationResult.cs" />
-    <Compile Include="LicenseValidator.cs" />
-    <Compile Include="LicenseViewModel.cs" />
-    <Compile Include="ProductManifest.cs" />
-    <Compile Include="ProductManifestManager.cs" />
-    <Compile Include="ProductManifestProviderBase.cs" />
+    <Compile Include="ServiceFactory.cs" />
+    <Compile Include="Models\CacheInvalidationContext.cs" />
+    <Compile Include="Services\CacheService.cs" />
+    <Compile Include="Services\HttpContextAccessor.cs" />
+    <Compile Include="Services\IHttpContextAccessor.cs" />
+    <Compile Include="Services\ICacheService.cs" />
+    <Compile Include="Services\ILicensingServiceClient.cs" />
+    <Compile Include="Services\LicenseAccessor.cs" />
+    <Compile Include="Helpers\HttpRequestExtensions.cs" />
+    <Compile Include="Services\ILicenseAccessor.cs" />
+    <Compile Include="Services\ILicenseFileManager.cs" />
+    <Compile Include="Services\ILicenseValidator.cs" />
+    <Compile Include="Services\IProductManifestManager.cs" />
+    <Compile Include="Services\IProductManifestProvider.cs" />
+    <Compile Include="Controllers\LicenseControllerBase.cs" />
+    <Compile Include="Models\LicenseFile.cs" />
+    <Compile Include="Services\LicenseFileManager.cs" />
+    <Compile Include="Models\LicenseValidationOptions.cs" />
+    <Compile Include="Models\LicenseValidationResult.cs" />
+    <Compile Include="Services\LicensingServiceClient.cs" />
+    <Compile Include="Services\LicenseValidator.cs" />
+    <Compile Include="ViewModels\LicenseViewModel.cs" />
+    <Compile Include="Models\ProductManifest.cs" />
+    <Compile Include="Services\ProductManifestManager.cs" />
+    <Compile Include="Services\ProductManifestProviderBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -82,6 +91,7 @@
       <Name>Orchard.Framework</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
