@@ -165,7 +165,7 @@ build/
 /buildtasks
 /artifacts
 *.sln.cache
-src/Orchard.Web/Media/*
+#src/Orchard.Web/Media/*
 log.xml
 profiling/
 *.orig
@@ -187,3 +187,8 @@ node_modules/
 
 #enable all /lib artifacts
 !lib/*/*.*
+
+#Enable version control of some IDeliverable specifics.
+src/Orchard.Web/Media/Default/RecipeJournal/*
+src/Orchard.Web/Media/Default/_Profiles/*
+

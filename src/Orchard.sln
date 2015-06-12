@@ -271,6 +271,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IDeliverable.Slides", "Orch
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IDeliverable.Licensing.Orchard", "IDeliverable\IDeliverable.Licensing.Orchard\IDeliverable.Licensing.Orchard.csproj", "{F1467A6B-2397-447B-BE90-766D192EC3D9}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Recipes", "Recipes", "{65E81B62-845D-426D-BD9C-6C146A0D63C6}"
+	ProjectSection(SolutionItems) = preProject
+		Orchard.Web\Modules\Orchard.Setup\Recipes\ideliverable.slides.recipe.xml = Orchard.Web\Modules\Orchard.Setup\Recipes\ideliverable.slides.recipe.xml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		CodeCoverage|Any CPU = CodeCoverage|Any CPU

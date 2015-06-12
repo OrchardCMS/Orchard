@@ -1,0 +1,215 @@
+﻿<?xml version="1.0"?>
+<Orchard>
+    
+    <Recipe>
+        <Name>IDeliverable.Slides</Name>
+        <Description>Enables and configures IDeliverable.Slides with some initial content for development/testing purposes.</Description>
+        <Author>IDeliverable, Ltd.</Author>
+        <WebSite>http://www.ideliverable.com</WebSite>
+        <Tags></Tags>
+        <Version>1.0</Version>
+        <IsSetupRecipe>true</IsSetupRecipe>
+    </Recipe>
+
+    <Feature enable="
+            Orchard.Blogs,Orchard.Comments,Orchard.Tags,Orchard.Alias,Orchard.Autoroute,
+            TinyMce,Orchard.MediaLibrary,Orchard.ContentPicker,Orchard.PublishLater,
+            Orchard.jQuery,Orchard.Widgets,Orchard.ContentTypes,
+            Orchard.Scripting,Orchard.Scripting.Lightweight,PackagingServices,Orchard.Packaging,
+            Orchard.Projections,Orchard.Fields,Orchard.OutputCache,Orchard.Taxonomies,Orchard.Workflows,
+            Orchard.Layouts,TheThemeMachine,
+                   
+            Orchard.ImportExport,
+            IDeliverable.Slides.Lists,
+            IDeliverable.Slides.Projections
+            " />
+
+    <Metadata>
+        <Types>
+            <Page ContentTypeSettings.Draftable="True" TypeIndexing.Indexes="Search">
+                <TagsPart />
+                <LocalizationPart />
+                <TitlePart/>
+                <AutoroutePart />
+                <MenuPart />
+            </Page>
+            <BlogPost ContentTypeSettings.Draftable="True" TypeIndexing.Indexes="Search">
+                <CommentsPart />
+                <TagsPart />
+                <LocalizationPart />
+                <TitlePart/>
+                <AutoroutePart />
+            </BlogPost>
+        </Types>
+        <Parts>
+            <BodyPart BodyPartSettings.FlavorDefault="html" />
+        </Parts>
+    </Metadata>
+
+    <Data>
+        <Layer Id="/Layer.LayerName=Default" Status="Published">
+            <CommonPart Owner="/User.UserName=admin" CreatedUtc="2015-06-12T18:07:55.2319769Z" PublishedUtc="2015-06-12T18:07:55.2799819Z" ModifiedUtc="2015-06-12T18:07:55.2319769Z" />
+            <LayerPart Name="Default" Description="The widgets in this layer are displayed on all pages" LayerRule="true" />
+        </Layer>
+        <Layer Id="/Layer.LayerName=Authenticated" Status="Published">
+            <CommonPart Owner="/User.UserName=admin" CreatedUtc="2015-06-12T18:07:55.3039835Z" PublishedUtc="2015-06-12T18:07:55.3239851Z" ModifiedUtc="2015-06-12T18:07:55.3039835Z" />
+            <LayerPart Name="Authenticated" Description="The widgets in this layer are displayed when the user is authenticated" LayerRule="authenticated" />
+        </Layer>
+        <Layer Id="/Layer.LayerName=Anonymous" Status="Published">
+            <CommonPart Owner="/User.UserName=admin" CreatedUtc="2015-06-12T18:07:55.3599878Z" PublishedUtc="2015-06-12T18:07:55.3759953Z" ModifiedUtc="2015-06-12T18:07:55.3599878Z" />
+            <LayerPart Name="Anonymous" Description="The widgets in this layer are displayed when the user is anonymous" LayerRule="not authenticated" />
+        </Layer>
+        <Layer Id="/Layer.LayerName=Disabled" Status="Published">
+            <CommonPart Owner="/User.UserName=admin" CreatedUtc="2015-06-12T18:07:55.4079908Z" PublishedUtc="2015-06-12T18:07:55.4239903Z" ModifiedUtc="2015-06-12T18:07:55.4079908Z" />
+            <LayerPart Name="Disabled" Description="The widgets in this layer are never displayed" LayerRule="false" />
+        </Layer>
+        <Layer Id="/Layer.LayerName=TheHomepage" Status="Published">
+            <CommonPart Owner="/User.UserName=admin" CreatedUtc="2015-06-12T18:07:55.4479924Z" PublishedUtc="2015-06-12T18:07:55.4679932Z" ModifiedUtc="2015-06-12T18:07:55.4479924Z" />
+            <LayerPart Name="TheHomepage" Description="The widgets in this layer are displayed on the home page" LayerRule="url '~/'" />
+        </Layer>
+        <Image Id="/Identifier=f03058aa32ba4ee099745b68fbe715d4" Status="Published">
+            <IdentityPart Identifier="f03058aa32ba4ee099745b68fbe715d4" />
+            <CommonPart Owner="/User.UserName=admin" CreatedUtc="2015-06-12T17:42:51.4666585Z" PublishedUtc="2015-06-12T17:42:51.7166643Z" ModifiedUtc="2015-06-12T17:42:51.4666585Z" />
+            <TitlePart Title="IMG_2838" />
+            <ImagePart Height="3000" Width="4000" />
+            <MediaPart MimeType="image/jpeg" Caption="" AlternateText="" FolderPath="Slides" FileName="IMG_2838.JPG" />
+        </Image>
+        <Image Id="/Identifier=e7375c837717442d99f942b0ca9d1ffd" Status="Published">
+            <IdentityPart Identifier="e7375c837717442d99f942b0ca9d1ffd" />
+            <CommonPart Owner="/User.UserName=admin" CreatedUtc="2015-06-12T17:42:53.0837931Z" PublishedUtc="2015-06-12T17:42:53.2087948Z" ModifiedUtc="2015-06-12T17:42:53.0837931Z" />
+            <TitlePart Title="IMG_2844" />
+            <ImagePart Height="3000" Width="4000" />
+            <MediaPart MimeType="image/jpeg" Caption="" AlternateText="" FolderPath="Slides" FileName="IMG_2844.JPG" />
+        </Image>
+        <Image Id="/Identifier=cec9d599d92c4cb1bc90e56b79bc8a30" Status="Published">
+            <IdentityPart Identifier="cec9d599d92c4cb1bc90e56b79bc8a30" />
+            <CommonPart Owner="/User.UserName=admin" CreatedUtc="2015-06-12T17:42:54.1556244Z" PublishedUtc="2015-06-12T17:42:54.3899989Z" ModifiedUtc="2015-06-12T17:42:54.1556244Z" />
+            <TitlePart Title="IMG_2834" />
+            <ImagePart Height="3000" Width="4000" />
+            <MediaPart MimeType="image/jpeg" Caption="" AlternateText="" FolderPath="Slides" FileName="IMG_2834.JPG" />
+        </Image>
+        <Image Id="/Identifier=4b8bcbb44657488d9044a35a9d123ff2" Status="Published">
+            <IdentityPart Identifier="4b8bcbb44657488d9044a35a9d123ff2" />
+            <CommonPart Owner="/User.UserName=admin" CreatedUtc="2015-06-12T17:42:55.0881394Z" PublishedUtc="2015-06-12T17:42:55.3624334Z" ModifiedUtc="2015-06-12T17:42:55.0881394Z" />
+            <TitlePart Title="IMG_2847" />
+            <ImagePart Height="3000" Width="4000" />
+            <MediaPart MimeType="image/jpeg" Caption="" AlternateText="" FolderPath="Slides" FileName="IMG_2847.JPG" />
+        </Image>
+        <Image Id="/Identifier=a998f0fa02f6453da7195fe45898d45f" Status="Published">
+            <IdentityPart Identifier="a998f0fa02f6453da7195fe45898d45f" />
+            <CommonPart Owner="/User.UserName=admin" CreatedUtc="2015-06-12T17:44:21.8146748Z" PublishedUtc="2015-06-12T17:44:21.9537547Z" ModifiedUtc="2015-06-12T17:44:21.8146748Z" />
+            <TitlePart Title="IMG_2841" />
+            <ImagePart Height="4000" Width="3000" />
+            <MediaPart MimeType="image/jpeg" Caption="" AlternateText="" FolderPath="Slides" FileName="IMG_2841.JPG" />
+        </Image>
+        <Image Id="/Identifier=df331e172e5c4483be8adf78cd77509c" Status="Published">
+            <IdentityPart Identifier="df331e172e5c4483be8adf78cd77509c" />
+            <CommonPart Owner="/User.UserName=admin" CreatedUtc="2015-06-12T17:44:22.9476652Z" PublishedUtc="2015-06-12T17:44:23.1057843Z" ModifiedUtc="2015-06-12T17:44:22.9476652Z" />
+            <TitlePart Title="IMG_2836" />
+            <ImagePart Height="4000" Width="3000" />
+            <MediaPart MimeType="image/jpeg" Caption="" AlternateText="" FolderPath="Slides" FileName="IMG_2836.JPG" />
+        </Image>
+        <Image Id="/Identifier=2a860e7b537947a1a33718cce52ba9a8" Status="Published">
+            <IdentityPart Identifier="2a860e7b537947a1a33718cce52ba9a8" />
+            <CommonPart Owner="/User.UserName=admin" CreatedUtc="2015-06-12T17:44:23.9580145Z" PublishedUtc="2015-06-12T17:44:24.1072555Z" ModifiedUtc="2015-06-12T17:44:23.9580145Z" />
+            <TitlePart Title="IMG_2819" />
+            <ImagePart Height="4000" Width="3000" />
+            <MediaPart MimeType="image/jpeg" Caption="" AlternateText="" FolderPath="Slides" FileName="IMG_2819.JPG" />
+        </Image>
+        <Image Id="/Identifier=c76632b469b4477e90f40cc84d4cc42a" Status="Published">
+            <IdentityPart Identifier="c76632b469b4477e90f40cc84d4cc42a" />
+            <CommonPart Owner="/User.UserName=admin" CreatedUtc="2015-06-12T17:44:24.892825Z" PublishedUtc="2015-06-12T17:44:25.0326265Z" ModifiedUtc="2015-06-12T17:44:24.892825Z" />
+            <TitlePart Title="IMG_2812" />
+            <ImagePart Height="4000" Width="3000" />
+            <MediaPart MimeType="image/jpeg" Caption="" AlternateText="" FolderPath="Slides" FileName="IMG_2812.JPG" />
+        </Image>
+        <Menu Id="/Identifier=a41ee2c9570848dcaf1413faa8192aff" Status="Published">
+            <IdentityPart Identifier="a41ee2c9570848dcaf1413faa8192aff" />
+            <CommonPart CreatedUtc="2015-06-12T17:30:20.0378725Z" PublishedUtc="2015-06-12T17:30:20.0578757Z" ModifiedUtc="2015-06-12T17:30:20.0378725Z" />
+            <TitlePart Title="Main Menu" />
+        </Menu>
+        <MenuItem Id="/Identifier=ce75e1e20edb48098a3670e7af4a18f9" Status="Published">
+            <IdentityPart Identifier="ce75e1e20edb48098a3670e7af4a18f9" />
+            <CommonPart Owner="/User.UserName=admin" CreatedUtc="2015-06-12T17:30:20.4579383Z" PublishedUtc="2015-06-12T17:30:20.4819069Z" ModifiedUtc="2015-06-12T17:30:20.4579383Z" />
+            <MenuItemPart Url="~/" />
+            <MenuPart Menu="/Identifier=a41ee2c9570848dcaf1413faa8192aff" MenuText="Home" MenuPosition="0" />
+        </MenuItem>
+        <ContentMenuItem Id="/Identifier=b57679b74e03430ea06da0ea9022ca20" Status="Published">
+            <IdentityPart Identifier="b57679b74e03430ea06da0ea9022ca20" />
+            <CommonPart Owner="/User.UserName=admin" CreatedUtc="2015-06-12T17:47:18.6582736Z" PublishedUtc="2015-06-12T17:47:18.8102843Z" ModifiedUtc="2015-06-12T17:47:18.7622999Z" />
+            <MenuPart Menu="/Identifier=a41ee2c9570848dcaf1413faa8192aff" MenuText="JCarousel 1" MenuPosition="1" />
+            <ContentMenuItemPart ContentItem="/alias=jcarousel-slideshow-1" />
+        </ContentMenuItem>
+        <ContentMenuItem Id="/Identifier=afaf2ee1a87f47b6bd3813092680c9ec" Status="Published">
+            <IdentityPart Identifier="afaf2ee1a87f47b6bd3813092680c9ec" />
+            <CommonPart Owner="/User.UserName=admin" CreatedUtc="2015-06-12T17:47:27.539095Z" PublishedUtc="2015-06-12T17:47:27.5831094Z" ModifiedUtc="2015-06-12T17:47:27.5550891Z" />
+            <MenuPart Menu="/Identifier=a41ee2c9570848dcaf1413faa8192aff" MenuText="Bootstrap 1" MenuPosition="2" />
+            <ContentMenuItemPart ContentItem="/alias=bootstrap-slideshow-1" />
+        </ContentMenuItem>
+        <ContentMenuItem Id="/Identifier=c4a3c5ea4b34414b911eb6ec685fa373" Status="Published">
+            <IdentityPart Identifier="c4a3c5ea4b34414b911eb6ec685fa373" />
+            <CommonPart Owner="/User.UserName=admin" CreatedUtc="2015-06-12T17:51:23.8932561Z" PublishedUtc="2015-06-12T17:51:23.9372333Z" ModifiedUtc="2015-06-12T17:51:23.9052393Z" />
+            <MenuPart Menu="/Identifier=a41ee2c9570848dcaf1413faa8192aff" MenuText="JCarousel Layout 1" MenuPosition="3" />
+            <ContentMenuItemPart ContentItem="/alias=jcarousel-layout-1" />
+        </ContentMenuItem>
+        <ContentMenuItem Id="/Identifier=9a21b4a5678c4c048aee2391b1d31a3d" Status="Published">
+            <IdentityPart Identifier="9a21b4a5678c4c048aee2391b1d31a3d" />
+            <CommonPart Owner="/User.UserName=admin" CreatedUtc="2015-06-12T17:51:37.9049966Z" PublishedUtc="2015-06-12T17:51:37.9570241Z" ModifiedUtc="2015-06-12T17:51:37.9209949Z" />
+            <MenuPart Menu="/Identifier=a41ee2c9570848dcaf1413faa8192aff" MenuText="Bootstrap Layout 1" MenuPosition="4" />
+            <ContentMenuItemPart ContentItem="/alias=bootstrap-layout-1" />
+        </ContentMenuItem>
+        <MenuWidget Id="/Identifier=MenuWidget1" Status="Published">
+            <IdentityPart Identifier="MenuWidget1" />
+            <CommonPart Owner="/User.UserName=admin" Container="/Layer.LayerName=Default" CreatedUtc="2015-06-12T17:30:20.5539233Z" PublishedUtc="2015-06-12T17:30:20.6059122Z" ModifiedUtc="2015-06-12T17:30:20.5539233Z" />
+            <MenuWidgetPart Menu="/Identifier=a41ee2c9570848dcaf1413faa8192aff" StartLevel="1" Levels="0" Breadcrumb="false" AddCurrentPage="false" AddHomePage="false" ShowFullMenu="false" />
+            <WidgetPart Title="Main Menu" Position="1" Zone="Navigation" RenderTitle="false" Name="" />
+        </MenuWidget>
+        <Page Id="/alias=" Status="Published">
+            <CommonPart Owner="/User.UserName=admin" CreatedUtc="2015-06-12T17:30:20.1738824Z" PublishedUtc="2015-06-12T17:30:20.1738824Z" ModifiedUtc="2015-06-12T17:30:20.1098925Z" />
+            <TitlePart Title="Welcome to Orchard!" />
+            <LayoutPart>
+                <LayoutData>{"elements":[{"typeName":"Orchard.Layouts.Elements.Canvas","data":"","exportableData":"","index":0,"elements":[{"typeName":"Orchard.Layouts.Elements.Grid","data":"","exportableData":"","index":0,"elements":[{"typeName":"Orchard.Layouts.Elements.Row","data":"","exportableData":"","index":0,"elements":[{"typeName":"Orchard.Layouts.Elements.Column","data":"Width=12","exportableData":"","index":0,"elements":[{"typeName":"Orchard.Layouts.Elements.Html","data":"Content=%3cp%3eYou%27ve+successfully+setup+your+Orchard+Site+and+this+is+the+homepage+of+your+new+site.%0d%0aHere+are+a+few+things+you+can+look+at+to+get+familiar+with+the+application.%0d%0aOnce+you+feel+confident+you+don%27t+need+this+anymore%2c+you+can%0d%0a%3ca+href%3d%22Admin%2fContents%2fEdit%2f9%22%3eremove+it+by+going+into+editing+mode%3c%2fa%3e%0d%0aand+replacing+it+with+whatever+you+want.%3c%2fp%3e%0d%0a%3cp%3eFirst+things+first+-+You%27ll+probably+want+to+%3ca+href%3d%22Admin%2fSettings%22%3emanage+your+settings%3c%2fa%3e%0d%0aand+configure+Orchard+to+your+liking.+After+that%2c+you+can+head+over+to%0d%0a%3ca+href%3d%22Admin%2fThemes%22%3emanage+themes+to+change+or+install+new+themes%3c%2fa%3e%0d%0aand+really+make+it+your+own.+Once+you%27re+happy+with+a+look+and+feel%2c+it%27s+time+for+some+content.%0d%0aYou+can+start+creating+new+custom+content+types+or+start+from+the+built-in+ones+by%0d%0a%3ca+href%3d%22Admin%2fContents%2fCreate%2fPage%22%3eadding+a+page%3c%2fa%3e%2c+or+%3ca+href%3d%22Admin%2fNavigation%22%3emanaging+your+menus.%3c%2fa%3e%3c%2fp%3e%0d%0a%3cp%3eFinally%2c+Orchard+has+been+designed+to+be+extended.+It+comes+with+a+few+built-in%0d%0amodules+such+as+pages+and+blogs+or+themes.+If+you%27re+looking+to+add+additional+functionality%2c%0d%0ayou+can+do+so+by+creating+your+own+module+or+by+installing+one+that+somebody+else+built.%0d%0aModules+are+created+by+other+users+of+Orchard+just+like+you+so+if+you+feel+up+to+it%2c%0d%0a%3ca+href%3d%22http%3a%2f%2forchardproject.net%2fcontribution%22%3eplease+consider+participating%3c%2fa%3e.%3c%2fp%3e%0d%0a%3cp%3eThanks+for+using+Orchard+%e2%80%93+The+Orchard+Team+%3c%2fp%3e","exportableData":"","index":0,"elements":[],"isTemplated":false,"htmlId":null,"htmlClass":null,"htmlStyle":null}],"isTemplated":false,"htmlId":null,"htmlClass":null,"htmlStyle":null}],"isTemplated":false,"htmlId":null,"htmlClass":null,"htmlStyle":null},{"typeName":"Orchard.Layouts.Elements.Row","data":"","exportableData":"","index":1,"elements":[{"typeName":"Orchard.Layouts.Elements.Column","data":"Width=4","exportableData":"","index":0,"elements":[{"typeName":"Orchard.Layouts.Elements.Html","data":"Content=%3ch2%3eFirst+Leader+Aside%3c%2fh2%3e%0d%0a%3cp%3eLorem+ipsum+dolor+sit+amet%2c+consectetur+adipiscing+elit.+Curabitur+a+nibh+ut+tortor+dapibus+vestibulum.%0d%0aAliquam+vel+sem+nibh.+Suspendisse+vel+condimentum+tellus.%3c%2fp%3e","exportableData":"","index":0,"elements":[],"isTemplated":false,"htmlId":null,"htmlClass":null,"htmlStyle":null}],"isTemplated":false,"htmlId":null,"htmlClass":null,"htmlStyle":null},{"typeName":"Orchard.Layouts.Elements.Column","data":"Width=4","exportableData":"","index":1,"elements":[{"typeName":"Orchard.Layouts.Elements.Html","data":"Content=%3ch2%3eSecond+Leader+Aside%3c%2fh2%3e%0d%0a%3cp%3eLorem+ipsum+dolor+sit+amet%2c+consectetur+adipiscing+elit.+Curabitur+a+nibh+ut+tortor+dapibus+vestibulum.%0d%0aAliquam+vel+sem+nibh.+Suspendisse+vel+condimentum+tellus.%3c%2fp%3e","exportableData":"","index":0,"elements":[],"isTemplated":false,"htmlId":null,"htmlClass":null,"htmlStyle":null}],"isTemplated":false,"htmlId":null,"htmlClass":null,"htmlStyle":null},{"typeName":"Orchard.Layouts.Elements.Column","data":"Width=4","exportableData":"","index":2,"elements":[{"typeName":"Orchard.Layouts.Elements.Html","data":"Content=%3ch2%3eThird+Leader+Aside%3c%2fh2%3e%0d%0a%3cp%3eLorem+ipsum+dolor+sit+amet%2c+consectetur+adipiscing+elit.+Curabitur+a+nibh+ut+tortor+dapibus+vestibulum.%0d%0aAliquam+vel+sem+nibh.+Suspendisse+vel+condimentum+tellus.%3c%2fp%3e","exportableData":"","index":0,"elements":[],"isTemplated":false,"htmlId":null,"htmlClass":null,"htmlStyle":null}],"isTemplated":false,"htmlId":null,"htmlClass":null,"htmlStyle":null}],"isTemplated":false,"htmlId":null,"htmlClass":null,"htmlStyle":null}],"isTemplated":false,"htmlId":null,"htmlClass":null,"htmlStyle":null}],"isTemplated":false,"htmlId":null,"htmlClass":null,"htmlStyle":null}]}</LayoutData>
+            </LayoutPart>
+            <AutoroutePart Alias="/" CustomPattern="/" UseCustomPattern="true" />
+            <TagsPart Tags="" />
+        </Page>
+        <Page Id="/alias=jcarousel-layout-1" Status="Published">
+            <CommonPart Owner="/User.UserName=admin" CreatedUtc="2015-06-12T17:49:58.3492169Z" PublishedUtc="2015-06-12T17:49:58.3492169Z" ModifiedUtc="2015-06-12T17:49:58.3292145Z" />
+            <TitlePart Title="JCarousel Layout 1" />
+            <LayoutPart>
+                <LayoutData>{"elements":[{"typeName":"Orchard.Layouts.Elements.Canvas","data":"","exportableData":"","index":0,"elements":[{"typeName":"Orchard.Layouts.Elements.Paragraph","data":"TypeName=Orchard.Layouts.Elements.Paragraph&amp;Text=This+slideshow+is+an+element+in+a+layout.&amp;Content=This+slideshow+is+an+element+in+a+layout.","exportableData":"","index":0,"elements":[],"isTemplated":false,"htmlId":null,"htmlClass":null,"htmlStyle":null},{"typeName":"IDeliverable.Slides.Elements.SlideShow","data":"TypeName=IDeliverable.Slides.Elements.SlideShow&amp;SlideShowElement.ProfileId=1&amp;SlideShowElement.ProviderName=DefaultSlides&amp;SlideShowElement.DefaultSlidesProvider.Indices=0%001%002%003&amp;SlideShowElement.ListSlidesProvider.SelectedListId=&amp;SlideShowElement.ListSlidesProvider.DisplayType=&amp;SlideShowSlides=%3cSlides%3e%3cSlide%3e%7b%22elements%22%3a%5b%7b%22typeName%22%3a%22Orchard.Layouts.Elements.Canvas%22%2c%22data%22%3a%22%22%2c%22exportableData%22%3a%22%22%2c%22index%22%3a0%2c%22elements%22%3a%5b%7b%22typeName%22%3a%22Orchard.Layouts.Elements.Image%22%2c%22data%22%3a%22MediaId%3d15%22%2c%22exportableData%22%3a%22%22%2c%22index%22%3a0%2c%22elements%22%3a%5b%5d%2c%22isTemplated%22%3afalse%2c%22htmlId%22%3anull%2c%22htmlClass%22%3anull%2c%22htmlStyle%22%3anull%7d%5d%2c%22isTemplated%22%3afalse%2c%22htmlId%22%3anull%2c%22htmlClass%22%3anull%2c%22htmlStyle%22%3anull%7d%5d%7d%3c%2fSlide%3e%3cSlide%3e%7b%22elements%22%3a%5b%7b%22typeName%22%3a%22Orchard.Layouts.Elements.Canvas%22%2c%22data%22%3a%22%22%2c%22exportableData%22%3a%22%22%2c%22index%22%3a0%2c%22elements%22%3a%5b%7b%22typeName%22%3a%22Orchard.Layouts.Elements.Image%22%2c%22data%22%3a%22MediaId%3d14%22%2c%22exportableData%22%3a%22%22%2c%22index%22%3a0%2c%22elements%22%3a%5b%5d%2c%22isTemplated%22%3afalse%2c%22htmlId%22%3anull%2c%22htmlClass%22%3anull%2c%22htmlStyle%22%3anull%7d%5d%2c%22isTemplated%22%3afalse%2c%22htmlId%22%3anull%2c%22htmlClass%22%3anull%2c%22htmlStyle%22%3anull%7d%5d%7d%3c%2fSlide%3e%3cSlide%3e%7b%22elements%22%3a%5b%7b%22typeName%22%3a%22Orchard.Layouts.Elements.Canvas%22%2c%22data%22%3a%22%22%2c%22exportableData%22%3a%22%22%2c%22index%22%3a0%2c%22elements%22%3a%5b%7b%22typeName%22%3a%22Orchard.Layouts.Elements.Image%22%2c%22data%22%3a%22MediaId%3d13%22%2c%22exportableData%22%3a%22%22%2c%22index%22%3a0%2c%22elements%22%3a%5b%5d%2c%22isTemplated%22%3afalse%2c%22htmlId%22%3anull%2c%22htmlClass%22%3anull%2c%22htmlStyle%22%3anull%7d%5d%2c%22isTemplated%22%3afalse%2c%22htmlId%22%3anull%2c%22htmlClass%22%3anull%2c%22htmlStyle%22%3anull%7d%5d%7d%3c%2fSlide%3e%3cSlide%3e%7b%22elements%22%3a%5b%7b%22typeName%22%3a%22Orchard.Layouts.Elements.Canvas%22%2c%22data%22%3a%22%22%2c%22exportableData%22%3a%22%22%2c%22index%22%3a0%2c%22elements%22%3a%5b%7b%22typeName%22%3a%22Orchard.Layouts.Elements.Image%22%2c%22data%22%3a%22MediaId%3d12%22%2c%22exportableData%22%3a%22%22%2c%22index%22%3a0%2c%22elements%22%3a%5b%5d%2c%22isTemplated%22%3afalse%2c%22htmlId%22%3anull%2c%22htmlClass%22%3anull%2c%22htmlStyle%22%3anull%7d%5d%2c%22isTemplated%22%3afalse%2c%22htmlId%22%3anull%2c%22htmlClass%22%3anull%2c%22htmlStyle%22%3anull%7d%5d%7d%3c%2fSlide%3e%3c%2fSlides%3e&amp;SlideShowQueryId=null&amp;SlideShowProjectionSlidesDisplayType=&amp;SlideShowListId=null&amp;SlideShowListSlidesDisplayType=&amp;ProfileId=1&amp;ProviderName=DefaultSlides","exportableData":"","index":1,"elements":[],"isTemplated":false,"htmlId":null,"htmlClass":null,"htmlStyle":null}],"isTemplated":false,"htmlId":"","htmlClass":"","htmlStyle":""}]}</LayoutData>
+            </LayoutPart>
+            <AutoroutePart Alias="jcarousel-layout-1" UseCustomPattern="false" />
+            <TagsPart Tags="" />
+        </Page>
+        <Page Id="/alias=bootstrap-layout-1" Status="Published">
+            <CommonPart Owner="/User.UserName=admin" CreatedUtc="2015-06-12T17:51:05.501336Z" PublishedUtc="2015-06-12T17:51:05.501336Z" ModifiedUtc="2015-06-12T17:51:05.4933351Z" />
+            <TitlePart Title="Bootstrap Layout 1" />
+            <LayoutPart>
+                <LayoutData>{"elements":[{"typeName":"Orchard.Layouts.Elements.Canvas","data":"","exportableData":"","index":0,"elements":[{"typeName":"Orchard.Layouts.Elements.Paragraph","data":"TypeName=Orchard.Layouts.Elements.Paragraph&amp;Text=This+slideshow+is+an+element+in+a+layout.&amp;Content=This+slideshow+is+an+element+in+a+layout.","exportableData":"","index":0,"elements":[],"isTemplated":false,"htmlId":null,"htmlClass":null,"htmlStyle":null},{"typeName":"IDeliverable.Slides.Elements.SlideShow","data":"TypeName=IDeliverable.Slides.Elements.SlideShow&amp;SlideShowElement.ProfileId=2&amp;SlideShowElement.ProviderName=DefaultSlides&amp;SlideShowElement.DefaultSlidesProvider.Indices=0%001%002%003&amp;SlideShowElement.ListSlidesProvider.SelectedListId=&amp;SlideShowElement.ListSlidesProvider.DisplayType=&amp;SlideShowSlides=%3cSlides%3e%3cSlide%3e%7b%22elements%22%3a%5b%7b%22typeName%22%3a%22Orchard.Layouts.Elements.Canvas%22%2c%22data%22%3a%22%22%2c%22exportableData%22%3a%22%22%2c%22index%22%3a0%2c%22elements%22%3a%5b%7b%22typeName%22%3a%22Orchard.Layouts.Elements.Image%22%2c%22data%22%3a%22MediaId%3d15%22%2c%22exportableData%22%3a%22%22%2c%22index%22%3a0%2c%22elements%22%3a%5b%5d%2c%22isTemplated%22%3afalse%2c%22htmlId%22%3anull%2c%22htmlClass%22%3anull%2c%22htmlStyle%22%3anull%7d%5d%2c%22isTemplated%22%3afalse%2c%22htmlId%22%3anull%2c%22htmlClass%22%3anull%2c%22htmlStyle%22%3anull%7d%5d%7d%3c%2fSlide%3e%3cSlide%3e%7b%22elements%22%3a%5b%7b%22typeName%22%3a%22Orchard.Layouts.Elements.Canvas%22%2c%22data%22%3a%22%22%2c%22exportableData%22%3a%22%22%2c%22index%22%3a0%2c%22elements%22%3a%5b%7b%22typeName%22%3a%22Orchard.Layouts.Elements.Image%22%2c%22data%22%3a%22MediaId%3d14%22%2c%22exportableData%22%3a%22%22%2c%22index%22%3a0%2c%22elements%22%3a%5b%5d%2c%22isTemplated%22%3afalse%2c%22htmlId%22%3anull%2c%22htmlClass%22%3anull%2c%22htmlStyle%22%3anull%7d%5d%2c%22isTemplated%22%3afalse%2c%22htmlId%22%3anull%2c%22htmlClass%22%3anull%2c%22htmlStyle%22%3anull%7d%5d%7d%3c%2fSlide%3e%3cSlide%3e%7b%22elements%22%3a%5b%7b%22typeName%22%3a%22Orchard.Layouts.Elements.Canvas%22%2c%22data%22%3a%22%22%2c%22exportableData%22%3a%22%22%2c%22index%22%3a0%2c%22elements%22%3a%5b%7b%22typeName%22%3a%22Orchard.Layouts.Elements.Image%22%2c%22data%22%3a%22MediaId%3d13%22%2c%22exportableData%22%3a%22%22%2c%22index%22%3a0%2c%22elements%22%3a%5b%5d%2c%22isTemplated%22%3afalse%2c%22htmlId%22%3anull%2c%22htmlClass%22%3anull%2c%22htmlStyle%22%3anull%7d%5d%2c%22isTemplated%22%3afalse%2c%22htmlId%22%3anull%2c%22htmlClass%22%3anull%2c%22htmlStyle%22%3anull%7d%5d%7d%3c%2fSlide%3e%3cSlide%3e%7b%22elements%22%3a%5b%7b%22typeName%22%3a%22Orchard.Layouts.Elements.Canvas%22%2c%22data%22%3a%22%22%2c%22exportableData%22%3a%22%22%2c%22index%22%3a0%2c%22elements%22%3a%5b%7b%22typeName%22%3a%22Orchard.Layouts.Elements.Image%22%2c%22data%22%3a%22MediaId%3d12%22%2c%22exportableData%22%3a%22%22%2c%22index%22%3a0%2c%22elements%22%3a%5b%5d%2c%22isTemplated%22%3afalse%2c%22htmlId%22%3anull%2c%22htmlClass%22%3anull%2c%22htmlStyle%22%3anull%7d%5d%2c%22isTemplated%22%3afalse%2c%22htmlId%22%3anull%2c%22htmlClass%22%3anull%2c%22htmlStyle%22%3anull%7d%5d%7d%3c%2fSlide%3e%3c%2fSlides%3e&amp;SlideShowQueryId=null&amp;SlideShowProjectionSlidesDisplayType=&amp;SlideShowListId=null&amp;SlideShowListSlidesDisplayType=&amp;ProfileId=2&amp;ProviderName=DefaultSlides","exportableData":"","index":1,"elements":[],"isTemplated":false,"htmlId":null,"htmlClass":null,"htmlStyle":null}],"isTemplated":false,"htmlId":"","htmlClass":"","htmlStyle":""}]}</LayoutData>
+            </LayoutPart>
+            <AutoroutePart Alias="bootstrap-layout-1" UseCustomPattern="false" />
+            <TagsPart Tags="" />
+        </Page>
+        <SlideShow Id="/alias=jcarousel-slideshow-1" Status="Published">
+            <CommonPart Owner="/User.UserName=admin" CreatedUtc="2015-06-12T17:45:32.1597212Z" PublishedUtc="2015-06-12T17:46:12.8281636Z" ModifiedUtc="2015-06-12T17:46:12.8041533Z" />
+            <TitlePart Title="JCarousel Slideshow 1" />
+            <AutoroutePart Alias="jcarousel-slideshow-1" UseCustomPattern="false" />
+        </SlideShow>
+        <SlideShow Id="/alias=bootstrap-slideshow-1" Status="Published">
+            <CommonPart Owner="/User.UserName=admin" CreatedUtc="2015-06-12T17:46:35.9321026Z" PublishedUtc="2015-06-12T17:46:57.8989394Z" ModifiedUtc="2015-06-12T17:46:57.8869297Z" />
+            <TitlePart Title="Bootstrap Slideshow 1" />
+            <AutoroutePart Alias="bootstrap-slideshow-1" UseCustomPattern="false" />
+        </SlideShow>        
+    </Data>
+
+    <Settings />
+
+    <Migration features="*" />
+
+    <Command>
+        site setting set baseurl
+        theme activate "The Theme Machine"
+    </Command>
+    
+</Orchard>

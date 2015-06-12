@@ -136,6 +136,14 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
+    <Content Include="Media\Default\Slides\IMG_2812.JPG" />
+    <Content Include="Media\Default\Slides\IMG_2819.JPG" />
+    <Content Include="Media\Default\Slides\IMG_2834.JPG" />
+    <Content Include="Media\Default\Slides\IMG_2836.JPG" />
+    <Content Include="Media\Default\Slides\IMG_2838.JPG" />
+    <Content Include="Media\Default\Slides\IMG_2841.JPG" />
+    <Content Include="Media\Default\Slides\IMG_2844.JPG" />
+    <Content Include="Media\Default\Slides\IMG_2847.JPG" />
     <Content Include="Refresh.html" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
