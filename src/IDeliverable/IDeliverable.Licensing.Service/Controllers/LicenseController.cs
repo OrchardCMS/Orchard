@@ -1,4 +1,8 @@
-﻿using System.Web.Http;
+﻿using System;
+using System.Configuration;
+using System.Net;
+using System.Net.Http;
+using System.Web.Http;
 using IDeliverable.Licensing.Service.Services;
 
 namespace IDeliverable.Licensing.Service.Controllers
@@ -18,6 +22,17 @@ namespace IDeliverable.Licensing.Service.Controllers
             {
                 return LicenseValidationToken.CreateInvalidLicenseToken(ex.Error);
             }
-        }        
+        }
+
+        [HttpGet]
+        public HttpResponseMessage Test()
+        {
+            var token = Validate(Int32.Parse(ConfigurationManager.AppSettings["TestProductId"]), ConfigurationManager.AppSettings["TestHostname"], ConfigurationManager.AppSettings["TestKey"]);
+
+            if (token.Error.HasValue)
+                return new HttpResponseMessage(HttpStatusCode.InternalServerError) { ReasonPhrase = $"Validation for a supposedly valid license returned error code '{token.Error}'." };
+
+            return new HttpResponseMessage(HttpStatusCode.OK);
+        }
     }
 }

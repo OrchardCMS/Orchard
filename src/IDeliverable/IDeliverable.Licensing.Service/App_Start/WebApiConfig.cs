@@ -15,9 +15,15 @@ namespace IDeliverable.Licensing.Service
             config.MapHttpAttributeRoutes();
 
             config.Routes.MapHttpRoute(
-                name: "ValidateApi/V1",
+                name: "ValidateV1",
                 routeTemplate: "api/v1/validate/{productId}/{hostname}/{key}",
                 defaults: new { controller = "License", action = "Validate" }
+            );
+
+            config.Routes.MapHttpRoute(
+                name: "TestV1",
+                routeTemplate: "api/v1/test",
+                defaults: new { controller = "License", action = "Test" }
             );
         }
 
