@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using IDeliverable.Licensing.Orchard.Models;
 
-namespace IDeliverable.Licensing.Orchard
+namespace IDeliverable.Licensing.Orchard.Services
 {
     public class ProductManifestManager : IProductManifestManager
     {
@@ -20,7 +21,7 @@ namespace IDeliverable.Licensing.Orchard
 
         public ProductManifest FindByProductId(int productId)
         {
-            return Find(x =>  x.ProductId == productId);
+            return Find(x => x.ProductId == productId);
         }
 
         public ProductManifest FindByExtensionName(string extensionName)

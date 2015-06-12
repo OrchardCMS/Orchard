@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using IDeliverable.Licensing.Orchard;
+using IDeliverable.Licensing.Orchard.Services;
 using IDeliverable.Slides.Helpers;
 using IDeliverable.Slides.Models;
 using IDeliverable.Slides.Providers;
@@ -20,20 +21,16 @@ namespace IDeliverable.Slides.Drivers
         private readonly ISlideShowPlayerEngineManager _engineManager;
         private readonly ISlidesProviderManager _providerManager;
         private readonly ILicenseValidator _licenseValidator;
-        private readonly ILicenseAccessor _licenseAccessor;
 
         public SlideShowPartDriver(
             IOrchardServices services,
             ISlideShowPlayerEngineManager engineManager,
-            ISlidesProviderManager providerManager,
-            ILicenseValidator licenseValidator,
-            ILicenseAccessor licenseAccessor)
+            ISlidesProviderManager providerManager)
         {
             _services = services;
             _engineManager = engineManager;
             _providerManager = providerManager;
-            _licenseValidator = licenseValidator;
-            _licenseAccessor = licenseAccessor;
+            _licenseValidator = ServiceFactory.Current.Resolve<ILicenseValidator>();
         }
 
         protected override DriverResult Editor(SlideShowPart part, dynamic shapeHelper)
@@ -43,7 +40,7 @@ namespace IDeliverable.Slides.Drivers
 
         protected override DriverResult Editor(SlideShowPart part, IUpdateModel updater, dynamic shapeHelper)
         {
-            if (!_licenseValidator.ValidateLicense(_licenseAccessor.GetSlidesLicense()).IsValid)
+            if (!_licenseValidator.ValidateSlidesLicense())
                 return ContentShape("Parts_SlideShow_Edit_InvalidLicense", () => shapeHelper.Parts_SlideShow_Edit_InvalidLicense());
 
             return ContentShape("Parts_SlideShow_Edit", () =>
@@ -78,7 +75,7 @@ namespace IDeliverable.Slides.Drivers
 
         protected override DriverResult Display(SlideShowPart part, string displayType, dynamic shapeHelper)
         {
-            if (!_licenseValidator.ValidateLicense(_licenseAccessor.GetSlidesLicense()).IsValid)
+            if (!_licenseValidator.ValidateSlidesLicense())
                 return ContentShape("Parts_SlideShow_InvalidLicense", () => shapeHelper.Parts_SlideShow_InvalidLicense());
 
             return Combined(

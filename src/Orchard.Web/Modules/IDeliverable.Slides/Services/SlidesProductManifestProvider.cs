@@ -1,9 +1,10 @@
 using System.Collections.Generic;
-using IDeliverable.Licensing.Orchard;
+using IDeliverable.Licensing.Orchard.Models;
+using IDeliverable.Licensing.Orchard.Services;
 
 namespace IDeliverable.Slides.Services
 {
-    public class SlidesProductManifest : ProductManifestProviderBase
+    public class SlidesProductManifestProvider : ProductManifestProviderBase
     {
         public const int ProductId = 233554;
         public const string ExtensionName = "IDeliverable.Slides";

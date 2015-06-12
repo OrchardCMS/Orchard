@@ -1,4 +1,4 @@
-namespace IDeliverable.Licensing.Orchard
+namespace IDeliverable.Licensing.Orchard.Models
 {
     public class ProductManifest
     {

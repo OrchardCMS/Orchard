@@ -49,7 +49,6 @@
     <Compile Include="LicenseValidationError.cs" />
     <Compile Include="LicenseValidationException.cs" />
     <Compile Include="LicenseValidationInfo.cs" />
-    <Compile Include="LicenseValidationOptions.cs" />
     <Compile Include="LicenseValidationToken.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
