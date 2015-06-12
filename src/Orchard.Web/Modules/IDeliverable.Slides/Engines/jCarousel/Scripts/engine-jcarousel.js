@@ -11,16 +11,23 @@
         var vertical = engine.data("vertical");
         var center = engine.data("center");
 
-        engine.find(".jcarousel").jcarousel({
-            wrap: wrap,
-            vertical: vertical,
-            center: center,
-            transitions: transitions ? {
-                transforms: Modernizr.csstransforms,
-                transforms3d: Modernizr.csstransforms3d,
-                easing: easing
-            } : false
-        })
+        engine.find(".jcarousel")
+            .on("jcarousel:create jcarousel:reload", function ()
+            {
+                var element = $(this);
+                var width = element.innerWidth();
+                element.jcarousel("items").css("width", width + "px");
+            })
+            .jcarousel({
+                wrap: wrap,
+                vertical: vertical,
+                center: center,
+                transitions: transitions ? {
+                    transforms: Modernizr.csstransforms,
+                    transforms3d: Modernizr.csstransforms3d,
+                    easing: easing
+                } : false
+            })
 
         .jcarouselAutoscroll({
             interval: interval,
@@ -36,11 +43,24 @@
             target: "+=1"
         });
 
-        engine.find(".jcarousel-pagination").jcarouselPagination({
-            item: function (page)
+        engine.find(".jcarousel-pagination")
+            .on("jcarouselpagination:active", "a", function ()
             {
-                return "<a href=\"#" + page + "\">" + page + "</a>";
-            }
-        });
+                $(this).addClass("active");
+            })
+            .on("jcarouselpagination:inactive", "a", function ()
+            {
+                $(this).removeClass("active");
+            })
+            .on("click", function (e)
+            {
+                e.preventDefault();
+            })
+            .jcarouselPagination({
+                item: function (page)
+                {
+                    return "<a href=\"#" + page + "\">" + page + "</a>";
+                }
+            });
     });
 })(jQuery);

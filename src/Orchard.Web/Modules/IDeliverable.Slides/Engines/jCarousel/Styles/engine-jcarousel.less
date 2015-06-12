@@ -1,29 +1,103 @@
-﻿.jcarousel
+﻿.jcarousel-engine
 {
     position: relative;
-    overflow: hidden;
+    box-sizing: border-box;
+    border: 4px solid lightgray;
+    border-radius: 5px;
+    margin-bottom: 1em;
 
-    > ul
+    > .jcarousel
     {
-        width: 20000em;
         position: relative;
-        list-style: none;
-        margin: 0;
-        padding: 0;
+        overflow: hidden;
+        width: 100%;
 
-        > li
+        > ul
         {
-            /* Required only for block elements like <li>'s */
-            float: left;
-            width: 1024px;
+            width: 20000em;
+            position: relative;
+            list-style: none;
+            margin: 0;
+            padding: 0;
 
-            img
+            > li
             {
-                vertical-align: middle;
-                display: block;
-                max-width: 100%;
-                height: auto;
+                float: left;
+
+                > img
+                {
+                    width: 100%;
+                }
+
+                img
+                {
+                    vertical-align: middle;
+                    display: block;
+                    max-width: 100%;
+                    height: auto !important;
+                }
+            }
+        }
+    }
+
+    > .jcarousel-prev, > .jcarousel-next
+    {
+        position: absolute;
+        top: 50%;
+        margin-top: -16px;
+        width: 32px;
+        height: 32px;
+        text-align: center;
+        background: #4E443C;
+        color: #fff;
+        text-decoration: none;
+        text-shadow: 0 0 1px #000;
+        font: 24px/27px Arial, sans-serif;
+        border-radius: 32px;
+        box-shadow: 0 0 4px #F0EFE7;
+    }
+
+    > .jcarousel-prev
+    {
+        left: 15px;
+    }
+
+    > .jcarousel-next
+    {
+        right: 15px;
+    }
+
+    > .jcarousel-pagination
+    {
+        position: absolute;
+        bottom: 10px;
+        left: 50%;
+        margin: 0;
+        margin-left: -22px;
+
+        > a
+        {
+            text-decoration: none;
+            display: inline-block;
+            font-size: 11px;
+            height: 10px;
+            width: 10px;
+            line-height: 10px;
+            background: #fff;
+            color: #4E443C;
+            border-radius: 10px;
+            text-indent: -9999px;
+            margin-right: 7px;
+            box-shadow: 0 0 2px #4E443C;
+
+            &.active
+            {
+                background: #4E443C;
+                color: #fff;
+                opacity: 1;
+                box-shadow: 0 0 2px #F0EFE7;
             }
         }
     }
 }
+
