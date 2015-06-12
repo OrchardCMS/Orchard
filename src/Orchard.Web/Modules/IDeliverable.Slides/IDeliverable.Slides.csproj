@@ -86,16 +86,10 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Engines\Bootstrap\Scripts\carousel.js" />
-    <Content Include="Engines\Bootstrap\Scripts\transition.js" />
-    <Content Include="Engines\JCarousel\Scripts\modernizr.transitions.js" />
-    <None Include="Engines\JCarousel\Styles\engine-jcarousel.less" />
     <Content Include="Fonts\glyphicons-halflings-regular.svg" />
     <Content Include="gulpfile.js" />
     <Content Include="Assets\JavaScript\admin-slideshow-part.js" />
     <Content Include="Assets\JavaScript\admin-slides-part.js" />
-    <Content Include="Engines\JCarousel\Scripts\engine-jcarousel.js" />
-    <Content Include="Engines\JCarousel\Scripts\jquery.jcarousel.js" />
     <Content Include="Scripts\Admin.js" />
     <Content Include="Scripts\Admin.min.js" />
     <Content Include="Scripts\Engine.Bootstrap.js" />
@@ -105,6 +99,11 @@
     <None Include="Assets\Less\admin-slideshow-part.less" />
     <None Include="Assets\Less\admin-slides-part.less" />
     <None Include="Assets\Less\admin-style-type-browser.less" />
+    <Content Include="SlideShowPlayerEngines\Bootstrap\Scripts\carousel.js" />
+    <Content Include="SlideShowPlayerEngines\Bootstrap\Scripts\transition.js" />
+    <Content Include="SlideShowPlayerEngines\JCarousel\Scripts\engine-jcarousel.js" />
+    <Content Include="SlideShowPlayerEngines\JCarousel\Scripts\jquery.jcarousel.js" />
+    <Content Include="SlideShowPlayerEngines\JCarousel\Scripts\modernizr.transitions.js" />
     <Content Include="Styles\Admin.css" />
     <Content Include="Styles\Admin.min.css" />
     <Content Include="Styles\Engine.Bootstrap.css" />
@@ -116,6 +115,40 @@
     <Content Include="Styles\Web.config" />
     <Content Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
+    <Content Include="SlideShowPlayerEngines\Bootstrap\Styles\carousel.less" />
+    <Content Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins.less" />
+    <Content Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\alerts.less" />
+    <Content Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\background-variant.less" />
+    <Content Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\border-radius.less" />
+    <Content Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\buttons.less" />
+    <Content Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\center-block.less" />
+    <Content Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\clearfix.less" />
+    <Content Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\forms.less" />
+    <Content Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\gradients.less" />
+    <Content Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\grid-framework.less" />
+    <Content Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\grid.less" />
+    <Content Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\hide-text.less" />
+    <Content Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\image.less" />
+    <Content Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\labels.less" />
+    <Content Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\list-group.less" />
+    <Content Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\nav-divider.less" />
+    <Content Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\nav-vertical-align.less" />
+    <Content Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\opacity.less" />
+    <Content Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\pagination.less" />
+    <Content Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\panels.less" />
+    <Content Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\progress-bar.less" />
+    <Content Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\reset-filter.less" />
+    <Content Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\resize.less" />
+    <Content Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\responsive-visibility.less" />
+    <Content Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\size.less" />
+    <Content Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\tab-focus.less" />
+    <Content Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\table-row.less" />
+    <Content Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\text-emphasis.less" />
+    <Content Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\text-overflow.less" />
+    <Content Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\vendor-prefixes.less" />
+    <Content Include="SlideShowPlayerEngines\Bootstrap\Styles\variables.less" />
+    <Content Include="SlideShowPlayerEngines\Bootstrap\Styles\wells.less" />
+    <Content Include="SlideShowPlayerEngines\JCarousel\Styles\engine-jcarousel.less" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\IDeliverable\IDeliverable.Licensing.Orchard\IDeliverable.Licensing.Orchard.csproj">
@@ -166,7 +199,7 @@
     <Compile Include="Handlers\SlideShowSettingsPartHandler.cs" />
     <Compile Include="Helpers\LicenseAccessorExtensions.cs" />
     <Compile Include="Helpers\StorageExtensions.cs" />
-    <Compile Include="Helpers\EngineDataHelper.cs" />
+    <Compile Include="Helpers\SlideShowPlayerEngineDataHelper.cs" />
     <Compile Include="Models\ISlideShow.cs" />
     <Compile Include="Models\SlideShowProfile.cs" />
     <Compile Include="Providers\ListSlidesProvider.cs" />
@@ -183,6 +216,8 @@
     <Compile Include="Services\SlidesProvider.cs" />
     <Compile Include="Services\SlidesProviderContext.cs" />
     <Compile Include="Services\SlidesProviderManager.cs" />
+    <Compile Include="SlideShowPlayerEngines\Bootstrap\Bootstrap.cs" />
+    <Compile Include="SlideShowPlayerEngines\JCarousel\JCarousel.cs" />
     <Compile Include="ViewModels\ListSlidesProviderViewModel.cs" />
     <Compile Include="ViewModels\ProjectionSlidesProviderViewModel.cs" />
     <Compile Include="ViewModels\DefaultSlidesProviderViewModel.cs" />
@@ -194,14 +229,12 @@
     <Compile Include="Controllers\SlideShowPartController.cs" />
     <Compile Include="Controllers\SlideFactoryController.cs" />
     <Compile Include="Elements\SlideShow.cs" />
-    <Compile Include="Engines\Bootstrap\Bootstrap.cs" />
     <Compile Include="Handlers\SlideShowElementHandler.cs" />
     <Compile Include="Helpers\UrlStringExtensions.cs" />
-    <Compile Include="Services\Engine.cs" />
-    <Compile Include="Services\EngineManager.cs" />
-    <Compile Include="Services\IEngine.cs" />
-    <Compile Include="Engines\JCarousel\JCarousel.cs" />
-    <Compile Include="Services\IEngineManager.cs" />
+    <Compile Include="Services\SlideShowPlayerEngine.cs" />
+    <Compile Include="Services\SlideShowPlayerEngineManager.cs" />
+    <Compile Include="Services\ISlideShowPlayerEngine.cs" />
+    <Compile Include="Services\ISlideShowPlayerEngineManager.cs" />
     <Compile Include="Services\Updater.cs" />
     <Compile Include="ViewModels\SlideShowElementViewModel.cs" />
     <Compile Include="ViewModels\SlideShowProfileViewModel.cs" />
@@ -333,52 +366,7 @@
     <Content Include="Views\Elements\SlideShow.InvalidLicense.Design.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Engines\Bootstrap\Styles\carousel.less" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="package.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Engines\Bootstrap\Styles\mixins\vendor-prefixes.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Engines\Bootstrap\Styles\variables.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Engines\Bootstrap\Styles\mixins.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Engines\Bootstrap\Styles\mixins\alerts.less" />
-    <Content Include="Engines\Bootstrap\Styles\mixins\background-variant.less" />
-    <Content Include="Engines\Bootstrap\Styles\mixins\border-radius.less" />
-    <Content Include="Engines\Bootstrap\Styles\mixins\buttons.less" />
-    <Content Include="Engines\Bootstrap\Styles\mixins\center-block.less" />
-    <Content Include="Engines\Bootstrap\Styles\mixins\clearfix.less" />
-    <Content Include="Engines\Bootstrap\Styles\mixins\forms.less" />
-    <Content Include="Engines\Bootstrap\Styles\mixins\gradients.less" />
-    <Content Include="Engines\Bootstrap\Styles\mixins\grid-framework.less" />
-    <Content Include="Engines\Bootstrap\Styles\mixins\grid.less" />
-    <Content Include="Engines\Bootstrap\Styles\mixins\hide-text.less" />
-    <Content Include="Engines\Bootstrap\Styles\mixins\image.less" />
-    <Content Include="Engines\Bootstrap\Styles\mixins\labels.less" />
-    <Content Include="Engines\Bootstrap\Styles\mixins\list-group.less" />
-    <Content Include="Engines\Bootstrap\Styles\mixins\nav-divider.less" />
-    <Content Include="Engines\Bootstrap\Styles\mixins\nav-vertical-align.less" />
-    <Content Include="Engines\Bootstrap\Styles\mixins\opacity.less" />
-    <Content Include="Engines\Bootstrap\Styles\mixins\pagination.less" />
-    <Content Include="Engines\Bootstrap\Styles\mixins\panels.less" />
-    <Content Include="Engines\Bootstrap\Styles\mixins\progress-bar.less" />
-    <Content Include="Engines\Bootstrap\Styles\mixins\reset-filter.less" />
-    <Content Include="Engines\Bootstrap\Styles\mixins\resize.less" />
-    <Content Include="Engines\Bootstrap\Styles\mixins\responsive-visibility.less" />
-    <Content Include="Engines\Bootstrap\Styles\mixins\size.less" />
-    <Content Include="Engines\Bootstrap\Styles\mixins\tab-focus.less" />
-    <Content Include="Engines\Bootstrap\Styles\mixins\table-row.less" />
-    <Content Include="Engines\Bootstrap\Styles\mixins\text-emphasis.less" />
-    <Content Include="Engines\Bootstrap\Styles\mixins\text-overflow.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Engines\Bootstrap\Styles\wells.less" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Fonts\glyphicons-halflings-regular.eot" />

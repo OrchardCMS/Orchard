@@ -20,11 +20,11 @@ namespace IDeliverable.Slides.Controllers
     public class SlideShowProfileController : Controller, IUpdateModel
     {
         private readonly IOrchardServices _services;
-        private readonly IEngineManager _engineManager;
+        private readonly ISlideShowPlayerEngineManager _engineManager;
         private readonly ILicenseValidator _licenseValidator;
         private readonly ILicenseAccessor _licenseAccessor;
 
-        public SlideShowProfileController(IOrchardServices services, IEngineManager engineManager, ILicenseValidator licenseValidator, ILicenseAccessor licenseAccessor)
+        public SlideShowProfileController(IOrchardServices services, ISlideShowPlayerEngineManager engineManager, ILicenseValidator licenseValidator, ILicenseAccessor licenseAccessor)
         {
             _services = services;
             _engineManager = engineManager;

@@ -6,9 +6,9 @@ using Orchard.Utility.Extensions;
 
 namespace IDeliverable.Slides.Services
 {
-    public abstract class Engine : Component, IEngine
+    public abstract class SlideShowPlayerEngine : Component, ISlideShowPlayerEngine
     {
-        protected Engine()
+        protected SlideShowPlayerEngine()
         {
             Data = new ElementDataDictionary();
         }

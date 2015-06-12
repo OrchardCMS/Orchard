@@ -3,9 +3,9 @@ using IDeliverable.Slides.Services;
 using Orchard.ContentManagement;
 using Orchard.Localization;
 
-namespace IDeliverable.Slides.Engines.Bootstrap
+namespace IDeliverable.Slides.SlideShowPlayerEngines.Bootstrap
 {
-    public class Bootstrap : Engine
+    public class Bootstrap : SlideShowPlayerEngine
     {
         public override LocalizedString DisplayName
         {
@@ -43,13 +43,13 @@ namespace IDeliverable.Slides.Engines.Bootstrap
 
         public bool Wrap
         {
-            get { return EngineDataHelper.Retrieve(this, x => x.Wrap); }
+            get { return SlideShowPlayerEngineDataHelper.Retrieve(this, x => x.Wrap); }
             set { this.Store(x => x.Wrap, value); }
         }
 
         public bool Keyboard
         {
-            get { return EngineDataHelper.Retrieve(this, x => x.Keyboard); }
+            get { return SlideShowPlayerEngineDataHelper.Retrieve(this, x => x.Keyboard); }
             set { this.Store(x => x.Keyboard, value); }
         }
 

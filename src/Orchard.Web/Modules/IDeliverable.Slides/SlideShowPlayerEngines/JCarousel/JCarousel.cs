@@ -3,9 +3,9 @@ using IDeliverable.Slides.Services;
 using Orchard.Localization;
 using IUpdateModel = Orchard.ContentManagement.IUpdateModel;
 
-namespace IDeliverable.Slides.Engines.JCarousel
+namespace IDeliverable.Slides.SlideShowPlayerEngines.JCarousel
 {
-    public class JCarousel : Engine
+    public class JCarousel : SlideShowPlayerEngine
     {
         public override LocalizedString DisplayName
         {
