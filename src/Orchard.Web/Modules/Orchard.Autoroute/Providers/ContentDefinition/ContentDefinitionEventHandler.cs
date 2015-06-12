@@ -82,6 +82,8 @@ namespace Orchard.Autoroute.Providers.ContentDefinition {
                 _contentDefinitionManager.AlterTypeDefinition(context.ContentTypeName, builder => builder.WithPart("AutoroutePart", settings.Build));
 
                 //TODO Generate URL's for existing content items
+                //We should provide a global setting to enable/disable this feature
+
             }
         }
         

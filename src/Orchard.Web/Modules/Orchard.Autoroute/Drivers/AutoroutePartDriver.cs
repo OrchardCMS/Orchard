@@ -75,13 +75,23 @@ namespace Orchard.Autoroute.Drivers {
                 }
             }
 
+            //we update the settings assuming that when 
+            //pattern culture = null it means culture = default website culture
+            //for patterns that we migrated
+            foreach (RoutePattern pattern in settings.Patterns.Where(x => String.IsNullOrEmpty(x.Culture))) {
+                pattern.Culture = _cultureManager.GetSiteCulture(); ;
+            }
+
+            //we do the same for default patterns
+            foreach (DefaultPattern pattern in settings.DefaultPatterns.Where(x => String.IsNullOrEmpty(x.Culture))) {
+                pattern.Culture = _cultureManager.GetSiteCulture();
+            }
+
             // if the content type has no pattern for autoroute, then use a default one
             if (!settings.Patterns.Any(x => x.Culture == itemCulture)) {
                 settings.AllowCustomPattern = true;
                 settings.AutomaticAdjustmentOnEdit = false;
                 settings.Patterns = new List<RoutePattern> { new RoutePattern { Name = "Title", Description = "my-title", Pattern = "{Content.Slug}", Culture = itemCulture } };
-
-                _notifier.Warning(T("No route patterns are currently defined for this Content Type. If you don't set one in the settings, a default one will be used."));
             }
 
             // if the content type has no defaultPattern for autoroute, then use a default one

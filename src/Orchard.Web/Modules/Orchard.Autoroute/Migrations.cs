@@ -3,21 +3,14 @@ using Orchard.Autoroute.Services;
 using Orchard.Autoroute.Settings;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
+using Orchard.ContentManagement.MetaData.Models;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Orchard.Autoroute {
     public class Migrations : DataMigrationImpl {
-        private readonly IAutorouteService _autorouteService;
-        private readonly IContentManager _contentManager;
-
-        public Migrations(
-            IAutorouteService autorouteService,
-            IContentManager contentManager) {
-            _autorouteService = autorouteService;
-            _contentManager = contentManager;
-        }
 
         public int Create() {
             SchemaBuilder.CreateTable("AutoroutePartRecord",
@@ -25,6 +18,7 @@ namespace Orchard.Autoroute {
                     .ContentPartVersionRecord()
                             .Column<string>("CustomPattern", c => c.WithLength(2048))
                             .Column<bool>("UseCustomPattern", c => c.WithDefault(false))
+                            .Column<bool>("UseCulturePattern", c => c.WithDefault(false))
                             .Column<string>("DisplayAlias", c => c.WithLength(2048)));
 
             ContentDefinitionManager.AlterPartDefinition("AutoroutePart", part => part
@@ -35,7 +29,7 @@ namespace Orchard.Autoroute {
                 .CreateIndex("IDX_AutoroutePartRecord_DisplayAlias", "DisplayAlias")
             );
 
-            return 3;
+            return 4;
         }
 
         public int UpdateFrom1() {
@@ -59,13 +53,14 @@ namespace Orchard.Autoroute {
                 .AddColumn<bool>("UseCulturePattern", c => c.WithDefault(false))
             );
 
-            // populate the AutorouteSettings.DefaultPatternDefinitions AutoroutePart settings
-            foreach (var autoroutePart in _contentManager.Query<AutoroutePart, AutoroutePartRecord>().List()) {
-                var settings = autoroutePart.Settings.GetModel<AutorouteSettings>();
-                string patternIndex = autoroutePart.Settings["AutorouteSettings.DefaultPatternIndex"];
-                settings.DefaultPatterns = new List<DefaultPattern> { new DefaultPattern { PatternIndex = patternIndex, Culture = "" } };
+            foreach (ContentTypeDefinition contentTypeDefinition in ContentDefinitionManager.ListTypeDefinitions()) {
+                foreach (ContentTypePartDefinition contentTypePartDefinition in contentTypeDefinition.Parts.Where(x => x.PartDefinition.Name == "AutoroutePart")) {
+                    var settings = contentTypePartDefinition.Settings.GetModel<AutorouteSettings>();
+                    string patternIndex = contentTypePartDefinition.Settings["AutorouteSettings.DefaultPatternIndex"];
+                    settings.DefaultPatterns = new List<DefaultPattern> { new DefaultPattern { PatternIndex = patternIndex, Culture = "" } };
 
-                ContentDefinitionManager.AlterTypeDefinition(autoroutePart.TypeDefinition.Name, builder => builder.WithPart("AutoroutePart", settings.Build));
+                    ContentDefinitionManager.AlterTypeDefinition(contentTypeDefinition.Name, builder => builder.WithPart("AutoroutePart", settings.Build));
+                }
             }
 
             return 4;

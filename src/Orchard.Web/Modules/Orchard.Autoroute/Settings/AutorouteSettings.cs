@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Web.Script.Serialization;
 using Orchard.ContentManagement.MetaData.Builders;
+using Orchard.Services;
 
 namespace Orchard.Autoroute.Settings {
 
@@ -39,7 +39,7 @@ namespace Orchard.Autoroute.Settings {
         public List<RoutePattern> Patterns {
             get {
                 if (_patterns == null) {
-                    _patterns = new JavaScriptSerializer().Deserialize<RoutePattern[]>(PatternDefinitions).ToList();
+                    _patterns = new DefaultJsonConverter().Deserialize<RoutePattern[]>(PatternDefinitions).ToList();
                 }
 
                 return _patterns;
@@ -47,7 +47,7 @@ namespace Orchard.Autoroute.Settings {
 
             set {
                 _patterns = value;
-                PatternDefinitions = new JavaScriptSerializer().Serialize(_patterns.ToArray());
+                PatternDefinitions = new DefaultJsonConverter().Serialize(_patterns.ToArray());
             }
         }
 
@@ -59,7 +59,7 @@ namespace Orchard.Autoroute.Settings {
         public List<DefaultPattern> DefaultPatterns {
             get {
                 if (_defaultPatterns == null) {
-                    _defaultPatterns = new JavaScriptSerializer().Deserialize<DefaultPattern[]>(DefaultPatternDefinitions).ToList();
+                    _defaultPatterns = new DefaultJsonConverter().Deserialize<DefaultPattern[]>(DefaultPatternDefinitions).ToList();
                 }
 
                 //We split the values from the radio button returned values
@@ -86,7 +86,7 @@ namespace Orchard.Autoroute.Settings {
                     }
                     i++;
                 }
-                DefaultPatternDefinitions = new JavaScriptSerializer().Serialize(_defaultPatterns.ToArray());
+                DefaultPatternDefinitions = new DefaultJsonConverter().Serialize(_defaultPatterns.ToArray());
             }
         }
 

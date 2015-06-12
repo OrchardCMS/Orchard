@@ -36,8 +36,7 @@ namespace Orchard.Taxonomies {
                 .WithPart("AutoroutePart", builder => builder
                 .WithSetting("AutorouteSettings.AllowCustomPattern", "True")
                 .WithSetting("AutorouteSettings.AutomaticAdjustmentOnEdit", "False")
-                .WithSetting("AutorouteSettings.PatternDefinitions", "[{\"Name\":\"Title\",\"Pattern\":\"{Content.Slug}\",\"Description\":\"my-taxonomy\",\"Culture\":\"\"}]")
-                .WithSetting("AutorouteSettings.DefaultPatternDefinitions", "[{\"PatternIndex\":\"0\",\"Culture\":\"\"}]"))
+                .WithSetting("AutorouteSettings.PatternDefinitions", "[{\"Name\":\"Title\",\"Pattern\":\"{Content.Slug}\",\"Description\":\"my-taxonomy\"}]"))
             );
 
             SchemaBuilder.CreateTable("TermsPartRecord", table => table

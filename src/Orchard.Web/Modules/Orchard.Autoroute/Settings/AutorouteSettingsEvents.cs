@@ -62,9 +62,9 @@ namespace Orchard.Autoroute.Settings {
                 //We add a pattern for each culture if there is none
                 if (!settings.Patterns.Where(x => x.Culture == culture).Any()) {
                     //We add the default pattern from migrations
-                    if (settings.Patterns.Where(x => x.Culture == "").Any()) {
+                    if (settings.Patterns.Where(x => String.IsNullOrEmpty(x.Culture)).Any()) {
                         //we add the RoutePattern and we set the culture since there is none defined
-                        RoutePattern migrationRoutePattern = settings.Patterns.Where(x => x.Culture == "").First();
+                        RoutePattern migrationRoutePattern = settings.Patterns.Where(x => String.IsNullOrEmpty(x.Culture)).First();
                         newPatterns.Add(new RoutePattern { Culture = culture, Name = migrationRoutePattern.Name, Description = migrationRoutePattern.Description, Pattern = migrationRoutePattern.Pattern });
                     } else {
                         //we add the default pattern for custom content types or modules that don't define it in their migration
@@ -107,7 +107,7 @@ namespace Orchard.Autoroute.Settings {
                 List<RoutePattern> newPatterns = new List<RoutePattern>();
                 int current = 0;
                 foreach (string culture in settings.SiteCultures) {
-                    if (settings.Patterns.Any(x => x.Culture == culture)) {
+                    if (settings.Patterns.Any(x => String.Equals(x.Culture, culture, StringComparison.OrdinalIgnoreCase))) {
                         foreach (RoutePattern routePattern in settings.Patterns.Where(x => x.Culture == culture)) {
                             newPatterns.Add(settings.Patterns[current]);
                             current++;
