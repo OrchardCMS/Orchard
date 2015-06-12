@@ -17,14 +17,14 @@ namespace IDeliverable.Slides.Drivers
     public class SlideShowPartDriver : ContentPartDriver<SlideShowPart>
     {
         private readonly IOrchardServices _services;
-        private readonly IEngineManager _engineManager;
+        private readonly ISlideShowPlayerEngineManager _engineManager;
         private readonly ISlidesProviderManager _providerManager;
         private readonly ILicenseValidator _licenseValidator;
         private readonly ILicenseAccessor _licenseAccessor;
 
         public SlideShowPartDriver(
             IOrchardServices services,
-            IEngineManager engineManager,
+            ISlideShowPlayerEngineManager engineManager,
             ISlidesProviderManager providerManager,
             ILicenseValidator licenseValidator,
             ILicenseAccessor licenseAccessor)

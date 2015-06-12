@@ -43,11 +43,11 @@ var srcLessAdmin = [
 ];
 
 var srcLessEngineBootstrap = [
-    "Engines/Bootstrap/Styles/carousel.less"
+    "SlideShowPlayerEngines/Bootstrap/Styles/carousel.less"
 ];
 
 var srcLessEngineJCarousel = [
-    "Engines/JCarousel/Styles/engine-jcarousel.less"
+    "SlideShowPlayerEngines/JCarousel/Styles/engine-jcarousel.less"
 ];
 
 gulp.task("buildLess", function () {
@@ -91,14 +91,14 @@ var srcJsAdmin = [
 ];
 
 var srcJsEngineBootstrap = [
-    "Engines/Bootstrap/Scripts/transition.js",
-	"Engines/Bootstrap/Scripts/carousel.js"
+    "SlideShowPlayerEngines/Bootstrap/Scripts/transition.js",
+	"SlideShowPlayerEngines/Bootstrap/Scripts/carousel.js"
 ];
 
 var srcJsEngineJCarousel = [
-    "Engines/JCarousel/Scripts/modernizr.transitions.js",
-    "Engines/JCarousel/Scripts/jquery.jcarousel.js",
-    "Engines/JCarousel/Scripts/engine-jcarousel.js"
+    "SlideShowPlayerEngines/JCarousel/Scripts/modernizr.transitions.js",
+    "SlideShowPlayerEngines/JCarousel/Scripts/jquery.jcarousel.js",
+    "SlideShowPlayerEngines/JCarousel/Scripts/engine-jcarousel.js"
 ];
 
 gulp.task("buildJs", function () {

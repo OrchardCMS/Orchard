@@ -20,7 +20,7 @@ namespace IDeliverable.Slides.Drivers
     public class SlideShowElementDriver : ElementDriver<SlideShow>
     {
         private readonly IOrchardServices _services;
-        private readonly IEngineManager _engineManager;
+        private readonly ISlideShowPlayerEngineManager _engineManager;
         private readonly IClock _clock;
         private readonly ISlidesProviderManager _providerManager;
         private readonly ILicenseValidator _licenseValidator;
@@ -28,7 +28,7 @@ namespace IDeliverable.Slides.Drivers
 
         public SlideShowElementDriver(
             IOrchardServices services, 
-            IEngineManager engineManager, 
+            ISlideShowPlayerEngineManager engineManager, 
             IClock clock, 
             ISlidesProviderManager providerManager, 
             ILicenseValidator licenseValidator,

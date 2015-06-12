@@ -5,7 +5,7 @@ using Orchard.Localization;
 
 namespace IDeliverable.Slides.Services
 {
-    public interface IEngine : IDependency
+    public interface ISlideShowPlayerEngine : IDependency
     {
         string Name { get; }
         LocalizedString DisplayName { get; }
