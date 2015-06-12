@@ -12,7 +12,12 @@ namespace IDeliverable.Licensing.Service.Controllers
         [HttpGet]
         public LicenseValidationToken Validate(int productId, string hostname, string key)
         {
-            var service = new LicenseService();
+            var sendOwlApiEndpoint = ConfigurationManager.AppSettings["SendOwlApiEndpoint"];
+            var sendOwlApiKey = ConfigurationManager.AppSettings["SendOwlApiKey"];
+            var sendOwlApiSecret = ConfigurationManager.AppSettings["SendOwlApiSecret"];
+            var tokenSigningCertificateThumbprint = ConfigurationManager.AppSettings["TokenSigningCertificateThumbprint"];
+
+            var service = new LicenseService(sendOwlApiEndpoint, sendOwlApiKey, sendOwlApiSecret, tokenSigningCertificateThumbprint);
 
             try
             {
@@ -27,7 +32,11 @@ namespace IDeliverable.Licensing.Service.Controllers
         [HttpGet]
         public HttpResponseMessage Test()
         {
-            var token = Validate(Int32.Parse(ConfigurationManager.AppSettings["TestProductId"]), ConfigurationManager.AppSettings["TestHostname"], ConfigurationManager.AppSettings["TestKey"]);
+            var testProductId = ConfigurationManager.AppSettings["TestProductId"];
+            var testHostname = ConfigurationManager.AppSettings["TestHostname"];
+            var testKey = ConfigurationManager.AppSettings["TestKey"];
+
+            var token = Validate(Int32.Parse(testProductId), testHostname, testKey);
 
             if (token.Error.HasValue)
                 return new HttpResponseMessage(HttpStatusCode.InternalServerError) { ReasonPhrase = $"Validation for a supposedly valid license returned error code '{token.Error}'." };

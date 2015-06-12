@@ -11,26 +11,26 @@ namespace IDeliverable.Licensing.Service.Services
 {
     public class LicenseService : ILicenseService
     {
-        public LicenseService()
+        public LicenseService(string sendOwlApiEndpoint, string sendOwlApiKey, string sendOwlApiSecret, string tokenSigningCertificateThumbprint)
         {
-            ApiKey = "14be9ee5e05222e";
-            ApiSecret = "1a10fe7987724e0a56a1";
-            ApiEndpoint = "https://www.sendowl.com/api/v1/";
-            CertificateThumbprint = "8ef6a50968a338fbe24ffce1d72dceb9fe3355bc";
+            SendOwlApiEndpoint = sendOwlApiEndpoint;
+            SendOwlApiKey = sendOwlApiKey;
+            SendOwlApiSecret = sendOwlApiSecret;
+            TokenSigningCertificateThumbprint = tokenSigningCertificateThumbprint;
         }
 
-        public string ApiKey { get; set; }
-        public string ApiSecret { get; set; }
-        public string ApiEndpoint { get; set; }
-        public string CertificateThumbprint { get; set; }
+        public string SendOwlApiEndpoint { get; set; }
+        public string SendOwlApiKey { get; set; }
+        public string SendOwlApiSecret { get; set; }
+        public string TokenSigningCertificateThumbprint { get; set; }
 
         /// <exception cref="LicenseValidationException"></exception>
         public LicenseValidationToken ValidateLicense(int productId, string hostname, string key)
         {
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri(ApiEndpoint);
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", CreateBasicAuthenticationToken(ApiKey, ApiSecret));
+                client.BaseAddress = new Uri(SendOwlApiEndpoint);
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", CreateBasicAuthenticationToken(SendOwlApiKey, SendOwlApiSecret));
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
                 var licenses = ParseLicenseInfo(client.GetAsync($"products/{productId}/licenses/check_valid?key={key}").Result.Content.ReadAsStringAsync().Result).ToList();
@@ -51,9 +51,9 @@ namespace IDeliverable.Licensing.Service.Services
 
         private LicenseValidationToken GenerateToken(int productId, string hostname, string key)
         {
-            var store = new X509Store(StoreName.My, StoreLocation.LocalMachine);
+            var store = new X509Store(StoreName.My, StoreLocation.CurrentUser);
             store.Open(OpenFlags.ReadOnly);
-            var cert = store.Certificates.Find(X509FindType.FindByThumbprint, CertificateThumbprint, validOnly: false)[0];
+            var cert = store.Certificates.Find(X509FindType.FindByThumbprint, TokenSigningCertificateThumbprint, validOnly: false)[0];
             var info = new LicenseValidationInfo(productId, hostname, key, DateTime.UtcNow.Ticks);
             var token = LicenseValidationToken.Create(info, cert);
             store.Close();
