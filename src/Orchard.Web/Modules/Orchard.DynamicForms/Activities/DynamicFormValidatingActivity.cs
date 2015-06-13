@@ -4,8 +4,10 @@ using Orchard.DynamicForms.Services.Models;
 using Orchard.Localization;
 using Orchard.Scripting.CSharp.Services;
 using Orchard.Workflows.Models;
+using Orchard.Environment.Extensions;
 
 namespace Orchard.DynamicForms.Activities {
+    [OrchardFeature("Orchard.DynamicForms.Activities.Validation")]
     public class DynamicFormValidatingActivity : DynamicFormActivity {
         private readonly ICSharpService _csharpService;
         private readonly IOrchardServices _orchardServices;
