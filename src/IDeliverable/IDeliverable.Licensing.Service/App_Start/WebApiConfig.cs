@@ -25,6 +25,8 @@ namespace IDeliverable.Licensing.Service
                 routeTemplate: "api/v1/test",
                 defaults: new { controller = "License", action = "Test" }
             );
+
+            config.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
         }
 
         private static void ConfigSerializationSettings(HttpConfiguration config)
