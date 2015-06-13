@@ -1,0 +1,26 @@
+﻿@using IDeliverable.ThemeSettings.Helpers
+@{
+    var profile = Html.GetCurrentThemeProfile();
+}
+@if (profile != null)
+{
+    var baseColor = Html.GetThemeSetting(profile, "BaseColor");
+    var accentColor = Html.GetThemeSetting(profile, "AccentColor");
+    
+    using (Script.Head())
+    {
+        <style>
+            .navbar.navbar-default {
+                background-color: @baseColor;
+            }
+
+            .block h2 {
+                border-top-color: @baseColor;
+            }
+
+            .titlebar {
+                background-color: @accentColor;
+            }
+        </style>
+    }
+}

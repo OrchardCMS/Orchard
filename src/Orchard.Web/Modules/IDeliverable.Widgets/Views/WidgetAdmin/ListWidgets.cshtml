@@ -1,0 +1,9 @@
+﻿@{
+    Style.Include("admin.widgets-container.css", "admin.widgets-container.min.css");
+    Layout.Title = "Choose A Widget";
+}
+<ul id="available-widgets">
+    @foreach (var widgetType in Model.WidgetTypes) {
+        <li><a href="@Url.Action("AddWidget", "WidgetAdmin", new { area = "IDeliverable.Widgets", hostId = Model.HostId, widgetType, zone = Model.Zone })">@widgetType</a></li>
+    }
+</ul>

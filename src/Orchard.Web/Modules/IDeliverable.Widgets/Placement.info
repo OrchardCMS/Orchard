@@ -1,0 +1,7 @@
+﻿<Placement>
+    <Place Parts_WidgetsContainer="Content:after" />
+    <Place Parts_AjaxWidget="Content:0"
+           Parts_AjaxWidget_Edit="Content:1"
+           Parts_Ajaxify_Edit="Content:7"/>
+    <Place Parts_OutputCache_Edit="Content:10" />
+</Placement>

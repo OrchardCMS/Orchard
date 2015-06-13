@@ -1,0 +1,28 @@
+﻿@model IDeliverable.ThemeSettings.ViewModels.ProfileViewModel
+@Display.TokenHint()
+<fieldset>
+    <legend>@T("Profile")</legend>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Name, T("Name"))
+        @Html.TextBoxFor(m => m.Name, new { @class = "text medium", maxlength = 128 })
+        @Html.Hint(T("Provide a name for the profile."))
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Description, T("Description"))
+        @Html.TextBoxFor(m => m.Description, new { @class = "text large" })
+        @Html.Hint(T("Optionally provide a description for the profile."))
+    </div>
+    <div class="form-group">
+        @if (Model.IsCurrent)
+        {
+            @Html.HiddenFor(m => m.IsCurrent)
+            <p>@T("This is the current profile")</p>
+        }
+        else
+        {
+            @Html.CheckBoxFor(m => m.IsCurrent)
+            @Html.LabelFor(m => m.IsCurrent, T("Make this the current profile").Text, new { @class = "forcheckbox" })
+        }
+    </div>
+</fieldset>
+@Display(Model.SettingsForm)

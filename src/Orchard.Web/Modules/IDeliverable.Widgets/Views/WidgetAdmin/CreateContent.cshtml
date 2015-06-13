@@ -1,0 +1,15 @@
+@using Orchard.ContentManagement
+@using Orchard.Utility.Extensions
+
+@{
+    ContentItem contentItem = Model.ContentItem;
+    var typeDisplayName = contentItem.TypeDefinition.DisplayName ?? contentItem.ContentType.CamelFriendly();
+    var pageTitle = T("New {0}", typeDisplayName);
+
+    Layout.Title = pageTitle.Text;
+}
+
+@using (Html.BeginFormAntiForgeryPost(Url.Action("CreateContent", "WidgetAdmin", new { hostId = Request.QueryString["HostId"], zone = Request.QueryString["Zone"], area = "IDeliverable.Widgets" }))) {
+    @Html.ValidationSummary()
+    @Display(Model)
+}
