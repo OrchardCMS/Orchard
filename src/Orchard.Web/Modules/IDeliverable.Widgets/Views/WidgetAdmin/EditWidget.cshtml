@@ -1,0 +1,7 @@
+﻿@{ Layout.Title = T("Edit Widget").ToString(); }
+
+@using (Html.BeginFormAntiForgeryPost()) {
+    @Html.ValidationSummary()
+    @Html.Hidden("HostId", (int)Model.HostId)
+    @Display(Model)
+}

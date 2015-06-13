@@ -10,6 +10,8 @@ using IDeliverable.Slides.ViewModels;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
+using Orchard.Layouts.Framework.Drivers;
 
 namespace IDeliverable.Slides.Drivers
 {
@@ -17,16 +19,19 @@ namespace IDeliverable.Slides.Drivers
     {
         private readonly IOrchardServices _services;
         private readonly ISlideShowPlayerEngineManager _engineManager;
-        private readonly ISlidesProviderManager _providerManager;
+        private readonly ISlidesProviderService _providerService;
+        private readonly ISlideShowProfileService _slideShowProfileService;
 
         public SlideShowPartDriver(
             IOrchardServices services,
             ISlideShowPlayerEngineManager engineManager,
-            ISlidesProviderManager providerManager)
+            ISlidesProviderService providerService,
+            ISlideShowProfileService slideShowProfileService)
         {
             _services = services;
             _engineManager = engineManager;
-            _providerManager = providerManager;
+            _providerService = providerService;
+            _slideShowProfileService = slideShowProfileService;
         }
 
         protected override DriverResult Editor(SlideShowPart part, dynamic shapeHelper)
@@ -43,7 +48,7 @@ namespace IDeliverable.Slides.Drivers
             {
                 var storage = new ContentPartStorage(part);
                 var slidesProviderContext = new SlidesProviderContext(part, part, storage);
-                var providerShapes = Enumerable.ToDictionary(_providerManager.BuildEditors(shapeHelper, slidesProviderContext), (Func<dynamic, string>)(x => (string)x.Provider.Name));
+                var providerShapes = Enumerable.ToDictionary(_providerService.BuildEditors(shapeHelper, slidesProviderContext), (Func<dynamic, string>)(x => (string)x.Provider.Name));
 
                 var viewModel = new SlideShowPartViewModel
                 {
@@ -58,7 +63,7 @@ namespace IDeliverable.Slides.Drivers
                 {
                     if (updater.TryUpdateModel(viewModel, Prefix, new[] { "ProfileId", "ProviderName" }, null))
                     {
-                        providerShapes = Enumerable.ToDictionary(_providerManager.UpdateEditors(shapeHelper, slidesProviderContext, new Updater(updater, Prefix)), (Func<dynamic, string>)(x => (string)x.Provider.Name));
+                        providerShapes = Enumerable.ToDictionary(_providerService.UpdateEditors(shapeHelper, slidesProviderContext, new Updater(updater, Prefix)), (Func<dynamic, string>)(x => (string)x.Provider.Name));
                         part.ProfileId = viewModel.ProfileId;
                         part.ProviderName = viewModel.ProviderName;
                         viewModel.AvailableProviders = providerShapes;
@@ -99,9 +104,31 @@ namespace IDeliverable.Slides.Drivers
                 }));
         }
 
+        protected override void Exporting(SlideShowPart part, ExportContentContext context)
+        {
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Profile", part.Profile?.Name);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Provider", part.ProviderName);
+
+            var storage = new ContentPartStorage(part);
+            var providersElement = _providerService.Export(storage, part);
+            
+            context.Element(part.PartDefinition.Name).Add(providersElement);
+        }
+
+        protected override void Importing(SlideShowPart part, ImportContentContext context)
+        {
+            context.ImportAttribute(part.PartDefinition.Name, "Profile", profileName => part.ProfileId = _slideShowProfileService.FindByName(profileName)?.Id);
+            context.ImportAttribute(part.PartDefinition.Name, "Provider", providerName => part.ProviderName = _providerService.GetProvider(providerName)?.Name);
+
+            var storage = new ContentPartStorage(part);
+            var providersElement = context.Data.Element(part.PartDefinition.Name)?.Element("Providers");
+
+            _providerService.Import(storage, providersElement, new ImportContentContextWrapper(context), part);
+        }
+
         private IList<dynamic> GetSlides(SlideShowPart part, dynamic shapeHelper)
         {
-            var provider = !String.IsNullOrWhiteSpace(part.ProviderName) ? _providerManager.GetProvider(part.ProviderName) : default(ISlidesProvider);
+            var provider = !String.IsNullOrWhiteSpace(part.ProviderName) ? _providerService.GetProvider(part.ProviderName) : default(ISlidesProvider);
             var storage = new ContentPartStorage(part);
             var slidesProviderContext = new SlidesProviderContext(part, part, storage);
             return provider == null ? new List<dynamic>() : new List<dynamic>(provider.BuildSlides(shapeHelper, slidesProviderContext));

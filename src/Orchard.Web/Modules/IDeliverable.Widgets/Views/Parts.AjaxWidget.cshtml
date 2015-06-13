@@ -1,0 +1,13 @@
+﻿@{
+    Script.Require("Ajaxify");
+
+    var contentItemId = (int?)Model.ContentPart.SelectedContentItemId;
+}
+@if (contentItemId != null) {
+    <div class="widget-ajax-placeholder" data-widget-ajax-url="@Url.Action("Display", "Ajax", new { id = contentItemId, area = "IDeliverable.Widgets" })">
+        @Display.AjaxWidgetPartLoading()
+    </div>
+}
+else {
+    <!-- No content specified to render -->
+}

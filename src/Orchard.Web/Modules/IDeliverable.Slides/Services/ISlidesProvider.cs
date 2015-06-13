@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using IDeliverable.Slides.Providers;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Localization;
@@ -15,5 +14,7 @@ namespace IDeliverable.Slides.Services
         dynamic UpdateEditor(dynamic shapeFactory, SlidesProviderContext context, IUpdateModel updater);
         IEnumerable<dynamic> BuildSlides(dynamic shapeFactory, SlidesProviderContext context);
         int Priority { get; }
+        void Exporting(SlidesProviderExportContext context);
+        void Importing(SlidesProviderImportContext context);
     }
 }

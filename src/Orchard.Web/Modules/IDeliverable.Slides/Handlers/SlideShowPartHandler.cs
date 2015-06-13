@@ -1,25 +1,27 @@
-﻿using System.Linq;
-using IDeliverable.Slides.Models;
+﻿using IDeliverable.Slides.Models;
+using IDeliverable.Slides.Services;
 using Orchard;
-using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 
-namespace IDeliverable.Slides.Handlers {
+namespace IDeliverable.Slides.Handlers
+{
     public class SlideShowPartHandler : ContentHandler
     {
         private readonly IOrchardServices _services;
+        private readonly ISlideShowProfileService _slideShowProfileService;
 
-        public SlideShowPartHandler(IOrchardServices services)
+        public SlideShowPartHandler(IOrchardServices services, ISlideShowProfileService slideShowProfileService)
         {
             _services = services;
+            _slideShowProfileService = slideShowProfileService;
             OnActivated<SlideShowPart>(SetupLazyFields);
         }
 
         private void SetupLazyFields(ActivatedContentContext context, SlideShowPart part)
         {
-            part._profileField.Loader(value => {
-                var profiles = _services.WorkContext.CurrentSite.As<SlideShowSettingsPart>().Profiles.ToDictionary(x => x.Id);
-                var profile = part.ProfileId != null && profiles.ContainsKey(part.ProfileId.Value) ? profiles[part.ProfileId.Value] : default(SlideShowProfile);
+            part._profileField.Loader(value =>
+            {
+                var profile = _slideShowProfileService.FindById(part.ProfileId.GetValueOrDefault());
                 return profile;
             });
         }

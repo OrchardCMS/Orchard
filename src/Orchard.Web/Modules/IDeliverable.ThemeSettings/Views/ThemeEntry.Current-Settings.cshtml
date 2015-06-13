@@ -1,0 +1,30 @@
+﻿@using Orchard.Themes.Models
+@using Orchard.Mvc.Html
+@{
+    ThemeEntry theme = Model.Theme;
+    var hasSettings = (bool)Model.HasSettings;
+}
+
+<div id="currentTheme">
+    @Html.Image(Href(Html.ThemePath(theme.Descriptor, "/Theme.png")), Html.Encode(theme.Name), new { @class = "themePreviewImage" })
+
+    <div class="details">
+        <h4>@theme.Name</h4>
+        <h5>
+            @T("By") @theme.Descriptor.Author<br />
+            @T("Version:") @theme.Descriptor.Version<br />
+            @if (theme.Descriptor.WebSite != null)
+            {
+                <a href="@theme.Descriptor.WebSite">@theme.Descriptor.WebSite</a><br />
+            }
+        </h5>
+
+        <p class="themeInfo">@theme.Descriptor.Description</p>
+    </div>
+    @if (hasSettings)
+    {
+        <p class="settings">
+            @Html.ActionLink(T("Settings").Text, "Index", "Profile", new { id = theme.Descriptor.Id, area = "IDeliverable.ThemeSettings" }, new { @class = "button" })
+        </p>
+    }
+</div>

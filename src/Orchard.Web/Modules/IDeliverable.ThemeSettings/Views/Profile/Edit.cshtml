@@ -1,0 +1,14 @@
+﻿@model IDeliverable.ThemeSettings.ViewModels.ProfileViewModel
+@{
+    Layout.Title = T("Edit {0} Profile", Model.Theme.Name);
+}
+
+@Html.ValidationSummary()
+@using (Html.BeginFormAntiForgeryPost())
+{
+    @Html.EditorForModel()
+    <fieldset>
+        <button type="submit">@T("Save")</button>
+        @Html.ActionLink(T("Back").Text, "Index", new { id = Model.Theme.Id }, new { @class = "button" })
+    </fieldset>
+}

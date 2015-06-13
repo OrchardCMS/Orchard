@@ -1,16 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using IDeliverable.Slides.Providers;
+using System.Xml.Linq;
 using Orchard.ContentManagement;
+using Orchard.Layouts.Framework.Drivers;
 
 namespace IDeliverable.Slides.Services
 {
-    public class SlidesProviderManager : ISlidesProviderManager
+    public class SlidesProviderService : ISlidesProviderService
     {
         private readonly Lazy<IEnumerable<ISlidesProvider>> _providers;
 
-        public SlidesProviderManager(Lazy<IEnumerable<ISlidesProvider>> providers)
+        public SlidesProviderService(Lazy<IEnumerable<ISlidesProvider>> providers)
         {
             _providers = providers;
         }
@@ -49,6 +50,37 @@ namespace IDeliverable.Slides.Services
             });
 
             return editorShapes;
+        }
+
+        public XElement Export(IStorage storage, IContent content)
+        {
+            var providersElement = new XElement("Providers");
+            foreach (var provider in GetProviders())
+            {
+                var providerExportContext = new SlidesProviderExportContext(provider, new XElement(provider.Name), storage, content);
+
+                provider.Exporting(providerExportContext);
+                providersElement.Add(providerExportContext.Element);
+            }
+
+            return providersElement;
+        }
+
+        public void Import(IStorage storage, XElement element, IContentImportSession context, IContent content)
+        {
+            if (element == null)
+                return;
+            
+            foreach (var provider in GetProviders())
+            {
+                var providerElement = element.Element(provider.Name);
+
+                if (providerElement == null)
+                    continue;
+
+                var providerImportContext = new SlidesProviderImportContext(provider, providerElement, storage, context, content);
+                provider.Importing(providerImportContext);
+            }
         }
     }
 }

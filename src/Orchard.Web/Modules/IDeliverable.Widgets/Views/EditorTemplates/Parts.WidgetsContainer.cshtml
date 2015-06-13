@@ -1,0 +1,86 @@
+﻿@using IDeliverable.Widgets.Models
+@using Orchard.ContentManagement
+@using Orchard.Core.Contents
+@using Orchard.Environment.Extensions.Models
+@using Orchard.Utility.Extensions
+@{
+    Style.Include("admin.widgets-container.css", "admin.widgets-container.min.css");
+    Script.Require("jQueryUI_Sortable");
+    Script.Include("~/Themes/TheAdmin/scripts/admin.js").AtFoot();
+    Script.Include("admin.widgets-container.js", "admin.widgets-container.min.js");
+    
+    var zones = Model.Zones;
+    var theme = (ExtensionDescriptor)Model.CurrentTheme;
+    var zonePreviewImage = (string)Model.ZonePreviewImage;
+    var allWidgets = (IEnumerable<WidgetExPart>) Model.Widgets;
+    var contentItem = Model.ContentItem;
+}
+
+<fieldset id="widgetsPlacement">
+    <input type="hidden" name="returnUrl"/>
+    <input type="hidden" name="submit.Save" />
+    <input type="hidden" name="widgetPlacement"/>
+    <input type="hidden" name="removedWidgets" />
+    <legend>@T("Widgets")</legend>
+    
+    <div class="expando">
+        <div class="widgets group">
+            <div class="layout-widgets-placement">
+                <div class="zones-container">
+                    <div class="zones">
+                        <ol>
+                            @foreach (var zone in zones) {
+                                var widgets = allWidgets.Where(x => x.Zone == zone).OrderBy(w => w.Position, new Orchard.UI.FlatPositionComparer());
+                                var addWidgetUrl = contentItem.Id != 0
+                                                       ? Url.Action("ListWidgets", "WidgetAdmin", new { area = "IDeliverable.Widgets", hostId = contentItem.Id, zone })
+                                                       : Url.Action("CreateContent", "WidgetAdmin", new { area = "IDeliverable.Widgets", id = contentItem.ContentType, zone });
+                                <li>
+                                    <h2>@zone</h2>
+                                    <div class="zone-actions">
+                                        <a class="button grey add-widget" href="@addWidgetUrl" data-host-id="@contentItem.Id">@T("Add")</a>
+                                    </div>
+                                    <ul class="widgets" data-zone="@zone" id="@zone">
+                                        @foreach (var widget in widgets) {
+                                            <li data-widget-id="@widget.Id">
+                                                <h3><a href="@Url.Action("EditWidget", "WidgetAdmin", new { area = "IDeliverable.Widgets", hostId = contentItem.Id, id = widget.Id })">@Html.ItemDisplayText(widget)</a></h3>
+                                                <div class="widget-actions">
+                                                    @if (widget.HasPublished()) {
+                                                        if (widget.HasDraft()) {
+                                                            if (Authorizer.Authorize(Permissions.PublishContent, widget)) {
+                                                                @Html.Link(T("Publish Draft").Text, Url.Action("Publish", "Admin", new { area = "Contents", id = widget.ContentItem.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "UnsafeUrl" })
+                                                                @T(" | ")
+                                                            }
+                                                        }
+
+                                                        if (Authorizer.Authorize(Permissions.PublishContent, widget)) {
+                                                            @Html.Link(T("Unpublish").Text, Url.Action("Unpublish", "Admin", new { area = "Contents", id = widget.ContentItem.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "UnsafeUrl" })
+                                                            @T(" | ")
+                                                        }
+                                                    }
+                                                    else {
+                                                        if (Authorizer.Authorize(Permissions.PublishContent, widget)) {
+                                                            @Html.Link(T("Publish").Text, Url.Action("Publish", "Admin", new { area = "Contents", id = widget.ContentItem.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "UnsafeUrl" })
+                                                            @T(" | ")
+                                                        }
+                                                    }
+                                                    <a href="#" class="remove-widget" data-confirm="@T("Are you sure you want to delete this widget? Note: the widget will be removed permanently when you save the content item.")">@T("Remove")</a>
+                                                </div>
+                                            </li>
+                                        }
+                                    </ul>
+                                </li>
+                            }
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            <div class="layout-widgets-assistance">
+                @if (!String.IsNullOrEmpty(zonePreviewImage)) {
+                    <div class="theme-preview">
+                        <img title="@T("{0} zone preview", theme.Name)" src="@Url.Content(zonePreviewImage)" alt="@T("{0} zone preview", theme.Name)">
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</fieldset>

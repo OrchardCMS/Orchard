@@ -1,0 +1,21 @@
+{
+    "groups": [
+        {
+            "name": "Colors",
+            "settings": [
+                {
+                    "name": "BaseColor",
+                    "type": "Color",
+                    "default": "#777c00",
+                    "description": "The base color of the site."
+                },
+                {
+                    "name": "AccentColor",
+                    "type": "Color",
+                    "default": "#d6d7b2",
+                    "description": "The accent color of the site."
+                }
+            ]
+        }
+    ]
+}

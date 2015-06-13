@@ -1,0 +1,5 @@
+﻿<ul id="available-widgets">
+    @foreach (var widgetType in Model.WidgetTypes) {
+        <li><a href="@Url.Action("AddWidget", "WidgetAdmin", new { area = "IDeliverable.Widgets", contentId = Model.ContentId, widgetType, zone = Model.Zone })">@widgetType</a></li>
+    }
+</ul>

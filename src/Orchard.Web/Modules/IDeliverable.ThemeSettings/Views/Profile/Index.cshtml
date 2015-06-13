@@ -1,0 +1,56 @@
+﻿@model IDeliverable.ThemeSettings.ViewModels.ProfilesIndexViewModel
+@{
+    Layout.Title = T("{0} Profiles", Model.Theme.Name);
+}
+<div class="manage">
+    @Html.ActionLink(T("Create Profile").Text, "Create", "Profile", new { id = Model.Theme.Id, area = "IDeliverable.ThemeSettings" }, new { @class = "button primary" })
+</div>
+
+@using (Html.BeginFormAntiForgeryPost())
+{
+    <table class="items">
+        <thead>
+            <tr>
+                <th>@T("Profile")</th>
+                <th>@T("Description")</th>
+                <th>@T("Current")</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Profiles.Any())
+            {
+                foreach (var profile in Model.Profiles)
+                {
+                    <tr>
+                        <td>@Html.ActionLink(profile.Name, "Edit", "Profile", new { id = profile.Id, area = "IDeliverable.ThemeSettings" }, null)</td>
+                        <td>@profile.Description</td>
+                        <td>
+                            @if (profile.IsCurrent)
+                            {
+                                @T("Yes")
+                            }
+                            else
+                            {
+                                @Html.ActionLink(T("Make Current").Text, "MakeCurrent", "Profile", new { id = profile.Id, area = "IDeliverable.ThemeSettings" }, new { data_unsafe_url = "" })
+                            }
+                        </td>
+                        <td>
+                            @Html.ActionLink(T("Edit").Text, "Edit", "Profile", new { id = profile.Id, area = "IDeliverable.ThemeSettings" }, null) @T(" | ")
+                            @Html.ActionLink(T("Clone").Text, "Clone", "Profile", new { id = profile.Id, area = "IDeliverable.ThemeSettings" }, new { data_unsafe_url = "" }) @T(" | ")
+                            @Html.ActionLink(T("Delete").Text, "Delete", "Profile", new { id = profile.Id, area = "IDeliverable.ThemeSettings" }, new { data_unsafe_url = T("Are you sure you want to delete this profile?").Text })
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="4">
+                        <p>@T("No profiles have been defined yet for this theme.")</p>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

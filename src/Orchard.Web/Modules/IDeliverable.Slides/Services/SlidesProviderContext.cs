@@ -1,8 +1,7 @@
 ﻿using IDeliverable.Slides.Models;
-using IDeliverable.Slides.Services;
 using Orchard.ContentManagement;
 
-namespace IDeliverable.Slides.Providers
+namespace IDeliverable.Slides.Services
 {
     public class SlidesProviderContext
     {

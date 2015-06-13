@@ -27,10 +27,7 @@ namespace IDeliverable.Slides.Providers
             _contentManager = services.ContentManager;
         }
 
-        public override LocalizedString DisplayName
-        {
-            get { return T("Projection"); }
-        }
+        public override LocalizedString DisplayName => T("Projection");
 
         public override dynamic BuildEditor(dynamic shapeFactory, SlidesProviderContext context)
         {
@@ -74,6 +71,27 @@ namespace IDeliverable.Slides.Providers
                 var contentShape = _contentManager.BuildDisplay(contentItem, displayType);
                 yield return contentShape;
             }
+        }
+
+        public override void Exporting(SlidesProviderExportContext context)
+        {
+            var displayType = context.Storage.RetrieveProjectionSlidesDisplayType();
+            var queryId = context.Storage.RetrieveQueryId();
+            var query = queryId != null ? _contentManager.Get(queryId.Value) : default(ContentItem);
+            var queryIdentity = query != null ? _contentManager.GetItemMetadata(query).Identity.ToString() : default(string);
+
+            context.Element.SetAttributeValue("Query", queryIdentity);
+            context.Element.SetAttributeValue("DisplayType", displayType);
+        }
+
+        public override void Importing(SlidesProviderImportContext context)
+        {
+            var displayType = context.Element.Attr("DisplayType");
+            var queryIdentity = context.Element.Attr("Query");
+            var query = context.GetItemFromSession(queryIdentity);
+
+            context.Storage.StoreQueryId(query?.Id);
+            context.Storage.StoreProjectionSlidesDisplayType(displayType);
         }
 
         private IEnumerable<SelectListItem> GetQueries()
