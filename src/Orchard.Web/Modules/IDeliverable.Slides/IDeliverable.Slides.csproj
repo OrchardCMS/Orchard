@@ -210,7 +210,7 @@
     <Compile Include="Services\ISlidesProvider.cs" />
     <Compile Include="Providers\DefaultSlidesProvider.cs" />
     <Compile Include="Services\IStorage.cs" />
-    <Compile Include="Services\InvalidLicenseKeyBanner.cs" />
+    <Compile Include="Services\LicenseValidationErrorBanner.cs" />
     <Compile Include="Services\SlideShowProfileService.cs" />
     <Compile Include="Services\SlidesProvider.cs" />
     <Compile Include="Services\SlidesProviderContext.cs" />

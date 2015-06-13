@@ -1,54 +1,56 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
 using IDeliverable.Licensing.Validation;
-using IDeliverable.Slides.Helpers;
 using Orchard;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.UI.Admin.Notification;
 using Orchard.UI.Notify;
 
-namespace IDeliverable.Slides.Services
+namespace IDeliverable.Licensing.Orchard
 {
-    public class InvalidLicenseKeyBanner : Component, INotificationProvider
+    public abstract class LicenseValidationErrorBannerBase : Component, INotificationProvider
     {
-        public InvalidLicenseKeyBanner(UrlHelper urlHelper)
+        public LicenseValidationErrorBannerBase(string moduleName, UrlHelper urlHelper)
         {
+            _moduleName = moduleName;
             _urlHelper = urlHelper;
-
         }
 
+        private readonly string _moduleName;
         private readonly UrlHelper _urlHelper;
+
+        protected abstract void EnsureLicenseIsValid();
 
         public IEnumerable<NotifyEntry> GetNotifications()
         {
-            var licenseSettingsUrl = _urlHelper.Action("Index", "License", new { area = "IDeliverable.Slides" });
+            var licenseSettingsUrl = _urlHelper.Action("Index", "Home", new { area = "Settings" }); // TODO: Sipke change this to construct the right URL given the settings group "Licenses".
             LocalizedString message = null;
 
             try
             {
-                LicenseValidationHelper.EnsureLicenseIsValid();
+                EnsureLicenseIsValid();
             }
             catch (LicenseValidationException ex)
             {
                 switch (ex.Error)
                 {
                     case LicenseValidationError.UnknownLicenseKey:
-                        message = T("The <a href=\"{0}\">configured license key</a> is invalid.", licenseSettingsUrl);
+                        message = T("The <a href=\"{0}\">configured license key</a> for the {1} module is invalid.", licenseSettingsUrl, _moduleName);
                         break;
                     case LicenseValidationError.HostnameMismatch:
-                        message = T("The <a href=\"{0}\">configured license key</a> is invalid for the current host name.", licenseSettingsUrl);
+                        message = T("The <a href=\"{0}\">configured license key</a> for the {1} module is invalid for the current host name.", licenseSettingsUrl, _moduleName);
                         break;
                     case LicenseValidationError.TokenSignatureValidationFailed:
                     case LicenseValidationError.LicensingServiceError:
                     case LicenseValidationError.LicensingServiceUnreachable:
                     case LicenseValidationError.UnexpectedError:
                     default:
-                        message = T("There was an error validating the <a href=\"{0}\">configured license key</a>.", licenseSettingsUrl);
+                        message = T("There was an error validating the <a href=\"{0}\">configured license key</a> for the {1} module.", licenseSettingsUrl, _moduleName);
                         break;
                 }
 
-                Logger.Warning(ex, "An error occurred while validating the configured license key.");
+                Logger.Warning(ex, "An error occurred while validating the configured license key for the {0} module.", _moduleName);
             }
 
             if (message != null)

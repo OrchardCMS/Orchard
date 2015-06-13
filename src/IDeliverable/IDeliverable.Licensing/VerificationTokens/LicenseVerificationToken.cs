@@ -35,7 +35,7 @@ namespace IDeliverable.Licensing.VerificationTokens
         public LicenseVerificationToken(LicenseVerificationInfo info, string signature)
         {
             if (info == null)
-                throw new ArgumentNullException("info", $"The parameter {nameof(info)} cannot be null.");
+                throw new ArgumentNullException(nameof(info), $"The parameter {nameof(info)} cannot be null.");
 
             Info = info;
             Signature = signature;

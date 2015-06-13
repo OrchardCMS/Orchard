@@ -54,7 +54,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="LicenseValidationHelper.cs" />
+    <Compile Include="LicenseValidationErrorBannerBase.cs" />
+    <Compile Include="LicenseValidationHelperBase.cs" />
     <Compile Include="LicenseVerificationTokenStore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -9,9 +9,9 @@ using Orchard.FileSystems.AppData;
 
 namespace IDeliverable.Licensing.Orchard
 {
-    public abstract class LicenseValidationHelper
+    public abstract class LicenseValidationHelperBase
     {
-        public LicenseValidationHelper(IAppDataFolder appDataFolder)
+        public LicenseValidationHelperBase(IAppDataFolder appDataFolder)
         {
             _appDataFolder = appDataFolder;
         }
@@ -24,6 +24,8 @@ namespace IDeliverable.Licensing.Orchard
 
         public void ValidateLicense()
         {
+            // TODO: Throttle this code by caching its outcome (void or exception) for 5 minutes.
+
             var licenseVerificationTokenStore = new LicenseVerificationTokenStore(_appDataFolder);
             var licenseVerificationTokenAccessor = new LicenseVerificationTokenAccessor(licenseVerificationTokenStore);
             var licenseValidator = new LicenseValidator(licenseVerificationTokenAccessor);

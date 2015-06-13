@@ -3,10 +3,6 @@ using Orchard.FileSystems.AppData;
 
 namespace IDeliverable.Licensing.Orchard
 {
-    // TODO: Add caching and cache invalidation to this class.
-    //context.ValidFor = TimeSpan.FromMinutes(5);
-    //context.CacheDependency = new CacheDependency(_licenseFileManager.GetPhysicalPath(product.ExtensionName));
-
     public class LicenseVerificationTokenStore : ILicenseVerificationTokenStore
     {
         public LicenseVerificationTokenStore(IAppDataFolder appDataFolder)

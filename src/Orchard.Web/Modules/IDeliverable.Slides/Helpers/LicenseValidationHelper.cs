@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Web;
+using IDeliverable.Licensing.Orchard;
 using Orchard;
 using Orchard.FileSystems.AppData;
 
 namespace IDeliverable.Slides.Helpers
 {
-    public class LicenseValidationHelper : Licensing.Orchard.LicenseValidationHelper
+    public class LicenseValidationHelper : LicenseValidationHelperBase
     {
         public static bool GetLicenseIsValid()
         {
@@ -14,7 +15,7 @@ namespace IDeliverable.Slides.Helpers
                 EnsureLicenseIsValid();
                 return true;
             }
-            catch (Exception)
+            catch
             {
                 return false;
             }
@@ -47,7 +48,7 @@ namespace IDeliverable.Slides.Helpers
         }
 
         protected override string ProductId => "233554";
-        protected override string LicenseKey => ""; // TODO: Get this from some kind of site settings.
+        protected override string LicenseKey => ""; // TODO: Sipke get this from some kind of site settings.
         protected override bool SkipValidationForLocalRequests => true;
     }
 }
