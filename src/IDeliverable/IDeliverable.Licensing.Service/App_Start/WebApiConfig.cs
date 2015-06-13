@@ -8,24 +8,9 @@ namespace IDeliverable.Licensing.Service
     {
         public static void Register(HttpConfiguration config)
         {
-            // Web API configuration and services
             ConfigSerializationSettings(config);
 
-            // Web API routes
             config.MapHttpAttributeRoutes();
-
-            config.Routes.MapHttpRoute(
-                name: "ValidateV1",
-                routeTemplate: "api/v1/validate/{productId}/{hostname}/{key}",
-                defaults: new { controller = "License", action = "Validate" }
-            );
-
-            config.Routes.MapHttpRoute(
-                name: "TestV1",
-                routeTemplate: "api/v1/test",
-                defaults: new { controller = "License", action = "Test" }
-            );
-
             config.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
         }
 

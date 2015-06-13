@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
-using IDeliverable.Licensing;
-using IDeliverable.Licensing.Orchard;
-using IDeliverable.Licensing.Orchard.Services;
+using IDeliverable.Licensing.Validation;
+using IDeliverable.Slides.Helpers;
 using Orchard;
 using Orchard.Localization;
+using Orchard.Logging;
 using Orchard.UI.Admin.Notification;
 using Orchard.UI.Notify;
 
@@ -12,44 +12,47 @@ namespace IDeliverable.Slides.Services
 {
     public class InvalidLicenseKeyBanner : Component, INotificationProvider
     {
-        private readonly ILicenseValidator _licenseValidator;
-        private readonly UrlHelper _urlHelper;
-
         public InvalidLicenseKeyBanner(UrlHelper urlHelper)
         {
-            _licenseValidator = ServiceFactory.Current.Resolve<ILicenseValidator>();
             _urlHelper = urlHelper;
+
         }
+
+        private readonly UrlHelper _urlHelper;
 
         public IEnumerable<NotifyEntry> GetNotifications()
         {
-            var token = _licenseValidator.ValidateLicense(SlidesProductManifestProvider.ProductManifest);
-            if (!token.IsValid)
-            {
-                var url = _urlHelper.Action("Index", "License", new { area = "IDeliverable.Slides" });
-                LocalizedString message;
+            var licenseSettingsUrl = _urlHelper.Action("Index", "License", new { area = "IDeliverable.Slides" });
+            LocalizedString message = null;
 
-                switch (token.Error) {
-                    case LicenseValidationError.HostnameMismatch:
-                        message = T("The <a href=\"{0}\">Slides license key</a> is invalid for the current host name.", url);
-                        break;
-                    case LicenseValidationError.LicenseExpired:
-                        message = T("The <a href=\"{0}\">Slides license key</a> has expired.", url);
-                        break;
-                    case LicenseValidationError.LicenseRevoked:
-                        message = T("The <a href=\"{0}\">Slides license key</a> has been revoked.", url);
-                        break;
-                    case LicenseValidationError.UnhandledException:
-                        message = T("There was an error validating the <a href=\"{0}\">Slides license key</a>.", url);
-                        break;
-                    case LicenseValidationError.SignatureValidationFailed:
+            try
+            {
+                LicenseValidationHelper.EnsureLicenseIsValid();
+            }
+            catch (LicenseValidationException ex)
+            {
+                switch (ex.Error)
+                {
                     case LicenseValidationError.UnknownLicenseKey:
+                        message = T("The <a href=\"{0}\">configured license key</a> is invalid.", licenseSettingsUrl);
+                        break;
+                    case LicenseValidationError.HostnameMismatch:
+                        message = T("The <a href=\"{0}\">configured license key</a> is invalid for the current host name.", licenseSettingsUrl);
+                        break;
+                    case LicenseValidationError.TokenSignatureValidationFailed:
+                    case LicenseValidationError.LicensingServiceError:
+                    case LicenseValidationError.LicensingServiceUnreachable:
+                    case LicenseValidationError.UnexpectedError:
                     default:
-                        message = T("The <a href=\"{0}\">Slides license key</a> is invalid.", url);
+                        message = T("There was an error validating the <a href=\"{0}\">configured license key</a>.", licenseSettingsUrl);
                         break;
                 }
-                yield return new NotifyEntry { Message = message, Type = NotifyType.Warning };
+
+                Logger.Warning(ex, "An error occurred while validating the configured license key.");
             }
+
+            if (message != null)
+                yield return new NotifyEntry { Message = message, Type = NotifyType.Warning };
         }
     }
 }

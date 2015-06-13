@@ -102,14 +102,15 @@
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\LicenseController.cs" />
-    <Compile Include="Exceptions\LicenseValidationError.cs" />
+    <Compile Include="Exceptions\LicenseVerificationError.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\ILicenseService.cs" />
+    <Compile Include="Services\LicenseInfo.cs" />
     <Compile Include="Services\LicenseService.cs" />
-    <Compile Include="Exceptions\LicenseValidationException.cs" />
+    <Compile Include="Exceptions\LicenseVerificationException.cs" />
+    <Compile Include="Services\OrderInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />

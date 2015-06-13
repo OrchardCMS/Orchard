@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using IDeliverable.Licensing.Orchard;
-using IDeliverable.Licensing.Orchard.Services;
 using IDeliverable.Slides.Helpers;
 using IDeliverable.Slides.Models;
 using IDeliverable.Slides.Providers;
@@ -20,7 +18,6 @@ namespace IDeliverable.Slides.Drivers
         private readonly IOrchardServices _services;
         private readonly ISlideShowPlayerEngineManager _engineManager;
         private readonly ISlidesProviderManager _providerManager;
-        private readonly ILicenseValidator _licenseValidator;
 
         public SlideShowPartDriver(
             IOrchardServices services,
@@ -30,7 +27,6 @@ namespace IDeliverable.Slides.Drivers
             _services = services;
             _engineManager = engineManager;
             _providerManager = providerManager;
-            _licenseValidator = ServiceFactory.Current.Resolve<ILicenseValidator>();
         }
 
         protected override DriverResult Editor(SlideShowPart part, dynamic shapeHelper)
@@ -40,7 +36,7 @@ namespace IDeliverable.Slides.Drivers
 
         protected override DriverResult Editor(SlideShowPart part, IUpdateModel updater, dynamic shapeHelper)
         {
-            if (!_licenseValidator.ValidateSlidesLicense())
+            if (!LicenseValidationHelper.GetLicenseIsValid())
                 return ContentShape("Parts_SlideShow_Edit_InvalidLicense", () => shapeHelper.Parts_SlideShow_Edit_InvalidLicense());
 
             return ContentShape("Parts_SlideShow_Edit", () =>
@@ -75,7 +71,7 @@ namespace IDeliverable.Slides.Drivers
 
         protected override DriverResult Display(SlideShowPart part, string displayType, dynamic shapeHelper)
         {
-            if (!_licenseValidator.ValidateSlidesLicense())
+            if (!LicenseValidationHelper.GetLicenseIsValid())
                 return ContentShape("Parts_SlideShow_InvalidLicense", () => shapeHelper.Parts_SlideShow_InvalidLicense());
 
             return Combined(

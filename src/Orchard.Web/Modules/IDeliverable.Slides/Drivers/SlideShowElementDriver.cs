@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using IDeliverable.Licensing.Orchard;
-using IDeliverable.Licensing.Orchard.Services;
 using IDeliverable.Slides.Elements;
 using IDeliverable.Slides.Helpers;
 using IDeliverable.Slides.Models;
@@ -23,7 +21,6 @@ namespace IDeliverable.Slides.Drivers
         private readonly ISlideShowPlayerEngineManager _engineManager;
         private readonly IClock _clock;
         private readonly ISlidesProviderManager _providerManager;
-        private readonly ILicenseValidator _licenseValidator;
 
         public SlideShowElementDriver(
             IOrchardServices services,
@@ -35,14 +32,13 @@ namespace IDeliverable.Slides.Drivers
             _engineManager = engineManager;
             _clock = clock;
             _providerManager = providerManager;
-            _licenseValidator = ServiceFactory.Current.Resolve<ILicenseValidator>();
         }
 
         public string Prefix => "SlideShowElement";
 
         protected override EditorResult OnBuildEditor(SlideShow element, ElementEditorContext context)
         {
-            if (!_licenseValidator.ValidateSlidesLicense())
+            if (!LicenseValidationHelper.GetLicenseIsValid())
                 return Editor(context, context.ShapeFactory.Slides_InvalidLicense());
 
             var storage = new ElementStorage(element);
@@ -83,7 +79,7 @@ namespace IDeliverable.Slides.Drivers
 
         protected override void OnDisplaying(SlideShow element, ElementDisplayContext context)
         {
-            if (!_licenseValidator.ValidateSlidesLicense())
+            if (!LicenseValidationHelper.GetLicenseIsValid())
             {
                 context.ElementShape.Metadata.Alternates.Clear();
                 context.ElementShape.Metadata.Alternates.Add($"Elements_SlideShow_InvalidLicense");

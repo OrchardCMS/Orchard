@@ -192,19 +192,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
-    <Compile Include="Controllers\LicenseController.cs" />
     <Compile Include="Controllers\SlideShowProfileController.cs" />
     <Compile Include="Drivers\SlideShowElementDriver.cs" />
     <Compile Include="Filters\DialogAttribute.cs" />
     <Compile Include="Handlers\SlideShowSettingsPartHandler.cs" />
-    <Compile Include="Helpers\LicenseValidatorExtensions.cs" />
+    <Compile Include="Helpers\LicenseValidationHelper.cs" />
     <Compile Include="Helpers\StorageExtensions.cs" />
     <Compile Include="Helpers\SlideShowPlayerEngineDataHelper.cs" />
     <Compile Include="Models\ISlideShow.cs" />
     <Compile Include="Models\SlideShowProfile.cs" />
     <Compile Include="Providers\ListSlidesProvider.cs" />
     <Compile Include="Providers\ProjectionSlidesProvider.cs" />
-    <Compile Include="ServiceContainer.cs" />
     <Compile Include="Services\ContentPartStorage.cs" />
     <Compile Include="Services\ElementStorage.cs" />
     <Compile Include="Services\ISlidesProviderManager.cs" />
@@ -212,7 +210,6 @@
     <Compile Include="Providers\DefaultSlidesProvider.cs" />
     <Compile Include="Services\IStorage.cs" />
     <Compile Include="Services\InvalidLicenseKeyBanner.cs" />
-    <Compile Include="Services\SlidesProductManifestProvider.cs" />
     <Compile Include="Services\SlidesProvider.cs" />
     <Compile Include="Services\SlidesProviderContext.cs" />
     <Compile Include="Services\SlidesProviderManager.cs" />

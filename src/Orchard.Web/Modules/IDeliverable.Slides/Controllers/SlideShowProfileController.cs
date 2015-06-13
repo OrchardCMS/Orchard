@@ -1,13 +1,12 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
-using IDeliverable.Licensing.Orchard;
-using IDeliverable.Licensing.Orchard.Services;
 using IDeliverable.Slides.Helpers;
 using IDeliverable.Slides.Models;
 using IDeliverable.Slides.Services;
 using IDeliverable.Slides.ViewModels;
 using Orchard;
 using Orchard.ContentManagement;
+using Orchard.FileSystems.AppData;
 using Orchard.Layouts.Framework.Elements;
 using Orchard.Layouts.Helpers;
 using Orchard.Localization;
@@ -20,23 +19,21 @@ namespace IDeliverable.Slides.Controllers
     [Admin]
     public class SlideShowProfileController : Controller, IUpdateModel
     {
-        private readonly IOrchardServices _services;
-        private readonly ISlideShowPlayerEngineManager _engineManager;
-        private readonly ILicenseValidator _licenseValidator;
-
         public SlideShowProfileController(IOrchardServices services, ISlideShowPlayerEngineManager engineManager)
         {
             _services = services;
             _engineManager = engineManager;
-            _licenseValidator = ServiceFactory.Current.Resolve<ILicenseValidator>();
-            T = NullLocalizer.Instance;
         }
 
-        public Localizer T { get; set; }
+        public Localizer T { get; set; } = NullLocalizer.Instance;
+
+        private readonly IOrchardServices _services;
+        private readonly ISlideShowPlayerEngineManager _engineManager;
+
 
         public ActionResult Index()
         {
-            if (!_licenseValidator.ValidateSlidesLicense())
+            if (!LicenseValidationHelper.GetLicenseIsValid())
                 return View("InvalidLicense");
 
             var viewModel = new SlideShowProfileIndexViewModel

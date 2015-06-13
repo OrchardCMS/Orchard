@@ -44,13 +44,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ILicense.cs" />
-    <Compile Include="License.cs" />
-    <Compile Include="LicenseValidationError.cs" />
-    <Compile Include="LicenseValidationException.cs" />
-    <Compile Include="LicenseValidationInfo.cs" />
-    <Compile Include="LicenseValidationToken.cs" />
+    <Compile Include="CacheInvalidationContext.cs" />
+    <Compile Include="CacheService.cs" />
+    <Compile Include="HttpContextAccessor.cs" />
+    <Compile Include="HttpRequestExtensions.cs" />
+    <Compile Include="Validation\LicenseValidationError.cs" />
+    <Compile Include="Validation\LicenseValidationException.cs" />
+    <Compile Include="Validation\LicenseValidator.cs" />
+    <Compile Include="VerificationTokens\LicenseVerificationTokenError.cs" />
+    <Compile Include="VerificationTokens\LicenseVerificationTokenException.cs" />
+    <Compile Include="VerificationTokens\LicenseVerificationInfo.cs" />
+    <Compile Include="VerificationTokens\LicenseVerificationToken.cs" />
+    <Compile Include="VerificationTokens\LicenseVerificationTokenAccessor.cs" />
+    <Compile Include="VerificationTokens\LicensingServiceClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Validation\LicenseValidationOptions.cs" />
+    <Compile Include="VerificationTokens\ILicenseVerificationTokenStore.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
