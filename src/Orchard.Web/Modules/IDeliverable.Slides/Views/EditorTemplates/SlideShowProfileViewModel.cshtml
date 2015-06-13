@@ -11,7 +11,7 @@
 <fieldset>
     <div class="form-group">
         @Html.LabelFor(m => m.Name, T("Profile Name").Text, new { @class = "required" })
-        @Html.TextBoxFor(m => m.Name, new { @class = "text medium" })
+        @Html.TextBoxFor(m => m.Name, new { @class = "text medium", autofocus = "autofocus" })
     </div>
 </fieldset>
 

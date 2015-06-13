@@ -11,13 +11,22 @@ namespace IDeliverable.Slides.Models
     {
         private IReadOnlyList<SlideShowProfile> _profiles;
 
+        /// <summary>
+        /// Expose direct access to the underlying data so that it becomes part of the Site export recipe step.
+        /// </summary>
+        public string ProfilesData
+        {
+            get { return Retrieve<string>("SlideShowProfiles"); }
+            set { Store("SlideShowProfiles", value); }
+        }
+
         public IReadOnlyList<SlideShowProfile> Profiles
         {
             get
             {
                 if (_profiles == null)
                 {
-                    var json = Retrieve<string>("Profiles");
+                    var json = ProfilesData;
 
                     try
                     {
@@ -34,7 +43,7 @@ namespace IDeliverable.Slides.Models
             private set
             {
                 var json = JsonConvert.SerializeObject(value.ToList());
-                Store("Profiles", json);
+                ProfilesData = json;
                 _profiles = value;
             }
         }

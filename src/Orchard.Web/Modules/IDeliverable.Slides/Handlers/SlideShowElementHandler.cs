@@ -1,19 +1,16 @@
-﻿using System.Linq;
-using IDeliverable.Slides.Elements;
-using IDeliverable.Slides.Models;
-using Orchard;
-using Orchard.ContentManagement;
+﻿using IDeliverable.Slides.Elements;
+using IDeliverable.Slides.Services;
 using Orchard.Layouts.Services;
 
 namespace IDeliverable.Slides.Handlers
 {
     public class SlideShowElementHandler : ElementEventHandlerBase
     {
-        private readonly IOrchardServices _services;
+        private readonly ISlideShowProfileService _slideShowProfileService;
 
-        public SlideShowElementHandler(IOrchardServices services)
+        public SlideShowElementHandler(ISlideShowProfileService slideShowProfileService)
         {
-            _services = services;
+            _slideShowProfileService = slideShowProfileService;
         }
 
         public override void Created(ElementCreatedContext context)
@@ -30,8 +27,7 @@ namespace IDeliverable.Slides.Handlers
         {
             element._profileField.Loader(value =>
             {
-                var profiles = _services.WorkContext.CurrentSite.As<SlideShowSettingsPart>().Profiles.ToDictionary(x => x.Id);
-                var profile = element.ProfileId != null && profiles.ContainsKey(element.ProfileId.Value) ? profiles[element.ProfileId.Value] : default(SlideShowProfile);
+                var profile = _slideShowProfileService.FindById(element.ProfileId.GetValueOrDefault());
                 return profile;
             });
         }

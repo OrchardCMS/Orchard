@@ -24,10 +24,7 @@ namespace IDeliverable.Slides.Providers
             _containerService = containerService;
         }
 
-        public override LocalizedString DisplayName
-        {
-            get { return T("List"); }
-        }
+        public override LocalizedString DisplayName => T("List");
 
         public override dynamic BuildEditor(dynamic shapeFactory, SlidesProviderContext context)
         {
@@ -40,7 +37,7 @@ namespace IDeliverable.Slides.Providers
             var viewModel = new ListSlidesProviderViewModel
             {
                 SelectedListId = selectedListId.ToString(),
-                DisplayType = context.Storage.RetrieveProjectionSlidesDisplayType()
+                DisplayType = context.Storage.RetrieveListSlidesDisplayType()
             };
 
             if (updater != null)
@@ -64,7 +61,7 @@ namespace IDeliverable.Slides.Providers
             if (listId == null)
                 yield break;
 
-            var displayType = context.Storage.RetrieveProjectionSlidesDisplayType();
+            var displayType = context.Storage.RetrieveListSlidesDisplayType();
             var contentItems = _containerService.GetContentItems(listId.Value).ToList();
 
             foreach (var contentItem in contentItems)
@@ -72,6 +69,27 @@ namespace IDeliverable.Slides.Providers
                 var contentShape = _contentManager.BuildDisplay(contentItem, displayType);
                 yield return contentShape;
             }
+        }
+
+        public override void Exporting(SlidesProviderExportContext context)
+        {
+            var displayType = context.Storage.RetrieveListSlidesDisplayType();
+            var listId = context.Storage.RetrieveListId();
+            var list = listId != null ? _contentManager.Get(listId.Value) : default(ContentItem);
+            var listIdentity = list != null ? _contentManager.GetItemMetadata(list).Identity.ToString() : default(string);
+
+            context.Element.SetAttributeValue("List", listIdentity);
+            context.Element.SetAttributeValue("DisplayType", displayType);
+        }
+
+        public override void Importing(SlidesProviderImportContext context)
+        {
+            var displayType = context.Element.Attr("DisplayType");
+            var listIdentity = context.Element.Attr("List");
+            var list = context.GetItemFromSession(listIdentity);
+
+            context.Storage.StoreListId(list?.Id);
+            context.Storage.StoreListSlidesDisplayType(displayType);
         }
 
         private static int? ParseInt32Array(string value)
