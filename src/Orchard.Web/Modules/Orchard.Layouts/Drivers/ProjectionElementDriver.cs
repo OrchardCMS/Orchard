@@ -288,7 +288,7 @@ namespace Orchard.Layouts.Drivers {
 
         protected override void OnExporting(Projection element, ExportElementContext context) {
             var query = element.QueryId != null ? _contentManager.Get<QueryPart>(element.QueryId.Value) : default(QueryPart);
-            var layout = element.LayoutId != null ? _layoutRepository.Get(element.LayoutId.Value) : default(LayoutRecord);
+            var layout = query != null && element.LayoutId != null ? _layoutRepository.Get(element.LayoutId.Value) : default(LayoutRecord);
             var queryIdentity = query != null ? _contentManager.GetItemMetadata(query).Identity.ToString() : default(string);
             var layoutIndex = layout != null ? query.Layouts.IndexOf(layout) : default(int?);
 
