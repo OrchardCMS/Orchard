@@ -9,8 +9,8 @@ namespace IDeliverable.Licensing.Orchard
 {
     public class ServiceFactory
     {
-        public static readonly ServiceFactory Current = new ServiceFactory();
         public static readonly IList<IProductManifestProvider> ProductManifestProviders = new List<IProductManifestProvider>();
+        public static readonly ServiceFactory Current = new ServiceFactory();
         private readonly IDictionary<Type, object> _services = new Dictionary<Type, object>();
 
         public static void RegisterProductManifestProvider<T>(T provider) where T : IProductManifestProvider
