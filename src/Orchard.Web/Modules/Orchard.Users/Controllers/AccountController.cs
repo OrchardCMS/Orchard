@@ -155,6 +155,7 @@ namespace Orchard.Users.Controllers {
                     }
 
                     _authenticationService.SignIn(user, false /* createPersistentCookie */);
+                    _userEventHandler.LoggedIn(user);
                     return this.RedirectLocal(returnUrl);
                 }
                 
