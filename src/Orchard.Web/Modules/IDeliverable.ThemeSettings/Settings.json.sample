@@ -10,28 +10,10 @@
                     "description": "The base color of the site."
                 },
                 {
-                    "name": "TopAccentColor",
+                    "name": "AccentColor",
                     "type": "Color",
                     "default": "#d6d7b2",
-                    "description": "The top accent color of the site."
-                },
-                {
-                    "name": "BottomAccentColor",
-                    "type": "Color",
-                    "default": "#ebebd9",
-                    "description": "The bottom accent color of the site."
-                },
-                {
-                    "name": "TextColorMenu",
-                    "type": "Color",
-                    "default": "#fff",
-                    "description": "The color of the text on the main menu items. (first level)"
-                },
-                {
-                    "name": "TextColorSubItem",
-                    "type": "Color",
-                    "default": "#000",
-                    "description": "The color of the text on the subnav items. (second level)"
+                    "description": "The accent color of the site."
                 }
             ]
         }
