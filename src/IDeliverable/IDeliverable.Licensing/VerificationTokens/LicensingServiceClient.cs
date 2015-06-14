@@ -11,7 +11,7 @@ namespace IDeliverable.Licensing.VerificationTokens
     {
         // These are consciously hard coded.
         private static readonly string LicensingServiceUrl = "https://licensing.ideliverable.com/api/v1/";
-        private static readonly string ExpectedServerCertificateThumbprint = "8ef6a50968a338fbe24ffce1d72dceb9fe3355bc";
+        private static readonly string ExpectedServerCertificateThumbprint = "fa4746a778716109e7e80e1b8dc2ed2a2ba3b852";
 
         public LicenseVerificationToken VerifyLicense(string productId, string licenseKey, string hostname)
         {

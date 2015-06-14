@@ -52,7 +52,7 @@ namespace IDeliverable.Licensing.Service.Services
                     return token;
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex) when (!(ex is LicenseVerificationException))
             {
                 throw new LicenseVerificationException(LicenseVerificationError.UnhandledException, ex);
             }

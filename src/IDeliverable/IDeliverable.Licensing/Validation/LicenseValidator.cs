@@ -79,8 +79,7 @@ namespace IDeliverable.Licensing.Validation
         private static X509Certificate2 GetSigningCertificate()
         {
             const string certBase64 =
-@"-----BEGIN CERTIFICATE-----
-MIIG0TCCBLmgAwIBAgIQ7qnUeLGos7hDPcw3o9G74jANBgkqhkiG9w0BAQ0FADCB
+@"MIIG0TCCBLmgAwIBAgIQ7qnUeLGos7hDPcw3o9G74jANBgkqhkiG9w0BAQ0FADCB
 ozELMAkGA1UEBhMCQ1kxETAPBgNVBAgTCExpbWFzc29sMREwDwYDVQQHEwhMaW1h
 c3NvbDEZMBcGA1UEChMQSURlbGl2ZXJhYmxlIEx0ZDETMBEGA1UECxMKT3BlcmF0
 aW9uczEYMBYGA1UEAxMPSURlbGl2ZXJhYmxlIENBMSQwIgYJKoZIhvcNAQkBFhVp
@@ -116,8 +115,7 @@ DgHOLKuiODxBF61+Ou/d29XiSX2HxCoH+onppi2h6ceJPcFwPrgzKVszsGkavtKL
 9hgWApwE9hL1i6ygIfrpq2B+djPS8ZwX5S/t/QO5SmBjNLmw1GD1gHN5xqY0vMzS
 VxDXrH6Kllhwipu8GLeMWn/VmWWLy1vr//GoBjujhplIZHJPYBrYjqwfxH1ZLa4B
 O+N7bHDp63M0UVX5FdX1sN0laL29L1jXX/oe7x8PHNt3W4aOwVaIilh+/adXNDxr
-1yumH4G7QEeMQisiMhlPxnZJHajX
------END CERTIFICATE-----";
+1yumH4G7QEeMQisiMhlPxnZJHajX";
 
             var certBytes = Convert.FromBase64String(certBase64);
             var cert = new X509Certificate2(certBytes);
