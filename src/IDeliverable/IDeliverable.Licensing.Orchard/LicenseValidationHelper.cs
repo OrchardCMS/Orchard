@@ -64,9 +64,12 @@ namespace IDeliverable.Licensing.Orchard
 
         public void ValidateLicense(string productId)
         {
-            _cacheService.GetValue($"ValidateLicenseAction-{productId}", context =>
+            var productManifest = _products.Single(x => x.ProductId == productId);
+
+            string cacheKey = $"ValidateLicenseResult-{productId}-{productManifest.LicenseKey}-{productManifest.SkipValidationForLocalRequests}";
+            _cacheService.GetValue(cacheKey, context =>
             {
-                var productManifest = _products.Single(x => x.ProductId == productId);
+                context.ValidFor = TimeSpan.FromMinutes(5);
 
                 var options = LicenseValidationOptions.Default;
                 if (productManifest.SkipValidationForLocalRequests)
@@ -74,7 +77,6 @@ namespace IDeliverable.Licensing.Orchard
 
                 _licenseValidator.ValidateLicense(productManifest.ProductId, productManifest.LicenseKey, options);
 
-                context.ValidFor = TimeSpan.FromMinutes(5);
                 return true;
             });
         }
