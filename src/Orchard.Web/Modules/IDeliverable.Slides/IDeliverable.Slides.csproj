@@ -147,9 +147,9 @@
     <Content Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\text-overflow.less" />
     <Content Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\vendor-prefixes.less" />
     <Content Include="SlideShowPlayerEngines\Bootstrap\Styles\variables.less" />
-    <Content Include="SlideShowPlayerEngines\Bootstrap\Styles\wells.less" />
     <Content Include="SlideShowPlayerEngines\JCarousel\Styles\engine-jcarousel.less" />
     <Content Include="Views\EditorTemplates\Parts.Slides.License.cshtml" />
+    <Content Include="SlideShowPlayerEngines\Bootstrap\Styles\glyphicons.less" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\IDeliverable\IDeliverable.Licensing.Orchard\IDeliverable.Licensing.Orchard.csproj">

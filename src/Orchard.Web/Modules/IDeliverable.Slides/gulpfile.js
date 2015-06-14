@@ -43,7 +43,8 @@ var srcLessAdmin = [
 ];
 
 var srcLessEngineBootstrap = [
-    "SlideShowPlayerEngines/Bootstrap/Styles/carousel.less"
+    "SlideShowPlayerEngines/Bootstrap/Styles/carousel.less",
+    "SlideShowPlayerEngines/Bootstrap/Styles/glyphicons.less",
 ];
 
 var srcLessEngineJCarousel = [
