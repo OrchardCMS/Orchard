@@ -60,24 +60,36 @@ namespace IDeliverable.Licensing.Service.Services
 
         private LicenseVerificationToken CreateVerificationToken(int productId, string hostname, string key)
         {
-            var store = new X509Store(StoreName.My, StoreLocation.CurrentUser);
+            X509Certificate2 signingCert = null;
+
+            // Try to find the certificate in either the CurrentUser or LocalMachine stores
+            // to maximize code portability.
+            signingCert = GetSigningCertificateFrom(StoreLocation.CurrentUser) ?? GetSigningCertificateFrom(StoreLocation.LocalMachine);
+            if (signingCert == null)
+                throw new Exception($"No certificate with thumbprint '{TokenSigningCertificateThumbprint}' was found in the certificate store.");
+
+            var info = new LicenseVerificationInfo(productId, hostname, key, DateTime.UtcNow.Ticks);
+            var token = LicenseVerificationToken.Create(info, signingCert);
+
+            return token;
+        }
+
+        private X509Certificate2 GetSigningCertificateFrom(StoreLocation location)
+        {
+            var store = new X509Store(StoreName.My, location);
             store.Open(OpenFlags.ReadOnly);
 
             try
             {
                 var certificates = store.Certificates.Find(X509FindType.FindByThumbprint, TokenSigningCertificateThumbprint, validOnly: false);
-                if (certificates.Count == 0)
-                    throw new Exception($"No certificate with thumbprint '{TokenSigningCertificateThumbprint}' was found in the certificate store.");
-                var cert = certificates[0];
+                if (certificates.Count > 0)
+                    return certificates[0];
 
-                var info = new LicenseVerificationInfo(productId, hostname, key, DateTime.UtcNow.Ticks);
-                var token = LicenseVerificationToken.Create(info, cert);
-
-                return token;
+                return null;
             }
             finally
             {
-                store.Close();            
+                store.Close();
             }
         }
 
