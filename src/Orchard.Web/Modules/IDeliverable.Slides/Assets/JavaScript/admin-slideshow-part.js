@@ -1,6 +1,9 @@
-﻿(function ($) {
-    $(function() {
-        $(".engine-picker").on("change", function(e) {
+﻿(function ($)
+{
+    $(function ()
+    {
+        $(".engine-picker").on("change", function (e)
+        {
             var engine = $(this).val();
 
             $(".engine-settings-editor").hide();

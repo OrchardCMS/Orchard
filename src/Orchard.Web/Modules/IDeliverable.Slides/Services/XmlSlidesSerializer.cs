@@ -5,7 +5,8 @@ using System.Xml.Linq;
 using IDeliverable.Slides.Models;
 using Orchard;
 
-namespace IDeliverable.Slides.Services {
+namespace IDeliverable.Slides.Services
+{
     public class XmlSlidesSerializer : Component, ISlidesSerializer
     {
         public string Serialize(IEnumerable<Slide> value)

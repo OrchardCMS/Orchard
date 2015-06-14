@@ -4,38 +4,38 @@ namespace IDeliverable.Licensing.VerificationTokens
 {
     public class LicenseVerificationTokenAccessor
     {
-        private static readonly TimeSpan _tokenRenewalInterval = TimeSpan.FromDays(14);
+        private static readonly TimeSpan sTokenRenewalInterval = TimeSpan.FromDays(14);
 
         public LicenseVerificationTokenAccessor(ILicenseVerificationTokenStore store)
         {
-            _store = store;
-            _licensingServiceClient = new LicensingServiceClient();
+            mStore = store;
+            mLicensingServiceClient = new LicensingServiceClient();
         }
 
-        private readonly ILicenseVerificationTokenStore _store;
-        private readonly LicensingServiceClient _licensingServiceClient;
+        private readonly ILicenseVerificationTokenStore mStore;
+        private readonly LicensingServiceClient mLicensingServiceClient;
 
         public LicenseVerificationToken GetLicenseVerificationToken(string productId, string licenseKey, string hostname, bool forceRenew = false)
         {
-            var token = _store.Load(productId);
+            var token = mStore.Load(productId);
 
             // Delete the existing verification token from store if:
             // * It was issued for a different license key OR
             // * We are instructed by caller to force renewal
             if (token != null && (token.Info.LicenseKey != licenseKey || forceRenew))
             {
-                _store.Clear(productId);
+                mStore.Clear(productId);
                 token = null;
             }
 
             // Try to renew verification token from licensing service if:
             // * We don't have a token in store OR
             // * The one we have has passed the token renewal interval
-            if (token == null || token.Age > _tokenRenewalInterval)
+            if (token == null || token.Age > sTokenRenewalInterval)
             {
                 try
                 {
-                    token = _licensingServiceClient.VerifyLicense(productId, licenseKey, hostname);
+                    token = mLicensingServiceClient.VerifyLicense(productId, licenseKey, hostname);
                 }
                 catch (Exception ex)
                 {
@@ -46,7 +46,7 @@ namespace IDeliverable.Licensing.VerificationTokens
                         var lvtex = ex as LicenseVerificationTokenException;
                         if (lvtex.Error == LicenseVerificationTokenError.UnknownLicenseKey || lvtex.Error == LicenseVerificationTokenError.HostnameMismatch)
                         {
-                            _store.Clear(productId);
+                            mStore.Clear(productId);
                             throw;
                         }
                     }
@@ -61,7 +61,7 @@ namespace IDeliverable.Licensing.VerificationTokens
                     throw new LicenseVerificationTokenException(LicenseVerificationTokenError.UnexpectedError, ex);
                 }
 
-                _store.Save(productId, token);
+                mStore.Save(productId, token);
             }
 
             return token;

@@ -14,21 +14,21 @@ namespace IDeliverable.Licensing.Orchard
     {
         public LicenseValidationErrorBannerBase(IEnumerable<ILicensedProductManifest> products, UrlHelper urlHelper, string productId)
         {
-            _products = products;
-            _urlHelper = urlHelper;
-            _productId = productId;
+            mProducts = products;
+            mUrlHelper = urlHelper;
+            mProductId = productId;
         }
 
-        private readonly IEnumerable<ILicensedProductManifest> _products;
-        private readonly UrlHelper _urlHelper;
-        private readonly string _productId;
+        private readonly IEnumerable<ILicensedProductManifest> mProducts;
+        private readonly UrlHelper mUrlHelper;
+        private readonly string mProductId;
 
         public IEnumerable<NotifyEntry> GetNotifications()
         {
-            var licenseSettingsUrl = _urlHelper.Action("Index", "Admin", new { area = "Settings", groupInfoId = "Licenses" });
+            var licenseSettingsUrl = mUrlHelper.Action("Index", "Admin", new { area = "Settings", groupInfoId = "Licenses" });
             LocalizedString message = null;
 
-            var productManifest = _products.Single(x => x.ProductId == _productId);
+            var productManifest = mProducts.Single(x => x.ProductId == mProductId);
 
             try
             {

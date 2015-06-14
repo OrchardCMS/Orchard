@@ -8,7 +8,7 @@
             OrderId = orderId;
         }
 
-        public string Key { get; private set; }
-        public int OrderId { get; private set; }
+        public string Key { get; }
+        public int OrderId { get; }
     }
 }

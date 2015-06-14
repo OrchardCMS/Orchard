@@ -1,7 +1,8 @@
 using Orchard.Layouts.Framework.Elements;
 using Orchard.Layouts.Helpers;
 
-namespace IDeliverable.Slides.Services {
+namespace IDeliverable.Slides.Services
+{
     public class ElementStorage : IStorage
     {
         private readonly Element _element;

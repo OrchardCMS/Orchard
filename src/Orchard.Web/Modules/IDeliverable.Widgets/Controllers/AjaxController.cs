@@ -3,19 +3,23 @@ using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
 using Orchard.Environment.Extensions;
 
-namespace IDeliverable.Widgets.Controllers {
+namespace IDeliverable.Widgets.Controllers
+{
     [OrchardFeature("IDeliverable.Widgets.Ajax")]
-    public class AjaxController : Controller {
+    public class AjaxController : Controller
+    {
 
         private readonly IContentManager _contentManager;
         private readonly IShapeDisplay _shapeDisplay;
 
-        public AjaxController(IContentManager contentManager, IShapeDisplay shapeDisplay) {
+        public AjaxController(IContentManager contentManager, IShapeDisplay shapeDisplay)
+        {
             _contentManager = contentManager;
             _shapeDisplay = shapeDisplay;
         }
 
-        public ActionResult Display(int id, string displayType = null) {
+        public ActionResult Display(int id, string displayType = null)
+        {
             var contentItem = _contentManager.Get(id);
 
             if (contentItem == null)
@@ -26,7 +30,8 @@ namespace IDeliverable.Widgets.Controllers {
             return Content(output, "text/html");
         }
 
-        private string RenderContentItem(ContentItem contentItem, string displayType) {
+        private string RenderContentItem(ContentItem contentItem, string displayType)
+        {
             var shape = _contentManager.BuildDisplay(contentItem, displayType ?? "");
             shape.Ajaxified = true;
             return _shapeDisplay.Display(shape);

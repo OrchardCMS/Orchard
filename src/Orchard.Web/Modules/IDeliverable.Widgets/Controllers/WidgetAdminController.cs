@@ -19,17 +19,20 @@ using Orchard.Widgets;
 using Orchard.Widgets.Models;
 using Orchard.Widgets.Services;
 
-namespace IDeliverable.Widgets.Controllers {
+namespace IDeliverable.Widgets.Controllers
+{
     [OrchardFeature("IDeliverable.Widgets")]
     [ValidateInput(false)]
     [Admin]
-    public class WidgetAdminController : Controller, IUpdateModel {
+    public class WidgetAdminController : Controller, IUpdateModel
+    {
         private readonly IOrchardServices _services;
         private readonly IWidgetsService _widgetsService;
         private readonly IWidgetManager _widgetManager;
         private readonly IContentManager _contentManager;
 
-        public WidgetAdminController(IOrchardServices services, IWidgetsService widgetsService, IWidgetManager widgetManager, IContentManager contentManager) {
+        public WidgetAdminController(IOrchardServices services, IWidgetsService widgetsService, IWidgetManager widgetManager, IContentManager contentManager)
+        {
             _services = services;
             _widgetsService = widgetsService;
             _widgetManager = widgetManager;
@@ -42,7 +45,8 @@ namespace IDeliverable.Widgets.Controllers {
         public Localizer T { get; set; }
 
         [HttpPost]
-        public ActionResult CreateContent(string id, string zone) {
+        public ActionResult CreateContent(string id, string zone)
+        {
             var contentItem = _contentManager.New(id);
 
             if (!_services.Authorizer.Authorize(Orchard.Core.Contents.Permissions.EditContent, contentItem, T("Couldn't create content")))
@@ -51,7 +55,8 @@ namespace IDeliverable.Widgets.Controllers {
             _contentManager.Create(contentItem, VersionOptions.Draft);
 
             var model = _contentManager.UpdateEditor(contentItem, this);
-            if (!ModelState.IsValid) {
+            if (!ModelState.IsValid)
+            {
                 _services.TransactionManager.Cancel();
                 return View(model);
             }
@@ -59,13 +64,14 @@ namespace IDeliverable.Widgets.Controllers {
             _services.Notifier.Information(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName)
                 ? T("Your content has been created.")
                 : T("Your {0} has been created.", contentItem.TypeDefinition.DisplayName));
-            
+
             return RedirectToAction("ListWidgets", new { hostId = contentItem.Id, zone });
         }
 
-        public ActionResult ListWidgets(int hostId, string zone) {
+        public ActionResult ListWidgets(int hostId, string zone)
+        {
             var widgetTypes = _widgetsService.GetWidgetTypeNames().OrderBy(x => x).ToList();
-            
+
             var viewModel = _services.New.ViewModel()
                 .WidgetTypes(widgetTypes)
                 .HostId(hostId)
@@ -74,7 +80,8 @@ namespace IDeliverable.Widgets.Controllers {
             return View(viewModel);
         }
 
-        public ActionResult AddWidget(int hostId, string widgetType, string zone, string returnUrl) {
+        public ActionResult AddWidget(int hostId, string widgetType, string zone, string returnUrl)
+        {
             if (!IsAuthorizedToManageWidgets())
                 return new HttpUnauthorizedResult();
 
@@ -82,7 +89,8 @@ namespace IDeliverable.Widgets.Controllers {
             if (widgetPart == null)
                 return HttpNotFound();
 
-            try {
+            try
+            {
                 var widgetPosition = _widgetManager.GetWidgets(hostId).Count(widget => widget.Zone == widgetPart.Zone) + 1;
                 widgetPart.Position = widgetPosition.ToString(CultureInfo.InvariantCulture);
                 widgetPart.Zone = zone;
@@ -92,7 +100,8 @@ namespace IDeliverable.Widgets.Controllers {
                 var model = _services.ContentManager.BuildEditor(widgetPart).HostId(hostId);
                 return View(model);
             }
-            catch (Exception exception) {
+            catch (Exception exception)
+            {
                 Logger.Error(T("Creating widget failed: {0}", exception.Message).Text);
                 _services.Notifier.Error(T("Creating widget failed: {0}", exception.Message));
                 return this.RedirectLocal(returnUrl, () => RedirectToAction("Edit", "Admin", new { area = "Contents" }));
@@ -101,8 +110,10 @@ namespace IDeliverable.Widgets.Controllers {
 
         [HttpPost, ActionName("AddWidget")]
         [FormValueRequired("submit.Save")]
-        public ActionResult AddWidgetSavePost(string widgetType, int hostId) {
-            return AddWidgetPost(widgetType, hostId, contentItem => {
+        public ActionResult AddWidgetSavePost(string widgetType, int hostId)
+        {
+            return AddWidgetPost(widgetType, hostId, contentItem =>
+            {
                 if (!contentItem.Has<IPublishingControlAspect>() && !contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
                     _services.ContentManager.Publish(contentItem);
             });
@@ -110,11 +121,13 @@ namespace IDeliverable.Widgets.Controllers {
 
         [HttpPost, ActionName("AddWidget")]
         [FormValueRequired("submit.Publish")]
-        public ActionResult AddWidgetPublishPost(string widgetType, int hostId) {
+        public ActionResult AddWidgetPublishPost(string widgetType, int hostId)
+        {
             return AddWidgetPost(widgetType, hostId, contentItem => _services.ContentManager.Publish(contentItem));
         }
 
-        private ActionResult AddWidgetPost(string widgetType, int hostId, Action<ContentItem> conditionallyPublish) {
+        private ActionResult AddWidgetPost(string widgetType, int hostId, Action<ContentItem> conditionallyPublish)
+        {
             if (!IsAuthorizedToManageWidgets())
                 return new HttpUnauthorizedResult();
 
@@ -128,17 +141,20 @@ namespace IDeliverable.Widgets.Controllers {
             var returnUrl = Url.RouteUrl(contentMetadata.EditorRouteValues);
             var model = _services.ContentManager.UpdateEditor(widgetPart, this).HostId(hostId);
             var widgetExPart = widgetPart.As<WidgetExPart>();
-            try {
+            try
+            {
                 widgetPart.LayerPart = _widgetManager.GetContentLayer();
                 widgetExPart.Host = contentItem;
                 conditionallyPublish(widgetPart.ContentItem);
             }
-            catch (Exception exception) {
+            catch (Exception exception)
+            {
                 Logger.Error(T("Creating widget failed: {0}", exception.Message).Text);
                 _services.Notifier.Error(T("Creating widget failed: {0}", exception.Message));
                 return Redirect(returnUrl);
             }
-            if (!ModelState.IsValid) {
+            if (!ModelState.IsValid)
+            {
                 _services.TransactionManager.Cancel();
                 return View((object)model);
             }
@@ -147,7 +163,8 @@ namespace IDeliverable.Widgets.Controllers {
             return Redirect(returnUrl);
         }
 
-        public ActionResult EditWidget(int hostId, int id) {
+        public ActionResult EditWidget(int hostId, int id)
+        {
             if (!IsAuthorizedToManageWidgets())
                 return new HttpUnauthorizedResult();
 
@@ -156,15 +173,18 @@ namespace IDeliverable.Widgets.Controllers {
             var returnUrl = Url.RouteUrl(contentMetadata.EditorRouteValues);
             var widgetPart = _widgetsService.GetWidget(id);
 
-            if (widgetPart == null) {
+            if (widgetPart == null)
+            {
                 _services.Notifier.Error(T("Widget not found: {0}", id));
                 return Redirect(returnUrl);
             }
-            try {
+            try
+            {
                 var model = _services.ContentManager.BuildEditor(widgetPart).HostId(hostId);
                 return View(model);
             }
-            catch (Exception exception) {
+            catch (Exception exception)
+            {
                 Logger.Error(T("Editing widget failed: {0}", exception.Message).Text);
                 _services.Notifier.Error(T("Editing widget failed: {0}", exception.Message));
 
@@ -174,7 +194,8 @@ namespace IDeliverable.Widgets.Controllers {
 
         [HttpPost, ActionName("EditWidget")]
         [FormValueRequired("submit.Save")]
-        public ActionResult EditWidgetSavePost(int hostId, int id) {
+        public ActionResult EditWidgetSavePost(int hostId, int id)
+        {
             if (!IsAuthorizedToManageWidgets())
                 return new HttpUnauthorizedResult();
 
@@ -186,21 +207,24 @@ namespace IDeliverable.Widgets.Controllers {
             if (widgetPart == null)
                 return HttpNotFound();
 
-            try {
+            try
+            {
                 var model = _services.ContentManager.UpdateEditor(widgetPart, this).HostId(hostId);
                 var widgetExPart = widgetPart.As<WidgetExPart>();
-                
+
                 widgetPart.LayerPart = _widgetManager.GetContentLayer();
                 widgetExPart.Host = contentItem;
 
-                if (!ModelState.IsValid) {
+                if (!ModelState.IsValid)
+                {
                     _services.TransactionManager.Cancel();
                     return View(model);
                 }
 
                 _services.Notifier.Information(T("Your {0} has been saved.", widgetPart.TypeDefinition.DisplayName));
             }
-            catch (Exception exception) {
+            catch (Exception exception)
+            {
                 Logger.Error(T("Editing widget failed: {0}", exception.Message).Text);
                 _services.Notifier.Error(T("Editing widget failed: {0}", exception.Message));
             }
@@ -210,11 +234,13 @@ namespace IDeliverable.Widgets.Controllers {
 
         [HttpPost, ActionName("EditWidget")]
         [FormValueRequired("submit.Delete")]
-        public ActionResult EditWidgetDeletePOST(int id, int hostId) {
+        public ActionResult EditWidgetDeletePOST(int id, int hostId)
+        {
             return DeleteWidget(id, hostId);
         }
 
-        private ActionResult DeleteWidget(int id, int hostId) {
+        private ActionResult DeleteWidget(int id, int hostId)
+        {
             if (!IsAuthorizedToManageWidgets())
                 return new HttpUnauthorizedResult();
 
@@ -226,11 +252,13 @@ namespace IDeliverable.Widgets.Controllers {
             if (widgetPart == null)
                 return HttpNotFound();
 
-            try {
+            try
+            {
                 _widgetsService.DeleteWidget(widgetPart.Id);
                 _services.Notifier.Information(T("Widget was successfully deleted"));
             }
-            catch (Exception exception) {
+            catch (Exception exception)
+            {
                 Logger.Error(T("Removing Widget failed: {0}", exception.Message).Text);
                 _services.Notifier.Error(T("Removing Widget failed: {0}", exception.Message));
             }
@@ -238,15 +266,18 @@ namespace IDeliverable.Widgets.Controllers {
             return Redirect(returnUrl);
         }
 
-        private bool IsAuthorizedToManageWidgets() {
+        private bool IsAuthorizedToManageWidgets()
+        {
             return _services.Authorizer.Authorize(Permissions.ManageWidgets, T("Not authorized to manage widgets"));
         }
 
-        bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
+        bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties)
+        {
             return TryUpdateModel(model, prefix, includeProperties, excludeProperties);
         }
 
-        void IUpdateModel.AddModelError(string key, LocalizedString errorMessage) {
+        void IUpdateModel.AddModelError(string key, LocalizedString errorMessage)
+        {
             ModelState.AddModelError(key, errorMessage.ToString());
         }
     }

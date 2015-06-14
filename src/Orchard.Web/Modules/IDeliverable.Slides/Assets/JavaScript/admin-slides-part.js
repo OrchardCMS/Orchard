@@ -1,10 +1,13 @@
-﻿(function ($) {
+﻿(function ($)
+{
     // Slides preview.
-    var applyCssScale = function (element, scale, translate) {
+    var applyCssScale = function (element, scale, translate)
+    {
         var browserPrefixes = ["", "-ms-", "-moz-", "-webkit-", "-o-"],
             offset = ((1 - scale) * 50) + "%",
             scaleString = (translate !== false ? "translate(-" + offset + ", -" + offset + ") " : "") + "scale(" + scale + "," + scale + ")";
-        $(browserPrefixes).each(function () {
+        $(browserPrefixes).each(function ()
+        {
             element
                 .css(this + "transform", scaleString);
         });
@@ -13,10 +16,12 @@
             .addClass("scaled");
     };
 
-    var scaleSlides = function() {
+    var scaleSlides = function ()
+    {
         $(".slides")
             .css("display", "block")
-            .each(function () {
+            .each(function ()
+            {
                 var slideshow = $(this),
                     slide = slideshow.find(".slide-preview"),
                     parent = slide.parent(),
@@ -49,20 +54,25 @@
             });
     };
 
-    $(window).load(function () {
+    $(window).load(function ()
+    {
         scaleSlides();
     });
-    
+
     // Sortable slides.
-    $(function () {
-        $(".slides-wrapper.interactive").each(function() {
+    $(function ()
+    {
+        $(".slides-wrapper.interactive").each(function ()
+        {
             var wrapper = $(this);
 
-            var showChangedMessage = function () {
+            var showChangedMessage = function ()
+            {
                 wrapper.find(".dirty-message").show();
             };
 
-            var onSlideIndexChanged = function (e, ui) {
+            var onSlideIndexChanged = function (e, ui)
+            {
                 showChangedMessage();
             };
 

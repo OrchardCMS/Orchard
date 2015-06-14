@@ -5,9 +5,9 @@ namespace IDeliverable.Licensing
 {
     public class CacheService
     {
-        private readonly HttpContextAccessor _httpContextAccessor = new HttpContextAccessor();
+        private readonly HttpContextAccessor mHttpContextAccessor = new HttpContextAccessor();
 
-        private Cache Cache => _httpContextAccessor.Current().Cache;
+        private Cache Cache => mHttpContextAccessor.Current().Cache;
 
         public void SetValue<T>(string key, T value, CacheDependency dependency = null, TimeSpan? validFor = null)
         {

@@ -5,7 +5,8 @@ using Orchard.ContentManagement;
 using Orchard.Layouts.Helpers;
 using Orchard.Utility;
 
-namespace IDeliverable.Slides.Helpers {
+namespace IDeliverable.Slides.Helpers
+{
     public static class SlideShowPlayerEngineDataHelper
     {
         public static TProperty Retrieve<TEngine, TProperty>(this TEngine engine, Expression<Func<TEngine, TProperty>> targetExpression, Func<TProperty> defaultValue = null) where TEngine : SlideShowPlayerEngine

@@ -1,4 +1,5 @@
-﻿namespace IDeliverable.Slides.ViewModels {
+﻿namespace IDeliverable.Slides.ViewModels
+{
     public class ContentSlidesFactoryViewModel
     {
         public string ContentIds { get; set; }

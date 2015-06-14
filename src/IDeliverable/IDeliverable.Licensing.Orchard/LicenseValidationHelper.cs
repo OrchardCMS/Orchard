@@ -50,24 +50,24 @@ namespace IDeliverable.Licensing.Orchard
             var tokenStore = new LicenseVerificationTokenStore(appDataFolder);
             var tokenAccessor = new LicenseVerificationTokenAccessor(tokenStore);
 
-            _products = products;
-            _licenseValidator = new LicenseValidator(tokenAccessor);
-            _cacheService = new CacheService();
+            mProducts = products;
+            mLicenseValidator = new LicenseValidator(tokenAccessor);
+            mCacheService = new CacheService();
         }
 
-        private readonly IEnumerable<ILicensedProductManifest> _products;
-        private readonly LicenseValidator _licenseValidator;
-        private readonly CacheService _cacheService;
+        private readonly IEnumerable<ILicensedProductManifest> mProducts;
+        private readonly LicenseValidator mLicenseValidator;
+        private readonly CacheService mCacheService;
 
         public void ValidateLicense(string productId)
         {
-            var productManifest = _products.Single(x => x.ProductId == productId);
+            var productManifest = mProducts.Single(x => x.ProductId == productId);
             productManifest.Logger.Debug("Validating license for product '{0}'...", productId);
 
             try
             {
                 string cacheKey = $"ValidateLicenseResult-{productId}-{productManifest.LicenseKey}-{productManifest.SkipValidationForLocalRequests}";
-                _cacheService.GetValue(cacheKey, context =>
+                mCacheService.GetValue(cacheKey, context =>
                 {
                     context.ValidFor = _validationResultCachedFor;
 
@@ -76,7 +76,7 @@ namespace IDeliverable.Licensing.Orchard
                         options = options | LicenseValidationOptions.SkipForLocalRequests;
 
                     productManifest.Logger.Debug("Validation result not in cache. Invoking the license validator for product '{0}'...", productId);
-                    _licenseValidator.ValidateLicense(productManifest.ProductId, productManifest.LicenseKey, options);
+                    mLicenseValidator.ValidateLicense(productManifest.ProductId, productManifest.LicenseKey, options);
 
                     return true;
                 });

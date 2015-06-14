@@ -2,11 +2,12 @@
 using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
 
-namespace IDeliverable.Slides {
+namespace IDeliverable.Slides
+{
     public class Migrations : DataMigrationImpl
     {
         public int Create()
-        {    
+        {
             ContentDefinitionManager.AlterPartDefinition("SlideShowPart", part => part
                 .Attachable()
                 .WithDescription("Turns your content item into a slide show."));

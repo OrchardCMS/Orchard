@@ -13,9 +13,11 @@ using Orchard.FileSystems.VirtualPath;
 using Orchard.Themes.Services;
 using Orchard.Widgets.Services;
 
-namespace IDeliverable.Widgets.Drivers {
+namespace IDeliverable.Widgets.Drivers
+{
     [OrchardFeature("IDeliverable.Widgets")]
-    public class WidgetsContainerPartDriver : ContentPartDriver<WidgetsContainerPart> {
+    public class WidgetsContainerPartDriver : ContentPartDriver<WidgetsContainerPart>
+    {
         private readonly ISiteThemeService _siteThemeService;
         private readonly IWidgetsService _widgetsService;
         private readonly IVirtualPathProvider _virtualPathProvider;
@@ -24,13 +26,14 @@ namespace IDeliverable.Widgets.Drivers {
         private readonly IContentManager _contentManager;
 
         public WidgetsContainerPartDriver(
-            ISiteThemeService siteThemeService, 
-            IWidgetsService widgetsService, 
-            IVirtualPathProvider virtualPathProvider, 
-            IShapeFactory shapeFactory, 
-            IWidgetManager widgetManager, 
-            IWorkContextAccessor wca, 
-            IContentManager contentManager) {
+            ISiteThemeService siteThemeService,
+            IWidgetsService widgetsService,
+            IVirtualPathProvider virtualPathProvider,
+            IShapeFactory shapeFactory,
+            IWidgetManager widgetManager,
+            IWorkContextAccessor wca,
+            IContentManager contentManager)
+        {
 
             _siteThemeService = siteThemeService;
             _widgetsService = widgetsService;
@@ -43,11 +46,13 @@ namespace IDeliverable.Widgets.Drivers {
 
         private dynamic New { get; set; }
 
-        protected override string Prefix {
+        protected override string Prefix
+        {
             get { return "WidgetsContainer"; }
         }
 
-        protected override DriverResult Display(WidgetsContainerPart part, string displayType, dynamic shapeHelper) {
+        protected override DriverResult Display(WidgetsContainerPart part, string displayType, dynamic shapeHelper)
+        {
             // TODO: make DisplayType configurable
             if (displayType != "Detail")
                 return null;
@@ -57,7 +62,8 @@ namespace IDeliverable.Widgets.Drivers {
             // Build and add shape to zone.
             var workContext = _wca.GetContext();
             var zones = workContext.Layout.Zones;
-            foreach (var widgetPart in widgetParts) {
+            foreach (var widgetPart in widgetParts)
+            {
                 var widgetShape = _contentManager.BuildDisplay(widgetPart);
                 zones[widgetPart.Zone].Add(widgetShape, widgetPart.Position);
             }
@@ -65,8 +71,10 @@ namespace IDeliverable.Widgets.Drivers {
             return null;
         }
 
-        protected override DriverResult Editor(WidgetsContainerPart part, dynamic shapeHelper) {
-            return ContentShape("Parts_WidgetsContainer", () => {
+        protected override DriverResult Editor(WidgetsContainerPart part, dynamic shapeHelper)
+        {
+            return ContentShape("Parts_WidgetsContainer", () =>
+            {
                 var currentTheme = _siteThemeService.GetSiteTheme();
                 var currentThemesZones = _widgetsService.GetZones(currentTheme).ToList();
                 var widgetTypes = _widgetsService.GetWidgetTypeNames().ToList();
@@ -88,9 +96,11 @@ namespace IDeliverable.Widgets.Drivers {
             });
         }
 
-        protected override DriverResult Editor(WidgetsContainerPart part, IUpdateModel updater, dynamic shapeHelper) {
+        protected override DriverResult Editor(WidgetsContainerPart part, IUpdateModel updater, dynamic shapeHelper)
+        {
             var viewModel = new WidgetsContainerViewModel();
-            if (updater.TryUpdateModel(viewModel, null, null, null)) {
+            if (updater.TryUpdateModel(viewModel, null, null, null))
+            {
                 UpdatePositions(viewModel);
                 RemoveWidgets(viewModel);
             }
@@ -98,25 +108,29 @@ namespace IDeliverable.Widgets.Drivers {
             return Editor(part, shapeHelper);
         }
 
-        private void RemoveWidgets(WidgetsContainerViewModel viewModel) {
+        private void RemoveWidgets(WidgetsContainerViewModel viewModel)
+        {
             if (string.IsNullOrEmpty(viewModel.RemovedWidgets))
                 return;
 
             var widgetIds = JsonConvert.DeserializeObject<int[]>(viewModel.RemovedWidgets);
 
-            foreach (var widgetId in widgetIds) {
+            foreach (var widgetId in widgetIds)
+            {
                 _widgetsService.DeleteWidget(widgetId);
             }
         }
 
-        private void UpdatePositions(WidgetsContainerViewModel viewModel) {
+        private void UpdatePositions(WidgetsContainerViewModel viewModel)
+        {
             if (string.IsNullOrEmpty(viewModel.WidgetPlacement))
                 return;
 
             var data = JsonConvert.DeserializeXNode(viewModel.WidgetPlacement);
             var zonesNode = data.Root;
 
-            foreach (var zoneNode in zonesNode.Elements()) {
+            foreach (var zoneNode in zonesNode.Elements())
+            {
                 var zoneName = zoneNode.Name.ToString();
                 var widgetElements = zoneNode.Elements("widgets");
                 var position = 0;
@@ -124,7 +138,8 @@ namespace IDeliverable.Widgets.Drivers {
                 foreach (var widget in widgetElements
                     .Select(widgetNode => XmlConvert.ToInt32(widgetNode.Value))
                     .Select(widgetId => _widgetsService.GetWidget(widgetId))
-                    .Where(widget => widget != null)) {
+                    .Where(widget => widget != null))
+                {
 
                     widget.Position = (position++).ToString();
                     widget.Zone = zoneName;

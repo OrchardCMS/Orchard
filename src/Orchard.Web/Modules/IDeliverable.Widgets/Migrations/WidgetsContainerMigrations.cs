@@ -3,11 +3,13 @@ using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
 using Orchard.Environment.Extensions;
 
-namespace IDeliverable.Widgets.Migrations {
+namespace IDeliverable.Widgets.Migrations
+{
     [OrchardFeature("IDeliverable.Widgets")]
-    public class WidgetsContainerMigrations : DataMigrationImpl {
-        public int Create() {
-
+    public class WidgetsContainerMigrations : DataMigrationImpl
+    {
+        public int Create()
+        {
             SchemaBuilder.CreateTable("WidgetExPartRecord", table => table
                 .ContentPartVersionRecord()
                 .Column<int>("HostId"));

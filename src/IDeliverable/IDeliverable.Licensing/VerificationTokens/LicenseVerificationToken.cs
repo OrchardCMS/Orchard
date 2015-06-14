@@ -41,8 +41,8 @@ namespace IDeliverable.Licensing.VerificationTokens
             Signature = signature;
         }
 
-        public LicenseVerificationInfo Info { get; private set; }
-        public string Signature { get; private set; }
+        public LicenseVerificationInfo Info { get; }
+        public string Signature { get; }
 
         public DateTime VerifiedUtc => Info.VerifiedUtc; // Delegated to Info because it needs to be included in signature.
         public TimeSpan Age => Info.Age; // Delegated to Info because it needs to be included in signature.

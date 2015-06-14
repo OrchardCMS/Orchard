@@ -20,7 +20,7 @@ namespace IDeliverable.ThemeSettings.SettingProviders
                 Value: setting.Default,
                 Description: T(setting.Description),
                 Classes: new[] { "text large tokenized" }
-                );
+            );
         }
     }
 }

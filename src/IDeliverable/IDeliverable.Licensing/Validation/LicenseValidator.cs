@@ -6,21 +6,21 @@ namespace IDeliverable.Licensing.Validation
 {
     public class LicenseValidator
     {
-        private static readonly TimeSpan _verificationTokenValidFor = TimeSpan.FromDays(21);
-        private static readonly TimeSpan _allowableClockSkew = TimeSpan.FromMinutes(10);
+        private static readonly TimeSpan sVerificationTokenValidFor = TimeSpan.FromDays(21);
+        private static readonly TimeSpan sAllowableClockSkew = TimeSpan.FromMinutes(10);
 
         public LicenseValidator(LicenseVerificationTokenAccessor verificationTokenAccessor)
         {
-            _httpContextAccessor = new HttpContextAccessor();
-            _verificationTokenAccessor = verificationTokenAccessor;
+            mHttpContextAccessor = new HttpContextAccessor();
+            mVerificationTokenAccessor = verificationTokenAccessor;
         }
 
-        private readonly HttpContextAccessor _httpContextAccessor;
-        private readonly LicenseVerificationTokenAccessor _verificationTokenAccessor;
+        private readonly HttpContextAccessor mHttpContextAccessor;
+        private readonly LicenseVerificationTokenAccessor mVerificationTokenAccessor;
 
         public void ValidateLicense(string productId, string licenseKey, LicenseValidationOptions options = LicenseValidationOptions.Default)
         {
-            var request = _httpContextAccessor.Current().Request;
+            var request = mHttpContextAccessor.Current().Request;
 
             var skipForLocalRequests = (options & LicenseValidationOptions.SkipForLocalRequests) == LicenseValidationOptions.SkipForLocalRequests;
             if (request.IsLocal && skipForLocalRequests)
@@ -31,12 +31,12 @@ namespace IDeliverable.Licensing.Validation
             try
             {
                 var forceRenewToken = (options & LicenseValidationOptions.ForceRenewToken) == LicenseValidationOptions.ForceRenewToken;
-                token = _verificationTokenAccessor.GetLicenseVerificationToken(productId, licenseKey, request.GetHttpHost(), forceRenewToken);
+                token = mVerificationTokenAccessor.GetLicenseVerificationToken(productId, licenseKey, request.GetHttpHost(), forceRenewToken);
 
                 // If the token we got back is too old to be considered valid anymore, try to get the token
                 // again, this time forcing token renewal.
-                if (token.Age > _verificationTokenValidFor)
-                    token = _verificationTokenAccessor.GetLicenseVerificationToken(productId, licenseKey, request.GetHttpHost(), forceRenew: true);
+                if (token.Age > sVerificationTokenValidFor)
+                    token = mVerificationTokenAccessor.GetLicenseVerificationToken(productId, licenseKey, request.GetHttpHost(), forceRenew: true);
             }
             catch (LicenseVerificationTokenException ex)
             {
@@ -69,13 +69,13 @@ namespace IDeliverable.Licensing.Validation
             }
 
             // It should never happen that at this point we don't have a token or it's too old.
-            if (token == null || token.Age > _verificationTokenValidFor)
+            if (token == null || token.Age > sVerificationTokenValidFor)
                 throw new LicenseValidationException(LicenseValidationError.UnexpectedError);
 
             // If the token age is negative by more than 10 minutes (allowable clock skew between licensing
             // service and local machine) then this is a strong indication of an attempt to bypass license
             // validation by changing the system clock.
-            if (token.Age < -_allowableClockSkew)
+            if (token.Age < -sAllowableClockSkew)
                 throw new LicenseValidationException("The license verification token age is negative by more than the allowable clock skew. This might indicate that system clock of either the client or the licensing service is offset.", LicenseValidationError.TokenAgeValidationFailed);
 
             var signingCertificate = GetSigningCertificate();

@@ -7,18 +7,18 @@ namespace IDeliverable.Licensing.Orchard
     {
         public LicenseVerificationTokenStore(IAppDataFolder appDataFolder)
         {
-            _appDataFolder = appDataFolder;
+            mAppDataFolder = appDataFolder;
         }
 
-        private readonly IAppDataFolder _appDataFolder;
+        private readonly IAppDataFolder mAppDataFolder;
 
         public LicenseVerificationToken Load(string productId)
         {
             var path = GetRelativeTokenFilePath(productId);
-            if (!_appDataFolder.FileExists(path))
+            if (!mAppDataFolder.FileExists(path))
                 return null;
 
-            var tokenBase64 = _appDataFolder.ReadFile(path);
+            var tokenBase64 = mAppDataFolder.ReadFile(path);
             var token = LicenseVerificationToken.FromBase64(tokenBase64);
 
             return token;
@@ -31,19 +31,19 @@ namespace IDeliverable.Licensing.Orchard
             var path = GetRelativeTokenFilePath(productId);
 
             var tokenBase64 = token.ToBase64();
-            _appDataFolder.CreateFile(path, tokenBase64);
+            mAppDataFolder.CreateFile(path, tokenBase64);
         }
 
         public void Clear(string productId)
         {
             var path = GetRelativeTokenFilePath(productId);
-            if (_appDataFolder.FileExists(path))
-                _appDataFolder.DeleteFile(path);
+            if (mAppDataFolder.FileExists(path))
+                mAppDataFolder.DeleteFile(path);
         }
 
-        private string GetRelativeTokenFilePath(string productid)
+        private string GetRelativeTokenFilePath(string productId)
         {
-            return $"IDeliverable.Licensing/{productid}.lic";
+            return $"IDeliverable.Licensing/{productId}.lic";
         }
     }
 }

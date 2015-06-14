@@ -8,6 +8,7 @@ namespace IDeliverable.ThemeSettings.Models
         {
             Settings = new List<ThemeSettingDefinition>();
         }
+
         public string Name { get; set; }
         public IList<ThemeSettingDefinition> Settings { get; set; }
     }

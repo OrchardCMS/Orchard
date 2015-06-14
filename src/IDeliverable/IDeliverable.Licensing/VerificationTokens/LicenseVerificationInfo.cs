@@ -23,12 +23,14 @@ namespace IDeliverable.Licensing.VerificationTokens
 
         public override string ToString()
         {
-            return JsonConvert.SerializeObject(new {
-                ProductId,
-                Hostname,
-                LicenseKey,
-                VerifiedUtcTicks
-            });
+            return JsonConvert.SerializeObject(
+                new
+                {
+                    ProductId,
+                    Hostname,
+                    LicenseKey,
+                    VerifiedUtcTicks
+                });
         }
     }
 }

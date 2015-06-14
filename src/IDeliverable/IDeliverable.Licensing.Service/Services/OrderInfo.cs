@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 
 namespace IDeliverable.Licensing.Service.Services
 {
@@ -13,7 +10,7 @@ namespace IDeliverable.Licensing.Service.Services
             Hostnames = hostnames;
         }
 
-        public int OrderId { get; private set; }
-        public IEnumerable<string> Hostnames { get; private set; }
+        public int OrderId { get; }
+        public IEnumerable<string> Hostnames { get; }
     }
 }
