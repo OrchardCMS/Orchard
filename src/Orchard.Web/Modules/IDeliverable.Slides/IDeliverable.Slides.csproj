@@ -199,6 +199,7 @@
     <Compile Include="Helpers\StorageExtensions.cs" />
     <Compile Include="Helpers\SlideShowPlayerEngineDataHelper.cs" />
     <Compile Include="Licensing\LicensedProductManifest.cs" />
+    <Compile Include="Licensing\LicenseValidationErrorBanner.cs" />
     <Compile Include="Models\ISlideShow.cs" />
     <Compile Include="Models\SlideShowProfile.cs" />
     <Compile Include="Providers\ListSlidesProvider.cs" />

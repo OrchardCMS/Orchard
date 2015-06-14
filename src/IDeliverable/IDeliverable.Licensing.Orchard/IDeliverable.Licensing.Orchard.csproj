@@ -59,7 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ILicensedProductManifest.cs" />
-    <Compile Include="LicenseValidationErrorBanner.cs" />
+    <Compile Include="LicenseValidationErrorBannerBase.cs" />
     <Compile Include="LicenseValidationHelper.cs" />
     <Compile Include="LicenseVerificationTokenStore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
