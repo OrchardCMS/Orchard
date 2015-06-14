@@ -34,19 +34,15 @@ namespace IDeliverable.Licensing.Orchard
         {
             get
             {
-                if (_instance == null)
-                {
-                    var workContext = HttpContext.Current.Request.RequestContext.GetWorkContext();
-                    var products = workContext.Resolve<IEnumerable<ILicensedProductManifest>>();
-                    var appDataFolder = workContext.Resolve<IAppDataFolder>();
-                    _instance = new LicenseValidationHelper(products, appDataFolder);
-                }
+                var workContext = HttpContext.Current.Request.RequestContext.GetWorkContext();
+                var products = workContext.Resolve<IEnumerable<ILicensedProductManifest>>();
+                var appDataFolder = workContext.Resolve<IAppDataFolder>();
+                var instance = new LicenseValidationHelper(products, appDataFolder);
 
-                return _instance;
+                return instance;
             }
         }
 
-        private static LicenseValidationHelper _instance;
         private static readonly TimeSpan _validationResultCachedFor = TimeSpan.FromMinutes(5);
 
         public LicenseValidationHelper(IEnumerable<ILicensedProductManifest> products, IAppDataFolder appDataFolder)
