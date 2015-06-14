@@ -28,7 +28,7 @@ namespace IDeliverable.Licensing.VerificationTokens
                 token = null;
             }
 
-            // Renew verification token from licensing server if:
+            // Try to renew verification token from licensing service if:
             // * We don't have a token in store OR
             // * The one we have has passed the token renewal interval
             if (token == null || token.Age > _tokenRenewalInterval)
@@ -39,6 +39,18 @@ namespace IDeliverable.Licensing.VerificationTokens
                 }
                 catch (Exception ex)
                 {
+                    // If the license key is reported by licensing service to be either invalid or for
+                    // a different hostname, we delete any existing token from store and throw unconditionally.
+                    if (ex is LicenseVerificationTokenException)
+                    {
+                        var lvtex = ex as LicenseVerificationTokenException;
+                        if (lvtex.Error == LicenseVerificationTokenError.UnknownLicenseKey || lvtex.Error == LicenseVerificationTokenError.HostnameMismatch)
+                        {
+                            _store.Clear(productId);
+                            throw;
+                        }
+                    }
+                       
                     // If we have an existing token from before, return it rather than throwing.
                     if (token != null)
                         return token;
