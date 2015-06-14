@@ -13,17 +13,22 @@ namespace IDeliverable.Licensing.VerificationTokens
             VerifiedUtcTicks = verifiedUtcTicks;
         }
 
-        public int ProductId { get; private set; }
-        public string Hostname { get; private set; }
-        public string LicenseKey { get; private set; }
-        public long VerifiedUtcTicks { get; private set; }
+        public int ProductId { get; }
+        public string Hostname { get; }
+        public string LicenseKey { get; }
+        public long VerifiedUtcTicks { get; }
 
         public DateTime VerifiedUtc => new DateTime(VerifiedUtcTicks, DateTimeKind.Utc);
         public TimeSpan Age => DateTime.UtcNow - VerifiedUtc;
 
         public override string ToString()
         {
-            return JsonConvert.SerializeObject(this);
+            return JsonConvert.SerializeObject(new {
+                ProductId,
+                Hostname,
+                LicenseKey,
+                VerifiedUtcTicks
+            });
         }
     }
 }
