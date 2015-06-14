@@ -9,9 +9,9 @@ using Orchard.UI.Notify;
 
 namespace IDeliverable.Licensing.Orchard
 {
-    public abstract class LicenseValidationErrorBanner : Component, INotificationProvider
+    public class LicenseValidationErrorBanner : Component, INotificationProvider
     {
-        public LicenseValidationErrorBanner(IEnumerable<ILicensedProductManifest> products, UrlHelper urlHelper)
+        protected LicenseValidationErrorBanner(IEnumerable<ILicensedProductManifest> products, UrlHelper urlHelper)
         {
             _products = products;
             _urlHelper = urlHelper;
@@ -20,19 +20,16 @@ namespace IDeliverable.Licensing.Orchard
         private readonly IEnumerable<ILicensedProductManifest> _products;
         private readonly UrlHelper _urlHelper;
 
-        protected abstract void EnsureLicenseIsValid();
-
         public IEnumerable<NotifyEntry> GetNotifications()
         {
-            // TODO: Sipke change this to construct the right URL given the settings group "Licenses".
-            var licenseSettingsUrl = _urlHelper.Action("Index", "Home", new { area = "Settings" });
+            var licenseSettingsUrl = _urlHelper.Action("Index", "Admin", new { area = "Settings", groupInfoId = "Licenses" });
             LocalizedString message = null;
 
             foreach (var productManifest in _products)
             {
                 try
                 {
-                    EnsureLicenseIsValid();
+                    LicenseValidationHelper.EnsureLicenseIsValid(productManifest.ProductId);
                 }
                 catch (LicenseValidationException ex)
                 {
