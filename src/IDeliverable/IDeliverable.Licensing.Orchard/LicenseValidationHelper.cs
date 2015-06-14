@@ -46,6 +46,7 @@ namespace IDeliverable.Licensing.Orchard
         }
 
         private static LicenseValidationHelper _instance;
+        private static readonly TimeSpan _validationResultCachedFor = TimeSpan.FromMinutes(5);
 
         public LicenseValidationHelper(IEnumerable<ILicensedProductManifest> products, IAppDataFolder appDataFolder)
         {
@@ -68,7 +69,7 @@ namespace IDeliverable.Licensing.Orchard
             string cacheKey = $"ValidateLicenseResult-{productId}-{productManifest.LicenseKey}-{productManifest.SkipValidationForLocalRequests}";
             _cacheService.GetValue(cacheKey, context =>
             {
-                context.ValidFor = TimeSpan.FromMinutes(5);
+                context.ValidFor = _validationResultCachedFor;
 
                 var options = LicenseValidationOptions.Default;
                 if (productManifest.SkipValidationForLocalRequests)
