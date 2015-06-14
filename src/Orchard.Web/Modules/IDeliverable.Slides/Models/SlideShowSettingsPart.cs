@@ -73,11 +73,5 @@ namespace IDeliverable.Slides.Models
         {
             return Profiles.SingleOrDefault(x => x.Id == id);
         }
-
-        public string LicenseKey
-        {
-            get { return this.Retrieve(x => x.LicenseKey); }
-            set { this.Store(x => x.LicenseKey, value); }
-        }
     }
 }

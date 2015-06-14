@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using IDeliverable.Licensing.Orchard;
+﻿using IDeliverable.Licensing.Orchard;
+using IDeliverable.Slides.Models;
+using Orchard;
+using Orchard.ContentManagement;
 
 namespace IDeliverable.Slides.Licensing
 {
@@ -11,10 +10,16 @@ namespace IDeliverable.Slides.Licensing
         public static readonly string ProductId = "233554";
         public static readonly string ProductName = "IDeliverable.Slides";
 
+        public LicensedProductManifest(IOrchardServices orchardServices)
+        {
+            _orchardServices = orchardServices;
+        }
+
+        private readonly IOrchardServices _orchardServices;
         string ILicensedProductManifest.ProductId => ProductId;
         string ILicensedProductManifest.ProductName => ProductName;
-        bool ILicensedProductManifest.SkipValidationForLocalRequests => true;
+        bool ILicensedProductManifest.SkipValidationForLocalRequests => false;
 
-        public string LicenseKey => ""; // TODO: Sipke get this from some kind of site settings.
+        public string LicenseKey => _orchardServices.WorkContext.CurrentSite.As<SlidesLicenseSettingsPart>().LicenseKey;
     }
 }

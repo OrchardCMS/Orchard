@@ -1,6 +1,7 @@
 ﻿<Placement>
-    <Place Parts_SlideShow_Edit="Content:3"/>
-    
+    <Place Parts_SlideShow_Edit="Content:3"
+           Parts_SlideShow_Edit_InvalidLicense="Content:0"/>
+
     <Match DisplayType="Detail">
         <Place Parts_SlideShow="Content:3"/>
     </Match>
@@ -14,5 +15,5 @@
     </Match>
 
     <Place Parts_SlideShow_InvalidLicense="Content:0"/>
-    <Place Parts_SlideShow_Edit_InvalidLicense="Content:0"/>
+    <Place Parts_Slides_License_Edit="Content:0" />
 </Placement>

@@ -25,7 +25,7 @@ namespace IDeliverable.Licensing.Validation
             if (request.IsLocal && skipForLocalRequests)
                 return;
 
-            LicenseVerificationToken token = null;
+            LicenseVerificationToken token;
 
             try
             {
@@ -39,7 +39,7 @@ namespace IDeliverable.Licensing.Validation
             }
             catch (LicenseVerificationTokenException ex)
             {
-                LicenseValidationError error = LicenseValidationError.UnexpectedError;
+                var error = LicenseValidationError.UnexpectedError;
 
                 switch (ex.Error)
                 {
@@ -67,7 +67,7 @@ namespace IDeliverable.Licensing.Validation
                 throw new LicenseValidationException("An unexpected error occurred while validating the license.", LicenseValidationError.UnexpectedError, ex);
             }
 
-            // It should never happen that at this point we don't have a token or it's too old. 
+            // It should never happen that at this point we don't have a token or it's too old.
             if (token == null || token.Age > _verificationTokenValidFor)
                 throw new LicenseValidationException(LicenseValidationError.UnexpectedError);
 

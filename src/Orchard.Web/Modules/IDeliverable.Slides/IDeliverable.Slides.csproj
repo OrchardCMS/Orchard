@@ -149,6 +149,7 @@
     <Content Include="SlideShowPlayerEngines\Bootstrap\Styles\variables.less" />
     <Content Include="SlideShowPlayerEngines\Bootstrap\Styles\wells.less" />
     <Content Include="SlideShowPlayerEngines\JCarousel\Styles\engine-jcarousel.less" />
+    <Content Include="Views\EditorTemplates\Parts.Slides.License.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\IDeliverable\IDeliverable.Licensing.Orchard\IDeliverable.Licensing.Orchard.csproj">
@@ -194,7 +195,9 @@
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\SlideShowProfileController.cs" />
     <Compile Include="Drivers\SlideShowElementDriver.cs" />
+    <Compile Include="Drivers\SlidesLicenseSettingsPartDriver.cs" />
     <Compile Include="Filters\DialogAttribute.cs" />
+    <Compile Include="Handlers\SlidesLicenseSettingsPartHandler.cs" />
     <Compile Include="Handlers\SlideShowSettingsPartHandler.cs" />
     <Compile Include="Helpers\StorageExtensions.cs" />
     <Compile Include="Helpers\SlideShowPlayerEngineDataHelper.cs" />
@@ -202,6 +205,7 @@
     <Compile Include="Licensing\LicenseValidationErrorBanner.cs" />
     <Compile Include="Models\ISlideShow.cs" />
     <Compile Include="Models\SlideShowProfile.cs" />
+    <Compile Include="Models\SlidesLicenseSettingsPart.cs" />
     <Compile Include="Providers\ListSlidesProvider.cs" />
     <Compile Include="Providers\ProjectionSlidesProvider.cs" />
     <Compile Include="Services\ContentPartStorage.cs" />
@@ -347,9 +351,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Parts.SlideShow.InvalidLicense.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\License\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\SlideShowProfile\InvalidLicense.cshtml" />

@@ -63,6 +63,9 @@
     <Compile Include="LicenseValidationHelper.cs" />
     <Compile Include="LicenseVerificationTokenStore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="LicenseSettingsPartHandlerBase.cs" />
+    <Compile Include="LicenseSettingsPartBase.cs" />
+    <Compile Include="LicenseSettingsPartDriverBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\IDeliverable.Licensing\IDeliverable.Licensing.csproj">

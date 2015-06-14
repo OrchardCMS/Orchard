@@ -18,10 +18,6 @@ namespace IDeliverable.Slides
                         .Add(T("Profiles"), "1", profiles => profiles
                             .Action("Index", "SlideShowProfile", new { area = "IDeliverable.Slides" })
                             .Permission(StandardPermissions.SiteOwner)
-                            .LocalNav())
-                        .Add(T("License"), "1", profiles => profiles
-                            .Action("Index", "License", new { area = "IDeliverable.Slides" })
-                            .Permission(StandardPermissions.SiteOwner)
                             .LocalNav())));
         }
     }
