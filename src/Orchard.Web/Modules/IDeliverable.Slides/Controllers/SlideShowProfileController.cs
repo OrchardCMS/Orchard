@@ -1,12 +1,12 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
-using IDeliverable.Slides.Helpers;
+using IDeliverable.Licensing.Orchard;
+using IDeliverable.Slides.Licensing;
 using IDeliverable.Slides.Models;
 using IDeliverable.Slides.Services;
 using IDeliverable.Slides.ViewModels;
 using Orchard;
 using Orchard.ContentManagement;
-using Orchard.FileSystems.AppData;
 using Orchard.Layouts.Framework.Elements;
 using Orchard.Layouts.Helpers;
 using Orchard.Localization;
@@ -33,7 +33,7 @@ namespace IDeliverable.Slides.Controllers
 
         public ActionResult Index()
         {
-            if (!LicenseValidationHelper.GetLicenseIsValid())
+            if (!LicenseValidationHelper.GetLicenseIsValid(LicensedProductManifest.ProductId))
                 return View("InvalidLicense");
 
             var viewModel = new SlideShowProfileIndexViewModel

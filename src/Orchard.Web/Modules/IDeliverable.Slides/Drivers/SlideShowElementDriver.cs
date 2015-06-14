@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using IDeliverable.Licensing.Orchard;
 using IDeliverable.Slides.Elements;
 using IDeliverable.Slides.Helpers;
+using IDeliverable.Slides.Licensing;
 using IDeliverable.Slides.Models;
-using IDeliverable.Slides.Providers;
 using IDeliverable.Slides.Services;
 using IDeliverable.Slides.ViewModels;
 using Orchard;
@@ -43,7 +44,7 @@ namespace IDeliverable.Slides.Drivers
 
         protected override EditorResult OnBuildEditor(SlideShow element, ElementEditorContext context)
         {
-            if (!LicenseValidationHelper.GetLicenseIsValid())
+            if (!LicenseValidationHelper.GetLicenseIsValid(LicensedProductManifest.ProductId))
                 return Editor(context, context.ShapeFactory.Slides_InvalidLicense());
 
             var storage = new ElementStorage(element);
@@ -84,7 +85,7 @@ namespace IDeliverable.Slides.Drivers
 
         protected override void OnDisplaying(SlideShow element, ElementDisplayContext context)
         {
-            if (!LicenseValidationHelper.GetLicenseIsValid())
+            if (!LicenseValidationHelper.GetLicenseIsValid(LicensedProductManifest.ProductId))
             {
                 context.ElementShape.Metadata.Alternates.Clear();
                 context.ElementShape.Metadata.Alternates.Add($"Elements_SlideShow_InvalidLicense");

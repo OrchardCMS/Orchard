@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using IDeliverable.Slides.Helpers;
+using IDeliverable.Licensing.Orchard;
+using IDeliverable.Slides.Licensing;
 using IDeliverable.Slides.Models;
-using IDeliverable.Slides.Providers;
 using IDeliverable.Slides.Services;
 using IDeliverable.Slides.ViewModels;
 using Orchard;
@@ -41,7 +41,7 @@ namespace IDeliverable.Slides.Drivers
 
         protected override DriverResult Editor(SlideShowPart part, IUpdateModel updater, dynamic shapeHelper)
         {
-            if (!LicenseValidationHelper.GetLicenseIsValid())
+            if (!LicenseValidationHelper.GetLicenseIsValid(LicensedProductManifest.ProductId))
                 return ContentShape("Parts_SlideShow_Edit_InvalidLicense", () => shapeHelper.Parts_SlideShow_Edit_InvalidLicense());
 
             return ContentShape("Parts_SlideShow_Edit", () =>
@@ -76,7 +76,7 @@ namespace IDeliverable.Slides.Drivers
 
         protected override DriverResult Display(SlideShowPart part, string displayType, dynamic shapeHelper)
         {
-            if (!LicenseValidationHelper.GetLicenseIsValid())
+            if (!LicenseValidationHelper.GetLicenseIsValid(LicensedProductManifest.ProductId))
                 return ContentShape("Parts_SlideShow_InvalidLicense", () => shapeHelper.Parts_SlideShow_InvalidLicense());
 
             return Combined(

@@ -196,9 +196,9 @@
     <Compile Include="Drivers\SlideShowElementDriver.cs" />
     <Compile Include="Filters\DialogAttribute.cs" />
     <Compile Include="Handlers\SlideShowSettingsPartHandler.cs" />
-    <Compile Include="Helpers\LicenseValidationHelper.cs" />
     <Compile Include="Helpers\StorageExtensions.cs" />
     <Compile Include="Helpers\SlideShowPlayerEngineDataHelper.cs" />
+    <Compile Include="Licensing\LicensedProductManifest.cs" />
     <Compile Include="Models\ISlideShow.cs" />
     <Compile Include="Models\SlideShowProfile.cs" />
     <Compile Include="Providers\ListSlidesProvider.cs" />
@@ -210,7 +210,6 @@
     <Compile Include="Services\ISlidesProvider.cs" />
     <Compile Include="Providers\DefaultSlidesProvider.cs" />
     <Compile Include="Services\IStorage.cs" />
-    <Compile Include="Services\LicenseValidationErrorBanner.cs" />
     <Compile Include="Services\SlideShowProfileService.cs" />
     <Compile Include="Services\SlidesProvider.cs" />
     <Compile Include="Services\SlidesProviderContext.cs" />
