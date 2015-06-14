@@ -17,20 +17,31 @@ namespace IDeliverable.Licensing
 
         public T GetValue<T>(string key, Func<CacheInvalidationContext, T> valueFactory = null)
         {
-            var value = (T)Cache.Get(key);
+            var value = Cache.Get(key);
+            var exception = value as Exception;
+
+            if (exception != null)
+                throw (Exception)value;
 
             if (value != null)
-                return value;
+                return (T)value;
 
             if (valueFactory == null)
                 return default(T);
 
             var context = new CacheInvalidationContext();
-            value = valueFactory(context);
 
-            SetValue(key, value, context.CacheDependency, context.ValidFor);
-
-            return value;
+            try
+            {
+                value = valueFactory(context);
+                SetValue(key, value, context.CacheDependency, context.ValidFor);
+                return (T) value;
+            }
+            catch (Exception ex)
+            {
+                SetValue(key, ex, context.CacheDependency, context.ValidFor);
+                throw;
+            }
         }
     }
 }

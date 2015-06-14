@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Caching;
 using IDeliverable.Licensing.Validation;
 using IDeliverable.Licensing.VerificationTokens;
 using Orchard;
@@ -48,30 +50,33 @@ namespace IDeliverable.Licensing.Orchard
 
         public LicenseValidationHelper(IEnumerable<ILicensedProductManifest> products, IAppDataFolder appDataFolder)
         {
+            var tokenStore = new LicenseVerificationTokenStore(appDataFolder);
+            var tokenAccessor = new LicenseVerificationTokenAccessor(tokenStore);
+
             _products = products;
-            _appDataFolder = appDataFolder;
-            _tokenStore = new LicenseVerificationTokenStore(_appDataFolder);
-            _tokenAccessor = new LicenseVerificationTokenAccessor(_tokenStore);
-            _licenseValidator = new LicenseValidator(_tokenAccessor);
+            _licenseValidator = new LicenseValidator(tokenAccessor);
+            _cacheService = new CacheService();
         }
 
         private readonly IEnumerable<ILicensedProductManifest> _products;
-        private readonly IAppDataFolder _appDataFolder;
-        private readonly LicenseVerificationTokenStore _tokenStore;
-        private readonly LicenseVerificationTokenAccessor _tokenAccessor;
         private readonly LicenseValidator _licenseValidator;
+        private readonly CacheService _cacheService;
 
         public void ValidateLicense(string productId)
         {
-            // TODO: Throttle this code by caching its outcome (void or exception) for 5 minutes.
+            _cacheService.GetValue($"ValidateLicenseAction-{productId}", context =>
+            {
+                var productManifest = _products.Single(x => x.ProductId == productId);
 
-            var productManifest = _products.Single(x => x.ProductId == productId);
+                var options = LicenseValidationOptions.Default;
+                if (productManifest.SkipValidationForLocalRequests)
+                    options = options | LicenseValidationOptions.SkipForLocalRequests;
 
-            var options = LicenseValidationOptions.Default;
-            if (productManifest.SkipValidationForLocalRequests)
-                options = options | LicenseValidationOptions.SkipForLocalRequests;
+                _licenseValidator.ValidateLicense(productManifest.ProductId, productManifest.LicenseKey, options);
 
-            _licenseValidator.ValidateLicense(productManifest.ProductId, productManifest.LicenseKey, options);
+                context.ValidFor = TimeSpan.FromMinutes(5);
+                return true;
+            });
         }
     }
 }
