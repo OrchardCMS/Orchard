@@ -14,6 +14,7 @@ namespace IDeliverable.Licensing.Service.Controllers
     {
         [HttpGet]
         [Route("license/{licenseKey}/verify")]
+        [ApiKeyAuthorization]
         public LicenseVerificationToken Verify(string licenseKey, int productId, string hostname)
         {
             var sendOwlApiEndpoint = ConfigurationManager.AppSettings["SendOwlApiEndpoint"];
@@ -45,6 +46,7 @@ namespace IDeliverable.Licensing.Service.Controllers
 
         [HttpGet]
         [Route("test")]
+        [ApiKeyAuthorization]
         public HttpResponseMessage Test()
         {
             var testProductId = ConfigurationManager.AppSettings["TestProductId"];

@@ -9,8 +9,9 @@ namespace IDeliverable.Licensing.VerificationTokens
 {
     public class LicensingServiceClient
     {
-        // These are consciously hard coded.
+        // These are consciously hard coded (need to be obfuscated).
         private static readonly string LicensingServiceUrl = "https://licensing.ideliverable.com/api/v1/";
+        private static readonly string LicensingServiceApiKey = "MJb17j7YAzSjyEYkhsoI";
         private static readonly string ExpectedServerCertificateThumbprint = "fa4746a778716109e7e80e1b8dc2ed2a2ba3b852";
 
         public LicenseVerificationToken VerifyLicense(string productId, string licenseKey, string hostname)
@@ -27,6 +28,7 @@ namespace IDeliverable.Licensing.VerificationTokens
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri(LicensingServiceUrl);
+                client.DefaultRequestHeaders.Add("ApiKey", LicensingServiceApiKey);
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
                 ServicePointManager.ServerCertificateValidationCallback += certValidationHandler;

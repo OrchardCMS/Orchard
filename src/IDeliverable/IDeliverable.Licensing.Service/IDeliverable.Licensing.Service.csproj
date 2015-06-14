@@ -145,6 +145,7 @@
   <ItemGroup />
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="ApiKeyAuthorizationAttribute.cs" />
     <Compile Include="Controllers\LicenseController.cs" />
     <Compile Include="Exceptions\LicenseVerificationError.cs" />
     <Compile Include="Global.asax.cs">
