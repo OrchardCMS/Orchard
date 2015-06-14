@@ -17,15 +17,20 @@ namespace IDeliverable.Licensing.VerificationTokens
 
         public LicenseVerificationToken GetLicenseVerificationToken(string productId, string licenseKey, string hostname, bool forceRenew = false)
         {
-            if (forceRenew)
-                _store.Clear(productId);
-
             var token = _store.Load(productId);
 
-            // Renew verification token from licensing server if:
-            // - We don't have a token in store OR
-            // - We have a token in store but it has passed the token renewal interval
+            // Delete the existing verification token from store if:
+            // * It was issued for a different license key OR
+            // * We are instructed by caller to force renewal
+            if (token != null && (token.Info.LicenseKey != licenseKey || forceRenew))
+            {
+                _store.Clear(productId);
+                token = null;
+            }
 
+            // Renew verification token from licensing server if:
+            // * We don't have a token in store OR
+            // * The one we have has passed the token renewal interval
             if (token == null || token.Age > _tokenRenewalInterval)
             {
                 try
@@ -34,6 +39,10 @@ namespace IDeliverable.Licensing.VerificationTokens
                 }
                 catch (Exception ex)
                 {
+                    // If we have an existing token from before, return it rather than throwing.
+                    if (token != null)
+                        return token;
+
                     if (ex is LicenseVerificationTokenException)
                         throw;
 
