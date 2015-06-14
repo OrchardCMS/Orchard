@@ -2,7 +2,7 @@
 
 namespace IDeliverable.Licensing.Service.Services
 {
-    public class OrderInfo
+    internal class OrderInfo
     {
         public OrderInfo(int orderId, IEnumerable<string> hostnames)
         {

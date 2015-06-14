@@ -2,7 +2,7 @@
 
 namespace IDeliverable.Licensing.Service.Exceptions
 {
-    public class LicenseVerificationException : Exception
+    internal class LicenseVerificationException : Exception
     {
         public LicenseVerificationException(LicenseVerificationError error)
             :this("An error occurred while verifying the license.", error)

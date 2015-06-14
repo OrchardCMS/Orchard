@@ -2,7 +2,7 @@ using System.Web;
 
 namespace IDeliverable.Licensing
 {
-    public static class HttpRequestExtensions
+    internal static class HttpRequestExtensions
     {
         public static string GetHttpHost(this HttpRequestBase request)
         {

@@ -9,7 +9,7 @@ using System.Web.Http.Filters;
 
 namespace IDeliverable.Licensing.Service
 {
-    public class ApiKeyAuthorizationAttribute : AuthorizationFilterAttribute
+    internal class ApiKeyAuthorizationAttribute : AuthorizationFilterAttribute
 	{
 		public override void OnAuthorization(HttpActionContext actionContext)
 		{

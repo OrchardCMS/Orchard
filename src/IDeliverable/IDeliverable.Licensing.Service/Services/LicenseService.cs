@@ -11,7 +11,7 @@ using Newtonsoft.Json.Linq;
 
 namespace IDeliverable.Licensing.Service.Services
 {
-    public class LicenseService
+    internal class LicenseService
     {
         public LicenseService(string sendOwlApiEndpoint, string sendOwlApiKey, string sendOwlApiSecret, string tokenSigningCertificateThumbprint)
         {

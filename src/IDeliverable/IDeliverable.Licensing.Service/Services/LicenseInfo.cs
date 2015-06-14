@@ -1,6 +1,6 @@
 ﻿namespace IDeliverable.Licensing.Service.Services
 {
-    public class LicenseInfo
+    internal class LicenseInfo
     {
         public LicenseInfo(string key, int orderId)
         {

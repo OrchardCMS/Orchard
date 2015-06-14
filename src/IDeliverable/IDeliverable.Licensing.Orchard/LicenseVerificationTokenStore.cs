@@ -3,7 +3,7 @@ using Orchard.FileSystems.AppData;
 
 namespace IDeliverable.Licensing.Orchard
 {
-    public class LicenseVerificationTokenStore : ILicenseVerificationTokenStore
+    internal class LicenseVerificationTokenStore : ILicenseVerificationTokenStore
     {
         public LicenseVerificationTokenStore(IAppDataFolder appDataFolder)
         {

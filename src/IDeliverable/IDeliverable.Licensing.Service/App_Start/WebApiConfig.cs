@@ -4,7 +4,7 @@ using Newtonsoft.Json.Converters;
 
 namespace IDeliverable.Licensing.Service
 {
-    public static class WebApiConfig
+    internal static class WebApiConfig
     {
         public static void Register(HttpConfiguration config)
         {
