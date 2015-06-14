@@ -5,6 +5,7 @@ using System.Web;
 using IDeliverable.Licensing.Validation;
 using IDeliverable.Licensing.VerificationTokens;
 using Orchard;
+using Orchard.Logging;
 using Orchard.FileSystems.AppData;
 
 namespace IDeliverable.Licensing.Orchard
@@ -65,20 +66,32 @@ namespace IDeliverable.Licensing.Orchard
         public void ValidateLicense(string productId)
         {
             var productManifest = _products.Single(x => x.ProductId == productId);
+            productManifest.Logger.Debug("Validating license for product '{0}'...", productId);
 
-            string cacheKey = $"ValidateLicenseResult-{productId}-{productManifest.LicenseKey}-{productManifest.SkipValidationForLocalRequests}";
-            _cacheService.GetValue(cacheKey, context =>
+            try
             {
-                context.ValidFor = _validationResultCachedFor;
+                string cacheKey = $"ValidateLicenseResult-{productId}-{productManifest.LicenseKey}-{productManifest.SkipValidationForLocalRequests}";
+                _cacheService.GetValue(cacheKey, context =>
+                {
+                    context.ValidFor = _validationResultCachedFor;
 
-                var options = LicenseValidationOptions.Default;
-                if (productManifest.SkipValidationForLocalRequests)
-                    options = options | LicenseValidationOptions.SkipForLocalRequests;
+                    var options = LicenseValidationOptions.Default;
+                    if (productManifest.SkipValidationForLocalRequests)
+                        options = options | LicenseValidationOptions.SkipForLocalRequests;
 
-                _licenseValidator.ValidateLicense(productManifest.ProductId, productManifest.LicenseKey, options);
+                    productManifest.Logger.Debug("Validation result not in cache. Invoking the license validator for product '{0}'...", productId);
+                    _licenseValidator.ValidateLicense(productManifest.ProductId, productManifest.LicenseKey, options);
 
-                return true;
-            });
+                    return true;
+                });
+
+                productManifest.Logger.Debug("License successfully validated for product '{0}'.", productId);
+            }
+            catch (Exception ex)
+            {
+                productManifest.Logger.Error(ex, "An error occurred while validating the license for product '{0}'.", productId);
+                throw;
+            }
         }
     }
 }

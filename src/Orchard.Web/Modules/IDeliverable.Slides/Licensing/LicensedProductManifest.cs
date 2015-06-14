@@ -5,7 +5,7 @@ using Orchard.ContentManagement;
 
 namespace IDeliverable.Slides.Licensing
 {
-    public class LicensedProductManifest : ILicensedProductManifest
+    public class LicensedProductManifest : Component, ILicensedProductManifest
     {
         public static readonly string ProductId = "233554";
         public static readonly string ProductName = "IDeliverable.Slides";

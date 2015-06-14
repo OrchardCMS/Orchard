@@ -1,4 +1,5 @@
 ﻿using Orchard;
+using Orchard.Logging;
 
 namespace IDeliverable.Licensing.Orchard
 {
@@ -8,5 +9,6 @@ namespace IDeliverable.Licensing.Orchard
         string ProductName { get; }
         bool SkipValidationForLocalRequests { get; }
         string LicenseKey { get; }
+        ILogger Logger { get; }
     }
 }
