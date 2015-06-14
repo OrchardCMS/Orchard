@@ -7,6 +7,7 @@ namespace IDeliverable.Licensing.Validation
     public class LicenseValidator
     {
         private static readonly TimeSpan _verificationTokenValidFor = TimeSpan.FromDays(21);
+        private static readonly TimeSpan _allowableClockSkew = TimeSpan.FromMinutes(10);
 
         public LicenseValidator(LicenseVerificationTokenAccessor verificationTokenAccessor)
         {
@@ -70,6 +71,12 @@ namespace IDeliverable.Licensing.Validation
             // It should never happen that at this point we don't have a token or it's too old.
             if (token == null || token.Age > _verificationTokenValidFor)
                 throw new LicenseValidationException(LicenseValidationError.UnexpectedError);
+
+            // If the token age is negative by more than 10 minutes (allowable clock skew between licensing
+            // service and local machine) then this is a strong indication of an attempt to bypass license
+            // validation by changing the system clock.
+            if (token.Age < -_allowableClockSkew)
+                throw new LicenseValidationException("The license verification token age is negative by more than the allowable clock skew. This might indicate that system clock of either the client or the licensing service is offset.", LicenseValidationError.TokenAgeValidationFailed);
 
             var signingCertificate = GetSigningCertificate();
             if (!token.GetSignatureIsValid(signingCertificate))

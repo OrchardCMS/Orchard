@@ -6,6 +6,7 @@ namespace IDeliverable.Licensing.Validation
         HostnameMismatch,
         LicensingServiceError,
         LicensingServiceUnreachable,
+        TokenAgeValidationFailed,
         TokenSignatureValidationFailed,
         UnexpectedError
     }

@@ -44,6 +44,7 @@ namespace IDeliverable.Licensing.Orchard
                     case LicenseValidationError.HostnameMismatch:
                         message = T("The <a href=\"{0}\">configured license key</a> for the {1} module is invalid for the current host name.", licenseSettingsUrl, productManifest.ProductName);
                         break;
+                    case LicenseValidationError.TokenAgeValidationFailed:
                     case LicenseValidationError.TokenSignatureValidationFailed:
                     case LicenseValidationError.LicensingServiceError:
                     case LicenseValidationError.LicensingServiceUnreachable:
