@@ -1,0 +1,13 @@
+﻿@model IDeliverable.Slides.Models.SlidesLicenseSettingsPart
+<fieldset>
+    <legend>@T("Slide Show License")</legend>
+    <div class="form-group">
+        @Html.LabelFor(m => m.LicenseKey, T("License Key"))
+        @Html.TextBoxFor(m => m.LicenseKey, new {@class = "text large"})
+        @Html.Hint(T("The license key associated with the public hostname of this website."))
+    </div>
+    <div class="message">
+        <p>@T("For pricing and licensing options, please visit our <a href=\"http://www.ideliverable.com/products/ideliverable-slides\">product page</a>.")</p>
+        <p>@T("For technical support, please visit our <a href=\"http://www.ideliverable.com/support\">support page</a>.")</p>
+    </div>
+</fieldset>
