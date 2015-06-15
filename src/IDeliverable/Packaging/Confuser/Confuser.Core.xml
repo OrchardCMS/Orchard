@@ -1,0 +1,3234 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Confuser.Core</name>
+    </assembly>
+    <members>
+        <member name="T:Confuser.Core.Annotations">
+            <summary>
+                Provides methods to annotate objects.
+            </summary>
+            <remarks>
+                The annotations are stored using <see cref="T:System.WeakReference"/>
+            </remarks>
+        </member>
+        <member name="M:Confuser.Core.Annotations.Get``1(System.Object,System.Object,``0)">
+            <summary>
+                Retrieves the annotation on the specified object associated with the specified key.
+            </summary>
+            <typeparam name="TValue">The type of the value.</typeparam>
+            <param name="obj">The object.</param>
+            <param name="key">The key of annotation.</param>
+            <param name="defValue">The default value if the specified annotation does not exists on the object.</param>
+            <returns>The value of annotation, or default value if the annotation does not exist.</returns>
+            <exception cref="T:System.ArgumentNullException">
+                <paramref name="obj"/> or <paramref name="key"/> is <c>null</c>.
+            </exception>
+        </member>
+        <member name="M:Confuser.Core.Annotations.GetLazy``1(System.Object,System.Object,System.Func{System.Object,``0})">
+            <summary>
+                Retrieves the annotation on the specified object associated with the specified key.
+            </summary>
+            <typeparam name="TValue">The type of the value.</typeparam>
+            <param name="obj">The object.</param>
+            <param name="key">The key of annotation.</param>
+            <param name="defValueFactory">The default value factory function.</param>
+            <returns>The value of annotation, or default value if the annotation does not exist.</returns>
+            <exception cref="T:System.ArgumentNullException">
+                <paramref name="obj"/> or <paramref name="key"/> is <c>null</c>.
+            </exception>
+        </member>
+        <member name="M:Confuser.Core.Annotations.GetOrCreate``1(System.Object,System.Object,System.Func{System.Object,``0})">
+            <summary>
+                Retrieves or create the annotation on the specified object associated with the specified key.
+            </summary>
+            <typeparam name="TValue">The type of the value.</typeparam>
+            <param name="obj">The object.</param>
+            <param name="key">The key of annotation.</param>
+            <param name="factory">The factory function to create the annotation value when the annotation does not exist.</param>
+            <returns>The value of annotation, or the newly created value.</returns>
+            <exception cref="T:System.ArgumentNullException">
+                <paramref name="obj"/> or <paramref name="key"/> is <c>null</c>.
+            </exception>
+        </member>
+        <member name="M:Confuser.Core.Annotations.Set``1(System.Object,System.Object,``0)">
+            <summary>
+                Sets an annotation on the specified object.
+            </summary>
+            <typeparam name="TValue">The type of the value.</typeparam>
+            <param name="obj">The object.</param>
+            <param name="key">The key of annotation.</param>
+            <param name="value">The value of annotation.</param>
+            <exception cref="T:System.ArgumentNullException">
+                <paramref name="obj"/> or <paramref name="key"/> is <c>null</c>.
+            </exception>
+        </member>
+        <member name="M:Confuser.Core.Annotations.Trim">
+            <summary>
+                Trims the annotations of unreachable objects from this instance.
+            </summary>
+        </member>
+        <member name="T:Confuser.Core.Annotations.WeakReferenceComparer">
+            <summary>
+                Equality comparer of weak references.
+            </summary>
+        </member>
+        <member name="F:Confuser.Core.Annotations.WeakReferenceComparer.Instance">
+            <summary>
+                The singleton instance of this comparer.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.Annotations.WeakReferenceComparer.#ctor">
+            <summary>
+                Prevents a default instance of the <see cref="T:Confuser.Core.Annotations.WeakReferenceComparer"/> class from being created.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.Annotations.WeakReferenceComparer.Equals(System.Object,System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:Confuser.Core.Annotations.WeakReferenceComparer.GetHashCode(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="T:Confuser.Core.Annotations.WeakReferenceKey">
+            <summary>
+                Represent a key using <see cref="T:System.WeakReference"/>.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.Annotations.WeakReferenceKey.#ctor(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="P:Confuser.Core.Annotations.WeakReferenceKey.HashCode">
+            <summary>
+                Gets the hash code of the target object.
+            </summary>
+            <value>The hash code.</value>
+        </member>
+        <member name="T:Confuser.Core.API.IAPIStore">
+            <summary>
+                Provides storage for API interfaces
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.API.IAPIStore.AddStore(Confuser.Core.API.IDataStore)">
+            <summary>
+                Adds the specified data store into this store.
+            </summary>
+            <param name="dataStore">The data store.</param>
+        </member>
+        <member name="M:Confuser.Core.API.IAPIStore.GetStore(dnlib.DotNet.MethodDef)">
+            <summary>
+                Finds a suitable data store for the specified method, with the
+                specified number of keys.
+            </summary>
+            <param name="method">The method.</param>
+            <returns>The suitable data store if found, or <c>null</c> if not found.</returns>
+            <remarks>
+                It should never returns null --- ConfuserEx has internal data store.
+            </remarks>
+        </member>
+        <member name="M:Confuser.Core.API.IAPIStore.AddPredicate(Confuser.Core.API.IOpaquePredicateDescriptor)">
+            <summary>
+                Adds the specified opaque predicate into this store.
+            </summary>
+            <param name="predicate">The opaque predicate.</param>
+        </member>
+        <member name="M:Confuser.Core.API.IAPIStore.GetPredicate(dnlib.DotNet.MethodDef,System.Nullable{Confuser.Core.API.OpaquePredicateType},System.Int32[])">
+            <summary>
+                Finds a suitable opaque predicate for the specified method, with the
+                specified properties.
+            </summary>
+            <param name="method">The method.</param>
+            <param name="type">The required type of predicate, or <c>null</c> if it does not matter.</param>
+            <param name="argCount">The required numbers of arguments, or <c>null</c> if it does not matter.</param>
+            <returns>The suitable opaque predicate if found, or <c>null</c> if not found.</returns>
+        </member>
+        <member name="M:Confuser.Core.API.APIStore.#ctor(Confuser.Core.ConfuserContext)">
+            <summary>
+                Initializes a new instance of the <see cref="T:Confuser.Core.API.APIStore"/> class.
+            </summary>
+            <param name="context">The working context.</param>
+        </member>
+        <member name="M:Confuser.Core.API.APIStore.AddStore(Confuser.Core.API.IDataStore)">
+            <inheritdoc />
+        </member>
+        <member name="M:Confuser.Core.API.APIStore.AddPredicate(Confuser.Core.API.IOpaquePredicateDescriptor)">
+            <inheritdoc />
+        </member>
+        <member name="M:Confuser.Core.API.APIStore.GetStore(dnlib.DotNet.MethodDef)">
+            <inheritdoc />
+        </member>
+        <member name="M:Confuser.Core.API.APIStore.GetPredicate(dnlib.DotNet.MethodDef,System.Nullable{Confuser.Core.API.OpaquePredicateType},System.Int32[])">
+            <inheritdoc />
+        </member>
+        <member name="T:Confuser.Core.API.IDataStore">
+            <summary>
+                A data store.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.API.IDataStore.IsUsable(dnlib.DotNet.MethodDef)">
+            <summary>
+                Determines whether this data store can be used in the specified method.
+            </summary>
+            <param name="method">The method.</param>
+            <value><c>true</c> if this data store can be used in the specified method; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="M:Confuser.Core.API.IDataStore.CreateAccessor(dnlib.DotNet.MethodDef,System.UInt32[],System.Byte[])">
+            <summary>
+                Creates an accessor of this data store for the specified method.
+            </summary>
+            <param name="method">The method.</param>
+            <param name="keys">The keys.</param>
+            <param name="data">The data to store.</param>
+            <returns>A newly accessor of this data store.</returns>
+        </member>
+        <member name="P:Confuser.Core.API.IDataStore.Priority">
+            <summary>
+                Gets the priority of this data store; higher priority means it
+                would be tried earlier.
+            </summary>
+            <value>The priority of this data store.</value>
+        </member>
+        <member name="P:Confuser.Core.API.IDataStore.KeyCount">
+            <summary>
+                Gets the number of keys this predicate has.
+            </summary>
+            <remarks>
+                Keys are used by the data store to encrypt data/whatever purpose.
+            </remarks>
+            <value>The number of keys this data store has.</value>
+        </member>
+        <member name="T:Confuser.Core.API.IDataStoreAccessor">
+            <summary>
+                An accessor of data store.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.API.IDataStoreAccessor.Emit">
+            <summary>
+                Emits the runtime instruction sequence for this accessor.
+            </summary>
+            <returns>An instruction sequence that returns the stored data.</returns>
+        </member>
+        <member name="T:Confuser.Core.API.IOpaquePredicateDescriptor">
+            <summary>
+                The descriptor of a type of opaque predicate.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.API.IOpaquePredicateDescriptor.IsUsable(dnlib.DotNet.MethodDef)">
+            <summary>
+                Determines whether this predicate can be used with the specified method.
+            </summary>
+            <param name="method">The method.</param>
+            <value><c>true</c> if this predicate can be used with the specified method; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="M:Confuser.Core.API.IOpaquePredicateDescriptor.CreatePredicate(dnlib.DotNet.MethodDef)">
+            <summary>
+                Creates a new opaque predicate for the specified method.
+            </summary>
+            <param name="method">The method.</param>
+            <returns>A newly create opaque predicate.</returns>
+        </member>
+        <member name="P:Confuser.Core.API.IOpaquePredicateDescriptor.Type">
+            <summary>
+                Gets the type of the opaque predicate.
+            </summary>
+            <value>The type of the opaque predicate.</value>
+        </member>
+        <member name="P:Confuser.Core.API.IOpaquePredicateDescriptor.ArgumentCount">
+            <summary>
+                Gets the number of arguments this predicate has.
+            </summary>
+            <remarks>
+                When <see cref="P:Confuser.Core.API.IOpaquePredicateDescriptor.Type"/> is <see cref="F:Confuser.Core.API.OpaquePredicateType.Invariant"/>,
+                there can be 0 or more arguments.
+                When <see cref="P:Confuser.Core.API.IOpaquePredicateDescriptor.Type"/> is <see cref="F:Confuser.Core.API.OpaquePredicateType.Function"/>,
+                there must be more than 0 arguments.
+            </remarks>
+            <value>The number of arguments this predicate has.</value>
+        </member>
+        <member name="T:Confuser.Core.API.IOpaquePredicate">
+            <summary>
+                An instance of opaque predicate.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.API.IOpaquePredicate.Emit(System.Func{dnlib.DotNet.Emit.Instruction[]})">
+            <summary>
+                Emits the runtime instruction sequence for this predicate.
+            </summary>
+            <param name="loadArg">
+                A function that returns an instruction sequence that returns the input value,
+                or <c>null</c> if <see cref="P:Confuser.Core.API.IOpaquePredicateDescriptor.ArgumentCount"/> is 0.
+            </param>
+            <returns>An instruction sequence that returns the value of this predicate.</returns>
+        </member>
+        <member name="M:Confuser.Core.API.IOpaquePredicate.GetValue(System.UInt32[])">
+            <summary>
+                Computes the value of this predicate with the specified argument.
+            </summary>
+            <param name="arg">The argument to this predicate.</param>
+            <returns>The return value of this predicate.</returns>
+        </member>
+        <member name="T:Confuser.Core.API.OpaquePredicateType">
+            <summary>
+                The type of opaque predicate.
+            </summary>
+        </member>
+        <member name="F:Confuser.Core.API.OpaquePredicateType.Function">
+            <summary>
+                A function, in a mathematics sense, with one input and one output.
+            </summary>
+        </member>
+        <member name="F:Confuser.Core.API.OpaquePredicateType.Invariant">
+            <summary>
+                A constant function, always returning the same value.
+            </summary>
+        </member>
+        <member name="T:Confuser.Core.Helpers.ControlFlowGraph">
+            <summary>
+                A Control Flow Graph (CFG) of a method
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.Helpers.ControlFlowGraph.GetContainingBlock(System.Int32)">
+            <summary>
+                Gets the block containing the specified instruction.
+            </summary>
+            <param name="instrIndex">The index of instruction.</param>
+            <returns>The block containing the instruction.</returns>
+        </member>
+        <member name="M:Confuser.Core.Helpers.ControlFlowGraph.IndexOf(dnlib.DotNet.Emit.Instruction)">
+            <summary>
+                Gets the index of the specified instruction.
+            </summary>
+            <param name="instr">The instruction.</param>
+            <returns>The index of instruction.</returns>
+        </member>
+        <member name="M:Confuser.Core.Helpers.ControlFlowGraph.Construct(dnlib.DotNet.Emit.CilBody)">
+            <summary>
+                Constructs a CFG from the specified method body.
+            </summary>
+            <param name="body">The method body.</param>
+            <returns>The CFG of the given method body.</returns>
+        </member>
+        <member name="P:Confuser.Core.Helpers.ControlFlowGraph.Count">
+            <summary>
+                Gets the number of blocks in this CFG.
+            </summary>
+            <value>The number of blocks.</value>
+        </member>
+        <member name="P:Confuser.Core.Helpers.ControlFlowGraph.Item(System.Int32)">
+            <summary>
+                Gets the <see cref="T:Confuser.Core.Helpers.ControlFlowBlock"/> of the specified id.
+            </summary>
+            <param name="id">The id.</param>
+            <returns>The block with specified id.</returns>
+        </member>
+        <member name="P:Confuser.Core.Helpers.ControlFlowGraph.Body">
+            <summary>
+                Gets the corresponding method body.
+            </summary>
+            <value>The method body.</value>
+        </member>
+        <member name="T:Confuser.Core.Helpers.ControlFlowBlockType">
+            <summary>
+                The type of Control Flow Block
+            </summary>
+        </member>
+        <member name="F:Confuser.Core.Helpers.ControlFlowBlockType.Normal">
+            <summary>
+                The block is a normal block
+            </summary>
+        </member>
+        <member name="F:Confuser.Core.Helpers.ControlFlowBlockType.Entry">
+            <summary>
+                There are unknown edges to this block. Usually used at exception handlers / method entry.
+            </summary>
+        </member>
+        <member name="F:Confuser.Core.Helpers.ControlFlowBlockType.Exit">
+            <summary>
+                There are unknown edges from this block. Usually used at filter blocks / throw / method exit.
+            </summary>
+        </member>
+        <member name="T:Confuser.Core.Helpers.ControlFlowBlock">
+            <summary>
+                A block in Control Flow Graph (CFG).
+            </summary>
+        </member>
+        <member name="F:Confuser.Core.Helpers.ControlFlowBlock.Footer">
+            <summary>
+                The footer instruction
+            </summary>
+        </member>
+        <member name="F:Confuser.Core.Helpers.ControlFlowBlock.Header">
+            <summary>
+                The header instruction
+            </summary>
+        </member>
+        <member name="F:Confuser.Core.Helpers.ControlFlowBlock.Id">
+            <summary>
+                The identifier of this block
+            </summary>
+        </member>
+        <member name="F:Confuser.Core.Helpers.ControlFlowBlock.Type">
+            <summary>
+                The type of this block
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.Helpers.ControlFlowBlock.ToString">
+            <summary>
+                Returns a <see cref="T:System.String"/> that represents this block.
+            </summary>
+            <returns>A <see cref="T:System.String"/> that represents this block.</returns>
+        </member>
+        <member name="P:Confuser.Core.Helpers.ControlFlowBlock.Sources">
+            <summary>
+                Gets the source blocks of this control flow block.
+            </summary>
+            <value>The source blocks.</value>
+        </member>
+        <member name="P:Confuser.Core.Helpers.ControlFlowBlock.Targets">
+            <summary>
+                Gets the target blocks of this control flow block.
+            </summary>
+            <value>The target blocks.</value>
+        </member>
+        <member name="T:Confuser.Core.Helpers.BlockKeyType">
+            <summary>
+                The type of block in the key sequence
+            </summary>
+        </member>
+        <member name="F:Confuser.Core.Helpers.BlockKeyType.Explicit">
+            <summary>
+                The state key should be explicitly set in the block
+            </summary>
+        </member>
+        <member name="F:Confuser.Core.Helpers.BlockKeyType.Incremental">
+            <summary>
+                The state key could be assumed to be same as <see cref="F:Confuser.Core.Helpers.BlockKey.EntryState"/> at the beginning of block.
+            </summary>
+        </member>
+        <member name="T:Confuser.Core.Helpers.BlockKey">
+            <summary>
+                The information of the block in the key sequence
+            </summary>
+        </member>
+        <member name="F:Confuser.Core.Helpers.BlockKey.EntryState">
+            <summary>
+                The state key at the beginning of the block
+            </summary>
+        </member>
+        <member name="F:Confuser.Core.Helpers.BlockKey.ExitState">
+            <summary>
+                The state key at the end of the block
+            </summary>
+        </member>
+        <member name="F:Confuser.Core.Helpers.BlockKey.Type">
+            <summary>
+                The type of block
+            </summary>
+        </member>
+        <member name="T:Confuser.Core.Helpers.KeySequence">
+            <summary>
+                Computes a key sequence that is valid according to the execution of the CFG.
+            </summary>
+            <remarks>
+                The caller can utilize the information provided by this classes to instruments state machines.
+                For example:
+                <code>
+            int state = 4;
+            for (int i = 0 ; i &lt; 10; i++) {
+                state = 6;
+                if (i % 2 == 0) {
+                    state = 3;
+                else {
+                    // The state varaible is guaranteed to be 6 in here.
+                }
+            }
+                </code>
+            </remarks>
+        </member>
+        <member name="M:Confuser.Core.Helpers.KeySequence.ComputeKeys(Confuser.Core.Helpers.ControlFlowGraph,Confuser.Core.Services.RandomGenerator)">
+            <summary>
+                Computes a key sequence of the given CFG.
+            </summary>
+            <param name="graph">The CFG.</param>
+            <param name="random">The random source, or <c>null</c> if key id is needed.</param>
+            <returns>The generated key sequence of the CFG.</returns>
+        </member>
+        <member name="M:SevenZip.ICoder.Code(System.IO.Stream,System.IO.Stream,System.Int64,System.Int64,SevenZip.ICodeProgress)">
+            <summary>
+                Codes streams.
+            </summary>
+            <param name="inStream">
+                input Stream.
+            </param>
+            <param name="outStream">
+                output Stream.
+            </param>
+            <param name="inSize">
+                input Size. -1 if unknown.
+            </param>
+            <param name="outSize">
+                output Size. -1 if unknown.
+            </param>
+            <param name="progress">
+                callback progress reference.
+            </param>
+            <exception cref="T:SevenZip.DataErrorException">
+                if input stream is not valid
+            </exception>
+        </member>
+        <member name="T:SevenZip.DataErrorException">
+            <summary>
+                The exception that is thrown when an error in input stream occurs during decoding.
+            </summary>
+        </member>
+        <member name="T:SevenZip.InvalidParamException">
+            <summary>
+                The exception that is thrown when the value of an argument is outside the allowable range.
+            </summary>
+        </member>
+        <member name="M:SevenZip.ICodeProgress.SetProgress(System.Int64,System.Int64)">
+            <summary>
+                Callback progress.
+            </summary>
+            <param name="inSize">
+                input size. -1 if unknown.
+            </param>
+            <param name="outSize">
+                output size. -1 if unknown.
+            </param>
+        </member>
+        <member name="T:SevenZip.CoderPropID">
+            <summary>
+                Provides the fields that represent properties idenitifiers for compressing.
+            </summary>
+        </member>
+        <member name="F:SevenZip.CoderPropID.DefaultProp">
+            <summary>
+                Specifies default property.
+            </summary>
+        </member>
+        <member name="F:SevenZip.CoderPropID.DictionarySize">
+            <summary>
+                Specifies size of dictionary.
+            </summary>
+        </member>
+        <member name="F:SevenZip.CoderPropID.UsedMemorySize">
+            <summary>
+                Specifies size of memory for PPM*.
+            </summary>
+        </member>
+        <member name="F:SevenZip.CoderPropID.Order">
+            <summary>
+                Specifies order for PPM methods.
+            </summary>
+        </member>
+        <member name="F:SevenZip.CoderPropID.BlockSize">
+            <summary>
+                Specifies Block Size.
+            </summary>
+        </member>
+        <member name="F:SevenZip.CoderPropID.PosStateBits">
+            <summary>
+                Specifies number of postion state bits for LZMA (0 &lt;= x &lt;= 4).
+            </summary>
+        </member>
+        <member name="F:SevenZip.CoderPropID.LitContextBits">
+            <summary>
+                Specifies number of literal context bits for LZMA (0 &lt;= x &lt;= 8).
+            </summary>
+        </member>
+        <member name="F:SevenZip.CoderPropID.LitPosBits">
+            <summary>
+                Specifies number of literal position bits for LZMA (0 &lt;= x &lt;= 4).
+            </summary>
+        </member>
+        <member name="F:SevenZip.CoderPropID.NumFastBytes">
+            <summary>
+                Specifies number of fast bytes for LZ*.
+            </summary>
+        </member>
+        <member name="F:SevenZip.CoderPropID.MatchFinder">
+            <summary>
+                Specifies match finder. LZMA: "BT2", "BT4" or "BT4B".
+            </summary>
+        </member>
+        <member name="F:SevenZip.CoderPropID.MatchFinderCycles">
+            <summary>
+                Specifies the number of match finder cyckes.
+            </summary>
+        </member>
+        <member name="F:SevenZip.CoderPropID.NumPasses">
+            <summary>
+                Specifies number of passes.
+            </summary>
+        </member>
+        <member name="F:SevenZip.CoderPropID.Algorithm">
+            <summary>
+                Specifies number of algorithm.
+            </summary>
+        </member>
+        <member name="F:SevenZip.CoderPropID.NumThreads">
+            <summary>
+                Specifies the number of threads.
+            </summary>
+        </member>
+        <member name="F:SevenZip.CoderPropID.EndMarker">
+            <summary>
+                Specifies mode with end marker.
+            </summary>
+        </member>
+        <member name="T:Confuser.Core.ConfuserEngine">
+            <summary>
+                The processing engine of ConfuserEx.
+            </summary>
+        </member>
+        <member name="F:Confuser.Core.ConfuserEngine.Version">
+            <summary>
+                The version of ConfuserEx.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.ConfuserEngine.Run(Confuser.Core.ConfuserParameters,System.Nullable{System.Threading.CancellationToken})">
+            <summary>
+                Runs the engine with the specified parameters.
+            </summary>
+            <param name="parameters">The parameters.</param>
+            <param name="token">The token used for cancellation.</param>
+            <returns>Task to run the engine.</returns>
+            <exception cref="T:System.ArgumentNullException">
+                <paramref name="parameters"/>.Project is <c>null</c>.
+            </exception>
+        </member>
+        <member name="M:Confuser.Core.ConfuserEngine.RunInternal(Confuser.Core.ConfuserParameters,System.Threading.CancellationToken)">
+            <summary>
+                Runs the engine.
+            </summary>
+            <param name="parameters">The parameters.</param>
+            <param name="token">The cancellation token.</param>
+        </member>
+        <member name="M:Confuser.Core.ConfuserEngine.RunPipeline(Confuser.Core.ProtectionPipeline,Confuser.Core.ConfuserContext)">
+            <summary>
+                Runs the protection pipeline.
+            </summary>
+            <param name="pipeline">The protection pipeline.</param>
+            <param name="context">The context.</param>
+        </member>
+        <member name="M:Confuser.Core.ConfuserEngine.PrintInfo(Confuser.Core.ConfuserContext)">
+            <summary>
+                Prints the copyright stuff and environment information.
+            </summary>
+            <param name="context">The working context.</param>
+        </member>
+        <member name="M:Confuser.Core.ConfuserEngine.PrintEnvironmentInfo(Confuser.Core.ConfuserContext)">
+            <summary>
+                Prints the environment information when error occurred.
+            </summary>
+            <param name="context">The working context.</param>
+        </member>
+        <member name="T:Confuser.Core.ConfuserException">
+            <summary>
+                The exception that is thrown when a handled error occurred during the protection process.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.ConfuserException.#ctor(System.Exception)">
+            <summary>
+                Initializes a new instance of the <see cref="T:Confuser.Core.ConfuserException"/> class.
+            </summary>
+            <param name="innerException">The inner exception, or null if no exception is associated with the error.</param>
+        </member>
+        <member name="T:Confuser.Core.ConfuserParameters">
+            <summary>
+                Parameters that passed to <see cref="T:Confuser.Core.ConfuserEngine"/>.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.ConfuserParameters.GetLogger">
+            <summary>
+                Gets the actual non-null logger.
+            </summary>
+            <returns>The logger.</returns>
+        </member>
+        <member name="M:Confuser.Core.ConfuserParameters.GetPluginDiscovery">
+            <summary>
+                Gets the actual non-null plugin discovery service.
+            </summary>
+            <returns>The plugin discovery service.</returns>
+        </member>
+        <member name="M:Confuser.Core.ConfuserParameters.GetMarker">
+            <summary>
+                Gets the actual non-null marker.
+            </summary>
+            <returns>The marker.</returns>
+        </member>
+        <member name="P:Confuser.Core.ConfuserParameters.Project">
+            <summary>
+                Gets or sets the project that would be processed.
+            </summary>
+            <value>The Confuser project.</value>
+        </member>
+        <member name="P:Confuser.Core.ConfuserParameters.Logger">
+            <summary>
+                Gets or sets the logger that used to log the protection process.
+            </summary>
+            <value>The logger, or <c>null</c> if logging is not needed.</value>
+        </member>
+        <member name="P:Confuser.Core.ConfuserParameters.PluginDiscovery">
+            <summary>
+                Gets or sets the plugin discovery service.
+            </summary>
+            <value>The plugin discovery service, or <c>null</c> if default discovery is used.</value>
+        </member>
+        <member name="P:Confuser.Core.ConfuserParameters.Marker">
+            <summary>
+                Gets or sets the marker.
+            </summary>
+            <value>The marker, or <c>null</c> if default marker is used.</value>
+        </member>
+        <member name="T:Confuser.Core.CoreComponent">
+            <summary>
+                Core component of Confuser.
+            </summary>
+        </member>
+        <member name="T:Confuser.Core.ConfuserComponent">
+            <summary>
+                Represent a component in Confuser
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.ConfuserComponent.Initialize(Confuser.Core.ConfuserContext)">
+            <summary>
+                Initializes the component.
+            </summary>
+            <param name="context">The working context.</param>
+        </member>
+        <member name="M:Confuser.Core.ConfuserComponent.PopulatePipeline(Confuser.Core.ProtectionPipeline)">
+            <summary>
+                Inserts protection stages into processing pipeline.
+            </summary>
+            <param name="pipeline">The processing pipeline.</param>
+        </member>
+        <member name="P:Confuser.Core.ConfuserComponent.Name">
+            <summary>
+                Gets the name of component.
+            </summary>
+            <value>The name of component.</value>
+        </member>
+        <member name="P:Confuser.Core.ConfuserComponent.Description">
+            <summary>
+                Gets the description of component.
+            </summary>
+            <value>The description of component.</value>
+        </member>
+        <member name="P:Confuser.Core.ConfuserComponent.Id">
+            <summary>
+                Gets the identifier of component used by users.
+            </summary>
+            <value>The identifier of component.</value>
+        </member>
+        <member name="P:Confuser.Core.ConfuserComponent.FullId">
+            <summary>
+                Gets the full identifier of component used in Confuser.
+            </summary>
+            <value>The full identifier of component.</value>
+        </member>
+        <member name="F:Confuser.Core.CoreComponent._RandomServiceId">
+            <summary>
+                The service ID of RNG
+            </summary>
+        </member>
+        <member name="F:Confuser.Core.CoreComponent._MarkerServiceId">
+            <summary>
+                The service ID of Marker
+            </summary>
+        </member>
+        <member name="F:Confuser.Core.CoreComponent._TraceServiceId">
+            <summary>
+                The service ID of Trace
+            </summary>
+        </member>
+        <member name="F:Confuser.Core.CoreComponent._RuntimeServiceId">
+            <summary>
+                The service ID of Runtime
+            </summary>
+        </member>
+        <member name="F:Confuser.Core.CoreComponent._CompressionServiceId">
+            <summary>
+                The service ID of Compression
+            </summary>
+        </member>
+        <member name="F:Confuser.Core.CoreComponent._APIStoreId">
+            <summary>
+                The service ID of API Store
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.CoreComponent.#ctor(Confuser.Core.ConfuserParameters,Confuser.Core.Marker)">
+            <summary>
+                Initializes a new instance of the <see cref="T:Confuser.Core.CoreComponent"/> class.
+            </summary>
+            <param name="parameters">The parameters.</param>
+            <param name="marker">The marker.</param>
+        </member>
+        <member name="M:Confuser.Core.CoreComponent.Initialize(Confuser.Core.ConfuserContext)">
+            <inheritdoc />
+        </member>
+        <member name="M:Confuser.Core.CoreComponent.PopulatePipeline(Confuser.Core.ProtectionPipeline)">
+            <inheritdoc />
+        </member>
+        <member name="P:Confuser.Core.CoreComponent.Name">
+            <inheritdoc />
+        </member>
+        <member name="P:Confuser.Core.CoreComponent.Description">
+            <inheritdoc />
+        </member>
+        <member name="P:Confuser.Core.CoreComponent.Id">
+            <inheritdoc />
+        </member>
+        <member name="P:Confuser.Core.CoreComponent.FullId">
+            <inheritdoc />
+        </member>
+        <member name="T:Confuser.Core.DependencyResolver">
+            <summary>
+                Resolves dependency between protections.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.DependencyResolver.#ctor(System.Collections.Generic.IEnumerable{Confuser.Core.Protection})">
+            <summary>
+                Initializes a new instance of the <see cref="T:Confuser.Core.DependencyResolver"/> class.
+            </summary>
+            <param name="protections">The protections for resolution.</param>
+        </member>
+        <member name="M:Confuser.Core.DependencyResolver.SortDependency">
+            <summary>
+                Sort the protection according to their dependency.
+            </summary>
+            <returns>Sorted protections with respect to dependencies.</returns>
+            <exception cref="T:CircularDependencyException">
+                The protections contain circular dependencies.
+            </exception>
+        </member>
+        <member name="M:Confuser.Core.DependencyResolver.SortGraph(System.Collections.Generic.IEnumerable{Confuser.Core.Protection},System.Collections.Generic.IList{Confuser.Core.DependencyResolver.DependencyGraphEdge})">
+            <summary>
+                Topologically sort the dependency graph.
+            </summary>
+            <param name="roots">The root protections.</param>
+            <param name="edges">The dependency graph edges.</param>
+            <returns>Topological sorted protections.</returns>
+        </member>
+        <member name="T:Confuser.Core.DependencyResolver.DependencyGraphEdge">
+            <summary>
+                An edge of dependency graph.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.DependencyResolver.DependencyGraphEdge.#ctor(Confuser.Core.Protection,Confuser.Core.Protection)">
+            <summary>
+                Initializes a new instance of the <see cref="T:Confuser.Core.DependencyResolver.DependencyGraphEdge"/> class.
+            </summary>
+            <param name="from">The source protection node.</param>
+            <param name="to">The destination protection node.</param>
+        </member>
+        <member name="P:Confuser.Core.DependencyResolver.DependencyGraphEdge.From">
+            <summary>
+                The source protection node.
+            </summary>
+        </member>
+        <member name="P:Confuser.Core.DependencyResolver.DependencyGraphEdge.To">
+            <summary>
+                The destination protection node.
+            </summary>
+        </member>
+        <member name="T:Confuser.Core.CircularDependencyException">
+            <summary>
+                The exception that is thrown when there exists circular dependency between protections.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.CircularDependencyException.#ctor(Confuser.Core.Protection,Confuser.Core.Protection)">
+            <summary>
+                Initializes a new instance of the <see cref="T:Confuser.Core.CircularDependencyException"/> class.
+            </summary>
+            <param name="a">The first protection.</param>
+            <param name="b">The second protection.</param>
+        </member>
+        <member name="P:Confuser.Core.CircularDependencyException.ProtectionA">
+            <summary>
+                First protection that involved in circular dependency.
+            </summary>
+        </member>
+        <member name="P:Confuser.Core.CircularDependencyException.ProtectionB">
+            <summary>
+                Second protection that involved in circular dependency.
+            </summary>
+        </member>
+        <member name="T:Confuser.Core.DnlibUtils">
+            <summary>
+                Provides a set of utility methods about dnlib
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.DnlibUtils.FindDefinitions(dnlib.DotNet.ModuleDef)">
+            <summary>
+                Finds all definitions of interest in a module.
+            </summary>
+            <param name="module">The module.</param>
+            <returns>A collection of all required definitions</returns>
+        </member>
+        <member name="M:Confuser.Core.DnlibUtils.FindDefinitions(dnlib.DotNet.TypeDef)">
+            <summary>
+                Finds all definitions of interest in a type.
+            </summary>
+            <param name="typeDef">The type.</param>
+            <returns>A collection of all required definitions</returns>
+        </member>
+        <member name="M:Confuser.Core.DnlibUtils.IsVisibleOutside(dnlib.DotNet.TypeDef)">
+            <summary>
+                Determines whether the specified type is visible outside the containing assembly.
+            </summary>
+            <param name="typeDef">The type.</param>
+            <returns><c>true</c> if the specified type is visible outside the containing assembly; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="M:Confuser.Core.DnlibUtils.HasAttribute(dnlib.DotNet.IHasCustomAttribute,System.String)">
+            <summary>
+                Determines whether the object has the specified custom attribute.
+            </summary>
+            <param name="obj">The object.</param>
+            <param name="fullName">The full name of the type of custom attribute.</param>
+            <returns><c>true</c> if the specified object has custom attribute; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="M:Confuser.Core.DnlibUtils.IsComImport(dnlib.DotNet.TypeDef)">
+            <summary>
+                Determines whether the specified type is COM import.
+            </summary>
+            <param name="type">The type.</param>
+            <returns><c>true</c> if specified type is COM import; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="M:Confuser.Core.DnlibUtils.IsDelegate(dnlib.DotNet.TypeDef)">
+            <summary>
+                Determines whether the specified type is a delegate.
+            </summary>
+            <param name="type">The type.</param>
+            <returns><c>true</c> if the specified type is a delegate; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="M:Confuser.Core.DnlibUtils.InheritsFromCorlib(dnlib.DotNet.TypeDef,System.String)">
+            <summary>
+                Determines whether the specified type is inherited from a base type in corlib.
+            </summary>
+            <param name="type">The type.</param>
+            <param name="baseType">The full name of base type.</param>
+            <returns><c>true</c> if the specified type is inherited from a base type; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="M:Confuser.Core.DnlibUtils.InheritsFrom(dnlib.DotNet.TypeDef,System.String)">
+            <summary>
+                Determines whether the specified type is inherited from a base type.
+            </summary>
+            <param name="type">The type.</param>
+            <param name="baseType">The full name of base type.</param>
+            <returns><c>true</c> if the specified type is inherited from a base type; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="M:Confuser.Core.DnlibUtils.Implements(dnlib.DotNet.TypeDef,System.String)">
+            <summary>
+                Determines whether the specified type implements the specified interface.
+            </summary>
+            <param name="type">The type.</param>
+            <param name="fullName">The full name of the type of interface.</param>
+            <returns><c>true</c> if the specified type implements the interface; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="M:Confuser.Core.DnlibUtils.ResolveThrow(dnlib.DotNet.IMethod)">
+            <summary>
+                Resolves the method.
+            </summary>
+            <param name="method">The method to resolve.</param>
+            <returns>A <see cref="T:dnlib.DotNet.MethodDef"/> instance.</returns>
+            <exception cref="T:dnlib.DotNet.MemberRefResolveException">The method couldn't be resolved.</exception>
+        </member>
+        <member name="M:Confuser.Core.DnlibUtils.ResolveThrow(dnlib.DotNet.IField)">
+            <summary>
+                Resolves the field.
+            </summary>
+            <param name="field">The field to resolve.</param>
+            <returns>A <see cref="T:dnlib.DotNet.FieldDef"/> instance.</returns>
+            <exception cref="T:dnlib.DotNet.MemberRefResolveException">The method couldn't be resolved.</exception>
+        </member>
+        <member name="M:Confuser.Core.DnlibUtils.ToBasicTypeDefOrRef(dnlib.DotNet.TypeSig)">
+            <summary>
+                Find the basic type reference.
+            </summary>
+            <param name="typeSig">The type signature to get the basic type.</param>
+            <returns>A <see cref="T:dnlib.DotNet.ITypeDefOrRef"/> instance, or null if the typeSig cannot be resolved to basic type.</returns>
+        </member>
+        <member name="M:Confuser.Core.DnlibUtils.FindTypeRefs(dnlib.DotNet.TypeSig)">
+            <summary>
+                Find the type references within the specified type signature.
+            </summary>
+            <param name="typeSig">The type signature to find the type references.</param>
+            <returns>A list of <see cref="T:dnlib.DotNet.ITypeDefOrRef"/> instance.</returns>
+        </member>
+        <member name="M:Confuser.Core.DnlibUtils.IsPublic(dnlib.DotNet.PropertyDef)">
+            <summary>
+                Determines whether the specified property is public.
+            </summary>
+            <param name="property">The property.</param>
+            <returns><c>true</c> if the specified property is public; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="M:Confuser.Core.DnlibUtils.IsStatic(dnlib.DotNet.PropertyDef)">
+            <summary>
+                Determines whether the specified property is static.
+            </summary>
+            <param name="property">The property.</param>
+            <returns><c>true</c> if the specified property is static; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="M:Confuser.Core.DnlibUtils.IsPublic(dnlib.DotNet.EventDef)">
+            <summary>
+                Determines whether the specified event is public.
+            </summary>
+            <param name="evt">The event.</param>
+            <returns><c>true</c> if the specified event is public; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="M:Confuser.Core.DnlibUtils.IsStatic(dnlib.DotNet.EventDef)">
+            <summary>
+                Determines whether the specified event is static.
+            </summary>
+            <param name="evt">The event.</param>
+            <returns><c>true</c> if the specified event is static; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="M:Confuser.Core.DnlibUtils.ReplaceReference(dnlib.DotNet.Emit.CilBody,dnlib.DotNet.Emit.Instruction,dnlib.DotNet.Emit.Instruction)">
+            <summary>
+                Replaces the specified instruction reference with another instruction.
+            </summary>
+            <param name="body">The method body.</param>
+            <param name="target">The instruction to replace.</param>
+            <param name="newInstr">The new instruction.</param>
+        </member>
+        <member name="M:Confuser.Core.DnlibUtils.IsArrayAccessors(dnlib.DotNet.IMethod)">
+            <summary>
+                Determines whether the specified method is array accessors.
+            </summary>
+            <param name="method">The method.</param>
+            <returns><c>true</c> if the specified method is array accessors; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="T:Confuser.Core.ImageStream">
+            <summary>
+                <see cref="T:System.IO.Stream"/> wrapper of <see cref="T:dnlib.IO.IImageStream"/>.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.ImageStream.#ctor(dnlib.IO.IImageStream)">
+            <summary>
+                Initializes a new instance of the <see cref="T:Confuser.Core.ImageStream"/> class.
+            </summary>
+            <param name="baseStream">The base stream.</param>
+        </member>
+        <member name="M:Confuser.Core.ImageStream.Flush">
+            <inheritdoc />
+        </member>
+        <member name="M:Confuser.Core.ImageStream.Read(System.Byte[],System.Int32,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Confuser.Core.ImageStream.Seek(System.Int64,System.IO.SeekOrigin)">
+            <inheritdoc />
+        </member>
+        <member name="M:Confuser.Core.ImageStream.SetLength(System.Int64)">
+            <inheritdoc />
+        </member>
+        <member name="M:Confuser.Core.ImageStream.Write(System.Byte[],System.Int32,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="P:Confuser.Core.ImageStream.BaseStream">
+            <summary>
+                Gets the base stream of this instance.
+            </summary>
+            <value>The base stream.</value>
+        </member>
+        <member name="P:Confuser.Core.ImageStream.CanRead">
+            <inheritdoc />
+        </member>
+        <member name="P:Confuser.Core.ImageStream.CanSeek">
+            <inheritdoc />
+        </member>
+        <member name="P:Confuser.Core.ImageStream.CanWrite">
+            <inheritdoc />
+        </member>
+        <member name="P:Confuser.Core.ImageStream.Length">
+            <inheritdoc />
+        </member>
+        <member name="P:Confuser.Core.ImageStream.Position">
+            <inheritdoc />
+        </member>
+        <member name="T:Confuser.Core.Helpers.InjectHelper">
+            <summary>
+                Provides methods to inject a <see cref="T:dnlib.DotNet.TypeDef"/> into another module.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.Helpers.InjectHelper.Clone(dnlib.DotNet.TypeDef)">
+            <summary>
+                Clones the specified origin TypeDef.
+            </summary>
+            <param name="origin">The origin TypeDef.</param>
+            <returns>The cloned TypeDef.</returns>
+        </member>
+        <member name="M:Confuser.Core.Helpers.InjectHelper.Clone(dnlib.DotNet.MethodDef)">
+            <summary>
+                Clones the specified origin MethodDef.
+            </summary>
+            <param name="origin">The origin MethodDef.</param>
+            <returns>The cloned MethodDef.</returns>
+        </member>
+        <member name="M:Confuser.Core.Helpers.InjectHelper.Clone(dnlib.DotNet.FieldDef)">
+            <summary>
+                Clones the specified origin FieldDef.
+            </summary>
+            <param name="origin">The origin FieldDef.</param>
+            <returns>The cloned FieldDef.</returns>
+        </member>
+        <member name="M:Confuser.Core.Helpers.InjectHelper.PopulateContext(dnlib.DotNet.TypeDef,Confuser.Core.Helpers.InjectHelper.InjectContext)">
+            <summary>
+                Populates the context mappings.
+            </summary>
+            <param name="typeDef">The origin TypeDef.</param>
+            <param name="ctx">The injection context.</param>
+            <returns>The new TypeDef.</returns>
+        </member>
+        <member name="M:Confuser.Core.Helpers.InjectHelper.CopyTypeDef(dnlib.DotNet.TypeDef,Confuser.Core.Helpers.InjectHelper.InjectContext)">
+            <summary>
+                Copies the information from the origin type to injected type.
+            </summary>
+            <param name="typeDef">The origin TypeDef.</param>
+            <param name="ctx">The injection context.</param>
+        </member>
+        <member name="M:Confuser.Core.Helpers.InjectHelper.CopyMethodDef(dnlib.DotNet.MethodDef,Confuser.Core.Helpers.InjectHelper.InjectContext)">
+            <summary>
+                Copies the information from the origin method to injected method.
+            </summary>
+            <param name="methodDef">The origin MethodDef.</param>
+            <param name="ctx">The injection context.</param>
+        </member>
+        <member name="M:Confuser.Core.Helpers.InjectHelper.CopyFieldDef(dnlib.DotNet.FieldDef,Confuser.Core.Helpers.InjectHelper.InjectContext)">
+            <summary>
+                Copies the information from the origin field to injected field.
+            </summary>
+            <param name="fieldDef">The origin FieldDef.</param>
+            <param name="ctx">The injection context.</param>
+        </member>
+        <member name="M:Confuser.Core.Helpers.InjectHelper.Copy(dnlib.DotNet.TypeDef,Confuser.Core.Helpers.InjectHelper.InjectContext,System.Boolean)">
+            <summary>
+                Copies the information to the injected definitions.
+            </summary>
+            <param name="typeDef">The origin TypeDef.</param>
+            <param name="ctx">The injection context.</param>
+            <param name="copySelf">if set to <c>true</c>, copy information of <paramref name="typeDef" />.</param>
+        </member>
+        <member name="M:Confuser.Core.Helpers.InjectHelper.Inject(dnlib.DotNet.TypeDef,dnlib.DotNet.ModuleDef)">
+            <summary>
+                Injects the specified TypeDef to another module.
+            </summary>
+            <param name="typeDef">The source TypeDef.</param>
+            <param name="target">The target module.</param>
+            <returns>The injected TypeDef.</returns>
+        </member>
+        <member name="M:Confuser.Core.Helpers.InjectHelper.Inject(dnlib.DotNet.MethodDef,dnlib.DotNet.ModuleDef)">
+            <summary>
+                Injects the specified MethodDef to another module.
+            </summary>
+            <param name="methodDef">The source MethodDef.</param>
+            <param name="target">The target module.</param>
+            <returns>The injected MethodDef.</returns>
+        </member>
+        <member name="M:Confuser.Core.Helpers.InjectHelper.Inject(dnlib.DotNet.TypeDef,dnlib.DotNet.TypeDef,dnlib.DotNet.ModuleDef)">
+            <summary>
+                Injects the members of specified TypeDef to another module.
+            </summary>
+            <param name="typeDef">The source TypeDef.</param>
+            <param name="newType">The new type.</param>
+            <param name="target">The target module.</param>
+            <returns>Injected members.</returns>
+        </member>
+        <member name="T:Confuser.Core.Helpers.InjectHelper.InjectContext">
+            <summary>
+                Context of the injection process.
+            </summary>
+        </member>
+        <member name="F:Confuser.Core.Helpers.InjectHelper.InjectContext.Map">
+            <summary>
+                The mapping of origin definitions to injected definitions.
+            </summary>
+        </member>
+        <member name="F:Confuser.Core.Helpers.InjectHelper.InjectContext.OriginModule">
+            <summary>
+                The module which source type originated from.
+            </summary>
+        </member>
+        <member name="F:Confuser.Core.Helpers.InjectHelper.InjectContext.TargetModule">
+            <summary>
+                The module which source type is being injected to.
+            </summary>
+        </member>
+        <member name="F:Confuser.Core.Helpers.InjectHelper.InjectContext.importer">
+            <summary>
+                The importer.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.Helpers.InjectHelper.InjectContext.#ctor(dnlib.DotNet.ModuleDef,dnlib.DotNet.ModuleDef)">
+            <summary>
+                Initializes a new instance of the <see cref="T:Confuser.Core.Helpers.InjectHelper.InjectContext"/> class.
+            </summary>
+            <param name="module">The origin module.</param>
+            <param name="target">The target module.</param>
+        </member>
+        <member name="M:Confuser.Core.Helpers.InjectHelper.InjectContext.Resolve(dnlib.DotNet.TypeDef)">
+            <inheritdoc />
+        </member>
+        <member name="M:Confuser.Core.Helpers.InjectHelper.InjectContext.Resolve(dnlib.DotNet.MethodDef)">
+            <inheritdoc />
+        </member>
+        <member name="M:Confuser.Core.Helpers.InjectHelper.InjectContext.Resolve(dnlib.DotNet.FieldDef)">
+            <inheritdoc />
+        </member>
+        <member name="P:Confuser.Core.Helpers.InjectHelper.InjectContext.Importer">
+            <summary>
+                Gets the importer.
+            </summary>
+            <value>The importer.</value>
+        </member>
+        <member name="T:Confuser.Core.Helpers.MutationHelper">
+            <summary>
+                Provides methods to mutated injected methods.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.Helpers.MutationHelper.InjectKey(dnlib.DotNet.MethodDef,System.Int32,System.Int32)">
+            <summary>
+                Replaces the mutation key placeholder in method with actual key.
+            </summary>
+            <param name="method">The method to process.</param>
+            <param name="keyId">The mutation key ID.</param>
+            <param name="key">The actual key.</param>
+        </member>
+        <member name="M:Confuser.Core.Helpers.MutationHelper.InjectKeys(dnlib.DotNet.MethodDef,System.Int32[],System.Int32[])">
+            <summary>
+                Replaces the mutation key placeholders in method with actual keys.
+            </summary>
+            <param name="method">The method to process.</param>
+            <param name="keyIds">The mutation key IDs.</param>
+            <param name="keys">The actual keys.</param>
+        </member>
+        <member name="M:Confuser.Core.Helpers.MutationHelper.ReplacePlaceholder(dnlib.DotNet.MethodDef,System.Func{dnlib.DotNet.Emit.Instruction[],dnlib.DotNet.Emit.Instruction[]})">
+            <summary>
+                Replaces the placeholder call in method with actual instruction sequence.
+            </summary>
+            <param name="method">The methodto process.</param>
+            <param name="repl">The function replacing the argument of placeholder call with actual instruction sequence.</param>
+        </member>
+        <member name="T:Confuser.Core.ILogger">
+            <summary>
+                Defines a logger used to log Confuser events
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.ILogger.Debug(System.String)">
+            <summary>
+                Logs a message at DEBUG level.
+            </summary>
+            <param name="msg">The message.</param>
+        </member>
+        <member name="M:Confuser.Core.ILogger.DebugFormat(System.String,System.Object[])">
+            <summary>
+                Logs a message at DEBUG level with specified parameters.
+            </summary>
+            <param name="format">The format.</param>
+            <param name="args">The arguments.</param>
+        </member>
+        <member name="M:Confuser.Core.ILogger.Info(System.String)">
+            <summary>
+                Logs a message at INFO level.
+            </summary>
+            <param name="msg">The message.</param>
+        </member>
+        <member name="M:Confuser.Core.ILogger.InfoFormat(System.String,System.Object[])">
+            <summary>
+                Logs a message at INFO level with specified parameters.
+            </summary>
+            <param name="format">The format.</param>
+            <param name="args">The arguments.</param>
+        </member>
+        <member name="M:Confuser.Core.ILogger.Warn(System.String)">
+            <summary>
+                Logs a message at WARN level.
+            </summary>
+            <param name="msg">The message.</param>
+        </member>
+        <member name="M:Confuser.Core.ILogger.WarnFormat(System.String,System.Object[])">
+            <summary>
+                Logs a message at WARN level with specified parameters.
+            </summary>
+            <param name="format">The format.</param>
+            <param name="args">The arguments.</param>
+        </member>
+        <member name="M:Confuser.Core.ILogger.WarnException(System.String,System.Exception)">
+            <summary>
+                Logs a message at WARN level with specified exception.
+            </summary>
+            <param name="msg">The message.</param>
+            <param name="ex">The exception.</param>
+        </member>
+        <member name="M:Confuser.Core.ILogger.Error(System.String)">
+            <summary>
+                Logs a message at ERROR level.
+            </summary>
+            <param name="msg">The message.</param>
+        </member>
+        <member name="M:Confuser.Core.ILogger.ErrorFormat(System.String,System.Object[])">
+            <summary>
+                Logs a message at ERROR level with specified parameters.
+            </summary>
+            <param name="format">The format.</param>
+            <param name="args">The arguments.</param>
+        </member>
+        <member name="M:Confuser.Core.ILogger.ErrorException(System.String,System.Exception)">
+            <summary>
+                Logs a message at ERROR level with specified exception.
+            </summary>
+            <param name="msg">The message.</param>
+            <param name="ex">The exception.</param>
+        </member>
+        <member name="M:Confuser.Core.ILogger.Progress(System.Int32,System.Int32)">
+            <summary>
+                Logs the progress of protection.
+            </summary>
+            <remarks>
+                This method is intended to be used with <see cref="M:Confuser.Core.ILogger.EndProgress"/>.
+            </remarks>
+            <example>
+                <code> 
+                    for (int i = 0; i &lt; defs.Length; i++) {
+                        logger.Progress(i + 1, defs.Length);
+                    }
+                    logger.EndProgress();
+                </code>
+            </example>
+            <param name="overall">The total work amount .</param>
+            <param name="progress">The amount of work done.</param>
+        </member>
+        <member name="M:Confuser.Core.ILogger.EndProgress">
+            <summary>
+                End the progress of protection.
+            </summary>
+            <seealso cref="M:Confuser.Core.ILogger.Progress(System.Int32,System.Int32)"/>
+        </member>
+        <member name="M:Confuser.Core.ILogger.Finish(System.Boolean)">
+            <summary>
+                Logs the finish of protection.
+            </summary>
+            <param name="successful">Indicated whether the protection process is successful.</param>
+        </member>
+        <member name="T:Confuser.Core.Marker">
+            <summary>
+                Resolves and marks the modules with protection settings according to the rules.
+            </summary>
+        </member>
+        <member name="F:Confuser.Core.Marker.SNKey">
+            <summary>
+                Annotation key of Strong Name Key.
+            </summary>
+        </member>
+        <member name="F:Confuser.Core.Marker.RulesKey">
+            <summary>
+                Annotation key of rules.
+            </summary>
+        </member>
+        <member name="F:Confuser.Core.Marker.packers">
+            <summary>
+                The packers available to use.
+            </summary>
+        </member>
+        <member name="F:Confuser.Core.Marker.protections">
+            <summary>
+                The protections available to use.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.Marker.Initalize(System.Collections.Generic.IList{Confuser.Core.Protection},System.Collections.Generic.IList{Confuser.Core.Packer})">
+            <summary>
+                Initalizes the Marker with specified protections and packers.
+            </summary>
+            <param name="protections">The protections.</param>
+            <param name="packers">The packers.</param>
+        </member>
+        <member name="M:Confuser.Core.Marker.FillPreset(Confuser.Core.ProtectionPreset,Confuser.Core.ProtectionSettings)">
+            <summary>
+                Fills the protection settings with the specified preset.
+            </summary>
+            <param name="preset">The preset.</param>
+            <param name="settings">The settings.</param>
+        </member>
+        <member name="M:Confuser.Core.Marker.LoadSNKey(Confuser.Core.ConfuserContext,System.String,System.String)">
+            <summary>
+                Loads the Strong Name Key at the specified path with a optional password.
+            </summary>
+            <param name="context">The working context.</param>
+            <param name="path">The path to the key.</param>
+            <param name="pass">
+                The password of the certificate at <paramref name="path" /> if
+                it is a pfx file; otherwise, <c>null</c>.
+            </param>
+            <returns>The loaded Strong Name Key.</returns>
+        </member>
+        <member name="M:Confuser.Core.Marker.MarkProject(Confuser.Core.Project.ConfuserProject,Confuser.Core.ConfuserContext)">
+            <summary>
+                Loads the assembly and marks the project.
+            </summary>
+            <param name="proj">The project.</param>
+            <param name="context">The working context.</param>
+            <returns><see cref="T:Confuser.Core.MarkerResult"/> storing the marked modules and packer information.</returns>
+        </member>
+        <member name="M:Confuser.Core.Marker.MarkMember(dnlib.DotNet.IDnlibDef,Confuser.Core.ConfuserContext)">
+            <summary>
+                Marks the member definition.
+            </summary>
+            <param name="member">The member definition.</param>
+            <param name="context">The working context.</param>
+        </member>
+        <member name="M:Confuser.Core.Marker.ParseRules(Confuser.Core.Project.ConfuserProject,Confuser.Core.Project.ProjectModule,Confuser.Core.ConfuserContext)">
+            <summary>
+                Parses the rules' patterns.
+            </summary>
+            <param name="proj">The project.</param>
+            <param name="module">The module description.</param>
+            <param name="context">The working context.</param>
+            <returns>Parsed rule patterns.</returns>
+            <exception cref="T:System.ArgumentException">
+                One of the rules has invalid pattern.
+            </exception>
+        </member>
+        <member name="M:Confuser.Core.Marker.ApplyRules(Confuser.Core.ConfuserContext,dnlib.DotNet.IDnlibDef,System.Collections.Generic.Dictionary{Confuser.Core.Project.Rule,Confuser.Core.Project.Patterns.PatternExpression})">
+            <summary>
+                Applies the rules to the target definition.
+            </summary>
+            <param name="context">The working context.</param>
+            <param name="target">The target definition.</param>
+            <param name="rules">The rules.</param>
+        </member>
+        <member name="T:Confuser.Core.MarkerResult">
+            <summary>
+                Result of the marker.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.MarkerResult.#ctor(System.Collections.Generic.IList{dnlib.DotNet.ModuleDefMD},Confuser.Core.Packer,System.Collections.Generic.IList{System.Byte[]})">
+            <summary>
+                Initializes a new instance of the <see cref="T:Confuser.Core.MarkerResult"/> class.
+            </summary>
+            <param name="modules">The modules.</param>
+            <param name="packer">The packer.</param>
+            <param name="extModules">The external modules.</param>
+        </member>
+        <member name="P:Confuser.Core.MarkerResult.Modules">
+            <summary>
+                Gets a list of modules that is marked.
+            </summary>
+            <value>The list of modules.</value>
+        </member>
+        <member name="P:Confuser.Core.MarkerResult.ExternalModules">
+            <summary>
+                Gets a list of external modules.
+            </summary>
+            <value>The list of external modules.</value>
+        </member>
+        <member name="P:Confuser.Core.MarkerResult.Packer">
+            <summary>
+                Gets the packer if exists.
+            </summary>
+            <value>The packer, or null if no packer exists.</value>
+        </member>
+        <member name="T:Confuser.Core.ModuleWriterListener">
+            <summary>
+                The listener of module writer event.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.ModuleWriterListener.dnlib#DotNet#Writer#IModuleWriterListener#OnWriterEvent(dnlib.DotNet.Writer.ModuleWriterBase,dnlib.DotNet.Writer.ModuleWriterEvent)">
+            <inheritdoc />
+        </member>
+        <member name="E:Confuser.Core.ModuleWriterListener.OnWriterEvent">
+            <summary>
+                Occurs when a module writer event is triggered.
+            </summary>
+        </member>
+        <member name="T:Confuser.Core.ModuleWriterListenerEventArgs">
+            <summary>
+                Indicates the triggered writer event.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.ModuleWriterListenerEventArgs.#ctor(dnlib.DotNet.Writer.ModuleWriterEvent)">
+            <summary>
+                Initializes a new instance of the <see cref="T:Confuser.Core.ModuleWriterListenerEventArgs"/> class.
+            </summary>
+            <param name="evt">The triggered writer event.</param>
+        </member>
+        <member name="P:Confuser.Core.ModuleWriterListenerEventArgs.WriterEvent">
+            <summary>
+                Gets the triggered writer event.
+            </summary>
+            <value>The triggered writer event.</value>
+        </member>
+        <member name="T:Confuser.Core.PluginDiscovery">
+            <summary>
+                Discovers available protection plugins.
+            </summary>
+        </member>
+        <member name="F:Confuser.Core.PluginDiscovery.Instance">
+            <summary>
+                The default plugin discovery service.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.PluginDiscovery.#ctor">
+            <summary>
+                Initializes a new instance of the <see cref="T:Confuser.Core.PluginDiscovery"/> class.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.PluginDiscovery.GetPlugins(Confuser.Core.ConfuserContext,System.Collections.Generic.IList{Confuser.Core.Protection}@,System.Collections.Generic.IList{Confuser.Core.Packer}@,System.Collections.Generic.IList{Confuser.Core.ConfuserComponent}@)">
+            <summary>
+                Retrieves the available protection plugins.
+            </summary>
+            <param name="context">The working context.</param>
+            <param name="protections">A list of resolved protections.</param>
+            <param name="packers">A list of resolved packers.</param>
+            <param name="components">A list of resolved components.</param>
+        </member>
+        <member name="M:Confuser.Core.PluginDiscovery.HasAccessibleDefConstructor(System.Type)">
+            <summary>
+                Determines whether the specified type has an accessible default constructor.
+            </summary>
+            <param name="type">The type.</param>
+            <returns><c>true</c> if the specified type has an accessible default constructor; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="M:Confuser.Core.PluginDiscovery.AddPlugins(Confuser.Core.ConfuserContext,System.Collections.Generic.IList{Confuser.Core.Protection},System.Collections.Generic.IList{Confuser.Core.Packer},System.Collections.Generic.IList{Confuser.Core.ConfuserComponent},System.Reflection.Assembly)">
+            <summary>
+                Adds plugins in the assembly to the protection list.
+            </summary>
+            <param name="context">The working context.</param>
+            <param name="protections">The working list of protections.</param>
+            <param name="packers">The working list of packers.</param>
+            <param name="components">The working list of components.</param>
+            <param name="asm">The assembly.</param>
+        </member>
+        <member name="M:Confuser.Core.PluginDiscovery.GetPluginsInternal(Confuser.Core.ConfuserContext,System.Collections.Generic.IList{Confuser.Core.Protection},System.Collections.Generic.IList{Confuser.Core.Packer},System.Collections.Generic.IList{Confuser.Core.ConfuserComponent})">
+            <summary>
+                Retrieves the available protection plugins.
+            </summary>
+            <param name="context">The working context.</param>
+            <param name="protections">The working list of protections.</param>
+            <param name="packers">The working list of packers.</param>
+            <param name="components">The working list of components.</param>
+        </member>
+        <member name="T:Confuser.Core.NullLogger">
+            <summary>
+                An <see cref="T:Confuser.Core.ILogger"/> implementation that doesn't actually do any logging.
+            </summary>
+        </member>
+        <member name="F:Confuser.Core.NullLogger.Instance">
+            <summary>
+                The singleton instance of <see cref="T:Confuser.Core.NullLogger"/>.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.NullLogger.#ctor">
+            <summary>
+                Prevents a default instance of the <see cref="T:Confuser.Core.NullLogger"/> class from being created.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.NullLogger.Debug(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Confuser.Core.NullLogger.DebugFormat(System.String,System.Object[])">
+            <inheritdoc />
+        </member>
+        <member name="M:Confuser.Core.NullLogger.Info(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Confuser.Core.NullLogger.InfoFormat(System.String,System.Object[])">
+            <inheritdoc />
+        </member>
+        <member name="M:Confuser.Core.NullLogger.Warn(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Confuser.Core.NullLogger.WarnFormat(System.String,System.Object[])">
+            <inheritdoc />
+        </member>
+        <member name="M:Confuser.Core.NullLogger.WarnException(System.String,System.Exception)">
+            <inheritdoc />
+        </member>
+        <member name="M:Confuser.Core.NullLogger.Error(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Confuser.Core.NullLogger.ErrorFormat(System.String,System.Object[])">
+            <inheritdoc />
+        </member>
+        <member name="M:Confuser.Core.NullLogger.ErrorException(System.String,System.Exception)">
+            <inheritdoc />
+        </member>
+        <member name="M:Confuser.Core.NullLogger.Progress(System.Int32,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Confuser.Core.NullLogger.EndProgress">
+            <inheritdoc />
+        </member>
+        <member name="M:Confuser.Core.NullLogger.Finish(System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:Confuser.Core.NullLogger.BeginModule(dnlib.DotNet.ModuleDef)">
+            <inheritdoc />
+        </member>
+        <member name="M:Confuser.Core.NullLogger.EndModule(dnlib.DotNet.ModuleDef)">
+            <inheritdoc />
+        </member>
+        <member name="T:Confuser.Core.Packer">
+            <summary>
+                Base class of Confuser packers.
+            </summary>
+            <remarks>
+                A parameterless constructor must exists in derived classes to enable plugin discovery.
+            </remarks>
+        </member>
+        <member name="M:Confuser.Core.Packer.Pack(Confuser.Core.ConfuserContext,Confuser.Core.ProtectionParameters)">
+            <summary>
+                Executes the packer.
+            </summary>
+            <param name="context">The working context.</param>
+            <param name="parameters">The parameters of packer.</param>
+        </member>
+        <member name="M:Confuser.Core.Packer.ProtectStub(Confuser.Core.ConfuserContext,System.String,System.Byte[],dnlib.DotNet.StrongNameKey,Confuser.Core.Protection)">
+            <summary>
+                Protects the stub using original project settings replace the current output with the protected stub.
+            </summary>
+            <param name="context">The working context.</param>
+            <param name="fileName">The result file name.</param>
+            <param name="module">The stub module.</param>
+            <param name="snKey">The strong name key.</param>
+            <param name="prot">The packer protection that applies to the stub.</param>
+        </member>
+        <member name="T:Confuser.Core.Project.ProjectModule">
+            <summary>
+                A module description in a Confuser project.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.Project.ProjectModule.#ctor">
+            <summary>
+                Initializes a new instance of the <see cref="T:Confuser.Core.Project.ProjectModule"/> class.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.Project.ProjectModule.Resolve(System.String,dnlib.DotNet.ModuleContext)">
+            <summary>
+                Resolves the module from the path.
+            </summary>
+            <param name="basePath">
+                The base path for the relative module path,
+                or null if the module path is absolute or relative to current directory.
+            </param>
+            <param name="context">The resolved module's context.</param>
+            <returns>The resolved module.</returns>
+        </member>
+        <member name="M:Confuser.Core.Project.ProjectModule.LoadRaw(System.String)">
+            <summary>
+                Read the raw bytes of the module from the path.
+            </summary>
+            <param name="basePath">
+                The base path for the relative module path,
+                or null if the module path is absolute or relative to current directory.
+            </param>
+            <returns>The loaded module.</returns>
+        </member>
+        <member name="M:Confuser.Core.Project.ProjectModule.Save(System.Xml.XmlDocument)">
+            <summary>
+                Saves the module description as XML element.
+            </summary>
+            <param name="xmlDoc">The root XML document.</param>
+            <returns>The serialized module description.</returns>
+        </member>
+        <member name="M:Confuser.Core.Project.ProjectModule.Load(System.Xml.XmlElement)">
+            <summary>
+                Loads the module description from XML element.
+            </summary>
+            <param name="elem">The serialized module description.</param>
+        </member>
+        <member name="M:Confuser.Core.Project.ProjectModule.ToString">
+            <summary>
+                Returns a <see cref="T:System.String"/> that represents this instance.
+            </summary>
+            <returns>A <see cref="T:System.String"/> that represents this instance.</returns>
+        </member>
+        <member name="P:Confuser.Core.Project.ProjectModule.Path">
+            <summary>
+                Gets the path to the module.
+            </summary>
+        </member>
+        <member name="P:Confuser.Core.Project.ProjectModule.IsExternal">
+            <summary>
+                Indicates whether this module is external and should not be obfuscated.
+            </summary>
+        </member>
+        <member name="P:Confuser.Core.Project.ProjectModule.SNKeyPath">
+            <summary>
+                Gets or sets the path to the strong name private key for signing.
+            </summary>
+            <value>The path to the strong name private key, or null if not necessary.</value>
+        </member>
+        <member name="P:Confuser.Core.Project.ProjectModule.SNKeyPassword">
+            <summary>
+                Gets or sets the password of the strong name private key.
+            </summary>
+            <value>The password of the strong name private key, or null if not necessary.</value>
+        </member>
+        <member name="P:Confuser.Core.Project.ProjectModule.Rules">
+            <summary>
+                Gets a list of protection rules applies to the module.
+            </summary>
+            <value>A list of protection rules.</value>
+        </member>
+        <member name="T:Confuser.Core.Project.SettingItemAction">
+            <summary>
+                Indicates add or remove the protection from the active protections
+            </summary>
+        </member>
+        <member name="F:Confuser.Core.Project.SettingItemAction.Add">
+            <summary>
+                Add the protection to the active protections
+            </summary>
+        </member>
+        <member name="F:Confuser.Core.Project.SettingItemAction.Remove">
+            <summary>
+                Remove the protection from the active protections
+            </summary>
+        </member>
+        <member name="T:Confuser.Core.Project.SettingItem`1">
+            <summary>
+                A <see cref="T:Confuser.Core.ConfuserComponent"/> setting within a rule.
+            </summary>
+            <typeparam name="T"><see cref="T:Confuser.Core.Protection"/> or <see cref="T:Confuser.Core.Packer"/></typeparam>
+        </member>
+        <member name="M:Confuser.Core.Project.SettingItem`1.Save(System.Xml.XmlDocument)">
+            <summary>
+                Saves the setting description as XML element.
+            </summary>
+            <param name="xmlDoc">The root XML document.</param>
+            <returns>The setting module description.</returns>
+        </member>
+        <member name="M:Confuser.Core.Project.SettingItem`1.Load(System.Xml.XmlElement)">
+            <summary>
+                Loads the setting description from XML element.
+            </summary>
+            <param name="elem">The serialized setting description.</param>
+        </member>
+        <member name="P:Confuser.Core.Project.SettingItem`1.Id">
+            <summary>
+                The identifier of component
+            </summary>
+            <value>The identifier of component.</value>
+            <seealso cref="P:Confuser.Core.ConfuserComponent.Id"/>
+        </member>
+        <member name="P:Confuser.Core.Project.SettingItem`1.Action">
+            <summary>
+                Gets or sets the action of component.
+            </summary>
+            <value>The action of component.</value>
+        </member>
+        <member name="T:Confuser.Core.Project.Rule">
+            <summary>
+                A rule that control how <see cref="T:Confuser.Core.Protection"/>s are applied to module
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.Project.Rule.Save(System.Xml.XmlDocument)">
+            <summary>
+                Saves the rule description as XML element.
+            </summary>
+            <param name="xmlDoc">The root XML document.</param>
+            <returns>The serialized rule description.</returns>
+        </member>
+        <member name="M:Confuser.Core.Project.Rule.Load(System.Xml.XmlElement)">
+            <summary>
+                Loads the rule description from XML element.
+            </summary>
+            <param name="elem">The serialized module description.</param>
+        </member>
+        <member name="M:Confuser.Core.Project.Rule.Clone">
+            <summary>
+                Clones this instance.
+            </summary>
+            <returns>A duplicated rule.</returns>
+        </member>
+        <member name="P:Confuser.Core.Project.Rule.Pattern">
+            <summary>
+                Gets or sets the pattern that determine the target components of the rule.
+            </summary>
+            <value>The pattern expression.</value>
+        </member>
+        <member name="P:Confuser.Core.Project.Rule.Preset">
+            <summary>
+                Gets or sets the protection preset this rule uses.
+            </summary>
+            <value>The protection preset.</value>
+        </member>
+        <member name="P:Confuser.Core.Project.Rule.Inherit">
+            <summary>
+                Gets or sets a value indicating whether this <see cref="T:Confuser.Core.Project.Rule"/> inherits settings from earlier rules.
+            </summary>
+            <value><c>true</c> if it inherits settings; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="T:Confuser.Core.Project.ProjectValidationException">
+            <summary>
+                The exception that is thrown when there exists schema errors in the project XML.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.Project.ProjectValidationException.#ctor(System.Collections.Generic.List{System.Xml.Schema.XmlSchemaException})">
+            <summary>
+                Initializes a new instance of the <see cref="T:Confuser.Core.Project.ProjectValidationException"/> class.
+            </summary>
+            <param name="exceptions">The list of schema exceptions.</param>
+        </member>
+        <member name="P:Confuser.Core.Project.ProjectValidationException.Errors">
+            <summary>
+                Gets the schema exceptions.
+            </summary>
+            <value>A list of schema exceptions.</value>
+        </member>
+        <member name="T:Confuser.Core.Project.ConfuserProject">
+            <summary>
+                Represent a project of Confuser.
+            </summary>
+        </member>
+        <member name="F:Confuser.Core.Project.ConfuserProject.Namespace">
+            <summary>
+                The namespace of Confuser project schema
+            </summary>
+        </member>
+        <member name="F:Confuser.Core.Project.ConfuserProject.Schema">
+            <summary>
+                The schema of project XML.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.Project.ConfuserProject.#ctor">
+            <summary>
+                Initializes a new instance of the <see cref="T:Confuser.Core.Project.ConfuserProject"/> class.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.Project.ConfuserProject.Save">
+            <summary>
+                Saves the project as XML document.
+            </summary>
+            <returns>The serialized project XML.</returns>
+        </member>
+        <member name="M:Confuser.Core.Project.ConfuserProject.Load(System.Xml.XmlDocument)">
+            <summary>
+                Loads the project from specified XML document.
+            </summary>
+            <param name="doc">The XML document storing the project.</param>
+            <exception cref="T:Confuser.Core.Project.ProjectValidationException">
+                The project XML contains schema errors.
+            </exception>
+        </member>
+        <member name="P:Confuser.Core.Project.ConfuserProject.Seed">
+            <summary>
+                Gets or sets the seed of pseudo-random generator used in process of protection.
+            </summary>
+            <value>The random seed.</value>
+        </member>
+        <member name="P:Confuser.Core.Project.ConfuserProject.Debug">
+            <summary>
+                Gets or sets a value indicating whether debug symbols are generated.
+            </summary>
+            <value><c>true</c> if debug symbols are generated; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:Confuser.Core.Project.ConfuserProject.OutputDirectory">
+            <summary>
+                Gets or sets the output directory.
+            </summary>
+            <value>The output directory.</value>
+        </member>
+        <member name="P:Confuser.Core.Project.ConfuserProject.BaseDirectory">
+            <summary>
+                Gets or sets the base directory of the project.
+            </summary>
+            <value>The base directory.</value>
+        </member>
+        <member name="P:Confuser.Core.Project.ConfuserProject.Rules">
+            <summary>
+                Gets a list of protection rules that applies globally.
+            </summary>
+            <value>A list of protection rules.</value>
+        </member>
+        <member name="P:Confuser.Core.Project.ConfuserProject.Packer">
+            <summary>
+                Gets or sets the packer used to pack up the output.
+            </summary>
+            <value>The packer.</value>
+        </member>
+        <member name="P:Confuser.Core.Project.ConfuserProject.ProbePaths">
+            <summary>
+                Gets a list of paths that used to resolve assemblies.
+            </summary>
+            <value>The list of paths.</value>
+        </member>
+        <member name="P:Confuser.Core.Project.ConfuserProject.PluginPaths">
+            <summary>
+                Gets a list of paths to plugin.
+            </summary>
+            <value>The list of plugins.</value>
+        </member>
+        <member name="T:Confuser.Core.Project.InvalidPatternException">
+            <summary>
+                The exception that is thrown when attempted to parse an invalid pattern.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.Project.InvalidPatternException.#ctor(System.String)">
+            <summary>
+                Initializes a new instance of the <see cref="T:Confuser.Core.ConfuserException"/> class.
+            </summary>
+            <param name="message">The message that describes the error.</param>
+        </member>
+        <member name="M:Confuser.Core.Project.InvalidPatternException.#ctor(System.String,System.Exception)">
+            <summary>
+                Initializes a new instance of the <see cref="T:Confuser.Core.ConfuserException"/> class.
+            </summary>
+            <param name="message">The error message that explains the reason for the exception.</param>
+            <param name="innerException">
+                The exception that is the cause of the current exception, or a null reference (Nothing in
+                Visual Basic) if no inner exception is specified.
+            </param>
+        </member>
+        <member name="T:Confuser.Core.Project.PatternParser">
+            <summary>
+                Parser of pattern expressions.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.Project.PatternParser.Parse(System.String)">
+            <summary>
+                Parses the specified pattern into expression.
+            </summary>
+            <param name="pattern">The pattern to parse.</param>
+            <returns>The parsed expression.</returns>
+            <exception cref="T:Confuser.Core.Project.InvalidPatternException">
+                The pattern is invalid.
+            </exception>
+        </member>
+        <member name="T:Confuser.Core.Project.Patterns.AndOperator">
+            <summary>
+                The AND operator.
+            </summary>
+        </member>
+        <member name="T:Confuser.Core.Project.Patterns.PatternOperator">
+            <summary>
+                A pattern operator.
+            </summary>
+        </member>
+        <member name="T:Confuser.Core.Project.Patterns.PatternExpression">
+            <summary>
+                A pattern expression.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.Project.Patterns.PatternExpression.Evaluate(dnlib.DotNet.IDnlibDef)">
+            <summary>
+                Evaluates the expression on the specified definition.
+            </summary>
+            <param name="definition">The definition.</param>
+            <returns>The result value.</returns>
+        </member>
+        <member name="M:Confuser.Core.Project.Patterns.PatternExpression.Serialize(System.Collections.Generic.IList{Confuser.Core.Project.PatternToken})">
+            <summary>
+                Serializes the expression into tokens.
+            </summary>
+            <param name="tokens">The output list of tokens.</param>
+        </member>
+        <member name="M:Confuser.Core.Project.Patterns.PatternOperator.Serialize(System.Collections.Generic.IList{Confuser.Core.Project.PatternToken})">
+            <inheritdoc />
+        </member>
+        <member name="P:Confuser.Core.Project.Patterns.PatternOperator.Name">
+            <summary>
+                Gets the name of operator.
+            </summary>
+            <value>The name.</value>
+        </member>
+        <member name="P:Confuser.Core.Project.Patterns.PatternOperator.IsUnary">
+            <summary>
+                Gets a value indicating whether this is an unary operator.
+            </summary>
+            <value><c>true</c> if this is an unary operator; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:Confuser.Core.Project.Patterns.PatternOperator.OperandA">
+            <summary>
+                Gets or sets the first operand.
+            </summary>
+            <value>The first operand.</value>
+        </member>
+        <member name="P:Confuser.Core.Project.Patterns.PatternOperator.OperandB">
+            <summary>
+                Gets or sets the second operand.
+            </summary>
+            <value>The second operand.</value>
+        </member>
+        <member name="M:Confuser.Core.Project.Patterns.AndOperator.Evaluate(dnlib.DotNet.IDnlibDef)">
+            <inheritdoc />
+        </member>
+        <member name="P:Confuser.Core.Project.Patterns.AndOperator.Name">
+            <inheritdoc />
+        </member>
+        <member name="P:Confuser.Core.Project.Patterns.AndOperator.IsUnary">
+            <inheritdoc />
+        </member>
+        <member name="T:Confuser.Core.Project.Patterns.IsTypeFunction">
+            <summary>
+                A function that indicate the type of type(?).
+            </summary>
+        </member>
+        <member name="T:Confuser.Core.Project.Patterns.PatternFunction">
+            <summary>
+                A pattern function.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.Project.Patterns.PatternFunction.Serialize(System.Collections.Generic.IList{Confuser.Core.Project.PatternToken})">
+            <inheritdoc />
+        </member>
+        <member name="P:Confuser.Core.Project.Patterns.PatternFunction.Name">
+            <summary>
+                Gets the name of function.
+            </summary>
+            <value>The name.</value>
+        </member>
+        <member name="P:Confuser.Core.Project.Patterns.PatternFunction.ArgumentCount">
+            <summary>
+                Gets the number of arguments of the function.
+            </summary>
+            <value>The number of arguments.</value>
+        </member>
+        <member name="P:Confuser.Core.Project.Patterns.PatternFunction.Arguments">
+            <summary>
+                Gets or sets the arguments of function.
+            </summary>
+            <value>The arguments.</value>
+        </member>
+        <member name="M:Confuser.Core.Project.Patterns.IsTypeFunction.Evaluate(dnlib.DotNet.IDnlibDef)">
+            <inheritdoc />
+        </member>
+        <member name="P:Confuser.Core.Project.Patterns.IsTypeFunction.Name">
+            <inheritdoc />
+        </member>
+        <member name="P:Confuser.Core.Project.Patterns.IsTypeFunction.ArgumentCount">
+            <inheritdoc />
+        </member>
+        <member name="T:Confuser.Core.Project.Patterns.InheritsFunction">
+            <summary>
+                A function that indicate whether the type inherits from the specified type.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.Project.Patterns.InheritsFunction.Evaluate(dnlib.DotNet.IDnlibDef)">
+            <inheritdoc />
+        </member>
+        <member name="P:Confuser.Core.Project.Patterns.InheritsFunction.Name">
+            <inheritdoc />
+        </member>
+        <member name="P:Confuser.Core.Project.Patterns.InheritsFunction.ArgumentCount">
+            <inheritdoc />
+        </member>
+        <member name="T:Confuser.Core.Project.Patterns.IsPublicFunction">
+            <summary>
+                A function that indicate the visibility of members.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.Project.Patterns.IsPublicFunction.Evaluate(dnlib.DotNet.IDnlibDef)">
+            <inheritdoc />
+        </member>
+        <member name="P:Confuser.Core.Project.Patterns.IsPublicFunction.Name">
+            <inheritdoc />
+        </member>
+        <member name="P:Confuser.Core.Project.Patterns.IsPublicFunction.ArgumentCount">
+            <inheritdoc />
+        </member>
+        <member name="T:Confuser.Core.Project.Patterns.FullNameFunction">
+            <summary>
+                A function that compare the full name of definition.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.Project.Patterns.FullNameFunction.Evaluate(dnlib.DotNet.IDnlibDef)">
+            <inheritdoc />
+        </member>
+        <member name="P:Confuser.Core.Project.Patterns.FullNameFunction.Name">
+            <inheritdoc />
+        </member>
+        <member name="P:Confuser.Core.Project.Patterns.FullNameFunction.ArgumentCount">
+            <inheritdoc />
+        </member>
+        <member name="T:Confuser.Core.Project.Patterns.NotOperator">
+            <summary>
+                The NOT operator.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.Project.Patterns.NotOperator.Evaluate(dnlib.DotNet.IDnlibDef)">
+            <inheritdoc />
+        </member>
+        <member name="P:Confuser.Core.Project.Patterns.NotOperator.Name">
+            <inheritdoc />
+        </member>
+        <member name="P:Confuser.Core.Project.Patterns.NotOperator.IsUnary">
+            <inheritdoc />
+        </member>
+        <member name="T:Confuser.Core.Project.Patterns.MemberTypeFunction">
+            <summary>
+                A function that compare the type of definition.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.Project.Patterns.MemberTypeFunction.Evaluate(dnlib.DotNet.IDnlibDef)">
+            <inheritdoc />
+        </member>
+        <member name="P:Confuser.Core.Project.Patterns.MemberTypeFunction.Name">
+            <inheritdoc />
+        </member>
+        <member name="P:Confuser.Core.Project.Patterns.MemberTypeFunction.ArgumentCount">
+            <inheritdoc />
+        </member>
+        <member name="T:Confuser.Core.Project.Patterns.DeclTypeFunction">
+            <summary>
+                A function that compare the full name of declaring type.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.Project.Patterns.DeclTypeFunction.Evaluate(dnlib.DotNet.IDnlibDef)">
+            <inheritdoc />
+        </member>
+        <member name="P:Confuser.Core.Project.Patterns.DeclTypeFunction.Name">
+            <inheritdoc />
+        </member>
+        <member name="P:Confuser.Core.Project.Patterns.DeclTypeFunction.ArgumentCount">
+            <inheritdoc />
+        </member>
+        <member name="T:Confuser.Core.Project.Patterns.MatchFunction">
+            <summary>
+                A function that match the full name of the definition with specified RegEx.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.Project.Patterns.MatchFunction.Evaluate(dnlib.DotNet.IDnlibDef)">
+            <inheritdoc />
+        </member>
+        <member name="P:Confuser.Core.Project.Patterns.MatchFunction.Name">
+            <inheritdoc />
+        </member>
+        <member name="P:Confuser.Core.Project.Patterns.MatchFunction.ArgumentCount">
+            <inheritdoc />
+        </member>
+        <member name="T:Confuser.Core.Project.Patterns.MatchNameFunction">
+            <summary>
+                A function that match the name of the definition with specified RegEx.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.Project.Patterns.MatchNameFunction.Evaluate(dnlib.DotNet.IDnlibDef)">
+            <inheritdoc />
+        </member>
+        <member name="P:Confuser.Core.Project.Patterns.MatchNameFunction.Name">
+            <inheritdoc />
+        </member>
+        <member name="P:Confuser.Core.Project.Patterns.MatchNameFunction.ArgumentCount">
+            <inheritdoc />
+        </member>
+        <member name="T:Confuser.Core.Project.Patterns.MatchTypeNameFunction">
+            <summary>
+                A function that match the name of declaring type with specified RegEx.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.Project.Patterns.MatchTypeNameFunction.Evaluate(dnlib.DotNet.IDnlibDef)">
+            <inheritdoc />
+        </member>
+        <member name="P:Confuser.Core.Project.Patterns.MatchTypeNameFunction.Name">
+            <inheritdoc />
+        </member>
+        <member name="P:Confuser.Core.Project.Patterns.MatchTypeNameFunction.ArgumentCount">
+            <inheritdoc />
+        </member>
+        <member name="T:Confuser.Core.Project.Patterns.ModuleFunction">
+            <summary>
+                A function that compare the module of definition.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.Project.Patterns.ModuleFunction.Evaluate(dnlib.DotNet.IDnlibDef)">
+            <inheritdoc />
+        </member>
+        <member name="P:Confuser.Core.Project.Patterns.ModuleFunction.Name">
+            <inheritdoc />
+        </member>
+        <member name="P:Confuser.Core.Project.Patterns.ModuleFunction.ArgumentCount">
+            <inheritdoc />
+        </member>
+        <member name="T:Confuser.Core.Project.Patterns.NamespaceFunction">
+            <summary>
+                A function that compare the namespace of definition.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.Project.Patterns.NamespaceFunction.Evaluate(dnlib.DotNet.IDnlibDef)">
+            <inheritdoc />
+        </member>
+        <member name="P:Confuser.Core.Project.Patterns.NamespaceFunction.Name">
+            <inheritdoc />
+        </member>
+        <member name="P:Confuser.Core.Project.Patterns.NamespaceFunction.ArgumentCount">
+            <inheritdoc />
+        </member>
+        <member name="T:Confuser.Core.Project.Patterns.OrOperator">
+            <summary>
+                The OR operator.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.Project.Patterns.OrOperator.Evaluate(dnlib.DotNet.IDnlibDef)">
+            <inheritdoc />
+        </member>
+        <member name="P:Confuser.Core.Project.Patterns.OrOperator.Name">
+            <inheritdoc />
+        </member>
+        <member name="P:Confuser.Core.Project.Patterns.OrOperator.IsUnary">
+            <inheritdoc />
+        </member>
+        <member name="T:Confuser.Core.Project.Patterns.LiteralExpression">
+            <summary>
+                A literal expression.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.Project.Patterns.LiteralExpression.#ctor(System.Object)">
+            <summary>
+                Initializes a new instance of the <see cref="T:Confuser.Core.Project.Patterns.LiteralExpression"/> class.
+            </summary>
+            <param name="literal">The literal.</param>
+        </member>
+        <member name="M:Confuser.Core.Project.Patterns.LiteralExpression.Evaluate(dnlib.DotNet.IDnlibDef)">
+            <inheritdoc />
+        </member>
+        <member name="M:Confuser.Core.Project.Patterns.LiteralExpression.Serialize(System.Collections.Generic.IList{Confuser.Core.Project.PatternToken})">
+            <inheritdoc />
+        </member>
+        <member name="P:Confuser.Core.Project.Patterns.LiteralExpression.Literal">
+            <summary>
+                Gets the value of literal.
+            </summary>
+            <value>The value of literal.</value>
+        </member>
+        <member name="T:Confuser.Core.Project.Patterns.NameFunction">
+            <summary>
+                A function that compare the name of definition.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.Project.Patterns.NameFunction.Evaluate(dnlib.DotNet.IDnlibDef)">
+            <inheritdoc />
+        </member>
+        <member name="P:Confuser.Core.Project.Patterns.NameFunction.Name">
+            <inheritdoc />
+        </member>
+        <member name="P:Confuser.Core.Project.Patterns.NameFunction.ArgumentCount">
+            <inheritdoc />
+        </member>
+        <member name="T:Confuser.Core.Project.TokenType">
+            <summary>
+                The type of pattern tokens
+            </summary>
+        </member>
+        <member name="F:Confuser.Core.Project.TokenType.Identifier">
+            <summary>
+                An identifier, could be functions/operators.
+            </summary>
+        </member>
+        <member name="F:Confuser.Core.Project.TokenType.Literal">
+            <summary>
+                A string literal.
+            </summary>
+        </member>
+        <member name="F:Confuser.Core.Project.TokenType.LParens">
+            <summary>
+                A left parenthesis.
+            </summary>
+        </member>
+        <member name="F:Confuser.Core.Project.TokenType.RParens">
+            <summary>
+                A right parenthesis.
+            </summary>
+        </member>
+        <member name="F:Confuser.Core.Project.TokenType.Comma">
+            <summary>
+                A comma.
+            </summary>
+        </member>
+        <member name="T:Confuser.Core.Project.PatternToken">
+            <summary>
+                Represent a token in pattern
+            </summary>
+        </member>
+        <member name="F:Confuser.Core.Project.PatternToken.Position">
+            <summary>
+                The position of this token in the pattern, or null if position not available.
+            </summary>
+        </member>
+        <member name="F:Confuser.Core.Project.PatternToken.Type">
+            <summary>
+                The type of this token.
+            </summary>
+        </member>
+        <member name="F:Confuser.Core.Project.PatternToken.Value">
+            <summary>
+                The value of this token, applicable to identifiers and literals.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.Project.PatternToken.#ctor(System.Int32,Confuser.Core.Project.TokenType)">
+            <summary>
+                Initializes a new instance of the <see cref="T:Confuser.Core.Project.PatternToken"/> struct.
+            </summary>
+            <param name="pos">The position of token.</param>
+            <param name="type">The type of token.</param>
+        </member>
+        <member name="M:Confuser.Core.Project.PatternToken.#ctor(System.Int32,Confuser.Core.Project.TokenType,System.String)">
+            <summary>
+                Initializes a new instance of the <see cref="T:Confuser.Core.Project.PatternToken"/> struct.
+            </summary>
+            <param name="pos">The position of token.</param>
+            <param name="type">The type of token.</param>
+            <param name="value">The value of token.</param>
+        </member>
+        <member name="M:Confuser.Core.Project.PatternToken.#ctor(Confuser.Core.Project.TokenType)">
+            <summary>
+                Initializes a new instance of the <see cref="T:Confuser.Core.Project.PatternToken"/> struct.
+            </summary>
+            <param name="type">The type of token.</param>
+        </member>
+        <member name="M:Confuser.Core.Project.PatternToken.#ctor(Confuser.Core.Project.TokenType,System.String)">
+            <summary>
+                Initializes a new instance of the <see cref="T:Confuser.Core.Project.PatternToken"/> struct.
+            </summary>
+            <param name="type">The type of token.</param>
+            <param name="value">The value of token.</param>
+        </member>
+        <member name="M:Confuser.Core.Project.PatternToken.ToString">
+            <inheritdoc />
+        </member>
+        <member name="T:Confuser.Core.Protection">
+            <summary>
+                Base class of Confuser protections.
+            </summary>
+            <remarks>
+                A parameterless constructor must exists in derived classes to enable plugin discovery.
+            </remarks>
+        </member>
+        <member name="P:Confuser.Core.Protection.Preset">
+            <summary>
+                Gets the preset this protection is in.
+            </summary>
+            <value>The protection's preset.</value>
+        </member>
+        <member name="T:Confuser.Core.BeforeProtectionAttribute">
+            <summary>
+                Indicates the <see cref="T:Confuser.Core.Protection"/> must initialize before the specified protections.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.BeforeProtectionAttribute.#ctor(System.String[])">
+            <summary>
+                Initializes a new instance of the <see cref="T:Confuser.Core.BeforeProtectionAttribute"/> class.
+            </summary>
+            <param name="ids">The full IDs of the specified protections.</param>
+        </member>
+        <member name="P:Confuser.Core.BeforeProtectionAttribute.Ids">
+            <summary>
+                Gets the full IDs of the specified protections.
+            </summary>
+            <value>The IDs of protections.</value>
+        </member>
+        <member name="T:Confuser.Core.AfterProtectionAttribute">
+            <summary>
+                Indicates the <see cref="T:Confuser.Core.Protection"/> must initialize after the specified protections.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.AfterProtectionAttribute.#ctor(System.String[])">
+            <summary>
+                Initializes a new instance of the <see cref="T:Confuser.Core.BeforeProtectionAttribute"/> class.
+            </summary>
+            <param name="ids">The full IDs of the specified protections.</param>
+        </member>
+        <member name="P:Confuser.Core.AfterProtectionAttribute.Ids">
+            <summary>
+                Gets the full IDs of the specified protections.
+            </summary>
+            <value>The IDs of protections.</value>
+        </member>
+        <member name="T:Confuser.Core.ProtectionPhase">
+            <summary>
+                Base class of protection phases.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.ProtectionPhase.#ctor(Confuser.Core.ConfuserComponent)">
+            <summary>
+                Initializes a new instance of the <see cref="T:Confuser.Core.ProtectionPhase"/> class.
+            </summary>
+            <param name="parent">The parent component of this phase.</param>
+        </member>
+        <member name="M:Confuser.Core.ProtectionPhase.Execute(Confuser.Core.ConfuserContext,Confuser.Core.ProtectionParameters)">
+            <summary>
+                Executes the protection phase.
+            </summary>
+            <param name="context">The working context.</param>
+            <param name="parameters">The parameters of protection.</param>
+        </member>
+        <member name="P:Confuser.Core.ProtectionPhase.Parent">
+            <summary>
+                Gets the parent component.
+            </summary>
+            <value>The parent component.</value>
+        </member>
+        <member name="P:Confuser.Core.ProtectionPhase.Targets">
+            <summary>
+                Gets the targets of protection.
+            </summary>
+            <value>The protection targets.</value>
+        </member>
+        <member name="P:Confuser.Core.ProtectionPhase.Name">
+            <summary>
+                Gets the name of the phase.
+            </summary>
+            <value>The name of phase.</value>
+        </member>
+        <member name="P:Confuser.Core.ProtectionPhase.ProcessAll">
+            <summary>
+                Gets a value indicating whether this phase process all targets, not just the targets that requires the component.
+            </summary>
+            <value><c>true</c> if this phase process all targets; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="T:Confuser.Core.ProtectionSettings">
+            <summary>
+                Protection settings for a certain component
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.ProtectionSettings.#ctor">
+            <summary>
+                Initializes a new instance of the <see cref="T:Confuser.Core.ProtectionSettings"/> class.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.ProtectionSettings.#ctor(Confuser.Core.ProtectionSettings)">
+            <summary>
+                Initializes a new instance of the <see cref="T:Confuser.Core.ProtectionSettings"/> class
+                from an existing <see cref="T:Confuser.Core.ProtectionSettings"/>.
+            </summary>
+            <param name="settings">The settings to copy from.</param>
+        </member>
+        <member name="M:Confuser.Core.ProtectionSettings.IsEmpty">
+            <summary>
+                Determines whether the settings is empty.
+            </summary>
+            <returns><c>true</c> if the settings is empty; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="T:Confuser.Core.ProtectionTargets">
+            <summary>
+                Targets of protection.
+            </summary>
+        </member>
+        <member name="F:Confuser.Core.ProtectionTargets.Types">
+            <summary> Type definitions. </summary>
+        </member>
+        <member name="F:Confuser.Core.ProtectionTargets.Methods">
+            <summary> Method definitions. </summary>
+        </member>
+        <member name="F:Confuser.Core.ProtectionTargets.Fields">
+            <summary> Field definitions. </summary>
+        </member>
+        <member name="F:Confuser.Core.ProtectionTargets.Events">
+            <summary> Event definitions. </summary>
+        </member>
+        <member name="F:Confuser.Core.ProtectionTargets.Properties">
+            <summary> Property definitions. </summary>
+        </member>
+        <member name="F:Confuser.Core.ProtectionTargets.AllMembers">
+            <summary> All member definitions (i.e. type, methods, fields, events and properties). </summary>
+        </member>
+        <member name="F:Confuser.Core.ProtectionTargets.Modules">
+            <summary> Module definitions. </summary>
+        </member>
+        <member name="F:Confuser.Core.ProtectionTargets.AllDefinitions">
+            <summary> All definitions (i.e. All member definitions and modules). </summary>
+        </member>
+        <member name="T:Confuser.Core.ConfuserContext">
+            <summary>
+                Context providing information on the current protection process.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.ConfuserContext.CheckCancellation">
+            <summary>
+                Throws a System.OperationCanceledException if protection process has been canceled.
+            </summary>
+            <exception cref="T:System.OperationCanceledException">
+                The protection process is canceled.
+            </exception>
+        </member>
+        <member name="M:Confuser.Core.ConfuserContext.RequestNative">
+            <summary>
+                Requests the current module to be written as mix-mode module, and return the native writer options.
+            </summary>
+            <returns>The native writer options.</returns>
+        </member>
+        <member name="P:Confuser.Core.ConfuserContext.Logger">
+            <summary>
+                Gets the logger used for logging events.
+            </summary>
+            <value>The logger.</value>
+        </member>
+        <member name="P:Confuser.Core.ConfuserContext.Project">
+            <summary>
+                Gets the project being processed.
+            </summary>
+            <value>The project.</value>
+        </member>
+        <member name="P:Confuser.Core.ConfuserContext.Annotations">
+            <summary>
+                Gets the annotation storage.
+            </summary>
+            <value>The annotation storage.</value>
+        </member>
+        <member name="P:Confuser.Core.ConfuserContext.Registry">
+            <summary>
+                Gets the service registry.
+            </summary>
+            <value>The service registry.</value>
+        </member>
+        <member name="P:Confuser.Core.ConfuserContext.Resolver">
+            <summary>
+                Gets the assembly resolver.
+            </summary>
+            <value>The assembly resolver.</value>
+        </member>
+        <member name="P:Confuser.Core.ConfuserContext.Modules">
+            <summary>
+                Gets the modules being protected.
+            </summary>
+            <value>The modules being protected.</value>
+        </member>
+        <member name="P:Confuser.Core.ConfuserContext.ExternalModules">
+            <summary>
+                Gets the external modules.
+            </summary>
+            <value>The external modules.</value>
+        </member>
+        <member name="P:Confuser.Core.ConfuserContext.BaseDirectory">
+            <summary>
+                Gets the base directory.
+            </summary>
+            <value>The base directory.</value>
+        </member>
+        <member name="P:Confuser.Core.ConfuserContext.OutputDirectory">
+            <summary>
+                Gets the output directory.
+            </summary>
+            <value>The output directory.</value>
+        </member>
+        <member name="P:Confuser.Core.ConfuserContext.Packer">
+            <summary>
+                Gets the packer.
+            </summary>
+            <value>The packer.</value>
+        </member>
+        <member name="P:Confuser.Core.ConfuserContext.Pipeline">
+            <summary>
+                Gets the current processing pipeline.
+            </summary>
+            <value>The processing pipeline.</value>
+        </member>
+        <member name="P:Confuser.Core.ConfuserContext.OutputModules">
+            <summary>
+                Gets the <c>byte[]</c> of modules after protected, or null if module is not protected yet.
+            </summary>
+            <value>The list of <c>byte[]</c> of protected modules.</value>
+        </member>
+        <member name="P:Confuser.Core.ConfuserContext.OutputSymbols">
+            <summary>
+                Gets the <c>byte[]</c> of module debug symbols after protected, or null if module is not protected yet.
+            </summary>
+            <value>The list of <c>byte[]</c> of module debug symbols.</value>
+        </member>
+        <member name="P:Confuser.Core.ConfuserContext.OutputPaths">
+            <summary>
+                Gets the relative output paths of module, or null if module is not protected yet.
+            </summary>
+            <value>The relative output paths of protected modules.</value>
+        </member>
+        <member name="P:Confuser.Core.ConfuserContext.CurrentModuleIndex">
+            <summary>
+                Gets the current module index.
+            </summary>
+            <value>The current module index.</value>
+        </member>
+        <member name="P:Confuser.Core.ConfuserContext.CurrentModule">
+            <summary>
+                Gets the current module.
+            </summary>
+            <value>The current module.</value>
+        </member>
+        <member name="P:Confuser.Core.ConfuserContext.CurrentModuleWriterOptions">
+            <summary>
+                Gets the writer options of the current module.
+            </summary>
+            <value>The writer options.</value>
+        </member>
+        <member name="P:Confuser.Core.ConfuserContext.CurrentModuleWriterListener">
+            <summary>
+                Gets the writer event listener of the current module.
+            </summary>
+            <value>The writer event listener.</value>
+        </member>
+        <member name="P:Confuser.Core.ConfuserContext.CurrentModuleOutput">
+            <summary>
+                Gets output <c>byte[]</c> of the current module
+            </summary>
+            <value>The output <c>byte[]</c>.</value>
+        </member>
+        <member name="P:Confuser.Core.ConfuserContext.CurrentModuleSymbol">
+            <summary>
+                Gets output <c>byte[]</c> debug symbol of the current module
+            </summary>
+            <value>The output <c>byte[]</c> debug symbol.</value>
+        </member>
+        <member name="T:Confuser.Core.ProtectionParameters">
+            <summary>
+                Parameters of <see cref="T:Confuser.Core.ConfuserComponent"/>.
+            </summary>
+        </member>
+        <member name="F:Confuser.Core.ProtectionParameters.Empty">
+            <summary>
+                A empty instance of <see cref="T:Confuser.Core.ProtectionParameters"/>.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.ProtectionParameters.#ctor(Confuser.Core.ConfuserComponent,System.Collections.Generic.IList{dnlib.DotNet.IDnlibDef})">
+            <summary>
+                Initializes a new instance of the <see cref="T:Confuser.Core.ProtectionParameters"/> class.
+            </summary>
+            <param name="component">The component that this parameters applied to.</param>
+            <param name="targets">The protection targets.</param>
+        </member>
+        <member name="M:Confuser.Core.ProtectionParameters.GetParameter``1(Confuser.Core.ConfuserContext,dnlib.DotNet.IDnlibDef,System.String,``0)">
+            <summary>
+                Obtains the value of a parameter of the specified target.
+            </summary>
+            <typeparam name="T">The type of the parameter value.</typeparam>
+            <param name="context">The working context.</param>
+            <param name="target">The protection target.</param>
+            <param name="name">The name of the parameter.</param>
+            <param name="defValue">Default value if the parameter does not exist.</param>
+            <returns>The value of the parameter.</returns>
+        </member>
+        <member name="M:Confuser.Core.ProtectionParameters.SetParameters(Confuser.Core.ConfuserContext,dnlib.DotNet.IDnlibDef,Confuser.Core.ProtectionSettings)">
+            <summary>
+                Sets the protection parameters of the specified target.
+            </summary>
+            <param name="context">The context.</param>
+            <param name="target">The protection target.</param>
+            <param name="parameters">The parameters.</param>
+        </member>
+        <member name="M:Confuser.Core.ProtectionParameters.GetParameters(Confuser.Core.ConfuserContext,dnlib.DotNet.IDnlibDef)">
+            <summary>
+                Gets the protection parameters of the specified target.
+            </summary>
+            <param name="context">The context.</param>
+            <param name="target">The protection target.</param>
+            <returns>The parameters.</returns>
+        </member>
+        <member name="P:Confuser.Core.ProtectionParameters.Targets">
+            <summary>
+                Gets the targets of protection.
+                Possible targets are module, types, methods, fields, events, properties.
+            </summary>
+            <value>A list of protection targets.</value>
+        </member>
+        <member name="T:Confuser.Core.PipelineStage">
+            <summary>
+                Various stages in <see cref="T:Confuser.Core.ProtectionPipeline"/>.
+            </summary>
+        </member>
+        <member name="F:Confuser.Core.PipelineStage.Inspection">
+            <summary>
+                Confuser engine inspects the loaded modules and makes necessary changes.
+                This stage occurs only once per pipeline run.
+            </summary>
+        </member>
+        <member name="F:Confuser.Core.PipelineStage.BeginModule">
+            <summary>
+                Confuser engine begins to process a module.
+                This stage occurs once per module.
+            </summary>
+        </member>
+        <member name="F:Confuser.Core.PipelineStage.ProcessModule">
+            <summary>
+                Confuser engine processes a module.
+                This stage occurs once per module.
+            </summary>
+        </member>
+        <member name="F:Confuser.Core.PipelineStage.OptimizeMethods">
+            <summary>
+                Confuser engine optimizes opcodes of the method bodys.
+                This stage occurs once per module.
+            </summary>
+        </member>
+        <member name="F:Confuser.Core.PipelineStage.EndModule">
+            <summary>
+                Confuser engine finishes processing a module.
+                This stage occurs once per module.
+            </summary>
+        </member>
+        <member name="F:Confuser.Core.PipelineStage.WriteModule">
+            <summary>
+                Confuser engine writes the module to byte array.
+                This stage occurs once per module, after all processing of modules are completed.
+            </summary>
+        </member>
+        <member name="F:Confuser.Core.PipelineStage.Debug">
+            <summary>
+                Confuser engine generates debug symbols.
+                This stage occurs only once per pipeline run.
+            </summary>
+        </member>
+        <member name="F:Confuser.Core.PipelineStage.Pack">
+            <summary>
+                Confuser engine packs up the output if packer is present.
+                This stage occurs only once per pipeline run.
+            </summary>
+        </member>
+        <member name="F:Confuser.Core.PipelineStage.SaveModules">
+            <summary>
+                Confuser engine saves the output.
+                This stage occurs only once per pipeline run.
+            </summary>
+        </member>
+        <member name="T:Confuser.Core.ProtectionPipeline">
+            <summary>
+                Protection processing pipeline.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.ProtectionPipeline.#ctor">
+            <summary>
+                Initializes a new instance of the <see cref="T:Confuser.Core.ProtectionPipeline"/> class.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.ProtectionPipeline.InsertPreStage(Confuser.Core.PipelineStage,Confuser.Core.ProtectionPhase)">
+            <summary>
+                Inserts the phase into pre-processing pipeline of the specified stage.
+            </summary>
+            <param name="stage">The pipeline stage.</param>
+            <param name="phase">The protection phase.</param>
+        </member>
+        <member name="M:Confuser.Core.ProtectionPipeline.InsertPostStage(Confuser.Core.PipelineStage,Confuser.Core.ProtectionPhase)">
+            <summary>
+                Inserts the phase into post-processing pipeline of the specified stage.
+            </summary>
+            <param name="stage">The pipeline stage.</param>
+            <param name="phase">The protection phase.</param>
+        </member>
+        <member name="M:Confuser.Core.ProtectionPipeline.FindPhase``1">
+            <summary>
+                Finds the phase with the specified type in the pipeline.
+            </summary>
+            <typeparam name="T">The type of the phase.</typeparam>
+            <returns>The phase with specified type in the pipeline.</returns>
+        </member>
+        <member name="M:Confuser.Core.ProtectionPipeline.ExecuteStage(Confuser.Core.PipelineStage,System.Action{Confuser.Core.ConfuserContext},System.Func{System.Collections.Generic.IList{dnlib.DotNet.IDnlibDef}},Confuser.Core.ConfuserContext)">
+            <summary>
+                Execute the specified pipeline stage with pre-processing and post-processing.
+            </summary>
+            <param name="stage">The pipeline stage.</param>
+            <param name="func">The stage function.</param>
+            <param name="targets">The target list of the stage.</param>
+            <param name="context">The working context.</param>
+        </member>
+        <member name="M:Confuser.Core.ProtectionPipeline.Filter(Confuser.Core.ConfuserContext,System.Collections.Generic.IList{dnlib.DotNet.IDnlibDef},Confuser.Core.ProtectionPhase)">
+            <summary>
+                Returns only the targets with the specified type and used by specified component.
+            </summary>
+            <param name="context">The working context.</param>
+            <param name="targets">List of targets.</param>
+            <param name="phase">The component phase.</param>
+            <returns>Filtered targets.</returns>
+        </member>
+        <member name="T:Confuser.Core.ProtectionPreset">
+            <summary>
+                Various presets of protections.
+            </summary>
+        </member>
+        <member name="F:Confuser.Core.ProtectionPreset.None">
+            <summary> The protection does not belong to any preset. </summary>
+        </member>
+        <member name="F:Confuser.Core.ProtectionPreset.Minimum">
+            <summary> The protection provides basic security. </summary>
+        </member>
+        <member name="F:Confuser.Core.ProtectionPreset.Normal">
+            <summary> The protection provides normal security for public release. </summary>
+        </member>
+        <member name="F:Confuser.Core.ProtectionPreset.Aggressive">
+            <summary> The protection provides better security with observable performance impact. </summary>
+        </member>
+        <member name="F:Confuser.Core.ProtectionPreset.Maximum">
+            <summary> The protection provides strongest security with possible incompatibility. </summary>
+        </member>
+        <member name="T:Confuser.Core.ServiceRegistry">
+            <summary>
+                A registry of different services provided by protections
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.ServiceRegistry.System#IServiceProvider#GetService(System.Type)">
+            <inheritdoc />
+        </member>
+        <member name="M:Confuser.Core.ServiceRegistry.GetService``1">
+            <summary>
+                Retrieves the service of type <typeparamref name="T" />.
+            </summary>
+            <typeparam name="T">The type of service.</typeparam>
+            <returns>The service instance.</returns>
+        </member>
+        <member name="M:Confuser.Core.ServiceRegistry.RegisterService(System.String,System.Type,System.Object)">
+            <summary>
+                Registers the service with specified ID .
+            </summary>
+            <param name="serviceId">The service identifier.</param>
+            <param name="serviceType">The service type.</param>
+            <param name="service">The service.</param>
+            <exception cref="T:System.ArgumentException">Service with same ID or type has already registered.</exception>
+        </member>
+        <member name="M:Confuser.Core.ServiceRegistry.Contains(System.String)">
+            <summary>
+                Determines whether the service with specified identifier has already registered.
+            </summary>
+            <param name="serviceId">The service identifier.</param>
+            <returns><c>true</c> if the service with specified identifier has already registered; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="T:Confuser.Core.Services.ICompressionService">
+            <summary>
+                Provides methods to do compression and inject decompression algorithm.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.Services.ICompressionService.TryGetRuntimeDecompressor(dnlib.DotNet.ModuleDef,System.Action{dnlib.DotNet.IDnlibDef})">
+            <summary>
+                Gets the runtime decompression method in the module, or null if it's not yet injected.
+            </summary>
+            <param name="module">The module which the decompression method resides in.</param>
+            <param name="init">The initializing method for compression helper definitions.</param>
+            <returns>
+                The requested decompression method with signature 'static Byte[] (Byte[])',
+                or null if it hasn't been injected yet.
+            </returns>
+        </member>
+        <member name="M:Confuser.Core.Services.ICompressionService.GetRuntimeDecompressor(dnlib.DotNet.ModuleDef,System.Action{dnlib.DotNet.IDnlibDef})">
+            <summary>
+                Gets the runtime decompression method in the module and inject if it does not exists.
+            </summary>
+            <param name="module">The module which the decompression method resides in.</param>
+            <param name="init">The initializing method for injected helper definitions.</param>
+            <returns>The requested decompression method with signature 'static Byte[] (Byte[])'.</returns>
+        </member>
+        <member name="M:Confuser.Core.Services.ICompressionService.Compress(System.Byte[],System.Action{System.Double})">
+            <summary>
+                Compresses the specified data.
+            </summary>
+            <param name="data">The buffer storing the data.</param>
+            <param name="progressFunc">The function that receive the progress of compression.</param>
+            <returns>The compressed data.</returns>
+        </member>
+        <member name="M:Confuser.Core.Services.CompressionService.#ctor(Confuser.Core.ConfuserContext)">
+            <summary>
+                Initializes a new instance of the <see cref="T:Confuser.Core.Services.CompressionService"/> class.
+            </summary>
+            <param name="context">The working context.</param>
+        </member>
+        <member name="M:Confuser.Core.Services.CompressionService.TryGetRuntimeDecompressor(dnlib.DotNet.ModuleDef,System.Action{dnlib.DotNet.IDnlibDef})">
+            <inheritdoc />
+        </member>
+        <member name="M:Confuser.Core.Services.CompressionService.GetRuntimeDecompressor(dnlib.DotNet.ModuleDef,System.Action{dnlib.DotNet.IDnlibDef})">
+            <inheritdoc />
+        </member>
+        <member name="M:Confuser.Core.Services.CompressionService.Compress(System.Byte[],System.Action{System.Double})">
+            <inheritdoc />
+        </member>
+        <member name="T:Confuser.Core.Services.IRuntimeService">
+            <summary>
+                Provides methods to obtain runtime library injection type.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.Services.IRuntimeService.GetRuntimeType(System.String)">
+            <summary>
+                Gets the specified runtime type for injection.
+            </summary>
+            <param name="fullName">The full name of the runtime type.</param>
+            <returns>The requested runtime type.</returns>
+        </member>
+        <member name="M:Confuser.Core.Services.RuntimeService.GetRuntimeType(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="T:Confuser.Core.Services.IMarkerService">
+            <summary>
+                Provides methods to access the obfuscation marker.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.Services.IMarkerService.Mark(dnlib.DotNet.IDnlibDef,Confuser.Core.ConfuserComponent)">
+            <summary>
+                Marks the helper member.
+            </summary>
+            <param name="member">The helper member.</param>
+            <param name="parentComp">The parent component.</param>
+            <exception cref="T:System.ArgumentException"><paramref name="member"/> is a <see cref="T:dnlib.DotNet.ModuleDef"/>.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="member"/> is <c>null</c>.</exception>
+        </member>
+        <member name="M:Confuser.Core.Services.IMarkerService.IsMarked(dnlib.DotNet.IDnlibDef)">
+            <summary>
+                Determines whether the specified definition is marked.
+            </summary>
+            <param name="def">The definition.</param>
+            <returns><c>true</c> if the specified definition is marked; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="M:Confuser.Core.Services.IMarkerService.GetHelperParent(dnlib.DotNet.IDnlibDef)">
+            <summary>
+                Gets the parent component of the specified helper.
+            </summary>
+            <param name="def">The helper definition.</param>
+            <returns>The parent component of the helper, or <c>null</c> if the specified definition is not a helper.</returns>
+        </member>
+        <member name="M:Confuser.Core.Services.MarkerService.#ctor(Confuser.Core.ConfuserContext,Confuser.Core.Marker)">
+            <summary>
+                Initializes a new instance of the <see cref="T:Confuser.Core.Services.MarkerService"/> class.
+            </summary>
+            <param name="context">The working context.</param>
+            <param name="marker">The marker.</param>
+        </member>
+        <member name="M:Confuser.Core.Services.MarkerService.Mark(dnlib.DotNet.IDnlibDef,Confuser.Core.ConfuserComponent)">
+            <inheritdoc />
+        </member>
+        <member name="M:Confuser.Core.Services.MarkerService.IsMarked(dnlib.DotNet.IDnlibDef)">
+            <inheritdoc />
+        </member>
+        <member name="M:Confuser.Core.Services.MarkerService.GetHelperParent(dnlib.DotNet.IDnlibDef)">
+            <inheritdoc />
+        </member>
+        <member name="T:Confuser.Core.Services.RandomGenerator">
+            <summary>
+                A seeded SHA256 PRNG.
+            </summary>
+        </member>
+        <member name="F:Confuser.Core.Services.RandomGenerator.primes">
+            <summary>
+                The prime numbers used for generation
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.Services.RandomGenerator.#ctor(System.Byte[])">
+            <summary>
+                Initializes a new instance of the <see cref="T:Confuser.Core.Services.RandomGenerator"/> class.
+            </summary>
+            <param name="seed">The seed.</param>
+        </member>
+        <member name="M:Confuser.Core.Services.RandomGenerator.Seed(System.String)">
+            <summary>
+                Creates a seed buffer.
+            </summary>
+            <param name="seed">The seed data.</param>
+            <returns>The seed buffer.</returns>
+        </member>
+        <member name="M:Confuser.Core.Services.RandomGenerator.NextState">
+            <summary>
+                Refills the state buffer.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.Services.RandomGenerator.NextBytes(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+                Fills the specified buffer with random bytes.
+            </summary>
+            <param name="buffer">The buffer.</param>
+            <param name="offset">The offset of buffer to fill in.</param>
+            <param name="length">The number of random bytes.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="buffer"/> is <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+                <paramref name="offset"/> or <paramref name="length"/> is less than 0.
+            </exception>
+            <exception cref="T:System.ArgumentException">Invalid <paramref name="offset"/> or <paramref name="length"/>.</exception>
+        </member>
+        <member name="M:Confuser.Core.Services.RandomGenerator.NextByte">
+            <summary>
+                Returns a random byte.
+            </summary>
+            <returns>Requested random byte.</returns>
+        </member>
+        <member name="M:Confuser.Core.Services.RandomGenerator.NextBytes(System.Int32)">
+            <summary>
+                Gets a buffer of random bytes with the specified length.
+            </summary>
+            <param name="length">The number of random bytes.</param>
+            <returns>A buffer of random bytes.</returns>
+        </member>
+        <member name="M:Confuser.Core.Services.RandomGenerator.NextInt32">
+            <summary>
+                Returns a random signed integer.
+            </summary>
+            <returns>Requested random number.</returns>
+        </member>
+        <member name="M:Confuser.Core.Services.RandomGenerator.NextInt32(System.Int32)">
+            <summary>
+                Returns a nonnegative random integer that is less than the specified maximum.
+            </summary>
+            <param name="max">The exclusive upper bound.</param>
+            <returns>Requested random number.</returns>
+        </member>
+        <member name="M:Confuser.Core.Services.RandomGenerator.NextInt32(System.Int32,System.Int32)">
+            <summary>
+                Returns a random integer that is within a specified range.
+            </summary>
+            <param name="min">The inclusive lower bound.</param>
+            <param name="max">The exclusive upper bound.</param>
+            <returns>Requested random number.</returns>
+        </member>
+        <member name="M:Confuser.Core.Services.RandomGenerator.NextUInt32">
+            <summary>
+                Returns a random unsigned integer.
+            </summary>
+            <returns>Requested random number.</returns>
+        </member>
+        <member name="M:Confuser.Core.Services.RandomGenerator.NextDouble">
+            <summary>
+                Returns a random double floating pointer number from 0 (inclusive) to 1 (exclusive).
+            </summary>
+            <returns>Requested random number.</returns>
+        </member>
+        <member name="M:Confuser.Core.Services.RandomGenerator.NextBoolean">
+            <summary>
+                Returns a random boolean value.
+            </summary>
+            <returns>Requested random boolean value.</returns>
+        </member>
+        <member name="M:Confuser.Core.Services.RandomGenerator.Shuffle``1(System.Collections.Generic.IList{``0})">
+            <summary>
+                Shuffles the element in the specified list.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="list">The list to shuffle.</param>
+        </member>
+        <member name="T:Confuser.Core.Services.RandomService">
+            <summary>
+                Implementation of <see cref="T:Confuser.Core.Services.IRandomService"/>.
+            </summary>
+        </member>
+        <member name="T:Confuser.Core.Services.IRandomService">
+            <summary>
+                Provides methods to obtain a unique stable PRNG for any given ID.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.Services.IRandomService.GetRandomGenerator(System.String)">
+            <summary>
+                Gets a RNG with the specified identifier.
+            </summary>
+            <param name="id">The identifier.</param>
+            <returns>The requested RNG.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="id"/> is <c>null</c>.</exception>
+        </member>
+        <member name="M:Confuser.Core.Services.RandomService.#ctor(System.String)">
+            <summary>
+                Initializes a new instance of the <see cref="T:Confuser.Core.Services.RandomService"/> class.
+            </summary>
+            <param name="seed">The project seed.</param>
+        </member>
+        <member name="M:Confuser.Core.Services.RandomService.GetRandomGenerator(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="T:Confuser.Core.Services.ITraceService">
+            <summary>
+                Provides methods to trace stack of method body.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.Services.ITraceService.Trace(dnlib.DotNet.MethodDef)">
+            <summary>
+                Trace the stack of the specified method.
+            </summary>
+            <param name="method">The method to trace.</param>
+            <exception cref="T:dnlib.DotNet.Emit.InvalidMethodException"><paramref name="method"/> has invalid body.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="method"/> is <c>null</c>.</exception>
+        </member>
+        <member name="M:Confuser.Core.Services.TraceService.#ctor(Confuser.Core.ConfuserContext)">
+            <summary>
+                Initializes a new instance of the <see cref="T:Confuser.Core.Services.TraceService"/> class.
+            </summary>
+            <param name="context">The working context.</param>
+        </member>
+        <member name="M:Confuser.Core.Services.TraceService.Trace(dnlib.DotNet.MethodDef)">
+            <inheritdoc />
+        </member>
+        <member name="T:Confuser.Core.Services.MethodTrace">
+            <summary>
+                The trace result of a method.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.Services.MethodTrace.#ctor(dnlib.DotNet.MethodDef)">
+            <summary>
+                Initializes a new instance of the <see cref="T:Confuser.Core.Services.MethodTrace"/> class.
+            </summary>
+            <param name="method">The method to trace.</param>
+        </member>
+        <member name="M:Confuser.Core.Services.MethodTrace.IsBranchTarget(System.Int32)">
+            <summary>
+                Determines whether the specified instruction is the target of a branch instruction.
+            </summary>
+            <param name="instrIndex">The index of instruction.</param>
+            <returns><c>true</c> if the specified instruction is a branch target; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="M:Confuser.Core.Services.MethodTrace.Trace">
+            <summary>
+                Perform the actual tracing.
+            </summary>
+            <returns>This instance.</returns>
+            <exception cref="T:dnlib.DotNet.Emit.InvalidMethodException">Bad method body.</exception>
+        </member>
+        <member name="M:Confuser.Core.Services.MethodTrace.TraceArguments(dnlib.DotNet.Emit.Instruction)">
+            <summary>
+                Traces the arguments of the specified call instruction.
+            </summary>
+            <param name="instr">The call instruction.</param>
+            <returns>The indexes of the begin instruction of arguments.</returns>
+            <exception cref="T:System.ArgumentException">The specified call instruction is invalid.</exception>
+            <exception cref="T:dnlib.DotNet.Emit.InvalidMethodException">The method body is invalid.</exception>
+        </member>
+        <member name="P:Confuser.Core.Services.MethodTrace.Method">
+            <summary>
+                Gets the method this trace belongs to.
+            </summary>
+            <value>The method.</value>
+        </member>
+        <member name="P:Confuser.Core.Services.MethodTrace.Instructions">
+            <summary>
+                Gets the instructions this trace is performed on.
+            </summary>
+            <value>The instructions.</value>
+        </member>
+        <member name="P:Confuser.Core.Services.MethodTrace.OffsetToIndexMap">
+            <summary>
+                Gets the map of offset to index.
+            </summary>
+            <value>The map.</value>
+        </member>
+        <member name="P:Confuser.Core.Services.MethodTrace.BeforeStackDepths">
+            <summary>
+                Gets the stack depths of method body.
+            </summary>
+            <value>The stack depths.</value>
+        </member>
+        <member name="P:Confuser.Core.Services.MethodTrace.AfterStackDepths">
+            <summary>
+                Gets the stack depths of method body.
+            </summary>
+            <value>The stack depths.</value>
+        </member>
+        <member name="T:Confuser.Core.UnreachableException">
+            <summary>
+                The exception that is thrown when supposedly unreachable code is executed.
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.UnreachableException.#ctor">
+            <summary>
+                Initializes a new instance of the <see cref="T:Confuser.Core.UnreachableException"/> class.
+            </summary>
+        </member>
+        <member name="T:Confuser.Core.Utils">
+            <summary>
+                Provides a set of utility methods
+            </summary>
+        </member>
+        <member name="M:Confuser.Core.Utils.GetValueOrDefault``2(System.Collections.Generic.Dictionary{``0,``1},``0,``1)">
+            <summary>
+                Gets the value associated with the specified key, or default value if the key does not exists.
+            </summary>
+            <typeparam name="TKey">The type of the key.</typeparam>
+            <typeparam name="TValue">The type of the value.</typeparam>
+            <param name="dictionary">The dictionary.</param>
+            <param name="key">The key of the value to get.</param>
+            <param name="defValue">The default value.</param>
+            <returns>The value associated with the specified key, or the default value if the key does not exists</returns>
+        </member>
+        <member name="M:Confuser.Core.Utils.GetValueOrDefaultLazy``2(System.Collections.Generic.Dictionary{``0,``1},``0,System.Func{``0,``1})">
+            <summary>
+                Gets the value associated with the specified key, or default value if the key does not exists.
+            </summary>
+            <typeparam name="TKey">The type of the key.</typeparam>
+            <typeparam name="TValue">The type of the value.</typeparam>
+            <param name="dictionary">The dictionary.</param>
+            <param name="key">The key of the value to get.</param>
+            <param name="defValueFactory">The default value factory function.</param>
+            <returns>The value associated with the specified key, or the default value if the key does not exists</returns>
+        </member>
+        <member name="M:Confuser.Core.Utils.AddListEntry``2(System.Collections.Generic.IDictionary{``0,System.Collections.Generic.List{``1}},``0,``1)">
+            <summary>
+                Adds the specified key and value to the multi dictionary.
+            </summary>
+            <typeparam name="TKey">The type of key.</typeparam>
+            <typeparam name="TValue">The type of value.</typeparam>
+            <param name="self">The dictionary to add to.</param>
+            <param name="key">The key of the element to add.</param>
+            <param name="value">The value of the element to add.</param>
+            <exception cref="T:System.ArgumentNullException">key is <c>null</c>.</exception>
+        </member>
+        <member name="M:Confuser.Core.Utils.GetRelativePath(System.String,System.String)">
+            <summary>
+                Obtains the relative path from the specified base path.
+            </summary>
+            <param name="filespec">The file path.</param>
+            <param name="folder">The base path.</param>
+            <returns>The path of <paramref name="filespec" /> relative to <paramref name="folder" />.</returns>
+        </member>
+        <member name="M:Confuser.Core.Utils.NullIfEmpty(System.String)">
+            <summary>
+                If the input string is empty, return null; otherwise, return the original input string.
+            </summary>
+            <param name="val">The input string.</param>
+            <returns><c>null</c> if the input string is empty; otherwise, the original input string.</returns>
+        </member>
+        <member name="M:Confuser.Core.Utils.SHA1(System.Byte[])">
+            <summary>
+                Compute the SHA1 hash of the input buffer.
+            </summary>
+            <param name="buffer">The input buffer.</param>
+            <returns>The SHA1 hash of the input buffer.</returns>
+        </member>
+        <member name="M:Confuser.Core.Utils.Xor(System.Byte[],System.Byte[])">
+            <summary>
+                Xor the values in the two buffer together.
+            </summary>
+            <param name="buffer1">The input buffer 1.</param>
+            <param name="buffer2">The input buffer 2.</param>
+            <returns>The result buffer.</returns>
+            <exception cref="T:System.ArgumentException">Length of the two buffers are not equal.</exception>
+        </member>
+        <member name="M:Confuser.Core.Utils.SHA256(System.Byte[])">
+            <summary>
+                Compute the SHA256 hash of the input buffer.
+            </summary>
+            <param name="buffer">The input buffer.</param>
+            <returns>The SHA256 hash of the input buffer.</returns>
+        </member>
+        <member name="M:Confuser.Core.Utils.EncodeString(System.Byte[],System.Char[])">
+            <summary>
+                Encoding the buffer to a string using specified charset.
+            </summary>
+            <param name="buff">The input buffer.</param>
+            <param name="charset">The charset.</param>
+            <returns>The encoded string.</returns>
+        </member>
+        <member name="M:Confuser.Core.Utils.Replace(System.String,System.String,System.String,System.StringComparison)">
+            <summary>
+                Returns a new string in which all occurrences of a specified string in
+                <paramref name="str"/><paramref name="str"/> are replaced with another specified string.
+            </summary>
+            <returns>
+                A <see cref="T:System.String"/> equivalent to <paramref name="str"/> but with all instances of
+                <paramref name="oldValue"/>
+                replaced with <paramref name="newValue"/>.
+            </returns>
+            <param name="str">A string to do the replace in. </param>
+            <param name="oldValue">A string to be replaced. </param>
+            <param name="newValue">A string to replace all occurrences of <paramref name="oldValue"/>. </param>
+            <param name="comparison">One of the <see cref="T:System.StringComparison"/> values. </param>
+            <remarks>Adopted from http://stackoverflow.com/a/244933 </remarks>
+        </member>
+        <member name="M:Confuser.Core.Utils.ToHexString(System.Byte[])">
+            <summary>
+                Encode the buffer to a hexadecimal string.
+            </summary>
+            <param name="buff">The input buffer.</param>
+            <returns>A hexadecimal representation of input buffer.</returns>
+        </member>
+        <member name="M:Confuser.Core.Utils.RemoveWhere``1(System.Collections.Generic.IList{``0},System.Predicate{``0})">
+            <summary>
+                Removes all elements that match the conditions defined by the specified predicate from a the list.
+            </summary>
+            <typeparam name="T">The type of the elements of <paramref name="self" />.</typeparam>
+            <param name="self">The list to remove from.</param>
+            <param name="match">The predicate that defines the conditions of the elements to remove.</param>
+            <returns><paramref name="self" /> for method chaining.</returns>
+        </member>
+        <member name="M:Confuser.Core.Utils.WithProgress``1(System.Collections.Generic.IEnumerable{``0},Confuser.Core.ILogger)">
+            <summary>
+                Returns a <see cref="T:System.Collections.Generic.IEnumerable`1"/> that log the progress of iterating the specified list.
+            </summary>
+            <typeparam name="T">The type of list element</typeparam>
+            <param name="enumerable">The list.</param>
+            <param name="logger">The logger.</param>
+            <returns>A wrapper of the list.</returns>
+        </member>
+    </members>
+</doc>

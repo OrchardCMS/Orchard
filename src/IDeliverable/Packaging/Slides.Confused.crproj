@@ -1,0 +1,11 @@
+<project outputDir="C:\Projects\IDeliverable\Star\src\Orchard.Web\Modules\IDeliverable.Slides\bin\Confused" baseDir="C:\Projects\IDeliverable\Star\src\Orchard.Web\Modules\IDeliverable.Slides\bin" xmlns="http://confuser.codeplex.com">
+  <module path="IDeliverable.Licensing.dll">
+    <rule pattern="true" preset="normal" inherit="false" />
+  </module>
+  <module path="IDeliverable.Licensing.Orchard.dll">
+    <rule pattern="true" preset="minimum" inherit="false" />
+  </module>
+  <module path="IDeliverable.Slides.dll">
+    <rule pattern="true" preset="normal" inherit="false" />
+  </module>
+</project>
