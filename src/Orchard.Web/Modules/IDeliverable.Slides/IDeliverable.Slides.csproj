@@ -99,6 +99,9 @@
     <None Include="Assets\Less\admin-slideshow-part.less" />
     <None Include="Assets\Less\admin-slides-part.less" />
     <None Include="Assets\Less\admin-style-type-browser.less" />
+    <Content Include="Confuser.crproj" />
+    <Content Include="Package.cmd" />
+    <None Include="Properties\PublishProfiles\Package.pubxml" />
     <None Include="SlideShowPlayerEngines\Bootstrap\Scripts\carousel.js" />
     <None Include="SlideShowPlayerEngines\Bootstrap\Scripts\transition.js" />
     <None Include="SlideShowPlayerEngines\JCarousel\Scripts\engine-jcarousel.js" />

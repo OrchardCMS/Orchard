@@ -1,0 +1,1 @@
+..\..\..\..\..\IDeliverable\Packaging\Confuser\Confuser.CLI.exe Confuser.crproj
