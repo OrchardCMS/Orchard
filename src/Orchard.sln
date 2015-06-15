@@ -280,12 +280,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IDeliverable.ThemeSettings"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IDeliverable.Widgets", "Orchard.Web\Modules\IDeliverable.Widgets\IDeliverable.Widgets.csproj", "{B2883BED-DD02-4064-8553-15EE0F07F18F}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Packaging", "Packaging", "{F0C61093-3A5E-4C03-9181-ABCC117C7605}"
-	ProjectSection(SolutionItems) = preProject
-		IDeliverable\Packaging\Confuser\Confuser.CLI.exe = IDeliverable\Packaging\Confuser\Confuser.CLI.exe
-		IDeliverable\Packaging\Slides.Confused.crproj = IDeliverable\Packaging\Slides.Confused.crproj
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vandelay.TranslationManager", "Orchard.Web\Modules\Vandelay.TranslationManager\Vandelay.TranslationManager.csproj", "{D853C0F7-3570-4D27-A45F-9ADE897E9BB5}"
 EndProject
 Global

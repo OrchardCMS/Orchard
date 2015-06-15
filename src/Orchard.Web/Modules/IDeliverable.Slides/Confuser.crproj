@@ -1,11 +1,5 @@
 <project outputDir="confused\.." baseDir="bin" xmlns="http://confuser.codeplex.com">
-  <module path="IDeliverable.Licensing.dll">
-    <rule pattern="true" preset="normal" inherit="false" />
-  </module>
-  <module path="IDeliverable.Licensing.Orchard.dll">
-    <rule pattern="true" preset="normal" inherit="false" />
-  </module>
-  <module path="IDeliverable.Slides.dll">
-    <rule pattern="true" preset="normal" inherit="false" />
-  </module>
+    <module path="IDeliverable.Slides.dll">
+        <rule pattern="true" preset="minimum" inherit="false" />
+    </module>
 </project>

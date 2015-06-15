@@ -12,7 +12,7 @@ namespace IDeliverable.Licensing.Orchard
 {
     public abstract class LicenseValidationErrorBannerBase : Component, INotificationProvider
     {
-        public LicenseValidationErrorBannerBase(IEnumerable<ILicensedProductManifest> products, UrlHelper urlHelper, string productId)
+        protected LicenseValidationErrorBannerBase(IEnumerable<ILicensedProductManifest> products, UrlHelper urlHelper, string productId)
         {
             mProducts = products;
             mUrlHelper = urlHelper;
