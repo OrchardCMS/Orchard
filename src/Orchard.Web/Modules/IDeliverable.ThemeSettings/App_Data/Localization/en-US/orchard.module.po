@@ -1,0 +1,225 @@
+#: ~/Modules/IDeliverable.ThemeSettings/Module.txt
+#| msgid "Name"
+msgid "Theme Settings"
+msgstr "Theme Settings"
+
+#: ~/Modules/IDeliverable.ThemeSettings/Module.txt
+#| msgid "Author"
+msgid "IDeliverable"
+msgstr "IDeliverable"
+
+#: ~/Modules/IDeliverable.ThemeSettings/Module.txt
+#| msgid "Website"
+msgid "https://github.com/IDeliverable/IDeliverable.ThemeSettings"
+msgstr "https://github.com/IDeliverable/IDeliverable.ThemeSettings"
+
+#: ~/Modules/IDeliverable.ThemeSettings/Module.txt
+#| msgid "Description"
+msgid "Enables third party themes to provide a theme settings manifest. These settings are surfaced as theme settings to the user in the dashboard."
+msgstr "Enables third party themes to provide a theme settings manifest. These settings are surfaced as theme settings to the user in the dashboard."
+
+#: ~/Modules/IDeliverable.ThemeSettings/Module.txt
+#| msgid "IDeliverable.ThemeSettings.Name"
+msgid "Theme Settings"
+msgstr "Theme Settings"
+
+#: ~/Modules/IDeliverable.ThemeSettings/Module.txt
+#| msgid "IDeliverable.ThemeSettings.Description"
+msgid "Enables third party themes to provide a theme settings manifest. These settings are surfaced as theme settings to the user in the dashboard."
+msgstr "Enables third party themes to provide a theme settings manifest. These settings are surfaced as theme settings to the user in the dashboard."
+
+#: ~/Modules/IDeliverable.ThemeSettings/Module.txt
+#| msgid "IDeliverable.ThemeSettings.Category"
+msgid "Designer"
+msgstr "Designer"
+
+#: ~/Modules/IDeliverable.ThemeSettings/Module.txt
+#| msgid "IDeliverable.ThemeSettings.ImportExport.Name"
+msgid "Theme Settings Import Export"
+msgstr "Theme Settings Import Export"
+
+#: ~/Modules/IDeliverable.ThemeSettings/Module.txt
+#| msgid "IDeliverable.ThemeSettings.ImportExport.Description"
+msgid "Enables import and export of theme settings."
+msgstr "Enables import and export of theme settings."
+
+#: ~/Modules/IDeliverable.ThemeSettings/Module.txt
+#| msgid "IDeliverable.ThemeSettings.ImportExport.Category"
+msgid "Settings"
+msgstr "Settings"
+
+#: IDeliverable.ThemeSettings.Controllers.ProfileController
+#| msgid "The profile {0} for the {1} theme was succesfully created."
+msgid "The profile {0} for the {1} theme was succesfully created."
+msgstr "The profile {0} for the {1} theme was succesfully created."
+
+#: IDeliverable.ThemeSettings.Controllers.ProfileController
+#| msgid "The profile {0} for the {1} theme was succesfully updated."
+msgid "The profile {0} for the {1} theme was succesfully updated."
+msgstr "The profile {0} for the {1} theme was succesfully updated."
+
+#: IDeliverable.ThemeSettings.Controllers.ProfileController
+#| msgid "The {0} profile is now the current one."
+msgid "The {0} profile is now the current one."
+msgstr "The {0} profile is now the current one."
+
+#: IDeliverable.ThemeSettings.Controllers.ProfileController
+#| msgid "The {0} profile has been cloned."
+msgid "The {0} profile has been cloned."
+msgstr "The {0} profile has been cloned."
+
+#: IDeliverable.ThemeSettings.Controllers.ProfileController
+#| msgid "The {0} profile has been deleted."
+msgid "The {0} profile has been deleted."
+msgstr "The {0} profile has been deleted."
+
+#: ~/Modules/IDeliverable.ThemeSettings/Views/ThemeEntry.Current-Settings.cshtml
+#| msgid "By"
+msgid "By"
+msgstr "By"
+
+#: ~/Modules/IDeliverable.ThemeSettings/Views/ThemeEntry.Current-Settings.cshtml
+#| msgid "Version:"
+msgid "Version:"
+msgstr "Version:"
+
+#: ~/Modules/IDeliverable.ThemeSettings/Views/ThemeEntry.Current-Settings.cshtml
+#| msgid "Settings"
+msgid "Settings"
+msgstr "Settings"
+
+#: ~/Modules/IDeliverable.ThemeSettings/Views/EditorTemplates/ProfileViewModel.cshtml
+#| msgid "Profile"
+msgid "Profile"
+msgstr "Profile"
+
+#: ~/Modules/IDeliverable.ThemeSettings/Views/EditorTemplates/ProfileViewModel.cshtml
+#| msgid "Name"
+msgid "Name"
+msgstr "Name"
+
+#: ~/Modules/IDeliverable.ThemeSettings/Views/EditorTemplates/ProfileViewModel.cshtml
+#| msgid "Provide a name for the profile."
+msgid "Provide a name for the profile."
+msgstr "Provide a name for the profile."
+
+#: ~/Modules/IDeliverable.ThemeSettings/Views/EditorTemplates/ProfileViewModel.cshtml
+#| msgid "Description"
+msgid "Description"
+msgstr "Description"
+
+#: ~/Modules/IDeliverable.ThemeSettings/Views/EditorTemplates/ProfileViewModel.cshtml
+#| msgid "Optionally provide a description for the profile."
+msgid "Optionally provide a description for the profile."
+msgstr "Optionally provide a description for the profile."
+
+#: ~/Modules/IDeliverable.ThemeSettings/Views/EditorTemplates/ProfileViewModel.cshtml
+#| msgid "This is the current profile"
+msgid "This is the current profile"
+msgstr "This is the current profile"
+
+#: ~/Modules/IDeliverable.ThemeSettings/Views/EditorTemplates/ProfileViewModel.cshtml
+#| msgid "Make this the current profile"
+msgid "Make this the current profile"
+msgstr "Make this the current profile"
+
+#: ~/Modules/IDeliverable.ThemeSettings/Views/Profile/Create.cshtml
+#| msgid "New {0} Profile"
+msgid "New {0} Profile"
+msgstr "New {0} Profile"
+
+#: ~/Modules/IDeliverable.ThemeSettings/Views/Profile/Create.cshtml
+#| msgid "Save"
+msgid "Save"
+msgstr "Save"
+
+#: ~/Modules/IDeliverable.ThemeSettings/Views/Profile/Create.cshtml
+#| msgid "Back"
+msgid "Back"
+msgstr "Back"
+
+#: ~/Modules/IDeliverable.ThemeSettings/Views/Profile/Edit.cshtml
+#| msgid "Edit {0} Profile"
+msgid "Edit {0} Profile"
+msgstr "Edit {0} Profile"
+
+#: ~/Modules/IDeliverable.ThemeSettings/Views/Profile/Edit.cshtml
+#| msgid "Save"
+msgid "Save"
+msgstr "Save"
+
+#: ~/Modules/IDeliverable.ThemeSettings/Views/Profile/Edit.cshtml
+#| msgid "Back"
+msgid "Back"
+msgstr "Back"
+
+#: ~/Modules/IDeliverable.ThemeSettings/Views/Profile/Index.cshtml
+#| msgid "{0} Profiles"
+msgid "{0} Profiles"
+msgstr "{0} Profiles"
+
+#: ~/Modules/IDeliverable.ThemeSettings/Views/Profile/Index.cshtml
+#| msgid "Create Profile"
+msgid "Create Profile"
+msgstr "Create Profile"
+
+#: ~/Modules/IDeliverable.ThemeSettings/Views/Profile/Index.cshtml
+#| msgid "Profile"
+msgid "Profile"
+msgstr "Profile"
+
+#: ~/Modules/IDeliverable.ThemeSettings/Views/Profile/Index.cshtml
+#| msgid "Description"
+msgid "Description"
+msgstr "Description"
+
+#: ~/Modules/IDeliverable.ThemeSettings/Views/Profile/Index.cshtml
+#| msgid "Current"
+msgid "Current"
+msgstr "Current"
+
+#: ~/Modules/IDeliverable.ThemeSettings/Views/Profile/Index.cshtml
+#| msgid "Yes"
+msgid "Yes"
+msgstr "Yes"
+
+#: ~/Modules/IDeliverable.ThemeSettings/Views/Profile/Index.cshtml
+#| msgid "Make Current"
+msgid "Make Current"
+msgstr "Make Current"
+
+#: ~/Modules/IDeliverable.ThemeSettings/Views/Profile/Index.cshtml
+#| msgid "Edit"
+msgid "Edit"
+msgstr "Edit"
+
+#: ~/Modules/IDeliverable.ThemeSettings/Views/Profile/Index.cshtml
+#| msgid " | "
+msgid " | "
+msgstr " | "
+
+#: ~/Modules/IDeliverable.ThemeSettings/Views/Profile/Index.cshtml
+#| msgid "Clone"
+msgid "Clone"
+msgstr "Clone"
+
+#: ~/Modules/IDeliverable.ThemeSettings/Views/Profile/Index.cshtml
+#| msgid " | "
+msgid " | "
+msgstr " | "
+
+#: ~/Modules/IDeliverable.ThemeSettings/Views/Profile/Index.cshtml
+#| msgid "Delete"
+msgid "Delete"
+msgstr "Delete"
+
+#: ~/Modules/IDeliverable.ThemeSettings/Views/Profile/Index.cshtml
+#| msgid "Are you sure you want to delete this profile?"
+msgid "Are you sure you want to delete this profile?"
+msgstr "Are you sure you want to delete this profile?"
+
+#: ~/Modules/IDeliverable.ThemeSettings/Views/Profile/Index.cshtml
+#| msgid "No profiles have been defined yet for this theme."
+msgid "No profiles have been defined yet for this theme."
+msgstr "No profiles have been defined yet for this theme."
+

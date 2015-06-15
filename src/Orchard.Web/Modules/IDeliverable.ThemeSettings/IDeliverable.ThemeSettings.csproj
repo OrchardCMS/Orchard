@@ -24,6 +24,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -144,6 +145,7 @@
     <Content Include="Views\ThemeEntry.Current-Settings.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\Localization\en-US\orchard.module.po" />
     <None Include="Readme.md" />
     <None Include="Settings.json.sample" />
     <None Include="ThemeSettings.cshtml.sample" />

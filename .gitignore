@@ -192,5 +192,5 @@ node_modules/
 src/Orchard.Web/Media/Default/RecipeJournal/*
 src/Orchard.Web/Media/Default/_Profiles/*
 
-# Enable "IDeliverables/Packaging/" folder.
+# Enable "IDeliverable/Packaging/" folder.
 !src/IDeliverable/Packaging/*/*.*
