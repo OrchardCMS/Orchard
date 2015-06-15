@@ -10,7 +10,7 @@ using Orchard.UI.Notify;
 
 namespace IDeliverable.Licensing.Orchard
 {
-    public class LicenseValidationErrorBannerBase : Component, INotificationProvider
+    public abstract class LicenseValidationErrorBannerBase : Component, INotificationProvider
     {
         public LicenseValidationErrorBannerBase(IEnumerable<ILicensedProductManifest> products, UrlHelper urlHelper, string productId)
         {
