@@ -4,10 +4,11 @@ namespace IDeliverable.Licensing.Validation
     {
         UnknownLicenseKey,
         HostnameMismatch,
+        NoActiveSubscription,
         LicensingServiceError,
         LicensingServiceUnreachable,
         TokenAgeValidationFailed,
         TokenSignatureValidationFailed,
-        UnexpectedError
+        UnexpectedError,
     }
 }

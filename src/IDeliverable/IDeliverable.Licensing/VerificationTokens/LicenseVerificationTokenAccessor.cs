@@ -4,7 +4,7 @@ namespace IDeliverable.Licensing.VerificationTokens
 {
     public class LicenseVerificationTokenAccessor
     {
-        private static readonly TimeSpan sTokenRenewalInterval = TimeSpan.FromDays(14);
+        private static readonly TimeSpan sTokenRenewalInterval = TimeSpan.FromHours(48);
 
         public LicenseVerificationTokenAccessor(ILicenseVerificationTokenStore store)
         {
@@ -43,8 +43,10 @@ namespace IDeliverable.Licensing.VerificationTokens
                     // a different hostname, we delete any existing token from store and throw unconditionally.
                     if (ex is LicenseVerificationTokenException)
                     {
-                        var lvtex = ex as LicenseVerificationTokenException;
-                        if (lvtex.Error == LicenseVerificationTokenError.UnknownLicenseKey || lvtex.Error == LicenseVerificationTokenError.HostnameMismatch)
+                        var lvtex = (LicenseVerificationTokenException)ex;
+                        if (lvtex.Error == LicenseVerificationTokenError.UnknownLicenseKey || 
+                            lvtex.Error == LicenseVerificationTokenError.HostnameMismatch ||
+                            lvtex.Error == LicenseVerificationTokenError.NoActiveSubscription)
                         {
                             mStore.Clear(productId);
                             throw;

@@ -21,10 +21,10 @@ namespace IDeliverable.Licensing.Service.Services
             mTokenSigningCertificateThumbprint = tokenSigningCertificateThumbprint;
         }
 
-        private string mSendOwlApiEndpoint;
-        private string mSendOwlApiKey;
-        private string mSendOwlApiSecret;
-        private string mTokenSigningCertificateThumbprint;
+        private readonly string mSendOwlApiEndpoint;
+        private readonly string mSendOwlApiKey;
+        private readonly string mSendOwlApiSecret;
+        private readonly string mTokenSigningCertificateThumbprint;
 
         public LicenseVerificationToken VerifyLicense(string licenseKey, int productId, string hostname)
         {
@@ -43,6 +43,9 @@ namespace IDeliverable.Licensing.Service.Services
 
                     var orderId = licenses.First(x => x.Key == licenseKey).OrderId;
                     var order = ParseOrderInfo(client.GetAsync($"orders/{orderId}").Result.Content.ReadAsStringAsync().Result);
+
+                    if (!order.IsProductAccessAllowed)
+                        throw new LicenseVerificationException($"The license with key '{licenseKey}' is not associated with an active subscription.", LicenseVerificationError.NoActiveSubscription);
 
                     if (!order.Hostnames.Contains(hostname, StringComparer.OrdinalIgnoreCase))
                         throw new LicenseVerificationException($"The license with key '{licenseKey}' is not valid for the provided '{hostname}'. Valid hostnames are '{String.Join(",", order.Hostnames)}", LicenseVerificationError.HostnameMismatch);
@@ -82,10 +85,7 @@ namespace IDeliverable.Licensing.Service.Services
             try
             {
                 var certificates = store.Certificates.Find(X509FindType.FindByThumbprint, mTokenSigningCertificateThumbprint, validOnly: false);
-                if (certificates.Count > 0)
-                    return certificates[0];
-
-                return null;
+                return certificates.Count > 0 ? certificates[0] : null;
             }
             finally
             {
@@ -93,12 +93,12 @@ namespace IDeliverable.Licensing.Service.Services
             }
         }
 
-        private string CreateBasicAuthenticationToken(string userName, string password)
+        private static string CreateBasicAuthenticationToken(string userName, string password)
         {
             return Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"), Base64FormattingOptions.None);
         }
 
-        private IEnumerable<LicenseInfo> ParseLicenseInfo(string json)
+        private static IEnumerable<LicenseInfo> ParseLicenseInfo(string json)
         {
             var licensesQuery =
                 from node in JArray.Parse(json)
@@ -110,6 +110,8 @@ namespace IDeliverable.Licensing.Service.Services
         private OrderInfo ParseOrderInfo(string json)
         {
             var order = JObject.Parse(json)["order"];
+            var status = ReadOrderStatus(order);
+            var isAccessAllowed = (bool) order["access_allowed"];
             var customFields = (JArray)order["order_custom_checkout_fields"];
             var hostnames = new List<string>();
 
@@ -119,7 +121,32 @@ namespace IDeliverable.Licensing.Service.Services
             if (customFields.Count > 1)
                 hostnames.Add((string)customFields[1]["order_custom_checkout_field"]["value"]);
 
-            return new OrderInfo((int)order["id"], hostnames);
+            return new OrderInfo((int)order["id"], status, isAccessAllowed, hostnames);
+        }
+
+        private static OrderStatus ReadOrderStatus(JToken order)
+        {
+            var dictionary = new Dictionary<string, OrderStatus>
+            {
+                {"initial", OrderStatus.Initial },
+                {"payment_started", OrderStatus.PaymentStarted },
+                {"payment_pending", OrderStatus.PaymentPending },
+                {"failed", OrderStatus.Failed },
+                {"complete", OrderStatus.Complete },
+                {"chargeback", OrderStatus.Chargeback },
+                {"refunded", OrderStatus.Refunded },
+                {"in_dispute", OrderStatus.InDispute },
+                {"free", OrderStatus.Free },
+                {"imported", OrderStatus.Imported },
+                {"fraud_review", OrderStatus.FraudReview },
+                {"subscription_setup", OrderStatus.SubscriptionSetup },
+                {"subscription_active", OrderStatus.SubscriptionActive },
+                {"subscription_complete", OrderStatus.SubscriptionComplete },
+                {"subscription_cancelled", OrderStatus.SubscriptionCancelled }
+            };
+            var status = (string) order["state"];
+
+            return dictionary.ContainsKey(status) ? dictionary[status] : OrderStatus.Unknown;
         }
     }
 }

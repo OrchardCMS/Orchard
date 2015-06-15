@@ -30,7 +30,7 @@ namespace IDeliverable.Licensing.Orchard
             Instance.ValidateLicense(productId);
         }
 
-        private static LicenseValidationHelper Instance
+        public static LicenseValidationHelper Instance
         {
             get
             {
@@ -61,12 +61,12 @@ namespace IDeliverable.Licensing.Orchard
 
         public void ValidateLicense(string productId)
         {
-            var productManifest = mProducts.Single(x => x.ProductId == productId);
+            var productManifest = GetLicensedProductManifest(productId);
             productManifest.Logger.Debug("Validating license for product '{0}'...", productId);
 
             try
             {
-                string cacheKey = $"ValidateLicenseResult-{productId}-{productManifest.LicenseKey}-{productManifest.SkipValidationForLocalRequests}";
+                var cacheKey = ComputeCacheKey(productManifest);
                 mCacheService.GetValue(cacheKey, context =>
                 {
                     context.ValidFor = _validationResultCachedFor;
@@ -88,6 +88,25 @@ namespace IDeliverable.Licensing.Orchard
                 productManifest.Logger.Error(ex, "An error occurred while validating the license for product '{0}'.", productId);
                 throw;
             }
+        }
+
+        public void ClearLicenseValidationResult(string productId)
+        {
+            var productManifest = GetLicensedProductManifest(productId);
+            productManifest.Logger.Debug("Clearing license validation result for product '{0}'...", productId);
+
+            var cacheKey = ComputeCacheKey(productManifest);
+            mCacheService.RemoveValue(cacheKey);
+        }
+
+        private ILicensedProductManifest GetLicensedProductManifest(string productId)
+        {
+            return mProducts.Single(x => x.ProductId == productId);
+        }
+
+        private string ComputeCacheKey(ILicensedProductManifest productManifest)
+        {
+            return $"ValidateLicenseResult-{productManifest.ProductId}-{productManifest.LicenseKey}-{productManifest.SkipValidationForLocalRequests}";
         }
     }
 }

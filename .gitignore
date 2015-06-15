@@ -185,10 +185,12 @@ src/Orchard.Web/Properties/PublishProfiles
 src/Orchard.Azure/Orchard.Azure.CloudService/Staging/
 node_modules/
 
-#enable all /lib artifacts
+# Enable all /lib artifacts
 !lib/*/*.*
 
-#Enable version control of some IDeliverable specifics.
+# Enable version control of some IDeliverable specifics.
 src/Orchard.Web/Media/Default/RecipeJournal/*
 src/Orchard.Web/Media/Default/_Profiles/*
 
+# Enable "IDeliverables/Packaging/" folder.
+!src/IDeliverable/Packaging/*/*.*
