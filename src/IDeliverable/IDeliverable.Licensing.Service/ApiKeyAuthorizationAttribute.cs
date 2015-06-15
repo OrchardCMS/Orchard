@@ -13,8 +13,19 @@ namespace IDeliverable.Licensing.Service
 	{
 		public override void OnAuthorization(HttpActionContext actionContext)
 		{
-			IEnumerable<string> values = null;
-			actionContext.Request.Headers.TryGetValues("ApiKey", out values);
+            var values = new List<string>();
+
+            var paramsQuery =
+                from param in actionContext.Request.GetQueryNameValuePairs()
+                where String.Equals(param.Key, "ApiKey", StringComparison.OrdinalIgnoreCase)
+                select param.Value;
+            values.AddRange(paramsQuery.ToArray());
+
+            IEnumerable<string> headers;
+			actionContext.Request.Headers.TryGetValues("ApiKey", out headers);
+            if (headers != null)
+                values.AddRange(headers);
+
 			string apiKey = values != null ? values.FirstOrDefault() : null;
 
 			if (String.IsNullOrWhiteSpace(apiKey))
