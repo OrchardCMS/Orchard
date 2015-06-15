@@ -38,6 +38,9 @@ namespace IDeliverable.Licensing.Service.Controllers
                     case LicenseVerificationError.HostnameMismatch:
                         throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.Forbidden) { ReasonPhrase = ex.Message });
 
+                    case LicenseVerificationError.NoActiveSubscription:
+                        throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.Gone) { ReasonPhrase = ex.Message });
+
                     default:
                         throw;
                 }

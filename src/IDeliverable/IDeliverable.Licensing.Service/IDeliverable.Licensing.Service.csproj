@@ -156,6 +156,7 @@
     <Compile Include="Services\LicenseService.cs" />
     <Compile Include="Exceptions\LicenseVerificationException.cs" />
     <Compile Include="Services\OrderInfo.cs" />
+    <Compile Include="Services\OrderStatus.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />

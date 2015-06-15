@@ -4,6 +4,7 @@ namespace IDeliverable.Licensing.VerificationTokens
     {
         UnknownLicenseKey,
         HostnameMismatch,
+        NoActiveSubscription,
         LicenseServiceError,
         LicenseServiceUnreachable,
         UnexpectedError

@@ -52,6 +52,10 @@ namespace IDeliverable.Licensing.Validation
                         error = LicenseValidationError.HostnameMismatch;
                         break;
 
+                    case LicenseVerificationTokenError.NoActiveSubscription:
+                        error = LicenseValidationError.NoActiveSubscription;
+                        break;
+
                     case LicenseVerificationTokenError.LicenseServiceError:
                         error = LicenseValidationError.LicensingServiceError;
                         break;

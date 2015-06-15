@@ -52,6 +52,9 @@ namespace IDeliverable.Licensing.VerificationTokens
                     if (response.StatusCode == HttpStatusCode.Forbidden)
                         throw new LicenseVerificationTokenException(response.ReasonPhrase, LicenseVerificationTokenError.HostnameMismatch);
 
+                    if (response.StatusCode == HttpStatusCode.Gone)
+                        throw new LicenseVerificationTokenException(response.ReasonPhrase, LicenseVerificationTokenError.NoActiveSubscription);
+
                     if (!response.IsSuccessStatusCode)
                         throw new LicenseVerificationTokenException(response.ReasonPhrase, LicenseVerificationTokenError.LicenseServiceError);
 
