@@ -203,6 +203,7 @@
     <Compile Include="Helpers\SlideShowPlayerEngineDataHelper.cs" />
     <Compile Include="Licensing\LicensedProductManifest.cs" />
     <Compile Include="Licensing\LicenseValidationErrorBanner.cs" />
+    <Compile Include="Licensing\LicenseValidationController.cs" />
     <Compile Include="Models\ISlideShow.cs" />
     <Compile Include="Models\SlideShowProfile.cs" />
     <Compile Include="Models\SlidesLicenseSettingsPart.cs" />

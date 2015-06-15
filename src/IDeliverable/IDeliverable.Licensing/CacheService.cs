@@ -43,5 +43,10 @@ namespace IDeliverable.Licensing
                 throw;
             }
         }
+
+        public object RemoveValue(string key)
+        {
+            return Cache.Remove(key);
+        }
     }
 }

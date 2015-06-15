@@ -4,7 +4,7 @@ namespace IDeliverable.Licensing.VerificationTokens
 {
     public class LicenseVerificationTokenAccessor
     {
-        private static readonly TimeSpan sTokenRenewalInterval = TimeSpan.FromDays(14);
+        private static readonly TimeSpan sTokenRenewalInterval = TimeSpan.FromHours(48);
 
         public LicenseVerificationTokenAccessor(ILicenseVerificationTokenStore store)
         {
