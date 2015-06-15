@@ -96,6 +96,7 @@
     <Content Include="Scripts\Engine.Bootstrap.min.js" />
     <Content Include="Scripts\Engine.JCarousel.js" />
     <Content Include="Scripts\Engine.JCarousel.min.js" />
+    <Content Include="App_Data\Localization\en-US\orchard.module.po" />
     <None Include="Assets\Less\admin-slideshow-part.less" />
     <None Include="Assets\Less\admin-slides-part.less" />
     <None Include="Assets\Less\admin-style-type-browser.less" />

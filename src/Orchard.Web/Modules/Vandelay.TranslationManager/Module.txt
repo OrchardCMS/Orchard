@@ -1,0 +1,11 @@
+Name: Vandelay.TranslationManager
+AntiForgery: enabled
+Author: Bertrand Le Roy
+Website: http://weblogs.asp.net/bleroy
+Version: 0.5.0
+OrchardVersion: 0.5.0
+Description: Translation management tools
+Features:
+    Vandelay.TranslationManager:
+        Description: Translation management tools
+        Category: Localization

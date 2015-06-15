@@ -280,6 +280,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IDeliverable.ThemeSettings"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IDeliverable.Widgets", "Orchard.Web\Modules\IDeliverable.Widgets\IDeliverable.Widgets.csproj", "{B2883BED-DD02-4064-8553-15EE0F07F18F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Packaging", "Packaging", "{F0C61093-3A5E-4C03-9181-ABCC117C7605}"
+	ProjectSection(SolutionItems) = preProject
+		IDeliverable\Packaging\Confuser\Confuser.CLI.exe = IDeliverable\Packaging\Confuser\Confuser.CLI.exe
+		IDeliverable\Packaging\Slides.Confused.crproj = IDeliverable\Packaging\Slides.Confused.crproj
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vandelay.TranslationManager", "Orchard.Web\Modules\Vandelay.TranslationManager\Vandelay.TranslationManager.csproj", "{D853C0F7-3570-4D27-A45F-9ADE897E9BB5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		CodeCoverage|Any CPU = CodeCoverage|Any CPU
@@ -1142,6 +1150,16 @@ Global
 		{B2883BED-DD02-4064-8553-15EE0F07F18F}.FxCop|Any CPU.Build.0 = Release|Any CPU
 		{B2883BED-DD02-4064-8553-15EE0F07F18F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B2883BED-DD02-4064-8553-15EE0F07F18F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D853C0F7-3570-4D27-A45F-9ADE897E9BB5}.CodeCoverage|Any CPU.ActiveCfg = Release|Any CPU
+		{D853C0F7-3570-4D27-A45F-9ADE897E9BB5}.CodeCoverage|Any CPU.Build.0 = Release|Any CPU
+		{D853C0F7-3570-4D27-A45F-9ADE897E9BB5}.Coverage|Any CPU.ActiveCfg = Release|Any CPU
+		{D853C0F7-3570-4D27-A45F-9ADE897E9BB5}.Coverage|Any CPU.Build.0 = Release|Any CPU
+		{D853C0F7-3570-4D27-A45F-9ADE897E9BB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D853C0F7-3570-4D27-A45F-9ADE897E9BB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D853C0F7-3570-4D27-A45F-9ADE897E9BB5}.FxCop|Any CPU.ActiveCfg = Release|Any CPU
+		{D853C0F7-3570-4D27-A45F-9ADE897E9BB5}.FxCop|Any CPU.Build.0 = Release|Any CPU
+		{D853C0F7-3570-4D27-A45F-9ADE897E9BB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D853C0F7-3570-4D27-A45F-9ADE897E9BB5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1231,5 +1249,6 @@ Global
 		{F1467A6B-2397-447B-BE90-766D192EC3D9} = {35CE9047-8A48-4EFA-A30C-93C5A8E564A4}
 		{66279934-5324-48A7-969B-565CD23D6B79} = {35CE9047-8A48-4EFA-A30C-93C5A8E564A4}
 		{B2883BED-DD02-4064-8553-15EE0F07F18F} = {35CE9047-8A48-4EFA-A30C-93C5A8E564A4}
+		{D853C0F7-3570-4D27-A45F-9ADE897E9BB5} = {35CE9047-8A48-4EFA-A30C-93C5A8E564A4}
 	EndGlobalSection
 EndGlobal

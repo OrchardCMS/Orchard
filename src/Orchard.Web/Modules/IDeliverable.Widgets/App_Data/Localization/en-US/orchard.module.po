@@ -1,0 +1,270 @@
+#: ~/Modules/IDeliverable.Widgets/Module.txt
+#| msgid "Name"
+msgid "IDeliverable Widgets"
+msgstr "IDeliverable Widgets"
+
+#: ~/Modules/IDeliverable.Widgets/Module.txt
+#| msgid "Author"
+msgid "IDeliverable"
+msgstr "IDeliverable"
+
+#: ~/Modules/IDeliverable.Widgets/Module.txt
+#| msgid "Website"
+msgid "https://github.com/IDeliverable/IDeliverable.Widgets"
+msgstr "https://github.com/IDeliverable/IDeliverable.Widgets"
+
+#: ~/Modules/IDeliverable.Widgets/Module.txt
+#| msgid "Description"
+msgid "Provides advanced widget support, such as widgets per content item, a content picker widget and an way to ajaxify content and widgets."
+msgstr "Provides advanced widget support, such as widgets per content item, a content picker widget and an way to ajaxify content and widgets."
+
+#: ~/Modules/IDeliverable.Widgets/Module.txt
+#| msgid "IDeliverable.Widgets.Name"
+msgid "Widgets Container"
+msgstr "Widgets Container"
+
+#: ~/Modules/IDeliverable.Widgets/Module.txt
+#| msgid "IDeliverable.Widgets.Description"
+msgid "Add widgets per content item without creating new layers. Attach the WidgetContainerPart to content types to which you want to be able to add widgets."
+msgstr "Add widgets per content item without creating new layers. Attach the WidgetContainerPart to content types to which you want to be able to add widgets."
+
+#: ~/Modules/IDeliverable.Widgets/Module.txt
+#| msgid "IDeliverable.Widgets.Category"
+msgid "Widget"
+msgstr "Widget"
+
+#: ~/Modules/IDeliverable.Widgets/Module.txt
+#| msgid "IDeliverable.Widgets.Name"
+msgid "Ajax Widget"
+msgstr "Ajax Widget"
+
+#: ~/Modules/IDeliverable.Widgets/Module.txt
+#| msgid "IDeliverable.Widgets.Description"
+msgid "Provides an AjaxifyPart used to create widgets that can load content and other widgets asynchronously via AJAX."
+msgstr "Provides an AjaxifyPart used to create widgets that can load content and other widgets asynchronously via AJAX."
+
+#: ~/Modules/IDeliverable.Widgets/Module.txt
+#| msgid "IDeliverable.Widgets.Category"
+msgid "Widget"
+msgstr "Widget"
+
+#: ~/Modules/IDeliverable.Widgets/Module.txt
+#| msgid "IDeliverable.Widgets.Name"
+msgid "Widget Output Cache"
+msgstr "Widget Output Cache"
+
+#: ~/Modules/IDeliverable.Widgets/Module.txt
+#| msgid "IDeliverable.Widgets.Description"
+msgid "Provides an OutputCachePart for use with widget content types. Attach this part to widgets for which you want to control output caching."
+msgstr "Provides an OutputCachePart for use with widget content types. Attach this part to widgets for which you want to control output caching."
+
+#: ~/Modules/IDeliverable.Widgets/Module.txt
+#| msgid "IDeliverable.Widgets.Category"
+msgid "Widget"
+msgstr "Widget"
+
+#: IDeliverable.Widgets.Controllers.WidgetAdminController
+#| msgid "Couldn't create content"
+msgid "Couldn't create content"
+msgstr "Couldn't create content"
+
+#: IDeliverable.Widgets.Controllers.WidgetAdminController
+#| msgid "Your content has been created."
+msgid "Your content has been created."
+msgstr "Your content has been created."
+
+#: IDeliverable.Widgets.Controllers.WidgetAdminController
+#| msgid "Your {0} has been created."
+msgid "Your {0} has been created."
+msgstr "Your {0} has been created."
+
+#: IDeliverable.Widgets.Controllers.WidgetAdminController
+#| msgid "Creating widget failed: {0}"
+msgid "Creating widget failed: {0}"
+msgstr "Creating widget failed: {0}"
+
+#: IDeliverable.Widgets.Controllers.WidgetAdminController
+#| msgid "Creating widget failed: {0}"
+msgid "Creating widget failed: {0}"
+msgstr "Creating widget failed: {0}"
+
+#: IDeliverable.Widgets.Controllers.WidgetAdminController
+#| msgid "Creating widget failed: {0}"
+msgid "Creating widget failed: {0}"
+msgstr "Creating widget failed: {0}"
+
+#: IDeliverable.Widgets.Controllers.WidgetAdminController
+#| msgid "Creating widget failed: {0}"
+msgid "Creating widget failed: {0}"
+msgstr "Creating widget failed: {0}"
+
+#: IDeliverable.Widgets.Controllers.WidgetAdminController
+#| msgid "Your {0} has been added."
+msgid "Your {0} has been added."
+msgstr "Your {0} has been added."
+
+#: IDeliverable.Widgets.Controllers.WidgetAdminController
+#| msgid "Widget not found: {0}"
+msgid "Widget not found: {0}"
+msgstr "Widget not found: {0}"
+
+#: IDeliverable.Widgets.Controllers.WidgetAdminController
+#| msgid "Editing widget failed: {0}"
+msgid "Editing widget failed: {0}"
+msgstr "Editing widget failed: {0}"
+
+#: IDeliverable.Widgets.Controllers.WidgetAdminController
+#| msgid "Editing widget failed: {0}"
+msgid "Editing widget failed: {0}"
+msgstr "Editing widget failed: {0}"
+
+#: IDeliverable.Widgets.Controllers.WidgetAdminController
+#| msgid "Your {0} has been saved."
+msgid "Your {0} has been saved."
+msgstr "Your {0} has been saved."
+
+#: IDeliverable.Widgets.Controllers.WidgetAdminController
+#| msgid "Editing widget failed: {0}"
+msgid "Editing widget failed: {0}"
+msgstr "Editing widget failed: {0}"
+
+#: IDeliverable.Widgets.Controllers.WidgetAdminController
+#| msgid "Editing widget failed: {0}"
+msgid "Editing widget failed: {0}"
+msgstr "Editing widget failed: {0}"
+
+#: IDeliverable.Widgets.Controllers.WidgetAdminController
+#| msgid "Widget was successfully deleted"
+msgid "Widget was successfully deleted"
+msgstr "Widget was successfully deleted"
+
+#: IDeliverable.Widgets.Controllers.WidgetAdminController
+#| msgid "Removing Widget failed: {0}"
+msgid "Removing Widget failed: {0}"
+msgstr "Removing Widget failed: {0}"
+
+#: IDeliverable.Widgets.Controllers.WidgetAdminController
+#| msgid "Removing Widget failed: {0}"
+msgid "Removing Widget failed: {0}"
+msgstr "Removing Widget failed: {0}"
+
+#: IDeliverable.Widgets.Controllers.WidgetAdminController
+#| msgid "Not authorized to manage widgets"
+msgid "Not authorized to manage widgets"
+msgstr "Not authorized to manage widgets"
+
+#: IDeliverable.Widgets.Filters.WidgetFilter
+#| msgid "An error occured during layer evaluation on: {0}"
+msgid "An error occured during layer evaluation on: {0}"
+msgstr "An error occured during layer evaluation on: {0}"
+
+#: ~/Modules/IDeliverable.Widgets/Views/AjaxWidgetPartError.cshtml
+#| msgid "Error loading widget."
+msgid "Error loading widget."
+msgstr "Error loading widget."
+
+#: ~/Modules/IDeliverable.Widgets/Views/AjaxWidgetPartLoading.cshtml
+#| msgid "Loading..."
+msgid "Loading..."
+msgstr "Loading..."
+
+#: ~/Modules/IDeliverable.Widgets/Views/EditorTemplates/Parts.Ajaxify.cshtml
+#| msgid "Asynchronous Settings"
+msgid "Asynchronous Settings"
+msgstr "Asynchronous Settings"
+
+#: ~/Modules/IDeliverable.Widgets/Views/EditorTemplates/Parts.Ajaxify.cshtml
+#| msgid "Ajaxify"
+msgid "Ajaxify"
+msgstr "Ajaxify"
+
+#: ~/Modules/IDeliverable.Widgets/Views/EditorTemplates/Parts.Ajaxify.cshtml
+#| msgid "Check to load this content item asynchronously via AJAX."
+msgid "Check to load this content item asynchronously via AJAX."
+msgstr "Check to load this content item asynchronously via AJAX."
+
+#: ~/Modules/IDeliverable.Widgets/Views/EditorTemplates/Parts.OutputCache.cshtml
+#| msgid "Enable Output Cache"
+msgid "Enable Output Cache"
+msgstr "Enable Output Cache"
+
+#: ~/Modules/IDeliverable.Widgets/Views/EditorTemplates/Parts.OutputCache.cshtml
+#| msgid "Check to enable output caching for this widget's output."
+msgid "Check to enable output caching for this widget's output."
+msgstr "Check to enable output caching for this widget's output."
+
+#: ~/Modules/IDeliverable.Widgets/Views/EditorTemplates/Parts.WidgetsContainer.cshtml
+#| msgid "Widgets"
+msgid "Widgets"
+msgstr "Widgets"
+
+#: ~/Modules/IDeliverable.Widgets/Views/EditorTemplates/Parts.WidgetsContainer.cshtml
+#| msgid "Add"
+msgid "Add"
+msgstr "Add"
+
+#: ~/Modules/IDeliverable.Widgets/Views/EditorTemplates/Parts.WidgetsContainer.cshtml
+#| msgid "Publish Draft"
+msgid "Publish Draft"
+msgstr "Publish Draft"
+
+#: ~/Modules/IDeliverable.Widgets/Views/EditorTemplates/Parts.WidgetsContainer.cshtml
+#| msgid " | "
+msgid " | "
+msgstr " | "
+
+#: ~/Modules/IDeliverable.Widgets/Views/EditorTemplates/Parts.WidgetsContainer.cshtml
+#| msgid "Unpublish"
+msgid "Unpublish"
+msgstr "Unpublish"
+
+#: ~/Modules/IDeliverable.Widgets/Views/EditorTemplates/Parts.WidgetsContainer.cshtml
+#| msgid " | "
+msgid " | "
+msgstr " | "
+
+#: ~/Modules/IDeliverable.Widgets/Views/EditorTemplates/Parts.WidgetsContainer.cshtml
+#| msgid "Publish"
+msgid "Publish"
+msgstr "Publish"
+
+#: ~/Modules/IDeliverable.Widgets/Views/EditorTemplates/Parts.WidgetsContainer.cshtml
+#| msgid " | "
+msgid " | "
+msgstr " | "
+
+#: ~/Modules/IDeliverable.Widgets/Views/EditorTemplates/Parts.WidgetsContainer.cshtml
+#| msgid "Are you sure you want to delete this widget? Note: the widget will be removed permanently when you save the content item."
+msgid "Are you sure you want to delete this widget? Note: the widget will be removed permanently when you save the content item."
+msgstr "Are you sure you want to delete this widget? Note: the widget will be removed permanently when you save the content item."
+
+#: ~/Modules/IDeliverable.Widgets/Views/EditorTemplates/Parts.WidgetsContainer.cshtml
+#| msgid "Remove"
+msgid "Remove"
+msgstr "Remove"
+
+#: ~/Modules/IDeliverable.Widgets/Views/EditorTemplates/Parts.WidgetsContainer.cshtml
+#| msgid "{0} zone preview"
+msgid "{0} zone preview"
+msgstr "{0} zone preview"
+
+#: ~/Modules/IDeliverable.Widgets/Views/EditorTemplates/Parts.WidgetsContainer.cshtml
+#| msgid "{0} zone preview"
+msgid "{0} zone preview"
+msgstr "{0} zone preview"
+
+#: ~/Modules/IDeliverable.Widgets/Views/WidgetAdmin/AddWidget.cshtml
+#| msgid "Add Widget"
+msgid "Add Widget"
+msgstr "Add Widget"
+
+#: ~/Modules/IDeliverable.Widgets/Views/WidgetAdmin/CreateContent.cshtml
+#| msgid "New {0}"
+msgid "New {0}"
+msgstr "New {0}"
+
+#: ~/Modules/IDeliverable.Widgets/Views/WidgetAdmin/EditWidget.cshtml
+#| msgid "Edit Widget"
+msgid "Edit Widget"
+msgstr "Edit Widget"
+
