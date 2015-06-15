@@ -1,5 +1,5 @@
 <project outputDir="confused\.." baseDir="bin" xmlns="http://confuser.codeplex.com">
     <module path="IDeliverable.Slides.dll">
-        <rule pattern="true" preset="minimum" inherit="false" />
+        <rule pattern="not match(&quot;IDeliverable.Licensing.Orchard.*&quot;) or match(&quot;.*LicenseValidationHelper&quot;)" preset="maximum" inherit="false" />
     </module>
 </project>
