@@ -33,10 +33,9 @@ namespace Orchard.Autoroute.Settings {
             //get default site culture
             settings.DefaultSiteCulture = _cultureManager.GetSiteCulture();
 
-            //if a culture is not set on the token we set it to the default site culture for backward compatibility
-            //NOT SURE ABOUT THIS
-            if (!settings.Patterns.Any(x => x.Culture == settings.DefaultSiteCulture)) {
-                foreach (RoutePattern pattern in settings.Patterns.Where(x => x.Culture == null)) {
+            //if a culture is not set on the pattern we set it to the default site culture for backward compatibility
+            if (!settings.Patterns.Any(x => String.Equals(x.Culture, settings.DefaultSiteCulture, StringComparison.OrdinalIgnoreCase))) {
+                foreach (RoutePattern pattern in settings.Patterns.Where(x => String.IsNullOrWhiteSpace(x.Culture))) {
                     settings.Patterns.Where(x => x.GetHashCode() == pattern.GetHashCode()).FirstOrDefault().Culture = settings.DefaultSiteCulture;
                 }
             }
@@ -45,8 +44,8 @@ namespace Orchard.Autoroute.Settings {
             List<RoutePattern> newPatterns = new List<RoutePattern>();
             int current = 0;
             foreach (string culture in settings.SiteCultures) {
-                foreach (RoutePattern routePattern in settings.Patterns.Where(x => x.Culture == culture)) {
-                    if (settings.Patterns.Any(x => x.Culture == culture)) {
+                foreach (RoutePattern routePattern in settings.Patterns.Where(x => String.Equals(x.Culture, culture, StringComparison.OrdinalIgnoreCase))) {
+                    if (settings.Patterns.Any(x => String.Equals(x.Culture, culture, StringComparison.OrdinalIgnoreCase))) {
                         newPatterns.Add(settings.Patterns[current]);
                     } else {
                         newPatterns.Add(new RoutePattern {
@@ -60,24 +59,26 @@ namespace Orchard.Autoroute.Settings {
                 }
 
                 //We add a pattern for each culture if there is none
-                if (!settings.Patterns.Where(x => x.Culture == culture).Any()) {
-                    //We add the default pattern from migrations
-                    if (settings.Patterns.Where(x => String.IsNullOrEmpty(x.Culture)).Any()) {
-                        //we add the RoutePattern and we set the culture since there is none defined
-                        RoutePattern migrationRoutePattern = settings.Patterns.Where(x => String.IsNullOrEmpty(x.Culture)).First();
-                        newPatterns.Add(new RoutePattern { Culture = culture, Name = migrationRoutePattern.Name, Description = migrationRoutePattern.Description, Pattern = migrationRoutePattern.Pattern });
-                    } else {
-                        //we add the default pattern for custom content types or modules that don't define it in their migration
-                        newPatterns.Add(new RoutePattern { Culture = culture, Name = "Title", Description = "my-title", Pattern = "{Content.Slug}" });
-                    }
+                if (!settings.Patterns.Where(x => String.Equals(x.Culture, culture, StringComparison.OrdinalIgnoreCase)).Any()) {
+                    newPatterns.Add(new RoutePattern { Culture = culture, Name = "Title", Description = "my-title", Pattern = "{Content.Slug}" });
                 }
 
                 //we add a new empty line for each culture
                 newPatterns.Add(new RoutePattern { Culture = culture, Name = null, Description = null, Pattern = null });
 
-                // if the content type has no defaultPattern for autoroute, then assign a the first one we just created
-                if (!settings.DefaultPatterns.Any(x => x.Culture == culture)) {
-                    settings.DefaultPatterns.Add(new DefaultPattern { PatternIndex = "0", Culture = culture });
+                // if the content type has no defaultPattern for autoroute, then assign one
+                if (!settings.DefaultPatterns.Any(x => String.Equals(x.Culture, culture, StringComparison.OrdinalIgnoreCase))) {
+                    //if we are in the default culture check the old setting
+                    if (String.Equals(culture, _cultureManager.GetSiteCulture(), StringComparison.OrdinalIgnoreCase)) {
+                        if (!String.IsNullOrEmpty(definition.Settings["AutorouteSettings.DefaultPatternIndex"])) {
+                            string patternIndex = definition.Settings["AutorouteSettings.DefaultPatternIndex"];
+                            settings.DefaultPatterns.Add(new DefaultPattern { Culture = settings.DefaultSiteCulture, PatternIndex = patternIndex });
+                        } else {
+                            settings.DefaultPatterns.Add(new DefaultPattern { PatternIndex = "0", Culture = culture });
+                        }
+                    } else {
+                        settings.DefaultPatterns.Add(new DefaultPattern { PatternIndex = "0", Culture = culture });
+                    }
                 }
             }
 
@@ -108,7 +109,7 @@ namespace Orchard.Autoroute.Settings {
                 int current = 0;
                 foreach (string culture in settings.SiteCultures) {
                     if (settings.Patterns.Any(x => String.Equals(x.Culture, culture, StringComparison.OrdinalIgnoreCase))) {
-                        foreach (RoutePattern routePattern in settings.Patterns.Where(x => x.Culture == culture)) {
+                        foreach (RoutePattern routePattern in settings.Patterns.Where(x => String.Equals(x.Culture, culture, StringComparison.OrdinalIgnoreCase))) {
                             newPatterns.Add(settings.Patterns[current]);
                             current++;
                         }

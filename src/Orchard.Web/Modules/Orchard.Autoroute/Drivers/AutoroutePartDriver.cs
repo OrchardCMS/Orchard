@@ -70,33 +70,41 @@ namespace Orchard.Autoroute.Drivers {
             if (settings.UseCulturePattern) {
                 //if we are creating from a form post we use the form value for culture
                 HttpContextBase context = _httpContextAccessor.Current();
-                if (context.Request.Form["Localization.SelectedCulture"] != null) {
+                if (!String.IsNullOrEmpty(context.Request.Form["Localization.SelectedCulture"])) {
                     itemCulture = context.Request.Form["Localization.SelectedCulture"].ToString();
                 }
             }
 
             //we update the settings assuming that when 
-            //pattern culture = null it means culture = default website culture
+            //pattern culture = null or "" it means culture = default website culture
             //for patterns that we migrated
-            foreach (RoutePattern pattern in settings.Patterns.Where(x => String.IsNullOrEmpty(x.Culture))) {
+            foreach (RoutePattern pattern in settings.Patterns.Where(x => String.IsNullOrWhiteSpace(x.Culture))) {
                 pattern.Culture = _cultureManager.GetSiteCulture(); ;
             }
 
             //we do the same for default patterns
-            foreach (DefaultPattern pattern in settings.DefaultPatterns.Where(x => String.IsNullOrEmpty(x.Culture))) {
+            foreach (DefaultPattern pattern in settings.DefaultPatterns.Where(x => String.IsNullOrWhiteSpace(x.Culture))) {
                 pattern.Culture = _cultureManager.GetSiteCulture();
             }
 
             // if the content type has no pattern for autoroute, then use a default one
-            if (!settings.Patterns.Any(x => x.Culture == itemCulture)) {
-                settings.AllowCustomPattern = true;
-                settings.AutomaticAdjustmentOnEdit = false;
+            if (!settings.Patterns.Any(x => String.Equals(x.Culture, itemCulture, StringComparison.OrdinalIgnoreCase))) {
                 settings.Patterns = new List<RoutePattern> { new RoutePattern { Name = "Title", Description = "my-title", Pattern = "{Content.Slug}", Culture = itemCulture } };
             }
 
             // if the content type has no defaultPattern for autoroute, then use a default one
-            if (!settings.DefaultPatterns.Any(x => x.Culture == itemCulture)) {
-                settings.DefaultPatterns = new List<DefaultPattern> { new DefaultPattern { PatternIndex = "0", Culture = itemCulture } };
+            if (!settings.DefaultPatterns.Any(x => String.Equals(x.Culture, itemCulture, StringComparison.OrdinalIgnoreCase))) {
+                //if we are in the default culture check the old setting
+                if (String.Equals(itemCulture, _cultureManager.GetSiteCulture(), StringComparison.OrdinalIgnoreCase)) {
+                    if (!String.IsNullOrEmpty(part.TypePartDefinition.Settings["AutorouteSettings.DefaultPatternIndex"])) {
+                        string patternIndex = part.TypePartDefinition.Settings["AutorouteSettings.DefaultPatternIndex"];
+                        settings.DefaultPatterns.Add(new DefaultPattern { PatternIndex = patternIndex, Culture = itemCulture });
+                    } else {
+                        settings.DefaultPatterns.Add(new DefaultPattern { PatternIndex = "0", Culture = itemCulture });
+                    }
+                } else {
+                    settings.DefaultPatterns.Add(new DefaultPattern { PatternIndex = "0", Culture = itemCulture });
+                }
             }
 
             var viewModel = new AutoroutePartEditViewModel {

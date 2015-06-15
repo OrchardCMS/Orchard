@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Linq;
 using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.Services;
+using System;
 
 namespace Orchard.Autoroute.Settings {
 
@@ -65,7 +66,7 @@ namespace Orchard.Autoroute.Settings {
                 //We split the values from the radio button returned values
                 int i = 0;
                 foreach (DefaultPattern defaultPattern in _defaultPatterns) {
-                    if (defaultPattern.Culture != null) {
+                    if (!String.IsNullOrWhiteSpace(defaultPattern.Culture)) {
                         if (defaultPattern.Culture.Split('|').Count() > 1) {
                             _defaultPatterns[i].PatternIndex = defaultPattern.Culture.Split('|').Last();
                             _defaultPatterns[i].Culture = defaultPattern.Culture.Split('|').First();
@@ -82,7 +83,7 @@ namespace Orchard.Autoroute.Settings {
                 //We split the values from the radio button returned values
                 int i = 0;
                 foreach (DefaultPattern defaultPattern in _defaultPatterns) {
-                    if (defaultPattern.Culture != null) {
+                    if (!String.IsNullOrWhiteSpace(defaultPattern.Culture)) {
                         if (defaultPattern.Culture.Split('|').Count() > 1) {
                             _defaultPatterns[i].PatternIndex = defaultPattern.Culture.Split('|').Last();
                             _defaultPatterns[i].Culture = defaultPattern.Culture.Split('|').First();

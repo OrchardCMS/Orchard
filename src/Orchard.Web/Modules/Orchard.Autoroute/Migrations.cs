@@ -54,15 +54,15 @@ namespace Orchard.Autoroute {
             );
 
             //we set the default pattern index from the deprecated setting
-            foreach (ContentTypeDefinition contentTypeDefinition in ContentDefinitionManager.ListTypeDefinitions()) {
-                foreach (ContentTypePartDefinition contentTypePartDefinition in contentTypeDefinition.Parts.Where(x => x.PartDefinition.Name == "AutoroutePart")) {
-                    var settings = contentTypePartDefinition.Settings.GetModel<AutorouteSettings>();
-                    string patternIndex = contentTypePartDefinition.Settings["AutorouteSettings.DefaultPatternIndex"];
-                    settings.DefaultPatterns = new List<DefaultPattern> { new DefaultPattern { PatternIndex = patternIndex } };
+            //foreach (ContentTypeDefinition contentTypeDefinition in ContentDefinitionManager.ListTypeDefinitions()) {
+            //    foreach (ContentTypePartDefinition contentTypePartDefinition in contentTypeDefinition.Parts.Where(x => x.PartDefinition.Name == "AutoroutePart")) {
+            //        var settings = contentTypePartDefinition.Settings.GetModel<AutorouteSettings>();
+            //        string patternIndex = contentTypePartDefinition.Settings["AutorouteSettings.DefaultPatternIndex"];
+            //        settings.DefaultPatterns = new List<DefaultPattern> { new DefaultPattern { PatternIndex = patternIndex } };
 
-                    ContentDefinitionManager.AlterTypeDefinition(contentTypeDefinition.Name, builder => builder.WithPart("AutoroutePart", settings.Build));
-                }
-            }
+            //        ContentDefinitionManager.AlterTypeDefinition(contentTypeDefinition.Name, builder => builder.WithPart("AutoroutePart", settings.Build));
+            //    }
+            //}
 
             return 4;
         }

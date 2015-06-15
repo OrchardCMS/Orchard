@@ -6,7 +6,6 @@
     Style.Require("AutorouteSettings");
     int patternCount = 0;
     int patternCultureCount = 0;
-    int cultureCount = 0;
 }
 <fieldset>
     <div>
@@ -64,7 +63,7 @@
                     </tr>
                     @for (int index = 0; index < Model.Patterns.Where(x => x.Culture == culture).Count(); index++) {
                         <tr>
-                            <td>@Html.RadioButtonFor(m => m.DefaultPatterns[cultureCount].Culture, culture + "|" + patternCultureCount, patternCultureCount.ToString() == Model.DefaultPatterns[cultureCount].PatternIndex ? new { @checked = "checked" } : null)</td>
+                            <td>@Html.RadioButtonFor(m => m.DefaultPatterns[Model.SiteCultures.IndexOf(culture)].Culture, culture + "|" + patternCultureCount, patternCultureCount.ToString() == Model.DefaultPatterns[Model.SiteCultures.IndexOf(culture)].PatternIndex ? new { @checked = "checked" } : null)</td>
                             <td>@Html.TextBoxFor(m => m.Patterns[patternCount].Name, new { @class = "text" })</td>
                             <td>@Html.TextBoxFor(m => m.Patterns[patternCount].Pattern, new { @class = "tokenized text" })</td>
                             <td>@Html.TextBoxFor(m => m.Patterns[patternCount].Description, new { @class = "text" })</td>
@@ -76,20 +75,8 @@
                     <tr></tr>
                 </table>
             </fieldset>
-                    cultureCount++;
         }
     </div>
 </fieldset>
-
-
-
-
-
-
-
-
-
-
-
 
 @Display.TokenHint()
