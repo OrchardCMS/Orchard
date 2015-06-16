@@ -1,16 +1,20 @@
+using System;
 using IDeliverable.Licensing.VerificationTokens;
 using Orchard.FileSystems.AppData;
+using Orchard.Logging;
 
 namespace IDeliverable.Licensing.Orchard
 {
     internal class LicenseVerificationTokenStore : ILicenseVerificationTokenStore
     {
-        public LicenseVerificationTokenStore(IAppDataFolder appDataFolder)
+        public LicenseVerificationTokenStore(IAppDataFolder appDataFolder, ILogger logger)
         {
             mAppDataFolder = appDataFolder;
+            mLogger = logger;
         }
 
         private readonly IAppDataFolder mAppDataFolder;
+        private readonly ILogger mLogger;
 
         public LicenseVerificationToken Load(string productId)
         {
@@ -18,8 +22,21 @@ namespace IDeliverable.Licensing.Orchard
             if (!mAppDataFolder.FileExists(path))
                 return null;
 
+            LicenseVerificationToken token = null;
             var tokenBase64 = mAppDataFolder.ReadFile(path);
-            var token = LicenseVerificationToken.FromBase64(tokenBase64);
+
+            try
+            {
+                token = LicenseVerificationToken.FromBase64(tokenBase64);
+            }
+            catch (Exception ex)
+            {
+                // An exception while parsing the token indicates somebody probably
+                // tampered with it or it got corrupted. In this case, let's clear out
+                // the store and return nothing.
+                mLogger.Warning(ex, "An error occurred while parsing the license verification token from the store.");
+                Clear(productId);
+            }
 
             return token;
         }
