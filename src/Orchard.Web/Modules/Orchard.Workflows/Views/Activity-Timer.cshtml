@@ -2,11 +2,11 @@
 
 @{
     string name = Model.Name;
-    string title = null;
+    IHtmlString title = null;
     if (Model.State != null && HasText(Model.State.Unity)) {
         string amount = Model.State.Amount;
         string unity = Model.State.Unity;
-        title = T("{0} {1} after", amount, T(unity).Text).Text;
+        title = T("{0} {1} after", amount, T(unity));
     }
 }
 

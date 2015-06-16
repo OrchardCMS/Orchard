@@ -89,7 +89,7 @@
                     featureClassName += " missingDependencies";
                 }
 
-                <li class="@featureClassName" id="@featureId" title="@T("{0} is {1}", Html.AttributeEncode(featureName), featureState)">
+                <li class="@featureClassName" id="@featureId" title="@T(feature.IsEnabled ? "{0} is enabled" : "{0} is disabled", Html.AttributeEncode(featureName))">
                     <div class="summary">
                         <div class="properties">
                             <h3>
