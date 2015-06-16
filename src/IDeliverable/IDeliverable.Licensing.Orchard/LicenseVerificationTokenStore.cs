@@ -7,14 +7,12 @@ namespace IDeliverable.Licensing.Orchard
 {
     internal class LicenseVerificationTokenStore : ILicenseVerificationTokenStore
     {
-        public LicenseVerificationTokenStore(IAppDataFolder appDataFolder, ILogger logger)
+        public LicenseVerificationTokenStore(IAppDataFolder appDataFolder)
         {
             mAppDataFolder = appDataFolder;
-            mLogger = logger;
         }
 
         private readonly IAppDataFolder mAppDataFolder;
-        private readonly ILogger mLogger;
 
         public LicenseVerificationToken Load(string productId)
         {
@@ -29,12 +27,11 @@ namespace IDeliverable.Licensing.Orchard
             {
                 token = LicenseVerificationToken.FromBase64(tokenBase64);
             }
-            catch (Exception ex)
+            catch
             {
                 // An exception while parsing the token indicates somebody probably
                 // tampered with it or it got corrupted. In this case, let's clear out
                 // the store and return nothing.
-                mLogger.Warning(ex, "An error occurred while parsing the license verification token from the store.");
                 Clear(productId);
             }
 
