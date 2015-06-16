@@ -1,0 +1,20 @@
+﻿@using Orchard.Users.Models;
+
+@{
+  Orchard.Users.ViewModels.UserIndexViewModel viewModel = Model.Model;
+}
+
+  @Html.ActionLink(T("Edit").ToString(), "Edit", new { viewModel.Id }) |
+  @Html.ActionLink(T("Delete").ToString(), "Delete", new { viewModel.Id }, new { itemprop = "RemoveUrl UnsafeUrl" }) |
+  @if (viewModel.RegistrationStatus == UserStatus.Pending)
+  {
+    @Html.ActionLink(T("Approve").ToString(), "Approve", new { viewModel.Id })
+  }
+  else
+  {
+    @Html.ActionLink(T("Disable").ToString(), "Moderate", new { viewModel.Id })
+  }
+  @if (viewModel.EmailStatus == UserStatus.Pending)
+  { <text>|</text>
+    @Html.ActionLink(T("Send challenge E-mail").ToString(), "SendChallengeEmail", new { viewModel.Id })
+  }

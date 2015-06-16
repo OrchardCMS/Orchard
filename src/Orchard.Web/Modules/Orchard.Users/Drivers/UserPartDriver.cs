@@ -2,15 +2,49 @@
 using System.Web.Security;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Users.Models;
+using Orchard.Users.ViewModels;
+using Orchard.ContentManagement;
 
-namespace Orchard.Users.Drivers {
+namespace Orchard.Users.Drivers
+{
     /// <summary>
     /// This class intentionnaly has no Display method to prevent external access to this information through standard 
     /// Content Item display methods.
     /// </summary>
-    public class UserPartDriver : ContentPartDriver<UserPart> {
+    public class UserPartDriver : ContentPartDriver<UserPart>
+    {
 
-        protected override void Importing(UserPart part, ContentManagement.Handlers.ImportContentContext context) {
+        protected override DriverResult Display(UserPart part, string displayType, dynamic shapeHelper)
+        {
+            UserIndexViewModel viewModel = new UserIndexViewModel();
+            viewModel.MapPart(part);
+
+            if (displayType == "SummaryAdmin")
+            {
+                return Combined(new DriverResult[]{
+                    ContentShape("Parts_User", () => shapeHelper.Parts_UserSummaryAdmin(Model: viewModel)),
+                    ContentShape("User_AdminActions", () => shapeHelper.Parts_UserAdminActions(Model: viewModel))
+                });
+            }
+
+            return ContentShape("Parts_User", () => shapeHelper.Parts_UserSummaryAdmin(
+                Model: viewModel
+                ));
+            //return base.Display(part, displayType, shapeHelper);
+        }
+
+        protected override DriverResult Editor(UserPart part, dynamic shapeHelper)
+        {
+            return ContentShape("", () => shapeHelper.EditorTemplate());
+        }
+
+        protected override DriverResult Editor(UserPart part, IUpdateModel updater, dynamic shapeHelper)
+        {
+            return Editor(part, shapeHelper);
+        }
+
+        protected override void Importing(UserPart part, ContentManagement.Handlers.ImportContentContext context)
+        {
             part.Email = context.Attribute(part.PartDefinition.Name, "Email");
             part.EmailChallengeToken = context.Attribute(part.PartDefinition.Name, "EmailChallengeToken");
             part.EmailStatus = (UserStatus)Enum.Parse(typeof(UserStatus), context.Attribute(part.PartDefinition.Name, "EmailStatus"));

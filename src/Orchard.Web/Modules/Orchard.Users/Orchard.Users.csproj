@@ -108,6 +108,7 @@
     <Compile Include="ViewModels\UserCreateViewModel.cs" />
     <Compile Include="ViewModels\UserEditPasswordViewModel.cs" />
     <Compile Include="ViewModels\UserEditViewModel.cs" />
+    <Compile Include="ViewModels\UserIndexViewModel.cs" />
     <Compile Include="ViewModels\UsersIndexViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -193,6 +194,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Placement.info" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Content-User.SummaryAdmin.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\UserAdminActions.cshtml" />
+    <Content Include="Views\Parts\UserSummaryAdmin.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

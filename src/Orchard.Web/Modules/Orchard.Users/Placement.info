@@ -1,5 +1,11 @@
 ﻿<Placement>
-  <Match Path="~/Admin/Users/Edit/*">
-    <Place Parts_User_EditPassword_Edit="Content:1"/>
-  </Match>
+    <Match Path="~/Admin/Users/Edit/*">
+        <Place Parts_User_EditPassword_Edit="Content:1"/>
+    </Match>
+    <Match ContentType="User">
+        <Match DisplayType="SummaryAdmin">
+            <Place Parts_User="UserIndexAdminContent: 1"></Place>
+            <Place User_AdminActions="UserIndexAdminContentActions: 1"></Place>
+        </Match>
+    </Match>
 </Placement>

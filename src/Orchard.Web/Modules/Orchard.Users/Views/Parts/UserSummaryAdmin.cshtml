@@ -1,0 +1,19 @@
+﻿@using Orchard.Users.Models;
+
+@{
+  Orchard.Users.ViewModels.UserIndexViewModel viewModel = Model.Model;
+}
+<td>
+  @if (viewModel.RegistrationStatus == UserStatus.Approved && viewModel.EmailStatus == UserStatus.Approved)
+  {
+    <img class="icon" src="@Href("~/Modules/Orchard.Users/Content/Admin/images/online.gif")" alt="@T("Approved")" title="@T("User is approved")" />
+  }
+  else
+  {
+    <img class="icon" src="@Href("~/Modules/Orchard.Users/Content/Admin/images/offline.gif")" alt="@T("Moderated")" title="@if (viewModel.EmailStatus == UserStatus.Approved) { @T("User is moderated") } else { @T("E-mail validation is pending") }" />
+  }
+  @Html.ActionLink(viewModel.UserName, "Edit", new { viewModel.Id })
+</td>
+<td>
+  @viewModel.Email
+</td>

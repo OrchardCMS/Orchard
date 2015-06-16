@@ -19,6 +19,7 @@ using System;
 using Orchard.Settings;
 using Orchard.UI.Navigation;
 using Orchard.Utility.Extensions;
+using Orchard.DisplayManagement.Shapes;
 
 namespace Orchard.Users.Controllers {
     [ValidateInput(false)]
@@ -93,13 +94,19 @@ namespace Orchard.Users.Controllers {
                 .Slice(pager.GetStartIndex(), pager.PageSize)
                 .ToList();
 
-            var model = new UsersIndexViewModel {
-                Users = results
-                    .Select(x => new UserEntry { User = x.Record })
-                    .ToList(),
-                    Options = options,
-                    Pager = pagerShape
-            };
+            UsersIndexViewModel model = new UsersIndexViewModel();
+            model.Options = options;
+            model.Pager = pagerShape;
+            model.UserShapes = new List<Shape>();
+
+            foreach (UserPart userPart in results) {
+                Shape userShape = Services.ContentManager.BuildDisplay(userPart, "SummaryAdmin");
+                model.UserShapes.Add(userShape);
+            }
+
+            model.Users = results
+                .Select(x => new UserEntry { UserId = x.Record.Id })
+                .ToList();
 
             // maintain previous route data when generating page links
             var routeData = new RouteData();
@@ -127,22 +134,22 @@ namespace Orchard.Users.Controllers {
                     break;
                 case UsersBulkAction.Approve:
                     foreach (var entry in checkedEntries) {
-                        Approve(entry.User.Id);
+                        Approve(entry.UserId);
                     }
                     break;
                 case UsersBulkAction.Disable:
                     foreach (var entry in checkedEntries) {
-                        Moderate(entry.User.Id);
+                        Moderate(entry.UserId);
                     }
                     break;
                 case UsersBulkAction.ChallengeEmail:
                     foreach (var entry in checkedEntries) {
-                        SendChallengeEmail(entry.User.Id);
+                        SendChallengeEmail(entry.UserId);
                     }
                     break;
                 case UsersBulkAction.Delete:
                     foreach (var entry in checkedEntries) {
-                        Delete(entry.User.Id);
+                        Delete(entry.UserId);
                     }
                     break;
             }

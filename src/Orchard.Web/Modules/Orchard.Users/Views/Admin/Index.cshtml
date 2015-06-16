@@ -50,13 +50,14 @@
                     <th scope="col">@T("Actions")</th>
                 </tr>
             </thead>
-            @foreach (var entry in Model.Users) { 
+      @foreach (var entry in Model.UserShapes) {
             <tr>
                 <td>
-                    <input type="hidden" value="@Model.Users[userIndex].User.Id" name="@Html.NameOf(m => m.Users[userIndex].User.Id)"/>
+            <input type="hidden" value="@Model.Users[userIndex].UserId" name="@Html.NameOf(m => m.Users[userIndex].UserId)" />
                     <input type="checkbox" value="true" name="@Html.NameOf(m => m.Users[userIndex].IsChecked)"/>
                 </td>
-                <td>
+          @Display(entry)
+          @*<td>
                     @if (entry.User.RegistrationStatus == UserStatus.Approved && entry.User.EmailStatus == UserStatus.Approved) { 
                     <img class="icon" src="@Href("~/Modules/Orchard.Users/Content/Admin/images/online.gif") " alt="@T("Approved") " title="@T("User is approved") " /> 
                     } else { 
@@ -71,14 +72,14 @@
                     @Html.ActionLink(T("Edit").ToString(), "Edit", new { entry.User.Id }) |
                     @Html.ActionLink(T("Delete").ToString(), "Delete", new { entry.User.Id}, new { itemprop = "RemoveUrl UnsafeUrl" }) |
                     @if (entry.User.RegistrationStatus == UserStatus.Pending) {
-                        @Html.ActionLink(T("Approve").ToString(), "Approve", new { entry.User.Id }, new { itemprop = "UnsafeUrl" })
+                    @Html.ActionLink(T("Approve").ToString(), "Approve", new { entry.User.Id })
                     } else {
-                        @Html.ActionLink(T("Disable").ToString(), "Moderate", new { entry.User.Id }, new { itemprop = "UnsafeUrl" })
+                    @Html.ActionLink(T("Disable").ToString(), "Moderate", new { entry.User.Id })
                     }
                     @if (entry.User.EmailStatus == UserStatus.Pending) { <text>|</text>
-                        @Html.ActionLink(T("Send challenge E-mail").ToString(), "SendChallengeEmail", new { entry.User.Id }, new { itemprop = "UnsafeUrl" })
+                    @Html.ActionLink(T("Send challenge E-mail").ToString(), "SendChallengeEmail", new { entry.User.Id })
                     } 
-                </td>
+            </td>*@
             </tr>
                     userIndex++;
             }
