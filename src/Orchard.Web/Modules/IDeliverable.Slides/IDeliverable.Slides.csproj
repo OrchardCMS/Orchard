@@ -154,6 +154,7 @@
     <None Include="SlideShowPlayerEngines\JCarousel\Styles\engine-jcarousel.less" />
     <Content Include="Views\EditorTemplates\Parts.Slides.License.cshtml" />
     <None Include="SlideShowPlayerEngines\Bootstrap\Styles\glyphicons.less" />
+    <Content Include="Views\SlideFactory\MediaSlides.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\IDeliverable\IDeliverable.Licensing.Orchard\IDeliverable.Licensing.Orchard.csproj">
@@ -287,9 +288,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Parts.SlideShow.SummaryAdmin.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\SlideFactory\ImageSlides.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\SlideFactory\ContentSlides.cshtml" />
