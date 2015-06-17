@@ -4,11 +4,14 @@ using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Widgets.Models;
 using Orchard.ContentManagement;
+using Orchard.Core.Common.Utilities;
 
 namespace Orchard.Widgets.Services{
     public class DefaultLayerEvaluationService : ILayerEvaluationService {
         private readonly IRuleManager _ruleManager;
         private readonly IOrchardServices _orchardServices;
+
+        private readonly LazyField<IEnumerable<int>> _activeLayerIDs; 
 
         public DefaultLayerEvaluationService(IRuleManager ruleManager, IOrchardServices orchardServices) {
             _ruleManager = ruleManager;
@@ -16,6 +19,9 @@ namespace Orchard.Widgets.Services{
 
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
+
+            _activeLayerIDs = new LazyField<IEnumerable<int>>();
+            _activeLayerIDs.Loader(PopulateActiveLayers);
         }
 
         public ILogger Logger { get; set; }
@@ -27,21 +33,25 @@ namespace Orchard.Widgets.Services{
         /// <returns>
         /// A collection of integers that represents the Ids of each active Layer
         /// </returns>
-        public IEnumerable<int> GetActiveLayerIds(){
+        public IEnumerable<int> GetActiveLayerIds() {
+            return _activeLayerIDs.Value;
+        }
+
+        private IEnumerable<int> PopulateActiveLayers() {
             // Once the Rule Engine is done:
             // Get Layers and filter by zone and rule
             // NOTE: .ForType("Layer") is faster than .Query<LayerPart, LayerPartRecord>()
             var activeLayers = _orchardServices.ContentManager.Query<LayerPart>().ForType("Layer").List();
 
             var activeLayerIds = new List<int>();
-            foreach (var activeLayer in activeLayers){
+            foreach (var activeLayer in activeLayers) {
                 // ignore the rule if it fails to execute
-                try{
-                    if (_ruleManager.Matches(activeLayer.LayerRule)){
+                try {
+                    if (_ruleManager.Matches(activeLayer.LayerRule)) {
                         activeLayerIds.Add(activeLayer.ContentItem.Id);
                     }
                 }
-                catch (Exception e){
+                catch (Exception e) {
                     Logger.Warning(e, T("An error occurred during layer evaluation on: {0}", activeLayer.Name).Text);
                 }
             }
