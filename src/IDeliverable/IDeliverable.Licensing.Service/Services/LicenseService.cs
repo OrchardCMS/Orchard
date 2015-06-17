@@ -19,15 +19,19 @@ namespace IDeliverable.Licensing.Service.Services
             mSendOwlApiKey = sendOwlApiKey;
             mSendOwlApiSecret = sendOwlApiSecret;
             mTokenSigningCertificateThumbprint = tokenSigningCertificateThumbprint;
+            mLogger = new Logger(nameof(LicenseService));
         }
 
         private readonly string mSendOwlApiEndpoint;
         private readonly string mSendOwlApiKey;
         private readonly string mSendOwlApiSecret;
         private readonly string mTokenSigningCertificateThumbprint;
+        private readonly Logger mLogger;
 
-        public LicenseVerificationToken VerifyLicense(string licenseKey, int productId, string hostname)
+        public LicenseVerificationToken VerifyLicense(string licenseKey, string productId, string hostname, bool throwOnError)
         {
+            mLogger.Info($"Starting license verification... LicenseKey={licenseKey}; ProductId={productId}; Hostname={hostname};");
+
             try
             {
                 using (var client = new HttpClient())
@@ -49,19 +53,24 @@ namespace IDeliverable.Licensing.Service.Services
 
                     if (!order.Hostnames.Contains(hostname, StringComparer.OrdinalIgnoreCase))
                         throw new LicenseVerificationException($"The license with key '{licenseKey}' is not valid for the provided '{hostname}'. Valid hostnames are '{String.Join(",", order.Hostnames)}", LicenseVerificationError.HostnameMismatch);
-
-                    var token = CreateVerificationToken(productId, hostname, licenseKey);
-
-                    return token;
                 }
             }
             catch (Exception ex) when (!(ex is LicenseVerificationException))
             {
-                throw new LicenseVerificationException(LicenseVerificationError.UnhandledException, ex);
+                mLogger.Error($"An error occurred while verifying license with SendOwl. LicenseKey={licenseKey}; ProductId={productId}; Hostname={hostname};", ex);
+
+                if (throwOnError)
+                    throw;
+
+                mLogger.Info("Ignoring error and issuing verification token anyway. LicenseKey={licenseKey}; ProductId={productId}; Hostname={hostname};");
             }
+
+            mLogger.Info($"License verification finished. LicenseKey={licenseKey}; ProductId={productId}; Hostname={hostname};");
+
+            return CreateVerificationToken(productId, hostname, licenseKey);
         }
 
-        private LicenseVerificationToken CreateVerificationToken(int productId, string hostname, string key)
+        private LicenseVerificationToken CreateVerificationToken(string productId, string hostname, string key)
         {
             X509Certificate2 signingCert = null;
 

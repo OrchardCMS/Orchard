@@ -15,18 +15,13 @@ namespace IDeliverable.Licensing.Service.Controllers
         [HttpGet]
         [Route("license/{licenseKey}/verify")]
         [ApiKeyAuthorization]
-        public LicenseVerificationToken Verify(string licenseKey, int productId, string hostname)
+        public LicenseVerificationToken Verify(string licenseKey, string productId, string hostname)
         {
-            var sendOwlApiEndpoint = ConfigurationManager.AppSettings["SendOwlApiEndpoint"];
-            var sendOwlApiKey = ConfigurationManager.AppSettings["SendOwlApiKey"];
-            var sendOwlApiSecret = ConfigurationManager.AppSettings["SendOwlApiSecret"];
-            var tokenSigningCertificateThumbprint = ConfigurationManager.AppSettings["TokenSigningCertificateThumbprint"];
-
-            var service = new LicenseService(sendOwlApiEndpoint, sendOwlApiKey, sendOwlApiSecret, tokenSigningCertificateThumbprint);
+            var service = GetLicenseService();
 
             try
             {
-                return service.VerifyLicense(licenseKey, productId, hostname);
+                return service.VerifyLicense(licenseKey, productId, hostname, throwOnError: false);
             }
             catch (LicenseVerificationException ex)
             {
@@ -52,13 +47,14 @@ namespace IDeliverable.Licensing.Service.Controllers
         [ApiKeyAuthorization]
         public HttpResponseMessage Test()
         {
+            var testKey = ConfigurationManager.AppSettings["TestKey"];
             var testProductId = ConfigurationManager.AppSettings["TestProductId"];
             var testHostname = ConfigurationManager.AppSettings["TestHostname"];
-            var testKey = ConfigurationManager.AppSettings["TestKey"];
+            var service = GetLicenseService();
 
             try
             {
-                var token = Verify(testKey, Int32.Parse(testProductId), testHostname);
+                service.VerifyLicense(testKey, testProductId, testHostname, throwOnError: true);
             }
             catch (Exception ex)
             {
@@ -66,6 +62,16 @@ namespace IDeliverable.Licensing.Service.Controllers
             }
 
             return new HttpResponseMessage(HttpStatusCode.OK);
+        }
+
+        private LicenseService GetLicenseService()
+        {
+            var sendOwlApiEndpoint = ConfigurationManager.AppSettings["SendOwlApiEndpoint"];
+            var sendOwlApiKey = ConfigurationManager.AppSettings["SendOwlApiKey"];
+            var sendOwlApiSecret = ConfigurationManager.AppSettings["SendOwlApiSecret"];
+            var tokenSigningCertificateThumbprint = ConfigurationManager.AppSettings["TokenSigningCertificateThumbprint"];
+
+            return new LicenseService(sendOwlApiEndpoint, sendOwlApiKey, sendOwlApiSecret, tokenSigningCertificateThumbprint);
         }
     }
 }

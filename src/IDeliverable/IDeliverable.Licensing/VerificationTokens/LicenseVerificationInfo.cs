@@ -5,7 +5,7 @@ namespace IDeliverable.Licensing.VerificationTokens
 {
     public class LicenseVerificationInfo
     {
-        public LicenseVerificationInfo(int productId, string hostname, string licenseKey, long verifiedUtcTicks)
+        public LicenseVerificationInfo(string productId, string hostname, string licenseKey, long verifiedUtcTicks)
         {
             ProductId = productId;
             Hostname = hostname;
@@ -13,7 +13,7 @@ namespace IDeliverable.Licensing.VerificationTokens
             VerifiedUtcTicks = verifiedUtcTicks;
         }
 
-        public int ProductId { get; }
+        public string ProductId { get; }
         public string Hostname { get; }
         public string LicenseKey { get; }
         public long VerifiedUtcTicks { get; }
