@@ -27,8 +27,8 @@ namespace IDeliverable.Licensing.Orchard
         {
             var productManifest = mProducts.Single(x => x.ProductId == mProductId);
             var licenseSettingsUrl = mUrlHelper.Action("Index", "Admin", new { area = "Settings", groupInfoId = "Licenses" });
-            var refreshResultUrl = mUrlHelper.Action("VerifyLicenseKey", "LicenseValidation", new { area = productManifest.ProductName });
-            var refreshResultLink = T("<a href=\"{0}\">Refresh</a>", refreshResultUrl);
+            var retryResultUrl = mUrlHelper.Action("VerifyLicenseKey", "LicenseValidation", new { area = productManifest.ProductName });
+            var retryResultLink = T("<a href=\"{0}\">Try again</a>", retryResultUrl);
             LocalizedString message = null;
 
             try
@@ -40,13 +40,13 @@ namespace IDeliverable.Licensing.Orchard
                 switch (ex.Error)
                 {
                     case LicenseValidationError.UnknownLicenseKey:
-                        message = T("The <a href=\"{0}\">configured license key</a> for the {1} module is invalid. {2}", licenseSettingsUrl, productManifest.ProductName, refreshResultLink);
+                        message = T("The <a href=\"{0}\">configured license key</a> for the {1} module is invalid. {2}", licenseSettingsUrl, productManifest.ProductName, retryResultLink);
                         break;
                     case LicenseValidationError.HostnameMismatch:
-                        message = T("The <a href=\"{0}\">configured license key</a> for the {1} module is invalid for the current host name. {2}", licenseSettingsUrl, productManifest.ProductName, refreshResultLink);
+                        message = T("The <a href=\"{0}\">configured license key</a> for the {1} module is invalid for the current host name. {2}", licenseSettingsUrl, productManifest.ProductName, retryResultLink);
                         break;
                     case LicenseValidationError.NoActiveSubscription:
-                        message = T("The <a href=\"{0}\">configured license key</a> for the {1} module has no active subscription. {2}", licenseSettingsUrl, productManifest.ProductName, refreshResultLink);
+                        message = T("The <a href=\"{0}\">configured license key</a> for the {1} module has no active subscription. {2}", licenseSettingsUrl, productManifest.ProductName, retryResultLink);
                         break;
                     case LicenseValidationError.TokenAgeValidationFailed:
                     case LicenseValidationError.TokenSignatureValidationFailed:
@@ -54,11 +54,11 @@ namespace IDeliverable.Licensing.Orchard
                     case LicenseValidationError.LicensingServiceUnreachable:
                     case LicenseValidationError.UnexpectedError:
                     default:
-                        message = T("There was an error validating the <a href=\"{0}\">configured license key</a> for the {1} module. {2}", licenseSettingsUrl, productManifest.ProductName, refreshResultLink);
+                        message = T("There was an error validating the <a href=\"{0}\">configured license key</a> for the {1} module. {2}", licenseSettingsUrl, productManifest.ProductName, retryResultLink);
                         break;
                 }
 
-                Logger.Warning(ex, "An error occurred while validating the configured license key for the {0} module. {1}", productManifest.ProductName, refreshResultLink);
+                Logger.Warning(ex, "An error occurred while validating the configured license key for the {0} module. {1}", productManifest.ProductName, retryResultLink);
             }
 
             if (message != null)
