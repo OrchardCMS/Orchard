@@ -132,6 +132,7 @@ namespace IDeliverable.Slides.Controllers
                 profile.EngineStates[engine.Name] = engine.Data.Serialize();
             }
 
+            profile.Name = viewModel.Name?.Trim();
             profile.SelectedEngine = viewModel.SelectedEngine;
             settingsPart.StoreProfile(profile);
             _services.Notifier.Information(T("That slide show profile has been updated."));
