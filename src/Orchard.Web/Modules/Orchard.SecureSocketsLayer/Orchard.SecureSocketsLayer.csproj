@@ -90,6 +90,7 @@
     <Compile Include="Filters\SecureSocketsLayersFilter.cs" />
     <Compile Include="Handlers\SslSettingsPartHandler.cs" />
     <Compile Include="Models\SslSettingsPart.cs" />
+    <Compile Include="Services\SecureSocketsLayerSettingsProvider.cs" />
     <Compile Include="Services\ISecureSocketsLayerService.cs" />
     <Compile Include="Services\SecureSocketsLayerService.cs" />
   </ItemGroup>
