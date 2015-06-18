@@ -22,11 +22,12 @@ namespace Orchard.Users {
                     .Column<string>("EmailChallengeToken")
                     .Column<DateTime>("CreatedUtc")
                     .Column<DateTime>("LastLoginUtc")
+                    .Column<DateTime>("LastLogoutUtc")
                 );
 
             ContentDefinitionManager.AlterTypeDefinition("User", cfg => cfg.Creatable(false));
 
-            return 3;
+            return 4;
         }
 
         public int UpdateFrom1() {
@@ -43,6 +44,15 @@ namespace Orchard.Users {
                 });
 
             return 3;
+        }
+
+        public int UpdateFrom3() {
+            SchemaBuilder.AlterTable("UserPartRecord",
+                table => {
+                    table.AddColumn<DateTime>("LastLogoutUtc");
+                });
+
+            return 4;
         }
     }
 }

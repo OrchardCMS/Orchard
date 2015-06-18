@@ -25,6 +25,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -82,6 +83,7 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Drivers\UserPartDriver.cs" />
     <Compile Include="Drivers\UserPartPasswordDriver.cs" />
+    <Compile Include="Events\LoginUserEventHandler.cs" />
     <Compile Include="Forms\SignInUserForm.cs" />
     <Compile Include="Forms\VerifyUserUnicityForm.cs" />
     <Compile Include="Forms\CreateUserForm.cs" />

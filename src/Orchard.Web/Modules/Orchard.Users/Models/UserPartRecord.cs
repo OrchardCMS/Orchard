@@ -18,5 +18,6 @@ namespace Orchard.Users.Models {
         public virtual string EmailChallengeToken { get; set; }
         public virtual DateTime? CreatedUtc { get; set; }
         public virtual DateTime? LastLoginUtc { get; set; }
+        public virtual DateTime? LastLogoutUtc { get; set; }
     }
 }

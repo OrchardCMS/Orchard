@@ -30,6 +30,7 @@ using Orchard.UI.PageClass;
 using Orchard.Users.Handlers;
 using Orchard.Users.Models;
 using Orchard.Users.Services;
+using Orchard.Services;
 
 namespace Orchard.Tests.Modules.Users.Services {
     [TestFixture]
@@ -38,7 +39,7 @@ namespace Orchard.Tests.Modules.Users.Services {
         private ISessionFactory _sessionFactory;
         private ISession _session;
         private IContainer _container;
-
+        private StubClock _clock;
 
         public class TestSessionLocator : ISessionLocator {
             private readonly ISession _session;
@@ -88,6 +89,7 @@ namespace Orchard.Tests.Modules.Users.Services {
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
+            builder.RegisterInstance(_clock = new StubClock()).As<IClock>();
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
             builder.RegisterInstance(new Mock<IPageClassBuilder>().Object);
             builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
@@ -151,6 +153,65 @@ namespace Orchard.Tests.Modules.Users.Services {
             Assert.That(validate1, Is.Null);
             Assert.That(validate2, Is.Null);
             Assert.That(validate3, Is.Not.Null);
+        }
+
+        [Test]
+        public void UsersWhoHaveNeverLoggedInCanBeAuthenticated() {
+            var user = (UserPart)_membershipService.CreateUser(new CreateUserParams("a", "b", "c", null, null, true));
+            
+            Assert.That(_membershipService.CanAuthenticateWithCookie(user), Is.True);
+        }
+
+        [Test]
+        public void UsersWhoHaveNeverLoggedOutCanBeAuthenticated() {
+            var user = (UserPart)_membershipService.CreateUser(new CreateUserParams("a", "b", "c", null, null, true));
+
+            user.LastLoginUtc = _clock.UtcNow;
+            _clock.Advance(TimeSpan.FromMinutes(1));
+
+            Assert.That(_membershipService.CanAuthenticateWithCookie(user), Is.True);
+        }
+
+        [Test]
+        public void UsersWhoHaveLoggedOutCantBeAuthenticated() {
+            var user = (UserPart)_membershipService.CreateUser(new CreateUserParams("a", "b", "c", null, null, true));
+
+            user.LastLoginUtc = _clock.UtcNow;
+            _clock.Advance(TimeSpan.FromMinutes(1));
+            user.LastLogoutUtc = _clock.UtcNow;
+            _clock.Advance(TimeSpan.FromMinutes(1));
+
+            Assert.That(_membershipService.CanAuthenticateWithCookie(user), Is.False);
+        }
+
+        [Test]
+        public void UsersWhoHaveLoggedInCanBeAuthenticated() {
+            var user = (UserPart)_membershipService.CreateUser(new CreateUserParams("a", "b", "c", null, null, true));
+
+            user.LastLogoutUtc = _clock.UtcNow;
+            _clock.Advance(TimeSpan.FromMinutes(1));
+            user.LastLoginUtc = _clock.UtcNow;
+            _clock.Advance(TimeSpan.FromMinutes(1));
+
+            Assert.That(_membershipService.CanAuthenticateWithCookie(user), Is.True);
+        }
+
+        [Test]
+        public void PendingUsersCantBeAuthenticated() {
+            var user = (UserPart)_membershipService.CreateUser(new CreateUserParams("a", "b", "c", null, null, true));
+
+            user.RegistrationStatus = UserStatus.Pending;
+
+            Assert.That(_membershipService.CanAuthenticateWithCookie(user), Is.False);
+        }
+
+        [Test]
+        public void ApprovedUsersCanBeAuthenticated() {
+            var user = (UserPart)_membershipService.CreateUser(new CreateUserParams("a", "b", "c", null, null, true));
+
+            user.RegistrationStatus = UserStatus.Approved;
+
+            Assert.That(_membershipService.CanAuthenticateWithCookie(user), Is.True);
         }
     }
 }

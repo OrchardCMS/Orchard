@@ -42,7 +42,7 @@ namespace Orchard.Security.Providers {
         public TimeSpan ExpirationTimeSpan { get; set; }
 
         public void SignIn(IUser user, bool createPersistentCookie) {
-            var now = _clock.UtcNow.ToLocalTime();
+            var now = _clock.UtcNow;
             
             // the cookie user data is {userName.Base64};{tenant}
             // the username is encoded to base64 to prevent collisions with the ';' seprarator
@@ -140,15 +140,23 @@ namespace Orchard.Security.Providers {
                 userDataName = userDataName.FromBase64();
             }
             catch {
+                // if the cookie is tampered, it could contain a bad base64 value
                 return null;
             }
 
-            if (!String.Equals(userDataTenant, _settings.Name, StringComparison.Ordinal)) {
+            if (!String.Equals(userDataTenant, _settings.Name, StringComparison.OrdinalIgnoreCase)) {
+                return null;
+            }
+
+            // todo: this issues a sql query for each authenticated request
+            _signedInUser = _membershipService.GetUser(userDataName);
+
+            if(_signedInUser == null || !_membershipService.CanAuthenticateWithCookie(_signedInUser)) {
                 return null;
             }
 
             _isAuthenticated = true;
-            return _signedInUser = _membershipService.GetUser(userDataName);
+            return _signedInUser;
         }
 
         private string GetCookiePath(HttpContextBase httpContext) {

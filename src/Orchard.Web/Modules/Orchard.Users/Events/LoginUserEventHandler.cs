@@ -23,7 +23,9 @@ namespace Orchard.Users.Events {
             user.As<UserPart>().LastLoginUtc = _clock.UtcNow;
         }
 
-        public void LoggedOut(IUser user) { }
+        public void LoggedOut(IUser user) {
+            user.As<UserPart>().LastLogoutUtc = _clock.UtcNow;
+        }
 
         public void AccessDenied(IUser user) { }
 
