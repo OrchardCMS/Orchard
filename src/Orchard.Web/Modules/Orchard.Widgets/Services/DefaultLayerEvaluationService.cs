@@ -11,7 +11,7 @@ namespace Orchard.Widgets.Services{
         private readonly IRuleManager _ruleManager;
         private readonly IOrchardServices _orchardServices;
 
-        private readonly LazyField<IEnumerable<int>> _activeLayerIDs; 
+        private readonly LazyField<int[]> _activeLayerIDs; 
 
         public DefaultLayerEvaluationService(IRuleManager ruleManager, IOrchardServices orchardServices) {
             _ruleManager = ruleManager;
@@ -20,12 +20,12 @@ namespace Orchard.Widgets.Services{
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
 
-            _activeLayerIDs = new LazyField<IEnumerable<int>>();
+            _activeLayerIDs = new LazyField<int[]>();
             _activeLayerIDs.Loader(PopulateActiveLayers);
         }
 
         public ILogger Logger { get; set; }
-        public Localizer T { get; private set; }
+        public Localizer T { get; set; }
 
         /// <summary>
         /// Retrieves every Layer from the Content Manager and evaluates each one.
@@ -33,11 +33,11 @@ namespace Orchard.Widgets.Services{
         /// <returns>
         /// A collection of integers that represents the Ids of each active Layer
         /// </returns>
-        public IEnumerable<int> GetActiveLayerIds() {
+        public int[] GetActiveLayerIds() {
             return _activeLayerIDs.Value;
         }
 
-        private IEnumerable<int> PopulateActiveLayers() {
+        private int[] PopulateActiveLayers() {
             // Once the Rule Engine is done:
             // Get Layers and filter by zone and rule
             // NOTE: .ForType("Layer") is faster than .Query<LayerPart, LayerPartRecord>()
@@ -56,7 +56,7 @@ namespace Orchard.Widgets.Services{
                 }
             }
 
-            return activeLayerIds;
+            return activeLayerIds.ToArray();
         }
     }
 }

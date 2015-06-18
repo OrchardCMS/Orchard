@@ -49,7 +49,7 @@ namespace Orchard.Widgets.Filters {
                 return;
             }
 
-            var widgetParts = _widgetsService.GetWidgets(_layerEvaluationService.GetActiveLayerIds().ToArray());
+            var widgetParts = _widgetsService.GetWidgets(_layerEvaluationService.GetActiveLayerIds());
 
             // Build and add shape to zone.
             var zones = workContext.Layout.Zones;
