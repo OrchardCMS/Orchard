@@ -24,11 +24,13 @@
             
             <li data-shape-type="@placement.ShapeType" data-shape-differentiator="@placement.Differentiator" data-shape-zone="Content" data-shape-position="@placement.Position">
                 <div class="shape-type"><h3>@placement.ShapeType @placement.Differentiator</h3></div>
-                @try {
-                    <div class="shape-editor">@Display(Model.AllPlacements[i].Shape)</div>
-                }
-                catch {
-                }
+				<div class="shape-editor">
+					@try {
+						@Display(Model.AllPlacements[i].Shape)
+					}
+					catch {
+					}
+				</div>
                 
                 @*  @shape.Position @(Model.PlacementSettings.Any(x => x.Equals(shape)))*@
                 @Html.HiddenFor(m => m.AllPlacements[i].PlacementSettings.ShapeType, new { @class = "type" })
