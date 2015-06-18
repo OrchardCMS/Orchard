@@ -129,6 +129,10 @@ namespace Orchard.Setup.Controllers {
                         providerName = "MySql";
                         break;
 
+                    case SetupDatabaseType.PostgreSql:
+                        providerName = "PostgreSql";
+                        break;
+
                     default:
                         throw new ApplicationException("Unknown database type: " + model.DatabaseProvider);
                 }
