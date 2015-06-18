@@ -46,6 +46,8 @@
   <ItemGroup>
     <Compile Include="CacheInvalidationContext.cs" />
     <Compile Include="CacheService.cs" />
+    <Compile Include="Exceptions\LicenseVerificationError.cs" />
+    <Compile Include="Exceptions\LicenseVerificationException.cs" />
     <Compile Include="HttpContextAccessor.cs" />
     <Compile Include="HttpRequestExtensions.cs" />
     <Compile Include="Validation\LicenseValidationError.cs" />

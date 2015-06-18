@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace IDeliverable.Licensing.Service.Exceptions
+namespace IDeliverable.Licensing.Exceptions
 {
-    internal class LicenseVerificationException : Exception
+    public class LicenseVerificationException : Exception
     {
         public LicenseVerificationException(LicenseVerificationError error)
             :this("An error occurred while verifying the license.", error)

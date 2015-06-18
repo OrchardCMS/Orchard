@@ -18,7 +18,7 @@ namespace IDeliverable.Slides.Licensing
         private readonly IOrchardServices _orchardServices;
         string ILicensedProductManifest.ProductId => ProductId;
         string ILicensedProductManifest.ProductName => ProductName;
-        bool ILicensedProductManifest.SkipValidationForLocalRequests => true;
+        bool ILicensedProductManifest.SkipValidationForLocalRequests => false;
 
         public string LicenseKey => _orchardServices.WorkContext.CurrentSite.As<SlidesLicenseSettingsPart>().LicenseKey;
     }

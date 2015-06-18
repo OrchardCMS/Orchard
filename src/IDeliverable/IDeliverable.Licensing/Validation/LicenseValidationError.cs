@@ -5,6 +5,7 @@ namespace IDeliverable.Licensing.Validation
         UnknownLicenseKey,
         HostnameMismatch,
         NoActiveSubscription,
+        LicenseRevoked,
         LicensingServiceError,
         LicensingServiceUnreachable,
         TokenAgeValidationFailed,

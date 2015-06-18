@@ -1,9 +1,10 @@
-namespace IDeliverable.Licensing.Service.Exceptions
+namespace IDeliverable.Licensing.Exceptions
 {
-    internal enum LicenseVerificationError
+    public enum LicenseVerificationError
     {
         UnknownLicenseKey,
         NoActiveSubscription,
+        LicenseRevoked,
         HostnameMismatch,
         UnhandledException
     }

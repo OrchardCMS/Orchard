@@ -5,7 +5,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using IDeliverable.Licensing.Service.Exceptions;
+using IDeliverable.Licensing.Exceptions;
 using IDeliverable.Licensing.VerificationTokens;
 using Newtonsoft.Json.Linq;
 
@@ -49,7 +49,12 @@ namespace IDeliverable.Licensing.Service.Services
                     var order = ParseOrderInfo(client.GetAsync($"orders/{orderId}").Result.Content.ReadAsStringAsync().Result);
 
                     if (!order.IsProductAccessAllowed)
-                        throw new LicenseVerificationException($"The license with key '{licenseKey}' is not associated with an active subscription.", LicenseVerificationError.NoActiveSubscription);
+                    {
+                        if(order.SubscriptionId != null)
+                            throw new LicenseVerificationException($"The license with key '{licenseKey}' is not associated with an active subscription.", LicenseVerificationError.NoActiveSubscription);
+
+                        throw new LicenseVerificationException($"The license with key '{licenseKey}' has been revoked.", LicenseVerificationError.LicenseRevoked);
+                    }
 
                     if (!order.Hostnames.Contains(hostname, StringComparer.OrdinalIgnoreCase))
                         throw new LicenseVerificationException($"The license with key '{licenseKey}' is not valid for the provided '{hostname}'. Valid hostnames are '{String.Join(",", order.Hostnames)}", LicenseVerificationError.HostnameMismatch);
@@ -116,11 +121,12 @@ namespace IDeliverable.Licensing.Service.Services
             return licensesQuery.ToArray();
         }
 
-        private OrderInfo ParseOrderInfo(string json)
+        private static OrderInfo ParseOrderInfo(string json)
         {
             var order = JObject.Parse(json)["order"];
             var status = ReadOrderStatus(order);
             var isAccessAllowed = (bool) order["access_allowed"];
+            var subscriptionId = (int?) order["subscription_id"];
             var customFields = (JArray)order["order_custom_checkout_fields"];
             var hostnames = new List<string>();
 
@@ -130,7 +136,7 @@ namespace IDeliverable.Licensing.Service.Services
             if (customFields.Count > 1)
                 hostnames.Add((string)customFields[1]["order_custom_checkout_field"]["value"]);
 
-            return new OrderInfo((int)order["id"], status, isAccessAllowed, hostnames);
+            return new OrderInfo((int)order["id"], status, isAccessAllowed, subscriptionId, hostnames);
         }
 
         private static OrderStatus ReadOrderStatus(JToken order)

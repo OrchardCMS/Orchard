@@ -1,9 +1,12 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
+using IDeliverable.Licensing.Exceptions;
 
 namespace IDeliverable.Licensing.VerificationTokens
 {
@@ -35,7 +38,7 @@ namespace IDeliverable.Licensing.VerificationTokens
 
                 try
                 {
-                    HttpResponseMessage response = null;
+                    HttpResponseMessage response;
 
                     try
                     {
@@ -46,17 +49,28 @@ namespace IDeliverable.Licensing.VerificationTokens
                         throw new LicenseVerificationTokenException("An error occurred while calling the licensing service.", LicenseVerificationTokenError.LicenseServiceUnreachable, ex);
                     }
 
-                    if (response.StatusCode == HttpStatusCode.NotFound)
-                        throw new LicenseVerificationTokenException(response.ReasonPhrase, LicenseVerificationTokenError.UnknownLicenseKey);
-
-                    if (response.StatusCode == HttpStatusCode.Forbidden)
-                        throw new LicenseVerificationTokenException(response.ReasonPhrase, LicenseVerificationTokenError.HostnameMismatch);
-
-                    if (response.StatusCode == HttpStatusCode.Gone)
-                        throw new LicenseVerificationTokenException(response.ReasonPhrase, LicenseVerificationTokenError.NoActiveSubscription);
-
                     if (!response.IsSuccessStatusCode)
-                        throw new LicenseVerificationTokenException(response.ReasonPhrase, LicenseVerificationTokenError.LicenseServiceError);
+                    {
+                        var licenseVerificationError = ReadLicenseVerificationError(response);
+                        
+                        switch (licenseVerificationError)
+                        {
+                            case LicenseVerificationError.UnknownLicenseKey:
+                                throw new LicenseVerificationTokenException(response.ReasonPhrase, LicenseVerificationTokenError.UnknownLicenseKey);
+
+                            case LicenseVerificationError.HostnameMismatch:
+                                throw new LicenseVerificationTokenException(response.ReasonPhrase, LicenseVerificationTokenError.HostnameMismatch);
+
+                            case LicenseVerificationError.NoActiveSubscription:
+                                throw new LicenseVerificationTokenException(response.ReasonPhrase, LicenseVerificationTokenError.NoActiveSubscription);
+
+                            case LicenseVerificationError.LicenseRevoked:
+                                throw new LicenseVerificationTokenException(response.ReasonPhrase, LicenseVerificationTokenError.LicenseRevoked);
+
+                            default:
+                                throw new LicenseVerificationTokenException(response.ReasonPhrase, LicenseVerificationTokenError.LicenseServiceError);
+                        }
+                    }
 
                     var responseText = response.Content.ReadAsStringAsync().Result;
                     var token = LicenseVerificationToken.Parse(responseText);
@@ -65,9 +79,19 @@ namespace IDeliverable.Licensing.VerificationTokens
                 }
                 finally
                 {
-                    ServicePointManager.ServerCertificateValidationCallback -= certValidationHandler;   
+                    ServicePointManager.ServerCertificateValidationCallback -= certValidationHandler;
                 }
             }
+        }
+
+        private static LicenseVerificationError? ReadLicenseVerificationError(HttpResponseMessage response)
+        {
+            IEnumerable<string> values;
+            if (!response.Headers.TryGetValues("LicensingErrorCode", out values))
+                return null;
+
+            var value = values.First();
+            return (LicenseVerificationError)Enum.Parse(typeof(LicenseVerificationError), value);
         }
     }
 }

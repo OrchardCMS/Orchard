@@ -46,7 +46,8 @@ namespace IDeliverable.Licensing.VerificationTokens
                         var lvtex = (LicenseVerificationTokenException)ex;
                         if (lvtex.Error == LicenseVerificationTokenError.UnknownLicenseKey || 
                             lvtex.Error == LicenseVerificationTokenError.HostnameMismatch ||
-                            lvtex.Error == LicenseVerificationTokenError.NoActiveSubscription)
+                            lvtex.Error == LicenseVerificationTokenError.NoActiveSubscription ||
+                            lvtex.Error == LicenseVerificationTokenError.LicenseRevoked)
                         {
                             mStore.Clear(productId);
                             throw;

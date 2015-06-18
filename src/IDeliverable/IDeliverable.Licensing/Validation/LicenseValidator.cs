@@ -56,6 +56,10 @@ namespace IDeliverable.Licensing.Validation
                         error = LicenseValidationError.NoActiveSubscription;
                         break;
 
+                    case LicenseVerificationTokenError.LicenseRevoked:
+                        error = LicenseValidationError.LicenseRevoked;
+                        break;
+
                     case LicenseVerificationTokenError.LicenseServiceError:
                         error = LicenseValidationError.LicensingServiceError;
                         break;

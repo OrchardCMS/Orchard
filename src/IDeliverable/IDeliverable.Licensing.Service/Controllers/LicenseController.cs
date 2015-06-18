@@ -3,7 +3,7 @@ using System.Configuration;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using IDeliverable.Licensing.Service.Exceptions;
+using IDeliverable.Licensing.Exceptions;
 using IDeliverable.Licensing.Service.Services;
 using IDeliverable.Licensing.VerificationTokens;
 
@@ -28,18 +28,23 @@ namespace IDeliverable.Licensing.Service.Controllers
                 switch (ex.Error)
                 {
                     case LicenseVerificationError.UnknownLicenseKey:
-                        throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.NotFound) { ReasonPhrase = ex.Message });
+                        ThrowHttpResponseException(ex, HttpStatusCode.NotFound);
+                        break;
 
                     case LicenseVerificationError.HostnameMismatch:
-                        throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.Forbidden) { ReasonPhrase = ex.Message });
+                        ThrowHttpResponseException(ex, HttpStatusCode.Forbidden);
+                        break;
 
                     case LicenseVerificationError.NoActiveSubscription:
-                        throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.Gone) { ReasonPhrase = ex.Message });
+                    case LicenseVerificationError.LicenseRevoked:
+                        ThrowHttpResponseException(ex, HttpStatusCode.Gone);
+                        break;
 
                     default:
                         throw;
                 }
             }
+            return null;
         }
 
         [HttpGet]
@@ -64,7 +69,7 @@ namespace IDeliverable.Licensing.Service.Controllers
             return new HttpResponseMessage(HttpStatusCode.OK);
         }
 
-        private LicenseService GetLicenseService()
+        private static LicenseService GetLicenseService()
         {
             var sendOwlApiEndpoint = ConfigurationManager.AppSettings["SendOwlApiEndpoint"];
             var sendOwlApiKey = ConfigurationManager.AppSettings["SendOwlApiKey"];
@@ -72,6 +77,13 @@ namespace IDeliverable.Licensing.Service.Controllers
             var tokenSigningCertificateThumbprint = ConfigurationManager.AppSettings["TokenSigningCertificateThumbprint"];
 
             return new LicenseService(sendOwlApiEndpoint, sendOwlApiKey, sendOwlApiSecret, tokenSigningCertificateThumbprint);
+        }
+
+        private static void ThrowHttpResponseException(LicenseVerificationException ex, HttpStatusCode httpStatusCode)
+        {
+            var response = new HttpResponseMessage(httpStatusCode) { ReasonPhrase = ex.Message };
+            response.Headers.Add("LicensingErrorCode", ex.Error.ToString());
+            throw new HttpResponseException(response);
         }
     }
 }

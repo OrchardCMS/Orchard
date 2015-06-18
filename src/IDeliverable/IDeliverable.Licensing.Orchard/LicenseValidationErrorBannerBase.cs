@@ -48,6 +48,9 @@ namespace IDeliverable.Licensing.Orchard
                     case LicenseValidationError.NoActiveSubscription:
                         message = T("The <a href=\"{0}\">configured license key</a> for the {1} module has no active subscription. {2}", licenseSettingsUrl, productManifest.ProductName, retryResultLink);
                         break;
+                    case LicenseValidationError.LicenseRevoked:
+                        message = T("The <a href=\"{0}\">configured license key</a> for the {1} module has been revoked. {2}", licenseSettingsUrl, productManifest.ProductName, retryResultLink);
+                        break;
                     case LicenseValidationError.TokenAgeValidationFailed:
                     case LicenseValidationError.TokenSignatureValidationFailed:
                     case LicenseValidationError.LicensingServiceError:
