@@ -20,7 +20,7 @@ namespace Orchard.Widgets.RuleEngine {
         public bool Matches(string expression) {
             var evaluator = _evaluators.FirstOrDefault();
             if (evaluator == null) {
-                throw new OrchardException(T("There are currently not scripting engine enabled"));
+                throw new OrchardException(T("There are currently no scripting engines enabled"));
             }
 
             var result = evaluator.Evaluate(expression, new List<IGlobalMethodProvider> { new GlobalMethodProvider(this) });
