@@ -14,7 +14,9 @@ namespace Orchard.Security.Providers {
 
         private readonly ShellSettings _settings;
         private readonly IClock _clock;
-        private readonly IMembershipService _membershipService;
+        // Lazy because Setup is using IAuthenticationService but doesn't have 
+        // any implementation yet
+        private readonly Lazy<IMembershipService> _membershipService; 
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ISslSettingsProvider _sslSettingsProvider;
         private IUser _signedInUser;
@@ -23,7 +25,7 @@ namespace Orchard.Security.Providers {
         public FormsAuthenticationService(
             ShellSettings settings, 
             IClock clock, 
-            IMembershipService membershipService, 
+            Lazy<IMembershipService> membershipService, 
             IHttpContextAccessor httpContextAccessor,
             ISslSettingsProvider sslSettingsProvider) {
             _settings = settings;
@@ -149,9 +151,9 @@ namespace Orchard.Security.Providers {
             }
 
             // todo: this issues a sql query for each authenticated request
-            _signedInUser = _membershipService.GetUser(userDataName);
+            _signedInUser = _membershipService.Value.GetUser(userDataName);
 
-            if(_signedInUser == null || !_membershipService.CanAuthenticateWithCookie(_signedInUser)) {
+            if(_signedInUser == null || !_membershipService.Value.CanAuthenticateWithCookie(_signedInUser)) {
                 return null;
             }
 
