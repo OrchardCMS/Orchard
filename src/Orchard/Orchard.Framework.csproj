@@ -149,6 +149,8 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Security\ISslSettingsProvider.cs" />
+    <Compile Include="Security\Providers\DefaultSslSettingsProvider.cs" />
     <Compile Include="StaticHttpContextScope.cs" />
     <Compile Include="StaticHttpContextScopeFactory.cs" />
     <Compile Include="Caching\DefaultCacheContextAccessor.cs" />

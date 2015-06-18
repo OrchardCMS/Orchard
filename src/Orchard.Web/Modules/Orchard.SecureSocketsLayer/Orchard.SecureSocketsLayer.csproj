@@ -24,6 +24,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -33,7 +34,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\..\..\OrchardBasicCorrectness.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -91,6 +92,7 @@
     <Compile Include="Filters\SecureSocketsLayersFilter.cs" />
     <Compile Include="Handlers\SslSettingsPartHandler.cs" />
     <Compile Include="Models\SslSettingsPart.cs" />
+    <Compile Include="Services\SecureSocketsLayerSettingsProvider.cs" />
     <Compile Include="Services\ISecureSocketsLayerService.cs" />
     <Compile Include="Services\SecureSocketsLayerService.cs" />
   </ItemGroup>

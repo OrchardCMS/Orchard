@@ -34,7 +34,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\..\..\OrchardBasicCorrectness.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -321,12 +321,14 @@
     <Compile Include="Drivers\MenuElementDriver.cs" />
     <Compile Include="Drivers\NotificationsElementDriver.cs" />
     <Compile Include="Drivers\ShapeElementDriver.cs" />
+    <Compile Include="Drivers\BreakElementDriver.cs" />
     <Compile Include="Elements\Breadcrumbs.cs" />
     <Compile Include="Elements\Canvas.cs" />
     <Compile Include="Elements\ContentElement.cs" />
     <Compile Include="Elements\Menu.cs" />
     <Compile Include="Elements\Notifications.cs" />
     <Compile Include="Elements\Shape.cs" />
+    <Compile Include="Elements\Break.cs" />
     <Compile Include="Elements\UIElement.cs" />
     <Compile Include="Filters\TokensFilter.cs" />
     <Compile Include="Framework\Display\ElementDisplayedContext.cs" />
@@ -549,9 +551,12 @@
     <Content Include="Styles\Lib\FontAwesome\Fonts\fontawesome-webfont.woff2" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Views\Elements\Break.cshtml" />
     <Content Include="Styles\LayoutEditor\Menu.less" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Views\Parts.Layout.Recursive.cshtml" />
+    <Content Include="Views\Parts.Layout.Summary.Recursive.cshtml" />
     <Content Include="Views\EditorTemplates\Elements.Breadcrumbs.cshtml" />
     <Content Include="Views\EditorTemplates\Elements.Menu.cshtml" />
   </ItemGroup>
