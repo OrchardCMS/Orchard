@@ -35,6 +35,7 @@ using Orchard.Services;
 namespace Orchard.Tests.Modules.Users.Services {
     [TestFixture]
     public class MembershipServiceTests {
+        private IMembershipValidationService _membershipValidationService;
         private IMembershipService _membershipService;
         private ISessionFactory _sessionFactory;
         private ISession _session;
@@ -73,6 +74,7 @@ namespace Orchard.Tests.Modules.Users.Services {
         public void Init() {
             var builder = new ContainerBuilder();
             //builder.RegisterModule(new ImplicitCollectionSupportModule());
+            builder.RegisterType<MembershipValidationService>().As<IMembershipValidationService>();
             builder.RegisterType<MembershipService>().As<IMembershipService>();
             builder.RegisterType<DefaultContentQuery>().As<IContentQuery>();
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
@@ -98,6 +100,7 @@ namespace Orchard.Tests.Modules.Users.Services {
             _session = _sessionFactory.OpenSession();
             builder.RegisterInstance(new TestSessionLocator(_session)).As<ISessionLocator>();
             _container = builder.Build();
+            _membershipValidationService = _container.Resolve<IMembershipValidationService>();
             _membershipService = _container.Resolve<IMembershipService>();
         }
 
@@ -159,7 +162,7 @@ namespace Orchard.Tests.Modules.Users.Services {
         public void UsersWhoHaveNeverLoggedInCanBeAuthenticated() {
             var user = (UserPart)_membershipService.CreateUser(new CreateUserParams("a", "b", "c", null, null, true));
             
-            Assert.That(_membershipService.CanAuthenticateWithCookie(user), Is.True);
+            Assert.That(_membershipValidationService.CanAuthenticateWithCookie(user), Is.True);
         }
 
         [Test]
@@ -169,7 +172,7 @@ namespace Orchard.Tests.Modules.Users.Services {
             user.LastLoginUtc = _clock.UtcNow;
             _clock.Advance(TimeSpan.FromMinutes(1));
 
-            Assert.That(_membershipService.CanAuthenticateWithCookie(user), Is.True);
+            Assert.That(_membershipValidationService.CanAuthenticateWithCookie(user), Is.True);
         }
 
         [Test]
@@ -181,7 +184,7 @@ namespace Orchard.Tests.Modules.Users.Services {
             user.LastLogoutUtc = _clock.UtcNow;
             _clock.Advance(TimeSpan.FromMinutes(1));
 
-            Assert.That(_membershipService.CanAuthenticateWithCookie(user), Is.False);
+            Assert.That(_membershipValidationService.CanAuthenticateWithCookie(user), Is.False);
         }
 
         [Test]
@@ -193,7 +196,7 @@ namespace Orchard.Tests.Modules.Users.Services {
             user.LastLoginUtc = _clock.UtcNow;
             _clock.Advance(TimeSpan.FromMinutes(1));
 
-            Assert.That(_membershipService.CanAuthenticateWithCookie(user), Is.True);
+            Assert.That(_membershipValidationService.CanAuthenticateWithCookie(user), Is.True);
         }
 
         [Test]
@@ -202,7 +205,7 @@ namespace Orchard.Tests.Modules.Users.Services {
 
             user.RegistrationStatus = UserStatus.Pending;
 
-            Assert.That(_membershipService.CanAuthenticateWithCookie(user), Is.False);
+            Assert.That(_membershipValidationService.CanAuthenticateWithCookie(user), Is.False);
         }
 
         [Test]
@@ -211,7 +214,7 @@ namespace Orchard.Tests.Modules.Users.Services {
 
             user.RegistrationStatus = UserStatus.Approved;
 
-            Assert.That(_membershipService.CanAuthenticateWithCookie(user), Is.True);
+            Assert.That(_membershipValidationService.CanAuthenticateWithCookie(user), Is.True);
         }
     }
 }
