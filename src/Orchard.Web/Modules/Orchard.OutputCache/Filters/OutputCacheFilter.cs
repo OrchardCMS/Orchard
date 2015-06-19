@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -94,13 +93,15 @@ namespace Orchard.OutputCache.Filters {
 
             _now = _clock.UtcNow;
             _workContext = _workContextAccessor.GetContext();
+
+            if (!RequestIsCacheable(filterContext))
+                return;
+
+            // Computing the cache key after we know that the request is cacheable means that we are only performing this calculation on requests that require it
             _cacheKey = ComputeCacheKey(filterContext, GetCacheKeyParameters(filterContext));
             _invariantCacheKey = ComputeCacheKey(filterContext, null);
 
             Logger.Debug("Cache key '{0}' was created.", _cacheKey);
-
-            if (!RequestIsCacheable(filterContext))
-                return;
 
             // The cache key lock for a given cache key is used to synchronize requests to
             // ensure only a single request is regenerating the item.
@@ -269,45 +270,59 @@ namespace Orchard.OutputCache.Filters {
 
         protected virtual bool RequestIsCacheable(ActionExecutingContext filterContext) {
 
+            var itemDescriptor = string.Empty;
+
+            if (Logger.IsEnabled(LogLevel.Debug)) {
+                var url = filterContext.RequestContext.HttpContext.Request.RawUrl;
+                var area = filterContext.RequestContext.RouteData.Values["area"];
+                var controller = filterContext.ActionDescriptor.ControllerDescriptor.ControllerName;
+                var action = filterContext.ActionDescriptor.ActionName;
+                var culture = _workContext.CurrentCulture.ToLowerInvariant();
+                var auth = filterContext.HttpContext.User.Identity.IsAuthenticated.ToString().ToLowerInvariant();
+                var theme = _themeManager.GetRequestTheme(filterContext.RequestContext).Id.ToLowerInvariant();
+
+                itemDescriptor = string.Format("{0} (Area: {1}, Controller: {2}, Action: {3}, Culture: {4}, Theme: {5}, Auth: {6})", url, area, controller, action, culture, theme, auth);
+            }
+
             // Respect OutputCacheAttribute if applied.
             var actionAttributes = filterContext.ActionDescriptor.GetCustomAttributes(typeof(OutputCacheAttribute), true);
             var controllerAttributes = filterContext.ActionDescriptor.ControllerDescriptor.GetCustomAttributes(typeof(OutputCacheAttribute), true);
             var outputCacheAttribute = actionAttributes.Concat(controllerAttributes).Cast<OutputCacheAttribute>().FirstOrDefault();
             if (outputCacheAttribute != null) {
                 if (outputCacheAttribute.Duration <= 0 || outputCacheAttribute.NoStore || outputCacheAttribute.LocationIsIn(OutputCacheLocation.Downstream, OutputCacheLocation.Client, OutputCacheLocation.None)) {
-                    Logger.Debug("Request for item '{0}' ignored based on OutputCache attribute.", _cacheKey);
+                    Logger.Debug("Request for item '{0}' ignored based on OutputCache attribute.", itemDescriptor);
                     return false;
                 }
             }
 
             // Don't cache POST requests.
             if (filterContext.HttpContext.Request.HttpMethod.Equals("POST", StringComparison.OrdinalIgnoreCase)) {
-                Logger.Debug("Request for item '{0}' ignored because HTTP method is POST.", _cacheKey);
+                Logger.Debug("Request for item '{0}' ignored because HTTP method is POST.", itemDescriptor);
                 return false;
             }
 
             // Don't cache admin section requests.
             if (AdminFilter.IsApplied(new RequestContext(filterContext.HttpContext, new RouteData()))) {
-                Logger.Debug("Request for item '{0}' ignored because it's in admin section.", _cacheKey);
+                Logger.Debug("Request for item '{0}' ignored because it's in admin section.", itemDescriptor);
                 return false;
             }
 
             // Ignore authenticated requests unless the setting to cache them is true.
             if (_workContext.CurrentUser != null && !CacheSettings.CacheAuthenticatedRequests) {
-                Logger.Debug("Request for item '{0}' ignored because user is authenticated.", _cacheKey);
+                Logger.Debug("Request for item '{0}' ignored because user is authenticated.", itemDescriptor);
                 return false;
             }
 
             // Don't cache ignored URLs.
             if (IsIgnoredUrl(filterContext.RequestContext.HttpContext.Request.AppRelativeCurrentExecutionFilePath, CacheSettings.IgnoredUrls)) {
-                Logger.Debug("Request for item '{0}' ignored because the URL is configured as ignored.", _cacheKey);
+                Logger.Debug("Request for item '{0}' ignored because the URL is configured as ignored.", itemDescriptor);
                 return false;
             }
 
             // Ignore requests with the refresh key on the query string.
             foreach (var key in filterContext.RequestContext.HttpContext.Request.QueryString.AllKeys) {
                 if (String.Equals(_refreshKey, key, StringComparison.OrdinalIgnoreCase)) {
-                    Logger.Debug("Request for item '{0}' ignored because refresh key was found on query string.", _cacheKey);
+                    Logger.Debug("Request for item '{0}' ignored because refresh key was found on query string.", itemDescriptor);
                     return false;
                 }
             }
