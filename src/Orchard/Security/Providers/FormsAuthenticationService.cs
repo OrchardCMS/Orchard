@@ -3,18 +3,16 @@ using System.Web;
 using System.Web.Security;
 using Orchard.Environment.Configuration;
 using Orchard.Logging;
+using Orchard.ContentManagement;
 using Orchard.Mvc;
 using Orchard.Mvc.Extensions;
 using Orchard.Services;
-using Orchard.Utility.Extensions;
 
 namespace Orchard.Security.Providers {
     public class FormsAuthenticationService : IAuthenticationService {
-        private const int _version = 3;
-
         private readonly ShellSettings _settings;
         private readonly IClock _clock;
-        private readonly IMembershipService _membershipService;
+        private readonly IContentManager _contentManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ISslSettingsProvider _sslSettingsProvider;
         private IUser _signedInUser;
@@ -23,12 +21,12 @@ namespace Orchard.Security.Providers {
         public FormsAuthenticationService(
             ShellSettings settings, 
             IClock clock, 
-            IMembershipService membershipService, 
+            IContentManager contentManager, 
             IHttpContextAccessor httpContextAccessor,
             ISslSettingsProvider sslSettingsProvider) {
             _settings = settings;
             _clock = clock;
-            _membershipService = membershipService;
+            _contentManager = contentManager;
             _httpContextAccessor = httpContextAccessor;
             _sslSettingsProvider = sslSettingsProvider;
 
@@ -44,12 +42,11 @@ namespace Orchard.Security.Providers {
         public void SignIn(IUser user, bool createPersistentCookie) {
             var now = _clock.UtcNow.ToLocalTime();
             
-            // the cookie user data is {userName.Base64};{tenant}
-            // the username is encoded to base64 to prevent collisions with the ';' seprarator
-            var userData = String.Concat(Convert.ToString(user.UserName).ToBase64(), ";", _settings.Name); 
+            // the cookie user data is {userId};{tenant}
+            var userData = String.Concat(Convert.ToString(user.Id), ";", _settings.Name); 
 
             var ticket = new FormsAuthenticationTicket(
-                _version,
+                1 /*version*/,
                 user.UserName,
                 now,
                 now.Add(ExpirationTimeSpan),
@@ -60,8 +57,8 @@ namespace Orchard.Security.Providers {
             var encryptedTicket = FormsAuthentication.Encrypt(ticket);
 
             var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket) {
-                HttpOnly = true, // can't retrieve the cookie from JavaScript
-                Secure = _sslSettingsProvider.GetRequiresSSL(), 
+                HttpOnly = true,
+                Secure = _sslSettingsProvider.GetRequiresSSL(),
                 Path = FormsAuthentication.FormsCookiePath
             };
 
@@ -118,37 +115,30 @@ namespace Orchard.Security.Providers {
             }
 
             var formsIdentity = (FormsIdentity)httpContext.User.Identity;
-
-            // if the cookie is from a previous format, ignore
-            if (formsIdentity.Ticket.Version != _version) {
-                return null;
-            }
-
             var userData = formsIdentity.Ticket.UserData ?? "";
 
-            // the cookie user data is {userName};{tenant}
+            // the cookie user data is {userId};{tenant}
             var userDataSegments = userData.Split(';');
             
             if (userDataSegments.Length < 2) {
                 return null;
             }
 
-            var userDataName = userDataSegments[0];
+            var userDataId = userDataSegments[0];
             var userDataTenant = userDataSegments[1];
-
-            try {
-                userDataName = userDataName.FromBase64();
-            }
-            catch {
-                return null;
-            }
 
             if (!String.Equals(userDataTenant, _settings.Name, StringComparison.Ordinal)) {
                 return null;
             }
 
+            int userId;
+            if (!int.TryParse(userDataId, out userId)) {
+                Logger.Error("User id not a parsable integer");
+                return null;
+            }
+
             _isAuthenticated = true;
-            return _signedInUser = _membershipService.GetUser(userDataName);
+            return _signedInUser = _contentManager.Get(userId).As<IUser>();
         }
 
         private string GetCookiePath(HttpContextBase httpContext) {
