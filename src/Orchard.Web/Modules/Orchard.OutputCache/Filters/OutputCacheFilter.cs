@@ -268,15 +268,19 @@ namespace Orchard.OutputCache.Filters {
 
         protected virtual bool RequestIsCacheable(ActionExecutingContext filterContext) {
 
-            var url = filterContext.RequestContext.HttpContext.Request.RawUrl;
-            var area = filterContext.RequestContext.RouteData.Values["area"];
-            var controller = filterContext.ActionDescriptor.ControllerDescriptor.ControllerName;
-            var action = filterContext.ActionDescriptor.ActionName;
-            var culture = _workContext.CurrentCulture.ToLowerInvariant();
-            var auth = filterContext.HttpContext.User.Identity.IsAuthenticated.ToString().ToLowerInvariant();
-            var theme = _themeManager.GetRequestTheme(filterContext.RequestContext).Id.ToLowerInvariant();
+            var itemDescriptor = string.Empty;
 
-            var itemDescriptor = string.Format("{0} (Area: {1}, Controller: {2}, Action: {3}, Culture: {4}, Theme: {5}, Auth: {6})", url, area, controller, action, culture, theme, auth);
+            if (Logger.IsEnabled(LogLevel.Debug)) {
+                var url = filterContext.RequestContext.HttpContext.Request.RawUrl;
+                var area = filterContext.RequestContext.RouteData.Values["area"];
+                var controller = filterContext.ActionDescriptor.ControllerDescriptor.ControllerName;
+                var action = filterContext.ActionDescriptor.ActionName;
+                var culture = _workContext.CurrentCulture.ToLowerInvariant();
+                var auth = filterContext.HttpContext.User.Identity.IsAuthenticated.ToString().ToLowerInvariant();
+                var theme = _themeManager.GetRequestTheme(filterContext.RequestContext).Id.ToLowerInvariant();
+
+                itemDescriptor = string.Format("{0} (Area: {1}, Controller: {2}, Action: {3}, Culture: {4}, Theme: {5}, Auth: {6})", url, area, controller, action, culture, theme, auth);
+            }
 
             // Respect OutputCacheAttribute if applied.
             var actionAttributes = filterContext.ActionDescriptor.GetCustomAttributes(typeof(OutputCacheAttribute), true);
