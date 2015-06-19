@@ -7,9 +7,9 @@ using System.Security;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("IDeliverable.Slides")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Provides slide show features, enabling users to turn content items into slide shows and add slide show elements to layouts.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyProduct("Orchard")]
+[assembly: AssemblyProduct("IDeliverable.Slides")]
 [assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -32,6 +32,6 @@ using System.Security;
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
 
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("1.0.2.*")]
+[assembly: AssemblyFileVersion("1.0.2.*")]
 
