@@ -15,6 +15,8 @@ namespace Orchard.Layouts.Services {
 
         public Element Activate(Type elementType, Action<Element> initialize = null) {
             var element = (Element)Activator.CreateInstance(elementType);
+            
+            element.T = T;
 
             if (initialize != null)
                 initialize(element);
@@ -24,6 +26,8 @@ namespace Orchard.Layouts.Services {
 
         public T Activate<T>(Action<T> initialize = null) where T : Element {
             var element = (T)Activator.CreateInstance(typeof(T));
+
+            element.T = this.T;
 
             if (initialize != null)
                 initialize(element);
