@@ -1,7 +1,8 @@
 ﻿@import "Variables.less";
+@import "Reset.less";
 
 .layout-editor {
-    .layout-content {
+    .layout-content, .layout-html {
         min-height: 1em;
 
         > .layout-element-wrapper {
@@ -12,7 +13,7 @@
                 line-height: normal;
 
                 // Reset to HTML5 W3C standard default styling within content.
-                @import "Reset.less";
+                .reset();
 
                 > *:first-child {
                     margin-top: 0 !important; // Important because site.css of the admin theme styles heading margins with a very high specificity.

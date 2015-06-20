@@ -320,13 +320,15 @@
     <Compile Include="Drivers\CanvasElementDriver.cs" />
     <Compile Include="Drivers\MenuElementDriver.cs" />
     <Compile Include="Drivers\NotificationsElementDriver.cs" />
-    <Compile Include="Drivers\ShapeElementDriver.cs" />
+    <Compile Include="Drivers\HeadingElementDriver.cs" />
+   <Compile Include="Drivers\ShapeElementDriver.cs" />
     <Compile Include="Drivers\BreakElementDriver.cs" />
     <Compile Include="Elements\Breadcrumbs.cs" />
     <Compile Include="Elements\Canvas.cs" />
     <Compile Include="Elements\ContentElement.cs" />
     <Compile Include="Elements\Menu.cs" />
     <Compile Include="Elements\Notifications.cs" />
+    <Compile Include="Elements\Heading.cs" />
     <Compile Include="Elements\Shape.cs" />
     <Compile Include="Elements\Break.cs" />
     <Compile Include="Elements\UIElement.cs" />
@@ -427,6 +429,7 @@
     <Compile Include="ViewModels\LayoutEditor.cs" />
     <Compile Include="ViewModels\LayoutEditorPropertiesViewModel.cs" />
     <Compile Include="ViewModels\MenuEditorViewModel.cs" />
+    <Compile Include="ViewModels\HeadingEditorViewModel.cs" />
     <Compile Include="ViewModels\VectorImageEditorViewModel.cs" />
     <Compile Include="ViewModels\ImageEditorViewModel.cs" />
     <Compile Include="ViewModels\MarkdownEditorViewModel.cs" />
@@ -567,6 +570,12 @@
     <Content Include="Views\Elements\Menu.Design.cshtml" />
     <Content Include="Views\Elements\Notifications.cshtml" />
     <Content Include="Views\Elements\Notifications.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Heading.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Elements.Heading.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

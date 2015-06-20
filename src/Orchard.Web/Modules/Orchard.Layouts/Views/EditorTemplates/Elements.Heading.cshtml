@@ -1,0 +1,20 @@
+﻿@model Orchard.Layouts.ViewModels.HeadingEditorViewModel
+@{
+    Script.Include("AutoFocus.js");
+}
+<fieldset>
+    <legend>@T("Level")</legend>
+    <ul>
+    @for (var i = 1; i <= 6; i++) {
+        <li>
+            @Html.RadioButtonFor(m => m.Level, i, new {id = "h" + i})
+            <label for="@("h" + i)" class="forcheckbox">@T("&lt;h{0}/&gt;", i)</label>
+        </li>
+    }
+    </ul>
+</fieldset>
+<fieldset class="autofocus">
+    @Html.LabelFor(m => m.Text, T("Text"))
+    @Html.TextBoxFor(m => m.Text, new { @class = "text large tokenized", autofocus = "autofocus" })
+    @Html.Hint(T("Note: HTML markup will be rendered unencoded."))
+</fieldset>

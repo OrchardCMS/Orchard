@@ -8,11 +8,6 @@ using Orchard.Services;
 
 namespace Orchard.Layouts.Drivers {
     public class ParagraphElementDriver : ElementDriver<Paragraph> {
-        private readonly IEnumerable<IHtmlFilter> _htmlFilters;
-        public ParagraphElementDriver(IEnumerable<IHtmlFilter> htmlFilters) {
-            _htmlFilters = htmlFilters;
-        }
-
         protected override EditorResult OnBuildEditor(Paragraph element, ElementEditorContext context) {
             var viewModel = new ParagraphEditorViewModel {
                 Text = element.Content
@@ -25,18 +20,6 @@ namespace Orchard.Layouts.Drivers {
             }
             
             return Editor(context, editor);
-        }
-
-        protected override void OnDisplaying(Paragraph element, ElementDisplayingContext context) {
-            var text = element.Content;
-            var flavor = "html";
-            var processedText = ApplyHtmlFilters(text, flavor);
-
-            context.ElementShape.ProcessedText = processedText;
-        }
-
-        private string ApplyHtmlFilters(string content, string flavor) {
-            return _htmlFilters.Aggregate(content, (t, filter) => filter.ProcessContent(t, flavor));
         }
     }
 }

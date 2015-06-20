@@ -167,7 +167,6 @@
         this.copy = function (clipboardData) {
             var text = this.getInnerText();
             clipboardData.setData("text/plain", text);
-            console.log(text);
 
             var data = this.toObject();
             var json = JSON.stringify(data, null, "\t");
