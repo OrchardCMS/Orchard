@@ -2,7 +2,7 @@
 AntiForgery: enabled
 Author: IDeliverable
 Website: http://www.ideliverable.com
-Version: 1.0.2
+Version: 1.0.3
 OrchardVersion: 1.9
 Status: Delivered
 Description: Provides slide show features, enabling users to turn content items into slide shows and add slide show elements to layouts.

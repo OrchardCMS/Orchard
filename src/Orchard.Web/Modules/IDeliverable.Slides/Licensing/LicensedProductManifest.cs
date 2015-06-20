@@ -9,6 +9,7 @@ namespace IDeliverable.Slides.Licensing
     {
         public static readonly string ProductId = "233554";
         public static readonly string ProductName = "IDeliverable.Slides";
+        public static readonly string ExtensionId = "IDeliverable.Slides";
 
         public LicensedProductManifest(IOrchardServices orchardServices)
         {
@@ -18,6 +19,7 @@ namespace IDeliverable.Slides.Licensing
         private readonly IOrchardServices _orchardServices;
         string ILicensedProductManifest.ProductId => ProductId;
         string ILicensedProductManifest.ProductName => ProductName;
+        string ILicensedProductManifest.ExtensionId => ExtensionId;
         bool ILicensedProductManifest.SkipValidationForLocalRequests => true;
 
         public string LicenseKey => _orchardServices.WorkContext.CurrentSite.As<SlidesLicenseSettingsPart>().LicenseKey;
