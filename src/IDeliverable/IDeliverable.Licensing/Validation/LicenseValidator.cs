@@ -22,8 +22,11 @@ namespace IDeliverable.Licensing.Validation
         {
             var request = mHttpContextAccessor.Current().Request;
 
+            var isLocal = request.IsLocal;
+            var isDebugMode = mHttpContextAccessor.Current().IsDebuggingEnabled;
+
             var skipForLocalRequests = (options & LicenseValidationOptions.SkipForLocalRequests) == LicenseValidationOptions.SkipForLocalRequests;
-            if (request.IsLocal && skipForLocalRequests)
+            if (skipForLocalRequests && isLocal && isDebugMode)
                 return;
 
             LicenseVerificationToken token;
