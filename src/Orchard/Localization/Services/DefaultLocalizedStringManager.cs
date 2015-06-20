@@ -254,20 +254,28 @@ namespace Orchard.Localization.Services {
             }
         }
 
+        private static string TrimQuote(string str) {
+            if (str.StartsWith("\"") && str.EndsWith("\"")) {
+                return str.Substring(1, str.Length - 2);
+            }
+
+            return str;
+        }
+
         private static string ParseTranslation(string poLine) {
-            return Unescape(poLine.Substring(6).Trim().Trim('"'));
+            return Unescape(TrimQuote(poLine.Substring(6).Trim()));
         }
 
         private static string ParseId(string poLine) {
-            return Unescape(poLine.Substring(5).Trim().Trim('"'));
+            return Unescape(TrimQuote(poLine.Substring(5).Trim()));
         }
 
         private static string ParseScope(string poLine) {
-            return Unescape(poLine.Substring(2).Trim().Trim('"'));
+            return Unescape(TrimQuote(poLine.Substring(2).Trim()));
         }
 
         private static string ParseContext(string poLine) {
-            return Unescape(poLine.Substring(7).Trim().Trim('"'));
+            return Unescape(TrimQuote(poLine.Substring(7).Trim()));
         }
 
         class CultureDictionary {
