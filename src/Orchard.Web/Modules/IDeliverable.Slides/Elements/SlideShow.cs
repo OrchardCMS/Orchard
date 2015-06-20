@@ -5,9 +5,9 @@ using Orchard.Layouts.Helpers;
 
 namespace IDeliverable.Slides.Elements
 {
-    public class SlideShow : Element, ISlideShow
+    public class Slideshow : Element, ISlideshow
     {
-        internal readonly LazyField<SlideShowProfile> _profileField = new LazyField<SlideShowProfile>();
+        internal readonly LazyField<SlideshowProfile> _profileField = new LazyField<SlideshowProfile>();
 
         public override string Category => "Media";
         public override bool HasEditor => true;
@@ -18,7 +18,7 @@ namespace IDeliverable.Slides.Elements
             set { this.Store(x => x.ProfileId, value); }
         }
 
-        public SlideShowProfile Profile => _profileField.Value;
+        public SlideshowProfile Profile => _profileField.Value;
 
         public string ProviderName
         {

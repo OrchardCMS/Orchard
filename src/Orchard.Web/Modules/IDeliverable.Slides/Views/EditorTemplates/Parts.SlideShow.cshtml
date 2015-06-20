@@ -1,4 +1,4 @@
-﻿@model IDeliverable.Slides.ViewModels.SlideShowPartViewModel
+﻿@model IDeliverable.Slides.ViewModels.SlideshowPartViewModel
 @{
     Script.Require("ShapesBase");
 }
@@ -10,7 +10,7 @@
     <div class="form-group">
         @Html.LabelFor(m => m.ProfileId, T("Slide Show Profile"))
         @Html.DropDownListFor(m => m.ProfileId, profileOptions, T("(Default)").Text)
-        @Html.Hint(T("Select the slide show player profile to use when presenting the slides. <a href=\"{0}\">Click here</a> to manage your profiles.", Url.Action("Index", "SlideShowProfile", new { area = "IDeliverable.Slides" })))
+        @Html.Hint(T("Select the slide show player profile to use when presenting the slides. <a href=\"{0}\">Click here</a> to manage your profiles.", Url.Action("Index", "SlideshowProfile", new { area = "IDeliverable.Slides" })))
     </div>
 </fieldset>
 

@@ -4,10 +4,10 @@ using Orchard;
 
 namespace IDeliverable.Slides.Services
 {
-    public interface ISlideShowPlayerEngineManager : IDependency
+    public interface ISlideshowPlayerEngineManager : IDependency
     {
-        IEnumerable<ISlideShowPlayerEngine> GetEngines();
-        ISlideShowPlayerEngine GetEngine(string name);
-        ISlideShowPlayerEngine GetEngine(SlideShowProfile profile);
+        IEnumerable<ISlideshowPlayerEngine> GetEngines();
+        ISlideshowPlayerEngine GetEngine(string name);
+        ISlideshowPlayerEngine GetEngine(SlideshowProfile profile);
     }
 }

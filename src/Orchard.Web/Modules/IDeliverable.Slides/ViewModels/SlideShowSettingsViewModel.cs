@@ -3,10 +3,10 @@ using IDeliverable.Slides.Services;
 
 namespace IDeliverable.Slides.ViewModels
 {
-    public class SlideShowSettingsViewModel
+    public class SlideshowSettingsViewModel
     {
         public string Engine { get; set; }
-        public IList<ISlideShowPlayerEngine> AvailableEngines { get; set; }
+        public IList<ISlideshowPlayerEngine> AvailableEngines { get; set; }
         public IDictionary<string, dynamic> EngineSettingsEditors { get; set; }
     }
 }

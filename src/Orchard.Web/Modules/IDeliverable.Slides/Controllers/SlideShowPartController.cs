@@ -15,14 +15,14 @@ using Orchard.Layouts.Helpers;
 namespace IDeliverable.Slides.Controllers
 {
     [Admin]
-    public class SlideShowPartController : Controller
+    public class SlideshowPartController : Controller
     {
         private readonly IObjectStore _objectStore;
         private readonly IContentManager _contentManager;
         private readonly INotifier _notifier;
         private readonly ISlidesSerializer _serializer;
 
-        public SlideShowPartController(IObjectStore objectStore, IContentManager contentManager, INotifier notifier, ISlidesSerializer serializer)
+        public SlideshowPartController(IObjectStore objectStore, IContentManager contentManager, INotifier notifier, ISlidesSerializer serializer)
         {
             _objectStore = objectStore;
             _contentManager = contentManager;
@@ -35,7 +35,7 @@ namespace IDeliverable.Slides.Controllers
 
         public ActionResult AddSlides(int id, string slides)
         {
-            var part = _contentManager.Get<SlideShowPart>(id, VersionOptions.DraftRequired);
+            var part = _contentManager.Get<SlideshowPart>(id, VersionOptions.DraftRequired);
 
             if (slides == null)
             {
@@ -53,7 +53,7 @@ namespace IDeliverable.Slides.Controllers
 
         public ActionResult EditSlide(int id, int index)
         {
-            var slidesPart = _contentManager.Get<SlideShowPart>(id, VersionOptions.Latest);
+            var slidesPart = _contentManager.Get<SlideshowPart>(id, VersionOptions.Latest);
             var slides = GetSlides(slidesPart).ToList();
             var slide = slides.ElementAt(index);
             var key = _objectStore.GenerateKey();
@@ -65,7 +65,7 @@ namespace IDeliverable.Slides.Controllers
 
         public ActionResult UpdateSlide(int id, int index, string key)
         {
-            var slidesPart = _contentManager.Get<SlideShowPart>(id, VersionOptions.Latest);
+            var slidesPart = _contentManager.Get<SlideshowPart>(id, VersionOptions.Latest);
             var slide = _objectStore.Get<Slide>(key);
             var slides = GetSlides(slidesPart).ToList();
 
@@ -78,7 +78,7 @@ namespace IDeliverable.Slides.Controllers
         [HttpPost]
         public ActionResult DeleteSlide(int id, int index)
         {
-            var slidesPart = _contentManager.Get<SlideShowPart>(id, VersionOptions.DraftRequired);
+            var slidesPart = _contentManager.Get<SlideshowPart>(id, VersionOptions.DraftRequired);
             var slides = GetSlides(slidesPart).ToList();
 
             slides.RemoveAt(index);
@@ -87,7 +87,7 @@ namespace IDeliverable.Slides.Controllers
             return RedirectToEditor(slidesPart, T("That slide has been deleted."));
         }
 
-        private RedirectToRouteResult RedirectToEditor(SlideShowPart part, LocalizedString message = null)
+        private RedirectToRouteResult RedirectToEditor(SlideshowPart part, LocalizedString message = null)
         {
             if (message != null)
                 _notifier.Information(message);
@@ -95,13 +95,13 @@ namespace IDeliverable.Slides.Controllers
             return RedirectToRoute(_contentManager.GetItemMetadata(part).EditorRouteValues);
         }
 
-        private IEnumerable<Slide> GetSlides(SlideShowPart part) {
+        private IEnumerable<Slide> GetSlides(SlideshowPart part) {
             var storage = new ContentPartStorage(part);
             var slidesData = storage.RetrieveSlidesData();
             return _serializer.Deserialize(slidesData);
         }
 
-        private void SetSlides(SlideShowPart part, IEnumerable<Slide> slides) {
+        private void SetSlides(SlideshowPart part, IEnumerable<Slide> slides) {
             var storage = new ContentPartStorage(part);
             var slidesData = _serializer.Serialize(slides);
             storage.StoreSlidesData(slidesData);

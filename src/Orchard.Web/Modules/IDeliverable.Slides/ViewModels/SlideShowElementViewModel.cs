@@ -4,18 +4,18 @@ using IDeliverable.Slides.Models;
 
 namespace IDeliverable.Slides.ViewModels
 {
-    public class SlideShowElementViewModel
+    public class SlideshowElementViewModel
     {
-        public SlideShowElementViewModel()
+        public SlideshowElementViewModel()
         {
-            AvailableProfiles = new List<SlideShowProfile>();
+            AvailableProfiles = new List<SlideshowProfile>();
             AvailableProviders = new Dictionary<string, dynamic>();
         }
 
-        public SlideShow Element { get; set; }
+        public Slideshow Element { get; set; }
         public string SessionKey { get; set; }
         public int? ProfileId { get; set; }
-        public IList<SlideShowProfile> AvailableProfiles { get; set; }
+        public IList<SlideshowProfile> AvailableProfiles { get; set; }
         public string ProviderName { get; set; }
         public IDictionary<string, dynamic> AvailableProviders { get; set; }
     }

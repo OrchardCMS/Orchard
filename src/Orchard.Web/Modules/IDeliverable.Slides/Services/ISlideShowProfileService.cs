@@ -5,11 +5,11 @@ using Orchard;
 
 namespace IDeliverable.Slides.Services
 {
-    public interface ISlideShowProfileService : IDependency
+    public interface ISlideshowProfileService : IDependency
     {
-        IEnumerable<SlideShowProfile> GetProfiles();
-        SlideShowProfile Find(Func<SlideShowProfile, bool> predicate);
-        SlideShowProfile FindById(int id);
-        SlideShowProfile FindByName(string name);
+        IEnumerable<SlideshowProfile> GetProfiles();
+        SlideshowProfile Find(Func<SlideshowProfile, bool> predicate);
+        SlideshowProfile FindById(int id);
+        SlideshowProfile FindByName(string name);
     }
 }

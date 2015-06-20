@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using Orchard;
 using Orchard.ContentManagement;
-using Orchard.Layouts.Framework.Elements;
 using Orchard.Localization;
 using Orchard.Utility.Extensions;
 
@@ -12,7 +11,6 @@ namespace IDeliverable.Slides.Services
         public virtual string Name => GetType().Name.Replace("Provider", "");
         public virtual LocalizedString DisplayName => T(Name.CamelFriendly());
         public virtual int Priority => 0;
-        public ElementDataDictionary Data { get; set; }
         public virtual string Prefix => GetType().Name;
 
         public abstract dynamic BuildEditor(dynamic shapeFactory, SlidesProviderContext context);

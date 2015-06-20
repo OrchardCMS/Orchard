@@ -18,20 +18,20 @@ using Orchard.Services;
 
 namespace IDeliverable.Slides.Drivers
 {
-    public class SlideShowElementDriver : ElementDriver<SlideShow>
+    public class SlideshowElementDriver : ElementDriver<Slideshow>
     {
         private readonly IOrchardServices _services;
-        private readonly ISlideShowPlayerEngineManager _engineManager;
+        private readonly ISlideshowPlayerEngineManager _engineManager;
         private readonly IClock _clock;
         private readonly ISlidesProviderService _providerService;
-        private readonly ISlideShowProfileService _slideShowProfileService;
+        private readonly ISlideshowProfileService _slideShowProfileService;
 
-        public SlideShowElementDriver(
+        public SlideshowElementDriver(
             IOrchardServices services,
-            ISlideShowPlayerEngineManager engineManager,
+            ISlideshowPlayerEngineManager engineManager,
             IClock clock,
             ISlidesProviderService providerService,
-            ISlideShowProfileService slideShowProfileService)
+            ISlideshowProfileService slideShowProfileService)
         {
             _services = services;
             _engineManager = engineManager;
@@ -40,9 +40,9 @@ namespace IDeliverable.Slides.Drivers
             _slideShowProfileService = slideShowProfileService;
         }
 
-        public string Prefix => "SlideShowElement";
+        public string Prefix => "SlideshowElement";
 
-        protected override EditorResult OnBuildEditor(SlideShow element, ElementEditorContext context)
+        protected override EditorResult OnBuildEditor(Slideshow element, ElementEditorContext context)
         {
             if (!LicenseValidationHelper.GetLicenseIsValid(LicensedProductManifest.ProductId))
                 return Editor(context, context.ShapeFactory.Slides_InvalidLicense());
@@ -51,12 +51,12 @@ namespace IDeliverable.Slides.Drivers
             var slidesProvidercontext = new SlidesProviderContext(context.Content, element, storage, context.Session);
             var providerShapes = Enumerable.ToDictionary(_providerService.BuildEditors(context.ShapeFactory, slidesProvidercontext), (Func<dynamic, string>)(x => (string)x.Provider.Name));
 
-            var viewModel = new SlideShowElementViewModel
+            var viewModel = new SlideshowElementViewModel
             {
                 Element = element,
                 ProfileId = element.ProfileId,
                 SessionKey = context.Session,
-                AvailableProfiles = _services.WorkContext.CurrentSite.As<SlideShowSettingsPart>().Profiles.ToList(),
+                AvailableProfiles = _services.WorkContext.CurrentSite.As<SlideshowSettingsPart>().Profiles.ToList(),
                 ProviderName = element.ProviderName,
                 AvailableProviders = providerShapes,
             };
@@ -66,8 +66,8 @@ namespace IDeliverable.Slides.Drivers
                 if (context.Updater.TryUpdateModel(viewModel, Prefix, new[] { "ProfileId", "ProviderName", "SlidesData" }, null))
                 {
                     // The element editor only provides the posted form values (for the ValueProvider), so we need to fetch the slides data ourselves in order to not lose it.
-                    if (context.ElementData.ContainsKey("SlideShowSlides"))
-                        storage.StoreSlidesData(context.ElementData["SlideShowSlides"]);
+                    if (context.ElementData.ContainsKey("SlideshowSlides"))
+                        storage.StoreSlidesData(context.ElementData["SlideshowSlides"]);
 
                     providerShapes = Enumerable.ToDictionary(_providerService.UpdateEditors(context.ShapeFactory, slidesProvidercontext, new Updater(context.Updater, Prefix)), (Func<dynamic, string>)(x => (string)x.Provider.Name));
                     element.ProfileId = viewModel.ProfileId;
@@ -76,20 +76,20 @@ namespace IDeliverable.Slides.Drivers
                 }
             }
 
-            var slidesEditor = context.ShapeFactory.EditorTemplate(TemplateName: "Elements.SlideShow", Prefix: Prefix, Model: viewModel);
+            var slidesEditor = context.ShapeFactory.EditorTemplate(TemplateName: "Elements.Slideshow", Prefix: Prefix, Model: viewModel);
 
             //viewModel.Slides = element.Slides.Select(x => _layoutManager.RenderLayout(x.LayoutData)).ToArray();
             slidesEditor.Metadata.Position = "Slides:0";
             return Editor(context, slidesEditor);
         }
 
-        protected override void OnDisplaying(SlideShow element, ElementDisplayContext context)
+        protected override void OnDisplaying(Slideshow element, ElementDisplayContext context)
         {
             if (!LicenseValidationHelper.GetLicenseIsValid(LicensedProductManifest.ProductId))
             {
                 context.ElementShape.Metadata.Alternates.Clear();
-                context.ElementShape.Metadata.Alternates.Add($"Elements_SlideShow_InvalidLicense");
-                context.ElementShape.Metadata.Alternates.Add($"Elements_SlideShow_InvalidLicense_{context.DisplayType}");
+                context.ElementShape.Metadata.Alternates.Add($"Elements_Slideshow_InvalidLicense");
+                context.ElementShape.Metadata.Alternates.Add($"Elements_Slideshow_InvalidLicense_{context.DisplayType}");
                 return;
             }
 
@@ -99,13 +99,13 @@ namespace IDeliverable.Slides.Drivers
 
             engineShape.Engine = engine;
             engineShape.Slides = slideShapes;
-            engineShape.SlideShowId = _clock.UtcNow.Ticks + "[" + element.Index + "]"; // TODO: Come up with a better, deterministic way to determine the slide show id. Perhaps elements should have a unique ID (unique within the layout, at least).
+            engineShape.SlideshowId = _clock.UtcNow.Ticks + "[" + element.Index + "]"; // TODO: Come up with a better, deterministic way to determine the slide show id. Perhaps elements should have a unique ID (unique within the layout, at least).
 
             context.ElementShape.Slides = slideShapes;
             context.ElementShape.Engine = engineShape;
         }
 
-        protected override void OnExporting(SlideShow element, ExportElementContext context)
+        protected override void OnExporting(Slideshow element, ExportElementContext context)
         {
             context.ExportableData["Profile"] = element.Profile?.Name;
             context.ExportableData["Provider"] = element.ProviderName;
@@ -116,7 +116,7 @@ namespace IDeliverable.Slides.Drivers
             context.ExportableData["Providers"] = providersElement.ToString(SaveOptions.DisableFormatting);
         }
 
-        protected override void OnImporting(SlideShow element, ImportElementContext context)
+        protected override void OnImporting(Slideshow element, ImportElementContext context)
         {
             element.ProfileId = _slideShowProfileService.FindByName(context.ExportableData.Get("Profile"))?.Id;
             element.ProviderName = _providerService.GetProvider(context.ExportableData.Get("Provider"))?.Name;
@@ -132,7 +132,7 @@ namespace IDeliverable.Slides.Drivers
             _providerService.Import(storage, providersElement, context.Session, context.Layout);
         }
 
-        private IList<dynamic> GetSlides(SlideShow element, ElementDisplayContext context)
+        private IList<dynamic> GetSlides(Slideshow element, ElementDisplayContext context)
         {
             var provider = !String.IsNullOrWhiteSpace(element.ProviderName) ? _providerService.GetProvider(element.ProviderName) : default(ISlidesProvider);
             var storage = new ElementStorage(element);

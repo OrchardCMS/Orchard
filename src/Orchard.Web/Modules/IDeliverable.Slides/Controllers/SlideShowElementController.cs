@@ -18,14 +18,14 @@ namespace IDeliverable.Slides.Controllers
 {
     [Admin]
     [Dialog]
-    public class SlideShowElementController : Controller
+    public class SlideshowElementController : Controller
     {
         private readonly IObjectStore _objectStore;
         private readonly INotifier _notifier;
         private readonly IElementManager _elementManager;
         private readonly ISlidesSerializer _serializer;
 
-        public SlideShowElementController(IObjectStore objectStore, INotifier notifier, IElementManager elementManager, ISlidesSerializer serializer)
+        public SlideshowElementController(IObjectStore objectStore, INotifier notifier, IElementManager elementManager, ISlidesSerializer serializer)
         {
             _objectStore = objectStore;
             _notifier = notifier;
@@ -40,8 +40,8 @@ namespace IDeliverable.Slides.Controllers
         {
             var addedSlides = _objectStore.Get<IList<Slide>>(slides);
             var slideShowElementState = _objectStore.Get<ElementSessionState>(session);
-            var slideShowElementDescriptor = _elementManager.GetElementDescriptorByType<SlideShow>();
-            var slideShowElement = _elementManager.ActivateElement<SlideShow>(slideShowElementDescriptor, x => x.Data = ElementDataHelper.Deserialize(slideShowElementState.ElementData));
+            var slideShowElementDescriptor = _elementManager.GetElementDescriptorByType<Slideshow>();
+            var slideShowElement = _elementManager.ActivateElement<Slideshow>(slideShowElementDescriptor, x => x.Data = ElementDataHelper.Deserialize(slideShowElementState.ElementData));
             var slideShowSlides = GetSlides(slideShowElement);
             var currentSlides = slideShowSlides.ToList();
 
@@ -57,7 +57,7 @@ namespace IDeliverable.Slides.Controllers
         public ActionResult EditSlide(string session, int index, bool dialog)
         {
             var slideShowElementState = _objectStore.Get<ElementSessionState>(session);
-            var slideShowElement = GetSlideShow(slideShowElementState);
+            var slideShowElement = GetSlideshow(slideShowElementState);
             var slides = GetSlides(slideShowElement);
             var slide = slides.ElementAt(index);
             var key = _objectStore.GenerateKey();
@@ -70,7 +70,7 @@ namespace IDeliverable.Slides.Controllers
         public ActionResult UpdateSlide(string session, string key, int index, bool dialog)
         {
             var slideShowElementState = _objectStore.Get<ElementSessionState>(session);
-            var slideShowElement = GetSlideShow(slideShowElementState);
+            var slideShowElement = GetSlideshow(slideShowElementState);
             var slide = _objectStore.Get<Slide>(key);
             var slides = GetSlides(slideShowElement).ToList();
 
@@ -86,7 +86,7 @@ namespace IDeliverable.Slides.Controllers
         public ActionResult DeleteSlide(string session, int index, bool dialog)
         {
             var slideShowElementState = _objectStore.Get<ElementSessionState>(session);
-            var slideShowElement = GetSlideShow(slideShowElementState);
+            var slideShowElement = GetSlideshow(slideShowElementState);
             var currentSlides = GetSlides(slideShowElement).ToList();
 
             currentSlides.RemoveAt(index);
@@ -105,22 +105,22 @@ namespace IDeliverable.Slides.Controllers
             return RedirectToAction("Edit", "Element", new { session = session, dialog = dialog, area = "Orchard.Layouts" });
         }
 
-        private SlideShow GetSlideShow(ElementSessionState sessionState)
+        private Slideshow GetSlideshow(ElementSessionState sessionState)
         {
-            var slideShowElementDescriptor = _elementManager.GetElementDescriptorByType<SlideShow>();
-            var slideShowElement = _elementManager.ActivateElement<SlideShow>(slideShowElementDescriptor, x => x.Data = ElementDataHelper.Deserialize(sessionState.ElementData));
+            var slideShowElementDescriptor = _elementManager.GetElementDescriptorByType<Slideshow>();
+            var slideShowElement = _elementManager.ActivateElement<Slideshow>(slideShowElementDescriptor, x => x.Data = ElementDataHelper.Deserialize(sessionState.ElementData));
 
             return slideShowElement;
         }
 
-        private IEnumerable<Slide> GetSlides(SlideShow element)
+        private IEnumerable<Slide> GetSlides(Slideshow element)
         {
             var storage = new ElementStorage(element);
             var slidesData = storage.RetrieveSlidesData();
             return _serializer.Deserialize(slidesData);
         }
 
-        private void SetSlides(SlideShow element, IEnumerable<Slide> slides)
+        private void SetSlides(Slideshow element, IEnumerable<Slide> slides)
         {
             var storage = new ElementStorage(element);
             var slidesData = _serializer.Serialize(slides);

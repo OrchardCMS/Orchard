@@ -1,4 +1,4 @@
-﻿@using IDeliverable.Slides.SlideShowPlayerEngines.Bootstrap
+﻿@using IDeliverable.Slides.SlideshowPlayerEngines.Bootstrap
 @{
     Script.Require("jQuery");
     Style.Include("Engine.Bootstrap.css", "Engine.Bootstrap.min.css");
@@ -6,8 +6,8 @@
 }
 @{
     var engine = (Bootstrap)Model.Engine;
-    var id = (string)Model.SlideShowId;
-    var slideShowId = String.Format("SlideShow-{0}", id);
+    var id = (string)Model.SlideshowId;
+    var slideShowId = String.Format("Slideshow-{0}", id);
     var slides = (IList<dynamic>)Model.Slides;
 
     if (slides.Any())

@@ -3,8 +3,8 @@ using IDeliverable.Slides.Models;
 
 namespace IDeliverable.Slides.ViewModels
 {
-    public class SlideShowProfileIndexViewModel
+    public class SlideshowProfileIndexViewModel
     {
-        public IList<SlideShowProfile> Profiles { get; set; }
+        public IList<SlideshowProfile> Profiles { get; set; }
     }
 }

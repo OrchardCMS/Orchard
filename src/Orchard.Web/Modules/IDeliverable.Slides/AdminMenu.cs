@@ -13,10 +13,10 @@ namespace IDeliverable.Slides
             builder.Add(T("Settings"),
                 menu => menu
                     .Add(T("Slides"), "7", slides => slides
-                        .Action("Index", "SlideShowProfile", new { area = "IDeliverable.Slides" })
+                        .Action("Index", "SlideshowProfile", new { area = "IDeliverable.Slides" })
                         .Permission(StandardPermissions.SiteOwner)
                         .Add(T("Profiles"), "1", profiles => profiles
-                            .Action("Index", "SlideShowProfile", new { area = "IDeliverable.Slides" })
+                            .Action("Index", "SlideshowProfile", new { area = "IDeliverable.Slides" })
                             .Permission(StandardPermissions.SiteOwner)
                             .LocalNav())));
         }

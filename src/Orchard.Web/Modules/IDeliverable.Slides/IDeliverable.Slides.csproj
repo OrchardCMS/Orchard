@@ -103,11 +103,11 @@
     <Content Include="Confuser.crproj" />
     <Content Include="Package.cmd" />
     <None Include="Properties\PublishProfiles\Package.pubxml" />
-    <None Include="SlideShowPlayerEngines\Bootstrap\Scripts\carousel.js" />
-    <None Include="SlideShowPlayerEngines\Bootstrap\Scripts\transition.js" />
-    <None Include="SlideShowPlayerEngines\JCarousel\Scripts\engine-jcarousel.js" />
-    <None Include="SlideShowPlayerEngines\JCarousel\Scripts\jquery.jcarousel.js" />
-    <None Include="SlideShowPlayerEngines\JCarousel\Scripts\modernizr.transitions.js" />
+    <None Include="SlideshowPlayerEngines\Bootstrap\Scripts\carousel.js" />
+    <None Include="SlideshowPlayerEngines\Bootstrap\Scripts\transition.js" />
+    <None Include="SlideshowPlayerEngines\JCarousel\Scripts\engine-jcarousel.js" />
+    <None Include="SlideshowPlayerEngines\JCarousel\Scripts\jquery.jcarousel.js" />
+    <None Include="SlideshowPlayerEngines\JCarousel\Scripts\modernizr.transitions.js" />
     <Content Include="Styles\Admin.css" />
     <Content Include="Styles\Admin.min.css" />
     <Content Include="Styles\Engine.Bootstrap.css" />
@@ -119,41 +119,41 @@
     <Content Include="Styles\Web.config" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
-    <None Include="SlideShowPlayerEngines\Bootstrap\Styles\carousel.less" />
-    <None Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins.less" />
-    <None Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\alerts.less" />
-    <None Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\background-variant.less" />
-    <None Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\border-radius.less" />
-    <None Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\buttons.less" />
-    <None Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\center-block.less" />
-    <None Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\clearfix.less" />
-    <None Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\forms.less" />
-    <None Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\gradients.less" />
-    <None Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\grid-framework.less" />
-    <None Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\grid.less" />
-    <None Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\hide-text.less" />
-    <None Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\image.less" />
-    <None Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\labels.less" />
-    <None Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\list-group.less" />
-    <None Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\nav-divider.less" />
-    <None Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\nav-vertical-align.less" />
-    <None Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\opacity.less" />
-    <None Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\pagination.less" />
-    <None Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\panels.less" />
-    <None Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\progress-bar.less" />
-    <None Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\reset-filter.less" />
-    <None Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\resize.less" />
-    <None Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\responsive-visibility.less" />
-    <None Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\size.less" />
-    <None Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\tab-focus.less" />
-    <None Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\table-row.less" />
-    <None Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\text-emphasis.less" />
-    <None Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\text-overflow.less" />
-    <None Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins\vendor-prefixes.less" />
-    <None Include="SlideShowPlayerEngines\Bootstrap\Styles\variables.less" />
-    <None Include="SlideShowPlayerEngines\JCarousel\Styles\engine-jcarousel.less" />
+    <None Include="SlideshowPlayerEngines\Bootstrap\Styles\carousel.less" />
+    <None Include="SlideshowPlayerEngines\Bootstrap\Styles\mixins.less" />
+    <None Include="SlideshowPlayerEngines\Bootstrap\Styles\mixins\alerts.less" />
+    <None Include="SlideshowPlayerEngines\Bootstrap\Styles\mixins\background-variant.less" />
+    <None Include="SlideshowPlayerEngines\Bootstrap\Styles\mixins\border-radius.less" />
+    <None Include="SlideshowPlayerEngines\Bootstrap\Styles\mixins\buttons.less" />
+    <None Include="SlideshowPlayerEngines\Bootstrap\Styles\mixins\center-block.less" />
+    <None Include="SlideshowPlayerEngines\Bootstrap\Styles\mixins\clearfix.less" />
+    <None Include="SlideshowPlayerEngines\Bootstrap\Styles\mixins\forms.less" />
+    <None Include="SlideshowPlayerEngines\Bootstrap\Styles\mixins\gradients.less" />
+    <None Include="SlideshowPlayerEngines\Bootstrap\Styles\mixins\grid-framework.less" />
+    <None Include="SlideshowPlayerEngines\Bootstrap\Styles\mixins\grid.less" />
+    <None Include="SlideshowPlayerEngines\Bootstrap\Styles\mixins\hide-text.less" />
+    <None Include="SlideshowPlayerEngines\Bootstrap\Styles\mixins\image.less" />
+    <None Include="SlideshowPlayerEngines\Bootstrap\Styles\mixins\labels.less" />
+    <None Include="SlideshowPlayerEngines\Bootstrap\Styles\mixins\list-group.less" />
+    <None Include="SlideshowPlayerEngines\Bootstrap\Styles\mixins\nav-divider.less" />
+    <None Include="SlideshowPlayerEngines\Bootstrap\Styles\mixins\nav-vertical-align.less" />
+    <None Include="SlideshowPlayerEngines\Bootstrap\Styles\mixins\opacity.less" />
+    <None Include="SlideshowPlayerEngines\Bootstrap\Styles\mixins\pagination.less" />
+    <None Include="SlideshowPlayerEngines\Bootstrap\Styles\mixins\panels.less" />
+    <None Include="SlideshowPlayerEngines\Bootstrap\Styles\mixins\progress-bar.less" />
+    <None Include="SlideshowPlayerEngines\Bootstrap\Styles\mixins\reset-filter.less" />
+    <None Include="SlideshowPlayerEngines\Bootstrap\Styles\mixins\resize.less" />
+    <None Include="SlideshowPlayerEngines\Bootstrap\Styles\mixins\responsive-visibility.less" />
+    <None Include="SlideshowPlayerEngines\Bootstrap\Styles\mixins\size.less" />
+    <None Include="SlideshowPlayerEngines\Bootstrap\Styles\mixins\tab-focus.less" />
+    <None Include="SlideshowPlayerEngines\Bootstrap\Styles\mixins\table-row.less" />
+    <None Include="SlideshowPlayerEngines\Bootstrap\Styles\mixins\text-emphasis.less" />
+    <None Include="SlideshowPlayerEngines\Bootstrap\Styles\mixins\text-overflow.less" />
+    <None Include="SlideshowPlayerEngines\Bootstrap\Styles\mixins\vendor-prefixes.less" />
+    <None Include="SlideshowPlayerEngines\Bootstrap\Styles\variables.less" />
+    <None Include="SlideshowPlayerEngines\JCarousel\Styles\engine-jcarousel.less" />
     <Content Include="Views\EditorTemplates\Parts.Slides.License.cshtml" />
-    <None Include="SlideShowPlayerEngines\Bootstrap\Styles\glyphicons.less" />
+    <None Include="SlideshowPlayerEngines\Bootstrap\Styles\glyphicons.less" />
     <Content Include="Views\SlideFactory\MediaSlides.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -198,73 +198,73 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
-    <Compile Include="Controllers\SlideShowProfileController.cs" />
-    <Compile Include="Drivers\SlideShowElementDriver.cs" />
+    <Compile Include="Controllers\SlideshowProfileController.cs" />
+    <Compile Include="Drivers\SlideshowElementDriver.cs" />
     <Compile Include="Drivers\SlidesLicenseSettingsPartDriver.cs" />
     <Compile Include="Filters\DialogAttribute.cs" />
     <Compile Include="Handlers\SlidesLicenseSettingsPartHandler.cs" />
-    <Compile Include="Handlers\SlideShowSettingsPartHandler.cs" />
+    <Compile Include="Handlers\SlideshowSettingsPartHandler.cs" />
     <Compile Include="Helpers\StorageExtensions.cs" />
-    <Compile Include="Helpers\SlideShowPlayerEngineDataHelper.cs" />
+    <Compile Include="Helpers\SlideshowPlayerEngineDataHelper.cs" />
     <Compile Include="Licensing\LicensedProductManifest.cs" />
     <Compile Include="Licensing\LicenseValidationErrorBanner.cs" />
     <Compile Include="Licensing\LicenseValidationController.cs" />
-    <Compile Include="Models\ISlideShow.cs" />
-    <Compile Include="Models\SlideShowProfile.cs" />
+    <Compile Include="Models\ISlideshow.cs" />
+    <Compile Include="Models\SlideshowProfile.cs" />
     <Compile Include="Models\SlidesLicenseSettingsPart.cs" />
     <Compile Include="Providers\ListSlidesProvider.cs" />
     <Compile Include="Providers\ProjectionSlidesProvider.cs" />
     <Compile Include="Services\ContentPartStorage.cs" />
     <Compile Include="Services\ElementStorage.cs" />
-    <Compile Include="Services\ISlideShowProfileService.cs" />
+    <Compile Include="Services\ISlideshowProfileService.cs" />
     <Compile Include="Services\ISlidesProviderService.cs" />
     <Compile Include="Services\ISlidesProvider.cs" />
     <Compile Include="Providers\DefaultSlidesProvider.cs" />
     <Compile Include="Services\IStorage.cs" />
-    <Compile Include="Services\SlideShowProfileService.cs" />
+    <Compile Include="Services\SlideshowProfileService.cs" />
     <Compile Include="Services\SlidesProvider.cs" />
     <Compile Include="Services\SlidesProviderContext.cs" />
     <Compile Include="Services\SlidesProviderExportContext.cs" />
     <Compile Include="Services\SlidesProviderImportContext.cs" />
     <Compile Include="Services\SlidesProviderService.cs" />
-    <Compile Include="SlideShowPlayerEngines\Bootstrap\Bootstrap.cs" />
-    <Compile Include="SlideShowPlayerEngines\JCarousel\JCarousel.cs" />
+    <Compile Include="SlideshowPlayerEngines\Bootstrap\Bootstrap.cs" />
+    <Compile Include="SlideshowPlayerEngines\JCarousel\JCarousel.cs" />
     <Compile Include="ViewModels\ListSlidesProviderViewModel.cs" />
     <Compile Include="ViewModels\ProjectionSlidesProviderViewModel.cs" />
     <Compile Include="ViewModels\DefaultSlidesProviderViewModel.cs" />
-    <Compile Include="ViewModels\SlideShowProfileIndexViewModel.cs" />
-    <Compile Include="Models\SlideShowSettingsPart.cs" />
+    <Compile Include="ViewModels\SlideshowProfileIndexViewModel.cs" />
+    <Compile Include="Models\SlideshowSettingsPart.cs" />
     <Compile Include="Routes.cs" />
     <Compile Include="ViewModels\LayoutEditorViewModel.cs" />
-    <Compile Include="Controllers\SlideShowElementController.cs" />
-    <Compile Include="Controllers\SlideShowPartController.cs" />
+    <Compile Include="Controllers\SlideshowElementController.cs" />
+    <Compile Include="Controllers\SlideshowPartController.cs" />
     <Compile Include="Controllers\SlideFactoryController.cs" />
-    <Compile Include="Elements\SlideShow.cs" />
-    <Compile Include="Handlers\SlideShowElementHandler.cs" />
+    <Compile Include="Elements\Slideshow.cs" />
+    <Compile Include="Handlers\SlideshowElementHandler.cs" />
     <Compile Include="Helpers\UrlStringExtensions.cs" />
-    <Compile Include="Services\SlideShowPlayerEngine.cs" />
-    <Compile Include="Services\SlideShowPlayerEngineManager.cs" />
-    <Compile Include="Services\ISlideShowPlayerEngine.cs" />
-    <Compile Include="Services\ISlideShowPlayerEngineManager.cs" />
+    <Compile Include="Services\SlideshowPlayerEngine.cs" />
+    <Compile Include="Services\SlideshowPlayerEngineManager.cs" />
+    <Compile Include="Services\ISlideshowPlayerEngine.cs" />
+    <Compile Include="Services\ISlideshowPlayerEngineManager.cs" />
     <Compile Include="Services\Updater.cs" />
-    <Compile Include="ViewModels\SlideShowElementViewModel.cs" />
-    <Compile Include="ViewModels\SlideShowProfileViewModel.cs" />
-    <Compile Include="ViewModels\SlideShowSettingsViewModel.cs" />
+    <Compile Include="ViewModels\SlideshowElementViewModel.cs" />
+    <Compile Include="ViewModels\SlideshowProfileViewModel.cs" />
+    <Compile Include="ViewModels\SlideshowSettingsViewModel.cs" />
     <Compile Include="ViewModels\ContentSlidesFactoryViewModel.cs" />
     <Compile Include="ViewModels\ImageSlidesFactoryViewModel.cs" />
-    <Compile Include="ViewModels\SlideShowPartViewModel.cs" />
+    <Compile Include="ViewModels\SlideshowPartViewModel.cs" />
     <Compile Include="Controllers\SlideController.cs" />
-    <Compile Include="Drivers\SlideShowPartDriver.cs" />
+    <Compile Include="Drivers\SlideshowPartDriver.cs" />
     <Compile Include="Migrations.cs" />
-    <Compile Include="Models\SlideShowPart.cs" />
+    <Compile Include="Models\SlideshowPart.cs" />
     <Compile Include="Services\ISlidesSerializer.cs" />
-    <Compile Include="Handlers\SlideShowPartHandler.cs" />
+    <Compile Include="Handlers\SlideshowPartHandler.cs" />
     <Compile Include="Models\Slide.cs" />
     <Compile Include="Services\XmlSlidesSerializer.cs" />
     <Compile Include="ViewModels\SlideEditorViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\EditorTemplates\Parts.SlideShow.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts.Slideshow.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Placement.info">
@@ -281,19 +281,19 @@
     <Content Include="Views\Slide\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Parts.SlideShow.cshtml" />
+    <Content Include="Views\Parts.Slideshow.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Parts.SlideShow.Summary.cshtml" />
+    <Content Include="Views\Parts.Slideshow.Summary.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Parts.SlideShow.SummaryAdmin.cshtml" />
+    <Content Include="Views\Parts.Slideshow.SummaryAdmin.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\SlideFactory\ContentSlides.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\DefinitionTemplates\SlideShowSettings.cshtml" />
+    <Content Include="Views\DefinitionTemplates\SlideshowSettings.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EditorTemplates\Engines.JCarousel.cshtml" />
@@ -308,37 +308,37 @@
     <Content Include="Views\Engines.Bootstrap.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Elements\SlideShow.cshtml" />
+    <Content Include="Views\Elements\Slideshow.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Elements\SlideShow.Design.cshtml" />
+    <Content Include="Views\Elements\Slideshow.Design.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\EditorTemplates\Elements.SlideShow.cshtml" />
+    <Content Include="Views\EditorTemplates\Elements.Slideshow.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\SlideShowElement\Browse.cshtml" />
+    <Content Include="Views\SlideshowElement\Browse.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\SlideShowElement\Create.cshtml" />
+    <Content Include="Views\SlideshowElement\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\SlideShowElement\Edit.cshtml" />
+    <Content Include="Views\SlideshowElement\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\SlidesFactorySelector.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\SlideShowProfile\Index.cshtml" />
+    <Content Include="Views\SlideshowProfile\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\SlideShowProfile\Create.cshtml" />
+    <Content Include="Views\SlideshowProfile\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\EditorTemplates\SlideShowProfileViewModel.cshtml" />
+    <Content Include="Views\EditorTemplates\SlideshowProfileViewModel.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\SlideShowProfile\Edit.cshtml" />
+    <Content Include="Views\SlideshowProfile\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EditorTemplates\SlidesProviders.Projection.cshtml" />
@@ -353,22 +353,22 @@
     <Content Include="Views\EditorTemplates\SlidesProviders.Slides.Element.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Parts.SlideShow.InvalidLicense.cshtml" />
+    <Content Include="Views\Parts.Slideshow.InvalidLicense.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\SlideShowProfile\InvalidLicense.cshtml" />
+    <Content Include="Views\SlideshowProfile\InvalidLicense.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Slides.InvalidLicense.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Parts.SlideShow.Edit.InvalidLicense.cshtml" />
+    <Content Include="Views\Parts.Slideshow.Edit.InvalidLicense.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Elements\SlideShow.InvalidLicense.cshtml" />
+    <Content Include="Views\Elements\Slideshow.InvalidLicense.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Elements\SlideShow.InvalidLicense.Design.cshtml" />
+    <Content Include="Views\Elements\Slideshow.InvalidLicense.Design.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="package.json" />

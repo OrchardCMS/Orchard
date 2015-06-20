@@ -6,31 +6,25 @@ using Orchard.Utility.Extensions;
 
 namespace IDeliverable.Slides.Services
 {
-    public abstract class SlideShowPlayerEngine : Component, ISlideShowPlayerEngine
+    public abstract class SlideshowPlayerEngine : Component, ISlideshowPlayerEngine
     {
-        protected SlideShowPlayerEngine()
+        protected SlideshowPlayerEngine()
         {
             Data = new ElementDataDictionary();
         }
 
-        public virtual string Name
-        {
-            get { return GetType().Name; }
-        }
+        public virtual string Name => GetType().Name;
 
-        public virtual LocalizedString DisplayName
-        {
-            get { return T(Name.CamelFriendly()); }
-        }
+        public virtual LocalizedString DisplayName => T(Name.CamelFriendly());
 
         public ElementDataDictionary Data { get; set; }
 
-        public virtual dynamic BuildSettingsEditor(dynamic shapeFactory)
+        public virtual dynamic BuildEditor(dynamic shapeFactory)
         {
             return null;
         }
 
-        public virtual dynamic UpdateSettingsEditor(dynamic shapeFactory, IUpdateModel updater)
+        public virtual dynamic UpdateEditor(dynamic shapeFactory, IUpdateModel updater)
         {
             return null;
         }

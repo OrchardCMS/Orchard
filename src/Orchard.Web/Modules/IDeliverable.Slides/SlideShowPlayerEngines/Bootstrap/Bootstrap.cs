@@ -3,19 +3,12 @@ using IDeliverable.Slides.Services;
 using Orchard.ContentManagement;
 using Orchard.Localization;
 
-namespace IDeliverable.Slides.SlideShowPlayerEngines.Bootstrap
+namespace IDeliverable.Slides.SlideshowPlayerEngines.Bootstrap
 {
-    public class Bootstrap : SlideShowPlayerEngine
+    public class Bootstrap : SlideshowPlayerEngine
     {
-        public override LocalizedString DisplayName
-        {
-            get { return T("Bootstrap"); }
-        }
-
-        public string Prefix
-        {
-            get { return "Bootstrap"; }
-        }
+        public override LocalizedString DisplayName => T("Bootstrap");
+        public string Prefix => "Bootstrap";
 
         public int Interval
         {
@@ -43,22 +36,22 @@ namespace IDeliverable.Slides.SlideShowPlayerEngines.Bootstrap
 
         public bool Wrap
         {
-            get { return SlideShowPlayerEngineDataHelper.Retrieve(this, x => x.Wrap); }
+            get { return SlideshowPlayerEngineDataHelper.Retrieve(this, x => x.Wrap); }
             set { this.Store(x => x.Wrap, value); }
         }
 
         public bool Keyboard
         {
-            get { return SlideShowPlayerEngineDataHelper.Retrieve(this, x => x.Keyboard); }
+            get { return SlideshowPlayerEngineDataHelper.Retrieve(this, x => x.Keyboard); }
             set { this.Store(x => x.Keyboard, value); }
         }
 
-        public override dynamic BuildSettingsEditor(dynamic shapeFactory)
+        public override dynamic BuildEditor(dynamic shapeFactory)
         {
-            return UpdateSettingsEditor(shapeFactory, null);
+            return UpdateEditor(shapeFactory, null);
         }
 
-        public override dynamic UpdateSettingsEditor(dynamic shapeFactory, IUpdateModel updater)
+        public override dynamic UpdateEditor(dynamic shapeFactory, IUpdateModel updater)
         {
             if (updater != null)
             {

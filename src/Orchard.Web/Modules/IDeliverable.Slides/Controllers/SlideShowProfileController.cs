@@ -17,9 +17,9 @@ using Orchard.UI.Notify;
 namespace IDeliverable.Slides.Controllers
 {
     [Admin]
-    public class SlideShowProfileController : Controller, IUpdateModel
+    public class SlideshowProfileController : Controller, IUpdateModel
     {
-        public SlideShowProfileController(IOrchardServices services, ISlideShowPlayerEngineManager engineManager)
+        public SlideshowProfileController(IOrchardServices services, ISlideshowPlayerEngineManager engineManager)
         {
             _services = services;
             _engineManager = engineManager;
@@ -28,7 +28,7 @@ namespace IDeliverable.Slides.Controllers
         public Localizer T { get; set; } = NullLocalizer.Instance;
 
         private readonly IOrchardServices _services;
-        private readonly ISlideShowPlayerEngineManager _engineManager;
+        private readonly ISlideshowPlayerEngineManager _engineManager;
 
 
         public ActionResult Index()
@@ -36,9 +36,9 @@ namespace IDeliverable.Slides.Controllers
             if (!LicenseValidationHelper.GetLicenseIsValid(LicensedProductManifest.ProductId))
                 return View("InvalidLicense");
 
-            var viewModel = new SlideShowProfileIndexViewModel
+            var viewModel = new SlideshowProfileIndexViewModel
             {
-                Profiles = _services.WorkContext.CurrentSite.As<SlideShowSettingsPart>().Profiles.ToList()
+                Profiles = _services.WorkContext.CurrentSite.As<SlideshowSettingsPart>().Profiles.ToList()
             };
             return View(viewModel);
         }
@@ -46,22 +46,22 @@ namespace IDeliverable.Slides.Controllers
         public ActionResult Create()
         {
             var engines = _engineManager.GetEngines().ToList();
-            var viewModel = new SlideShowProfileViewModel
+            var viewModel = new SlideshowProfileViewModel
             {
                 AvailableEngines = engines,
-                EngineSettingsEditors = engines.ToDictionary(x => x.Name, x => x.BuildSettingsEditor(_services.New))
+                EngineSettingsEditors = engines.ToDictionary(x => x.Name, x => x.BuildEditor(_services.New))
             };
 
             return View(viewModel);
         }
 
         [HttpPost]
-        public ActionResult Create(SlideShowProfileViewModel viewModel)
+        public ActionResult Create(SlideshowProfileViewModel viewModel)
         {
             var engines = _engineManager.GetEngines().ToList();
 
             viewModel.AvailableEngines = engines;
-            viewModel.EngineSettingsEditors = engines.ToDictionary(x => x.Name, x => x.UpdateSettingsEditor(_services.New, this));
+            viewModel.EngineSettingsEditors = engines.ToDictionary(x => x.Name, x => x.UpdateEditor(_services.New, this));
 
             if (!ModelState.IsValid)
             {
@@ -69,8 +69,8 @@ namespace IDeliverable.Slides.Controllers
                 return View(viewModel);
             }
 
-            var settingsPart = _services.WorkContext.CurrentSite.As<SlideShowSettingsPart>();
-            var profile = new SlideShowProfile
+            var settingsPart = _services.WorkContext.CurrentSite.As<SlideshowSettingsPart>();
+            var profile = new SlideshowProfile
             {
                 Id = settingsPart.NextId(),
                 Name = viewModel.Name.TrimSafe(),
@@ -91,7 +91,7 @@ namespace IDeliverable.Slides.Controllers
 
         public ActionResult Edit(int id)
         {
-            var settingsPart = _services.WorkContext.CurrentSite.As<SlideShowSettingsPart>();
+            var settingsPart = _services.WorkContext.CurrentSite.As<SlideshowSettingsPart>();
             var profile = settingsPart.GetProfile(id);
             var engines = _engineManager.GetEngines().ToList();
 
@@ -100,11 +100,11 @@ namespace IDeliverable.Slides.Controllers
                 engine.Data = ElementDataHelper.Deserialize(profile.EngineStates[engine.Name]);
             }
 
-            var viewModel = new SlideShowProfileViewModel
+            var viewModel = new SlideshowProfileViewModel
             {
                 Name = profile.Name,
                 AvailableEngines = engines,
-                EngineSettingsEditors = engines.ToDictionary(x => x.Name, x => x.BuildSettingsEditor(_services.New)),
+                EngineSettingsEditors = engines.ToDictionary(x => x.Name, x => x.BuildEditor(_services.New)),
                 SelectedEngine = profile.SelectedEngine
             };
 
@@ -112,14 +112,14 @@ namespace IDeliverable.Slides.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(int id, SlideShowProfileViewModel viewModel)
+        public ActionResult Edit(int id, SlideshowProfileViewModel viewModel)
         {
-            var settingsPart = _services.WorkContext.CurrentSite.As<SlideShowSettingsPart>();
+            var settingsPart = _services.WorkContext.CurrentSite.As<SlideshowSettingsPart>();
             var profile = settingsPart.GetProfile(id);
             var engines = _engineManager.GetEngines().ToList();
 
             viewModel.AvailableEngines = engines;
-            viewModel.EngineSettingsEditors = engines.ToDictionary(x => x.Name, x => x.UpdateSettingsEditor(_services.New, this));
+            viewModel.EngineSettingsEditors = engines.ToDictionary(x => x.Name, x => x.UpdateEditor(_services.New, this));
 
             if (!ModelState.IsValid)
             {
@@ -143,7 +143,7 @@ namespace IDeliverable.Slides.Controllers
         [HttpPost]
         public ActionResult Delete(int id)
         {
-            var settingsPart = _services.WorkContext.CurrentSite.As<SlideShowSettingsPart>();
+            var settingsPart = _services.WorkContext.CurrentSite.As<SlideshowSettingsPart>();
 
             settingsPart.DeleteProfile(id);
             _services.Notifier.Information(T("That slide show profile has been deleted."));

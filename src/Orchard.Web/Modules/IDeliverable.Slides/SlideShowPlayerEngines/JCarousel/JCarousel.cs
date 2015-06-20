@@ -3,19 +3,12 @@ using IDeliverable.Slides.Services;
 using Orchard.Localization;
 using IUpdateModel = Orchard.ContentManagement.IUpdateModel;
 
-namespace IDeliverable.Slides.SlideShowPlayerEngines.JCarousel
+namespace IDeliverable.Slides.SlideshowPlayerEngines.JCarousel
 {
-    public class JCarousel : SlideShowPlayerEngine
+    public class JCarousel : SlideshowPlayerEngine
     {
-        public override LocalizedString DisplayName
-        {
-            get { return T("JCarousel"); }
-        }
-
-        public string Prefix
-        {
-            get { return "JCarousel"; }
-        }
+        public override LocalizedString DisplayName => T("JCarousel");
+        public string Prefix => "JCarousel";
 
         public bool AutoStart
         {
@@ -71,12 +64,12 @@ namespace IDeliverable.Slides.SlideShowPlayerEngines.JCarousel
             set { this.Store(x => x.Center, value); }
         }
 
-        public override dynamic BuildSettingsEditor(dynamic shapeFactory)
+        public override dynamic BuildEditor(dynamic shapeFactory)
         {
-            return UpdateSettingsEditor(shapeFactory, null);
+            return UpdateEditor(shapeFactory, null);
         }
 
-        public override dynamic UpdateSettingsEditor(dynamic shapeFactory, IUpdateModel updater)
+        public override dynamic UpdateEditor(dynamic shapeFactory, IUpdateModel updater)
         {
             if (updater != null)
             {

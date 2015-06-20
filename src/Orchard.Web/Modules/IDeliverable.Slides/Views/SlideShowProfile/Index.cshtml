@@ -1,10 +1,10 @@
-﻿@model IDeliverable.Slides.ViewModels.SlideShowProfileIndexViewModel
+﻿@model IDeliverable.Slides.ViewModels.SlideshowProfileIndexViewModel
 @{
     Layout.Title = T("Slide Show Profiles");
 }
 @Html.AntiForgeryToken()
 <div class="manage">
-    @Html.ActionLink(T("Create Profile").Text, "Create", "SlideShowProfile", new { area = "IDeliverable.Slides" }, new { @class = "button primaryAction" })
+    @Html.ActionLink(T("Create Profile").Text, "Create", "SlideshowProfile", new { area = "IDeliverable.Slides" }, new { @class = "button primaryAction" })
 </div>
 <table class="items">
     <thead>
@@ -25,11 +25,11 @@
         <tbody>
             @foreach (var profile in Model.Profiles) {
                 <tr>
-                    <td>@Html.ActionLink(profile.Name, "Edit", "SlideShowProfile", new { id = profile.Id, area = "IDeliverable.Slides" }, null)</td>
+                    <td>@Html.ActionLink(profile.Name, "Edit", "SlideshowProfile", new { id = profile.Id, area = "IDeliverable.Slides" }, null)</td>
                     <td>@profile.SelectedEngine</td>
                     <td>
-                        @Html.ActionLink(T("Edit").Text, "Edit", "SlideShowProfile", new { id = profile.Id, area = "IDeliverable.Slides" }, null) @T(" | ")
-                        @Html.ActionLink(T("Delete").Text, "Delete", "SlideShowProfile", new { id = profile.Id, area = "IDeliverable.Slides" }, new { data_unsafe_url= T("Are you sure you want to delete this profile?") })
+                        @Html.ActionLink(T("Edit").Text, "Edit", "SlideshowProfile", new { id = profile.Id, area = "IDeliverable.Slides" }, null) @T(" | ")
+                        @Html.ActionLink(T("Delete").Text, "Delete", "SlideshowProfile", new { id = profile.Id, area = "IDeliverable.Slides" }, new { data_unsafe_url= T("Are you sure you want to delete this profile?") })
                     </td>
                 </tr>
             }

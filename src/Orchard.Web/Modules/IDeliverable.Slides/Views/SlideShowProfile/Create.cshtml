@@ -1,4 +1,4 @@
-﻿@model IDeliverable.Slides.ViewModels.SlideShowProfileViewModel
+﻿@model IDeliverable.Slides.ViewModels.SlideshowProfileViewModel
 @{
     Layout.Title = T("Create Slide Show Profile");
 }
@@ -7,6 +7,6 @@
     @Html.EditorForModel()
     <fieldset>
         <button type="submit">@T("Create")</button>
-        @Html.ActionLink(T("Cancel").Text, "Index", "SlideShowProfile", new { area = "IDeliverable.Slides" }, new { @class = "button" })
+        @Html.ActionLink(T("Cancel").Text, "Index", "SlideshowProfile", new { area = "IDeliverable.Slides" }, new { @class = "button" })
     </fieldset>
 }

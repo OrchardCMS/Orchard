@@ -43,12 +43,12 @@ var srcLessAdmin = [
 ];
 
 var srcLessEngineBootstrap = [
-    "SlideShowPlayerEngines/Bootstrap/Styles/carousel.less",
-    "SlideShowPlayerEngines/Bootstrap/Styles/glyphicons.less",
+    "SlideshowPlayerEngines/Bootstrap/Styles/carousel.less",
+    "SlideshowPlayerEngines/Bootstrap/Styles/glyphicons.less",
 ];
 
 var srcLessEngineJCarousel = [
-    "SlideShowPlayerEngines/JCarousel/Styles/engine-jcarousel.less"
+    "SlideshowPlayerEngines/JCarousel/Styles/engine-jcarousel.less"
 ];
 
 gulp.task("buildLess", function () {
@@ -92,14 +92,14 @@ var srcJsAdmin = [
 ];
 
 var srcJsEngineBootstrap = [
-    "SlideShowPlayerEngines/Bootstrap/Scripts/transition.js",
-	"SlideShowPlayerEngines/Bootstrap/Scripts/carousel.js"
+    "SlideshowPlayerEngines/Bootstrap/Scripts/transition.js",
+	"SlideshowPlayerEngines/Bootstrap/Scripts/carousel.js"
 ];
 
 var srcJsEngineJCarousel = [
-    "SlideShowPlayerEngines/JCarousel/Scripts/modernizr.transitions.js",
-    "SlideShowPlayerEngines/JCarousel/Scripts/jquery.jcarousel.js",
-    "SlideShowPlayerEngines/JCarousel/Scripts/engine-jcarousel.js"
+    "SlideshowPlayerEngines/JCarousel/Scripts/modernizr.transitions.js",
+    "SlideshowPlayerEngines/JCarousel/Scripts/jquery.jcarousel.js",
+    "SlideshowPlayerEngines/JCarousel/Scripts/engine-jcarousel.js"
 ];
 
 gulp.task("buildJs", function () {

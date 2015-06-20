@@ -7,20 +7,20 @@ using Orchard.ContentManagement;
 
 namespace IDeliverable.Slides.Models
 {
-    public class SlideShowSettingsPart : ContentPart
+    public class SlideshowSettingsPart : ContentPart
     {
-        private IReadOnlyList<SlideShowProfile> _profiles;
+        private IReadOnlyList<SlideshowProfile> _profiles;
 
         /// <summary>
         /// Expose direct access to the underlying data so that it becomes part of the Site export recipe step.
         /// </summary>
         public string ProfilesData
         {
-            get { return Retrieve<string>("SlideShowProfiles"); }
-            set { Store("SlideShowProfiles", value); }
+            get { return Retrieve<string>("SlideshowProfiles"); }
+            set { Store("SlideshowProfiles", value); }
         }
 
-        public IReadOnlyList<SlideShowProfile> Profiles
+        public IReadOnlyList<SlideshowProfile> Profiles
         {
             get
             {
@@ -30,12 +30,12 @@ namespace IDeliverable.Slides.Models
 
                     try
                     {
-                        var profiles = !String.IsNullOrWhiteSpace(json) ? JsonConvert.DeserializeObject<List<SlideShowProfile>>(json) : new List<SlideShowProfile>();
+                        var profiles = !String.IsNullOrWhiteSpace(json) ? JsonConvert.DeserializeObject<List<SlideshowProfile>>(json) : new List<SlideshowProfile>();
                         _profiles = profiles.AsReadOnly();
                     }
                     catch (JsonSerializationException)
                     {
-                        return new ReadOnlyCollection<SlideShowProfile>(new List<SlideShowProfile>(0));
+                        return new ReadOnlyCollection<SlideshowProfile>(new List<SlideshowProfile>(0));
                     }
                 }
                 return _profiles;
@@ -55,7 +55,7 @@ namespace IDeliverable.Slides.Models
             return seed;
         }
 
-        public void StoreProfile(SlideShowProfile profile)
+        public void StoreProfile(SlideshowProfile profile)
         {
             var profiles = Profiles.ToDictionary(x => x.Id);
             profiles[profile.Id] = profile;
@@ -69,7 +69,7 @@ namespace IDeliverable.Slides.Models
             Profiles = profiles.Select(x => x.Value).ToList();
         }
 
-        public SlideShowProfile GetProfile(int id)
+        public SlideshowProfile GetProfile(int id)
         {
             return Profiles.SingleOrDefault(x => x.Id == id);
         }

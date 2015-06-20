@@ -5,11 +5,11 @@ Website: http://www.ideliverable.com
 Version: 1.0.3
 OrchardVersion: 1.9
 Status: Delivered
-Description: Provides slide show features, enabling users to turn content items into slide shows and add slide show elements to layouts.
+Description: Provides slideshow features, enabling users to turn content items into slide shows and add slideshow elements to layouts.
 Features:
     IDeliverable.Slides:
         Name: Slides
-        Description: Turn content items into slide shows.
+        Description: Turn content items into slideshows.
         Category: Content
         Dependencies: Orchard.Layouts, Orchard.jQuery, Orchard.MediaLibrary
     IDeliverable.Slides.Projections:

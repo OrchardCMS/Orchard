@@ -3,9 +3,9 @@ using Orchard.ContentManagement.Utilities;
 
 namespace IDeliverable.Slides.Models
 {
-    public class SlideShowPart : ContentPart, ISlideShow
+    public class SlideshowPart : ContentPart, ISlideshow
     {
-        internal readonly LazyField<SlideShowProfile> _profileField = new LazyField<SlideShowProfile>();
+        internal readonly LazyField<SlideshowProfile> _profileField = new LazyField<SlideshowProfile>();
 
         /// <summary>
         /// The player profile ID to use when presenting the slides.
@@ -19,7 +19,7 @@ namespace IDeliverable.Slides.Models
         /// <summary>
         /// The player profile ID to use when presenting the slides.
         /// </summary>
-        public SlideShowProfile Profile => _profileField.Value;
+        public SlideshowProfile Profile => _profileField.Value;
 
         /// <summary>
         /// The name of the slides provider that provides the slides.

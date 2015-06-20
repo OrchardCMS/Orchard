@@ -5,19 +5,19 @@ using Orchard.ContentManagement.Handlers;
 
 namespace IDeliverable.Slides.Handlers
 {
-    public class SlideShowPartHandler : ContentHandler
+    public class SlideshowPartHandler : ContentHandler
     {
         private readonly IOrchardServices _services;
-        private readonly ISlideShowProfileService _slideShowProfileService;
+        private readonly ISlideshowProfileService _slideShowProfileService;
 
-        public SlideShowPartHandler(IOrchardServices services, ISlideShowProfileService slideShowProfileService)
+        public SlideshowPartHandler(IOrchardServices services, ISlideshowProfileService slideShowProfileService)
         {
             _services = services;
             _slideShowProfileService = slideShowProfileService;
-            OnActivated<SlideShowPart>(SetupLazyFields);
+            OnActivated<SlideshowPart>(SetupLazyFields);
         }
 
-        private void SetupLazyFields(ActivatedContentContext context, SlideShowPart part)
+        private void SetupLazyFields(ActivatedContentContext context, SlideshowPart part)
         {
             part._profileField.Loader(value =>
             {

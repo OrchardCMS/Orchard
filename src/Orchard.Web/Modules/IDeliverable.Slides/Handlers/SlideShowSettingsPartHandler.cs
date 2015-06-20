@@ -2,11 +2,11 @@
 using Orchard.ContentManagement.Handlers;
 
 namespace IDeliverable.Slides.Handlers {
-    public class SlideShowSettingsPartHandler : ContentHandler
+    public class SlideshowSettingsPartHandler : ContentHandler
     {
-        public SlideShowSettingsPartHandler()
+        public SlideshowSettingsPartHandler()
         {
-            Filters.Add(new ActivatingFilter<SlideShowSettingsPart>("Site"));
+            Filters.Add(new ActivatingFilter<SlideshowSettingsPart>("Site"));
         }
     }
 }

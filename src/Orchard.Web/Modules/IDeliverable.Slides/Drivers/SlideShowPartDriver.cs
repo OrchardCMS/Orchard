@@ -15,18 +15,18 @@ using Orchard.Layouts.Framework.Drivers;
 
 namespace IDeliverable.Slides.Drivers
 {
-    public class SlideShowPartDriver : ContentPartDriver<SlideShowPart>
+    public class SlideshowPartDriver : ContentPartDriver<SlideshowPart>
     {
         private readonly IOrchardServices _services;
-        private readonly ISlideShowPlayerEngineManager _engineManager;
+        private readonly ISlideshowPlayerEngineManager _engineManager;
         private readonly ISlidesProviderService _providerService;
-        private readonly ISlideShowProfileService _slideShowProfileService;
+        private readonly ISlideshowProfileService _slideShowProfileService;
 
-        public SlideShowPartDriver(
+        public SlideshowPartDriver(
             IOrchardServices services,
-            ISlideShowPlayerEngineManager engineManager,
+            ISlideshowPlayerEngineManager engineManager,
             ISlidesProviderService providerService,
-            ISlideShowProfileService slideShowProfileService)
+            ISlideshowProfileService slideShowProfileService)
         {
             _services = services;
             _engineManager = engineManager;
@@ -34,27 +34,27 @@ namespace IDeliverable.Slides.Drivers
             _slideShowProfileService = slideShowProfileService;
         }
 
-        protected override DriverResult Editor(SlideShowPart part, dynamic shapeHelper)
+        protected override DriverResult Editor(SlideshowPart part, dynamic shapeHelper)
         {
             return Editor(part, null, shapeHelper);
         }
 
-        protected override DriverResult Editor(SlideShowPart part, IUpdateModel updater, dynamic shapeHelper)
+        protected override DriverResult Editor(SlideshowPart part, IUpdateModel updater, dynamic shapeHelper)
         {
             if (!LicenseValidationHelper.GetLicenseIsValid(LicensedProductManifest.ProductId))
-                return ContentShape("Parts_SlideShow_Edit_InvalidLicense", () => shapeHelper.Parts_SlideShow_Edit_InvalidLicense());
+                return ContentShape("Parts_Slideshow_Edit_InvalidLicense", () => shapeHelper.Parts_Slideshow_Edit_InvalidLicense());
 
-            return ContentShape("Parts_SlideShow_Edit", () =>
+            return ContentShape("Parts_Slideshow_Edit", () =>
             {
                 var storage = new ContentPartStorage(part);
                 var slidesProviderContext = new SlidesProviderContext(part, part, storage);
                 var providerShapes = Enumerable.ToDictionary(_providerService.BuildEditors(shapeHelper, slidesProviderContext), (Func<dynamic, string>)(x => (string)x.Provider.Name));
 
-                var viewModel = new SlideShowPartViewModel
+                var viewModel = new SlideshowPartViewModel
                 {
                     Part = part,
                     ProfileId = part.ProfileId,
-                    AvailableProfiles = _services.WorkContext.CurrentSite.As<SlideShowSettingsPart>().Profiles.ToList(),
+                    AvailableProfiles = _services.WorkContext.CurrentSite.As<SlideshowSettingsPart>().Profiles.ToList(),
                     ProviderName = part.ProviderName,
                     AvailableProviders = providerShapes,
                 };
@@ -70,17 +70,17 @@ namespace IDeliverable.Slides.Drivers
                     }
                 }
 
-                return shapeHelper.EditorTemplate(TemplateName: "Parts.SlideShow", Prefix: Prefix, Model: viewModel);
+                return shapeHelper.EditorTemplate(TemplateName: "Parts.Slideshow", Prefix: Prefix, Model: viewModel);
             });
         }
 
-        protected override DriverResult Display(SlideShowPart part, string displayType, dynamic shapeHelper)
+        protected override DriverResult Display(SlideshowPart part, string displayType, dynamic shapeHelper)
         {
             if (!LicenseValidationHelper.GetLicenseIsValid(LicensedProductManifest.ProductId))
-                return ContentShape("Parts_SlideShow_InvalidLicense", () => shapeHelper.Parts_SlideShow_InvalidLicense());
+                return ContentShape("Parts_Slideshow_InvalidLicense", () => shapeHelper.Parts_Slideshow_InvalidLicense());
 
             return Combined(
-                ContentShape("Parts_SlideShow", () =>
+                ContentShape("Parts_Slideshow", () =>
                 {
                     var slideShapes = GetSlides(part, shapeHelper);
                     var engine = _engineManager.GetEngine(part.Profile);
@@ -88,23 +88,23 @@ namespace IDeliverable.Slides.Drivers
 
                     engineShape.Engine = engine;
                     engineShape.Slides = slideShapes;
-                    engineShape.SlideShowId = part.Id.ToString(CultureInfo.InvariantCulture);
+                    engineShape.SlideshowId = part.Id.ToString(CultureInfo.InvariantCulture);
 
-                    return shapeHelper.Parts_SlideShow(Slides: slideShapes, Engine: engineShape);
+                    return shapeHelper.Parts_Slideshow(Slides: slideShapes, Engine: engineShape);
                 }),
-                ContentShape("Parts_SlideShow_Summary", () =>
+                ContentShape("Parts_Slideshow_Summary", () =>
                 {
                     var slideShapes = GetSlides(part, shapeHelper);
-                    return shapeHelper.Parts_SlideShow_Summary(Slides: slideShapes);
+                    return shapeHelper.Parts_Slideshow_Summary(Slides: slideShapes);
                 }),
-                ContentShape("Parts_SlideShow_SummaryAdmin", () =>
+                ContentShape("Parts_Slideshow_SummaryAdmin", () =>
                 {
                     var slideShapes = GetSlides(part, shapeHelper);
-                    return shapeHelper.Parts_SlideShow_SummaryAdmin(Slides: slideShapes);
+                    return shapeHelper.Parts_Slideshow_SummaryAdmin(Slides: slideShapes);
                 }));
         }
 
-        protected override void Exporting(SlideShowPart part, ExportContentContext context)
+        protected override void Exporting(SlideshowPart part, ExportContentContext context)
         {
             context.Element(part.PartDefinition.Name).SetAttributeValue("Profile", part.Profile?.Name);
             context.Element(part.PartDefinition.Name).SetAttributeValue("Provider", part.ProviderName);
@@ -115,7 +115,7 @@ namespace IDeliverable.Slides.Drivers
             context.Element(part.PartDefinition.Name).Add(providersElement);
         }
 
-        protected override void Importing(SlideShowPart part, ImportContentContext context)
+        protected override void Importing(SlideshowPart part, ImportContentContext context)
         {
             context.ImportAttribute(part.PartDefinition.Name, "Profile", profileName => part.ProfileId = _slideShowProfileService.FindByName(profileName)?.Id);
             context.ImportAttribute(part.PartDefinition.Name, "Provider", providerName => part.ProviderName = _providerService.GetProvider(providerName)?.Name);
@@ -126,7 +126,7 @@ namespace IDeliverable.Slides.Drivers
             _providerService.Import(storage, providersElement, new ImportContentContextWrapper(context), part);
         }
 
-        private IList<dynamic> GetSlides(SlideShowPart part, dynamic shapeHelper)
+        private IList<dynamic> GetSlides(SlideshowPart part, dynamic shapeHelper)
         {
             var provider = !String.IsNullOrWhiteSpace(part.ProviderName) ? _providerService.GetProvider(part.ProviderName) : default(ISlidesProvider);
             var storage = new ContentPartStorage(part);

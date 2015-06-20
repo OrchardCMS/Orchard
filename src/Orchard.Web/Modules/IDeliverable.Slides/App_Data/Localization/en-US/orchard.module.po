@@ -93,27 +93,27 @@ msgstr "No images were selected."
 msgid "No content items were selected."
 msgstr "No content items were selected."
 
-#: IDeliverable.Slides.Controllers.SlideShowElementController
+#: IDeliverable.Slides.Controllers.SlideshowElementController
 #| msgid "That slide has been deleted."
 msgid "That slide has been deleted."
 msgstr "That slide has been deleted."
 
-#: IDeliverable.Slides.Controllers.SlideShowPartController
+#: IDeliverable.Slides.Controllers.SlideshowPartController
 #| msgid "That slide has been deleted."
 msgid "That slide has been deleted."
 msgstr "That slide has been deleted."
 
-#: IDeliverable.Slides.Controllers.SlideShowProfileController
+#: IDeliverable.Slides.Controllers.SlideshowProfileController
 #| msgid "That slide show profile has been created."
 msgid "That slide show profile has been created."
 msgstr "That slide show profile has been created."
 
-#: IDeliverable.Slides.Controllers.SlideShowProfileController
+#: IDeliverable.Slides.Controllers.SlideshowProfileController
 #| msgid "That slide show profile has been updated."
 msgid "That slide show profile has been updated."
 msgstr "That slide show profile has been updated."
 
-#: IDeliverable.Slides.Controllers.SlideShowProfileController
+#: IDeliverable.Slides.Controllers.SlideshowProfileController
 #| msgid "That slide show profile has been deleted."
 msgid "That slide show profile has been deleted."
 msgstr "That slide show profile has been deleted."
@@ -133,12 +133,12 @@ msgstr "List"
 msgid "Projection"
 msgstr "Projection"
 
-#: IDeliverable.Slides.SlideShowPlayerEngines.Bootstrap.Bootstrap
+#: IDeliverable.Slides.SlideshowPlayerEngines.Bootstrap.Bootstrap
 #| msgid "Bootstrap"
 msgid "Bootstrap"
 msgstr "Bootstrap"
 
-#: IDeliverable.Slides.SlideShowPlayerEngines.JCarousel.JCarousel
+#: IDeliverable.Slides.SlideshowPlayerEngines.JCarousel.JCarousel
 #| msgid "JCarousel"
 msgid "JCarousel"
 msgstr "JCarousel"
@@ -163,12 +163,12 @@ msgstr "‹"
 msgid "›"
 msgstr "›"
 
-#: ~/Modules/IDeliverable.Slides/Views/Parts.SlideShow.Summary.cshtml
+#: ~/Modules/IDeliverable.Slides/Views/Parts.Slideshow.Summary.cshtml
 #| msgid "Prev"
 msgid "Prev"
 msgstr "Prev"
 
-#: ~/Modules/IDeliverable.Slides/Views/Parts.SlideShow.Summary.cshtml
+#: ~/Modules/IDeliverable.Slides/Views/Parts.Slideshow.Summary.cshtml
 #| msgid "Next"
 msgid "Next"
 msgstr "Next"
@@ -213,37 +213,37 @@ msgstr "Create Slides From Content Items"
 msgid "Creates multiple slides from content item elements."
 msgstr "Creates multiple slides from content item elements."
 
-#: ~/Modules/IDeliverable.Slides/Views/DefinitionTemplates/SlideShowSettings.cshtml
+#: ~/Modules/IDeliverable.Slides/Views/DefinitionTemplates/SlideshowSettings.cshtml
 #| msgid "Engine"
 msgid "Engine"
 msgstr "Engine"
 
-#: ~/Modules/IDeliverable.Slides/Views/DefinitionTemplates/SlideShowSettings.cshtml
+#: ~/Modules/IDeliverable.Slides/Views/DefinitionTemplates/SlideshowSettings.cshtml
 #| msgid "The slide show engine to use to present the slides."
 msgid "The slide show engine to use to present the slides."
 msgstr "The slide show engine to use to present the slides."
 
-#: ~/Modules/IDeliverable.Slides/Views/EditorTemplates/Elements.SlideShow.cshtml
+#: ~/Modules/IDeliverable.Slides/Views/EditorTemplates/Elements.Slideshow.cshtml
 #| msgid "Slide Show Profile"
 msgid "Slide Show Profile"
 msgstr "Slide Show Profile"
 
-#: ~/Modules/IDeliverable.Slides/Views/EditorTemplates/Elements.SlideShow.cshtml
+#: ~/Modules/IDeliverable.Slides/Views/EditorTemplates/Elements.Slideshow.cshtml
 #| msgid "(Default)"
 msgid "(Default)"
 msgstr "(Default)"
 
-#: ~/Modules/IDeliverable.Slides/Views/EditorTemplates/Elements.SlideShow.cshtml
+#: ~/Modules/IDeliverable.Slides/Views/EditorTemplates/Elements.Slideshow.cshtml
 #| msgid "Select the slide show player profile to use when presenting the slides."
 msgid "Select the slide show player profile to use when presenting the slides."
 msgstr "Select the slide show player profile to use when presenting the slides."
 
-#: ~/Modules/IDeliverable.Slides/Views/EditorTemplates/Elements.SlideShow.cshtml
+#: ~/Modules/IDeliverable.Slides/Views/EditorTemplates/Elements.Slideshow.cshtml
 #| msgid "Slides Provider"
 msgid "Slides Provider"
 msgstr "Slides Provider"
 
-#: ~/Modules/IDeliverable.Slides/Views/EditorTemplates/Elements.SlideShow.cshtml
+#: ~/Modules/IDeliverable.Slides/Views/EditorTemplates/Elements.Slideshow.cshtml
 #| msgid "Select the provider that will provide the slides to the slide show."
 msgid "Select the provider that will provide the slides to the slide show."
 msgstr "Select the provider that will provide the slides to the slide show."
@@ -423,37 +423,37 @@ msgstr "For pricing and licensing options, please visit our <a href=\"http://www
 msgid "For technical support, please visit our <a href=\"http://www.ideliverable.com/support\">support page</a>."
 msgstr "For technical support, please visit our <a href=\"http://www.ideliverable.com/support\">support page</a>."
 
-#: ~/Modules/IDeliverable.Slides/Views/EditorTemplates/Parts.SlideShow.cshtml
+#: ~/Modules/IDeliverable.Slides/Views/EditorTemplates/Parts.Slideshow.cshtml
 #| msgid "Slide Show Profile"
 msgid "Slide Show Profile"
 msgstr "Slide Show Profile"
 
-#: ~/Modules/IDeliverable.Slides/Views/EditorTemplates/Parts.SlideShow.cshtml
+#: ~/Modules/IDeliverable.Slides/Views/EditorTemplates/Parts.Slideshow.cshtml
 #| msgid "(Default)"
 msgid "(Default)"
 msgstr "(Default)"
 
-#: ~/Modules/IDeliverable.Slides/Views/EditorTemplates/Parts.SlideShow.cshtml
+#: ~/Modules/IDeliverable.Slides/Views/EditorTemplates/Parts.Slideshow.cshtml
 #| msgid "Slides Provider"
 msgid "Slides Provider"
 msgstr "Slides Provider"
 
-#: ~/Modules/IDeliverable.Slides/Views/EditorTemplates/Parts.SlideShow.cshtml
+#: ~/Modules/IDeliverable.Slides/Views/EditorTemplates/Parts.Slideshow.cshtml
 #| msgid "Select the provider that will provide the slides to the slide show."
 msgid "Select the provider that will provide the slides to the slide show."
 msgstr "Select the provider that will provide the slides to the slide show."
 
-#: ~/Modules/IDeliverable.Slides/Views/EditorTemplates/SlideShowProfileViewModel.cshtml
+#: ~/Modules/IDeliverable.Slides/Views/EditorTemplates/SlideshowProfileViewModel.cshtml
 #| msgid "Profile Name"
 msgid "Profile Name"
 msgstr "Profile Name"
 
-#: ~/Modules/IDeliverable.Slides/Views/EditorTemplates/SlideShowProfileViewModel.cshtml
+#: ~/Modules/IDeliverable.Slides/Views/EditorTemplates/SlideshowProfileViewModel.cshtml
 #| msgid "Engine"
 msgid "Engine"
 msgstr "Engine"
 
-#: ~/Modules/IDeliverable.Slides/Views/EditorTemplates/SlideShowProfileViewModel.cshtml
+#: ~/Modules/IDeliverable.Slides/Views/EditorTemplates/SlideshowProfileViewModel.cshtml
 #| msgid "The slide show engine to use to present the slides."
 msgid "The slide show engine to use to present the slides."
 msgstr "The slide show engine to use to present the slides."
@@ -568,7 +568,7 @@ msgstr "Delete"
 msgid "Are you sure you want to delete this slide?"
 msgstr "Are you sure you want to delete this slide?"
 
-#: ~/Modules/IDeliverable.Slides/Views/Elements/SlideShow.Design.cshtml
+#: ~/Modules/IDeliverable.Slides/Views/Elements/Slideshow.Design.cshtml
 #| msgid "No slides have been added yet."
 msgid "No slides have been added yet."
 msgstr "No slides have been added yet."
@@ -673,167 +673,167 @@ msgstr "Save"
 msgid "Cancel"
 msgstr "Cancel"
 
-#: ~/Modules/IDeliverable.Slides/Views/SlideShowElement/Browse.cshtml
+#: ~/Modules/IDeliverable.Slides/Views/SlideshowElement/Browse.cshtml
 #| msgid "Add Slides"
 msgid "Add Slides"
 msgstr "Add Slides"
 
-#: ~/Modules/IDeliverable.Slides/Views/SlideShowElement/Browse.cshtml
+#: ~/Modules/IDeliverable.Slides/Views/SlideshowElement/Browse.cshtml
 #| msgid "Create Slide"
 msgid "Create Slide"
 msgstr "Create Slide"
 
-#: ~/Modules/IDeliverable.Slides/Views/SlideShowElement/Browse.cshtml
+#: ~/Modules/IDeliverable.Slides/Views/SlideshowElement/Browse.cshtml
 #| msgid "Create a new regular, free-form slide."
 msgid "Create a new regular, free-form slide."
 msgstr "Create a new regular, free-form slide."
 
-#: ~/Modules/IDeliverable.Slides/Views/SlideShowElement/Browse.cshtml
+#: ~/Modules/IDeliverable.Slides/Views/SlideshowElement/Browse.cshtml
 #| msgid "Create Image Slides"
 msgid "Create Image Slides"
 msgstr "Create Image Slides"
 
-#: ~/Modules/IDeliverable.Slides/Views/SlideShowElement/Browse.cshtml
+#: ~/Modules/IDeliverable.Slides/Views/SlideshowElement/Browse.cshtml
 #| msgid "Creates multiple slides based on image elements."
 msgid "Creates multiple slides based on image elements."
 msgstr "Creates multiple slides based on image elements."
 
-#: ~/Modules/IDeliverable.Slides/Views/SlideShowElement/Browse.cshtml
+#: ~/Modules/IDeliverable.Slides/Views/SlideshowElement/Browse.cshtml
 #| msgid "Create Content Slides"
 msgid "Create Content Slides"
 msgstr "Create Content Slides"
 
-#: ~/Modules/IDeliverable.Slides/Views/SlideShowElement/Browse.cshtml
+#: ~/Modules/IDeliverable.Slides/Views/SlideshowElement/Browse.cshtml
 #| msgid "Creates multiple slides based on content item elements."
 msgid "Creates multiple slides based on content item elements."
 msgstr "Creates multiple slides based on content item elements."
 
-#: ~/Modules/IDeliverable.Slides/Views/SlideShowElement/Browse.cshtml
+#: ~/Modules/IDeliverable.Slides/Views/SlideshowElement/Browse.cshtml
 #| msgid "Cancel"
 msgid "Cancel"
 msgstr "Cancel"
 
-#: ~/Modules/IDeliverable.Slides/Views/SlideShowElement/Create.cshtml
+#: ~/Modules/IDeliverable.Slides/Views/SlideshowElement/Create.cshtml
 #| msgid "Create Slide"
 msgid "Create Slide"
 msgstr "Create Slide"
 
-#: ~/Modules/IDeliverable.Slides/Views/SlideShowElement/Create.cshtml
+#: ~/Modules/IDeliverable.Slides/Views/SlideshowElement/Create.cshtml
 #| msgid "Create"
 msgid "Create"
 msgstr "Create"
 
-#: ~/Modules/IDeliverable.Slides/Views/SlideShowElement/Create.cshtml
+#: ~/Modules/IDeliverable.Slides/Views/SlideshowElement/Create.cshtml
 #| msgid "Cancel"
 msgid "Cancel"
 msgstr "Cancel"
 
-#: ~/Modules/IDeliverable.Slides/Views/SlideShowElement/Edit.cshtml
+#: ~/Modules/IDeliverable.Slides/Views/SlideshowElement/Edit.cshtml
 #| msgid "Edit Slide {0}"
 msgid "Edit Slide {0}"
 msgstr "Edit Slide {0}"
 
-#: ~/Modules/IDeliverable.Slides/Views/SlideShowElement/Edit.cshtml
+#: ~/Modules/IDeliverable.Slides/Views/SlideshowElement/Edit.cshtml
 #| msgid "Save"
 msgid "Save"
 msgstr "Save"
 
-#: ~/Modules/IDeliverable.Slides/Views/SlideShowElement/Edit.cshtml
+#: ~/Modules/IDeliverable.Slides/Views/SlideshowElement/Edit.cshtml
 #| msgid "Cancel"
 msgid "Cancel"
 msgstr "Cancel"
 
-#: ~/Modules/IDeliverable.Slides/Views/SlideShowProfile/Create.cshtml
+#: ~/Modules/IDeliverable.Slides/Views/SlideshowProfile/Create.cshtml
 #| msgid "Create Slide Show Profile"
 msgid "Create Slide Show Profile"
 msgstr "Create Slide Show Profile"
 
-#: ~/Modules/IDeliverable.Slides/Views/SlideShowProfile/Create.cshtml
+#: ~/Modules/IDeliverable.Slides/Views/SlideshowProfile/Create.cshtml
 #| msgid "Create"
 msgid "Create"
 msgstr "Create"
 
-#: ~/Modules/IDeliverable.Slides/Views/SlideShowProfile/Create.cshtml
+#: ~/Modules/IDeliverable.Slides/Views/SlideshowProfile/Create.cshtml
 #| msgid "Cancel"
 msgid "Cancel"
 msgstr "Cancel"
 
-#: ~/Modules/IDeliverable.Slides/Views/SlideShowProfile/Edit.cshtml
+#: ~/Modules/IDeliverable.Slides/Views/SlideshowProfile/Edit.cshtml
 #| msgid "Edit Slide Show Profile"
 msgid "Edit Slide Show Profile"
 msgstr "Edit Slide Show Profile"
 
-#: ~/Modules/IDeliverable.Slides/Views/SlideShowProfile/Edit.cshtml
+#: ~/Modules/IDeliverable.Slides/Views/SlideshowProfile/Edit.cshtml
 #| msgid "Save"
 msgid "Save"
 msgstr "Save"
 
-#: ~/Modules/IDeliverable.Slides/Views/SlideShowProfile/Edit.cshtml
+#: ~/Modules/IDeliverable.Slides/Views/SlideshowProfile/Edit.cshtml
 #| msgid "Back"
 msgid "Back"
 msgstr "Back"
 
-#: ~/Modules/IDeliverable.Slides/Views/SlideShowProfile/Index.cshtml
+#: ~/Modules/IDeliverable.Slides/Views/SlideshowProfile/Index.cshtml
 #| msgid "Slide Show Profiles"
 msgid "Slide Show Profiles"
 msgstr "Slide Show Profiles"
 
-#: ~/Modules/IDeliverable.Slides/Views/SlideShowProfile/Index.cshtml
+#: ~/Modules/IDeliverable.Slides/Views/SlideshowProfile/Index.cshtml
 #| msgid "Create Profile"
 msgid "Create Profile"
 msgstr "Create Profile"
 
-#: ~/Modules/IDeliverable.Slides/Views/SlideShowProfile/Index.cshtml
+#: ~/Modules/IDeliverable.Slides/Views/SlideshowProfile/Index.cshtml
 #| msgid "Profile Name"
 msgid "Profile Name"
 msgstr "Profile Name"
 
-#: ~/Modules/IDeliverable.Slides/Views/SlideShowProfile/Index.cshtml
+#: ~/Modules/IDeliverable.Slides/Views/SlideshowProfile/Index.cshtml
 #| msgid "Engine"
 msgid "Engine"
 msgstr "Engine"
 
-#: ~/Modules/IDeliverable.Slides/Views/SlideShowProfile/Index.cshtml
+#: ~/Modules/IDeliverable.Slides/Views/SlideshowProfile/Index.cshtml
 #| msgid "No profiles have been defined yet."
 msgid "No profiles have been defined yet."
 msgstr "No profiles have been defined yet."
 
-#: ~/Modules/IDeliverable.Slides/Views/SlideShowProfile/Index.cshtml
+#: ~/Modules/IDeliverable.Slides/Views/SlideshowProfile/Index.cshtml
 #| msgid "Edit"
 msgid "Edit"
 msgstr "Edit"
 
-#: ~/Modules/IDeliverable.Slides/Views/SlideShowProfile/Index.cshtml
+#: ~/Modules/IDeliverable.Slides/Views/SlideshowProfile/Index.cshtml
 #| msgid " | "
 msgid " | "
 msgstr " | "
 
-#: ~/Modules/IDeliverable.Slides/Views/SlideShowProfile/Index.cshtml
+#: ~/Modules/IDeliverable.Slides/Views/SlideshowProfile/Index.cshtml
 #| msgid "Delete"
 msgid "Delete"
 msgstr "Delete"
 
-#: ~/Modules/IDeliverable.Slides/Views/SlideShowProfile/Index.cshtml
+#: ~/Modules/IDeliverable.Slides/Views/SlideshowProfile/Index.cshtml
 #| msgid "Are you sure you want to delete this profile?"
 msgid "Are you sure you want to delete this profile?"
 msgstr "Are you sure you want to delete this profile?"
 
-#: IDeliverable.Slides.Controllers.SlideShowElementController
+#: IDeliverable.Slides.Controllers.SlideshowElementController
 #| msgid "That slide has been added."
 msgid "That slide has been added."
 msgstr "That slide has been added."
 
-#: IDeliverable.Slides.Controllers.SlideShowElementController
+#: IDeliverable.Slides.Controllers.SlideshowElementController
 #| msgid "Those slides have been added."
 msgid "Those slides have been added."
 msgstr "Those slides have been added."
 
-#: IDeliverable.Slides.Controllers.SlideShowPartController
+#: IDeliverable.Slides.Controllers.SlideshowPartController
 #| msgid "That slide has been added."
 msgid "That slide has been added."
 msgstr "That slide has been added."
 
-#: IDeliverable.Slides.Controllers.SlideShowPartController
+#: IDeliverable.Slides.Controllers.SlideshowPartController
 #| msgid "Those slides have been added."
 msgid "Those slides have been added."
 msgstr "Those slides have been added."

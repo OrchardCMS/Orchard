@@ -41,7 +41,7 @@ namespace IDeliverable.Slides.Providers
             var slideShapes = slides.Select(x => _layoutManager.RenderLayout(x.LayoutData, content: context.Content)).ToList();
             var viewModel = new DefaultSlidesProviderViewModel
             {
-                SlideShow = context.SlideShow,
+                Slideshow = context.Slideshow,
                 SessionKey = context.ElementSessionKey,
                 Slides = slideShapes
             };
@@ -58,7 +58,7 @@ namespace IDeliverable.Slides.Providers
                 }
             }
 
-            var templateName = context.SlideShow is SlideShowPart ? "SlidesProviders.Slides.Part" : "SlidesProviders.Slides.Element";
+            var templateName = context.Slideshow is SlideshowPart ? "SlidesProviders.Slides.Part" : "SlidesProviders.Slides.Element";
             return shapeFactory.EditorTemplate(TemplateName: templateName, Model: viewModel, Prefix: Prefix);
         }
 

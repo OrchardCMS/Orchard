@@ -4,18 +4,18 @@ using Orchard.Layouts.Services;
 
 namespace IDeliverable.Slides.Handlers
 {
-    public class SlideShowElementHandler : ElementEventHandlerBase
+    public class SlideshowElementHandler : ElementEventHandlerBase
     {
-        private readonly ISlideShowProfileService _slideShowProfileService;
+        private readonly ISlideshowProfileService _slideShowProfileService;
 
-        public SlideShowElementHandler(ISlideShowProfileService slideShowProfileService)
+        public SlideshowElementHandler(ISlideshowProfileService slideShowProfileService)
         {
             _slideShowProfileService = slideShowProfileService;
         }
 
         public override void Created(ElementCreatedContext context)
         {
-            var element = context.Element as SlideShow;
+            var element = context.Element as Slideshow;
 
             if (element == null)
                 return;
@@ -23,7 +23,7 @@ namespace IDeliverable.Slides.Handlers
             SetupLazyFields(element);
         }
 
-        private void SetupLazyFields(SlideShow element)
+        private void SetupLazyFields(Slideshow element)
         {
             element._profileField.Loader(value =>
             {

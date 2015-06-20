@@ -7,25 +7,25 @@ using Orchard.Layouts.Helpers;
 
 namespace IDeliverable.Slides.Services
 {
-    public class SlideShowPlayerEngineManager : ISlideShowPlayerEngineManager
+    public class SlideshowPlayerEngineManager : ISlideshowPlayerEngineManager
     {
-        private readonly Lazy<IEnumerable<ISlideShowPlayerEngine>> _engines;
-        public SlideShowPlayerEngineManager(Lazy<IEnumerable<ISlideShowPlayerEngine>> engines)
+        private readonly Lazy<IEnumerable<ISlideshowPlayerEngine>> _engines;
+        public SlideshowPlayerEngineManager(Lazy<IEnumerable<ISlideshowPlayerEngine>> engines)
         {
             _engines = engines;
         }
 
-        public IEnumerable<ISlideShowPlayerEngine> GetEngines()
+        public IEnumerable<ISlideshowPlayerEngine> GetEngines()
         {
             return _engines.Value;
         }
 
-        public ISlideShowPlayerEngine GetEngine(string name)
+        public ISlideshowPlayerEngine GetEngine(string name)
         {
             return GetEngines().SingleOrDefault(x => x.Name == name);
         }
 
-        public ISlideShowPlayerEngine GetEngine(SlideShowProfile profile)
+        public ISlideshowPlayerEngine GetEngine(SlideshowProfile profile)
         {
             var engine = profile != null ? GetEngine(profile.SelectedEngine) : GetEngines().First();
             engine.Data = profile != null ? ElementDataHelper.Deserialize(profile.EngineStates[profile.SelectedEngine]) : new ElementDataDictionary();

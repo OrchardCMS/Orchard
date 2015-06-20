@@ -7,30 +7,30 @@ using Orchard.ContentManagement;
 
 namespace IDeliverable.Slides.Services
 {
-    public class SlideShowProfileService : ISlideShowProfileService
+    public class SlideshowProfileService : ISlideshowProfileService
     {
         private readonly IWorkContextAccessor _wca;
-        public SlideShowProfileService(IWorkContextAccessor wca)
+        public SlideshowProfileService(IWorkContextAccessor wca)
         {
             _wca = wca;
         }
 
-        public IEnumerable<SlideShowProfile> GetProfiles()
+        public IEnumerable<SlideshowProfile> GetProfiles()
         {
-            return _wca.GetContext().CurrentSite.As<SlideShowSettingsPart>().Profiles;
+            return _wca.GetContext().CurrentSite.As<SlideshowSettingsPart>().Profiles;
         }
 
-        public SlideShowProfile Find(Func<SlideShowProfile, bool> predicate)
+        public SlideshowProfile Find(Func<SlideshowProfile, bool> predicate)
         {
             return GetProfiles().SingleOrDefault(predicate);
         }
 
-        public SlideShowProfile FindById(int id)
+        public SlideshowProfile FindById(int id)
         {
             return Find(x => x.Id == id);
         }
 
-        public SlideShowProfile FindByName(string name)
+        public SlideshowProfile FindByName(string name)
         {
             return Find(x => String.Equals(x.Name, name, StringComparison.OrdinalIgnoreCase));
         }

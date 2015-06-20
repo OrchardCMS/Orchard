@@ -13,7 +13,7 @@ namespace IDeliverable.Slides.ViewModels
         }
 
         public IList<dynamic> Slides { get; set; }
-        public ISlideShow SlideShow { get; set; }
+        public ISlideshow Slideshow { get; set; }
         public string SessionKey { get; set; }
         public IList<int> Indices { get; set; }
         public string SlidesData { get; set; }
