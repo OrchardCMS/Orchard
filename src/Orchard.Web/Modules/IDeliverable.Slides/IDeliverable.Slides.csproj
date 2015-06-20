@@ -117,7 +117,7 @@
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
-    <Content Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
     <None Include="SlideShowPlayerEngines\Bootstrap\Styles\carousel.less" />
     <None Include="SlideShowPlayerEngines\Bootstrap\Styles\mixins.less" />
