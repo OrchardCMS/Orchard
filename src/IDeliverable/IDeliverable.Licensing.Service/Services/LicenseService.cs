@@ -107,12 +107,12 @@ namespace IDeliverable.Licensing.Service.Services
             }
         }
 
-        private static string CreateBasicAuthenticationToken(string userName, string password)
+        private string CreateBasicAuthenticationToken(string userName, string password)
         {
             return Convert.ToBase64String(Encoding.UTF8.GetBytes($"{userName}:{password}"), Base64FormattingOptions.None);
         }
 
-        private static IEnumerable<LicenseInfo> ParseLicenseInfo(string json)
+        private IEnumerable<LicenseInfo> ParseLicenseInfo(string json)
         {
             var licensesQuery =
                 from node in JArray.Parse(json)
@@ -121,7 +121,7 @@ namespace IDeliverable.Licensing.Service.Services
             return licensesQuery.ToArray();
         }
 
-        private static OrderInfo ParseOrderInfo(string json)
+        private OrderInfo ParseOrderInfo(string json)
         {
             var order = JObject.Parse(json)["order"];
             var status = ReadOrderStatus(order);
@@ -131,12 +131,30 @@ namespace IDeliverable.Licensing.Service.Services
             var hostnames = new List<string>();
 
             if (customFields.Count > 0)
-                hostnames.Add((string)customFields[0]["order_custom_checkout_field"]["value"]);
+            {
+                var hostnameString = (string)customFields[0]["order_custom_checkout_field"]["value"];
+                if (!String.IsNullOrWhiteSpace(hostnameString))
+                    hostnames.Add(ParseHostname(hostnameString));
+            }
 
             if (customFields.Count > 1)
-                hostnames.Add((string)customFields[1]["order_custom_checkout_field"]["value"]);
+            {
+                var hostnameString = (string)customFields[1]["order_custom_checkout_field"]["value"];
+                if (!String.IsNullOrWhiteSpace(hostnameString))
+                    hostnames.Add(ParseHostname(hostnameString));
+            }
 
             return new OrderInfo((int)order["id"], status, isAccessAllowed, subscriptionId, hostnames);
+        }
+
+        private string ParseHostname(string hostnameString)
+        {
+            Uri uri = null;
+
+            if (Uri.TryCreate(hostnameString, UriKind.Absolute, out uri))
+                return uri.Host;
+
+            return hostnameString;
         }
 
         private static OrderStatus ReadOrderStatus(JToken order)
