@@ -7,5 +7,6 @@ namespace Orchard.Widgets.Models {
         public virtual string Zone { get; set; }
         public virtual bool RenderTitle { get; set; }
         public virtual string Name { get; set; }
+        public virtual string CssClass { get; set; }
     }
 }

@@ -22,6 +22,7 @@ namespace Orchard.Widgets {
                     .Column<string>("Zone")
                     .Column<bool>("RenderTitle", c => c.WithDefault(true))
                     .Column<string>("Name")
+                    .Column<string>("CssClass", c=> c.Nullable())
                 );
 
             ContentDefinitionManager.AlterPartDefinition("WidgetPart", part => part
@@ -43,7 +44,7 @@ namespace Orchard.Widgets {
                     .WithSetting("Stereotype", "Widget")
                 );
 
-            return 5;
+            return 6;
         }
         
         public int UpdateFrom1() {
@@ -70,6 +71,12 @@ namespace Orchard.Widgets {
             ContentDefinitionManager.AlterPartDefinition("WidgetPart", part => part
                 .WithDescription("Turns a content type into a Widget. Note: you need to set the stereotype to \"Widget\" as well."));
             return 5;
+        }
+
+        public int UpdateFrom5() {
+            SchemaBuilder
+                .AlterTable("WidgetPartRecord", table => table.AddColumn<string>("CssClass", c => c.Nullable()));
+            return 6;
         }
     }
 }

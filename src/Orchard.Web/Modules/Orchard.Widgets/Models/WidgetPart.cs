@@ -51,6 +51,14 @@ namespace Orchard.Widgets.Models {
         }
 
         /// <summary>
+        /// The CSS class(es) of the widget
+        /// </summary>
+        public string CssClass {
+            get { return Retrieve(x => x.CssClass); }
+            set { Store(x => x.CssClass, value); }
+        }
+
+        /// <summary>
         /// The layerPart where the widget belongs.
         /// </summary>
         public LayerPart LayerPart {
