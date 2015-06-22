@@ -8,8 +8,6 @@ namespace Orchard.Users.ViewModels
 {
     public class UserIndexViewModel
     {
-        private UserPart x;
-
         public int Id { get; set; }
         public UserStatus RegistrationStatus { get; set; }
         public UserStatus EmailStatus { get; set; }
@@ -33,7 +31,6 @@ namespace Orchard.Users.ViewModels
 
         public UserIndexViewModel(UserPart userPart)
         {
-            // TODO: Complete member initialization
             MapPart(userPart);
         }
 

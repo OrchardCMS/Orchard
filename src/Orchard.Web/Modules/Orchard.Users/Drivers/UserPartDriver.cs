@@ -30,7 +30,6 @@ namespace Orchard.Users.Drivers
             return ContentShape("Parts_User", () => shapeHelper.Parts_UserSummaryAdmin(
                 Model: viewModel
                 ));
-            //return base.Display(part, displayType, shapeHelper);
         }
 
         protected override DriverResult Editor(UserPart part, dynamic shapeHelper)
