@@ -282,6 +282,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IDeliverable.Widgets", "Orc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vandelay.TranslationManager", "Orchard.Web\Modules\Vandelay.TranslationManager\Vandelay.TranslationManager.csproj", "{D853C0F7-3570-4D27-A45F-9ADE897E9BB5}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IDeliverable.Star.Tutorials", "IDeliverable.Star.Tutorials", "{9DFCD562-414E-4E53-AD51-D48943470A6D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IDeliverable.Tutorials.Slides", "Orchard.Web\Modules\IDeliverable.Tutorials.Slides\IDeliverable.Tutorials.Slides.csproj", "{6CE8A820-B7EC-416B-9772-A402F875074D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		CodeCoverage|Any CPU = CodeCoverage|Any CPU
@@ -1154,6 +1158,16 @@ Global
 		{D853C0F7-3570-4D27-A45F-9ADE897E9BB5}.FxCop|Any CPU.Build.0 = Release|Any CPU
 		{D853C0F7-3570-4D27-A45F-9ADE897E9BB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D853C0F7-3570-4D27-A45F-9ADE897E9BB5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6CE8A820-B7EC-416B-9772-A402F875074D}.CodeCoverage|Any CPU.ActiveCfg = Release|Any CPU
+		{6CE8A820-B7EC-416B-9772-A402F875074D}.CodeCoverage|Any CPU.Build.0 = Release|Any CPU
+		{6CE8A820-B7EC-416B-9772-A402F875074D}.Coverage|Any CPU.ActiveCfg = Release|Any CPU
+		{6CE8A820-B7EC-416B-9772-A402F875074D}.Coverage|Any CPU.Build.0 = Release|Any CPU
+		{6CE8A820-B7EC-416B-9772-A402F875074D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CE8A820-B7EC-416B-9772-A402F875074D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CE8A820-B7EC-416B-9772-A402F875074D}.FxCop|Any CPU.ActiveCfg = Release|Any CPU
+		{6CE8A820-B7EC-416B-9772-A402F875074D}.FxCop|Any CPU.Build.0 = Release|Any CPU
+		{6CE8A820-B7EC-416B-9772-A402F875074D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CE8A820-B7EC-416B-9772-A402F875074D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1244,5 +1258,6 @@ Global
 		{66279934-5324-48A7-969B-565CD23D6B79} = {35CE9047-8A48-4EFA-A30C-93C5A8E564A4}
 		{B2883BED-DD02-4064-8553-15EE0F07F18F} = {35CE9047-8A48-4EFA-A30C-93C5A8E564A4}
 		{D853C0F7-3570-4D27-A45F-9ADE897E9BB5} = {35CE9047-8A48-4EFA-A30C-93C5A8E564A4}
+		{6CE8A820-B7EC-416B-9772-A402F875074D} = {9DFCD562-414E-4E53-AD51-D48943470A6D}
 	EndGlobalSection
 EndGlobal

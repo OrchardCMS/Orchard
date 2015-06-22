@@ -1,0 +1,64 @@
+﻿@model IDeliverable.Tutorials.Slides.SlideshowPlayerEngines.Cycle
+<fieldset>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Speed, T("Speed"))
+        @Html.TextBoxFor(m => m.Speed, new { @class = "text medium" })
+        @Html.Hint(T("The speed of the transition effect in milliseconds."))
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.ManualSpeed, T("Manual Speed"))
+        @Html.TextBoxFor(m => m.ManualSpeed, new { @class = "text medium" })
+        @Html.Hint(T("The speed (in milliseconds) for transitions that are manually initiated, such as those caused by clicking a \"next\" button or a pager link. By default, manual transitions occur at the same speed as automatic (timer-based) transitions."))
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Timeout, T("Timeout"))
+        @Html.TextBoxFor(m => m.Timeout, new { @class = "text medium" })
+        @Html.Hint(T("The time between slide transitions in milliseconds."))
+    </div>
+    <div class="form-group">
+        @Html.CheckBoxFor(m => m.AllowWrap)
+        @Html.LabelFor(m => m.AllowWrap, T("Allow Wrap").Text, new {@class = "forcheckbox"})
+        @Html.Hint(T("This option determines whether or not a slideshow can advance from the last slide to the first (or vice versa)."))
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Loop, T("Loop"))
+        @Html.TextBoxFor(m => m.Loop, new { @class = "text medium" })
+        @Html.Hint(T("The number of times an auto-advancing slideshow should loop before terminating. If the value is less than 1 then the slideshow will loop continuously. Set to 1 to loop once, etc. Note: Setting the allow-wrap option to false will override looping."))
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.AutoHeight, T("Auto Height"))
+        @Html.TextBoxFor(m => m.AutoHeight, new { @class = "text medium" })
+        <div class="hint">
+            <p>This option determines whether or not Cycle2 will provide height management for the slideshow which can be very useful in fluid or responsive designs. There are three ways this option can be used:</p>
+            <ul>
+                <li>an integer can be provided to identify the zero-based slide index for a sentinel slide</li>
+                <li>the string "calc" can be provided to instruct Cycle2 to calculate the tallest slide and use it as the sentinel</li>
+                <li>a ratio string can be provided which identifies the width:height aspect ratio for the container</li>
+            </ul>
+            <p>By default, the slideshow's first slide is used as the sentinel slide and its demensions will control the height of the slideshow container if the container does not have a specific height set via CSS.</p>
+            <p>To force the slideshow container to a specific aspect ratio, for example to hold a set of images that are 600x400, use a ratio string like this:</p>
+            <blockquote>data-cycle-auto-height="600:400"</blockquote>
+            <p>To disable height management, set this option's value to -1 or false.</p>
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.CheckBoxFor(m => m.Paused)
+        @Html.LabelFor(m => m.Paused, T("Paused").Text, new {@class = "forcheckbox"})
+        @Html.Hint(T("If checked the slideshow will begin in a paused state."))
+    </div>
+    <div class="form-group">
+        @Html.CheckBoxFor(m => m.PauseOnHover)
+        @Html.LabelFor(m => m.PauseOnHover, T("Pause On Hover").Text, new {@class = "forcheckbox"})
+        @Html.Hint(T("If checked an auto-running slideshow will be paused while the mouse is over the slideshow."))
+    </div>
+    <div class="form-group">
+        @Html.CheckBoxFor(m => m.Random)
+        @Html.LabelFor(m => m.Random, T("Random").Text, new {@class = "forcheckbox"})
+        @Html.Hint(T("If checked the order of the slides will be randomized. This only effects slides that are initially in the markup, not slides added via the add command or via Cycle2's image loader functionality."))
+    </div>
+    <div class="form-group">
+        @Html.CheckBoxFor(m => m.Reverse)
+        @Html.LabelFor(m => m.Reverse, T("Reverse").Text, new { @class = "forcheckbox" })
+        @Html.Hint(T("If checked the slideshow will proceed in reverse order and transitions that support this option will run a reverse animation."))
+    </div>
+</fieldset>

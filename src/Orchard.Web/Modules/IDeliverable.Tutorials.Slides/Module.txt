@@ -1,0 +1,12 @@
+﻿Name: IDeliverable Slides Tutorial
+AntiForgery: enabled
+Author: IDeliverable
+Website: http://www.ideliverable.com
+Version: 1.0
+OrchardVersion: 1.9
+Features:
+    IDeliverable.Tutorials.Slides
+        Name: IDeliverable Slides Tutorial
+        Description: Demonstrates the implementation of various extensibility points of IDeliverable.Slides.
+        Category: Tutorials
+        Dependencies: IDeliverable.Slides

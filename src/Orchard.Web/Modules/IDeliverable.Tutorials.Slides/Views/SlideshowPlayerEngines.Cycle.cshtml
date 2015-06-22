@@ -1,0 +1,32 @@
+﻿@using IDeliverable.Tutorials.Slides.SlideshowPlayerEngines
+@{
+    Script.Require("jQuery");
+    Script.Include("jquery.cycle2.js", "jquery.cycle2.min.js");
+}
+@{
+    var engine = (Cycle)Model.Engine;
+    var slides = (IList<dynamic>)Model.Slides;
+
+    if (slides.Any())
+    {
+        <div class="cycle-slideshow"
+             data-cycle-speed="@engine.Speed"
+             data-cycle-manual-speed="@engine.ManualSpeed"
+             data-cycle-timeout="@engine.Timeout"
+             data-cycle-allow-wrap="@engine.AllowWrap.ToString().ToLowerInvariant()"
+             data-cycle-auto-height="@engine.AutoHeight"
+             data-cycle-loop="@engine.Loop.ToString().ToLowerInvariant()"
+             data-cycle-paused="@engine.Paused.ToString().ToLowerInvariant()"
+             data-cycle-pause-on-hover="@engine.PauseOnHover.ToString().ToLowerInvariant()"
+             data-cycle-random="@engine.Random.ToString().ToLowerInvariant()"
+             data-cycle-reverse="@engine.Reverse.ToString().ToLowerInvariant()"
+             data-cycle-slides="> div">
+        @foreach (var slide in slides)
+        {
+            <div>
+                @Display(slide)
+            </div>
+        }
+    </div>
+    }
+}
