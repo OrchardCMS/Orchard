@@ -4,7 +4,7 @@ Author: The Orchard Team
 Website: http://orchardproject.net/
 Version: 1.9.0
 OrchardVersion: 1.9
-Description: Adds output caching functiona
+Description: Adds output caching functionality
 Features:
     Orchard.OutputCache:
         Description: Adds output caching functionality.
