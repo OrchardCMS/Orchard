@@ -212,14 +212,14 @@
     <Compile Include="Models\ISlideshow.cs" />
     <Compile Include="Models\SlideshowProfile.cs" />
     <Compile Include="Models\SlidesLicenseSettingsPart.cs" />
-    <Compile Include="Providers\ListSlidesProvider.cs" />
-    <Compile Include="Providers\ProjectionSlidesProvider.cs" />
+    <Compile Include="SlidesProviders\ListSlidesProvider.cs" />
+    <Compile Include="SlidesProviders\ProjectionSlidesProvider.cs" />
     <Compile Include="Services\ContentPartStorage.cs" />
     <Compile Include="Services\ElementStorage.cs" />
     <Compile Include="Services\ISlideshowProfileService.cs" />
     <Compile Include="Services\ISlidesProviderService.cs" />
     <Compile Include="Services\ISlidesProvider.cs" />
-    <Compile Include="Providers\DefaultSlidesProvider.cs" />
+    <Compile Include="SlidesProviders\DefaultSlidesProvider.cs" />
     <Compile Include="Services\IStorage.cs" />
     <Compile Include="Services\SlideshowProfileService.cs" />
     <Compile Include="Services\SlidesProvider.cs" />
@@ -296,16 +296,16 @@
     <Content Include="Views\DefinitionTemplates\SlideshowSettings.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\EditorTemplates\Engines.JCarousel.cshtml" />
+    <Content Include="Views\EditorTemplates\SlideshowPlayerEngines.JCarousel.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Engines.JCarousel.cshtml" />
+    <Content Include="Views\SlideshowPlayerEngines.JCarousel.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\EditorTemplates\Engines.Bootstrap.cshtml" />
+    <Content Include="Views\EditorTemplates\SlideshowPlayerEngines.Bootstrap.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Engines.Bootstrap.cshtml" />
+    <Content Include="Views\SlideshowPlayerEngines.Bootstrap.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Elements\Slideshow.cshtml" />

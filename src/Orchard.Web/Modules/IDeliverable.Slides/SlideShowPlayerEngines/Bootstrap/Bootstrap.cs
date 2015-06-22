@@ -53,17 +53,14 @@ namespace IDeliverable.Slides.SlideshowPlayerEngines.Bootstrap
 
         public override dynamic UpdateEditor(dynamic shapeFactory, IUpdateModel updater)
         {
-            if (updater != null)
-            {
-                updater.TryUpdateModel(this, Prefix, null, null);
-            }
+            updater?.TryUpdateModel(this, Prefix, null, null);
 
-            return shapeFactory.EditorTemplate(TemplateName: "Engines.Bootstrap", Prefix: Prefix, Model: this);
+            return shapeFactory.EditorTemplate(TemplateName: "SlideshowPlayerEngines.Bootstrap", Prefix: Prefix, Model: this);
         }
 
         public override dynamic BuildDisplay(dynamic shapeFactory)
         {
-            return shapeFactory.Engines_Bootstrap();
+            return shapeFactory.SlideshowPlayerEngines_Bootstrap();
         }
     }
 }

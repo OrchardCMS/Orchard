@@ -13,7 +13,7 @@ using Orchard.Localization;
 using Orchard.Projections.Models;
 using Orchard.Projections.Services;
 
-namespace IDeliverable.Slides.Providers
+namespace IDeliverable.Slides.SlidesProviders
 {
     [OrchardFeature("IDeliverable.Slides.Projections")]
     public class ProjectionSlidesProvider : SlidesProvider

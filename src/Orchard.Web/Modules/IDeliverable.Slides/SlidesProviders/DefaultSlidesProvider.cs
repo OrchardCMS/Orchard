@@ -11,7 +11,7 @@ using Orchard.Layouts.Helpers;
 using Orchard.Layouts.Services;
 using Orchard.Localization;
 
-namespace IDeliverable.Slides.Providers
+namespace IDeliverable.Slides.SlidesProviders
 {
     public class DefaultSlidesProvider : SlidesProvider
     {

@@ -10,7 +10,7 @@ using Orchard.Environment.Extensions;
 using Orchard.Layouts.Helpers;
 using Orchard.Localization;
 
-namespace IDeliverable.Slides.Providers
+namespace IDeliverable.Slides.SlidesProviders
 {
     [OrchardFeature("IDeliverable.Slides.Lists")]
     public class ListSlidesProvider : SlidesProvider

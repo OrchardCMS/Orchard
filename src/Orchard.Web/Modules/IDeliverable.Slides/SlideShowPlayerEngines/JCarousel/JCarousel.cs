@@ -71,17 +71,14 @@ namespace IDeliverable.Slides.SlideshowPlayerEngines.JCarousel
 
         public override dynamic UpdateEditor(dynamic shapeFactory, IUpdateModel updater)
         {
-            if (updater != null)
-            {
-                updater.TryUpdateModel(this, Prefix, null, null);
-            }
+            updater?.TryUpdateModel(this, Prefix, null, null);
 
-            return shapeFactory.EditorTemplate(TemplateName: "Engines.JCarousel", Prefix: Prefix, Model: this);
+            return shapeFactory.EditorTemplate(TemplateName: "SlideshowPlayerEngines.JCarousel", Prefix: Prefix, Model: this);
         }
 
         public override dynamic BuildDisplay(dynamic shapeFactory)
         {
-            return shapeFactory.Engines_JCarousel();
+            return shapeFactory.SlideshowPlayerEngines_JCarousel();
         }
     }
 }
