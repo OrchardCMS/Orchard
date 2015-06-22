@@ -119,9 +119,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="SlideshowPlayerEngines\Cycle.cs" />
+    <Compile Include="SlidesProvider\LinesSlidesProvider.cs" />
+    <Compile Include="ViewModels\LinesSlidesProviderViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EditorTemplates\SlideshowPlayerEngines.Cycle.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\SlidesProviders.Lines.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\SlidesProviders.LineSlide.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

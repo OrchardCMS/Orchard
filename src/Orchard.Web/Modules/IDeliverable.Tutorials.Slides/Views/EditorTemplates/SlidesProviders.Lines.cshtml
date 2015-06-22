@@ -1,0 +1,8 @@
+﻿@model IDeliverable.Tutorials.Slides.ViewModels.LinesSlidesProviderViewModel
+<fieldset>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Text, T("Lines"))
+        @Html.TextAreaFor(m => m.Text, new { @class = "text large" })
+        @Html.Hint(T("Enter the text to display, one line per slide."))
+    </div>
+</fieldset>
