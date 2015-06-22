@@ -1,15 +1,11 @@
 using IDeliverable.Slides.Helpers;
 using IDeliverable.Slides.Services;
 using Orchard.ContentManagement;
-using Orchard.Localization;
 
 namespace IDeliverable.Slides.SlideshowPlayerEngines.Bootstrap
 {
     public class Bootstrap : SlideshowPlayerEngine
     {
-        public override LocalizedString DisplayName => T("Bootstrap");
-        public string Prefix => "Bootstrap";
-
         public int Interval
         {
             get { return this.Retrieve(x => x.Interval, () => 3000); }

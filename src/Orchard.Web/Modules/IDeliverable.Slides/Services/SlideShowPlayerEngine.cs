@@ -13,7 +13,8 @@ namespace IDeliverable.Slides.Services
             Data = new ElementDataDictionary();
         }
 
-        public virtual string Name => GetType().Name;
+        public virtual string Name => T(GetType().Name).ToString();
+        public virtual string Prefix => GetType().Name;
 
         public virtual LocalizedString DisplayName => T(Name.CamelFriendly());
 

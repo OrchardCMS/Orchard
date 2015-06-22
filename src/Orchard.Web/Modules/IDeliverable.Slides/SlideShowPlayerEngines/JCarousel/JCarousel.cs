@@ -1,15 +1,11 @@
 using IDeliverable.Slides.Helpers;
 using IDeliverable.Slides.Services;
-using Orchard.Localization;
-using IUpdateModel = Orchard.ContentManagement.IUpdateModel;
+using Orchard.ContentManagement;
 
 namespace IDeliverable.Slides.SlideshowPlayerEngines.JCarousel
 {
     public class JCarousel : SlideshowPlayerEngine
     {
-        public override LocalizedString DisplayName => T("JCarousel");
-        public string Prefix => "JCarousel";
-
         public bool AutoStart
         {
             get { return this.Retrieve(x => x.AutoStart, () => true); }
@@ -54,13 +50,13 @@ namespace IDeliverable.Slides.SlideshowPlayerEngines.JCarousel
 
         public bool Vertical
         {
-            get { return this.Retrieve(x => x.Vertical); }
+            get { return SlideshowPlayerEngineDataHelper.Retrieve(this, x => x.Vertical); }
             set { this.Store(x => x.Vertical, value); }
         }
 
         public bool Center
         {
-            get { return this.Retrieve(x => x.Center); }
+            get { return SlideshowPlayerEngineDataHelper.Retrieve(this, x => x.Center); }
             set { this.Store(x => x.Center, value); }
         }
 
