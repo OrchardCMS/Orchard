@@ -1,11 +1,14 @@
 using IDeliverable.Slides.Helpers;
 using IDeliverable.Slides.Services;
 using Orchard.ContentManagement;
+using Orchard.Localization;
 
 namespace IDeliverable.Slides.SlideshowPlayerEngines.JCarousel
 {
     public class JCarousel : SlideshowPlayerEngine
     {
+        public override LocalizedString DisplayName => T("JCarousel");
+
         public bool AutoStart
         {
             get { return this.Retrieve(x => x.AutoStart, () => true); }
