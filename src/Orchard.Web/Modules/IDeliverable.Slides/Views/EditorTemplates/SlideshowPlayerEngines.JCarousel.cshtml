@@ -42,7 +42,7 @@
     <div class="form-group">
         @Html.CheckBoxFor(m => m.Center)
         @Html.LabelFor(m => m.Center, T("Center").Text, new { @class = "forcheckbox" })
-        @Html.Hint(T("Wether the targeted item should be centered inside the root element. Note: This feature is experimental and may not work with all setups."))
+        @Html.Hint(T("Whether the targeted item should be centered inside the root element. Note: This feature is experimental and may not work with all setups."))
     </div>
     <div class="form-group" data-controllerid="@Html.FieldIdFor(m => m.Transitions)">
         @Html.LabelFor(m => m.Easing, T("Easing"))
