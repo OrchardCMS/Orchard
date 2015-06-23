@@ -64,6 +64,18 @@ namespace Orchard.MediaProcessing.Services {
             var filePath = _fileNameProvider.GetFileName(profileName, System.Web.HttpUtility.UrlDecode(path));
             bool process = false;
 
+            //after reboot the app cache is empty so we reload the image in the cache if it exists in the _Profiles folder
+            if (string.IsNullOrEmpty(filePath))
+            {
+                var filterContext = new FilterContext { FilePath = _storageProvider.Combine("_Profiles", FormatProfilePath(profileName, System.Web.HttpUtility.UrlDecode(path))) };
+
+                if (_storageProvider.FileExists(filterContext.FilePath))
+                {
+                    _fileNameProvider.UpdateFileName(profileName, System.Web.HttpUtility.UrlDecode(path), filterContext.FilePath);
+                    filePath = _fileNameProvider.GetFileName(profileName, path);
+                }
+            }
+            
             // if the filename is not cached, process it
             if (string.IsNullOrEmpty(filePath)) {
                 Logger.Debug("FilePath is null, processing required, profile {0} for image {1}", profileName, path);
