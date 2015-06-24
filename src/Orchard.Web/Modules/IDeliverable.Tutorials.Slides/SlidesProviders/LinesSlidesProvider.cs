@@ -7,9 +7,9 @@ using IDeliverable.Tutorials.Slides.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.Localization;
 
-namespace IDeliverable.Tutorials.Slides.SlidesProvider
+namespace IDeliverable.Tutorials.Slides.SlidesProviders
 {
-    public class LinesSlidesProvider : IDeliverable.Slides.Services.SlidesProvider
+    public class LinesSlidesProvider :  SlidesProvider
     {
         private const string TextKey = "LinesSlidesProvider.Text";
         public override LocalizedString DisplayName => T("Lines");

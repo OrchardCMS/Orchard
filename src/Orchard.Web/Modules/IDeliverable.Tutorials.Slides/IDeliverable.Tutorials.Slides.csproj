@@ -97,7 +97,7 @@
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
-    <Content Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -119,7 +119,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="SlideshowPlayerEngines\Cycle.cs" />
-    <Compile Include="SlidesProvider\LinesSlidesProvider.cs" />
+    <Compile Include="SlidesProviders\LinesSlidesProvider.cs" />
     <Compile Include="ViewModels\LinesSlidesProviderViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
