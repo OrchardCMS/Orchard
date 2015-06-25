@@ -105,8 +105,7 @@ namespace Orchard.Taxonomies.Services {
                     .WithPart("AutoroutePart", builder => builder
                         .WithSetting("AutorouteSettings.AllowCustomPattern", "true")
                         .WithSetting("AutorouteSettings.AutomaticAdjustmentOnEdit", "false")
-                        .WithSetting("AutorouteSettings.PatternDefinitions", "[{Name:'Taxonomy and Title', Pattern: '{Content.Container.Path}/{Content.Slug}', Description: 'my-taxonomy/my-term/sub-term'}]")
-                        .WithSetting("AutorouteSettings.DefaultPatternIndex", "0"))
+                        .WithSetting("AutorouteSettings.PatternDefinitions", "[{Name:'Taxonomy and Title', Pattern: '{Content.Container.Path}/{Content.Slug}', Description: 'my-taxonomy/my-term/sub-term'}]"))
                     .WithPart("CommonPart")
                     .DisplayedAs(taxonomy.Name + " Term")
                 );
@@ -216,8 +215,7 @@ namespace Orchard.Taxonomies.Services {
 
                 termPart.As<ICommonPart>().Container = GetTaxonomy(termPart.TaxonomyId).ContentItem;
                 _contentManager.Create(termPart);
-            }
-            else {
+            } else {
                 _notifier.Warning(T("The term {0} already exists in this taxonomy", termPart.Name));
             }
         }
@@ -282,8 +280,7 @@ namespace Orchard.Taxonomies.Services {
                     tpr => tpr.Terms.Any(tr =>
                         tr.TermRecord.Id == term.Id
                         || tr.TermRecord.Path.StartsWith(rootPath)));
-            }
-            else {
+            } else {
                 query = query.Where(
                     tpr => tpr.Terms.Any(tr =>
                         tr.Field == fieldName

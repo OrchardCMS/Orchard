@@ -18,6 +18,10 @@
     text-align: right;
 }
 
-.autoroute-settings-patterns tr td input {
+.autoroute-settings-patterns, .autoroute-settings-patterns tr td input {
     width: 100%;
+}
+
+.autoroute-settings-patterns td, .autoroute-settings-patterns th {
+    padding:10px;
 }
