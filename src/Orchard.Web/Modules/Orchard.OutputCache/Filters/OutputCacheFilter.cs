@@ -279,8 +279,8 @@ namespace Orchard.OutputCache.Filters {
             }
         }
 
-        protected virtual bool RequestIsCacheable(ActionExecutingContext filterContext) {
-
+        protected virtual bool RequestIsCacheable(ActionExecutingContext filterContext)
+        {
             var itemDescriptor = string.Empty;
 
             if (Logger.IsEnabled(LogLevel.Debug)) {
@@ -295,33 +295,22 @@ namespace Orchard.OutputCache.Filters {
                 itemDescriptor = string.Format("{0} (Area: {1}, Controller: {2}, Action: {3}, Culture: {4}, Theme: {5}, Auth: {6})", url, area, controller, action, culture, theme, auth);
             }
 
-            // Respect OutputCacheAttribute if applied.
-            var actionAttributes = filterContext.ActionDescriptor.GetCustomAttributes(typeof(OutputCacheAttribute), true);
-            var controllerAttributes = filterContext.ActionDescriptor.ControllerDescriptor.GetCustomAttributes(typeof(OutputCacheAttribute), true);
-            var outputCacheAttribute = actionAttributes.Concat(controllerAttributes).Cast<OutputCacheAttribute>().FirstOrDefault();
-            if (outputCacheAttribute != null) {
-                if (outputCacheAttribute.Duration <= 0 || outputCacheAttribute.NoStore || outputCacheAttribute.LocationIsIn(OutputCacheLocation.Downstream, OutputCacheLocation.Client, OutputCacheLocation.None)) {
-                    Logger.Debug("Request for item '{0}' ignored based on OutputCache attribute.", itemDescriptor);
-                    return false;
+            foreach (var provider in _requestIsCacheableProviders) {
+                try {
+                    var providerResponse = provider.RequestIsCacheable(filterContext, CacheSettings);
+
+                    if (providerResponse == null) {
+                        continue;
+                    }
+
+                    if (!providerResponse.CanBeCached) {
+                        Logger.Debug("Request for item '{0}' ignored with message: {1}", itemDescriptor, providerResponse.Message);
+                        return false;
+                    }
                 }
-            }
-
-            // Don't cache POST requests.
-            if (filterContext.HttpContext.Request.HttpMethod.Equals("POST", StringComparison.OrdinalIgnoreCase)) {
-                Logger.Debug("Request for item '{0}' ignored because HTTP method is POST.", itemDescriptor);
-                return false;
-            }
-
-            // Don't cache admin section requests.
-            if (AdminFilter.IsApplied(new RequestContext(filterContext.HttpContext, new RouteData()))) {
-                Logger.Debug("Request for item '{0}' ignored because it's in admin section.", itemDescriptor);
-                return false;
-            }
-
-            // Ignore authenticated requests unless the setting to cache them is true.
-            if (_workContext.CurrentUser != null && !CacheSettings.CacheAuthenticatedRequests) {
-                Logger.Debug("Request for item '{0}' ignored because user is authenticated.", itemDescriptor);
-                return false;
+                catch (Exception ex) {
+                    Logger.Error(ex, "An exception was encountered while processing the Request Is Cacheable Providers.");
+                }
             }
 
             // Don't cache ignored URLs.
