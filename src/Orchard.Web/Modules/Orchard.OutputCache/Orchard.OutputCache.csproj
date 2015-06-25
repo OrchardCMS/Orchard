@@ -109,6 +109,16 @@
     <Compile Include="Models\CacheItemRecord.cs" />
     <Compile Include="Models\CacheSettingsPart.cs" />
     <Compile Include="Models\CacheParameterRecord.cs" />
+    <Compile Include="Models\AbilityToCacheResponse.cs" />
+    <Compile Include="Providers\ActionParametersOutputCacheKeyCompositeProvider.cs" />
+    <Compile Include="Providers\AuthenticationStateOutputCacheKeyCompositeProvider.cs" />
+    <Compile Include="Providers\CultureOutputCacheKeyCompositeProvider.cs" />
+    <Compile Include="Providers\HeadersOutputCacheKeyCompositeProvider.cs" />
+    <Compile Include="Providers\IOutputCacheKeyCompositeProvider.cs" />
+    <Compile Include="Providers\IRequestIsCacheableProvider.cs" />
+    <Compile Include="Providers\IResponseIsCacheableProvider.cs" />
+    <Compile Include="Providers\QueryStringOutputCacheKeyCompositeProvider.cs" />
+    <Compile Include="Providers\ThemeOutputCacheKeyCompositeProvider.cs" />
     <Compile Include="Services\CacheService.cs" />
     <Compile Include="Services\DatabaseOutputCacheBackgroundTask.cs" />
     <Compile Include="Services\DatabaseOutputCacheProvider.cs" />

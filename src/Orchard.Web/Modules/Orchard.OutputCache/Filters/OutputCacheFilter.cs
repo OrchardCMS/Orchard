@@ -19,6 +19,7 @@ using Orchard.Mvc.Extensions;
 using Orchard.Mvc.Filters;
 using Orchard.OutputCache.Helpers;
 using Orchard.OutputCache.Models;
+using Orchard.OutputCache.Providers;
 using Orchard.OutputCache.Services;
 using Orchard.Services;
 using Orchard.Themes;
@@ -43,6 +44,10 @@ namespace Orchard.OutputCache.Filters {
         private readonly ICacheService _cacheService;
         private readonly ISignals _signals;
         private readonly ShellSettings _shellSettings;
+        private readonly IEnumerable<IRequestIsCacheableProvider> _requestIsCacheableProviders;
+        private readonly IEnumerable<IResponseIsCacheableProvider> _responseIsCacheableProviders;
+        private readonly IEnumerable<IOutputCacheKeyCompositeProvider> _outputCacheCompositeKeyProviders;
+
         public ILogger Logger { get; set; }
 
         public OutputCacheFilter(
@@ -55,7 +60,10 @@ namespace Orchard.OutputCache.Filters {
             IClock clock,
             ICacheService cacheService,
             ISignals signals,
-            ShellSettings shellSettings) {
+            ShellSettings shellSettings, 
+            IEnumerable<IResponseIsCacheableProvider> responseIsCacheableProviders, 
+            IEnumerable<IRequestIsCacheableProvider> requestIsCacheableProviders, 
+            IEnumerable<IOutputCacheKeyCompositeProvider> outputCacheCompositeKeyProviders) {
 
             _cacheManager = cacheManager;
             _cacheStorageProvider = cacheStorageProvider;
@@ -67,6 +75,9 @@ namespace Orchard.OutputCache.Filters {
             _cacheService = cacheService;
             _signals = signals;
             _shellSettings = shellSettings;
+            _responseIsCacheableProviders = responseIsCacheableProviders;
+            _requestIsCacheableProviders = requestIsCacheableProviders;
+            _outputCacheCompositeKeyProviders = outputCacheCompositeKeyProviders;
 
             Logger = NullLogger.Instance;
         }
@@ -360,38 +371,9 @@ namespace Orchard.OutputCache.Filters {
 
         protected virtual IDictionary<string, object> GetCacheKeyParameters(ActionExecutingContext filterContext) {
             var result = new Dictionary<string, object>();
-            
-            // Vary by action parameters.
-            foreach (var p in filterContext.ActionParameters)
-                result.Add("PARAM:" + p.Key, p.Value);
 
-            // Vary by theme.
-            result.Add("theme", _themeManager.GetRequestTheme(filterContext.RequestContext).Id.ToLowerInvariant());
-
-            // Vary by configured query string parameters.
-            var queryString = filterContext.RequestContext.HttpContext.Request.QueryString;
-            foreach (var key in queryString.AllKeys) {
-                if (key == null || (CacheSettings.VaryByQueryStringParameters != null && !CacheSettings.VaryByQueryStringParameters.Contains(key)))
-                    continue;
-                result[key] = queryString[key];
-            }
-
-            // Vary by configured request headers.
-            var requestHeaders = filterContext.RequestContext.HttpContext.Request.Headers;
-            foreach (var varyByRequestHeader in CacheSettings.VaryByRequestHeaders) {
-                if (requestHeaders.AllKeys.Contains(varyByRequestHeader))
-                    result["HEADER:" + varyByRequestHeader] = requestHeaders[varyByRequestHeader];
-            }
-
-            
-            // Vary by request culture if configured.
-            if (CacheSettings.VaryByCulture) {
-                result["culture"] = _workContext.CurrentCulture.ToLowerInvariant();
-            }
-
-            // Vary by authentication state if configured.
-            if (CacheSettings.VaryByAuthenticationState) {
-                result["auth"] = filterContext.HttpContext.User.Identity.IsAuthenticated.ToString().ToLowerInvariant();
+            foreach (var kvp in _outputCacheCompositeKeyProviders.SelectMany(p=>p.GetCacheKeySegment(filterContext, CacheSettings))) {
+                result[kvp.Key] = kvp.Value;
             }
 
             return result;
