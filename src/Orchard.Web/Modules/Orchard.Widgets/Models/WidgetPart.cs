@@ -76,5 +76,13 @@ namespace Orchard.Widgets.Models {
         /// </summary>
         [HiddenInput(DisplayValue = false)]
         public IEnumerable<LayerPart> AvailableLayers { get; set; }
+
+        /// <summary>
+        /// Css classes for the widget.
+        /// </summary>
+        public string CssClasses {
+            get { return this.Retrieve(x => x.CssClasses); }
+            set { this.Store(x => x.CssClasses, value); }
+        }
     }
 }
