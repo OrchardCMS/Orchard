@@ -42,6 +42,10 @@ namespace Orchard.Widgets {
                             displaying.ShapeMetadata.Alternates.Add("Widget__Name__" + widgetPart.Name);
                         }
 
+                        // add CSS class(es) specified in the admin panel
+                        if (!String.IsNullOrWhiteSpace(widgetPart.CssClass)) {
+                            widget.Classes.Add(widgetPart.CssClass);
+                        }
                     }
                 });
         }

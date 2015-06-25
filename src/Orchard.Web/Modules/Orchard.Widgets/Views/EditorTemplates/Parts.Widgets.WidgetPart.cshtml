@@ -24,6 +24,11 @@
 </fieldset>
 <fieldset>
     @Html.LabelFor(widget => widget.Name, T("Name"))
-    @Html.TextBoxFor(widget => widget.Name, new { @class = "text" })
+    @Html.TextBoxFor(widget => widget.Name, new {@class = "text"})
     <span class="hint">@T("The technical name of the Widget, used for css class and alternates.")</span>
+</fieldset>
+<fieldset>
+    @Html.LabelFor(widget => widget.CssClass, T("CSS Class"))
+    @Html.TextBoxFor(widget => widget.CssClass, new{@class = "text medium"})
+    <span class="hint">@T("A list of CSS classes separated by space.")</span>
 </fieldset>
