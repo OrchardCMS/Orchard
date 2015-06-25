@@ -4,7 +4,7 @@ using System.Web.UI;
 using Orchard.OutputCache.Helpers;
 using Orchard.OutputCache.Models;
 
-namespace Orchard.OutputCache.Providers.RequestIsCacheableProvider {
+namespace Orchard.OutputCache.Providers.RequestIsCacheableProviders {
     public class OutputCacheAttributeRequestIsCacheableProvider : IRequestIsCacheableProvider {
         public AbilityToCacheResponse RequestIsCacheable(ActionExecutingContext context, CacheSettings settings) {
             // Respect OutputCacheAttribute if applied.

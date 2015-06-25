@@ -110,9 +110,9 @@
     <Compile Include="Models\CacheSettingsPart.cs" />
     <Compile Include="Models\CacheParameterRecord.cs" />
     <Compile Include="Models\AbilityToCacheResponse.cs" />
-    <Compile Include="Providers\RequestIsCacheableProvider\AdminFilterRequestIsCacheableProvider.cs" />
+    <Compile Include="Providers\RequestIsCacheableProviders\AdminFilterRequestIsCacheableProvider.cs" />
     <Compile Include="Providers\CacheKeyCompositeProviders\ActionParametersOutputCacheKeyCompositeProvider.cs" />
-    <Compile Include="Providers\RequestIsCacheableProvider\AuthenticatedRequestIsCacheableProvider.cs" />
+    <Compile Include="Providers\RequestIsCacheableProviders\AuthenticatedRequestIsCacheableProvider.cs" />
     <Compile Include="Providers\CacheKeyCompositeProviders\AuthenticationStateOutputCacheKeyCompositeProvider.cs" />
     <Compile Include="Providers\CacheKeyCompositeProviders\CultureOutputCacheKeyCompositeProvider.cs" />
     <Compile Include="Providers\CacheKeyCompositeProviders\HeadersOutputCacheKeyCompositeProvider.cs" />
@@ -121,8 +121,8 @@
     <Compile Include="Providers\IResponseIsCacheableProvider.cs" />
     <Compile Include="Providers\CacheKeyCompositeProviders\QueryStringOutputCacheKeyCompositeProvider.cs" />
     <Compile Include="Providers\CacheKeyCompositeProviders\ThemeOutputCacheKeyCompositeProvider.cs" />
-    <Compile Include="Providers\RequestIsCacheableProvider\OutputCacheAttributeRequestIsCacheableProvider.cs" />
-    <Compile Include="Providers\RequestIsCacheableProvider\PostRequestIsCacheableProvider.cs" />
+    <Compile Include="Providers\RequestIsCacheableProviders\OutputCacheAttributeRequestIsCacheableProvider.cs" />
+    <Compile Include="Providers\RequestIsCacheableProviders\PostRequestIsCacheableProvider.cs" />
     <Compile Include="Services\CacheService.cs" />
     <Compile Include="Services\DatabaseOutputCacheBackgroundTask.cs" />
     <Compile Include="Services\DatabaseOutputCacheProvider.cs" />
@@ -146,7 +146,7 @@
     <Content Include="Views\Admin\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Providers\ResponseIsCacheableProvider\" />
+    <Folder Include="Providers\ResponseIsCacheableProviders\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

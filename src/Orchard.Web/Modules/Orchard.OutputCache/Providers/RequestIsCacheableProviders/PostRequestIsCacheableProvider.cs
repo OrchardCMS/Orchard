@@ -2,7 +2,7 @@ using System;
 using System.Web.Mvc;
 using Orchard.OutputCache.Models;
 
-namespace Orchard.OutputCache.Providers.RequestIsCacheableProvider {
+namespace Orchard.OutputCache.Providers.RequestIsCacheableProviders {
     public class PostRequestIsCacheableProvider : IRequestIsCacheableProvider {
         public AbilityToCacheResponse RequestIsCacheable(ActionExecutingContext context, CacheSettings settings) {
             // Don't cache POST requests.

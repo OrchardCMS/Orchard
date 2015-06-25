@@ -3,7 +3,7 @@ using System.Web.Routing;
 using Orchard.OutputCache.Models;
 using Orchard.UI.Admin;
 
-namespace Orchard.OutputCache.Providers.RequestIsCacheableProvider {
+namespace Orchard.OutputCache.Providers.RequestIsCacheableProviders {
     public class AdminFilterRequestIsCacheableProvider : IRequestIsCacheableProvider {
         public AbilityToCacheResponse RequestIsCacheable(ActionExecutingContext context, CacheSettings settings) {
             // Don't cache admin section requests.
