@@ -3,7 +3,7 @@ using System.Linq;
 using System.Web.Mvc;
 using Orchard.OutputCache.Models;
 
-namespace Orchard.OutputCache.Providers {
+namespace Orchard.OutputCache.Providers.CacheKeyCompositeProviders {
     public class QueryStringOutputCacheKeyCompositeProvider : IOutputCacheKeyCompositeProvider
     {
         public IEnumerable<KeyValuePair<string, object>> GetCacheKeySegment(ActionExecutingContext context, CacheSettings settings) {

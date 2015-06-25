@@ -3,7 +3,7 @@ using System.Web.Mvc;
 using Orchard.OutputCache.Models;
 using Orchard.Themes;
 
-namespace Orchard.OutputCache.Providers {
+namespace Orchard.OutputCache.Providers.CacheKeyCompositeProviders {
     public class ThemeOutputCacheKeyCompositeProvider : IOutputCacheKeyCompositeProvider
     {
         private readonly IThemeManager _themeManager;

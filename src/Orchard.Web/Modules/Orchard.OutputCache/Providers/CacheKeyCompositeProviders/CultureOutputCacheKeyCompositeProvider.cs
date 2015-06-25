@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Web.Mvc;
 using Orchard.OutputCache.Models;
 
-namespace Orchard.OutputCache.Providers {
+namespace Orchard.OutputCache.Providers.CacheKeyCompositeProviders {
     public class CultureOutputCacheKeyCompositeProvider : IOutputCacheKeyCompositeProvider
     {
         private readonly WorkContext _workContext;

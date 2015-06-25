@@ -1,7 +1,7 @@
 using System.Web.Mvc;
 using Orchard.OutputCache.Models;
 
-namespace Orchard.OutputCache.Providers {
+namespace Orchard.OutputCache.Providers.RequestIsCacheableProvider {
     public class AuthenticatedRequestIsCacheableProvider : IRequestIsCacheableProvider {
         private readonly WorkContext _workContext;
 
