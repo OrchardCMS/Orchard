@@ -1,7 +1,7 @@
 ﻿@using Orchard.Utility.Extensions;
 @{
     var terms = (IEnumerable<Orchard.Taxonomies.Models.TermPart>)Model.Terms;
-    string name = @Model.ContentField.DisplayName;
+    string name = Model.ContentField.DisplayName;
 }
 @if (Model.Terms.Count > 0) {
 <p class="taxonomy-field">
