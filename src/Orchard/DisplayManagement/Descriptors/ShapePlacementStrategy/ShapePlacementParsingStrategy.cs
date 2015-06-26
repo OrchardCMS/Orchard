@@ -111,8 +111,9 @@ namespace Orchard.DisplayManagement.Descriptors.ShapePlacementStrategy {
             differentiator = "";
             shapeType = shapeLocation.ShapeType;
             var dashIndex = shapeType.LastIndexOf('-');
-            if (dashIndex > 0 && dashIndex < shapeType.Length - 1) {
-                differentiator = shapeType.Substring(dashIndex + 1);
+            var dashIndex = shapeType.LastIndexOf("__");
+            if (dashIndex > 0 && dashIndex < shapeType.Length - 2) {
+                differentiator = shapeType.Substring(dashIndex + 2);
                 shapeType = shapeType.Substring(0, dashIndex);
             }
         }
