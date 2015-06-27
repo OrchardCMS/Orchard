@@ -110,7 +110,6 @@ namespace Orchard.DisplayManagement.Descriptors.ShapePlacementStrategy {
         private void GetShapeType(PlacementShapeLocation shapeLocation, out string shapeType, out string differentiator) {
             differentiator = "";
             shapeType = shapeLocation.ShapeType;
-            var dashIndex = shapeType.LastIndexOf('-');
             var dashIndex = shapeType.LastIndexOf("__");
             if (dashIndex > 0 && dashIndex < shapeType.Length - 2) {
                 differentiator = shapeType.Substring(dashIndex + 2);
