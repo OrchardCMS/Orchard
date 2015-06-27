@@ -357,7 +357,7 @@ namespace Orchard.OutputCache.Filters {
             }
 
             // Don't cache non-200 responses or results of a redirect.
-            // This check is not performed in an IResponseIsCacheableProvider because it requires knowledge of the value of _transformRedirect which is set with a protected virtual method and therefore removing this mrethod from this filter would introduce a breaking change. 
+            // This check is not performed in an IResponseIsCacheableProvider because it requires knowledge of the value of _transformRedirect which is set with a protected virtual method and therefore removing this method from this filter would introduce a breaking change. 
             var response = filterContext.HttpContext.Response;
             if (response.StatusCode != (int)HttpStatusCode.OK || _transformRedirect) {
                 return false;
