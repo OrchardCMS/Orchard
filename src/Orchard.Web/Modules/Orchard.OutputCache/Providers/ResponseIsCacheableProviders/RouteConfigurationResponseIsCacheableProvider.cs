@@ -1,7 +1,7 @@
 ﻿using System.Web.Mvc;
 using Orchard.OutputCache.Models;
 
-namespace Orchard.OutputCache.Providers {
+namespace Orchard.OutputCache.Providers.ResponseIsCacheableProviders {
     public class RouteConfigurationResponseIsCacheableProvider : IResponseIsCacheableProvider {
         public AbilityToCacheResponse ResponseIsCacheable(ResultExecutedContext context, CacheRouteConfig configuration, CacheSettings settings) {
             // Don't cache if individual route configuration says so.

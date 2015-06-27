@@ -2,7 +2,7 @@ using System;
 using System.Web.Mvc;
 using Orchard.OutputCache.Models;
 
-namespace Orchard.OutputCache.Providers {
+namespace Orchard.OutputCache.Providers.ResponseIsCacheableProviders {
     public class NotificationsResponseIsCacheableProvider : IResponseIsCacheableProvider {
         public AbilityToCacheResponse ResponseIsCacheable(ResultExecutedContext context, CacheRouteConfig configuration, CacheSettings settings) {
             // Don't cache if request created notifications.
