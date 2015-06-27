@@ -70,8 +70,9 @@ namespace Orchard.Autoroute.Settings {
                 if (!settings.DefaultPatterns.Any(x => String.Equals(x.Culture, culture, StringComparison.OrdinalIgnoreCase))) {
                     //if we are in the default culture check the old setting
                     if (String.Equals(culture, _cultureManager.GetSiteCulture(), StringComparison.OrdinalIgnoreCase)) {
-                        if (!String.IsNullOrEmpty(definition.Settings["AutorouteSettings.DefaultPatternIndex"])) {
-                            string patternIndex = definition.Settings["AutorouteSettings.DefaultPatternIndex"];
+                        var defaultPatternIndex = settings.DefaultPatternIndex;
+                        if (!String.IsNullOrWhiteSpace(defaultPatternIndex)) {
+                            var patternIndex = defaultPatternIndex;
                             settings.DefaultPatterns.Add(new DefaultPattern { Culture = settings.DefaultSiteCulture, PatternIndex = patternIndex });
                         } else {
                             settings.DefaultPatterns.Add(new DefaultPattern { PatternIndex = "0", Culture = culture });

@@ -22,6 +22,7 @@ namespace Orchard.Autoroute.Settings {
             AutomaticAdjustmentOnEdit = false;
             PatternDefinitions = "[]";
             DefaultPatternDefinitions = "[]";
+            DefaultPatternIndex = null;
         }
 
         public bool PerItemConfiguration { get; set; }
@@ -31,6 +32,7 @@ namespace Orchard.Autoroute.Settings {
         public bool? IsDefault { get; set; }
         public List<string> SiteCultures { get; set; }
         public string DefaultSiteCulture { get; set; }
+        public string DefaultPatternIndex { get; set; }
 
         /// <summary>
         /// A serialized Json array of <see cref="RoutePattern"/> objects
@@ -102,6 +104,7 @@ namespace Orchard.Autoroute.Settings {
             builder.WithSetting("AutorouteSettings.AutomaticAdjustmentOnEdit", AutomaticAdjustmentOnEdit.ToString(CultureInfo.InvariantCulture));
             builder.WithSetting("AutorouteSettings.PatternDefinitions", PatternDefinitions);
             builder.WithSetting("AutorouteSettings.DefaultPatternDefinitions", DefaultPatternDefinitions);
+            builder.WithSetting("AutorouteSettings.DefaultPatternIndex", DefaultPatternIndex);
         }
     }
 }

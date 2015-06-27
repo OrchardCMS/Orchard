@@ -67,7 +67,8 @@ namespace Orchard.Autoroute.Services {
             }
 
             if (settings.UseCulturePattern) {
-                //if we are creating from a form post we use the form value for culture
+                // TODO: Refactor the below so that we don't need to know about Request.Form["Localization.SelectedCulture"].
+                // If we are creating from a form post we use the form value for culture.
                 HttpContextBase context = _httpContextAccessor.Current();
                 if (!String.IsNullOrEmpty(context.Request.Form["Localization.SelectedCulture"])) {
                     itemCulture = context.Request.Form["Localization.SelectedCulture"].ToString();
@@ -140,9 +141,8 @@ namespace Orchard.Autoroute.Services {
             var settings = GetTypePartSettings(contentType).GetModel<AutorouteSettings>();
 
             if (!settings.DefaultPatterns.Any(x => String.Equals(x.Culture, culture, StringComparison.OrdinalIgnoreCase))) {
-                ContentTypeDefinition definition = _contentDefinitionManager.GetTypeDefinition(contentType);
-                var patternIndex = definition.Parts.Where(x => x.PartDefinition.Name == "AutoroutePart").FirstOrDefault().Settings["AutorouteSettings.DefaultPatternIndex"];
-                //lazy updating from old setting
+                var patternIndex = settings.DefaultPatternIndex;
+                // Lazy updating from old setting.
                 if (String.Equals(culture, _cultureManager.GetSiteCulture(), StringComparison.OrdinalIgnoreCase) && !String.IsNullOrWhiteSpace(patternIndex)) {
                     settings.DefaultPatterns.Add(new DefaultPattern { PatternIndex = patternIndex, Culture = culture });
                     return settings.Patterns.Where(x => x.Culture == null).ElementAt(Convert.ToInt32(settings.DefaultPatterns.Where(x => x.Culture == culture).FirstOrDefault().PatternIndex));

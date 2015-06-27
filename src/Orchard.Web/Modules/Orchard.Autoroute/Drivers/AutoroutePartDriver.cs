@@ -94,10 +94,10 @@ namespace Orchard.Autoroute.Drivers {
 
             // if the content type has no defaultPattern for autoroute, then use a default one
             if (!settings.DefaultPatterns.Any(x => String.Equals(x.Culture, itemCulture, StringComparison.OrdinalIgnoreCase))) {
-                //if we are in the default culture check the old setting
+                // If we are in the default culture, check the old setting.
                 if (String.Equals(itemCulture, _cultureManager.GetSiteCulture(), StringComparison.OrdinalIgnoreCase)) {
-                    if (!String.IsNullOrEmpty(part.TypePartDefinition.Settings["AutorouteSettings.DefaultPatternIndex"])) {
-                        string patternIndex = part.TypePartDefinition.Settings["AutorouteSettings.DefaultPatternIndex"];
+                    if (!String.IsNullOrWhiteSpace(settings.DefaultPatternIndex)) {
+                        var patternIndex = settings.DefaultPatternIndex;
                         settings.DefaultPatterns.Add(new DefaultPattern { PatternIndex = patternIndex, Culture = itemCulture });
                     } else {
                         settings.DefaultPatterns.Add(new DefaultPattern { PatternIndex = "0", Culture = itemCulture });
