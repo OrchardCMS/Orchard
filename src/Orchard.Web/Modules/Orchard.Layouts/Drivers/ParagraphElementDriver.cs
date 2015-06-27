@@ -1,10 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Orchard.Layouts.Elements;
-using Orchard.Layouts.Framework.Display;
+﻿using Orchard.Layouts.Elements;
 using Orchard.Layouts.Framework.Drivers;
 using Orchard.Layouts.ViewModels;
-using Orchard.Services;
 
 namespace Orchard.Layouts.Drivers {
     public class ParagraphElementDriver : ElementDriver<Paragraph> {
@@ -18,7 +14,7 @@ namespace Orchard.Layouts.Drivers {
                 context.Updater.TryUpdateModel(viewModel, context.Prefix, null, null);
                 element.Content = viewModel.Text;
             }
-            
+
             return Editor(context, editor);
         }
     }
