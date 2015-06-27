@@ -314,12 +314,14 @@ namespace Orchard.OutputCache.Filters {
             }
 
             // Don't cache ignored URLs.
+            // This check is not performed in an IRequestIsCacheableProvider because the method IsIgnoredUrl is protected virtual and removing it from this filter would introduce a breaking change. 
             if (IsIgnoredUrl(filterContext.RequestContext.HttpContext.Request.AppRelativeCurrentExecutionFilePath, CacheSettings.IgnoredUrls)) {
                 Logger.Debug("Request for item '{0}' ignored because the URL is configured as ignored.", itemDescriptor);
                 return false;
             }
 
             // Ignore requests with the refresh key on the query string.
+            // This check is not performed in an IRequestIsCacheableProvider because it requires knowledge of the Refresh Key. 
             foreach (var key in filterContext.RequestContext.HttpContext.Request.QueryString.AllKeys) {
                 if (String.Equals(_refreshKey, key, StringComparison.OrdinalIgnoreCase)) {
                     Logger.Debug("Request for item '{0}' ignored because refresh key was found on query string.", itemDescriptor);
