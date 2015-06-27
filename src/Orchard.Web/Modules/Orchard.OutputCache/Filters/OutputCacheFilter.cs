@@ -361,8 +361,17 @@ namespace Orchard.OutputCache.Filters {
         protected virtual IDictionary<string, object> GetCacheKeyParameters(ActionExecutingContext filterContext) {
             var result = new Dictionary<string, object>();
 
-            foreach (var kvp in _outputCacheCompositeKeyProviders.SelectMany(p=>p.GetCacheKeySegment(filterContext, CacheSettings))) {
-                result[kvp.Key] = kvp.Value;
+            try {
+                foreach (var provider in _outputCacheCompositeKeyProviders) {
+                    var kvps = provider.GetCacheKeySegment(filterContext, CacheSettings);
+
+                    foreach (var kvp in kvps) {
+                        result[kvp.Key] = kvp.Value;
+                    }
+                }
+            }
+            catch (Exception ex) {
+                Logger.Error(ex, "An Output Cache Composite Key Provider threw an exception when evaluating the key segments. This provider will be ignored.");
             }
 
             return result;
