@@ -279,8 +279,7 @@ namespace Orchard.OutputCache.Filters {
             }
         }
 
-        protected virtual bool RequestIsCacheable(ActionExecutingContext filterContext)
-        {
+        protected virtual bool RequestIsCacheable(ActionExecutingContext filterContext) {
             var itemDescriptor = string.Empty;
 
             if (Logger.IsEnabled(LogLevel.Debug)) {
@@ -304,7 +303,7 @@ namespace Orchard.OutputCache.Filters {
                     }
 
                     if (!providerResponse.CanBeCached) {
-                        Logger.Debug("Request for item '{0}' ignored with message: {1}", itemDescriptor, providerResponse.Message);
+                        Logger.Debug("Request for item '{0}' ignored with message: {1}", itemDescriptor, providerResponse.Message ?? "An IRequestIsCacheableProvider determined that this request was not cacheable");
                         return false;
                     }
                 }
@@ -338,22 +337,29 @@ namespace Orchard.OutputCache.Filters {
                 return false;
             }
 
+            foreach (var provider in _responseIsCacheableProviders) {
+                try {
+                    var providerResponse = provider.ResponseIsCacheable(filterContext, configuration, CacheSettings);
+
+                    if (providerResponse == null) {
+                        continue;
+                    }
+
+                    if (!providerResponse.CanBeCached) {
+                        Logger.Debug("Response for item '{0}' will not be cached because: {1}", _cacheKey, providerResponse.Message ?? "An IResponseIsCacheableProvider determined that this request was not cacheable");
+
+                        return false;
+                    }
+                }
+                catch (Exception ex) {
+                    Logger.Error(ex, "An exception was encountered while processing the Request Is Cacheable Providers.");
+                }
+            }
+
             // Don't cache non-200 responses or results of a redirect.
+            // This check is not performed in an IResponseIsCacheableProvider because it requires knowledge of the value of _transformRedirect which is set with a protected virtual method and therefore removing this mrethod from this filter would introduce a breaking change. 
             var response = filterContext.HttpContext.Response;
             if (response.StatusCode != (int)HttpStatusCode.OK || _transformRedirect) {
-                return false;
-            }
-
-            // Don't cache in individual route configuration says no.
-            if (configuration != null && configuration.Duration == 0) {
-                Logger.Debug("Response for item '{0}' will not be cached because route is configured to not be cached.", _cacheKey);
-                return false;
-            }
-
-            // Don't cache if request created notifications.
-            var hasNotifications = !String.IsNullOrEmpty(Convert.ToString(filterContext.Controller.TempData["messages"]));
-            if (hasNotifications) {
-                Logger.Debug("Response for item '{0}' will not be cached because one or more notifications were created.", _cacheKey);
                 return false;
             }
 
