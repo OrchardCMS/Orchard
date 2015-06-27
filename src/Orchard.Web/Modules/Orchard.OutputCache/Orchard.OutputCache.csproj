@@ -25,6 +25,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -34,7 +35,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\..\..\OrchardBasicCorrectness.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -102,6 +103,7 @@
     <Compile Include="Handlers\CacheSettingsPartHandler.cs" />
     <Compile Include="Handlers\DisplayedContentItemHandler.cs" />
     <Compile Include="DatabaseOutputCacheMigrations.cs" />
+    <Compile Include="Helpers\OutputCacheAttributeExtensions.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\CacheItem.cs" />
     <Compile Include="Models\CacheItemRecord.cs" />

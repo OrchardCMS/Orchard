@@ -30,6 +30,10 @@
                             popup.hide();
                         e.stopPropagation();
                     });
+                    popup.on("cut copy paste", function (e) {
+                        // Allow clipboard operations in popup without invoking clipboard event handlers on parent element.
+                        e.stopPropagation();
+                    });
                 }
             };
         }

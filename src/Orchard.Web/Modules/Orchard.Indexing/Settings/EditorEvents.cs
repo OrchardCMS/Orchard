@@ -9,14 +9,14 @@ using Orchard.Indexing.Services;
 
 namespace Orchard.Indexing.Settings {
     public class EditorEvents : ContentDefinitionEditorEventsBase {
-        private readonly IIndexTaskBatchManagementService _indexTaskBatchManagementService;
+        private readonly IJobsQueueService _jobsQueueService;
+
+        public EditorEvents(IJobsQueueService jobsQueueService) {
+            _jobsQueueService = jobsQueueService;
+        }
 
         private string _contentTypeName;
         private bool _tasksCreated;
-
-        public EditorEvents(IIndexTaskBatchManagementService indexTaskBatchManagementService) {
-            _indexTaskBatchManagementService = indexTaskBatchManagementService;
-        }
 
         public override IEnumerable<TemplateViewModel> TypeEditor(ContentTypeDefinition definition) {
             var model = definition.Settings.GetModel<TypeIndexing>();
@@ -33,7 +33,7 @@ namespace Orchard.Indexing.Settings {
 
             // create indexing tasks only if settings have changed
             if (Clean(model.Indexes) != Clean(previous.Indexes)) {
-                
+
                 // if a an index is added, all existing content items need to be re-indexed
                 CreateIndexingTasks();
             }
@@ -53,8 +53,8 @@ namespace Orchard.Indexing.Settings {
         /// </summary>
         private void CreateIndexingTasks() {
             if (!_tasksCreated) {
-                // Creating tasks in batches is needed because editing content type settings for a type with many items causes OutOfMemoryException, see issue: https://github.com/OrchardCMS/Orchard/issues/4729
-                _indexTaskBatchManagementService.RegisterContentType(_contentTypeName);
+                // Creating tasks with Jobs is needed because editing content type settings for a type with many items causes OutOfMemoryException, see issue: https://github.com/OrchardCMS/Orchard/issues/4729
+                _jobsQueueService.Enqueue("ICreateUpdateIndexTaskService.CreateNextIndexingTaskBatch", new Dictionary<string, object> { { "contentTypeName", _contentTypeName }, { "currentBatchIndex", "0" } }, CreateUpdateIndexTaskService.JobPriority);
                 _tasksCreated = true;
             }
         }
@@ -65,8 +65,8 @@ namespace Orchard.Indexing.Settings {
         }
 
         public override IEnumerable<TemplateViewModel> PartFieldEditorUpdate(ContentPartFieldDefinitionBuilder builder, IUpdateModel updateModel) {
-            var previous = builder.Current.Settings.GetModel<FieldIndexing>(); 
-            
+            var previous = builder.Current.Settings.GetModel<FieldIndexing>();
+
             var model = new FieldIndexing();
             updateModel.TryUpdateModel(model, "FieldIndexing", null, null);
             builder.WithSetting("FieldIndexing.Included", model.Included ? true.ToString() : null);

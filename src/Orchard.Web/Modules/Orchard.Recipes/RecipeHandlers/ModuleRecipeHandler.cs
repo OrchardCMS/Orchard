@@ -17,14 +17,17 @@ namespace Orchard.Recipes.RecipeHandlers {
         private readonly IPackagingSourceManager _packagingSourceManager;
         private readonly IPackageManager _packageManager;
         private readonly IExtensionManager _extensionManager;
+        private readonly IRecipeJournal _recipeJournal;
 
         public ModuleRecipeHandler(
             IPackagingSourceManager packagingSourceManager, 
             IPackageManager packageManager, 
-            IExtensionManager extensionManager) {
+            IExtensionManager extensionManager,
+            IRecipeJournal recipeJournal) {
             _packagingSourceManager = packagingSourceManager;
             _packageManager = packageManager;
             _extensionManager = extensionManager;
+            _recipeJournal = recipeJournal;
 
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
@@ -87,6 +90,9 @@ namespace Orchard.Recipes.RecipeHandlers {
 
             if (packagingEntry != null) {
                 if (!ModuleAlreadyInstalled(packagingEntry.PackageId)) {
+                    if (!string.IsNullOrEmpty(recipeContext.ExecutionId)) {
+                        _recipeJournal.WriteJournalEntry(recipeContext.ExecutionId, T("Installing module: {0}.", packagingEntry.Title).Text);
+                    }
                     _packageManager.Install(packagingEntry.PackageId, packagingEntry.Version, packagingSource.FeedUrl, HostingEnvironment.MapPath("~/")); 
                 }
                 installed = true;

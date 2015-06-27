@@ -16,29 +16,29 @@
 
 @if (Model.Features.Any()) {
     using (Html.BeginFormAntiForgeryPost()) {
-    @Html.Hidden("submit.BulkExecute")
-    @Html.Hidden("force", true)
-    @Html.Hidden("featureIds")
-    <div class="bulk-actions-wrapper">
-        <fieldset class="bulk-actions">
-            <label for="search-box">@T("Filter:")</label>
-            <input id="search-box" class="text" type="text" autofocus="autofocus" />
-        </fieldset>
-        <fieldset class="bulk-actions">
-            <label for="publishActions">@T("Actions:")</label>
-            <select id="publishActions" name="bulkAction">
-                @Html.SelectOption(Model.BulkAction, FeaturesBulkAction.None, T("Choose action...").ToString())
-                @Html.SelectOption(Model.BulkAction, FeaturesBulkAction.Enable, T("Enable").ToString())
-                @Html.SelectOption(Model.BulkAction, FeaturesBulkAction.Disable, T("Disable").ToString())
-                @Html.SelectOption(Model.BulkAction, FeaturesBulkAction.Update, T("Update").ToString())
-                @Html.SelectOption(Model.BulkAction, FeaturesBulkAction.Toggle, T("Toggle").ToString())
-            </select>
-            <button type="submit" name="submit.BulkExecute" value="yes">@T("Execute")</button>
-        </fieldset>
-    </div>
+        @Html.Hidden("submit.BulkExecute")
+        @Html.Hidden("force", true)
+        @Html.Hidden("featureIds")
+        <div class="bulk-actions-wrapper">
+            <fieldset class="bulk-actions">
+                <label for="search-box">@T("Filter:")</label>
+                <input id="search-box" class="text" type="text" autofocus="autofocus" />
+            </fieldset>
+            <fieldset class="bulk-actions">
+                <label for="publishActions">@T("Actions:")</label>
+                <select id="publishActions" name="bulkAction">
+                    @Html.SelectOption(Model.BulkAction, FeaturesBulkAction.None, T("Choose action...").ToString())
+                    @Html.SelectOption(Model.BulkAction, FeaturesBulkAction.Enable, T("Enable").ToString())
+                    @Html.SelectOption(Model.BulkAction, FeaturesBulkAction.Disable, T("Disable").ToString())
+                    @Html.SelectOption(Model.BulkAction, FeaturesBulkAction.Update, T("Update").ToString())
+                    @Html.SelectOption(Model.BulkAction, FeaturesBulkAction.Toggle, T("Toggle").ToString())
+                </select>
+                <button type="submit" name="submit.BulkExecute" value="yes">@T("Execute")</button>
+            </fieldset>
+        </div>
 
-    <ul class="features summary-view switchable">
-        @{
+        <ul class="features summary-view switchable">
+            @{
         var featureGroups = Model.Features.OrderBy(f => f.Descriptor.Category, new DoghouseComparer("Core")).GroupBy(f => f.Descriptor.Category).ToList();
         foreach (var featureGroup in featureGroups) {
             if (!featureGroup.Any(x => Model.IsAllowed(x.Descriptor.Extension))) {
@@ -89,7 +89,7 @@
                     featureClassName += " missingDependencies";
                 }
 
-                <li class="@featureClassName" id="@featureId" title="@T("{0} is {1}", Html.AttributeEncode(featureName), featureState)">
+                <li class="@featureClassName" id="@featureId" title="@T(feature.IsEnabled ? "{0} is enabled" : "{0} is disabled", Html.AttributeEncode(featureName))">
                     <div class="summary">
                         <div class="properties">
                             <h3>
@@ -98,8 +98,7 @@
                                         <input type="checkbox" name="featureIds" value="@feature.Descriptor.Id" />
                                         @featureName
                                     </label>
-                                }
-                                else {
+                                } else {
                                     @featureName
                                 }
                             </h3>
@@ -138,14 +137,14 @@
                     }
                 </ul>
             </li>}
-    }
-</ul>}
+            }
+        </ul>}
 
     using (Script.Foot()) {
         <script type="text/javascript">
-        //<![CDATA[
-            var confirmDisableMessage = '@T("Disabling this feature will also disable the following dependent features. Are you sure you want to continue?")';
-        //]]>
+            //<![CDATA[
+            var confirmDisableMessage = '@HttpUtility.JavaScriptStringEncode(T("Disabling this feature will also disable the following dependent features. Are you sure you want to continue?").Text)';
+            //]]>
         </script>
     }
 }

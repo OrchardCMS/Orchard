@@ -24,6 +24,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -33,7 +34,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\..\..\OrchardBasicCorrectness.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -78,14 +79,15 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\Forms.js">
-      <DependentUpon>Forms.js.bundle</DependentUpon>
-    </Content>
-    <Content Include="Scripts\Forms.min.js">
-      <DependentUpon>Forms.js</DependentUpon>
-    </Content>
-    <Content Include="Scripts\Layouts\Directives\Form.js" />
-    <Content Include="Scripts\Layouts\Models\Form.js" />
+    <Content Include="gulpfile.js" />
+    <Content Include="Scripts\LayoutEditor.js" />
+    <Content Include="Scripts\LayoutEditor.min.js" />
+    <Content Include="Scripts\LayoutEditor\Directives\Fieldset.js" />
+    <Content Include="Scripts\LayoutEditor\Directives\Form.js" />
+    <Content Include="Scripts\LayoutEditor\Models\Fieldset.js" />
+    <Content Include="Scripts\LayoutEditor\Models\Form.js" />
+    <Content Include="Scripts\Lib.js" />
+    <Content Include="Scripts\Lib.min.js" />
     <Content Include="Scripts\Lib\jquery.validate.js" />
     <Content Include="Scripts\Lib\jquery.validate.min.js">
       <DependentUpon>jquery.validate.js</DependentUpon>
@@ -95,9 +97,12 @@
     <Content Include="Scripts\Lib\jquery.validate.unobtrusive.min.js">
       <DependentUpon>jquery.validate.unobtrusive.js</DependentUpon>
     </Content>
+    <Content Include="Styles\forms-admin.min.css" />
     <Content Include="Styles\forms.css" />
     <Content Include="Styles\forms-admin.css" />
+    <Content Include="Styles\forms.min.css" />
     <Content Include="Styles\menu.dynamicforms-admin.css" />
+    <Content Include="Styles\menu.dynamicforms-admin.min.css" />
     <Content Include="Styles\menu.dynamicforms.png" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
@@ -166,6 +171,8 @@
     <Compile Include="Bindings\EnumerationFieldBindings.cs" />
     <Compile Include="Bindings\InputFieldBindings.cs" />
     <Compile Include="Bindings\TaxonomyFieldBindings.cs" />
+    <Compile Include="Drivers\FieldsetElementDriver.cs" />
+    <Compile Include="Elements\Fieldset.cs" />
     <Compile Include="Bindings\NumericFieldBindings.cs" />
     <Compile Include="Forms\AddModelErrorForm.cs" />
     <Compile Include="Forms\SelectDynamicForms.cs" />
@@ -192,6 +199,7 @@
     <Compile Include="Handlers\LayoutEditorShapeEventHandler.cs" />
     <Compile Include="Handlers\WorkflowValidatorCoordinator.cs" />
     <Compile Include="ResourceManifest.cs" />
+    <Compile Include="Services\FieldsetModelMap.cs" />
     <Compile Include="Services\FormModelMap.cs" />
     <Compile Include="Services\Models\FormSubmissionTokenContext.cs" />
     <Compile Include="Handlers\ValidatorsCoordinator.cs" />
@@ -461,15 +469,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\Forms.js.bundle" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\LayoutEditor.Template.Form.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Scripts\Forms.min.js.map">
-      <DependentUpon>Forms.min.js</DependentUpon>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Elements\Enumeration-RadioList.Design.cshtml" />
@@ -506,6 +506,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Elements\Query-SelectList.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Fieldset.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\LayoutEditor.Template.Fieldset.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="package.json" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

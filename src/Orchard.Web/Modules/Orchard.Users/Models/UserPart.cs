@@ -1,13 +1,14 @@
-﻿using System.Web.Security;
+﻿using System;
+using System.Web.Security;
 using Orchard.ContentManagement;
 using Orchard.Security;
 
 namespace Orchard.Users.Models {
     public sealed class UserPart : ContentPart<UserPartRecord>, IUser {
-        public const string EmailPattern = 
+        public const string EmailPattern =
             @"^(?![\.@])(""([^""\r\\]|\\[""\r\\])*""|([-a-z0-9!#$%&'*+/=?^_`{|}~]|(?<!\.)\.)*)(?<!\.)"
             + @"@([a-z0-9][\w-]*\.)+[a-z]{2,}$";
-        
+
         public const int MaxUserNameLength = 255;
         public const int MaxEmailLength = 255;
 
@@ -59,6 +60,21 @@ namespace Orchard.Users.Models {
         public UserStatus EmailStatus {
             get { return Retrieve(x => x.EmailStatus); }
             set { Store(x => x.EmailStatus, value); }
+        }
+
+        public DateTime? CreatedUtc {
+            get { return Retrieve(x => x.CreatedUtc); }
+            set { Store(x => x.CreatedUtc, value); }
+        }
+
+        public DateTime? LastLoginUtc {
+            get { return Retrieve(x => x.LastLoginUtc); }
+            set { Store(x => x.LastLoginUtc, value); }
+        }
+
+        public DateTime? LastLogoutUtc {
+            get { return Retrieve(x => x.LastLogoutUtc); }
+            set { Store(x => x.LastLogoutUtc, value); }
         }
     }
 }

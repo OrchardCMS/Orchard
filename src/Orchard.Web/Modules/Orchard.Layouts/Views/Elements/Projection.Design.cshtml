@@ -1,0 +1,11 @@
+﻿@{
+    var contentShapes = ((Func<string, IEnumerable<dynamic>>)Model.BuildShapes)("Summary").ToList();
+    var list = New.List();
+    list.AddRange(contentShapes);
+}
+@if (contentShapes.Any()) {
+    @Display(list)
+}
+else {
+    <p>@T("The query returned no results.")</p>
+}

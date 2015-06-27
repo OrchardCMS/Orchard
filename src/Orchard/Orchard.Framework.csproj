@@ -149,6 +149,12 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Security\IMembershipValidationService.cs" />
+    <Compile Include="Security\ISslSettingsProvider.cs" />
+    <Compile Include="Security\Providers\DefaultSslSettingsProvider.cs" />
+    <Compile Include="Security\Providers\DefaultMembershipValidationService.cs" />
+    <Compile Include="StaticHttpContextScope.cs" />
+    <Compile Include="StaticHttpContextScopeFactory.cs" />
     <Compile Include="Caching\DefaultCacheContextAccessor.cs" />
     <Compile Include="Caching\DefaultParallelCacheContext.cs" />
     <Compile Include="Caching\ICacheContextAccessor.cs" />
@@ -193,6 +199,8 @@
     <Compile Include="Data\Providers\SqlCeStatementProvider.cs" />
     <Compile Include="Data\Providers\ISqlStatementProvider.cs" />
     <Compile Include="Data\Providers\SqlServerStatementProvider.cs" />
+    <Compile Include="Data\Providers\PostgreSqlStatementProvider.cs" />
+    <Compile Include="Data\Providers\PostgreSqlDataServicesProvider.cs" />
     <Compile Include="DisplayManagement\Arguments.cs" />
     <Compile Include="Data\Bags\SConvert.cs" />
     <Compile Include="Data\Bags\Serialization\IBagSerializer.cs" />
@@ -317,7 +325,9 @@
     <Compile Include="Mvc\DataAnnotations\LocalizedModelValidatorProvider.cs" />
     <Compile Include="Mvc\DataAnnotations\LocalizedRequiredAttribute.cs" />
     <Compile Include="Mvc\Extensions\RouteExtension.cs" />
+    <Compile Include="Mvc\Extensions\HttpContextExtensions.cs" />
     <Compile Include="Mvc\FormValueRequiredAttribute.cs" />
+    <Compile Include="Mvc\HttpContextAccessor.cs" />
     <Compile Include="Mvc\HttpContextWorkContext.cs" />
     <Compile Include="Mvc\Extensions\ControllerExtensions.cs" />
     <Compile Include="Mvc\IOrchardViewPage.cs" />
@@ -645,6 +655,7 @@
     <Compile Include="WebApi\Filters\OrchardApiActionFilterDispatcher.cs" />
     <Compile Include="WebApi\Routes\IHttpRouteProvider.cs" />
     <Compile Include="WebApi\Routes\StandardExtensionHttpRouteProvider.cs" />
+    <Compile Include="IStaticHttpContextScopeFactory.cs" />
     <Compile Include="WorkContextExtensions.cs" />
     <Compile Include="Mvc\ViewEngines\Razor\RazorCompilationEventsShim.cs" />
     <Compile Include="Mvc\ViewEngines\Razor\RazorViewEngineProvider.cs" />

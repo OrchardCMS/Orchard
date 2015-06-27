@@ -24,6 +24,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -33,7 +34,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\..\..\OrchardBasicCorrectness.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -79,6 +80,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Default.html" />
+    <Content Include="gulpfile.js" />
     <Content Include="Images\azure.png" />
     <Content Include="Images\illustration.jpg" />
     <Content Include="Images\logo.svg" />
@@ -93,12 +95,8 @@
     <Content Include="Scripts\frame.js" />
     <Content Include="Scripts\jquery.browser.js" />
     <Content Include="Scripts\jquery.deserialize.js" />
-    <Content Include="Scripts\LayoutEditor.js">
-      <DependentUpon>LayoutEditor.js.bundle</DependentUpon>
-    </Content>
-    <Content Include="Scripts\LayoutEditor.min.js">
-      <DependentUpon>LayoutEditor.js</DependentUpon>
-    </Content>
+    <Content Include="Scripts\LayoutEditor.js" />
+    <Content Include="Scripts\LayoutEditor.min.js" />
     <Content Include="Scripts\LayoutEditor\Directives\Html.js" />
     <Content Include="Scripts\LayoutEditor\Directives\Editor.js" />
     <Content Include="Scripts\LayoutEditor\Directives\Canvas.js" />
@@ -113,18 +111,15 @@
     <Content Include="Scripts\LayoutEditor\Module.js" />
     <Content Include="Scripts\LayoutEditor\Services\Clipboard.js" />
     <Content Include="Scripts\LayoutEditor\Services\ScopeConfigurator.js" />
-    <Content Include="Scripts\Lib\affix.js" />
+    <Content Include="Scripts\Lib.js" />
+    <Content Include="Scripts\Lib.min.js" />
     <Content Include="Scripts\Lib\angular-resource.js" />
     <Content Include="Scripts\Lib\angular-sanitize.js" />
     <Content Include="Scripts\Lib\angular.js" />
     <Content Include="Scripts\Lib\sortable.js" />
     <Content Include="Scripts\Lib\underscore.js" />
-    <Content Include="Scripts\Models.js">
-      <DependentUpon>Models.js.bundle</DependentUpon>
-    </Content>
-    <Content Include="Scripts\Models.min.js">
-      <DependentUpon>Models.js</DependentUpon>
-    </Content>
+    <Content Include="Scripts\Models.js" />
+    <Content Include="Scripts\Models.min.js" />
     <Content Include="Scripts\Models\Canvas.js" />
     <Content Include="Scripts\Models\Editor.js" />
     <Content Include="Scripts\Models\Column.js" />
@@ -144,87 +139,11 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Scripts\_references.js" />
-    <Content Include="Styles\LayoutEditor.css">
-      <DependentUpon>LayoutEditor.css.bundle</DependentUpon>
-    </Content>
-    <Content Include="Styles\LayoutEditor.min.css">
-      <DependentUpon>LayoutEditor.css</DependentUpon>
-    </Content>
-    <Content Include="Styles\LayoutEditor\Canvas.css">
-      <DependentUpon>Canvas.less</DependentUpon>
-    </Content>
-    <Content Include="Styles\LayoutEditor\Canvas.min.css">
-      <DependentUpon>Canvas.css</DependentUpon>
-    </Content>
-    <Content Include="Styles\LayoutEditor\Column.css">
-      <DependentUpon>Column.less</DependentUpon>
-    </Content>
-    <Content Include="Styles\LayoutEditor\Column.min.css">
-      <DependentUpon>Column.css</DependentUpon>
-    </Content>
-    <Content Include="Styles\LayoutEditor\Container.css">
-      <DependentUpon>Container.less</DependentUpon>
-    </Content>
-    <Content Include="Styles\LayoutEditor\Container.min.css">
-      <DependentUpon>Container.css</DependentUpon>
-    </Content>
-    <Content Include="Styles\LayoutEditor\Content.css">
-      <DependentUpon>Content.less</DependentUpon>
-    </Content>
-    <Content Include="Styles\LayoutEditor\Content.min.css">
-      <DependentUpon>Content.css</DependentUpon>
-    </Content>
-    <Content Include="Styles\LayoutEditor\Editor.css">
-      <DependentUpon>Editor.less</DependentUpon>
-    </Content>
-    <Content Include="Styles\LayoutEditor\Editor.min.css">
-      <DependentUpon>Editor.css</DependentUpon>
-    </Content>
-    <Content Include="Styles\LayoutEditor\Element.css">
-      <DependentUpon>Element.less</DependentUpon>
-    </Content>
-    <Content Include="Styles\LayoutEditor\Element.min.css">
-      <DependentUpon>Element.css</DependentUpon>
-    </Content>
-    <Content Include="Styles\LayoutEditor\Menu.css">
-      <DependentUpon>Menu.less</DependentUpon>
-    </Content>
-    <Content Include="Styles\LayoutEditor\Menu.min.css">
-      <DependentUpon>Menu.css</DependentUpon>
-    </Content>
-    <Content Include="Styles\LayoutEditor\Popup.css">
-      <DependentUpon>Popup.less</DependentUpon>
-    </Content>
-    <Content Include="Styles\LayoutEditor\Popup.min.css">
-      <DependentUpon>Popup.css</DependentUpon>
-    </Content>
-    <Content Include="Styles\LayoutEditor\Reset.css">
-      <DependentUpon>Reset.less</DependentUpon>
-    </Content>
-    <Content Include="Styles\LayoutEditor\Reset.min.css">
-      <DependentUpon>Reset.css</DependentUpon>
-    </Content>
-    <Content Include="Styles\LayoutEditor\Row.css">
-      <DependentUpon>Row.less</DependentUpon>
-    </Content>
-    <Content Include="Styles\LayoutEditor\Row.min.css">
-      <DependentUpon>Row.css</DependentUpon>
-    </Content>
-    <Content Include="Styles\LayoutEditor\Toolbox.css">
-      <DependentUpon>Toolbox.less</DependentUpon>
-    </Content>
-    <Content Include="Styles\LayoutEditor\Toolbox.min.css">
-      <DependentUpon>Toolbox.css</DependentUpon>
-    </Content>
-    <Content Include="Styles\Lib\Bootstrap\bootstrap.css">
-      <DependentUpon>bootstrap.less</DependentUpon>
-    </Content>
-    <Content Include="Styles\Lib\Bootstrap\bootstrap.min.css">
-      <DependentUpon>bootstrap.css</DependentUpon>
-    </Content>
-    <Content Include="Styles\Lib\font-awesome.css" />
-    <Content Include="Styles\Lib\font-awesome.min.css" />
-    <Content Include="Styles\Lib\fontawesome-webfont.svg" />
+    <Content Include="Styles\LayoutEditor.css" />
+    <Content Include="Styles\LayoutEditor.min.css" />
+    <Content Include="Styles\Lib.css" />
+    <Content Include="Styles\Lib.min.css" />
+    <Content Include="Styles\Lib\FontAwesome\Fonts\fontawesome-webfont.svg" />
     <Content Include="Styles\menu.layouts-admin.css" />
     <Content Include="Styles\menu.elements.png" />
     <Content Include="Styles\element-editor.css" />
@@ -292,10 +211,10 @@
     <Content Include="Views\EditorTemplates\Elements.Image.cshtml" />
     <Content Include="Views\Elements\Image.cshtml" />
     <Content Include="Views\Elements\Image.Design.cshtml" />
-    <Content Include="Styles\Lib\fontawesome-webfont.eot" />
-    <Content Include="Styles\Lib\fontawesome-webfont.ttf" />
-    <Content Include="Styles\Lib\fontawesome-webfont.woff" />
-    <Content Include="Styles\Lib\FontAwesome.otf" />
+    <Content Include="Styles\Lib\FontAwesome\Fonts\fontawesome-webfont.eot" />
+    <Content Include="Styles\Lib\FontAwesome\Fonts\fontawesome-webfont.ttf" />
+    <Content Include="Styles\Lib\FontAwesome\Fonts\fontawesome-webfont.woff" />
+    <Content Include="Styles\Lib\FontAwesome\Fonts\FontAwesome.otf" />
     <Content Include="Styles\Lib\Bootstrap\bootstrap.less" />
     <Content Include="Styles\Lib\Bootstrap\grid.less" />
     <Content Include="Styles\Lib\Bootstrap\mixins.less" />
@@ -321,35 +240,14 @@
     <Content Include="Styles\Lib\Bootstrap\scaffolding.less" />
     <Content Include="Styles\Lib\Bootstrap\utilities.less" />
     <Content Include="Styles\Lib\Bootstrap\variables.less" />
-    <Content Include="Styles\Lib\Bootstrap\bootstrap.css.map">
-      <DependentUpon>bootstrap.css</DependentUpon>
-    </Content>
     <Content Include="Styles\LayoutEditor\Element.less" />
     <Content Include="Styles\LayoutEditor\Container.less" />
     <Content Include="Styles\LayoutEditor\Variables.less" />
-    <Content Include="Styles\LayoutEditor\Container.css.map">
-      <DependentUpon>Container.css</DependentUpon>
-    </Content>
     <Content Include="Styles\LayoutEditor\Canvas.less" />
-    <Content Include="Styles\LayoutEditor\Canvas.css.map">
-      <DependentUpon>Canvas.css</DependentUpon>
-    </Content>
     <Content Include="Styles\LayoutEditor\Content.less" />
-    <Content Include="Styles\LayoutEditor\Content.css.map">
-      <DependentUpon>Content.css</DependentUpon>
-    </Content>
     <Content Include="Styles\LayoutEditor\Popup.less" />
-    <Content Include="Styles\LayoutEditor\Popup.css.map">
-      <DependentUpon>Popup.css</DependentUpon>
-    </Content>
     <Content Include="Styles\LayoutEditor\Row.less" />
     <Content Include="Styles\LayoutEditor\Column.less" />
-    <Content Include="Styles\LayoutEditor\Column.css.map">
-      <DependentUpon>Column.css</DependentUpon>
-    </Content>
-    <Content Include="Styles\LayoutEditor\Row.css.map">
-      <DependentUpon>Row.css</DependentUpon>
-    </Content>
     <Content Include="Views\Elements\Html.Design.cshtml" />
     <Content Include="Views\Elements\ContentItem.Design.cshtml" />
     <Content Include="Views\Elements\Markdown.Design.cshtml" />
@@ -361,18 +259,9 @@
     <Content Include="Views\Element.cshtml" />
     <Content Include="Views\Element.Design.cshtml" />
     <Content Include="Styles\LayoutEditor\Reset.less" />
-    <Content Include="Styles\LayoutEditor\Reset.css.map">
-      <DependentUpon>Reset.css</DependentUpon>
-    </Content>
     <Content Include="Views\ElementBrowser.Tabs.cshtml" />
     <Content Include="Styles\LayoutEditor\Editor.less" />
-    <Content Include="Styles\LayoutEditor\Editor.css.map">
-      <DependentUpon>Editor.css</DependentUpon>
-    </Content>
     <Content Include="Styles\LayoutEditor\Toolbox.less" />
-    <Content Include="Styles\LayoutEditor\Toolbox.css.map">
-      <DependentUpon>Toolbox.css</DependentUpon>
-    </Content>
     <Content Include="Views\LayoutEditor.Template.Canvas.cshtml" />
     <Content Include="Views\LayoutEditor.Template.Column.cshtml" />
     <Content Include="Views\LayoutEditor.Template.Content.cshtml" />
@@ -383,19 +272,16 @@
     <Content Include="Views\LayoutEditor.Template.Toolbox.cshtml" />
     <Content Include="Views\LayoutEditor.Template.Properties.cshtml" />
     <Content Include="Views\LayoutEditor.Template.Children.cshtml" />
-    <Content Include="Styles\LayoutEditor.css.bundle" />
     <Content Include="Views\EditorTemplates\LayoutEditor.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
       <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
       <Name>Orchard.Framework</Name>
-      <Private>false</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Core\Orchard.Core.csproj">
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
-      <Private>false</Private>
     </ProjectReference>
     <ProjectReference Include="..\Markdown\Markdown.csproj">
       <Project>{3158c928-888c-4a84-8bc1-4a8257489538}</Project>
@@ -431,20 +317,25 @@
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\BlueprintAdminController.cs" />
     <Compile Include="Controllers\TemplateController.cs" />
-    <Compile Include="Drivers\CanvasElementDriver.cs" />
     <Compile Include="Drivers\BreadcrumbsElementDriver.cs" />
+    <Compile Include="Drivers\CanvasElementDriver.cs" />
     <Compile Include="Drivers\MenuElementDriver.cs" />
     <Compile Include="Drivers\NotificationsElementDriver.cs" />
-    <Compile Include="Drivers\ShapeElementDriver.cs" />
+    <Compile Include="Drivers\HeadingElementDriver.cs" />
+   <Compile Include="Drivers\ShapeElementDriver.cs" />
+    <Compile Include="Drivers\BreakElementDriver.cs" />
+    <Compile Include="Elements\Breadcrumbs.cs" />
     <Compile Include="Elements\Canvas.cs" />
     <Compile Include="Elements\ContentElement.cs" />
-    <Compile Include="Elements\Breadcrumbs.cs" />
     <Compile Include="Elements\Menu.cs" />
     <Compile Include="Elements\Notifications.cs" />
+    <Compile Include="Elements\Heading.cs" />
     <Compile Include="Elements\Shape.cs" />
+    <Compile Include="Elements\Break.cs" />
     <Compile Include="Elements\UIElement.cs" />
     <Compile Include="Filters\TokensFilter.cs" />
     <Compile Include="Framework\Display\ElementDisplayedContext.cs" />
+    <Compile Include="Framework\Display\ElementDisplayingContext.cs" />
     <Compile Include="Framework\Drivers\ImportContentContextWrapper.cs" />
     <Compile Include="Framework\Drivers\IContentImportSession.cs" />
     <Compile Include="Framework\Drivers\ExportElementContext.cs" />
@@ -461,16 +352,16 @@
     <Compile Include="Framework\Display\ElementCreatingDisplayShapeContext.cs" />
     <Compile Include="Framework\Drivers\ImportElementContext.cs" />
     <Compile Include="Framework\Drivers\ImportLayoutContext.cs" />
-    <Compile Include="Handlers\ElementRuleCoordinator.cs" />
     <Compile Include="Handlers\ElementDriversCoordinator.cs" />
+    <Compile Include="Handlers\ElementRuleCoordinator.cs" />
     <Compile Include="Helpers\DictionaryExtensions.cs" />
     <Compile Include="Helpers\EditorResultExtensions.cs" />
     <Compile Include="Helpers\ObjectStoreHelper.cs" />
     <Compile Include="Helpers\PrefixHelper.cs" />
     <Compile Include="Helpers\JsonHelper.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
-    <Compile Include="ImportExport\ElementsExportStep.cs" />
     <Compile Include="ImportExport\ElementsExportHandler.cs" />
+    <Compile Include="ImportExport\ElementsExportStep.cs" />
     <Compile Include="ImportExport\ElementsImportHandler.cs" />
     <Compile Include="Providers\BlueprintElementHarvester.cs" />
     <Compile Include="ResourceManifest.cs" />
@@ -494,6 +385,7 @@
     <Compile Include="Services\ObjectStore.cs" />
     <Compile Include="Signals.cs" />
     <Compile Include="Tokens\ElementTokens.cs" />
+    <Compile Include="ViewModels\BreadcrumbsEditorViewModel.cs" />
     <Compile Include="ViewModels\ElementBlueprintPropertiesViewModel.cs" />
     <Compile Include="ViewModels\CreateElementBlueprintViewModel.cs" />
     <Compile Include="Models\ElementBlueprint.cs" />
@@ -537,8 +429,8 @@
     <Compile Include="ViewModels\HtmlEditorViewModel.cs" />
     <Compile Include="ViewModels\LayoutEditor.cs" />
     <Compile Include="ViewModels\LayoutEditorPropertiesViewModel.cs" />
-    <Compile Include="ViewModels\BreadcrumbsEditorViewModel.cs" />
     <Compile Include="ViewModels\MenuEditorViewModel.cs" />
+    <Compile Include="ViewModels\HeadingEditorViewModel.cs" />
     <Compile Include="ViewModels\VectorImageEditorViewModel.cs" />
     <Compile Include="ViewModels\ImageEditorViewModel.cs" />
     <Compile Include="ViewModels\MarkdownEditorViewModel.cs" />
@@ -587,7 +479,6 @@
     <Compile Include="Services\ILayoutSerializer.cs" />
     <Compile Include="Helpers\ElementDataHelper.cs" />
     <Compile Include="Models\ElementInstance.cs" />
-    <Compile Include="Framework\Display\ElementDisplayingContext.cs" />
     <Compile Include="Elements\Column.cs" />
     <Compile Include="Services\LayoutSerializer.cs" />
     <Compile Include="Providers\SnippetElementHarvester.cs" />
@@ -637,38 +528,55 @@
     <Content Include="Views\Elements\Shape.Design.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\LayoutEditor.js.bundle" />
-    <Content Include="Scripts\Models.js.bundle" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\LayoutEditor.Template.Html.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Elements\Notifications.cshtml" />
+    <Content Include="Views\Elements\Projection.Design.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Elements\Notifications.Design.cshtml" />
+    <Content Include="package.json" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Styles\Lib\FontAwesome\animated.less" />
+    <Content Include="Styles\Lib\FontAwesome\bordered-pulled.less" />
+    <Content Include="Styles\Lib\FontAwesome\core.less" />
+    <Content Include="Styles\Lib\FontAwesome\fixed-width.less" />
+    <Content Include="Styles\Lib\FontAwesome\font-awesome.less" />
+    <Content Include="Styles\Lib\FontAwesome\icons.less" />
+    <Content Include="Styles\Lib\FontAwesome\larger.less" />
+    <Content Include="Styles\Lib\FontAwesome\list.less" />
+    <Content Include="Styles\Lib\FontAwesome\mixins.less" />
+    <Content Include="Styles\Lib\FontAwesome\path.less" />
+    <Content Include="Styles\Lib\FontAwesome\rotated-flipped.less" />
+    <Content Include="Styles\Lib\FontAwesome\stacked.less" />
+    <Content Include="Styles\Lib\FontAwesome\variables.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\Lib\FontAwesome\Fonts\fontawesome-webfont.woff2" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Break.cshtml" />
+    <Content Include="Styles\LayoutEditor\Menu.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts.Layout.Recursive.cshtml" />
+    <Content Include="Views\Parts.Layout.Summary.Recursive.cshtml" />
+    <Content Include="Views\EditorTemplates\Elements.Breadcrumbs.cshtml" />
     <Content Include="Views\EditorTemplates\Elements.Menu.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Elements\Menu.Design.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Elements\Menu.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Elements\Breadcrumbs.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Elements\Breadcrumbs.Design.cshtml" />
+    <Content Include="Views\Elements\Menu.cshtml" />
+    <Content Include="Views\Elements\Menu.Design.cshtml" />
+    <Content Include="Views\Elements\Notifications.cshtml" />
+    <Content Include="Views\Elements\Notifications.Design.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\EditorTemplates\Elements.Breadcrumbs.cshtml" />
+    <Content Include="Views\Elements\Heading.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\LayoutEditor\Menu.less" />
+    <Content Include="Views\EditorTemplates\Elements.Heading.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

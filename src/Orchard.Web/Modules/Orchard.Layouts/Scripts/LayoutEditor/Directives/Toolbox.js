@@ -179,7 +179,29 @@
                     }
                 ],
                 templateUrl: environment.templateUrl("Toolbox"),
-                replace: true
+                replace: true,
+                link: function (scope, element) {
+                    var toolbox = element.find(".layout-toolbox");
+                    $(window).on("resize scroll", function (e) {
+                        var canvas = element.parent().find(".layout-canvas");
+                        // If the canvas is taller than the toolbox, make the toolbox sticky-positioned within the editor
+                        // to help the user avoid excessive vertical scrolling.
+                        var canvasIsTaller = !!canvas && canvas.height() > toolbox.height();
+                        var windowPos = $(window).scrollTop();
+                        if (canvasIsTaller && windowPos > element.offset().top + element.height() - toolbox.height()) {
+                            toolbox.addClass("sticky-bottom");
+                            toolbox.removeClass("sticky-top");
+                        }
+                        else if (canvasIsTaller && windowPos > element.offset().top) {
+                            toolbox.addClass("sticky-top");
+                            toolbox.removeClass("sticky-bottom");
+                        }
+                        else {
+                            toolbox.removeClass("sticky-top");
+                            toolbox.removeClass("sticky-bottom");
+                        }
+                    });
+                }
             };
         }
     ]);

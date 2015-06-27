@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Orchard.Data;
 using Orchard.Environment.Configuration;
 using Orchard.Logging;
-using Orchard.ContentManagement;
 
 namespace Orchard.Tasks {
 
@@ -15,24 +14,22 @@ namespace Orchard.Tasks {
         private readonly IEnumerable<IBackgroundTask> _tasks;
         private readonly ITransactionManager _transactionManager;
         private readonly string _shellName;
-        private readonly IContentManager _contentManager;
 
         public BackgroundService(
             IEnumerable<IBackgroundTask> tasks, 
             ITransactionManager transactionManager, 
-            ShellSettings shellSettings,
-            IContentManager contentManager) {
+            ShellSettings shellSettings) {
+
             _tasks = tasks;
             _transactionManager = transactionManager;
             _shellName = shellSettings.Name;
-            _contentManager = contentManager;
             Logger = NullLogger.Instance;
         }
 
         public ILogger Logger { get; set; }
 
         public void Sweep() {
-            foreach(var task in _tasks) {
+            foreach (var task in _tasks) {
                 var taskName = task.GetType().FullName;
 
                 try {

@@ -1,8 +1,10 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.Layouts.Elements;
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
+using Orchard.Layouts.Helpers;
 using Orchard.Layouts.ViewModels;
 using Orchard.MediaLibrary.Models;
 using ContentItem = Orchard.Layouts.Elements.ContentItem;
@@ -41,6 +43,22 @@ namespace Orchard.Layouts.Drivers {
             var mediaId = element.MediaId;
             var vectorImage = mediaId != null ? GetVectorImage(mediaId.Value) : default(VectorImagePart);
             context.ElementShape.VectorImagePart = vectorImage;
+        }
+
+        protected override void OnExporting(VectorImage element, ExportElementContext context) {
+            var image = element.MediaId != null ? GetVectorImage(element.MediaId.Value) : default(VectorImagePart);
+
+            if (image == null)
+                return;
+
+            context.ExportableData["VectorImage"] = _contentManager.GetItemMetadata(image).Identity.ToString();
+        }
+
+        protected override void OnImporting(VectorImage element, ImportElementContext context) {
+            var imageIdentity = context.ExportableData.Get("VectorImage");
+            var image = !String.IsNullOrWhiteSpace(imageIdentity) ? context.Session.GetItemFromSession(imageIdentity) : default(ContentManagement.ContentItem);
+
+            element.MediaId = image != null ? image.Id : default(int?);
         }
 
         protected VectorImagePart GetVectorImage(int id) {

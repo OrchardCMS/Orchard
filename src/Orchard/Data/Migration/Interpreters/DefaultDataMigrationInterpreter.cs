@@ -79,9 +79,15 @@ namespace Orchard.Data.Migration.Interpreters {
                     builder.Append(", ");
                 }
 
+                var primaryKeysQuoted = new List<string>(primaryKeys.Length);
+                foreach (string pk in primaryKeys) {
+                    primaryKeysQuoted.Add(_dialectLazy.Value.QuoteForColumnName(pk));
+                }
+
+
                 builder.Append(_dialectLazy.Value.PrimaryKeyString)
                     .Append(" ( ")
-                    .Append(String.Join(", ", primaryKeys.ToArray()))
+                    .Append(String.Join(", ", primaryKeysQuoted.ToArray()))
                     .Append(" )");
             }
 
@@ -91,7 +97,7 @@ namespace Orchard.Data.Migration.Interpreters {
             RunPendingStatements();
         }
 
-        private string PrefixTableName(string tableName) {
+        public string PrefixTableName(string tableName) {
             if (string.IsNullOrEmpty(_shellSettings.DataTablePrefix))
                 return tableName;
             return _shellSettings.DataTablePrefix + "_" + tableName;
@@ -358,7 +364,7 @@ namespace Orchard.Data.Migration.Interpreters {
             return false;
         }
 
-        public static string ConvertToSqlValue(object value) {
+        public string ConvertToSqlValue(object value) {
             if ( value == null ) {
                 return "null";
             }
@@ -372,7 +378,7 @@ namespace Orchard.Data.Migration.Interpreters {
                 case TypeCode.Char:
                     return String.Concat("'", Convert.ToString(value).Replace("'", "''"), "'");
                 case TypeCode.Boolean:
-                    return (bool) value ? "1" : "0";
+                    return this._dialectLazy.Value.ToBooleanValueString((bool)value);
                 case TypeCode.SByte:
                 case TypeCode.Int16:
                 case TypeCode.UInt16:

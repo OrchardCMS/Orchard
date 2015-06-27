@@ -34,7 +34,7 @@ namespace Orchard.Recipes.Services {
                 return false;
             }
             _recipeJournal.WriteJournalEntry(executionId, string.Format("Executing step {0}.", nextRecipeStep.Name));
-            var recipeContext = new RecipeContext { RecipeStep = nextRecipeStep, Executed = false };
+            var recipeContext = new RecipeContext { RecipeStep = nextRecipeStep, Executed = false, ExecutionId = executionId };
             try {
                 _recipeExecuteEventHandler.RecipeStepExecuting(executionId, recipeContext);
                 foreach (var recipeHandler in _recipeHandlers) {

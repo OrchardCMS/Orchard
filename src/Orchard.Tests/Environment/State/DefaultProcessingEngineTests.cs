@@ -11,6 +11,7 @@ using Orchard.Environment.State;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Events;
 using Orchard.Mvc;
+using Orchard.Tests.Stubs;
 using Orchard.Tests.Utility;
 
 namespace Orchard.Tests.Environment.State {
@@ -34,12 +35,17 @@ namespace Orchard.Tests.Environment.State {
                 LifetimeScope = _container.BeginLifetimeScope(),
             };
 
+            var httpContext = new StubHttpContext();
+
             _container.Mock<IShellContextFactory>()
                 .Setup(x => x.CreateDescribedContext(_shellContext.Settings, _shellContext.Descriptor))
                 .Returns(_shellContext);
             _container.Mock<IHttpContextAccessor>()
                 .Setup(x=>x.Current())
-                .Returns(default(HttpContextBase));
+                .Returns(httpContext);
+            _container.Mock<IHttpContextAccessor>()
+                .Setup(x => x.CreateContext(It.IsAny<ILifetimeScope>()))
+                .Returns(httpContext);
 
         }
 

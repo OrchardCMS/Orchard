@@ -13,9 +13,11 @@ namespace Orchard.Recipes.RecipeHandlers  {
     public class CommandRecipeHandler : IRecipeHandler {
         private readonly ICommandManager _commandManager;
         private readonly CommandParser _commandParser;
+        private readonly IRecipeJournal _recipeJournal;
 
-        public CommandRecipeHandler (ICommandManager commandManager) {
+        public CommandRecipeHandler(ICommandManager commandManager, IRecipeJournal recipeJournal) {
             _commandManager = commandManager;
+            _recipeJournal = recipeJournal;
             _commandParser = new CommandParser();
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
@@ -44,6 +46,9 @@ namespace Orchard.Recipes.RecipeHandlers  {
 
             foreach (var command in commands) {
                 if (!String.IsNullOrEmpty(command)) {
+                    if (!String.IsNullOrEmpty(recipeContext.ExecutionId)) {
+                        _recipeJournal.WriteJournalEntry(recipeContext.ExecutionId, T("Commands: Executing item {0}.", command).Text);
+                    }
                     var commandParameters = _commandParser.ParseCommandParameters(command);
                     var input = new StringReader("");
                     var output = new StringWriter();

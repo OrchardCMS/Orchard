@@ -114,34 +114,46 @@
                         };
 
                         $(document).on("cut copy paste", function (e) {
-                            // The real clipboard is supported, so disable the peudo clipboard.
-                            clipboard.disable();
-                            var focusedElement = $scope.element.focusedElement;
-                            if (!!focusedElement) {
-                                $scope.$apply(function () {
-                                    switch (e.type) {
-                                        case "copy":
-                                            focusedElement.copy(e.originalEvent.clipboardData);
-                                            break;
-                                        case "cut":
-                                            focusedElement.cut(e.originalEvent.clipboardData);
-                                            break;
-                                        case "paste":
-                                            focusedElement.paste(e.originalEvent.clipboardData);
-                                            break;
-                                    }
-                                });
-
-                                // HACK: Workaround because of how Angular treats the DOM when elements are shifted around - input focus is sometimes lost.
-                                window.setTimeout(function () {
-                                    $scope.$apply(function () {
-                                        if (!!$scope.element.focusedElement)
-                                            $scope.element.focusedElement.setIsFocused();
-                                    });
-                                }, 100);
-
+                            // If the pseudo clipboard was already invoked (which happens on the first clipboard
+                            // operation after page load even if native clipboard support exists) then sit this
+                            // one operation out, but make sure whatever is on the pseudo clipboard gets migrated
+                            // to the native clipboard for subsequent operations.
+                            if (clipboard.wasInvoked()) {
+                                e.originalEvent.clipboardData.setData("text/plain", clipboard.getData("text/plain"));
+                                e.originalEvent.clipboardData.setData("text/json", clipboard.getData("text/json"));
                                 e.preventDefault();
                             }
+                            else {
+                                var focusedElement = $scope.element.focusedElement;
+                                if (!!focusedElement) {
+                                    $scope.$apply(function () {
+                                        switch (e.type) {
+                                            case "copy":
+                                                focusedElement.copy(e.originalEvent.clipboardData);
+                                                break;
+                                            case "cut":
+                                                focusedElement.cut(e.originalEvent.clipboardData);
+                                                break;
+                                            case "paste":
+                                                focusedElement.paste(e.originalEvent.clipboardData);
+                                                break;
+                                        }
+                                    });
+
+                                    // HACK: Workaround because of how Angular treats the DOM when elements are shifted around - input focus is sometimes lost.
+                                    window.setTimeout(function () {
+                                        $scope.$apply(function () {
+                                            if (!!$scope.element.focusedElement)
+                                                $scope.element.focusedElement.setIsFocused();
+                                        });
+                                    }, 100);
+
+                                    e.preventDefault();
+                                }
+                            }
+
+                            // Native clipboard support obviously exists, so disable the peudo clipboard from now on.
+                            clipboard.disable();
                         });
                     }
                 ],

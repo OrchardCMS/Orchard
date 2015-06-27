@@ -8,6 +8,8 @@
 
     // remove default Save/Publish buttons
     Model.Zones["Sidebar"].Items.Clear();
+
+    var submitButtonText = String.IsNullOrEmpty(Model.ContentItem.CustomFormPart.SubmitButtonText) ? T("Submit").Text : Model.ContentItem.CustomFormPart.SubmitButtonText;
 }
 
 @Display(New.Parts_Title().Title(Html.ItemDisplayText(customForm)))
@@ -18,7 +20,7 @@
     @Display(Model)
 
     <fieldset class="submit-button">
-        <button type="submit" name="submit.Save" value="submit.Save">@Model.ContentItem.CustomFormPart.SubmitButtonText</button>
+        <button type="submit" name="submit.Save" value="submit.Save">@submitButtonText</button>
     </fieldset>
 }
 

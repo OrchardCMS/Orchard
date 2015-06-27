@@ -25,6 +25,7 @@
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
     <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -34,7 +35,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\..\..\OrchardBasicCorrectness.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -78,9 +79,8 @@
     <Compile Include="Models\IndexSettings.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Models\IndexTaskBatchRecord.cs" />
-    <Compile Include="Services\IIndexTaskBatchManagementService.cs" />
-    <Compile Include="Services\IndexTaskBatchManagementService.cs" />
+    <Compile Include="Services\CreateUpdateIndexTaskService.cs" />
+    <Compile Include="Services\ICreateUpdateIndexTaskService.cs" />
     <Compile Include="Services\UpdateIndexScheduler.cs" />
     <Compile Include="Services\IIndexingTaskExecutor.cs" />
     <Compile Include="Services\IUpdateIndexScheduler.cs" />
@@ -94,7 +94,6 @@
     <Compile Include="Services\IndexingService.cs" />
     <Compile Include="Settings\EditorEvents.cs" />
     <Compile Include="Settings\FieldIndexing.cs" />
-    <Compile Include="Services\CreateUpdateIndexTaskBackgroundTask.cs" />
     <Compile Include="Settings\TypeIndexing.cs" />
     <Compile Include="ViewModels\IndexViewModel.cs" />
   </ItemGroup>
@@ -102,12 +101,14 @@
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
       <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
       <Name>Orchard.Framework</Name>
-      <Private>false</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Core\Orchard.Core.csproj">
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
-      <Private>false</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.JobsQueue\Orchard.JobsQueue.csproj">
+      <Project>{085948ff-0e9b-4a9a-b564-f8b8b4bdddbc}</Project>
+      <Name>Orchard.JobsQueue</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -1,5 +1,4 @@
-﻿using Orchard.Caching;
-using Orchard.ContentManagement;
+﻿using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Data;
 using Orchard.DisplayManagement;
@@ -13,7 +12,7 @@ namespace Orchard.Layouts.Handlers {
         private readonly IContentPartDisplay _contentPartDisplay;
         private readonly IShapeDisplay _shapeDisplay;
         private readonly ILayoutSerializer _serializer;
-        private readonly ISignals _signals;
+        private readonly IStaticHttpContextScopeFactory _staticHttpContextScopeFactory;
 
         public LayoutPartHandler(
             IRepository<LayoutPartRecord> repository, 
@@ -22,14 +21,14 @@ namespace Orchard.Layouts.Handlers {
             IContentPartDisplay contentPartDisplay, 
             IShapeDisplay shapeDisplay, 
             ILayoutSerializer serializer,
-            ISignals signals) {
+            IStaticHttpContextScopeFactory staticHttpContextScopeFactory) {
 
             _layoutManager = layoutManager;
             _contentManager = contentManager;
             _contentPartDisplay = contentPartDisplay;
             _shapeDisplay = shapeDisplay;
             _serializer = serializer;
-            _signals = signals;
+            _staticHttpContextScopeFactory = staticHttpContextScopeFactory;
 
             Filters.Add(StorageFilter.For(repository));
             OnPublished<LayoutPart>(UpdateTemplateClients);
@@ -38,11 +37,20 @@ namespace Orchard.Layouts.Handlers {
 
         private void IndexLayout(IndexContentContext context, LayoutPart part) {
             var layoutShape = _contentPartDisplay.BuildDisplay(part);
-            var layoutHtml = _shapeDisplay.Display(layoutShape);
+            var layoutHtml = RenderShape(layoutShape);
 
             context.DocumentIndex
                 .Add("body", layoutHtml).RemoveTags().Analyze()
                 .Add("format", "html").Store();
+        }
+
+        /// <summary>
+        /// This method of rendering is safe even in background tasks.
+        /// </summary>
+        private string RenderShape(dynamic shape) {
+            using (_staticHttpContextScopeFactory.CreateStaticScope()) {
+                return _shapeDisplay.Display(shape);
+            }
         }
 
         private void UpdateTemplateClients(PublishContentContext context, LayoutPart part) {
