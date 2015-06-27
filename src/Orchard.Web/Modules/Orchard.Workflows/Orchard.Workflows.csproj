@@ -78,6 +78,7 @@
     <Content Include="Scripts\jquery.jsPlumb-1.4.1-all-min.js" />
     <Content Include="Scripts\orchard-workflows-serialize.js" />
     <Content Include="Scripts\orchard-workflows.js" />
+    <Content Include="Styles\workflows-activity-logging.css" />
     <Content Include="Styles\workflows-activity-trigger.css" />
     <Content Include="Styles\workflows-activity-signal.css" />
     <Content Include="Styles\workflows-activity-web-request.css" />

@@ -104,6 +104,9 @@
     <Content Include="Styles\menu.dynamicforms-admin.css" />
     <Content Include="Styles\menu.dynamicforms-admin.min.css" />
     <Content Include="Styles\menu.dynamicforms.png" />
+    <Content Include="Styles\workflows-activity-dynamic-form-validating.css" />
+    <Content Include="Styles\workflows-activity-dynamic-form-submitted.css" />
+    <Content Include="Styles\workflows-activity-add-model-error.css" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
