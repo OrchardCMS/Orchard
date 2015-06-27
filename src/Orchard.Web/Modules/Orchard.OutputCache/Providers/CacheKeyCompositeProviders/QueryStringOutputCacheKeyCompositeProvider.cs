@@ -9,8 +9,7 @@ namespace Orchard.OutputCache.Providers.CacheKeyCompositeProviders {
         public IEnumerable<KeyValuePair<string, object>> GetCacheKeySegment(ActionExecutingContext context, CacheSettings settings) {
             // Vary by configured query string parameters.
             var queryString = context.RequestContext.HttpContext.Request.QueryString;
-            foreach (var key in queryString.AllKeys)
-            {
+            foreach (var key in queryString.AllKeys) {
                 if (key == null || (settings.VaryByQueryStringParameters != null && !settings.VaryByQueryStringParameters.Contains(key)))
                     continue;
                 yield return new KeyValuePair<string, object>(key, queryString[key]);
