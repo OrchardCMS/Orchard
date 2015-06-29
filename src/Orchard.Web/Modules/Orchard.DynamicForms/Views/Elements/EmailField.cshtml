@@ -7,19 +7,19 @@
 
     tagBuilder.AddCssClass("text");
     tagBuilder.Attributes["type"] = "email";
-    tagBuilder.Attributes["value"] = Model.TokenizedValue;
-    tagBuilder.Attributes["name"] = element.Name;
+    tagBuilder.Attributes["value"] = Model.ProcessedValue;
+    tagBuilder.Attributes["name"] = Model.ProcessedName;
     tagBuilder.AddClientValidationAttributes((IDictionary<string, string>)Model.ClientValidationAttributes);
 
-    if (!ViewData.ModelState.IsValidField(element.Name)) {
+    if (!ViewData.ModelState.IsValidField(Model.ProcessedName)) {
         tagBuilder.AddCssClass("input-validation-error");
     }
 }
 
 @if (element.ShowLabel) {
-    <label for="@element.HtmlId">@element.Label</label>
+    <label for="@element.HtmlId">@Model.ProcessedLabel</label>
 }
 @tagBuilder.ToHtmlString(TagRenderMode.SelfClosing)
 @if (element.ValidationSettings.ShowValidationMessage == true) {
-    @Html.ValidationMessage(element.Name)
+    @Html.ValidationMessage((string)Model.ProcessedName)
 }
