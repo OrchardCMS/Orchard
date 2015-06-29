@@ -35,6 +35,8 @@ using Orchard.Mvc.ViewEngines.ThemeAwareness;
 using Orchard.Services;
 using Orchard.WebApi;
 using Orchard.WebApi.Filters;
+using System.Linq;
+using System.Web.Configuration;
 
 namespace Orchard.Environment {
     public static class OrchardStarter {
@@ -100,11 +102,11 @@ namespace Orchard.Environment {
                         {
                             builder.RegisterType<ExtensionHarvester>().As<IExtensionHarvester>().SingleInstance();
                             builder.RegisterType<ModuleFolders>().As<IExtensionFolders>().SingleInstance()
-                                .WithParameter(new NamedParameter("paths", new[] { "~/Modules" }));
+                                .WithParameter(new NamedParameter("paths", GetPaths("Modules", "~/Modules" )));
                             builder.RegisterType<CoreModuleFolders>().As<IExtensionFolders>().SingleInstance()
                                 .WithParameter(new NamedParameter("paths", new[] { "~/Core" }));
                             builder.RegisterType<ThemeFolders>().As<IExtensionFolders>().SingleInstance()
-                                .WithParameter(new NamedParameter("paths", new[] { "~/Themes" }));
+                                .WithParameter(new NamedParameter("paths", GetPaths("Themes", "~/Themes" )));
 
                             builder.RegisterType<CoreExtensionLoader>().As<IExtensionLoader>().SingleInstance();
                             builder.RegisterType<ReferencedExtensionLoader>().As<IExtensionLoader>().SingleInstance();
@@ -172,6 +174,16 @@ namespace Orchard.Environment {
             ModelValidatorProviders.Providers.Add(new LocalizedModelValidatorProvider());
 
             return container;
+        }
+
+        /// <summary>
+        /// Get list of comma separated paths from web.config appSettings
+        /// Also return the default path
+        /// </summary>
+        static IEnumerable<string> GetPaths(string key, string defaultPath)
+        {
+            char[] delim = new char[]{','};
+            return (WebConfigurationManager.AppSettings[key] ?? "").Split(delim, StringSplitOptions.RemoveEmptyEntries).Concat(new string[]{defaultPath}).Select(s => s.Trim()).Distinct();
         }
 
 
