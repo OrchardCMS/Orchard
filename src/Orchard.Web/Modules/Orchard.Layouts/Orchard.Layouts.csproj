@@ -341,6 +341,7 @@
     <Compile Include="Handlers\ElementDriversCoordinator.cs" />
     <Compile Include="Helpers\DictionaryExtensions.cs" />
     <Compile Include="Helpers\EditorResultExtensions.cs" />
+    <Compile Include="Helpers\ElementDisplayContextHelper.cs" />
     <Compile Include="Helpers\ObjectStoreHelper.cs" />
     <Compile Include="Helpers\PrefixHelper.cs" />
     <Compile Include="Helpers\JsonHelper.cs" />
@@ -354,6 +355,9 @@
     <Compile Include="Services\ElementEventContext.cs" />
     <Compile Include="Services\ElementEventHandlerBase.cs" />
     <Compile Include="Models\ElementSessionState.cs" />
+    <Compile Include="Services\ElementFilterProcessor.cs" />
+    <Compile Include="Services\IElementFilterProcessor.cs" />
+    <Compile Include="Services\IElementFilter.cs" />
     <Compile Include="Services\ICurrentControllerAccessor.cs" />
     <Compile Include="Services\IElementEventHandler.cs" />
     <Compile Include="Services\ILayoutEditorFactory.cs" />
@@ -547,6 +551,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EditorTemplates\Elements.Heading.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Heading.Design.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
