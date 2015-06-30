@@ -2,6 +2,7 @@
 using Orchard.Environment.Extensions;
 using Orchard.Layouts.Services;
 using Orchard.Tokens;
+using System.Collections.Generic;
 
 namespace Orchard.Layouts.Filters {
     [OrchardFeature("Orchard.Layouts.Tokens")]
