@@ -6,10 +6,12 @@ using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.Core.Title.Models;
 using Orchard.DynamicForms.Elements;
+using Orchard.DynamicForms.Helpers;
 using Orchard.Environment.Extensions;
 using Orchard.Forms.Services;
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
+using Orchard.Layouts.Helpers;
 using Orchard.Projections.Models;
 using Orchard.Projections.Services;
 using Orchard.Tokens;
@@ -119,19 +121,21 @@ namespace Orchard.DynamicForms.Drivers {
         protected override void OnDisplaying(Query element, ElementDisplayContext context) {
             var queryId = element.QueryId;
             var typeName = element.GetType().Name;
-            var category = element.Category.ToSafeName();
             var displayType = context.DisplayType;
+            var tokenData = context.GetTokenData();
 
-            context.ElementShape.Options = GetOptions(element, queryId).ToArray();
+            context.ElementShape.ProcessedName = _tokenizer.Replace(element.Name, tokenData);
+            context.ElementShape.ProcessedLabel = _tokenizer.Replace(element.Label, tokenData);
+            context.ElementShape.Options = GetOptions(element, context.DisplayType, queryId, tokenData).ToArray();
             context.ElementShape.Metadata.Alternates.Add(String.Format("Elements_{0}__{1}", typeName, element.InputType));
             context.ElementShape.Metadata.Alternates.Add(String.Format("Elements_{0}_{1}__{2}", typeName, displayType, element.InputType));
         }
 
-        private IEnumerable<SelectListItem> GetOptions(Query element, int? queryId) {
+        private IEnumerable<SelectListItem> GetOptions(Query element, string displayType, int? queryId, IDictionary<string, object> tokenData) {
             var optionLabel = element.OptionLabel;
 
             if (!String.IsNullOrWhiteSpace(optionLabel)) {
-                yield return new SelectListItem { Text = optionLabel };
+                yield return new SelectListItem { Text = displayType != "Design" ? _tokenizer.Replace(optionLabel, tokenData) : optionLabel };
             }
 
             if (queryId == null)

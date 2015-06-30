@@ -2,6 +2,7 @@
 using Orchard.Forms.Services;
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
+using Orchard.Layouts.Helpers;
 using Orchard.Tokens;
 using DescribeContext = Orchard.Forms.Services.DescribeContext;
 
@@ -65,7 +66,9 @@ namespace Orchard.DynamicForms.Drivers {
         }
 
         protected override void OnDisplaying(CheckBox element, ElementDisplayContext context) {
-            context.ElementShape.TokenizedValue = _tokenizer.Replace(element.RuntimeValue, null);
+            context.ElementShape.ProcessedName = _tokenizer.Replace(element.Name, context.GetTokenData());
+            context.ElementShape.ProcessedLabel = _tokenizer.Replace(element.Label, context.GetTokenData());
+            context.ElementShape.ProcessedValue = _tokenizer.Replace(element.RuntimeValue, context.GetTokenData());
         }
     }
 }

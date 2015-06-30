@@ -6,8 +6,8 @@
     var tagBuilder = (OrchardTagBuilder)TagBuilderExtensions.CreateElementTagBuilder(Model, "input");
 
     tagBuilder.Attributes["type"] = "checkbox";
-    tagBuilder.Attributes["name"] = element.Name;
-    tagBuilder.Attributes["value"] = Model.TokenizedValue;
+    tagBuilder.Attributes["name"] = Model.ProcessedName;
+    tagBuilder.Attributes["value"] = Model.ProcessedValue;
     tagBuilder.AddClientValidationAttributes((IDictionary<string, string>)Model.ClientValidationAttributes);
 
     if (!String.IsNullOrWhiteSpace(element.PostedValue)) {
@@ -17,12 +17,12 @@
 @if (element.ShowLabel) {
     <label>
         @tagBuilder.ToHtmlString(TagRenderMode.SelfClosing)
-        @Html.Raw(element.Label)
+        @Html.Raw(Model.ProcessedLabel)
     </label>
 }
 else {
     @tagBuilder.ToHtmlString(TagRenderMode.SelfClosing)
 }
 @if (element.ValidationSettings.ShowValidationMessage == true) {
-    @Html.ValidationMessage(element.Name)
+    @Html.ValidationMessage((string)Model.ProcessedName)
 }

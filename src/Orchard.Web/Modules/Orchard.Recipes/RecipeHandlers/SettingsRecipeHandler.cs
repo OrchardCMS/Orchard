@@ -16,11 +16,13 @@ namespace Orchard.Recipes.RecipeHandlers {
         private readonly ISiteService _siteService;
         private readonly IContentManager _contentManager;
         private readonly Lazy<IEnumerable<IContentHandler>> _handlers;
+        private readonly IRecipeJournal _recipeJournal;
 
-        public SettingsRecipeHandler(ISiteService siteService, IContentManager contentManager, Lazy<IEnumerable<IContentHandler>> handlers) {
+        public SettingsRecipeHandler(ISiteService siteService, IContentManager contentManager, Lazy<IEnumerable<IContentHandler>> handlers, IRecipeJournal recipeJournal) {
             _siteService = siteService;
             _contentManager = contentManager;
             _handlers = handlers;
+            _recipeJournal = recipeJournal;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
@@ -54,6 +56,10 @@ namespace Orchard.Recipes.RecipeHandlers {
                 var partElement = context.Data.Element(contentPart.PartDefinition.Name);
                 if (partElement == null) {
                     continue;
+                }
+
+                if (!string.IsNullOrEmpty(recipeContext.ExecutionId)) {
+                    _recipeJournal.WriteJournalEntry(recipeContext.ExecutionId, T("Setting: {0}.", contentPart.PartDefinition.Name).Text);
                 }
 
                 ImportSettingPart(contentPart, partElement);

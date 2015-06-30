@@ -192,6 +192,34 @@ namespace Orchard.Utility.Extensions {
         }
 
         /// <summary>
+        /// Generates a valid Html name.
+        /// </summary>
+        /// <remarks>
+        /// Uses a white list set of chars.
+        /// </remarks>
+        public static string ToHtmlName(this string name) {
+            if (String.IsNullOrWhiteSpace(name))
+                return String.Empty;
+
+            name = RemoveDiacritics(name);
+            name = name.Strip(c =>
+                c != '-'
+                && c != '_'
+                && !c.IsLetter()
+                && !Char.IsDigit(c)
+                );
+
+            name = name.Trim();
+
+            // don't allow non A-Z chars as first letter, as they are not allowed in prefixes
+            while (name.Length > 0 && !IsLetter(name[0])) {
+                name = name.Substring(1);
+            }
+
+            return name;
+        }
+
+        /// <summary>
         /// Whether the char is a letter between A and Z or not
         /// </summary>
         public static bool IsLetter(this char c) {
@@ -319,6 +347,14 @@ namespace Orchard.Utility.Extensions {
         public static string ReplaceAll(this string original, IDictionary<string, string> replacements) {
             var pattern = String.Format("{0}", String.Join("|", replacements.Keys));
             return Regex.Replace(original, pattern, match => replacements[match.Value]);
+        }
+
+        public static string ToBase64(this string value) {
+            return Convert.ToBase64String(Encoding.UTF8.GetBytes(value));
+        }
+
+        public static string FromBase64(this string value) {
+            return Encoding.UTF8.GetString(Convert.FromBase64String(value));
         }
     }
 }

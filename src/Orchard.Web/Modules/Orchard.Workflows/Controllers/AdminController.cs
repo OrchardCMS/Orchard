@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using System.Web;
 using System.Web.Mvc;
@@ -159,6 +160,15 @@ namespace Orchard.Workflows.Controllers {
             return RedirectToAction("Edit", new { workflowDefinitionRecord.Id });
         }
 
+        public JsonResult State(int? id) {
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to edit workflows")))
+                throw new AuthenticationException("");
+
+            var workflowDefinitionRecord = id.HasValue ? _workflowDefinitionRecords.Get(id.Value) : null;
+            var isRunning = workflowDefinitionRecord != null && workflowDefinitionRecord.WorkflowRecords.Any();
+            return Json(new { isRunning = isRunning }, JsonRequestBehavior.AllowGet);
+        }
+
         public ActionResult Edit(int id, string localId, int? workflowId) {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to edit workflows")))
                 return new HttpUnauthorizedResult();
@@ -265,6 +275,7 @@ namespace Orchard.Workflows.Controllers {
             var activitiesIndex = new Dictionary<string, ActivityRecord>();
 
             workflowDefinitionRecord.ActivityRecords.Clear();
+            workflowDefinitionRecord.WorkflowRecords.Clear();
 
             foreach (var activity in state.Activities) {
                 ActivityRecord activityRecord;

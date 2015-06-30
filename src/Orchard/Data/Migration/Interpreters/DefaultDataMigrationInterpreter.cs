@@ -91,7 +91,7 @@ namespace Orchard.Data.Migration.Interpreters {
             RunPendingStatements();
         }
 
-        private string PrefixTableName(string tableName) {
+        public string PrefixTableName(string tableName) {
             if (string.IsNullOrEmpty(_shellSettings.DataTablePrefix))
                 return tableName;
             return _shellSettings.DataTablePrefix + "_" + tableName;
