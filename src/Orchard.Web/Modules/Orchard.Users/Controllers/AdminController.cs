@@ -290,6 +290,7 @@ namespace Orchard.Users.Controllers {
             return RedirectToAction("Index");
         }
 
+        [HttpPost]
         public ActionResult SendChallengeEmail(int id) {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage users")))
                 return new HttpUnauthorizedResult();
@@ -305,7 +306,9 @@ namespace Orchard.Users.Controllers {
             return RedirectToAction("Index");
         }
 
-        public ActionResult Approve(int id) {
+        [HttpPost]
+        public ActionResult Approve(int id)
+        {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage users")))
                 return new HttpUnauthorizedResult();
 
@@ -322,7 +325,9 @@ namespace Orchard.Users.Controllers {
             return RedirectToAction("Index");
         }
 
-        public ActionResult Moderate(int id) {
+        [HttpPost]
+        public ActionResult Moderate(int id)
+        {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage users")))
                 return new HttpUnauthorizedResult();
 
