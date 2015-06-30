@@ -1,4 +1,5 @@
 ﻿using Orchard.Layouts.Elements;
+using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
 using Orchard.Layouts.Helpers;
 using Orchard.Layouts.Services;
