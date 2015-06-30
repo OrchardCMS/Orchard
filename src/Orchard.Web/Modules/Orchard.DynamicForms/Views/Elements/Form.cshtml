@@ -9,7 +9,8 @@
     var element = (Form) Model.Element;
     var tagBuilder = TagBuilderExtensions.CreateElementTagBuilder(Model);
     var formName = element.Name;
-    var formAction = String.IsNullOrWhiteSpace(element.Action) ? Url.Action("Submit", "Form", new { area = "Orchard.DynamicForms"}) : element.Action;
+    var processedAction = (string)Model.ProcessedAction;
+    var formAction = String.IsNullOrWhiteSpace(processedAction) ? Url.Action("Submit", "Form", new { area = "Orchard.DynamicForms"}) : processedAction;
     var formMethod = !String.IsNullOrWhiteSpace(element.Method) ? element.Method : "POST";
     
     tagBuilder.AddCssClass("dynamic-form");

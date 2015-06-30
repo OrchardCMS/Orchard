@@ -35,9 +35,10 @@ namespace Orchard.DynamicForms.Handlers {
                 ModelState = context.ModelState,
                 PostedValues = values
             };
-            var tokensData = new Dictionary<string, object>(formValuesDictionary) {
+            var tokenData = new Dictionary<string, object>(formValuesDictionary) {
                 {"Updater", context.Updater},
                 {"FormSubmission", formTokenContext},
+                {"Content", context.Content }
             };
 
             // Store the submission.
@@ -53,10 +54,10 @@ namespace Orchard.DynamicForms.Handlers {
 
             // Notifiy.
             if (!String.IsNullOrWhiteSpace(form.Notification))
-                _notifier.Information(T(_tokenizer.Replace(T(form.Notification).Text, tokensData)));
+                _notifier.Information(T(_tokenizer.Replace(T(form.Notification).Text, tokenData)));
 
             // Trigger workflow event.
-            _workflowManager.TriggerEvent(DynamicFormSubmittedActivity.EventName, contentItem, () => tokensData);
+            _workflowManager.TriggerEvent(DynamicFormSubmittedActivity.EventName, contentItem, () => tokenData);
         }
     }
 }

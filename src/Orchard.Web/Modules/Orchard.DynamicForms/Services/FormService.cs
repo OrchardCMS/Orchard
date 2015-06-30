@@ -77,10 +77,11 @@ namespace Orchard.DynamicForms.Services {
             return GetFormElements(form).Select(x => x.Name).Where(x => !String.IsNullOrWhiteSpace(x)).Distinct();
         }
 
-        public NameValueCollection SubmitForm(Form form, IValueProvider valueProvider, ModelStateDictionary modelState, IUpdateModel updater) {
+        public NameValueCollection SubmitForm(IContent content, Form form, IValueProvider valueProvider, ModelStateDictionary modelState, IUpdateModel updater) {
             var values = ReadElementValues(form, valueProvider);
 
             _formEventHandler.Submitted(new FormSubmittedEventContext {
+                Content = content,
                 Form = form,
                 FormService = this,
                 ValueProvider = valueProvider,
@@ -89,6 +90,7 @@ namespace Orchard.DynamicForms.Services {
             });
 
             _formEventHandler.Validating(new FormValidatingEventContext {
+                Content = content,
                 Form = form,
                 FormService = this,
                 Values = values,
@@ -98,6 +100,7 @@ namespace Orchard.DynamicForms.Services {
             });
 
             _formEventHandler.Validated(new FormValidatedEventContext {
+                Content = content,
                 Form = form,
                 FormService = this,
                 Values = values,

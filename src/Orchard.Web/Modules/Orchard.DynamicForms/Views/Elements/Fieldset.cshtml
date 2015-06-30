@@ -3,7 +3,7 @@
 @{
     var element = (Fieldset) Model.Element;
     var tagBuilder = TagBuilderExtensions.CreateElementTagBuilder(Model, "fieldset");
-    var legend = element.Legend;
+    var legend = Model.ProcessedLegend;
 }
 @tagBuilder.StartElement
 <legend>@legend</legend>

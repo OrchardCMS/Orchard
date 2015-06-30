@@ -7,14 +7,19 @@
     var index = 0;
 }
 @if (element.ShowLabel) {
-    <label>@Html.Raw(element.Label)</label>
+    <label>@Html.Raw(Model.ProcessedLabel)</label>
 }
 @tagBuilder.StartElement
-@foreach (var option in Model.TokenizedOptions) {
+@foreach (var option in Model.ProcessedOptions) {
     var inputTagBuilder = new OrchardTagBuilder("input");
     inputTagBuilder.Attributes["type"] = "checkbox";
-    inputTagBuilder.Attributes["name"] = element.Name;
+    inputTagBuilder.Attributes["name"] = Model.ProcessedName;
     inputTagBuilder.Attributes["value"] = option.Value;
+
+    if (option.Selected) {
+        inputTagBuilder.Attributes["checked"] = "checked";
+    }
+
     if (element.ValidationSettings.Required == true && index == 0) {
         inputTagBuilder.AddClientValidationAttributes((IDictionary<string, string>)Model.ClientValidationAttributes);
     }
@@ -28,5 +33,5 @@
 }
 @tagBuilder.EndElement
 @if (element.ValidationSettings.ShowValidationMessage == true) {
-    @Html.ValidationMessage(element.Name)
+    @Html.ValidationMessage((string)Model.ProcessedName)
 }

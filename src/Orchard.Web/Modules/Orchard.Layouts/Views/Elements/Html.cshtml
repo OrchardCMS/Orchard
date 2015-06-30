@@ -2,7 +2,7 @@
 @using Orchard.Layouts.Helpers
 @{
     // Only render the surrounding div if there are any attributes to be rendered.
-    var commonAttributes = (IDictionary<string, object>)TagBuilderExtensions.GetCommonElementAttributes(Model);
+    tagBuilder.InnerHtml = Model.ProcessedContent;
     var tagBuilder = commonAttributes.Any() ? new OrchardTagBuilder("div") : default(OrchardTagBuilder);
 
     if (tagBuilder != null) {
