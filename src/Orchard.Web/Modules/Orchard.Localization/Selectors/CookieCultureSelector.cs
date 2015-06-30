@@ -37,7 +37,7 @@ namespace Orchard.Localization.Selectors {
                 Expires = _clock.UtcNow.AddYears(DefaultExpireTimeYear), 
             };
 
-            cookie.Domain = httpContext.Request.Url.Host;
+            cookie.Domain = !httpContext.Request.IsLocal ? httpContext.Request.Url.Host : null;
 
             if (!String.IsNullOrEmpty(_shellSettings.RequestUrlPrefix)) {
                 cookie.Path = GetCookiePath(httpContext);
