@@ -20,7 +20,10 @@ namespace Orchard.Data.Migration.Schema {
                     dbType = DbType.Boolean;
                     break;
                 default:
-                    Enum.TryParse(Type.GetTypeCode(type).ToString(), true, out dbType);
+                    if(type == typeof(Guid)) 
+                        dbType = DbType.Guid;
+                    else
+                        Enum.TryParse(Type.GetTypeCode(type).ToString(), true, out dbType);
                     break;
             }
 
