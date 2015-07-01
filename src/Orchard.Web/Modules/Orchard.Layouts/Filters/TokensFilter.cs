@@ -1,12 +1,12 @@
 ﻿using System;
 using Orchard.Environment.Extensions;
-using Orchard.Services;
+using Orchard.Layouts.Services;
 using Orchard.Tokens;
+using System.Collections.Generic;
 
 namespace Orchard.Layouts.Filters {
-    // TODO: Fix the version that lives in Orchard.Tokens.Filters.
     [OrchardFeature("Orchard.Layouts.Tokens")]
-    public class TokensFilter : IHtmlFilter {
+    public class TokensFilter : IElementFilter {
 
         private readonly ITokenizer _tokenizer;
  
@@ -15,18 +15,18 @@ namespace Orchard.Layouts.Filters {
         }
 
         public string ProcessContent(string text, string flavor) {
-            return TokensReplace(text);
+            return ProcessContent(text, flavor, new Dictionary<string, object>());
         }
 
-        private string TokensReplace(string text) {
+        public string ProcessContent(string text, string flavor, IDictionary<string, object> context) {
             if (String.IsNullOrEmpty(text))
                 return "";
 
             if (!text.Contains("#{")) {
                 return text;
             }
-
-            text = _tokenizer.Replace(text, null, new ReplaceOptions {Encoding = ReplaceOptions.NoEncode});
+            
+            text = _tokenizer.Replace(text, context, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
 
             return text;
         }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.DynamicForms.Elements;
@@ -7,8 +6,8 @@ using Orchard.DynamicForms.Helpers;
 using Orchard.Forms.Services;
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
+using Orchard.Layouts.Helpers;
 using Orchard.Tokens;
-using Orchard.Utility.Extensions;
 using DescribeContext = Orchard.Forms.Services.DescribeContext;
 
 namespace Orchard.DynamicForms.Drivers {
@@ -80,11 +79,13 @@ namespace Orchard.DynamicForms.Drivers {
         }
 
         protected override void OnDisplaying(Enumeration element, ElementDisplayingContext context) {
-            var tokenizedOptions = _tokenizer.Replace(element.Options).ToArray();
             var typeName = element.GetType().Name;
             var displayType = context.DisplayType;
+            var tokenData = context.GetTokenData();
 
-            context.ElementShape.TokenizedOptions = tokenizedOptions;
+            context.ElementShape.ProcessedName = _tokenizer.Replace(element.Name, tokenData);
+            context.ElementShape.ProcessedLabel = _tokenizer.Replace(element.Label, tokenData);
+            context.ElementShape.ProcessedOptions = _tokenizer.Replace(element.Options, tokenData).ToArray();
             context.ElementShape.Metadata.Alternates.Add(String.Format("Elements_{0}__{1}", typeName, element.InputType));
             context.ElementShape.Metadata.Alternates.Add(String.Format("Elements_{0}_{1}__{2}", typeName, displayType, element.InputType));
         }

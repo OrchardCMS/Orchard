@@ -5,13 +5,13 @@
     var tagBuilder = TagBuilderExtensions.CreateElementTagBuilder(Model, "input");
 
     tagBuilder.Attributes["type"] = "radio";
-    tagBuilder.Attributes["name"] = element.Name;
-    tagBuilder.Attributes["value"] = Model.TokenizedValue;
+    tagBuilder.Attributes["name"] = Model.ProcessedName;
+    tagBuilder.Attributes["value"] = Model.ProcessedValue;
 }
 @if (element.ShowLabel) {
     <label>
         @tagBuilder.ToHtmlString(TagRenderMode.SelfClosing)
-        @Html.Raw(element.Label)
+        @Html.Raw(Model.ProcessedLabel)
     </label>
 }
 else {

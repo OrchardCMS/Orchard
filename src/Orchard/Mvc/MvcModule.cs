@@ -230,6 +230,12 @@ namespace Orchard.Mvc {
                 }
             }
 
+            public override string UserHostAddress {
+                get {
+                    return "127.0.0.1";
+                }
+            }
+
             public override HttpBrowserCapabilitiesBase Browser {
                 get {
                     return new HttpBrowserCapabilitiesPlaceholder();

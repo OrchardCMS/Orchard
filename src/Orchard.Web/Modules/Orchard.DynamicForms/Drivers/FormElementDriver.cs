@@ -10,9 +10,10 @@ using Orchard.DynamicForms.Services;
 using Orchard.Forms.Services;
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
-using Orchard.Layouts.Framework.Elements;
 using Orchard.Layouts.Helpers;
 using Orchard.Layouts.Services;
+using Orchard.Tokens;
+using DescribeContext = Orchard.Forms.Services.DescribeContext;
 
 namespace Orchard.DynamicForms.Drivers {
     public class FormElementDriver : FormsElementDriver<Form> {
@@ -20,19 +21,22 @@ namespace Orchard.DynamicForms.Drivers {
         private readonly IFormService _formService;
         private readonly ICurrentControllerAccessor _currentControllerAccessor;
         private readonly ICultureAccessor _cultureAccessor;
+        private readonly ITokenizer _tokenizer;
 
         public FormElementDriver(
             IFormManager formManager, 
             IContentDefinitionManager contentDefinitionManager, 
             IFormService formService, 
             ICurrentControllerAccessor currentControllerAccessor, 
-            ICultureAccessor cultureAccessor)
+            ICultureAccessor cultureAccessor, 
+            ITokenizer tokenizer)
 
             : base(formManager) {
             _contentDefinitionManager = contentDefinitionManager;
             _formService = formService;
             _currentControllerAccessor = currentControllerAccessor;
             _cultureAccessor = cultureAccessor;
+            _tokenizer = tokenizer;
         }
 
         protected override IEnumerable<string> FormNames {
@@ -145,6 +149,10 @@ namespace Orchard.DynamicForms.Drivers {
             foreach (var child in element.Elements.Flatten().Where(x => x is FormElement).Cast<FormElement>()) {
                 child.FormBindingContentType = element.CreateContent == true ? element.FormBindingContentType : default(string);
             }
+
+            // Set tokenized properties.
+            var tokenData = context.GetTokenData();
+            context.ElementShape.ProcessedAction = _tokenizer.Replace(element.Action, tokenData);
         }
 
         private static bool IsFormBindingContentType(ContentTypeDefinition contentTypeDefinition) {

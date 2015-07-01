@@ -6,6 +6,7 @@ using Orchard.DynamicForms.Services;
 using Orchard.Layouts.Services;
 using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.Tokens;
 using Orchard.UI.Notify;
 using Orchard.Utility.Extensions;
 using IController = Orchard.DynamicForms.Services.IController;
@@ -15,15 +16,18 @@ namespace Orchard.DynamicForms.Controllers {
         private readonly INotifier _notifier;
         private readonly ILayoutManager _layoutManager;
         private readonly IFormService _formService;
+        private readonly ITokenizer _tokenizer;
 
         public FormController(
             INotifier notifier, 
             ILayoutManager layoutManager, 
-            IFormService formService) {
+            IFormService formService, 
+            ITokenizer tokenizer) {
 
             _notifier = notifier;
             _layoutManager = layoutManager;
             _formService = formService;
+            _tokenizer = tokenizer;
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
         }
@@ -35,7 +39,7 @@ namespace Orchard.DynamicForms.Controllers {
         public ActionResult Submit(int contentId, string formName) {
             var layoutPart = _layoutManager.GetLayout(contentId);
             var form = _formService.FindForm(layoutPart, formName);
-            var urlReferrer = Request.UrlReferrer != null && Request.IsLocalUrl(Request.UrlReferrer.ToString()) ? Request.UrlReferrer.ToString() : "~/";
+            var urlReferrer = Request.UrlReferrer != null && Url.IsLocalUrl(Request.UrlReferrer.ToString()) ? Request.UrlReferrer.ToString() : "~/";
 
             if (form == null) {
                 Logger.Warning("The specified form \"{0}\" could not be found.", formName);
@@ -43,7 +47,7 @@ namespace Orchard.DynamicForms.Controllers {
                 return Redirect(urlReferrer);
             }
 
-            var values = _formService.SubmitForm(form, ValueProvider, ModelState, this);
+            var values = _formService.SubmitForm(layoutPart, form, ValueProvider, ModelState, this);
             this.TransferFormSubmission(form, values);
 
             if (!ModelState.IsValid)
@@ -52,7 +56,7 @@ namespace Orchard.DynamicForms.Controllers {
             if(Response.IsRequestBeingRedirected)
                 return new EmptyResult();
 
-            var redirectUrl = !String.IsNullOrWhiteSpace(form.RedirectUrl) ? form.RedirectUrl : urlReferrer;
+            var redirectUrl = !String.IsNullOrWhiteSpace(form.RedirectUrl) ? _tokenizer.Replace(form.RedirectUrl, new { Content = layoutPart.ContentItem }) : urlReferrer;
             return Redirect(redirectUrl);
         }
 

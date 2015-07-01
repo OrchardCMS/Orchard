@@ -147,7 +147,7 @@ namespace Orchard.Projections.Services {
             var groupQuery = _contentManager.HqlQuery().Where(alias => alias.Named("ci"), x => x.InG("Id", ids));
 
             // iterate over each sort criteria to apply the alterations to the query object
-            foreach (var sortCriterion in queryRecord.SortCriteria) {
+            foreach (var sortCriterion in queryRecord.SortCriteria.OrderBy(s => s.Position)) {
                 var sortCriterionContext = new SortCriterionContext {
                     Query = groupQuery,
                     State = FormParametersHelper.ToDynamic(sortCriterion.State)
@@ -210,7 +210,7 @@ namespace Orchard.Projections.Services {
                 }
 
                 // iterate over each sort criteria to apply the alterations to the query object
-                foreach (var sortCriterion in sortCriteria) {
+                foreach (var sortCriterion in sortCriteria.OrderBy(s => s.Position)) {
                     var sortCriterionContext = new SortCriterionContext {
                         Query = contentQuery,
                         State = FormParametersHelper.ToDynamic(sortCriterion.State)

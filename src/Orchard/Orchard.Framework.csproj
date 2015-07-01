@@ -150,6 +150,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Security\IMembershipValidationService.cs" />
+    <Compile Include="Localization\Services\ILocalizationStreamParser.cs" />
+    <Compile Include="Localization\Services\LocalizationStreamParser.cs" />
     <Compile Include="Security\ISslSettingsProvider.cs" />
     <Compile Include="Security\Providers\DefaultSslSettingsProvider.cs" />
     <Compile Include="Security\Providers\DefaultMembershipValidationService.cs" />
