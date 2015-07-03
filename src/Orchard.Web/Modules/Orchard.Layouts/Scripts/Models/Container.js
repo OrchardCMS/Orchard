@@ -7,12 +7,15 @@
         this.children = children;
         this.isContainer = true;
 
-        var _self = this;
+        var self = this;
+
+        this.onChildAdded = function (element) { /* Virtual */ };
+        this.onDescendantAdded = function (element, parentElement) { /* Virtual */ };
 
         this.setChildren = function (children) {
             this.children = children;
             _(this.children).each(function (child) {
-                child.parent = _self;
+                child.setParent(self);
             });
         };
 
@@ -29,7 +32,7 @@
                 this.children.push(child);
             child.setEditor(this.editor);
             child.setIsTemplated(false);
-            child.parent = this;
+            child.setParent(this);
         };
 
         this.deleteChild = function (child) {

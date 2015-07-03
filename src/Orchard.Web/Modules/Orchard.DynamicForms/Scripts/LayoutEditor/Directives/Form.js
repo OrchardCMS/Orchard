@@ -14,10 +14,11 @@
                             $scope.$root.editElement($scope.element).then(function (args) {
                                 if (args.cancel)
                                     return;
-                                $scope.element.data = decodeURIComponent(args.element.data);
-                                $scope.element.name = args.elementEditorModel.name;
-                                $scope.element.formBindingContentType = args.elementEditorModel.formBindingContentType;
-                                $scope.$apply();
+
+                                $scope.apply(function() {
+                                    $scope.element.data = decodeURIComponent(args.element.data);
+                                    $scope.element.applyElementEditorModel(args.elementEditorModel);
+                                });
                             });
                         };
                     }
