@@ -78,12 +78,15 @@
                 onLoad: function() { // hide the scrollbars from the main window
                     $('html, body').css('overflow', 'hidden');
                     $('#cboxClose').remove();
+                    element.trigger("opened");
                 },
                 onClosed: function() {
                     $('html, body').css('overflow', '');
                     var selectedData = $.colorbox.selectedData;
-                    if (selectedData == null) // Dialog cancelled, do nothing
+                    if (selectedData == null) { // Dialog cancelled, do nothing
+                        element.trigger("closed");
                         return;
+                    }
 
                     var selectionLength = multiple ? selectedData.length : Math.min(selectedData.length, 1);
                     
@@ -102,6 +105,8 @@
                     if (selectedData.length) {
                         showSaveMsg();
                     }
+
+                    element.trigger("closed");
                 }
             });
             

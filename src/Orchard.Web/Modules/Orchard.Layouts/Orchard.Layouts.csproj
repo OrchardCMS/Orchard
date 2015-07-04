@@ -90,6 +90,7 @@
     <Content Include="Scripts\DemoData.js" />
     <Content Include="Scripts\element-browser.js" />
     <Content Include="Scripts\AutoFocus.js" />
+    <Content Include="Scripts\Elements\Image.js" />
     <Content Include="Scripts\LayoutDesignerHost.js" />
     <Content Include="Scripts\element-editor.js" />
     <Content Include="Scripts\frame.js" />
@@ -322,7 +323,7 @@
     <Compile Include="Drivers\MenuElementDriver.cs" />
     <Compile Include="Drivers\NotificationsElementDriver.cs" />
     <Compile Include="Drivers\HeadingElementDriver.cs" />
-   <Compile Include="Drivers\ShapeElementDriver.cs" />
+    <Compile Include="Drivers\ShapeElementDriver.cs" />
     <Compile Include="Drivers\BreakElementDriver.cs" />
     <Compile Include="Elements\Breadcrumbs.cs" />
     <Compile Include="Elements\Canvas.cs" />
