@@ -35,6 +35,7 @@ namespace Orchard.DynamicForms.Controllers {
         public ILogger Logger { get; set; }
 
         [HttpPost]
+        [ValidateInput(false)]
         public ActionResult Submit(int contentId, string formName) {
             var layoutPart = _layoutManager.GetLayout(contentId);
             var form = _formService.FindForm(layoutPart, formName);
