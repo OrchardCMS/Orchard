@@ -78,12 +78,19 @@ namespace Orchard.DynamicForms.Drivers {
                         Title: "Store Submission",
                         Value: "true",
                         Description: T("Stores the submitted form into the database.")),
+                    _HtmlEncode: shape.Checkbox(
+                        Id: "HtmlEncode",
+                        Name: "HtmlEncode",
+                        Title: "Html Encode",
+                        Value: "true",
+                        Checked: true,
+                        Description: T("Check this option to automatically HTML encode submitted values to prevent code injection.")),
                     _CreateContent: shape.Checkbox(
                         Id: "CreateContent",
                         Name: "CreateContent",
                         Title: "Create Content",
                         Value: "true",
-                        Description: T("Check this to create a content item based using the submitted values. You will have to select a Content Type here and bind the form fields to the various parts and fields of the selected Content Type.")),
+                        Description: T("Check this option to create a content item based using the submitted values. You will have to select a Content Type here and bind the form fields to the various parts and fields of the selected Content Type.")),
                     _ContentType: shape.SelectList(
                         Id: "FormBindingContentType",
                         Name: "FormBindingContentType",

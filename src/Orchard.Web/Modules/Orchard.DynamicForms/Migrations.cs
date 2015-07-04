@@ -5,6 +5,27 @@ using Orchard.Data.Migration;
 
 namespace Orchard.DynamicForms {
     public class Migrations : DataMigrationImpl {
+        private const string DefaultFormLayoutData =
+@"{
+    ""elements"": [
+        {
+            ""typeName"": ""Orchard.Layouts.Elements.Canvas"",
+            ""elements"": [
+                {
+                    ""typeName"": ""Orchard.DynamicForms.Elements.Form"",
+                    ""data"": ""FormName=Untitled&amp;FormAction=&amp;FormMethod=POST&amp;FormBindingContentType=&amp;Publication=Draft&amp;Notification=&amp;RedirectUrl="",
+                    ""elements"": [
+                        {
+                            ""typeName"": ""Orchard.DynamicForms.Elements.Button"",
+                            ""data"": ""InputName=&amp;FormBindingContentType=&amp;Text=Submit""
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}";
+
         public int Create() {
             SchemaBuilder.CreateTable("Submission", table => table
                 .Column<int>("Id", c => c.PrimaryKey().Identity())
@@ -18,28 +39,12 @@ namespace Orchard.DynamicForms {
                     .WithSetting("DateEditorSettings.ShowDateEditor", "false"))
                 .WithPart("TitlePart")
                 .WithPart("MenuPart")
-                .WithPart("AutoroutePart", builder => builder
+                 .WithPart("AutoroutePart", builder => builder
                     .WithSetting("AutorouteSettings.AllowCustomPattern", "True")
                     .WithSetting("AutorouteSettings.AutomaticAdjustmentOnEdit", "False")
                     .WithSetting("AutorouteSettings.PatternDefinitions", "[{\"Name\":\"Title\",\"Pattern\":\"{Content.Slug}\",\"Description\":\"my-form\"}]"))
                 .WithPart("LayoutPart", p => p
-                    .WithSetting("LayoutTypePartSettings.DefaultLayoutData",
-                    "{" +
-                    "   \"elements\":[" +
-                    "   {" +
-                    "      \"typeName\":\"Orchard.Layouts.Elements.Canvas\"," +
-                    "      \"elements\":[" +
-                    "      {" +
-                    "         \"typeName\":\"Orchard.DynamicForms.Elements.Form\"," +
-                    "         \"data\":\"TypeName=Orchard.DynamicForms.Elements.Form&amp;FormName=Untitled&amp;FormAction=&amp;FormMethod=POST&amp;EnableClientValidation=true&amp;StoreSubmission=true&amp;FormBindingContentType=&amp;Publication=Draft&amp;Notification=&amp;RedirectUrl=\"," +
-                    "         \"elements\":[" +
-                    "         {" +
-                    "            \"typeName\":\"Orchard.DynamicForms.Elements.Button\"," +
-                    "            \"data\":\"TypeName=Orchard.DynamicForms.Elements.Button&amp;InputName=&amp;FormBindingContentType=&amp;Text=Submit\"" +
-                    "         }]" +
-                    "      }]" +
-                    "   }]" +
-                    "}"))
+                    .WithSetting("LayoutTypePartSettings.DefaultLayoutData", DefaultFormLayoutData))
                 .DisplayedAs("Form")
                 .Listable()
                 .Creatable()
@@ -51,16 +56,7 @@ namespace Orchard.DynamicForms {
                     .WithSetting("DateEditorSettings.ShowDateEditor", "false"))
                 .WithPart("WidgetPart")
                 .WithPart("LayoutPart", p => p
-                    .WithSetting("LayoutTypePartSettings.DefaultLayoutData",
-                    "{" +
-                        "\"elements\": [{" +
-                            "\"typeName\": \"Orchard.DynamicForms.Elements.Form\"," +
-                            "\"elements\": [{" +
-                                "\"typeName\": \"Orchard.DynamicForms.Elements.Button\"," +
-                                "\"state\": \"ButtonText=Submit\"" +
-                            "}]" +
-                        "}]" +
-                    "}"))
+                    .WithSetting("LayoutTypePartSettings.DefaultLayoutData", DefaultFormLayoutData))
                 .WithSetting("Stereotype", "Widget")
                 .DisplayedAs("Form Widget"));
             return 1;

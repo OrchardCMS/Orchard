@@ -149,7 +149,6 @@
     <Content Include="Styles\menu.elements.png" />
     <Content Include="Styles\element-editor.css" />
     <Content Include="Styles\element-browser.css" />
-    <Content Include="Styles\designer.css" />
     <Content Include="Styles\default-grid.css" />
     <Content Include="Styles\edit.png" />
     <Content Include="Styles\menu.layouts.png" />
@@ -179,8 +178,6 @@
     <Content Include="Views\Elements\MediaItem.cshtml" />
     <Content Include="Views\Elements\Snippet.cshtml" />
     <Content Include="Views\Layout-Dialog.cshtml" />
-    <Content Include="Views\Layout-Designer.cshtml" />
-    <Content Include="Views\Layout-Designer-Wrapper.cshtml" />
     <Content Include="Views\DialogTemplate.cshtml" />
     <Content Include="Views\Element\Create.cshtml" />
     <Content Include="Views\Elements\ContentPart.cshtml" />
@@ -287,6 +284,14 @@
     <ProjectReference Include="..\Markdown\Markdown.csproj">
       <Project>{3158c928-888c-4a84-8bc1-4a8257489538}</Project>
       <Name>Markdown</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Alias\Orchard.Alias.csproj">
+      <Project>{475b6c45-b27c-438b-8966-908b9d6d1077}</Project>
+      <Name>Orchard.Alias</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Autoroute\Orchard.Autoroute.csproj">
+      <Project>{66fccd76-2761-47e3-8d11-b45d0001ddaa}</Project>
+      <Name>Orchard.Autoroute</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Forms\Orchard.Forms.csproj">
       <Project>{642a49d7-8752-4177-80d6-bfbbcfad3de0}</Project>
