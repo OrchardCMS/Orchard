@@ -189,7 +189,7 @@ angular
                                 if (args.cancel)
                                     return;
 
-                                $scope.apply(function() {
+                                $scope.$apply(function() {
                                     $scope.element.data = decodeURIComponent(args.element.data);
                                     $scope.element.applyElementEditorModel(args.elementEditorModel);
                                 });
