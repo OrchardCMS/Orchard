@@ -39,7 +39,7 @@ namespace Orchard.DynamicForms.Controllers {
         public ActionResult Submit(int contentId, string formName) {
             var layoutPart = _layoutManager.GetLayout(contentId);
             var form = _formService.FindForm(layoutPart, formName);
-            var urlReferrer = Request.UrlReferrer != null && Url.IsLocalUrl(Request.UrlReferrer.ToString()) ? Request.UrlReferrer.ToString() : "~/";
+            var urlReferrer = Request.UrlReferrer != null ? Request.UrlReferrer.LocalPath : "~/";
 
             if (form == null) {
                 Logger.Warning("The specified form \"{0}\" could not be found.", formName);
