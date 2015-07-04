@@ -148,7 +148,6 @@
     <Content Include="Styles\menu.elements.png" />
     <Content Include="Styles\element-editor.css" />
     <Content Include="Styles\element-browser.css" />
-    <Content Include="Styles\designer.css" />
     <Content Include="Styles\default-grid.css" />
     <Content Include="Styles\edit.png" />
     <Content Include="Styles\menu.layouts.png" />
@@ -178,8 +177,6 @@
     <Content Include="Views\Elements\MediaItem.cshtml" />
     <Content Include="Views\Elements\Snippet.cshtml" />
     <Content Include="Views\Layout-Dialog.cshtml" />
-    <Content Include="Views\Layout-Designer.cshtml" />
-    <Content Include="Views\Layout-Designer-Wrapper.cshtml" />
     <Content Include="Views\DialogTemplate.cshtml" />
     <Content Include="Views\Element\Create.cshtml" />
     <Content Include="Views\Elements\ContentPart.cshtml" />
