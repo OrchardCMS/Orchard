@@ -4,7 +4,7 @@ using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Widgets.Models;
 using Orchard.ContentManagement;
-using Orchard.Core.Common.Utilities;
+using Orchard.ContentManagement.Utilities;
 
 namespace Orchard.Widgets.Services{
     public class DefaultLayerEvaluationService : ILayerEvaluationService {
