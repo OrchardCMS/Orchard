@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Localization;
@@ -10,7 +9,6 @@ using Orchard.Widgets.Services;
 
 namespace Orchard.Widgets.Drivers {
 
-    [UsedImplicitly]
     public class WidgetPartDriver : ContentPartDriver<WidgetPart> {
         private readonly IWidgetsService _widgetsService;
         private readonly IContentManager _contentManager;
@@ -59,6 +57,16 @@ namespace Orchard.Widgets.Drivers {
                 if(widgets > 0) {
                     updater.AddModelError("Name", T("A Widget with the same Name already exists."));
                 }
+            }
+
+            if (!String.IsNullOrEmpty(widgetPart.CssClasses)) {
+                var classNames = widgetPart.CssClasses.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+                for (var i = 0; i < classNames.Length; i++) {
+                    classNames[i] = classNames[i].Trim().HtmlClassify();
+                }
+
+                widgetPart.CssClasses = String.Join(" ", classNames);
             }
 
             _widgetsService.MakeRoomForWidgetPosition(widgetPart);

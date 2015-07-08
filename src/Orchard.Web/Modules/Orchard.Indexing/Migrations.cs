@@ -20,7 +20,7 @@ namespace Orchard.Indexing {
                     .Column<int>("ContentItemRecord_id")
                 );
 
-            return 2;
+            return 4;
         }
 
         public int UpdateFrom1() {
@@ -34,6 +34,20 @@ namespace Orchard.Indexing {
             }
 
             return 2;
+        }
+
+        public int UpdateFrom2() {
+
+            // A table for a custom job implementation was here, but since we use JobsQueue that table is deprecated.
+
+            return 3;
+        }
+
+        public int UpdateFrom3() {
+
+            SchemaBuilder.DropTable("IndexTaskBatchRecord");
+
+            return 4;
         }
     }
 }

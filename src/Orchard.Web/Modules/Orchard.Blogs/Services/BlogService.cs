@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using Orchard.Autoroute.Models;
 using Orchard.Autoroute.Services;
 using Orchard.Blogs.Models;
@@ -12,7 +11,6 @@ using Orchard.Environment.Descriptor;
 using Orchard.Environment.State;
 
 namespace Orchard.Blogs.Services {
-    [UsedImplicitly]
     public class BlogService : IBlogService {
         private readonly IContentManager _contentManager;
         private readonly IProcessingEngine _processingEngine;

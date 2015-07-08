@@ -44,7 +44,8 @@
     <CodeAnalysisRuleSet>..\OrchardBasicCorrectness.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
     <UseVSHostingProcess>false</UseVSHostingProcess>
-    <NoWarn>0436</NoWarn>
+    <NoWarn>
+    </NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -148,8 +149,12 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Security\IMembershipValidationService.cs" />
+    <Compile Include="Localization\Services\ILocalizationStreamParser.cs" />
+    <Compile Include="Localization\Services\LocalizationStreamParser.cs" />
     <Compile Include="Security\ISslSettingsProvider.cs" />
     <Compile Include="Security\Providers\DefaultSslSettingsProvider.cs" />
+    <Compile Include="Security\Providers\DefaultMembershipValidationService.cs" />
     <Compile Include="StaticHttpContextScope.cs" />
     <Compile Include="StaticHttpContextScopeFactory.cs" />
     <Compile Include="Caching\DefaultCacheContextAccessor.cs" />
@@ -196,6 +201,8 @@
     <Compile Include="Data\Providers\SqlCeStatementProvider.cs" />
     <Compile Include="Data\Providers\ISqlStatementProvider.cs" />
     <Compile Include="Data\Providers\SqlServerStatementProvider.cs" />
+    <Compile Include="Data\Providers\PostgreSqlStatementProvider.cs" />
+    <Compile Include="Data\Providers\PostgreSqlDataServicesProvider.cs" />
     <Compile Include="DisplayManagement\Arguments.cs" />
     <Compile Include="Data\Bags\SConvert.cs" />
     <Compile Include="Data\Bags\Serialization\IBagSerializer.cs" />
@@ -939,7 +946,6 @@
     <Compile Include="Mvc\ModelBinders\IModelBinderProvider.cs" />
     <Compile Include="Mvc\ModelBinders\IModelBinderPublisher.cs" />
     <Compile Include="Mvc\ModelBinders\ModelBinderDescriptor.cs" />
-    <Compile Include="Mvc\Routes\RouteExtensions.cs" />
     <Compile Include="Mvc\ViewEngines\IViewEngineProvider.cs" />
     <Compile Include="Mvc\ViewEngines\LayoutViewContext.cs" />
     <Compile Include="Mvc\ViewEngines\ThemeAwareness\ThemedViewResultFilter.cs" />
@@ -995,7 +1001,6 @@
     <Compile Include="Utility\Position.cs" />
     <Compile Include="Utility\Reflect.cs" />
     <Compile Include="Utility\ReflectOn.cs" />
-    <Compile Include="Validation\JetBrains.Annotations.cs" />
     <Compile Include="IMapper.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -4,7 +4,6 @@ using System.Xml.Linq;
 using Orchard.Mvc.Extensions;
 using Orchard.Taxonomies.Models;
 using Orchard.Taxonomies.Services;
-using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.Core.Feeds;
 using Orchard.Core.Feeds.Models;
@@ -12,7 +11,6 @@ using Orchard.Core.Feeds.StandardBuilders;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.Taxonomies.StandardQueries {
-    [UsedImplicitly]
     public class TermFeedQuery : IFeedQueryProvider, IFeedQuery {
         private readonly IContentManager _contentManager;
         private readonly ITaxonomyService _taxonomyService;
@@ -43,7 +41,7 @@ namespace Orchard.Taxonomies.StandardQueries {
             var containerId = (int)termParthId.ConvertTo(typeof(int));
             var container = _contentManager.Get<TermPart>(containerId);
 
-            if(container == null){
+            if (container == null) {
                 return;
             }
 

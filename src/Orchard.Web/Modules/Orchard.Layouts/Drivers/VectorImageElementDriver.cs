@@ -39,7 +39,7 @@ namespace Orchard.Layouts.Drivers {
             return Editor(context, editor);
         }
 
-        protected override void OnDisplaying(VectorImage element, ElementDisplayContext context) {
+        protected override void OnDisplaying(VectorImage element, ElementDisplayingContext context) {
             var mediaId = element.MediaId;
             var vectorImage = mediaId != null ? GetVectorImage(mediaId.Value) : default(VectorImagePart);
             context.ElementShape.VectorImagePart = vectorImage;

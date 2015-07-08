@@ -1,16 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using Orchard.Blogs.Models;
 using Orchard.Blogs.Services;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.Handlers;
+using Orchard.Core.Common.Models;
 using Orchard.Data;
 
 namespace Orchard.Blogs.Handlers {
-    [UsedImplicitly]
     public class BlogPartArchiveHandler : ContentHandler {
         private readonly IRepository<BlogPartArchiveRecord> _blogArchiveRepository;
         private readonly IWorkContextAccessor _workContextAccessor;
@@ -27,16 +26,16 @@ namespace Orchard.Blogs.Handlers {
             _workContextAccessor = workContextAccessor;
             _contentManager = contentManager;
 
-            OnPublishing<BlogPostPart>((context, bp) => SavePreviousPublishDate(context.Id));
-            OnRemoving<BlogPostPart>((context, bp) => SavePreviousPublishDate(context.Id));
-            OnUnpublishing<BlogPostPart>((context, bp) => SavePreviousPublishDate(context.Id));
+            OnUpdating<CommonPart>((context, cp) => { if(context.ContentItem.Has<BlogPostPart>()) SavePreviousCreatedDate(context.Id);});
+            OnRemoving<BlogPostPart>((context, bp) => SavePreviousCreatedDate(context.Id));
+            OnUnpublishing<BlogPostPart>((context, bp) => SavePreviousCreatedDate(context.Id));
 
             OnPublished<BlogPostPart>((context, bp) => IncreaseBlogArchive(bp));
             OnUnpublished<BlogPostPart>((context, bp) => ReduceBlogArchive(bp));
             OnRemoved<BlogPostPart>((context, bp) => ReduceBlogArchive(bp));
         }
 
-        private void SavePreviousPublishDate(int contentItemId) {
+        private void SavePreviousCreatedDate(int contentItemId) {
             if (_previousCreatedUtc.ContainsKey(contentItemId)) {
                 return;
             }
@@ -46,8 +45,8 @@ namespace Orchard.Blogs.Handlers {
             // retrieve the creation date when it was published
             if (previousPublishedVersion != null) {
                 var versionCommonPart = previousPublishedVersion.As<ICommonPart>();
-                if (versionCommonPart.VersionCreatedUtc.HasValue) {
-                    _previousCreatedUtc[contentItemId] = versionCommonPart.VersionCreatedUtc.Value;
+                if (versionCommonPart.CreatedUtc.HasValue) {
+                    _previousCreatedUtc[contentItemId] = versionCommonPart.CreatedUtc.Value;
                 }
             }
         }

@@ -290,6 +290,7 @@
     <ProjectReference Include="..\Orchard.Forms\Orchard.Forms.csproj">
       <Project>{642a49d7-8752-4177-80d6-bfbbcfad3de0}</Project>
       <Name>Orchard.Forms</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.MediaLibrary\Orchard.MediaLibrary.csproj">
       <Project>{73a7688a-5bd3-4f7e-adfa-ce36c5a10e3b}</Project>
@@ -307,21 +308,34 @@
       <Project>{6f759635-13d7-4e94-bcc9-80445d63f117}</Project>
       <Name>Orchard.Tokens</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Orchard.Widgets\Orchard.Widgets.csproj">
+      <Project>{194d3ccc-1153-474d-8176-fde8d7d0d0bd}</Project>
+      <Name>Orchard.Widgets</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\BlueprintAdminController.cs" />
     <Compile Include="Controllers\TemplateController.cs" />
+    <Compile Include="Drivers\BreadcrumbsElementDriver.cs" />
     <Compile Include="Drivers\CanvasElementDriver.cs" />
+    <Compile Include="Drivers\MenuElementDriver.cs" />
+    <Compile Include="Drivers\NotificationsElementDriver.cs" />
     <Compile Include="Drivers\HeadingElementDriver.cs" />
-    <Compile Include="Drivers\ShapeElementDriver.cs" />
+   <Compile Include="Drivers\ShapeElementDriver.cs" />
     <Compile Include="Drivers\BreakElementDriver.cs" />
+    <Compile Include="Elements\Breadcrumbs.cs" />
     <Compile Include="Elements\Canvas.cs" />
     <Compile Include="Elements\ContentElement.cs" />
+    <Compile Include="Elements\Menu.cs" />
+    <Compile Include="Elements\Notifications.cs" />
     <Compile Include="Elements\Heading.cs" />
     <Compile Include="Elements\Shape.cs" />
     <Compile Include="Elements\Break.cs" />
+    <Compile Include="Elements\UIElement.cs" />
     <Compile Include="Filters\TokensFilter.cs" />
+    <Compile Include="Framework\Display\ElementDisplayedContext.cs" />
+    <Compile Include="Framework\Display\ElementDisplayingContext.cs" />
     <Compile Include="Framework\Drivers\ImportContentContextWrapper.cs" />
     <Compile Include="Framework\Drivers\IContentImportSession.cs" />
     <Compile Include="Framework\Drivers\ExportElementContext.cs" />
@@ -339,6 +353,7 @@
     <Compile Include="Framework\Drivers\ImportElementContext.cs" />
     <Compile Include="Framework\Drivers\ImportLayoutContext.cs" />
     <Compile Include="Handlers\ElementDriversCoordinator.cs" />
+    <Compile Include="Handlers\ElementRuleCoordinator.cs" />
     <Compile Include="Helpers\DictionaryExtensions.cs" />
     <Compile Include="Helpers\EditorResultExtensions.cs" />
     <Compile Include="Helpers\ElementDisplayContextHelper.cs" />
@@ -346,6 +361,9 @@
     <Compile Include="Helpers\PrefixHelper.cs" />
     <Compile Include="Helpers\JsonHelper.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
+    <Compile Include="ImportExport\ElementsExportHandler.cs" />
+    <Compile Include="ImportExport\ElementsExportStep.cs" />
+    <Compile Include="ImportExport\ElementsImportHandler.cs" />
     <Compile Include="Providers\BlueprintElementHarvester.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Services\CurrentControllerAccessor.cs" />
@@ -371,6 +389,7 @@
     <Compile Include="Services\ObjectStore.cs" />
     <Compile Include="Signals.cs" />
     <Compile Include="Tokens\ElementTokens.cs" />
+    <Compile Include="ViewModels\BreadcrumbsEditorViewModel.cs" />
     <Compile Include="ViewModels\ElementBlueprintPropertiesViewModel.cs" />
     <Compile Include="ViewModels\CreateElementBlueprintViewModel.cs" />
     <Compile Include="Models\ElementBlueprint.cs" />
@@ -414,6 +433,7 @@
     <Compile Include="ViewModels\HtmlEditorViewModel.cs" />
     <Compile Include="ViewModels\LayoutEditor.cs" />
     <Compile Include="ViewModels\LayoutEditorPropertiesViewModel.cs" />
+    <Compile Include="ViewModels\MenuEditorViewModel.cs" />
     <Compile Include="ViewModels\HeadingEditorViewModel.cs" />
     <Compile Include="ViewModels\VectorImageEditorViewModel.cs" />
     <Compile Include="ViewModels\ImageEditorViewModel.cs" />
@@ -463,7 +483,6 @@
     <Compile Include="Services\ILayoutSerializer.cs" />
     <Compile Include="Helpers\ElementDataHelper.cs" />
     <Compile Include="Models\ElementInstance.cs" />
-    <Compile Include="Framework\Display\ElementDisplayContext.cs" />
     <Compile Include="Elements\Column.cs" />
     <Compile Include="Services\LayoutSerializer.cs" />
     <Compile Include="Providers\SnippetElementHarvester.cs" />
@@ -541,10 +560,21 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Elements\Break.cshtml" />
+    <Content Include="Styles\LayoutEditor\Menu.less" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Parts.Layout.Recursive.cshtml" />
     <Content Include="Views\Parts.Layout.Summary.Recursive.cshtml" />
+    <Content Include="Views\EditorTemplates\Elements.Breadcrumbs.cshtml" />
+    <Content Include="Views\EditorTemplates\Elements.Menu.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Breadcrumbs.cshtml" />
+    <Content Include="Views\Elements\Breadcrumbs.Design.cshtml" />
+    <Content Include="Views\Elements\Menu.cshtml" />
+    <Content Include="Views\Elements\Menu.Design.cshtml" />
+    <Content Include="Views\Elements\Notifications.cshtml" />
+    <Content Include="Views\Elements\Notifications.Design.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Elements\Heading.cshtml" />

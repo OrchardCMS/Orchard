@@ -11,6 +11,7 @@ using Orchard.Layouts.Framework.Elements;
 using Orchard.Layouts.Helpers;
 using Orchard.Layouts.Models;
 using Orchard.Layouts.Services;
+using Orchard.Layouts.Settings;
 using Orchard.Layouts.ViewModels;
 using Orchard.Logging;
 
@@ -89,6 +90,11 @@ namespace Orchard.Layouts.Drivers {
 
         protected override DriverResult Editor(LayoutPart part, IUpdateModel updater, dynamic shapeHelper) {
             return ContentShape("Parts_Layout_Edit", () => {
+
+                if (part.Id == 0 && String.IsNullOrWhiteSpace(part.LayoutData)) {
+                    part.LayoutData = part.TypePartDefinition.Settings.GetModel<LayoutTypePartSettings>().DefaultLayoutData;
+                }
+
                 var viewModel = new LayoutPartViewModel {
                     LayoutEditor = _layoutEditorFactory.Create(part)
                 };

@@ -30,7 +30,7 @@ namespace Orchard.MediaPicker.Handlers {
 
             foreach (var field in fields) {
                 var localField = field;
-                field._mediaGalleryItems.Loader(x => _jsonConverter.Deserialize<MediaGalleryItem[]>(localField.SelectedItems ?? "[]") ?? new MediaGalleryItem[0]);
+                field._mediaGalleryItems.Loader(() => _jsonConverter.Deserialize<MediaGalleryItem[]>(localField.SelectedItems ?? "[]") ?? new MediaGalleryItem[0]);
             }
         }
     }

@@ -15,6 +15,11 @@
     inputTagBuilder.Attributes["type"] = "radio";
     inputTagBuilder.Attributes["name"] = Model.ProcessedName;
     inputTagBuilder.Attributes["value"] = option.Value;
+
+    if (option.Selected) {
+        inputTagBuilder.Attributes["checked"] = "checked";
+    }
+
     if (element.ValidationSettings.Required == true && index == 0) {
         inputTagBuilder.AddClientValidationAttributes((IDictionary<string, string>) Model.ClientValidationAttributes);
     }

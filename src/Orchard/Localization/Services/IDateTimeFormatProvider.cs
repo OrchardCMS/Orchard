@@ -162,5 +162,20 @@ namespace Orchard.Localization.Services {
         string[] AmPmDesignators {
             get;
         }
+
+        /// <summary>
+        /// Returns a string containing the name of the specified era.
+        /// </summary>
+        string GetEraName(int era);
+
+        /// <summary>
+        /// Returns a string containing the abbreviated name of the specified era, if an abbreviation exists.
+        /// </summary>
+        string GetShortEraName(int era);
+
+        /// <summary>
+        /// Returns the integer representing the specified era.
+        /// </summary>
+        int GetEra(string eraName);
     }
 }

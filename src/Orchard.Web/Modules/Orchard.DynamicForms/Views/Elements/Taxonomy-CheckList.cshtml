@@ -16,6 +16,11 @@
     inputTagBuilder.Attributes["type"] = "checkbox";
     inputTagBuilder.Attributes["name"] = element.Name;
     inputTagBuilder.Attributes["value"] = option.Value;
+
+    if (option.Selected) {
+        inputTagBuilder.Attributes["checked"] = "checked";
+    }
+
     if (element.ValidationSettings.Required == true && index == 0) {
         inputTagBuilder.AddClientValidationAttributes((IDictionary<string, string>)Model.ClientValidationAttributes);
     }

@@ -1037,15 +1037,20 @@ table.items tr:nth-child(odd) {
 
 #main .contentItems > ul > li:nth-child(even),
 ul.contentItems > li:nth-child(even) ,
-table.items tr:nth-child(even) {
+table.items tr:nth-child(even) ,
+fieldset.manage-part:nth-child(even), 
+fieldset.manage-field:nth-child(even) {
     background-color: #f9f9f9;
 }
 
 #main .contentItems > ul > li:hover,
 ul.contentItems > li:hover,
-table.items tbody tr:hover {
+table.items tbody tr:hover ,
+fieldset.manage-part:hover,
+fieldset.manage-field:hover {
     background-color: #EDF9F5;
 }
+
 
 /* Pager
 ***************************************************************/

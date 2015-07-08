@@ -12,6 +12,10 @@ namespace Orchard.Autoroute.Models {
             get { return Retrieve(x => x.UseCustomPattern); }
             set { Store(x => x.UseCustomPattern, value); }
         }
+        public bool UseCulturePattern {
+            get { return Retrieve(x => x.UseCulturePattern); }
+            set { Store(x => x.UseCulturePattern, value); }
+        }
         public string DisplayAlias {
             get { return Retrieve(x => x.DisplayAlias); }
             set { Store(x => x.DisplayAlias, value); }

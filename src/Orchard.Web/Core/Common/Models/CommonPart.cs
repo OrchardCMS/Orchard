@@ -1,7 +1,7 @@
 ﻿using System;
-using Orchard.Core.Common.Utilities;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
+using Orchard.ContentManagement.Utilities;
 using Orchard.Security;
 
 namespace Orchard.Core.Common.Models {
@@ -52,6 +52,15 @@ namespace Orchard.Core.Common.Models {
             set {
                 if (PartVersionRecord != null)
                     PartVersionRecord.CreatedUtc = value;
+            }
+        }
+        public string VersionModifiedBy {
+            get {
+                return PartVersionRecord == null ? null : PartVersionRecord.ModifiedBy;
+            }
+            set {
+                if (PartVersionRecord != null)
+                    PartVersionRecord.ModifiedBy = value;
             }
         }
 

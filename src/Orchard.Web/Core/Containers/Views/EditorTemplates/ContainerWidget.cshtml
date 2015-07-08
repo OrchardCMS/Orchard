@@ -1,5 +1,4 @@
 ﻿@model Orchard.Core.Containers.ViewModels.ContainerWidgetViewModel
-@using Orchard.Core.Containers.Models;
 @{
     Script.Require("ShapesBase");
 }
@@ -25,8 +24,8 @@
         @Html.SelectOption(Model.Part.Record.OrderByProperty, "CustomPropertiesPart.CustomThree", T("Custom 3").Text)
     </select>
     <select title="@T("Order direction")" id="@Html.FieldIdFor(m => m.Part.Record.OrderByDirection)" name="@Html.FieldNameFor(m => m.Part.Record.OrderByDirection)">
-        @Html.SelectOption(Model.Part.Record.OrderByDirection, (int)OrderByDirection.Ascending, T("Ascending").Text)
-        @Html.SelectOption(Model.Part.Record.OrderByDirection, (int)OrderByDirection.Descending, T("Descending").Text)
+        @Html.SelectOption(Model.Part.Record.OrderByDirection, (int)SortDirection.Ascending, T("Ascending").Text)
+        @Html.SelectOption(Model.Part.Record.OrderByDirection, (int)SortDirection.Descending, T("Descending").Text)
     </select>
 </fieldset>
 <fieldset>

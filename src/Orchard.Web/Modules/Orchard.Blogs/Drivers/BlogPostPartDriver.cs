@@ -1,12 +1,10 @@
-﻿using JetBrains.Annotations;
-using Orchard.Blogs.Models;
+﻿using Orchard.Blogs.Models;
 using Orchard.Blogs.Extensions;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Feeds;
 
 namespace Orchard.Blogs.Drivers {
-    [UsedImplicitly]
     public class BlogPostPartDriver : ContentPartDriver<BlogPostPart> {
         private readonly IFeedManager _feedManager;
         private readonly IContentManager _contentManager;

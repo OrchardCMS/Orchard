@@ -4,7 +4,6 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using Orchard.Taxonomies.Models;
-using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
@@ -18,7 +17,6 @@ using Orchard.Taxonomies.Helpers;
 using Orchard.UI.Notify;
 
 namespace Orchard.Taxonomies.Drivers {
-    [UsedImplicitly]
     public class TaxonomyFieldDriver : ContentFieldDriver<TaxonomyField> {
         private readonly ITaxonomyService _taxonomyService;
         public IOrchardServices Services { get; set; }
@@ -121,7 +119,7 @@ namespace Orchard.Taxonomies.Drivers {
             }
 
             var terms = termIdentities
-                            .Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries)
+                            .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                             .Select(context.GetItemFromSession)
                             .Where(contentItem => contentItem != null)
                             .ToList();

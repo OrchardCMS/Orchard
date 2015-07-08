@@ -78,7 +78,7 @@ namespace Orchard.DynamicForms.Drivers {
             });
         }
 
-        protected override void OnDisplaying(Enumeration element, ElementDisplayContext context) {
+        protected override void OnDisplaying(Enumeration element, ElementDisplayingContext context) {
             var typeName = element.GetType().Name;
             var displayType = context.DisplayType;
             var tokenData = context.GetTokenData();

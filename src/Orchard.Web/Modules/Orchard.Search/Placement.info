@@ -1,11 +1,13 @@
 ﻿<Placement>
-    <Place Parts_AdminSearch_SiteSettings="Content:1"/>
-    <Place Parts_Search_SiteSettings="Content:1"/>
+    <Place Parts_AdminSearch_SiteSettings="Content:2"/>
+    <Place Parts_Search_SiteSettings_Index="Content:1"/>
+    <Place Parts_Search_SiteSettings_Fields="Content:3"/>
     <Place Parts_Search_SearchForm="Content:1"/>
+    <Place Parts_Search_SearchForm_Edit="Content:1"/>
 
-  <Place
-    Parts_Search_MediaLibrary_Actions="Actions:6"
-    Parts_Search_MediaLibrary_Navigation="Navigation:1"
+    <Place
+      Parts_Search_MediaLibrary_Actions="Actions:6"
+      Parts_Search_MediaLibrary_Navigation="Navigation:1"
   />
-  
+
 </Placement>

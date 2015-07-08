@@ -12,7 +12,7 @@ namespace Orchard.DynamicForms.Drivers {
             _tokenizer = tokenizer;
         }
 
-        protected override void OnDisplaying(Fieldset element, ElementDisplayContext context) {
+        protected override void OnDisplaying(Fieldset element, ElementDisplayingContext context) {
             context.ElementShape.ProcessedLegend = _tokenizer.Replace(element.Legend, context.GetTokenData());
         }
     }

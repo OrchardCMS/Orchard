@@ -17,7 +17,7 @@ namespace Orchard.MediaLibrary.Handlers {
             OnRemoving<MediaPart>((context, part) => RemoveMedia(part));
             OnLoaded<MediaPart>((context, part) => {
                 if (!String.IsNullOrEmpty(part.FileName)) {
-                    part._publicUrl.Loader(x => _mediaLibraryService.GetMediaPublicUrl(part.FolderPath, part.FileName));
+                    part._publicUrl.Loader(() => _mediaLibraryService.GetMediaPublicUrl(part.FolderPath, part.FileName));
                 }
             });
 

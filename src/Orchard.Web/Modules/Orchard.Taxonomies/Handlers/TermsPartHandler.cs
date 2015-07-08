@@ -65,7 +65,7 @@ namespace Orchard.Taxonomies.Handlers {
 
             foreach (var field in part.ContentItem.Parts.SelectMany(p => p.Fields).OfType<TaxonomyField>()) {
                 var tempField = field.Name;
-                field.TermsField.Loader(value => {
+                field.TermsField.Loader(() => {
                     var fieldTermRecordIds = part.Record.Terms.Where(t => t.Field == tempField).Select(tci => tci.TermRecord.Id);
                     var terms = _contentManager.GetMany<TermPart>(fieldTermRecordIds, VersionOptions.Published, queryHint);
                     return terms.ToList();
@@ -73,7 +73,7 @@ namespace Orchard.Taxonomies.Handlers {
             }
 
             part._termParts = new LazyField<IEnumerable<TermContentItemPart>>();
-            part._termParts.Loader(value => {
+            part._termParts.Loader(() => {
                 var ids = part.Terms.Select(t => t.TermRecord.Id).Distinct();
                 var terms = _contentManager.GetMany<TermPart>(ids, VersionOptions.Published, queryHint)
                     .ToDictionary(t => t.Id, t => t);
@@ -88,7 +88,7 @@ namespace Orchard.Taxonomies.Handlers {
             });
         }
 
-        
+
         // Fires off a processing engine task to run the count processing after the request so it's non-blocking.
         private void RecalculateCount(IProcessingEngine processingEngine, ShellSettings shellSettings, IShellDescriptorManager shellDescriptorManager, TermsPart part) {
             var termPartRecordIds = part.Terms.Select(t => t.TermRecord.Id).ToArray();

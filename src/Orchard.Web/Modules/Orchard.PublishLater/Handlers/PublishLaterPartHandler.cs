@@ -18,7 +18,7 @@ namespace Orchard.PublishLater.Handlers {
         }
 
         protected void LazyLoadHandlers(PublishLaterPart part) {
-            part.ScheduledPublishUtc.Loader((value) => _publishLaterService.GetScheduledPublishUtc(part));
+            part.ScheduledPublishUtc.Loader(() => _publishLaterService.GetScheduledPublishUtc(part));
         }
     }
 }
