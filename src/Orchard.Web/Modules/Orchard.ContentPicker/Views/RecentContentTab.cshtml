@@ -19,7 +19,7 @@
         <select id="filterResults" name="Options.SelectedFilter">
             @Html.SelectOption((string)Model.Options.SelectedFilter, "", T("any (show all)").ToString())
             @foreach(var filterOption in Model.Options.FilterOptions) {
-                @Html.SelectOption((string)Model.Options.SelectedFilter, (string)filterOption.Key, (string)filterOption.Value)
+                @Html.SelectOption((string)Model.Options.SelectedFilter, (string)filterOption.Key, (string)T(filterOption.Value).Text)
             }
         </select>
         <label for="orderResults" class="bulk-order">@T("Ordered by")</label>

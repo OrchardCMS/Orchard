@@ -8,7 +8,7 @@
 <div class="summary" itemscope="itemscope" itemid="@contentItem.Id" itemtype="http://orchardproject.net/data/ContentItem">
     <div class="properties">
         <input type="checkbox" value="@contentItem.Id" name="itemIds"/>
-        <h3>@Html.ItemAdminLink(contentItem)</h3> - <div class="contentType">@contentItem.TypeDefinition.DisplayName</div>
+        <h3>@Html.ItemAdminLink(contentItem)</h3> - <div class="contentType">@T(contentItem.TypeDefinition.DisplayName)</div>
         @if (Model.Header != null) {
         <div class="header">@Display(Model.Header)</div>
         }

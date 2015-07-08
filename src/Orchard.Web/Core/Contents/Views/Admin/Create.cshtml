@@ -4,7 +4,7 @@
 @{
     ContentItem contentItem = Model.ContentItem;
     var typeDisplayName = contentItem.TypeDefinition.DisplayName ?? contentItem.ContentType.CamelFriendly();
-    var pageTitle = T("New {0}", typeDisplayName);
+    var pageTitle = T("New {0}", T(typeDisplayName));
 
     Layout.Title = (string)pageTitle.Text;
 }

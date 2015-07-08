@@ -4,8 +4,8 @@
     var pageTitle = T("Manage Content");
     var createLinkText = T("Create New Content");
     if (!string.IsNullOrWhiteSpace(typeDisplayName)) {
-        pageTitle = T("Manage {0} Content", typeDisplayName);
-        createLinkText = T("Create New {0}", typeDisplayName);
+        pageTitle = T("Manage {0} Content", T(typeDisplayName));
+        createLinkText = T("Create New {0}", T(typeDisplayName));
     }
 
     IEnumerable<string> cultures = Model.Options.Cultures;
@@ -34,7 +34,7 @@
         <select id="filterResults" name="Options.SelectedFilter">
             @Html.SelectOption((string)Model.Options.SelectedFilter, "", T("any (show all)").ToString())
             @foreach (var filterOption in Model.Options.FilterOptions) {
-                @Html.SelectOption((string)Model.Options.SelectedFilter, (string)filterOption.Key, (string)filterOption.Value)
+                @Html.SelectOption((string)Model.Options.SelectedFilter, (string)filterOption.Key, (string)T(filterOption.Value).Text)
             }
         </select>
 
