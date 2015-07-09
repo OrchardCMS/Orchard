@@ -1,11 +1,10 @@
-﻿@using Orchard.DynamicForms.Elements
-@using Orchard.Layouts.Helpers
+﻿@using Orchard.Layouts.Helpers
 @{
-    var element = (ValidationMessage)Model.Element;
     var commonAttributes = (IDictionary<string, object>) TagBuilderExtensions.GetCommonElementAttributes(Model);
+    var forField = (string) Model.ProcessedFor;
 }
-@if (!String.IsNullOrWhiteSpace(element.For)) {
-@Html.ValidationMessage(element.For, commonAttributes)
+@if (!String.IsNullOrWhiteSpace(forField)) {
+@Html.ValidationMessage(forField, commonAttributes)
 }
 else {
   <!--@T("ValidationMessage (target not specified)")-->

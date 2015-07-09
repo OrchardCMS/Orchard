@@ -67,9 +67,8 @@ namespace Orchard.Autoroute.Drivers {
             var homepage = _aliasService.Get(string.Empty);
             var displayRouteValues = _contentManager.GetItemMetadata(part).DisplayRouteValues;
 
-            if(homepage.Match(displayRouteValues)) {
-                viewModel.PromoteToHomePage = true;
-            }
+            viewModel.IsHomePage = homepage.Match(displayRouteValues);
+            viewModel.PromoteToHomePage = viewModel.IsHomePage || part.DisplayAlias == "/";
 
             if (settings.PerItemConfiguration) {
                 // if enabled, the list of all available patterns is displayed, and the user can 

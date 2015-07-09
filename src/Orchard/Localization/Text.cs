@@ -2,6 +2,8 @@ using System;
 using System.Globalization;
 using Orchard.Localization.Services;
 using Orchard.Logging;
+using System.Web;
+using System.Linq;
 
 namespace Orchard.Localization {
     public class Text : IText {
@@ -22,17 +24,23 @@ namespace Orchard.Localization {
             Logger.Debug("{0} localizing '{1}'", _scope, textHint);
 
             var workContext = _workContextAccessor.GetContext();
-            
-            if (workContext != null) {
-                var currentCulture = workContext.CurrentCulture;
-                var localizedFormat = _localizedStringManager.GetLocalizedString(_scope, textHint, currentCulture);
+	        
+	        if (workContext != null) {
+		        var currentCulture = workContext.CurrentCulture;
+		        var localizedFormat = _localizedStringManager.GetLocalizedString(_scope, textHint, currentCulture);
 
-                return args.Length == 0
-                ? new LocalizedString(localizedFormat, _scope, textHint, args)
-                : new LocalizedString(string.Format(GetFormatProvider(currentCulture), localizedFormat, args), _scope, textHint, args);
-            }
+                // localization arguments are HTML-encoded unless they implement IHtmlString
 
-            return new LocalizedString(textHint, _scope, textHint, args);
+				return args.Length == 0
+				? new LocalizedString(localizedFormat, _scope, textHint, args)
+				: new LocalizedString(
+                    String.Format(GetFormatProvider(currentCulture), localizedFormat, args.Select(Encode).ToArray()), 
+                    _scope, 
+                    textHint, 
+                    args);
+	        }
+
+			return new LocalizedString(textHint, _scope, textHint, args);
         }
 
         private static IFormatProvider GetFormatProvider(string currentCulture) {
@@ -42,6 +50,15 @@ namespace Orchard.Localization {
             catch {
                 return null;
             }
+        }
+
+        static object Encode(object arg)
+        {
+            if (arg is IFormattable || arg is IHtmlString) {
+                return arg;
+            }
+
+            return HttpUtility.HtmlEncode(arg);
         }
     }
 }

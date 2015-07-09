@@ -1,39 +1,39 @@
-using System;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Web;
+using Autofac;
+using Orchard.Mvc.Extensions;
+using Orchard.Settings;
 
 namespace Orchard.Mvc {
     public class HttpContextAccessor : IHttpContextAccessor {
-        private HttpContextBase _httpContext;
+        readonly object _contextKey = new object();
+
+        [ThreadStatic]
+        static ConcurrentDictionary<object, HttpContextBase> _threadStaticContexts;
 
         public HttpContextBase Current() {
-            var httpContext = GetStaticProperty();
-            return !IsBackgroundHttpContext(httpContext) ? new HttpContextWrapper(httpContext) : _httpContext;
+            if (!HttpContext.Current.IsBackgroundContext())
+                return new HttpContextWrapper(HttpContext.Current);
+
+            return GetContext();
         }
 
-        public void Set(HttpContextBase httpContext) {
-            _httpContext = httpContext;
+        public HttpContextBase CreateContext(ILifetimeScope lifetimeScope) {
+            return new MvcModule.HttpContextPlaceholder(_threadStaticContexts, _contextKey, () => {
+                return lifetimeScope.Resolve<ISiteService>().GetSiteSettings().BaseUrl;
+            });
         }
 
-        private static bool IsBackgroundHttpContext(HttpContext httpContext) {
-            return httpContext == null || httpContext.Items.Contains(BackgroundHttpContextFactory.IsBackgroundHttpContextKey);
+        private HttpContextBase GetContext() {
+            HttpContextBase context;
+            return ThreadStaticContexts.TryGetValue(_contextKey, out context) ? context : null;
         }
 
-        private static HttpContext GetStaticProperty() {
-            var httpContext = HttpContext.Current;
-            if (httpContext == null) {
-                return null;
+        static ConcurrentDictionary<object, HttpContextBase> ThreadStaticContexts {
+            get {
+                return _threadStaticContexts ?? (_threadStaticContexts = new ConcurrentDictionary<object, HttpContextBase>());
             }
-
-            try {
-                // The "Request" property throws at application startup on IIS integrated pipeline mode.
-                if (httpContext.Request == null) {
-                    return null;
-                }
-            }
-            catch (Exception) {
-                return null;
-            }
-            return httpContext;
         }
     }
 }

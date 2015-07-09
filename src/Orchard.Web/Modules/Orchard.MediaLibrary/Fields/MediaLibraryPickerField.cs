@@ -7,7 +7,7 @@ using Orchard.MediaLibrary.Models;
 
 namespace Orchard.MediaLibrary.Fields {
     public class MediaLibraryPickerField : ContentField {
-        private static readonly char[] separator = new [] {'{', '}', ','};
+        private static readonly char[] separator = {'{', '}', ','};
         internal Lazy<IEnumerable<MediaPart>> _contentItems;
  
         public int[] Ids {
@@ -17,7 +17,7 @@ namespace Orchard.MediaLibrary.Fields {
 
         public IEnumerable<MediaPart> MediaParts { 
             get {
-                return _contentItems.Value;
+                return _contentItems != null ? _contentItems.Value : Enumerable.Empty<MediaPart>();
             }
         }
 

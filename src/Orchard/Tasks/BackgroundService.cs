@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Orchard.Data;
 using Orchard.Environment.Configuration;
 using Orchard.Logging;
-using Orchard.ContentManagement;
 
 namespace Orchard.Tasks {
 
@@ -14,19 +13,15 @@ namespace Orchard.Tasks {
     public class BackgroundService : IBackgroundService {
         private readonly IEnumerable<IBackgroundTask> _tasks;
         private readonly ITransactionManager _transactionManager;
-        private readonly IBackgroundHttpContextFactory _backgroundHttpContextFactory;
         private readonly string _shellName;
 
         public BackgroundService(
-            IEnumerable<IBackgroundTask> tasks, 
-            ITransactionManager transactionManager, 
-            ShellSettings shellSettings,
-            IContentManager contentManager,
-            IBackgroundHttpContextFactory backgroundHttpContextFactory) {
+            IEnumerable<IBackgroundTask> tasks,
+            ITransactionManager transactionManager,
+            ShellSettings shellSettings) {
 
             _tasks = tasks;
             _transactionManager = transactionManager;
-            _backgroundHttpContextFactory = backgroundHttpContextFactory;
             _shellName = shellSettings.Name;
             Logger = NullLogger.Instance;
         }
@@ -34,9 +29,7 @@ namespace Orchard.Tasks {
         public ILogger Logger { get; set; }
 
         public void Sweep() {
-            _backgroundHttpContextFactory.InitializeHttpContext();
-
-            foreach(var task in _tasks) {
+            foreach (var task in _tasks) {
                 var taskName = task.GetType().FullName;
 
                 try {

@@ -1,1 +1,6 @@
-﻿<div class="message message-@Model.Type">@Html.Raw(Html.Encode(Model.Message).Replace("\n", "<br />"))</div>
+﻿@* 
+    Model.Message can either be:
+    - an IHtmlString and won't be re-encoded
+    - a string and will be encoded
+*@
+<div class="message message-@Model.Type">@Html.Raw(Html.Encode(Model.Message).Replace("\n", "<br />"))</div>

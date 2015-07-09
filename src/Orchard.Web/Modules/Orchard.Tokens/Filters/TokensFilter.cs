@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Web;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Environment.Extensions;
 using Orchard.Services;
 
-namespace Orchard.Tokens.Filters.Services {
+namespace Orchard.Tokens.Filters {
 
     [OrchardFeature("Orchard.Tokens.HtmlFilter")]
     public class TokensFilter : ContentHandler, IHtmlFilter {
@@ -28,19 +26,18 @@ namespace Orchard.Tokens.Filters.Services {
         }
 
         private string TokensReplace(string text) {
-            if (_displayed == null) {
-                return text;
-            }
+            if (String.IsNullOrEmpty(text))
+                return String.Empty;
 
-            if (string.IsNullOrEmpty(text))
-                return string.Empty;
-
-            // optimize code path if nothing to do
+            // Optimize code path if nothing to do.
             if (!text.Contains("#{")) {
                 return text;
             }
 
-            Dictionary<string, object> data = new Dictionary<string, object>() { { "Content", _displayed } };
+            var data = new Dictionary<string, object>();
+
+            if (_displayed != null)
+                data["Content"] = _displayed;
 
             text = _tokenizer.Replace(text, data);
 

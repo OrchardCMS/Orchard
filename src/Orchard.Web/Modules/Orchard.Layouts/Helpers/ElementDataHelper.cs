@@ -12,7 +12,7 @@ using Orchard.Utility;
 
 namespace Orchard.Layouts.Helpers {
     public static class ElementDataHelper {
-        private static readonly string[] _elementDataBlackList = { "ElementData", "__RequestVerificationToken" };
+        private static readonly string[] _elementDataBlackList = { "ElementData", "__RequestVerificationToken", "TypeName" };
 
         public static string Get(this ElementDataDictionary data, string key, string defaultValue = null) {
             return data != null ? data.ContainsKey(key) ? data[key] : defaultValue : defaultValue;

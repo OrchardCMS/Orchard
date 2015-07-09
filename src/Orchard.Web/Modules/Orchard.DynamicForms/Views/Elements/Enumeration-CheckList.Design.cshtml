@@ -8,7 +8,7 @@
     <label>@Html.Raw(element.Label)</label>
 }
 @tagBuilder.StartElement
-@foreach (var option in Model.TokenizedOptions) {
+@foreach (var option in element.Options) {
     <li>
         <label>
             <input type="checkbox" name="@element.Name" value="@option.Value" />

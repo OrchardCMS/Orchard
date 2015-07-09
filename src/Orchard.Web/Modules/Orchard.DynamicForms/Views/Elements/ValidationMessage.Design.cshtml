@@ -3,8 +3,7 @@
     var element = (ValidationMessage)Model.Element;
     var forField = element.For;
 }
-<div class="layout-placeholder">
-    <span class="fa fa-file-code-o"></span>
+<div class="layout-snippet">
     @if (String.IsNullOrWhiteSpace(forField)) {
         @T("Validation message (target not specified)")
     }

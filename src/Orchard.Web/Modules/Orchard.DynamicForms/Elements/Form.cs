@@ -32,6 +32,11 @@ namespace Orchard.DynamicForms.Elements {
             set { this.Store(x => x.StoreSubmission, value); }
         }
 
+        public bool HtmlEncode {
+            get { return this.Retrieve(x => x.HtmlEncode, () => true); }
+            set { this.Store(x => x.HtmlEncode, value); }
+        }
+
         public bool? CreateContent {
             get { return this.Retrieve(x => x.CreateContent); }
             set { this.Store(x => x.CreateContent, value); }

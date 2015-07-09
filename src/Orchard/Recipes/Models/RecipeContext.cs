@@ -6,5 +6,6 @@ namespace Orchard.Recipes.Models {
         public RecipeStep RecipeStep { get; set; }
         public IList<FileToImport> Files { get; set; }
         public bool Executed { get; set; }
+        public string ExecutionId { get; set; }
     }
 }

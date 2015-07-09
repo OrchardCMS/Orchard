@@ -28,9 +28,13 @@
 
         this.setParent = function(parentElement) {
             this.parent = parentElement;
+            this.parent.onChildAdded(this);
 
-            if (!!this.parent.linkChild)
-                this.parent.linkChild(this);
+            var currentAncestor = parentElement;
+            while (!!currentAncestor) {
+                currentAncestor.onDescendantAdded(this, parentElement);
+                currentAncestor = currentAncestor.parent;
+            }
         };
 
         this.setIsTemplated = function (value) {
@@ -41,6 +45,8 @@
                 });
             }
         };
+
+        this.applyElementEditorModel = function() { /* Virtual */ };
 
         this.getIsActive = function () {
             if (!this.editor)
@@ -167,7 +173,6 @@
         this.copy = function (clipboardData) {
             var text = this.getInnerText();
             clipboardData.setData("text/plain", text);
-            console.log(text);
 
             var data = this.toObject();
             var json = JSON.stringify(data, null, "\t");

@@ -15,12 +15,11 @@
                         var resetFocus = false;
                         var element = $scope.element;
                     
-
                         if (element.editor.isDragging || element.editor.inlineEditingIsActive)
                             return;
 
-                        // If the "real" clipboard works, then the pseudo-clipboard will have been disabled.
-                        if (!clipboard.disabled) {
+                        // If native clipboard support exists, the pseudo-clipboard will have been disabled.
+                        if (!clipboard.isDisabled()) {
                             var focusedElement = element.editor.focusedElement;
                             if (!!focusedElement) {
                                 // Pseudo clipboard handling for browsers not allowing real clipboard operations.
@@ -237,12 +236,14 @@
                                         // Because of this, we need to invoke "setParent" so that specific container types can perform element speficic initialization.
                                         receivedElement.setEditor(element.editor);
                                         receivedElement.setParent(element);
+
                                         if (!!receivedElement.hasEditor) {
                                             $scope.$root.editElement(receivedElement).then(function (args) {
                                                 if (!args.cancel) {
                                                     receivedElement.data = args.element.data;
+                                                    receivedElement.applyElementEditorModel(args.elementEditorModel);
 
-                                                    if (receivedElement.setHtml)
+                                                    if (!!receivedElement.setHtml)
                                                         receivedElement.setHtml(args.element.html);
                                                 }
                                                 $timeout(function () {

@@ -18,7 +18,7 @@
         var isLatest = contentItem.VersionRecord.Number == eventVersionNumber;
         var isRemoved = !contentItem.VersionRecord.Latest && !contentItem.VersionRecord.Published;
         if (isPublishedEvent || isLatest) {
-            @T("{0} of the {1} {2} was {3}.", Html.ActionLink(T("Version {0}", eventVersionNumber).Text, "Detail", "Content", new { area = "Orchard.AuditTrail", id = contentItemId, version = eventVersionNumber }, null), contentType.ToLower(), isRemoved ? "<strong>" + title + "</strong>" : Html.ItemEditLink(title, contentItemId).ToString(), eventPastTense)
+            @T("{0} of the {1} {2} was {3}.", Html.ActionLink(T("Version {0}", eventVersionNumber).Text, "Detail", "Content", new { area = "Orchard.AuditTrail", id = contentItemId, version = eventVersionNumber }, null), contentType.ToLower(), isRemoved ? Html.Raw("<strong>" + title + "</strong>") : Html.ItemEditLink(title, contentItemId), eventPastTense)
         }
         else if (isRemoved) {
             @T("The {0} <strong>{1}</strong> was {2}.", contentType.ToLower(), title, eventPastTense)
