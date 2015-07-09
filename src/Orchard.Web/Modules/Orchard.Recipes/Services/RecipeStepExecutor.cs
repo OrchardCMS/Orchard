@@ -27,15 +27,13 @@ namespace Orchard.Recipes.Services {
         public ILogger Logger { get; set; }
 
         public bool ExecuteNextStep(string executionId) {
-            var nextRecipeStep= _recipeStepQueue.Dequeue(executionId);
+            var nextRecipeStep = _recipeStepQueue.Dequeue(executionId);
             if (nextRecipeStep == null) {
-                // TODO: ************** LOGGING
-                //_recipeJournal.ExecutionComplete(executionId);
+                Logger.Information("Recipe execution {0} completed.", executionId);
                 _recipeExecuteEventHandler.ExecutionComplete(executionId);
                 return false;
             }
-            // TODO: ************** LOGGING
-            //_recipeJournal.WriteJournalEntry(executionId, string.Format("Executing step {0}.", nextRecipeStep.Name));
+            Logger.Information("Running all recipe handlers for step '{0}'.", nextRecipeStep.Name);
             var recipeContext = new RecipeContext { RecipeStep = nextRecipeStep, Executed = false, ExecutionId = executionId };
             try {
                 _recipeExecuteEventHandler.RecipeStepExecuting(executionId, recipeContext);
@@ -44,29 +42,17 @@ namespace Orchard.Recipes.Services {
                 }
                 _recipeExecuteEventHandler.RecipeStepExecuted(executionId, recipeContext);
             }
-            catch(Exception exception) {
-                Logger.Error(exception, "Recipe execution {0} was cancelled because a step failed to execute", executionId);
-                while (_recipeStepQueue.Dequeue(executionId) != null) ;
-                // TODO: ************** LOGGING
-                //_recipeJournal.ExecutionFailed(executionId);
-                var message = T("Recipe execution with id {0} was cancelled because the \"{1}\" step failed to execute. The following exception was thrown: {2}. Refer to the error logs for more information.",
-                                executionId, nextRecipeStep.Name, exception.Message);
-                // TODO: ************** LOGGING
-                //_recipeJournal.WriteJournalEntry(executionId, message.ToString());
-
+            catch (Exception exception) {
+                Logger.Error(exception, "Recipe execution {0} failed because the step '{1}' failed.", executionId, nextRecipeStep.Name);
+                while (_recipeStepQueue.Dequeue(executionId) != null);
+                var message = T("Recipe execution with ID {0} failed because the step '{1}' failed to execute. The following exception was thrown:\n{2}\nRefer to the error logs for more information.", executionId, nextRecipeStep.Name, exception.Message);
                 throw new OrchardCoreException(message);
             }
 
             if (!recipeContext.Executed) {
-                Logger.Error("Could not execute recipe step '{0}' because the recipe handler was not found.", recipeContext.RecipeStep.Name);
-                while (_recipeStepQueue.Dequeue(executionId) != null) ;
-                // TODO: ************** LOGGING
-                //_recipeJournal.ExecutionFailed(executionId);
-                var message = T("Recipe execution with id {0} was cancelled because the recipe handler for step \"{1}\" was not found. Refer to the error logs for more information.",
-                                executionId, nextRecipeStep.Name);
-                // TODO: ************** LOGGING
-                //_recipeJournal.WriteJournalEntry(executionId, message.ToString());
-
+                Logger.Error("Recipe execution {0} failed because no matching handler for recipe step '{1}' was found.", executionId, recipeContext.RecipeStep.Name);
+                while (_recipeStepQueue.Dequeue(executionId) != null);
+                var message = T("Recipe execution with ID {0} failed because no matching handler for recipe step '{1}' was found. Refer to the error logs for more information.", executionId, nextRecipeStep.Name);
                 throw new OrchardCoreException(message);
             }
 

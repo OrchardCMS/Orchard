@@ -33,30 +33,37 @@ namespace Orchard.Roles.ImportExport {
                 return;
             }
 
+            Logger.Information("Executing recipe step '{0}'; ExecutionId={1}", recipeContext.RecipeStep.Name, recipeContext.ExecutionId);
+
             var installedPermissions = _roleService.GetInstalledPermissions().SelectMany(p => p.Value).ToList();
 
             foreach (var roleElement in recipeContext.RecipeStep.Step.Elements()) {
                 var roleName = roleElement.Attribute("Name").Value;
 
-                if (string.IsNullOrEmpty(recipeContext.ExecutionId)) {
-                    // TODO: ************** LOGGING
-                    //_recipeJournal.WriteJournalEntry(recipeContext.ExecutionId, T("Roles: Executing item {0}.", roleName).Text);
+                Logger.Information("Processing role '{0}'.", roleName);
+
+                try {
+                    var role = _roleService.GetRoleByName(roleName);
+                    if (role == null) {
+                        _roleService.CreateRole(roleName);
+                        role = _roleService.GetRoleByName(roleName);
+                    }
+
+                    var permissions = roleElement.Attribute("Permissions").Value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                    // only import permissions for currenlty installed modules
+                    var permissionsValid = permissions.Where(permission => installedPermissions.Any(x => x.Name == permission)).ToList();
+
+                    // union to keep existing permissions
+                    _roleService.UpdateRole(role.Id, role.Name, permissionsValid.Union(role.RolesPermissions.Select(p => p.Permission.Name)));
                 }
-
-                var role = _roleService.GetRoleByName(roleName);
-                if (role == null) {
-                    _roleService.CreateRole(roleName);
-                    role = _roleService.GetRoleByName(roleName);
+                catch (Exception ex) {
+                    Logger.Error(ex, "Error while processing role '{0}'.", roleName);
+                    throw;
                 }
-
-                var permissions = roleElement.Attribute("Permissions").Value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                // only import permissions for currenlty installed modules
-                var permissionsValid = permissions.Where(permission => installedPermissions.Any(x => x.Name == permission)).ToList();
-
-                // union to keep existing permissions
-                _roleService.UpdateRole(role.Id, role.Name, permissionsValid.Union(role.RolesPermissions.Select(p => p.Permission.Name)));
             }
+
             recipeContext.Executed = true;
+            Logger.Information("Finished executing recipe step '{0}'.", recipeContext.RecipeStep.Name);
         }
     }
 }

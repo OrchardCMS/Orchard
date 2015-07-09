@@ -37,8 +37,10 @@ namespace Orchard.Recipes.RecipeHandlers {
             if (!String.Equals(recipeContext.RecipeStep.Name, "Module", StringComparison.OrdinalIgnoreCase)) {
                 return;
             }
-            string packageId = null, version = null, repository = null;
 
+            Logger.Information("Executing recipe step '{0}'; ExecutionId={1}", recipeContext.RecipeStep.Name, recipeContext.ExecutionId);
+
+            string packageId = null, version = null, repository = null;
             foreach (var attribute in recipeContext.RecipeStep.Step.Attributes()) {
                 if (String.Equals(attribute.Name.LocalName, "packageId", StringComparison.OrdinalIgnoreCase)) {
                     packageId = attribute.Value;
@@ -85,10 +87,7 @@ namespace Orchard.Recipes.RecipeHandlers {
 
             if (packagingEntry != null) {
                 if (!ModuleAlreadyInstalled(packagingEntry.PackageId)) {
-                    if (!string.IsNullOrEmpty(recipeContext.ExecutionId)) {
-                        // TODO: ************** LOGGING
-                        //_recipeJournal.WriteJournalEntry(recipeContext.ExecutionId, T("Installing module: {0}.", packagingEntry.Title).Text);
-                    }
+                    Logger.Information("Installing module {0}.", packagingEntry.Title);
                     _packageManager.Install(packagingEntry.PackageId, packagingEntry.Version, packagingSource.FeedUrl, HostingEnvironment.MapPath("~/")); 
                 }
                 installed = true;
@@ -99,6 +98,7 @@ namespace Orchard.Recipes.RecipeHandlers {
             }
 
             recipeContext.Executed = true;
+            Logger.Information("Finished executing recipe step '{0}'.", recipeContext.RecipeStep.Name);
         }
 
         private bool ModuleAlreadyInstalled(string packageId) {

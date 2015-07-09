@@ -46,6 +46,8 @@ namespace Orchard.Recipes.RecipeHandlers {
                 return;
             }
 
+            Logger.Information("Executing recipe step '{0}'; ExecutionId={1}", recipeContext.RecipeStep.Name, recipeContext.ExecutionId);
+
             bool enable = false, current = false;
             string packageId = null, version = null, repository = null;
 
@@ -66,12 +68,12 @@ namespace Orchard.Recipes.RecipeHandlers {
                     repository = attribute.Value;
                 }
                 else {
-                    Logger.Error("Unrecognized attribute {0} encountered in step Theme. Skipping.", attribute.Name.LocalName);
+                    Logger.Warning("Unrecognized attribute '{0}' encountered; skipping.", attribute.Name.LocalName);
                 }
             }
 
             if (packageId == null) {
-                throw new InvalidOperationException("PackageId is required in a Theme declaration in a recipe file.");
+                throw new InvalidOperationException("The PackageId attribute is required on a Theme declaration in a recipe file.");
             }
 
             // download and install theme from the orchard feed or a custom feed if repository is specified.
@@ -101,13 +103,17 @@ namespace Orchard.Recipes.RecipeHandlers {
 
             if (packagingEntry != null) {
                 if (!ThemeAlreadyInstalled(packagingEntry.PackageId)) {
+                    Logger.Information("Installing theme package '{0}'.", packagingEntry.PackageId);
                     _packageManager.Install(packagingEntry.PackageId, packagingEntry.Version, packagingSource.FeedUrl, HostingEnvironment.MapPath("~/"));
                 }
                 if (current) {
+                    Logger.Information("Enabling theme '{0}'.", packagingEntry.Title);
                     _themeService.EnableThemeFeatures(packagingEntry.Title);
+                    Logger.Information("Setting theme '{0}' as the site theme.", packagingEntry.Title);
                     _siteThemeService.SetSiteTheme(packagingEntry.Title);
                 }
                 else if (enable) {
+                    Logger.Information("Enabling theme '{0}'.", packagingEntry.Title);
                     _themeService.EnableThemeFeatures(packagingEntry.Title);
                 }
 
@@ -115,10 +121,11 @@ namespace Orchard.Recipes.RecipeHandlers {
             }
 
             if (!installed) {
-                throw new InvalidOperationException(string.Format("Theme {0} was not found in the specified location.", packageId));
+                throw new InvalidOperationException(string.Format("Theme '{0}' was not found in the specified location.", packageId));
             }
 
             recipeContext.Executed = true;
+            Logger.Information("Finished executing recipe step '{0}'.", recipeContext.RecipeStep.Name);
         }
 
         private bool ThemeAlreadyInstalled(string packageId) {

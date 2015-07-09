@@ -27,6 +27,8 @@ namespace Orchard.Recipes.RecipeHandlers {
                 return;
             }
 
+            Logger.Information("Executing recipe step '{0}'; ExecutionId={1}", recipeContext.RecipeStep.Name, recipeContext.ExecutionId);
+
             var featuresToEnable = new List<string>();
             var featuresToDisable = new List<string>();
             foreach (var attribute in recipeContext.RecipeStep.Step.Attributes()) {
@@ -37,7 +39,7 @@ namespace Orchard.Recipes.RecipeHandlers {
                     featuresToEnable = ParseFeatures(attribute.Value);
                 }
                 else {
-                    Logger.Error("Unrecognized attribute {0} encountered in step Feature. Skipping.", attribute.Name.LocalName);
+                    Logger.Warning("Unrecognized attribute '{0}' encountered; skipping", attribute.Name.LocalName);
                 }
             }
 
@@ -54,14 +56,17 @@ namespace Orchard.Recipes.RecipeHandlers {
                 }
             }
 
-            if (featuresToDisable.Count != 0) {
+            if (featuresToDisable.Any()) {
+                Logger.Information("Disabling features: {0}", String.Join(";", featuresToDisable));
                 _featureManager.DisableFeatures(featuresToDisable, true);
             }
-            if (featuresToEnable.Count != 0) {
+            if (featuresToEnable.Any()) {
+                Logger.Information("Enabling features: {0}", String.Join(";", featuresToEnable));
                 _featureManager.EnableFeatures(featuresToEnable, true);
             }
 
             recipeContext.Executed = true;
+            Logger.Information("Finished executing recipe step '{0}'.", recipeContext.RecipeStep.Name);
         }
 
         private static List<string> ParseFeatures(string csv) {

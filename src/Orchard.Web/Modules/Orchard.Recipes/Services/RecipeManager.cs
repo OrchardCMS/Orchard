@@ -30,8 +30,7 @@ namespace Orchard.Recipes.Services {
                 return null;
 
             var executionId = Guid.NewGuid().ToString("n");
-            // TODO: ************** LOGGING
-            //_recipeJournal.ExecutionStart(executionId);
+            Logger.Information("Executing recipe '{0}' using ExecutionId {1}.", recipe.Name, executionId);
             _recipeExecuteEventHandler.ExecutionStart(executionId, recipe);
 
             foreach (var recipeStep in recipe.RecipeSteps) {

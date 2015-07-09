@@ -28,6 +28,8 @@ namespace Orchard.Recipes.RecipeHandlers {
                 return;
             }
 
+            Logger.Information("Executing recipe step '{0}'; ExecutionId={1}", recipeContext.RecipeStep.Name, recipeContext.ExecutionId);
+
             bool runAll = false;
             var features = new List<string>();
             foreach (var attribute in recipeContext.RecipeStep.Step.Attributes()) {
@@ -37,21 +39,35 @@ namespace Orchard.Recipes.RecipeHandlers {
                         runAll = true;
                 }
                 else {
-                    Logger.Error("Unrecognized attribute {0} encountered in step Migration. Skipping.", attribute.Name.LocalName);
+                    Logger.Warning("Unrecognized attribute '{0}' encountered; skipping.", attribute.Name.LocalName);
                 }
             }
 
             if (runAll) {
                 foreach (var feature in _dataMigrationManager.GetFeaturesThatNeedUpdate()) {
-                    _dataMigrationManager.Update(feature);
+                    Logger.Information("Updating feature '{0}'.", feature);
+                    try {
+                        _dataMigrationManager.Update(feature);
+                    }
+                    catch (Exception ex) {
+                        Logger.Error(ex, "Error while updating feature '{0}'", feature);
+                        throw;
+                    }
                 }
             }
             else {
-                _dataMigrationManager.Update(features);
+                Logger.Information("Updating features: {0}", String.Join(";", features));
+                try {
+                    _dataMigrationManager.Update(features);
+                }
+                catch (Exception ex) {
+                    Logger.Error(ex, "Error while updating features: {0}", String.Join(";", features));
+                    throw;
+                }
             }
 
-            // run migrations
             recipeContext.Executed = true;
+            Logger.Information("Finished executing recipe step '{0}'.", recipeContext.RecipeStep.Name);
         }
 
         private static List<string> ParseFeatures(string csv) {

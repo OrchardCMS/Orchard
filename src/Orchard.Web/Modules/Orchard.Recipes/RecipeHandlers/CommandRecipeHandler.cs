@@ -37,6 +37,8 @@ namespace Orchard.Recipes.RecipeHandlers  {
                 return;
             }
 
+            Logger.Information("Executing recipe step '{0}'; ExecutionId={1}", recipeContext.RecipeStep.Name, recipeContext.ExecutionId);
+
             var commands = 
                 recipeContext.RecipeStep.Step.Value
                 .Split(new[] {"\r\n", "\n"}, StringSplitOptions.RemoveEmptyEntries)
@@ -44,18 +46,22 @@ namespace Orchard.Recipes.RecipeHandlers  {
 
             foreach (var command in commands) {
                 if (!String.IsNullOrEmpty(command)) {
-                    if (!String.IsNullOrEmpty(recipeContext.ExecutionId)) {
-                        // TODO: ************** LOGGING
-                        //_recipeJournal.WriteJournalEntry(recipeContext.ExecutionId, T("Commands: Executing item {0}.", command).Text);
+                    Logger.Information("Executing command: {0}", command);
+                    try {
+                        var commandParameters = _commandParser.ParseCommandParameters(command);
+                        var input = new StringReader("");
+                        var output = new StringWriter();
+                        _commandManager.Execute(new CommandParameters { Arguments = commandParameters.Arguments, Input = input, Output = output, Switches = commandParameters.Switches });
                     }
-                    var commandParameters = _commandParser.ParseCommandParameters(command);
-                    var input = new StringReader("");
-                    var output = new StringWriter();
-                    _commandManager.Execute(new CommandParameters { Arguments = commandParameters.Arguments, Input = input, Output = output, Switches = commandParameters.Switches });
+                    catch (Exception ex) {
+                        Logger.Error(ex, "Error while executing command: {0}", command);
+                        throw;
+                    }
                 }
             }
 
             recipeContext.Executed = true;
+            Logger.Information("Finished executing recipe step '{0}'.", recipeContext.RecipeStep.Name);
         }
     }
 

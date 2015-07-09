@@ -39,6 +39,8 @@ namespace Orchard.Recipes.RecipeHandlers {
                 return;
             }
 
+            Logger.Information("Executing recipe step '{0}'; ExecutionId={1}", recipeContext.RecipeStep.Name, recipeContext.ExecutionId);
+
             var siteContentItem = _siteService.GetSiteSettings().ContentItem;
 
             var importContentSession = new ImportContentSession(_contentManager);
@@ -54,12 +56,14 @@ namespace Orchard.Recipes.RecipeHandlers {
                     continue;
                 }
 
-                if (!string.IsNullOrEmpty(recipeContext.ExecutionId)) {
-                    // TODO: ************** LOGGING
-                    //_recipeJournal.WriteJournalEntry(recipeContext.ExecutionId, T("Setting: {0}.", contentPart.PartDefinition.Name).Text);
+                Logger.Information("Importing settings part '{0}'.", contentPart.PartDefinition.Name);
+                try {
+                    ImportSettingPart(contentPart, partElement);
                 }
-
-                ImportSettingPart(contentPart, partElement);
+                catch (Exception ex) {
+                    Logger.Error(ex, "Error while importing settings part '{0}'.", contentPart.PartDefinition.Name);
+                    throw;
+                }
             }
 
             foreach (var contentHandler in Handlers) {
@@ -67,6 +71,7 @@ namespace Orchard.Recipes.RecipeHandlers {
             }
 
             recipeContext.Executed = true;
+            Logger.Information("Finished executing recipe step '{0}'.", recipeContext.RecipeStep.Name);
         }
 
         private void ImportSettingPart(ContentPart sitePart, XElement element) {
