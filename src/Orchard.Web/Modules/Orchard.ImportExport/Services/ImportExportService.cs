@@ -4,17 +4,14 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Environment.Descriptor;
 using Orchard.FileSystems.AppData;
 using Orchard.ImportExport.Models;
 using Orchard.Localization;
 using Orchard.Logging;
-using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
 using Orchard.Services;
-using VersionOptions = Orchard.ContentManagement.VersionOptions;
 
 namespace Orchard.ImportExport.Services {
     public class ImportExportService : IImportExportService {
