@@ -27,7 +27,8 @@
                 <span>@Html.TextBoxFor(m => m.CurrentUrl, new { @class = "text is-url" })</span>
             </span>
             <span class="hint">@T("Save the current item and leave the input empty to have it automatically generated using the pattern {0} e.g., {1}", pattern.ElementAtOrDefault(Convert.ToInt32(defaultPattern.PatternIndex)).Name, pattern.ElementAtOrDefault(Convert.ToInt32(defaultPattern.PatternIndex)).Description)</span>
-        } else {
+        }
+        else {
             var hintClass = string.Empty;
             if (!string.IsNullOrEmpty(Model.CurrentUrl)) {
                 hintClass = "hint";
@@ -58,6 +59,7 @@
             <span class="hint">@T("Check to promote this content as the home page")</span>
         </fieldset>
     }
-} else {
+}
+else {
     <span>@T("This content is the current home page")</span>
 }

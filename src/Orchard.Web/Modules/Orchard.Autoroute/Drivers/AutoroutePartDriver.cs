@@ -29,7 +29,7 @@ namespace Orchard.Autoroute.Drivers {
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         public AutoroutePartDriver(
-            IAliasService aliasService,
+            IAliasService aliasService, 
             IContentManager contentManager,
             IAutorouteService autorouteService,
             IAuthorizer authorizer,
@@ -86,7 +86,7 @@ namespace Orchard.Autoroute.Drivers {
             foreach (DefaultPattern pattern in settings.DefaultPatterns.Where(x => String.IsNullOrWhiteSpace(x.Culture))) {
                 pattern.Culture = _cultureManager.GetSiteCulture();
             }
-
+            
             // if the content type has no pattern for autoroute, then use a default one
             if (!settings.Patterns.Any(x => String.Equals(x.Culture, itemCulture, StringComparison.OrdinalIgnoreCase))) {
                 settings.Patterns = new List<RoutePattern> { new RoutePattern { Name = "Title", Description = "my-title", Pattern = "{Content.Slug}", Culture = itemCulture } };
@@ -117,9 +117,8 @@ namespace Orchard.Autoroute.Drivers {
             var homepage = _aliasService.Get(string.Empty);
             var displayRouteValues = _contentManager.GetItemMetadata(part).DisplayRouteValues;
 
-            if (homepage.Match(displayRouteValues)) {
-                viewModel.PromoteToHomePage = true;
-            }
+            viewModel.IsHomePage = homepage.Match(displayRouteValues);
+            viewModel.PromoteToHomePage = viewModel.IsHomePage || part.DisplayAlias == "/";
 
             if (settings.PerItemConfiguration) {
                 // if enabled, the list of all available patterns is displayed, and the user can 
@@ -130,7 +129,7 @@ namespace Orchard.Autoroute.Drivers {
 
             var previous = part.DisplayAlias;
             if (updater != null && updater.TryUpdateModel(viewModel, Prefix, null, null)) {
-
+                
                 // remove any leading slash in the permalink
                 if (viewModel.CurrentUrl != null) {
                     viewModel.CurrentUrl = viewModel.CurrentUrl.TrimStart('/');
@@ -156,7 +155,7 @@ namespace Orchard.Autoroute.Drivers {
                 }
             }
 
-            return ContentShape("Parts_Autoroute_Edit",
+            return ContentShape("Parts_Autoroute_Edit", 
                 () => shapeHelper.EditorTemplate(TemplateName: "Parts.Autoroute.Edit", Model: viewModel, Prefix: Prefix));
         }
 
