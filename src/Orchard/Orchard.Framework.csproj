@@ -149,6 +149,15 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Reports\Report.cs" />
+    <Compile Include="Reports\ReportEntry.cs" />
+    <Compile Include="Reports\ReportExtentions.cs" />
+    <Compile Include="Reports\Services\IReportsCoordinator.cs" />
+    <Compile Include="Reports\Services\IReportsManager.cs" />
+    <Compile Include="Reports\Services\IReportsPersister.cs" />
+    <Compile Include="Reports\Services\ReportsCoordinator.cs" />
+    <Compile Include="Reports\Services\ReportsManager.cs" />
+    <Compile Include="Reports\Services\ReportsPersister.cs" />
     <Compile Include="Security\IMembershipValidationService.cs" />
     <Compile Include="Localization\Services\ILocalizationStreamParser.cs" />
     <Compile Include="Localization\Services\LocalizationStreamParser.cs" />

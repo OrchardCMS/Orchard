@@ -223,6 +223,11 @@
     <Compile Include="Navigation\ViewModels\MenuItemEntry.cs" />
     <Compile Include="Navigation\ViewModels\NavigationManagementViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reports\AdminMenu.cs" />
+    <Compile Include="Reports\Controllers\AdminController.cs" />
+    <Compile Include="Reports\Routes.cs" />
+    <Compile Include="Reports\ViewModels\DisplayReportViewModel.cs" />
+    <Compile Include="Reports\ViewModels\ReportsAdminIndexViewModel.cs" />
     <Compile Include="Scheduling\Migrations.cs" />
     <Compile Include="Scheduling\Models\ScheduledTaskRecord.cs" />
     <Compile Include="Scheduling\Services\ScheduledTaskManager.cs" />
@@ -310,6 +315,9 @@
     <Content Include="Navigation\Styles\navigation-admin.css" />
     <Content Include="Navigation\Styles\images\menu.navigation.png" />
     <Content Include="Navigation\Styles\menu.navigation-admin.css" />
+    <Content Include="Reports\Module.txt" />
+    <Content Include="Reports\Styles\images\menu.reports.png" />
+    <Content Include="Reports\Styles\menu.reports-admin.css" />
     <Content Include="Settings\Module.txt" />
     <Content Include="Settings\Styles\admin.css" />
     <Content Include="Settings\Styles\images\menu.settings.png" />
@@ -556,6 +564,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Common\Views\EditorTemplates\Flavor.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Reports\Styles\Web.config" />
+    <Content Include="Reports\Views\Admin\Display.cshtml" />
+    <Content Include="Reports\Views\Admin\Index.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
