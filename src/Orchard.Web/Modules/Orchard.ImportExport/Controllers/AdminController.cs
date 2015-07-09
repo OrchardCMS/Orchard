@@ -93,7 +93,7 @@ namespace Orchard.ImportExport.Controllers {
             };
 
             UpdateModel(viewModel);
-            var contentTypesToExport = viewModel.ContentTypes.Where(c => c.IsChecked).Select(c => c.ContentTypeName);
+            var contentTypesToExport = viewModel.ContentTypes.Where(c => c.IsChecked).Select(c => c.ContentTypeName).ToList();
             var customSteps = viewModel.CustomSteps.Where(c => c.IsChecked).Select(c => c.CustomStep);
             
             var exportOptions = new ExportOptions {

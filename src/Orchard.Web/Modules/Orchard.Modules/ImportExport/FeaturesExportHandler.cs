@@ -25,7 +25,7 @@ namespace Orchard.Modules.ImportExport {
 
             var enabledFeatures = _featureManager.GetEnabledFeatures();
 
-            var root = new XElement("Feature", new XAttribute("enable", String.Join(", ", enabledFeatures.Select(x => x.Id))));
+            var root = new XElement("Feature", new XAttribute("enable", String.Join(", ", enabledFeatures.Select(x => x.Id).OrderBy(x => x))));
             context.Document.Element("Orchard").Add(root);
         }
 
