@@ -40,7 +40,7 @@ namespace Orchard.Localization {
                     args);
 	        }
 
-			return new LocalizedString(textHint, _scope, textHint, args);
+            return new LocalizedString(textHint, _scope, textHint, args);
         }
 
         private static IFormatProvider GetFormatProvider(string currentCulture) {

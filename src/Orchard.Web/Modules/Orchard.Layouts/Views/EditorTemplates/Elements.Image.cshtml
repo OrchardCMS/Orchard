@@ -1,6 +1,10 @@
 ﻿@using Orchard.ContentManagement
 @model Orchard.Layouts.ViewModels.ImageEditorViewModel
 @{
+    Script.Require("jQuery");
+    Script.Include("Elements/Image.js");
+}
+@{
     var contentItems = new List<ContentItem>();
 
     if (Model.CurrentImage != null) {

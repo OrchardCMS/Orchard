@@ -12,6 +12,11 @@ using Orchard.Localization;
 using Orchard.Security;
 using Orchard.UI.Notify;
 using Orchard.Utility.Extensions;
+using Orchard.Localization.Services;
+using Orchard.Localization.Models;
+using Orchard.Mvc;
+using System.Web;
+using Orchard.ContentManagement.Aspects;
 
 namespace Orchard.Autoroute.Drivers {
     public class AutoroutePartDriver : ContentPartDriver<AutoroutePart> {
@@ -20,47 +25,92 @@ namespace Orchard.Autoroute.Drivers {
         private readonly IAutorouteService _autorouteService;
         private readonly IAuthorizer _authorizer;
         private readonly INotifier _notifier;
+        private readonly ICultureManager _cultureManager;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public AutoroutePartDriver(
             IAliasService aliasService, 
             IContentManager contentManager,
             IAutorouteService autorouteService,
             IAuthorizer authorizer,
-            INotifier notifier) {
+            INotifier notifier,
+            ICultureManager cultureManager,
+            IHttpContextAccessor httpContextAccessor) {
             _aliasService = aliasService;
             _contentManager = contentManager;
             _autorouteService = autorouteService;
             _authorizer = authorizer;
             _notifier = notifier;
+            _cultureManager = cultureManager;
+            _httpContextAccessor = httpContextAccessor;
 
             T = NullLocalizer.Instance;
         }
 
         public Localizer T { get; set; }
 
-        protected override string Prefix { get { return "Autoroute"; }}
-
         protected override DriverResult Editor(AutoroutePart part, dynamic shapeHelper) {
             return Editor(part, null, shapeHelper);
         }
 
         protected override DriverResult Editor(AutoroutePart part, IUpdateModel updater, dynamic shapeHelper) {
-
             var settings = part.TypePartDefinition.Settings.GetModel<AutorouteSettings>();
+            var itemCulture = _cultureManager.GetSiteCulture();
+
+            //if we are editing an existing content item
+            if (part.Record.Id != 0) {
+                ContentItem contentItem = _contentManager.Get(part.Record.ContentItemRecord.Id);
+                var aspect = contentItem.As<ILocalizableAspect>();
+
+                if (aspect != null) {
+                    itemCulture = aspect.Culture;
+                }
+            }
+
+            if (settings.UseCulturePattern) {
+                //if we are creating from a form post we use the form value for culture
+                HttpContextBase context = _httpContextAccessor.Current();
+                if (!String.IsNullOrEmpty(context.Request.Form["Localization.SelectedCulture"])) {
+                    itemCulture = context.Request.Form["Localization.SelectedCulture"].ToString();
+                }
+            }
+
+            //we update the settings assuming that when 
+            //pattern culture = null or "" it means culture = default website culture
+            //for patterns that we migrated
+            foreach (RoutePattern pattern in settings.Patterns.Where(x => String.IsNullOrWhiteSpace(x.Culture))) {
+                pattern.Culture = _cultureManager.GetSiteCulture(); ;
+            }
+
+            //we do the same for default patterns
+            foreach (DefaultPattern pattern in settings.DefaultPatterns.Where(x => String.IsNullOrWhiteSpace(x.Culture))) {
+                pattern.Culture = _cultureManager.GetSiteCulture();
+            }
             
             // if the content type has no pattern for autoroute, then use a default one
-            if(!settings.Patterns.Any()) {
-                settings.AllowCustomPattern = true;
-                settings.AutomaticAdjustmentOnEdit = false;
-                settings.DefaultPatternIndex = 0;
-                settings.Patterns = new List<RoutePattern> {new RoutePattern {Name = "Title", Description = "my-title", Pattern = "{Content.Slug}"}};
+            if (!settings.Patterns.Any(x => String.Equals(x.Culture, itemCulture, StringComparison.OrdinalIgnoreCase))) {
+                settings.Patterns = new List<RoutePattern> { new RoutePattern { Name = "Title", Description = "my-title", Pattern = "{Content.Slug}", Culture = itemCulture } };
+            }
 
-                _notifier.Warning(T("No route patterns are currently defined for this Content Type. If you don't set one in the settings, a default one will be used."));
+            // if the content type has no defaultPattern for autoroute, then use a default one
+            if (!settings.DefaultPatterns.Any(x => String.Equals(x.Culture, itemCulture, StringComparison.OrdinalIgnoreCase))) {
+                // If we are in the default culture, check the old setting.
+                if (String.Equals(itemCulture, _cultureManager.GetSiteCulture(), StringComparison.OrdinalIgnoreCase)) {
+                    if (!String.IsNullOrWhiteSpace(settings.DefaultPatternIndex)) {
+                        var patternIndex = settings.DefaultPatternIndex;
+                        settings.DefaultPatterns.Add(new DefaultPattern { PatternIndex = patternIndex, Culture = itemCulture });
+                    } else {
+                        settings.DefaultPatterns.Add(new DefaultPattern { PatternIndex = "0", Culture = itemCulture });
+                    }
+                } else {
+                    settings.DefaultPatterns.Add(new DefaultPattern { PatternIndex = "0", Culture = itemCulture });
+                }
             }
 
             var viewModel = new AutoroutePartEditViewModel {
                 CurrentUrl = part.DisplayAlias,
-                Settings = settings
+                Settings = settings,
+                CurrentCulture = itemCulture
             };
 
             // retrieve home page
@@ -88,7 +138,7 @@ namespace Orchard.Autoroute.Drivers {
                 part.DisplayAlias = viewModel.CurrentUrl;
 
                 // reset the alias if we need to force regeneration, and the user didn't provide a custom one
-                if(settings.AutomaticAdjustmentOnEdit && previous == part.DisplayAlias) {
+                if (settings.AutomaticAdjustmentOnEdit && previous == part.DisplayAlias) {
                     part.DisplayAlias = string.Empty;
                 }
 
@@ -100,7 +150,7 @@ namespace Orchard.Autoroute.Drivers {
                 // but instead keep the value
 
                 // if home page is requested, use "/" to have the handler create a homepage alias
-                if(viewModel.PromoteToHomePage) {
+                if (viewModel.PromoteToHomePage) {
                     part.DisplayAlias = "/";
                 }
             }
@@ -124,12 +174,18 @@ namespace Orchard.Autoroute.Drivers {
             if (useCustomPattern != null) {
                 part.UseCustomPattern = bool.Parse(useCustomPattern);
             }
+
+            var useCulturePattern = context.Attribute(part.PartDefinition.Name, "UseCulturePattern");
+            if (useCulturePattern != null) {
+                part.UseCulturePattern = bool.Parse(useCulturePattern);
+            }
         }
 
         protected override void Exporting(AutoroutePart part, ContentManagement.Handlers.ExportContentContext context) {
             context.Element(part.PartDefinition.Name).SetAttributeValue("Alias", String.IsNullOrEmpty(part.Record.DisplayAlias) ? "/" : part.Record.DisplayAlias);
             context.Element(part.PartDefinition.Name).SetAttributeValue("CustomPattern", part.Record.CustomPattern);
             context.Element(part.PartDefinition.Name).SetAttributeValue("UseCustomPattern", part.Record.UseCustomPattern);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("UseCulturePattern", part.Record.UseCulturePattern);
         }
     }
 }

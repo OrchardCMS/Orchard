@@ -69,7 +69,7 @@ namespace Orchard.Setup.Services {
             if (_recipes == null) {
                 var recipes = new List<Recipe>();
 
-                foreach (var extension in _extensionManager.AvailableExtensions().Where(extension => DefaultExtensionTypes.IsModule(extension.ExtensionType))) {
+                foreach (var extension in _extensionManager.AvailableExtensions()) {
                     recipes.AddRange(_recipeHarvester.HarvestRecipes(extension.Id).Where(recipe => recipe.IsSetupRecipe)); 
                 }
 
@@ -140,6 +140,9 @@ namespace Orchard.Setup.Services {
                     if (installationPresent) {
                         throw new OrchardException(T("A previous Orchard installation was detected in this database with this table prefix."));
                     }
+
+                    // Make a workaround to avoid the Transaction issue for PostgreSQL
+                    environment.Resolve<ITransactionManager>().RequireNew();
 
                     var reportsCoordinator = environment.Resolve<IReportsCoordinator>();
 

@@ -59,6 +59,16 @@ namespace Orchard.Widgets.Drivers {
                 }
             }
 
+            if (!String.IsNullOrEmpty(widgetPart.CssClasses)) {
+                var classNames = widgetPart.CssClasses.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+                for (var i = 0; i < classNames.Length; i++) {
+                    classNames[i] = classNames[i].Trim().HtmlClassify();
+                }
+
+                widgetPart.CssClasses = String.Join(" ", classNames);
+            }
+
             _widgetsService.MakeRoomForWidgetPosition(widgetPart);
 
             return Editor(widgetPart, shapeHelper);

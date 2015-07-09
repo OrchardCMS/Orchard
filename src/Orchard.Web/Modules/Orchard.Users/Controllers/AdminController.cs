@@ -87,6 +87,12 @@ namespace Orchard.Users.Controllers {
                 case UsersOrder.Email:
                     users = users.OrderBy(u => u.Email);
                     break;
+                case UsersOrder.CreatedUtc:
+                    users = users.OrderBy(u => u.CreatedUtc);
+                    break;
+                case UsersOrder.LastLoginUtc:
+                    users = users.OrderBy(u => u.LastLoginUtc);
+                    break;
             }
 
             var results = users

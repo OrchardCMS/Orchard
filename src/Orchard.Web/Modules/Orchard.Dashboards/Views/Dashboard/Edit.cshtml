@@ -1,0 +1,9 @@
+@{
+    var pageTitle = T("Edit Dashboard");
+    Layout.Title = pageTitle;
+}
+
+@using (Html.BeginFormAntiForgeryPost(Url.Action("Edit"), FormMethod.Post, new { enctype = "multipart/form-data" })) {
+    @Html.ValidationSummary()
+    @Display(Model)
+}

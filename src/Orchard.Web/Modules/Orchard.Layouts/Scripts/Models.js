@@ -154,9 +154,9 @@ var LayoutEditor;
 
         this.setIsFocused = function () {
             if (!this.editor)
-                return;
+            	return;
             if (this.isTemplated && !this.allowSealedFocus())
-                return;
+            	return;
             if (this.editor.isDragging || this.editor.inlineEditingIsActive || this.editor.isResizing)
                 return;
 
@@ -420,7 +420,7 @@ var LayoutEditor;
 
         this.allowSealedFocus = function() {
             return this.children.length === 0;
-        };
+    };
     };
 
     LayoutEditor.Canvas.from = function (value) {
@@ -819,7 +819,7 @@ var LayoutEditor;
                 offset: 0,
                 children: []
             });
-
+            
             this.width = this.width - newColumnWidth;
             this.parent.insertChild(newColumn, this);
             newColumn.setIsFocused();

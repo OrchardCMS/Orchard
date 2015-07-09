@@ -14,7 +14,7 @@ namespace Orchard.Taxonomies.Services {
             _contentManager = contentManager;
             _taxonomyService = taxonomyService;
         }
-        
+
         public void Process(params int[] termPartRecordIds) {
 
             foreach (var id in termPartRecordIds) {

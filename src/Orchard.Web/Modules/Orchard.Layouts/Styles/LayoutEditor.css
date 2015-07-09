@@ -11,7 +11,7 @@
 .layout-editor > .layout-canvas-wrapper {
   -webkit-flex-grow: 1;
       -ms-flex-positive: 1;
-  flex-grow: 1;
+          flex-grow: 1;
   background-color: #f3f4f5;
   border: 1px solid #e4e5e6;
 }
@@ -140,7 +140,7 @@
   display: none;
   -webkit-flex-direction: column;
       -ms-flex-direction: column;
-  flex-direction: column;
+          flex-direction: column;
   margin: 11px;
   min-height: 80px;
   border: 1px dashed rgba(124, 124, 124, 0.4);
@@ -148,7 +148,7 @@
   padding: 12px;
   -webkit-justify-content: center;
       -ms-flex-pack: center;
-  justify-content: center;
+          justify-content: center;
   font-size: 13px;
   font-style: italic;
   opacity: 0.6;
@@ -412,7 +412,7 @@ table[rules=all i] > tfoot > tr > td, table[rules=all i] > tfoot > tr > th {
   font-size: 50%;
   font-variant-east-asian: ruby;
   -webkit-text-emphasis: none;
-  text-emphasis: none;
+          text-emphasis: none;
 }
 .layout-editor .layout-content > .layout-element-wrapper .layout-content-markup rbc,
 .layout-editor .layout-html > .layout-element-wrapper .layout-content-markup rbc {

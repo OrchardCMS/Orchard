@@ -42,8 +42,7 @@ namespace Orchard.DynamicForms {
                  .WithPart("AutoroutePart", builder => builder
                     .WithSetting("AutorouteSettings.AllowCustomPattern", "True")
                     .WithSetting("AutorouteSettings.AutomaticAdjustmentOnEdit", "False")
-                    .WithSetting("AutorouteSettings.PatternDefinitions", "[{\"Name\":\"Title\",\"Pattern\":\"{Content.Slug}\",\"Description\":\"my-form\"}]")
-                    .WithSetting("AutorouteSettings.DefaultPatternIndex", "0"))
+                    .WithSetting("AutorouteSettings.PatternDefinitions", "[{\"Name\":\"Title\",\"Pattern\":\"{Content.Slug}\",\"Description\":\"my-form\"}]"))
                 .WithPart("LayoutPart", p => p
                     .WithSetting("LayoutTypePartSettings.DefaultLayoutData", DefaultFormLayoutData))
                 .DisplayedAs("Form")

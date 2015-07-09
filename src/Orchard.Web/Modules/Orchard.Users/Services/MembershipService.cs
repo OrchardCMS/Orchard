@@ -28,6 +28,7 @@ namespace Orchard.Users.Services {
         private readonly IShapeFactory _shapeFactory;
         private readonly IShapeDisplay _shapeDisplay;
         private readonly IAppConfigurationAccessor _appConfigurationAccessor;
+        private readonly IClock _clock;
 
         public MembershipService(
             IOrchardServices orchardServices, 
@@ -45,6 +46,7 @@ namespace Orchard.Users.Services {
             _shapeFactory = shapeFactory;
             _shapeDisplay = shapeDisplay;
             _appConfigurationAccessor = appConfigurationAccessor;
+            _clock = clock;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
@@ -69,6 +71,7 @@ namespace Orchard.Users.Services {
             user.Email = createUserParams.Email;
             user.NormalizedUserName = createUserParams.Username.ToLowerInvariant();
             user.HashAlgorithm = PBKDF2;
+            user.CreatedUtc = _clock.UtcNow;
             SetPassword(user, createUserParams.Password);
 
             if ( registrationSettings != null ) {
@@ -285,5 +288,6 @@ namespace Orchard.Users.Services {
         private bool ValidatePasswordEncrypted(UserPart userPart, string password) {
             return String.Equals(password, Encoding.UTF8.GetString(_encryptionService.Decode(Convert.FromBase64String(userPart.Password))), StringComparison.Ordinal);
         }
+
     }
 }

@@ -30,7 +30,7 @@ namespace Orchard.Taxonomies.Services {
         /// </summary>
         /// <param name="taxonomy">The taxonomy to create a term content type for.</param>
         void CreateTermContentType(TaxonomyPart taxonomy);
-        
+
         /// <summary>
         /// Deletes a <see cref="TaxonomyPart"/> content item from the database.
         /// </summary>
@@ -38,7 +38,7 @@ namespace Orchard.Taxonomies.Services {
         /// <remarks>It will also remove all its terms and delete their content type.</remarks>
         void DeleteTaxonomy(TaxonomyPart taxonomy);
         IContentQuery<TaxonomyPart, TaxonomyPartRecord> GetTaxonomiesQuery();
-        
+
 
         IEnumerable<TermPart> GetTerms(int taxonomyId);
         TermPart GetTerm(int id);

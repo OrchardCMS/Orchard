@@ -12,7 +12,7 @@ namespace Orchard.Email.Activities {
         void Enqueue(string message, object parameters, int priority);
     }
 
-    [OrchardSuppressDependency("Orchard.Email.Workflows")]
+    [OrchardFeature("Orchard.Email.Workflows")]
     public class EmailActivity : Task {
         private readonly IMessageService _messageService;
         private readonly IJobsQueueService _jobsQueueService;

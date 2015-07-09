@@ -72,6 +72,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Scripts\autoroute-browser.js" />
     <Content Include="Styles\orchard-autoroute-settings.css" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
@@ -95,6 +96,10 @@
       <Project>{475B6C45-B27C-438B-8966-908B9D6D1077}</Project>
       <Name>Orchard.Alias</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Orchard.ContentTypes\Orchard.ContentTypes.csproj">
+      <Project>{0e7646e8-fe8f-43c1-8799-d97860925ec4}</Project>
+      <Name>Orchard.ContentTypes</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Orchard.Tokens\Orchard.Tokens.csproj">
       <Project>{6F759635-13D7-4E94-BCC9-80445D63F117}</Project>
       <Name>Orchard.Tokens</Name>
@@ -102,11 +107,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\AutorouteCommands.cs" />
+    <Compile Include="Providers\ContentDefinition\ContentDefinitionEventHandler.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Services\PathResolutionService.cs" />
     <Compile Include="Services\IPathResolutionService.cs" />
     <Compile Include="Services\IRouteEvents.cs" />
     <Compile Include="Settings\AutorouteSettingsEvents.cs" />
+    <Compile Include="Settings\DefaultPattern.cs" />
     <Compile Include="Settings\RoutePattern.cs" />
     <Compile Include="Drivers\AutoroutePartDriver.cs" />
     <Compile Include="Handlers\AutoroutePartHandler.cs" />
@@ -122,9 +129,7 @@
     <Compile Include="Settings\AutorouteSettings.cs" />
     <Compile Include="ViewModels\AutoroutePartEditViewModel.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="Placement.info">
       <SubType>Designer</SubType>

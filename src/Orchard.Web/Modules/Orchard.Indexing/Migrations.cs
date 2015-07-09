@@ -20,18 +20,7 @@ namespace Orchard.Indexing {
                     .Column<int>("ContentItemRecord_id")
                 );
 
-            SchemaBuilder.CreateTable("IndexTaskBatchRecord",
-                table => table
-                    .Column<int>("Id", column => column.PrimaryKey().Identity())
-                    .Column<int>("BatchStartIndex")
-                    .Column<string>("ContentType")
-                )
-            .AlterTable("IndexTaskBatchRecord",
-                table =>
-                    table.CreateIndex("IDX_ContentType", "ContentType")
-                );
-
-            return 3;
+            return 4;
         }
 
         public int UpdateFrom1() {
@@ -49,18 +38,16 @@ namespace Orchard.Indexing {
 
         public int UpdateFrom2() {
 
-            SchemaBuilder.CreateTable("IndexTaskBatchRecord",
-                table => table
-                    .Column<int>("Id", column => column.PrimaryKey().Identity())
-                    .Column<int>("BatchStartIndex")
-                    .Column<string>("ContentType")
-                )
-            .AlterTable("IndexTaskBatchRecord",
-                table =>
-                    table.CreateIndex("IDX_ContentType", "ContentType")
-                );
+            // A table for a custom job implementation was here, but since we use JobsQueue that table is deprecated.
 
             return 3;
+        }
+
+        public int UpdateFrom3() {
+
+            SchemaBuilder.DropTable("IndexTaskBatchRecord");
+
+            return 4;
         }
     }
 }

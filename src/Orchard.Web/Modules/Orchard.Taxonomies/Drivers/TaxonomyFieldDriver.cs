@@ -119,7 +119,7 @@ namespace Orchard.Taxonomies.Drivers {
             }
 
             var terms = termIdentities
-                            .Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries)
+                            .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                             .Select(context.GetItemFromSession)
                             .Where(contentItem => contentItem != null)
                             .ToList();

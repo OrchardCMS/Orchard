@@ -53,7 +53,7 @@ namespace Orchard.Comments.Drivers {
             else {
                 return ContentShape("Parts_Comment_Edit", 
                     () => shapeHelper.EditorTemplate(TemplateName: "Parts.Comment", Model: part, Prefix: Prefix));
-	        }
+            }
         }
 
         // POST

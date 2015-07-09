@@ -93,10 +93,13 @@ namespace Orchard.Users.Controllers {
         }
 
         public ActionResult LogOff(string returnUrl) {
-            var wasLoggedInUser = _authenticationService.GetAuthenticatedUser();
             _authenticationService.SignOut();
-            if (wasLoggedInUser != null)
-                _userEventHandler.LoggedOut(wasLoggedInUser);
+
+            var loggedUser = _authenticationService.GetAuthenticatedUser();
+            if (loggedUser != null) {
+                _userEventHandler.LoggedOut(loggedUser);
+            }
+
             return this.RedirectLocal(returnUrl);
         }
 
@@ -154,7 +157,10 @@ namespace Orchard.Users.Controllers {
                         return RedirectToAction("RegistrationPending");
                     }
 
+                    _userEventHandler.LoggingIn(userName, password);
                     _authenticationService.SignIn(user, false /* createPersistentCookie */);
+                    _userEventHandler.LoggedIn(user);
+
                     return this.RedirectLocal(returnUrl);
                 }
                 

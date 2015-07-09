@@ -23,10 +23,14 @@ namespace Orchard.Recipes.Services {
             var recipe = new Recipe();
             
             try {
+
+                if (string.IsNullOrEmpty(recipeText)) {
+                    throw new Exception("Recipe is empty");
+                }
+
+                XElement recipeTree = XElement.Parse(recipeText, LoadOptions.PreserveWhitespace);
+
                 var recipeSteps = new List<RecipeStep>();
-                TextReader textReader = new StringReader(recipeText);
-                var recipeTree = XElement.Load(textReader, LoadOptions.PreserveWhitespace);
-                textReader.Close();
 
                 foreach (var element in recipeTree.Elements()) {
                     // Recipe mETaDaTA

@@ -7,23 +7,27 @@ using Orchard.Data;
 using Orchard.Autoroute.Services;
 using Orchard.Localization;
 using Orchard.UI.Notify;
+using Orchard.Alias;
 
 namespace Orchard.Autoroute.Handlers {
     public class AutoroutePartHandler : ContentHandler {
 
         private readonly Lazy<IAutorouteService> _autorouteService;
         private readonly IOrchardServices _orchardServices;
+        private readonly IAliasService _aliasService;
 
         public Localizer T { get; set; }
 
         public AutoroutePartHandler(
             IRepository<AutoroutePartRecord> autoroutePartRepository,
             Lazy<IAutorouteService> autorouteService,
-            IOrchardServices orchardServices) {
+            IOrchardServices orchardServices,
+            IAliasService aliasService) {
 
             Filters.Add(StorageFilter.For(autoroutePartRepository));
             _autorouteService = autorouteService;
             _orchardServices = orchardServices;
+            _aliasService = aliasService;
 
             OnUpdated<AutoroutePart>((ctx, part) => CreateAlias(part));
 
@@ -106,6 +110,13 @@ namespace Orchard.Autoroute.Handlers {
         }
 
         void RemoveAlias(AutoroutePart part) {
+            // Is this the current home page?
+            var homePageRoute = _aliasService.Get("");
+            var homePageId = homePageRoute.ContainsKey("id") ? int.Parse(homePageRoute["id"].ToString()) : default(int);
+
+            if (part.ContentItem.Id == homePageId) {
+                _orchardServices.Notifier.Warning(T("You removed the content item that served as the site\'s home page. \nMost possibly this means that instead of the home page a \"404 Not Found\" error page will be displayed without a link to log in or access the dashboard. \n\nTo prevent this you can e.g. publish a content item that has the \"Set as home page\" checkbox ticked."));
+            }
             _autorouteService.Value.RemoveAliases(part);
         }
 

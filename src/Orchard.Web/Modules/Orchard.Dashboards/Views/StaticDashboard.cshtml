@@ -1,0 +1,37 @@
+﻿@{ Layout.Title = T("Welcome to Orchard").ToString(); }
+<section class="dashboard group">
+    <div class="help-item">
+        <h2 class="start">@T("Get up and running")</h2>
+        <p>@T("Start by exploring the menu on the left and familiarize yourself with Orchard. As for the basics, we suggest <a href=\"{0}\">changing the theme</a>, <a href=\"{1}\">adding some pages</a>, <a href=\"{2}\">setup up a blog</a>, and <a href=\"{3}\">configuring basic settings</a>.",
+            Url.Action("Index", "Admin", new { area = "Orchard.Themes" }),
+            Url.Action("Create", "Admin", new { area = "Contents", id = "Page" }),
+            Url.Action("Create", "BlogAdmin", new { area = "Orchard.Blogs" }),
+            Url.Action("Index", "Admin", new { area = "Settings", groupInfoId = "Index" }))</p>
+    </div>
+    <div class="help-item">
+        <h2 class="gallery">@T("Get more goodies")</h2>
+        <p>@T("Change the way your site works and looks with <a href=\"{0}\">themes</a> and <a href=\"{1}\">modules</a>. There’s plenty to choose from in the <a href=\"http://gallery.orchardproject.net/\">Orchard Gallery</a>. We’re always adding things, so be sure to check back often to see what’s new.",
+        Url.Action("Themes", "Gallery", new { area = "Orchard.Packaging" }),
+        Url.Action("Modules", "Gallery", new { area = "Orchard.Packaging" }))
+        </p>
+    </div>
+    <div class="help-item">
+        <h2 class="docs">@T("Read the Docs")</h2>
+        <p>@T("Are you ready to go deeper and become an Orchard expert? Take a look at the <a href=\"http://docs.orchardproject.net\">Orchard Documentation</a> to learn about how everything connects together and what makes Orchard tick.")</p>
+    </div>
+    <div class="help-item">
+    <h2 class="friends">@T("Make friends")</h2>
+        <p>@T("Find friends that share your interest of Orchard. There are a couple ways that you can <a href=\"http://orchardproject.net/discussions\">discuss and get connected</a> to the project including mailing lists, forums and IRC.")</p>
+    </div>
+    <div class="help-item">
+        <h2 class="contribute">@T("Contribute back")</h2>
+        <p>@T("Help grow Orchard. We encourage contributions of all sorts, including code submissions, documentation, translations, feature recommendations, and more. Here are some ways to <a href=\"http://orchardproject.net/contribution\">give back to the project</a>.")</p>
+    </div>
+
+<div class="help-item">
+    <h2 class="advisory">@T("Stay up to date")</h2>
+<iframe id="advisory" src="http://www.orchardproject.net/advisory" frameborder="0" height="100%" width="100%" scrolling="no">
+ <p>@T("Your browser does not support iframes. You can't see advisory messages.")</p>
+</iframe>
+</div>
+</section>

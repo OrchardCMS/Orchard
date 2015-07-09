@@ -176,6 +176,7 @@
     <Compile Include="Bindings\TaxonomyFieldBindings.cs" />
     <Compile Include="Drivers\FieldsetElementDriver.cs" />
     <Compile Include="Elements\Fieldset.cs" />
+    <Compile Include="Bindings\NumericFieldBindings.cs" />
     <Compile Include="Forms\AddModelErrorForm.cs" />
     <Compile Include="Forms\SelectDynamicForms.cs" />
     <Compile Include="Bindings\TextFieldBindings.cs" />
