@@ -12,15 +12,14 @@ using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.ShellBuilders.Models;
 using Orchard.FileSystems.AppData;
-using Orchard.Reports.Services;
 using Orchard.Tests.ContentManagement;
 using System.IO;
 using Orchard.Tests.Environment;
 using Orchard.Tests.FileSystems.AppData;
-using Orchard.Tests.Stubs;
 
-namespace Orchard.Tests.DataMigration {
-    [TestFixture]
+namespace Orchard.Tests.DataMigration
+{
+	[TestFixture]
     public class SchemaBuilderTestsBase {
         private IContainer _container;
         private ISessionFactory _sessionFactory;
@@ -45,7 +44,6 @@ namespace Orchard.Tests.DataMigration {
             builder.RegisterInstance(appDataFolder).As<IAppDataFolder>();
             builder.RegisterType<SqlCeDataServicesProvider>().As<IDataServicesProvider>();
             builder.RegisterType<DataServicesProviderFactory>().As<IDataServicesProviderFactory>();
-            builder.RegisterType<StubReportsCoordinator>().As<IReportsCoordinator>();
             builder.RegisterType<DefaultDataMigrationInterpreter>().As<IDataMigrationInterpreter>();
             builder.RegisterType<SqlCeCommandInterpreter>().As<ICommandInterpreter>();
             builder.RegisterType<SessionConfigurationCache>().As<ISessionConfigurationCache>();

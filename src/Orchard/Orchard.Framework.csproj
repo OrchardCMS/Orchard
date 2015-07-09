@@ -723,15 +723,6 @@
     <Compile Include="Environment\Extensions\Compilers\IProjectFileParser.cs" />
     <Compile Include="Indexing\MetaDataExtensions.cs" />
     <Compile Include="Localization\Commands\CultureCommands.cs" />
-    <Compile Include="Reports\Report.cs" />
-    <Compile Include="Reports\ReportEntry.cs" />
-    <Compile Include="Reports\ReportExtentions.cs" />
-    <Compile Include="Reports\Services\IReportsCoordinator.cs" />
-    <Compile Include="Reports\Services\IReportsManager.cs" />
-    <Compile Include="Reports\Services\IReportsPersister.cs" />
-    <Compile Include="Reports\Services\ReportsCoordinator.cs" />
-    <Compile Include="Reports\Services\ReportsManager.cs" />
-    <Compile Include="Reports\Services\ReportsPersister.cs" />
     <Compile Include="UI\Admin\Notification\NotificationFilter.cs" />
     <Compile Include="Data\Migration\DataMigrationNotificationProvider.cs" />
     <Compile Include="UI\Admin\Notification\INotificationManager.cs" />

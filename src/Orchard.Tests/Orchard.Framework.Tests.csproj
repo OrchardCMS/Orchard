@@ -281,7 +281,6 @@
     <Compile Include="Stubs\StubHttpContextAccessor.cs" />
     <Compile Include="Stubs\StubWorkContextAccessor.cs" />
     <Compile Include="Stubs\StubExtensionManager.cs" />
-    <Compile Include="Stubs\StubReportsCoordinator.cs" />
     <Compile Include="Stubs\StubVirtualPathProvider.cs" />
     <Compile Include="Stubs\StubFileSystem.cs" />
     <Compile Include="Stubs\StubAppDataFolder.cs" />

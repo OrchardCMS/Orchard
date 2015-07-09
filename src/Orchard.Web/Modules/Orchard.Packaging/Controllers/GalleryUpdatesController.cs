@@ -11,15 +11,15 @@ using Orchard.Mvc.Extensions;
 using Orchard.Packaging.Models;
 using Orchard.Packaging.Services;
 using Orchard.Packaging.ViewModels;
-using Orchard.Reports.Services;
 using Orchard.Security;
 using Orchard.Themes;
 using Orchard.UI.Admin;
 using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
 
-namespace Orchard.Packaging.Controllers {
-    [OrchardFeature("Gallery.Updates")]
+namespace Orchard.Packaging.Controllers
+{
+	[OrchardFeature("Gallery.Updates")]
     [Themed, Admin]
     public class GalleryUpdatesController : Controller {
         private readonly ShellSettings _shellSettings;

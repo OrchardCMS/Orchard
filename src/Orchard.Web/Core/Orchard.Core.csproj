@@ -25,6 +25,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -175,12 +176,7 @@
     <Compile Include="Contents\ViewModels\ListContentTypesViewModel.cs" />
     <Compile Include="Navigation\ViewModels\MenuPartViewModel.cs" />
     <Compile Include="Navigation\ViewModels\MenuWidgetViewModel.cs" />
-    <Compile Include="Reports\AdminMenu.cs" />
-    <Compile Include="Reports\Controllers\AdminController.cs" />
-    <Compile Include="Reports\Routes.cs" />
     <Compile Include="Navigation\Migrations.cs" />
-    <Compile Include="Reports\ViewModels\DisplayReportViewModel.cs" />
-    <Compile Include="Reports\ViewModels\ReportsAdminIndexViewModel.cs" />
     <Compile Include="Common\Utilities\LazyField.cs" />
     <Compile Include="Common\Handlers\CommonPartHandler.cs" />
     <Compile Include="Common\Models\CommonPart.cs" />
@@ -314,11 +310,6 @@
     <Content Include="Navigation\Styles\navigation-admin.css" />
     <Content Include="Navigation\Styles\images\menu.navigation.png" />
     <Content Include="Navigation\Styles\menu.navigation-admin.css" />
-    <Content Include="Reports\Module.txt" />
-    <Content Include="Reports\Styles\images\menu.reports.png" />
-    <Content Include="Reports\Styles\menu.reports-admin.css" />
-    <Content Include="Reports\Views\Admin\Display.cshtml" />
-    <Content Include="Reports\Views\Admin\Index.cshtml" />
     <Content Include="Settings\Module.txt" />
     <Content Include="Settings\Styles\admin.css" />
     <Content Include="Settings\Styles\images\menu.settings.png" />
@@ -433,9 +424,6 @@
     <Content Include="Navigation\Styles\Web.config">
       <SubType>Designer</SubType>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Reports\Styles\Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Common\Views\Parts.Common.Metadata.SummaryAdmin.cshtml" />

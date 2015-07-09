@@ -11,7 +11,6 @@ using Orchard.Data.Migration.Schema;
 using Orchard.Environment.Configuration;
 using Orchard.Localization;
 using Orchard.Logging;
-using Orchard.Reports.Services;
 
 namespace Orchard.Data.Migration.Interpreters {
     public class DefaultDataMigrationInterpreter : AbstractDataMigrationInterpreter, IDataMigrationInterpreter {
@@ -21,7 +20,6 @@ namespace Orchard.Data.Migration.Interpreters {
         private readonly Lazy<Dialect> _dialectLazy;
         private readonly List<string> _sqlStatements;
         private readonly ISessionFactoryHolder _sessionFactoryHolder;
-        private readonly IReportsCoordinator _reportsCoordinator;
 
         private const char Space = ' ';
 
@@ -29,14 +27,12 @@ namespace Orchard.Data.Migration.Interpreters {
             ShellSettings shellSettings,
             ISessionLocator sessionLocator,
             IEnumerable<ICommandInterpreter> commandInterpreters,
-            ISessionFactoryHolder sessionFactoryHolder,
-            IReportsCoordinator reportsCoordinator) {
+            ISessionFactoryHolder sessionFactoryHolder) {
             _shellSettings = shellSettings;
             _sessionLocator = sessionLocator;
             _commandInterpreters = commandInterpreters;
             _sqlStatements = new List<string>();
             _sessionFactoryHolder = sessionFactoryHolder;
-            _reportsCoordinator = reportsCoordinator;
 
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
@@ -341,7 +337,8 @@ namespace Orchard.Data.Migration.Interpreters {
                         command.ExecuteNonQuery();
                     }
                  
-                    _reportsCoordinator.Information("Data Migration", String.Format("Executing SQL Query: {0}", sqlStatement));
+					// TODO: LOGGING
+                    //_reportsCoordinator.Information("Data Migration", String.Format("Executing SQL Query: {0}", sqlStatement));
                 }
             }
             finally {

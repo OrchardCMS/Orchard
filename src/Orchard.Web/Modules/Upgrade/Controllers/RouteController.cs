@@ -13,7 +13,6 @@ using Orchard.Core.Title.Models;
 using Orchard.Data;
 using Orchard.Environment.Configuration;
 using Orchard.Localization;
-using Orchard.Reports.Services;
 using Orchard.Security;
 using Orchard.UI.Admin;
 using Orchard.UI.Notify;
@@ -27,21 +26,18 @@ namespace Upgrade.Controllers {
         private readonly ISessionFactoryHolder _sessionFactoryHolder;
         private readonly ShellSettings _shellSettings;
         private readonly IAutorouteService _autorouteService;
-        private readonly IReportsCoordinator _reportsCoordinator;
 
         public RouteController(
             IContentDefinitionManager contentDefinitionManager,
             IOrchardServices orchardServices,
             ISessionFactoryHolder sessionFactoryHolder,
             ShellSettings shellSettings,
-            IAutorouteService autorouteService,
-            IReportsCoordinator reportsCoordinator) {
+            IAutorouteService autorouteService) {
             _contentDefinitionManager = contentDefinitionManager;
             _orchardServices = orchardServices;
             _sessionFactoryHolder = sessionFactoryHolder;
             _shellSettings = shellSettings;
             _autorouteService = autorouteService;
-            _reportsCoordinator = reportsCoordinator;
         }
 
         public Localizer T { get; set; }
@@ -71,8 +67,8 @@ namespace Upgrade.Controllers {
 
             if(TryUpdateModel(viewModel)) {
 
-                // creating report
-                _reportsCoordinator.Register("Migration", "Upgrade", "Migrating " + string.Join(" ,", viewModel.ContentTypes.Where(x => x.IsChecked).Select(x => x.ContentTypeName).ToArray()));
+				// TODO: LOGGING
+				//_reportsCoordinator.Register("Migration", "Upgrade", "Migrating " + string.Join(" ,", viewModel.ContentTypes.Where(x => x.IsChecked).Select(x => x.ContentTypeName).ToArray()));
             
                 var contentTypesToMigrate = viewModel.ContentTypes.Where(c => c.IsChecked).Select(c => c.ContentTypeName);
 
@@ -81,7 +77,8 @@ namespace Upgrade.Controllers {
 
                 foreach (var contentType in contentTypesToMigrate) {
 
-                    _reportsCoordinator.Information("Migration", "Adding parts to " + contentType);
+					// TODO: LOGGING
+					//_reportsCoordinator.Information("Migration", "Adding parts to " + contentType);
 
                     // migrating parts
                     _contentDefinitionManager.AlterTypeDefinition(contentType,
@@ -133,8 +130,9 @@ namespace Upgrade.Controllers {
                                     if (!reader.IsClosed) {
                                         reader.Close();
                                     }
-                                    
-                                    _reportsCoordinator.Error("Migration", "Migrating content item " + autoroutePart.ContentItem.Id + " failed with: " + e.Message);
+
+									// TODO: LOGGING
+									//_reportsCoordinator.Error("Migration", "Migrating content item " + autoroutePart.ContentItem.Id + " failed with: " + e.Message);
                                     errors = true;
                                 }
                             }

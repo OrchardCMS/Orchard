@@ -19,7 +19,6 @@ using Orchard.Mvc;
 using Orchard.Mvc.Extensions;
 using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
-using Orchard.Reports.Services;
 using Orchard.Security;
 using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
@@ -29,7 +28,6 @@ namespace Orchard.Modules.Controllers {
         private readonly IExtensionDisplayEventHandler _extensionDisplayEventHandler;
         private readonly IModuleService _moduleService;
         private readonly IDataMigrationManager _dataMigrationManager;
-        private readonly IReportsCoordinator _reportsCoordinator;
         private readonly IExtensionManager _extensionManager;
         private readonly IFeatureManager _featureManager;
         private readonly IRecipeHarvester _recipeHarvester;
@@ -42,7 +40,6 @@ namespace Orchard.Modules.Controllers {
             IOrchardServices services,
             IModuleService moduleService,
             IDataMigrationManager dataMigrationManager,
-            IReportsCoordinator reportsCoordinator,
             IExtensionManager extensionManager,
             IFeatureManager featureManager,
             IRecipeHarvester recipeHarvester,
@@ -55,7 +52,6 @@ namespace Orchard.Modules.Controllers {
             _extensionDisplayEventHandler = extensionDisplayEventHandlers.FirstOrDefault();
             _moduleService = moduleService;
             _dataMigrationManager = dataMigrationManager;
-            _reportsCoordinator = reportsCoordinator;
             _extensionManager = extensionManager;
             _featureManager = featureManager;
             _recipeHarvester = recipeHarvester;
@@ -233,7 +229,8 @@ namespace Orchard.Modules.Controllers {
                         foreach (var feature in selectedFeaturesThatNeedUpdate) {
                             var id = feature.Descriptor.Id;
                             try {
-                                _reportsCoordinator.Register("Data Migration", "Upgrade " + id, "Orchard installation");
+								// TODO: LOGGING
+                                //_reportsCoordinator.Register("Data Migration", "Upgrade " + id, "Orchard installation");
                                 _dataMigrationManager.Update(id);
                                 Services.Notifier.Information(T("The feature {0} was updated successfully", id));
                             }

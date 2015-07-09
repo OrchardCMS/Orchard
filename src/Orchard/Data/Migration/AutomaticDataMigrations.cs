@@ -28,7 +28,7 @@ namespace Orchard.Data.Migration {
 
             // Let's make sure that the basic set of features is enabled.  If there are any that are not enabled, then let's enable them first.
             var theseFeaturesShouldAlwaysBeActive = new[] {
-                "Common", "Containers", "Contents", "Dashboard", "Feeds", "Navigation", "Reports", "Scheduling", "Settings", "Shapes", "Title"
+                "Common", "Containers", "Contents", "Dashboard", "Feeds", "Navigation", "Scheduling", "Settings", "Shapes", "Title"
             };
 
             var enabledFeatures = _featureManager.GetEnabledFeatures().Select(f => f.Id).ToList();

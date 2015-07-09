@@ -82,7 +82,7 @@ this.ScenarioSetup(scenarioInfo);
             table1.AddRow(new string[] {
                         "Core",
                         "Common, Containers, Dashboard, Feeds, Navigation, Contents, Scheduling, Settings," +
-                            " Shapes, XmlRpc, Title, Reports"});
+                            " Shapes, XmlRpc, Title"});
             table1.AddRow(new string[] {
                         "Theme",
                         "SafeMode"});
@@ -117,7 +117,7 @@ this.ScenarioSetup(scenarioInfo);
             table2.AddRow(new string[] {
                         "Core",
                         "Common, Containers, Dashboard, Feeds, Navigation, Contents, Scheduling, Settings," +
-                            " Shapes, XmlRpc, Title, Reports"});
+                            " Shapes, XmlRpc, Title"});
             table2.AddRow(new string[] {
                         "Theme",
                         "SafeMode"});
@@ -152,7 +152,7 @@ this.ScenarioSetup(scenarioInfo);
             table3.AddRow(new string[] {
                         "Core",
                         "Common, Containers, Dashboard, Feeds, Navigation, Contents, Scheduling, Settings," +
-                            " Shapes, XmlRpc, Title, Reports"});
+                            " Shapes, XmlRpc, Title"});
             table3.AddRow(new string[] {
                         "Theme",
                         "SafeMode"});
@@ -189,7 +189,7 @@ this.ScenarioSetup(scenarioInfo);
             table4.AddRow(new string[] {
                         "Core",
                         "Common, Containers, Dashboard, Feeds, Navigation, Contents, Scheduling, Settings," +
-                            " Shapes, XmlRpc, Title, Reports"});
+                            " Shapes, XmlRpc, Title"});
             table4.AddRow(new string[] {
                         "Theme",
                         "SafeMode, TheAdmin, TheThemeMachine"});

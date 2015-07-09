@@ -12,7 +12,6 @@ using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Mvc;
 using Orchard.Mvc.Extensions;
-using Orchard.Reports.Services;
 using Orchard.Security;
 using Orchard.Themes.Events;
 using Orchard.Themes.Models;
@@ -34,7 +33,6 @@ namespace Orchard.Themes.Controllers {
         private readonly ShellDescriptor _shellDescriptor;
         private readonly IPreviewTheme _previewTheme;
         private readonly IThemeService _themeService;
-        private readonly IReportsCoordinator _reportsCoordinator;
         private readonly ShellSettings _shellSettings;
 
         public AdminController(
@@ -47,7 +45,6 @@ namespace Orchard.Themes.Controllers {
             ShellDescriptor shellDescriptor,
             IPreviewTheme previewTheme, 
             IThemeService themeService,
-            IReportsCoordinator reportsCoordinator,
             ShellSettings shellSettings) {
             Services = services;
 
@@ -59,7 +56,6 @@ namespace Orchard.Themes.Controllers {
             _featureManager = featureManager;
             _previewTheme = previewTheme;
             _themeService = themeService;
-            _reportsCoordinator = reportsCoordinator;
             _shellSettings = shellSettings;
             
             T = NullLocalizer.Instance;
@@ -232,7 +228,7 @@ namespace Orchard.Themes.Controllers {
                 return HttpNotFound();
 
             try {
-                _reportsCoordinator.Register("Data Migration", "Upgrade " + themeId, "Orchard installation");
+				// TODO: LOGGING
                 _dataMigrationManager.Update(themeId);
                 Services.Notifier.Information(T("The theme {0} was updated successfully", themeId));
             } catch (Exception exception) {
