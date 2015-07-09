@@ -18,6 +18,7 @@ using Orchard.Environment.ShellBuilders;
 using Orchard.Environment.State;
 using Orchard.Localization;
 using Orchard.Localization.Services;
+using Orchard.Logging;
 using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
 using Orchard.Security;
@@ -55,9 +56,11 @@ namespace Orchard.Setup.Services
             _extensionManager = extensionManager;
             _recipeHarvester = recipeHarvester;
             T = NullLocalizer.Instance;
+            Logger = NullLogger.Instance;
         }
 
         public Localizer T { get; set; }
+        public ILogger Logger { get; set; }
 
         public ShellSettings Prime() {
             return _shellSettings;
@@ -79,6 +82,8 @@ namespace Orchard.Setup.Services
 
         public string Setup(SetupContext context) {
             string executionId;
+
+            Logger.Information("Running setup for tenant '{0}'.", _shellSettings.Name);
 
             // The vanilla Orchard distibution has the following features enabled.
             string[] hardcoded = {
@@ -142,9 +147,6 @@ namespace Orchard.Setup.Services
                     // Make a workaround to avoid the Transaction issue for PostgreSQL
                     environment.Resolve<ITransactionManager>().RequireNew();
 
-					// TODO: LOGGING
-					//reportsCoordinator.Register("Data Migration", "Setup", "Orchard installation");
-
                     schemaBuilder.CreateTable("Orchard_Framework_DataMigrationRecord",
                                               table => table
                                                            .Column<int>("Id", column => column.PrimaryKey().Identity())
@@ -164,8 +166,6 @@ namespace Orchard.Setup.Services
                         shellDescriptor.Parameters);
                 }
             }
-
-
 
             // in effect "pump messages" see PostMessage circa 1980
             while ( _processingEngine.AreTasksPending() )

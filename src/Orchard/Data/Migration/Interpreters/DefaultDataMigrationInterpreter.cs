@@ -329,16 +329,13 @@ namespace Orchard.Data.Migration.Interpreters {
 
             try {
                 foreach (var sqlStatement in _sqlStatements) {
-                    Logger.Debug(sqlStatement);
+                    Logger.Debug("Executing SQL query: {0}", sqlStatement);
 
                     using (var command = session.Connection.CreateCommand()) {
                         command.CommandText = sqlStatement;
                         session.Transaction.Enlist(command);
                         command.ExecuteNonQuery();
                     }
-                 
-					// TODO: LOGGING
-                    //_reportsCoordinator.Information("Data Migration", String.Format("Executing SQL Query: {0}", sqlStatement));
                 }
             }
             finally {

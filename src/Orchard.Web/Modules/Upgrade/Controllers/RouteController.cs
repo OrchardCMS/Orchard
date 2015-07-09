@@ -13,6 +13,7 @@ using Orchard.Core.Title.Models;
 using Orchard.Data;
 using Orchard.Environment.Configuration;
 using Orchard.Localization;
+using Orchard.Logging;
 using Orchard.Security;
 using Orchard.UI.Admin;
 using Orchard.UI.Notify;
@@ -38,9 +39,12 @@ namespace Upgrade.Controllers {
             _sessionFactoryHolder = sessionFactoryHolder;
             _shellSettings = shellSettings;
             _autorouteService = autorouteService;
+            T = NullLocalizer.Instance;
+            Logger = NullLogger.Instance;
         }
 
         public Localizer T { get; set; }
+        public ILogger Logger { get; set; }
 
         public ActionResult Index() {
             var viewModel = new MigrateViewModel { ContentTypes = new List<ContentTypeEntry>() };
@@ -67,9 +71,9 @@ namespace Upgrade.Controllers {
 
             if(TryUpdateModel(viewModel)) {
 
-				// TODO: LOGGING
-				//_reportsCoordinator.Register("Migration", "Upgrade", "Migrating " + string.Join(" ,", viewModel.ContentTypes.Where(x => x.IsChecked).Select(x => x.ContentTypeName).ToArray()));
-            
+                var contentTypeNames = String.Join(" ,", viewModel.ContentTypes.Where(x => x.IsChecked).Select(x => x.ContentTypeName).ToArray());
+                Logger.Information("Migrating content types: {0}", contentTypeNames);
+
                 var contentTypesToMigrate = viewModel.ContentTypes.Where(c => c.IsChecked).Select(c => c.ContentTypeName);
 
                 var sessionFactory = _sessionFactoryHolder.GetSessionFactory();
@@ -77,8 +81,7 @@ namespace Upgrade.Controllers {
 
                 foreach (var contentType in contentTypesToMigrate) {
 
-					// TODO: LOGGING
-					//_reportsCoordinator.Information("Migration", "Adding parts to " + contentType);
+                    Logger.Information("Adding parts to content type '{0}'.", contentType);
 
                     // migrating parts
                     _contentDefinitionManager.AlterTypeDefinition(contentType,
@@ -131,8 +134,7 @@ namespace Upgrade.Controllers {
                                         reader.Close();
                                     }
 
-									// TODO: LOGGING
-									//_reportsCoordinator.Error("Migration", "Migrating content item " + autoroutePart.ContentItem.Id + " failed with: " + e.Message);
+                                    Logger.Error("Migration of content item '{0}' failed: {1}", autoroutePart.ContentItem.Id, e.Message);
                                     errors = true;
                                 }
                             }
