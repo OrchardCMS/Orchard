@@ -25,6 +25,7 @@
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
     <TargetFrameworkProfile />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -82,7 +83,6 @@
     <Compile Include="RecipeHandlers\ThemeRecipeHandler.cs" />
     <Compile Include="Routes.cs" />
     <Compile Include="Services\RecipeHarvester.cs" />
-    <Compile Include="Services\RecipeJournalManager.cs" />
     <Compile Include="Services\RecipeManager.cs" />
     <Compile Include="Services\RecipeParser.cs" />
     <Compile Include="Services\RecipeScheduler.cs" />

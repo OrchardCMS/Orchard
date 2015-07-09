@@ -12,12 +12,10 @@ namespace Orchard.Recipes.RecipeHandlers {
     public class DataRecipeHandler : IRecipeHandler {
         private readonly IOrchardServices _orchardServices;
         private readonly ITransactionManager _transactionManager;
-        private readonly IRecipeJournal _recipeJournal;
 
-        public DataRecipeHandler(IOrchardServices orchardServices, ITransactionManager transactionManager, IRecipeJournal recipeJournal) {
+        public DataRecipeHandler(IOrchardServices orchardServices, ITransactionManager transactionManager) {
             _orchardServices = orchardServices;
             _transactionManager = transactionManager;
-            _recipeJournal = recipeJournal;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
@@ -57,7 +55,8 @@ namespace Orchard.Recipes.RecipeHandlers {
                     while (nextIdentity != null) {
                         if (!string.IsNullOrEmpty(recipeContext.ExecutionId) && elementDictionary[nextIdentity.ToString()].HasAttributes) {
                             var itemId = elementDictionary[nextIdentity.ToString()].FirstAttribute.Value;
-                            _recipeJournal.WriteJournalEntry(recipeContext.ExecutionId, T("Data: Importing {0}.", itemId).Text);
+                            // TODO: ************** LOGGING
+                            //_recipeJournal.WriteJournalEntry(recipeContext.ExecutionId, T("Data: Importing {0}.", itemId).Text);
                         }
                         _orchardServices.ContentManager.Import(
                             elementDictionary[nextIdentity.ToString()],

@@ -56,7 +56,6 @@ namespace Orchard.Tests.Modules.ImportExport.Services {
             builder.RegisterType<RecipeHarvester>().As<IRecipeHarvester>();
             builder.RegisterType<RecipeStepExecutor>().As<IRecipeStepExecutor>();
             builder.RegisterType<StubStepQueue>().As<IRecipeStepQueue>().InstancePerLifetimeScope();
-            builder.RegisterType<StubRecipeJournal>().As<IRecipeJournal>();
             builder.RegisterType<StubRecipeScheduler>().As<IRecipeScheduler>();
             builder.RegisterType<ExtensionManager>().As<IExtensionManager>();
             builder.RegisterType<StubAppDataFolder>().As<IAppDataFolder>();

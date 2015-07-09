@@ -16,19 +16,15 @@ namespace Orchard.ImportExport.Controllers {
         private readonly IImportExportService _importExportService;
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly ICustomExportStep _customExportStep;
-        private readonly IRecipeJournal _recipeJournal;
 
         public AdminController(
             IOrchardServices services, 
             IImportExportService importExportService, 
             IContentDefinitionManager contentDefinitionManager,
-            ICustomExportStep customExportStep,
-            IRecipeJournal recipeJournal
-            ) {
+            ICustomExportStep customExportStep) {
             _importExportService = importExportService;
             _contentDefinitionManager = contentDefinitionManager;
             _customExportStep = customExportStep;
-            _recipeJournal = recipeJournal;
             Services = services;
             T = NullLocalizer.Instance;
         }
@@ -54,16 +50,9 @@ namespace Orchard.ImportExport.Controllers {
 
             if (ModelState.IsValid) {
                 var executionId = _importExportService.Import(new StreamReader(Request.Files["RecipeFile"].InputStream).ReadToEnd());
-                Services.Notifier.Information(T("Your recipe has been imported."));
-
-                return RedirectToAction("ImportResult", new { ExecutionId = executionId });
+                // TODO: Figure out how to report the result. Probably add notifications from the actual import and then redirect to another action, which will display those notifications.
             }
             return View(new ImportViewModel());
-        }
-
-        public ActionResult ImportResult(string executionId) {
-            var journal = _recipeJournal.GetRecipeJournal(executionId);
-            return View(journal);
         }
 
         public ActionResult Export() {

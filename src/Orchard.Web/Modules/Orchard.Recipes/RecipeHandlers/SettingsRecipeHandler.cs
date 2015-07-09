@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security.Policy;
-using System.Xml;
 using System.Xml.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
@@ -16,13 +14,11 @@ namespace Orchard.Recipes.RecipeHandlers {
         private readonly ISiteService _siteService;
         private readonly IContentManager _contentManager;
         private readonly Lazy<IEnumerable<IContentHandler>> _handlers;
-        private readonly IRecipeJournal _recipeJournal;
 
-        public SettingsRecipeHandler(ISiteService siteService, IContentManager contentManager, Lazy<IEnumerable<IContentHandler>> handlers, IRecipeJournal recipeJournal) {
+        public SettingsRecipeHandler(ISiteService siteService, IContentManager contentManager, Lazy<IEnumerable<IContentHandler>> handlers) {
             _siteService = siteService;
             _contentManager = contentManager;
             _handlers = handlers;
-            _recipeJournal = recipeJournal;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
@@ -59,7 +55,8 @@ namespace Orchard.Recipes.RecipeHandlers {
                 }
 
                 if (!string.IsNullOrEmpty(recipeContext.ExecutionId)) {
-                    _recipeJournal.WriteJournalEntry(recipeContext.ExecutionId, T("Setting: {0}.", contentPart.PartDefinition.Name).Text);
+                    // TODO: ************** LOGGING
+                    //_recipeJournal.WriteJournalEntry(recipeContext.ExecutionId, T("Setting: {0}.", contentPart.PartDefinition.Name).Text);
                 }
 
                 ImportSettingPart(contentPart, partElement);

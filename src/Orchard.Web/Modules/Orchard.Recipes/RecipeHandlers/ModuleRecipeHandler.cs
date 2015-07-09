@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Hosting;
-using Orchard.Data.Migration;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
-using Orchard.Environment.Features;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Packaging.Models;
@@ -17,17 +15,14 @@ namespace Orchard.Recipes.RecipeHandlers {
         private readonly IPackagingSourceManager _packagingSourceManager;
         private readonly IPackageManager _packageManager;
         private readonly IExtensionManager _extensionManager;
-        private readonly IRecipeJournal _recipeJournal;
 
         public ModuleRecipeHandler(
             IPackagingSourceManager packagingSourceManager, 
             IPackageManager packageManager, 
-            IExtensionManager extensionManager,
-            IRecipeJournal recipeJournal) {
+            IExtensionManager extensionManager) {
             _packagingSourceManager = packagingSourceManager;
             _packageManager = packageManager;
             _extensionManager = extensionManager;
-            _recipeJournal = recipeJournal;
 
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
@@ -91,7 +86,8 @@ namespace Orchard.Recipes.RecipeHandlers {
             if (packagingEntry != null) {
                 if (!ModuleAlreadyInstalled(packagingEntry.PackageId)) {
                     if (!string.IsNullOrEmpty(recipeContext.ExecutionId)) {
-                        _recipeJournal.WriteJournalEntry(recipeContext.ExecutionId, T("Installing module: {0}.", packagingEntry.Title).Text);
+                        // TODO: ************** LOGGING
+                        //_recipeJournal.WriteJournalEntry(recipeContext.ExecutionId, T("Installing module: {0}.", packagingEntry.Title).Text);
                     }
                     _packageManager.Install(packagingEntry.PackageId, packagingEntry.Version, packagingSource.FeedUrl, HostingEnvironment.MapPath("~/")); 
                 }

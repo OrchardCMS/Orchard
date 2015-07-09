@@ -222,7 +222,6 @@ namespace Orchard.MediaLibrary.Services {
         public IEnumerable<IMediaFolder> GetMediaFolders(string relativePath) {
             return _storageProvider
                 .ListFolders(relativePath)
-                .Where(f => !f.GetName().Equals("RecipeJournal", StringComparison.OrdinalIgnoreCase))
                 .Where(f => !f.GetName().StartsWith("_"))
                 .Select(BuildMediaFolder)
                 .ToList();

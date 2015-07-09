@@ -14,16 +14,13 @@ namespace Orchard.Roles.ImportExport {
         private readonly IRoleService _roleService;
         private readonly IRepository<RoleRecord> _roleRecordRepository;
         private readonly IRepository<PermissionRecord> _permissionRepository;
-        private readonly IRecipeJournal _recipeJournal;
 
         public RolesRecipeHandler(IRoleService roleService, 
             IRepository<RoleRecord> roleRecordRepository, 
-            IRepository<PermissionRecord> permissionRepository,
-            IRecipeJournal recipeJournal) {
+            IRepository<PermissionRecord> permissionRepository) {
             _roleService = roleService;
             _roleRecordRepository = roleRecordRepository;
             _permissionRepository = permissionRepository;
-            _recipeJournal = recipeJournal;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
@@ -42,7 +39,8 @@ namespace Orchard.Roles.ImportExport {
                 var roleName = roleElement.Attribute("Name").Value;
 
                 if (string.IsNullOrEmpty(recipeContext.ExecutionId)) {
-                    _recipeJournal.WriteJournalEntry(recipeContext.ExecutionId, T("Roles: Executing item {0}.", roleName).Text);
+                    // TODO: ************** LOGGING
+                    //_recipeJournal.WriteJournalEntry(recipeContext.ExecutionId, T("Roles: Executing item {0}.", roleName).Text);
                 }
 
                 var role = _roleService.GetRoleByName(roleName);

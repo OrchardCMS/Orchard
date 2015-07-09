@@ -347,11 +347,9 @@
     <Compile Include="Recipes\Events\IRecipeSchedulerEventHandler.cs" />
     <Compile Include="Recipes\Models\Recipe.cs" />
     <Compile Include="Recipes\Models\RecipeContext.cs" />
-    <Compile Include="Recipes\Models\RecipeJournal.cs" />
     <Compile Include="Recipes\Models\RecipeStep.cs" />
     <Compile Include="Recipes\Services\IRecipeHandler.cs" />
     <Compile Include="Recipes\Services\IRecipeHarvester.cs" />
-    <Compile Include="Recipes\Services\IRecipeJournal.cs" />
     <Compile Include="Recipes\Services\IRecipeManager.cs" />
     <Compile Include="Recipes\Services\IRecipeParser.cs" />
     <Compile Include="Recipes\Services\IRecipeScheduler.cs" />
