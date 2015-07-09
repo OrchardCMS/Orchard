@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Descriptor;
 using Orchard.Environment.State;
+using Orchard.Logging;
 using Orchard.Recipes.Events;
 
 namespace Orchard.Recipes.Services {
@@ -17,16 +18,21 @@ namespace Orchard.Recipes.Services {
             IProcessingEngine processingEngine,
             ShellSettings shellSettings,
             IShellDescriptorManager shellDescriptorManager,
-            Lazy<IRecipeStepExecutor> recipeStepExecutor, IShellDescriptorManagerEventHandler events) {
+            Lazy<IRecipeStepExecutor> recipeStepExecutor,
+            IShellDescriptorManagerEventHandler events) {
             _processingEngine = processingEngine;
             _shellSettings = shellSettings;
             _shellDescriptorManager = shellDescriptorManager;
             _recipeStepExecutor = recipeStepExecutor;
             _events = events;
+            Logger = NullLogger.Instance;
         }
+
+        public ILogger Logger;
 
         public void ScheduleWork(string executionId) {
             var shellDescriptor = _shellDescriptorManager.GetShellDescriptor();
+            Logger.Information("Scheduling execution of recipe {0}.", executionId);
             // TODO: this task entry may need to become appdata folder backed if it isn't already
             _processingEngine.AddTask(
                 _shellSettings,
@@ -36,6 +42,7 @@ namespace Orchard.Recipes.Services {
         }
 
         public void ExecuteWork(string executionId) {
+            Logger.Information("Executing next step of recipe {0}.", executionId);
             // todo: this callback should be guarded against concurrency by the IProcessingEngine
             var scheduleMore = _recipeStepExecutor.Value.ExecuteNextStep(executionId);
             if (scheduleMore)
