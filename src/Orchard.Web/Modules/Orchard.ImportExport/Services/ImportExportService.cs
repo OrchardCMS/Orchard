@@ -25,7 +25,6 @@ namespace Orchard.ImportExport.Services {
         private readonly IShellDescriptorManager _shellDescriptorManager;
         private readonly IClock _clock;
         private readonly IEnumerable<IExportEventHandler> _exportEventHandlers;
-        private readonly IContentManager _contentManager;
         private const string ExportsDirectory = "Exports";
 
         public ImportExportService(
@@ -37,8 +36,7 @@ namespace Orchard.ImportExport.Services {
             IRecipeManager recipeManager,
             IShellDescriptorManager shellDescriptorManager,
             IClock clock,
-            IEnumerable<IExportEventHandler> exportEventHandlers, 
-            IContentManager contentManager) {
+            IEnumerable<IExportEventHandler> exportEventHandlers) {
 
             _orchardServices = orchardServices;
             _contentDefinitionManager = contentDefinitionManager;
@@ -49,7 +47,6 @@ namespace Orchard.ImportExport.Services {
             _shellDescriptorManager = shellDescriptorManager;
             _clock = clock;
             _exportEventHandlers = exportEventHandlers;
-            _contentManager = contentManager;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
@@ -197,7 +194,7 @@ namespace Orchard.ImportExport.Services {
 
             var orderedContentItemsQuery = 
                 from contentItem in contentItems
-                let identity = _contentManager.GetItemMetadata(contentItem).Identity.ToString()
+                let identity = _orchardServices.ContentManager.GetItemMetadata(contentItem).Identity.ToString()
                 orderby identity
                 select contentItem;
 
