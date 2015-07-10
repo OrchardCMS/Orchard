@@ -35,7 +35,7 @@ namespace Orchard.Roles.ImportExport {
             var root = new XElement("Roles");
             context.Document.Element("Orchard").Add(root);
 
-            foreach (var role in roles) {
+            foreach (var role in roles.OrderBy(x => x)) {
                 root.Add(new XElement("Role",
                                       new XAttribute("Name", role.Name),
                                       new XAttribute("Permissions", string.Join(",", role.RolesPermissions.Select(rolePermission => rolePermission.Permission.Name)))));

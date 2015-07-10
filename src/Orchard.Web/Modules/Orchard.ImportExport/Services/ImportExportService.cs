@@ -4,17 +4,15 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
+using Orchard.ContentManagement.MetaData.Models;
 using Orchard.Environment.Descriptor;
 using Orchard.FileSystems.AppData;
 using Orchard.ImportExport.Models;
 using Orchard.Localization;
 using Orchard.Logging;
-using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
 using Orchard.Services;
-using VersionOptions = Orchard.ContentManagement.VersionOptions;
 
 namespace Orchard.ImportExport.Services {
     public class ImportExportService : IImportExportService {
@@ -27,6 +25,7 @@ namespace Orchard.ImportExport.Services {
         private readonly IShellDescriptorManager _shellDescriptorManager;
         private readonly IClock _clock;
         private readonly IEnumerable<IExportEventHandler> _exportEventHandlers;
+        private readonly IContentManager _contentManager;
         private const string ExportsDirectory = "Exports";
 
         public ImportExportService(
@@ -38,7 +37,9 @@ namespace Orchard.ImportExport.Services {
             IRecipeManager recipeManager,
             IShellDescriptorManager shellDescriptorManager,
             IClock clock,
-            IEnumerable<IExportEventHandler> exportEventHandlers) {
+            IEnumerable<IExportEventHandler> exportEventHandlers, 
+            IContentManager contentManager) {
+
             _orchardServices = orchardServices;
             _contentDefinitionManager = contentDefinitionManager;
             _contentDefinitionWriter = contentDefinitionWriter;
@@ -48,6 +49,7 @@ namespace Orchard.ImportExport.Services {
             _shellDescriptorManager = shellDescriptorManager;
             _clock = clock;
             _exportEventHandlers = exportEventHandlers;
+            _contentManager = contentManager;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
@@ -66,7 +68,7 @@ namespace Orchard.ImportExport.Services {
             //items need to be retrieved
             IEnumerable<ContentItem> contentItems = null;
             if (exportOptions.ExportData) {
-                contentItems = _orchardServices.ContentManager.Query(GetContentExportVersionOptions(exportOptions.VersionHistoryOptions), contentTypes.ToArray()).List();
+                contentItems = _orchardServices.ContentManager.Query(GetContentExportVersionOptions(exportOptions.VersionHistoryOptions), contentTypes.ToArray()).List().ToArray();
             }
 
             return Export(contentTypes, contentItems, exportOptions);
@@ -121,17 +123,20 @@ namespace Orchard.ImportExport.Services {
             var typesToExport = _contentDefinitionManager.ListTypeDefinitions()
                 .Where(typeDefinition => contentTypes.Contains(typeDefinition.Name))
                 .ToList();
-            var partsToExport = new List<string>();
+            var partsToExport = new Dictionary<string, ContentPartDefinition>();
 
-            foreach (var contentTypeDefinition in typesToExport) {
+            foreach (var contentTypeDefinition in typesToExport.OrderBy(x => x.Name)) {
                 foreach (var contentPartDefinition in contentTypeDefinition.Parts) {
-                    if (partsToExport.Contains(contentPartDefinition.PartDefinition.Name)) {
+                    if (partsToExport.ContainsKey(contentPartDefinition.PartDefinition.Name)) {
                         continue;
                     }
-                    partsToExport.Add(contentPartDefinition.PartDefinition.Name);
-                    partsElement.Add(_contentDefinitionWriter.Export(contentPartDefinition.PartDefinition));
+                    partsToExport.Add(contentPartDefinition.PartDefinition.Name, contentPartDefinition.PartDefinition);
                 }
                 typesElement.Add(_contentDefinitionWriter.Export(contentTypeDefinition));
+            }
+
+            foreach (var part in partsToExport.Values.OrderBy(x => x.Name)) {
+                partsElement.Add(_contentDefinitionWriter.Export(part));
             }
 
             return new XElement("Metadata", typesElement, partsElement);
@@ -141,7 +146,7 @@ namespace Orchard.ImportExport.Services {
             var siteContentItem = _orchardServices.WorkContext.CurrentSite.ContentItem;
             var exportedElements = ExportContentItem(siteContentItem).Elements().ToList();
             
-            foreach (var contentPart in siteContentItem.Parts) {
+            foreach (var contentPart in siteContentItem.Parts.OrderBy(x => x.PartDefinition.Name)) {
                 var exportedElement = exportedElements.FirstOrDefault(element => element.Name == contentPart.PartDefinition.Name);
 
                 //Get all simple attributes if exported element is null
@@ -149,6 +154,7 @@ namespace Orchard.ImportExport.Services {
                 var simpleAttributes =
                     ExportSettingsPartAttributes(contentPart)
                     .Where(attribute => exportedElement == null || exportedElement.Attributes().All(xAttribute => xAttribute.Name != attribute.Name))
+                    .OrderBy(x => x.Name.LocalName)
                     .ToList();
 
                 if (simpleAttributes.Any()) {
@@ -161,11 +167,12 @@ namespace Orchard.ImportExport.Services {
                 }
             }
 
+            exportedElements = exportedElements.OrderBy(x => x.Name.LocalName).ToList();
             return new XElement("Settings", exportedElements);
         }
 
         private IEnumerable<XAttribute> ExportSettingsPartAttributes(ContentPart sitePart) {
-            foreach (var property in sitePart.GetType().GetProperties()) {
+            foreach (var property in sitePart.GetType().GetProperties().OrderBy(x => x.Name)) {
                 var propertyType = property.PropertyType;
 
                 // Supported types (we also know they are not indexed properties).
@@ -188,9 +195,17 @@ namespace Orchard.ImportExport.Services {
             if (batchSize.HasValue && batchSize.Value > 0)
                 data.SetAttributeValue("BatchSize", batchSize);
 
-            foreach (var contentType in contentTypes) {
+            var orderedContentItemsQuery = 
+                from contentItem in contentItems
+                let identity = _contentManager.GetItemMetadata(contentItem).Identity.ToString()
+                orderby identity
+                select contentItem;
+
+            var orderedContentItems = orderedContentItemsQuery.ToList();
+
+            foreach (var contentType in contentTypes.OrderBy(x => x)) {
                 var type = contentType;
-                var items = contentItems.Where(i => i.ContentType == type);
+                var items = orderedContentItems.Where(i => i.ContentType == type);
                 foreach (var contentItem in items) {
                     var contentItemElement = ExportContentItem(contentItem);
                     if (contentItemElement != null)
