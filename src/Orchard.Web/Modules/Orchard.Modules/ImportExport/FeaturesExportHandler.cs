@@ -27,6 +27,9 @@ namespace Orchard.Modules.ImportExport {
 
             var root = new XElement("Feature", new XAttribute("enable", String.Join(", ", enabledFeatures.Select(x => x.Id).OrderBy(x => x))));
             context.Document.Element("Orchard").Add(root);
+
+            // Add the Migration element to force migrations run immediately after the features have been synced.
+            context.Document.Element("Orchard").Add(new XElement("Migration", new XAttribute("features", "*")));
         }
 
         public void Exported(dynamic context) {
