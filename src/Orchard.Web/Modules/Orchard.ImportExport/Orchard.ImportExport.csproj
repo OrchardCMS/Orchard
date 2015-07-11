@@ -76,6 +76,7 @@
     <Compile Include="Services\IImportExportService.cs" />
     <Compile Include="Services\ImportExportService.cs" />
     <Compile Include="ViewModels\ExportViewModel.cs" />
+    <Compile Include="ViewModels\ImportResultViewModel.cs" />
     <Compile Include="ViewModels\ImportViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -109,7 +110,9 @@
   <ItemGroup>
     <Content Include="Views\Admin\Export.cshtml" />
   </ItemGroup>
-
+  <ItemGroup>
+    <Content Include="Views\Admin\ImportResult.cshtml" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

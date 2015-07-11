@@ -1,4 +1,5 @@
 ﻿using System;
+using Orchard.Data;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Recipes.Events;
@@ -9,14 +10,17 @@ namespace Orchard.Recipes.Services {
         private readonly IRecipeStepQueue _recipeStepQueue;
         private readonly IRecipeScheduler _recipeScheduler;
         private readonly IRecipeExecuteEventHandler _recipeExecuteEventHandler;
+        private readonly IRepository<RecipeStepResultRecord> _recipeStepResultRecordRepository;
 
         public RecipeManager(
             IRecipeStepQueue recipeStepQueue,
             IRecipeScheduler recipeScheduler,
-            IRecipeExecuteEventHandler recipeExecuteEventHandler) {
+            IRecipeExecuteEventHandler recipeExecuteEventHandler,
+            IRepository<RecipeStepResultRecord> recipeStepResultRecordRepository) {
             _recipeStepQueue = recipeStepQueue;
             _recipeScheduler = recipeScheduler;
             _recipeExecuteEventHandler = recipeExecuteEventHandler;
+            _recipeStepResultRecordRepository = recipeStepResultRecordRepository;
 
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
@@ -35,6 +39,10 @@ namespace Orchard.Recipes.Services {
 
             foreach (var recipeStep in recipe.RecipeSteps) {
                 _recipeStepQueue.Enqueue(executionId, recipeStep);
+                _recipeStepResultRecordRepository.Create(new RecipeStepResultRecord() {
+                    ExecutionId = executionId,
+                    StepName = recipeStep.Name
+                });
             }
             _recipeScheduler.ScheduleWork(executionId);
 

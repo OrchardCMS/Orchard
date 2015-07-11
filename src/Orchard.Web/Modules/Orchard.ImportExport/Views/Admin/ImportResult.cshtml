@@ -1,0 +1,36 @@
+﻿@model Orchard.ImportExport.ViewModels.ImportResultViewModel
+@{
+    Layout.Title = T("Import Result").ToString();
+}
+@if (Model.Result.IsSuccessful) {
+    <div class="message message-Information">
+        @T("The recipe file was successfully imported.")
+    </div>
+}
+else {
+    <div class="message message-Error">
+        @T("The recipe file import failed. Check the logs (recipe execution ID <strong>{0}</strong>) for more information.", Model.Result.ExecutionId)
+    </div>
+}
+<h2>@T("Recipe steps")</h2>
+<table class="items" style="width: auto;">
+    <thead>
+        <tr>
+            <th>@T("Step")</th>
+            <th>@T("Executed")</th>
+            <th>@T("Result")</th>
+            <th>@T("Message")</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var step in Model.Result.Steps) {
+            <tr>
+                <td>@step.StepName</td>
+                <td>@step.IsCompleted</td>
+                <td>@if (step.IsSuccessful) { @T("Successful") } else if (step.IsCompleted) { <strong>@T("Failed")</strong> }</td>
+                <td><strong>@step.ErrorMessage</strong></td>
+            </tr>
+        }        
+    </tbody>
+</table>
+

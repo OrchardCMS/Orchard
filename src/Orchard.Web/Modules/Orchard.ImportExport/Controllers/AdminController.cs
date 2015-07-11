@@ -16,15 +16,18 @@ namespace Orchard.ImportExport.Controllers {
         private readonly IImportExportService _importExportService;
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly ICustomExportStep _customExportStep;
+        private readonly IRecipeResultAccessor _recipeResultAccessor;
 
         public AdminController(
             IOrchardServices services, 
             IImportExportService importExportService, 
             IContentDefinitionManager contentDefinitionManager,
-            ICustomExportStep customExportStep) {
+            ICustomExportStep customExportStep,
+            IRecipeResultAccessor recipeResultAccessor) {
             _importExportService = importExportService;
             _contentDefinitionManager = contentDefinitionManager;
             _customExportStep = customExportStep;
+            _recipeResultAccessor = recipeResultAccessor;
             Services = services;
             T = NullLocalizer.Instance;
         }
@@ -50,9 +53,20 @@ namespace Orchard.ImportExport.Controllers {
 
             if (ModelState.IsValid) {
                 var executionId = _importExportService.Import(new StreamReader(Request.Files["RecipeFile"].InputStream).ReadToEnd());
-                // TODO: Figure out how to report the result. Probably add notifications from the actual import and then redirect to another action, which will display those notifications.
+                return RedirectToAction("ImportResult", new { executionId = executionId });
             }
+
             return View(new ImportViewModel());
+        }
+
+        public ActionResult ImportResult(string executionId) {
+            var result = _recipeResultAccessor.GetResult(executionId);
+
+            var viewModel = new ImportResultViewModel() {
+                Result = result
+            };
+
+            return View(viewModel);
         }
 
         public ActionResult Export() {
@@ -96,6 +110,7 @@ namespace Orchard.ImportExport.Controllers {
                 exportOptions.VersionHistoryOptions = (VersionHistoryOptions)Enum.Parse(typeof(VersionHistoryOptions), viewModel.DataImportChoice, true);
             }
             var exportFilePath = _importExportService.Export(contentTypesToExport, exportOptions);
+
             return File(exportFilePath, "text/xml", "export.xml");
         }
     }

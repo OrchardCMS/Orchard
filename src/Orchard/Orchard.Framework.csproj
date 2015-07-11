@@ -149,6 +149,9 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Recipes\Models\RecipeResult.cs" />
+    <Compile Include="Recipes\Models\RecipeStepResult.cs" />
+    <Compile Include="Recipes\Services\IRecipeResultAccessor.cs" />
     <Compile Include="Reports\Report.cs" />
     <Compile Include="Reports\ReportEntry.cs" />
     <Compile Include="Reports\ReportExtentions.cs" />
