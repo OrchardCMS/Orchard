@@ -109,9 +109,7 @@
   <ItemGroup>
     <Content Include="Views\Admin\Export.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="RecipeHandlers\" />
-  </ItemGroup>
+
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

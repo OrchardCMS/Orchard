@@ -25,6 +25,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -64,12 +65,15 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
     </Reference>
+    <Reference Include="System.XML" />
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Data\Migration\DataMigrationNotificationProvider.cs" />
     <Compile Include="Events\IExtensionDisplayEventHandler.cs" />
+    <Compile Include="ImportExport\FeaturesStep.cs" />
+    <Compile Include="ImportExport\FeaturesExportHandler.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Commands\FeatureCommands.cs" />
     <Compile Include="Controllers\AdminController.cs" />
