@@ -1,5 +1,4 @@
 ﻿(function ($) {
-
     var LayoutDesignerHost = function (element) {
         var self = this;
         this.element = element;
@@ -125,5 +124,16 @@
 
     $(function () {
         var host = new LayoutDesignerHost($(".layout-designer"));
+        $(".layout-designer").each(function (e) {
+            var designer = $(this);
+            var dialog = designer.find(".layout-editor-help-dialog");
+            designer.find(".layout-editor-help-link").click(function (e) {
+                dialog.dialog({
+                    modal: true,
+                    width: 840
+                });
+                e.preventDefault();
+            });
+        });
     });
 })(jQuery);
