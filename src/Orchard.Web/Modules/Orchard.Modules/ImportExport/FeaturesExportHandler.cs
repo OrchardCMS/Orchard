@@ -19,7 +19,7 @@ namespace Orchard.Modules.ImportExport {
         }
 
         public void Exporting(dynamic context) {
-            if (!((IEnumerable<string>)context.ExportOptions.CustomSteps).Contains("Features")) {
+            if (!((IEnumerable<string>)context.ExportOptions.CustomSteps).Contains("EnabledFeatures")) {
                 return;
             }
 

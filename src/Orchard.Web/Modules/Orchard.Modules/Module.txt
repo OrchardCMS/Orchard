@@ -13,7 +13,7 @@ Features:
         Dependencies: Orchard.jQuery
         Category: Core
     Orchard.Modules.ExportFeatures:
-        Name: Export Features
+        Name: Export Enabled Features
         Description: Provides feature export capability.
         Category: Deployment
         Dependencies: Orchard.ImportExport

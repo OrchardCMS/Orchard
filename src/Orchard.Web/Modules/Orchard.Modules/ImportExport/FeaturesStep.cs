@@ -8,7 +8,7 @@ namespace Orchard.Modules.ImportExport {
 
     public class FeaturesStep : ICustomExportStep {
         public void Register(IList<string> steps) {
-            steps.Add("Features");
+            steps.Add("EnabledFeatures");
         }
     }
 }
