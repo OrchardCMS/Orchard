@@ -57,6 +57,11 @@
         </div>
         <div data-controllerid="@Html.FieldIdFor(m => m.SetupRecipe)">
             <div>
+                @Html.LabelFor(m => m.RecipeName, T("Name"))
+                @Html.TextBoxFor(m => m.RecipeName, new { @class = "text medium" })
+                @Html.Hint(T("Optionally provide a name for the setup recipe."))
+            </div>
+            <div>
                 @Html.LabelFor(m => m.RecipeDescription, T("Description"))
                 @Html.TextBoxFor(m => m.RecipeDescription, new {@class = "text large"})
                 @Html.Hint(T("Optionally provide a description for the setup recipe."))
@@ -73,7 +78,7 @@
             </div>
             <div>
                 @Html.LabelFor(m => m.RecipeVersion, T("Version"))
-                @Html.TextBoxFor(m => m.RecipeVersion, new { @class = "text small" })
+                @Html.TextBoxFor(m => m.RecipeVersion, new {@class = "text small"})
                 @Html.Hint(T("Optionally provide a version for the setup recipe."))
             </div>
         </div>

@@ -10,6 +10,7 @@ namespace Orchard.ImportExport.ViewModels {
         public string DataImportChoice { get; set; }
         public bool SiteSettings { get; set; }
         public bool SetupRecipe { get; set; }
+        public string RecipeName { get; set; }
         public string RecipeDescription { get; set; }
         public string RecipeWebsite { get; set; }
         public string RecipeTags { get; set; }

@@ -9,6 +9,7 @@ namespace Orchard.ImportExport.Models {
         public bool ExportSiteSettings { get; set; }
         public IEnumerable<string> CustomSteps { get; set; }
         public bool SetupRecipe { get; set; }
+        public string RecipeName { get; set; }
         public string RecipeDescription { get; set; }
         public string RecipeWebsite { get; set; }
         public string RecipeTags { get; set; }

@@ -10,6 +10,7 @@ using Orchard.Localization;
 using Orchard.Recipes.Services;
 using Orchard.UI.Notify;
 using Orchard.ImportExport.Models;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.ImportExport.Controllers {
     public class AdminController : Controller {
@@ -104,6 +105,7 @@ namespace Orchard.ImportExport.Controllers {
                 ExportMetadata = viewModel.Metadata, 
                 ExportSiteSettings = viewModel.SiteSettings,
                 SetupRecipe = viewModel.SetupRecipe,
+                RecipeName = viewModel.RecipeName,
                 RecipeDescription = viewModel.RecipeDescription,
                 RecipeWebsite = viewModel.RecipeWebsite,
                 RecipeTags = viewModel.RecipeTags,
@@ -117,8 +119,11 @@ namespace Orchard.ImportExport.Controllers {
                 exportOptions.ImportBatchSize = viewModel.ImportBatchSize;
             }
             var exportFilePath = _importExportService.Export(contentTypesToExport, exportOptions);
+            var exportFileName = exportOptions.SetupRecipe && !String.IsNullOrWhiteSpace(exportOptions.RecipeName)
+                ? String.Format("{0}.recipe.xml", exportOptions.RecipeName.HtmlClassify())
+                : "export.xml";
 
-            return File(exportFilePath, "text/xml", "export.xml");
+            return File(exportFilePath, "text/xml", exportFileName);
         }
     }
 }
