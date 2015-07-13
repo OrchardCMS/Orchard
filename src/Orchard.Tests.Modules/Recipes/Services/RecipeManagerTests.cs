@@ -4,8 +4,11 @@ using System.Linq;
 using System.Xml;
 using Autofac;
 using Moq;
+using NHibernate;
 using NUnit.Framework;
 using Orchard.Caching;
+using Orchard.ContentManagement.Records;
+using Orchard.Data;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Folders;
 using Orchard.Environment.Extensions.Loaders;
@@ -16,6 +19,7 @@ using Orchard.Recipes.Services;
 using Orchard.Services;
 using Orchard.Tests.Stubs;
 using Orchard.Recipes.Events;
+using Orchard.Tests.ContentManagement;
 
 namespace Orchard.Tests.Modules.Recipes.Services {
     [TestFixture]
@@ -25,9 +29,22 @@ namespace Orchard.Tests.Modules.Recipes.Services {
         private IRecipeHarvester _recipeHarvester;
         private IRecipeParser _recipeParser;
         private IExtensionFolders _folders;
+        private ISessionFactory _sessionFactory;
+        private ISession _session;
 
         private const string DataPrefix = "Orchard.Tests.Modules.Recipes.Services.FoldersData.";
         private string _tempFolderName;
+
+        [TestFixtureSetUp]
+        public void InitFixture() {
+            var databaseFileName = System.IO.Path.GetTempFileName();
+            _sessionFactory = DataUtility.CreateSessionFactory(
+                databaseFileName,
+                typeof(ContentTypeRecord),
+                typeof(ContentItemRecord),
+                typeof(ContentItemVersionRecord),
+                typeof(RecipeStepResultRecord));
+        }
 
         [SetUp]
         public void Init() {
@@ -83,6 +100,9 @@ namespace Orchard.Tests.Modules.Recipes.Services {
             builder.RegisterType<RecipeParser>().As<IRecipeParser>();
             builder.RegisterType<StubWebSiteFolder>().As<IWebSiteFolder>();
             builder.RegisterType<CustomRecipeHandler>().As<IRecipeHandler>();
+            builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
+            _session = _sessionFactory.OpenSession();
+            builder.RegisterInstance(new DefaultContentManagerTests.TestSessionLocator(_session)).As<ISessionLocator>();
 
             _container = builder.Build();
             _recipeManager = _container.Resolve<IRecipeManager>();
