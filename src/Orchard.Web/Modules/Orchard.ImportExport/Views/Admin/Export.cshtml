@@ -1,22 +1,18 @@
 ﻿@using Orchard.Utility.Extensions
 @model Orchard.ImportExport.ViewModels.ExportViewModel
-
 @{ Layout.Title = T("Export").ToString(); }
-
 @using (Html.BeginFormAntiForgeryPost()) {
     Html.ValidationSummary();
     <fieldset>
         <legend>@T("Choose the types to include in the export file:")</legend>
         <label><input type="checkbox" class="check-all" />@T("Select all")</label>
         <ol>
-            @{var contentTypeIndex = 0;}
-            @foreach (var contentTypeEntry in Model.ContentTypes) {
+            @for (var contentTypeIndex = 0; contentTypeIndex < Model.ContentTypes.Count; contentTypeIndex++) {
                 <li>
                     <input type="hidden" value="@Model.ContentTypes[contentTypeIndex].ContentTypeName" name="@Html.NameOf(m => m.ContentTypes[contentTypeIndex].ContentTypeName)"/>
                     <input type="checkbox" value="true" name="@Html.NameOf(m => m.ContentTypes[contentTypeIndex].IsChecked)" id="@Html.NameOf(m => m.ContentTypes[contentTypeIndex].IsChecked)" />
                     <label class="forcheckbox" for="@Html.NameOf(m => m.ContentTypes[contentTypeIndex].IsChecked)">@Model.ContentTypes[contentTypeIndex].ContentTypeName.CamelFriendly()</label>
                 </li>
-                contentTypeIndex = contentTypeIndex + 1;
             }
         </ol>
     </fieldset>
