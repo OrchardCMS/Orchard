@@ -108,6 +108,7 @@ namespace Orchard.ImportExport.Controllers {
             if (viewModel.Data) {
                 exportOptions.ExportData = true;
                 exportOptions.VersionHistoryOptions = (VersionHistoryOptions)Enum.Parse(typeof(VersionHistoryOptions), viewModel.DataImportChoice, true);
+                exportOptions.ImportBatchSize = viewModel.ImportBatchSize;
             }
             var exportFilePath = _importExportService.Export(contentTypesToExport, exportOptions);
 
