@@ -21,6 +21,7 @@ using Orchard.FileSystems.AppData;
 using Orchard.FileSystems.WebSite;
 using Orchard.ImportExport.Services;
 using Orchard.Recipes.Events;
+using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
 using Orchard.Services;
 using Orchard.Tests.ContentManagement;
@@ -44,7 +45,8 @@ namespace Orchard.Tests.Modules.ImportExport.Services {
                 databaseFileName,
                 typeof(ContentTypeRecord),
                 typeof(ContentItemRecord),
-                typeof(ContentItemVersionRecord));
+                typeof(ContentItemVersionRecord),
+                typeof(RecipeStepResultRecord));
         }
 
         [SetUp]
