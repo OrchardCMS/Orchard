@@ -8,6 +8,11 @@ namespace Orchard.ImportExport.Models {
         public VersionHistoryOptions VersionHistoryOptions { get; set; }
         public bool ExportSiteSettings { get; set; }
         public IEnumerable<string> CustomSteps { get; set; }
+        public bool SetupRecipe { get; set; }
+        public string RecipeDescription { get; set; }
+        public string RecipeWebsite { get; set; }
+        public string RecipeTags { get; set; }
+        public string RecipeVersion { get; set; }
     }
 
     public enum VersionHistoryOptions {

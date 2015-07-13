@@ -20,47 +20,75 @@
     <fieldset>
         <legend>@T("Choose what to save for these types:")</legend>
         <div>
-            @Html.EditorFor(m => m.Metadata) 
-            <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Metadata)">@T("Metadata")</label>
+            @Html.EditorFor(m => m.Metadata)
+            @Html.LabelFor(m => m.Metadata, T("Batch Size").ToString(), new { @class = "forcheckbox" })
             @Html.Hint(T("Metadata is the definition of your content types: what parts and fields they have, with what settings."))
         </div>
         <div>
             @Html.EditorFor(m => m.Data)
-            <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Data)">@T("Data")</label>
+            @Html.LabelFor(m => m.Data, T("Data").ToString(), new { @class = "forcheckbox" })
             @Html.Hint(T("Data is the actual content of your site."))
         </div>
         <div>
             @Html.LabelFor(m => m.ImportBatchSize, T("Batch Size"))
-            @Html.TextBoxFor(m => m.ImportBatchSize, new { @class = "text small" })
+            @Html.TextBoxFor(m => m.ImportBatchSize, new {@class = "text small"})
             @Html.Hint(T("The batch size to use when importing the data. Leave empty to disable batched imports."))
         </div>
         <div>
             <p>@T("Version History")</p>
-            @Html.RadioButtonFor(m => m.DataImportChoice, "Published", new { id = "Published", Checked = "Checked" })
-            <label for="@Html.FieldIdFor(m => m.DataImportChoice)" class="forcheckbox">@T("Only Published Versions")</label>
-            <br />
-            @Html.RadioButtonFor(m => m.DataImportChoice, "Draft", new { id = "Draft" })
-            <label for="@Html.FieldIdFor(m => m.DataImportChoice)" class="forcheckbox">@T("Only Drafts")</label>
+            @Html.RadioButtonFor(m => m.DataImportChoice, "Published", new {id = "Published", Checked = "Checked"})
+            <label for="Published" class="forcheckbox">@T("Only Published Versions")</label>
+            <br/>
+            @Html.RadioButtonFor(m => m.DataImportChoice, "Draft", new {id = "Draft"})
+            <label for="Draft" class="forcheckbox">@T("Only Drafts")</label>
         </div>
         <div>
             @Html.EditorFor(m => m.SiteSettings)
-            <label class="forcheckbox" for="@Html.FieldIdFor(m => m.SiteSettings)">@T("Site Settings")</label><br />
+            <label class="forcheckbox" for="@Html.FieldIdFor(m => m.SiteSettings)">@T("Site Settings")</label><br/>
             @Html.Hint(T("Please verify that you are not exporting confidential information, such as passwords or application keys."))
-        </div>     
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>@T("Setup")</legend>
+        <div>
+            @Html.CheckBoxFor(m => m.SetupRecipe)
+            @Html.LabelFor(m => m.SetupRecipe, T("Setup Recipe").ToString(), new {@class = "forcheckbox"})
+            @Html.Hint(T("Check this option if you want to use the generated recipe as a setup recipe."))
+        </div>
+        <div data-controllerid="@Html.FieldIdFor(m => m.SetupRecipe)">
+            <div>
+                @Html.LabelFor(m => m.RecipeDescription, T("Description"))
+                @Html.TextBoxFor(m => m.RecipeDescription, new {@class = "text large"})
+                @Html.Hint(T("Optionally provide a description for the setup recipe."))
+            </div>
+            <div>
+                @Html.LabelFor(m => m.RecipeWebsite, T("Website"))
+                @Html.TextBoxFor(m => m.RecipeWebsite, new {@class = "text large"})
+                @Html.Hint(T("Optionally provide a website URL for the setup recipe."))
+            </div>
+            <div>
+                @Html.LabelFor(m => m.RecipeTags, T("Tags"))
+                @Html.TextBoxFor(m => m.RecipeTags, new {@class = "text large"})
+                @Html.Hint(T("Optionally provide tags for the setup recipe."))
+            </div>
+            <div>
+                @Html.LabelFor(m => m.RecipeVersion, T("Version"))
+                @Html.TextBoxFor(m => m.RecipeVersion, new { @class = "text small" })
+                @Html.Hint(T("Optionally provide a version for the setup recipe."))
+            </div>
+        </div>
     </fieldset>
 
     if (Model.CustomSteps.Any()) {
          <fieldset>
              <legend>@T("Choose the custom steps to execute in the export file:")</legend>
              <ol>
-                 @{ var customStepIndex = 0; }
-                 @foreach (var customStepEntry in Model.CustomSteps) {
+                 @for (var customStepIndex = 0; customStepIndex < Model.CustomSteps.Count; customStepIndex++) {
                      <li>
                          <input type="hidden" value="@Model.CustomSteps[customStepIndex].CustomStep" name="@Html.NameOf(m => m.CustomSteps[customStepIndex].CustomStep)"/>
                          <input type="checkbox" value="true" name="@Html.NameOf(m => m.CustomSteps[customStepIndex].IsChecked)" id="@Html.NameOf(m => m.CustomSteps[customStepIndex].IsChecked)" />
                          <label class="forcheckbox" for="@Html.NameOf(m => m.CustomSteps[customStepIndex].IsChecked)">@Model.CustomSteps[customStepIndex].CustomStep.CamelFriendly()</label>
                      </li>
-                     customStepIndex = customStepIndex + 1;
                  }
              </ol>
          </fieldset>

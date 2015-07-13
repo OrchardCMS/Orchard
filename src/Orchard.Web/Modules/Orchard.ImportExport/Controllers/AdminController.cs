@@ -74,6 +74,7 @@ namespace Orchard.ImportExport.Controllers {
             _customExportStep.Register(customSteps);
 
             var viewModel = new ExportViewModel {
+                RecipeVersion = "1.0",
                 ContentTypes = new List<ContentTypeEntry>(),
                 CustomSteps = customSteps.Select(x => new CustomStepEntry { CustomStep = x }).ToList()
             };
@@ -102,6 +103,11 @@ namespace Orchard.ImportExport.Controllers {
             var exportOptions = new ExportOptions {
                 ExportMetadata = viewModel.Metadata, 
                 ExportSiteSettings = viewModel.SiteSettings,
+                SetupRecipe = viewModel.SetupRecipe,
+                RecipeDescription = viewModel.RecipeDescription,
+                RecipeWebsite = viewModel.RecipeWebsite,
+                RecipeTags = viewModel.RecipeTags,
+                RecipeVersion = viewModel.RecipeVersion,
                 CustomSteps = customSteps
             };
 
