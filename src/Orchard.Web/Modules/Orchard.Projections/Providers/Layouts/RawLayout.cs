@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
@@ -37,6 +38,8 @@ namespace Orchard.Projections.Providers.Layouts {
             string containerTag = context.State.ContainerTag;
             string containerId = context.State.ContainerId;
             string containerClass = context.State.ContainerClass;
+            if (!String.IsNullOrEmpty(containerClass)) containerClass += " ";
+            containerClass += "projector-layout projector-raw-layout";
 
             string itemTag = context.State.ItemTag;
             string itemClass = context.State.ItemClass;
