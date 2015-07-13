@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement.MetaData;
+using Orchard.DisplayManagement;
 using Orchard.ImportExport.Services;
 using Orchard.ImportExport.ViewModels;
 using Orchard.Localization;
@@ -18,17 +19,21 @@ namespace Orchard.ImportExport.Controllers {
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly ICustomExportStep _customExportStep;
         private readonly IRecipeResultAccessor _recipeResultAccessor;
+        private readonly IEnumerable<IExportStepProvider> _exportStepProviders;
 
         public AdminController(
             IOrchardServices services, 
             IImportExportService importExportService, 
             IContentDefinitionManager contentDefinitionManager,
             ICustomExportStep customExportStep,
-            IRecipeResultAccessor recipeResultAccessor) {
+            IRecipeResultAccessor recipeResultAccessor, 
+            IEnumerable<IExportStepProvider> exportStepProviders) {
+
             _importExportService = importExportService;
             _contentDefinitionManager = contentDefinitionManager;
             _customExportStep = customExportStep;
             _recipeResultAccessor = recipeResultAccessor;
+            _exportStepProviders = exportStepProviders;
             Services = services;
             T = NullLocalizer.Instance;
         }
@@ -74,10 +79,19 @@ namespace Orchard.ImportExport.Controllers {
             var customSteps = new List<string>();
             _customExportStep.Register(customSteps);
 
+            var exportSteps = _exportStepProviders.Select(x => {
+                var editor = x.BuildEditor(Services.New);
+                editor.Provider = x;
+                editor.Name = x.Name;
+                editor.DisplayName = x.DisplayName;
+                return editor;
+            }).Where(x => x != null);
+
             var viewModel = new ExportViewModel {
                 RecipeVersion = "1.0",
                 ContentTypes = new List<ContentTypeEntry>(),
-                CustomSteps = customSteps.Select(x => new CustomStepEntry { CustomStep = x }).ToList()
+                CustomSteps = customSteps.Select(x => new CustomStepEntry { CustomStep = x }).ToList(),
+                ExportSteps = exportSteps.ToList()
             };
 
             foreach (var contentType in _contentDefinitionManager.ListTypeDefinitions().OrderBy(c => c.Name)) {

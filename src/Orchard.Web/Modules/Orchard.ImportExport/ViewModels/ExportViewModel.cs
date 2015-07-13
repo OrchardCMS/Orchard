@@ -4,6 +4,7 @@ namespace Orchard.ImportExport.ViewModels {
     public class ExportViewModel {
         public IList<ContentTypeEntry> ContentTypes { get; set; }
         public IList<CustomStepEntry> CustomSteps { get; set; }
+        public IList<dynamic> ExportSteps { get; set; }
         public bool Metadata { get; set; }
         public bool Data { get; set; }
         public int? ImportBatchSize { get; set; }

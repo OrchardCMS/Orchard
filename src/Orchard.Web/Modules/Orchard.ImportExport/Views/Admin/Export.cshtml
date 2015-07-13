@@ -1,8 +1,19 @@
-﻿@using Orchard.Utility.Extensions
+﻿@using Orchard.Localization
+@using Orchard.Utility.Extensions
 @model Orchard.ImportExport.ViewModels.ExportViewModel
 @{ Layout.Title = T("Export").ToString(); }
 @using (Html.BeginFormAntiForgeryPost()) {
     Html.ValidationSummary();
+    foreach (var exportStep in Model.ExportSteps) {
+        var displayName = (LocalizedString)exportStep.DisplayName;
+         var stepId = String.Format("step-{0}", displayName.ToString().HtmlClassify());
+         <fieldset>
+             <legend><label><input type="checkbox" id="@stepId" />@displayName</label></legend>
+             <div data-controllerid="@stepId">
+                 @Display(exportStep)
+             </div>
+         </fieldset>
+     }
     <fieldset>
         <legend>@T("Choose the types to include in the export file:")</legend>
         <label><input type="checkbox" class="check-all" />@T("Select all")</label>
