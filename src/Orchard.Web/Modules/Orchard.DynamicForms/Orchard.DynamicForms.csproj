@@ -88,6 +88,11 @@
     <Content Include="Scripts\LayoutEditor\Models\Form.js" />
     <Content Include="Scripts\Lib.js" />
     <Content Include="Scripts\Lib.min.js" />
+    <Content Include="Scripts\Lib\cldr.js" />
+    <Content Include="Scripts\Lib\cldr\event.js" />
+    <Content Include="Scripts\Lib\cldr\supplemental.js" />
+    <Content Include="Scripts\Lib\globalize.js" />
+    <Content Include="Scripts\Lib\globalize\number.js" />
     <Content Include="Scripts\Lib\jquery.validate.js" />
     <Content Include="Scripts\Lib\jquery.validate.min.js">
       <DependentUpon>jquery.validate.js</DependentUpon>
@@ -175,8 +180,10 @@
     <Compile Include="Bindings\InputFieldBindings.cs" />
     <Compile Include="Bindings\TaxonomyFieldBindings.cs" />
     <Compile Include="Drivers\FieldsetElementDriver.cs" />
+    <Compile Include="Drivers\NumFieldElementDriver.cs" />
     <Compile Include="Elements\Fieldset.cs" />
     <Compile Include="Bindings\NumericFieldBindings.cs" />
+    <Compile Include="Elements\NumField.cs" />
     <Compile Include="Forms\AddModelErrorForm.cs" />
     <Compile Include="Forms\SelectDynamicForms.cs" />
     <Compile Include="Bindings\TextFieldBindings.cs" />
@@ -224,9 +231,12 @@
     <Compile Include="ValidationRules\Mandatory.cs" />
     <Compile Include="ValidationRules\Compare.cs" />
     <Compile Include="ValidationRules\EmailAddress.cs" />
+    <Compile Include="ValidationRules\Range.cs" />
     <Compile Include="ValidationRules\RegularExpression.cs" />
     <Compile Include="ValidationRules\StringLength.cs" />
+    <Compile Include="Validators\NumFieldValidator.cs" />
     <Compile Include="Validators\QueryValidator.cs" />
+    <Compile Include="Validators\Settings\NumFieldValidationSettings.cs" />
     <Compile Include="Validators\TaxonomyValidator.cs" />
     <Compile Include="Validators\EnumerationValidator.cs" />
     <Compile Include="Validators\CheckBoxValidator.cs" />
@@ -524,6 +534,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Elements\Label.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\NumField.cshtml" />
+    <Content Include="Views\Elements\NumField.Design.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

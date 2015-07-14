@@ -1,0 +1,28 @@
+﻿@using System.Globalization;
+@using Orchard.DynamicForms.Elements
+@using Orchard.Layouts.Helpers
+@{
+    var element = (NumField)Model.Element;
+    var tagBuilder = TagBuilderExtensions.CreateElementTagBuilder(Model, "input");
+
+    Decimal value;
+    var numValue = element.Value;
+    if (Decimal.TryParse(numValue, NumberStyles.Any, CultureInfo.InvariantCulture, out value)) {
+        numValue = value.ToString(new CultureInfo(WorkContext.CurrentCulture));
+    }
+
+    tagBuilder.AddCssClass("text design");
+    tagBuilder.Attributes["type"] = "text";
+    tagBuilder.Attributes["value"] = numValue;
+    tagBuilder.Attributes["name"] = element.Name;
+}
+
+@if (element.ShowLabel) {
+    <div>
+        <label for="@element.HtmlId">@element.Label</label>
+        @tagBuilder.ToHtmlString(TagRenderMode.SelfClosing)
+    </div>
+}
+else {
+    @tagBuilder.ToHtmlString(TagRenderMode.SelfClosing)
+}
