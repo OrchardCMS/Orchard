@@ -8,3 +8,4 @@ OrchardVersion: 1.9
 Description: Provides content item data import and export capability.
 FeatureDescription: Imports and exports content item data
 Category: Content
+Dependencies: Orchard.jQuery

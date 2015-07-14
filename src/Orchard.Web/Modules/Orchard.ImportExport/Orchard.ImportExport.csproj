@@ -108,6 +108,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Scripts\exportstep-data.js" />
     <Content Include="Styles\images\menu.importexport.png" />
     <Content Include="Styles\exportstep-data.css" />
     <Content Include="Styles\menu.importexport-admin.css" />
@@ -135,6 +136,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EditorTemplates\ExportSteps\SetupRecipe.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

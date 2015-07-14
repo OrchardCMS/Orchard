@@ -1,39 +1,41 @@
 ﻿@model Orchard.ImportExport.ViewModels.DataExportStepViewModel
 @{
     Style.Include("exportstep-data.css");
+    Script.Require("jQuery");
+    Script.Include("exportstep-data.js");
 }
 <div>
     <table class="items">
         <thead>
-        <tr>
-            <th>@T("Content Type")</th>
-            <th>@T("Schema")</th>
-            <th>@T("Data")</th>
-            <th>@T("Both")</th>
-        </tr>
-        <tr class="sub">
-            <th>&nbsp;</th>
-            <th><input type="checkbox"/></th>
-            <th><input type="checkbox"/></th>
-            <th><input type="checkbox"/></th>
-        </tr>
+            <tr>
+                <th>@T("Content Type")</th>
+                <th>@T("Schema")</th>
+                <th>@T("Data")</th>
+                <th>@T("Both")</th>
+            </tr>
+            <tr class="sub">
+                <th>&nbsp;</th>
+                <th><input type="checkbox" class="check-all-schema" /></th>
+                <th><input type="checkbox" class="check-all-data" /></th>
+                <th><input type="checkbox" class="check-all-both" /></th>
+            </tr>
         </thead>
         <tbody>
-        @{ var contentTypeIndex = 0;}
-        @foreach (var contentType in Model.ContentTypes) {
-            <tr>
-                <td>@contentType.DisplayName</td>
-                <td>
-                    <input type="hidden" name="@Html.NameFor(m => m.ContentTypes[contentTypeIndex].Name)" value="@Model.ContentTypes[contentTypeIndex].Name"/>
-                    <input type="checkbox" name="@Html.NameFor(m => m.ContentTypes[contentTypeIndex].ExportSchema)" value="true"/>
-                </td>
-                <td>
-                    <input type="checkbox" name="@Html.NameFor(m => m.ContentTypes[contentTypeIndex].ExportData)" value="true"/>
-                </td>
-                <td><input type="checkbox"/></td>
-            </tr>
-            contentTypeIndex++;
-        }
+            @{ var contentTypeIndex = 0;}
+            @foreach (var contentType in Model.ContentTypes) {
+                <tr>
+                    <td>@contentType.DisplayName</td>
+                    <td>
+                        <input type="hidden" name="@Html.NameFor(m => m.ContentTypes[contentTypeIndex].Name)" value="@Model.ContentTypes[contentTypeIndex].Name" />
+                        <input type="checkbox" class="check-schema" name="@Html.NameFor(m => m.ContentTypes[contentTypeIndex].ExportSchema)" value="true" />
+                    </td>
+                    <td>
+                        <input type="checkbox" class="check-data" name="@Html.NameFor(m => m.ContentTypes[contentTypeIndex].ExportData)" value="true" />
+                    </td>
+                    <td><input type="checkbox" class="check-both" /></td>
+                </tr>
+                contentTypeIndex++;
+            }
         </tbody>
     </table>
     @Html.Hint(T("Choose the types to include in the export file"))
