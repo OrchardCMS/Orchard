@@ -3,18 +3,17 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
+using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
-using Orchard.DisplayManagement;
+using Orchard.ImportExport.Models;
 using Orchard.ImportExport.Services;
 using Orchard.ImportExport.ViewModels;
 using Orchard.Localization;
 using Orchard.Recipes.Services;
 using Orchard.UI.Notify;
-using Orchard.ImportExport.Models;
-using Orchard.Utility.Extensions;
 
 namespace Orchard.ImportExport.Controllers {
-    public class AdminController : Controller {
+    public class AdminController : Controller, IUpdateModel {
         private readonly IImportExportService _importExportService;
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly ICustomExportStep _customExportStep;
@@ -79,24 +78,17 @@ namespace Orchard.ImportExport.Controllers {
             var customSteps = new List<string>();
             _customExportStep.Register(customSteps);
 
-            var exportSteps = _exportStepProviders.Select(x => {
-                var editor = x.BuildEditor(Services.New);
-                editor.Provider = x;
-                editor.Name = x.Name;
-                editor.DisplayName = x.DisplayName;
-                return editor;
+            var exportSteps = _exportStepProviders.OrderBy(x => x.Position).Select(x => new ExportStepViewModel {
+                Name = x.Name,
+                DisplayName = x.DisplayName,
+                Description = x.Description,
+                Editor = x.BuildEditor(Services.New)
             }).Where(x => x != null);
 
             var viewModel = new ExportViewModel {
-                RecipeVersion = "1.0",
-                ContentTypes = new List<ContentTypeEntry>(),
                 CustomSteps = customSteps.Select(x => new CustomStepEntry { CustomStep = x }).ToList(),
                 ExportSteps = exportSteps.ToList()
             };
-
-            foreach (var contentType in _contentDefinitionManager.ListTypeDefinitions().OrderBy(c => c.Name)) {
-                viewModel.ContentTypes.Add(new ContentTypeEntry { ContentTypeName = contentType.Name });
-            }
 
             return View(viewModel);
         }
@@ -107,37 +99,39 @@ namespace Orchard.ImportExport.Controllers {
                 return new HttpUnauthorizedResult();
 
             var viewModel = new ExportViewModel {
-                ContentTypes = new List<ContentTypeEntry>(),
-                CustomSteps = new List<CustomStepEntry>()
+                CustomSteps = new List<CustomStepEntry>(),
+                ExportSteps = new List<ExportStepViewModel>()
             };
 
             UpdateModel(viewModel);
-            var contentTypesToExport = viewModel.ContentTypes.Where(c => c.IsChecked).Select(c => c.ContentTypeName).ToList();
+            var exportStepNames = viewModel.ExportSteps.Where(x => x.IsSelected).Select(x => x.Name);
+            var exportStepsQuery = from name in exportStepNames
+                              let provider = _exportStepProviders.SingleOrDefault(x => x.Name == name)
+                              where provider != null
+                              select provider;
+            var exportSteps = exportStepsQuery.ToArray();
             var customSteps = viewModel.CustomSteps.Where(c => c.IsChecked).Select(c => c.CustomStep);
             
             var exportOptions = new ExportOptions {
-                ExportMetadata = viewModel.Metadata, 
-                ExportSiteSettings = viewModel.SiteSettings,
-                SetupRecipe = viewModel.SetupRecipe,
-                RecipeName = viewModel.RecipeName,
-                RecipeDescription = viewModel.RecipeDescription,
-                RecipeWebsite = viewModel.RecipeWebsite,
-                RecipeTags = viewModel.RecipeTags,
-                RecipeVersion = viewModel.RecipeVersion,
                 CustomSteps = customSteps
             };
 
-            if (viewModel.Data) {
-                exportOptions.ExportData = true;
-                exportOptions.VersionHistoryOptions = (VersionHistoryOptions)Enum.Parse(typeof(VersionHistoryOptions), viewModel.DataImportChoice, true);
-                exportOptions.ImportBatchSize = viewModel.ImportBatchSize;
+            foreach (var exportStep in exportSteps) {
+                exportStep.UpdateEditor(Services.New, this);
             }
-            var exportFilePath = _importExportService.Export(contentTypesToExport, exportOptions);
-            var exportFileName = exportOptions.SetupRecipe && !String.IsNullOrWhiteSpace(exportOptions.RecipeName)
-                ? String.Format("{0}.recipe.xml", exportOptions.RecipeName.HtmlClassify())
-                : "export.xml";
+
+            var exportFilePath = _importExportService.Export(exportSteps, exportOptions);
+            var exportFileName = "export.xml";
 
             return File(exportFilePath, "text/xml", exportFileName);
+        }
+
+        bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
+            return TryUpdateModel(model, prefix, includeProperties, excludeProperties);
+        }
+
+        void IUpdateModel.AddModelError(string key, LocalizedString errorMessage) {
+            ModelState.AddModelError(key, errorMessage.ToString());
         }
     }
 }

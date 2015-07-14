@@ -1,5 +1,57 @@
-﻿<table>
-    <thead>
-    
-    </thead>
-</table>
+﻿@model Orchard.ImportExport.ViewModels.DataExportStepViewModel
+@{
+    Style.Include("exportstep-data.css");
+}
+<div>
+    <table class="items">
+        <thead>
+        <tr>
+            <th>@T("Content Type")</th>
+            <th>@T("Schema")</th>
+            <th>@T("Data")</th>
+            <th>@T("Both")</th>
+        </tr>
+        <tr class="sub">
+            <th>&nbsp;</th>
+            <th><input type="checkbox"/></th>
+            <th><input type="checkbox"/></th>
+            <th><input type="checkbox"/></th>
+        </tr>
+        </thead>
+        <tbody>
+        @{ var contentTypeIndex = 0;}
+        @foreach (var contentType in Model.ContentTypes) {
+            <tr>
+                <td>@contentType.DisplayName</td>
+                <td>
+                    <input type="hidden" name="@Html.NameFor(m => m.ContentTypes[contentTypeIndex].Name)" value="@Model.ContentTypes[contentTypeIndex].Name"/>
+                    <input type="checkbox" name="@Html.NameFor(m => m.ContentTypes[contentTypeIndex].ExportSchema)" value="true"/>
+                </td>
+                <td>
+                    <input type="checkbox" name="@Html.NameFor(m => m.ContentTypes[contentTypeIndex].ExportData)" value="true"/>
+                </td>
+                <td><input type="checkbox"/></td>
+            </tr>
+            contentTypeIndex++;
+        }
+        </tbody>
+    </table>
+    @Html.Hint(T("Choose the types to include in the export file"))
+</div>
+
+<div>
+    @Html.LabelFor(m => m.ImportBatchSize, T("Batch Size"))
+    @Html.TextBoxFor(m => m.ImportBatchSize, new { @class = "text small" })
+    @Html.Hint(T("The batch size to use when importing the data. Leave empty to disable batched imports."))
+</div>
+<div>
+    <p>@T("Version History")</p>
+    @Html.RadioButtonFor(m => m.VersionHistoryOptions, "Published", new { id = "Published", Checked = "Checked" })
+    <label for="Published" class="forcheckbox">@T("Only Published Versions")</label>
+    <br />
+    @Html.RadioButtonFor(m => m.VersionHistoryOptions, "Draft", new { id = "Draft" })
+    <label for="Draft" class="forcheckbox">@T("Only Drafts")</label>
+    <br />
+    @Html.RadioButtonFor(m => m.VersionHistoryOptions, "Latest", new { id = "Latest" })
+    <label for="Latest" class="forcheckbox">@T("Latest Versions")</label>
+</div>

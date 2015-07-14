@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Orchard.Commands;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ImportExport.Models;
+using Orchard.ImportExport.Providers;
 using Orchard.ImportExport.Services;
 using Orchard.Security;
 using Orchard.Settings;
@@ -15,18 +17,22 @@ namespace Orchard.ImportExport.Commands {
         private readonly ISiteService _siteService;
         private readonly IMembershipService _membershipService;
         private readonly IAuthenticationService _authenticationService;
+        private readonly IOrchardServices _orchardServices;
 
         public ImportExportCommands(
             IImportExportService importExportService,
             IContentDefinitionManager contentDefinitionManager,
             ISiteService siteService,
             IMembershipService membershipService,
-            IAuthenticationService authenticationService) {
+            IAuthenticationService authenticationService, 
+            IOrchardServices orchardServices) {
+
             _importExportService = importExportService;
             _contentDefinitionManager = contentDefinitionManager;
             _siteService = siteService;
             _membershipService = membershipService;
             _authenticationService = authenticationService;
+            _orchardServices = orchardServices;
         }
 
         [OrchardSwitch]
@@ -65,10 +71,10 @@ namespace Orchard.ImportExport.Commands {
         }
 
         [CommandName("export file")]
-        [CommandHelp("export file [/Types:<type-name-1>, ... ,<type-name-n>] [/Metadata:true|false] [/Data:true|false] [/Version:Published|Draft] [/SiteSettings:true|false] [/Steps:<custom-step-1>, ... ,<custom-step-n>]\r\n\t" + "Create an export file according to the specified options.")]
+        [CommandHelp("export file [/Types:<type-name-1>, ... ,<type-name-n>] [/Metadata:true|false] [/Data:true|false] [/Version:Published|Draft|Latest] [/SiteSettings:true|false] [/Steps:<custom-step-1>, ... ,<custom-step-n>]\r\n\t" + "Create an export file according to the specified options.")]
         [OrchardSwitches("Types,Metadata,Data,Version,SiteSettings,Steps")]
         public void ExportFile() {
-            // impersonate the Site owner
+            // Impersonate the Site owner.
             var superUser = _siteService.GetSiteSettings().SuperUser;
             var owner = _membershipService.GetUser(superUser);
             _authenticationService.SetAuthenticatedUserForRequest(owner);
@@ -82,23 +88,39 @@ namespace Orchard.ImportExport.Commands {
 
             var enteredTypes = (Types ?? String.Empty).Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
-            var exportTypes = _contentDefinitionManager.ListTypeDefinitions()
-                                                       .Where(contentType => enteredTypes.Contains(contentType.Name))
-                                                       .Select(contentType => contentType.Name);
+            var exportTypes = _contentDefinitionManager
+                .ListTypeDefinitions()
+                .Where(contentType => enteredTypes.Contains(contentType.Name))
+                .Select(contentType => contentType.Name)
+                .ToList();
 
             var enteredSteps = (Steps ?? String.Empty).Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-
+            var exportSteps = new List<IExportStepProvider>();
             var exportOptions = new ExportOptions {
-                ExportMetadata = Metadata,
-                ExportData = Data,
-                VersionHistoryOptions = versionOption,
-                ExportSiteSettings = SiteSettings,
                 CustomSteps = enteredSteps
             };
 
+            if (Metadata || Data) {
+                var dataStep = _orchardServices.WorkContext.Resolve<DataExportStep>();
+
+                if(Data)
+                    dataStep.DataContentTypes = exportTypes;
+
+                if(Metadata)
+                    dataStep.SchemaContentTypes = exportTypes;
+
+                dataStep.VersionHistoryOptions = versionOption;
+                exportSteps.Add(dataStep);
+            }
+
+            if (SiteSettings) {
+                var siteSettingsStep = _orchardServices.WorkContext.Resolve<SiteSettingsExportStep>();
+                exportSteps.Add(siteSettingsStep);
+            }
+
             Context.Output.WriteLine(T("Export starting..."));
 
-            var exportFilePath = _importExportService.Export(exportTypes, exportOptions);
+            var exportFilePath = _importExportService.Export(exportSteps, exportOptions);
 
             Context.Output.WriteLine(T("Export completed at {0}", exportFilePath));
         }
