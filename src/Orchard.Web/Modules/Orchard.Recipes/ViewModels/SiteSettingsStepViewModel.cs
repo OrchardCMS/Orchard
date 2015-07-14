@@ -1,3 +1,3 @@
-namespace Orchard.ImportExport.ViewModels {
+namespace Orchard.Recipes.ViewModels {
     public class SiteSettingsStepViewModel {}
 }

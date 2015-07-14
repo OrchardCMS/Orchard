@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using Orchard.ImportExport.Models;
+using Orchard.Recipes.Models;
 
-namespace Orchard.ImportExport.ViewModels {
+namespace Orchard.Recipes.ViewModels {
     public class DataExportStepViewModel {
         public DataExportStepViewModel() {
             ContentTypes = new List<ContentTypeEntry>();

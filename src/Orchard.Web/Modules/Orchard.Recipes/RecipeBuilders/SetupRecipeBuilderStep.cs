@@ -1,12 +1,12 @@
 ﻿using Orchard.ContentManagement;
-using Orchard.ImportExport.Services;
-using Orchard.ImportExport.ViewModels;
 using Orchard.Localization;
+using Orchard.Recipes.Services;
+using Orchard.Recipes.ViewModels;
 
-namespace Orchard.ImportExport.Providers {
-    public class SetupRecipeExportStep : ExportStepProvider {
+namespace Orchard.Recipes.RecipeBuilders {
+    public class SetupRecipeBuilderStep : RecipeBuilderStep {
         private readonly IOrchardServices _orchardServices;
-        public SetupRecipeExportStep(IOrchardServices orchardServices) {
+        public SetupRecipeBuilderStep(IOrchardServices orchardServices) {
             _orchardServices = orchardServices;
         }
 
@@ -22,7 +22,7 @@ namespace Orchard.ImportExport.Providers {
             get { return T("Turns the export file into a Setup recipe."); }
         }
 
-        public override int Position { get { return -10; } }
+        public override int Priority { get { return -10; } }
 
         public string RecipeName { get; set; }
         public string RecipeDescription { get; set; }
@@ -54,8 +54,8 @@ namespace Orchard.ImportExport.Providers {
             return shapeFactory.EditorTemplate(TemplateName: "ExportSteps/SetupRecipe", Model: viewModel, Prefix: Prefix);
         }
 
-        public override void Export(ExportContext context) {
-            var recipeElement = context.Document.Element("Orchard").Element("Recipe");
+        public override void Build(BuildContext context) {
+            var recipeElement = context.RecipeDocument.Element("Orchard").Element("Recipe");
             
             recipeElement.SetElementValue("Name", RecipeName);
             recipeElement.SetElementValue("Description", RecipeDescription);

@@ -4,18 +4,18 @@ using System.Xml.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Models;
-using Orchard.ImportExport.Models;
-using Orchard.ImportExport.Services;
-using Orchard.ImportExport.ViewModels;
 using Orchard.Localization;
+using Orchard.Recipes.Models;
+using Orchard.Recipes.Services;
+using Orchard.Recipes.ViewModels;
 
-namespace Orchard.ImportExport.Providers {
-    public class DataExportStep : ExportStepProvider {
+namespace Orchard.Recipes.RecipeBuilders {
+    public class DataRecipeBuilderStep : RecipeBuilderStep {
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly IOrchardServices _orchardServices;
         private readonly IContentDefinitionWriter _contentDefinitionWriter;
 
-        public DataExportStep(
+        public DataRecipeBuilderStep(
             IContentDefinitionManager contentDefinitionManager, 
             IOrchardServices orchardServices, 
             IContentDefinitionWriter contentDefinitionWriter) {
@@ -37,7 +37,7 @@ namespace Orchard.ImportExport.Providers {
             get { return T("Exports content items and content item definitions."); }
         }
 
-        public override int Position { get { return 10; } }
+        public override int Priority { get { return 10; } }
 
         public IList<string> SchemaContentTypes { get; set; }
         public IList<string> DataContentTypes { get; set; }
@@ -67,7 +67,7 @@ namespace Orchard.ImportExport.Providers {
             return shapeFactory.EditorTemplate(TemplateName: "ExportSteps/Data", Model: viewModel, Prefix: Prefix);
         }
 
-        public override void Export(ExportContext context) {
+        public override void Build(BuildContext context) {
             var dataContentTypes = DataContentTypes;
             var schemaContentTypes = SchemaContentTypes;
             var exportVersionOptions = GetContentExportVersionOptions(VersionHistoryOptions);
@@ -76,10 +76,10 @@ namespace Orchard.ImportExport.Providers {
                 : Enumerable.Empty<ContentItem>();
 
             if(schemaContentTypes.Any())
-                context.Document.Element("Orchard").Add(ExportMetadata(schemaContentTypes));
+                context.RecipeDocument.Element("Orchard").Add(ExportMetadata(schemaContentTypes));
 
             if(contentItems.Any())
-                context.Document.Element("Orchard").Add(ExportData(dataContentTypes, contentItems, ImportBatchSize));
+                context.RecipeDocument.Element("Orchard").Add(ExportData(dataContentTypes, contentItems, ImportBatchSize));
         }
 
         private XElement ExportMetadata(IEnumerable<string> contentTypes) {

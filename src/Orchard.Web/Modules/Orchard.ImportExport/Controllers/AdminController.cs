@@ -4,8 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.MetaData;
-using Orchard.ImportExport.Models;
 using Orchard.ImportExport.Services;
 using Orchard.ImportExport.ViewModels;
 using Orchard.Localization;
@@ -15,22 +13,16 @@ using Orchard.UI.Notify;
 namespace Orchard.ImportExport.Controllers {
     public class AdminController : Controller, IUpdateModel {
         private readonly IImportExportService _importExportService;
-        private readonly IContentDefinitionManager _contentDefinitionManager;
-        private readonly ICustomExportStep _customExportStep;
         private readonly IRecipeResultAccessor _recipeResultAccessor;
-        private readonly IEnumerable<IExportStepProvider> _exportStepProviders;
+        private readonly IEnumerable<IRecipeBuilderStep> _exportStepProviders;
 
         public AdminController(
             IOrchardServices services, 
-            IImportExportService importExportService, 
-            IContentDefinitionManager contentDefinitionManager,
-            ICustomExportStep customExportStep,
-            IRecipeResultAccessor recipeResultAccessor, 
-            IEnumerable<IExportStepProvider> exportStepProviders) {
+            IImportExportService importExportService,
+            IRecipeResultAccessor recipeResultAccessor,
+            IEnumerable<IRecipeBuilderStep> exportStepProviders) {
 
             _importExportService = importExportService;
-            _contentDefinitionManager = contentDefinitionManager;
-            _customExportStep = customExportStep;
             _recipeResultAccessor = recipeResultAccessor;
             _exportStepProviders = exportStepProviders;
             Services = services;
@@ -75,10 +67,7 @@ namespace Orchard.ImportExport.Controllers {
         }
 
         public ActionResult Export() {
-            var customSteps = new List<string>();
-            _customExportStep.Register(customSteps);
-
-            var exportSteps = _exportStepProviders.OrderBy(x => x.Position).Select(x => new ExportStepViewModel {
+            var exportSteps = _exportStepProviders.OrderBy(x => x.Priority).Select(x => new ExportStepViewModel {
                 Name = x.Name,
                 DisplayName = x.DisplayName,
                 Description = x.Description,
@@ -86,7 +75,6 @@ namespace Orchard.ImportExport.Controllers {
             }).Where(x => x != null);
 
             var viewModel = new ExportViewModel {
-                CustomSteps = customSteps.Select(x => new CustomStepEntry { CustomStep = x }).ToList(),
                 ExportSteps = exportSteps.ToList()
             };
 
@@ -94,33 +82,22 @@ namespace Orchard.ImportExport.Controllers {
         }
 
         [HttpPost, ActionName("Export")]
-        public ActionResult ExportPOST() {
+        public ActionResult ExportPOST(ExportViewModel viewModel) {
             if (!Services.Authorizer.Authorize(Permissions.Export, T("Not allowed to export.")))
                 return new HttpUnauthorizedResult();
-
-            var viewModel = new ExportViewModel {
-                CustomSteps = new List<CustomStepEntry>(),
-                ExportSteps = new List<ExportStepViewModel>()
-            };
-
-            UpdateModel(viewModel);
+            
             var exportStepNames = viewModel.ExportSteps.Where(x => x.IsSelected).Select(x => x.Name);
             var exportStepsQuery = from name in exportStepNames
                               let provider = _exportStepProviders.SingleOrDefault(x => x.Name == name)
                               where provider != null
                               select provider;
             var exportSteps = exportStepsQuery.ToArray();
-            var customSteps = viewModel.CustomSteps.Where(c => c.IsChecked).Select(c => c.CustomStep);
             
-            var exportOptions = new ExportOptions {
-                CustomSteps = customSteps
-            };
-
             foreach (var exportStep in exportSteps) {
                 exportStep.UpdateEditor(Services.New, this);
             }
 
-            var exportFilePath = _importExportService.Export(exportSteps, exportOptions);
+            var exportFilePath = _importExportService.Export(exportSteps);
             var exportFileName = "export.xml";
 
             return File(exportFilePath, "text/xml", exportFileName);

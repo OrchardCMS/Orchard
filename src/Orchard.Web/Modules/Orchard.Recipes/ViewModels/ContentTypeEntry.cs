@@ -1,4 +1,4 @@
-namespace Orchard.ImportExport.ViewModels {
+namespace Orchard.Recipes.ViewModels {
     public class ContentTypeEntry {
         public string Name { get; set; }
         public string DisplayName { get; set; }

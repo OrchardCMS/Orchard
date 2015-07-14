@@ -51,6 +51,7 @@
     <Reference Include="Autofac">
       <HintPath>..\..\..\..\lib\autofac\Autofac.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -68,6 +69,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
+    <Content Include="Scripts\exportstep-data.js" />
+    <Content Include="Styles\exportstep-data.css" />
+    <Content Include="Styles\images\menu.importexport.png" />
+    <Content Include="Styles\menu.importexport-admin.css" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -75,7 +80,11 @@
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\RecipeResultRecord.cs" />
     <Compile Include="Models\RecipeStepResultRecord.cs" />
+    <Compile Include="Models\VersionHistoryOptions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RecipeBuilders\DataRecipeBuilderStep.cs" />
+    <Compile Include="RecipeBuilders\SetupRecipeBuilderStep.cs" />
+    <Compile Include="RecipeBuilders\SiteSettingsBuilderStep.cs" />
     <Compile Include="RecipeHandlers\CommandRecipeHandler.cs" />
     <Compile Include="RecipeHandlers\DataRecipeHandler.cs" />
     <Compile Include="RecipeHandlers\FeatureRecipeHandler.cs" />
@@ -85,6 +94,13 @@
     <Compile Include="RecipeHandlers\SettingsRecipeHandler.cs" />
     <Compile Include="RecipeHandlers\ThemeRecipeHandler.cs" />
     <Compile Include="Routes.cs" />
+    <Compile Include="Services\BuildContext.cs" />
+    <Compile Include="Services\IRecipeExecutor.cs" />
+    <Compile Include="Services\RecipeExecutor.cs" />
+    <Compile Include="Services\IRecipeBuilder.cs" />
+    <Compile Include="Services\RecipeBuilder.cs" />
+    <Compile Include="Services\IRecipeBuilderStep.cs" />
+    <Compile Include="Services\RecipeBuilderStep.cs" />
     <Compile Include="Services\RecipeHarvester.cs" />
     <Compile Include="Services\RecipeManager.cs" />
     <Compile Include="Services\RecipeParser.cs" />
@@ -92,6 +108,13 @@
     <Compile Include="Services\RecipeScheduler.cs" />
     <Compile Include="Services\RecipeStepExecutor.cs" />
     <Compile Include="Services\RecipeStepQueue.cs" />
+    <Compile Include="ViewModels\ContentTypeEntry.cs" />
+    <Compile Include="ViewModels\CustomStepEntry.cs" />
+    <Compile Include="ViewModels\DataExportStepViewModel.cs" />
+    <Compile Include="ViewModels\ImportResultViewModel.cs" />
+    <Compile Include="ViewModels\ImportViewModel.cs" />
+    <Compile Include="ViewModels\SetupRecipeStepViewModel.cs" />
+    <Compile Include="ViewModels\SiteSettingsStepViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
@@ -112,7 +135,25 @@
       <Name>Orchard.Themes</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Scripts\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\ExportSteps\Data.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\ExportSteps\SetupRecipe.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\ExportSteps\SiteSettings.cshtml" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

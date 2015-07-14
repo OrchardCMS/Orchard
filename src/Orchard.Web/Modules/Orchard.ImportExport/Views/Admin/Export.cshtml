@@ -1,5 +1,5 @@
 ﻿@using Orchard.Utility.Extensions
-@model Orchard.ImportExport.ViewModels.ExportViewModel
+@model Orchard.ImportExport.ViewModels.CustomStepsViewModel
 @{ Layout.Title = T("Export").ToString(); }
 @using (Html.BeginFormAntiForgeryPost()) {
     Html.ValidationSummary();
@@ -23,21 +23,6 @@
         if (exportStepIndex < Model.ExportSteps.Count) {
             <hr />
         }
-    }
-
-    if (Model.CustomSteps.Any()) {
-        <fieldset>
-            <legend>@T("Choose the custom steps to execute in the export file:")</legend>
-            <ol>
-                @for (var customStepIndex = 0; customStepIndex < Model.CustomSteps.Count; customStepIndex++) {
-                    <li>
-                        <input type="hidden" value="@Model.CustomSteps[customStepIndex].CustomStep" name="@Html.NameOf(m => m.CustomSteps[customStepIndex].CustomStep)" />
-                        <input type="checkbox" value="true" name="@Html.NameOf(m => m.CustomSteps[customStepIndex].IsChecked)" id="@Html.NameOf(m => m.CustomSteps[customStepIndex].IsChecked)" />
-                        <label class="forcheckbox" for="@Html.NameOf(m => m.CustomSteps[customStepIndex].IsChecked)">@Model.CustomSteps[customStepIndex].CustomStep.CamelFriendly()</label>
-                    </li>
-                }
-            </ol>
-        </fieldset>
     }
 
     <button type="submit" class="primaryAction">@T("Export")</button>

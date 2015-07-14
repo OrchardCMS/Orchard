@@ -1,12 +1,9 @@
 ﻿using System.Collections.Generic;
-using Orchard.ImportExport.Models;
+using Orchard.Recipes.Services;
 
 namespace Orchard.ImportExport.Services {
     public interface IImportExportService : IDependency {
         string Import(string recipeText);
-        string Export(IEnumerable<IExportStepProvider> steps, ExportOptions exportOptions);
+        string Export(IEnumerable<IRecipeBuilderStep> steps);
     }
 }
-
-
-

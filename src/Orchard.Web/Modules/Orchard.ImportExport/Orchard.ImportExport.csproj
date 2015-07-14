@@ -71,23 +71,15 @@
     <Compile Include="Models\ExportOptions.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Providers\SetupRecipeExportStep.cs" />
-    <Compile Include="Providers\SiteSettingsExportStep.cs" />
-    <Compile Include="Providers\DataExportStep.cs" />
-    <Compile Include="ViewModels\ContentTypeEntry.cs" />
+    <Compile Include="RecipeBuilderSteps\CustomStepsRecipeBuilderStep.cs" />
+    <Compile Include="Services\ExportContext.cs" />
     <Compile Include="ViewModels\CustomStepEntry.cs" />
-    <Compile Include="ViewModels\ExportStepViewModel.cs" />
-    <Compile Include="ViewModels\SetupRecipeStepViewModel.cs" />
-    <Compile Include="ViewModels\SiteSettingsStepViewModel.cs" />
-    <Compile Include="ViewModels\DataExportStepViewModel.cs" />
     <Compile Include="Services\ICustomExportStep.cs" />
     <Compile Include="Services\IExportEventHandler.cs" />
     <Compile Include="Services\IImportExportService.cs" />
-    <Compile Include="Services\IImportStepProvider.cs" />
     <Compile Include="Services\ImportExportService.cs" />
-    <Compile Include="Services\IExportStepProvider.cs" />
-    <Compile Include="Services\ImportStepProvider.cs" />
-    <Compile Include="Services\ExportStepProvider.cs" />
+    <Compile Include="ViewModels\CustomStepsViewModel.cs" />
+    <Compile Include="ViewModels\ExportStepViewModel.cs" />
     <Compile Include="ViewModels\ExportViewModel.cs" />
     <Compile Include="ViewModels\ImportResultViewModel.cs" />
     <Compile Include="ViewModels\ImportViewModel.cs" />
@@ -106,9 +98,12 @@
       <Name>Orchard.Core</Name>
       <Private>false</Private>
     </ProjectReference>
+    <ProjectReference Include="..\Orchard.Recipes\Orchard.Recipes.csproj">
+      <Project>{fc1d74e8-7a4d-48f4-83de-95c6173780c4}</Project>
+      <Name>Orchard.Recipes</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\exportstep-data.js" />
     <Content Include="Styles\images\menu.importexport.png" />
     <Content Include="Styles\exportstep-data.css" />
     <Content Include="Styles\menu.importexport-admin.css" />
@@ -128,19 +123,9 @@
   <ItemGroup>
     <Content Include="Views\Admin\ImportResult.cshtml" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Content Include="Views\EditorTemplates\ExportSteps\Data.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\EditorTemplates\ExportSteps\SiteSettings.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\EditorTemplates\ExportSteps\SetupRecipe.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Scripts\Web.config">
-      <SubType>Designer</SubType>
-    </Content>
+    <Content Include="Views\EditorTemplates\ExportSteps\CustomSteps.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

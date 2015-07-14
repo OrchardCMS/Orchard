@@ -4,9 +4,11 @@ using System.IO;
 using System.Linq;
 using Orchard.Commands;
 using Orchard.ContentManagement.MetaData;
-using Orchard.ImportExport.Models;
-using Orchard.ImportExport.Providers;
+using Orchard.ImportExport.RecipeBuilderSteps;
 using Orchard.ImportExport.Services;
+using Orchard.Recipes.Models;
+using Orchard.Recipes.RecipeBuilders;
+using Orchard.Recipes.Services;
 using Orchard.Security;
 using Orchard.Settings;
 
@@ -95,13 +97,10 @@ namespace Orchard.ImportExport.Commands {
                 .ToList();
 
             var enteredSteps = (Steps ?? String.Empty).Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-            var exportSteps = new List<IExportStepProvider>();
-            var exportOptions = new ExportOptions {
-                CustomSteps = enteredSteps
-            };
+            var recipeBuilderSteps = new List<IRecipeBuilderStep>();
 
             if (Metadata || Data) {
-                var dataStep = _orchardServices.WorkContext.Resolve<DataExportStep>();
+                var dataStep = _orchardServices.WorkContext.Resolve<DataRecipeBuilderStep>();
 
                 if(Data)
                     dataStep.DataContentTypes = exportTypes;
@@ -110,17 +109,22 @@ namespace Orchard.ImportExport.Commands {
                     dataStep.SchemaContentTypes = exportTypes;
 
                 dataStep.VersionHistoryOptions = versionOption;
-                exportSteps.Add(dataStep);
+                recipeBuilderSteps.Add(dataStep);
             }
 
             if (SiteSettings) {
-                var siteSettingsStep = _orchardServices.WorkContext.Resolve<SiteSettingsExportStep>();
-                exportSteps.Add(siteSettingsStep);
+                var siteSettingsStep = _orchardServices.WorkContext.Resolve<SiteSettingsBuilderStep>();
+                recipeBuilderSteps.Add(siteSettingsStep);
+            }
+
+            if (enteredSteps.Any()) {
+                var customStepsStep = _orchardServices.WorkContext.Resolve<CustomStepsRecipeBuilderStep>();
+                recipeBuilderSteps.Add(customStepsStep);
             }
 
             Context.Output.WriteLine(T("Export starting..."));
 
-            var exportFilePath = _importExportService.Export(exportSteps, exportOptions);
+            var exportFilePath = _importExportService.Export(recipeBuilderSteps);
 
             Context.Output.WriteLine(T("Export completed at {0}", exportFilePath));
         }

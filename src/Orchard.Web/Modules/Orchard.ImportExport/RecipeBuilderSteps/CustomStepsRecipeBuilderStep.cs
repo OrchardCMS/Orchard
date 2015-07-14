@@ -1,0 +1,67 @@
+﻿using System.Collections.Generic;
+using System.Linq;
+using Orchard.ContentManagement;
+using Orchard.ImportExport.Models;
+using Orchard.ImportExport.Services;
+using Orchard.ImportExport.ViewModels;
+using Orchard.Localization;
+using Orchard.Recipes.Services;
+
+namespace Orchard.ImportExport.RecipeBuilderSteps {
+    public class CustomStepsRecipeBuilderStep : RecipeBuilderStep {
+        private readonly IEnumerable<IExportEventHandler> _exportEventHandlers;
+        private readonly ICustomExportStep _customExportStep;
+
+        public CustomStepsRecipeBuilderStep(IEnumerable<IExportEventHandler> exportEventHandlers, ICustomExportStep customExportStep) {
+            _exportEventHandlers = exportEventHandlers;
+            _customExportStep = customExportStep;
+            CustomSteps = new List<string>();
+        }
+
+        public override string Name {
+            get { return "CustomSteps"; }
+        }
+
+        public override LocalizedString DisplayName {
+            get { return T("Additional Export Steps"); }
+        }
+
+        public override LocalizedString Description {
+            get { return T("Exports additional items."); }
+        }
+
+        public override int Priority { get { return 60; } }
+
+        public IList<string> CustomSteps { get; set; }
+
+        public override dynamic BuildEditor(dynamic shapeFactory) {
+            return UpdateEditor(shapeFactory, null);
+        }
+
+        public override dynamic UpdateEditor(dynamic shapeFactory, IUpdateModel updater) {
+            var customSteps = new List<string>();
+            _customExportStep.Register(customSteps);
+
+            var viewModel = new CustomStepsViewModel {
+                CustomSteps = customSteps.Select(x => new CustomStepEntry { CustomStep = x}).ToList()
+            };
+
+            if (updater != null && updater.TryUpdateModel(viewModel, Prefix, null, null)) {
+                CustomSteps = viewModel.CustomSteps.Where(x => x.IsChecked).Select(x => x.CustomStep).ToList();
+            }
+
+            return shapeFactory.EditorTemplate(TemplateName: "ExportSteps/CustomSteps", Model: viewModel, Prefix: Prefix);
+        }
+
+        public override void Build(BuildContext context) {
+            var exportContext = new ExportContext {
+                Document = context.RecipeDocument,
+                ExportOptions = new ExportOptions {
+                    CustomSteps = CustomSteps
+                }
+            };
+            _exportEventHandlers.Invoke(x => x.Exporting(exportContext), Logger);
+            _exportEventHandlers.Invoke(x => x.Exported(exportContext), Logger);
+        }
+    }
+}

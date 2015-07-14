@@ -2,15 +2,15 @@
 using System.Linq;
 using System.Xml.Linq;
 using Orchard.ContentManagement;
-using Orchard.ImportExport.Services;
-using Orchard.ImportExport.ViewModels;
 using Orchard.Localization;
+using Orchard.Recipes.Services;
+using Orchard.Recipes.ViewModels;
 
-namespace Orchard.ImportExport.Providers {
-    public class SiteSettingsExportStep : ExportStepProvider {
+namespace Orchard.Recipes.RecipeBuilders {
+    public class SiteSettingsBuilderStep : RecipeBuilderStep {
         private readonly IOrchardServices _orchardServices;
 
-        public SiteSettingsExportStep(IOrchardServices orchardServices) {
+        public SiteSettingsBuilderStep(IOrchardServices orchardServices) {
             _orchardServices = orchardServices;
         }
 
@@ -26,7 +26,7 @@ namespace Orchard.ImportExport.Providers {
             get { return T("Exports site settings."); }
         }
 
-        public override int Position { get { return 20; } }
+        public override int Priority { get { return 20; } }
 
         public override dynamic BuildEditor(dynamic shapeFactory) {
             return UpdateEditor(shapeFactory, null);
@@ -37,8 +37,8 @@ namespace Orchard.ImportExport.Providers {
             return shapeFactory.EditorTemplate(TemplateName: "ExportSteps/SiteSettings", Model: viewModel, Prefix: Prefix);
         }
 
-        public override void Export(ExportContext context) {
-            context.Document.Element("Orchard").Add(ExportSiteSettings());
+        public override void Build(BuildContext context) {
+            context.RecipeDocument.Element("Orchard").Add(ExportSiteSettings());
         }
 
         private XElement ExportSiteSettings() {
