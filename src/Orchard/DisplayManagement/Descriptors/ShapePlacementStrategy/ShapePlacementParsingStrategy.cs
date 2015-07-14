@@ -107,22 +107,19 @@ namespace Orchard.DisplayManagement.Descriptors.ShapePlacementStrategy {
             }
         }
 
-        private void GetShapeType(PlacementShapeLocation shapeLocation, out string shapeType, out string differentiator)
-        {
+        private void GetShapeType(PlacementShapeLocation shapeLocation, out string shapeType, out string differentiator) {
             differentiator = "";
             shapeType = shapeLocation.ShapeType;
             var separatorLengh = 2;
             var separatorIndex = shapeType.LastIndexOf("__");
 
             var dashIndex = shapeType.LastIndexOf('-');
-            if (dashIndex > separatorIndex)
-            {
+            if (dashIndex > separatorIndex) {
                 separatorIndex = dashIndex;
                 separatorLengh = 1;
             }
 
-            if (separatorIndex > 0 && separatorIndex < shapeType.Length - separatorLengh)
-            {
+            if (separatorIndex > 0 && separatorIndex < shapeType.Length - separatorLengh) {
                 differentiator = shapeType.Substring(separatorIndex + separatorLengh);
                 shapeType = shapeType.Substring(0, separatorIndex);
             }
