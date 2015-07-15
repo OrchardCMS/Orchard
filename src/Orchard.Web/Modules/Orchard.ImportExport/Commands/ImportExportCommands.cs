@@ -100,7 +100,7 @@ namespace Orchard.ImportExport.Commands {
             var recipeBuilderSteps = new List<IRecipeBuilderStep>();
 
             if (Metadata || Data) {
-                var dataStep = _orchardServices.WorkContext.Resolve<DataRecipeBuilderStep>();
+                var dataStep = _orchardServices.WorkContext.Resolve<ContentRecipeBuilderStep>();
 
                 if(Data)
                     dataStep.DataContentTypes = exportTypes;

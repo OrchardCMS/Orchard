@@ -8,7 +8,7 @@
         var stepName = Html.NameFor(m => m.ExportSteps[exportStepIndex].IsSelected).ToString();
         var stepId = stepName.HtmlClassify();
 
-        <fieldset class="export-step export-step-@exportStep.Name.HtmlClassify()">
+        <fieldset class="recipe-builder-step recipe-builder-step-@exportStep.Name.HtmlClassify()">
             <legend>
                 <input type="hidden" name="@Html.NameFor(m => m.ExportSteps[exportStepIndex].Name)" value="@Model.ExportSteps[exportStepIndex].Name"/>
                 <input type="checkbox" id="@stepId" name="@stepName" value="true"/>

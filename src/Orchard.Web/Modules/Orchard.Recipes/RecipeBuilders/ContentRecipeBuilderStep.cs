@@ -10,12 +10,12 @@ using Orchard.Recipes.Services;
 using Orchard.Recipes.ViewModels;
 
 namespace Orchard.Recipes.RecipeBuilders {
-    public class DataRecipeBuilderStep : RecipeBuilderStep {
+    public class ContentRecipeBuilderStep : RecipeBuilderStep {
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly IOrchardServices _orchardServices;
         private readonly IContentDefinitionWriter _contentDefinitionWriter;
 
-        public DataRecipeBuilderStep(
+        public ContentRecipeBuilderStep(
             IContentDefinitionManager contentDefinitionManager, 
             IOrchardServices orchardServices, 
             IContentDefinitionWriter contentDefinitionWriter) {
@@ -26,11 +26,11 @@ namespace Orchard.Recipes.RecipeBuilders {
         }
 
         public override string Name {
-            get { return "Data"; }
+            get { return "Content"; }
         }
 
         public override LocalizedString DisplayName {
-            get { return T("Content Items and Definitions"); }
+            get { return T("Content and Content Definitions"); }
         }
 
         public override LocalizedString Description {
@@ -64,7 +64,7 @@ namespace Orchard.Recipes.RecipeBuilders {
                 VersionHistoryOptions = viewModel.VersionHistoryOptions;
             }
 
-            return shapeFactory.EditorTemplate(TemplateName: "ExportSteps/Data", Model: viewModel, Prefix: Prefix);
+            return shapeFactory.EditorTemplate(TemplateName: "ExportSteps/Content", Model: viewModel, Prefix: Prefix);
         }
 
         public override void Build(BuildContext context) {

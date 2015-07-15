@@ -69,8 +69,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
-    <Content Include="Scripts\exportstep-data.js" />
-    <Content Include="Styles\exportstep-data.css" />
+    <Content Include="Scripts\recipebuilderstep-data.js" />
+    <Content Include="Styles\recipebuilderstep-content.css" />
     <Content Include="Styles\images\menu.importexport.png" />
     <Content Include="Styles\menu.importexport-admin.css" />
     <Content Include="Web.config" />
@@ -82,7 +82,7 @@
     <Compile Include="Models\RecipeStepResultRecord.cs" />
     <Compile Include="Models\VersionHistoryOptions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RecipeBuilders\DataRecipeBuilderStep.cs" />
+    <Compile Include="RecipeBuilders\ContentRecipeBuilderStep.cs" />
     <Compile Include="RecipeBuilders\RecipeMetadataBuilderStep.cs" />
     <Compile Include="RecipeBuilders\SiteSettingsBuilderStep.cs" />
     <Compile Include="RecipeHandlers\CommandRecipeHandler.cs" />
@@ -146,7 +146,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\EditorTemplates\ExportSteps\Data.cshtml" />
+    <Content Include="Views\EditorTemplates\ExportSteps\Content.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EditorTemplates\ExportSteps\RecipeMetadata.cshtml" />
