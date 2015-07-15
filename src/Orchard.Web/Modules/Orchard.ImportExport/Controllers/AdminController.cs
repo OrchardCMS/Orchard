@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
@@ -8,25 +6,27 @@ using Orchard.ImportExport.Services;
 using Orchard.ImportExport.ViewModels;
 using Orchard.Localization;
 using Orchard.Recipes.Services;
-using Orchard.UI.Notify;
 
 namespace Orchard.ImportExport.Controllers {
     public class AdminController : Controller, IUpdateModel {
         private readonly IImportExportService _importExportService;
         private readonly IRecipeResultAccessor _recipeResultAccessor;
         private readonly IEnumerable<IExportAction> _exportActions;
+        private readonly IEnumerable<IImportAction> _importActions;
         private readonly IRecipeParser _recipeParser;
 
         public AdminController(
             IOrchardServices services, 
             IImportExportService importExportService,
             IRecipeResultAccessor recipeResultAccessor,
-            IEnumerable<IExportAction> exportActions, 
+            IEnumerable<IExportAction> exportActions,
+            IEnumerable<IImportAction> importActions,
             IRecipeParser recipeParser) {
 
             _importExportService = importExportService;
             _recipeResultAccessor = recipeResultAccessor;
             _exportActions = exportActions;
+            _importActions = importActions;
             _recipeParser = recipeParser;
             Services = services;
             T = NullLocalizer.Instance;
@@ -36,7 +36,13 @@ namespace Orchard.ImportExport.Controllers {
         public Localizer T { get; set; }
 
         public ActionResult Import() {
-            var viewModel = new ImportViewModel();
+            var actions = _importActions.OrderBy(x => x.Priority).Select(x => new ImportActionViewModel {
+                Editor = x.BuildEditor(Services.New)
+            }).Where(x => x != null).ToList();
+
+            var viewModel = new ImportViewModel {
+                Actions = actions
+            };
 
             return View(viewModel);
         }
@@ -46,17 +52,23 @@ namespace Orchard.ImportExport.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.Import, T("Not allowed to import.")))
                 return new HttpUnauthorizedResult();
 
-            if (String.IsNullOrEmpty(Request.Files["RecipeFile"].FileName)) {
-                ModelState.AddModelError("RecipeFile", T("Please choose a recipe file to import.").Text);
-                Services.Notifier.Error(T("Please choose a recipe file to import."));
+            var actions = _importActions.OrderBy(x => x.Priority).ToList();
+            var viewModel = new ImportViewModel {
+                Actions = actions.Select(x => new ImportActionViewModel {
+                    Editor = x.UpdateEditor(Services.New, this)
+                }).Where(x => x != null).ToList()
+            };
+
+            if (!ModelState.IsValid) {
+                return View(viewModel);
             }
 
-            if (ModelState.IsValid) {
-                var executionId = _importExportService.Import(new StreamReader(Request.Files["RecipeFile"].InputStream).ReadToEnd());
-                return RedirectToAction("ImportResult", new { executionId = executionId });
+            var context = new ImportActionContext { ActionResult = RedirectToAction("Import") };
+            foreach(var action in actions) {
+                action.Execute(context);
             }
-
-            return View(new ImportViewModel());
+            
+            return context.ActionResult;
         }
 
         public ActionResult ImportResult(string executionId) {

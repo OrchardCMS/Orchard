@@ -1,12 +1,12 @@
 ﻿using Orchard.ContentManagement;
 
 namespace Orchard.ImportExport.Services {
-    public interface IExportAction : IDependency {
+    public interface IImportAction : IDependency {
         int Priority { get; }
         string Name { get; }
         
         dynamic BuildEditor(dynamic shapeFactory);
         dynamic UpdateEditor(dynamic shapeFactory, IUpdateModel updater);
-        void Execute(ExportActionContext context);
+        void Execute(ImportActionContext context);
     }
 }

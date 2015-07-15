@@ -1,7 +1,7 @@
 ﻿using Orchard.ContentManagement;
 
 namespace Orchard.ImportExport.Services {
-    public abstract class ExportAction : Component, IExportAction {
+    public abstract class ImportAction : Component, IImportAction {
         public virtual int Priority { get { return 0; } }
         public abstract string Name { get; }
 
@@ -17,6 +17,6 @@ namespace Orchard.ImportExport.Services {
             return null;
         }
 
-        public abstract void Execute(ExportActionContext context);
+        public abstract void Execute(ImportActionContext context);
     }
 }
