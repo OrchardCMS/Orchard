@@ -8,6 +8,7 @@ using Orchard.MultiTenancy.Services;
 namespace Orchard.MultiTenancy.Commands {
     public class TenantCommand : DefaultOrchardCommandHandler {
         private readonly ITenantService _tenantService;
+        private readonly string[] _validDataProviderNames = new[] { "SqlCe", "SqlServer", "MySql", "PostgreSql" };
 
         public TenantCommand(ITenantService tenantService) {
             _tenantService = tenantService;
@@ -58,43 +59,47 @@ namespace Orchard.MultiTenancy.Commands {
         [CommandHelp("tenant info <tenantName>\r\n\t" + "Display the current settings for a tenant.")]
         [CommandName("tenant info")]
         public void Info(string tenantName) {
-            ShellSettings tenant = _tenantService.GetTenants().Where(x => x.Name == tenantName).FirstOrDefault();
-
+            var tenant = _tenantService.GetTenants().FirstOrDefault(x => x.Name == tenantName);
             if (tenant == null) {
-                Context.Output.Write(T("Tenant: ") + tenantName + T(" was not found"));
+                Context.Output.WriteLine(T("Could not read tenant '{0}'. No tenant with that name exists.", tenantName));
+                return;
             }
-            else {
-                Context.Output.WriteLine(T("Tenant settings:"));
-                Context.Output.WriteLine(T("---------------------------"));
-                Context.Output.WriteLine(T("Name: ") + tenant.Name);
-                Context.Output.WriteLine(T("State: ") + tenant.State.ToString());
-                Context.Output.WriteLine(T("Data provider: ") + tenant.DataProvider);
-                Context.Output.WriteLine(T("Connection string: ") + tenant.DataConnectionString);
-                Context.Output.WriteLine(T("Data table prefix: ") + tenant.DataTablePrefix);
-                Context.Output.WriteLine(T("Request URL host: ") + tenant.RequestUrlHost);
-                Context.Output.WriteLine(T("Request URL prefix: ") + tenant.RequestUrlPrefix);
-                Context.Output.WriteLine(T("Encryption algorithm: ") + tenant.EncryptionAlgorithm);
-                Context.Output.WriteLine(T("Encryption key: ") + tenant.EncryptionKey);
-                Context.Output.WriteLine(T("Hash algorithm: ") + tenant.HashAlgorithm);
-                Context.Output.WriteLine(T("Hash key: ") + tenant.HashKey);
-                Context.Output.WriteLine(T("Themes: ") + String.Join(";", tenant.Themes));
-                Context.Output.WriteLine(T("Modules: ") + String.Join(";", tenant.Modules));
-                Context.Output.WriteLine(T("---------------------------"));
-            }
+
+            Context.Output.WriteLine(T("Tenant settings:"));
+            Context.Output.WriteLine(T("---------------------------"));
+            Context.Output.WriteLine(T("Name: ") + tenant.Name);
+            Context.Output.WriteLine(T("State: ") + tenant.State.ToString());
+            Context.Output.WriteLine(T("Data provider: ") + tenant.DataProvider);
+            Context.Output.WriteLine(T("Connection string: ") + tenant.DataConnectionString);
+            Context.Output.WriteLine(T("Data table prefix: ") + tenant.DataTablePrefix);
+            Context.Output.WriteLine(T("Request URL host: ") + tenant.RequestUrlHost);
+            Context.Output.WriteLine(T("Request URL prefix: ") + tenant.RequestUrlPrefix);
+            Context.Output.WriteLine(T("Encryption algorithm: ") + tenant.EncryptionAlgorithm);
+            Context.Output.WriteLine(T("Encryption key: ") + tenant.EncryptionKey);
+            Context.Output.WriteLine(T("Hash algorithm: ") + tenant.HashAlgorithm);
+            Context.Output.WriteLine(T("Hash key: ") + tenant.HashKey);
+            Context.Output.WriteLine(T("Themes: ") + String.Join(";", tenant.Themes));
+            Context.Output.WriteLine(T("Modules: ") + String.Join(";", tenant.Modules));
+            Context.Output.WriteLine(T("---------------------------"));
         }
 
-        [CommandHelp("tenant add <tenantName> /DataProvider:<provider> /DataConnectionString:<connectionString> /DataTablePrefix:<prefix> /UrlHost:<hostname> /UrlPrefix:<prefix> /Themes:<themes> /Modules:<modules>\r\n\t" + "Create a new tenant named <tenantName> on the site.")]
+        [CommandHelp("tenant add <tenantName> /DataProvider:<provider> /DataConnectionString:<connectionString> /DataTablePrefix:<prefix> /UrlHost:<hostname> /UrlPrefix:<prefix> /Themes:<themes> /Modules:<modules>\r\n\t" + "Create a new tenant named <tenantName> on the site.\r\n" + "The <themes> and <modules> parameters should be semicolon-separated lists of module names.")]
         [CommandName("tenant add")]
         [OrchardSwitches("DataProvider,DataConnectionString,DataTablePrefix,UrlHost,UrlPrefix,Themes,Modules")]
         public void Create(string tenantName) {
             Context.Output.WriteLine(T("Creating tenant '{0}'...", tenantName));
 
-            if (string.IsNullOrWhiteSpace(tenantName) || !Regex.IsMatch(tenantName, @"^\w+$")) {
+            if (String.IsNullOrWhiteSpace(tenantName) || !Regex.IsMatch(tenantName, @"^\w+$")) {
                 Context.Output.WriteLine(T("Invalid tenant name. Must contain characters only and no spaces."));
                 return;
             }
             if (_tenantService.GetTenants().Any(tenant => String.Equals(tenant.Name, tenantName, StringComparison.OrdinalIgnoreCase))) {
                 Context.Output.WriteLine(T("Could not create tenant '{0}'. A tenant with the same name already exists.", tenantName));
+                return;
+            }
+
+            if (DataProvider != null && !_validDataProviderNames.Contains(DataProvider)) {
+                Context.Output.WriteLine(T("Invalid value '{0}' for parameter DataProvider. Expect one of the following: {1}", DataProvider, String.Join(", ", _validDataProviderNames)));
                 return;
             }
 
@@ -112,20 +117,20 @@ namespace Orchard.MultiTenancy.Commands {
                 });
         }
 
-        [CommandHelp("tenant update <tenantName> /DataProvider:<provider> /DataConnectionString:<connectionString> /DataTablePrefix:<prefix> /UrlHost:<hostname> /UrlPrefix:<prefix> /Themes:<themes> /Modules:<modules>\r\n\t" + "Update the settings of the existing tenant <tenantName>.")]
+        [CommandHelp("tenant update <tenantName> /DataProvider:<SqlCe|SqlServer|MySql|PostgreSql> /DataConnectionString:<connectionString> /DataTablePrefix:<prefix> /UrlHost:<hostname> /UrlPrefix:<prefix> /Themes:<themes> /Modules:<modules>\r\n\t" + "Update the settings of the existing tenant <tenantName>.\r\n" + "The <themes> and <modules> parameters should be semicolon-separated lists of module names.")]
         [CommandName("tenant update")]
         [OrchardSwitches("DataProvider,DataConnectionString,DataTablePrefix,UrlHost,UrlPrefix,Themes,Modules")]
         public void Edit(string tenantName) {
             Context.Output.WriteLine(T("Updating tenant '{0}'...", tenantName));
 
-            if (string.IsNullOrWhiteSpace(tenantName) || !Regex.IsMatch(tenantName, @"^\w+$")) {
-                Context.Output.WriteLine(T("Invalid tenant name. Must contain characters only and no spaces."));
-                return;
-            }
-
             var tenant = _tenantService.GetTenants().FirstOrDefault(t => String.Equals(t.Name, tenantName, StringComparison.OrdinalIgnoreCase));
             if (tenant == null) {
                 Context.Output.WriteLine(T("Could not update tenant '{0}'. No tenant with that name exists.", tenantName));
+                return;
+            }
+
+            if (DataProvider != null && !_validDataProviderNames.Contains(DataProvider)) {
+                Context.Output.WriteLine(T("Invalid value '{0}' for parameter DataProvider. Expect one of the following: {1}", DataProvider, String.Join(", ", _validDataProviderNames)));
                 return;
             }
 
@@ -148,11 +153,6 @@ namespace Orchard.MultiTenancy.Commands {
         public void Disable(string tenantName) {
             Context.Output.WriteLine(T("Disabling tenant '{0}'...", tenantName));
 
-            if (string.IsNullOrWhiteSpace(tenantName) || !Regex.IsMatch(tenantName, @"^\w+$")) {
-                Context.Output.WriteLine(T("Invalid tenant name. Must contain characters only and no spaces."));
-                return;
-            }
-
             var tenant = _tenantService.GetTenants().FirstOrDefault(t => String.Equals(t.Name, tenantName, StringComparison.OrdinalIgnoreCase));
             if (tenant == null) {
                 Context.Output.WriteLine(T("Could not disable tenant '{0}'. No tenant with that name exists.", tenantName));
@@ -168,11 +168,6 @@ namespace Orchard.MultiTenancy.Commands {
         public void Enable(string tenantName) {
             Context.Output.WriteLine(T("Enabling tenant '{0}'...", tenantName));
 
-            if (string.IsNullOrWhiteSpace(tenantName) || !Regex.IsMatch(tenantName, @"^\w+$")) {
-                Context.Output.WriteLine(T("Invalid tenant name. Must contain characters only and no spaces."));
-                return;
-            }
-
             var tenant = _tenantService.GetTenants().FirstOrDefault(t => String.Equals(t.Name, tenantName, StringComparison.OrdinalIgnoreCase));
             if (tenant == null) {
                 Context.Output.WriteLine(T("Could not enable tenant '{0}'. No tenant with that name exists.", tenantName));
@@ -183,16 +178,11 @@ namespace Orchard.MultiTenancy.Commands {
             _tenantService.UpdateTenant(tenant);
         }
 
-        [CommandHelp("tenant reset <tenantName> /DropDatabaseTables:<true|false>\r\n\t" + "Reset the tenant <tenantName>, optionally dropping its tables from the database.")]
+        [CommandHelp("tenant reset <tenantName> /DropDatabaseTables:<true|false>\r\n\t" + "Reset the tenant <tenantName> to its uninitialized, optionally dropping its tables from the database.")]
         [CommandName("tenant reset")]
         [OrchardSwitches("DropDatabaseTables")]
         public void Reset(string tenantName) {
             Context.Output.WriteLine(T("Resetting tenant '{0}'...", tenantName));
-
-            if (string.IsNullOrWhiteSpace(tenantName) || !Regex.IsMatch(tenantName, @"^\w+$")) {
-                Context.Output.WriteLine(T("Invalid tenant name. Must contain characters only and no spaces."));
-                return;
-            }
 
             var tenant = _tenantService.GetTenants().FirstOrDefault(t => String.Equals(t.Name, tenantName, StringComparison.OrdinalIgnoreCase));
             if (tenant == null) {
