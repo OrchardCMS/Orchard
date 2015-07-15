@@ -3,12 +3,6 @@
 namespace Orchard.Recipes {
     public class Migrations : DataMigrationImpl {
         public int Create() {
-            //SchemaBuilder.CreateTable("RecipeResultRecord", table => table
-            //    .Column<int>("Id", c => c.PrimaryKey().Identity())
-            //    .Column<string>("ExecutionId", c => c.WithLength(128).Unique().NotNull())
-            //    .Column<bool>("IsCompleted", c => c.NotNull())
-            //);
-
             SchemaBuilder.CreateTable("RecipeStepResultRecord", table => table
                 .Column<int>("Id", c => c.PrimaryKey().Identity())
                 .Column<string>("ExecutionId", c => c.WithLength(128).NotNull())
@@ -18,14 +12,11 @@ namespace Orchard.Recipes {
                 .Column<string>("ErrorMessage", c => c.Unlimited().Nullable())
             );
 
-            SchemaBuilder.AlterTable("RecipeStepResultRecord", table => table
-                .CreateIndex("IDX_RecipeStepResultRecord_ExecutionId", "ExecutionId")
-            );
-
-            SchemaBuilder.AlterTable("RecipeStepResultRecord", table => table
-                .CreateIndex("IDX_RecipeStepResultRecord_ExecutionId_StepName", "ExecutionId", "StepName")
-            );
-
+            SchemaBuilder.AlterTable("RecipeStepResultRecord", table => {
+                table.CreateIndex("IDX_RecipeStepResultRecord_ExecutionId", "ExecutionId");
+                table.CreateIndex("IDX_RecipeStepResultRecord_ExecutionId_StepName", "ExecutionId", "StepName");
+            });
+            
             return 1;
         }
     }
