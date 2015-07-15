@@ -1,0 +1,25 @@
+﻿@using Orchard.Utility.Extensions
+@model Orchard.ImportExport.ViewModels.RecipeBuilderViewModel
+@{
+    var exportStepIndex = 0;
+    foreach (var exportStep in Model.Steps) {
+        var stepName = Html.NameFor(m => m.Steps[exportStepIndex].IsSelected).ToString();
+        var stepId = stepName.HtmlClassify();
+
+        <fieldset class="recipe-builder-step recipe-builder-step-@exportStep.Name.HtmlClassify()">
+            <legend>
+                <input type="hidden" name="@Html.NameFor(m => m.Steps[exportStepIndex].Name)" value="@Model.Steps[exportStepIndex].Name" />
+                <input type="checkbox" id="@stepId" name="@stepName" value="true" />
+                <label for="@stepId" class="forcheckbox">@exportStep.DisplayName</label>
+            </legend>
+            @Html.Hint(@exportStep.Description)
+            <div data-controllerid="@stepId">
+                @Display(exportStep.Editor)
+            </div>
+        </fieldset>
+        exportStepIndex++;
+        if (exportStepIndex < Model.Steps.Count) {
+            <hr />
+        }
+    }
+}

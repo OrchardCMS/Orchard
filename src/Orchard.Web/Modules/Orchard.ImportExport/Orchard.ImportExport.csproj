@@ -71,18 +71,24 @@
     <Compile Include="Models\ExportOptions.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Providers\ExportActions\RecipeBuilder.cs" />
     <Compile Include="Recipes\Builders\CustomStepsStep.cs" />
+    <Compile Include="Services\ExportAction.cs" />
+    <Compile Include="Services\ExportActionContext.cs" />
     <Compile Include="Services\ExportContext.cs" />
+    <Compile Include="Services\IExportAction.cs" />
     <Compile Include="ViewModels\CustomStepEntry.cs" />
     <Compile Include="Services\ICustomExportStep.cs" />
     <Compile Include="Services\IExportEventHandler.cs" />
     <Compile Include="Services\IImportExportService.cs" />
     <Compile Include="Services\ImportExportService.cs" />
     <Compile Include="ViewModels\CustomStepsViewModel.cs" />
+    <Compile Include="ViewModels\ExportActionViewModel.cs" />
     <Compile Include="ViewModels\ExportStepViewModel.cs" />
     <Compile Include="ViewModels\ExportViewModel.cs" />
     <Compile Include="ViewModels\ImportResultViewModel.cs" />
     <Compile Include="ViewModels\ImportViewModel.cs" />
+    <Compile Include="ViewModels\RecipeBuilderViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
@@ -123,9 +129,14 @@
   <ItemGroup>
     <Content Include="Views\Admin\ImportResult.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Providers\ImportActions\" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EditorTemplates\ExportSteps\CustomSteps.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\ExportActions\RecipeBuilder.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -1,28 +1,12 @@
-﻿@using Orchard.Utility.Extensions
-@model Orchard.ImportExport.ViewModels.ExportViewModel
+﻿@model Orchard.ImportExport.ViewModels.ExportViewModel
 @{ Layout.Title = T("Export").ToString(); }
 @using (Html.BeginFormAntiForgeryPost()) {
     Html.ValidationSummary();
-    var exportStepIndex = 0;
-    foreach (var exportStep in Model.ExportSteps) {
-        var stepName = Html.NameFor(m => m.ExportSteps[exportStepIndex].IsSelected).ToString();
-        var stepId = stepName.HtmlClassify();
 
-        <fieldset class="recipe-builder-step recipe-builder-step-@exportStep.Name.HtmlClassify()">
-            <legend>
-                <input type="hidden" name="@Html.NameFor(m => m.ExportSteps[exportStepIndex].Name)" value="@Model.ExportSteps[exportStepIndex].Name"/>
-                <input type="checkbox" id="@stepId" name="@stepName" value="true"/>
-                <label for="@stepId" class="forcheckbox">@exportStep.DisplayName</label>
-            </legend>
-            @Html.Hint(@exportStep.Description)
-            <div data-controllerid="@stepId">
-                @Display(exportStep.Editor)
-            </div>
-        </fieldset>
-        exportStepIndex++;
-        if (exportStepIndex < Model.ExportSteps.Count) {
-            <hr />
-        }
+    foreach(var action in Model.Actions) {
+        <div class="export-action">
+            @Display(action.Editor)
+        </div>
     }
 
     <button type="submit" class="primaryAction">@T("Export")</button>

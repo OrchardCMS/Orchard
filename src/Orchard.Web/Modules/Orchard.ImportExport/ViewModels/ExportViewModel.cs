@@ -2,6 +2,6 @@
 
 namespace Orchard.ImportExport.ViewModels {
     public class ExportViewModel {
-        public IList<ExportStepViewModel> ExportSteps { get; set; }
+        public IList<ExportActionViewModel> Actions { get; set; }
     }
 }
