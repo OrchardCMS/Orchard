@@ -12,8 +12,3 @@ Features:
         Description: Imports and exports content item data.
         Category: Content
         Dependencies: Orchard.jQuery, Orchard.Recipes
-    Orchard.ImportExport.ResetSite
-        Name: Reset Site Action
-        Description: Adds a Reset Site action to the Import screen.
-        Category: Hosting
-        Dependencies: Orchard.ImportExport, Orchard.MultiTenancy

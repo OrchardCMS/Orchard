@@ -1,6 +1,5 @@
 ﻿namespace Orchard.ImportExport.ViewModels {
-    public class ResetSiteViewModel {
+    public class UploadRecipeViewModel {
         public bool ResetSite { get; set; }
-        public bool DropTables { get; set; }
     }
 }
