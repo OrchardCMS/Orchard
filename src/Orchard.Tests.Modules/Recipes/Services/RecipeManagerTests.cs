@@ -16,6 +16,9 @@ using Orchard.Recipes.Services;
 using Orchard.Services;
 using Orchard.Tests.Stubs;
 using Orchard.Recipes.Events;
+using Orchard.Data;
+using System;
+using System.Linq.Expressions;
 
 namespace Orchard.Tests.Modules.Recipes.Services {
     [TestFixture]
@@ -83,6 +86,7 @@ namespace Orchard.Tests.Modules.Recipes.Services {
             builder.RegisterType<RecipeParser>().As<IRecipeParser>();
             builder.RegisterType<StubWebSiteFolder>().As<IWebSiteFolder>();
             builder.RegisterType<CustomRecipeHandler>().As<IRecipeHandler>();
+            builder.RegisterInstance(new StubRecipeStepResultRecordRepository()).As<IRepository<RecipeStepResultRecord>>();
 
             _container = builder.Build();
             _recipeManager = _container.Resolve<IRecipeManager>();
@@ -97,7 +101,7 @@ namespace Orchard.Tests.Modules.Recipes.Services {
 
         [Test]
         public void HarvestRecipesFailsToFindRecipesWhenCalledWithNotExistingExtension() {
-            var recipes = (List<Recipe>) _recipeHarvester.HarvestRecipes("cantfindme");
+            var recipes = (List<Recipe>)_recipeHarvester.HarvestRecipes("cantfindme");
 
             Assert.That(recipes.Count, Is.EqualTo(0));
         }
@@ -110,7 +114,7 @@ namespace Orchard.Tests.Modules.Recipes.Services {
 
         [Test]
         public void ParseRecipeLoadsRecipeMetaDataIntoModel() {
-            var recipes = (List<Recipe>) _recipeHarvester.HarvestRecipes("Sample1");
+            var recipes = (List<Recipe>)_recipeHarvester.HarvestRecipes("Sample1");
             Assert.That(recipes.Count, Is.EqualTo(1));
 
             var sampleRecipe = recipes[0];
@@ -129,7 +133,7 @@ namespace Orchard.Tests.Modules.Recipes.Services {
             Assert.That(recipes.Count, Is.EqualTo(1));
 
             var sampleRecipe = recipes[0];
-            var recipeSteps = (List<RecipeStep>) sampleRecipe.RecipeSteps;
+            var recipeSteps = (List<RecipeStep>)sampleRecipe.RecipeSteps;
 
             Assert.That(recipeSteps.Count, Is.EqualTo(9));
         }
@@ -163,6 +167,22 @@ namespace Orchard.Tests.Modules.Recipes.Services {
         }
     }
 
+    public class StubRecipeStepResultRecordRepository : IRepository<RecipeStepResultRecord> {
+        private List<RecipeStepResultRecord> _records = new List<RecipeStepResultRecord>();
+        public IQueryable<RecipeStepResultRecord> Table { get { return _records.AsQueryable(); } }
+        public void Copy(RecipeStepResultRecord source, RecipeStepResultRecord target) { }
+        public int Count(Expression<Func<RecipeStepResultRecord, bool>> predicate) { return _records.Count; }
+        public void Create(RecipeStepResultRecord entity) { _records.Add(entity); }
+        public void Delete(RecipeStepResultRecord entity) { _records.Remove(entity); }
+        public IEnumerable<RecipeStepResultRecord> Fetch(Expression<Func<RecipeStepResultRecord, bool>> predicate) { throw new NotImplementedException(); }
+        public IEnumerable<RecipeStepResultRecord> Fetch(Expression<Func<RecipeStepResultRecord, bool>> predicate, Action<Orderable<RecipeStepResultRecord>> order) { throw new NotImplementedException(); }
+        public IEnumerable<RecipeStepResultRecord> Fetch(Expression<Func<RecipeStepResultRecord, bool>> predicate, Action<Orderable<RecipeStepResultRecord>> order, int skip, int count) { throw new NotImplementedException(); }
+        public void Flush() { }
+        public RecipeStepResultRecord Get(Expression<Func<RecipeStepResultRecord, bool>> predicate) { throw new NotImplementedException(); }
+        public RecipeStepResultRecord Get(int id) { throw new NotImplementedException(); }
+        public void Update(RecipeStepResultRecord entity) { }
+    }
+
     public class StubRecipeScheduler : IRecipeScheduler {
         private readonly IRecipeStepExecutor _recipeStepExecutor;
 
@@ -177,7 +197,7 @@ namespace Orchard.Tests.Modules.Recipes.Services {
 
     public class CustomRecipeHandler : IRecipeHandler {
         public static string AttributeValue;
-        public string[] _handles = {"Module", "Theme", "Migration", "Custom1", "Custom2", "Command", "Metadata", "Feature", "Settings"};
+        public string[] _handles = { "Module", "Theme", "Migration", "Custom1", "Custom2", "Command", "Metadata", "Feature", "Settings" };
 
         public void ExecuteRecipeStep(RecipeContext recipeContext) {
             if (_handles.Contains(recipeContext.RecipeStep.Name)) {
