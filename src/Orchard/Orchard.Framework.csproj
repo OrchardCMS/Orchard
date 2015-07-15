@@ -150,6 +150,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Environment\Extensions\Helpers\ExtensionManagerExtensions.cs" />
+    <Compile Include="Mvc\Updater.cs" />
     <Compile Include="Recipes\Models\RecipeResult.cs" />
     <Compile Include="Recipes\Models\RecipeStepResult.cs" />
     <Compile Include="Recipes\Models\BuildContext.cs" />
