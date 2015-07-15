@@ -7,6 +7,7 @@ using Orchard.Localization;
 using Orchard.Utility.Extensions;
 using Orchard.Widgets.Models;
 using Orchard.Widgets.Services;
+using System.Linq;
 
 namespace Orchard.Widgets.Drivers {
 
@@ -32,6 +33,14 @@ namespace Orchard.Widgets.Drivers {
             widgetPart.AvailableZones = _widgetsService.GetZones();
             widgetPart.AvailableLayers = _widgetsService.GetLayers();
 
+            if (widgetPart.LayerPart == null) {
+                Localization.Models.LocalizationPart localizationPart = widgetPart.ContentItem.Parts.Where(x => x.PartDefinition.Name == "LocalizationPart").FirstOrDefault() as Localization.Models.LocalizationPart;
+                ContentItem masterContentItem = localizationPart.MasterContentItem as ContentItem;
+                WidgetPart masterWidgetPart = masterContentItem.Parts.Where(x => x.PartDefinition.Name == "WidgetPart").FirstOrDefault() as WidgetPart;
+                widgetPart.LayerPart = masterWidgetPart.LayerPart;
+                widgetPart.Zone = masterWidgetPart.Zone;
+            }
+
             var results = new List<DriverResult> {
                 ContentShape("Parts_Widgets_WidgetPart",
                              () => shapeHelper.EditorTemplate(TemplateName: "Parts.Widgets.WidgetPart", Model: widgetPart, Prefix: Prefix))
@@ -47,16 +56,16 @@ namespace Orchard.Widgets.Drivers {
         protected override DriverResult Editor(WidgetPart widgetPart, IUpdateModel updater, dynamic shapeHelper) {
             updater.TryUpdateModel(widgetPart, Prefix, null, null);
 
-            if(string.IsNullOrWhiteSpace(widgetPart.Title)) {
+            if (string.IsNullOrWhiteSpace(widgetPart.Title)) {
                 updater.AddModelError("Title", T("Title can't be empty."));
             }
-            
+
             // if there is a name, ensure it's unique
-            if(!string.IsNullOrWhiteSpace(widgetPart.Name)) {
+            if (!string.IsNullOrWhiteSpace(widgetPart.Name)) {
                 widgetPart.Name = widgetPart.Name.ToHtmlName();
 
                 var widgets = _contentManager.Query<WidgetPart, WidgetPartRecord>().Where(x => x.Name == widgetPart.Name && x.Id != widgetPart.Id).Count();
-                if(widgets > 0) {
+                if (widgets > 0) {
                     updater.AddModelError("Name", T("A Widget with the same Name already exists."));
                 }
             }
