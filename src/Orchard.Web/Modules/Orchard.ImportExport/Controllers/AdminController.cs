@@ -7,24 +7,29 @@ using Orchard.ContentManagement;
 using Orchard.ImportExport.Services;
 using Orchard.ImportExport.ViewModels;
 using Orchard.Localization;
+using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
 using Orchard.UI.Notify;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.ImportExport.Controllers {
     public class AdminController : Controller, IUpdateModel {
         private readonly IImportExportService _importExportService;
         private readonly IRecipeResultAccessor _recipeResultAccessor;
         private readonly IEnumerable<IRecipeBuilderStep> _exportStepProviders;
+        private readonly IRecipeParser _recipeParser;
 
         public AdminController(
             IOrchardServices services, 
             IImportExportService importExportService,
             IRecipeResultAccessor recipeResultAccessor,
-            IEnumerable<IRecipeBuilderStep> exportStepProviders) {
+            IEnumerable<IRecipeBuilderStep> exportStepProviders, 
+            IRecipeParser recipeParser) {
 
             _importExportService = importExportService;
             _recipeResultAccessor = recipeResultAccessor;
             _exportStepProviders = exportStepProviders;
+            _recipeParser = recipeParser;
             Services = services;
             T = NullLocalizer.Instance;
         }
@@ -97,10 +102,20 @@ namespace Orchard.ImportExport.Controllers {
                 exportStep.UpdateEditor(Services.New, this);
             }
 
-            var exportFilePath = _importExportService.Export(exportSteps);
-            var exportFileName = "export.xml";
+            var recipeDocument = _importExportService.ExportXml(exportSteps);
+            var recipe = _recipeParser.ParseRecipe(recipeDocument);
+            var exportFileName = GetExportFileName(recipe);
+            var exportFilePath = _importExportService.WriteExportFile(recipeDocument);
 
             return File(exportFilePath, "text/xml", exportFileName);
+        }
+
+        private string GetExportFileName(Recipe recipe) {
+            return String.IsNullOrWhiteSpace(recipe.Name) 
+                ? "export.xml" 
+                : String.Format(recipe.IsSetupRecipe 
+                    ? "{0}.recipe.xml" 
+                    : "{0}.export.xml", recipe.Name.HtmlClassify());
         }
 
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
