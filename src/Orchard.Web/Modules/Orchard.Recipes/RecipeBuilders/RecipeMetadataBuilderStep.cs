@@ -4,22 +4,22 @@ using Orchard.Recipes.Services;
 using Orchard.Recipes.ViewModels;
 
 namespace Orchard.Recipes.RecipeBuilders {
-    public class SetupRecipeBuilderStep : RecipeBuilderStep {
+    public class RecipeMetadataBuilderStep : RecipeBuilderStep {
         private readonly IOrchardServices _orchardServices;
-        public SetupRecipeBuilderStep(IOrchardServices orchardServices) {
+        public RecipeMetadataBuilderStep(IOrchardServices orchardServices) {
             _orchardServices = orchardServices;
         }
 
         public override string Name {
-            get { return "SetupRecipe"; }
+            get { return "RecipeMetadata"; }
         }
 
         public override LocalizedString DisplayName {
-            get { return T("Setup Recipe"); }
+            get { return T("Recipe Metadata"); }
         }
 
         public override LocalizedString Description {
-            get { return T("Turns the export file into a Setup recipe."); }
+            get { return T("Provides additional information about the recipe."); }
         }
 
         public override int Priority { get { return -10; } }
@@ -48,10 +48,10 @@ namespace Orchard.Recipes.RecipeBuilders {
                 RecipeWebsite = viewModel.RecipeWebsite;
                 RecipeTags = viewModel.RecipeTags;
                 RecipeVersion = viewModel.RecipeVersion;
-                IsSetupRecipe = true;
+                IsSetupRecipe = viewModel.IsSetupRecipe;
             }
 
-            return shapeFactory.EditorTemplate(TemplateName: "ExportSteps/SetupRecipe", Model: viewModel, Prefix: Prefix);
+            return shapeFactory.EditorTemplate(TemplateName: "ExportSteps/RecipeMetadata", Model: viewModel, Prefix: Prefix);
         }
 
         public override void Build(BuildContext context) {

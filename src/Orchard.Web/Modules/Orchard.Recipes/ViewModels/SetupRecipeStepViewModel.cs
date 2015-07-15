@@ -6,5 +6,6 @@ namespace Orchard.Recipes.ViewModels {
         public string RecipeWebsite { get; set; }
         public string RecipeTags { get; set; }
         public string RecipeVersion { get; set; }
+        public bool IsSetupRecipe { get; set; }
     }
 }

@@ -26,6 +26,11 @@
 </div>
 <div>
     @Html.LabelFor(m => m.RecipeVersion, T("Version"))
-    @Html.TextBoxFor(m => m.RecipeVersion, new { @class = "text small" })
+    @Html.TextBoxFor(m => m.RecipeVersion, new {@class = "text small"})
     @Html.Hint(T("Optionally provide a version for the setup recipe."))
+</div>
+<div>
+    @Html.CheckBoxFor(m => m.IsSetupRecipe)
+    @Html.LabelFor(m => m.IsSetupRecipe, T("Is Setup Recipe").ToString(), new { @class = "forcheckbox" })
+    @Html.Hint(T("Check this option to make this a Setup recipe."))
 </div>
