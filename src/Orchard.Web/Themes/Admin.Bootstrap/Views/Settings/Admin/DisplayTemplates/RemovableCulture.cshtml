@@ -1,0 +1,7 @@
+﻿<div>
+    @Model 
+    @using (Html.BeginFormAntiForgeryPost(Url.Action("DeleteCulture", "Admin", new { area = "Settings" }), FormMethod.Post, new {@class = "inline link"})) {
+        @Html.Hidden("cultureName", (string)Model, new { id = "" }) 
+        <button type="submit" class="remove" title="@T("Delete")">x</button>
+    }
+</div>

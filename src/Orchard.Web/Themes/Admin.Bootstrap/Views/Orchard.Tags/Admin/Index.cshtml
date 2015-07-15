@@ -1,0 +1,59 @@
+﻿@model Orchard.Tags.ViewModels.TagsAdminIndexViewModel
+@using Orchard.Tags.ViewModels;
+@using Orchard.Utility.Extensions;
+@{
+    Script.Require("ShapesBase");
+    Style.Require("TagsAdmin");
+    Layout.Title = T("Tags").ToString();
+}
+
+@Html.ValidationSummary() 
+<div class="manage">
+    @Display.EditorTemplate(TemplateName: "Parts/CreateTag", Model: ViewData["CreateTag"] != null ? ViewData["CreateTag"] : new TagsAdminCreateViewModel())
+</div>
+@using(Html.BeginFormAntiForgeryPost()) {
+    <fieldset class="bulk-actions">
+        <input id="publishActions" name="@Html.NameOf(m => m.BulkAction)" type="hidden" value="@TagAdminIndexBulkAction.None" />
+        <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
+        <div class="btn-group">
+            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                Bulk Actions <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+                <li><a href="javascript:submitForm($('form'), '@TagAdminIndexBulkAction.Delete');">@T("Delete").ToString()</a></li>
+            </ul>
+        </div>
+    </fieldset>
+    <fieldset class="table-responsive">
+        <table class="table table-hover table-bordered items" summary="@T("This is a table of the tags in your application")">
+            <colgroup>
+                <col id="Name" />
+                <col id="Email" />
+                <col id="Edit" />
+            </colgroup>
+            <thead>
+            <th scope="col"><input type="checkbox" class="check-all" /></th>
+            <th scope="col">@T("Name")</th>
+            <th class="text-right" scope="col">@T("Actions")</th>
+            </thead>
+            @{var tagIndex = 0;}
+            @foreach (var tagEntry in Model.Tags)
+            {
+                <tr>
+                    <td>
+                        <input type="hidden" value="@Model.Tags[tagIndex].Tag.Id" name="@Html.NameOf(m => m.Tags[tagIndex].Tag.Id)" />
+                        <input type="checkbox" value="true" name="@Html.NameOf(m => m.Tags[tagIndex].IsChecked)" />
+                    </td>
+                    <td>
+                        @Html.ActionLink(tagEntry.Tag.TagName, "Edit", new { id = tagEntry.Tag.Id })
+                    </td>
+                    <td class="text-right">
+                        @Html.ActionLink(T("Edit").ToString(), "Edit", new { id = tagEntry.Tag.Id }) @T(" | ")
+                        <a href="@Url.Action("Remove", new {tagEntry.Tag.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString()})" itemprop="RemoveUrl UnsafeUrl">@T("Delete")</a>
+                    </td>
+                </tr>
+                tagIndex = tagIndex + 1;
+            }
+        </table>
+    </fieldset>
+}

@@ -1,0 +1,73 @@
+@model Orchard.MediaProcessing.ViewModels.AdminIndexViewModel
+@using Orchard.MediaProcessing.ViewModels
+@{
+    Layout.Title = T("Profiles").ToString();
+    
+    var index = 0;
+
+	var pageSizes = new List<int?>() { 10, 50, 100 };
+	var defaultPageSize = WorkContext.CurrentSite.PageSize;
+	if(!pageSizes.Contains(defaultPageSize)) { 
+		pageSizes.Add(defaultPageSize);
+	}
+}
+
+@using (Html.BeginFormAntiForgeryPost()) { 
+    @Html.ValidationSummary()
+    <div class="manage">@Html.ActionLink(T("Add a new Media Profile").ToString(), "Create", new { Area = "Contents", id = "ImageProfile", returnurl = HttpContext.Current.Request.RawUrl }, new { @class = "btn btn-primary" })</div>
+
+    <fieldset class="bulk-actions">
+        <input id="publishActions" name="@Html.NameOf(m => m.Options.BulkAction)" type="hidden" value="@ImageProfilesBulkAction.None" />
+        <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
+        <div class="btn-group">
+            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                Bulk Actions <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+                <li><a href="javascript:submitForm($('form'), '@ImageProfilesBulkAction.Delete');">@T("Delete").ToString()</a></li>
+            </ul>
+        </div>
+    </fieldset>
+    <fieldset class="bulk-actions">
+		<input type="hidden" name="Page" value="1" />
+		<label for="pageSize">@T("Show:")</label>
+		<select id="pageSize" name="PageSize">
+			@Html.SelectOption((int)Model.Pager.PageSize, 0, T("All").ToString())
+			@foreach(int size in pageSizes.OrderBy(p => p)) {
+				@Html.SelectOption((int)Model.Pager.PageSize, size, size.ToString())
+			}
+		</select>
+        <button class="btn btn-primary" type="submit" name="submit.Filter" value="@T("Filter")">@T("Filter")</button>
+    </fieldset>
+    <fieldset class="table-responsive">
+        <table class="table table-hover table-bordered items">
+            <thead>
+                <tr>
+                    <th scope="col" class="checkbox">&nbsp;&darr;</th>
+                    <th scope="col">@T("Name")</th>
+                    <th scope="col" class="actions">&nbsp;</th>
+                </tr>
+            </thead>
+            @foreach (var entry in Model.ImageProfiles)
+            {
+                <tr>
+                    <td>
+                        <input type="hidden" value="@Model.ImageProfiles[index].ImageProfileId" name="@Html.NameOf(m => m.ImageProfiles[index].ImageProfileId)" />
+                        <input type="checkbox" value="true" name="@Html.NameOf(m => m.ImageProfiles[index].IsChecked)" />
+                    </td>
+                    <td>
+                        @Html.ActionLink(entry.Name, "Edit", new { id = entry.ImageProfileId })
+                    </td>
+                    <td class="text-right">
+                        @Html.ActionLink(T("Properties").ToString(), "Edit", new { Area = "Contents", id = entry.ImageProfileId, returnurl = HttpContext.Current.Request.RawUrl }) |
+                        @Html.ActionLink(T("Edit").ToString(), "Edit", new { id = entry.ImageProfileId }) |
+                        @Html.ActionLink(T("Delete").ToString(), "Delete", new { id = entry.ImageProfileId }, new { itemprop = "RemoveUrl UnsafeUrl" })
+                        @*@Html.ActionLink(T("Preview").ToString(), "Preview", new { id = entry.ImageProfileId })*@
+                    </td>
+                </tr>
+                index++;
+            }
+        </table>
+        @Display(Model.Pager)
+    </fieldset>
+} 

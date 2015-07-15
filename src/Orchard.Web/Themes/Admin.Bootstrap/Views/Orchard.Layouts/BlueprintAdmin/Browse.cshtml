@@ -1,0 +1,31 @@
+﻿@using Orchard.Utility.Extensions
+@model Orchard.Layouts.ViewModels.BrowseElementsViewModel
+@{
+    Style.Include("element-browser.css");
+    Script.Require("jQuery");
+    Script.Include("element-browser.js");
+
+    // Only display categories that have at least a single (non-system) element.
+    var categories = Model.Categories.Where(x => x.Elements.Any(e => !e.IsSystemElement)).ToArray();
+
+    Layout.Title = T("Choose Base Element");
+    Layout.LocalNavigation.Add(New.ElementBrowser_Tabs(Categories: categories));
+}
+<div class="element-browser">
+    @foreach (var category in categories) {
+        <div id="cat-@category.Name.HtmlClassify()" class="elements">
+            <ul>
+                @foreach (var element in category.Elements) {
+                    if (element.IsSystemElement) {
+                        continue;
+                    }
+                    <li>
+                        <a class="element" href="@Url.Action("Create", "BlueprintAdmin", new { id = element.TypeName, area = "Orchard.Layouts" })">
+                            <h2>@element.DisplayText</h2>
+                        </a>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+</div>

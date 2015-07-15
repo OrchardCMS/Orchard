@@ -1,0 +1,16 @@
+﻿@using Orchard.Blogs.Extensions;
+@using Orchard.Blogs.Models;
+@using Orchard.ContentManagement;
+@using Orchard.Utility.Extensions;
+@{
+    ContentItem contentItem = Model.ContentItem;
+    BlogPart blog = (BlogPart)contentItem.Get(typeof(BlogPart));
+}
+<a href="@Url.BlogForAdmin(blog)" class="btn btn-default" title="@T("List Posts")">
+    <span class="fa fa-list"></span>
+    @T("List Posts")
+</a>
+<a href="@Url.BlogPostCreate(blog)" class="btn btn-default" title="@T("New Post")">
+    <span class="fa fa-envelope-o"></span>
+    @T("New Post")
+</a>

@@ -1,0 +1,33 @@
+﻿@model dynamic
+
+@{
+    var siteName = WorkContext.CurrentSite.SiteName;
+    var siteLinkText = !string.IsNullOrWhiteSpace(siteName) ? siteName : T("Your site").Text;
+    var appLinkText = !string.IsNullOrWhiteSpace(siteName) ? siteName : T("Project Orchard").Text;
+}
+<nav class="navbar navbar-inverse" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <button title="Show main menu" data-placement="bottom" id="menu-toggle" type="button" class="fa fa-list btn btn-default navbar-btn pull-right">
+                <span class="sr-only">Toggle left menu</span>
+            </button>
+            <div id="branding">
+                <div id="app">@Html.Link(appLinkText, Href("~/"))</div>
+                <div id="site">@Html.Link(siteLinkText, Href("~/"))</div>
+            </div>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="~/admin">Dashboard</a></li>
+                <li><a href="~/admin/settings/index">Settings</a></li>
+                <li>@Display.User(CurrentUser: WorkContext.CurrentUser)</li>
+            </ul>
+        </div>
+    </div>
+</nav>

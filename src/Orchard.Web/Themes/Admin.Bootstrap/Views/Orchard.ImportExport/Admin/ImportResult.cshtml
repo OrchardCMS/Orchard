@@ -1,0 +1,32 @@
+﻿@model Orchard.Recipes.Models.RecipeJournal
+@{
+    Layout.Title = T("Import Result").ToString();
+}
+<fieldset>
+    <label>@T("Status"):</label>
+    <span>@Model.Status</span>
+</fieldset>
+<fieldset>
+    <fieldset class="table-responsive">
+        <table class="table table-hover table-bordered items" summary="@T("These are messages logged during the import process")">
+            <colgroup>
+                <col id="Col1" />
+            </colgroup>
+            <thead>
+                <tr>
+                    <th scope="col">@T("Message")</th>
+                </tr>
+            </thead>
+            @foreach (var message in Model.Messages)
+            {
+                <tr>
+                    <td>
+                        @message.Message
+                    </td>
+                </tr>
+            }
+        </table>
+    </fieldset>
+</fieldset>
+
+@Html.ActionLink(T("Close").ToString(), "Import", null, new { @class = "btn btn-default" })

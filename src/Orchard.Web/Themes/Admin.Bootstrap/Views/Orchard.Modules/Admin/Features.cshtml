@@ -1,0 +1,180 @@
+﻿@model FeaturesViewModel
+@using Orchard.Localization;
+@using Orchard.Modules.Extensions;
+@using Orchard.Modules.ViewModels;
+@using Orchard.Utility.Extensions;
+@using Orchard.Modules.Models;
+
+@{
+    Style.Require("ModulesAdmin");
+    //Style.Require("Switchable");
+    Script.Require("Switchable").AtFoot();
+    Script.Include("features.admin.js", "features.admin.min.js").AtFoot();
+
+    Layout.Title = T("Modules").ToString();
+}
+
+@if (Model.Features.Any())
+{
+    using (Html.BeginFormAntiForgeryPost())
+    {
+        @Html.Hidden("submit.BulkExecute")
+        @Html.Hidden("force", true)
+        @Html.Hidden("featureIds")
+        <input id="publishActions" name="bulkAction" type="hidden" value="@FeaturesBulkAction.None" />
+        <button name="submit.BulkExecute" type="submit" class="hidden" value="yes">@T("Execute")</button>
+
+        <fieldset class="bulk-actions">
+            <div class="btn-group">
+                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                    Bulk Actions <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href="javascript:submitForm($('form'), '@FeaturesBulkAction.Enable');">@T("Enable").ToString()</a></li>
+                    <li><a href="javascript:submitForm($('form'), '@FeaturesBulkAction.Disable');">@T("Disable").ToString()</a></li>
+                    <li><a href="javascript:submitForm($('form'), '@FeaturesBulkAction.Toggle');">@T("Toggle").ToString()</a></li>
+                </ul>
+            </div>
+        </fieldset>
+        <fieldset class="bulk-actions">
+            <div class="form-group">
+                <label for="search-box">@T("Filter:")</label>
+                <input id="search-box" class="form-control" type="text" />
+            </div>
+        </fieldset>
+
+
+    <ul class="features summary-view switchable">
+        @{
+        var featureGroups = Model.Features.OrderBy(f => f.Descriptor.Category, new DoghouseComparer("Core")).GroupBy(f => f.Descriptor.Category).ToList();
+        foreach (var featureGroup in featureGroups)
+        {
+            if (!featureGroup.Any(x => Model.IsAllowed(x.Descriptor.Extension)))
+            {
+                continue;
+            }
+            var categoryName = LocalizedString.TextOrDefault(featureGroup.First().Descriptor.Category, T("Uncategorized"));
+            var categoryClassName = string.Format("category {0}", Html.Encode(categoryName.ToString().HtmlClassify()));
+            if (featureGroup == featureGroups.First())
+            {
+                categoryClassName += " first";
+            }
+            if (featureGroup == featureGroups.Last())
+            {
+                categoryClassName += " last";
+            }
+
+            <li class="@categoryClassName">
+                <h3>@categoryName</h3>
+                <ul>
+                    @{
+            var features = featureGroup.OrderBy(f => f.Descriptor.Name);
+            foreach (var feature in features)
+            {
+                if (!Model.IsAllowed(feature.Descriptor.Extension))
+                {
+                    continue;
+                }
+                //hmmm...I feel like I've done this before...
+                var featureId = feature.Descriptor.Id.AsFeatureId(n => T(n));
+                var featureName = string.IsNullOrEmpty(feature.Descriptor.Name) ? feature.Descriptor.Id : feature.Descriptor.Name;
+                var featureState = feature.IsEnabled ? "enabled" : "disabled";
+                var featureClassName = string.Format("{0}", featureState + (feature.NeedsUpdate ? " update" : String.Empty));
+                if (feature == features.First())
+                {
+                    featureClassName += " first";
+                }
+                if (feature == features.Last())
+                {
+                    featureClassName += " last";
+                }
+
+                if (feature.IsRecentlyInstalled)
+                {
+                    featureClassName += " recentlyInstalledFeature";
+                }
+
+                var dependencies = (from d in feature.Descriptor.Dependencies
+                                    select (from f in Model.Features where f.Descriptor.Id.Equals(d, StringComparison.OrdinalIgnoreCase) select f).SingleOrDefault()).Where(f => f != null).OrderBy(f => f.Descriptor.Name);
+                var missingDependencies = feature.Descriptor.Dependencies
+                    .Where(d => !Model.Features.Any(f => f.Descriptor.Id.Equals(d, StringComparison.OrdinalIgnoreCase)));
+                var showDisable = categoryName.ToString() != "Core";
+                var showEnable = Model.IsAllowed(feature.Descriptor.Extension) && !missingDependencies.Any() && feature.Descriptor.Id != "Orchard.Setup";
+                <li class="feature-item col-md-4" id="@featureId" title="@T("{0} is {1}", Html.AttributeEncode(featureName), featureState)">
+                    <div class="feature @featureClassName">
+                        <div class="summary">
+                            <div class="properties">
+                                <h4>
+                                    @if ((showEnable && !feature.IsEnabled) || (showDisable && feature.IsEnabled))
+                                    {
+                                        <label>
+                                            <input type="checkbox" name="featureIds" value="@feature.Descriptor.Id" />
+                                            @featureName
+                                        </label>
+                                    }
+                                    else
+                                    {
+                                        @featureName
+                                    }
+                                </h4>
+                                <p class="description" title="@feature.Descriptor.Description">@feature.Descriptor.Description</p>
+                                @if (feature.Descriptor.Dependencies != null && feature.Descriptor.Dependencies.Any())
+                                {
+                                    <div class="dependencies">
+                                        <h5>@T("Depends on:")</h5>
+                                        @Html.UnorderedList(dependencies,
+                            (s, i) => Html.Link(string.IsNullOrEmpty(s.Descriptor.Name) ? s.Descriptor.Id : s.Descriptor.Name, string.Format("#{0}", s.Descriptor.Id.AsFeatureId(n => T(n)))),
+                        "",
+                        "dependency",
+                        "")
+                                    </div>}
+                                @if (missingDependencies.Any())
+                                {
+                                    <div class="missingdependencies">
+                                        <h5>@T("Missing:")</h5>
+                                        @Html.UnorderedList(missingDependencies, (s, i) => MvcHtmlString.Create(s), "", "missingdependency", "")
+                                    </div>}
+                            </div>
+                            <div class="actions">
+                                @if (showDisable && feature.IsEnabled)
+                                {
+                                    var dependantsJoined = string.Join(", ", feature.DependentFeatures.Select(f => f.Name));
+                                    @*<a href="#" data-feature-id="@feature.Descriptor.Id" data-feature-action="@FeaturesBulkAction.Disable" data-feature-force="true" data-feature-dependants="@dependantsJoined">@T("Disable")</a>*@
+                                    <div class="btn-group btn-toggle">
+                                        <button type="button" class="btn btn-xs btn-success disabled">ON</button>
+                                        <button type="button" class="btn btn-xs btn-default" data-feature-id="@feature.Descriptor.Id" data-feature-action="@FeaturesBulkAction.Disable" data-feature-force="true" data-feature-dependants="@dependantsJoined">OFF</button>
+                                    </div>
+                                }
+
+                                @if (showEnable && !feature.IsEnabled)
+                                {
+                                    @*<a href="#" data-feature-id="@feature.Descriptor.Id" data-feature-action="@FeaturesBulkAction.Enable" data-feature-force="true">@T("Enable")</a>*@
+                                    <div class="btn-group btn-toggle">
+                                        <button type="button" class="btn btn-xs btn-default" data-feature-id="@feature.Descriptor.Id" data-feature-action="@FeaturesBulkAction.Enable" data-feature-force="true">ON</button>
+                                        <button type="button" class="btn btn-xs btn-danger disabled">OFF</button>
+                                    </div>
+                                }
+
+                                @if (feature.NeedsUpdate)
+                                {
+                                    <a href="#" data-feature-id="@feature.Descriptor.Id" data-feature-action="@FeaturesBulkAction.Update" data-feature-force="false">@T("Update")</a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </li>}
+                    }
+                </ul>
+            </li>}
+        }
+    </ul>}
+
+    using (Script.Foot())
+    {
+        <script type="text/javascript">
+            //<![CDATA[
+            var confirmDisableMessage = '@T("Disabling this feature will also disable the following dependent features. Are you sure you want to continue?")';
+            //]]>
+        </script>
+    }
+}

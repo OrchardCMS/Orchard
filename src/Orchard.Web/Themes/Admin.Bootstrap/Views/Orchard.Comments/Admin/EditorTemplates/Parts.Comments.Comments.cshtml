@@ -1,0 +1,18 @@
+﻿@model Orchard.Comments.Models.CommentsPart
+
+<fieldset>
+    <legend>@T("Comments") 
+    @if (Model.Comments.Count > 0) { 
+        <span>&#150; @Display.CommentSummaryLinks(item: Model.ContentItem, count: Model.Comments.Count, pendingCount: Model.PendingComments.Count)</span> 
+     }
+     </legend>
+    @Html.EditorFor(m => m.CommentsShown)
+    <label class="forcheckbox" for="@Html.FieldIdFor(m => m.CommentsShown)">@T("Show comments")</label> 
+    <span class="hint forcheckbox">@T("Enable to show the existing comments.")</span>
+    @Html.EditorFor(m => m.CommentsActive)
+    <label class="forcheckbox" for="@Html.FieldIdFor(m => m.CommentsActive)">@T("Allow new comments")</label> 
+    <span class="hint forcheckbox">@T("Enable to show the comment form. Disabling still allows the existing comments to be shown but does not allow the conversation to continue.")</span>
+    @Html.EditorFor(m => m.ThreadedComments)
+    <label class="forcheckbox" for="@Html.FieldIdFor(m => m.ThreadedComments)">@T("Allow threaded comments")</label> 
+    <span class="hint forcheckbox">@T("Enable to allow users to answer directly to other comments.")</span>
+</fieldset>

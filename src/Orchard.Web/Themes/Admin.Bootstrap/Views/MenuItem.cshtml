@@ -1,0 +1,38 @@
+﻿@{
+    // odd formatting in this file is to cause more attractive results in the output.
+    var items = Enumerable.Cast<dynamic>((System.Collections.IEnumerable)Model);
+}
+@{
+    if (!HasText(Model.Text)) {
+        @DisplayChildren(Model)
+    }
+    else {
+        if ((bool) Model.Selected) {
+            Model.Classes.Add("current");
+        }
+
+        if (items.Any()) {
+            Model.Classes.Add("dropdown");
+        }
+
+        @* morphing the shape to keep Model untouched*@
+        Model.Metadata.Alternates.Clear();
+        Model.Metadata.Type = "MenuItemLink";
+
+        @* render the menu item only if it has some content *@
+        var renderedMenuItemLink = Display(Model);
+        if (HasText(renderedMenuItemLink)) {
+            var tag = Tag(Model, "li");
+            @tag.StartElement
+            @renderedMenuItemLink
+
+            if (items.Any()) {
+                <ul>
+                    @DisplayChildren(Model)
+                </ul>
+            }
+    
+            @tag.EndElement
+        }
+    }
+}

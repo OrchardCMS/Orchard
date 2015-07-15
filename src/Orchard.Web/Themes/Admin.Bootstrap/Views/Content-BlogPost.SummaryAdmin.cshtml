@@ -1,0 +1,80 @@
+﻿@using Orchard.ContentManagement;
+@using Orchard.Core.Contents
+@using Orchard.Utility.Extensions;
+@{
+    Script.Require("ShapesBase");
+    ContentItem contentItem = Model.ContentItem;
+    var returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString();
+}
+<div class="summary" itemscope="itemscope" itemid="@contentItem.Id" itemtype="http://orchardproject.net/data/ContentItem">
+    <div class="properties">
+        <input type="checkbox" value="@contentItem.Id" name="itemIds" />
+        <h3>@Html.ItemAdminLink(contentItem)</h3> - <div class="contentType">@contentItem.TypeDefinition.DisplayName</div>
+        @if (Model.Header != null) {
+            <div class="header">@Display(Model.Header)</div>
+        }
+        @if (Model.Meta != null) {
+            <div class="metadata">@Display(Model.Meta)</div>
+        }
+    </div>
+    <div class="related">
+        @Display(Model.Actions)
+
+        @if (contentItem.HasPublished()) {
+            <a href="@Url.ItemDisplayUrl(contentItem)" class="btn btn-default">
+                <span class="fa fa-eye"></span>
+                @T("View")
+            </a>
+
+            if (contentItem.HasDraft()) {
+                <a href="@Url.Action("Publish", "Admin", new { area = "Contents", id = contentItem.Id, returnUrl = Request.ToUrlString() })" class="btn btn-default" itemprop="UnsafeUrl">
+                    <span class="fa fa-cloud-upload text-success"></span>
+                    @T("Publish Draft")
+                </a>
+
+                if (Authorizer.Authorize(Orchard.Blogs.Permissions.PublishBlogPost, contentItem)) {
+                    <a href="@Url.Action("Preview", "Item", new { area = "Contents", id = contentItem.Id })" class="btn btn-default">
+                        <span class="fa fa-eye"></span>
+                        @T("Preview")
+                    </a>
+                }
+            }
+
+            if (Authorizer.Authorize(Orchard.Blogs.Permissions.PublishBlogPost, contentItem)) {
+                <a href="@Url.Action("Unpublish", "Admin", new { area = "Contents", id = contentItem.Id, returnUrl = Request.ToUrlString() })" class="btn btn-default" itemprop="UnsafeUrl">
+                    <span class="fa fa-cloud-download text-danger"></span>
+                    @T("Unpublish").Text
+                </a>
+            }
+        } else {
+            if (contentItem.HasDraft()) {
+                <a href="@Url.Action("Preview", "Item", new { area = "Contents", id = contentItem.Id })" class="btn btn-default">
+                    <span class="fa fa-eye"></span>
+                    @T("Preview")
+                </a>
+            }
+
+            if (Authorizer.Authorize(Orchard.Blogs.Permissions.PublishBlogPost, contentItem)) {
+                <a href="@Url.Action("Publish", "Admin", new { area = "Contents", id = contentItem.Id, returnUrl = Request.ToUrlString() })" class="btn btn-default" itemprop="UnsafeUrl">
+                    <span class="fa fa-cloud-upload text-success"></span>
+                    @T("Publish")
+                </a>
+            }
+        }
+        @if (Authorizer.Authorize(Orchard.Blogs.Permissions.EditBlogPost, contentItem)) {
+            <a href="@Url.ItemEditUrl(contentItem)" class="btn btn-info">
+                <span class="fa fa-pencil-square-o"></span>
+                @T("Edit")
+            </a>
+        }
+        @if (Authorizer.Authorize(Orchard.Blogs.Permissions.DeleteBlogPost, contentItem)) {
+            <a href="@Url.ItemRemoveUrl(contentItem, new { returnUrl })" class="btn btn-danger" itemprop="RemoveUrl UnsafeUrl">
+                <span class="fa fa-trash"></span>
+                @T("Delete")
+            </a>
+        }
+    </div>
+    @if (Model.Content != null) {
+        <div class="primary">@Display(Model.Content)</div>
+    }
+</div>

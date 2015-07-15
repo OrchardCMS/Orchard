@@ -1,0 +1,33 @@
+@using Orchard.Blogs.Extensions;
+@using Orchard.Core.Contents.ViewModels;
+@using Orchard.Utility.Extensions;
+
+@{ Layout.Title = T("Manage Blogs").ToString(); }
+
+@if (Model.ContentItems.Items.Count > 0)
+{
+    using (Html.BeginFormAntiForgeryPost(Url.Action("List", "Admin", new { area = "Contents", id = "" })))
+    {
+        <fieldset class="bulk-actions">
+            @Html.Hidden("returnUrl", ViewContext.RequestContext.HttpContext.Request.ToUrlString())
+            <input id="publishActions" name="Options.BulkAction" type="hidden" value="@ContentsBulkAction.None" />
+            <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
+            <div class="btn-group">
+                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                    Bulk Actions <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href="javascript:submitForm($('form'), '@ContentsBulkAction.Remove');">@T("Remove").ToString()</a></li>
+                </ul>
+            </div>
+        </fieldset>
+        <div class="manage"><a class="btn btn-primary" href="@Url.BlogCreate()">@T("New Blog")</a></div>
+        <fieldset class="contentItems bulk-items">
+            @Display(Model.ContentItems)
+        </fieldset>
+    }
+}
+else
+{
+    <div class="info message">@T("There are no blogs for you to see. Want to <a href=\"{0}\">add one</a>?", Url.BlogCreate())</div>
+}

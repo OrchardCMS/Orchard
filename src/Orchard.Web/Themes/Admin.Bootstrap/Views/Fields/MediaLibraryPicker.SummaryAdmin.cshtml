@@ -1,0 +1,60 @@
+﻿@using Orchard.Core.Contents
+@using Orchard.MediaLibrary.Fields
+@using Orchard.Utility.Extensions;
+
+@{
+    var field = (MediaLibraryPickerField)Model.ContentField;
+    string name = field.DisplayName;
+    var mediaParts = field.MediaParts;
+
+    var returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString();
+}
+<div class="col-xs-4">
+    <span class="name">@name:</span>
+    <div class="media-library-picker-field media-library-picker-field-@name.HtmlClassify()">
+        @if (mediaParts.Any()) {
+            <div id="carousel-@(Model.ContentItem.Id)-@field.DisplayName" class="carousel slide" data-ride="carousel">
+                <!-- Indicators -->
+                <ol class="carousel-indicators">
+                    @{int count = 0;}
+                    @foreach (var contentItem in mediaParts) {
+                        <li data-target="#carousel-@(Model.ContentItem.Id)-@field.DisplayName" data-slide-to="@count" class="@(count == 0 ? "active" : "")"></li>
+                        count++;
+                    }
+                </ol>
+
+                <!-- Wrapper for slides -->
+                <div class="carousel-inner" role="listbox">
+                    @{count = 0;}
+                    @foreach (var contentItem in mediaParts) {
+                        if (Authorizer.Authorize(Permissions.EditContent, contentItem)) {
+                            <div class="item @(count == 0 ? "active" : "")">
+                                <a href="@Url.ItemEditUrl(contentItem, new {returnUrl})">
+                                    @Display(BuildDisplay(contentItem, "Thumbnail"))
+                                </a>
+                                <div class="carousel-caption">
+                                    ...
+                                </div>
+                            </div>
+                        } else {
+                            @Display(BuildDisplay(contentItem, "Thumbnail"))
+                        }
+                        count++;
+                    }
+                </div>
+
+                <!-- Controls -->
+                <a class="left carousel-control" href="#carousel-@(Model.ContentItem.Id)-@field.DisplayName" role="button" data-slide="prev">
+                    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="right carousel-control" href="#carousel-@(Model.ContentItem.Id)-@field.DisplayName" role="button" data-slide="next">
+                    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+        } else {
+            <span class="value">@T("No media items.")</span>
+        }
+    </div>
+</div>

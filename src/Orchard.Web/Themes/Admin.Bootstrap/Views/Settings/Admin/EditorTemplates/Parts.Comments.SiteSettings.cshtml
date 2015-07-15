@@ -1,0 +1,18 @@
+﻿@model Orchard.Comments.Models.CommentSettingsPart
+
+<fieldset>
+    <legend>@T("Comments")</legend>
+    <div class="form-group">
+        @Html.EditorFor(m => m.ModerateComments)
+        <label class="forcheckbox" for="CommentSettings_ModerateComments">@T("Comments must be approved before they appear")</label>
+        @Html.ValidationMessage("ModerateComments", "*")
+        <span class="hint">@T("Check if you want to manually approve comments before they can be displayed.")</span>
+    </div>
+    <div class="form-group">
+        <label for="CommentSettings_ClosedCommentsDelay">@T("Automatically close comments after")</label>
+        @Html.TextBoxFor(m => m.ClosedCommentsDelay, new { @class = "text small" }) @T("days")
+        @Html.ValidationMessage("ClosedCommentsDelay", "*")
+        <span class="hint">@T("Number of days after comments are automatically closed. Leave to 0 to have them always available.")</span>
+    </div>
+
+</fieldset>

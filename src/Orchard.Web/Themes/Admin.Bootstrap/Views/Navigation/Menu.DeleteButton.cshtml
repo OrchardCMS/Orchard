@@ -1,0 +1,14 @@
+﻿@using Orchard.ContentManagement;
+@using Orchard.Core.Contents
+@using Orchard.Utility.Extensions;
+
+@{
+    ContentItem contentItem = Model.ContentItem;
+    string returnUrl = Request["returnUrl"];
+}
+
+@if (Authorizer.Authorize(Permissions.DeleteContent, contentItem)) {
+    <fieldset class="delete-button">
+        @Html.Link(T("Delete").Text, Url.ItemRemoveUrl(contentItem, new {returnUrl}), new { @class = "button", itemprop = "RemoveUrl UnsafeUrl"})
+    </fieldset>
+}

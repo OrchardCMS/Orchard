@@ -1,0 +1,27 @@
+﻿@using Orchard.Utility.Extensions;
+@using Orchard.Widgets.Models;
+@{
+    Style.Require("WidgetsAdmin");
+    Layout.Title = T("Choose A Widget").ToString();
+    IEnumerable<Tuple<string, string>> widgetTypes = Model.WidgetTypes;
+}
+
+@if (widgetTypes.Count() > 0) {
+<ul id="widgets-available">
+    @foreach (var widgetType in widgetTypes.OrderBy(type => (string)type.Item1)) {
+        string name = widgetType.Item1;
+        string description = widgetType.Item2;
+    <li>
+        <a href="@Url.Action("AddWidget", "Admin", new { area = "Orchard.Widgets", layerId = Model.CurrentLayer.Id, widgetType = name, zone = Model.Zone, returnUrl = Model.ReturnUrl })">
+            <h2>@name.CamelFriendly()</h2>
+            @if (!string.IsNullOrWhiteSpace(description)) {
+            <p>@description</p>
+            }
+        </a>
+    </li>
+    }
+</ul>
+}
+else {
+<p>@T("There are no widgets available to add.")</p>
+}

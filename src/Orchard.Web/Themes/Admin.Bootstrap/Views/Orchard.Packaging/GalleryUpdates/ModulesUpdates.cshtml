@@ -1,0 +1,89 @@
+﻿@using Orchard.Modules.Extensions
+@using Orchard.Mvc.Html;
+@using Orchard.Packaging.ViewModels;
+@using Orchard.Packaging.Services;
+@using Orchard.Packaging.Models;
+@using Orchard.Environment.Extensions.Models;
+@using Orchard.Utility.Extensions;
+@model PackagingListViewModel
+
+@{
+    Style.Require("PackagingAdmin");
+
+    Layout.Title = T("Modules").ToString();
+}
+
+@functions {
+    public string InstallAction(PackagingEntry package) {
+        return Url.Action("InstallGallery", "PackagingServices", new {
+            area = "Orchard.Packaging",
+            packageId = package.PackageId,
+            version = package.Version,
+            sourceId = package.Source.Id,
+            redirectUrl = HttpContext.Current.Request.RawUrl
+        });
+    }
+}
+
+<fieldset class="update-actions">
+    <a class="button" href="@Url.Action("ReloadUpdates", new { returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString()})" title="@T("Most recent check for updates: {0}", Model.LastUpdateCheckUtc == null ? T("Unknown") : Display.DateTimeRelative(DateTimeUtc: Model.LastUpdateCheckUtc.Value))">@T("Check for Updates")</a>
+</fieldset>
+
+@if (Model.Entries.Count() <= 0) {
+    <p>@T("No module updates available.").ToString()</p>
+} else {
+    <ul class="contentItems">
+    @foreach (var module in Model.Entries) {
+        <li>
+            @{
+                string iconUrl = module.NewVersionToInstall.IconUrl;
+                if (string.IsNullOrWhiteSpace(iconUrl)) {
+                    iconUrl = Href("../../Content/Images/ModuleDefaultIcon.png");
+                }
+            }
+
+            <div class="iconThumbnail">
+                <div class="extensionDetails column">
+                    <div class="extensionName">
+                        @if (!string.IsNullOrWhiteSpace(module.NewVersionToInstall.GalleryDetailsUrl)) {
+                            <a href="@module.NewVersionToInstall.GalleryDetailsUrl">
+                                <h2>@module.NewVersionToInstall.Title<span> - @T("Version: {0}", module.NewVersionToInstall.Version)</span></h2>
+                            </a>
+                        } else {
+                            <h2>@module.NewVersionToInstall.Title<span> - @T("Version: {0}", module.NewVersionToInstall.Version)</span></h2>
+                        }
+                    </div>
+
+                    <div class="related">
+                        @Html.Link(T("Install Latest").Text, InstallAction(module.NewVersionToInstall))@T(" | ")
+                        <a href="@module.NewVersionToInstall.PackageStreamUri">@T("Download")</a>
+                    </div>
+
+                    <div class="properties">
+                        <p>@(module.NewVersionToInstall.Description == null ? T("(No description").Text : module.NewVersionToInstall.Description)</p>
+                        <ul class="pageStatus">
+                            <li>@T("Last Updated: {0}", module.NewVersionToInstall.LastUpdated)</li>
+                            <li>&nbsp;&#124;&nbsp;@T("Author: {0}", !string.IsNullOrEmpty(module.NewVersionToInstall.Authors) ? module.NewVersionToInstall.Authors : T("Unknown").ToString())</li>
+                            <li>&nbsp;&#124;&nbsp;@T("Downloads: {0}", module.NewVersionToInstall.DownloadCount)</li>
+                            <li>&nbsp;&#124;&nbsp;@T("Website: ")
+                                @if (!string.IsNullOrEmpty(module.NewVersionToInstall.ProjectUrl)) { <a href="@module.NewVersionToInstall.ProjectUrl">@module.NewVersionToInstall.ProjectUrl</a> } else { @T("Unknown").ToString() }
+                            </li>
+                            <li><div>&nbsp;&#124;&nbsp;@T("Rating: ")
+                                    <div class="ratings" style="width:@(15 * 5)px" title="@T("Rating: {0} out of 5 ({1} total).", module.NewVersionToInstall.Rating, module.NewVersionToInstall.RatingsCount)">
+                                        <div class="score" style="width:@(15 * (module.NewVersionToInstall.Rating))px">&nbsp;</div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="extensionThumbnail column">
+                    <img src="@iconUrl" class="thumbnail" alt="module" />
+                </div>
+            </div>
+        </li>}
+    </ul>
+
+    @Display(Model.Pager)
+}

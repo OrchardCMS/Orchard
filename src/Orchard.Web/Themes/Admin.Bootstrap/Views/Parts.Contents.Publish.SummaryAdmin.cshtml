@@ -1,0 +1,52 @@
+﻿@using Orchard.ContentManagement;
+@using Orchard.Core.Contents;
+@using Orchard.Utility.Extensions;
+
+@{
+    Script.Require("ShapesBase");
+    ContentPart contentPart = Model.ContentPart;
+}
+@if (contentPart.HasPublished()) {
+    <a href="@Url.ItemDisplayUrl((ContentItem)Model.ContentPart.ContentItem)" class="btn btn-default">
+        <span class="fa fa-eye"></span>
+        @T("View")
+    </a>
+    if (contentPart.HasDraft()) {
+        if (Authorizer.Authorize(Permissions.PublishContent, contentPart)) {
+            <a href="@Url.Action("Publish", "Admin", new { area = "Contents", id = contentPart.ContentItem.Id, returnUrl = Request.ToUrlString() })" class="btn btn-default" itemprop="UnsafeUrl">
+                <span class="fa fa-cloud-upload text-success"></span>
+                @T("Publish Draft")
+            </a>
+        }
+
+        if (Authorizer.Authorize(Permissions.PreviewContent, contentPart)) {
+            <a href="@Url.Action("Display", "Item", new { area = "Contents", id = ((ContentItem)Model.ContentPart.ContentItem).Id, version = ((ContentItem)Model.ContentPart.ContentItem).Version })" class="btn btn-default">
+                <span class="fa fa-eye"></span>
+                @T("Preview")
+            </a>
+        }
+    }
+
+    if (Authorizer.Authorize(Permissions.PublishContent, contentPart)) {
+        <a href="@Url.Action("Unpublish", "Admin", new { area = "Contents", id = contentPart.ContentItem.Id, returnUrl = Request.ToUrlString() })" class="btn btn-default" itemprop="UnsafeUrl">
+            <span class="fa fa-cloud-download text-danger"></span>
+            @T("Unpublish").Text
+        </a>
+    }
+} else {
+    if (contentPart.HasDraft()) {
+        if (Authorizer.Authorize(Permissions.PreviewContent, contentPart)) {
+            <a href="@Url.Action("Display", "Item", new { area = "Contents", id = ((ContentItem)Model.ContentPart.ContentItem).Id, version = ((ContentItem)Model.ContentPart.ContentItem).Version })" class="btn btn-default">
+                <span class="fa fa-eye"></span>
+                @T("Preview")
+            </a>
+        }
+    }
+
+    if (Authorizer.Authorize(Permissions.PublishContent, contentPart)) {
+        <a href="@Url.Action("Publish", "Admin", new { area = "Contents", id = contentPart.ContentItem.Id, returnUrl = Request.ToUrlString() })" class="btn btn-default" itemprop="UnsafeUrl">
+            <span class="fa fa-cloud-upload text-success"></span>
+            @T("Publish")
+        </a>
+    }
+}

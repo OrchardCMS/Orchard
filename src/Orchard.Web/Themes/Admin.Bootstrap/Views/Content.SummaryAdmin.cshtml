@@ -1,0 +1,37 @@
+﻿@using Orchard.ContentManagement;
+@using Orchard.Core.Contents
+@using Orchard.Utility.Extensions;
+@{
+    ContentItem contentItem = Model.ContentItem;
+    var returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString();
+}
+<div class="summary" itemscope="itemscope" itemid="@contentItem.Id" itemtype="http://orchardproject.net/data/ContentItem">
+    <div class="properties">
+        <input type="checkbox" value="@contentItem.Id" name="itemIds" />
+        <h3><div class="contentType">@contentItem.TypeDefinition.DisplayName</div> - @Html.ItemAdminLink(contentItem)</h3>
+        @if (Model.Header != null) {
+            <div class="header">@Display(Model.Header)</div>
+        }
+        @if (Model.Meta != null) {
+            <div class="metadata">@Display(Model.Meta)</div>
+        }
+    </div>
+    @if (Model.Content != null) {
+        <div class="primary">@Display(Model.Content)</div>
+    }
+    <div class="related">
+        @Display(Model.Actions)
+        @if (Authorizer.Authorize(Permissions.EditContent, contentItem)) {
+            <a href="@Url.ItemEditUrl(contentItem)" class="btn btn-info">
+                <span class="fa fa-pencil-square-o"></span>
+                @T("Edit")
+            </a>
+        }
+        @if (Authorizer.Authorize(Permissions.DeleteContent, contentItem)) {
+            <a href="@Url.ItemRemoveUrl(contentItem, new { returnUrl })" class="btn btn-danger" itemprop="RemoveUrl UnsafeUrl">
+                <span class="fa fa-trash"></span>
+                @T("Delete")
+            </a>
+        }
+    </div>
+</div>

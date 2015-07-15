@@ -1,0 +1,29 @@
+@model MergeTermViewModel
+@using Orchard.Taxonomies.ViewModels;
+
+@{
+    Layout.Title = T("Merging terms").Text;
+}
+@using (Html.BeginFormAntiForgeryPost()) {
+    @Html.ValidationSummary()
+    <fieldset>    
+        <p>@T("You are going to merge the terms '{0}' into the term you select below. Please be aware that this term will then be deleted.", string.Join(", ", Model.TermsToMerge.Select(o => o.Name)))</p>
+    
+        <label for="@Html.FieldIdFor(m => m.SelectedTermId)">@T("Parent term")</label>
+        <select name="@Html.FieldNameFor(m => m.SelectedTermId)" id="@Html.FieldIdFor(m => m.SelectedTermId)">
+            @foreach(var term in Model.Terms) {
+                <option value="@term.Id">@T(term.Name)</option>
+            }
+        </select>    
+        
+@*        <label for="@Html.FieldIdFor(m => m.ForcePublish)">@T("Republish content")</label>
+        <input name="@Html.FieldNameFor(m => m.ForcePublish)" id="@Html.FieldIdFor(m => m.ForcePublish)" value="@Model.ForcePublish" type="checkbox" />
+        <span class="hint">@T("This will republish all content that is currently published. It will not publish out content if the latest version is in draft.")</span>*@
+    </fieldset>
+    
+    @Html.HiddenFor(o => o.TaxonomyId)
+
+    <fieldset>
+        <button class="primaryAction" type="submit">@T("Select")</button>
+    </fieldset>
+}

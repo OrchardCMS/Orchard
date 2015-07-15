@@ -1,0 +1,7 @@
+Name: Admin.Bootstrap
+Author: John Doe
+Website: http://www.orchardproject.net
+Description: Bootstrap admin theme
+Version: 1.0.0
+Tags: hidden, admin, bootstrap
+Zones: Header, Messages, BeforeContent, LocalNavigation, Content, AfterContent, Footer

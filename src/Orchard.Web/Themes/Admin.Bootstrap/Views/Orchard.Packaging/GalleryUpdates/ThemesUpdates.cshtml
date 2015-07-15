@@ -1,0 +1,94 @@
+﻿@using Orchard.Modules.Extensions
+@using Orchard.Mvc.Html;
+@using Orchard.Packaging.ViewModels;
+@using Orchard.Packaging.Services;
+@using Orchard.Packaging.Models;
+@using Orchard.Environment.Extensions.Models;
+@using Orchard.Utility.Extensions;
+@model PackagingListViewModel
+
+@{
+    Style.Require("PackagingAdmin");
+
+    Layout.Title = T("Themes").ToString();
+}
+
+@functions {
+    public string InstallAction(PackagingEntry package) {
+        return Url.Action("InstallGallery", "PackagingServices", new {
+            area = "Orchard.Packaging",
+            packageId = package.PackageId,
+            version = package.Version,
+            sourceId = package.Source.Id,
+            redirectUrl = HttpContext.Current.Request.RawUrl
+        });
+    }
+}
+
+<fieldset class="update-actions">
+    <a class="button" href="@Url.Action("ReloadUpdates", new { returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString()})" title="@T("Most recent check for updates: {0}", Model.LastUpdateCheckUtc == null ? T("Unknown") : Display.DateTimeRelative(DateTimeUtc: Model.LastUpdateCheckUtc.Value))" >@T("Check for Updates")</a>
+</fieldset>
+
+@if (Model.Entries.Count() <= 0) {
+    <p>@T("No theme updates available.").ToString()</p>
+} else {
+    <ul class="contentItems theme">
+    @foreach (var theme in Model.Entries) {
+        <li>
+            @{
+                string extensionClass = "iconThumbnail";
+                string iconUrl = theme.NewVersionToInstall.IconUrl;
+                if (!string.IsNullOrWhiteSpace(@theme.NewVersionToInstall.FirstScreenshot)) {
+                    iconUrl = theme.NewVersionToInstall.FirstScreenshot;
+                    extensionClass = "screenshotThumbnail";
+                } else if (string.IsNullOrWhiteSpace(iconUrl)) {
+                    iconUrl = Href("../../Content/Images/imagePlaceholder.png");
+                    extensionClass = "screenshotThumbnail";
+                }
+            }
+
+            <div class="@extensionClass">
+                <div class="extensionDetails column">
+                    <div class="extensionName">
+                        @if (!string.IsNullOrWhiteSpace(theme.NewVersionToInstall.GalleryDetailsUrl)) {
+                            <a href="@theme.NewVersionToInstall.GalleryDetailsUrl">
+                                <h2>@theme.NewVersionToInstall.Title<span> - @T("Version: {0}", theme.NewVersionToInstall.Version)</span></h2>
+                            </a>
+                        } else {
+                            <h2>@theme.NewVersionToInstall.Title<span> - @T("Version: {0}", theme.NewVersionToInstall.Version)</span></h2>
+                        }
+                    </div>
+
+                    <div class="related">
+                        @Html.Link(T("Install Latest").Text, InstallAction(theme.NewVersionToInstall))@T(" | ")
+                        <a href="@theme.NewVersionToInstall.PackageStreamUri">@T("Download")</a>
+                    </div>
+
+                    <div class="properties">
+                        <p>@(theme.NewVersionToInstall.Description == null ? T("(No description").Text : theme.NewVersionToInstall.Description)</p>
+                        <ul class="pageStatus">
+                            <li>@T("Last Updated: {0}", theme.NewVersionToInstall.LastUpdated)</li>
+                            <li>&nbsp;&#124;&nbsp;@T("Author: {0}", !string.IsNullOrEmpty(theme.NewVersionToInstall.Authors) ? theme.NewVersionToInstall.Authors : T("Unknown").ToString())</li>
+                            <li>&nbsp;&#124;&nbsp;@T("Downloads: {0}", theme.NewVersionToInstall.DownloadCount)</li>
+                            <li>&nbsp;&#124;&nbsp;@T("Website: ")
+                                @if (!string.IsNullOrEmpty(theme.NewVersionToInstall.ProjectUrl)) { <a href="@theme.NewVersionToInstall.ProjectUrl">@theme.NewVersionToInstall.ProjectUrl</a> } else { @T("Unknown").ToString() }
+                            </li>
+                            <li><div>&nbsp;&#124;&nbsp;@T("Rating: ")
+                                    <div class="ratings" style="width:@(15 * 5)px" title="@T("Rating: {0} out of 5 ({1} total).", theme.NewVersionToInstall.Rating, theme.NewVersionToInstall.RatingsCount)">
+                                        <div class="score" style="width:@(15 * (theme.NewVersionToInstall.Rating))px">&nbsp;</div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="extensionThumbnail column">
+                    <img src="@iconUrl" class="thumbnail" alt="theme" />
+                </div>
+            </div>
+        </li>}
+    </ul>
+
+    @Display(Model.Pager)
+}

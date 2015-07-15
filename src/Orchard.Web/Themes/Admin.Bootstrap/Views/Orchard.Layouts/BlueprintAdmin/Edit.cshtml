@@ -1,0 +1,9 @@
+﻿@model Orchard.Layouts.ViewModels.EditElementBlueprintViewModel
+@{
+    Layout.Title = T("Edit Element based on {0}", Model.BaseElement.DisplayText);
+}
+@using (Html.BeginFormAntiForgeryPost()) {
+    @Html.Partial("ElementBlueprintEditor", Model, ViewData)
+    <button type="submit">@T("Save")</button>
+    @Html.ActionLink(T("Back").Text, "Index", "BlueprintAdmin", new { area = "Orchard.Layouts" }, new { @class = "button" })
+}

@@ -1,0 +1,59 @@
+﻿﻿@model PJS.Bootstrap.Models.ThemeSettingsPart
+
+@{
+    List<SelectListItem> swatches = new List<SelectListItem>();
+
+    swatches.Add(new SelectListItem { Text = "Default", Value = "default" });
+    swatches.Add(new SelectListItem { Text = "Amelia", Value = "amelia" });
+    swatches.Add(new SelectListItem { Text = "Cerulean", Value = "cerulean" });
+    swatches.Add(new SelectListItem { Text = "Cosmo", Value = "cosmo" });
+    swatches.Add(new SelectListItem { Text = "Cyborg", Value = "cyborg" });
+    swatches.Add(new SelectListItem { Text = "Darkly", Value = "darkly" });
+    swatches.Add(new SelectListItem { Text = "Flatly", Value = "flatly" });
+    swatches.Add(new SelectListItem { Text = "Journal", Value = "journal" });
+    swatches.Add(new SelectListItem { Text = "Lumen", Value = "lumen" });
+    swatches.Add(new SelectListItem { Text = "Readable", Value = "readable" });
+    swatches.Add(new SelectListItem { Text = "Simplex", Value = "simplex" });
+    swatches.Add(new SelectListItem { Text = "Slate", Value = "slate" });
+    swatches.Add(new SelectListItem { Text = "Spacelab", Value = "spacelab" });
+    swatches.Add(new SelectListItem { Text = "Superhero", Value = "superhero" });
+    swatches.Add(new SelectListItem { Text = "United", Value = "united" });
+    swatches.Add(new SelectListItem { Text = "Yeti", Value = "yeti" });
+}
+
+<fieldset>
+    <legend>@T("Theme Options")</legend>
+    <div>
+        @Html.DropDownListFor(m => m.Swatch, swatches.AsEnumerable()) 
+        <span class="hint">@T("Select the Swatch to use.")</span>
+    </div>
+    <div>
+        @Html.CheckBoxFor(m => m.UseFluidLayout)@T("Use Fluid Layout")
+        <span class="hint">@T("Select this checkbox to use a fluid layout instead of a boxed layout.")</span>
+    </div>
+    <div>
+        @Html.CheckBoxFor(m => m.UseFixedNav)@T("Use Fixed Navigation Bar")
+        <span class="hint">@T("Select this checkbox to use a fixed navigation.")</span>
+    </div>
+    <div>
+        @Html.CheckBoxFor(m => m.UseInverseNav)@T("Use Inverse Navigation Bar Color")
+        <span class="hint">@T("Select this checkbox to use the inverse navigation color.")</span>
+    </div>
+    <div>
+        @Html.CheckBoxFor(m => m.UseNavSearch)@T("Use Navigation Bar Search Field")
+        <span class="hint">@T("Select this checkbox to use a navigation bar search field.")</span>
+    </div>
+    <div>
+        @Html.CheckBoxFor(m => m.UseHoverMenus)@T("Use Hover Menu")
+        <span class="hint">@T("Select this checkbox to use hover menu items.")</span>
+    </div>
+    <div>
+        @Html.CheckBoxFor(m => m.UseStickyFooter)@T("Use Sticky Footer")
+        <span class="hint">@T("Select this checkbox to use a sticky footer.")</span>
+    </div>
+</fieldset>
+
+<div>
+    <p>Swatches:</p>
+    <img src="~/Themes/PJS.Bootstrap/Theme.png" alt="" />
+</div>

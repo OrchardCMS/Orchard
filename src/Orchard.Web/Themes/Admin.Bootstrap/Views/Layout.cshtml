@@ -1,0 +1,126 @@
+﻿@model dynamic
+@using Orchard.Security;
+@using Orchard.DisplayManagement.Descriptors;
+@using Orchard.UI.Resources;
+@using Orchard;
+@using Orchard.ContentManagement;
+@using Admin.Bootstrap.Models;
+
+@{
+
+    string title = Convert.ToString(Model.Title);
+    string siteName = Convert.ToString(WorkContext.CurrentSite.SiteName);
+
+}
+
+@{
+    /* Some useful shortcuts or settings
+    ***************************************************************/
+
+    Func<dynamic, dynamic> Zone = x => Display(x); // Zone as an alias for Display to help make it obvious when we're displaying zones
+
+    /* Inserting some ad hoc shapes
+    ***************************************************************/
+
+    // these are just hacked together to fire existing partials... can change
+    Model.Header.Add(Display.Header());
+
+    //Model.Header.Add(Display.User(CurrentUser: WorkContext.CurrentUser));
+    Model.Footer.Add(Display.OrchardVersion());
+
+}
+@if (Model.Header != null)
+{
+    @Zone(Model.Header)
+}
+<div id="wrapper">
+    <aside id="sidebar-wrapper">
+        @if (Model.Navigation != null)
+        {
+            <div id="menu">
+                @Zone(Model.Navigation)
+            </div>
+        }
+    </aside>
+
+    <div id="page-content-wrapper">
+        <div class="container-fluid">
+            <div class="row">
+
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    @if (Model.Title != null)
+                    {
+                        <h1 class="page-header">@Model.Title.ToString()</h1>
+                    }
+                    <div class="row placeholders">
+
+                        @*<div id="navshortcut">
+                                <a href="#Menu-admin">
+                                    @T("Skip to navigation")
+                                </a>
+                            </div>*@
+                    </div>
+
+                    <div id="layout-main" class="row placeholders">
+                        <div id="main" role="main">
+
+                            <div id="messages">
+                                @Zone(Model.Messages)
+                                @*for Navigation*@
+                                
+                            </div>
+
+
+                            @if (Model.BeforeContent != null)
+                            {
+                                <div id="before-content">
+                                    @Zone(Model.BeforeContent)
+                                </div>
+                            }
+
+                            @if (Model.LocalNavigation != null)
+                            {
+                                <div id="local-navigation">
+                                    @Zone(Model.LocalNavigation)
+                                </div>
+                            }
+
+                            @if (Model.Content != null)
+                            {
+                                <div id="content" class="group">
+                                    @Zone(Model.Content)
+                                </div>
+                            }
+
+                            @if (Model.AfterContent != null)
+                            {
+                                <div id="after-content">
+                                    @Zone(Model.AfterContent)
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@if (Model.Footer != null)
+{
+    <div id="footer" role="contentinfo">
+        <div class="row">
+            <div class="col-xs-12 col-sm-6"></div>
+            <div class="col-xs-6 col-sm-6 text-right hidden-xs">
+                @Zone(Model.Footer)
+            </div>
+        </div>
+    </div>
+}
+@using (Script.Foot())
+{
+    <script type="text/javascript">
+        //<![CDATA[
+        var confirmRemoveMessage = '@T("Are you sure you want to remove this element ?")';
+        //]]>
+    </script>
+}

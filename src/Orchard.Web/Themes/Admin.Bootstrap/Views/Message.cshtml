@@ -1,0 +1,1 @@
+﻿<div class="alert alert-@Model.Type.ToString().ToLower() alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">@T("Close")</span></button>@Html.Raw(Html.Encode(Model.Message).Replace("\n", "<br />"))</div>

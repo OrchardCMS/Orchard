@@ -1,0 +1,73 @@
+﻿@model TaxonomyAdminIndexViewModel
+@using Orchard.Taxonomies.ViewModels;
+
+@{
+    Layout.Title = T("Manage Taxonomies").ToString();
+    int taxonomyIndex = 0, ti;
+}
+
+@using (Html.BeginFormAntiForgeryPost()) {
+	@Html.ValidationSummary()
+	<fieldset class="bulk-actions">
+        <input id="publishActions" name="@Html.NameOf(m => m.BulkAction)" type="hidden" value="@TaxonomiesAdminIndexBulkAction.None" />
+        <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
+        <div class="btn-group">
+            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                Bulk Actions <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+                <li><a href="javascript:submitForm($('form'), '@TaxonomiesAdminIndexBulkAction.Delete');">@T("Remove").ToString()</a></li>
+            </ul>
+        </div>
+	</fieldset>
+	<div class="manage">@Html.ActionLink(T("Add a taxonomy").Text, "Create", new { Area = "Contents", Id = "Taxonomy", ReturnUrl = Request.RawUrl }, new { @class = "btn btn-primary" })</div>
+	<fieldset class="table-responsive">
+        <table class="table table-hover table-bordered items" summary="@T("This is a table of the taxonomies in your application")">
+            <colgroup>
+                <col id="Col1" />
+                <col id="Col2" />
+                <col id="Col3" />
+            </colgroup>
+            <thead>
+                <tr>
+                    <th scope="col"><input type="checkbox" class="check-all" /></th>
+                    <th scope="col">@T("Name")</th>
+                    <th class="text-right" scope="col">@T("Actions")</th>
+                </tr>
+            </thead>
+            @foreach (var taxonomyEntry in Model.Taxonomies)
+            {
+                ti = taxonomyIndex;
+                <tr class="@(taxonomyEntry.IsInternal ? "internal" : null)">
+                    <td>
+                        <input type="hidden" value="@Model.Taxonomies[taxonomyIndex].Id" name="@Html.NameOf(m => m.Taxonomies[ti].Id)" />
+                        @if (!taxonomyEntry.IsInternal || Authorizer.Authorize(Orchard.Security.StandardPermissions.SiteOwner))
+                        {
+                            <input type="checkbox" value="true" name="@Html.NameOf(m => m.Taxonomies[ti].IsChecked)" />
+                        }
+                    </td>
+                    <td>
+                        @if (!taxonomyEntry.IsInternal || Authorizer.Authorize(Orchard.Security.StandardPermissions.SiteOwner))
+                        {
+                            @Html.ActionLink(taxonomyEntry.Name, "Index", "TermAdmin", new { taxonomyId = taxonomyEntry.Id }, new object { })
+                        }
+                        else
+                        {
+                            @Html.ItemDisplayText(taxonomyEntry.ContentItem)
+                        }
+                    </td>
+                    <td class="text-right">
+                        @if (!taxonomyEntry.IsInternal || Authorizer.Authorize(Orchard.Security.StandardPermissions.SiteOwner))
+                        {
+                            @Html.ItemEditLink(T("Edit").Text, taxonomyEntry.ContentItem) <text>|</text>
+                            @Html.ActionLink(T("Terms").Text, "Index", "TermAdmin", new { taxonomyId = taxonomyEntry.Id }, new object { }) <text>|</text>
+                            @Html.ActionLink(T("Delete").Text, "Delete", new { id = taxonomyEntry.Id }, new object { }) <text>|</text>
+                            @Html.ActionLink(T("Import").Text, "Import", new { id = taxonomyEntry.Id }, new object { })
+                        }
+                    </td>
+                </tr>
+                        taxonomyIndex++;
+            }
+        </table>
+	</fieldset>
+}

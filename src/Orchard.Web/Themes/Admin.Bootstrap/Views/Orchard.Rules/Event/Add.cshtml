@@ -1,0 +1,31 @@
+﻿@model Orchard.Rules.ViewModels.AddEventViewModel
+           
+@{
+    Layout.Title = T("Add an Event");
+}
+
+@if (!Model.Events.Any())
+{
+    <h3>@T("There are no currently available events")</h3>
+}
+
+@foreach (var ev in Model.Events.OrderBy(x => x.Name.Text))
+{
+    <h2>@ev.Name</h2>
+    
+    <table class="items">
+        <thead>
+            <tr>
+                <th scope="col" style="width:300px">@T("Name")</th>
+                <th scope="col">@T("Description")</th>
+            </tr>
+        </thead>
+        @foreach (var descriptor in ev.Descriptors)
+        {
+        <tr>
+            <td>@Html.ActionLink(descriptor.Name.Text, "Edit", new { id = Model.Id, category = descriptor.Category, type = descriptor.Type })</td>
+            <td>@descriptor.Description</td>    
+        </tr>
+        }
+    </table>
+}

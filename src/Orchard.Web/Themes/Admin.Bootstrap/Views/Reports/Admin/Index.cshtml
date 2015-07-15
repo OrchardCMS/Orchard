@@ -1,0 +1,39 @@
+﻿@model ReportsAdminIndexViewModel
+@using Orchard.Core.Reports.ViewModels;
+
+@{ Layout.Title = T("Reports").ToString(); }
+
+@using (Html.BeginFormAntiForgeryPost())
+{
+    @Html.ValidationSummary()
+    <fieldset class="table-responsive">
+        <table class="table table-hover table-bordered items" summary="@T("This is a table of the reports in your application")">
+            <colgroup>
+                <col id="Col1" />
+                <col id="Col2" />
+                <col id="Col3" />
+            </colgroup>
+            <thead>
+                <tr>
+                    <th scope="col">@T("Name")</th>
+                    <th scope="col">@T("Title")</th>
+                    <th class="text-right" scope="col">@T("Date")</th>
+                </tr>
+            </thead>
+            @foreach (var report in Model.Reports)
+            {
+                <tr>
+                    <td>
+                        @Html.ActionLink(report.ActivityName, "Display", new { id = report.ReportId })
+                    </td>
+                    <td>
+                        @report.Title
+                    </td>
+                    <td class="text-right">
+                        @report.Utc.ToLocalTime().ToShortDateString() @report.Utc.ToLocalTime().ToShortTimeString()
+                    </td>
+                </tr>
+            }
+        </table>
+    </fieldset>
+}

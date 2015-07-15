@@ -1,0 +1,1477 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{84D93BB0-1B18-43C6-A601-B4A6119AFDB8}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Admin.Bootstrap</RootNamespace>
+    <AssemblyName>Admin.Bootstrap</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <TargetFrameworkProfile />
+    <UseIISExpress>false</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Mvc, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.XML" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\apple-touch-icon.png" />
+    <Content Include="Content\favicon.ico" />
+    <Content Include="HtmlPage1.html" />
+    <Content Include="Scripts\AlertMessage.js" />
+    <Content Include="Scripts\bootstrap-3.3.4\js\affix.js" />
+    <Content Include="Scripts\bootstrap-3.3.4\js\alert.js" />
+    <Content Include="Scripts\bootstrap-3.3.4\js\bootstrap.js" />
+    <Content Include="Scripts\bootstrap-3.3.4\js\bootstrap.min.js" />
+    <Content Include="Scripts\bootstrap-3.3.4\js\button.js" />
+    <Content Include="Scripts\bootstrap-3.3.4\js\carousel.js" />
+    <Content Include="Scripts\bootstrap-3.3.4\js\collapse.js" />
+    <Content Include="Scripts\bootstrap-3.3.4\js\dropdown.js" />
+    <Content Include="Scripts\bootstrap-3.3.4\js\modal.js" />
+    <Content Include="Scripts\bootstrap-3.3.4\js\npm.js" />
+    <Content Include="Scripts\bootstrap-3.3.4\js\popover.js" />
+    <Content Include="Scripts\bootstrap-3.3.4\js\scrollspy.js" />
+    <Content Include="Scripts\bootstrap-3.3.4\js\tab.js" />
+    <Content Include="Scripts\bootstrap-3.3.4\js\tests\index.html" />
+    <Content Include="Scripts\bootstrap-3.3.4\js\tests\unit\affix.js" />
+    <Content Include="Scripts\bootstrap-3.3.4\js\tests\unit\alert.js" />
+    <Content Include="Scripts\bootstrap-3.3.4\js\tests\unit\button.js" />
+    <Content Include="Scripts\bootstrap-3.3.4\js\tests\unit\carousel.js" />
+    <Content Include="Scripts\bootstrap-3.3.4\js\tests\unit\collapse.js" />
+    <Content Include="Scripts\bootstrap-3.3.4\js\tests\unit\dropdown.js" />
+    <Content Include="Scripts\bootstrap-3.3.4\js\tests\unit\modal.js" />
+    <Content Include="Scripts\bootstrap-3.3.4\js\tests\unit\phantom.js" />
+    <Content Include="Scripts\bootstrap-3.3.4\js\tests\unit\popover.js" />
+    <Content Include="Scripts\bootstrap-3.3.4\js\tests\unit\scrollspy.js" />
+    <Content Include="Scripts\bootstrap-3.3.4\js\tests\unit\tab.js" />
+    <Content Include="Scripts\bootstrap-3.3.4\js\tests\unit\tooltip.js" />
+    <Content Include="Scripts\bootstrap-3.3.4\js\tests\vendor\jquery.min.js" />
+    <Content Include="Scripts\bootstrap-3.3.4\js\tests\vendor\qunit.css" />
+    <Content Include="Scripts\bootstrap-3.3.4\js\tests\vendor\qunit.js" />
+    <Content Include="Scripts\bootstrap-3.3.4\js\tests\visual\affix.html" />
+    <Content Include="Scripts\bootstrap-3.3.4\js\tests\visual\alert.html" />
+    <Content Include="Scripts\bootstrap-3.3.4\js\tests\visual\button.html" />
+    <Content Include="Scripts\bootstrap-3.3.4\js\tests\visual\carousel.html" />
+    <Content Include="Scripts\bootstrap-3.3.4\js\tests\visual\collapse.html" />
+    <Content Include="Scripts\bootstrap-3.3.4\js\tests\visual\dropdown.html" />
+    <Content Include="Scripts\bootstrap-3.3.4\js\tests\visual\modal.html" />
+    <Content Include="Scripts\bootstrap-3.3.4\js\tests\visual\popover.html" />
+    <Content Include="Scripts\bootstrap-3.3.4\js\tests\visual\scrollspy.html" />
+    <Content Include="Scripts\bootstrap-3.3.4\js\tests\visual\tab.html" />
+    <Content Include="Scripts\bootstrap-3.3.4\js\tests\visual\tooltip.html" />
+    <Content Include="Scripts\bootstrap-3.3.4\js\tooltip.js" />
+    <Content Include="Scripts\bootstrap-3.3.4\js\transition.js" />
+    <Content Include="Scripts\history.js" />
+    <Content Include="Scripts\knockout-2.3.0.js" />
+    <Content Include="Scripts\media-library-picker.js" />
+    <Content Include="Scripts\media-library.js" />
+    <Content Include="Scripts\modal-window.js" />
+    <Content Include="Styles\bootstrap-3.3.4\.gitattributes" />
+    <Content Include="Styles\bootstrap-3.3.4\.gitignore" />
+    <Content Include="Styles\bootstrap-3.3.4\dist\css\bootstrap-theme.css" />
+    <Content Include="Styles\bootstrap-3.3.4\dist\css\bootstrap-theme.min.css" />
+    <Content Include="Styles\bootstrap-3.3.4\dist\css\bootstrap.css" />
+    <Content Include="Styles\bootstrap-3.3.4\dist\css\bootstrap.min.css" />
+    <Content Include="Styles\bootstrap-3.3.4\dist\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Styles\bootstrap-3.3.4\dist\js\bootstrap.js" />
+    <Content Include="Styles\bootstrap-3.3.4\dist\js\bootstrap.min.js" />
+    <Content Include="Styles\bootstrap-3.3.4\dist\js\npm.js" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\about.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\apple-touch-icon.png" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\assets\brand\bootstrap-outline.svg" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\assets\brand\bootstrap-punchout.svg" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\assets\brand\bootstrap-solid.svg" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\assets\css\docs.min.css" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\assets\css\src\anchor.css" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\assets\css\src\docs.css" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\assets\css\src\pygments-manni.css" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\assets\flash\ZeroClipboard.swf" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\assets\img\components.png" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\assets\img\devices.png" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\assets\img\sass-less.png" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\assets\js\customize.min.js" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\assets\js\docs.min.js" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\assets\js\ie-emulation-modes-warning.js" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\assets\js\ie10-viewport-bug-workaround.js" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\assets\js\ie8-responsive-file-warning.js" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\assets\js\raw-files.min.js" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\assets\js\src\application.js" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\assets\js\src\customizer.js" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\assets\js\vendor\anchor.js" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\assets\js\vendor\autoprefixer.js" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\assets\js\vendor\Blob.js" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\assets\js\vendor\FileSaver.js" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\assets\js\vendor\holder.js" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\assets\js\vendor\jszip.min.js" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\assets\js\vendor\less.min.js" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\assets\js\vendor\uglify.min.js" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\assets\js\vendor\ZeroClipboard.min.js" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\browser-bugs.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\components.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\css.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\customize.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\dist\css\bootstrap-theme.css" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\dist\css\bootstrap-theme.min.css" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\dist\css\bootstrap.css" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\dist\css\bootstrap.min.css" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\dist\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\dist\js\bootstrap.js" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\dist\js\bootstrap.min.js" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\dist\js\npm.js" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\blog\blog.css" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\blog\index.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\carousel\carousel.css" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\carousel\index.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\cover\cover.css" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\cover\index.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\dashboard\dashboard.css" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\dashboard\index.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\grid\grid.css" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\grid\index.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\jumbotron-narrow\index.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\jumbotron-narrow\jumbotron-narrow.css" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\jumbotron\index.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\jumbotron\jumbotron.css" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\justified-nav\index.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\justified-nav\justified-nav.css" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\navbar-fixed-top\index.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\navbar-fixed-top\navbar-fixed-top.css" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\navbar-static-top\index.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\navbar-static-top\navbar-static-top.css" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\navbar\index.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\navbar\navbar.css" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\non-responsive\index.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\non-responsive\non-responsive.css" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\offcanvas\index.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\offcanvas\offcanvas.css" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\offcanvas\offcanvas.js" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\screenshots\blog.jpg" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\screenshots\carousel.jpg" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\screenshots\cover.jpg" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\screenshots\dashboard.jpg" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\screenshots\equal-height-columns.jpg" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\screenshots\grid.jpg" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\screenshots\jumbotron-narrow.jpg" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\screenshots\jumbotron.jpg" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\screenshots\justified-nav.jpg" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\screenshots\navbar-fixed.jpg" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\screenshots\navbar-static.jpg" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\screenshots\navbar.jpg" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\screenshots\non-responsive.jpg" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\screenshots\offcanvas.jpg" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\screenshots\sign-in.jpg" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\screenshots\starter-template.jpg" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\screenshots\sticky-footer-navbar.jpg" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\screenshots\sticky-footer.jpg" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\screenshots\theme.jpg" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\signin\index.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\signin\signin.css" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\starter-template\index.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\starter-template\starter-template.css" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\sticky-footer-navbar\index.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\sticky-footer-navbar\sticky-footer-navbar.css" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\sticky-footer\index.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\sticky-footer\sticky-footer.css" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\theme\index.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\theme\theme.css" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\tooltip-viewport\index.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\tooltip-viewport\tooltip-viewport.css" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\examples\tooltip-viewport\tooltip-viewport.js" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\favicon.ico" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\getting-started.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\index.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\javascript.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\migration.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\robots.txt" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\sitemap.xml" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\ads.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\components\alerts.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\components\badges.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\components\breadcrumbs.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\components\button-dropdowns.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\components\button-groups.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\components\dropdowns.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\components\glyphicons.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\components\input-groups.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\components\jumbotron.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\components\labels.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\components\list-group.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\components\media.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\components\navbar.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\components\navs.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\components\page-header.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\components\pagination.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\components\panels.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\components\progress-bars.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\components\responsive-embed.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\components\thumbnails.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\components\wells.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\css\buttons.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\css\code.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\css\forms.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\css\grid.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\css\helpers.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\css\images.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\css\less.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\css\overview.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\css\responsive-utilities.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\css\sass.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\css\tables.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\css\type.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\customizer-variables.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\footer.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\getting-started\accessibility.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\getting-started\browser-device-support.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\getting-started\community.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\getting-started\disabling-responsiveness.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\getting-started\download.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\getting-started\examples.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\getting-started\grunt.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\getting-started\license.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\getting-started\template.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\getting-started\third-party-support.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\getting-started\tools.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\getting-started\translations.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\getting-started\whats-included.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\header.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\js\affix.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\js\alerts.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\js\buttons.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\js\carousel.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\js\collapse.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\js\dropdowns.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\js\modal.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\js\overview.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\js\popovers.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\js\scrollspy.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\js\tabs.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\js\tooltips.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\js\transitions.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\nav\about.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\nav\components.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\nav\css.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\nav\customize.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\nav\getting-started.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\nav\javascript.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\nav\main.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\nav\migration.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_includes\social-buttons.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_layouts\default.html" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_layouts\home.html" />
+    <Content Include="Styles\bootstrap-3.3.4\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Styles\bootstrap-3.3.4\Gruntfile.js" />
+    <Content Include="Styles\bootstrap-3.3.4\grunt\bs-commonjs-generator.js" />
+    <Content Include="Styles\bootstrap-3.3.4\grunt\bs-glyphicons-data-generator.js" />
+    <Content Include="Styles\bootstrap-3.3.4\grunt\bs-lessdoc-parser.js" />
+    <Content Include="Styles\bootstrap-3.3.4\grunt\bs-raw-files-generator.js" />
+    <Content Include="Styles\bootstrap-3.3.4\js\affix.js" />
+    <Content Include="Styles\bootstrap-3.3.4\js\alert.js" />
+    <Content Include="Styles\bootstrap-3.3.4\js\button.js" />
+    <Content Include="Styles\bootstrap-3.3.4\js\carousel.js" />
+    <Content Include="Styles\bootstrap-3.3.4\js\collapse.js" />
+    <Content Include="Styles\bootstrap-3.3.4\js\dropdown.js" />
+    <Content Include="Styles\bootstrap-3.3.4\js\modal.js" />
+    <Content Include="Styles\bootstrap-3.3.4\js\popover.js" />
+    <Content Include="Styles\bootstrap-3.3.4\js\scrollspy.js" />
+    <Content Include="Styles\bootstrap-3.3.4\js\tab.js" />
+    <Content Include="Styles\bootstrap-3.3.4\js\tests\index.html" />
+    <Content Include="Styles\bootstrap-3.3.4\js\tests\unit\affix.js" />
+    <Content Include="Styles\bootstrap-3.3.4\js\tests\unit\alert.js" />
+    <Content Include="Styles\bootstrap-3.3.4\js\tests\unit\button.js" />
+    <Content Include="Styles\bootstrap-3.3.4\js\tests\unit\carousel.js" />
+    <Content Include="Styles\bootstrap-3.3.4\js\tests\unit\collapse.js" />
+    <Content Include="Styles\bootstrap-3.3.4\js\tests\unit\dropdown.js" />
+    <Content Include="Styles\bootstrap-3.3.4\js\tests\unit\modal.js" />
+    <Content Include="Styles\bootstrap-3.3.4\js\tests\unit\phantom.js" />
+    <Content Include="Styles\bootstrap-3.3.4\js\tests\unit\popover.js" />
+    <Content Include="Styles\bootstrap-3.3.4\js\tests\unit\scrollspy.js" />
+    <Content Include="Styles\bootstrap-3.3.4\js\tests\unit\tab.js" />
+    <Content Include="Styles\bootstrap-3.3.4\js\tests\unit\tooltip.js" />
+    <Content Include="Styles\bootstrap-3.3.4\js\tests\vendor\jquery.min.js" />
+    <Content Include="Styles\bootstrap-3.3.4\js\tests\vendor\qunit.css" />
+    <Content Include="Styles\bootstrap-3.3.4\js\tests\vendor\qunit.js" />
+    <Content Include="Styles\bootstrap-3.3.4\js\tests\visual\affix.html" />
+    <Content Include="Styles\bootstrap-3.3.4\js\tests\visual\alert.html" />
+    <Content Include="Styles\bootstrap-3.3.4\js\tests\visual\button.html" />
+    <Content Include="Styles\bootstrap-3.3.4\js\tests\visual\carousel.html" />
+    <Content Include="Styles\bootstrap-3.3.4\js\tests\visual\collapse.html" />
+    <Content Include="Styles\bootstrap-3.3.4\js\tests\visual\dropdown.html" />
+    <Content Include="Styles\bootstrap-3.3.4\js\tests\visual\modal.html" />
+    <Content Include="Styles\bootstrap-3.3.4\js\tests\visual\popover.html" />
+    <Content Include="Styles\bootstrap-3.3.4\js\tests\visual\scrollspy.html" />
+    <Content Include="Styles\bootstrap-3.3.4\js\tests\visual\tab.html" />
+    <Content Include="Styles\bootstrap-3.3.4\js\tests\visual\tooltip.html" />
+    <Content Include="Styles\bootstrap-3.3.4\js\tooltip.js" />
+    <Content Include="Styles\bootstrap-3.3.4\js\transition.js" />
+    <Content Include="Styles\bootstrap-3.3.4\package.js" />
+    <Content Include="Styles\bootstrap-3.3.4\test-infra\requirements.txt" />
+    <Content Include="Styles\font-awesome-4.3.0\css\font-awesome.css" />
+    <Content Include="Styles\font-awesome-4.3.0\css\font-awesome.min.css" />
+    <Content Include="Styles\font-awesome-4.3.0\fonts\fontawesome-webfont.svg" />
+    <Content Include="Styles\Images\menu-filter.png" />
+    <Content Include="Styles\Images\menu.navigation.png" />
+    <Content Include="Styles\Images\move.gif" />
+    <Content Include="Scripts\admin-contenttypes.js" />
+    <Content Include="Scripts\admin.js" />
+    <Content Include="Scripts\custom.js" />
+    <Content Include="Scripts\features.admin.js" />
+    <Content Include="Scripts\features.admin.min.js">
+      <DependentUpon>features.admin.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\hover-dropdown.js" />
+    <Content Include="Scripts\jquery.jsPlumb-1.4.1-all-min.js" />
+    <Content Include="Scripts\jquery.mjs.nestedSortable.js" />
+    <Content Include="Scripts\navigation-admin.js" />
+    <Content Include="Scripts\orchard-workflows-serialize.js" />
+    <Content Include="Scripts\orchard-workflows.js" />
+    <Content Include="Scripts\styler.js" />
+    <Content Include="Styles\admin.css">
+      <DependentUpon>admin.less</DependentUpon>
+    </Content>
+    <Content Include="Styles\admin.min.css">
+      <DependentUpon>admin.css</DependentUpon>
+    </Content>
+    <Content Include="Styles\forms.css">
+      <DependentUpon>forms.less</DependentUpon>
+    </Content>
+    <Content Include="Styles\forms.min.css">
+      <DependentUpon>forms.css</DependentUpon>
+    </Content>
+    <Content Include="Styles\Images\adminNavBackground.gif" />
+    <Content Include="Styles\Images\backgroundGradient.gif" />
+    <Content Include="Styles\Images\backgroundHeader.gif" />
+    <Content Include="Styles\Images\icon-advisory.png" />
+    <Content Include="Styles\Images\icon-contribute.png" />
+    <Content Include="Styles\Images\icon-docs.png" />
+    <Content Include="Styles\Images\icon-friends.png" />
+    <Content Include="Styles\Images\icon-gallery.png" />
+    <Content Include="Styles\Images\icon-settings.png" />
+    <Content Include="Styles\Images\icons.png" />
+    <Content Include="Styles\Images\info.gif" />
+    <Content Include="Styles\Images\menu-default.png" />
+    <Content Include="Styles\Images\menu-glyph.png" />
+    <Content Include="Styles\Images\menuClosed.gif" />
+    <Content Include="Styles\Images\menuClosedHover.gif" />
+    <Content Include="Styles\Images\menuOpen.gif" />
+    <Content Include="Styles\Images\menuOpenHover.gif" />
+    <Content Include="Styles\Images\orchardLogo.gif" />
+    <Content Include="Styles\Images\tableHeaderBackgroundRed.gif" />
+    <Content Include="Styles\Images\vinesBackgroundBottom.gif" />
+    <Content Include="Styles\layout.css">
+      <DependentUpon>layout.less</DependentUpon>
+    </Content>
+    <Content Include="Styles\layout.min.css">
+      <DependentUpon>layout.css</DependentUpon>
+    </Content>
+    <Content Include="Styles\navigation-admin.css" />
+    <Content Include="Styles\navigation.css">
+      <DependentUpon>navigation.less</DependentUpon>
+    </Content>
+    <Content Include="Styles\navigation.min.css">
+      <DependentUpon>navigation.css</DependentUpon>
+    </Content>
+    <Content Include="Styles\orchard-medialibrary-admin.css" />
+    <Content Include="Styles\orchard-modules-admin.css" />
+    <Content Include="Styles\site-default.css">
+      <DependentUpon>site-default.less</DependentUpon>
+    </Content>
+    <Content Include="Styles\site-default.min.css">
+      <DependentUpon>site-default.css</DependentUpon>
+    </Content>
+    <Content Include="Styles\type.css">
+      <DependentUpon>type.less</DependentUpon>
+    </Content>
+    <Content Include="Styles\type.less" />
+    <Content Include="Styles\layout.css.map">
+      <DependentUpon>layout.css</DependentUpon>
+    </Content>
+    <Content Include="Styles\forms.css.map">
+      <DependentUpon>forms.css</DependentUpon>
+    </Content>
+    <Content Include="Styles\navigation.css.map">
+      <DependentUpon>navigation.css</DependentUpon>
+    </Content>
+    <Content Include="Styles\type.css.map">
+      <DependentUpon>type.css</DependentUpon>
+    </Content>
+    <Content Include="Styles\type.min.css">
+      <DependentUpon>type.css</DependentUpon>
+    </Content>
+    <Content Include="Styles\orchard-admin-themes-admin.css" />
+    <Content Include="Web.config" />
+    <Content Include="Scripts\Web.config" />
+    <Content Include="Styles\Web.config" />
+    <Content Include="Content\Web.config" />
+    <Content Include="Theme.txt" />
+    <Content Include="Theme.png" />
+    <Content Include="Placement.info" />
+    <Content Include="Views\ErrorPage.cshtml" />
+    <Content Include="Views\Header.cshtml" />
+    <Content Include="Views\Layout.cshtml" />
+    <Content Include="Views\LocalMenu.cshtml" />
+    <Content Include="Views\Menu.cshtml" />
+    <Content Include="Views\OrchardVersion.cshtml" />
+    <Content Include="Views\Pager.cshtml" />
+    <Content Include="Views\Title.cshtml" />
+    <Content Include="Views\User.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts\AdminTheme.ThemeSettings.cshtml" />
+    <Content Include="Views\Document.cshtml" />
+    <Content Include="Views\Resources.cshtml" />
+    <Content Include="Views\Orchard.Themes\Admin\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
+      <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
+      <Name>Orchard.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\Orchard.Core.csproj">
+      <Project>{9916839c-39fc-4ceb-a5af-89ca7e87119f}</Project>
+      <Name>Orchard.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Modules\Orchard.Blogs\Orchard.Blogs.csproj">
+      <Project>{63fbd4d9-e1da-4a7b-aa6a-d6074fe50867}</Project>
+      <Name>Orchard.Blogs</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Modules\Orchard.Comments\Orchard.Comments.csproj">
+      <Project>{14c049fd-b35b-415a-a824-87f26b26e7fd}</Project>
+      <Name>Orchard.Comments</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Modules\Orchard.MediaLibrary\Orchard.MediaLibrary.csproj">
+      <Project>{73a7688a-5bd3-4f7e-adfa-ce36c5a10e3b}</Project>
+      <Name>Orchard.MediaLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Modules\Orchard.Roles\Orchard.Roles.csproj">
+      <Project>{d10ad48f-407d-4db5-a328-173ec7cb010f}</Project>
+      <Name>Orchard.Roles</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Modules\Orchard.Search\Orchard.Search.csproj">
+      <Project>{4be4eb01-ac56-4048-924e-2ca77f509aba}</Project>
+      <Name>Orchard.Search</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Modules\Orchard.Users\Orchard.Users.csproj">
+      <Project>{79aed36e-abd0-4747-93d3-8722b042454b}</Project>
+      <Name>Orchard.Users</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\layout.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Handlers\AdminThemeSiteSettingsPartHandler.cs" />
+    <Compile Include="Models\AdminThemeSettingsPart.cs" />
+    <Compile Include="ResourceManifest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\bootswatch\amelia-bootswatch.less" />
+    <Content Include="Styles\bootswatch\amelia-variables.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\bootswatch\cerulean-bootswatch.less" />
+    <Content Include="Styles\bootswatch\cerulean-variables.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\bootswatch\cosmo-bootswatch.less" />
+    <Content Include="Styles\bootswatch\cosmo-variables.less" />
+    <Content Include="Styles\bootswatch\cyborg-bootswatch.less" />
+    <Content Include="Styles\bootswatch\cyborg-variables.less" />
+    <Content Include="Styles\bootswatch\darkly-bootswatch.less" />
+    <Content Include="Styles\bootswatch\darkly-variables.less" />
+    <Content Include="Styles\bootswatch\flatly-bootswatch.less" />
+    <Content Include="Styles\bootswatch\flatly-variables.less" />
+    <Content Include="Styles\bootswatch\journal-bootswatch.less" />
+    <Content Include="Styles\bootswatch\journal-variables.less" />
+    <Content Include="Styles\bootswatch\lumen-bootswatch.less" />
+    <Content Include="Styles\bootswatch\lumen-variables.less" />
+    <Content Include="Styles\bootswatch\readable-bootswatch.less" />
+    <Content Include="Styles\bootswatch\readable-variables.less" />
+    <Content Include="Styles\bootswatch\simplex-bootswatch.less" />
+    <Content Include="Styles\bootswatch\simplex-variables.less" />
+    <Content Include="Styles\bootswatch\slate-bootswatch.less" />
+    <Content Include="Styles\bootswatch\slate-variables.less" />
+    <Content Include="Styles\bootswatch\spacelab-bootswatch.less" />
+    <Content Include="Styles\bootswatch\spacelab-variables.less" />
+    <Content Include="Styles\bootswatch\superhero-bootswatch.less" />
+    <Content Include="Styles\bootswatch\superhero-variables.less" />
+    <Content Include="Styles\bootswatch\united-bootswatch.less" />
+    <Content Include="Styles\bootswatch\united-variables.less" />
+    <Content Include="Styles\bootswatch\yeti-bootswatch.less" />
+    <Content Include="Styles\bootswatch\yeti-variables.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\forms.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\navigation.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+    <Folder Include="Views\Orchard.Fields\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\Images\icons.psd" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\admin.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\admin.css.map">
+      <DependentUpon>admin.css</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts\Theme.ThemeSettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Dashboard\Admin\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Projections\Admin\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Projections\Binding\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Workflows\Admin\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.ContentTypes\Admin\ListParts.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Message.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Breadcrumb.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\HeadPreload.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\LocalMenuItem.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\MenuItem.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\NotFound.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Taxonomies\Admin\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Users\Admin\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Roles\Admin\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Comments\Admin\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Tags\Admin\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Tags\Admin\EditorTemplates\Parts\CreateTag.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Contents\Admin\List.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.ContentTypes\Admin\List.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Reports\Admin\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.MediaProcessing\Admin\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Alias\Admin\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Reports\Admin\Display.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Packaging\Gallery\AddSource.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Packaging\Gallery\Modules.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Packaging\Gallery\Sources.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Packaging\Gallery\Themes.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Packaging\GalleryUpdates\ModulesUpdates.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Packaging\GalleryUpdates\ThemesUpdates.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Packaging\PackagingServices\AddModule.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Packaging\PackagingServices\AddTheme.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Packaging\PackagingServices\InstallModuleDetails.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Packaging\PackagingServices\InstallPackageFailed.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Roles\Admin\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Roles\Admin\Create.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Alias\Admin\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Alias\Admin\Add.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Alias\Admin\Delete.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Taxonomies\Admin\Import.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.CustomForms\Admin\Item.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.CustomForms\Admin\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Taxonomies\TermAdmin\Create.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Taxonomies\TermAdmin\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Taxonomies\TermAdmin\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Taxonomies\TermAdmin\Merge.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Taxonomies\TermAdmin\MoveTerm.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Taxonomies\TermAdmin\RenderTermSelect.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Taxonomies\TermAdmin\SelectTerm.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Workflows\Admin\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Workflows\Admin\EditActivity.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Workflows\Admin\List.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Workflows\Admin\Create.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.ContentTypes\Admin\AddFieldTo.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.ContentTypes\Admin\AddPartsTo.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.ContentTypes\Admin\Create.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.ContentTypes\Admin\CreatePart.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.ContentTypes\Admin\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.ContentTypes\Admin\EditField.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.ContentTypes\Admin\EditPart.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.ContentTypes\Admin\EditPlacement.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.ContentTypes\Admin\RemoveFieldFrom.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.ContentTypes\Admin\RemovePartFrom.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Projections\Binding\Select.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Projections\Binding\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Projections\Admin\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Contents\Admin\Create.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Contents\Admin\CreatableTypeList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Contents\Admin\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Comments\Admin\Details.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Comments\Admin\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Comments\Admin\EditorTemplates\Parts.Comment.AdminEdit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Comments\Admin\EditorTemplates\Parts.Comment.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Comments\Admin\EditorTemplates\Parts.Comments.Comments.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Settings\Admin\EditorTemplates\Parts.Comments.SiteSettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Tags\Admin\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.CustomForms\EditorTemplates\Parts.CustomForm.Fields.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.CustomForms\Parts.CustomForm.Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.CustomForms\Parts.CustomForm.SummaryAdmin.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.CustomForms\Parts.CustomForm.Wrapper.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Content.SaveButton.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Content.PublishButton.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts\PublishLater.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.JobsQueue\Admin\Details.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.JobsQueue\Admin\List.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Templates\Admin\CreatableTypeList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Templates\Admin\List.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Lists\Admin\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Lists\Admin\List.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Lists\Admin\SelectType.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.ImportExport\Admin\Export.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.ImportExport\Admin\Import.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.ImportExport\Admin\ImportResult.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Upgrade\ContentPicker\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Upgrade\Field\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Upgrade\Infoset\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Upgrade\Media\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Upgrade\Menu\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Upgrade\Messaging\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Upgrade\Route\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Upgrade\Taxonomy\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Blogs\BlogAdmin\List.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Content-Blog.DetailAdmin.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Blog.DeleteButton.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts.Blogs.BlogPost.ListAdmin.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Modules\Admin\Features.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Modules\Admin\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Modules\Admin\Recipes.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\features.admin.min.js.map">
+      <DependentUpon>features.admin.js</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Settings\Admin\Culture.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Settings\Admin\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Indexing\Admin\Create.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Indexing\Admin\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.OutputCache\Admin\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.OutputCache\Statistics\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Themes.Admin\Admin\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ThemeEntry.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ThemeEntry.Current.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Themes.Admin\ThemePreview.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Themes\ThemePreview.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Navigation\Admin\CreateMenuItem.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Navigation\Admin\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Menu.DeleteButton.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\MenuItem.Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Items\Content-User.Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Projections\Filter\Add.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Projections\Filter\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Projections\SortCriterion\Add.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Projections\SortCriterion\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Projections\Property\Add.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Projections\Property\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Projections\Layout\Add.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Projections\Layout\Create.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Projections\Layout\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Navigation\DefinitionTemplates\AdminMenuPartTypeSettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Navigation\EditorTemplates\Parts.MenuItem.Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Navigation\EditorTemplates\Parts.MenuWidget.Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Navigation\EditorTemplates\Parts.Navigation.AdminMenu.Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Navigation\EditorTemplates\Parts.Navigation.Menu.Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Navigation\EditorTemplates\Parts.ShapeMenuItemPart.Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Navigation\Content-Menu.Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Navigation\Menu.DeleteButton.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Navigation\Menu.Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Navigation\MenuItem.Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Navigation\MenuItemLink-HtmlMenuItem.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Navigation\MenuItemLink-ShapeMenuItem.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Navigation\Parts.MenuWidget.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Widgets\Admin\AddLayer.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Widgets\Admin\AddWidget.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Widgets\Admin\ChooseWidget.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Widgets\Admin\EditLayer.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Widgets\Admin\EditWidget.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Widgets\Admin\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Widget.ControlWrapper.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Widget.DeleteButton.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Widget.Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Widget.Wrapper.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\WidgetLayersControl.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\WidgetLayerVisibility.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\WidgetPlacement.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\WidgetPlacement.Orphans.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\WidgetPlacement.Zones.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\WidgetSimplePreview.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.MediaLibrary\Admin\ChildFolders.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.MediaLibrary\Admin\Import.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.MediaLibrary\Admin\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.MediaLibrary\Admin\MediaItems.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.MediaLibrary\Folder\Create.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.MediaLibrary\Folder\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.MultiTenancy\Admin\Add.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.MultiTenancy\Admin\DisplayTemplates\ActionsForDisabled.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.MultiTenancy\Admin\DisplayTemplates\ActionsForInvalid.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.MultiTenancy\Admin\DisplayTemplates\ActionsForRunning.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.MultiTenancy\Admin\DisplayTemplates\ActionsForUninitialized.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.MultiTenancy\Admin\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.MultiTenancy\Admin\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Search\Admin\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\site-default.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\site-default.css.map">
+      <DependentUpon>site-default.css</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.AntiSpam\Admin\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ModuleEntry.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Warmup\Admin\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Localization\TransliterationAdmin\Create.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Localization\TransliterationAdmin\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Localization\TransliterationAdmin\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Rules\Action\Add.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Rules\Action\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Rules\Admin\Create.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Rules\Admin\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Rules\Admin\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Rules\Event\Add.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Rules\Event\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Settings\Admin\EditorTemplates\Parts.Settings.SiteSettingsPart.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Settings\Admin\DisplayTemplates\CurrentCulture.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Settings\Admin\DisplayTemplates\RemovableCulture.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Settings\Admin\EditorTemplates\Parts\SmtpSettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.AuditTrail\Admin\Detail.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.AuditTrail\Admin\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.AuditTrail\EditorTemplates\Parts.AuditTrail.Comment.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.AuditTrail\EditorTemplates\Parts.AuditTrailSettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.AuditTrail\EditorTemplates\Parts.AuditTrailTrimmingSettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Settings\Admin\EditorTemplates\Parts.AuditTrail.Comment.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Settings\Admin\EditorTemplates\Parts.AuditTrailSettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Settings\Admin\EditorTemplates\Parts.AuditTrailTrimmingSettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Layouts\BlueprintAdmin\Browse.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Layouts\BlueprintAdmin\Create.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Layouts\BlueprintAdmin\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Layouts\BlueprintAdmin\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.Layouts\BlueprintAdmin\Properties.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.AuditTrail\RecycleBin\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Content.SummaryAdmin.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts.Contents.Clone.SummaryAdmin.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts.Contents.Publish.SummaryAdmin.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\font-awesome-4.3.0\fonts\fontawesome-webfont.eot" />
+    <Content Include="Styles\font-awesome-4.3.0\fonts\fontawesome-webfont.ttf" />
+    <Content Include="Styles\font-awesome-4.3.0\fonts\fontawesome-webfont.woff" />
+    <Content Include="Styles\font-awesome-4.3.0\fonts\fontawesome-webfont.woff2" />
+    <Content Include="Styles\font-awesome-4.3.0\fonts\FontAwesome.otf" />
+    <Content Include="Styles\font-awesome-4.3.0\less\animated.less" />
+    <Content Include="Styles\font-awesome-4.3.0\less\bordered-pulled.less" />
+    <Content Include="Styles\font-awesome-4.3.0\less\core.less" />
+    <Content Include="Styles\font-awesome-4.3.0\less\fixed-width.less" />
+    <Content Include="Styles\font-awesome-4.3.0\less\font-awesome.less" />
+    <Content Include="Styles\font-awesome-4.3.0\less\icons.less" />
+    <Content Include="Styles\font-awesome-4.3.0\less\larger.less" />
+    <Content Include="Styles\font-awesome-4.3.0\less\list.less" />
+    <Content Include="Styles\font-awesome-4.3.0\less\mixins.less" />
+    <Content Include="Styles\font-awesome-4.3.0\less\path.less" />
+    <Content Include="Styles\font-awesome-4.3.0\less\rotated-flipped.less" />
+    <Content Include="Styles\font-awesome-4.3.0\less\stacked.less" />
+    <Content Include="Styles\font-awesome-4.3.0\less\variables.less" />
+    <Content Include="Styles\font-awesome-4.3.0\scss\font-awesome.scss" />
+    <Content Include="Styles\font-awesome-4.3.0\scss\_animated.scss" />
+    <Content Include="Styles\font-awesome-4.3.0\scss\_bordered-pulled.scss" />
+    <Content Include="Styles\font-awesome-4.3.0\scss\_core.scss" />
+    <Content Include="Styles\font-awesome-4.3.0\scss\_fixed-width.scss" />
+    <Content Include="Styles\font-awesome-4.3.0\scss\_icons.scss" />
+    <Content Include="Styles\font-awesome-4.3.0\scss\_larger.scss" />
+    <Content Include="Styles\font-awesome-4.3.0\scss\_list.scss" />
+    <Content Include="Styles\font-awesome-4.3.0\scss\_mixins.scss" />
+    <Content Include="Styles\font-awesome-4.3.0\scss\_path.scss" />
+    <Content Include="Styles\font-awesome-4.3.0\scss\_rotated-flipped.scss" />
+    <Content Include="Styles\font-awesome-4.3.0\scss\_stacked.scss" />
+    <Content Include="Styles\font-awesome-4.3.0\scss\_variables.scss" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\bootstrap-3.3.4\.editorconfig" />
+    <Content Include="Styles\bootstrap-3.3.4\.travis.yml" />
+    <Content Include="Styles\bootstrap-3.3.4\bower.json" />
+    <Content Include="Styles\bootstrap-3.3.4\CNAME" />
+    <Content Include="Styles\bootstrap-3.3.4\composer.json" />
+    <Content Include="Styles\bootstrap-3.3.4\CONTRIBUTING.md" />
+    <Content Include="Styles\bootstrap-3.3.4\dist\css\bootstrap-theme.css.map" />
+    <Content Include="Styles\bootstrap-3.3.4\dist\css\bootstrap.css.map" />
+    <Content Include="Styles\bootstrap-3.3.4\dist\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Styles\bootstrap-3.3.4\dist\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Styles\bootstrap-3.3.4\dist\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Styles\bootstrap-3.3.4\dist\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\dist\css\bootstrap-theme.css.map" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\dist\css\bootstrap.css.map" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\dist\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\dist\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\dist\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\dist\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\LICENSE" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_data\browser-bugs.yml" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_data\core-team.yml" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_data\glyphicons.yml" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_data\sass-team.yml" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_data\showcase.yml" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_data\translations.yml" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_jade\customizer-nav.jade" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_jade\customizer-variables.jade" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_plugins\bridge.rb" />
+    <Content Include="Styles\bootstrap-3.3.4\docs\_plugins\bugify.rb" />
+    <Content Include="Styles\bootstrap-3.3.4\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Styles\bootstrap-3.3.4\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Styles\bootstrap-3.3.4\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Styles\bootstrap-3.3.4\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="Styles\bootstrap-3.3.4\grunt\.jshintrc" />
+    <Content Include="Styles\bootstrap-3.3.4\grunt\configBridge.json" />
+    <Content Include="Styles\bootstrap-3.3.4\grunt\sauce_browsers.yml" />
+    <Content Include="Styles\bootstrap-3.3.4\js\.jscsrc" />
+    <Content Include="Styles\bootstrap-3.3.4\js\.jshintrc" />
+    <Content Include="Styles\bootstrap-3.3.4\js\tests\README.md" />
+    <Content Include="Styles\bootstrap-3.3.4\js\tests\unit\.jshintrc" />
+    <Content Include="Styles\bootstrap-3.3.4\less\.csscomb.json" />
+    <Content Include="Styles\bootstrap-3.3.4\less\.csslintrc" />
+    <Content Include="Styles\bootstrap-3.3.4\less\alerts.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\badges.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\bootstrap.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\breadcrumbs.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\button-groups.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\buttons.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\carousel.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\close.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\code.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\component-animations.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\dropdowns.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\forms.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\glyphicons.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\grid.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\input-groups.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\jumbotron.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\labels.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\list-group.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\media.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\mixins.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\mixins\alerts.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\mixins\background-variant.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\mixins\border-radius.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\mixins\buttons.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\mixins\center-block.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\mixins\clearfix.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\mixins\forms.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\mixins\gradients.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\mixins\grid-framework.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\mixins\grid.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\mixins\hide-text.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\mixins\image.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\mixins\labels.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\mixins\list-group.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\mixins\nav-divider.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\mixins\nav-vertical-align.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\mixins\opacity.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\mixins\pagination.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\mixins\panels.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\mixins\progress-bar.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\mixins\reset-filter.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\mixins\resize.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\mixins\responsive-visibility.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\mixins\size.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\mixins\tab-focus.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\mixins\table-row.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\mixins\text-emphasis.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\mixins\text-overflow.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\mixins\vendor-prefixes.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\modals.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\navbar.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\navs.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\normalize.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\pager.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\pagination.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\panels.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\popovers.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\print.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\progress-bars.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\responsive-embed.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\responsive-utilities.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\scaffolding.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\tables.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\theme.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\thumbnails.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\tooltip.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\type.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\utilities.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\variables.less" />
+    <Content Include="Styles\bootstrap-3.3.4\less\wells.less" />
+    <Content Include="Styles\bootstrap-3.3.4\LICENSE" />
+    <Content Include="Styles\bootstrap-3.3.4\package.json" />
+    <Content Include="Styles\bootstrap-3.3.4\README.md" />
+    <Content Include="Styles\bootstrap-3.3.4\test-infra\npm-shrinkwrap.json" />
+    <Content Include="Styles\bootstrap-3.3.4\test-infra\README.md" />
+    <Content Include="Styles\bootstrap-3.3.4\test-infra\S3Cachefile.json" />
+    <Content Include="Styles\bootstrap-3.3.4\test-infra\s3_cache.py" />
+    <Content Include="Styles\bootstrap-3.3.4\test-infra\uncached-npm-install.sh" />
+    <Content Include="Styles\bootstrap-3.3.4\_config.yml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts.Contents.AuditTrail.SummaryAdmin.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\MediaLibraryPicker.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\bootstrap-3.3.4\js\.jscsrc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\bootstrap-3.3.4\js\.jshintrc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\bootstrap-3.3.4\js\tests\README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\bootstrap-3.3.4\js\tests\unit\.jshintrc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Fields\MediaLibraryPicker.SummaryAdmin.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Contents\Admin\EditorTemplates\Fields\Boolean.Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Contents\Admin\EditorTemplates\Fields\DateTime.Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Contents\Admin\EditorTemplates\Fields\Enumeration.Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Contents\Admin\EditorTemplates\Fields\Input.Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Contents\Admin\EditorTemplates\Fields\Link.Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Contents\Admin\EditorTemplates\Fields\Numeric.Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts.Blogs.Blog.SummaryAdmin.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Content-BlogPost.SummaryAdmin.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.ContentTypes\Admin\DisplayTemplates\EditPartViewModel.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.ContentTypes\Admin\DisplayTemplates\EditTypeViewModel.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.ContentTypes\Admin\DisplayTemplates\Field.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.ContentTypes\Admin\DisplayTemplates\Fields.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Orchard.ContentTypes\Admin\DisplayTemplates\Settings.cshtml" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target> -->
+  <Target Name="AfterBuild" DependsOnTargets="AfterBuildCompiler">
+    <PropertyGroup>
+      <AreasManifestDir>$(ProjectDir)\..\Manifests</AreasManifestDir>
+    </PropertyGroup>
+    <!-- If this is an area child project, uncomment the following line:
+    <CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Child" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" />
+    -->
+    <!-- If this is an area parent project, uncomment the following lines:
+    <CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Parent" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" />
+    <CopyAreaManifests ManifestPath="$(AreasManifestDir)" CrossCopy="false" RenameViews="true" />
+    -->
+  </Target>
+  <Target Name="AfterBuildCompiler" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(ProjectDir)\..\$(ProjectName)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>45979</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>
+          </IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>True</UseCustomServer>
+          <CustomServerUrl>http://orchard.codeplex.com</CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

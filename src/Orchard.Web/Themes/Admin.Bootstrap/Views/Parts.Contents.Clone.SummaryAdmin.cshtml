@@ -1,0 +1,12 @@
+﻿@using Orchard.ContentManagement
+@using Orchard.Core.Contents
+@using Orchard.Utility.Extensions
+@{
+  ContentPart contentPart = Model.ContentPart;
+}
+@if (Authorizer.Authorize(Permissions.EditContent, contentPart)) {
+    <a href="@Url.Action("Clone", "Admin", new { Id = Model.ContentItem.Id, ReturnUrl = Request.ToUrlString(), Area = "Contents" })" itemprop="UnsafeUrl" class="btn btn-default">
+        <span class="fa fa-files-o"></span>
+        @T("Clone")
+    </a>
+}

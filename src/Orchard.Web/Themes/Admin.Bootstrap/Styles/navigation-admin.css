@@ -1,0 +1,117 @@
+﻿#save-message {
+    display: none;
+}
+
+
+
+.navigation-menu .panel-heading  {
+	background: url(images/move.gif) no-repeat 12px 14px;
+    padding-left:32px;
+    cursor: pointer;
+}
+
+
+
+.navigation-position
+{
+    display: none;
+}
+
+.navigation-url
+{
+}
+
+.navigation-actions
+{
+    float: right;
+}
+
+/* style for the dynamically created placeholder */
+.navigation-menu li.navigation-placeholder
+{ 
+    background: #dadada; 
+}
+
+
+/* layout */
+
+#display-menu-controls {
+    display: block;
+}
+
+#display-menu-controls form, #display-menu-controls fieldset {
+    display: inline;
+}
+
+#navigation-menu-add {
+    display: inline;
+    position: relative;
+}
+
+.sections  {
+}
+
+.primary 
+{
+    float: left;
+    width: 100%;
+}
+
+.container
+{
+    margin-right:350px;
+}
+
+.secondary 
+{
+    padding:0;
+    margin:0;
+    margin-top:2px;
+    float:right;
+    width:300px;
+    margin-left: -300px;
+}
+
+.menu-items-zone {
+    /*background: #F3F4F5;*/
+    /*border:1px solid #E4E5E6;*/
+    padding:0px;
+}
+
+.menu-items-zone h2 {
+    font-size:1.077em;
+    padding:2px 2px;
+}
+
+.menu-items-zone li {
+    background:#FFF;
+    border:1px solid #CCC;
+    margin-bottom: 5px;
+    padding: 5px;
+    padding-right:65px;
+    display: block;
+    position:relative;
+}
+
+    div.menu-item-description {
+        display: block;
+    }
+
+    div.menu-item-actions {
+        display: block;
+        position:absolute;
+        right:10px;
+        top:15px;
+    }
+
+    .menu-items-zone li a {
+        border:1px solid #EAEAEA;
+    }
+    
+    .menu-items-zone li a:hover {
+        border-color:#487328;
+    }
+
+.navbar-btn {
+    margin-right:15px;
+}

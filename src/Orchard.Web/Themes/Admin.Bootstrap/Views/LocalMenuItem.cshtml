@@ -1,0 +1,22 @@
+﻿@{
+    // odd formatting in this file is to cause more attractive results in the output.
+    var items = (IEnumerable<dynamic>)Enumerable.Cast<dynamic>(Model);
+}
+@{
+if (!HasText(Model.Text)) {
+    @DisplayChildren(Model)
+} else {
+    if (Model.Href.TrimEnd('/').ToUpperInvariant() == Request.Path.TrimEnd('/').ToUpperInvariant()) {
+        Model.Classes.Add("current");
+    }
+    var tag = Tag(Model, "li");
+    @tag.StartElement
+    <a href="@Model.Href">@Model.Text</a>
+    if (items.Any()) {
+        <ul>
+        @DisplayChildren(Model)
+        </ul>
+    }
+    @tag.EndElement
+    }
+}
