@@ -17,6 +17,7 @@ namespace Orchard.Recipes.Services {
             IRecipeScheduler recipeScheduler,
             IRecipeExecuteEventHandler recipeExecuteEventHandler,
             IRepository<RecipeStepResultRecord> recipeStepResultRecordRepository) {
+
             _recipeStepQueue = recipeStepQueue;
             _recipeScheduler = recipeScheduler;
             _recipeExecuteEventHandler = recipeExecuteEventHandler;

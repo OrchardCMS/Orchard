@@ -113,7 +113,7 @@ namespace Orchard.ImportExport.Commands {
             }
 
             if (SiteSettings) {
-                var siteSettingsStep = _orchardServices.WorkContext.Resolve<SiteSettingsBuilderStep>();
+                var siteSettingsStep = _orchardServices.WorkContext.Resolve<SettingsBuilderStep>();
                 recipeBuilderSteps.Add(siteSettingsStep);
             }
 

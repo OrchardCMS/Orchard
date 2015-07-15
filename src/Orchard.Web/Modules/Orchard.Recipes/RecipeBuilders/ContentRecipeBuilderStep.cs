@@ -104,11 +104,11 @@ namespace Orchard.Recipes.RecipeBuilders {
                 partsElement.Add(_contentDefinitionWriter.Export(part));
             }
 
-            return new XElement("Metadata", typesElement, partsElement);
+            return new XElement("ContentSchema", typesElement, partsElement);
         }
 
         private XElement ExportData(IEnumerable<string> contentTypes, IEnumerable<ContentItem> contentItems, int? batchSize) {
-            var data = new XElement("Data");
+            var data = new XElement("Content");
 
             if (batchSize.HasValue && batchSize.Value > 0)
                 data.SetAttributeValue("BatchSize", batchSize);

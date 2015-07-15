@@ -7,23 +7,23 @@ using Orchard.Recipes.Services;
 using Orchard.Recipes.ViewModels;
 
 namespace Orchard.Recipes.RecipeBuilders {
-    public class SiteSettingsBuilderStep : RecipeBuilderStep {
+    public class SettingsBuilderStep : RecipeBuilderStep {
         private readonly IOrchardServices _orchardServices;
 
-        public SiteSettingsBuilderStep(IOrchardServices orchardServices) {
+        public SettingsBuilderStep(IOrchardServices orchardServices) {
             _orchardServices = orchardServices;
         }
 
         public override string Name {
-            get { return "SiteSettings"; }
+            get { return "Settings"; }
         }
 
         public override LocalizedString DisplayName {
-            get { return T("Site Settings"); }
+            get { return T("Settings"); }
         }
 
         public override LocalizedString Description {
-            get { return T("Exports site settings."); }
+            get { return T("Exports settings."); }
         }
 
         public override int Priority { get { return 20; } }
@@ -34,7 +34,7 @@ namespace Orchard.Recipes.RecipeBuilders {
 
         public override dynamic UpdateEditor(dynamic shapeFactory, IUpdateModel updater) {
             var viewModel = new SiteSettingsStepViewModel();
-            return shapeFactory.EditorTemplate(TemplateName: "ExportSteps/SiteSettings", Model: viewModel, Prefix: Prefix);
+            return shapeFactory.EditorTemplate(TemplateName: "ExportSteps/Settings", Model: viewModel, Prefix: Prefix);
         }
 
         public override void Build(BuildContext context) {
