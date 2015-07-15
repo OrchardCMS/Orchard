@@ -9,7 +9,7 @@ using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
 using Orchard.Recipes.ViewModels;
 
-namespace Orchard.Recipes.RecipeBuilders {
+namespace Orchard.Recipes.Providers.Builders {
     public class ContentStep : RecipeBuilderStep {
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly IOrchardServices _orchardServices;

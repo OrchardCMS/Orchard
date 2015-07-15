@@ -9,7 +9,7 @@ using Orchard.Packaging.Services;
 using Orchard.Recipes.Services;
 using Orchard.Themes.Services;
 
-namespace Orchard.Themes.RecipeExecutionSteps {
+namespace Orchard.Themes.Recipes.Executors {
     public class ThemeStep : RecipeExecutionStep {
         private readonly IPackagingSourceManager _packagingSourceManager;
         private readonly IPackageManager _packageManager;

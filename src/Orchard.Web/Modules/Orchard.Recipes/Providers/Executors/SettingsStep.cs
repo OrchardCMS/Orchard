@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using System.Xml.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
-using Orchard.Localization;
 using Orchard.Logging;
-using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
 using Orchard.Settings;
 
-namespace Orchard.Recipes.RecipeExecutionSteps {
+namespace Orchard.Recipes.Providers.Executors {
     public class SettingsStep : RecipeExecutionStep {
         private readonly ISiteService _siteService;
         private readonly IContentManager _contentManager;

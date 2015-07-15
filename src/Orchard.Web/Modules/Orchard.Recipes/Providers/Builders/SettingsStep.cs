@@ -6,7 +6,7 @@ using Orchard.Localization;
 using Orchard.Recipes.Services;
 using Orchard.Recipes.ViewModels;
 
-namespace Orchard.Recipes.RecipeBuilders {
+namespace Orchard.Recipes.Providers.Builders {
     public class SettingsStep : RecipeBuilderStep {
         private readonly IOrchardServices _orchardServices;
 

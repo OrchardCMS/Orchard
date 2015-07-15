@@ -5,7 +5,7 @@ using Orchard.Environment.Features;
 using Orchard.Logging;
 using Orchard.Recipes.Services;
 
-namespace Orchard.Modules.RecipeExecutionSteps {
+namespace Orchard.Modules.Recipes.Executors {
     public class FeatureStep : RecipeExecutionStep {
         private readonly IFeatureManager _featureManager;
 

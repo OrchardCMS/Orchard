@@ -72,8 +72,8 @@
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Data\Migration\DataMigrationNotificationProvider.cs" />
     <Compile Include="Events\IExtensionDisplayEventHandler.cs" />
-    <Compile Include="RecipeBuilderSteps\FeatureStep.cs" />
-    <Compile Include="RecipeExecutionSteps\FeatureStep.cs" />
+    <Compile Include="Recipes\Builders\FeatureStep.cs" />
+    <Compile Include="Recipes\Executors\FeatureStep.cs" />
     <Compile Include="ViewModels\FeatureStepViewModel.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Commands\FeatureCommands.cs" />

@@ -7,7 +7,7 @@ using Orchard.ImportExport.ViewModels;
 using Orchard.Localization;
 using Orchard.Recipes.Services;
 
-namespace Orchard.ImportExport.RecipeBuilderSteps {
+namespace Orchard.ImportExport.Recipes.Builders {
     public class CustomStepsStep : RecipeBuilderStep {
         private readonly IEnumerable<IExportEventHandler> _exportEventHandlers;
         private readonly ICustomExportStep _customExportStep;

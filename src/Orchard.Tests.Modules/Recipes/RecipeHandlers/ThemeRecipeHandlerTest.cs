@@ -22,14 +22,13 @@ using Orchard.FileSystems.VirtualPath;
 using Orchard.Packaging.GalleryServer;
 using Orchard.Packaging.Services;
 using Orchard.Recipes.Models;
-using Orchard.Recipes.RecipeExecutionSteps;
 using Orchard.Recipes.Services;
 using Orchard.Tests.DisplayManagement.Descriptors;
 using Orchard.Tests.Environment.Extensions;
 using Orchard.Tests.Environment.Features;
 using Orchard.Tests.Stubs;
 using Orchard.Tests.UI.Navigation;
-using Orchard.Themes.RecipeExecutionSteps;
+using Orchard.Themes.Recipes.Executors;
 using Orchard.Themes.Services;
 
 namespace Orchard.Tests.Modules.Recipes.RecipeHandlers {

@@ -8,7 +8,7 @@ using Orchard.Packaging.Models;
 using Orchard.Packaging.Services;
 using Orchard.Recipes.Services;
 
-namespace Orchard.Recipes.RecipeExecutionSteps {
+namespace Orchard.Recipes.Providers.Executors {
     public class ModuleStep : RecipeExecutionStep {
         private readonly IPackagingSourceManager _packagingSourceManager;
         private readonly IPackageManager _packageManager;

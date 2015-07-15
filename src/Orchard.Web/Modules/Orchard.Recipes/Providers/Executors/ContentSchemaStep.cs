@@ -5,7 +5,7 @@ using Orchard.ContentTypes.Events;
 using Orchard.Logging;
 using Orchard.Recipes.Services;
 
-namespace Orchard.Recipes.RecipeExecutionSteps {
+namespace Orchard.Recipes.Providers.Executors {
     public class ContentSchemaStep : RecipeExecutionStep {
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly IContentDefinitionReader _contentDefinitionReader;

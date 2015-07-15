@@ -3,7 +3,7 @@ using Orchard.Localization;
 using Orchard.Recipes.Services;
 using Orchard.Recipes.ViewModels;
 
-namespace Orchard.Recipes.RecipeBuilders {
+namespace Orchard.Recipes.Providers.Builders {
     public class RecipeMetadataStep : RecipeBuilderStep {
         private readonly IOrchardServices _orchardServices;
         public RecipeMetadataStep(IOrchardServices orchardServices) {

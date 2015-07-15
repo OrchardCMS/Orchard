@@ -7,7 +7,7 @@ using Orchard.Localization;
 using Orchard.Modules.ViewModels;
 using Orchard.Recipes.Services;
 
-namespace Orchard.Modules.RecipeBuilderSteps {
+namespace Orchard.Modules.Recipes.Builders {
     public class FeatureStep : RecipeBuilderStep {
         private readonly IFeatureManager _featureManager;
 

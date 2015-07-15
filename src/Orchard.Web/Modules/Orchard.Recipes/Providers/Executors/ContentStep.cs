@@ -6,7 +6,7 @@ using Orchard.Data;
 using Orchard.Logging;
 using Orchard.Recipes.Services;
 
-namespace Orchard.Recipes.RecipeExecutionSteps {
+namespace Orchard.Recipes.Providers.Executors {
     public class ContentStep : RecipeExecutionStep {
         private readonly IOrchardServices _orchardServices;
         private readonly ITransactionManager _transactionManager;

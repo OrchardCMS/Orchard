@@ -7,7 +7,7 @@ using Orchard.Commands;
 using Orchard.Logging;
 using Orchard.Recipes.Services;
 
-namespace Orchard.Recipes.RecipeExecutionSteps  {
+namespace Orchard.Recipes.Providers.Executors  {
     public class CommandStep : RecipeExecutionStep {
         private readonly ICommandManager _commandManager;
         private readonly CommandParser _commandParser;

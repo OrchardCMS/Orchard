@@ -75,7 +75,7 @@
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\ThemeEntry.cs" />
     <Compile Include="Models\DisableThemePart.cs" />
-    <Compile Include="RecipeExecutionSteps\ThemeStep.cs" />
+    <Compile Include="Recipes\Executors\ThemeStep.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Handlers\ThemeSiteSettingsPartHandler.cs" />
