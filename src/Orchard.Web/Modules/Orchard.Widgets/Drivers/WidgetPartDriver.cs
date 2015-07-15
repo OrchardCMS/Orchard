@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Localization;
 using Orchard.Utility.Extensions;
@@ -34,7 +35,7 @@ namespace Orchard.Widgets.Drivers {
             widgetPart.AvailableLayers = _widgetsService.GetLayers();
 
             if (widgetPart.LayerPart == null) {
-                Localization.Models.LocalizationPart localizationPart = widgetPart.ContentItem.Parts.Where(x => x.PartDefinition.Name == "LocalizationPart").FirstOrDefault() as Localization.Models.LocalizationPart;
+                var localizationPart = widgetPart.As<ILocalizableAspect>();
                 ContentItem masterContentItem = localizationPart.MasterContentItem as ContentItem;
                 WidgetPart masterWidgetPart = masterContentItem.Parts.Where(x => x.PartDefinition.Name == "WidgetPart").FirstOrDefault() as WidgetPart;
                 widgetPart.LayerPart = masterWidgetPart.LayerPart;
