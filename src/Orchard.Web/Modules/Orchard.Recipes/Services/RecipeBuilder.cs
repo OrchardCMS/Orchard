@@ -5,7 +5,6 @@ namespace Orchard.Recipes.Services {
     public class RecipeBuilder : Component, IRecipeBuilder {
         
         public string Build(IEnumerable<IRecipeBuilderStep> steps) {
-            var exportDocument = CreateRecipeRoot();
             var context = new BuildContext {
                 RecipeDocument = CreateRecipeRoot()
             };
@@ -14,7 +13,7 @@ namespace Orchard.Recipes.Services {
                 step.Build(context);
             }
             
-            return exportDocument.ToString();
+            return context.RecipeDocument.ToString();
         }
 
         private XDocument CreateRecipeRoot() {
