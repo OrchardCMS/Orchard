@@ -1,11 +1,9 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Orchard.ContentManagement;
 using Orchard.ImportExport.Services;
-using Orchard.UI.Notify;
 
 namespace Orchard.ImportExport.Providers.ImportActions {
     public class UploadRecipeAction : ImportAction {
@@ -29,19 +27,16 @@ namespace Orchard.ImportExport.Providers.ImportActions {
             
             if (updater != null) {
                 var request = _orchardServices.WorkContext.HttpContext.Request;
-                var file = request.Files["RecipeFile"];
-                if (String.IsNullOrEmpty(file.FileName)) {
-                    updater.AddModelError("RecipeFile", T("Please choose a recipe file to import."));
-                    _orchardServices.Notifier.Error(T("Please choose a recipe file to import."));
-                }
-                else
-                    File = file;
+                File = request.Files["RecipeFile"];
             }
 
             return shapeFactory.EditorTemplate(TemplateName: "ImportActions/UploadRecipe", Prefix: Prefix);
         }
 
         public override void Execute(ImportActionContext context) {
+            if (File == null || File.ContentLength == 0)
+                return;
+
             var executionId = _importExportService.Import(new StreamReader(File.InputStream).ReadToEnd());
             context.ActionResult = new RedirectToRouteResult(new RouteValueDictionary(new { action = "ImportResult", controller = "Admin", area = "Orchard.ImportExport", executionId = executionId }));
         }
