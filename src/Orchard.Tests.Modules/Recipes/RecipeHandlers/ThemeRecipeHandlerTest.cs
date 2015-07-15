@@ -29,6 +29,7 @@ using Orchard.Tests.Environment.Extensions;
 using Orchard.Tests.Environment.Features;
 using Orchard.Tests.Stubs;
 using Orchard.Tests.UI.Navigation;
+using Orchard.Themes.RecipeExecutionSteps;
 using Orchard.Themes.Services;
 
 namespace Orchard.Tests.Modules.Recipes.RecipeHandlers {
