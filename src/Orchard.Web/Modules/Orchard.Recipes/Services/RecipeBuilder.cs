@@ -1,9 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Linq;
+using Orchard.Services;
 
 namespace Orchard.Recipes.Services {
     public class RecipeBuilder : Component, IRecipeBuilder {
-        
+        private readonly IClock _clock;
+
+        public RecipeBuilder(IClock clock) {
+            _clock = clock;
+        }
+
         public XDocument Build(IEnumerable<IRecipeBuilderStep> steps) {
             var context = new BuildContext {
                 RecipeDocument = CreateRecipeRoot()
@@ -19,9 +25,10 @@ namespace Orchard.Recipes.Services {
         private XDocument CreateRecipeRoot() {
             var recipeRoot = new XDocument(
                 new XDeclaration("1.0", "", "yes"),
-                new XComment("Exported from Orchard"),
+                new XComment(T("Exported from Orchard").ToString()),
                 new XElement("Orchard",
-                    new XElement("Recipe")
+                    new XElement("Recipe",
+                        new XElement("ExportUtc", _clock.UtcNow))
                 )
             );
             return recipeRoot;
