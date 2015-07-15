@@ -36,7 +36,7 @@ namespace Orchard.ImportExport.Controllers {
         public Localizer T { get; set; }
 
         public ActionResult Import() {
-            var actions = _importActions.OrderBy(x => x.Priority).Select(x => new ImportActionViewModel {
+            var actions = _importActions.OrderByDescending(x => x.Priority).Select(x => new ImportActionViewModel {
                 Editor = x.BuildEditor(Services.New)
             }).Where(x => x != null).ToList();
 
@@ -52,7 +52,7 @@ namespace Orchard.ImportExport.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.Import, T("Not allowed to import.")))
                 return new HttpUnauthorizedResult();
 
-            var actions = _importActions.OrderBy(x => x.Priority).ToList();
+            var actions = _importActions.OrderByDescending(x => x.Priority).ToList();
             var viewModel = new ImportViewModel {
                 Actions = actions.Select(x => new ImportActionViewModel {
                     Editor = x.UpdateEditor(Services.New, this)
@@ -82,7 +82,7 @@ namespace Orchard.ImportExport.Controllers {
         }
 
         public ActionResult Export() {
-            var actions = _exportActions.OrderBy(x => x.Priority).Select(x => new ExportActionViewModel {
+            var actions = _exportActions.OrderByDescending(x => x.Priority).Select(x => new ExportActionViewModel {
                 Editor = x.BuildEditor(Services.New)
             }).Where(x => x != null).ToList();
 
@@ -98,7 +98,7 @@ namespace Orchard.ImportExport.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.Export, T("Not allowed to export.")))
                 return new HttpUnauthorizedResult();
 
-            var actions = _exportActions.OrderBy(x => x.Priority).ToList();
+            var actions = _exportActions.OrderByDescending(x => x.Priority).ToList();
 
             foreach (var action in actions) {
                 action.UpdateEditor(Services.New, this);

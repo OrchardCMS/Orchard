@@ -11,12 +11,12 @@ using Orchard.Recipes.Services;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.ImportExport.Providers.ExportActions {
-    public class RecipeBuilder : ExportAction {
+    public class BuildRecipeAction : ExportAction {
         private readonly IEnumerable<IRecipeBuilderStep> _recipeBuilderSteps;
         private readonly IImportExportService _importExportService;
         private readonly IRecipeParser _recipeParser;
 
-        public RecipeBuilder(IEnumerable<IRecipeBuilderStep> recipeBuilderSteps, IImportExportService importExportService, IRecipeParser recipeParser) {
+        public BuildRecipeAction(IEnumerable<IRecipeBuilderStep> recipeBuilderSteps, IImportExportService importExportService, IRecipeParser recipeParser) {
             _recipeBuilderSteps = recipeBuilderSteps;
             _importExportService = importExportService;
             _recipeParser = recipeParser;
@@ -24,7 +24,7 @@ namespace Orchard.ImportExport.Providers.ExportActions {
             RecipeBuilderSteps = new List<IRecipeBuilderStep>();
         }
 
-        public override string Name { get { return "RecipeBuilder"; } }
+        public override string Name { get { return "BuildRecipe"; } }
 
         public IList<IRecipeBuilderStep> RecipeBuilderSteps { get; set; }
 
@@ -33,7 +33,7 @@ namespace Orchard.ImportExport.Providers.ExportActions {
         }
 
         public override dynamic UpdateEditor(dynamic shapeFactory, IUpdateModel updater) {
-            var builderSteps = _recipeBuilderSteps.OrderBy(x => x.Priority).Select(x => new ExportStepViewModel {
+            var builderSteps = _recipeBuilderSteps.OrderByDescending(x => x.Priority).Select(x => new ExportStepViewModel {
                 Name = x.Name,
                 DisplayName = x.DisplayName,
                 Description = x.Description,
@@ -61,7 +61,7 @@ namespace Orchard.ImportExport.Providers.ExportActions {
                 }
             }
 
-            return shapeFactory.EditorTemplate(TemplateName: "ExportActions/RecipeBuilder", Model: viewModel, Prefix: Prefix);
+            return shapeFactory.EditorTemplate(TemplateName: "ExportActions/BuildRecipe", Model: viewModel, Prefix: Prefix);
         }
 
         public override void Execute(ExportActionContext context) {

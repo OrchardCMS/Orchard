@@ -8,11 +8,11 @@ using Orchard.ImportExport.Services;
 using Orchard.UI.Notify;
 
 namespace Orchard.ImportExport.Providers.ImportActions {
-    public class UploadRecipe : ImportAction {
+    public class UploadRecipeAction : ImportAction {
         private readonly IOrchardServices _orchardServices;
         private readonly IImportExportService _importExportService;
 
-        public UploadRecipe(IOrchardServices orchardServices, IImportExportService importExportService) {
+        public UploadRecipeAction(IOrchardServices orchardServices, IImportExportService importExportService) {
             _orchardServices = orchardServices;
             _importExportService = importExportService;
         }

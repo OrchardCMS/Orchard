@@ -22,7 +22,7 @@ namespace Orchard.Recipes.Providers.Builders {
             get { return T("Provides additional information about the recipe."); }
         }
 
-        public override int Priority { get { return -10; } }
+        public override int Priority { get { return 1000; } }
 
         public string RecipeName { get; set; }
         public string RecipeDescription { get; set; }

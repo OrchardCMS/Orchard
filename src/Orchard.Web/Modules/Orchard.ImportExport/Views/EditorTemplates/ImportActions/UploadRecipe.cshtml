@@ -1,4 +1,5 @@
-﻿<p>
+﻿@model dynamic
+<p>
     @T("Choose a recipe file to import. Please consider {0} or backing up your data first.", @Html.Link(T("exporting").Text, Url.Action("Export", "Admin", new { area = "Orchard.ImportExport" })))
 </p>
 <fieldset>

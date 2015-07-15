@@ -71,8 +71,10 @@
     <Compile Include="Models\ExportOptions.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Providers\ExportActions\RecipeBuilder.cs" />
-    <Compile Include="Providers\ImportActions\UploadRecipe.cs" />
+    <Compile Include="Providers\ExportActions\BuildRecipeAction.cs" />
+    <Compile Include="Providers\ImportActions\ResetSiteAction.cs" />
+    <Compile Include="ViewModels\ResetSiteViewModel.cs" />
+    <Compile Include="Providers\ImportActions\UploadRecipeAction.cs" />
     <Compile Include="Recipes\Builders\CustomStepsStep.cs" />
     <Compile Include="Services\ImportAction.cs" />
     <Compile Include="Services\ExportAction.cs" />
@@ -141,7 +143,10 @@
     <Content Include="Views\EditorTemplates\ExportSteps\CustomSteps.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\EditorTemplates\ExportActions\RecipeBuilder.cshtml" />
+    <Content Include="Views\EditorTemplates\ExportActions\BuildRecipe.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\ImportActions\ResetSite.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

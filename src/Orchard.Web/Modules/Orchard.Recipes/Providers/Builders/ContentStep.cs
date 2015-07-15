@@ -37,7 +37,7 @@ namespace Orchard.Recipes.Providers.Builders {
             get { return T("Exports content items and content item definitions."); }
         }
 
-        public override int Priority { get { return 10; } }
+        public override int Priority { get { return 20; } }
 
         public IList<string> SchemaContentTypes { get; set; }
         public IList<string> DataContentTypes { get; set; }
