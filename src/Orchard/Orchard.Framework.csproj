@@ -149,9 +149,20 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Environment\Extensions\Helpers\ExtensionManagerExtensions.cs" />
     <Compile Include="Recipes\Models\RecipeResult.cs" />
     <Compile Include="Recipes\Models\RecipeStepResult.cs" />
+    <Compile Include="Recipes\Models\BuildContext.cs" />
+    <Compile Include="Recipes\Services\IRecipeBuilder.cs" />
+    <Compile Include="Recipes\Services\IRecipeBuilderStep.cs" />
+    <Compile Include="Recipes\Services\IRecipeExecutionStep.cs" />
+    <Compile Include="Recipes\Services\IRecipeExecutor.cs" />
     <Compile Include="Recipes\Services\IRecipeResultAccessor.cs" />
+    <Compile Include="Recipes\Services\RecipeBuilder.cs" />
+    <Compile Include="Recipes\Services\RecipeBuilderStep.cs" />
+    <Compile Include="Recipes\Models\RecipeExecutionContext.cs" />
+    <Compile Include="Recipes\Services\RecipeExecutionStep.cs" />
+    <Compile Include="Recipes\Services\RecipeExecutor.cs" />
     <Compile Include="Reports\Report.cs" />
     <Compile Include="Reports\ReportEntry.cs" />
     <Compile Include="Reports\ReportExtentions.cs" />

@@ -8,11 +8,11 @@ using Orchard.Localization;
 using Orchard.Recipes.Services;
 
 namespace Orchard.ImportExport.RecipeBuilderSteps {
-    public class CustomStepsRecipeBuilderStep : RecipeBuilderStep {
+    public class CustomStepsStep : RecipeBuilderStep {
         private readonly IEnumerable<IExportEventHandler> _exportEventHandlers;
         private readonly ICustomExportStep _customExportStep;
 
-        public CustomStepsRecipeBuilderStep(IEnumerable<IExportEventHandler> exportEventHandlers, ICustomExportStep customExportStep) {
+        public CustomStepsStep(IEnumerable<IExportEventHandler> exportEventHandlers, ICustomExportStep customExportStep) {
             _exportEventHandlers = exportEventHandlers;
             _customExportStep = customExportStep;
             CustomSteps = new List<string>();

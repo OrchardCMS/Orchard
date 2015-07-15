@@ -4,9 +4,9 @@ using Orchard.Recipes.Services;
 using Orchard.Recipes.ViewModels;
 
 namespace Orchard.Recipes.RecipeBuilders {
-    public class RecipeMetadataBuilderStep : RecipeBuilderStep {
+    public class RecipeMetadataStep : RecipeBuilderStep {
         private readonly IOrchardServices _orchardServices;
-        public RecipeMetadataBuilderStep(IOrchardServices orchardServices) {
+        public RecipeMetadataStep(IOrchardServices orchardServices) {
             _orchardServices = orchardServices;
         }
 

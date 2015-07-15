@@ -100,7 +100,7 @@ namespace Orchard.ImportExport.Commands {
             var recipeBuilderSteps = new List<IRecipeBuilderStep>();
 
             if (Metadata || Data) {
-                var dataStep = _orchardServices.WorkContext.Resolve<ContentRecipeBuilderStep>();
+                var dataStep = _orchardServices.WorkContext.Resolve<ContentStep>();
 
                 if(Data)
                     dataStep.DataContentTypes = exportTypes;
@@ -113,12 +113,12 @@ namespace Orchard.ImportExport.Commands {
             }
 
             if (SiteSettings) {
-                var siteSettingsStep = _orchardServices.WorkContext.Resolve<SettingsBuilderStep>();
+                var siteSettingsStep = _orchardServices.WorkContext.Resolve<SettingsStep>();
                 recipeBuilderSteps.Add(siteSettingsStep);
             }
 
             if (enteredSteps.Any()) {
-                var customStepsStep = _orchardServices.WorkContext.Resolve<CustomStepsRecipeBuilderStep>();
+                var customStepsStep = _orchardServices.WorkContext.Resolve<CustomStepsStep>();
                 recipeBuilderSteps.Add(customStepsStep);
             }
 

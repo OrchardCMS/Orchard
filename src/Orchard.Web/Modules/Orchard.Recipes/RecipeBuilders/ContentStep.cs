@@ -10,12 +10,12 @@ using Orchard.Recipes.Services;
 using Orchard.Recipes.ViewModels;
 
 namespace Orchard.Recipes.RecipeBuilders {
-    public class ContentRecipeBuilderStep : RecipeBuilderStep {
+    public class ContentStep : RecipeBuilderStep {
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly IOrchardServices _orchardServices;
         private readonly IContentDefinitionWriter _contentDefinitionWriter;
 
-        public ContentRecipeBuilderStep(
+        public ContentStep(
             IContentDefinitionManager contentDefinitionManager, 
             IOrchardServices orchardServices, 
             IContentDefinitionWriter contentDefinitionWriter) {

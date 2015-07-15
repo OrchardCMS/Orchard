@@ -7,10 +7,10 @@ using Orchard.Recipes.Services;
 using Orchard.Recipes.ViewModels;
 
 namespace Orchard.Recipes.RecipeBuilders {
-    public class SettingsBuilderStep : RecipeBuilderStep {
+    public class SettingsStep : RecipeBuilderStep {
         private readonly IOrchardServices _orchardServices;
 
-        public SettingsBuilderStep(IOrchardServices orchardServices) {
+        public SettingsStep(IOrchardServices orchardServices) {
             _orchardServices = orchardServices;
         }
 
