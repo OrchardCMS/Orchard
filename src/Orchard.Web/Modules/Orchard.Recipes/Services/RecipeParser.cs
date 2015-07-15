@@ -2,29 +2,23 @@
 using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Linq;
-using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Recipes.Models;
 
 namespace Orchard.Recipes.Services {
-    public class RecipeParser : IRecipeParser {
-        public RecipeParser() {
-            Logger = NullLogger.Instance;
-            T = NullLocalizer.Instance;
+    public class RecipeParser : Component, IRecipeParser {
+        public Recipe ParseRecipe(XDocument recipeDocument) {
+            return ParseRecipe(recipeDocument.ToString(SaveOptions.DisableFormatting));
         }
-
-        public Localizer T { get; set; }
-        public ILogger Logger { get; set; }
 
         public Recipe ParseRecipe(string recipeText) {
             var recipe = new Recipe();
 
-            if (string.IsNullOrEmpty(recipeText)) {
+            if (String.IsNullOrEmpty(recipeText)) {
                 throw new Exception("Recipe is empty");
             }
 
-            XElement recipeTree = XElement.Parse(recipeText, LoadOptions.PreserveWhitespace);
-
+            var recipeTree = XElement.Parse(recipeText, LoadOptions.PreserveWhitespace);
             var recipeSteps = new List<RecipeStep>();
 
             foreach (var element in recipeTree.Elements()) {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using Orchard.FileSystems.AppData;
 using Orchard.Localization;
 using Orchard.Logging;
@@ -34,23 +35,36 @@ namespace Orchard.ImportExport.Services {
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
+        public string Import(XDocument recipeDocument) {
+            return _recipeExecutor.Execute(recipeDocument);
+        }
+
         public string Import(string recipeText) {
             return _recipeExecutor.Execute(recipeText);
         }
 
+        public XDocument ExportXml(IEnumerable<IRecipeBuilderStep> steps) {
+            var recipe = _recipeBuilder.Build(steps);
+            return recipe;
+        }
+
         public string Export(IEnumerable<IRecipeBuilderStep> steps) {
             var recipe = _recipeBuilder.Build(steps);
-            return WriteExportFile(recipe);
+            return recipe.ToString();
         }
-        
-        private string WriteExportFile(string exportDocument) {
+
+        public string WriteExportFile(XDocument recipeDocument) {
+            return WriteExportFile(recipeDocument.ToString());
+        }
+
+        public string WriteExportFile(string recipeText) {
             var exportFile = String.Format("Export-{0}-{1}.xml", _orchardServices.WorkContext.CurrentUser.UserName, _clock.UtcNow.Ticks);
             if (!_appDataFolder.DirectoryExists(ExportsDirectory)) {
                 _appDataFolder.CreateDirectory(ExportsDirectory);
             }
 
             var path = _appDataFolder.Combine(ExportsDirectory, exportFile);
-            _appDataFolder.CreateFile(path, exportDocument);
+            _appDataFolder.CreateFile(path, recipeText);
 
             return _appDataFolder.MapPath(path);
         }

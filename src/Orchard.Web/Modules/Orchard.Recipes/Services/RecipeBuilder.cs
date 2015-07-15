@@ -4,7 +4,7 @@ using System.Xml.Linq;
 namespace Orchard.Recipes.Services {
     public class RecipeBuilder : Component, IRecipeBuilder {
         
-        public string Build(IEnumerable<IRecipeBuilderStep> steps) {
+        public XDocument Build(IEnumerable<IRecipeBuilderStep> steps) {
             var context = new BuildContext {
                 RecipeDocument = CreateRecipeRoot()
             };
@@ -13,7 +13,7 @@ namespace Orchard.Recipes.Services {
                 step.Build(context);
             }
             
-            return context.RecipeDocument.ToString();
+            return context.RecipeDocument;
         }
 
         private XDocument CreateRecipeRoot() {

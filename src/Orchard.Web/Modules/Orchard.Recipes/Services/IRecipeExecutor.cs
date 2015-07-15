@@ -1,5 +1,10 @@
-﻿namespace Orchard.Recipes.Services {
+﻿using System.Xml.Linq;
+using Orchard.Recipes.Models;
+
+namespace Orchard.Recipes.Services {
     public interface IRecipeExecutor : IDependency {
+        string Execute(XDocument recipeDocument);
         string Execute(string recipeText);
+        string Execute(Recipe recipe);
     }
 }
