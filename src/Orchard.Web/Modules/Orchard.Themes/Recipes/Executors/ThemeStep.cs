@@ -6,6 +6,7 @@ using Orchard.Environment.Extensions.Models;
 using Orchard.Logging;
 using Orchard.Packaging.Models;
 using Orchard.Packaging.Services;
+using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
 using Orchard.Themes.Services;
 

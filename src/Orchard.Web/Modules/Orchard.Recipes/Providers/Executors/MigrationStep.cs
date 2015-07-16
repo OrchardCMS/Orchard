@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Orchard.Data.Migration;
 using Orchard.Logging;
+using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
 
 namespace Orchard.Recipes.Providers.Executors {

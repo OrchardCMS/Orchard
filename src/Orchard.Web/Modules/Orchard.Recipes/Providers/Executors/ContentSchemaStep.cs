@@ -3,6 +3,7 @@ using System.Xml;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentTypes.Events;
 using Orchard.Logging;
+using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
 
 namespace Orchard.Recipes.Providers.Executors {

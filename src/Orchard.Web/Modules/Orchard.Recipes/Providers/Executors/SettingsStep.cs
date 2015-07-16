@@ -4,6 +4,7 @@ using System.Xml.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Logging;
+using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
 using Orchard.Settings;
 

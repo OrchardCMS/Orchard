@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using Orchard.Commands;
 using Orchard.Logging;
+using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
 
 namespace Orchard.Recipes.Providers.Executors  {

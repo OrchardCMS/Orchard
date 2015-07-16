@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Orchard.Environment.Features;
 using Orchard.Logging;
+using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
 
 namespace Orchard.Modules.Recipes.Executors {
@@ -13,7 +14,10 @@ namespace Orchard.Modules.Recipes.Executors {
             _featureManager = featureManager;
         }
 
-        public override string Name { get { return "Feature"; } }
+        public override string Name
+        {
+            get { return "Feature"; }
+        }
 
         // <Feature enable="f1,f2,f3" disable="f4" />
         // Enable/Disable features.

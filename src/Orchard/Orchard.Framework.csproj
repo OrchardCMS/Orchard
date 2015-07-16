@@ -164,6 +164,7 @@
     <Compile Include="Recipes\Models\RecipeExecutionContext.cs" />
     <Compile Include="Recipes\Services\RecipeExecutionStep.cs" />
     <Compile Include="Recipes\Services\RecipeExecutor.cs" />
+    <Compile Include="Recipes\Services\UpdateRecipeExecutionStepContext.cs" />
     <Compile Include="Reports\Report.cs" />
     <Compile Include="Reports\ReportEntry.cs" />
     <Compile Include="Reports\ReportExtentions.cs" />

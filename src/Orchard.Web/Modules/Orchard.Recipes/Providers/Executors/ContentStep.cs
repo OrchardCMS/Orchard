@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Xml.Linq;
 using Orchard.ContentManagement;
 using Orchard.Data;
+using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
+using Orchard.Recipes.ViewModels;
 
 namespace Orchard.Recipes.Providers.Executors {
     public class ContentStep : RecipeExecutionStep {
@@ -16,7 +19,35 @@ namespace Orchard.Recipes.Providers.Executors {
             _transactionManager = transactionManager;
         }
 
-        public override string Name { get { return "Content"; } }
+        public override string Name
+        {
+            get { return "Content"; }
+        }
+
+        public override LocalizedString DisplayName
+        {
+            get { return T("Content"); }
+        }
+
+        public override LocalizedString Description {
+            get { return T("Provides additional coniguration for the Content recipe step."); }
+        }
+
+        public override dynamic BuildEditor(dynamic shapeFactory) {
+            return UpdateEditor(shapeFactory, null, null);
+        }
+
+        public override dynamic UpdateEditor(dynamic shapeFactory, IUpdateModel updater, UpdateRecipeExecutionStepContext context) {
+            var viewModel = new ContentExecutionStepViewModel();
+
+            if (updater != null) {
+                if (updater.TryUpdateModel(viewModel, Prefix, null, null)) {
+                    SetBatchSizeForDataStep(context.Step, viewModel.BatchSize);
+                }
+            }
+
+            return shapeFactory.EditorTemplate(TemplateName: "ExecutionSteps/Content", Model: viewModel, Prefix: Prefix);
+        }
 
         // <Data />
         // Import Data.
@@ -91,6 +122,10 @@ namespace Orchard.Recipes.Providers.Executors {
                 elementDictionary[identity] = element;
             }
             return elementDictionary;
+        }
+
+        private void SetBatchSizeForDataStep(XElement step, int? batchSize) {
+            step.SetAttributeValue("BatchSize", batchSize);
         }
 
         private int GetBatchSizeForDataStep(XElement step) {

@@ -86,6 +86,7 @@
     <Compile Include="Providers\Builders\RecipeMetadataStep.cs" />
     <Compile Include="Providers\Builders\SettingsStep.cs" />
     <Compile Include="Providers\Executors\CommandStep.cs" />
+    <Compile Include="ViewModels\ContentExecutionStepViewModel.cs" />
     <Compile Include="Providers\Executors\ContentStep.cs" />
     <Compile Include="Providers\Executors\ContentSchemaStep.cs" />
     <Compile Include="Providers\Executors\MigrationStep.cs" />
@@ -141,6 +142,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EditorTemplates\ExportSteps\Settings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\ExecutionSteps\Content.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

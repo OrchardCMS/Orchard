@@ -1,6 +1,9 @@
 ﻿@using Orchard.Utility.Extensions
 @model Orchard.ImportExport.ViewModels.RecipeBuilderViewModel
 @{
+    Script.Require("ShapesBase");
+}
+@{
     var exportStepIndex = 0;
     foreach (var exportStep in Model.Steps) {
         var stepName = Html.NameFor(m => m.Steps[exportStepIndex].IsSelected).ToString();
