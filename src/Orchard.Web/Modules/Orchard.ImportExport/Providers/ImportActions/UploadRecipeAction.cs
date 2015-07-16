@@ -132,6 +132,9 @@ namespace Orchard.ImportExport.Providers.ImportActions {
             if (RecipeDocument == null)
                 return;
 
+            // Sets the request timeout to 10 minutes to give enough time to execute custom recipes.
+            _orchardServices.WorkContext.HttpContext.Server.ScriptTimeout = 600;
+
             var executionId = ResetSite ? Setup() : ExecuteRecipe();
             context.ActionResult = new RedirectToRouteResult(new RouteValueDictionary(new { action = "ImportResult", controller = "Admin", area = "Orchard.ImportExport", executionId = executionId }));
         }

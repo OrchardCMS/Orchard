@@ -24,14 +24,15 @@ namespace Orchard.MultiTenancy.Services {
         /// <summary>
         /// Resets a tenant to its uninitialized state.
         /// </summary>
-        /// <param name="tenantName">A ShellSettings object for the tenant to reset.</param>
+        /// <param name="settings">A ShellSettings object to identify the tenant to reset.</param>
         /// <param name="dropDatabaseTables">A boolean indicated whether tenant database tables should be dropped also.</param>
         void ResetTenant(ShellSettings settings, bool dropDatabaseTables);
 
         /// <summary>
         /// Returns a list of all known database tables in a tenant.
         /// </summary>
-        /// <returns>A ShellSettings object for the tenant.</returns>
+        /// <param name="settings">A ShellSettings object to identify the tenant.</param>
+        /// <returns>A list of known database table names for the tenant.</returns>
         IEnumerable<string> GetTenantDatabaseTableNames(ShellSettings settings);
 
         /// <summary>

@@ -52,9 +52,6 @@ namespace Orchard.ImportExport.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.Import, T("Not allowed to import.")))
                 return new HttpUnauthorizedResult();
 
-            // Sets the request timeout to 10 minutes to give enough time to execute custom recipes.
-            Services.WorkContext.HttpContext.Server.ScriptTimeout = 600;
-
             var actions = _importActions.OrderByDescending(x => x.Priority).ToList();
             var viewModel = new ImportViewModel {
                 Actions = actions.Select(x => new ImportActionViewModel {
