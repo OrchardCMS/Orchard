@@ -51,7 +51,7 @@ namespace Orchard.Recipes.Providers.Builders {
                 IsSetupRecipe = viewModel.IsSetupRecipe;
             }
 
-            return shapeFactory.EditorTemplate(TemplateName: "ExportSteps/RecipeMetadata", Model: viewModel, Prefix: Prefix);
+            return shapeFactory.EditorTemplate(TemplateName: "BuilderSteps/RecipeMetadata", Model: viewModel, Prefix: Prefix);
         }
 
         public override void Build(BuildContext context) {

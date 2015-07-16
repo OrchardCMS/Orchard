@@ -103,7 +103,7 @@
     <Compile Include="Services\RecipeStepQueue.cs" />
     <Compile Include="ViewModels\ContentTypeEntry.cs" />
     <Compile Include="ViewModels\CustomStepEntry.cs" />
-    <Compile Include="ViewModels\DataExportStepViewModel.cs" />
+    <Compile Include="ViewModels\ContentBuilderStepViewModel.cs" />
     <Compile Include="ViewModels\ImportResultViewModel.cs" />
     <Compile Include="ViewModels\ImportViewModel.cs" />
     <Compile Include="ViewModels\SetupRecipeStepViewModel.cs" />
@@ -135,13 +135,13 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\EditorTemplates\ExportSteps\Content.cshtml" />
+    <Content Include="Views\EditorTemplates\BuilderSteps\Content.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\EditorTemplates\ExportSteps\RecipeMetadata.cshtml" />
+    <Content Include="Views\EditorTemplates\BuilderSteps\RecipeMetadata.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\EditorTemplates\ExportSteps\Settings.cshtml" />
+    <Content Include="Views\EditorTemplates\BuilderSteps\Settings.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EditorTemplates\ExecutionSteps\Content.cshtml" />

@@ -65,39 +65,41 @@ namespace Orchard.ImportExport.Providers.ImportActions {
                     // Validate and read uploaded recipe file.
                     var request = _orchardServices.WorkContext.HttpContext.Request;
                     var file = request.Files["RecipeFile"];
-                    var isInValid = false;
+                    var isValid = true;
 
                     ResetSite = viewModel.ResetSite;
                     SuperUserPassword = viewModel.SuperUserPassword;
 
                     if (file == null || file.ContentLength == 0) {
                         updater.AddModelError("RecipeFile", T("No recipe file selected."));
-                        isInValid = true;
+                        isValid = false;
                     }
 
                     if (ResetSite) {
                         if (String.IsNullOrWhiteSpace(viewModel.SuperUserPassword)) {
                             updater.AddModelError("SuperUserPassword", T("Please specify a new password for the super user."));
-                            isInValid = true;
+                            isValid = false;
                         }
                         else if (!String.Equals(viewModel.SuperUserPassword, viewModel.SuperUserPasswordConfirmation)) {
                             updater.AddModelError("SuperUserPassword", T("The passwords do not match."));
-                            isInValid = true;
+                            isValid = false;
                         }
                     }
 
                     var stepUpdater = new Updater(updater, secondHalf => String.Format("{0}.{1}", Prefix, secondHalf));
 
-                    // Update the view model with non-submitted values.
+                    // Update the view model with non-roundtripped values.
                     viewModel.SuperUserName = _orchardServices.WorkContext.CurrentSite.SuperUser;
                     foreach (var stepViewModel in viewModel.RecipeExecutionSteps) {
                         var step = _recipeExecutionSteps.Single(x => x.Name == stepViewModel.Name);
                         stepViewModel.DisplayName = step.DisplayName;
                         stepViewModel.Description = step.Description;
+
+                        // Update the step with posted values.
                         stepViewModel.Editor = step.UpdateEditor(shapeFactory, stepUpdater);
                     }
 
-                    if (!isInValid) {
+                    if (isValid) {
                         // Read recipe file.
                         RecipeDocument = XDocument.Parse(new StreamReader(file.InputStream).ReadToEnd());
                         var orchardElement = RecipeDocument.Element("Orchard");
@@ -116,6 +118,8 @@ namespace Orchard.ImportExport.Providers.ImportActions {
                                 RecipeDocument = RecipeDocument,
                                 Step = orchardElement.Element(executionStep.Name)
                             };
+
+                            // Give the execution step a chance to augment the recipe step before it will be scheduled.
                             executionStep.UpdateStep(context);
                         }
                     }

@@ -41,7 +41,6 @@ namespace Orchard.Recipes.Providers.Builders {
 
         public IList<string> SchemaContentTypes { get; set; }
         public IList<string> DataContentTypes { get; set; }
-        public int? ImportBatchSize { get; set; }
         public VersionHistoryOptions VersionHistoryOptions { get; set; }
 
         public override dynamic BuildEditor(dynamic shapeFactory) {
@@ -54,7 +53,7 @@ namespace Orchard.Recipes.Providers.Builders {
                 .Select(x => new ContentTypeEntry { Name = x.Name, DisplayName = x.DisplayName })
                 .ToList();
 
-            var viewModel = new DataExportStepViewModel {
+            var viewModel = new ContentBuilderStepViewModel {
                 ContentTypes = contentTypeViewModels
             };
 
@@ -64,7 +63,7 @@ namespace Orchard.Recipes.Providers.Builders {
                 VersionHistoryOptions = viewModel.VersionHistoryOptions;
             }
 
-            return shapeFactory.EditorTemplate(TemplateName: "ExportSteps/Content", Model: viewModel, Prefix: Prefix);
+            return shapeFactory.EditorTemplate(TemplateName: "BuilderSteps/Content", Model: viewModel, Prefix: Prefix);
         }
 
         public override void Build(BuildContext context) {
@@ -79,7 +78,7 @@ namespace Orchard.Recipes.Providers.Builders {
                 context.RecipeDocument.Element("Orchard").Add(ExportMetadata(schemaContentTypes));
 
             if(contentItems.Any())
-                context.RecipeDocument.Element("Orchard").Add(ExportData(dataContentTypes, contentItems, ImportBatchSize));
+                context.RecipeDocument.Element("Orchard").Add(ExportData(dataContentTypes, contentItems));
         }
 
         private XElement ExportMetadata(IEnumerable<string> contentTypes) {
@@ -107,12 +106,9 @@ namespace Orchard.Recipes.Providers.Builders {
             return new XElement("ContentSchema", typesElement, partsElement);
         }
 
-        private XElement ExportData(IEnumerable<string> contentTypes, IEnumerable<ContentItem> contentItems, int? batchSize) {
+        private XElement ExportData(IEnumerable<string> contentTypes, IEnumerable<ContentItem> contentItems) {
             var data = new XElement("Content");
-
-            if (batchSize.HasValue && batchSize.Value > 0)
-                data.SetAttributeValue("BatchSize", batchSize);
-
+            
             var orderedContentItemsQuery =
                 from contentItem in contentItems
                 let identity = _orchardServices.ContentManager.GetItemMetadata(contentItem).Identity.ToString()

@@ -159,7 +159,7 @@
     <Content Include="Views\EditorTemplates\ImportActions\UploadRecipe.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\EditorTemplates\ExportSteps\CustomSteps.cshtml" />
+    <Content Include="Views\EditorTemplates\BuilderSteps\CustomSteps.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EditorTemplates\ExportActions\BuildRecipe.cshtml" />

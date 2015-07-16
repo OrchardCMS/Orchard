@@ -1,4 +1,4 @@
-﻿@model Orchard.Recipes.ViewModels.DataExportStepViewModel
+﻿@model Orchard.Recipes.ViewModels.ContentBuilderStepViewModel
 @{
     Style.Include("recipebuilderstep-content.css");
     Script.Require("jQuery");
@@ -39,12 +39,6 @@
         </tbody>
     </table>
     @Html.Hint(T("Choose the types to include in the export file"))
-</div>
-
-<div>
-    @Html.LabelFor(m => m.ImportBatchSize, T("Batch Size"))
-    @Html.TextBoxFor(m => m.ImportBatchSize, new { @class = "text small" })
-    @Html.Hint(T("The batch size to use when importing the data. Leave empty to disable batched imports."))
 </div>
 <div>
     <p>@T("Version History")</p>

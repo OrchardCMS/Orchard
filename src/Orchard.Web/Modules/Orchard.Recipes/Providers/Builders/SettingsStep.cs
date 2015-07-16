@@ -34,7 +34,7 @@ namespace Orchard.Recipes.Providers.Builders {
 
         public override dynamic UpdateEditor(dynamic shapeFactory, IUpdateModel updater) {
             var viewModel = new SiteSettingsStepViewModel();
-            return shapeFactory.EditorTemplate(TemplateName: "ExportSteps/Settings", Model: viewModel, Prefix: Prefix);
+            return shapeFactory.EditorTemplate(TemplateName: "BuilderSteps/Settings", Model: viewModel, Prefix: Prefix);
         }
 
         public override void Build(BuildContext context) {

@@ -50,7 +50,7 @@ namespace Orchard.ImportExport.Recipes.Builders {
                 CustomSteps = viewModel.CustomSteps.Where(x => x.IsChecked).Select(x => x.CustomStep).ToList();
             }
 
-            return shapeFactory.EditorTemplate(TemplateName: "ExportSteps/CustomSteps", Model: viewModel, Prefix: Prefix);
+            return shapeFactory.EditorTemplate(TemplateName: "BuilderSteps/CustomSteps", Model: viewModel, Prefix: Prefix);
         }
 
         public override void Build(BuildContext context) {
