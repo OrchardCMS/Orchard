@@ -26,7 +26,8 @@ namespace Orchard.Recipes.Providers.Builders {
             get { return T("Exports settings."); }
         }
 
-        public override int Priority { get { return 10; } }
+        public override int Priority { get { return 30; } }
+        public override int Position { get { return 60; } }
 
         public override dynamic BuildEditor(dynamic shapeFactory) {
             return UpdateEditor(shapeFactory, null);

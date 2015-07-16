@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 using Orchard.Services;
 
@@ -15,7 +16,7 @@ namespace Orchard.Recipes.Services {
                 RecipeDocument = CreateRecipeRoot()
             };
             
-            foreach (var step in steps) {
+            foreach (var step in steps.OrderByDescending(x => x.Priority)) {
                 step.Build(context);
             }
             

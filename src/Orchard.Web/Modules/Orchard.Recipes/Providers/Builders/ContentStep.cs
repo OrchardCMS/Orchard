@@ -38,6 +38,7 @@ namespace Orchard.Recipes.Providers.Builders {
         }
 
         public override int Priority { get { return 20; } }
+        public override int Position { get { return 20; } }
 
         public IList<string> SchemaContentTypes { get; set; }
         public IList<string> DataContentTypes { get; set; }
@@ -103,7 +104,7 @@ namespace Orchard.Recipes.Providers.Builders {
                 partsElement.Add(_contentDefinitionWriter.Export(part));
             }
 
-            return new XElement("ContentSchema", typesElement, partsElement);
+            return new XElement("ContentDefinition", typesElement, partsElement);
         }
 
         private XElement ExportData(IEnumerable<string> contentTypes, IEnumerable<ContentItem> contentItems) {

@@ -7,6 +7,7 @@ namespace Orchard.Recipes.Services {
         public abstract LocalizedString DisplayName { get; }
         public abstract LocalizedString Description { get; }
         public virtual int Priority { get { return 0; } }
+        public virtual int Position { get { return 0; } }
 
         protected virtual string Prefix {
             get { return GetType().Name; }

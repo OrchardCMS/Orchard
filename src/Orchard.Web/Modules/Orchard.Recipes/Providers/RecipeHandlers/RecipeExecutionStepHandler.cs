@@ -15,7 +15,7 @@ namespace Orchard.Recipes.Providers.RecipeHandlers {
         }
 
         public void ExecuteRecipeStep(RecipeContext recipeContext) {
-            var executionStep = _recipeExecutionSteps.FirstOrDefault(x => x.Name == recipeContext.RecipeStep.Name);
+            var executionStep = _recipeExecutionSteps.FirstOrDefault(x => x.Names.Contains(recipeContext.RecipeStep.Name));
             var recipeExecutionContext = new RecipeExecutionContext {ExecutionId = recipeContext.ExecutionId, RecipeStep = recipeContext.RecipeStep};
 
             if (executionStep != null) {

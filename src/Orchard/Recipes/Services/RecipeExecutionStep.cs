@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Orchard.ContentManagement;
 using Orchard.Localization;
 using Orchard.Recipes.Models;
@@ -5,6 +6,10 @@ using Orchard.Recipes.Models;
 namespace Orchard.Recipes.Services {
     public abstract class RecipeExecutionStep : Component, IRecipeExecutionStep {
         public abstract string Name { get; }
+
+        public virtual IEnumerable<string> Names {
+            get { yield return Name; }
+        }
 
         public virtual LocalizedString DisplayName {
             get { return T(Name); }

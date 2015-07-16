@@ -27,7 +27,8 @@ namespace Orchard.Modules.Recipes.Builders {
             get { return T("Exports enabled and disabled features."); }
         }
 
-        public override int Priority { get { return 0; } }
+        public override int Priority { get { return 500; } }
+        public override int Position { get { return 70; } }
 
         public bool ExportEnabledFeatures { get; set; }
         public bool ExportDisabledFeatures { get; set; }
@@ -44,7 +45,7 @@ namespace Orchard.Modules.Recipes.Builders {
                 ExportDisabledFeatures = viewModel.ExportDisabledFeatures;
             }
 
-            return shapeFactory.EditorTemplate(TemplateName: "ExportSteps/Feature", Model: viewModel, Prefix: Prefix);
+            return shapeFactory.EditorTemplate(TemplateName: "BuilderSteps/Feature", Model: viewModel, Prefix: Prefix);
         }
 
         public override void Build(BuildContext context) {

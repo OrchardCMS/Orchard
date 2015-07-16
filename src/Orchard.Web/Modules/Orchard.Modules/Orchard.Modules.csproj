@@ -143,7 +143,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Content Include="Views\EditorTemplates\ExportSteps\Feature.cshtml" />
+    <Content Include="Views\EditorTemplates\BuilderSteps\Feature.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

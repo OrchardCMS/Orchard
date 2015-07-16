@@ -88,7 +88,7 @@
     <Compile Include="Providers\Executors\CommandStep.cs" />
     <Compile Include="ViewModels\ContentExecutionStepViewModel.cs" />
     <Compile Include="Providers\Executors\ContentStep.cs" />
-    <Compile Include="Providers\Executors\ContentSchemaStep.cs" />
+    <Compile Include="Providers\Executors\ContentDefinitionStep.cs" />
     <Compile Include="Providers\Executors\MigrationStep.cs" />
     <Compile Include="Providers\Executors\ModuleStep.cs" />
     <Compile Include="Providers\Executors\SettingsStep.cs" />

@@ -33,7 +33,7 @@ namespace Orchard.ImportExport.Providers.ExportActions {
         }
 
         public override dynamic UpdateEditor(dynamic shapeFactory, IUpdateModel updater) {
-            var builderSteps = _recipeBuilderSteps.OrderByDescending(x => x.Priority).Select(x => new ExportStepViewModel {
+            var builderSteps = _recipeBuilderSteps.OrderBy(x => x.Position).Select(x => new ExportStepViewModel {
                 Name = x.Name,
                 DisplayName = x.DisplayName,
                 Description = x.Description,

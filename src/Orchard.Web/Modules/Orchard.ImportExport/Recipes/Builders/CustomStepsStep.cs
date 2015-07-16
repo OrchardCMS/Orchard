@@ -30,7 +30,8 @@ namespace Orchard.ImportExport.Recipes.Builders {
             get { return T("Exports additional items."); }
         }
 
-        public override int Priority { get { return 60; } }
+        public override int Priority { get { return -50; } }
+        public override int Position { get { return 500; } }
 
         public IList<string> CustomSteps { get; set; }
 

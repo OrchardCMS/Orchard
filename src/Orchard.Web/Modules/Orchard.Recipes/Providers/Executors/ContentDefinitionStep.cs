@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Xml;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentTypes.Events;
@@ -7,14 +8,19 @@ using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
 
 namespace Orchard.Recipes.Providers.Executors {
-    public class ContentSchemaStep : RecipeExecutionStep {
+    public class ContentDefinitionStep : RecipeExecutionStep {
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly IContentDefinitionReader _contentDefinitionReader;
         private readonly IContentDefinitionEventHandler _contentDefinitonEventHandlers;
 
-        public override string Name { get { return "ContentSchema"; } }
+        public override string Name { get { return "ContentDefinition"; } }
 
-        public ContentSchemaStep(
+        public override IEnumerable<string> Names
+        {
+            get { return new[] {Name, "Metadata"}; }
+        }
+
+        public ContentDefinitionStep(
             IContentDefinitionManager contentDefinitionManager, 
             IContentDefinitionReader contentDefinitionReader, 
             IContentDefinitionEventHandler contentDefinitonEventHandlers) {

@@ -19,13 +19,15 @@ namespace Orchard.Recipes.Providers.Executors {
             _transactionManager = transactionManager;
         }
 
-        public override string Name
-        {
+        public override string Name {
             get { return "Content"; }
         }
 
-        public override LocalizedString DisplayName
-        {
+        public override IEnumerable<string> Names {
+            get { return new[] { Name, "Data" }; }
+        }
+
+        public override LocalizedString DisplayName {
             get { return T("Content"); }
         }
 
