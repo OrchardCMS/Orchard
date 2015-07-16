@@ -51,7 +51,7 @@ namespace Orchard.ImportExport.Providers.ImportActions {
                     File = request.Files["RecipeFile"];
                     ResetSite = viewModel.ResetSite;
 
-                    if (File == null)
+                    if (File == null || File.ContentLength == 0)
                         updater.AddModelError("RecipeFile", T("No recipe file selected."));
                 }
             }
