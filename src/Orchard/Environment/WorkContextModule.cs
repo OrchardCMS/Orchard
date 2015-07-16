@@ -23,6 +23,10 @@ namespace Orchard.Environment {
             builder.RegisterType<WorkContextProperty<HttpContextBase>>()
                 .As<WorkContextProperty<HttpContextBase>>()
                 .InstancePerMatchingLifetimeScope("work");
+                
+            builder.RegisterType<WorkContextProperty<HttpContextBase>>()
+                .As<WorkContextProperty<HttpContextBase>>()
+                .InstancePerMatchingLifetimeScope("shell");
 
             builder.Register(ctx => ctx.Resolve<WorkContextProperty<HttpContextBase>>().Value)
                 .As<HttpContextBase>()
