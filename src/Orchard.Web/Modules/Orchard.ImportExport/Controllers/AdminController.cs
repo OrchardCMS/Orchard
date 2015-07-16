@@ -53,6 +53,9 @@ namespace Orchard.ImportExport.Controllers {
             }
 
             if (ModelState.IsValid) {
+                // Sets the request timeout to 10 minutes to give enough time to execute custom recipes.
+                Services.WorkContext.HttpContext.Server.ScriptTimeout = 600;
+
                 var executionId = _importExportService.Import(new StreamReader(Request.Files["RecipeFile"].InputStream).ReadToEnd());
                 return RedirectToAction("ImportResult", new { executionId = executionId });
             }
