@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -35,13 +36,16 @@ namespace Orchard.ImportExport.Providers.ImportActions {
 
         public HttpPostedFileBase File { get; set; }
         public bool ResetSite { get; set; }
+        public string SuperUserPassword { get; set; }
 
         public override dynamic BuildEditor(dynamic shapeFactory) {
             return UpdateEditor(shapeFactory, null);
         }
 
         public override dynamic UpdateEditor(dynamic shapeFactory, IUpdateModel updater) {
-            var viewModel = new UploadRecipeViewModel();
+            var viewModel = new UploadRecipeViewModel {
+                SuperUserName = _orchardServices.WorkContext.CurrentSite.SuperUser
+            };
 
             if (updater != null) {
 
@@ -50,9 +54,17 @@ namespace Orchard.ImportExport.Providers.ImportActions {
 
                     File = request.Files["RecipeFile"];
                     ResetSite = viewModel.ResetSite;
+                    SuperUserPassword = viewModel.SuperUserPassword;
 
                     if (File == null || File.ContentLength == 0)
                         updater.AddModelError("RecipeFile", T("No recipe file selected."));
+
+                    if (ResetSite) {
+                        if(String.IsNullOrWhiteSpace(viewModel.SuperUserPassword))
+                            updater.AddModelError("SuperUserPassword", T("Please specify a new password for the super user."));
+                        else if(!String.Equals(viewModel.SuperUserPassword, viewModel.SuperUserPasswordConfirmation))
+                            updater.AddModelError("SuperUserPassword", T("The passwords do not match."));
+                    }
                 }
             }
 
@@ -71,7 +83,7 @@ namespace Orchard.ImportExport.Providers.ImportActions {
             var setupContext = new SetupContext {
                 DropExistingTables = true,
                 RecipeText = ReadRecipeFile(),
-                AdminPassword = "password",
+                AdminPassword = SuperUserPassword,
                 AdminUsername = _orchardServices.WorkContext.CurrentSite.SuperUser,
                 DatabaseConnectionString = _shellSettings.DataConnectionString,
                 DatabaseProvider = _shellSettings.DataProvider,

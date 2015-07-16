@@ -13,6 +13,16 @@
         @Html.Hint(T("Check this option to reset your site before executing the uploaded recipe."))
     </div>
     <div data-controllerid="@Html.FieldIdFor(m => m.ResetSite)">
+        <div>
+            @Html.LabelFor(m => m.SuperUserPassword, T("Super User Password"))
+            @Html.PasswordFor(m => m.SuperUserPassword, new {@class = "text medium"})
+            @Html.Hint(T("Specify a new password for the super user in case your recipe doesn't contain the current super user."))
+        </div>
+        <div>
+            @Html.LabelFor(m => m.SuperUserPasswordConfirmation, T("Confirm Super User Password"))
+            @Html.PasswordFor(m => m.SuperUserPasswordConfirmation, new { @class = "text medium" })
+            @Html.Hint(T("Repeat the password to make sure you didn't mistype anything."))
+        </div>
         <div class="message message-Warning">@T("This will delete your database tables. Please consider creating a backup first.")</div>
     </div>
 </fieldset>
