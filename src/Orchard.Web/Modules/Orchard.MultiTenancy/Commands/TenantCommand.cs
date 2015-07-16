@@ -112,8 +112,8 @@ namespace Orchard.MultiTenancy.Commands {
                     DataTablePrefix = DataTablePrefix,
                     RequestUrlHost = UrlHost,
                     RequestUrlPrefix = UrlPrefix,
-                    Themes = Themes.Split(';'),
-                    Modules = Modules.Split(';')
+                    Themes = Themes != null ? Themes.Split(';') : new string[] { },
+                    Modules = Modules != null ? Modules.Split(';') : new string[] { }
                 });
         }
 
