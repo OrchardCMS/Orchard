@@ -22,8 +22,11 @@ namespace Orchard.Recipes.Services {
             return null;
         }
 
-        public virtual dynamic UpdateEditor(dynamic shapeFactory, IUpdateModel updater, UpdateRecipeExecutionStepContext context) {
+        public virtual dynamic UpdateEditor(dynamic shapeFactory, IUpdateModel updater) {
             return null;
+        }
+
+        public virtual void UpdateStep(UpdateRecipeExecutionStepContext context) {
         }
 
         public abstract void Execute(RecipeExecutionContext context);

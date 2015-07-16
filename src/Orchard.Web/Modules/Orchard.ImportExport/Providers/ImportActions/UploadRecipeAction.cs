@@ -24,11 +24,11 @@ namespace Orchard.ImportExport.Providers.ImportActions {
         private readonly IEnumerable<IRecipeExecutionStep> _recipeExecutionSteps;
 
         public UploadRecipeAction(
-            IOrchardServices orchardServices, 
-            IImportExportService importExportService, 
-            ISetupService setupService, 
-            ShellSettings shellSettings, 
-            IFeatureManager featureManager, 
+            IOrchardServices orchardServices,
+            IImportExportService importExportService,
+            ISetupService setupService,
+            ShellSettings shellSettings,
+            IFeatureManager featureManager,
             IEnumerable<IRecipeExecutionStep> recipeExecutionSteps) {
 
             _orchardServices = orchardServices;
@@ -86,6 +86,17 @@ namespace Orchard.ImportExport.Providers.ImportActions {
                         }
                     }
 
+                    var stepUpdater = new Updater(updater, secondHalf => String.Format("{0}.{1}", Prefix, secondHalf));
+
+                    // Update the view model with non-submitted values.
+                    viewModel.SuperUserName = _orchardServices.WorkContext.CurrentSite.SuperUser;
+                    foreach (var stepViewModel in viewModel.RecipeExecutionSteps) {
+                        var step = _recipeExecutionSteps.Single(x => x.Name == stepViewModel.Name);
+                        stepViewModel.DisplayName = step.DisplayName;
+                        stepViewModel.Description = step.Description;
+                        stepViewModel.Editor = step.UpdateEditor(shapeFactory, stepUpdater);
+                    }
+
                     if (!isInValid) {
                         // Read recipe file.
                         RecipeDocument = XDocument.Parse(new StreamReader(file.InputStream).ReadToEnd());
@@ -93,20 +104,19 @@ namespace Orchard.ImportExport.Providers.ImportActions {
 
                         // Update execution steps.
                         var executionStepNames = viewModel.RecipeExecutionSteps.Where(x => x.IsSelected).Select(x => x.Name);
-                        var executionStepsQuery = 
+                        var executionStepsQuery =
                             from name in executionStepNames
                             where orchardElement.Element(name) != null
                             let provider = _recipeExecutionSteps.SingleOrDefault(x => x.Name == name)
                             where provider != null
                             select provider;
                         var executionSteps = executionStepsQuery.ToArray();
-                        var stepUpdater = new Updater(updater, secondHalf => String.Format("{0}.{1}", Prefix, secondHalf));
                         foreach (var executionStep in executionSteps) {
                             var context = new UpdateRecipeExecutionStepContext {
                                 RecipeDocument = RecipeDocument,
                                 Step = orchardElement.Element(executionStep.Name)
                             };
-                            executionStep.UpdateEditor(shapeFactory, stepUpdater, context);
+                            executionStep.UpdateStep(context);
                         }
                     }
                 }

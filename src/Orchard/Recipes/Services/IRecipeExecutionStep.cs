@@ -8,7 +8,8 @@ namespace Orchard.Recipes.Services {
         LocalizedString DisplayName { get; }
         LocalizedString Description { get; }
         dynamic BuildEditor(dynamic shapeFactory);
-        dynamic UpdateEditor(dynamic shapeFactory, IUpdateModel updater, UpdateRecipeExecutionStepContext context);
+        dynamic UpdateEditor(dynamic shapeFactory, IUpdateModel updater);
+        void UpdateStep(UpdateRecipeExecutionStepContext context);
         void Execute(RecipeExecutionContext context);
         
     }

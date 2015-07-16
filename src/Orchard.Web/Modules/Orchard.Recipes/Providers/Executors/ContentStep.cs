@@ -33,20 +33,26 @@ namespace Orchard.Recipes.Providers.Executors {
             get { return T("Provides additional coniguration for the Content recipe step."); }
         }
 
+        public int? BatchSize { get; set; }
+
         public override dynamic BuildEditor(dynamic shapeFactory) {
-            return UpdateEditor(shapeFactory, null, null);
+            return UpdateEditor(shapeFactory, null);
         }
 
-        public override dynamic UpdateEditor(dynamic shapeFactory, IUpdateModel updater, UpdateRecipeExecutionStepContext context) {
+        public override dynamic UpdateEditor(dynamic shapeFactory, IUpdateModel updater) {
             var viewModel = new ContentExecutionStepViewModel();
 
             if (updater != null) {
                 if (updater.TryUpdateModel(viewModel, Prefix, null, null)) {
-                    SetBatchSizeForDataStep(context.Step, viewModel.BatchSize);
+                    BatchSize = viewModel.BatchSize;
                 }
             }
 
             return shapeFactory.EditorTemplate(TemplateName: "ExecutionSteps/Content", Model: viewModel, Prefix: Prefix);
+        }
+
+        public override void UpdateStep(UpdateRecipeExecutionStepContext context) {
+            SetBatchSizeForDataStep(context.Step, BatchSize);
         }
 
         // <Data />
