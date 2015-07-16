@@ -5,6 +5,7 @@
     <Description>A recipe providing only the core Orchard framework, with limited end-user functionality. This is useful for development scenarios.</Description>
     <Author>The Orchard Team</Author>
     <WebSite>http://orchardproject.net</WebSite>
+      <Category>Default</Category>
     <Tags>developer</Tags>
     <Version>1.0</Version>
     <IsSetupRecipe>true</IsSetupRecipe>

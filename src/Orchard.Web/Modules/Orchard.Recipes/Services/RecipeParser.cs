@@ -2,20 +2,12 @@
 using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Linq;
-using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Recipes.Models;
 
 namespace Orchard.Recipes.Services {
-    public class RecipeParser : IRecipeParser {
-        public RecipeParser() {
-            Logger = NullLogger.Instance;
-            T = NullLocalizer.Instance;
-        }
-
-        public Localizer T { get; set; }
-        public ILogger Logger { get; set; }
-
+    public class RecipeParser : Component, IRecipeParser {
+        
         public Recipe ParseRecipe(string recipeText) {
             var recipe = new Recipe();
 
@@ -23,12 +15,11 @@ namespace Orchard.Recipes.Services {
                 throw new Exception("Recipe is empty");
             }
 
-            XElement recipeTree = XElement.Parse(recipeText, LoadOptions.PreserveWhitespace);
-
+            var recipeTree = XElement.Parse(recipeText, LoadOptions.PreserveWhitespace);
             var recipeSteps = new List<RecipeStep>();
 
             foreach (var element in recipeTree.Elements()) {
-                // Recipe metadata
+                // Recipe metadata.
                 if (element.Name.LocalName == "Recipe") {
                     foreach (var metadataElement in element.Elements()) {
                         switch (metadataElement.Name.LocalName) {
@@ -53,6 +44,9 @@ namespace Orchard.Recipes.Services {
                             case "ExportUtc":
                                 recipe.ExportUtc = !string.IsNullOrEmpty(metadataElement.Value) ? (DateTime?)XmlConvert.ToDateTime(metadataElement.Value, XmlDateTimeSerializationMode.Utc) : null;
                                 break;
+                            case "Category":
+                                recipe.Category = metadataElement.Value;
+                                break;
                             case "Tags":
                                 recipe.Tags = metadataElement.Value;
                                 break;
@@ -62,7 +56,7 @@ namespace Orchard.Recipes.Services {
                         }
                     }
                 }
-                // Recipe step
+                // Recipe step.
                 else {
                     var recipeStep = new RecipeStep { Name = element.Name.LocalName, Step = element };
                     recipeSteps.Add(recipeStep);

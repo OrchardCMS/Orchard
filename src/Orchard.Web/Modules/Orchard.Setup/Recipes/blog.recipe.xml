@@ -5,6 +5,7 @@
     <Description>A recipe providing the features you need for a personal blog site.</Description>
     <Author>The Orchard Team</Author>
     <WebSite>http://orchardproject.net</WebSite>
+      <Category>Default</Category>
     <Tags>blog</Tags>
     <Version>1.0</Version>
     <IsSetupRecipe>true</IsSetupRecipe>

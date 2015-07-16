@@ -5,6 +5,7 @@
     <Description>The default recipe for an Orchard site that includes pages, blogs, custom content types, comments, tags, widgets and basic navigation.</Description>
     <Author>The Orchard Team</Author>
     <WebSite>http://orchardproject.net</WebSite>
+      <Category>Default</Category>
     <Tags></Tags>
     <Version>1.0</Version>
     <IsSetupRecipe>true</IsSetupRecipe>
