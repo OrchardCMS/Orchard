@@ -14,7 +14,7 @@
 }
 
 <fieldset class="taxonomy-wrapper" data-name-prefix="@Html.FieldNameFor(m => m)" data-id-prefix="@Html.FieldIdFor(m => m)">
-    <legend @if(settings.Required) { <text>class="required"</text> }>@Model.DisplayName.CamelFriendly()</legend>
+    <legend @if(settings.Required) { <text>class="required"</text> }>@Model.DisplayName</legend>
     
     <div class="expando">
         @if (!String.IsNullOrWhiteSpace(Model.Settings.Hint))
@@ -45,7 +45,7 @@
             
         @if (!Model.Terms.Any()) {
             <div class="no-terms">
-                @T("There are no terms defined for {0} yet.", Model.DisplayName.CamelFriendly())
+                @T("There are no terms defined for {0} yet.", Model.DisplayName)
                 <a href="@Url.Action("Index", "TermAdmin", new { taxonomyId = Model.TaxonomyId, area = "Orchard.Taxonomies" })">@T("Create some terms")</a>
             </div>        
         }
