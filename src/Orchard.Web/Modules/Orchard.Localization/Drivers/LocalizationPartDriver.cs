@@ -61,8 +61,9 @@ namespace Orchard.Localization.Drivers {
         protected override DriverResult Editor(LocalizationPart part, IUpdateModel updater, dynamic shapeHelper) {
             var model = new EditLocalizationViewModel();
 
-            // Content culture has to be set only if it's not set already.
-            if (updater != null && updater.TryUpdateModel(model, TemplatePrefix, null, null) && GetCulture(part) == null) {
+            // GetCulture(part) is checked against null value, because the content culture has to be set only if it's not set already.
+            // model.SelectedCulture is checked against null value, because the editor group may not contain LocalizationPart when the content item is saved for the first time.
+            if (updater != null && updater.TryUpdateModel(model, TemplatePrefix, null, null) && GetCulture(part) == null && !string.IsNullOrEmpty(model.SelectedCulture)) {
                 _localizationService.SetContentCulture(part, model.SelectedCulture);
             }
 
