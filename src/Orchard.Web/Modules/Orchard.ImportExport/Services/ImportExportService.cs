@@ -10,7 +10,7 @@ namespace Orchard.ImportExport.Services {
         private readonly IOrchardServices _orchardServices;
         private readonly IAppDataFolder _appDataFolder;
         private readonly IRecipeBuilder _recipeBuilder;
-        private IRecipeParser _recipeParser;
+        private readonly IRecipeParser _recipeParser;
         private readonly IRecipeExecutor _recipeExecutor;
         private readonly IClock _clock;
         private const string ExportsDirectory = "Exports";
@@ -40,7 +40,7 @@ namespace Orchard.ImportExport.Services {
             var recipe = _recipeBuilder.Build(steps);
             return recipe;
         }
-        
+
         public string WriteExportFile(XDocument recipeDocument) {
             var exportFile = String.Format("Export-{0}-{1}.xml", _orchardServices.WorkContext.CurrentUser.UserName, _clock.UtcNow.Ticks);
             if (!_appDataFolder.DirectoryExists(ExportsDirectory)) {
