@@ -23,7 +23,7 @@ SET project=%2
 IF "%target%" == "" SET target=Build
 IF "%project%" =="" SET project=Orchard.proj
 
-msbuild /t:%target% %project%
+msbuild /t:%target% %project% /v:m
 
 pause
 
