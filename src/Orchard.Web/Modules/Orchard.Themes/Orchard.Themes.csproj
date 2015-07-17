@@ -69,12 +69,11 @@
     <Compile Include="Commands\ThemeCommands.cs" />
     <Compile Include="Drivers\DisableThemePartDriver.cs" />
     <Compile Include="Events\IExtensionDisplayEventHandler.cs" />
-    <Compile Include="ImportExport\CurrentThemeRecipeHandler.cs" />
-    <Compile Include="ImportExport\CurrentThemeExportHandler.cs" />
-    <Compile Include="ImportExport\CurrentThemeStep.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\ThemeEntry.cs" />
     <Compile Include="Models\DisableThemePart.cs" />
+    <Compile Include="Recipes\Executors\CurrentThemeStep.cs" />
+    <Compile Include="Recipes\Builders\CurrentThemeStep.cs" />
     <Compile Include="Recipes\Executors\ThemeStep.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Controllers\AdminController.cs" />

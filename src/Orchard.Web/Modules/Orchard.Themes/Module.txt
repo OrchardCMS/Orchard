@@ -16,4 +16,3 @@ Features:
         Name: Import Export Current Theme
         Description: Provides the capability to import and export the current theme.
         Category: Deployment
-        Dependencies: Orchard.ImportExport
