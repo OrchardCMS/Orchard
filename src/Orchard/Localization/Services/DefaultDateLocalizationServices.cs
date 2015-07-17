@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Globalization;
-using Orchard.ContentManagement;
 using Orchard.Localization.Models;
 using Orchard.Services;
-using Orchard.Settings;
 
 namespace Orchard.Localization.Services {
 
@@ -217,6 +215,9 @@ namespace Orchard.Localization.Services {
                     dateValue = new DateTime(DateTime.MinValue.Year, DateTime.MinValue.Month, DateTime.MinValue.Day, dateValue.Hour, dateValue.Minute, dateValue.Second, dateValue.Millisecond, dateValue.Kind);
                 }
             }
+
+            if (options.EnableTimeZoneConversion)
+                dateValue = DateTime.SpecifyKind(dateValue, DateTimeKind.Utc);
 
             return dateValue;
         }
