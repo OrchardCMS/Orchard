@@ -1,32 +1,39 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Xml.Linq;
 using Orchard.DynamicForms.Services;
 using Orchard.Environment.Extensions;
-using Orchard.Events;
+using Orchard.Localization;
+using Orchard.Recipes.Services;
 
-namespace Orchard.DynamicForms.ImportExport {
-    public interface IExportEventHandler : IEventHandler {
-        void Exporting(dynamic context);
-        void Exported(dynamic context);
-    }
-
+namespace Orchard.DynamicForms.Recipes.Builders {
     [OrchardFeature("Orchard.DynamicForms.ImportExport")]
-    public class FormsExportHandler : IExportEventHandler {
+    public class FormSubmissionsStep : RecipeBuilderStep {
         private readonly IFormService _formService;
-        public FormsExportHandler(IFormService formService) {
+        public FormSubmissionsStep(IFormService formService) {
             _formService = formService;
         }
 
-        public void Exporting(dynamic context) {
+        public override string Name
+        {
+            get { return "FormSubmissions"; }
         }
 
-        public void Exported(dynamic context) {
+        public override LocalizedString DisplayName
+        {
+            get { return T("Form Submissions"); }
+        }
 
-            if (!((IEnumerable<string>)context.ExportOptions.CustomSteps).Contains("Forms")) {
-                return;
-            }
+        public override LocalizedString Description
+        {
+            get { return T("Exports submitted forms."); }
+        }
 
+        public override dynamic BuildEditor(dynamic shapeFactory) {
+            // TODO: Implement an editor that enables the user to select which forms to export.
+            return null;
+        }
+
+        public override void Build(BuildContext context) {
             var submissions = _formService.GetSubmissions().ToArray();
 
             if (!submissions.Any()) {
@@ -35,7 +42,7 @@ namespace Orchard.DynamicForms.ImportExport {
 
             var forms = submissions.GroupBy(x => x.FormName);
             var root = new XElement("Forms");
-            context.Document.Element("Orchard").Add(root);
+            context.RecipeDocument.Element("Orchard").Add(root);
 
             foreach (var form in forms) {
                 root.Add(new XElement("Form",

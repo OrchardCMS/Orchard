@@ -6,20 +6,20 @@ using Orchard.Environment.Extensions;
 using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
 
-namespace Orchard.DynamicForms.ImportExport {
+namespace Orchard.DynamicForms.Recipes.Executors {
     [OrchardFeature("Orchard.DynamicForms.ImportExport")]
-    public class FormsImportHandler : Component, IRecipeHandler {
+    public class FormSubmissionsStep : RecipeExecutionStep {
         private readonly IFormService _formService;
-        public FormsImportHandler(IFormService formService) {
+        public FormSubmissionsStep(IFormService formService) {
             _formService = formService;
         }
 
-        public void ExecuteRecipeStep(RecipeContext recipeContext) {
-            if (!String.Equals(recipeContext.RecipeStep.Name, "Forms", StringComparison.OrdinalIgnoreCase)) {
-                return;
-            }
-
-            var formsElement = recipeContext.RecipeStep.Step.Elements();
+        public override string Name
+        {
+            get { return "Forms"; }
+        }
+        public override void Execute(RecipeExecutionContext context) {
+            var formsElement = context.RecipeStep.Step.Elements();
             foreach (var formElement in formsElement) {
                 var formName = formElement.Attr<string>("Name");
                 var submissionElements = formElement.Element("Submissions").Elements();
@@ -32,8 +32,6 @@ namespace Orchard.DynamicForms.ImportExport {
                     });
                 }
             }
-
-            recipeContext.Executed = true;
         }
     }
 }

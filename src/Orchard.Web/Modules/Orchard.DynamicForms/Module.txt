@@ -27,10 +27,10 @@ Features:
 		Category: Forms
 		Dependencies: Orchard.DynamicForms, Orchard.Projections
 	Orchard.DynamicForms.ImportExport:
-		Name: Dynamic Forms Import Export
+		Name: Dynamic Forms Submissions Import Export
 		Description: Enables the import and export of form submissions.
 		Category: Forms
-		Dependencies: Orchard.DynamicForms, Orchard.ImportExport
+		Dependencies: Orchard.DynamicForms
 	Orchard.DynamicForms.Activities.Validation:
 		Name: Dynamic Forms Validation Activities
 		Description: Adds activities for form validation.
