@@ -32,7 +32,7 @@ namespace Orchard.Layouts.Recipes.Executors {
                 element.BaseElementState = elementElement.Element("BaseElementState").Value;
             }
         }
-        
+
         private ElementBlueprint GetOrCreateElement(string typeName) {
             var element = _repository.Get(x => x.ElementTypeName == typeName);
 

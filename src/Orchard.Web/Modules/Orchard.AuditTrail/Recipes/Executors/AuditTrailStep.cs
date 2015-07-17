@@ -21,11 +21,10 @@ namespace Orchard.AuditTrail.Recipes.Executors {
             _wca = wca;
         }
 
-        public override string Name
-        {
+        public override string Name {
             get { return "AuditTrail"; }
         }
-        
+
         public override void Execute(RecipeExecutionContext context) {
             if (!_authorizer.Authorize(Permissions.ImportAuditTrail)) {
                 Logger.Warning("Blocked {0} from importing an audit trail because this user does not have the ImportauditTrail permission.", _wca.GetContext().CurrentUser.UserName);

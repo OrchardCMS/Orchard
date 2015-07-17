@@ -6,7 +6,7 @@ using Orchard.Localization;
 using Orchard.Recipes.Services;
 
 namespace Orchard.Layouts.Recipes.Builders {
-   
+
     public class CustomElementsStep : RecipeBuilderStep {
         private readonly IRepository<ElementBlueprint> _repository;
 
@@ -14,18 +14,15 @@ namespace Orchard.Layouts.Recipes.Builders {
             _repository = repository;
         }
 
-        public override string Name
-        {
+        public override string Name {
             get { return "CustomElements"; }
         }
 
-        public override LocalizedString DisplayName
-        {
+        public override LocalizedString DisplayName {
             get { return T("Custom Elements"); }
         }
 
-        public override LocalizedString Description
-        {
+        public override LocalizedString Description {
             get { return T("Exports custom defined elements."); }
         }
 

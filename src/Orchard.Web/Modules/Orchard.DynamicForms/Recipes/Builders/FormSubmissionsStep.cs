@@ -13,18 +13,15 @@ namespace Orchard.DynamicForms.Recipes.Builders {
             _formService = formService;
         }
 
-        public override string Name
-        {
+        public override string Name {
             get { return "FormSubmissions"; }
         }
 
-        public override LocalizedString DisplayName
-        {
+        public override LocalizedString DisplayName {
             get { return T("Form Submissions"); }
         }
 
-        public override LocalizedString Description
-        {
+        public override LocalizedString Description {
             get { return T("Exports submitted forms."); }
         }
 

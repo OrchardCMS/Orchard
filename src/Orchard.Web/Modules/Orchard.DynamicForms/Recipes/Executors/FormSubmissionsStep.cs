@@ -14,8 +14,7 @@ namespace Orchard.DynamicForms.Recipes.Executors {
             _formService = formService;
         }
 
-        public override string Name
-        {
+        public override string Name {
             get { return "Forms"; }
         }
         public override void Execute(RecipeExecutionContext context) {
