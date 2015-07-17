@@ -141,9 +141,6 @@
     <Content Include="Views\EditorTemplates\BuilderSteps\RecipeMetadata.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\EditorTemplates\BuilderSteps\Settings.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\EditorTemplates\ExecutionSteps\Content.cshtml" />
   </ItemGroup>
   <PropertyGroup>

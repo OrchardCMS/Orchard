@@ -23,20 +23,11 @@ namespace Orchard.Recipes.Providers.Builders {
         }
 
         public override LocalizedString Description {
-            get { return T("Exports settings."); }
+            get { return T("Exports settings. Please verify that you are not exporting confidential information, such as passwords or application keys."); }
         }
 
         public override int Priority { get { return 30; } }
         public override int Position { get { return 60; } }
-
-        public override dynamic BuildEditor(dynamic shapeFactory) {
-            return UpdateEditor(shapeFactory, null);
-        }
-
-        public override dynamic UpdateEditor(dynamic shapeFactory, IUpdateModel updater) {
-            var viewModel = new SiteSettingsStepViewModel();
-            return shapeFactory.EditorTemplate(TemplateName: "BuilderSteps/Settings", Model: viewModel, Prefix: Prefix);
-        }
 
         public override void Build(BuildContext context) {
             context.RecipeDocument.Element("Orchard").Add(ExportSiteSettings());
