@@ -8,31 +8,31 @@ using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
 using Orchard.Security;
 
-namespace Orchard.AuditTrail.ImportExport {
+namespace Orchard.AuditTrail.Recipes.Executors {
     [OrchardFeature("Orchard.AuditTrail.ImportExport")]
-    public class AuditTrailImportHandler : Component, IRecipeHandler {
+    public class AuditTrailStep : RecipeExecutionStep {
         private readonly IRepository<AuditTrailEventRecord> _auditTrailEventRepository;
         private readonly IAuthorizer _authorizer;
         private readonly IWorkContextAccessor _wca;
 
-        public AuditTrailImportHandler(IRepository<AuditTrailEventRecord> auditTrailEventRepository, IAuthorizer authorizer, IWorkContextAccessor wca) {
+        public AuditTrailStep(IRepository<AuditTrailEventRecord> auditTrailEventRepository, IAuthorizer authorizer, IWorkContextAccessor wca) {
             _auditTrailEventRepository = auditTrailEventRepository;
             _authorizer = authorizer;
             _wca = wca;
         }
 
-        public void ExecuteRecipeStep(RecipeContext recipeContext) {
-            if (!String.Equals(recipeContext.RecipeStep.Name, "AuditTrail", StringComparison.OrdinalIgnoreCase)) {
-                return;
-            }
-
+        public override string Name
+        {
+            get { return "AuditTrail"; }
+        }
+        
+        public override void Execute(RecipeExecutionContext context) {
             if (!_authorizer.Authorize(Permissions.ImportAuditTrail)) {
                 Logger.Warning("Blocked {0} from importing an audit trail because this user does not have the ImportauditTrail permission.", _wca.GetContext().CurrentUser.UserName);
-                recipeContext.Executed = false;
                 return;
             }
 
-            foreach (var eventElement in recipeContext.RecipeStep.Step.Elements()) {
+            foreach (var eventElement in context.RecipeStep.Step.Elements()) {
                 var record = new AuditTrailEventRecord {
                     EventName = eventElement.Attr<string>("Name"),
                     FullEventName = eventElement.Attr<string>("FullName"),
@@ -44,11 +44,9 @@ namespace Orchard.AuditTrail.ImportExport {
                     Comment = eventElement.El("Comment"),
                     EventData = eventElement.Element("EventData").ToString(),
                 };
-                
+
                 _auditTrailEventRepository.Create(record);
             }
-
-            recipeContext.Executed = true;
         }
     }
 }

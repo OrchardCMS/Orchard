@@ -4,26 +4,31 @@ using System.Xml.Linq;
 using Orchard.AuditTrail.Models;
 using Orchard.Data;
 using Orchard.Environment.Extensions;
-using Orchard.ImportExport.Services;
+using Orchard.Localization;
+using Orchard.Recipes.Services;
 
-namespace Orchard.AuditTrail.ImportExport {
+namespace Orchard.AuditTrail.Recipes.Builders {
     [OrchardFeature("Orchard.AuditTrail.ImportExport")]
-    public class AuditTrailExportEventHandler : IExportEventHandler {
+    public class AuditTrailExportEventHandler : RecipeBuilderStep {
         private readonly IRepository<AuditTrailEventRecord> _auditTrailEventRepository;
 
         public AuditTrailExportEventHandler(IRepository<AuditTrailEventRecord> auditTrailEventRepository) {
             _auditTrailEventRepository = auditTrailEventRepository;
         }
 
-        public void Exporting(ExportContext context) {
+        public override string Name {
+            get { return "AuditTrail"; }
         }
 
-        public void Exported(ExportContext context) {
+        public override LocalizedString DisplayName {
+            get { return T("AuditTrail"); }
+        }
 
-            if (!context.ExportOptions.CustomSteps.Contains("AuditTrail")) {
-                return;
-            }
+        public override LocalizedString Description {
+            get { return T("Exports audit trail events."); }
+        }
 
+        public override void Build(BuildContext context) {
             var records = _auditTrailEventRepository.Table.ToList();
 
             if (!records.Any()) {
@@ -31,7 +36,7 @@ namespace Orchard.AuditTrail.ImportExport {
             }
 
             var root = new XElement("AuditTrail");
-            context.Document.Element("Orchard").Add(root);
+            context.RecipeDocument.Element("Orchard").Add(root);
 
             foreach (var record in records) {
                 root.Add(new XElement("Event",
@@ -60,7 +65,7 @@ namespace Orchard.AuditTrail.ImportExport {
         }
 
         private static XElement ParseEventData(string eventData) {
-            if(String.IsNullOrWhiteSpace(eventData))
+            if (String.IsNullOrWhiteSpace(eventData))
                 return new XElement("EventData");
 
             return XElement.Parse(eventData);
