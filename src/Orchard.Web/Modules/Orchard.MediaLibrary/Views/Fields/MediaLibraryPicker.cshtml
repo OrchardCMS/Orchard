@@ -5,9 +5,10 @@
 @{
     var field = (MediaLibraryPickerField) Model.ContentField;
     string name = field.DisplayName;
+    string techName = field.Name;
     var contents = field.MediaParts;
 }
-<section class="media-library-picker-field media-library-picker-field-@name.HtmlClassify()">
+<section class="media-library-picker-field media-library-picker-field-@techName.HtmlClassify()">
     <h3>@name</h3>
     @foreach(var content in contents) {
     <div>
