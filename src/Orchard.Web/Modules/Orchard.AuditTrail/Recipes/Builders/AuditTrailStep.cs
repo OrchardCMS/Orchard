@@ -9,10 +9,10 @@ using Orchard.Recipes.Services;
 
 namespace Orchard.AuditTrail.Recipes.Builders {
     [OrchardFeature("Orchard.AuditTrail.ImportExport")]
-    public class AuditTrailExportEventHandler : RecipeBuilderStep {
+    public class AuditTrailStep : RecipeBuilderStep {
         private readonly IRepository<AuditTrailEventRecord> _auditTrailEventRepository;
 
-        public AuditTrailExportEventHandler(IRepository<AuditTrailEventRecord> auditTrailEventRepository) {
+        public AuditTrailStep(IRepository<AuditTrailEventRecord> auditTrailEventRepository) {
             _auditTrailEventRepository = auditTrailEventRepository;
         }
 
