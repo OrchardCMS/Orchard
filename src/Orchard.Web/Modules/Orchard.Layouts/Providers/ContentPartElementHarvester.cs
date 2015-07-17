@@ -57,7 +57,7 @@ namespace Orchard.Layouts.Providers {
                 ? contentTypeDefinition.Parts.Select(x => x.PartDefinition)
                 : _contentDefinitionManager.Value.ListPartDefinitions();
 
-            return parts.Where(p => p.Settings.GetModel<ContentPartLayoutSettings>().Placable);
+            return parts.Where(p => p.Settings.GetModel<ContentPartLayoutSettings>().Placeable);
         }
 
         private void Displaying(ElementDisplayContext context) {
