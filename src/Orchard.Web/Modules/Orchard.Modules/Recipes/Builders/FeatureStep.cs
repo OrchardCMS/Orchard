@@ -5,6 +5,7 @@ using Orchard.ContentManagement;
 using Orchard.Environment.Features;
 using Orchard.Localization;
 using Orchard.Modules.ViewModels;
+using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
 
 namespace Orchard.Modules.Recipes.Builders {
@@ -46,6 +47,11 @@ namespace Orchard.Modules.Recipes.Builders {
             }
 
             return shapeFactory.EditorTemplate(TemplateName: "BuilderSteps/Feature", Model: viewModel, Prefix: Prefix);
+        }
+
+        public override void Configure(RecipeBuilderStepConfigurationContext context) {
+            ExportEnabledFeatures = context.ConfigurationElement.Attr<bool>("ExportEnabledFeatures");
+            ExportDisabledFeatures = context.ConfigurationElement.Attr<bool>("ExportDisabledFeatures");
         }
 
         public override void Build(BuildContext context) {

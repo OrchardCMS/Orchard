@@ -1,5 +1,6 @@
 ﻿using Orchard.ContentManagement;
 using Orchard.Localization;
+using Orchard.Recipes.Models;
 
 namespace Orchard.Recipes.Services {
     public abstract class RecipeBuilderStep : Component, IRecipeBuilderStep {
@@ -19,6 +20,9 @@ namespace Orchard.Recipes.Services {
 
         public virtual dynamic UpdateEditor(dynamic shapeFactory, IUpdateModel updater) {
             return null;
+        }
+
+        public virtual void Configure(RecipeBuilderStepConfigurationContext context) {
         }
 
         public virtual void Build(BuildContext context) {}

@@ -1,4 +1,6 @@
-﻿using Orchard.ContentManagement;
+﻿using System.Xml.Linq;
+using Orchard.ContentManagement;
+using Orchard.ImportExport.Models;
 
 namespace Orchard.ImportExport.Services {
     public abstract class ExportAction : Component, IExportAction {
@@ -15,6 +17,9 @@ namespace Orchard.ImportExport.Services {
 
         public virtual dynamic UpdateEditor(dynamic shapeFactory, IUpdateModel updater) {
             return null;
+        }
+
+        public virtual void Configure(ExportActionConfigurationContext context) {
         }
 
         public abstract void Execute(ExportActionContext context);

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using Orchard.ContentManagement;
@@ -23,6 +24,7 @@ namespace Orchard.Recipes.Providers.Builders {
             _contentDefinitionManager = contentDefinitionManager;
             _orchardServices = orchardServices;
             _contentDefinitionWriter = contentDefinitionWriter;
+            VersionHistoryOptions = VersionHistoryOptions.Published;
         }
 
         public override string Name {
@@ -65,6 +67,21 @@ namespace Orchard.Recipes.Providers.Builders {
             }
 
             return shapeFactory.EditorTemplate(TemplateName: "BuilderSteps/Content", Model: viewModel, Prefix: Prefix);
+        }
+
+        public override void Configure(RecipeBuilderStepConfigurationContext context) {
+            var schemaContentTypeNames = context.ConfigurationElement.Attr("SchemaContentTypes");
+            var dataContentTypeNames = context.ConfigurationElement.Attr("DataContentTypes");
+            var versionHistoryOptions = context.ConfigurationElement.Attr<VersionHistoryOptions?>("VersionHistoryOptions");
+
+            if (!string.IsNullOrWhiteSpace(schemaContentTypeNames))
+                SchemaContentTypes = schemaContentTypeNames.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries).ToList();
+
+            if (!string.IsNullOrWhiteSpace(dataContentTypeNames))
+                DataContentTypes = dataContentTypeNames.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+
+            if(versionHistoryOptions != null)
+                VersionHistoryOptions = versionHistoryOptions.Value;
         }
 
         public override void Build(BuildContext context) {

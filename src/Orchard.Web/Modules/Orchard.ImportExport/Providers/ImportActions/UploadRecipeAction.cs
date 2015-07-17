@@ -8,9 +8,11 @@ using System.Xml.Linq;
 using Orchard.ContentManagement;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Features;
+using Orchard.ImportExport.Models;
 using Orchard.ImportExport.Services;
 using Orchard.ImportExport.ViewModels;
 using Orchard.Mvc;
+using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
 using Orchard.UI.Notify;
 
@@ -127,6 +129,24 @@ namespace Orchard.ImportExport.Providers.ImportActions {
             }
 
             return shapeFactory.EditorTemplate(TemplateName: "ImportActions/UploadRecipe", Model: viewModel, Prefix: Prefix);
+        }
+
+        public override void Configure(ImportActionConfigurationContext context) {
+            ResetSite = context.ConfigurationElement.Attr<bool>("ResetSite");
+            SuperUserPassword = context.ConfigurationElement.Attr("SuperUserPassword");
+
+            var executionStepsElement = context.ConfigurationElement.Element("RecipeExecutionSteps");
+            if (executionStepsElement == null)
+                return;
+
+            foreach (var step in _recipeExecutionSteps) {
+                var stepConfigurationElement = executionStepsElement.Element(step.Name);
+
+                if (stepConfigurationElement != null) {
+                    var stepContext = new RecipeExecutionStepConfigurationContext(stepConfigurationElement);
+                    step.Configure(stepContext);
+                }
+            }
         }
 
         public override void Execute(ImportActionContext context) {

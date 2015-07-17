@@ -11,6 +11,7 @@ namespace Orchard.Recipes.Services {
         LocalizedString Description { get; }
         dynamic BuildEditor(dynamic shapeFactory);
         dynamic UpdateEditor(dynamic shapeFactory, IUpdateModel updater);
+        void Configure(RecipeExecutionStepConfigurationContext context);
         void UpdateStep(UpdateRecipeExecutionStepContext context);
         void Execute(RecipeExecutionContext context);
         

@@ -31,6 +31,9 @@ namespace Orchard.Recipes.Services {
             return null;
         }
 
+        public virtual void Configure(RecipeExecutionStepConfigurationContext context) {
+        }
+
         public virtual void UpdateStep(UpdateRecipeExecutionStepContext context) {
         }
 

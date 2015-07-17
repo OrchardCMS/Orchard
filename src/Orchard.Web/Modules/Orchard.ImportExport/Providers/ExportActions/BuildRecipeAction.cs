@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
+using Orchard.ImportExport.Models;
 using Orchard.ImportExport.Services;
 using Orchard.ImportExport.ViewModels;
 using Orchard.Mvc;
@@ -62,6 +63,21 @@ namespace Orchard.ImportExport.Providers.ExportActions {
             }
 
             return shapeFactory.EditorTemplate(TemplateName: "ExportActions/BuildRecipe", Model: viewModel, Prefix: Prefix);
+        }
+
+        public override void Configure(ExportActionConfigurationContext context) {
+            var recipeBuilderStepsElement = context.ConfigurationElement.Element("RecipeBuilderSteps");
+            if (recipeBuilderStepsElement == null)
+                return;
+
+            foreach (var step in _recipeBuilderSteps) {
+                var stepConfigurationElement = recipeBuilderStepsElement.Element(step.Name);
+
+                if (stepConfigurationElement != null) {
+                    var stepContext = new RecipeBuilderStepConfigurationContext(stepConfigurationElement);
+                    step.Configure(stepContext);
+                }
+            }
         }
 
         public override void Execute(ExportActionContext context) {

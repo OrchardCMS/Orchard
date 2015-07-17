@@ -53,6 +53,10 @@ namespace Orchard.Recipes.Providers.Executors {
             return shapeFactory.EditorTemplate(TemplateName: "ExecutionSteps/Content", Model: viewModel, Prefix: Prefix);
         }
 
+        public override void Configure(RecipeExecutionStepConfigurationContext context) {
+            BatchSize = context.ConfigurationElement.Attr<int?>("BatchSize");
+        }
+
         public override void UpdateStep(UpdateRecipeExecutionStepContext context) {
             SetBatchSizeForDataStep(context.Step, BatchSize);
         }

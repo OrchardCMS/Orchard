@@ -1,5 +1,6 @@
 ﻿using Orchard.ContentManagement;
 using Orchard.Localization;
+using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
 using Orchard.Recipes.ViewModels;
 
@@ -53,6 +54,16 @@ namespace Orchard.Recipes.Providers.Builders {
             }
 
             return shapeFactory.EditorTemplate(TemplateName: "BuilderSteps/RecipeMetadata", Model: viewModel, Prefix: Prefix);
+        }
+
+        public override void Configure(RecipeBuilderStepConfigurationContext context) {
+            RecipeName = context.ConfigurationElement.Attr("RecipeName");
+            RecipeDescription = context.ConfigurationElement.Attr("RecipeDescription");
+            RecipeAuthor = context.ConfigurationElement.Attr("RecipeAuthor");
+            RecipeWebsite = context.ConfigurationElement.Attr("RecipeWebsite");
+            RecipeTags = context.ConfigurationElement.Attr("RecipeTags");
+            RecipeVersion = context.ConfigurationElement.Attr("RecipeVersion");
+            IsSetupRecipe = context.ConfigurationElement.Attr<bool>("IsSetupRecipe");
         }
 
         public override void Build(BuildContext context) {
