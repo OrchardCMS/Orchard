@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.ImportExport.Models;
@@ -8,6 +9,7 @@ using Orchard.Localization;
 using Orchard.Recipes.Services;
 
 namespace Orchard.ImportExport.Recipes.Builders {
+    [Obsolete("Implement IRecipeBuilderStep and IRecipeExecutionStep instead of implementing custom export steps.")]
     public class CustomStepsStep : RecipeBuilderStep {
         private readonly IEnumerable<IExportEventHandler> _exportEventHandlers;
         private readonly ICustomExportStep _customExportStep;
