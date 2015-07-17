@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Xml.Linq;
+﻿using System.Collections.Generic;
 using Autofac;
 using Moq;
 using NHibernate;
@@ -8,7 +6,6 @@ using NUnit.Framework;
 using Orchard.Caching;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
-using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.MetaData.Services;
 using Orchard.ContentManagement.Records;
 using Orchard.Core.Settings.Metadata;
@@ -86,23 +83,23 @@ namespace Orchard.Tests.Modules.ImportExport.Services {
         [Test]
         public void ImportSucceedsWhenRecipeContainsImportSteps() {
             Assert.DoesNotThrow(() => _importExportService.Import(
-                                                                    @"<Orchard>
-                                                                        <Recipe>
-                                                                        <Name>MyModuleInstaller</Name>
-                                                                        </Recipe>
-                                                                        <Settings />
-                                                                    </Orchard>"));
+@"<Orchard>
+    <Recipe>
+    <Name>MyModuleInstaller</Name>
+    </Recipe>
+    <Settings />
+</Orchard>"));
         }
 
         [Test]
-        public void ImportDoesntFailsWhenRecipeContainsNonImportSteps() {
+        public void ImportDoesntFailWhenRecipeContainsNonImportSteps() {
             Assert.DoesNotThrow(() => _importExportService.Import(
-                                                                    @"<Orchard>
-                                                                        <Recipe>
-                                                                        <Name>MyModuleInstaller</Name>
-                                                                        </Recipe>
-                                                                        <Module name=""MyModule"" />
-                                                                    </Orchard>"));
+@"<Orchard>
+    <Recipe>
+    <Name>MyModuleInstaller</Name>
+    </Recipe>
+    <Module name=""MyModule"" />
+</Orchard>"));
         }
     }
 

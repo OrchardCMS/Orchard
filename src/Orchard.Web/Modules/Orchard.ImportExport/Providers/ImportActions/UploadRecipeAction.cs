@@ -149,7 +149,7 @@ namespace Orchard.ImportExport.Providers.ImportActions {
         private string Setup() {
             var setupContext = new SetupContext {
                 DropExistingTables = true,
-                RecipeText = RecipeDocument.ToString(SaveOptions.DisableFormatting),
+                RecipeDocument = RecipeDocument,
                 AdminPassword = SuperUserPassword,
                 AdminUsername = _orchardServices.WorkContext.CurrentSite.SuperUser,
                 DatabaseConnectionString = _shellSettings.DataConnectionString,
@@ -162,7 +162,7 @@ namespace Orchard.ImportExport.Providers.ImportActions {
         }
 
         private string ExecuteRecipe() {
-            return _importExportService.Import(RecipeDocument.ToString(SaveOptions.DisableFormatting));
+            return _importExportService.Import(RecipeDocument);
         }
     }
 }

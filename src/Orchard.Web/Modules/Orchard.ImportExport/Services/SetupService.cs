@@ -181,7 +181,7 @@ namespace Orchard.ImportExport.Services
 
             // Execute recipe
             var recipeParser = environment.Resolve<IRecipeParser>();
-            var recipe = recipeParser.ParseRecipe(context.RecipeText);
+            var recipe = recipeParser.ParseRecipe(context.RecipeDocument);
             var recipeManager = environment.Resolve<IRecipeManager>();
             var executionId = recipeManager.Execute(recipe);
 

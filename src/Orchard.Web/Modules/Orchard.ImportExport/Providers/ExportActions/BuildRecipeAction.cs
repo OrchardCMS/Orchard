@@ -65,7 +65,7 @@ namespace Orchard.ImportExport.Providers.ExportActions {
         }
 
         public override void Execute(ExportActionContext context) {
-            var recipeDocument = _importExportService.ExportXml(RecipeBuilderSteps);
+            var recipeDocument = _importExportService.Export(RecipeBuilderSteps);
             var recipe = _recipeParser.ParseRecipe(recipeDocument);
             var exportFileName = GetExportFileName(recipe);
             var exportFilePath = _importExportService.WriteExportFile(recipeDocument);

@@ -7,21 +7,12 @@ using Orchard.Recipes.Models;
 
 namespace Orchard.Recipes.Services {
     public class RecipeParser : Component, IRecipeParser {
+
         public Recipe ParseRecipe(XDocument recipeDocument) {
-            return ParseRecipe(recipeDocument.ToString(SaveOptions.DisableFormatting));
-        }
-
-        public Recipe ParseRecipe(string recipeText) {
             var recipe = new Recipe();
-
-            if (string.IsNullOrEmpty(recipeText)) {
-                throw new Exception("Recipe is empty");
-            }
-
-            var recipeTree = XElement.Parse(recipeText, LoadOptions.PreserveWhitespace);
             var recipeSteps = new List<RecipeStep>();
 
-            foreach (var element in recipeTree.Elements()) {
+            foreach (var element in recipeDocument.Root.Elements()) {
                 // Recipe metadata.
                 if (element.Name.LocalName == "Recipe") {
                     foreach (var metadataElement in element.Elements()) {

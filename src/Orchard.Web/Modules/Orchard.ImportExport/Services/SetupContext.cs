@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Xml.Linq;
 
 namespace Orchard.ImportExport.Services {
     public class SetupContext {
@@ -9,7 +10,7 @@ namespace Orchard.ImportExport.Services {
         public string DatabaseConnectionString { get; set; }
         public string DatabaseTablePrefix { get; set; }
         public IEnumerable<string> EnabledFeatures { get; set; }
-        public string RecipeText { get; set; }
+        public XDocument RecipeDocument { get; set; }
         public bool DropExistingTables { get; set; }
     }
 }

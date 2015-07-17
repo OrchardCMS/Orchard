@@ -1,10 +1,8 @@
-﻿using System.Xml.Linq;
-using Orchard.Environment.Descriptor;
+﻿using Orchard.Environment.Descriptor;
 using Orchard.Recipes.Models;
 
 namespace Orchard.Recipes.Services {
     public class RecipeExecutor : Component, IRecipeExecutor {
-        private readonly IRecipeParser _recipeParser;
         private readonly IRecipeManager _recipeManager;
         private readonly IShellDescriptorManager _shellDescriptorManager;
 
@@ -13,19 +11,8 @@ namespace Orchard.Recipes.Services {
             IRecipeManager recipeManager,
             IShellDescriptorManager shellDescriptorManager) {
             
-            _recipeParser = recipeParser;
             _recipeManager = recipeManager;
             _shellDescriptorManager = shellDescriptorManager;
-        }
-
-        public string Execute(XDocument recipeDocument) {
-            var recipeText = recipeDocument.ToString();
-            return Execute(recipeText);
-        }
-
-        public string Execute(string recipeText) {
-            var recipe = _recipeParser.ParseRecipe(recipeText);
-            return Execute(recipe);
         }
 
         public string Execute(Recipe recipe) {

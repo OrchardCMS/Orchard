@@ -4,10 +4,15 @@ using Orchard.Recipes.Services;
 
 namespace Orchard.ImportExport.Services {
     public interface IImportExportService : IDependency {
-        string Import(string recipeText);
-        XDocument ExportXml(IEnumerable<IRecipeBuilderStep> steps);
-        string Export(IEnumerable<IRecipeBuilderStep> steps);
+        string Import(XDocument recipeDocument);
+        XDocument Export(IEnumerable<IRecipeBuilderStep> steps);
         string WriteExportFile(XDocument recipeDocument);
-        string WriteExportFile(string recipeText);
+    }
+
+    public static class ImportExportServiceExtensions {
+        public static string Import(this IImportExportService service, string recipeText) {
+            var recipeDocument = XDocument.Parse(recipeText, LoadOptions.PreserveWhitespace);
+            return service.Import(recipeDocument);
+        }
     }
 }
