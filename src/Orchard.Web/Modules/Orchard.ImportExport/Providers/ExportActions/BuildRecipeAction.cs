@@ -38,7 +38,7 @@ namespace Orchard.ImportExport.Providers.ExportActions {
                 DisplayName = x.DisplayName,
                 Description = x.Description,
                 Editor = x.BuildEditor(shapeFactory)
-            }).Where(x => x != null);
+            });
 
             var viewModel = new RecipeBuilderViewModel {
                 Steps = builderSteps.ToList()
