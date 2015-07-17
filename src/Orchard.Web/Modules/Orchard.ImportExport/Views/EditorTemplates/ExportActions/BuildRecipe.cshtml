@@ -16,9 +16,11 @@
                 <label for="@stepId" class="forcheckbox">@exportStep.DisplayName</label>
             </legend>
             @Html.Hint(@exportStep.Description)
-            <div data-controllerid="@stepId">
-                @Display(exportStep.Editor)
-            </div>
+            @if (exportStep.Editor != null) {
+                <div data-controllerid="@stepId">
+                    @Display(exportStep.Editor)
+                </div>
+            }
         </fieldset>
         exportStepIndex++;
         if (exportStepIndex < Model.Steps.Count) {
