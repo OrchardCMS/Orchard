@@ -53,6 +53,10 @@ namespace Orchard.Mvc {
             // thus preventing a StackOverflowException.
             var baseUrl = new Func<string>(() => siteService.GetSiteSettings().BaseUrl);
             var httpContextBase = context.Resolve<IHttpContextAccessor>().Current();
+            if (httpContextBase == null) {
+                context.Resolve<IWorkContextAccessor>().CreateWorkContextScope();
+                return context.Resolve<IHttpContextAccessor>().Current();
+            }
             context.Resolve<IWorkContextAccessor>().CreateWorkContextScope(httpContextBase);
             return httpContextBase;
         }
