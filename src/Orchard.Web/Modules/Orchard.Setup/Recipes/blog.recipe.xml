@@ -5,6 +5,7 @@
         <Description>A recipe providing the features you need for a personal blog site.</Description>
         <Author>The Orchard Team</Author>
         <WebSite>http://orchardproject.net</WebSite>
+        <Category>Default</Category>
         <Tags>blog</Tags>
         <Version>1.0</Version>
         <IsSetupRecipe>true</IsSetupRecipe>
@@ -19,7 +20,7 @@
                    Orchard.Taxonomies,Orchard.Workflows,
                    TheThemeMachine" />
 
-    <ContentSchema>
+    <ContentDefinition>
         <Types>
             <Page ContentTypeSettings.Draftable="True" TypeIndexing.Indexes="Search">
                 <TitlePart/>
@@ -39,7 +40,7 @@
         <Parts>
             <BodyPart BodyPartSettings.FlavorDefault="html" />
         </Parts>
-    </ContentSchema>
+    </ContentDefinition>
 
     <Settings>
         <SiteSettingsPart PageSize="20" PageTitleSeparator = " - " />

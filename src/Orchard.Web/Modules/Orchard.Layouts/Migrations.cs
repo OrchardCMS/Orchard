@@ -45,10 +45,10 @@ namespace Orchard.Layouts {
                 .WithSetting("Stereotype", "Widget")
                 .DisplayedAs("Layout Widget"));
 
-            ContentDefinitionManager.AlterPartDefinition("BodyPart", part => part.Placable());
-            ContentDefinitionManager.AlterPartDefinition("TitlePart", part => part.Placable());
-            ContentDefinitionManager.AlterPartDefinition("CommonPart", part => part.Placable());
-            ContentDefinitionManager.AlterPartDefinition("TagsPart", part => part.Placable());
+            ContentDefinitionManager.AlterPartDefinition("BodyPart", part => part.Placeable());
+            ContentDefinitionManager.AlterPartDefinition("TitlePart", part => part.Placeable());
+            ContentDefinitionManager.AlterPartDefinition("CommonPart", part => part.Placeable());
+            ContentDefinitionManager.AlterPartDefinition("TagsPart", part => part.Placeable());
 
             ContentDefinitionManager.AlterPartDefinition("ElementWrapperPart", part => part
                 .Attachable()

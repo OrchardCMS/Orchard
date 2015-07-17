@@ -7,14 +7,11 @@ using Orchard.Recipes.Models;
 
 namespace Orchard.Recipes.Services {
     public class RecipeParser : Component, IRecipeParser {
-        public Recipe ParseRecipe(XDocument recipeDocument) {
-            return ParseRecipe(recipeDocument.ToString(SaveOptions.DisableFormatting));
-        }
-
+        
         public Recipe ParseRecipe(string recipeText) {
             var recipe = new Recipe();
 
-            if (String.IsNullOrEmpty(recipeText)) {
+            if (string.IsNullOrEmpty(recipeText)) {
                 throw new Exception("Recipe is empty");
             }
 
@@ -22,7 +19,7 @@ namespace Orchard.Recipes.Services {
             var recipeSteps = new List<RecipeStep>();
 
             foreach (var element in recipeTree.Elements()) {
-                // Recipe metadata
+                // Recipe metadata.
                 if (element.Name.LocalName == "Recipe") {
                     foreach (var metadataElement in element.Elements()) {
                         switch (metadataElement.Name.LocalName) {
@@ -47,6 +44,9 @@ namespace Orchard.Recipes.Services {
                             case "ExportUtc":
                                 recipe.ExportUtc = !string.IsNullOrEmpty(metadataElement.Value) ? (DateTime?)XmlConvert.ToDateTime(metadataElement.Value, XmlDateTimeSerializationMode.Utc) : null;
                                 break;
+                            case "Category":
+                                recipe.Category = metadataElement.Value;
+                                break;
                             case "Tags":
                                 recipe.Tags = metadataElement.Value;
                                 break;
@@ -56,7 +56,7 @@ namespace Orchard.Recipes.Services {
                         }
                     }
                 }
-                // Recipe step
+                // Recipe step.
                 else {
                     var recipeStep = new RecipeStep { Name = element.Name.LocalName, Step = element };
                     recipeSteps.Add(recipeStep);
