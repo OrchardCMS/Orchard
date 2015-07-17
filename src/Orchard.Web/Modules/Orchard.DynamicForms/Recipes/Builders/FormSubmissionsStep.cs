@@ -1,12 +1,10 @@
 ﻿using System.Linq;
 using System.Xml.Linq;
 using Orchard.DynamicForms.Services;
-using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.Recipes.Services;
 
 namespace Orchard.DynamicForms.Recipes.Builders {
-    [OrchardFeature("Orchard.DynamicForms.ImportExport")]
     public class FormSubmissionsStep : RecipeBuilderStep {
         private readonly IFormService _formService;
         public FormSubmissionsStep(IFormService formService) {

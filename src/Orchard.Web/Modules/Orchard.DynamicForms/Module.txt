@@ -26,11 +26,6 @@ Features:
 		Description: Adds a Query form element to the sytem.
 		Category: Forms
 		Dependencies: Orchard.DynamicForms, Orchard.Projections
-	Orchard.DynamicForms.ImportExport:
-		Name: Dynamic Forms Submissions Import Export
-		Description: Enables the import and export of form submissions.
-		Category: Forms
-		Dependencies: Orchard.DynamicForms
 	Orchard.DynamicForms.Activities.Validation:
 		Name: Dynamic Forms Validation Activities
 		Description: Adds activities for form validation.

@@ -7,7 +7,6 @@ using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
 
 namespace Orchard.DynamicForms.Recipes.Executors {
-    [OrchardFeature("Orchard.DynamicForms.ImportExport")]
     public class FormSubmissionsStep : RecipeExecutionStep {
         private readonly IFormService _formService;
         public FormSubmissionsStep(IFormService formService) {
