@@ -12,6 +12,7 @@ using Orchard.ImportExport.Services;
 using Orchard.ImportExport.ViewModels;
 using Orchard.Mvc;
 using Orchard.Recipes.Services;
+using Orchard.UI.Notify;
 
 namespace Orchard.ImportExport.Providers.ImportActions {
     public class UploadRecipeAction : ImportAction {
@@ -136,6 +137,12 @@ namespace Orchard.ImportExport.Providers.ImportActions {
             _orchardServices.WorkContext.HttpContext.Server.ScriptTimeout = 600;
 
             var executionId = ResetSite ? Setup() : ExecuteRecipe();
+
+            if(executionId == null) {
+                _orchardServices.Notifier.Warning(T("The recipe contained no steps. No work was scheduled."));
+                return;
+            }
+
             context.ActionResult = new RedirectToRouteResult(new RouteValueDictionary(new { action = "ImportResult", controller = "Admin", area = "Orchard.ImportExport", executionId = executionId }));
         }
 

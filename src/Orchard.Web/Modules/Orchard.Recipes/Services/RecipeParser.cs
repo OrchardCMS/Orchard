@@ -7,7 +7,10 @@ using Orchard.Recipes.Models;
 
 namespace Orchard.Recipes.Services {
     public class RecipeParser : Component, IRecipeParser {
-        
+        public Recipe ParseRecipe(XDocument recipeDocument) {
+            return ParseRecipe(recipeDocument.ToString(SaveOptions.DisableFormatting));
+        }
+
         public Recipe ParseRecipe(string recipeText) {
             var recipe = new Recipe();
 

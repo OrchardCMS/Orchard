@@ -30,7 +30,11 @@ namespace Orchard.Recipes.Services {
 
         public string Execute(Recipe recipe) {
             var executionId = _recipeManager.Execute(recipe);
-            UpdateShell();
+
+            // Only need to update the shell if work was actually done.
+            if(executionId != null)
+                UpdateShell();
+
             return executionId;
         }
 
