@@ -1,23 +1,27 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using Orchard.Data;
 using Orchard.Layouts.Models;
 using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
 
-namespace Orchard.Layouts.ImportExport {
-    public class ElementsImportHandler : Component, IRecipeHandler {
+namespace Orchard.Layouts.Recipes.Executors {
+    public class CustomElementsStep : RecipeExecutionStep {
         private readonly IRepository<ElementBlueprint> _repository;
 
-        public ElementsImportHandler(IRepository<ElementBlueprint> repository) {
+        public CustomElementsStep(IRepository<ElementBlueprint> repository) {
             _repository = repository;
         }
 
-        public void ExecuteRecipeStep(RecipeContext recipeContext) {
-            if (!String.Equals(recipeContext.RecipeStep.Name, "LayoutElements", StringComparison.OrdinalIgnoreCase)) {
-                return;
-            }
+        public override string Name {
+            get { return "CustomElements"; }
+        }
 
-            foreach (var elementElement in recipeContext.RecipeStep.Step.Elements()) {
+        public override IEnumerable<string> Names {
+            get { return new[] { Name, "LayoutElements" }; }
+        }
+
+        public override void Execute(RecipeExecutionContext context) {
+            foreach (var elementElement in context.RecipeStep.Step.Elements()) {
                 var typeName = elementElement.Attribute("ElementTypeName").Value;
                 var element = GetOrCreateElement(typeName);
 
@@ -27,10 +31,8 @@ namespace Orchard.Layouts.ImportExport {
                 element.ElementCategory = elementElement.Attribute("ElementCategory").Value;
                 element.BaseElementState = elementElement.Element("BaseElementState").Value;
             }
-
-            recipeContext.Executed = true;
         }
-
+        
         private ElementBlueprint GetOrCreateElement(string typeName) {
             var element = _repository.Get(x => x.ElementTypeName == typeName);
 

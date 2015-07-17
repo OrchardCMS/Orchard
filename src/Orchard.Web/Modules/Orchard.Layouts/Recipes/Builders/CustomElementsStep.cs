@@ -1,40 +1,43 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Xml.Linq;
 using Orchard.Data;
-using Orchard.Events;
 using Orchard.Layouts.Models;
+using Orchard.Localization;
+using Orchard.Recipes.Services;
 
-namespace Orchard.Layouts.ImportExport {
-    public interface IExportEventHandler : IEventHandler {
-        void Exporting(dynamic context);
-        void Exported(dynamic context);
-    }
-
-    public class ElementsExportHandler : IExportEventHandler {
+namespace Orchard.Layouts.Recipes.Builders {
+   
+    public class CustomElementsStep : RecipeBuilderStep {
         private readonly IRepository<ElementBlueprint> _repository;
 
-        public ElementsExportHandler(IRepository<ElementBlueprint> repository) {
+        public CustomElementsStep(IRepository<ElementBlueprint> repository) {
             _repository = repository;
         }
 
-        public void Exporting(dynamic context) {
+        public override string Name
+        {
+            get { return "CustomElements"; }
         }
 
-        public void Exported(dynamic context) {
+        public override LocalizedString DisplayName
+        {
+            get { return T("Custom Elements"); }
+        }
 
-            if (!((IEnumerable<string>)context.ExportOptions.CustomSteps).Contains("LayoutElements")) {
-                return;
-            }
+        public override LocalizedString Description
+        {
+            get { return T("Exports custom defined elements."); }
+        }
 
+        public override void Build(BuildContext context) {
             var elements = _repository.Table.OrderBy(x => x.ElementTypeName).ToList();
 
             if (!elements.Any()) {
                 return;
             }
 
-            var root = new XElement("LayoutElements");
-            context.Document.Element("Orchard").Add(root);
+            var root = new XElement("CustomElements");
+            context.RecipeDocument.Element("Orchard").Add(root);
 
             foreach (var element in elements) {
                 root.Add(new XElement("Element",
