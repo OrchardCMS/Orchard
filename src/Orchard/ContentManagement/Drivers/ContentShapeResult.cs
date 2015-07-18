@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Orchard.ContentManagement.Handlers;
 using Orchard.DisplayManagement.Shapes;
 
@@ -30,7 +31,7 @@ namespace Orchard.ContentManagement.Drivers {
             if (string.IsNullOrEmpty(placement.Location) || placement.Location == "-")
                 return;
 
-            // parse group placement
+            // Parse group placement.
             var group = placement.GetGroup();
             if (!String.IsNullOrEmpty(group)) {
                 _groupId = group;
@@ -44,17 +45,17 @@ namespace Orchard.ContentManagement.Drivers {
 
             var newShape = _shapeBuilder(context);
 
-            // ignore it if the driver returned a null shape
-            if(newShape == null) {
+            // Ignore it if the driver returned a null shape.
+            if (newShape == null) {
                 return;
             }
 
-            // add a ContentPart property to the final shape 
+            // Add a ContentPart property to the final shape.
             if (ContentPart != null && newShape.ContentPart == null) {
                 newShape.ContentPart = ContentPart;
             }
 
-            // add a ContentField property to the final shape 
+            // Add a ContentField property to the final shape.
             if (ContentField != null && newShape.ContentField == null) {
                 newShape.ContentField = ContentField;
             }
@@ -63,8 +64,21 @@ namespace Orchard.ContentManagement.Drivers {
             newShapeMetadata.Prefix = _prefix;
             newShapeMetadata.DisplayType = displayType;
             newShapeMetadata.PlacementSource = placement.Source;
-            
-            // if a specific shape is provided, remove all previous alternates and wrappers
+            newShapeMetadata.Tab = placement.GetTab();
+
+            // If a tab name is specified, add it to the list of tabs on the parent shape so it can render them.
+            var tabs = (HashSet<string>)parentShape.Tabs;
+
+            if (tabs == null) {
+                tabs = new HashSet<string>();
+                parentShape.Tabs = tabs;
+            }
+
+            if (!String.IsNullOrEmpty(newShapeMetadata.Tab)) {
+                tabs.Add(newShapeMetadata.Tab);
+            }
+
+            // If a specific shape is provided, remove all previous alternates and wrappers.
             if (!String.IsNullOrEmpty(placement.ShapeType)) {
                 newShapeMetadata.Type = placement.ShapeType;
                 newShapeMetadata.Alternates.Clear();
@@ -79,7 +93,7 @@ namespace Orchard.ContentManagement.Drivers {
                 newShapeMetadata.Wrappers.Add(wrapper);
             }
 
-            // the zone name is in reference of Layout, e.g. /AsideSecond
+            // Check if the zone name is in reference of Layout, e.g. /AsideSecond.
             if (placement.IsLayoutZone()) {
                 parentShape = context.Layout;
             }
@@ -106,7 +120,7 @@ namespace Orchard.ContentManagement.Drivers {
         }
 
         public ContentShapeResult OnGroup(string groupId) {
-            _groupId=groupId;
+            _groupId = groupId;
             return this;
         }
 

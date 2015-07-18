@@ -282,8 +282,26 @@ namespace Orchard.Core.Shapes {
 
         [Shape]
         public void ContentZone(dynamic Display, dynamic Shape, TextWriter Output) {
-            foreach (var item in Order(Shape))
-                Output.Write(Display(item));
+            var unordered = ((IEnumerable<dynamic>)Shape).ToArray();
+            var tabbed = unordered.GroupBy(x => (string)x.Metadata.Tab);
+
+            if (tabbed.Count() > 1) {
+                foreach (var tab in tabbed) {
+                    var tabName = String.IsNullOrWhiteSpace(tab.Key) ? "Content" : tab.Key;
+                    var tabBuilder = new TagBuilder("div");
+                    tabBuilder.Attributes["id"] = "tab-" + tabName.HtmlClassify();
+                    tabBuilder.Attributes["data-tab"] = tabName;
+                    Output.Write(tabBuilder.ToString(TagRenderMode.StartTag));
+                    foreach (var item in Order(tab))
+                        Output.Write(Display(item));
+
+                    Output.Write(tabBuilder.ToString(TagRenderMode.EndTag));
+                }
+            }
+            else {
+                foreach (var item in Order(unordered))
+                    Output.Write(Display(item));
+            }
         }
 
         [Shape]

@@ -1,4 +1,16 @@
-﻿<div class="edit-item">
+﻿@{
+    var tabs = ((IEnumerable<string>)Model.Tabs).ToList();
+
+    // If we have any tabs, make sure we have at least the Content tab and that it is the first one,
+    // since that's where we will put antyhing else not part of a tab.
+    if (tabs.Any()) {
+        tabs.Remove("Content");
+        tabs.Insert(0, "Content");
+    }
+
+    Display.LocalNavigation(Tabs: tabs);
+}
+<div class="edit-item">
     <div class="edit-item-primary">
         @if (Model.Content != null) {
             <div class="edit-item-content">
