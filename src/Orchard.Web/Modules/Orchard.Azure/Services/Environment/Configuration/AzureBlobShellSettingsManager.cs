@@ -20,7 +20,11 @@ namespace Orchard.Azure.Services.Environment.Configuration {
         private readonly IShellSettingsManagerEventHandler _events;
 
         public AzureBlobShellSettingsManager(IMimeTypeProvider mimeTypeProvider, IShellSettingsManagerEventHandler events) {
-            _fileSystem = new AzureFileSystem(CloudConfigurationManager.GetSetting(Constants.ShellSettingsStorageConnectionStringSettingName), Constants.ShellSettingsContainerName, String.Empty, true, mimeTypeProvider);
+            var connectionString = CloudConfigurationManager.GetSetting(Constants.ShellSettingsStorageConnectionStringSettingName);
+            var containerName = CloudConfigurationManager.GetSetting(Constants.ShellSettingsContainerNameSettingName);
+            if (String.IsNullOrEmpty(containerName))
+                containerName = Constants.ShellSettingsDefaultContainerName;
+            _fileSystem = new AzureFileSystem(connectionString, containerName, String.Empty, true, mimeTypeProvider);
             _events = events;
             Logger = NullLogger.Instance;
         }

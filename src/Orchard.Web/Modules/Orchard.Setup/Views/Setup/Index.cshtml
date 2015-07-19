@@ -1,4 +1,5 @@
 ﻿@model Orchard.Setup.ViewModels.SetupViewModel
+@using Orchard.Recipes.Models;
 @{
     Script.Require("jQuery");
     Script.Require("ShapesBase");
@@ -7,6 +8,18 @@
 @{ 
     var groupedRecipes = Model.Recipes.Where(x => !String.IsNullOrWhiteSpace(x.Category)).GroupBy(x => x.Category);
     var unspecifiedCategoryRecipes = Model.Recipes.Where(x => String.IsNullOrWhiteSpace(x.Category)).ToList();
+}
+@helper RenderRecipeOptions(IEnumerable<Recipe> recipes) {
+        foreach (var recipe in recipes) {
+            var optionAttributes = new RouteValueDictionary {
+                    { "data-recipe-description", recipe.Description }
+                };
+            if (Model.Recipe == null && recipe.Name == "Default") {
+                optionAttributes["selected"] = "selected";
+            }
+            @Html.SelectOption(Model.Recipe, recipe.Name, recipe.Name, optionAttributes)
+        }
+    }
 }
 <h1>@Html.TitleForPage(T("Get Started").ToString())</h1>
 
@@ -83,17 +96,13 @@ if (!Model.DatabaseIsPreconfigured) {
             if (groupedRecipes.Count() > 1) {
             <optgroup label="@recipeGroup.Key"></optgroup>
             }
-            foreach (var recipe in recipeGroup.OrderBy(x => x.Name)) {
-                @Html.SelectOption(Model.Recipe, recipe.Name, recipe.Name, new { recipedescription = recipe.Description })
-            }
+            @RenderRecipeOptions(recipeGroup.OrderBy(x => x.Name))
         }
         @if (unspecifiedCategoryRecipes.Any()) {
             if (groupedRecipes.Any()) {
             <optgroup label="@T("Unspecified")"></optgroup>
             }
-            foreach (var recipe in unspecifiedCategoryRecipes.OrderBy(x => x.Name)) {
-                @Html.SelectOption(Model.Recipe, recipe.Name, recipe.Name, new { recipedescription = recipe.Description })
-            }
+            @RenderRecipeOptions(unspecifiedCategoryRecipes.OrderBy(x => x.Name))
         }
         </select>
     </div>
