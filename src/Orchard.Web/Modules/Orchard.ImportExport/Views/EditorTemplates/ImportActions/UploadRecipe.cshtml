@@ -5,8 +5,8 @@
 }
 @{
     var importOptions = new SelectListItem[] {
-        new SelectListItem { Text = T("Import").ToString(), Value = "false", Selected = !Model.ResetSite},
-        new SelectListItem { Text = T("Reset Site and run Setup").ToString(), Value = "true", Selected = Model.ResetSite},
+        new SelectListItem { Text = T("Import the uploaded recipe").ToString(), Value = "false", Selected = !Model.ResetSite},
+        new SelectListItem { Text = T("Reset the site and run setup using the uploaded recipe").ToString(), Value = "true", Selected = Model.ResetSite},
     };
 }
 <p>
@@ -34,12 +34,12 @@
         <div class="message message-Warning">@T("This will delete your database tables. Please consider creating a backup first.")</div>
         <div>
             @Html.LabelFor(m => m.SuperUserPassword, T("Super User Password"))
-            @Html.PasswordFor(m => m.SuperUserPassword, new {@class = "text medium"})
+            @Html.PasswordFor(m => m.SuperUserPassword, new {@class = "text"})
             @Html.Hint(T("Specify a new password for the super user in case your recipe doesn't contain the current super user."))
         </div>
         <div>
             @Html.LabelFor(m => m.SuperUserPasswordConfirmation, T("Confirm Super User Password"))
-            @Html.PasswordFor(m => m.SuperUserPasswordConfirmation, new {@class = "text medium"})
+            @Html.PasswordFor(m => m.SuperUserPasswordConfirmation, new {@class = "text"})
             @Html.Hint(T("Repeat the password to make sure you didn't mistype anything."))
         </div>
     </div>
