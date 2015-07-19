@@ -17,6 +17,7 @@ namespace Orchard.Recipes.Providers.Executors {
         public ContentStep(IOrchardServices orchardServices, ITransactionManager transactionManager) {
             _orchardServices = orchardServices;
             _transactionManager = transactionManager;
+            BatchSize = 64;
         }
 
         public override string Name {
@@ -42,7 +43,9 @@ namespace Orchard.Recipes.Providers.Executors {
         }
 
         public override dynamic UpdateEditor(dynamic shapeFactory, IUpdateModel updater) {
-            var viewModel = new ContentExecutionStepViewModel();
+            var viewModel = new ContentExecutionStepViewModel {
+                BatchSize = BatchSize
+            };
 
             if (updater != null) {
                 if (updater.TryUpdateModel(viewModel, Prefix, null, null)) {
