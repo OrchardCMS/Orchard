@@ -12,6 +12,11 @@
         }
     </div>
     <div class="edit-item-secondary group">
+        @if (Model.Actions != null) {
+            <div class="edit-item-actions">
+                @Display(Model.Actions)
+            </div>
+        }
         @if (Model.Sidebar != null) {
             <div class="edit-item-sidebar group">
                 @Display(Model.Sidebar)
@@ -19,11 +24,6 @@
         }
     </div>
 </div>
-@if (Model.Actions != null) {
-    <div class="edit-item-actions">
-        @Display(Model.Actions)
-    </div>
-}
 
 @if (!String.IsNullOrWhiteSpace(Request.QueryString["returnUrl"])) {
     @Html.Hidden("returnUrl", Request.QueryString["returnUrl"])
