@@ -54,7 +54,6 @@
         <fieldset class="recipe-builder-step recipe-builder-step-@step.Name.HtmlClassify()">
             <legend>
                 <input type="hidden" name="@Html.FieldNameFor(m => m.RecipeExecutionSteps[stepIndex].Name)" value="@Model.RecipeExecutionSteps[stepIndex].Name" />
-                @Html.CheckBoxFor(m => m.RecipeExecutionSteps[stepIndex].IsSelected)
                 <label for="@stepId" class="forcheckbox">@step.DisplayName</label>
             </legend>
             @Html.Hint(step.Description)

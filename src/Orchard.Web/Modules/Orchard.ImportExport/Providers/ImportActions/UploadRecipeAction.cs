@@ -107,7 +107,7 @@ namespace Orchard.ImportExport.Providers.ImportActions {
                         var orchardElement = RecipeDocument.Element("Orchard");
 
                         // Update execution steps.
-                        var executionStepNames = viewModel.RecipeExecutionSteps.Where(x => x.IsSelected).Select(x => x.Name);
+                        var executionStepNames = viewModel.RecipeExecutionSteps.Select(x => x.Name);
                         var executionStepsQuery =
                             from name in executionStepNames
                             where orchardElement.Element(name) != null
