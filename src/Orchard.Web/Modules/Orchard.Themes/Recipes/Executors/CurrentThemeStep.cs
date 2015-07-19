@@ -1,11 +1,8 @@
-using Orchard.Environment.Extensions;
 using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
 using Orchard.Themes.Services;
 
 namespace Orchard.Themes.Recipes.Executors {
-
-    [OrchardFeature("Orchard.Themes.ImportExportCurrentTheme")]
     public class CurrentThemeStep : RecipeExecutionStep {
         private readonly ISiteThemeService _siteThemeService;
 

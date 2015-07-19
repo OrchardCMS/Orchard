@@ -1,11 +1,9 @@
 ﻿using System.Xml.Linq;
-using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.Recipes.Services;
 using Orchard.Themes.Services;
 
 namespace Orchard.Themes.Recipes.Builders {
-    [OrchardFeature("Orchard.Themes.ImportExportCurrentTheme")]
     public class CurrentThemeStep : RecipeBuilderStep {
         private readonly ISiteThemeService _siteThemeService;
 
