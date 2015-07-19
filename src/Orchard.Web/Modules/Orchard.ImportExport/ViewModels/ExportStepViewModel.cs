@@ -7,5 +7,6 @@ namespace Orchard.ImportExport.ViewModels {
         public LocalizedString Description { get; set; }
         public bool IsSelected { get; set; }
         public dynamic Editor { get; set; }
+        public bool IsVisible { get; set; }
     }
 }

@@ -32,6 +32,10 @@ namespace Orchard.ImportExport.Recipes.Builders {
             get { return T("Exports additional items."); }
         }
 
+        public override bool IsVisible {
+            get { return CustomSteps.Any(); }
+        }
+
         public override int Priority { get { return -50; } }
         public override int Position { get { return 500; } }
 

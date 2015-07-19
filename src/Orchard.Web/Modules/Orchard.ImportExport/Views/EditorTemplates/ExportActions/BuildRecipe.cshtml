@@ -4,26 +4,27 @@
     Script.Require("ShapesBase");
 }
 @{
-    var exportStepIndex = 0;
-    foreach (var exportStep in Model.Steps) {
-        var stepName = Html.NameFor(m => m.Steps[exportStepIndex].IsSelected).ToString();
+    var stepIndex = 0;
+    var steps = Model.Steps.Where(x => x.IsVisible).ToArray();
+    foreach (var step in steps) {
+        var stepName = Html.NameFor(m => m.Steps[stepIndex].IsSelected).ToString();
         var stepId = stepName.HtmlClassify();
 
-        <fieldset class="recipe-builder-step recipe-builder-step-@exportStep.Name.HtmlClassify()">
+        <fieldset class="recipe-builder-step recipe-builder-step-@step.Name.HtmlClassify()">
             <legend>
-                <input type="hidden" name="@Html.NameFor(m => m.Steps[exportStepIndex].Name)" value="@Model.Steps[exportStepIndex].Name" />
+                <input type="hidden" name="@Html.NameFor(m => m.Steps[stepIndex].Name)" value="@steps[stepIndex].Name" />
                 <input type="checkbox" id="@stepId" name="@stepName" value="true" />
-                <label for="@stepId" class="forcheckbox">@exportStep.DisplayName</label>
+                <label for="@stepId" class="forcheckbox">@step.DisplayName</label>
             </legend>
-            @Html.Hint(@exportStep.Description)
-            @if (exportStep.Editor != null) {
+            @Html.Hint(step.Description)
+            @if (step.Editor != null) {
                 <div data-controllerid="@stepId">
-                    @Display(exportStep.Editor)
+                    @Display(step.Editor)
                 </div>
             }
         </fieldset>
-        exportStepIndex++;
-        if (exportStepIndex < Model.Steps.Count) {
+        stepIndex++;
+        if (stepIndex < steps.Count()) {
             <hr />
         }
     }
