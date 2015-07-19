@@ -33,7 +33,7 @@ namespace Orchard.Recipes.Providers.Executors {
         }
 
         public override LocalizedString Description {
-            get { return T("Provides additional coniguration for the Content recipe step."); }
+            get { return T("Provides additional configuration for the Content recipe step."); }
         }
 
         public int? BatchSize { get; set; }
