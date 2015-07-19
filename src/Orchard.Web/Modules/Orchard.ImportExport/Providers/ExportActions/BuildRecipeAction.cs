@@ -92,11 +92,18 @@ namespace Orchard.ImportExport.Providers.ExportActions {
         }
 
         private string GetExportFileName(Recipe recipe) {
-            return String.IsNullOrWhiteSpace(recipe.Name)
-                ? "export.xml"
-                : String.Format(recipe.IsSetupRecipe
-                    ? "{0}.recipe.xml"
-                    : "{0}.export.xml", recipe.Name.HtmlClassify());
+            string format;
+
+            if (String.IsNullOrWhiteSpace(recipe.Name) && String.IsNullOrWhiteSpace(recipe.Version))
+                format = "export.xml";
+            else if (String.IsNullOrWhiteSpace(recipe.Version))
+                format = "{0}.recipe.xml";
+            else if (String.IsNullOrWhiteSpace(recipe.Name))
+                format = "export-{1}.recipe.xml";
+            else
+                format = "{0}-{1}.recipe.xml";
+
+            return String.Format(format, recipe.Name.HtmlClassify(), recipe.Version);
         }
     }
 }
