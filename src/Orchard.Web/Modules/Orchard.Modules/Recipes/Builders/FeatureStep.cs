@@ -14,6 +14,7 @@ namespace Orchard.Modules.Recipes.Builders {
 
         public FeatureStep(IFeatureManager featureManager) {
             _featureManager = featureManager;
+            ExportEnabledFeatures = true;
         }
 
         public override string Name {
@@ -39,7 +40,10 @@ namespace Orchard.Modules.Recipes.Builders {
         }
 
         public override dynamic UpdateEditor(dynamic shapeFactory, IUpdateModel updater) {
-            var viewModel = new FeatureStepViewModel();
+            var viewModel = new FeatureStepViewModel {
+                ExportEnabledFeatures = ExportEnabledFeatures,
+                ExportDisabledFeatures = ExportDisabledFeatures
+            };
 
             if (updater != null && updater.TryUpdateModel(viewModel, Prefix, null, null)) {
                 ExportEnabledFeatures = viewModel.ExportEnabledFeatures;
