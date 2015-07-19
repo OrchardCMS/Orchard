@@ -10,15 +10,14 @@
     var unspecifiedCategoryRecipes = Model.Recipes.Where(x => String.IsNullOrWhiteSpace(x.Category)).ToList();
 }
 @helper RenderRecipeOptions(IEnumerable<Recipe> recipes) {
-        foreach (var recipe in recipes) {
-            var optionAttributes = new RouteValueDictionary {
-                    { "data-recipe-description", recipe.Description }
-                };
-            if (Model.Recipe == null && recipe.Name == "Default") {
-                optionAttributes["selected"] = "selected";
-            }
-            @Html.SelectOption(Model.Recipe, recipe.Name, recipe.Name, optionAttributes)
+    foreach (var recipe in recipes) {
+        var optionAttributes = new RouteValueDictionary {
+                { "data-recipe-description", recipe.Description }
+            };
+        if (Model.Recipe == null && recipe.Name == "Default") {
+            optionAttributes["selected"] = "selected";
         }
+        @Html.SelectOption(Model.Recipe, recipe.Name, recipe.Name, optionAttributes)
     }
 }
 <h1>@Html.TitleForPage(T("Get Started").ToString())</h1>
