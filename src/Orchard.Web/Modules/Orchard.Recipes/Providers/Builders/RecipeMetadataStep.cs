@@ -31,6 +31,7 @@ namespace Orchard.Recipes.Providers.Builders {
         public string RecipeAuthor { get; set; }
         public string RecipeWebsite { get; set; }
         public string RecipeTags { get; set; }
+        public string RecipeCategory { get; set; }
         public string RecipeVersion { get; set; }
         public bool IsSetupRecipe { get; set; }
 
@@ -49,6 +50,7 @@ namespace Orchard.Recipes.Providers.Builders {
                 RecipeAuthor = viewModel.RecipeAuthor;
                 RecipeWebsite = viewModel.RecipeWebsite;
                 RecipeTags = viewModel.RecipeTags;
+                RecipeCategory = viewModel.RecipeCategory;
                 RecipeVersion = viewModel.RecipeVersion;
                 IsSetupRecipe = viewModel.IsSetupRecipe;
             }
@@ -62,6 +64,7 @@ namespace Orchard.Recipes.Providers.Builders {
             RecipeAuthor = context.ConfigurationElement.Attr("RecipeAuthor");
             RecipeWebsite = context.ConfigurationElement.Attr("RecipeWebsite");
             RecipeTags = context.ConfigurationElement.Attr("RecipeTags");
+            RecipeCategory = context.ConfigurationElement.Attr("RecipeCategory");
             RecipeVersion = context.ConfigurationElement.Attr("RecipeVersion");
             IsSetupRecipe = context.ConfigurationElement.Attr<bool>("IsSetupRecipe");
         }
@@ -74,6 +77,7 @@ namespace Orchard.Recipes.Providers.Builders {
             recipeElement.SetElementValue("Author", RecipeAuthor);
             recipeElement.SetElementValue("WebSite", RecipeWebsite);
             recipeElement.SetElementValue("Tags", RecipeTags);
+            recipeElement.SetElementValue("Category", RecipeCategory);
             recipeElement.SetElementValue("Version", RecipeVersion);
             recipeElement.SetElementValue("IsSetupRecipe", IsSetupRecipe);
         }
