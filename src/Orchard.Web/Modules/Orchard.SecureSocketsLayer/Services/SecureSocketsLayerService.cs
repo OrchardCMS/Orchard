@@ -214,11 +214,12 @@ namespace Orchard.SecureSocketsLayer.Services {
             var settings = GetSettings();
             if (settings == null) return path;
             var insecureHostName = settings.InsecureHostName;
-            var builder = new UriBuilder(insecureHostName.Trim('/') + path) {
-                Scheme = Uri.UriSchemeHttp, 
-                Port = 80
+            int port = 80;
+            TryGetPort(insecureHostName, port, out port);
+            var builder = new UriBuilder(insecureHostName.Split(':').First().Trim('/') + path) {
+                Scheme = Uri.UriSchemeHttp,
+                Port = port
             };
-            SetPort(insecureHostName, builder);
             return builder.Uri.ToString();
         }
 
@@ -226,24 +227,28 @@ namespace Orchard.SecureSocketsLayer.Services {
             var settings = GetSettings();
             if (settings == null) return path;
             var secureHostName = settings.SecureHostName;
-            var builder = new UriBuilder(secureHostName.Trim('/') + path) {
+            int port = 443;
+            TryGetPort(secureHostName, port, out port);
+            var builder = new UriBuilder(secureHostName.Split(':').First().Trim('/') + path) {
                 Scheme = Uri.UriSchemeHttps, 
-                Port = 443
+                Port = port
             };
-            SetPort(secureHostName, builder);
             return builder.Uri.ToString();
         }
 
-        private static void SetPort(string hostName, UriBuilder builder) {
-            if (string.IsNullOrWhiteSpace(hostName)) return;
+        private static bool TryGetPort(string hostName, int defaultPort, out int port) {
+            bool ret = false;
+            port = defaultPort;
+            if (string.IsNullOrWhiteSpace(hostName)) return true;
             var splitSecuredHostName = hostName.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
             if (splitSecuredHostName.Length == 2) {
-                int port;
                 if (int.TryParse(splitSecuredHostName[1], NumberStyles.Integer, CultureInfo.InvariantCulture,
                     out port)) {
-                    builder.Port = port;
+                    ret = true;
                 }
             }
+            else ret = true;
+            return ret;
         }
     }
 }
