@@ -28,7 +28,7 @@ namespace Orchard.ContentManagement.Drivers {
 
         private void ApplyImplementation(BuildShapeContext context, string displayType) {
             var placement = context.FindPlacement(_shapeType, _differentiator, _defaultLocation);
-            if (string.IsNullOrEmpty(placement.Location) || placement.Location == "-")
+            if (String.IsNullOrEmpty(placement.Location) || placement.Location == "-")
                 return;
 
             // Parse group placement.
@@ -37,7 +37,7 @@ namespace Orchard.ContentManagement.Drivers {
                 _groupId = group;
             }
 
-            if (!string.Equals(context.GroupId ?? "", _groupId ?? "", StringComparison.OrdinalIgnoreCase))
+            if (!String.Equals(context.GroupId ?? "", _groupId ?? "", StringComparison.OrdinalIgnoreCase))
                 return;
 
             dynamic parentShape = context.Shape;
@@ -65,19 +65,7 @@ namespace Orchard.ContentManagement.Drivers {
             newShapeMetadata.DisplayType = displayType;
             newShapeMetadata.PlacementSource = placement.Source;
             newShapeMetadata.Tab = placement.GetTab();
-
-            // If a tab name is specified, add it to the list of tabs on the parent shape so it can render them.
-            var tabs = (HashSet<string>)parentShape.Tabs;
-
-            if (tabs == null) {
-                tabs = new HashSet<string>();
-                parentShape.Tabs = tabs;
-            }
-
-            if (!String.IsNullOrEmpty(newShapeMetadata.Tab)) {
-                tabs.Add(newShapeMetadata.Tab);
-            }
-
+            
             // If a specific shape is provided, remove all previous alternates and wrappers.
             if (!String.IsNullOrEmpty(placement.ShapeType)) {
                 newShapeMetadata.Type = placement.ShapeType;

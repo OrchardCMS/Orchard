@@ -345,6 +345,30 @@ namespace Orchard.Core.Shapes {
             return ordering.Select(ordered => ordered.item).ToList();
         }
 
+        public static IEnumerable<string> HarvestAndSortTabs(IEnumerable<dynamic> shapes) {
+            var orderedShapes = Order(shapes).ToArray();
+            var tabs = new List<string>();
+
+            foreach (var shape in orderedShapes) {
+                var tab = (string)shape.Metadata.Tab;
+
+                if (String.IsNullOrEmpty(tab))
+                    continue;
+
+                if(!tabs.Contains(tab))
+                    tabs.Add(tab);
+            }
+
+            // If we have any tabs, make sure we have at least the Content tab and that it is the first one,
+            // since that's where we will put anything else not part of a tab.
+            if (tabs.Any()) {
+                tabs.Remove("Content");
+                tabs.Insert(0, "Content");
+            }
+
+            return tabs;
+        }
+
         [Shape]
         public void HeadScripts(dynamic Display, TextWriter Output) {
             WriteResources(Display, Output, "script", ResourceLocation.Head, null);

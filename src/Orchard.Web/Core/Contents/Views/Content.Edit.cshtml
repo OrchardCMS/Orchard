@@ -1,13 +1,6 @@
-﻿@{
-    var tabs = ((IEnumerable<string>)Model.Tabs).ToList();
-
-    // If we have any tabs, make sure we have at least the Content tab and that it is the first one,
-    // since that's where we will put antyhing else not part of a tab.
-    if (tabs.Any()) {
-        tabs.Remove("Content");
-        tabs.Insert(0, "Content");
-    }
-
+﻿@using Orchard.Core.Shapes
+@{
+    var tabs = (IEnumerable<string>)CoreShapes.HarvestAndSortTabs(Model.Content);
     Display.LocalNavigation(Tabs: tabs);
 }
 <div class="edit-item">
@@ -19,11 +12,6 @@
         }
     </div>
     <div class="edit-item-secondary group">
-        @if (Model.Actions != null) {
-            <div class="edit-item-actions">
-                @Display(Model.Actions)
-            </div>
-        }
         @if (Model.Sidebar != null) {
             <div class="edit-item-sidebar group">
                 @Display(Model.Sidebar)
@@ -31,6 +19,11 @@
         }
     </div>
 </div>
+@if (Model.Actions != null) {
+    <div class="edit-item-actions">
+        @Display(Model.Actions)
+    </div>
+}
 
 @if (!String.IsNullOrWhiteSpace(Request.QueryString["returnUrl"])) {
     @Html.Hidden("returnUrl", Request.QueryString["returnUrl"])
