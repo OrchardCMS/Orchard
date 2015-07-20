@@ -67,7 +67,7 @@ namespace Orchard.ImportExport.Providers.ExportActions {
         }
 
         public override void Configure(ExportActionConfigurationContext context) {
-            var recipeBuilderStepsElement = context.ConfigurationElement.Element("RecipeBuilderSteps");
+            var recipeBuilderStepsElement = context.ConfigurationElement.Element("Steps");
             if (recipeBuilderStepsElement == null)
                 return;
 

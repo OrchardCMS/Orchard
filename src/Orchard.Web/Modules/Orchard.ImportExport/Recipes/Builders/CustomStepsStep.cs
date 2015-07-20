@@ -62,7 +62,7 @@ namespace Orchard.ImportExport.Recipes.Builders {
         }
 
         public override void Configure(RecipeBuilderStepConfigurationContext context) {
-            var steps = (context.ConfigurationElement.Attr("CustomSteps") ?? "").Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries);
+            var steps = (context.ConfigurationElement.Attr("Steps") ?? "").Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries);
             CustomSteps = steps.ToList();
         }
 

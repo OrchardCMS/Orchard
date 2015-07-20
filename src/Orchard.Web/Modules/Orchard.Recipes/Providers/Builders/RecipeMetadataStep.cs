@@ -1,4 +1,5 @@
-﻿using Orchard.ContentManagement;
+﻿using System.Xml;
+using Orchard.ContentManagement;
 using Orchard.Localization;
 using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
@@ -59,13 +60,13 @@ namespace Orchard.Recipes.Providers.Builders {
         }
 
         public override void Configure(RecipeBuilderStepConfigurationContext context) {
-            RecipeName = context.ConfigurationElement.Attr("RecipeName");
-            RecipeDescription = context.ConfigurationElement.Attr("RecipeDescription");
-            RecipeAuthor = context.ConfigurationElement.Attr("RecipeAuthor");
-            RecipeWebsite = context.ConfigurationElement.Attr("RecipeWebsite");
-            RecipeTags = context.ConfigurationElement.Attr("RecipeTags");
-            RecipeCategory = context.ConfigurationElement.Attr("RecipeCategory");
-            RecipeVersion = context.ConfigurationElement.Attr("RecipeVersion");
+            RecipeName = context.ConfigurationElement.Attr("Name");
+            RecipeDescription = context.ConfigurationElement.Attr("Description");
+            RecipeAuthor = context.ConfigurationElement.Attr("Author");
+            RecipeWebsite = context.ConfigurationElement.Attr("Website");
+            RecipeTags = context.ConfigurationElement.Attr("Tags");
+            RecipeCategory = context.ConfigurationElement.Attr("Category");
+            RecipeVersion = context.ConfigurationElement.Attr("Version");
             IsSetupRecipe = context.ConfigurationElement.Attr<bool>("IsSetupRecipe");
         }
 

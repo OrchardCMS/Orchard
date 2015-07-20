@@ -135,7 +135,7 @@ namespace Orchard.ImportExport.Providers.ImportActions {
             ResetSite = context.ConfigurationElement.Attr<bool>("ResetSite");
             SuperUserPassword = context.ConfigurationElement.Attr("SuperUserPassword");
 
-            var executionStepsElement = context.ConfigurationElement.Element("RecipeExecutionSteps");
+            var executionStepsElement = context.ConfigurationElement.Element("Steps");
             if (executionStepsElement == null)
                 return;
 
