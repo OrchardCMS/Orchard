@@ -110,26 +110,17 @@ namespace Orchard.Autoroute.Drivers {
         }
 
         protected override void Importing(AutoroutePart part, ContentManagement.Handlers.ImportContentContext context) {
-            var displayAlias = context.Attribute(part.PartDefinition.Name, "Alias");
-            if (displayAlias != null) {
-                part.DisplayAlias = displayAlias;
-            }
-
-            var customPattern = context.Attribute(part.PartDefinition.Name, "CustomPattern");
-            if (customPattern != null) {
-                part.CustomPattern = customPattern;
-            }
-
-            var useCustomPattern = context.Attribute(part.PartDefinition.Name, "UseCustomPattern");
-            if (useCustomPattern != null) {
-                part.UseCustomPattern = bool.Parse(useCustomPattern);
-            }
+            context.ImportAttribute(part.PartDefinition.Name, "Alias", x => part.DisplayAlias = x);
+            context.ImportAttribute(part.PartDefinition.Name, "CustomPattern", x => part.CustomPattern = x);
+            context.ImportAttribute(part.PartDefinition.Name, "UseCustomPattern", x => part.UseCustomPattern = XmlHelper.Parse<bool>(x));
+            context.ImportAttribute(part.PartDefinition.Name, "Identifier", x => part.Identifier = x);
         }
 
         protected override void Exporting(AutoroutePart part, ContentManagement.Handlers.ExportContentContext context) {
             context.Element(part.PartDefinition.Name).SetAttributeValue("Alias", String.IsNullOrEmpty(part.Record.DisplayAlias) ? "/" : part.Record.DisplayAlias);
             context.Element(part.PartDefinition.Name).SetAttributeValue("CustomPattern", part.Record.CustomPattern);
             context.Element(part.PartDefinition.Name).SetAttributeValue("UseCustomPattern", part.Record.UseCustomPattern);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Identifier", part.Record.Identifier);
         }
     }
 }

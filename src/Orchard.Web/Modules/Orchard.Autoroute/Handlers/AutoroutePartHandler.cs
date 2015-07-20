@@ -5,6 +5,7 @@ using Orchard.ContentManagement.Handlers;
 using Orchard.Autoroute.Models;
 using Orchard.Data;
 using Orchard.Autoroute.Services;
+using Orchard.Core.Common.Models;
 using Orchard.Localization;
 using Orchard.UI.Notify;
 
@@ -25,28 +26,30 @@ namespace Orchard.Autoroute.Handlers {
             _autorouteService = autorouteService;
             _orchardServices = orchardServices;
 
+            OnLoaded<AutoroutePart>(AssignIdentity);
             OnUpdated<AutoroutePart>((ctx, part) => CreateAlias(part));
-
             OnCreated<AutoroutePart>((ctx, part) => {
-                // non-draftable items
+                // Non-draftable items.
                 if (part.ContentItem.VersionRecord == null) {
                     PublishAlias(part);
                 }
             });
-
-            // OnVersioned<AutoroutePart>((ctx, part1, part2) => CreateAlias(part1));
-
+            
             OnPublished<AutoroutePart>((ctx, part) => PublishAlias(part));
 
-            // Remove alias if removed or unpublished
+            // Remove alias if removed or unpublished.
             OnRemoved<AutoroutePart>((ctx, part) => RemoveAlias(part));
             OnUnpublished<AutoroutePart>((ctx, part) => RemoveAlias(part));
 
-            // Register alias as identity
+            // Register alias as identity.
             OnGetContentItemMetadata<AutoroutePart>((ctx, part) => {
-                if (part.DisplayAlias != null)
-                    ctx.Metadata.Identity.Add("alias", part.DisplayAlias);
+                ctx.Metadata.Identity.Add("identifier", part.Identifier);
             });
+        }
+
+        private void AssignIdentity(LoadContentContext loadContentContext, AutoroutePart part) {
+            if(String.IsNullOrWhiteSpace(part.Identifier))
+                part.Identifier = Guid.NewGuid().ToString("n");
         }
 
         private void CreateAlias(AutoroutePart part) {
@@ -56,15 +59,15 @@ namespace Orchard.Autoroute.Handlers {
         private void PublishAlias(AutoroutePart part) {
             ProcessAlias(part);
 
-            // should it become the home page ?
+            // Should it become the home page?
             if (part.DisplayAlias == "/") {
                 part.DisplayAlias = String.Empty;
 
-                // regenerate the alias for the previous home page
+                // Regenerate the alias for the previous home page.
                 var currentHomePages = _orchardServices.ContentManager.Query<AutoroutePart, AutoroutePartRecord>().Where(x => x.DisplayAlias == "").List();
                 foreach (var current in currentHomePages.Where(x => x.Id != part.Id)) {
                     if (current != null) {
-                        current.CustomPattern = String.Empty; // force the regeneration
+                        current.CustomPattern = String.Empty; // Force the regeneration.
                         current.DisplayAlias = _autorouteService.Value.GenerateAlias(current);
 
                         // we changed the alias of the previous homepage, so publish this change if the content item was published.
@@ -79,19 +82,19 @@ namespace Orchard.Autoroute.Handlers {
         }
 
         private void ProcessAlias(AutoroutePart part) {
-            // generate an alias if one as not already been entered
+            // Generate an alias if one as not already been entered.
             if (String.IsNullOrWhiteSpace(part.DisplayAlias)) {
                 part.DisplayAlias = _autorouteService.Value.GenerateAlias(part);
             }
 
-            // if the generated alias is empty, compute a new one 
+            // If the generated alias is empty, compute a new one.
             if (String.IsNullOrWhiteSpace(part.DisplayAlias)) {
                 _autorouteService.Value.ProcessPath(part);
                 _orchardServices.Notifier.Warning(T("The permalink could not be generated, a new slug has been defined: \"{0}\"", part.Path));
                 return;
             }
 
-            // check for permalink conflict, unless we are trying to set the home page
+            // Check for permalink conflict, unless we are trying to set the home page.
             if (part.DisplayAlias != "/") {
                 var previous = part.Path;
                 if (!_autorouteService.Value.ProcessPath(part))
