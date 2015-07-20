@@ -83,6 +83,12 @@ namespace Orchard.Recipes.Providers.Builders {
             VersionHistoryOptions = versionHistoryOptions;
         }
 
+        public override void ConfigureDefault() {
+            var contentTypeDefinitions = _contentDefinitionManager.ListTypeDefinitions().OrderBy(x => x.Name).ToList();
+            SchemaContentTypes = DataContentTypes = contentTypeDefinitions.Select(x => x.Name).ToList();
+            VersionHistoryOptions = VersionHistoryOptions.Published;
+        }
+
         public override void Build(BuildContext context) {
             var dataContentTypes = DataContentTypes;
             var schemaContentTypes = SchemaContentTypes;

@@ -58,6 +58,11 @@ namespace Orchard.Modules.Recipes.Builders {
             ExportDisabledFeatures = context.ConfigurationElement.Attr<bool>("ExportDisabledFeatures");
         }
 
+        public override void ConfigureDefault() {
+            ExportEnabledFeatures = true;
+            ExportDisabledFeatures = false;
+        }
+
         public override void Build(BuildContext context) {
             if (!ExportEnabledFeatures && !ExportDisabledFeatures)
                 return;

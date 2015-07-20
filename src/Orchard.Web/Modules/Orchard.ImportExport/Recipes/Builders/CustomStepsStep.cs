@@ -66,6 +66,10 @@ namespace Orchard.ImportExport.Recipes.Builders {
             CustomSteps = steps.ToList();
         }
 
+        public override void ConfigureDefault() {
+            _customExportStep.Register(CustomSteps);
+        }
+
         public override void Build(BuildContext context) {
             var exportContext = new ExportContext {
                 Document = context.RecipeDocument,

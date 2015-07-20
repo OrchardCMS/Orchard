@@ -23,6 +23,7 @@ namespace Orchard.Recipes.Services {
         dynamic BuildEditor(dynamic shapeFactory);
         dynamic UpdateEditor(dynamic shapeFactory, IUpdateModel updater);
         void Configure(RecipeBuilderStepConfigurationContext configurationElement);
+        void ConfigureDefault();
         void Build(BuildContext context);
     }
 }

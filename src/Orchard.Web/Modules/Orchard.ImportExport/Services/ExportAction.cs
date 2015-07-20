@@ -1,5 +1,4 @@
-﻿using System.Xml.Linq;
-using Orchard.ContentManagement;
+﻿using Orchard.ContentManagement;
 using Orchard.ImportExport.Models;
 
 namespace Orchard.ImportExport.Services {
@@ -20,6 +19,9 @@ namespace Orchard.ImportExport.Services {
         }
 
         public virtual void Configure(ExportActionConfigurationContext context) {
+        }
+
+        public virtual void ConfigureDefault() {
         }
 
         public abstract void Execute(ExportActionContext context);

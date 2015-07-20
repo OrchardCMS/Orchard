@@ -80,6 +80,14 @@ namespace Orchard.ImportExport.Providers.ExportActions {
             }
         }
 
+        public override void ConfigureDefault() {
+            RecipeBuilderSteps = _recipeBuilderSteps.ToList();
+
+            foreach (var step in RecipeBuilderSteps) {
+                step.ConfigureDefault();
+            }
+        }
+
         public override void Execute(ExportActionContext context) {
             context.RecipeDocument = _recipeBuilder.Build(RecipeBuilderSteps);
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
@@ -18,19 +19,22 @@ namespace Orchard.ImportExport.Commands {
         private readonly ISiteService _siteService;
         private readonly IMembershipService _membershipService;
         private readonly IAuthenticationService _authenticationService;
+        private readonly IEnumerable<IExportAction> _exportActions;
 
         public ImportExportCommands(
             IImportExportService importExportService,
             IContentDefinitionManager contentDefinitionManager,
             ISiteService siteService,
             IMembershipService membershipService,
-            IAuthenticationService authenticationService) {
+            IAuthenticationService authenticationService, 
+            IEnumerable<IExportAction> exportActions) {
 
             _importExportService = importExportService;
             _contentDefinitionManager = contentDefinitionManager;
             _siteService = siteService;
             _membershipService = membershipService;
             _authenticationService = authenticationService;
+            _exportActions = exportActions;
         }
 
         [OrchardSwitch]
@@ -86,11 +90,19 @@ namespace Orchard.ImportExport.Commands {
             // Impersonate the Site owner.
             ImpersonateSuperUser();
 
-            // Read config file if specified.
-            var configurationDocument = UpdateExportConfiguration(ReadExportConfigurationFile(ConfigFilename), Types, Metadata, Data, Version, SiteSettings, Steps);
+            IEnumerable<IExportAction> actions;
 
-            // Get all the steps based on the configuration.
-            var actions = _importExportService.ParseExportActions(configurationDocument);
+            if (!IsAnySwitchDefined("ConfigFilename", "Types", "Metadata", "Version", "SiteSettings", "Steps")) {
+                // Get default configured actions.
+                actions = GetDefaultConfiguration();
+            }
+            else {
+                // Read config file if specified.
+                var configurationDocument = UpdateExportConfiguration(ReadExportConfigurationFile(ConfigFilename), Types, Metadata, Data, Version, SiteSettings, Steps);
+
+                // Get all the steps based on the configuration.
+                actions = _importExportService.ParseExportActions(configurationDocument);
+            }
 
             Context.Output.WriteLine(T("Export starting..."));
             var exportContext = new ExportActionContext();
@@ -106,6 +118,18 @@ namespace Orchard.ImportExport.Commands {
             }
 
             Context.Output.WriteLine(T("Export completed at {0}", exportFilePath));
+        }
+
+        private bool IsAnySwitchDefined(params string[] switches) {
+            return Context.Switches.Keys.Any(switches.Contains);
+        }
+
+        private IEnumerable<IExportAction> GetDefaultConfiguration() {
+            foreach (var action in _exportActions) {
+                action.ConfigureDefault();
+            }
+
+            return _exportActions;
         }
 
         private XDocument UpdateExportConfiguration(XDocument configurationDocument, string types, bool metadata, bool data, string version, bool siteSettings, string customSteps) {

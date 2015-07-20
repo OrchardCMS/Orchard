@@ -26,6 +26,9 @@ namespace Orchard.Recipes.Services {
         public virtual void Configure(RecipeBuilderStepConfigurationContext context) {
         }
 
+        public virtual void ConfigureDefault() {
+        }
+
         public virtual void Build(BuildContext context) {}
     }
 }
