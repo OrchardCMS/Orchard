@@ -4,7 +4,7 @@
     Script.Require("ShapesBase");
 }
 @{
-    var importOptions = new SelectListItem[] {
+    var importOptions = new[] {
         new SelectListItem { Text = T("Import the uploaded recipe").ToString(), Value = "false", Selected = !Model.ResetSite},
         new SelectListItem { Text = T("Reset the site and run setup using the uploaded recipe").ToString(), Value = "true", Selected = Model.ResetSite},
     };
@@ -13,7 +13,7 @@
     @T("Choose a recipe file to import. Please consider {0} or backing up your data first.", @Html.Link(T("exporting").Text, Url.Action("Export", "Admin", new { area = "Orchard.ImportExport" })))
 </p>
 <fieldset>
-    <label for="RecipeFile">@T("Recipe File:")</label>
+    <label for="RecipeFile">@T("Recipe File")</label>
     <input type="file" id="RecipeFile" size="64" name="RecipeFile" value="@T("Browse...")"/>
 </fieldset>
 <fieldset>

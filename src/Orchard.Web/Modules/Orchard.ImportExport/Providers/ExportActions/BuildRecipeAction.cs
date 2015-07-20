@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Xml.Linq;
 using Orchard.ContentManagement;
 using Orchard.ImportExport.Models;
 using Orchard.ImportExport.Services;
@@ -13,10 +15,12 @@ namespace Orchard.ImportExport.Providers.ExportActions {
     public class BuildRecipeAction : ExportAction {
         private readonly IEnumerable<IRecipeBuilderStep> _recipeBuilderSteps;
         private readonly IRecipeBuilder _recipeBuilder;
+        private readonly IOrchardServices _orchardServices;
 
-        public BuildRecipeAction(IEnumerable<IRecipeBuilderStep> recipeBuilderSteps, IRecipeBuilder recipeBuilder) {
+        public BuildRecipeAction(IEnumerable<IRecipeBuilderStep> recipeBuilderSteps, IRecipeBuilder recipeBuilder, IOrchardServices orchardServices) {
             _recipeBuilderSteps = recipeBuilderSteps;
             _recipeBuilder = recipeBuilder;
+            _orchardServices = orchardServices;
 
             RecipeBuilderSteps = new List<IRecipeBuilderStep>();
         }
@@ -44,18 +48,30 @@ namespace Orchard.ImportExport.Providers.ExportActions {
 
             if (updater != null) {
                 if (updater.TryUpdateModel(viewModel, Prefix, null, null)) {
-                    var exportStepNames = viewModel.Steps.Where(x => x.IsSelected).Select(x => x.Name);
-                    var stepsQuery = from name in exportStepNames
-                                     let provider = _recipeBuilderSteps.SingleOrDefault(x => x.Name == name)
-                                     where provider != null
-                                     select provider;
-                    var steps = stepsQuery.ToArray();
-                    var stepUpdater = new Updater(updater, secondHalf => String.Format("{0}.{1}", Prefix, secondHalf));
-                    foreach (var exportStep in steps) {
-                        exportStep.UpdateEditor(shapeFactory, stepUpdater);
-                    }
+                    if (viewModel.UploadConfigurationFile) {
+                        var configurationFile = _orchardServices.WorkContext.HttpContext.Request.Files["ConfigurationFile"];
 
-                    RecipeBuilderSteps = steps;
+                        if (configurationFile.ContentLength == 0)
+                            updater.AddModelError("ConfigurationFile", T("No configuration file was specified."));
+                        else {
+                            var configurationDocument = XDocument.Parse(new StreamReader(configurationFile.InputStream).ReadToEnd());
+                            Configure(new ExportActionConfigurationContext(configurationDocument.Root.Element(Name)));
+                        }
+                    }
+                    else {
+                        var exportStepNames = viewModel.Steps.Where(x => x.IsSelected).Select(x => x.Name);
+                        var stepsQuery = from name in exportStepNames
+                            let provider = _recipeBuilderSteps.SingleOrDefault(x => x.Name == name)
+                            where provider != null
+                            select provider;
+                        var steps = stepsQuery.ToArray();
+                        var stepUpdater = new Updater(updater, secondHalf => String.Format("{0}.{1}", Prefix, secondHalf));
+                        foreach (var exportStep in steps) {
+                            exportStep.UpdateEditor(shapeFactory, stepUpdater);
+                        }
+
+                        RecipeBuilderSteps = steps;
+                    }
                 }
             }
 

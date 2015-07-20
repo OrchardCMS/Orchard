@@ -1,9 +1,9 @@
 ﻿@model Orchard.ImportExport.ViewModels.ExportViewModel
 @{ Layout.Title = T("Export").ToString(); }
-@using (Html.BeginFormAntiForgeryPost()) {
+@using (Html.BeginFormAntiForgeryPost(Url.Action("Export", new { area = "Orchard.ImportExport" }), FormMethod.Post, new { enctype = "multipart/form-data" })) {
     Html.ValidationSummary();
 
-    foreach(var action in Model.Actions) {
+    foreach (var action in Model.Actions) {
         <div class="export-action">
             @Display(action.Editor)
         </div>
