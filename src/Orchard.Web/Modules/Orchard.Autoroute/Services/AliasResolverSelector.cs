@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Orchard.Autoroute.Models;
 using Orchard.ContentManagement;
 
@@ -11,7 +12,7 @@ namespace Orchard.Autoroute.Services {
         }
 
         public IdentityResolverSelectorResult GetResolver(ContentIdentity contentIdentity) {
-            if (contentIdentity.Has("alias")) {
+            if (contentIdentity.Has("identifier") || contentIdentity.Has("alias")) {
                 return new IdentityResolverSelectorResult {
                     Priority = 0,
                     Resolve = ResolveIdentity
@@ -22,15 +23,25 @@ namespace Orchard.Autoroute.Services {
         }
 
         private IEnumerable<ContentItem> ResolveIdentity(ContentIdentity identity) {
-            var identifier = identity.Get("alias");
+            var identifier = identity.Get("identifier");
 
-            if (identifier == null) {
+            if (identifier != null) {
+                return _contentManager
+                    .Query<AutoroutePart, AutoroutePartRecord>()
+                    .Where(p => p.Identifier == identifier)
+                    .List<ContentItem>();
+            }
+
+            // Keep this for backward compatibility with existing recipes.
+            var aliasIdentifier = identity.Get("alias");
+
+            if (aliasIdentifier == null) {
                 return null;
             }
 
             return _contentManager
                 .Query<AutoroutePart, AutoroutePartRecord>()
-                .Where(p => p.DisplayAlias == identifier)
+                .Where(p => p.DisplayAlias == aliasIdentifier)
                 .List<ContentItem>();
         }
     }

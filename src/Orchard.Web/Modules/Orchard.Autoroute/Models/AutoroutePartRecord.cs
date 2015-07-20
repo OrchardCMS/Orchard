@@ -11,5 +11,8 @@ namespace Orchard.Autoroute.Models {
         
         [StringLength(2048)]
         public virtual string DisplayAlias { get; set; }
+
+        [StringLength(256)]
+        public virtual string Identifier { get; set; }
     }
 }

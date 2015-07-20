@@ -16,6 +16,10 @@ namespace Orchard.Autoroute.Models {
             get { return Retrieve(x => x.DisplayAlias); }
             set { Store(x => x.DisplayAlias, value); }
         }
+        public string Identifier {
+            get { return Retrieve(x => x.Identifier); }
+            set { Store(x => x.Identifier, value); }
+        }
 
         public string Path {
             get { return DisplayAlias; }
