@@ -6,6 +6,7 @@ using Orchard.ImportExport.Models;
 using Orchard.ImportExport.Services;
 using Orchard.ImportExport.ViewModels;
 using Orchard.Localization;
+using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
 
 namespace Orchard.ImportExport.Recipes.Builders {
@@ -58,6 +59,11 @@ namespace Orchard.ImportExport.Recipes.Builders {
             }
 
             return shapeFactory.EditorTemplate(TemplateName: "BuilderSteps/CustomSteps", Model: viewModel, Prefix: Prefix);
+        }
+
+        public override void Configure(RecipeBuilderStepConfigurationContext context) {
+            var steps = (context.ConfigurationElement.Attr("CustomSteps") ?? "").Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries);
+            CustomSteps = steps.ToList();
         }
 
         public override void Build(BuildContext context) {

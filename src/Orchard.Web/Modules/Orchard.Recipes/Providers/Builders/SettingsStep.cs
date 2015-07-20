@@ -4,7 +4,6 @@ using System.Xml.Linq;
 using Orchard.ContentManagement;
 using Orchard.Localization;
 using Orchard.Recipes.Services;
-using Orchard.Recipes.ViewModels;
 
 namespace Orchard.Recipes.Providers.Builders {
     public class SettingsStep : RecipeBuilderStep {

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Xml.Linq;
 using Orchard.Data;
 using Orchard.Localization;
