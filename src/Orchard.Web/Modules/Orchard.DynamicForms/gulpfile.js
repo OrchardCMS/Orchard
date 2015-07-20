@@ -14,12 +14,12 @@
 
 var gulp = require("gulp"),
     newer = require("gulp-newer"),
-	minify = require("gulp-minify-css"),
-	uglify = require("gulp-uglify"),
-	rename = require("gulp-rename"),
-	concat = require("gulp-concat"),
+    minify = require("gulp-minify-css"),
+    uglify = require("gulp-uglify"),
+    rename = require("gulp-rename"),
+    concat = require("gulp-concat"),
     sourcemaps = require("gulp-sourcemaps"),
-	merge = require("merge-stream");
+    merge = require("merge-stream");
 
 /*
  * General tasks.
@@ -43,11 +43,11 @@ var srcCss = [
 
 gulp.task("buildCss", function () {
     return gulp.src(srcCss)
-		.pipe(minify())
-		.pipe(rename({
-		    suffix: ".min"
-		}))
-		.pipe(gulp.dest("Styles"));
+        .pipe(minify())
+        .pipe(rename({
+            suffix: ".min"
+        }))
+        .pipe(gulp.dest("Styles"));
 });
 
 gulp.task("watchCss", function () {
@@ -62,9 +62,9 @@ gulp.task("watchCss", function () {
  */
 
 var srcJsLib = [
-	"Scripts/Lib/jquery.validate.js",
-	"Scripts/Lib/jquery.validate.unobtrusive.additional.js",
-	"Scripts/Lib/jquery.validate.unobtrusive.js"
+    "Scripts/Lib/jquery.validate.js",
+    "Scripts/Lib/jquery.validate.unobtrusive.additional.js",
+    "Scripts/Lib/jquery.validate.unobtrusive.js"
 ];
 
 var srcJsLayoutEditor = [
@@ -90,12 +90,12 @@ function jsPipelineFrom(inputStream, outputFolder, outputFile) {
     return inputStream
         .pipe(newer(outputFolder + "/" + outputFile))
         .pipe(sourcemaps.init())
-		.pipe(concat(outputFile))
+        .pipe(concat(outputFile))
         .pipe(sourcemaps.write())
-		.pipe(gulp.dest(outputFolder))
-		.pipe(uglify())
-		.pipe(rename({
-		    suffix: ".min"
-		}))
-		.pipe(gulp.dest(outputFolder));
+        .pipe(gulp.dest(outputFolder))
+        .pipe(uglify())
+        .pipe(rename({
+            suffix: ".min"
+        }))
+        .pipe(gulp.dest(outputFolder));
 }
