@@ -78,6 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
+    <Compile Include="Models\ConfigureImportActionsContext.cs" />
     <Compile Include="Commands\ImportExportCommands.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Models\ExportOptions.cs" />
@@ -88,16 +89,16 @@
     <Compile Include="Models\ImportActionConfigurationContext.cs" />
     <Compile Include="ViewModels\RecipeExecutionStepViewModel.cs" />
     <Compile Include="Services\ISetupService.cs" />
-    <Compile Include="Services\SetupContext.cs" />
+    <Compile Include="Models\SetupContext.cs" />
     <Compile Include="Services\SetupService.cs" />
     <Compile Include="ViewModels\UploadRecipeViewModel.cs" />
-    <Compile Include="Providers\ImportActions\UploadRecipeAction.cs" />
+    <Compile Include="Providers\ImportActions\ExecuteRecipeAction.cs" />
     <Compile Include="Recipes\Builders\CustomStepsStep.cs" />
     <Compile Include="Services\ImportAction.cs" />
     <Compile Include="Services\ExportAction.cs" />
     <Compile Include="Models\ImportActionContext.cs" />
     <Compile Include="Models\ExportActionContext.cs" />
-    <Compile Include="Services\ExportContext.cs" />
+    <Compile Include="Models\ExportContext.cs" />
     <Compile Include="Services\IImportAction.cs" />
     <Compile Include="Services\IExportAction.cs" />
     <Compile Include="ViewModels\CustomStepEntry.cs" />
@@ -158,7 +159,7 @@
     <Content Include="Views\Admin\ImportResult.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\EditorTemplates\ImportActions\UploadRecipe.cshtml" />
+    <Content Include="Views\EditorTemplates\ImportActions\ExecuteRecipe.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EditorTemplates\BuilderSteps\CustomSteps.cshtml" />

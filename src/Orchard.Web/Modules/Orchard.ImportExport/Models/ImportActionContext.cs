@@ -1,7 +1,8 @@
-﻿using System.Web.Mvc;
+﻿using System.Xml.Linq;
 
 namespace Orchard.ImportExport.Models {
     public class ImportActionContext {
-        public ActionResult ActionResult { get; set; }
+        public XDocument RecipeDocument { get; set; }
+        public string ExecutionId { get; set; }
     }
 }

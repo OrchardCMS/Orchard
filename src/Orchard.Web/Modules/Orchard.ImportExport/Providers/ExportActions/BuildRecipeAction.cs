@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.ImportExport.Models;
 using Orchard.ImportExport.Services;
@@ -9,18 +8,15 @@ using Orchard.ImportExport.ViewModels;
 using Orchard.Mvc;
 using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
-using Orchard.Utility.Extensions;
 
 namespace Orchard.ImportExport.Providers.ExportActions {
     public class BuildRecipeAction : ExportAction {
         private readonly IEnumerable<IRecipeBuilderStep> _recipeBuilderSteps;
-        private readonly IImportExportService _importExportService;
-        private readonly IRecipeParser _recipeParser;
+        private readonly IRecipeBuilder _recipeBuilder;
 
-        public BuildRecipeAction(IEnumerable<IRecipeBuilderStep> recipeBuilderSteps, IImportExportService importExportService, IRecipeParser recipeParser) {
+        public BuildRecipeAction(IEnumerable<IRecipeBuilderStep> recipeBuilderSteps, IRecipeBuilder recipeBuilder) {
             _recipeBuilderSteps = recipeBuilderSteps;
-            _importExportService = importExportService;
-            _recipeParser = recipeParser;
+            _recipeBuilder = recipeBuilder;
 
             RecipeBuilderSteps = new List<IRecipeBuilderStep>();
         }
@@ -67,44 +63,25 @@ namespace Orchard.ImportExport.Providers.ExportActions {
         }
 
         public override void Configure(ExportActionConfigurationContext context) {
+            RecipeBuilderSteps.Clear();
+
             var recipeBuilderStepsElement = context.ConfigurationElement.Element("Steps");
             if (recipeBuilderStepsElement == null)
                 return;
 
-            foreach (var step in _recipeBuilderSteps) {
-                var stepConfigurationElement = recipeBuilderStepsElement.Element(step.Name);
+            foreach (var stepElement in recipeBuilderStepsElement.Elements()) {
+                var step = _recipeBuilderSteps.SingleOrDefault(x => x.Name == stepElement.Name.LocalName);
 
-                if (stepConfigurationElement != null) {
-                    var stepContext = new RecipeBuilderStepConfigurationContext(stepConfigurationElement);
+                if (step != null) {
+                    var stepContext = new RecipeBuilderStepConfigurationContext(stepElement);
                     step.Configure(stepContext);
+                    RecipeBuilderSteps.Add(step);
                 }
             }
         }
 
         public override void Execute(ExportActionContext context) {
-            var recipeDocument = _importExportService.Export(RecipeBuilderSteps);
-            var recipe = _recipeParser.ParseRecipe(recipeDocument);
-            var exportFileName = GetExportFileName(recipe);
-            var exportFilePath = _importExportService.WriteExportFile(recipeDocument);
-            var actionResult = new FilePathResult(exportFilePath, "text/xml");
-
-            actionResult.FileDownloadName = exportFileName;
-            context.ActionResult = actionResult;
-        }
-
-        private string GetExportFileName(Recipe recipe) {
-            string format;
-
-            if (String.IsNullOrWhiteSpace(recipe.Name) && String.IsNullOrWhiteSpace(recipe.Version))
-                format = "export.xml";
-            else if (String.IsNullOrWhiteSpace(recipe.Version))
-                format = "{0}.recipe.xml";
-            else if (String.IsNullOrWhiteSpace(recipe.Name))
-                format = "export-{1}.recipe.xml";
-            else
-                format = "{0}-{1}.recipe.xml";
-
-            return String.Format(format, recipe.Name.HtmlClassify(), recipe.Version);
+            context.RecipeDocument = _recipeBuilder.Build(RecipeBuilderSteps);
         }
     }
 }

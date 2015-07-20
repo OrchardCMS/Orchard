@@ -14,6 +14,7 @@ using Orchard.Environment.Descriptor;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.ShellBuilders;
 using Orchard.Environment.State;
+using Orchard.ImportExport.Models;
 using Orchard.Localization.Services;
 using Orchard.Logging;
 using Orchard.Recipes.Services;

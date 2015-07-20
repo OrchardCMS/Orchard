@@ -72,16 +72,15 @@ namespace Orchard.Recipes.Providers.Builders {
         public override void Configure(RecipeBuilderStepConfigurationContext context) {
             var schemaContentTypeNames = context.ConfigurationElement.Attr("SchemaContentTypes");
             var dataContentTypeNames = context.ConfigurationElement.Attr("DataContentTypes");
-            var versionHistoryOptions = context.ConfigurationElement.Attr<VersionHistoryOptions?>("VersionHistoryOptions");
+            var versionHistoryOptions = context.ConfigurationElement.Attr<VersionHistoryOptions>("VersionHistoryOptions");
 
-            if (!string.IsNullOrWhiteSpace(schemaContentTypeNames))
+            if (!String.IsNullOrWhiteSpace(schemaContentTypeNames))
                 SchemaContentTypes = schemaContentTypeNames.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries).ToList();
 
-            if (!string.IsNullOrWhiteSpace(dataContentTypeNames))
+            if (!String.IsNullOrWhiteSpace(dataContentTypeNames))
                 DataContentTypes = dataContentTypeNames.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
 
-            if(versionHistoryOptions != null)
-                VersionHistoryOptions = versionHistoryOptions.Value;
+            VersionHistoryOptions = versionHistoryOptions;
         }
 
         public override void Build(BuildContext context) {

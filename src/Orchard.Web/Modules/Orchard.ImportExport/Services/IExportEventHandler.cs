@@ -1,5 +1,6 @@
 ﻿using System;
 using Orchard.Events;
+using Orchard.ImportExport.Models;
 
 namespace Orchard.ImportExport.Services {
     [Obsolete("Implement IRecipeExecutionStep instead.")]

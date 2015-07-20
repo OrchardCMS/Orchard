@@ -1,7 +1,10 @@
-﻿using System.Web.Mvc;
+﻿using System.Xml.Linq;
 
-namespace Orchard.ImportExport.Services {
+namespace Orchard.ImportExport.Models {
     public class ExportActionContext {
-        public ActionResult ActionResult { get; set; }
+        public ExportActionContext() {
+            RecipeDocument = new XDocument();
+        }
+        public XDocument RecipeDocument { get; set; }
     }
 }

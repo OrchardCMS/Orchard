@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
@@ -64,12 +65,12 @@ namespace Orchard.ImportExport.Controllers {
                 return View(viewModel);
             }
 
-            var context = new ImportActionContext { ActionResult = RedirectToAction("Import") };
-            foreach(var action in actions) {
-                action.Execute(context);
-            }
-            
-            return context.ActionResult;
+            var context = new ImportActionContext();
+            var executionId = _importExportService.Import(context, actions);
+
+            return !String.IsNullOrEmpty(executionId)
+                ? RedirectToAction("ImportResult", new { executionId = context.ExecutionId })
+                : RedirectToAction("Import");
         }
 
         public ActionResult ImportResult(string executionId) {
@@ -104,16 +105,16 @@ namespace Orchard.ImportExport.Controllers {
             foreach (var action in actions) {
                 action.UpdateEditor(Services.New, this);
             }
-
-            var exportActionContext = new ExportActionContext {
-                ActionResult = RedirectToAction("Export")
-            };
-
-            foreach (var action in actions) {
-                action.Execute(exportActionContext);
-            }
             
-            return exportActionContext.ActionResult;
+            var exportActionContext = new ExportActionContext();
+            _importExportService.Export(exportActionContext, actions);
+
+            var recipeDocument = exportActionContext.RecipeDocument;
+            var exportFilePath = _importExportService.WriteExportFile(recipeDocument);
+            var recipe = _recipeParser.ParseRecipe(recipeDocument);
+            var exportFileName = recipe.GetExportFileName();
+
+            return File(exportFilePath, "text/xml", exportFileName);
         }
 
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Xml.Linq;
 
-namespace Orchard.ImportExport.Services {
+namespace Orchard.ImportExport.Models {
     public class SetupContext {
         public string SiteName { get; set; }
         public string AdminUsername { get; set; }
