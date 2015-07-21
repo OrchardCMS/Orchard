@@ -25,6 +25,7 @@
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
     <TargetFrameworkProfile />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -156,6 +157,7 @@
     <Compile Include="ViewModels\DeploymentHistoryViewModel.cs" />
     <Compile Include="ViewModels\EditDeploymentUserViewModel.cs" />
     <Compile Include="ViewModels\ExportViewModel.cs" />
+    <Compile Include="ViewModels\ImportResultViewModel.cs" />
     <Compile Include="ViewModels\ImportViewModel.cs" />
     <Compile Include="ViewModels\RecurringTaskViewModel.cs" />
     <Compile Include="ViewModels\SubscriptionPartViewModel.cs" />
@@ -185,6 +187,10 @@
     <ProjectReference Include="..\Orchard.Projections\Orchard.Projections.csproj">
       <Project>{5531e894-d259-45a3-aa61-26dbe720c1ce}</Project>
       <Name>Orchard.Projections</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Recipes\Orchard.Recipes.csproj">
+      <Project>{fc1d74e8-7a4d-48f4-83de-95c6173780c4}</Project>
+      <Name>Orchard.Recipes</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Roles\Orchard.Roles.csproj">
       <Project>{d10ad48f-407d-4db5-a328-173ec7cb010f}</Project>

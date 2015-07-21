@@ -19,22 +19,22 @@ namespace Orchard.ImportExport.Controllers {
     [OrchardFeature("Orchard.Deployment.ImportApi")]
     public class ImportController : BaseApiController {
         private readonly IImportExportService _importExportService;
-        private readonly IRecipeJournal _recipeJournal;
         private readonly IAppDataFolder _appData;
+        private readonly IRecipeResultAccessor _recipeResultAccessor;
 
         public ImportController(
             IOrchardServices services,
             IImportExportService importExportService,
-            IRecipeJournal recipeJournal,
             IAppDataFolder appData,
             ISigningService signingService,
             IAuthenticationService authenticationService,
-            IClock clock
-            ) : base(signingService, authenticationService, clock) {
+            IClock clock, 
+            IRecipeResultAccessor recipeResultAccessor) 
+            : base(signingService, authenticationService, clock) {
 
             _importExportService = importExportService;
-            _recipeJournal = recipeJournal;
             _appData = appData;
+            _recipeResultAccessor = recipeResultAccessor;
             Services = services;
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
@@ -72,14 +72,13 @@ namespace Orchard.ImportExport.Controllers {
             if (!Services.Authorizer.Authorize(DeploymentPermissions.ImportFromDeploymentSources, T("Not allowed to import")))
                 return new HttpUnauthorizedResult();
 
-            var journal = _recipeJournal.GetRecipeJournal(executionId);
+            var recipeResult = _recipeResultAccessor.GetResult(executionId);
 
-            if (!journal.Messages.Any()) {
+            if (!recipeResult.Steps.Any()) {
                 return new HttpStatusCodeResult(HttpStatusCode.InternalServerError, T("Unable to locate recipe journal").Text);
             }
 
-            var localExecutionJournal = _recipeJournal.GetRecipeJournal(journal.Messages.First().Message);
-            return CreateSignedResponse(localExecutionJournal.ExecutionId);
+            return CreateSignedResponse(executionId);
         }
 
         [AuthenticateApi]

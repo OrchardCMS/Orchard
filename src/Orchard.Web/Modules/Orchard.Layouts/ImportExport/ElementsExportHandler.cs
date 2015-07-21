@@ -27,7 +27,7 @@ namespace Orchard.Layouts.ImportExport {
                 return;
             }
 
-            var elements = _repository.Table.ToList();
+            var elements = _repository.Table.OrderBy(x => x.ElementTypeName).ToList();
 
             if (!elements.Any()) {
                 return;

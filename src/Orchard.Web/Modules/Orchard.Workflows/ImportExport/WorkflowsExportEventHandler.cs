@@ -36,7 +36,7 @@ namespace Orchard.Workflows.ImportExport {
             var root = new XElement("Workflows");
             context.Document.Element("Orchard").Add(root);
 
-            foreach (var workflowDefinition in workflowDefinitions) {
+            foreach (var workflowDefinition in workflowDefinitions.OrderBy(x => x.Name)) {
                 root.Add(new XElement("Workflow",
                     new XAttribute("Name", workflowDefinition.Name),
                     new XAttribute("Enabled", workflowDefinition.Enabled),

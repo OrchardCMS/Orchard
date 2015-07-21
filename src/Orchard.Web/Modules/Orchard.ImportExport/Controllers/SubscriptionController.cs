@@ -11,7 +11,6 @@ using Orchard.ImportExport.Permissions;
 using Orchard.ImportExport.Services;
 using Orchard.ImportExport.ViewModels;
 using Orchard.Localization;
-using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
 using Orchard.UI.Admin;
 using Orchard.UI.Navigation;
@@ -25,14 +24,14 @@ namespace Orchard.ImportExport.Controllers {
         private readonly ISubscriptionService _subscriptionService;
         private readonly IRecurringScheduledTaskManager _recurringScheduledTaskManager;
         private readonly IDeploymentService _deploymentService;
-        private readonly IRecipeJournal _recipeJournal;
+        private readonly IRecipeResultAccessor _recipeJournal;
 
         public SubscriptionController(
             IOrchardServices services,
             ISubscriptionService subscriptionService,
             IRecurringScheduledTaskManager recurringScheduledTaskManager,
             IDeploymentService deploymentService,
-            IRecipeJournal recipeJournal,
+            IRecipeResultAccessor recipeJournal,
             IShapeFactory shapeFactory
             ) {
             _orchardServices = services;
@@ -171,7 +170,7 @@ namespace Orchard.ImportExport.Controllers {
             if (!Services.Authorizer.Authorize(DeploymentPermissions.ViewDeploymentHistory, T("Not allowed to view deployment history.")))
                 return new HttpUnauthorizedResult();
 
-            var journal = _recipeJournal.GetRecipeJournal(executionId);
+            var journal = _recipeJournal.GetResult(executionId);
             var result = Json(journal);
             result.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
             return result;
@@ -202,9 +201,9 @@ namespace Orchard.ImportExport.Controllers {
 
                 //Due to roll back of transactions on error, update status if failure logged in journal
                 if (lastTaskRun.RunStatus == RunStatus.Running) {
-                    var recipeStatus = _recipeJournal.GetRecipeStatus(lastTaskRun.ExecutionId);
+                    var recipeStatus = _recipeJournal.GetResult(lastTaskRun.ExecutionId);
 
-                    if (recipeStatus == RecipeStatus.Failed) {
+                    if (!recipeStatus.IsSuccessful) {
                         _recurringScheduledTaskManager.SetTaskCompleted(lastTaskRun.ExecutionId, RunStatus.Fail);
                     }
                 }

@@ -73,7 +73,7 @@ namespace Orchard.ImportExport.DeploymentTargets {
             Client.Value.Post(actionUrl, recipeText, "text/xml");
         }
 
-        public RecipeStatus GetRecipeDeploymentStatus(string executionId) {
+        public bool? GetRecipeDeploymentStatus(string executionId) {
             var actionUrl = _url.Action("RecipeJournal", "Import", new {
                 area = "Orchard.ImportExport",
                 executionId
@@ -81,11 +81,11 @@ namespace Orchard.ImportExport.DeploymentTargets {
             var journal = Client.Value.Get(actionUrl);
             var element = XElement.Parse(journal);
             var statusElement = element.Element("Status");
-            RecipeStatus status;
-            if (statusElement != null && Enum.TryParse(statusElement.Value, out status)) {
+            bool status;
+            if (statusElement != null && Boolean.TryParse(statusElement.Value, out status)) {
                 return status;
             }
-            return RecipeStatus.Unknown;
+            return null;
         }
 
         public void PushContent(IContent content, bool deployAsDraft = false) {

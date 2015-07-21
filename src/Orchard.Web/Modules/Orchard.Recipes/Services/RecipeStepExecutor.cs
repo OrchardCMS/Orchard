@@ -1,46 +1,43 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using Orchard.ContentManagement.Handlers;
 using Orchard.FileSystems.AppData;
-using Orchard.Localization;
+using Orchard.Data;
 using Orchard.Logging;
 using Orchard.Recipes.Events;
 using Orchard.Recipes.Models;
 
 namespace Orchard.Recipes.Services {
-    public class RecipeStepExecutor : IRecipeStepExecutor {
+    public class RecipeStepExecutor : Component, IRecipeStepExecutor {
         private readonly IRecipeStepQueue _recipeStepQueue;
-        private readonly IRecipeJournal _recipeJournal;
         private readonly IEnumerable<IRecipeHandler> _recipeHandlers;
         private readonly IRecipeExecuteEventHandler _recipeExecuteEventHandler;
         private readonly IAppDataFolder _appData;
+        private readonly IRepository<RecipeStepResultRecord> _recipeStepResultRecordRepository;
 
-        public RecipeStepExecutor(IRecipeStepQueue recipeStepQueue, IRecipeJournal recipeJournal, 
-            IEnumerable<IRecipeHandler> recipeHandlers, IRecipeExecuteEventHandler recipeExecuteEventHandler,
+        public RecipeStepExecutor(
+            IRecipeStepQueue recipeStepQueue,
+            IEnumerable<IRecipeHandler> recipeHandlers,
+            IRecipeExecuteEventHandler recipeExecuteEventHandler,
+            IRepository<RecipeStepResultRecord> recipeStepResultRecordRepository,
             IAppDataFolder appData) {
+
             _recipeStepQueue = recipeStepQueue;
-            _recipeJournal = recipeJournal;
             _recipeHandlers = recipeHandlers;
             _recipeExecuteEventHandler = recipeExecuteEventHandler;
+            _recipeStepResultRecordRepository = recipeStepResultRecordRepository;
             _appData = appData;
-
-            Logger = NullLogger.Instance;
-            T = NullLocalizer.Instance;
         }
 
-        public Localizer T { get; set; }
-        public ILogger Logger { get; set; }
-
         public bool ExecuteNextStep(string executionId) {
-            var nextRecipeStep= _recipeStepQueue.Dequeue(executionId);
+            var nextRecipeStep = _recipeStepQueue.Dequeue(executionId);
             if (nextRecipeStep == null) {
-                _recipeJournal.ExecutionComplete(executionId);
+                Logger.Information("Recipe execution {0} completed.", executionId);
                 _recipeExecuteEventHandler.ExecutionComplete(executionId);
                 return false;
             }
-            _recipeJournal.WriteJournalEntry(executionId, string.Format("Executing step {0}.", nextRecipeStep.Name));
+            Logger.Information("Running all recipe handlers for step '{0}'.", nextRecipeStep.Name);
             var files = String.IsNullOrWhiteSpace(nextRecipeStep.FilesPath)
                 ? null
                 : _appData
@@ -59,31 +56,40 @@ namespace Orchard.Recipes.Services {
                 foreach (var recipeHandler in _recipeHandlers) {
                     recipeHandler.ExecuteRecipeStep(recipeContext);
                 }
+                UpdateStepResultRecord(executionId, nextRecipeStep.Name, isSuccessful: true);
                 _recipeExecuteEventHandler.RecipeStepExecuted(executionId, recipeContext);
             }
-            catch(Exception exception) {
-                Logger.Error(exception, "Recipe execution {0} was cancelled because a step failed to execute", executionId);
-                while (_recipeStepQueue.Dequeue(executionId) != null) {}
-                _recipeJournal.ExecutionFailed(executionId);
-                var message = T("Recipe execution with id {0} was cancelled because the \"{1}\" step failed to execute. The following exception was thrown: {2}. Refer to the error logs for more information.",
-                                executionId, nextRecipeStep.Name, exception.Message);
-                _recipeJournal.WriteJournalEntry(executionId, message.ToString());
-
+            catch (Exception ex) {
+                UpdateStepResultRecord(executionId, nextRecipeStep.Name, isSuccessful: false, errorMessage: ex.Message);
+                Logger.Error(ex, "Recipe execution {0} failed because the step '{1}' failed.", executionId, nextRecipeStep.Name);
+                while (_recipeStepQueue.Dequeue(executionId) != null);
+                var message = T("Recipe execution with ID {0} failed because the step '{1}' failed to execute. The following exception was thrown:\n{2}\nRefer to the error logs for more information.", executionId, nextRecipeStep.Name, ex.Message);
                 throw new OrchardCoreException(message);
             }
 
             if (!recipeContext.Executed) {
-                Logger.Error("Could not execute recipe step '{0}' because the recipe handler was not found.", recipeContext.RecipeStep.Name);
-                while (_recipeStepQueue.Dequeue(executionId) != null) {}
-                _recipeJournal.ExecutionFailed(executionId);
-                var message = T("Recipe execution with id {0} was cancelled because the recipe handler for step \"{1}\" was not found. Refer to the error logs for more information.",
-                                executionId, nextRecipeStep.Name);
-                _recipeJournal.WriteJournalEntry(executionId, message.ToString());
-
+                Logger.Error("Recipe execution {0} failed because no matching handler for recipe step '{1}' was found.", executionId, recipeContext.RecipeStep.Name);
+                while (_recipeStepQueue.Dequeue(executionId) != null);
+                var message = T("Recipe execution with ID {0} failed because no matching handler for recipe step '{1}' was found. Refer to the error logs for more information.", executionId, nextRecipeStep.Name);
                 throw new OrchardCoreException(message);
             }
 
             return true;
+        }
+
+        private void UpdateStepResultRecord(string executionId, string stepName, bool isSuccessful, string errorMessage = null) {
+            var query =
+                from record in _recipeStepResultRecordRepository.Table
+                where record.ExecutionId == executionId && record.StepName == stepName
+                select record;
+
+            var stepResultRecord = query.Single();
+
+            stepResultRecord.IsCompleted = true;
+            stepResultRecord.IsSuccessful = isSuccessful;
+            stepResultRecord.ErrorMessage = errorMessage;
+
+            _recipeStepResultRecordRepository.Update(stepResultRecord);
         }
     }
 }

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Web;
 using Orchard.ContentManagement;
-using Orchard.Core.Settings.Descriptor.Records;
 using Orchard.Core.Settings.Models;
 using Orchard.Data;
 using Orchard.Data.Migration;
@@ -15,20 +14,20 @@ using Orchard.Environment.Configuration;
 using Orchard.Environment.Descriptor;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
-using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.ShellBuilders;
 using Orchard.Environment.State;
 using Orchard.Localization;
 using Orchard.Localization.Services;
+using Orchard.Logging;
 using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
-using Orchard.Reports.Services;
 using Orchard.Security;
 using Orchard.Settings;
 using Orchard.Utility.Extensions;
 
-namespace Orchard.Setup.Services {
-    public class SetupService : ISetupService {
+namespace Orchard.Setup.Services
+{
+	public class SetupService : ISetupService {
         private readonly ShellSettings _shellSettings;
         private readonly IOrchardHost _orchardHost;
         private readonly IShellSettingsManager _shellSettingsManager;
@@ -57,9 +56,11 @@ namespace Orchard.Setup.Services {
             _extensionManager = extensionManager;
             _recipeHarvester = recipeHarvester;
             T = NullLocalizer.Instance;
+            Logger = NullLogger.Instance;
         }
 
         public Localizer T { get; set; }
+        public ILogger Logger { get; set; }
 
         public ShellSettings Prime() {
             return _shellSettings;
@@ -82,12 +83,14 @@ namespace Orchard.Setup.Services {
         public string Setup(SetupContext context) {
             string executionId;
 
+            Logger.Information("Running setup for tenant '{0}'.", _shellSettings.Name);
+
             // The vanilla Orchard distibution has the following features enabled.
             string[] hardcoded = {
                     // Framework
                     "Orchard.Framework",
                     // Core
-                    "Common", "Containers", "Contents", "Dashboard", "Feeds", "Navigation", "Reports", "Scheduling", "Settings", "Shapes", "Title",
+                    "Common", "Containers", "Contents", "Dashboard", "Feeds", "Navigation","Scheduling", "Settings", "Shapes", "Title",
                     // Modules
                     "Orchard.Pages", "Orchard.ContentPicker", "Orchard.Themes", "Orchard.Users", "Orchard.Roles", "Orchard.Modules", 
                     "PackagingServices", "Orchard.Packaging", "Gallery", "Orchard.Recipes"
@@ -144,10 +147,6 @@ namespace Orchard.Setup.Services {
                     // Make a workaround to avoid the Transaction issue for PostgreSQL
                     environment.Resolve<ITransactionManager>().RequireNew();
 
-                    var reportsCoordinator = environment.Resolve<IReportsCoordinator>();
-
-                    reportsCoordinator.Register("Data Migration", "Setup", "Orchard installation");
-
                     schemaBuilder.CreateTable("Orchard_Framework_DataMigrationRecord",
                                               table => table
                                                            .Column<int>("Id", column => column.PrimaryKey().Identity())
@@ -167,8 +166,6 @@ namespace Orchard.Setup.Services {
                         shellDescriptor.Parameters);
                 }
             }
-
-
 
             // in effect "pump messages" see PostMessage circa 1980
             while ( _processingEngine.AreTasksPending() )

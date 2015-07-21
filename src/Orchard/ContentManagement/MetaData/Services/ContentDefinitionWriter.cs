@@ -1,4 +1,5 @@
-﻿using System.Xml;
+﻿using System.Linq;
+using System.Xml;
 using System.Xml.Linq;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.Validation;
@@ -36,7 +37,7 @@ namespace Orchard.ContentManagement.MetaData.Services {
                 typeElement.Add(new XAttribute("DisplayName", contentTypeDefinition.DisplayName));
             }
 
-            foreach (var typePart in contentTypeDefinition.Parts) {
+            foreach (var typePart in contentTypeDefinition.Parts.OrderBy(x => x.PartDefinition.Name)) {
                 typeElement.Add(NewElement(typePart.PartDefinition.Name, typePart.Settings));
             }
 
@@ -52,7 +53,7 @@ namespace Orchard.ContentManagement.MetaData.Services {
             Argument.ThrowIfNull(contentPartDefinition, "contentPartDefinition");
 
             var partElement = NewElement(contentPartDefinition.Name, contentPartDefinition.Settings);
-            foreach (var partField in contentPartDefinition.Fields) {
+            foreach (var partField in contentPartDefinition.Fields.OrderBy(x => x.Name)) {
                 var attributeName = string.Format("{0}.{1}", partField.Name, partField.FieldDefinition.Name);
                 var partFieldElement = NewElement(attributeName, partField.Settings);
                 partElement.Add(partFieldElement);

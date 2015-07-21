@@ -22,8 +22,8 @@
                 var ul = $('<ul></ul>');
                 container.append(ul);
                 $.get('@getRecipeJournalActionUrl' + '?executionId=' + executionId, function (data) {
-                    for (var i = 0; i < data.Messages.length; i++) {
-                        ul.append($('<li></li>').html(data.Messages[i].Message));
+                    for (var i = 0; i < data.Steps.length; i++) {
+                        ul.append($('<li></li>').html(data.Steps[i].ErrorMessage));
                     }
                 });
             }

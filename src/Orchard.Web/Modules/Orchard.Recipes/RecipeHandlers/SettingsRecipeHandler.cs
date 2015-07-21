@@ -3,35 +3,27 @@ using System.Collections.Generic;
 using System.Xml.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
-using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
 using Orchard.Settings;
 
 namespace Orchard.Recipes.RecipeHandlers {
-    public class SettingsRecipeHandler : IRecipeHandler {
+    public class SettingsRecipeHandler : Component, IRecipeHandler {
         private readonly ISiteService _siteService;
         private readonly IContentManager _contentManager;
         private readonly Lazy<IEnumerable<IContentHandler>> _handlers;
-        private readonly IRecipeJournal _recipeJournal;
 
         public SettingsRecipeHandler(
             ISiteService siteService,
             IContentManager contentManager,
-            IRecipeJournal recipeJournal,
-            Lazy<IEnumerable<IContentHandler>> handlers
-            ) {
+            Lazy<IEnumerable<IContentHandler>> handlers) {
+
             _siteService = siteService;
             _contentManager = contentManager;
             _handlers = handlers;
-            _recipeJournal = recipeJournal;
-            Logger = NullLogger.Instance;
-            T = NullLocalizer.Instance;
         }
 
-        public Localizer T { get; set; }
-        public ILogger Logger { get; set; }
         private IEnumerable<IContentHandler> Handlers { get { return _handlers.Value; } }
 
         /*  
@@ -45,6 +37,8 @@ namespace Orchard.Recipes.RecipeHandlers {
             if (!String.Equals(recipeContext.RecipeStep.Name, "Settings", StringComparison.OrdinalIgnoreCase)) {
                 return;
             }
+
+            Logger.Information("Executing recipe step '{0}'; ExecutionId={1}", recipeContext.RecipeStep.Name, recipeContext.ExecutionId);
 
             var siteContentItem = _siteService.GetSiteSettings().ContentItem;
 
@@ -61,11 +55,14 @@ namespace Orchard.Recipes.RecipeHandlers {
                     continue;
                 }
 
-                if (!string.IsNullOrEmpty(recipeContext.ExecutionId)) {
-                    _recipeJournal.WriteJournalEntry(recipeContext.ExecutionId, T("Setting: {0}.", contentPart.PartDefinition.Name).Text);
+                Logger.Information("Importing settings part '{0}'.", contentPart.PartDefinition.Name);
+                try {
+                    ImportSettingPart(contentPart, partElement);
                 }
-
-                ImportSettingPart(contentPart, partElement);
+                catch (Exception ex) {
+                    Logger.Error(ex, "Error while importing settings part '{0}'.", contentPart.PartDefinition.Name);
+                    throw;
+                }
             }
 
             foreach (var contentHandler in Handlers) {
@@ -73,6 +70,7 @@ namespace Orchard.Recipes.RecipeHandlers {
             }
 
             recipeContext.Executed = true;
+            Logger.Information("Finished executing recipe step '{0}'.", recipeContext.RecipeStep.Name);
         }
 
         private void ImportSettingPart(ContentPart sitePart, XElement element) {

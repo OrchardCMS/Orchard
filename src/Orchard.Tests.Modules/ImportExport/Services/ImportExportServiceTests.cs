@@ -18,6 +18,7 @@ using Orchard.FileSystems.AppData;
 using Orchard.FileSystems.WebSite;
 using Orchard.ImportExport.Services;
 using Orchard.Recipes.Events;
+using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
 using Orchard.Services;
 using Orchard.Tests.ContentManagement;
@@ -41,7 +42,8 @@ namespace Orchard.Tests.Modules.ImportExport.Services {
                 databaseFileName,
                 typeof(ContentTypeRecord),
                 typeof(ContentItemRecord),
-                typeof(ContentItemVersionRecord));
+                typeof(ContentItemVersionRecord),
+                typeof(RecipeStepResultRecord));
         }
 
         [SetUp]
@@ -53,7 +55,6 @@ namespace Orchard.Tests.Modules.ImportExport.Services {
             builder.RegisterType<RecipeHarvester>().As<IRecipeHarvester>();
             builder.RegisterType<RecipeStepExecutor>().As<IRecipeStepExecutor>();
             builder.RegisterType<StubStepQueue>().As<IRecipeStepQueue>().InstancePerLifetimeScope();
-            builder.RegisterType<StubRecipeJournal>().As<IRecipeJournal>();
             builder.RegisterType<StubRecipeScheduler>().As<IRecipeScheduler>();
             builder.RegisterType<ExtensionManager>().As<IExtensionManager>();
             builder.RegisterType<StubAppDataFolder>().As<IAppDataFolder>();

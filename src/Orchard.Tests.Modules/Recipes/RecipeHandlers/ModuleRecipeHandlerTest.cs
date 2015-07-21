@@ -67,7 +67,6 @@ namespace Orchard.Tests.Modules.Recipes.RecipeHandlers {
             builder.RegisterType<ShellStateManager>().As<IShellStateManager>().SingleInstance();
             builder.RegisterType<StubEventBus>().As<IEventBus>().SingleInstance();
             builder.RegisterType<ModuleRecipeHandler>();
-            builder.RegisterType<StubRecipeJournal>().As<IRecipeJournal>();
             builder.RegisterSource(new EventsRegistrationSource());
         }
 

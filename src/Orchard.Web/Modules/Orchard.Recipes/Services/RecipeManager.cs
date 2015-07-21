@@ -1,4 +1,5 @@
 ﻿using System;
+using Orchard.Data;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Recipes.Events;
@@ -8,19 +9,18 @@ namespace Orchard.Recipes.Services {
     public class RecipeManager : IRecipeManager {
         private readonly IRecipeStepQueue _recipeStepQueue;
         private readonly IRecipeScheduler _recipeScheduler;
-        private readonly IRecipeJournal _recipeJournal;
         private readonly IRecipeExecuteEventHandler _recipeExecuteEventHandler;
+        private readonly IRepository<RecipeStepResultRecord> _recipeStepResultRecordRepository;
 
         public RecipeManager(
-            IRecipeStepQueue recipeStepQueue, 
-            IRecipeScheduler recipeScheduler, 
-            IRecipeJournal recipeJournal,
-            IRecipeExecuteEventHandler recipeExecuteEventHandler
-            ) {
+            IRecipeStepQueue recipeStepQueue,
+            IRecipeScheduler recipeScheduler,
+            IRecipeExecuteEventHandler recipeExecuteEventHandler,
+            IRepository<RecipeStepResultRecord> recipeStepResultRecordRepository) {
             _recipeStepQueue = recipeStepQueue;
             _recipeScheduler = recipeScheduler;
-            _recipeJournal = recipeJournal;
             _recipeExecuteEventHandler = recipeExecuteEventHandler;
+            _recipeStepResultRecordRepository = recipeStepResultRecordRepository;
 
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
@@ -34,13 +34,16 @@ namespace Orchard.Recipes.Services {
                 return null;
 
             executionId = executionId ?? Guid.NewGuid().ToString("n");
-            
-            _recipeJournal.ExecutionStart(executionId);
+            Logger.Information("Executing recipe '{0}' using ExecutionId {1}.", recipe.Name, executionId);
             _recipeExecuteEventHandler.ExecutionStart(executionId, recipe);
 
             foreach (var recipeStep in recipe.RecipeSteps) {
                 recipeStep.FilesPath = filesPath;
                 _recipeStepQueue.Enqueue(executionId, recipeStep);
+                _recipeStepResultRecordRepository.Create(new RecipeStepResultRecord() {
+                    ExecutionId = executionId,
+                    StepName = recipeStep.Name
+                });
             }
             _recipeScheduler.ScheduleWork(executionId);
 

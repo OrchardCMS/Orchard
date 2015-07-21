@@ -46,36 +46,55 @@ namespace Orchard.Recipes.RecipeHandlers {
                 return;
             }
 
+            Logger.Information("Executing recipe step '{0}'; ExecutionId={1}", recipeContext.RecipeStep.Name, recipeContext.ExecutionId);
+
             foreach (var metadataElement in recipeContext.RecipeStep.Step.Elements()) {
+                Logger.Debug("Processing element '{0}'.", metadataElement.Name.LocalName);
                 switch (metadataElement.Name.LocalName) {
                     case "Types":
                         foreach (var element in metadataElement.Elements()) {
                             var typeElement = element;
                             var typeName = XmlConvert.DecodeName(element.Name.LocalName);
 
-                            _contentDefinitonEventHandlers.ContentTypeImporting(new ContentTypeImportingContext { ContentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(typeName), ContentTypeName = typeName });
-                            _contentDefinitionManager.AlterTypeDefinition(typeName, alteration => _contentDefinitionReader.Merge(typeElement, alteration));
-                            _contentDefinitonEventHandlers.ContentTypeImported(new ContentTypeImportedContext { ContentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(typeName) });
+                            Logger.Information("Importing content type '{0}'.", typeName);
+                            try {
+                                _contentDefinitonEventHandlers.ContentTypeImporting(new ContentTypeImportingContext { ContentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(typeName), ContentTypeName = typeName });
+                                _contentDefinitionManager.AlterTypeDefinition(typeName, alteration => _contentDefinitionReader.Merge(typeElement, alteration));
+                                _contentDefinitonEventHandlers.ContentTypeImported(new ContentTypeImportedContext { ContentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(typeName) });
+                            }
+                            catch (Exception ex) {
+                                Logger.Error(ex, "Error while importing content type '{0}'.", typeName);
+                                throw;
+                            }
                         }
                         break;
+
                     case "Parts":
-                        // create dynamic part.
                         foreach (var element in metadataElement.Elements()) {
                             var partElement = element;
                             var partName = XmlConvert.DecodeName(element.Name.LocalName);
-                            
-                            _contentDefinitonEventHandlers.ContentPartImporting(new ContentPartImportingContext { ContentPartDefinition = _contentDefinitionManager.GetPartDefinition(partName), ContentPartName = partName });
+
+                            Logger.Information("Importing content part '{0}'.", partName);
+                            try {
+                                _contentDefinitonEventHandlers.ContentPartImporting(new ContentPartImportingContext { ContentPartDefinition = _contentDefinitionManager.GetPartDefinition(partName), ContentPartName = partName });
                             _contentDefinitionManager.AlterPartDefinition(partName, alteration => _contentDefinitionReader.Merge(partElement, alteration));
                             _contentDefinitonEventHandlers.ContentPartImported(new ContentPartImportedContext { ContentPartDefinition = _contentDefinitionManager.GetPartDefinition(partName)});
+                            }
+                            catch (Exception ex) {
+                                Logger.Error(ex, "Error while importing content part '{0}'.", partName);
+                                throw;
+                            }
                         }
                         break;
+
                     default:
-                        Logger.Error("Unrecognized element {0} encountered in step Metadata. Skipping.", metadataElement.Name.LocalName);
+                        Logger.Warning("Unrecognized element '{0}' encountered; skipping", metadataElement.Name.LocalName);
                         break;
                 }
             }
 
             recipeContext.Executed = true;
+            Logger.Information("Finished executing recipe step '{0}'.", recipeContext.RecipeStep.Name);
         }
     }
 }

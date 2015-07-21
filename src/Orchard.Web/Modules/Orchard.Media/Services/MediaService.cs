@@ -72,7 +72,7 @@ namespace Orchard.Media.Services {
                     Size = folder.GetSize(),
                     LastUpdated = folder.GetLastUpdated(),
                     MediaPath = folder.GetPath()
-                }).Where(f => !f.Name.Equals("RecipeJournal", StringComparison.OrdinalIgnoreCase)).ToList();
+                }).ToList();
         }
 
         /// <summary>

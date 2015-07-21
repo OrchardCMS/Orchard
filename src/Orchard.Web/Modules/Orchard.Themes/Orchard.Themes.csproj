@@ -25,6 +25,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -60,6 +61,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
     </Reference>
+    <Reference Include="System.XML" />
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
@@ -67,6 +69,9 @@
     <Compile Include="Commands\ThemeCommands.cs" />
     <Compile Include="Drivers\DisableThemePartDriver.cs" />
     <Compile Include="Events\IExtensionDisplayEventHandler.cs" />
+    <Compile Include="ImportExport\CurrentThemeRecipeHandler.cs" />
+    <Compile Include="ImportExport\CurrentThemeExportHandler.cs" />
+    <Compile Include="ImportExport\CurrentThemeStep.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\ThemeEntry.cs" />
     <Compile Include="Models\DisableThemePart.cs" />

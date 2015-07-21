@@ -1,11 +1,10 @@
 ﻿using Orchard.ContentManagement;
-using Orchard.Recipes.Models;
 
 namespace Orchard.ImportExport.Services {
     public interface IDeploymentTarget : IDependency {
         void PushDeploymentFile(string deploymentExecutionId, string deploymentFilePath);
         void PushRecipe(string deploymentExecutionId, string recipeText);
-        RecipeStatus GetRecipeDeploymentStatus(string deploymentExecutionId);
+        bool? GetRecipeDeploymentStatus(string deploymentExecutionId);
         void PushContent(IContent content, bool deployAsDraft = false);
     }
 

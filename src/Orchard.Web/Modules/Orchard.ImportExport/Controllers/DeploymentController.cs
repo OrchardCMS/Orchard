@@ -26,7 +26,7 @@ namespace Orchard.ImportExport.Controllers {
         private readonly IDeploymentService _deploymentService;
         private readonly IStorageProvider _storageProvider;
         private readonly IAppDataFolder _appDataFolder;
-        private readonly IRecipeJournal _recipeJournal;
+        private readonly IRecipeResultAccessor _recipeResultAccessor;
 
         public DeploymentController(
             IOrchardServices services,
@@ -34,17 +34,17 @@ namespace Orchard.ImportExport.Controllers {
             IDeploymentService deploymentService,
             IStorageProvider storageProvider,
             IAppDataFolder appDataFolder,
-            IRecipeJournal recipeJournal,
-            IShapeFactory shapeFactory
-            ) {
+            IShapeFactory shapeFactory, 
+            IRecipeResultAccessor recipeResultAccessor) {
+
             _taskManager = taskManager;
             _deploymentService = deploymentService;
             _storageProvider = storageProvider;
             _appDataFolder = appDataFolder;
-            _recipeJournal = recipeJournal;
             Services = services;
-            T = NullLocalizer.Instance;
             Shape = shapeFactory;
+            _recipeResultAccessor = recipeResultAccessor;
+            T = NullLocalizer.Instance;
         }
 
         public IOrchardServices Services { get; private set; }
@@ -161,10 +161,9 @@ namespace Orchard.ImportExport.Controllers {
         }
 
         private DeploymentHistoryViewModel CreateHistoryFromJournal(string executionId, IStorageFile journalFile) {
-            var journal = _recipeJournal.GetRecipeJournal(executionId);
-
-            var metadata = journal.Messages
-                .Select(m => DeploymentMetadata.FromDisplayString(m.Message))
+            var recipeResult = _recipeResultAccessor.GetResult(executionId);
+            var metadata = recipeResult.Steps
+                .Select(m => DeploymentMetadata.FromDisplayString(m.ErrorMessage))
                 .Where(m => m != null).ToList();
 
             DeploymentType deploymentType;
@@ -179,7 +178,7 @@ namespace Orchard.ImportExport.Controllers {
 
             return new DeploymentHistoryViewModel {
                 ExecutionId = journalFile.GetName(),
-                RecipeStatus = journal.Status.ToString(),
+                RecipeStatus = T(recipeResult.IsSuccessful ? "Successful" : "Failed").ToString(),
                 DeploymentType = deploymentType,
                 Source = FindMetaItem(metadata, "Source") ?? "Local",
                 Target = FindMetaItem(metadata, "Target") ?? "Local",

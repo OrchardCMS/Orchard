@@ -59,7 +59,7 @@
             <ul class="menu-items-zone">
                 @foreach (var descriptor in Model.MenuItemDescriptors.OrderBy(x => x.DisplayName)) {
                     <li>
-                        <div class="menu-item-description"><h2>@T(descriptor.DisplayName.CamelFriendly())</h2>
+                        <div class="menu-item-description"><h2>@T(descriptor.DisplayName)</h2>
                             @if (!string.IsNullOrWhiteSpace(descriptor.Description)) {
                                 <span class="hint">@T(descriptor.Description)</span>
                             }

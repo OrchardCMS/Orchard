@@ -20,7 +20,7 @@ namespace Orchard.ImportExport.Services {
         private readonly IAppDataFolder _appDataFolder;
         private readonly IDeploymentService _deploymentService;
         private readonly IRecurringScheduledTaskManager _taskManager;
-        private readonly IRecipeJournal _recipeJournal;
+        private readonly IRecipeLoggerFactory _recipeLoggerFactory;
         private readonly IClock _clock;
 
         public SubscriptionService(
@@ -29,7 +29,7 @@ namespace Orchard.ImportExport.Services {
             IAppDataFolder appDataFolder,
             IDeploymentService deploymentService,
             IRecurringScheduledTaskManager taskManager,
-            IRecipeJournal recipeJournal,
+            IRecipeLoggerFactory recipeLoggerFactory,
             IClock clock
             ) {
             _orchardServices = orchardServices;
@@ -37,7 +37,7 @@ namespace Orchard.ImportExport.Services {
             _appDataFolder = appDataFolder;
             _deploymentService = deploymentService;
             _taskManager = taskManager;
-            _recipeJournal = recipeJournal;
+            _recipeLoggerFactory = recipeLoggerFactory;
             _clock = clock;
 
             T = NullLocalizer.Instance;
@@ -59,26 +59,27 @@ namespace Orchard.ImportExport.Services {
             var executionId = Guid.NewGuid().ToString("n");
             var exportUtc = _clock.UtcNow;
             var deploymentFile = GetDeploymentFile(subscriptionId, executionId);
+            var recipeLogger = _recipeLoggerFactory.CreateLogger(executionId);
 
             switch (subscription.DeploymentType) {
                 case DeploymentType.Export:
 
                     _taskManager.SetTaskStarted(task, executionId);
                     //Also writing to journal for exports
-                    _recipeJournal.ExecutionStart(executionId);
-                    _recipeJournal.WriteJournalEntry(executionId, new DeploymentMetadata(
+                    recipeLogger.LogExecutionStart();
+                    recipeLogger.Information(new DeploymentMetadata(
                         "DeploymentType", 
                         DeploymentType.Export.ToString()).ToDisplayString());
-                    _recipeJournal.WriteJournalEntry(executionId, new DeploymentMetadata(
+                    recipeLogger.Information(new DeploymentMetadata(
                         "Source", 
                         _orchardServices.WorkContext.CurrentSite.SiteName).ToDisplayString());
-                    _recipeJournal.WriteJournalEntry(executionId, new DeploymentMetadata(
+                    recipeLogger.Information(new DeploymentMetadata(
                         "Target",
                         _orchardServices.ContentManager.GetItemMetadata(
                             subscription.DeploymentConfiguration)
                             .DisplayText)
                         .ToDisplayString());
-                    _recipeJournal.WriteJournalEntry(executionId, new DeploymentMetadata(
+                    recipeLogger.Information(new DeploymentMetadata(
                         "Subscription",
                         subscriptionId.ToString(CultureInfo.InvariantCulture))
                         .ToDisplayString());
@@ -87,14 +88,14 @@ namespace Orchard.ImportExport.Services {
                     if (target != null) {
                         try {
                             target.PushDeploymentFile(executionId, deploymentFile);
-                            _recipeJournal.ExecutionComplete(executionId);
+                            recipeLogger.LogExecutionComplete();
                             _taskManager.SetTaskCompleted(executionId, RunStatus.Success);
                             subscription.DeployedChangesToUtc = exportUtc;
                             _deploymentService.UpdateDeployableContentStatus(executionId, DeploymentStatus.Successful);
                         }
                         catch (Exception ex) {
                             Logger.Error(ex, "Deployment subscription export failed.");
-                            _recipeJournal.ExecutionFailed(executionId);
+                            recipeLogger.LogExecutionFailed();
                             _taskManager.SetTaskCompleted(executionId, RunStatus.Fail);
                             throw;
                         }

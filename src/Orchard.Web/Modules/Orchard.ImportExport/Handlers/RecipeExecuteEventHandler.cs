@@ -9,23 +9,28 @@ using Orchard.Recipes.Events;
 using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
 using Orchard.Services;
+using Orchard.Logging;
 
 namespace Orchard.ImportExport.Handlers {
     [OrchardFeature("Orchard.Deployment")]
     public class RecipeExecuteEventHandler : Component, IRecipeExecuteEventHandler {
         private readonly IRecurringScheduledTaskManager _recurringScheduledTaskManager;
         private readonly IContentManager _contentManager;
-        private readonly IRecipeJournal _recipeJournal;
+        private readonly IRecipeResultAccessor _recipeJournal;
         private readonly IAppDataFolder _appDataFolder;
         private readonly IRecipeSerializer _recipeSerializer;
+        private readonly IRecipeLoggerFactory _recipeLoggerFactory;
+        private readonly IRecipeResultAccessor _recipeResultAccessor;
         private readonly IClock _clock;
 
         public RecipeExecuteEventHandler(
             IRecurringScheduledTaskManager recurringScheduledTaskManager,
             IContentManager contentManager,
-            IRecipeJournal recipeJournal,
+            IRecipeResultAccessor recipeJournal,
             IAppDataFolder appDataFolder,
             IRecipeSerializer recipeSerializer,
+            IRecipeLoggerFactory recipeLoggerFactory,
+            IRecipeResultAccessor recipeResultAccessor,
             IClock clock
             ) {
             _recurringScheduledTaskManager = recurringScheduledTaskManager;
@@ -33,6 +38,8 @@ namespace Orchard.ImportExport.Handlers {
             _recipeJournal = recipeJournal;
             _appDataFolder = appDataFolder;
             _recipeSerializer = recipeSerializer;
+            _recipeLoggerFactory = recipeLoggerFactory;
+            _recipeResultAccessor = recipeResultAccessor;
             _clock = clock;
         }
 
@@ -54,20 +61,18 @@ namespace Orchard.ImportExport.Handlers {
 
             if (recipe == null) throw new ArgumentNullException("recipe");
 
-            _recipeJournal.WriteJournalEntry(executionId,
-                new DeploymentMetadata("DeploymentType", DeploymentType.Import.ToString()).ToDisplayString());
+            var recipeLogger = _recipeLoggerFactory.CreateLogger(executionId);
+            recipeLogger.Information(new DeploymentMetadata("DeploymentType", DeploymentType.Import.ToString()).ToDisplayString());
 
             foreach (var deploymentMetaItem in deploymentMetaItems) {
-                _recipeJournal.WriteJournalEntry(executionId, deploymentMetaItem.ToDisplayString());
+                recipeLogger.Information(deploymentMetaItem.ToDisplayString());
             }
 
             if (recipe.ExportUtc.HasValue) {
-                _recipeJournal.WriteJournalEntry(executionId,
-                    new DeploymentMetadata("ExportUtc", recipe.ExportUtc.Value.ToString("u")).ToDisplayString());
+                recipeLogger.Information(new DeploymentMetadata("ExportUtc", recipe.ExportUtc.Value.ToString("u")).ToDisplayString());
             }
 
-            _recipeJournal.WriteJournalEntry(executionId,
-                new DeploymentMetadata("StartedUtc", _clock.UtcNow.ToString("u")).ToDisplayString());
+            recipeLogger.Information(new DeploymentMetadata("StartedUtc", _clock.UtcNow.ToString("u")).ToDisplayString());
 
             //Save recipe to deployment folder 
             if (!_appDataFolder.DirectoryExists("Deployments")) {
@@ -88,6 +93,7 @@ namespace Orchard.ImportExport.Handlers {
 
             int tempBatchSize, tempBatchStartIndex;
             var itemCount = context.RecipeStep.Step.Elements().Count();
+            var recipeLogger = _recipeLoggerFactory.CreateLogger(executionId);
 
             if (context.RecipeStep.Step.Attribute("BatchSize") != null &&
                 int.TryParse(context.RecipeStep.Step.Attribute("BatchSize").Value, out tempBatchSize) &&
@@ -97,17 +103,17 @@ namespace Orchard.ImportExport.Handlers {
                 var lastIndex = tempBatchStartIndex + tempBatchSize > itemCount - 1 ? itemCount - 1 : tempBatchStartIndex + tempBatchSize - 1;
                 var firstId = context.RecipeStep.Step.Elements().ElementAt(tempBatchStartIndex).Attribute("Id");
                 var lastId = context.RecipeStep.Step.Elements().ElementAt(lastIndex).Attribute("Id");
-                _recipeJournal.WriteJournalEntry(executionId, T("Successfully imported items {0} to {1}. First item id {2} to last item id {3}",
+                recipeLogger.Information(T("Successfully imported items {0} to {1}. First item id {2} to last item id {3}",
                     tempBatchStartIndex + 1, lastIndex + 1, firstId.Value, lastId.Value).ToString());
             }
             else {
-                _recipeJournal.WriteJournalEntry(executionId, T("Successfully imported {0} items.", itemCount).ToString());
+                recipeLogger.Information(T("Successfully imported {0} items.", itemCount).ToString());
             }
         }
 
         public void ExecutionComplete(string executionId) {
-            _recipeJournal.WriteJournalEntry(executionId,
-                new DeploymentMetadata("CompletedUtc", _clock.UtcNow.ToString("u")).ToDisplayString());
+            var recipeLogger = _recipeLoggerFactory.CreateLogger(executionId);
+            recipeLogger.Information(new DeploymentMetadata("CompletedUtc", _clock.UtcNow.ToString("u")).ToDisplayString());
 
             //Update the generic task
             _recurringScheduledTaskManager.SetTaskCompleted(executionId, RunStatus.Success);
@@ -121,9 +127,9 @@ namespace Orchard.ImportExport.Handlers {
 
             if (subscription == null) return;
 
-            var journal = _recipeJournal.GetRecipeJournal(executionId);
-            var exportUtcMeta = journal != null && journal.Messages != null ?
-                journal.Messages.Select(m => DeploymentMetadata.FromDisplayString(m.Message)).FirstOrDefault(m => m != null && m.Key == "ExportUtc") : null;
+            var journal = _recipeResultAccessor.GetResult(executionId);
+            var exportUtcMeta = journal != null ?
+                journal.Steps.Select(m => DeploymentMetadata.FromDisplayString(m.ErrorMessage)).FirstOrDefault(m => m != null && m.Key == "ExportUtc") : null;
 
             DateTime exportUtc;
             if (exportUtcMeta != null && DateTime.TryParse(exportUtcMeta.Value, out exportUtc)) {
