@@ -63,8 +63,8 @@ gulp.task("watchCss", function () {
 
 var srcJsLib = [
     "Scripts/Lib/jquery.validate.js",
-    "Scripts/Lib/jquery.validate.unobtrusive.additional.js",
-    "Scripts/Lib/jquery.validate.unobtrusive.js"
+    "Scripts/Lib/jquery.validate.unobtrusive.js",
+    "Scripts/Lib/jquery.validate.unobtrusive.additional.js"
 ];
 
 var srcJsLayoutEditor = [
