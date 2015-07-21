@@ -157,16 +157,6 @@ namespace Orchard.Autoroute.Services {
             return true;
         }
 
-        //private bool IsHomePage(IContent content) {
-        //    var homePageRoute = _aliasService.Get("");
-        //    var homePageId = homePageRoute.ContainsKey("id") ? XmlHelper.Parse<int>((string)homePageRoute["id"]) : default(int?);
-        //    return content.Id == homePageId;
-        //}
-
-        //private int GetHomePageAliasRecordId() {
-        //    return _aliasStorage.List(x => x.Path == "").First().Item5;
-        //}
-
         private SettingsDictionary GetTypePartSettings(string contentType) {
             var contentDefinition = _contentDefinitionManager.GetTypeDefinition(contentType);
 
