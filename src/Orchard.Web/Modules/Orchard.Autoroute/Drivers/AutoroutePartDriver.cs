@@ -48,7 +48,7 @@ namespace Orchard.Autoroute.Drivers {
 
             var settings = part.TypePartDefinition.Settings.GetModel<AutorouteSettings>();
             
-            // if the content type has no pattern for autoroute, then use a default one
+            // If the content type has no pattern for autoroute, then use a default one.
             if(!settings.Patterns.Any()) {
                 settings.AllowCustomPattern = true;
                 settings.AutomaticAdjustmentOnEdit = false;
@@ -63,16 +63,15 @@ namespace Orchard.Autoroute.Drivers {
                 Settings = settings
             };
 
-            // retrieve home page
-            var homepage = _aliasService.Get(string.Empty);
+            // Retrieve home page.
+            //var homepage = _aliasService.Get(string.Empty);
             var displayRouteValues = _contentManager.GetItemMetadata(part).DisplayRouteValues;
 
-            viewModel.IsHomePage = homepage.Match(displayRouteValues);
-            viewModel.PromoteToHomePage = viewModel.IsHomePage || part.DisplayAlias == "/";
+            //viewModel.IsHomePage = homepage.Match(displayRouteValues);
+            //viewModel.PromoteToHomePage = viewModel.IsHomePage || part.DisplayAlias == "/";
 
             if (settings.PerItemConfiguration) {
-                // if enabled, the list of all available patterns is displayed, and the user can 
-                // select which one to use
+                // If enabled, the list of all available patterns is displayed, and the user can select which one to use.
 
                 // todo: later
             }
@@ -80,14 +79,14 @@ namespace Orchard.Autoroute.Drivers {
             var previous = part.DisplayAlias;
             if (updater != null && updater.TryUpdateModel(viewModel, Prefix, null, null)) {
                 
-                // remove any leading slash in the permalink
+                // Remove any leading slash in the permalink.
                 if (viewModel.CurrentUrl != null) {
                     viewModel.CurrentUrl = viewModel.CurrentUrl.TrimStart('/');
                 }
 
                 part.DisplayAlias = viewModel.CurrentUrl;
 
-                // reset the alias if we need to force regeneration, and the user didn't provide a custom one
+                // Reset the alias if we need to force regeneration, and the user didn't provide a custom one.
                 if(settings.AutomaticAdjustmentOnEdit && previous == part.DisplayAlias) {
                     part.DisplayAlias = string.Empty;
                 }
@@ -96,13 +95,12 @@ namespace Orchard.Autoroute.Drivers {
                     updater.AddModelError("CurrentUrl", T("Please do not use any of the following characters in your permalink: \":\", \"?\", \"#\", \"[\", \"]\", \"@\", \"!\", \"$\", \"&\", \"'\", \"(\", \")\", \"*\", \"+\", \",\", \";\", \"=\", \", \"<\", \">\", \"\\\", \"|\", \"%\", \".\". No spaces are allowed (please use dashes or underscores instead)."));
                 }
 
-                // if CurrentUrl is set, the handler won't try to create an alias for it
-                // but instead keep the value
+                // If CurrentUrl is set, the handler won't try to create an alias for it but instead keep the value.
 
-                // if home page is requested, use "/" to have the handler create a homepage alias
-                if(viewModel.PromoteToHomePage) {
-                    part.DisplayAlias = "/";
-                }
+                //// If home page is requested, use "/" to have the handler create a homepage alias.
+                //if(viewModel.PromoteToHomePage) {
+                //    part.DisplayAlias = "/";
+                //}
             }
 
             return ContentShape("Parts_Autoroute_Edit", 
@@ -127,7 +125,7 @@ namespace Orchard.Autoroute.Drivers {
         }
 
         protected override void Exporting(AutoroutePart part, ContentManagement.Handlers.ExportContentContext context) {
-            context.Element(part.PartDefinition.Name).SetAttributeValue("Alias", String.IsNullOrEmpty(part.Record.DisplayAlias) ? "/" : part.Record.DisplayAlias);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Alias", part.Record.DisplayAlias);
             context.Element(part.PartDefinition.Name).SetAttributeValue("CustomPattern", part.Record.CustomPattern);
             context.Element(part.PartDefinition.Name).SetAttributeValue("UseCustomPattern", part.Record.UseCustomPattern);
         }
