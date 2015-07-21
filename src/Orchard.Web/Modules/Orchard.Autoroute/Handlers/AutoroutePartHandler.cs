@@ -73,7 +73,7 @@ namespace Orchard.Autoroute.Handlers {
                 }
 
                 // Update the home alias to point to this item being published.
-                _homeAliasService.SetHomeAlias(part);
+                _homeAliasService.PublishHomeAlias(part);
             }
 
             _autorouteService.Value.PublishAlias(part);

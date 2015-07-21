@@ -37,16 +37,18 @@ namespace Orchard.Autoroute.Services {
             return homePage;
         }
 
-        public void SetHomeAlias(IContent content) {
+        public void PublishHomeAlias(IContent content) {
             var routeValues = _contentManager.GetItemMetadata(content).DisplayRouteValues;
-            SetHomeAlias(routeValues);
+            PublishHomeAlias(routeValues);
         }
 
-        public void SetHomeAlias(string route) {
+        public void PublishHomeAlias(string route) {
+            _aliasService.DeleteBySource(AliasSource);
             _aliasService.Set(HomeAlias, route, AliasSource);
         }
 
-        public void SetHomeAlias(RouteValueDictionary route) {
+        public void PublishHomeAlias(RouteValueDictionary route) {
+            _aliasService.DeleteBySource(AliasSource);
             _aliasService.Set(HomeAlias, route, AliasSource);
         }
     }

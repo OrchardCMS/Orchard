@@ -113,23 +113,6 @@ namespace Orchard.Autoroute.Services {
         }
 
         public void RemoveAliases(AutoroutePart part) {
-            //// https://github.com/OrchardCMS/Orchard/issues/5137
-            //// If the alias of the specified part is empty while not being the homepage,
-            //// we need to make sure we are not removing all empty aliases in order to prevent losing the homepage content item being the homepage.
-            //if (String.IsNullOrWhiteSpace(part.Path)) {
-            //    if (!IsHomePage(part)) {
-            //        // The item being removed is NOT the homepage, so we need to make sure we're not removing the alias for the homepage.
-            //        var aliasRecordId = GetHomePageAliasRecordId();
-
-            //        // Remove all aliases EXCEPT for the alias of the homepage.
-            //        _aliasStorage.Remove(x => x.Path == part.Path && x.Source == AliasSource && x.Id != aliasRecordId);
-
-            //        // Done.
-            //        return;
-            //    }
-            //}
-
-            //// Safe to delete all aliases for the specified part since it is definitely not the homepage.
             _aliasService.Delete(part.Path, AliasSource);
         }
 

@@ -7,8 +7,8 @@ namespace Orchard.Autoroute.Services {
         RouteValueDictionary GetHomeRoute();
         int? GetHomePageId();
         IContent GetHomePage(VersionOptions version = null);
-        void SetHomeAlias(IContent content);
-        void SetHomeAlias(string route);
-        void SetHomeAlias(RouteValueDictionary route);
+        void PublishHomeAlias(IContent content);
+        void PublishHomeAlias(string route);
+        void PublishHomeAlias(RouteValueDictionary route);
     }
 }
