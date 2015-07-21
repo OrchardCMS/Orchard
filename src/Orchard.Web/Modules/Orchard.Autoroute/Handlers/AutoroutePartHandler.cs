@@ -59,14 +59,14 @@ namespace Orchard.Autoroute.Handlers {
             ProcessAlias(part);
 
             // Should it become the home page?
-            if (part.IsHomePage) {
+            if (part.PromoteToHomePage) {
                 // Get the current homepage an unmark it as the homepage.
                 var currentHomePage = _homeAliasService.GetHomePage(VersionOptions.Latest);
                 if(currentHomePage != null && currentHomePage.Id != part.Id) {
                     var autoroutePart = currentHomePage.As<AutoroutePart>();
 
                     if (autoroutePart != null) {
-                        autoroutePart.IsHomePage = false;
+                        autoroutePart.PromoteToHomePage = false;
                         if(autoroutePart.IsPublished())
                             _orchardServices.ContentManager.Publish(autoroutePart.ContentItem);
                     }

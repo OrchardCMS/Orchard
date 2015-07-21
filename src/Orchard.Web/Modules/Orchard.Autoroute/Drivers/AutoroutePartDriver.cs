@@ -61,7 +61,7 @@ namespace Orchard.Autoroute.Drivers {
             var isHomePage = part.Id == homePageId;
 
             viewModel.IsHomePage = isHomePage;
-            viewModel.PromoteToHomePage = part.IsHomePage;
+            viewModel.PromoteToHomePage = part.PromoteToHomePage;
 
             if (settings.PerItemConfiguration) {
                 // If enabled, the list of all available patterns is displayed, and the user can select which one to use.
@@ -88,7 +88,7 @@ namespace Orchard.Autoroute.Drivers {
                 }
 
                 // Mark the content item to be the homepage. Once this content isp ublished, the home alias will be updated to point to this content item.
-                part.IsHomePage = viewModel.PromoteToHomePage;
+                part.PromoteToHomePage = viewModel.PromoteToHomePage;
             }
 
             return ContentShape("Parts_Autoroute_Edit",  
@@ -96,26 +96,17 @@ namespace Orchard.Autoroute.Drivers {
         }
 
         protected override void Importing(AutoroutePart part, ImportContentContext context) {
-            var displayAlias = context.Attribute(part.PartDefinition.Name, "Alias");
-            if (displayAlias != null) {
-                part.DisplayAlias = displayAlias;
-            }
-
-            var customPattern = context.Attribute(part.PartDefinition.Name, "CustomPattern");
-            if (customPattern != null) {
-                part.CustomPattern = customPattern;
-            }
-
-            var useCustomPattern = context.Attribute(part.PartDefinition.Name, "UseCustomPattern");
-            if (useCustomPattern != null) {
-                part.UseCustomPattern = bool.Parse(useCustomPattern);
-            }
+            context.ImportAttribute(part.PartDefinition.Name, "Alias", s => part.DisplayAlias = s);
+            context.ImportAttribute(part.PartDefinition.Name, "CustomPattern", s => part.CustomPattern = s);
+            context.ImportAttribute(part.PartDefinition.Name, "UseCustomPattern", s => part.UseCustomPattern = XmlHelper.Parse<bool>(s));
+            context.ImportAttribute(part.PartDefinition.Name, "PromoteToHomePage", s => part.PromoteToHomePage = XmlHelper.Parse<bool>(s));
         }
 
         protected override void Exporting(AutoroutePart part, ExportContentContext context) {
             context.Element(part.PartDefinition.Name).SetAttributeValue("Alias", part.Record.DisplayAlias);
             context.Element(part.PartDefinition.Name).SetAttributeValue("CustomPattern", part.Record.CustomPattern);
             context.Element(part.PartDefinition.Name).SetAttributeValue("UseCustomPattern", part.Record.UseCustomPattern);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("PromoteToHomePage", part.UseCustomPattern);
         }
     }
 }
