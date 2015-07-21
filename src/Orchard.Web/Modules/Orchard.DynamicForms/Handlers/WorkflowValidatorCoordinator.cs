@@ -7,7 +7,6 @@ using Orchard.Layouts.Helpers;
 using Orchard.Workflows.Services;
 
 namespace Orchard.DynamicForms.Handlers {
-    [OrchardFeature("Orchard.DynamicForms.Activities.Validation")]
     public class WorkflowValidatorCoordinator : FormEventHandlerBase {
         private readonly IWorkflowManager _workflowManager;
         public WorkflowValidatorCoordinator(IWorkflowManager workflowManager) {
