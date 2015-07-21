@@ -1,6 +1,8 @@
-﻿using Orchard.Forms.Services;
+﻿using Orchard.Environment.Extensions;
+using Orchard.Forms.Services;
 
 namespace Orchard.DynamicForms.Forms {
+    [OrchardFeature("Orchard.DynamicForms.Activities.Validation")]
     public class DynamicFormValidatingForm : Component, IFormProvider {
         public void Describe(DescribeContext context) {
             context.Form("DynamicFormValidatingScript", shapeFactory => {
