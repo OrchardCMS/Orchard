@@ -1,37 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Orchard.Alias;
 using Orchard.Autoroute.Models;
 using Orchard.Autoroute.Services;
+using Orchard.Autoroute.Settings;
+using Orchard.Autoroute.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
-using Orchard.Autoroute.ViewModels;
-using Orchard.Autoroute.Settings;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
-using Orchard.Security;
 using Orchard.UI.Notify;
-using Orchard.Utility.Extensions;
 
 namespace Orchard.Autoroute.Drivers {
     public class AutoroutePartDriver : ContentPartDriver<AutoroutePart> {
-        private readonly IAliasService _aliasService;
-        private readonly IContentManager _contentManager;
         private readonly IAutorouteService _autorouteService;
-        private readonly IAuthorizer _authorizer;
         private readonly INotifier _notifier;
+        private readonly IHomeAliasService _homeAliasService;
 
         public AutoroutePartDriver(
-            IAliasService aliasService, 
-            IContentManager contentManager,
             IAutorouteService autorouteService,
-            IAuthorizer authorizer,
-            INotifier notifier) {
-            _aliasService = aliasService;
-            _contentManager = contentManager;
+            INotifier notifier, 
+            IHomeAliasService homeAliasService) {
+            
             _autorouteService = autorouteService;
-            _authorizer = authorizer;
             _notifier = notifier;
+            _homeAliasService = homeAliasService;
 
             T = NullLocalizer.Instance;
         }
@@ -64,15 +57,14 @@ namespace Orchard.Autoroute.Drivers {
             };
 
             // Retrieve home page.
-            //var homepage = _aliasService.Get(string.Empty);
-            var displayRouteValues = _contentManager.GetItemMetadata(part).DisplayRouteValues;
+            var homePageId = _homeAliasService.GetHomePageId();
+            var isHomePage = part.Id == homePageId;
 
-            //viewModel.IsHomePage = homepage.Match(displayRouteValues);
-            //viewModel.PromoteToHomePage = viewModel.IsHomePage || part.DisplayAlias == "/";
+            viewModel.IsHomePage = isHomePage;
+            viewModel.PromoteToHomePage = part.IsHomePage;
 
             if (settings.PerItemConfiguration) {
                 // If enabled, the list of all available patterns is displayed, and the user can select which one to use.
-
                 // todo: later
             }
 
@@ -88,26 +80,22 @@ namespace Orchard.Autoroute.Drivers {
 
                 // Reset the alias if we need to force regeneration, and the user didn't provide a custom one.
                 if(settings.AutomaticAdjustmentOnEdit && previous == part.DisplayAlias) {
-                    part.DisplayAlias = string.Empty;
+                    part.DisplayAlias = String.Empty;
                 }
 
                 if (!_autorouteService.IsPathValid(part.DisplayAlias)) {
                     updater.AddModelError("CurrentUrl", T("Please do not use any of the following characters in your permalink: \":\", \"?\", \"#\", \"[\", \"]\", \"@\", \"!\", \"$\", \"&\", \"'\", \"(\", \")\", \"*\", \"+\", \",\", \";\", \"=\", \", \"<\", \">\", \"\\\", \"|\", \"%\", \".\". No spaces are allowed (please use dashes or underscores instead)."));
                 }
 
-                // If CurrentUrl is set, the handler won't try to create an alias for it but instead keep the value.
-
-                //// If home page is requested, use "/" to have the handler create a homepage alias.
-                //if(viewModel.PromoteToHomePage) {
-                //    part.DisplayAlias = "/";
-                //}
+                // Mark the content item to be the homepage. Once this content isp ublished, the home alias will be updated to point to this content item.
+                part.IsHomePage = viewModel.PromoteToHomePage;
             }
 
-            return ContentShape("Parts_Autoroute_Edit", 
+            return ContentShape("Parts_Autoroute_Edit",  
                 () => shapeHelper.EditorTemplate(TemplateName: "Parts.Autoroute.Edit", Model: viewModel, Prefix: Prefix));
         }
 
-        protected override void Importing(AutoroutePart part, ContentManagement.Handlers.ImportContentContext context) {
+        protected override void Importing(AutoroutePart part, ImportContentContext context) {
             var displayAlias = context.Attribute(part.PartDefinition.Name, "Alias");
             if (displayAlias != null) {
                 part.DisplayAlias = displayAlias;
@@ -124,7 +112,7 @@ namespace Orchard.Autoroute.Drivers {
             }
         }
 
-        protected override void Exporting(AutoroutePart part, ContentManagement.Handlers.ExportContentContext context) {
+        protected override void Exporting(AutoroutePart part, ExportContentContext context) {
             context.Element(part.PartDefinition.Name).SetAttributeValue("Alias", part.Record.DisplayAlias);
             context.Element(part.PartDefinition.Name).SetAttributeValue("CustomPattern", part.Record.CustomPattern);
             context.Element(part.PartDefinition.Name).SetAttributeValue("UseCustomPattern", part.Record.UseCustomPattern);

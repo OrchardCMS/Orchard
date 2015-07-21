@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Orchard.Alias;
-using Orchard.Alias.Implementation.Storage;
 using Orchard.Autoroute.Models;
 using Orchard.Autoroute.Settings;
 using Orchard.ContentManagement;
@@ -19,7 +18,6 @@ namespace Orchard.Autoroute.Services {
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly IContentManager _contentManager;
         private readonly IRouteEvents _routeEvents;
-        private readonly IAliasStorage _aliasStorage;
         private const string AliasSource = "Autoroute:View";
 
         public AutorouteService(
@@ -27,15 +25,13 @@ namespace Orchard.Autoroute.Services {
             ITokenizer tokenizer,
             IContentDefinitionManager contentDefinitionManager,
             IContentManager contentManager,
-            IRouteEvents routeEvents,
-            IAliasStorage aliasStorage) {
+            IRouteEvents routeEvents) {
 
             _aliasService = aliasService;
             _tokenizer = tokenizer;
             _contentDefinitionManager = contentDefinitionManager;
             _contentManager = contentManager;
             _routeEvents = routeEvents;
-            _aliasStorage = aliasStorage;
         }
 
         public string GenerateAlias(AutoroutePart part) {
@@ -178,15 +174,15 @@ namespace Orchard.Autoroute.Services {
             return true;
         }
 
-        private bool IsHomePage(IContent content) {
-            var homePageRoute = _aliasService.Get("");
-            var homePageId = homePageRoute.ContainsKey("id") ? XmlHelper.Parse<int>((string)homePageRoute["id"]) : default(int?);
-            return content.Id == homePageId;
-        }
+        //private bool IsHomePage(IContent content) {
+        //    var homePageRoute = _aliasService.Get("");
+        //    var homePageId = homePageRoute.ContainsKey("id") ? XmlHelper.Parse<int>((string)homePageRoute["id"]) : default(int?);
+        //    return content.Id == homePageId;
+        //}
 
-        private int GetHomePageAliasRecordId() {
-            return _aliasStorage.List(x => x.Path == "").First().Item5;
-        }
+        //private int GetHomePageAliasRecordId() {
+        //    return _aliasStorage.List(x => x.Path == "").First().Item5;
+        //}
 
         private SettingsDictionary GetTypePartSettings(string contentType) {
             var contentDefinition = _contentDefinitionManager.GetTypeDefinition(contentType);
