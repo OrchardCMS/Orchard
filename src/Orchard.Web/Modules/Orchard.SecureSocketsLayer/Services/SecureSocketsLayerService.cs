@@ -215,7 +215,7 @@ namespace Orchard.SecureSocketsLayer.Services {
             if (settings == null) return path;
             var insecureHostName = settings.InsecureHostName;
             int port = 80;
-            TryGetPort(insecureHostName, port, out port);
+            GetPortFomHostName(insecureHostName, port, out port);
             var builder = new UriBuilder(insecureHostName.Split(':').First().Trim('/') + path) {
                 Scheme = Uri.UriSchemeHttp,
                 Port = port
@@ -228,7 +228,7 @@ namespace Orchard.SecureSocketsLayer.Services {
             if (settings == null) return path;
             var secureHostName = settings.SecureHostName;
             int port = 443;
-            TryGetPort(secureHostName, port, out port);
+            GetPortFomHostName(secureHostName, port, out port);
             var builder = new UriBuilder(secureHostName.Split(':').First().Trim('/') + path) {
                 Scheme = Uri.UriSchemeHttps, 
                 Port = port
@@ -236,7 +236,7 @@ namespace Orchard.SecureSocketsLayer.Services {
             return builder.Uri.ToString();
         }
 
-        private static bool TryGetPort(string hostName, int defaultPort, out int port) {
+        private static bool GetPortFomHostName(string hostName, int defaultPort, out int port) {
             bool ret = false;
             port = defaultPort;
             if (string.IsNullOrWhiteSpace(hostName)) return true;
