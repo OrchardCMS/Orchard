@@ -31,3 +31,68 @@
     @Html.AntiForgeryToken()
 </form>
 @tagBuilder.EndElement
+
+@if (element.EnableClientValidation == true && element.Elements.Where(x => x.GetType().IsAssignableFrom(typeof(NumField))).Any()) {
+    var culture = new System.Globalization.CultureInfo(WorkContext.CurrentCulture);
+    var number = new string(culture.NumberFormat.ToJson().Select(c => Char.IsWhiteSpace(c) ? '\u0020' : c).ToArray());
+
+    using (Script.Foot()) {
+        <script type="text/javascript">//<![CDATA[
+        $(function () {
+            var number = @Html.Raw(number);
+
+            Globalize.load({
+                "main": {
+                    "xx": {
+                        "numbers": {
+                            "defaultNumberingSystem": "xxxx",
+                            "symbols-numberSystem-xxxx": {
+                                "decimal": number.NumberDecimalSeparator,
+                                "group": number.NumberGroupSeparator,
+                                "percentSign": number.PercentSymbol,
+                                "plusSign": number.PositiveSign,
+                                "minusSign": number.NegativeSign,
+                                "exponential": "E",
+                                "perMille": number.PerMilleSymbol,
+                                "infinity": "∞",
+                                "nan": number.NaNSymbol
+                            },
+                            "decimalFormats-numberSystem-xxxx": {
+                                "standard": "0"
+                            }
+                        }
+                    }
+                },
+                "supplemental": {
+                    "likelySubtags": {
+                        "xx": "xx-Xxxx-XX",
+                    },
+                    "numberingSystems": {
+                        "xxxx": {
+                            "_digits": number.NativeDigits.join(""),
+                            "_type": "numeric"
+                        }
+                    }
+                }
+            });
+
+            Globalize.locale("xx-Xxxx-XX");
+            var numberParser = Globalize.numberParser();
+            var baseRange = $.validator.methods.range;
+
+            $.validator.methods.range = function (value, element, param) {
+
+                var globalizedValue = numberParser(value);
+                var scale = $(element).attr("data-val-range-scale");
+                scale = scale && scale > 0 ? scale : 0;
+
+                if (globalizedValue.toFixed(scale) == globalizedValue) {
+                    return baseRange.call(this, globalizedValue, element, param);
+                }
+                else {
+                    return baseRange.call(this, "NaN", element, param);
+                }
+            };
+        });//]]></script>
+    }
+}
