@@ -113,7 +113,7 @@ namespace Orchard.Recipes.Providers.Builders {
             var partsToExport = new Dictionary<string, ContentPartDefinition>();
 
             foreach (var contentTypeDefinition in typesToExport.OrderBy(x => x.Name)) {
-                foreach (var contentPartDefinition in contentTypeDefinition.Parts) {
+                foreach (var contentPartDefinition in contentTypeDefinition.Parts.OrderBy(x => x.PartDefinition.Name)) {
                     if (partsToExport.ContainsKey(contentPartDefinition.PartDefinition.Name)) {
                         continue;
                     }
