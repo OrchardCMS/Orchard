@@ -264,9 +264,8 @@
     <Compile Include="Helpers\StreamExtensions.cs" />
     <Compile Include="Helpers\DataTableExtensions.cs" />
     <Compile Include="Helpers\TokenizerExtensions.cs" />
-    <Compile Include="ImportExport\FormsExportStep.cs" />
-    <Compile Include="ImportExport\FormsExportHandler.cs" />
-    <Compile Include="ImportExport\FormsImportHandler.cs" />
+    <Compile Include="Recipes\Builders\FormSubmissionsStep.cs" />
+    <Compile Include="Recipes\Executors\FormSubmissionsStep.cs" />
     <Compile Include="Services\IDynamicFormEventHandler.cs" />
     <Compile Include="Services\Models\FieldValidatorDescriptor.cs" />
     <Compile Include="Services\Models\FormSubmittedEventContext.cs" />

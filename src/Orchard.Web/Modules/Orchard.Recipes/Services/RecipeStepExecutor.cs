@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.Data;
-using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Recipes.Events;
 using Orchard.Recipes.Models;
 
 namespace Orchard.Recipes.Services {
-    public class RecipeStepExecutor : IRecipeStepExecutor {
+    public class RecipeStepExecutor : Component, IRecipeStepExecutor {
         private readonly IRecipeStepQueue _recipeStepQueue;
         private readonly IEnumerable<IRecipeHandler> _recipeHandlers;
         private readonly IRecipeExecuteEventHandler _recipeExecuteEventHandler;
@@ -19,17 +18,12 @@ namespace Orchard.Recipes.Services {
             IEnumerable<IRecipeHandler> recipeHandlers,
             IRecipeExecuteEventHandler recipeExecuteEventHandler,
             IRepository<RecipeStepResultRecord> recipeStepResultRecordRepository) {
+
             _recipeStepQueue = recipeStepQueue;
             _recipeHandlers = recipeHandlers;
             _recipeExecuteEventHandler = recipeExecuteEventHandler;
             _recipeStepResultRecordRepository = recipeStepResultRecordRepository;
-
-            Logger = NullLogger.Instance;
-            T = NullLocalizer.Instance;
         }
-
-        public Localizer T { get; set; }
-        public ILogger Logger { get; set; }
 
         public bool ExecuteNextStep(string executionId) {
             var nextRecipeStep = _recipeStepQueue.Dequeue(executionId);
@@ -45,9 +39,11 @@ namespace Orchard.Recipes.Services {
 
             try {
                 _recipeExecuteEventHandler.RecipeStepExecuting(executionId, recipeContext);
+
                 foreach (var recipeHandler in _recipeHandlers) {
                     recipeHandler.ExecuteRecipeStep(recipeContext);
                 }
+
                 UpdateStepResultRecord(executionId, nextRecipeStep.Name, isSuccessful: true);
                 _recipeExecuteEventHandler.RecipeStepExecuted(executionId, recipeContext);
             }

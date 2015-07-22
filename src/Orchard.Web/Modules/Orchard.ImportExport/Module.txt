@@ -6,5 +6,9 @@ Website: http://orchardproject.net
 Version: 1.9.1
 OrchardVersion: 1.9
 Description: Provides content item data import and export capability.
-FeatureDescription: Imports and exports content item data
-Category: Content
+Features:
+    Orchard.ImportExport:
+        Name: Import Export
+        Description: Imports and exports content item data.
+        Category: Content
+        Dependencies: Orchard.jQuery, Orchard.Recipes

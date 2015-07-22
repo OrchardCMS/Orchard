@@ -14,7 +14,7 @@
     <Feature disable="Feeds, Containers"
              enable="Orchard.jQuery,Orchard.Alias,Orchard.Autoroute" />
 
-    <Metadata>
+    <ContentDefinition>
         <Types>
             <Page ContentTypeSettings.Draftable="True">
                 <BodyPart />
@@ -23,7 +23,7 @@
         <Parts>
             <BodyPart BodyPartSettings.FlavorDefault="html" />
         </Parts>
-    </Metadata>
+    </ContentDefinition>
 
     <Settings />
 

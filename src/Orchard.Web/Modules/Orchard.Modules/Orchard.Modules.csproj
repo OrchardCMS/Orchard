@@ -72,8 +72,9 @@
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Data\Migration\DataMigrationNotificationProvider.cs" />
     <Compile Include="Events\IExtensionDisplayEventHandler.cs" />
-    <Compile Include="ImportExport\FeaturesStep.cs" />
-    <Compile Include="ImportExport\FeaturesExportHandler.cs" />
+    <Compile Include="Recipes\Builders\FeatureStep.cs" />
+    <Compile Include="Recipes\Executors\FeatureStep.cs" />
+    <Compile Include="ViewModels\FeatureStepViewModel.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Commands\FeatureCommands.cs" />
     <Compile Include="Controllers\AdminController.cs" />
@@ -139,6 +140,10 @@
     <Content Include="Scripts\Web.config">
       <SubType>Designer</SubType>
     </Content>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\BuilderSteps\Feature.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

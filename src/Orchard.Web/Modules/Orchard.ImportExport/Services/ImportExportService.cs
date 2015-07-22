@@ -1,254 +1,103 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml;
 using System.Xml.Linq;
-using Orchard.ContentManagement;
-using Orchard.ContentManagement.MetaData;
-using Orchard.ContentManagement.MetaData.Models;
-using Orchard.Environment.Descriptor;
 using Orchard.FileSystems.AppData;
 using Orchard.ImportExport.Models;
-using Orchard.Localization;
 using Orchard.Logging;
-using Orchard.Recipes.Services;
 using Orchard.Services;
 
 namespace Orchard.ImportExport.Services {
-    public class ImportExportService : IImportExportService {
+    public class ImportExportService : Component, IImportExportService {
         private readonly IOrchardServices _orchardServices;
-        private readonly IContentDefinitionManager _contentDefinitionManager;
-        private readonly IContentDefinitionWriter _contentDefinitionWriter;
         private readonly IAppDataFolder _appDataFolder;
-        private readonly IRecipeParser _recipeParser;
-        private readonly IRecipeManager _recipeManager;
-        private readonly IShellDescriptorManager _shellDescriptorManager;
         private readonly IClock _clock;
-        private readonly IEnumerable<IExportEventHandler> _exportEventHandlers;
+        private readonly IEnumerable<IExportAction> _exportActions;
+        private readonly IEnumerable<IImportAction> _importActions;
         private const string ExportsDirectory = "Exports";
 
         public ImportExportService(
             IOrchardServices orchardServices,
-            IContentDefinitionManager contentDefinitionManager,
-            IContentDefinitionWriter contentDefinitionWriter,
             IAppDataFolder appDataFolder,
-            IRecipeParser recipeParser, 
-            IRecipeManager recipeManager,
-            IShellDescriptorManager shellDescriptorManager,
-            IClock clock,
-            IEnumerable<IExportEventHandler> exportEventHandlers) {
+            IClock clock, 
+            IEnumerable<IExportAction> exportActions, 
+            IEnumerable<IImportAction> importActions) {
 
             _orchardServices = orchardServices;
-            _contentDefinitionManager = contentDefinitionManager;
-            _contentDefinitionWriter = contentDefinitionWriter;
             _appDataFolder = appDataFolder;
-            _recipeParser = recipeParser;
-            _recipeManager = recipeManager;
-            _shellDescriptorManager = shellDescriptorManager;
             _clock = clock;
-            _exportEventHandlers = exportEventHandlers;
-            Logger = NullLogger.Instance;
-            T = NullLocalizer.Instance;
+            _exportActions = exportActions;
+            _importActions = importActions;
         }
 
-        public Localizer T { get; set; }
-        public ILogger Logger { get; set; }
-
-        public string Import(string recipeText) {
-            var recipe = _recipeParser.ParseRecipe(recipeText);
-            var executionId = _recipeManager.Execute(recipe);
-            UpdateShell();
-            return executionId;
+        public string Import(ImportActionContext context, IEnumerable<IImportAction> actions = null) {
+            foreach (var action in actions ?? _importActions) {
+                action.Execute(context);
+            }
+            return context.ExecutionId;
         }
 
-        public string Export(IEnumerable<string> contentTypes, ExportOptions exportOptions) {
-            //items need to be retrieved
-            IEnumerable<ContentItem> contentItems = null;
-            if (exportOptions.ExportData) {
-                contentItems = _orchardServices.ContentManager.Query(GetContentExportVersionOptions(exportOptions.VersionHistoryOptions), contentTypes.ToArray()).List().ToArray();
-            }
-
-            return Export(contentTypes, contentItems, exportOptions);
-        }
-
-        public string Export(IEnumerable<string> contentTypes, IEnumerable<ContentItem> contentItems, ExportOptions exportOptions) {
-            var exportDocument = CreateExportRoot(exportOptions);
-
-            var context = new ExportContext {
-                Document = exportDocument,
-                ContentTypes = contentTypes,
-                ExportOptions = exportOptions
-            };
-
-            _exportEventHandlers.Invoke(x => x.Exporting(context), Logger);
-
-            if (exportOptions.ExportMetadata && (!exportOptions.ExportData || contentItems.Any())) {
-                exportDocument.Element("Orchard").Add(ExportMetadata(contentTypes));
-            }
-
-            if (exportOptions.ExportSiteSettings) {
-                exportDocument.Element("Orchard").Add(ExportSiteSettings());
-            }
-
-            if (exportOptions.ExportData && contentItems.Any()) {
-                exportDocument.Element("Orchard").Add(ExportData(contentTypes, contentItems, exportOptions.ImportBatchSize));
-            }
-
-            _exportEventHandlers.Invoke(x => x.Exported(context), Logger);
-
-            return WriteExportFile(exportDocument.ToString());
-        }
-
-        private XDocument CreateExportRoot(ExportOptions exportOptions) {
-            var recipeName = !String.IsNullOrWhiteSpace(exportOptions.RecipeName) 
-                ? exportOptions.RecipeName 
-                : T("Generated by Orchard.ImportExport").ToString();
-
-            var exportRoot = new XDocument(
-                new XDeclaration("1.0", "", "yes"),
-                new XComment("Exported from Orchard"),
-                new XElement("Orchard",
-                    new XElement("Recipe",
-                        new XElement("Name", recipeName),
-                        new XElement("Description", exportOptions.RecipeDescription),
-                        new XElement("Author", _orchardServices.WorkContext.CurrentUser.UserName),
-                        new XElement("WebSite", exportOptions.RecipeWebsite),
-                        new XElement("Tags", exportOptions.RecipeTags),
-                        new XElement("Version", exportOptions.RecipeVersion),
-                        new XElement("IsSetupRecipe", exportOptions.SetupRecipe),
-                        new XElement("ExportUtc", XmlConvert.ToString(_clock.UtcNow, XmlDateTimeSerializationMode.Utc))
-                    )
-                )
-            );
-            return exportRoot;
-        }
-
-        private XElement ExportMetadata(IEnumerable<string> contentTypes) {
-            var typesElement = new XElement("Types");
-            var partsElement = new XElement("Parts");
-            var typesToExport = _contentDefinitionManager.ListTypeDefinitions()
-                .Where(typeDefinition => contentTypes.Contains(typeDefinition.Name))
-                .ToList();
-            var partsToExport = new Dictionary<string, ContentPartDefinition>();
-
-            foreach (var contentTypeDefinition in typesToExport.OrderBy(x => x.Name)) {
-                foreach (var contentPartDefinition in contentTypeDefinition.Parts) {
-                    if (partsToExport.ContainsKey(contentPartDefinition.PartDefinition.Name)) {
-                        continue;
-                    }
-                    partsToExport.Add(contentPartDefinition.PartDefinition.Name, contentPartDefinition.PartDefinition);
-                }
-                typesElement.Add(_contentDefinitionWriter.Export(contentTypeDefinition));
-            }
-
-            foreach (var part in partsToExport.Values.OrderBy(x => x.Name)) {
-                partsElement.Add(_contentDefinitionWriter.Export(part));
-            }
-
-            return new XElement("Metadata", typesElement, partsElement);
-        }
-
-        private XElement ExportSiteSettings() {
-            var siteContentItem = _orchardServices.WorkContext.CurrentSite.ContentItem;
-            var exportedElements = ExportContentItem(siteContentItem).Elements().ToList();
-            
-            foreach (var contentPart in siteContentItem.Parts.OrderBy(x => x.PartDefinition.Name)) {
-                var exportedElement = exportedElements.FirstOrDefault(element => element.Name == contentPart.PartDefinition.Name);
-
-                //Get all simple attributes if exported element is null
-                //Get exclude the simple attributes that already exist if element is not null
-                var simpleAttributes =
-                    ExportSettingsPartAttributes(contentPart)
-                    .Where(attribute => exportedElement == null || exportedElement.Attributes().All(xAttribute => xAttribute.Name != attribute.Name))
-                    .OrderBy(x => x.Name.LocalName)
-                    .ToList();
-
-                if (simpleAttributes.Any()) {
-                    if (exportedElement == null) {
-                        exportedElement = new XElement(contentPart.PartDefinition.Name);
-                        exportedElements.Add(exportedElement);
-                    }
-
-                    exportedElement.Add(simpleAttributes);
-                }
-            }
-
-            exportedElements = exportedElements.OrderBy(x => x.Name.LocalName).ToList();
-            return new XElement("Settings", exportedElements);
-        }
-
-        private IEnumerable<XAttribute> ExportSettingsPartAttributes(ContentPart sitePart) {
-            foreach (var property in sitePart.GetType().GetProperties().OrderBy(x => x.Name)) {
-                var propertyType = property.PropertyType;
-
-                // Supported types (we also know they are not indexed properties).
-                if (propertyType == typeof(string) || propertyType == typeof(bool) || propertyType == typeof(int)) {
-                    // Exclude read-only properties.
-                    if (property.GetSetMethod() != null) {
-                        var value = property.GetValue(sitePart, null);
-                        if (value == null)
-                            continue;
-
-                        yield return new XAttribute(property.Name, value);
-                    }
-                }
+        public void Export(ExportActionContext context, IEnumerable<IExportAction> actions = null) {
+            foreach (var action in actions ?? _exportActions) {
+                action.Execute(context);
             }
         }
-   
-        private XElement ExportData(IEnumerable<string> contentTypes, IEnumerable<ContentItem> contentItems, int? batchSize) {
-            var data = new XElement("Data");
 
-            if (batchSize.HasValue && batchSize.Value > 0)
-                data.SetAttributeValue("BatchSize", batchSize);
-
-            var orderedContentItemsQuery = 
-                from contentItem in contentItems
-                let identity = _orchardServices.ContentManager.GetItemMetadata(contentItem).Identity.ToString()
-                orderby identity
-                select contentItem;
-
-            var orderedContentItems = orderedContentItemsQuery.ToList();
-
-            foreach (var contentType in contentTypes.OrderBy(x => x)) {
-                var type = contentType;
-                var items = orderedContentItems.Where(i => i.ContentType == type);
-                foreach (var contentItem in items) {
-                    var contentItemElement = ExportContentItem(contentItem);
-                    if (contentItemElement != null)
-                        data.Add(contentItemElement);
-                }
-            }
-
-            return data;
-        }
-
-        private XElement ExportContentItem(ContentItem contentItem) {
-            // Call export handler for the item.
-            return _orchardServices.ContentManager.Export(contentItem);
-        }
-
-        private static VersionOptions GetContentExportVersionOptions(VersionHistoryOptions versionHistoryOptions) {
-            if (versionHistoryOptions.HasFlag(VersionHistoryOptions.Draft)) {
-                return VersionOptions.Draft;
-            }
-            return VersionOptions.Published;
-        }
-
-        private string WriteExportFile(string exportDocument) {
-            var exportFile = string.Format("Export-{0}-{1}.xml", _orchardServices.WorkContext.CurrentUser.UserName, DateTime.UtcNow.Ticks);
+        public string WriteExportFile(XDocument recipeDocument) {
+            var exportFile = String.Format("Export-{0}-{1}.xml", _orchardServices.WorkContext.CurrentUser.UserName, _clock.UtcNow.Ticks);
             if (!_appDataFolder.DirectoryExists(ExportsDirectory)) {
                 _appDataFolder.CreateDirectory(ExportsDirectory);
             }
 
             var path = _appDataFolder.Combine(ExportsDirectory, exportFile);
-            _appDataFolder.CreateFile(path, exportDocument);
+            var recipeText = recipeDocument.ToString(SaveOptions.None);
+            _appDataFolder.CreateFile(path, recipeText);
 
             return _appDataFolder.MapPath(path);
         }
 
-        private void UpdateShell() {
-            var descriptor = _shellDescriptorManager.GetShellDescriptor();
-            _shellDescriptorManager.UpdateShellDescriptor(descriptor.SerialNumber, descriptor.Features, descriptor.Parameters);
+        public IEnumerable<IExportAction> ParseExportActions(XDocument configurationDocument) {
+            var actionElements = configurationDocument.Root.Elements();
+
+            foreach (var actionElement in actionElements) {
+                var action = _exportActions.SingleOrDefault(x => x.Name == actionElement.Name.LocalName);
+
+                if (action == null) {
+                    Logger.Warning("The export action '{0}' could not be found. Did you forget to enable a feature?", actionElement.Name.LocalName);
+                    continue;
+                }
+
+                action.Configure(new ExportActionConfigurationContext(actionElement));
+                yield return action;
+            }
+        }
+
+        public void ConfigureImportActions(ConfigureImportActionsContext context) {
+            var actionConfigElements = context.ConfigurationDocument.Root;
+
+            foreach (var action in _importActions) {
+                var actionConfigElement = actionConfigElements.Element(action.Name);
+
+                if (actionConfigElement != null) {
+                    action.Configure(new ImportActionConfigurationContext(actionConfigElement));
+                }
+            }
+        }
+
+        public IEnumerable<IImportAction> ParseImportActions(XDocument configurationDocument) {
+            var actionElements = configurationDocument.Root.Elements();
+
+            foreach (var actionElement in actionElements) {
+                var action = _importActions.SingleOrDefault(x => x.Name == actionElement.Name.LocalName);
+
+                if (action == null) {
+                    Logger.Warning("The import action '{0}' could not be found. Did you forget to enable a feature?", actionElement.Name.LocalName);
+                    continue;
+                }
+
+                action.Configure(new ImportActionConfigurationContext(actionElement));
+                yield return action;
+            }
         }
     }
 }

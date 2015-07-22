@@ -69,12 +69,12 @@
     <Compile Include="Commands\ThemeCommands.cs" />
     <Compile Include="Drivers\DisableThemePartDriver.cs" />
     <Compile Include="Events\IExtensionDisplayEventHandler.cs" />
-    <Compile Include="ImportExport\CurrentThemeRecipeHandler.cs" />
-    <Compile Include="ImportExport\CurrentThemeExportHandler.cs" />
-    <Compile Include="ImportExport\CurrentThemeStep.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\ThemeEntry.cs" />
     <Compile Include="Models\DisableThemePart.cs" />
+    <Compile Include="Recipes\Executors\CurrentThemeStep.cs" />
+    <Compile Include="Recipes\Builders\CurrentThemeStep.cs" />
+    <Compile Include="Recipes\Executors\ThemeStep.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Handlers\ThemeSiteSettingsPartHandler.cs" />
@@ -115,6 +115,10 @@
       <Project>{9916839c-39fc-4ceb-a5af-89ca7e87119f}</Project>
       <Name>Orchard.Core</Name>
       <Private>false</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Packaging\Orchard.Packaging.csproj">
+      <Project>{dfd137a2-ddb5-4d22-be0d-fa9ad4c8b059}</Project>
+      <Name>Orchard.Packaging</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

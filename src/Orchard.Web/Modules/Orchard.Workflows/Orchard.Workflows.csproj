@@ -154,9 +154,8 @@
     <Compile Include="Forms\WebRequestForm.cs" />
     <Compile Include="Handlers\WorkflowContentHandler.cs" />
     <Compile Include="Handlers\WorkflowHandler.cs" />
-    <Compile Include="ImportExport\WorkflowsCustomExportStep.cs" />
-    <Compile Include="ImportExport\WorkflowsExportEventHandler.cs" />
-    <Compile Include="ImportExport\WorkflowsRecipeHandler.cs" />
+    <Compile Include="Recipes\Builders\WorkflowsStep.cs" />
+    <Compile Include="Recipes\Executors\WorkflowsStep.cs" />
     <Compile Include="Models\AwaitingActivityRecord.cs" />
     <Compile Include="Models\CancellationToken.cs" />
     <Compile Include="Models\ActivityContext.cs" />

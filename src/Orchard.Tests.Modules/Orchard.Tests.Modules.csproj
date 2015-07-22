@@ -159,7 +159,7 @@
     <Compile Include="Packaging\Services\FileBasedProjectSystemTests.cs" />
     <Compile Include="Packaging\Services\FolderUpdaterTests.cs" />
     <Compile Include="Packaging\Services\PackageInstallerTests.cs" />
-    <Compile Include="Recipes\RecipeHandlers\ModuleRecipeHandlerTest.cs" />
+    <Compile Include="Recipes\RecipeHandlers\ModuleStepTest.cs" />
     <Compile Include="Recipes\RecipeHandlers\ThemeRecipeHandlerTest.cs" />
     <Compile Include="Recipes\Services\RecipeManagerTests.cs" />
     <Compile Include="Scripting.Dlr\EvaluatorTests.cs" />
