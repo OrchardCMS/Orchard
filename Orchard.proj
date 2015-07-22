@@ -190,14 +190,41 @@
       <Stage-Media Include="$(SrcFolder)\Orchard.Web\Media\OrchardLogo.png" />
       <Stage-PoFiles Include="$(SrcFolder)\Orchard.Web\**\*.po" />
       <Stage-Core Include="$(WebSitesFolder)\Orchard.Core\**\*" Exclude="$(WebSitesFolder)\Orchard.Core\**\bin\**\*" />
-      <Stage-Themes Include="$(ThemesSrcFolder)\**\*" Exclude="@(Stage-Bin-Exclude);$(ThemesSrcFolder)\*.*;$(ThemesSrcFolder)\*.*;$(ThemesSrcFolder)\bin\**;$(ThemesSrcFolder)\obj\**;$(ThemesSrcFolder)\*.*;$(ThemesSrcFolder)\Properties\**" />
+	  
+      <!-- Get list of module names from the module definition files within ModulesSrcFolder -->
+      <Stage-Modules-Definitions Include="$(ModulesSrcFolder)\**\Module.txt" />
+      <Stage-Modules-Directories Include="@(Stage-Modules-Definitions->DirectoryName())"  />
+      <Stage-Modules-Names Include="@(Stage-Modules-Directories->'%(Filename)%(Extension)')"  />
+          
+      <Stage-Modules Include="$(WebSitesFolder)\%(Stage-Modules-Names.Identity)\**\*" Exclude="@(Stage-Bin-Exclude)">
+        <ModuleName>%(Stage-Modules-Names.Identity)</ModuleName>	  
+      </Stage-Modules>
+      <Stage-Modules-Binaries Include="$(WebSitesFolder)\%(Stage-Modules-Names.Identity)\**\bin\**\*">
+        <ModuleName>%(Stage-Modules-Names.Identity)</ModuleName>	  
+      </Stage-Modules-Binaries>
+	  <Stage-Modules-Sources Include="$(ModulesSrcFolder)\**\*.csproj;$(ModulesSrcFolder)\**\*.cs"/>
+
+      <!-- Get list of theme names from the theme definition files within ThemesSrcFolder -->
+      <Stage-Themes-Definitions Include="$(ThemesSrcFolder)\**\Theme.txt" />
+      <Stage-Themes-Directories Include="@(Stage-Themes-Definitions->DirectoryName())"  />
+      <Stage-Themes-Names Include="@(Stage-Themes-Directories->'%(Filename)%(Extension)')"  />
+      	 
+      <Stage-Themes-Default Include="$(WebSitesFolder)\Themes\%(Stage-Themes-Names.Identity)\**\*">
+        <ThemeName>%(Stage-Themes-Names.Identity)</ThemeName>
+      </Stage-Themes-Default>
+      <Stage-Themes-Custom Include="$(WebSitesFolder)\%(Stage-Themes-Names.Identity)\**\*" Exclude="@(Stage-Bin-Exclude)">
+        <ThemeName>%(Stage-Themes-Names.Identity)</ThemeName>
+      </Stage-Themes-Custom>
+	  
+	  <!-- Note. Binaries are not copied for themes in the default Themes project. -->
+      <Stage-Themes-Binaries Include="$(WebSitesFolder)\%(Stage-Themes-Names.Identity)\**\bin\**\*">
+        <ThemeName>%(Stage-Themes-Names.Identity)</ThemeName>
+      </Stage-Themes-Binaries>
+
+	  <Stage-Themes Include="$(ThemesSrcFolder)\**\*" Exclude="@(Stage-Bin-Exclude);$(ThemesSrcFolder)\*.*;$(ThemesSrcFolder)\bin\**;$(ThemesSrcFolder)\obj\**;$(ThemesSrcFolder)\Properties\**" />
       <Stage-Themes-Binaries Include="$(ThemesSrcFolder)\*\**\bin\*" />
+	  <Stage-Themes-Sources Include="$(ThemesSrcFolder)\**\*.csproj;$(ThemesSrcFolder)\**\*.cs" Exclude="$(ThemesSrcFolder)\*.*"/>
 
-      <Stage-Module-Exclude Include="@(Stage-Web);@(Stage-Core);@(Stage-Themes);$(WebSitesFolder)\Themes\**\*;$(WebSitesFolder)\PackageIndexReferenceImplementation\**\*"/>
-
-      <Stage-Modules Include="$(WebSitesFolder)\**\*" Exclude="@(Stage-Bin-Exclude);@(Stage-Module-Exclude)" />
-      <Stage-Modules-Binaries Include="$(WebSitesFolder)\**\bin\**\*"  Exclude="@(Stage-Module-Exclude)"/>
-      <Stage-Modules-Sources Include="$(ModulesSrcFolder)\**\*.csproj;$(ModulesSrcFolder)\**\*.cs"/>
       <Stage-License Include="$(MSBuildProjectDirectory)\*.txt" />
     </ItemGroup>
 
@@ -226,11 +253,13 @@
     <Copy SourceFiles="@(SqlCe-Native-Binaries-x86)" DestinationFolder="$(StageFolder)\bin\x86\%(RecursiveDir)"/>
     <Copy SourceFiles="@(SqlCe-Native-Binaries-amd64)" DestinationFolder="$(StageFolder)\bin\amd64\%(RecursiveDir)"/>
     <Copy SourceFiles="@(Stage-Core)" DestinationFolder="$(StageFolder)\Core\%(RecursiveDir)"/>
-    <Copy SourceFiles="@(Stage-Modules)" DestinationFolder="$(StageFolder)\Modules\%(RecursiveDir)"/>
+    <Copy SourceFiles="@(Stage-Modules)" DestinationFiles="@(Stage-Modules->'$(StageFolder)\Modules\%(ModuleName)\%(RecursiveDir)%(Filename)%(Extension)')"/>
+    <Copy SourceFiles="@(Stage-Modules-Binaries-Unique)" DestinationFiles="@(Stage-Modules-Binaries-Unique->'$(StageFolder)\Modules\%(ModuleName)\%(RecursiveDir)%(Filename)%(Extension)')"/>
     <Copy SourceFiles="@(Stage-Modules-Sources)" DestinationFolder="$(StageFolder)\Modules\%(RecursiveDir)"/>
-    <Copy SourceFiles="@(Stage-Modules-Binaries-Unique)" DestinationFolder="$(StageFolder)\Modules\%(RecursiveDir)"/>
-    <Copy SourceFiles="@(Stage-Themes)" DestinationFolder="$(StageFolder)\Themes\%(RecursiveDir)"/>
-    <Copy SourceFiles="@(Stage-Themes-Binaries-Unique)" DestinationFolder="$(StageFolder)\Themes\%(RecursiveDir)"/>
+    <Copy SourceFiles="@(Stage-Themes-Default)" DestinationFiles="@(Stage-Themes-Default->'$(StageFolder)\Themes\%(ThemeName)\%(RecursiveDir)%(Filename)%(Extension)')"/>
+    <Copy SourceFiles="@(Stage-Themes-Custom)" DestinationFiles="@(Stage-Themes-Custom->'$(StageFolder)\Themes\%(ThemeName)\%(RecursiveDir)%(Filename)%(Extension)')"/>
+    <Copy SourceFiles="@(Stage-Themes-Binaries-Unique)" DestinationFiles="@(Stage-Themes-Binaries-Unique->'$(StageFolder)\Themes\%(ThemeName)\%(RecursiveDir)%(Filename)%(Extension)')"/>
+    <Copy SourceFiles="@(Stage-Themes-Sources)" DestinationFolder="$(StageFolder)\Themes\%(RecursiveDir)"/>
     <MakeDir Directories="$(StageFolder)\App_Data"/>
     <WriteLinesToFile File="$(StageFolder)\App_Data\_marker.txt" Lines="some_text" Overwrite="true"/>
 
@@ -289,24 +318,46 @@
     <CallTarget Targets="ValidateProjectFiles"/>
 
     <ItemGroup>
-      <Stage-Exclude-Source Include="$(WebSitesFolder)\**\*.cs;$(WebSitesFolder)\**\*.csproj;" />
+      <Stage-Exclude-Source Include="$(WebSitesFolder)\**\*.cs;$(WebSitesFolder)\**\*.csproj;$(WebSitesFolder)\**\bin\**\*.xml" />
       <SqlCe-Native-Binaries-x86 Include="$(SqlCeFolder)\x86\**\*"/>
       <SqlCe-Native-Binaries-amd64 Include="$(SqlCeFolder)\amd64\**\*"/>
       <Stage-Orchard-Web-Bins Include="$(WebSitesFolder)\Orchard.Web\bin\*"/>
       <Stage-Bin-Exclude Include="$(WebSitesFolder)\**\bin\**\*" />
-      <Stage-Web Include="$(WebSitesFolder)\Orchard.Web\**\*" Exclude="$(SrcFolder)\Orchard.Web\**\*.Release.config;$(SrcFolder)\Orchard.Web\**\*.Debug.config;$(Stage-Exclude-Source)"/>
+      <Stage-Web Include="$(WebSitesFolder)\Orchard.Web\**\*" Exclude="$(SrcFolder)\Orchard.Web\**\*.Release.config;$(SrcFolder)\Orchard.Web\**\*.Debug.config;@(Stage-Exclude-Source)"/>
       <Stage-Web-Config Include="$(SrcFolder)\Orchard.Web\**\*.config" Exclude="$(SrcFolder)\Orchard.Web\**\*.Release.config;$(SrcFolder)\Orchard.Web\**\*.Debug.config"/>
       <Stage-Media Include="$(SrcFolder)\Orchard.Web\Media\OrchardLogo.png" />
       <Stage-PoFiles Include="$(SrcFolder)\Orchard.Web\**\*.po" />
-      <Stage-Core Include="$(WebSitesFolder)\Orchard.Core\**\*" Exclude="$(WebSitesFolder)\Orchard.Core\**\bin\**\*;$(Stage-Exclude-Source)" />
-      <Stage-Themes Include="$(ThemesSrcFolder)\**\*" Exclude="@(Stage-Bin-Exclude);$(ThemesSrcFolder)\*.*;$(ThemesSrcFolder)\*.*;$(ThemesSrcFolder)\bin\**;$(ThemesSrcFolder)\obj\**;$(ThemesSrcFolder)\*.*;$(ThemesSrcFolder)\Properties\**;$(Stage-Exclude-Source)" />
-      <Stage-Themes-Binaries Include="$(ThemesSrcFolder)\*\**\bin\*" />
+      <Stage-Core Include="$(WebSitesFolder)\Orchard.Core\**\*" Exclude="$(WebSitesFolder)\Orchard.Core\**\bin\**\*;@(Stage-Exclude-Source)" />
 
-      <Stage-Module-Exclude Include="@(Stage-Web);@(Stage-Core);@(Stage-Themes);$(WebSitesFolder)\Themes\**\*;$(WebSitesFolder)\PackageIndexReferenceImplementation\**\*;$(Stage-Exclude-Source)"/>
+      <!-- Get list of module names from the module definition files within ModulesSrcFolder -->
+      <Stage-Modules-Definitions Include="$(ModulesSrcFolder)\**\Module.txt" />
+      <Stage-Modules-Directories Include="@(Stage-Modules-Definitions->DirectoryName())"  />
+      <Stage-Modules-Names Include="@(Stage-Modules-Directories->'%(Filename)%(Extension)')"  />
+     
+      <Stage-Modules Include="$(WebSitesFolder)\%(Stage-Modules-Names.Identity)\**\*" Exclude="@(Stage-Bin-Exclude);@(Stage-Exclude-Source)">
+        <ModuleName>%(Stage-Modules-Names.Identity)</ModuleName>	  
+      </Stage-Modules>
+      <Stage-Modules-Binaries Include="$(WebSitesFolder)\%(Stage-Modules-Names.Identity)\**\bin\**\*" Exclude="@(Stage-Exclude-Source)">
+        <ModuleName>%(Stage-Modules-Names.Identity)</ModuleName>	  
+      </Stage-Modules-Binaries>
+      
+      <!-- Get list of theme names from the theme definition files within ThemesSrcFolder -->
+      <Stage-Themes-Definitions Include="$(ThemesSrcFolder)\**\Theme.txt" />
+      <Stage-Themes-Directories Include="@(Stage-Themes-Definitions->DirectoryName())"  />
+      <Stage-Themes-Names Include="@(Stage-Themes-Directories->'%(Filename)%(Extension)')"  />
 
-      <Stage-Modules Include="$(WebSitesFolder)\**\*" Exclude="@(Stage-Bin-Exclude);@(Stage-Module-Exclude);" />
-      <Stage-Modules-Binaries Include="$(WebSitesFolder)\**\bin\**\*"  Exclude="@(Stage-Module-Exclude)"/>
-      <Stage-License Include="$(MSBuildProjectDirectory)\*.txt" />
+      <Stage-Themes-Default Include="$(WebSitesFolder)\Themes\%(Stage-Themes-Names.Identity)\**\*">
+        <ThemeName>%(Stage-Themes-Names.Identity)</ThemeName>
+      </Stage-Themes-Default>
+      <Stage-Themes-Custom Include="$(WebSitesFolder)\%(Stage-Themes-Names.Identity)\**\*" Exclude="@(Stage-Bin-Exclude);@(Stage-Exclude-Source)">
+        <ThemeName>%(Stage-Themes-Names.Identity)</ThemeName>
+      </Stage-Themes-Custom>
+	  <!-- Note. Binaries are not copied for themes in the default Themes project. -->
+      <Stage-Themes-Binaries Include="$(WebSitesFolder)\%(Stage-Themes-Names.Identity)\**\bin\**\*" Exclude="@(Stage-Exclude-Source)">
+        <ThemeName>%(Stage-Themes-Names.Identity)</ThemeName>
+      </Stage-Themes-Binaries>
+
+	  <Stage-License Include="$(MSBuildProjectDirectory)\*.txt" />
     </ItemGroup>
 
     <!-- Copying module binaries is somewhat tricky: From a module "bin" directory, we
@@ -334,10 +385,13 @@
     <Copy SourceFiles="@(SqlCe-Native-Binaries-x86)" DestinationFolder="$(PrecompiledFolder)\bin\x86\%(RecursiveDir)" SkipUnchangedFiles="true"/>
     <Copy SourceFiles="@(SqlCe-Native-Binaries-amd64)" DestinationFolder="$(PrecompiledFolder)\bin\amd64\%(RecursiveDir)" SkipUnchangedFiles="true"/>
     <Copy SourceFiles="@(Stage-Core)" DestinationFolder="$(PrecompiledFolder)\Core\%(RecursiveDir)" SkipUnchangedFiles="true"/>
-    <Copy SourceFiles="@(Stage-Modules)" DestinationFolder="$(PrecompiledFolder)\Modules\%(RecursiveDir)" SkipUnchangedFiles="true"/>
-    <Copy SourceFiles="@(Stage-Modules-Binaries-Unique)" DestinationFolder="$(PrecompiledFolder)\Modules\%(RecursiveDir)" SkipUnchangedFiles="true"/>
-    <Copy SourceFiles="@(Stage-Themes)" DestinationFolder="$(PrecompiledFolder)\Themes\%(RecursiveDir)" SkipUnchangedFiles="true"/>
-    <Copy SourceFiles="@(Stage-Themes-Binaries-Unique)" DestinationFolder="$(PrecompiledFolder)\Themes\%(RecursiveDir)" SkipUnchangedFiles="true"/>
+    <Copy SourceFiles="@(Stage-Modules)" DestinationFiles="@(Stage-Modules->'$(PrecompiledFolder)\Modules\%(ModuleName)\%(RecursiveDir)%(Filename)%(Extension)')"/>
+    <Copy SourceFiles="@(Stage-Modules-Binaries-Unique)" DestinationFiles="@(Stage-Modules-Binaries-Unique->'$(PrecompiledFolder)\Modules\%(ModuleName)\%(RecursiveDir)%(Filename)%(Extension)')"/>
+    <Copy SourceFiles="@(Stage-Themes-Default)" DestinationFiles="@(Stage-Themes-Default->'$(PrecompiledFolder)\Themes\%(ThemeName)\%(RecursiveDir)%(Filename)%(Extension)')"/>
+    <Copy SourceFiles="@(Stage-Themes-Custom)" DestinationFiles="@(Stage-Themes-Custom->'$(PrecompiledFolder)\Themes\%(ThemeName)\%(RecursiveDir)%(Filename)%(Extension)')"/>
+    <Copy SourceFiles="@(Stage-Themes-Binaries-Unique)" DestinationFiles="@(Stage-Themes-Binaries-Unique->'$(PrecompiledFolder)\Themes\%(ThemeName)\%(RecursiveDir)%(Filename)%(Extension)')"/>
+    <Copy SourceFiles="@(Stage-Themes-Sources)" DestinationFolder="$(PrecompiledFolder)\Themes\%(RecursiveDir)"/>
+	
     <MakeDir Directories="$(PrecompiledFolder)\App_Data"/>
     <WriteLinesToFile File="$(PrecompiledFolder)\App_Data\_marker.txt" Lines="some_text" Overwrite="true"/>
     <MakeDir Directories="$(PrecompiledFolder)\bin\HostRestart"/>
