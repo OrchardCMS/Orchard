@@ -8,6 +8,7 @@
 @{ 
     var groupedRecipes = Model.Recipes.Where(x => !String.IsNullOrWhiteSpace(x.Category)).GroupBy(x => x.Category);
     var unspecifiedCategoryRecipes = Model.Recipes.Where(x => String.IsNullOrWhiteSpace(x.Category)).ToList();
+    var groupCount = groupedRecipes.Count() + unspecifiedCategoryRecipes.Count();
 }
 @helper RenderRecipeOptions(IEnumerable<Recipe> recipes) {
         foreach (var recipe in recipes) {
@@ -93,13 +94,13 @@ if (!Model.DatabaseIsPreconfigured) {
     <div>
         <select id="@Html.FieldIdFor(m => m.Recipe)" name="@Html.FieldNameFor(m => m.Recipe)" class="recipe">
         @foreach(var recipeGroup in groupedRecipes.OrderBy(x => x.Key)) {
-            if (groupedRecipes.Count() > 1) {
+            if (groupCount > 1) {
             <optgroup label="@recipeGroup.Key"></optgroup>
             }
             @RenderRecipeOptions(recipeGroup.OrderBy(x => x.Name))
         }
         @if (unspecifiedCategoryRecipes.Any()) {
-            if (groupedRecipes.Any()) {
+            if (groupCount > 1) {
             <optgroup label="@T("Unspecified")"></optgroup>
             }
             @RenderRecipeOptions(unspecifiedCategoryRecipes.OrderBy(x => x.Name))
