@@ -160,6 +160,11 @@
     </ItemGroup>
     <Copy SourceFiles="@(NUnitAddinFiles)" DestinationFolder="$(LibFolder)\nunit\addins" />
 
+	<!-- The Spec tests require the local project to be built and so that /bin exists -->
+    <MSBuild
+      Projects="$(SrcFolder)\Orchard.sln"
+      Targets="Build"/>
+      
     <CreateItem Include="$(CompileFolder)\*.Specs.dll">
       <Output TaskParameter="Include" ItemName="SpecAssemblies" />
     </CreateItem>

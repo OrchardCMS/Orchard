@@ -59,10 +59,7 @@ namespace Orchard.Specs.Hosting {
             //foreach (var filename in _knownThemes)
             //    Log("Available Theme: \"{0}\"", filename);
 
-            if (_orchardWebPath.Combine("bin").Exists) {
-                _knownBinAssemblies = _orchardWebPath.Combine("bin").GetFiles("*.dll").Select(f => f.FileNameWithoutExtension);
-            }
-
+            _knownBinAssemblies = _orchardWebPath.Combine("bin").GetFiles("*.dll").Select(f => f.FileNameWithoutExtension);
             //foreach (var filename in _knownBinAssemblies)
             //    Log("Assembly in ~/bin: \"{0}\"", filename);
 
