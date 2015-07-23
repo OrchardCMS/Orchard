@@ -110,6 +110,8 @@
     <Compile Include="Implementation\Updater\AliasHolderUpdaterTask.cs" />
     <Compile Include="Implementation\Utils.cs" />
     <Compile Include="Migrations.cs" />
+    <Compile Include="Recipes\Builders\AliasStep.cs" />
+    <Compile Include="Recipes\Executors\AliasStep.cs" />
     <Compile Include="Records\ActionRecord.cs" />
     <Compile Include="Records\AliasRecord.cs" />
     <Compile Include="Routes.cs" />
