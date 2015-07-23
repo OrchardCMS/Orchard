@@ -14,9 +14,10 @@
                             $scope.$root.editElement($scope.element).then(function (args) {
                                 if (args.cancel)
                                     return;
-                                $scope.element.data = decodeURIComponent(args.element.data);
-                                $scope.element.legend = args.elementEditorModel.legend;
-                                $scope.$apply();
+                                $scope.$apply(function() {
+                                    $scope.element.data = decodeURIComponent(args.element.data);
+                                    $scope.element.applyElementEditorModel(args.elementEditorModel);
+                                });
                             });
                         };
                     }

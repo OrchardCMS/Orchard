@@ -27,9 +27,13 @@
 
         this.setParent = function(parentElement) {
             this.parent = parentElement;
+            this.parent.onChildAdded(this);
 
-            if (!!this.parent.linkChild)
-                this.parent.linkChild(this);
+            var currentAncestor = parentElement;
+            while (!!currentAncestor) {
+                currentAncestor.onDescendantAdded(this, parentElement);
+                currentAncestor = currentAncestor.parent;
+            }
         };
 
         this.setIsTemplated = function (value) {
@@ -40,6 +44,8 @@
                 });
             }
         };
+
+        this.applyElementEditorModel = function() { /* Virtual */ };
 
         this.getIsActive = function () {
             if (!this.editor)

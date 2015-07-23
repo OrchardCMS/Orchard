@@ -37,6 +37,10 @@
             });
         };
 
+        this.applyElementEditorModel = function(model) {
+            this.legend = model.legend;
+        };
+
         this.setChildren(children);
     };
 

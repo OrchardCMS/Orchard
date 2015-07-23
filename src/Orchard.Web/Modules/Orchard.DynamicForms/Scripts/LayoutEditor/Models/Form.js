@@ -36,12 +36,11 @@
         this.setChildren = function (children) {
             this.children = children;
             _(this.children).each(function (child) {
-                child.parent = self;
-                self.linkChild(child);
+                child.setParent(self);
             });
         };
 
-        this.linkChild = function(element) {
+        this.onDescendantAdded = function(element) {
             var getEditorObject = element.getEditorObject;
             element.getEditorObject = function () {
                 var dto = getEditorObject();
@@ -49,6 +48,11 @@
                     FormBindingContentType: self.formBindingContentType
                 });
             };
+        };
+
+        this.applyElementEditorModel = function(model) {
+            this.name = model.name;
+            this.formBindingContentType = model.formBindingContentType;
         };
 
         this.setChildren(children);

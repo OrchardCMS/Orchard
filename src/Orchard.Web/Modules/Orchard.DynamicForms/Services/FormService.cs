@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using Orchard.Collections;
 using Orchard.ContentManagement;
@@ -179,7 +180,12 @@ namespace Orchard.DynamicForms.Services {
                 ReadElementValues(element, context);
 
                 foreach (var key in from string key in context.Output where !String.IsNullOrWhiteSpace(key) && values[key] == null select key) {
-                    values.Add(key, context.Output[key]);
+                    var value = context.Output[key];
+
+                    if (form.HtmlEncode)
+                        value = HttpUtility.HtmlEncode(value);
+
+                    values.Add(key, value);
                 }
             }
 

@@ -236,12 +236,14 @@
                                         // Because of this, we need to invoke "setParent" so that specific container types can perform element speficic initialization.
                                         receivedElement.setEditor(element.editor);
                                         receivedElement.setParent(element);
+
                                         if (!!receivedElement.hasEditor) {
                                             $scope.$root.editElement(receivedElement).then(function (args) {
                                                 if (!args.cancel) {
                                                     receivedElement.data = args.element.data;
+                                                    receivedElement.applyElementEditorModel(args.elementEditorModel);
 
-                                                    if (receivedElement.setHtml)
+                                                    if (!!receivedElement.setHtml)
                                                         receivedElement.setHtml(args.element.html);
                                                 }
                                                 $timeout(function () {

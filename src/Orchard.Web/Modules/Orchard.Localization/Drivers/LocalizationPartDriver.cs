@@ -60,7 +60,9 @@ namespace Orchard.Localization.Drivers {
 
         protected override DriverResult Editor(LocalizationPart part, IUpdateModel updater, dynamic shapeHelper) {
             var model = new EditLocalizationViewModel();
-            if (updater != null && updater.TryUpdateModel(model, TemplatePrefix, null, null)) {
+
+            // Content culture has to be set only if it's not set already.
+            if (updater != null && updater.TryUpdateModel(model, TemplatePrefix, null, null) && GetCulture(part) == null) {
                 _localizationService.SetContentCulture(part, model.SelectedCulture);
             }
 
