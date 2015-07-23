@@ -215,10 +215,9 @@ namespace Orchard.SecureSocketsLayer.Services {
             if (settings == null) return path;
             var insecureHostName = settings.InsecureHostName;
             int port = 80;
-            GetPortFomHostName(insecureHostName, port, out port);
             var builder = new UriBuilder(insecureHostName.Split(':').First().Trim('/') + path) {
                 Scheme = Uri.UriSchemeHttp,
-                Port = port
+                Port = GetPortFomHostNameJoli(insecureHostName, port)
             };
             return builder.Uri.ToString();
         }
@@ -228,27 +227,21 @@ namespace Orchard.SecureSocketsLayer.Services {
             if (settings == null) return path;
             var secureHostName = settings.SecureHostName;
             int port = 443;
-            GetPortFomHostName(secureHostName, port, out port);
             var builder = new UriBuilder(secureHostName.Split(':').First().Trim('/') + path) {
                 Scheme = Uri.UriSchemeHttps, 
-                Port = port
+                Port = GetPortFomHostNameJoli(secureHostName, port)
             };
             return builder.Uri.ToString();
         }
 
-        private static bool GetPortFomHostName(string hostName, int defaultPort, out int port) {
-            bool ret = false;
-            port = defaultPort;
-            if (string.IsNullOrWhiteSpace(hostName)) return true;
+        private static int GetPortFomHostNameJoli(string hostName, int defaultPort) {
+            int port = defaultPort;
+            if (string.IsNullOrWhiteSpace(hostName)) return port;
             var splitSecuredHostName = hostName.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
             if (splitSecuredHostName.Length == 2) {
-                if (int.TryParse(splitSecuredHostName[1], NumberStyles.Integer, CultureInfo.InvariantCulture,
-                    out port)) {
-                    ret = true;
-                }
+                int.TryParse(splitSecuredHostName[1], NumberStyles.Integer, CultureInfo.InvariantCulture,out port);
             }
-            else ret = true;
-            return ret;
+            return port;
         }
     }
 }
