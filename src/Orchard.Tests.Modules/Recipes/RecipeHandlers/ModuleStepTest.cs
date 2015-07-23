@@ -24,7 +24,6 @@ using Orchard.Packaging.Models;
 using Orchard.Packaging.Services;
 using Orchard.Recipes.Models;
 using Orchard.Recipes.Providers.Executors;
-using Orchard.Recipes.Services;
 using Orchard.Tests.Environment.Extensions;
 using Orchard.Tests.Environment.Features;
 using Orchard.Tests.Stubs;
@@ -87,27 +86,26 @@ Features:
                 IsLatestVersion = true,
             });
 
-            IShellDescriptorManager shellDescriptorManager = _container.Resolve<IShellDescriptorManager>();
+            var shellDescriptorManager = _container.Resolve<IShellDescriptorManager>();
             // No features enabled
-            shellDescriptorManager.UpdateShellDescriptor(0,
-                                                         Enumerable.Empty<ShellFeature>(),
-                                                         Enumerable.Empty<ShellParameter>());
+            shellDescriptorManager.UpdateShellDescriptor(
+                0,
+                Enumerable.Empty<ShellFeature>(),
+                Enumerable.Empty<ShellParameter>());
 
             var moduleStep = _container.Resolve<ModuleStep>();
-            var recipeContext = new RecipeContext { RecipeStep = new RecipeStep { Name = "Module", Step = new XElement("SuperWiki") } };
-            var recipeExecutionContext = new RecipeExecutionContext {RecipeStep = recipeContext.RecipeStep};
-            recipeContext.RecipeStep.Step.Add(new XAttribute("packageId", "Orchard.Module.SuperWiki"));
-            recipeContext.RecipeStep.Step.Add(new XAttribute("repository", "test"));
+            var recipeExecutionContext = new RecipeExecutionContext {RecipeStep = new RecipeStep { Name = "Module", Step = new XElement("SuperWiki") } };
+            recipeExecutionContext.RecipeStep.Step.Add(new XAttribute("packageId", "Orchard.Module.SuperWiki"));
+            recipeExecutionContext.RecipeStep.Step.Add(new XAttribute("repository", "test"));
 
-            IFeatureManager featureManager = _container.Resolve<IFeatureManager>();
-            IEnumerable<FeatureDescriptor> enabledFeatures = featureManager.GetEnabledFeatures();
+            var featureManager = _container.Resolve<IFeatureManager>();
+            var enabledFeatures = featureManager.GetEnabledFeatures();
             Assert.That(enabledFeatures.Count(), Is.EqualTo(0));
             moduleStep.Execute(recipeExecutionContext);
 
 
-            var availableFeatures = featureManager.GetAvailableFeatures().Where(x => x.Id == "SuperWiki").FirstOrDefault();
+            var availableFeatures = featureManager.GetAvailableFeatures().FirstOrDefault(x => x.Id == "SuperWiki");
             Assert.That(availableFeatures.Id, Is.EqualTo("SuperWiki"));
-            Assert.That(recipeContext.Executed, Is.True);
         }
 
         [Test]
@@ -147,19 +145,17 @@ Features:
             });
 
             var moduleStep = _container.Resolve<ModuleStep>();
-            var recipeContext = new RecipeContext { RecipeStep = new RecipeStep { Name = "Module", Step = new XElement("SuperWiki") } };
-            var recipeExecutionContext = new RecipeExecutionContext { RecipeStep = recipeContext.RecipeStep };
+            var recipeExecutionContext = new RecipeExecutionContext { RecipeStep = new RecipeStep { Name = "Module", Step = new XElement("SuperWiki") } };
 
-            recipeContext.RecipeStep.Step.Add(new XAttribute("packageId", "Orchard.Module.SuperWiki"));
-            recipeContext.RecipeStep.Step.Add(new XAttribute("repository", "test"));
-            recipeContext.RecipeStep.Step.Add(new XAttribute("version", "1.0.2"));
+            recipeExecutionContext.RecipeStep.Step.Add(new XAttribute("packageId", "Orchard.Module.SuperWiki"));
+            recipeExecutionContext.RecipeStep.Step.Add(new XAttribute("repository", "test"));
+            recipeExecutionContext.RecipeStep.Step.Add(new XAttribute("version", "1.0.2"));
 
             moduleStep.Execute(recipeExecutionContext);
 
             var installedPackage = _packageManager.GetInstalledPackages().FirstOrDefault(info => info.ExtensionName == "Orchard.Module.SuperWiki");
             Assert.That(installedPackage, Is.Not.Null);
             Assert.That(installedPackage.ExtensionVersion, Is.EqualTo("1.0.2"));
-            Assert.That(recipeContext.Executed, Is.True);
         }
 
         internal class StubPackagingSourceManager : IPackagingSourceManager {
