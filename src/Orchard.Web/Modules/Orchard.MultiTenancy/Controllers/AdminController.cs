@@ -247,7 +247,7 @@ namespace Orchard.MultiTenancy.Controllers {
             }
 
             try {
-                _tenantService.ResetTenant(tenant, viewModel.DropDatabaseTables);
+                _tenantService.ResetTenant(tenant, viewModel.DropDatabaseTables, force: false);
                 return RedirectToAction("Index");
             }
             catch (Exception ex) {

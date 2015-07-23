@@ -30,6 +30,8 @@ namespace Orchard.MultiTenancy.Commands {
         public string Modules { get; set; }
         [OrchardSwitch]
         public bool DropDatabaseTables { get; set; }
+        [OrchardSwitch]
+        public bool Force { get; set; }
 
         [CommandHelp("tenant list\r\n\t" + "Display current tenants of the site.")]
         [CommandName("tenant list")]
@@ -178,9 +180,9 @@ namespace Orchard.MultiTenancy.Commands {
             _tenantService.UpdateTenant(tenant);
         }
 
-        [CommandHelp("tenant reset <tenantName> /DropDatabaseTables:<true|false>\r\n\t" + "Reset the tenant <tenantName> to its uninitialized, optionally dropping its tables from the database.")]
+        [CommandHelp("tenant reset <tenantName> /DropDatabaseTables:true|false /Force:true|false\r\n\t" + "Reset the tenant <tenantName> to its uninitialized, optionally dropping its tables from the database.")]
         [CommandName("tenant reset")]
-        [OrchardSwitches("DropDatabaseTables")]
+        [OrchardSwitches("DropDatabaseTables,Force")]
         public void Reset(string tenantName) {
             Context.Output.WriteLine(T("Resetting tenant '{0}'...", tenantName));
 
@@ -190,7 +192,7 @@ namespace Orchard.MultiTenancy.Commands {
                 return;
             }
 
-            _tenantService.ResetTenant(tenant, DropDatabaseTables);
+            _tenantService.ResetTenant(tenant, DropDatabaseTables, Force);
         }
     }
 }

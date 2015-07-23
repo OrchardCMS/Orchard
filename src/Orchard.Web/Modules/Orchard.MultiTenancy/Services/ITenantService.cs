@@ -26,7 +26,8 @@ namespace Orchard.MultiTenancy.Services {
         /// </summary>
         /// <param name="settings">A ShellSettings object to identify the tenant to reset.</param>
         /// <param name="dropDatabaseTables">A boolean indicated whether tenant database tables should be dropped also.</param>
-        void ResetTenant(ShellSettings settings, bool dropDatabaseTables);
+        /// <param name="force">A boolean indicating whether reset should be performed even if the tenant state is <c>TenantState.Running</c>.</param>
+        void ResetTenant(ShellSettings settings, bool dropDatabaseTables, bool force);
 
         /// <summary>
         /// Returns a list of all known database tables in a tenant.
