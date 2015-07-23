@@ -22,7 +22,7 @@ var gulp = require("gulp"),
     uglify = require("gulp-uglify"),
     rename = require("gulp-rename"),
     concat = require("gulp-concat"),
-    merge = require("merge-stream")
+    merge = require("merge-stream");
 
 /*
  * General tasks.
