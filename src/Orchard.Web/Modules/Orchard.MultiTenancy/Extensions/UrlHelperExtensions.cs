@@ -7,7 +7,7 @@ namespace Orchard.MultiTenancy.Extensions {
     public static class UrlHelperExtensions {
         public static string Tenant(this UrlHelper urlHelper, ShellSettings tenantShellSettings) {
 
-            var requestUrlHost = tenantShellSettings.RequestUrlHost.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries).First();
+            var requestUrlHost = tenantShellSettings.RequestUrlHost?.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries).First();
 
             //info: (heskew) might not keep the port/vdir insertion around beyond...
             var port = string.Empty;
