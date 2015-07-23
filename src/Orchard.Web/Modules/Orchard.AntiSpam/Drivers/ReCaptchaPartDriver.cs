@@ -12,17 +12,21 @@ using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.UI.Admin;
 using Orchard.UI.Notify;
+using Orchard.Services;
 
 namespace Orchard.AntiSpam.Drivers {
     public class ReCaptchaPartDriver : ContentPartDriver<ReCaptchaPart> {
         private readonly INotifier _notifier;
+        private readonly IJsonConverter _jsonConverter;
         private readonly IWorkContextAccessor _workContextAccessor;
         private const string ReCaptchaSecureUrl = "https://www.google.com/recaptcha/api/siteverify";
 
         public ReCaptchaPartDriver(
             INotifier notifier,
+            IJsonConverter jsonConverter,
             IWorkContextAccessor workContextAccessor) {
             _notifier = notifier;
+            _jsonConverter = jsonConverter;
             _workContextAccessor = workContextAccessor;
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
@@ -75,16 +79,16 @@ namespace Orchard.AntiSpam.Drivers {
                     context.Request.Form["g-recaptcha-response"]
                     );
 
-                ReCaptchaPartResponseModel responseModel = Newtonsoft.Json.JsonConvert.DeserializeObject<ReCaptchaPartResponseModel>(result);
+                ReCaptchaPartResponseModel responseModel = _jsonConverter.Deserialize<ReCaptchaPartResponseModel>(result);
 
-                if (!responseModel.success) {
-                    for (int i = 0; i < responseModel.errorMessage.Length; i++) {
-                        if (responseModel.errorMessage[i] == "missing-input-response") {
+                if (!responseModel.Success) {
+                    for (int i = 0; i < responseModel.ErrorCodes.Length; i++) {
+                        if (responseModel.ErrorCodes[i] == "missing-input-response") {
                             _notifier.Error(T("The Captcha field is required"));
                         }
                         else {
                             _notifier.Error(T("There was an error with the Captcha please try again"));
-                            Logger.Information("Error occurred while submitting a reCaptcha: " + responseModel.errorMessage[i]);
+                            Logger.Information("Error occurred while submitting a reCaptcha: " + responseModel.ErrorCodes[i]);
                         }
                     }
                 }

@@ -1,11 +1,11 @@
 ﻿using Newtonsoft.Json;
 
-namespace Orchard.DynamicForms.ViewModels
-{
+namespace Orchard.DynamicForms.ViewModels {
     public class ReCaptchaElementResponseModel {
-        public bool success { get; set; }
+        [JsonProperty("success")]
+        public bool Success { get; set; }
 
         [JsonProperty("error-codes")]
-        public string[] errorMessage { get; set; }
+        public string[] ErrorCodes { get; set; }
     }
 }

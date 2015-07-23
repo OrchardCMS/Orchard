@@ -6,9 +6,10 @@ namespace Orchard.AntiSpam.ViewModels {
     }
 
     public class ReCaptchaPartResponseModel {
-        public bool success { get; set; }
+        [JsonProperty("success")]
+        public string Success { get; set; }
 
         [JsonProperty("error-codes")]
-        public string[] errorMessage { get; set; }
+        public string[] ErrorCodes { get; set; }
     }
 }

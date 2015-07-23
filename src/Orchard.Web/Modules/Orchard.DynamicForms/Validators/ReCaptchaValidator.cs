@@ -43,9 +43,9 @@ namespace Orchard.DynamicForms.Validators {
 
                     ReCaptchaElementResponseModel responseModel = Newtonsoft.Json.JsonConvert.DeserializeObject<ReCaptchaElementResponseModel>(result);
 
-                    if (!responseModel.success) {
-                        for (int i = 0; i < responseModel.errorMessage.Length; i++) {
-                            if (responseModel.errorMessage[i] == "missing-input-response") {
+                    if (!responseModel.Success) {
+                        for (int i = 0; i < responseModel.ErrorCodes.Length; i++) {
+                            if (responseModel.ErrorCodes[i] == "missing-input-response") {
                                 var validationSettings = element.ValidationSettings;
                                 var validationMessage = validationSettings.CustomValidationMessage.WithDefault("The Captcha field is required");
                                 context.ModelState.AddModelError("g-recaptcha-response", T(validationMessage).Text);
@@ -54,7 +54,7 @@ namespace Orchard.DynamicForms.Validators {
                                 var validationSettings = element.ValidationSettings;
                                 var validationMessage = validationSettings.CustomValidationMessage.WithDefault("There was an error with the Captcha please try again");
                                 context.ModelState.AddModelError("g-recaptcha-response", T(validationMessage).Text);
-                                Logger.Information("Error occurred while submitting a reCaptcha: " + responseModel.errorMessage[i]);
+                                Logger.Information("Error occurred while submitting a reCaptcha: " + responseModel.ErrorCodes[i]);
                             }
                         }
                     }
