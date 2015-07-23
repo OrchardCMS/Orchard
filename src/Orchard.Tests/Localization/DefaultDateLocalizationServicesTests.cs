@@ -213,9 +213,9 @@ namespace Orchard.Tests.Localization {
         [Description("DateTime which is DateTimeKind.Local is converted to DateTimeKind.Utc.")]
         public void ConvertFromLocalizedDateStringTest01() {
             var container = TestHelpers.InitializeContainer("en-US", "GregorianCalendar", TimeZoneInfo.Utc);
-            var dateTimeLocal = new DateTime(1998, 1, 15);
-            var dateTimeLocalString = dateTimeLocal.ToShortDateString();
             var target = container.Resolve<IDateLocalizationServices>();
+            var dateTimeLocal = new DateTime(1998, 1, 15);
+            var dateTimeLocalString = target.ConvertToLocalizedDateString(dateTimeLocal);
             var result = target.ConvertFromLocalizedDateString(dateTimeLocalString);
             Assert.AreEqual(DateTimeKind.Utc, result.Value.Kind);
         }

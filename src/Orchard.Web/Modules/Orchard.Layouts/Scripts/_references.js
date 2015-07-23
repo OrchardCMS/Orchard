@@ -1,5 +1,4 @@
 ﻿/// <autosync enabled="false" />
-/// <reference path="Lib/affix.js" />
 /// <reference path="Lib/angular-resource.js" />
 /// <reference path="Lib/angular-sanitize.js" />
 /// <reference path="Lib/angular.js" />

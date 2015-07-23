@@ -14,15 +14,15 @@
 
 var gulp = require("gulp"),
     newer = require("gulp-newer"),
-	plumber = require("gulp-plumber"),
+    plumber = require("gulp-plumber"),
     sourcemaps = require("gulp-sourcemaps"),
     less = require("gulp-less"),
-	autoprefixer = require("gulp-autoprefixer"),
-	minify = require("gulp-minify-css"),
-	uglify = require("gulp-uglify"),
-	rename = require("gulp-rename"),
-	concat = require("gulp-concat"),
-	merge = require("merge-stream")
+    autoprefixer = require("gulp-autoprefixer"),
+    minify = require("gulp-minify-css"),
+    uglify = require("gulp-uglify"),
+    rename = require("gulp-rename"),
+    concat = require("gulp-concat"),
+    merge = require("merge-stream");
 
 /*
  * General tasks.
@@ -72,18 +72,18 @@ gulp.task("watchLess", function () {
 function lessPipelineFrom(inputStream, outputFolder, outputFile) {
     return inputStream
         .pipe(newer(outputFolder + "/" + outputFile))
-		.pipe(plumber())
+        .pipe(plumber())
         .pipe(sourcemaps.init())
-		.pipe(less())
-		.pipe(concat(outputFile))
-		.pipe(autoprefixer({ browsers: ["last 2 versions"] }))
+        .pipe(less())
+        .pipe(concat(outputFile))
+        .pipe(autoprefixer({ browsers: ["last 2 versions"] }))
         .pipe(sourcemaps.write())
-		.pipe(gulp.dest(outputFolder))
-		.pipe(minify())
-		.pipe(rename({
-		    suffix: ".min"
-		}))
-		.pipe(gulp.dest(outputFolder));
+        .pipe(gulp.dest(outputFolder))
+        .pipe(minify())
+        .pipe(rename({
+            suffix: ".min"
+        }))
+        .pipe(gulp.dest(outputFolder));
 }
 
 /*
@@ -91,11 +91,11 @@ function lessPipelineFrom(inputStream, outputFolder, outputFile) {
  */
 
 var srcJsLib = [
-	"Scripts/Lib/underscore.js",
-	"Scripts/Lib/angular.js",
-	"Scripts/Lib/angular-sanitize.js",
-	"Scripts/Lib/angular-resource.js",
-	"Scripts/Lib/sortable.js"
+    "Scripts/Lib/underscore.js",
+    "Scripts/Lib/angular.js",
+    "Scripts/Lib/angular-sanitize.js",
+    "Scripts/Lib/angular-resource.js",
+    "Scripts/Lib/sortable.js"
 ];
 
 var srcJsLayoutEditor = [
@@ -146,14 +146,14 @@ gulp.task("watchJs", function () {
 function jsPipelineFrom(inputStream, outputFolder, outputFile) {
     return inputStream
         .pipe(newer(outputFolder + "/" + outputFile))
-		.pipe(plumber())
+        .pipe(plumber())
         .pipe(sourcemaps.init())
-		.pipe(concat(outputFile))
+        .pipe(concat(outputFile))
         .pipe(sourcemaps.write())
-		.pipe(gulp.dest(outputFolder))
-		.pipe(uglify())
-		.pipe(rename({
-		    suffix: ".min"
-		}))
-		.pipe(gulp.dest(outputFolder));
+        .pipe(gulp.dest(outputFolder))
+        .pipe(uglify())
+        .pipe(rename({
+            suffix: ".min"
+        }))
+        .pipe(gulp.dest(outputFolder));
 }
