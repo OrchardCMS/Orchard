@@ -43,9 +43,13 @@ namespace Orchard.MultiTenancy.Services {
             _shellSettingsManager.SaveSettings(settings);
         }
 
-        public void ResetTenant(ShellSettings settings, bool dropDatabaseTables) {
-            if (settings.State != TenantState.Disabled)
-                throw new InvalidOperationException(String.Format("Tenant state is '{0}'; must be '{1}' to perform reset action.", settings.State, TenantState.Disabled));
+        public void ResetTenant(ShellSettings settings, bool dropDatabaseTables, bool force) {
+            if (settings.State == TenantState.Uninitialized)
+                return;
+            if (settings.State == TenantState.Invalid)
+                throw new InvalidOperationException(String.Format("Tenant reset action cannot be performed when tenant state is '{0}'.", settings.State));
+            if (!force && settings.State != TenantState.Disabled)
+                throw new InvalidOperationException(String.Format("Tenant state is '{0}'; must be '{1}' to perform reset action. The 'force' option can be used to override this.", settings.State, TenantState.Disabled));
 
             ExecuteOnTenantScope(settings, environment => {
                 ExecuteResetEventHandlers(environment);
