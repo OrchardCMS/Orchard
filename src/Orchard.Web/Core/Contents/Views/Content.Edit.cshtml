@@ -1,4 +1,9 @@
-﻿<div class="edit-item">
+﻿@using Orchard.Core.Shapes
+@{
+    var tabs = (IEnumerable<string>)CoreShapes.HarvestAndSortTabs(Model.Content);
+    Display.LocalNavigation(Tabs: tabs);
+}
+<div class="edit-item">
     <div class="edit-item-primary">
         @if (Model.Content != null) {
             <div class="edit-item-content">
