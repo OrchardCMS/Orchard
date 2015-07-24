@@ -11,13 +11,11 @@
                 <th>@T("Content Type")</th>
                 <th>@T("Schema")</th>
                 <th>@T("Data")</th>
-                <th>@T("Both")</th>
             </tr>
             <tr class="sub">
                 <th>&nbsp;</th>
-                <th><input type="checkbox" class="check-all-schema" /></th>
-                <th><input type="checkbox" class="check-all-data" /></th>
-                <th><input type="checkbox" class="check-all-both" /></th>
+                <th><input type="checkbox" class="check-all-in-column" /></th>
+                <th><input type="checkbox" class="check-all-in-column" /></th>
             </tr>
         </thead>
         <tbody>
@@ -32,7 +30,6 @@
                     <td>
                         <input type="checkbox" class="check-data" name="@Html.NameFor(m => m.ContentTypes[contentTypeIndex].ExportData)" value="true" />
                     </td>
-                    <td><input type="checkbox" class="check-both" /></td>
                 </tr>
                 contentTypeIndex++;
             }
