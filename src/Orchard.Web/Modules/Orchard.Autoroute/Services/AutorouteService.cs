@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Orchard.Alias;
-using Orchard.Alias.Implementation.Storage;
 using Orchard.Autoroute.Models;
 using Orchard.Autoroute.Settings;
 using Orchard.ContentManagement;
@@ -19,7 +18,6 @@ namespace Orchard.Autoroute.Services {
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly IContentManager _contentManager;
         private readonly IRouteEvents _routeEvents;
-        private readonly IAliasStorage _aliasStorage;
         private const string AliasSource = "Autoroute:View";
 
         public AutorouteService(
@@ -27,15 +25,13 @@ namespace Orchard.Autoroute.Services {
             ITokenizer tokenizer,
             IContentDefinitionManager contentDefinitionManager,
             IContentManager contentManager,
-            IRouteEvents routeEvents,
-            IAliasStorage aliasStorage) {
+            IRouteEvents routeEvents) {
 
             _aliasService = aliasService;
             _tokenizer = tokenizer;
             _contentDefinitionManager = contentDefinitionManager;
             _contentManager = contentManager;
             _routeEvents = routeEvents;
-            _aliasStorage = aliasStorage;
         }
 
         public string GenerateAlias(AutoroutePart part) {
@@ -117,23 +113,6 @@ namespace Orchard.Autoroute.Services {
         }
 
         public void RemoveAliases(AutoroutePart part) {
-            // https://github.com/OrchardCMS/Orchard/issues/5137
-            // If the alias of the specified part is empty while not being the homepage,
-            // we need to make sure we are not removing all empty aliases in order to prevent losing the homepage content item being the homepage.
-            if (String.IsNullOrWhiteSpace(part.Path)) {
-                if (!IsHomePage(part)) {
-                    // The item being removed is NOT the homepage, so we need to make sure we're not removing the alias for the homepage.
-                    var aliasRecordId = GetHomePageAliasRecordId();
-
-                    // Remove all aliases EXCEPT for the alias of the homepage.
-                    _aliasStorage.Remove(x => x.Path == part.Path && x.Source == AliasSource && x.Id != aliasRecordId);
-
-                    // Done.
-                    return;
-                }
-            }
-
-            // Safe to delete all aliases for the specified part since it is definitely not the homepage.
             _aliasService.Delete(part.Path, AliasSource);
         }
 
@@ -141,7 +120,7 @@ namespace Orchard.Autoroute.Services {
             if (existingPaths == null || !existingPaths.Contains(part.Path))
                 return part.Path;
 
-            int? version = existingPaths.Select(s => GetSlugVersion(part.Path, s)).OrderBy(i => i).LastOrDefault();
+            var version = existingPaths.Select(s => GetSlugVersion(part.Path, s)).OrderBy(i => i).LastOrDefault();
 
             return version != null
                 ? String.Format("{0}-{1}", part.Path, version)
@@ -176,16 +155,6 @@ namespace Orchard.Autoroute.Services {
             }
 
             return true;
-        }
-
-        private bool IsHomePage(IContent content) {
-            var homePageRoute = _aliasService.Get("");
-            var homePageId = homePageRoute.ContainsKey("id") ? XmlHelper.Parse<int>((string)homePageRoute["id"]) : default(int?);
-            return content.Id == homePageId;
-        }
-
-        private int GetHomePageAliasRecordId() {
-            return _aliasStorage.List(x => x.Path == "").First().Item5;
         }
 
         private SettingsDictionary GetTypePartSettings(string contentType) {

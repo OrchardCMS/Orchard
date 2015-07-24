@@ -76,6 +76,9 @@
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
+    <Compile Include="ImportExport\HomeAliasExportStep.cs" />
+    <Compile Include="ImportExport\HomeAliasExportHandler.cs" />
+    <Compile Include="ImportExport\HomeAliasImportHandler.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
@@ -102,6 +105,8 @@
     <Compile Include="Commands\AutorouteCommands.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Services\AliasResolverSelector.cs" />
+    <Compile Include="Services\HomeAliasService.cs" />
+    <Compile Include="Services\IHomeAliasService.cs" />
     <Compile Include="Services\PathResolutionService.cs" />
     <Compile Include="Services\IPathResolutionService.cs" />
     <Compile Include="Services\IRouteEvents.cs" />
@@ -121,9 +126,7 @@
     <Compile Include="Settings\AutorouteSettings.cs" />
     <Compile Include="ViewModels\AutoroutePartEditViewModel.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="Placement.info">
       <SubType>Designer</SubType>

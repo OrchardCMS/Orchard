@@ -23,7 +23,7 @@ namespace Orchard.Alias {
 
         IEnumerable<Tuple<string, RouteValueDictionary>> List();
         IEnumerable<Tuple<string, RouteValueDictionary, string>> List(string sourceStartsWith);
-        IEnumerable<VirtualPathData> LookupVirtualPaths(RouteValueDictionary routeValues, System.Web.HttpContextBase HttpContext);
+        IEnumerable<VirtualPathData> LookupVirtualPaths(RouteValueDictionary routeValues, System.Web.HttpContextBase httpContext);
 
     }
 }
