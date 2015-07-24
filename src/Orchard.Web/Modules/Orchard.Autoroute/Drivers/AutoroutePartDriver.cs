@@ -63,18 +63,18 @@ namespace Orchard.Autoroute.Drivers {
             var settings = part.TypePartDefinition.Settings.GetModel<AutorouteSettings>();
             var itemCulture = _cultureManager.GetSiteCulture();
             
-            // If we are editing an existing content item.
+            // If we are editing an existing content item, check to see if we are an ILocalizableAspect so we can use its culture for alias generation.
             if (part.Record.Id != 0) {
-                ContentItem contentItem = _contentManager.Get(part.Record.ContentItemRecord.Id);
-                var aspect = contentItem.As<ILocalizableAspect>();
+                var localizableAspect = part.As<ILocalizableAspect>();
 
-                if (aspect != null) {
-                    itemCulture = aspect.Culture;
+                if (localizableAspect != null) {
+                    itemCulture = localizableAspect.Culture;
                 }
             }
 
             if (settings.UseCulturePattern) {
-                // If we are creating from a form post we use the form value for culture.
+                // Hack: if the LocalizedPart is attached to the content item, it will submit the following form value,
+                // which we use to determine what culture to use for alias generation.
                 var context = _httpContextAccessor.Current();
                 if (!String.IsNullOrEmpty(context.Request.Form["Localization.SelectedCulture"])) {
                     itemCulture = context.Request.Form["Localization.SelectedCulture"].ToString();
@@ -84,12 +84,12 @@ namespace Orchard.Autoroute.Drivers {
             // We update the settings assuming that when 
             // pattern culture = null or "" it means culture = default website culture
             // for patterns that we migrated.
-            foreach (RoutePattern pattern in settings.Patterns.Where(x => String.IsNullOrWhiteSpace(x.Culture))) {
+            foreach (var pattern in settings.Patterns.Where(x => String.IsNullOrWhiteSpace(x.Culture))) {
                 pattern.Culture = _cultureManager.GetSiteCulture(); ;
             }
 
             // We do the same for default patterns.
-            foreach (DefaultPattern pattern in settings.DefaultPatterns.Where(x => String.IsNullOrWhiteSpace(x.Culture))) {
+            foreach (var pattern in settings.DefaultPatterns.Where(x => String.IsNullOrWhiteSpace(x.Culture))) {
                 pattern.Culture = _cultureManager.GetSiteCulture();
             }
             
