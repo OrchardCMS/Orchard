@@ -18,6 +18,11 @@
         cursor: default;
         white-space: nowrap;
         line-height: normal;
+        min-width: 300px;
+
+        &.wide {
+            width: 600px;
+        }
 
         .layout-popup-flex {
             display: flex;
@@ -46,6 +51,10 @@
         }
 
         .layout-popup-input {
+            input[type='text'], textarea {
+                width: 100%;
+            }
+
             > label {
                 display: block;
                 font-size: 0.9em;

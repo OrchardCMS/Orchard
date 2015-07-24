@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
@@ -12,7 +11,6 @@ using Orchard.Localization;
 using Orchard.Services;
 
 namespace Orchard.Core.Common.Drivers {
-    [UsedImplicitly]
     public class TextFieldDriver : ContentFieldDriver<TextField> {
         private readonly IEnumerable<IHtmlFilter> _htmlFilters;
 

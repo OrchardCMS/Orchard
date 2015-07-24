@@ -481,11 +481,9 @@ namespace Orchard.ContentManagement {
 
             if (latestVersion != null) {
                 latestVersion.Latest = false;
-                buildingItemVersionRecord.Number = latestVersion.Number + 1;
             }
-            else {
-                buildingItemVersionRecord.Number = contentItemRecord.Versions.Max(x => x.Number) + 1;
-            }
+            ////The new version should always be the next highest available number.
+            buildingItemVersionRecord.Number = contentItemRecord.Versions.Max(x => x.Number) + 1;
 
             contentItemRecord.Versions.Add(buildingItemVersionRecord);
             _contentItemVersionRepository.Create(buildingItemVersionRecord);

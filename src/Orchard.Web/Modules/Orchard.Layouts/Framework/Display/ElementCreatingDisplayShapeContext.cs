@@ -6,5 +6,6 @@ namespace Orchard.Layouts.Framework.Display {
         public IContent Content { get; set; }
         public Element Element { get; set; }
         public string DisplayType { get; set; }
+        public bool Cancel { get; set; }
     }
 }

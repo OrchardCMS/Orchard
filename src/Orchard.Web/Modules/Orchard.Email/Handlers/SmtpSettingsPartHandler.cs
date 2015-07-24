@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Text;
-using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.Email.Models;
 using Orchard.ContentManagement.Handlers;
@@ -10,7 +9,6 @@ using Orchard.Security;
 using System.Configuration;
 
 namespace Orchard.Email.Handlers {
-    [UsedImplicitly]
     public class SmtpSettingsPartHandler : ContentHandler {
         private readonly IEncryptionService _encryptionService;
 
@@ -49,7 +47,7 @@ namespace Orchard.Email.Handlers {
                 part.Store(x => x.Password, encryptedPassword);
             });
 
-            part.AddressPlaceholderField.Loader(value => (string)((dynamic)ConfigurationManager.GetSection("system.net/mailSettings/smtp")).From);
+            part.AddressPlaceholderField.Loader(() => (string)((dynamic)ConfigurationManager.GetSection("system.net/mailSettings/smtp")).From);
         }
 
         public Localizer T { get; set; }

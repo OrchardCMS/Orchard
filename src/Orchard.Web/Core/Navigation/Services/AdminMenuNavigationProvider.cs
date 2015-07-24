@@ -1,5 +1,4 @@
 ﻿using System.Web;
-using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Navigation.Models;
@@ -7,7 +6,6 @@ using Orchard.Localization;
 using Orchard.UI.Navigation;
 
 namespace Orchard.Core.Navigation.Services {
-    [UsedImplicitly]
     public class AdminMenuNavigationProvider : INavigationProvider {
         private readonly IContentManager _contentManager;
         private readonly IContentDefinitionManager _contentDefinitionManager;

@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.Logging;
-using Orchard.Recipes.Models;
 using Orchard.Setup.Services;
 using Orchard.Setup.ViewModels;
 using Orchard.Localization;
@@ -44,7 +42,7 @@ namespace Orchard.Setup.Controllers {
 
         public ActionResult Index() {
             var initialSettings = _setupService.Prime();
-            var recipes = OrderRecipes(_setupService.Recipes());
+            var recipes = _setupService.Recipes().ToList();
             string recipeDescription = null;
             if (recipes.Count > 0) {
                 recipeDescription = recipes[0].Description;
@@ -54,13 +52,11 @@ namespace Orchard.Setup.Controllers {
             // will take a while to finish (user inputting data and the setup process itself).
             // We use this opportunity to start a background task to "pre-compile" all the known
             // views in the app folder, so that the application is more reponsive when the user
-            // hits the homepage and admin screens for the first time.))
+            // hits the homepage and admin screens for the first time).
             if (StringComparer.OrdinalIgnoreCase.Equals(initialSettings.Name, ShellSettings.DefaultName)) {
                 _viewsBackgroundCompilation.Start();
             }
-
-            //
-
+            
             return IndexViewResult(new SetupViewModel {
                 AdminUsername = "admin",
                 DatabaseIsPreconfigured = !string.IsNullOrEmpty(initialSettings.DataProvider),
@@ -71,32 +67,32 @@ namespace Orchard.Setup.Controllers {
 
         [HttpPost, ActionName("Index")]
         public ActionResult IndexPOST(SetupViewModel model) {
-            // sets the setup request timeout to 10 minutes to give enough time to execute custom recipes.  
+            // Sets the setup request timeout to 10 minutes to give enough time to execute custom recipes.
             HttpContext.Server.ScriptTimeout = 600;
 
-            var recipes = OrderRecipes(_setupService.Recipes());
+            var recipes = _setupService.Recipes().ToList();
 
-            // if no builtin provider, a connection string is mandatory
+            // If no builtin provider, a connection string is mandatory.
             if (model.DatabaseProvider != SetupDatabaseType.Builtin && string.IsNullOrEmpty(model.DatabaseConnectionString))
-                ModelState.AddModelError("DatabaseConnectionString", T("A connection string is required").Text);
+                ModelState.AddModelError("DatabaseConnectionString", T("A connection string is required.").Text);
 
-            if (!String.IsNullOrWhiteSpace(model.ConfirmPassword) && model.AdminPassword != model.ConfirmPassword ) {
-                ModelState.AddModelError("ConfirmPassword", T("Password confirmation must match").Text);
+            if (!string.IsNullOrWhiteSpace(model.ConfirmPassword) && model.AdminPassword != model.ConfirmPassword ) {
+                ModelState.AddModelError("ConfirmPassword", T("Password confirmation must match.").Text);
             }
 
-            if (model.DatabaseProvider != SetupDatabaseType.Builtin && !String.IsNullOrWhiteSpace(model.DatabaseTablePrefix)) {
+            if (model.DatabaseProvider != SetupDatabaseType.Builtin && !string.IsNullOrWhiteSpace(model.DatabaseTablePrefix)) {
                 model.DatabaseTablePrefix = model.DatabaseTablePrefix.Trim();
-                if(!Char.IsLetter(model.DatabaseTablePrefix[0])) {
-                    ModelState.AddModelError("DatabaseTablePrefix", T("The table prefix must begin with a letter").Text);
+                if(!char.IsLetter(model.DatabaseTablePrefix[0])) {
+                    ModelState.AddModelError("DatabaseTablePrefix", T("The table prefix must begin with a letter.").Text);
                 }
 
                 if(model.DatabaseTablePrefix.Any(x => !Char.IsLetterOrDigit(x))) {
-                    ModelState.AddModelError("DatabaseTablePrefix", T("The table prefix must contain letters or digits").Text);
+                    ModelState.AddModelError("DatabaseTablePrefix", T("The table prefix must contain letters or digits.").Text);
                 }
             }
             if (model.Recipe == null) {
                 if (!(recipes.Select(r => r.Name).Contains(DefaultRecipe))) {
-                    ModelState.AddModelError("Recipe", T("No recipes were found in the Setup module").Text);
+                    ModelState.AddModelError("Recipe", T("No recipes were found.").Text);
                 }
                 else {
                     model.Recipe = DefaultRecipe;
@@ -129,6 +125,10 @@ namespace Orchard.Setup.Controllers {
                         providerName = "MySql";
                         break;
 
+                    case SetupDatabaseType.PostgreSql:
+                        providerName = "PostgreSql";
+                        break;
+
                     default:
                         throw new ApplicationException("Unknown database type: " + model.DatabaseProvider);
                 }
@@ -151,7 +151,7 @@ namespace Orchard.Setup.Controllers {
                 // uses a "single lock" mechanism for compiling views).
                 _viewsBackgroundCompilation.Stop();
 
-                // redirect to the welcome page.
+                // Redirect to the welcome page.
                 return Redirect("~/" + _shellSettings.RequestUrlPrefix);
             } catch (Exception ex) {
                 Logger.Error(ex, "Setup failed");
@@ -165,20 +165,6 @@ namespace Orchard.Setup.Controllers {
 
                 return IndexViewResult(model);
             }
-        }
-
-        private static List<Recipe> OrderRecipes(IEnumerable<Recipe> recipes) {
-            var recipeList = new List<Recipe>();
-            var tempList = new List<Recipe>();
-            foreach (var recipe in recipes) {
-                if (recipe.Name == DefaultRecipe) {
-                    recipeList.Add(recipe);
-                }
-                else {
-                    tempList.Add(recipe);
-                }
-            }
-            return recipeList.Concat(tempList).ToList();
         }
     }
 }

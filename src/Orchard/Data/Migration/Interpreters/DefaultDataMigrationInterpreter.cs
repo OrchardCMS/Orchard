@@ -11,7 +11,6 @@ using Orchard.Data.Migration.Schema;
 using Orchard.Environment.Configuration;
 using Orchard.Localization;
 using Orchard.Logging;
-using Orchard.Reports.Services;
 
 namespace Orchard.Data.Migration.Interpreters {
     public class DefaultDataMigrationInterpreter : AbstractDataMigrationInterpreter, IDataMigrationInterpreter {
@@ -21,7 +20,6 @@ namespace Orchard.Data.Migration.Interpreters {
         private readonly Lazy<Dialect> _dialectLazy;
         private readonly List<string> _sqlStatements;
         private readonly ISessionFactoryHolder _sessionFactoryHolder;
-        private readonly IReportsCoordinator _reportsCoordinator;
 
         private const char Space = ' ';
 
@@ -29,14 +27,12 @@ namespace Orchard.Data.Migration.Interpreters {
             ShellSettings shellSettings,
             ISessionLocator sessionLocator,
             IEnumerable<ICommandInterpreter> commandInterpreters,
-            ISessionFactoryHolder sessionFactoryHolder,
-            IReportsCoordinator reportsCoordinator) {
+            ISessionFactoryHolder sessionFactoryHolder) {
             _shellSettings = shellSettings;
             _sessionLocator = sessionLocator;
             _commandInterpreters = commandInterpreters;
             _sqlStatements = new List<string>();
             _sessionFactoryHolder = sessionFactoryHolder;
-            _reportsCoordinator = reportsCoordinator;
 
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
@@ -79,9 +75,15 @@ namespace Orchard.Data.Migration.Interpreters {
                     builder.Append(", ");
                 }
 
+                var primaryKeysQuoted = new List<string>(primaryKeys.Length);
+                foreach (string pk in primaryKeys) {
+                    primaryKeysQuoted.Add(_dialectLazy.Value.QuoteForColumnName(pk));
+                }
+
+
                 builder.Append(_dialectLazy.Value.PrimaryKeyString)
                     .Append(" ( ")
-                    .Append(String.Join(", ", primaryKeys.ToArray()))
+                    .Append(String.Join(", ", primaryKeysQuoted.ToArray()))
                     .Append(" )");
             }
 
@@ -327,15 +329,13 @@ namespace Orchard.Data.Migration.Interpreters {
 
             try {
                 foreach (var sqlStatement in _sqlStatements) {
-                    Logger.Debug(sqlStatement);
+                    Logger.Debug("Executing SQL query: {0}", sqlStatement);
 
                     using (var command = session.Connection.CreateCommand()) {
                         command.CommandText = sqlStatement;
                         session.Transaction.Enlist(command);
                         command.ExecuteNonQuery();
                     }
-                 
-                    _reportsCoordinator.Information("Data Migration", String.Format("Executing SQL Query: {0}", sqlStatement));
                 }
             }
             finally {
@@ -358,7 +358,7 @@ namespace Orchard.Data.Migration.Interpreters {
             return false;
         }
 
-        public static string ConvertToSqlValue(object value) {
+        public string ConvertToSqlValue(object value) {
             if ( value == null ) {
                 return "null";
             }
@@ -372,7 +372,7 @@ namespace Orchard.Data.Migration.Interpreters {
                 case TypeCode.Char:
                     return String.Concat("'", Convert.ToString(value).Replace("'", "''"), "'");
                 case TypeCode.Boolean:
-                    return (bool) value ? "1" : "0";
+                    return this._dialectLazy.Value.ToBooleanValueString((bool)value);
                 case TypeCode.SByte:
                 case TypeCode.Int16:
                 case TypeCode.UInt16:

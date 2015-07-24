@@ -3,6 +3,8 @@
     var tagBuilder = TagBuilderExtensions.CreateElementTagBuilder(Model);
     tagBuilder.AddCssClass("row");
 }
-@tagBuilder.StartElement
-@DisplayChildren(Model)
-@tagBuilder.EndElement
+@if (!Model.Collapsed) {
+    @tagBuilder.StartElement
+    @DisplayChildren(Model)
+    @tagBuilder.EndElement
+}

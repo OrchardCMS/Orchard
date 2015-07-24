@@ -6,6 +6,7 @@ using Orchard.ContentManagement.Handlers;
 using Orchard.Data;
 using Orchard.Localization;
 using Orchard.UI.Notify;
+using Orchard.Alias;
 
 namespace Orchard.Autoroute.Handlers {
     public class AutoroutePartHandler : ContentHandler {
@@ -35,7 +36,7 @@ namespace Orchard.Autoroute.Handlers {
                     PublishAlias(part);
                 }
             });
-            
+
             OnPublished<AutoroutePart>((ctx, part) => PublishAlias(part));
 
             // Remove alias if removed or unpublished
@@ -96,11 +97,17 @@ namespace Orchard.Autoroute.Handlers {
                 if (!_autorouteService.Value.ProcessPath(part))
                     _orchardServices.Notifier.Warning(
                         T("Permalinks in conflict. \"{0}\" is already set for a previously created {2} so now it has the slug \"{1}\"", 
-                        previous, part.Path, part.ContentItem.ContentType));
+                                                 previous, part.Path, part.ContentItem.ContentType));
             }
         }
 
         void RemoveAlias(AutoroutePart part) {
+            var homePageId = _homeAliasService.GetHomePageId();
+
+            // Is this the current home page?
+            if (part.ContentItem.Id == homePageId) {
+                _orchardServices.Notifier.Warning(T("You removed the content item that served as the site\'s home page. \nMost possibly this means that instead of the home page a \"404 Not Found\" error page will be displayed without a link to log in or access the dashboard. \n\nTo prevent this you can e.g. publish a content item that has the \"Set as home page\" checkbox ticked."));
+            }
             _autorouteService.Value.RemoveAliases(part);
         }
     }

@@ -59,6 +59,7 @@ namespace Orchard.Tests.ContentManagement {
             builder.RegisterInstance(new ShellSettings { Name = ShellSettings.DefaultName, DataProvider = "SqlCe" });
             builder.RegisterType<SqlCeStatementProvider>().As<ISqlStatementProvider>();
             builder.RegisterType<MySqlStatementProvider>().As<ISqlStatementProvider>();
+            builder.RegisterType<PostgreSqlStatementProvider>().As<ISqlStatementProvider>();
 
             builder.RegisterType<AlphaPartHandler>().As<IContentHandler>();
             builder.RegisterType<BetaPartHandler>().As<IContentHandler>();

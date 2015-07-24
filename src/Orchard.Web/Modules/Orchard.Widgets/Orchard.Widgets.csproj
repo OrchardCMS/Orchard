@@ -90,6 +90,8 @@
     <Compile Include="RuleEngine\ContentDisplayedRuleProvider.cs" />
     <Compile Include="RuleEngine\RuleManager.cs" />
     <Compile Include="RuleEngine\UrlRuleProvider.cs" />
+    <Compile Include="Services\DefaultLayerEvaluationService.cs" />
+    <Compile Include="Services\ILayerEvaluationService.cs" />
     <Compile Include="Services\IRuleManager.cs" />
     <Compile Include="Services\IRuleProvider.cs" />
     <Compile Include="Services\IWidgetsService.cs" />
@@ -122,6 +124,7 @@
     <ProjectReference Include="..\..\Core\Orchard.Core.csproj">
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
+      <Private>false</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
       <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>

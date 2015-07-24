@@ -16,6 +16,7 @@
         factories[type] = factory;
     };
 
+    registerFactory("Canvas", function (value) { return LayoutEditor.Canvas.from(value); });
     registerFactory("Grid", function(value) { return LayoutEditor.Grid.from(value); });
     registerFactory("Row", function(value) { return LayoutEditor.Row.from(value); });
     registerFactory("Column", function(value) { return LayoutEditor.Column.from(value); });

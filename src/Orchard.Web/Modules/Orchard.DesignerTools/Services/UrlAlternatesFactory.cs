@@ -51,7 +51,7 @@ namespace Orchard.DesignerTools.Services {
                     return;
                 }
 
-                // prevent applying alternate again, c.f. http://orchard.codeplex.com/workitem/18298
+                // prevent applying alternate again, c.f. https://github.com/OrchardCMS/Orchard/issues/2125
                 if(displayedContext.ShapeMetadata.Alternates.Any(x => x.Contains("__url__"))) {
                     return;
                 }

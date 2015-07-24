@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Web.Mvc;
 using System.Web.Routing;
-using JetBrains.Annotations;
 
 namespace Orchard.Core.Feeds.Services {
-    [UsedImplicitly]
     public class FeedManager : IFeedManager {
         private readonly IList<Link> _links = new List<Link>();
 

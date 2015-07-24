@@ -1,0 +1,15 @@
+﻿@using Orchard.ContentManagement
+@{
+    Style.Include("bootstrap.css", "bootstrap.min.css");
+    Style.Include("~/Modules/Orchard.Layouts/Styles/Lib.css", "~/Modules/Orchard.Layouts/Styles/Lib.min.css");
+    Style.Include("dashboard.css");
+}
+@{
+    var contentItem = (ContentItem)Model.ContentItem;
+    var title = Html.ItemDisplayText(contentItem);
+
+    Layout.Title = HttpUtility.HtmlDecode(title.ToString());
+}
+<article class="content-item dashboard">
+    @Display(Model.Content)
+</article>

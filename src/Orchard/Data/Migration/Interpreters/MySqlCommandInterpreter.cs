@@ -10,8 +10,10 @@ namespace Orchard.Data.Migration.Interpreters {
     public class MySqlCommandInterpreter : ICommandInterpreter<AlterColumnCommand> {
         private readonly Lazy<Dialect> _dialectLazy;
         private readonly ShellSettings _shellSettings;
+        private readonly DefaultDataMigrationInterpreter _dataMigrationInterpreter;
 
-        public MySqlCommandInterpreter() {
+        public MySqlCommandInterpreter(DefaultDataMigrationInterpreter dataMigrationInterpreter) {
+            _dataMigrationInterpreter = dataMigrationInterpreter;
             T = NullLocalizer.Instance;
         }
 
@@ -47,7 +49,7 @@ namespace Orchard.Data.Migration.Interpreters {
 
             // [default value]
             if (command.Default != null) {
-                builder.Append(" set default ").Append(DefaultDataMigrationInterpreter.ConvertToSqlValue(command.Default)).Append(" ");
+                builder.Append(" set default ").Append(_dataMigrationInterpreter.ConvertToSqlValue(command.Default)).Append(" ");
             }
 
             return new [] {

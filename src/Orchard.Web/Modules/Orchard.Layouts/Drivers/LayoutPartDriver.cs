@@ -90,9 +90,9 @@ namespace Orchard.Layouts.Drivers {
 
         protected override DriverResult Editor(LayoutPart part, IUpdateModel updater, dynamic shapeHelper) {
             return ContentShape("Parts_Layout_Edit", () => {
-                if (part.Id == 0) {
-                    var settings = part.TypePartDefinition.Settings.GetModel<LayoutTypePartSettings>();
-                    part.LayoutData = settings.DefaultLayoutData;
+
+                if (part.Id == 0 && String.IsNullOrWhiteSpace(part.LayoutData)) {
+                    part.LayoutData = part.TypePartDefinition.Settings.GetModel<LayoutTypePartSettings>().DefaultLayoutData;
                 }
 
                 var viewModel = new LayoutPartViewModel {

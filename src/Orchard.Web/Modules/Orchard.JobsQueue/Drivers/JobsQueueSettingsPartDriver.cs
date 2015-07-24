@@ -1,5 +1,4 @@
-﻿using JetBrains.Annotations;
-using Orchard.ContentManagement;
+﻿using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Localization;
 using Orchard.JobsQueue.Models;
@@ -7,7 +6,6 @@ using Orchard.JobsQueue.ViewModels;
 using Orchard.Messaging.Models;
 
 namespace Orchard.JobsQueue.Drivers {
-    [UsedImplicitly]
     public class JobsQueueSettingsPartDriver : ContentPartDriver<JobsQueueSettingsPart> {
         private const string TemplateName = "Parts/JobsQueueSettings";
         public IOrchardServices Services { get; set; }

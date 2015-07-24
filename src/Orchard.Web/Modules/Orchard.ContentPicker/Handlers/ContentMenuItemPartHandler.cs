@@ -1,11 +1,9 @@
-﻿using JetBrains.Annotations;
-using Orchard.ContentManagement;
+﻿using Orchard.ContentManagement;
 using Orchard.ContentPicker.Models;
 using Orchard.Data;
 using Orchard.ContentManagement.Handlers;
 
 namespace Orchard.ContentPicker.Handlers {
-    [UsedImplicitly]
     public class ContentMenuItemPartHandler : ContentHandler {
         private readonly IContentManager _contentManager;
 
@@ -14,7 +12,7 @@ namespace Orchard.ContentPicker.Handlers {
             Filters.Add(new ActivatingFilter<ContentMenuItemPart>("ContentMenuItem"));
             Filters.Add(StorageFilter.For(repository));
 
-            OnLoading<ContentMenuItemPart>((context, part) => part._content.Loader(p => {
+            OnLoading<ContentMenuItemPart>((context, part) => part._content.Loader(() => {
                 if (part.ContentItemId != null) {
                     return contentManager.Get(part.ContentItemId.Value);
                 }

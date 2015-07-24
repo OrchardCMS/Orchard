@@ -49,7 +49,7 @@
 
             function transferViewModel(filename, size) {
                 var self = this;
-                
+
                 self.filename = filename;
                 self.size = size;
                 self.label = ko.observable();
@@ -60,7 +60,7 @@
 
             function clientStorageViewModel() {
                 var self = this;
-                
+
                 self.transfers = ko.observableArray([]);
 
                 self.upload = function(file) {
@@ -69,7 +69,7 @@
                     return transfer;
                 };
             }
-            
+
             var viewModel = new clientStorageViewModel();
             ko.applyBindings(viewModel);
 
@@ -81,7 +81,7 @@
             $('#fileupload > input').click(function(event) {
                 event.stopPropagation();
             });
-            
+
             // Add drag-n-drop HTML5 support
             $('#fileupload').fileupload({
                 url: '@Url.Action("Upload", "ClientStorage")',
@@ -103,7 +103,7 @@
                 // See the basic file upload widget for more information:
                 add: function (e, data) {
                     var self = $(this);
-                    
+
                     if (!data.files.length) {
                         return;
                     }
@@ -113,8 +113,8 @@
                         var file = data.files[i];
                         data.context = viewModel.upload(file);
                     }
-                    
-                    
+
+
                     data.submit();
                 },
                 // Callback for upload progress events:
@@ -134,9 +134,15 @@
                 },
                 done: function(e, data) {
                     var result = data.result[0];
+
+                    if (result.error) {
+                        data.context.label(result.error);
+                        return;
+                    }
+
                     data.context.label('@HttpUtility.JavaScriptStringEncode(T("Loading thumbnail...").Text)');
-                    
-                    
+
+
                     var url = '@HttpUtility.JavaScriptStringEncode(Url.Action("MediaItem", "Admin"))/' + result.id + '?displayType=Thumbnail';
 
                     $.ajax({

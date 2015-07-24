@@ -5,6 +5,29 @@ using System.Web.Mvc;
 namespace Orchard.UI.Resources {
     public class MetaEntry {
         private readonly TagBuilder _builder = new TagBuilder("meta");
+        
+        public MetaEntry() {
+
+        }
+
+        public MetaEntry(string name = null, string content = null, string httpEquiv = null, string charset = null) {
+            if (!String.IsNullOrEmpty(name)) {
+                Name = name;
+            }
+
+            if (!String.IsNullOrEmpty(content)) {
+                Content = content;
+            }
+
+            if (!String.IsNullOrEmpty(httpEquiv)) {
+                HttpEquiv = httpEquiv;
+            }
+
+            if (!String.IsNullOrEmpty(charset)) {
+                Charset = charset;
+            }
+
+        }
 
         public static MetaEntry Combine(MetaEntry meta1, MetaEntry meta2, string contentSeparator) {
             var newMeta = new MetaEntry();

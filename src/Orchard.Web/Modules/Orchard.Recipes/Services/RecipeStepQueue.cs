@@ -23,6 +23,7 @@ namespace Orchard.Recipes.Services {
         public ILogger Logger { get; set; }
 
         public void Enqueue(string executionId, RecipeStep step) {
+            Logger.Information("Enqueuing step '{0}' for recipe {1}.", step.Name, executionId);
             var recipeStepElement = new XElement("RecipeStep");
             recipeStepElement.Add(new XElement("Name", step.Name));
             recipeStepElement.Add(step.Step);
@@ -40,6 +41,7 @@ namespace Orchard.Recipes.Services {
         }
 
         public RecipeStep Dequeue(string executionId) {
+            Logger.Information("Dequeuing steps for recipe {0}.", executionId);
             if (!_appDataFolder.DirectoryExists(Path.Combine(_recipeQueueFolder, executionId))) {
                 return null;
             }
@@ -50,6 +52,7 @@ namespace Orchard.Recipes.Services {
                 // string to xelement
                 var stepElement = XElement.Parse(_appDataFolder.ReadFile(stepPath));
                 var stepName = stepElement.Element("Name").Value;
+                Logger.Information("Dequeuing step '{0}' for recipe {1}.", stepName, executionId);
                 recipeStep = new RecipeStep {
                     Name = stepName,
                     Step = stepElement.Element(stepName)

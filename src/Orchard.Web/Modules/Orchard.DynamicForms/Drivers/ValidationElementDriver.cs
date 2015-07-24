@@ -60,7 +60,7 @@
 //            return Editor(context, validatorsEditor);
 //        }
 
-//        protected override void OnDisplaying(FormElement element, ElementDisplayContext context) {
+//        protected override void OnDisplaying(FormElement element, ElementDisplayingContext context) {
 //            if (context.DisplayType == "Design" || element.Form == null)
 //                return;
 

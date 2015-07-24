@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Globalization;
 using System.Xml;
-using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Fields.Fields;
@@ -14,7 +13,6 @@ using Orchard.Core.Common.ViewModels;
 using Orchard.Localization.Models;
 
 namespace Orchard.Fields.Drivers {
-    [UsedImplicitly]
     public class DateTimeFieldDriver : ContentFieldDriver<DateTimeField> {
         private const string TemplateName = "Fields/DateTime.Edit"; // EditorTemplates/Fields/DateTime.Edit.cshtml
 

@@ -14,7 +14,7 @@ namespace Orchard.ArchiveLater.Handlers {
         }
 
         protected void LazyLoadHandlers(ArchiveLaterPart part) {
-            part.ScheduledArchiveUtc.Loader((value) => _archiveLaterService.GetScheduledArchiveUtc(part));        
+            part.ScheduledArchiveUtc.Loader(() => _archiveLaterService.GetScheduledArchiveUtc(part));
         }
     }
 }

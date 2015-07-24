@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Xml.Linq;
+﻿using System.Collections.Generic;
 using Autofac;
 using Moq;
 using NHibernate;
@@ -8,7 +6,6 @@ using NUnit.Framework;
 using Orchard.Caching;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
-using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.MetaData.Services;
 using Orchard.ContentManagement.Records;
 using Orchard.Core.Settings.Metadata;
@@ -21,6 +18,7 @@ using Orchard.FileSystems.AppData;
 using Orchard.FileSystems.WebSite;
 using Orchard.ImportExport.Services;
 using Orchard.Recipes.Events;
+using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
 using Orchard.Services;
 using Orchard.Tests.ContentManagement;
@@ -44,7 +42,8 @@ namespace Orchard.Tests.Modules.ImportExport.Services {
                 databaseFileName,
                 typeof(ContentTypeRecord),
                 typeof(ContentItemRecord),
-                typeof(ContentItemVersionRecord));
+                typeof(ContentItemVersionRecord),
+                typeof(RecipeStepResultRecord));
         }
 
         [SetUp]
@@ -56,7 +55,6 @@ namespace Orchard.Tests.Modules.ImportExport.Services {
             builder.RegisterType<RecipeHarvester>().As<IRecipeHarvester>();
             builder.RegisterType<RecipeStepExecutor>().As<IRecipeStepExecutor>();
             builder.RegisterType<StubStepQueue>().As<IRecipeStepQueue>().InstancePerLifetimeScope();
-            builder.RegisterType<StubRecipeJournal>().As<IRecipeJournal>();
             builder.RegisterType<StubRecipeScheduler>().As<IRecipeScheduler>();
             builder.RegisterType<ExtensionManager>().As<IExtensionManager>();
             builder.RegisterType<StubAppDataFolder>().As<IAppDataFolder>();
@@ -85,23 +83,23 @@ namespace Orchard.Tests.Modules.ImportExport.Services {
         [Test]
         public void ImportSucceedsWhenRecipeContainsImportSteps() {
             Assert.DoesNotThrow(() => _importExportService.Import(
-                                                                    @"<Orchard>
-                                                                        <Recipe>
-                                                                        <Name>MyModuleInstaller</Name>
-                                                                        </Recipe>
-                                                                        <Settings />
-                                                                    </Orchard>"));
+@"<Orchard>
+    <Recipe>
+    <Name>MyModuleInstaller</Name>
+    </Recipe>
+    <Settings />
+</Orchard>"));
         }
 
         [Test]
-        public void ImportDoesntFailsWhenRecipeContainsNonImportSteps() {
+        public void ImportDoesntFailWhenRecipeContainsNonImportSteps() {
             Assert.DoesNotThrow(() => _importExportService.Import(
-                                                                    @"<Orchard>
-                                                                        <Recipe>
-                                                                        <Name>MyModuleInstaller</Name>
-                                                                        </Recipe>
-                                                                        <Module name=""MyModule"" />
-                                                                    </Orchard>"));
+@"<Orchard>
+    <Recipe>
+    <Name>MyModuleInstaller</Name>
+    </Recipe>
+    <Module name=""MyModule"" />
+</Orchard>"));
         }
     }
 

@@ -9,6 +9,7 @@ namespace Orchard.Setup.Controllers
     {
         Builtin,
         SqlServer,
-        MySql
+        MySql,
+        PostgreSql,
     }
 }

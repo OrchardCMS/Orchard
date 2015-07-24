@@ -9,7 +9,7 @@ using Orchard.Mvc.Filters;
 
 namespace Orchard.UI.Notify {
     public class NotifyFilter : FilterProvider, IActionFilter, IResultFilter {
-        private const string TempDataMessages = "messages";
+        public const string TempDataMessages = "Messages";
         private readonly INotifier _notifier;
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly dynamic _shapeFactory;
@@ -24,6 +24,39 @@ namespace Orchard.UI.Notify {
         }
 
         public void OnActionExecuting(ActionExecutingContext filterContext) {
+            var messages = Convert.ToString(filterContext.Controller.TempData[TempDataMessages]);
+            if (String.IsNullOrEmpty(messages))
+                return;
+
+            var messageEntries = new List<NotifyEntry>();
+            foreach (var line in messages.Split(new[] { System.Environment.NewLine + "-" + System.Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries)) {
+                var delimiterIndex = line.IndexOf(':');
+                if (delimiterIndex != -1) {
+                    var type = (NotifyType)Enum.Parse(typeof(NotifyType), line.Substring(0, delimiterIndex));
+                    var message = new LocalizedString(line.Substring(delimiterIndex + 1));
+                    if (!messageEntries.Any(ne => ne.Message.TextHint == message.TextHint)) {
+                        messageEntries.Add(new NotifyEntry {
+                            Type = type,
+                            Message = message
+                        });
+                    }
+                }
+                else {
+                    var message = new LocalizedString(line.Substring(delimiterIndex + 1));
+                    if (!messageEntries.Any(ne => ne.Message.TextHint == message.TextHint)) {
+                        messageEntries.Add(new NotifyEntry {
+                            Type = NotifyType.Information,
+                            Message = message
+                        });
+                    }
+                }
+            }
+
+            if (!messageEntries.Any())
+                return;
+
+            // Make the notifications available for the rest of the current request.
+            filterContext.HttpContext.Items[TempDataMessages] = messageEntries;
         }
 
         public void OnActionExecuted(ActionExecutedContext filterContext) {
@@ -54,52 +87,18 @@ namespace Orchard.UI.Notify {
         }
 
         public void OnResultExecuting(ResultExecutingContext filterContext) {
-            var viewResult = filterContext.Result as ViewResultBase;
-
-            // if it's not a view result, a redirect for example
-            if (viewResult == null)
+            if (!(filterContext.Result is ViewResultBase))
                 return;
 
-            var messages = Convert.ToString(viewResult.TempData[TempDataMessages]);
-            if (string.IsNullOrEmpty(messages))
-                return;// nothing to do, really
-
-            var messageEntries = new List<NotifyEntry>();
-            foreach (var line in messages.Split(new[] { System.Environment.NewLine + "-" + System.Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries)) {
-                var delimiterIndex = line.IndexOf(':');
-                if (delimiterIndex != -1) {
-                    var type = (NotifyType)Enum.Parse(typeof(NotifyType), line.Substring(0, delimiterIndex));
-                    var message = new LocalizedString(line.Substring(delimiterIndex + 1));
-                    if (!messageEntries.Any(ne => ne.Message.TextHint == message.TextHint)) {
-                        messageEntries.Add(new NotifyEntry {
-                            Type = type,
-                            Message = message
-                        });
-                    }
-                }
-                else {
-                    var message = new LocalizedString(line.Substring(delimiterIndex + 1));
-                    if (!messageEntries.Any(ne => ne.Message.TextHint == message.TextHint)) {
-                        messageEntries.Add(new NotifyEntry {
-                            Type = NotifyType.Information,
-                            Message = message
-                        });
-                    }
-                }
-            }
-
-            if (!messageEntries.Any())
-                return;
-
+            var messageEntries = filterContext.HttpContext.Items[TempDataMessages] as IList<NotifyEntry> ?? new List<NotifyEntry>();
             var messagesZone = _workContextAccessor.GetContext(filterContext).Layout.Zones["Messages"];
-            foreach(var messageEntry in messageEntries)
+            foreach (var messageEntry in messageEntries)
                 messagesZone = messagesZone.Add(_shapeFactory.Message(messageEntry));
 
             //todo: (heskew) probably need to keep duplicate messages from being pushed into the zone like the previous behavior
             //baseViewModel.Messages = baseViewModel.Messages == null ? messageEntries .Messages.Union(messageEntries).ToList();
             //baseViewModel.Zones.AddRenderPartial("content:before", "Messages", baseViewModel.Messages);
         }
-
         public void OnResultExecuted(ResultExecutedContext filterContext) {}
     }
 }

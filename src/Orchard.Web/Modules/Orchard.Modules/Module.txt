@@ -7,3 +7,8 @@ OrchardVersion: 1.9
 Description: The Modules module enables the administrator of the site to manage the installed modules as well as activate and de-activate features.
 FeatureDescription: Standard module and feature management.
 Category: Core
+Features:
+    Orchard.Modules:
+        Description: Standard module and feature management.
+        Dependencies: Orchard.jQuery
+        Category: Core
