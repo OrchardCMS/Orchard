@@ -15,6 +15,12 @@ using Orchard.Localization.Services;
 using Orchard.Mvc;
 using Orchard.Security;
 using Orchard.UI.Notify;
+using Orchard.Utility.Extensions;
+using Orchard.Localization.Services;
+using Orchard.Localization.Models;
+using Orchard.Mvc;
+using System.Web;
+using Orchard.ContentManagement.Aspects;
 
 namespace Orchard.Autoroute.Drivers {
     public class AutoroutePartDriver : ContentPartDriver<AutoroutePart> {
@@ -56,7 +62,7 @@ namespace Orchard.Autoroute.Drivers {
         protected override DriverResult Editor(AutoroutePart part, IUpdateModel updater, dynamic shapeHelper) {
             var settings = part.TypePartDefinition.Settings.GetModel<AutorouteSettings>();
             var itemCulture = _cultureManager.GetSiteCulture();
-
+            
             // If we are editing an existing content item.
             if (part.Record.Id != 0) {
                 ContentItem contentItem = _contentManager.Get(part.Record.ContentItemRecord.Id);

@@ -148,8 +148,8 @@ namespace Orchard.Autoroute.Services {
                 } else {
                     settings.DefaultPatterns.Add(new DefaultPattern { PatternIndex = "0", Culture = culture });
                     return new RoutePattern { Name = "Title", Description = "my-title", Pattern = "{Content.Slug}", Culture = culture };
-                }
             }
+        }
 
             // return a default pattern if set
             var patternCultureSearch = settings.Patterns.Any(x => String.Equals(x.Culture, culture, StringComparison.OrdinalIgnoreCase)) ? culture : null;
@@ -159,11 +159,11 @@ namespace Orchard.Autoroute.Services {
                 if (settings.Patterns.Where(x => x.Culture == patternCultureSearch).ElementAt(Convert.ToInt32(settings.DefaultPatterns.Where(x => x.Culture == defaultPatternCultureSearch).FirstOrDefault().PatternIndex)) != null) {
                     return settings.Patterns.Where(x => x.Culture == patternCultureSearch).ElementAt(Convert.ToInt32(settings.DefaultPatterns.Where(x => x.Culture == defaultPatternCultureSearch).FirstOrDefault().PatternIndex));
                 };
-            }
+                }
 
             // return a default pattern if none is defined
             return new RoutePattern { Name = "Title", Description = "my-title", Pattern = "{Content.Slug}", Culture = culture };
-        }
+            }
 
         public void RemoveAliases(AutoroutePart part) {
             _aliasService.Delete(part.Path, AliasSource);
