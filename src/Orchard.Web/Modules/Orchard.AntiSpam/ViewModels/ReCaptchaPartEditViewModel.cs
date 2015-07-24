@@ -7,7 +7,7 @@ namespace Orchard.AntiSpam.ViewModels {
 
     public class ReCaptchaPartResponseModel {
         [JsonProperty("success")]
-        public string Success { get; set; }
+        public bool Success { get; set; }
 
         [JsonProperty("error-codes")]
         public string[] ErrorCodes { get; set; }
