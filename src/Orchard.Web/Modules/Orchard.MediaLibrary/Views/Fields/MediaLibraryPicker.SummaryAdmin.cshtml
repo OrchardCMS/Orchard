@@ -4,14 +4,14 @@
 
 @{
     var field = (MediaLibraryPickerField) Model.ContentField;
-    string name = field.DisplayName;
-    string techName = field.Name;
+    string displayName = field.DisplayName;
+    string name = field.Name;
     var mediaParts = field.MediaParts;
 
     var returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString();
 }
-<span class="name">@name:</span>
-<p class="media-library-picker-field media-library-picker-field-@techName.HtmlClassify()">
+<span class="name">@displayName:</span>
+<p class="media-library-picker-field media-library-picker-field-@name.HtmlClassify()">
     
     @if (mediaParts.Any()) {
         foreach (var contentItem in mediaParts) {
