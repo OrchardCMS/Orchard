@@ -506,12 +506,6 @@
   <ItemGroup>
     <Content Include="Assets.json" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="Assets\Less\StyleSheet1.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Assets\TypeScript\TypeScript1.ts" />
-  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

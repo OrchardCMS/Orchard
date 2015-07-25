@@ -1,11 +1,11 @@
-﻿#jobs-table {
-    width: auto !important;
+#jobs-table {
+  width: auto !important;
 }
-
 #jobs-table tbody tr td:last-child {
-    text-align: center;
+  text-align: center;
+}
+#jobs-table .progress-bar {
+  margin-top: 2px;
 }
 
-#jobs-table .progress-bar {
-    margin-top: 2px;
-}
+/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImNsb3VkbWVkaWEtZWRpdC1qb2JzLmxlc3MiLCJjbG91ZG1lZGlhLWVkaXQtam9icy5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDSSx1QkFBQTtDQ0NIO0FERkQ7RUFJUSxtQkFBQTtDQ0NQO0FETEQ7RUFRUSxnQkFBQTtDQ0FQIiwiZmlsZSI6ImNsb3VkbWVkaWEtZWRpdC1qb2JzLmNzcyIsInNvdXJjZXNDb250ZW50IjpbIiNqb2JzLXRhYmxlIHtcbiAgICB3aWR0aDogYXV0byAhaW1wb3J0YW50O1xuXG4gICAgdGJvZHkgdHIgdGQ6bGFzdC1jaGlsZCB7XG4gICAgICAgIHRleHQtYWxpZ246IGNlbnRlcjtcbiAgICB9XG5cbiAgICAucHJvZ3Jlc3MtYmFyIHtcbiAgICAgICAgbWFyZ2luLXRvcDogMnB4O1xuICAgIH1cbn1cbiIsIiNqb2JzLXRhYmxlIHtcbiAgd2lkdGg6IGF1dG8gIWltcG9ydGFudDtcbn1cbiNqb2JzLXRhYmxlIHRib2R5IHRyIHRkOmxhc3QtY2hpbGQge1xuICB0ZXh0LWFsaWduOiBjZW50ZXI7XG59XG4jam9icy10YWJsZSAucHJvZ3Jlc3MtYmFyIHtcbiAgbWFyZ2luLXRvcDogMnB4O1xufVxuIl0sInNvdXJjZVJvb3QiOiIvc291cmNlLyJ9 */
