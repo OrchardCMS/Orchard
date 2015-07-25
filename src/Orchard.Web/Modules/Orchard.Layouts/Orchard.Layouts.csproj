@@ -80,7 +80,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Default.html" />
-    <Content Include="gulpfile.js" />
+    <None Include="gulpfile.js%24" />
     <Content Include="Images\azure.png" />
     <Content Include="Images\illustration.jpg" />
     <Content Include="Images\logo.svg" />
@@ -524,7 +524,7 @@
     <Content Include="Views\Elements\Projection.Design.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="package.json" />
+    <None Include="package.json%24" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Styles\Lib\FontAwesome\animated.less" />

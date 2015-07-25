@@ -271,8 +271,8 @@ namespace Orchard.Data.Migration.Interpreters {
             var builder = new StringBuilder();
 
             builder.Append("alter table ")
-+                .Append(_dialectLazy.Value.QuoteForTableName(PrefixTableName(command.SrcTable)))
-+                .Append(_dialectLazy.Value.GetDropForeignKeyConstraintString(PrefixTableName(command.Name)));
+                .Append(_dialectLazy.Value.QuoteForTableName(PrefixTableName(command.SrcTable)))
+                .Append(_dialectLazy.Value.GetDropForeignKeyConstraintString(PrefixTableName(command.Name)));
             _sqlStatements.Add(builder.ToString());
 
             RunPendingStatements();

@@ -1,0 +1,18 @@
+﻿[
+    {
+        "inputs": [ "Assets/JavaScript/Lib/**/*.js" ],
+        "output": "Scripts/Lib.js"
+    },
+    {
+        "inputs": [ "Assets/JavaScript/LayoutEditor/**/*.js", "Assets/TypeScript/TypeScript1.ts" ],
+        "output": "Scripts/LayoutEditor.js"
+    },
+    {
+        "inputs": [ "Assets/CSS/DynamicForms.css", "Assets/Less/StyleSheet1.less" ],
+        "output": "Styles/DynamicForms.css"
+    },
+    {
+        "inputs": [ "Assets/CSS/DynamicForms-Admin.css" ],
+        "output": "Styles/DynamicForms-Admin.css"
+    }
+]

@@ -156,7 +156,7 @@
     <Compile Include="Helpers\FileSizeFormatProvider.cs" />
     <Compile Include="Infrastructure\Assets\AssetDriver.cs" />
     <Compile Include="Helpers\NamespaceHelper.cs" />
-    <Content Include="gulpfile.js" />
+    <None Include="gulpfile.js%24" />
     <Content Include="Images\Loader1.GIF" />
     <Content Include="Images\Thumbnail-Placeholder2.png" />
     <Content Include="Images\Thumbnail-Placeholder1.png" />
