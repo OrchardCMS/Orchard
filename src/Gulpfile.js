@@ -1,15 +1,3 @@
-/*
- * This gulpfile enables compilation of the LESS files in this project.
- * 
- * To use this file you will need to:
- * - Install Node.js on your machine
- * - Run "npm install" in this folder (either via command line or a Visual Studio extension) to install dependency packages from package.json
- * 
- * NOTE: If you install the Task Runner Explorer extension in Visual Studio the tasks in this
- * gulpfile will execute automatically on VS events for a more integrated/automated workflow. That's the 
- * purpose of the <binding> comment element at the top.
- */
-
 var glob = require("glob"),
     path = require("path-posix"),
     merge = require("merge-stream"),
@@ -31,11 +19,25 @@ var glob = require("glob"),
 ** GULP TASKS
 */
 
+// Incremental build (each asset group is built only if one or more inputs are newer than the output).
 gulp.task("build", function () {
-    var assetGroupTasks = getAssetGroups().map(createAssetGroupTask);
+    var assetGroupTasks = getAssetGroups().map(function (assetGroup) {
+        var doRebuild = false;
+        return createAssetGroupTask(assetGroup, doRebuild);
+    });
     return merge(assetGroupTasks);
 });
 
+// Full rebuild (all assets groups are built regardless of timestamps).
+gulp.task("rebuild", function () {
+    var assetGroupTasks = getAssetGroups().map(function (assetGroup) {
+        var doRebuild = true;
+        return createAssetGroupTask(assetGroup, doRebuild);
+    });
+    return merge(assetGroupTasks);
+});
+
+// Continuous watch (each asset group is built whenever one of its inputs changes).
 gulp.task("watch", function () {
     getAssetGroups().forEach(function (assetGroup) {
         gulp.watch(assetGroup.inputPaths, function (event) {
@@ -72,13 +74,13 @@ function resolveAssetGroupPaths(assetGroup, assetManifestPath) {
     assetGroup.outputFileName = path.basename(assetGroup.output);
 }
 
-function createAssetGroupTask(assetGroup) {
+function createAssetGroupTask(assetGroup, doRebuild) {
     var outputExt = path.extname(assetGroup.output).toLowerCase();
     switch (outputExt) {
         case ".css":
-            return buildCssGroup(assetGroup);
+            return buildCssGroup(assetGroup, doRebuild);
         case ".js":
-            return buildJsGroup(assetGroup);
+            return buildJsGroup(assetGroup, doRebuild);
     }
 }
 
@@ -86,16 +88,16 @@ function createAssetGroupTask(assetGroup) {
 ** PROCESSING PIPELINES
 */
 
-function buildCssGroup(assetGroup) {
+function buildCssGroup(assetGroup, doRebuild) {
     var doConcat = path.basename(assetGroup.outputFileName, ".css") !== "@";
     return gulp.src(assetGroup.inputPaths)
-        .pipe(gulpif(doConcat,
-            newer(assetGroup.outputPath),
-            newer({
-                dest: assetGroup.outputDir,
-                ext: ".css"
-            })
-        ))
+        .pipe(gulpif(!doRebuild,
+            gulpif(doConcat,
+                newer(assetGroup.outputPath),
+                newer({
+                    dest: assetGroup.outputDir,
+                    ext: ".css"
+                }))))
         .pipe(plumber())
         .pipe(sourcemaps.init())
         .pipe(gulpif("*.less", less()))
@@ -117,16 +119,16 @@ function buildCssGroup(assetGroup) {
         .pipe(gulp.dest(assetGroup.outputDir));
 }
 
-function buildJsGroup(assetGroup) {
+function buildJsGroup(assetGroup, doRebuild) {
     var doConcat = path.basename(assetGroup.outputFileName, ".js") !== "@";
     return gulp.src(assetGroup.inputPaths)
-        .pipe(gulpif(doConcat,
-            newer(assetGroup.outputPath),
-            newer({
-                dest: assetGroup.outputDir,
-                ext: ".js"
-            })
-        ))
+        .pipe(gulpif(!doRebuild,
+            gulpif(doConcat,
+                newer(assetGroup.outputPath),
+                newer({
+                    dest: assetGroup.outputDir,
+                    ext: ".js"
+                }))))
         .pipe(plumber())
         .pipe(sourcemaps.init())
         .pipe(gulpif("*.ts", typescript({
