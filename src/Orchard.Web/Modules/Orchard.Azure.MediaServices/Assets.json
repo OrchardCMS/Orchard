@@ -1,0 +1,14 @@
+﻿[
+    {
+        "inputs": [ "Assets/Less/*.less" ],
+        "output": "Styles/@.css"
+    },
+    {
+        "inputs": [ "Assets/TypeScript/*.ts" ],
+        "output": "Scripts/@.js"
+    },
+    {
+        "inputs": [ "Assets/JavaScript/Lib/*.js" ],
+        "output": "Scripts/Lib/@.js"
+    }
+]
