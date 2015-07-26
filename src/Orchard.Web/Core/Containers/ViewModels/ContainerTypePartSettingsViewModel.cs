@@ -5,6 +5,9 @@ using Orchard.Core.Containers.Services;
 
 namespace Orchard.Core.Containers.ViewModels {
     public class ContainerTypePartSettingsViewModel {
+        public string ItemsDisplayMode { get; set; }
+        public string ContainerTag { get; set; }
+        public string ItemTag { get; set; }
         public bool? ItemsShownDefault { get; set; }
         public int? PageSizeDefault { get; set; }
         public bool? PaginatedDefault { get; set; }

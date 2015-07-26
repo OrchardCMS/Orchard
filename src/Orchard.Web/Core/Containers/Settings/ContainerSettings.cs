@@ -94,6 +94,9 @@ namespace Orchard.Core.Containers.Settings {
         public bool RestrictItemContentTypes { get; set; }
         public bool? EnablePositioning { get; set; }
         public string AdminListViewName { get; set; }
+        public string ItemsDisplayMode { get; set; }
+        public string ContainerTag { get; set; }
+        public string ItemTag { get; set; }
     }
 
     public class ContainerSettingsHooks : ContentDefinitionEditorEventsBase {
@@ -123,7 +126,26 @@ namespace Orchard.Core.Containers.Settings {
             if (model.PaginatedDefault == null)
                 model.PaginatedDefault = partModel.PaginatedDefault;
 
-            var viewModel = new ContainerTypePartSettingsViewModel {
+            if (string.IsNullOrEmpty(model.ItemsDisplayMode))
+            {
+                model.ItemsDisplayMode = partModel.ItemsDisplayMode;
+            }
+
+            if (string.IsNullOrEmpty(model.ContainerTag))
+            {
+                model.ContainerTag = partModel.ContainerTag;
+            }
+
+            if (string.IsNullOrEmpty(model.ItemTag))
+            {
+                model.ItemTag = partModel.ItemTag;
+            }
+            
+            var viewModel = new ContainerTypePartSettingsViewModel
+            {
+                ItemTag = model.ItemTag,
+                ContainerTag = model.ContainerTag,
+                ItemsDisplayMode = model.ItemsDisplayMode,
                 ItemsShownDefault = model.ItemsShownDefault,
                 PageSizeDefault = model.PageSizeDefault,
                 PaginatedDefault = model.PaginatedDefault,
@@ -161,6 +183,9 @@ namespace Orchard.Core.Containers.Settings {
             builder.WithSetting("ContainerTypePartSettings.RestrictItemContentTypes", viewModel.RestrictItemContentTypes.ToString());
             builder.WithSetting("ContainerTypePartSettings.EnablePositioning", viewModel.EnablePositioning.ToString());
             builder.WithSetting("ContainerTypePartSettings.AdminListViewName", viewModel.AdminListViewName);
+            builder.WithSetting("ContainerTypePartSettings.ItemsDisplayMode", viewModel.ItemsDisplayMode);
+            builder.WithSetting("ContainerTypePartSettings.ContainerTag", viewModel.ContainerTag);
+            builder.WithSetting("ContainerTypePartSettings.ItemTag", viewModel.ItemTag);
             yield return DefinitionTemplate(viewModel);
         }
 
@@ -173,6 +198,9 @@ namespace Orchard.Core.Containers.Settings {
             builder.WithSetting("ContainerPartSettings.ItemsShownDefault", model.ItemsShownDefault.ToString());
             builder.WithSetting("ContainerPartSettings.PageSizeDefault", model.PageSizeDefault.ToString());
             builder.WithSetting("ContainerPartSettings.PaginatedDefault", model.PaginatedDefault.ToString());
+            builder.WithSetting("ContainerPartSettings.ItemsDisplayMode", model.ItemsDisplayMode);
+            builder.WithSetting("ContainerPartSettings.ContainerTag", model.ContainerTag);
+            builder.WithSetting("ContainerPartSettings.ItemTag", model.ItemTag);
             yield return DefinitionTemplate(model);
         }
     }
