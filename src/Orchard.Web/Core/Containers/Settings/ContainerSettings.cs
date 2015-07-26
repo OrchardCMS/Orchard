@@ -14,10 +14,49 @@ namespace Orchard.Core.Containers.Settings {
         public const bool ItemsShownDefaultDefault = true;
         public const int PageSizeDefaultDefault = 10;
         public const bool PaginatedDefaultDefault = true;
+        public const string ItemsDisplayModelDefault = "Summary";
+        public const string ItemTagDefault = "li";
+        public const string ContainerTagDefault = "ul";
 
         private bool? _itemsShownDefault;
         private int? _pageSizeDefault;
         private bool? _paginiatedDefault;
+        private string _itemsDisplayMode;
+        private string _itemTag = "li";
+        private string _containerTag = "ul";
+
+        public string ContainerTag
+        {
+            get
+            {
+                return !string.IsNullOrEmpty(_containerTag)
+                         ? _containerTag
+                         : ContainerTagDefault;
+            }
+            set { _containerTag = value; }
+        }
+        
+        public string ItemTag
+        {
+            get
+            {
+                return !string.IsNullOrEmpty(_itemTag)
+                         ? _itemTag
+                         : ItemTagDefault;
+            }
+            set { _itemTag = value; }
+        }
+        
+        public string ItemsDisplayMode
+        {
+            get
+            {
+                return !string.IsNullOrEmpty(_itemsDisplayMode)
+                         ? _itemsDisplayMode
+                         : ItemsDisplayModelDefault;
+            }
+            set { _itemsDisplayMode = value; }
+        }
 
         public bool ItemsShownDefault {
             get {
