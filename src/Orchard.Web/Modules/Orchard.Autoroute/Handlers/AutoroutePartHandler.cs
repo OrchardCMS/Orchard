@@ -91,13 +91,11 @@ namespace Orchard.Autoroute.Handlers {
             }
 
             // Check for permalink conflict, unless we are trying to set the home page.
-            if (part.DisplayAlias != "/") {
-                var previous = part.Path;
-                if (!_autorouteService.Value.ProcessPath(part))
-                    _orchardServices.Notifier.Warning(
-                        T("Permalinks in conflict. \"{0}\" is already set for a previously created {2} so now it has the slug \"{1}\"", 
-                                                 previous, part.Path, part.ContentItem.ContentType));
-            }
+            var previous = part.Path;
+            if (!_autorouteService.Value.ProcessPath(part))
+                _orchardServices.Notifier.Warning(
+                    T("Permalinks in conflict. \"{0}\" is already set for a previously created {2} so now it has the slug \"{1}\"", 
+                                                previous, part.Path, part.ContentItem.ContentType));
         }
 
         void RemoveAlias(AutoroutePart part) {
