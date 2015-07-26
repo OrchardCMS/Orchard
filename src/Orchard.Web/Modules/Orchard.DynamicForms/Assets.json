@@ -1,0 +1,14 @@
+﻿[
+    {
+        "inputs": [ "Assets/JavaScript/Lib/**/*.js" ],
+        "output": "Scripts/Lib.js"
+    },
+    {
+        "inputs": [ "Assets/JavaScript/LayoutEditor/**/*.js" ],
+        "output": "Scripts/LayoutEditor.js"
+    },
+    {
+        "inputs": [ "Assets/CSS/*.css" ],
+        "output": "Styles/@.css"
+    }
+]
