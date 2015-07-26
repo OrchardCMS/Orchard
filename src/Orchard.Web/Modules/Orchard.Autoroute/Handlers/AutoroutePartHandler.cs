@@ -6,7 +6,6 @@ using Orchard.ContentManagement.Handlers;
 using Orchard.Data;
 using Orchard.Localization;
 using Orchard.UI.Notify;
-using Orchard.Alias;
 
 namespace Orchard.Autoroute.Handlers {
     public class AutoroutePartHandler : ContentHandler {
