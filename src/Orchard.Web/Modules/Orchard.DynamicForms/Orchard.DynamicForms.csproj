@@ -79,19 +79,19 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\CSS\DynamicForms-Admin.css" />
-    <None Include="Assets\CSS\DynamicForms.css" />
+    <Content Include="Assets\CSS\DynamicForms-Admin.css" />
+    <Content Include="Assets\CSS\DynamicForms.css" />
     <Content Include="Scripts\LayoutEditor.js" />
     <Content Include="Scripts\LayoutEditor.min.js" />
-    <None Include="Assets\JavaScript\LayoutEditor\Directives\Fieldset.js" />
-    <None Include="Assets\JavaScript\LayoutEditor\Directives\Form.js" />
-    <None Include="Assets\JavaScript\LayoutEditor\Models\Fieldset.js" />
-    <None Include="Assets\JavaScript\LayoutEditor\Models\Form.js" />
+    <Content Include="Assets\JavaScript\LayoutEditor\Directives\Fieldset.js" />
+    <Content Include="Assets\JavaScript\LayoutEditor\Directives\Form.js" />
+    <Content Include="Assets\JavaScript\LayoutEditor\Models\Fieldset.js" />
+    <Content Include="Assets\JavaScript\LayoutEditor\Models\Form.js" />
     <Content Include="Scripts\Lib.js" />
     <Content Include="Scripts\Lib.min.js" />
-    <None Include="Assets\JavaScript\Lib\jquery.validate.js" />
-    <None Include="Assets\JavaScript\Lib\jquery.validate.unobtrusive.additional.js" />
-    <None Include="Assets\JavaScript\Lib\jquery.validate.unobtrusive.js" />
+    <Content Include="Assets\JavaScript\Lib\jquery.validate.js" />
+    <Content Include="Assets\JavaScript\Lib\jquery.validate.unobtrusive.additional.js" />
+    <Content Include="Assets\JavaScript\Lib\jquery.validate.unobtrusive.js" />
     <Content Include="Styles\DynamicForms-Admin.css" />
     <Content Include="Styles\DynamicForms-Admin.min.css" />
     <Content Include="Styles\DynamicForms.css" />
