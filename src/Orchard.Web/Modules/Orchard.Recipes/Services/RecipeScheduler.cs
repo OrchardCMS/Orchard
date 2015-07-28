@@ -29,7 +29,7 @@ namespace Orchard.Recipes.Services {
             Logger = NullLogger.Instance;
         }
 
-        public ILogger Logger;
+        public ILogger Logger { get; set; }
 
         public void ScheduleWork(string executionId) {
             var shellDescriptor = _shellDescriptorManager.GetShellDescriptor();

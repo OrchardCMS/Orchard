@@ -91,7 +91,7 @@ namespace Orchard.Recipes.Commands {
             Context.Output.WriteLine(T("  Successful:   {0}", result.IsSuccessful));
 
             foreach (var step in result.Steps) {
-                Context.Output.WriteLine(T("  Step: {0}", step.StepName));
+                Context.Output.WriteLine(T("  Step: {0} ({1})", step.StepName, step.RecipeName));
                 Context.Output.WriteLine(T("    Completed:     {0}", step.IsCompleted));
                 Context.Output.WriteLine(T("    Successful:    {0}", step.IsSuccessful));
                 if (!String.IsNullOrEmpty(step.ErrorMessage))

@@ -52,7 +52,7 @@ namespace Orchard.Recipes.Services {
                 }
                 // Recipe step.
                 else {
-                    var recipeStep = new RecipeStep { Name = element.Name.LocalName, Step = element };
+                    var recipeStep = new RecipeStep(recipeName: recipe.Name, name: element.Name.LocalName, step: element );
                     recipeSteps.Add(recipeStep);
                 }
             }

@@ -45,8 +45,9 @@ namespace Orchard.Recipes.Services {
 
                 foreach (var recipeStep in recipe.RecipeSteps) {
                     _recipeStepQueue.Enqueue(executionId, recipeStep);
-                    _recipeStepResultRecordRepository.Create(new RecipeStepResultRecord() {
+                    _recipeStepResultRecordRepository.Create(new RecipeStepResultRecord {
                         ExecutionId = executionId,
+                        RecipeName = recipe.Name,
                         StepName = recipeStep.Name
                     });
                 }

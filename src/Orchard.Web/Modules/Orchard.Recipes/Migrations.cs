@@ -6,10 +6,11 @@ namespace Orchard.Recipes {
             SchemaBuilder.CreateTable("RecipeStepResultRecord", table => table
                 .Column<int>("Id", c => c.PrimaryKey().Identity())
                 .Column<string>("ExecutionId", c => c.WithLength(128).NotNull())
+                .Column<string>("RecipeName", c => c.WithLength(256))
                 .Column<string>("StepName", c => c.WithLength(256).NotNull())
                 .Column<bool>("IsCompleted", c => c.NotNull())
                 .Column<bool>("IsSuccessful", c => c.NotNull())
-                .Column<string>("ErrorMessage", c => c.Unlimited().Nullable())
+                .Column<string>("ErrorMessage", c => c.Unlimited())
             );
 
             SchemaBuilder.AlterTable("RecipeStepResultRecord", table => {
