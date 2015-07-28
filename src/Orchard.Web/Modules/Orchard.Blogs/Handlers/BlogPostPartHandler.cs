@@ -6,11 +6,14 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Core.Common.Models;
 
-namespace Orchard.Blogs.Handlers {
-    public class BlogPostPartHandler : ContentHandler {
+namespace Orchard.Blogs.Handlers
+{
+    public class BlogPostPartHandler : ContentHandler
+    {
         private readonly IBlogService _blogService;
 
-        public BlogPostPartHandler(IBlogService blogService, IBlogPostService blogPostService, RequestContext requestContext) {
+        public BlogPostPartHandler(IBlogService blogService, IBlogPostService blogPostService, RequestContext requestContext)
+        {
             _blogService = blogService;
 
             OnGetDisplayShape<BlogPostPart>(SetModelProperties);
@@ -29,24 +32,29 @@ namespace Orchard.Blogs.Handlers {
                     blogPost => context.ContentManager.Remove(blogPost.ContentItem)));
         }
 
-        private void ProcessBlogPostsCount(BlogPostPart blogPostPart) {
+        private void ProcessBlogPostsCount(BlogPostPart blogPostPart)
+        {
             CommonPart commonPart = blogPostPart.As<CommonPart>();
             if (commonPart != null &&
-                commonPart.Record.Container != null) {
+                commonPart.Record.Container != null)
+            {
 
                 _blogService.ProcessBlogPostsCount(commonPart.Container.Id);
             }
         }
 
-        private static void SetModelProperties(BuildShapeContext context, BlogPostPart blogPost) {
+        private static void SetModelProperties(BuildShapeContext context, BlogPostPart blogPost)
+        {
             context.Shape.Blog = blogPost.BlogPart;
         }
 
-        protected override void GetItemMetadata(GetContentItemMetadataContext context) {
+        protected override void GetItemMetadata(GetContentItemMetadataContext context)
+        {
             var blogPost = context.ContentItem.As<BlogPostPart>();
 
             // BlogPart can be null if this is a new Blog Post item.
-            if (blogPost == null || blogPost.BlogPart == null) {
+            if (blogPost == null || blogPost.BlogPart == null)
+            {
                 return;
             }
 
@@ -54,7 +62,8 @@ namespace Orchard.Blogs.Handlers {
                 {"Area", "Orchard.Blogs"},
                 {"Controller", "BlogPostAdmin"},
                 {"Action", "Create"},
-                {"blogId", blogPost.BlogPart.Id}
+                {"blogId", blogPost.BlogPart.Id},
+                {"contentType", "BlogPost"}
             };
             context.Metadata.EditorRouteValues = new RouteValueDictionary {
                 {"Area", "Orchard.Blogs"},

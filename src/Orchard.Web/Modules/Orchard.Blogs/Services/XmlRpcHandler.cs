@@ -19,9 +19,11 @@ using Orchard.Blogs.Extensions;
 using Orchard.Mvc.Html;
 using Orchard.Core.Title.Models;
 
-namespace Orchard.Blogs.Services {
+namespace Orchard.Blogs.Services
+{
     [OrchardFeature("Orchard.Blogs.RemotePublishing")]
-    public class XmlRpcHandler : IXmlRpcHandler {
+    public class XmlRpcHandler : IXmlRpcHandler
+    {
         private readonly IBlogService _blogService;
         private readonly IBlogPostService _blogPostService;
         private readonly IContentManager _contentManager;
@@ -30,8 +32,9 @@ namespace Orchard.Blogs.Services {
         private readonly RouteCollection _routeCollection;
 
         public XmlRpcHandler(IBlogService blogService, IBlogPostService blogPostService, IContentManager contentManager,
-            IAuthorizationService authorizationService, IMembershipService membershipService, 
-            RouteCollection routeCollection) {
+            IAuthorizationService authorizationService, IMembershipService membershipService,
+            RouteCollection routeCollection)
+        {
             _blogService = blogService;
             _blogPostService = blogPostService;
             _contentManager = contentManager;
@@ -45,15 +48,18 @@ namespace Orchard.Blogs.Services {
         public ILogger Logger { get; set; }
         public Localizer T { get; set; }
 
-        public void SetCapabilities(XElement options) {
+        public void SetCapabilities(XElement options)
+        {
             const string manifestUri = "http://schemas.microsoft.com/wlw/manifest/weblog";
             options.SetElementValue(XName.Get("supportsSlug", manifestUri), "Yes");
         }
 
-        public void Process(XmlRpcContext context) {
+        public void Process(XmlRpcContext context)
+        {
             var urlHelper = new UrlHelper(context.ControllerContext.RequestContext, _routeCollection);
 
-            if (context.Request.MethodName == "blogger.getUsersBlogs") {
+            if (context.Request.MethodName == "blogger.getUsersBlogs")
+            {
                 var result = MetaWeblogGetUserBlogs(urlHelper,
                     Convert.ToString(context.Request.Params[1].Value),
                     Convert.ToString(context.Request.Params[2].Value));
@@ -61,7 +67,8 @@ namespace Orchard.Blogs.Services {
                 context.Response = new XRpcMethodResponse().Add(result);
             }
 
-            if (context.Request.MethodName == "metaWeblog.getRecentPosts") {
+            if (context.Request.MethodName == "metaWeblog.getRecentPosts")
+            {
                 var result = MetaWeblogGetRecentPosts(urlHelper,
                     Convert.ToString(context.Request.Params[0].Value),
                     Convert.ToString(context.Request.Params[1].Value),
@@ -72,7 +79,8 @@ namespace Orchard.Blogs.Services {
                 context.Response = new XRpcMethodResponse().Add(result);
             }
 
-            if (context.Request.MethodName == "metaWeblog.newPost") {
+            if (context.Request.MethodName == "metaWeblog.newPost")
+            {
                 var result = MetaWeblogNewPost(
                     Convert.ToString(context.Request.Params[0].Value),
                     Convert.ToString(context.Request.Params[1].Value),
@@ -84,7 +92,8 @@ namespace Orchard.Blogs.Services {
                 context.Response = new XRpcMethodResponse().Add(result);
             }
 
-            if (context.Request.MethodName == "metaWeblog.getPost") {
+            if (context.Request.MethodName == "metaWeblog.getPost")
+            {
                 var result = MetaWeblogGetPost(
                     urlHelper,
                     Convert.ToInt32(context.Request.Params[0].Value),
@@ -94,7 +103,8 @@ namespace Orchard.Blogs.Services {
                 context.Response = new XRpcMethodResponse().Add(result);
             }
 
-            if (context.Request.MethodName == "metaWeblog.editPost") {
+            if (context.Request.MethodName == "metaWeblog.editPost")
+            {
                 var result = MetaWeblogEditPost(
                     Convert.ToInt32(context.Request.Params[0].Value),
                     Convert.ToString(context.Request.Params[1].Value),
@@ -105,7 +115,8 @@ namespace Orchard.Blogs.Services {
                 context.Response = new XRpcMethodResponse().Add(result);
             }
 
-            if (context.Request.MethodName == "blogger.deletePost") {
+            if (context.Request.MethodName == "blogger.deletePost")
+            {
                 var result = MetaWeblogDeletePost(
                     Convert.ToString(context.Request.Params[1].Value),
                     Convert.ToString(context.Request.Params[2].Value),
@@ -117,14 +128,17 @@ namespace Orchard.Blogs.Services {
 
         private XRpcArray MetaWeblogGetUserBlogs(UrlHelper urlHelper,
             string userName,
-            string password) {
+            string password)
+        {
 
             IUser user = ValidateUser(userName, password);
 
             XRpcArray array = new XRpcArray();
-            foreach (BlogPart blog in _blogService.Get()) {
+            foreach (BlogPart blog in _blogService.Get())
+            {
                 // User needs to at least have permission to edit its own blog posts to access the service
-                if (_authorizationService.TryCheckAccess(Permissions.EditBlogPost, user, blog)) {
+                if (_authorizationService.TryCheckAccess(Permissions.EditBlogPost, user, blog))
+                {
 
                     BlogPart blogPart = blog;
                     array.Add(new XRpcStruct()
@@ -143,7 +157,8 @@ namespace Orchard.Blogs.Services {
             string userName,
             string password,
             int numberOfPosts,
-            IEnumerable<IXmlRpcDriver> drivers) {
+            IEnumerable<IXmlRpcDriver> drivers)
+        {
 
             IUser user = ValidateUser(userName, password);
 
@@ -151,12 +166,14 @@ namespace Orchard.Blogs.Services {
             _authorizationService.CheckAccess(Permissions.EditBlogPost, user, null);
 
             BlogPart blog = _contentManager.Get<BlogPart>(Convert.ToInt32(blogId));
-            if (blog == null) {
+            if (blog == null)
+            {
                 throw new ArgumentException();
             }
 
             var array = new XRpcArray();
-            foreach (var blogPost in _blogPostService.Get(blog, 0, numberOfPosts, VersionOptions.Latest)) {
+            foreach (var blogPost in _blogPostService.Get(blog, 0, numberOfPosts, VersionOptions.Latest))
+            {
                 var postStruct = CreateBlogStruct(blogPost, urlHelper);
 
                 foreach (var driver in drivers)
@@ -173,7 +190,8 @@ namespace Orchard.Blogs.Services {
             string password,
             XRpcStruct content,
             bool publish,
-            IEnumerable<IXmlRpcDriver> drivers) {
+            IEnumerable<IXmlRpcDriver> drivers)
+        {
 
             IUser user = ValidateUser(userName, password);
 
@@ -188,27 +206,32 @@ namespace Orchard.Blogs.Services {
             var description = content.Optional<string>("description");
             var slug = content.Optional<string>("wp_slug");
 
+            //TODO: Needs contentType parameter. See: http://orchard.uservoice.com/forums/50435-general/suggestions/9064510-multiple-blogpost-type-support
             var blogPost = _contentManager.New<BlogPostPart>("BlogPost");
 
             // BodyPart
-            if (blogPost.Is<BodyPart>()) {
+            if (blogPost.Is<BodyPart>())
+            {
                 blogPost.As<BodyPart>().Text = description;
             }
 
             //CommonPart
-            if (blogPost.Is<ICommonPart>()) {
+            if (blogPost.Is<ICommonPart>())
+            {
                 blogPost.As<ICommonPart>().Owner = user;
                 blogPost.As<ICommonPart>().Container = blog;
             }
 
             //TitlePart
-            if (blogPost.Is<TitlePart>()) {
+            if (blogPost.Is<TitlePart>())
+            {
                 blogPost.As<TitlePart>().Title = HttpUtility.HtmlDecode(title);
             }
-            
+
             //AutoroutePart
             dynamic dBlogPost = blogPost;
-            if (dBlogPost.AutoroutePart!=null){
+            if (dBlogPost.AutoroutePart != null)
+            {
                 dBlogPost.AutoroutePart.DisplayAlias = slug;
             }
 
@@ -216,11 +239,13 @@ namespace Orchard.Blogs.Services {
 
             // try to get the UTC timezone by default
             var publishedUtc = content.Optional<DateTime?>("date_created_gmt");
-            if (publishedUtc == null) {
+            if (publishedUtc == null)
+            {
                 // take the local one
                 publishedUtc = content.Optional<DateTime?>("dateCreated");
             }
-            else {
+            else
+            {
                 // ensure it's read as a UTC time
                 publishedUtc = new DateTime(publishedUtc.Value.Ticks, DateTimeKind.Utc);
             }
@@ -228,7 +253,8 @@ namespace Orchard.Blogs.Services {
             if (publish && (publishedUtc == null || publishedUtc <= DateTime.UtcNow))
                 _blogPostService.Publish(blogPost);
 
-            if (publishedUtc != null) {
+            if (publishedUtc != null)
+            {
                 blogPost.As<CommonPart>().CreatedUtc = publishedUtc;
             }
 
@@ -243,7 +269,8 @@ namespace Orchard.Blogs.Services {
             int postId,
             string userName,
             string password,
-            IEnumerable<IXmlRpcDriver> drivers) {
+            IEnumerable<IXmlRpcDriver> drivers)
+        {
 
             IUser user = ValidateUser(userName, password);
             var blogPost = _blogPostService.Get(postId, VersionOptions.Latest);
@@ -266,11 +293,13 @@ namespace Orchard.Blogs.Services {
             string password,
             XRpcStruct content,
             bool publish,
-            IEnumerable<IXmlRpcDriver> drivers) {
+            IEnumerable<IXmlRpcDriver> drivers)
+        {
 
             IUser user = ValidateUser(userName, password);
             var blogPost = _blogPostService.Get(postId, VersionOptions.DraftRequired);
-            if (blogPost == null) {
+            if (blogPost == null)
+            {
                 throw new OrchardCoreException(T("The specified Blog Post doesn't exist anymore. Please create a new Blog Post."));
             }
 
@@ -281,27 +310,32 @@ namespace Orchard.Blogs.Services {
             var slug = content.Optional<string>("wp_slug");
 
             // BodyPart
-            if (blogPost.Is<BodyPart>()) {
+            if (blogPost.Is<BodyPart>())
+            {
                 blogPost.As<BodyPart>().Text = description;
             }
 
             //TitlePart
-            if (blogPost.Is<TitlePart>()) {
+            if (blogPost.Is<TitlePart>())
+            {
                 blogPost.As<TitlePart>().Title = HttpUtility.HtmlDecode(title);
             }
             //AutoroutePart
             dynamic dBlogPost = blogPost;
-            if (dBlogPost.AutoroutePart != null) {
+            if (dBlogPost.AutoroutePart != null)
+            {
                 dBlogPost.AutoroutePart.DisplayAlias = slug;
             }
 
             // try to get the UTC timezone by default
             var publishedUtc = content.Optional<DateTime?>("date_created_gmt");
-            if (publishedUtc == null) {
+            if (publishedUtc == null)
+            {
                 // take the local one
                 publishedUtc = content.Optional<DateTime?>("dateCreated");
             }
-            else {
+            else
+            {
                 // ensure it's read as a UTC time
                 publishedUtc = new DateTime(publishedUtc.Value.Ticks, DateTimeKind.Utc);
             }
@@ -309,7 +343,8 @@ namespace Orchard.Blogs.Services {
             if (publish && (publishedUtc == null || publishedUtc <= DateTime.UtcNow))
                 _blogPostService.Publish(blogPost);
 
-            if (publishedUtc != null) {
+            if (publishedUtc != null)
+            {
                 blogPost.As<CommonPart>().CreatedUtc = publishedUtc;
             }
 
@@ -323,7 +358,8 @@ namespace Orchard.Blogs.Services {
             string postId,
             string userName,
             string password,
-            IEnumerable<IXmlRpcDriver> drivers) {
+            IEnumerable<IXmlRpcDriver> drivers)
+        {
 
             IUser user = ValidateUser(userName, password);
             var blogPost = _blogPostService.Get(Convert.ToInt32(postId), VersionOptions.Latest);
@@ -339,9 +375,11 @@ namespace Orchard.Blogs.Services {
             return true;
         }
 
-        private IUser ValidateUser(string userName, string password) {
+        private IUser ValidateUser(string userName, string password)
+        {
             IUser user = _membershipService.ValidateUser(userName, password);
-            if (user == null) {
+            if (user == null)
+            {
                 throw new OrchardCoreException(T("The username or e-mail or password provided is incorrect."));
             }
 
@@ -350,26 +388,29 @@ namespace Orchard.Blogs.Services {
 
         private static XRpcStruct CreateBlogStruct(
             BlogPostPart blogPostPart,
-            UrlHelper urlHelper) {
+            UrlHelper urlHelper)
+        {
 
             var url = urlHelper.AbsoluteAction(() => urlHelper.ItemDisplayUrl(blogPostPart));
 
-            if (blogPostPart.HasDraft()) {
+            if (blogPostPart.HasDraft())
+            {
                 url = urlHelper.AbsoluteAction("Preview", "Item", new { area = "Contents", id = blogPostPart.ContentItem.Id });
             }
 
             var blogStruct = new XRpcStruct()
                 .Set("postid", blogPostPart.Id)
                 .Set("title", HttpUtility.HtmlEncode(blogPostPart.Title))
-                
+
                 .Set("description", blogPostPart.Text)
                 .Set("link", url)
                 .Set("permaLink", url);
-            
-            blogStruct.Set("wp_slug", blogPostPart.As<IAliasAspect>().Path);
-            
 
-            if (blogPostPart.PublishedUtc != null) {
+            blogStruct.Set("wp_slug", blogPostPart.As<IAliasAspect>().Path);
+
+
+            if (blogPostPart.PublishedUtc != null)
+            {
                 blogStruct.Set("dateCreated", blogPostPart.PublishedUtc);
                 blogStruct.Set("date_created_gmt", blogPostPart.PublishedUtc);
             }

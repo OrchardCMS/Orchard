@@ -131,5 +131,12 @@ namespace Orchard.Blogs {
 
             return 6;
         }
+
+        public int UpdateFrom6() {
+            ContentDefinitionManager.AlterPartDefinition("BlogPostPart", builder => builder
+                .Attachable());
+
+            return 7;
+        }
     }
 }
