@@ -28,7 +28,7 @@ namespace Orchard.Recipes.Services {
         public bool ExecuteNextStep(string executionId) {
             var nextRecipeStep = _recipeStepQueue.Dequeue(executionId);
             if (nextRecipeStep == null) {
-                Logger.Information("Recipe execution {0} completed.", executionId);
+                Logger.Information("Recipe execution completed.");
                 _recipeExecuteEventHandler.ExecutionComplete(executionId);
                 return false;
             }
@@ -49,14 +49,14 @@ namespace Orchard.Recipes.Services {
             }
             catch (Exception ex) {
                 UpdateStepResultRecord(executionId, nextRecipeStep.Name, isSuccessful: false, errorMessage: ex.Message);
-                Logger.Error(ex, "Recipe execution {0} failed because the step '{1}' failed.", executionId, nextRecipeStep.Name);
+                Logger.Error(ex, "Recipe execution failed because the step '{0}' failed.", nextRecipeStep.Name);
                 while (_recipeStepQueue.Dequeue(executionId) != null);
                 var message = T("Recipe execution with ID {0} failed because the step '{1}' failed to execute. The following exception was thrown:\n{2}\nRefer to the error logs for more information.", executionId, nextRecipeStep.Name, ex.Message);
                 throw new OrchardCoreException(message);
             }
 
             if (!recipeContext.Executed) {
-                Logger.Error("Recipe execution {0} failed because no matching handler for recipe step '{1}' was found.", executionId, recipeContext.RecipeStep.Name);
+                Logger.Error("Recipe execution failed because no matching handler for recipe step '{0}' was found.", recipeContext.RecipeStep.Name);
                 while (_recipeStepQueue.Dequeue(executionId) != null);
                 var message = T("Recipe execution with ID {0} failed because no matching handler for recipe step '{1}' was found. Refer to the error logs for more information.", executionId, nextRecipeStep.Name);
                 throw new OrchardCoreException(message);
