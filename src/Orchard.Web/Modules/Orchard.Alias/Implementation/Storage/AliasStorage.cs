@@ -91,7 +91,7 @@ namespace Orchard.Alias.Implementation.Storage {
         }
 
         public void Remove(string path) {
-            Remove(x => x.Path == path && x.Source == path);
+            Remove(x => x.Path == path);
         }
 
         public void Remove(string path, string aliasSource) {

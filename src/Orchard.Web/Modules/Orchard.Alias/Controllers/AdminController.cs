@@ -45,13 +45,7 @@ namespace Orchard.Alias.Controllers {
             if (options == null)
                 options = new AdminIndexOptions();
 
-            switch (options.Filter) {
-                case AliasFilter.All:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
+                               
             var aliases = _aliasHolder.GetMaps().SelectMany(x => x.GetAliases());
 
             if (!String.IsNullOrWhiteSpace(options.Search)) {
@@ -61,6 +55,19 @@ namespace Orchard.Alias.Controllers {
 
             aliases = aliases.ToList();
 
+            switch (options.Filter)
+            {
+                case AliasFilter.Managed:
+                    aliases = aliases.Where(x => x.IsManaged);
+                    break;
+                case AliasFilter.Custom:
+                    aliases = aliases.Where(x => !x.IsManaged);
+                    break;
+                case AliasFilter.All:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
             var pagerShape = Services.New.Pager(pager).TotalItemCount(aliases.Count());
 
             switch (options.Order) {
@@ -76,7 +83,7 @@ namespace Orchard.Alias.Controllers {
             var model = new AdminIndexViewModel {
                 Options = options,
                 Pager = pagerShape,
-                AliasEntries = aliases.Select(x => new AliasEntry() { Alias = x, IsChecked = false }).ToList()
+                AliasEntries = aliases.Select(x => new AliasEntry() { Alias = x, IsChecked = false }).OrderBy(x => x.Alias.IsManaged).ToList()
             };
 
             return View(model);
@@ -104,8 +111,7 @@ namespace Orchard.Alias.Controllers {
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
-            }
-
+            }            
             return RedirectToAction("Index");
         }
 

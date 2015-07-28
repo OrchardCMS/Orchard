@@ -21,8 +21,7 @@ namespace Orchard.Alias.Recipes.Executors {
             get { return "Aliases"; }
         }
 
-        public override void Execute(RecipeExecutionContext context) {
-            //var installedPermissions = _roleService.GetInstalledPermissions().SelectMany(p => p.Value).ToList();
+        public override void Execute(RecipeExecutionContext context) {           
 
             foreach (var aliasElement in context.RecipeStep.Step.Elements()) {
                 var aliasPath = aliasElement.Attribute("Path").Value;
@@ -41,40 +40,16 @@ namespace Orchard.Alias.Recipes.Executors {
                         rvd.Add(routeValue.Attribute("Key").Value, routeValue.Attribute("Value").Value);
                     }
                 }
-
-                //_aliasService.Set(aliasPath, rvd, "Custom",false);
-
+                                
                 try {
-                        _aliasService.Set(aliasPath, rvd, "Custom", false);
-                    //var role = _roleService.GetRoleByName(roleName);
-                    //if (role == null) {
-                    //    _roleService.CreateRole(roleName);
-                    //    role = _roleService.GetRoleByName(roleName);
+                        _aliasService.Set(aliasPath, rvd, "Custom", false);                
                     }
-
-                //    var permissions = roleElement.Attribute("Permissions").Value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                //    // Only import permissions for currenlty installed modules.
-                //    var permissionsValid = permissions.Where(permission => installedPermissions.Any(x => x.Name == permission)).ToList();
-
-                //    // Union to keep existing permissions.
-                //    _roleService.UpdateRole(role.Id, role.Name, permissionsValid.Union(role.RolesPermissions.Select(p => p.Permission.Name)));
-                //}
+                
                 catch (Exception ex) {
                     Logger.Error(ex, "Error while processing alias '{0}'.", aliasPath);
                     throw;
                 }
-
-                ////remove all local pathys that are not present in the remote export
-                //var allRemotePaths = recipeContext.RecipeStep.Step.XPathSelectElements("Paths/Add").Select(e => e.Attribute("Path").Value);
-                //var allLocalPaths = _aliasService.List().Select(t => t.Item1).ToList();
-
-                //foreach (var path in allLocalPaths.Where(p => !allRemotePaths.Contains(p)))
-                //{
-                //    _aliasService.Delete(path);
-                //}
-
-
-                //recipeContext.Executed = true;
+    
             }
         }
 
