@@ -96,7 +96,7 @@ namespace Orchard.Autoroute.Services {
 
         public void PublishAlias(AutoroutePart part) {
             var displayRouteValues = _contentManager.GetItemMetadata(part).DisplayRouteValues;
-            _aliasService.Replace(part.DisplayAlias, displayRouteValues, AliasSource);
+            _aliasService.Replace(part.DisplayAlias, displayRouteValues, AliasSource, true);
             _routeEvents.Routed(part, part.DisplayAlias);
         }
 

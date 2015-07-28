@@ -31,18 +31,20 @@ namespace Orchard.Alias.Implementation {
             return _aliasStorage.Get(aliasPath).ToRouteValueDictionary();
         }
 
-        public void Set(string aliasPath, RouteValueDictionary routeValues, string aliasSource) {
+        public void Set(string aliasPath, RouteValueDictionary routeValues, string aliasSource, bool isManaged) {
             _aliasStorage.Set(
                 aliasPath,
                 ToDictionary(routeValues),
-                aliasSource);
+                aliasSource,
+                isManaged);
         }
 
-        public void Set(string aliasPath, string routePath, string aliasSource) {
+        public void Set(string aliasPath, string routePath, string aliasSource, bool isManaged) {
             _aliasStorage.Set(
                 aliasPath.TrimStart('/'),
                 ToDictionary(routePath),
-                aliasSource);
+                aliasSource,
+                isManaged);
         }
 
         public void Delete(string aliasPath) {
@@ -71,15 +73,16 @@ namespace Orchard.Alias.Implementation {
             return Lookup(ToDictionary(routePath).ToRouteValueDictionary());
         }
 
-        public void Replace(string aliasPath, RouteValueDictionary routeValues, string aliasSource) {
+        public void Replace(string aliasPath, RouteValueDictionary routeValues, string aliasSource, bool isManaged) {
             foreach (var lookup in Lookup(routeValues).Where(path => path != aliasPath)) {
                 Delete(lookup, aliasSource);
             }
-            Set(aliasPath, routeValues, aliasSource);
+            Set(aliasPath, routeValues, aliasSource, isManaged);
         }
 
-        public void Replace(string aliasPath, string routePath, string aliasSource) {
-            Replace(aliasPath, ToDictionary(routePath).ToRouteValueDictionary(), aliasSource);
+        public void Replace(string aliasPath, string routePath, string aliasSource, bool isManaged)
+        {
+            Replace(aliasPath, ToDictionary(routePath).ToRouteValueDictionary(), aliasSource, isManaged);
         }
 
         public IEnumerable<string> Lookup(RouteValueDictionary routeValues) {

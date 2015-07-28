@@ -18,7 +18,7 @@ namespace Orchard.Alias.Recipes.Executors {
         }
 
         public override string Name {
-            get { return "Alias"; }
+            get { return "Aliases"; }
         }
 
         public override void Execute(RecipeExecutionContext context) {
@@ -42,10 +42,10 @@ namespace Orchard.Alias.Recipes.Executors {
                     }
                 }
 
-                _aliasService.Set(aliasPath, rvd, "Custom");
+                //_aliasService.Set(aliasPath, rvd, "Custom",false);
 
                 try {
-                        _aliasService.Set(aliasPath, rvd, "Custom");
+                        _aliasService.Set(aliasPath, rvd, "Custom", false);
                     //var role = _roleService.GetRoleByName(roleName);
                     //if (role == null) {
                     //    _roleService.CreateRole(roleName);

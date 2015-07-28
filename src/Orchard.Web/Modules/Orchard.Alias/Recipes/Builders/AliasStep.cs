@@ -32,7 +32,7 @@ namespace Orchard.Roles.Recipes.Builders {
         public override void Build(BuildContext context) {
             //var aliases = _aliasRecordepository.Table.ToList();
 
-            var aliases = _aliasHolder.GetMaps().SelectMany(m => m.GetAliases()).ToList();
+            var aliases = _aliasHolder.GetMaps().SelectMany(m => m.GetAliases()).Where(m => m.IsManaged== false).ToList();
 
             if (!aliases.Any())
                 return;
@@ -57,13 +57,13 @@ namespace Orchard.Roles.Recipes.Builders {
             }
 
             //add a collection of all the alias paths in this site so that the importing site can remove aliases that don't exist remotely
-            var pathsElement = new XElement("Paths");
-            foreach (var aliasInfo in aliases)
-            {
-                pathsElement.Add(new XElement("Add", new XAttribute("Path", aliasInfo.Path)));
-            }
+            //var pathsElement = new XElement("Paths");
+            //foreach (var aliasInfo in aliases)
+            //{
+            //    pathsElement.Add(new XElement("Add", new XAttribute("Path", aliasInfo.Path)));
+            //}
 
-            root.Add(pathsElement);
+            //root.Add(pathsElement);
 
             //var rootElement = context.Document.Descendants("Orchard").FirstOrDefault();
 

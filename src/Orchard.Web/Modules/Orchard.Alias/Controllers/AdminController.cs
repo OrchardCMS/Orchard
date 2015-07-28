@@ -140,7 +140,7 @@ namespace Orchard.Alias.Controllers {
             }
 
             try {
-                _aliasService.Set(aliasPath, routePath, "Custom");
+                _aliasService.Set(aliasPath, routePath, "Custom",false);
             }
             catch(Exception ex) {
                 Services.TransactionManager.Cancel();
@@ -204,7 +204,7 @@ namespace Orchard.Alias.Controllers {
             }
 
             try {
-                _aliasService.Set(aliasPath, routePath, "Custom");
+                _aliasService.Set(aliasPath, routePath, "Custom",false);
             }
             catch (Exception ex)
             {
