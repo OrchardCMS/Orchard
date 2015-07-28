@@ -22,8 +22,7 @@ using Orchard.Core.Title.Models;
 namespace Orchard.Blogs.Services
 {
     [OrchardFeature("Orchard.Blogs.RemotePublishing")]
-    public class XmlRpcHandler : IXmlRpcHandler
-    {
+    public class XmlRpcHandler : IXmlRpcHandler {
         private readonly IBlogService _blogService;
         private readonly IBlogPostService _blogPostService;
         private readonly IContentManager _contentManager;
@@ -33,8 +32,7 @@ namespace Orchard.Blogs.Services
 
         public XmlRpcHandler(IBlogService blogService, IBlogPostService blogPostService, IContentManager contentManager,
             IAuthorizationService authorizationService, IMembershipService membershipService,
-            RouteCollection routeCollection)
-        {
+            RouteCollection routeCollection) {
             _blogService = blogService;
             _blogPostService = blogPostService;
             _contentManager = contentManager;
@@ -48,14 +46,12 @@ namespace Orchard.Blogs.Services
         public ILogger Logger { get; set; }
         public Localizer T { get; set; }
 
-        public void SetCapabilities(XElement options)
-        {
+        public void SetCapabilities(XElement options) {
             const string manifestUri = "http://schemas.microsoft.com/wlw/manifest/weblog";
             options.SetElementValue(XName.Get("supportsSlug", manifestUri), "Yes");
         }
 
-        public void Process(XmlRpcContext context)
-        {
+        public void Process(XmlRpcContext context) {
             var urlHelper = new UrlHelper(context.ControllerContext.RequestContext, _routeCollection);
 
             if (context.Request.MethodName == "blogger.getUsersBlogs")
@@ -128,8 +124,7 @@ namespace Orchard.Blogs.Services
 
         private XRpcArray MetaWeblogGetUserBlogs(UrlHelper urlHelper,
             string userName,
-            string password)
-        {
+            string password) {
 
             IUser user = ValidateUser(userName, password);
 
@@ -157,8 +152,7 @@ namespace Orchard.Blogs.Services
             string userName,
             string password,
             int numberOfPosts,
-            IEnumerable<IXmlRpcDriver> drivers)
-        {
+            IEnumerable<IXmlRpcDriver> drivers) {
 
             IUser user = ValidateUser(userName, password);
 
@@ -190,8 +184,7 @@ namespace Orchard.Blogs.Services
             string password,
             XRpcStruct content,
             bool publish,
-            IEnumerable<IXmlRpcDriver> drivers)
-        {
+            IEnumerable<IXmlRpcDriver> drivers) {
 
             IUser user = ValidateUser(userName, password);
 
@@ -269,8 +262,7 @@ namespace Orchard.Blogs.Services
             int postId,
             string userName,
             string password,
-            IEnumerable<IXmlRpcDriver> drivers)
-        {
+            IEnumerable<IXmlRpcDriver> drivers) {
 
             IUser user = ValidateUser(userName, password);
             var blogPost = _blogPostService.Get(postId, VersionOptions.Latest);
@@ -293,8 +285,7 @@ namespace Orchard.Blogs.Services
             string password,
             XRpcStruct content,
             bool publish,
-            IEnumerable<IXmlRpcDriver> drivers)
-        {
+            IEnumerable<IXmlRpcDriver> drivers) {
 
             IUser user = ValidateUser(userName, password);
             var blogPost = _blogPostService.Get(postId, VersionOptions.DraftRequired);
@@ -358,8 +349,7 @@ namespace Orchard.Blogs.Services
             string postId,
             string userName,
             string password,
-            IEnumerable<IXmlRpcDriver> drivers)
-        {
+            IEnumerable<IXmlRpcDriver> drivers) {
 
             IUser user = ValidateUser(userName, password);
             var blogPost = _blogPostService.Get(Convert.ToInt32(postId), VersionOptions.Latest);
@@ -375,8 +365,7 @@ namespace Orchard.Blogs.Services
             return true;
         }
 
-        private IUser ValidateUser(string userName, string password)
-        {
+        private IUser ValidateUser(string userName, string password) {
             IUser user = _membershipService.ValidateUser(userName, password);
             if (user == null)
             {
@@ -388,8 +377,7 @@ namespace Orchard.Blogs.Services
 
         private static XRpcStruct CreateBlogStruct(
             BlogPostPart blogPostPart,
-            UrlHelper urlHelper)
-        {
+            UrlHelper urlHelper) {
 
             var url = urlHelper.AbsoluteAction(() => urlHelper.ItemDisplayUrl(blogPostPart));
 

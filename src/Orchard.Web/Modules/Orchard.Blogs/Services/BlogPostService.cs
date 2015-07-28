@@ -3,15 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using Orchard.Blogs.Models;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Common.Models;
 using Orchard.Data;
 using Orchard.Tasks.Scheduling;
 
 namespace Orchard.Blogs.Services
 {
-    public class BlogPostService : IBlogPostService
-    {
+    public class BlogPostService : IBlogPostService {
         private readonly IContentManager _contentManager;
         private readonly IRepository<BlogPartArchiveRecord> _blogArchiveRepository;
         private readonly IPublishingTaskManager _publishingTaskManager;
@@ -19,62 +17,51 @@ namespace Orchard.Blogs.Services
         public BlogPostService(
             IContentManager contentManager,
             IRepository<BlogPartArchiveRecord> blogArchiveRepository,
-            IPublishingTaskManager publishingTaskManager,
-            IContentDefinitionManager contentDefinitionManager)
-        {
+            IPublishingTaskManager publishingTaskManager) {
             _contentManager = contentManager;
             _blogArchiveRepository = blogArchiveRepository;
             _publishingTaskManager = publishingTaskManager;
         }
 
-        public BlogPostPart Get(int id)
-        {
+        public BlogPostPart Get(int id) {
             return Get(id, VersionOptions.Published);
         }
 
-        public BlogPostPart Get(int id, VersionOptions versionOptions)
-        {
+        public BlogPostPart Get(int id, VersionOptions versionOptions) {
             return _contentManager.Get<BlogPostPart>(id, versionOptions);
         }
 
-        public IEnumerable<BlogPostPart> Get(BlogPart blogPart)
-        {
+        public IEnumerable<BlogPostPart> Get(BlogPart blogPart) {
             return Get(blogPart, VersionOptions.Published);
         }
 
-        public IEnumerable<BlogPostPart> Get(BlogPart blogPart, VersionOptions versionOptions)
-        {
+        public IEnumerable<BlogPostPart> Get(BlogPart blogPart, VersionOptions versionOptions) {
             return GetBlogQuery(blogPart, versionOptions).List().Select(ci => ci.As<BlogPostPart>());
         }
 
-        public IEnumerable<BlogPostPart> Get(BlogPart blogPart, int skip, int count)
-        {
+        public IEnumerable<BlogPostPart> Get(BlogPart blogPart, int skip, int count) {
             return Get(blogPart, skip, count, VersionOptions.Published);
         }
 
-        public IEnumerable<BlogPostPart> Get(BlogPart blogPart, int skip, int count, VersionOptions versionOptions)
-        {
+        public IEnumerable<BlogPostPart> Get(BlogPart blogPart, int skip, int count, VersionOptions versionOptions) {
             return GetBlogQuery(blogPart, versionOptions)
                     .Slice(skip, count)
                     .ToList()
                     .Select(ci => ci.As<BlogPostPart>());
         }
 
-        public int PostCount(BlogPart blogPart)
-        {
+        public int PostCount(BlogPart blogPart) {
             return PostCount(blogPart, VersionOptions.Published);
         }
 
-        public int PostCount(BlogPart blogPart, VersionOptions versionOptions)
-        {
+        public int PostCount(BlogPart blogPart, VersionOptions versionOptions) {
             return _contentManager.Query<BlogPostPart>(versionOptions)
                 .Join<CommonPartRecord>().Where(
                     cr => cr.Container.Id == blogPart.Id)
                 .Count();
         }
 
-        public IEnumerable<BlogPostPart> Get(BlogPart blogPart, ArchiveData archiveData)
-        {
+        public IEnumerable<BlogPostPart> Get(BlogPart blogPart, ArchiveData archiveData) {
             var query = GetBlogQuery(blogPart, VersionOptions.Published);
 
             if (archiveData.Day > 0)
@@ -99,8 +86,7 @@ namespace Orchard.Blogs.Services
             return query.List().Select(ci => ci.As<BlogPostPart>());
         }
 
-        public IEnumerable<KeyValuePair<ArchiveData, int>> GetArchives(BlogPart blogPart)
-        {
+        public IEnumerable<KeyValuePair<ArchiveData, int>> GetArchives(BlogPart blogPart) {
             var query =
                 from bar in _blogArchiveRepository.Table
                 where bar.BlogPart.Id == blogPart.Id
@@ -114,36 +100,30 @@ namespace Orchard.Blogs.Services
                                                        bar.PostCount));
         }
 
-        public void Delete(BlogPostPart blogPostPart)
-        {
+        public void Delete(BlogPostPart blogPostPart) {
             _publishingTaskManager.DeleteTasks(blogPostPart.ContentItem);
             _contentManager.Remove(blogPostPart.ContentItem);
         }
 
-        public void Publish(BlogPostPart blogPostPart)
-        {
+        public void Publish(BlogPostPart blogPostPart) {
             _publishingTaskManager.DeleteTasks(blogPostPart.ContentItem);
             _contentManager.Publish(blogPostPart.ContentItem);
         }
 
-        public void Publish(BlogPostPart blogPostPart, DateTime scheduledPublishUtc)
-        {
+        public void Publish(BlogPostPart blogPostPart, DateTime scheduledPublishUtc) {
             _publishingTaskManager.Publish(blogPostPart.ContentItem, scheduledPublishUtc);
         }
 
-        public void Unpublish(BlogPostPart blogPostPart)
-        {
+        public void Unpublish(BlogPostPart blogPostPart) {
             _contentManager.Unpublish(blogPostPart.ContentItem);
         }
 
-        public DateTime? GetScheduledPublishUtc(BlogPostPart blogPostPart)
-        {
+        public DateTime? GetScheduledPublishUtc(BlogPostPart blogPostPart) {
             var task = _publishingTaskManager.GetPublishTask(blogPostPart.ContentItem);
             return (task == null ? null : task.ScheduledUtc);
         }
 
-        private IContentQuery<BlogPostPart, CommonPartRecord> GetBlogQuery(BlogPart blog, VersionOptions versionOptions)
-        {
+        private IContentQuery<BlogPostPart, CommonPartRecord> GetBlogQuery(BlogPart blog, VersionOptions versionOptions) {
             return
                 _contentManager.Query<BlogPostPart>(versionOptions)
                 .Join<CommonPartRecord>().Where(

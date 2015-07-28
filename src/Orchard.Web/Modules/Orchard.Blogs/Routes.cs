@@ -6,27 +6,23 @@ using Orchard.Mvc.Routes;
 
 namespace Orchard.Blogs
 {
-    public class Routes : IRouteProvider
-    {
+    public class Routes : IRouteProvider {
         private readonly IArchiveConstraint _archiveConstraint;
         private readonly IRsdConstraint _rsdConstraint;
 
         public Routes(
             IArchiveConstraint archiveConstraint,
-            IRsdConstraint rsdConstraint)
-        {
+            IRsdConstraint rsdConstraint) {
             _archiveConstraint = archiveConstraint;
             _rsdConstraint = rsdConstraint;
         }
 
-        public void GetRoutes(ICollection<RouteDescriptor> routes)
-        {
+        public void GetRoutes(ICollection<RouteDescriptor> routes) {
             foreach (var routeDescriptor in GetRoutes())
                 routes.Add(routeDescriptor);
         }
 
-        public IEnumerable<RouteDescriptor> GetRoutes()
-        {
+        public IEnumerable<RouteDescriptor> GetRoutes() {
             return new[] {
                              new RouteDescriptor {
                                                      Route = new Route(

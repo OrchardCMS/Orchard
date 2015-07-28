@@ -8,12 +8,10 @@ using Orchard.Core.Common.Models;
 
 namespace Orchard.Blogs.Handlers
 {
-    public class BlogPostPartHandler : ContentHandler
-    {
+    public class BlogPostPartHandler : ContentHandler {
         private readonly IBlogService _blogService;
 
-        public BlogPostPartHandler(IBlogService blogService, IBlogPostService blogPostService, RequestContext requestContext)
-        {
+        public BlogPostPartHandler(IBlogService blogService, IBlogPostService blogPostService, RequestContext requestContext) {
             _blogService = blogService;
 
             OnGetDisplayShape<BlogPostPart>(SetModelProperties);
@@ -32,8 +30,7 @@ namespace Orchard.Blogs.Handlers
                     blogPost => context.ContentManager.Remove(blogPost.ContentItem)));
         }
 
-        private void ProcessBlogPostsCount(BlogPostPart blogPostPart)
-        {
+        private void ProcessBlogPostsCount(BlogPostPart blogPostPart) {
             CommonPart commonPart = blogPostPart.As<CommonPart>();
             if (commonPart != null &&
                 commonPart.Record.Container != null)
@@ -43,13 +40,11 @@ namespace Orchard.Blogs.Handlers
             }
         }
 
-        private static void SetModelProperties(BuildShapeContext context, BlogPostPart blogPost)
-        {
+        private static void SetModelProperties(BuildShapeContext context, BlogPostPart blogPost) {
             context.Shape.Blog = blogPost.BlogPart;
         }
 
-        protected override void GetItemMetadata(GetContentItemMetadataContext context)
-        {
+        protected override void GetItemMetadata(GetContentItemMetadataContext context) {
             var blogPost = context.ContentItem.As<BlogPostPart>();
 
             // BlogPart can be null if this is a new Blog Post item.

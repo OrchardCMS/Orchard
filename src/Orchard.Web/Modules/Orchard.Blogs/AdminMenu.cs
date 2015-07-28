@@ -7,14 +7,12 @@ using Orchard.UI.Navigation;
 
 namespace Orchard.Blogs
 {
-    public class AdminMenu : INavigationProvider
-    {
+    public class AdminMenu : INavigationProvider {
         private readonly IBlogService _blogService;
         private readonly IAuthorizationService _authorizationService;
         private readonly IWorkContextAccessor _workContextAccessor;
 
-        public AdminMenu(IBlogService blogService, IAuthorizationService authorizationService, IWorkContextAccessor workContextAccessor)
-        {
+        public AdminMenu(IBlogService blogService, IAuthorizationService authorizationService, IWorkContextAccessor workContextAccessor) {
             _blogService = blogService;
             _authorizationService = authorizationService;
             _workContextAccessor = workContextAccessor;
@@ -24,14 +22,12 @@ namespace Orchard.Blogs
 
         public string MenuName { get { return "admin"; } }
 
-        public void GetNavigation(NavigationBuilder builder)
-        {
+        public void GetNavigation(NavigationBuilder builder) {
             builder.AddImageSet("blog")
                 .Add(T("Blog"), "1.5", BuildMenu);
         }
 
-        private void BuildMenu(NavigationItemBuilder menu)
-        {
+        private void BuildMenu(NavigationItemBuilder menu) {
             var blogs = _blogService.Get().Where(x => _authorizationService.TryCheckAccess(Permissions.MetaListBlogs, _workContextAccessor.GetContext().CurrentUser, x)).ToArray();
             var blogCount = blogs.Count();
             var singleBlog = blogCount == 1 ? blogs.ElementAt(0) : null;

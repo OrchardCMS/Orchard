@@ -17,8 +17,7 @@ using Orchard.UI.Navigation;
 
 namespace Orchard.Blogs.Commands
 {
-    public class BlogCommands : DefaultOrchardCommandHandler
-    {
+    public class BlogCommands : DefaultOrchardCommandHandler {
         private readonly IContentManager _contentManager;
         private readonly IMembershipService _membershipService;
         private readonly IBlogService _blogService;
@@ -34,8 +33,7 @@ namespace Orchard.Blogs.Commands
             IMenuService menuService,
             ISiteService siteService,
             INavigationManager navigationManager,
-            IArchiveService archiveService)
-        {
+            IArchiveService archiveService) {
             _contentManager = contentManager;
             _membershipService = membershipService;
             _blogService = blogService;
@@ -78,8 +76,7 @@ namespace Orchard.Blogs.Commands
         [CommandName("blog create")]
         [CommandHelp("blog create [/Slug:<slug>] /Title:<title> [/Owner:<username>] [/Description:<description>] [/MenuName:<name>] [/MenuText:<menu text>] [/Homepage:true|false]\r\n\t" + "Creates a new Blog")]
         [OrchardSwitches("Slug,Title,Owner,Description,MenuText,Homepage,MenuName")]
-        public void Create()
-        {
+        public void Create() {
             if (String.IsNullOrEmpty(Owner))
             {
                 Owner = _siteService.GetSiteSettings().SuperUser;
@@ -132,8 +129,7 @@ namespace Orchard.Blogs.Commands
         [CommandName("blog import")]
         [CommandHelp("blog import /BlogId:<id> /FeedUrl:<feed url> /Owner:<username> [/ContentType:<contenttype>]\r\n\t" + "Import all items from <feed url> into the blog specified by <id>")]
         [OrchardSwitches("FeedUrl,BlogId,Owner,ContentType")]
-        public void Import()
-        {
+        public void Import() {
             var owner = _membershipService.GetUser(Owner);
 
             if (owner == null)
@@ -190,8 +186,7 @@ namespace Orchard.Blogs.Commands
         [CommandName("blog build archive")]
         [CommandHelp("blog build archive /BlogId:<id> \r\n\t" + "Rebuild the archive information for the blog specified by <id>")]
         [OrchardSwitches("BlogId")]
-        public void BuildArchive()
-        {
+        public void BuildArchive() {
 
             var blog = _blogService.Get(BlogId, VersionOptions.Latest);
 

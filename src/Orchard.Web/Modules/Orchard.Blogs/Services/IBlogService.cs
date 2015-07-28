@@ -5,8 +5,7 @@ using Orchard.ContentManagement.MetaData.Models;
 
 namespace Orchard.Blogs.Services
 {
-    public interface IBlogService : IDependency
-    {
+    public interface IBlogService : IDependency {
         BlogPart Get(string path);
         ContentItem Get(int id, VersionOptions versionOptions);
         IEnumerable<BlogPart> Get();

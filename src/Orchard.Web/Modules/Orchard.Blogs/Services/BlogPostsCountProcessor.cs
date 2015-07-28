@@ -4,18 +4,15 @@ using Orchard.Core.Common.Models;
 
 namespace Orchard.Blogs.Services
 {
-    public class BlogPostsCountProcessor : IBlogPostsCountProcessor
-    {
+    public class BlogPostsCountProcessor : IBlogPostsCountProcessor {
         private readonly IContentManager _contentManager;
 
         public BlogPostsCountProcessor(
-            IContentManager contentManager)
-        {
+            IContentManager contentManager) {
             _contentManager = contentManager;
         }
 
-        public void Process(int blogPartId)
-        {
+        public void Process(int blogPartId) {
             var blogPart = _contentManager.Get<BlogPart>(blogPartId);
             if (blogPart != null)
             {

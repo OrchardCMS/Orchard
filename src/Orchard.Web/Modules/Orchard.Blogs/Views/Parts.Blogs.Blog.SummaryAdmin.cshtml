@@ -9,7 +9,6 @@
 }
 <a href="@Url.BlogForAdmin(blog)" title="@T("List Posts")">@T("List Posts")</a>@T(" | ")
 
-@foreach (ContentTypeDefinition blogPostType in Layout.BlogPostContentTypes)
-{
+@foreach (ContentTypeDefinition blogPostType in Layout.BlogPostContentTypes) {
     <a href="@Url.BlogPostCreate(blog,blogPostType.Name)" title="@T("New {0}", blogPostType.DisplayName)">@T("New {0}", blogPostType.DisplayName)</a>@T(" | ")
 }

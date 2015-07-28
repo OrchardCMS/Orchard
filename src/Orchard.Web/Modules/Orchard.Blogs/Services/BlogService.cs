@@ -14,8 +14,7 @@ using Orchard.Environment.State;
 
 namespace Orchard.Blogs.Services
 {
-    public class BlogService : IBlogService
-    {
+    public class BlogService : IBlogService {
         private readonly IContentManager _contentManager;
         private readonly IProcessingEngine _processingEngine;
         private readonly ShellSettings _shellSettings;
@@ -30,8 +29,7 @@ namespace Orchard.Blogs.Services
             ShellSettings shellSettings,
             IShellDescriptorManager shellDescriptorManager,
             IPathResolutionService pathResolutionService,
-            IContentDefinitionManager contentDefinitionManager)
-        {
+            IContentDefinitionManager contentDefinitionManager) {
             _contentManager = contentManager;
             _processingEngine = processingEngine;
             _shellSettings = shellSettings;
@@ -40,8 +38,7 @@ namespace Orchard.Blogs.Services
             _contentDefinitionManager = contentDefinitionManager;
         }
 
-        public BlogPart Get(string path)
-        {
+        public BlogPart Get(string path) {
             var blog = _pathResolutionService.GetPath(path);
 
             if (blog == null)
@@ -57,32 +54,27 @@ namespace Orchard.Blogs.Services
             return blog.As<BlogPart>();
         }
 
-        public ContentItem Get(int id, VersionOptions versionOptions)
-        {
+        public ContentItem Get(int id, VersionOptions versionOptions) {
             var blogPart = _contentManager.Get<BlogPart>(id, versionOptions);
             return blogPart == null ? null : blogPart.ContentItem;
         }
 
-        public IEnumerable<BlogPart> Get()
-        {
+        public IEnumerable<BlogPart> Get() {
             return Get(VersionOptions.Published);
         }
 
-        public IEnumerable<BlogPart> Get(VersionOptions versionOptions)
-        {
+        public IEnumerable<BlogPart> Get(VersionOptions versionOptions) {
             return _contentManager.Query<BlogPart>(versionOptions, "Blog")
                 .Join<TitlePartRecord>()
                 .OrderBy(br => br.Title)
                 .List();
         }
 
-        public void Delete(ContentItem blog)
-        {
+        public void Delete(ContentItem blog) {
             _contentManager.Remove(blog);
         }
 
-        public void ProcessBlogPostsCount(int blogPartId)
-        {
+        public void ProcessBlogPostsCount(int blogPartId) {
             if (!_processedBlogParts.Contains(blogPartId))
             {
                 _processedBlogParts.Add(blogPartId);
@@ -90,8 +82,7 @@ namespace Orchard.Blogs.Services
             }
         }
 
-        public IEnumerable<ContentTypeDefinition> GetBlogPostContentTypes()
-        {
+        public IEnumerable<ContentTypeDefinition> GetBlogPostContentTypes() {
             var blogPostTypes = _contentDefinitionManager.ListTypeDefinitions().Where(ctd =>
                 ctd.Parts.Any(x => x.PartDefinition.Name == "BlogPostPart"));
 
