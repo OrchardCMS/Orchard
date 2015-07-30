@@ -7,6 +7,7 @@ namespace Orchard.Recipes {
                 .Column<int>("Id", c => c.PrimaryKey().Identity())
                 .Column<string>("ExecutionId", c => c.WithLength(128).NotNull())
                 .Column<string>("RecipeName", c => c.WithLength(256))
+                .Column<string>("StepId", c => c.WithLength(32).NotNull())
                 .Column<string>("StepName", c => c.WithLength(256).NotNull())
                 .Column<bool>("IsCompleted", c => c.NotNull())
                 .Column<bool>("IsSuccessful", c => c.NotNull())

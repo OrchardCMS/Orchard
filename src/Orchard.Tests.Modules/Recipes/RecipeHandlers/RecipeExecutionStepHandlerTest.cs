@@ -25,7 +25,7 @@ namespace Orchard.Tests.Modules.Recipes.RecipeHandlers {
             var fakeRecipeStep = _container.Resolve<StubRecipeExecutionStep>();
 
             var context = new RecipeContext {
-                RecipeStep = new RecipeStep (recipeName: "FakeRecipe",  name: "FakeRecipeStep", step: new XElement("FakeRecipeStep")),
+                RecipeStep = new RecipeStep (id: "1", recipeName: "FakeRecipe",  name: "FakeRecipeStep", step: new XElement("FakeRecipeStep")),
                 ExecutionId = "12345"
             };
 

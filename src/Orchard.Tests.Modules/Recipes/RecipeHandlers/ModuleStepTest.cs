@@ -94,7 +94,7 @@ Features:
                 Enumerable.Empty<ShellParameter>());
 
             var moduleStep = _container.Resolve<ModuleStep>();
-            var recipeExecutionContext = new RecipeExecutionContext {RecipeStep = new RecipeStep( recipeName: "Test", name: "Module", step: new XElement("SuperWiki")) };
+            var recipeExecutionContext = new RecipeExecutionContext {RecipeStep = new RecipeStep(id: "1", recipeName: "Test", name: "Module", step: new XElement("SuperWiki")) };
             recipeExecutionContext.RecipeStep.Step.Add(new XAttribute("packageId", "Orchard.Module.SuperWiki"));
             recipeExecutionContext.RecipeStep.Step.Add(new XAttribute("repository", "test"));
 
@@ -120,7 +120,7 @@ Features:
 ");
 
             var moduleStep = _container.Resolve<ModuleStep>();
-            var recipeContext = new RecipeContext { RecipeStep = new RecipeStep(recipeName: "Test", name: "Module", step: new XElement("SuperWiki")) };
+            var recipeContext = new RecipeContext { RecipeStep = new RecipeStep(id: "1", recipeName: "Test", name: "Module", step: new XElement("SuperWiki")) };
             var recipeExecutionContext = new RecipeExecutionContext { RecipeStep = recipeContext.RecipeStep };
             recipeContext.RecipeStep.Step.Add(new XAttribute("repository", "test"));
 
@@ -145,7 +145,7 @@ Features:
             });
 
             var moduleStep = _container.Resolve<ModuleStep>();
-            var recipeExecutionContext = new RecipeExecutionContext { RecipeStep = new RecipeStep(recipeName: "Test", name: "Module", step: new XElement("SuperWiki")) };
+            var recipeExecutionContext = new RecipeExecutionContext { RecipeStep = new RecipeStep(id: "1", recipeName: "Test", name: "Module", step: new XElement("SuperWiki")) };
 
             recipeExecutionContext.RecipeStep.Step.Add(new XAttribute("packageId", "Orchard.Module.SuperWiki"));
             recipeExecutionContext.RecipeStep.Step.Add(new XAttribute("repository", "test"));

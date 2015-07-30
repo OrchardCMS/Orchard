@@ -26,6 +26,7 @@ namespace Orchard.Recipes.Services {
         public void Enqueue(string executionId, RecipeStep step) {
             Logger.Information("Enqueuing recipe step '{0}'.", step.Name);
             var recipeStepElement = new XElement("RecipeStep");
+            recipeStepElement.Attr("Id", step.Id);
             recipeStepElement.Attr("RecipeName", step.RecipeName);
             recipeStepElement.Add(new XElement("Name", step.Name));
             recipeStepElement.Add(step.Step);
@@ -54,9 +55,10 @@ namespace Orchard.Recipes.Services {
                 // string to xelement
                 var stepElement = XElement.Parse(_appDataFolder.ReadFile(stepPath));
                 var stepName = stepElement.Element("Name").Value;
+                var stepId = stepElement.Attr("Id");
                 var recipeName = stepElement.Attr("RecipeName");
                 Logger.Information("Dequeuing recipe step '{0}'.", stepName);
-                recipeStep = new RecipeStep(recipeName: recipeName, name: stepName, step: stepElement.Element(stepName));
+                recipeStep = new RecipeStep(id: stepId, recipeName: recipeName, name: stepName, step: stepElement.Element(stepName));
                 _appDataFolder.DeleteFile(stepPath);
             }
 

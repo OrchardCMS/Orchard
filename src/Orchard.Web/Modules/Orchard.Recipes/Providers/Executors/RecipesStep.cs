@@ -65,6 +65,7 @@ namespace Orchard.Recipes.Providers.Executors {
                 _recipeStepResultRecordRepository.Create(new RecipeStepResultRecord {
                     ExecutionId = executionId,
                     RecipeName = recipe.Name,
+                    StepId = recipeStep.Id,
                     StepName = recipeStep.Name
                 });
             }

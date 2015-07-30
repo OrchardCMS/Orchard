@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -255,7 +256,8 @@ namespace Orchard.Packaging.Controllers {
                     var recipe = new Recipe {
                         Name = "Test",
                         RecipeSteps = featureIds.Select(
-                            x => new RecipeStep(
+                            (i,x) => new RecipeStep(
+                                id: i.ToString(CultureInfo.InvariantCulture),
                                 recipeName: "Test",
                                 name: "Feature",
                                 step: new XElement("Feature", new XAttribute("enable", x))))
