@@ -105,7 +105,6 @@ namespace Orchard.MultiTenancy.Services {
 
         private IEnumerable<string> GetTenantDatabaseTableNames(IWorkContextScope environment) {
             var sessionFactoryHolder = environment.Resolve<ISessionFactoryHolder>();
-            var schemaBuilder = new SchemaBuilder(environment.Resolve<IDataMigrationInterpreter>());
             var configuration = sessionFactoryHolder.GetConfiguration();
 
             var result =
@@ -116,15 +115,15 @@ namespace Orchard.MultiTenancy.Services {
         }
 
         private void DropTenantDatabaseTables(IWorkContextScope environment) {
-            var sessionFactoryHolder = environment.Resolve<ISessionFactoryHolder>();
+            var tableNames = GetTenantDatabaseTableNames(environment);
             var schemaBuilder = new SchemaBuilder(environment.Resolve<IDataMigrationInterpreter>());
-            var configuration = sessionFactoryHolder.GetConfiguration();
-            foreach (var mapping in configuration.ClassMappings) {
+
+            foreach (var tableName in tableNames) {
                 try {
-                    schemaBuilder.DropTable(mapping.Table.Name);
+                    schemaBuilder.DropTable(schemaBuilder.RemoveDataTablePrefix(tableName));
                 }
                 catch (Exception ex) {
-                    Logger.Warning(ex, "Failed to drop table '{0}'.", mapping.Table.Name);
+                    Logger.Warning(ex, "Failed to drop table '{0}'.", tableName);
                 }
             }
         }

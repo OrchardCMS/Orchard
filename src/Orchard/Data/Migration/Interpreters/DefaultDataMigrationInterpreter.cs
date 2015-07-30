@@ -19,7 +19,6 @@ namespace Orchard.Data.Migration.Interpreters {
         private readonly IEnumerable<ICommandInterpreter> _commandInterpreters;
         private readonly Lazy<Dialect> _dialectLazy;
         private readonly List<string> _sqlStatements;
-        private readonly ISessionFactoryHolder _sessionFactoryHolder;
 
         private const char Space = ' ';
 
@@ -32,7 +31,6 @@ namespace Orchard.Data.Migration.Interpreters {
             _sessionLocator = sessionLocator;
             _commandInterpreters = commandInterpreters;
             _sqlStatements = new List<string>();
-            _sessionFactoryHolder = sessionFactoryHolder;
 
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
@@ -80,7 +78,6 @@ namespace Orchard.Data.Migration.Interpreters {
                     primaryKeysQuoted.Add(_dialectLazy.Value.QuoteForColumnName(pk));
                 }
 
-
                 builder.Append(_dialectLazy.Value.PrimaryKeyString)
                     .Append(" ( ")
                     .Append(String.Join(", ", primaryKeysQuoted.ToArray()))
@@ -97,6 +94,12 @@ namespace Orchard.Data.Migration.Interpreters {
             if (string.IsNullOrEmpty(_shellSettings.DataTablePrefix))
                 return tableName;
             return _shellSettings.DataTablePrefix + "_" + tableName;
+        }
+
+        public string RemovePrefixFromTableName(string prefixedTableName) {
+            if (string.IsNullOrEmpty(_shellSettings.DataTablePrefix))
+                return prefixedTableName;
+            return prefixedTableName.Substring(_shellSettings.DataTablePrefix.Length + 1);
         }
 
         public override void Visit(DropTableCommand command) {
