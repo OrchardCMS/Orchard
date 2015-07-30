@@ -80,7 +80,7 @@ namespace Orchard.Tests.ContentManagement {
             builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
 
             _session = _sessionFactory.OpenSession();
-            builder.RegisterInstance(new DefaultContentManagerTests.TestSessionLocator(_session)).As<ISessionLocator>();
+            builder.RegisterInstance(new TestTransactionManager(_session)).As<ITransactionManager>();
 
             _session.Delete(string.Format("from {0}", typeof(GammaRecord).FullName));
             _session.Delete(string.Format("from {0}", typeof(DeltaRecord).FullName));
@@ -96,6 +96,12 @@ namespace Orchard.Tests.ContentManagement {
             _container = builder.Build();
             _manager = _container.Resolve<IContentManager>();
 
+        }
+
+        [TearDown]
+        public void Cleanup() {
+            if (_container != null)
+                _container.Dispose();
         }
 
         [Test]
