@@ -52,7 +52,7 @@ namespace Orchard.Tests.DataMigration {
             builder.RegisterType<SessionFactoryHolder>().As<ISessionFactoryHolder>();
             builder.RegisterType<DefaultDatabaseCacheConfiguration>().As<IDatabaseCacheConfiguration>();
             builder.RegisterType<StubHostEnvironment>().As<IHostEnvironment>();
-            builder.RegisterInstance(new DefaultContentManagerTests.TestSessionLocator(_session)).As<ISessionLocator>();
+            builder.RegisterInstance(new TestTransactionManager(_session)).As<ITransactionManager>();
             builder.RegisterInstance(new ShellBlueprint { Records = Enumerable.Empty<RecordBlueprint>() }).As<ShellBlueprint>();
             builder.RegisterInstance(new ShellSettings { Name = "temp", DataProvider = "SqlCe", DataTablePrefix = "TEST" }).As<ShellSettings>();
             builder.RegisterModule(new DataModule());

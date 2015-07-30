@@ -10,21 +10,17 @@ using Orchard.Utility.Extensions;
 
 namespace Orchard.Data {
     public class Repository<T> : IRepository<T> where T : class {
-        private readonly ISessionLocator _sessionLocator;
+        private readonly ITransactionManager _transactionManager;
 
-        public Repository(ISessionLocator sessionLocator) {
-            _sessionLocator = sessionLocator;
+        public Repository(ITransactionManager transactionManager) {
+            _transactionManager = transactionManager;
             Logger = NullLogger.Instance;
         }
 
         public ILogger Logger { get; set; }
 
-        protected virtual ISessionLocator SessionLocator {
-            get { return _sessionLocator; }
-        }
-
         protected virtual ISession Session {
-            get { return SessionLocator.For(typeof (T)); }
+            get { return _transactionManager.GetSession(); }
         }
 
         public virtual IQueryable<T> Table {
