@@ -35,7 +35,7 @@ namespace Orchard.Recipes.Providers.Builders {
         }
 
         public override LocalizedString DisplayName {
-            get { return T("Content and Content Definitions"); }
+            get { return T("Content and Content Definition"); }
         }
 
         public override LocalizedString Description {
