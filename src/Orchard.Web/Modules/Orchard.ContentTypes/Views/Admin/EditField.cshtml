@@ -3,7 +3,7 @@
 @{
     Style.Require("ContentTypesAdmin");
 
-    Layout.Title = T("Edit Field \"{0}\"", new HtmlString(Model.DisplayName)).ToString();
+    Layout.Title = T("Edit Field \"{0}\"", Model.Name);
 }
 
 @using (Html.BeginFormAntiForgeryPost()) {
