@@ -110,7 +110,6 @@ namespace Orchard.Alias.Implementation.Storage {
                 // Bulk updates might go wrong if we don't flush.
                 _aliasRepository.Flush();
                 var dict = ToDictionary(aliasRecord);
-                //TODO: 
                 _aliasHolder.RemoveAlias(new AliasInfo() { Path = dict.Item1, Area = dict.Item2, RouteValues = dict.Item3, IsManaged = dict.Item6});
             }
         }

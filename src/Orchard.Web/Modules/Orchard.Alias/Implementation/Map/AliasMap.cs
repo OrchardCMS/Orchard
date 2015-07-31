@@ -8,27 +8,20 @@ using System.Collections.Concurrent;
 
 namespace Orchard.Alias.Implementation.Map {
     public class AliasMap {
-        private readonly string _area;
-        //private readonly ConcurrentDictionary<string, IDictionary<string, string>> _aliases;
+        private readonly string _area;        
         private readonly ConcurrentDictionary<string, AliasInfo> _aliases;
         private readonly Node _root;        
 
         public AliasMap(string area) {
-            _area = area;
-            //_aliases = new ConcurrentDictionary<string, IDictionary<string, string>>(StringComparer.OrdinalIgnoreCase);
+            _area = area;            
             _aliases = new ConcurrentDictionary<string, AliasInfo>(StringComparer.OrdinalIgnoreCase);
             _root = new Node();
-            //_isManaged = isManaged;
         }
 
         public IEnumerable<AliasInfo> GetAliases() {
             return _aliases.Select(x => new AliasInfo { Area = _area, Path = x.Key, RouteValues = x.Value.RouteValues, IsManaged = x.Value.IsManaged });
         }
  
-        //public bool TryGetAlias(string virtualPath, out IDictionary<string, string> routeValues) {
-        //    return _aliases.TryGetValue(virtualPath, out routeValues);
-        //}
-
         public bool TryGetAlias(string virtualPath, out AliasInfo aliasInfo)
         {
             return _aliases.TryGetValue(virtualPath, out aliasInfo);
@@ -46,8 +39,6 @@ namespace Orchard.Alias.Implementation.Map {
             if(info == null) {
                 throw new ArgumentNullException();
             }
-
-            //_aliases[info.Path] = info.RouteValues;
             _aliases[info.Path] = info;
             ExpandTree(_root, info.Path, info.RouteValues);
         }
@@ -57,10 +48,8 @@ namespace Orchard.Alias.Implementation.Map {
         /// </summary>
         /// <param name="info"></param>
         public void Remove(AliasInfo info) {
-            //IDictionary<string, string> values;
             AliasInfo aliasInfo;
             _aliases.TryRemove(info.Path, out aliasInfo);
-            //_aliases.TryRemove(info.Path, out info);
             CollapseTree(_root, info.Path, info.RouteValues);
         }
 
