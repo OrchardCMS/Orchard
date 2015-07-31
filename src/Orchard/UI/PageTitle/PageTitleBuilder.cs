@@ -35,7 +35,7 @@ namespace Orchard.UI.PageTitle {
 
             return _titleParts.Count == 0 
                 ? String.Empty
-                : String.Join(_titleSeparator, _titleParts.AsEnumerable().Reverse().ToArray());
+                : String.Join(_titleSeparator, _titleParts.AsEnumerable().ToArray());
         }
     }
 }
