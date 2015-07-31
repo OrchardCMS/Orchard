@@ -1,0 +1,3 @@
+[config]
+command = deploy.cmd
+SCM_COMMAND_IDLE_TIMEOUT = 3600

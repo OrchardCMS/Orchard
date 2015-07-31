@@ -27,7 +27,7 @@
             <li class="sgd-s"><div class="name">@T("Shape").Text</div><div class="value">${shape.type}</div></li>
             <li class="sgd-t"><div class="name">@T("Active Template").Text</div><div class="value"><a id="activeTemplate" href="#">${shape.template}</a></div></li>
             {{if shape.template != shape.originalTemplate}}
-            <li class="sgd-ot"><div class="name">@T("Original Template").Text Template</div><div class="value">${shape.originalTemplate}</div></li>
+            <li class="sgd-ot"><div class="name">@T("Original Template").Text</div><div class="value">${shape.originalTemplate}</div></li>
             {{/if}}
             <li class="sgd-d"><div class="name">@T("Display Type").Text</div><div class="value">${shape.displayType}</div></li>
             <li class="sgd-a"><div class="name">@T("Alternate ({0})", "${shape.alternates.length}").Text</div>

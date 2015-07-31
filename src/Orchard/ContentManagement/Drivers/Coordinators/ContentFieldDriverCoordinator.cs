@@ -91,14 +91,14 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
 
         public override void Exporting(ExportContentContext context) {
             context.Logger = Logger;
-            foreach (var contentFieldDriver in _drivers) {
+            foreach (var contentFieldDriver in _drivers.OrderBy(x => x.GetFieldInfo().First().FieldTypeName)) {
                 contentFieldDriver.Exporting(context);
             }
         }
 
         public override void Exported(ExportContentContext context) {
             context.Logger = Logger;
-            foreach (var contentFieldDriver in _drivers) {
+            foreach (var contentFieldDriver in _drivers.OrderBy(x => x.GetFieldInfo().First().FieldTypeName)) {
                 contentFieldDriver.Exported(context);
             }
         }

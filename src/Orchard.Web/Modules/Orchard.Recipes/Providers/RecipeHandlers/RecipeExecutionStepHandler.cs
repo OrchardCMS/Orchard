@@ -19,7 +19,7 @@ namespace Orchard.Recipes.Providers.RecipeHandlers {
             var recipeExecutionContext = new RecipeExecutionContext {ExecutionId = recipeContext.ExecutionId, RecipeStep = recipeContext.RecipeStep};
 
             if (executionStep != null) {
-                Logger.Information("Executing recipe step '{0}'; ExecutionId={1}", recipeContext.RecipeStep.Name, recipeContext.ExecutionId);
+                Logger.Information("Executing recipe step '{0}'.", recipeContext.RecipeStep.Name);
                 executionStep.Execute(recipeExecutionContext);
                 Logger.Information("Finished executing recipe step '{0}'.", recipeContext.RecipeStep.Name);
                 recipeContext.Executed = true;

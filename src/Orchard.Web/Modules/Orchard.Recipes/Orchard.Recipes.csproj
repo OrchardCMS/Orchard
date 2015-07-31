@@ -51,7 +51,13 @@
     <Reference Include="Autofac">
       <HintPath>..\..\..\..\lib\autofac\Autofac.dll</HintPath>
     </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\..\..\..\lib\log4net\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="NHibernate">
+      <HintPath>..\..\..\..\lib\nhibernate\NHibernate.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -86,6 +92,7 @@
     <Compile Include="Providers\Builders\RecipeMetadataStep.cs" />
     <Compile Include="Providers\Builders\SettingsStep.cs" />
     <Compile Include="Providers\Executors\CommandStep.cs" />
+    <Compile Include="Providers\Executors\RecipesStep.cs" />
     <Compile Include="ViewModels\ContentExecutionStepViewModel.cs" />
     <Compile Include="Providers\Executors\ContentStep.cs" />
     <Compile Include="Providers\Executors\ContentDefinitionStep.cs" />

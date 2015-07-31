@@ -294,6 +294,7 @@
     <Content Include="Common\Views\Parts.Common.Metadata.cshtml" />
     <Content Include="Common\Views\CommonMetadataLastModified.cshtml" />
     <Content Include="Containers\Module.txt" />
+    <Content Include="Shapes\Scripts\admin-localnavigation.js" />
     <Content Include="Contents\Styles\images\menu.content.png" />
     <Content Include="Contents\Styles\menu.content-admin.css" />
     <Content Include="Contents\Views\Admin\Create.cshtml" />
@@ -340,6 +341,7 @@
     <Content Include="Shapes\Styles\Images\toolBarBackground.gif" />
     <Content Include="Shapes\Styles\Images\toolBarHoverButtonBackground.gif" />
     <Content Include="Shapes\Styles\jquery.switchable.css" />
+    <Content Include="Shapes\Styles\site.css" />
     <Content Include="Shapes\Styles\special.css" />
     <Content Include="Shapes\Views\HeadPreload.cshtml" />
     <Content Include="Shapes\Views\Message.cshtml" />
@@ -569,6 +571,12 @@
     <Content Include="Reports\Styles\Web.config" />
     <Content Include="Reports\Views\Admin\Display.cshtml" />
     <Content Include="Reports\Views\Admin\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Shapes\Views\LocalNavigation.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Shapes\Views\AdminTabs.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
