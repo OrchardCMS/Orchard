@@ -20,6 +20,7 @@ using Orchard.DisplayManagement.Implementation;
 using Orchard.Environment;
 using Orchard.Environment.Extensions;
 using Orchard.Security;
+using Orchard.Tests.ContentManagement;
 using Orchard.Tests.Modules;
 using Orchard.Tests.Stubs;
 using Orchard.UI.Notify;
@@ -35,7 +36,6 @@ namespace Orchard.Core.Tests.Body {
             builder.RegisterType<Signals>().As<ISignals>();
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
             builder.RegisterInstance(new Mock<IContentDefinitionManager>().Object);
-            builder.RegisterInstance(new Mock<ITransactionManager>().Object);
             builder.RegisterInstance(new Mock<IAuthorizer>().Object);
             builder.RegisterInstance(new Mock<INotifier>().Object);
             builder.RegisterInstance(new Mock<IContentDisplay>().Object);

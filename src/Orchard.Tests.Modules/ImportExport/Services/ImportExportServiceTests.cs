@@ -76,7 +76,7 @@ namespace Orchard.Tests.Modules.ImportExport.Services {
             builder.RegisterInstance(new Mock<ISettingsFormatter>().Object);
             builder.RegisterInstance(new Mock<IRecipeExecuteEventHandler>().Object);
             _session = _sessionFactory.OpenSession();
-            builder.RegisterInstance(new DefaultContentManagerTests.TestSessionLocator(_session)).As<ISessionLocator>();
+            builder.RegisterInstance(new TestTransactionManager(_session)).As<ITransactionManager>();
 
             _container = builder.Build();
             _importExportService = _container.Resolve<IImportExportService>();

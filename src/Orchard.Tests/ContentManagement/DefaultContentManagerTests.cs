@@ -86,84 +86,16 @@ namespace Orchard.Tests.ContentManagement {
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
 
             _session = _sessionFactory.OpenSession();
-            builder.RegisterInstance(new TestSessionLocator(_session)).As<ISessionLocator>();
+            builder.RegisterInstance(new TestTransactionManager(_session)).As<ITransactionManager>();
 
             _container = builder.Build();
             _manager = _container.Resolve<IContentManager>();
         }
 
-        public class TestSessionLocator : ISessionLocator, ITransactionManager, IDisposable {
-            private readonly ISession _session;
-            private ITransaction _transaction;
-            private bool _cancelled;
-
-            public TestSessionLocator(ISession session) {
-                _session = session;
-            }
-
-            public ISession For(Type entityType) {
-                return _session;
-            }
-
-            void ITransactionManager.Demand() {
-                EnsureSession();
-
-                if (_transaction == null) {
-                    _transaction = _session.BeginTransaction(IsolationLevel.ReadCommitted);
-                }
-            }
-
-            void ITransactionManager.RequireNew() {
-                ((ITransactionManager)this).RequireNew(IsolationLevel.ReadCommitted);
-            }
-
-            void ITransactionManager.RequireNew(IsolationLevel level) {
-                EnsureSession();
-
-                if (_cancelled) {
-                    _transaction.Rollback();
-                    _transaction.Dispose();
-                    _transaction = null;
-                }
-                else {
-                    if (_transaction != null) {
-                        _transaction.Commit();
-                    }
-                }
-
-                _transaction = _session.BeginTransaction(level);
-            }
-
-            void ITransactionManager.Cancel() {
-                _cancelled = true;
-            }
-
-            void IDisposable.Dispose() {
-                if (_transaction != null) {
-                    try {
-                        if (!_cancelled) {
-                            _transaction.Commit();
-                        }
-                        else {
-                            _transaction.Rollback();
-                        }
-
-                        _transaction.Dispose();
-                    }
-                    catch {
-                    }
-                    finally {
-                        _transaction = null;
-                        _cancelled = false;
-                    }
-                }
-            }
-
-            private void EnsureSession() {
-                if (_session != null) {
-                    return;
-                }
-            }
+        [TearDown]
+        public void Cleanup() {
+            if (_container != null)
+                _container.Dispose();
         }
 
         [Test]

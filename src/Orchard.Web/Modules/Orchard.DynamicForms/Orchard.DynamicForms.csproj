@@ -79,34 +79,28 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="gulpfile.js" />
+    <Content Include="Assets\CSS\DynamicForms-Admin.css" />
+    <Content Include="Assets\CSS\DynamicForms.css" />
     <Content Include="Scripts\LayoutEditor.js" />
     <Content Include="Scripts\LayoutEditor.min.js" />
-    <Content Include="Scripts\LayoutEditor\Directives\Fieldset.js" />
-    <Content Include="Scripts\LayoutEditor\Directives\Form.js" />
-    <Content Include="Scripts\LayoutEditor\Models\Fieldset.js" />
-    <Content Include="Scripts\LayoutEditor\Models\Form.js" />
+    <Content Include="Assets\JavaScript\LayoutEditor\Directives\Fieldset.js" />
+    <Content Include="Assets\JavaScript\LayoutEditor\Directives\Form.js" />
+    <Content Include="Assets\JavaScript\LayoutEditor\Models\Fieldset.js" />
+    <Content Include="Assets\JavaScript\LayoutEditor\Models\Form.js" />
     <Content Include="Scripts\Lib.js" />
     <Content Include="Scripts\Lib.min.js" />
-    <Content Include="Scripts\Lib\jquery.validate.js" />
-    <Content Include="Scripts\Lib\jquery.validate.min.js">
-      <DependentUpon>jquery.validate.js</DependentUpon>
-    </Content>
-    <Content Include="Scripts\Lib\jquery.validate.unobtrusive.additional.js" />
-    <Content Include="Scripts\Lib\jquery.validate.unobtrusive.js" />
-    <Content Include="Scripts\Lib\jquery.validate.unobtrusive.min.js">
-      <DependentUpon>jquery.validate.unobtrusive.js</DependentUpon>
-    </Content>
-    <Content Include="Styles\forms-admin.min.css" />
-    <Content Include="Styles\forms.css" />
-    <Content Include="Styles\forms-admin.css" />
-    <Content Include="Styles\forms.min.css" />
+    <Content Include="Assets\JavaScript\Lib\jquery.validate.js" />
+    <Content Include="Assets\JavaScript\Lib\jquery.validate.unobtrusive.additional.js" />
+    <Content Include="Assets\JavaScript\Lib\jquery.validate.unobtrusive.js" />
+    <Content Include="Styles\DynamicForms-Admin.css" />
+    <Content Include="Styles\DynamicForms-Admin.min.css" />
+    <Content Include="Styles\DynamicForms.css" />
+    <Content Include="Styles\DynamicForms.min.css" />
     <Content Include="Styles\menu.dynamicforms-admin.css" />
-    <Content Include="Styles\menu.dynamicforms-admin.min.css" />
     <Content Include="Styles\menu.dynamicforms.png" />
-    <Content Include="Styles\workflows-activity-dynamic-form-validating.css" />
-    <Content Include="Styles\workflows-activity-dynamic-form-submitted.css" />
     <Content Include="Styles\workflows-activity-add-model-error.css" />
+    <Content Include="Styles\workflows-activity-dynamic-form-submitted.css" />
+    <Content Include="Styles\workflows-activity-dynamic-form-validating.css" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
@@ -459,16 +453,6 @@
     <Content Include="Views\Elements\ReCaptcha.Design.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\Lib\jquery.validate.min.js.map">
-      <DependentUpon>jquery.validate.min.js</DependentUpon>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Scripts\Lib\jquery.validate.unobtrusive.min.js.map">
-      <DependentUpon>jquery.validate.unobtrusive.min.js</DependentUpon>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\LayoutEditor.Template.Form.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -514,19 +498,20 @@
     <Content Include="Views\LayoutEditor.Template.Fieldset.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="package.json" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Elements\Button.Design.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Elements\Label.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets.json" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

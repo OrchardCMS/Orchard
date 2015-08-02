@@ -456,10 +456,10 @@ namespace Orchard.Core.Shapes {
     
             var totalPageCount = pageSize > 0 ? (int)Math.Ceiling(TotalItemCount / pageSize) : 1;
 
-            var firstText = FirstText ?? T("<<");
-            var previousText = PreviousText ?? T("<");
-            var nextText = NextText ?? T(">");
-            var lastText = LastText ?? T(">>");
+            var firstText = FirstText ?? T("&lt;&lt;");
+            var previousText = PreviousText ?? T("&lt;");
+            var nextText = NextText ?? T("&gt;");
+            var lastText = LastText ?? T("&gt;&gt;");
             var gapText = GapText ?? T("...");
 
             var routeData = new RouteValueDictionary(Html.ViewContext.RouteData.Values);
