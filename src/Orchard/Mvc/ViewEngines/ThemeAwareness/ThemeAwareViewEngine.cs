@@ -93,12 +93,17 @@ namespace Orchard.Mvc.ViewEngines.ThemeAwareness {
                     .Reverse()  // reverse from (C <= B <= A) to (A => B => C)
                     .Where(fd => DefaultExtensionTypes.IsModule(fd.Extension.ExtensionType));
 
-                var allLocations = enabledModules.Concat(enabledModules)
+                var moduleLocations = enabledModules
+                    .Select(fd => fd.Extension.Location)
+                    .Distinct(StringComparer.OrdinalIgnoreCase)
+                    .ToList();
+
+                var moduleVirtualPaths = enabledModules.Concat(enabledModules)
                     .Select(fd => fd.Extension.Location + "/" + fd.Extension.Id)
                     .Distinct(StringComparer.OrdinalIgnoreCase)
                     .ToList();
 
-                var moduleParams = new CreateModulesViewEngineParams { VirtualPaths = allLocations };
+                var moduleParams = new CreateModulesViewEngineParams { VirtualPaths = moduleVirtualPaths, ModuleLocations = moduleLocations };
                 engines = engines.Concat(_viewEngineProviders.Select(vep => vep.CreateModulesViewEngine(moduleParams)));
 
                 return new ViewEngineCollectionWrapper(engines);

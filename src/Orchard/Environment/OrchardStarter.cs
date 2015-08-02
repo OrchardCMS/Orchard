@@ -102,11 +102,11 @@ namespace Orchard.Environment {
                         {
                             builder.RegisterType<ExtensionHarvester>().As<IExtensionHarvester>().SingleInstance();
                             builder.RegisterType<ModuleFolders>().As<IExtensionFolders>().SingleInstance()
-                                .WithParameter(new NamedParameter("paths", GetPaths("Modules", "~/Modules" )));
+                                .WithParameter(new NamedParameter("paths", GetConfigPaths("Modules", "~/Modules" )));
                             builder.RegisterType<CoreModuleFolders>().As<IExtensionFolders>().SingleInstance()
                                 .WithParameter(new NamedParameter("paths", new[] { "~/Core" }));
                             builder.RegisterType<ThemeFolders>().As<IExtensionFolders>().SingleInstance()
-                                .WithParameter(new NamedParameter("paths", GetPaths("Themes", "~/Themes" )));
+                                .WithParameter(new NamedParameter("paths", GetConfigPaths("Themes", "~/Themes" )));
 
                             builder.RegisterType<CoreExtensionLoader>().As<IExtensionLoader>().SingleInstance();
                             builder.RegisterType<ReferencedExtensionLoader>().As<IExtensionLoader>().SingleInstance();
@@ -180,10 +180,10 @@ namespace Orchard.Environment {
         /// Get list of comma separated paths from web.config appSettings
         /// Also return the default path
         /// </summary>
-        static IEnumerable<string> GetPaths(string key, string defaultPath)
+        static IEnumerable<string> GetConfigPaths(string key, string defaultPath)
         {
             char[] delim = new char[]{','};
-            return (WebConfigurationManager.AppSettings[key] ?? "").Split(delim, StringSplitOptions.RemoveEmptyEntries).Concat(new string[]{defaultPath}).Select(s => s.Trim()).Distinct();
+            return (WebConfigurationManager.AppSettings[key] ?? "").Split(delim, StringSplitOptions.RemoveEmptyEntries).Concat(new string[]{defaultPath}).Select(s => s.Trim()).Distinct(StringComparer.OrdinalIgnoreCase);
         }
 
 
