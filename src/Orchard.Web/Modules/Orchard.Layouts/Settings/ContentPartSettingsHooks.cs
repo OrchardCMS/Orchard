@@ -17,7 +17,7 @@ namespace Orchard.Layouts.Settings {
         public override IEnumerable<TemplateViewModel> PartEditorUpdate(ContentPartDefinitionBuilder builder, IUpdateModel updateModel) {
             var model = new ContentPartLayoutSettings();
             updateModel.TryUpdateModel(model, "ContentPartLayoutSettings", null, null);
-            builder.Placable(model.Placable);
+            builder.Placeable(model.Placeable);
             yield return DefinitionTemplate(model);
         }
     }

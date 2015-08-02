@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
+using Orchard.ContentManagement;
 using Orchard.FileSystems.AppData;
 using Orchard.Localization;
 using Orchard.Logging;
@@ -23,7 +24,10 @@ namespace Orchard.Recipes.Services {
         public ILogger Logger { get; set; }
 
         public void Enqueue(string executionId, RecipeStep step) {
+            Logger.Information("Enqueuing recipe step '{0}'.", step.Name);
             var recipeStepElement = new XElement("RecipeStep");
+            recipeStepElement.Attr("Id", step.Id);
+            recipeStepElement.Attr("RecipeName", step.RecipeName);
             recipeStepElement.Add(new XElement("Name", step.Name));
             recipeStepElement.Add(step.Step);
 
@@ -40,6 +44,7 @@ namespace Orchard.Recipes.Services {
         }
 
         public RecipeStep Dequeue(string executionId) {
+            Logger.Information("Dequeuing recipe steps.");
             if (!_appDataFolder.DirectoryExists(Path.Combine(_recipeQueueFolder, executionId))) {
                 return null;
             }
@@ -50,10 +55,10 @@ namespace Orchard.Recipes.Services {
                 // string to xelement
                 var stepElement = XElement.Parse(_appDataFolder.ReadFile(stepPath));
                 var stepName = stepElement.Element("Name").Value;
-                recipeStep = new RecipeStep {
-                    Name = stepName,
-                    Step = stepElement.Element(stepName)
-                };
+                var stepId = stepElement.Attr("Id");
+                var recipeName = stepElement.Attr("RecipeName");
+                Logger.Information("Dequeuing recipe step '{0}'.", stepName);
+                recipeStep = new RecipeStep(id: stepId, recipeName: recipeName, name: stepName, step: stepElement.Element(stepName));
                 _appDataFolder.DeleteFile(stepPath);
             }
 

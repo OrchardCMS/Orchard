@@ -21,7 +21,8 @@ namespace Orchard.Mvc {
 
         public HttpContextBase CreateContext(ILifetimeScope lifetimeScope) {
             return new MvcModule.HttpContextPlaceholder(_threadStaticContexts, _contextKey, () => {
-                return lifetimeScope.Resolve<ISiteService>().GetSiteSettings().BaseUrl;
+                var baseUrl = lifetimeScope.Resolve<ISiteService>().GetSiteSettings().BaseUrl;
+                return !String.IsNullOrEmpty(baseUrl) ? baseUrl : "http://localhost"; // Return a valid URL always.
             });
         }
 

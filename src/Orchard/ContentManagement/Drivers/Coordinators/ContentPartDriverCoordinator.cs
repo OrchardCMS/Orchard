@@ -79,13 +79,13 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
         }
 
         public override void Exporting(ExportContentContext context) {
-            foreach (var contentPartDriver in _drivers) {
+            foreach (var contentPartDriver in _drivers.OrderBy(x => x.GetPartInfo().First().PartName)) {
                 contentPartDriver.Exporting(context);
             }
         }
 
         public override void Exported(ExportContentContext context) {
-            foreach (var contentPartDriver in _drivers) {
+            foreach (var contentPartDriver in _drivers.OrderBy(x => x.GetPartInfo().First().PartName)) {
                 contentPartDriver.Exported(context);
             }
         }

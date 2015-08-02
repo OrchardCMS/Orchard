@@ -128,6 +128,10 @@ namespace Orchard.Mvc {
                 get { return HttpRuntime.Cache; }
             }
 
+            public override HttpServerUtilityBase Server {
+                get { return new HttpServerUtilityPlaceholder(); }
+            }
+
             public override object GetService(Type serviceType) {
                 return null;
             }
@@ -264,6 +268,10 @@ namespace Orchard.Mvc {
             public override string Browser { get { return "Placeholder"; } }
             public override bool Cookies { get { return true; } }
             public override ArrayList Browsers { get { return new ArrayList(); } }
+        }
+
+        public class HttpServerUtilityPlaceholder : HttpServerUtilityBase {
+            public override int ScriptTimeout { get; set; }
         }
     }
 }

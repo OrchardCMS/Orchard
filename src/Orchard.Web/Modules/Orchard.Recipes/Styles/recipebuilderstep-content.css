@@ -1,0 +1,9 @@
+﻿fieldset.recipe-builder-step-content table.items {
+    width: 500px;
+    margin: 0;
+}
+
+fieldset.recipe-builder-step-content table.items td,
+fieldset.recipe-builder-step-content table.items thead tr.sub th {
+    padding: 0 12px;
+}

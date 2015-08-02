@@ -25,6 +25,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -85,9 +86,8 @@
     <Compile Include="Events\UserRoleContext.cs" />
     <Compile Include="Forms\SelectRolesForms.cs" />
     <Compile Include="Forms\UserTaskForms.cs" />
-    <Compile Include="ImportExport\RolesCustomExportStep.cs" />
-    <Compile Include="ImportExport\RolesExportEventHandler.cs" />
-    <Compile Include="ImportExport\RolesRecipeHandler.cs" />
+    <Compile Include="Recipes\Builders\RolesStep.cs" />
+    <Compile Include="Recipes\Executors\RolesStep.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Drivers\UserRolesPartDriver.cs" />
     <Compile Include="DefaultRoleUpdater.cs" />

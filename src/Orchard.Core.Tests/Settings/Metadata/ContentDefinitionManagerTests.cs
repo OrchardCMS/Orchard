@@ -13,6 +13,7 @@ using Orchard.Core.Settings.Metadata;
 using Orchard.Core.Settings.Metadata.Records;
 using Orchard.Data;
 using Orchard.Tests;
+using Orchard.Tests.ContentManagement;
 using Orchard.Tests.Stubs;
 using Orchard.Tests.Utility;
 
@@ -23,6 +24,7 @@ namespace Orchard.Core.Tests.Settings.Metadata {
         private ISessionFactory _sessionFactory;
         private ISession _session;
         private IContainer _container;
+        private ITransactionManager _transactionManager;
 
         [TestFixtureSetUp]
         public void InitFixture() {
@@ -39,6 +41,17 @@ namespace Orchard.Core.Tests.Settings.Metadata {
 
         [SetUp]
         public void Init() {
+            _session = _sessionFactory.OpenSession();
+            foreach (var killType in new[] { typeof(ContentTypeDefinitionRecord), typeof(ContentPartDefinitionRecord), typeof(ContentFieldDefinitionRecord) }) {
+                foreach (var killRecord in _session.CreateCriteria(killType).List()) {
+                    _session.Delete(killRecord);
+                }
+            }
+            _session.Flush();
+            _session.Close();
+            _session.Dispose();
+            _session = _sessionFactory.OpenSession();
+
             var builder = new ContainerBuilder();
             builder.RegisterAutoMocking();
             builder.RegisterType<ContentDefinitionManager>().As<IContentDefinitionManager>();
@@ -48,25 +61,15 @@ namespace Orchard.Core.Tests.Settings.Metadata {
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
             builder.RegisterType<StubParallelCacheContext>().As<IParallelCacheContext>();
 
+            _session = _sessionFactory.OpenSession();
+            builder.RegisterInstance(_transactionManager = new TestTransactionManager(_session)).As<ITransactionManager>();
+
             _container = builder.Build();
 
-            _container.Mock<ISessionLocator>()
-                .Setup(x => x.For(It.IsAny<Type>()))
-                .Returns(() => _session);
-
-            _session = _sessionFactory.OpenSession();
-            foreach (var killType in new[] { typeof(ContentTypeDefinitionRecord), typeof(ContentPartDefinitionRecord), typeof(ContentFieldDefinitionRecord) }) {
-                foreach (var killRecord in _session.CreateCriteria(killType).List()) {
-                    _session.Delete(killRecord);
-                }
-            }
-            _session.Flush();
         }
 
         void ResetSession() {
-            _session.Flush();
-            _session.Dispose();
-            _session = _sessionFactory.OpenSession();
+            _transactionManager.RequireNew();
         }
 
         [TearDown]

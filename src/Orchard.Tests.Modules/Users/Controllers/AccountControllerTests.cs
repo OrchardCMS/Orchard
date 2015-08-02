@@ -74,7 +74,6 @@ namespace Orchard.Tests.Modules.Users.Controllers {
             builder.RegisterType<UserPartHandler>().As<IContentHandler>();
             builder.RegisterType<OrchardServices>().As<IOrchardServices>();
 
-            builder.RegisterInstance(new DefaultContentManagerTests.TestSessionLocator(_session)).As<ITransactionManager>();
             builder.RegisterInstance(new Work<IEnumerable<IShapeTableEventHandler>>(resolve => _container.Resolve<IEnumerable<IShapeTableEventHandler>>())).AsSelf();
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();

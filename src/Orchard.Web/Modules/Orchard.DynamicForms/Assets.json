@@ -1,0 +1,18 @@
+﻿[
+  {
+    "inputs": [
+      "Assets/JavaScript/Lib/jquery.validate.js",
+      "Assets/JavaScript/Lib/jquery.validate.unobtrusive.js",
+      "Assets/JavaScript/Lib/jquery.validate.unobtrusive.additional.js"
+    ],
+    "output": "Scripts/Lib.js"
+  },
+    {
+        "inputs": [ "Assets/JavaScript/LayoutEditor/**/*.js" ],
+        "output": "Scripts/LayoutEditor.js"
+    },
+    {
+        "inputs": [ "Assets/CSS/*.css" ],
+        "output": "Styles/@.css"
+    }
+]

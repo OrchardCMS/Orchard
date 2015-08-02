@@ -15,8 +15,10 @@ using System.Collections.Generic;
 using Orchard.Services;
 using System.Web.Helpers;
 using Orchard.Environment.Configuration;
+using Orchard.Environment.Extensions;
 
 namespace Orchard.Users.Services {
+    [OrchardSuppressDependency("Orchard.Security.NullMembershipService")]
     public class MembershipService : IMembershipService {
         private const string PBKDF2 = "PBKDF2";
         private const string DefaultHashAlgorithm = PBKDF2;

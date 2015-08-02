@@ -11,32 +11,26 @@ using Orchard.Data.Migration.Schema;
 using Orchard.Environment.Configuration;
 using Orchard.Localization;
 using Orchard.Logging;
-using Orchard.Reports.Services;
 
 namespace Orchard.Data.Migration.Interpreters {
     public class DefaultDataMigrationInterpreter : AbstractDataMigrationInterpreter, IDataMigrationInterpreter {
         private readonly ShellSettings _shellSettings;
-        private readonly ISessionLocator _sessionLocator;
+        private readonly ITransactionManager _transactionManager;
         private readonly IEnumerable<ICommandInterpreter> _commandInterpreters;
         private readonly Lazy<Dialect> _dialectLazy;
         private readonly List<string> _sqlStatements;
-        private readonly ISessionFactoryHolder _sessionFactoryHolder;
-        private readonly IReportsCoordinator _reportsCoordinator;
 
         private const char Space = ' ';
 
         public DefaultDataMigrationInterpreter(
             ShellSettings shellSettings,
-            ISessionLocator sessionLocator,
+            ITransactionManager ITransactionManager,
             IEnumerable<ICommandInterpreter> commandInterpreters,
-            ISessionFactoryHolder sessionFactoryHolder,
-            IReportsCoordinator reportsCoordinator) {
+            ISessionFactoryHolder sessionFactoryHolder) {
             _shellSettings = shellSettings;
-            _sessionLocator = sessionLocator;
+            _transactionManager = ITransactionManager;
             _commandInterpreters = commandInterpreters;
             _sqlStatements = new List<string>();
-            _sessionFactoryHolder = sessionFactoryHolder;
-            _reportsCoordinator = reportsCoordinator;
 
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
@@ -84,7 +78,6 @@ namespace Orchard.Data.Migration.Interpreters {
                     primaryKeysQuoted.Add(_dialectLazy.Value.QuoteForColumnName(pk));
                 }
 
-
                 builder.Append(_dialectLazy.Value.PrimaryKeyString)
                     .Append(" ( ")
                     .Append(String.Join(", ", primaryKeysQuoted.ToArray()))
@@ -101,6 +94,12 @@ namespace Orchard.Data.Migration.Interpreters {
             if (string.IsNullOrEmpty(_shellSettings.DataTablePrefix))
                 return tableName;
             return _shellSettings.DataTablePrefix + "_" + tableName;
+        }
+
+        public string RemovePrefixFromTableName(string prefixedTableName) {
+            if (string.IsNullOrEmpty(_shellSettings.DataTablePrefix))
+                return prefixedTableName;
+            return prefixedTableName.Substring(_shellSettings.DataTablePrefix.Length + 1);
         }
 
         public override void Visit(DropTableCommand command) {
@@ -276,7 +275,9 @@ namespace Orchard.Data.Migration.Interpreters {
 
             var builder = new StringBuilder();
 
-            builder.AppendFormat("alter table {0} drop constraint {1}", _dialectLazy.Value.QuoteForTableName(PrefixTableName(command.SrcTable)), PrefixTableName(command.Name));
+            builder.Append("alter table ")
+                .Append(_dialectLazy.Value.QuoteForTableName(PrefixTableName(command.SrcTable)))
+                .Append(_dialectLazy.Value.GetDropForeignKeyConstraintString(PrefixTableName(command.Name)));
             _sqlStatements.Add(builder.ToString());
 
             RunPendingStatements();
@@ -329,19 +330,17 @@ namespace Orchard.Data.Migration.Interpreters {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities", Justification = "Nothing comes from user input.")]
         private void RunPendingStatements() {
 
-            var session = _sessionLocator.For(typeof(ContentItemRecord));
+            var session = _transactionManager.GetSession();
 
             try {
                 foreach (var sqlStatement in _sqlStatements) {
-                    Logger.Debug(sqlStatement);
+                    Logger.Debug("Executing SQL query: {0}", sqlStatement);
 
                     using (var command = session.Connection.CreateCommand()) {
                         command.CommandText = sqlStatement;
                         session.Transaction.Enlist(command);
                         command.ExecuteNonQuery();
                     }
-                 
-                    _reportsCoordinator.Information("Data Migration", String.Format("Executing SQL Query: {0}", sqlStatement));
                 }
             }
             finally {

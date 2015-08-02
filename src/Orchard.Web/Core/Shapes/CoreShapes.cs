@@ -282,8 +282,26 @@ namespace Orchard.Core.Shapes {
 
         [Shape]
         public void ContentZone(dynamic Display, dynamic Shape, TextWriter Output) {
-            foreach (var item in Order(Shape))
-                Output.Write(Display(item));
+            var unordered = ((IEnumerable<dynamic>)Shape).ToArray();
+            var tabbed = unordered.GroupBy(x => (string)x.Metadata.Tab);
+
+            if (tabbed.Count() > 1) {
+                foreach (var tab in tabbed) {
+                    var tabName = String.IsNullOrWhiteSpace(tab.Key) ? "Content" : tab.Key;
+                    var tabBuilder = new TagBuilder("div");
+                    tabBuilder.Attributes["id"] = "tab-" + tabName.HtmlClassify();
+                    tabBuilder.Attributes["data-tab"] = tabName;
+                    Output.Write(tabBuilder.ToString(TagRenderMode.StartTag));
+                    foreach (var item in Order(tab))
+                        Output.Write(Display(item));
+
+                    Output.Write(tabBuilder.ToString(TagRenderMode.EndTag));
+                }
+            }
+            else {
+                foreach (var item in Order(unordered))
+                    Output.Write(Display(item));
+            }
         }
 
         [Shape]
@@ -325,6 +343,30 @@ namespace Orchard.Core.Shapes {
             }
 
             return ordering.Select(ordered => ordered.item).ToList();
+        }
+
+        public static IEnumerable<string> HarvestAndSortTabs(IEnumerable<dynamic> shapes) {
+            var orderedShapes = Order(shapes).ToArray();
+            var tabs = new List<string>();
+
+            foreach (var shape in orderedShapes) {
+                var tab = (string)shape.Metadata.Tab;
+
+                if (String.IsNullOrEmpty(tab))
+                    continue;
+
+                if(!tabs.Contains(tab))
+                    tabs.Add(tab);
+            }
+
+            // If we have any tabs, make sure we have at least the Content tab and that it is the first one,
+            // since that's where we will put anything else not part of a tab.
+            if (tabs.Any()) {
+                tabs.Remove("Content");
+                tabs.Insert(0, "Content");
+            }
+
+            return tabs;
         }
 
         [Shape]
@@ -456,10 +498,10 @@ namespace Orchard.Core.Shapes {
     
             var totalPageCount = pageSize > 0 ? (int)Math.Ceiling(TotalItemCount / pageSize) : 1;
 
-            var firstText = FirstText ?? T("<<");
-            var previousText = PreviousText ?? T("<");
-            var nextText = NextText ?? T(">");
-            var lastText = LastText ?? T(">>");
+            var firstText = FirstText ?? T("&lt;&lt;");
+            var previousText = PreviousText ?? T("&lt;");
+            var nextText = NextText ?? T("&gt;");
+            var lastText = LastText ?? T("&gt;&gt;");
             var gapText = GapText ?? T("...");
 
             var routeData = new RouteValueDictionary(Html.ViewContext.RouteData.Values);
