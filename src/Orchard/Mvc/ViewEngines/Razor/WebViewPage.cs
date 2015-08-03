@@ -195,20 +195,16 @@ namespace Orchard.Mvc.ViewEngines.Razor {
 
         private string _tenantPrefix;
         public override string Href(string path, params object[] pathParts) {
+
             if (_tenantPrefix == null) {
                 _tenantPrefix = WorkContext.Resolve<ShellSettings>().RequestUrlPrefix ?? "";
             }
 
-            if (!String.IsNullOrEmpty(_tenantPrefix)) {
-
-                if (path.StartsWith("~/")
-                    && !path.StartsWith("~/Modules", StringComparison.OrdinalIgnoreCase)
-                    && !path.StartsWith("~/Themes", StringComparison.OrdinalIgnoreCase)
-                    && !path.StartsWith("~/Media", StringComparison.OrdinalIgnoreCase)
-                    && !path.StartsWith("~/Core", StringComparison.OrdinalIgnoreCase)) {
-
-                    return base.Href("~/" + _tenantPrefix + path.Substring(String.IsNullOrWhiteSpace(_tenantPrefix) ? 2 : 1), pathParts);
-                }
+            if (!String.IsNullOrEmpty(_tenantPrefix)
+                && path.StartsWith("~/")  
+                && !WorkContext.Resolve<ShellSettings>().GlobalPathPrefixes.Any(gpp=>path.StartsWith(gpp, StringComparison.OrdinalIgnoreCase))
+            ) { 
+                    return base.Href("~/" + _tenantPrefix + path.Substring(2), pathParts);
             }
 
             return base.Href(path, pathParts);

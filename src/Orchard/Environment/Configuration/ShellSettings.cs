@@ -15,6 +15,15 @@ namespace Orchard.Environment.Configuration {
         private string[] _modules;
         private readonly IDictionary<string, string> _values;
 
+        public string[] _globalPathPrefixes = { };
+        public string[] GlobalPathPrefixes { get { return _globalPathPrefixes; } }
+        private static string[] defaultGlobalPrefixes = { "~/Media" }; 
+
+        public void updateGlobalPathPrefixes(IEnumerable<string> locations)
+        {
+            _globalPathPrefixes = defaultGlobalPrefixes.Concat(locations).ToArray();
+        }
+
         public ShellSettings() {
             _values = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             State = TenantState.Invalid;

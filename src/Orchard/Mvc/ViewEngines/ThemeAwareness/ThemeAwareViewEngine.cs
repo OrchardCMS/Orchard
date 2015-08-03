@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using Orchard.Environment.Configuration;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
@@ -105,6 +106,10 @@ namespace Orchard.Mvc.ViewEngines.ThemeAwareness {
 
                 var moduleParams = new CreateModulesViewEngineParams { VirtualPaths = moduleVirtualPaths, ModuleLocations = moduleLocations };
                 engines = engines.Concat(_viewEngineProviders.Select(vep => vep.CreateModulesViewEngine(moduleParams)));
+
+                //TBD: updating GlobalPathPrefixes should probably be placed in a better location in the code.
+                _workContext.Resolve<ShellSettings>().updateGlobalPathPrefixes(moduleLocations.Concat(new string[]{ theme.Location}));
+
 
                 return new ViewEngineCollectionWrapper(engines);
             });
