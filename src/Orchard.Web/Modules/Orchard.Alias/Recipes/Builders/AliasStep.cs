@@ -6,7 +6,7 @@ using Orchard.Recipes.Services;
 using Orchard.Alias.Records;
 using Orchard.Alias.Implementation.Holder;
 
-namespace Orchard.Roles.Recipes.Builders {
+namespace Orchard.Alias.Recipes.Builders {
     public class AliasStep : RecipeBuilderStep {
         private readonly IRepository<AliasRecord> _aliasRecordepository;
         private readonly IAliasHolder _aliasHolder;
