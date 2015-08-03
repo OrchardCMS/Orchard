@@ -17,7 +17,7 @@ namespace Orchard.Recipes.Providers.Executors {
         public ContentStep(
             IOrchardServices orchardServices,
             ITransactionManager transactionManager,
-            IWorkContextAccessor workContextAccessor) : base(workContextAccessor) {
+            RecipeExecutionLogger logger) : base(logger) {
 
             _orchardServices = orchardServices;
             _transactionManager = transactionManager;

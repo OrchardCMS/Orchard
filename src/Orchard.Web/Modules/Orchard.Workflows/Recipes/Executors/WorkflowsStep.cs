@@ -16,7 +16,7 @@ namespace Orchard.Workflows.Recipes.Executors {
             IRepository<WorkflowDefinitionRecord> workflowDefinitionRepository,
             IRepository<ActivityRecord> activityRepository,
             IRepository<TransitionRecord> transitionRepository,
-            IWorkContextAccessor workContextAccessor) : base(workContextAccessor) {
+            RecipeExecutionLogger logger) : base(logger) {
 
             _workflowDefinitionRepository = workflowDefinitionRepository;
             _activityRepository = activityRepository;

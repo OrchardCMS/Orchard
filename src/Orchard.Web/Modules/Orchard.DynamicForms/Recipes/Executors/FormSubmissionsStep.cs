@@ -11,8 +11,9 @@ namespace Orchard.DynamicForms.Recipes.Executors {
     public class FormSubmissionsStep : RecipeExecutionStep {
         private readonly IFormService _formService;
 
-        public FormSubmissionsStep(IFormService formService,
-            IWorkContextAccessor workContextAccessor) : base(workContextAccessor) {
+        public FormSubmissionsStep(
+            IFormService formService,
+            RecipeExecutionLogger logger) : base(logger) {
 
             _formService = formService;
         }

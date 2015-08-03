@@ -14,7 +14,8 @@ namespace Orchard.Recipes.Providers.Executors  {
         private readonly CommandParser _commandParser;
 
         public CommandStep(ICommandManager commandManager,
-            IWorkContextAccessor workContextAccessor) : base(workContextAccessor) {
+            RecipeExecutionLogger logger) : base(logger) {
+
             _commandManager = commandManager;
             _commandParser = new CommandParser();
         }

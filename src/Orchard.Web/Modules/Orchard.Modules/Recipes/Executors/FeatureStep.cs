@@ -10,7 +10,10 @@ namespace Orchard.Modules.Recipes.Executors {
     public class FeatureStep : RecipeExecutionStep {
         private readonly IFeatureManager _featureManager;
 
-        public FeatureStep(IFeatureManager featureManager, IWorkContextAccessor workContextAccessor) : base(workContextAccessor) {
+        public FeatureStep(
+            IFeatureManager featureManager,
+            RecipeExecutionLogger logger) : base(logger) {
+
             _featureManager = featureManager;
         }
 

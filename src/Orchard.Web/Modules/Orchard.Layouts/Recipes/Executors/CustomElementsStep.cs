@@ -12,7 +12,7 @@ namespace Orchard.Layouts.Recipes.Executors {
 
         public CustomElementsStep(
             IRepository<ElementBlueprint> repository,
-            IWorkContextAccessor workContextAccessor) : base(workContextAccessor) {
+            RecipeExecutionLogger logger) : base(logger) {
 
             _repository = repository;
         }

@@ -12,7 +12,7 @@ namespace Orchard.Recipes.Providers.Executors {
 
         public MigrationStep(
             IDataMigrationManager dataMigrationManager,
-            IWorkContextAccessor workContextAccessor) : base(workContextAccessor) {
+            RecipeExecutionLogger logger) : base(logger) {
 
             _dataMigrationManager = dataMigrationManager;
         }

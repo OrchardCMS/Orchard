@@ -20,7 +20,7 @@ namespace Orchard.Recipes.Providers.Executors {
             IRecipeStepQueue recipeStepQueue, 
             IRepository<RecipeStepResultRecord> recipeStepResultRecordRepository, 
             ISessionLocator sessionLocator,
-            IWorkContextAccessor workContextAccessor) : base(workContextAccessor) {
+            RecipeExecutionLogger logger) : base(logger) {
 
             _recipeHarvester = recipeHarvester;
             _recipeStepQueue = recipeStepQueue;

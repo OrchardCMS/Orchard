@@ -14,7 +14,6 @@ namespace Orchard.Tests.Modules.Recipes.RecipeHandlers {
         [SetUp]
         public void Init() {
             var builder = new ContainerBuilder();
-            builder.RegisterType<StubWorkContextAccessor>().As<IWorkContextAccessor>();
             builder.RegisterType<RecipeExecutionLogger>().AsSelf();
             builder.RegisterType<StubRecipeExecutionStep>().As<IRecipeExecutionStep>().AsSelf().SingleInstance();
             builder.RegisterType<RecipeExecutionStepHandler>().SingleInstance();
@@ -41,7 +40,8 @@ namespace Orchard.Tests.Modules.Recipes.RecipeHandlers {
 
     public class StubRecipeExecutionStep : RecipeExecutionStep {
 
-        public StubRecipeExecutionStep(IWorkContextAccessor workContextAccessor) : base(workContextAccessor) {
+        public StubRecipeExecutionStep(
+            RecipeExecutionLogger logger) : base(logger) {
         }
 
         public override string Name {

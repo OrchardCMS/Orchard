@@ -19,7 +19,8 @@ namespace Orchard.AuditTrail.Recipes.Executors {
         public AuditTrailStep(
             IRepository<AuditTrailEventRecord> auditTrailEventRepository,
             IAuthorizer authorizer,
-            IWorkContextAccessor wca) : base(wca) {
+            IWorkContextAccessor wca,
+            RecipeExecutionLogger logger) : base(logger) {
 
             _auditTrailEventRepository = auditTrailEventRepository;
             _authorizer = authorizer;

@@ -24,7 +24,7 @@ namespace Orchard.Themes.Recipes.Executors {
             IExtensionManager extensionManager,
             IThemeService themeService,
             ISiteThemeService siteThemeService,
-            IWorkContextAccessor workContextAccessor) : base(workContextAccessor) {
+            RecipeExecutionLogger logger) : base(logger) {
 
             _packagingSourceManager = packagingSourceManager;
             _packageManager = packageManager;

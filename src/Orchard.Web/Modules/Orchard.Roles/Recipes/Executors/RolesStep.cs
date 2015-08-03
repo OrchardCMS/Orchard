@@ -11,7 +11,7 @@ namespace Orchard.Roles.Recipes.Executors {
 
         public RolesStep(
             IRoleService roleService,
-            IWorkContextAccessor workContextAccessor) : base(workContextAccessor) {
+            RecipeExecutionLogger logger) : base(logger) {
 
             _roleService = roleService;
         }

@@ -12,7 +12,9 @@ namespace Orchard.Themes.Recipes.Executors {
             get { return "CurrentTheme"; }
         }
 
-        public CurrentThemeStep(ISiteThemeService siteThemeService, IWorkContextAccessor workContextAccessor) : base(workContextAccessor) {
+        public CurrentThemeStep(
+            ISiteThemeService siteThemeService,
+            RecipeExecutionLogger logger) : base(logger) {
             _siteThemeService = siteThemeService;
         }
 

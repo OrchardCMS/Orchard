@@ -54,7 +54,6 @@ namespace Orchard.Tests.Modules.Recipes.RecipeHandlers {
             _packagesInRepository = new StubPackagingSourceManager();
             _packageManager = new StubPackageManager();
             builder.RegisterInstance(_folders).As<IExtensionFolders>();
-            builder.RegisterType<StubWorkContextAccessor>().As<IWorkContextAccessor>();
             builder.RegisterType<RecipeExecutionLogger>().AsSelf();
             builder.RegisterType<ExtensionManager>().As<IExtensionManager>();
             builder.RegisterType<FeatureManager>().As<IFeatureManager>();

@@ -24,7 +24,7 @@ namespace Orchard.Recipes.Providers.Executors {
             IContentDefinitionManager contentDefinitionManager, 
             IContentDefinitionReader contentDefinitionReader, 
             IContentDefinitionEventHandler contentDefinitonEventHandlers,
-            IWorkContextAccessor workContextAccessor) : base(workContextAccessor) {
+            RecipeExecutionLogger logger) : base(logger) {
 
             _contentDefinitionManager = contentDefinitionManager;
             _contentDefinitionReader = contentDefinitionReader;

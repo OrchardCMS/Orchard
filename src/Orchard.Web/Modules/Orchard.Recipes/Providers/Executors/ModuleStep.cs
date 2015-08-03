@@ -19,7 +19,7 @@ namespace Orchard.Recipes.Providers.Executors {
             IPackagingSourceManager packagingSourceManager, 
             IPackageManager packageManager, 
             IExtensionManager extensionManager,
-            IWorkContextAccessor workContextAccessor) : base(workContextAccessor) {
+            RecipeExecutionLogger logger) : base(logger) {
 
             _packagingSourceManager = packagingSourceManager;
             _packageManager = packageManager;

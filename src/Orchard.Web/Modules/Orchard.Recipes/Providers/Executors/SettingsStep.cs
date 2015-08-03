@@ -18,7 +18,7 @@ namespace Orchard.Recipes.Providers.Executors {
             ISiteService siteService,
             IContentManager contentManager,
             Lazy<IEnumerable<IContentHandler>> handlers,
-            IWorkContextAccessor workContextAccessor) : base(workContextAccessor) {
+            RecipeExecutionLogger logger) : base(logger) {
 
             _siteService = siteService;
             _contentManager = contentManager;

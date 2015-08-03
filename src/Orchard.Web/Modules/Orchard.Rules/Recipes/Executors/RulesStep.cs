@@ -12,7 +12,7 @@ namespace Orchard.Rules.Recipes.Executors {
 
         public RulesStep(
             IRulesServices rulesServices,
-            IWorkContextAccessor workContextAccessor) : base(workContextAccessor) {
+            RecipeExecutionLogger logger) : base(logger) {
 
             _rulesServices = rulesServices;
         }

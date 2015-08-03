@@ -6,12 +6,10 @@ using Orchard.Recipes.Models;
 
 namespace Orchard.Recipes.Services {
     public abstract class RecipeExecutionStep : IDependency, IRecipeExecutionStep {
-        private readonly IWorkContextAccessor _workContextAccessor;
         private readonly RecipeExecutionLogger _logger;
 
-        public RecipeExecutionStep(IWorkContextAccessor workContextAccessor) {
-            _workContextAccessor = workContextAccessor;
-            _logger = _workContextAccessor.GetContext().Resolve<RecipeExecutionLogger>();
+        public RecipeExecutionStep(RecipeExecutionLogger logger) {
+            _logger = logger;
             _logger.ComponentType = GetType();
             T = NullLocalizer.Instance;
         }
