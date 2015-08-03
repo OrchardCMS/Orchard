@@ -41,7 +41,7 @@
         <select id="filterResults" name="@Html.NameOf(m => m.Options.Filter)">
             @Html.SelectOption(Model.Options.Filter, AliasFilter.All, T("All").ToString())
             @Html.SelectOption(Model.Options.Filter, AliasFilter.Managed, T("Managed").ToString())
-            @Html.SelectOption(Model.Options.Filter, AliasFilter.Custom, T("Custom").ToString())
+            @Html.SelectOption(Model.Options.Filter, AliasFilter.Unmanaged, T("Unmanaged").ToString())
         </select>
         <input type="hidden" name="Page" value="1" />
         <label for="pageSize">@T("Show:")</label>
@@ -60,7 +60,7 @@
                     <th scope="col" class="checkbox"><input type="checkbox" class="check-all" /></th>
                     <th scope="col">@T("Alias")</th>
                     <th scope="col">@T("Route")</th>
-                    <th scope="col">@T("IsManaged")</th>
+                    <th scope="col">@T("Managed")</th>
                     <th scope="col">&nbsp;</th>
                 </tr>
             </thead>
@@ -77,7 +77,9 @@
                 <tr>
                     <td>
                         <input type="hidden" value="@alias.Path" name="@Html.FieldNameFor(m => Model.AliasEntries[index].Alias.Path)" />
-                        <input type="checkbox" value="true" name="@Html.FieldNameFor(m => Model.AliasEntries[index].IsChecked)" />
+                        @if (!alias.IsManaged) {
+                            <input type="checkbox" value="true" name="@Html.FieldNameFor(m => Model.AliasEntries[index].IsChecked)" />
+                        }
                     </td>
                     <td>
                         @Html.Link(alias.Path == String.Empty ? "/" : alias.Path, Href("~/" + urlPrefix + alias.Path))

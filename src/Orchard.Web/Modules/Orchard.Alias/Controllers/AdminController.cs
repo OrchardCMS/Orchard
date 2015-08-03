@@ -59,7 +59,7 @@ namespace Orchard.Alias.Controllers {
                 case AliasFilter.Managed:
                     aliases = aliases.Where(x => x.IsManaged);
                     break;
-                case AliasFilter.Custom:
+                case AliasFilter.Unmanaged:
                     aliases = aliases.Where(x => !x.IsManaged);
                     break;
                 case AliasFilter.All:

@@ -28,7 +28,7 @@ namespace Orchard.Alias.ViewModels {
     public enum AliasFilter {
         All,
         Managed,
-        Custom
+        Unmanaged
     }
 
     public enum AliasBulkAction {
