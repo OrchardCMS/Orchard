@@ -156,10 +156,7 @@ namespace Orchard.ImportExport.Providers.ImportActions {
         }
 
         private string Setup(XDocument recipeDocument) {
-            // Delete the tenant tables.
-            DropTenantDatabaseTables();
-
-            // Setup.
+            // Prepare Setup.
             var setupContext = new SetupContext {
                 RecipeDocument = recipeDocument,
                 AdminPassword = SuperUserPassword,
@@ -170,7 +167,11 @@ namespace Orchard.ImportExport.Providers.ImportActions {
                 SiteName = _orchardServices.WorkContext.CurrentSite.SiteName,
                 EnabledFeatures = Enumerable.Empty<string>()
             };
-            
+
+            // Delete the tenant tables.
+            DropTenantDatabaseTables();
+
+            // Execute Setup.
             return _setupService.Setup(setupContext);
         }
 
