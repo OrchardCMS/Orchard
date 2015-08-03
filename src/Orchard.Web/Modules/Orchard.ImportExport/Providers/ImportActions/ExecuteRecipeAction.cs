@@ -168,7 +168,7 @@ namespace Orchard.ImportExport.Providers.ImportActions {
                 DatabaseProvider = _shellSettings.DataProvider,
                 DatabaseTablePrefix = _shellSettings.DataTablePrefix,
                 SiteName = _orchardServices.WorkContext.CurrentSite.SiteName,
-                EnabledFeatures = _featureManager.GetEnabledFeatures().Select(x => x.Id).ToArray()
+                EnabledFeatures = Enumerable.Empty<string>()
             };
             
             return _setupService.Setup(setupContext);
