@@ -39,18 +39,17 @@ namespace Orchard.Blogs.Routing {
 
                 //IDictionary<string, string> routeValues;
                 AliasInfo aliasInfo;
-                if (!_aliasHolder.GetMap("Orchard.Blogs").TryGetAlias(path, out aliasInfo))
-                {
+                if (!_aliasHolder.GetMap("Orchard.Blogs").TryGetAlias(path, out aliasInfo)) {
                     return false;
                 }
 
-                var isBlog = 
+                var isBlog =
                     //routeValues.ContainsKey("area") &&
                     //routeValues["area"] == "Orchard.Blogs" &&
                     aliasInfo.RouteValues.ContainsKey("controller") &&
                     aliasInfo.RouteValues["controller"] == "Blog" &&
                     aliasInfo.RouteValues.ContainsKey("action") &&
-                    aliasInfo.RouteValues["action"] == "Item" 
+                    aliasInfo.RouteValues["action"] == "Item"
                     ;
 
                 return isBlog;
@@ -86,7 +85,7 @@ namespace Orchard.Blogs.Routing {
                 }
 
                 // archive for blog as homepage ?
-                if(path.StartsWith("archive/", StringComparison.OrdinalIgnoreCase)) {
+                if (path.StartsWith("archive/", StringComparison.OrdinalIgnoreCase)) {
                     return String.Empty;
                 }
 

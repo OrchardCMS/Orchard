@@ -8,12 +8,12 @@ using System.Collections.Concurrent;
 
 namespace Orchard.Alias.Implementation.Map {
     public class AliasMap {
-        private readonly string _area;        
+        private readonly string _area;
         private readonly ConcurrentDictionary<string, AliasInfo> _aliases;
-        private readonly Node _root;        
+        private readonly Node _root;
 
         public AliasMap(string area) {
-            _area = area;            
+            _area = area;
             _aliases = new ConcurrentDictionary<string, AliasInfo>(StringComparer.OrdinalIgnoreCase);
             _root = new Node();
         }
@@ -21,9 +21,8 @@ namespace Orchard.Alias.Implementation.Map {
         public IEnumerable<AliasInfo> GetAliases() {
             return _aliases.Select(x => new AliasInfo { Area = _area, Path = x.Key, RouteValues = x.Value.RouteValues, IsManaged = x.Value.IsManaged });
         }
- 
-        public bool TryGetAlias(string virtualPath, out AliasInfo aliasInfo)
-        {
+
+        public bool TryGetAlias(string virtualPath, out AliasInfo aliasInfo) {
             return _aliases.TryGetValue(virtualPath, out aliasInfo);
         }
 
@@ -36,7 +35,7 @@ namespace Orchard.Alias.Implementation.Map {
         /// </summary>
         /// <param name="info">The <see cref="AliasInfo"/> intance to add</param>
         public void Insert(AliasInfo info) {
-            if(info == null) {
+            if (info == null) {
                 throw new ArgumentNullException();
             }
             _aliases[info.Path] = info;
@@ -73,18 +72,18 @@ namespace Orchard.Alias.Implementation.Map {
                 }
                 // Set the path at the end of the tree
                 object takenPath;
-                focus.Paths.TryRemove(path,out takenPath);
+                focus.Paths.TryRemove(path, out takenPath);
             }
         }
 
         private static void ExpandTree(Node root, string path, IDictionary<string, string> routeValues) {
-            foreach(var expanded in Expand(routeValues)) {
+            foreach (var expanded in Expand(routeValues)) {
                 var focus = root;
                 foreach (var routeValue in expanded.OrderBy(kv => kv.Key, StringComparer.InvariantCultureIgnoreCase)) {
                     // See if we already have a stem for this route key (i.e. "controller") and create if not
-                    var stem = focus.Stems.GetOrAdd(routeValue.Key,key=>new ConcurrentDictionary<string, Node>(StringComparer.InvariantCultureIgnoreCase));
+                    var stem = focus.Stems.GetOrAdd(routeValue.Key, key => new ConcurrentDictionary<string, Node>(StringComparer.InvariantCultureIgnoreCase));
                     // See if the stem has a node for this value (i.e. "Item") and create if not
-                    var node = stem.GetOrAdd(routeValue.Value, key=>new Node());
+                    var node = stem.GetOrAdd(routeValue.Value, key => new Node());
                     // Keep switching to new node until we reach deepest match
                     // TODO: (PH) Thread safety: at this point something could techincally traverse and find an empty node with a blank path ... not fatal
                     // since it will simply not match and therefore return a default-looking route instead of the aliased one. And the changes of that route
@@ -111,16 +110,16 @@ namespace Orchard.Alias.Implementation.Map {
 
             // For each key/value pair, we want a list containing a single list with either the term, or the term and the "default" value
             var termSets = ordered.Select(term => {
-                                              if (term.Key.EndsWith("-")) {
-                                                  var termKey = term.Key.Substring(0, term.Key.Length - 1);
-                                                  return new[] {
+                if (term.Key.EndsWith("-")) {
+                    var termKey = term.Key.Substring(0, term.Key.Length - 1);
+                    return new[] {
                                                       // This entry will auto-match in some cases because it was omitted from the route values
                                                       new [] { new KeyValuePair<string, string>(termKey, "\u0000") },
                                                       new [] { new KeyValuePair<string, string>(termKey, term.Value) }
                                                   };
-                                              }
-                                              return new[] {new[] {term}};
-                                          });
+                }
+                return new[] { new[] { term } };
+            });
 
             // Run each of those lists through an aggregation function, by taking the product of each set, so producting a tree of possibilities
             var produced = termSets.Aggregate(new[] { empty }.AsEnumerable(), (coords, termSet) => Product(coords, termSet, (coord, term) => coord.Concat(term)));
@@ -191,7 +190,7 @@ namespace Orchard.Alias.Implementation.Map {
             }
 
             public ConcurrentDictionary<string, ConcurrentDictionary<string, Node>> Stems { get; set; }
-            public ConcurrentDictionary<string,object> Paths { get; set; }
+            public ConcurrentDictionary<string, object> Paths { get; set; }
         }
 
     }

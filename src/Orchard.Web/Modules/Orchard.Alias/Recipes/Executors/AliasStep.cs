@@ -12,8 +12,7 @@ namespace Orchard.Alias.Recipes.Executors {
     public class AliasStep : RecipeExecutionStep {
         private readonly IAliasService _aliasService;
 
-        public AliasStep(IAliasService aliasService)        
-        {
+        public AliasStep(IAliasService aliasService) {
             _aliasService = aliasService;
         }
 
@@ -31,7 +30,7 @@ namespace Orchard.Alias.Recipes.Executors {
         </RouteValues>
         </Alias>
         */
-        public override void Execute(RecipeExecutionContext context) {           
+        public override void Execute(RecipeExecutionContext context) {
 
             foreach (var aliasElement in context.RecipeStep.Step.Elements()) {
                 var aliasPath = aliasElement.Attribute("Path").Value;
@@ -42,24 +41,22 @@ namespace Orchard.Alias.Recipes.Executors {
 
                 var routeValuesElement = aliasElement.Descendants("RouteValues").FirstOrDefault();
 
-                if (routeValuesElement != null)
-                {
-                    foreach (var routeValue in routeValuesElement.Descendants("Add"))
-                    {
+                if (routeValuesElement != null) {
+                    foreach (var routeValue in routeValuesElement.Descendants("Add")) {
                         rvd.Add(routeValue.Attribute("Key").Value, routeValue.Attribute("Value").Value);
                     }
                 }
-                                
+
                 try {
-                        _aliasService.Set(aliasPath, rvd, "Custom", false);                
-                    }
-                
+                    _aliasService.Set(aliasPath, rvd, "Custom", false);
+                }
+
                 catch (Exception ex) {
                     Logger.Error(ex, "Error while processing alias '{0}'.", aliasPath);
                     throw;
-                }    
+                }
             }
         }
 
-      }
+    }
 }

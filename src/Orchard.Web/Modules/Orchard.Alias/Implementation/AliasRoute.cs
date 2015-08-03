@@ -32,8 +32,7 @@ namespace Orchard.Alias.Implementation {
             //IDictionary<string, string> routeValues;
             AliasInfo aliasInfo;
             // TODO: Might as well have the lookup in AliasHolder...
-            if (_aliasMap.TryGetAlias(virtualPath, out aliasInfo))
-            {
+            if (_aliasMap.TryGetAlias(virtualPath, out aliasInfo)) {
                 // Construct RouteData from the route values
                 var data = new RouteData(this, _routeHandler);
                 foreach (var routeValue in aliasInfo.RouteValues) {

@@ -44,13 +44,13 @@ namespace Orchard.Alias.Implementation.Updater {
     }
 
     public class AliasUpdaterEvent : IOrchardShellEvents {
-        
+
         private readonly IAliasHolderUpdater _aliasHolderUpdater;
 
         public AliasUpdaterEvent(IAliasHolderUpdater aliasHolderUpdater) {
             _aliasHolderUpdater = aliasHolderUpdater;
         }
-        
+
         void IOrchardShellEvents.Activated() {
             _aliasHolderUpdater.Refresh();
         }

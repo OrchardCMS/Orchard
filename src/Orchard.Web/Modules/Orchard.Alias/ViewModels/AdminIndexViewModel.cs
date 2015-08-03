@@ -11,8 +11,9 @@ namespace Orchard.Alias.ViewModels {
 
     public class AliasEntry {
         public AliasInfo Alias { get; set; }
-        public bool IsChecked { get; set; }        
+        public bool IsChecked { get; set; }
     }
+
     public class AdminIndexOptions {
         public string Search { get; set; }
         public AliasOrder Order { get; set; }

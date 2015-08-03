@@ -110,12 +110,11 @@ namespace Orchard.Alias.Implementation.Storage {
                 // Bulk updates might go wrong if we don't flush.
                 _aliasRepository.Flush();
                 var dict = ToDictionary(aliasRecord);
-                _aliasHolder.RemoveAlias(new AliasInfo() { Path = dict.Item1, Area = dict.Item2, RouteValues = dict.Item3, IsManaged = dict.Item6});
+                _aliasHolder.RemoveAlias(new AliasInfo() { Path = dict.Item1, Area = dict.Item2, RouteValues = dict.Item3, IsManaged = dict.Item6 });
             }
         }
 
-        public IEnumerable<Tuple<string, string, IDictionary<string, string>, string, int, bool>> List()
-        {
+        public IEnumerable<Tuple<string, string, IDictionary<string, string>, string, int, bool>> List() {
             return List((Expression<Func<AliasRecord, bool>>)null);
         }
 
@@ -129,13 +128,11 @@ namespace Orchard.Alias.Implementation.Storage {
             return table.OrderBy(a => a.Id).Select(ToDictionary).ToList();
         }
 
-        public IEnumerable<Tuple<string, string, IDictionary<string, string>, string, int, bool>> List(string sourceStartsWith)
-        {
+        public IEnumerable<Tuple<string, string, IDictionary<string, string>, string, int, bool>> List(string sourceStartsWith) {
             return List(a => a.Source.StartsWith(sourceStartsWith));
         }
 
-        private static Tuple<string, string, IDictionary<string, string>, string, int, bool> ToDictionary(AliasRecord aliasRecord)
-        {
+        private static Tuple<string, string, IDictionary<string, string>, string, int, bool> ToDictionary(AliasRecord aliasRecord) {
             IDictionary<string, string> routeValues = new Dictionary<string, string>();
             if (aliasRecord.Action.Area != null) {
                 routeValues.Add("area", aliasRecord.Action.Area);
