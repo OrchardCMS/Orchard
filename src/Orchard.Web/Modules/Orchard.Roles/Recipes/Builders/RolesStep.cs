@@ -22,7 +22,7 @@ namespace Orchard.Roles.Recipes.Builders {
         }
 
         public override LocalizedString Description {
-            get { return T("Exports the user roles."); }
+            get { return T("Exports user roles."); }
         }
 
         public override void Build(BuildContext context) {

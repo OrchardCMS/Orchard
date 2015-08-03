@@ -21,11 +21,11 @@ namespace Orchard.Alias.Recipes.Builders {
         }
 
         public override LocalizedString DisplayName {
-            get { return T("Alias"); }
+            get { return T("Aliases"); }
         }
 
         public override LocalizedString Description {
-            get { return T("Exports the aliases."); }
+            get { return T("Exports unmanaged aliases."); }
         }
 
         public override void Build(BuildContext context) {
