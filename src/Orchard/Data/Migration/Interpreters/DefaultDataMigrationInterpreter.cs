@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Text;
 using NHibernate.Dialect;
 using NHibernate.SqlTypes;
-using Orchard.ContentManagement.Records;
 using Orchard.Data.Migration.Schema;
 using Orchard.Environment.Configuration;
 using Orchard.Localization;
@@ -24,11 +24,12 @@ namespace Orchard.Data.Migration.Interpreters {
 
         public DefaultDataMigrationInterpreter(
             ShellSettings shellSettings,
-            ITransactionManager ITransactionManager,
+            ITransactionManager transactionManager,
             IEnumerable<ICommandInterpreter> commandInterpreters,
             ISessionFactoryHolder sessionFactoryHolder) {
+
             _shellSettings = shellSettings;
-            _transactionManager = ITransactionManager;
+            _transactionManager = transactionManager;
             _commandInterpreters = commandInterpreters;
             _sqlStatements = new List<string>();
 
@@ -327,7 +328,7 @@ namespace Orchard.Data.Migration.Interpreters {
 
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities", Justification = "Nothing comes from user input.")]
+        [SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities", Justification = "Nothing comes from user input.")]
         private void RunPendingStatements() {
 
             var session = _transactionManager.GetSession();
