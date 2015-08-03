@@ -23,6 +23,7 @@ namespace Orchard.ImportExport.Providers.ImportActions {
         private readonly IEnumerable<IRecipeExecutionStep> _recipeExecutionSteps;
         private readonly IRecipeParser _recipeParser;
         private readonly IRecipeExecutor _recipeExecutor;
+        private readonly IDatabaseManager _databaseManager;
 
         public ExecuteRecipeAction(
             IOrchardServices orchardServices,
@@ -31,7 +32,8 @@ namespace Orchard.ImportExport.Providers.ImportActions {
             IFeatureManager featureManager,
             IEnumerable<IRecipeExecutionStep> recipeExecutionSteps, 
             IRecipeParser recipeParser, 
-            IRecipeExecutor recipeExecutor) {
+            IRecipeExecutor recipeExecutor, 
+            IDatabaseManager databaseManager) {
 
             _orchardServices = orchardServices;
             _setupService = setupService;
@@ -40,6 +42,7 @@ namespace Orchard.ImportExport.Providers.ImportActions {
             _recipeExecutionSteps = recipeExecutionSteps;
             _recipeParser = recipeParser;
             _recipeExecutor = recipeExecutor;
+            _databaseManager = databaseManager;
         }
 
         public override string Name { get { return "ExecuteRecipe"; } }
@@ -153,8 +156,11 @@ namespace Orchard.ImportExport.Providers.ImportActions {
         }
 
         private string Setup(XDocument recipeDocument) {
+            // Delete the tenant tables.
+            DropTenantDatabaseTables();
+
+            // Setup.
             var setupContext = new SetupContext {
-                DropExistingTables = true,
                 RecipeDocument = recipeDocument,
                 AdminPassword = SuperUserPassword,
                 AdminUsername = _orchardServices.WorkContext.CurrentSite.SuperUser,
@@ -164,6 +170,7 @@ namespace Orchard.ImportExport.Providers.ImportActions {
                 SiteName = _orchardServices.WorkContext.CurrentSite.SiteName,
                 EnabledFeatures = _featureManager.GetEnabledFeatures().Select(x => x.Id).ToArray()
             };
+            
             return _setupService.Setup(setupContext);
         }
 
@@ -183,6 +190,11 @@ namespace Orchard.ImportExport.Providers.ImportActions {
                 var context = new UpdateRecipeExecutionStepContext { Step = step.StepElement };
                 step.Step.UpdateStep(context);
             }
+        }
+
+        private void DropTenantDatabaseTables() {
+            _databaseManager.DropTenantDatabaseTables();
+            _orchardServices.TransactionManager.RequireNew();
         }
     }
 }

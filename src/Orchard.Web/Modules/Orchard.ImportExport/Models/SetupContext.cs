@@ -11,6 +11,5 @@ namespace Orchard.ImportExport.Models {
         public string DatabaseTablePrefix { get; set; }
         public IEnumerable<string> EnabledFeatures { get; set; }
         public XDocument RecipeDocument { get; set; }
-        public bool DropExistingTables { get; set; }
     }
 }

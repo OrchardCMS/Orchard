@@ -13,19 +13,19 @@ namespace Orchard.Recipes.Providers.Executors {
         private readonly IRecipeHarvester _recipeHarvester;
         private readonly IRecipeStepQueue _recipeStepQueue;
         private readonly IRepository<RecipeStepResultRecord> _recipeStepResultRecordRepository;
-        private readonly ISessionLocator _sessionLocator;
+        private readonly ITransactionManager _transactionManager;
 
         public RecipesStep(
             IRecipeHarvester recipeHarvester, 
             IRecipeStepQueue recipeStepQueue, 
             IRepository<RecipeStepResultRecord> recipeStepResultRecordRepository, 
-            ISessionLocator sessionLocator,
+            ITransactionManager transactionManager,
             RecipeExecutionLogger logger) : base(logger) {
 
             _recipeHarvester = recipeHarvester;
             _recipeStepQueue = recipeStepQueue;
             _recipeStepResultRecordRepository = recipeStepResultRecordRepository;
-            _sessionLocator = sessionLocator;
+            _transactionManager = transactionManager;
         }
 
         public override string Name { get { return "Recipes"; } }
@@ -38,7 +38,7 @@ namespace Orchard.Recipes.Providers.Executors {
         public override void Execute(RecipeExecutionContext context) {
             var recipeElements = context.RecipeStep.Step.Elements();
             var recipesDictionary = new Dictionary<string, IDictionary<string, Recipe>>();
-            var session = _sessionLocator.For(typeof(RecipeStepResultRecord));
+            var session = _transactionManager.GetSession();
 
             foreach (var recipeElement in recipeElements) {
                 var extensionId = recipeElement.Attr("ExtensionId");
