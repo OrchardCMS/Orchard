@@ -10,12 +10,11 @@ namespace Orchard.Modules.Recipes.Executors {
     public class FeatureStep : RecipeExecutionStep {
         private readonly IFeatureManager _featureManager;
 
-        public FeatureStep(IFeatureManager featureManager) {
+        public FeatureStep(IFeatureManager featureManager, IWorkContextAccessor workContextAccessor) : base(workContextAccessor) {
             _featureManager = featureManager;
         }
 
-        public override string Name
-        {
+        public override string Name {
             get { return "Feature"; }
         }
 

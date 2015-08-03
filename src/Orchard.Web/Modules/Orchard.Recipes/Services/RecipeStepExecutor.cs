@@ -28,12 +28,12 @@ namespace Orchard.Recipes.Services {
         public bool ExecuteNextStep(string executionId) {
             var nextRecipeStep = _recipeStepQueue.Dequeue(executionId);
             if (nextRecipeStep == null) {
-                Logger.Information("Recipe execution completed.");
+                Logger.Information("No more recipe steps left to execute.");
                 _recipeExecuteEventHandler.ExecutionComplete(executionId);
                 return false;
             }
 
-            Logger.Information("Running all recipe handlers for step '{0}'.", nextRecipeStep.Name);
+            Logger.Information("Executing recipe step '{0}'.", nextRecipeStep.Name);
 
             var recipeContext = new RecipeContext { RecipeStep = nextRecipeStep, Executed = false, ExecutionId = executionId };
 

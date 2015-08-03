@@ -14,7 +14,11 @@ namespace Orchard.Recipes.Providers.Executors {
         private readonly IOrchardServices _orchardServices;
         private readonly ITransactionManager _transactionManager;
 
-        public ContentStep(IOrchardServices orchardServices, ITransactionManager transactionManager) {
+        public ContentStep(
+            IOrchardServices orchardServices,
+            ITransactionManager transactionManager,
+            IWorkContextAccessor workContextAccessor) : base(workContextAccessor) {
+
             _orchardServices = orchardServices;
             _transactionManager = transactionManager;
             BatchSize = 64;
@@ -79,6 +83,7 @@ namespace Orchard.Recipes.Providers.Executors {
 
             // Determine if the import is to be batched in multiple transactions.
             var startIndex = 0;
+            var itemIndex = 0;
             var batchSize = GetBatchSizeForDataStep(context.RecipeStep.Step);
             Logger.Debug("Using batch size {0}.", batchSize);
 
@@ -96,7 +101,7 @@ namespace Orchard.Recipes.Providers.Executors {
                         if (elementDictionary[nextIdentity.ToString()].HasAttributes) {
                             itemId = elementDictionary[nextIdentity.ToString()].FirstAttribute.Value;
                         }
-                        Logger.Information("Importing data item '{0}'.", itemId);
+                        Logger.Information("Importing data item '{0}' (item {1}/{2}).", itemId, itemIndex + 1, elementDictionary.Count);
                         try {
                             _orchardServices.ContentManager.Import(
                                 elementDictionary[nextIdentity.ToString()],
@@ -106,6 +111,7 @@ namespace Orchard.Recipes.Providers.Executors {
                             Logger.Error(ex, "Error while importing data item '{0}'.", itemId);
                             throw;
                         }
+                        itemIndex++;
                         nextIdentity = importContentSession.GetNextInBatch();
                     }
 

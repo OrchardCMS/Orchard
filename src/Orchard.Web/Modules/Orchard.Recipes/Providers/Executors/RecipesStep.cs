@@ -19,7 +19,8 @@ namespace Orchard.Recipes.Providers.Executors {
             IRecipeHarvester recipeHarvester, 
             IRecipeStepQueue recipeStepQueue, 
             IRepository<RecipeStepResultRecord> recipeStepResultRecordRepository, 
-            ISessionLocator sessionLocator) {
+            ISessionLocator sessionLocator,
+            IWorkContextAccessor workContextAccessor) : base(workContextAccessor) {
 
             _recipeHarvester = recipeHarvester;
             _recipeStepQueue = recipeStepQueue;
@@ -42,20 +43,23 @@ namespace Orchard.Recipes.Providers.Executors {
             foreach (var recipeElement in recipeElements) {
                 var extensionId = recipeElement.Attr("ExtensionId");
                 var recipeName = recipeElement.Attr("Name");
-                var recipes = recipesDictionary.ContainsKey(extensionId) ? recipesDictionary[extensionId] : default(IDictionary<string, Recipe>);
 
-                if (recipes == null) {
-                    recipes = recipesDictionary[extensionId] = HarvestRecipes(extensionId);
+                Logger.Information("Executing recipe '{0}' in extension '{1}'.", recipeName, extensionId);
+
+                try {
+                    var recipes = recipesDictionary.ContainsKey(extensionId) ? recipesDictionary[extensionId] : default(IDictionary<string, Recipe>);
+                    if (recipes == null)
+                        recipes = recipesDictionary[extensionId] = HarvestRecipes(extensionId);
+
+                    if (!recipes.ContainsKey(recipeName))
+                        throw new Exception(String.Format("No recipe named '{0}' was found in extension '{1}'.", recipeName, extensionId));
+
+                    EnqueueRecipe(session, context.ExecutionId, recipes[recipeName]);
                 }
-
-                var recipe = recipes.ContainsKey(recipeName) ? recipes[recipeName] : default(Recipe);
-
-                if (recipe == null) {
-                    Logger.Error(String.Format("No recipe named {0} was found for extension {1}", recipeName, extensionId));
-                    continue;
+                catch (Exception ex) {
+                    Logger.Error(ex, "Error while executing recipe '{0}' in extension '{1}'.", recipeName, extensionId);
+                    throw;
                 }
-
-                EnqueueRecipe(session, context.ExecutionId, recipe);
             }
         }
 

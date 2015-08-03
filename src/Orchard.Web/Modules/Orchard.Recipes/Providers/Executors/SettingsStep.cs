@@ -14,7 +14,12 @@ namespace Orchard.Recipes.Providers.Executors {
         private readonly IContentManager _contentManager;
         private readonly Lazy<IEnumerable<IContentHandler>> _handlers;
 
-        public SettingsStep(ISiteService siteService, IContentManager contentManager, Lazy<IEnumerable<IContentHandler>> handlers) {
+        public SettingsStep(
+            ISiteService siteService,
+            IContentManager contentManager,
+            Lazy<IEnumerable<IContentHandler>> handlers,
+            IWorkContextAccessor workContextAccessor) : base(workContextAccessor) {
+
             _siteService = siteService;
             _contentManager = contentManager;
             _handlers = handlers;

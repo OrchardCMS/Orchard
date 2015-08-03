@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Orchard.Data;
+using Orchard.Logging;
 using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
 using Orchard.Workflows.Models;
@@ -14,7 +15,8 @@ namespace Orchard.Workflows.Recipes.Executors {
         public WorkflowsStep(
             IRepository<WorkflowDefinitionRecord> workflowDefinitionRepository,
             IRepository<ActivityRecord> activityRepository,
-            IRepository<TransitionRecord> transitionRepository) {
+            IRepository<TransitionRecord> transitionRepository,
+            IWorkContextAccessor workContextAccessor) : base(workContextAccessor) {
 
             _workflowDefinitionRepository = workflowDefinitionRepository;
             _activityRepository = activityRepository;
@@ -27,39 +29,51 @@ namespace Orchard.Workflows.Recipes.Executors {
 
         public override void Execute(RecipeExecutionContext context) {
             foreach (var workflowDefinitionElement in context.RecipeStep.Step.Elements()) {
-                var workflowDefinition = GetOrCreateWorkflowDefinition(workflowDefinitionElement.Attribute("Name").Value);
-                var activitiesElement = workflowDefinitionElement.Element("Activities");
-                var transitionsElement = workflowDefinitionElement.Element("Transitions");
-                var activitiesDictionary = new Dictionary<int, ActivityRecord>();
+                var workflowName = workflowDefinitionElement.Attribute("Name").Value;
+                Logger.Information("Importing workflow '{0}'.", workflowName);
 
-                workflowDefinition.Enabled = Boolean.Parse(workflowDefinitionElement.Attribute("Enabled").Value);
+                try {
+                    var workflowDefinition = GetOrCreateWorkflowDefinition(workflowName);
+                    var activitiesElement = workflowDefinitionElement.Element("Activities");
+                    var transitionsElement = workflowDefinitionElement.Element("Transitions");
+                    var activitiesDictionary = new Dictionary<int, ActivityRecord>();
 
-                foreach (var activityElement in activitiesElement.Elements()) {
-                    var localId = Int32.Parse(activityElement.Attribute("Id").Value);
-                    var activity = new ActivityRecord {
-                        Name = activityElement.Attribute("Name").Value,
-                        Start = Boolean.Parse(activityElement.Attribute("Start").Value),
-                        X = Int32.Parse(activityElement.Attribute("X").Value),
-                        Y = Int32.Parse(activityElement.Attribute("Y").Value),
-                        State = activityElement.Element("State").Value
-                    };
+                    workflowDefinition.Enabled = Boolean.Parse(workflowDefinitionElement.Attribute("Enabled").Value);
 
-                    activitiesDictionary.Add(localId, activity);
-                    workflowDefinition.ActivityRecords.Add(activity);
+                    foreach (var activityElement in activitiesElement.Elements()) {
+                        var localId = Int32.Parse(activityElement.Attribute("Id").Value);
+                        var activityName = activityElement.Attribute("Name").Value;
+                        Logger.Information("Importing activity '{0}' with ID '{1}'.", activityName, localId);
+                        var activity = new ActivityRecord {
+                            Name = activityName,
+                            Start = Boolean.Parse(activityElement.Attribute("Start").Value),
+                            X = Int32.Parse(activityElement.Attribute("X").Value),
+                            Y = Int32.Parse(activityElement.Attribute("Y").Value),
+                            State = activityElement.Element("State").Value
+                        };
+
+                        activitiesDictionary.Add(localId, activity);
+                        workflowDefinition.ActivityRecords.Add(activity);
+                    }
+
+                    foreach (var transitionElement in transitionsElement.Elements()) {
+                        var sourceActivityId = Int32.Parse(transitionElement.Attribute("SourceActivityId").Value);
+                        var sourceEndpoint = transitionElement.Attribute("SourceEndpoint").Value;
+                        var destinationActivityId = Int32.Parse(transitionElement.Attribute("DestinationActivityId").Value);
+                        var destinationEndpoint = transitionElement.Attribute("DestinationEndpoint").Value;
+                        Logger.Information("Importing transition between activities '{0}' and '{1}'.", sourceActivityId, destinationActivityId);
+
+                        workflowDefinition.TransitionRecords.Add(new TransitionRecord {
+                            SourceActivityRecord = activitiesDictionary[sourceActivityId],
+                            SourceEndpoint = sourceEndpoint,
+                            DestinationActivityRecord = activitiesDictionary[destinationActivityId],
+                            DestinationEndpoint = destinationEndpoint
+                        });
+                    }
                 }
-
-                foreach (var transitionElement in transitionsElement.Elements()) {
-                    var sourceActivityId = Int32.Parse(transitionElement.Attribute("SourceActivityId").Value);
-                    var sourceEndpoint = transitionElement.Attribute("SourceEndpoint").Value;
-                    var destinationActivityId = Int32.Parse(transitionElement.Attribute("DestinationActivityId").Value);
-                    var destinationEndpoint = transitionElement.Attribute("DestinationEndpoint").Value;
-
-                    workflowDefinition.TransitionRecords.Add(new TransitionRecord {
-                        SourceActivityRecord = activitiesDictionary[sourceActivityId],
-                        SourceEndpoint = sourceEndpoint,
-                        DestinationActivityRecord = activitiesDictionary[destinationActivityId],
-                        DestinationEndpoint = destinationEndpoint
-                    });
+                catch (Exception ex) {
+                    Logger.Error(ex, "Error while importing workflow '{0}'.", workflowName);
+                    throw;
                 }
             }
         }

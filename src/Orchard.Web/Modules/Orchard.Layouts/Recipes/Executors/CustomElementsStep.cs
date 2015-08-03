@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Orchard.Data;
 using Orchard.Layouts.Models;
+using Orchard.Logging;
 using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
 
@@ -8,7 +10,10 @@ namespace Orchard.Layouts.Recipes.Executors {
     public class CustomElementsStep : RecipeExecutionStep {
         private readonly IRepository<ElementBlueprint> _repository;
 
-        public CustomElementsStep(IRepository<ElementBlueprint> repository) {
+        public CustomElementsStep(
+            IRepository<ElementBlueprint> repository,
+            IWorkContextAccessor workContextAccessor) : base(workContextAccessor) {
+
             _repository = repository;
         }
 
@@ -23,13 +28,20 @@ namespace Orchard.Layouts.Recipes.Executors {
         public override void Execute(RecipeExecutionContext context) {
             foreach (var elementElement in context.RecipeStep.Step.Elements()) {
                 var typeName = elementElement.Attribute("ElementTypeName").Value;
-                var element = GetOrCreateElement(typeName);
+                Logger.Information("Importing custom element '{0}'.", typeName);
 
-                element.BaseElementTypeName = elementElement.Attribute("BaseElementTypeName").Value;
-                element.ElementDisplayName = elementElement.Attribute("ElementDisplayName").Value;
-                element.ElementDescription = elementElement.Attribute("ElementDescription").Value;
-                element.ElementCategory = elementElement.Attribute("ElementCategory").Value;
-                element.BaseElementState = elementElement.Element("BaseElementState").Value;
+                try {
+                    var element = GetOrCreateElement(typeName);
+                    element.BaseElementTypeName = elementElement.Attribute("BaseElementTypeName").Value;
+                    element.ElementDisplayName = elementElement.Attribute("ElementDisplayName").Value;
+                    element.ElementDescription = elementElement.Attribute("ElementDescription").Value;
+                    element.ElementCategory = elementElement.Attribute("ElementCategory").Value;
+                    element.BaseElementState = elementElement.Element("BaseElementState").Value;
+                }
+                catch (Exception ex) {
+                    Logger.Error(ex, "Error while importing custom element '{0}'.", typeName);
+                    throw;
+                }
             }
         }
 
