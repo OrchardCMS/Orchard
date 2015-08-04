@@ -12,7 +12,9 @@ namespace Orchard.Alias.Recipes.Executors {
     public class AliasStep : RecipeExecutionStep {
         private readonly IAliasService _aliasService;
 
-        public AliasStep(IAliasService aliasService) {
+        public AliasStep(
+            IAliasService aliasService,
+            RecipeExecutionLogger logger) : base(logger) {
             _aliasService = aliasService;
         }
 
