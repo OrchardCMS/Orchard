@@ -4,14 +4,15 @@ using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using Orchard.ContentManagement;
+using Orchard.Data;
 using Orchard.Environment.Configuration;
-using Orchard.Environment.Features;
 using Orchard.ImportExport.Models;
 using Orchard.ImportExport.Services;
 using Orchard.ImportExport.ViewModels;
 using Orchard.Mvc;
 using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
+using Orchard.Tasks;
 using Orchard.UI.Notify;
 
 namespace Orchard.ImportExport.Providers.ImportActions {
@@ -19,31 +20,37 @@ namespace Orchard.ImportExport.Providers.ImportActions {
         private readonly IOrchardServices _orchardServices;
         private readonly ISetupService _setupService;
         private readonly ShellSettings _shellSettings;
-        private readonly IFeatureManager _featureManager;
         private readonly IEnumerable<IRecipeExecutionStep> _recipeExecutionSteps;
         private readonly IRecipeParser _recipeParser;
         private readonly IRecipeExecutor _recipeExecutor;
         private readonly IDatabaseManager _databaseManager;
+        private readonly ISweepGenerator _sweepGenerator;
+        private readonly IRecipeStepQueue _recipeStepQueue;
+        private readonly IRepository<RecipeStepResultRecord> _recipeStepResultRepository;
 
         public ExecuteRecipeAction(
             IOrchardServices orchardServices,
             ISetupService setupService,
             ShellSettings shellSettings,
-            IFeatureManager featureManager,
             IEnumerable<IRecipeExecutionStep> recipeExecutionSteps, 
             IRecipeParser recipeParser, 
             IRecipeExecutor recipeExecutor, 
-            IDatabaseManager databaseManager) {
+            IDatabaseManager databaseManager, 
+            ISweepGenerator sweepGenerator, 
+            IRecipeStepQueue recipeStepQueue, 
+            IRepository<RecipeStepResultRecord> recipeStepResultRepository) {
 
             _orchardServices = orchardServices;
             _setupService = setupService;
             _shellSettings = shellSettings;
-            _featureManager = featureManager;
             _recipeExecutionSteps = recipeExecutionSteps;
             _recipeParser = recipeParser;
             _recipeExecutor = recipeExecutor;
             _databaseManager = databaseManager;
-        }
+            _sweepGenerator = sweepGenerator;
+            _recipeStepQueue = recipeStepQueue;
+            _recipeStepResultRepository = recipeStepResultRepository;
+            }
 
         public override string Name { get { return "ExecuteRecipe"; } }
 
@@ -144,12 +151,28 @@ namespace Orchard.ImportExport.Providers.ImportActions {
             // Sets the request timeout to 10 minutes to give enough time to execute custom recipes.
             _orchardServices.WorkContext.HttpContext.Server.ScriptTimeout = 600;
 
+            // Suspend background task execution.
+            _sweepGenerator.Terminate();
+
+            // Import or setup using the specified recipe.
             var executionId = ResetSite ? Setup(recipeDocument) : ExecuteRecipe(recipeDocument);
 
             if(executionId == null) {
                 _orchardServices.Notifier.Warning(T("The recipe contained no steps. No work was scheduled."));
+                _sweepGenerator.Activate();
                 return;
             }
+
+            // Resume background tasks once import/setup completes.
+            var recipe = _recipeParser.ParseRecipe(recipeDocument);
+            var activateSweepGeneratorStep = new RecipeStep(Guid.NewGuid().ToString("N"), recipe.Name, "ActivateSweepGenerator", new XElement("ActivateSweepGenerator"));
+            _recipeStepQueue.Enqueue(executionId, activateSweepGeneratorStep);
+            _recipeStepResultRepository.Create(new RecipeStepResultRecord {
+                ExecutionId = executionId,
+                RecipeName = recipe.Name,
+                StepId = activateSweepGeneratorStep.Id,
+                StepName = activateSweepGeneratorStep.Name
+            });
 
             context.ExecutionId = executionId;
             context.RecipeDocument = recipeDocument;
@@ -172,7 +195,9 @@ namespace Orchard.ImportExport.Providers.ImportActions {
             DropTenantDatabaseTables();
 
             // Execute Setup.
-            return _setupService.Setup(setupContext);
+            var executionId = _setupService.Setup(setupContext);
+
+            return executionId;
         }
 
         private string ExecuteRecipe(XDocument recipeDocument) {

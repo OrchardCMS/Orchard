@@ -91,6 +91,7 @@
     <Compile Include="Providers\Builders\ContentStep.cs" />
     <Compile Include="Providers\Builders\RecipeMetadataStep.cs" />
     <Compile Include="Providers\Builders\SettingsStep.cs" />
+    <Compile Include="Providers\Executors\ActivateSweepGeneratorStep.cs" />
     <Compile Include="Providers\Executors\CommandStep.cs" />
     <Compile Include="Providers\Executors\RecipesStep.cs" />
     <Compile Include="ViewModels\ContentExecutionStepViewModel.cs" />
