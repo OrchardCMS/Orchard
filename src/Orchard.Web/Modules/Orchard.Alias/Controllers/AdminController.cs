@@ -35,7 +35,7 @@ namespace Orchard.Alias.Controllers {
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
-        public ActionResult Index(AdminIndexOptions options, PagerParameters pagerParameters) {
+        public ActionResult IndexUnmanaged(AdminIndexOptions options, PagerParameters pagerParameters) {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage aliases")))
                 return new HttpUnauthorizedResult();
 
@@ -46,7 +46,7 @@ namespace Orchard.Alias.Controllers {
                 options = new AdminIndexOptions();
 
 
-            var aliases = _aliasHolder.GetMaps().SelectMany(x => x.GetAliases());
+            var aliases = _aliasHolder.GetMaps().SelectMany(x => x.GetAliases()).Where(x => !x.IsManaged);
 
             if (!String.IsNullOrWhiteSpace(options.Search)) {
                 var invariantSearch = options.Search.ToLowerInvariant();
@@ -54,19 +54,6 @@ namespace Orchard.Alias.Controllers {
             }
 
             aliases = aliases.ToList();
-
-            switch (options.Filter) {
-                case AliasFilter.Managed:
-                    aliases = aliases.Where(x => x.IsManaged);
-                    break;
-                case AliasFilter.Unmanaged:
-                    aliases = aliases.Where(x => !x.IsManaged);
-                    break;
-                case AliasFilter.All:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
             var pagerShape = Services.New.Pager(pager).TotalItemCount(aliases.Count());
 
             switch (options.Order) {
@@ -82,7 +69,7 @@ namespace Orchard.Alias.Controllers {
             var model = new AdminIndexViewModel {
                 Options = options,
                 Pager = pagerShape,
-                AliasEntries = aliases.Select(x => new AliasEntry() { Alias = x, IsChecked = false }).OrderBy(x => x.Alias.IsManaged).ToList()
+                AliasEntries = aliases.Select(x => new AliasEntry() { Alias = x, IsChecked = false }).ToList()
             };
 
             return View(model);
@@ -90,7 +77,7 @@ namespace Orchard.Alias.Controllers {
 
         [HttpPost]
         [FormValueRequired("submit.BulkEdit")]
-        public ActionResult Index(FormCollection input) {
+        public ActionResult IndexUnmanaged(FormCollection input) {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage aliases")))
                 return new HttpUnauthorizedResult();
 
@@ -111,7 +98,48 @@ namespace Orchard.Alias.Controllers {
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            return RedirectToAction("Index");
+            return RedirectToAction("IndexUnmanaged");
+        }
+
+        public ActionResult IndexManaged(AdminIndexOptions options, PagerParameters pagerParameters) {
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage aliases")))
+                return new HttpUnauthorizedResult();
+
+            var pager = new Pager(Services.WorkContext.CurrentSite, pagerParameters);
+
+            // default options
+            if (options == null)
+                options = new AdminIndexOptions();
+
+
+            var aliases = _aliasHolder.GetMaps().SelectMany(x => x.GetAliases()).Where(x => x.IsManaged);
+
+            if (!String.IsNullOrWhiteSpace(options.Search)) {
+                var invariantSearch = options.Search.ToLowerInvariant();
+                aliases = aliases.Where(x => x.Path.ToLowerInvariant().Contains(invariantSearch));
+            }
+
+            aliases = aliases.ToList();
+
+            var pagerShape = Services.New.Pager(pager).TotalItemCount(aliases.Count());
+
+            switch (options.Order) {
+                case AliasOrder.Path:
+                    aliases = aliases.OrderBy(x => x.Path);
+                    break;
+            }
+
+            if (pager.PageSize != 0) {
+                aliases = aliases.Skip(pager.GetStartIndex()).Take(pager.PageSize);
+            }
+
+            var model = new AdminIndexViewModel {
+                Options = options,
+                Pager = pagerShape,
+                AliasEntries = aliases.Select(x => new AliasEntry() { Alias = x, IsChecked = false }).ToList()
+            };
+
+            return View(model);
         }
 
         public ActionResult Add() {
@@ -160,7 +188,7 @@ namespace Orchard.Alias.Controllers {
 
             Services.Notifier.Information(T("Alias {0} created", aliasPath));
 
-            return RedirectToAction("Index");
+            return RedirectToAction("IndexUnmanaged");
         }
 
         public ActionResult Edit(string path) {
@@ -230,7 +258,7 @@ namespace Orchard.Alias.Controllers {
 
             Services.Notifier.Information(T("Alias {0} updated", path));
 
-            return RedirectToAction("Index");
+            return RedirectToAction("IndexUnmanaged");
         }
 
         [HttpPost]
@@ -246,7 +274,7 @@ namespace Orchard.Alias.Controllers {
 
             Services.Notifier.Information(T("Alias {0} deleted", path));
 
-            return this.RedirectLocal(returnUrl, Url.Action("Index"));
+            return this.RedirectLocal(returnUrl, Url.Action("IndexUnmanaged"));
         }
 
         private string GetExistingPathForAlias(string aliasPath) {
