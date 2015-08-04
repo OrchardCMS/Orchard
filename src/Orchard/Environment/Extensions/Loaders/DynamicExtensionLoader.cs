@@ -13,7 +13,8 @@ using Orchard.Utility.Extensions;
 
 namespace Orchard.Environment.Extensions.Loaders {
     public class DynamicExtensionLoader : ExtensionLoaderBase {
-        public static readonly string[] ExtensionsVirtualPathPrefixes = { "~/Modules/", "~/Themes/" };
+        //public static readonly string[] ExtensionsVirtualPathPrefixes = { "~/Modules/", "~/Themes/" };
+        public static readonly string[] ExcludeExtensionsVirtualPathPrefixes = { "~/Core" };
 
         private readonly IBuildManager _buildManager;
         private readonly IVirtualPathProvider _virtualPathProvider;
@@ -209,8 +210,8 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         private void AddDependencies(string projectPath, HashSet<string> currentSet) {
-            // Skip files from locations other than "~/Modules" and "~/Themes"
-            if (string.IsNullOrEmpty(PrefixMatch(projectPath, ExtensionsVirtualPathPrefixes))) {
+            // Skip files from "~/Core/" locations 
+            if (!string.IsNullOrEmpty(PrefixMatch(projectPath, ExcludeExtensionsVirtualPathPrefixes))) {
                 return;
             }
 

@@ -99,9 +99,9 @@ namespace Orchard.Mvc.ViewEngines.ThemeAwareness {
                     .Distinct(StringComparer.OrdinalIgnoreCase)
                     .ToList();
 
-                var moduleVirtualPaths = enabledModules.Concat(enabledModules)
-                    .Select(fd => fd.Extension.Location + "/" + fd.Extension.Id)
-                    .Distinct(StringComparer.OrdinalIgnoreCase)
+                var moduleVirtualPaths = enabledModules
+                    .Select(fd => fd.Extension.VirtualPath)
+                    .Distinct(StringComparer.OrdinalIgnoreCase) // is Distinct guranty to keep order?
                     .ToList();
 
                 var moduleParams = new CreateModulesViewEngineParams { VirtualPaths = moduleVirtualPaths, ModuleLocations = moduleLocations };
