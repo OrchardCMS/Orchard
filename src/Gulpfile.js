@@ -13,7 +13,8 @@ var glob = require("glob"),
 	uglify = require("gulp-uglify"),
 	rename = require("gulp-rename"),
     concat = require("gulp-concat"),
-	header = require("gulp-header")
+	header = require("gulp-header"),
+    notify = require("gulp-notify")
 
 /*
 ** GULP TASKS
@@ -40,9 +41,9 @@ gulp.task("rebuild", function () {
 // Continuous watch (each asset group is built whenever one of its inputs changes).
 gulp.task("watch", function () {
     getAssetGroups().forEach(function (assetGroup) {
-        gulp.watch(assetGroup.inputPaths, function (event) {
+        gulp.watch(assetGroup.watchPaths != undefined ? assetGroup.watchPaths : assetGroup.inputPaths, function (event) {
             console.log("Asset file '" + event.path + "' was " + event.type + ", rebuilding output '" + assetGroup.outputPath + "'.");
-            var task = createAssetGroupTask(assetGroup);
+            var task = createAssetGroupTask(assetGroup, assetGroup.rebuildAlways);
         });
     });
 });
@@ -66,6 +67,11 @@ function getAssetGroups() {
 
 function resolveAssetGroupPaths(assetGroup, assetManifestPath) {
     assetGroup.basePath = path.dirname(assetManifestPath);
+    if (assetGroup.watch != undefined) {
+        assetGroup.watchPaths = assetGroup.watch.map(function (watchPath) {
+            return path.join(assetGroup.basePath, watchPath);
+        });
+    }
     assetGroup.inputPaths = assetGroup.inputs.map(function (inputPath) {
         return path.join(assetGroup.basePath, inputPath);
     });
@@ -95,6 +101,16 @@ function buildCssPipeline(assetGroup, doRebuild) {
             throw "Input file '" + inputPath + "' is not of a valid type for output file '" + assetGroup.outputPath + "'.";
     });
     var doConcat = path.basename(assetGroup.outputFileName, ".css") !== "@";
+
+    if (!doRebuild) {
+        console.log("CSS will only rebuild if less files specified in 'inputs' are newer.");
+    }
+    else {
+        console.log("Force Rebuild is enabled, rebuilding all input files.");
+    }
+
+    var includeSourcepaths = assetGroup.excludeSourceMaps != undefined ? !assetGroup.excludeSourceMaps : true;
+
     return gulp.src(assetGroup.inputPaths)
         .pipe(gulpif(!doRebuild,
             gulpif(doConcat,
@@ -104,7 +120,7 @@ function buildCssPipeline(assetGroup, doRebuild) {
                     ext: ".css"
                 }))))
         .pipe(plumber())
-        .pipe(sourcemaps.init())
+        .pipe(gulpif(includeSourcepaths,sourcemaps.init()))
         .pipe(gulpif("*.less", less()))
         .pipe(gulpif(doConcat, concat(assetGroup.outputFileName)))
         .pipe(autoprefixer({ browsers: ["last 2 versions"] }))
@@ -115,13 +131,15 @@ function buildCssPipeline(assetGroup, doRebuild) {
         //    "** Any changes made directly to this file will be overwritten next time the Gulp compilation runs.\n" +
         //    "** For more information, see the Readme.txt file in the Gulp solution folder.\n" +
         //    "*/\n\n"))
-        .pipe(sourcemaps.write())
+        .pipe(gulpif(includeSourcepaths,sourcemaps.write()))
         .pipe(gulp.dest(assetGroup.outputDir))
         .pipe(minify())
         .pipe(rename({
             suffix: ".min"
         }))
-        .pipe(gulp.dest(assetGroup.outputDir));
+        .pipe(gulp.dest(assetGroup.outputDir))
+        //.pipe(notify("Build process complete"));
+        .pipe(gulpif(doRebuild, notify("Rebuild complete"),notify("Build process complete")));
 }
 
 function buildJsPipeline(assetGroup, doRebuild) {
@@ -147,7 +165,7 @@ function buildJsPipeline(assetGroup, doRebuild) {
             noEmitOnError: true,
             sortOutput: true,
         }).js))
-		.pipe(gulpif(doConcat, concat(assetGroup.outputFileName)))
+	.pipe(gulpif(doConcat, concat(assetGroup.outputFileName)))
         // TODO: Start using below whenever gulp-header supports sourcemaps.
         //.pipe(header(
         //    "/*\n" +
@@ -157,9 +175,9 @@ function buildJsPipeline(assetGroup, doRebuild) {
         //    "*/\n\n"))
         .pipe(sourcemaps.write())
         .pipe(gulp.dest(assetGroup.outputDir))
-		.pipe(uglify())
-		.pipe(rename({
-		    suffix: ".min"
-		}))
-		.pipe(gulp.dest(assetGroup.outputDir));
+	.pipe(uglify())
+	.pipe(rename({
+		suffix: ".min"
+	}))
+	.pipe(gulp.dest(assetGroup.outputDir));
 }
