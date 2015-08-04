@@ -126,7 +126,6 @@ namespace Orchard.Alias.Implementation.Map {
             return produced;
         }
 
-
         private static Tuple<IDictionary<string, object>, string> Traverse(Node focus, RouteValueDictionary routeValues, string areaName) {
 
             // Initialize a match variable

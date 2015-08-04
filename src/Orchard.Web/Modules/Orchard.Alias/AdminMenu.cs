@@ -3,7 +3,6 @@ using Orchard.Localization;
 using Orchard.Security;
 using Orchard.UI.Navigation;
 
-
 namespace Orchard.Alias {
     [OrchardFeature("Orchard.Alias.UI")]
     public class AdminMenu : INavigationProvider {
