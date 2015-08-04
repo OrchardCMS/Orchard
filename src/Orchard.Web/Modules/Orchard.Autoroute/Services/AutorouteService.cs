@@ -96,7 +96,7 @@ namespace Orchard.Autoroute.Services {
 
         public void PublishAlias(AutoroutePart part) {
             var displayRouteValues = _contentManager.GetItemMetadata(part).DisplayRouteValues;
-            _aliasService.Replace(part.DisplayAlias, displayRouteValues, AliasSource);
+            _aliasService.Replace(part.DisplayAlias, displayRouteValues, AliasSource, true);
             _routeEvents.Routed(part, part.DisplayAlias);
         }
 
@@ -146,7 +146,8 @@ namespace Orchard.Autoroute.Services {
                 if (String.Equals(culture, _cultureManager.GetSiteCulture(), StringComparison.OrdinalIgnoreCase) && !String.IsNullOrWhiteSpace(patternIndex)) {
                     settings.DefaultPatterns.Add(new DefaultPattern { PatternIndex = patternIndex, Culture = culture });
                     return settings.Patterns.Where(x => x.Culture == null).ElementAt(Convert.ToInt32(settings.DefaultPatterns.Where(x => x.Culture == culture).FirstOrDefault().PatternIndex));
-                } else {
+                }
+                else {
                     settings.DefaultPatterns.Add(new DefaultPattern { PatternIndex = "0", Culture = culture });
                     return new RoutePattern { Name = "Title", Description = "my-title", Pattern = "{Content.Slug}", Culture = culture };
                 }
