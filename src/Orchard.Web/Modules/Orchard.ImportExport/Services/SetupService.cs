@@ -87,29 +87,11 @@ namespace Orchard.ImportExport.Services
 
             // Initialize database explicitly, and store shell descriptor.
             using (var bootstrapLifetimeScope = _shellContainerFactory.CreateContainer(shellSettings, shellBlueprint)) {
-
                 using (var environment = bootstrapLifetimeScope.CreateWorkContextScope()) {
-
-                    // Check if the database is already created (in case an exception occured in the second phase).
-                    var schemaBuilder = new SchemaBuilder(environment.Resolve<IDataMigrationInterpreter>());
-                    var installationPresent = true;
-                    try {
-                        var tablePrefix = String.IsNullOrEmpty(shellSettings.DataTablePrefix) ? "" : shellSettings.DataTablePrefix + "_";
-                        schemaBuilder.ExecuteSql("SELECT * FROM " + tablePrefix + "Settings_ShellDescriptorRecord");
-                    }
-                    catch {
-                        installationPresent = false;
-                    }
-
-                    if (installationPresent) {
-                        if (context.DropExistingTables) {
-                            DropTenantDatabaseTables(environment);
-                        }
-                    }
-
-                    // Make a workaround to avoid the Transaction issue for PostgreSQL.
+                    // Workaround to avoid a Transaction issue with PostgreSQL.
                     environment.Resolve<ITransactionManager>().RequireNew();
 
+                    var schemaBuilder = new SchemaBuilder(environment.Resolve<IDataMigrationInterpreter>());
                     schemaBuilder.CreateTable("Orchard_Framework_DataMigrationRecord", table => table
                         .Column<int>("Id", column => column.PrimaryKey().Identity())
                         .Column<string>("DataMigrationClass")
@@ -131,10 +113,7 @@ namespace Orchard.ImportExport.Services
             while ( _processingEngine.AreTasksPending() )
                 _processingEngine.ExecuteNextTask();
 
-            // Creating a standalone environment. 
-            // In theory this environment can be used to resolve any normal components by interface, and those
-            // components will exist entirely in isolation - no crossover between the safemode container currently in effect.
-
+            // Create a standalone environment.
             // Must mark state as Running - otherwise standalone environment is created "for setup".
             shellSettings.State = TenantState.Running;
             using (var environment = _orchardHost.CreateStandaloneEnvironment(shellSettings)) {
@@ -192,20 +171,6 @@ namespace Orchard.ImportExport.Services
             }
 
             return executionId;
-        }
-
-        private void DropTenantDatabaseTables(IWorkContextScope environment) {
-            var sessionFactoryHolder = environment.Resolve<ISessionFactoryHolder>();
-            var schemaBuilder = new SchemaBuilder(environment.Resolve<IDataMigrationInterpreter>());
-            var configuration = sessionFactoryHolder.GetConfiguration();
-            foreach (var mapping in configuration.ClassMappings) {
-                try {
-                    schemaBuilder.DropTable(mapping.Table.Name);
-                }
-                catch (Exception ex) {
-                    Logger.Warning(ex, "Failed to drop table '{0}'.", mapping.Table.Name);
-                }
-            }
         }
     }
 }

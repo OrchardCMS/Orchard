@@ -25,7 +25,6 @@ namespace Orchard.Azure.MediaServices.Services.Assets {
         private readonly IOrchardServices _orchardServices;
         private readonly IClock _clock;
         private readonly ITransactionManager _transactionManager;
-        private readonly ISessionLocator _sessionLocator;
         private readonly IContentManager _contentManager;
         private readonly IAssetManager _assetManager;
         private readonly ITempFileManager _fileManager;
@@ -35,7 +34,6 @@ namespace Orchard.Azure.MediaServices.Services.Assets {
             IOrchardServices orchardServices,
             IClock clock,
             ITransactionManager transactionManager,
-            ISessionLocator sessionLocator,
             IContentManager contentManager,
             IAssetManager assetManager,
             ITempFileManager fileManager,
@@ -44,7 +42,6 @@ namespace Orchard.Azure.MediaServices.Services.Assets {
             _orchardServices = orchardServices;
             _clock = clock;
             _transactionManager = transactionManager;
-            _sessionLocator = sessionLocator;
             _contentManager = contentManager;
             _assetManager = assetManager;
             _fileManager = fileManager;
@@ -172,7 +169,7 @@ namespace Orchard.Azure.MediaServices.Services.Assets {
 
                         // Check for cancellation (asset upload status was set to Canceled).
                         if (!cancellationTokenSource.IsCancellationRequested) {
-                            var session = _sessionLocator.For(typeof(AssetRecord));
+                            var session = _transactionManager.GetSession();
                             session.Refresh(progressAsset.Record, LockMode.None);
 
                             if (progressAsset.UploadState.Status == AssetUploadStatus.Canceled) {

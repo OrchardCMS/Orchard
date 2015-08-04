@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Xml;
 using System.Xml.Linq;
 using Orchard.FileSystems.AppData;
 using Orchard.ImportExport.Models;
@@ -50,8 +52,11 @@ namespace Orchard.ImportExport.Services {
             }
 
             var path = _appDataFolder.Combine(ExportsDirectory, exportFile);
-            var recipeText = recipeDocument.ToString(SaveOptions.None);
-            _appDataFolder.CreateFile(path, recipeText);
+            
+            using (var writer = new XmlTextWriter(_appDataFolder.CreateFile(path), Encoding.UTF8)) {
+                writer.Formatting = Formatting.Indented;
+                recipeDocument.WriteTo(writer);
+            }
 
             return _appDataFolder.MapPath(path);
         }

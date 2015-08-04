@@ -159,6 +159,7 @@
     <Compile Include="Packaging\Services\FileBasedProjectSystemTests.cs" />
     <Compile Include="Packaging\Services\FolderUpdaterTests.cs" />
     <Compile Include="Packaging\Services\PackageInstallerTests.cs" />
+    <Compile Include="Recipes\RecipeHandlers\RecipeParserTest.cs" />
     <Compile Include="Recipes\RecipeHandlers\RecipeExecutionStepHandlerTest.cs" />
     <Compile Include="Recipes\RecipeHandlers\ModuleStepTest.cs" />
     <Compile Include="Recipes\RecipeHandlers\ThemeStepTest.cs" />
@@ -335,6 +336,12 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Recipes\Services\FoldersData\Sample2\Module.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Recipes\Services\FoldersData\Sample2\Recipes\duplicate-steps.recipe.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

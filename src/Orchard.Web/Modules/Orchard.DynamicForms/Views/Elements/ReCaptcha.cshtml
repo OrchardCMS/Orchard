@@ -5,7 +5,7 @@
     var element = (ReCaptcha)Model.Element;
     var publicKey = (string)Model.PublicKey;
 }
-@if (!String.IsNullOrWhiteSpace(publicKey)) {
+@if (HasText(publicKey)) {
     @tagBuilder.StartElement
     <script src='https://www.google.com/recaptcha/api.js'></script>
 

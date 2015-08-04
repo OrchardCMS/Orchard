@@ -208,6 +208,7 @@
     <Compile Include="ContentManagement\Records\GammaRecord.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ContentManagement\TestTransactionManager.cs" />
     <Compile Include="ContentManagement\XmlHelperTests.cs" />
     <Compile Include="DatabaseEnabledTestsBase.cs" />
     <Compile Include="DataMigration\SchemaBuilderTests.cs" />

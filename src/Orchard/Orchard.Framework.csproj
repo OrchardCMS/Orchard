@@ -165,6 +165,7 @@
     <Compile Include="Recipes\Services\RecipeBuilder.cs" />
     <Compile Include="Recipes\Services\RecipeBuilderStep.cs" />
     <Compile Include="Recipes\Models\RecipeExecutionContext.cs" />
+    <Compile Include="Recipes\Services\RecipeExecutionLogger.cs" />
     <Compile Include="Recipes\Services\RecipeExecutionStep.cs" />
     <Compile Include="Recipes\Services\RecipeExecutor.cs" />
     <Compile Include="Recipes\Services\UpdateRecipeExecutionStepContext.cs" />

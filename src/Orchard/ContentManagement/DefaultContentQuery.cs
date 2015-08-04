@@ -15,7 +15,7 @@ using Orchard.Caching;
 
 namespace Orchard.ContentManagement {
     public class DefaultContentQuery : IContentQuery {
-        private readonly ISessionLocator _sessionLocator;
+        private readonly ITransactionManager _transactionManager;
         private ISession _session;
         private ICriteria _itemVersionCriteria;
         private VersionOptions _versionOptions;
@@ -25,11 +25,11 @@ namespace Orchard.ContentManagement {
 
         public DefaultContentQuery(
             IContentManager contentManager, 
-            ISessionLocator sessionLocator, 
+            ITransactionManager transactionManager, 
             ICacheManager cacheManager,
             ISignals signals,
             IRepository<ContentTypeRecord> contentTypeRepository) {
-            _sessionLocator = sessionLocator;
+            _transactionManager = transactionManager;
             ContentManager = contentManager;
             _cacheManager = cacheManager;
             _signals = signals;
@@ -40,7 +40,7 @@ namespace Orchard.ContentManagement {
 
         ISession BindSession() {
             if (_session == null)
-                _session = _sessionLocator.For(typeof(ContentItemVersionRecord));
+                _session = _transactionManager.GetSession();
             return _session;
         }
 

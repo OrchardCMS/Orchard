@@ -24,6 +24,7 @@ using Orchard.Packaging.Models;
 using Orchard.Packaging.Services;
 using Orchard.Recipes.Models;
 using Orchard.Recipes.Providers.Executors;
+using Orchard.Recipes.Services;
 using Orchard.Tests.Environment.Extensions;
 using Orchard.Tests.Environment.Features;
 using Orchard.Tests.Stubs;
@@ -53,6 +54,7 @@ namespace Orchard.Tests.Modules.Recipes.RecipeHandlers {
             _packagesInRepository = new StubPackagingSourceManager();
             _packageManager = new StubPackageManager();
             builder.RegisterInstance(_folders).As<IExtensionFolders>();
+            builder.RegisterType<RecipeExecutionLogger>().AsSelf();
             builder.RegisterType<ExtensionManager>().As<IExtensionManager>();
             builder.RegisterType<FeatureManager>().As<IFeatureManager>();
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
@@ -94,7 +96,7 @@ Features:
                 Enumerable.Empty<ShellParameter>());
 
             var moduleStep = _container.Resolve<ModuleStep>();
-            var recipeExecutionContext = new RecipeExecutionContext {RecipeStep = new RecipeStep { Name = "Module", Step = new XElement("SuperWiki") } };
+            var recipeExecutionContext = new RecipeExecutionContext {RecipeStep = new RecipeStep(id: "1", recipeName: "Test", name: "Module", step: new XElement("SuperWiki")) };
             recipeExecutionContext.RecipeStep.Step.Add(new XAttribute("packageId", "Orchard.Module.SuperWiki"));
             recipeExecutionContext.RecipeStep.Step.Add(new XAttribute("repository", "test"));
 
@@ -120,7 +122,7 @@ Features:
 ");
 
             var moduleStep = _container.Resolve<ModuleStep>();
-            var recipeContext = new RecipeContext { RecipeStep = new RecipeStep { Name = "Module", Step = new XElement("SuperWiki") } };
+            var recipeContext = new RecipeContext { RecipeStep = new RecipeStep(id: "1", recipeName: "Test", name: "Module", step: new XElement("SuperWiki")) };
             var recipeExecutionContext = new RecipeExecutionContext { RecipeStep = recipeContext.RecipeStep };
             recipeContext.RecipeStep.Step.Add(new XAttribute("repository", "test"));
 
@@ -145,7 +147,7 @@ Features:
             });
 
             var moduleStep = _container.Resolve<ModuleStep>();
-            var recipeExecutionContext = new RecipeExecutionContext { RecipeStep = new RecipeStep { Name = "Module", Step = new XElement("SuperWiki") } };
+            var recipeExecutionContext = new RecipeExecutionContext { RecipeStep = new RecipeStep(id: "1", recipeName: "Test", name: "Module", step: new XElement("SuperWiki")) };
 
             recipeExecutionContext.RecipeStep.Step.Add(new XAttribute("packageId", "Orchard.Module.SuperWiki"));
             recipeExecutionContext.RecipeStep.Step.Add(new XAttribute("repository", "test"));

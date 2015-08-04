@@ -15,7 +15,7 @@ namespace Orchard.Redis.OutputCache {
 
     [OrchardFeature("Orchard.Redis.OutputCache")]
     [OrchardSuppressDependency("Orchard.OutputCache.Services.DefaultCacheStorageProvider")]
-    public class RedisOutputCacheStorageProvider : Component, IOutputCacheStorageProvider {
+    public class RedisOutputCacheStorageProvider : IOutputCacheStorageProvider {
 
         private readonly ShellSettings _shellSettings;
         private readonly IRedisConnectionProvider _redisConnectionProvider;
@@ -23,18 +23,22 @@ namespace Orchard.Redis.OutputCache {
 
         public const string ConnectionStringKey = "Orchard.Redis.OutputCache";
         private readonly string _connectionString;
+        private readonly ConnectionMultiplexer _connectionMultiplexer;
 
         public RedisOutputCacheStorageProvider(ShellSettings shellSettings, IRedisConnectionProvider redisConnectionProvider) {
             _shellSettings = shellSettings;
             _redisConnectionProvider = redisConnectionProvider;
             _connectionString = _redisConnectionProvider.GetConnectionString(ConnectionStringKey);
+            _connectionMultiplexer = _redisConnectionProvider.GetConnection(_connectionString);
 
             Logger = NullLogger.Instance;
         }
 
+        public ILogger Logger { get; set; }
+
         public IDatabase Database {
             get {
-                return _redisConnectionProvider.GetConnection(_connectionString).GetDatabase();
+                return _connectionMultiplexer.GetDatabase();
             }
         }
 
@@ -97,9 +101,8 @@ namespace Orchard.Redis.OutputCache {
                 _keysCache = new HashSet<string>();
                 var prefix = GetLocalizedKey("");
 
-                var connection = _redisConnectionProvider.GetConnection(_connectionString);
-                foreach (var endPoint in connection.GetEndPoints()) {
-                    var server = connection.GetServer(endPoint);
+                foreach (var endPoint in _connectionMultiplexer.GetEndPoints()) {
+                    var server = _connectionMultiplexer.GetServer(endPoint);
                     foreach (var key in server.Keys(pattern: GetLocalizedKey("*"))) {
                         _keysCache.Add(key.ToString().Substring(prefix.Length));
                     }

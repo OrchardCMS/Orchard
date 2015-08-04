@@ -24,7 +24,10 @@ namespace Orchard.Recipes.Providers.Builders {
             _contentDefinitionManager = contentDefinitionManager;
             _orchardServices = orchardServices;
             _contentDefinitionWriter = contentDefinitionWriter;
+
             VersionHistoryOptions = VersionHistoryOptions.Published;
+            SchemaContentTypes = new List<string>();
+            DataContentTypes = new List<string>();
         }
 
         public override string Name {
@@ -32,7 +35,7 @@ namespace Orchard.Recipes.Providers.Builders {
         }
 
         public override LocalizedString DisplayName {
-            get { return T("Content and Content Definitions"); }
+            get { return T("Content and Content Definition"); }
         }
 
         public override LocalizedString Description {

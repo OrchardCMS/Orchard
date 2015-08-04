@@ -22,6 +22,7 @@ using Orchard.FileSystems.VirtualPath;
 using Orchard.Packaging.GalleryServer;
 using Orchard.Packaging.Services;
 using Orchard.Recipes.Models;
+using Orchard.Recipes.Services;
 using Orchard.Tests.DisplayManagement.Descriptors;
 using Orchard.Tests.Environment.Extensions;
 using Orchard.Tests.Environment.Features;
@@ -56,6 +57,7 @@ namespace Orchard.Tests.Modules.Recipes.RecipeHandlers {
             _packagesInRepository = new ModuleStepTest.StubPackagingSourceManager();
             _packageManager = new ModuleStepTest.StubPackageManager();
             builder.RegisterInstance(_folders).As<IExtensionFolders>();
+            builder.RegisterType<RecipeExecutionLogger>().AsSelf();
             builder.RegisterType<ExtensionManager>().As<IExtensionManager>();
             builder.RegisterType<FeatureManager>().As<IFeatureManager>();
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
@@ -100,7 +102,7 @@ Features:
                                                          Enumerable.Empty<ShellParameter>());
 
             var themeStep = _container.Resolve<ThemeStep>();
-            var recipeExecutionContext = new RecipeExecutionContext {RecipeStep = new RecipeStep { Name = "Theme", Step = new XElement("SuperWiki") } };
+            var recipeExecutionContext = new RecipeExecutionContext {RecipeStep = new RecipeStep (id: "1", recipeName: "Test", name: "Theme", step: new XElement("SuperWiki")) };
 
             recipeExecutionContext.RecipeStep.Step.Add(new XAttribute("packageId", "Orchard.Theme.SuperWiki"));
             recipeExecutionContext.RecipeStep.Step.Add(new XAttribute("repository", "test"));
@@ -135,7 +137,7 @@ Features:
 ");
 
             var themeStep = _container.Resolve<ThemeStep>();
-            var recipeExecutionContext = new RecipeExecutionContext { RecipeStep = new RecipeStep { Name = "Theme", Step = new XElement("SuperWiki") } };
+            var recipeExecutionContext = new RecipeExecutionContext { RecipeStep = new RecipeStep(id: "1", recipeName: "Test", name: "Theme", step: new XElement("SuperWiki")) };
 
             recipeExecutionContext.RecipeStep.Step.Add(new XAttribute("repository", "test"));
             Assert.Throws(typeof (InvalidOperationException), () => themeStep.Execute(recipeExecutionContext));
@@ -159,7 +161,7 @@ Features:
             });
 
             var themeStep = _container.Resolve<ThemeStep>();
-            var recipeExecutionContext = new RecipeExecutionContext { RecipeStep = new RecipeStep { Name = "Theme", Step = new XElement("SuperWiki") } };
+            var recipeExecutionContext = new RecipeExecutionContext { RecipeStep = new RecipeStep(id: "1", recipeName: "Test", name: "Theme", step: new XElement("SuperWiki")) };
 
             recipeExecutionContext.RecipeStep.Step.Add(new XAttribute("packageId", "Orchard.Theme.SuperWiki"));
             recipeExecutionContext.RecipeStep.Step.Add(new XAttribute("repository", "test"));

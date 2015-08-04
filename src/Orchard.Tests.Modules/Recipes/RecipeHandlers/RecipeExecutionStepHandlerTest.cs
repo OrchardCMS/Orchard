@@ -4,6 +4,7 @@ using NUnit.Framework;
 using Orchard.Recipes.Models;
 using Orchard.Recipes.Providers.RecipeHandlers;
 using Orchard.Recipes.Services;
+using Orchard.Tests.Stubs;
 
 namespace Orchard.Tests.Modules.Recipes.RecipeHandlers {
     [TestFixture]
@@ -13,6 +14,7 @@ namespace Orchard.Tests.Modules.Recipes.RecipeHandlers {
         [SetUp]
         public void Init() {
             var builder = new ContainerBuilder();
+            builder.RegisterType<RecipeExecutionLogger>().AsSelf();
             builder.RegisterType<StubRecipeExecutionStep>().As<IRecipeExecutionStep>().AsSelf().SingleInstance();
             builder.RegisterType<RecipeExecutionStepHandler>().SingleInstance();
 
@@ -25,7 +27,7 @@ namespace Orchard.Tests.Modules.Recipes.RecipeHandlers {
             var fakeRecipeStep = _container.Resolve<StubRecipeExecutionStep>();
 
             var context = new RecipeContext {
-                RecipeStep = new RecipeStep {  Name = "FakeRecipeStep", Step = new XElement("FakeRecipeStep")},
+                RecipeStep = new RecipeStep (id: "1", recipeName: "FakeRecipe",  name: "FakeRecipeStep", step: new XElement("FakeRecipeStep")),
                 ExecutionId = "12345"
             };
 
@@ -37,6 +39,11 @@ namespace Orchard.Tests.Modules.Recipes.RecipeHandlers {
     }
 
     public class StubRecipeExecutionStep : RecipeExecutionStep {
+
+        public StubRecipeExecutionStep(
+            RecipeExecutionLogger logger) : base(logger) {
+        }
+
         public override string Name {
             get { return "FakeRecipeStep"; }
         }

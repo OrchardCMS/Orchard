@@ -23,7 +23,8 @@ namespace Orchard.Recipes.Providers.Executors {
         public ContentDefinitionStep(
             IContentDefinitionManager contentDefinitionManager, 
             IContentDefinitionReader contentDefinitionReader, 
-            IContentDefinitionEventHandler contentDefinitonEventHandlers) {
+            IContentDefinitionEventHandler contentDefinitonEventHandlers,
+            RecipeExecutionLogger logger) : base(logger) {
 
             _contentDefinitionManager = contentDefinitionManager;
             _contentDefinitionReader = contentDefinitionReader;

@@ -172,6 +172,7 @@ profiling/
 src/Orchard.Web/Modules-temp/*
 src/Backup/*
 src/packages/*
+src/node_modules
 src/UpgradeLog.*
 *.itrace.csdef
 *.build.csdef
@@ -183,9 +184,6 @@ src/Orchard.Web/Orchard.Web.Publish.xml
 src/TestResults/*
 src/Orchard.Web/Properties/PublishProfiles
 src/Orchard.Azure/Orchard.Azure.CloudService/Staging/
-src/Orchard.Web/Modules/Orchard.Azure.MediaServices/node_modules
-src/Orchard.Web/Modules/Orchard.Layouts/node_modules
-src/Orchard.Web/Modules/Orchard.DynamicForms/node_modules
 
 #enable all /lib artifacts
 !lib/*/*.*
