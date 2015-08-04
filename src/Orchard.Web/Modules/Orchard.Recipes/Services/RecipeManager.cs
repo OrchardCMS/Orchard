@@ -27,8 +27,7 @@ namespace Orchard.Recipes.Services {
 
         public string Execute(Recipe recipe) {
             if (recipe == null) {
-                Logger.Information("Cannot execute a null recipe. No work has been scheduled.");
-                return null;
+                throw new ArgumentNullException("recipe");
             }
 
             if (!recipe.RecipeSteps.Any()) {

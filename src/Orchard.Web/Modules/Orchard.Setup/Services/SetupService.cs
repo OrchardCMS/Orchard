@@ -27,7 +27,7 @@ using Orchard.Utility.Extensions;
 
 namespace Orchard.Setup.Services
 {
-	public class SetupService : ISetupService {
+    public class SetupService : ISetupService {
         private readonly ShellSettings _shellSettings;
         private readonly IOrchardHost _orchardHost;
         private readonly IShellSettingsManager _shellSettingsManager;
@@ -217,7 +217,12 @@ namespace Orchard.Setup.Services
             cultureManager.AddCulture("en-US");
 
             var recipeManager = environment.Resolve<IRecipeManager>();
-            string executionId = recipeManager.Execute(Recipes().FirstOrDefault(r => r.Name.Equals(context.Recipe, StringComparison.OrdinalIgnoreCase)));
+            var recipe = Recipes().FirstOrDefault(r => r.Name.Equals(context.Recipe, StringComparison.OrdinalIgnoreCase));
+
+            if(recipe == null)
+                throw new OrchardException(T("The recipe '{0}' could not be found.", context.Recipe));
+
+            var executionId = recipeManager.Execute(recipe);
 
             // null check: temporary fix for running setup in command line
             if (HttpContext.Current != null) {
