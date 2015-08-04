@@ -610,6 +610,3 @@ namespace Orchard.Tests.ContentManagement {
         }
     }
 }
-
-
-

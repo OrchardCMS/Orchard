@@ -10,7 +10,10 @@ namespace Orchard.Recipes.Providers.Executors {
     public class MigrationStep : RecipeExecutionStep {
         private readonly IDataMigrationManager _dataMigrationManager;
 
-        public MigrationStep(IDataMigrationManager dataMigrationManager) {
+        public MigrationStep(
+            IDataMigrationManager dataMigrationManager,
+            RecipeExecutionLogger logger) : base(logger) {
+
             _dataMigrationManager = dataMigrationManager;
         }
 

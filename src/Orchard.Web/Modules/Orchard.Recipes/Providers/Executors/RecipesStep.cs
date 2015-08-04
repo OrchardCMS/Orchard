@@ -13,18 +13,19 @@ namespace Orchard.Recipes.Providers.Executors {
         private readonly IRecipeHarvester _recipeHarvester;
         private readonly IRecipeStepQueue _recipeStepQueue;
         private readonly IRepository<RecipeStepResultRecord> _recipeStepResultRecordRepository;
-        private readonly ISessionLocator _sessionLocator;
+        private readonly ITransactionManager _transactionManager;
 
         public RecipesStep(
             IRecipeHarvester recipeHarvester, 
             IRecipeStepQueue recipeStepQueue, 
             IRepository<RecipeStepResultRecord> recipeStepResultRecordRepository, 
-            ISessionLocator sessionLocator) {
+            ITransactionManager transactionManager,
+            RecipeExecutionLogger logger) : base(logger) {
 
             _recipeHarvester = recipeHarvester;
             _recipeStepQueue = recipeStepQueue;
             _recipeStepResultRecordRepository = recipeStepResultRecordRepository;
-            _sessionLocator = sessionLocator;
+            _transactionManager = transactionManager;
         }
 
         public override string Name { get { return "Recipes"; } }
@@ -37,25 +38,28 @@ namespace Orchard.Recipes.Providers.Executors {
         public override void Execute(RecipeExecutionContext context) {
             var recipeElements = context.RecipeStep.Step.Elements();
             var recipesDictionary = new Dictionary<string, IDictionary<string, Recipe>>();
-            var session = _sessionLocator.For(typeof(RecipeStepResultRecord));
+            var session = _transactionManager.GetSession();
 
             foreach (var recipeElement in recipeElements) {
                 var extensionId = recipeElement.Attr("ExtensionId");
                 var recipeName = recipeElement.Attr("Name");
-                var recipes = recipesDictionary.ContainsKey(extensionId) ? recipesDictionary[extensionId] : default(IDictionary<string, Recipe>);
 
-                if (recipes == null) {
-                    recipes = recipesDictionary[extensionId] = HarvestRecipes(extensionId);
+                Logger.Information("Executing recipe '{0}' in extension '{1}'.", recipeName, extensionId);
+
+                try {
+                    var recipes = recipesDictionary.ContainsKey(extensionId) ? recipesDictionary[extensionId] : default(IDictionary<string, Recipe>);
+                    if (recipes == null)
+                        recipes = recipesDictionary[extensionId] = HarvestRecipes(extensionId);
+
+                    if (!recipes.ContainsKey(recipeName))
+                        throw new Exception(String.Format("No recipe named '{0}' was found in extension '{1}'.", recipeName, extensionId));
+
+                    EnqueueRecipe(session, context.ExecutionId, recipes[recipeName]);
                 }
-
-                var recipe = recipes.ContainsKey(recipeName) ? recipes[recipeName] : default(Recipe);
-
-                if (recipe == null) {
-                    Logger.Error(String.Format("No recipe named {0} was found for extension {1}", recipeName, extensionId));
-                    continue;
+                catch (Exception ex) {
+                    Logger.Error(ex, "Error while executing recipe '{0}' in extension '{1}'.", recipeName, extensionId);
+                    throw;
                 }
-
-                EnqueueRecipe(session, context.ExecutionId, recipe);
             }
         }
 

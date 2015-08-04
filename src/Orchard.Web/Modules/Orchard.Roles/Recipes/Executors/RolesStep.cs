@@ -9,7 +9,10 @@ namespace Orchard.Roles.Recipes.Executors {
     public class RolesStep : RecipeExecutionStep {
         private readonly IRoleService _roleService;
 
-        public RolesStep(IRoleService roleService) {
+        public RolesStep(
+            IRoleService roleService,
+            RecipeExecutionLogger logger) : base(logger) {
+
             _roleService = roleService;
         }
 
@@ -23,7 +26,7 @@ namespace Orchard.Roles.Recipes.Executors {
             foreach (var roleElement in context.RecipeStep.Step.Elements()) {
                 var roleName = roleElement.Attribute("Name").Value;
 
-                Logger.Information("Processing role '{0}'.", roleName);
+                Logger.Information("Importing role '{0}'.", roleName);
 
                 try {
                     var role = _roleService.GetRoleByName(roleName);
@@ -40,7 +43,7 @@ namespace Orchard.Roles.Recipes.Executors {
                     _roleService.UpdateRole(role.Id, role.Name, permissionsValid.Union(role.RolesPermissions.Select(p => p.Permission.Name)));
                 }
                 catch (Exception ex) {
-                    Logger.Error(ex, "Error while processing role '{0}'.", roleName);
+                    Logger.Error(ex, "Error while importing role '{0}'.", roleName);
                     throw;
                 }
             }

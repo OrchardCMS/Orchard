@@ -1,10 +1,21 @@
 using System.Collections.Generic;
 using Orchard.ContentManagement;
 using Orchard.Localization;
+using Orchard.Logging;
 using Orchard.Recipes.Models;
 
 namespace Orchard.Recipes.Services {
-    public abstract class RecipeExecutionStep : Component, IRecipeExecutionStep {
+    public abstract class RecipeExecutionStep : IDependency, IRecipeExecutionStep {
+        private readonly RecipeExecutionLogger _logger;
+
+        public RecipeExecutionStep(RecipeExecutionLogger logger) {
+            _logger = logger;
+            _logger.ComponentType = GetType();
+            T = NullLocalizer.Instance;
+        }
+
+        public Localizer T { get; set; }
+
         public abstract string Name { get; }
 
         public virtual IEnumerable<string> Names {
@@ -21,6 +32,10 @@ namespace Orchard.Recipes.Services {
 
         protected virtual string Prefix {
             get { return GetType().Name; }
+        }
+
+        protected virtual ILogger Logger {
+            get { return _logger; }
         }
 
         public virtual dynamic BuildEditor(dynamic shapeFactory) {

@@ -23,7 +23,8 @@ namespace Orchard.Themes.Recipes.Executors {
             IPackageManager packageManager,
             IExtensionManager extensionManager,
             IThemeService themeService,
-            ISiteThemeService siteThemeService) {
+            ISiteThemeService siteThemeService,
+            RecipeExecutionLogger logger) : base(logger) {
 
             _packagingSourceManager = packagingSourceManager;
             _packageManager = packageManager;

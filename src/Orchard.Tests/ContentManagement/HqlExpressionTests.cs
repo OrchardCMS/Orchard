@@ -1039,6 +1039,3 @@ namespace Orchard.Tests.ContentManagement {
         }
     }
 }
-
-
-
