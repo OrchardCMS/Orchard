@@ -85,6 +85,10 @@ namespace Orchard.Utility.Extensions {
                 return true;
             }
 
+            if (url.StartsWith("../")) {
+                return true;
+            }
+
             // at this point, check for an fully qualified url
             try {
                 var uri = new Uri(url);
