@@ -29,7 +29,7 @@ namespace Orchard.Alias.Recipes.Builders {
         }
 
         public override void Build(BuildContext context) {
-            var aliases = _aliasHolder.GetMaps().SelectMany(m => m.GetAliases()).Where(m => m.IsManaged == false).ToList();
+            var aliases = _aliasHolder.GetMaps().SelectMany(m => m.GetAliases()).Where(m => m.IsManaged == false).OrderBy(m => m.Path).ToList();
 
             if (!aliases.Any())
                 return;
@@ -37,7 +37,7 @@ namespace Orchard.Alias.Recipes.Builders {
             var root = new XElement("Aliases");
             context.RecipeDocument.Element("Orchard").Add(root);
 
-            foreach (var alias in aliases.OrderBy(x => x.Path)) {
+            foreach (var alias in aliases) {
                 var aliasElement = new XElement("Alias", new XAttribute("Path", alias.Path));
 
                 var routeValuesElement = new XElement("RouteValues");

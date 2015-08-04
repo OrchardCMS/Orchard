@@ -53,7 +53,6 @@ namespace Orchard.Alias.Controllers {
                 aliases = aliases.Where(x => x.Path.ToLowerInvariant().Contains(invariantSearch));
             }
 
-            aliases = aliases.ToList();
             var pagerShape = Services.New.Pager(pager).TotalItemCount(aliases.Count());
 
             switch (options.Order) {
@@ -118,8 +117,6 @@ namespace Orchard.Alias.Controllers {
                 var invariantSearch = options.Search.ToLowerInvariant();
                 aliases = aliases.Where(x => x.Path.ToLowerInvariant().Contains(invariantSearch));
             }
-
-            aliases = aliases.ToList();
 
             var pagerShape = Services.New.Pager(pager).TotalItemCount(aliases.Count());
 
