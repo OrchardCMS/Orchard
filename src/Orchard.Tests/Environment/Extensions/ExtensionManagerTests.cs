@@ -36,6 +36,7 @@ namespace Orchard.Tests.Environment.Extensions {
         }
 
         public class StubFolders : IExtensionFolders {
+            public IEnumerable<string> Paths { get { return AvailableExtensions().Select(e => e.Location).Distinct(); } }
             private readonly string _extensionType;
 
             public StubFolders(string extensionType) {
