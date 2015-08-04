@@ -49,6 +49,5 @@ namespace Orchard.Alias.Recipes.Builders {
                 root.Add(aliasElement);
             }
         }
-
     }
 }

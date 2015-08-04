@@ -7,7 +7,6 @@ using Orchard.Logging;
 using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
 
-
 namespace Orchard.Alias.Recipes.Executors {
     public class AliasStep : RecipeExecutionStep {
         private readonly IAliasService _aliasService;
@@ -50,7 +49,6 @@ namespace Orchard.Alias.Recipes.Executors {
                         }
                     }
 
-
                     _aliasService.Set(aliasPath, rvd, "Custom", false);
                 }
 
@@ -60,6 +58,5 @@ namespace Orchard.Alias.Recipes.Executors {
                 }
             }
         }
-
     }
 }
