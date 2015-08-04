@@ -37,7 +37,6 @@ namespace Orchard.Blogs.Routing {
                     return false;
                 }
 
-                //IDictionary<string, string> routeValues;
                 AliasInfo aliasInfo;
                 if (!_aliasHolder.GetMap("Orchard.Blogs").TryGetAlias(path, out aliasInfo)) {
                     return false;
