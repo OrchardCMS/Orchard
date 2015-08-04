@@ -45,7 +45,6 @@ namespace Orchard.Alias.Controllers {
             if (options == null)
                 options = new AdminIndexOptions();
 
-
             var aliases = _aliasHolder.GetMaps().SelectMany(x => x.GetAliases()).Where(x => !x.IsManaged);
 
             if (!String.IsNullOrWhiteSpace(options.Search)) {
