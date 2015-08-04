@@ -37,19 +37,20 @@ namespace Orchard.Alias.Recipes.Executors {
             foreach (var aliasElement in context.RecipeStep.Step.Elements()) {
                 var aliasPath = aliasElement.Attribute("Path").Value;
 
-                Logger.Information("Processing alias '{0}'.", aliasPath);
-
-                var rvd = new RouteValueDictionary();
-
-                var routeValuesElement = aliasElement.Descendants("RouteValues").FirstOrDefault();
-
-                if (routeValuesElement != null) {
-                    foreach (var routeValue in routeValuesElement.Descendants("Add")) {
-                        rvd.Add(routeValue.Attribute("Key").Value, routeValue.Attribute("Value").Value);
-                    }
-                }
+                Logger.Information("Importing alias '{0}'.", aliasPath);
 
                 try {
+                    var rvd = new RouteValueDictionary();
+
+                    var routeValuesElement = aliasElement.Descendants("RouteValues").FirstOrDefault();
+
+                    if (routeValuesElement != null) {
+                        foreach (var routeValue in routeValuesElement.Descendants("Add")) {
+                            rvd.Add(routeValue.Attribute("Key").Value, routeValue.Attribute("Value").Value);
+                        }
+                    }
+
+
                     _aliasService.Set(aliasPath, rvd, "Custom", false);
                 }
 
