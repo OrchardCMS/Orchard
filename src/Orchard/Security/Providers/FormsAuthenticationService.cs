@@ -54,7 +54,7 @@ namespace Orchard.Security.Providers {
             var now = _clock.UtcNow.ToLocalTime();
 
             // The cookie user data is "{userName.Base64};{providerKey|providerValue};{providerKey|providerValue}....".
-            // The UserName is encoded to Base64 to prevent collisions with the ';' and '|' seprarators.
+            // The UserName is encoded to Base64 to prevent collisions with the ';' and '|' seprarators (which do not exist in the Base 64 alphabet).
             var userData = user.UserName.ToBase64();
 
             foreach (var userDataValidationProvider in _userDataValidationProviders) {
@@ -154,8 +154,8 @@ namespace Orchard.Security.Providers {
             }
 
             // Iterate over all but the first user data segment because the first is the username
-            for (var i = 1; i < userDataSegments.Length; i++) {
-                var segmentSplit = userDataSegments[i].Split('|');
+            foreach (var segment in userDataSegments.Skip(1)) {
+                var segmentSplit = segment.Split('|');
 
                 if (segmentSplit.Length < 2) {
                     continue;
@@ -164,7 +164,7 @@ namespace Orchard.Security.Providers {
                 var providerKey = segmentSplit[0].FromBase64();
                 var providerValue = segmentSplit[1].FromBase64();
 
-                foreach (var userDataValidationProvider in _userDataValidationProviders.Where(p=>p.Key == providerKey)) {
+                foreach (var userDataValidationProvider in _userDataValidationProviders.Where(p => p.Key == providerKey)) {
                     try {
                         if (!userDataValidationProvider.ValidateUserData(providerValue)) {
                             return null;
