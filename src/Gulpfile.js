@@ -31,7 +31,6 @@ var glob = require("glob"),
         "inputs": [ "Less/master.less" ], //Specifies which files to process during the Build task
         "output": "Styles/@.css", //When @ is specified, each file specified in "inputs" will be converted to [filename].css
         "watch": ["Less/*.less"], //specifies which files to watch, use this when you have a master Less file that imports other Less files
-        "rebuildAlways": true, //Will force rebuild, defaults to 'true'
         "generateSourceMaps": true //Will include source maps in unminified version, defaults to 'true'
       }
     ]
@@ -59,9 +58,9 @@ gulp.task("rebuild", function () {
 // Continuous watch (each asset group is built whenever one of its inputs changes).
 gulp.task("watch", function () {
     getAssetGroups().forEach(function (assetGroup) {
-        gulp.watch(assetGroup.watchPaths != undefined ? assetGroup.watchPaths : assetGroup.inputPaths, function (event) {
+        gulp.watch(assetGroup.watchPaths, function (event) {
             console.log("Asset file '" + event.path + "' was " + event.type + ", rebuilding output '" + assetGroup.outputPath + "'.");
-            var doRebuild = assetGroup.rebuildAlways != undefined ? assetGroup.rebuildAlways : true; //defaults to true
+            var doRebuild = true; 
             var task = createAssetGroupTask(assetGroup, doRebuild);
         });
     });
@@ -89,12 +88,12 @@ function resolveAssetGroupPaths(assetGroup, assetManifestPath) {
     assetGroup.inputPaths = assetGroup.inputs.map(function (inputPath) {
         return path.join(assetGroup.basePath, inputPath);
     });
-    if (assetGroup.watch != undefined) {
-        assetGroup.watchPaths = assetGroup.watch.map(function (watchPath) {
+    
+    assetGroup.watchPaths = !!assetGroup.watch ?
+        assetGroup.watch.map(function (watchPath) {
             return path.join(assetGroup.basePath, watchPath);
-        })
-        .concat(assetGroup.inputPaths); //include inputs in watch list
-    }
+        }).concat(assetGroup.inputPaths) : assetGroup.inputPaths;
+
     assetGroup.outputPath = path.join(assetGroup.basePath, assetGroup.output);
     assetGroup.outputDir = path.dirname(assetGroup.outputPath);
     assetGroup.outputFileName = path.basename(assetGroup.output);
@@ -127,7 +126,7 @@ function buildCssPipeline(assetGroup, doRebuild) {
     else {
         console.log("Force Rebuild is enabled, rebuilding all input files.");
     }
-    var generateSourceMaps = assetGroup.generateSourceMaps != undefined ? assetGroup.generateSourceMaps : true;
+    var generateSourceMaps = assetGroup.generateSourceMaps !== undefined ? assetGroup.generateSourceMaps : true;
     return gulp.src(assetGroup.inputPaths)
         .pipe(gulpif(!doRebuild,
             gulpif(doConcat,
@@ -155,7 +154,7 @@ function buildCssPipeline(assetGroup, doRebuild) {
             suffix: ".min"
         }))
         .pipe(gulp.dest(assetGroup.outputDir))
-        .pipe(gulpif(doRebuild, notify("Rebuild complete"),notify("Build process complete")));
+        .pipe(gulpif(doRebuild, notify("Rebuild complete"), notify("Build process complete")));
 }
 
 function buildJsPipeline(assetGroup, doRebuild) {
@@ -165,7 +164,7 @@ function buildJsPipeline(assetGroup, doRebuild) {
             throw "Input file '" + inputPath + "' is not of a valid type for output file '" + assetGroup.outputPath + "'.";
     });
     var doConcat = path.basename(assetGroup.outputFileName, ".js") !== "@";
-    var generateSourceMaps = assetGroup.generateSourceMaps != undefined ? assetGroup.generateSourceMaps : true;
+    var generateSourceMaps = assetGroup.generateSourceMaps !== undefined ? assetGroup.generateSourceMaps : true;
     return gulp.src(assetGroup.inputPaths)
         .pipe(gulpif(!doRebuild,
             gulpif(doConcat,
@@ -182,7 +181,7 @@ function buildJsPipeline(assetGroup, doRebuild) {
             noEmitOnError: true,
             sortOutput: true,
         }).js))
-		.pipe(gulpif(doConcat, concat(assetGroup.outputFileName)))
+	.pipe(gulpif(doConcat, concat(assetGroup.outputFileName)))
         // TODO: Start using below whenever gulp-header supports sourcemaps.
         //.pipe(header(
         //    "/*\n" +
@@ -192,9 +191,9 @@ function buildJsPipeline(assetGroup, doRebuild) {
         //    "*/\n\n"))
         .pipe(gulpif(generateSourceMaps, sourcemaps.write()))
         .pipe(gulp.dest(assetGroup.outputDir))
-		.pipe(uglify())
-		.pipe(rename({
-		    suffix: ".min"
-		}))
-		.pipe(gulp.dest(assetGroup.outputDir));
+	.pipe(uglify())
+	.pipe(rename({
+	    suffix: ".min"
+	}))
+	.pipe(gulp.dest(assetGroup.outputDir));
 }
