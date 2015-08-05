@@ -185,6 +185,8 @@
     <Compile Include="Security\NullMembershipService.cs" />
     <Compile Include="Security\Providers\DefaultSslSettingsProvider.cs" />
     <Compile Include="Security\Providers\DefaultMembershipValidationService.cs" />
+    <Compile Include="Security\IUserDataValidationProvider.cs" />
+    <Compile Include="Security\Providers\TenantAwareUserDataValidationProvider.cs" />
     <Compile Include="StaticHttpContextScope.cs" />
     <Compile Include="StaticHttpContextScopeFactory.cs" />
     <Compile Include="Caching\DefaultCacheContextAccessor.cs" />
