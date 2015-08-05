@@ -107,7 +107,9 @@
     <Compile Include="Models\CacheSettingsPart.cs" />
     <Compile Include="Models\CacheParameterRecord.cs" />
     <Compile Include="Services\CacheService.cs" />
+    <Compile Include="Services\FileSystemOutputCacheBackgroundTask.cs" />
     <Compile Include="Services\DatabaseOutputCacheBackgroundTask.cs" />
+    <Compile Include="Services\FileSystemOutputCacheProvider.cs" />
     <Compile Include="Services\DatabaseOutputCacheProvider.cs" />
     <Compile Include="Services\DefaultCacheControlStrategy.cs" />
     <Compile Include="Services\DefaultTagCache.cs" />
