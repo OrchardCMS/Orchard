@@ -7,14 +7,15 @@ var glob = require("glob"),
 	plumber = require("gulp-plumber"),
     sourcemaps = require("gulp-sourcemaps"),
     less = require("gulp-less"),
-	autoprefixer = require("gulp-autoprefixer"),
-	minify = require("gulp-minify-css"),
+    autoprefixer = require("gulp-autoprefixer"),
+    minify = require("gulp-minify-css"),
     typescript = require("gulp-typescript"),
-	uglify = require("gulp-uglify"),
-	rename = require("gulp-rename"),
+    uglify = require("gulp-uglify"),
+    rename = require("gulp-rename"),
     concat = require("gulp-concat"),
-	header = require("gulp-header"),
-    notify = require("gulp-notify")
+    header = require("gulp-header"),
+    notify = require("gulp-notify"),
+    fs = require("fs")
 
 /*
 ** GULP TASKS
@@ -57,24 +58,45 @@ gulp.task("rebuild", function () {
 
 // Continuous watch (each asset group is built whenever one of its inputs changes).
 gulp.task("watch", function () {
-    getAssetGroups().forEach(function (assetGroup) {
-        gulp.watch(assetGroup.watchPaths, function (event) {
-            console.log("Asset file '" + event.path + "' was " + event.type + ", rebuilding output '" + assetGroup.outputPath + "'.");
-            var doRebuild = true; 
-            var task = createAssetGroupTask(assetGroup, doRebuild);
+    var watchers;
+    function restart() {
+        if (watchers) {
+            watchers.forEach(function (w) {
+                w.remove();
+                w.end();
+            });
+        }
+        watchers = [];
+        getAssetGroups().forEach(function (assetGroup) {
+            var watcher = gulp.watch(assetGroup.watchPaths, function (event) {
+                console.log("Asset file '" + event.path + "' was " + event.type + ", rebuilding output '" + assetGroup.outputPath + "'.");
+                var doRebuild = true;
+                var task = createAssetGroupTask(assetGroup, doRebuild);
+            });
+            watchers.push(watcher);
         });
+    }
+    var p;
+    if (p) { p.exit(); }
+    p = gulp.watch("Orchard.Web/{Core,Modules,Themes}/*/Assets.json", function (event) {
+        console.log("Asset file '" + event.path + "' was " + event.type + ", resetting asset watchers.");
+        restart();
     });
+    restart();
 });
+
 
 /*
 ** ASSET GROUPS
 */
 
 function getAssetGroups() {
-    var assetManifestPaths = glob.sync("Orchard.Web/{Core,Modules,Themes}/*/Assets.json");
+    var assetManifestPaths = glob.sync("Orchard.Web/{Core,Modules,Themes}/*/Assets.json", {});
     var assetGroups = [];
     assetManifestPaths.forEach(function (assetManifestPath) {
-        var assetManifest = require("./" + assetManifestPath);
+        var file = './' + assetManifestPath;
+        var json = fs.readFileSync(file, 'utf8');
+        assetManifest = eval(json);
         assetManifest.forEach(function (assetGroup) {
             resolveAssetGroupPaths(assetGroup, assetManifestPath);
             assetGroups.push(assetGroup);
@@ -127,6 +149,7 @@ function buildCssPipeline(assetGroup, doRebuild) {
         console.log("Force Rebuild is enabled, rebuilding all input files.");
     }
     var generateSourceMaps = assetGroup.hasOwnProperty("generateSourceMaps") ? assetGroup.generateSourceMaps : true;
+    console.log("sourcemaps: " + generateSourceMaps);
     return gulp.src(assetGroup.inputPaths)
         .pipe(gulpif(!doRebuild,
             gulpif(doConcat,
@@ -181,7 +204,7 @@ function buildJsPipeline(assetGroup, doRebuild) {
             noEmitOnError: true,
             sortOutput: true,
         }).js))
-		.pipe(gulpif(doConcat, concat(assetGroup.outputFileName)))
+	.pipe(gulpif(doConcat, concat(assetGroup.outputFileName)))
         // TODO: Start using below whenever gulp-header supports sourcemaps.
         //.pipe(header(
         //    "/*\n" +
@@ -191,9 +214,9 @@ function buildJsPipeline(assetGroup, doRebuild) {
         //    "*/\n\n"))
         .pipe(gulpif(generateSourceMaps, sourcemaps.write()))
         .pipe(gulp.dest(assetGroup.outputDir))
-		.pipe(uglify())
-		.pipe(rename({
-		    suffix: ".min"
-		}))
-		.pipe(gulp.dest(assetGroup.outputDir));
+	.pipe(uglify())
+	.pipe(rename({
+	    suffix: ".min"
+	}))
+	.pipe(gulp.dest(assetGroup.outputDir));
 }
