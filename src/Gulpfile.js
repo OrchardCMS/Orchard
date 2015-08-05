@@ -126,7 +126,7 @@ function buildCssPipeline(assetGroup, doRebuild) {
     else {
         console.log("Force Rebuild is enabled, rebuilding all input files.");
     }
-    var generateSourceMaps = assetGroup.generateSourceMaps !== undefined ? assetGroup.generateSourceMaps : true;
+    var generateSourceMaps = assetGroup.hasOwnProperty("generateSourceMaps") ? assetGroup.generateSourceMaps : true;
     return gulp.src(assetGroup.inputPaths)
         .pipe(gulpif(!doRebuild,
             gulpif(doConcat,
@@ -164,7 +164,7 @@ function buildJsPipeline(assetGroup, doRebuild) {
             throw "Input file '" + inputPath + "' is not of a valid type for output file '" + assetGroup.outputPath + "'.";
     });
     var doConcat = path.basename(assetGroup.outputFileName, ".js") !== "@";
-    var generateSourceMaps = assetGroup.generateSourceMaps !== undefined ? assetGroup.generateSourceMaps : true;
+    var generateSourceMaps = assetGroup.hasOwnProperty("generateSourceMaps") ? assetGroup.generateSourceMaps : true;
     return gulp.src(assetGroup.inputPaths)
         .pipe(gulpif(!doRebuild,
             gulpif(doConcat,
@@ -181,7 +181,7 @@ function buildJsPipeline(assetGroup, doRebuild) {
             noEmitOnError: true,
             sortOutput: true,
         }).js))
-	.pipe(gulpif(doConcat, concat(assetGroup.outputFileName)))
+		.pipe(gulpif(doConcat, concat(assetGroup.outputFileName)))
         // TODO: Start using below whenever gulp-header supports sourcemaps.
         //.pipe(header(
         //    "/*\n" +
@@ -191,9 +191,9 @@ function buildJsPipeline(assetGroup, doRebuild) {
         //    "*/\n\n"))
         .pipe(gulpif(generateSourceMaps, sourcemaps.write()))
         .pipe(gulp.dest(assetGroup.outputDir))
-	.pipe(uglify())
-	.pipe(rename({
-	    suffix: ".min"
-	}))
-	.pipe(gulp.dest(assetGroup.outputDir));
+		.pipe(uglify())
+		.pipe(rename({
+		    suffix: ".min"
+		}))
+		.pipe(gulp.dest(assetGroup.outputDir));
 }
