@@ -4,7 +4,7 @@ var glob = require("glob"),
     gulpif = require("gulp-if"),
     gulp = require("gulp"),
     newer = require("gulp-newer"),
-	plumber = require("gulp-plumber"),
+    plumber = require("gulp-plumber"),
     sourcemaps = require("gulp-sourcemaps"),
     less = require("gulp-less"),
     autoprefixer = require("gulp-autoprefixer"),
@@ -149,7 +149,6 @@ function buildCssPipeline(assetGroup, doRebuild) {
         console.log("Force Rebuild is enabled, rebuilding all input files.");
     }
     var generateSourceMaps = assetGroup.hasOwnProperty("generateSourceMaps") ? assetGroup.generateSourceMaps : true;
-    console.log("sourcemaps: " + generateSourceMaps);
     return gulp.src(assetGroup.inputPaths)
         .pipe(gulpif(!doRebuild,
             gulpif(doConcat,
