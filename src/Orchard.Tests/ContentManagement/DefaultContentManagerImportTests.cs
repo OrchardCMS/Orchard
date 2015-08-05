@@ -27,7 +27,6 @@ namespace Orchard.Tests.ContentManagement {
     public class DefaultContentManagerImportTests : DatabaseEnabledTestsBase {
         private const string ContentTypeName = "Dummy";
         private IContentManager _contentManager;
-        private Mock<IContentDefinitionManager> _contentDefinitionManager;
 
         protected override IEnumerable<Type> DatabaseTypes {
             get {
@@ -42,8 +41,6 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         public override void Register(ContainerBuilder builder) {
-            _contentDefinitionManager = new Mock<IContentDefinitionManager>();
-
             builder.RegisterType<IdentifierResolverSelector>().As<IIdentityResolverSelector>();
             builder.RegisterType<DummyHandler>().As<IContentHandler>();
             builder.RegisterType<IdentityPartDriver>().As<IContentPartDriver>();
@@ -57,7 +54,7 @@ namespace Orchard.Tests.ContentManagement {
             builder.RegisterType<Signals>().As<ISignals>();
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
             builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
-            builder.RegisterInstance(_contentDefinitionManager.Object);
+            builder.RegisterInstance(new Mock<IContentDefinitionManager>().Object);
         }
 
         public override void Init() {
