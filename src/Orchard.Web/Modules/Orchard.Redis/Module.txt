@@ -25,3 +25,8 @@ Features:
         Description: Business data cache using Redis.
         Category: Performance
         Dependencies: Orchard.Caching, Orchard.Redis
+	Orchard.Redis.OutputCache2:
+        Name: Redis Output Cache 2
+        Description: An output cache storage provider using Redis.
+        Category: Performance
+		Dependencies: Orchard.OutputCache2, Orchard.Redis

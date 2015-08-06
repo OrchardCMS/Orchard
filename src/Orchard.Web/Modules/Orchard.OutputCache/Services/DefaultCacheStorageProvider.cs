@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Orchard.OutputCache.Models;
 using Orchard.Environment.Configuration;
+using Orchard.Environment.Extensions;
 
 namespace Orchard.OutputCache.Services {
+    [OrchardFeature("Orchard.OutputCacheOld")]
     public class DefaultCacheStorageProvider : IOutputCacheStorageProvider {
         private readonly string _tenantName;
         private readonly WorkContext _workContext;

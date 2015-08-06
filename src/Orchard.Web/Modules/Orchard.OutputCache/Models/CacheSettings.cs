@@ -7,6 +7,14 @@ namespace Orchard.OutputCache.Models {
     public class CacheSettings : ContentPart {
         public const string CacheKey = "Orchard_OutputCache_CacheSettings";
 
+        public CacheSettings() {
+            DefaultCacheDuration = 300;
+            DefaultCacheGraceTime = 60;
+            VaryByRequestHeaders = new HashSet<string>();
+            VaryByQueryStringParameters = new List<string>();
+            IgnoredUrls = new List<string>();
+        }
+
         public CacheSettings(CacheSettingsPart part) {
             DefaultCacheDuration = part.DefaultCacheDuration;
             DefaultCacheGraceTime = part.DefaultCacheGraceTime;

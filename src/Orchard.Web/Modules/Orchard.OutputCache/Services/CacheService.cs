@@ -11,8 +11,10 @@ using Orchard;
 using Orchard.Caching;
 using Orchard.Data;
 using Orchard.Utility.Extensions;
+using Orchard.Environment.Extensions;
 
 namespace Orchard.OutputCache.Services {
+    [OrchardFeature("Orchard.OutputCacheOld")]
     public class CacheService : ICacheService {
         private const string RouteConfigsCacheKey = "OutputCache_RouteConfigs";
         

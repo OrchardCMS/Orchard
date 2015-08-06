@@ -10,6 +10,10 @@ Features:
 		Name: Output Cache
         Description: Adds output caching functionality.
         Category: Performance
+	Orchard.OutputCacheOld:
+		Name: Output Cache
+        Description: OLD cache.
+        Category: Performance
     Orchard.OutputCache.Database:
 		Name: Database Output Cache
         Description: Activates a provider that stores output cache data in the database.
@@ -18,5 +22,10 @@ Features:
     Orchard.OutputCache.FileSystem:
 		Name: File System Output Cache
         Description: Activates a provider that stores output cache data in the App_Data folder.
+        Category: Performance
+		Dependencies: Orchard.OutputCache
+    Orchard.OutputCache2:
+		Name: Output Cache 2
+        Description: Adds output caching functionality.
         Category: Performance
 		Dependencies: Orchard.OutputCache

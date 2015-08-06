@@ -54,6 +54,14 @@
       <HintPath>..\..\..\..\lib\autofac\Autofac.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Owin, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\owin\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\owin\Owin.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.ComponentModel.DataAnnotations">
@@ -107,8 +115,13 @@
     <Compile Include="Models\CacheSettingsPart.cs" />
     <Compile Include="Models\CacheParameterRecord.cs" />
     <Compile Include="Services\CacheService.cs" />
+    <Compile Include="Services\MemoryAsyncTagCache.cs" />
+    <Compile Include="Services\IAsyncTagCache.cs" />
+    <Compile Include="Services\MemoryAsyncOutputCacheStorageProvider.cs" />
     <Compile Include="Services\FileSystemOutputCacheBackgroundTask.cs" />
     <Compile Include="Services\DatabaseOutputCacheBackgroundTask.cs" />
+    <Compile Include="Services\IAsyncOutputCacheStorageProvider.cs" />
+    <Compile Include="Services\OutputCacheOwinMiddleware.cs" />
     <Compile Include="Services\FileSystemOutputCacheProvider.cs" />
     <Compile Include="Services\DatabaseOutputCacheProvider.cs" />
     <Compile Include="Services\DefaultCacheControlStrategy.cs" />

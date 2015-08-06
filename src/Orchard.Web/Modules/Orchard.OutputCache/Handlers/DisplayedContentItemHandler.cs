@@ -3,11 +3,13 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Orchard.OutputCache.Services;
 using Orchard.ContentManagement.Handlers;
+using Orchard.Environment.Extensions;
 
 namespace Orchard.OutputCache.Handlers {
     /// <summary>
     /// Saves references to content items which have been displayed during a request
     /// </summary>
+    [OrchardFeature("Orchard.OutputCacheOld")]
     public class DisplayedContentItemHandler : ContentHandler, IDisplayedContentItemHandler {
         private readonly Collection<int> _itemIds = new Collection<int>();
 

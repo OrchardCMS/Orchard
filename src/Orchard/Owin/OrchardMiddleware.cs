@@ -14,7 +14,9 @@ namespace Orchard.Owin {
                 if (handler == null) {
                     throw new ArgumentException("orchard.Handler can't be null");
                 }
+
                 await handler();
+
             });
 
             return app;

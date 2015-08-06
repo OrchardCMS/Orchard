@@ -111,7 +111,9 @@
     <Compile Include="Configuration\IRedisConnectionProvider.cs" />
     <Compile Include="Configuration\RedisConnectionProvider.cs" />
     <Compile Include="MessageBus\RedisMessageBusBroker.cs" />
+    <Compile Include="OutputCache\RedisAsyncOutputCacheStorageProvider.cs" />
     <Compile Include="OutputCache\RedisOutputCacheStorageProvider.cs" />
+    <Compile Include="OutputCache\RedisAsyncTagCache.cs" />
     <Compile Include="OutputCache\RedisTagCache.cs" />
   </ItemGroup>
   <PropertyGroup>

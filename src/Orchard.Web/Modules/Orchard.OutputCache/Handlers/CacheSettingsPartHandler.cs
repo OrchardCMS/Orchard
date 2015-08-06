@@ -2,10 +2,12 @@
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Core.Common.Models;
+using Orchard.Environment.Extensions;
 using Orchard.OutputCache.Models;
 using Orchard.OutputCache.Services;
 
 namespace Orchard.OutputCache.Handlers {
+    [OrchardFeature("Orchard.OutputCacheOld")]
     public class CacheSettingsPartHandler : ContentHandler {
         private readonly ICacheService _cacheService;
 

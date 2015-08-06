@@ -13,6 +13,7 @@ using System.Web.Routing;
 using Orchard.Caching;
 using Orchard.ContentManagement;
 using Orchard.Environment.Configuration;
+using Orchard.Environment.Extensions;
 using Orchard.Logging;
 using Orchard.Mvc.Extensions;
 using Orchard.Mvc.Filters;
@@ -24,6 +25,7 @@ using Orchard.UI.Admin;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.OutputCache.Filters {
+    [OrchardFeature("Orchard.OutputCacheOld")]
     public class OutputCacheFilter : FilterProvider, IActionFilter, IResultFilter {
 
         private static string _refreshKey = "__r";
@@ -603,9 +605,5 @@ namespace Orchard.OutputCache.Filters {
 
             return null;
         }
-    }
-
-    public class ViewDataContainer : IViewDataContainer {
-        public ViewDataDictionary ViewData { get; set; }
     }
 }

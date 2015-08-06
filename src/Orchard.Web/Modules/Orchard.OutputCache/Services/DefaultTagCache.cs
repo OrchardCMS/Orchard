@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using Orchard.Environment.Extensions;
 using Orchard.OutputCache.Models;
 using Orchard.Utility.Extensions;
 
@@ -9,6 +10,7 @@ namespace Orchard.OutputCache.Services {
     /// <summary>
     /// Tenant wide case insensitive reverse index for <see cref="CacheItem"/> tags.
     /// </summary>
+    [OrchardFeature("Orchard.OutputCacheOld")]
     public class DefaultTagCache : ITagCache {
 
         private readonly ConcurrentDictionary<string, HashSet<string>> _dictionary;
