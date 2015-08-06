@@ -5,17 +5,18 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.Mvc.Extensions;
 
-namespace Orchard.Blogs.Extensions {
+namespace Orchard.Blogs.Extensions
+{
     /// <summary>
     /// TODO: (PH:Autoroute) Many of these are or could be redundant (see controllers)
     /// </summary>
     public static class UrlHelperExtensions {
         public static string Blogs(this UrlHelper urlHelper) {
-            return urlHelper.Action("List", "Blog", new {area = "Orchard.Blogs"});
+            return urlHelper.Action("List", "Blog", new { area = "Orchard.Blogs" });
         }
 
         public static string BlogsForAdmin(this UrlHelper urlHelper) {
-            return urlHelper.Action("List", "BlogAdmin", new {area = "Orchard.Blogs"});
+            return urlHelper.Action("List", "BlogAdmin", new { area = "Orchard.Blogs" });
         }
 
         public static string Blog(this UrlHelper urlHelper, BlogPart blogPart) {
@@ -64,7 +65,11 @@ namespace Orchard.Blogs.Extensions {
         public static string BlogPostCreate(this UrlHelper urlHelper, BlogPart blogPart) {
             return urlHelper.Action("Create", "BlogPostAdmin", new { blogId = blogPart.Id, area = "Orchard.Blogs" });
         }
-        
+
+        public static string BlogPostCreate(this UrlHelper urlHelper, BlogPart blogPart, string contentType) {
+            return urlHelper.Action("Create", "BlogPostAdmin", new { blogId = blogPart.Id, contentType = contentType, area = "Orchard.Blogs" });
+        }
+
         public static string BlogPostEdit(this UrlHelper urlHelper, BlogPostPart blogPostPart) {
             return urlHelper.Action("Edit", "BlogPostAdmin", new { blogId = blogPostPart.BlogPart.Id, postId = blogPostPart.Id, area = "Orchard.Blogs" });
         }

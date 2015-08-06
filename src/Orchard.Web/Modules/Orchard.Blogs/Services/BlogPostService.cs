@@ -7,15 +7,16 @@ using Orchard.Core.Common.Models;
 using Orchard.Data;
 using Orchard.Tasks.Scheduling;
 
-namespace Orchard.Blogs.Services {
+namespace Orchard.Blogs.Services
+{
     public class BlogPostService : IBlogPostService {
         private readonly IContentManager _contentManager;
         private readonly IRepository<BlogPartArchiveRecord> _blogArchiveRepository;
         private readonly IPublishingTaskManager _publishingTaskManager;
 
         public BlogPostService(
-            IContentManager contentManager, 
-            IRepository<BlogPartArchiveRecord> blogArchiveRepository, 
+            IContentManager contentManager,
+            IRepository<BlogPartArchiveRecord> blogArchiveRepository,
             IPublishingTaskManager publishingTaskManager) {
             _contentManager = contentManager;
             _blogArchiveRepository = blogArchiveRepository;
@@ -54,7 +55,7 @@ namespace Orchard.Blogs.Services {
         }
 
         public int PostCount(BlogPart blogPart, VersionOptions versionOptions) {
-            return _contentManager.Query(versionOptions, "BlogPost")
+            return _contentManager.Query<BlogPostPart>(versionOptions)
                 .Join<CommonPartRecord>().Where(
                     cr => cr.Container.Id == blogPart.Id)
                 .Count();
@@ -63,7 +64,8 @@ namespace Orchard.Blogs.Services {
         public IEnumerable<BlogPostPart> Get(BlogPart blogPart, ArchiveData archiveData) {
             var query = GetBlogQuery(blogPart, VersionOptions.Published);
 
-            if (archiveData.Day > 0) {
+            if (archiveData.Day > 0)
+            {
                 var dayDate = new DateTime(archiveData.Year, archiveData.Month, archiveData.Day);
 
                 query = query.Where(cr => cr.CreatedUtc >= dayDate && cr.CreatedUtc < dayDate.AddDays(1));
@@ -74,7 +76,8 @@ namespace Orchard.Blogs.Services {
 
                 query = query.Where(cr => cr.CreatedUtc >= monthDate && cr.CreatedUtc < monthDate.AddMonths(1));
             }
-            else {
+            else
+            {
                 var yearDate = new DateTime(archiveData.Year, 1, 1);
 
                 query = query.Where(cr => cr.CreatedUtc >= yearDate && cr.CreatedUtc < yearDate.AddYears(1));
@@ -84,7 +87,7 @@ namespace Orchard.Blogs.Services {
         }
 
         public IEnumerable<KeyValuePair<ArchiveData, int>> GetArchives(BlogPart blogPart) {
-            var query = 
+            var query =
                 from bar in _blogArchiveRepository.Table
                 where bar.BlogPart.Id == blogPart.Id
                 orderby bar.Year descending, bar.Month descending
@@ -120,9 +123,9 @@ namespace Orchard.Blogs.Services {
             return (task == null ? null : task.ScheduledUtc);
         }
 
-        private IContentQuery<ContentItem, CommonPartRecord> GetBlogQuery(BlogPart blog, VersionOptions versionOptions) {
+        private IContentQuery<BlogPostPart, CommonPartRecord> GetBlogQuery(BlogPart blog, VersionOptions versionOptions) {
             return
-                _contentManager.Query(versionOptions, "BlogPost")
+                _contentManager.Query<BlogPostPart>(versionOptions)
                 .Join<CommonPartRecord>().Where(
                     cr => cr.Container.Id == blog.Id).OrderByDescending(cr => cr.CreatedUtc)
                     ;

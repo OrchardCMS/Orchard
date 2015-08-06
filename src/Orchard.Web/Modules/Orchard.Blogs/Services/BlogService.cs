@@ -5,12 +5,15 @@ using Orchard.Autoroute.Services;
 using Orchard.Blogs.Models;
 using Orchard.Caching;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.MetaData;
+using Orchard.ContentManagement.MetaData.Models;
 using Orchard.Core.Title.Models;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Descriptor;
 using Orchard.Environment.State;
 
-namespace Orchard.Blogs.Services {
+namespace Orchard.Blogs.Services
+{
     public class BlogService : IBlogService {
         private readonly IContentManager _contentManager;
         private readonly IProcessingEngine _processingEngine;
@@ -18,28 +21,33 @@ namespace Orchard.Blogs.Services {
         private readonly IShellDescriptorManager _shellDescriptorManager;
         private readonly HashSet<int> _processedBlogParts = new HashSet<int>();
         IPathResolutionService _pathResolutionService;
+        private readonly IContentDefinitionManager _contentDefinitionManager;
 
         public BlogService(
             IContentManager contentManager,
             IProcessingEngine processingEngine,
             ShellSettings shellSettings,
             IShellDescriptorManager shellDescriptorManager,
-            IPathResolutionService pathResolutionService) {
+            IPathResolutionService pathResolutionService,
+            IContentDefinitionManager contentDefinitionManager) {
             _contentManager = contentManager;
             _processingEngine = processingEngine;
             _shellSettings = shellSettings;
             _shellDescriptorManager = shellDescriptorManager;
             _pathResolutionService = pathResolutionService;
+            _contentDefinitionManager = contentDefinitionManager;
         }
 
         public BlogPart Get(string path) {
             var blog = _pathResolutionService.GetPath(path);
 
-            if (blog == null) {
+            if (blog == null)
+            {
                 return null;
             }
 
-            if (!blog.Has<BlogPart>()) {
+            if (!blog.Has<BlogPart>())
+            {
                 return null;
             }
 
@@ -67,10 +75,18 @@ namespace Orchard.Blogs.Services {
         }
 
         public void ProcessBlogPostsCount(int blogPartId) {
-            if (!_processedBlogParts.Contains(blogPartId)) {
+            if (!_processedBlogParts.Contains(blogPartId))
+            {
                 _processedBlogParts.Add(blogPartId);
                 _processingEngine.AddTask(_shellSettings, _shellDescriptorManager.GetShellDescriptor(), "IBlogPostsCountProcessor.Process", new Dictionary<string, object> { { "blogPartId", blogPartId } });
             }
+        }
+
+        public IEnumerable<ContentTypeDefinition> GetBlogPostContentTypes() {
+            var blogPostTypes = _contentDefinitionManager.ListTypeDefinitions().Where(ctd =>
+                ctd.Parts.Any(x => x.PartDefinition.Name == "BlogPostPart"));
+
+            return blogPostTypes;
         }
     }
 }

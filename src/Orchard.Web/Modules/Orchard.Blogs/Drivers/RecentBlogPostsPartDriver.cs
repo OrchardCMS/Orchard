@@ -8,27 +8,30 @@ using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Core.Common.Models;
 
-namespace Orchard.Blogs.Drivers {
+namespace Orchard.Blogs.Drivers
+{
     public class RecentBlogPostsPartDriver : ContentPartDriver<RecentBlogPostsPart> {
         private readonly IBlogService _blogService;
         private readonly IContentManager _contentManager;
 
         public RecentBlogPostsPartDriver(
-            IBlogService blogService, 
+            IBlogService blogService,
             IContentManager contentManager) {
             _blogService = blogService;
             _contentManager = contentManager;
         }
 
         protected override DriverResult Display(RecentBlogPostsPart part, string displayType, dynamic shapeHelper) {
-            return ContentShape("Parts_Blogs_RecentBlogPosts", () => {
-            var blog = _contentManager.Get<BlogPart>(part.BlogId);
+            return ContentShape("Parts_Blogs_RecentBlogPosts", () =>
+            {
+                var blog = _contentManager.Get<BlogPart>(part.BlogId);
 
-                if (blog == null) {
+                if (blog == null)
+                {
                     return null;
                 }
 
-                var blogPosts = _contentManager.Query(VersionOptions.Published, "BlogPost")
+                var blogPosts = _contentManager.Query(VersionOptions.Published)
                     .Join<CommonPartRecord>().Where(cr => cr.Container.Id == blog.Id)
                     .OrderByDescending(cr => cr.CreatedUtc)
                     .Slice(0, part.Count)
@@ -44,7 +47,8 @@ namespace Orchard.Blogs.Drivers {
         }
 
         protected override DriverResult Editor(RecentBlogPostsPart part, dynamic shapeHelper) {
-            var viewModel = new RecentBlogPostsViewModel {
+            var viewModel = new RecentBlogPostsViewModel
+            {
                 Count = part.Count,
                 BlogId = part.BlogId,
                 Blogs = _blogService.Get().ToList().OrderBy(b => _contentManager.GetItemMetadata(b).DisplayText)
@@ -57,7 +61,8 @@ namespace Orchard.Blogs.Drivers {
         protected override DriverResult Editor(RecentBlogPostsPart part, IUpdateModel updater, dynamic shapeHelper) {
             var viewModel = new RecentBlogPostsViewModel();
 
-            if (updater.TryUpdateModel(viewModel, Prefix, null, null)) {
+            if (updater.TryUpdateModel(viewModel, Prefix, null, null))
+            {
                 part.BlogId = viewModel.BlogId;
                 part.Count = viewModel.Count;
             }
@@ -67,12 +72,14 @@ namespace Orchard.Blogs.Drivers {
 
         protected override void Importing(RecentBlogPostsPart part, ImportContentContext context) {
             var blog = context.Attribute(part.PartDefinition.Name, "Blog");
-            if (blog != null) {
+            if (blog != null)
+            {
                 part.BlogId = context.GetItemFromSession(blog).Id;
             }
 
             var count = context.Attribute(part.PartDefinition.Name, "Count");
-            if (count != null) {
+            if (count != null)
+            {
                 part.Count = Convert.ToInt32(count);
             }
         }

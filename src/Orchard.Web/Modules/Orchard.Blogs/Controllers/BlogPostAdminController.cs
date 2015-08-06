@@ -14,7 +14,8 @@ using Orchard.Mvc.Extensions;
 using Orchard.UI.Admin;
 using Orchard.UI.Notify;
 
-namespace Orchard.Blogs.Controllers {
+namespace Orchard.Blogs.Controllers
+{
 
     /// <summary>
     /// TODO: (PH:Autoroute) This replicates a whole lot of Core.Contents functionality. All we actually need to do is take the BlogId from the query string in the BlogPostPartDriver, and remove
@@ -35,59 +36,61 @@ namespace Orchard.Blogs.Controllers {
         public IOrchardServices Services { get; set; }
         public Localizer T { get; set; }
 
-        public ActionResult Create(int blogId) {
+        public ActionResult Create(int blogId, string contentType) {
 
             var blog = _blogService.Get(blogId, VersionOptions.Latest).As<BlogPart>();
             if (blog == null)
                 return HttpNotFound();
 
-            var blogPost = Services.ContentManager.New<BlogPostPart>("BlogPost");
+            var blogPost = Services.ContentManager.New<BlogPostPart>(contentType);
             blogPost.BlogPart = blog;
 
             if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, blog, T("Not allowed to create blog post")))
                 return new HttpUnauthorizedResult();
 
             var model = Services.ContentManager.BuildEditor(blogPost);
-            
+
             return View(model);
         }
 
         [HttpPost, ActionName("Create")]
         [FormValueRequired("submit.Save")]
-        public ActionResult CreatePOST(int blogId) {
-            return CreatePOST(blogId, false);
+        public ActionResult CreatePOST(int blogId, string contentType) {
+            return CreatePOST(blogId, contentType, false);
         }
 
         [HttpPost, ActionName("Create")]
         [FormValueRequired("submit.Publish")]
-        public ActionResult CreateAndPublishPOST(int blogId) {
+        public ActionResult CreateAndPublishPOST(int blogId, string contentType) {
             if (!Services.Authorizer.Authorize(Permissions.PublishOwnBlogPost, T("Couldn't create content")))
                 return new HttpUnauthorizedResult();
 
-            return CreatePOST(blogId, true);
+            return CreatePOST(blogId, contentType, true);
         }
 
-        private ActionResult CreatePOST(int blogId, bool publish = false) {
+        private ActionResult CreatePOST(int blogId, string contentType, bool publish = false) {
             var blog = _blogService.Get(blogId, VersionOptions.Latest).As<BlogPart>();
 
             if (blog == null)
                 return HttpNotFound();
 
-            var blogPost = Services.ContentManager.New<BlogPostPart>("BlogPost");
+            var blogPost = Services.ContentManager.New<BlogPostPart>(contentType);
             blogPost.BlogPart = blog;
 
             if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, blog, T("Couldn't create blog post")))
                 return new HttpUnauthorizedResult();
-            
+
             Services.ContentManager.Create(blogPost, VersionOptions.Draft);
             var model = Services.ContentManager.UpdateEditor(blogPost, this);
 
-            if (!ModelState.IsValid) {
+            if (!ModelState.IsValid)
+            {
                 Services.TransactionManager.Cancel();
                 return View(model);
             }
 
-            if (publish) {
+            if (publish)
+            {
                 if (!Services.Authorizer.Authorize(Permissions.PublishBlogPost, blog.ContentItem, T("Couldn't publish blog post")))
                     return new HttpUnauthorizedResult();
 
@@ -119,7 +122,8 @@ namespace Orchard.Blogs.Controllers {
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("submit.Save")]
         public ActionResult EditPOST(int blogId, int postId, string returnUrl) {
-            return EditPOST(blogId, postId, returnUrl, contentItem => {
+            return EditPOST(blogId, postId, returnUrl, contentItem =>
+            {
                 if (!contentItem.Has<IPublishingControlAspect>() && !contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
                     Services.ContentManager.Publish(contentItem);
             });
@@ -158,7 +162,8 @@ namespace Orchard.Blogs.Controllers {
 
             // Validate form input
             var model = Services.ContentManager.UpdateEditor(blogPost, this);
-            if (!ModelState.IsValid) {
+            if (!ModelState.IsValid)
+            {
                 Services.TransactionManager.Cancel();
                 return View(model);
             }
@@ -174,7 +179,8 @@ namespace Orchard.Blogs.Controllers {
         public ActionResult DiscardDraft(int id) {
             // get the current draft version
             var draft = Services.ContentManager.Get(id, VersionOptions.Draft);
-            if (draft == null) {
+            if (draft == null)
+            {
                 Services.Notifier.Information(T("There is no draft to discard."));
                 return RedirectToEdit(id);
             }
@@ -185,7 +191,8 @@ namespace Orchard.Blogs.Controllers {
 
             // locate the published revision to revert onto
             var published = Services.ContentManager.Get(id, VersionOptions.Published);
-            if (published == null) {
+            if (published == null)
+            {
                 Services.Notifier.Information(T("Can not discard draft on unpublished blog post."));
                 return RedirectToEdit(draft);
             }

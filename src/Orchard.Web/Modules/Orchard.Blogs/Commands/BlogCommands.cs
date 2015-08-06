@@ -15,7 +15,8 @@ using Orchard.Settings;
 using Orchard.Core.Title.Models;
 using Orchard.UI.Navigation;
 
-namespace Orchard.Blogs.Commands {
+namespace Orchard.Blogs.Commands
+{
     public class BlogCommands : DefaultOrchardCommandHandler {
         private readonly IContentManager _contentManager;
         private readonly IMembershipService _membershipService;
@@ -69,16 +70,21 @@ namespace Orchard.Blogs.Commands {
         [OrchardSwitch]
         public bool Homepage { get; set; }
 
+        [OrchardSwitch]
+        public string ContentType { get; set; }
+
         [CommandName("blog create")]
         [CommandHelp("blog create [/Slug:<slug>] /Title:<title> [/Owner:<username>] [/Description:<description>] [/MenuName:<name>] [/MenuText:<menu text>] [/Homepage:true|false]\r\n\t" + "Creates a new Blog")]
         [OrchardSwitches("Slug,Title,Owner,Description,MenuText,Homepage,MenuName")]
         public void Create() {
-            if (String.IsNullOrEmpty(Owner)) {
+            if (String.IsNullOrEmpty(Owner))
+            {
                 Owner = _siteService.GetSiteSettings().SuperUser;
             }
             var owner = _membershipService.GetUser(Owner);
 
-            if (owner == null) {
+            if (owner == null)
+            {
                 Context.Output.WriteLine(T("Invalid username: {0}", Owner));
                 return;
             }
@@ -86,24 +92,29 @@ namespace Orchard.Blogs.Commands {
             var blog = _contentManager.New("Blog");
             blog.As<ICommonPart>().Owner = owner;
             blog.As<TitlePart>().Title = Title;
-            if (!String.IsNullOrEmpty(Description)) {
+            if (!String.IsNullOrEmpty(Description))
+            {
                 blog.As<BlogPart>().Description = Description;
             }
 
-            if (Homepage || !String.IsNullOrWhiteSpace(Slug)) {
+            if (Homepage || !String.IsNullOrWhiteSpace(Slug))
+            {
                 dynamic dblog = blog;
-                if (dblog.AutoroutePart != null) {
+                if (dblog.AutoroutePart != null)
+                {
                     dblog.AutoroutePart.UseCustomPattern = true;
                     dblog.AutoroutePart.CustomPattern = Homepage ? "/" : Slug;
                 }
             }
-            
+
             _contentManager.Create(blog);
 
-            if (!String.IsNullOrWhiteSpace(MenuText)) {
+            if (!String.IsNullOrWhiteSpace(MenuText))
+            {
                 var menu = _menuService.GetMenu(MenuName);
 
-                if (menu != null) {
+                if (menu != null)
+                {
                     var menuItem = _contentManager.Create<ContentMenuItemPart>("ContentMenuItem");
                     menuItem.Content = blog;
                     menuItem.As<MenuPart>().MenuPosition = _navigationManager.GetNextPosition(menu);
@@ -116,40 +127,51 @@ namespace Orchard.Blogs.Commands {
         }
 
         [CommandName("blog import")]
-        [CommandHelp("blog import /BlogId:<id> /FeedUrl:<feed url> /Owner:<username>\r\n\t" + "Import all items from <feed url> into the blog specified by <id>")]
-        [OrchardSwitches("FeedUrl,BlogId,Owner")]
+        [CommandHelp("blog import /BlogId:<id> /FeedUrl:<feed url> /Owner:<username> [/ContentType:<contenttype>]\r\n\t" + "Import all items from <feed url> into the blog specified by <id>")]
+        [OrchardSwitches("FeedUrl,BlogId,Owner,ContentType")]
         public void Import() {
             var owner = _membershipService.GetUser(Owner);
 
-            if(owner == null) {
+            if (owner == null)
+            {
                 Context.Output.WriteLine(T("Invalid username: {0}", Owner));
                 return;
             }
 
+            if (string.IsNullOrWhiteSpace(ContentType))
+            {
+                ContentType = "BlogPost";
+            }
+
             XDocument doc;
 
-            try {
+            try
+            {
                 Context.Output.WriteLine(T("Loading feed..."));
                 doc = XDocument.Load(FeedUrl);
                 Context.Output.WriteLine(T("Found {0} items", doc.Descendants("item").Count()));
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 throw new OrchardException(T("An error occured while loading the feed at {0}.", FeedUrl), ex);
             }
 
             var blog = _blogService.Get(BlogId, VersionOptions.Latest);
 
-            if ( blog == null ) {
+            if (blog == null)
+            {
                 Context.Output.WriteLine(T("Blog not found with specified Id: {0}", BlogId));
                 return;
             }
 
-            foreach ( var item in doc.Descendants("item") ) {
-                if (item != null) {
+            foreach (var item in doc.Descendants("item"))
+            {
+                if (item != null)
+                {
                     var postName = item.Element("title").Value;
 
                     Context.Output.WriteLine(T("Adding post: {0}...", postName.Substring(0, Math.Min(postName.Length, 40))));
-                    var post = _contentManager.New("BlogPost");
+                    var post = _contentManager.New(ContentType);
                     post.As<ICommonPart>().Owner = owner;
                     post.As<ICommonPart>().Container = blog;
                     post.As<TitlePart>().Title = postName;
@@ -168,7 +190,8 @@ namespace Orchard.Blogs.Commands {
 
             var blog = _blogService.Get(BlogId, VersionOptions.Latest);
 
-            if (blog == null) {
+            if (blog == null)
+            {
                 Context.Output.WriteLine(T("Blog not found with specified Id: {0}", BlogId));
                 return;
             }

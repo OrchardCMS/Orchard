@@ -4,7 +4,8 @@ using System.Web.Routing;
 using Orchard.Blogs.Routing;
 using Orchard.Mvc.Routes;
 
-namespace Orchard.Blogs {
+namespace Orchard.Blogs
+{
     public class Routes : IRouteProvider {
         private readonly IArchiveConstraint _archiveConstraint;
         private readonly IRsdConstraint _rsdConstraint;
@@ -81,11 +82,12 @@ namespace Orchard.Blogs {
                                                  },
                              new RouteDescriptor {
                                                      Route = new Route(
-                                                         "Admin/Blogs/{blogId}/Posts/Create",
+                                                         "Admin/Blogs/{blogId}/Posts/Create/{contentType}",
                                                          new RouteValueDictionary {
                                                                                       {"area", "Orchard.Blogs"},
                                                                                       {"controller", "BlogPostAdmin"},
-                                                                                      {"action", "Create"}
+                                                                                      {"action", "Create"},
+                                                                                      {"contentType", "BlogPost"}
                                                                                   },
                                                          new RouteValueDictionary (),
                                                          new RouteValueDictionary {

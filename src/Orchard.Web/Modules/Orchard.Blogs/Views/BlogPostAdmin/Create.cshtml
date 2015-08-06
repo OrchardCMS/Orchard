@@ -1,4 +1,4 @@
-@{ Layout.Title = T("New Post").ToString(); }
+@{ Layout.Title = T("New {0}", Model.ContentItem.TypeDefinition.DisplayName).ToString(); }
 
 @using (Html.BeginFormAntiForgeryPost()) {
     @Html.ValidationSummary()

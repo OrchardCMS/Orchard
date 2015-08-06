@@ -1,10 +1,12 @@
 ﻿using System.Linq;
 using Orchard.Blogs.Services;
+using Orchard.ContentManagement.MetaData.Models;
 using Orchard.Localization;
 using Orchard.Security;
 using Orchard.UI.Navigation;
 
-namespace Orchard.Blogs {
+namespace Orchard.Blogs
+{
     public class AdminMenu : INavigationProvider {
         private readonly IBlogService _blogService;
         private readonly IAuthorizationService _authorizationService;
@@ -30,7 +32,8 @@ namespace Orchard.Blogs {
             var blogCount = blogs.Count();
             var singleBlog = blogCount == 1 ? blogs.ElementAt(0) : null;
 
-            if (blogCount > 0 && singleBlog == null) {
+            if (blogCount > 0 && singleBlog == null)
+            {
                 menu.Add(T("Manage Blogs"), "3",
                          item => item.Action("List", "BlogAdmin", new { area = "Orchard.Blogs" }).Permission(Permissions.MetaListOwnBlogs));
             }
@@ -39,9 +42,16 @@ namespace Orchard.Blogs {
                     item => item.Action("Item", "BlogAdmin", new { area = "Orchard.Blogs", blogId = singleBlog.Id }).Permission(Permissions.MetaListOwnBlogs));
 
             if (singleBlog != null)
-                menu.Add(T("New Post"), "1.1",
+            {
+                foreach (var definition in _blogService.GetBlogPostContentTypes())
+                {
+                    string blogPostType = definition.Name;
+                    menu.Add(T("New {0}", definition.DisplayName), "1.1",
                          item =>
-                         item.Action("Create", "BlogPostAdmin", new {area = "Orchard.Blogs", blogId = singleBlog.Id}).Permission(Permissions.MetaListOwnBlogs));
+                         item.Action("Create", "BlogPostAdmin", new { area = "Orchard.Blogs", blogId = singleBlog.Id, contentType = blogPostType }).Permission(Permissions.MetaListOwnBlogs));
+                }
+            }
+
 
             menu.Add(T("New Blog"), "1.2",
                      item =>
