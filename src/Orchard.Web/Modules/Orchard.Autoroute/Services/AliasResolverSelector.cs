@@ -29,7 +29,7 @@ namespace Orchard.Autoroute.Services {
             }
 
             return _contentManager
-                .Query<AutoroutePart, AutoroutePartRecord>()
+                .Query<AutoroutePart, AutoroutePartRecord>(VersionOptions.Latest)
                 .Where(p => p.DisplayAlias == identifier)
                 .List<ContentItem>();
         }

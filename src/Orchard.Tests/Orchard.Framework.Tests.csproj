@@ -162,6 +162,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ContentManagement\ContentQueryTests.cs" />
+    <Compile Include="ContentManagement\DefaultContentManagerImportTests.cs" />
+    <Compile Include="ContentManagement\Handlers\DummyHandler.cs" />
     <Compile Include="ContentManagement\Handlers\LambdaPartHandler.cs" />
     <Compile Include="ContentManagement\HqlExpressionTests.cs" />
     <Compile Include="ContentManagement\DynamicContentQueryTests.cs" />

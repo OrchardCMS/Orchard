@@ -746,8 +746,13 @@ namespace Orchard.ContentManagement {
                     Create(item);
                 }
             }
+            else {
+                // If the existing item is published, create a new draft for that item.
+                if (item.IsPublished())
+                    item = Get(item.Id, VersionOptions.DraftRequired);
+            }
 
-            // create a version record if import handlers need it
+            // Create a version record if import handlers need it.
             if(item.VersionRecord == null) {
                 item.VersionRecord = new ContentItemVersionRecord {
                     ContentItemRecord = new ContentItemRecord {
@@ -770,7 +775,7 @@ namespace Orchard.ContentManagement {
 
             var savedItem = Get(item.Id, VersionOptions.Latest);
 
-            // the item has been pre-created in the first pass of the import, create it in db
+            // The item has been pre-created in the first pass of the import, create it in db.
             if(savedItem == null) {
                 if (status != null && status.Value == "Draft") {
                     Create(item, VersionOptions.Draft);
