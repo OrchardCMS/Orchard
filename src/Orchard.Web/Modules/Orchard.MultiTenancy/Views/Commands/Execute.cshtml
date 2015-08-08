@@ -1,0 +1,131 @@
+﻿@model Orchard.MultiTenancy.ViewModels.CommandsExecuteViewModel
+
+@{
+    Script.Require("jQuery").AtFoot();
+    Script.Include(Url.Content("~/Themes/TheAdmin/Scripts/admin.js")).AtFoot();
+}
+
+<h1>
+    @Html.TitleForPage(T("Command line").ToString())
+</h1>
+<div>
+    <fieldset>
+        <label for="command-line">@T("Command Line")</label>
+        <input id="command-line" type="text" value="" class="text large"/>    
+    </fieldset>
+    <fieldset>
+        <button type="button" id="button-run" class="button">@T("Run")</button>
+        <button type="button" id="button-cancel" class="button" style="display: none">@T("Cancel")</button>
+        <div class="message message-Warning" id="message-progress" style="display: none"></div>
+    </fieldset>
+
+    <div class="tenants">
+        @foreach(var tenant in Model.Tenants) {
+        <fieldset class="tenant" id="tenant-@tenant" data-tenant="@tenant">
+            <label>@tenant</label>
+            <pre class="result"> </pre>
+        </fieldset>
+        }
+    </div>
+</div>
+
+@using (Script.Foot()) {
+<script type="text/javascript">
+$(function() {
+    var executeCommandUrl = '@HttpUtility.JavaScriptStringEncode(Url.Action("Execute", "Commands"))';
+    var antiForgeryToken = '@HttpUtility.JavaScriptStringEncode(Html.AntiForgeryTokenValueOrchard().ToString())';
+    var endMessage = '@HttpUtility.JavaScriptStringEncode(T("All tenants have been processed").Text)';
+    var cancelMessage = '@HttpUtility.JavaScriptStringEncode(T("Cancellation requested").Text)';
+    var tenantsRemainingMessage = '@HttpUtility.JavaScriptStringEncode(T("{0} tenants remaining", "{0}").Text)';
+    var tenants = ['@Html.Raw(String.Join("', '", Model.Tenants.Select(HttpUtility.JavaScriptStringEncode)))'];
+    var cancel = false;
+    var isCancelled = function () {
+        return cancel;
+    }
+
+    $('#button-cancel').click(function () {
+        cancel = true;
+        $('#message-progress').text(endMessage);
+        $('#button-cancel').hide();
+    });
+
+    $('#button-run').click(function () {
+        cancel =false;
+        $('#button-cancel').show();
+        $('#button-run').hide();
+
+        var remaining = tenants.length;
+        $('#message-progress').show();
+        
+        var deferred = $.Deferred();
+        var tail = deferred.promise();
+
+        tenants.forEach(function (tenant) {
+            console.log("enlisting");
+
+            if (tenant.toLowerCase() == "default") {
+                return;
+            }
+
+            $('#tenant-' + tenant).find("label").removeClass();
+
+            tail = tail.then(function () {
+                if (isCancelled()) {
+                    console.log("reject");
+                    var t = $.Deferred();
+                    t.reject();
+                    return t.promise();
+                }
+
+                return $.ajax({
+                    type: 'POST',
+                    url: executeCommandUrl,
+                    // async: false,
+                    beforeSend: function (xhr, opts) {
+                        console.log("::send");
+
+                        var fieldset = $('#tenant-' + tenant);
+                        fieldset.find("label").removeClass().addClass("progress");
+                    },
+                    data: {
+                        __RequestVerificationToken: antiForgeryToken,
+                        tenant: tenant,
+                        commandLine: $('#command-line').val()
+                    },
+                    success: function (result) {
+                        var fieldset = $('#tenant-' + tenant);
+                        if (result.error) {
+                            fieldset.find("label").removeClass().addClass("fail");
+                            fieldset.find("pre").text(result.error);
+                        }
+                        else {
+                            fieldset.find("label").removeClass().addClass("success");
+                            fieldset.find("pre").text(result.data);
+                        }
+
+                        fieldset.find("label").expandoControl(function (controller) { return controller.nextAll("pre"); }, { collapse: true, remember: false });
+                        remaining--;
+                    }
+                });
+            });
+        });
+
+        tail
+
+            .fail(function () {
+                $('#message-progress').text(cancelMessage);
+            })
+            .done(function () {
+                $('#message-progress').text(endMessage);
+            })
+            .always(function () {
+                cancel = false;
+                $('#button-run').show();
+                $('#button-cancel').hide();
+            });
+
+        deferred.resolve();
+    });
+});
+</script>
+}
