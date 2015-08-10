@@ -36,6 +36,10 @@ gulp.task("rebuild", function () {
 // Continuous watch (each asset group is built whenever one of its inputs changes).
 gulp.task("watch", function () {
     getAssetGroups().forEach(function (assetGroup) {
+    	assetGroup.watchPaths = !!assetGroup.watch ?
+        	assetGroup.watch.map(function (watchPath) {
+            	return path.join(assetGroup.basePath, watchPath);
+        }).concat(assetGroup.inputPaths) : assetGroup.inputPaths;
         gulp.watch(assetGroup.watchPaths, function (event) {
             console.log("Asset file '" + event.path + "' was " + event.type + ", rebuilding output '" + assetGroup.outputPath + "'.");
             var doRebuild = true; 
@@ -66,12 +70,6 @@ function resolveAssetGroupPaths(assetGroup, assetManifestPath) {
     assetGroup.inputPaths = assetGroup.inputs.map(function (inputPath) {
         return path.join(assetGroup.basePath, inputPath);
     });
-    
-    assetGroup.watchPaths = !!assetGroup.watch ?
-        assetGroup.watch.map(function (watchPath) {
-            return path.join(assetGroup.basePath, watchPath);
-        }).concat(assetGroup.inputPaths) : assetGroup.inputPaths;
-
     assetGroup.outputPath = path.join(assetGroup.basePath, assetGroup.output);
     assetGroup.outputDir = path.dirname(assetGroup.outputPath);
     assetGroup.outputFileName = path.basename(assetGroup.output);
@@ -152,7 +150,7 @@ function buildJsPipeline(assetGroup, doRebuild) {
             noEmitOnError: true,
             sortOutput: true,
         }).js))
-		.pipe(gulpif(doConcat, concat(assetGroup.outputFileName)))
+	.pipe(gulpif(doConcat, concat(assetGroup.outputFileName)))
         // TODO: Start using below whenever gulp-header supports sourcemaps.
         //.pipe(header(
         //    "/*\n" +
@@ -162,9 +160,9 @@ function buildJsPipeline(assetGroup, doRebuild) {
         //    "*/\n\n"))
         .pipe(gulpif(generateSourceMaps, sourcemaps.write()))
         .pipe(gulp.dest(assetGroup.outputDir))
-		.pipe(uglify())
-		.pipe(rename({
-		    suffix: ".min"
-		}))
-		.pipe(gulp.dest(assetGroup.outputDir));
+	.pipe(uglify())
+	.pipe(rename({
+		suffix: ".min"
+	     }))
+	.pipe(gulp.dest(assetGroup.outputDir));
 }
