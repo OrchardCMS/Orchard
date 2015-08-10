@@ -7,6 +7,7 @@ namespace Orchard.TaskLease.Services {
     /// Describes a service to save and acquire task leases. A task lease can't be acquired by two different machines,
     /// for a specific amount of time. Optionnally a State can be saved along with the lease.
     /// </summary>
+    [Obsolete("Use Orchard.Tasks.Locking.ILockService instead.")]
     public interface ITaskLeaseService : IDependency {
     
         /// <summary>
