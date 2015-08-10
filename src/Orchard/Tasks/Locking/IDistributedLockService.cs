@@ -4,7 +4,7 @@ namespace Orchard.Tasks.Locking {
     /// <summary>
     /// Provides distributed locking functionality.
     /// </summary>
-    public interface IDistributedLockService : IDependency {
+    public interface IDistributedLockService : ISingletonDependency {
         /// <summary>
         /// Tries to acquire a lock on the specified name.
         /// </summary>
