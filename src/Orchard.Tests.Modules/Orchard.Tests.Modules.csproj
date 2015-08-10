@@ -182,6 +182,7 @@
     <Compile Include="Stubs\MessageChannelSelectorStub.cs" />
     <Compile Include="Stubs\ShapeDisplayStub.cs" />
     <Compile Include="Tags\Services\TagsServiceTests.cs" />
+    <Compile Include="TaskLease\DatabaseLockTests.cs" />
     <Compile Include="Themes\Services\ThemeServiceTests.cs" />
     <Compile Include="Users\Controllers\AccountControllerTests.cs" />
     <Compile Include="Users\Services\UserServiceTests.cs" />
@@ -280,6 +281,10 @@
     <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Tags\Orchard.Tags.csproj">
       <Project>{5D0F00F0-26C9-4785-AD61-B85710C60EB0}</Project>
       <Name>Orchard.Tags</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.TaskLease\Orchard.TaskLease.csproj">
+      <Project>{3f72a4e9-7b72-4260-b010-c16ec54f9baf}</Project>
+      <Name>Orchard.TaskLease</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Themes\Orchard.Themes.csproj">
       <Project>{CDE24A24-01D3-403C-84B9-37722E18DFB7}</Project>
