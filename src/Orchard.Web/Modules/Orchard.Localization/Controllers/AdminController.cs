@@ -50,9 +50,6 @@ namespace Orchard.Localization.Controllers {
                     existingTranslationMetadata.EditorRouteValues);
             }
 
-            var contentItemTranslation = _contentManager.New<LocalizationPart>(masterContentItem.ContentType);
-            contentItemTranslation.MasterContentItem = masterContentItem;
-
             // build the editor using the master content item so that
             // the form is pre-populated with the original values
             
