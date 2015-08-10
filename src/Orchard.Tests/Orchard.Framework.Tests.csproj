@@ -269,6 +269,7 @@
     <Compile Include="Localization\DateTimePartsTests.cs" />
     <Compile Include="Localization\DefaultDateLocalizationServicesTests.cs" />
     <Compile Include="Localization\DefaultDateFormatterTests.cs" />
+    <Compile Include="Stubs\StubDistributedLock.cs" />
     <Compile Include="Stubs\StubMachineNameProvider.cs" />
     <Compile Include="Stubs\StubCultureSelector.cs" />
     <Compile Include="Localization\TestHelpers.cs" />
@@ -291,6 +292,7 @@
     <Compile Include="Stubs\StubVirtualPathMonitor.cs" />
     <Compile Include="Stubs\StubCacheManager.cs" />
     <Compile Include="Stubs\StubWebSiteFolder.cs" />
+    <Compile Include="Tasks\DistributedLockServiceTests.cs" />
     <Compile Include="Time\TimeZoneSelectorTests.cs" />
     <Compile Include="UI\Resources\ResourceManagerTests.cs" />
     <Compile Include="UI\ShapeTests.cs" />
