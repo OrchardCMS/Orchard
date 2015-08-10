@@ -105,6 +105,7 @@ namespace Orchard.TaskLease.Services {
                     }
                     catch (Exception ex) {
                         if (ex.IsFatal()) throw;
+                        Logger.Error(ex, "An non-fatal error occurred while trying to dispose the database lock.");
                     }
                 }
 
