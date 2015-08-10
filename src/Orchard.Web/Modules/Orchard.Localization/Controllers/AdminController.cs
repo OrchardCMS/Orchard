@@ -55,8 +55,9 @@ namespace Orchard.Localization.Controllers {
 
             // build the editor using the master content item so that
             // the form is pre-populated with the original values
-
+            
             var content = _contentManager.BuildEditor(masterContentItem);
+            ViewData["Translating"] = true;
             
             return View(content);
         }

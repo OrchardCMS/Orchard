@@ -7,7 +7,7 @@
     <label for="@Html.FieldIdFor(m => m.SelectedCulture)">@T("Content Localization")</label>
     <div>
         @*Brand new content item*@
-        @if (Model.ContentItem.ContentItem.Id == 0) {
+        @if (Model.ContentItem.ContentItem.Id == 0 || (bool)(ViewData["Translating"] ?? false)) {
             if (Model.MasterContentItem == null) {
                 @T("This is the <em>{0}</em> variation of the content",
                     BuildSelectedCultureList(
