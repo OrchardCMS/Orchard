@@ -7,11 +7,11 @@ using Orchard.Logging;
 namespace Orchard.Tasks.Locking {
     public class DistributedLockService : IDistributedLockService {
         private readonly ReaderWriterLockSlim _rwl = new ReaderWriterLockSlim();
-        private readonly Work<IDistributedLock> _lock;
+        private readonly IWorkContextAccessor _wca;
         private readonly IMachineNameProvider _machineNameProvider;
 
-        public DistributedLockService(Work<IDistributedLock> @lock, IMachineNameProvider machineNameProvider) {
-            _lock = @lock;
+        public DistributedLockService(IWorkContextAccessor wca, IMachineNameProvider machineNameProvider) {
+            _wca = wca;
             _machineNameProvider = machineNameProvider;
             Logger = NullLogger.Instance;
         }
@@ -20,7 +20,7 @@ namespace Orchard.Tasks.Locking {
 
         public bool TryAcquireLock(string name, TimeSpan maxLifetime, TimeSpan timeout, out IDistributedLock @lock) {
             var machineName = _machineNameProvider.GetMachineName();
-            @lock = _lock.Value;
+            @lock = Resolve<IDistributedLock>();
 
             if (_rwl.TryEnterWriteLock(0)) {
                 try {
@@ -50,6 +50,11 @@ namespace Orchard.Tasks.Locking {
 
             Logger.Debug("Could not acquire a lock named {0} on machine {1}.", name, machineName);
             return false;
+        }
+
+        private T Resolve<T>() {
+            var workContext = _wca.GetContext() ?? _wca.CreateWorkContextScope().WorkContext; // In case this is invoked at the end of the request.
+            return workContext.Resolve<T>();
         }
 
         public IDistributedLock AcquireLock(string name, TimeSpan maxLifetime, TimeSpan timeout) {
