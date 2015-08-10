@@ -35,6 +35,9 @@ namespace Orchard.TaskLease.Services {
         public ILogger Logger { get; set; }
 
         public bool TryAcquire(string name, TimeSpan maxLifetime) {
+            if(_isDisposed)
+                throw new ObjectDisposedException("DatabaseLock");
+
             Argument.ThrowIfNullOrEmpty(name, "name");
 
             if (name.Length > 256)
@@ -110,7 +113,7 @@ namespace Orchard.TaskLease.Services {
         }
 
         private ILifetimeScope EnsureLifetimeScope(string name) {
-            return _scope = _lifetimeScope.BeginLifetimeScope("Orchard.Tasks.Locking.Database." + name);
+            return _scope ?? (_scope = _lifetimeScope.BeginLifetimeScope("Orchard.Tasks.Locking.Database." + name));
         }
 
         private void DisposeLifetimeScope() {
