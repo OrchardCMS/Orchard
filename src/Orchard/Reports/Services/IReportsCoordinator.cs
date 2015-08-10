@@ -16,7 +16,8 @@
         /// <param name="reportKey">Key, i.e. technical name of the report. Should be the same as the one used when registering the report.</param>
         /// <param name="type">Type of the entry.</param>
         /// <param name="message">The message to include in the entry.</param>
-        void Add(string reportKey, ReportEntryType type, string message);
+        /// <param name="reportDescription">Description for the new type of reports message. Optional.</param>
+        void Add(string reportKey, ReportEntryType type, string message, string reportDescription = null);
 
         /// <summary>
         /// Registers a new report so entries can be added to it.
