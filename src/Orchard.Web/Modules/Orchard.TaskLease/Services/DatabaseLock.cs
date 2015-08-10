@@ -5,6 +5,7 @@ using Autofac;
 using Orchard.Data;
 using Orchard.Environment.Extensions;
 using Orchard.Exceptions;
+using Orchard.Logging;
 using Orchard.Services;
 using Orchard.TaskLease.Models;
 using Orchard.Tasks.Locking;
@@ -23,11 +24,15 @@ namespace Orchard.TaskLease.Services {
         private bool _isAcquired;
         private int _id;
         private bool _isDisposed;
+        private ILifetimeScope _scope;
 
         public DatabaseLock(ILifetimeScope lifetimeScope, IClock clock) {
             _lifetimeScope = lifetimeScope;
             _clock = clock;
+            Logger = NullLogger.Instance;
         }
+
+        public ILogger Logger { get; set; }
 
         public bool TryAcquire(string name, TimeSpan maxLifetime) {
             Argument.ThrowIfNullOrEmpty(name, "name");
@@ -35,9 +40,12 @@ namespace Orchard.TaskLease.Services {
             if (name.Length > 256)
                 throw new ArgumentException("The lock's name can't be longer than 256 characters.");
 
-            // This way we can create a nested transaction scope instead of having the unwanted effect
-            // of manipulating the transaction of the caller.
-            using (var scope = BeginLifeTimeScope(name)) {
+            try {
+                var scope = EnsureLifetimeScope(name);
+                scope.Resolve<ITransactionManager>().RequireNew(IsolationLevel.ReadCommitted);
+
+                // This way we can create a nested transaction scope instead of having the unwanted effect
+                // of manipulating the transaction of the caller.
                 var repository = scope.Resolve<IRepository<DatabaseLockRecord>>();
                 var record = repository.Table.FirstOrDefault(x => x.Name == name);
 
@@ -67,34 +75,47 @@ namespace Orchard.TaskLease.Services {
 
                 return canAcquire;
             }
-        }
-
-        // This will be called at least by the IoC container when the request ends.
-        public void Dispose() {
-            if (_isDisposed || !_isAcquired) return;
-
-            _isDisposed = true;
-
-            using (var scope = BeginLifeTimeScope(_name)) {
-                try {
-                    var repository = scope.Resolve<IRepository<DatabaseLockRecord>>();
-                    var record = repository.Get(_id);
-
-                    if (record != null) {
-                        repository.Delete(record);
-                        repository.Flush();
-                    }
-                }
-                catch (Exception ex) {
-                    if (ex.IsFatal()) throw;
-                }
+            catch (Exception ex) {
+                Logger.Error(ex, "An error occurred while trying to acquire a lock.");
+                DisposeLifetimeScope();
+                throw;
             }
         }
 
-        private ILifetimeScope BeginLifeTimeScope(string name) {
-            var scope = _lifetimeScope.BeginLifetimeScope("Orchard.Tasks.Locking.Database." + name);
-            scope.Resolve<ITransactionManager>().RequireNew(IsolationLevel.ReadCommitted);
-            return scope;
+        // This will be called at least and at the latest by the IoC container when the request ends.
+        public void Dispose() {
+            if (_scope == null)
+                return;
+
+            if (!_isDisposed) {
+                _isDisposed = true;
+
+                if (_isAcquired) {
+                    try {
+                        var repository = _scope.Resolve<IRepository<DatabaseLockRecord>>();
+                        var record = repository.Get(_id);
+
+                        if (record != null) {
+                            repository.Delete(record);
+                            repository.Flush();
+                        }
+                    }
+                    catch (Exception ex) {
+                        if (ex.IsFatal()) throw;
+                    }
+                }
+
+                _scope.Dispose();
+            }
+        }
+
+        private ILifetimeScope EnsureLifetimeScope(string name) {
+            return _scope = _lifetimeScope.BeginLifetimeScope("Orchard.Tasks.Locking.Database." + name);
+        }
+
+        private void DisposeLifetimeScope() {
+            if (_scope != null)
+                _scope.Dispose();
         }
     }
 }
