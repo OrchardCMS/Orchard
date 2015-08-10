@@ -13,10 +13,10 @@ using Orchard.Validation;
 namespace Orchard.TaskLease.Services {
 
     /// <summary>
-    /// Provides a database driven implementation of <see cref="ILock" />
+    /// Provides a database driven implementation of <see cref="IDistributedLock" />
     /// </summary>
     [OrchardSuppressDependency("Orchard.Tasks.Locking.DefaultLock")]
-    public class DatabaseLock : ILock {
+    public class DatabaseLock : IDistributedLock {
         private readonly ILifetimeScope _lifetimeScope;
         private readonly IClock _clock;
         private string _name;

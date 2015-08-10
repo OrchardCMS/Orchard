@@ -4,11 +4,11 @@ using Orchard.Environment;
 using Orchard.Logging;
 
 namespace Orchard.Tasks.Locking {
-    public class LockService : ILockService {
-        private readonly Work<ILock> _lock;
+    public class DistributedLockService : IDistributedLockService {
+        private readonly Work<IDistributedLock> _lock;
         private readonly IMachineNameProvider _machineNameProvider;
 
-        public LockService(Work<ILock> @lock, IMachineNameProvider machineNameProvider) {
+        public DistributedLockService(Work<IDistributedLock> @lock, IMachineNameProvider machineNameProvider) {
             _lock = @lock;
             _machineNameProvider = machineNameProvider;
             Logger = NullLogger.Instance;
@@ -16,10 +16,10 @@ namespace Orchard.Tasks.Locking {
 
         public ILogger Logger { get; set; }
 
-        public ILock TryAcquireLock(string name, TimeSpan maxLifetime, TimeSpan timeout) {
+        public bool TryAcquireLock(string name, TimeSpan maxLifetime, TimeSpan timeout, out IDistributedLock @lock) {
             var waitedTime = TimeSpan.Zero;
             var waitTime = TimeSpan.FromMilliseconds(timeout.TotalMilliseconds / 10);
-            var @lock = _lock.Value;
+            @lock = _lock.Value;
             bool acquired;
 
             while (!(acquired = @lock.TryAcquire(name, maxLifetime)) && waitedTime < timeout) {
@@ -32,17 +32,16 @@ namespace Orchard.Tasks.Locking {
 
             if (acquired) {
                 Logger.Debug(String.Format("Successfully acquired a lock named {0} on machine {1}.", name, machineName));
-                return @lock;
+                return true;
             }
 
             Logger.Debug(String.Format("Failed to acquire a lock named {0} on machine {1}.", name, machineName));
-            return null;
+            return false;
         }
 
-        public ILock AcquireLock(string name, TimeSpan maxLifetime, TimeSpan timeout) {
-            var lockResult = TryAcquireLock(name, maxLifetime, timeout);
-            if (lockResult != null) return lockResult;
-            throw new TimeoutException(String.Format("No lock for \"{0}\" could not be acquired within {1} milliseconds.", name, timeout.TotalMilliseconds));
+        public IDistributedLock AcquireLock(string name, TimeSpan maxLifetime, TimeSpan timeout) {
+            IDistributedLock lockResult;
+            return TryAcquireLock(name, maxLifetime, timeout, out lockResult) ? lockResult : null;
         }
     }
 }

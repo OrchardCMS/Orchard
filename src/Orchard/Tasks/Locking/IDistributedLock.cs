@@ -4,7 +4,7 @@ namespace Orchard.Tasks.Locking {
     /// <summary>
     /// Provides a lock on a provided name.
     /// </summary>
-    public interface ILock : ITransientDependency, IDisposable {
+    public interface IDistributedLock : ITransientDependency, IDisposable {
         /// <summary>
         /// Tries to acquire a lock on the specified name.
         /// </summary>

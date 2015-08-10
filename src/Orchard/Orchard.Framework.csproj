@@ -398,9 +398,9 @@
     <Compile Include="Settings\CurrentSiteWorkContext.cs" />
     <Compile Include="Settings\ResourceDebugMode.cs" />
     <Compile Include="Tasks\Locking\DefaultLock.cs" />
-    <Compile Include="Tasks\Locking\ILockService.cs" />
-    <Compile Include="Tasks\Locking\ILock.cs" />
-    <Compile Include="Tasks\Locking\LockService.cs" />
+    <Compile Include="Tasks\Locking\IDistributedLockService.cs" />
+    <Compile Include="Tasks\Locking\IDistributedLock.cs" />
+    <Compile Include="Tasks\Locking\DistributedLockService.cs" />
     <Compile Include="Themes\CurrentThemeWorkContext.cs" />
     <Compile Include="Themes\ThemeManager.cs" />
     <Compile Include="Time\CurrentTimeZoneWorkContext.cs" />
