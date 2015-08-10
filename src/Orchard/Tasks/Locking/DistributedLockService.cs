@@ -34,7 +34,6 @@ namespace Orchard.Tasks.Locking {
                         }).Wait();
                     }
 
-
                     if (acquired) {
                         Logger.Debug(String.Format("Successfully acquired a lock named {0} on machine {1}.", name, machineName));
                         return true;
@@ -46,7 +45,6 @@ namespace Orchard.Tasks.Locking {
                 }
                 finally {
                     Monitor.Exit(_semaphore);
-                    Logger.Debug("Ending sweep.");
                 }
             }
 
