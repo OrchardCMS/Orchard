@@ -6,7 +6,7 @@ using Orchard.Logging;
 
 namespace Orchard.Tasks.Locking {
     public class DistributedLockService : IDistributedLockService {
-        private static readonly object _semaphore = new object();
+        private readonly ReaderWriterLockSlim _rwl = new ReaderWriterLockSlim();
         private readonly Work<IDistributedLock> _lock;
         private readonly IMachineNameProvider _machineNameProvider;
 
@@ -22,7 +22,7 @@ namespace Orchard.Tasks.Locking {
             var machineName = _machineNameProvider.GetMachineName();
             @lock = _lock.Value;
 
-            if (Monitor.TryEnter(_semaphore)) {
+            if (_rwl.TryEnterWriteLock(0)) {
                 try {
                     var waitedTime = TimeSpan.Zero;
                     var waitTime = TimeSpan.FromMilliseconds(timeout.TotalMilliseconds / 10);
@@ -35,20 +35,20 @@ namespace Orchard.Tasks.Locking {
                     }
 
                     if (acquired) {
-                        Logger.Debug(String.Format("Successfully acquired a lock named {0} on machine {1}.", name, machineName));
+                        Logger.Debug("Successfully acquired a lock named {0} on machine {1}.", name, machineName);
                         return true;
                     }
                 }
                 catch (Exception ex) {
-                    Logger.Error(ex, "Error during acquire lock.");
+                    Logger.Error(ex, "Error while trying to acquire a lock named {0} on machine {1}.", name, machineName);
                     throw;
                 }
                 finally {
-                    Monitor.Exit(_semaphore);
+                    _rwl.ExitWriteLock();
                 }
             }
 
-            Logger.Debug(String.Format("Failed to acquire a lock named {0} on machine {1}.", name, machineName));
+            Logger.Debug("Could not acquire a lock named {0} on machine {1}.", name, machineName);
             return false;
         }
 
