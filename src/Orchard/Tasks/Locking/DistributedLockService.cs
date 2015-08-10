@@ -1,10 +1,12 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Orchard.Environment;
 using Orchard.Logging;
 
 namespace Orchard.Tasks.Locking {
     public class DistributedLockService : IDistributedLockService {
+        private static readonly object _semaphore = new object();
         private readonly Work<IDistributedLock> _lock;
         private readonly IMachineNameProvider _machineNameProvider;
 
@@ -17,22 +19,35 @@ namespace Orchard.Tasks.Locking {
         public ILogger Logger { get; set; }
 
         public bool TryAcquireLock(string name, TimeSpan maxLifetime, TimeSpan timeout, out IDistributedLock @lock) {
-            var waitedTime = TimeSpan.Zero;
-            var waitTime = TimeSpan.FromMilliseconds(timeout.TotalMilliseconds / 10);
-            @lock = _lock.Value;
-            bool acquired;
-
-            while (!(acquired = @lock.TryAcquire(name, maxLifetime)) && waitedTime < timeout) {
-                Task.Delay(timeout).ContinueWith(t => {
-                    waitedTime += waitTime;
-                }).Wait();
-            }
-
             var machineName = _machineNameProvider.GetMachineName();
+            @lock = _lock.Value;
 
-            if (acquired) {
-                Logger.Debug(String.Format("Successfully acquired a lock named {0} on machine {1}.", name, machineName));
-                return true;
+            if (Monitor.TryEnter(_semaphore)) {
+                try {
+                    var waitedTime = TimeSpan.Zero;
+                    var waitTime = TimeSpan.FromMilliseconds(timeout.TotalMilliseconds / 10);
+                    bool acquired;
+
+                    while (!(acquired = @lock.TryAcquire(name, maxLifetime)) && waitedTime < timeout) {
+                        Task.Delay(timeout).ContinueWith(t => {
+                            waitedTime += waitTime;
+                        }).Wait();
+                    }
+
+
+                    if (acquired) {
+                        Logger.Debug(String.Format("Successfully acquired a lock named {0} on machine {1}.", name, machineName));
+                        return true;
+                    }
+                }
+                catch (Exception ex) {
+                    Logger.Error(ex, "Error during acquire lock.");
+                    throw;
+                }
+                finally {
+                    Monitor.Exit(_semaphore);
+                    Logger.Debug("Ending sweep.");
+                }
             }
 
             Logger.Debug(String.Format("Failed to acquire a lock named {0} on machine {1}.", name, machineName));
