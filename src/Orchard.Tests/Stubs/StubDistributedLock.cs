@@ -17,6 +17,7 @@ namespace Orchard.Tests.Stubs {
 
         public void Dispose() {
             IsDisposed = true;
+            IsAcquired = false;
         }
     }
 }

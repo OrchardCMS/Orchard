@@ -14,6 +14,7 @@ namespace Orchard.Tests.Tasks {
         private DistributedLockService _distributedLockService;
 
         protected override void Register(ContainerBuilder builder) {
+            builder.RegisterType<StubWorkContextAccessor>().As<IWorkContextAccessor>();
             builder.RegisterType<StubMachineNameProvider>().As<IMachineNameProvider>();
             builder.RegisterType<StubDistributedLock>().As<IDistributedLock>();
             builder.RegisterType<DistributedLockService>().AsSelf();
@@ -23,6 +24,7 @@ namespace Orchard.Tests.Tasks {
         protected override void Resolve(ILifetimeScope container) {
             _distributedLockService = container.Resolve<DistributedLockService>();
         }
+
 
         [Test]
         public void AcquiringLockSucceeds() {
