@@ -63,7 +63,7 @@ namespace Orchard.Environment.ShellBuilders {
                 Records = records,
             };
 
-            Logger.Debug("Done composing blueprint");
+            Logger.Debug("Done composing blueprint.");
             return result;
         }
 
