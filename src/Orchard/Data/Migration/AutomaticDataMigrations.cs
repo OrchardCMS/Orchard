@@ -3,7 +3,7 @@ using System.Linq;
 using Orchard.Environment;
 using Orchard.Environment.Features;
 using Orchard.Logging;
-using Orchard.Tasks.Locking;
+using Orchard.Tasks.Locking.Services;
 
 namespace Orchard.Data.Migration {
     /// <summary>

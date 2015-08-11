@@ -4,9 +4,8 @@ using System.Threading.Tasks;
 using Orchard.Environment;
 using Orchard.Logging;
 
-namespace Orchard.Tasks.Locking {
+namespace Orchard.Tasks.Locking.Services {
     public class DistributedLockService : IDistributedLockService {
-        private readonly ReaderWriterLockSlim _rwl = new ReaderWriterLockSlim();
         private readonly IWorkContextAccessor _wca;
         private readonly IMachineNameProvider _machineNameProvider;
 
@@ -22,30 +21,25 @@ namespace Orchard.Tasks.Locking {
             var machineName = _machineNameProvider.GetMachineName();
             @lock = Resolve<IDistributedLock>();
 
-            if (_rwl.TryEnterWriteLock(0)) {
-                try {
-                    var waitedTime = TimeSpan.Zero;
-                    var waitTime = TimeSpan.FromMilliseconds(timeout.TotalMilliseconds / 10);
-                    bool acquired;
+            try {
+                var waitedTime = TimeSpan.Zero;
+                var waitTime = TimeSpan.FromMilliseconds(timeout.TotalMilliseconds / 10);
+                bool acquired;
 
-                    while (!(acquired = @lock.TryAcquire(name, maxLifetime)) && waitedTime < timeout) {
-                        Task.Delay(timeout).ContinueWith(t => {
-                            waitedTime += waitTime;
-                        }).Wait();
-                    }
+                while (!(acquired = @lock.TryAcquire(name, machineName, maxLifetime)) && waitedTime < timeout) {
+                    Task.Delay(timeout).ContinueWith(t => {
+                        waitedTime += waitTime;
+                    }).Wait();
+                }
 
-                    if (acquired) {
-                        Logger.Debug("Successfully acquired a lock named {0} on machine {1}.", name, machineName);
-                        return true;
-                    }
+                if (acquired) {
+                    Logger.Debug("Successfully acquired a lock named {0} on machine {1}.", name, machineName);
+                    return true;
                 }
-                catch (Exception ex) {
-                    Logger.Error(ex, "Error while trying to acquire a lock named {0} on machine {1}.", name, machineName);
-                    throw;
-                }
-                finally {
-                    _rwl.ExitWriteLock();
-                }
+            }
+            catch (Exception ex) {
+                Logger.Error(ex, "Error while trying to acquire a lock named {0} on machine {1}.", name, machineName);
+                throw;
             }
 
             Logger.Debug("Could not acquire a lock named {0} on machine {1}.", name, machineName);

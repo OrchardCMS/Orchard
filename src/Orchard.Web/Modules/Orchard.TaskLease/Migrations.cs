@@ -17,14 +17,5 @@ namespace Orchard.TaskLease {
 
             return 1;
         }
-
-        public int UpdateFrom1() {
-            SchemaBuilder.CreateTable("DatabaseLockRecord", table => table
-                .Column<int>("Id", column => column.PrimaryKey().Identity())
-                .Column<string>("Name", column => column.NotNull().WithLength(256))
-                .Column<DateTime>("AcquiredUtc"));
-
-            return 2;
-        }
     }
 }

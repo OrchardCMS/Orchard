@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Orchard.Tasks.Locking {
+namespace Orchard.Tasks.Locking.Services {
     /// <summary>
     /// Provides distributed locking functionality.
     /// </summary>
