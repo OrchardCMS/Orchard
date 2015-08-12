@@ -5,5 +5,6 @@
         public virtual ActionRecord Action { get; set; }
         public virtual string RouteValues { get; set; }
         public virtual string Source { get; set; }
+        public virtual bool IsManaged { get; set; }
     }
 }

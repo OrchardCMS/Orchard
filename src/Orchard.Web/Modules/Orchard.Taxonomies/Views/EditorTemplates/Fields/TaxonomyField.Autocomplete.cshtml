@@ -26,7 +26,7 @@
     }
 }
 @{
-    var allTerms = Newtonsoft.Json.JsonConvert.SerializeObject(Model.Terms.Select(x => new { label = x.Name, value = x.Id, levels = x.GetLevels(), disabled = IsTermDisabled(x)}));
+    var allTerms = Newtonsoft.Json.JsonConvert.SerializeObject(Model.Terms.Select(x => new { label = x.Name, value = x.Id, levels = x.GetLevels(), disabled = IsTermDisabled(x) }));
     var selectedTerms = Newtonsoft.Json.JsonConvert.SerializeObject(Model.Terms.Where(x => x.IsChecked).Select(x => new { label = x.Name, value = x.Id, levels = 0, disabled = true }));
 }
 <fieldset class="taxonomy-wrapper" data-name-prefix="@Html.FieldNameFor(m => m)" data-id-prefix="@Html.FieldIdFor(m => m)">
@@ -53,10 +53,10 @@
                 @{
                     var disabled = IsTermDisabled(entry);
                     if (Model.Settings.SingleChoice) {
-                    <input @if (disabled){ <text>disabled="disabled"</text> } type="radio" value="@Model.Terms[ti].Id" @if (entry.Id == Model.SingleTermId){ <text>checked="checked"</text> } name="@Html.FieldNameFor(m => m.SingleTermId)" id="@Html.FieldIdFor(m => m.Terms[ti].IsChecked)" data-term="@entry.Name" data-term-identity="@entry.Name.ToLower()" />
+                            <input @if (disabled) { <text> disabled="disabled" </text>  } type="radio" value="@Model.Terms[ti].Id" @if (entry.Id == Model.SingleTermId) { <text> checked="checked" </text>  } name="@Html.FieldNameFor(m => m.SingleTermId)" id="@Html.FieldIdFor(m => m.Terms[ti].IsChecked)" data-term="@entry.Name" data-term-identity="@entry.Name.ToLower()" />
                     }
                     else {
-                    <input @if (disabled){ <text>disabled="disabled"</text> } type="checkbox" value="true" @if (entry.IsChecked) { <text>checked="checked"</text> } name="@Html.FieldNameFor(m => m.Terms[ti].IsChecked)" id="@Html.FieldIdFor(m => m.Terms[ti].IsChecked)" data-term="@entry.Name" data-term-identity="@entry.Name.ToLower()" /> 
+                            <input @if (disabled) { <text> disabled="disabled" </text>  } type="checkbox" value="true" @if (entry.IsChecked) { <text> checked="checked" </text>  } name="@Html.FieldNameFor(m => m.Terms[ti].IsChecked)" id="@Html.FieldIdFor(m => m.Terms[ti].IsChecked)" data-term="@entry.Name" data-term-identity="@entry.Name.ToLower()" />
                     }
                 }
                 <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Terms[ti].IsChecked)">@entry.Name</label>

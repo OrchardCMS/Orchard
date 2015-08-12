@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using log4net;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Descriptor;
 using Orchard.Environment.State;
+using Orchard.Logging;
 using Orchard.Recipes.Events;
 
 namespace Orchard.Recipes.Services {
@@ -17,13 +19,17 @@ namespace Orchard.Recipes.Services {
             IProcessingEngine processingEngine,
             ShellSettings shellSettings,
             IShellDescriptorManager shellDescriptorManager,
-            Lazy<IRecipeStepExecutor> recipeStepExecutor, IShellDescriptorManagerEventHandler events) {
+            Lazy<IRecipeStepExecutor> recipeStepExecutor,
+            IShellDescriptorManagerEventHandler events) {
             _processingEngine = processingEngine;
             _shellSettings = shellSettings;
             _shellDescriptorManager = shellDescriptorManager;
             _recipeStepExecutor = recipeStepExecutor;
             _events = events;
+            Logger = NullLogger.Instance;
         }
+
+        public ILogger Logger { get; set; }
 
         public void ScheduleWork(string executionId) {
             var shellDescriptor = _shellDescriptorManager.GetShellDescriptor();
@@ -36,14 +42,24 @@ namespace Orchard.Recipes.Services {
         }
 
         public void ExecuteWork(string executionId) {
-            // todo: this callback should be guarded against concurrency by the IProcessingEngine
-            var scheduleMore = _recipeStepExecutor.Value.ExecuteNextStep(executionId);
-            if (scheduleMore)
-                ScheduleWork(executionId);
-            else
-                // https://orchard.codeplex.com/workitem/19844
-                // Because recipes execute in their own workcontext, we need to restart the shell, as signaling a cache won't work across workcontexts.
-                _events.Changed(_shellDescriptorManager.GetShellDescriptor(), _shellSettings.Name);
+            ThreadContext.Properties["ExecutionId"] = executionId;
+            try {
+                // todo: this callback should be guarded against concurrency by the IProcessingEngine
+                var scheduleMore = _recipeStepExecutor.Value.ExecuteNextStep(executionId);
+                if (scheduleMore) {
+                    Logger.Information("Scheduling next step of recipe.");
+                    ScheduleWork(executionId);
+                }
+                else {
+                    Logger.Information("All recipe steps executed; restarting shell.");
+                    // https://github.com/OrchardCMS/Orchard/issues/3672
+                    // Because recipes execute in their own workcontext, we need to restart the shell, as signaling a cache won't work across workcontexts.
+                    _events.Changed(_shellDescriptorManager.GetShellDescriptor(), _shellSettings.Name);
+                }
+            }
+            finally {
+                ThreadContext.Properties["ExecutionId"] = null;
+            }
         }
     }
 }

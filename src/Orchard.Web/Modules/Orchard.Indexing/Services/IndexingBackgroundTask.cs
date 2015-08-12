@@ -1,12 +1,10 @@
-﻿using JetBrains.Annotations;
-using Orchard.Logging;
+﻿using Orchard.Logging;
 using Orchard.Tasks;
 
 namespace Orchard.Indexing.Services {
     /// <summary>
     /// Regularly fires IIndexNotifierHandler events
     /// </summary>
-    [UsedImplicitly]
     public class IndexingBackgroundTask : IBackgroundTask {
         private readonly IIndexNotifierHandler _indexNotifierHandler;
         private readonly IIndexManager _indexManager;

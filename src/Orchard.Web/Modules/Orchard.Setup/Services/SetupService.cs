@@ -4,7 +4,6 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Web;
 using Orchard.ContentManagement;
-using Orchard.Core.Settings.Descriptor.Records;
 using Orchard.Core.Settings.Models;
 using Orchard.Data;
 using Orchard.Data.Migration;
@@ -15,14 +14,13 @@ using Orchard.Environment.Configuration;
 using Orchard.Environment.Descriptor;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
-using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.ShellBuilders;
 using Orchard.Environment.State;
 using Orchard.Localization;
 using Orchard.Localization.Services;
+using Orchard.Logging;
 using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
-using Orchard.Reports.Services;
 using Orchard.Security;
 using Orchard.Settings;
 using Orchard.Utility.Extensions;
@@ -57,9 +55,11 @@ namespace Orchard.Setup.Services {
             _extensionManager = extensionManager;
             _recipeHarvester = recipeHarvester;
             T = NullLocalizer.Instance;
+            Logger = NullLogger.Instance;
         }
 
         public Localizer T { get; set; }
+        public ILogger Logger { get; set; }
 
         public ShellSettings Prime() {
             return _shellSettings;
@@ -69,8 +69,8 @@ namespace Orchard.Setup.Services {
             if (_recipes == null) {
                 var recipes = new List<Recipe>();
 
-                foreach (var extension in _extensionManager.AvailableExtensions().Where(extension => DefaultExtensionTypes.IsModule(extension.ExtensionType))) {
-                    recipes.AddRange(_recipeHarvester.HarvestRecipes(extension.Id).Where(recipe => recipe.IsSetupRecipe)); 
+                foreach (var extension in _extensionManager.AvailableExtensions()) {
+                    recipes.AddRange(_recipeHarvester.HarvestRecipes(extension.Id).Where(recipe => recipe.IsSetupRecipe));
                 }
 
                 _recipes = recipes;
@@ -82,14 +82,16 @@ namespace Orchard.Setup.Services {
         public string Setup(SetupContext context) {
             string executionId;
 
+            Logger.Information("Running setup for tenant '{0}'.", _shellSettings.Name);
+
             // The vanilla Orchard distibution has the following features enabled.
             string[] hardcoded = {
                     // Framework
                     "Orchard.Framework",
                     // Core
-                    "Common", "Containers", "Contents", "Dashboard", "Feeds", "Navigation", "Reports", "Scheduling", "Settings", "Shapes", "Title",
+                    "Common", "Containers", "Contents", "Dashboard", "Feeds", "Navigation","Scheduling", "Settings", "Shapes", "Title",
                     // Modules
-                    "Orchard.Pages", "Orchard.ContentPicker", "Orchard.Themes", "Orchard.Users", "Orchard.Roles", "Orchard.Modules", 
+                    "Orchard.Pages", "Orchard.ContentPicker", "Orchard.Themes", "Orchard.Users", "Orchard.Roles", "Orchard.Modules",
                     "PackagingServices", "Orchard.Packaging", "Gallery", "Orchard.Recipes"
                 };
 
@@ -112,7 +114,7 @@ namespace Orchard.Setup.Services {
             shellSettings.HashAlgorithm = "HMACSHA256";
             // randomly generated key
             shellSettings.HashKey = HMAC.Create(shellSettings.HashAlgorithm).Key.ToHexString();
-            
+
             #endregion
 
             var shellDescriptor = new ShellDescriptor {
@@ -141,9 +143,8 @@ namespace Orchard.Setup.Services {
                         throw new OrchardException(T("A previous Orchard installation was detected in this database with this table prefix."));
                     }
 
-                    var reportsCoordinator = environment.Resolve<IReportsCoordinator>();
-
-                    reportsCoordinator.Register("Data Migration", "Setup", "Orchard installation");
+                    // Make a workaround to avoid the Transaction issue for PostgreSQL
+                    environment.Resolve<ITransactionManager>().RequireNew();
 
                     schemaBuilder.CreateTable("Orchard_Framework_DataMigrationRecord",
                                               table => table
@@ -165,10 +166,8 @@ namespace Orchard.Setup.Services {
                 }
             }
 
-
-
             // in effect "pump messages" see PostMessage circa 1980
-            while ( _processingEngine.AreTasksPending() )
+            while (_processingEngine.AreTasksPending())
                 _processingEngine.ExecuteNextTask();
 
             // creating a standalone environment. 
@@ -188,7 +187,7 @@ namespace Orchard.Setup.Services {
             }
 
             _shellSettingsManager.SaveSettings(shellSettings);
- 
+
             return executionId;
         }
 
@@ -217,7 +216,12 @@ namespace Orchard.Setup.Services {
             cultureManager.AddCulture("en-US");
 
             var recipeManager = environment.Resolve<IRecipeManager>();
-            string executionId = recipeManager.Execute(Recipes().FirstOrDefault(r => r.Name.Equals(context.Recipe, StringComparison.OrdinalIgnoreCase)));
+            var recipe = Recipes().FirstOrDefault(r => r.Name.Equals(context.Recipe, StringComparison.OrdinalIgnoreCase));
+
+            if (recipe == null)
+                throw new OrchardException(T("The recipe '{0}' could not be found.", context.Recipe));
+
+            var executionId = recipeManager.Execute(recipe);
 
             // null check: temporary fix for running setup in command line
             if (HttpContext.Current != null) {

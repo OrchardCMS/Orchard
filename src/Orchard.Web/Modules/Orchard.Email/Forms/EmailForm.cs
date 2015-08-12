@@ -10,7 +10,7 @@ using Orchard.Localization;
 
 namespace Orchard.Email.Forms {
 
-    [OrchardSuppressDependency("Orchard.Email.Workflows")]
+    [OrchardFeature("Orchard.Email.Workflows")]
     public class EmailForm : Component, IFormProvider {
         private readonly IFeatureManager _featureManager;
         protected dynamic New { get; set; }

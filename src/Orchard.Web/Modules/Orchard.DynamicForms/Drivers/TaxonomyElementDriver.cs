@@ -120,7 +120,7 @@ namespace Orchard.DynamicForms.Drivers {
             });
         }
 
-        protected override void OnDisplaying(Taxonomy element, ElementDisplayContext context) {
+        protected override void OnDisplaying(Taxonomy element, ElementDisplayingContext context) {
             var taxonomyId = element.TaxonomyId;
             var typeName = element.GetType().Name;
             var displayType = context.DisplayType;

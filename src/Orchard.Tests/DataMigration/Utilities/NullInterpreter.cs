@@ -29,5 +29,8 @@ namespace Orchard.Tests.DataMigration.Utilities {
             return tableName;
         }
 
+        public string RemovePrefixFromTableName(string prefixedTableName) {
+            return prefixedTableName;
+        }
     }
 }

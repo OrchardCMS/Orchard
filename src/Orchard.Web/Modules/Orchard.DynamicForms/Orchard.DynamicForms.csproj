@@ -111,10 +111,12 @@
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
       <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
       <Name>Orchard.Framework</Name>
+      <Private>false</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Core\Orchard.Core.csproj">
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
+      <Private>false</Private>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.AntiSpam\Orchard.AntiSpam.csproj">
       <Project>{91bc2e7f-da04-421c-98ef-76d37cec130c}</Project>
@@ -168,6 +170,7 @@
     <Compile Include="Bindings\TaxonomyFieldBindings.cs" />
     <Compile Include="Drivers\FieldsetElementDriver.cs" />
     <Compile Include="Elements\Fieldset.cs" />
+    <Compile Include="Bindings\NumericFieldBindings.cs" />
     <Compile Include="Forms\AddModelErrorForm.cs" />
     <Compile Include="Forms\SelectDynamicForms.cs" />
     <Compile Include="Bindings\TextFieldBindings.cs" />
@@ -255,9 +258,8 @@
     <Compile Include="Helpers\StreamExtensions.cs" />
     <Compile Include="Helpers\DataTableExtensions.cs" />
     <Compile Include="Helpers\TokenizerExtensions.cs" />
-    <Compile Include="ImportExport\FormsExportStep.cs" />
-    <Compile Include="ImportExport\FormsExportHandler.cs" />
-    <Compile Include="ImportExport\FormsImportHandler.cs" />
+    <Compile Include="Recipes\Builders\FormSubmissionsStep.cs" />
+    <Compile Include="Recipes\Executors\FormSubmissionsStep.cs" />
     <Compile Include="Services\IDynamicFormEventHandler.cs" />
     <Compile Include="Services\Models\FieldValidatorDescriptor.cs" />
     <Compile Include="Services\Models\FormSubmittedEventContext.cs" />
@@ -284,6 +286,7 @@
     <Compile Include="ViewModels\FieldBindingSettings.cs" />
     <Compile Include="ViewModels\PartBindingSettings.cs" />
     <Compile Include="ViewModels\BlueprintsIndexViewModel.cs" />
+    <Compile Include="ViewModels\ReCaptchaElementViewModel.cs" />
     <Compile Include="ViewModels\SubmissionViewModel.cs" />
     <Compile Include="ViewModels\SubmissionsIndexViewModel.cs" />
     <Compile Include="Helpers\SubmissionExtensions.cs" />

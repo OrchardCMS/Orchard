@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web.Mvc;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
+using Orchard.Environment.Extensions.Helpers;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Logging;
 

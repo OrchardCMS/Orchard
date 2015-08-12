@@ -33,13 +33,12 @@ namespace Orchard.Layouts.Shapes {
         public void Discover(ShapeTableBuilder builder) {
             builder.Describe("Element").OnDisplaying(context => {
                 var element = (Element)context.Shape.Element;
-
-                // Tokenize common settings
                 var content = (ContentItem)context.Shape.ContentItem;
                 var htmlId = element.HtmlId;
                 var htmlClass = element.HtmlClass;
                 var htmlStyle = element.HtmlStyle;
 
+                // Provide tokenizer functions.
                 context.Shape.TokenizeHtmlId = (Func<string>)(() => _tokenizer.Value.Replace(htmlId, new { Content = content }));
                 context.Shape.TokenizeHtmlClass = (Func<string>)(() => _tokenizer.Value.Replace(htmlClass, new { Content = content }));
                 context.Shape.TokenizeHtmlStyle = (Func<string>)(() => _tokenizer.Value.Replace(htmlStyle, new { Content = content }));
@@ -70,6 +69,7 @@ namespace Orchard.Layouts.Shapes {
         }
 
         private static void DisplayChildren(dynamic shape, dynamic display, TextWriter output) {
+            shape = CoreShapes.Order(shape);
             foreach (var child in shape) {
                 output.Write(display(child));
             }

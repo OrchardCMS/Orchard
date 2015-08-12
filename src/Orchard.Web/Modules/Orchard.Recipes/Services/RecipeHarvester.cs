@@ -31,14 +31,20 @@ namespace Orchard.Recipes.Services {
 
         public IEnumerable<Recipe> HarvestRecipes(string extensionId) {
             var recipes = new List<Recipe>();
+
             var extension = _extensionManager.GetExtension(extensionId);
             if (extension != null) {
                 var recipeLocation = Path.Combine(extension.Location, extensionId, "Recipes");
                 var recipeFiles = _webSiteFolder.ListFiles(recipeLocation, true);
-                recipes.AddRange(
-                    from recipeFile in recipeFiles
-                    where recipeFile.EndsWith(".recipe.xml", StringComparison.OrdinalIgnoreCase)
-                    select _recipeParser.ParseRecipe(_webSiteFolder.ReadFile(recipeFile)));
+
+                recipeFiles.Where(r => r.EndsWith(".recipe.xml", StringComparison.OrdinalIgnoreCase)).ToList().ForEach(r => {
+                    try {
+                        recipes.Add(_recipeParser.ParseRecipe(_webSiteFolder.ReadFile(r)));
+                    }
+                    catch (Exception ex) {
+                        Logger.Error(ex, "Error while parsing recipe file '{0}'.", r);
+                    }
+                });
             }
             else {
                 Logger.Error("Could not discover recipes because module '{0}' was not found.", extensionId);

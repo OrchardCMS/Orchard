@@ -1,0 +1,60 @@
+﻿@using Orchard.Utility.Extensions
+@model Orchard.ImportExport.ViewModels.RecipeBuilderViewModel
+@{
+    Script.Require("ShapesBase");
+}
+@{
+    var exportOptions = new[] {
+        new SelectListItem { Text = T("Select the recipe steps to execute").ToString(), Value = "false", Selected = !Model.UploadConfigurationFile},
+        new SelectListItem { Text = T("Upload a configuration file with recipe steps to execute").ToString(), Value = "true", Selected = Model.UploadConfigurationFile},
+    };
+}
+<div>
+    <fieldset>
+        <legend>
+            @T("Export Options")
+        </legend>
+        <ul>
+            @foreach (var option in exportOptions) {
+                var exportOptionId = String.Format("{0}_{1}", Html.FieldIdFor(m => m.UploadConfigurationFile), option.Value);
+                <li>
+                    <input type="radio" id="@exportOptionId" name="@Html.FieldNameFor(m => m.UploadConfigurationFile)" value="@option.Value" @if (option.Selected) { <text> checked="checked" </text> }/>
+                    <label for="@exportOptionId" class="forradiobutton">@option.Text</label>
+                </li>
+            }
+        </ul>
+    </fieldset>
+</div>
+<div data-controllerid="@String.Format("{0}_{1}", Html.FieldIdFor(m => m.UploadConfigurationFile), "false")">
+    @{
+        var stepIndex = 0;
+        var steps = Model.Steps.Where(x => x.IsVisible).ToArray();
+        foreach (var step in steps) {
+            var stepName = Html.NameFor(m => m.Steps[stepIndex].IsSelected).ToString();
+            var stepId = stepName.HtmlClassify();
+            if (stepIndex <= steps.Count()) {
+                <hr />
+            }
+            <fieldset class="recipe-builder-step recipe-builder-step-@step.Name.HtmlClassify()">
+                <legend>
+                    <input type="hidden" name="@Html.NameFor(m => m.Steps[stepIndex].Name)" value="@steps[stepIndex].Name"/>
+                    <input type="checkbox" id="@stepId" name="@stepName" value="true"/>
+                    <label for="@stepId" class="forcheckbox">@step.DisplayName</label>
+                </legend>
+                @Html.Hint(step.Description)
+                @if (step.Editor != null) {
+                    <div data-controllerid="@stepId">
+                        @Display(step.Editor)
+                    </div>
+                }
+            </fieldset>
+            stepIndex++;
+        }
+    }
+</div>
+<div data-controllerid="@String.Format("{0}_{1}", Html.FieldIdFor(m => m.UploadConfigurationFile), "true")" style="display: none;">
+    <fieldset>
+        <label for="ConfigurationFile">@T("Configuration File")</label>
+        <input type="file" id="ConfigurationFile" size="64" name="ConfigurationFile" value="@T("Browse...")" />
+    </fieldset>
+</div>

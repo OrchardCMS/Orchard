@@ -178,6 +178,18 @@ namespace Orchard.Localization.Services {
             }
         }
 
+        public string GetEraName(int era) {
+            return DateTimeFormat.GetEraName(era);
+        }
+
+        public string GetShortEraName(int era) {
+            return DateTimeFormat.GetAbbreviatedEraName(era);
+        }
+
+        public int GetEra(string eraName) {
+            return DateTimeFormat.GetEra(eraName);
+        }
+
         protected virtual DateTimeFormatInfo DateTimeFormat {
             get {
                 var culture = CurrentCulture;

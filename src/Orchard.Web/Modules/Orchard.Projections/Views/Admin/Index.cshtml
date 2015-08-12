@@ -4,7 +4,7 @@
 
 @{
     Style.Include("admin-projections.css");
-
+	Layout.Title = T("Manage Queries").ToString();
     var index = 0;
 
 	var pageSizes = new List<int?>() { 10, 50, 100 };
@@ -18,8 +18,8 @@
 @using (Html.BeginFormAntiForgeryPost()) { 
     @Html.ValidationSummary()
     <div class="manage">@Html.ActionLink(T("Add a new Query").ToString(), "Create", new { Area = "Contents", id = "Query", returnurl = HttpContext.Current.Request.RawUrl }, new { @class = "button primaryAction" })</div>
-
     <fieldset class="bulk-actions">
+        <label><input type="checkbox" class="check-all" />@T("Select all")</label>@T(" | ")
         <label for="publishActions">@T("Actions:")</label>
         <select id="publishActions" name="@Html.NameOf(m => m.Options.BulkAction)">
             @Html.SelectOption(Model.Options.BulkAction, QueriesBulkAction.None, T("Choose action...").ToString())

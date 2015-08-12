@@ -1,9 +1,11 @@
 using Orchard.DynamicForms.Services;
 using Orchard.DynamicForms.Services.Models;
+using Orchard.Environment.Extensions;
 using Orchard.Security;
 using Orchard.Users.Models;
 
 namespace Orchard.DynamicForms.Bindings {
+    [OrchardFeature("Orchard.DynamicForms.Bindings.Users")]
     public class UserPartBindings : Component, IBindingProvider {
         private readonly IMembershipService _membershipService;
         public UserPartBindings(IMembershipService membershipService) {

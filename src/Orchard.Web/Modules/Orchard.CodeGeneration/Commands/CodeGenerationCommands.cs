@@ -318,18 +318,22 @@ namespace Orchard.CodeGeneration.Commands {
 @"<ProjectReference Include=""..\..\..\Orchard\Orchard.Framework.csproj"">
       <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
       <Name>Orchard.Framework</Name>
+      <Private>false</Private>
     </ProjectReference>
     <ProjectReference Include=""..\..\Core\Orchard.Core.csproj"">
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
+      <Private>false</Private>
     </ProjectReference>" :
 @"<Reference Include=""Orchard.Core"">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\Orchard.Core.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include=""Orchard.Framework"">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\Orchard.Framework.dll</HintPath>
+      <Private>false</Private>
     </Reference>";
         }
 

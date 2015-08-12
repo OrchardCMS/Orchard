@@ -36,19 +36,19 @@ namespace Orchard.Setup.Commands {
         [OrchardSwitch]
         public string Recipe { get; set; }
 
-        [CommandHelp("setup /SiteName:<siteName> /AdminUsername:<username> /AdminPassword:<password> /DatabaseProvider:<SqlCe|SQLServer|MySql> " + 
+        [CommandHelp("setup /SiteName:<siteName> /AdminUsername:<username> /AdminPassword:<password> /DatabaseProvider:<SqlCe|SQLServer|MySql|PostgreSql> " + 
             "/DatabaseConnectionString:<connection_string> /DatabaseTablePrefix:<table_prefix> /EnabledFeatures:<feature1,feature2,...> " +
             "/Recipe:<recipe>" + 
-            "\r\n\tRun first time setup for the site or for a given tenant")]
+            "\r\n\tRuns first time setup for the site or for a given tenant.")]
         [CommandName("setup")]
         [OrchardSwitches("SiteName,AdminUsername,AdminPassword,DatabaseProvider,DatabaseConnectionString,DatabaseTablePrefix,EnabledFeatures,Recipe")]
         public void Setup() {
             IEnumerable<string> enabledFeatures = null;
-            if (!string.IsNullOrEmpty(EnabledFeatures)) {
+            if (!String.IsNullOrEmpty(EnabledFeatures)) {
                 enabledFeatures = EnabledFeatures
                     .Split(',')
                     .Select(s => s.Trim())
-                    .Where(s => !string.IsNullOrEmpty(s));
+                    .Where(s => !String.IsNullOrEmpty(s));
             }
             Recipe = String.IsNullOrEmpty(Recipe) ? "Default" : Recipe;
 
@@ -63,13 +63,9 @@ namespace Orchard.Setup.Commands {
                 Recipe = Recipe,
             };
 
-            _setupService.Setup(setupContext);
+            var executionId = _setupService.Setup(setupContext);
 
-            Context.Output.WriteLine(T("Site \"{0}\" successfully setup to run data provider \"{1}\" (with table prefix \"{2}\") and configured by recipe \"{3}\"",
-                setupContext.SiteName,
-                setupContext.DatabaseProvider,
-                setupContext.DatabaseTablePrefix,
-                setupContext.Recipe));
+            Context.Output.WriteLine(T("Setup of site '{0}' was started with recipe execution ID {1}. Use the 'recipes result' command to check the result of the execution.", setupContext.SiteName, executionId));
         }
     }
 }

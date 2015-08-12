@@ -19,7 +19,7 @@ namespace Orchard.Layouts.Drivers {
             _transactionManager = transactionManager;
         }
 
-        protected override void OnDisplaying(ContentPart element, ElementDisplayContext context) {
+        protected override void OnDisplaying(ContentPart element, ElementDisplayingContext context) {
             // Content is optional context, so if it's null, we can't render the part element.
             // This typically only happens when the layout editor is used outside the context of
             // a content item and still renders the various content part elements as part of the toolbox.

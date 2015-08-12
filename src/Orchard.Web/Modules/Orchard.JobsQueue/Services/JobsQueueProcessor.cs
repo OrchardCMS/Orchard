@@ -15,14 +15,14 @@ namespace Orchard.JobsQueue.Services {
         private readonly Work<IJobsQueueManager> _jobsQueueManager;
         private readonly Work<IClock> _clock;
         private readonly Work<ITaskLeaseService> _taskLeaseService;
-        private readonly IEventBus _eventBus;
+        private readonly Work<IEventBus> _eventBus;
         private readonly ReaderWriterLockSlim _rwl = new ReaderWriterLockSlim();
 
         public JobsQueueProcessor(
             Work<IClock> clock,
             Work<IJobsQueueManager> jobsQueueManager,
             Work<ITaskLeaseService> taskLeaseService,
-            IEventBus eventBus) {
+            Work<IEventBus> eventBus) {
             _clock = clock;
             _jobsQueueManager = jobsQueueManager;
             _taskLeaseService = taskLeaseService;
@@ -35,12 +35,13 @@ namespace Orchard.JobsQueue.Services {
             // prevent two threads on the same machine to process the message queue
             if (_rwl.TryEnterWriteLock(0)) {
                 try {
-                    _taskLeaseService.Value.Acquire("JobsQueueProcessor", _clock.Value.UtcNow.AddMinutes(5));
-                    IEnumerable<QueuedJobRecord> messages;
+                    if (_taskLeaseService.Value.Acquire("JobsQueueProcessor", _clock.Value.UtcNow.AddMinutes(5)) != null) {
+                        IEnumerable<QueuedJobRecord> messages;
 
-                    while ((messages = _jobsQueueManager.Value.GetJobs(0, 10).ToArray()).Any()) {
-                        foreach (var message in messages) {
-                            ProcessMessage(message);
+                        while ((messages = _jobsQueueManager.Value.GetJobs(0, 10).ToArray()).Any()) {
+                            foreach (var message in messages) {
+                                ProcessMessage(message);
+                            }
                         }
                     }
                 }
@@ -58,7 +59,7 @@ namespace Orchard.JobsQueue.Services {
                 var payload = JObject.Parse(job.Parameters);
                 var parameters = payload.ToDictionary();
 
-                _eventBus.Notify(job.Message, parameters);
+                _eventBus.Value.Notify(job.Message, parameters);
 
                 Logger.Debug("Processed job Id {0}.", job.Id);
             }

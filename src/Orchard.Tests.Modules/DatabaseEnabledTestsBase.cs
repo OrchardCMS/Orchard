@@ -60,7 +60,7 @@ namespace Orchard.Tests.Modules {
         }
 
         [TearDown]
-        public void Cleanup() {
+        public virtual void Cleanup() {
             if(_container != null)
                 _container.Dispose();
         }
@@ -72,7 +72,7 @@ namespace Orchard.Tests.Modules {
                 return Enumerable.Empty<Type>();
             }
         }
-
+        
         protected void ClearSession() {
             Trace.WriteLine("Flush and clear session");
             _transaction.Commit();

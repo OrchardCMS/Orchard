@@ -35,18 +35,34 @@
         <label for="@Html.FieldIdFor(m => m.RequireCredentials)" class="forcheckbox">@T("Require credentials")</label>
         @Html.ValidationMessage("RequireCredentials", "*")
     </div>
+
     <div data-controllerid="@Html.FieldIdFor(m => m.RequireCredentials)">
+
         <div>
-            <label for="@Html.FieldIdFor(m => m.UserName)">@T("User name")</label>
-            @Html.TextBoxFor(m => m.UserName, new { @class = "text" })
-            @Html.ValidationMessage("UserName", "*")
-            <span class="hint">@T("The username for authentication.")</span>
+            @Html.RadioButtonFor(m => m.UseDefaultCredentials, false, new { id = "customCredentialsOption", name = "UseDefaultCredentials" })
+            <label for="customCredentialsOption" class="forcheckbox">@T("Specify username/password")</label>
+            @Html.ValidationMessage("UseDefaultCredentials", "*")
         </div>
+
         <div>
-            <label for="@Html.FieldIdFor(m => m.Password)">@T("Password")</label>
-            @Html.TextBoxFor(m => m.Password, new { type = "password", @class = "text medium" })
-            @Html.ValidationMessage("Password", "*")
-            <span class="hint">@T("The password for authentication.")</span>
+            @Html.RadioButtonFor(m => m.UseDefaultCredentials, true, new { id = "defaultCredentialsOptions", name = "UseDefaultCredentials" })
+            <label for="defaultCredentialsOptions" class="forcheckbox">@T("Use Windows authentication")</label>
+            @Html.ValidationMessage("UseDefaultCredentials", "*")
+            <span class="hint">@T("When this option is selected, the aplication pool or host-process identity is used to authenticate with the mail server. ")</span>
+        </div>
+        <div class="options">
+            <span data-controllerid="customCredentialsOption">
+                <label for="@Html.FieldIdFor(m => m.UserName)">@T("User name")</label>
+                @Html.TextBoxFor(m => m.UserName, new { @class = "text" })
+                @Html.ValidationMessage("UserName", "*")
+                <span class="hint">@T("The username for authentication.")</span>
+            </span>
+            <span data-controllerid="customCredentialsOption">
+                <label for="@Html.FieldIdFor(m => m.Password)">@T("Password")</label>
+                @Html.TextBoxFor(m => m.Password, new { type = "password", @class = "text medium" })
+                @Html.ValidationMessage("Password", "*")
+                <span class="hint">@T("The password for authentication.")</span>
+            </span>
         </div>
     </div>
 </fieldset>
@@ -80,7 +96,8 @@
     </div>
     <div id="emailtesterror" class="message-Error" style="display:none;"></div>
     <div id="emailtestinfo" class="message-Information" style="display:none;"></div>
-    @using (Script.Foot()) {
+    @using (Script.Foot())
+    {
         <script type="text/javascript">
             $(function () {
                 var url = "@Url.Action("TestSettings", "EmailAdmin", new {area = "Orchard.Email"})",
@@ -91,6 +108,7 @@
                     port = $("#@Html.FieldIdFor(m => m.Port)"),
                     enableSsl = $("#@Html.FieldIdFor(m => m.EnableSsl)"),
                     requireCredentials = $("#@Html.FieldIdFor(m => m.RequireCredentials)"),
+                    useDefaultCredentials = $("input[name='@Html.NameFor(m => m.UseDefaultCredentials)']"),
                     userName = $("#@Html.FieldIdFor(m => m.UserName)"),
                     password = $("#@Html.FieldIdFor(m => m.Password)"),
                     to = $("#emailtestto"),
@@ -107,6 +125,7 @@
                         port: port.val(),
                         enableSsl: enableSsl.prop("checked"),
                         requireCredentials: requireCredentials.prop("checked"),
+                        useDefaultCredentials: useDefaultCredentials.filter(':checked').val(),
                         userName: userName.val(),
                         password: password.val(),
                         to: to.val(),
