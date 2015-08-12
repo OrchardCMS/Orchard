@@ -10,7 +10,6 @@ using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.ShellBuilders;
 using Orchard.Tests.Environment.TestDependencies;
-using Orchard.Utility;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.Tests.Environment.ShellBuilders {
@@ -90,6 +89,16 @@ namespace Orchard.Tests.Environment.ShellBuilders {
 
             Assert.That(shellBlueprint.Dependencies.Count(x => x.Type == typeof (AlphaDependency)), Is.EqualTo(1));
             Assert.That(shellBlueprint.Dependencies.Count(x => x.Type == typeof(BetaDependency)), Is.EqualTo(1));
+        }
+
+        [Test]
+        public void ComposeReturnsBlueprintWithAutoEnabledDependencyFeatures() {
+            var shellSettings = CreateShell();
+            var shellDescriptor = CreateShellDescriptor("Beta"); // Beta has a dependency on Alpha, but is not enabled initially.
+            var shellBlueprint = _compositionStrategy.Compose(shellSettings, shellDescriptor);
+
+            Assert.That(shellBlueprint.Dependencies.Count(x => x.Type == typeof(AlphaDependency)), Is.EqualTo(1));
+            Assert.That(shellDescriptor.Features.Count(x => x.Name == "Alpha"), Is.EqualTo(1));
         }
 
         private ShellSettings CreateShell() {
