@@ -25,7 +25,6 @@ using Orchard.Tests.Stubs;
 using Orchard.Tests.Utility;
 using Orchard.WebApi.Routes;
 using IModelBinderProvider = Orchard.Mvc.ModelBinders.IModelBinderProvider;
-using Orchard.Tasks;
 
 namespace Orchard.Tests.Environment {
     [TestFixture]
@@ -138,8 +137,6 @@ namespace Orchard.Tests.Environment {
                 _shellSettings.Add(settings);
             }
         }
-
-
 
         [Test, Ignore("containers are disposed when calling BeginRequest, maybe by the StubVirtualPathMonitor")]
         public void NormalDependenciesShouldBeUniquePerRequestContainer() {
