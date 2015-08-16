@@ -327,9 +327,16 @@ namespace Orchard.Tests.Localization {
                 var container = TestHelpers.InitializeContainer(culture.Name, null, TimeZoneInfo.Utc);
                 var formats = container.Resolve<IDateTimeFormatProvider>();
                 var target = container.Resolve<IDateFormatter>();
+                var hoursToTest = Enumerable.Range(0, 23);
+
+                // Fix for some cultures on Windows 10 where both designators for some reason
+                // are empty strings. A 24-hour time cannot possibly be round-tripped without any
+                // way to distinguish AM from PM, so for these cases test only 12-hour time.
+                if (culture.DateTimeFormat.AMDesignator == culture.DateTimeFormat.PMDesignator)
+                    hoursToTest = Enumerable.Range(1, 12);
 
                 foreach (var timeFormat in formats.AllTimeFormats) { // All time formats supported by the culture.
-                    for (var hour = 0; hour <= 23; hour++) { // All hours in the day.
+                    foreach (var hour in hoursToTest) { // All hours in the day.
 
                         DateTime time = new DateTime(1998, 1, 1, hour, 30, 30);
                         var timeString = time.ToString(timeFormat, culture);
