@@ -6,6 +6,7 @@ using System.Xml.Linq;
 using System.Xml.XPath;
 using Orchard.FileSystems.Media;
 using Orchard.Azure.MediaServices.Helpers;
+using Newtonsoft.Json;
 
 namespace Orchard.Azure.MediaServices.Models.Assets.EncoderMetadata {
     public class AssetFile {
@@ -120,6 +121,7 @@ namespace Orchard.Azure.MediaServices.Models.Assets.EncoderMetadata {
         /// <summary>
         /// A direct URL to download the asset file using a private locator.
         /// </summary>
+        [JsonIgnore]
         public string PrivateUrl {
             get {
                 if (!String.IsNullOrEmpty(_parentMetadata.PrivateLocatorUrl)) {
