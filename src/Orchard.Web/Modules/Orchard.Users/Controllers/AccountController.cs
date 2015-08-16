@@ -187,7 +187,7 @@ namespace Orchard.Users.Controllers {
             }
 
             if(String.IsNullOrWhiteSpace(username)){
-                ModelState.AddModelError("userNameOrEmail", T("Invalid username or E-mail."));
+                ModelState.AddModelError("username", T("You must specify a username or e-mail."));
                 return View();
             }
 
