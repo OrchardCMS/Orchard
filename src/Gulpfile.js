@@ -13,7 +13,11 @@ var glob = require("glob"),
     uglify = require("gulp-uglify"),
     rename = require("gulp-rename"),
     concat = require("gulp-concat"),
-    header = require("gulp-header")
+    header = require("gulp-header");
+
+/*
+** GULP TASKS
+*/
 
 // Incremental build (each asset group is built only if one or more inputs are newer than the output).
 gulp.task("build", function () {
@@ -35,14 +39,16 @@ gulp.task("rebuild", function () {
 
 // Continuous watch (each asset group is built whenever one of its inputs changes).
 gulp.task("watch", function () {
+    var pathWin32 = require("path");
     getAssetGroups().forEach(function (assetGroup) {
-    	assetGroup.watchPaths = !!assetGroup.watch ?
-        	assetGroup.watch.map(function (watchPath) {
-            	return path.join(assetGroup.basePath, watchPath);
-        }).concat(assetGroup.inputPaths) : assetGroup.inputPaths;
-        gulp.watch(assetGroup.watchPaths, function (event) {
-            console.log("Asset file '" + event.path + "' was " + event.type + ", rebuilding output '" + assetGroup.outputPath + "'.");
-            var doRebuild = true; 
+        var watchPaths = assetGroup.inputPaths.concat(assetGroup.watchPaths);
+        gulp.watch(watchPaths, function (event) {
+            var isConcat = path.basename(assetGroup.outputFileName, path.extname(assetGroup.outputFileName)) !== "@";
+            if (isConcat)
+                console.log("Asset file '" + event.path + "' was " + event.type + ", rebuilding asset group with output '" + assetGroup.outputPath + "'.");
+            else
+                console.log("Asset file '" + event.path + "' was " + event.type + ", rebuilding asset group.");
+            var doRebuild = true;
             var task = createAssetGroupTask(assetGroup, doRebuild);
         });
     });
@@ -70,6 +76,12 @@ function resolveAssetGroupPaths(assetGroup, assetManifestPath) {
     assetGroup.inputPaths = assetGroup.inputs.map(function (inputPath) {
         return path.join(assetGroup.basePath, inputPath);
     });
+    assetGroup.watchPaths = [];
+    if (!!assetGroup.watch) {
+        assetGroup.watchPaths = assetGroup.watch.map(function (watchPath) {
+            return path.join(assetGroup.basePath, watchPath);
+        });
+    }  
     assetGroup.outputPath = path.join(assetGroup.basePath, assetGroup.output);
     assetGroup.outputDir = path.dirname(assetGroup.outputPath);
     assetGroup.outputFileName = path.basename(assetGroup.output);
@@ -162,7 +174,7 @@ function buildJsPipeline(assetGroup, doRebuild) {
         .pipe(gulp.dest(assetGroup.outputDir))
 	.pipe(uglify())
 	.pipe(rename({
-		suffix: ".min"
-	     }))
+	    suffix: ".min"
+	}))
 	.pipe(gulp.dest(assetGroup.outputDir));
 }
