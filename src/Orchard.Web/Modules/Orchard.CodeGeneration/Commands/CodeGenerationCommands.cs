@@ -24,7 +24,7 @@ namespace Orchard.CodeGeneration.Commands {
             "", "Content", "Styles", "Scripts", "Views"
         };
         private static readonly string[] _moduleDirectories = new[] {
-            "", "Properties", "Controllers", "Views", "Models", "Scripts", "Styles"
+            "", "Properties", "Assets", "Controllers", "Views", "Models", "Scripts", "Styles"
         };
         private static readonly string[] _moduleTestsDirectories = new[] {
             "", "Properties"
@@ -280,6 +280,15 @@ namespace Orchard.CodeGeneration.Commands {
                     folders.Add(modulePath + folder);
                 }
             }
+
+            File.WriteAllText(modulePath + "Assets.json", File.ReadAllText(_codeGenTemplatePath + "ModuleAssetsJson.txt"));
+            content.Add(modulePath + "Assets.json");
+            File.WriteAllText(modulePath + "Assets\\Styles.less", File.ReadAllText(_codeGenTemplatePath + "ModuleStylesLess.txt"));
+            content.Add(modulePath + "Assets\\Styles.less");
+            File.WriteAllText(modulePath + "Styles\\Styles.css", File.ReadAllText(_codeGenTemplatePath + "ModuleStylesCss.txt"));
+            content.Add(modulePath + "Styles\\Styles.css");
+            File.WriteAllText(modulePath + "Styles\\Styles.min.css", File.ReadAllText(_codeGenTemplatePath + "ModuleStylesMinCss.txt"));
+            content.Add(modulePath + "Styles\\Styles.min.css");
 
             File.WriteAllText(modulePath + "Web.config", File.ReadAllText(_codeGenTemplatePath + "ModuleRootWebConfig.txt"));
             content.Add(modulePath + "Web.config");
