@@ -87,9 +87,16 @@ namespace Orchard.Tests.Localization {
                 var container = TestHelpers.InitializeContainer(culture.Name, "GregorianCalendar", TimeZoneInfo.Utc);
                 var formats = container.Resolve<IDateTimeFormatProvider>();
                 var target = container.Resolve<IDateFormatter>();
+                var hoursToTest = new[] { 0, 6, 12, 18 };
+
+                // Fix for some cultures on Windows 10 where both designators for some reason
+                // are empty strings. A 24-hour time cannot possibly be round-tripped without any
+                // way to distinguish AM from PM, so for these cases test only 12-hour time.
+                if (culture.DateTimeFormat.AMDesignator == culture.DateTimeFormat.PMDesignator)
+                    hoursToTest = new[] { 1, 6, 9, 12 };
 
                 foreach (var dateTimeFormat in formats.AllDateTimeFormats) { // All date and time formats supported by the culture.
-                    foreach (var hour in new[] { 0, 6, 12, 18 }) { // Enough hours to cover all code paths (AM/PM, 12<->00, etc).
+                    foreach (var hour in hoursToTest) { // Enough hours to cover all code paths (AM/PM, 12<->00, etc).
 
                         DateTime dateTime = new DateTime(1998, 1, 1, hour, 30, 30, DateTimeKind.Utc);
 
