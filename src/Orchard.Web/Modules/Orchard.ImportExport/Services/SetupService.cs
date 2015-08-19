@@ -92,10 +92,14 @@ namespace Orchard.ImportExport.Services
                     environment.Resolve<ITransactionManager>().RequireNew();
 
                     var schemaBuilder = new SchemaBuilder(environment.Resolve<IDataMigrationInterpreter>());
+
                     schemaBuilder.CreateTable("Orchard_Framework_DataMigrationRecord", table => table
                         .Column<int>("Id", column => column.PrimaryKey().Identity())
                         .Column<string>("DataMigrationClass")
                         .Column<int>("Version"));
+
+                    schemaBuilder.AlterTable("Orchard_Framework_DataMigrationRecord",
+                        table => table.CreateUniqueConstraint("UC_DataMigrationRecord_DataMigrationClass_Version", "DataMigrationClass", "Version"));
 
                     var dataMigrationManager = environment.Resolve<IDataMigrationManager>();
                     dataMigrationManager.Update("Settings");
