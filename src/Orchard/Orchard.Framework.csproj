@@ -398,11 +398,11 @@
     <Compile Include="Settings\CurrentSiteWorkContext.cs" />
     <Compile Include="Settings\ResourceDebugMode.cs" />
     <Compile Include="Tasks\Locking\Migrations\FrameworkMigrations.cs" />
-    <Compile Include="Tasks\Locking\Providers\DatabaseLock.cs" />
+    <Compile Include="Tasks\Locking\Services\Lock.cs" />
     <Compile Include="Tasks\Locking\Services\IDistributedLockService.cs" />
     <Compile Include="Tasks\Locking\Services\IDistributedLock.cs" />
     <Compile Include="Tasks\Locking\Services\DistributedLockService.cs" />
-    <Compile Include="Tasks\Locking\Records\DatabaseLockRecord.cs" />
+    <Compile Include="Tasks\Locking\Records\LockRecord.cs" />
     <Compile Include="Themes\CurrentThemeWorkContext.cs" />
     <Compile Include="Themes\ThemeManager.cs" />
     <Compile Include="Time\CurrentTimeZoneWorkContext.cs" />

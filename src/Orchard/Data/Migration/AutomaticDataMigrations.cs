@@ -29,34 +29,34 @@ namespace Orchard.Data.Migration {
         public ILogger Logger { get; set; } 
 
         public void Activated() {
-            IDistributedLock @lock;
-            if (_distributedLockService.TryAcquireLock(GetType().FullName, TimeSpan.FromMinutes(30), TimeSpan.FromMilliseconds(250), out @lock)) {
-                using (@lock) {
-                    // Let's make sure that the basic set of features is enabled.  If there are any that are not enabled, then let's enable them first.
-                    var theseFeaturesShouldAlwaysBeActive = new[] {
-                        "Common", "Containers", "Contents", "Dashboard", "Feeds", "Navigation", "Scheduling", "Settings", "Shapes", "Title"
-                    };
+            using(var @lock = _distributedLockService.AcquireLock(GetType().FullName, TimeSpan.FromMinutes(30), TimeSpan.FromMilliseconds(250))) {
+                if (@lock == null)
+                    return;
 
-                    var enabledFeatures = _featureManager.GetEnabledFeatures().Select(f => f.Id).ToList();
-                    var featuresToEnable = theseFeaturesShouldAlwaysBeActive.Where(shouldBeActive => !enabledFeatures.Contains(shouldBeActive)).ToList();
-                    if (featuresToEnable.Any()) {
-                        _featureManager.EnableFeatures(featuresToEnable, true);
+                // Let's make sure that the basic set of features is enabled.  If there are any that are not enabled, then let's enable them first.
+                var theseFeaturesShouldAlwaysBeActive = new[] {
+                    "Common", "Containers", "Contents", "Dashboard", "Feeds", "Navigation", "Scheduling", "Settings", "Shapes", "Title"
+                };
+
+                var enabledFeatures = _featureManager.GetEnabledFeatures().Select(f => f.Id).ToList();
+                var featuresToEnable = theseFeaturesShouldAlwaysBeActive.Where(shouldBeActive => !enabledFeatures.Contains(shouldBeActive)).ToList();
+                if (featuresToEnable.Any()) {
+                    _featureManager.EnableFeatures(featuresToEnable, true);
+                }
+
+                foreach (var feature in _dataMigrationManager.GetFeaturesThatNeedUpdate()) {
+                    try {
+                        _dataMigrationManager.Update(feature);
                     }
-
-                    foreach (var feature in _dataMigrationManager.GetFeaturesThatNeedUpdate()) {
-                        try {
-                            _dataMigrationManager.Update(feature);
-                        }
-                        catch (Exception e) {
-                            Logger.Error("Could not run migrations automatically on " + feature, e);
-                        }
+                    catch (Exception e) {
+                        Logger.Error("Could not run migrations automatically on " + feature, e);
                     }
                 }
             }
         }
 
         public void Terminating() {
-            
+            // No-op.
         }
     }
 }

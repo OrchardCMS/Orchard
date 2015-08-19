@@ -23,5 +23,10 @@ namespace Orchard.Tasks.Locking.Services {
         /// <param name="timeout">The amount of time to wait for the lock to be acquired before timing out.</param>
         /// <returns>Returns a lock if one was successfully acquired, null otherwise.</returns>
         IDistributedLock AcquireLock(string name, TimeSpan maxLifetime, TimeSpan timeout);
+
+        /// <summary>
+        /// Disposes the specified lock.
+        /// </summary>
+        void DisposeLock(IDistributedLock @lock);
     }
 }

@@ -5,11 +5,13 @@ namespace Orchard.Tasks.Locking.Migrations {
     public class FrameworkMigrations : DataMigrationImpl {
 
         public int Create() {
-            SchemaBuilder.CreateTable("DatabaseLockRecord", table => table
+            SchemaBuilder.CreateTable("LockRecord", table => table
                 .Column<int>("Id", column => column.PrimaryKey().Identity())
                 .Column<string>("Name", column => column.NotNull().WithLength(256))
-                .Column<string>("MachineName", column => column.WithLength(256))
-                .Column<DateTime>("AcquiredUtc"));
+                .Column<string>("Owner", column => column.WithLength(256))
+                .Column<int>("ReferenceCount")
+                .Column<DateTime>("CreatedUtc")
+                .Column<DateTime>("ValidUntilUtc"));
 
             return 1;
         }
