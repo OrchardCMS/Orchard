@@ -66,9 +66,9 @@ namespace Orchard.ContentManagement.DataMigrations {
 
         public int UpdateFrom3() {
             SchemaBuilder.AlterTable("ContentItemVersionRecord", table => {
-                table.CreateUniqueConstraint("UC_ContentItemVersionRecord_ContentItemRecordId_Number", "ContentItemRecord_id", "Number");
-                table.CreateUniqueConstraint("UC_ContentItemVersionRecord_ContentItemRecordId_Published", "ContentItemRecord_id", "Published");
-                table.CreateUniqueConstraint("UC_ContentItemVersionRecord_ContentItemRecordId_Latest", "ContentItemRecord_id", "Latest");
+                table.AddUniqueConstraint("UC_ContentItemVersionRecord_ContentItemRecordId_Number", "ContentItemRecord_id", "Number");
+                table.AddUniqueConstraint("UC_ContentItemVersionRecord_ContentItemRecordId_Published", "ContentItemRecord_id", "Published");
+                table.AddUniqueConstraint("UC_ContentItemVersionRecord_ContentItemRecordId_Latest", "ContentItemRecord_id", "Latest");
             });
 
             return 4;

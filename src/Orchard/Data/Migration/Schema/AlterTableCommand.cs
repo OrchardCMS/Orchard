@@ -48,7 +48,7 @@ namespace Orchard.Data.Migration.Schema {
             TableCommands.Add(command);
         }
 
-        public void CreateUniqueConstraint(string constraintName, params string[] columnNames) {
+        public void AddUniqueConstraint(string constraintName, params string[] columnNames) {
             var command = new AddUniqueConstraintCommand(Name, constraintName, columnNames);
             TableCommands.Add(command);
         }
