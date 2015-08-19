@@ -125,41 +125,54 @@ namespace Orchard.Data.Migration.Interpreters {
                 return;
             }
 
-            // drop columns
+            // Drop columns.
             foreach (var dropColumn in command.TableCommands.OfType<DropColumnCommand>()) {
                 var builder = new StringBuilder();
                 Visit(builder, dropColumn);
                 RunPendingStatements();
             }
 
-            // add columns
+            // Add columns.
             foreach (var addColumn in command.TableCommands.OfType<AddColumnCommand>()) {
                 var builder = new StringBuilder();
                 Visit(builder, addColumn);
                 RunPendingStatements();
             }
 
-            // alter columns
+            // Alter columns.
             foreach (var alterColumn in command.TableCommands.OfType<AlterColumnCommand>()) {
                 var builder = new StringBuilder();
                 Visit(builder, alterColumn);
                 RunPendingStatements();
             }
 
-            // add index
+            // Add index.
             foreach (var addIndex in command.TableCommands.OfType<AddIndexCommand>()) {
                 var builder = new StringBuilder();
                 Visit(builder, addIndex);
                 RunPendingStatements();
             }
 
-            // drop index
+            // Drop index.
             foreach (var dropIndex in command.TableCommands.OfType<DropIndexCommand>()) {
                 var builder = new StringBuilder();
                 Visit(builder, dropIndex);
                 RunPendingStatements();
             }
 
+            // Add unique constraint.
+            foreach (var addUniqueConstraint in command.TableCommands.OfType<AddUniqueConstraintCommand>()) {
+                var builder = new StringBuilder();
+                Visit(builder, addUniqueConstraint);
+                RunPendingStatements();
+            }
+
+            // Drop unique constraint.
+            foreach (var dropUniqueConstraint in command.TableCommands.OfType<DropUniqueConstraintCommand>()) {
+                var builder = new StringBuilder();
+                Visit(builder, dropUniqueConstraint);
+                RunPendingStatements();
+            }
         }
 
         public void Visit(StringBuilder builder, AddColumnCommand command) {
@@ -210,7 +223,6 @@ namespace Orchard.Data.Migration.Interpreters {
             _sqlStatements.Add(builder.ToString());
         }
 
-
         public void Visit(StringBuilder builder, AddIndexCommand command) {
             if (ExecuteCustomInterpreter(command)) {
                 return;
@@ -232,6 +244,31 @@ namespace Orchard.Data.Migration.Interpreters {
             builder.AppendFormat("drop index {0} ON {1}",
                 _dialectLazy.Value.QuoteForColumnName(PrefixTableName(command.IndexName)),
                 _dialectLazy.Value.QuoteForTableName(PrefixTableName(command.TableName)));
+            _sqlStatements.Add(builder.ToString());
+        }
+
+        public void Visit(StringBuilder builder, AddUniqueConstraintCommand command) {
+            if (ExecuteCustomInterpreter(command)) {
+                return;
+            }
+
+            builder.AppendFormat("alter table {0} add constraint {1} unique ({2})",
+                _dialectLazy.Value.QuoteForTableName(PrefixTableName(command.TableName)),
+                _dialectLazy.Value.QuoteForColumnName(PrefixTableName(command.ConstraintName)),
+                String.Join(", ", command.ColumnNames));
+
+            _sqlStatements.Add(builder.ToString());
+        }
+
+        public void Visit(StringBuilder builder, DropUniqueConstraintCommand command) {
+            if (ExecuteCustomInterpreter(command)) {
+                return;
+            }
+
+            builder.AppendFormat("alter table {0} drop constraint {1}",
+                _dialectLazy.Value.QuoteForTableName(PrefixTableName(command.TableName)),
+                _dialectLazy.Value.QuoteForColumnName(PrefixTableName(command.ConstraintName)));
+
             _sqlStatements.Add(builder.ToString());
         }
 
