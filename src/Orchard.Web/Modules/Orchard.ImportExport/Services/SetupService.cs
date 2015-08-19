@@ -99,7 +99,7 @@ namespace Orchard.ImportExport.Services
                         .Column<int>("Version"));
 
                     schemaBuilder.AlterTable("Orchard_Framework_DataMigrationRecord",
-                        table => table.CreateUniqueConstraint("UC_DataMigrationRecord_DataMigrationClass_Version", "DataMigrationClass", "Version"));
+                        table => table.AddUniqueConstraint("UC_DataMigrationRecord_DataMigrationClass_Version", "DataMigrationClass", "Version"));
 
                     var dataMigrationManager = environment.Resolve<IDataMigrationManager>();
                     dataMigrationManager.Update("Settings");
