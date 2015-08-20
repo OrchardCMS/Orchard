@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Web;
 using System.Web.Security;
 using Orchard.Environment.Configuration;
@@ -10,7 +12,7 @@ using Orchard.Utility.Extensions;
 
 namespace Orchard.Security.Providers {
     public class FormsAuthenticationService : IAuthenticationService {
-        private const int _cookieVersion = 3;
+        private const int _cookieVersion = 4;
 
         private readonly ShellSettings _settings;
         private readonly IClock _clock;
@@ -18,6 +20,7 @@ namespace Orchard.Security.Providers {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ISslSettingsProvider _sslSettingsProvider;
         private readonly IMembershipValidationService _membershipValidationService;
+        private readonly IEnumerable<IUserDataValidationProvider> _userDataValidationProviders;
 
         private IUser _signedInUser;
         private bool _isAuthenticated;
@@ -28,13 +31,15 @@ namespace Orchard.Security.Providers {
             IMembershipService membershipService,
             IHttpContextAccessor httpContextAccessor,
             ISslSettingsProvider sslSettingsProvider,
-            IMembershipValidationService membershipValidationService) {
+            IMembershipValidationService membershipValidationService,
+            IEnumerable<IUserDataValidationProvider> userDataValidationProviders) {
             _settings = settings;
             _clock = clock;
             _membershipService = membershipService;
             _httpContextAccessor = httpContextAccessor;
             _sslSettingsProvider = sslSettingsProvider;
             _membershipValidationService = membershipValidationService;
+            _userDataValidationProviders = userDataValidationProviders;
 
             Logger = NullLogger.Instance;
             
@@ -48,9 +53,21 @@ namespace Orchard.Security.Providers {
         public void SignIn(IUser user, bool createPersistentCookie) {
             var now = _clock.UtcNow.ToLocalTime();
 
-            // The cookie user data is "{userName.Base64};{tenant}".
-            // The username is encoded to Base64 to prevent collisions with the ';' seprarator.
-            var userData = String.Concat(user.UserName.ToBase64(), ";", _settings.Name);
+            // The cookie user data is "{userName.Base64};{providerKey|providerValue};{providerKey|providerValue}....".
+            // The UserName is encoded to Base64 to prevent collisions with the ';' and '|' seprarators (which do not exist in the Base 64 alphabet).
+            var userData = user.UserName.ToBase64();
+
+            foreach (var userDataValidationProvider in _userDataValidationProviders) {
+                try {
+                    // The data provided by this provider is base 64 encoded to avoid collisions with the ';' seprarator.
+                    userData += String.Format(";{0}|{1}", userDataValidationProvider.Key.ToBase64(), userDataValidationProvider.GetUserData().ToBase64());
+                }
+                catch (Exception ex) {
+                    Logger.Error(ex, "An exception was thrown by {0} when generating the values to be added to User Data.", userDataValidationProvider.GetType().FullName);
+
+                    throw;
+                }
+            }
 
             var ticket = new FormsAuthenticationTicket(
                 _cookieVersion,
@@ -124,15 +141,10 @@ namespace Orchard.Security.Providers {
             var formsIdentity = (FormsIdentity)httpContext.User.Identity;
             var userData = formsIdentity.Ticket.UserData ?? "";
 
-            // The cookie user data is {userName.Base64};{tenant}.
+            // The cookie user data is "{userName.Base64};{providerKey|providerValue};{providerKey|providerValue}....".
             var userDataSegments = userData.Split(';');
-            
-            if (userDataSegments.Length < 2) {
-                return null;
-            }
 
             var userDataName = userDataSegments[0];
-            var userDataTenant = userDataSegments[1];
 
             try {
                 userDataName = userDataName.FromBase64();
@@ -141,8 +153,30 @@ namespace Orchard.Security.Providers {
                 return null;
             }
 
-            if (!String.Equals(userDataTenant, _settings.Name, StringComparison.Ordinal)) {
-                return null;
+            // Iterate over all but the first user data segment because the first is the username
+            foreach (var segment in userDataSegments.Skip(1)) {
+                var segmentSplit = segment.Split('|');
+
+                if (segmentSplit.Length < 2) {
+                    continue;
+                }
+
+                var providerKey = segmentSplit[0].FromBase64();
+                var providerValue = segmentSplit[1].FromBase64();
+
+                foreach (var userDataValidationProvider in _userDataValidationProviders.Where(p => p.Key == providerKey)) {
+                    try {
+                        if (!userDataValidationProvider.ValidateUserData(providerValue)) {
+                            return null;
+                        }   
+                    }
+                    catch (Exception ex) {
+                        Logger.Error(ex, "An exception was thrown by {0} when validating the values found in User Data.", userDataValidationProvider.GetType().FullName);
+
+                        // Throwing here would result in a YSOD. Instead, just return null, indicating that the user is not logged in.
+                        return null;
+                    }
+                }
             }
 
             _signedInUser = _membershipService.GetUser(userDataName);
