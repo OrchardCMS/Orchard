@@ -114,22 +114,22 @@ namespace Orchard.Core.Settings {
 
         public int UpdateFrom4() {
             SchemaBuilder.AlterTable("ContentFieldDefinitionRecord",
-                table => table.AddUniqueConstraint("UC_ContentFieldDefinitionRecord_Name", "Name"));
+                table => table.AddUniqueConstraint("UC_CFDR_Name", "Name"));
             SchemaBuilder.AlterTable("ContentPartDefinitionRecord",
-                table => table.AddUniqueConstraint("UC_ContentPartDefinitionRecord_Name", "Name"));
+                table => table.AddUniqueConstraint("UC_CPDR_Name", "Name"));
             SchemaBuilder.AlterTable("ContentPartFieldDefinitionRecord",
-                table => table.AddUniqueConstraint("UC_ContentPartFieldDefinitionRecord_ContentPartDefinitionRecord_Id_Name", "ContentPartDefinitionRecord_Id", "Name"));
+                table => table.AddUniqueConstraint("UC_CPFDR_CPDRId_Name", "ContentPartDefinitionRecord_Id", "Name"));
             SchemaBuilder.AlterTable("ContentTypeDefinitionRecord",
-                table => table.AddUniqueConstraint("UC_ContentTypeDefinitionRecord_ContentPartDefinitionRecord_Id", "Name"));
+                table => table.AddUniqueConstraint("UC_CTDR_CPDRId", "Name"));
             SchemaBuilder.AlterTable("ContentTypePartDefinitionRecord",
-                table => table.AddUniqueConstraint("UC_ContentTypePartDefinitionRecord_ContentPartDefinitionRecord_id_ContentTypeDefinitionRecord_Id", "ContentPartDefinitionRecord_id", "ContentTypeDefinitionRecord_Id"));
+                table => table.AddUniqueConstraint("UC_CTPDR_CPDRId_CTDRId", "ContentPartDefinitionRecord_id", "ContentTypeDefinitionRecord_Id"));
             // TODO: Orchard creates dupes in this table so no can do for now.
             //SchemaBuilder.AlterTable("ShellFeatureRecord",
-            //    table => table.AddUniqueConstraint("UC_ShellFeatureRecord_ShellDescriptorRecord_id_Name", "ShellDescriptorRecord_id", "Name"));
+            //    table => table.AddUniqueConstraint("UC_SFR_SDRId_Name", "ShellDescriptorRecord_id", "Name"));
             SchemaBuilder.AlterTable("ShellFeatureStateRecord",
-                table => table.AddUniqueConstraint("UC_ShellFeatureStateRecord_ShellStateRecord_Id_Name", "ShellStateRecord_Id", "Name"));
+                table => table.AddUniqueConstraint("UC_SFSR_SSRId_Name", "ShellStateRecord_Id", "Name"));
             SchemaBuilder.AlterTable("ShellParameterRecord",
-                table => table.AddUniqueConstraint("UC_ShellParameterRecord_ShellDescriptorRecord_id_Component_Name", "ShellDescriptorRecord_id", "Component", "Name"));
+                table => table.AddUniqueConstraint("UC_SPR_SDRId_Component_Name", "ShellDescriptorRecord_id", "Component", "Name"));
 
             return 5;
         }
