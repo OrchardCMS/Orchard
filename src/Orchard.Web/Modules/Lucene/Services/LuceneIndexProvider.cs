@@ -27,8 +27,6 @@ namespace Lucene.Services {
         private readonly string _basePath;
         private ILuceneAnalyzerProvider _analyzerProvider;
 
-        private static int MAX_DOC_COUNT = 1000;
-
         public static readonly Version LuceneVersion = Version.LUCENE_29;
         public static readonly DateTime DefaultMinDateTime = new DateTime(1980, 1, 1);
         
@@ -133,17 +131,11 @@ namespace Lucene.Services {
             Delete(indexName, indexDocuments.Select(i => i.ContentItemId));
 
             using (var writer = new IndexWriter(GetDirectory(indexName), _analyzerProvider.GetAnalyzer(indexName), false, IndexWriter.MaxFieldLength.UNLIMITED)) {
-                var pageCount = (int)Math.Ceiling((decimal)indexDocuments.Count() / MAX_DOC_COUNT);
-                for (int i = 0; i < pageCount; i++)
-                {
-                    var documentsToIndex = indexDocuments.Skip(i * MAX_DOC_COUNT).Take(MAX_DOC_COUNT);
-                    foreach (var indexDocument in documentsToIndex)
-                    {
-                        var doc = CreateDocument(indexDocument);
+                foreach (var indexDocument in indexDocuments) {
+                    var doc = CreateDocument(indexDocument);
 
-                        writer.AddDocument(doc);
-                        Logger.Debug("Document [{0}] indexed", indexDocument.ContentItemId);
-                    }
+                    writer.AddDocument(doc);
+                    Logger.Debug("Document [{0}] indexed", indexDocument.ContentItemId);
                 }
             }
         }
@@ -152,34 +144,24 @@ namespace Lucene.Services {
             Delete(indexName, new[] { documentId });
         }
 
-        public void Delete(string indexName, IEnumerable<int> documentIds)
-        {
+        public void Delete(string indexName, IEnumerable<int> documentIds) {
             documentIds = documentIds.ToArray();
-
-            if (!documentIds.Any())
-            {
+            
+            if (!documentIds.Any()) {
                 return;
             }
 
-            using (var writer = new IndexWriter(GetDirectory(indexName), _analyzerProvider.GetAnalyzer(indexName), false, IndexWriter.MaxFieldLength.UNLIMITED))
-            {
-                var pageCount = (int)Math.Ceiling((decimal)documentIds.Count() / MAX_DOC_COUNT);
-                try
-                {
-                    for (int i = 0; i < pageCount; i++)
-                    {
-                        var documentsToDelete = documentIds.Skip(i * MAX_DOC_COUNT).Take(MAX_DOC_COUNT);
-                        var query = new BooleanQuery();
-                        foreach (var id in documentsToDelete)
-                        {
-                            query.Add(new BooleanClause(new TermQuery(new Term("id", id.ToString(CultureInfo.InvariantCulture))), Occur.SHOULD));
-                        }
+            using (var writer = new IndexWriter(GetDirectory(indexName), _analyzerProvider.GetAnalyzer(indexName), false, IndexWriter.MaxFieldLength.UNLIMITED)) {
+                var query = new BooleanQuery();
 
-                        writer.DeleteDocuments(query);
+                try {
+                    foreach (var id in documentIds) {
+                        query.Add(new BooleanClause(new TermQuery(new Term("id", id.ToString(CultureInfo.InvariantCulture))), Occur.SHOULD));
                     }
+
+                    writer.DeleteDocuments(query);
                 }
-                catch (Exception ex)
-                {
+                catch (Exception ex) {
                     Logger.Error(ex, "An unexpected error occured while removing the documents [{0}] from the index [{1}].", String.Join(", ", documentIds), indexName);
                 }
             }
