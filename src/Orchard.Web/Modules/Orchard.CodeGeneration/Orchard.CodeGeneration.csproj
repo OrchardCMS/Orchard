@@ -26,6 +26,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -69,6 +70,9 @@
     <Compile Include="Services\CodeGenerationCommandInterpreter.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="CodeGenerationTemplates\ModuleStylesMinCss.txt" />
+    <Content Include="CodeGenerationTemplates\ModuleStylesCss.txt" />
+    <Content Include="CodeGenerationTemplates\ModuleStylesLess.txt" />
     <Content Include="CodeGenerationTemplates\ModuleTestsCsProj.txt" />
     <Content Include="CodeGenerationTemplates\StaticFilesWebConfig.txt" />
     <Content Include="CodeGenerationTemplates\Theme.png" />
@@ -100,6 +104,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="CodeGenerationTemplates\Placement.info" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="CodeGenerationTemplates\ModuleAssetsJson.txt" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

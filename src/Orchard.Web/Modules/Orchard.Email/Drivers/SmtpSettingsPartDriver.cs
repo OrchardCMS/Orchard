@@ -7,7 +7,7 @@ using Orchard.Localization;
 namespace Orchard.Email.Drivers {
 
     // We define a specific driver instead of using a TemplateFilterForRecord, because we need the model to be the part and not the record.
-    // Thus the encryption/decryption will be done when accessing the part's property
+    // Thus the encryption/decryption will be done when accessing the part's property.
 
     public class SmtpSettingsPartDriver : ContentPartDriver<SmtpSettingsPart> {
         private const string TemplateName = "Parts/SmtpSettings";
@@ -31,7 +31,7 @@ namespace Orchard.Email.Drivers {
                     var previousPassword = part.Password;
                     updater.TryUpdateModel(part, Prefix, null, null);
 
-                    // restore password if the input is empty, meaning it has not been reseted
+                    // Restore password if the input is empty, meaning that it has not been reset.
                     if (string.IsNullOrEmpty(part.Password)) {
                         part.Password = previousPassword;
                     }

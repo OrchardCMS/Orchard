@@ -109,7 +109,7 @@ namespace Orchard.OutputCache.Filters {
 
                 // Is there a cached item, and are we allowed to serve it?
                 var allowServeFromCache = filterContext.RequestContext.HttpContext.Request.Headers["Cache-Control"] != "no-cache" || CacheSettings.IgnoreNoCache;
-                var cacheItem = _cacheStorageProvider.GetCacheItem(_cacheKey);
+                var cacheItem = GetCacheItem(_cacheKey);
                 if (allowServeFromCache && cacheItem != null) {
 
                     Logger.Debug("Item '{0}' was found in cache.", _cacheKey);
@@ -140,7 +140,7 @@ namespace Orchard.OutputCache.Filters {
 
                     // Item might now have been rendered and cached by another request; if so serve it from cache.
                     if (allowServeFromCache) {
-                        cacheItem = _cacheStorageProvider.GetCacheItem(_cacheKey);
+                        cacheItem = GetCacheItem(_cacheKey);
                         if (cacheItem != null) {
                             Logger.Debug("Item '{0}' was now found; releasing cache key lock and serving from cache.", _cacheKey);
                             Monitor.Exit(cacheKeyLock);
@@ -590,6 +590,18 @@ namespace Orchard.OutputCache.Filters {
             }
 
             return keyBuilder.ToString();
+        }
+
+        protected virtual CacheItem GetCacheItem(string key) {
+            try {
+                var cacheItem = _cacheStorageProvider.GetCacheItem(key);
+                return cacheItem;
+            }
+            catch(Exception e) {
+                Logger.Error(e, "An unexpected error occured while reading a cache entry");
+            }
+
+            return null;
         }
     }
 

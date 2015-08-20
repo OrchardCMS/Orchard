@@ -4,16 +4,16 @@ var glob = require("glob"),
     gulpif = require("gulp-if"),
     gulp = require("gulp"),
     newer = require("gulp-newer"),
-	plumber = require("gulp-plumber"),
+    plumber = require("gulp-plumber"),
     sourcemaps = require("gulp-sourcemaps"),
     less = require("gulp-less"),
-	autoprefixer = require("gulp-autoprefixer"),
-	minify = require("gulp-minify-css"),
+    autoprefixer = require("gulp-autoprefixer"),
+    minify = require("gulp-minify-css"),
     typescript = require("gulp-typescript"),
-	uglify = require("gulp-uglify"),
-	rename = require("gulp-rename"),
+    uglify = require("gulp-uglify"),
+    rename = require("gulp-rename"),
     concat = require("gulp-concat"),
-	header = require("gulp-header")
+    header = require("gulp-header");
 
 /*
 ** GULP TASKS
@@ -39,10 +39,17 @@ gulp.task("rebuild", function () {
 
 // Continuous watch (each asset group is built whenever one of its inputs changes).
 gulp.task("watch", function () {
+    var pathWin32 = require("path");
     getAssetGroups().forEach(function (assetGroup) {
-        gulp.watch(assetGroup.inputPaths, function (event) {
-            console.log("Asset file '" + event.path + "' was " + event.type + ", rebuilding output '" + assetGroup.outputPath + "'.");
-            var task = createAssetGroupTask(assetGroup);
+        var watchPaths = assetGroup.inputPaths.concat(assetGroup.watchPaths);
+        gulp.watch(watchPaths, function (event) {
+            var isConcat = path.basename(assetGroup.outputFileName, path.extname(assetGroup.outputFileName)) !== "@";
+            if (isConcat)
+                console.log("Asset file '" + event.path + "' was " + event.type + ", rebuilding asset group with output '" + assetGroup.outputPath + "'.");
+            else
+                console.log("Asset file '" + event.path + "' was " + event.type + ", rebuilding asset group.");
+            var doRebuild = true;
+            var task = createAssetGroupTask(assetGroup, doRebuild);
         });
     });
 });
@@ -69,6 +76,12 @@ function resolveAssetGroupPaths(assetGroup, assetManifestPath) {
     assetGroup.inputPaths = assetGroup.inputs.map(function (inputPath) {
         return path.join(assetGroup.basePath, inputPath);
     });
+    assetGroup.watchPaths = [];
+    if (!!assetGroup.watch) {
+        assetGroup.watchPaths = assetGroup.watch.map(function (watchPath) {
+            return path.join(assetGroup.basePath, watchPath);
+        });
+    }  
     assetGroup.outputPath = path.join(assetGroup.basePath, assetGroup.output);
     assetGroup.outputDir = path.dirname(assetGroup.outputPath);
     assetGroup.outputFileName = path.basename(assetGroup.output);
@@ -95,6 +108,7 @@ function buildCssPipeline(assetGroup, doRebuild) {
             throw "Input file '" + inputPath + "' is not of a valid type for output file '" + assetGroup.outputPath + "'.";
     });
     var doConcat = path.basename(assetGroup.outputFileName, ".css") !== "@";
+    var generateSourceMaps = assetGroup.hasOwnProperty("generateSourceMaps") ? assetGroup.generateSourceMaps : true;
     return gulp.src(assetGroup.inputPaths)
         .pipe(gulpif(!doRebuild,
             gulpif(doConcat,
@@ -104,7 +118,7 @@ function buildCssPipeline(assetGroup, doRebuild) {
                     ext: ".css"
                 }))))
         .pipe(plumber())
-        .pipe(sourcemaps.init())
+        .pipe(gulpif(generateSourceMaps, sourcemaps.init()))
         .pipe(gulpif("*.less", less()))
         .pipe(gulpif(doConcat, concat(assetGroup.outputFileName)))
         .pipe(autoprefixer({ browsers: ["last 2 versions"] }))
@@ -115,7 +129,7 @@ function buildCssPipeline(assetGroup, doRebuild) {
         //    "** Any changes made directly to this file will be overwritten next time the Gulp compilation runs.\n" +
         //    "** For more information, see the Readme.txt file in the Gulp solution folder.\n" +
         //    "*/\n\n"))
-        .pipe(sourcemaps.write())
+        .pipe(gulpif(generateSourceMaps, sourcemaps.write()))
         .pipe(gulp.dest(assetGroup.outputDir))
         .pipe(minify())
         .pipe(rename({
@@ -131,6 +145,7 @@ function buildJsPipeline(assetGroup, doRebuild) {
             throw "Input file '" + inputPath + "' is not of a valid type for output file '" + assetGroup.outputPath + "'.";
     });
     var doConcat = path.basename(assetGroup.outputFileName, ".js") !== "@";
+    var generateSourceMaps = assetGroup.hasOwnProperty("generateSourceMaps") ? assetGroup.generateSourceMaps : true;
     return gulp.src(assetGroup.inputPaths)
         .pipe(gulpif(!doRebuild,
             gulpif(doConcat,
@@ -140,14 +155,14 @@ function buildJsPipeline(assetGroup, doRebuild) {
                     ext: ".js"
                 }))))
         .pipe(plumber())
-        .pipe(sourcemaps.init())
+        .pipe(gulpif(generateSourceMaps, sourcemaps.init()))
         .pipe(gulpif("*.ts", typescript({
             declaration: false,
             //noImplicitAny: true,
             noEmitOnError: true,
             sortOutput: true,
         }).js))
-		.pipe(gulpif(doConcat, concat(assetGroup.outputFileName)))
+	.pipe(gulpif(doConcat, concat(assetGroup.outputFileName)))
         // TODO: Start using below whenever gulp-header supports sourcemaps.
         //.pipe(header(
         //    "/*\n" +
@@ -155,11 +170,11 @@ function buildJsPipeline(assetGroup, doRebuild) {
         //    "** Any changes made directly to this file will be overwritten next time the Gulp compilation runs.\n" +
         //    "** For more information, see the Readme.txt file in the Gulp solution folder.\n" +
         //    "*/\n\n"))
-        .pipe(sourcemaps.write())
+        .pipe(gulpif(generateSourceMaps, sourcemaps.write()))
         .pipe(gulp.dest(assetGroup.outputDir))
-		.pipe(uglify())
-		.pipe(rename({
-		    suffix: ".min"
-		}))
-		.pipe(gulp.dest(assetGroup.outputDir));
+	.pipe(uglify())
+	.pipe(rename({
+	    suffix: ".min"
+	}))
+	.pipe(gulp.dest(assetGroup.outputDir));
 }

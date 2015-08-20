@@ -21,10 +21,10 @@ namespace Orchard.CodeGeneration.Commands {
         private const string SolutionDirectoryThemes = "74492CBC-7201-417E-BC29-28B4C25A58B0";
 
         private static readonly string[] _themeDirectories = new[] {
-            "", "Content", "Styles", "Scripts", "Views"
+            "", "Assets", "Content", "Styles", "Scripts", "Views"
         };
         private static readonly string[] _moduleDirectories = new[] {
-            "", "Properties", "Controllers", "Views", "Models", "Scripts", "Styles"
+            "", "Properties", "Assets", "Controllers", "Views", "Models", "Scripts", "Styles"
         };
         private static readonly string[] _moduleTestsDirectories = new[] {
             "", "Properties"
@@ -281,6 +281,15 @@ namespace Orchard.CodeGeneration.Commands {
                 }
             }
 
+            File.WriteAllText(modulePath + "Assets.json", File.ReadAllText(_codeGenTemplatePath + "ModuleAssetsJson.txt"));
+            content.Add(modulePath + "Assets.json");
+            File.WriteAllText(modulePath + "Assets\\Styles.less", File.ReadAllText(_codeGenTemplatePath + "ModuleStylesLess.txt"));
+            content.Add(modulePath + "Assets\\Styles.less");
+            File.WriteAllText(modulePath + "Styles\\Styles.css", File.ReadAllText(_codeGenTemplatePath + "ModuleStylesCss.txt"));
+            content.Add(modulePath + "Styles\\Styles.css");
+            File.WriteAllText(modulePath + "Styles\\Styles.min.css", File.ReadAllText(_codeGenTemplatePath + "ModuleStylesMinCss.txt"));
+            content.Add(modulePath + "Styles\\Styles.min.css");
+
             File.WriteAllText(modulePath + "Web.config", File.ReadAllText(_codeGenTemplatePath + "ModuleRootWebConfig.txt"));
             content.Add(modulePath + "Web.config");
             File.WriteAllText(modulePath + "Scripts\\Web.config", File.ReadAllText(_codeGenTemplatePath + "StaticFilesWebConfig.txt"));
@@ -350,6 +359,15 @@ namespace Orchard.CodeGeneration.Commands {
                     createdFolders.Add(folder);
                 }
             }
+
+            File.WriteAllText(themePath + "Assets.json", File.ReadAllText(_codeGenTemplatePath + "ModuleAssetsJson.txt"));
+            createdFiles.Add(themePath + "Assets.json");
+            File.WriteAllText(themePath + "Assets\\Styles.less", File.ReadAllText(_codeGenTemplatePath + "ModuleStylesLess.txt"));
+            createdFiles.Add(themePath + "Assets\\Styles.less");
+            File.WriteAllText(themePath + "Styles\\Styles.css", File.ReadAllText(_codeGenTemplatePath + "ModuleStylesCss.txt"));
+            createdFiles.Add(themePath + "Styles\\Styles.css");
+            File.WriteAllText(themePath + "Styles\\Styles.min.css", File.ReadAllText(_codeGenTemplatePath + "ModuleStylesMinCss.txt"));
+            createdFiles.Add(themePath + "Styles\\Styles.min.css");
 
             File.WriteAllText(themePath + "Web.config", File.ReadAllText(_codeGenTemplatePath + "ModuleRootWebConfig.txt"));
             createdFiles.Add(themePath + "Web.config");
