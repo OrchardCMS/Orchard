@@ -146,11 +146,13 @@ namespace Orchard.Setup.Services {
                     // Make a workaround to avoid the Transaction issue for PostgreSQL
                     environment.Resolve<ITransactionManager>().RequireNew();
 
-                    schemaBuilder.CreateTable("Orchard_Framework_DataMigrationRecord",
-                                              table => table
-                                                           .Column<int>("Id", column => column.PrimaryKey().Identity())
-                                                           .Column<string>("DataMigrationClass")
-                                                           .Column<int>("Version"));
+                    schemaBuilder.CreateTable("Orchard_Framework_DataMigrationRecord", table => table
+                        .Column<int>("Id", column => column.PrimaryKey().Identity())
+                        .Column<string>("DataMigrationClass")
+                        .Column<int>("Version"));
+
+                    schemaBuilder.AlterTable("Orchard_Framework_DataMigrationRecord",
+                        table => table.AddUniqueConstraint("UC_DMR_DataMigrationClass_Version", "DataMigrationClass", "Version"));
 
                     var dataMigrationManager = environment.Resolve<IDataMigrationManager>();
                     dataMigrationManager.Update("Settings");

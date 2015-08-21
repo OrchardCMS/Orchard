@@ -1,36 +1,35 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Web.Routing;
 using System.Xml.Linq;
 using Orchard.Autoroute.Services;
 using Orchard.ContentManagement;
-using Orchard.Events;
+using Orchard.Localization;
+using Orchard.Recipes.Services;
 
-namespace Orchard.Autoroute.ImportExport {
-    public interface IExportEventHandler : IEventHandler {
-        void Exporting(dynamic context);
-        void Exported(dynamic context);
-    }
-
-    public class HomeAliasHandler : IExportEventHandler {
+namespace Orchard.Autoroute.Recipes.Builders {
+    public class HomeAliasStep : RecipeBuilderStep {
         private readonly IHomeAliasService _homeAliasService;
         private readonly IContentManager _contentManager;
 
-        public HomeAliasHandler(IHomeAliasService homeAliasService, IContentManager contentManager) {
+        public HomeAliasStep(IHomeAliasService homeAliasService, IContentManager contentManager) {
             _homeAliasService = homeAliasService;
             _contentManager = contentManager;
         }
 
-        public void Exporting(dynamic context) {
+        public override string Name {
+            get { return "HomeAlias"; }
         }
 
-        public void Exported(dynamic context) {
+        public override LocalizedString DisplayName {
+            get { return T("Home Alias"); }
+        }
 
-            if (!((IEnumerable<string>)context.ExportOptions.CustomSteps).Contains("HomeAlias")) {
-                return;
-            }
+        public override LocalizedString Description {
+            get { return T("Exports home alias."); }
+        }
 
+        public override void Build(BuildContext context) {
             var homeAliasRoute = _homeAliasService.GetHomeRoute() ?? new RouteValueDictionary();
             var root = new XElement("HomeAlias", homeAliasRoute.Select(x => new XElement(Capitalize(x.Key), x.Value)));
             var homePage = _homeAliasService.GetHomePage(VersionOptions.Latest);
@@ -40,10 +39,10 @@ namespace Orchard.Autoroute.ImportExport {
             // so we can't rely on the route values in that case.
             if (homePage != null) {
                 var homePageIdentifier = _contentManager.GetItemMetadata(homePage).Identity.ToString();
-                root.Attr("Identifier", homePageIdentifier);
+                root.Attr("Id", homePageIdentifier);
             }
-            
-            context.Document.Element("Orchard").Add(root);
+
+            context.RecipeDocument.Element("Orchard").Add(root);
         }
 
         private string Capitalize(string value) {
@@ -54,4 +53,3 @@ namespace Orchard.Autoroute.ImportExport {
         }
     }
 }
-
