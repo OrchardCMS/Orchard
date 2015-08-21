@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using NUnit.Framework;
@@ -16,103 +15,208 @@ namespace Orchard.Tests.Tasks {
     public class DistributedLockServiceTests : DatabaseEnabledTestsBase {
         private const string LockName = "Orchard Test Lock";
         private DistributedLockService _distributedLockService;
-        private StubMachineNameProvider _stubMachineNameProvider;
-        private IRepository<LockRecord> _lockRepository;
+        private StubMachineNameProvider _machineNameProvider;
+        private StubThreadProvider _threadProvider;
+        private IRepository<DistributedLockRecord> _distributedLockRepository;
 
-        protected override IEnumerable<Type> DatabaseTypes
-        {
-            get { yield return typeof (LockRecord); }
+        protected override IEnumerable<Type> DatabaseTypes {
+            get { yield return typeof(DistributedLockRecord); }
         }
 
         public override void Register(ContainerBuilder builder) {
             builder.RegisterType<StubClock>().As<IClock>();
-            //builder.RegisterType<StubWorkContextAccessor>().As<IWorkContextAccessor>();
             builder.RegisterType<StubMachineNameProvider>().As<IMachineNameProvider>().SingleInstance();
-            builder.RegisterType<StubDistributedLock>().As<IDistributedLock>();
+            builder.RegisterType<StubThreadProvider>().As<IThreadProvider>().SingleInstance();
             builder.RegisterType<DistributedLockService>().AsSelf();
-            builder.RegisterInstance(new Work<IDistributedLock>(resolve => _container.Resolve<IDistributedLock>())).AsSelf();
         }
 
         public override void Init() {
             base.Init();
             _distributedLockService = _container.Resolve<DistributedLockService>();
-            _stubMachineNameProvider = (StubMachineNameProvider)_container.Resolve<IMachineNameProvider>();
-            _lockRepository = _container.Resolve<IRepository<LockRecord>>();
+            _machineNameProvider = (StubMachineNameProvider)_container.Resolve<IMachineNameProvider>();
+            _threadProvider = (StubThreadProvider)_container.Resolve<IThreadProvider>();
+            _distributedLockRepository = _container.Resolve<IRepository<DistributedLockRecord>>();
         }
 
-
         [Test]
-        public void AcquiringLockSucceeds() {
-            IDistributedLock @lock;
-            var lockAcquired = _distributedLockService.TryAcquireLock(LockName, TimeSpan.FromSeconds(60), TimeSpan.Zero, out @lock);
-            
+        public void TryAcquiringLockSucceeds() {
+            DistributedLock @lock;
+            var lockAcquired = _distributedLockService.TryAcquireLockForMachine(LockName, TimeSpan.FromSeconds(60), null, out @lock);
+
             Assert.That(lockAcquired, Is.True);
         }
 
         [Test]
-        public void AcquiringLockTwiceOnSameMachineSucceeds() {
-            IDistributedLock @lock;
-            var attempt1 = _distributedLockService.TryAcquireLock(LockName, TimeSpan.FromSeconds(60), TimeSpan.Zero, out @lock);
-            var attempt2 = _distributedLockService.TryAcquireLock(LockName, TimeSpan.FromSeconds(60), TimeSpan.Zero, out @lock);
+        public void TryAcquiringLockTwiceOnSameMachineSucceeds() {
+            DistributedLock @lock;
+            var attempt1 = _distributedLockService.TryAcquireLockForMachine(LockName, TimeSpan.FromSeconds(60), null, out @lock);
+            var attempt2 = _distributedLockService.TryAcquireLockForMachine(LockName, TimeSpan.FromSeconds(60), null, out @lock);
 
             Assert.That(attempt1, Is.True);
             Assert.That(attempt2, Is.True);
         }
 
         [Test]
-        public void AcquiringLockTwiceOnSameMachineIncreasesRefCountTwice() {
-            IDistributedLock @lock;
-            _distributedLockService.TryAcquireLock(LockName, TimeSpan.FromSeconds(60), TimeSpan.Zero, out @lock);
-            _distributedLockService.TryAcquireLock(LockName, TimeSpan.FromSeconds(60), TimeSpan.Zero, out @lock);
+        public void TryAcquiringLockTwiceOnSameMachineIncreasesLockCountTwice() {
+            DistributedLock @lock;
+            _distributedLockService.TryAcquireLockForMachine(LockName, TimeSpan.FromSeconds(60), null, out @lock);
+            _distributedLockService.TryAcquireLockForMachine(LockName, TimeSpan.FromSeconds(60), null, out @lock);
 
-            var lockRecord = _lockRepository.Get(@lock.Id);
-            Assert.That(lockRecord.ReferenceCount, Is.EqualTo(2));
+            var lockId = Int32.Parse(@lock.Id);
+            var lockRecord = _distributedLockRepository.Get(lockId);
+            Assert.That(lockRecord.Count, Is.EqualTo(2));
         }
 
         [Test]
-        public void DisposingLockWillDecreaseRefCount() {
-            IDistributedLock @lock;
-            _distributedLockService.TryAcquireLock(LockName, TimeSpan.FromSeconds(60), TimeSpan.Zero, out @lock);
-            _distributedLockService.TryAcquireLock(LockName, TimeSpan.FromSeconds(60), TimeSpan.Zero, out @lock);
-            var lockRecord = _lockRepository.Get(@lock.Id);
+        public void ReleasingLockDecreasesLockCount() {
+            DistributedLock @lock;
+            _distributedLockService.TryAcquireLockForMachine(LockName, TimeSpan.FromSeconds(60), null, out @lock);
+            _distributedLockService.TryAcquireLockForMachine(LockName, TimeSpan.FromSeconds(60), null, out @lock);
 
-            _distributedLockService.DisposeLock(@lock);
-            Assert.That(lockRecord.ReferenceCount, Is.EqualTo(1));
+            var lockId = Int32.Parse(@lock.Id);
+            var lockRecord = _distributedLockRepository.Get(lockId);
 
-            _distributedLockService.DisposeLock(@lock);
-            Assert.That(lockRecord.ReferenceCount, Is.EqualTo(0));
+            _distributedLockService.ReleaseLock(@lock);
+            Assert.That(lockRecord.Count, Is.EqualTo(1));
+
+            _distributedLockService.ReleaseLock(@lock);
+            Assert.That(lockRecord.Count, Is.EqualTo(0));
         }
 
         [Test]
-        public void AcquiringLockTwiceFails() {
-            IDistributedLock @lock;
-            _stubMachineNameProvider.MachineName = "Orchard Test Machine 1";
-            var attempt1 = _distributedLockService.TryAcquireLock(LockName, TimeSpan.FromSeconds(60), TimeSpan.Zero, out @lock);
-            _stubMachineNameProvider.MachineName = "Orchard Test Machine 2";
-            var attempt2 = _distributedLockService.TryAcquireLock(LockName, TimeSpan.FromSeconds(60), TimeSpan.Zero, out @lock);
+        public void TryAcquiringLockTwiceFails() {
+            DistributedLock @lock;
+            _machineNameProvider.MachineName = "Orchard Test Machine 1";
+            var attempt1 = _distributedLockService.TryAcquireLockForMachine(LockName, TimeSpan.FromSeconds(60), null, out @lock);
+            _machineNameProvider.MachineName = "Orchard Test Machine 2";
+            var attempt2 = _distributedLockService.TryAcquireLockForMachine(LockName, TimeSpan.FromSeconds(60), null, out @lock);
 
             Assert.That(attempt1, Is.True);
             Assert.That(attempt2, Is.False);
         }
 
         [Test]
-        public void MultipleSimultaneousAcquisitionsShouldAllowOneLock() {
-            var attempts = new List<bool>();
+        public void TryAcquiringNonExpiredActiveLockFails() {
+            DistributedLock @lock;
+            CreateNonExpiredActiveLock("Other Machine", threadId: null);
+            var success = _distributedLockService.TryAcquireLockForMachine(LockName, TimeSpan.FromHours(1), null, out @lock);
+
+            Assert.That(success, Is.False);
+        }
+
+        [Test]
+        public void TryAcquiringNonExpiredButInactiveLockSucceeds() {
+            DistributedLock @lock;
+            CreateNonExpiredButInactiveLock("Other Machine", threadId: null);
+            var success = _distributedLockService.TryAcquireLockForMachine(LockName, TimeSpan.FromHours(1), null, out @lock);
+
+            Assert.That(success, Is.True);
+        }
+
+        [Test]
+        public void TryAcquiringExpiredButActiveLockSucceeds() {
+            DistributedLock @lock;
+            CreateExpiredButActiveLock("Other Machine", threadId: null);
+            var success = _distributedLockService.TryAcquireLockForMachine(LockName, TimeSpan.FromHours(1), null, out @lock);
+
+            Assert.That(success, Is.True);
+        }
+
+        [Test]
+        public void TryAcquiringNonExpiredAndActiveLockFromCurrentOwnerSucceeds() {
+            DistributedLock @lock;
+            CreateNonExpiredActiveLock(GetMachineName(), threadId: null);
+            var success = _distributedLockService.TryAcquireLockForMachine(LockName, TimeSpan.FromHours(1), null, out @lock);
+
+            Assert.That(success, Is.True);
+        }
+
+        [Test]
+        public void AcquiringNonExpiredAndActiveLockFromDifferentOwnerThrowsTimeoutException() {
+            CreateNonExpiredActiveLock("Other Machine", threadId: null);
+            Assert.Throws<TimeoutException>(() => _distributedLockService.AcquireLockForMachine(LockName, TimeSpan.FromHours(1), TimeSpan.Zero));
+        }
+
+        [Test]
+        public void MultipleAcquisitionsFromDifferentMachinesShouldFail() {
+            DistributedLock @lock;
+            _machineNameProvider.MachineName = "Orchard Test Machine 1";
+            var attempt1 = _distributedLockService.TryAcquireLockForMachine(LockName, TimeSpan.FromSeconds(60), null, out @lock);
+            _machineNameProvider.MachineName = "Orchard Test Machine 2";
+            var attempt2 = _distributedLockService.TryAcquireLockForMachine(LockName, TimeSpan.FromSeconds(60), null, out @lock);
+
+            Assert.That(attempt1, Is.True);
+            Assert.That(attempt2, Is.False);
+        }
+
+        [Test]
+        public void MultithreadedAcquisitionsShouldNotCauseTransactionErrors() {
             var tasks = new List<Task>();
 
-            foreach (var index in Enumerable.Range(0, 20)) {
+            for (var i = 0; i < 10; i++) {
                 var task = Task.Factory.StartNew(() => {
-                    IDistributedLock @lock;
-                    _stubMachineNameProvider.MachineName = "Orchard Test Machine " + (index + 1);
-                    var attempt = _distributedLockService.TryAcquireLock(LockName, TimeSpan.FromSeconds(60), TimeSpan.Zero, out @lock);
-                    attempts.Add(attempt);
+                    DistributedLock @lock;
+                    Assert.DoesNotThrow(() => _distributedLockService.TryAcquireLockForMachine(LockName, TimeSpan.FromHours(1), null, out @lock));
                 });
 
                 tasks.Add(task);
             }
 
             Task.WaitAll(tasks.ToArray());
-            Assert.That(attempts.Count(x => x == true), Is.EqualTo(1));
+        }
+
+        [Test]
+        public void MixedScopeAcquisitionsShouldThrow() {
+            DistributedLock @lock;
+            Assert.DoesNotThrow(() => _distributedLockService.TryAcquireLockForMachine(LockName, TimeSpan.FromSeconds(60), null, out @lock));
+            Assert.Throws<InvalidOperationException>(() => _distributedLockService.TryAcquireLockForThread(LockName, TimeSpan.FromSeconds(60), null, out @lock));
+        }
+
+        [Test]
+        public void TryAcquireActiveLockWithNullTimeoutReturnsFalseImmediately() {
+            CreateNonExpiredActiveLock("Other Machine", null);
+
+            DistributedLock @lock;
+            var acquired = _distributedLockService.TryAcquireLockForThread(LockName, TimeSpan.FromMinutes(1), null, out @lock);
+            
+            Assert.That(acquired, Is.False);
+        }
+
+        private DistributedLockRecord CreateLockRecord(int count, DateTime createdUtc, DateTime validUntilUtc, string machineName, int? threadId) {
+            var record = new DistributedLockRecord {
+                Name = LockName,
+                Count = count,
+                CreatedUtc = createdUtc,
+                ValidUntilUtc = validUntilUtc,
+                MachineName = machineName,
+                ThreadId = threadId
+            };
+
+            _distributedLockRepository.Create(record);
+            return record;
+        }
+
+        private DistributedLockRecord CreateNonExpiredActiveLock(string machineName, int? threadId) {
+            var now = _clock.UtcNow;
+            return CreateLockRecord(1, now, now + TimeSpan.FromHours(1), machineName, threadId);
+        }
+
+        private DistributedLockRecord CreateNonExpiredButInactiveLock(string machineName, int? threadId) {
+            var now = _clock.UtcNow;
+            return CreateLockRecord(0, now, now + TimeSpan.FromHours(1), machineName, threadId);
+        }
+
+        private DistributedLockRecord CreateExpiredButActiveLock(string machineName, int? threadId) {
+            var now = _clock.UtcNow;
+            return CreateLockRecord(1, now, now - TimeSpan.FromHours(1), machineName, threadId);
+        }
+
+        private string GetMachineName() {
+            return _machineNameProvider.GetMachineName();
+        }
+
+        private int GetThreadId() {
+            return _threadProvider.GetCurrentThreadId();
         }
     }
 }

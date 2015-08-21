@@ -1,7 +1,6 @@
 using System;
 using System.Data;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
 using Orchard.Data;
@@ -13,137 +12,189 @@ using Orchard.Tasks.Locking.Records;
 
 namespace Orchard.Tasks.Locking.Services {
 
-    public class DistributedLockService : IDistributedLockService {
+    public class DistributedLockService : Component, IDistributedLockService {
         private readonly IMachineNameProvider _machineNameProvider;
         private readonly ILifetimeScope _lifetimeScope;
         private readonly IClock _clock;
-        private readonly object _semaphore = new object();
+        private readonly object _transactionManagerLock = new object();
+        private readonly IThreadProvider _threadProvider;
 
-        public DistributedLockService(IMachineNameProvider machineNameProvider, ILifetimeScope lifetimeScope, IClock clock) {
+        public DistributedLockService(IMachineNameProvider machineNameProvider, IThreadProvider threadProvider, ILifetimeScope lifetimeScope, IClock clock) {
             _machineNameProvider = machineNameProvider;
             _lifetimeScope = lifetimeScope;
             _clock = clock;
-            Logger = NullLogger.Instance;
+            _threadProvider = threadProvider;
         }
 
-        public ILogger Logger { get; set; }
+        public bool TryAcquireLockForMachine(string name, TimeSpan maxValidFor, TimeSpan? timeout, out DistributedLock @lock) {
+            return TryAcquireLock(name, maxValidFor, timeout, GetMachineName(), null, out @lock);
+        }
 
-        public bool TryAcquireLock(string name, TimeSpan maxLifetime, TimeSpan timeout, out IDistributedLock @lock) {
-            lock (_semaphore) {
-                @lock = default(IDistributedLock);
+        public DistributedLock AcquireLockForMachine(string name, TimeSpan maxValidFor, TimeSpan? timeout) {
+            return AcquireLock(name, maxValidFor, timeout, GetMachineName(), null);
+        }
+
+        public bool TryAcquireLockForThread(string name, TimeSpan maxValidFor, TimeSpan? timeout, out DistributedLock @lock) {
+            return TryAcquireLock(name, maxValidFor, timeout, GetMachineName(), GetThreadId(), out @lock);
+        }
+
+        public DistributedLock AcquireLockForThread(string name, TimeSpan maxValidFor, TimeSpan? timeout) {
+            return AcquireLock(name, maxValidFor, timeout, GetMachineName(), GetThreadId());
+        }
+
+        public void ReleaseLock(DistributedLock @lock) {
+            lock (_transactionManagerLock) {
+                var childLifetimeScope = CreateChildLifetimeScope(@lock.Name);
 
                 try {
-                    var waitedTime = TimeSpan.Zero;
-                    var waitTime = TimeSpan.FromMilliseconds(timeout.TotalMilliseconds / 10);
-                    bool acquired;
+                    var repository = childLifetimeScope.Resolve<IRepository<DistributedLockRecord>>();
+                    var transactionManager = childLifetimeScope.Resolve<ITransactionManager>();
+                    transactionManager.RequireNew(IsolationLevel.ReadCommitted);
+                    var lockId = Int32.Parse(@lock.Id);
+                    var record = repository.Get(lockId);
 
-                    while (!(acquired = TryAcquireLockRecord(name, maxLifetime, out @lock)) && waitedTime < timeout) {
-                        Task.Delay(timeout).ContinueWith(t => {
-                            waitedTime += waitTime;
-                        }).Wait();
-                    }
+                    if (record == null)
+                        throw new ObjectDisposedException("@lock", "No lock record could be found for the specified lock to be released.");
 
-                    if (acquired) {
-                        Logger.Debug("Successfully acquired a lock named {0}.", name);
-                        return true;
-                    }
+                    if (record.Count <= 0)
+                        throw new ObjectDisposedException("@lock", "The specified lock has already been released.");
+
+                    record.Count--;
                 }
                 catch (Exception ex) {
-                    Logger.Error(ex, "Error while trying to acquire a lock named {0}.", name);
-                    throw;
+                    if (ex.IsFatal()) throw;
+                    Logger.Error(ex, "An non-fatal error occurred while trying to dispose a distributed lock with name '{0}' and ID {1}.", @lock.Name, @lock.Id);
                 }
-
-                Logger.Debug("Could not acquire a lock named {0}.", name);
-                return false;
+                finally {
+                    childLifetimeScope.Dispose();
+                }
             }
         }
 
-        public IDistributedLock AcquireLock(string name, TimeSpan maxLifetime, TimeSpan timeout) {
-            IDistributedLock lockResult;
-            return TryAcquireLock(name, maxLifetime, timeout, out lockResult) ? lockResult : null;
-        }
-
-        public void DisposeLock(IDistributedLock @lock) {
-            var childLifetimeScope = CreateChildLifetimeScope(@lock.Name);
-
-            try {
-                var repository = childLifetimeScope.Resolve<IRepository<LockRecord>>();
-                var transactionManager = childLifetimeScope.Resolve<ITransactionManager>();
-                transactionManager.RequireNew(IsolationLevel.ReadCommitted);
-                var record = repository.Get(@lock.Id);
-
-                if (record != null) {
-                    if (record.ReferenceCount > 0)
-                        record.ReferenceCount--;
-                }
-            }
-            catch (Exception ex) {
-                if (ex.IsFatal()) throw;
-                Logger.Error(ex, "An non-fatal error occurred while trying to dispose a distributed lock with name {0} and ID {1}.", @lock.Name, @lock.Id);
-            }
-            finally {
-                childLifetimeScope.Dispose();
-            }
-        }
-
-        protected virtual bool TryAcquireLockRecord(string name, TimeSpan maxLifetime, out IDistributedLock @lock) {
-            @lock = null;
-            var childLifetimeScope = CreateChildLifetimeScope(name);
-
-            try {
-                var transactionManager = childLifetimeScope.Resolve<ITransactionManager>();
-                transactionManager.RequireNew(IsolationLevel.ReadCommitted);
-
-                // This way we can create a nested transaction scope instead of having the unwanted effect
-                // of manipulating the transaction of the caller.
-                var repository = childLifetimeScope.Resolve<IRepository<LockRecord>>();
-
-                // Find an existing, active lock, if any.
-                var record = repository.Table.FirstOrDefault(x => x.Name == name && (x.ValidUntilUtc >= _clock.UtcNow || x.ReferenceCount > 0));
-
-                // The current owner name (based on machine name and current thread ID).
-                var currentOwnerName = GetOwnerName();
-                var canAcquireLock = false;
-
-                // Check if there's already an active lock.
-                if (record != null) {
-                    // Check if the owner of the lock is the one trying to acquire the lock.
-                    if (record.Owner == currentOwnerName) {
-                        record.ReferenceCount++;
-                        canAcquireLock = true;
-                    }
-                }
-                else {
-                    // No one has an active lock yet, so good to go.
-                    record = new LockRecord {
-                        Name = name,
-                        Owner = currentOwnerName,
-                        ReferenceCount = 1,
-                        CreatedUtc = _clock.UtcNow,
-                        ValidUntilUtc = _clock.UtcNow + maxLifetime
-                    };
-                    repository.Create(record);
-                    repository.Flush();
-                    canAcquireLock = true;
-                }
-
-                if (!canAcquireLock)
-                    return false;
-
-                @lock = new Lock(this, name, record.Id);
+        private bool TryAcquireLock(string name, TimeSpan maxValidFor, TimeSpan? timeout, string machineName, int? threadId, out DistributedLock @lock) {
+            @lock = AcquireLockInternal(name, maxValidFor, machineName, threadId, timeout.GetValueOrDefault());
+            if (@lock != null)
                 return true;
+
+            Logger.Debug("Could not acquire a lock named '{0}'.", name);
+            return false;
+        }
+
+        private DistributedLock AcquireLock(string name, TimeSpan maxValidFor, TimeSpan? timeout, string machineName, int? threadId) {
+            var @lock = AcquireLockInternal(name, maxValidFor, machineName, threadId, timeout);
+            if (@lock != null)
+                return @lock;
+
+            throw new TimeoutException("Could not acquire a lock within the specified amount of time.");
+        }
+
+        private DistributedLock AcquireLockInternal(string name, TimeSpan maxValidFor, string machineName, int? threadId, TimeSpan? timeout = null) {
+            try {
+                DistributedLockRecord record = null;
+                var acquired = Poll(() => (record = AcquireLockRecord(name, maxValidFor, machineName, threadId)) != null, timeout);
+
+                if (acquired) {
+                    Logger.Debug("Successfully acquired a lock named '{0}'.", name);
+                    return threadId != null
+                        ? DistributedLock.ForThread(this, name, machineName, threadId.Value, record.Id.ToString())
+                        : DistributedLock.ForMachine(this, name, machineName, record.Id.ToString());
+                }
             }
             catch (Exception ex) {
-                Logger.Error(ex, "An error occurred while trying to acquire a lock.");
+                Logger.Error(ex, "Error while trying to acquire a lock named '{0}'.", name);
                 throw;
             }
-            finally {
-                childLifetimeScope.Dispose();
+
+            return null;
+        }
+
+        private DistributedLockRecord AcquireLockRecord(string name, TimeSpan maxValidFor, string machineName, int? threadId) {
+            lock (_transactionManagerLock) {
+                var childLifetimeScope = CreateChildLifetimeScope(name);
+
+                try {
+                    var transactionManager = childLifetimeScope.Resolve<ITransactionManager>();
+                    transactionManager.RequireNew(IsolationLevel.ReadCommitted);
+
+                    // This way we can create a nested transaction scope instead of having the unwanted effect
+                    // of manipulating the transaction of the caller.
+                    var repository = childLifetimeScope.Resolve<IRepository<DistributedLockRecord>>();
+
+                    // Find an existing, active lock, if any.
+                    var record = repository.Table.FirstOrDefault(x => x.Name == name && x.ValidUntilUtc >= _clock.UtcNow && x.Count > 0);
+
+                    // The current owner name (based on machine name and current thread ID).
+                    var canAcquireLock = false;
+
+                    // Check if there's already an active lock.
+                    if (record != null) {
+                        // Check if the machine name assigned to the lock is the one trying to acquire it.
+                        if (record.MachineName == machineName) {
+                            if(record.ThreadId != threadId)
+                                throw new InvalidOperationException(
+                                    threadId == null 
+                                    ? "An attempt to acquire a lock for a machine was detected while the requested lock is already assigned to a specific thread."
+                                    : "An attempt to acquire a lock for a thread was detected while the requested lock is already assigned to a machine.");
+
+                            record.Count++;
+                            canAcquireLock = true;
+                        }
+                    }
+                    else {
+                        // No one has an active lock yet, so good to go.
+                        record = new DistributedLockRecord {
+                            Name = name,
+                            MachineName = machineName,
+                            ThreadId = threadId,
+                            Count = 1,
+                            CreatedUtc = _clock.UtcNow,
+                            ValidUntilUtc = _clock.UtcNow + maxValidFor
+                        };
+                        repository.Create(record);
+                        canAcquireLock = true;
+                    }
+
+                    if (!canAcquireLock)
+                        return null;
+
+                    return record;
+                }
+                catch (Exception ex) {
+                    Logger.Error(ex, "An error occurred while trying to acquire a lock.");
+                    throw;
+                }
+                finally {
+                    childLifetimeScope.Dispose();
+                }
             }
         }
 
-        private string GetOwnerName() {
-            return String.Format("{0}_{1}", _machineNameProvider.GetMachineName(), Thread.CurrentThread.ManagedThreadId);
+        /// <summary>
+        /// Executes the specified function until it returns true, for the specified amount of time, or indefinitely if no timeout was given.
+        /// </summary>
+        /// <param name="pollFunc">The function to repeatedly execute until it returns true.</param>
+        /// <param name="timeout">The amount of time to retry executing the function. If null is specified, the specified function is executed indefinitely until it returns true.</param>
+        /// <returns>Returns true if the specified function returned true within the specified timeout, false otherwise.</returns>
+        private bool Poll(Func<bool> pollFunc, TimeSpan? timeout) {
+            var waitedTime = TimeSpan.Zero;
+            var waitTime = TimeSpan.FromMilliseconds(timeout.GetValueOrDefault().TotalMilliseconds / 10);
+            bool acquired;
+
+            while (!(acquired = pollFunc()) && (timeout == null || waitedTime < timeout.Value)) {
+                Task.Delay(waitTime).ContinueWith(t => {
+                    waitedTime += waitTime;
+                }).Wait();
+            }
+
+            return acquired;
+        }
+
+        private string GetMachineName() {
+            return _machineNameProvider.GetMachineName();
+        }
+
+        private int GetThreadId() {
+            return _threadProvider.GetCurrentThreadId();
         }
 
         private ILifetimeScope CreateChildLifetimeScope(string name) {

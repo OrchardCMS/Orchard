@@ -29,27 +29,27 @@ namespace Orchard.Data.Migration {
         public ILogger Logger { get; set; } 
 
         public void Activated() {
-            using(var @lock = _distributedLockService.AcquireLock(GetType().FullName, TimeSpan.FromMinutes(30), TimeSpan.FromMilliseconds(250))) {
-                if (@lock == null)
-                    return;
+            DistributedLock @lock;
+            if(_distributedLockService.TryAcquireLockForMachine(GetType().FullName, TimeSpan.FromMinutes(30), TimeSpan.FromMilliseconds(250), out @lock)) {
+                using (@lock) {
+                    // Let's make sure that the basic set of features is enabled.  If there are any that are not enabled, then let's enable them first.
+                    var theseFeaturesShouldAlwaysBeActive = new[] {
+                        "Common", "Containers", "Contents", "Dashboard", "Feeds", "Navigation", "Scheduling", "Settings", "Shapes", "Title"
+                    };
 
-                // Let's make sure that the basic set of features is enabled.  If there are any that are not enabled, then let's enable them first.
-                var theseFeaturesShouldAlwaysBeActive = new[] {
-                    "Common", "Containers", "Contents", "Dashboard", "Feeds", "Navigation", "Scheduling", "Settings", "Shapes", "Title"
-                };
-
-                var enabledFeatures = _featureManager.GetEnabledFeatures().Select(f => f.Id).ToList();
-                var featuresToEnable = theseFeaturesShouldAlwaysBeActive.Where(shouldBeActive => !enabledFeatures.Contains(shouldBeActive)).ToList();
-                if (featuresToEnable.Any()) {
-                    _featureManager.EnableFeatures(featuresToEnable, true);
-                }
-
-                foreach (var feature in _dataMigrationManager.GetFeaturesThatNeedUpdate()) {
-                    try {
-                        _dataMigrationManager.Update(feature);
+                    var enabledFeatures = _featureManager.GetEnabledFeatures().Select(f => f.Id).ToList();
+                    var featuresToEnable = theseFeaturesShouldAlwaysBeActive.Where(shouldBeActive => !enabledFeatures.Contains(shouldBeActive)).ToList();
+                    if (featuresToEnable.Any()) {
+                        _featureManager.EnableFeatures(featuresToEnable, true);
                     }
-                    catch (Exception e) {
-                        Logger.Error("Could not run migrations automatically on " + feature, e);
+
+                    foreach (var feature in _dataMigrationManager.GetFeaturesThatNeedUpdate()) {
+                        try {
+                            _dataMigrationManager.Update(feature);
+                        }
+                        catch (Exception ex) {
+                            Logger.Error(ex, "Could not run migrations automatically on {0}.", feature);
+                        }
                     }
                 }
             }

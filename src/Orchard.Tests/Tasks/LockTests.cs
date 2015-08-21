@@ -1,5 +1,4 @@
-﻿using System;
-using Autofac;
+﻿using Autofac;
 using Moq;
 using NUnit.Framework;
 using Orchard.Tasks.Locking.Services;
@@ -8,9 +7,9 @@ namespace Orchard.Tests.Tasks {
     [TestFixture]
     public class LockTests : ContainerTestBase {
         private const string LockName = "Orchard Test Lock";
-        private const int LockId = 1;
+        private const string LockId = "1";
         private Mock<IDistributedLockService> _distributedLockServiceMock;
-        private Lock _lock;
+        private DistributedLock _lock;
 
         protected override void Register(ContainerBuilder builder) {
             _distributedLockServiceMock = new Mock<IDistributedLockService>();
@@ -18,14 +17,14 @@ namespace Orchard.Tests.Tasks {
         }
 
         protected override void Resolve(ILifetimeScope container) {
-            _lock = new Lock(_distributedLockServiceMock.Object, LockName, LockId);
+            _lock = DistributedLock.ForMachine(_distributedLockServiceMock.Object, LockName, "Orchard Test Machine", LockId);
         }
 
         [Test]
         public void DisposeInvokesDistributedLockServiceDisposeLock() {
             _lock.Dispose();
 
-            _distributedLockServiceMock.Verify(service => service.DisposeLock(_lock), Times.Exactly(1));
+            _distributedLockServiceMock.Verify(service => service.ReleaseLock(_lock), Times.Exactly(1));
         }
 
         [Test]
@@ -34,7 +33,7 @@ namespace Orchard.Tests.Tasks {
             _lock.Dispose();
             _lock.Dispose();
 
-            _distributedLockServiceMock.Verify(service => service.DisposeLock(_lock), Times.Exactly(1));
+            _distributedLockServiceMock.Verify(service => service.ReleaseLock(_lock), Times.Exactly(1));
         }
     }
 }

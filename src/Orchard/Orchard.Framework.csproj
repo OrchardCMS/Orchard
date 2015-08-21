@@ -151,6 +151,8 @@
   <ItemGroup>
     <Compile Include="Environment\Extensions\Helpers\ExtensionManagerExtensions.cs" />
     <Compile Include="Environment\Extensions\Models\LifecycleStatus.cs" />
+    <Compile Include="Environment\IThreadProvider.cs" />
+    <Compile Include="Environment\ThreadProvider.cs" />
     <Compile Include="Mvc\Updater.cs" />
     <Compile Include="Recipes\Models\ConfigurationContext.cs" />
     <Compile Include="Recipes\Models\RecipeBuilderStepConfigurationContext.cs" />
@@ -398,11 +400,10 @@
     <Compile Include="Settings\CurrentSiteWorkContext.cs" />
     <Compile Include="Settings\ResourceDebugMode.cs" />
     <Compile Include="Tasks\Locking\Migrations\FrameworkMigrations.cs" />
-    <Compile Include="Tasks\Locking\Services\Lock.cs" />
+    <Compile Include="Tasks\Locking\Services\DistributedLock.cs" />
     <Compile Include="Tasks\Locking\Services\IDistributedLockService.cs" />
-    <Compile Include="Tasks\Locking\Services\IDistributedLock.cs" />
     <Compile Include="Tasks\Locking\Services\DistributedLockService.cs" />
-    <Compile Include="Tasks\Locking\Records\LockRecord.cs" />
+    <Compile Include="Tasks\Locking\Records\DistributedLockRecord.cs" />
     <Compile Include="Themes\CurrentThemeWorkContext.cs" />
     <Compile Include="Themes\ThemeManager.cs" />
     <Compile Include="Time\CurrentTimeZoneWorkContext.cs" />
