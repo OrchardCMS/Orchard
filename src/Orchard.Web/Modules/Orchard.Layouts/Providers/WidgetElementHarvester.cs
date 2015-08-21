@@ -13,12 +13,12 @@ using Orchard.Layouts.Settings;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.Layouts.Providers {
-    public class ContentPartElementHarvester : Component, IElementHarvester {
+    public class WidgetElementHarvester : Component, IElementHarvester {
         private readonly Work<IContentDefinitionManager> _contentDefinitionManager;
         private readonly Work<IElementFactory> _elementFactory;
         private readonly Work<IElementManager> _elementManager;
 
-        public ContentPartElementHarvester(
+        public WidgetElementHarvester(
             Work<IContentDefinitionManager> contentDefinitionManager,
             Work<IElementFactory> elementFactory,
             Work<IElementManager> elementManager) {

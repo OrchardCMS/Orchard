@@ -13,7 +13,7 @@ using Orchard.Layouts.Helpers;
 using Orchard.Layouts.Services;
 
 namespace Orchard.Layouts.Providers {
-    public class ContentFieldElementHarvester : Component, ElementHarvester {
+    public class ContentFieldElementHarvester : Component, IElementHarvester {
         private readonly Work<IContentDefinitionManager> _contentDefinitionManager;
         private readonly Work<ITransactionManager> _transactionManager;
         private readonly Work<ICultureAccessor> _cultureAccessor;
