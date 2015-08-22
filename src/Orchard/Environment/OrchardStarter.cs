@@ -41,7 +41,13 @@ using System.Web.Configuration;
 namespace Orchard.Environment {
     public static class OrchardStarter {
         public static IContainer CreateHostContainer(Action<ContainerBuilder> registrations) {
+            AppLocations applLocations = new AppLocations(null);
+
             var builder = new ContainerBuilder();
+            // Application paths and parameters
+            builder.RegisterInstance(applLocations);
+
+
             builder.RegisterModule(new CollectionOrderModule());
             builder.RegisterModule(new LoggingModule());
             builder.RegisterModule(new EventsModule());
@@ -81,7 +87,6 @@ namespace Orchard.Environment {
             RegisterVolatileProvider<DefaultVirtualPathMonitor, IVirtualPathMonitor>(builder);
             RegisterVolatileProvider<DefaultVirtualPathProvider, IVirtualPathProvider>(builder);
             
-
             builder.RegisterType<DefaultOrchardHost>().As<IOrchardHost>().As<IEventHandler>()
                 .Named<IEventHandler>(typeof(IShellSettingsManagerEventHandler).Name)
                 .Named<IEventHandler>(typeof(IShellDescriptorManagerEventHandler).Name)
@@ -102,11 +107,11 @@ namespace Orchard.Environment {
                         {
                             builder.RegisterType<ExtensionHarvester>().As<IExtensionHarvester>().SingleInstance();
                             builder.RegisterType<ModuleFolders>().As<IExtensionFolders>().SingleInstance()
-                                .WithParameter(new NamedParameter("paths", GetConfigPaths("Modules", "~/Modules" )));
+                                .WithParameter(new NamedParameter("paths", applLocations.ModuleLocations));
                             builder.RegisterType<CoreModuleFolders>().As<IExtensionFolders>().SingleInstance()
-                                .WithParameter(new NamedParameter("paths", new[] { "~/Core" }));
+                                .WithParameter(new NamedParameter("paths", applLocations.CoreLocations));
                             builder.RegisterType<ThemeFolders>().As<IExtensionFolders>().SingleInstance()
-                                .WithParameter(new NamedParameter("paths", GetConfigPaths("Themes", "~/Themes" )));
+                                .WithParameter(new NamedParameter("paths", applLocations.ThemeLocations));
 
                             builder.RegisterType<CoreExtensionLoader>().As<IExtensionLoader>().SingleInstance();
                             builder.RegisterType<ReferencedExtensionLoader>().As<IExtensionLoader>().SingleInstance();
@@ -175,17 +180,6 @@ namespace Orchard.Environment {
 
             return container;
         }
-
-        /// <summary>
-        /// Get list of comma separated paths from web.config appSettings
-        /// Also return the default path
-        /// </summary>
-        static IEnumerable<string> GetConfigPaths(string key, string defaultPath)
-        {
-            char[] delim = new char[]{','};
-            return (WebConfigurationManager.AppSettings[key] ?? "").Split(delim, StringSplitOptions.RemoveEmptyEntries).Concat(new string[]{defaultPath}).Select(s => s.Trim()).Distinct(StringComparer.OrdinalIgnoreCase);
-        }
-
 
         private static void RegisterVolatileProvider<TRegister, TService>(ContainerBuilder builder) where TService : IVolatileProvider {
             builder.RegisterType<TRegister>()
