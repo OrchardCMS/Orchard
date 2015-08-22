@@ -72,7 +72,7 @@ namespace Orchard.Tasks.Locking.Services {
         }
 
         private bool TryAcquireLock(string name, TimeSpan maxValidFor, TimeSpan? timeout, string machineName, int? threadId, out DistributedLock @lock) {
-            @lock = AcquireLockInternal(name, maxValidFor, machineName, threadId, timeout.GetValueOrDefault());
+            @lock = AcquireLockInternal(name, maxValidFor, machineName, threadId, timeout ?? TimeSpan.Zero);
             if (@lock != null)
                 return true;
 
