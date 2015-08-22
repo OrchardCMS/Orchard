@@ -13,7 +13,8 @@ var glob = require("glob"),
     uglify = require("gulp-uglify"),
     rename = require("gulp-rename"),
     concat = require("gulp-concat"),
-    header = require("gulp-header");
+    header = require("gulp-header"),
+    fs = require("fs");
 
 /*
 ** GULP TASKS
@@ -37,32 +38,53 @@ gulp.task("rebuild", function () {
     return merge(assetGroupTasks);
 });
 
-// Continuous watch (each asset group is built whenever one of its inputs changes).
+
+// Set "Watchers" as sub-processes in order to restart the task when Assets.json changes.
 gulp.task("watch", function () {
-    var pathWin32 = require("path");
-    getAssetGroups().forEach(function (assetGroup) {
-        var watchPaths = assetGroup.inputPaths.concat(assetGroup.watchPaths);
-        gulp.watch(watchPaths, function (event) {
-            var isConcat = path.basename(assetGroup.outputFileName, path.extname(assetGroup.outputFileName)) !== "@";
-            if (isConcat)
-                console.log("Asset file '" + event.path + "' was " + event.type + ", rebuilding asset group with output '" + assetGroup.outputPath + "'.");
-            else
-                console.log("Asset file '" + event.path + "' was " + event.type + ", rebuilding asset group.");
-            var doRebuild = true;
-            var task = createAssetGroupTask(assetGroup, doRebuild);
+    var watchers;
+    function restart() {
+        if (watchers) {
+            watchers.forEach(function (w) {
+                w.remove();
+                w.end();
+            });
+        }
+        watchers = [];
+        // Continuous watch (each asset group is built whenever one of its inputs changes).
+        getAssetGroups().forEach(function (assetGroup) {
+            var watchPaths = assetGroup.inputPaths.concat(assetGroup.watchPaths);
+            var watcher = gulp.watch(watchPaths, function (event) {
+                var isConcat = path.basename(assetGroup.outputFileName, path.extname(assetGroup.outputFileName)) !== "@";
+                if (isConcat)
+                    console.log("Asset file '" + event.path + "' was " + event.type + ", rebuilding asset group with output '" + assetGroup.outputPath + "'.");
+                else
+                    console.log("Asset file '" + event.path + "' was " + event.type + ", rebuilding asset group.");
+                var doRebuild = true;
+                var task = createAssetGroupTask(assetGroup, doRebuild);
+            });
+            watchers.push(watcher);
         });
+    }
+    var p;
+    if (p) { p.exit(); }
+    p = gulp.watch("Orchard.Web/{Core,Modules,Themes}/*/Assets.json", function (event) {
+        console.log("Asset file '" + event.path + "' was " + event.type + ", resetting asset watchers.");
+        restart();
     });
+    restart();
 });
+
 
 /*
 ** ASSET GROUPS
 */
-
 function getAssetGroups() {
-    var assetManifestPaths = glob.sync("Orchard.Web/{Core,Modules,Themes}/*/Assets.json");
+    var assetManifestPaths = glob.sync("Orchard.Web/{Core,Modules,Themes}/*/Assets.json", {});
     var assetGroups = [];
     assetManifestPaths.forEach(function (assetManifestPath) {
-        var assetManifest = require("./" + assetManifestPath);
+        var file = './' + assetManifestPath;
+        var json = fs.readFileSync(file, 'utf8');
+        assetManifest = eval(json);
         assetManifest.forEach(function (assetGroup) {
             resolveAssetGroupPaths(assetGroup, assetManifestPath);
             assetGroups.push(assetGroup);
