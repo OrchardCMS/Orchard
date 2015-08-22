@@ -339,6 +339,7 @@
     <Compile Include="Elements\Shape.cs" />
     <Compile Include="Elements\Break.cs" />
     <Compile Include="Elements\UIElement.cs" />
+    <Compile Include="Elements\Widget.cs" />
     <Compile Include="Filters\TokensFilter.cs" />
     <Compile Include="Framework\Display\ElementDisplayedContext.cs" />
     <Compile Include="Framework\Display\ElementDisplayingContext.cs" />
@@ -367,6 +368,7 @@
     <Compile Include="Helpers\PrefixHelper.cs" />
     <Compile Include="Helpers\JsonHelper.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
+    <Compile Include="Providers\WidgetElementHarvester.cs" />
     <Compile Include="Recipes\Builders\CustomElementsStep.cs" />
     <Compile Include="Recipes\Executors\CustomElementsStep.cs" />
     <Compile Include="Providers\BlueprintElementHarvester.cs" />
@@ -589,6 +591,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assets\CSS\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Widget.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Widget.Design.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

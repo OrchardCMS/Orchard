@@ -1,0 +1,7 @@
+﻿@using Orchard.Widgets.Models
+@{
+    var widgetPart = (WidgetPart)Model.WidgetPart;
+}
+<div class="layout-placeholder">
+    @String.Format("{0} - {1}", widgetPart.Title, widgetPart.ContentItem.TypeDefinition.DisplayName)
+</div>
