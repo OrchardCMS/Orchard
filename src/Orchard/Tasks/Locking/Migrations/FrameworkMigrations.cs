@@ -14,6 +14,10 @@ namespace Orchard.Tasks.Locking.Migrations {
                 .Column<DateTime>("CreatedUtc")
                 .Column<DateTime>("ValidUntilUtc"));
 
+            SchemaBuilder.AlterTable("DistributedLockRecord", table => {
+                table.CreateIndex("IDX_DistributedLockRecord_Name_ValidUntilUtc_Count", "Name", "ValidUntilUtc", "Count");
+            });
+
             return 1;
         }
     }
