@@ -113,6 +113,9 @@ namespace Orchard.Mvc.ViewEngines.Razor {
             }
         }
 
+        private string[] _commonLocations;
+        public string[] CommonLocations { get { return _commonLocations ?? (_commonLocations = WorkContext.Resolve<AppLocations>().CommonLocations); } } 
+
         public void RegisterImageSet(string imageSet, string style = "", int size = 16) {
             // hack to fake the style "alternate" for now so we don't have to change stylesheet names when this is hooked up
             // todo: (heskew) deal in shapes so we have real alternates 
@@ -202,7 +205,7 @@ namespace Orchard.Mvc.ViewEngines.Razor {
 
             if (!String.IsNullOrEmpty(_tenantPrefix)
                 && path.StartsWith("~/")  
-                && !WorkContext.Resolve<ShellSettings>().GlobalPathPrefixes.Any(gpp=>path.StartsWith(gpp, StringComparison.OrdinalIgnoreCase))
+                && !CommonLocations.Any(gpp=>path.StartsWith(gpp, StringComparison.OrdinalIgnoreCase))
             ) { 
                     return base.Href("~/" + _tenantPrefix + path.Substring(2), pathParts);
             }

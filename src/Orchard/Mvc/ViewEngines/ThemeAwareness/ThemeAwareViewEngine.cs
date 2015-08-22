@@ -20,6 +20,7 @@ namespace Orchard.Mvc.ViewEngines.ThemeAwareness {
         private readonly IConfiguredEnginesCache _configuredEnginesCache;
         private readonly IExtensionManager _extensionManager;
         private readonly ShellDescriptor _shellDescriptor;
+        private readonly AppLocations _appLocations;
         private readonly IViewEngine _nullEngines = new ViewEngineCollectionWrapper(Enumerable.Empty<IViewEngine>());
 
         public ThemeAwareViewEngine(
@@ -27,12 +28,14 @@ namespace Orchard.Mvc.ViewEngines.ThemeAwareness {
             IEnumerable<IViewEngineProvider> viewEngineProviders,
             IConfiguredEnginesCache configuredEnginesCache,
             IExtensionManager extensionManager,
-            ShellDescriptor shellDescriptor) {
+            ShellDescriptor shellDescriptor,
+            AppLocations appLocations) {
             _workContext = workContext;
             _viewEngineProviders = viewEngineProviders;
             _configuredEnginesCache = configuredEnginesCache;
             _extensionManager = extensionManager;
             _shellDescriptor = shellDescriptor;
+            _appLocations = appLocations;
 
             Logger = NullLogger.Instance;
         }
@@ -94,22 +97,13 @@ namespace Orchard.Mvc.ViewEngines.ThemeAwareness {
                     .Reverse()  // reverse from (C <= B <= A) to (A => B => C)
                     .Where(fd => DefaultExtensionTypes.IsModule(fd.Extension.ExtensionType));
 
-                var moduleLocations = enabledModules
-                    .Select(fd => fd.Extension.Location)
-                    .Distinct(StringComparer.OrdinalIgnoreCase)
-                    .ToList();
-
                 var moduleVirtualPaths = enabledModules
                     .Select(fd => fd.Extension.VirtualPath)
-                    .Distinct(StringComparer.OrdinalIgnoreCase) // is Distinct guranty to keep order?
+                    .Distinct(StringComparer.OrdinalIgnoreCase) // is Distinct guaranty to keep order?
                     .ToList();
 
-                var moduleParams = new CreateModulesViewEngineParams { VirtualPaths = moduleVirtualPaths, ModuleLocations = moduleLocations };
+                var moduleParams = new CreateModulesViewEngineParams { VirtualPaths = moduleVirtualPaths, ModuleLocations = _appLocations.ModuleLocations };
                 engines = engines.Concat(_viewEngineProviders.Select(vep => vep.CreateModulesViewEngine(moduleParams)));
-
-                //TBD: updating GlobalPathPrefixes should probably be placed in a better location in the code.
-                _workContext.Resolve<ShellSettings>().updateGlobalPathPrefixes(moduleLocations.Concat(new string[]{ theme.Location}));
-
 
                 return new ViewEngineCollectionWrapper(engines);
             });
