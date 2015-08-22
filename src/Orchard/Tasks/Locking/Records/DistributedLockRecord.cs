@@ -8,6 +8,6 @@ namespace Orchard.Tasks.Locking.Records {
         public virtual int? ThreadId { get; set; }
         public virtual int Count { get; set; }
         public virtual DateTime CreatedUtc { get; set; }
-        public virtual DateTime ValidUntilUtc { get; set; }
+        public virtual DateTime? ValidUntilUtc { get; set; }
     }
 }

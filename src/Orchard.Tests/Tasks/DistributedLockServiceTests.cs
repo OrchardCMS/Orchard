@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
-using NHibernate.Linq;
 using NUnit.Framework;
 using Orchard.Data;
 using Orchard.Environment;
@@ -189,7 +187,37 @@ namespace Orchard.Tests.Tasks {
             Assert.That(acquired, Is.False);
         }
 
-        private DistributedLockRecord CreateLockRecord(int count, DateTime createdUtc, DateTime validUntilUtc, string machineName, int? threadId) {
+        [Test]
+        public void ActiveLockWithUndefinedValidUntilNeverExpires() {
+            CreateNonExpiredActiveLockThatNeverExpires("Other Machine", null);
+            _clock.Advance(DateTime.MaxValue - _clock.UtcNow); // Fast forward to the End of Time.
+            DistributedLock @lock;
+            var acquired = _distributedLockService.TryAcquireLockForThread(LockName, TimeSpan.FromMinutes(1), null, out @lock);
+
+            Assert.That(acquired, Is.False);
+        }
+
+        [Test]
+        public void ActiveLockWithUndefinedValidUntilNeverExpiresUntilReleased() {
+            DistributedLock @lock;
+
+            // Create a never expiring lock.
+            _machineNameProvider.MachineName = "Orchard Test Machine 1";
+            var attempt1 = _distributedLockService.TryAcquireLockForThread(LockName, maxValidFor: null, timeout: null, @lock: out @lock);
+            
+            // Release the lock.
+            _distributedLockService.ReleaseLock(@lock);
+
+            // Acquire the lock from another machine.
+            _machineNameProvider.MachineName = "Orchard Test Machine 2";
+            var attempt2 = _distributedLockService.TryAcquireLockForThread(LockName, maxValidFor: null, timeout: null, @lock: out @lock);
+
+            // Validate the results.
+            Assert.That(attempt1, Is.True);
+            Assert.That(attempt2, Is.True);
+        }
+
+        private DistributedLockRecord CreateLockRecord(int count, DateTime createdUtc, DateTime? validUntilUtc, string machineName, int? threadId) {
             var record = new DistributedLockRecord {
                 Name = LockName,
                 Count = count,
@@ -217,6 +245,11 @@ namespace Orchard.Tests.Tasks {
         private DistributedLockRecord CreateExpiredButActiveLock(string machineName, int? threadId) {
             var now = _clock.UtcNow;
             return CreateLockRecord(1, now, now - TimeSpan.FromHours(1), machineName, threadId);
+        }
+
+        private DistributedLockRecord CreateNonExpiredActiveLockThatNeverExpires(string machineName, int? threadId) {
+            var now = _clock.UtcNow;
+            return CreateLockRecord(1, now, null, machineName, threadId);
         }
 
         private string GetMachineName() {

@@ -12,7 +12,7 @@ namespace Orchard.Tasks.Locking.Migrations {
                 .Column<int>("ThreadId", column => column.Nullable())
                 .Column<int>("Count")
                 .Column<DateTime>("CreatedUtc")
-                .Column<DateTime>("ValidUntilUtc"));
+                .Column<DateTime>("ValidUntilUtc", column => column.Nullable()));
 
             SchemaBuilder.AlterTable("DistributedLockRecord", table => {
                 table.CreateIndex("IDX_DistributedLockRecord_Name_ValidUntilUtc_Count", "Name", "ValidUntilUtc", "Count");
