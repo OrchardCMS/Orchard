@@ -69,7 +69,7 @@ namespace Orchard.Tasks.Locking.Services {
         }
 
         private bool TryAcquireLock(string name, TimeSpan? maxValidFor, TimeSpan? timeout, string machineName, int? threadId, out DistributedLock @lock) {
-            @lock = AcquireLockInternal(name, maxValidFor, machineName, threadId, timeout ?? TimeSpan.Zero);
+            @lock = AcquireLock(name, maxValidFor, machineName, threadId, timeout ?? TimeSpan.Zero);
             if (@lock != null)
                 return true;
 
@@ -77,23 +77,21 @@ namespace Orchard.Tasks.Locking.Services {
         }
 
         private DistributedLock AcquireLock(string name, TimeSpan? maxValidFor, TimeSpan? timeout, string machineName, int? threadId) {
-            var @lock = AcquireLockInternal(name, maxValidFor, machineName, threadId, timeout);
+            var @lock = AcquireLock(name, maxValidFor, machineName, threadId, timeout);
             if (@lock != null)
                 return @lock;
 
             throw new TimeoutException(String.Format("Failed to acquire a lock named '{0}' within the specified timeout ('{1}').", name, timeout));
         }
 
-        private DistributedLock AcquireLockInternal(string name, TimeSpan? maxValidFor, string machineName, int? threadId, TimeSpan? timeout = null) {
+        private DistributedLock AcquireLock(string name, TimeSpan? maxValidFor, string machineName, int? threadId, TimeSpan? timeout = null) {
             try {
-                DistributedLockRecord record = null;
-                var acquired = Poll(() => (record = AcquireLockRecord(name, maxValidFor, machineName, threadId)) != null, timeout);
+                DistributedLock @lock = null;
+                var acquired = Poll(() => (@lock = AcquireLockInternal(name, maxValidFor, machineName, threadId)) != null, timeout);
 
                 if (acquired) {
                     Logger.Debug("Successfully acquired a lock named '{0}'.", name);
-                    return threadId != null
-                        ? DistributedLock.ForThread(this, name, machineName, threadId.Value, record.Id.ToString())
-                        : DistributedLock.ForMachine(this, name, machineName, record.Id.ToString());
+                    return @lock;
                 }
             }
             catch (Exception ex) {
@@ -109,7 +107,7 @@ namespace Orchard.Tasks.Locking.Services {
             return null;
         }
 
-        private DistributedLockRecord AcquireLockRecord(string name, TimeSpan? maxValidFor, string machineName, int? threadId) {
+        private DistributedLock AcquireLockInternal(string name, TimeSpan? maxValidFor, string machineName, int? threadId) {
             var childLifetimeScope = CreateChildLifetimeScope(name);
 
             try {
@@ -157,7 +155,9 @@ namespace Orchard.Tasks.Locking.Services {
                 if (!canAcquireLock)
                     return null;
 
-                return record;
+                return threadId != null
+                    ? DistributedLock.ForThread(this, name, machineName, threadId.Value, record.Id.ToString())
+                    : DistributedLock.ForMachine(this, name, machineName, record.Id.ToString());
             }
             catch (Exception ex) {
                 Logger.Error(ex, "An error occurred while trying to acquire a lock.");
