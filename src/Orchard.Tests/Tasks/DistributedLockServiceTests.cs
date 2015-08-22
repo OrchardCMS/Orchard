@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
+using NHibernate.Linq;
 using NUnit.Framework;
 using Orchard.Data;
 using Orchard.Environment;
@@ -18,6 +20,8 @@ namespace Orchard.Tests.Tasks {
         private StubMachineNameProvider _machineNameProvider;
         private StubThreadProvider _threadProvider;
         private IRepository<DistributedLockRecord> _distributedLockRepository;
+        private ITransactionManager _transactionManager;
+        
 
         protected override IEnumerable<Type> DatabaseTypes {
             get { yield return typeof(DistributedLockRecord); }
@@ -36,6 +40,7 @@ namespace Orchard.Tests.Tasks {
             _machineNameProvider = (StubMachineNameProvider)_container.Resolve<IMachineNameProvider>();
             _threadProvider = (StubThreadProvider)_container.Resolve<IThreadProvider>();
             _distributedLockRepository = _container.Resolve<IRepository<DistributedLockRecord>>();
+            _transactionManager = _container.Resolve<ITransactionManager>();
         }
 
         [Test]
@@ -75,11 +80,13 @@ namespace Orchard.Tests.Tasks {
 
             var lockId = Int32.Parse(@lock.Id);
             var lockRecord = _distributedLockRepository.Get(lockId);
-
+            
             _distributedLockService.ReleaseLock(@lock);
+            _session.Refresh(lockRecord);
             Assert.That(lockRecord.Count, Is.EqualTo(1));
 
             _distributedLockService.ReleaseLock(@lock);
+            _session.Refresh(lockRecord);
             Assert.That(lockRecord.Count, Is.EqualTo(0));
         }
 
@@ -193,6 +200,7 @@ namespace Orchard.Tests.Tasks {
             };
 
             _distributedLockRepository.Create(record);
+            _transactionManager.RequireNew();
             return record;
         }
 

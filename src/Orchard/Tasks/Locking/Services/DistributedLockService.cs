@@ -16,7 +16,6 @@ namespace Orchard.Tasks.Locking.Services {
         private readonly IMachineNameProvider _machineNameProvider;
         private readonly ILifetimeScope _lifetimeScope;
         private readonly IClock _clock;
-        private readonly object _transactionManagerLock = new object();
         private readonly IThreadProvider _threadProvider;
 
         public DistributedLockService(IMachineNameProvider machineNameProvider, IThreadProvider threadProvider, ILifetimeScope lifetimeScope, IClock clock) {
@@ -43,31 +42,29 @@ namespace Orchard.Tasks.Locking.Services {
         }
 
         public void ReleaseLock(DistributedLock @lock) {
-            lock (_transactionManagerLock) {
-                var childLifetimeScope = CreateChildLifetimeScope(@lock.Name);
+            var childLifetimeScope = CreateChildLifetimeScope(@lock.Name);
 
-                try {
-                    var repository = childLifetimeScope.Resolve<IRepository<DistributedLockRecord>>();
-                    var transactionManager = childLifetimeScope.Resolve<ITransactionManager>();
-                    transactionManager.RequireNew(IsolationLevel.ReadCommitted);
-                    var lockId = Int32.Parse(@lock.Id);
-                    var record = repository.Get(lockId);
+            try {
+                var repository = childLifetimeScope.Resolve<IRepository<DistributedLockRecord>>();
+                var transactionManager = childLifetimeScope.Resolve<ITransactionManager>();
+                transactionManager.RequireNew(IsolationLevel.ReadCommitted);
+                var lockId = Int32.Parse(@lock.Id);
+                var record = repository.Get(lockId);
 
-                    if (record == null)
-                        throw new ObjectDisposedException("@lock", "No lock record could be found for the specified lock to be released.");
+                if (record == null)
+                    throw new ObjectDisposedException("@lock", "No lock record could be found for the specified lock to be released.");
 
-                    if (record.Count <= 0)
-                        throw new ObjectDisposedException("@lock", "The specified lock has already been released.");
+                if (record.Count <= 0)
+                    throw new ObjectDisposedException("@lock", "The specified lock has already been released.");
 
-                    record.Count--;
-                }
-                catch (Exception ex) {
-                    if (ex.IsFatal()) throw;
-                    Logger.Error(ex, "An non-fatal error occurred while trying to dispose a distributed lock with name '{0}' and ID {1}.", @lock.Name, @lock.Id);
-                }
-                finally {
-                    childLifetimeScope.Dispose();
-                }
+                record.Count--;
+            }
+            catch (Exception ex) {
+                if (ex.IsFatal()) throw;
+                Logger.Error(ex, "An non-fatal error occurred while trying to dispose a distributed lock with name '{0}' and ID {1}.", @lock.Name, @lock.Id);
+            }
+            finally {
+                childLifetimeScope.Dispose();
             }
         }
 
@@ -76,7 +73,6 @@ namespace Orchard.Tasks.Locking.Services {
             if (@lock != null)
                 return true;
 
-            Logger.Debug("Could not acquire a lock named '{0}'.", name);
             return false;
         }
 
@@ -85,7 +81,7 @@ namespace Orchard.Tasks.Locking.Services {
             if (@lock != null)
                 return @lock;
 
-            throw new TimeoutException("Could not acquire a lock within the specified amount of time.");
+            throw new TimeoutException(String.Format("Failed to acquire a lock named '{0}' within the specified timeout ('{1}').", name, timeout));
         }
 
         private DistributedLock AcquireLockInternal(string name, TimeSpan maxValidFor, string machineName, int? threadId, TimeSpan? timeout = null) {
@@ -105,11 +101,16 @@ namespace Orchard.Tasks.Locking.Services {
                 throw;
             }
 
+            Logger.Debug(timeout == null
+                ? "Failed to acquire a lock named '{0}'."
+                : "Failed to acquire a lock named '{0}' within the specified timeout ('{1}')."
+                , name, timeout);
+
             return null;
         }
 
         private DistributedLockRecord AcquireLockRecord(string name, TimeSpan maxValidFor, string machineName, int? threadId) {
-            lock (_transactionManagerLock) {
+            //lock (_transactionManagerLock) {
                 var childLifetimeScope = CreateChildLifetimeScope(name);
 
                 try {
@@ -130,9 +131,9 @@ namespace Orchard.Tasks.Locking.Services {
                     if (record != null) {
                         // Check if the machine name assigned to the lock is the one trying to acquire it.
                         if (record.MachineName == machineName) {
-                            if(record.ThreadId != threadId)
+                            if (record.ThreadId != threadId)
                                 throw new InvalidOperationException(
-                                    threadId == null 
+                                    threadId == null
                                     ? "An attempt to acquire a lock for a machine was detected while the requested lock is already assigned to a specific thread."
                                     : "An attempt to acquire a lock for a thread was detected while the requested lock is already assigned to a machine.");
 
@@ -166,7 +167,7 @@ namespace Orchard.Tasks.Locking.Services {
                 finally {
                     childLifetimeScope.Dispose();
                 }
-            }
+            //}
         }
 
         /// <summary>
