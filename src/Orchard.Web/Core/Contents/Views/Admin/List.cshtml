@@ -4,13 +4,13 @@
     var pageTitle = T("Manage Content");
     var createLinkText = T("Create New Content");
     if (!string.IsNullOrWhiteSpace(typeDisplayName)) {
-        pageTitle = T("Manage {0} Content", typeDisplayName);
-        createLinkText = T("Create New {0}", typeDisplayName);
+        pageTitle = T("Manage {0} Content", Html.Raw(typeDisplayName));
+        createLinkText = T("Create New {0}", Html.Raw(typeDisplayName));
     }
 
     IEnumerable<string> cultures = Model.Options.Cultures;
     
-    Layout.Title = pageTitle;
+    Layout.Title = pageTitle.Text;
 }
 
 <div class="manage">
