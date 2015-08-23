@@ -37,6 +37,7 @@ namespace Orchard.Environment {
             ISweepGenerator sweepGenerator,
             IEnumerable<IOwinMiddlewareProvider> owinMiddlewareProviders,
             ShellSettings shellSettings) {
+
             _eventsFactory = eventsFactory;
             _routeProviders = routeProviders;
             _httpRouteProviders = httpRouteProviders;

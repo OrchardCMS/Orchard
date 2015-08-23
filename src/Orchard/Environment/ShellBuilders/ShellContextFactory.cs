@@ -103,7 +103,8 @@ namespace Orchard.Environment.ShellBuilders {
                 Features = new[] {
                     new ShellFeature { Name = "Orchard.Setup" },
                     new ShellFeature { Name = "Shapes" },
-                    new ShellFeature { Name = "Orchard.jQuery" },
+                    new ShellFeature { Name = "Orchard.Recipes" },
+                    new ShellFeature { Name = "Orchard.jQuery" }
                 },
             };
 
