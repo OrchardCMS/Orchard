@@ -9,6 +9,7 @@ namespace Orchard.Environment.Configuration {
         public string[] ModuleLocations;
         public string[] ThemeLocations;
         public string[] CommonLocations;  // locations that should not be common and not related to the current tenant
+        public string[] ModuleAndThemeLocations {  get { return ModuleLocations.Concat(ThemeLocations).Distinct(StringComparer.CurrentCultureIgnoreCase).ToArray(); } }
 
         public AppLocations(IAppConfigurationAccessor appConfigurationAccessor)
         {

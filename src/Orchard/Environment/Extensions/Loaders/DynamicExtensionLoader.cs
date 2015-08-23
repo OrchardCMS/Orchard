@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Orchard.Caching;
+using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions.Compilers;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.Dependencies;
@@ -13,8 +14,7 @@ using Orchard.Utility.Extensions;
 
 namespace Orchard.Environment.Extensions.Loaders {
     public class DynamicExtensionLoader : ExtensionLoaderBase {
-        //public static readonly string[] ExtensionsVirtualPathPrefixes = { "~/Modules/", "~/Themes/" };
-        public static readonly string[] ExcludeExtensionsVirtualPathPrefixes = { "~/Core" };
+        private readonly string[] _extensionsVirtualPathPrefixes; //  { "~/Modules/", "~/Themes/" };
 
         private readonly IBuildManager _buildManager;
         private readonly IVirtualPathProvider _virtualPathProvider;
@@ -32,7 +32,8 @@ namespace Orchard.Environment.Extensions.Loaders {
             IHostEnvironment hostEnvironment,
             IAssemblyProbingFolder assemblyProbingFolder,
             IDependenciesFolder dependenciesFolder,
-            IProjectFileParser projectFileParser)
+            IProjectFileParser projectFileParser,
+            AppLocations appLocations)
             : base(dependenciesFolder) {
 
             _buildManager = buildManager;
@@ -44,6 +45,8 @@ namespace Orchard.Environment.Extensions.Loaders {
             _dependenciesFolder = dependenciesFolder;
 
             Logger = NullLogger.Instance;
+
+            _extensionsVirtualPathPrefixes = appLocations.ModuleAndThemeLocations;
         }
 
         public ILogger Logger { get; set; }
@@ -210,8 +213,8 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         private void AddDependencies(string projectPath, HashSet<string> currentSet) {
-            // Skip files from "~/Core/" locations 
-            if (!string.IsNullOrEmpty(PrefixMatch(projectPath, ExcludeExtensionsVirtualPathPrefixes))) {
+            // Skip files from locations other than "~/Modules" and "~/Themes" etc.
+            if (string.IsNullOrEmpty(PrefixMatch(projectPath, _extensionsVirtualPathPrefixes))) {
                 return;
             }
 

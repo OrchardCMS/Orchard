@@ -198,7 +198,6 @@ namespace Orchard.Mvc.ViewEngines.Razor {
 
         private string _tenantPrefix;
         public override string Href(string path, params object[] pathParts) {
-
             if (_tenantPrefix == null) {
                 _tenantPrefix = WorkContext.Resolve<ShellSettings>().RequestUrlPrefix ?? "";
             }

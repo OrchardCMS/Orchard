@@ -92,9 +92,6 @@ namespace Orchard.Tests.DataMigration {
         }
 
         public class StubFolders : IExtensionFolders {
-
-            public IEnumerable<string> Paths { get { return AvailableExtensions().Select(e => e.Location).Distinct(); } }
-
             public StubFolders() {
                 Manifests = new Dictionary<string, string>();
             }
