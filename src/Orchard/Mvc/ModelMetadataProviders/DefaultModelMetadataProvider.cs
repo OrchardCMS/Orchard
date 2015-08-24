@@ -5,12 +5,12 @@ using System.Web.Mvc;
 
 namespace Orchard.Mvc.ModelMetadataProviders {
     public class DefaultModelMetadataProvider : DataAnnotationsModelMetadataProvider, IModelMetadataProvider {
-        private readonly IEnumerable<IModelMetadataProcessor> _modelMetadataProviders;
+        private readonly IEnumerable<IModelMetadataProcessor> _modelMetadataProcessors;
 
         public DefaultModelMetadataProvider(
-            IEnumerable<IModelMetadataProcessor> modelMetadataProviders 
+            IEnumerable<IModelMetadataProcessor> modelMetadataProcessors 
         ) {
-            _modelMetadataProviders = modelMetadataProviders;
+            _modelMetadataProcessors = modelMetadataProcessors;
         }
 
         protected override ModelMetadata CreateMetadata(IEnumerable<Attribute> attributes, Type containerType, Func<object> modelAccessor, Type modelType, string propertyName) {
@@ -26,8 +26,8 @@ namespace Orchard.Mvc.ModelMetadataProviders {
                 ModelType = modelType,
                 PropertyName = propertyName,
             };
-            foreach (var modelMetadataProvider in _modelMetadataProviders) {
-                modelMetadataProvider.ProcessMetadata(context);
+            foreach (var modelMetadataProcessor in _modelMetadataProcessors) {
+                modelMetadataProcessor.ProcessMetadata(context);
             }
 
             return data;
