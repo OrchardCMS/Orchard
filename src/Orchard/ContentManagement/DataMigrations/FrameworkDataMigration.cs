@@ -64,5 +64,16 @@ namespace Orchard.ContentManagement.DataMigrations {
             return 3;
         }
 
+        public int UpdateFrom3() {
+            SchemaBuilder
+                .AlterTable("ContentTypeRecord", table =>
+                    table.AddUniqueConstraint("UC_CTR_Name", "Name"))
+                .AlterTable("ContentItemVersionRecord", table =>
+                    table.AddUniqueConstraint("UC_CIVR_CIRId_Number", "ContentItemRecord_id", "Number"))
+                .AlterTable("CultureRecord", table =>
+                    table.AddUniqueConstraint("UC_CR_Name", "Culture"));
+
+            return 4;
+        }
     }
 }

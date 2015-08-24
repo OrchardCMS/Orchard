@@ -217,6 +217,7 @@
     <Content Include="Assets\JavaScript\Lib\moment.js" />
     <Content Include="Assets\JavaScript\Lib\swfobject.js" />
     <Content Include="Assets\JavaScript\Lib\uri.js" />
+    <Content Include="Assets\JavaScript\Lib\underscore.js" />
     <Content Include="Scripts\Lib\console-shim.js" />
     <Content Include="Scripts\Lib\console-shim.min.js" />
     <Content Include="Scripts\Lib\dash.all.js" />
@@ -239,7 +240,6 @@
     <Content Include="Scripts\Lib\underscore.min.js" />
     <Content Include="Scripts\Lib\uri.js" />
     <Content Include="Scripts\Lib\uri.min.js" />
-    <Content Include="Assets\JavaScript\Lib\underscore.js" />
     <Content Include="Styles\cloudmedia-admin-asset.css" />
     <Content Include="Styles\cloudmedia-admin-asset.min.css" />
     <Content Include="Styles\cloudmedia-admin-job.css" />
