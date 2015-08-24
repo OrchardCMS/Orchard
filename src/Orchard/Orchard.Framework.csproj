@@ -323,6 +323,8 @@
     <Compile Include="FileSystems\Media\StorageProviderExtensions.cs" />
     <Compile Include="Indexing\ISearchBits.cs" />
     <Compile Include="Localization\LocalizationExtensions.cs" />
+    <Compile Include="Localization\LocalizedDisplayNameAttribute.cs" />
+    <Compile Include="Localization\LocalizedModelMetadataProcessor.cs" />
     <Compile Include="Localization\Models\DateLocalizationOptions.cs" />
     <Compile Include="Localization\Models\DateParts.cs" />
     <Compile Include="Localization\Models\DateTimeParts.cs" />
@@ -366,6 +368,10 @@
     <Compile Include="Mvc\HttpContextWorkContext.cs" />
     <Compile Include="Mvc\Extensions\ControllerExtensions.cs" />
     <Compile Include="Mvc\IOrchardViewPage.cs" />
+    <Compile Include="Mvc\ModelMetadataProviders\DefaultModelMetadataProvider.cs" />
+    <Compile Include="Mvc\ModelMetadataProviders\IModelMetadataProcessor.cs" />
+    <Compile Include="Mvc\ModelMetadataProviders\IModelMetadataProvider.cs" />
+    <Compile Include="Mvc\ModelMetadataProviders\ModelMetadataProviderProxy.cs" />
     <Compile Include="Mvc\Routes\HubRoute.cs" />
     <Compile Include="Mvc\ShapeResult.cs" />
     <Compile Include="Mvc\Spooling\HtmlStringWriter.cs" />
