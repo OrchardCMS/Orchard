@@ -20,7 +20,6 @@ namespace Orchard.Mvc.ViewEngines.ThemeAwareness {
         private readonly IConfiguredEnginesCache _configuredEnginesCache;
         private readonly IExtensionManager _extensionManager;
         private readonly ShellDescriptor _shellDescriptor;
-        private readonly AppLocations _appLocations;
         private readonly IViewEngine _nullEngines = new ViewEngineCollectionWrapper(Enumerable.Empty<IViewEngine>());
 
         public ThemeAwareViewEngine(
@@ -28,14 +27,12 @@ namespace Orchard.Mvc.ViewEngines.ThemeAwareness {
             IEnumerable<IViewEngineProvider> viewEngineProviders,
             IConfiguredEnginesCache configuredEnginesCache,
             IExtensionManager extensionManager,
-            ShellDescriptor shellDescriptor,
-            AppLocations appLocations) {
+            ShellDescriptor shellDescriptor) {
             _workContext = workContext;
             _viewEngineProviders = viewEngineProviders;
             _configuredEnginesCache = configuredEnginesCache;
             _extensionManager = extensionManager;
             _shellDescriptor = shellDescriptor;
-            _appLocations = appLocations;
 
             Logger = NullLogger.Instance;
         }
@@ -102,7 +99,12 @@ namespace Orchard.Mvc.ViewEngines.ThemeAwareness {
                     .Distinct(StringComparer.OrdinalIgnoreCase) // is Distinct guaranty to keep order?
                     .ToList();
 
-                var moduleParams = new CreateModulesViewEngineParams { VirtualPaths = moduleVirtualPaths, ModuleLocations = _appLocations.ModuleLocations };
+                var moduleLocations = enabledModules
+                    .Select(fd => fd.Extension.Location)
+                    .Distinct(StringComparer.OrdinalIgnoreCase) // is Distinct guaranty to keep order?
+                    .ToList();
+
+                var moduleParams = new CreateModulesViewEngineParams { VirtualPaths = moduleVirtualPaths, ModuleLocations = moduleLocations };
                 engines = engines.Concat(_viewEngineProviders.Select(vep => vep.CreateModulesViewEngine(moduleParams)));
 
                 return new ViewEngineCollectionWrapper(engines);
