@@ -188,6 +188,18 @@ namespace Orchard.Mvc {
                 }
             }
 
+            public override string HttpMethod {
+                get {
+                    return "";
+                }
+            }
+
+            public override NameValueCollection Params {
+                get {
+                    return new NameValueCollection();
+                }
+            }
+
             public override string AppRelativeCurrentExecutionFilePath {
                 get {
                     return "~/";
@@ -233,6 +245,12 @@ namespace Orchard.Mvc {
             public override string UserHostAddress {
                 get {
                     return "127.0.0.1";
+                }
+            }
+
+            public override string[] UserLanguages {
+                get {
+                    return new string[0];
                 }
             }
 
