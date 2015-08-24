@@ -30,6 +30,7 @@ using Orchard.Logging;
 using Orchard.Mvc;
 using Orchard.Mvc.DataAnnotations;
 using Orchard.Mvc.Filters;
+using Orchard.Mvc.ModelMetadataProviders;
 using Orchard.Mvc.ViewEngines.Razor;
 using Orchard.Mvc.ViewEngines.ThemeAwareness;
 using Orchard.Services;
@@ -166,6 +167,8 @@ namespace Orchard.Environment {
             var hostContainer = new DefaultOrchardHostContainer(container);
             //MvcServiceLocator.SetCurrent(hostContainer);
             OrchardHostContainerRegistry.RegisterHostContainer(hostContainer);
+
+            ModelMetadataProviders.Current = new ModelMetadataProviderProxy(ModelMetadataProviders.Current);
 
             // Register localized data annotations
             ModelValidatorProviders.Providers.Clear();
