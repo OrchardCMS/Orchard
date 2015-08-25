@@ -85,6 +85,9 @@
     <Reference Include="Microsoft.WindowsAzure.MediaServices.Client">
       <HintPath>..\..\..\..\lib\windowsazure\Microsoft.WindowsAzure.MediaServices.Client.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.WindowsAzure.MediaServices.Client.Common.BlobTransfer">
+      <HintPath>..\..\..\..\lib\windowsazure\Microsoft.WindowsAzure.MediaServices.Client.Common.BlobTransfer.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.WindowsAzure.Storage">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\lib\windowsazure\Microsoft.WindowsAzure.Storage.dll</HintPath>
@@ -270,7 +273,9 @@
     <Content Include="Assets\Less\cloudmedia-edit-cloudvideopart.less" />
     <Content Include="Styles\menu.cloudmedia-mediaproviders.css" />
     <Content Include="Styles\menu.cloudmedia-mediaproviders.min.css" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
     <Content Include="Properties\AssemblyInfo.cs" />
