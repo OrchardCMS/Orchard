@@ -144,6 +144,9 @@ namespace Orchard.Projections.Services {
                     var allCiFiltered = contentQuery.List().FilterContentItems(_services.WorkContext.CurrentUser);
                     contentItems.AddRange(allCiFiltered.Skip(skip).Take(count));
                 }
+                else {
+                    contentItems.AddRange(contentQuery.Slice(skip, count));
+                }
             }
 
             if (queryRecord.FilterGroups.Count <= 1) {
