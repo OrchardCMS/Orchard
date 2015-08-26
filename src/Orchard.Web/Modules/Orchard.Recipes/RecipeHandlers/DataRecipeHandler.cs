@@ -39,6 +39,7 @@ namespace Orchard.Recipes.RecipeHandlers {
 
             //Populate import session with all identities to be imported
             foreach (var identity in elementDictionary.Keys) {
+                Logger.Debug("Importing {0}", identity);
                 importContentSession.Set(identity, elementDictionary[identity].Name.LocalName);
             }
 
@@ -86,7 +87,7 @@ namespace Orchard.Recipes.RecipeHandlers {
             var elementDictionary = new Dictionary<string, XElement>();
             foreach (var element in step.Elements()) {
                 if (element.Attribute("Id") == null
-                    || string.IsNullOrEmpty(element.Attribute("Id").Value))
+                    || String.IsNullOrWhiteSpace(element.Attribute("Id").Value))
                     continue;
 
                 var identity = new ContentIdentity(element.Attribute("Id").Value).ToString();
