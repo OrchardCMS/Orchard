@@ -7,55 +7,52 @@ using Orchard.ContentPermissions.Models;
 using Orchard.Roles.Models;
 using Orchard.Security;
 
-namespace Orchard.Projections.Extensions
-{
-    public static class SecurityFilterExtension
-    {
+namespace Orchard.Projections.Extensions {
+    public static class SecurityFilterExtension {
         private static readonly string[] AnonymousRole = { "Anonymous" };
         private static readonly string[] AuthenticatedRole = { "Authenticated" };
         public static IEnumerable<T> FilterContentItems<T>(this IEnumerable<T> list, IUser currentUser)
-            where T : ContentItem
-        {
+            where T : ContentItem {
             return list.Where(x => x.As<ContentPermissionsPart>() == null ||
-                                   HasAccess(currentUser,x.As<ContentPermissionsPart>()
+                                   HasAccess(currentUser, x.As<ContentPermissionsPart>()
                               ));
             //Assuming owners can always view their own items.
         }
 
-        public static bool HasAccess(IUser user, ContentPermissionsPart part)
-        {
+        public static bool HasAccess(IUser user, ContentPermissionsPart part) {
 
             if (user == null && part == null)
                 return true;
-            if (part == null || !part.Enabled)
-            {
+            if (part == null || !part.Enabled) {
                 return true;
             }
-            if (part.ViewContent.Contains(AnonymousRole[0]))
-            {
+            if (part.ViewContent.Contains(AnonymousRole[0])) {
                 return true;
             }
-            if (user != null)
-            {
-                var isOwner = HasOwnership(user, part.ContentItem);
+            if (user != null) {
+                if (part.ViewContent.Contains(AuthenticatedRole[0])) {
+                    return true;
+                }
+
                 var userRoles = user.As<IUserRoles>();
-                if (userRoles == null)
-                {
-                    return part.ViewContent.Contains(AuthenticatedRole[0]); 
+
+                var viewContentRoles = part.ViewContent.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).AsEnumerable().ToList();
+                if (userRoles.Roles.Any(x => viewContentRoles.Contains(x, StringComparer.OrdinalIgnoreCase))) {
+                    return true;
                 }
-                var authorizedRoles = part.ViewContent.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries).AsEnumerable().ToList();
-                if (isOwner) {
-                    authorizedRoles.AddRange(part.ViewOwnContent.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries));
+
+                if (HasOwnership(user, part.ContentItem)) {
+                    var viewOwnContentRoles = part.ViewOwnContent.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                    if (viewOwnContentRoles.Contains(AuthenticatedRole[0]) || userRoles.Roles.Any(x => viewOwnContentRoles.Contains(x, StringComparer.OrdinalIgnoreCase))) {
+                        return true;
+                    }
                 }
-                var rolesToExamine = userRoles.Roles;
-                return rolesToExamine.Any(x => authorizedRoles.Contains(x, StringComparer.OrdinalIgnoreCase));
             }
             return false;
 
         }
 
-        private static bool HasOwnership(IUser user, IContent content)
-        {
+        private static bool HasOwnership(IUser user, IContent content) {
             if (user == null || content == null)
                 return false;
 
@@ -66,6 +63,6 @@ namespace Orchard.Projections.Extensions
             return user.Id == common.Owner.Id;
         }
     }
-    
+
 
 }
