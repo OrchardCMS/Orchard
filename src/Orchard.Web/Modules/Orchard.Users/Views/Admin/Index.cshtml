@@ -4,7 +4,6 @@
 @using Orchard.Users.ViewModels;
 
 
-
 @{
     var userIndex = 0;
 
@@ -27,7 +26,7 @@
         <button type="submit" name="submit.BulkEdit" value="@T("Apply")">@T("Apply")</button>
     </fieldset>
     <fieldset class="bulk-actions">
-        @Html.TextBoxFor(m => m.Options.Search, new { @class = "text" })        
+        @Html.TextBoxFor(m => m.Options.Search, new { @class = "text" })
         <label for="filterResults">@T("Filter:")</label>
         <select id="filterResults" name="@Html.NameOf(m => m.Options.Filter)">
             @Html.SelectOption(Model.Options.Filter, UsersFilter.All, T("All Users").ToString())
@@ -65,9 +64,9 @@
                 </td>
                 <td>
                     @if (entry.User.RegistrationStatus == UserStatus.Approved && entry.User.EmailStatus == UserStatus.Approved) { 
-                    <img class="icon" src="@Href("~/Modules/Orchard.Users/Content/Admin/images/online.gif") " alt="@T("Approved") " title="@T("User is approved") " /> 
+                    <img class="icon" src="@Href("~/Modules/Orchard.Users/Content/Admin/images/online.gif")" alt="@T("Approved") " title="@T("User is approved") " /> 
                     } else { 
-                    <img class="icon" src="@Href("~/Modules/Orchard.Users/Content/Admin/images/offline.gif") " alt="@T("Moderated") " title="@if (entry.User.EmailStatus == UserStatus.Approved) { @T("User is moderated") } else { @T("E-mail validation is pending") }" />
+                    <img class="icon" src="@Href("~/Modules/Orchard.Users/Content/Admin/images/offline.gif")" alt="@T("Moderated") " title="@(entry.User.EmailStatus == UserStatus.Approved ? T("User is moderated") : T("E-mail validation is pending"))" />
                     } 
                     @Html.ActionLink(entry.User.UserName, "Edit", new { entry.User.Id }) 
                 </td>
@@ -75,16 +74,23 @@
                     @entry.User.Email 
                 </td>
                 <td>
-                    @Html.ActionLink(T("Edit").ToString(), "Edit", new { entry.User.Id }) |
-                    @Html.ActionLink(T("Delete").ToString(), "Delete", new { entry.User.Id}, new { itemprop = "RemoveUrl UnsafeUrl" }) |
-                    @if (entry.User.RegistrationStatus == UserStatus.Pending) {
-                        @Html.ActionLink(T("Approve").ToString(), "Approve", new { entry.User.Id }, new { itemprop = "UnsafeUrl" })
-                    } else {
-                        @Html.ActionLink(T("Disable").ToString(), "Moderate", new { entry.User.Id }, new { itemprop = "UnsafeUrl" })
+                    @if (entry.User.UserName == Model.SuperUserName) {
+                        @Html.ActionLink(T("Super user").ToString(), "Index", "Admin", new { area = "Settings", groupInfoId = "Index" }, null)
+                        @T(" cannot be deleted and has all permissions granted implicitly")
                     }
-                    @if (entry.User.EmailStatus == UserStatus.Pending) { <text>|</text>
-                        @Html.ActionLink(T("Send challenge E-mail").ToString(), "SendChallengeEmail", new { entry.User.Id }, new { itemprop = "UnsafeUrl" })
-                    } 
+                    else
+                    {
+                        <span>
+                            @Html.ActionLink(T("Edit").ToString(), "Edit", new { entry.User.Id }) |
+                            @Html.ActionLink(T("Delete").ToString(), "Delete", new { entry.User.Id }, new { itemprop = "RemoveUrl UnsafeUrl" }) |
+                            @(entry.User.RegistrationStatus == UserStatus.Pending ? Html.ActionLink(T("Approve").ToString(), "Approve", new { entry.User.Id }, new { itemprop = "UnsafeUrl" }) : Html.ActionLink(T("Disable").ToString(), "Moderate", new { entry.User.Id }, new { itemprop = "UnsafeUrl" }))
+                            @if (entry.User.EmailStatus == UserStatus.Pending)
+                            { <text>|</text>
+                                @Html.ActionLink(T("Send challenge E-mail").ToString(), "SendChallengeEmail", new { entry.User.Id }, new { itemprop = "UnsafeUrl" })
+                            }
+                        </span>
+                    }
+                    
                 </td>
                 <td>
                     @Display(New.DateTimeRelative(dateTimeUtc: entry.User.CreatedUtc))

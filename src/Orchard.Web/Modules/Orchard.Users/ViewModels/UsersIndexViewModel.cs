@@ -7,6 +7,7 @@ namespace Orchard.Users.ViewModels {
         public IList<UserEntry> Users { get; set; }
         public UserIndexOptions Options { get; set; }
         public dynamic Pager { get; set; }
+        public string SuperUserName { get; set; }
     }
 
     public class UserEntry {

@@ -103,8 +103,9 @@ namespace Orchard.Users.Controllers {
                 Users = results
                     .Select(x => new UserEntry { User = x.Record })
                     .ToList(),
-                    Options = options,
-                    Pager = pagerShape
+                Options = options,
+                Pager = pagerShape,
+                SuperUserName = Services.WorkContext.CurrentSite.SuperUser
             };
 
             // maintain previous route data when generating page links
@@ -219,6 +220,9 @@ namespace Orchard.Users.Controllers {
                 return new HttpUnauthorizedResult();
 
             var user = Services.ContentManager.Get<UserPart>(id);
+            if (user.UserName == Services.WorkContext.CurrentSite.SuperUser)
+                Services.Notifier.Warning(T("This user is the super user for the site (all permissions granted implicitly)."));
+            
             var editor = Shape.EditorTemplate(TemplateName: "Parts/User.Edit", Model: new UserEditViewModel {User = user}, Prefix: null);
             editor.Metadata.Position = "2";
             var model = Services.ContentManager.BuildEditor(user);
