@@ -7,5 +7,6 @@ namespace Orchard.Projections.ViewModels {
         public string Description { get; set; }
         public FilterDescriptor Filter { get; set; }
         public dynamic Form { get; set; }
+        public bool CheckPermissions { get; set; }
     }
 }

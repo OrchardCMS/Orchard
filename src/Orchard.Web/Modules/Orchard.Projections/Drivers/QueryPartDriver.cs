@@ -49,6 +49,7 @@ namespace Orchard.Projections.Drivers {
                                              new XAttribute("Description", filter.Description ?? ""),
                                              new XAttribute("Position", filter.Position),
                                              new XAttribute("State", state ?? ""),
+                                             new XAttribute("CheckPermissions", filter.CheckPermissions ? "True" : "False" ),
                                              new XAttribute("Type", filter.Type ?? "")
                                     );
                             })
@@ -113,18 +114,20 @@ namespace Orchard.Projections.Drivers {
                         var category = filter.Attribute("Category").Value;
                         var type = filter.Attribute("Type").Value;
                         var state = filter.Attribute("State").Value;
+                        var checkPermissions = Convert.ToBoolean( filter.Attribute("CheckPermissions").Value );
                         
                         var descriptor = _projectionManager.GetFilter(category, type);
                         if (descriptor != null) {
                             state = _formManager.Import(descriptor.Form, state, context);
                         }
-                        
+
                         return new FilterRecord {
                             Category = category,
                             Description = filter.Attribute("Description").Value,
                             Position = Convert.ToInt32(filter.Attribute("Position").Value),
                             State = state,
-                            Type = type
+                            Type = type,
+                            CheckPermissions = checkPermissions
                         };
                     }).ToList()
                 })) {

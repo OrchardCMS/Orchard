@@ -23,6 +23,7 @@ namespace Orchard.Projections.ViewModels {
         public string Category { get; set; }
         public string Type { get; set; }
         public string DisplayText { get; set; }
+        public bool CheckPermissions { get; set; }
     }
 
     public class SortCriterionEntry {
