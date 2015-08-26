@@ -71,7 +71,7 @@ namespace Orchard.Taxonomies.Models {
                 // if two nodes have the same parent, then compare by weight, then by path 
                 // /1/2/3 vs /1/2/4 => 3 vs 4
                 if (x.Path == y.Path) {
-                    var weight = y.Weight.CompareTo(x.Weight);
+                    var weight = x.Weight.CompareTo(y.Weight);
 
                     if (weight != 0) {
                         return weight;
