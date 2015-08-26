@@ -16,7 +16,6 @@ namespace Orchard.Projections.Extensions {
             return list.Where(x => x.As<ContentPermissionsPart>() == null ||
                                    HasAccess(currentUser, x.As<ContentPermissionsPart>()
                               ));
-            //Assuming owners can always view their own items.
         }
 
         public static bool HasAccess(IUser user, ContentPermissionsPart part) {
