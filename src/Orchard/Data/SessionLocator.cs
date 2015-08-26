@@ -30,9 +30,9 @@ namespace Orchard.Data {
     }
 
     public class TransactionManager : ITransactionManager, IDisposable {
-        private readonly ISessionFactoryHolder _sessionFactoryHolder;
         private readonly IEnumerable<ISessionInterceptor> _interceptors;
         private Func<IContentManagerSession> _contentManagerSessionFactory;
+        private readonly ISessionFactory _sessionFactory;
 
         private ISession _session;
         private IContentManagerSession _contentManagerSession;
@@ -41,9 +41,9 @@ namespace Orchard.Data {
             ISessionFactoryHolder sessionFactoryHolder,
             Func<IContentManagerSession> contentManagerSessionFactory,
             IEnumerable<ISessionInterceptor> interceptors) {
-            _sessionFactoryHolder = sessionFactoryHolder;
             _interceptors = interceptors;
             _contentManagerSessionFactory = contentManagerSessionFactory;
+            _sessionFactory = sessionFactoryHolder.GetSessionFactory();
 
             Logger = NullLogger.Instance;
             IsolationLevel = IsolationLevel.ReadCommitted;
@@ -74,6 +74,7 @@ namespace Orchard.Data {
             if (_session != null && _session.Transaction.IsActive) {
                 Logger.Debug("Rolling back transaction");
                 _session.Transaction.Rollback();
+                DisposeSession();
             }
         }
 
@@ -106,10 +107,9 @@ namespace Orchard.Data {
             if (_session != null) {
                 return;
             }
-
-            var sessionFactory = _sessionFactoryHolder.GetSessionFactory();
+            
             Logger.Debug("Opening NHibernate session");
-            _session = sessionFactory.OpenSession(new OrchardSessionInterceptor(_interceptors.ToArray(), Logger));
+            _session = _sessionFactory.OpenSession(new OrchardSessionInterceptor(_interceptors.ToArray(), Logger));
             _session.BeginTransaction(level);
             _contentManagerSession = _contentManagerSessionFactory();
         }
