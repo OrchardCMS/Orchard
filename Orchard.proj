@@ -27,6 +27,7 @@
 
     <BuildPlatform Condition="$(ProgramW6432) != ''">x64</BuildPlatform>
     <BuildPlatform Condition="$(BuildPlatform) == ''">x86</BuildPlatform>
+    <Configuration Condition="$(Configuration) == ''">Release</Configuration>
 
     <!-- TeamCity build number -->
     <Version>$(BUILD_NUMBER)</Version>
@@ -115,7 +116,7 @@
     <MSBuild
       Projects="$(SrcFolder)\Orchard.sln"
       Targets="Build"
-      Properties="Configuration=Release;OutputPath=$(CompileFolder)" />
+      Properties="Configuration=$(Configuration);OutputPath=$(CompileFolder)" />
     <!-- Compile to "regular" output folder for devs using VS locally -->
     <MSBuild
       Projects="$(SrcFolder)\Orchard.sln"
@@ -126,7 +127,7 @@
     <MSBuild
       Projects="$(SrcFolder)\Tools\MSBuild.Orchard.Tasks\MSBuild.Orchard.Tasks.csproj"
       Targets="Build"
-      Properties="Configuration=Release;OutputPath=$(MsBuildTasksFolder)" />
+      Properties="Configuration=$(Configuration);OutputPath=$(MsBuildTasksFolder)" />
   </Target>
 
   <Target Name="TypeScript" DependsOnTargets="CompileMsBuildTasks">
@@ -273,19 +274,19 @@
     <!-- extra processing of the staged config files -->
     <TransformXml 
       Source="$(StageFolder)\Web.Config"
-      Transform="$(SrcFolder)\Orchard.Web\Web.Release.Config"
+      Transform="$(SrcFolder)\Orchard.Web\Web.$(Configuration).Config"
       Destination="$(StageFolder)\Web.Config"
     />
 
     <TransformXml 
       Source="$(StageFolder)\Config\HostComponents.Config"
-      Transform="$(SrcFolder)\Orchard.Web\Config\HostComponents.Release.Config"
+      Transform="$(SrcFolder)\Orchard.Web\Config\HostComponents.$(Configuration).Config"
       Destination="$(StageFolder)\Config\HostComponents.Config"
     />
 
     <TransformXml 
       Source="$(StageFolder)\Config\log4net.Config"
-      Transform="$(SrcFolder)\Orchard.Web\Config\log4net.Release.Config"
+      Transform="$(SrcFolder)\Orchard.Web\Config\log4net.$(Configuration).Config"
       Destination="$(StageFolder)\Config\log4net.Config"
     />
     

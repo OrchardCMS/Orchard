@@ -76,5 +76,39 @@ namespace Orchard.Tests.ContentManagement {
 
             Assert.That((object)testingPartDynamic, Is.AssignableTo<IEnumerable<ContentPart>>());
         }
+
+
+        [Test]
+        public void NullCheckingCanBeDoneOnProperties() {
+            var contentItem = new ContentItem();
+            var contentPart = new ContentPart { TypePartDefinition = new ContentTypePartDefinition(new ContentPartDefinition("FooPart"), new SettingsDictionary()) };
+            var contentField = new ContentField { PartFieldDefinition = new ContentPartFieldDefinition(new ContentFieldDefinition("FooType"), "FooField", new SettingsDictionary()) };
+
+            dynamic item = contentItem;
+            dynamic part = contentPart;
+
+            Assert.That(item.FooPart == null, Is.True);
+            Assert.That(item.FooPart != null, Is.False);
+
+            contentItem.Weld(contentPart);
+
+            Assert.That(item.FooPart == null, Is.False);
+            Assert.That(item.FooPart != null, Is.True);
+            Assert.That(item.FooPart, Is.SameAs(contentPart));
+
+            Assert.That(part.FooField == null, Is.True);
+            Assert.That(part.FooField != null, Is.False);
+            Assert.That(item.FooPart.FooField == null, Is.True);
+            Assert.That(item.FooPart.FooField != null, Is.False);
+
+            contentPart.Weld(contentField);
+
+            Assert.That(part.FooField == null, Is.False);
+            Assert.That(part.FooField != null, Is.True);
+            Assert.That(item.FooPart.FooField == null, Is.False);
+            Assert.That(item.FooPart.FooField != null, Is.True);
+            Assert.That(part.FooField, Is.SameAs(contentField));
+            Assert.That(item.FooPart.FooField, Is.SameAs(contentField));
+        }
     }
 }

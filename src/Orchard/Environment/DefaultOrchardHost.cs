@@ -143,6 +143,10 @@ namespace Orchard.Environment {
                     catch (Exception e) {
                         Logger.Error(e, "A tenant could not be started: " + settings.Name);
                     }
+                    while (_processingEngine.AreTasksPending()) {
+                        Logger.Debug("Processing pending task after activate Shell");
+                        _processingEngine.ExecuteNextTask();
+                    }
                 });
             }
             // no settings, run the Setup

@@ -74,15 +74,15 @@ function getAssetGroups() {
 function resolveAssetGroupPaths(assetGroup, assetManifestPath) {
     assetGroup.basePath = path.dirname(assetManifestPath);
     assetGroup.inputPaths = assetGroup.inputs.map(function (inputPath) {
-        return path.join(assetGroup.basePath, inputPath);
+        return path.resolve(path.join(assetGroup.basePath, inputPath));
     });
     assetGroup.watchPaths = [];
     if (!!assetGroup.watch) {
         assetGroup.watchPaths = assetGroup.watch.map(function (watchPath) {
-            return path.join(assetGroup.basePath, watchPath);
+            return path.resolve(path.join(assetGroup.basePath, watchPath));
         });
     }  
-    assetGroup.outputPath = path.join(assetGroup.basePath, assetGroup.output);
+    assetGroup.outputPath = path.resolve(path.join(assetGroup.basePath, assetGroup.output));
     assetGroup.outputDir = path.dirname(assetGroup.outputPath);
     assetGroup.outputFileName = path.basename(assetGroup.output);
 }
