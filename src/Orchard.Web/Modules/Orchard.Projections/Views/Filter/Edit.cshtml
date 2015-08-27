@@ -31,6 +31,12 @@
 
     @Display.TokenHint()
 
+    <fieldset>
+        @Html.LabelFor(m => m.CheckPermissions, T("Check Permissions"))
+        @Html.CheckBoxFor(m => m.CheckPermissions)
+        <span class="hint">Check user permissions for content items</span>
+    </fieldset>
+
 <fieldset>
     <button class="primaryAction" type="submit">@T("Save")</button>
 </fieldset>

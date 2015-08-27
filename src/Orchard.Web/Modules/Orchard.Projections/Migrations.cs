@@ -274,5 +274,13 @@ namespace Orchard.Projections {
 
             return 3;
         }
+
+        public int UpdateFrom3() {
+            SchemaBuilder.AlterTable("FilterRecord",
+                table => table
+                    .AddColumn("CheckPermissions", DbType.Boolean)
+                    );
+            return 4;
+        }        
     }
 }

@@ -115,19 +115,21 @@ namespace Orchard.Projections.Controllers {
             var form = filter.Form == null ? null : _formManager.Build(filter.Form);
 
             string description = "";
+            bool checkPermissions = false;
 
             // bind form with existing values).
             if (filterId != -1) {
-                var group = _groupRepository.Get(id);
+                var group = _groupRepository.Get(id);                
                 var filterRecord = group.Filters.FirstOrDefault(f => f.Id == filterId);
                 if (filterRecord != null) {
                     description = filterRecord.Description;
                     var parameters = FormParametersHelper.FromString(filterRecord.State);
                     _formManager.Bind(form, new DictionaryValueProvider<string>(parameters, CultureInfo.InvariantCulture));
+                    checkPermissions = filterRecord.CheckPermissions;
                 }
             }
 
-            var viewModel = new FilterEditViewModel { Id = id, Description = description, Filter = filter, Form = form };
+            var viewModel = new FilterEditViewModel { Id = id, Description = description, Filter = filter, Form = form, CheckPermissions = checkPermissions };
             return View(viewModel);
         }
 
@@ -149,8 +151,8 @@ namespace Orchard.Projections.Controllers {
                 // add new filter record if it's a newly created filter
                 if (filterRecord == null) {
                     filterRecord = new FilterRecord {
-                        Category = category, 
-                        Type = type, 
+                        Category = category,
+                        Type = type,
                         Position = group.Filters.Count
                     };
                     group.Filters.Add(filterRecord);
@@ -161,6 +163,7 @@ namespace Orchard.Projections.Controllers {
                 // save form parameters
                 filterRecord.State = FormParametersHelper.ToString(dictionary);
                 filterRecord.Description = model.Description;
+                filterRecord.CheckPermissions = model.CheckPermissions;
 
                 return RedirectToAction("Edit", "Admin", new { group.QueryPartRecord.Id });
             }

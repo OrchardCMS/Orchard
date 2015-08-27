@@ -10,5 +10,7 @@
 
         // Parent property
         public virtual FilterGroupRecord FilterGroupRecord { get; set; }
+
+        public bool CheckPermissions { get; set; }
     }
 }

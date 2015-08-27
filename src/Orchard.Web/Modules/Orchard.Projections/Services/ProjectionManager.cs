@@ -12,9 +12,10 @@ using Orchard.Projections.Descriptors.Layout;
 using Orchard.Projections.Descriptors.SortCriterion;
 using Orchard.Projections.Models;
 using Orchard.Tokens;
+using Orchard.Projections.Extensions;
 
 namespace Orchard.Projections.Services {
-    public class ProjectionManager : IProjectionManager{
+    public class ProjectionManager : IProjectionManager {
         private readonly ITokenizer _tokenizer;
         private readonly IEnumerable<IFilterProvider> _filterProviders;
         private readonly IEnumerable<ISortCriterionProvider> _sortCriterionProviders;
@@ -22,6 +23,7 @@ namespace Orchard.Projections.Services {
         private readonly IEnumerable<IPropertyProvider> _propertyProviders;
         private readonly IContentManager _contentManager;
         private readonly IRepository<QueryPartRecord> _queryRepository;
+        private readonly IOrchardServices _services;
 
         public ProjectionManager(
             ITokenizer tokenizer,
@@ -30,7 +32,8 @@ namespace Orchard.Projections.Services {
             IEnumerable<ILayoutProvider> layoutProviders,
             IEnumerable<IPropertyProvider> propertyProviders,
             IContentManager contentManager,
-            IRepository<QueryPartRecord> queryRepository) {
+            IRepository<QueryPartRecord> queryRepository,
+            IOrchardServices services) {
             _tokenizer = tokenizer;
             _filterProviders = filterProviders;
             _sortCriterionProviders = sortCriterionProviders;
@@ -38,6 +41,7 @@ namespace Orchard.Projections.Services {
             _propertyProviders = propertyProviders;
             _contentManager = contentManager;
             _queryRepository = queryRepository;
+            _services = services;
             T = NullLocalizer.Instance;
         }
 
@@ -112,9 +116,15 @@ namespace Orchard.Projections.Services {
             }
 
             // aggregate the result for each group query
+            var checkPermissions = queryRecord.FilterGroups.Any(x => x.Filters.Any(y => y.CheckPermissions));
 
-            return GetContentQueries(queryRecord, Enumerable.Empty<SortCriterionRecord>())
-                .Sum(contentQuery => contentQuery.Count());
+            var count = GetContentQueries(queryRecord, Enumerable.Empty<SortCriterionRecord>())
+                .Sum(contentQuery => checkPermissions ? 
+                                contentQuery.List().FilterContentItems(_services.WorkContext.CurrentUser).Count() : 
+                                contentQuery.Count()
+                                );
+
+            return count;
         }
 
         public IEnumerable<ContentItem> GetContentItems(int queryId, int skip = 0, int count = 0) {
@@ -122,25 +132,31 @@ namespace Orchard.Projections.Services {
 
             var queryRecord = _queryRepository.Get(queryId);
 
-            if(queryRecord == null) {
+            if (queryRecord == null) {
                 throw new ArgumentException("queryId");
             }
 
             var contentItems = new List<ContentItem>();
-
+            var checkPermissions = queryRecord.FilterGroups.Any(x => x.Filters.Any(y => y.CheckPermissions));
             // aggregate the result for each group query
-            foreach(var contentQuery in GetContentQueries(queryRecord, queryRecord.SortCriteria.OrderBy(sc => sc.Position))) {
-                contentItems.AddRange(contentQuery.Slice(skip, count));
+            foreach (var contentQuery in GetContentQueries(queryRecord, queryRecord.SortCriteria.OrderBy(sc => sc.Position))) {
+                if (checkPermissions) {
+                    var allCiFiltered = contentQuery.List().FilterContentItems(_services.WorkContext.CurrentUser);
+                    contentItems.AddRange(allCiFiltered.Skip(skip).Take(count));
+                }
+                else {
+                    contentItems.AddRange(contentQuery.Slice(skip, count));
+                }
             }
 
-            if(queryRecord.FilterGroups.Count <= 1) {
+            if (queryRecord.FilterGroups.Count <= 1) {
                 return contentItems;
             }
 
             // re-executing the sorting with the cumulated groups
             var ids = contentItems.Select(c => c.Id).ToArray();
 
-            if(ids.Length == 0) {
+            if (ids.Length == 0) {
                 return Enumerable.Empty<ContentItem>();
             }
 
@@ -237,7 +253,7 @@ namespace Orchard.Projections.Services {
 
 
                 yield return contentQuery;
-            }            
+            }
         }
     }
 }
