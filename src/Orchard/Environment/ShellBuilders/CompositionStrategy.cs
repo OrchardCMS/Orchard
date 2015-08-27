@@ -33,14 +33,9 @@ namespace Orchard.Environment.ShellBuilders {
             var builtinFeatureDescriptors = builtinFeatures.Select(x => x.Descriptor).ToList();
             var availableFeatures = _extensionManager.AvailableFeatures().Concat(builtinFeatureDescriptors).ToDictionary(x => x.Id);
             var enabledFeatures = _extensionManager.EnabledFeatures(descriptor).Select(x => x.Id).ToList();
-            var featuresToLoad = descriptor.Features.Select(x => x.Name).ToList();
-
-            // Only auto-enable features for already running shells.
-            if(settings.State == TenantState.Running) {
-                featuresToLoad = ExpandDependencies(availableFeatures, enabledFeatures).ToList();
-            }
-
-            var featureDescriptors = _extensionManager.EnabledFeatures(featuresToLoad.Select(x => new ShellFeature { Name = x})).ToList();
+            var expandedFeatures = ExpandDependencies(availableFeatures, descriptor.Features.Select(x => x.Name)).ToList();
+            var autoEnabledDependencyFeatures = expandedFeatures.Except(enabledFeatures).Except(builtinFeatureDescriptors.Select(x => x.Id)).ToList();
+            var featureDescriptors = _extensionManager.EnabledFeatures(expandedFeatures.Select(x => new ShellFeature { Name = x})).ToList();
             var features = _extensionManager.LoadFeatures(featureDescriptors);
 
             if (descriptor.Features.Any(feature => feature.Name == "Orchard.Framework"))
@@ -64,9 +59,8 @@ namespace Orchard.Environment.ShellBuilders {
 
             Logger.Debug("Done composing blueprint.");
 
-            // Add any dependencies previously not enabled to the shell descriptor.
-            var autoEnabledDependencyFeatures = featuresToLoad.Except(enabledFeatures).Except(builtinFeatureDescriptors.Select(x => x.Id)).ToList();
             if (autoEnabledDependencyFeatures.Any()) {
+                // Add any dependencies previously not enabled to the shell descriptor.
                 descriptor.Features = descriptor.Features.Concat(autoEnabledDependencyFeatures.Select(x => new ShellFeature { Name = x })).ToList();
                 Logger.Information("Automatically enabled the following dependency features: {0}.", String.Join(", ", autoEnabledDependencyFeatures));
             }
