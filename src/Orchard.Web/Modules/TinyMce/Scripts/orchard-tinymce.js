@@ -24,6 +24,8 @@ tinyMCE.init({
     valid_elements: "*[*]",
     // Shouldn't be needed due to the valid_elements setting, but TinyMCE would strip script.src without it.
     extended_valid_elements: "script[type|defer|src|language]",
+    //allow inline styles 
+    valid_children : "+body[style]",
     //menubar: false,
     //statusbar: false,
     skin: "orchardlightgray",
