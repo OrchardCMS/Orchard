@@ -16,7 +16,7 @@ namespace Orchard.Workflows.Helpers {
             var query = 
                 from item in items
                 let outcome = Encode(item)
-                select "{label:'" + outcome + "', value:'" + outcome + "'}";
+                select "{Id:'" + outcome + "', Label:'" + outcome + "'}";
             
             var outcomes = String.Join(",", query);
             return outcomes;
