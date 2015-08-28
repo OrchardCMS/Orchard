@@ -29,7 +29,7 @@ namespace Lucene.Services {
 
         public static readonly Version LuceneVersion = Version.LUCENE_29;
         public static readonly DateTime DefaultMinDateTime = new DateTime(1980, 1, 1);
-        public static readonly int BatchSize = 50;
+        public static readonly int BatchSize = BooleanQuery.MaxClauseCount;
 
         public LuceneIndexProvider(
             IAppDataFolder appDataFolder, 
