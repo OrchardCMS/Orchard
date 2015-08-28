@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using Orchard.ContentManagement;
@@ -61,7 +62,10 @@ namespace Orchard.Search.Drivers {
         }
 
         protected override void Exporting(SearchSettingsPart part, ExportContentContext context) {
-            context.Element(part.PartDefinition.Name).Add(new XAttribute("SearchFields", part.Retrieve<string>("SearchFields")));
+            var searchFields = part.Retrieve<string>("SearchFields");
+            if(!String.IsNullOrWhiteSpace(searchFields)) {
+                context.Element(part.PartDefinition.Name).Add(new XAttribute("SearchFields", searchFields));
+            }            
         }
 
         protected override void Importing(SearchSettingsPart part, ImportContentContext context) {

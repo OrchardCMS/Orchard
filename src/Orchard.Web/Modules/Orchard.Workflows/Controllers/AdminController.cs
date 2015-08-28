@@ -23,6 +23,7 @@ using Orchard.UI.Notify;
 using Orchard.Workflows.Models;
 using Orchard.Workflows.Services;
 using Orchard.Workflows.ViewModels;
+using Orchard.Workflows.Helpers;
 
 namespace Orchard.Workflows.Controllers {
     [ValidateInput(false)]
@@ -234,7 +235,7 @@ namespace Orchard.Workflows.Controllers {
                 dynamic activity = new JObject();
                 activity.Name = x.Name;
                 activity.Id = x.Id;
-                activity.ClientId = x.Name + "_" + x.Id;
+                activity.ClientId = x.GetClientId();
                 activity.Left = x.X;
                 activity.Top = x.Y;
                 activity.Start = x.Start;
@@ -259,7 +260,7 @@ namespace Orchard.Workflows.Controllers {
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("submit.Save")]
-        public ActionResult EditPost(int id, string localId, string data) {
+        public ActionResult EditPost(int id, string localId, string data, bool clearWorkflows) {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to edit workflows")))
                 return new HttpUnauthorizedResult();
 
@@ -275,7 +276,6 @@ namespace Orchard.Workflows.Controllers {
             var activitiesIndex = new Dictionary<string, ActivityRecord>();
 
             workflowDefinitionRecord.ActivityRecords.Clear();
-            workflowDefinitionRecord.WorkflowRecords.Clear();
 
             foreach (var activity in state.Activities) {
                 ActivityRecord activityRecord;
@@ -303,9 +303,32 @@ namespace Orchard.Workflows.Controllers {
                 });
             }
 
+            if (clearWorkflows) {
+                workflowDefinitionRecord.WorkflowRecords.Clear();
+            }
+            else {
+                foreach (var workflowRecord in workflowDefinitionRecord.WorkflowRecords) {
+                    // Update any awaiting activity records with the new activity record.
+                    foreach (var awaitingActivityRecord in workflowRecord.AwaitingActivities) {
+                        var clientId = awaitingActivityRecord.ActivityRecord.GetClientId();
+                        if (activitiesIndex.ContainsKey(clientId)) {
+                            awaitingActivityRecord.ActivityRecord = activitiesIndex[clientId];
+                        }
+                        else {
+                            workflowRecord.AwaitingActivities.Remove(awaitingActivityRecord);
+                        }
+                    }
+                    // Remove any workflows with no awaiting activities.
+                    if (!workflowRecord.AwaitingActivities.Any()) {
+                        workflowDefinitionRecord.WorkflowRecords.Remove(workflowRecord);
+                    }
+                }
+            }
+
             Services.Notifier.Information(T("Workflow saved successfully"));
 
-            return RedirectToAction("Edit", new { id, localId });
+            // Don't pass the localId to force the activites to refresh and use the deterministic clientId.
+            return RedirectToAction("Edit", new { id });
         }
 
         [HttpPost, ActionName("Edit")]

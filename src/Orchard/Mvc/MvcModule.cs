@@ -53,6 +53,12 @@ namespace Orchard.Mvc {
             // thus preventing a StackOverflowException.
             var baseUrl = new Func<string>(() => siteService.GetSiteSettings().BaseUrl);
             var httpContextBase = context.Resolve<IHttpContextAccessor>().Current();
+
+            if (httpContextBase == null) {
+                context.Resolve<IWorkContextAccessor>().CreateWorkContextScope();
+                return context.Resolve<IHttpContextAccessor>().Current();
+            }
+            
             context.Resolve<IWorkContextAccessor>().CreateWorkContextScope(httpContextBase);
             return httpContextBase;
         }
@@ -188,6 +194,18 @@ namespace Orchard.Mvc {
                 }
             }
 
+            public override string HttpMethod {
+                get {
+                    return "";
+                }
+            }
+
+            public override NameValueCollection Params {
+                get {
+                    return new NameValueCollection();
+                }
+            }
+
             public override string AppRelativeCurrentExecutionFilePath {
                 get {
                     return "~/";
@@ -233,6 +251,12 @@ namespace Orchard.Mvc {
             public override string UserHostAddress {
                 get {
                     return "127.0.0.1";
+                }
+            }
+
+            public override string[] UserLanguages {
+                get {
+                    return new string[0];
                 }
             }
 
