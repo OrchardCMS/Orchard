@@ -1,4 +1,5 @@
-﻿using System.Linq;
+using System.Linq;
+using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Models;
 
 namespace Orchard.ContentManagement.Handlers {
@@ -7,14 +8,16 @@ namespace Orchard.ContentManagement.Handlers {
     /// </summary>
     public class ContentItemBuilder {
         private readonly ContentTypeDefinition _definition;
+        private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly ContentItem _item;
 
         /// <summary>
         /// Constructs a new Content Item Builder instance.
         /// </summary>
         /// <param name="definition">The definition for the content item to be built.</param>
-        public ContentItemBuilder(ContentTypeDefinition definition) {
+        public ContentItemBuilder(ContentTypeDefinition definition, IContentDefinitionManager contentDefinitionManager = null) {
             _definition = definition;
+            _contentDefinitionManager = contentDefinitionManager;
 
             // TODO: could / should be done on the build method ?
             _item = new ContentItem {
@@ -41,9 +44,14 @@ namespace Orchard.ContentManagement.Handlers {
                 // obtain the type definition for the part
                 var typePartDefinition = _definition.Parts.FirstOrDefault(p => p.PartDefinition.Name == partName);
                 if (typePartDefinition == null) {
-                    // If the content item's type definition does not define the part; use an empty type definition.
+                    // If the content item's type definition does not define the part, retrieve the part definition.
+                    ContentPartDefinition contentPartDefinition = null;
+                    if (_contentDefinitionManager != null) {
+                        contentPartDefinition = _contentDefinitionManager.GetPartDefinition(typeof(TPart).Name);
+                    }
+                    // And create a new type definition for the part.
                     typePartDefinition = new ContentTypePartDefinition(
-                        new ContentPartDefinition(partName),
+                        contentPartDefinition ?? new ContentPartDefinition(partName),
                         new SettingsDictionary());
                 }
 
