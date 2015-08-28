@@ -12,6 +12,7 @@ using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Helpers;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.ShellBuilders.Models;
+using Orchard.Localization;
 using Orchard.Logging;
 
 namespace Orchard.Environment.ShellBuilders {
@@ -22,16 +23,18 @@ namespace Orchard.Environment.ShellBuilders {
             _extensionManager = extensionManager;
 
             Logger = NullLogger.Instance;
+            T = NullLocalizer.Instance;
         }
 
         public ILogger Logger { get; set; }
+        public Localizer T { get; set; }
 
         public ShellBlueprint Compose(ShellSettings settings, ShellDescriptor descriptor) {
             Logger.Debug("Composing blueprint");
 
             var builtinFeatures = BuiltinFeatures().ToList();
             var builtinFeatureDescriptors = builtinFeatures.Select(x => x.Descriptor).ToList();
-            var availableFeatures = _extensionManager.AvailableFeatures().Concat(builtinFeatureDescriptors).ToDictionary(x => x.Id);
+            var availableFeatures = _extensionManager.AvailableFeatures().Concat(builtinFeatureDescriptors).ToDictionary(x => x.Id, StringComparer.OrdinalIgnoreCase);
             var enabledFeatures = _extensionManager.EnabledFeatures(descriptor).Select(x => x.Id).ToList();
             var expandedFeatures = ExpandDependencies(availableFeatures, descriptor.Features.Select(x => x.Name)).ToList();
             var autoEnabledDependencyFeatures = expandedFeatures.Except(enabledFeatures).Except(builtinFeatureDescriptors.Select(x => x.Id)).ToList();
@@ -74,6 +77,11 @@ namespace Orchard.Environment.ShellBuilders {
 
         private IEnumerable<string> ExpandDependenciesInternal(IDictionary<string, FeatureDescriptor> availableFeatures, IEnumerable<string> features) {
             foreach (var shellFeature in features) {
+
+                if (!availableFeatures.ContainsKey(shellFeature)) {
+                    throw new OrchardException(T("The feature {0} is not available", shellFeature));
+                }
+
                 var feature = availableFeatures[shellFeature];
                 
                 foreach (var childDependency in ExpandDependenciesInternal(availableFeatures, feature.Dependencies))
