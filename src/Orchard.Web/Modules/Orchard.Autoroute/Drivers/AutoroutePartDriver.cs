@@ -110,20 +110,22 @@ namespace Orchard.Autoroute.Drivers {
         }
 
         protected override void Importing(AutoroutePart part, ContentManagement.Handlers.ImportContentContext context) {
-            var displayAlias = context.Attribute(part.PartDefinition.Name, "Alias");
-            if (displayAlias != null) {
-                part.DisplayAlias = displayAlias;
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
             }
 
-            var customPattern = context.Attribute(part.PartDefinition.Name, "CustomPattern");
-            if (customPattern != null) {
-                part.CustomPattern = customPattern;
-            }
+            context.ImportAttribute(part.PartDefinition.Name, "Alias", displayAlias =>
+                part.DisplayAlias = displayAlias
+            );
 
-            var useCustomPattern = context.Attribute(part.PartDefinition.Name, "UseCustomPattern");
-            if (useCustomPattern != null) {
-                part.UseCustomPattern = bool.Parse(useCustomPattern);
-            }
+            context.ImportAttribute(part.PartDefinition.Name, "CustomPattern", customPattern =>
+                part.CustomPattern = customPattern
+            );
+
+            context.ImportAttribute(part.PartDefinition.Name, "UseCustomPattern", useCustomPattern =>
+                part.UseCustomPattern = bool.Parse(useCustomPattern)
+            );
         }
 
         protected override void Exporting(AutoroutePart part, ContentManagement.Handlers.ExportContentContext context) {

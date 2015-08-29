@@ -68,15 +68,14 @@ namespace Orchard.Search.Drivers {
         }
 
         protected override void Importing(AdminSearchSettingsPart part, ImportContentContext context) {
-            var xElement = context.Data.Element(part.PartDefinition.Name);
-            if (xElement == null) return;
-
-            var searchFields = xElement.Attribute("SearchFields");
-            if (searchFields != null) {
-                searchFields.Remove();
-
-                part.Store("SearchFields", searchFields.Value);
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
             }
+
+            context.ImportAttribute(part.PartDefinition.Name, "SearchFields", value => {
+                part.Store("SearchFields", value);
+            });
         }
     }
 }

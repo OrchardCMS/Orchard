@@ -63,10 +63,14 @@ namespace Orchard.Core.Common.Drivers {
         }
 
         protected override void Importing(BodyPart part, ContentManagement.Handlers.ImportContentContext context) {
-            var importedText = context.Attribute(part.PartDefinition.Name, "Text");
-            if (importedText != null) {
-                part.Text = importedText;
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
             }
+
+            context.ImportAttribute(part.PartDefinition.Name, "Text", importedText =>
+                part.Text = importedText
+            );
         }
 
         protected override void Exporting(BodyPart part, ContentManagement.Handlers.ExportContentContext context) {

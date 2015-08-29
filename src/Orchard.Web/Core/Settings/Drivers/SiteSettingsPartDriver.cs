@@ -118,12 +118,16 @@ namespace Orchard.Core.Settings.Drivers {
         }
 
         protected override void Importing(SiteSettingsPart part, ContentManagement.Handlers.ImportContentContext context) {
-            var supportedCultures = context.Attribute(part.PartDefinition.Name, "SupportedCultures");
-            if (supportedCultures != null) {
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
+            }
+
+            context.ImportAttribute(part.PartDefinition.Name, "SupportedCultures", supportedCultures => {
                 foreach (var culture in supportedCultures.Split(';')) {
                     _cultureManager.AddCulture(culture);
                 }
-            }
+            });
         }
     }
 }
