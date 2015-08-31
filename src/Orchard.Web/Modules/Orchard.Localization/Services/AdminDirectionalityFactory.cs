@@ -48,8 +48,8 @@ namespace Orchard.Localization.Services {
                 var workContext = _workContextAccessor.GetContext();
                 var className = "content-" + workContext.GetTextDirection(contentItem);
 
-                if (!_workContext.Layout.Content.Classes.Contains(className))
-                    _workContext.Layout.Content.Classes.Add(className);
+                if (!workContext.Layout.Content.Classes.Contains(className))
+                    workContext.Layout.Content.Classes.Add(className);
             });
         }
 
