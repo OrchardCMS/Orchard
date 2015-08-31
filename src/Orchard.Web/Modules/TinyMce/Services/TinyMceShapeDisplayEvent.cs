@@ -11,7 +11,7 @@ namespace TinyMce.Services {
         private readonly ICacheManager _cacheManager;
         private readonly ISignals _signals;
         private readonly IVirtualPathProvider _virtualPathProvider;
-        private readonly WorkContext _workContext;
+        private readonly IWorkContextAccessor _workContextAccessor;
 
         private const string CacheKeyFormat = "tinymce-locales-{0}";
         private const string DefaultLanguage = "en";
@@ -24,7 +24,7 @@ namespace TinyMce.Services {
             _signals = signals;
             _cacheManager = cacheManager;
             _virtualPathProvider = virtualPathProvider;
-            _workContext = workContextAccessor.GetContext();
+            _workContextAccessor = workContextAccessor;
         }
 
         public override void Displaying(ShapeDisplayingContext context) {
@@ -40,7 +40,8 @@ namespace TinyMce.Services {
         }
 
         private string GetTinyMceLanguageIdentifier() {
-            var currentCulture = CultureInfo.GetCultureInfo(_workContext.CurrentCulture);
+            var workContext = _workContextAccessor.GetContext();
+            var currentCulture = CultureInfo.GetCultureInfo(workContext.CurrentCulture);
 
             if (currentCulture.Name.Equals(DefaultLanguage, StringComparison.OrdinalIgnoreCase))
                 return currentCulture.Name;
