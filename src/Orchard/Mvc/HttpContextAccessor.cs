@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.Web;
 using Autofac;
 using Orchard.Mvc.Extensions;
-using Orchard.Settings;
 
 namespace Orchard.Mvc {
     public class HttpContextAccessor : IHttpContextAccessor {
@@ -20,10 +19,11 @@ namespace Orchard.Mvc {
         }
 
         public HttpContextBase CreateContext(ILifetimeScope lifetimeScope) {
-            return new MvcModule.HttpContextPlaceholder(_threadStaticContexts, _contextKey, () => {
-                var baseUrl = lifetimeScope.Resolve<ISiteService>().GetSiteSettings().BaseUrl;
-                return !String.IsNullOrEmpty(baseUrl) ? baseUrl : "http://localhost"; // Return a valid URL always.
-            });
+            return new MvcModule.HttpContextPlaceholder(
+                _threadStaticContexts, 
+                _contextKey, 
+                () => "http://localhost" // Use a valid URL always for the fake request. The value itself doesn't matter.
+            );
         }
 
         private HttpContextBase GetContext() {
