@@ -4,6 +4,7 @@ using System.Linq;
 
 namespace Orchard.ContentPermissions.ViewModels {
     public class ContentPermissionsPartViewModel {
+        public bool ApplyDefaults { get; set; }
         public bool Enabled { get; set; }
         
         // list of available roles

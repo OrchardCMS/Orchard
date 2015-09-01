@@ -1,18 +1,24 @@
 ﻿@model Orchard.Widgets.Models.WidgetPart
+@using Orchard;
+
+@{
+    var services = WorkContext.Resolve<IOrchardServices>();
+    var isAuthorizedToChangePostionAndLayer = services.Authorizer.Authorize(Orchard.Widgets.Permissions.ChangeWidgetsPositionAndLayer);
+}
 <h2>@Model.TypeDefinition.DisplayName</h2>
 <fieldset>
     @Html.LabelFor(widget => widget.Zone, T("Zone"))
     @Html.DropDownListFor(widget => widget.Zone, new SelectList(Model.AvailableZones))
     <span class="hint">@T("The Zone in the Layout where the Widget will be rendered.")</span>
 </fieldset>
-<fieldset>
+<fieldset disabled="@(!isAuthorizedToChangePostionAndLayer)">
     @Html.LabelFor(widget => widget.LayerId, T("Layer"))
     @Html.DropDownListFor(widget => widget.LayerId, new SelectList(Model.AvailableLayers, "Id", "Name"))
     <span class="hint">@T("The Layer where the Widget will be rendered.")</span>
 </fieldset>
-<fieldset>
+<fieldset disabled="@(!isAuthorizedToChangePostionAndLayer)">
     @Html.LabelFor(widget => widget.Position, T("Position"))
-    @Html.TextBoxFor(widget => widget.Position, new { @class = "text small"})
+    @Html.TextBoxFor(widget => widget.Position, new { @class = "text small" })
     <span class="hint">@T("The position of the Widget inside the Zone.")</span>
 </fieldset>
 <fieldset>
@@ -27,3 +33,8 @@
     @Html.TextBoxFor(widget => widget.Name, new { @class = "text" })
     <span class="hint">@T("The technical name of the Widget, used for css class and alternates.")</span>
 </fieldset>
+@if (!isAuthorizedToChangePostionAndLayer)
+{
+    @Html.HiddenFor(widget => widget.LayerId);
+    @Html.HiddenFor(widget => widget.Position);
+}

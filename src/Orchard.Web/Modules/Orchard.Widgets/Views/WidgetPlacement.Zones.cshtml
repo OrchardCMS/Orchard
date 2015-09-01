@@ -1,64 +1,106 @@
-﻿@using Orchard.ContentManagement;
+﻿@using Orchard;
+@using Orchard.ContentManagement;
 @using Orchard.Core.Contents;
 @using Orchard.Utility.Extensions;
 @using Orchard.Widgets.Models;
+@using Orchard.Widgets;
+@using Orchard.Widgets.Services;
+
+
 @{
     Style.Require("WidgetsAdmin");
     IEnumerable<WidgetPart> widgets = Model.Widgets;
     IEnumerable<string> zones = Model.Zones;
     var returnUrl = Request.RawUrl;
+    var services = WorkContext.Resolve<IOrchardServices>();
+    var widgetsService = WorkContext.Resolve<IWidgetsService>();
+    LayerPart layerPart = widgetsService.GetLayer(Model.CurrentLayer.Id);
+    var changeWidgetPositionAndLayer = services.Authorizer.Authorize(Orchard.Widgets.Permissions.ChangeWidgetsPositionAndLayer);
+    var hasEditContentCurrentLayerPartPermission = services.Authorizer.Authorize(Orchard.Core.Contents.Permissions.EditContent, layerPart);
 }
 <ol>
-    @foreach (string zone in zones) {
+    @foreach (string zone in zones)
+    {
         int count = widgets.Where(w => w.Zone == zone).Count();
         MvcHtmlString classAttr = null;
-        if (count == 0) {
+        if (count == 0)
+        {
             classAttr = new MvcHtmlString("class=\"widgets-none\"");
         }
         <li @classAttr>
             <h2>@zone</h2>
-            <div class="widgets-actions">
-                @Html.ActionLink(T("Add").Text, "ChooseWidget", new { layerId = Model.CurrentLayer.Id, zone, returnUrl }, new { @class = "button grey" })
-            </div>
+            @if (hasEditContentCurrentLayerPartPermission)
+            {
+                <div class="widgets-actions">
+                    @Html.ActionLink(T("Add").Text, "ChooseWidget", new { layerId = Model.CurrentLayer.Id, zone, returnUrl }, new { @class = "button grey" })
+                </div>
+            }
             <ul class="widgets-zone-widgets">
-                @if (count > 0) {
+                @if (count > 0)
+                {
                     int i = 0;
-                    foreach (WidgetPart widget in widgets.Where(w => w.Zone == zone).OrderBy(w => w.Position, new Orchard.UI.FlatPositionComparer())) {
+                    foreach (WidgetPart widget in widgets.Where(w => w.Zone == zone).OrderBy(w => w.Position, new Orchard.UI.FlatPositionComparer()))
+                    {
                         <li class="widgets-@(widget.LayerId == Model.CurrentLayer.Id ? "this" : "other")-layer widgets-layer-@widget.LayerId@(i == 0 ? " first" : (i == count ? " last" : ""))">
-                            @using (Html.BeginFormAntiForgeryPost()) {
-                                <h3>@Html.ActionLink(HasText(widget.Title) ? widget.Title : widget.TypeDefinition.DisplayName, "EditWidget", new { @widget.Id, returnUrl })</h3><div class="contentType"> - @widget.TypeDefinition.DisplayName</div>
+                            @using (Html.BeginFormAntiForgeryPost())
+                            {
+                                var hasEditContentWidgetPartPermission = services.Authorizer.Authorize(Orchard.Core.Contents.Permissions.EditContent, widget);
+                                if (services.Authorizer.Authorize(Orchard.Core.Contents.Permissions.EditContent, widget))
+                                {
+                                    <h3>@Html.ActionLink(HasText(widget.Title) ? widget.Title : widget.TypeDefinition.DisplayName, "EditWidget", new { @widget.Id, returnUrl })</h3><div class="contentType"> - @widget.TypeDefinition.DisplayName</div>
+                                }
+                                else
+                                {
+                                    <h3>@(HasText(widget.Title) ? widget.Title : widget.TypeDefinition.DisplayName)</h3><div class="contentType"> - @widget.TypeDefinition.DisplayName</div>
+                                }
                                 <div class="widgets-actions">
-                                    @if (widget.HasPublished()) {
-                                        if (widget.HasDraft()) {
-                                            if (Authorizer.Authorize(Permissions.PublishContent, widget)) {
+                                    @if (widget.HasPublished())
+                                    {
+                                        if (widget.HasDraft())
+                                        {
+                                            if (Authorizer.Authorize(Permissions.PublishContent, widget))
+                                            {
                                                 @Html.Link(T("Publish Draft").Text, Url.Action("Publish", "Admin", new { area = "Contents", id = widget.ContentItem.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "UnsafeUrl" })
                                                 @T(" | ")
                                             }
                                         }
 
-                                        if (Authorizer.Authorize(Permissions.PublishContent, widget)) {
+                                        if (Authorizer.Authorize(Permissions.PublishContent, widget))
+                                        {
                                             @Html.Link(T("Unpublish").Text, Url.Action("Unpublish", "Admin", new { area = "Contents", id = widget.ContentItem.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "UnsafeUrl" })
                                             @T(" | ")
                                         }
                                     }
-                                    else {
-                                        if (Authorizer.Authorize(Permissions.PublishContent, widget)) {
+                                    else
+                                    {
+                                        if (Authorizer.Authorize(Permissions.PublishContent, widget))
+                                        {
                                             @Html.Link(T("Publish").Text, Url.Action("Publish", "Admin", new { area = "Contents", id = widget.ContentItem.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "UnsafeUrl" })
                                             @T(" | ")
                                         }
                                     }
-                                    
-                                    @if (widget.LayerId != Model.CurrentLayer.Id) {
-                                        <button name="moveHere" class="link" type="submit" value="1">@T("Move to current layer")</button>
+
+                                    @if (widget.LayerId != Model.CurrentLayer.Id)
+                                    {
+                                        var hasEditContentPermissionLayerFrom = services.Authorizer.Authorize(Orchard.Core.Contents.Permissions.EditContent, widget.LayerPart);
+                                        if (changeWidgetPositionAndLayer && hasEditContentPermissionLayerFrom && hasEditContentCurrentLayerPartPermission && hasEditContentWidgetPartPermission)
+                                        {
+                                            <button name="moveHere" class="link" type="submit" value="1">@T("Move to current layer")</button>
+                                        }
                                     }
-                                    else { /* it could be useful to remove the widget regardless of the layer it's on but there's no place in the current UI for this and "Move to current layer" */
+                                    else if (services.Authorizer.Authorize(Orchard.Core.Contents.Permissions.DeleteContent, widget))
+                                    { /* it could be useful to remove the widget regardless of the layer it's on but there's no place in the current UI for this and "Move to current layer" */
                                         <button name="moveOut" class="link" type="submit" value="1" itemprop="RemoveUrl">@T("Remove")</button>
                                     }
                                 </div>
-                                <div class="widgets-move-somewhere">
-                                    <button name="moveUp" @(new MvcHtmlString(i == 0 ? "disabled='disabled'" : "")) class="widgets-move widgets-move-up" type="submit" title="@T("Move up")" value="1">@T("Move up")</button>
-                                    <button name="moveDown" @(new MvcHtmlString(++i == count ? "disabled='disabled'" : "")) class="widgets-move widgets-move-down" type="submit" title="@T("Move down")" value="1">@T("Move down")</button>
-                                </div>
+                                if (changeWidgetPositionAndLayer && hasEditContentWidgetPartPermission)
+                                {
+                                    <div class="widgets-move-somewhere">
+                                        <button name="moveUp" @(new MvcHtmlString(i == 0 ? "disabled='disabled'" : "")) class="widgets-move widgets-move-up" type="submit" title="@T("Move up")" value="1">@T("Move up")</button>
+                                        <button name="moveDown" @(new MvcHtmlString(i == count - 1 ? "disabled='disabled'" : "")) class="widgets-move widgets-move-down" type="submit" title="@T("Move down")" value="1">@T("Move down")</button>
+                                    </div>
+                                }
+                                ++i;
                                 @Html.Hidden("widgetId", widget.Id)
                                 @Html.Hidden("returnUrl", returnUrl)
                             }
@@ -66,7 +108,7 @@
                     }
                 }
             </ul>
-            </li>
+        </li>
     }
 </ol>
 

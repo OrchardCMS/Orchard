@@ -39,16 +39,17 @@ namespace Orchard.ContentPermissions.Drivers {
         }
 
         protected override DriverResult Editor(ContentPermissionsPart part, dynamic shapeHelper) {
+            // ensure the current user is allowed to define permissions
+            if (!_authorizer.Authorize(Permissions.GrantPermission))
+            {
+                return null;
+            }
+
             return ContentShape("Parts_ContentPermissions_Edit", () => {
 
                 var settings = part.Settings.TryGetModel<ContentPermissionsPartSettings>();
 
                 var allRoles = _roleService.GetRoles().Select(x => x.Name).OrderBy(x => x).ToList();
-
-                // ensure the current user is allowed to define permissions
-                if (!_authorizer.Authorize(Permissions.GrantPermission)) {
-                    return null;
-                }
 
                 if(settings == null) {
                     settings = new ContentPermissionsPartSettings {
@@ -119,6 +120,10 @@ namespace Orchard.ContentPermissions.Drivers {
         }
 
         protected override DriverResult Editor(ContentPermissionsPart part, IUpdateModel updater, dynamic shapeHelper) {
+            if (!_authorizer.Authorize(Permissions.GrantPermission))
+            {
+                return null;
+            }
 
             var allRoles = _roleService.GetRoles().Select(x => x.Name).OrderBy(x => x).ToList();
 

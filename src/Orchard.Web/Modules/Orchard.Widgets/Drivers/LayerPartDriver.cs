@@ -15,13 +15,17 @@ namespace Orchard.Widgets.Drivers {
     public class LayerPartDriver : ContentPartDriver<LayerPart> {
         private readonly IRuleManager _ruleManager;
         private readonly IWidgetsService _widgetsService;
+        private readonly IOrchardServices _services;
 
         public LayerPartDriver(
             IRuleManager ruleManager,
-            IWidgetsService widgetsService) {
+            IWidgetsService widgetsService,
+            IOrchardServices services)
+        {
 
             _ruleManager = ruleManager;
             _widgetsService = widgetsService;
+            _services = services;
 
             T = NullLocalizer.Instance;
         }
@@ -35,8 +39,13 @@ namespace Orchard.Widgets.Drivers {
             };
 
             if (layerPart.Id > 0)
-                results.Add(ContentShape("Widget_DeleteButton",
-                    deleteButton => deleteButton));
+            {
+                if (_widgetsService.GetWidgets(layerPart.Id).Any() == false &&
+                    _services.Authorizer.Authorize(Orchard.Core.Contents.Permissions.DeleteContent, layerPart))
+                {
+                    results.Add(ContentShape("Widget_DeleteButton", deleteButton => deleteButton));
+                }
+            }
 
             return Combined(results.ToArray());
         }

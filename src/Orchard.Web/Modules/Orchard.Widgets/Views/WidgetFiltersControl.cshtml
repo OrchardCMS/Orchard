@@ -1,5 +1,9 @@
-﻿@using Orchard.Utility.Extensions;
+﻿@using Orchard;
+@using Orchard.Utility.Extensions;
 @using Orchard.Widgets.Models;
+@using Orchard.Widgets.Services;
+@using Orchard.ContentManagement;
+
 @{
     Style.Require("WidgetsAdmin");
     Script.Require("Switchable").AtFoot();
@@ -7,44 +11,63 @@
     IEnumerable<LayerPart> layers = Model.Layers;
     IEnumerable<string> cultures = Model.Cultures;
     var returnUrl = Request.RawUrl;
+    var services = WorkContext.Resolve<IOrchardServices>();
+    var widgetsService = WorkContext.Resolve<IWidgetsService>();
+    LayerPart layerPart = widgetsService.GetLayer(Model.CurrentLayer.Id);
+    LayerPart virtualLayerPart = services.ContentManager.New<LayerPart>("Layer");
+    var hasEditContentPermission = services.Authorizer.Authorize(Orchard.Core.Contents.Permissions.EditContent, layerPart);
+    var hasVirtualEditContentPermission = services.Authorizer.Authorize(Orchard.Core.Contents.Permissions.EditContent, virtualLayerPart);
 }
 <div id="widgets-layers-control" class="widgets-container">
-    @if (layers.Any()) {
-        using (Html.BeginForm("index", "admin", FormMethod.Get, new { area = "Orchard.Widgets" })) {
+    @if (layers.Any())
+    {
+        using (Html.BeginForm("index", "admin", FormMethod.Get, new { area = "Orchard.Widgets" }))
+        {
             <fieldset class="bulk-actions-auto">
                 <label for="layerId">@T("Current Layer:")</label>
                 <select id="layerId" name="layerId">
-                    @foreach (var layer in layers) {
+                    @foreach (var layer in layers.OrderBy(l => l.Name))
+                    {
                         @Html.SelectOption((int)Model.CurrentLayer.Id, (int)layer.Id, (string)layer.Name)
                     }
                 </select>
                 <button type="submit" class="apply-bulk-actions-auto">@T("Show")</button>
-                @Html.Link(T("Edit").Text, Url.Action("EditLayer", "Admin", new { area = "Orchard.Widgets", id = Model.CurrentLayer.Id, returnUrl }), new { @class = "button" })
+                @if (hasEditContentPermission)
+                {
+                    @Html.Link(T("Edit").Text, Url.Action("EditLayer", "Admin", new { area = "Orchard.Widgets", id = Model.CurrentLayer.Id, returnUrl }), new { @class = "button" })
+                }
             </fieldset>
         }
     }
-    <div id="widgets-layer-add">
-        @Html.Link(T("Add a new layer...").Text, Url.Action("AddLayer", "Admin", new { area = "Orchard.Widgets", returnUrl }))
-    </div>
+    @if (hasVirtualEditContentPermission)
+    {
+        <div id="widgets-layer-add">
+            @Html.Link(T("Add a new layer...").Text, Url.Action("AddLayer", "Admin", new { area = "Orchard.Widgets", returnUrl }))
+        </div>
+    }
 
-    @if (cultures.Count() > 1) { 
-        using (Html.BeginForm("index", "admin", FormMethod.Get, new { area = "Orchard.Widgets" })) {
-        <fieldset class="bulk-actions-auto">
-            <label for="culture">@T("Current Culture:")</label>
-            <select id="culture" name="culture">
-                @Html.SelectOption((string)Model.CurrentCulture, "", T("any (show all)").ToString())
-                @foreach (var culture in cultures) {
-                    @Html.SelectOption((string)Model.CurrentCulture, (string)culture, System.Globalization.CultureInfo.GetCultureInfo(culture).DisplayName)
-                }
-            </select>
-            <button type="submit" class="apply-bulk-actions-auto">@T("Show")</button>
-        </fieldset>
+    @if (cultures.Count() > 1)
+    {
+        using (Html.BeginForm("index", "admin", FormMethod.Get, new { area = "Orchard.Widgets" }))
+        {
+            <fieldset class="bulk-actions-auto">
+                <label for="culture">@T("Current Culture:")</label>
+                <select id="culture" name="culture">
+                    @Html.SelectOption((string)Model.CurrentCulture, "", T("any (show all)").ToString())
+                    @foreach (var culture in cultures)
+                    {
+                        @Html.SelectOption((string)Model.CurrentCulture, (string)culture, System.Globalization.CultureInfo.GetCultureInfo(culture).DisplayName)
+                    }
+                </select>
+                <button type="submit" class="apply-bulk-actions-auto">@T("Show")</button>
+            </fieldset>
         }
     }
 
 
 
-    @if (!String.IsNullOrEmpty(Model.CurrentLayer.Description)) {
+    @if (!String.IsNullOrEmpty(Model.CurrentLayer.Description))
+    {
         <div>
             <span class="hint" id="widgets-layer-description">@Model.CurrentLayer.Description</span>
             <br />
