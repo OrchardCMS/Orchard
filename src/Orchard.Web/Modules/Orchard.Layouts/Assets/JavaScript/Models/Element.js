@@ -74,9 +74,9 @@
 
         this.setIsFocused = function () {
             if (!this.editor)
-                return;
-            if (this.isTemplated && this.isTemplatedContainer != true)
-                return;
+            	return;
+            if (this.isTemplated)
+            	return;
             if (this.editor.isDragging || this.editor.inlineEditingIsActive || this.editor.isResizing)
                 return;
 

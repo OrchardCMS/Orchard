@@ -151,7 +151,7 @@ var LayoutEditor;
         this.setIsFocused = function () {
             if (!this.editor)
                 return;
-            if (this.isTemplated && this.isTemplatedContainer != true)
+            if (this.isTemplated)
                 return;
             if (this.editor.isDragging || this.editor.inlineEditingIsActive || this.editor.isResizing)
                 return;
@@ -755,7 +755,7 @@ var LayoutEditor;
     LayoutEditor.Column = function (data, htmlId, htmlClass, htmlStyle, isTemplated, width, offset, collapsible, rule, children) {
         LayoutEditor.Element.call(this, "Column", data, htmlId, htmlClass, htmlStyle, isTemplated, rule);
         LayoutEditor.Container.call(this, ["Grid", "Content"], children);
-        this.isTemplatedContainer = true;
+
         this.width = width;
         this.offset = offset;
         this.collapsible = collapsible;
