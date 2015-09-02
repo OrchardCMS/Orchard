@@ -52,12 +52,15 @@ namespace Orchard.Tasks.Locking.Services {
                 var record = repository.Get(lockId);
 
                 if (record == null)
-                    throw new ObjectDisposedException("@lock", "No lock record could be found for the specified lock to be released.");
+                    throw new OrchardException(T("No lock record could be found for the specified lock to be released."));
 
                 if (record.Count <= 0)
-                    throw new ObjectDisposedException("@lock", "The specified lock has already been released.");
+                    throw new OrchardException(T("The specified lock has already been released."));
 
                 record.Count--;
+
+                if(record.Count == 0)
+                    repository.Delete(record);
             }
             catch (Exception ex) {
                 if (ex.IsFatal()) throw;
@@ -70,10 +73,7 @@ namespace Orchard.Tasks.Locking.Services {
 
         private bool TryAcquireLock(string name, TimeSpan? maxValidFor, TimeSpan? timeout, string machineName, int? threadId, out DistributedLock @lock) {
             @lock = AcquireLock(name, maxValidFor, machineName, threadId, timeout ?? TimeSpan.Zero);
-            if (@lock != null)
-                return true;
-
-            return false;
+            return @lock != null;
         }
 
         private DistributedLock AcquireLock(string name, TimeSpan? maxValidFor, TimeSpan? timeout, string machineName, int? threadId) {
@@ -171,15 +171,15 @@ namespace Orchard.Tasks.Locking.Services {
         /// <summary>
         /// Executes the specified function until it returns true, for the specified amount of time, or indefinitely if no timeout was given.
         /// </summary>
-        /// <param name="pollFunc">The function to repeatedly execute until it returns true.</param>
+        /// <param name="operation">The operation to repeatedly execute until it returns true.</param>
         /// <param name="timeout">The amount of time to retry executing the function. If null is specified, the specified function is executed indefinitely until it returns true.</param>
         /// <returns>Returns true if the specified function returned true within the specified timeout, false otherwise.</returns>
-        private bool Poll(Func<bool> pollFunc, TimeSpan? timeout) {
+        private bool Poll(Func<bool> operation, TimeSpan? timeout) {
             var waitedTime = TimeSpan.Zero;
             var waitTime = TimeSpan.FromMilliseconds(timeout.GetValueOrDefault().TotalMilliseconds / 10);
             bool acquired;
 
-            while (!(acquired = pollFunc()) && (timeout == null || waitedTime < timeout.Value)) {
+            while (!(acquired = operation()) && (timeout == null || waitedTime < timeout.Value)) {
                 Task.Delay(waitTime).ContinueWith(t => {
                     waitedTime += waitTime;
                 }).Wait();

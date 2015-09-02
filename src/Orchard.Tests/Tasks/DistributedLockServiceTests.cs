@@ -82,10 +82,19 @@ namespace Orchard.Tests.Tasks {
             _distributedLockService.ReleaseLock(@lock);
             _session.Refresh(lockRecord);
             Assert.That(lockRecord.Count, Is.EqualTo(1));
+        }
 
+        [Test]
+        public void ReleasingLockAndCountReachesZeroDeletesLock()
+        {
+            DistributedLock @lock;
+            _distributedLockService.TryAcquireLockForMachine(LockName, TimeSpan.FromSeconds(60), null, out @lock);
+
+            var lockId = Int32.Parse(@lock.Id);
             _distributedLockService.ReleaseLock(@lock);
-            _session.Refresh(lockRecord);
-            Assert.That(lockRecord.Count, Is.EqualTo(0));
+            var lockRecord = _distributedLockRepository.Get(lockId);
+
+            Assert.That(lockRecord, Is.Null);
         }
 
         [Test]
