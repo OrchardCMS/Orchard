@@ -1,7 +1,7 @@
 ﻿namespace Orchard.Environment {
 
     /// <summary>
-    /// Describes a service which the name of the machine running the application.
+    /// Describes a service which returns the name of the machine running the application.
     /// </summary>
     public interface IMachineNameProvider {
     

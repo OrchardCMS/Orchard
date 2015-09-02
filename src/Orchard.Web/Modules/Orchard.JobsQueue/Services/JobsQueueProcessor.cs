@@ -5,28 +5,25 @@ using System.Threading;
 using Newtonsoft.Json.Linq;
 using Orchard.Environment;
 using Orchard.Events;
-using Orchard.Logging;
 using Orchard.JobsQueue.Models;
-using Orchard.Services;
-using Orchard.TaskLease.Services;
+using Orchard.Logging;
+using Orchard.Tasks.Locking.Services;
 
 namespace Orchard.JobsQueue.Services {
     public class JobsQueueProcessor : IJobsQueueProcessor {
         private readonly Work<IJobsQueueManager> _jobsQueueManager;
-        private readonly Work<IClock> _clock;
-        private readonly Work<ITaskLeaseService> _taskLeaseService;
         private readonly Work<IEventBus> _eventBus;
         private readonly ReaderWriterLockSlim _rwl = new ReaderWriterLockSlim();
+        private readonly IDistributedLockService _distributedLockService;
 
         public JobsQueueProcessor(
-            Work<IClock> clock,
             Work<IJobsQueueManager> jobsQueueManager,
-            Work<ITaskLeaseService> taskLeaseService,
-            Work<IEventBus> eventBus) {
-            _clock = clock;
+            Work<IEventBus> eventBus, 
+            IDistributedLockService distributedLockService) {
+
             _jobsQueueManager = jobsQueueManager;
-            _taskLeaseService = taskLeaseService;
             _eventBus = eventBus;
+            _distributedLockService = distributedLockService;
             Logger = NullLogger.Instance;
         }
 
@@ -35,12 +32,15 @@ namespace Orchard.JobsQueue.Services {
             // prevent two threads on the same machine to process the message queue
             if (_rwl.TryEnterWriteLock(0)) {
                 try {
-                    if (_taskLeaseService.Value.Acquire("JobsQueueProcessor", _clock.Value.UtcNow.AddMinutes(5)) != null) {
-                        IEnumerable<QueuedJobRecord> messages;
+                    DistributedLock @lock;
+                    if(_distributedLockService.TryAcquireLockForMachine(GetType().FullName, TimeSpan.FromMinutes(5), out @lock)){
+                        using (@lock) {
+                            IEnumerable<QueuedJobRecord> messages;
 
-                        while ((messages = _jobsQueueManager.Value.GetJobs(0, 10).ToArray()).Any()) {
-                            foreach (var message in messages) {
-                                ProcessMessage(message);
+                            while ((messages = _jobsQueueManager.Value.GetJobs(0, 10).ToArray()).Any()) {
+                                foreach (var message in messages) {
+                                    ProcessMessage(message);
+                                }
                             }
                         }
                     }

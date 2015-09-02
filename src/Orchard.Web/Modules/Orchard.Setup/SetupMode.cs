@@ -29,6 +29,7 @@ using Orchard.Mvc.ViewEngines.ThemeAwareness;
 using Orchard.Recipes.Services;
 using Orchard.Settings;
 using Orchard.Tasks;
+using Orchard.Tasks.Locking;
 using Orchard.Themes;
 using Orchard.UI.Notify;
 using Orchard.UI.PageClass;
