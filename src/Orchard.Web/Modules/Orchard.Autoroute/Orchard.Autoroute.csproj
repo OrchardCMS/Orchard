@@ -81,9 +81,6 @@
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
-    <Compile Include="ImportExport\HomeAliasExportStep.cs" />
-    <Compile Include="ImportExport\HomeAliasExportHandler.cs" />
-    <Compile Include="ImportExport\HomeAliasImportHandler.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
@@ -115,6 +112,8 @@
   <ItemGroup>
     <Compile Include="Commands\AutorouteCommands.cs" />
     <Compile Include="Providers\ContentDefinition\ContentDefinitionEventHandler.cs" />
+    <Compile Include="Recipes\Builders\HomeAliasStep.cs" />
+    <Compile Include="Recipes\Executors\HomeAliasStep.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Services\AliasResolverSelector.cs" />
     <Compile Include="Services\HomeAliasService.cs" />

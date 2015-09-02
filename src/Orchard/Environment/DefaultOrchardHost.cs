@@ -15,7 +15,7 @@ using Orchard.Logging;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.Environment {
-    // All the event handlers that DefaultOrchardHost implements have to be declared in OrchardStarter
+    // All the event handlers that DefaultOrchardHost implements have to be declared in OrchardStarter.
     public class DefaultOrchardHost : IOrchardHost, IShellSettingsManagerEventHandler, IShellDescriptorManagerEventHandler {
         private readonly IHostLocalRestart _hostLocalRestart;
         private readonly IShellSettingsManager _shellSettingsManager;
@@ -142,6 +142,10 @@ namespace Orchard.Environment {
                     }
                     catch (Exception e) {
                         Logger.Error(e, "A tenant could not be started: " + settings.Name);
+                    }
+                    while (_processingEngine.AreTasksPending()) {
+                        Logger.Debug("Processing pending task after activate Shell");
+                        _processingEngine.ExecuteNextTask();
                     }
                 });
             }

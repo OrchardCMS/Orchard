@@ -20,7 +20,7 @@ namespace Orchard.MediaLibrary.Services {
         private readonly IStorageProvider _storageProvider;
         private readonly IEnumerable<IMediaFactorySelector> _mediaFactorySelectors;
 
-        private static char[] HttpUnallowed = new char[] { '<', '>', '*', '%', '&', ':', '\\', '?' };
+        private static char[] HttpUnallowed = new char[] { '<', '>', '*', '%', '&', ':', '\\', '?', '#' };
 
         public MediaLibraryService(
             IOrchardServices orchardServices,

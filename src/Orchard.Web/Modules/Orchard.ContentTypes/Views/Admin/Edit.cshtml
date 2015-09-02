@@ -2,7 +2,7 @@
 @{
     Style.Require("ContentTypesAdmin");
     Script.Require("jQuery");
-    Layout.Title = T("Edit Content Type - {0}", Model.DisplayName).ToString();
+    Layout.Title = T("Edit Content Type - {0}", Html.Raw(Model.DisplayName)).Text;
 }
 
 <div class="manage">

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ServiceDefinition name="OrchardCloudService" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceDefinition" schemaVersion="2014-06.2.4">
+<ServiceDefinition name="OrchardCloudService" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceDefinition" schemaVersion="2015-04.2.6">
   <WebRole name="Orchard.Azure.Web">
     <Sites>
       <Site name="Web">
@@ -20,6 +20,7 @@
       <Setting name="Orchard.Azure.DatabaseCache.HostIdentifier" />
       <Setting name="Orchard.Azure.DatabaseCache.CacheName" />
       <Setting name="Orchard.Azure.DatabaseCache.AuthorizationToken" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" />
     </ConfigurationSettings>
     <Endpoints>
       <InputEndpoint name="HttpIn" protocol="http" port="80" />

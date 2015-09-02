@@ -9,7 +9,7 @@ using Orchard.Layouts.Helpers;
 
 namespace Orchard.Layouts.Services {
     public class ElementManager : Component, IElementManager {
-        private readonly Lazy<IEnumerable<ElementHarvester>> _elementHarvesters;
+        private readonly Lazy<IEnumerable<IElementHarvester>> _elementHarvesters;
         private readonly ICacheManager _cacheManager;
         private readonly Lazy<IEnumerable<IElementDriver>> _drivers;
         private readonly Lazy<IEnumerable<ICategoryProvider>> _categoryProviders;
@@ -18,7 +18,7 @@ namespace Orchard.Layouts.Services {
         private readonly IElementEventHandler _elementEventHandler;
 
         public ElementManager(
-            Lazy<IEnumerable<ElementHarvester>> elementHarvesters,
+            Lazy<IEnumerable<IElementHarvester>> elementHarvesters,
             ICacheManager cacheManager,
             Lazy<IEnumerable<IElementDriver>> drivers,
             Lazy<IEnumerable<ICategoryProvider>> categoryProviders,
