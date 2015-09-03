@@ -67,7 +67,6 @@ namespace Orchard.Environment {
             builder.RegisterType<ViewsBackgroundCompilation>().As<IViewsBackgroundCompilation>().SingleInstance();
             builder.RegisterType<DefaultExceptionPolicy>().As<IExceptionPolicy>().SingleInstance();
             builder.RegisterType<DefaultCriticalErrorProvider>().As<ICriticalErrorProvider>().SingleInstance();
-            builder.RegisterType<ThreadProvider>().As<IThreadProvider>().SingleInstance();
             //builder.RegisterType<RazorTemplateCache>().As<IRazorTemplateProvider>().SingleInstance();
 
             RegisterVolatileProvider<WebSiteFolder, IWebSiteFolder>(builder);

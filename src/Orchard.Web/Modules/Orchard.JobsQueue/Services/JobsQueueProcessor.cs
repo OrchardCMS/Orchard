@@ -32,8 +32,8 @@ namespace Orchard.JobsQueue.Services {
             // prevent two threads on the same machine to process the message queue
             if (_rwl.TryEnterWriteLock(0)) {
                 try {
-                    DistributedLock @lock;
-                    if(_distributedLockService.TryAcquireLockForMachine(GetType().FullName, TimeSpan.FromMinutes(5), out @lock)){
+                    IDistributedLock @lock;
+                    if(_distributedLockService.TryAcquireLock(GetType().FullName, TimeSpan.FromMinutes(5), out @lock)){
                         using (@lock) {
                             IEnumerable<QueuedJobRecord> messages;
 

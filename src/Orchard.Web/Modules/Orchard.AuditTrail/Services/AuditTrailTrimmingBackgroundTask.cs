@@ -41,8 +41,8 @@ namespace Orchard.AuditTrail.Services {
                     Logger.Debug("Beginning sweep.");
 
                     // Only allow this task to run on one farm node at a time.
-                    DistributedLock @lock;
-                    if (_distributedLockService.TryAcquireLockForMachine(GetType().FullName, TimeSpan.FromHours(1), out @lock)) {
+                    IDistributedLock @lock;
+                    if (_distributedLockService.TryAcquireLock(GetType().FullName, TimeSpan.FromHours(1), out @lock)) {
                         using (@lock) {
 
                             // We don't need to check the audit trail for events to remove every minute. Let's stick with twice a day.

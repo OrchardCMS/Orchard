@@ -9,7 +9,7 @@ namespace Orchard.TaskLease.Services {
     /// <summary>
     /// Provides a database driven implementation of <see cref="ITaskLeaseService" />
     /// </summary>
-    [Obsolete("Use Orchard.Tasks.Locking.DistributedLockService and the AcquireLockForMachine/TryAcquireLockForMachine methods instead.")]
+    [Obsolete("Use Orchard.Tasks.Locking.DistributedLockService instead.")]
     public class TaskLeaseService : ITaskLeaseService {
 
         private readonly IRepository<TaskLeaseRecord> _repository;

@@ -7,24 +7,23 @@ namespace Orchard.Tests.Tasks {
     [TestFixture]
     public class LockTests : ContainerTestBase {
         private const string LockName = "Orchard Test Lock";
-        private const string LockId = "1";
-        private Mock<IDistributedLockService> _distributedLockServiceMock;
+        private Mock<DistributedLockService> _distributedLockServiceMock;
         private DistributedLock _lock;
 
         protected override void Register(ContainerBuilder builder) {
-            _distributedLockServiceMock = new Mock<IDistributedLockService>();
+            _distributedLockServiceMock = new Mock<DistributedLockService>();
             builder.RegisterInstance(_distributedLockServiceMock.Object);
         }
 
         protected override void Resolve(ILifetimeScope container) {
-            _lock = DistributedLock.ForMachine(_distributedLockServiceMock.Object, LockName, "Orchard Test Machine", LockId);
+            _lock = new DistributedLock(_distributedLockServiceMock.Object, LockName);
         }
 
         [Test]
         public void DisposeInvokesDistributedLockServiceDisposeLock() {
             _lock.Dispose();
 
-            _distributedLockServiceMock.Verify(service => service.ReleaseLock(_lock), Times.Exactly(1));
+            _distributedLockServiceMock.Verify(service => service.ReleaseDistributedLock(_lock), Times.Exactly(1));
         }
 
         [Test]
@@ -33,7 +32,7 @@ namespace Orchard.Tests.Tasks {
             _lock.Dispose();
             _lock.Dispose();
 
-            _distributedLockServiceMock.Verify(service => service.ReleaseLock(_lock), Times.Exactly(1));
+            _distributedLockServiceMock.Verify(service => service.ReleaseDistributedLock(_lock), Times.Exactly(1));
         }
     }
 }
