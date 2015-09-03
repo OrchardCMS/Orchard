@@ -5,6 +5,7 @@ using Orchard.Projections.Descriptors.Property;
 using Orchard.Projections.Descriptors.Filter;
 using Orchard.Projections.Descriptors.Layout;
 using Orchard.Projections.Descriptors.SortCriterion;
+using System;
 
 namespace Orchard.Projections.Services {
     public interface IProjectionManager : IDependency {
@@ -17,9 +18,8 @@ namespace Orchard.Projections.Services {
         SortCriterionDescriptor GetSortCriterion(string category, string type);
         LayoutDescriptor GetLayout(string category, string type);
         PropertyDescriptor GetProperty(string category, string type);
-
-        IEnumerable<ContentItem> GetContentItems(int queryId, int skip = 0, int count = 0);
-        int GetCount(int queryId);
+        IEnumerable<ContentItem> GetContentItems(int queryId, int skip = 0, int count = 0, Dictionary<string, object> tokens = null);
+        int GetCount(int queryId, Dictionary<string, object> tokens = null);
     }
 
 }

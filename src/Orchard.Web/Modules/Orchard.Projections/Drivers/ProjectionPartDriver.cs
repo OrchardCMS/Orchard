@@ -110,7 +110,7 @@ namespace Orchard.Projections.Drivers {
                     _feedManager.Register(metaData.DisplayText, "rss", new RouteValueDictionary { { "projection", part.Id } });
 
                     // execute the query
-                    var contentItems = _projectionManager.GetContentItems(query.Id, pager.GetStartIndex() + part.Record.Skip, pager.PageSize).ToList();
+                    var contentItems = _projectionManager.GetContentItems(query.Id, pager.GetStartIndex() + part.Record.Skip, pager.PageSize, new Dictionary<string, object> { { "Content", part.ContentItem } }).ToList();
 
                     // sanity check so that content items with ProjectionPart can't be added here, or it will result in an infinite loop
                     contentItems = contentItems.Where(x => !x.Has<ProjectionPart>()).ToList();
