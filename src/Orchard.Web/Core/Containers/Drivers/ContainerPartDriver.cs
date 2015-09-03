@@ -16,6 +16,7 @@ using System.Web.Routing;
 using Orchard.Settings;
 using Orchard.Core.Feeds;
 using Orchard.UI.Navigation;
+using Orchard.Core.Containers.Settings;
 
 namespace Orchard.Core.Containers.Drivers {
     public class ContainerPartDriver : ContentPartDriver<ContainerPart> {
@@ -27,8 +28,8 @@ namespace Orchard.Core.Containers.Drivers {
         private readonly IContainerService _containerService;
 
         public ContainerPartDriver(
-            IContentDefinitionManager contentDefinitionManager, 
-            IOrchardServices orchardServices, 
+            IContentDefinitionManager contentDefinitionManager,
+            IOrchardServices orchardServices,
             ISiteService siteService,
             IFeedManager feedManager, IContainerService containerService) {
             _contentDefinitionManager = contentDefinitionManager;
@@ -67,9 +68,17 @@ namespace Orchard.Core.Containers.Drivers {
                 var startIndex = part.Paginated ? pager.GetStartIndex() : 0;
                 var pageOfItems = query.Slice(startIndex, pager.PageSize).ToList();
 
+                var partSettings = part.ContainerSettings;
+
+                string itemDisplayMode = string.IsNullOrEmpty(partSettings.ItemsDisplayMode) ? "Summary" : partSettings.ItemsDisplayMode;
+                string containerTag = string.IsNullOrEmpty(partSettings.ContainerTag) ? "ul" : partSettings.ContainerTag;
+                string itemTag = string.IsNullOrEmpty(partSettings.ItemTag) ? "li" : partSettings.ItemTag;
+
                 var listShape = shapeHelper.List();
-                listShape.AddRange(pageOfItems.Select(item => _contentManager.BuildDisplay(item, "Summary")));
+                listShape.AddRange(pageOfItems.Select(item => _contentManager.BuildDisplay(item, itemDisplayMode)));
                 listShape.Classes.Add("content-items");
+                listShape.Tag = containerTag;
+                listShape.ItemTag = itemTag;
                 listShape.Classes.Add("list-items");
 
                 return shapeHelper.Parts_Container_Contained(
@@ -103,7 +112,7 @@ namespace Orchard.Core.Containers.Drivers {
                     EnablePositioning = part.Record.EnablePositioning,
                     OverrideEnablePositioning = part.ContainerSettings.EnablePositioning == null
                 };
-                
+
                 if (updater != null) {
                     if (updater.TryUpdateModel(model, "Container", null, new[] { "OverrideEnablePositioning" })) {
                         part.AdminMenuPosition = model.AdminMenuPosition;
@@ -123,7 +132,6 @@ namespace Orchard.Core.Containers.Drivers {
                         }
                     }
                 }
-                   
                 return shapeHelper.EditorTemplate(TemplateName: "Container", Model: model, Prefix: "Container");
             });
         }

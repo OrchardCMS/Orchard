@@ -3,6 +3,18 @@
     Script.Require("ShapesBase");
 }
 <fieldset>
+    <label for="@Html.FieldIdFor(m => m.ItemsDisplayMode)">@T("Default Item Display Mode")</label>
+    @Html.EditorFor(m => m.ItemsDisplayMode)
+</fieldset>
+<fieldset>
+    <label for="@Html.FieldIdFor(m => m.ContainerTag)">@T("Default Container Tag")</label>
+    @Html.EditorFor(m => m.ContainerTag)
+</fieldset>
+<fieldset>
+    <label for="@Html.FieldIdFor(m => m.ItemTag)">@T("Default Item Tag")</label>
+    @Html.EditorFor(m => m.ItemTag)
+</fieldset>
+<fieldset>
     <label for="@Html.FieldIdFor(m => m.ItemsShownDefault)">@T("Default Items Shown")</label>
     @Html.EditorFor(m => m.ItemsShownDefault)
 </fieldset>
