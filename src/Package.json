@@ -1,4 +1,5 @@
 {
+    "private": true,
     "devDependencies": {
         "glob": "^5.0.14",
         "path-posix": "^1.0.0",
