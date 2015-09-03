@@ -29,8 +29,8 @@ namespace Orchard.Data.Migration {
         public ILogger Logger { get; set; } 
 
         public void Activated() {
-            DistributedLock @lock;
-            if(_distributedLockService.TryAcquireLockForThread(GetType().FullName, TimeSpan.FromMinutes(30), TimeSpan.FromMilliseconds(250), out @lock)) {
+            IDistributedLock @lock;
+            if(_distributedLockService.TryAcquireLock(GetType().FullName, TimeSpan.FromMinutes(30), TimeSpan.FromMilliseconds(250), out @lock)) {
                 using (@lock) {
                     // Let's make sure that the basic set of features is enabled.  If there are any that are not enabled, then let's enable them first.
                     var theseFeaturesShouldAlwaysBeActive = new[] {

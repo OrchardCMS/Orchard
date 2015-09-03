@@ -3,44 +3,34 @@ using System.Threading;
 
 namespace Orchard.Tasks.Locking.Services {
 
-    /// <summary>
-    /// Represents a distributed lock. />
-    /// </summary>
-    public class DistributedLock : IDisposable {
-        public static DistributedLock ForMachine(IDistributedLockService service, string name, string machineName, string lockId) {
-            return new DistributedLock {
-                _service = service,
-                Name = name,
-                MachineName = machineName,
-                Id = lockId
-            };
+    public class DistributedLock : IDistributedLock {
+
+        private DistributedLockService _service;
+        private string _name;
+        private int _count;
+
+        public string Name {
+            get {
+                return _name;
+            }
         }
 
-        public static DistributedLock ForThread(IDistributedLockService service, string name, string machineName, int threadId, string lockId) {
-            return new DistributedLock {
-                _service = service,
-                Name = name,
-                MachineName = machineName,
-                ThreadId = threadId,
-                Id = lockId
-            };
+        public DistributedLock(DistributedLockService service, string name) {
+            _service = service;
+            _name = name;
+            _count = 1;
         }
 
-        private IDistributedLockService _service;
-        private int _isDisposed;
-
-        private DistributedLock() {
+        public void IncreaseReferenceCount() {
+            _count++;
         }
 
-        public string Id { get; private set; }
-        public string Name { get; private set; }
-        public string MachineName { get; private set; }
-        public int? ThreadId { get; private set; }
-
-        // This will be called at least and at the latest by the IoC container when the request ends.
         public void Dispose() {
-            if(Interlocked.CompareExchange(ref _isDisposed, 1, 0) == 0)
-                _service.ReleaseLock(this);
+            _count--;
+            if (_count == 0) {
+                Monitor.Exit(String.Intern(_name));
+                _service.ReleaseDistributedLock(this);
+            }
         }
     }
 }

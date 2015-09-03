@@ -51,8 +51,8 @@ namespace Orchard.Azure.MediaServices.Services.Jobs {
                     }
 
                     // Only allow this task to run on one farm node at a time.
-                    DistributedLock @lock;
-                    if (_distributedLockService.TryAcquireLockForMachine(GetType().FullName, TimeSpan.FromHours(1), out @lock)) {
+                    IDistributedLock @lock;
+                    if (_distributedLockService.TryAcquireLock(GetType().FullName, TimeSpan.FromHours(1), out @lock)) {
                         using (@lock) {
                             var jobs = _jobManager.GetActiveJobs().ToDictionary(job => job.WamsJobId);
 
