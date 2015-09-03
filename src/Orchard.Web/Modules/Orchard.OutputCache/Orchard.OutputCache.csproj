@@ -109,6 +109,22 @@
     <Compile Include="Models\CacheItemRecord.cs" />
     <Compile Include="Models\CacheSettingsPart.cs" />
     <Compile Include="Models\CacheParameterRecord.cs" />
+    <Compile Include="Models\AbilityToCacheResponse.cs" />
+    <Compile Include="Providers\ResponseIsCacheableProviders\NotificationsResponseIsCacheableProvider.cs" />
+    <Compile Include="Providers\RequestIsCacheableProviders\AdminFilterRequestIsCacheableProvider.cs" />
+    <Compile Include="Providers\CacheKeyCompositeProviders\ActionParametersOutputCacheKeyCompositeProvider.cs" />
+    <Compile Include="Providers\RequestIsCacheableProviders\AuthenticatedRequestIsCacheableProvider.cs" />
+    <Compile Include="Providers\CacheKeyCompositeProviders\AuthenticationStateOutputCacheKeyCompositeProvider.cs" />
+    <Compile Include="Providers\CacheKeyCompositeProviders\CultureOutputCacheKeyCompositeProvider.cs" />
+    <Compile Include="Providers\CacheKeyCompositeProviders\HeadersOutputCacheKeyCompositeProvider.cs" />
+    <Compile Include="Providers\IOutputCacheKeyCompositeProvider.cs" />
+    <Compile Include="Providers\IRequestIsCacheableProvider.cs" />
+    <Compile Include="Providers\IResponseIsCacheableProvider.cs" />
+    <Compile Include="Providers\CacheKeyCompositeProviders\QueryStringOutputCacheKeyCompositeProvider.cs" />
+    <Compile Include="Providers\CacheKeyCompositeProviders\ThemeOutputCacheKeyCompositeProvider.cs" />
+    <Compile Include="Providers\RequestIsCacheableProviders\OutputCacheAttributeRequestIsCacheableProvider.cs" />
+    <Compile Include="Providers\RequestIsCacheableProviders\PostRequestIsCacheableProvider.cs" />
+    <Compile Include="Providers\ResponseIsCacheableProviders\RouteConfigurationResponseIsCacheableProvider.cs" />
     <Compile Include="Services\CacheService.cs" />
     <Compile Include="Services\FileSystemOutputCacheBackgroundTask.cs" />
     <Compile Include="Services\DatabaseOutputCacheBackgroundTask.cs" />
@@ -133,6 +149,7 @@
   <ItemGroup>
     <Content Include="Views\Admin\Index.cshtml" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

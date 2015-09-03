@@ -19,6 +19,7 @@ using Orchard.Mvc.Extensions;
 using Orchard.Mvc.Filters;
 using Orchard.OutputCache.Helpers;
 using Orchard.OutputCache.Models;
+using Orchard.OutputCache.Providers;
 using Orchard.OutputCache.Services;
 using Orchard.Services;
 using Orchard.Themes;
@@ -43,6 +44,10 @@ namespace Orchard.OutputCache.Filters {
         private readonly ICacheService _cacheService;
         private readonly ISignals _signals;
         private readonly ShellSettings _shellSettings;
+        private readonly IEnumerable<IRequestIsCacheableProvider> _requestIsCacheableProviders;
+        private readonly IEnumerable<IResponseIsCacheableProvider> _responseIsCacheableProviders;
+        private readonly IEnumerable<IOutputCacheKeyCompositeProvider> _outputCacheCompositeKeyProviders;
+
         public ILogger Logger { get; set; }
 
         public OutputCacheFilter(
@@ -55,7 +60,10 @@ namespace Orchard.OutputCache.Filters {
             IClock clock,
             ICacheService cacheService,
             ISignals signals,
-            ShellSettings shellSettings) {
+            ShellSettings shellSettings, 
+            IEnumerable<IResponseIsCacheableProvider> responseIsCacheableProviders, 
+            IEnumerable<IRequestIsCacheableProvider> requestIsCacheableProviders, 
+            IEnumerable<IOutputCacheKeyCompositeProvider> outputCacheCompositeKeyProviders) {
 
             _cacheManager = cacheManager;
             _cacheStorageProvider = cacheStorageProvider;
@@ -67,6 +75,9 @@ namespace Orchard.OutputCache.Filters {
             _cacheService = cacheService;
             _signals = signals;
             _shellSettings = shellSettings;
+            _responseIsCacheableProviders = responseIsCacheableProviders;
+            _requestIsCacheableProviders = requestIsCacheableProviders;
+            _outputCacheCompositeKeyProviders = outputCacheCompositeKeyProviders;
 
             Logger = NullLogger.Instance;
         }
@@ -269,7 +280,6 @@ namespace Orchard.OutputCache.Filters {
         }
 
         protected virtual bool RequestIsCacheable(ActionExecutingContext filterContext) {
-
             var itemDescriptor = string.Empty;
 
             if (Logger.IsEnabled(LogLevel.Debug)) {
@@ -284,42 +294,33 @@ namespace Orchard.OutputCache.Filters {
                 itemDescriptor = string.Format("{0} (Area: {1}, Controller: {2}, Action: {3}, Culture: {4}, Theme: {5}, Auth: {6})", url, area, controller, action, culture, theme, auth);
             }
 
-            // Respect OutputCacheAttribute if applied.
-            var actionAttributes = filterContext.ActionDescriptor.GetCustomAttributes(typeof(OutputCacheAttribute), true);
-            var controllerAttributes = filterContext.ActionDescriptor.ControllerDescriptor.GetCustomAttributes(typeof(OutputCacheAttribute), true);
-            var outputCacheAttribute = actionAttributes.Concat(controllerAttributes).Cast<OutputCacheAttribute>().FirstOrDefault();
-            if (outputCacheAttribute != null) {
-                if (outputCacheAttribute.Duration <= 0 || outputCacheAttribute.NoStore || outputCacheAttribute.LocationIsIn(OutputCacheLocation.Downstream, OutputCacheLocation.Client, OutputCacheLocation.None)) {
-                    Logger.Debug("Request for item '{0}' ignored based on OutputCache attribute.", itemDescriptor);
-                    return false;
+            foreach (var provider in _requestIsCacheableProviders) {
+                try {
+                    var providerResponse = provider.RequestIsCacheable(filterContext, CacheSettings);
+
+                    if (providerResponse == null) {
+                        continue;
+                    }
+
+                    if (!providerResponse.CanBeCached) {
+                        Logger.Debug("Request for item '{0}' ignored with message: {1}", itemDescriptor, providerResponse.Message ?? "An IRequestIsCacheableProvider determined that this request was not cacheable");
+                        return false;
+                    }
+                }
+                catch (Exception ex) {
+                    Logger.Error(ex, "An exception was encountered while processing the Request Is Cacheable Providers.");
                 }
             }
 
-            // Don't cache POST requests.
-            if (filterContext.HttpContext.Request.HttpMethod.Equals("POST", StringComparison.OrdinalIgnoreCase)) {
-                Logger.Debug("Request for item '{0}' ignored because HTTP method is POST.", itemDescriptor);
-                return false;
-            }
-
-            // Don't cache admin section requests.
-            if (AdminFilter.IsApplied(new RequestContext(filterContext.HttpContext, new RouteData()))) {
-                Logger.Debug("Request for item '{0}' ignored because it's in admin section.", itemDescriptor);
-                return false;
-            }
-
-            // Ignore authenticated requests unless the setting to cache them is true.
-            if (_workContext.CurrentUser != null && !CacheSettings.CacheAuthenticatedRequests) {
-                Logger.Debug("Request for item '{0}' ignored because user is authenticated.", itemDescriptor);
-                return false;
-            }
-
             // Don't cache ignored URLs.
+            // This check is not performed in an IRequestIsCacheableProvider because the method IsIgnoredUrl is protected virtual and removing it from this filter would introduce a breaking change. 
             if (IsIgnoredUrl(filterContext.RequestContext.HttpContext.Request.AppRelativeCurrentExecutionFilePath, CacheSettings.IgnoredUrls)) {
                 Logger.Debug("Request for item '{0}' ignored because the URL is configured as ignored.", itemDescriptor);
                 return false;
             }
 
             // Ignore requests with the refresh key on the query string.
+            // This check is not performed in an IRequestIsCacheableProvider because it requires knowledge of the Refresh Key. 
             foreach (var key in filterContext.RequestContext.HttpContext.Request.QueryString.AllKeys) {
                 if (String.Equals(_refreshKey, key, StringComparison.OrdinalIgnoreCase)) {
                     Logger.Debug("Request for item '{0}' ignored because refresh key was found on query string.", itemDescriptor);
@@ -336,22 +337,29 @@ namespace Orchard.OutputCache.Filters {
                 return false;
             }
 
+            foreach (var provider in _responseIsCacheableProviders) {
+                try {
+                    var providerResponse = provider.ResponseIsCacheable(filterContext, configuration, CacheSettings);
+
+                    if (providerResponse == null) {
+                        continue;
+                    }
+
+                    if (!providerResponse.CanBeCached) {
+                        Logger.Debug("Response for item '{0}' will not be cached because: {1}", _cacheKey, providerResponse.Message ?? "An IResponseIsCacheableProvider determined that this request was not cacheable");
+
+                        return false;
+                    }
+                }
+                catch (Exception ex) {
+                    Logger.Error(ex, "An exception was encountered while processing the Request Is Cacheable Providers.");
+                }
+            }
+
             // Don't cache non-200 responses or results of a redirect.
+            // This check is not performed in an IResponseIsCacheableProvider because it requires knowledge of the value of _transformRedirect which is set with a protected virtual method and therefore removing this method from this filter would introduce a breaking change. 
             var response = filterContext.HttpContext.Response;
             if (response.StatusCode != (int)HttpStatusCode.OK || _transformRedirect) {
-                return false;
-            }
-
-            // Don't cache in individual route configuration says no.
-            if (configuration != null && configuration.Duration == 0) {
-                Logger.Debug("Response for item '{0}' will not be cached because route is configured to not be cached.", _cacheKey);
-                return false;
-            }
-
-            // Don't cache if request created notifications.
-            var hasNotifications = !String.IsNullOrEmpty(Convert.ToString(filterContext.Controller.TempData["messages"]));
-            if (hasNotifications) {
-                Logger.Debug("Response for item '{0}' will not be cached because one or more notifications were created.", _cacheKey);
                 return false;
             }
 
@@ -360,38 +368,18 @@ namespace Orchard.OutputCache.Filters {
 
         protected virtual IDictionary<string, object> GetCacheKeyParameters(ActionExecutingContext filterContext) {
             var result = new Dictionary<string, object>();
-            
-            // Vary by action parameters.
-            foreach (var p in filterContext.ActionParameters)
-                result.Add("PARAM:" + p.Key, p.Value);
 
-            // Vary by theme.
-            result.Add("theme", _themeManager.GetRequestTheme(filterContext.RequestContext).Id.ToLowerInvariant());
+            try {
+                foreach (var provider in _outputCacheCompositeKeyProviders) {
+                    var kvps = provider.GetCacheKeySegment(filterContext, CacheSettings);
 
-            // Vary by configured query string parameters.
-            var queryString = filterContext.RequestContext.HttpContext.Request.QueryString;
-            foreach (var key in queryString.AllKeys) {
-                if (key == null || (CacheSettings.VaryByQueryStringParameters != null && !CacheSettings.VaryByQueryStringParameters.Contains(key)))
-                    continue;
-                result[key] = queryString[key];
+                    foreach (var kvp in kvps) {
+                        result[kvp.Key] = kvp.Value;
+                    }
+                }
             }
-
-            // Vary by configured request headers.
-            var requestHeaders = filterContext.RequestContext.HttpContext.Request.Headers;
-            foreach (var varyByRequestHeader in CacheSettings.VaryByRequestHeaders) {
-                if (requestHeaders.AllKeys.Contains(varyByRequestHeader))
-                    result["HEADER:" + varyByRequestHeader] = requestHeaders[varyByRequestHeader];
-            }
-
-            
-            // Vary by request culture if configured.
-            if (CacheSettings.VaryByCulture) {
-                result["culture"] = _workContext.CurrentCulture.ToLowerInvariant();
-            }
-
-            // Vary by authentication state if configured.
-            if (CacheSettings.VaryByAuthenticationState) {
-                result["auth"] = filterContext.HttpContext.User.Identity.IsAuthenticated.ToString().ToLowerInvariant();
+            catch (Exception ex) {
+                Logger.Error(ex, "An Output Cache Composite Key Provider threw an exception when evaluating the key segments. This provider will be ignored.");
             }
 
             return result;
