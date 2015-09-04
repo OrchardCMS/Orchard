@@ -22,11 +22,11 @@ namespace Orchard.FileSystems.Dependencies {
         private string[] _extensionsVirtualPathPrefixes;
 
 
-        public DynamicModuleVirtualPathProvider(IExtensionDependenciesManager extensionDependenciesManager, AppLocations appLocations) {
+        public DynamicModuleVirtualPathProvider(IExtensionDependenciesManager extensionDependenciesManager, ExtensionLocations extensionLocations) {
             _extensionDependenciesManager = extensionDependenciesManager;
             Logger = NullLogger.Instance;
 
-            _extensionsVirtualPathPrefixes = appLocations.ModuleAndThemeLocations;
+            _extensionsVirtualPathPrefixes = extensionLocations.ModuleAndThemeLocations;
         }
 
         public ILogger Logger { get; set; }

@@ -153,8 +153,8 @@ namespace Orchard.Tests.Environment.Loaders {
                 IAssemblyProbingFolder assemblyProbingFolder,
                 IDependenciesFolder dependenciesFolder,
                 IProjectFileParser projectFileParser,
-                AppLocations appLocations)
-                : base(buildManager, virtualPathProvider, virtualPathMonitor, hostEnvironment, assemblyProbingFolder, dependenciesFolder, projectFileParser, appLocations) {}
+                ExtensionLocations extensionLocations)
+                : base(buildManager, virtualPathProvider, virtualPathMonitor, hostEnvironment, assemblyProbingFolder, dependenciesFolder, projectFileParser, extensionLocations) {}
 
             public IEnumerable<string> GetDependenciesAccessor(string projectPath) {
                 return GetDependencies(projectPath);

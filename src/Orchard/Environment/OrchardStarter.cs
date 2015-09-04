@@ -41,12 +41,11 @@ using System.Web.Configuration;
 namespace Orchard.Environment {
     public static class OrchardStarter {
         public static IContainer CreateHostContainer(Action<ContainerBuilder> registrations) {
-            AppLocations applLocations = new AppLocations(null);
+            ExtensionLocations extensionLocations = new ExtensionLocations();
 
             var builder = new ContainerBuilder();
             // Application paths and parameters
-            builder.RegisterInstance(applLocations);
-
+            builder.RegisterInstance(extensionLocations);
 
             builder.RegisterModule(new CollectionOrderModule());
             builder.RegisterModule(new LoggingModule());
@@ -107,11 +106,11 @@ namespace Orchard.Environment {
                         {
                             builder.RegisterType<ExtensionHarvester>().As<IExtensionHarvester>().SingleInstance();
                             builder.RegisterType<ModuleFolders>().As<IExtensionFolders>().SingleInstance()
-                                .WithParameter(new NamedParameter("paths", applLocations.ModuleLocations));
+                                .WithParameter(new NamedParameter("paths", extensionLocations.ModuleLocations));
                             builder.RegisterType<CoreModuleFolders>().As<IExtensionFolders>().SingleInstance()
-                                .WithParameter(new NamedParameter("paths", applLocations.CoreLocations));
+                                .WithParameter(new NamedParameter("paths", extensionLocations.CoreLocations));
                             builder.RegisterType<ThemeFolders>().As<IExtensionFolders>().SingleInstance()
-                                .WithParameter(new NamedParameter("paths", applLocations.ThemeLocations));
+                                .WithParameter(new NamedParameter("paths", extensionLocations.ThemeLocations));
 
                             builder.RegisterType<CoreExtensionLoader>().As<IExtensionLoader>().SingleInstance();
                             builder.RegisterType<ReferencedExtensionLoader>().As<IExtensionLoader>().SingleInstance();

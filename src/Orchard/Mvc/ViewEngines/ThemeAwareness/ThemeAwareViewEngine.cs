@@ -101,10 +101,10 @@ namespace Orchard.Mvc.ViewEngines.ThemeAwareness {
 
                 var moduleLocations = enabledModules
                     .Select(fd => fd.Extension.Location)
-                    .Distinct(StringComparer.OrdinalIgnoreCase) // is Distinct guaranty to keep order?
+                    .Distinct(StringComparer.OrdinalIgnoreCase) 
                     .ToList();
 
-                var moduleParams = new CreateModulesViewEngineParams { VirtualPaths = moduleVirtualPaths, ModuleLocations = moduleLocations };
+                var moduleParams = new CreateModulesViewEngineParams { VirtualPaths = moduleVirtualPaths, ExtensionLocations = moduleLocations };
                 engines = engines.Concat(_viewEngineProviders.Select(vep => vep.CreateModulesViewEngine(moduleParams)));
 
                 return new ViewEngineCollectionWrapper(engines);

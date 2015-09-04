@@ -33,7 +33,7 @@ namespace Orchard.Environment.Extensions.Loaders {
             IAssemblyProbingFolder assemblyProbingFolder,
             IDependenciesFolder dependenciesFolder,
             IProjectFileParser projectFileParser,
-            AppLocations appLocations)
+            ExtensionLocations extensionLocations)
             : base(dependenciesFolder) {
 
             _buildManager = buildManager;
@@ -46,7 +46,7 @@ namespace Orchard.Environment.Extensions.Loaders {
 
             Logger = NullLogger.Instance;
 
-            _extensionsVirtualPathPrefixes = appLocations.ModuleAndThemeLocations;
+            _extensionsVirtualPathPrefixes = extensionLocations.ModuleAndThemeLocations;
         }
 
         public ILogger Logger { get; set; }

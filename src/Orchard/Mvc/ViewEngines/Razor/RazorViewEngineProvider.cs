@@ -60,7 +60,7 @@ namespace Orchard.Mvc.ViewEngines.Razor {
 
         public IViewEngine CreateModulesViewEngine(CreateModulesViewEngineParams parameters) {
             //TBD: It would probably be better to determined the area deterministically from the module of the controller, not by trial and error.
-            var areaFormats = parameters.ModuleLocations.Select(ml => ml + "/{2}/Views/{1}/{0}.cshtml").ToArray();
+            var areaFormats = parameters.ExtensionLocations.Select(location => location + "/{2}/Views/{1}/{0}.cshtml").ToArray();
 
             //Logger.Debug("AreaFormats (module): \r\n\t-{0}", string.Join("\r\n\t-", areaFormats));
 

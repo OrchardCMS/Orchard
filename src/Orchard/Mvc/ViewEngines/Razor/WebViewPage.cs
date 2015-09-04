@@ -114,7 +114,7 @@ namespace Orchard.Mvc.ViewEngines.Razor {
         }
 
         private string[] _commonLocations;
-        public string[] CommonLocations { get { return _commonLocations ?? (_commonLocations = WorkContext.Resolve<AppLocations>().CommonLocations); } } 
+        public string[] CommonLocations { get { return _commonLocations ?? (_commonLocations = WorkContext.Resolve<ExtensionLocations>().CommonLocations); } } 
 
         public void RegisterImageSet(string imageSet, string style = "", int size = 16) {
             // hack to fake the style "alternate" for now so we don't have to change stylesheet names when this is hooked up
