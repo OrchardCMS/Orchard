@@ -41,7 +41,7 @@ namespace Orchard.Tasks {
         }
 
         void Elapsed(object sender, ElapsedEventArgs e) {
-            // Current implementation disallows re-entrancy.
+            // current implementation disallows re-entrancy
             if (!System.Threading.Monitor.TryEnter(_timer))
                 return;
 
@@ -60,7 +60,7 @@ namespace Orchard.Tasks {
 
         public void DoWork() {
             using (var scope = _workContextAccessor.CreateWorkContextScope()) {
-                // Resolve the manager and invoke it.
+                // resolve the manager and invoke it
                 var manager = scope.Resolve<IBackgroundService>();
                 manager.Sweep();
             }

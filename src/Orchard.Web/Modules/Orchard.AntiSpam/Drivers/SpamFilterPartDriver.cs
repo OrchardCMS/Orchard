@@ -42,6 +42,11 @@ namespace Orchard.AntiSpam.Drivers {
         }
 
         protected override void Importing(SpamFilterPart part, ImportContentContext context) {
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
+            }
+
             var status = context.Attribute(part.PartDefinition.Name, "Status");
             
             if (status != null) {

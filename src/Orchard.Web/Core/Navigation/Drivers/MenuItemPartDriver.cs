@@ -35,10 +35,14 @@ namespace Orchard.Core.Navigation.Drivers {
         }
 
         protected override void Importing(MenuItemPart part, ContentManagement.Handlers.ImportContentContext context) {
-            var url = context.Attribute(part.PartDefinition.Name, "Url");
-            if (url != null) {
-                part.Url = url;
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
             }
+
+            context.ImportAttribute(part.PartDefinition.Name, "Url", url =>
+                part.Url = url
+            );
         }
 
         protected override void Exporting(MenuItemPart part, ContentManagement.Handlers.ExportContentContext context) {

@@ -16,7 +16,6 @@ namespace Orchard.Layouts.Handlers {
         private readonly IContentPartDisplay _contentPartDisplay;
         private readonly IShapeDisplay _shapeDisplay;
         private readonly ILayoutSerializer _serializer;
-        private readonly IStaticHttpContextScopeFactory _staticHttpContextScopeFactory;
         private readonly IAliasService _aliasService;
 
         public LayoutPartHandler(
@@ -26,7 +25,6 @@ namespace Orchard.Layouts.Handlers {
             IContentPartDisplay contentPartDisplay, 
             IShapeDisplay shapeDisplay, 
             ILayoutSerializer serializer,
-            IStaticHttpContextScopeFactory staticHttpContextScopeFactory,
             IAliasService aliasService) {
 
             _layoutManager = layoutManager;
@@ -34,7 +32,6 @@ namespace Orchard.Layouts.Handlers {
             _contentPartDisplay = contentPartDisplay;
             _shapeDisplay = shapeDisplay;
             _serializer = serializer;
-            _staticHttpContextScopeFactory = staticHttpContextScopeFactory;
             _aliasService = aliasService;
 
             Filters.Add(StorageFilter.For(repository));
@@ -44,20 +41,11 @@ namespace Orchard.Layouts.Handlers {
 
         private void IndexLayout(IndexContentContext context, LayoutPart part) {
             var layoutShape = _contentPartDisplay.BuildDisplay(part);
-            var layoutHtml = RenderShape(layoutShape);
+            var layoutHtml = _shapeDisplay.Display(layoutShape);
 
             context.DocumentIndex
                 .Add("body", layoutHtml).RemoveTags().Analyze()
                 .Add("format", "html").Store();
-        }
-
-        /// <summary>
-        /// This method of rendering is safe even in background tasks.
-        /// </summary>
-        private string RenderShape(dynamic shape) {
-            using (_staticHttpContextScopeFactory.CreateStaticScope()) {
-                return _shapeDisplay.Display(shape);
-            }
         }
 
         private void UpdateTemplateClients(PublishContentContext context, LayoutPart part) {

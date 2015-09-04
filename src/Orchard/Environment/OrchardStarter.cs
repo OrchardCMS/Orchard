@@ -63,7 +63,7 @@ namespace Orchard.Environment {
             builder.RegisterType<AppDomainAssemblyNameResolver>().As<IAssemblyNameResolver>().SingleInstance();
             builder.RegisterType<GacAssemblyNameResolver>().As<IAssemblyNameResolver>().SingleInstance();
             builder.RegisterType<OrchardFrameworkAssemblyNameResolver>().As<IAssemblyNameResolver>().SingleInstance();
-            builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().SingleInstance();
+            builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().InstancePerDependency();
             builder.RegisterType<ViewsBackgroundCompilation>().As<IViewsBackgroundCompilation>().SingleInstance();
             builder.RegisterType<DefaultExceptionPolicy>().As<IExceptionPolicy>().SingleInstance();
             builder.RegisterType<DefaultCriticalErrorProvider>().As<ICriticalErrorProvider>().SingleInstance();

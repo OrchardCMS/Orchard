@@ -1,4 +1,5 @@
 ﻿using Orchard.Autoroute.Models;
+using Orchard.ContentManagement;
 using Orchard.Autoroute.Services;
 using Orchard.Autoroute.Settings;
 using Orchard.ContentManagement;
