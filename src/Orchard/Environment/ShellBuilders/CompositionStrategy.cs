@@ -34,7 +34,11 @@ namespace Orchard.Environment.ShellBuilders {
 
             var builtinFeatures = BuiltinFeatures().ToList();
             var builtinFeatureDescriptors = builtinFeatures.Select(x => x.Descriptor).ToList();
-            var availableFeatures = _extensionManager.AvailableFeatures().Concat(builtinFeatureDescriptors).ToDictionary(x => x.Id, StringComparer.OrdinalIgnoreCase);
+            var availableFeatures = _extensionManager.AvailableFeatures()
+                .Concat(builtinFeatureDescriptors)
+                .GroupBy(x => x.Id.ToLowerInvariant()) // prevent duplicates
+                .Select(x => x.FirstOrDefault())
+                .ToDictionary(x => x.Id, StringComparer.OrdinalIgnoreCase);
             var enabledFeatures = _extensionManager.EnabledFeatures(descriptor).Select(x => x.Id).ToList();
             var expandedFeatures = ExpandDependencies(availableFeatures, descriptor.Features.Select(x => x.Name)).ToList();
             var autoEnabledDependencyFeatures = expandedFeatures.Except(enabledFeatures).Except(builtinFeatureDescriptors.Select(x => x.Id)).ToList();

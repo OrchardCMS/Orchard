@@ -95,6 +95,10 @@ namespace Orchard.Tests.Environment {
                 var ext = new ExtensionDescriptor { Id = "Orchard.Framework" };
                 ext.Features = new[] { new FeatureDescriptor { Extension = ext, Id = ext.Id } };
                 yield return ext;
+
+                var settings = new ExtensionDescriptor { Id = "Settings" };
+                settings.Features = new[] { new FeatureDescriptor { Extension = settings, Id = settings.Id } };
+                yield return settings;
             }
 
             public IEnumerable<FeatureDescriptor> AvailableFeatures() {
@@ -177,6 +181,7 @@ namespace Orchard.Tests.Environment {
             Assert.That(again2a, Is.SameAs(dep2a));
             Assert.That(again2b, Is.SameAs(dep2b));
         }
+
         [Test]
         public void SingletonDependenciesShouldBeUniquePerShell() {
             var host = _lifetime.Resolve<IOrchardHost>();
@@ -200,6 +205,7 @@ namespace Orchard.Tests.Environment {
             Assert.That(dep2, Is.SameAs(dep2a));
             Assert.That(dep2, Is.SameAs(dep2b));
         }
+
         [Test]
         public void TransientDependenciesShouldBeUniquePerResolve() {
             var host = _lifetime.Resolve<IOrchardHost>();
