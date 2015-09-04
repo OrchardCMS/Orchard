@@ -152,6 +152,7 @@
     <Compile Include="BackgroundHttpContextFactory.cs" />
     <Compile Include="Localization\Services\ILocalizationStreamParser.cs" />
     <Compile Include="Localization\Services\LocalizationStreamParser.cs" />
+    <Compile Include="Mvc\Html\LinkExtensions.cs" />
     <Compile Include="Security\ISslSettingsProvider.cs" />
     <Compile Include="Security\Providers\DefaultSslSettingsProvider.cs" />
     <Compile Include="Caching\DefaultCacheContextAccessor.cs" />
