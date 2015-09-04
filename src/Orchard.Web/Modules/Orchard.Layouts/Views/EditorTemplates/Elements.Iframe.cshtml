@@ -1,0 +1,25 @@
+﻿@model Orchard.Layouts.ViewModels.IframeEditorViewModel
+@{
+    Script.Include("AutoFocus.js");
+}
+<fieldset class="autofocus">
+    @Html.LabelFor(m => m.Src, T("Src"))
+    @Html.TextBoxFor(m => m.Src, new { @class = "text large tokenized", autofocus = "autofocus" })
+    @Html.Hint(T("Contained page URL"))
+</fieldset>
+<fieldset>
+    @Html.LabelFor(m => m.Width, T("Width"))
+    @Html.TextBoxFor(m => m.Width, new { @class = "text" })
+    @Html.Hint(T("(optional) Iframe width in pixels"))
+</fieldset>
+<fieldset>
+    @Html.LabelFor(m => m.Height, T("Height"))
+    @Html.TextBoxFor(m => m.Height, new { @class = "text" })
+    @Html.Hint(T("(optional) Iframe height in pixels"))
+</fieldset>
+<fieldset>
+    <label>
+        @Html.CheckBoxFor(m => m.AllowFullscreen)
+        @T("Allow full screen")
+    </label>
+</fieldset>
