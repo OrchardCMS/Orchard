@@ -8,11 +8,11 @@ namespace Orchard.Environment {
     class WorkContextImplementation : WorkContext {
         readonly IComponentContext _componentContext;
         readonly ConcurrentDictionary<string, Func<object>> _stateResolvers = new ConcurrentDictionary<string, Func<object>>();
-        readonly IEnumerable<IWorkContextStateProvider> _workContextStateProviders;
+        readonly IEnumerable<Lazy<IWorkContextStateProvider>> _workContextStateProviders;
 
         public WorkContextImplementation(IComponentContext componentContext) {
             _componentContext = componentContext;
-            _workContextStateProviders = componentContext.Resolve<IEnumerable<IWorkContextStateProvider>>();
+            _workContextStateProviders = componentContext.Resolve<IEnumerable<Lazy<IWorkContextStateProvider>>>();
         }
 
         public override T Resolve<T>() {
@@ -29,7 +29,7 @@ namespace Orchard.Environment {
         }
 
         Func<object> FindResolverForState<T>(string name) {
-            var resolver = _workContextStateProviders.Select(wcsp => wcsp.Get<T>(name)).FirstOrDefault(value => !Equals(value, default(T)));
+            var resolver = _workContextStateProviders.Select(wcsp => wcsp.Value.Get<T>(name)).FirstOrDefault(value => !Equals(value, default(T)));
 
             if (resolver == null) {
                 return () => default(T);
