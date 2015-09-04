@@ -23,6 +23,7 @@ using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
 using Orchard.Security;
 using Orchard.Settings;
+using Orchard.Tasks.Locking.Services;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.Setup.Services {
@@ -153,6 +154,10 @@ namespace Orchard.Setup.Services {
 
                     schemaBuilder.AlterTable("Orchard_Framework_DataMigrationRecord",
                         table => table.AddUniqueConstraint("UC_DMR_DataMigrationClass_Version", "DataMigrationClass", "Version"));
+
+                    // Create the distributed lock record schema.
+                    var distributedLockSchemaBuilder = new DistributedLockSchemaBuilder(_shellSettings, schemaBuilder);
+                    distributedLockSchemaBuilder.CreateSchema();
 
                     var dataMigrationManager = environment.Resolve<IDataMigrationManager>();
                     dataMigrationManager.Update("Settings");
