@@ -1,7 +1,7 @@
 ﻿namespace Orchard.Layouts.Settings {
-    public class ContentPartLayoutSettings {
+    public class ContentTypeLayoutSettings {
         /// <summary>
-        /// This setting is used to configure a content part to be placeable on a layout.
+        /// This setting is used to configure a content type to be placeable on a layout.
         /// </summary>
         public bool Placeable { get; set; }
     }

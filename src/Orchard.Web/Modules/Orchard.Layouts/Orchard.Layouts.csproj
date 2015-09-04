@@ -85,7 +85,6 @@
     <Content Include="Images\illustration.jpg" />
     <Content Include="Images\logo.svg" />
     <Content Include="Placement.info" />
-    <Content Include="Scripts\contentpart-layouts-settings.js" />
     <Content Include="Scripts\DemoConfig.js" />
     <Content Include="Scripts\DemoData.js" />
     <Content Include="Scripts\element-browser.js" />
@@ -394,6 +393,8 @@
     <Compile Include="Services\LayoutModelMapper.cs" />
     <Compile Include="Services\ElementSerializer.cs" />
     <Compile Include="Services\ObjectStore.cs" />
+    <Compile Include="Settings\ContentTypeLayoutSettingsHooks.cs" />
+    <Compile Include="Settings\ContentTypeLayoutSettings.cs" />
     <Compile Include="Signals.cs" />
     <Compile Include="Tokens\ElementTokens.cs" />
     <Compile Include="ViewModels\BreadcrumbsEditorViewModel.cs" />
@@ -430,9 +431,9 @@
     <Compile Include="Services\ContentFieldDisplay.cs" />
     <Compile Include="Services\IContentFieldDisplay.cs" />
     <Compile Include="Settings\ContentPartLayoutSettings.cs" />
-    <Compile Include="Settings\LayoutSettingsHooks.cs" />
+    <Compile Include="Settings\LayoutTypePartSettingsHooks.cs" />
     <Compile Include="Settings\LayoutTypePartSettings.cs" />
-    <Compile Include="Settings\ContentPartSettingsHooks.cs" />
+    <Compile Include="Settings\ContentPartLayoutSettingsHooks.cs" />
     <Compile Include="ViewModels\BlueprintsIndexViewModel.cs" />
     <Compile Include="ViewModels\ContentItemEditorViewModel.cs" />
     <Compile Include="ViewModels\EditElementBlueprintViewModel.cs" />
@@ -597,6 +598,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Elements\Widget.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\DefinitionTemplates\ContentTypeLayoutSettings.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
