@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
@@ -13,7 +12,7 @@ using Orchard.Localization.Services;
 
 namespace Orchard.Tests.Localization {
 
-    [TestFixture]
+    [TestFixture(Ignore = true, IgnoreReason = "Long running tests, stable code.")]
     public class DefaultDateFormatterTests {
 
         [SetUp]
