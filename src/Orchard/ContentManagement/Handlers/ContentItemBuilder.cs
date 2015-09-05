@@ -1,5 +1,5 @@
+using System.Collections.Generic;
 using System.Linq;
-using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Models;
 
 namespace Orchard.ContentManagement.Handlers {
@@ -8,16 +8,16 @@ namespace Orchard.ContentManagement.Handlers {
     /// </summary>
     public class ContentItemBuilder {
         private readonly ContentTypeDefinition _definition;
-        private readonly IContentDefinitionManager _contentDefinitionManager;
+        private readonly IList<ContentPartDefinition> _partDefinitions;
         private readonly ContentItem _item;
 
         /// <summary>
         /// Constructs a new Content Item Builder instance.
         /// </summary>
         /// <param name="definition">The definition for the content item to be built.</param>
-        public ContentItemBuilder(ContentTypeDefinition definition, IContentDefinitionManager contentDefinitionManager = null) {
+        public ContentItemBuilder(ContentTypeDefinition definition, IList<ContentPartDefinition> partDefinitions = null) {
             _definition = definition;
-            _contentDefinitionManager = contentDefinitionManager;
+            _partDefinitions = partDefinitions;
 
             // TODO: could / should be done on the build method ?
             _item = new ContentItem {
@@ -46,8 +46,8 @@ namespace Orchard.ContentManagement.Handlers {
                 if (typePartDefinition == null) {
                     // If the content item's type definition does not define the part, retrieve the part definition.
                     ContentPartDefinition contentPartDefinition = null;
-                    if (_contentDefinitionManager != null) {
-                        contentPartDefinition = _contentDefinitionManager.GetPartDefinition(typeof(TPart).Name);
+                    if (_partDefinitions != null) {
+                        contentPartDefinition = _partDefinitions.Where(p => p.Name == partName).FirstOrDefault() ;
                     }
                     // And create a new type definition for the part.
                     typePartDefinition = new ContentTypePartDefinition(
