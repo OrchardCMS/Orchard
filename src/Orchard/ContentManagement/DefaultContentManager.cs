@@ -91,11 +91,13 @@ namespace Orchard.ContentManagement {
                 contentTypeDefinition = new ContentTypeDefinitionBuilder().Named(contentType).Build();
             }
 
+            var contentPartDefinitions = _contentDefinitionManager.ListPartDefinitions().ToList();
+
             // create a new kernel for the model instance
             var context = new ActivatingContentContext {
                 ContentType = contentTypeDefinition.Name,
                 Definition = contentTypeDefinition,
-                Builder = new ContentItemBuilder(contentTypeDefinition, _contentDefinitionManager)
+                Builder = new ContentItemBuilder(contentTypeDefinition, contentPartDefinitions)
             };
 
             // invoke handlers to weld aspects onto kernel
