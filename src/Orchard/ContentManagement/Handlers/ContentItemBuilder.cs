@@ -15,6 +15,7 @@ namespace Orchard.ContentManagement.Handlers {
         /// Constructs a new Content Item Builder instance.
         /// </summary>
         /// <param name="definition">The definition for the content item to be built.</param>
+        /// <param name="partDefinitions">An optional list of part definitions used to weld parts on the fly.</param>
         public ContentItemBuilder(ContentTypeDefinition definition, IList<ContentPartDefinition> partDefinitions = null) {
             _definition = definition;
             _partDefinitions = partDefinitions;
