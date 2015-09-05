@@ -265,6 +265,18 @@ Website:      https://github.com/sayedihashimi/package-web/
 Copyright:    Copyright 2013 Sayed Ibrahim Hashimi
 License:      Apache 2.0
 
+SQLite
+-----
+Website:      http://sqlite.org
+Copyright:    Public Domain
+License:      Public Domain
+
+SQLite CREATE Statement Parser for .Net
+-----
+Website:      https://github.com/ericschultz/SQLiteParser
+Copyright:    Copyright 2014 Outercurve Foundation
+License:      MIT
+
 SpecFlow
 -----
 Website:      http://www.specflow.org/

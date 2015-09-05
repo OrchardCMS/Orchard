@@ -1,0 +1,1103 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Outercurve.SQLiteParser</name>
+    </assembly>
+    <members>
+        <member name="T:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1">
+            <summary>
+            This interface defines a complete generic visitor for a parse tree produced
+            by <see cref="T:Outercurve.SQLiteParser.SQLiteParserSimpleParser"/>.
+            </summary>
+            <typeparam name="Result">The return type of the visit operation.</typeparam>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitSql_stmt(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Sql_stmtContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.sql_stmt"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitForeign_key_clause__on_update(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Foreign_key_clause__on_updateContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.foreign_key_clause__on_update"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitCompound_operator(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Compound_operatorContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.compound_operator"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitIndexed_column(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Indexed_columnContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.indexed_column"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitCreate_index_stmt(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Create_index_stmtContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.create_index_stmt"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitColumn_name(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Column_nameContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.column_name"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitSelect_stmt__compound_operator_core(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Select_stmt__compound_operator_coreContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.select_stmt__compound_operator_core"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitQualified_table_name(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Qualified_table_nameContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.qualified_table_name"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitResult_column(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Result_columnContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.result_column"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitError_message(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Error_messageContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.error_message"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitSelect_core(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Select_coreContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.select_core"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitTable_constraint__indexed_columns(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Table_constraint__indexed_columnsContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.table_constraint__indexed_columns"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitColumn_constraint__postfix(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Column_constraint__postfixContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.column_constraint__postfix"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitFunction_name(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Function_nameContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.function_name"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitForeign_key_clause__column_list(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Foreign_key_clause__column_listContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.foreign_key_clause__column_list"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitDatabase_name(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Database_nameContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.database_name"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitForeign_key_clause__match(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Foreign_key_clause__matchContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.foreign_key_clause__match"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitTable_constraint__parens_field_list(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Table_constraint__parens_field_listContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.table_constraint__parens_field_list"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitUpdate_stmt__limit_ending(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Update_stmt__limit_endingContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.update_stmt__limit_ending"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitVacuum_stmt(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Vacuum_stmtContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.vacuum_stmt"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitForeign_key_clause__on_delete(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Foreign_key_clause__on_deleteContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.foreign_key_clause__on_delete"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitSelect_core__group_by_having(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Select_core__group_by_havingContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.select_core__group_by_having"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitUnary_operator(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Unary_operatorContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.unary_operator"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitTable_constraint__foreign_key_constraint(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Table_constraint__foreign_key_constraintContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.table_constraint__foreign_key_constraint"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitType_name(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Type_nameContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.type_name"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitTable_alias(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Table_aliasContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.table_alias"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitTable_constraint__check(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Table_constraint__checkContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.table_constraint__check"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitCreate_table_stmt(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Create_table_stmtContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.create_table_stmt"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitJoin_op(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Join_opContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.join_op"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitColumn_constraint(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Column_constraintContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.column_constraint"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitTable_constraint(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Table_constraintContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.table_constraint"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitColumn_def(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Column_defContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.column_def"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitColumn_alias(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Column_aliasContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.column_alias"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitExpr(Outercurve.SQLiteParser.SQLiteParserSimpleParser.ExprContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.expr(System.Int32)"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitSigned_number(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Signed_numberContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.signed_number"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitSelect_core__group_by(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Select_core__group_byContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.select_core__group_by"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitBind_parameter(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Bind_parameterContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.bind_parameter"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitId(Outercurve.SQLiteParser.SQLiteParserSimpleParser.IdContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.id"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitIndex_name(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Index_nameContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.index_name"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitTable_constraint__indexed_column(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Table_constraint__indexed_columnContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.table_constraint__indexed_column"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitSelect_stmt(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Select_stmtContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.select_stmt"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitSingle_source(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Single_sourceContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.single_source"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitTable_name(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Table_nameContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.table_name"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitName(Outercurve.SQLiteParser.SQLiteParserSimpleParser.NameContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.name"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitForeign_key_clause__parens_field_list(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Foreign_key_clause__parens_field_listContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.foreign_key_clause__parens_field_list"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitJoin_constraint(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Join_constraintContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.join_constraint"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitJoin_source(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Join_sourceContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.join_source"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitExpr__function_expr(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Expr__function_exprContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.expr__function_expr"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitBinary_operator(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Binary_operatorContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.binary_operator"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitTable_constraint__index_clause(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Table_constraint__index_clauseContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.table_constraint__index_clause"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitOrdering_term(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Ordering_termContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.ordering_term"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitExpr__function_expr_params(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Expr__function_expr_paramsContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.expr__function_expr_params"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitForeign_key_clause__deferrable(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Foreign_key_clause__deferrableContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.foreign_key_clause__deferrable"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitForeign_key_clause(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Foreign_key_clauseContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.foreign_key_clause"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitLiteral_value(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Literal_valueContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.literal_value"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitTable_constraint__column_list(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Table_constraint__column_listContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.table_constraint__column_list"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitCollation_name(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Collation_nameContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.collation_name"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitUpdate_stmt(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Update_stmtContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.update_stmt"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitRaise_function(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Raise_functionContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.raise_function"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1.VisitConflict_clause(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Conflict_clauseContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.conflict_clause"/>.
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="T:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1">
+            <summary>
+            This class provides an empty implementation of <see cref="T:Outercurve.SQLiteParser.ISQLiteParserSimpleVisitor`1"/>,
+            which can be extended to create a visitor which only needs to handle a subset
+            of the available methods.
+            </summary>
+            <typeparam name="Result">The return type of the visit operation.</typeparam>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitSql_stmt(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Sql_stmtContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.sql_stmt"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitForeign_key_clause__on_update(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Foreign_key_clause__on_updateContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.foreign_key_clause__on_update"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitCompound_operator(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Compound_operatorContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.compound_operator"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitIndexed_column(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Indexed_columnContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.indexed_column"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitCreate_index_stmt(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Create_index_stmtContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.create_index_stmt"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitColumn_name(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Column_nameContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.column_name"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitSelect_stmt__compound_operator_core(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Select_stmt__compound_operator_coreContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.select_stmt__compound_operator_core"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitQualified_table_name(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Qualified_table_nameContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.qualified_table_name"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitResult_column(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Result_columnContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.result_column"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitError_message(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Error_messageContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.error_message"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitSelect_core(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Select_coreContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.select_core"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitTable_constraint__indexed_columns(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Table_constraint__indexed_columnsContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.table_constraint__indexed_columns"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitColumn_constraint__postfix(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Column_constraint__postfixContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.column_constraint__postfix"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitFunction_name(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Function_nameContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.function_name"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitForeign_key_clause__column_list(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Foreign_key_clause__column_listContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.foreign_key_clause__column_list"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitDatabase_name(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Database_nameContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.database_name"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitForeign_key_clause__match(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Foreign_key_clause__matchContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.foreign_key_clause__match"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitTable_constraint__parens_field_list(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Table_constraint__parens_field_listContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.table_constraint__parens_field_list"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitUpdate_stmt__limit_ending(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Update_stmt__limit_endingContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.update_stmt__limit_ending"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitVacuum_stmt(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Vacuum_stmtContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.vacuum_stmt"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitForeign_key_clause__on_delete(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Foreign_key_clause__on_deleteContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.foreign_key_clause__on_delete"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitSelect_core__group_by_having(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Select_core__group_by_havingContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.select_core__group_by_having"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitUnary_operator(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Unary_operatorContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.unary_operator"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitTable_constraint__foreign_key_constraint(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Table_constraint__foreign_key_constraintContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.table_constraint__foreign_key_constraint"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitType_name(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Type_nameContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.type_name"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitTable_alias(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Table_aliasContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.table_alias"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitTable_constraint__check(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Table_constraint__checkContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.table_constraint__check"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitCreate_table_stmt(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Create_table_stmtContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.create_table_stmt"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitJoin_op(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Join_opContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.join_op"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitColumn_constraint(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Column_constraintContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.column_constraint"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitTable_constraint(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Table_constraintContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.table_constraint"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitColumn_def(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Column_defContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.column_def"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitColumn_alias(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Column_aliasContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.column_alias"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitExpr(Outercurve.SQLiteParser.SQLiteParserSimpleParser.ExprContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.expr(System.Int32)"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitSigned_number(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Signed_numberContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.signed_number"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitSelect_core__group_by(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Select_core__group_byContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.select_core__group_by"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitBind_parameter(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Bind_parameterContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.bind_parameter"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitId(Outercurve.SQLiteParser.SQLiteParserSimpleParser.IdContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.id"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitIndex_name(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Index_nameContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.index_name"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitTable_constraint__indexed_column(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Table_constraint__indexed_columnContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.table_constraint__indexed_column"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitSelect_stmt(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Select_stmtContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.select_stmt"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitSingle_source(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Single_sourceContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.single_source"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitTable_name(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Table_nameContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.table_name"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitName(Outercurve.SQLiteParser.SQLiteParserSimpleParser.NameContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.name"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitForeign_key_clause__parens_field_list(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Foreign_key_clause__parens_field_listContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.foreign_key_clause__parens_field_list"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitJoin_constraint(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Join_constraintContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.join_constraint"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitJoin_source(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Join_sourceContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.join_source"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitExpr__function_expr(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Expr__function_exprContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.expr__function_expr"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitBinary_operator(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Binary_operatorContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.binary_operator"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitTable_constraint__index_clause(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Table_constraint__index_clauseContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.table_constraint__index_clause"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitOrdering_term(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Ordering_termContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.ordering_term"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitExpr__function_expr_params(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Expr__function_expr_paramsContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.expr__function_expr_params"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitForeign_key_clause__deferrable(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Foreign_key_clause__deferrableContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.foreign_key_clause__deferrable"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitForeign_key_clause(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Foreign_key_clauseContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.foreign_key_clause"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitLiteral_value(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Literal_valueContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.literal_value"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitTable_constraint__column_list(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Table_constraint__column_listContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.table_constraint__column_list"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitCollation_name(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Collation_nameContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.collation_name"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitUpdate_stmt(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Update_stmtContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.update_stmt"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitRaise_function(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Raise_functionContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.raise_function"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+        <member name="M:Outercurve.SQLiteParser.SQLiteParserSimpleBaseVisitor`1.VisitConflict_clause(Outercurve.SQLiteParser.SQLiteParserSimpleParser.Conflict_clauseContext)">
+            <summary>
+            Visit a parse tree produced by <see cref="M:Outercurve.SQLiteParser.SQLiteParserSimpleParser.conflict_clause"/>.
+            <para>
+            The default implementation returns the result of calling <see cref="M:Antlr4.Runtime.Tree.AbstractParseTreeVisitor`1.VisitChildren(Antlr4.Runtime.Tree.IRuleNode)"/>
+            on <paramref name="context"/>.
+            </para>
+            </summary>
+            <param name="context">The parse tree.</param>
+            <return>The visitor result.</return>
+        </member>
+    </members>
+</doc>

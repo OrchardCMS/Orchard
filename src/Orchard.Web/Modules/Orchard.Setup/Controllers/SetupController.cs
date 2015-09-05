@@ -9,6 +9,7 @@ using Orchard.Setup.ViewModels;
 using Orchard.Localization;
 using Orchard.Themes;
 using Orchard.UI.Notify;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.Setup.Controllers {
     [ValidateInput(false), Themed]
@@ -72,20 +73,18 @@ namespace Orchard.Setup.Controllers {
 
         [HttpPost, ActionName("Index")]
         public ActionResult IndexPOST(SetupViewModel model) {
-            // Sets the setup request timeout to 10 minutes to give enough time to execute custom recipes.
-            HttpContext.Server.ScriptTimeout = 600;
-
             var recipes = _setupService.Recipes().ToList();
 
             // If no builtin provider, a connection string is mandatory.
-            if (model.DatabaseProvider != SetupDatabaseType.Builtin && string.IsNullOrEmpty(model.DatabaseConnectionString))
+            if ((model.DatabaseProvider != SetupDatabaseType.Builtin && model.DatabaseProvider != SetupDatabaseType.SQLite) && string.IsNullOrEmpty(model.DatabaseConnectionString))
                 ModelState.AddModelError("DatabaseConnectionString", T("A connection string is required.").Text);
 
             if (!String.IsNullOrWhiteSpace(model.ConfirmPassword) && model.AdminPassword != model.ConfirmPassword) {
                 ModelState.AddModelError("ConfirmPassword", T("Password confirmation must match.").Text);
             }
 
-            if (model.DatabaseProvider != SetupDatabaseType.Builtin && !string.IsNullOrWhiteSpace(model.DatabaseTablePrefix)) {
+            if ((model.DatabaseProvider != SetupDatabaseType.Builtin && model.DatabaseProvider != SetupDatabaseType.SQLite) && !String.IsNullOrWhiteSpace(model.DatabaseTablePrefix))
+            {
                 model.DatabaseTablePrefix = model.DatabaseTablePrefix.Trim();
                 if (!Char.IsLetter(model.DatabaseTablePrefix[0])) {
                     ModelState.AddModelError("DatabaseTablePrefix", T("The table prefix must begin with a letter.").Text);
@@ -128,9 +127,9 @@ namespace Orchard.Setup.Controllers {
                     case SetupDatabaseType.MySql:
                         providerName = "MySql";
                         break;
-
-                    case SetupDatabaseType.PostgreSql:
-                        providerName = "PostgreSql";
+                    case SetupDatabaseType.SQLite:
+                        providerName = "SQLite";
+                        break;
                         break;
 
                     default:

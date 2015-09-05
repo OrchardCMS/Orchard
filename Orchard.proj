@@ -10,6 +10,7 @@
     <MsBuildTasksFolder>$(MSBuildProjectDirectory)\buildtasks</MsBuildTasksFolder>
     <ArtifactsFolder>$(MSBuildProjectDirectory)\artifacts</ArtifactsFolder>
     <SqlCeFolder>$(MSBuildProjectDirectory)\lib\sqlce</SqlCeFolder>
+	<SQLiteFolder>$(MSBuildProjectDirectory)\lib\sqlite</SQLiteFolder>
     <SourceArtifactFolder>$(ArtifactsFolder)\Source</SourceArtifactFolder>
     <MsDeployArtifactFolder>$(ArtifactsFolder)\MsDeploy</MsDeployArtifactFolder>
     <GalleryArtifactFolder>$(ArtifactsFolder)\Gallery</GalleryArtifactFolder>
@@ -189,6 +190,8 @@
     <ItemGroup>
       <SqlCe-Native-Binaries-x86 Include="$(SqlCeFolder)\x86\**\*"/>
       <SqlCe-Native-Binaries-amd64 Include="$(SqlCeFolder)\amd64\**\*"/>
+	  <SQLite-Native-Binaries-x86 Include="$(SQLiteFolder)\x86\**\*"/>
+      <SQLite-Native-Binaries-amd64 Include="$(SQLiteFolder)\amd64\**\*"/>
       <Stage-Orchard-Web-Bins Include="$(WebSitesFolder)\Orchard.Web\bin\*"/>
       <Stage-Bin-Exclude Include="$(WebSitesFolder)\**\bin\**\*" />
       <Stage-Web Include="$(WebSitesFolder)\Orchard.Web\**\*;$(SrcFolder)\Orchard.Web\*.csproj;" Exclude="$(SrcFolder)\Orchard.Web\Orchard.Web.csproj;$(SrcFolder)\Orchard.Web\**\*.Release.config;$(SrcFolder)\Orchard.Web\**\*.Debug.config"/>
@@ -259,6 +262,8 @@
     <Copy SourceFiles="@(Stage-PoFiles)" DestinationFolder="$(StageFolder)\%(RecursiveDir)"/>
     <Copy SourceFiles="@(SqlCe-Native-Binaries-x86)" DestinationFolder="$(StageFolder)\bin\x86\%(RecursiveDir)"/>
     <Copy SourceFiles="@(SqlCe-Native-Binaries-amd64)" DestinationFolder="$(StageFolder)\bin\amd64\%(RecursiveDir)"/>
+	<Copy SourceFiles="@(SQLite-Native-Binaries-x86)" DestinationFolder="$(StageFolder)\bin\x86\%(RecursiveDir)"/>
+    <Copy SourceFiles="@(SQLite-Native-Binaries-amd64)" DestinationFolder="$(StageFolder)\bin\amd64\%(RecursiveDir)"/>
     <Copy SourceFiles="@(Stage-Core)" DestinationFolder="$(StageFolder)\Core\%(RecursiveDir)"/>
     <Copy SourceFiles="@(Stage-Modules)" DestinationFiles="@(Stage-Modules->'$(StageFolder)\Modules\%(ModuleName)\%(RecursiveDir)%(Filename)%(Extension)')"/>
     <Copy SourceFiles="@(Stage-Modules-Binaries-Unique)" DestinationFiles="@(Stage-Modules-Binaries-Unique->'$(StageFolder)\Modules\%(ModuleName)\%(RecursiveDir)%(Filename)%(Extension)')"/>

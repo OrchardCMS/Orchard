@@ -19,6 +19,35 @@
             var description = $(this).find(":selected").data("recipe-description"); // reads the html attribute of the selected option
             $("#recipedescription").text(description); // make the contents of <div id="recipe-description"></div> be the escaped description string
         });
-        $(".data").find('input[name=DatabaseProvider]:checked').click();
+
+        $(".embedded").change(function() {
+            alert($(this).find(":selected").attr("selected"));
+            
+        });
+
+        var handleVisibility = function() {
+            if ($("#sqlserver").is(":checked") || $("#mysql").is(":checked")) {
+                $("#databaseDetails").show();
+
+                if ($("#sqlserver").is(":checked")) {
+                    $("#sqlserverDetails").show();
+                    $("#mysqlDetails").hide();
+                } else {
+                    $("#sqlserverDetails").hide();
+                    $("#mysqlDetails").show();
+                }
+            } else {
+                $("#databaseDetails").hide();
+            }
+        };
+
+        
+
+        $("input[name='DatabaseProvider']").change(handleVisibility);
+        var ourClicked = $("input[name='DatabaseProvider'][checked='checked']");
+
+        $("input[name='DatabaseProvider']").not("[checked='checked']")[0].click();
+        ourClicked.click();
+        
     });
 })(jQuery);

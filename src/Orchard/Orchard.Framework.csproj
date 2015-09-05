@@ -59,6 +59,9 @@
     <NoWarn>0436</NoWarn>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Antlr4.Runtime.v4.0">
+      <HintPath>..\..\lib\antlr\Antlr4.Runtime.v4.0.dll</HintPath>
+    </Reference>
     <Reference Include="Autofac, Version=2.1.13.813, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\autofac\Autofac.dll</HintPath>
@@ -103,6 +106,12 @@
     </Reference>
     <Reference Include="Owin">
       <HintPath>..\..\lib\owin\Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Outercurve.SQLiteCreateTree">
+      <HintPath>..\..\lib\sqlite-createsupport\Outercurve.SQLiteCreateTree.dll</HintPath>
+    </Reference>
+    <Reference Include="Outercurve.SQLiteParser">
+      <HintPath>..\..\lib\sqlite-createsupport\Outercurve.SQLiteParser.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations">
@@ -228,12 +237,15 @@
     <Compile Include="Data\DefaultSessionConfigurationEvents.cs" />
     <Compile Include="Data\DoNotMapAttribute.cs" />
     <Compile Include="Data\FetchRequest.cs" />
+    <Compile Include="Data\Migration\Interpreters\DialectService.cs" />
     <Compile Include="Data\SessionConfigurationEventsWithParameters.cs" />
     <Compile Include="Data\ISessionConfigurationEventsWithParameters.cs" />
     <Compile Include="Data\Migration\Interpreters\MySqlCommandInterpreter.cs" />
     <Compile Include="Data\Providers\MySqlStatementProvider.cs" />
     <Compile Include="Data\Providers\SqlCeStatementProvider.cs" />
     <Compile Include="Data\Providers\ISqlStatementProvider.cs" />
+    <Compile Include="Data\Providers\SQLiteDataServicesProvider.cs" />
+    <Compile Include="Data\Providers\SQLiteStatementProvider.cs" />
     <Compile Include="Data\Providers\SqlServerStatementProvider.cs" />
     <Compile Include="Data\Providers\PostgreSqlStatementProvider.cs" />
     <Compile Include="Data\Providers\PostgreSqlDataServicesProvider.cs" />

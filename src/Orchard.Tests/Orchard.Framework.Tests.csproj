@@ -120,6 +120,9 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.SQLite">
+      <HintPath>..\..\lib\sqlite\System.Data.SQLite.dll</HintPath>
+    </Reference>
     <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <HintPath>..\..\lib\sqlce\System.Data.SqlServerCe.dll</HintPath>
       <Private>True</Private>
@@ -215,6 +218,8 @@
     <Compile Include="DatabaseEnabledTestsBase.cs" />
     <Compile Include="DataMigration\SchemaBuilderTests.cs" />
     <Compile Include="DataMigration\DataMigrationTests.cs" />
+    <Compile Include="DataMigration\SQLite\SQLiteDataUtility.cs" />
+    <Compile Include="DataMigration\SQLite\SQLiteSchemaBuilderTestsBase.cs" />
     <Compile Include="DataMigration\Utilities\NullInterpreter.cs" />
     <Compile Include="DataUtility.cs" />
     <Compile Include="Data\Builders\SessionFactoryBuilderTests.cs" />
@@ -404,7 +409,16 @@
     <Copy SourceFiles="@(SqlCeBinariesx86)" DestinationFolder="$(OutputPath)\x86\%(RecursiveDir)" SkipUnchangedFiles="true" />
     <Copy SourceFiles="@(SqlCeBinariesx64)" DestinationFolder="$(OutputPath)\amd64\%(RecursiveDir)" SkipUnchangedFiles="true" />
   </Target>
+  <Target Name="CopySQLiteBinaries">
+    <ItemGroup>
+      <SQLiteBinariesx86 Include="$(ProjectDir)..\..\lib\sqlite\x86\**\*" />
+      <SQLiteBinariesx64 Include="$(ProjectDir)..\..\lib\sqlite\x64\**\*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(SQLiteBinariesx86)" DestinationFolder="$(OutputPath)\x86\%(RecursiveDir)" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(SQLiteBinariesx64)" DestinationFolder="$(OutputPath)\amd64\%(RecursiveDir)" SkipUnchangedFiles="true" />
+  </Target>
   <Target Name="AfterBuild">
     <CallTarget Targets="CopySqlCeBinaries" />
+    <CallTarget Targets="CopySQLiteBinaries" />
   </Target>
 </Project>

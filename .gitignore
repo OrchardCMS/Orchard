@@ -166,6 +166,8 @@ build/
 /artifacts
 *.sln.cache
 src/Orchard.Web/Media/*
+src/Orchard.Web/x86
+src/Orchard.Web/amd64
 log.xml
 profiling/
 *.orig

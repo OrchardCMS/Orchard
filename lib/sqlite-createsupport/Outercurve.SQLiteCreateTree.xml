@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Outercurve.SQLiteCreateTree</name>
+    </assembly>
+    <members>
+        <member name="M:Outercurve.SQLiteCreateTree.AlterTable.NativeAlterTableProcessor.CreateSqlStatements(Outercurve.SQLiteCreateTree.AlterTable.Action.AlterTableCommand)">
+            <summary>
+            returns null if something if we don't have ones we can do natively
+            </summary>
+            <param name="command"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Outercurve.SQLiteCreateTree.Nodes.ColumnConstraint.UniqueConstraintNode.ConflictClause">
+            <summary>
+            Conflict Clause is really weird, it can be empty. We treat that as null.
+            </summary>
+        </member>
+        <member name="P:Outercurve.SQLiteCreateTree.Nodes.ForeignDeferrableNode.IsDeferrable">
+            <summary>
+            NOT? 
+            </summary>
+        </member>
+        <member name="P:Outercurve.SQLiteCreateTree.Nodes.ForeignDeferrableNode.InitiallyImmediate">
+            <summary>
+            ((INITIALLY DEFERRED)| (INITIALLY IMMEDIATE))?
+            </summary>
+        </member>
+    </members>
+</doc>
