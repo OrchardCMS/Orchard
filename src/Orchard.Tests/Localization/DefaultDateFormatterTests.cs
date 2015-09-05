@@ -12,7 +12,8 @@ using Orchard.Localization.Services;
 
 namespace Orchard.Tests.Localization {
 
-    [TestFixture(Ignore = true, IgnoreReason = "Long running tests, stable code.")]
+    [TestFixture()]
+	[Category("longrunning")]
     public class DefaultDateFormatterTests {
 
         [SetUp]
