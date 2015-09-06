@@ -9,6 +9,7 @@ using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Utility;
 using Orchard.Utility.Extensions;
+using Orchard.Exceptions;
 
 namespace Orchard.Environment.Extensions {
     public class ExtensionManager : IExtensionManager {
@@ -119,6 +120,9 @@ namespace Orchard.Environment.Extensions {
                 });
             }
             catch (Exception ex) {
+                if (ex.IsFatal()) {
+                    throw;
+                } 
                 Logger.Error(ex, "Error loading extension '{0}'", extensionId);
                 throw new OrchardException(T("Error while loading extension '{0}'.", extensionId), ex);
             }

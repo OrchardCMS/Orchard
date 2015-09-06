@@ -13,6 +13,7 @@ using Orchard.Tasks;
 using Orchard.UI;
 using Orchard.WebApi.Routes;
 using Owin;
+using Orchard.Exceptions;
 using IModelBinderProvider = Orchard.Mvc.ModelBinders.IModelBinderProvider;
 
 namespace Orchard.Environment {
@@ -102,8 +103,12 @@ namespace Orchard.Environment {
             try {
                 action();
             }
-            catch(Exception e) {
-                Logger.Error(e, "An unexcepted error occured while terminating the Shell");
+            catch(Exception ex) {
+                if (ex.IsFatal()) {
+                    throw;
+                }
+
+                Logger.Error(ex, "An unexcepted error occured while terminating the Shell");
             }
         }
     }

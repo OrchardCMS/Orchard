@@ -11,6 +11,7 @@ using System.Web.Routing;
 using Autofac;
 using Orchard.Mvc.Routes;
 using Orchard.Settings;
+using Orchard.Exceptions;
 
 namespace Orchard.Mvc {
     public class MvcModule : Module {
@@ -31,7 +32,11 @@ namespace Orchard.Mvc {
                 // The "Request" property throws at application startup on IIS integrated pipeline mode.
                 var req = HttpContext.Current.Request;
             }
-            catch (Exception) {
+            catch (Exception ex) {
+                if (ex.IsFatal()) {
+                    throw;
+                }
+
                 return false;
             }
 

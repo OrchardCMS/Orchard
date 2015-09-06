@@ -9,6 +9,7 @@ using Orchard.ContentManagement.MetaData.Services;
 using Orchard.Core.Settings.Metadata.Records;
 using Orchard.Data;
 using Orchard.Logging;
+using Orchard.Exceptions;
 
 namespace Orchard.Core.Settings.Metadata {
     public class ContentDefinitionManager : Component, IContentDefinitionManager {
@@ -282,6 +283,9 @@ namespace Orchard.Core.Settings.Metadata {
                 return XElement.Parse(settings);
             }
             catch (Exception ex) {
+                if (ex.IsFatal()) {                
+                    throw;
+                }
                 Logger.Error(ex, "Unable to parse settings xml");
                 return null;
             }

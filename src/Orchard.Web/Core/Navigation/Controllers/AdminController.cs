@@ -17,6 +17,7 @@ using Orchard.UI.Navigation;
 using Orchard.Utility;
 using System;
 using Orchard.Logging;
+using Orchard.Exceptions;
 
 namespace Orchard.Core.Navigation.Controllers {
     [ValidateInput(false)]
@@ -179,6 +180,10 @@ namespace Orchard.Core.Navigation.Controllers {
                 return View(model);
             }
             catch (Exception exception) {
+                if (exception.IsFatal()) {
+                    throw;
+                } 
+
                 Logger.Error(T("Creating menu item failed: {0}", exception.Message).Text);
                 Services.Notifier.Error(T("Creating menu item failed: {0}", exception.Message));
                 return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));

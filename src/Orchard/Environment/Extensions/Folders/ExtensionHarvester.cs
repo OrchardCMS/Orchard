@@ -8,6 +8,7 @@ using Orchard.FileSystems.WebSite;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Utility.Extensions;
+using Orchard.Exceptions;
 
 namespace Orchard.Environment.Extensions.Folders {
     public class ExtensionHarvester : IExtensionHarvester {
@@ -98,6 +99,9 @@ namespace Orchard.Environment.Extensions.Folders {
                 }
                 catch (Exception ex) {
                     // Ignore invalid module manifests
+                    if (ex.IsFatal()) {
+                        throw;
+                    } 
                     Logger.Error(ex, "The module '{0}' could not be loaded. It was ignored.", extensionId);
                     _criticalErrorProvider.RegisterErrorMessage(T("The extension '{0}' manifest could not be loaded. It was ignored.", extensionId));
                 }

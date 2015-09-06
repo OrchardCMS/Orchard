@@ -7,6 +7,7 @@ using System.Reflection;
 using Autofac.Features.Indexed;
 using Orchard.Exceptions;
 using Orchard.Localization;
+using Orchard.Exceptions;
 
 namespace Orchard.Events {
     public class DefaultOrchardEventBus : IEventBus {
@@ -53,6 +54,9 @@ namespace Orchard.Events {
                 return TryInvoke(eventHandler, messageName, interfaceName, methodName, eventData, out returnValue);
             }
             catch (Exception exception) {
+                if (exception.IsFatal()) {
+                    throw;
+                } 
                 if (!_exceptionPolicy.HandleException(this, exception)) {
                     throw;
                 }
