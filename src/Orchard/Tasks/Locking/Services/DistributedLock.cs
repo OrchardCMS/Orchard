@@ -9,19 +9,19 @@ namespace Orchard.Tasks.Locking.Services {
         private string _name;
         private int _count;
 
-        public string Name {
-            get {
-                return _name;
-            }
-        }
-
         public DistributedLock(DistributedLockService service, string name) {
             _service = service;
             _name = name;
             _count = 1;
         }
 
-        public void IncreaseReferenceCount() {
+        public string Name {
+            get {
+                return _name;
+            }
+        }
+
+        public void Increment() {
             _count++;
         }
 

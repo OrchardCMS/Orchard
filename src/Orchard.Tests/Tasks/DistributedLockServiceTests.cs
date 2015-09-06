@@ -223,14 +223,14 @@ namespace Orchard.Tests.Tasks {
 
             // Create a never expiring lock.
             _machineNameProvider.MachineName = "Orchard Test Machine 1";
-            var attempt1 = _distributedLockService.TryAcquireLock(LockName, maxValidFor: null, timeout: null, l: out @lock);
+            var attempt1 = _distributedLockService.TryAcquireLock(LockName, maxValidFor: null, timeout: null, dLock: out @lock);
             
             // Release the lock.
             _distributedLockService.ReleaseDistributedLock((DistributedLock)@lock);
 
             // Acquire the lock from another machine.
             _machineNameProvider.MachineName = "Orchard Test Machine 2";
-            var attempt2 = _distributedLockService.TryAcquireLock(LockName, maxValidFor: null, timeout: null, l: out @lock);
+            var attempt2 = _distributedLockService.TryAcquireLock(LockName, maxValidFor: null, timeout: null, dLock: out @lock);
 
             // Validate the results.
             Assert.That(attempt1, Is.True);
