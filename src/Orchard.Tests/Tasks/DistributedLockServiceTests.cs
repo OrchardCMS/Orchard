@@ -87,7 +87,6 @@ namespace Orchard.Tests.Tasks {
         
         [Test]
         public void TryAcquiringLockTwiceFails() {
-            _distributedLockService.DisableMonitorLock = true;
             IDistributedLock @lock;
             _machineNameProvider.MachineName = "Orchard Test Machine 1";
             var attempt1 = _distributedLockService.TryAcquireLock(LockName, TimeSpan.FromSeconds(60), out @lock);
@@ -152,11 +151,10 @@ namespace Orchard.Tests.Tasks {
         [Test]
         public void MultipleAcquisitionsFromDifferentMachinesShouldFail() {
             IDistributedLock @lock;
-            _distributedLockService.DisableMonitorLock = true;
             _machineNameProvider.MachineName = "Orchard Test Machine 1";
-            var attempt1 = _distributedLockService.TryAcquireLock(LockName, TimeSpan.FromSeconds(60), out @lock);
+            var attempt1 = _distributedLockService.TryAcquireLock(LockName, TimeSpan.FromMinutes(60), out @lock);
             _machineNameProvider.MachineName = "Orchard Test Machine 2";
-            var attempt2 = _distributedLockService.TryAcquireLock(LockName, TimeSpan.FromSeconds(60), out @lock);
+            var attempt2 = _distributedLockService.TryAcquireLock(LockName, TimeSpan.FromMinutes(60), out @lock);
 
             Assert.That(attempt1, Is.True);
             Assert.That(attempt2, Is.False);
@@ -165,7 +163,6 @@ namespace Orchard.Tests.Tasks {
         [Test]
         public void MultipleAcquisitionsFromDifferentMachinesOnDifferentTenantShouldSucceed() {
             IDistributedLock @lock;
-            _distributedLockService.DisableMonitorLock = true;
             _machineNameProvider.MachineName = "Orchard Test Machine 1";
             var attempt1 = _distributedLockService.TryAcquireLock(LockName, TimeSpan.FromSeconds(60), out @lock);
             _machineNameProvider.MachineName = "Orchard Test Machine 2";
@@ -194,8 +191,6 @@ namespace Orchard.Tests.Tasks {
 
         [Test]
         public void TryAcquireActiveLockWithNullTimeoutReturnsFalseImmediately() {
-            // Disable monitor locking to simulate concurrent requests
-            _distributedLockService.DisableMonitorLock = true;
             CreateNonExpiredActiveLock("Other Machine");
 
             IDistributedLock @lock;
@@ -206,8 +201,6 @@ namespace Orchard.Tests.Tasks {
 
         [Test]
         public void ActiveLockWithUndefinedValidUntilNeverExpires() {
-            // Disable monitor locking to simulate concurrent requests
-            _distributedLockService.DisableMonitorLock = true;
             CreateNonExpiredActiveLockThatNeverExpires("Other Machine");
 
             _clock.Advance(DateTime.MaxValue - _clock.UtcNow); // Fast forward to the End of Time.
@@ -224,9 +217,9 @@ namespace Orchard.Tests.Tasks {
             // Create a never expiring lock.
             _machineNameProvider.MachineName = "Orchard Test Machine 1";
             var attempt1 = _distributedLockService.TryAcquireLock(LockName, maxValidFor: null, timeout: null, dLock: out @lock);
-            
+
             // Release the lock.
-            _distributedLockService.ReleaseDistributedLock((DistributedLock)@lock);
+            @lock.Dispose();
 
             // Acquire the lock from another machine.
             _machineNameProvider.MachineName = "Orchard Test Machine 2";
@@ -239,7 +232,7 @@ namespace Orchard.Tests.Tasks {
 
         private DistributedLockRecord CreateLockRecord(DateTime createdUtc, DateTime? validUntilUtc, string machineName) {
             var record = new DistributedLockRecord {
-                Name = ShellSettings.DefaultName + ":" + LockName,
+                Name = String.Format("DistributedLock:{0}:{1}", ShellSettings.DefaultName, LockName),
                 CreatedUtc = createdUtc,
                 ValidUntilUtc = validUntilUtc,
                 MachineName = machineName,
