@@ -56,20 +56,20 @@ namespace Orchard.Layouts.Services {
         public IEnumerable<CategoryDescriptor> GetCategories(DescribeElementsContext context) {
             var contentType = context.Content != null ? context.Content.ContentItem.ContentType : default(string);
             return _cacheManager.Get(String.Format("ElementCategories-{0}-{1}", contentType ?? "AnyType", context.CacheVaryParam), acquireContext => {
-                var elements = DescribeElements(context);
+                var elementDescriptors = DescribeElements(context);
                 var categoryDictionary = GetCategories();
                 var categoryDescriptorDictionary = new Dictionary<string, CategoryDescriptor>();
 
-                foreach (var element in elements) {
-                    var category = categoryDictionary.ContainsKey(element.Category)
-                        ? categoryDictionary[element.Category]
-                        : new Category(element.Category, T(element.Category), position: int.MaxValue);
+                foreach (var elementDescriptor in elementDescriptors) {
+                    var category = categoryDictionary.ContainsKey(elementDescriptor.Category)
+                        ? categoryDictionary[elementDescriptor.Category]
+                        : new Category(elementDescriptor.Category, T(elementDescriptor.Category), position: int.MaxValue);
 
-                    var descriptor = categoryDescriptorDictionary.ContainsKey(element.Category)
-                        ? categoryDescriptorDictionary[element.Category]
-                        : categoryDescriptorDictionary[element.Category] = new CategoryDescriptor(category.Name, category.DisplayName, category.Description, category.Position);
+                    var descriptor = categoryDescriptorDictionary.ContainsKey(elementDescriptor.Category)
+                        ? categoryDescriptorDictionary[elementDescriptor.Category]
+                        : categoryDescriptorDictionary[elementDescriptor.Category] = new CategoryDescriptor(category.Name, category.DisplayName, category.Description, category.Position);
 
-                    descriptor.Elements.Add(element);
+                    descriptor.Elements.Add(elementDescriptor);
                 }
 
                 acquireContext.Monitor(_signals.When(Signals.ElementDescriptors));

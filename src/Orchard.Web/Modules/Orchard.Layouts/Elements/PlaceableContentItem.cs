@@ -2,9 +2,9 @@
 using Orchard.Layouts.Helpers;
 
 namespace Orchard.Layouts.Elements {
-    public class Widget : Element {
+    public class PlaceableContentItem : Element {
         public override string Category {
-            get { return "Widgets"; }
+            get { return "Content Items"; }
         }
 
         public override bool IsSystemElement {
@@ -15,9 +15,9 @@ namespace Orchard.Layouts.Elements {
             get { return false; }
         }
 
-        public int? WidgetId {
-            get { return this.Retrieve(x => x.WidgetId); }
-            set { this.Store(x => x.WidgetId, value); }
+        public int? ContentItemId {
+            get { return this.Retrieve(x => x.ContentItemId); }
+            set { this.Store(x => x.ContentItemId, value); }
         }
     }
 }
