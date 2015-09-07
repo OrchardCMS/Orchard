@@ -123,8 +123,16 @@ namespace Orchard.Tests.Stubs {
                 return _lifetimeScope.Resolve<T>();
             }
 
+            public override object Resolve(Type serviceType) {
+                return _lifetimeScope.Resolve(serviceType);
+            }
+
             public override bool TryResolve<T>(out T service) {
                 return _lifetimeScope.TryResolve<T>(out service);
+            }
+
+            public override bool TryResolve(Type serviceType, out object service) {
+                return _lifetimeScope.TryResolve(serviceType, out service);
             }
 
             public override T GetState<T>(string name) {

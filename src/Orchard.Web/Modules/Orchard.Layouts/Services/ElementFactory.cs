@@ -5,16 +5,19 @@ using Orchard.Localization;
 namespace Orchard.Layouts.Services {
     public class ElementFactory : IElementFactory {
         private readonly IElementEventHandler _elementEventHandler;
+        private readonly IWorkContextAccessor _workContextAccessor;
 
-        public ElementFactory(IElementEventHandler elementEventHandler) {
+        public ElementFactory(IElementEventHandler elementEventHandler, IWorkContextAccessor workContextAccessor) {
             _elementEventHandler = elementEventHandler;
+            _workContextAccessor = workContextAccessor;
             T = NullLocalizer.Instance;
         }
 
         public Localizer T { get; set; }
 
         public Element Activate(Type elementType, Action<Element> initialize = null) {
-            var element = (Element)Activator.CreateInstance(elementType);
+            var workContext = _workContextAccessor.GetContext();
+            var element = (Element)workContext.Resolve(elementType);
 
             if (initialize != null)
                 initialize(element);
@@ -23,7 +26,8 @@ namespace Orchard.Layouts.Services {
         }
 
         public T Activate<T>(Action<T> initialize = null) where T : Element {
-            var element = (T)Activator.CreateInstance(typeof(T));
+            var workContext = _workContextAccessor.GetContext();
+            var element = workContext.Resolve<T>();
 
             if (initialize != null)
                 initialize(element);
