@@ -31,7 +31,7 @@ namespace Orchard.Autoroute.Recipes.Builders {
 
         public override void Build(BuildContext context) {
             var homeAliasRoute = _homeAliasService.GetHomeRoute() ?? new RouteValueDictionary();
-            var root = new XElement("HomeAlias", homeAliasRoute.Select(x => new XElement(Capitalize(x.Key), x.Value)));
+            var root = new XElement("HomeAlias");
             var homePage = _homeAliasService.GetHomePage(VersionOptions.Latest);
 
             // If the home alias points to a content item, store its identifier in addition to the routevalues,
@@ -40,6 +40,10 @@ namespace Orchard.Autoroute.Recipes.Builders {
             if (homePage != null) {
                 var homePageIdentifier = _contentManager.GetItemMetadata(homePage).Identity.ToString();
                 root.Attr("Id", homePageIdentifier);
+            }
+            else {
+                // The alias does not point to a content item, so export the route values instead.
+                root.Add(homeAliasRoute.Select(x => new XElement(Capitalize(x.Key), x.Value)).ToArray());
             }
 
             context.RecipeDocument.Element("Orchard").Add(root);

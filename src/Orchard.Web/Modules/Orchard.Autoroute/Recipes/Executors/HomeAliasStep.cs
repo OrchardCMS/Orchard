@@ -20,15 +20,16 @@ namespace Orchard.Autoroute.Recipes.Executors {
         
         public override void Execute(RecipeExecutionContext context) {
             var root = context.RecipeStep.Step;
-            var routeValueDictionary = root.Elements().ToDictionary(x => x.Name.LocalName.ToLower(), x => (object)x.Value);
             var homePageIdentifier = root.Attr("Id");
-            var homePageIdentity = new ContentIdentity(homePageIdentifier);
-            var homePage = !String.IsNullOrEmpty(homePageIdentifier) ? _contentManager.ResolveIdentity(homePageIdentity) : default(ContentItem);
+            var homePageIdentity = !String.IsNullOrWhiteSpace(homePageIdentifier) ? new ContentIdentity(homePageIdentifier) : default(ContentIdentity);
+            var homePage = homePageIdentity != null ? _contentManager.ResolveIdentity(homePageIdentity) : default(ContentItem);
 
             if (homePage != null)
                 _homeAliasService.PublishHomeAlias(homePage);
-            else
+            else {
+                var routeValueDictionary = root.Elements().ToDictionary(x => x.Name.LocalName.ToLower(), x => (object) x.Value);
                 _homeAliasService.PublishHomeAlias(new RouteValueDictionary(routeValueDictionary));
+            }
         }
     }
 }
