@@ -3,7 +3,7 @@
     var tagBuilder = TagBuilderExtensions.CreateElementTagBuilder(Model);
 }
 @tagBuilder.StartElement
-@if (Model.WidgetShape != null) {
-    @Display(Model.WidgetShape)
+@if (Model.ContentShape != null) {
+    @Display(Model.ContentShape)
 }
 @tagBuilder.EndElement

@@ -87,6 +87,7 @@
     <Content Include="Placement.info" />
     <Content Include="Scripts\DemoConfig.js" />
     <Content Include="Scripts\DemoData.js" />
+    <Content Include="Scripts\placeable-widget-editor.js" />
     <Content Include="Scripts\element-browser.js" />
     <Content Include="Scripts\AutoFocus.js" />
     <Content Include="Scripts\Elements\Image.js" />
@@ -361,6 +362,8 @@
     <Compile Include="Framework\Elements\IElement.cs" />
     <Compile Include="Handlers\ElementDriversCoordinator.cs" />
     <Compile Include="Handlers\ElementRuleCoordinator.cs" />
+    <Compile Include="Handlers\WidgetPartHandler.cs" />
+    <Compile Include="Helpers\PlaceableContentExtensions.cs" />
     <Compile Include="Helpers\DictionaryExtensions.cs" />
     <Compile Include="Helpers\EditorResultExtensions.cs" />
     <Compile Include="Helpers\ElementDisplayContextHelper.cs" />
@@ -369,6 +372,7 @@
     <Compile Include="Helpers\JsonHelper.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
     <Compile Include="Providers\PlaceableContentElementHarvester.cs" />
+    <Compile Include="ViewModels\PlaceableContentItemViewModel.cs" />
     <Compile Include="Recipes\Builders\CustomElementsStep.cs" />
     <Compile Include="Recipes\Executors\CustomElementsStep.cs" />
     <Compile Include="Providers\BlueprintElementHarvester.cs" />
@@ -595,13 +599,22 @@
     <Folder Include="Assets\CSS\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Elements\Widget.cshtml" />
+    <Content Include="Views\Elements\PlaceableContentItem.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Elements\Widget.Design.cshtml" />
+    <Content Include="Views\Elements\PlaceableContentItem.Design.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\DefinitionTemplates\ContentTypeLayoutSettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\PlacedContentElementEditor.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\PlacedContentElementEditor-Widget.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Elements.PlaceableContentItem.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

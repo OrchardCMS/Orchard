@@ -1,0 +1,8 @@
+﻿@using Orchard.ContentManagement
+@{
+    var contentItem = (ContentItem)Model.ContentItem;
+    var title = Html.ItemDisplayText(contentItem);
+}
+<div class="layout-placeholder">
+    @String.Format("{0} - {1}", title, contentItem.TypeDefinition.DisplayName)
+</div>
