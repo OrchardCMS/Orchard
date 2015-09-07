@@ -58,6 +58,11 @@ namespace Orchard.Templates.Drivers {
         }
 
         protected override void Importing(ShapePart part, ImportContentContext context) {
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
+            }
+
             var shapeElement = context.Data.Element(part.PartDefinition.Name);
 
             if (shapeElement != null)

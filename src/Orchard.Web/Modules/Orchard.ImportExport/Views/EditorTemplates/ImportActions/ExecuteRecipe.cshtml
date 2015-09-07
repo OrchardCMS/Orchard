@@ -33,12 +33,12 @@
     <div data-controllerid="@String.Format("{0}_{1}", Html.FieldIdFor(m => m.ResetSite), "true")" style="display: none;">
         <div class="message message-Warning">@T("This will delete your database tables. Please consider creating a backup first.")</div>
         <div>
-            @Html.LabelFor(m => m.SuperUserPassword, T("Super User Password"))
+            @Html.LabelFor(m => m.SuperUserPassword, T("Site Owner Password"))
             @Html.PasswordFor(m => m.SuperUserPassword, new {@class = "text"})
-            @Html.Hint(T("Specify a new password for the super user in case your recipe doesn't contain the current super user."))
+            @Html.Hint(T("Specify a new password for the site owner in case your recipe doesn't contain the current site owner."))
         </div>
         <div>
-            @Html.LabelFor(m => m.SuperUserPasswordConfirmation, T("Confirm Super User Password"))
+            @Html.LabelFor(m => m.SuperUserPasswordConfirmation, T("Confirm Site Owner Password"))
             @Html.PasswordFor(m => m.SuperUserPasswordConfirmation, new {@class = "text"})
             @Html.Hint(T("Repeat the password to make sure you didn't mistype anything."))
         </div>

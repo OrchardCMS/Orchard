@@ -90,9 +90,6 @@
     <Compile Include="Services\DatabaseManager.cs" />
     <Compile Include="Services\IDatabaseManager.cs" />
     <Compile Include="ViewModels\RecipeExecutionStepViewModel.cs" />
-    <Compile Include="Services\ISetupService.cs" />
-    <Compile Include="Models\SetupContext.cs" />
-    <Compile Include="Services\SetupService.cs" />
     <Compile Include="ViewModels\UploadRecipeViewModel.cs" />
     <Compile Include="Providers\ImportActions\ExecuteRecipeAction.cs" />
     <Compile Include="Recipes\Builders\CustomStepsStep.cs" />
@@ -139,6 +136,10 @@
       <Project>{fc1d74e8-7a4d-48f4-83de-95c6173780c4}</Project>
       <Name>Orchard.Recipes</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Orchard.Setup\Orchard.Setup.csproj">
+      <Project>{8c7fcbc2-e6e1-405e-bfb5-d8d9e67a09c4}</Project>
+      <Name>Orchard.Setup</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Styles\images\menu.importexport.png" />
@@ -157,9 +158,7 @@
   <ItemGroup>
     <Content Include="Views\Admin\Export.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Admin\ImportResult.cshtml" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="Views\EditorTemplates\ImportActions\ExecuteRecipe.cshtml" />
   </ItemGroup>

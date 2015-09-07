@@ -60,14 +60,18 @@ namespace Orchard.ContentPicker.Drivers {
         }
 
         protected override void Importing(ContentMenuItemPart part, ImportContentContext context) {
-            var contentItemId = context.Attribute(part.PartDefinition.Name, "ContentItem");
-            if (contentItemId != null) {
-                var contentItem = context.GetItemFromSession(contentItemId);
-                part.Content = contentItem;
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
             }
-            else {
-                part.Content = null;
-            }
+
+            context.ImportAttribute(part.PartDefinition.Name, "ContentItem", 
+                contentItemId => {
+                    var contentItem = context.GetItemFromSession(contentItemId);
+                    part.Content = contentItem;
+                }, () => 
+                    part.Content = null
+            );
         }
 
         protected override void Exporting(ContentMenuItemPart part, ExportContentContext context) {

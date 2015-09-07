@@ -126,6 +126,11 @@ namespace Orchard.Taxonomies.Drivers {
         }
 
         protected override void Importing(TermPart part, ImportContentContext context) {
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
+            }
+
             part.Count = Int32.Parse(context.Attribute(part.PartDefinition.Name, "Count"));
             part.Selectable = Boolean.Parse(context.Attribute(part.PartDefinition.Name, "Selectable"));
             part.Weight = Int32.Parse(context.Attribute(part.PartDefinition.Name, "Weight"));

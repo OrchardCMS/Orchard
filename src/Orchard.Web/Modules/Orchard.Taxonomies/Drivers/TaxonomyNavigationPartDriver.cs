@@ -101,6 +101,11 @@ namespace Orchard.Taxonomies.Drivers {
         }
 
         protected override void Importing(TaxonomyNavigationPart part, ImportContentContext context) {
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
+            }
+
             part.DisplayContentCount = Boolean.Parse(context.Attribute(part.PartDefinition.Name, "DisplayContentCount"));
             part.DisplayRootTerm = Boolean.Parse(context.Attribute(part.PartDefinition.Name, "DisplayRootTerm"));
             part.HideEmptyTerms = Boolean.Parse(context.Attribute(part.PartDefinition.Name, "HideEmptyTerms"));

@@ -36,7 +36,6 @@ namespace Orchard.SecureSocketsLayer.Drivers {
         }
 
         protected override void Importing(SslSettingsPart part, ImportContentContext context) {
-            base.Importing(part, context);
             _signals.Trigger(SslSettingsPart.CacheKey);
         }
     }

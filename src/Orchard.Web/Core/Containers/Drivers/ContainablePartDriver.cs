@@ -82,6 +82,11 @@ namespace Orchard.Core.Containers.Drivers {
         }
 
         protected override void Importing(ContainablePart part, ImportContentContext context) {
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
+            }
+
             context.ImportAttribute(part.PartDefinition.Name, "Position", s => part.Position = XmlConvert.ToInt32(s));
         }
 

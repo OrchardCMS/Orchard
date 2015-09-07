@@ -264,7 +264,7 @@ namespace Orchard.Azure.Services.FileSystems {
 
             var blob = Container.GetBlockBlobReference(String.Concat(_root, path));
             var newBlob = Container.GetBlockBlobReference(String.Concat(_root, newPath));
-            newBlob.StartCopyFromBlob(blob);
+            newBlob.StartCopy(blob);
             blob.Delete();
         }
 
@@ -277,7 +277,7 @@ namespace Orchard.Azure.Services.FileSystems {
 
             var blob = Container.GetBlockBlobReference(String.Concat(_root, path));
             var newBlob = Container.GetBlockBlobReference(String.Concat(_root, newPath));
-            newBlob.StartCopyFromBlob(blob);
+            newBlob.StartCopy(blob);
         }
 
         public IStorageFile CreateFile(string path) {

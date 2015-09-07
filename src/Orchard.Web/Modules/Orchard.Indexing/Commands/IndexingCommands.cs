@@ -47,8 +47,19 @@ namespace Orchard.Indexing.Commands {
                 Context.Output.WriteLine(T("Invalid index name."));
             }
             else {
-                _indexManager.GetSearchIndexProvider().CreateIndex(index);
-                Context.Output.WriteLine(T("New index has been created successfully."));
+                var indexProvider = _indexManager.GetSearchIndexProvider();
+                if(indexProvider == null) {
+                    Context.Output.WriteLine(T("New indexing service was found. Please enable a module like Lucene."));
+                }
+                else {
+                    if (indexProvider.Exists(index)) {
+                        Context.Output.WriteLine(T("The specified index already exists."));
+                    }
+                    else {
+                        _indexManager.GetSearchIndexProvider().CreateIndex(index);
+                        Context.Output.WriteLine(T("New index has been created successfully."));
+                    }
+                }
             }
         }
 

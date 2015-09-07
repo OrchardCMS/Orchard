@@ -74,7 +74,13 @@ namespace Orchard.Recipes.Services {
             if (!String.IsNullOrWhiteSpace(recipeName))
                 query = from record in query where record.RecipeName == recipeName select record;
 
-            var stepResultRecord = query.Single();
+            var stepResultRecord = query.SingleOrDefault();
+
+            if (stepResultRecord == null)
+                // No step result record was created when scheduling the step, so simply ignore.
+                // The only reason where one would not create such a record would be Setup,
+                // when no database exists to store the record but still wants to schedule a recipe step (such as the "StopViewsBackgroundCompilationStep").
+                return; 
 
             stepResultRecord.IsCompleted = true;
             stepResultRecord.IsSuccessful = isSuccessful;

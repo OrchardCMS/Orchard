@@ -56,11 +56,7 @@ namespace Orchard.Tests.Environment.ShellBuilders {
 
             _container.Mock<IHttpContextAccessor>()
                 .Setup(x => x.Current())
-                .Returns(httpContext);
-
-            _container.Mock<IHttpContextAccessor>()
-                .Setup(x => x.CreateContext(It.IsAny<ILifetimeScope>()))
-                .Returns(httpContext);
+                .Returns(default(HttpContextBase));
 
             var factory = _container.Resolve<IShellContextFactory>();
 

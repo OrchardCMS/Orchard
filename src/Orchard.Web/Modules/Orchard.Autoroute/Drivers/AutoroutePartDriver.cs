@@ -16,11 +16,6 @@ using Orchard.Mvc;
 using Orchard.Security;
 using Orchard.UI.Notify;
 using Orchard.Utility.Extensions;
-using Orchard.Localization.Services;
-using Orchard.Localization.Models;
-using Orchard.Mvc;
-using System.Web;
-using Orchard.ContentManagement.Aspects;
 
 namespace Orchard.Autoroute.Drivers {
     public class AutoroutePartDriver : ContentPartDriver<AutoroutePart> {
@@ -159,6 +154,11 @@ namespace Orchard.Autoroute.Drivers {
         }
 
         protected override void Importing(AutoroutePart part, ImportContentContext context) {
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
+            }
+
             context.ImportAttribute(part.PartDefinition.Name, "Alias", s => part.DisplayAlias = s);
             context.ImportAttribute(part.PartDefinition.Name, "CustomPattern", s => part.CustomPattern = s);
             context.ImportAttribute(part.PartDefinition.Name, "UseCustomPattern", s => part.UseCustomPattern = XmlHelper.Parse<bool>(s));

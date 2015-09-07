@@ -7,5 +7,4 @@ Version: 1.9.1
 OrchardVersion: 1.9
 Description: The jQuery module contains the jQuery and related script libraries.
 FeatureDescription: A common location for jQuery and related script libraries.
-Dependencies: Common
 Category: Core
