@@ -26,6 +26,7 @@ using Orchard.Settings;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.Setup.Services {
+    [OrchardFeature("Orchard.Setup.Services")]
     public class SetupService : Component, ISetupService {
         private readonly ShellSettings _shellSettings;
         private readonly IOrchardHost _orchardHost;
@@ -33,7 +34,6 @@ namespace Orchard.Setup.Services {
         private readonly IShellContainerFactory _shellContainerFactory;
         private readonly ICompositionStrategy _compositionStrategy;
         private readonly IProcessingEngine _processingEngine;
-        private readonly IExtensionManager _extensionManager;
         private readonly IRecipeHarvester _recipeHarvester;
         private IEnumerable<Recipe> _recipes;
 
@@ -44,7 +44,6 @@ namespace Orchard.Setup.Services {
             IShellContainerFactory shellContainerFactory,
             ICompositionStrategy compositionStrategy,
             IProcessingEngine processingEngine,
-            IExtensionManager extensionManager,
             IRecipeHarvester recipeHarvester) {
 
             _shellSettings = shellSettings;
@@ -53,7 +52,6 @@ namespace Orchard.Setup.Services {
             _shellContainerFactory = shellContainerFactory;
             _compositionStrategy = compositionStrategy;
             _processingEngine = processingEngine;
-            _extensionManager = extensionManager;
             _recipeHarvester = recipeHarvester;
         }
 
@@ -64,14 +62,9 @@ namespace Orchard.Setup.Services {
         public IEnumerable<Recipe> Recipes() {
             if (_recipes == null) {
                 var recipes = new List<Recipe>();
-
-                foreach (var extension in _extensionManager.AvailableExtensions()) {
-                    recipes.AddRange(_recipeHarvester.HarvestRecipes(extension.Id).Where(recipe => recipe.IsSetupRecipe));
-                }
-
+                recipes.AddRange(_recipeHarvester.HarvestRecipes().Where(recipe => recipe.IsSetupRecipe));
                 _recipes = recipes;
             }
-
             return _recipes;
         }
 
@@ -212,11 +205,7 @@ namespace Orchard.Setup.Services {
             cultureManager.AddCulture("en-US");
 
             var recipeManager = environment.Resolve<IRecipeManager>();
-            var recipe = Recipes().FirstOrDefault(r => r.Name.Equals(context.Recipe, StringComparison.OrdinalIgnoreCase));
-
-            if (recipe == null)
-                throw new OrchardException(T("The recipe '{0}' could not be found.", context.Recipe));
-            
+            var recipe = context.Recipe;
             var executionId = recipeManager.Execute(recipe);
 
             // Once the recipe has finished executing, we need to update the shell state to "Running", so add a recipe step that does exactly that.

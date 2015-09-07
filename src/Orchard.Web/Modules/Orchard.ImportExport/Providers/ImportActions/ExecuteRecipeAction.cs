@@ -12,6 +12,7 @@ using Orchard.ImportExport.ViewModels;
 using Orchard.Mvc;
 using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
+using Orchard.Setup.Services;
 using Orchard.Tasks;
 using Orchard.UI.Notify;
 
@@ -181,7 +182,7 @@ namespace Orchard.ImportExport.Providers.ImportActions {
         private string Setup(XDocument recipeDocument) {
             // Prepare Setup.
             var setupContext = new SetupContext {
-                RecipeDocument = recipeDocument,
+                Recipe = _recipeParser.ParseRecipe(recipeDocument),
                 AdminPassword = SuperUserPassword,
                 AdminUsername = _orchardServices.WorkContext.CurrentSite.SuperUser,
                 DatabaseConnectionString = _shellSettings.DataConnectionString,

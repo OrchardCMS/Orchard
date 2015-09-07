@@ -7,6 +7,7 @@ using Orchard.Logging;
 using Orchard.Setup.Services;
 using Orchard.Setup.ViewModels;
 using Orchard.Localization;
+using Orchard.Recipes.Services;
 using Orchard.Themes;
 using Orchard.UI.Notify;
 
@@ -137,6 +138,7 @@ namespace Orchard.Setup.Controllers {
                         throw new ApplicationException("Unknown database type: " + model.DatabaseProvider);
                 }
 
+                var recipe = _setupService.Recipes().GetRecipeByName(model.Recipe);
                 var setupContext = new SetupContext {
                     SiteName = model.SiteName,
                     AdminUsername = model.AdminUsername,
@@ -145,7 +147,7 @@ namespace Orchard.Setup.Controllers {
                     DatabaseConnectionString = model.DatabaseConnectionString,
                     DatabaseTablePrefix = model.DatabaseTablePrefix,
                     EnabledFeatures = null, // Default list
-                    Recipe = model.Recipe
+                    Recipe = recipe
                 };
 
                 var executionId = _setupService.Setup(setupContext);

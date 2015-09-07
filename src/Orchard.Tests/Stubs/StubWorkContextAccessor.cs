@@ -13,7 +13,7 @@ namespace Orchard.Tests.Stubs {
 
         public StubWorkContextAccessor(ILifetimeScope lifetimeScope) {
             _lifetimeScope = lifetimeScope;
-            _workContext = new WorkContextImpl(_lifetimeScope);
+            _workContext = new WorkContextImpl(lifetimeScope);
         }
 
         public class WorkContextImpl : WorkContext {
@@ -149,7 +149,9 @@ namespace Orchard.Tests.Stubs {
         }
 
         public IWorkContextScope CreateWorkContextScope() {
-            throw new NotSupportedException();
+            var workLifetime = _lifetimeScope.BeginLifetimeScope("work");
+            var workContext = new WorkContextImpl(workLifetime);
+            return new StubWorkContextScope(workContext, workLifetime);
         }
     }
 }
