@@ -69,7 +69,7 @@ namespace Orchard.Widgets.Controllers {
             }
 
             LayerPart currentLayer = layerId == null
-                ? layers.FirstOrDefault()
+                ? layers.FirstOrDefault(x => x.Name == "Default")
                 : layers.FirstOrDefault(layer => layer.Id == layerId);
 
             if (currentLayer == null && layerId != null) { // Incorrect layer id passed
