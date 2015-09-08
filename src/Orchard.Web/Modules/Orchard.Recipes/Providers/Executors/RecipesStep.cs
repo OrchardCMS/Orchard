@@ -16,9 +16,9 @@ namespace Orchard.Recipes.Providers.Executors {
         private readonly ITransactionManager _transactionManager;
 
         public RecipesStep(
-            IRecipeHarvester recipeHarvester, 
-            IRecipeStepQueue recipeStepQueue, 
-            IRepository<RecipeStepResultRecord> recipeStepResultRecordRepository, 
+            IRecipeHarvester recipeHarvester,
+            IRecipeStepQueue recipeStepQueue,
+            IRepository<RecipeStepResultRecord> recipeStepResultRecordRepository,
             ITransactionManager transactionManager,
             RecipeExecutionLogger logger) : base(logger) {
 
@@ -54,7 +54,7 @@ namespace Orchard.Recipes.Providers.Executors {
                     if (!recipes.ContainsKey(recipeName))
                         throw new Exception(String.Format("No recipe named '{0}' was found in extension '{1}'.", recipeName, extensionId));
 
-                    EnqueueRecipe(session, context.ExecutionId, recipes[recipeName]);
+                    EnqueueRecipe(context.ExecutionId, recipes[recipeName]);
                 }
                 catch (Exception ex) {
                     Logger.Error(ex, "Error while executing recipe '{0}' in extension '{1}'.", recipeName, extensionId);
@@ -63,7 +63,7 @@ namespace Orchard.Recipes.Providers.Executors {
             }
         }
 
-        private void EnqueueRecipe(ISession session, string executionId, Recipe recipe) {
+        private void EnqueueRecipe(string executionId, Recipe recipe) {
             foreach (var recipeStep in recipe.RecipeSteps) {
                 _recipeStepQueue.Enqueue(executionId, recipeStep);
                 _recipeStepResultRecordRepository.Create(new RecipeStepResultRecord {
@@ -76,7 +76,12 @@ namespace Orchard.Recipes.Providers.Executors {
         }
 
         private IDictionary<string, Recipe> HarvestRecipes(string extensionId) {
-            return _recipeHarvester.HarvestRecipes(extensionId).ToDictionary(x => x.Name);
+            try {
+                return _recipeHarvester.HarvestRecipes(extensionId).ToDictionary(x => x.Name);
+            }
+            catch (ArgumentException ex) {
+                throw new OrchardFatalException(T("A recipe with the same name has been detected for extension \"{0}\". Please make sure recipes are uniquely named.", extensionId), ex);
+            }
         }
     }
 }
