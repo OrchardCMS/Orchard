@@ -1,5 +1,4 @@
-﻿using System;
-using System.Globalization;
+using System;
 using System.Web;
 using System.Web.Mvc;
 using Orchard.DisplayManagement;
@@ -32,8 +31,20 @@ namespace Orchard.Core.Shapes {
             DateTimeUtc = DateTimeUtc != System.DateTime.MinValue ? DateTimeUtc : dateTimeUtc; // Both capitalizations retained for compatibility.
             var time = _clock.UtcNow - DateTimeUtc;
 
-            if (time.TotalDays > 7 || time.TotalDays < -7)
-                return Display.DateTime(DateTimeUtc: DateTimeUtc, CustomFormat: null);
+            if (time.TotalYears() > 1)
+                return T.Plural("1 year ago", "{0} years ago", time.TotalYears());
+            if (time.TotalYears() < -1)
+                return T.Plural("in 1 year", "in {0} years", -time.TotalYears());
+
+            if (time.TotalMonths() > 1)
+                return T.Plural("1 month ago", "{0} months ago", time.TotalMonths());
+            if (time.TotalMonths() < -1)
+                return T.Plural("in 1 month", "in {0} months", -time.TotalMonths());
+
+            if (time.TotalWeeks() > 1)
+                return T.Plural("1 week ago", "{0} weeks ago", time.TotalWeeks());
+            if (time.TotalWeeks() < -1)
+                return T.Plural("in 1 week", "in {0} weeks", -time.TotalWeeks());
 
             if (time.TotalHours > 24)
                 return T.Plural("1 day ago", "{0} days ago", time.Days);
@@ -69,6 +80,20 @@ namespace Orchard.Core.Shapes {
             }
 
             return new MvcHtmlString(_dateLocalizationServices.ConvertToLocalizedString(DateTimeUtc, CustomFormat.Text));
+        }
+    }
+
+    public static class TimespanExtensions {
+        public static int TotalWeeks(this TimeSpan time) {
+            return (int)time.TotalDays / 7;
+        }
+
+        public static int TotalMonths(this TimeSpan time) {
+            return (int)time.TotalDays / 31;
+        }
+
+        public static int TotalYears(this TimeSpan time) {
+            return (int)time.TotalDays / 365;
         }
     }
 }
