@@ -7,7 +7,6 @@ using System.Reflection;
 using Autofac.Features.Indexed;
 using Orchard.Exceptions;
 using Orchard.Localization;
-using Orchard.Exceptions;
 
 namespace Orchard.Events {
     public class DefaultOrchardEventBus : IEventBus {
