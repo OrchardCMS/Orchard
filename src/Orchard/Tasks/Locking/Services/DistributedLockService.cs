@@ -110,7 +110,7 @@ namespace Orchard.Tasks.Locking.Services {
                 );
             });
 
-            return result;            
+            return result;
         }
         
         private DistributedLock AcquireLockInternal(string name, TimeSpan? maxValidFor) {

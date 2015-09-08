@@ -18,18 +18,21 @@ namespace Orchard.Data.Migration {
         private readonly IDistributedLockService _distributedLockService;
         private readonly IDataMigrationInterpreter _dataMigrationInterpreter;
         private readonly ShellSettings _shellSettings;
+        private readonly ITransactionManager _transactionManager;
 
         public AutomaticDataMigrations(
             IDataMigrationManager dataMigrationManager,
             IDataMigrationInterpreter dataMigrationInterpreter,
             IFeatureManager featureManager,
             IDistributedLockService distributedLockService,
+            ITransactionManager transactionManager,
             ShellSettings shellSettings) {
 
             _dataMigrationManager = dataMigrationManager;
             _featureManager = featureManager;
             _distributedLockService = distributedLockService;
             _shellSettings = shellSettings;
+            _transactionManager = transactionManager;
             _dataMigrationInterpreter = dataMigrationInterpreter;
 
             Logger = NullLogger.Instance;
@@ -77,7 +80,8 @@ namespace Orchard.Data.Migration {
             // Ensure the distributed lock record schema exists.
             var schemaBuilder = new SchemaBuilder(_dataMigrationInterpreter);
             var distributedLockSchemaBuilder = new DistributedLockSchemaBuilder(_shellSettings, schemaBuilder);
-            distributedLockSchemaBuilder.EnsureSchema();
+            if (distributedLockSchemaBuilder.EnsureSchema())
+                _transactionManager.RequireNew();
         }
     }
 }

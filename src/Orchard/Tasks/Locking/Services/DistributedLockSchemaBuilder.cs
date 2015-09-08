@@ -13,11 +13,12 @@ namespace Orchard.Tasks.Locking.Services {
             _schemaBuilder = schemaBuilder;
         }
 
-        public void EnsureSchema() {
+        public bool EnsureSchema() {
             if (SchemaExists())
-                return;
+                return false;
 
             CreateSchema();
+            return true;
         }
 
         public void CreateSchema() {
