@@ -567,7 +567,6 @@
     <Content Include="Views\EditorTemplates\Elements.Iframe.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="packages.config" />
     <Content Include="Views\Elements\Iframe.cshtml" />
   </ItemGroup>
   <ItemGroup>
