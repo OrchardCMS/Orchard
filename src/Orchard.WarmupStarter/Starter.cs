@@ -89,9 +89,9 @@ namespace Orchard.WarmupStarter {
                         var result = _initialization(application);
                         _initializationResult = result;
                     }
-                    catch (Exception e) {
+                    catch (Exception ex) {
                         lock (_synLock) {
-                        _error = e;
+                        _error = ex;
                             _previousError = null;
                         }
                     }

@@ -110,23 +110,23 @@ namespace Orchard.Tests.Modules.Recipes.Services {
 
         [Test]
         public void HarvestRecipesFailsToFindRecipesWhenCalledWithNotExistingExtension() {
-            var recipes = (List<Recipe>)_recipeHarvester.HarvestRecipes("cantfindme");
+            var recipes = _recipeHarvester.HarvestRecipes("cantfindme");
 
-            Assert.That(recipes.Count, Is.EqualTo(0));
+            Assert.That(recipes.Count(), Is.EqualTo(0));
         }
 
         [Test]
         public void HarvestRecipesShouldHarvestRecipeXmlFiles() {
-            var recipes = (List<Recipe>)_recipeHarvester.HarvestRecipes("Sample1");
-            Assert.That(recipes.Count, Is.EqualTo(1));
+            var recipes = _recipeHarvester.HarvestRecipes("Sample1");
+            Assert.That(recipes.Count(), Is.EqualTo(1));
         }
 
         [Test]
         public void ParseRecipeLoadsRecipeMetaDataIntoModel() {
-            var recipes = (List<Recipe>)_recipeHarvester.HarvestRecipes("Sample1");
-            Assert.That(recipes.Count, Is.EqualTo(1));
+            var recipes = _recipeHarvester.HarvestRecipes("Sample1");
+            Assert.That(recipes.Count(), Is.EqualTo(1));
 
-            var sampleRecipe = recipes[0];
+            var sampleRecipe = recipes.First();
             Assert.That(sampleRecipe.Name, Is.EqualTo("cms"));
             Assert.That(sampleRecipe.Description, Is.EqualTo("a sample Orchard recipe describing a cms"));
             Assert.That(sampleRecipe.Author, Is.EqualTo("orchard"));

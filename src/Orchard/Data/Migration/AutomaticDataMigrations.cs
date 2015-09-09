@@ -4,6 +4,7 @@ using Orchard.Environment;
 using Orchard.Environment.Features;
 using Orchard.Logging;
 using Orchard.Tasks.Locking.Services;
+using Orchard.Exceptions;
 
 namespace Orchard.Data.Migration {
     /// <summary>
@@ -26,11 +27,11 @@ namespace Orchard.Data.Migration {
             Logger = NullLogger.Instance;
         }
 
-        public ILogger Logger { get; set; } 
+        public ILogger Logger { get; set; }
 
         public void Activated() {
             IDistributedLock @lock;
-            if(_distributedLockService.TryAcquireLock(GetType().FullName, TimeSpan.FromMinutes(30), TimeSpan.FromMilliseconds(250), out @lock)) {
+            if (_distributedLockService.TryAcquireLock(GetType().FullName, TimeSpan.FromMinutes(30), TimeSpan.FromMilliseconds(250), out @lock)) {
                 using (@lock) {
                     // Let's make sure that the basic set of features is enabled.  If there are any that are not enabled, then let's enable them first.
                     var theseFeaturesShouldAlwaysBeActive = new[] {
@@ -48,7 +49,10 @@ namespace Orchard.Data.Migration {
                             _dataMigrationManager.Update(feature);
                         }
                         catch (Exception ex) {
-                            Logger.Error(ex, "Could not run migrations automatically on {0}.", feature);
+                            if (ex.IsFatal()) {
+                                throw;
+                            }
+                            Logger.Error("Could not run migrations automatically on " + feature, ex);
                         }
                     }
                 }

@@ -6,6 +6,7 @@ using System.Web.Hosting;
 using Orchard.Environment.Configuration;
 using Orchard.Localization;
 using Orchard.Validation;
+using Orchard.Exceptions;
 
 namespace Orchard.FileSystems.Media {
     public class FileSystemStorageProvider : IStorageProvider {
@@ -155,6 +156,9 @@ namespace Orchard.FileSystems.Media {
                     directoryInfo.Create();
                 }
                 catch (Exception ex) {
+                    if (ex.IsFatal()) {
+                        throw;
+                    } 
                     throw new ArgumentException(T("The folder could not be created at path: {0}. {1}", path, ex).ToString());
                 }
             }

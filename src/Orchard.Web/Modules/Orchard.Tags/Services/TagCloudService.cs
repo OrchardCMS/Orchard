@@ -32,7 +32,7 @@ namespace Orchard.Tags.Services {
 
         public IEnumerable<TagCount> GetPopularTags(int buckets, string slug) {
             var cacheKey = "Orchard.Tags.TagCloud." + (slug ?? "") + '.' + buckets;
-            return _cacheManager.Get(cacheKey,
+            return _cacheManager.Get(cacheKey, true,
                 ctx => {
                     ctx.Monitor(_signals.When(TagCloudTagsChanged));
                     IEnumerable<TagCount> tagCounts;

@@ -30,7 +30,7 @@ namespace Orchard.DisplayManagement.Descriptors.ShapePlacementStrategy {
         public bool DisableMonitoring { get; set; }
 
         public PlacementFile Parse(string virtualPath) {
-            return _cacheManager.Get(virtualPath, context => {
+            return _cacheManager.Get(virtualPath, true, context => {
 
                 if (!DisableMonitoring) {
                     Logger.Debug("Monitoring virtual path \"{0}\"", virtualPath);
