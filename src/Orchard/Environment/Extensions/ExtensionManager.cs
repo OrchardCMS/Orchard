@@ -45,7 +45,7 @@ namespace Orchard.Environment.Extensions {
         }
 
         public IEnumerable<ExtensionDescriptor> AvailableExtensions() {
-            return _cacheManager.Get("AvailableExtensions", ctx =>
+            return _cacheManager.Get("AvailableExtensions", true, ctx =>
                 _parallelCacheContext
                     .RunInParallel(_folders, folder => folder.AvailableExtensions().ToList())
                     .SelectMany(descriptors => descriptors)
@@ -53,7 +53,7 @@ namespace Orchard.Environment.Extensions {
         }
 
         public IEnumerable<FeatureDescriptor> AvailableFeatures() {
-            return _cacheManager.Get("AvailableFeatures", ctx =>
+            return _cacheManager.Get("AvailableFeatures", true, ctx =>
                 AvailableExtensions()
                     .SelectMany(ext => ext.Features)
                     .OrderByDependenciesAndPriorities(HasDependency, GetPriority)
@@ -93,7 +93,7 @@ namespace Orchard.Environment.Extensions {
 
             var result =
                 _parallelCacheContext
-                .RunInParallel(featureDescriptors, descriptor => _cacheManager.Get(descriptor.Id, ctx => LoadFeature(descriptor)))
+                .RunInParallel(featureDescriptors, descriptor => _cacheManager.Get(descriptor.Id, true, ctx => LoadFeature(descriptor)))
                 .ToArray();
 
             Logger.Information("Done loading features");
@@ -107,7 +107,7 @@ namespace Orchard.Environment.Extensions {
 
             ExtensionEntry extensionEntry;
             try {
-                extensionEntry = _cacheManager.Get(extensionId, ctx => {
+                extensionEntry = _cacheManager.Get(extensionId, true, ctx => {
                     var entry = BuildEntry(extensionDescriptor);
                     if (entry != null) {
                         ctx.Monitor(_asyncTokenProvider.GetToken(monitor => {

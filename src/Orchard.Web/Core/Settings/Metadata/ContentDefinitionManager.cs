@@ -125,7 +125,7 @@ namespace Orchard.Core.Settings.Metadata {
         }
 
         private IDictionary<string, ContentTypeDefinition> AcquireContentTypeDefinitions() {
-            return _cacheManager.Get("ContentTypeDefinitions", ctx => {
+            return _cacheManager.Get("ContentTypeDefinitions", true, ctx => {
                 MonitorContentDefinitionSignal(ctx);
 
                 AcquireContentPartDefinitions();
@@ -140,7 +140,7 @@ namespace Orchard.Core.Settings.Metadata {
         }
 
         private IDictionary<string, ContentPartDefinition> AcquireContentPartDefinitions() {
-            return _cacheManager.Get("ContentPartDefinitions", ctx => {
+            return _cacheManager.Get("ContentPartDefinitions", true, ctx => {
                 MonitorContentDefinitionSignal(ctx);
 
                 var contentPartDefinitionRecords = _partDefinitionRepository.Table
@@ -153,7 +153,7 @@ namespace Orchard.Core.Settings.Metadata {
         }
 
         private IDictionary<string, ContentFieldDefinition> AcquireContentFieldDefinitions() {
-            return _cacheManager.Get("ContentFieldDefinitions", ctx => {
+            return _cacheManager.Get("ContentFieldDefinitions", true, ctx => {
                 MonitorContentDefinitionSignal(ctx);
 
                 return _fieldDefinitionRepository.Table.Select(Build).ToDictionary(x => x.Name, y => y);

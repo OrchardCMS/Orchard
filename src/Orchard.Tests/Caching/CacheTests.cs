@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Threading;
 using Autofac;
 using NUnit.Framework;
 using Orchard.Caching;
@@ -76,6 +78,42 @@ namespace Orchard.Tests.Caching {
 
             Assert.That(c1.CacheManager.GetCache<string, string>(),
                 Is.Not.SameAs(c2.CacheManager.GetCache<string, string>()));
+        }
+
+        [Test]
+        public void CacheManagerIsNotBlocking() {
+            var hits = 0;
+            string result = "";
+
+            Enumerable.Range(0, 5).AsParallel().ForAll(x =>
+                result = _cacheManager.Get("testItem", ctx => {
+                    // by waiting for 100ms we expect all the calls to Get
+                    // to enter this lambda
+                    Thread.Sleep(100);
+                    hits++;
+                    return "testResult";
+                })
+            );
+
+            Assert.That(result, Is.EqualTo("testResult"));
+            Assert.That(hits, Is.GreaterThan(1));
+        }
+
+        [Test]
+        public void CacheManagerIsBlocking() {
+            var hits = 0;
+            string result = "";
+
+            Enumerable.Range(0, 5).AsParallel().ForAll(x =>
+                result = _cacheManager.Get("testItem", true, ctx => {
+                    Thread.Sleep(100);
+                    hits++;
+                    return "testResult";
+                })
+            );
+
+            Assert.That(result, Is.EqualTo("testResult"));
+            Assert.That(hits, Is.EqualTo(1));
         }
 
         class ComponentOne {

@@ -65,7 +65,7 @@ namespace Orchard.FileSystems.Dependencies {
         }
 
         public IEnumerable<ActivatedExtensionDescriptor> LoadDescriptors() {
-            return _cacheManager.Get(PersistencePath, ctx => {
+            return _cacheManager.Get(PersistencePath, true, ctx => {
                 _appDataFolder.CreateDirectory(BasePath);
 
                 if (!DisableMonitoring) {
