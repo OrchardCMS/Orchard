@@ -71,11 +71,12 @@ namespace Orchard.Core.Settings.Drivers {
 
             var previousBaseUrl = model.Site.BaseUrl;
 
-            updater.TryUpdateModel(model, Prefix, null, new [] { "Site.SuperUser", "Site.MaxPageSize" });
+            // Update all properties but not SuperUser, MaxPageSize and BaseUrl.
+            updater.TryUpdateModel(model, Prefix, null, new [] { "Site.SuperUser", "Site.MaxPageSize", "Site.BaseUrl", "Site.MaxPagedCount" });
 
             // only a user with SiteOwner permission can change the site owner
             if (_authorizer.Authorize(StandardPermissions.SiteOwner)) {
-                updater.TryUpdateModel(model, Prefix, new[] { "Site.SuperUser", "Site.MaxPageSize" }, null);
+                updater.TryUpdateModel(model, Prefix, new[] { "Site.SuperUser", "Site.MaxPageSize", "Site.BaseUrl", "Site.MaxPagedCount" }, null);
 
                 // ensures the super user is fully empty
                 if (String.IsNullOrEmpty(model.SuperUser)) {
@@ -88,30 +89,30 @@ namespace Orchard.Core.Settings.Drivers {
                         updater.AddModelError("SuperUser", T("The user {0} was not found", model.SuperUser));
                     }
                 }
-            }
 
-            // ensure the base url is absolute if provided
-            if (!String.IsNullOrWhiteSpace(model.Site.BaseUrl)) {
-                if (!Uri.IsWellFormedUriString(model.Site.BaseUrl, UriKind.Absolute)) {
-                    updater.AddModelError("BaseUrl", T("The base url must be absolute."));
-                }
+                // ensure the base url is absolute if provided
+                if (!String.IsNullOrWhiteSpace(model.Site.BaseUrl)) {
+                    if (!Uri.IsWellFormedUriString(model.Site.BaseUrl, UriKind.Absolute)) {
+                        updater.AddModelError("BaseUrl", T("The base url must be absolute."));
+                    }
                     // if the base url has been modified, try to ping it
-                else if (!String.Equals(previousBaseUrl, model.Site.BaseUrl, StringComparison.OrdinalIgnoreCase)) {
-                    try {
-                        var request = WebRequest.Create(model.Site.BaseUrl) as HttpWebRequest;
-                        if (request != null) {
-                            using (request.GetResponse() as HttpWebResponse) {}
+                    else if (!String.Equals(previousBaseUrl, model.Site.BaseUrl, StringComparison.OrdinalIgnoreCase)) {
+                        try {
+                            var request = WebRequest.Create(model.Site.BaseUrl) as HttpWebRequest;
+                            if (request != null) {
+                                using (request.GetResponse() as HttpWebResponse) { }
+                            }
                         }
-                    }
-                    catch (Exception ex) {
-                        if (ex.IsFatal()) {                        
-                            throw;
+                        catch (Exception ex) {
+                            if (ex.IsFatal()) {
+                                throw;
+                            }
+                            _notifier.Warning(T("The base url you entered could not be requested from current location."));
+                            Logger.Warning(ex, "Could not query base url: {0}", model.Site.BaseUrl);
                         }
-                        _notifier.Warning(T("The base url you entered could not be requested from current location."));
-                        Logger.Warning(ex, "Could not query base url: {0}", model.Site.BaseUrl);
                     }
                 }
-            }
+            }            
 
             return ContentShape("Parts_Settings_SiteSettingsPart",
                 () => shapeHelper.EditorTemplate(TemplateName: "Parts.Settings.SiteSettingsPart", Model: model, Prefix: Prefix));
