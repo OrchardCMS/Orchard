@@ -34,11 +34,14 @@ namespace Orchard.Search.Drivers {
                 var model = new SearchSettingsViewModel();
                 var searchFields = part.SearchFields;
 
+                model.DisplayType = part.DisplayType;
+
                 if (updater != null) {
                     if (updater.TryUpdateModel(model, Prefix, null, null)) {
                         part.SearchIndex = model.SelectedIndex;
                         part.SearchFields = model.Entries.ToDictionary(x => x.Index, x => x.Fields.Where(e => e.Selected).Select(e => e.Field).ToArray());
                         part.FilterCulture = model.FilterCulture;
+                        part.DisplayType = model.DisplayType;
                     }
                 }
                 else if (_indexManager.HasIndexProvider()) {
