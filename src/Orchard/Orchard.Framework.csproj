@@ -55,6 +55,7 @@
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
+    <NoWarn>0436</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Autofac, Version=2.1.13.813, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
@@ -148,13 +149,12 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Environment\Configuration\ExtensionLocations.cs" />
+    <Compile Include="BackgroundHttpContextFactory.cs" />
     <Compile Include="Localization\Services\ILocalizationStreamParser.cs" />
     <Compile Include="Localization\Services\LocalizationStreamParser.cs" />
+    <Compile Include="Mvc\Html\LinkExtensions.cs" />
     <Compile Include="Security\ISslSettingsProvider.cs" />
     <Compile Include="Security\Providers\DefaultSslSettingsProvider.cs" />
-    <Compile Include="StaticHttpContextScope.cs" />
-    <Compile Include="StaticHttpContextScopeFactory.cs" />
     <Compile Include="Caching\DefaultCacheContextAccessor.cs" />
     <Compile Include="Caching\DefaultParallelCacheContext.cs" />
     <Compile Include="Caching\ICacheContextAccessor.cs" />
@@ -323,7 +323,7 @@
     <Compile Include="Mvc\DataAnnotations\LocalizedModelValidatorProvider.cs" />
     <Compile Include="Mvc\DataAnnotations\LocalizedRequiredAttribute.cs" />
     <Compile Include="Mvc\Extensions\RouteExtension.cs" />
-    <Compile Include="Mvc\Extensions\HttpContextExtensions.cs" />
+    <Compile Include="Mvc\Extensions\HttpContextBaseExtensions.cs" />
     <Compile Include="Mvc\FormValueRequiredAttribute.cs" />
     <Compile Include="Mvc\HttpContextAccessor.cs" />
     <Compile Include="Mvc\HttpContextWorkContext.cs" />
@@ -653,7 +653,7 @@
     <Compile Include="WebApi\Filters\OrchardApiActionFilterDispatcher.cs" />
     <Compile Include="WebApi\Routes\IHttpRouteProvider.cs" />
     <Compile Include="WebApi\Routes\StandardExtensionHttpRouteProvider.cs" />
-    <Compile Include="IStaticHttpContextScopeFactory.cs" />
+    <Compile Include="IBackgroundHttpContextFactory.cs" />
     <Compile Include="WorkContextExtensions.cs" />
     <Compile Include="Mvc\ViewEngines\Razor\RazorCompilationEventsShim.cs" />
     <Compile Include="Mvc\ViewEngines\Razor\RazorViewEngineProvider.cs" />

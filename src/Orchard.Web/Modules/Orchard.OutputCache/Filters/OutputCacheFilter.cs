@@ -461,7 +461,7 @@ namespace Orchard.OutputCache.Filters {
 
         private CacheSettings CacheSettings {
             get {
-                return _cacheSettings ?? (_cacheSettings = _cacheManager.Get(CacheSettings.CacheKey, context => {
+                return _cacheSettings ?? (_cacheSettings = _cacheManager.Get(CacheSettings.CacheKey, true, context => {
                     context.Monitor(_signals.When(CacheSettings.CacheKey));
                     return new CacheSettings(_workContext.CurrentSite.As<CacheSettingsPart>());
                 }));

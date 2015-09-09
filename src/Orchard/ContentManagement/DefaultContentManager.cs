@@ -814,7 +814,7 @@ namespace Orchard.ContentManagement {
         }
 
         private ContentTypeRecord AcquireContentTypeRecord(string contentType) {
-            var contentTypeId = _cacheManager.Get(contentType + "_Record", ctx => {
+            var contentTypeId = _cacheManager.Get(contentType + "_Record", true, ctx => {
                 ctx.Monitor(_signals.When(contentType + "_Record"));
 
                 var contentTypeRecord = _contentTypeRepository.Get(x => x.Name == contentType);

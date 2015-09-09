@@ -24,20 +24,22 @@ namespace Orchard.Core.Containers.Drivers {
         }
 
         protected override void Importing(CustomPropertiesPart part, ImportContentContext context) {
-            var customOne = context.Attribute(part.PartDefinition.Name, "CustomOne");
-            if (customOne != null) {
-                part.Record.CustomOne = customOne;
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
             }
 
-            var customTwo = context.Attribute(part.PartDefinition.Name, "CustomTwo");
-            if (customTwo != null) {
-                part.Record.CustomTwo = customTwo;
-            }
+            context.ImportAttribute(part.PartDefinition.Name, "CustomOne", customOne =>
+                part.Record.CustomOne = customOne
+            );
 
-            var customThree = context.Attribute(part.PartDefinition.Name, "CustomThree");
-            if (customThree != null) {
-                part.Record.CustomThree = customThree;
-            }
+            context.ImportAttribute(part.PartDefinition.Name, "CustomTwo", customTwo =>
+                part.Record.CustomTwo = customTwo
+            );
+
+            context.ImportAttribute(part.PartDefinition.Name, "CustomThree", customThree =>
+                part.Record.CustomThree = customThree
+            );
         }
 
         protected override void Exporting(CustomPropertiesPart part, ExportContentContext context) {

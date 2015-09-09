@@ -67,6 +67,11 @@ namespace Orchard.Widgets.Drivers {
         }
 
         protected override void Importing(WidgetPart part, ContentManagement.Handlers.ImportContentContext context) {
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
+            }
+
             var title = context.Attribute(part.PartDefinition.Name, "Title");
             if (title != null) {
                 part.Title = title;
