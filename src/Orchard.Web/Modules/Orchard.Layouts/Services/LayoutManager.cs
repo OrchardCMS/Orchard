@@ -17,7 +17,12 @@ namespace Orchard.Layouts.Services {
         private readonly IElementDisplay _elementDisplay;
         private readonly IElementManager _elementManager;
 
-        public LayoutManager(IContentManager contentManager, ILayoutSerializer serializer, IElementDisplay elementDisplay, IElementManager elementManager) {
+        public LayoutManager(
+            IContentManager contentManager,
+            ILayoutSerializer serializer,
+            IElementDisplay elementDisplay,
+            IElementManager elementManager) {
+
             _contentManager = contentManager;
             _serializer = serializer;
             _elementDisplay = elementDisplay;
@@ -29,6 +34,16 @@ namespace Orchard.Layouts.Services {
                                          from typePartDefinition in typeDefinition.Parts
                                          let settings = typePartDefinition.Settings.GetModel<LayoutTypePartSettings>()
                                          where settings.IsTemplate
+                                         select typeDefinition.Name;
+
+            var templateTypeNames = templateTypeNamesQuery.ToArray();
+            return _contentManager.Query<LayoutPart>(templateTypeNames).List();
+        }
+
+        public IEnumerable<LayoutPart> GetLayouts() {
+            var templateTypeNamesQuery = from typeDefinition in _contentManager.GetContentTypeDefinitions()
+                                         from typePartDefinition in typeDefinition.Parts
+                                         where typePartDefinition.PartDefinition.Name == "LayoutPart"
                                          select typeDefinition.Name;
 
             var templateTypeNames = templateTypeNamesQuery.ToArray();
@@ -84,7 +99,7 @@ namespace Orchard.Layouts.Services {
             var nonTemplatedElements = ExtractNonTemplatedElements(layout).ToList();
 
             foreach (var element in nonTemplatedElements) {
-                
+
                 // Move the element to the template and try to maintain its index.
                 var column = element.Container as Column;
                 var indexInTemplate = templateColumns.Any() ? 0 : -1;

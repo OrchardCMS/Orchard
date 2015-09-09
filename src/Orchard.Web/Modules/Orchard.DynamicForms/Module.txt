@@ -10,7 +10,7 @@ Features:
         Name: Dynamic Forms
         Description: Create custom forms like contact forms using layouts.
         Category: Forms
-        Dependencies: Orchard.Layouts, Orchard.Scripting.CSharp, Orchard.Tokens, Orchard.Workflows, Orchard.Users, Orchard.Fields, Common
+        Dependencies: Orchard.Layouts, Orchard.Tokens, Orchard.Workflows, Orchard.Fields, Common
     Orchard.DynamicForms.AntiSpam:
         Name: Anti-Spam Elements
         Description: Provides anti-spam elements to protect your content from malicious submissions.
@@ -26,8 +26,13 @@ Features:
         Description: Adds a Query form element to the system.
         Category: Forms
         Dependencies: Orchard.DynamicForms, Orchard.Projections
-    Orchard.DynamicForms.ImportExport:
-        Name: Dynamic Forms Import Export
-        Description: Enables the import and export of form submissions.
+    Orchard.DynamicForms.Activities.Validation:
+        Name: Dynamic Forms Validation Activities
+        Description: Adds activities for form validation.
         Category: Forms
-        Dependencies: Orchard.DynamicForms, Orchard.ImportExport
+        Dependencies: Orchard.DynamicForms, Orchard.Scripting.CSharp
+    Orchard.DynamicForms.Bindings.Users
+        Name: Dynamic Forms User Bindings
+        Description: Adds bindings for Users.
+        Category: Forms
+        Dependencies: Orchard.DynamicForms, Orchard.Users

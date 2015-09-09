@@ -590,6 +590,7 @@ legend            { font-size: 1.231em; font-weight: normal; border:none;}
 fieldset          { padding:6px 0 0; margin:0 0 12px 0; border: 0px solid #dbdbdb; }
 label             { font-weight:normal; display:block; padding: 0 0 0.3em 0; }
 label.forcheckbox { margin:0 0 0 .4em; display:inline; }
+label.forradiobutton { margin:0 0 0 .4em; display:inline; }
 label.required:after {margin-left: 1ex; content: "*"; color: red; }
 legend.required:after {margin-left: 1ex; content: "*"; color: red; }    
 
@@ -656,7 +657,7 @@ input.textMedium, input.text-medium, input.text.medium {
     width:26em;
 }
 select {
-    padding:1px;	
+    padding:1px;
 }
 select:focus, textarea:focus, input.text:focus, input.text-box:focus, input.text-small:focus, input.textMedium:focus, input.text-medium:focus  {
     border-color:#666d51;
@@ -1037,15 +1038,20 @@ table.items tr:nth-child(odd) {
 
 #main .contentItems > ul > li:nth-child(even),
 ul.contentItems > li:nth-child(even) ,
-table.items tr:nth-child(even) {
+table.items tr:nth-child(even) ,
+fieldset.manage-part:nth-child(even), 
+fieldset.manage-field:nth-child(even) {
     background-color: #f9f9f9;
 }
 
 #main .contentItems > ul > li:hover,
 ul.contentItems > li:hover,
-table.items tbody tr:hover {
+table.items tbody tr:hover ,
+fieldset.manage-part:hover,
+fieldset.manage-field:hover {
     background-color: #EDF9F5;
 }
+
 
 /* Pager
 ***************************************************************/

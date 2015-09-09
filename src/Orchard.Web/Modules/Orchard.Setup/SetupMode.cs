@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Web.Routing;
 using Autofac;
-using JetBrains.Annotations;
 using Orchard.Caching;
 using Orchard.Commands;
 using Orchard.Commands.Builtin;
@@ -30,6 +28,7 @@ using Orchard.Mvc.ViewEngines.ThemeAwareness;
 using Orchard.Recipes.Services;
 using Orchard.Settings;
 using Orchard.Tasks;
+using Orchard.Tasks.Locking;
 using Orchard.Themes;
 using Orchard.UI.Notify;
 using Orchard.UI.PageClass;
@@ -62,7 +61,6 @@ namespace Orchard.Setup {
             builder.RegisterType<DataServicesProviderFactory>().As<IDataServicesProviderFactory>().InstancePerLifetimeScope();
             builder.RegisterType<DefaultCommandManager>().As<ICommandManager>().InstancePerLifetimeScope();
             builder.RegisterType<HelpCommand>().As<ICommandHandler>().InstancePerLifetimeScope();
-            //builder.RegisterType<WorkContextAccessor>().As<IWorkContextAccessor>().InstancePerMatchingLifetimeScope("shell");
             builder.RegisterType<ResourceManager>().As<IResourceManager>().InstancePerLifetimeScope();
             builder.RegisterType<ResourceFilter>().As<IFilterProvider>().InstancePerLifetimeScope();
             builder.RegisterType<DefaultOrchardShell>().As<IOrchardShell>().InstancePerMatchingLifetimeScope("shell");
@@ -108,7 +106,6 @@ namespace Orchard.Setup {
             }
         }
 
-        [UsedImplicitly]
         class SafeModeText : IText {
             public LocalizedString Get(string textHint, params object[] args) {
                 if (args == null || args.Length == 0) {
@@ -118,7 +115,6 @@ namespace Orchard.Setup {
             }
         }
 
-        [UsedImplicitly]
         class SafeModeThemeService : IThemeManager {
             private readonly ExtensionDescriptor _theme = new ExtensionDescriptor {
                 Id = "SafeMode",
@@ -129,7 +125,6 @@ namespace Orchard.Setup {
             public ExtensionDescriptor GetRequestTheme(RequestContext requestContext) { return _theme; }
         }
 
-        [UsedImplicitly]
         class SafeModeSiteWorkContextProvider : IWorkContextStateProvider {
             public Func<WorkContext, T> Get<T>(string name) {
                 if (name == "CurrentSite") {
@@ -140,7 +135,6 @@ namespace Orchard.Setup {
             }
         }
 
-        [UsedImplicitly]
         class SafeModeSiteService : ISiteService {
             public ISite GetSiteSettings() {
                 var siteType = new ContentTypeDefinitionBuilder().Named("Site").Build();

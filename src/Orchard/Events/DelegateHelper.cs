@@ -100,7 +100,7 @@ namespace Orchard.Events {
         }
 
          static Func<object, object[], object> BuildFunc<T, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TRet>(MethodInfo method) {
-            var func = (Func<T, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TRet>)Delegate.CreateDelegate(typeof(Func<T, TRet>), method);
+            var func = (Func<T, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TRet>)Delegate.CreateDelegate(typeof(Func<T, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TRet>), method);
             Func<object, object[], object> ret = (target, p) => func((T)target, (T1)p[0], (T2)p[1], (T3)p[2], (T4)p[3], (T5)p[4], (T6)p[5], (T7)p[6], (T8)p[7], (T9)p[8], (T10)p[9]);
             return ret;
         }

@@ -13,7 +13,7 @@ using Orchard.Layouts.Helpers;
 using Orchard.Layouts.Services;
 
 namespace Orchard.Layouts.Providers {
-    public class ContentFieldElementHarvester : Component, ElementHarvester {
+    public class ContentFieldElementHarvester : Component, IElementHarvester {
         private readonly Work<IContentDefinitionManager> _contentDefinitionManager;
         private readonly Work<ITransactionManager> _transactionManager;
         private readonly Work<ICultureAccessor> _cultureAccessor;
@@ -45,7 +45,7 @@ namespace Orchard.Layouts.Providers {
                 var name = String.Format("{0}.{1}", part.Name, field.Name);
                 var displayName = field.DisplayName;
                 yield return new ElementDescriptor(elementType, name, T(displayName), T(field.DisplayName), contentFieldElement.Category) {
-                    Display = displayContext => Displaying(displayContext),
+                    Displaying = displayContext => Displaying(displayContext),
                     ToolboxIcon = "\uf1b2"
                 };
             }
@@ -68,7 +68,7 @@ namespace Orchard.Layouts.Providers {
             return fields.Where(t => blackList.All(x => t.Item2.FieldDefinition.Name != x));
         }
 
-        private void Displaying(ElementDisplayContext context) {
+        private void Displaying(ElementDisplayingContext context) {
             var contentItem = context.Content.ContentItem;
             var typeName = context.Element.Descriptor.TypeName;
             var contentField = contentItem.GetContentField(typeName);

@@ -1,5 +1,5 @@
 ﻿namespace Orchard.Alias.Implementation.Updater {
     public interface IAliasUpdateCursor : ISingletonDependency {
-        int Cursor { get; set; } 
+        int Cursor { get; set; }
     }
 }

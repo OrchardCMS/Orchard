@@ -214,7 +214,7 @@ namespace Orchard.SecureSocketsLayer.Services {
             var settings = GetSettings();
             if (settings == null) return path;
             var insecureHostName = settings.InsecureHostName;
-            var builder = new UriBuilder(insecureHostName.Trim('/') + path) {
+            var builder = new UriBuilder(insecureHostName.Split(':').First().Trim('/') + path) {
                 Scheme = Uri.UriSchemeHttp, 
                 Port = 80
             };
@@ -226,7 +226,7 @@ namespace Orchard.SecureSocketsLayer.Services {
             var settings = GetSettings();
             if (settings == null) return path;
             var secureHostName = settings.SecureHostName;
-            var builder = new UriBuilder(secureHostName.Trim('/') + path) {
+            var builder = new UriBuilder(secureHostName.Split(':').First().Trim('/') + path) {
                 Scheme = Uri.UriSchemeHttps, 
                 Port = 443
             };

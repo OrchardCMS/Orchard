@@ -100,8 +100,9 @@ namespace Orchard.Mvc.Html {
                 Convert.ToString(metadata.EditorRouteValues["action"]),
                 metadata.EditorRouteValues.Merge(additionalRouteValues));
         }
-
-        public static MvcHtmlString ItemEditLink(this HtmlHelper html, string linkText, IContent content, object additionalRouteValues, object htmlAttributes) {
+        
+        public static MvcHtmlString ItemEditLink(this HtmlHelper html, string linkText, IContent content, object additionalRouteValues, object htmlAttributes = null)
+        {
             var metadata = content.ContentItem.ContentManager.GetItemMetadata(content);
             if (metadata.EditorRouteValues == null)
                 return null;
@@ -110,7 +111,7 @@ namespace Orchard.Mvc.Html {
                 NonNullOrEmpty(linkText, metadata.DisplayText, content.ContentItem.TypeDefinition.DisplayName),
                 Convert.ToString(metadata.EditorRouteValues["action"]),
                 metadata.EditorRouteValues.Merge(additionalRouteValues),
-                htmlAttributes);
+                new RouteValueDictionary(htmlAttributes));
         }
 
         public static MvcHtmlString ItemAdminLink(this HtmlHelper html, IContent content) {

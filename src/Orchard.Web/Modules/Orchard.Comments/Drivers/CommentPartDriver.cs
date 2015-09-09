@@ -1,7 +1,6 @@
 using System;
 using System.Globalization;
 using System.Xml;
-using JetBrains.Annotations;
 using Orchard.Comments.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
@@ -12,7 +11,6 @@ using Orchard.Comments.Services;
 using Orchard.UI.Notify;
 
 namespace Orchard.Comments.Drivers {
-    [UsedImplicitly]
     public class CommentPartDriver : ContentPartDriver<CommentPart> {
         private readonly IContentManager _contentManager;
         private readonly IWorkContextAccessor _workContextAccessor;
@@ -55,7 +53,7 @@ namespace Orchard.Comments.Drivers {
             else {
                 return ContentShape("Parts_Comment_Edit", 
                     () => shapeHelper.EditorTemplate(TemplateName: "Parts.Comment", Model: part, Prefix: Prefix));
-	        }
+            }
         }
 
         // POST

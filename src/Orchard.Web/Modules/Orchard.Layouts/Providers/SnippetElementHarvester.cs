@@ -16,7 +16,7 @@ using Orchard.Utility.Extensions;
 
 namespace Orchard.Layouts.Providers {
     [OrchardFeature("Orchard.Layouts.Snippets")]
-    public class SnippetElementHarvester : Component, ElementHarvester {
+    public class SnippetElementHarvester : Component, IElementHarvester {
         private const string SnippetShapeSuffix = "Snippet";
         private readonly Work<IShapeFactory> _shapeFactory;
         private readonly Work<ISiteThemeService> _siteThemeService;
@@ -49,13 +49,13 @@ namespace Orchard.Layouts.Providers {
                 var elementName = GetDisplayName(shapeDescriptor.Value.BindingSource);
                 var closureDescriptor = shapeDescriptor;
                 yield return new ElementDescriptor(elementType, shapeType, T(elementName), T("An element that renders the {0} shape.", shapeType), snippetElement.Category) {
-                    Display = displayContext => Displaying(displayContext, closureDescriptor.Value),
+                    Displaying = displayContext => Displaying(displayContext, closureDescriptor.Value),
                     ToolboxIcon = "\uf10c"
                 };
             }
         }
 
-        private void Displaying(ElementDisplayContext context, ShapeDescriptor shapeDescriptor) {
+        private void Displaying(ElementDisplayingContext context, ShapeDescriptor shapeDescriptor) {
             var shapeType = shapeDescriptor.ShapeType;
             var shape = _shapeFactory.Value.Create(shapeType);
             context.ElementShape.Snippet = shape;

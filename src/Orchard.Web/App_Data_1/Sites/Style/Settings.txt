@@ -1,0 +1,13 @@
+State: Running
+Themes: 
+Modules: 
+Name: Style
+RequestUrlHost: null
+RequestUrlPrefix: Style
+DataProvider: SqlServer
+DataConnectionString: Data Source=localhost\sql2014;Initial Catalog=StyleUp;Persist Security Info=True;Integrated Security=true;
+DataTablePrefix: dev
+EncryptionAlgorithm: AES
+EncryptionKey: 5E36983884EF107026EAFB50EEDF526079FC1AE92CC2D302FC77710CE391A437
+HashAlgorithm: HMACSHA256
+HashKey: 7BB865251A5DBB4A68F973C206DF2A90DFB4B87B7843F77F5BC243D215773ADCC6436720709B41F050CCE6494B0E4093E8E23F1684115513DFBE02C43F976799

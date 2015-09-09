@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using JetBrains.Annotations;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Data;
 using Orchard.ContentManagement;
@@ -13,7 +12,6 @@ using Orchard.Security;
 using Orchard.UI.Notify;
 
 namespace Orchard.Roles.Drivers {
-    [UsedImplicitly]
     public class UserRolesPartDriver : ContentPartDriver<UserRolesPart> {
         private readonly IRepository<UserRolesPartRecord> _userRolesRepository;
         private readonly IRoleService _roleService;

@@ -1,0 +1,19 @@
+﻿@model Orchard.Search.ViewModels.SearchFormViewModel
+@{
+    Script.Require("ShapesBase");
+}
+@{
+    var indexOptions = Model.AvailableIndexes.Select(x => new SelectListItem { Text = x, Value = x, Selected = x == Model.SelectedIndex });
+}
+<fieldset>
+    <div class="form-group">
+        @Html.CheckBoxFor(m => m.OverrideIndex)
+        @Html.LabelFor(m => m.OverrideIndex, T("Override Search Index").Text, new { @class = "forcheckbox" })
+        @Html.Hint(T("Check this if you want to specify a different index for this widget to search."))
+    </div>
+    <div class="form-group" data-controllerid="@Html.FieldIdFor(m => m.OverrideIndex)">
+        @Html.LabelFor(m => m.SelectedIndex, T("Index"))
+        @Html.DropDownListFor(m => m.SelectedIndex, indexOptions)
+        @Html.Hint(T("The index to search."))
+    </div>
+</fieldset>

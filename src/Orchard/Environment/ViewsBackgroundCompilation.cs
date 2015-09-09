@@ -120,7 +120,7 @@ namespace Orchard.Environment {
         }
 
         private void CompileDirectory(CompilationContext context, string viewDirectory) {
-            // Prevent processing of the same directories multiple times (sligh performance optimization,
+            // Prevent processing of the same directories multiple times (slight performance optimization,
             // as the build manager second call to compile a view is essentially a "no-op".
             if (context.ProcessedDirectories.Contains(viewDirectory))
                 return;

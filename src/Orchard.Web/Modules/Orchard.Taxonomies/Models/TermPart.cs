@@ -79,7 +79,7 @@ namespace Orchard.Taxonomies.Models {
 
                     // if same parent path and same weight, compare by name
                     return String.Compare(x.Name, y.Name, StringComparison.OrdinalIgnoreCase);
-                } 
+                }
 
                 // if two nodes have different parents
 
@@ -98,12 +98,12 @@ namespace Orchard.Taxonomies.Models {
                 //    /1/2 vs /1/3 => 2 vs 3
                 //    /2/3 vs /4 => 2 vs 4
 
-                var xPath = x.FullPath.Split(new [] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-                var yPath = y.FullPath.Split(new [] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+                var xPath = x.FullPath.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+                var yPath = y.FullPath.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
 
-                string xFullPath = "", yFullPath = ""; 
+                string xFullPath = "", yFullPath = "";
 
-                for(var i=0; i< Math.Min(xPath.Length, yPath.Length); i++) {
+                for (var i = 0; i < Math.Min(xPath.Length, yPath.Length); i++) {
                     xFullPath += "/" + xPath[i];
                     yFullPath += "/" + yPath[i];
 

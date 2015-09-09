@@ -25,6 +25,7 @@
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
     <TargetFrameworkProfile />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -50,6 +51,13 @@
     <Reference Include="Autofac">
       <HintPath>..\..\..\..\lib\autofac\Autofac.dll</HintPath>
     </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\..\..\..\lib\log4net\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="NHibernate">
+      <HintPath>..\..\..\..\lib\nhibernate\NHibernate.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -67,32 +75,55 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
+    <Content Include="Scripts\recipebuilderstep-data.js" />
+    <Content Include="Styles\recipebuilderstep-content.css" />
+    <Content Include="Styles\images\menu.importexport.png" />
+    <Content Include="Styles\menu.importexport-admin.css" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\RecipesCommands.cs" />
+    <Compile Include="Migrations.cs" />
+    <Compile Include="Models\RecipeResultRecord.cs" />
+    <Compile Include="Models\RecipeStepResultRecord.cs" />
+    <Compile Include="Models\VersionHistoryOptions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RecipeHandlers\CommandRecipeHandler.cs" />
-    <Compile Include="RecipeHandlers\DataRecipeHandler.cs" />
-    <Compile Include="RecipeHandlers\FeatureRecipeHandler.cs" />
-    <Compile Include="RecipeHandlers\MetadataRecipeHandler.cs" />
-    <Compile Include="RecipeHandlers\MigrationRecipeHandler.cs" />
-    <Compile Include="RecipeHandlers\ModuleRecipeHandler.cs" />
-    <Compile Include="RecipeHandlers\SettingsRecipeHandler.cs" />
-    <Compile Include="RecipeHandlers\ThemeRecipeHandler.cs" />
+    <Compile Include="Providers\Builders\ContentStep.cs" />
+    <Compile Include="Providers\Builders\RecipeMetadataStep.cs" />
+    <Compile Include="Providers\Builders\SettingsStep.cs" />
+    <Compile Include="Providers\Executors\ActivateShellStep.cs" />
+    <Compile Include="Providers\Executors\ActivateSweepGeneratorStep.cs" />
+    <Compile Include="Providers\Executors\CommandStep.cs" />
+    <Compile Include="Providers\Executors\RemoveContentStep.cs" />
+    <Compile Include="Providers\Executors\RecipesStep.cs" />
+    <Compile Include="ViewModels\ContentExecutionStepViewModel.cs" />
+    <Compile Include="Providers\Executors\ContentStep.cs" />
+    <Compile Include="Providers\Executors\ContentDefinitionStep.cs" />
+    <Compile Include="Providers\Executors\MigrationStep.cs" />
+    <Compile Include="Providers\Executors\ModuleStep.cs" />
+    <Compile Include="Providers\Executors\SettingsStep.cs" />
+    <Compile Include="Providers\RecipeHandlers\RecipeExecutionStepHandler.cs" />
     <Compile Include="Routes.cs" />
     <Compile Include="Services\RecipeHarvester.cs" />
-    <Compile Include="Services\RecipeJournalManager.cs" />
     <Compile Include="Services\RecipeManager.cs" />
     <Compile Include="Services\RecipeParser.cs" />
+    <Compile Include="Services\RecipeResultAccessor.cs" />
     <Compile Include="Services\RecipeScheduler.cs" />
     <Compile Include="Services\RecipeStepExecutor.cs" />
     <Compile Include="Services\RecipeStepQueue.cs" />
+    <Compile Include="ViewModels\ContentTypeEntry.cs" />
+    <Compile Include="ViewModels\CustomStepEntry.cs" />
+    <Compile Include="ViewModels\ContentBuilderStepViewModel.cs" />
+    <Compile Include="ViewModels\ImportResultViewModel.cs" />
+    <Compile Include="ViewModels\ImportViewModel.cs" />
+    <Compile Include="ViewModels\SetupRecipeStepViewModel.cs" />
+    <Compile Include="ViewModels\SiteSettingsStepViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
       <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
       <Name>Orchard.Framework</Name>
+      <Private>false</Private>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.ContentTypes\Orchard.ContentTypes.csproj">
       <Project>{0e7646e8-fe8f-43c1-8799-d97860925ec4}</Project>
@@ -102,12 +133,26 @@
       <Project>{DFD137A2-DDB5-4D22-BE0D-FA9AD4C8B059}</Project>
       <Name>Orchard.Packaging</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Orchard.Themes\Orchard.Themes.csproj">
-      <Project>{CDE24A24-01D3-403C-84B9-37722E18DFB7}</Project>
-      <Name>Orchard.Themes</Name>
-    </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Scripts\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\BuilderSteps\Content.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\BuilderSteps\RecipeMetadata.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\ExecutionSteps\Content.cshtml" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

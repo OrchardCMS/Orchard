@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Navigation.Models;
@@ -11,7 +10,6 @@ using Orchard.UI.Navigation;
 using Orchard.Utility;
 
 namespace Orchard.Core.Navigation.Drivers {
-    [UsedImplicitly]
     public class MenuPartDriver : ContentPartDriver<MenuPart> {
         private readonly IAuthorizationService _authorizationService;
         private readonly INavigationManager _navigationManager;

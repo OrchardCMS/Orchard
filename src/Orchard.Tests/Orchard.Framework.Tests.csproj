@@ -162,6 +162,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ContentManagement\ContentQueryTests.cs" />
+    <Compile Include="ContentManagement\DefaultContentManagerImportTests.cs" />
+    <Compile Include="ContentManagement\Handlers\DummyHandler.cs" />
     <Compile Include="ContentManagement\Handlers\LambdaPartHandler.cs" />
     <Compile Include="ContentManagement\HqlExpressionTests.cs" />
     <Compile Include="ContentManagement\DynamicContentQueryTests.cs" />
@@ -243,9 +245,12 @@
     <Compile Include="Environment\Extensions\ExtensionLoaderCoordinatorTests.cs" />
     <Compile Include="Environment\Features\FeatureManagerTests.cs" />
     <Compile Include="Environment\Loaders\DynamicExtensionLoaderTests.cs" />
+    <Compile Include="Environment\ShellBuilders\CompositionStrategyTests.cs" />
     <Compile Include="Environment\State\DefaultProcessingEngineTests.cs" />
     <Compile Include="Environment\RunningShellTableTests.cs" />
     <Compile Include="Environment\StubHostEnvironment.cs" />
+    <Compile Include="Environment\TestDependencies\AlphaDependency.cs" />
+    <Compile Include="Environment\TestDependencies\BetaDependency.cs" />
     <Compile Include="Environment\Utility\Build.cs" />
     <Compile Include="Environment\Warmup\WarmupUtilityTests.cs" />
     <Compile Include="FileSystems\AppData\AppDataFolderTests.cs" />
@@ -267,6 +272,7 @@
     <Compile Include="Localization\DateTimePartsTests.cs" />
     <Compile Include="Localization\DefaultDateLocalizationServicesTests.cs" />
     <Compile Include="Localization\DefaultDateFormatterTests.cs" />
+    <Compile Include="Stubs\StubMachineNameProvider.cs" />
     <Compile Include="Stubs\StubCultureSelector.cs" />
     <Compile Include="Localization\TestHelpers.cs" />
     <Compile Include="Logging\OrchardFileAppenderTests.cs" />
@@ -282,13 +288,14 @@
     <Compile Include="Stubs\StubHttpContextAccessor.cs" />
     <Compile Include="Stubs\StubWorkContextAccessor.cs" />
     <Compile Include="Stubs\StubExtensionManager.cs" />
-    <Compile Include="Stubs\StubReportsCoordinator.cs" />
     <Compile Include="Stubs\StubVirtualPathProvider.cs" />
     <Compile Include="Stubs\StubFileSystem.cs" />
     <Compile Include="Stubs\StubAppDataFolder.cs" />
     <Compile Include="Stubs\StubVirtualPathMonitor.cs" />
     <Compile Include="Stubs\StubCacheManager.cs" />
     <Compile Include="Stubs\StubWebSiteFolder.cs" />
+    <Compile Include="Stubs\StubWorkContextScope.cs" />
+    <Compile Include="Tasks\DistributedLockServiceTests.cs" />
     <Compile Include="Time\TimeZoneSelectorTests.cs" />
     <Compile Include="UI\Resources\ResourceManagerTests.cs" />
     <Compile Include="UI\ShapeTests.cs" />
@@ -334,10 +341,12 @@
     <ProjectReference Include="..\Orchard.Web\Core\Orchard.Core.csproj">
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
+      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\Orchard\Orchard.Framework.csproj">
       <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
       <Name>Orchard.Framework</Name>
+      <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

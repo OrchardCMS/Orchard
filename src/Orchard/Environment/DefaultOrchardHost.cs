@@ -16,7 +16,7 @@ using Orchard.Utility.Extensions;
 using Orchard.Exceptions;
 
 namespace Orchard.Environment {
-    // All the event handlers that DefaultOrchardHost implements have to be declared in OrchardStarter
+    // All the event handlers that DefaultOrchardHost implements have to be declared in OrchardStarter.
     public class DefaultOrchardHost : IOrchardHost, IShellSettingsManagerEventHandler, IShellDescriptorManagerEventHandler {
         private readonly IHostLocalRestart _hostLocalRestart;
         private readonly IShellSettingsManager _shellSettingsManager;
@@ -129,12 +129,12 @@ namespace Orchard.Environment {
         void CreateAndActivateShells() {
             Logger.Information("Start creation of shells");
 
-            // is there any tenant right now ?
+            // Is there any tenant right now?
             var allSettings = _shellSettingsManager.LoadSettings()
-                .Where(settings => settings.State == TenantState.Running || settings.State == TenantState.Uninitialized)
+                .Where(settings => settings.State == TenantState.Running || settings.State == TenantState.Uninitialized || settings.State == TenantState.Initializing)
                 .ToArray();
 
-            // load all tenants, and activate their shell
+            // Load all tenants, and activate their shell.
             if (allSettings.Any()) {
                 Parallel.ForEach(allSettings, settings => {
                     try {
@@ -153,7 +153,7 @@ namespace Orchard.Environment {
                     }
                 });
             }
-            // no settings, run the Setup
+            // No settings, run the Setup.
             else {
                 var setupContext = CreateSetupContext();
                 ActivateShell(setupContext);
@@ -180,24 +180,26 @@ namespace Orchard.Environment {
         }
 
         /// <summary>
-        /// Creates a transient shell for the default tenant's setup
+        /// Creates a transient shell for the default tenant's setup.
         /// </summary>
         private ShellContext CreateSetupContext() {
-            Logger.Debug("Creating shell context for root setup");
+            Logger.Debug("Creating shell context for root setup.");
             return _shellContextFactory.CreateSetupContext(new ShellSettings { Name = ShellSettings.DefaultName });
         }
 
         /// <summary>
-        /// Creates a shell context based on shell settings
+        /// Creates a shell context based on shell settings.
         /// </summary>
         private ShellContext CreateShellContext(ShellSettings settings) {
-            if (settings.State == TenantState.Uninitialized) {
-                Logger.Debug("Creating shell context for tenant {0} setup", settings.Name);
-                return _shellContextFactory.CreateSetupContext(settings);
+            switch (settings.State) {
+                case TenantState.Uninitialized:
+                case TenantState.Initializing:
+                    Logger.Debug("Creating shell context for tenant {0} setup.", settings.Name);
+                    return _shellContextFactory.CreateSetupContext(settings);
+                default:
+                    Logger.Debug("Creating shell context for tenant {0}.", settings.Name);
+                    return _shellContextFactory.CreateShellContext(settings);
             }
-
-            Logger.Debug("Creating shell context for tenant {0}", settings.Name);
-            return _shellContextFactory.CreateShellContext(settings);
         }
 
         private void SetupExtensions() {

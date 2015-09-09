@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
@@ -12,7 +11,6 @@ using Orchard.Tags.ViewModels;
 using Orchard.UI.Notify;
 
 namespace Orchard.Tags.Drivers {
-    [UsedImplicitly]
     public class TagsPartDriver : ContentPartDriver<TagsPart> {
         public static readonly char[] DisalowedChars =  { '<', '>', '*', '%', ':', '&', '\\', '"', '|', '/' };
         private const string TemplateName = "Parts/Tags";

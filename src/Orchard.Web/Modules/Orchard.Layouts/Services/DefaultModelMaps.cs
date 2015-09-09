@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using System;
+using Newtonsoft.Json.Linq;
 using Orchard.DisplayManagement;
 using Orchard.Layouts.Elements;
 using Orchard.Layouts.Framework.Display;
@@ -35,6 +36,7 @@ namespace Orchard.Layouts.Services {
             node["htmlClass"] = element.HtmlClass;
             node["htmlStyle"] = element.HtmlStyle;
             node["isTemplated"] = element.IsTemplated;
+            node["rule"] = element.Rule;
         }
 
         protected virtual void ToElement(T element, JToken node) {
@@ -43,6 +45,23 @@ namespace Orchard.Layouts.Services {
             element.HtmlClass = (string)node["htmlClass"];
             element.HtmlStyle = (string)node["htmlStyle"];
             element.IsTemplated = (bool)(node["isTemplated"] ?? false);
+            element.Rule = (string) node["rule"];
+        }
+
+        protected bool? ReadBoolean(JToken node) {
+            if (node == null)
+                return null;
+
+            var value = node.Value<string>();
+            if (String.IsNullOrWhiteSpace(value))
+                return null;
+
+            bool result;
+
+            if (Boolean.TryParse(value, out result))
+                return result;
+
+            return null;
         }
     }
 
@@ -55,12 +74,14 @@ namespace Orchard.Layouts.Services {
             base.ToElement(element, node);
             element.Width = (int?)node["width"];
             element.Offset = (int?)node["offset"];
+            element.Collapsible = ReadBoolean(node["collapsible"]);
         }
 
         public override void FromElement(Column element, DescribeElementsContext describeContext, JToken node) {
             base.FromElement(element, describeContext, node);
             node["width"] = element.Width;
             node["offset"] = element.Offset;
+            node["collapsible"] = element.Collapsible;
         }
     }
 
@@ -92,6 +113,7 @@ namespace Orchard.Layouts.Services {
             element.HtmlClass = (string)node["htmlClass"];
             element.HtmlStyle = (string)node["htmlStyle"];
             element.IsTemplated = (bool)(node["isTemplated"] ?? false);
+            element.Rule = (string) node["rule"];
 
             return element;
         }
@@ -101,6 +123,7 @@ namespace Orchard.Layouts.Services {
             node["htmlId"] = element.HtmlId;
             node["htmlClass"] = element.HtmlClass;
             node["htmlStyle"] = element.HtmlStyle;
+            node["rule"] = element.Rule;
             node["isTemplated"] = element.IsTemplated;
             node["hasEditor"] = element.HasEditor;
             node["contentType"] = element.Descriptor.TypeName;

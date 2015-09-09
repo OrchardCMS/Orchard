@@ -1,0 +1,13 @@
+State: Running
+Themes: 
+Modules: 
+Name: TT
+RequestUrlHost: null
+RequestUrlPrefix: tt
+DataProvider: SqlServer
+DataConnectionString: Data Source=localhost\sql2014;Initial Catalog=tt_dev_orchard;Persist Security Info=True;Integrated Security=true;
+DataTablePrefix: null
+EncryptionAlgorithm: AES
+EncryptionKey: DB5B39C22977B39313E93830A5B7BBFEE54CD4530C408F160AD3A0ECB55312F9
+HashAlgorithm: HMACSHA256
+HashKey: 1E95D2E3D923304B07E07104A5C07B0457CFAA1E380C0399C6A6CFBAAC1525A01040C294D6ECA7720096668D6319CB5247EFC8ADCE3A750D3FFAE740B72F99F7

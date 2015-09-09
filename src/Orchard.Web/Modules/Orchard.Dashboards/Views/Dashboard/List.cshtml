@@ -1,0 +1,55 @@
+﻿@using Orchard.Core.Contents.ViewModels;
+@{
+    var typeDisplayName = Model.TypeDisplayName;
+    var pageTitle = T("Manage Dashboards");
+    var createLinkText = T("Create New Dashboard");
+    var cultures = (IEnumerable<string>)Model.Options.Cultures;
+    
+    Layout.Title = pageTitle;
+}
+
+<div class="manage">
+    @Html.ActionLink(createLinkText.Text, "Create", "Admin", new { area = "Contents", id = "Dashboard", returnUrl = Url.Action("List", "Dashboard", new { area = "Orchard.Dashboards" }) }, new { @class = "button primaryAction" })
+</div>
+@using (Html.BeginFormAntiForgeryPost()) {
+    <fieldset class="bulk-actions">
+        <label for="publishActions">@T("Actions:")</label>
+        <select id="publishActions" name="Options.BulkAction">
+            @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.None, T("Choose action...").ToString())
+            @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.PublishNow, T("Publish Now").ToString())
+            @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.Unpublish, T("Unpublish").ToString())
+            @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.Remove, T("Delete").ToString())
+        </select>
+        <button type="submit" name="submit.BulkEdit" value="yes">@T("Apply")</button>
+    </fieldset>
+    <fieldset class="bulk-actions">
+        @if (cultures.Count() > 1) {
+            <label for="filterCultures" class="bulk-culture">@T("Culture")</label>
+            <select id="filterCultures" name="Options.SelectedCulture">
+                @Html.SelectOption((string)Model.Options.SelectedCulture, "", T("any (show all)").ToString())
+                @foreach (string culture in cultures) {
+                    @Html.SelectOption((string)Model.Options.SelectedCulture, culture, System.Globalization.CultureInfo.GetCultureInfo(culture).DisplayName)
+                }
+            </select>
+        }
+
+        <label for="orderResults" class="bulk-order">@T("Ordered by")</label>
+        <select id="orderResults" name="Options.OrderBy">
+            @Html.SelectOption((ContentsOrder)Model.Options.OrderBy, ContentsOrder.Created, T("recently created").ToString())
+            @Html.SelectOption((ContentsOrder)Model.Options.OrderBy, ContentsOrder.Modified, T("recently modified").ToString())
+            @Html.SelectOption((ContentsOrder)Model.Options.OrderBy, ContentsOrder.Published, T("recently published").ToString())
+        </select>
+        <label for="contentResults" class="bulk-order">@T("Filter by")</label>
+        <select id="contentResults" name="Options.ContentsStatus">
+            @Html.SelectOption((ContentsStatus)Model.Options.ContentsStatus, ContentsStatus.Latest, T("latest").ToString())
+            @Html.SelectOption((ContentsStatus)Model.Options.ContentsStatus, ContentsStatus.Published, T("published").ToString())
+            @Html.SelectOption((ContentsStatus)Model.Options.ContentsStatus, ContentsStatus.Draft, T("unpublished").ToString())
+            @Html.SelectOption((ContentsStatus)Model.Options.ContentsStatus, ContentsStatus.AllVersions, T("all versions").ToString())
+        </select>
+        <button type="submit" name="submit.Filter" value="yes please">@T("Apply")</button>
+    </fieldset>
+    <fieldset class="contentItems bulk-items">
+@Display(Model.ContentItems)
+    </fieldset>
+@Display(Model.Pager)
+}

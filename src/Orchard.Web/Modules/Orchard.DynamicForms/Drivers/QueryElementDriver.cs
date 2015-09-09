@@ -118,7 +118,7 @@ namespace Orchard.DynamicForms.Drivers {
             });
         }
 
-        protected override void OnDisplaying(Query element, ElementDisplayContext context) {
+        protected override void OnDisplaying(Query element, ElementDisplayingContext context) {
             var queryId = element.QueryId;
             var typeName = element.GetType().Name;
             var displayType = context.DisplayType;

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Autofac.Features.OwnedInstances;
 using Microsoft.Owin.Builder;
 using Orchard.Environment.Configuration;
@@ -12,7 +11,6 @@ using Orchard.Owin;
 using Orchard.Tasks;
 using Orchard.UI;
 using Orchard.WebApi.Routes;
-using Owin;
 using Orchard.Exceptions;
 using IModelBinderProvider = Orchard.Mvc.ModelBinders.IModelBinderProvider;
 
@@ -54,7 +52,7 @@ namespace Orchard.Environment {
         public ILogger Logger { get; set; }
 
         public void Activate() {
-            IAppBuilder appBuilder = new AppBuilder();
+            var appBuilder = new AppBuilder();
             appBuilder.Properties["host.AppName"] = _shellSettings.Name;
 
             var orderedMiddlewares = _owinMiddlewareProviders
@@ -65,11 +63,10 @@ namespace Orchard.Environment {
                 middleware.Configure(appBuilder);
             }
 
-            // register the Orchard middleware after all others
+            // Register the Orchard middleware after all others.
             appBuilder.UseOrchard();
 
-            Func<IDictionary<string, object>, Task> pipeline = appBuilder.Build();
-
+            var pipeline = appBuilder.Build();
             var allRoutes = new List<RouteDescriptor>();
             allRoutes.AddRange(_routeProviders.SelectMany(provider => provider.GetRoutes()));
             allRoutes.AddRange(_httpRouteProviders.SelectMany(provider => provider.GetRoutes()));
@@ -82,7 +79,7 @@ namespace Orchard.Environment {
                     events.Value.Activated();
                 }
             }
-
+            
             _sweepGenerator.Activate();
         }
 
@@ -92,7 +89,7 @@ namespace Orchard.Environment {
                     using (var events = scope.Resolve<Owned<IOrchardShellEvents>>()) {
                         SafelyTerminate(() => events.Value.Terminating());
                     }
-                }
+                }  
             });
 
             SafelyTerminate(() => _sweepGenerator.Terminate());

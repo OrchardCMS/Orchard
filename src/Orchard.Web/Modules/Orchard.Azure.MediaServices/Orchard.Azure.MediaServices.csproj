@@ -85,6 +85,9 @@
     <Reference Include="Microsoft.WindowsAzure.MediaServices.Client">
       <HintPath>..\..\..\..\lib\windowsazure\Microsoft.WindowsAzure.MediaServices.Client.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.WindowsAzure.MediaServices.Client.Common.BlobTransfer">
+      <HintPath>..\..\..\..\lib\windowsazure\Microsoft.WindowsAzure.MediaServices.Client.Common.BlobTransfer.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.WindowsAzure.Storage">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\lib\windowsazure\Microsoft.WindowsAzure.Storage.dll</HintPath>
@@ -217,6 +220,7 @@
     <Content Include="Assets\JavaScript\Lib\moment.js" />
     <Content Include="Assets\JavaScript\Lib\swfobject.js" />
     <Content Include="Assets\JavaScript\Lib\uri.js" />
+    <Content Include="Assets\JavaScript\Lib\underscore.js" />
     <Content Include="Scripts\Lib\console-shim.js" />
     <Content Include="Scripts\Lib\console-shim.min.js" />
     <Content Include="Scripts\Lib\dash.all.js" />
@@ -239,7 +243,6 @@
     <Content Include="Scripts\Lib\underscore.min.js" />
     <Content Include="Scripts\Lib\uri.js" />
     <Content Include="Scripts\Lib\uri.min.js" />
-    <Content Include="Assets\JavaScript\Lib\underscore.js" />
     <Content Include="Styles\cloudmedia-admin-asset.css" />
     <Content Include="Styles\cloudmedia-admin-asset.min.css" />
     <Content Include="Styles\cloudmedia-admin-job.css" />
@@ -270,7 +273,9 @@
     <Content Include="Assets\Less\cloudmedia-edit-cloudvideopart.less" />
     <Content Include="Styles\menu.cloudmedia-mediaproviders.css" />
     <Content Include="Styles\menu.cloudmedia-mediaproviders.min.css" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
     <Content Include="Properties\AssemblyInfo.cs" />
@@ -290,10 +295,12 @@
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
       <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
       <Name>Orchard.Framework</Name>
+      <Private>false</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Core\Orchard.Core.csproj">
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
+      <Private>false</Private>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.MediaLibrary\Orchard.MediaLibrary.csproj">
       <Project>{73a7688a-5bd3-4f7e-adfa-ce36c5a10e3b}</Project>

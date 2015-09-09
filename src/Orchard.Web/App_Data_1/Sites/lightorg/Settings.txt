@@ -1,0 +1,13 @@
+State: Uninitialized
+Themes: 
+Modules: 
+Name: lightorg
+DataProvider: SqlCe
+DataConnectionString: null
+DataTablePrefix: null
+RequestUrlHost: null
+RequestUrlPrefix: null
+EncryptionAlgorithm: null
+EncryptionKey: null
+HashAlgorithm: null
+HashKey: null

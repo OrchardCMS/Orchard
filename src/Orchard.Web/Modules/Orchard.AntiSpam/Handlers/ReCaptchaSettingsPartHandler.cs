@@ -1,11 +1,9 @@
-﻿using JetBrains.Annotations;
-using Orchard.AntiSpam.Models;
+﻿using Orchard.AntiSpam.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
 
 namespace Orchard.AntiSpam.Handlers {
-    [UsedImplicitly]
     public class ReCaptchaSettingsPartHandler : ContentHandler {
         public ReCaptchaSettingsPartHandler() {
             T = NullLocalizer.Instance;

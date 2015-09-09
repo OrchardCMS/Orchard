@@ -2,7 +2,7 @@
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.Records;
-using Orchard.Core.Common.Utilities;
+using Orchard.ContentManagement.Utilities;
 using Orchard.Core.Containers.Services;
 using Orchard.Core.Containers.Settings;
 using Orchard.UI.Navigation;

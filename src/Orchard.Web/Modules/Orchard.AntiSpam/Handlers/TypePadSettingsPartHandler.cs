@@ -1,12 +1,10 @@
-﻿using JetBrains.Annotations;
-using Orchard.AntiSpam.Models;
+﻿using Orchard.AntiSpam.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Environment.Extensions;
 using Orchard.Localization;
 
 namespace Orchard.AntiSpam.Handlers {
-    [UsedImplicitly]
     [OrchardFeature("TypePad.Filter")]
     public class TypePadSettingsPartHandler : ContentHandler {
         public TypePadSettingsPartHandler() {

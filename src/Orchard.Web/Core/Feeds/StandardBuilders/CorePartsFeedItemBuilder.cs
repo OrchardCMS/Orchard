@@ -4,14 +4,12 @@ using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Xml.Linq;
-using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.Core.Feeds.Models;
 using Orchard.Mvc.Extensions;
 using Orchard.Services;
 
 namespace Orchard.Core.Feeds.StandardBuilders {
-    [UsedImplicitly]
     public class CorePartsFeedItemBuilder : IFeedItemBuilder {
         private readonly IContentManager _contentManager;
         private readonly RouteCollection _routes;

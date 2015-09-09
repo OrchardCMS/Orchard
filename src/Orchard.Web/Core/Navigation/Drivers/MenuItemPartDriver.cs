@@ -1,11 +1,9 @@
-﻿using JetBrains.Annotations;
-using Orchard.ContentManagement;
+﻿using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Navigation.Models;
 using Orchard.Security;
 
 namespace Orchard.Core.Navigation.Drivers {
-    [UsedImplicitly]
     public class MenuItemPartDriver : ContentPartDriver<MenuItemPart> {
         private readonly IAuthorizationService _authorizationService;
         private readonly IWorkContextAccessor _workContextAccessor;

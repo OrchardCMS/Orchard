@@ -19,7 +19,7 @@ namespace Orchard.Layouts.Drivers {
             get { yield return "ShapeElement"; }
         }
 
-        protected override void OnDisplaying(Shape element, ElementDisplayContext context) {
+        protected override void OnDisplaying(Shape element, ElementDisplayingContext context) {
             if (String.IsNullOrWhiteSpace(element.ShapeType))
                 return;
 

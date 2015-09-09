@@ -1,6 +1,14 @@
-﻿@using Orchard.Layouts.Helpers
+﻿@using Orchard.DisplayManagement.Shapes
+@using Orchard.Layouts.Helpers
 @{
-    var tagBuilder = TagBuilderExtensions.CreateElementTagBuilder(Model);
-    tagBuilder.InnerHtml = Model.ProcessedContent;
+    // Only render the surrounding div if there are any attributes to be rendered.
+    var commonAttributes = (IDictionary<string, object>)TagBuilderExtensions.GetCommonElementAttributes(Model);
+    var tagBuilder = commonAttributes.Any() ? new OrchardTagBuilder("div") : default(OrchardTagBuilder);
+
+    if (tagBuilder != null) {
+        tagBuilder.MergeAttributes(commonAttributes);
+    }
 }
-@tagBuilder.ToHtmlString()
+@if (tagBuilder != null) { @tagBuilder.StartElement }
+@Html.Raw(Model.ProcessedContent)
+@if (tagBuilder != null) { @tagBuilder.EndElement }
