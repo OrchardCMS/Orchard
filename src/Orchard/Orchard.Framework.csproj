@@ -401,7 +401,7 @@
     <Compile Include="Services\IJsonConverter.cs" />
     <Compile Include="Settings\CurrentSiteWorkContext.cs" />
     <Compile Include="Settings\ResourceDebugMode.cs" />
-    <Compile Include="Tasks\Locking\Migrations\FrameworkMigrations.cs" />
+    <Compile Include="Tasks\Locking\Services\DistributedLockSchemaBuilder.cs" />
     <Compile Include="Tasks\Locking\Services\IDistributedLock.cs" />
     <Compile Include="Tasks\Locking\Services\DistributedLock.cs" />
     <Compile Include="Tasks\Locking\Services\IDistributedLockService.cs" />
