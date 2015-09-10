@@ -17,7 +17,7 @@ namespace Orchard.Utility.Extensions {
 
             for (int i = camel.Length-1; i>0; i--) {
                 var current = sb[i];
-                if('A' <= current && current <= 'Z') {
+                if(char.IsUpper(current)) {
                     sb.Insert(i, ' ');
                 }
             }
