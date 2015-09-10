@@ -69,6 +69,17 @@ namespace Orchard.Setup.Services {
         }
 
         public string Setup(SetupContext context) {
+            var initialState = _shellSettings.State;
+            try {
+                return SetupInternal(context);
+            }
+            catch {
+                _shellSettings.State = initialState;
+                throw;
+            }
+        }
+
+        private string SetupInternal(SetupContext context) {
             string executionId;
 
             Logger.Information("Running setup for tenant '{0}'.", _shellSettings.Name);
@@ -96,7 +107,7 @@ namespace Orchard.Setup.Services {
                 shellSettings.DataConnectionString = context.DatabaseConnectionString;
                 shellSettings.DataTablePrefix = context.DatabaseTablePrefix;
             }
-            
+
             shellSettings.EncryptionAlgorithm = "AES";
 
             // Randomly generated key.
@@ -173,9 +184,8 @@ namespace Orchard.Setup.Services {
                     throw;
                 }
             }
-            
-            _shellSettingsManager.SaveSettings(shellSettings);
 
+            _shellSettingsManager.SaveSettings(shellSettings);
             return executionId;
         }
 
