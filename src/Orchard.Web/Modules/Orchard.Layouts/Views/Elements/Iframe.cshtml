@@ -1,0 +1,7 @@
+﻿@using Orchard.Layouts.Helpers
+@{
+    var tagBuilder = TagBuilderExtensions.CreateElementTagBuilder(Model, "iframe");
+    tagBuilder.MergeAttributes(Model.IframeAttributes);
+    tagBuilder.AddCssClass("layout-content-iframe");
+}
+@tagBuilder.ToHtmlString()

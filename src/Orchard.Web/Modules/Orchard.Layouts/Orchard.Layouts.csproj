@@ -319,11 +319,13 @@
     <Compile Include="Controllers\TemplateController.cs" />
     <Compile Include="Drivers\CanvasElementDriver.cs" />
     <Compile Include="Drivers\HeadingElementDriver.cs" />
+    <Compile Include="Drivers\IframeElementDriver.cs" />
     <Compile Include="Drivers\ShapeElementDriver.cs" />
     <Compile Include="Drivers\BreakElementDriver.cs" />
     <Compile Include="Elements\Canvas.cs" />
     <Compile Include="Elements\ContentElement.cs" />
     <Compile Include="Elements\Heading.cs" />
+    <Compile Include="Elements\Iframe.cs" />
     <Compile Include="Elements\Shape.cs" />
     <Compile Include="Elements\Break.cs" />
     <Compile Include="Filters\TokensFilter.cs" />
@@ -417,6 +419,7 @@
     <Compile Include="ViewModels\EditElementBlueprintViewModel.cs" />
     <Compile Include="ViewModels\ElementWrapperPartViewModel.cs" />
     <Compile Include="ViewModels\HtmlEditorViewModel.cs" />
+    <Compile Include="ViewModels\IframeEditorViewModel.cs" />
     <Compile Include="ViewModels\LayoutEditor.cs" />
     <Compile Include="ViewModels\LayoutEditorPropertiesViewModel.cs" />
     <Compile Include="ViewModels\HeadingEditorViewModel.cs" />
@@ -559,6 +562,15 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assets\CSS\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Elements.Iframe.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Iframe.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Iframe.Design.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
