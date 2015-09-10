@@ -362,8 +362,8 @@ namespace Orchard.Environment {
             if (runningShell.State == TenantState.Initializing) {
                 var response = httpContext.Response;
                 response.StatusCode = 503;
-                response.StatusDescription = "Orchard is currently setting up. Please check back in a few moments.";
-                response.Write("Orchard is currently setting up. Please check back in a few moments.");
+                response.StatusDescription = "This tenant is currently initializing. Please try again later.";
+                response.Write("This tenant is currently initializing. Please try again later.");
             }
         }
 
