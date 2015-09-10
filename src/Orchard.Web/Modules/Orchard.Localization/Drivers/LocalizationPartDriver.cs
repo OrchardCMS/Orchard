@@ -108,16 +108,19 @@ namespace Orchard.Localization.Drivers {
         }
 
         protected override void Importing(LocalizationPart part, ContentManagement.Handlers.ImportContentContext context) {
-            var masterContentItem = context.Attribute(part.PartDefinition.Name, "MasterContentItem");
-            if (masterContentItem != null) {
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
+            }
+
+            context.ImportAttribute(part.PartDefinition.Name, "MasterContentItem", masterContentItem => {
                 var contentItem = context.GetItemFromSession(masterContentItem);
                 if (contentItem != null) {
                     part.MasterContentItem = contentItem;
                 }
-            }
+            });
 
-            var culture = context.Attribute(part.PartDefinition.Name, "Culture");
-            if (culture != null) {
+            context.ImportAttribute(part.PartDefinition.Name, "Culture", culture => {
                 var targetCulture = _cultureManager.GetCultureByName(culture);
                 // Add Culture.
                 if (targetCulture == null && _cultureManager.IsValidCulture(culture)) {
@@ -125,7 +128,7 @@ namespace Orchard.Localization.Drivers {
                     targetCulture = _cultureManager.GetCultureByName(culture);
                 }
                 part.Culture = targetCulture;
-            }
+            });
         }
 
         protected override void Exporting(LocalizationPart part, ContentManagement.Handlers.ExportContentContext context) {

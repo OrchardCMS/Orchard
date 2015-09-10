@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Orchard.Recipes.Models;
 
 namespace Orchard.Setup.Services {
     public class SetupContext {
@@ -9,6 +10,6 @@ namespace Orchard.Setup.Services {
         public string DatabaseConnectionString { get; set; }
         public string DatabaseTablePrefix { get; set; }
         public IEnumerable<string> EnabledFeatures { get; set; }
-        public string Recipe { get; set; }
+        public Recipe Recipe { get; set; }
     }
 }

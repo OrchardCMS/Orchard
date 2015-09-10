@@ -15,7 +15,7 @@ using IModelBinderProvider = Orchard.Mvc.ModelBinders.IModelBinderProvider;
 
 namespace Orchard.Environment {
     public class DefaultOrchardShell : IOrchardShell {
-        private readonly Func<Owned<IOrchardShellEvents>> _eventsFactory;
+        private readonly IWorkContextAccessor _workContextAccessor;
         private readonly IEnumerable<IRouteProvider> _routeProviders;
         private readonly IEnumerable<IHttpRouteProvider> _httpRouteProviders;
         private readonly IRoutePublisher _routePublisher;
@@ -26,7 +26,7 @@ namespace Orchard.Environment {
         private readonly ShellSettings _shellSettings;
 
         public DefaultOrchardShell(
-            Func<Owned<IOrchardShellEvents>> eventsFactory,
+            IWorkContextAccessor workContextAccessor,
             IEnumerable<IRouteProvider> routeProviders,
             IEnumerable<IHttpRouteProvider> httpRouteProviders,
             IRoutePublisher routePublisher,
@@ -35,8 +35,7 @@ namespace Orchard.Environment {
             ISweepGenerator sweepGenerator,
             IEnumerable<IOwinMiddlewareProvider> owinMiddlewareProviders,
             ShellSettings shellSettings) {
-
-            _eventsFactory = eventsFactory;
+            _workContextAccessor = workContextAccessor;
             _routeProviders = routeProviders;
             _httpRouteProviders = httpRouteProviders;
             _routePublisher = routePublisher;
@@ -74,8 +73,10 @@ namespace Orchard.Environment {
             _routePublisher.Publish(allRoutes, pipeline);
             _modelBinderPublisher.Publish(_modelBinderProviders.SelectMany(provider => provider.GetModelBinders()));
 
-            using (var events = _eventsFactory()) {
-                events.Value.Activated();
+            using (var scope = _workContextAccessor.CreateWorkContextScope()) {
+                using (var events = scope.Resolve<Owned<IOrchardShellEvents>>()) {
+                    events.Value.Activated();
+                }
             }
             
             _sweepGenerator.Activate();
@@ -83,10 +84,11 @@ namespace Orchard.Environment {
 
         public void Terminate() {
             SafelyTerminate(() => {
-                using (var events = _eventsFactory()) {
-                    var localEvents = events;
-                    SafelyTerminate(() => localEvents.Value.Terminating());
-                }
+                using (var scope = _workContextAccessor.CreateWorkContextScope()) {
+                    using (var events = scope.Resolve<Owned<IOrchardShellEvents>>()) {
+                        SafelyTerminate(() => events.Value.Terminating());
+                    }
+                }  
             });
 
             SafelyTerminate(() => _sweepGenerator.Terminate());

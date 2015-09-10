@@ -129,12 +129,16 @@ namespace Orchard.Core.Containers.Drivers {
         }
 
         protected override void Importing(ContainerPart part, ImportContentContext context) {
-            var itemContentType = context.Attribute(part.PartDefinition.Name, "ItemContentTypes");
-            if (itemContentType != null) {
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
+            }
+
+            context.ImportAttribute(part.PartDefinition.Name, "ItemContentTypes", itemContentType => {
                 if (_contentDefinitionManager.GetTypeDefinition(itemContentType) != null) {
                     part.Record.ItemContentTypes = itemContentType;
                 }
-            }
+            });
 
             context.ImportAttribute(part.PartDefinition.Name, "ItemsShown", s => part.ItemsShown = XmlConvert.ToBoolean(s));
             context.ImportAttribute(part.PartDefinition.Name, "Paginated", s => part.Paginated = XmlConvert.ToBoolean(s));

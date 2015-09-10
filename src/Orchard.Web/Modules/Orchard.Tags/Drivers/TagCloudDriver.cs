@@ -43,6 +43,11 @@ namespace Orchard.Tags.Drivers {
         }
 
         protected override void Importing(TagCloudPart part, ImportContentContext context) {
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
+            }
+
             part.Slug = context.Attribute(part.PartDefinition.Name, "Slug");
             part.Buckets = Convert.ToInt32(context.Attribute(part.PartDefinition.Name, "Buckets"));
         }

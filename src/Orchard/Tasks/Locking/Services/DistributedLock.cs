@@ -1,36 +1,41 @@
 ﻿using System;
-using System.Threading;
 
 namespace Orchard.Tasks.Locking.Services {
 
     public class DistributedLock : IDistributedLock {
 
-        private DistributedLockService _service;
-        private string _name;
+        private readonly string _name;
+        private readonly string _internalName;
+        private readonly Action _releaseLockAction;
         private int _count;
 
-        public string Name {
+        internal DistributedLock(string name, string internalName, Action releaseLockAction) {
+            _name = name;
+            _internalName = internalName;
+            _releaseLockAction = releaseLockAction;
+            _count = 1;
+        }
+
+        string IDistributedLock.Name {
             get {
                 return _name;
             }
         }
 
-        public DistributedLock(DistributedLockService service, string name) {
-            _service = service;
-            _name = name;
-            _count = 1;
+        internal string InternalName {
+            get {
+                return _internalName;
+            }
         }
 
-        public void IncreaseReferenceCount() {
+        internal void Increment() {
             _count++;
         }
 
         public void Dispose() {
             _count--;
-            if (_count == 0) {
-                Monitor.Exit(String.Intern(_name));
-                _service.ReleaseDistributedLock(this);
-            }
+            if (_count == 0)
+                _releaseLockAction();
         }
     }
 }

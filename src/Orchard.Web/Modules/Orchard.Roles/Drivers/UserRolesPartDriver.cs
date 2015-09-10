@@ -96,29 +96,32 @@ namespace Orchard.Roles.Drivers {
         }
 
         protected override void Importing(UserRolesPart part, ContentManagement.Handlers.ImportContentContext context) {
-            var roles = context.Attribute(part.PartDefinition.Name, "Roles");
-            if(string.IsNullOrEmpty(roles)) {
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
                 return;
             }
 
-            var userRoles = roles.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries);
+            context.ImportAttribute(part.PartDefinition.Name, "Roles", roles => {
 
-            // create new roles
-            foreach (var role in userRoles) {
-                var roleRecord = _roleService.GetRoleByName(role);
+                var userRoles = roles.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
-                // create the role if it doesn't already exist
-                if (roleRecord == null) {
-                    _roleService.CreateRole(role);
+                // create new roles
+                foreach (var role in userRoles) {
+                    var roleRecord = _roleService.GetRoleByName(role);
+
+                    // create the role if it doesn't already exist
+                    if (roleRecord == null) {
+                        _roleService.CreateRole(role);
+                    }
                 }
-            }
 
-            var currentUserRoleRecords = _userRolesRepository.Fetch(x => x.UserId == part.ContentItem.Id).ToList();
-            var currentRoleRecords = currentUserRoleRecords.Select(x => x.Role).ToList();
-            var targetRoleRecords = userRoles.Select(x => _roleService.GetRoleByName(x)).ToList();
-            foreach (var addingRole in targetRoleRecords.Where(x => !currentRoleRecords.Contains(x))) {
-                _userRolesRepository.Create(new UserRolesPartRecord { UserId = part.ContentItem.Id, Role = addingRole });
-            }
+                var currentUserRoleRecords = _userRolesRepository.Fetch(x => x.UserId == part.ContentItem.Id).ToList();
+                var currentRoleRecords = currentUserRoleRecords.Select(x => x.Role).ToList();
+                var targetRoleRecords = userRoles.Select(x => _roleService.GetRoleByName(x)).ToList();
+                foreach (var addingRole in targetRoleRecords.Where(x => !currentRoleRecords.Contains(x))) {
+                    _userRolesRepository.Create(new UserRolesPartRecord { UserId = part.ContentItem.Id, Role = addingRole });
+                }
+            });
         }
 
         protected override void Exporting(UserRolesPart part, ContentManagement.Handlers.ExportContentContext context) {

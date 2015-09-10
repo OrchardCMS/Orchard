@@ -103,6 +103,11 @@ namespace Orchard.Projections.Drivers {
         }
 
         protected override void Importing(QueryPart part, ImportContentContext context) {
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
+            }
+
             var queryElement = context.Data.Element(part.PartDefinition.Name);
 
             part.Record.FilterGroups.Clear();

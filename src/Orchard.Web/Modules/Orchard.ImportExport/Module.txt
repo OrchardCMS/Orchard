@@ -11,4 +11,4 @@ Features:
         Name: Import Export
         Description: Imports and exports content item data.
         Category: Content
-        Dependencies: Orchard.jQuery, Orchard.Recipes
+        Dependencies: Orchard.jQuery, Orchard.Recipes, Orchard.Setup.Services

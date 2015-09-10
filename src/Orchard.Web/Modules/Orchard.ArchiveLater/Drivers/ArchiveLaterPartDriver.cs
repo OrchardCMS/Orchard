@@ -92,10 +92,14 @@ namespace Orchard.ArchiveLater.Drivers {
         }
 
         protected override void Importing(ArchiveLaterPart part, ImportContentContext context) {
-            var scheduledUtc = context.Attribute(part.PartDefinition.Name, "ScheduledArchiveUtc");
-            if (scheduledUtc != null) {
-                part.ScheduledArchiveUtc.Value = XmlConvert.ToDateTime(scheduledUtc, XmlDateTimeSerializationMode.Utc);
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
             }
+
+            context.ImportAttribute(part.PartDefinition.Name, "ScheduledArchiveUtc", scheduledUtc =>
+                part.ScheduledArchiveUtc.Value = XmlConvert.ToDateTime(scheduledUtc, XmlDateTimeSerializationMode.Utc)
+            );
         }
 
         protected override void Exporting(ArchiveLaterPart part, ExportContentContext context) {
