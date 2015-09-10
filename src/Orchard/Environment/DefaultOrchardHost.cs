@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Orchard.Caching;
 using Orchard.Environment.Configuration;
@@ -12,6 +11,7 @@ using Orchard.Environment.Descriptor;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.Mvc;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.Environment {
@@ -25,12 +25,13 @@ namespace Orchard.Environment {
         private readonly IExtensionLoaderCoordinator _extensionLoaderCoordinator;
         private readonly IExtensionMonitoringCoordinator _extensionMonitoringCoordinator;
         private readonly ICacheManager _cacheManager;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly static object _syncLock = new object();
         private readonly static object _shellContextsWriteLock = new object();
 
         private IEnumerable<ShellContext> _shellContexts;
-
         private readonly ContextState<IList<ShellSettings>> _tenantsToRestart;
+
         public DefaultOrchardHost(
             IShellSettingsManager shellSettingsManager,
             IShellContextFactory shellContextFactory,
@@ -39,7 +40,9 @@ namespace Orchard.Environment {
             IExtensionLoaderCoordinator extensionLoaderCoordinator,
             IExtensionMonitoringCoordinator extensionMonitoringCoordinator,
             ICacheManager cacheManager,
-            IHostLocalRestart hostLocalRestart) {
+            IHostLocalRestart hostLocalRestart, 
+            IHttpContextAccessor httpContextAccessor) {
+
             _shellSettingsManager = shellSettingsManager;
             _shellContextFactory = shellContextFactory;
             _runningShellTable = runningShellTable;
@@ -48,6 +51,7 @@ namespace Orchard.Environment {
             _extensionMonitoringCoordinator = extensionMonitoringCoordinator;
             _cacheManager = cacheManager;
             _hostLocalRestart = hostLocalRestart;
+            _httpContextAccessor = httpContextAccessor;
 
             _tenantsToRestart = new ContextState<IList<ShellSettings>>("DefaultOrchardHost.TenantsToRestart", () => new List<ShellSettings>());
 
@@ -189,7 +193,6 @@ namespace Orchard.Environment {
         private ShellContext CreateShellContext(ShellSettings settings) {
             switch (settings.State) {
                 case TenantState.Uninitialized:
-                case TenantState.Initializing:
                     Logger.Debug("Creating shell context for tenant {0} setup.", settings.Name);
                     return _shellContextFactory.CreateSetupContext(settings);
                 default:
@@ -236,6 +239,8 @@ namespace Orchard.Environment {
         }
 
         protected virtual void BeginRequest() {
+            BlockRequestsDuringSetup();
+
             // Ensure all shell contexts are loaded, or need to be reloaded if
             // extensions have changed
             MonitorExtensions();
@@ -341,6 +346,20 @@ namespace Orchard.Environment {
 
             Logger.Debug("Adding tenant to restart: " + tenant);
             _tenantsToRestart.GetState().Add(context.Settings);
+        }
+
+        private void BlockRequestsDuringSetup() {
+            if (_shellContexts == null)
+                return;
+
+            // If there's only one tenant and it's initializing, return a Service Unavailable HTTP status code.
+            var shellContexts = _shellContexts.ToList();
+            if (shellContexts.Count == 1 && shellContexts[0].Settings.State == TenantState.Initializing) {
+                var response = _httpContextAccessor.Current().Response;
+                response.StatusCode = 503;
+                response.StatusDescription = "Orchard is currently setting up. Please check back in a few moments.";
+                response.Write("Orchard is currently setting up. Please check back in a few moments.");
+            }
         }
 
         // To be used from CreateStandaloneEnvironment(), also disposes the ShellContext LifetimeScope.

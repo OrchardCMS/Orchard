@@ -86,6 +86,9 @@ namespace Orchard.Setup.Services {
 
             context.EnabledFeatures = hardcoded.Union(context.EnabledFeatures ?? Enumerable.Empty<string>()).Distinct().ToList();
 
+            // Set shell state to "Initializing" so that subsequent HTTP requests are responded to with "Service Unavailable" while Orchard is setting up.
+            _shellSettings.State = TenantState.Initializing;
+
             var shellSettings = new ShellSettings(_shellSettings);
 
             if (String.IsNullOrEmpty(shellSettings.DataProvider)) {
@@ -174,7 +177,7 @@ namespace Orchard.Setup.Services {
                 }
             }
 
-            // Set shell state to "Initializing" so that subsequent HTTP requests are responded to with "Service Unavailable" while Orchard is setting up.
+            // Reset shell state to "Initializing" so that subsequent HTTP requests are responded to with "Service Unavailable" while Orchard is setting up.
             shellSettings.State = _shellSettings.State = TenantState.Initializing;
             _shellSettingsManager.SaveSettings(shellSettings);
 
