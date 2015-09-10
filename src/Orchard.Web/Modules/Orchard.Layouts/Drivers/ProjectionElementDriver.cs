@@ -307,10 +307,9 @@ namespace Orchard.Layouts.Drivers {
 
             var queryPart = query.As<QueryPart>();
             var layoutIndex = XmlHelper.Parse<int>(context.ExportableData.Get("LayoutIndex"));
-            var layout = queryPart.Layouts[layoutIndex];
 
             element.QueryId = queryPart.Id;
-            element.LayoutId = layout.Id;
+            element.LayoutId = layoutIndex != -1 ? queryPart.Layouts[layoutIndex].Id : -1;
         }
 
         private static string GetLayoutDescription(IEnumerable<LayoutDescriptor> layouts, LayoutRecord l) {

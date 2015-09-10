@@ -9,7 +9,7 @@ namespace Orchard.Tests.Stubs {
             WorkContext = workContext;
         }
 
-        public WorkContext WorkContext { get; }
+        public WorkContext WorkContext { get; private set; }
 
         public void Dispose() {
             _lifetimeScope.Dispose();

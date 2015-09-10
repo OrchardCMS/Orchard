@@ -255,13 +255,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Layouts", "Orchard.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.DynamicForms", "Orchard.Web\Modules\Orchard.DynamicForms\Orchard.DynamicForms.csproj", "{82190F52-2901-46D6-8A4C-34649959483F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Dashboards", "Orchard.Web\Modules\Orchard.Dashboards\Orchard.Dashboards.csproj", "{BAC82DB9-F4C4-4DD1-ABDB-F70E6229E6B0}"
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DF3909B0-1DDD-4D8A-9919-56FC438E25E2}"
 	ProjectSection(SolutionItems) = preProject
 		Rebracer.xml = Rebracer.xml
 		WebEssentials-Settings.json = WebEssentials-Settings.json
 	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Dashboards", "Orchard.Web\Modules\Orchard.Dashboards\Orchard.Dashboards.csproj", "{BAC82DB9-F4C4-4DD1-ABDB-F70E6229E6B0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Gulp", "Gulp", "{90EBEE36-B5CD-42A8-A21B-76270E2C5D24}"
 	ProjectSection(SolutionItems) = preProject

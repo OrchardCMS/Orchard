@@ -10,6 +10,7 @@ using Orchard.Logging;
 using Orchard.Security;
 using Orchard.Settings;
 using Orchard.UI.Notify;
+using Orchard.Exceptions;
 
 namespace Orchard.Core.Settings.Drivers {
     public class SiteSettingsPartDriver : ContentPartDriver<SiteSettingsPart> {
@@ -100,9 +101,12 @@ namespace Orchard.Core.Settings.Drivers {
                             using (request.GetResponse() as HttpWebResponse) {}
                         }
                     }
-                    catch (Exception e) {
+                    catch (Exception ex) {
+                        if (ex.IsFatal()) {                        
+                            throw;
+                        }
                         _notifier.Warning(T("The base url you entered could not be requested from current location."));
-                        Logger.Warning(e, "Could not query base url: {0}", model.Site.BaseUrl);
+                        Logger.Warning(ex, "Could not query base url: {0}", model.Site.BaseUrl);
                     }
                 }
             }

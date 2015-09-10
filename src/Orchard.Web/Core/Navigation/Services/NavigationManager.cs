@@ -11,6 +11,7 @@ using Orchard.Security.Permissions;
 using Orchard.UI;
 using Orchard.UI.Navigation;
 using Orchard.Utility;
+using Orchard.Exceptions;
 
 namespace Orchard.Core.Navigation.Services {
     public class NavigationManager : INavigationManager {
@@ -152,6 +153,9 @@ namespace Orchard.Core.Navigation.Services {
                         items = builder.Build();
                     }
                     catch (Exception ex) {
+                        if (ex.IsFatal()) {
+                            throw;
+                        } 
                         Logger.Error(ex, "Unexpected error while querying a navigation provider. It was ignored. The menu provided by the provider may not be complete.");
                     }
                     if (items != null) {
@@ -170,6 +174,9 @@ namespace Orchard.Core.Navigation.Services {
                     items = builder.Build();
                 }
                 catch (Exception ex) {
+                    if (ex.IsFatal()) {
+                        throw;
+                    } 
                     Logger.Error(ex, "Unexpected error while querying a menu provider. It was ignored. The menu provided by the provider may not be complete.");
                 }
                 if (items != null) {
@@ -188,6 +195,9 @@ namespace Orchard.Core.Navigation.Services {
                         imageSets = builder.BuildImageSets();
                     }
                     catch (Exception ex) {
+                        if (ex.IsFatal()) {
+                            throw;
+                        } 
                         Logger.Error(ex, "Unexpected error while querying a navigation provider. It was ignored. The menu provided by the provider may not be complete.");
                     }
                     if (imageSets != null) {

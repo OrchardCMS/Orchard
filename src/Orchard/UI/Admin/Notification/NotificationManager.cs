@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Orchard.Logging;
 using Orchard.UI.Notify;
+using Orchard.Exceptions;
 
 namespace Orchard.UI.Admin.Notification {
     public class NotificationManager : INotificationManager {
@@ -22,8 +23,11 @@ namespace Orchard.UI.Admin.Notification {
                     try {
                         return n.GetNotifications();
                     }
-                    catch(Exception e) {
-                        Logger.Error("An unhandled exception was thrown while generating a notification: " + n.GetType(), e);
+                    catch(Exception ex) {
+                        if (ex.IsFatal()) {
+                            throw;
+                        } 
+                        Logger.Error("An unhandled exception was thrown while generating a notification: " + n.GetType(), ex);
                         return Enumerable.Empty<NotifyEntry>();
                     }
                 }).ToList();

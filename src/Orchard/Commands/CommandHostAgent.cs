@@ -15,6 +15,7 @@ using Orchard.FileSystems.VirtualPath;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Tasks;
+using Orchard.Exceptions;
 
 namespace Orchard.Commands {
     
@@ -94,19 +95,21 @@ namespace Orchard.Commands {
 
                 return CommandReturnCodes.Ok;
             }
-            catch (OrchardCommandHostRetryException e) {
+            catch (OrchardCommandHostRetryException ex) {
                 // Special "Retry" return code for our host
-                output.WriteLine(T("{0} (Retrying...)", e.Message));
+                output.WriteLine(T("{0} (Retrying...)", ex.Message));
                 return CommandReturnCodes.Retry;
             }
-            catch (Exception e) {
-                if (e is TargetInvocationException && 
-                    e.InnerException != null) {
-                    // If this is an exception coming from reflection and there is an innerexception which is the actual one, redirect
-                    e = e.InnerException;
+            catch (Exception ex) {
+                if (ex.IsFatal()) {
+                    throw;
                 }
-
-                OutputException(output, T("Error executing command \"{0}\"", string.Join(" ", args)), e);
+                if (ex is TargetInvocationException && 
+                    ex.InnerException != null) {
+                    // If this is an exception coming from reflection and there is an innerexception which is the actual one, redirect
+                    ex = ex.InnerException;
+                }
+                OutputException(output, T("Error executing command \"{0}\"", string.Join(" ", args)), ex);
                 return CommandReturnCodes.Fail;
             }
         }
@@ -116,13 +119,16 @@ namespace Orchard.Commands {
                 _hostContainer = CreateHostContainer();
                 return CommandReturnCodes.Ok;
             }
-            catch (OrchardCommandHostRetryException e) {
+            catch (OrchardCommandHostRetryException ex) {
                 // Special "Retry" return code for our host
-                output.WriteLine(T("{0} (Retrying...)", e.Message));
+                output.WriteLine(T("{0} (Retrying...)", ex.Message));
                 return CommandReturnCodes.Retry;
             }
-            catch (Exception e) {
-                OutputException(output, T("Error starting up Orchard command line host"), e);
+            catch (Exception ex) {
+                if (ex.IsFatal()) {         
+                    throw;
+                } 
+                OutputException(output, T("Error starting up Orchard command line host"), ex);
                 return CommandReturnCodes.Fail;
             }
         }
@@ -135,8 +141,11 @@ namespace Orchard.Commands {
                 }
                 return CommandReturnCodes.Ok;
             }
-            catch (Exception e) {
-                OutputException(output, T("Error shutting down Orchard command line host"), e);
+            catch (Exception ex) {
+                if (ex.IsFatal()) {
+                    throw;
+                } 
+                OutputException(output, T("Error shutting down Orchard command line host"), ex);
                 return CommandReturnCodes.Fail;
             }
         }

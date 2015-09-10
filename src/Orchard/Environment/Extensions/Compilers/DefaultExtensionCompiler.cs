@@ -8,6 +8,7 @@ using Orchard.FileSystems.Dependencies;
 using Orchard.FileSystems.VirtualPath;
 using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.Exceptions;
 
 namespace Orchard.Environment.Extensions.Compilers {
     /// <summary>
@@ -106,10 +107,13 @@ namespace Orchard.Environment.Extensions.Compilers {
                         }
                     }
                 }
-            catch (Exception e) {
+            catch (Exception ex) {
+                if (ex.IsFatal()) {
+                    throw;
+                } 
                 //Note: we need to embed the "e.Message" in the exception text because 
                 //      ASP.NET build manager "swallows" inner exceptions from this method.
-                throw new OrchardCoreException(T("Error compiling module \"{0}\" from file \"{1}\":\r\n{2}", moduleName, context.VirtualPath, e.Message), e);
+                throw new OrchardCoreException(T("Error compiling module \"{0}\" from file \"{1}\":\r\n{2}", moduleName, context.VirtualPath, ex.Message), ex);
             }
         }
 

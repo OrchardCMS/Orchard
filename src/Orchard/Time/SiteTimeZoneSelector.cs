@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Web;
 using Orchard.Logging;
+using Orchard.Exceptions;
 
 namespace Orchard.Time {
     /// <summary>
@@ -31,8 +32,11 @@ namespace Orchard.Time {
                     TimeZone = TimeZoneInfo.FindSystemTimeZoneById(siteTimeZoneId)
                 };
             }
-            catch(Exception e) {
-                Logger.Error(e, "TimeZone could not be loaded");
+            catch(Exception ex) {
+                if (ex.IsFatal()) {
+                    throw;
+                } 
+                Logger.Error(ex, "TimeZone could not be loaded");
 
                 // if the database could not be updated in time, ignore this provider
                 return null;

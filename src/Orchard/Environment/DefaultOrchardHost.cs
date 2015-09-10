@@ -14,6 +14,7 @@ using Orchard.Logging;
 using Orchard.Mvc;
 using Orchard.Mvc.Extensions;
 using Orchard.Utility.Extensions;
+using Orchard.Exceptions;
 
 namespace Orchard.Environment {
     // All the event handlers that DefaultOrchardHost implements have to be declared in OrchardStarter.
@@ -145,8 +146,11 @@ namespace Orchard.Environment {
                         var context = CreateShellContext(settings, StandaloneEnvironmentOptions.None);
                         ActivateShell(context);
                     }
-                    catch (Exception e) {
-                        Logger.Error(e, "A tenant could not be started: " + settings.Name);
+                    catch (Exception ex) {
+                        if (ex.IsFatal()) {
+                            throw;
+                        } 
+                        Logger.Error(ex, "A tenant could not be started: " + settings.Name);
                     }
                     while (_processingEngine.AreTasksPending()) {
                         Logger.Debug("Processing pending task after activate Shell");
