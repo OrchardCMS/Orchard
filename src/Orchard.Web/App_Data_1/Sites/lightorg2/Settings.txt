@@ -1,9 +1,0 @@
-State: Uninitialized
-Themes: 
-Modules: 
-Name: lightorg2
-RequestUrlHost: null
-RequestUrlPrefix: null
-DataProvider: null
-DataConnectionString: null
-DataTablePrefix: null
