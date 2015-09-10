@@ -12,6 +12,7 @@ using Orchard.Environment.Descriptor.Models;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Mvc;
+using Orchard.Mvc.Extensions;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.Environment {
@@ -348,13 +349,18 @@ namespace Orchard.Environment {
         }
 
         private void BlockRequestsDuringSetup() {
-            if (_shellContexts == null)
+            var httpContext = _httpContextAccessor.Current();
+            if (httpContext.IsBackgroundContext())
                 return;
 
-            // If there's only one tenant and it's initializing, return a Service Unavailable HTTP status code.
-            var shellContexts = _shellContexts.ToList();
-            if (shellContexts.Count == 1 && shellContexts[0].Settings.State == TenantState.Initializing) {
-                var response = _httpContextAccessor.Current().Response;
+            // Get the requested shell.
+            var runningShell = _runningShellTable.Match(httpContext);
+            if (runningShell == null)
+                return;
+
+            // If the requested shell is currently initializing, return a Service Unavailable HTTP status code.
+            if (runningShell.State == TenantState.Initializing) {
+                var response = httpContext.Response;
                 response.StatusCode = 503;
                 response.StatusDescription = "Orchard is currently setting up. Please check back in a few moments.";
                 response.Write("Orchard is currently setting up. Please check back in a few moments.");

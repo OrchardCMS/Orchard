@@ -382,7 +382,7 @@ namespace Orchard.Data.Migration.Interpreters {
                 }
             }
             finally {
-                _sqlStatements.Clear();    
+                _sqlStatements.Clear();
             }
         }
 
