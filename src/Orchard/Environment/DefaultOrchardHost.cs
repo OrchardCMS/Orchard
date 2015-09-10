@@ -90,13 +90,13 @@ namespace Orchard.Environment {
             EndRequest();
         }
 
-        IWorkContextScope IOrchardHost.CreateStandaloneEnvironment(ShellSettings shellSettings) {
+        IWorkContextScope IOrchardHost.CreateStandaloneEnvironment(ShellSettings shellSettings, StandaloneEnvironmentOptions options) {
             Logger.Debug("Creating standalone environment for tenant {0}", shellSettings.Name);
 
             MonitorExtensions();
             BuildCurrent();
 
-            var shellContext = CreateShellContext(shellSettings);
+            var shellContext = CreateShellContext(shellSettings, options);
             var workContext = shellContext.LifetimeScope.CreateWorkContextScope();
             return new StandaloneEnvironmentWorkContextScopeWrapper(workContext, shellContext);
         }
@@ -141,7 +141,7 @@ namespace Orchard.Environment {
             if (allSettings.Any()) {
                 Parallel.ForEach(allSettings, settings => {
                     try {
-                        var context = CreateShellContext(settings);
+                        var context = CreateShellContext(settings, StandaloneEnvironmentOptions.None);
                         ActivateShell(context);
                     }
                     catch (Exception e) {
@@ -190,15 +190,14 @@ namespace Orchard.Environment {
         /// <summary>
         /// Creates a shell context based on shell settings.
         /// </summary>
-        private ShellContext CreateShellContext(ShellSettings settings) {
-            switch (settings.State) {
-                case TenantState.Uninitialized:
-                    Logger.Debug("Creating shell context for tenant {0} setup.", settings.Name);
-                    return _shellContextFactory.CreateSetupContext(settings);
-                default:
-                    Logger.Debug("Creating shell context for tenant {0}.", settings.Name);
-                    return _shellContextFactory.CreateShellContext(settings);
+        private ShellContext CreateShellContext(ShellSettings settings, StandaloneEnvironmentOptions options) {
+            if (settings.State != TenantState.Uninitialized || options.Running) {
+                Logger.Debug("Creating shell context for tenant {0}.", settings.Name);
+                return _shellContextFactory.CreateShellContext(settings);
             }
+            
+            Logger.Debug("Creating shell context for tenant {0} setup.", settings.Name);
+            return _shellContextFactory.CreateSetupContext(settings);
         }
 
         private void SetupExtensions() {
@@ -285,7 +284,7 @@ namespace Orchard.Environment {
             // is this is a new tenant ? or is it a tenant waiting for setup ?
             if (shellContext == null || settings.State == TenantState.Uninitialized) {
                 // create the Shell
-                var context = CreateShellContext(settings);
+                var context = CreateShellContext(settings, StandaloneEnvironmentOptions.None);
 
                 // activate the Shell
                 ActivateShell(context);

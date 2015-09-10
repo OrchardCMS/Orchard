@@ -164,10 +164,7 @@ namespace Orchard.Setup.Services {
             // Creating a standalone environment. 
             // in theory this environment can be used to resolve any normal components by interface, and those
             // components will exist entirely in isolation - no crossover between the safemode container currently in effect.
-
-            // Set shell state to "Running" so that the proper shell context is created.
-            shellSettings.State = TenantState.Running;
-            using (var environment = _orchardHost.CreateStandaloneEnvironment(shellSettings)) {
+            using (var environment = _orchardHost.CreateStandaloneEnvironment(shellSettings, StandaloneEnvironmentOptions.RunningEnvironment)) {
                 try {
                     executionId = CreateTenantData(context, environment);
                 }
@@ -176,9 +173,7 @@ namespace Orchard.Setup.Services {
                     throw;
                 }
             }
-
-            // Reset shell state to "Initializing" so that subsequent HTTP requests are responded to with "Service Unavailable" while Orchard is setting up.
-            shellSettings.State = _shellSettings.State = TenantState.Initializing;
+            
             _shellSettingsManager.SaveSettings(shellSettings);
 
             return executionId;
