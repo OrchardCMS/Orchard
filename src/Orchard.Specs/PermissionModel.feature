@@ -26,4 +26,3 @@ Scenario: Anonymous user can see the home page but not the dashboard
      And I go to "/"
     Then I should see "this is the homepage of your new site"
      And I should be denied access when I go to "admin"
-
