@@ -80,6 +80,9 @@ namespace Orchard.jQuery {
 
             // jQuery Cookie.
             manifest.DefineScript("jQueryCookie").SetUrl("jquery.cookie.min.js", "jquery.cookie.js").SetVersion("1.4.1").SetDependencies("jQuery");
+            
+            // jQuery Ajax Anti Forgery Token
+            manifest.DefineScript("jQuery_AjaxAntiForgery").SetUrl("jquery-ajax-anti-forgery.js").SetVersion("1.0").SetDependencies("jQuery");
         }
     }
 }

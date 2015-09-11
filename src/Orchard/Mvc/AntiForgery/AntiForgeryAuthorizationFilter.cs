@@ -21,30 +21,52 @@ namespace Orchard.Mvc.AntiForgery {
         }
 
         public void OnAuthorization(AuthorizationContext filterContext) {
-            // If the request is not a POST or is anonymous, and the request doesn't have validation forced, return.
-            if ((filterContext.HttpContext.Request.HttpMethod != "POST" ||
-                 _authenticationService.GetAuthenticatedUser() == null) && !ShouldValidateGet(filterContext)) {
+            var request = filterContext.HttpContext.Request;
+
+            // If the action is adorned with the ValidateAntiForgeryTokenOrchard(false) attribute
+            // then we do not validate under any circumstances. This allows validation to be
+            // disabled for particular actions when a module has AntiForgery enabled.
+            if (ShouldNotValidate(filterContext)) {
                 return;
             }
 
-            if (!IsAntiForgeryProtectionEnabled(filterContext)) {
+            // We don't perform CSRF checks on un-authenticated requests because 
+            // generally the whole point of CSRF checks is to ensure data is not submitted to
+            // authenticated sessions from untrusted sources.
+            if (_authenticationService.GetAuthenticatedUser() == null) {
                 return;
             }
 
-            var validator = new ValidateAntiForgeryTokenAttribute();
-            validator.OnAuthorization(filterContext);
+            // If the action is adorned with the ValidateAntiForgeryTokenOrchard(true) attribute then
+            // we always validate regardless of the module's AntiForgery setting or the http method
+            // of the request. Otherwise we'll only validate if anti-forgery is enabled for the module
+            // and the request is not made via a "safe" method (eg. GET and other "safe" methods, as
+            // defined by 9.1.1 Safe Methods, HTTP 1.1, RFC 2616).
+            if (!ShouldValidate(filterContext)) {
+                if (IsSafeMethod(request.HttpMethod) || !IsAntiForgeryProtectionEnabled(filterContext))
+                    return;
+            }
 
-            if (filterContext.HttpContext is HackHttpContext)
-                filterContext.HttpContext = ((HackHttpContext)filterContext.HttpContext).OriginalHttpContextBase;
+            // If the request header or the request query string contains the
+            // verification token, then use this to validate the request.
+            string requestVerificationToken = request.Headers.Get("X-Request-Verification-Token") ?? request.QueryString["__RequestVerificationToken"];
+            if (!string.IsNullOrWhiteSpace(requestVerificationToken)) {
+                var cookie = request.Cookies[System.Web.Helpers.AntiForgeryConfig.CookieName];
+                System.Web.Helpers.AntiForgery.Validate(cookie != null ? cookie.Value : null, requestVerificationToken);
+            }
+            else {
+                var validator = new ValidateAntiForgeryTokenAttribute();
+                validator.OnAuthorization(filterContext);
+            }
+        }
+
+        #region Private Helper Methods
+
+        bool IsSafeMethod(string httpMethod) {
+            return httpMethod == "GET" || httpMethod == "HEAD";
         }
 
         private bool IsAntiForgeryProtectionEnabled(AuthorizationContext context) {
-            // POST is opt-out
-            var attributes =
-                (ValidateAntiForgeryTokenOrchardAttribute[])
-                context.ActionDescriptor.GetCustomAttributes(typeof (ValidateAntiForgeryTokenOrchardAttribute), false);
-
-            if (attributes.Length > 0 && !attributes[0].Enabled) return false;
 
             var currentModule = GetArea(context.RouteData);
             return !String.IsNullOrEmpty(currentModule)
@@ -53,91 +75,35 @@ namespace Orchard.Mvc.AntiForgery {
                        .AntiForgery.Equals("enabled", StringComparison.OrdinalIgnoreCase));
         }
 
-        private static string GetArea(RouteData routeData) {
+        static string GetArea(RouteData routeData) {
             if (routeData.Values.ContainsKey("area"))
                 return routeData.Values["area"] as string;
 
             return routeData.DataTokens["area"] as string ?? "";
         }
 
-        private static bool ShouldValidateGet(AuthorizationContext context) {
-            const string tokenFieldName = "__RequestVerificationToken";
-
+        static bool ShouldValidate(AuthorizationContext context) {
             var attributes =
                 (ValidateAntiForgeryTokenOrchardAttribute[])
-                context.ActionDescriptor.GetCustomAttributes(typeof (ValidateAntiForgeryTokenOrchardAttribute), false);
+                context.ActionDescriptor.GetCustomAttributes(typeof(ValidateAntiForgeryTokenOrchardAttribute), false);
 
             if (attributes.Length > 0 && attributes[0].Enabled) {
-                var request = context.HttpContext.Request;
-
-                //HAACK: (erikpo) If the token is in the querystring, put it in the form so MVC can validate it
-                if (!string.IsNullOrEmpty(request.QueryString[tokenFieldName])) {
-                    context.HttpContext = new HackHttpContext(context.HttpContext, (HttpContext)context.HttpContext.Items["originalHttpContext"]);
-                    ((HackHttpRequest)context.HttpContext.Request).AddFormValue(tokenFieldName, context.HttpContext.Request.QueryString[tokenFieldName]);
-                }
-
                 return true;
             }
 
             return false;
         }
 
-        #region HackHttpContext
+        static bool ShouldNotValidate(AuthorizationContext context) {
+            var attributes =
+                (ValidateAntiForgeryTokenOrchardAttribute[])
+                context.ActionDescriptor.GetCustomAttributes(typeof(ValidateAntiForgeryTokenOrchardAttribute), false);
 
-        private class HackHttpContext : HttpContextWrapper {
-            private readonly HttpContextBase _originalHttpContextBase;
-            private readonly HttpContext _originalHttpContext;
-            private HttpRequestWrapper _request;
-
-            public HackHttpContext(HttpContextBase httpContextBase, HttpContext httpContext)
-                : base(httpContext) {
-                _originalHttpContextBase = httpContextBase;
-                _originalHttpContext = httpContext;
+            if (attributes.Length > 0 && !attributes[0].Enabled) {
+                return true;
             }
 
-            public HttpContextBase OriginalHttpContextBase {
-                get { return _originalHttpContextBase; }
-            }
-
-            public override HttpRequestBase Request
-            {
-                get
-                {
-                    if (_request == null)
-                        _request = new HackHttpRequest(_originalHttpContext.Request);
-
-                    return _request;
-                }
-            }
-        }
-
-        #endregion
-
-        #region HackHttpRequest
-
-        private class HackHttpRequest : HttpRequestWrapper {
-            private readonly HttpRequest _originalHttpRequest;
-            private NameValueCollection _form;
-
-            public HackHttpRequest(HttpRequest httpRequest)
-                : base(httpRequest) {
-                _originalHttpRequest = httpRequest;
-            }
-
-            public override NameValueCollection Form
-            {
-                get
-                {
-                    if (_form == null)
-                        _form = new NameValueCollection(_originalHttpRequest.Form);
-
-                    return _form;
-                }
-            }
-
-            public void AddFormValue(string key, string value) {
-                Form.Add(key, value);
-            }
+            return false;
         }
 
         #endregion

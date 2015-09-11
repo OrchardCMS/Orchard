@@ -295,6 +295,7 @@
     <Content Include="Scripts\colorbox\jquery.colorbox-zh-TW.js" />
     <Content Include="Scripts\jquery-1.11.1.js" />
     <Content Include="Scripts\jquery-1.11.1.min.js" />
+    <Content Include="Scripts\jquery-ajax-anti-forgery.js" />
     <Content Include="Scripts\jquery-migrate-1.2.1.js" />
     <Content Include="Scripts\jquery-migrate-1.2.1.min.js" />
     <Content Include="Scripts\colorbox\jquery.colorbox.min.js" />
