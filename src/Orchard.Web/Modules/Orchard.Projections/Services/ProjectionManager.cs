@@ -111,10 +111,20 @@ namespace Orchard.Projections.Services {
                 throw new ArgumentException("queryId");
             }
 
-            // aggregate the result for each group query
-
-            return GetContentQueries(queryRecord, Enumerable.Empty<SortCriterionRecord>())
-                .Sum(contentQuery => contentQuery.Count());
+            // aggregate the result for each group query - performance may be 
+            // impacted for queries over large data sets when multiple filter 
+            // groups are in place because we list all results in each query 
+            // group to ensure we get an accurate distinct count of items.
+            if (queryRecord.FilterGroups.Count == 1) {
+                return GetContentQueries(queryRecord, Enumerable.Empty<SortCriterionRecord>())
+                    .Sum(contentQuery => contentQuery.Count());
+            }
+            else {
+                return GetContentQueries(queryRecord, Enumerable.Empty<SortCriterionRecord>())
+                    .SelectMany(contentQuery => contentQuery.List().Select(contentItem => contentItem.Id))
+                    .Distinct()
+                    .Count();
+            }
         }
 
         public IEnumerable<ContentItem> GetContentItems(int queryId, int skip = 0, int count = 0) {
@@ -128,9 +138,19 @@ namespace Orchard.Projections.Services {
 
             var contentItems = new List<ContentItem>();
 
-            // aggregate the result for each group query
-            foreach(var contentQuery in GetContentQueries(queryRecord, queryRecord.SortCriteria.OrderBy(sc => sc.Position))) {
-                contentItems.AddRange(contentQuery.Slice(skip, count));
+            // aggregate the result for each group query - performance may be 
+            // impacted for queries over large data sets when multiple filter 
+            // groups are in place because paging parameters can not be passed 
+            // through to the underlying content queries in this case.
+            foreach (var contentQuery in GetContentQueries(queryRecord, queryRecord.SortCriteria.OrderBy(sc => sc.Position))) {
+                if (queryRecord.FilterGroups.Count == 1) {
+                    // If there's only one filter group defined then we can 
+                    // slice the query for improved performance.
+                    contentItems.AddRange(contentQuery.Slice(skip, count));
+                }
+                else {
+                    contentItems.AddRange(contentQuery.List());
+                }
             }
 
             if(queryRecord.FilterGroups.Count <= 1) {
