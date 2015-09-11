@@ -62,7 +62,7 @@ namespace Orchard.Mvc.AntiForgery {
 
         #region Private Helper Methods
 
-        bool IsSafeMethod(string httpMethod) {
+        private bool IsSafeMethod(string httpMethod) {
             return httpMethod == "GET" || httpMethod == "HEAD";
         }
 
@@ -75,14 +75,14 @@ namespace Orchard.Mvc.AntiForgery {
                        .AntiForgery.Equals("enabled", StringComparison.OrdinalIgnoreCase));
         }
 
-        static string GetArea(RouteData routeData) {
+        private static string GetArea(RouteData routeData) {
             if (routeData.Values.ContainsKey("area"))
                 return routeData.Values["area"] as string;
 
             return routeData.DataTokens["area"] as string ?? "";
         }
 
-        static bool ShouldValidate(AuthorizationContext context) {
+        private static bool ShouldValidate(AuthorizationContext context) {
             var attributes =
                 (ValidateAntiForgeryTokenOrchardAttribute[])
                 context.ActionDescriptor.GetCustomAttributes(typeof(ValidateAntiForgeryTokenOrchardAttribute), false);
@@ -94,7 +94,7 @@ namespace Orchard.Mvc.AntiForgery {
             return false;
         }
 
-        static bool ShouldNotValidate(AuthorizationContext context) {
+        private static bool ShouldNotValidate(AuthorizationContext context) {
             var attributes =
                 (ValidateAntiForgeryTokenOrchardAttribute[])
                 context.ActionDescriptor.GetCustomAttributes(typeof(ValidateAntiForgeryTokenOrchardAttribute), false);
