@@ -24,5 +24,10 @@ namespace Orchard.Search.Models {
             get { return this.Retrieve(x => x.SearchIndex); }
             set { this.Store(x => x.SearchIndex, value); }
         }
+
+        public string DisplayType {
+            get { return this.Retrieve(x => x.DisplayType, "Summary"); }
+            set { this.Store(x => x.DisplayType, value); }
+        }
     }
 }
