@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Orchard.Caching;
 using Orchard.Environment.Configuration;
@@ -12,6 +11,8 @@ using Orchard.Environment.Descriptor;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.Mvc;
+using Orchard.Mvc.Extensions;
 using Orchard.Utility.Extensions;
 using Orchard.Exceptions;
 
@@ -26,12 +27,13 @@ namespace Orchard.Environment {
         private readonly IExtensionLoaderCoordinator _extensionLoaderCoordinator;
         private readonly IExtensionMonitoringCoordinator _extensionMonitoringCoordinator;
         private readonly ICacheManager _cacheManager;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly static object _syncLock = new object();
         private readonly static object _shellContextsWriteLock = new object();
 
         private IEnumerable<ShellContext> _shellContexts;
-
         private readonly ContextState<IList<ShellSettings>> _tenantsToRestart;
+
         public DefaultOrchardHost(
             IShellSettingsManager shellSettingsManager,
             IShellContextFactory shellContextFactory,
@@ -40,7 +42,9 @@ namespace Orchard.Environment {
             IExtensionLoaderCoordinator extensionLoaderCoordinator,
             IExtensionMonitoringCoordinator extensionMonitoringCoordinator,
             ICacheManager cacheManager,
-            IHostLocalRestart hostLocalRestart) {
+            IHostLocalRestart hostLocalRestart, 
+            IHttpContextAccessor httpContextAccessor) {
+
             _shellSettingsManager = shellSettingsManager;
             _shellContextFactory = shellContextFactory;
             _runningShellTable = runningShellTable;
@@ -49,6 +53,7 @@ namespace Orchard.Environment {
             _extensionMonitoringCoordinator = extensionMonitoringCoordinator;
             _cacheManager = cacheManager;
             _hostLocalRestart = hostLocalRestart;
+            _httpContextAccessor = httpContextAccessor;
 
             _tenantsToRestart = new ContextState<IList<ShellSettings>>("DefaultOrchardHost.TenantsToRestart", () => new List<ShellSettings>());
 
@@ -87,13 +92,13 @@ namespace Orchard.Environment {
             EndRequest();
         }
 
-        IWorkContextScope IOrchardHost.CreateStandaloneEnvironment(ShellSettings shellSettings) {
+        IWorkContextScope IOrchardHost.CreateStandaloneEnvironment(ShellSettings shellSettings, StandaloneEnvironmentOptions options) {
             Logger.Debug("Creating standalone environment for tenant {0}", shellSettings.Name);
 
             MonitorExtensions();
             BuildCurrent();
 
-            var shellContext = CreateShellContext(shellSettings);
+            var shellContext = CreateShellContext(shellSettings, options);
             var workContext = shellContext.LifetimeScope.CreateWorkContextScope();
             return new StandaloneEnvironmentWorkContextScopeWrapper(workContext, shellContext);
         }
@@ -138,7 +143,7 @@ namespace Orchard.Environment {
             if (allSettings.Any()) {
                 Parallel.ForEach(allSettings, settings => {
                     try {
-                        var context = CreateShellContext(settings);
+                        var context = CreateShellContext(settings, StandaloneEnvironmentOptions.None);
                         ActivateShell(context);
                     }
                     catch (Exception ex) {
@@ -190,16 +195,14 @@ namespace Orchard.Environment {
         /// <summary>
         /// Creates a shell context based on shell settings.
         /// </summary>
-        private ShellContext CreateShellContext(ShellSettings settings) {
-            switch (settings.State) {
-                case TenantState.Uninitialized:
-                case TenantState.Initializing:
-                    Logger.Debug("Creating shell context for tenant {0} setup.", settings.Name);
-                    return _shellContextFactory.CreateSetupContext(settings);
-                default:
-                    Logger.Debug("Creating shell context for tenant {0}.", settings.Name);
-                    return _shellContextFactory.CreateShellContext(settings);
+        private ShellContext CreateShellContext(ShellSettings settings, StandaloneEnvironmentOptions options) {
+            if (settings.State != TenantState.Uninitialized || options.Running) {
+                Logger.Debug("Creating shell context for tenant {0}.", settings.Name);
+                return _shellContextFactory.CreateShellContext(settings);
             }
+            
+            Logger.Debug("Creating shell context for tenant {0} setup.", settings.Name);
+            return _shellContextFactory.CreateSetupContext(settings);
         }
 
         private void SetupExtensions() {
@@ -240,6 +243,8 @@ namespace Orchard.Environment {
         }
 
         protected virtual void BeginRequest() {
+            BlockRequestsDuringSetup();
+
             // Ensure all shell contexts are loaded, or need to be reloaded if
             // extensions have changed
             MonitorExtensions();
@@ -284,7 +289,7 @@ namespace Orchard.Environment {
             // is this is a new tenant ? or is it a tenant waiting for setup ?
             if (shellContext == null || settings.State == TenantState.Uninitialized) {
                 // create the Shell
-                var context = CreateShellContext(settings);
+                var context = CreateShellContext(settings, StandaloneEnvironmentOptions.None);
 
                 // activate the Shell
                 ActivateShell(context);
@@ -345,6 +350,25 @@ namespace Orchard.Environment {
 
             Logger.Debug("Adding tenant to restart: " + tenant);
             _tenantsToRestart.GetState().Add(context.Settings);
+        }
+
+        private void BlockRequestsDuringSetup() {
+            var httpContext = _httpContextAccessor.Current();
+            if (httpContext.IsBackgroundContext())
+                return;
+
+            // Get the requested shell.
+            var runningShell = _runningShellTable.Match(httpContext);
+            if (runningShell == null)
+                return;
+
+            // If the requested shell is currently initializing, return a Service Unavailable HTTP status code.
+            if (runningShell.State == TenantState.Initializing) {
+                var response = httpContext.Response;
+                response.StatusCode = 503;
+                response.StatusDescription = "This tenant is currently initializing. Please try again later.";
+                response.Write("This tenant is currently initializing. Please try again later.");
+            }
         }
 
         // To be used from CreateStandaloneEnvironment(), also disposes the ShellContext LifetimeScope.

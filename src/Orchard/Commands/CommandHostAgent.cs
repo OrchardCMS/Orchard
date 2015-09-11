@@ -193,12 +193,11 @@ namespace Orchard.Commands {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         private IContainer CreateHostContainer() {
             var hostContainer = OrchardStarter.CreateHostContainer(ContainerRegistrations);
-
             var host = hostContainer.Resolve<IOrchardHost>();
+
             host.Initialize();
             return hostContainer;
         }
-
 
         private IWorkContextScope CreateStandaloneEnvironment(string tenant) {
             var host = _hostContainer.Resolve<IOrchardHost>();
@@ -216,12 +215,11 @@ namespace Orchard.Commands {
                 return env;
             }
             else {
-                // In case of an unitiliazed site (no default settings yet), we create a default settings instance.
+                // In case of an uninitialized site (no default settings yet), we create a default settings instance.
                 var settings = new ShellSettings { Name = ShellSettings.DefaultName, State = TenantState.Uninitialized };
                 return host.CreateStandaloneEnvironment(settings);
             }
         }
-
 
         protected void ContainerRegistrations(ContainerBuilder builder) {
             MvcSingletons(builder);
@@ -234,14 +232,14 @@ namespace Orchard.Commands {
         private CommandHostShellContainerRegistrations CreateShellRegistrations() {
             return new CommandHostShellContainerRegistrations {
                 Registrations = shellBuilder => {
-                                    shellBuilder.RegisterType<CommandHostVirtualPathMonitor>()
-                                        .As<IVirtualPathMonitor>()
-                                        .As<IVolatileProvider>()
-                                        .InstancePerMatchingLifetimeScope("shell");
-                                    shellBuilder.RegisterType<CommandBackgroundService>()
-                                        .As<IBackgroundService>()
-                                        .InstancePerLifetimeScope();
-                                }
+                    shellBuilder.RegisterType<CommandHostVirtualPathMonitor>()
+                        .As<IVirtualPathMonitor>()
+                        .As<IVolatileProvider>()
+                        .InstancePerMatchingLifetimeScope("shell");
+                    shellBuilder.RegisterType<CommandBackgroundService>()
+                        .As<IBackgroundService>()
+                        .InstancePerLifetimeScope();
+                }
             };
         }
 

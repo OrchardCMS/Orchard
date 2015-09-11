@@ -44,12 +44,9 @@ namespace Orchard.Setup.Controllers {
 
         public ActionResult Index() {
             var initialSettings = _setupService.Prime();
-
-            if(initialSettings.State == TenantState.Initializing)
-                return View("Initializing");
-
             var recipes = _setupService.Recipes().ToList();
             string recipeDescription = null;
+
             if (recipes.Count > 0) {
                 recipeDescription = recipes[0].Description;
             }

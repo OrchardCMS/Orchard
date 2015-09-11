@@ -95,7 +95,6 @@ namespace Orchard.Environment {
             SafelyTerminate(() => _sweepGenerator.Terminate());
         }
 
-
         private void SafelyTerminate(Action action) {
             try {
                 action();
