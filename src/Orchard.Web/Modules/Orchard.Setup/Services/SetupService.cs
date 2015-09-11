@@ -175,7 +175,7 @@ namespace Orchard.Setup.Services {
             // Creating a standalone environment. 
             // in theory this environment can be used to resolve any normal components by interface, and those
             // components will exist entirely in isolation - no crossover between the safemode container currently in effect.
-            using (var environment = _orchardHost.CreateStandaloneEnvironment(shellSettings, StandaloneEnvironmentOptions.RunningEnvironment)) {
+            using (var environment = _orchardHost.CreateStandaloneEnvironment(shellSettings)) {
                 try {
                     executionId = CreateTenantData(context, environment);
                 }
