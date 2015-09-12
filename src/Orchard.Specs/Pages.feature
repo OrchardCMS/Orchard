@@ -25,13 +25,13 @@ Scenario: In the admin (menu) there is a link to create a Page
         And I fill in
             | name | value |
             | Title.Title | Super Duper |
-            | AutoroutePart.LayoutEditor.Data | { "type": "Content", "data": "TypeName=Orchard.Layouts.Elements.Text&Content=This+is+super+number+two", "isTemplated": false, "contentType": "Orchard.Layouts.Elements.Text", "contentTypeLabel": "Text", "contentTypeClass": "text", "html": "This is super number two", "hasEditor": true } |
+            | LayoutPart.LayoutEditor.Data | { "type": "Content", "data": "TypeName=Orchard.Layouts.Elements.Text&Content=This+is+super+number+two", "isTemplated": false, "contentType": "Orchard.Layouts.Elements.Text", "contentTypeLabel": "Text", "contentTypeClass": "text", "html": "This is super number two", "hasEditor": true } |
         And I hit "Publish Now"
         And I go to "super-duper-2"
     Then I should see "<h1[^>]*>.*?Super Duper.*?</h1>"
         And I should see "This is super number two."
 
-    # A new page marked to be the home page and publish does take over the home page and is not accessible from its own standard path
+    # A new page marked to be the home page and publish does take over the home page and is also accessible from its own standard path
     When I go to "Admin/Contents/Create/Page"
         And I fill in
             | name | value |
@@ -41,7 +41,7 @@ Scenario: In the admin (menu) there is a link to create a Page
         And I go to "/"
     Then I should see "<h1>Another</h1>"
     When I go to "another"
-    Then the status should be 404 "Not Found"
+    Then the status should be 200 "OK"
 
     # A new page marked to be the home page but only saved as draft does not take over the home page
     When I go to "Admin/Contents/Create/Page"
