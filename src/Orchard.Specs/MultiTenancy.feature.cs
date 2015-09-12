@@ -525,7 +525,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 170
         testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 171
-    testRunner.Then("I should see \"<form action=\"/Admin/MultiTenancy/enable\"\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+    testRunner.Then("I should see \"<form action=\"/Admin/MultiTenancy/Enable\"\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
         }
@@ -587,7 +587,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 193
         testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 194
-    testRunner.Then("I should see \"<form action=\"/Admin/MultiTenancy/disable\"\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+    testRunner.Then("I should see \"<form action=\"/Admin/MultiTenancy/Disable\"\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
         }
@@ -610,7 +610,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 201
     testRunner.Then("I should see \"Name: Alpha\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 202
-        testRunner.And("I should see \"Request Url Host: example.org\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I should see \"Request URL host: example.org\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
         }
