@@ -26,7 +26,7 @@ namespace Orchard.FileSystems.Dependencies {
             _extensionDependenciesManager = extensionDependenciesManager;
             Logger = NullLogger.Instance;
 
-            _extensionsVirtualPathPrefixes = extensionLocations.ModuleAndThemeLocations;
+            _extensionsVirtualPathPrefixes = extensionLocations.ExtensionsVirtualPathPrefixes;
         }
 
         public ILogger Logger { get; set; }

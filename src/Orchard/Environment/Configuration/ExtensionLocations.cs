@@ -9,7 +9,8 @@ namespace Orchard.Environment.Configuration {
         public string[] ModuleLocations;
         public string[] ThemeLocations;
         public string[] CommonLocations;  // locations that should not be common and not related to the current tenant
-        public string[] ModuleAndThemeLocations {  get { return ModuleLocations.Concat(ThemeLocations).Distinct(StringComparer.CurrentCultureIgnoreCase).ToArray(); } }
+        public string[] ModuleAndThemeLocations;
+        public string[] ExtensionsVirtualPathPrefixes;  // Modules+Themes (no core)
 
         public ExtensionLocations()
         {
@@ -32,6 +33,63 @@ namespace Orchard.Environment.Configuration {
                 .Concat(ModuleLocations)
                 .Distinct(StringComparer.OrdinalIgnoreCase)
                 .ToArray();
+            ModuleAndThemeLocations = ModuleLocations
+                .Concat(ThemeLocations)
+                .Distinct(StringComparer.CurrentCultureIgnoreCase)
+                .ToArray();
+            ExtensionsVirtualPathPrefixes = ModuleAndThemeLocations
+                .Select(l=>l+"/")
+                .OrderBy(l=>l.Count(c=>c=='/'))
+                .Reverse()
+                .ToArray();
+        }
+
+        /// <summary>
+        /// Return module from path that is constructed as Location/Module/relative/path/in/module
+        /// Path prefixes is expected as list of Location/ (location+trailing "/")
+        /// 
+        /// Extension locations can contain '/' so they are matched with deeper path first
+        /// </summary>
+        /// <param name="virtualPath"></param>
+        /// <returns>the module - or null of not found</returns>
+        public static string ModuleMatch(string virtualPath, IEnumerable<string> pathPrefixes)
+        {
+            foreach(string prefix in pathPrefixes) {
+                if(virtualPath.StartsWith(prefix)) {
+                    int index = virtualPath.IndexOf('/', prefix.Length, virtualPath.Length - prefix.Length);
+                    if (index <= 0)
+                        continue; 
+                    var moduleName = virtualPath.Substring(prefix.Length, index - prefix.Length);
+                    return (string.IsNullOrEmpty(moduleName) ? null : moduleName);
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Return module from path that is constructed as ExtensionLocation/Module/relative/path/in/module
+        /// 
+        /// Extension locations can contain '/' so they are matched with deeper path first
+        /// </summary>
+        /// <param name="virtualPath"></param>
+        /// <returns>the module - or null of not found</returns>
+        public string ExtensionsModuleMatch(string virtualPath)
+        {
+            ModuleMatch(virtualPath, ExtensionsVirtualPathPrefixes);
+            return null;
+        }
+
+        /// <summary>
+        /// Return true if the virtual path starts with any of the prefixes
+        /// </summary>
+        public static bool PrefixMatch(string virtualPath, IEnumerable<string> pathPrefixes)
+        {
+            return pathPrefixes.Any(p => virtualPath.StartsWith(p));
+        }
+
+        public bool ExtensionsPrefixMatch(string virtualPath)
+        {
+            return PrefixMatch(virtualPath, ExtensionsVirtualPathPrefixes);
         }
 
         /// <summary>
