@@ -266,9 +266,9 @@ namespace Orchard.Taxonomies.Services {
             }
 
             var termPartRecordIds = termList.Select(t => t.Term.TermRecord.Id).ToArray();
-            _processingEngine.AddTask(_shellSettings, _shellDescriptorManager.GetShellDescriptor(), "ITermCountProcessor.Process", new Dictionary<string, object> { { "termPartRecordIds", termPartRecordIds } });
-
-
+            if (termPartRecordIds.Length > 0) {
+                _processingEngine.AddTask(_shellSettings, _shellDescriptorManager.GetShellDescriptor(), "ITermCountProcessor.Process", new Dictionary<string, object> { { "termPartRecordIds", termPartRecordIds } });
+            }
         }
 
         public IContentQuery<TermsPart, TermsPartRecord> GetContentItemsQuery(TermPart term, string fieldName = null) {
