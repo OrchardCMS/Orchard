@@ -43,10 +43,6 @@ namespace Orchard.Tests.Environment.State {
             _container.Mock<IHttpContextAccessor>()
                 .Setup(x=>x.Current())
                 .Returns(httpContext);
-            _container.Mock<IHttpContextAccessor>()
-                .Setup(x => x.CreateContext(It.IsAny<ILifetimeScope>()))
-                .Returns(httpContext);
-
         }
 
         [TearDown]

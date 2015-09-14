@@ -65,6 +65,11 @@ namespace Orchard.Taxonomies.Drivers {
         }
 
         protected override void Importing(TaxonomyPart part, ImportContentContext context) {
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
+            }
+
             part.TermTypeName = context.Attribute(part.PartDefinition.Name, "TermTypeName");
         }
     }

@@ -53,8 +53,9 @@ namespace Orchard.Environment {
                 return BuildManager.GetCompiledAssembly(virtualPath);
             }
             catch (Exception ex) {
-                if (ex.IsFatal()) throw;
-
+                if (ex.IsFatal()) {               
+                    throw;
+                }
                 Logger.Warning(ex, "Error when compiling assembly under {0}.", virtualPath);
                 return null;
             }

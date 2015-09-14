@@ -72,6 +72,11 @@ namespace Orchard.Tags.Drivers {
         }
 
         protected override void Importing(TagsPart part, ImportContentContext context) {
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
+            }
+
             var tagString = context.Attribute(part.PartDefinition.Name, "Tags");
             if (tagString != null) {
                 var tags = tagString.Split(new[] {","}, StringSplitOptions.RemoveEmptyEntries);

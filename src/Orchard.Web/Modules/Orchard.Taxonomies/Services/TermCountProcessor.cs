@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using Orchard.ContentManagement;
 using Orchard.Taxonomies.Models;
 
 namespace Orchard.Taxonomies.Services {
     public class TermCountProcessor : ITermCountProcessor {
-        private readonly IContentManager _contentManager;
         private readonly ITaxonomyService _taxonomyService;
 
-        public TermCountProcessor(IContentManager contentManager, ITaxonomyService taxonomyService) {
-            _contentManager = contentManager;
+        public TermCountProcessor(ITaxonomyService taxonomyService) {
             _taxonomyService = taxonomyService;
         }
         

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using Orchard.ContentManagement;
@@ -33,11 +34,14 @@ namespace Orchard.Search.Drivers {
                 var model = new SearchSettingsViewModel();
                 var searchFields = part.SearchFields;
 
+                model.DisplayType = part.DisplayType;
+
                 if (updater != null) {
                     if (updater.TryUpdateModel(model, Prefix, null, null)) {
                         part.SearchIndex = model.SelectedIndex;
                         part.SearchFields = model.Entries.ToDictionary(x => x.Index, x => x.Fields.Where(e => e.Selected).Select(e => e.Field).ToArray());
                         part.FilterCulture = model.FilterCulture;
+                        part.DisplayType = model.DisplayType;
                     }
                 }
                 else if (_indexManager.HasIndexProvider()) {
@@ -61,19 +65,21 @@ namespace Orchard.Search.Drivers {
         }
 
         protected override void Exporting(SearchSettingsPart part, ExportContentContext context) {
-            context.Element(part.PartDefinition.Name).Add(new XAttribute("SearchFields", part.Retrieve<string>("SearchFields")));
+            var searchFields = part.Retrieve<string>("SearchFields");
+            if(!String.IsNullOrWhiteSpace(searchFields)) {
+                context.Element(part.PartDefinition.Name).Add(new XAttribute("SearchFields", searchFields));
+            }            
         }
 
         protected override void Importing(SearchSettingsPart part, ImportContentContext context) {
-            var xElement = context.Data.Element(part.PartDefinition.Name);
-            if (xElement == null) return;
-            
-            var searchFields = xElement.Attribute("SearchFields");
-            if (searchFields != null) {
-                searchFields.Remove();
-
-                part.Store("SearchFields", searchFields.Value); 
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
             }
+
+            context.ImportAttribute(part.PartDefinition.Name, "SearchFields", value => {
+                part.Store("SearchFields", value);
+            });
         }
     }
 }

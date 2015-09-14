@@ -90,7 +90,7 @@ namespace Orchard.Localization.Services {
         // Cache entry will be invalidated any time the directories hosting 
         // the .po files are modified.
         private CultureDictionary LoadCulture(string culture) {
-            return _cacheManager.Get(culture, ctx => {
+            return _cacheManager.Get(culture, true, ctx => {
                 ctx.Monitor(_signals.When("culturesChanged"));
                 return new CultureDictionary {
                     CultureName = culture,

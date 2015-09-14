@@ -1,6 +1,7 @@
 ﻿using System;
 using Orchard.Data.Migration.Interpreters;
 using Orchard.Localization;
+using Orchard.Exceptions;
 
 namespace Orchard.Data.Migration.Schema {
     public class SchemaBuilder {
@@ -65,6 +66,9 @@ namespace Orchard.Data.Migration.Schema {
                 Run(sqlStatmentCommand);
                 return this;
             } catch (Exception ex) {
+                if (ex.IsFatal()) {  
+                    throw;
+                } 
                 throw new OrchardException(T("An unexpected error occured while executing the SQL statement: {0}", sql), ex); // Add the sql to the nested exception information
             }
         }

@@ -55,7 +55,7 @@ namespace Orchard.Templates.Services {
         }
 
         private IDictionary<string, TemplateResult> BuildShapeProcessors() {
-            return _cacheManager.Get("Template.ShapeProcessors", ctx => {
+            return _cacheManager.Get("Template.ShapeProcessors", true, ctx => {
                 ctx.Monitor(_signals.When(DefaultTemplateService.TemplatesSignal));
 
                 // select all name of types which contains ShapePart

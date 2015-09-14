@@ -1,9 +1,11 @@
-﻿using Orchard.ContentManagement.MetaData;
+﻿using Orchard.ContentManagement;
+using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
 
 namespace Orchard.Autoroute {
     public class Migrations : DataMigrationImpl {
+
         public int Create() {
             SchemaBuilder.CreateTable("AutoroutePartRecord",
                 table => table

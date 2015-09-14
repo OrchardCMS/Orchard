@@ -8,6 +8,7 @@ using Orchard.FileSystems.WebSite;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Utility.Extensions;
+using Orchard.Exceptions;
 
 namespace Orchard.Environment.Extensions.Folders {
     public class ExtensionHarvester : IExtensionHarvester {
@@ -55,7 +56,7 @@ namespace Orchard.Environment.Extensions.Folders {
         private IEnumerable<ExtensionDescriptor> HarvestExtensions(string path, string extensionType, string manifestName, bool manifestIsOptional) {
             string key = string.Format("{0}-{1}-{2}", path, manifestName, extensionType);
 
-            return _cacheManager.Get(key, ctx => {
+            return _cacheManager.Get(key, true, ctx => {
                 if (!DisableMonitoring) {
                     Logger.Debug("Monitoring virtual path \"{0}\"", path);
                     ctx.Monitor(_webSiteFolder.WhenPathChanges(path));
@@ -98,6 +99,9 @@ namespace Orchard.Environment.Extensions.Folders {
                 }
                 catch (Exception ex) {
                     // Ignore invalid module manifests
+                    if (ex.IsFatal()) {
+                        throw;
+                    } 
                     Logger.Error(ex, "The module '{0}' could not be loaded. It was ignored.", extensionId);
                     _criticalErrorProvider.RegisterErrorMessage(T("The extension '{0}' manifest could not be loaded. It was ignored.", extensionId));
                 }
@@ -131,7 +135,7 @@ namespace Orchard.Environment.Extensions.Folders {
         }
 
         private ExtensionDescriptor GetExtensionDescriptor(string locationPath, string extensionId, string extensionType, string manifestPath, bool manifestIsOptional) {
-            return _cacheManager.Get(manifestPath, context => {
+            return _cacheManager.Get(manifestPath, true, context => {
                 if (!DisableMonitoring) {
                     Logger.Debug("Monitoring virtual path \"{0}\"", manifestPath);
                     context.Monitor(_webSiteFolder.WhenPathChanges(manifestPath));
