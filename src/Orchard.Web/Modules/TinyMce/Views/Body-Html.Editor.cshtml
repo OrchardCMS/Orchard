@@ -1,9 +1,14 @@
 ﻿@using Orchard.ContentManagement
 @using Orchard.Environment.Descriptor.Models
 @using Orchard.Localization
+@using TinyMce.Models
+@using TinyMce.Services
 
 @{
     var shellDescriptor = WorkContext.Resolve<ShellDescriptor>();
+    var tinyMceSettingsPart = WorkContext.CurrentSite.As<TinyMceSettingsPart>();
+    var tinyMceSettings = tinyMceSettingsPart != null ? tinyMceSettingsPart.TinyMceSettingsOverride : string.Empty;
+    var loadSettings = shellDescriptor.Features.Any(x => x.Name == "TinyMce.Settings") && !string.IsNullOrWhiteSpace(tinyMceSettings);
 }
 
 <script type="text/javascript">
@@ -14,8 +19,18 @@
     var autofocus = "@(Model.AutoFocus == true ? ViewData.TemplateInfo.GetFullHtmlFieldId("Text") : null)";
 </script>
 
-@{ 
-    Script.Require("OrchardTinyMce");
+@{
+    if (!loadSettings) {
+        Script.Require("OrchardTinyMce");
+    }
+    else {
+        Script.Require("TinyMce");
+        using (Script.Foot()) {
+            <script type="text/javascript">
+            @Html.Raw(tinyMceSettings)
+            </script>
+        }
+    }
     Script.Require("jQueryColorBox");
     Style.Require("jQueryColorBox");
 }

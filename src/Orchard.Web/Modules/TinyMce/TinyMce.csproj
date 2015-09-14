@@ -229,6 +229,10 @@
     <Content Include="Scripts\tinymce.min.js" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Drivers\TinyMceSettingsPartDriver.cs" />
+    <Compile Include="Handlers\TinyMceSettingsPartHandler.cs" />
+    <Compile Include="Models\TinyMceSettingsPart.cs" />
+    <Compile Include="Permissions.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\TinyMceShapeDisplayEvent.cs" />
@@ -276,6 +280,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\skins\orchardlightgray\fonts\tinymce.woff" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts\TinyMceSettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Placement.info" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

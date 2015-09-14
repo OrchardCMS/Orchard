@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using Orchard;
 using Orchard.Caching;
+using Orchard.ContentManagement;
 using Orchard.DisplayManagement.Implementation;
 using Orchard.FileSystems.VirtualPath;
+using TinyMce.Models;
 
 namespace TinyMce.Services {
     public class TinyMceShapeDisplayEvent : ShapeDisplayEvents {
@@ -68,6 +71,6 @@ namespace TinyMce.Services {
 
                 return DefaultLanguage;
             });
-        }
+        }        
     }
 }
