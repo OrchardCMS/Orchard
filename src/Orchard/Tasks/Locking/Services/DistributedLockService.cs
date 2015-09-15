@@ -44,30 +44,30 @@ namespace Orchard.Tasks.Locking.Services {
                 if (dLock != null) {
                     Logger.Debug("Successfully acquired lock '{0}'.", name);
                     return true;
-            }
+                }
 
                 Logger.Warning("Failed to acquire lock '{0}' within the specified timeout ({1}).", name, timeout);
             }
             catch (Exception ex) {
                 Logger.Error(ex, "Error while trying to acquire lock '{0}'.", name);
                 // TODO: Is it correct to not throw here? Should we instead ONLY swallow TimeoutException?
-        }
+            }
 
             dLock = null;
             return false;
         }
-            
+
         public IDistributedLock AcquireLock(string name, TimeSpan? maxValidFor, TimeSpan? timeout) {
             try {
                 DistributedLock result = AcquireLockInternal(name, maxValidFor, timeout, throwOnTimeout: true);
                 Logger.Debug("Successfully acquired lock '{0}'.", name);
                 return result;
-                }
+            }
             catch (Exception ex) {
                 Logger.Error(ex, "Error while trying to acquire lock '{0}'.", name);
                 throw;
             }
-            }
+        }
 
         private DistributedLock AcquireLockInternal(string name, TimeSpan? maxValidFor, TimeSpan? timeout, bool throwOnTimeout) {
             var internalName = GetInternalLockName(name);
@@ -76,12 +76,12 @@ namespace Orchard.Tasks.Locking.Services {
 
             if (!Monitor.TryEnter(monitorObj, monitorTimeout)) {
                 Logger.Debug("Could not enter local monitor for lock '{0}' within the specified timeout ({1}).", internalName, timeout);
-                    
+
                 if (throwOnTimeout)
                     throw new TimeoutException(String.Format("Failed to acquire lock '{0}' within the specified timeout ({1}).", internalName, timeout));
 
                 return null;
-        }
+            }
 
             Logger.Debug("Successfully entered local monitor for lock '{0}'.", internalName);
 
@@ -106,37 +106,37 @@ namespace Orchard.Tasks.Locking.Services {
                             dLock = new DistributedLock(name, internalName, releaseLockAction: () => {
                                 Monitor.Exit(monitorObj);
                                 DeleteDistributedLockRecord(internalName);
-            });
+                            });
 
                             _locks.Add(monitorObj, dLock);
                             return true;
-        }
+                        }
 
                         return false;
-            });
+                    });
 
                     if (!success) {
                         Logger.Debug("Record for lock '{0}' could not be created for current machine within the specified timeout ({1}).", internalName, timeout);
-        
+
                         if (throwOnTimeout)
                             throw new TimeoutException(String.Format("Failed to acquire lock '{0}' within the specified timeout ({1}).", internalName, timeout));
 
-                    return null;
-                }
+                        return null;
+                    }
                 }
 
-                    return dLock;
-                }
+                return dLock;
+            }
             catch (Exception ex) {
                 Monitor.Exit(monitorObj);
 
                 Logger.Error(ex, "An error occurred while trying to acquire lock '{0}'.", internalName);
                 throw;
-                    }
-                }
+            }
+        }
 
         private bool EnsureDistributedLockRecord(string internalName, TimeSpan? maxValidFor) {
-            var localMachineName = _applicationEnvironment.GetEnvironmentIdentifier();
+            var environmentIdentifier = _applicationEnvironment.GetEnvironmentIdentifier();
             var hasLockRecord = false;
 
             ExecuteOnSeparateTransaction(repository => {
@@ -145,25 +145,25 @@ namespace Orchard.Tasks.Locking.Services {
                 if (record == null) {
                     // No record existed, so we're good to create a new one.
                     Logger.Debug("No valid record was found for lock '{0}'; creating a new record.", internalName);
-                    
+
                     repository.Create(new DistributedLockRecord {
                         Name = internalName,
-                        MachineName = localMachineName,
+                        MachineName = environmentIdentifier,
                         CreatedUtc = _clock.UtcNow,
                         ValidUntilUtc = maxValidFor.HasValue ? _clock.UtcNow + maxValidFor.Value : default(DateTime?)
                     });
 
                     hasLockRecord = true;
                 }
-                else if (record.MachineName == localMachineName) {
+                else if (record.MachineName == environmentIdentifier) {
                     // Existing lock was for correct machine name => lock record exists.
-                    Logger.Debug("Found a valid record for lock '{0}' and current local machine name '{1}'.", internalName, localMachineName);
+                    Logger.Debug("Found a valid record for lock '{0}' and current local machine name '{1}'.", internalName, environmentIdentifier);
                     hasLockRecord = true;
                 }
             });
 
             return hasLockRecord;
-                }
+        }
 
         private void DeleteDistributedLockRecord(string internalName) {
             try {
@@ -177,9 +177,9 @@ namespace Orchard.Tasks.Locking.Services {
             }
             catch (Exception ex) {
                 if (ex.IsFatal())
-                throw;
+                    throw;
                 Logger.Warning(ex, "An error occurred while deleting record for lock '{0}'.", internalName);
-            }           
+            }
         }
 
         private bool RepeatUntilTimeout(TimeSpan? timeout, TimeSpan repeatInterval, Func<bool> action) {
@@ -198,14 +198,14 @@ namespace Orchard.Tasks.Locking.Services {
             if (action == null)
                 throw new ArgumentNullException();
 
-                using (var childLifetimeScope = _lifetimeScope.BeginLifetimeScope()) {
-                    var repository = childLifetimeScope.Resolve<IRepository<DistributedLockRecord>>();
-                    var transactionManager = childLifetimeScope.Resolve<ITransactionManager>();
-                    transactionManager.RequireNew(IsolationLevel.ReadCommitted);
-                    action(repository);
-                }
+            using (var childLifetimeScope = _lifetimeScope.BeginLifetimeScope()) {
+                var repository = childLifetimeScope.Resolve<IRepository<DistributedLockRecord>>();
+                var transactionManager = childLifetimeScope.Resolve<ITransactionManager>();
+                transactionManager.RequireNew(IsolationLevel.ReadCommitted);
+                action(repository);
             }
-            
+        }
+
         private string GetInternalLockName(string name) {
             // Prefix the requested lock name by a constant and the tenant name.
             return String.Format("DistributedLock:{0}:{1}", _shellSettings.Name, name);
