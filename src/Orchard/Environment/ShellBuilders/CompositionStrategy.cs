@@ -9,7 +9,6 @@ using Orchard.ContentManagement.Records;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
-using Orchard.Environment.Extensions.Helpers;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.ShellBuilders.Models;
 using Orchard.Localization;
@@ -76,19 +75,29 @@ namespace Orchard.Environment.ShellBuilders {
         }
 
         private IEnumerable<string> ExpandDependencies(IDictionary<string, FeatureDescriptor> availableFeatures, IEnumerable<string> features) {
-            return ExpandDependenciesInternal(availableFeatures, features).Distinct();
+            return ExpandDependenciesInternal(availableFeatures, features, dependentFeatureDescriptor: null).Distinct();
         }
 
-        private IEnumerable<string> ExpandDependenciesInternal(IDictionary<string, FeatureDescriptor> availableFeatures, IEnumerable<string> features) {
+        private IEnumerable<string> ExpandDependenciesInternal(IDictionary<string, FeatureDescriptor> availableFeatures, IEnumerable<string> features, FeatureDescriptor dependentFeatureDescriptor = null) {
             foreach (var shellFeature in features) {
 
                 if (!availableFeatures.ContainsKey(shellFeature)) {
-                    throw new OrchardException(T("The feature {0} is not available", shellFeature));
+                    // If the feature comes from a list of feature dependencies it indicates a bug, so throw an exception.
+                    if(dependentFeatureDescriptor != null)
+                        throw new OrchardException(
+                            T("The feature '{0}' was listed as a dependency of '{1}' of extension '{2}', but this feature could not be found. Please update your manifest file or install the module providing the missing feature.",
+                            shellFeature,
+                            dependentFeatureDescriptor.Name,
+                            dependentFeatureDescriptor.Extension.Name));
+
+                    // If the feature comes from the shell descriptor it means the feature is simply orphaned, so don't throw an exception.
+                    Logger.Warning("Identified '{0}' as an orphaned feature state record in Settings_ShellFeatureRecord.", shellFeature);
+                    continue;
                 }
 
                 var feature = availableFeatures[shellFeature];
                 
-                foreach (var childDependency in ExpandDependenciesInternal(availableFeatures, feature.Dependencies))
+                foreach (var childDependency in ExpandDependenciesInternal(availableFeatures, feature.Dependencies, dependentFeatureDescriptor: feature))
                     yield return childDependency;
 
                 foreach (var dependency in feature.Dependencies)
