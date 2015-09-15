@@ -51,13 +51,16 @@ namespace Orchard.ImportExport.Providers.ImportActions {
             _sweepGenerator = sweepGenerator;
             _recipeStepQueue = recipeStepQueue;
             _recipeStepResultRepository = recipeStepResultRepository;
-            }
+
+            RecipeExecutionTimeout = 600;
+        }
 
         public override string Name { get { return "ExecuteRecipe"; } }
 
         public XDocument RecipeDocument { get; set; }
         public bool ResetSite { get; set; }
         public string SuperUserPassword { get; set; }
+        public int RecipeExecutionTimeout { get; set; }
 
         public override dynamic BuildEditor(dynamic shapeFactory) {
             return UpdateEditor(shapeFactory, null);
@@ -149,8 +152,8 @@ namespace Orchard.ImportExport.Providers.ImportActions {
             // Give each execution step a chance to augment the recipe step before it will be scheduled.
             PrepareRecipe(recipeDocument);
 
-            // Sets the request timeout to 10 minutes to give enough time to execute custom recipes.
-            _orchardServices.WorkContext.HttpContext.Server.ScriptTimeout = 600;
+            // Sets the request timeout to a configurable amount of seconds to give enough time to execute custom recipes.
+            _orchardServices.WorkContext.HttpContext.Server.ScriptTimeout = RecipeExecutionTimeout;
 
             // Suspend background task execution.
             _sweepGenerator.Terminate();
