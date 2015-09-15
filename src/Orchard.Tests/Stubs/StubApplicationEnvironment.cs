@@ -1,12 +1,12 @@
 ﻿using Orchard.Environment;
 
 namespace Orchard.Tests.Stubs {
-    public class StubMachineNameProvider : IMachineNameProvider {
-        public StubMachineNameProvider() {
+    public class StubApplicationEnvironment : IApplicationEnvironment {
+        public StubApplicationEnvironment() {
             MachineName = "Orchard Machine";
         }
         public string MachineName { get; set; }
-        public string GetMachineName() {
+        public string GetEnvironmentIdentifier() {
             return MachineName;
         }
     }

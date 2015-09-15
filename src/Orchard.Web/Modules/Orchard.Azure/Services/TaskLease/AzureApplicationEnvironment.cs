@@ -5,8 +5,8 @@ using Microsoft.WindowsAzure.ServiceRuntime;
 using Orchard.Environment;
 
 namespace Orchard.Azure.Services.TaskLease {
-    public class AzureMachineNameProvider : IMachineNameProvider {
-        public string GetMachineName() {
+    public class AzureApplicationEnvironment : IApplicationEnvironment {
+        public string GetEnvironmentIdentifier() {
             return RoleEnvironment.CurrentRoleInstance.Id;
         }
     }

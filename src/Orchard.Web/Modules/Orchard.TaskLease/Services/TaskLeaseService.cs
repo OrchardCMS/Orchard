@@ -14,20 +14,20 @@ namespace Orchard.TaskLease.Services {
 
         private readonly IRepository<TaskLeaseRecord> _repository;
         private readonly IClock _clock;
-        private readonly IMachineNameProvider _machineNameProvider;
+        private readonly IApplicationEnvironment _applicationEnvironment;
 
         public TaskLeaseService(
             IRepository<TaskLeaseRecord> repository,
             IClock clock,
-            IMachineNameProvider machineNameProvider) {
+            IApplicationEnvironment applicationEnvironment) {
 
             _repository = repository;
             _clock = clock;
-            _machineNameProvider = machineNameProvider;
+            _applicationEnvironment = applicationEnvironment;
         }
 
         public string Acquire(string taskName, DateTime expiredUtc) {
-            var machineName = _machineNameProvider.GetMachineName();
+            var machineName = _applicationEnvironment.GetEnvironmentIdentifier();
 
             // retrieve current lease for the specified task
             var taskLease = _repository.Get(x => x.TaskName == taskName);
@@ -64,7 +64,7 @@ namespace Orchard.TaskLease.Services {
         }
 
         public void Update(string taskName, string state) {
-            var machineName = _machineNameProvider.GetMachineName();
+            var machineName = _applicationEnvironment.GetEnvironmentIdentifier();
 
             // retrieve current lease for the specified task
             var taskLease = _repository.Get(x => x.TaskName == taskName && x.MachineName == machineName);
@@ -78,7 +78,7 @@ namespace Orchard.TaskLease.Services {
         }
 
         public void Update(string taskName, string state, DateTime expiredUtc) {
-            var machineName = _machineNameProvider.GetMachineName();
+            var machineName = _applicationEnvironment.GetEnvironmentIdentifier();
 
             // retrieve current lease for the specified task
             var taskLease = _repository.Get(x => x.TaskName == taskName && x.MachineName == machineName);
