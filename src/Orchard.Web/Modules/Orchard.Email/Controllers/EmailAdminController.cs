@@ -23,6 +23,7 @@ namespace Orchard.Email.Controllers {
         public Localizer T { get; set; }
 
         [HttpPost]
+        [ValidateInput(false)]
         public ActionResult TestSettings(TestSmtpSettings testSettings) {
             ILogger logger = null;
             try {

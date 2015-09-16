@@ -348,5 +348,13 @@ namespace Orchard.Utility.Extensions {
             var pattern = String.Format("{0}", String.Join("|", replacements.Keys));
             return Regex.Replace(original, pattern, match => replacements[match.Value]);
         }
+
+        public static string ToBase64(this string value) {
+            return Convert.ToBase64String(Encoding.UTF8.GetBytes(value));
+        }
+
+        public static string FromBase64(this string value) {
+            return Encoding.UTF8.GetString(Convert.FromBase64String(value));
+        }
     }
 }

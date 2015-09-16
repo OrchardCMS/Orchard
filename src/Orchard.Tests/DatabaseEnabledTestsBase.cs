@@ -11,6 +11,7 @@ using Orchard.ContentManagement.Handlers;
 using Orchard.Data;
 using Orchard.Environment.Configuration;
 using Orchard.Services;
+using Orchard.Tests.ContentManagement;
 using Orchard.Tests.Data;
 using Orchard.Tests.Stubs;
 
@@ -48,7 +49,8 @@ namespace Orchard.Tests {
             builder.RegisterInstance(_clock).As<IClock>();
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
             builder.RegisterInstance(new ShellSettings { Name = ShellSettings.DefaultName, DataProvider = "SqlCe" });
-            
+            builder.RegisterInstance(new TestTransactionManager(_session)).As<ITransactionManager>();
+
             Register(builder);
             _container = builder.Build();
         }
@@ -57,9 +59,6 @@ namespace Orchard.Tests {
         public void Cleanup() {
             if(_container != null)
                 _container.Dispose();
-
-            if(_session != null)
-                _session.Close();
         }
 
         public abstract void Register(ContainerBuilder builder);

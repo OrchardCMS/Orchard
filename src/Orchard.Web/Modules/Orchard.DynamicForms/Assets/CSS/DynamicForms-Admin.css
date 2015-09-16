@@ -1,0 +1,11 @@
+﻿.layout-editor .layout-content > .layout-element-wrapper .layout-content-markup > .form-field-element input[type="text"],
+.layout-editor .layout-content > .layout-element-wrapper .layout-content-markup > .form-field-element input[type="password"],
+.layout-editor .layout-content > .layout-element-wrapper .layout-content-markup > .form-field-element input[type="email"],
+.layout-editor .layout-content > .layout-element-wrapper .layout-content-markup > .form-field-element input[type="tel"],
+.layout-editor .layout-content > .layout-element-wrapper .layout-content-markup > .form-field-element textarea {
+    width: 100%;
+}
+
+.layout-editor .layout-content > .layout-element-wrapper .layout-content-markup > .form-field-element.form-field-element-enumeration ol {
+    list-style: none;
+}

@@ -1,4 +1,5 @@
-﻿using Orchard.Forms.Services;
+﻿using Orchard.Environment.Extensions;
+using Orchard.Forms.Services;
 
 namespace Orchard.DynamicForms.Forms {
     public class DynamicFormValidatingForm : Component, IFormProvider {

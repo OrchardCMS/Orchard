@@ -3,11 +3,12 @@
 @using Orchard.Layouts.Helpers
 @{
     var element = (Taxonomy)Model.Element;
+    var name = String.IsNullOrWhiteSpace((string)Model.ProcessedName) ? "CheckList1" : (string)Model.ProcessedName;
     var tagBuilder = (OrchardTagBuilder)TagBuilderExtensions.CreateElementTagBuilder(Model, "ol");
     var index = 0;
 }
 @if (element.ShowLabel) {
-    <label>@Html.Raw(element.Label)</label>
+    <label>@Html.Raw(Model.ProcessedLabel)</label>
 }
 @tagBuilder.StartElement
 @foreach (var option in Model.TermOptions) {
@@ -15,6 +16,11 @@
     inputTagBuilder.Attributes["type"] = "checkbox";
     inputTagBuilder.Attributes["name"] = element.Name;
     inputTagBuilder.Attributes["value"] = option.Value;
+
+    if (option.Selected) {
+        inputTagBuilder.Attributes["checked"] = "checked";
+    }
+
     if (element.ValidationSettings.Required == true && index == 0) {
         inputTagBuilder.AddClientValidationAttributes((IDictionary<string, string>)Model.ClientValidationAttributes);
     }
@@ -28,5 +34,5 @@
 }
 @tagBuilder.EndElement
 @if (element.ValidationSettings.ShowValidationMessage == true) {
-    @Html.ValidationMessage(element.Name)
+    @Html.ValidationMessage(name)
 }

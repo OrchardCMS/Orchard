@@ -9,6 +9,7 @@ using Orchard.Logging;
 using Orchard.Services;
 using Orchard.Tasks;
 using Orchard.Tasks.Scheduling;
+using Orchard.Exceptions;
 
 namespace Orchard.Core.Scheduling.Services {
     [UsedImplicitly]
@@ -65,6 +66,9 @@ namespace Orchard.Core.Scheduling.Services {
                     }
                 }
                 catch (Exception ex) {
+                    if (ex.IsFatal()) {
+                        throw;
+                    }
                     Logger.Warning(ex, "Unable to process scheduled task #{0} of type {1}", taskEntry.Id, taskEntry.Action);
                     _transactionManager.Cancel();
                 }

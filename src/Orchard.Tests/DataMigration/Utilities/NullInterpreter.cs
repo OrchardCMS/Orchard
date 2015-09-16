@@ -24,5 +24,10 @@ namespace Orchard.Tests.DataMigration.Utilities {
 
         public void Visit(DropForeignKeyCommand command) {
         }
+
+        public string PrefixTableName(string tableName) {
+            return tableName;
+        }
+
     }
 }

@@ -3,6 +3,7 @@ using System.Linq;
 using Orchard.Environment;
 using Orchard.Environment.Features;
 using Orchard.Logging;
+using Orchard.Exceptions;
 
 namespace Orchard.Data.Migration {
     /// <summary>
@@ -41,8 +42,11 @@ namespace Orchard.Data.Migration {
                 try {
                     _dataMigrationManager.Update(feature);
                 }
-                catch (Exception e) {
-                    Logger.Error("Could not run migrations automatically on " + feature, e);
+                catch (Exception ex) {
+                    if (ex.IsFatal()) {
+                        throw;
+                    } 
+                    Logger.Error("Could not run migrations automatically on " + feature, ex);
                 }
             }
         }

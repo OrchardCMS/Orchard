@@ -66,6 +66,11 @@ namespace Orchard.Widgets.Drivers {
         }
 
         protected override void Importing(LayerPart part, ImportContentContext context) {
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
+            }
+
             var name = context.Attribute(part.PartDefinition.Name, "Name");
             if (name != null) {
                 part.Name = name;

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using Orchard.ContentManagement;
 
@@ -15,7 +16,9 @@ namespace Orchard.AuditTrail.Services.Models {
             var filters = new Filters(updateModel);
 
             foreach (string nameValue in nameValues) {
-                filters.Add(nameValue, nameValues[nameValue]);
+                if (!String.IsNullOrEmpty(nameValue)) {
+                    filters.Add(nameValue, nameValues[nameValue]);
+                }
             }
 
             return filters;

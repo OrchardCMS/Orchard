@@ -1,1 +1,3 @@
-/// <reference path="typings/jquery.d.ts" />
+/// <reference path="Typings/jquery.d.ts" /> 
+
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImNsb3VkbWVkaWEtYWRtaW4tam9iLnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBLDRDQUE0QyIsImZpbGUiOiJjbG91ZG1lZGlhLWFkbWluLWpvYi5qcyIsInNvdXJjZXNDb250ZW50IjpbIi8vLyA8cmVmZXJlbmNlIHBhdGg9XCJUeXBpbmdzL2pxdWVyeS5kLnRzXCIgLz4iXSwic291cmNlUm9vdCI6Ii9zb3VyY2UvIn0=

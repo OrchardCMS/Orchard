@@ -29,6 +29,7 @@ using Orchard.Tests.Environment.Extensions;
 using Orchard.Tests.Environment.Features;
 using Orchard.Tests.Stubs;
 using IPackageManager = Orchard.Packaging.Services.IPackageManager;
+using Orchard.Tests.Modules.Recipes.Services;
 
 namespace Orchard.Tests.Modules.Recipes.RecipeHandlers {
     [TestFixture]
@@ -66,6 +67,7 @@ namespace Orchard.Tests.Modules.Recipes.RecipeHandlers {
             builder.RegisterType<ShellStateManager>().As<IShellStateManager>().SingleInstance();
             builder.RegisterType<StubEventBus>().As<IEventBus>().SingleInstance();
             builder.RegisterType<ModuleRecipeHandler>();
+            builder.RegisterType<StubRecipeJournal>().As<IRecipeJournal>();
             builder.RegisterSource(new EventsRegistrationSource());
         }
 

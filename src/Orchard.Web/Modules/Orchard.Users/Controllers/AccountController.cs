@@ -187,7 +187,7 @@ namespace Orchard.Users.Controllers {
             }
 
             if(String.IsNullOrWhiteSpace(username)){
-                ModelState.AddModelError("userNameOrEmail", T("Invalid username or E-mail."));
+                ModelState.AddModelError("username", T("You must specify a username or e-mail."));
                 return View();
             }
 
@@ -242,6 +242,7 @@ namespace Orchard.Users.Controllers {
             }
         }
 
+        [AlwaysAccessible]
         public ActionResult LostPassword(string nonce) {
             if ( _userService.ValidateLostPassword(nonce) == null ) {
                 return RedirectToAction("LogOn");
@@ -253,6 +254,7 @@ namespace Orchard.Users.Controllers {
         }
 
         [HttpPost]
+        [AlwaysAccessible]
         [ValidateInput(false)]
         public ActionResult LostPassword(string nonce, string newPassword, string confirmPassword) {
             IUser user;
@@ -281,6 +283,7 @@ namespace Orchard.Users.Controllers {
             return RedirectToAction("ChangePasswordSuccess");
         }
 
+        [AlwaysAccessible]
         public ActionResult ChangePasswordSuccess() {
             return View();
         }

@@ -48,7 +48,8 @@
                                 var isSelected = Model.SelectedContentItems.Where(x => x.Id == contentItem.Id && x.Selected).Select(x => x.Id).Any();
                                 var commonPart = contentItem.As<CommonPart>();
                                 var removedText = commonPart != null ? dateLocalizationServices.ConvertToLocalizedString(commonPart.VersionModifiedUtc) : T("-").Text;
-                                var contentDisplayText = Html.ItemDisplayText(contentItem).ToString();
+                                var contentDisplayTextHtmlString = Html.ItemDisplayText(contentItem);
+                                var contentDisplayText = contentDisplayTextHtmlString != null ? contentDisplayTextHtmlString.ToString() : contentItem.ContentType;
                                 var contentDisplayUrl = Url.Action("Detail", "Content", new {id = contentItem.Id, version = contentItem.Version, area = "Orchard.AuditTrail"});
                                 <tr>
                                     <td>

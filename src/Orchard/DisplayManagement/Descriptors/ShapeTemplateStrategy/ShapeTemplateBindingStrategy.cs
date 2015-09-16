@@ -77,7 +77,7 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy {
                 var pathContexts = harvesterInfos.SelectMany(harvesterInfo => harvesterInfo.subPaths.Select(subPath => {
                     var basePath = Path.Combine(extensionDescriptor.Location, extensionDescriptor.Id).Replace(Path.DirectorySeparatorChar, '/');
                     var virtualPath = Path.Combine(basePath, subPath).Replace(Path.DirectorySeparatorChar, '/');
-                    var fileNames = _cacheManager.Get(virtualPath, ctx => {
+                    var fileNames = _cacheManager.Get(virtualPath, true, ctx => {
                         if (!_virtualPathProvider.DirectoryExists(virtualPath))
                             return new List<string>();
 

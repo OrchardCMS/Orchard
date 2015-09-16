@@ -29,6 +29,7 @@ namespace Orchard.Tests.ContentManagement {
         private IContentManager _manager;
         private ISessionFactory _sessionFactory;
         private ISession _session;
+        private ITransactionManager _transactionManager;
 
         [TestFixtureSetUp]
         public void InitFixture() {
@@ -74,7 +75,7 @@ namespace Orchard.Tests.ContentManagement {
             builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
 
             _session = _sessionFactory.OpenSession();
-            builder.RegisterInstance(new DefaultContentManagerTests.TestSessionLocator(_session)).As<ISessionLocator>();
+            builder.RegisterInstance(_transactionManager = new TestTransactionManager(_session)).As<ITransactionManager>();
 
             _session.Delete(string.Format("from {0}", typeof(GammaRecord).FullName));
             _session.Delete(string.Format("from {0}", typeof(DeltaRecord).FullName));
@@ -82,12 +83,17 @@ namespace Orchard.Tests.ContentManagement {
             _session.Delete(string.Format("from {0}", typeof(ContentItemVersionRecord).FullName));
             _session.Delete(string.Format("from {0}", typeof(ContentItemRecord).FullName));
             _session.Delete(string.Format("from {0}", typeof(ContentTypeRecord).FullName));
-            _session.Flush();
-            _session.Clear();
+            _transactionManager.RequireNew();
 
             _container = builder.Build();
             _manager = _container.Resolve<IContentManager>();
 
+        }
+
+        [TearDown]
+        public void Cleanup() {
+            if (_container != null)
+                _container.Dispose();
         }
 
         private List<IContent> AddSampleData() {
@@ -98,7 +104,7 @@ namespace Orchard.Tests.ContentManagement {
                 _manager.Create<DeltaPart>("delta", init => { init.Record.Quux = "the quux value"; })
             };
 
-            _session.Flush();
+            _transactionManager.RequireNew();
 
             return items;
         }
@@ -212,7 +218,7 @@ namespace Orchard.Tests.ContentManagement {
             var twoId = _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "two"; }).ContentItem.Id;
             _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "three"; });
             var fourId = _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "four"; }).ContentItem.Id;
-            _session.Flush();
+            _transactionManager.RequireNew();
 
 
             var two = _manager.Query()
@@ -239,7 +245,7 @@ namespace Orchard.Tests.ContentManagement {
             _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "two"; });
             _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "three"; });
             _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "four"; });
-            _session.Flush();
+            _transactionManager.RequireNew();
 
             var twoOrFour = _manager.Query<GammaPart, GammaRecord>()
                 .Where(x => x.Frap == "one" || x.Frap == "four")
@@ -271,8 +277,7 @@ namespace Orchard.Tests.ContentManagement {
             _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "two"; });
             _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "three"; });
             _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "four"; });
-            _session.Flush();
-            _session.Clear();
+            _transactionManager.RequireNew();
 
             var ascending = _manager.Query("gamma")
                 .OrderBy<GammaRecord>(x => x.Frap)
@@ -282,7 +287,7 @@ namespace Orchard.Tests.ContentManagement {
             Assert.That(ascending.First().Record.Frap, Is.EqualTo("four"));
             Assert.That(ascending.Last().Record.Frap, Is.EqualTo("two"));
 
-            _session.Clear();
+            _transactionManager.RequireNew();
 
             var descending = _manager.Query<GammaPart, GammaRecord>()
                 .OrderByDescending(x => x.Frap)
@@ -300,7 +305,7 @@ namespace Orchard.Tests.ContentManagement {
             _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "two"; });
             _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "three"; });
             _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "four"; });
-            _session.Flush();
+            _transactionManager.RequireNew();
 
             var reverseById = _manager.Query()
                 .OrderByDescending<GammaRecord>(x => x.Id)
@@ -346,8 +351,7 @@ namespace Orchard.Tests.ContentManagement {
                 init.Record.Frap = "four";
                 init.As<EpsilonPart>().Record.Quad = "4";
             });
-            _session.Flush();
-            _session.Clear();
+            _transactionManager.RequireNew();
 
             var results = _manager.Query<EpsilonPart, EpsilonRecord>()
                 .Where(x => x.Quad == "2" || x.Quad == "3")
@@ -365,21 +369,18 @@ namespace Orchard.Tests.ContentManagement {
                 init.As<GammaPart>().Record.Frap = "one";
                 init.As<EpsilonPart>().Record.Quad = "v1";
             });
-            _session.Flush();
-            _session.Clear();
+            _transactionManager.RequireNew();
 
             var gamma2 = _manager.Get(gamma1.Id, VersionOptions.DraftRequired);
             gamma2.As<GammaPart>().Record.Frap = "two";
             gamma2.As<EpsilonPart>().Record.Quad = "v2";
-            _session.Flush();
-            _session.Clear();
+            _transactionManager.RequireNew();
 
             var gamma3 = _manager.Create<ContentItem>("gamma", init => {
                 init.As<GammaPart>().Record.Frap = "three";
                 init.As<EpsilonPart>().Record.Quad = "v3";
             });
-            _session.Flush();
-            _session.Clear();
+            _transactionManager.RequireNew();
         }
 
         [Test]
@@ -562,7 +563,7 @@ namespace Orchard.Tests.ContentManagement {
             _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "two"; });
             _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "three"; });
             _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "four"; });
-            _session.Flush();
+            _transactionManager.RequireNew();
 
             var result = _manager.Query<GammaPart, GammaRecord>()
                 .Where(x => x.Frap.StartsWith("t"))
@@ -579,7 +580,7 @@ namespace Orchard.Tests.ContentManagement {
             _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "two"; });
             _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "three"; });
             _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "four"; });
-            _session.Flush();
+            _transactionManager.RequireNew();
 
             var result = _manager.Query<GammaPart, GammaRecord>()
                 .Where(x => x.Frap.EndsWith("e"))
@@ -596,7 +597,7 @@ namespace Orchard.Tests.ContentManagement {
             _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "two"; });
             _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "three"; });
             _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "four"; });
-            _session.Flush();
+            _transactionManager.RequireNew();
 
             var result = _manager.Query<GammaPart, GammaRecord>()
                 .Where(x => x.Frap.Contains("o"))

@@ -1,5 +1,6 @@
 ﻿using System.Web;
 using Autofac;
+using Moq;
 using NUnit.Framework;
 using Orchard.Environment;
 using Orchard.Mvc;

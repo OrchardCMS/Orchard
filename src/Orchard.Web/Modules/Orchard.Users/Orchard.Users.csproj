@@ -25,6 +25,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -100,6 +101,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AuthenticationRedirectionFilter.cs" />
     <Compile Include="Services\IUserService.cs" />
+    <Compile Include="Services\UserNameIdentityResolver.cs" />
     <Compile Include="Services\UserResolverSelector.cs" />
     <Compile Include="Services\MembershipService.cs" />
     <Compile Include="AdminMenu.cs" />
@@ -116,6 +118,21 @@
     <Content Include="Module.txt" />
     <Content Include="Styles\images\menu.users.png" />
     <Content Include="Styles\menu.users-admin.css" />
+    <Content Include="Styles\workflows-activity-verify-user-unicity.css" />
+    <Content Include="Styles\workflows-activity-user-logged-in.css" />
+    <Content Include="Styles\workflows-activity-user-sent-challenge-email.css" />
+    <Content Include="Styles\workflows-activity-user-logged-out.css" />
+    <Content Include="Styles\workflows-activity-user-logging-in.css" />
+    <Content Include="Styles\workflows-activity-user-is-approved.css" />
+    <Content Include="Styles\workflows-activity-user-access-denied.css" />
+    <Content Include="Styles\workflows-activity-user-creating.css" />
+    <Content Include="Styles\workflows-activity-user-confirmed-email.css" />
+    <Content Include="Styles\workflows-activity-user-created.css" />
+    <Content Include="Styles\workflows-activity-user-changed-password.css" />
+    <Content Include="Styles\workflows-activity-user-approved.css" />
+    <Content Include="Styles\workflows-activity-sign-in-user.css" />
+    <Content Include="Styles\workflows-activity-create-user.css" />
+    <Content Include="Styles\workflows-activity-approve-user.css" />
     <Content Include="Views\Account\ChangePassword.cshtml" />
     <Content Include="Views\Account\ChangePasswordSuccess.cshtml" />
     <Content Include="Views\Account\AccessDenied.cshtml" />

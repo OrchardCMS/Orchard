@@ -54,8 +54,13 @@ namespace Orchard.Projections.Drivers {
         }
 
         protected override void Importing(NavigationQueryPart part, ImportContentContext context) {
-            IfNotNull(context.Attribute(part.PartDefinition.Name, "Items"), x => part.Record.Items = Int32.Parse(x));
-            IfNotNull(context.Attribute(part.PartDefinition.Name, "Offset"), x => part.Record.Skip = Int32.Parse(x));
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
+            }
+
+            context.ImportAttribute(part.PartDefinition.Name, "Items", x => part.Record.Items = Int32.Parse(x));
+            context.ImportAttribute(part.PartDefinition.Name, "Offset", x => part.Record.Skip = Int32.Parse(x));
         }
 
         protected override void Imported(NavigationQueryPart part, ImportContentContext context) {
@@ -65,13 +70,7 @@ namespace Orchard.Projections.Drivers {
                 part.Record.QueryPartRecord = context.GetItemFromSession(query).As<QueryPart>().Record;
             }
         }
-
-        private static void IfNotNull<T>(T value, Action<T> then) where T : class {
-            if(value != null) {
-                then(value);
-            }
-        }
-
+        
         protected override void Exporting(NavigationQueryPart part, ExportContentContext context) {
             context.Element(part.PartDefinition.Name).SetAttributeValue("Items", part.Record.Items);
             context.Element(part.PartDefinition.Name).SetAttributeValue("Offset", part.Record.Skip);

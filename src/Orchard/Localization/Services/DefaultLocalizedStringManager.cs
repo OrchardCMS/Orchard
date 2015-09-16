@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
-using System.Text;
 using Orchard.Caching;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
@@ -15,8 +12,10 @@ namespace Orchard.Localization.Services {
         private readonly IWebSiteFolder _webSiteFolder;
         private readonly IExtensionManager _extensionManager;
         private readonly ICacheManager _cacheManager;
+        private readonly ILocalizationStreamParser _localizationStreamParser;
         private readonly ShellSettings _shellSettings;
         private readonly ISignals _signals;
+
         const string CoreLocalizationFilePathFormat = "~/Core/App_Data/Localization/{0}/orchard.core.po";
         const string ModulesLocalizationFilePathFormat = "~/Modules/{0}/App_Data/Localization/{1}/orchard.module.po";
         const string ThemesLocalizationFilePathFormat = "~/Themes/{0}/App_Data/Localization/{1}/orchard.theme.po";
@@ -27,11 +26,13 @@ namespace Orchard.Localization.Services {
             IWebSiteFolder webSiteFolder,
             IExtensionManager extensionManager,
             ICacheManager cacheManager,
+            ILocalizationStreamParser locationStreamParser,
             ShellSettings shellSettings,
             ISignals signals) {
             _webSiteFolder = webSiteFolder;
             _extensionManager = extensionManager;
             _cacheManager = cacheManager;
+            _localizationStreamParser = locationStreamParser;
             _shellSettings = shellSettings;
             _signals = signals;
 
@@ -89,7 +90,7 @@ namespace Orchard.Localization.Services {
         // Cache entry will be invalidated any time the directories hosting 
         // the .po files are modified.
         private CultureDictionary LoadCulture(string culture) {
-            return _cacheManager.Get(culture, ctx => {
+            return _cacheManager.Get(culture, true, ctx => {
                 ctx.Monitor(_signals.When("culturesChanged"));
                 return new CultureDictionary {
                     CultureName = culture,
@@ -114,7 +115,7 @@ namespace Orchard.Localization.Services {
             string corePath = string.Format(CoreLocalizationFilePathFormat, culture);
             string text = _webSiteFolder.ReadFile(corePath);
             if (text != null) {
-                ParseLocalizationStream(text, translations, false);
+                _localizationStreamParser.ParseLocalizationStream(text, translations, false);
                 if (!DisableMonitoring) {
                     Logger.Debug("Monitoring virtual path \"{0}\"", corePath);
                     context.Monitor(_webSiteFolder.WhenPathChanges(corePath));
@@ -126,7 +127,7 @@ namespace Orchard.Localization.Services {
                     string modulePath = string.Format(ModulesLocalizationFilePathFormat, module.Id, culture);
                     text = _webSiteFolder.ReadFile(modulePath);
                     if (text != null) {
-                        ParseLocalizationStream(text, translations, true);
+                        _localizationStreamParser.ParseLocalizationStream(text, translations, true);
 
                         if (!DisableMonitoring) {
                             Logger.Debug("Monitoring virtual path \"{0}\"", modulePath);
@@ -141,7 +142,7 @@ namespace Orchard.Localization.Services {
                     string themePath = string.Format(ThemesLocalizationFilePathFormat, theme.Id, culture);
                     text = _webSiteFolder.ReadFile(themePath);
                     if (text != null) {
-                        ParseLocalizationStream(text, translations, true);
+                        _localizationStreamParser.ParseLocalizationStream(text, translations, true);
 
                         if (!DisableMonitoring) {
                             Logger.Debug("Monitoring virtual path \"{0}\"", themePath);
@@ -154,7 +155,7 @@ namespace Orchard.Localization.Services {
             string rootPath = string.Format(RootLocalizationFilePathFormat, culture);
             text = _webSiteFolder.ReadFile(rootPath);
             if (text != null) {
-                ParseLocalizationStream(text, translations, true);
+                _localizationStreamParser.ParseLocalizationStream(text, translations, true);
                 if (!DisableMonitoring) {
                     Logger.Debug("Monitoring virtual path \"{0}\"", rootPath);
                     context.Monitor(_webSiteFolder.WhenPathChanges(rootPath));
@@ -164,7 +165,7 @@ namespace Orchard.Localization.Services {
             string tenantPath = string.Format(TenantLocalizationFilePathFormat, _shellSettings.Name, culture);
             text = _webSiteFolder.ReadFile(tenantPath);
             if (text != null) {
-                ParseLocalizationStream(text, translations, true);
+                _localizationStreamParser.ParseLocalizationStream(text, translations, true);
                 if (!DisableMonitoring) {
                     Logger.Debug("Monitoring virtual path \"{0}\"", tenantPath);
                     context.Monitor(_webSiteFolder.WhenPathChanges(tenantPath));
@@ -172,102 +173,6 @@ namespace Orchard.Localization.Services {
             }
 
             return translations;
-        }
-
-        private static readonly Dictionary<char, char> _escapeTranslations = new Dictionary<char, char> {
-            { 'n', '\n' },
-            { 'r', '\r' },
-            { 't', '\t' }
-        };
-
-        private static string Unescape(string str) {
-            StringBuilder sb = null;
-            bool escaped = false;
-            for (var i = 0; i < str.Length; i++) {
-                var c = str[i];
-                if (escaped) {
-                    if (sb == null) {
-                        sb = new StringBuilder(str.Length);
-                        if (i > 1) {
-                            sb.Append(str.Substring(0, i - 1));
-                        }
-                    }
-                    char unescaped;
-                    if (_escapeTranslations.TryGetValue(c, out unescaped)) {
-                        sb.Append(unescaped);
-                    }
-                    else {
-                        // General rule: \x ==> x
-                        sb.Append(c);
-                    }
-                    escaped = false;
-                }
-                else {
-                    if (c == '\\') {
-                        escaped = true;
-                    }
-                    else if (sb != null) {
-                        sb.Append(c);
-                    }
-                }
-            }
-            return sb == null ? str : sb.ToString();
-        }
-
-        private static void ParseLocalizationStream(string text, IDictionary<string, string> translations, bool merge) {
-            StringReader reader = new StringReader(text);
-            string poLine, id, scope;
-            id = scope = String.Empty;
-            while ((poLine = reader.ReadLine()) != null) {
-                if (poLine.StartsWith("#:")) {
-                    scope = ParseScope(poLine);
-                    continue;
-                }
-
-                if (poLine.StartsWith("msgctxt")) {
-                    scope = ParseContext(poLine);
-                    continue;
-                }
-
-                if (poLine.StartsWith("msgid")) {
-                    id = ParseId(poLine);
-                    continue;
-                }
-
-                if (poLine.StartsWith("msgstr")) {
-                    string translation = ParseTranslation(poLine);
-                    // ignore incomplete localizations (empty msgid or msgstr)
-                    if (!String.IsNullOrWhiteSpace(id) && !String.IsNullOrWhiteSpace(translation)) {
-                        string scopedKey = (scope + "|" + id).ToLowerInvariant();
-                        if (!translations.ContainsKey(scopedKey)) {
-                            translations.Add(scopedKey, translation);
-                        }
-                        else {
-                            if (merge) {
-                                translations[scopedKey] = translation;
-                            }
-                        }
-                    }
-                    id = scope = String.Empty;
-                }
-
-            }
-        }
-
-        private static string ParseTranslation(string poLine) {
-            return Unescape(poLine.Substring(6).Trim().Trim('"'));
-        }
-
-        private static string ParseId(string poLine) {
-            return Unescape(poLine.Substring(5).Trim().Trim('"'));
-        }
-
-        private static string ParseScope(string poLine) {
-            return Unescape(poLine.Substring(2).Trim().Trim('"'));
-        }
-
-        private static string ParseContext(string poLine) {
-            return Unescape(poLine.Substring(7).Trim().Trim('"'));
         }
 
         class CultureDictionary {

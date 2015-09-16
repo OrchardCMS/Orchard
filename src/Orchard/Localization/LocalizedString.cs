@@ -2,6 +2,10 @@
 using System.Web;
 
 namespace Orchard.Localization {
+
+    /// <summary>
+    /// An HTML-encoded localized string
+    /// </summary>
     public class LocalizedString : MarshalByRefObject, IHtmlString {
         private readonly string _localized;
         private readonly string _scope;
@@ -30,6 +34,9 @@ namespace Orchard.Localization {
             get { return _scope; }
         }
 
+        /// <summary>
+        /// The HTML-Encoded original text
+        /// </summary>
         public string TextHint {
             get { return _textHint; }
         }
@@ -38,10 +45,16 @@ namespace Orchard.Localization {
             get { return _args; }
         }
 
+        /// <summary>
+        /// The HTML-encoded localized text
+        /// </summary>
         public string Text {
             get { return _localized; }
         }
 
+        /// <summary>
+        /// The HTML-encoded localized text
+        /// </summary>
         public override string ToString() {
             return _localized;
         }

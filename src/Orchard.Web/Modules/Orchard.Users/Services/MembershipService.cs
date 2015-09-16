@@ -117,7 +117,7 @@ namespace Orchard.Users.Services {
                         var parameters = new Dictionary<string, object> {
                             {"Subject", T("New account").Text},
                             {"Body", _shapeDisplay.Display(template)},
-                            {"Recipients", new [] { recipient.Email }}
+                            {"Recipients", recipient.Email }
                         };
 
                         _messageService.Send("Email", parameters);

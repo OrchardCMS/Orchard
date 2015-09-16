@@ -3,8 +3,8 @@
 @{
     var element = (Enumeration)Model.Element;
     var attributes = (IDictionary<string, object>)TagBuilderExtensions.GetCommonElementAttributes(Model);
-    var name = String.IsNullOrWhiteSpace(element.Name) ? "MultiSelectList1" : element.Name;
-    var options = (IEnumerable<SelectListItem>)Model.TokenizedOptions;
+    var name = (string)(String.IsNullOrWhiteSpace(Model.ProcessedName) ? "MultiSelectList1" : Model.ProcessedName);
+    var options = (IEnumerable<SelectListItem>)Model.ProcessedOptions;
     var clientValidationAttributes = (IDictionary<string, string>)Model.ClientValidationAttributes;
     var htmlId = !String.IsNullOrWhiteSpace(element.HtmlId) ? element.HtmlId : name;
 
@@ -13,9 +13,9 @@
     }
 }
 @if (element.ShowLabel) {
-    <label for="@htmlId">@Html.Raw(element.Label)</label>
+    <label for="@htmlId">@Html.Raw(Model.ProcessedLabel)</label>
 }
 @Html.ListBox(name, options, attributes)
 @if (element.ValidationSettings.ShowValidationMessage == true) {
-    @Html.ValidationMessage(element.Name)
+    @Html.ValidationMessage((string)Model.ProcessedName)
 }

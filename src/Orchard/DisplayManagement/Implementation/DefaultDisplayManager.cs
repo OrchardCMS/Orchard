@@ -11,6 +11,7 @@ using Orchard.DisplayManagement.Shapes;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Mvc;
+using Orchard.Mvc.Extensions;
 
 namespace Orchard.DisplayManagement.Implementation {
     public class DefaultDisplayManager : IDisplayManager {
@@ -61,7 +62,7 @@ namespace Orchard.DisplayManagement.Implementation {
                 return CoerceHtmlString(context.Value);
 
             var workContext = _workContextAccessor.GetContext();
-            var shapeTable = _httpContextAccessor.Current() != null
+            var shapeTable = !_httpContextAccessor.Current().IsBackgroundContext()
                 ? _shapeTableLocator.Value.Lookup(workContext.CurrentTheme.Id)
                 : _shapeTableLocator.Value.Lookup(null);
 

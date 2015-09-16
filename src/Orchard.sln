@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}"
 EndProject
@@ -259,6 +259,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		Rebracer.xml = Rebracer.xml
 		WebEssentials-Settings.json = WebEssentials-Settings.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Gulp", "Gulp", "{90EBEE36-B5CD-42A8-A21B-76270E2C5D24}"
+	ProjectSection(SolutionItems) = preProject
+		Gulpfile.js = Gulpfile.js
+		Package.json = Package.json
 	EndProjectSection
 EndProject
 Global
@@ -1146,5 +1152,6 @@ Global
 		{2C5EB8B3-A313-413D-BAA0-5C21D2A6EC6E} = {E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}
 		{6BD8B2FA-F2E3-4AC8-A4C3-2925A653889A} = {E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}
 		{82190F52-2901-46D6-8A4C-34649959483F} = {E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}
+		{90EBEE36-B5CD-42A8-A21B-76270E2C5D24} = {DF3909B0-1DDD-4D8A-9919-56FC438E25E2}
 	EndGlobalSection
 EndGlobal

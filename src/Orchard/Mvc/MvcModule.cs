@@ -11,6 +11,7 @@ using System.Web.Routing;
 using Autofac;
 using Orchard.Mvc.Routes;
 using Orchard.Settings;
+using Orchard.Exceptions;
 
 namespace Orchard.Mvc {
     public class MvcModule : Module {
@@ -28,10 +29,14 @@ namespace Orchard.Mvc {
                 return false;
 
             try {
-                // The "Request" property throws at application startup on IIS integrated pipeline mode
+                // The "Request" property throws at application startup on IIS integrated pipeline mode.
                 var req = HttpContext.Current.Request;
             }
-            catch (Exception) {
+            catch (Exception ex) {
+                if (ex.IsFatal()) {
+                    throw;
+                }
+
                 return false;
             }
 
@@ -51,7 +56,7 @@ namespace Orchard.Mvc {
             // thus preventing a StackOverflowException.
             var baseUrl = new Func<string>(() => siteService.GetSiteSettings().BaseUrl);
             var httpContextBase = new HttpContextPlaceholder(baseUrl);
-            context.Resolve<IWorkContextAccessor>().CreateWorkContextScope(httpContextBase);
+
             return httpContextBase;
         }
 
@@ -85,7 +90,7 @@ namespace Orchard.Mvc {
         /// <summary>
         /// Standin context for background tasks.
         /// </summary>
-        class HttpContextPlaceholder : HttpContextBase {
+        public class HttpContextPlaceholder : HttpContextBase {
             private readonly Lazy<string> _baseUrl;
             private readonly IDictionary _items = new Dictionary<object, object>();
 
@@ -120,7 +125,7 @@ namespace Orchard.Mvc {
             }
         }
 
-        private class HttpResponsePlaceholder : HttpResponseBase {
+        public class HttpResponsePlaceholder : HttpResponseBase {
             public override string ApplyAppPathModifier(string virtualPath) {
                 return virtualPath;
             }
@@ -135,7 +140,7 @@ namespace Orchard.Mvc {
         /// <summary>
         /// standin context for background tasks. 
         /// </summary>
-        class HttpRequestPlaceholder : HttpRequestBase {
+        public class HttpRequestPlaceholder : HttpRequestBase {
             private readonly Uri _uri;
 
             public HttpRequestPlaceholder(Uri uri) {
@@ -165,6 +170,18 @@ namespace Orchard.Mvc {
             public override NameValueCollection Headers {
                 get {
                     return new NameValueCollection { { "Host", _uri.Authority } };
+                }
+            }
+
+            public override string HttpMethod {
+                get {
+                    return "";
+                }
+            }
+
+            public override NameValueCollection Params {
+                get {
+                    return new NameValueCollection();
                 }
             }
 
@@ -210,6 +227,18 @@ namespace Orchard.Mvc {
                 }
             }
 
+            public override string UserHostAddress {
+                get {
+                    return "127.0.0.1";
+                }
+            }
+
+            public override string[] UserLanguages {
+                get {
+                    return new string[0];
+                }
+            }
+
             public override HttpBrowserCapabilitiesBase Browser {
                 get {
                     return new HttpBrowserCapabilitiesPlaceholder();
@@ -217,7 +246,7 @@ namespace Orchard.Mvc {
             }
         }
 
-        class HttpBrowserCapabilitiesPlaceholder : HttpBrowserCapabilitiesBase {
+        public class HttpBrowserCapabilitiesPlaceholder : HttpBrowserCapabilitiesBase {
             public override string this[string key] {
                 get {
                     return "";

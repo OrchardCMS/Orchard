@@ -68,7 +68,21 @@ namespace Orchard.Layouts.Services {
         }
 
         private IEnumerable<IContentPartDriver> GetPartDrivers(string partName) {
-            return _contentPartDrivers.Where(x => x.GetType().BaseType.GenericTypeArguments[0].Name == partName);
+            return _contentPartDrivers.Where(x => GetPartOfDriver(x.GetType().BaseType).Name == partName);
+        }
+
+        private Type GetPartOfDriver(Type type) {
+            var baseType = type;
+
+            while (baseType != null && typeof(IContentPartDriver).IsAssignableFrom(baseType)) {
+                if (baseType.GenericTypeArguments.Any()) {
+                    return baseType.GenericTypeArguments[0];
+                }
+
+                baseType = baseType.BaseType;
+            }
+
+            return null;
         }
     }
 }

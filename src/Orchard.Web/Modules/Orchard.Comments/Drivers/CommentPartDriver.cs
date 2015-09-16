@@ -134,71 +134,65 @@ namespace Orchard.Comments.Drivers {
         }
 
         protected override void Importing(CommentPart part, ContentManagement.Handlers.ImportContentContext context) {
-            var author = context.Attribute(part.PartDefinition.Name, "Author");
-            if (author != null) {
-                part.Record.Author = author;
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
             }
 
-            var siteName = context.Attribute(part.PartDefinition.Name, "SiteName");
-            if (siteName != null) {
-                part.Record.SiteName = siteName;
-            }
+            context.ImportAttribute(part.PartDefinition.Name, "Author", author =>
+                part.Record.Author = author
+            );
 
-            var userName = context.Attribute(part.PartDefinition.Name, "UserName");
-            if (userName != null) {
-                part.Record.UserName = userName;
-            }
+            context.ImportAttribute(part.PartDefinition.Name, "SiteName", siteName =>
+                part.Record.SiteName = siteName
+            );
 
-            var email = context.Attribute(part.PartDefinition.Name, "Email");
-            if (email != null) {
-                part.Record.Email = email;
-            }
+            context.ImportAttribute(part.PartDefinition.Name, "UserName", userName =>
+                part.Record.UserName = userName
+            );
 
-            var position = context.Attribute(part.PartDefinition.Name, "Position");
-            if (position != null) {
-                part.Record.Position = decimal.Parse(position, CultureInfo.InvariantCulture);
-            }
+            context.ImportAttribute(part.PartDefinition.Name, "Email", email =>
+                part.Record.Email = email
+            );
 
-            var status = context.Attribute(part.PartDefinition.Name, "Status");
-            if (status != null) {
-                part.Record.Status = (CommentStatus)Enum.Parse(typeof(CommentStatus), status);
-            }
+            context.ImportAttribute(part.PartDefinition.Name, "Position", position =>
+                part.Record.Position = decimal.Parse(position, CultureInfo.InvariantCulture)
+            );
 
-            var commentDate = context.Attribute(part.PartDefinition.Name, "CommentDateUtc");
-            if (commentDate != null) {
-                part.Record.CommentDateUtc = XmlConvert.ToDateTime(commentDate, XmlDateTimeSerializationMode.Utc);
-            }
+            context.ImportAttribute(part.PartDefinition.Name, "Status", status =>
+                part.Record.Status = (CommentStatus)Enum.Parse(typeof(CommentStatus), status)
+            );
 
-            var text = context.Attribute(part.PartDefinition.Name, "CommentText");
-            if (text != null) {
-                part.Record.CommentText = text;
-            }
+            context.ImportAttribute(part.PartDefinition.Name, "CommentDateUtc", commentDate =>
+                part.Record.CommentDateUtc = XmlConvert.ToDateTime(commentDate, XmlDateTimeSerializationMode.Utc)
+            );
 
-            var commentedOn = context.Attribute(part.PartDefinition.Name, "CommentedOn");
-            if (commentedOn != null) {
+            context.ImportAttribute(part.PartDefinition.Name, "CommentText", text =>
+                part.Record.CommentText = text
+            );
+
+            context.ImportAttribute(part.PartDefinition.Name, "CommentedOn", commentedOn => {
                 var contentItem = context.GetItemFromSession(commentedOn);
                 if (contentItem != null) {
                     part.Record.CommentedOn = contentItem.Id;
                 }
 
                 contentItem.As<CommentsPart>().Record.CommentPartRecords.Add(part.Record);
-            }
+            });
 
-            var repliedOn = context.Attribute(part.PartDefinition.Name, "RepliedOn");
-            if (repliedOn != null) {
+            context.ImportAttribute(part.PartDefinition.Name, "RepliedOn", repliedOn => {
                 var contentItem = context.GetItemFromSession(repliedOn);
                 if (contentItem != null) {
                     part.Record.RepliedOn = contentItem.Id;
                 }
-            }
+            });
 
-            var commentedOnContainer = context.Attribute(part.PartDefinition.Name, "CommentedOnContainer");
-            if (commentedOnContainer != null) {
+            context.ImportAttribute(part.PartDefinition.Name, "CommentedOnContainer", commentedOnContainer => {
                 var container = context.GetItemFromSession(commentedOnContainer);
                 if (container != null) {
                     part.Record.CommentedOnContainer = container.Id;
                 }
-            }
+            });
         }
 
         protected override void Exporting(CommentPart part, ContentManagement.Handlers.ExportContentContext context) {

@@ -32,7 +32,7 @@ namespace Orchard.Users.Activities {
         }
 
         public override LocalizedString Description {
-            get { return T("Signs in a user based on the specified credentials, or if the current content item us a user, that user is signed in."); }
+            get { return T("Signs in a user based on the specified credentials, or if the current content item is a user, that user is signed in."); }
         }
 
         public override string Form {

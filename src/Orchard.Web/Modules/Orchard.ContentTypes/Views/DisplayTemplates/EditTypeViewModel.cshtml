@@ -9,7 +9,7 @@
     <div class="properties">
         <h3>@Model.DisplayName</h3> @if (!string.IsNullOrWhiteSpace(stereotype)) { <text><span class="stereotype" title="Stereotype">- @stereotype</span></text>}
         @if (creatable) {
-        <p class="pageStatus">@Html.ActionLink(T("Create New {0}", Model.DisplayName).Text, "Create", new {area = "Contents", id = Model.Name})</p>
+        <p class="pageStatus">@Html.ActionLink(T("Create New {0}", Html.Raw(Model.DisplayName)).Text, "Create", new {area = "Contents", id = Model.Name})</p>
         }
     </div>
     <div class="related">@if (creatable) {

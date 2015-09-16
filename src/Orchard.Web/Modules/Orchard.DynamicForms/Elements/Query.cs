@@ -3,7 +3,7 @@ using Orchard.Layouts.Helpers;
 
 namespace Orchard.DynamicForms.Elements {
     public class Query : LabeledFormElement {
-        
+
         public string InputType {
             get { return this.Retrieve(x => x.InputType, () => "SelectList"); }
             set { this.Store(x => x.InputType, value); }

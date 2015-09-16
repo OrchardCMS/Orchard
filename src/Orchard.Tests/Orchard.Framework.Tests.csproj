@@ -208,6 +208,7 @@
     <Compile Include="ContentManagement\Records\GammaRecord.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ContentManagement\TestTransactionManager.cs" />
     <Compile Include="ContentManagement\XmlHelperTests.cs" />
     <Compile Include="DatabaseEnabledTestsBase.cs" />
     <Compile Include="DataMigration\SchemaBuilderTests.cs" />
@@ -259,6 +260,8 @@
     <Compile Include="FileSystems\Dependencies\AssemblyProbingFolderTests.cs" />
     <Compile Include="FileSystems\Dependencies\DependenciesFolderTests.cs" />
     <Compile Include="FileSystems\VirtualPath\DefaultVirtualPathProviderTests.cs" />
+    <Compile Include="Localization\LocalizationStreamParserTests.cs" />
+    <Compile Include="Localization\TextTests.cs" />
     <Compile Include="Localization\CurrentCultureWorkContextTests.cs" />
     <Compile Include="Localization\CultureManagerTests.cs" />
     <Compile Include="Localization\DateTimePartsTests.cs" />

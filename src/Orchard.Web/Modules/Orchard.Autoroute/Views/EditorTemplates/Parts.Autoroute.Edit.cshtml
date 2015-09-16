@@ -16,7 +16,7 @@
     }
 }
 
-@if (!Model.PromoteToHomePage) {
+@if (!Model.IsHomePage) {
     <fieldset class="permalink">
         <label>@T("Permalink")</label>
         @if (Model.Settings.AllowCustomPattern) {
@@ -24,7 +24,7 @@
                 <span>@Url.MakeAbsolute("/")@urlPrefix</span>
                 <span>@Html.TextBoxFor(m => m.CurrentUrl, new { @class = "text is-url" })</span>
             </span>
-            <span class="hint">@T("Save the current item and leave the input empty to have it automatically generated using the pattern {0} e.g., {1}", defaultPattern.Name, defaultPattern.Description)</span>
+            <span class="hint">@T("Save the current item and leave the input empty to have it automatically generated using the pattern {0} e.g., {1}.", defaultPattern.Name, defaultPattern.Description)</span>
         }
         else {
             var hintClass = string.Empty;
@@ -35,7 +35,7 @@
 
             if (string.IsNullOrEmpty(Model.CurrentUrl)
                 || (!string.IsNullOrEmpty(Model.CurrentUrl) && Model.Settings.AutomaticAdjustmentOnEdit)) {
-                <span class="@hintClass">@T("Save the current item and the url will be generated using the pattern {0} e.g., {1}", defaultPattern.Name, defaultPattern.Description)</span>
+                <span class="@hintClass">@T("Save the current item and the url will be generated using the pattern {0} e.g., {1}.", defaultPattern.Name, defaultPattern.Description)</span>
             }
         }
         @if (!String.IsNullOrEmpty(Model.CurrentUrl)) {
@@ -54,10 +54,10 @@
                  @Html.EditorFor(m => m.PromoteToHomePage)
                  <label for="@Html.FieldIdFor(m => m.PromoteToHomePage)" class="forcheckbox">@T("Set as home page")</label>
              </span>
-             <span class="hint">@T("Check to promote this content as the home page")</span>
+             <span class="hint">@T("Check to promote this content as the home page.")</span>
          </fieldset>
      }
 }
 else {
-    <span>@T("This content is the current home page")</span>
+    <span>@T("This content is the current home page.")</span>
 }
