@@ -1,5 +1,6 @@
 ﻿@model Orchard.Localization.ViewModels.EditLocalizationViewModel
 @using System.Globalization
+@using Orchard.Localization.Controllers
 @{
     Style.Require("LocalizationAdmin");
 }
@@ -7,7 +8,16 @@
     <label for="@Html.FieldIdFor(m => m.SelectedCulture)">@T("Content Localization")</label>
     <div>
         @*Brand new content item*@
-        @if (Model.ContentItem.ContentItem.Id == 0) {
+        @if (AdminController.IsTranslatePage(Context)) {
+            @T("This is the <em>{0}</em> variation of {1}",
+                BuildSelectedCultureList(
+                    Html.FieldIdFor(m => m.SelectedCulture),
+                    Html.FieldNameFor(m => m.SelectedCulture),
+                    Model.MissingCultures,
+                    Model.SelectedCulture),
+                Html.ItemEditLink(Model.ContentItem))
+        }
+        else if (Model.ContentItem.ContentItem.Id == 0) {
             if (Model.MasterContentItem == null) {
                 @T("This is the <em>{0}</em> variation of the content",
                     BuildSelectedCultureList(
@@ -26,8 +36,7 @@
                     Html.ItemEditLink(Model.MasterContentItem))
             }
         }
-
-        @if (Model.ContentItem.ContentItem.Id > 0) {
+        else if (Model.ContentItem.ContentItem.Id > 0) {
             if (string.IsNullOrEmpty(Model.SelectedCulture)) {
                 @T("This content currently has no culture associated to it, please select a culture to associate to this piece of content: {0}",
                     BuildSelectedCultureList(

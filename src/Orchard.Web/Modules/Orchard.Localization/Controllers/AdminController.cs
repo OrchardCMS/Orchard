@@ -9,6 +9,7 @@ using Orchard.Localization.Services;
 using Orchard.Localization.ViewModels;
 using Orchard.Mvc;
 using Orchard.UI.Notify;
+using System.Web;
 
 namespace Orchard.Localization.Controllers {
     [ValidateInput(false)]
@@ -58,6 +59,8 @@ namespace Orchard.Localization.Controllers {
 
             var content = _contentManager.BuildEditor(masterContentItem);
             
+            MarkAsTranslatePage(HttpContext);
+
             return View(content);
         }
 
@@ -106,6 +109,8 @@ namespace Orchard.Localization.Controllers {
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
 
+                MarkAsTranslatePage(HttpContext);
+
                 return View(content);
             }
 
@@ -123,6 +128,14 @@ namespace Orchard.Localization.Controllers {
 
         void IUpdateModel.AddModelError(string key, LocalizedString errorMessage) {
             ModelState.AddModelError(key, errorMessage.ToString());
+        }
+
+        public static void MarkAsTranslatePage(HttpContextBase httpContext) {
+            httpContext.Items["IsTranslatePage"] = null;
+        }
+
+        public static bool IsTranslatePage(HttpContextBase httpContext) {
+            return httpContext.Items.Contains("IsTranslatePage");
         }
     }
 }
