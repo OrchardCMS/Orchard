@@ -272,7 +272,7 @@
     <Compile Include="Localization\DateTimePartsTests.cs" />
     <Compile Include="Localization\DefaultDateLocalizationServicesTests.cs" />
     <Compile Include="Localization\DefaultDateFormatterTests.cs" />
-    <Compile Include="Stubs\StubMachineNameProvider.cs" />
+    <Compile Include="Stubs\StubApplicationEnvironment.cs" />
     <Compile Include="Stubs\StubCultureSelector.cs" />
     <Compile Include="Localization\TestHelpers.cs" />
     <Compile Include="Logging\OrchardFileAppenderTests.cs" />

@@ -17,7 +17,7 @@ namespace Orchard.Tests.Tasks {
     public class DistributedLockServiceTests : DatabaseEnabledTestsBase {
         private const string LockName = "Orchard Test Lock";
         private DistributedLockService _distributedLockService;
-        private StubMachineNameProvider _machineNameProvider;
+        private StubApplicationEnvironment _applicationEnvironment;
         private IRepository<DistributedLockRecord> _distributedLockRepository;
         private ITransactionManager _transactionManager;
 
@@ -27,14 +27,14 @@ namespace Orchard.Tests.Tasks {
 
         public override void Register(ContainerBuilder builder) {
             builder.RegisterType<StubClock>().As<IClock>();
-            builder.RegisterType<StubMachineNameProvider>().As<IMachineNameProvider>().SingleInstance();
+            builder.RegisterType<StubApplicationEnvironment>().As<IApplicationEnvironment>().SingleInstance();
             builder.RegisterType<DistributedLockService>().AsSelf();
         }
 
         public override void Init() {
             base.Init();
             _distributedLockService = _container.Resolve<DistributedLockService>();
-            _machineNameProvider = (StubMachineNameProvider)_container.Resolve<IMachineNameProvider>();
+            _applicationEnvironment = (StubApplicationEnvironment)_container.Resolve<IApplicationEnvironment>();
             _distributedLockRepository = _container.Resolve<IRepository<DistributedLockRecord>>();
             _transactionManager = _container.Resolve<ITransactionManager>();
         }
@@ -88,9 +88,9 @@ namespace Orchard.Tests.Tasks {
         [Test]
         public void TryAcquiringLockTwiceFails() {
             IDistributedLock @lock;
-            _machineNameProvider.MachineName = "Orchard Test Machine 1";
+            _applicationEnvironment.MachineName = "Orchard Test Machine 1";
             var attempt1 = _distributedLockService.TryAcquireLock(LockName, TimeSpan.FromSeconds(60), out @lock);
-            _machineNameProvider.MachineName = "Orchard Test Machine 2";
+            _applicationEnvironment.MachineName = "Orchard Test Machine 2";
             var attempt2 = _distributedLockService.TryAcquireLock(LockName, TimeSpan.FromSeconds(60), out @lock);
 
             Assert.That(attempt1, Is.True);
@@ -151,9 +151,9 @@ namespace Orchard.Tests.Tasks {
         [Test]
         public void MultipleAcquisitionsFromDifferentMachinesShouldFail() {
             IDistributedLock @lock;
-            _machineNameProvider.MachineName = "Orchard Test Machine 1";
+            _applicationEnvironment.MachineName = "Orchard Test Machine 1";
             var attempt1 = _distributedLockService.TryAcquireLock(LockName, TimeSpan.FromMinutes(60), out @lock);
-            _machineNameProvider.MachineName = "Orchard Test Machine 2";
+            _applicationEnvironment.MachineName = "Orchard Test Machine 2";
             var attempt2 = _distributedLockService.TryAcquireLock(LockName, TimeSpan.FromMinutes(60), out @lock);
 
             Assert.That(attempt1, Is.True);
@@ -163,9 +163,9 @@ namespace Orchard.Tests.Tasks {
         [Test]
         public void MultipleAcquisitionsFromDifferentMachinesOnDifferentTenantShouldSucceed() {
             IDistributedLock @lock;
-            _machineNameProvider.MachineName = "Orchard Test Machine 1";
+            _applicationEnvironment.MachineName = "Orchard Test Machine 1";
             var attempt1 = _distributedLockService.TryAcquireLock(LockName, TimeSpan.FromSeconds(60), out @lock);
-            _machineNameProvider.MachineName = "Orchard Test Machine 2";
+            _applicationEnvironment.MachineName = "Orchard Test Machine 2";
             _shellSettings.Name = "Foo";
             var attempt2 = _distributedLockService.TryAcquireLock(LockName, TimeSpan.FromSeconds(60), out @lock);
 
@@ -215,14 +215,14 @@ namespace Orchard.Tests.Tasks {
             IDistributedLock @lock;
 
             // Create a never expiring lock.
-            _machineNameProvider.MachineName = "Orchard Test Machine 1";
+            _applicationEnvironment.MachineName = "Orchard Test Machine 1";
             var attempt1 = _distributedLockService.TryAcquireLock(LockName, maxValidFor: null, timeout: null, dLock: out @lock);
 
             // Release the lock.
             @lock.Dispose();
 
             // Acquire the lock from another machine.
-            _machineNameProvider.MachineName = "Orchard Test Machine 2";
+            _applicationEnvironment.MachineName = "Orchard Test Machine 2";
             var attempt2 = _distributedLockService.TryAcquireLock(LockName, maxValidFor: null, timeout: null, dLock: out @lock);
 
             // Validate the results.
@@ -259,7 +259,7 @@ namespace Orchard.Tests.Tasks {
         }
 
         private string GetMachineName() {
-            return _machineNameProvider.GetMachineName();
+            return _applicationEnvironment.GetEnvironmentIdentifier();
         }
     }
 }
