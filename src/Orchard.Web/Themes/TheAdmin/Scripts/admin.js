@@ -71,6 +71,10 @@
         return confirm(confirmRemoveMessage);
     });
 
+    $("body").on("click", "[itemprop~='RestorePlacements']", function () {
+    	return confirm(confirmRestorePlacementMessage);
+    });    
+
     $(".check-all").change(function () {
         $(this).parents("table.items").find(":checkbox:not(:disabled)").prop('checked', $(this).prop("checked"));
     });
