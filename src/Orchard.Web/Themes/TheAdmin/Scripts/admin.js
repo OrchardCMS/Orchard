@@ -70,11 +70,11 @@
 
     	// use a custom message if its set in data-message
         var dataMessage = $(this).data('message');
-        if (dataMessage !== undefined) {
-        	confirmRemoveMessage = dataMessage;
+        if (dataMessage === undefined) {
+        	dataMessage = confirmRemoveMessage;
         }
 
-        return confirm(confirmRemoveMessage);
+        return confirm(dataMessage);
     });
 
     $(".check-all").change(function () {
