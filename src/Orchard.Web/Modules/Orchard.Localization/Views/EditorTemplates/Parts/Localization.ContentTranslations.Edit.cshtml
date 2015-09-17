@@ -8,26 +8,25 @@
     <div>
         @*Brand new content item*@
         @if (Model.ContentItem.ContentItem.Id == 0) {
-            if (Model.MasterContentItem == null) {
-                @T("This is the <em>{0}</em> variation of the content",
-                    BuildSelectedCultureList(
-                        Html.FieldIdFor(m => m.SelectedCulture),
-                        Html.FieldNameFor(m => m.SelectedCulture),
-                        Model.MissingCultures,
-                        Model.SelectedCulture))
-            }
-            else {
-                @T("This is the <em>{0}</em> variation of {1}",
-                    BuildSelectedCultureList(
-                        Html.FieldIdFor(m => m.SelectedCulture),
-                        Html.FieldNameFor(m => m.SelectedCulture),
-                        Model.MissingCultures,
-                        Model.SelectedCulture),
-                    Html.ItemEditLink(Model.MasterContentItem))
-            }
+            @T("This is the <em>{0}</em> variation of the content",
+                BuildSelectedCultureList(
+                    Html.FieldIdFor(m => m.SelectedCulture),
+                    Html.FieldNameFor(m => m.SelectedCulture),
+                    Model.MissingCultures,
+                    Model.SelectedCulture))
         }
-
-        @if (Model.ContentItem.ContentItem.Id > 0) {
+        @*Translating content item*@
+        else if((bool)(ViewData["Translating"] ?? false)) {
+            @T("This is the <em>{0}</em> variation of {1}",
+                BuildSelectedCultureList(
+                    Html.FieldIdFor(m => m.SelectedCulture),
+                    Html.FieldNameFor(m => m.SelectedCulture),
+                    Model.MissingCultures,
+                    Model.SelectedCulture),
+                Html.ItemEditLink(Model.ContentItem))
+        }
+        @*Editing content item*@
+        else {
             if (string.IsNullOrEmpty(Model.SelectedCulture)) {
                 @T("This content currently has no culture associated to it, please select a culture to associate to this piece of content: {0}",
                     BuildSelectedCultureList(
