@@ -68,12 +68,14 @@
             return false;
         }
 
+    	// use a custom message if its set in data-message
+        var dataMessage = $(this).data('message');
+        if (dataMessage !== undefined) {
+        	confirmRemoveMessage = dataMessage;
+        }
+
         return confirm(confirmRemoveMessage);
     });
-
-    $("body").on("click", "[itemprop~='RestorePlacements']", function () {
-    	return confirm(confirmRestorePlacementMessage);
-    });    
 
     $(".check-all").change(function () {
         $(this).parents("table.items").find(":checkbox:not(:disabled)").prop('checked', $(this).prop("checked"));
