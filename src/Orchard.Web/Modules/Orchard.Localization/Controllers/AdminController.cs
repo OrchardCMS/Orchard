@@ -9,6 +9,7 @@ using Orchard.Localization.Services;
 using Orchard.Localization.ViewModels;
 using Orchard.Mvc;
 using Orchard.UI.Notify;
+using System.Web;
 
 namespace Orchard.Localization.Controllers {
     [ValidateInput(false)]
@@ -50,6 +51,8 @@ namespace Orchard.Localization.Controllers {
                     existingTranslationMetadata.EditorRouteValues);
             }
 
+            SetIsTranslating(HttpContext);
+
             var contentItemTranslation = _contentManager.New<LocalizationPart>(masterContentItem.ContentType);
             contentItemTranslation.MasterContentItem = masterContentItem;
 
@@ -57,7 +60,7 @@ namespace Orchard.Localization.Controllers {
             // the form is pre-populated with the original values
 
             var content = _contentManager.BuildEditor(masterContentItem);
-            
+
             return View(content);
         }
 
@@ -96,6 +99,8 @@ namespace Orchard.Localization.Controllers {
                     existingTranslationMetadata.EditorRouteValues);
             }
 
+            SetIsTranslating(HttpContext);
+
             var contentItemTranslation = _contentManager
                 .Create<LocalizationPart>(masterContentItem.ContentType, VersionOptions.Draft, part => {
                     part.MasterContentItem = masterContentItem;
@@ -113,6 +118,8 @@ namespace Orchard.Localization.Controllers {
 
             Services.Notifier.Information(T("Created content item translation."));
 
+            SetIsTranslating(HttpContext, false);
+
             var metadata = _contentManager.GetItemMetadata(contentItemTranslation);
             return RedirectToAction(Convert.ToString(metadata.EditorRouteValues["action"]), metadata.EditorRouteValues);
         }
@@ -123,6 +130,19 @@ namespace Orchard.Localization.Controllers {
 
         void IUpdateModel.AddModelError(string key, LocalizedString errorMessage) {
             ModelState.AddModelError(key, errorMessage.ToString());
+        }
+
+        public static void SetIsTranslating(HttpContextBase httpContext, bool isTranslating = true) {
+            if (isTranslating) {
+                httpContext.Items["IsTranslating"] = null;
+            }
+            else {
+                httpContext.Items.Remove("IsTranslating");
+            }
+        }
+
+        public static bool IsTranslating(HttpContextBase httpContext) {
+            return httpContext.Items.Contains("IsTranslating");
         }
     }
 }
