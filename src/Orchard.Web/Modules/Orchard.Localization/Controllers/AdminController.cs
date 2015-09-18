@@ -51,6 +51,8 @@ namespace Orchard.Localization.Controllers {
                     existingTranslationMetadata.EditorRouteValues);
             }
 
+            SetIsTranslating(HttpContext);
+
             var contentItemTranslation = _contentManager.New<LocalizationPart>(masterContentItem.ContentType);
             contentItemTranslation.MasterContentItem = masterContentItem;
 
@@ -58,8 +60,6 @@ namespace Orchard.Localization.Controllers {
             // the form is pre-populated with the original values
 
             var content = _contentManager.BuildEditor(masterContentItem);
-            
-            MarkAsTranslatePage(HttpContext);
 
             return View(content);
         }
@@ -99,6 +99,8 @@ namespace Orchard.Localization.Controllers {
                     existingTranslationMetadata.EditorRouteValues);
             }
 
+            SetIsTranslating(HttpContext);
+
             var contentItemTranslation = _contentManager
                 .Create<LocalizationPart>(masterContentItem.ContentType, VersionOptions.Draft, part => {
                     part.MasterContentItem = masterContentItem;
@@ -109,14 +111,14 @@ namespace Orchard.Localization.Controllers {
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
 
-                MarkAsTranslatePage(HttpContext);
-
                 return View(content);
             }
 
             conditionallyPublish(contentItemTranslation.ContentItem);
 
             Services.Notifier.Information(T("Created content item translation."));
+
+            SetIsTranslating(HttpContext, false);
 
             var metadata = _contentManager.GetItemMetadata(contentItemTranslation);
             return RedirectToAction(Convert.ToString(metadata.EditorRouteValues["action"]), metadata.EditorRouteValues);
@@ -130,12 +132,17 @@ namespace Orchard.Localization.Controllers {
             ModelState.AddModelError(key, errorMessage.ToString());
         }
 
-        public static void MarkAsTranslatePage(HttpContextBase httpContext) {
-            httpContext.Items["IsTranslatePage"] = null;
+        public static void SetIsTranslating(HttpContextBase httpContext, bool isTranslating = true) {
+            if (isTranslating) {
+                httpContext.Items["IsTranslating"] = null;
+            }
+            else {
+                httpContext.Items.Remove("IsTranslating");
+            }
         }
 
-        public static bool IsTranslatePage(HttpContextBase httpContext) {
-            return httpContext.Items.Contains("IsTranslatePage");
+        public static bool IsTranslating(HttpContextBase httpContext) {
+            return httpContext.Items.Contains("IsTranslating");
         }
     }
 }

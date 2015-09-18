@@ -8,7 +8,7 @@
     <label for="@Html.FieldIdFor(m => m.SelectedCulture)">@T("Content Localization")</label>
     <div>
         @*Brand new content item*@
-        @if (AdminController.IsTranslatePage(Context)) {
+        @if (AdminController.IsTranslating(Context)) {
             @T("This is the <em>{0}</em> variation of {1}",
                 BuildSelectedCultureList(
                     Html.FieldIdFor(m => m.SelectedCulture),
