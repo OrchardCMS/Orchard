@@ -108,10 +108,10 @@ namespace Orchard.Taxonomies.Drivers {
             var appliedTerms = _taxonomyService.GetTermsForContentItem(part.ContentItem.Id, field.Name);
 
             // stores all content items associated to this field
-            var termIdentities = appliedTerms.Select(x => Services.ContentManager.GetItemMetadata(x).Identity.ToString())
-                .ToArray();
+            var termIdentities = appliedTerms.Select(x => Services.ContentManager.GetItemMetadata(x).Identity.ToString()).ToArray();
 
-            context.Element(XmlConvert.EncodeLocalName(field.FieldDefinition.Name + "." + field.Name)).SetAttributeValue("Terms", String.Join(",", termIdentities));
+            if (termIdentities.Any())
+                context.Element(XmlConvert.EncodeLocalName(field.FieldDefinition.Name + "." + field.Name)).SetAttributeValue("Terms", String.Join(",", termIdentities));
         }
 
         protected override void Importing(ContentPart part, TaxonomyField field, ImportContentContext context) {
