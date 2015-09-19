@@ -13,11 +13,18 @@ namespace Orchard.MediaLibrary.Controllers {
     public class WebSearchController : Controller {
         private readonly IMediaLibraryService _mediaLibraryService;
         private readonly IContentManager _contentManager;
-
-        public WebSearchController(IMediaLibraryService mediaManagerService, IContentManager contentManager) {
+        
+        public WebSearchController(
+            IMediaLibraryService mediaManagerService, 
+            IContentManager contentManager,
+            IOrchardServices orchardServices) {
             _mediaLibraryService = mediaManagerService;
             _contentManager = contentManager;
+
+            Services = orchardServices;
         }
+
+        public IOrchardServices Services { get; set; }
 
         public ActionResult Index(string folderPath, string type) {
             var viewModel = new ImportMediaViewModel {
@@ -30,7 +37,15 @@ namespace Orchard.MediaLibrary.Controllers {
 
 
         [HttpPost]
-        public JsonResult ImagePost(string folderPath, string type, string url) {
+        public ActionResult ImagePost(string folderPath, string type, string url) {
+            if (!Services.Authorizer.Authorize(Permissions.ManageOwnMedia))
+                return new HttpUnauthorizedResult();
+
+            // Check permission.
+            var rootMediaFolder = _mediaLibraryService.GetRootMediaFolder();
+            if (!Services.Authorizer.Authorize(Permissions.ManageMediaContent) && !_mediaLibraryService.CanManageMediaFolder(folderPath)) {
+                return new HttpUnauthorizedResult();
+            }
 
             try {
                 var buffer = new WebClient().DownloadData(url);
