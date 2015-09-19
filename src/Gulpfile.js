@@ -105,7 +105,7 @@ function createAssetGroupTask(assetGroup, doRebuild) {
     if (doConcat && !doRebuild) {
         // Force a rebuild of this asset group is the asset manifest file itself is newer than the output.
         var assetManifestStats = fs.statSync(assetGroup.manifestPath);
-        var outputStats = fs.statSync(assetGroup.outputPath);
+        var outputStats = fs.existsSync(assetGroup.outputPath) ? fs.statSync(assetGroup.outputPath) : null;
         doRebuild = !outputStats || assetManifestStats.mtime > outputStats.mtime;
     }
     switch (outputExt) {
