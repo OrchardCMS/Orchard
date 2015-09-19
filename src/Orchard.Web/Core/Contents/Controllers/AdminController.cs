@@ -65,8 +65,7 @@ namespace Orchard.Core.Contents.Controllers {
             Pager pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
 
             var versionOptions = VersionOptions.Latest;
-            switch (model.Options.ContentsStatus)
-            {
+            switch (model.Options.ContentsStatus) {
                 case ContentsStatus.Published:
                     versionOptions = VersionOptions.Published;
                     break;
@@ -110,6 +109,10 @@ namespace Orchard.Core.Contents.Controllers {
 
             if(!String.IsNullOrWhiteSpace(model.Options.SelectedCulture)) {
                 query = _cultureFilter.FilterCulture(query, model.Options.SelectedCulture);
+            }
+
+            if(model.Options.ContentsStatus == ContentsStatus.Owner) {
+                query = query.Where<CommonPartRecord>(cr => cr.OwnerId == Services.WorkContext.CurrentUser.Id);
             }
 
             model.Options.SelectedFilter = model.TypeName;

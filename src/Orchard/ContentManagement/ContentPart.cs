@@ -21,14 +21,6 @@ namespace Orchard.ContentManagement {
 
         public virtual ContentItem ContentItem { get; set; }
 
-        //interesting thought, should/could parts also have zones (would then have zones on the page, content item and parts...)?
-        private readonly IZoneCollection _zones = new ZoneCollection();
-        public virtual IZoneCollection Zones {
-            get {
-                return _zones;
-            }
-        }
-
         /// <summary>
         /// The ContentItem's identifier.
         /// </summary>

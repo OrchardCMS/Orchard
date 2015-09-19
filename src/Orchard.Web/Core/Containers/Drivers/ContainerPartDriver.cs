@@ -88,6 +88,10 @@ namespace Orchard.Core.Containers.Drivers {
 
         protected override DriverResult Editor(ContainerPart part, IUpdateModel updater, dynamic shapeHelper) {
             return ContentShape("Parts_Container_Edit", () => {
+                if(!part.ContainerSettings.DisplayContainerEditor) {
+                    return null;
+                }
+
                 var containables = !part.ContainerSettings.RestrictItemContentTypes ? _containerService.GetContainableTypes().ToList() : new List<ContentTypeDefinition>(0);
                 var model = new ContainerViewModel {
                     AdminMenuPosition = part.AdminMenuPosition,

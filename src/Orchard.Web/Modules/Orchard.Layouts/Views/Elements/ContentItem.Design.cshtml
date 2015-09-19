@@ -2,7 +2,7 @@
 @foreach (var contentItemShape in Model.ContentItems) {
     var contentItem = (ContentItem)contentItemShape.ContentItem;
     var displayTextHtmlString = Html.ItemDisplayText(contentItem);
-    var displayText = displayTextHtmlString != null ? displayTextHtmlString.ToString() : T("-").ToString();
+    var displayText = displayTextHtmlString != null ? (IHtmlString)displayTextHtmlString : T("-");
     <div class="layout-snippet">
         @displayText
     </div>

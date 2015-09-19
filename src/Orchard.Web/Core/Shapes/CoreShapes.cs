@@ -301,9 +301,12 @@ namespace Orchard.Core.Shapes {
             var progress = 1;
             var flatPositionComparer = new FlatPositionComparer();
             var ordering = unordered.Select(item => {
-                var position = (item == null || item.GetType().GetProperty("Metadata") == null || item.Metadata.GetType().GetProperty("Position") == null)
-                                   ? null
-                                   : item.Metadata.Position;
+                string position = null;
+                var itemPosition = item as IPositioned;
+                if (itemPosition != null) {
+                    position = itemPosition.Position;
+                }
+
                 return new { item, position };
             }).ToList();
 

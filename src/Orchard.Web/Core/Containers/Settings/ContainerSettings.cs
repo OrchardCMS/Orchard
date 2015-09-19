@@ -48,6 +48,10 @@ namespace Orchard.Core.Containers.Settings {
     }
 
     public class ContainerTypePartSettings {
+        public ContainerTypePartSettings() {
+            DisplayContainerEditor = true;
+        }
+
         public bool? ItemsShownDefault { get; set; }
         public int? PageSizeDefault { get; set; }
         public bool? PaginatedDefault { get; set; }
@@ -55,6 +59,7 @@ namespace Orchard.Core.Containers.Settings {
         public bool RestrictItemContentTypes { get; set; }
         public bool? EnablePositioning { get; set; }
         public string AdminListViewName { get; set; }
+        public bool DisplayContainerEditor { get; set; }
     }
 
     public class ContainerSettingsHooks : ContentDefinitionEditorEventsBase {
@@ -93,7 +98,8 @@ namespace Orchard.Core.Containers.Settings {
                 EnablePositioning = model.EnablePositioning,
                 AdminListViewName = model.AdminListViewName,
                 AvailableItemContentTypes = _containerService.GetContainableTypes().ToList(),
-                ListViewProviders = _listViewService.Providers.ToList()
+                ListViewProviders = _listViewService.Providers.ToList(),
+                DisplayContainerEditor = model.DisplayContainerEditor
             };
 
             yield return DefinitionTemplate(viewModel);
@@ -122,6 +128,7 @@ namespace Orchard.Core.Containers.Settings {
             builder.WithSetting("ContainerTypePartSettings.RestrictItemContentTypes", viewModel.RestrictItemContentTypes.ToString());
             builder.WithSetting("ContainerTypePartSettings.EnablePositioning", viewModel.EnablePositioning.ToString());
             builder.WithSetting("ContainerTypePartSettings.AdminListViewName", viewModel.AdminListViewName);
+            builder.WithSetting("ContainerTypePartSettings.DisplayContainerEditor", viewModel.DisplayContainerEditor.ToString());
             yield return DefinitionTemplate(viewModel);
         }
 
