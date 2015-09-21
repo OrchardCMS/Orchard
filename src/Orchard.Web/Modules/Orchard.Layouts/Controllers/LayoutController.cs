@@ -6,6 +6,7 @@ using Orchard.ContentManagement;
 using Orchard.Layouts.Elements;
 using Orchard.Layouts.Framework.Elements;
 using Orchard.Layouts.Services;
+using Orchard.Localization;
 using Orchard.UI.Admin;
 
 namespace Orchard.Layouts.Controllers {
@@ -15,15 +16,25 @@ namespace Orchard.Layouts.Controllers {
         private readonly ILayoutManager _layoutManager;
         private readonly ILayoutModelMapper _mapper;
 
-        public LayoutController(IContentManager contentManager, ILayoutManager layoutManager, ILayoutModelMapper mapper) {
+        public LayoutController(
+            IContentManager contentManager, 
+            ILayoutManager layoutManager, 
+            ILayoutModelMapper mapper,
+            IOrchardServices orchardServices) {
 
             _contentManager = contentManager;
             _layoutManager = layoutManager;
             _mapper = mapper;
+            Services = orchardServices;
+
+            T = NullLocalizer.Instance;
         }
 
+        public IOrchardServices Services { get; set; }
+        public Localizer T { get; set; }
+
         [HttpPost, ValidateInput(enableValidation: false)]
-        public ContentResult ApplyTemplate(int? templateId = null, string layoutData = null, int? contentId = null, string contentType = null) {
+        public ActionResult ApplyTemplate(int? templateId = null, string layoutData = null, int? contentId = null, string contentType = null) {
             var template = templateId != null ? _layoutManager.GetLayout(templateId.Value) : null;
             var templateElements = template != null ? _layoutManager.LoadElements(template).ToList() : default(IEnumerable<Element>);
             var describeContext = CreateDescribeElementsContext(contentId, contentType);
