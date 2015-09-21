@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -33,7 +33,7 @@ namespace Orchard.Core.Contents.Controllers {
         private readonly ISiteService _siteService;
         private readonly ICultureManager _cultureManager;
         private readonly ICultureFilter _cultureFilter;
-
+        private readonly dynamic _shape;
         public AdminController(
             IOrchardServices orchardServices,
             IContentManager contentManager,
@@ -53,10 +53,9 @@ namespace Orchard.Core.Contents.Controllers {
 
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
-            Shape = shapeFactory;
+            _shape = shapeFactory;
         }
-
-        dynamic Shape { get; set; }
+        
         public IOrchardServices Services { get; private set; }
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
@@ -122,13 +121,13 @@ namespace Orchard.Core.Contents.Controllers {
             var maxPagedCount = _siteService.GetSiteSettings().MaxPagedCount;
             if (maxPagedCount > 0 && pager.PageSize > maxPagedCount)
                 pager.PageSize = maxPagedCount;
-            var pagerShape = Shape.Pager(pager).TotalItemCount(maxPagedCount > 0 ? maxPagedCount : query.Count());
+            var pagerShape = _shape.Pager(pager).TotalItemCount(maxPagedCount > 0 ? maxPagedCount : query.Count());
             var pageOfContentItems = query.Slice(pager.GetStartIndex(), pager.PageSize).ToList();
 
-            var list = Shape.List();
+            var list = _shape.List();
             list.AddRange(pageOfContentItems.Select(ci => _contentManager.BuildDisplay(ci, "SummaryAdmin")));
 
-            var viewModel = Shape.ViewModel()
+            var viewModel = _shape.ViewModel()
                 .ContentItems(list)
                 .Pager(pagerShape)
                 .Options(model.Options)
@@ -220,13 +219,13 @@ namespace Orchard.Core.Contents.Controllers {
         }
 
         ActionResult CreatableTypeList(int? containerId) {
-            var viewModel = Shape.ViewModel(ContentTypes: GetCreatableTypes(containerId.HasValue), ContainerId: containerId);
+            var viewModel = _shape.ViewModel(ContentTypes: GetCreatableTypes(containerId.HasValue), ContainerId: containerId);
 
             return View("CreatableTypeList", viewModel);
         }
 
         ActionResult ListableTypeList(int? containerId) {
-            var viewModel = Shape.ViewModel(ContentTypes: GetListableTypes(containerId.HasValue), ContainerId: containerId);
+            var viewModel = _shape.ViewModel(ContentTypes: GetListableTypes(containerId.HasValue), ContainerId: containerId);
 
             return View("ListableTypeList", viewModel);
         }
