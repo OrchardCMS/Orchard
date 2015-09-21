@@ -120,7 +120,8 @@ namespace Orchard.Comments.Services {
         }
 
         public void DeleteComment(int commentId) {
-            _orchardServices.ContentManager.Remove(_orchardServices.ContentManager.Get<CommentPart>(commentId).ContentItem);
+            // Get latest because the comment may be unpublished if the anti-spam module has caught it
+            _orchardServices.ContentManager.Remove(_orchardServices.ContentManager.Get<CommentPart>(commentId, VersionOptions.Latest).ContentItem);
         }
 
         public bool CommentsDisabledForCommentedContent(int id) {
