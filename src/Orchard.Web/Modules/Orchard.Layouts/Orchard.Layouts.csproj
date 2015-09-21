@@ -368,6 +368,7 @@
     <Compile Include="Helpers\PrefixHelper.cs" />
     <Compile Include="Helpers\JsonHelper.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
+    <Compile Include="Permissions.cs" />
     <Compile Include="Recipes\Builders\CustomElementsStep.cs" />
     <Compile Include="Recipes\Executors\CustomElementsStep.cs" />
     <Compile Include="Providers\BlueprintElementHarvester.cs" />

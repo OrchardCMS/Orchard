@@ -57,7 +57,7 @@
         this.setIsActive = function (value) {
             if (!this.editor)
                 return;
-            if (this.editor.isDragging || this.editor.inlineEditingIsActive || this.editor.isResizing)
+            if (this.editor.isDragging || this.editor.isResizing)
                 return;
 
             if (value)
@@ -81,7 +81,7 @@
                 return;
             if (this.isTemplated && !this.allowSealedFocus())
                 return;
-            if (this.editor.isDragging || this.editor.inlineEditingIsActive || this.editor.isResizing)
+            if (this.editor.isDragging || this.editor.isResizing)
                 return;
 
             this.editor.focusedElement = this;

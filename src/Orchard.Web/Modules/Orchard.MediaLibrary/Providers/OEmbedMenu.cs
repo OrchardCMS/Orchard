@@ -15,7 +15,7 @@ namespace Orchard.MediaLibrary.Providers {
             builder.AddImageSet("oembed")
                 .Add(T("Media Url"), "10", 
                     menu => menu.Action("Index", "OEmbed", new { area = "Orchard.MediaLibrary" })
-                        .Permission(Permissions.ManageMediaContent));
+                        .Permission(Permissions.ManageOwnMedia));
         }
     }
 }
