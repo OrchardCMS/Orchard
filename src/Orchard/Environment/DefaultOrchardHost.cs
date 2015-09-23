@@ -208,7 +208,7 @@ namespace Orchard.Environment {
             // This is a "fake" cache entry to allow the extension loader coordinator
             // notify us (by resetting _current to "null") when an extension has changed
             // on disk, and we need to reload new/updated extensions.
-            _cacheManager.Get("OrchardHost_Extensions",
+            _cacheManager.Get("OrchardHost_Extensions", true,
                               ctx => {
                                   _extensionMonitoringCoordinator.MonitorExtensions(ctx.Monitor);
                                   _hostLocalRestart.Monitor(ctx.Monitor);
