@@ -92,7 +92,15 @@ namespace Orchard.Layouts.Drivers {
             return ContentShape("Parts_Layout_Edit", () => {
                 if (part.Id == 0) {
                     var settings = part.TypePartDefinition.Settings.GetModel<LayoutTypePartSettings>();
-                    part.LayoutData = settings.DefaultLayoutData;
+
+                    // If the default layout setting is left empty, use the one from the service
+                    if (String.IsNullOrWhiteSpace(settings.DefaultLayoutData)) {
+                        var defaultData = _serializer.Serialize(_layoutManager.CreateDefaultLayout());
+                        part.LayoutData = defaultData;
+                    }
+                    else {
+                        part.LayoutData = settings.DefaultLayoutData;
+                    }
                 }
 
                 var viewModel = new LayoutPartViewModel {

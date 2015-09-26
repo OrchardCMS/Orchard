@@ -1,7 +1,13 @@
 <MSDeploy.iisApp>
-  <iisapp path="Orchard" managedRuntimeVersion="v4.0" />
+	<iisapp path="Orchard" managedRuntimeVersion="v4.0" />
 	<setAcl path="Orchard/App_Data" setAclAccess="Modify" />
 	<setAcl path="Orchard/Media" setAclAccess="Modify" />
 	<setAcl path="Orchard/bin/HostRestart" setAclAccess="Modify" />
-	<dbFullSql path="install.sql" />
+
+	<!-- Runs SQL script to create login and assign permissions, requires transacted="false" 
+		This script runs as the database administrator provided in parameters.xml 
+  	-->
+	<dbfullsql path="createlogin.sql" transacted="false" />
+	<dbfullsql path="createuser.sql" transacted="false" />
+
 </MSDeploy.iisApp>
