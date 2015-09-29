@@ -56,7 +56,8 @@ namespace Orchard.Fields.Drivers {
         }
 
         protected override void Exporting(ContentPart part, InputField field, ExportContentContext context) {
-            context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Value", field.Value);
+            if (!String.IsNullOrEmpty(field.Value))
+                context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Value", field.Value);
         }
 
         protected override void Describe(DescribeMembersContext context) {

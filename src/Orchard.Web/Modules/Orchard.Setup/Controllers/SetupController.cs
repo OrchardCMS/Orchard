@@ -33,10 +33,12 @@ namespace Orchard.Setup.Controllers {
 
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
+            RecipeExecutionTimeout = 600;
         }
 
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
+        public int RecipeExecutionTimeout { get; set; }
 
         private ActionResult IndexViewResult(SetupViewModel model) {
             return View(model);
@@ -44,12 +46,9 @@ namespace Orchard.Setup.Controllers {
 
         public ActionResult Index() {
             var initialSettings = _setupService.Prime();
-
-            if(initialSettings.State == TenantState.Initializing)
-                return View("Initializing");
-
             var recipes = _setupService.Recipes().ToList();
             string recipeDescription = null;
+
             if (recipes.Count > 0) {
                 recipeDescription = recipes[0].Description;
             }
@@ -73,8 +72,8 @@ namespace Orchard.Setup.Controllers {
 
         [HttpPost, ActionName("Index")]
         public ActionResult IndexPOST(SetupViewModel model) {
-            // Sets the setup request timeout to 10 minutes to give enough time to execute custom recipes.
-            HttpContext.Server.ScriptTimeout = 600;
+            // Sets the setup request timeout to a configurable amount of seconds to give enough time to execute custom recipes.
+            HttpContext.Server.ScriptTimeout = RecipeExecutionTimeout;
 
             var recipes = _setupService.Recipes().ToList();
 

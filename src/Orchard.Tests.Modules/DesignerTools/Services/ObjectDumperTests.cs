@@ -265,9 +265,6 @@ namespace Orchard.Tests.Modules.DesignerTools.Services
                         new JProperty("value", "ContentPart"),
                         new JProperty("children", new JArray(
                             new JObject(
-                                new JProperty("name", "Zones"),
-                                new JProperty("value", "ZoneCollection")),
-                            new JObject(
                                 new JProperty("name", "Id"),
                                 new JProperty("value", "0")),
                             new JObject(
@@ -327,9 +324,6 @@ namespace Orchard.Tests.Modules.DesignerTools.Services
                         new JProperty("name", "TestingPart"),
                         new JProperty("value", "ContentPart"),
                         new JProperty("children", new JArray(
-                            new JObject(
-                                new JProperty("name", "Zones"),
-                                new JProperty("value", "ZoneCollection")),
                             new JObject(
                                 new JProperty("name", "Id"),
                                 new JProperty("value", "0")),

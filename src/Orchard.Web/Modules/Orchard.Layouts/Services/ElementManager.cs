@@ -38,7 +38,7 @@ namespace Orchard.Layouts.Services {
         public IEnumerable<ElementDescriptor> DescribeElements(DescribeElementsContext context) {
             var contentType = context.Content != null ? context.Content.ContentItem.ContentType : default(string);
             var cacheKey = String.Format("LayoutElementTypes-{0}-{1}", contentType ?? "AnyType", context.CacheVaryParam);
-            return _cacheManager.Get(cacheKey, acquireContext => {
+            return _cacheManager.Get(cacheKey, true, acquireContext => {
                 var harvesterContext = new HarvestElementsContext {
                     Content = context.Content
                 };

@@ -151,6 +151,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BackgroundHttpContextFactory.cs" />
+    <Compile Include="DisplayManagement\IPositioned.cs" />
+    <Compile Include="DisplayManagement\PositionWrapper.cs" />
     <Compile Include="Data\Migration\Schema\AddUniqueConstraintCommand.cs" />
     <Compile Include="Data\Migration\Schema\DropUniqueConstraintCommand.cs" />
     <Compile Include="Environment\Extensions\Models\LifecycleStatus.cs" />
@@ -187,6 +189,7 @@
     <Compile Include="Security\IMembershipValidationService.cs" />
     <Compile Include="Localization\Services\ILocalizationStreamParser.cs" />
     <Compile Include="Localization\Services\LocalizationStreamParser.cs" />
+    <Compile Include="Mvc\Html\LinkExtensions.cs" />
     <Compile Include="Security\ISslSettingsProvider.cs" />
     <Compile Include="Security\NullMembershipService.cs" />
     <Compile Include="Security\Providers\DefaultSslSettingsProvider.cs" />
@@ -297,10 +300,10 @@
     <Compile Include="Environment\HostComponentsConfigModule.cs" />
     <Compile Include="Environment\Extensions\ICriticalErrorProvider.cs" />
     <Compile Include="Environment\IFeatureEventHandler.cs" />
-    <Compile Include="Environment\IMachineNameProvider.cs" />
+    <Compile Include="Environment\IApplicationEnvironment.cs" />
     <Compile Include="Environment\IOrchardFrameworkAssemblies.cs" />
     <Compile Include="Environment\IWorkContextEvents.cs" />
-    <Compile Include="Environment\MachineNameProvider.cs" />
+    <Compile Include="Environment\ApplicationEnvironment.cs" />
     <Compile Include="Environment\State\ContextState.cs" />
     <Compile Include="Environment\ViewsBackgroundCompilation.cs" />
     <Compile Include="Environment\Warmup\WarmupUtility.cs" />
@@ -400,7 +403,7 @@
     <Compile Include="Services\IJsonConverter.cs" />
     <Compile Include="Settings\CurrentSiteWorkContext.cs" />
     <Compile Include="Settings\ResourceDebugMode.cs" />
-    <Compile Include="Tasks\Locking\Migrations\FrameworkMigrations.cs" />
+    <Compile Include="Tasks\Locking\Services\DistributedLockSchemaBuilder.cs" />
     <Compile Include="Tasks\Locking\Services\IDistributedLock.cs" />
     <Compile Include="Tasks\Locking\Services\DistributedLock.cs" />
     <Compile Include="Tasks\Locking\Services\IDistributedLockService.cs" />

@@ -52,7 +52,7 @@ namespace Orchard.Core.Containers.Drivers {
                     if (updater != null) {
                         var oldContainerId = model.ContainerId;
                         updater.TryUpdateModel(model, "Containable", null, new[] { "ShowContainerPicker", "ShowPositionEditor" });
-                        if (oldContainerId != model.ContainerId) {
+                        if (oldContainerId != model.ContainerId && settings.ShowContainerPicker) {
                             if (commonPart != null) {
                                 var containerItem = _contentManager.Get(model.ContainerId, VersionOptions.Latest);
                                 commonPart.Container = containerItem;
@@ -61,20 +61,23 @@ namespace Orchard.Core.Containers.Drivers {
                         part.Position = model.Position;
                     }
 
-                    var containers = _contentManager
-                        .Query<ContainerPart, ContainerPartRecord>(VersionOptions.Latest)
-                        .List()
-                        .Where(container => container.ItemContentTypes.Any(type => type.Name == part.TypeDefinition.Name));
+                    if (settings.ShowContainerPicker) {
+                        var containers = _contentManager
+                            .Query<ContainerPart, ContainerPartRecord>(VersionOptions.Latest)
+                            .List()
+                            .Where(container => container.ItemContentTypes.Any(type => type.Name == part.TypeDefinition.Name));
 
-                    var listItems = new[] { new SelectListItem { Text = T("(None)").Text, Value = "0" } }
-                        .Concat(containers.Select(x => new SelectListItem {
-                            Value = Convert.ToString(x.Id),
-                            Text = x.ContentItem.TypeDefinition.DisplayName + ": " + _contentManager.GetItemMetadata(x.ContentItem).DisplayText,
-                            Selected = x.Id == model.ContainerId,
-                        }))
-                        .ToList();
+                        var listItems = new[] { new SelectListItem { Text = T("(None)").Text, Value = "0" } }
+                            .Concat(containers.Select(x => new SelectListItem {
+                                Value = Convert.ToString(x.Id),
+                                Text = x.ContentItem.TypeDefinition.DisplayName + ": " + _contentManager.GetItemMetadata(x.ContentItem).DisplayText,
+                                Selected = x.Id == model.ContainerId,
+                            }))
+                            .ToList();
 
-                    model.AvailableContainers = new SelectList(listItems, "Value", "Text", model.ContainerId);
+                        model.AvailableContainers = new SelectList(listItems, "Value", "Text", model.ContainerId);
+                    }
+
                     model.Position = part.Position;
 
                     return shapeHelper.EditorTemplate(TemplateName: "Containable", Model: model, Prefix: "Containable");

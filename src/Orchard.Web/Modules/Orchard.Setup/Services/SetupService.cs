@@ -69,6 +69,17 @@ namespace Orchard.Setup.Services {
         }
 
         public string Setup(SetupContext context) {
+            var initialState = _shellSettings.State;
+            try {
+                return SetupInternal(context);
+            }
+            catch {
+                _shellSettings.State = initialState;
+                throw;
+            }
+        }
+
+        private string SetupInternal(SetupContext context) {
             string executionId;
 
             Logger.Information("Running setup for tenant '{0}'.", _shellSettings.Name);
@@ -86,6 +97,9 @@ namespace Orchard.Setup.Services {
 
             context.EnabledFeatures = hardcoded.Union(context.EnabledFeatures ?? Enumerable.Empty<string>()).Distinct().ToList();
 
+            // Set shell state to "Initializing" so that subsequent HTTP requests are responded to with "Service Unavailable" while Orchard is setting up.
+            _shellSettings.State = TenantState.Initializing;
+
             var shellSettings = new ShellSettings(_shellSettings);
 
             if (String.IsNullOrEmpty(shellSettings.DataProvider)) {
@@ -93,7 +107,7 @@ namespace Orchard.Setup.Services {
                 shellSettings.DataConnectionString = context.DatabaseConnectionString;
                 shellSettings.DataTablePrefix = context.DatabaseTablePrefix;
             }
-            
+
             shellSettings.EncryptionAlgorithm = "AES";
 
             // Randomly generated key.
@@ -161,9 +175,6 @@ namespace Orchard.Setup.Services {
             // Creating a standalone environment. 
             // in theory this environment can be used to resolve any normal components by interface, and those
             // components will exist entirely in isolation - no crossover between the safemode container currently in effect.
-
-            // Set shell state to "Running" so that the proper shell context is created.
-            shellSettings.State = TenantState.Running;
             using (var environment = _orchardHost.CreateStandaloneEnvironment(shellSettings)) {
                 try {
                     executionId = CreateTenantData(context, environment);
@@ -174,10 +185,7 @@ namespace Orchard.Setup.Services {
                 }
             }
 
-            // Set shell state to "Initializing" so that subsequent HTTP requests are responded to with "Service Unavailable" while Orchard is setting up.
-            shellSettings.State = _shellSettings.State = TenantState.Initializing;
             _shellSettingsManager.SaveSettings(shellSettings);
-
             return executionId;
         }
 

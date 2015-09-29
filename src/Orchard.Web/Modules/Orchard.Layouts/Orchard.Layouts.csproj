@@ -371,6 +371,7 @@
     <Compile Include="Helpers\PrefixHelper.cs" />
     <Compile Include="Helpers\JsonHelper.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
+    <Compile Include="Permissions.cs" />
     <Compile Include="Providers\PlaceableContentElementHarvester.cs" />
     <Compile Include="ViewModels\PlaceableContentItemViewModel.cs" />
     <Compile Include="Recipes\Builders\CustomElementsStep.cs" />

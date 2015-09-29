@@ -1,6 +1,7 @@
 {
     "private": true,
     "devDependencies": {
+        "fs":  "^0.0.2",
         "glob": "^5.0.14",
         "path-posix": "^1.0.0",
         "merge-stream": "^0.1.8",

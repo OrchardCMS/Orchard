@@ -17,7 +17,7 @@ namespace Orchard.Tasks.Locking.Services {
 
     public class DistributedLockService : Component, IDistributedLockService {
 
-        private readonly IMachineNameProvider _machineNameProvider;
+        private readonly IApplicationEnvironment _applicationEnvironment;
         private readonly ILifetimeScope _lifetimeScope;
         private readonly IClock _clock;
         private readonly ShellSettings _shellSettings;
@@ -25,14 +25,14 @@ namespace Orchard.Tasks.Locking.Services {
         private readonly TimeSpan _defaultRepeatInterval;
 
         public DistributedLockService(
-            IMachineNameProvider machineNameProvider,
+            IApplicationEnvironment applicationEnvironment,
             ILifetimeScope lifetimeScope,
             IClock clock,
             ShellSettings shellSettings) {
             _clock = clock;
             _lifetimeScope = lifetimeScope;
             _shellSettings = shellSettings;
-            _machineNameProvider = machineNameProvider;
+            _applicationEnvironment = applicationEnvironment;
             _locks = new Dictionary<string, DistributedLock>();
             _defaultRepeatInterval = TimeSpan.FromMilliseconds(500);
         }
@@ -72,11 +72,11 @@ namespace Orchard.Tasks.Locking.Services {
         private DistributedLock AcquireLockInternal(string name, TimeSpan? maxValidFor, TimeSpan? timeout, bool throwOnTimeout) {
             var internalName = GetInternalLockName(name);
             var monitorTimeout = timeout.HasValue ? timeout.Value : TimeSpan.FromMilliseconds(-1); // -1 ms is .NET magic number for "infinite".
-            var monitorObj = String.Intern(String.Format("{0}:{1}", _machineNameProvider.GetMachineName(), internalName));
+            var monitorObj = String.Intern(String.Format("{0}:{1}", _applicationEnvironment.GetEnvironmentIdentifier(), internalName));
 
             if (!Monitor.TryEnter(monitorObj, monitorTimeout)) {
                 Logger.Debug("Could not enter local monitor for lock '{0}' within the specified timeout ({1}).", internalName, timeout);
-                    
+
                 if (throwOnTimeout)
                     throw new TimeoutException(String.Format("Failed to acquire lock '{0}' within the specified timeout ({1}).", internalName, timeout));
 
@@ -136,7 +136,7 @@ namespace Orchard.Tasks.Locking.Services {
         }
 
         private bool EnsureDistributedLockRecord(string internalName, TimeSpan? maxValidFor) {
-            var localMachineName = _machineNameProvider.GetMachineName();
+            var environmentIdentifier = _applicationEnvironment.GetEnvironmentIdentifier();
             var hasLockRecord = false;
 
             ExecuteOnSeparateTransaction(repository => {
@@ -148,16 +148,16 @@ namespace Orchard.Tasks.Locking.Services {
 
                     repository.Create(new DistributedLockRecord {
                         Name = internalName,
-                        MachineName = localMachineName,
+                        MachineName = environmentIdentifier,
                         CreatedUtc = _clock.UtcNow,
                         ValidUntilUtc = maxValidFor.HasValue ? _clock.UtcNow + maxValidFor.Value : default(DateTime?)
                     });
 
                     hasLockRecord = true;
                 }
-                else if (record.MachineName == localMachineName) {
+                else if (record.MachineName == environmentIdentifier) {
                     // Existing lock was for correct machine name => lock record exists.
-                    Logger.Debug("Found a valid record for lock '{0}' and current local machine name '{1}'.", internalName, localMachineName);
+                    Logger.Debug("Found a valid record for lock '{0}' and current local machine name '{1}'.", internalName, environmentIdentifier);
                     hasLockRecord = true;
                 }
             });

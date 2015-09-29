@@ -135,6 +135,10 @@ namespace Orchard.Environment.ShellBuilders {
                         if (File.Exists(optionalShellConfig))
                             builder.RegisterModule(new ConfigurationSettingsReader(ConfigurationSettingsReaderConstants.DefaultSectionName, optionalShellConfig));
                     }
+
+                    var optionalComponentsConfig = HostingEnvironment.MapPath("~/Config/HostComponents.config");
+                    if (File.Exists(optionalComponentsConfig))
+                        builder.RegisterModule(new HostComponentsConfigModule(optionalComponentsConfig));
                 });
         }
 
