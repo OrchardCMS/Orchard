@@ -35,7 +35,7 @@ namespace Orchard.Tokens.Tests {
 
         [Test]
         public void TestListSumTokens() {
-            Assert.That(_tokenizer.Replace("{List.SumInt:{Content.Id}}", new {List = new List<IContent> {new TestUser {Id = 5}, new TestUser {Id = 10}}}), Is.EqualTo("15"));
+            Assert.That(_tokenizer.Replace("{List.Sum:{Content.Id}}", new {List = new List<IContent> {new TestUser {Id = 5}, new TestUser {Id = 10}}}), Is.EqualTo("15"));
         }
 
         [Test]
