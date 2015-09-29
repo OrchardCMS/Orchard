@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Contents.Extensions;
@@ -102,7 +103,7 @@ namespace Orchard.Projections {
             SchemaBuilder.CreateTable("LayoutRecord",
                 table => table
                     .Column<int>("Id", c => c.PrimaryKey().Identity())
-                    .Column<string>("Guid", c => c.WithLength(64))
+                    .Column<Guid>("Guid")
                     .Column<string>("Category", c => c.WithLength(64))
                     .Column<string>("Type", c => c.WithLength(64))
                     .Column<string>("Description", c => c.WithLength(255))
@@ -279,7 +280,7 @@ namespace Orchard.Projections {
 
         public int UpdateFrom3() {
             SchemaBuilder.AlterTable("LayoutRecord", table => table
-                .AddColumn<string>("Guid", c => c.WithLength(64))
+                .AddColumn<Guid>("Guid")
             );
 
             SchemaBuilder.AlterTable("LayoutRecord", table => table

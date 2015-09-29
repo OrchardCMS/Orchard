@@ -173,7 +173,7 @@ namespace Orchard.Projections.Drivers {
                 }
 
                 return new LayoutRecord {
-                    Guid = guid,
+                    Guid = !String.IsNullOrWhiteSpace(guid) ? Guid.Parse(guid) : Guid.NewGuid(),
                     Category = category,
                     Description = layout.Attribute("Description").Value,
                     Display = int.Parse(layout.Attribute("Display").Value),
