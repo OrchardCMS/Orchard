@@ -308,7 +308,7 @@ namespace Orchard.Projections.Drivers {
         }
 
         protected override void Imported(ProjectionPart part, ImportContentContext context) {
-            // assign the query only when everythin is imported
+            // Assign the query only when everything is imported.
             var query = context.Attribute(part.PartDefinition.Name, "Query");
             if (query != null) {
                 part.Record.QueryPartRecord = context.GetItemFromSession(query).As<QueryPart>().Record;

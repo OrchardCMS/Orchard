@@ -126,9 +126,7 @@ namespace Orchard.Layouts.Drivers {
 
         protected override void Exporting(LayoutPart part, ExportContentContext context) {
             _layoutManager.Exporting(new ExportLayoutContext { Layout = part });
-
-            context.Element(part.PartDefinition.Name).SetElementValue("LayoutData", part.LayoutData);
-
+            
             if (part.TemplateId != null) {
                 var template = part.ContentItem.ContentManager.Get(part.TemplateId.Value);
 
@@ -137,6 +135,12 @@ namespace Orchard.Layouts.Drivers {
                     context.Element(part.PartDefinition.Name).SetAttributeValue("TemplateId", templateIdentity);
                 }
             }
+        }
+
+        protected override void Exported(LayoutPart part, ExportContentContext context) {
+            _layoutManager.Exported(new ExportLayoutContext { Layout = part });
+
+            context.Element(part.PartDefinition.Name).SetElementValue("LayoutData", part.LayoutData);
         }
 
         protected override void Importing(LayoutPart part, ImportContentContext context) {
@@ -154,6 +158,18 @@ namespace Orchard.Layouts.Drivers {
             });
 
             context.ImportAttribute(part.PartDefinition.Name, "TemplateId", s => part.TemplateId = GetTemplateId(context, s));
+        }
+
+        protected override void Imported(LayoutPart part, ImportContentContext context) {
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
+            }
+            
+            _layoutManager.Imported(new ImportLayoutContext {
+                Layout = part,
+                Session = new ImportContentContextWrapper(context)
+            });
         }
 
         private static int? GetTemplateId(ImportContentContext context, string templateIdentity) {

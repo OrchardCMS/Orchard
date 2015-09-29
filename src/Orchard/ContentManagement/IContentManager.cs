@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
 using Orchard.ContentManagement.MetaData.Models;
@@ -91,7 +92,7 @@ namespace Orchard.ContentManagement {
         void Index(ContentItem contentItem, IDocumentIndex documentIndex);
 
         XElement Export(ContentItem contentItem);
-        void Import(XElement element, ImportContentSession importContentSession);
+        void Import(XElement element, ImportContentSession importContentSession, Action<ContentItem> importItemCallback = null);
 
         /// <summary>
         /// Clears the current referenced content items

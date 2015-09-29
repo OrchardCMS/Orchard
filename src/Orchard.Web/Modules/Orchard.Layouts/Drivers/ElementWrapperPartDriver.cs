@@ -87,6 +87,18 @@ namespace Orchard.Layouts.Drivers {
             context.Element(part.PartDefinition.Name).SetValue(exportableData);
         }
 
+        protected override void Exported(ElementWrapperPart part, ExportContentContext context) {
+            var describeContext = CreateDescribeContext(part);
+            var descriptor = _elementManager.GetElementDescriptorByTypeName(describeContext, part.ElementTypeName);
+            var data = ElementDataHelper.Deserialize(part.ElementData);
+            var element = _elementManager.ActivateElement(descriptor, e => e.Data = data);
+
+            _elementManager.Exported(new[] { element }, new ExportLayoutContext());
+            var exportableData = _serializer.Serialize(element);
+
+            context.Element(part.PartDefinition.Name).SetValue(exportableData);
+        }
+
         protected override void Importing(ElementWrapperPart part, ImportContentContext context) {
             var root = context.Data.Element(part.PartDefinition.Name);
 
@@ -98,6 +110,20 @@ namespace Orchard.Layouts.Drivers {
             var element = _serializer.Deserialize(exportedData, describeContext);
 
             _elementManager.Importing(new[]{element}, new ImportLayoutContext { Session = new ImportContentContextWrapper(context)});
+            part.ElementData = element.Data.Serialize();
+        }
+
+        protected override void Imported(ElementWrapperPart part, ImportContentContext context) {
+            var root = context.Data.Element(part.PartDefinition.Name);
+
+            if (root == null)
+                return;
+
+            var exportedData = root.Value;
+            var describeContext = CreateDescribeContext(part);
+            var element = _serializer.Deserialize(exportedData, describeContext);
+
+            _elementManager.Imported(new[] { element }, new ImportLayoutContext { Session = new ImportContentContextWrapper(context) });
             part.ElementData = element.Data.Serialize();
         }
 

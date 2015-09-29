@@ -54,6 +54,8 @@ namespace Orchard.Layouts.Services {
         IEnumerable<LayoutPart> GetTemplateClients(int templateId, VersionOptions versionOptions);
         IEnumerable<Element> CreateDefaultLayout();
         void Exporting(ExportLayoutContext context);
+        void Exported(ExportLayoutContext context);
         void Importing(ImportLayoutContext context);
+        void Imported(ImportLayoutContext context);
     }
 }

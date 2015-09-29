@@ -298,7 +298,7 @@ namespace Orchard.Layouts.Drivers {
             }
         }
 
-        protected override void OnImporting(Projection element, ImportElementContext context) {
+        protected override void OnImported(Projection element, ImportElementContext context) {
             var queryIdentity = context.ExportableData.Get("QueryId");
             var query = queryIdentity != null ? context.Session.GetItemFromSession(queryIdentity) : default(ContentManagement.ContentItem);
 
