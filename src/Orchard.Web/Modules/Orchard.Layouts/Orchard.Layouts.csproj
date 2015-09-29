@@ -85,8 +85,6 @@
     <Content Include="Images\illustration.jpg" />
     <Content Include="Images\logo.svg" />
     <Content Include="Placement.info" />
-    <Content Include="Scripts\DemoConfig.js" />
-    <Content Include="Scripts\DemoData.js" />
     <Content Include="Scripts\placeable-widget-editor.js" />
     <Content Include="Scripts\element-browser.js" />
     <Content Include="Scripts\AutoFocus.js" />
@@ -133,7 +131,6 @@
     <Content Include="Assets\JavaScript\Models\Row.js" />
     <Content Include="Scripts\LayoutDecoder.js" />
     <Content Include="Scripts\dialog.js" />
-    <Content Include="Scripts\designer.canvas.js" />
     <Content Include="Data\Canvas.json" />
     <Content Include="Data\ContentTypes.json" />
     <Content Include="Images\Web.config">
