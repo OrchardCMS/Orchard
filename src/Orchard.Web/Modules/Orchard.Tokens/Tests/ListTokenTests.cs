@@ -51,9 +51,14 @@ namespace Orchard.Tokens.Tests {
         [Test]
         public void TestListCountTokens() {
             Assert.That(_tokenizer.Replace("{List.Count}", new {List = new List<IContent> {new TestUser(), new TestUser()}}), Is.EqualTo("2"));
-        }
+		}
 
-        [Test]
+		[Test]
+		public void TestListElementAtTokens() {
+			Assert.That(_tokenizer.Replace("{List.ElementAt:1,UserId is: {Content.Id}}", new { List = new List<IContent> { new TestUser { Id = 5 }, new TestUser { Id = 10 } } }), Is.EqualTo("UserId is: 10"));
+		}
+
+		[Test]
         public void TestListTokensAdhereToEncodings() {
             Assert.That(_tokenizer.Replace(
                 "{List.Join:<strong>{Content.Id}<strong>}",

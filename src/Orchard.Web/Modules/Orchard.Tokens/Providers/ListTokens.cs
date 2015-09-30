@@ -23,85 +23,96 @@ namespace Orchard.Tokens.Providers {
                 .Token("Sum:*", T("Sum:<Tokenized text>"), T("Sum each element in the list by applying the tokenized text."))
                 .Token("First:*", T("First:<Tokenized text>"), T("Apply the tokenized text to the first element."))
                 .Token("Last:*", T("Last:<Tokenized text>"), T("Apply the tokenized text to the last element."))
-                .Token("Count", T("Count"), T("Get the list count."))
-                ;
+				.Token("Count", T("Count"), T("Get the list count."))
+				.Token("ElementAt:*", T("ElementAt:<index>,<Tokenized text>"), T("Apply the tokenized text to the element at its index."))
+				;
 	    }
 	 
 	    public void Evaluate(EvaluateContext context) {
-			Func<string, IContent, string> getValue = (t, i) => _tokenizer().Replace(t, new { Content = i }, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
+			Func<string, IContent, string> tokenValue = (t, i) => _tokenizer().Replace(t, new { Content = i }, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
 
 		    context.For<IList<IContent>>("List", () => new List<IContent>())
 			    .Token( // {List.Join:<string>[,<separator>]}
-				    token => {
-					    if (token.StartsWith("Join:", StringComparison.OrdinalIgnoreCase)) {
-						    // html decode to stop double encoding.
-						    return HttpUtility.HtmlDecode(token.Substring("Join:".Length));
-					    }
-					    return null;
-				    },
-				    (token, collection) => {
-					    if (String.IsNullOrEmpty(token)) {
+				   token => FilterToken(token, "Join:"),
+					(token, list) => {
+					    if (String.IsNullOrEmpty(token) || !list.Any()) {
 						    return String.Empty;
 					    }
-					    // Split the params to get the tokenized text and optional separator.
+					    // Split the token to get the tokenized text and optional separator.
 					    var index = token.IndexOf(',');
 					    var text = index == -1 ? token : token.Substring(0, index);
 					    if (String.IsNullOrEmpty(text)) {
 						    return String.Empty;
 					    }
 					    var separator = index == -1 ? String.Empty : token.Substring(index + 1);
-					    return String.Join(separator, collection.Select(content => getValue(text, content)));
+					    return String.Join(separator, list.Select(content => tokenValue(text, content)));
 				    })
 			    .Token( // {List.Sum:<string>}
-				    token => {
-					    if (token.StartsWith("Sum:", StringComparison.OrdinalIgnoreCase)) {
-						    // html decode to stop double encoding.
-						    return HttpUtility.HtmlDecode(token.Substring("Sum:".Length));
-					    }
-					    return null;
-				    },
-				    (token, collection) => {
-					    if (!collection.Any()) return "0";
+					token => FilterToken(token, "Sum:"),
+					(token, list) => {
+						if (String.IsNullOrEmpty(token) || !list.Any()) {
+							return "0";
+						}
 
 					    // try long.
 					    long longValue;
-					    if (long.TryParse(collection.Select(i => getValue(token, i)).First(), out longValue)) {
-						    return collection.Sum(i => long.Parse(getValue(token, i)));
+					    if (long.TryParse(list.Select(i => tokenValue(token, i)).First(), out longValue)) {
+						    return list.Sum(i => long.Parse(tokenValue(token, i)));
 					    }
 					    // try float.
 					    float floatValue;
-					    if (float.TryParse(collection.Select(i => getValue(token, i)).First(), out floatValue)) {
-						    return collection.Sum(i => float.Parse(getValue(token, i)));
+					    if (float.TryParse(list.Select(i => tokenValue(token, i)).First(), out floatValue)) {
+						    return list.Sum(i => float.Parse(tokenValue(token, i)));
 					    }
 					    // try decimal.
 					    decimal decimalValue;
-					    if (decimal.TryParse(collection.Select(i => getValue(token, i)).First(), out decimalValue)) {
-						    return collection.Sum(i => decimal.Parse(getValue(token, i)));
+					    if (decimal.TryParse(list.Select(i => tokenValue(token, i)).First(), out decimalValue)) {
+						    return list.Sum(i => decimal.Parse(tokenValue(token, i)));
 					    }
 					    return "";
 				    })
 			    .Token( // {List.First:<string>}
-				    token => {
-					    if (token.StartsWith("First:", StringComparison.OrdinalIgnoreCase)) {
-						    // html decode to stop double encoding.
-						    return HttpUtility.HtmlDecode(token.Substring("First:".Length));
-					    }
-					    return null;
-				    },
-				    (token, list) => list.Any() ? list.Select(i => getValue(token, i)).First() : String.Empty)
+					token => FilterToken(token, "First:"),
+					(token, list) => String.IsNullOrEmpty(token) || !list.Any() ? String.Empty : list.Select(i => tokenValue(token, i)).First())
 			    .Token( // {List.Last:<string>}
-				    token => {
-					    if (token.StartsWith("Last:", StringComparison.OrdinalIgnoreCase)) {
-						    // html decode to stop double encoding.
-						    return HttpUtility.HtmlDecode(token.Substring("Last:".Length));
-					    }
-					    return null;
-				    },
-				    (token, list) => list.Any() ? list.Select(i => getValue(token, i)).Last() : String.Empty)
+				    token => FilterToken(token, "Last:"),
+				    (token, list) => String.IsNullOrEmpty(token) || !list.Any() ? String.Empty : list.Select(i => tokenValue(token, i)).Last())
 			    .Token( // {List.Count}
 				    "Count",
 				    list => list.Count)
-			    ;
+				.Token( // {List.ElementAt:<index>,<string>}
+					token => FilterToken(token, "ElementAt:"),
+					(token, list) => {
+						if (String.IsNullOrEmpty(token) || !list.Any()) {
+							return String.Empty;
+						}
+						// Split the token to get the index and the tokenized text.
+						var delimiterIndex = token.IndexOf(',');
+						if (delimiterIndex == -1) {
+							return String.Empty;
+						}
+
+						var text = token.Substring(delimiterIndex + 1);
+						if (String.IsNullOrEmpty(text)) {
+							return String.Empty;
+						}
+
+						var index= 0;
+						if (!int.TryParse(token.Substring(0, delimiterIndex), out index)) {
+							return String.Empty;
+						}
+
+						return list.Select(i => tokenValue(text, i)).ElementAt(index);
+					})
+				;
 	    }
+
+		private static string FilterToken(string token, string operation) {
+			if (token.StartsWith(operation, StringComparison.OrdinalIgnoreCase)) {
+				// html decode to stop double encoding.
+				return HttpUtility.HtmlDecode(token.Substring(operation.Length));
+			}
+			return null;
+		}
 	}
 }
