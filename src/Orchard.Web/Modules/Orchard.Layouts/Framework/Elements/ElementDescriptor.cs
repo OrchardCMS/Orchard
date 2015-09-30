@@ -15,9 +15,10 @@ namespace Orchard.Layouts.Framework.Elements {
             Category = category;
             GetDrivers = Enumerable.Empty<IElementDriver>;
             CreatingDisplay = context => { };
-            Displaying = context => {};
+            Displaying = context => { };
             Editor = context => { };
             UpdateEditor = context => { };
+            Removing = context => { };
             StateBag = new Dictionary<string, object>();
         }
 
@@ -33,6 +34,7 @@ namespace Orchard.Layouts.Framework.Elements {
         public Action<ElementDisplayedContext> Displayed { get; set; }
         public Action<ElementEditorContext> Editor { get; set; }
         public Action<ElementEditorContext> UpdateEditor { get; set; }
+        public Action<ElementRemovingContext> Removing { get; set; }
         public bool IsSystemElement { get; set; }
         public bool EnableEditorDialog { get; set; }
         public IDictionary<string, object> StateBag { get; set; }

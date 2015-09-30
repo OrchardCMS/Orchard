@@ -147,7 +147,16 @@ namespace Orchard.Layouts.Services {
         }
 
         public void Removing(LayoutSavingContext context) {
-            var elementInstances = context.RemovedElements.Flatten();
+            var elementInstances = context.RemovedElements.Flatten().ToList();
+
+            InvokeElementAction(elementInstances, (elementInstance) => {
+                var elementContext = new ElementRemovingContext(context) {
+                    Element = elementInstance
+                };
+                _elementEventHandler.Removing(elementContext);
+                elementInstance.Descriptor.Removing(elementContext);
+            });
+
             InvokeDriver(elementInstances, (driver, elementInstance) => driver.Removing(new ElementRemovingContext(context) {
                 Element = elementInstance
             }));
@@ -186,6 +195,12 @@ namespace Orchard.Layouts.Services {
             }
 
             return dictionary;
+        }
+
+        private void InvokeElementAction(IEnumerable<Element> elements, Action<Element> action) {
+            foreach (var element in elements) {
+                action(element);
+            }
         }
 
         private void InvokeDriver(IEnumerable<Element> elements, Action<IElementDriver, Element> driverAction) {

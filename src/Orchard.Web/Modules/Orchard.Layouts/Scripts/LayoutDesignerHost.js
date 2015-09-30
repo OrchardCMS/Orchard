@@ -66,6 +66,11 @@
             return JSON.stringify(layoutData, null, "\t");
         };
 
+        var serializeRecycleBin = function () {
+            var recycleBinData = self.editor.recycleBin.toObject();
+            return JSON.stringify(recycleBinData, null, "\t");
+        };
+
         var applyTemplate = function (templateId) {
             var layoutData = serializeCanvas();
 
@@ -95,9 +100,12 @@
 
         var serializeLayout = function () {
             var layoutDataField = self.element.find(".layout-data-field");
+            var recycleBinDataField = self.element.find(".recycle-bin-data-field");
             var layoutDataDataJson = serializeCanvas();
+            var recycleBinDataJson = serializeRecycleBin();
 
             layoutDataField.val(layoutDataDataJson);
+            recycleBinDataField.val(recycleBinDataJson);
         };
 
         this.element.on("change", ".template-picker select", function (e) {

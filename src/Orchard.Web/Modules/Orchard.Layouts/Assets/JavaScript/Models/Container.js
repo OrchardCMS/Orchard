@@ -39,6 +39,7 @@
             var index = _(this.children).indexOf(child);
             if (index >= 0) {
                 this.children.splice(index, 1);
+                this.editor.recycleBin.add(child);
                 if (child.getIsActive())
                     this.editor.activeElement = null;
                 if (child.getIsFocused()) {

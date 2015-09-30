@@ -1,8 +1,12 @@
 ﻿@using Orchard.ContentManagement
 @{
     var contentItem = (ContentItem)Model.ContentItem;
-    var title = Html.ItemDisplayText(contentItem);
 }
 <div class="layout-placeholder">
-    @String.Format("{0} - {1}", title, contentItem.TypeDefinition.DisplayName)
+    @if (contentItem != null) {
+        @String.Format("{0} - {1}", Html.ItemDisplayText(contentItem), contentItem.TypeDefinition.DisplayName)
+    }
+    else {
+        @T("Content Item Not Found");
+    }
 </div>

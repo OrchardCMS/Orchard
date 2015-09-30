@@ -53,6 +53,7 @@
         "inputs": [
             "Assets/JavaScript/Models/Helpers.js",
             "Assets/JavaScript/Models/Editor.js",
+            "Assets/JavaScript/Models/RecycleBin.js",
             "Assets/JavaScript/Models/Element.js",
             "Assets/JavaScript/Models/Container.js",
             "Assets/JavaScript/Models/Canvas.js",

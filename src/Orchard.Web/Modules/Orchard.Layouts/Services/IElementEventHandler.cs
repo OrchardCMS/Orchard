@@ -1,6 +1,7 @@
 using Orchard.Events;
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
+using Orchard.Layouts.Framework.Elements;
 
 namespace Orchard.Layouts.Services {
     public interface IElementEventHandler : IEventHandler {
@@ -11,5 +12,6 @@ namespace Orchard.Layouts.Services {
         void Displayed(ElementDisplayedContext context);
         void BuildEditor(ElementEditorContext context);
         void UpdateEditor(ElementEditorContext context);
+        void Removing(ElementRemovingContext context);
     }
 }

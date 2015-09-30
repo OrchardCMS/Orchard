@@ -15,6 +15,7 @@ using Orchard.Layouts.Framework.Harvesters;
 using Orchard.Layouts.Helpers;
 using Orchard.Layouts.Settings;
 using Orchard.Layouts.ViewModels;
+using ContentItem = Orchard.ContentManagement.ContentItem;
 
 namespace Orchard.Layouts.Providers {
     public class PlaceableContentElementHarvester : Component, IElementHarvester {
@@ -38,6 +39,7 @@ namespace Orchard.Layouts.Providers {
                     UpdateEditor = UpdateEditor,
                     ToolboxIcon = "\uf1b2",
                     EnableEditorDialog = true,
+                    Removing = RemoveContentItem,
                     StateBag = new Dictionary<string, object> {
                         { "ContentTypeName", contentTypeDefinition.Name }
                     }
@@ -121,6 +123,15 @@ namespace Orchard.Layouts.Providers {
             context.EditorResult.Add(elementEditorShape);
             context.EditorResult.Add(contentEditorShape);
             context.EditorResult.Add(editorWrapper);
+        }
+
+        private void RemoveContentItem(ElementRemovingContext context) {
+            var element = (PlaceableContentItem) context.Element;
+            var contentItemId = element.ContentItemId;
+            var contentItem = contentItemId != null ? _contentManager.Value.Get(contentItemId.Value, VersionOptions.Latest) : default(ContentItem);
+
+            if(contentItem != null)
+                _contentManager.Value.Remove(contentItem);
         }
 
         private IEnumerable<ContentTypeDefinition> GetPlaceableContentTypeDefinitions() {

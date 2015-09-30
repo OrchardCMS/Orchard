@@ -45,7 +45,7 @@ namespace Orchard.Layouts.Services {
             element.HtmlClass = (string)node["htmlClass"];
             element.HtmlStyle = (string)node["htmlStyle"];
             element.IsTemplated = (bool)(node["isTemplated"] ?? false);
-            element.Rule = (string) node["rule"];
+            element.Rule = (string)node["rule"];
         }
 
         protected bool? ReadBoolean(JToken node) {
@@ -113,7 +113,7 @@ namespace Orchard.Layouts.Services {
             element.HtmlClass = (string)node["htmlClass"];
             element.HtmlStyle = (string)node["htmlStyle"];
             element.IsTemplated = (bool)(node["isTemplated"] ?? false);
-            element.Rule = (string) node["rule"];
+            element.Rule = (string)node["rule"];
 
             return element;
         }
@@ -159,6 +159,21 @@ namespace Orchard.Layouts.Services {
             element.Content = html;
 
             return element;
+        }
+    }
+
+    public class RecycleBinModelMap : ILayoutModelMap {
+        public int Priority { get { return 0; } }
+        public string LayoutElementType { get { return "RecycleBin"; } }
+        public bool CanMap(Element element) {
+            return element.Type == "RecycleBin";
+        }
+
+        public Element ToElement(IElementManager elementManager, DescribeElementsContext describeContext, JToken node) {
+            return new RecycleBin();
+        }
+
+        public void FromElement(Element element, DescribeElementsContext describeContext, JToken node) {
         }
     }
 }

@@ -79,6 +79,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\JavaScript\Models\RecycleBin.js" />
     <Content Include="Default.html" />
     <Content Include="Assets.json" />
     <Content Include="Images\azure.png" />
@@ -370,6 +371,7 @@
     <Compile Include="Helpers\StringHelper.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Providers\PlaceableContentElementHarvester.cs" />
+    <Compile Include="Elements\RecycleBin.cs" />
     <Compile Include="ViewModels\PlaceableContentItemViewModel.cs" />
     <Compile Include="Recipes\Builders\CustomElementsStep.cs" />
     <Compile Include="Recipes\Executors\CustomElementsStep.cs" />
