@@ -90,8 +90,9 @@ namespace Orchard.Layouts.Drivers {
 
         protected override DriverResult Editor(LayoutPart part, IUpdateModel updater, dynamic shapeHelper) {
             return ContentShape("Parts_Layout_Edit", () => {
-
                 if (part.Id == 0 && String.IsNullOrWhiteSpace(part.LayoutData)) {
+
+                    var settings = part.TypePartDefinition.Settings.GetModel<LayoutTypePartSettings>();
 
                     // If the default layout setting is left empty, use the one from the service
                     if (String.IsNullOrWhiteSpace(settings.DefaultLayoutData)) {
