@@ -134,11 +134,11 @@ namespace Orchard.Layouts.Providers {
         }
 
         private IEnumerable<ContentTypeDefinition> GetPlaceableContentTypeDefinitions() {
-            // Select all types that have either "Placeable" set ot true or the "Widget" or "Element" stereotype.
+            // Select all types that have either "Placeable" set ot true or the "Widget" stereotype.
             var contentTypeDefinitionsQuery =
                 from contentTypeDefinition in _contentManager.Value.GetContentTypeDefinitions()
                 let stereotype = contentTypeDefinition.Settings.ContainsKey("Stereotype") ? contentTypeDefinition.Settings["Stereotype"] : default(string)
-                where contentTypeDefinition.Settings.GetModel<ContentTypeLayoutSettings>().Placeable || stereotype == "Widget" || stereotype == "Element"
+                where contentTypeDefinition.Settings.GetModel<ContentTypeLayoutSettings>().Placeable || stereotype == "Widget"
                 select contentTypeDefinition;
 
             return contentTypeDefinitionsQuery.ToList();
