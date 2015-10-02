@@ -91,9 +91,18 @@ namespace Orchard.Layouts.Drivers {
 
         protected override DriverResult Editor(LayoutPart part, IUpdateModel updater, dynamic shapeHelper) {
             return ContentShape("Parts_Layout_Edit", () => {
-
                 if (part.Id == 0 && String.IsNullOrWhiteSpace(part.LayoutData)) {
-                    part.LayoutData = part.TypePartDefinition.Settings.GetModel<LayoutTypePartSettings>().DefaultLayoutData;
+
+                    var settings = part.TypePartDefinition.Settings.GetModel<LayoutTypePartSettings>();
+
+                    // If the default layout setting is left empty, use the one from the service
+                    if (String.IsNullOrWhiteSpace(settings.DefaultLayoutData)) {
+                        var defaultData = _serializer.Serialize(_layoutManager.CreateDefaultLayout());
+                        part.LayoutData = defaultData;
+                    }
+                    else {
+                        part.LayoutData = settings.DefaultLayoutData;
+                    }
                 }
 
                 var viewModel = new LayoutPartViewModel {

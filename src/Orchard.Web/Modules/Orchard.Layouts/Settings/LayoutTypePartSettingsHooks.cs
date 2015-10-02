@@ -22,12 +22,7 @@ namespace Orchard.Layouts.Settings {
                 yield break;
 
             var model = definition.Settings.GetModel<LayoutTypePartSettings>();
-
-            if (String.IsNullOrWhiteSpace(model.DefaultLayoutData)) {
-                var defaultData = _serializer.Serialize(_layoutManager.CreateDefaultLayout());
-                model.DefaultLayoutData = defaultData;
-            }
-
+            
             yield return DefinitionTemplate(model);
         }
 
