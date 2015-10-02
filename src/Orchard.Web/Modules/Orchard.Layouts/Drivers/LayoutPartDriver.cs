@@ -104,12 +104,12 @@ namespace Orchard.Layouts.Drivers {
                     updater.TryUpdateModel(viewModel, Prefix, null, new[] { "Part", "Templates" });
                     var describeContext = new DescribeElementsContext { Content = part };
                     var elementInstances = _mapper.ToLayoutModel(viewModel.LayoutEditor.Data, describeContext).ToArray();
-                    var recycleBin = (RecycleBin)_mapper.ToLayoutModel(viewModel.LayoutEditor.RecycleBin, describeContext).Single();
+                    var recycleBin = (RecycleBin)_mapper.ToLayoutModel(viewModel.LayoutEditor.RecycleBin, describeContext).SingleOrDefault();
                     var context = new LayoutSavingContext {
                         Content = part,
                         Updater = updater,
                         Elements = elementInstances,
-                        RemovedElements = recycleBin.Elements
+                        RemovedElements = recycleBin != null ? recycleBin.Elements : Enumerable.Empty<Element>()
                     };
 
                     _elementManager.Saving(context);

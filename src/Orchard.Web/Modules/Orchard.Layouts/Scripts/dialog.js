@@ -174,10 +174,11 @@
                         break;
                     case "save": {
                         var frameDoc = self.frame.getDocument();
-                        var form = frameDoc.find("#layout-content form:first");
-                        form.submit();
+                        var form = frameDoc.find(".zone-content form:first");
+                        form.attr("isSubmitting", true);
+                        form.trigger("submit");
                     }
-                    break;
+                        break;
                 }
             });
         };

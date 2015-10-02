@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
-using Orchard.ContentManagement.FieldStorage.InfosetStorage;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.Core.Contents.Settings;
 using Orchard.Environment;
@@ -135,9 +134,11 @@ namespace Orchard.Layouts.Providers {
         }
 
         private IEnumerable<ContentTypeDefinition> GetPlaceableContentTypeDefinitions() {
+            // Select all types that have either "Placeable" set ot true or the "Widget" or "Element" stereotype.
             var contentTypeDefinitionsQuery =
                 from contentTypeDefinition in _contentManager.Value.GetContentTypeDefinitions()
-                where contentTypeDefinition.Settings.GetModel<ContentTypeLayoutSettings>().Placeable
+                let stereotype = contentTypeDefinition.Settings.ContainsKey("Stereotype") ? contentTypeDefinition.Settings["Stereotype"] : default(string)
+                where contentTypeDefinition.Settings.GetModel<ContentTypeLayoutSettings>().Placeable || stereotype == "Widget" || stereotype == "Element"
                 select contentTypeDefinition;
 
             return contentTypeDefinitionsQuery.ToList();

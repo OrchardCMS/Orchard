@@ -218,13 +218,15 @@ namespace Orchard.Layouts.Controllers {
             IUpdateModel updater = null) {
 
             postedElementData = postedElementData ?? new ElementDataDictionary();
+            var valueProviderCollection = (ValueProviderCollection) ValueProvider;
+            valueProviderCollection.Add(postedElementData.ToValueProvider(_cultureAccessor.CurrentCulture));
             var context = new ElementEditorContext {
                 Session = session,
                 Content = content,
                 Element = element,
                 Updater = updater,
                 ElementData = elementData ?? new ElementDataDictionary(),
-                ValueProvider = postedElementData.ToValueProvider(_cultureAccessor.CurrentCulture),
+                ValueProvider = valueProviderCollection,
                 ShapeFactory = _shapeFactory
             };
             ValueProvider = context.ValueProvider;

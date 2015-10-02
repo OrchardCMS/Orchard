@@ -4,7 +4,6 @@
         this.element = element;
         this.element.data("layout-designer-host", this);
         this.editor = window.layoutEditor;
-        this.isFormSubmitting = false;
         this.settings = {
             antiForgeryToken: self.element.data("anti-forgery-token"),
             editorDialogTitleFormat: self.element.data("editor-dialog-title-format"),
@@ -88,12 +87,11 @@
             });
         };
 
-        var monitorForm = function() {
-            var layoutDesigner = self.element;
-            var form = layoutDesigner.closest("form");
-            
+        var monitorForm = function () {
+            var form = $(".zone-content form:first");
+
             form.on("submit", function (e) {
-                self.isFormSubmitting = true;
+                form.attr("isSubmitting", true);
                 serializeLayout();
             });
         };
@@ -115,7 +113,10 @@
         });
 
         $(window).on("beforeunload", function () {
-            if (!self.isFormSubmitting && self.editor.isDirty())
+
+            var form = $(".zone-content form:first");
+            var isFormSubmitting = form.attr("isSubmitting");
+            if (!isFormSubmitting && self.editor.isDirty())
                 return "You have unsaved changes.";
 
             return undefined;
@@ -130,7 +131,7 @@
     window.Orchard.Layouts.LayoutEditorHost = window.Orchard.Layouts.LayoutEditorHost || {};
 
     $(function () {
-        var host = new LayoutDesignerHost($(".layout-designer"));
+        window.layoutDesignerHost = new LayoutDesignerHost($(".layout-designer"));
         $(".layout-designer").each(function (e) {
             var designer = $(this);
             var dialog = designer.find(".layout-editor-help-dialog");
