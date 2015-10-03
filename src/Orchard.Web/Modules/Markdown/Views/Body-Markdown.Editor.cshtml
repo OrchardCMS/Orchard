@@ -21,7 +21,8 @@
         {"id", "wmd-input" + "-" + idPostfix},
         {"class", "wmd-input"},
         {"data-mediapicker-uploadpath", Model.AddMediaPath},
-        {"data-mediapicker-title", T("Insert/Update Media")}
+        {"data-mediapicker-title", T("Insert/Update Media")},
+        {"data-manage-media", AuthorizedFor(Orchard.MediaLibrary.Permissions.ManageMediaContent) ? "true" : "false" }
     };
 
     // The markdown editor itself doesn't seem to (yet) support autofocus, but we'll set it on the textarea nonetheless.

@@ -25,7 +25,7 @@ Scenario: In the admin (menu) there is a link to create a Page
         And I fill in
             | name | value |
             | Title.Title | Super Duper |
-            | LayoutPart.LayoutEditor.Data | { "type": "Content", "data": "TypeName=Orchard.Layouts.Elements.Text&Content=This+is+super+number+two", "isTemplated": false, "contentType": "Orchard.Layouts.Elements.Text", "contentTypeLabel": "Text", "contentTypeClass": "text", "html": "This is super number two", "hasEditor": true } |
+            | AutoroutePart.LayoutEditor.Data | { "type": "Content", "data": "TypeName=Orchard.Layouts.Elements.Text&Content=This+is+super+number+two", "isTemplated": false, "contentType": "Orchard.Layouts.Elements.Text", "contentTypeLabel": "Text", "contentTypeClass": "text", "html": "This is super number two", "hasEditor": true } |
         And I hit "Publish Now"
         And I go to "super-duper-2"
     Then I should see "<h1[^>]*>.*?Super Duper.*?</h1>"
@@ -36,7 +36,7 @@ Scenario: In the admin (menu) there is a link to create a Page
         And I fill in
             | name | value |
             | Title.Title | Another |
-            | Autoroute.PromoteToHomePage | true |
+            | AutoroutePart.PromoteToHomePage | true |
         And I hit "Publish Now"
         And I go to "/"
     Then I should see "<h1>Another</h1>"
@@ -48,7 +48,7 @@ Scenario: In the admin (menu) there is a link to create a Page
         And I fill in
             | name | value |
             | Title.Title | Drafty |
-            | Autoroute.PromoteToHomePage | true |
+            | AutoroutePart.PromoteToHomePage | true |
         And I hit "Save"
         And I go to "/"
     Then I should see "<h1>Another</h1>"

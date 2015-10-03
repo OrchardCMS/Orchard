@@ -1,46 +1,41 @@
 ﻿using System;
-using System.Threading;
 
 namespace Orchard.Tasks.Locking.Services {
 
-    /// <summary>
-    /// Represents a distributed lock. />
-    /// </summary>
-    public class DistributedLock : IDisposable {
-        public static DistributedLock ForMachine(IDistributedLockService service, string name, string machineName, string lockId) {
-            return new DistributedLock {
-                _service = service,
-                Name = name,
-                MachineName = machineName,
-                Id = lockId
-            };
+    public class DistributedLock : IDistributedLock {
+
+        private readonly string _name;
+        private readonly string _internalName;
+        private readonly Action _releaseLockAction;
+        private int _count;
+
+        internal DistributedLock(string name, string internalName, Action releaseLockAction) {
+            _name = name;
+            _internalName = internalName;
+            _releaseLockAction = releaseLockAction;
+            _count = 1;
         }
 
-        public static DistributedLock ForThread(IDistributedLockService service, string name, string machineName, int threadId, string lockId) {
-            return new DistributedLock {
-                _service = service,
-                Name = name,
-                MachineName = machineName,
-                ThreadId = threadId,
-                Id = lockId
-            };
+        string IDistributedLock.Name {
+            get {
+                return _name;
+            }
         }
 
-        private IDistributedLockService _service;
-        private int _isDisposed;
-
-        private DistributedLock() {
+        internal string InternalName {
+            get {
+                return _internalName;
+            }
         }
 
-        public string Id { get; private set; }
-        public string Name { get; private set; }
-        public string MachineName { get; private set; }
-        public int? ThreadId { get; private set; }
+        internal void Increment() {
+            _count++;
+        }
 
-        // This will be called at least and at the latest by the IoC container when the request ends.
         public void Dispose() {
-            if(Interlocked.CompareExchange(ref _isDisposed, 1, 0) == 0)
-                _service.ReleaseLock(this);
+            _count--;
+            if (_count == 0)
+                _releaseLockAction();
         }
     }
 }

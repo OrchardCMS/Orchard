@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Orchard.ContentManagement;
@@ -32,7 +33,7 @@ namespace Orchard.Core.Common.Drivers {
         }
 
         protected override DriverResult Display(ContentPart part, TextField field, string displayType, dynamic shapeHelper) {
-            return ContentShape("Fields_Common_Text", GetDifferentiator(field, part), 
+            return ContentShape("Fields_Common_Text", GetDifferentiator(field, part),
                 () => {
                     var settings = field.PartFieldDefinition.Settings.GetModel<TextFieldSettings>();
 
@@ -56,7 +57,7 @@ namespace Orchard.Core.Common.Drivers {
         }
 
         protected override DriverResult Editor(ContentPart part, TextField field, IUpdateModel updater, dynamic shapeHelper) {
-            
+
             var viewModel = new TextFieldDriverViewModel {
                 Field = field,
                 Text = field.Value,
@@ -64,7 +65,7 @@ namespace Orchard.Core.Common.Drivers {
                 ContentItem = part.ContentItem
             };
 
-            if(updater.TryUpdateModel(viewModel, GetPrefix(field, part), null, null)) {
+            if (updater.TryUpdateModel(viewModel, GetPrefix(field, part), null, null)) {
                 if (viewModel.Settings.Required && string.IsNullOrWhiteSpace(viewModel.Text)) {
                     updater.AddModelError("Text", T("The field {0} is mandatory", T(field.DisplayName)));
                     return ContentShape("Fields_Common_Text_Edit", GetDifferentiator(field, part),
@@ -85,7 +86,8 @@ namespace Orchard.Core.Common.Drivers {
         }
 
         protected override void Exporting(ContentPart part, TextField field, ExportContentContext context) {
-            context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Text", field.Value);
+            if (!String.IsNullOrEmpty(field.Value))
+                context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Text", field.Value);
         }
 
         protected override void Describe(DescribeMembersContext context) {

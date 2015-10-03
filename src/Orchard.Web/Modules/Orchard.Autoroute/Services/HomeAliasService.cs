@@ -1,4 +1,5 @@
-﻿using System.Web.Routing;
+﻿using System;
+using System.Web.Routing;
 using Orchard.Alias;
 using Orchard.ContentManagement;
 
@@ -20,12 +21,8 @@ namespace Orchard.Autoroute.Services {
 
         public int? GetHomePageId() {
             var homePageRoute = GetHomeRoute();
-            var homePageId = 
-                homePageRoute != null 
-                ? homePageRoute.ContainsKey("id") 
-                    ? XmlHelper.Parse<int>((string)homePageRoute["id"]) 
-                    : default(int?) 
-                : default(int?);
+            var homePageIdValue = homePageRoute != null && homePageRoute.ContainsKey("id") ? (string)homePageRoute["id"] : default(string);
+            var homePageId = TryParseInt32(homePageIdValue);
 
             return homePageId;
         }
@@ -50,6 +47,15 @@ namespace Orchard.Autoroute.Services {
         public void PublishHomeAlias(RouteValueDictionary route) {
             _aliasService.DeleteBySource(AliasSource);
             _aliasService.Set(HomeAlias, route, AliasSource);
+        }
+
+        private int? TryParseInt32(string value) {
+            int i;
+
+            if (String.IsNullOrWhiteSpace(value) || !Int32.TryParse(value, out i))
+                return null;
+            
+            return i;
         }
     }
 }

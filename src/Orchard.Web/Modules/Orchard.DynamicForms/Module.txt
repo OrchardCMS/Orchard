@@ -1,8 +1,8 @@
-﻿Name: Custom Forms
+Name: Dynamic Forms
 AntiForgery: enabled
 Author: The Orchard Team
-Website: http://orchardcustomforms.codeplex.com
-Version: 1.9.1
+Website: http://www.orchardproject.net/
+Version: 1.9.2
 OrchardVersion: 1.9
 Description: Create custom forms like contact forms using layouts.
 Features:

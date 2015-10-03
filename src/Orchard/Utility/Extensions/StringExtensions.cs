@@ -16,8 +16,7 @@ namespace Orchard.Utility.Extensions {
             var sb = new StringBuilder(camel);
 
             for (int i = camel.Length-1; i>0; i--) {
-                var current = sb[i];
-                if('A' <= current && current <= 'Z') {
+                if(char.IsUpper(sb[i])) {
                     sb.Insert(i, ' ');
                 }
             }

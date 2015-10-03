@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
@@ -49,10 +47,13 @@ namespace Orchard.Search.Drivers {
                     var model = new SearchSettingsFieldsViewModel();
                     var searchFields = part.SearchFields;
 
+                    model.DisplayType = part.DisplayType;
+
                     if (updater != null) {
                         if (updater.TryUpdateModel(model, Prefix, null, null)) {
                             part.SearchFields = model.Entries.ToDictionary(x => x.Index, x => x.Fields.Where(e => e.Selected).Select(e => e.Field).ToArray());
                             part.FilterCulture = model.FilterCulture;
+                            part.DisplayType = model.DisplayType;
                         }
                     }
                     else if (_indexManager.HasIndexProvider()) {
@@ -79,15 +80,14 @@ namespace Orchard.Search.Drivers {
         }
 
         protected override void Importing(SearchSettingsPart part, ImportContentContext context) {
-            var xElement = context.Data.Element(part.PartDefinition.Name);
-            if (xElement == null) return;
-            
-            var searchFields = xElement.Attribute("SearchFields");
-            if (searchFields != null) {
-                searchFields.Remove();
-
-                part.Store("SearchFields", searchFields.Value); 
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
             }
+
+            context.ImportAttribute(part.PartDefinition.Name, "SearchFields", value => {
+                part.Store("SearchFields", value);
+            });
         }
     }
 }

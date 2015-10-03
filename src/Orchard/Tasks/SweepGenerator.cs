@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Timers;
 using Orchard.Logging;
+using Orchard.Exceptions;
 
 namespace Orchard.Tasks {
 
@@ -41,7 +42,7 @@ namespace Orchard.Tasks {
         }
 
         void Elapsed(object sender, ElapsedEventArgs e) {
-            // Current implementation disallows re-entrancy.
+            // current implementation disallows re-entrancy
             if (!System.Threading.Monitor.TryEnter(_timer))
                 return;
 
@@ -51,6 +52,10 @@ namespace Orchard.Tasks {
                 }
             }
             catch (Exception ex) {
+                if (ex.IsFatal()) {
+                    throw;
+                }
+
                 Logger.Warning(ex, "Problem in background tasks");
             }
             finally {
@@ -60,7 +65,7 @@ namespace Orchard.Tasks {
 
         public void DoWork() {
             using (var scope = _workContextAccessor.CreateWorkContextScope()) {
-                // Resolve the manager and invoke it.
+                // resolve the manager and invoke it
                 var manager = scope.Resolve<IBackgroundService>();
                 manager.Sweep();
             }

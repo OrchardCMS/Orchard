@@ -98,13 +98,14 @@ namespace Orchard.Recipes.Providers.Executors {
                     var nextIdentity = importContentSession.GetNextInBatch();
                     while (nextIdentity != null) {
                         var itemId = "";
-                        if (elementDictionary[nextIdentity.ToString()].HasAttributes) {
-                            itemId = elementDictionary[nextIdentity.ToString()].FirstAttribute.Value;
+                        var nextIdentityValue = nextIdentity.ToString();
+                        if (elementDictionary[nextIdentityValue].HasAttributes) {
+                            itemId = elementDictionary[nextIdentityValue].FirstAttribute.Value;
                         }
                         Logger.Information("Importing data item '{0}' (item {1}/{2}).", itemId, itemIndex + 1, elementDictionary.Count);
                         try {
                             _orchardServices.ContentManager.Import(
-                                elementDictionary[nextIdentity.ToString()],
+                                elementDictionary[nextIdentityValue],
                                 importContentSession);
                         }
                         catch (Exception ex) {

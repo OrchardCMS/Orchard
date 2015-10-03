@@ -16,6 +16,7 @@ namespace Orchard.Search.ViewModels {
 
         public IList<IndexSettingsEntry> Entries { get; set; }
         public bool FilterCulture { get; set; }
+        public string DisplayType { get; set; }
     }
 
     public class IndexSettingsEntry {

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Threading;
 using Orchard.AuditTrail.Models;
 using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
@@ -13,7 +12,6 @@ using Orchard.Tasks.Locking.Services;
 namespace Orchard.AuditTrail.Services {
     [OrchardFeature("Orchard.AuditTrail.Trimming")]
     public class AuditTrailTrimmingBackgroundTask : Component, IBackgroundTask {
-        private static readonly object _sweepLock = new object();
         private readonly ISiteService _siteService;
         private readonly IClock _clock;
         private readonly IAuditTrailManager _auditTrailManager;
@@ -36,33 +34,32 @@ namespace Orchard.AuditTrail.Services {
         }
 
         public void Sweep() {
-            if (Monitor.TryEnter(_sweepLock)) {
-                try {
-                    Logger.Debug("Beginning sweep.");
+            Logger.Debug("Beginning sweep.");
 
-                    // Only allow this task to run on one farm node at a time.
-                    DistributedLock @lock;
-                    if (_distributedLockService.TryAcquireLockForMachine(GetType().FullName, TimeSpan.FromHours(1), out @lock)) {
-                        using (@lock) {
+            try {
+                // Only allow this task to run on one farm node at a time.
+                IDistributedLock @lock;
+                if (_distributedLockService.TryAcquireLock(GetType().FullName, TimeSpan.FromHours(1), out @lock)) {
+                    using (@lock) {
 
-                            // We don't need to check the audit trail for events to remove every minute. Let's stick with twice a day.
-                            if (!GetIsTimeToTrim())
-                                return;
+                        // We don't need to check the audit trail for events to remove every minute. Let's stick with twice a day.
+                        if (!GetIsTimeToTrim())
+                            return;
 
-                            Logger.Debug("Starting audit trail trimming.");
-                            var deletedRecords = _auditTrailManager.Trim(TimeSpan.FromDays(Settings.RetentionPeriod));
-                            Logger.Debug("Audit trail trimming completed. {0} records were deleted.", deletedRecords.Count());
-                            Settings.LastRunUtc = _clock.UtcNow;
-                        }
+                        Logger.Debug("Starting audit trail trimming.");
+                        var deletedRecords = _auditTrailManager.Trim(TimeSpan.FromDays(Settings.RetentionPeriod));
+                        Logger.Debug("Audit trail trimming completed. {0} records were deleted.", deletedRecords.Count());
+                        Settings.LastRunUtc = _clock.UtcNow;
                     }
                 }
-                catch (Exception ex) {
-                    Logger.Error(ex, "Error during sweep.");
-                }
-                finally {
-                    Monitor.Exit(_sweepLock);
-                    Logger.Debug("Ending sweep.");
-                }
+                else
+                    Logger.Debug("Distributed lock could not be acquired; going back to sleep.");
+            }
+            catch (Exception ex) {
+                Logger.Error(ex, "Error during sweep.");
+            }
+            finally {
+                Logger.Debug("Ending sweep.");
             }
         }
 

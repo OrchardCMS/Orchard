@@ -358,6 +358,7 @@
     <Compile Include="Framework\Display\ElementCreatingDisplayShapeContext.cs" />
     <Compile Include="Framework\Drivers\ImportElementContext.cs" />
     <Compile Include="Framework\Drivers\ImportLayoutContext.cs" />
+    <Compile Include="Framework\Elements\IElement.cs" />
     <Compile Include="Handlers\ElementDriversCoordinator.cs" />
     <Compile Include="Handlers\ElementRuleCoordinator.cs" />
     <Compile Include="Helpers\DictionaryExtensions.cs" />
@@ -367,6 +368,7 @@
     <Compile Include="Helpers\PrefixHelper.cs" />
     <Compile Include="Helpers\JsonHelper.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
+    <Compile Include="Permissions.cs" />
     <Compile Include="Recipes\Builders\CustomElementsStep.cs" />
     <Compile Include="Recipes\Executors\CustomElementsStep.cs" />
     <Compile Include="Providers\BlueprintElementHarvester.cs" />
