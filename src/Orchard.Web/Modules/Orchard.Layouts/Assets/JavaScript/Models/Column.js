@@ -39,6 +39,8 @@
         };
 
         this.canSplit = function () {
+            if (this.isTemplated)
+                return false;
             return this.width > 1;
         };
 
@@ -63,34 +65,50 @@
         };
 
         this.canContractRight = function (connectAdjacent) {
+            if (this.isTemplated)
+                return false;
             return this.parent.canContractColumnRight(this, connectAdjacent);
         };
 
         this.contractRight = function (connectAdjacent) {
+            if (!this.canContractRight())
+                return;
             this.parent.contractColumnRight(this, connectAdjacent);
         };
 
         this.canExpandRight = function (connectAdjacent) {
+            if (this.isTemplated)
+                return false;
             return this.parent.canExpandColumnRight(this, connectAdjacent);
         };
 
         this.expandRight = function (connectAdjacent) {
+            if (!this.canExpandRight())
+                return;
             this.parent.expandColumnRight(this, connectAdjacent);
         };
 
         this.canExpandLeft = function (connectAdjacent) {
+            if (this.isTemplated)
+                return false;
             return this.parent.canExpandColumnLeft(this, connectAdjacent);
         };
 
         this.expandLeft = function (connectAdjacent) {
+            if (!this.canExpandLeft())
+                return;
             this.parent.expandColumnLeft(this, connectAdjacent);
         };
 
         this.canContractLeft = function (connectAdjacent) {
+            if (this.isTemplated)
+                return false;
             return this.parent.canContractColumnLeft(this, connectAdjacent);
         };
 
         this.contractLeft = function (connectAdjacent) {
+            if (!this.canContractLeft())
+                return;
             this.parent.contractColumnLeft(this, connectAdjacent);
         };
 
