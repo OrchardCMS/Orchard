@@ -83,6 +83,11 @@ namespace Orchard.Widgets.Drivers {
             context.ImportAttribute(part.PartDefinition.Name, "Title", x => part.Title = x);
             context.ImportAttribute(part.PartDefinition.Name, "Position", x => part.Position = x);
             context.ImportAttribute(part.PartDefinition.Name, "Zone", x => part.Zone = x);
+            context.ImportAttribute(part.PartDefinition.Name, "RenderTitle", x => {
+                if (!string.IsNullOrWhiteSpace(x)) {
+                    part.RenderTitle = Convert.ToBoolean(x);
+                }
+            });
             context.ImportAttribute(part.PartDefinition.Name, "Name", x => part.Name = x);
             context.ImportAttribute(part.PartDefinition.Name, "Title", x => {
                 if (!String.IsNullOrWhiteSpace(x))
