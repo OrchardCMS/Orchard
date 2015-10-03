@@ -71,7 +71,7 @@
         };
 
         this.contractRight = function (connectAdjacent) {
-            if (!this.canContractRight())
+            if (!this.canContractRight(connectAdjacent))
                 return;
             this.parent.contractColumnRight(this, connectAdjacent);
         };
@@ -83,7 +83,7 @@
         };
 
         this.expandRight = function (connectAdjacent) {
-            if (!this.canExpandRight())
+            if (!this.canExpandRight(connectAdjacent))
                 return;
             this.parent.expandColumnRight(this, connectAdjacent);
         };
@@ -95,7 +95,7 @@
         };
 
         this.expandLeft = function (connectAdjacent) {
-            if (!this.canExpandLeft())
+            if (!this.canExpandLeft(connectAdjacent))
                 return;
             this.parent.expandColumnLeft(this, connectAdjacent);
         };
@@ -107,7 +107,7 @@
         };
 
         this.contractLeft = function (connectAdjacent) {
-            if (!this.canContractLeft())
+            if (!this.canContractLeft(connectAdjacent))
                 return;
             this.parent.contractColumnLeft(this, connectAdjacent);
         };
