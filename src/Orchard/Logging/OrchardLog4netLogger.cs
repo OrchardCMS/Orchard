@@ -23,7 +23,7 @@ namespace Orchard.Logging {
             Logger = logger;
             Factory = factory;
 
-            _shellSettings = new Lazy<ShellSettings>(LoadSettings);
+             _shellSettings = new Lazy<ShellSettings>(LoadSettings, System.Threading.LazyThreadSafetyMode.PublicationOnly);
         }
 
         internal OrchardLog4netLogger() {
