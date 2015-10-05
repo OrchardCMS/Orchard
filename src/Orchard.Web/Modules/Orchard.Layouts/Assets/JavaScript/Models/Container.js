@@ -27,6 +27,13 @@
             });
         };
 
+        var _baseSetIsFocused = this.setIsFocused;
+        this.setIsFocused = function () {
+            if (this.getIsSealed())
+                return;
+            _baseSetIsFocused.call(this);
+        };
+
         this.addChild = function (child) {
             if (!_(this.children).contains(child) && (_(this.allowedChildTypes).contains(child.type) || child.isContainable))
                 this.children.push(child);

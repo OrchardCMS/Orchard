@@ -2,7 +2,7 @@
     <ul class="layout-panel layout-panel-main">
         <li class="layout-panel-item layout-panel-label">Row</li>
         @Display(New.LayoutEditor_Template_Properties(ElementTypeName: "row"))
-        <li class="layout-panel-item layout-panel-action" title="@T("Delete row (Del)")" ng-click="delete(element)">
+        <li class="layout-panel-item layout-panel-action" title="@T("Delete row (Del)")" ng-click="delete(element)" ng-class="{disabled: !element.canDelete()}">
             <i class="fa fa-remove"></i>
         </li>
         <li class="layout-panel-item layout-panel-action" title="@T("Move row up (Ctrl+Up)")" ng-click="element.moveUp()" ng-class="{disabled: !element.canMoveUp()}">
