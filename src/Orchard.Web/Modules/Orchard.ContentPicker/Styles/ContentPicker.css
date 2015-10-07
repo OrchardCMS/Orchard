@@ -32,6 +32,18 @@ body {
 
 }
 
+label[for="selectAll"]:before
+{
+    content:'';
+    display:block;
+    margin-top:20px;
+}
+
+label[for="selectAll"]
+{
+    display:inline;
+}
+
 .addSelected
 {
     margin-bottom: 10px;
