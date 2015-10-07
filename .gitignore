@@ -188,3 +188,7 @@ src/Orchard.Azure/Orchard.Azure.CloudService/Staging/
 #enable all /lib artifacts
 !lib/*/*.*
 */.vs/*
+src/Orchard.Web/Modules/Naxos*
+src/Orchard.Web/Modules/NogginBox.MenuItemLinkAlternates/
+src/Orchard.Web/Modules/Vandelay.Industries/
+src/Orchard.Web/Themes/Musicbox.Theme/
