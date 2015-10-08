@@ -380,7 +380,11 @@ namespace Orchard.Lists.Controllers {
         [HttpPost, ActionName("List")]
         [FormValueRequired("listViewName")]
         public ActionResult ChangeListView(int containerId, string listViewName, PagerParameters pagerParameters) {
-            var container = _containerService.Get(containerId);
+            var container = _containerService.Get(containerId, VersionOptions.Latest);
+            if (container == null || !container.Has<ContainerPart>()) {
+                return HttpNotFound();
+            }
+
             container.Record.AdminListViewName = listViewName;
             return RedirectToAction("List", new { containerId, page = pagerParameters.Page, pageSize = pagerParameters.PageSize });
         }
