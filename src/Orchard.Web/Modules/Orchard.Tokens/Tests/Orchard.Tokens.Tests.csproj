@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DateTokenTests.cs" />
+    <Compile Include="ListTokenTests.cs" />
     <Compile Include="StubClock.cs" />
     <Compile Include="StubOrchardServices.cs" />
     <Compile Include="StubWorkContextAccessor.cs" />
