@@ -1,0 +1,10 @@
+﻿@model TinyMce.Models.TinyMceSettingsPart
+<section class="tinymce-settings-section">
+    <h2>@T("TinyMCE Settings")</h2>
+    <fieldset>
+        @Html.LabelFor(m => m.TinyMceSettingsOverride, T("TinyMCE Initialization Script"))
+        @Html.TextAreaFor(m => m.TinyMceSettingsOverride, new { @class = "text large", @rows = "40" })
+        <span class="hint">@T("Override the default TinyMCE initialization script.")</span>
+    </fieldset>
+</section>
+
