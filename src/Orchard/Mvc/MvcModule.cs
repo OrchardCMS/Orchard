@@ -158,6 +158,17 @@ namespace Orchard.Mvc {
                 get { return false; }
             }
 
+            /// <summary>
+            /// Create an anonymous ID the same way as ASP.NET would.
+            /// Some users of an HttpRequestPlaceHolder object could expect this,
+            /// say CookieCultureSelector from module Orchard.CulturePicker.
+            /// </summary>
+            public override string AnonymousID {
+                get {
+                    return Guid.NewGuid().ToString("D", CultureInfo.InvariantCulture);
+                }
+            }
+
             // empty collection provided for background operation
             public override NameValueCollection Form {
                 get {
