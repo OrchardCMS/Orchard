@@ -8,18 +8,27 @@ using Orchard.CustomForms.Models;
 using Orchard.CustomForms.ViewModels;
 using Orchard.ContentManagement.Handlers;
 using System;
+using Orchard.Core.Contents.Settings;
+using Orchard.Security;
+using Orchard.Localization;
 
 namespace Orchard.CustomForms.Drivers {
     public class CustomFormPartDriver : ContentPartDriver<CustomFormPart> {
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly IOrchardServices _orchardServices;
+        private readonly IAuthorizationService _authService;
 
         public CustomFormPartDriver(
             IContentDefinitionManager contentDefinitionManager,
-            IOrchardServices orchardServices) {
+            IOrchardServices orchardServices,
+            IAuthorizationService authService) {
             _contentDefinitionManager = contentDefinitionManager;
             _orchardServices = orchardServices;
+            _authService = authService;
+            T = NullLocalizer.Instance;
         }
+
+        public Localizer T { get; set; }
 
         protected override DriverResult Display(CustomFormPart part, string displayType, dynamic shapeHelper) {
             // this method is used by the widget to render the form when it is displayed
@@ -55,6 +64,19 @@ namespace Orchard.CustomForms.Drivers {
             };
 
             updater.TryUpdateModel(viewModel, Prefix, null, null);
+
+            // Warn if the custom form is set to save a content item that is viewable by anonymous users (publicly accessible)
+            if (viewModel.CustomFormPart.SaveContentItem) {
+                // If it's draftable then don't display the warning because the generated content items won't be publicly accessible
+                var typeDefinition = _contentDefinitionManager.ListTypeDefinitions().Where(x => String.Equals(x.Name, viewModel.CustomFormPart.ContentType, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+                if (typeDefinition != null && !typeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable) {
+                    // Create a dummy content item of the specified type to check permissions against
+                    if (_authService.TryCheckAccess(Orchard.Core.Contents.Permissions.ViewContent, null, _orchardServices.ContentManager.New(viewModel.CustomFormPart.ContentType))) {
+                        _orchardServices.Notifier.Add(UI.Notify.NotifyType.Warning, T("Your custom form will save data to content items that are publicly accessible."));
+                    }
+                }
+            }
+
             return Editor(part, shapeHelper);
         }
 
