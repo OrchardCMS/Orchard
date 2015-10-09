@@ -189,6 +189,8 @@ src/Orchard.Azure/Orchard.Azure.CloudService/Staging/
 !lib/*/*.*
 */.vs/*
 src/Orchard.Web/Modules/Naxos*
+src/Orchard.Web/Modules/Musicbox*
 src/Orchard.Web/Modules/NogginBox.MenuItemLinkAlternates/
 src/Orchard.Web/Modules/Vandelay.Industries/
 src/Orchard.Web/Themes/Musicbox.Theme/
+src/Tools/Orchard/Properties/app.manifest
