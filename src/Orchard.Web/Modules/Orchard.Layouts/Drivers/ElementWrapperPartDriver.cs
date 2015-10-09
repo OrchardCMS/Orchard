@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Diagnostics.Eventing.Reader;
+using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
@@ -100,20 +102,24 @@ namespace Orchard.Layouts.Drivers {
         }
 
         protected override void Importing(ElementWrapperPart part, ImportContentContext context) {
-            var root = context.Data.Element(part.PartDefinition.Name);
-
-            if (root == null)
-                return;
-
-            var exportedData = root.Value;
-            var describeContext = CreateDescribeContext(part);
-            var element = _serializer.Deserialize(exportedData, describeContext);
-
-            _elementManager.Importing(new[]{element}, new ImportLayoutContext { Session = new ImportContentContextWrapper(context)});
-            part.ElementData = element.Data.Serialize();
+            HandleImportEvent(part, context, (describeContext, element) => {
+                _elementManager.Importing(new[] { element }, new ImportLayoutContext { Session = new ImportContentContextWrapper(context) });
+            });
         }
 
         protected override void Imported(ElementWrapperPart part, ImportContentContext context) {
+            HandleImportEvent(part, context, (describeContext, element) => {
+                _elementManager.Imported(new[] { element }, new ImportLayoutContext { Session = new ImportContentContextWrapper(context) });
+            });
+        }
+
+        protected override void ImportCompleted(ElementWrapperPart part, ImportContentContext context) {
+            HandleImportEvent(part, context, (describeContext, element) => {
+                _elementManager.ImportCompleted(new[] { element }, new ImportLayoutContext { Session = new ImportContentContextWrapper(context) });
+            });
+        }
+
+        private void HandleImportEvent(ElementWrapperPart part, ImportContentContext context, Action<DescribeElementsContext, Element> callback) {
             var root = context.Data.Element(part.PartDefinition.Name);
 
             if (root == null)
@@ -123,7 +129,7 @@ namespace Orchard.Layouts.Drivers {
             var describeContext = CreateDescribeContext(part);
             var element = _serializer.Deserialize(exportedData, describeContext);
 
-            _elementManager.Imported(new[] { element }, new ImportLayoutContext { Session = new ImportContentContextWrapper(context) });
+            callback(describeContext, element);
             part.ElementData = element.Data.Serialize();
         }
 

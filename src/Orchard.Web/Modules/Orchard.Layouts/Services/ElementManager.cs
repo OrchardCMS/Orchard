@@ -201,6 +201,18 @@ namespace Orchard.Layouts.Services {
             });
         }
 
+        public void ImportCompleted(IEnumerable<Element> elements, ImportLayoutContext context) {
+            InvokeDriver(elements, (driver, element) => {
+                var importElementContext = new ImportElementContext {
+                    Layout = context.Layout,
+                    Element = element,
+                    ExportableData = element.ExportableData,
+                    Session = context.Session
+                };
+                driver.ImportCompleted(importElementContext);
+            });
+        }
+
         private IDictionary<string, Category> GetCategories() {
             var providers = _categoryProviders.Value;
             var categories = providers.SelectMany(x => x.GetCategories());

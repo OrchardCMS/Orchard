@@ -26,5 +26,6 @@ namespace Orchard.Layouts.Services {
         void Exported(IEnumerable<Element> elements, ExportLayoutContext context);
         void Importing(IEnumerable<Element> elements, ImportLayoutContext context);
         void Imported(IEnumerable<Element> elements, ImportLayoutContext context);
+        void ImportCompleted(IEnumerable<Element> elements, ImportLayoutContext context);
     }
 }

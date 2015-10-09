@@ -57,5 +57,6 @@ namespace Orchard.Layouts.Services {
         void Exported(ExportLayoutContext context);
         void Importing(ImportLayoutContext context);
         void Imported(ImportLayoutContext context);
+        void ImportCompleted(ImportLayoutContext context);
     }
 }

@@ -91,6 +91,14 @@ namespace Orchard.Layouts.Services {
             context.Layout.LayoutData = _serializer.Serialize(elementTree);
         }
 
+        public void ImportCompleted(ImportLayoutContext context) {
+            var elementTree = LoadElements(context.Layout).ToArray();
+            var elements = elementTree.Flatten().ToArray();
+
+            _elementManager.ImportCompleted(elements, context);
+            context.Layout.LayoutData = _serializer.Serialize(elementTree);
+        }
+
         public dynamic RenderLayout(string data, string displayType = null, IContent content = null) {
             var elements = _serializer.Deserialize(data, new DescribeElementsContext { Content = content });
             var layoutRoot = _elementDisplay.DisplayElements(elements, content, displayType);

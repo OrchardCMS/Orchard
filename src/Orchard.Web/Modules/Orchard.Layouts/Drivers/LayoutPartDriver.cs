@@ -144,29 +144,31 @@ namespace Orchard.Layouts.Drivers {
         }
 
         protected override void Importing(LayoutPart part, ImportContentContext context) {
-            // Don't do anything if the tag is not specified.
-            if (context.Data.Element(part.PartDefinition.Name) == null) {
-                return;
-            }
-
-            context.ImportChildEl(part.PartDefinition.Name, "LayoutData", s => {
-                part.LayoutData = s;
-                _layoutManager.Importing(new ImportLayoutContext {
-                    Layout = part,
-                    Session = new ImportContentContextWrapper(context)
+            HandleImportEvent(part, context, importLayoutContext => {
+                context.ImportChildEl(part.PartDefinition.Name, "LayoutData", s => {
+                    part.LayoutData = s;
+                    _layoutManager.Importing(importLayoutContext);
                 });
-            });
 
-            context.ImportAttribute(part.PartDefinition.Name, "TemplateId", s => part.TemplateId = GetTemplateId(context, s));
+                context.ImportAttribute(part.PartDefinition.Name, "TemplateId", s => part.TemplateId = GetTemplateId(context, s));
+            });
         }
 
         protected override void Imported(LayoutPart part, ImportContentContext context) {
+            HandleImportEvent(part, context, importLayoutContext => _layoutManager.Imported(importLayoutContext));
+        }
+
+        protected override void ImportCompleted(LayoutPart part, ImportContentContext context) {
+            HandleImportEvent(part, context, importLayoutContext => _layoutManager.ImportCompleted(importLayoutContext));
+        }
+
+        private void HandleImportEvent(LayoutPart part, ImportContentContext context, Action<ImportLayoutContext> callback) {
             // Don't do anything if the tag is not specified.
             if (context.Data.Element(part.PartDefinition.Name) == null) {
                 return;
             }
-            
-            _layoutManager.Imported(new ImportLayoutContext {
+
+            callback(new ImportLayoutContext {
                 Layout = part,
                 Session = new ImportContentContextWrapper(context)
             });

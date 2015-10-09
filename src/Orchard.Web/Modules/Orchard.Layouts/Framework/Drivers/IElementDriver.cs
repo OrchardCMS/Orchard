@@ -15,5 +15,6 @@ namespace Orchard.Layouts.Framework.Drivers {
         void Exported(ExportElementContext context);
         void Importing(ImportElementContext context);
         void Imported(ImportElementContext context);
+        void ImportCompleted(ImportElementContext context);
     }
 }
