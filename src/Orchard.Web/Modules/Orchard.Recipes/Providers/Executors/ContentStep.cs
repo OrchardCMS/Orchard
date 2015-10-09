@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Linq;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Handlers;
 using Orchard.Data;
 using Orchard.Localization;
 using Orchard.Logging;
@@ -15,17 +13,14 @@ namespace Orchard.Recipes.Providers.Executors {
     public class ContentStep : RecipeExecutionStep {
         private readonly IOrchardServices _orchardServices;
         private readonly ITransactionManager _transactionManager;
-        private readonly Lazy<IEnumerable<IContentHandler>> _handlers;
 
         public ContentStep(
             IOrchardServices orchardServices,
             ITransactionManager transactionManager,
-            Lazy<IEnumerable<IContentHandler>> handlers,
             RecipeExecutionLogger logger) : base(logger) {
 
             _orchardServices = orchardServices;
             _transactionManager = transactionManager;
-            _handlers = handlers;
             BatchSize = 64;
         }
 
@@ -43,10 +38,6 @@ namespace Orchard.Recipes.Providers.Executors {
 
         public override LocalizedString Description {
             get { return T("Provides additional configuration for the Content recipe step."); }
-        }
-
-        public IEnumerable<IContentHandler> Handlers {
-            get { return _handlers.Value; }
         }
 
         public int? BatchSize { get; set; }
@@ -98,8 +89,6 @@ namespace Orchard.Recipes.Providers.Executors {
 
             // Run the import.
             try {
-                var importedContentItems = new List<ImportContentContext>();
-
                 while (startIndex < elementDictionary.Count) {
                     Logger.Debug("Importing batch starting at index {0}.", startIndex);
                     importContentSession.InitializeBatch(startIndex, batchSize);
@@ -115,17 +104,9 @@ namespace Orchard.Recipes.Providers.Executors {
                         }
                         Logger.Information("Importing data item '{0}' (item {1}/{2}).", itemId, itemIndex + 1, elementDictionary.Count);
                         try {
-                            var contentElement = elementDictionary[nextIdentityValue];
-                            _orchardServices.ContentManager.Import(contentElement, importContentSession, item => {
-
-                                // Invoke 'Importing' on the content item,
-                                var importContentContext = new ImportContentContext(item, contentElement, importContentSession);
-                                foreach (var contentHandler in Handlers) {
-                                    contentHandler.Importing(importContentContext);
-                                }
-
-                                importedContentItems.Add(importContentContext);
-                            });
+                            _orchardServices.ContentManager.Import(
+                                elementDictionary[nextIdentityValue],
+                                importContentSession);
                         }
                         catch (Exception ex) {
                             Logger.Error(ex, "Error while importing data item '{0}'.", itemId);
@@ -134,6 +115,7 @@ namespace Orchard.Recipes.Providers.Executors {
                         itemIndex++;
                         nextIdentity = importContentSession.GetNextInBatch();
                     }
+
                     startIndex += batchSize;
 
                     // Create a new transaction for each batch.
@@ -142,13 +124,6 @@ namespace Orchard.Recipes.Providers.Executors {
                     }
 
                     Logger.Debug("Finished importing batch starting at index {0}.", startIndex);
-                }
-
-                // Invoke 'Imported' event on all imported content items.
-                foreach (var importContentContext in importedContentItems) {
-                    foreach (var contentHandler in Handlers) {
-                        contentHandler.Imported(importContentContext);
-                    }
                 }
             }
             catch (Exception) {
