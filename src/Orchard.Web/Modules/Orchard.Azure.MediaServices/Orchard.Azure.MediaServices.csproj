@@ -89,7 +89,6 @@
       <HintPath>..\..\..\..\lib\windowsazure\Microsoft.WindowsAzure.MediaServices.Client.Common.BlobTransfer.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.WindowsAzure.Storage">
-      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\lib\windowsazure\Microsoft.WindowsAzure.Storage.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
@@ -289,7 +288,6 @@
     <Content Include="Assets\TypeScript\cloudmedia-videoplayer-main.ts" />
     <Content Include="Assets\TypeScript\Typings\moment.d.ts" />
     <Content Include="Assets\TypeScript\Typings\underscore.d.ts" />
-    <Content Include="Assets\TypeScript\Typings\uri.d.ts" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
@@ -552,7 +550,13 @@
   <ItemGroup>
     <None Include="Assets\JavaScript\Lib\MPEG Dash Notice.docx" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\TypeScript\Typings\moment-node.d.ts" />
+    <Content Include="Assets\TypeScript\Typings\URIjs.d.ts" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

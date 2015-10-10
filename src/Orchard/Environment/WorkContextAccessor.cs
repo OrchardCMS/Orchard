@@ -27,7 +27,11 @@ namespace Orchard.Environment {
         }
 
         public WorkContext GetContext(HttpContextBase httpContext) {
-            return httpContext.Items[_workContextKey] as WorkContext;
+            if (!httpContext.IsBackgroundContext())
+                return httpContext.Items[_workContextKey] as WorkContext;
+
+            WorkContext workContext;
+            return EnsureThreadStaticContexts().TryGetValue(_workContextKey, out workContext) ? workContext : null;
         }
 
         public WorkContext GetContext() {

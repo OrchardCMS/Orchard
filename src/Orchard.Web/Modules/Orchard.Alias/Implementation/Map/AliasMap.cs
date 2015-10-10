@@ -171,7 +171,8 @@ namespace Orchard.Alias.Implementation.Map {
             }
 
             if (match == null) {
-                var foundPath = focus.Paths.Keys.FirstOrDefault();
+                // Get the shortest path available to ensure the "home" alias is always taken if present.
+                var foundPath = focus.Paths.Keys.OrderBy(x => x.Length).FirstOrDefault();
                 if (foundPath != null) {
                     // Here the deepest match is being created, which will be populated as it rises back up the stack, but save the path here.
                     // Within this function it's used to count how many items match so we get the best one; but when it's returned

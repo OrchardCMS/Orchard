@@ -110,7 +110,7 @@ this.ScenarioSetup(scenarioInfo);
                         "Title.Title",
                         "Super Duper"});
             table2.AddRow(new string[] {
-                        "AutoroutePart.LayoutEditor.Data",
+                        "LayoutPart.LayoutEditor.Data",
                         @"{ ""type"": ""Content"", ""data"": ""TypeName=Orchard.Layouts.Elements.Text&Content=This+is+super+number+two"", ""isTemplated"": false, ""contentType"": ""Orchard.Layouts.Elements.Text"", ""contentTypeLabel"": ""Text"", ""contentTypeClass"": ""text"", ""html"": ""This is super number two"", ""hasEditor"": true }"});
 #line 25
         testRunner.And("I fill in", ((string)(null)), table2, "And ");
@@ -145,7 +145,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 43
     testRunner.When("I go to \"another\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 44
-    testRunner.Then("the status should be 404 \"Not Found\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+    testRunner.Then("the status should be 200 \"OK\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 47
     testRunner.When("I go to \"Admin/Contents/Create/Page\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden

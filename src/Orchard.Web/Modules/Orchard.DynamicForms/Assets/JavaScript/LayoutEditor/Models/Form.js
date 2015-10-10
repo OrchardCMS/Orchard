@@ -33,10 +33,6 @@
             });
         }
 
-        this.allowSealedFocus = function () {
-            return this.children.length === 0;
-        };
-
         this.setChildren = function (children) {
             this.children = children;
             _(this.children).each(function (child) {
