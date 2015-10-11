@@ -100,7 +100,7 @@ namespace Orchard.PublishLater.Drivers {
                         updater.AddModelError(Prefix, T("'{0} {1}' could not be parsed as a valid date and time.", model.Editor.Date, model.Editor.Time));                                             
                     }
                 }
-                else if (!String.IsNullOrWhiteSpace(model.Editor.Date) || !String.IsNullOrWhiteSpace(model.Editor.Time)) {
+                else {
                     updater.AddModelError(Prefix, T("Both the date and time need to be specified for when this is to be published. If you don't want to schedule publishing then click Save or Publish Now."));
                 }
             }
@@ -110,10 +110,14 @@ namespace Orchard.PublishLater.Drivers {
         }
 
         protected override void Importing(PublishLaterPart part, ImportContentContext context) {
-            var scheduledUtc = context.Attribute(part.PartDefinition.Name, "ScheduledPublishUtc");
-            if (scheduledUtc != null) {
-                part.ScheduledPublishUtc.Value = XmlConvert.ToDateTime(scheduledUtc, XmlDateTimeSerializationMode.Utc);
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
             }
+
+            context.ImportAttribute(part.PartDefinition.Name, "ScheduledPublishUtc", scheduledUtc =>
+                part.ScheduledPublishUtc.Value = XmlConvert.ToDateTime(scheduledUtc, XmlDateTimeSerializationMode.Utc)
+            );
         }
 
         protected override void Exporting(PublishLaterPart part, ExportContentContext context) {

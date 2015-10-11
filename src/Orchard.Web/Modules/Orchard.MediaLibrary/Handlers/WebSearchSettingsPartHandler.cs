@@ -1,11 +1,9 @@
-﻿using JetBrains.Annotations;
-using Orchard.ContentManagement;
+﻿using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
 using Orchard.MediaLibrary.Models;
 
 namespace Orchard.MediaLibrary.Handlers {
-    [UsedImplicitly]
     public class WebSearchSettingsPartHandler : ContentHandler {
         public WebSearchSettingsPartHandler() {
             T = NullLocalizer.Instance;

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using JetBrains.Annotations;
 using Orchard.Comments.Models;
 using Orchard.Comments.Services;
 using Orchard.Comments.Settings;
@@ -9,7 +8,6 @@ using Orchard.ContentManagement.Drivers;
 using System.Collections.Generic;
 
 namespace Orchard.Comments.Drivers {
-    [UsedImplicitly]
     public class CommentsPartDriver : ContentPartDriver<CommentsPart> {
         private readonly ICommentService _commentService;
         private readonly IContentManager _contentManager;
@@ -113,20 +111,22 @@ namespace Orchard.Comments.Drivers {
         }
 
         protected override void Importing(CommentsPart part, ContentManagement.Handlers.ImportContentContext context) {
-            var commentsShown = context.Attribute(part.PartDefinition.Name, "CommentsShown");
-            if (commentsShown != null) {
-                part.CommentsShown = Convert.ToBoolean(commentsShown);
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
             }
 
-            var commentsActive = context.Attribute(part.PartDefinition.Name, "CommentsActive");
-            if (commentsActive != null) {
-                part.CommentsActive = Convert.ToBoolean(commentsActive);
-            }
+            context.ImportAttribute(part.PartDefinition.Name, "CommentsShown", commentsShown =>
+                part.CommentsShown = Convert.ToBoolean(commentsShown)
+            );
 
-            var threadedComments = context.Attribute(part.PartDefinition.Name, "ThreadedComments");
-            if (threadedComments != null) {
-                part.ThreadedComments = Convert.ToBoolean(threadedComments);
-            }
+            context.ImportAttribute(part.PartDefinition.Name, "CommentsActive", commentsActive =>
+                part.CommentsActive = Convert.ToBoolean(commentsActive)
+            );
+
+            context.ImportAttribute(part.PartDefinition.Name, "ThreadedComments", threadedComments =>
+                part.ThreadedComments = Convert.ToBoolean(threadedComments)
+            );
         }
 
         protected override void Exporting(CommentsPart part, ContentManagement.Handlers.ExportContentContext context) {

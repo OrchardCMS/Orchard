@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Orchard.Caching;
+using Orchard.ContentManagement;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.WebSite;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Utility.Extensions;
+using Orchard.Exceptions;
 
 namespace Orchard.Environment.Extensions.Folders {
     public class ExtensionHarvester : IExtensionHarvester {
@@ -29,6 +31,7 @@ namespace Orchard.Environment.Extensions.Folders {
         private const string PrioritySection = "priority";
         private const string FeaturesSection = "features";
         private const string SessionStateSection = "sessionstate";
+        private const string LifecycleStatusSection = "lifecyclestatus";
 
         private readonly ICacheManager _cacheManager;
         private readonly IWebSiteFolder _webSiteFolder;
@@ -55,7 +58,7 @@ namespace Orchard.Environment.Extensions.Folders {
         private IEnumerable<ExtensionDescriptor> HarvestExtensions(string path, string extensionType, string manifestName, bool manifestIsOptional) {
             string key = string.Format("{0}-{1}-{2}", path, manifestName, extensionType);
 
-            return _cacheManager.Get(key, ctx => {
+            return _cacheManager.Get(key, true, ctx => {
                 if (!DisableMonitoring) {
                     Logger.Debug("Monitoring virtual path \"{0}\"", path);
                     ctx.Monitor(_webSiteFolder.WhenPathChanges(path));
@@ -98,6 +101,9 @@ namespace Orchard.Environment.Extensions.Folders {
                 }
                 catch (Exception ex) {
                     // Ignore invalid module manifests
+                    if (ex.IsFatal()) {
+                        throw;
+                    } 
                     Logger.Error(ex, "The module '{0}' could not be loaded. It was ignored.", extensionId);
                     _criticalErrorProvider.RegisterErrorMessage(T("The extension '{0}' manifest could not be loaded. It was ignored.", extensionId));
                 }
@@ -123,7 +129,8 @@ namespace Orchard.Environment.Extensions.Folders {
                 AntiForgery = GetValue(manifest, AntiForgerySection),
                 Zones = GetValue(manifest, ZonesSection),
                 BaseTheme = GetValue(manifest, BaseThemeSection),
-                SessionState = GetValue(manifest, SessionStateSection)
+                SessionState = GetValue(manifest, SessionStateSection),
+                LifecycleStatus = GetValue(manifest, LifecycleStatusSection, LifecycleStatus.Production)
             };
             extensionDescriptor.Features = GetFeaturesForExtension(manifest, extensionDescriptor);
 
@@ -131,7 +138,7 @@ namespace Orchard.Environment.Extensions.Folders {
         }
 
         private ExtensionDescriptor GetExtensionDescriptor(string locationPath, string extensionId, string extensionType, string manifestPath, bool manifestIsOptional) {
-            return _cacheManager.Get(manifestPath, context => {
+            return _cacheManager.Get(manifestPath, true, context => {
                 if (!DisableMonitoring) {
                     Logger.Debug("Monitoring virtual path \"{0}\"", manifestPath);
                     context.Monitor(_webSiteFolder.WhenPathChanges(manifestPath));
@@ -215,6 +222,9 @@ namespace Orchard.Environment.Extensions.Folders {
                             break;
                         case SessionStateSection:
                             manifest.Add(SessionStateSection, field[1]);
+                            break;
+                        case LifecycleStatusSection:
+                            manifest.Add(LifecycleStatusSection, field[1]);
                             break;
                         case FeaturesSection:
                             manifest.Add(FeaturesSection, reader.ReadToEnd());
@@ -353,6 +363,11 @@ namespace Orchard.Environment.Extensions.Folders {
         private static string GetValue(IDictionary<string, string> fields, string key) {
             string value;
             return fields.TryGetValue(key, out value) ? value : null;
+        }
+
+        private static T GetValue<T>(IDictionary<string, string> fields, string key, T defaultValue = default(T)) {
+            var value = GetValue(fields, key);
+            return String.IsNullOrWhiteSpace(value) ? defaultValue : XmlHelper.Parse<T>(value);
         }
     }
 }

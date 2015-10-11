@@ -26,8 +26,6 @@ namespace Orchard.Core.Containers.ViewModels {
 
     public enum SortDirection {
         Ascending,
-        Descending,
-        Created,
-        DisplayText
+        Descending
     }
 }

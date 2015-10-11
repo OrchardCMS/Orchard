@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Text;
 using NHibernate.Dialect;
@@ -10,8 +11,10 @@ namespace Orchard.Data.Migration.Interpreters {
     public class MySqlCommandInterpreter : ICommandInterpreter<AlterColumnCommand> {
         private readonly Lazy<Dialect> _dialectLazy;
         private readonly ShellSettings _shellSettings;
+        private readonly DefaultDataMigrationInterpreter _dataMigrationInterpreter;
 
-        public MySqlCommandInterpreter() {
+        public MySqlCommandInterpreter(DefaultDataMigrationInterpreter dataMigrationInterpreter) {
+            _dataMigrationInterpreter = dataMigrationInterpreter;
             T = NullLocalizer.Instance;
         }
 
@@ -34,6 +37,7 @@ namespace Orchard.Data.Migration.Interpreters {
             builder.AppendFormat("alter table {0} modify column {1} ",
                             _dialectLazy.Value.QuoteForTableName(PrefixTableName(command.TableName)),
                             _dialectLazy.Value.QuoteForColumnName(command.ColumnName));
+            var initLength = builder.Length;
 
             // type
             if (command.DbType != DbType.Object) {
@@ -46,13 +50,31 @@ namespace Orchard.Data.Migration.Interpreters {
             }
 
             // [default value]
+            var builder2 = new StringBuilder();
+
+            builder2.AppendFormat("alter table {0} alter column {1} ",
+                            _dialectLazy.Value.QuoteForTableName(PrefixTableName(command.TableName)),
+                            _dialectLazy.Value.QuoteForColumnName(command.ColumnName));
+            var initLength2 = builder2.Length;
+            
             if (command.Default != null) {
-                builder.Append(" set default ").Append(DefaultDataMigrationInterpreter.ConvertToSqlValue(command.Default)).Append(" ");
+                builder2.Append(" set default ").Append(_dataMigrationInterpreter.ConvertToSqlValue(command.Default)).Append(" ");
             }
 
-            return new [] {
-                builder.ToString()
-            };
+            // result
+            var result = new List<string>();
+
+            if (builder.Length > initLength)
+            {
+                result.Add(builder.ToString());
+            }
+
+            if (builder2.Length > initLength2)
+            {
+                result.Add(builder2.ToString());
+            }
+
+            return result.ToArray();
         }
 
         private string PrefixTableName(string tableName) {

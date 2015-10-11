@@ -23,10 +23,6 @@ namespace Orchard.Tests.Tasks {
                 .Setup(x => x.Current())
                 .Returns(() => null);
 
-            container.Mock<IHttpContextAccessor>()
-                .Setup(x => x.CreateContext(It.IsAny<ILifetimeScope>()))
-                .Returns(() => new StubHttpContext());
-
             container.Mock<IWorkContextEvents>()
                 .Setup(x => x.Started());
         }

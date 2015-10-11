@@ -159,8 +159,10 @@
     <Compile Include="Packaging\Services\FileBasedProjectSystemTests.cs" />
     <Compile Include="Packaging\Services\FolderUpdaterTests.cs" />
     <Compile Include="Packaging\Services\PackageInstallerTests.cs" />
-    <Compile Include="Recipes\RecipeHandlers\ModuleRecipeHandlerTest.cs" />
-    <Compile Include="Recipes\RecipeHandlers\ThemeRecipeHandlerTest.cs" />
+    <Compile Include="Recipes\RecipeHandlers\RecipeParserTest.cs" />
+    <Compile Include="Recipes\RecipeHandlers\RecipeExecutionStepHandlerTest.cs" />
+    <Compile Include="Recipes\RecipeHandlers\ModuleStepTest.cs" />
+    <Compile Include="Recipes\RecipeHandlers\ThemeStepTest.cs" />
     <Compile Include="Recipes\Services\RecipeManagerTests.cs" />
     <Compile Include="Scripting.Dlr\EvaluatorTests.cs" />
     <Compile Include="Scripting\EvaluatorTestsBase.cs" />
@@ -205,6 +207,7 @@
     <ProjectReference Include="..\Orchard.Web\Core\Orchard.Core.csproj">
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
+      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Web\Modules\Lucene\Lucene.csproj">
       <Project>{D5D447D7-EF8E-43A6-B9A4-3B025DD9F45D}</Project>
@@ -278,6 +281,10 @@
       <Project>{5D0F00F0-26C9-4785-AD61-B85710C60EB0}</Project>
       <Name>Orchard.Tags</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.TaskLease\Orchard.TaskLease.csproj">
+      <Project>{3f72a4e9-7b72-4260-b010-c16ec54f9baf}</Project>
+      <Name>Orchard.TaskLease</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Themes\Orchard.Themes.csproj">
       <Project>{CDE24A24-01D3-403C-84B9-37722E18DFB7}</Project>
       <Name>Orchard.Themes</Name>
@@ -301,6 +308,7 @@
     <ProjectReference Include="..\Orchard\Orchard.Framework.csproj">
       <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
       <Name>Orchard.Framework</Name>
+      <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -332,6 +340,12 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Recipes\Services\FoldersData\Sample2\Module.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Recipes\Services\FoldersData\Sample2\Recipes\duplicate-steps.recipe.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

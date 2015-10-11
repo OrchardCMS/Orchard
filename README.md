@@ -1,5 +1,12 @@
 # Orchard
+
 Orchard is a free, open source, community-focused Content Management System built on the ASP.NET MVC platform.
+
+[![Join the chat at https://gitter.im/OrchardCMS/Orchard](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/OrchardCMS/Orchard?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
+You can try it for free on [Dotnest.com](https://dotnest.com) or on Microsoft Azure by clicking on this button
+
+[![Deploy to Azure](https://azuredeploy.net/deploybutton.png)](https://ms.portal.azure.com/#create/OutercurveFoundation.OrchardCMS.0.5.9)
 
 ## About The Orchard Project
 
@@ -16,8 +23,8 @@ Our mission is to empower our users and foster a dedicated and diverse community
 There are many ways you can [contribute to Orchard](http://orchardproject.net/contribution): you can [fix bugs](https://github.com/OrchardCMS/Orchard/issues), contribute modules and themes to [our gallery](http://gallery.orchardproject.net/), [write documentation](https://github.com/OrchardCMS/OrchardDoc), [translate Orchard](http://orchardproject.net/localize), or answer questions [on our forums](http://orchard.codeplex.com/discussions) and [on Stack Overflow](http://stackoverflow.com/questions/tagged/orchardcms).
 
 ## Project Status
-Orchard is currently in version 1.8.1. We invite participation by the developer community in shaping the project’s direction, so that we can publicly validate our designs and development approach. 
-Our 1.8.1 release is available from our Downloads page, and is easy to [Install Orchard using the Web Platform Installer](http://www.orchardproject.net/docs/Installing-Orchard.ashx). We encourage interested developers to check out the source code on the Orchard Github site and get involved with the project.
+Orchard is currently in version 1.9.1. We invite participation by the developer community in shaping the project’s direction, so that we can publicly validate our designs and development approach. 
+Our 1.9.1 release is available from our Downloads page, and is easy to [Install Orchard using the Web Platform Installer](http://www.orchardproject.net/docs/Installing-Orchard.ashx). We encourage interested developers to check out the source code on the Orchard Github site and get involved with the project.
 
 * [Download the latest release](https://github.com/OrchardCMS/Orchard/releases)
 * [Feature roadmap](http://www.orchardproject.net/docs/feature-roadmap.ashx)

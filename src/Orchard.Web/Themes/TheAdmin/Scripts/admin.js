@@ -68,11 +68,17 @@
             return false;
         }
 
-        return confirm(confirmRemoveMessage);
+    	// use a custom message if its set in data-message
+        var dataMessage = $(this).data('message');
+        if (dataMessage === undefined) {
+        	dataMessage = confirmRemoveMessage;
+        }
+
+        return confirm(dataMessage);
     });
 
     $(".check-all").change(function () {
-        $(this).parents("table.items").find(":checkbox:not(:disabled)").prop('checked', $(this).prop("checked"));
+        $("input[type=checkbox]:not(:disabled)").prop('checked', $(this).prop("checked"))
     });
 
     // Handle keypress events in bulk action fieldsets that are part of a single form.

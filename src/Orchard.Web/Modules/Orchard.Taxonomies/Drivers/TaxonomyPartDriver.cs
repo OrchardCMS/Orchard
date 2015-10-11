@@ -31,7 +31,7 @@ namespace Orchard.Taxonomies.Drivers {
                         taxonomyShape.Items.Add(child.Shape);
                     }
                     else {
-                                
+
                         if (parent.Shape == null) {
                             parent.Shape = shapeHelper.TaxonomyItem(Taxonomy: part.ContentItem, ContentPart: parent.TermPart, ContentItem: parent.TermPart.ContentItem);
                         }
@@ -51,7 +51,7 @@ namespace Orchard.Taxonomies.Drivers {
             if (existing != null && existing.Record != part.Record) {
                 updater.AddModelError("Title", T("A taxonomy with the same name already exists"));
             }
-            
+
             // nothing to display for this part
             return null;
         }
@@ -65,6 +65,11 @@ namespace Orchard.Taxonomies.Drivers {
         }
 
         protected override void Importing(TaxonomyPart part, ImportContentContext context) {
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
+            }
+
             part.TermTypeName = context.Attribute(part.PartDefinition.Name, "TermTypeName");
         }
     }

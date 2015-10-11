@@ -18,10 +18,11 @@ namespace Orchard.Redis.Caching {
         private readonly ShellSettings _shellSettings;
         private readonly IRedisConnectionProvider _redisConnectionProvider;
         private readonly string _connectionString;
+        private readonly ConnectionMultiplexer _connectionMultiplexer;
 
         public IDatabase Database {
             get {
-                return _redisConnectionProvider.GetConnection(_connectionString).GetDatabase();
+                return _connectionMultiplexer.GetDatabase();
             }
         }
 
@@ -29,11 +30,16 @@ namespace Orchard.Redis.Caching {
             _shellSettings = shellSettings;
             _redisConnectionProvider = redisConnectionProvider;
             _connectionString = _redisConnectionProvider.GetConnectionString(ConnectionStringKey);
+            _connectionMultiplexer = _redisConnectionProvider.GetConnection(_connectionString);
+
             Logger = NullLogger.Instance;
         }
 
         public object Get<T>(string key) {
             var json = Database.StringGet(GetLocalizedKey(key));
+            if(String.IsNullOrEmpty(json)) {
+                return default(T);
+            }
             return JsonConvert.DeserializeObject<T>(json);
         }
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Globalization;
@@ -10,9 +9,9 @@ using System.Web.Instrumentation;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Autofac;
-using Orchard.Mvc.Extensions;
 using Orchard.Mvc.Routes;
 using Orchard.Settings;
+using Orchard.Exceptions;
 
 namespace Orchard.Mvc {
     public class MvcModule : Module {
@@ -33,7 +32,11 @@ namespace Orchard.Mvc {
                 // The "Request" property throws at application startup on IIS integrated pipeline mode.
                 var req = HttpContext.Current.Request;
             }
-            catch (Exception) {
+            catch (Exception ex) {
+                if (ex.IsFatal()) {
+                    throw;
+                }
+
                 return false;
             }
 
@@ -52,15 +55,15 @@ namespace Orchard.Mvc {
             // which requires activating the Site content item, which in turn requires a UrlHelper, which in turn requires a RequestContext,
             // thus preventing a StackOverflowException.
             var baseUrl = new Func<string>(() => siteService.GetSiteSettings().BaseUrl);
-            var httpContextBase = context.Resolve<IHttpContextAccessor>().Current();
-            context.Resolve<IWorkContextAccessor>().CreateWorkContextScope(httpContextBase);
+            var httpContextBase = new HttpContextPlaceholder(baseUrl);
+
             return httpContextBase;
         }
 
         static RequestContext RequestContextFactory(IComponentContext context) {
             var httpContextAccessor = context.Resolve<IHttpContextAccessor>();
             var httpContext = httpContextAccessor.Current();
-            if (!httpContext.IsBackgroundContext()) {
+            if (httpContext != null) {
 
                 var mvcHandler = httpContext.Handler as MvcHandler;
                 if (mvcHandler != null) {
@@ -87,33 +90,22 @@ namespace Orchard.Mvc {
         /// <summary>
         /// Standin context for background tasks.
         /// </summary>
-        public class HttpContextPlaceholder : HttpContextBase, IDisposable {
+        public class HttpContextPlaceholder : HttpContextBase {
             private readonly Lazy<string> _baseUrl;
             private readonly IDictionary _items = new Dictionary<object, object>();
-            readonly Action _disposer;
 
-            public HttpContextPlaceholder(ConcurrentDictionary<object, HttpContextBase> contexts, object contextKey, Func<string> baseUrl) {
+            public HttpContextPlaceholder(Func<string> baseUrl) {
                 _baseUrl = new Lazy<string>(baseUrl);
-                contexts.AddOrUpdate(contextKey, this, (a, b) => this);
-
-                _disposer = () => {
-                    HttpContextBase removedContext;
-                    contexts.TryRemove(contextKey, out removedContext);
-                };
             }
 
             public override HttpRequestBase Request {
-                get { return new HttpRequestPlaceholder(this, new Uri(_baseUrl.Value)); }
+                get { return new HttpRequestPlaceholder(new Uri(_baseUrl.Value)); }
             }
 
             public override IHttpHandler Handler { get; set; }
 
             public override HttpResponseBase Response {
                 get { return new HttpResponsePlaceholder(); }
-            }
-
-            public override HttpSessionStateBase Session {
-                get { return null; }
             }
 
             public override IDictionary Items {
@@ -128,12 +120,12 @@ namespace Orchard.Mvc {
                 get { return HttpRuntime.Cache; }
             }
 
-            public override object GetService(Type serviceType) {
-                return null;
+            public override HttpServerUtilityBase Server {
+                get { return new HttpServerUtilityPlaceholder(); }
             }
 
-            public void Dispose() {
-                _disposer();
+            public override object GetService(Type serviceType) {
+                return null;
             }
         }
 
@@ -153,12 +145,9 @@ namespace Orchard.Mvc {
         /// standin context for background tasks. 
         /// </summary>
         public class HttpRequestPlaceholder : HttpRequestBase {
-            private readonly HttpContextBase _httpContext;
             private readonly Uri _uri;
-            private RequestContext _requestContext;
 
-            public HttpRequestPlaceholder(HttpContextBase httpContext, Uri uri) {
-                _httpContext = httpContext;
+            public HttpRequestPlaceholder(Uri uri) {
                 _uri = uri;
             }
 
@@ -167,6 +156,17 @@ namespace Orchard.Mvc {
             /// </summary>
             public override bool IsAuthenticated {
                 get { return false; }
+            }
+
+            /// <summary>
+            /// Create an anonymous ID the same way as ASP.NET would.
+            /// Some users of an HttpRequestPlaceHolder object could expect this,
+            /// say CookieCultureSelector from module Orchard.CulturePicker.
+            /// </summary>
+            public override string AnonymousID {
+                get {
+                    return Guid.NewGuid().ToString("D", CultureInfo.InvariantCulture);
+                }
             }
 
             // empty collection provided for background operation
@@ -188,6 +188,18 @@ namespace Orchard.Mvc {
                 }
             }
 
+            public override string HttpMethod {
+                get {
+                    return "";
+                }
+            }
+
+            public override NameValueCollection Params {
+                get {
+                    return new NameValueCollection();
+                }
+            }
+
             public override string AppRelativeCurrentExecutionFilePath {
                 get {
                     return "~/";
@@ -205,7 +217,7 @@ namespace Orchard.Mvc {
                     return new NameValueCollection {
                         { "SERVER_PORT", _uri.Port.ToString(CultureInfo.InvariantCulture) },
                         { "HTTP_HOST", _uri.Authority.ToString(CultureInfo.InvariantCulture) },
-
+                        
                     };
                 }
             }
@@ -236,20 +248,16 @@ namespace Orchard.Mvc {
                 }
             }
 
+            public override string[] UserLanguages {
+                get {
+                    return new string[0];
+                }
+            }
+
             public override HttpBrowserCapabilitiesBase Browser {
                 get {
                     return new HttpBrowserCapabilitiesPlaceholder();
                 }
-            }
-
-            public override RequestContext RequestContext {
-                get {
-                    if (_requestContext == null) {
-                        _requestContext = new RequestContext(_httpContext, new RouteData());
-                    }
-                    return _requestContext;
-                }
-                set { _requestContext = value; }
             }
         }
 
@@ -264,6 +272,10 @@ namespace Orchard.Mvc {
             public override string Browser { get { return "Placeholder"; } }
             public override bool Cookies { get { return true; } }
             public override ArrayList Browsers { get { return new ArrayList(); } }
+        }
+
+        public class HttpServerUtilityPlaceholder : HttpServerUtilityBase {
+            public override int ScriptTimeout { get; set; }
         }
     }
 }

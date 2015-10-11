@@ -41,6 +41,18 @@ namespace Orchard.Tokens.Tests {
         }
 
         [Test]
+        public void TestParameterizedTokens() {
+            Assert.That(_tokenizer.Replace("{Users.User:User2}", null), Is.EqualTo("User2"));
+            Assert.That(_tokenizer.Replace("{Users.User:FakeUser}", null), Is.EqualTo(""));
+        }
+
+        [Test]
+        public void TestParameterizedChainedTokens() {
+            Assert.That(_tokenizer.Replace("{Users.User:User2.Email}", null), Is.EqualTo("user2@test.com"));
+            Assert.That(_tokenizer.Replace("{Users.User:FakeUser.Email}", null), Is.EqualTo(""));
+        }
+
+        [Test]
         public void TestMissingTokens() {
             Assert.That(_tokenizer.Replace("[{Site.NotAToken}]", null), Is.EqualTo("[]"));
             Assert.That(_tokenizer.Replace("[{NotATokenType.Foo}]", null), Is.EqualTo("[]"));

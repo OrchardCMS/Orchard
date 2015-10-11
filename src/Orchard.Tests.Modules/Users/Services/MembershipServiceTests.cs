@@ -30,28 +30,18 @@ using Orchard.UI.PageClass;
 using Orchard.Users.Handlers;
 using Orchard.Users.Models;
 using Orchard.Users.Services;
+using Orchard.Tests.ContentManagement;
+using Orchard.Services;
 
 namespace Orchard.Tests.Modules.Users.Services {
     [TestFixture]
     public class MembershipServiceTests {
+        private IMembershipValidationService _membershipValidationService;
         private IMembershipService _membershipService;
         private ISessionFactory _sessionFactory;
         private ISession _session;
         private IContainer _container;
-
-
-        public class TestSessionLocator : ISessionLocator {
-            private readonly ISession _session;
-
-            public TestSessionLocator(ISession session) {
-                _session = session;
-            }
-
-            public ISession For(Type entityType) {
-                return _session;
-            }
-        }
-
+        private StubClock _clock;
         [TestFixtureSetUp]
         public void InitFixture() {
             var databaseFileName = System.IO.Path.GetTempFileName();
@@ -72,6 +62,7 @@ namespace Orchard.Tests.Modules.Users.Services {
         public void Init() {
             var builder = new ContainerBuilder();
             //builder.RegisterModule(new ImplicitCollectionSupportModule());
+            builder.RegisterType<MembershipValidationService>().As<IMembershipValidationService>();
             builder.RegisterType<MembershipService>().As<IMembershipService>();
             builder.RegisterType<DefaultContentQuery>().As<IContentQuery>();
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
@@ -88,15 +79,24 @@ namespace Orchard.Tests.Modules.Users.Services {
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
+            builder.RegisterInstance(_clock = new StubClock()).As<IClock>();
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
             builder.RegisterInstance(new Mock<IPageClassBuilder>().Object);
             builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
             builder.RegisterType<InfosetHandler>().As<IContentHandler>();
 
             _session = _sessionFactory.OpenSession();
-            builder.RegisterInstance(new TestSessionLocator(_session)).As<ISessionLocator>();
+            builder.RegisterInstance(new TestTransactionManager(_session)).As<ITransactionManager>();
+
             _container = builder.Build();
+            _membershipValidationService = _container.Resolve<IMembershipValidationService>();
             _membershipService = _container.Resolve<IMembershipService>();
+        }
+
+        [TearDown]
+        public void Cleanup() {
+            if (_container != null)
+                _container.Dispose();
         }
 
         [Test]
@@ -151,6 +151,65 @@ namespace Orchard.Tests.Modules.Users.Services {
             Assert.That(validate1, Is.Null);
             Assert.That(validate2, Is.Null);
             Assert.That(validate3, Is.Not.Null);
+        }
+
+        [Test]
+        public void UsersWhoHaveNeverLoggedInCanBeAuthenticated() {
+            var user = (UserPart)_membershipService.CreateUser(new CreateUserParams("a", "b", "c", null, null, true));
+            
+            Assert.That(_membershipValidationService.CanAuthenticateWithCookie(user), Is.True);
+        }
+
+        [Test]
+        public void UsersWhoHaveNeverLoggedOutCanBeAuthenticated() {
+            var user = (UserPart)_membershipService.CreateUser(new CreateUserParams("a", "b", "c", null, null, true));
+
+            user.LastLoginUtc = _clock.UtcNow;
+            _clock.Advance(TimeSpan.FromMinutes(1));
+
+            Assert.That(_membershipValidationService.CanAuthenticateWithCookie(user), Is.True);
+        }
+
+        [Test]
+        public void UsersWhoHaveLoggedOutCantBeAuthenticated() {
+            var user = (UserPart)_membershipService.CreateUser(new CreateUserParams("a", "b", "c", null, null, true));
+
+            user.LastLoginUtc = _clock.UtcNow;
+            _clock.Advance(TimeSpan.FromMinutes(1));
+            user.LastLogoutUtc = _clock.UtcNow;
+            _clock.Advance(TimeSpan.FromMinutes(1));
+
+            Assert.That(_membershipValidationService.CanAuthenticateWithCookie(user), Is.False);
+        }
+
+        [Test]
+        public void UsersWhoHaveLoggedInCanBeAuthenticated() {
+            var user = (UserPart)_membershipService.CreateUser(new CreateUserParams("a", "b", "c", null, null, true));
+
+            user.LastLogoutUtc = _clock.UtcNow;
+            _clock.Advance(TimeSpan.FromMinutes(1));
+            user.LastLoginUtc = _clock.UtcNow;
+            _clock.Advance(TimeSpan.FromMinutes(1));
+
+            Assert.That(_membershipValidationService.CanAuthenticateWithCookie(user), Is.True);
+        }
+
+        [Test]
+        public void PendingUsersCantBeAuthenticated() {
+            var user = (UserPart)_membershipService.CreateUser(new CreateUserParams("a", "b", "c", null, null, true));
+
+            user.RegistrationStatus = UserStatus.Pending;
+
+            Assert.That(_membershipValidationService.CanAuthenticateWithCookie(user), Is.False);
+        }
+
+        [Test]
+        public void ApprovedUsersCanBeAuthenticated() {
+            var user = (UserPart)_membershipService.CreateUser(new CreateUserParams("a", "b", "c", null, null, true));
+
+            user.RegistrationStatus = UserStatus.Approved;
+
+            Assert.That(_membershipValidationService.CanAuthenticateWithCookie(user), Is.True);
         }
     }
 }

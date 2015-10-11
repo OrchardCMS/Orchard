@@ -3,6 +3,11 @@
     Script.Require("ShapesBase");
 }
 <fieldset>
+    @Html.CheckBoxFor(m => m.DisplayContainerEditor)
+    @Html.LabelFor(m => m.DisplayContainerEditor, @T("Display settings editor").ToString(), new { @class = "forcheckbox" })
+    <span class="hint">@T("When checked, users can change the settings for each content item.")</span>
+</fieldset>
+<fieldset>
     <label for="@Html.FieldIdFor(m => m.ItemsShownDefault)">@T("Default Items Shown")</label>
     @Html.EditorFor(m => m.ItemsShownDefault)
 </fieldset>

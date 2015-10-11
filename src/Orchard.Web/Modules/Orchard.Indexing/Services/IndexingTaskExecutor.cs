@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Records;
 using Orchard.Data;
@@ -21,7 +20,6 @@ namespace Orchard.Indexing.Services {
     /// This class is synchronized using a lock file as both command line and web workers can potentially use it,
     /// and singleton locks would not be shared accross those two.
     /// </remarks>
-    [UsedImplicitly]
     public class IndexingTaskExecutor : IIndexingTaskExecutor, IIndexStatisticsProvider
     {
         private readonly IRepository<IndexingTaskRecord> _taskRepository;
@@ -176,18 +174,18 @@ namespace Orchard.Indexing.Services {
 
                             var settings = GetTypeIndexingSettings(item);
 
-                        // skip items from types which are not indexed
+                            // skip items from types which are not indexed
                             if (settings.List.Contains(indexName)) {
-                            if (item.HasPublished()) {
-                            var published = _contentManager.Get(item.Id, VersionOptions.Published);
-                                IDocumentIndex documentIndex = ExtractDocumentIndex(published);
+                                if (item.HasPublished()) {
+                                    var published = _contentManager.Get(item.Id, VersionOptions.Published);
+                                    IDocumentIndex documentIndex = ExtractDocumentIndex(published);
 
-                                if (documentIndex != null && documentIndex.IsDirty) {
-                                    addToIndex.Add(documentIndex);
+                                    if (documentIndex != null && documentIndex.IsDirty) {
+                                        addToIndex.Add(documentIndex);
+                                    }
                                 }
                             }
-                        }
-                        else if (settings.List.Contains(indexName + ":latest")) {
+                            else if (settings.List.Contains(indexName + ":latest")) {
                                 IDocumentIndex documentIndex = ExtractDocumentIndex(item);
 
                                 if (documentIndex != null && documentIndex.IsDirty) {
@@ -207,8 +205,7 @@ namespace Orchard.Indexing.Services {
                     }
                     else {
                         _transactionManager.RequireNew();
-                     }
-
+                    }
 
                 } while (loop);
             }
@@ -240,10 +237,10 @@ namespace Orchard.Indexing.Services {
                                 if (settings.List.Contains(indexName)) {
                                     documentIndex = ExtractDocumentIndex(item.ContentItem);
                                 }
-                            else if (settings.List.Contains(indexName + ":latest")) {
-                                var latest = _contentManager.Get(item.Id, VersionOptions.Latest);
-                                documentIndex = ExtractDocumentIndex(latest);
-                            }
+                                else if (settings.List.Contains(indexName + ":latest")) {
+                                    var latest = _contentManager.Get(item.Id, VersionOptions.Latest);
+                                    documentIndex = ExtractDocumentIndex(latest);
+                                }
                             }
 
                             if (documentIndex == null || item.Delete) {
@@ -266,8 +263,8 @@ namespace Orchard.Indexing.Services {
                     else {
                         _transactionManager.RequireNew();
                     }
-                }
-                while (loop);
+
+                } while (loop);
             }
 
             // save current state of the index

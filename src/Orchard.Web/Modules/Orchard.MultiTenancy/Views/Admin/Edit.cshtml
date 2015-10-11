@@ -16,9 +16,9 @@
             <h2>@Model.Name</h2>
         </div>
         <div>
-            <label for="@Html.FieldIdFor(m => m.RequestUrlHost)">@T("Host")</label>
+            <label for="@Html.FieldIdFor(m => m.RequestUrlHost)">@T("URL host")</label>
             @Html.TextBoxFor(m => m.RequestUrlHost, new { @class = "text medium" })
-            <span class="hint">@T("Example: If host is \"orchardproject.net\", the tenant site URL is \"http://orchardproject.net/\"")</span>
+            <span class="hint">@T("Example: If host is \"orchardproject.net\", the tenant site URL is \"http://orchardproject.net/\". Multiple hosts can be separated by a comma.")</span>
         </div>
         <div>
             <label for="@Html.FieldIdFor(m => m.RequestUrlPrefix)">@T("URL prefix")</label>
@@ -47,7 +47,7 @@
             <span data-controllerid="sqlDatabaseOption">
             <label for="DatabaseConnectionString">@T("Connection string")</label>
             @Html.TextBoxFor(svm => svm.DatabaseConnectionString, new { @class = "text large" })
-            <span class="hint">@T("Example:")<br />@T("Data Source=sqlServerName;Initial Catalog=dbName;Persist Security Info=True;User ID=userName;Password=password")</span>
+            <span class="hint">@T("Example:")<br />@T("Data Source=sqlServerName;Initial Catalog=dbName;User ID=userName;Password=password")</span>
             </span>
             <span data-controllerid="sqlDatabaseOption">
             <label for="DatabaseTablePrefix">@T("Database Table Prefix")</label>

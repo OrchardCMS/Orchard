@@ -81,7 +81,7 @@
         displaySaveMessage();
     }
     });
-    
+
     $("#search-box").focus().on("keyup", function (e) {
         var text = $(this).val();
         if (text == "") {
@@ -155,13 +155,13 @@
                 for (i = 0; i < outcomes.length; i++) {
                     var ep = jsPlumb.addEndpoint(dom, {
                         anchor: "Continuous",
-                        connectorOverlays: [["Label", { label: outcomes[i].label, cssClass: "connection-label" }]],
+                        connectorOverlays: [["Label", { label: outcomes[i].Label, cssClass: "connection-label" }]],
                     },
                         sourceEndpointOptions);
 
-                    elt.endpoints[outcomes[i].value] = ep;
-                    ep.outcome = outcomes[i].value;
-                    // ep.overlays[0].setLabel(outcomes[i]);
+                    elt.endpoints[outcomes[i].Id] = ep;
+                    ep.outcome = outcomes[i];
+                    // ep.overlays[0].setLabel(outcomes[i].Label);
                 }
 
                 if (activities[name].hasForm) {

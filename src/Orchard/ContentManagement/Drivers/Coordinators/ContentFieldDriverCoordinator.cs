@@ -1,12 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using Orchard.ContentManagement.FieldStorage;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Logging;
 
 namespace Orchard.ContentManagement.Drivers.Coordinators {
-    [UsedImplicitly]
     public class ContentFieldDriverCoordinator : ContentHandlerBase {
         private readonly IEnumerable<IContentFieldDriver> _drivers;
         private readonly IFieldStorageProviderSelector _fieldStorageProviderSelector;
@@ -93,14 +91,14 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
 
         public override void Exporting(ExportContentContext context) {
             context.Logger = Logger;
-            foreach (var contentFieldDriver in _drivers) {
+            foreach (var contentFieldDriver in _drivers.OrderBy(x => x.GetFieldInfo().First().FieldTypeName)) {
                 contentFieldDriver.Exporting(context);
             }
         }
 
         public override void Exported(ExportContentContext context) {
             context.Logger = Logger;
-            foreach (var contentFieldDriver in _drivers) {
+            foreach (var contentFieldDriver in _drivers.OrderBy(x => x.GetFieldInfo().First().FieldTypeName)) {
                 contentFieldDriver.Exported(context);
             }
         }

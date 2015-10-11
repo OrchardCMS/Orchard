@@ -22,7 +22,7 @@ namespace Orchard.ContentTypes.Services {
         }
 
         public IEnumerable<StereotypeDescription> GetStereotypes() {
-            return _cacheManager.Get("ContentType.Stereotypes", context => {
+            return _cacheManager.Get("ContentType.Stereotypes", true, context => {
 
                 // TODO: Implement a signal in ContentDefinitionManager that gets raised whenever a type definition is updated.
                 // For now, we'll just cache the stereotypes for 1 minute.

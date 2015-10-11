@@ -3,6 +3,9 @@
 namespace Orchard.OutputCache.Models {
     [Serializable]
     public class CacheItem {
+        // used for serialization compatibility
+        public static readonly string Version = "1";
+
         public DateTime CachedOnUtc { get; set; }
         public int Duration { get; set; }
         public int GraceTime { get; set; }

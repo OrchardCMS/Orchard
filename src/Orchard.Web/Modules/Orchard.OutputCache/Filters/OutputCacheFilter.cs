@@ -10,12 +10,14 @@ using System.Threading;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using System.Web.UI;
 using Orchard.Caching;
 using Orchard.ContentManagement;
 using Orchard.Environment.Configuration;
 using Orchard.Logging;
 using Orchard.Mvc.Extensions;
 using Orchard.Mvc.Filters;
+using Orchard.OutputCache.Helpers;
 using Orchard.OutputCache.Models;
 using Orchard.OutputCache.Services;
 using Orchard.Services;
@@ -109,7 +111,7 @@ namespace Orchard.OutputCache.Filters {
 
                 // Is there a cached item, and are we allowed to serve it?
                 var allowServeFromCache = filterContext.RequestContext.HttpContext.Request.Headers["Cache-Control"] != "no-cache" || CacheSettings.IgnoreNoCache;
-                var cacheItem = _cacheStorageProvider.GetCacheItem(_cacheKey);
+                var cacheItem = GetCacheItem(_cacheKey);
                 if (allowServeFromCache && cacheItem != null) {
 
                     Logger.Debug("Item '{0}' was found in cache.", _cacheKey);
@@ -140,7 +142,7 @@ namespace Orchard.OutputCache.Filters {
 
                     // Item might now have been rendered and cached by another request; if so serve it from cache.
                     if (allowServeFromCache) {
-                        cacheItem = _cacheStorageProvider.GetCacheItem(_cacheKey);
+                        cacheItem = GetCacheItem(_cacheKey);
                         if (cacheItem != null) {
                             Logger.Debug("Item '{0}' was now found; releasing cache key lock and serving from cache.", _cacheKey);
                             Monitor.Exit(cacheKeyLock);
@@ -287,7 +289,7 @@ namespace Orchard.OutputCache.Filters {
             var controllerAttributes = filterContext.ActionDescriptor.ControllerDescriptor.GetCustomAttributes(typeof(OutputCacheAttribute), true);
             var outputCacheAttribute = actionAttributes.Concat(controllerAttributes).Cast<OutputCacheAttribute>().FirstOrDefault();
             if (outputCacheAttribute != null) {
-                if (outputCacheAttribute.Duration <= 0 || outputCacheAttribute.NoStore) {
+                if (outputCacheAttribute.Duration <= 0 || outputCacheAttribute.NoStore || outputCacheAttribute.LocationIsIn(OutputCacheLocation.Downstream, OutputCacheLocation.Client, OutputCacheLocation.None)) {
                     Logger.Debug("Request for item '{0}' ignored based on OutputCache attribute.", itemDescriptor);
                     return false;
                 }
@@ -461,7 +463,7 @@ namespace Orchard.OutputCache.Filters {
 
         private CacheSettings CacheSettings {
             get {
-                return _cacheSettings ?? (_cacheSettings = _cacheManager.Get(CacheSettings.CacheKey, context => {
+                return _cacheSettings ?? (_cacheSettings = _cacheManager.Get(CacheSettings.CacheKey, true, context => {
                     context.Monitor(_signals.When(CacheSettings.CacheKey));
                     return new CacheSettings(_workContext.CurrentSite.As<CacheSettingsPart>());
                 }));
@@ -590,6 +592,18 @@ namespace Orchard.OutputCache.Filters {
             }
 
             return keyBuilder.ToString();
+        }
+
+        protected virtual CacheItem GetCacheItem(string key) {
+            try {
+                var cacheItem = _cacheStorageProvider.GetCacheItem(key);
+                return cacheItem;
+            }
+            catch(Exception e) {
+                Logger.Error(e, "An unexpected error occured while reading a cache entry");
+            }
+
+            return null;
         }
     }
 

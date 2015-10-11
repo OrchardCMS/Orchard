@@ -24,12 +24,12 @@ namespace Orchard.MessageBus.Services {
         }
 
         public void Activated() {
-            _messageBus.Subscribe(Channel, (channel, message) => {
+            _messageBus.Subscribe(Channel, (channel, tenantName) => {
                 // todo: this only handles changed tenants, we should consider handling started and stopped tenants
 
                 using (var scope = _workContextAccessor.CreateWorkContextScope()) {
                     var shellSettings = scope.Resolve<ShellSettings>();
-                    if (shellSettings != null) {
+                    if (shellSettings != null && shellSettings.Name == tenantName) {
 
                         // todo: this doesn't work as the new tenants list is lost right after
                         var shellSettingsManagerEventHandler = scope.Resolve<IShellSettingsManagerEventHandler>();

@@ -4,20 +4,22 @@
     var pageTitle = T("Manage Content");
     var createLinkText = T("Create New Content");
     if (!string.IsNullOrWhiteSpace(typeDisplayName)) {
-        pageTitle = T("Manage {0} Content", typeDisplayName);
-        createLinkText = T("Create New {0}", typeDisplayName);
+        pageTitle = T("Manage {0} Content", Html.Raw(typeDisplayName));
+        createLinkText = T("Create New {0}", Html.Raw(typeDisplayName));
     }
 
     IEnumerable<string> cultures = Model.Options.Cultures;
     
-    Layout.Title = pageTitle;
+    Layout.Title = pageTitle.Text;
 }
 
 <div class="manage">
     @Html.ActionLink(createLinkText.Text, "Create", new { Area = "Contents", Id = (string)Model.Options.SelectedFilter }, new { @class = "button primaryAction" })
 </div>
+
 @using (Html.BeginFormAntiForgeryPost()) {
     <fieldset class="bulk-actions">
+        <label><input type="checkbox" class="check-all" />@T("Select all")</label>@T(" | ")
         <label for="publishActions">@T("Actions:")</label>
         <select id="publishActions" name="Options.BulkAction">
             @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.None, T("Choose action...").ToString())
@@ -54,6 +56,7 @@
         </select>
         <label for="contentResults" class="bulk-order">@T("Filter by")</label>
         <select id="contentResults" name="Options.ContentsStatus">
+            @Html.SelectOption((ContentsStatus)Model.Options.ContentsStatus, ContentsStatus.Owner, T("owned by me").ToString())
             @Html.SelectOption((ContentsStatus)Model.Options.ContentsStatus, ContentsStatus.Latest, T("latest").ToString())
             @Html.SelectOption((ContentsStatus)Model.Options.ContentsStatus, ContentsStatus.Published, T("published").ToString())
             @Html.SelectOption((ContentsStatus)Model.Options.ContentsStatus, ContentsStatus.Draft, T("unpublished").ToString())

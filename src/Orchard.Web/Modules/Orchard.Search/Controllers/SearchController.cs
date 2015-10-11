@@ -30,6 +30,7 @@ namespace Orchard.Search.Controllers {
             IContentManager contentManager,
             ISiteService siteService,
             IShapeFactory shapeFactory) {
+
              Services = services;
             _searchService = searchService;
             _contentManager = contentManager;
@@ -45,23 +46,24 @@ namespace Orchard.Search.Controllers {
         public ILogger Logger { get; set; }
         dynamic Shape { get; set; }
 
-        public ActionResult Index(PagerParameters pagerParameters, string q = "") {
+        public ActionResult Index(PagerParameters pagerParameters, string searchIndex = null, string q = "") {
             var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
             var searchSettingPart = Services.WorkContext.CurrentSite.As<SearchSettingsPart>();
+            var index = !String.IsNullOrWhiteSpace(searchIndex) ? searchIndex.Trim() : searchSettingPart.SearchIndex;
 
-            if (String.IsNullOrEmpty(searchSettingPart.SearchIndex)) {
-                Services.Notifier.Error(T("Please define a default search index"));
+            if (String.IsNullOrEmpty(index)) {
+                Services.Notifier.Error(T("Please define a default search index."));
                 return HttpNotFound();
             }
 
             IPageOfItems<ISearchHit> searchHits = new PageOfItems<ISearchHit>(new ISearchHit[] { });
             try {
-
-                searchHits = _searchService.Query(q, pager.Page, pager.PageSize,
-                                                  Services.WorkContext.CurrentSite.As<SearchSettingsPart>().FilterCulture,
-                                                  searchSettingPart.SearchIndex,
-                                                  searchSettingPart.GetSearchFields(),
-                                                  searchHit => searchHit);
+                searchHits = _searchService.Query(
+                    q, pager.Page, pager.PageSize,
+                    Services.WorkContext.CurrentSite.As<SearchSettingsPart>().FilterCulture,
+                    index,
+                    searchSettingPart.GetSearchFields(index),
+                    searchHit => searchHit);
             } catch(Exception exception) {
                 Logger.Error(T("Invalid search query: {0}", exception.Message).Text);
                 Services.Notifier.Error(T("Invalid search query: {0}", exception.Message));
@@ -73,7 +75,7 @@ namespace Orchard.Search.Controllers {
             // ignore search results which content item has been removed or unpublished
             var foundItems = _contentManager.GetMany<IContent>(foundIds, VersionOptions.Published, new QueryHints()).ToList();
             foreach (var contentItem in foundItems) {
-                list.Add(_contentManager.BuildDisplay(contentItem, "Summary"));
+                list.Add(_contentManager.BuildDisplay(contentItem, searchSettingPart.DisplayType));
             }
             searchHits.TotalItemCount -= foundIds.Count() - foundItems.Count();
 

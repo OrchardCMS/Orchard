@@ -27,3 +27,8 @@
     @Html.TextBoxFor(widget => widget.Name, new { @class = "text" })
     <span class="hint">@T("The technical name of the Widget, used for css class and alternates.")</span>
 </fieldset>
+<fieldset>
+    @Html.LabelFor(widget => widget.CssClasses, T("Css classes"))
+    @Html.TextBoxFor(widget => widget.CssClasses, new { @class = "text medium" })
+    <span class="hint">@T("Add custom css classes for the widget separated by spaces.")</span>
+</fieldset>

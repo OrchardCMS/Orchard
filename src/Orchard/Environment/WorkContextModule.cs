@@ -6,7 +6,6 @@ using System.Web;
 using Autofac;
 using Autofac.Builder;
 using Autofac.Core;
-using Autofac.Features.Metadata;
 using Module = Autofac.Module;
 
 namespace Orchard.Environment {
@@ -23,10 +22,6 @@ namespace Orchard.Environment {
             builder.RegisterType<WorkContextProperty<HttpContextBase>>()
                 .As<WorkContextProperty<HttpContextBase>>()
                 .InstancePerMatchingLifetimeScope("work");
-
-            builder.Register(ctx => ctx.Resolve<WorkContextProperty<HttpContextBase>>().Value)
-                .As<HttpContextBase>()
-                .InstancePerDependency();
 
             builder.RegisterGeneric(typeof(WorkValues<>))
                 .InstancePerMatchingLifetimeScope("work");

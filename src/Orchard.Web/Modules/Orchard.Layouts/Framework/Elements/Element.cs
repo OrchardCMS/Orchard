@@ -3,7 +3,7 @@ using Orchard.Localization;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.Layouts.Framework.Elements {
-    public abstract class Element {
+    public abstract class Element : IElement {
         protected Element() {
             T = NullLocalizer.Instance;
             Data = new ElementDataDictionary();
@@ -41,6 +41,7 @@ namespace Orchard.Layouts.Framework.Elements {
         public string HtmlId { get; set; }
         public string HtmlClass { get; set; }
         public string HtmlStyle { get; set; }
+        public string Rule { get; set; }
         public ElementDataDictionary ExportableData { get; set; }
         public ElementDescriptor Descriptor { get; set; }
         public ElementDataDictionary Data { get; set; }

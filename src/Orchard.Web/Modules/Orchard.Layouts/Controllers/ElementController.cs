@@ -142,18 +142,7 @@ namespace Orchard.Layouts.Controllers {
             _objectStore.Set(session, state);
             return RedirectToAction("Edit", new {session = session});
         }
-
-        public RedirectToRouteResult Add(string session, string typeName, int? contentId = null, string contentType = null) {
-            var state = new ElementSessionState {
-                TypeName = typeName,
-                ContentId = contentId,
-                ContentType = contentType
-            };
-
-            _objectStore.Set(session, state);
-            return RedirectToAction("Edit", new { session = session });
-        }
-
+        
         public ViewResult Edit(string session) {
             var sessionState = _objectStore.Get<ElementSessionState>(session);
             var contentId = sessionState.ContentId;

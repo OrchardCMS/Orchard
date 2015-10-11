@@ -13,7 +13,7 @@ using Orchard.Layouts.Settings;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.Layouts.Providers {
-    public class ContentPartElementHarvester : Component, ElementHarvester {
+    public class ContentPartElementHarvester : Component, IElementHarvester {
         private readonly Work<IContentDefinitionManager> _contentDefinitionManager;
         private readonly Work<IElementFactory> _elementFactory;
         private readonly Work<IElementManager> _elementManager;
@@ -39,7 +39,7 @@ namespace Orchard.Layouts.Providers {
                 var partDescription = partSettings != null ? partSettings.Description : null;
                 var description = T(!String.IsNullOrWhiteSpace(partDescription) ? partDescription : contentPart.Name);
                 return new ElementDescriptor(elementType, contentPart.Name, T(contentPart.Name.CamelFriendly()), description, contentPartElement.Category) {
-                    Display = displayContext => Displaying(displayContext),
+                    Displaying = displayContext => Displaying(displayContext),
                     ToolboxIcon = "\uf1b2",
                     StateBag = new Dictionary<string, object> {
                         {"ElementTypeName", contentPart.Name}
@@ -60,7 +60,7 @@ namespace Orchard.Layouts.Providers {
             return parts.Where(p => p.Settings.GetModel<ContentPartLayoutSettings>().Placeable);
         }
 
-        private void Displaying(ElementDisplayContext context) {
+        private void Displaying(ElementDisplayingContext context) {
             var drivers = _elementManager.Value.GetDrivers(context.Element);
 
             foreach (var driver in drivers) {

@@ -3,7 +3,6 @@ using System.IO;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Xml.Linq;
-using JetBrains.Annotations;
 using Orchard.Core.XmlRpc;
 using Orchard.Core.XmlRpc.Models;
 using Orchard.Localization;
@@ -11,7 +10,6 @@ using Orchard.Mvc.Extensions;
 using Orchard.Security;
 
 namespace Orchard.Media.Services {
-    [UsedImplicitly]
     public class XmlRpcHandler : IXmlRpcHandler {
         private readonly IMembershipService _membershipService;
         private readonly IAuthorizationService _authorizationService;

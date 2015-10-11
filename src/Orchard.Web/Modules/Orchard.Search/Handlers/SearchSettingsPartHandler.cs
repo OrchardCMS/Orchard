@@ -1,12 +1,9 @@
-﻿using System.Collections.Generic;
-using JetBrains.Annotations;
-using Orchard.ContentManagement;
+﻿using Orchard.ContentManagement;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
 using Orchard.Search.Models;
-using Orchard.ContentManagement.Handlers;
 
 namespace Orchard.Search.Handlers {
-    [UsedImplicitly]
     public class SearchSettingsPartHandler : ContentHandler {
         public SearchSettingsPartHandler() {
             T = NullLocalizer.Instance;

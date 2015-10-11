@@ -4,6 +4,7 @@ using System.Linq;
 using Orchard.Environment.Descriptor;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
+using Orchard.Environment.Extensions.Helpers;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Localization;
 using Orchard.Logging;
@@ -46,6 +47,15 @@ namespace Orchard.Environment.Features {
         public IEnumerable<FeatureDescriptor> GetEnabledFeatures() {
             var currentShellDescriptor = _shellDescriptorManager.GetShellDescriptor();
             return _extensionManager.EnabledFeatures(currentShellDescriptor);
+        }
+
+        /// <summary>
+        /// Retrieves the disabled features.
+        /// </summary>
+        /// <returns>An enumeration of feature descriptors for the disabled features.</returns>
+        public IEnumerable<FeatureDescriptor> GetDisabledFeatures() {
+            var currentShellDescriptor = _shellDescriptorManager.GetShellDescriptor();
+            return _extensionManager.DisabledFeatures(currentShellDescriptor);
         }
 
         /// <summary>

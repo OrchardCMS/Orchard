@@ -47,8 +47,6 @@ namespace Orchard.Search.Controllers {
         public ActionResult Index(PagerParameters pagerParameters, string part, string field, string searchText = "") {
             var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
             var searchSettingsPart = Services.WorkContext.CurrentSite.As<SearchSettingsPart>();
-            var searchIndex = searchSettingsPart.SearchIndex;
-            var searchFields = searchSettingsPart.GetSearchFields();
             var totalCount = 0;
             var foundIds = new int[0];
 
@@ -66,6 +64,11 @@ namespace Orchard.Search.Controllers {
                     return View("NoIndex");
                 }
 
+                var searchIndex = searchSettingsPart.SearchIndex;
+                if (settings != null && !String.IsNullOrEmpty(settings.SearchIndex))
+                    searchIndex = settings.SearchIndex;
+                var searchFields = searchSettingsPart.GetSearchFields(searchIndex);
+
                 var builder = _indexManager.GetSearchIndexProvider().CreateSearchBuilder(searchIndex);
 
                 try {
@@ -75,12 +78,12 @@ namespace Orchard.Search.Controllers {
                         var rawTypes = settings.DisplayedContentTypes.Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries).ToList();
                         var contentTypes = _contentDefinitionManager
                             .ListTypeDefinitions()
-                            .Where(x => x.Parts.Any(p => rawTypes.Contains(p.PartDefinition.Name)))
+                            .Where(x => x.Parts.Any(p => rawTypes.Contains(p.PartDefinition.Name)) || rawTypes.Contains(x.Name))
                             .ToArray();
 
 
                         foreach (string type in contentTypes.Select(x => x.Name)) {
-                            builder.WithField("type", type).AsFilter();
+                            builder.WithField("type", type).NotAnalyzed().AsFilter();
                         }
                     }
 

@@ -214,11 +214,11 @@ namespace Orchard.SecureSocketsLayer.Services {
             var settings = GetSettings();
             if (settings == null) return path;
             var insecureHostName = settings.InsecureHostName;
-            int port = 80;
             var builder = new UriBuilder(insecureHostName.Split(':').First().Trim('/') + path) {
-                Scheme = Uri.UriSchemeHttp,
-                Port = GetPortFomHostNameJoli(insecureHostName, port)
+                Scheme = Uri.UriSchemeHttp, 
+                Port = 80
             };
+            SetPort(insecureHostName, builder);
             return builder.Uri.ToString();
         }
 
@@ -226,22 +226,24 @@ namespace Orchard.SecureSocketsLayer.Services {
             var settings = GetSettings();
             if (settings == null) return path;
             var secureHostName = settings.SecureHostName;
-            int port = 443;
             var builder = new UriBuilder(secureHostName.Split(':').First().Trim('/') + path) {
                 Scheme = Uri.UriSchemeHttps, 
-                Port = GetPortFomHostNameJoli(secureHostName, port)
+                Port = 443
             };
+            SetPort(secureHostName, builder);
             return builder.Uri.ToString();
         }
 
-        private static int GetPortFomHostNameJoli(string hostName, int defaultPort) {
-            int port = defaultPort;
-            if (string.IsNullOrWhiteSpace(hostName)) return port;
+        private static void SetPort(string hostName, UriBuilder builder) {
+            if (string.IsNullOrWhiteSpace(hostName)) return;
             var splitSecuredHostName = hostName.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
             if (splitSecuredHostName.Length == 2) {
-                int.TryParse(splitSecuredHostName[1], NumberStyles.Integer, CultureInfo.InvariantCulture,out port);
+                int port;
+                if (int.TryParse(splitSecuredHostName[1], NumberStyles.Integer, CultureInfo.InvariantCulture,
+                    out port)) {
+                    builder.Port = port;
+                }
             }
-            return port;
         }
     }
 }

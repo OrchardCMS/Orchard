@@ -2,7 +2,7 @@ Name: Forms
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardforms.codeplex.com
-Version: 1.9.1
+Version: 1.9.2
 OrchardVersion: 1.9
 Description: Provides a system to publish and alter html forms.
 Features:

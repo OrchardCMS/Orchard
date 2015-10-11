@@ -1,16 +1,15 @@
 ﻿@using System.Globalization
-@using Orchard.Alias
+@using Orchard.Autoroute.Services
 @using Orchard.ContentManagement
 @using Orchard.ContentManagement.Aspects
 @using Orchard.Localization.Services
 @{
     var localizableAspects = Enumerable.Empty<ILocalizableAspect>();
-    
-    var homePage = GetByPath(string.Empty);
+    var homePage = WorkContext.Resolve<IHomeAliasService>().GetHomePage();
 
     if (homePage != null) {
         var localizationService = WorkContext.Resolve<ILocalizationService>();
-        localizableAspects = localizationService.GetLocalizations(homePage).Concat<ILocalizableAspect>(new[] { homePage.As<ILocalizableAspect>() });
+        localizableAspects = localizationService.GetLocalizations(homePage).Concat(new[] { homePage.As<ILocalizableAspect>() });
     }
 }
 @if (localizableAspects.Any()) {
@@ -30,22 +29,4 @@
         }
     </ul>
 </div>
-}
-@functions{
-    public IContent GetByPath(string aliasPath) {
-        var contentRouting = WorkContext.Resolve<IAliasService>().Get(aliasPath);
-
-        if (contentRouting == null)
-            return null;
-
-        object id;
-        if (contentRouting.TryGetValue("id", out id)) {
-            int contentId;
-            if (int.TryParse(id as string, out contentId)) {
-                return WorkContext.Resolve<IContentManager>().Get(contentId);
-            }
-        }
-
-        return null;
-    }
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Autofac;
-using JetBrains.Annotations;
 using Moq;
 using NUnit.Framework;
 using Orchard.Caching;
@@ -51,7 +50,6 @@ namespace Orchard.Tests.Modules.Comments.Services {
             builder.RegisterType<Signals>().As<ISignals>();
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
             builder.RegisterInstance(new Mock<IContentDefinitionManager>().Object);
-            builder.RegisterInstance(new Mock<ITransactionManager>().Object);
             builder.RegisterInstance(new Mock<IAuthorizer>().Object);
             builder.RegisterInstance(new Mock<INotifier>().Object);
             builder.RegisterInstance(new Mock<IContentDisplay>().Object);
@@ -188,7 +186,6 @@ namespace Orchard.Tests.Modules.Comments.Services {
         }
     }
 
-    [UsedImplicitly]
     public class CommentedItemHandler : ContentHandler {
         public CommentedItemHandler() {
             Filters.Add(new ActivatingFilter<CommentedItem>("commentedItem"));

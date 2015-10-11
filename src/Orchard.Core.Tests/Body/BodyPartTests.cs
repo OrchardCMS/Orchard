@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Autofac;
-using JetBrains.Annotations;
 using Moq;
 using NUnit.Framework;
 using Orchard.Caching;
@@ -20,6 +19,7 @@ using Orchard.DisplayManagement.Implementation;
 using Orchard.Environment;
 using Orchard.Environment.Extensions;
 using Orchard.Security;
+using Orchard.Tests.ContentManagement;
 using Orchard.Tests.Modules;
 using Orchard.Tests.Stubs;
 using Orchard.UI.Notify;
@@ -35,7 +35,6 @@ namespace Orchard.Core.Tests.Body {
             builder.RegisterType<Signals>().As<ISignals>();
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
             builder.RegisterInstance(new Mock<IContentDefinitionManager>().Object);
-            builder.RegisterInstance(new Mock<ITransactionManager>().Object);
             builder.RegisterInstance(new Mock<IAuthorizer>().Object);
             builder.RegisterInstance(new Mock<INotifier>().Object);
             builder.RegisterInstance(new Mock<IContentDisplay>().Object);
@@ -83,7 +82,6 @@ namespace Orchard.Core.Tests.Body {
             }
         }
 
-        [UsedImplicitly]
         public class ThingHandler : ContentHandler {
             public ThingHandler() {
                 Filters.Add(new ActivatingFilter<Thing>(ThingDriver.ContentTypeName));

@@ -44,6 +44,601 @@
             Subscription connections
             </summary>
         </member>
+        <member name="T:StackExchange.Redis.ProfiledCommandEnumerable">
+            <summary>
+            A collection of IProfiledCommands.
+            
+            This is a very light weight data structure, only supporting enumeration.
+            
+            While it implements IEnumerable, it there are fewer allocations if one uses
+            it's explicit GetEnumerator() method.  Using `foreach` does this automatically.
+            
+            This type is not threadsafe.
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.ProfiledCommandEnumerable.GetEnumerator">
+            <summary>
+            Returns an implementor of IEnumerator that, provided it isn't accessed
+            though an interface, avoids allocations.
+            
+            `foreach` will automatically use this method.
+            </summary>
+        </member>
+        <member name="T:StackExchange.Redis.ProfiledCommandEnumerable.Enumerator">
+            <summary>
+            Implements IEnumerator for ProfiledCommandEnumerable.
+            This implementation is comparable to List.Enumerator and Dictionary.Enumerator,
+            and is provided to reduce allocations in the common (ie. foreach) case.
+            
+            This type is not threadsafe.
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.ProfiledCommandEnumerable.Enumerator.MoveNext">
+            <summary>
+            Advances the enumeration, returning true if there is a new element to consume and false
+            if enumeration is complete.
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.ProfiledCommandEnumerable.Enumerator.Reset">
+            <summary>
+            Resets the enumeration.
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.ProfiledCommandEnumerable.Enumerator.Dispose">
+            <summary>
+            Disposes the enumeration.
+            subsequent attempts to enumerate results in undefined behavior.
+            </summary>
+        </member>
+        <member name="P:StackExchange.Redis.ProfiledCommandEnumerable.Enumerator.Current">
+            <summary>
+            The current element.
+            </summary>
+        </member>
+        <member name="T:StackExchange.Redis.ConcurrentProfileStorageCollection">
+            <summary>
+            A thread-safe collection tailored to the "always append, with high contention, then enumerate once with no contention"
+            behavior of our profiling.
+            
+            Performs better than ConcurrentBag, which is important since profiling code shouldn't impact timings.
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.ConcurrentProfileStorageCollection.Add(StackExchange.Redis.ProfileStorage)">
+            <summary>
+            This method is thread-safe.
+            
+            Adds an element to the bag.
+            
+            Order is not preserved.
+            
+            The element can only be a member of *one* bag.
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.ConcurrentProfileStorageCollection.EnumerateAndReturnForReuse">
+            <summary>
+            This method returns an enumerable view of the bag, and returns it to 
+            an internal pool for reuse by GetOrCreate().
+            
+            It is not thread safe.
+            
+            It should only be called once the bag is finished being mutated.
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.ConcurrentProfileStorageCollection.ReturnForReuse">
+            <summary>
+            This returns the ConcurrentProfileStorageCollection to an internal pool for reuse by GetOrCreate().
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.ConcurrentProfileStorageCollection.GetOrCreate">
+            <summary>
+            Returns a ConcurrentProfileStorageCollection to use.
+            
+            It *may* have allocated a new one, or it may return one that has previously been released.
+            To return the collection, call EnumerateAndReturnForReuse()
+            </summary>
+        </member>
+        <member name="T:StackExchange.Redis.ConnectionMultiplexer">
+            <summary>
+            Represents an inter-related group of connections to redis servers
+            </summary>
+        </member>
+        <member name="T:StackExchange.Redis.IConnectionMultiplexer">
+            <summary>
+            Represents the abstract multiplexer API
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.IConnectionMultiplexer.RegisterProfiler(StackExchange.Redis.IProfiler)">
+            <summary>
+            Sets an IProfiler instance for this ConnectionMultiplexer.
+            
+            An IProfiler instances is used to determine which context to associate an
+            IProfiledCommand with.  See BeginProfiling(object) and FinishProfiling(object)
+            for more details.
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.IConnectionMultiplexer.BeginProfiling(System.Object)">
+            <summary>
+            Begins profiling for the given context.
+            
+            If the same context object is returned by the registered IProfiler, the IProfiledCommands
+            will be associated with each other.
+            
+            Call FinishProfiling with the same context to get the assocated commands.
+            
+            Note that forContext cannot be a WeakReference or a WeakReference&lt;T&gt;
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.IConnectionMultiplexer.FinishProfiling(System.Object,System.Boolean)">
+            <summary>
+            Stops profiling for the given context, returns all IProfiledCommands associated.
+            
+            By default this may do a sweep for dead profiling contexts, you can disable this by passing "allowCleanupSweep: false".
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.IConnectionMultiplexer.GetCounters">
+            <summary>
+            Get summary statistics associates with this server
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.IConnectionMultiplexer.GetEndPoints(System.Boolean)">
+            <summary>
+            Gets all endpoints defined on the server
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:StackExchange.Redis.IConnectionMultiplexer.Wait(System.Threading.Tasks.Task)">
+            <summary>
+            Wait for a given asynchronous operation to complete (or timeout)
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.IConnectionMultiplexer.Wait``1(System.Threading.Tasks.Task{``0})">
+            <summary>
+            Wait for a given asynchronous operation to complete (or timeout)
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.IConnectionMultiplexer.WaitAll(System.Threading.Tasks.Task[])">
+            <summary>
+            Wait for the given asynchronous operations to complete (or timeout)
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.IConnectionMultiplexer.HashSlot(StackExchange.Redis.RedisKey)">
+            <summary>
+            Compute the hash-slot of a specified key
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.IConnectionMultiplexer.GetSubscriber(System.Object)">
+            <summary>
+            Obtain a pub/sub subscriber connection to the specified server
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.IConnectionMultiplexer.GetDatabase(System.Int32,System.Object)">
+            <summary>
+            Obtain an interactive connection to a database inside redis
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.IConnectionMultiplexer.GetServer(System.String,System.Int32,System.Object)">
+            <summary>
+            Obtain a configuration API for an individual server
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.IConnectionMultiplexer.GetServer(System.String,System.Object)">
+            <summary>
+            Obtain a configuration API for an individual server
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.IConnectionMultiplexer.GetServer(System.Net.IPAddress,System.Int32)">
+            <summary>
+            Obtain a configuration API for an individual server
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.IConnectionMultiplexer.GetServer(System.Net.EndPoint,System.Object)">
+            <summary>
+            Obtain a configuration API for an individual server
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.IConnectionMultiplexer.ConfigureAsync(System.IO.TextWriter)">
+            <summary>
+            Reconfigure the current connections based on the existing configuration
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.IConnectionMultiplexer.Configure(System.IO.TextWriter)">
+            <summary>
+            Reconfigure the current connections based on the existing configuration
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.IConnectionMultiplexer.GetStatus">
+            <summary>
+            Provides a text overview of the status of all connections
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.IConnectionMultiplexer.GetStatus(System.IO.TextWriter)">
+            <summary>
+            Provides a text overview of the status of all connections
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.IConnectionMultiplexer.ToString">
+            <summary>
+            See Object.ToString()
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.IConnectionMultiplexer.Close(System.Boolean)">
+            <summary>
+            Close all connections and release all resources associated with this object
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.IConnectionMultiplexer.CloseAsync(System.Boolean)">
+            <summary>
+            Close all connections and release all resources associated with this object
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.IConnectionMultiplexer.Dispose">
+            <summary>
+            Release all resources associated with this object
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.IConnectionMultiplexer.GetStormLog">
+            <summary>
+            Obtains the log of unusual busy patterns
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.IConnectionMultiplexer.ResetStormLog">
+            <summary>
+            Resets the log of unusual busy patterns
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.IConnectionMultiplexer.PublishReconfigure(StackExchange.Redis.CommandFlags)">
+            <summary>
+            Request all compatible clients to reconfigure or reconnect
+            </summary>
+            <returns>The number of instances known to have received the message (however, the actual number can be higher; returns -1 if the operation is pending)</returns>
+        </member>
+        <member name="M:StackExchange.Redis.IConnectionMultiplexer.PublishReconfigureAsync(StackExchange.Redis.CommandFlags)">
+            <summary>
+            Request all compatible clients to reconfigure or reconnect
+            </summary>
+            <returns>The number of instances known to have received the message (however, the actual number can be higher)</returns>
+        </member>
+        <member name="P:StackExchange.Redis.IConnectionMultiplexer.ClientName">
+            <summary>
+            Gets the client-name that will be used on all new connections
+            </summary>
+        </member>
+        <member name="P:StackExchange.Redis.IConnectionMultiplexer.Configuration">
+            <summary>
+            Gets the configuration of the connection
+            </summary>
+        </member>
+        <member name="P:StackExchange.Redis.IConnectionMultiplexer.TimeoutMilliseconds">
+            <summary>
+            Gets the timeout associated with the connections
+            </summary>
+        </member>
+        <member name="P:StackExchange.Redis.IConnectionMultiplexer.OperationCount">
+            <summary>
+            The number of operations that have been performed on all connections
+            </summary>
+        </member>
+        <member name="P:StackExchange.Redis.IConnectionMultiplexer.PreserveAsyncOrder">
+            <summary>
+            Gets or sets whether asynchronous operations should be invoked in a way that guarantees their original delivery order
+            </summary>
+        </member>
+        <member name="P:StackExchange.Redis.IConnectionMultiplexer.IsConnected">
+            <summary>
+            Indicates whether any servers are connected
+            </summary>
+        </member>
+        <member name="P:StackExchange.Redis.IConnectionMultiplexer.IncludeDetailInExceptions">
+            <summary>
+            Should exceptions include identifiable details? (key names, additional .Data annotations)
+            </summary>
+        </member>
+        <member name="P:StackExchange.Redis.IConnectionMultiplexer.StormLogThreshold">
+            <summary>
+            Limit at which to start recording unusual busy patterns (only one log will be retained at a time;
+            set to a negative value to disable this feature)
+            </summary>
+        </member>
+        <member name="E:StackExchange.Redis.IConnectionMultiplexer.ErrorMessage">
+            <summary>
+            A server replied with an error message;
+            </summary>
+        </member>
+        <member name="E:StackExchange.Redis.IConnectionMultiplexer.ConnectionFailed">
+            <summary>
+            Raised whenever a physical connection fails
+            </summary>
+        </member>
+        <member name="E:StackExchange.Redis.IConnectionMultiplexer.InternalError">
+            <summary>
+            Raised whenever an internal error occurs (this is primarily for debugging)
+            </summary>
+        </member>
+        <member name="E:StackExchange.Redis.IConnectionMultiplexer.ConnectionRestored">
+            <summary>
+            Raised whenever a physical connection is established
+            </summary>
+        </member>
+        <member name="E:StackExchange.Redis.IConnectionMultiplexer.ConfigurationChanged">
+            <summary>
+            Raised when configuration changes are detected
+            </summary>
+        </member>
+        <member name="E:StackExchange.Redis.IConnectionMultiplexer.ConfigurationChangedBroadcast">
+            <summary>
+            Raised when nodes are explicitly requested to reconfigure via broadcast;
+            this usually means master/slave changes
+            </summary>
+        </member>
+        <member name="E:StackExchange.Redis.IConnectionMultiplexer.HashSlotMoved">
+            <summary>
+            Raised when a hash-slot has been relocated
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.ConnectionMultiplexer.RegisterProfiler(StackExchange.Redis.IProfiler)">
+            <summary>
+            Sets an IProfiler instance for this ConnectionMultiplexer.
+            
+            An IProfiler instances is used to determine which context to associate an
+            IProfiledCommand with.  See BeginProfiling(object) and FinishProfiling(object)
+            for more details.
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.ConnectionMultiplexer.BeginProfiling(System.Object)">
+            <summary>
+            Begins profiling for the given context.
+            
+            If the same context object is returned by the registered IProfiler, the IProfiledCommands
+            will be associated with each other.
+            
+            Call FinishProfiling with the same context to get the assocated commands.
+            
+            Note that forContext cannot be a WeakReference or a WeakReference&lt;T&gt;
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.ConnectionMultiplexer.FinishProfiling(System.Object,System.Boolean)">
+            <summary>
+            Stops profiling for the given context, returns all IProfiledCommands associated.
+            
+            By default this may do a sweep for dead profiling contexts, you can disable this by passing "allowCleanupSweep: false".
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.ConnectionMultiplexer.GetCounters">
+            <summary>
+            Get summary statistics associates with this server
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.ConnectionMultiplexer.ExportConfiguration(System.IO.Stream,StackExchange.Redis.ExportOptions)">
+            <summary>
+            Write the configuration of all servers to an output stream
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.ConnectionMultiplexer.GetEndPoints(System.Boolean)">
+            <summary>
+            Gets all endpoints defined on the server
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:StackExchange.Redis.ConnectionMultiplexer.Wait(System.Threading.Tasks.Task)">
+            <summary>
+            Wait for a given asynchronous operation to complete (or timeout)
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.ConnectionMultiplexer.Wait``1(System.Threading.Tasks.Task{``0})">
+            <summary>
+            Wait for a given asynchronous operation to complete (or timeout)
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.ConnectionMultiplexer.WaitAll(System.Threading.Tasks.Task[])">
+            <summary>
+            Wait for the given asynchronous operations to complete (or timeout)
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.ConnectionMultiplexer.HashSlot(StackExchange.Redis.RedisKey)">
+            <summary>
+            Compute the hash-slot of a specified key
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.ConnectionMultiplexer.ConnectAsync(System.String,System.IO.TextWriter)">
+            <summary>
+            Create a new ConnectionMultiplexer instance
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.ConnectionMultiplexer.ConnectAsync(StackExchange.Redis.ConfigurationOptions,System.IO.TextWriter)">
+            <summary>
+            Create a new ConnectionMultiplexer instance
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.ConnectionMultiplexer.Connect(System.String,System.IO.TextWriter)">
+            <summary>
+            Create a new ConnectionMultiplexer instance
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.ConnectionMultiplexer.Connect(StackExchange.Redis.ConfigurationOptions,System.IO.TextWriter)">
+            <summary>
+            Create a new ConnectionMultiplexer instance
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.ConnectionMultiplexer.GetSubscriber(System.Object)">
+            <summary>
+            Obtain a pub/sub subscriber connection to the specified server
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.ConnectionMultiplexer.GetDatabase(System.Int32,System.Object)">
+            <summary>
+            Obtain an interactive connection to a database inside redis
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.ConnectionMultiplexer.GetServer(System.String,System.Int32,System.Object)">
+            <summary>
+            Obtain a configuration API for an individual server
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.ConnectionMultiplexer.GetServer(System.String,System.Object)">
+            <summary>
+            Obtain a configuration API for an individual server
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.ConnectionMultiplexer.GetServer(System.Net.IPAddress,System.Int32)">
+            <summary>
+            Obtain a configuration API for an individual server
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.ConnectionMultiplexer.GetServer(System.Net.EndPoint,System.Object)">
+            <summary>
+            Obtain a configuration API for an individual server
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.ConnectionMultiplexer.ConfigureAsync(System.IO.TextWriter)">
+            <summary>
+            Reconfigure the current connections based on the existing configuration
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.ConnectionMultiplexer.Configure(System.IO.TextWriter)">
+            <summary>
+            Reconfigure the current connections based on the existing configuration
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.ConnectionMultiplexer.GetStatus">
+            <summary>
+            Provides a text overview of the status of all connections
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.ConnectionMultiplexer.GetStatus(System.IO.TextWriter)">
+            <summary>
+            Provides a text overview of the status of all connections
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.ConnectionMultiplexer.ToString">
+            <summary>
+            See Object.ToString()
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.ConnectionMultiplexer.Close(System.Boolean)">
+            <summary>
+            Close all connections and release all resources associated with this object
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.ConnectionMultiplexer.CloseAsync(System.Boolean)">
+            <summary>
+            Close all connections and release all resources associated with this object
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.ConnectionMultiplexer.Dispose">
+            <summary>
+            Release all resources associated with this object
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.ConnectionMultiplexer.GetStormLog">
+            <summary>
+            Obtains the log of unusual busy patterns
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.ConnectionMultiplexer.ResetStormLog">
+            <summary>
+            Resets the log of unusual busy patterns
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.ConnectionMultiplexer.PublishReconfigure(StackExchange.Redis.CommandFlags)">
+            <summary>
+            Request all compatible clients to reconfigure or reconnect
+            </summary>
+            <returns>The number of instances known to have received the message (however, the actual number can be higher; returns -1 if the operation is pending)</returns>
+        </member>
+        <member name="M:StackExchange.Redis.ConnectionMultiplexer.PublishReconfigureAsync(StackExchange.Redis.CommandFlags)">
+            <summary>
+            Request all compatible clients to reconfigure or reconnect
+            </summary>
+            <returns>The number of instances known to have received the message (however, the actual number can be higher)</returns>
+        </member>
+        <member name="P:StackExchange.Redis.ConnectionMultiplexer.Factory">
+            <summary>
+            Provides a way of overriding the default Task Factory. If not set, it will use the default Task.Factory.
+            Useful when top level code sets it's own factory which may interfere with Redis queries.
+            </summary>
+        </member>
+        <member name="P:StackExchange.Redis.ConnectionMultiplexer.ClientName">
+            <summary>
+            Gets the client-name that will be used on all new connections
+            </summary>
+        </member>
+        <member name="P:StackExchange.Redis.ConnectionMultiplexer.Configuration">
+            <summary>
+            Gets the configuration of the connection
+            </summary>
+        </member>
+        <member name="E:StackExchange.Redis.ConnectionMultiplexer.ErrorMessage">
+            <summary>
+            A server replied with an error message;
+            </summary>
+        </member>
+        <member name="P:StackExchange.Redis.ConnectionMultiplexer.LogSyncLock">
+            <summary>
+            Used internally to synchronize loggine without depending on locking the log instance
+            </summary>
+        </member>
+        <member name="E:StackExchange.Redis.ConnectionMultiplexer.ConnectionFailed">
+            <summary>
+            Raised whenever a physical connection fails
+            </summary>
+        </member>
+        <member name="E:StackExchange.Redis.ConnectionMultiplexer.InternalError">
+            <summary>
+            Raised whenever an internal error occurs (this is primarily for debugging)
+            </summary>
+        </member>
+        <member name="E:StackExchange.Redis.ConnectionMultiplexer.ConnectionRestored">
+            <summary>
+            Raised whenever a physical connection is established
+            </summary>
+        </member>
+        <member name="E:StackExchange.Redis.ConnectionMultiplexer.ConfigurationChanged">
+            <summary>
+            Raised when configuration changes are detected
+            </summary>
+        </member>
+        <member name="E:StackExchange.Redis.ConnectionMultiplexer.ConfigurationChangedBroadcast">
+            <summary>
+            Raised when nodes are explicitly requested to reconfigure via broadcast;
+            this usually means master/slave changes
+            </summary>
+        </member>
+        <member name="P:StackExchange.Redis.ConnectionMultiplexer.TimeoutMilliseconds">
+            <summary>
+            Gets the timeout associated with the connections
+            </summary>
+        </member>
+        <member name="E:StackExchange.Redis.ConnectionMultiplexer.HashSlotMoved">
+            <summary>
+            Raised when a hash-slot has been relocated
+            </summary>
+        </member>
+        <member name="P:StackExchange.Redis.ConnectionMultiplexer.OperationCount">
+            <summary>
+            The number of operations that have been performed on all connections
+            </summary>
+        </member>
+        <member name="P:StackExchange.Redis.ConnectionMultiplexer.PreserveAsyncOrder">
+            <summary>
+            Gets or sets whether asynchronous operations should be invoked in a way that guarantees their original delivery order
+            </summary>
+        </member>
+        <member name="P:StackExchange.Redis.ConnectionMultiplexer.IsConnected">
+            <summary>
+            Indicates whether any servers are connected
+            </summary>
+        </member>
+        <member name="P:StackExchange.Redis.ConnectionMultiplexer.IncludeDetailInExceptions">
+            <summary>
+            Should exceptions include identifiable details? (key names, additional .Data annotations)
+            </summary>
+        </member>
+        <member name="P:StackExchange.Redis.ConnectionMultiplexer.StormLogThreshold">
+            <summary>
+            Limit at which to start recording unusual busy patterns (only one log will be retained at a time;
+            set to a negative value to disable this feature)
+            </summary>
+        </member>
         <member name="T:StackExchange.Redis.ExtensionMethods">
             <summary>
             Utility methods
@@ -82,6 +677,11 @@
         <member name="M:StackExchange.Redis.ExtensionMethods.ToDictionary(System.Collections.Generic.KeyValuePair{System.String,System.String}[])">
             <summary>
             Create a dictionary from an array of string pairs
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.ExtensionMethods.ToStringArray(StackExchange.Redis.RedisValue[])">
+            <summary>
+            Create an array of strings from an array of values
             </summary>
         </member>
         <member name="T:StackExchange.Redis.HashEntry">
@@ -174,6 +774,131 @@
             The underlying origin of the error
             </summary>
         </member>
+        <member name="T:StackExchange.Redis.RetransmissionReasonType">
+            <summary>
+            If an IProfiledCommand is a retransmission of a previous command, this enum
+            is used to indicate what prompted the retransmission.
+            
+            This can be used to distinguish between transient causes (moving hashslots, joining nodes, etc.)
+            and incorrect routing.
+            </summary>
+        </member>
+        <member name="F:StackExchange.Redis.RetransmissionReasonType.None">
+            <summary>
+            No stated reason
+            </summary>
+        </member>
+        <member name="F:StackExchange.Redis.RetransmissionReasonType.Ask">
+            <summary>
+            Issued to investigate which node owns a key
+            </summary>
+        </member>
+        <member name="F:StackExchange.Redis.RetransmissionReasonType.Moved">
+            <summary>
+            A node has indicated that it does *not* own the given key
+            </summary>
+        </member>
+        <member name="T:StackExchange.Redis.IProfiledCommand">
+            <summary>
+            A profiled command against a redis instance.
+            
+            TimeSpans returned by this interface use a high precision timer if possible.
+            DateTimes returned by this interface are no more precise than DateTime.UtcNow.
+            </summary>
+        </member>
+        <member name="P:StackExchange.Redis.IProfiledCommand.EndPoint">
+            <summary>
+            The endpoint this command was sent to.
+            </summary>
+        </member>
+        <member name="P:StackExchange.Redis.IProfiledCommand.Db">
+            <summary>
+            The Db this command was sent to.
+            </summary>
+        </member>
+        <member name="P:StackExchange.Redis.IProfiledCommand.Command">
+            <summary>
+            The name of this command.
+            </summary>
+        </member>
+        <member name="P:StackExchange.Redis.IProfiledCommand.Flags">
+            <summary>
+            The CommandFlags the command was submitted with.
+            </summary>
+        </member>
+        <member name="P:StackExchange.Redis.IProfiledCommand.CommandCreated">
+            <summary>
+            When this command was *created*, will be approximately
+            when the paired method of StackExchange.Redis was called but
+            before that method returned.
+            
+            Note that the resolution of the returned DateTime is limited by DateTime.UtcNow.
+            </summary>
+        </member>
+        <member name="P:StackExchange.Redis.IProfiledCommand.CreationToEnqueued">
+            <summary>
+            How long this command waited to be added to the queue of pending
+            redis commands.  A large TimeSpan indicates serious contention for
+            the pending queue.
+            </summary>
+        </member>
+        <member name="P:StackExchange.Redis.IProfiledCommand.EnqueuedToSending">
+            <summary>
+            How long this command spent in the pending queue before being sent to redis.
+            A large TimeSpan can indicate a large number of pending events, large pending events,
+            or network issues.
+            </summary>
+        </member>
+        <member name="P:StackExchange.Redis.IProfiledCommand.SentToResponse">
+            <summary>
+            How long before Redis responded to this command and it's response could be handled after it was sent.
+            A large TimeSpan can indicate a large response body, an overtaxed redis instance, or network issues.
+            </summary>
+        </member>
+        <member name="P:StackExchange.Redis.IProfiledCommand.ResponseToCompletion">
+            <summary>
+            How long between Redis responding to this command and awaiting consumers being notified.
+            </summary>
+        </member>
+        <member name="P:StackExchange.Redis.IProfiledCommand.ElapsedTime">
+            <summary>
+            How long it took this redis command to be processed, from creation to deserializing the final resposne.
+            
+            Note that this TimeSpan *does not* include time spent awaiting a Task in consumer code.
+            </summary>
+        </member>
+        <member name="P:StackExchange.Redis.IProfiledCommand.RetransmissionOf">
+            <summary>
+            If a command has to be resent due to an ASK or MOVED response from redis (in a cluster configuration),
+            the second sending of the command will have this property set to the original IProfiledCommand.
+            
+            This can only be set if redis is configured as a cluster.
+            </summary>
+        </member>
+        <member name="P:StackExchange.Redis.IProfiledCommand.RetransmissionReason">
+            <summary>
+            If RetransmissionOf is not null, this property will be set to either Ask or Moved to indicate
+            what sort of response triggered the retransmission.
+            
+            This can be useful for determining the root cause of extra commands.
+            </summary>
+        </member>
+        <member name="T:StackExchange.Redis.IProfiler">
+            <summary>
+            Interface for profiling individual commands against an Redis ConnectionMulitplexer.
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.IProfiler.GetContext">
+            <summary>
+            Called to provide a context object.
+            
+            This method is called before the method which triggers work against redis (such as StringSet(Async)) returns,
+            and will always be called on the same thread as that method.
+            
+            Note that GetContext() may be called even if ConnectionMultiplexer.BeginProfiling() has not been called.
+            You may return `null` to prevent any tracking of commands.
+            </summary>
+        </member>
         <member name="T:StackExchange.Redis.MigrateOptions">
             <summary>
             Additional options for the MIGRATE command
@@ -194,9 +919,211 @@
             Replace existing key on the remote instance.
             </summary>
         </member>
+        <member name="T:StackExchange.Redis.ProfileContextTracker">
+            <summary>
+            Big ol' wrapper around most of the profiling storage logic, 'cause it got too big to just live in ConnectionMultiplexer.
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.ProfileContextTracker.TryCreate(System.Object)">
+            <summary>
+            Registers the passed context with a collection that can be retried with subsequent calls to TryGetValue.
+            
+            Returns false if the passed context object is already registered.
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.ProfileContextTracker.TryGetValue(System.Object,StackExchange.Redis.ConcurrentProfileStorageCollection@)">
+            <summary>
+            Returns true and sets val to the tracking collection associated with the given context if the context
+            was registered with TryCreate.
+            
+            Otherwise returns false and sets val to null.
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.ProfileContextTracker.TryRemove(System.Object,StackExchange.Redis.ProfiledCommandEnumerable@)">
+            <summary>
+            Removes a context, setting all commands to a (non-thread safe) enumerable of
+            all the commands attached to that context.
+            
+            If the context was never registered, will return false and set commands to null.
+            
+            Subsequent calls to TryRemove with the same context will return false unless it is
+            re-registered with TryCreate.
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.ProfileContextTracker.TryCleanup">
+            <summary>
+            If enough time has passed (1 minute) since the last call, this does walk of all contexts
+            and removes those that the GC has collected.
+            </summary>
+        </member>
+        <member name="T:StackExchange.Redis.ProfileContextTracker.ProfileContextCell">
+            <summary>
+            Necessary, because WeakReference can't be readily comparable (since the reference is... weak).
+            
+            This lets us detect leaks* with some reasonable confidence, and cleanup periodically.
+            
+            Some calisthenics are done to avoid allocating WeakReferences for no reason, as often
+            we're just looking up ProfileStorage.
+            
+            * Somebody starts profiling, but for whatever reason never *stops* with a context object
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.ProfileContextTracker.ProfileContextCell.ToStoreUnder(System.Object)">
+            <summary>
+            Suitable for use as a key into something.
+            
+            This instance **WILL NOT** keep forObj alive, so it can
+            be copied out of the calling method's scope.
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.ProfileContextTracker.ProfileContextCell.ToLookupBy(System.Object)">
+            <summary>
+            Only suitable for looking up.
+            
+            This instance **ABSOLUTELY WILL** keep forObj alive, so this
+            had better not be copied into anything outside the scope of the
+            calling method.
+            </summary>
+        </member>
+        <member name="T:StackExchange.Redis.LuaScript">
+            <summary>
+            Represents a Lua script that can be executed on Redis.
+            
+            Unlike normal Redis Lua scripts, LuaScript can have named parameters (prefixed by a @).
+            Public fields and properties of the passed in object are treated as parameters.
+            
+            Parameters of type RedisKey are sent to Redis as KEY (http://redis.io/commands/eval) in addition to arguments, 
+            so as to play nicely with Redis Cluster.
+            
+            All members of this class are thread safe.
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.LuaScript.Finalize">
+            <summary>
+            Finalizer, used to prompt cleanups of the script cache when
+            a LuaScript reference goes out of scope.
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.LuaScript.PurgeCache">
+            <summary>
+            Invalidates the internal cache of LuaScript objects.
+            Existing LuaScripts will continue to work, but future calls to LuaScript.Prepare
+            return a new LuaScript instance.
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.LuaScript.GetCachedScriptCount">
+            <summary>
+            Returns the number of cached LuaScripts.
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.LuaScript.Prepare(System.String)">
+            <summary>
+            Prepares a Lua script with named parameters to be run against any Redis instance.
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.LuaScript.Evaluate(StackExchange.Redis.IDatabase,System.Object,System.Nullable{StackExchange.Redis.RedisKey},StackExchange.Redis.CommandFlags)">
+            <summary>
+            Evaluates this LuaScript against the given database, extracting parameters from the passed in object if any.
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.LuaScript.EvaluateAsync(StackExchange.Redis.IDatabaseAsync,System.Object,System.Nullable{StackExchange.Redis.RedisKey},StackExchange.Redis.CommandFlags)">
+            <summary>
+            Evaluates this LuaScript against the given database, extracting parameters from the passed in object if any.
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.LuaScript.Load(StackExchange.Redis.IServer,StackExchange.Redis.CommandFlags)">
+            <summary>
+            Loads this LuaScript into the given IServer so it can be run with it's SHA1 hash, instead of
+            passing the full script on each Evaluate or EvaluateAsync call.
+            
+            Note: the FireAndForget command flag cannot be set
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.LuaScript.LoadAsync(StackExchange.Redis.IServer,StackExchange.Redis.CommandFlags)">
+            <summary>
+            Loads this LuaScript into the given IServer so it can be run with it's SHA1 hash, instead of
+            passing the full script on each Evaluate or EvaluateAsync call.
+            
+            Note: the FireAndForget command flag cannot be set
+            </summary>
+        </member>
+        <member name="P:StackExchange.Redis.LuaScript.OriginalScript">
+            <summary>
+            The original Lua script that was used to create this.
+            </summary>
+        </member>
+        <member name="P:StackExchange.Redis.LuaScript.ExecutableScript">
+            <summary>
+            The Lua script that will actually be sent to Redis for execution.
+            
+            All @-prefixed parameter names have been replaced at this point.
+            </summary>
+        </member>
+        <member name="T:StackExchange.Redis.LoadedLuaScript">
+            <summary>
+            Represents a Lua script that can be executed on Redis.
+            
+            Unlike LuaScript, LoadedLuaScript sends the hash of it's ExecutableScript to Redis rather than pass
+            the whole script on each call.  This requires that the script be loaded into Redis before it is used.
+            
+            To create a LoadedLuaScript first create a LuaScript via LuaScript.Prepare(string), then
+            call Load(IServer, CommandFlags) on the returned LuaScript.
+            
+            Unlike normal Redis Lua scripts, LoadedLuaScript can have named parameters (prefixed by a @).
+            Public fields and properties of the passed in object are treated as parameters.
+            
+            Parameters of type RedisKey are sent to Redis as KEY (http://redis.io/commands/eval) in addition to arguments, 
+            so as to play nicely with Redis Cluster.
+            
+            All members of this class are thread safe.
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.LoadedLuaScript.Evaluate(StackExchange.Redis.IDatabase,System.Object,System.Nullable{StackExchange.Redis.RedisKey},StackExchange.Redis.CommandFlags)">
+            <summary>
+            Evaluates this LoadedLuaScript against the given database, extracting parameters for the passed in object if any.
+            
+            This method sends the SHA1 hash of the ExecutableScript instead of the script itself.  If the script has not
+            been loaded into the passed Redis instance it will fail.
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.LoadedLuaScript.EvaluateAsync(StackExchange.Redis.IDatabaseAsync,System.Object,System.Nullable{StackExchange.Redis.RedisKey},StackExchange.Redis.CommandFlags)">
+            <summary>
+            Evaluates this LoadedLuaScript against the given database, extracting parameters for the passed in object if any.
+            
+            This method sends the SHA1 hash of the ExecutableScript instead of the script itself.  If the script has not
+            been loaded into the passed Redis instance it will fail.
+            </summary>
+        </member>
+        <member name="P:StackExchange.Redis.LoadedLuaScript.OriginalScript">
+            <summary>
+            The original script that was used to create this LoadedLuaScript.
+            </summary>
+        </member>
+        <member name="P:StackExchange.Redis.LoadedLuaScript.ExecutableScript">
+            <summary>
+            The script that will actually be sent to Redis for execution.
+            </summary>
+        </member>
+        <member name="P:StackExchange.Redis.LoadedLuaScript.Hash">
+            <summary>
+            The SHA1 hash of ExecutableScript.
+            
+            This is sent to Redis instead of ExecutableScript during Evaluate and EvaluateAsync calls.
+            </summary>
+        </member>
         <member name="T:StackExchange.Redis.RedisChannel">
             <summary>
             Represents a pub/sub channel name
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.RedisChannel.#ctor(System.Byte[],StackExchange.Redis.RedisChannel.PatternMode)">
+            <summary>
+            Create a new redis channel from a buffer, explicitly controlling the pattern mode
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.RedisChannel.#ctor(System.String,StackExchange.Redis.RedisChannel.PatternMode)">
+            <summary>
+            Create a new redis channel from a string, explicitly controlling the pattern mode
             </summary>
         </member>
         <member name="M:StackExchange.Redis.RedisChannel.op_Inequality(StackExchange.Redis.RedisChannel,StackExchange.Redis.RedisChannel)">
@@ -292,6 +1219,26 @@
         <member name="P:StackExchange.Redis.RedisChannel.IsNullOrEmpty">
             <summary>
             Indicates whether the channel-name is either null or a zero-length value
+            </summary>
+        </member>
+        <member name="T:StackExchange.Redis.RedisChannel.PatternMode">
+            <summary>
+            The matching pattern for this channel
+            </summary>
+        </member>
+        <member name="F:StackExchange.Redis.RedisChannel.PatternMode.Auto">
+            <summary>
+            Will be treated as a pattern if it includes *
+            </summary>
+        </member>
+        <member name="F:StackExchange.Redis.RedisChannel.PatternMode.Literal">
+            <summary>
+            Never a pattern
+            </summary>
+        </member>
+        <member name="F:StackExchange.Redis.RedisChannel.PatternMode.Pattern">
+            <summary>
+            Always a pattern
             </summary>
         </member>
         <member name="T:StackExchange.Redis.Bitwise">
@@ -837,7 +1784,7 @@
         </member>
         <member name="P:StackExchange.Redis.ConfigurationOptions.ClientName">
             <summary>
-            The client name to user for all connections
+            The client name to use for all connections
             </summary>
         </member>
         <member name="P:StackExchange.Redis.ConfigurationOptions.ConnectRetry">
@@ -908,7 +1855,13 @@
         </member>
         <member name="P:StackExchange.Redis.ConfigurationOptions.SyncTimeout">
             <summary>
-            Specifies the time in milliseconds that the system should allow for synchronous operations
+            Specifies the time in milliseconds that the system should allow for synchronous operations (defaults to 1 second)
+            </summary>
+        </member>
+        <member name="P:StackExchange.Redis.ConfigurationOptions.ResponseTimeout">
+            <summary>
+            Specifies the time in milliseconds that the system should allow for responses before concluding that the socket is unhealthy
+            (defaults to SyncTimeout)
             </summary>
         </member>
         <member name="P:StackExchange.Redis.ConfigurationOptions.TieBreaker">
@@ -919,6 +1872,16 @@
         <member name="P:StackExchange.Redis.ConfigurationOptions.WriteBuffer">
             <summary>
             The size of the output buffer to use
+            </summary>
+        </member>
+        <member name="P:StackExchange.Redis.ConfigurationOptions.DefaultDatabase">
+            <summary>
+            Specifies the default database to be used when calling ConnectionMultiplexer.GetDatabase() without any parameters
+            </summary>
+        </member>
+        <member name="P:StackExchange.Redis.ConfigurationOptions.ConfigCheckSeconds">
+            <summary>
+            Check configuration every n seconds (every minute by default)
             </summary>
         </member>
         <member name="T:StackExchange.Redis.ConnectionCounters">
@@ -1082,241 +2045,6 @@
             It has not been possible to create an intial connection to the redis server(s)
             </summary>
         </member>
-        <member name="T:StackExchange.Redis.ConnectionMultiplexer">
-            <summary>
-            Represents an inter-related group of connections to redis servers
-            </summary>
-        </member>
-        <member name="M:StackExchange.Redis.ConnectionMultiplexer.GetCounters">
-            <summary>
-            Get summary statistics associates with this server
-            </summary>
-        </member>
-        <member name="M:StackExchange.Redis.ConnectionMultiplexer.ExportConfiguration(System.IO.Stream,StackExchange.Redis.ExportOptions)">
-            <summary>
-            Write the configuration of all servers to an output stream
-            </summary>
-        </member>
-        <member name="M:StackExchange.Redis.ConnectionMultiplexer.GetEndPoints(System.Boolean)">
-            <summary>
-            Gets all endpoints defined on the server
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:StackExchange.Redis.ConnectionMultiplexer.Wait(System.Threading.Tasks.Task)">
-            <summary>
-            Wait for a given asynchronous operation to complete (or timeout)
-            </summary>
-        </member>
-        <member name="M:StackExchange.Redis.ConnectionMultiplexer.Wait``1(System.Threading.Tasks.Task{``0})">
-            <summary>
-            Wait for a given asynchronous operation to complete (or timeout)
-            </summary>
-        </member>
-        <member name="M:StackExchange.Redis.ConnectionMultiplexer.WaitAll(System.Threading.Tasks.Task[])">
-            <summary>
-            Wait for the given asynchronous operations to complete (or timeout)
-            </summary>
-        </member>
-        <member name="M:StackExchange.Redis.ConnectionMultiplexer.HashSlot(StackExchange.Redis.RedisKey)">
-            <summary>
-            Compute the hash-slot of a specified key
-            </summary>
-        </member>
-        <member name="M:StackExchange.Redis.ConnectionMultiplexer.ConnectAsync(System.String,System.IO.TextWriter)">
-            <summary>
-            Create a new ConnectionMultiplexer instance
-            </summary>
-        </member>
-        <member name="M:StackExchange.Redis.ConnectionMultiplexer.ConnectAsync(StackExchange.Redis.ConfigurationOptions,System.IO.TextWriter)">
-            <summary>
-            Create a new ConnectionMultiplexer instance
-            </summary>
-        </member>
-        <member name="M:StackExchange.Redis.ConnectionMultiplexer.Connect(System.String,System.IO.TextWriter)">
-            <summary>
-            Create a new ConnectionMultiplexer instance
-            </summary>
-        </member>
-        <member name="M:StackExchange.Redis.ConnectionMultiplexer.Connect(StackExchange.Redis.ConfigurationOptions,System.IO.TextWriter)">
-            <summary>
-            Create a new ConnectionMultiplexer instance
-            </summary>
-        </member>
-        <member name="M:StackExchange.Redis.ConnectionMultiplexer.GetSubscriber(System.Object)">
-            <summary>
-            Obtain a pub/sub subscriber connection to the specified server
-            </summary>
-        </member>
-        <member name="M:StackExchange.Redis.ConnectionMultiplexer.GetDatabase(System.Int32,System.Object)">
-            <summary>
-            Obtain an interactive connection to a database inside redis
-            </summary>
-        </member>
-        <member name="M:StackExchange.Redis.ConnectionMultiplexer.GetServer(System.String,System.Int32,System.Object)">
-            <summary>
-            Obtain a configuration API for an individual server
-            </summary>
-        </member>
-        <member name="M:StackExchange.Redis.ConnectionMultiplexer.GetServer(System.String,System.Object)">
-            <summary>
-            Obtain a configuration API for an individual server
-            </summary>
-        </member>
-        <member name="M:StackExchange.Redis.ConnectionMultiplexer.GetServer(System.Net.IPAddress,System.Int32)">
-            <summary>
-            Obtain a configuration API for an individual server
-            </summary>
-        </member>
-        <member name="M:StackExchange.Redis.ConnectionMultiplexer.GetServer(System.Net.EndPoint,System.Object)">
-            <summary>
-            Obtain a configuration API for an individual server
-            </summary>
-        </member>
-        <member name="M:StackExchange.Redis.ConnectionMultiplexer.ConfigureAsync(System.IO.TextWriter)">
-            <summary>
-            Reconfigure the current connections based on the existing configuration
-            </summary>
-        </member>
-        <member name="M:StackExchange.Redis.ConnectionMultiplexer.Configure(System.IO.TextWriter)">
-            <summary>
-            Reconfigure the current connections based on the existing configuration
-            </summary>
-        </member>
-        <member name="M:StackExchange.Redis.ConnectionMultiplexer.GetStatus">
-            <summary>
-            Provides a text overview of the status of all connections
-            </summary>
-        </member>
-        <member name="M:StackExchange.Redis.ConnectionMultiplexer.GetStatus(System.IO.TextWriter)">
-            <summary>
-            Provides a text overview of the status of all connections
-            </summary>
-        </member>
-        <member name="M:StackExchange.Redis.ConnectionMultiplexer.ToString">
-            <summary>
-            See Object.ToString()
-            </summary>
-        </member>
-        <member name="M:StackExchange.Redis.ConnectionMultiplexer.Close(System.Boolean)">
-            <summary>
-            Close all connections and release all resources associated with this object
-            </summary>
-        </member>
-        <member name="M:StackExchange.Redis.ConnectionMultiplexer.CloseAsync(System.Boolean)">
-            <summary>
-            Close all connections and release all resources associated with this object
-            </summary>
-        </member>
-        <member name="M:StackExchange.Redis.ConnectionMultiplexer.Dispose">
-            <summary>
-            Release all resources associated with this object
-            </summary>
-        </member>
-        <member name="M:StackExchange.Redis.ConnectionMultiplexer.GetStormLog">
-            <summary>
-            Obtains the log of unusual busy patterns
-            </summary>
-        </member>
-        <member name="M:StackExchange.Redis.ConnectionMultiplexer.ResetStormLog">
-            <summary>
-            Resets the log of unusual busy patterns
-            </summary>
-        </member>
-        <member name="M:StackExchange.Redis.ConnectionMultiplexer.PublishReconfigure(StackExchange.Redis.CommandFlags)">
-            <summary>
-            Request all compatible clients to reconfigure or reconnect
-            </summary>
-            <returns>The number of instances known to have received the message (however, the actual number can be higher)</returns>
-        </member>
-        <member name="M:StackExchange.Redis.ConnectionMultiplexer.PublishReconfigureAsync(StackExchange.Redis.CommandFlags)">
-            <summary>
-            Request all compatible clients to reconfigure or reconnect
-            </summary>
-            <returns>The number of instances known to have received the message (however, the actual number can be higher)</returns>
-        </member>
-        <member name="P:StackExchange.Redis.ConnectionMultiplexer.ClientName">
-            <summary>
-            Gets the client-name that will be used on all new connections
-            </summary>
-        </member>
-        <member name="P:StackExchange.Redis.ConnectionMultiplexer.Configuration">
-            <summary>
-            Gets the configuration of the connection
-            </summary>
-        </member>
-        <member name="E:StackExchange.Redis.ConnectionMultiplexer.ErrorMessage">
-            <summary>
-            A server replied with an error message;
-            </summary>
-        </member>
-        <member name="P:StackExchange.Redis.ConnectionMultiplexer.LogSyncLock">
-            <summary>
-            Used internally to synchronize loggine without depending on locking the log instance
-            </summary>
-        </member>
-        <member name="E:StackExchange.Redis.ConnectionMultiplexer.ConnectionFailed">
-            <summary>
-            Raised whenever a physical connection fails
-            </summary>
-        </member>
-        <member name="E:StackExchange.Redis.ConnectionMultiplexer.InternalError">
-            <summary>
-            Raised whenever an internal error occurs (this is primarily for debugging)
-            </summary>
-        </member>
-        <member name="E:StackExchange.Redis.ConnectionMultiplexer.ConnectionRestored">
-            <summary>
-            Raised whenever a physical connection is established
-            </summary>
-        </member>
-        <member name="E:StackExchange.Redis.ConnectionMultiplexer.ConfigurationChanged">
-            <summary>
-            Raised when configuration changes are detected
-            </summary>
-        </member>
-        <member name="E:StackExchange.Redis.ConnectionMultiplexer.ConfigurationChangedBroadcast">
-            <summary>
-            Raised when nodes are explicitly requested to reconfigure via broadcast;
-            this usually means master/slave changes
-            </summary>
-        </member>
-        <member name="P:StackExchange.Redis.ConnectionMultiplexer.TimeoutMilliseconds">
-            <summary>
-            Gets the timeout associated with the connections
-            </summary>
-        </member>
-        <member name="E:StackExchange.Redis.ConnectionMultiplexer.HashSlotMoved">
-            <summary>
-            Raised when a hash-slot has been relocated
-            </summary>
-        </member>
-        <member name="P:StackExchange.Redis.ConnectionMultiplexer.OperationCount">
-            <summary>
-            The number of operations that have been performed on all connections
-            </summary>
-        </member>
-        <member name="P:StackExchange.Redis.ConnectionMultiplexer.PreserveAsyncOrder">
-            <summary>
-            Gets or sets whether asynchronous operations should be invoked in a way that guarantees their original delivery order
-            </summary>
-        </member>
-        <member name="P:StackExchange.Redis.ConnectionMultiplexer.IsConnected">
-            <summary>
-            Indicates whether any servers are connected
-            </summary>
-        </member>
-        <member name="P:StackExchange.Redis.ConnectionMultiplexer.IncludeDetailInExceptions">
-            <summary>
-            Should exceptions include identifiable details? (key names, additional .Data annotations)
-            </summary>
-        </member>
-        <member name="P:StackExchange.Redis.ConnectionMultiplexer.StormLogThreshold">
-            <summary>
-            Limit at which to start recording unusual busy patterns (only one log will be retained at a time;
-            set to a negative value to disable this feature)
-            </summary>
-        </member>
         <member name="T:StackExchange.Redis.ConnectionType">
             <summary>
             The type of a connection
@@ -1335,6 +2063,26 @@
         <member name="F:StackExchange.Redis.ConnectionType.Subscription">
             <summary>
             A subscriber connection recieves unsolicted messages from the server as pub/sub events occur
+            </summary>
+        </member>
+        <member name="T:StackExchange.Redis.CompletionType">
+            <summary>
+            Completion type for CompletionTypeHelper
+            </summary>
+        </member>
+        <member name="F:StackExchange.Redis.CompletionType.Any">
+            <summary>
+            Retain original completion type (either sync or async)
+            </summary>
+        </member>
+        <member name="F:StackExchange.Redis.CompletionType.Sync">
+            <summary>
+            Force sync completion
+            </summary>
+        </member>
+        <member name="F:StackExchange.Redis.CompletionType.Async">
+            <summary>
+            Force async completion
             </summary>
         </member>
         <member name="T:StackExchange.Redis.EndPointCollection">
@@ -1637,6 +2385,13 @@
             <returns>The approximated number of unique elements observed via HyperLogLogAdd.</returns>
             <remarks>http://redis.io/commands/pfcount</remarks>
         </member>
+        <member name="M:StackExchange.Redis.IDatabaseAsync.HyperLogLogLengthAsync(StackExchange.Redis.RedisKey[],StackExchange.Redis.CommandFlags)">
+            <summary>
+            Returns the approximated cardinality of the union of the HyperLogLogs passed, by internally merging the HyperLogLogs stored at the provided keys into a temporary hyperLogLog, or 0 if the variable does not exist.
+            </summary>
+            <returns>The approximated number of unique elements observed via HyperLogLogAdd.</returns>
+            <remarks>http://redis.io/commands/pfcount</remarks>
+        </member>
         <member name="M:StackExchange.Redis.IDatabaseAsync.HyperLogLogMergeAsync(StackExchange.Redis.RedisKey,StackExchange.Redis.RedisKey,StackExchange.Redis.RedisKey,StackExchange.Redis.CommandFlags)">
             <summary>
             Merge multiple HyperLogLog values into an unique value that will approximate the cardinality of the union of the observed Sets of the source HyperLogLog structures.
@@ -1918,6 +2673,19 @@
             </summary>
             <remarks>http://redis.io/commands/evalsha</remarks>
             <returns>A dynamic representation of the script's result</returns>
+        </member>
+        <member name="M:StackExchange.Redis.IDatabaseAsync.ScriptEvaluateAsync(StackExchange.Redis.LuaScript,System.Object,StackExchange.Redis.CommandFlags)">
+            <summary>
+            Execute a lua script against the server, using previously prepared script.
+            Named parameters, if any, are provided by the `parameters` object.
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.IDatabaseAsync.ScriptEvaluateAsync(StackExchange.Redis.LoadedLuaScript,System.Object,StackExchange.Redis.CommandFlags)">
+            <summary>
+            Execute a lua script against the server, using previously prepared and loaded script.
+            This method sends only the SHA1 hash of the lua script to Redis.
+            Named parameters, if any, are provided by the `parameters` object.
+            </summary>
         </member>
         <member name="M:StackExchange.Redis.IDatabaseAsync.SetAddAsync(StackExchange.Redis.RedisKey,StackExchange.Redis.RedisValue,StackExchange.Redis.CommandFlags)">
             <summary>
@@ -2398,6 +3166,26 @@
             <returns>The observed latency.</returns>
             <remarks>http://redis.io/commands/ping</remarks>
         </member>
+        <member name="T:StackExchange.Redis.IScanningCursor">
+            <summary>
+            Represents a resumable, cursor-based scanning operation
+            </summary>
+        </member>
+        <member name="P:StackExchange.Redis.IScanningCursor.Cursor">
+            <summary>
+            Returns the cursor that represents the *active* page of results (not the pending/next page of results as returned by SCAN/HSCAN/ZSCAN/SSCAN)
+            </summary>
+        </member>
+        <member name="P:StackExchange.Redis.IScanningCursor.PageSize">
+            <summary>
+            The page size of the current operation
+            </summary>
+        </member>
+        <member name="P:StackExchange.Redis.IScanningCursor.PageOffset">
+            <summary>
+            The offset into the current page
+            </summary>
+        </member>
         <member name="T:StackExchange.Redis.IDatabase">
             <summary>
             Describes functionality that is common to both standalone redis servers and redis clusters
@@ -2523,6 +3311,13 @@
             <returns>yields all elements of the hash.</returns>
             <remarks>http://redis.io/commands/hscan</remarks>
         </member>
+        <member name="M:StackExchange.Redis.IDatabase.HashScan(StackExchange.Redis.RedisKey,StackExchange.Redis.RedisValue,System.Int32,System.Int64,System.Int32,StackExchange.Redis.CommandFlags)">
+            <summary>
+            The HSCAN command is used to incrementally iterate over a hash; note: to resume an iteration via <i>cursor</i>, cast the original enumerable or enumerator to <i>IScanningCursor</i>.
+            </summary>
+            <returns>yields all elements of the hash.</returns>
+            <remarks>http://redis.io/commands/hscan</remarks>
+        </member>
         <member name="M:StackExchange.Redis.IDatabase.HashSet(StackExchange.Redis.RedisKey,StackExchange.Redis.HashEntry[],StackExchange.Redis.CommandFlags)">
             <summary>
             Sets the specified fields to their respective values in the hash stored at key. This command overwrites any existing fields in the hash. If key does not exist, a new key holding a hash is created.
@@ -2561,6 +3356,13 @@
         <member name="M:StackExchange.Redis.IDatabase.HyperLogLogLength(StackExchange.Redis.RedisKey,StackExchange.Redis.CommandFlags)">
             <summary>
             Returns the approximated cardinality computed by the HyperLogLog data structure stored at the specified variable, or 0 if the variable does not exist.
+            </summary>
+            <returns>The approximated number of unique elements observed via HyperLogLogAdd.</returns>
+            <remarks>http://redis.io/commands/pfcount</remarks>
+        </member>
+        <member name="M:StackExchange.Redis.IDatabase.HyperLogLogLength(StackExchange.Redis.RedisKey[],StackExchange.Redis.CommandFlags)">
+            <summary>
+            Returns the approximated cardinality of the union of the HyperLogLogs passed, by internally merging the HyperLogLogs stored at the provided keys into a temporary hyperLogLog, or 0 if the variable does not exist.
             </summary>
             <returns>The approximated number of unique elements observed via HyperLogLogAdd.</returns>
             <remarks>http://redis.io/commands/pfcount</remarks>
@@ -2622,7 +3424,7 @@
             <remarks>http://redis.io/commands/persist</remarks>
         </member>
         <member name="M:StackExchange.Redis.IDatabase.KeyExpire(StackExchange.Redis.RedisKey,System.Nullable{System.DateTime},StackExchange.Redis.CommandFlags)">
-            <summary>C:\Dev\Redis\StackExchange.Redis\StackExchange\Redis\
+            <summary>
             Set a timeout on key. After the timeout has expired, the key will automatically be deleted. A key with an associated timeout is said to be volatile in Redis terminology.
             </summary>
             <remarks>If key is updated before the timeout has expired, then the timeout is removed as if the PERSIST command was invoked on key.
@@ -2835,6 +3637,19 @@
             <remarks>http://redis.io/commands/evalsha</remarks>
             <returns>A dynamic representation of the script's result</returns>
         </member>
+        <member name="M:StackExchange.Redis.IDatabase.ScriptEvaluate(StackExchange.Redis.LuaScript,System.Object,StackExchange.Redis.CommandFlags)">
+            <summary>
+            Execute a lua script against the server, using previously prepared script.
+            Named parameters, if any, are provided by the `parameters` object.
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.IDatabase.ScriptEvaluate(StackExchange.Redis.LoadedLuaScript,System.Object,StackExchange.Redis.CommandFlags)">
+            <summary>
+            Execute a lua script against the server, using previously prepared and loaded script.
+            This method sends only the SHA1 hash of the lua script to Redis.
+            Named parameters, if any, are provided by the `parameters` object.
+            </summary>
+        </member>
         <member name="M:StackExchange.Redis.IDatabase.SetAdd(StackExchange.Redis.RedisKey,StackExchange.Redis.RedisValue,StackExchange.Redis.CommandFlags)">
             <summary>
             Add the specified member to the set stored at key. Specified members that are already a member of this set are ignored. If key does not exist, a new set is created before adding the specified members.
@@ -2953,6 +3768,13 @@
         <member name="M:StackExchange.Redis.IDatabase.SetScan(StackExchange.Redis.RedisKey,StackExchange.Redis.RedisValue,System.Int32,StackExchange.Redis.CommandFlags)">
             <summary>
             The SSCAN command is used to incrementally iterate over set
+            </summary>
+            <returns>yields all elements of the set.</returns>
+            <remarks>http://redis.io/commands/sscan</remarks>
+        </member>
+        <member name="M:StackExchange.Redis.IDatabase.SetScan(StackExchange.Redis.RedisKey,StackExchange.Redis.RedisValue,System.Int32,System.Int64,System.Int32,StackExchange.Redis.CommandFlags)">
+            <summary>
+            The SSCAN command is used to incrementally iterate over set; note: to resume an iteration via <i>cursor</i>, cast the original enumerable or enumerator to <i>IScanningCursor</i>.
             </summary>
             <returns>yields all elements of the set.</returns>
             <remarks>http://redis.io/commands/sscan</remarks>
@@ -3132,6 +3954,13 @@
             <returns>yields all elements of the sorted set.</returns>
             <remarks>http://redis.io/commands/zscan</remarks>
         </member>
+        <member name="M:StackExchange.Redis.IDatabase.SortedSetScan(StackExchange.Redis.RedisKey,StackExchange.Redis.RedisValue,System.Int32,System.Int64,System.Int32,StackExchange.Redis.CommandFlags)">
+            <summary>
+            The ZSCAN command is used to incrementally iterate over a sorted set; note: to resume an iteration via <i>cursor</i>, cast the original enumerable or enumerator to <i>IScanningCursor</i>.
+            </summary>
+            <returns>yields all elements of the sorted set.</returns>
+            <remarks>http://redis.io/commands/zscan</remarks>
+        </member>
         <member name="M:StackExchange.Redis.IDatabase.SortedSetScore(StackExchange.Redis.RedisKey,StackExchange.Redis.RedisValue,StackExchange.Redis.CommandFlags)">
             <summary>
             Returns the score of member in the sorted set at key; If member does not exist in the sorted set, or key does not exist, nil is returned.
@@ -3178,7 +4007,7 @@
         <member name="M:StackExchange.Redis.IDatabase.StringBitPosition(StackExchange.Redis.RedisKey,System.Boolean,System.Int64,System.Int64,StackExchange.Redis.CommandFlags)">
             <summary>
             Return the position of the first bit set to 1 or 0 in a string.
-            The position is returned thinking at the string as an array of bits from left to right where the first byte most significant bit is at position 0, the second byte most significant big is at position 8 and so forth.
+            The position is returned thinking at the string as an array of bits from left to right where the first byte most significant bit is at position 0, the second byte most significant bit is at position 8 and so forth.
             An start and end may be specified; these are in bytes, not bits; start and end can contain negative values in order to index bytes starting from the end of the string, where -1 is the last byte, -2 is the penultimate, and so forth.
             </summary>
             <returns>The command returns the position of the first bit set to 1 or 0 according to the request.
@@ -3567,6 +4396,14 @@
             <remarks>http://redis.io/commands/keys</remarks>
             <remarks>http://redis.io/commands/scan</remarks>
         </member>
+        <member name="M:StackExchange.Redis.IServer.Keys(System.Int32,StackExchange.Redis.RedisValue,System.Int32,System.Int64,System.Int32,StackExchange.Redis.CommandFlags)">
+            <summary>
+            Returns all keys matching pattern; the KEYS or SCAN commands will be used based on the server capabilities; note: to resume an iteration via <i>cursor</i>, cast the original enumerable or enumerator to <i>IScanningCursor</i>.
+            </summary>
+            <remarks>Warning: consider KEYS as a command that should only be used in production environments with extreme care.</remarks>
+            <remarks>http://redis.io/commands/keys</remarks>
+            <remarks>http://redis.io/commands/scan</remarks>
+        </member>
         <member name="M:StackExchange.Redis.IServer.LastSave(StackExchange.Redis.CommandFlags)">
             <summary>
             Return the time of the last DB save executed with success. A client may check if a BGSAVE command succeeded reading the LASTSAVE value, then issuing a BGSAVE command and checking at regular intervals every N seconds if LASTSAVE changed.
@@ -3637,7 +4474,17 @@
             Explicitly defines a script on the server
             </summary>
         </member>
+        <member name="M:StackExchange.Redis.IServer.ScriptLoad(StackExchange.Redis.LuaScript,StackExchange.Redis.CommandFlags)">
+            <summary>
+            Explicitly defines a script on the server
+            </summary>
+        </member>
         <member name="M:StackExchange.Redis.IServer.ScriptLoadAsync(System.String,StackExchange.Redis.CommandFlags)">
+            <summary>
+            Explicitly defines a script on the server
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.IServer.ScriptLoadAsync(StackExchange.Redis.LuaScript,StackExchange.Redis.CommandFlags)">
             <summary>
             Explicitly defines a script on the server
             </summary>
@@ -3850,6 +4697,11 @@
         <member name="P:StackExchange.Redis.IServer.IsSlave">
             <summary>
             Gets whether the connected server is a replica / slave
+            </summary>
+        </member>
+        <member name="P:StackExchange.Redis.IServer.AllowSlaveWrites">
+            <summary>
+            Explicitly opt in for slave writes on writable slaves
             </summary>
         </member>
         <member name="P:StackExchange.Redis.IServer.ServerType">
@@ -4066,6 +4918,16 @@
             Indicates an issue communicating with redis
             </summary>
         </member>
+        <member name="M:StackExchange.Redis.RedisException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Deserialization constructor; not intended for general usage
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.RedisConnectionException.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Serialization implementation; not intended for general usage
+            </summary>
+        </member>
         <member name="P:StackExchange.Redis.RedisConnectionException.FailureType">
             <summary>
             The type of connection failure
@@ -4081,7 +4943,7 @@
             Allows callbacks from SocketManager as work is discovered
             </summary>
         </member>
-        <member name="M:StackExchange.Redis.ISocketCallback.Connected(System.IO.Stream)">
+        <member name="M:StackExchange.Redis.ISocketCallback.Connected(System.IO.Stream,System.IO.TextWriter)">
             <summary>
             Indicates that a socket has connected
             </summary>
@@ -4431,6 +5293,27 @@
             Obtain the key as a String
             </summary>
         </member>
+        <member name="M:StackExchange.Redis.RedisKey.op_Addition(StackExchange.Redis.RedisKey,StackExchange.Redis.RedisKey)">
+            <summary>
+            Concatenate two keys
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.RedisKey.Prepend(StackExchange.Redis.RedisKey)">
+            <summary>
+            Prepends p to this RedisKey, returning a new RedisKey.
+            
+            Avoids some allocations if possible, repeated Prepend/Appends make
+            it less possible.
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.RedisKey.Append(StackExchange.Redis.RedisKey)">
+            <summary>
+            Appends p to this RedisKey, returning a new RedisKey.
+            
+            Avoids some allocations if possible, repeated Prepend/Appends make
+            it less possible.
+            </summary>
+        </member>
         <member name="T:StackExchange.Redis.RedisType">
             <summary>
             The intrinsinc data-types supported by redis
@@ -4619,6 +5502,27 @@
             Converts the value to a byte[]
             </summary>
         </member>
+        <member name="M:StackExchange.Redis.RedisValue.TryParse(System.Int64@)">
+            <summary>
+            Convert to a long if possible, returning true.
+            
+            Returns false otherwise.
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.RedisValue.TryParse(System.Int32@)">
+            <summary>
+            Convert to a int if possible, returning true.
+            
+            Returns false otherwise.
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.RedisValue.TryParse(System.Double@)">
+            <summary>
+            Convert to a double if possible, returning true.
+            
+            Returns false otherwise.
+            </summary>
+        </member>
         <member name="P:StackExchange.Redis.RedisValue.EmptyString">
             <summary>
             Represents the string <c>""</c>
@@ -4679,6 +5583,31 @@
             All additional operations
             </summary>
         </member>
+        <member name="M:StackExchange.Redis.ScriptParameterMapper.PrepareScript(System.String)">
+            <summary>
+            Turns a script with @namedParameters into a LuaScript that can be executed
+            against a given IDatabase(Async) object
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.ScriptParameterMapper.IsValidParameterHash(System.Type,StackExchange.Redis.LuaScript,System.String@,System.String@)">
+            <summary>
+            Determines whether or not the given type can be used to provide parameters for the given LuaScript.
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.ScriptParameterMapper.GetParameterExtractor(System.Type,StackExchange.Redis.LuaScript)">
+            <summary>
+            Creates a Func that extracts parameters from the given type for use by a LuaScript.
+            
+            Members that are RedisKey's get extracted to be passed in as keys to redis; all members that
+            appear in the script get extracted as RedisValue arguments to be sent up as args.
+            
+            We send all values as arguments so we don't have to prepare the same script for different parameter
+            types.
+            
+            The created Func takes a RedisKey, which will be prefixed to all keys (and arguments of type RedisKey) for 
+            keyspace isolation.
+            </summary>
+        </member>
         <member name="T:StackExchange.Redis.ServerCounters">
             <summary>
             Illustrates the queues associates with this server
@@ -4714,7 +5643,7 @@
             Indicates the total number of outstanding items against this server
             </summary>
         </member>
-        <member name="M:StackExchange.Redis.ServerSelectionStrategy.HashSlot(System.Byte[])">
+        <member name="M:StackExchange.Redis.ServerSelectionStrategy.HashSlot(StackExchange.Redis.RedisKey)">
             <summary>
             Computes the hash-slot that would be used by the given key
             </summary>
@@ -4945,7 +5874,7 @@
         </member>
         <member name="T:StackExchange.Redis.SaveType">
             <summary>
-            The type of save operation to perform; note that foreground saving is not offered, as this is basically never a good thing to do through regular code.
+            The type of save operation to perform
             </summary>
         </member>
         <member name="F:StackExchange.Redis.SaveType.BackgroundRewriteAppendOnlyFile">
@@ -4959,6 +5888,49 @@
             Save the DB in background. The OK code is immediately returned. Redis forks, the parent continues to serve the clients, the child saves the DB on disk then exits. A client my be able to check if the operation succeeded using the LASTSAVE command.
             </summary>
             <remarks>http://redis.io/commands/bgsave</remarks>
+        </member>
+        <member name="F:StackExchange.Redis.SaveType.ForegroundSave">
+            <summary>
+            Save the DB in foreground. This is almost never a good thing to do, and could cause significant blocking. Only do this if you know you need to save
+            </summary>
+            <remarks>http://redis.io/commands/save</remarks>
+        </member>
+        <member name="T:StackExchange.Redis.KeyspaceIsolation.DatabaseExtensions">
+            <summary>
+                Provides the <see cref="M:StackExchange.Redis.KeyspaceIsolation.DatabaseExtensions.WithKeyPrefix(StackExchange.Redis.IDatabase,StackExchange.Redis.RedisKey)"/> extension method to <see cref="T:StackExchange.Redis.IDatabase"/>.
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.KeyspaceIsolation.DatabaseExtensions.WithKeyPrefix(StackExchange.Redis.IDatabase,StackExchange.Redis.RedisKey)">
+            <summary>
+                Creates a new <see cref="T:StackExchange.Redis.IDatabase"/> instance that provides an isolated key space
+                of the specified underyling database instance.
+            </summary>
+            <param name="database">
+                The underlying database instance that the returned instance shall use.
+            </param>
+            <param name="keyPrefix">
+                The prefix that defines a key space isolation for the returned database instance.
+            </param>
+            <returns>
+                A new <see cref="T:StackExchange.Redis.IDatabase"/> instance that invokes the specified underlying
+                <paramref name="database"/> but prepends the specified <paramref name="keyPrefix"/>
+                to all key paramters and thus forms a logical key space isolation.
+            </returns>
+            <remarks>
+            <para>
+                The following methods are not supported in a key space isolated database and
+                will throw an <see cref="T:System.NotSupportedException"/> when invoked:
+            </para>    
+            <list type="bullet">
+                <item><see cref="M:StackExchange.Redis.IDatabaseAsync.KeyRandomAsync(StackExchange.Redis.CommandFlags)"/></item>
+                <item><see cref="M:StackExchange.Redis.IDatabase.KeyRandom(StackExchange.Redis.CommandFlags)"/></item>
+            </list>
+            <para>
+                Please notice that keys passed to a script are prefixed (as normal) but care must
+                be taken when a script returns the name of a key as that will (currently) not be
+                "unprefixed".
+            </para>
+            </remarks>
         </member>
     </members>
 </doc>

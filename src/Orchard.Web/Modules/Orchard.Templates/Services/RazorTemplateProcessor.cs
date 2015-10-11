@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.UI;
 using System.Web.WebPages;
@@ -14,6 +15,7 @@ namespace Orchard.Templates.Services {
     [OrchardFeature("Orchard.Templates.Razor")]
     public class RazorTemplateProcessor : TemplateProcessorImpl {
         private readonly IRazorCompiler _compiler;
+        private readonly HttpContextBase _httpContextBase;
         private readonly IWorkContextAccessor _wca;
 
         public override string Type {
@@ -22,9 +24,11 @@ namespace Orchard.Templates.Services {
 
         public RazorTemplateProcessor(
             IRazorCompiler compiler,
+            HttpContextBase httpContextBase,
             IWorkContextAccessor wca) {
 
             _compiler = compiler;
+            _httpContextBase = httpContextBase;
             _wca = wca;
             Logger = NullLogger.Instance;
         }
@@ -37,7 +41,7 @@ namespace Orchard.Templates.Services {
 
         public override string Process(string template, string name, DisplayContext context = null, dynamic model = null) {
             if (String.IsNullOrEmpty(template))
-                return String.Empty;
+                return string.Empty;
 
             var compiledTemplate = _compiler.CompileRazor(template, name, new Dictionary<string, object>());
             var result = ActivateAndRenderTemplate(compiledTemplate, context, null, model);
@@ -69,10 +73,9 @@ namespace Orchard.Templates.Services {
                         // Setup a fake view context in order to support razor syntax inside of HTML attributes,
                         // for instance: <a href="@WorkContext.CurrentSite.BaseUrl">Homepage</a>.
                         var viewData = new ViewDataDictionary(model);
-                        var httpContext = _wca.GetContext().HttpContext;
                         obj.ViewContext = new ViewContext(
                             new ControllerContext(
-                                httpContext.Request.RequestContext,
+                                _httpContextBase.Request.RequestContext,
                                 new StubController()),
                                 new StubView(),
                                 viewData,
@@ -80,7 +83,7 @@ namespace Orchard.Templates.Services {
                                 htmlWriter);
 
                         obj.ViewData = viewData;
-                        obj.WebPageContext = new WebPageContext(httpContext, obj as WebPageRenderingBase, model);
+                        obj.WebPageContext = new WebPageContext(_httpContextBase, obj as WebPageRenderingBase, model);
                         obj.WorkContext = _wca.GetContext();
                     }
 

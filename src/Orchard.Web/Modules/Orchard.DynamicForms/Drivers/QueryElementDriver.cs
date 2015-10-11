@@ -118,7 +118,7 @@ namespace Orchard.DynamicForms.Drivers {
             });
         }
 
-        protected override void OnDisplaying(Query element, ElementDisplayContext context) {
+        protected override void OnDisplaying(Query element, ElementDisplayingContext context) {
             var queryId = element.QueryId;
             var typeName = element.GetType().Name;
             var displayType = context.DisplayType;
@@ -136,7 +136,7 @@ namespace Orchard.DynamicForms.Drivers {
             var runtimeValues = GetRuntimeValues(element);
 
             if (!String.IsNullOrWhiteSpace(optionLabel)) {
-                yield return new SelectListItem { Text = displayType != "Design" ? _tokenizer.Replace(optionLabel, tokenData) : optionLabel };
+                yield return new SelectListItem { Text = displayType != "Design" ? _tokenizer.Replace(optionLabel, tokenData) : optionLabel, Value = string.Empty };
             }
 
             if (queryId == null)

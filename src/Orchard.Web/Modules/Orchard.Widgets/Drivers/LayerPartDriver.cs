@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
@@ -11,7 +10,6 @@ using Orchard.Widgets.Services;
 
 namespace Orchard.Widgets.Drivers {
 
-    [UsedImplicitly]
     public class LayerPartDriver : ContentPartDriver<LayerPart> {
         private readonly IRuleManager _ruleManager;
         private readonly IWidgetsService _widgetsService;
@@ -66,6 +64,11 @@ namespace Orchard.Widgets.Drivers {
         }
 
         protected override void Importing(LayerPart part, ImportContentContext context) {
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
+            }
+
             var name = context.Attribute(part.PartDefinition.Name, "Name");
             if (name != null) {
                 part.Name = name;

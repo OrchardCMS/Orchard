@@ -1,22 +1,18 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.ViewModels;
-using Orchard.Tasks.Indexing;
+using Orchard.Indexing.Services;
 
 namespace Orchard.Indexing.Settings {
     public class EditorEvents : ContentDefinitionEditorEventsBase {
-        private readonly IIndexingTaskManager _indexingTaskManager;
-        private readonly IContentManager _contentManager;
+        private readonly IJobsQueueService _jobsQueueService;
 
-        private const int PageSize = 50;
-
-        public EditorEvents(IIndexingTaskManager indexingTaskManager, IContentManager contentManager){
-            _indexingTaskManager = indexingTaskManager;
-            _contentManager = contentManager;
+        public EditorEvents(IJobsQueueService jobsQueueService) {
+            _jobsQueueService = jobsQueueService;
         }
 
         private string _contentTypeName;
@@ -37,16 +33,16 @@ namespace Orchard.Indexing.Settings {
 
             // create indexing tasks only if settings have changed
             if (Clean(model.Indexes) != Clean(previous.Indexes)) {
-                
+
                 // if a an index is added, all existing content items need to be re-indexed
                 CreateIndexingTasks();
             }
-            
+
             yield return DefinitionTemplate(model);
         }
 
         private string Clean(string value) {
-            if (string.IsNullOrEmpty(value))
+            if (String.IsNullOrEmpty(value))
                 return value;
 
             return value.Trim(',', ' ');
@@ -57,7 +53,8 @@ namespace Orchard.Indexing.Settings {
         /// </summary>
         private void CreateIndexingTasks() {
             if (!_tasksCreated) {
-                CreateTasksForType(_contentTypeName);
+                // Creating tasks with Jobs is needed because editing content type settings for a type with many items causes OutOfMemoryException, see issue: https://github.com/OrchardCMS/Orchard/issues/4729
+                _jobsQueueService.Enqueue("ICreateUpdateIndexTaskService.CreateNextIndexingTaskBatch", new Dictionary<string, object> { { "contentTypeName", _contentTypeName }, { "currentBatchIndex", "0" } }, CreateUpdateIndexTaskService.JobPriority);
                 _tasksCreated = true;
             }
         }
@@ -68,8 +65,8 @@ namespace Orchard.Indexing.Settings {
         }
 
         public override IEnumerable<TemplateViewModel> PartFieldEditorUpdate(ContentPartFieldDefinitionBuilder builder, IUpdateModel updateModel) {
-            var previous = builder.Current.Settings.GetModel<FieldIndexing>(); 
-            
+            var previous = builder.Current.Settings.GetModel<FieldIndexing>();
+
             var model = new FieldIndexing();
             updateModel.TryUpdateModel(model, "FieldIndexing", null, null);
             builder.WithSetting("FieldIndexing.Included", model.Included ? true.ToString() : null);
@@ -82,27 +79,6 @@ namespace Orchard.Indexing.Settings {
             }
 
             yield return DefinitionTemplate(model);
-        }
-
-        private void CreateTasksForType(string type) {
-            var index = 0;
-            bool contentItemProcessed;
-
-            // todo: load ids only, or create a queued job
-            // we create a task even for draft items, and the executor will filter based on the settings
-
-            do {
-                contentItemProcessed = false;
-                var contentItemsToIndex = _contentManager.Query(VersionOptions.Latest, new [] { type }).Slice(index, PageSize);
-
-                foreach (var contentItem in contentItemsToIndex) {
-                    contentItemProcessed = true;
-                    _indexingTaskManager.CreateUpdateIndexTask(contentItem);
-                }
-
-                index += PageSize;
-
-            } while (contentItemProcessed);
         }
     }
 }

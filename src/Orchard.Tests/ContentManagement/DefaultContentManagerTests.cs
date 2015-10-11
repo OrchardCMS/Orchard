@@ -86,84 +86,16 @@ namespace Orchard.Tests.ContentManagement {
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
 
             _session = _sessionFactory.OpenSession();
-            builder.RegisterInstance(new TestSessionLocator(_session)).As<ISessionLocator>();
+            builder.RegisterInstance(new TestTransactionManager(_session)).As<ITransactionManager>();
 
             _container = builder.Build();
             _manager = _container.Resolve<IContentManager>();
         }
 
-        public class TestSessionLocator : ISessionLocator, ITransactionManager, IDisposable {
-            private readonly ISession _session;
-            private ITransaction _transaction;
-            private bool _cancelled;
-
-            public TestSessionLocator(ISession session) {
-                _session = session;
-            }
-
-            public ISession For(Type entityType) {
-                return _session;
-            }
-
-            void ITransactionManager.Demand() {
-                EnsureSession();
-
-                if (_transaction == null) {
-                    _transaction = _session.BeginTransaction(IsolationLevel.ReadCommitted);
-                }
-            }
-
-            void ITransactionManager.RequireNew() {
-                ((ITransactionManager)this).RequireNew(IsolationLevel.ReadCommitted);
-            }
-
-            void ITransactionManager.RequireNew(IsolationLevel level) {
-                EnsureSession();
-
-                if (_cancelled) {
-                    _transaction.Rollback();
-                    _transaction.Dispose();
-                    _transaction = null;
-                }
-                else {
-                    if (_transaction != null) {
-                        _transaction.Commit();
-                    }
-                }
-
-                _transaction = _session.BeginTransaction(level);
-            }
-
-            void ITransactionManager.Cancel() {
-                _cancelled = true;
-            }
-
-            void IDisposable.Dispose() {
-                if (_transaction != null) {
-                    try {
-                        if (!_cancelled) {
-                            _transaction.Commit();
-                        }
-                        else {
-                            _transaction.Rollback();
-                        }
-
-                        _transaction.Dispose();
-                    }
-                    catch {
-                    }
-                    finally {
-                        _transaction = null;
-                        _cancelled = false;
-                    }
-                }
-            }
-
-            private void EnsureSession() {
-                if (_session != null) {
-                    return;
-                }
-            }
+        [TearDown]
+        public void Cleanup() {
+            if (_container != null)
+                _container.Dispose();
         }
 
         [Test]
@@ -469,6 +401,46 @@ namespace Orchard.Tests.ContentManagement {
             Trace.WriteLine("gamma2");
             var gamma2 = _manager.Get(gamma1.Id);
             Assert.That(gamma2.Record.Versions, Has.Count.EqualTo(2));
+        }
+
+        [Test]
+        public void DraftRequiredShouldAlwaysBuildNewVersionFromPublishedIfDraftNotFound()
+        {
+            Trace.WriteLine("gamma1");
+            var gamma1 = _manager.Create(DefaultGammaName, VersionOptions.Published);
+            Trace.WriteLine("flush");
+            _session.Flush();
+            _session.Clear();
+
+            Trace.WriteLine("gammaDraft1");
+            var gammaDraft1 = _manager.Get(gamma1.Id, VersionOptions.DraftRequired);
+            Assert.That(gammaDraft1.Version, Is.EqualTo(2));
+            Trace.WriteLine("flush");
+            _session.Flush();
+            _session.Clear();
+
+            Trace.WriteLine("Delete gammaDraft1");
+            var gammaDraft2 = _manager.Get(gammaDraft1.Id, VersionOptions.Draft);
+            gammaDraft2.VersionRecord.Latest = false;
+
+            Trace.WriteLine("Restore gamma1 as Latest");
+            var gamma2 = _manager.Get(gamma1.Id, VersionOptions.Published);
+            var publishedVersion = gamma2.Record.Versions.SingleOrDefault(x => x.Published);
+            if (publishedVersion != null)
+            {
+                publishedVersion.Latest = true;
+            }
+            Trace.WriteLine("flush");
+            _session.Flush();
+            _session.Clear();
+
+            Trace.WriteLine("gammaDraft3");
+            var gammaDraft3 = _manager.Get(gamma1.Id, VersionOptions.DraftRequired);
+            Assert.That(gammaDraft3.Version, Is.EqualTo(3));
+            Assert.That(gammaDraft3.Record, Is.Not.SameAs(gammaDraft2.Record));
+            Trace.WriteLine("flush");
+            _session.Flush();
+            _session.Clear();
         }
 
         [Test]

@@ -55,8 +55,8 @@ namespace Orchard.Taxonomies.Projections {
                         f._Terms.Add(new SelectListItem { Value = String.Empty, Text = taxonomy.Name });
                         foreach (var term in _taxonomyService.GetTerms(taxonomy.Id)) {
                             var gap = new string('-', term.GetLevels());
-                            
-                            if(gap.Length > 0) {
+
+                            if (gap.Length > 0) {
                                 gap += " ";
                             }
 
@@ -67,10 +67,10 @@ namespace Orchard.Taxonomies.Projections {
                     return f;
                 };
 
-            context.Form("SelectTerms", 
-                form, 
-                (Action<dynamic, ImportContentContext>) Import, 
-                (Action<dynamic, ExportContentContext>) Export
+            context.Form("SelectTerms",
+                form,
+                (Action<dynamic, ImportContentContext>)Import,
+                (Action<dynamic, ExportContentContext>)Export
             );
         }
 
@@ -78,7 +78,7 @@ namespace Orchard.Taxonomies.Projections {
             string termIds = Convert.ToString(state.TermIds);
 
             if (!String.IsNullOrEmpty(termIds)) {
-                var ids = termIds.Split(new[] {','}).Select(Int32.Parse).ToArray();
+                var ids = termIds.Split(new[] { ',' }).Select(Int32.Parse).ToArray();
                 var terms = ids.Select(_taxonomyService.GetTerm).ToList();
                 var identities = terms.Select(context.ContentManager.GetItemMetadata).Select(x => x.Identity.ToString()).ToArray();
 

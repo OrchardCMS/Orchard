@@ -21,7 +21,7 @@ namespace Orchard.DynamicForms.Handlers {
             }
         }
 
-        void IElementEventHandler.Displaying(ElementDisplayContext context) {
+        void IElementEventHandler.Displaying(ElementDisplayingContext context) {
             if (context.DisplayType == "Design")
                 return;
 
@@ -45,6 +45,8 @@ namespace Orchard.DynamicForms.Handlers {
             context.ElementShape.ClientValidationAttributes = registrationContext.ClientAttributes;
         }
 
+        void IElementEventHandler.CreatingDisplay(ElementCreatingDisplayShapeContext context) { }
+        void IElementEventHandler.Displayed(ElementDisplayedContext context) {}
         void IFormElementEventHandler.GetElementValue(FormElement element, ReadElementValuesContext context) { }
         void IElementEventHandler.Creating(ElementCreatingContext context) {}
         void IElementEventHandler.Created(ElementCreatedContext context) {}

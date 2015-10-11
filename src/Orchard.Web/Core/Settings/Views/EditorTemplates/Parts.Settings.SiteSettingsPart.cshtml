@@ -16,7 +16,10 @@
     </div>
     <div>
         <label for="@Html.FieldIdFor(m => m.BaseUrl)">@T("Base URL")</label>
-        @Html.TextBoxFor(m => m.BaseUrl, new { @class = "text medium is-url" })
+        @Html.TextBoxFor(m => m.BaseUrl,
+            (object)(AuthorizedFor(Orchard.Security.StandardPermissions.SiteOwner)
+                ? (dynamic)new { @class = "text medium is-url" }
+                : (dynamic)new { @class = "text medium is-url", @readonly = "readonly" }))
         <span class="hint">@T("Enter the fully qualified base URL of the web site.")</span>
         <span class="hint">@T("e.g., http://localhost:30320/orchardlocal, http://www.yourdomain.com")</span>
     </div>
@@ -45,14 +48,15 @@
         @Html.EditorFor(x => x.PageTitleSeparator)
         @Html.ValidationMessage("PageTitleSeparator", "*")
     </div>
-@if (AuthorizedFor(Orchard.Security.StandardPermissions.SiteOwner)) {
     <div>
         <label for="SuperUser">@T("Super user")</label>
-        @Html.EditorFor(x => x.SuperUser)
+        @Html.TextBoxFor(x => x.SuperUser, 
+            (object)(AuthorizedFor(Orchard.Security.StandardPermissions.SiteOwner)
+                ? (dynamic)new { @class = "text single-line" }
+                : (dynamic)new { @class = "text single-line", @readonly = "readonly" }))
         @Html.ValidationMessage("SuperUser", "*")
         <span class="hint">@T("Enter an existing account name, or nothing if you don't want a Super user account")</span>
     </div>
-}
     <div>
         <label for="SiteDebugMode">@T("Resource Debug Mode")</label>
         @Html.DropDownList("ResourceDebugMode", resourceDebugMode)

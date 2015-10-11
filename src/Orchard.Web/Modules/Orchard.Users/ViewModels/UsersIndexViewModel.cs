@@ -23,7 +23,9 @@ namespace Orchard.Users.ViewModels {
 
     public enum UsersOrder {
         Name,
-        Email
+        Email,
+        CreatedUtc,
+        LastLoginUtc
     }
 
     public enum UsersFilter {
