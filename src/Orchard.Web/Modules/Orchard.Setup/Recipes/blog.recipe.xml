@@ -20,7 +20,7 @@
                    Orchard.Taxonomies,Orchard.Workflows,
                    TheThemeMachine" />
 
-    <Metadata>
+    <ContentDefinition>
         <Types>
             <Page ContentTypeSettings.Draftable="True" TypeIndexing.Indexes="Search">
                 <TitlePart/>
@@ -40,7 +40,7 @@
         <Parts>
             <BodyPart BodyPartSettings.FlavorDefault="html" />
         </Parts>
-    </Metadata>
+    </ContentDefinition>
 
     <Settings>
         <SiteSettingsPart PageSize="20" PageTitleSeparator = " - " />

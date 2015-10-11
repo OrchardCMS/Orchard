@@ -63,7 +63,7 @@ namespace Orchard.Environment {
             builder.RegisterType<AppDomainAssemblyNameResolver>().As<IAssemblyNameResolver>().SingleInstance();
             builder.RegisterType<GacAssemblyNameResolver>().As<IAssemblyNameResolver>().SingleInstance();
             builder.RegisterType<OrchardFrameworkAssemblyNameResolver>().As<IAssemblyNameResolver>().SingleInstance();
-            builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().SingleInstance();
+            builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().InstancePerDependency();
             builder.RegisterType<ViewsBackgroundCompilation>().As<IViewsBackgroundCompilation>().SingleInstance();
             builder.RegisterType<DefaultExceptionPolicy>().As<IExceptionPolicy>().SingleInstance();
             builder.RegisterType<DefaultCriticalErrorProvider>().As<ICriticalErrorProvider>().SingleInstance();
@@ -79,7 +79,6 @@ namespace Orchard.Environment {
             RegisterVolatileProvider<DefaultVirtualPathMonitor, IVirtualPathMonitor>(builder);
             RegisterVolatileProvider<DefaultVirtualPathProvider, IVirtualPathProvider>(builder);
             
-
             builder.RegisterType<DefaultOrchardHost>().As<IOrchardHost>().As<IEventHandler>()
                 .Named<IEventHandler>(typeof(IShellSettingsManagerEventHandler).Name)
                 .Named<IEventHandler>(typeof(IShellDescriptorManagerEventHandler).Name)

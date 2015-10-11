@@ -19,7 +19,7 @@
                    Orchard.Layouts,Orchard.Layouts.Tokens,
                    TheThemeMachine" />
 
-    <Metadata>
+    <ContentDefinition>
         <Types>
             <Page ContentTypeSettings.Draftable="True" TypeIndexing.Indexes="Search">
                 <TagsPart />
@@ -39,7 +39,7 @@
         <Parts>
             <BodyPart BodyPartSettings.FlavorDefault="html" />
         </Parts>
-    </Metadata>
+    </ContentDefinition>
 
     <Settings />
 

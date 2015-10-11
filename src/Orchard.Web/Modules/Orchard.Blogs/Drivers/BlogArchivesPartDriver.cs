@@ -53,10 +53,14 @@ namespace Orchard.Blogs.Drivers {
         }
 
         protected override void Importing(BlogArchivesPart part, ImportContentContext context) {
-            var blog = context.Attribute(part.PartDefinition.Name, "Blog");
-            if (blog != null) {
-                part.BlogId = context.GetItemFromSession(blog).Id;
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
             }
+
+            context.ImportAttribute(part.PartDefinition.Name, "Blog", blog =>
+                part.BlogId = context.GetItemFromSession(blog).Id
+            );
         }
 
         protected override void Exporting(BlogArchivesPart part, ExportContentContext context) {

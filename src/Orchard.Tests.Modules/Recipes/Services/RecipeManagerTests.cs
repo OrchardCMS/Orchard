@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Xml;
@@ -6,24 +8,22 @@ using Autofac;
 using Moq;
 using NUnit.Framework;
 using Orchard.Caching;
+using Orchard.Data;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Folders;
 using Orchard.Environment.Extensions.Loaders;
 using Orchard.FileSystems.AppData;
 using Orchard.FileSystems.WebSite;
+using Orchard.Recipes.Events;
 using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
 using Orchard.Services;
+using Orchard.Tests.Environment.Extensions;
 using Orchard.Tests.Stubs;
-using Orchard.Recipes.Events;
-using Orchard.Data;
-using System;
-using System.Linq.Expressions;
 
 namespace Orchard.Tests.Modules.Recipes.Services {
     [TestFixture]
-    public class RecipeManagerTests {
-        private IContainer _container;
+    public class RecipeManagerTests : DatabaseEnabledTestsBase {
         private IRecipeManager _recipeManager;
         private IRecipeHarvester _recipeHarvester;
         private IRecipeParser _recipeParser;
@@ -32,15 +32,21 @@ namespace Orchard.Tests.Modules.Recipes.Services {
         private const string DataPrefix = "Orchard.Tests.Modules.Recipes.Services.FoldersData.";
         private string _tempFolderName;
 
-        [SetUp]
-        public void Init() {
+        protected override IEnumerable<Type> DatabaseTypes {
+            get { yield return typeof (RecipeStepResultRecord); }
+        }
+
+        public override void Register(ContainerBuilder builder) {
             _tempFolderName = Path.GetTempFileName();
             File.Delete(_tempFolderName);
             var assembly = GetType().Assembly;
-            foreach (var name in assembly.GetManifestResourceNames()) {
-                if (name.StartsWith(DataPrefix)) {
+            foreach (var name in assembly.GetManifestResourceNames())
+            {
+                if (name.StartsWith(DataPrefix))
+                {
                     string text;
-                    using (var stream = assembly.GetManifestResourceStream(name)) {
+                    using (var stream = assembly.GetManifestResourceStream(name))
+                    {
                         using (var reader = new StreamReader(stream))
                             text = reader.ReadToEnd();
 
@@ -58,15 +64,16 @@ namespace Orchard.Tests.Modules.Recipes.Services {
                     var targetPath = Path.Combine(_tempFolderName, relativePath);
 
                     Directory.CreateDirectory(Path.GetDirectoryName(targetPath));
-                    using (var stream = new FileStream(targetPath, FileMode.Create)) {
-                        using (var writer = new StreamWriter(stream)) {
+                    using (var stream = new FileStream(targetPath, FileMode.Create))
+                    {
+                        using (var writer = new StreamWriter(stream))
+                        {
                             writer.Write(text);
                         }
                     }
                 }
             }
 
-            var builder = new ContainerBuilder();
             var harvester = new ExtensionHarvester(new StubCacheManager(), new StubWebSiteFolder(), new Mock<ICriticalErrorProvider>().Object);
             _folders = new ModuleFolders(new[] { _tempFolderName }, harvester);
             builder.RegisterType<RecipeManager>().As<IRecipeManager>();
@@ -82,42 +89,44 @@ namespace Orchard.Tests.Modules.Recipes.Services {
             builder.RegisterType<StubAsyncTokenProvider>().As<IAsyncTokenProvider>();
             builder.RegisterInstance(_folders).As<IExtensionFolders>();
             builder.RegisterInstance(new Mock<IRecipeExecuteEventHandler>().Object);
-            builder.RegisterType<Environment.Extensions.ExtensionManagerTests.StubLoaders>().As<IExtensionLoader>();
+            builder.RegisterType<ExtensionManagerTests.StubLoaders>().As<IExtensionLoader>();
             builder.RegisterType<RecipeParser>().As<IRecipeParser>();
             builder.RegisterType<StubWebSiteFolder>().As<IWebSiteFolder>();
             builder.RegisterType<CustomRecipeHandler>().As<IRecipeHandler>();
-            builder.RegisterInstance(new StubRecipeStepResultRecordRepository()).As<IRepository<RecipeStepResultRecord>>();
+        }
 
-            _container = builder.Build();
+        public override void Init() {
+            base.Init();
+
             _recipeManager = _container.Resolve<IRecipeManager>();
             _recipeParser = _container.Resolve<IRecipeParser>();
             _recipeHarvester = _container.Resolve<IRecipeHarvester>();
         }
 
-        [TearDown]
-        public void Term() {
+        public override void Cleanup() {
             Directory.Delete(_tempFolderName, true);
+            base.Cleanup();
         }
 
         [Test]
         public void HarvestRecipesFailsToFindRecipesWhenCalledWithNotExistingExtension() {
-            var recipes = (List<Recipe>)_recipeHarvester.HarvestRecipes("cantfindme");
+            var recipes = _recipeHarvester.HarvestRecipes("cantfindme");
 
-            Assert.That(recipes.Count, Is.EqualTo(0));
+            Assert.That(recipes.Count(), Is.EqualTo(0));
         }
 
         [Test]
         public void HarvestRecipesShouldHarvestRecipeXmlFiles() {
-            var recipes = (List<Recipe>)_recipeHarvester.HarvestRecipes("Sample1");
-            Assert.That(recipes.Count, Is.EqualTo(1));
+            var recipes = _recipeHarvester.HarvestRecipes("Sample1");
+            Assert.That(recipes.Count(), Is.EqualTo(1));
         }
 
         [Test]
         public void ParseRecipeLoadsRecipeMetaDataIntoModel() {
-            var recipes = (List<Recipe>)_recipeHarvester.HarvestRecipes("Sample1");
-            Assert.That(recipes.Count, Is.EqualTo(1));
+            var recipes = _recipeHarvester.HarvestRecipes("Sample1");
+            Assert.That(recipes.Count(), Is.EqualTo(1));
 
-            var sampleRecipe = recipes[0];
+            var sampleRecipe = recipes.First();
             Assert.That(sampleRecipe.Name, Is.EqualTo("cms"));
             Assert.That(sampleRecipe.Description, Is.EqualTo("a sample Orchard recipe describing a cms"));
             Assert.That(sampleRecipe.Author, Is.EqualTo("orchard"));
@@ -153,6 +162,38 @@ namespace Orchard.Tests.Modules.Recipes.Services {
 
             Assert.That(CustomRecipeHandler.AttributeValue == "value1");
         }
+
+        [Test]
+        public void ExecuteUpdatesStepResults()
+        {
+            var recipes = (List<Recipe>)_recipeHarvester.HarvestRecipes("Sample1");
+            var sampleRecipe = recipes.First();
+            var steps = sampleRecipe.RecipeSteps.ToArray();
+
+            _recipeManager.Execute(sampleRecipe);
+
+            var stepResultRepository = _container.Resolve<IRepository<RecipeStepResultRecord>>();
+            var stepResults = stepResultRepository.Table.ToArray();
+
+            Assert.That(stepResults.Count(), Is.EqualTo(steps.Count()));
+            Assert.IsTrue(stepResults.All(x => x.IsCompleted));
+        }
+
+        [Test]
+        public void CanExecuteSameStepMultipleTimes()
+        {
+            var recipes = (List<Recipe>)_recipeHarvester.HarvestRecipes("Sample2");
+            var recipe = recipes.Single(x => x.Name == "Duplicate Steps");
+            var steps = recipe.RecipeSteps.ToArray();
+
+            _recipeManager.Execute(recipe);
+
+            var stepResultRepository = _container.Resolve<IRepository<RecipeStepResultRecord>>();
+            var stepResults = stepResultRepository.Table.ToArray();
+
+            Assert.That(stepResults.Count(), Is.EqualTo(steps.Count()));
+            Assert.IsTrue(stepResults.All(x => x.IsCompleted));
+        }
     }
 
     public class StubStepQueue : IRecipeStepQueue {
@@ -165,22 +206,6 @@ namespace Orchard.Tests.Modules.Recipes.Services {
         public RecipeStep Dequeue(string executionId) {
             return _queue.Count == 0 ? null : _queue.Dequeue();
         }
-    }
-
-    public class StubRecipeStepResultRecordRepository : IRepository<RecipeStepResultRecord> {
-        private List<RecipeStepResultRecord> _records = new List<RecipeStepResultRecord>();
-        public IQueryable<RecipeStepResultRecord> Table { get { return _records.AsQueryable(); } }
-        public void Copy(RecipeStepResultRecord source, RecipeStepResultRecord target) { }
-        public int Count(Expression<Func<RecipeStepResultRecord, bool>> predicate) { return _records.Count; }
-        public void Create(RecipeStepResultRecord entity) { _records.Add(entity); }
-        public void Delete(RecipeStepResultRecord entity) { _records.Remove(entity); }
-        public IEnumerable<RecipeStepResultRecord> Fetch(Expression<Func<RecipeStepResultRecord, bool>> predicate) { throw new NotImplementedException(); }
-        public IEnumerable<RecipeStepResultRecord> Fetch(Expression<Func<RecipeStepResultRecord, bool>> predicate, Action<Orderable<RecipeStepResultRecord>> order) { throw new NotImplementedException(); }
-        public IEnumerable<RecipeStepResultRecord> Fetch(Expression<Func<RecipeStepResultRecord, bool>> predicate, Action<Orderable<RecipeStepResultRecord>> order, int skip, int count) { throw new NotImplementedException(); }
-        public void Flush() { }
-        public RecipeStepResultRecord Get(Expression<Func<RecipeStepResultRecord, bool>> predicate) { throw new NotImplementedException(); }
-        public RecipeStepResultRecord Get(int id) { throw new NotImplementedException(); }
-        public void Update(RecipeStepResultRecord entity) { }
     }
 
     public class StubRecipeScheduler : IRecipeScheduler {
@@ -197,7 +222,7 @@ namespace Orchard.Tests.Modules.Recipes.Services {
 
     public class CustomRecipeHandler : IRecipeHandler {
         public static string AttributeValue;
-        public string[] _handles = { "Module", "Theme", "Migration", "Custom1", "Custom2", "Command", "Metadata", "Feature", "Settings" };
+        public string[] _handles = { "Module", "Theme", "Migration", "Custom1", "Custom2", "Command", "Metadata", "Feature", "Settings", "Recipes" };
 
         public void ExecuteRecipeStep(RecipeContext recipeContext) {
             if (_handles.Contains(recipeContext.RecipeStep.Name)) {

@@ -58,9 +58,9 @@ namespace Orchard.Taxonomies.Drivers {
         protected override DriverResult Editor(ContentPart part, TaxonomyField field, dynamic shapeHelper) {
             return ContentShape("Fields_TaxonomyField_Edit", GetDifferentiator(field, part), () => {
                 var settings = field.PartFieldDefinition.Settings.GetModel<TaxonomyFieldSettings>();
-                var appliedTerms = _taxonomyService.GetTermsForContentItem(part.ContentItem.Id, field.Name, VersionOptions.Latest).Distinct(new TermPartComparer()).ToDictionary(t => t.Id, t => t);
+                var appliedTerms = GetAppliedTerms(part, field, VersionOptions.Latest).ToDictionary(t => t.Id, t => t);
                 var taxonomy = _taxonomyService.GetTaxonomyByName(settings.Taxonomy);
-                var terms = taxonomy != null
+                var terms = taxonomy != null && !settings.Autocomplete
                     ? _taxonomyService.GetTerms(taxonomy.Id).Where(t => !string.IsNullOrWhiteSpace(t.Name)).Select(t => t.CreateTermEntry()).ToList()
                     : new List<TermEntry>(0);
 
@@ -70,9 +70,11 @@ namespace Orchard.Taxonomies.Drivers {
                     DisplayName = field.DisplayName,
                     Name = field.Name,
                     Terms = terms,
+                    SelectedTerms = appliedTerms.Select(t => t.Value),
                     Settings = settings,
-                    SingleTermId = terms.Where(t => t.IsChecked).Select(t => t.Id).FirstOrDefault(),
-                    TaxonomyId = taxonomy != null ? taxonomy.Id : 0
+                    SingleTermId = appliedTerms.Select(t => t.Key).FirstOrDefault(),
+                    TaxonomyId = taxonomy != null ? taxonomy.Id : 0,
+                    HasTerms = taxonomy != null && _taxonomyService.GetTermsCount(taxonomy.Id) > 0
                 };
 
                 var templateName = settings.Autocomplete ? "Fields/TaxonomyField.Autocomplete" : "Fields/TaxonomyField";
@@ -82,7 +84,9 @@ namespace Orchard.Taxonomies.Drivers {
 
         protected override DriverResult Editor(ContentPart part, TaxonomyField field, IUpdateModel updater, dynamic shapeHelper) {
             // Initializing viewmodel using the terms that are already selected to prevent loosing them when updating an editor group this field isn't displayed in.
-            var viewModel = new TaxonomyFieldViewModel { Terms = field.Terms.Select(t => t.CreateTermEntry()).ToList() };
+            // Get all the selected, published terms of all the TaxonomyFields of the content item.
+            var appliedTerms = GetAppliedTerms(part).ToList();
+            var viewModel = new TaxonomyFieldViewModel { Terms = appliedTerms.Select(t => t.CreateTermEntry()).ToList() };
             foreach (var item in viewModel.Terms) item.IsChecked = true;
             
             if (updater.TryUpdateModel(viewModel, GetPrefix(field, part), null, null)) {
@@ -106,10 +110,10 @@ namespace Orchard.Taxonomies.Drivers {
             var appliedTerms = _taxonomyService.GetTermsForContentItem(part.ContentItem.Id, field.Name);
 
             // stores all content items associated to this field
-            var termIdentities = appliedTerms.Select(x => Services.ContentManager.GetItemMetadata(x).Identity.ToString())
-                .ToArray();
+            var termIdentities = appliedTerms.Select(x => Services.ContentManager.GetItemMetadata(x).Identity.ToString()).ToArray();
 
-            context.Element(XmlConvert.EncodeLocalName(field.FieldDefinition.Name + "." + field.Name)).SetAttributeValue("Terms", String.Join(",", termIdentities));
+            if (termIdentities.Any())
+                context.Element(XmlConvert.EncodeLocalName(field.FieldDefinition.Name + "." + field.Name)).SetAttributeValue("Terms", String.Join(",", termIdentities));
         }
 
         protected override void Importing(ContentPart part, TaxonomyField field, ImportContentContext context) {
@@ -155,6 +159,13 @@ namespace Orchard.Taxonomies.Drivers {
             }
 
             return term;
+        }
+
+
+        private IEnumerable<TermPart> GetAppliedTerms(ContentPart part, TaxonomyField field = null, VersionOptions versionOptions = null) {
+            string fieldName = field != null ? field.Name : string.Empty;
+
+            return _taxonomyService.GetTermsForContentItem(part.ContentItem.Id, fieldName, versionOptions?? VersionOptions.Published).Distinct(new TermPartComparer());
         }
     }
 

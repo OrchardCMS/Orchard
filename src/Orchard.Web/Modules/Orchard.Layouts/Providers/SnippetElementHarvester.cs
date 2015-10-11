@@ -16,7 +16,7 @@ using Orchard.Utility.Extensions;
 
 namespace Orchard.Layouts.Providers {
     [OrchardFeature("Orchard.Layouts.Snippets")]
-    public class SnippetElementHarvester : Component, ElementHarvester {
+    public class SnippetElementHarvester : Component, IElementHarvester {
         private const string SnippetShapeSuffix = "Snippet";
         private readonly Work<IShapeFactory> _shapeFactory;
         private readonly Work<ISiteThemeService> _siteThemeService;

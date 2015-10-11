@@ -37,13 +37,12 @@ namespace Orchard.Core.Navigation.Drivers {
         }
 
         protected override void Importing(ShapeMenuItemPart part, ImportContentContext context) {
-            IfNotNull(context.Attribute(part.PartDefinition.Name, "ShapeType"), x => part.ShapeType = x);
-        }
-
-        private static void IfNotNull<T>(T value, Action<T> then) where T : class {
-            if(value != null) {
-                then(value);
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
             }
+
+            context.ImportAttribute(part.PartDefinition.Name, "ShapeType", x => part.ShapeType = x);
         }
 
         protected override void Exporting(ShapeMenuItemPart part, ExportContentContext context) {

@@ -185,6 +185,12 @@ namespace Orchard.Taxonomies.Services {
             return TermPart.Sort(result);
         }
 
+        public int GetTermsCount(int taxonomyId) {
+            return _contentManager.Query<TermPart, TermPartRecord>()
+                .Where(x => x.TaxonomyId == taxonomyId)
+                .Count();
+        }
+
         public TermPart GetTerm(int id) {
             return _contentManager
                 .Query<TermPart, TermPartRecord>()

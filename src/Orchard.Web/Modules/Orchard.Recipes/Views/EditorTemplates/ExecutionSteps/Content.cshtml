@@ -1,0 +1,6 @@
+﻿@model Orchard.Recipes.ViewModels.ContentExecutionStepViewModel
+<div>
+    @Html.LabelFor(m => m.BatchSize, T("Batch Size"))
+    @Html.TextBoxFor(m => m.BatchSize, new { @class = "text small" })
+    @Html.Hint(T("The batch size to use when importing the data. Leave empty to disable batched imports."))
+</div>

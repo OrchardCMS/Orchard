@@ -93,11 +93,12 @@ namespace Orchard.Specs.Bindings {
             _webHost = new WebHost(_orchardTemp);
             Host.Initialize(siteFolder, virtualDirectory ?? "/", _dynamicCompilationOption);
             var shuttle = new Shuttle();
-            Host.Execute(() => {
-                log4net.Config.BasicConfigurator.Configure(new CastleAppender());
-                HostingTraceListener.SetHook(msg => shuttle._sink.Receive(msg));
-            });
+            Host.Execute(() => Executor(shuttle));
             _messages = shuttle._sink;
+        }
+
+        private static void Executor(Shuttle shuttle) {
+            HostingTraceListener.SetHook(msg => shuttle._sink.Receive(msg));
         }
 
         private class CastleAppender : IAppender {

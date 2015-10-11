@@ -29,10 +29,10 @@ namespace Orchard.Layouts {
                     .WithSetting("OwnerEditorSettings.ShowOwnerEditor", "false")
                     .WithSetting("DateEditorSettings.ShowDateEditor", "false"))
                 .WithPart("TitlePart")
+                .WithPart("IdentityPart")
                 .WithPart("LayoutPart", p => p
                     .WithSetting("LayoutTypePartSettings.IsTemplate", "True"))
                 .DisplayedAs("Layout")
-                .Listable()
                 .Draftable());
 
             ContentDefinitionManager.AlterTypeDefinition("LayoutWidget", type => type
@@ -62,12 +62,19 @@ namespace Orchard.Layouts {
                 .WithPart("LayoutPart", p => p
                     .WithSetting("LayoutTypePartSettings.IsTemplate", "False")));
 
-            return 2;
+            return 3;
         }
 
         public int UpdateFrom1() {
             SchemaBuilder.AlterTable("ElementBlueprint", table => table.AddColumn<string>("ElementDescription", c => c.WithLength(2048)));
             return 2;
+        }
+
+        public int UpdateFrom2() {
+            ContentDefinitionManager.AlterTypeDefinition("Layout", type => type
+                .WithPart("IdentityPart"));
+
+            return 3;
         }
 
         private void DefineElementWidget(string widgetTypeName, string widgetDisplayedAs, string elementTypeName) {

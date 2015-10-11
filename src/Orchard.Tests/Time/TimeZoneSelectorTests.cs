@@ -69,7 +69,15 @@ namespace Orchard.Tests.Time {
             throw new NotImplementedException();
         }
 
+        public override object Resolve(Type serviceType) {
+            throw new NotImplementedException();
+        }
+
         public override bool TryResolve<T>(out T service) {
+            throw new NotImplementedException();
+        }
+
+        public override bool TryResolve(Type serviceType, out object service) {
             throw new NotImplementedException();
         }
 

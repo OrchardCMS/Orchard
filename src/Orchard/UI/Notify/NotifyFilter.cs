@@ -61,28 +61,40 @@ namespace Orchard.UI.Notify {
 
         public void OnActionExecuted(ActionExecutedContext filterContext) {
 
-            // don't touch temp data if there's no work to perform
+            // Don't touch temp data if there's no work to perform.
             if (!_notifier.List().Any())
                 return;
 
+            var messageEntries = _notifier.List().ToList();
+
+            if (filterContext.Result is ViewResultBase) {
+                // Assign values to the Items collection instead of TempData and 
+                // combine any existing entries added by the previous request with new ones.
+                var existingEntries = filterContext.HttpContext.Items[TempDataMessages] as IList<NotifyEntry> ?? new List<NotifyEntry>();
+                messageEntries = messageEntries.Concat(existingEntries).ToList();
+                filterContext.HttpContext.Items[TempDataMessages] = messageEntries;
+
+                return;
+            }
+            
             var tempData = filterContext.Controller.TempData;
 
-            // initialize writer with current data
+            // Initialize writer with current data.
             var sb = new StringBuilder();
             if (tempData.ContainsKey(TempDataMessages)) {
                 sb.Append(tempData[TempDataMessages]);
             }
 
-            // accumulate messages, one line per message
-            foreach (var entry in _notifier.List()) {
+            // Accumulate messages, one line per message.
+            foreach (var entry in messageEntries) {
                 sb.Append(Convert.ToString(entry.Type))
                     .Append(':')
                     .AppendLine(entry.Message.ToString())
                     .AppendLine("-");
             }
 
-            // assign values into temp data
-            // string data type used instead of complex array to be session-friendly
+            // Result is not a view, so assume a redirect and assign values to TemData.
+            // String data type used instead of complex array to be session-friendly.
             tempData[TempDataMessages] = sb.ToString();
         }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Xml;
 using System.Xml.Linq;
 using Orchard.Logging;
@@ -7,18 +8,13 @@ using Orchard.Recipes.Models;
 
 namespace Orchard.Recipes.Services {
     public class RecipeParser : Component, IRecipeParser {
-        
-        public Recipe ParseRecipe(string recipeText) {
+
+        public Recipe ParseRecipe(XDocument recipeDocument) {
             var recipe = new Recipe();
-
-            if (string.IsNullOrEmpty(recipeText)) {
-                throw new Exception("Recipe is empty");
-            }
-
-            var recipeTree = XElement.Parse(recipeText, LoadOptions.PreserveWhitespace);
             var recipeSteps = new List<RecipeStep>();
+            var stepId = 0;
 
-            foreach (var element in recipeTree.Elements()) {
+            foreach (var element in recipeDocument.Root.Elements()) {
                 // Recipe metadata.
                 if (element.Name.LocalName == "Recipe") {
                     foreach (var metadataElement in element.Elements()) {
@@ -58,7 +54,7 @@ namespace Orchard.Recipes.Services {
                 }
                 // Recipe step.
                 else {
-                    var recipeStep = new RecipeStep { Name = element.Name.LocalName, Step = element };
+                    var recipeStep = new RecipeStep(id: (++stepId).ToString(CultureInfo.InvariantCulture), recipeName: recipe.Name, name: element.Name.LocalName, step: element );
                     recipeSteps.Add(recipeStep);
                 }
             }

@@ -28,13 +28,6 @@ namespace Orchard.Tests.Environment {
             container.Mock<IHttpContextAccessor>()
                 .Setup(x => x.Current())
                 .Returns(() => _httpContextCurrent);
-
-            container.Mock<IHttpContextAccessor>()
-                .Setup(x => x.CreateContext(It.IsAny<ILifetimeScope>()))
-                .Returns(() => new StubHttpContext());
-
-            container.Mock<IWorkContextEvents>()
-                .Setup(x => x.Started());
         }
 
         [Test]

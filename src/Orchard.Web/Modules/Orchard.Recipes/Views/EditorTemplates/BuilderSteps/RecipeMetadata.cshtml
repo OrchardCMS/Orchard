@@ -1,0 +1,41 @@
+﻿@model Orchard.Recipes.ViewModels.SetupRecipeStepViewModel
+<div>
+    @Html.LabelFor(m => m.RecipeName, T("Name"))
+    @Html.TextBoxFor(m => m.RecipeName, new { @class = "text medium" })
+    @Html.Hint(T("Optionally provide a name for the recipe."))
+</div>
+<div>
+    @Html.LabelFor(m => m.RecipeDescription, T("Description"))
+    @Html.TextBoxFor(m => m.RecipeDescription, new {@class = "text large"})
+    @Html.Hint(T("Optionally provide a description for the recipe."))
+</div>
+<div>
+    @Html.LabelFor(m => m.RecipeAuthor, T("Author"))
+    @Html.TextBoxFor(m => m.RecipeAuthor, new { @class = "text large" })
+    @Html.Hint(T("Optionally provide the name of the author for the recipe."))
+</div>
+<div>
+    @Html.LabelFor(m => m.RecipeWebsite, T("Website"))
+    @Html.TextBoxFor(m => m.RecipeWebsite, new { @class = "text large" })
+    @Html.Hint(T("Optionally provide a website URL for the recipe."))
+</div>
+<div>
+    @Html.LabelFor(m => m.RecipeTags, T("Tags"))
+    @Html.TextBoxFor(m => m.RecipeTags, new {@class = "text large"})
+    @Html.Hint(T("Optionally provide tags for the recipe."))
+</div>
+<div>
+    @Html.LabelFor(m => m.RecipeCategory, T("Category"))
+    @Html.TextBoxFor(m => m.RecipeCategory, new { @class = "text large" })
+    @Html.Hint(T("Optionally provide a category for the recipe."))
+</div>
+<div>
+    @Html.LabelFor(m => m.RecipeVersion, T("Version"))
+    @Html.TextBoxFor(m => m.RecipeVersion, new {@class = "text small"})
+    @Html.Hint(T("Optionally provide a version for the recipe."))
+</div>
+<div>
+    @Html.CheckBoxFor(m => m.IsSetupRecipe)
+    @Html.LabelFor(m => m.IsSetupRecipe, T("Is Setup Recipe").ToString(), new { @class = "forcheckbox" })
+    @Html.Hint(T("Check this option to make this a Setup recipe."))
+</div>

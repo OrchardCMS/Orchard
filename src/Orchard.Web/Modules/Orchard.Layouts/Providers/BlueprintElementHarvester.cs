@@ -10,7 +10,7 @@ using Orchard.Layouts.Models;
 using Orchard.Layouts.Services;
 
 namespace Orchard.Layouts.Providers {
-    public class BlueprintElementHarvester : Component, ElementHarvester {
+    public class BlueprintElementHarvester : Component, IElementHarvester {
         private readonly Work<IElementBlueprintService> _elementBlueprintService;
         private readonly Work<IElementManager> _elementManager;
         private bool _isHarvesting;

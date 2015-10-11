@@ -63,11 +63,17 @@ namespace Orchard.Logging {
             if (_shellSettings.Value != null) {
                 ThreadContext.Properties["Tenant"] = _shellSettings.Value.Name;
             }
+            else {
+                ThreadContext.Properties.Remove("Tenant");
+            }
 
             try {
                 var ctx = HttpContext.Current;
                 if (ctx != null) {
                     ThreadContext.Properties["Url"] = ctx.Request.Url.ToString();
+                }
+                else {
+                    ThreadContext.Properties.Remove("Url");
                 }
             }
             catch(HttpException) {

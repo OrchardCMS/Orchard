@@ -40443,7 +40443,7 @@
             <param name="model">The model to use.</param>
             <param name="messageReaderSettings">The message reader settings to use.</param>
             <param name="version">The version of the payload being read.</param>
-            <param name="typeKindFromPayloadFunc">A func to compute the type kind from the payload shape if it could not be determined from the expected type or the payload type.</param>
+            <param name="typeKindPeekedFromPayloadFunc">A func to compute the type kind from the payload shape if it could not be determined from the expected type or the payload type.</param>
             <param name="targetTypeKind">The target type kind to be used to read the payload.</param>
             <param name="serializationTypeNameAnnotation">Potentially non-null instance of an annotation to put on the value reported from the reader.</param>
             <returns>

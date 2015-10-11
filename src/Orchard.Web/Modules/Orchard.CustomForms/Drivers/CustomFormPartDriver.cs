@@ -59,21 +59,20 @@ namespace Orchard.CustomForms.Drivers {
         }
 
         protected override void Importing(CustomFormPart part, ImportContentContext context) {
-            IfNotNull(context.Attribute(part.PartDefinition.Name, "ContentType"), x => part.Record.ContentType = x);
-            IfNotNull(context.Attribute(part.PartDefinition.Name, "SaveContentItem"), x => part.Record.SaveContentItem = Boolean.Parse(x));
-            IfNotNull(context.Attribute(part.PartDefinition.Name, "CustomMessage"), x => part.Record.CustomMessage = Boolean.Parse(x));
-            IfNotNull(context.Attribute(part.PartDefinition.Name, "Message"), x => part.Record.Message = x);
-            IfNotNull(context.Attribute(part.PartDefinition.Name, "Redirect"), x => part.Record.Redirect = Boolean.Parse(x));
-            IfNotNull(context.Attribute(part.PartDefinition.Name, "RedirectUrl"), x => part.Record.RedirectUrl = x);
-            IfNotNull(context.Attribute(part.PartDefinition.Name, "SubmitButtonText"), x => part.Record.SubmitButtonText = x);
-        }
-
-        private static void IfNotNull<T>(T value, Action<T> then) {
-            if (value != null) {
-                then(value);
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
             }
-        }
 
+            context.ImportAttribute(part.PartDefinition.Name, "ContentType", x => part.Record.ContentType = x);
+            context.ImportAttribute(part.PartDefinition.Name, "SaveContentItem", x => part.Record.SaveContentItem = Boolean.Parse(x));
+            context.ImportAttribute(part.PartDefinition.Name, "CustomMessage", x => part.Record.CustomMessage = Boolean.Parse(x));
+            context.ImportAttribute(part.PartDefinition.Name, "Message", x => part.Record.Message = x);
+            context.ImportAttribute(part.PartDefinition.Name, "Redirect", x => part.Record.Redirect = Boolean.Parse(x));
+            context.ImportAttribute(part.PartDefinition.Name, "RedirectUrl", x => part.Record.RedirectUrl = x);
+            context.ImportAttribute(part.PartDefinition.Name, "SubmitButtonText", x => part.Record.SubmitButtonText = x);
+        }
+        
         protected override void Exporting(CustomFormPart part, ExportContentContext context) {
             context.Element(part.PartDefinition.Name).SetAttributeValue("ContentType", part.Record.ContentType);
             context.Element(part.PartDefinition.Name).SetAttributeValue("SaveContentItem", part.Record.SaveContentItem);

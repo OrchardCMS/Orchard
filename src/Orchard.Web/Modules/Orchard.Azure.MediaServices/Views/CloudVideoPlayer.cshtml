@@ -7,19 +7,19 @@
     Style.Include("cloudmedia-videoplayer.css", "cloudmedia-videoplayer.min.css");
     
     Script.Require("JQuery").AtFoot();    
-    Script.Include("Lib/swfobject.js").AtFoot();
-    Script.Include("Lib/dash.all.js").AtFoot();
-    Script.Include("Lib/uri.js").AtFoot();
+    Script.Include("Lib/swfobject.js", "Lib/swfobject.min.js").AtFoot();
+    Script.Include("Lib/dash.all.js", "Lib/dash.all.min.js").AtFoot();
+    Script.Include("Lib/uri.js", "Lib/uri.min.js").AtFoot();
     Script.Include("Lib/underscore.js", "Lib/underscore.min.js").AtFoot();
     Script.Include("Lib/moment.js", "Lib/moment.min.js").AtFoot();
     Script.Include("Lib/console-shim.js", "Lib/console-shim.min.js").AtFoot();
-    Script.Include("cloudmedia-videoplayer-data.js").AtFoot();
-    Script.Include("cloudmedia-videoplayer-injectors.js").AtFoot();
-    Script.Include("cloudmedia-videoplayer-injectors-smp.js").AtFoot();
-    Script.Include("cloudmedia-videoplayer-injectors-dash.js").AtFoot();
-    Script.Include("cloudmedia-videoplayer-injectors-html5.js").AtFoot();
-    Script.Include("cloudmedia-videoplayer-injectors-alt.js").AtFoot();
-    Script.Include("cloudmedia-videoplayer-main.js").AtFoot();
+    Script.Include("cloudmedia-videoplayer-data.js", "cloudmedia-videoplayer-data.min.js").AtFoot();
+    Script.Include("cloudmedia-videoplayer-injectors.js", "cloudmedia-videoplayer-injectors.min.js").AtFoot();
+    Script.Include("cloudmedia-videoplayer-injectors-smp.js", "cloudmedia-videoplayer-injectors-smp.min.js").AtFoot();
+    Script.Include("cloudmedia-videoplayer-injectors-dash.js", "cloudmedia-videoplayer-injectors-dash.min.js").AtFoot();
+    Script.Include("cloudmedia-videoplayer-injectors-html5.js", "cloudmedia-videoplayer-injectors-html5.min.js").AtFoot();
+    Script.Include("cloudmedia-videoplayer-injectors-alt.js", "cloudmedia-videoplayer-injectors-alt.min.js").AtFoot();
+    Script.Include("cloudmedia-videoplayer-main.js", "cloudmedia-videoplayer-main.min.js").AtFoot();
 
     var altText = Model.AlternateText;
     var assetData = Model.AssetData;

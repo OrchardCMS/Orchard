@@ -43,9 +43,13 @@ namespace Orchard.MultiTenancy.Services {
             _shellSettingsManager.SaveSettings(settings);
         }
 
-        public void ResetTenant(ShellSettings settings, bool dropDatabaseTables) {
-            if (settings.State != TenantState.Disabled)
-                throw new InvalidOperationException(String.Format("Tenant state is '{0}'; must be '{1}' to perform reset action.", settings.State, TenantState.Disabled));
+        public void ResetTenant(ShellSettings settings, bool dropDatabaseTables, bool force) {
+            if (settings.State == TenantState.Uninitialized)
+                return;
+            if (settings.State == TenantState.Invalid)
+                throw new InvalidOperationException(String.Format("Tenant reset action cannot be performed when tenant state is '{0}'.", settings.State));
+            if (!force && settings.State != TenantState.Disabled)
+                throw new InvalidOperationException(String.Format("Tenant state is '{0}'; must be '{1}' to perform reset action. The 'force' option can be used to override this.", settings.State, TenantState.Disabled));
 
             ExecuteOnTenantScope(settings, environment => {
                 ExecuteResetEventHandlers(environment);
@@ -101,7 +105,6 @@ namespace Orchard.MultiTenancy.Services {
 
         private IEnumerable<string> GetTenantDatabaseTableNames(IWorkContextScope environment) {
             var sessionFactoryHolder = environment.Resolve<ISessionFactoryHolder>();
-            var schemaBuilder = new SchemaBuilder(environment.Resolve<IDataMigrationInterpreter>());
             var configuration = sessionFactoryHolder.GetConfiguration();
 
             var result =
@@ -112,15 +115,15 @@ namespace Orchard.MultiTenancy.Services {
         }
 
         private void DropTenantDatabaseTables(IWorkContextScope environment) {
-            var sessionFactoryHolder = environment.Resolve<ISessionFactoryHolder>();
+            var tableNames = GetTenantDatabaseTableNames(environment);
             var schemaBuilder = new SchemaBuilder(environment.Resolve<IDataMigrationInterpreter>());
-            var configuration = sessionFactoryHolder.GetConfiguration();
-            foreach (var mapping in configuration.ClassMappings) {
+
+            foreach (var tableName in tableNames) {
                 try {
-                    schemaBuilder.DropTable(mapping.Table.Name);
+                    schemaBuilder.DropTable(schemaBuilder.RemoveDataTablePrefix(tableName));
                 }
                 catch (Exception ex) {
-                    Logger.Warning(ex, "Failed to drop table '{0}'.", mapping.Table.Name);
+                    Logger.Warning(ex, "Failed to drop table '{0}'.", tableName);
                 }
             }
         }

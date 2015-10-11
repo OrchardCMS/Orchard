@@ -21,7 +21,7 @@ namespace Orchard.Layouts.Elements {
         }
 
         public int? Width {
-            get { return this.Retrieve<int?>("Width") ?? this.Retrieve<int?>("ColumnSpan") ?? 0; } // Falling back on "ColumnSpan" for backward compatibility.
+            get { return  this.Retrieve<int?>("Width") ?? this.Retrieve<int?>("ColumnSpan") ?? 12; } // Falling back on "ColumnSpan" for backward compatibility.
             set { this.Store(x => x.Width, value); }
         }
 

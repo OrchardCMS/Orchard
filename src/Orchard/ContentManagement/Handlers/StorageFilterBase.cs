@@ -21,6 +21,10 @@ namespace Orchard.ContentManagement.Handlers {
         protected virtual void Removed(RemoveContentContext context, TPart instance) { }
         protected virtual void Indexing(IndexContentContext context, TPart instance) { }
         protected virtual void Indexed(IndexContentContext context, TPart instance) { }
+        protected virtual void Importing(ImportContentContext context, TPart instance) { }
+        protected virtual void Imported(ImportContentContext context, TPart instance) { }
+        protected virtual void Exporting(ExportContentContext context, TPart instance) { }
+        protected virtual void Exported(ExportContentContext context, TPart instance) { }
         protected virtual void Restoring(RestoreContentContext context, TPart instance) { }
         protected virtual void Restored(RestoreContentContext context, TPart instance) { }
         protected virtual void Destroying(DestroyContentContext context, TPart instance) { }
@@ -119,6 +123,26 @@ namespace Orchard.ContentManagement.Handlers {
         void IContentStorageFilter.Indexed(IndexContentContext context) {
             if ( context.ContentItem.Is<TPart>() )
                 Indexed(context, context.ContentItem.As<TPart>());
+        }
+
+        void IContentStorageFilter.Importing(ImportContentContext context) {
+            if (context.ContentItem.Is<TPart>())
+                Importing(context, context.ContentItem.As<TPart>());
+        }
+
+        void IContentStorageFilter.Imported(ImportContentContext context) {
+            if (context.ContentItem.Is<TPart>())
+                Imported(context, context.ContentItem.As<TPart>());
+        }
+
+        void IContentStorageFilter.Exporting(ExportContentContext context) {
+            if (context.ContentItem.Is<TPart>())
+                Exporting(context, context.ContentItem.As<TPart>());
+        }
+
+        void IContentStorageFilter.Exported(ExportContentContext context) {
+            if (context.ContentItem.Is<TPart>())
+                Exported(context, context.ContentItem.As<TPart>());
         }
 
         void IContentStorageFilter.Restoring(RestoreContentContext context) {

@@ -68,7 +68,7 @@ namespace Orchard.Specs.Hosting {
                 TargetInstance = Activator.CreateInstance(classType);
 
                 foreach (FieldInfo field in classType.GetFields()) {
-                    if (typeof (Delegate).IsAssignableFrom(field.FieldType))
+                    if (typeof (TDelegate).IsAssignableFrom(field.FieldType))
                         //If the field is a delegate
                         field.SetValue(TargetInstance, ((SerializableDelegate<TDelegate>)info.GetValue(field.Name, typeof(SerializableDelegate<TDelegate>))).Delegate);
                     else if (!field.FieldType.IsSerializable)
@@ -86,8 +86,12 @@ namespace Orchard.Specs.Hosting {
 
                 foreach (FieldInfo field in targetType.GetFields()) {
                     //See corresponding comments above
-                    if (typeof (Delegate).IsAssignableFrom(field.FieldType))
-                        info.AddValue(field.Name, new SerializableDelegate<TDelegate>((TDelegate)field.GetValue(TargetInstance)));
+                    if (typeof (TDelegate).IsAssignableFrom(field.FieldType)) {
+                        var value = (TDelegate)field.GetValue(TargetInstance);
+                        if (value != null) {
+                            info.AddValue(field.Name, new SerializableDelegate<TDelegate>(value));
+                        }
+                    }
                     else if (!field.FieldType.IsSerializable)
                         info.AddValue(field.Name, new AnonymousClassWrapper(field.FieldType, field.GetValue(TargetInstance)));
                     else
