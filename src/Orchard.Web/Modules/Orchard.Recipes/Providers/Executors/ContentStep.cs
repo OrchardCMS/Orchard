@@ -118,12 +118,12 @@ namespace Orchard.Recipes.Providers.Executors {
                         if (elementDictionary[nextIdentityValue].HasAttributes) {
                             itemId = elementDictionary[nextIdentityValue].FirstAttribute.Value;
                         }
-                        Logger.Information("Handling content item '{0}' (item {1}/{2}).", itemId, itemIndex + 1, elementDictionary.Count);
+                        Logger.Information("Handling content item '{0}' (item {1}/{2} of '{3}').", itemId, itemIndex + 1, elementDictionary.Count, batchLabel);
                         try {
                             contentItemAction(itemId, nextIdentityValue, elementDictionary[nextIdentityValue], importContentSession, elementDictionary);
                         }
                         catch (Exception ex) {
-                            Logger.Error(ex, "Error while handling content item '{0}'.", itemId);
+                            Logger.Error(ex, "Error while handling content item '{0}' (item {1}/{2} of '{3}').", itemId, itemIndex + 1, elementDictionary.Count, batchLabel);
                             throw;
                         }
                         itemIndex++;
