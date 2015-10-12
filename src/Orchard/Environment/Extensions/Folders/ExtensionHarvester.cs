@@ -23,6 +23,8 @@ namespace Orchard.Environment.Extensions.Folders {
         private const string TagsSection = "tags";
         private const string AntiForgerySection = "antiforgery";
         private const string ZonesSection = "zones";
+        private const string LayersSection = "layers";
+        private const string LayerZonesSection = "layerzones";
         private const string BaseThemeSection = "basetheme";
         private const string DependenciesSection = "dependencies";
         private const string CategorySection = "category";
@@ -128,6 +130,8 @@ namespace Orchard.Environment.Extensions.Folders {
                 Tags = GetValue(manifest, TagsSection),
                 AntiForgery = GetValue(manifest, AntiForgerySection),
                 Zones = GetValue(manifest, ZonesSection),
+                Layers = GetValue(manifest, LayersSection),
+                LayerZones = GetValue(manifest, LayerZonesSection),
                 BaseTheme = GetValue(manifest, BaseThemeSection),
                 SessionState = GetValue(manifest, SessionStateSection),
                 LifecycleStatus = GetValue(manifest, LifecycleStatusSection, LifecycleStatus.Production)
@@ -201,6 +205,12 @@ namespace Orchard.Environment.Extensions.Folders {
                             break;
                         case ZonesSection:
                             manifest.Add(ZonesSection, field[1]);
+                            break;
+                        case LayersSection:
+                            manifest.Add(LayersSection, field[1]);
+                            break;
+                        case LayerZonesSection:
+                            manifest.Add(LayerZonesSection, field[1]);
                             break;
                         case BaseThemeSection:
                             manifest.Add(BaseThemeSection, field[1]);

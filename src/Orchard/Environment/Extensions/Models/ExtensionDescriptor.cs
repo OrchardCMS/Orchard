@@ -32,6 +32,8 @@ namespace Orchard.Environment.Extensions.Models {
         public string Tags { get; set; }
         public string AntiForgery { get; set; }
         public string Zones { get; set; }
+        public string Layers { get; set; }
+        public string LayerZones { get; set; }
         public string BaseTheme { get; set; }
         public string SessionState { get; set; }
         public LifecycleStatus LifecycleStatus { get; set; }

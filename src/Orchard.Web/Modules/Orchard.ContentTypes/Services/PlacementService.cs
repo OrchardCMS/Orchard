@@ -10,8 +10,10 @@ using Orchard.ContentTypes.Settings;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.Environment.Extensions;
+using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.VirtualPath;
 using Orchard.Logging;
+using Orchard.Services;
 using Orchard.Themes.Services;
 using Orchard.UI.Zones;
 
@@ -34,6 +36,7 @@ namespace Orchard.ContentTypes.Services {
         private readonly IEnumerable<IContentFieldDriver> _contentFieldDrivers;
         private readonly IVirtualPathProvider _virtualPathProvider;
         private readonly IWorkContextAccessor _workContextAccessor;
+        private readonly IJsonConverter _jsonConverter;
 
         public PlacementService(
             IContentManager contentManager,
@@ -45,7 +48,8 @@ namespace Orchard.ContentTypes.Services {
             IEnumerable<IContentPartDriver> contentPartDrivers,
             IEnumerable<IContentFieldDriver> contentFieldDrivers,
             IVirtualPathProvider virtualPathProvider,
-            IWorkContextAccessor workContextAccessor
+            IWorkContextAccessor workContextAccessor,
+            IJsonConverter jsonConverter
             ) 
         {
             _contentManager = contentManager;
@@ -58,6 +62,7 @@ namespace Orchard.ContentTypes.Services {
             _contentFieldDrivers = contentFieldDrivers;
             _virtualPathProvider = virtualPathProvider;
             _workContextAccessor = workContextAccessor;
+            _jsonConverter = jsonConverter;
 
             Logger = NullLogger.Instance;
         }
@@ -129,28 +134,45 @@ namespace Orchard.ContentTypes.Services {
             }
         }
 
-        public IEnumerable<string> GetZones() {
-            var theme = _siteThemeService.GetSiteTheme();
+        private IEnumerable<string> GetAllThemeZones(ExtensionDescriptor theme) {
+            if (theme == null) {
+                return Enumerable.Empty<string>();
+            }
             IEnumerable<string> zones = new List<string>();
+            IEnumerable<string> layers = string.IsNullOrEmpty(theme.Layers) ? Enumerable.Empty<string>() : theme.Layers.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
+            if (!string.IsNullOrEmpty(theme.Layers)) {
+                Dictionary<string, string> layerZones = _jsonConverter.Deserialize<Dictionary<string, string>>(theme.LayerZones);
+                foreach (var lz in layerZones.Keys) {
+                    var value = layerZones[lz];
+                    zones = zones.Concat(value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                                                                                        .Select(x => x.Trim())
+                                                                                        .Distinct());
+                }
+            }
             // get the zones for this theme
             if (theme.Zones != null)
-                zones = theme.Zones.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                    .Select(x => x.Trim())
-                    .Distinct()
-                    .ToList();
+                zones = zones.Concat(theme.Zones.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                                                                            .Select(x => x.Trim())
+                                                                            .Distinct());
+            return zones.Distinct();
+        }
 
+        public IEnumerable<string> GetZones() {
+            var theme = _siteThemeService.GetSiteTheme();
+            string baseTheme = theme.BaseTheme;
+            IEnumerable<string> zones = new List<string>();
             // if this theme has no zones defined then walk the BaseTheme chain until we hit a theme which defines zones
-            while (!zones.Any() && theme != null && !string.IsNullOrWhiteSpace(theme.BaseTheme)) {
-                string baseTheme = theme.BaseTheme;
-                theme = _extensionManager.GetExtension(baseTheme);
-                if (theme != null && theme.Zones != null)
-                    zones = theme.Zones.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                        .Select(x => x.Trim())
-                        .Distinct()
-                        .ToList();
-            }
-
+            do {
+                zones = GetAllThemeZones(theme);
+                if (!zones.Any()) {
+                    if (!string.IsNullOrEmpty(baseTheme)) {
+                        theme = _extensionManager.GetExtension(baseTheme);
+                        baseTheme = theme != null ? theme.BaseTheme : null;
+                    }
+                    else theme = null;
+                }
+            } while (!zones.Any() && theme != null );
             return zones;
         }
 

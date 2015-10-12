@@ -79,9 +79,11 @@ namespace Orchard.Widgets.Controllers {
             }
 
             IEnumerable<string> allZones = _widgetsService.GetZones();
-            IEnumerable<string> currentThemesZones = _widgetsService.GetZones(currentTheme);
+            IEnumerable<string> currentThemesZones = _widgetsService.GetZones(currentTheme,currentLayer.Name);
 
             string zonePreviewImagePath = string.Format("{0}/{1}/ThemeZonePreview.png", currentTheme.Location, currentTheme.Id);
+            if ( !string.IsNullOrEmpty(currentTheme.Layers) && !string.IsNullOrEmpty(currentTheme.LayerZones) && _widgetsService.HasDedicatedZones(currentTheme,currentLayer.Name) )
+                zonePreviewImagePath = string.Format("{0}/{1}/{2}/ThemeZonePreview.png", currentTheme.Location, currentTheme.Id,currentLayer.Name);
             string zonePreviewImage = _virtualPathProvider.FileExists(zonePreviewImagePath) ? zonePreviewImagePath : null;
 
             var widgets = _widgetsService.GetWidgets();
