@@ -104,6 +104,10 @@ namespace Orchard.ContentManagement.Handlers {
             Filters.Add(new InlineStorageFilter<TPart> { OnImported = handler });
         }
 
+        protected void OnImportCompleted<TPart>(Action<ImportContentContext, TPart> handler) where TPart : class, IContent {
+            Filters.Add(new InlineStorageFilter<TPart> { OnImportCompleted = handler });
+        }
+
         protected void OnExporting<TPart>(Action<ExportContentContext, TPart> handler) where TPart : class, IContent {
             Filters.Add(new InlineStorageFilter<TPart> { OnExporting = handler });
         }
@@ -157,6 +161,7 @@ namespace Orchard.ContentManagement.Handlers {
             public Action<IndexContentContext, TPart> OnIndexed { get; set; }
             public Action<ImportContentContext, TPart> OnImporting { get; set; }
             public Action<ImportContentContext, TPart> OnImported { get; set; }
+            public Action<ImportContentContext, TPart> OnImportCompleted { get; set; }
             public Action<ExportContentContext, TPart> OnExporting { get; set; }
             public Action<ExportContentContext, TPart> OnExported { get; set; }
             public Action<RestoreContentContext, TPart> OnRestoring { get; set; }
@@ -229,6 +234,10 @@ namespace Orchard.ContentManagement.Handlers {
             protected override void Imported(ImportContentContext context, TPart instance) {
                 if (OnImported != null)
                     OnImported(context, instance);
+            }
+            protected override void ImportCompleted(ImportContentContext context, TPart instance) {
+                if (OnImportCompleted != null)
+                    OnImportCompleted(context, instance);
             }
             protected override void Exporting(ExportContentContext context, TPart instance) {
                 if (OnExporting != null)
@@ -407,6 +416,12 @@ namespace Orchard.ContentManagement.Handlers {
             Imported(context);
         }
 
+        void IContentHandler.ImportCompleted(ImportContentContext importContentContext) {
+            foreach (var filter in Filters.OfType<IContentStorageFilter>())
+                filter.ImportCompleted(importContentContext);
+            ImportCompleted(importContentContext);
+        }
+
         void IContentHandler.Exporting(ExportContentContext context) {
             foreach (var filter in Filters.OfType<IContentStorageFilter>())
                 filter.Exporting(context);
@@ -496,6 +511,7 @@ namespace Orchard.ContentManagement.Handlers {
 
         protected virtual void Importing(ImportContentContext context) { }
         protected virtual void Imported(ImportContentContext context) { }
+        protected virtual void ImportCompleted(ImportContentContext context) { }
         protected virtual void Exporting(ExportContentContext context) { }
         protected virtual void Exported(ExportContentContext context) { }
         protected virtual void Restoring(RestoreContentContext context) { }

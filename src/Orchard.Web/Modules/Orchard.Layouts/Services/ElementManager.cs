@@ -157,9 +157,22 @@ namespace Orchard.Layouts.Services {
             InvokeDriver(elements, (driver, element) => {
                 var exportElementContext = new ExportElementContext {
                     Layout = context.Layout,
-                    Element = element
+                    Element = element,
+                    ExportableData = element.ExportableData
                 };
                 driver.Exporting(exportElementContext);
+                element.ExportableData = new ElementDataDictionary(exportElementContext.ExportableData);
+            });
+        }
+
+        public void Exported(IEnumerable<Element> elements, ExportLayoutContext context) {
+            InvokeDriver(elements, (driver, element) => {
+                var exportElementContext = new ExportElementContext {
+                    Layout = context.Layout,
+                    Element = element,
+                    ExportableData = element.ExportableData
+                };
+                driver.Exported(exportElementContext);
                 element.ExportableData = new ElementDataDictionary(exportElementContext.ExportableData);
             });
         }
@@ -173,6 +186,30 @@ namespace Orchard.Layouts.Services {
                     Session = context.Session
                 };
                 driver.Importing(importElementContext);
+            });
+        }
+
+        public void Imported(IEnumerable<Element> elements, ImportLayoutContext context) {
+            InvokeDriver(elements, (driver, element) => {
+                var importElementContext = new ImportElementContext {
+                    Layout = context.Layout,
+                    Element = element,
+                    ExportableData = element.ExportableData,
+                    Session = context.Session
+                };
+                driver.Imported(importElementContext);
+            });
+        }
+
+        public void ImportCompleted(IEnumerable<Element> elements, ImportLayoutContext context) {
+            InvokeDriver(elements, (driver, element) => {
+                var importElementContext = new ImportElementContext {
+                    Layout = context.Layout,
+                    Element = element,
+                    ExportableData = element.ExportableData,
+                    Session = context.Session
+                };
+                driver.ImportCompleted(importElementContext);
             });
         }
 

@@ -135,9 +135,7 @@ namespace Orchard.Layouts.Drivers {
 
         protected override void Exporting(LayoutPart part, ExportContentContext context) {
             _layoutManager.Exporting(new ExportLayoutContext { Layout = part });
-
-            context.Element(part.PartDefinition.Name).SetElementValue("LayoutData", part.LayoutData);
-
+            
             if (part.TemplateId != null) {
                 var template = part.ContentItem.ContentManager.Get(part.TemplateId.Value);
 
@@ -148,21 +146,41 @@ namespace Orchard.Layouts.Drivers {
             }
         }
 
+        protected override void Exported(LayoutPart part, ExportContentContext context) {
+            _layoutManager.Exported(new ExportLayoutContext { Layout = part });
+
+            context.Element(part.PartDefinition.Name).SetElementValue("LayoutData", part.LayoutData);
+        }
+
         protected override void Importing(LayoutPart part, ImportContentContext context) {
+            HandleImportEvent(part, context, importLayoutContext => {
+                context.ImportChildEl(part.PartDefinition.Name, "LayoutData", s => {
+                    part.LayoutData = s;
+                    _layoutManager.Importing(importLayoutContext);
+                });
+
+                context.ImportAttribute(part.PartDefinition.Name, "TemplateId", s => part.TemplateId = GetTemplateId(context, s));
+            });
+        }
+
+        protected override void Imported(LayoutPart part, ImportContentContext context) {
+            HandleImportEvent(part, context, importLayoutContext => _layoutManager.Imported(importLayoutContext));
+        }
+
+        protected override void ImportCompleted(LayoutPart part, ImportContentContext context) {
+            HandleImportEvent(part, context, importLayoutContext => _layoutManager.ImportCompleted(importLayoutContext));
+        }
+
+        private void HandleImportEvent(LayoutPart part, ImportContentContext context, Action<ImportLayoutContext> callback) {
             // Don't do anything if the tag is not specified.
             if (context.Data.Element(part.PartDefinition.Name) == null) {
                 return;
             }
 
-            context.ImportChildEl(part.PartDefinition.Name, "LayoutData", s => {
-                part.LayoutData = s;
-                _layoutManager.Importing(new ImportLayoutContext {
-                    Layout = part,
-                    Session = new ImportContentContextWrapper(context)
-                });
+            callback(new ImportLayoutContext {
+                Layout = part,
+                Session = new ImportContentContextWrapper(context)
             });
-
-            context.ImportAttribute(part.PartDefinition.Name, "TemplateId", s => part.TemplateId = GetTemplateId(context, s));
         }
 
         private static int? GetTemplateId(ImportContentContext context, string templateIdentity) {

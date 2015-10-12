@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Orchard.Data.Conventions;
 
@@ -9,6 +10,7 @@ namespace Orchard.Projections.Models {
         }
 
         public virtual int Id { get; set; }
+        public virtual Guid Guid { get; set; }
         public virtual string Description { get; set; }
         public virtual string Category { get; set; }
         public virtual string Type { get; set; }

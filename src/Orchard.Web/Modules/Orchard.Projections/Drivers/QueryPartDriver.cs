@@ -65,12 +65,12 @@ namespace Orchard.Projections.Drivers {
                         }
 
                         return new XElement("SortCriterion",
-                                            new XAttribute("Category", sortCriterion.Category ?? ""),
-                                            new XAttribute("Description", sortCriterion.Description ?? ""),
-                                            new XAttribute("Position", sortCriterion.Position),
-                                            new XAttribute("State", state ?? ""),
-                                            new XAttribute("Type", sortCriterion.Type ?? "")
-                            );
+                            new XAttribute("Category", sortCriterion.Category ?? ""),
+                            new XAttribute("Description", sortCriterion.Description ?? ""),
+                            new XAttribute("Position", sortCriterion.Position),
+                            new XAttribute("State", state ?? ""),
+                            new XAttribute("Type", sortCriterion.Type ?? "")
+                        );
                     })
                 ),
                 new XElement("Layouts",
@@ -83,20 +83,21 @@ namespace Orchard.Projections.Drivers {
                         }
 
                         return new XElement("Layout",
-                                            // Attributes
-                                            new XAttribute("Category", layout.Category ?? ""),
-                                            new XAttribute("Description", layout.Description ?? ""),
-                                            new XAttribute("State", state ?? ""),
-                                            new XAttribute("Display", layout.Display),
-                                            new XAttribute("DisplayType", layout.DisplayType ?? ""),
-                                            new XAttribute("Type", layout.Type ?? ""),
+                            // Attributes
+                            new XAttribute("Guid", layout.Guid),
+                            new XAttribute("Category", layout.Category ?? ""),
+                            new XAttribute("Description", layout.Description ?? ""),
+                            new XAttribute("State", state ?? ""),
+                            new XAttribute("Display", layout.Display),
+                            new XAttribute("DisplayType", layout.DisplayType ?? ""),
+                            new XAttribute("Type", layout.Type ?? ""),
 
-                                            // Properties
-                                            new XElement("Properties", layout.Properties.Select(GetPropertyXml)),
+                            // Properties
+                            new XElement("Properties", layout.Properties.Select(GetPropertyXml)),
 
-                                            // Group
-                                            new XElement("Group", GetPropertyXml(layout.GroupProperty))
-                            );
+                            // Group
+                            new XElement("Group", GetPropertyXml(layout.GroupProperty))
+                        );
                     })
                 )
             );
@@ -161,6 +162,7 @@ namespace Orchard.Projections.Drivers {
 
             part.Record.Layouts.Clear();
             foreach (var item in queryElement.Element("Layouts").Elements("Layout").Select(layout => {
+                var guid = layout.Attr("Guid");
                 var category = layout.Attribute("Category").Value;
                 var type = layout.Attribute("Type").Value;
                 var state = layout.Attribute("State").Value;
@@ -171,7 +173,7 @@ namespace Orchard.Projections.Drivers {
                 }
 
                 return new LayoutRecord {
-
+                    Guid = !String.IsNullOrWhiteSpace(guid) ? Guid.Parse(guid) : Guid.NewGuid(),
                     Category = category,
                     Description = layout.Attribute("Description").Value,
                     Display = int.Parse(layout.Attribute("Display").Value),
