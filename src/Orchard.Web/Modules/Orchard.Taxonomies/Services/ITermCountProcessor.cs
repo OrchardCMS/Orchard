@@ -7,6 +7,6 @@ using Orchard.Events;
 
 namespace Orchard.Taxonomies.Services {
     public interface ITermCountProcessor : IEventHandler {
-        void Process(params int[] termPartRecordIds);
+        void Process(IEnumerable<int> termPartRecordIds);
     }
 }

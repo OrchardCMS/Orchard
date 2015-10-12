@@ -34,7 +34,8 @@ namespace Orchard.Layouts.Controllers {
             ICultureAccessor cultureAccessor, 
             IShapeFactory shapeFactory, 
             ITransactionManager transactionManager, 
-            ISignals signals) {
+            ISignals signals,
+            IOrchardServices orchardServices) {
 
             _elementBlueprintService = elementBlueprintService;
             _notifier = notifier;
@@ -43,12 +44,19 @@ namespace Orchard.Layouts.Controllers {
             _shapeFactory = shapeFactory;
             _transactionManager = transactionManager;
             _signals = signals;
+            Services = orchardServices;
+
             T = NullLocalizer.Instance;
         }
 
+        public IOrchardServices Services { get; set; }
         public Localizer T { get; set; }
 
         public ActionResult Index() {
+            if (!Services.Authorizer.Authorize(Permissions.ManageLayouts, T("Not authorized to manage layouts."))) {
+                return new HttpUnauthorizedResult();
+            }
+
             var blueprints = _elementBlueprintService.GetBlueprints().ToArray();
             var viewModel = new BlueprintsIndexViewModel {
                 Blueprints = blueprints
@@ -57,6 +65,10 @@ namespace Orchard.Layouts.Controllers {
         }
 
         public ActionResult Browse() {
+            if (!Services.Authorizer.Authorize(Permissions.ManageLayouts, T("Not authorized to manage layouts."))) {
+                return new HttpUnauthorizedResult();
+            }
+
             var categories = RemoveBlueprints(_elementManager.GetCategories(DescribeElementsContext.Empty)).ToArray();
             var viewModel = new BrowseElementsViewModel {
                 Categories = categories
@@ -65,6 +77,10 @@ namespace Orchard.Layouts.Controllers {
         }
 
         public ActionResult Create(string id) {
+            if (!Services.Authorizer.Authorize(Permissions.ManageLayouts, T("Not authorized to manage layouts."))) {
+                return new HttpUnauthorizedResult();
+            }
+
             if (String.IsNullOrWhiteSpace(id))
                 return RedirectToAction("Browse");
 
@@ -80,6 +96,10 @@ namespace Orchard.Layouts.Controllers {
 
         [HttpPost]
         public ActionResult Create(string id, CreateElementBlueprintViewModel model) {
+            if (!Services.Authorizer.Authorize(Permissions.ManageLayouts, T("Not authorized to manage layouts."))) {
+                return new HttpUnauthorizedResult();
+            }
+
             var describeContext = DescribeElementsContext.Empty;
             var descriptor = _elementManager.GetElementDescriptorByTypeName(describeContext, id);
             var baseElement = _elementManager.ActivateElement(descriptor);
@@ -100,7 +120,11 @@ namespace Orchard.Layouts.Controllers {
             return RedirectToAction("Edit", new { id = blueprint.Id });
         }
 
-        public ViewResult Edit(int id) {
+        public ActionResult Edit(int id) {
+            if (!Services.Authorizer.Authorize(Permissions.ManageLayouts, T("Not authorized to manage layouts."))) {
+                return new HttpUnauthorizedResult();
+            }
+
             var blueprint = _elementBlueprintService.GetBlueprint(id);
             var describeContext = DescribeElementsContext.Empty;
             var descriptor = _elementManager.GetElementDescriptorByTypeName(describeContext, blueprint.BaseElementTypeName);
@@ -125,6 +149,10 @@ namespace Orchard.Layouts.Controllers {
         [HttpPost]
         [ValidateInput(false)]
         public ActionResult Edit(int id, ElementDataViewModel model) {
+            if (!Services.Authorizer.Authorize(Permissions.ManageLayouts, T("Not authorized to manage layouts."))) {
+                return new HttpUnauthorizedResult();
+            }
+
             var blueprint = _elementBlueprintService.GetBlueprint(id);
             var describeContext = DescribeElementsContext.Empty;
             var descriptor = _elementManager.GetElementDescriptorByTypeName(describeContext, blueprint.BaseElementTypeName);
@@ -154,6 +182,10 @@ namespace Orchard.Layouts.Controllers {
         }
 
         public ActionResult Properties(int id) {
+            if (!Services.Authorizer.Authorize(Permissions.ManageLayouts, T("Not authorized to manage layouts."))) {
+                return new HttpUnauthorizedResult();
+            }
+
             var blueprint = _elementBlueprintService.GetBlueprint(id);
             var describeContext = DescribeElementsContext.Empty;
             var descriptor = _elementManager.GetElementDescriptorByTypeName(describeContext, blueprint.BaseElementTypeName);
@@ -171,6 +203,10 @@ namespace Orchard.Layouts.Controllers {
 
         [HttpPost]
         public ActionResult Properties(int id, ElementBlueprintPropertiesViewModel model) {
+            if (!Services.Authorizer.Authorize(Permissions.ManageLayouts, T("Not authorized to manage layouts."))) {
+                return new HttpUnauthorizedResult();
+            }
+
             var blueprint = _elementBlueprintService.GetBlueprint(id);
             var describeContext = DescribeElementsContext.Empty;
             var descriptor = _elementManager.GetElementDescriptorByTypeName(describeContext, blueprint.BaseElementTypeName);
@@ -191,7 +227,12 @@ namespace Orchard.Layouts.Controllers {
             return RedirectToAction("Index");
         }
 
+        [HttpPost]
         public ActionResult Delete(int id) {
+            if (!Services.Authorizer.Authorize(Permissions.ManageLayouts, T("Not authorized to manage layouts."))) {
+                return new HttpUnauthorizedResult();
+            }
+
             var blueprint = _elementBlueprintService.GetBlueprint(id);
 
             if (blueprint == null)
@@ -204,7 +245,12 @@ namespace Orchard.Layouts.Controllers {
 
         [FormValueRequired("submit.BulkEdit")]
         [ActionName("Index")]
+        [HttpPost]
         public ActionResult BulkDelete(IEnumerable<int> blueprintIds) {
+            if (!Services.Authorizer.Authorize(Permissions.ManageLayouts, T("Not authorized to manage layouts."))) {
+                return new HttpUnauthorizedResult();
+            }
+
             if (blueprintIds == null || !blueprintIds.Any()) {
                 _notifier.Error(T("Please select the blueprints to delete."));
             }
