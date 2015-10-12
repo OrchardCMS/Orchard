@@ -104,7 +104,7 @@ namespace Orchard.ContentManagement.Handlers {
             Filters.Add(new InlineStorageFilter<TPart> { OnImported = handler });
         }
 
-        protected void OnImportedAll<TPart>(Action<ImportContentContext, TPart> handler) where TPart : class, IContent {
+        protected void OnImportCompleted<TPart>(Action<ImportContentContext, TPart> handler) where TPart : class, IContent {
             Filters.Add(new InlineStorageFilter<TPart> { OnImportCompleted = handler });
         }
 
@@ -419,7 +419,7 @@ namespace Orchard.ContentManagement.Handlers {
         void IContentHandler.ImportCompleted(ImportContentContext importContentContext) {
             foreach (var filter in Filters.OfType<IContentStorageFilter>())
                 filter.ImportCompleted(importContentContext);
-            ImportedAll(importContentContext);
+            ImportCompleted(importContentContext);
         }
 
         void IContentHandler.Exporting(ExportContentContext context) {
@@ -511,7 +511,7 @@ namespace Orchard.ContentManagement.Handlers {
 
         protected virtual void Importing(ImportContentContext context) { }
         protected virtual void Imported(ImportContentContext context) { }
-        protected virtual void ImportedAll(ImportContentContext context) { }
+        protected virtual void ImportCompleted(ImportContentContext context) { }
         protected virtual void Exporting(ExportContentContext context) { }
         protected virtual void Exported(ExportContentContext context) { }
         protected virtual void Restoring(RestoreContentContext context) { }
