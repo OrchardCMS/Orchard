@@ -563,11 +563,9 @@ namespace Orchard.ContentManagement {
 
         public virtual ContentItem Clone(ContentItem contentItem) {
             // Mostly taken from: http://orchard.codeplex.com/discussions/396664
-            var importContentSession = new ImportContentSession(this);
-
             var element = Export(contentItem);
 
-            // If a handler prevents this element from being exported, it can't be cloned
+            // If a handler prevents this element from being exported, it can't be cloned.
             if (element == null) {
                 throw new InvalidOperationException("The content item couldn't be cloned because a handler prevented it from being exported.");
             }
@@ -578,9 +576,10 @@ namespace Orchard.ContentManagement {
             var status = element.Attribute("Status");
             if (status != null) status.SetValue("Draft"); // So the copy is always a draft.
 
+            var importContentSession = new ImportContentSession(this);
             importContentSession.Set(copyId, element.Name.LocalName);
-
             Import(element, importContentSession);
+            CompleteImport(element, importContentSession);
 
             return importContentSession.Get(copyId, element.Name.LocalName);
         }
@@ -787,6 +786,26 @@ namespace Orchard.ContentManagement {
 
             if (status == null || status.Value == Published) {
                 Publish(item);
+            }
+        }
+
+        public void CompleteImport(XElement element, ImportContentSession importContentSession) {
+            var elementId = element.Attribute("Id");
+            if (elementId == null) {
+                return;
+            }
+
+            var identity = elementId.Value;
+
+            if (String.IsNullOrWhiteSpace(identity)) {
+                return;
+            }
+
+            var item = importContentSession.Get(identity, VersionOptions.Latest, XmlConvert.DecodeName(element.Name.LocalName));
+            var context = new ImportContentContext(item, element, importContentSession);
+
+            foreach (var handler in _handlers.Value) {
+                handler.ImportCompleted(context);
             }
         }
 

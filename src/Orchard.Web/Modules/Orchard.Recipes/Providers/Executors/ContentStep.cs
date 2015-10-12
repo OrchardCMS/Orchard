@@ -82,11 +82,7 @@ namespace Orchard.Recipes.Providers.Executors {
             
             // Invoke ImportCompleted.
             BatchedInvoke(context, "ImportCompleted", (itemId, nextIdentityValue, element, importContentSession, elementDictionary) => {
-                var contentItem = importContentSession.Get(itemId, VersionOptions.Latest);
-                var importContentContext = new ImportContentContext(contentItem, elementDictionary[nextIdentityValue], importContentSession);
-                foreach (var handler in _handlers.Value) {
-                    handler.ImportCompleted(importContentContext);
-                }
+                _orchardServices.ContentManager.CompleteImport(element, importContentSession);
             });
         }
 
