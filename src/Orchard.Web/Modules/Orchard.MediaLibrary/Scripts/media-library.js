@@ -73,6 +73,8 @@ $(function () {
         var listHeight = $('#media-library-main-list').height();
         var itemWidth = $('.thumbnail').first().width();
         var itemHeight = $('.thumbnail').first().height();
+        if (itemHeight == 0) itemHeight = 200;
+        if (itemWidth == 0) itemWidth = 200;
         var draftText = $("#media-library").data("draft-text");
 
         var itemsPerRow = Math.floor(listWidth / itemWidth);
