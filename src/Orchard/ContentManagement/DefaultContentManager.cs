@@ -764,13 +764,9 @@ namespace Orchard.ContentManagement {
             }
 
             var context = new ImportContentContext(item, element, importContentSession);
-            foreach (var contentHandler in Handlers) {
-                contentHandler.Importing(context);
-            }
 
-            foreach (var contentHandler in Handlers) {
-                contentHandler.Imported(context);
-            }
+            Handlers.Invoke(contentHandler => contentHandler.Importing(context), Logger);
+            Handlers.Invoke(contentHandler => contentHandler.Imported(context), Logger);
 
             var savedItem = Get(item.Id, VersionOptions.Latest);
 
@@ -804,22 +800,15 @@ namespace Orchard.ContentManagement {
             var item = importContentSession.Get(identity, VersionOptions.Latest, XmlConvert.DecodeName(element.Name.LocalName));
             var context = new ImportContentContext(item, element, importContentSession);
 
-            foreach (var handler in _handlers.Value) {
-                handler.ImportCompleted(context);
-            }
+            Handlers.Invoke(contentHandler => contentHandler.ImportCompleted(context), Logger);
         }
 
         public XElement Export(ContentItem contentItem) {
             var context = new ExportContentContext(contentItem, new XElement(XmlConvert.EncodeLocalName(contentItem.ContentType)));
 
-            foreach (var contentHandler in Handlers) {
-                contentHandler.Exporting(context);
-            }
-
-            foreach (var contentHandler in Handlers) {
-                contentHandler.Exported(context);
-            }
-
+            Handlers.Invoke(contentHandler => contentHandler.Exporting(context), Logger);
+            Handlers.Invoke(contentHandler => contentHandler.Exported(context), Logger);
+            
             if (context.Exclude) {
                 return null;
             }
