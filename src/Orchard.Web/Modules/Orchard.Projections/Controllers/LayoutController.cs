@@ -105,7 +105,7 @@ namespace Orchard.Projections.Controllers {
             model.Form = form;
 
             if (ModelState.IsValid) {
-                var layoutRecord = new LayoutRecord { Guid = Guid.NewGuid() ,Category = model.Category, Type = model.Type };
+                var layoutRecord = new LayoutRecord { Category = model.Category, Type = model.Type };
                 var query = _queryService.GetQuery(model.QueryId);
                 query.Layouts.Add(layoutRecord);
 

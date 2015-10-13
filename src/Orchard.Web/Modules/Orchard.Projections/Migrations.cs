@@ -103,7 +103,6 @@ namespace Orchard.Projections {
             SchemaBuilder.CreateTable("LayoutRecord",
                 table => table
                     .Column<int>("Id", c => c.PrimaryKey().Identity())
-                    .Column<Guid>("Guid")
                     .Column<string>("Category", c => c.WithLength(64))
                     .Column<string>("Type", c => c.WithLength(64))
                     .Column<string>("Description", c => c.WithLength(255))
@@ -113,9 +112,6 @@ namespace Orchard.Projections {
                     .Column<int>("QueryPartRecord_id")
                     .Column<int>("GroupProperty_id")
                 );
-
-            SchemaBuilder.AlterTable("LayoutRecord", table => table
-                .CreateIndex("IDX_LR_GUID", "Guid"));
 
             SchemaBuilder.CreateTable("PropertyRecord",
                 table => table
@@ -267,7 +263,7 @@ namespace Orchard.Projections {
 
             ContentDefinitionManager.AlterTypeDefinition("ProjectionPage", cfg => cfg.Listable());
 
-            return 4;
+            return 3;
         }
 
         public int UpdateFrom2() {
@@ -276,17 +272,6 @@ namespace Orchard.Projections {
             );
 
             return 3;
-        }
-
-        public int UpdateFrom3() {
-            SchemaBuilder.AlterTable("LayoutRecord", table => table
-                .AddColumn<Guid>("Guid")
-            );
-
-            SchemaBuilder.AlterTable("LayoutRecord", table => table
-                .CreateIndex("IDX_LR_GUID", "Guid"));
-
-            return 4;
         }
     }
 }

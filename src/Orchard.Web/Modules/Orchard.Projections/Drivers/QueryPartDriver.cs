@@ -84,7 +84,6 @@ namespace Orchard.Projections.Drivers {
 
                         return new XElement("Layout",
                             // Attributes
-                            new XAttribute("Guid", layout.Guid),
                             new XAttribute("Category", layout.Category ?? ""),
                             new XAttribute("Description", layout.Description ?? ""),
                             new XAttribute("State", state ?? ""),
@@ -162,7 +161,6 @@ namespace Orchard.Projections.Drivers {
 
             part.Record.Layouts.Clear();
             foreach (var item in queryElement.Element("Layouts").Elements("Layout").Select(layout => {
-                var guid = layout.Attr("Guid");
                 var category = layout.Attribute("Category").Value;
                 var type = layout.Attribute("Type").Value;
                 var state = layout.Attribute("State").Value;
@@ -173,7 +171,6 @@ namespace Orchard.Projections.Drivers {
                 }
 
                 return new LayoutRecord {
-                    Guid = !String.IsNullOrWhiteSpace(guid) ? Guid.Parse(guid) : Guid.NewGuid(),
                     Category = category,
                     Description = layout.Attribute("Description").Value,
                     Display = int.Parse(layout.Attribute("Display").Value),
