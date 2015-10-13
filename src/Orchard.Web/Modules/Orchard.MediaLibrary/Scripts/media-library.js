@@ -71,10 +71,11 @@ $(function () {
 
         var listWidth = $('#media-library-main-list').width();
         var listHeight = $('#media-library-main-list').height();
-        var itemWidth = $('.thumbnail').first().width();
-        var itemHeight = $('.thumbnail').first().height();
-        if (itemHeight == 0) itemHeight = 200;
-        if (itemWidth == 0) itemWidth = 200;
+        var itemWidth = $('#media-library-main-list li').first().width();
+        var itemHeight = $('#media-library-main-list li').first().height();
+        var defaultDimension = $(window).width() < 1420 ? 120 : 200;
+        if (itemHeight == 0 || itemHeight == null) itemHeight = defaultDimension;
+        if (itemWidth == 0 || itemHeight == null) itemWidth = defaultDimension;
         var draftText = $("#media-library").data("draft-text");
 
         var itemsPerRow = Math.floor(listWidth / itemWidth);
