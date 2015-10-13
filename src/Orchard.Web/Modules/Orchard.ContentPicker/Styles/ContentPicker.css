@@ -20,3 +20,36 @@ body {
     background: white;
     border: 1px solid #E4E5E6;
 }
+
+.content-picker-item
+{
+    margin-left: 20px;
+}
+
+.content-picker-itemCheck
+{
+    position:absolute;
+
+}
+
+label[for="selectAll"]:before
+{
+    content:'';
+    display:block;
+    margin-top:20px;
+}
+
+label[for="selectAll"]
+{
+    display:inline;
+}
+
+.addSelected
+{
+    margin-bottom: 10px;
+}
+
+.page-size-options > div:first-child
+{
+    display:inline-block;
+}

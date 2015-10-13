@@ -72,6 +72,7 @@
   <ItemGroup>
     <Compile Include="ViewModels\NavigationPartViewModel.cs" />
     <Content Include="Scripts\ContentPicker.js" />
+    <Content Include="Scripts\SelectableContentTab.js" />
     <Content Include="Styles\content-picker-admin.css" />
     <Content Include="Styles\ContentPicker.css" />
     <Content Include="Styles\Images\move.gif" />

@@ -80,14 +80,26 @@
             addButton.click(function() {
                 addButton.trigger("orchard-admin-contentpicker-open", {
                     callback: function(data) {
-                        var tmpl = template.replace( /\{contentItemId\}/g , data.id)
-                            .replace( /\{edit-link\}/g , data.editLink)
-                            .replace( /\{status-text}/g , data.published? "" : " - " + notPublishedText);
-                        var content = $(tmpl);
-                        $(self).find('table.content-picker tbody').append(content);
+                        if (Array.isArray && Array.isArray(data)) {
+                            data.forEach(function (d) {
+                                var tmpl = template.replace(/\{contentItemId\}/g, d.id)
+                                    .replace(/\{edit-link\}/g, d.editLink)
+                                    .replace(/\{status-text}/g, d.published ? "" : " - " + notPublishedText);
+                                var content = $(tmpl);
+                                $(self).find('table.content-picker tbody').append(content);
+                            });
+                            refreshIds();
+                            $(self).find('.content-picker-message').show();
+                        } else {
+                            var tmpl = template.replace(/\{contentItemId\}/g, data.id)
+                                .replace(/\{edit-link\}/g, data.editLink)
+                                .replace(/\{status-text}/g, data.published ? "" : " - " + notPublishedText);
+                            var content = $(tmpl);
+                            $(self).find('table.content-picker tbody').append(content);
 
-                        refreshIds();
-                        $(self).find('.content-picker-message').show();
+                            refreshIds();
+                            $(self).find('.content-picker-message').show();
+                        }
                     },
                     baseUrl: baseUrl,
                     part: partName,
