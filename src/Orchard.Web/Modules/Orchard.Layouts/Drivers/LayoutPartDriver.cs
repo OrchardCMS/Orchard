@@ -144,6 +144,8 @@ namespace Orchard.Layouts.Drivers {
                     context.Element(part.PartDefinition.Name).SetAttributeValue("TemplateId", templateIdentity);
                 }
             }
+
+            context.Element(part.PartDefinition.Name).SetElementValue("LayoutData", part.LayoutData);
         }
 
         protected override void Exported(LayoutPart part, ExportContentContext context) {
