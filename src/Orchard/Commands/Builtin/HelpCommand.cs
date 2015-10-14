@@ -37,12 +37,15 @@ namespace Orchard.Commands.Builtin {
         [CommandHelp("help <command>\r\n\t" + "Display help text for <command>")]
         public void SingleCommand(string[] commandNameStrings) {
             string command = string.Join(" ", commandNameStrings);
-            var descriptor = _commandManager.GetCommandDescriptors().SingleOrDefault(d => string.Equals(command, d.Name, StringComparison.OrdinalIgnoreCase));
-            if (descriptor == null) {
+            var descriptors = _commandManager.GetCommandDescriptors().Where(t => t.Name.StartsWith(command, StringComparison.OrdinalIgnoreCase)).OrderBy(d => d.Name);
+            if (!descriptors.Any()) {
                 Context.Output.WriteLine(T("Command {0} doesn't exist").ToString(), command);
             }
             else {
-                Context.Output.WriteLine(GetHelpText(descriptor));
+                foreach (var descriptor in descriptors) {
+                    Context.Output.WriteLine(GetHelpText(descriptor));
+                    Context.Output.WriteLine();
+                }
             }
         }
     }
