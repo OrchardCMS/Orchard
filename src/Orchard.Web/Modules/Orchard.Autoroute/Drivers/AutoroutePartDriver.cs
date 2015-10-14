@@ -146,7 +146,7 @@ namespace Orchard.Autoroute.Drivers {
                 }
                 
                 if (part.DisplayAlias != null && part.DisplayAlias.Length > 1850){
-                    updater.AddModelError("CurrentUrl", T("Your Display Alias is too long. The Display Alias can only be up to 1,850 characters."));
+                    updater.AddModelError("CurrentUrl", T("Your permalink is too long. The permalink can only be up to 1,850 characters."));
                 }
 
                 // Mark the content item to be the homepage. Once this content isp ublished, the home alias will be updated to point to this content item.
