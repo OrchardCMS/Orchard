@@ -307,23 +307,22 @@ namespace Orchard.Projections.Drivers {
             context.ImportAttribute(part.PartDefinition.Name, "DisplayPager", x => part.Record.DisplayPager = Boolean.Parse(x));
         }
 
-        protected override void Imported(ProjectionPart part, ImportContentContext context) {
-            // assign the query only when everythin is imported
+        protected override void ImportCompleted(ProjectionPart part, ImportContentContext context) {
+            // Assign the query only when everything is imported.
             var query = context.Attribute(part.PartDefinition.Name, "Query");
             if (query != null) {
                 part.Record.QueryPartRecord = context.GetItemFromSession(query).As<QueryPart>().Record;
                 var layoutIndex = context.Attribute(part.PartDefinition.Name, "LayoutIndex");
                 int layoutIndexValue;
-                if (layoutIndex != null 
+                if (layoutIndex != null
                     && Int32.TryParse(layoutIndex, out layoutIndexValue)
                     && layoutIndexValue >= 0
-                    && part.Record.QueryPartRecord.Layouts.Count > layoutIndexValue)
-                {
+                    && part.Record.QueryPartRecord.Layouts.Count > layoutIndexValue) {
                     part.Record.LayoutRecord = part.Record.QueryPartRecord.Layouts[Int32.Parse(layoutIndex)];
                 }
             }
         }
-        
+
         protected override void Exporting(ProjectionPart part, ExportContentContext context) {
             context.Element(part.PartDefinition.Name).SetAttributeValue("Items", part.Record.Items);
             context.Element(part.PartDefinition.Name).SetAttributeValue("ItemsPerPage", part.Record.ItemsPerPage);

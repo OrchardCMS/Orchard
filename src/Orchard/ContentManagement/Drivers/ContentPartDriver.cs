@@ -129,6 +129,12 @@ namespace Orchard.ContentManagement.Drivers {
                 Imported(part, context);
         }
 
+        void IContentPartDriver.ImportCompleted(ImportContentContext context) {
+            var part = context.ContentItem.As<TContent>();
+            if (part != null)
+                ImportCompleted(part, context);
+        }
+
         void IContentPartDriver.Exporting(ExportContentContext context) {
             var part = context.ContentItem.As<TContent>();
             if (part != null)
@@ -149,6 +155,7 @@ namespace Orchard.ContentManagement.Drivers {
 
         protected virtual void Importing(TContent part, ImportContentContext context) { }
         protected virtual void Imported(TContent part, ImportContentContext context) { }
+        protected virtual void ImportCompleted(TContent part, ImportContentContext context) { }
         protected virtual void Exporting(TContent part, ExportContentContext context) { }
         protected virtual void Exported(TContent part, ExportContentContext context) { }
 

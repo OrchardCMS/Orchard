@@ -22,6 +22,7 @@
         void Indexed(IndexContentContext context);
         void Importing(ImportContentContext context);
         void Imported(ImportContentContext context);
+        void ImportCompleted(ImportContentContext importContentContext);
         void Exporting(ExportContentContext context);
         void Exported(ExportContentContext context);
 

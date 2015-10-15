@@ -27,7 +27,8 @@ namespace Orchard.OutputCache.Services {
         }
 
         public void Remove(string key) {
-            _workContext.HttpContext.Cache.Remove(key);
+            if (_workContext.HttpContext != null)
+                _workContext.HttpContext.Cache.Remove(key);
         }
 
         public void RemoveAll() {

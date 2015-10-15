@@ -7,7 +7,7 @@ namespace Orchard.Templates {
         public void GetNavigation(NavigationBuilder builder) {
             builder
                 .AddImageSet("templates")
-                .Add(T("Templates"), "5.0", item => item.Action("List", "Admin", new { area = "Orchard.Templates", id = "" }));
+                .Add(T("Templates"), "5.0", item => item.Action("List", "Admin", new { area = "Orchard.Templates", id = "" }).Permission(Permissions.ManageTemplates));
         }
     }
 }

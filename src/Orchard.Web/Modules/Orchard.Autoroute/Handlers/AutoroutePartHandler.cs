@@ -39,7 +39,7 @@ namespace Orchard.Autoroute.Handlers {
             OnPublished<AutoroutePart>((ctx, part) => PublishAlias(part));
 
             // Remove alias if removed or unpublished
-            OnRemoved<AutoroutePart>((ctx, part) => RemoveAlias(part));
+            OnRemoving<AutoroutePart>((ctx, part) => RemoveAlias(part));
             OnUnpublished<AutoroutePart>((ctx, part) => RemoveAlias(part));
 
             // Register alias as identity
@@ -73,7 +73,7 @@ namespace Orchard.Autoroute.Handlers {
                 // Update the home alias to point to this item being published.
                 _homeAliasService.PublishHomeAlias(part);
             }
-
+            
             _autorouteService.Value.PublishAlias(part);
         }
 
@@ -99,7 +99,7 @@ namespace Orchard.Autoroute.Handlers {
         }
 
         void RemoveAlias(AutoroutePart part) {
-            var homePageId = _homeAliasService.GetHomePageId();
+            var homePageId = _homeAliasService.GetHomePageId(VersionOptions.Latest);
 
             // Is this the current home page?
             if (part.ContentItem.Id == homePageId) {
