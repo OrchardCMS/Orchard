@@ -28,7 +28,7 @@ namespace Orchard.DynamicForms.ValidationRules {
         }
 
         private LocalizedString GetValidationMessage(ValidationContext context) {
-            return T(Tokenize(ErrorMessage.WithDefault(String.Format("{0} is not a valid email address.", context.FieldName)), context));
+            return new LocalizedString(Tokenize(T(ErrorMessage.WithDefault(String.Format("{0} is not a valid email address.", context.FieldName))).ToString(), context));
         }
     }
 }
