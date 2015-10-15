@@ -68,11 +68,7 @@ namespace Orchard.Search {
         }
 
         public int Create() {
-
-            _indexManager.GetSearchIndexProvider().CreateIndex("Admin");
-
-            ContentDefinitionManager.AlterTypeDefinition("Page", cfg => cfg.WithSetting("TypeIndexing.Indexes", "Page:latest"));
-
+            
             return 1;
         }
     }
