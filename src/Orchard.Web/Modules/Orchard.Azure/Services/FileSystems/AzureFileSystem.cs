@@ -355,7 +355,7 @@ namespace Orchard.Azure.Services.FileSystems {
                 // as opposed to the File System implementation, if nothing is done on the stream
                 // the file will be emptied, because Azure doesn't implement FileMode.Truncate
                 _blob.DeleteIfExists();
-                _blob = _blob.Container.GetBlockBlobReference(_blob.Uri.ToString());
+                _blob = _blob.Container.GetBlockBlobReference(_blob.Name);
                 _blob.UploadFromStream(new MemoryStream(new byte[0]));
                 return OpenWrite();
             }

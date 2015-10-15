@@ -27,7 +27,7 @@ namespace Orchard.DynamicForms.ValidationRules {
         }
 
         private LocalizedString GetValidationMessage(ValidationContext context) {
-            return T(Tokenize(ErrorMessage.WithDefault(String.Format("{0} must match the following pattern: {1}.", context.FieldName, Pattern)), context));
+            return new LocalizedString(Tokenize(T(ErrorMessage.WithDefault(String.Format("{0} must match the following pattern: {1}.", context.FieldName, Pattern))).ToString(), context));
         }
     }
 }
