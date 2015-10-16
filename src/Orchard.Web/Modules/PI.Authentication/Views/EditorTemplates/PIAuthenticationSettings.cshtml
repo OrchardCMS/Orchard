@@ -1,0 +1,21 @@
+﻿@model PI.Authentication.Models.PIAuthenticationSettingsPart
+@{
+    ViewBag.Title = "PIAuthenticationSettings";
+}
+
+<h2>PI Authentication Settings</h2>
+
+<fieldset>
+    <div>
+        @Html.LabelFor(m => m.LDAPString, @T("LDAP String"))
+        @Html.TextBoxFor(m => m.LDAPString, new { style = "width: 600px;" })
+        <br />
+        @Html.LabelFor(m => m.Domain, @T("Domain"))
+        @Html.TextBoxFor(m => m.Domain, new { style = "width: 300px;" })
+        <br />
+        @Html.LabelFor(m => m.LoginPage, @T("Login Page"))
+        @Html.TextBoxFor(m => m.LoginPage, new { style = "width: 300px;" })
+
+    </div>
+</fieldset>
+
