@@ -87,6 +87,7 @@ namespace Orchard.Taxonomies.Drivers {
         private ContentShapeResult BuildEditorShape(ContentPart part, TaxonomyField field, dynamic shapeHelper, TaxonomyFieldViewModel appliedViewModel = null) {
             return ContentShape("Fields_TaxonomyField_Edit", GetDifferentiator(field, part), () => {
                 var settings = field.PartFieldDefinition.Settings.GetModel<TaxonomyFieldSettings>();
+                var appliedTerms = GetAppliedTerms(part, field, VersionOptions.Latest).ToDictionary(t => t.Id, t => t);
                 var taxonomy = _taxonomyService.GetTaxonomyByName(settings.Taxonomy);
                 var terms = taxonomy != null && !settings.Autocomplete
                     ? _taxonomyService.GetTerms(taxonomy.Id).Where(t => !string.IsNullOrWhiteSpace(t.Name)).Select(t => t.CreateTermEntry()).ToList()
@@ -97,7 +98,6 @@ namespace Orchard.Taxonomies.Drivers {
                     terms.ForEach(t => t.IsChecked = appliedViewModel.Terms.Any(at => at.Id == t.Id && at.IsChecked) || t.Id == appliedViewModel.SingleTermId);
                 }
                 else {
-                    var appliedTerms = GetAppliedTerms(part, field, VersionOptions.Latest).ToDictionary(t => t.Id, t => t);
                     terms.ForEach(t => t.IsChecked = appliedTerms.ContainsKey(t.Id));
                 }
 
