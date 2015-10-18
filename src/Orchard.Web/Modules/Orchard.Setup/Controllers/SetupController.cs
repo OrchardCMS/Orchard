@@ -49,7 +49,7 @@ namespace Orchard.Setup.Controllers {
             var recipes = _setupService.Recipes().ToList();
             string recipeDescription = null;
 
-            if (recipes.Count > 0) {
+            if (recipes.Any()) {
                 recipeDescription = recipes[0].Description;
             }
 
