@@ -156,10 +156,10 @@ namespace Orchard.MediaLibrary.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageOwnMedia, T("Cannot view media")))
                 return new HttpUnauthorizedResult();
 
-            var rootMediaFolder = _mediaLibraryService.GetRootMediaFolder().MediaPath;
-
-            var mediaParts = _mediaLibraryService.GetMediaContentItems(rootMediaFolder, skip, count, order, mediaType);
-            var mediaPartsCount = _mediaLibraryService.GetMediaContentItemsCount(rootMediaFolder, mediaType);
+            var rootMediaFolder = _mediaLibraryService.GetRootMediaFolder();
+            var rootMediaFolderPath = rootMediaFolder == null ? null : rootMediaFolder.MediaPath;
+            var mediaParts = _mediaLibraryService.GetMediaContentItems(rootMediaFolderPath, skip, count, order, mediaType);
+            var mediaPartsCount = _mediaLibraryService.GetMediaContentItemsCount(rootMediaFolderPath, mediaType);
 
 
             var mediaItems = mediaParts.Select(x => new MediaManagerMediaItemViewModel {

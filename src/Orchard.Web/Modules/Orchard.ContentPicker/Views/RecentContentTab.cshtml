@@ -1,5 +1,7 @@
 ﻿@using Orchard.Core.Contents.ViewModels;
 @{
+    Script.Require("SelectableContentTab");
+    
     var typeDisplayName = Model.TypeDisplayName;
     var pageTitle = T("Recent Content");
 
@@ -8,6 +10,7 @@
     }
 
     Layout.Title = pageTitle;
+    
 }
 
 <div class="manage">
@@ -33,6 +36,7 @@
     <fieldset class="contentItems bulk-items">
 @Display(Model.ContentItems)
     </fieldset>
+    @Html.Link(T("Add Selected").Text, "#", new { @class = "button addSelected"})
 @Display(Model.Pager)
 }
 
