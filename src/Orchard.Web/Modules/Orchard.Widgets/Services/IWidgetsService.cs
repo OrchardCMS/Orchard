@@ -5,10 +5,11 @@ using Orchard.Widgets.Models;
 
 namespace Orchard.Widgets.Services {
     public interface IWidgetsService : IDependency {
-        
         IEnumerable<string> GetZones();
+        [Obsolete("Use GetZones(ExtensionDescriptor theme,string layer)")]
         IEnumerable<string> GetZones(ExtensionDescriptor theme);
-
+        IEnumerable<string> GetZones(ExtensionDescriptor theme,string layer=null);
+        bool HasDedicatedZones(ExtensionDescriptor theme, string layer);
         IEnumerable<LayerPart> GetLayers();
 
         IEnumerable<Tuple<string, string>> GetWidgetTypes();

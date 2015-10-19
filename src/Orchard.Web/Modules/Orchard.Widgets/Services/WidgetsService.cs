@@ -7,6 +7,7 @@ using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.Features;
 using Orchard.Widgets.Models;
 using Orchard.Core.Common.Models;
+using Orchard.Services;
 
 namespace Orchard.Widgets.Services {
 
@@ -14,15 +15,17 @@ namespace Orchard.Widgets.Services {
         private readonly IFeatureManager _featureManager;
         private readonly IExtensionManager _extensionManager;
         private readonly IContentManager _contentManager;
-
+        private readonly IJsonConverter _jsonConverter;
         public WidgetsService(
             IContentManager contentManager,
             IFeatureManager featureManager,
-            IExtensionManager extensionManager) {
+            IExtensionManager extensionManager,
+            IJsonConverter jsonConverter) {
 
             _contentManager = contentManager;
             _featureManager = featureManager;
             _extensionManager = extensionManager;
+            _jsonConverter = jsonConverter;
         }
 
         public IEnumerable<Tuple<string, string>> GetWidgetTypes() {
@@ -79,42 +82,113 @@ namespace Orchard.Widgets.Services {
                 .List();
         }
 
-        public IEnumerable<string> GetZones() {
-            return _featureManager.GetEnabledFeatures()
-                .Select(x => x.Extension)
-                .Where(x => DefaultExtensionTypes.IsTheme(x.ExtensionType) && x.Zones != null)
-                .SelectMany(x => x.Zones.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-                .Select(x => x.Trim())
-                .Distinct()
-                .ToArray();
+        public bool HasDedicatedZones(ExtensionDescriptor theme, string layer) {
+            if (theme == null) {
+                return false;
+            }
+            IEnumerable<string> layers = string.IsNullOrEmpty(theme.Layers) ? Enumerable.Empty<string>() : theme.Layers.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
+            if (!string.IsNullOrEmpty(layer)
+                && !string.IsNullOrEmpty(theme.Layers)
+                && layers.Contains(layer, StringComparer.InvariantCultureIgnoreCase)) {
+                Dictionary<string, string> layerZones = _jsonConverter.Deserialize<Dictionary<string, string>>(theme.LayerZones);
+                if (layerZones.ContainsKey(layer))
+                    return true;
+            }
+            return false;
         }
 
-        public IEnumerable<string> GetZones(ExtensionDescriptor theme) {
-            if(theme == null) {
+        private IEnumerable<string> GetAllThemeZones(ExtensionDescriptor theme) {
+            if (theme == null) {
                 return Enumerable.Empty<string>();
             }
-
             IEnumerable<string> zones = new List<string>();
+            IEnumerable<string> layers = string.IsNullOrEmpty(theme.Layers) ? Enumerable.Empty<string>() : theme.Layers.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
+            if (!string.IsNullOrEmpty(theme.Layers)) {
+                Dictionary<string, string> layerZones = _jsonConverter.Deserialize<Dictionary<string, string>>(theme.LayerZones);
+                foreach( var lz in layerZones.Keys){
+                    var value = layerZones[lz];
+                    zones = zones.Concat(value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                                                                                        .Select(x => x.Trim())
+                                                                                        .Distinct());
+                }
+            }
             // get the zones for this theme
             if (theme.Zones != null)
-                zones = theme.Zones.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                    .Select(x => x.Trim())
-                    .Distinct()
-                    .ToList();
+                zones = zones.Concat(theme.Zones.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                                                                            .Select(x => x.Trim())
+                                                                            .Distinct());
+            return zones.Distinct();
+        }
 
-            // if this theme has no zones defined then walk the BaseTheme chain until we hit a theme which defines zones
-            while (!zones.Any() && theme != null && !string.IsNullOrWhiteSpace(theme.BaseTheme)) {
-                string baseTheme = theme.BaseTheme;
-                theme = _extensionManager.GetExtension(baseTheme);
-                if (theme != null && theme.Zones != null)
-                    zones = theme.Zones.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+        public IEnumerable<string> GetZones() {
+            IEnumerable<string> zones = new List<string>(); 
+            var themes = _featureManager.GetEnabledFeatures()
+                .Select(x => x.Extension)
+                .Where(x => DefaultExtensionTypes.IsTheme(x.ExtensionType));
+            foreach (var theme in themes) {
+                var zn = GetAllThemeZones(theme);
+                if (zn.Any())
+                    zones = zn.Concat(zones);
+            }
+            return zones.Distinct();
+        }
+
+        private IEnumerable<string> GetThemeZones(ExtensionDescriptor theme, string layer) {
+            if (theme == null) {
+                return Enumerable.Empty<string>();
+            }
+            IEnumerable<string> zones = new List<string>();
+            IEnumerable<string> layers = string.IsNullOrEmpty(theme.Layers) ? Enumerable.Empty<string>() : theme.Layers.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
+            if (!string.IsNullOrEmpty(layer)
+                && !string.IsNullOrEmpty(theme.Layers)
+                && layers.Contains(layer, StringComparer.InvariantCultureIgnoreCase)) {
+                Dictionary<string, string> layerZones = _jsonConverter.Deserialize<Dictionary<string, string>>(theme.LayerZones);
+                if (layerZones.ContainsKey(layer)) {
+                    var value = layerZones[layer];
+                    zones = value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                        .Select(x => x.Trim())
+                        .Distinct()
+                        .ToList();
+                }
+            }
+            else if (string.IsNullOrEmpty(layer)
+                || string.IsNullOrEmpty(theme.Layers)
+                || !layers.Contains(layer, StringComparer.InvariantCultureIgnoreCase)) {
+                // get the zones for this theme
+                if (theme.Zones != null)
+                    zones = theme.Zones.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                         .Select(x => x.Trim())
                         .Distinct()
                         .ToList();
             }
-
             return zones;
+        }
+
+        public IEnumerable<string> GetZones(ExtensionDescriptor theme) {
+            return GetZones(theme, null);
+        }
+
+        public IEnumerable<string> GetZones(ExtensionDescriptor theme,string layer=null) {
+            if(theme == null) {
+                return Enumerable.Empty<string>();
+            }
+            string baseTheme = theme.BaseTheme;
+            IEnumerable<string> zones = new List<string>();
+            // if this theme has no zones defined then walk the BaseTheme chain until we hit a theme which defines zones
+            do {
+                zones = GetThemeZones(theme, layer);
+                if (!zones.Any()) {
+                    if (!string.IsNullOrEmpty(baseTheme)) {
+                        theme = _extensionManager.GetExtension(baseTheme);
+                        baseTheme = theme != null ? theme.BaseTheme : null;
+                    }
+                    else theme = null;
+                }
+            } while (!zones.Any() && theme != null);
+            return zones.Distinct();
         }
 
         public LayerPart GetLayer(int layerId) {
