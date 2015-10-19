@@ -30,7 +30,7 @@
     <fieldset>
         <legend>@T("Database Setup")</legend>
         @if (Model.State != TenantState.Uninitialized) {
-            <div class="warning message">@T("Warning: If you don't know what you're doing you *will* (likely) send this tenant into a downward spiral of irrecoverable disrepair. Have a nice day.")</div>
+            <div class="message message-Warning">@T("Warning: If you don't know what you're doing you *will* (likely) send this tenant into a downward spiral of irrecoverable disrepair. Have a nice day.")</div>
         }
         else {
             <div>
