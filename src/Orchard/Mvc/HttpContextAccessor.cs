@@ -1,13 +1,16 @@
-﻿using System;
+using System;
+using System.Runtime.Remoting.Messaging;
 using System.Web;
 
 namespace Orchard.Mvc {
+
     public class HttpContextAccessor : IHttpContextAccessor {
         private HttpContextBase _httpContext;
 
         public HttpContextBase Current() {
             var httpContext = GetStaticProperty();
-            return !IsBackgroundHttpContext(httpContext) ? new HttpContextWrapper(httpContext) : _httpContext;
+            return !IsBackgroundHttpContext(httpContext) ? new HttpContextWrapper(httpContext) :
+                _httpContext ?? CallContext.LogicalGetData("HttpContext") as HttpContextBase;
         }
 
         public void Set(HttpContextBase httpContext) {
@@ -15,7 +18,7 @@ namespace Orchard.Mvc {
         }
 
         private static bool IsBackgroundHttpContext(HttpContext httpContext) {
-            return httpContext == null || httpContext.Items.Contains(BackgroundHttpContextFactory.IsBackgroundHttpContextKey);
+            return httpContext == null || httpContext.Items.Contains(MvcModule.IsBackgroundHttpContextKey);
         }
 
         private static HttpContext GetStaticProperty() {
