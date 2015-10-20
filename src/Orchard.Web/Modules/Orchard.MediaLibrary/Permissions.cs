@@ -31,7 +31,7 @@ namespace Orchard.MediaLibrary {
                 },
                 new PermissionStereotype {
                     Name = "Author",
-                    Permissions = new[] {ManageMediaContent}
+                    Permissions = new[] {ManageOwnMedia}
                 },
                 new PermissionStereotype {
                     Name = "Contributor",

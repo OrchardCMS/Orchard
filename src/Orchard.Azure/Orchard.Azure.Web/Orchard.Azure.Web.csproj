@@ -561,6 +561,23 @@
   <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
     <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
   </Target>
+  <Target Name="DeleteDebugFiles" AfterTargets="AfterBuild">
+    <RemoveDir Directories="Themes;Core;Modules" />
+  </Target>
+  <Target Name="CopyDebugFiles" AfterTargets="DeleteDebugFiles" Condition="'$(Configuration)' == 'Debug'">
+    <PropertyGroup>
+      <SrcFolder>..\..</SrcFolder>
+    </PropertyGroup>
+    <ItemGroup>
+      <Excluded Include="$(SrcFolder)\**\bin\**\*;$(SrcFolder)\**\obj\**\*;$(SrcFolder)\**\*.user;$(SrcFolder)\**\*.cs;$(SrcFolder)\**\*.csproj;$(SrcFolder)\**\.hg\**\*" />
+      <Src-Themes Include="$(SrcFolder)\Orchard.Web\Themes\**\*" Exclude="@(Excluded)" />
+      <Src-Core Include="$(SrcFolder)\Orchard.Web\Core\**\*" Exclude="@(Excluded)" />
+      <Src-Modules Include="$(SrcFolder)\Orchard.Web\Modules\**\*" Exclude="@(Excluded)" />
+    </ItemGroup>
+    <Copy SourceFiles="@(Src-Themes)" DestinationFolder="Themes\%(RecursiveDir)" />
+    <Copy SourceFiles="@(Src-Core)" DestinationFolder="Core\%(RecursiveDir)" />
+    <Copy SourceFiles="@(Src-Modules)" DestinationFolder="Modules\%(RecursiveDir)" />
+  </Target>
   <ProjectExtensions>
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
@@ -580,6 +597,11 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
+  <PropertyGroup>
+    <PreBuildEvent>del "$(TargetDir)\Modules"
+del "$(TargetDir)\Themes"
+del "$(TargetDir)\Media"</PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
 		 Other similar extension points exist, see Microsoft.Common.targets.
 	<Target Name="BeforeBuild">
