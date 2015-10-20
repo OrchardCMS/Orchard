@@ -1,20 +1,23 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Globalization;
+using System.IO;
 using System.Web;
 using System.Web.Caching;
 using System.Web.Instrumentation;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Autofac;
+using Orchard.Environment.Configuration;
+using Orchard.Mvc.Extensions;
 using Orchard.Mvc.Routes;
 using Orchard.Settings;
-using Orchard.Exceptions;
 
 namespace Orchard.Mvc {
     public class MvcModule : Module {
+        public const string IsBackgroundHttpContextKey = "IsBackgroundHttpContext";
 
         protected override void Load(ContainerBuilder moduleBuilder) {
             moduleBuilder.RegisterType<ShellRoute>().InstancePerDependency();
@@ -24,37 +27,25 @@ namespace Orchard.Mvc {
             moduleBuilder.Register(UrlHelperFactory).As<UrlHelper>().InstancePerDependency();
         }
 
-        private static bool IsRequestValid() {
-            if (HttpContext.Current == null)
-                return false;
-
-            try {
-                // The "Request" property throws at application startup on IIS integrated pipeline mode.
-                var req = HttpContext.Current.Request;
-            }
-            catch (Exception ex) {
-                if (ex.IsFatal()) {
-                    throw;
-                }
-
-                return false;
-            }
-
-            return true;
-        }
-
         static HttpContextBase HttpContextBaseFactory(IComponentContext context) {
-            if (IsRequestValid()) {
-                return new HttpContextWrapper(HttpContext.Current);
-            }
+
+            var httpContext = context.Resolve<IHttpContextAccessor>().Current();
+            if (httpContext != null)
+                return httpContext;
 
             var siteService = context.Resolve<ISiteService>();
+            var prefix = context.Resolve<ShellSettings>().RequestUrlPrefix;
 
             // Wrapping the code accessing the SiteSettings in a function that will be executed later (in HttpContextPlaceholder),
             // so that the RequestContext will have been established when the time comes to actually load the site settings,
             // which requires activating the Site content item, which in turn requires a UrlHelper, which in turn requires a RequestContext,
             // thus preventing a StackOverflowException.
-            var baseUrl = new Func<string>(() => siteService.GetSiteSettings().BaseUrl);
+            var baseUrl = new Func<string>(() => {
+                var url = siteService.GetSiteSettings().BaseUrl;
+                return !string.IsNullOrWhiteSpace(url) ? !string.IsNullOrWhiteSpace(prefix) ?
+                    url.TrimEnd('/') + "/" + prefix : url : "http://localhost"
+                    + System.Web.Hosting.HostingEnvironment.ApplicationVirtualPath;
+            });
             var httpContextBase = new HttpContextPlaceholder(baseUrl);
 
             return httpContextBase;
@@ -63,7 +54,8 @@ namespace Orchard.Mvc {
         static RequestContext RequestContextFactory(IComponentContext context) {
             var httpContextAccessor = context.Resolve<IHttpContextAccessor>();
             var httpContext = httpContextAccessor.Current();
-            if (httpContext != null) {
+
+            if (!httpContext.IsBackgroundContext()) {
 
                 var mvcHandler = httpContext.Handler as MvcHandler;
                 if (mvcHandler != null) {
@@ -76,7 +68,11 @@ namespace Orchard.Mvc {
                         return hasRequestContext.RequestContext;
                 }
             }
-            else {
+            else if (httpContext is HttpContextPlaceholder) {
+                if (((HttpContextPlaceholder)httpContext).IsResolved)
+                    return httpContext.Request.RequestContext;
+            }
+            else if (httpContext == null) {
                 httpContext = HttpContextBaseFactory(context);
             }
 
@@ -90,7 +86,8 @@ namespace Orchard.Mvc {
         /// <summary>
         /// Standin context for background tasks.
         /// </summary>
-        public class HttpContextPlaceholder : HttpContextBase {
+        public class HttpContextPlaceholder : HttpContextBase, IDisposable {
+            private HttpContext _httpContext;
             private readonly Lazy<string> _baseUrl;
             private readonly IDictionary _items = new Dictionary<object, object>();
 
@@ -98,8 +95,35 @@ namespace Orchard.Mvc {
                 _baseUrl = new Lazy<string>(baseUrl);
             }
 
+            public void Dispose() {
+                _httpContext = null;
+                if (HttpContext.Current != null)
+                    HttpContext.Current = null;
+            }
+ 
+            public bool IsResolved {
+                get {
+                    return _baseUrl.IsValueCreated;
+                }
+            }
+
             public override HttpRequestBase Request {
-                get { return new HttpRequestPlaceholder(new Uri(_baseUrl.Value)); }
+                get {
+
+                    if (_httpContext == null) {
+                        var httpContext = new HttpContext(new HttpRequest("", _baseUrl.Value, ""), new HttpResponse(new StringWriter()));
+                        httpContext.Items[IsBackgroundHttpContextKey] = true;
+                        _httpContext = httpContext;
+                    }
+
+                    if (HttpContext.Current != _httpContext)
+                        HttpContext.Current = _httpContext;
+                    return new HttpRequestPlaceholder(this, new Uri(_baseUrl.Value));
+                }
+            }
+
+            public override HttpSessionStateBase Session {
+                get { return new HttpSessionStatePlaceholder(); }
             }
 
             public override IHttpHandler Handler { get; set; }
@@ -129,6 +153,14 @@ namespace Orchard.Mvc {
             }
         }
 
+        public class HttpSessionStatePlaceholder : HttpSessionStateBase {
+            public override object this[string name] {
+                get {
+                    return null;
+                }
+            }
+        }
+
         public class HttpResponsePlaceholder : HttpResponseBase {
             public override string ApplyAppPathModifier(string virtualPath) {
                 return virtualPath;
@@ -145,10 +177,30 @@ namespace Orchard.Mvc {
         /// standin context for background tasks. 
         /// </summary>
         public class HttpRequestPlaceholder : HttpRequestBase {
+            private HttpContextBase _httpContext;
             private readonly Uri _uri;
 
-            public HttpRequestPlaceholder(Uri uri) {
+            public HttpRequestPlaceholder(HttpContextBase httpContext, Uri uri) {
+                _httpContext = httpContext;
                 _uri = uri;
+            }
+
+            public override RequestContext RequestContext {
+                get {
+                    return new RequestContext(_httpContext, new RouteData());
+                }
+            }
+
+            public override NameValueCollection QueryString {
+                get {
+                    return new NameValueCollection();
+                }
+            }
+
+            public override string RawUrl {
+                get {
+                    return _uri.OriginalString;
+                }
             }
 
             /// <summary>
@@ -156,17 +208,6 @@ namespace Orchard.Mvc {
             /// </summary>
             public override bool IsAuthenticated {
                 get { return false; }
-            }
-
-            /// <summary>
-            /// Create an anonymous ID the same way as ASP.NET would.
-            /// Some users of an HttpRequestPlaceHolder object could expect this,
-            /// say CookieCultureSelector from module Orchard.CulturePicker.
-            /// </summary>
-            public override string AnonymousID {
-                get {
-                    return Guid.NewGuid().ToString("D", CultureInfo.InvariantCulture);
-                }
             }
 
             // empty collection provided for background operation
