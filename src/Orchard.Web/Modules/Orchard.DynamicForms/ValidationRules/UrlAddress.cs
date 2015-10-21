@@ -34,7 +34,9 @@ namespace Orchard.DynamicForms.ValidationRules
 
         private LocalizedString GetValidationMessage(ValidationContext context)
         {
-            return T(Tokenize(ErrorMessage.WithDefault(String.Format("{0} is not a valid url.", context.FieldName)), context));
+            return String.IsNullOrWhiteSpace(ErrorMessage)
+                ? T("{0} is not a valid URL.", context.FieldName)
+                : new LocalizedString(Tokenize(ErrorMessage, context));
         }
     }
 }
