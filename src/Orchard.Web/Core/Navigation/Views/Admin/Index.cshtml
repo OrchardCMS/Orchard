@@ -46,6 +46,8 @@
             <div class="container">
                 <div class="navigation-menu">
                     @if (Model.MenuItemEntries.Any()) {
+                        @Html.Hint(T("If you'd like to add a new menu item under another one directly then select the parent by clicking on it."))
+
                         @RenderMenuItems(Model.MenuItemEntries, 0)
                     }
                     else {
@@ -78,7 +80,7 @@
 
 
 @helper RenderMenuItems(IList<MenuItemEntry> menuItems, int index) {
-            
+
     @:<ol> 
 
     // store current level to detect lowerb or upper level
