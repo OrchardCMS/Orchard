@@ -47,7 +47,7 @@
             <label for="sqlDatabaseOption" class="forcheckbox">@T("Use an existing SQL Server (or SQL Express) database")</label>
             <div class="options">
                 <span data-controllerid="sqlDatabaseOption">
-                    <label for="DatabaseConnectionString">@T("Connection string")</label>
+                <label for="DatabaseConnectionString">@T("Connection string")</label>
                     @Html.TextBoxFor(svm => svm.DatabaseConnectionString)
                     <span class="hint">@T("Example:") @T("Data Source=sqlServerName;Initial Catalog=dbName;Persist Security Info=True;User ID=userName;Password=password")</span>
                 </span>
