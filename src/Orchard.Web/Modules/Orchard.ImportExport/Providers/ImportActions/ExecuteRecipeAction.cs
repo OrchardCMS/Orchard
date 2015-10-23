@@ -19,7 +19,7 @@ using Orchard.UI.Notify;
 namespace Orchard.ImportExport.Providers.ImportActions {
     public class ExecuteRecipeAction : ImportAction {
         private readonly IOrchardServices _orchardServices;
-        private readonly ISetupService _setupService;
+        private readonly ISetupServiceFactory _setupServiceFactory;
         private readonly ShellSettings _shellSettings;
         private readonly IEnumerable<IRecipeExecutionStep> _recipeExecutionSteps;
         private readonly IRecipeParser _recipeParser;
@@ -31,7 +31,7 @@ namespace Orchard.ImportExport.Providers.ImportActions {
 
         public ExecuteRecipeAction(
             IOrchardServices orchardServices,
-            ISetupService setupService,
+            ISetupServiceFactory setupServiceFactory,
             ShellSettings shellSettings,
             IEnumerable<IRecipeExecutionStep> recipeExecutionSteps, 
             IRecipeParser recipeParser, 
@@ -42,7 +42,7 @@ namespace Orchard.ImportExport.Providers.ImportActions {
             IRepository<RecipeStepResultRecord> recipeStepResultRepository) {
 
             _orchardServices = orchardServices;
-            _setupService = setupService;
+            _setupServiceFactory = setupServiceFactory;
             _shellSettings = shellSettings;
             _recipeExecutionSteps = recipeExecutionSteps;
             _recipeParser = recipeParser;
@@ -199,7 +199,8 @@ namespace Orchard.ImportExport.Providers.ImportActions {
             DropTenantDatabaseTables();
 
             // Execute Setup.
-            var executionId = _setupService.Setup(setupContext);
+            var setupService = _setupServiceFactory.CreateSetupService();
+            var executionId = setupService.Setup(setupContext);
 
             return executionId;
         }
