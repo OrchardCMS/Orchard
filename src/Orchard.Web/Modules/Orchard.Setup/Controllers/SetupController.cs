@@ -137,7 +137,7 @@ namespace Orchard.Setup.Controllers {
                         throw new ApplicationException("Unknown database type: " + model.DatabaseProvider);
                 }
 
-                var recipe = _setupService.Recipes().GetRecipeByName(model.Recipe);
+                var recipe = recipes.GetRecipeByName(model.Recipe);
                 var setupContext = new SetupContext {
                     SiteName = model.SiteName,
                     AdminUsername = model.AdminUsername,
