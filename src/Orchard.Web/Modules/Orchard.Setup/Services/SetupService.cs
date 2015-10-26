@@ -14,7 +14,6 @@ using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Descriptor;
 using Orchard.Environment.Descriptor.Models;
-using Orchard.Environment.Extensions;
 using Orchard.Environment.ShellBuilders;
 using Orchard.Environment.State;
 using Orchard.Localization.Services;
@@ -26,7 +25,6 @@ using Orchard.Settings;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.Setup.Services {
-    [OrchardFeature("Orchard.Setup.Services")]
     public class SetupService : Component, ISetupService {
         private readonly ShellSettings _shellSettings;
         private readonly IOrchardHost _orchardHost;

@@ -8,11 +8,9 @@ using Orchard.Setup.Services;
 namespace Orchard.Setup.Commands {
     public class SetupCommand : DefaultOrchardCommandHandler {
         private readonly ISetupService _setupService;
-        private readonly IRecipeHarvester _recipeHarvester;
 
-        public SetupCommand(ISetupService setupService, IRecipeHarvester recipeHarvester) {
+        public SetupCommand(ISetupService setupService) {
             _setupService = setupService;
-            _recipeHarvester = recipeHarvester;
         }
 
         [OrchardSwitch]

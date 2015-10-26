@@ -89,6 +89,8 @@
     <Compile Include="Models\ImportActionConfigurationContext.cs" />
     <Compile Include="Services\DatabaseManager.cs" />
     <Compile Include="Services\IDatabaseManager.cs" />
+    <Compile Include="Services\ISetupServiceFactory.cs" />
+    <Compile Include="Services\SetupServiceFactory.cs" />
     <Compile Include="ViewModels\RecipeExecutionStepViewModel.cs" />
     <Compile Include="ViewModels\UploadRecipeViewModel.cs" />
     <Compile Include="Providers\ImportActions\ExecuteRecipeAction.cs" />
