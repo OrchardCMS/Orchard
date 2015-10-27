@@ -7,6 +7,7 @@ Description: The setup module is creating the application's setup experience.
 FeatureDescription: Standard site setup. This feature is disabled automatically once setup is over.
 Category: Core
 Dependencies: Orchard.Setup.Services
+Priority: 1
 Features:
     Orchard.Setup.Services
         Name: Setup Services
