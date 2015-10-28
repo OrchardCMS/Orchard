@@ -10,7 +10,6 @@ using System.Web.Instrumentation;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Autofac;
-using Orchard.Environment.Configuration;
 using Orchard.Mvc.Extensions;
 using Orchard.Mvc.Routes;
 using Orchard.Settings;
@@ -34,18 +33,12 @@ namespace Orchard.Mvc {
                 return httpContext;
 
             var siteService = context.Resolve<ISiteService>();
-            var prefix = context.Resolve<ShellSettings>().RequestUrlPrefix;
 
             // Wrapping the code accessing the SiteSettings in a function that will be executed later (in HttpContextPlaceholder),
             // so that the RequestContext will have been established when the time comes to actually load the site settings,
             // which requires activating the Site content item, which in turn requires a UrlHelper, which in turn requires a RequestContext,
             // thus preventing a StackOverflowException.
-            var baseUrl = new Func<string>(() => {
-                var url = siteService.GetSiteSettings().BaseUrl;
-                return !string.IsNullOrWhiteSpace(url) ? !string.IsNullOrWhiteSpace(prefix) ?
-                    url.TrimEnd('/') + "/" + prefix : url : "http://localhost"
-                    + System.Web.Hosting.HostingEnvironment.ApplicationVirtualPath;
-            });
+            var baseUrl = new Func<string>(() => siteService.GetSiteSettings().BaseUrl);
             var httpContextBase = new HttpContextPlaceholder(baseUrl);
 
             return httpContextBase;
