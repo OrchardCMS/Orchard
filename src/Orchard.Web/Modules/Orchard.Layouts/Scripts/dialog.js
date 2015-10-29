@@ -169,8 +169,8 @@
                         break;
                     case "save":
                         {
-                            var frameDoc = self.frame.getDocument();
-                            var form = frameDoc.find("form:first");
+                            var frameWindow = self.frame.getWindow();
+                            var form = frameWindow.$("form:first");
                             form.submit();
                         }
                         break;
