@@ -41,12 +41,14 @@ namespace Orchard.Environment.Extensions {
         }
 
         public void MonitorExtensionsWork(Action<IVolatileToken> monitor) {
+            var locations = _extensionManager.AvailableExtensions().Select(e => e.Location).Distinct(StringComparer.InvariantCultureIgnoreCase);
+
             Logger.Information("Start monitoring extension files...");
             // Monitor add/remove of any module/theme
-            Logger.Debug("Monitoring virtual path \"{0}\"", "~/Modules");
-            monitor(_virtualPathMonitor.WhenPathChanges("~/Modules"));
-            Logger.Debug("Monitoring virtual path \"{0}\"", "~/Themes");
-            monitor(_virtualPathMonitor.WhenPathChanges("~/Themes"));
+            foreach(string location in locations) {
+                Logger.Debug("Monitoring virtual path \"{0}\"", location);
+                monitor(_virtualPathMonitor.WhenPathChanges(location));
+            }
 
             // Give loaders a chance to monitor any additional changes
             var extensions = _extensionManager.AvailableExtensions().Where(d => DefaultExtensionTypes.IsModule(d.ExtensionType) || DefaultExtensionTypes.IsTheme(d.ExtensionType)).ToList();

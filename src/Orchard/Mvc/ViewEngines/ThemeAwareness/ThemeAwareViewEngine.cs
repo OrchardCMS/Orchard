@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using Orchard.Environment.Configuration;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Helpers;
@@ -94,12 +95,17 @@ namespace Orchard.Mvc.ViewEngines.ThemeAwareness {
                     .Reverse()  // reverse from (C <= B <= A) to (A => B => C)
                     .Where(fd => DefaultExtensionTypes.IsModule(fd.Extension.ExtensionType));
 
-                var allLocations = enabledModules.Concat(enabledModules)
-                    .Select(fd => fd.Extension.Location + "/" + fd.Extension.Id)
-                    .Distinct(StringComparer.OrdinalIgnoreCase)
+                var moduleVirtualPaths = enabledModules
+                    .Select(fd => fd.Extension.VirtualPath)
+                    .Distinct(StringComparer.OrdinalIgnoreCase) // is Distinct guaranty to keep order?
                     .ToList();
 
-                var moduleParams = new CreateModulesViewEngineParams { VirtualPaths = allLocations };
+                var moduleLocations = enabledModules
+                    .Select(fd => fd.Extension.Location)
+                    .Distinct(StringComparer.OrdinalIgnoreCase) 
+                    .ToList();
+
+                var moduleParams = new CreateModulesViewEngineParams { VirtualPaths = moduleVirtualPaths, ExtensionLocations = moduleLocations };
                 engines = engines.Concat(_viewEngineProviders.Select(vep => vep.CreateModulesViewEngine(moduleParams)));
 
                 return new ViewEngineCollectionWrapper(engines);
