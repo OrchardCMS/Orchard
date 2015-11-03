@@ -77,14 +77,6 @@ namespace Orchard.Comments.Drivers {
                         return shapeHelper.Parts_Comments_Count(
                             CommentCount: part.CommentsCount);
                     }),
-                ContentShape("Parts_Comments_Count_Detail",
-                    () => {
-                        if (part.CommentsShown == false)
-                            return null;
-
-                        return shapeHelper.Parts_Comments_Count_Detail(
-                            CommentCount: part.CommentsCount);
-                    }),
                 ContentShape("Parts_Comments_Count_Summary",
                     () => {
                         if (part.CommentsShown == false)
