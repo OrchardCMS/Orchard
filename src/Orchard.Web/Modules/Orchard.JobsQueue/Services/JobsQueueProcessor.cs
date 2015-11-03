@@ -12,12 +12,12 @@ namespace Orchard.JobsQueue.Services {
     public class JobsQueueProcessor : IJobsQueueProcessor {
         private readonly Work<IJobsQueueManager> _jobsQueueManager;
         private readonly Work<IEventBus> _eventBus;
-        private readonly IDistributedLockService _distributedLockService;
+        private readonly Work<IDistributedLockService> _distributedLockService;
 
         public JobsQueueProcessor(
             Work<IJobsQueueManager> jobsQueueManager,
             Work<IEventBus> eventBus,
-            IDistributedLockService distributedLockService) {
+            Work<IDistributedLockService> distributedLockService) {
 
             _jobsQueueManager = jobsQueueManager;
             _eventBus = eventBus;
@@ -29,7 +29,7 @@ namespace Orchard.JobsQueue.Services {
 
         public void ProcessQueue() {
             IDistributedLock @lock;
-            if (_distributedLockService.TryAcquireLock(GetType().FullName, TimeSpan.FromMinutes(5), out @lock)) {
+            if (_distributedLockService.Value.TryAcquireLock(GetType().FullName, TimeSpan.FromMinutes(5), out @lock)) {
                 using (@lock) {
                     IEnumerable<QueuedJobRecord> messages;
 
