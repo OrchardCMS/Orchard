@@ -23,19 +23,20 @@
 
 	<!-- Prompts for the database name and fills it into the database scripts -->
 	<parameter name="Database Name" description="Name of the database for Orchard." defaultValue="orchard" tags="SQL, dbName">
-		<parameterEntry type="TextFile" scope="install.sql" match="PlaceHolderForDb" />
+		
 	</parameter>	
 
         <!-- Prompts for the database username and fills it into the database scripts.
 	The SQL tag indicates it is a parameter required for SQL, the DbUsername tag indicates this is a Db username -->
 	<parameter name="Database Username" description="User name to access you application database." defaultValue="orcharduser" tags="SQL, DbUsername">
-		<parameterEntry type="TextFile" scope="install.sql" match="PlaceHolderForUser" />
+		<parameterEntry type="TextFile" scope="createuser.sql" match="PlaceHolderForUser" />
+		<parameterEntry type="TextFile" scope="createlogin.sql" match="PlaceHolderForUser" />
 	</parameter>
 
         <!-- Prompts for the database password and fills it into the database scripts.
 	The SQL tag indicates it is a parameter required for SQL, the DbUserPassword tag indicates this is a Db password -->
 	<parameter name="Database Password" description="Password for the Database Username." tags="New, Password, SQL, DbUserPassword">
-		<parameterEntry type="TextFile" scope="install.sql" match="PlaceHolderForPassword" />
+		<parameterEntry type="TextFile" scope="createlogin.sql" match="PlaceHolderForPassword" />
 	</parameter>
 
 	<!-- Prompts for the admin creds and uses it for the administrator connection string. This is used to create a login and assign permissions. 

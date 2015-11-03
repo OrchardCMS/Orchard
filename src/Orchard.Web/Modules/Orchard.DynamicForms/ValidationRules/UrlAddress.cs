@@ -6,15 +6,15 @@ using Orchard.DynamicForms.Services.Models;
 using Orchard.Localization;
 
 namespace Orchard.DynamicForms.ValidationRules {
-    public class EmailAddress : ValidationRule {
-        public EmailAddress() {
+    public class UrlAddress : ValidationRule {
+        public UrlAddress() {
             RegexOptions = RegexOptions.Singleline | RegexOptions.IgnoreCase;
-            Pattern = @"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$";
+            Pattern = @"^http(s)?://([\w-]+.)+[\w-]+(/[\w- ./?%&=])?$";
         }
 
         public string Pattern { get; set; }
         public RegexOptions RegexOptions { get; set; }
-
+        
         public override void Validate(ValidateInputContext context) {
             if (!Regex.IsMatch(context.AttemptedValue, Pattern, RegexOptions)) {
                 var message = GetValidationMessage(context);
@@ -29,7 +29,7 @@ namespace Orchard.DynamicForms.ValidationRules {
 
         private LocalizedString GetValidationMessage(ValidationContext context) {
             return String.IsNullOrWhiteSpace(ErrorMessage)
-                ? T("{0} is not a valid email address.", context.FieldName)
+                ? T("{0} is not a valid URL.", context.FieldName)
                 : T(ErrorMessage);
         }
     }
