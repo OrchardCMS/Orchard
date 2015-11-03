@@ -28,7 +28,7 @@ namespace Orchard.DynamicForms.ValidationRules {
         private LocalizedString GetValidationMessage(ValidationContext context) {
             return String.IsNullOrWhiteSpace(ErrorMessage)
                 ? T("{0} must match the following pattern: {1}.", context.FieldName, Pattern)
-                : new LocalizedString(Tokenize(ErrorMessage, context));
+                : T(ErrorMessage);
         }
     }
 }

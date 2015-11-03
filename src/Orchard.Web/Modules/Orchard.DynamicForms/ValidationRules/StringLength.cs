@@ -41,7 +41,7 @@ namespace Orchard.DynamicForms.ValidationRules {
 
         private LocalizedString GetValidationMessage(ValidationContext context) {
             if(!String.IsNullOrWhiteSpace(ErrorMessage))
-                return new LocalizedString(Tokenize(String.Format(ErrorMessage, context.FieldName, Minimum, Maximum), context));
+                return T(ErrorMessage, context.FieldName, Minimum, Maximum);
 
             if (Minimum != null && Maximum != null)
                 return T("{0} must be between {1} and {2} characters long.", context.FieldName, Minimum, Maximum);

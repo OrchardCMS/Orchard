@@ -23,7 +23,7 @@ namespace Orchard.DynamicForms.ValidationRules {
         private LocalizedString GetValidationMessage(ValidationContext context) {
             return String.IsNullOrWhiteSpace(ErrorMessage)
                 ? T("{0} must match the value of {1}.", context.FieldName, TargetName)
-                : new LocalizedString(Tokenize(ErrorMessage, context));
+                : T(ErrorMessage, context);
         }
     }
 }
