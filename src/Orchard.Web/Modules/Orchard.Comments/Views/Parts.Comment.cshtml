@@ -1,10 +1,12 @@
-﻿@using Orchard.Comments.Models
-@using Orchard.ContentManagement
+﻿@using Orchard.ContentManagement
+@using Orchard.Comments
+@using Orchard.Comments.Models
 
 @{
     CommentPart comment = Model.ContentPart;
     CommentsPart comments = comment.CommentedOnContentItem.As<CommentsPart>();
-
+    var isAuthorized = AuthorizedFor(Permissions.AddComment, Model.ContentItem);
+    
     var children = New.List(Items: Model.Items);
     children.Classes.Add("comments");
 
@@ -22,7 +24,7 @@
         <h4>
             <span class="who">@Display.CommentAuthor(ContentPart: comment)</span>
             <span class="when">@Display.CommentMetadata(ContentPart: comment)</span>
-            @if (comments.ThreadedComments && comments.CommentsActive) {
+            @if (comments.ThreadedComments && comments.CommentsActive && isAuthorized) {
                 @Display.CommentReplyButton(ContentPart: comment)
             }
         </h4>
