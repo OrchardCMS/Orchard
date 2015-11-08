@@ -12,6 +12,8 @@ namespace Orchard.Environment.Extensions.Models {
         /// </summary>
         public string Id { get; set; }
 
+        public string VirtualPath { get { return Location + "/" + Id; } }
+
         /// <summary>
         /// The extension type.
         /// </summary>
