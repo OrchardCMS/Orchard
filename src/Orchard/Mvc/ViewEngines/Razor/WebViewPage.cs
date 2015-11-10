@@ -179,7 +179,8 @@ namespace Orchard.Mvc.ViewEngines.Razor {
             return writer;
         }
 
-        private string _tenantPrefix;
+        private string _tenantPrefix = null;
+
         public override string Href(string path, params object[] pathParts) {
             if (_tenantPrefix == null) {
                 _tenantPrefix = WorkContext.Resolve<ShellSettings>().RequestUrlPrefix ?? "";
@@ -193,6 +194,11 @@ namespace Orchard.Mvc.ViewEngines.Razor {
             }
 
             return base.Href(path, pathParts);
+        }
+
+        // resolve url relative to the current theme 
+        public string Tref(string pathInTheme, params object[] pathParts) {
+            return base.Href(WorkContext.CurrentTheme.VirtualPath + pathInTheme, pathParts);
         }
 
         public IDisposable Capture(Action<IHtmlString> callback) {
