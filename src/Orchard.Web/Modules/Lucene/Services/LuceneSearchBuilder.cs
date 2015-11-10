@@ -11,7 +11,7 @@ using Lucene.Net.Util;
 using Orchard.Indexing;
 using Orchard.Logging;
 using Lucene.Net.Documents;
-using Lucene.Net.QueryParsers;
+using Lucene.Net.Search.QueryParsers;
 using Lucene.Net.Analysis.Tokenattributes;
 
 namespace Lucene.Services {
@@ -33,7 +33,7 @@ namespace Lucene.Services {
         private bool _asFilter;
 
         // pending clause attributes
-        private Occur _occur;
+        private BooleanClause.Occur _occur;
         private bool _exactMatch;
         private bool _notAnalyzed;
         private float _boost;

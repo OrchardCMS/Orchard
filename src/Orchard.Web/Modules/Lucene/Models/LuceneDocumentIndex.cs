@@ -10,7 +10,7 @@ namespace Lucene.Models {
 
     public class LuceneDocumentIndex : IDocumentIndex {
 
-        public List<AbstractField> Fields { get; private set; }
+        public List<Field> Fields { get; private set; }
 
         private string _name;
         private string  _stringValue;
@@ -24,7 +24,7 @@ namespace Lucene.Models {
         public int ContentItemId { get; private set; }
 
         public LuceneDocumentIndex(int documentId, Localizer t) {
-            Fields = new List<AbstractField>();
+            Fields = new List<Field>();
             SetContentItemId(documentId);
             IsDirty = false;
             
@@ -92,7 +92,7 @@ namespace Lucene.Models {
 
         public IDocumentIndex SetContentItemId(int contentItemId) {
             ContentItemId = contentItemId;
-            Fields.Add(new Field("id", contentItemId.ToString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+            Fields.Add(new StringField("id", contentItemId.ToString(), Field.Store.YES));
             return this;
         }
 
@@ -102,19 +102,26 @@ namespace Lucene.Models {
                     if(_removeTags) {
                         _stringValue = _stringValue.RemoveTags(true);
                     }
-                    Fields.Add(new Field(_name, _stringValue ?? String.Empty, 
-                        _store ? Field.Store.YES : Field.Store.NO, 
-                        _analyze ? Field.Index.ANALYZED : Field.Index.NOT_ANALYZED));
+                    Fields.Add(new TextField(
+                        _name, 
+                        _stringValue ?? String.Empty,
+                        _store ? Field.Store.YES : Field.Store.NO
+                        //,_analyze ? Field.Index.ANALYZED : Field.Index.NOT_ANALYZED
+                        ));
                     break;
                 case TypeCode.Int32:
-                    Fields.Add(new NumericField(_name, 
-                        _store ? Field.Store.YES : Field.Store.NO,
-                        true).SetIntValue(_intValue));
+                    Fields.Add(new DoubleField(
+                        _name,
+                        _intValue,
+                        _store ? Field.Store.YES : Field.Store.NO
+                        ));
                     break;
                 case TypeCode.Single:
-                    Fields.Add(new NumericField(_name,
-                        _store ? Field.Store.YES : Field.Store.NO,
-                        true).SetDoubleValue(_doubleValue));
+                    Fields.Add(new DoubleField(
+                        _name,
+                        _doubleValue,
+                        _store ? Field.Store.YES : Field.Store.NO
+                        ));
                     break;
                 case TypeCode.Empty:
                     break;
