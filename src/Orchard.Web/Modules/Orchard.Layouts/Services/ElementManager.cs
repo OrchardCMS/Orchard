@@ -141,85 +141,68 @@ namespace Orchard.Layouts.Services {
 
         public void Saving(LayoutSavingContext context) {
             var elements = context.Elements.Flatten();
-            InvokeDriver(elements, (driver, element) => driver.LayoutSaving(new ElementSavingContext(context) {
-                Element = element
-            }));
+            
+            foreach (var element in elements) {
+                var savingContext = new ElementSavingContext(context);
+                _elementEventHandler.LayoutSaving(savingContext);
+                element.Descriptor.LayoutSaving(savingContext);
+            }
         }
 
         public void Removing(LayoutSavingContext context) {
-            var elementInstances = context.RemovedElements.Flatten().ToList();
+            var elements = context.RemovedElements.Flatten().ToList();
 
-            InvokeElementAction(elementInstances, (elementInstance) => {
-                var elementContext = new ElementRemovingContext(context) {
-                    Element = elementInstance
-                };
-                _elementEventHandler.Removing(elementContext);
-                elementInstance.Descriptor.Removing(elementContext);
-            });
-
-            InvokeDriver(elementInstances, (driver, elementInstance) => driver.Removing(new ElementRemovingContext(context) {
-                Element = elementInstance
-            }));
+            foreach (var element in elements) {
+                var removingContext = new ElementRemovingContext(element, context.Content);
+                _elementEventHandler.Removing(removingContext);
+                element.Descriptor.Removing(removingContext);
+            }
         }
 
         public void Exporting(IEnumerable<Element> elements, ExportLayoutContext context) {
-            InvokeDriver(elements, (driver, element) => {
-                var exportElementContext = new ExportElementContext {
-                    Layout = context.Layout,
-                    Element = element,
-                    ExportableData = element.ExportableData
-                };
-                driver.Exporting(exportElementContext);
-                element.ExportableData = new ElementDataDictionary(exportElementContext.ExportableData);
-            });
+            foreach (var element in elements) {
+                var exportingContext = new ExportElementContext(element, context.Layout, element.ExportableData ?? new ElementDataDictionary());
+                _elementEventHandler.Exporting(exportingContext);
+                element.Descriptor.Exporting(exportingContext);
+
+                // Update potentially modified ExportableData.
+                element.ExportableData = new ElementDataDictionary(exportingContext.ExportableData);
+            }
         }
 
         public void Exported(IEnumerable<Element> elements, ExportLayoutContext context) {
-            InvokeDriver(elements, (driver, element) => {
-                var exportElementContext = new ExportElementContext {
-                    Layout = context.Layout,
-                    Element = element,
-                    ExportableData = element.ExportableData
-                };
-                driver.Exported(exportElementContext);
-                element.ExportableData = new ElementDataDictionary(exportElementContext.ExportableData);
-            });
+            foreach (var element in elements) {
+                var exportingContext = new ExportElementContext(element, context.Layout, element.ExportableData ?? new ElementDataDictionary());
+                _elementEventHandler.Exported(exportingContext);
+                element.Descriptor.Exported(exportingContext);
+                
+                // Update potentially modified ExportableData.
+                element.ExportableData = new ElementDataDictionary(exportingContext.ExportableData);
+            }
         }
 
         public void Importing(IEnumerable<Element> elements, ImportLayoutContext context) {
-            InvokeDriver(elements, (driver, element) => {
-                var importElementContext = new ImportElementContext {
-                    Layout = context.Layout,
-                    Element = element,
-                    ExportableData = element.ExportableData,
-                    Session = context.Session
-                };
-                driver.Importing(importElementContext);
-            });
+            foreach (var element in elements) {
+                var importingContext = new ImportElementContext(element, context.Layout, element.ExportableData ?? new ElementDataDictionary(), context.Session);
+                _elementEventHandler.Importing(importingContext);
+                element.Descriptor.Importing(importingContext);
+            }
         }
 
         public void Imported(IEnumerable<Element> elements, ImportLayoutContext context) {
-            InvokeDriver(elements, (driver, element) => {
-                var importElementContext = new ImportElementContext {
-                    Layout = context.Layout,
-                    Element = element,
-                    ExportableData = element.ExportableData,
-                    Session = context.Session
-                };
-                driver.Imported(importElementContext);
-            });
+            foreach (var element in elements) {
+                var importingContext = new ImportElementContext(element, context.Layout, element.ExportableData ?? new ElementDataDictionary(), context.Session);
+                _elementEventHandler.Imported(importingContext);
+                element.Descriptor.Imported(importingContext);
+            }
         }
 
         public void ImportCompleted(IEnumerable<Element> elements, ImportLayoutContext context) {
-            InvokeDriver(elements, (driver, element) => {
-                var importElementContext = new ImportElementContext {
-                    Layout = context.Layout,
-                    Element = element,
-                    ExportableData = element.ExportableData,
-                    Session = context.Session
-                };
-                driver.ImportCompleted(importElementContext);
-            });
+            foreach (var element in elements) {
+                var importingContext = new ImportElementContext(element, context.Layout, element.ExportableData ?? new ElementDataDictionary(), context.Session);
+                _elementEventHandler.ImportCompleted(importingContext);
+                element.Descriptor.ImportCompleted(importingContext);
+            }
         }
 
         private IDictionary<string, Category> GetCategories() {
@@ -232,21 +215,6 @@ namespace Orchard.Layouts.Services {
             }
 
             return dictionary;
-        }
-
-        private void InvokeElementAction(IEnumerable<Element> elements, Action<Element> action) {
-            foreach (var element in elements) {
-                action(element);
-            }
-        }
-
-        private void InvokeDriver(IEnumerable<Element> elements, Action<IElementDriver, Element> driverAction) {
-            foreach (var element in elements) {
-                var drivers = GetDrivers(element.Descriptor);
-                foreach (var driver in drivers) {
-                    driverAction(driver, element);
-                }
-            }
         }
 
         private static bool IsElementType(IElementDriver elementDriver, Type elementType) {

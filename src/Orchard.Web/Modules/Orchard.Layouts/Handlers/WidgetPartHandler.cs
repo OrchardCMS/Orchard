@@ -11,18 +11,7 @@ namespace Orchard.Layouts.Handlers {
 
         public WidgetPartHandler(IOrchardServices orchardServices) {
             _orchardServices = orchardServices;
-            OnUpdating<WidgetPart>(PreProcessPlacedWidget);
             OnUpdated<WidgetPart>(PostProcessPlacedWidget);
-        }
-
-        private void PreProcessPlacedWidget(UpdateContentContext context, WidgetPart part) {
-            if (!part.IsPlaceableContent())
-                return;
-
-            // This widget will be placed on a layout and thus will be created outside
-            // the context of the widget admin controller, which would have provided a default position value.
-            // Since the position property is required, we need to set it here to prevent a model validation error when updating.
-            part.Position = "0";
         }
 
         private void PostProcessPlacedWidget(UpdateContentContext context, WidgetPart part) {

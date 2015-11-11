@@ -1,11 +1,13 @@
-﻿namespace Orchard.Layouts.Framework.Elements {
-    public class ElementRemovingContext : LayoutSavingContext {
-        public ElementRemovingContext(LayoutSavingContext stub) {
-            Content = stub.Content;
-            RemovedElements = stub.RemovedElements;
-            Updater = stub.Updater;
-            Elements = stub.Elements;
+﻿using Orchard.ContentManagement;
+
+namespace Orchard.Layouts.Framework.Elements {
+    public class ElementRemovingContext {
+        public ElementRemovingContext(Element element, IContent content) {
+            Element = element;
+            Content = content;
         }
-        public Element Element { get; set; }
+
+        public IContent Content { get; private set; }
+        public Element Element { get; private set; }
     }
 }

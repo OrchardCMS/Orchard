@@ -39,6 +39,8 @@ namespace Orchard.Layouts.Providers {
                     ToolboxIcon = "\uf1b2",
                     EnableEditorDialog = true,
                     Removing = RemoveContentItem,
+                    Exporting = ExportElement,
+                    Importing = ImportElement,
                     StateBag = new Dictionary<string, object> {
                         { "ContentTypeName", contentTypeDefinition.Name }
                     }
@@ -131,6 +133,28 @@ namespace Orchard.Layouts.Providers {
 
             if(contentItem != null)
                 _contentManager.Value.Remove(contentItem);
+        }
+
+        private void ExportElement(ExportElementContext context) {
+            var element = (PlaceableContentItem)context.Element;
+            var contentItemId = element.ContentItemId;
+            var contentItem = contentItemId != null ? _contentManager.Value.Get(contentItemId.Value, VersionOptions.Latest) : default(ContentItem);
+            var contentItemIdentity = contentItem != null ? _contentManager.Value.GetItemMetadata(contentItem).Identity.ToString() : default(string);
+
+            if (contentItemIdentity != null)
+                context.ExportableData["ContentItemId"] = contentItemIdentity;
+        }
+
+        private void ImportElement(ImportElementContext context) {
+            var contentItemIdentity = context.ExportableData.Get("ContentItemId");
+
+            if (String.IsNullOrWhiteSpace(contentItemIdentity))
+                return;
+
+            var contentItem = context.Session.GetItemFromSession(contentItemIdentity);
+            var element = (PlaceableContentItem)context.Element;
+
+            element.ContentItemId = contentItem != null ? contentItem.Id : default(int?);
         }
 
         private IEnumerable<ContentTypeDefinition> GetPlaceableContentTypeDefinitions() {
