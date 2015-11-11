@@ -1,6 +1,6 @@
 ﻿/// <reference path="Typings/jquery.d.ts" />
 /// <reference path="Typings/underscore.d.ts" />
-/// <reference path="Typings/uri.d.ts" />
+/// <reference path="Typings/URIjs.d.ts" />
 
 module Orchard.Azure.MediaServices.VideoPlayer.Injectors {
 
@@ -78,7 +78,7 @@ module Orchard.Azure.MediaServices.VideoPlayer.Injectors {
 
             var lastSource = <HTMLSourceElement>_(sourceElements).last()[0];
 
-            var errorHandler = e => {
+            var errorHandler = (e: any) => {
                 this.debug("Error detected; cleaning up container and faulting this injector.");
                 // TODO: Be a little more selective here, don't fail on any error.
                 this.fault();

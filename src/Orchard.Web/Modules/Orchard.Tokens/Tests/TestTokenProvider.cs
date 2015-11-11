@@ -38,6 +38,9 @@ namespace Orchard.Tokens.Tests {
                 .Token("CurrentUser", o => new TestUser { UserName = "CurrentUser" })
                 .Chain("CurrentUser", "User", o => new TestUser { UserName = "CurrentUser" });
 
+            context.For<IContent>("Content")
+                .Token("Id", u => u.Id);
+
             context.For<IUser>("User", () => new TestUser { UserName = "CurrentUser" })
                 .Token("Name", u => u.UserName)
                 .Token("Email", u => u.Email)

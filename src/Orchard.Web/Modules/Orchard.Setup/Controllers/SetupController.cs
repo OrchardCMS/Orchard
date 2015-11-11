@@ -49,7 +49,7 @@ namespace Orchard.Setup.Controllers {
             var recipes = _setupService.Recipes().ToList();
             string recipeDescription = null;
 
-            if (recipes.Count > 0) {
+            if (recipes.Any()) {
                 recipeDescription = recipes[0].Description;
             }
 
@@ -137,7 +137,7 @@ namespace Orchard.Setup.Controllers {
                         throw new ApplicationException("Unknown database type: " + model.DatabaseProvider);
                 }
 
-                var recipe = _setupService.Recipes().GetRecipeByName(model.Recipe);
+                var recipe = recipes.GetRecipeByName(model.Recipe);
                 var setupContext = new SetupContext {
                     SiteName = model.SiteName,
                     AdminUsername = model.AdminUsername,

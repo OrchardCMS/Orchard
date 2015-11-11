@@ -172,12 +172,12 @@
                     case "cancel":
                         self.close();
                         break;
-                    case "save": {
-                        var frameDoc = self.frame.getDocument();
-                        var form = frameDoc.find(".zone-content form:first");
-                        form.attr("isSubmitting", true);
-                        form.trigger("submit");
-                    }
+                    case "save":
+                        {
+                            var frameWindow = self.frame.getWindow();
+                            var form = frameWindow.$("form:first");
+                            form.submit();
+                        }
                         break;
                 }
             });

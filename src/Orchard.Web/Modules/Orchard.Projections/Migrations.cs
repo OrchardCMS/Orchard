@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Contents.Extensions;
@@ -266,10 +267,9 @@ namespace Orchard.Projections {
         }
 
         public int UpdateFrom2() {
-            SchemaBuilder.AlterTable("ProjectionPartRecord",
-                            table => table
-                                .AlterColumn("PagerSuffix", c => c.WithType(DbType.String).WithLength(255))
-                            );
+            SchemaBuilder.AlterTable("ProjectionPartRecord", table => table
+                .AlterColumn("PagerSuffix", c => c.WithType(DbType.String).WithLength(255))
+            );
 
             return 3;
         }

@@ -2,7 +2,7 @@
 
     /* Helper functions
     **********************************************************************/
-    var createTermCheckbox = function ($wrapper, tag) {
+	var createTermCheckbox = function ($wrapper, tag, checked) {
         var $ul = $("ul.terms", $wrapper);
         var singleChoice = $(".terms-editor", $wrapper).data("singlechoice");
         var namePrefix = $wrapper.data("name-prefix");
@@ -12,8 +12,8 @@
         var checkboxId = idPrefix + "_Terms_" + nextIndex + "__IsChecked";
         var checkboxName = namePrefix + ".Terms[" + nextIndex + "].IsChecked";
         var radioName = namePrefix + ".SingleTermId";
-        var checkboxHtml = "<input type=\"checkbox\" value=\"true\" checked=\"checked\" data-term=\"" + tag.label + "\" data-term-identity=\"" + tag.label.toLowerCase() + "\" id=\"" + checkboxId + "\" name=\"" + checkboxName + "\" />";
-        var radioHtml = "<input type=\"radio\" value=\"" + id + "\" checked=\"checked\" data-term=\"" + tag.label + "\" data-term-identity=\"" + tag.label.toLowerCase() + "\" id=\"" + checkboxId + "\" name=\"" + radioName + "\" />";
+        var checkboxHtml = "<input type=\"checkbox\" value=\"" + (checked ? "true\" checked=\"checked\"" : "false") + " data-term=\"" + tag.label + "\" data-term-identity=\"" + tag.label.toLowerCase() + "\" id=\"" + checkboxId + "\" name=\"" + checkboxName + "\" />";
+        var radioHtml = "<input type=\"radio\" value=\"" + id + (checked ? "\" checked=\"checked\"" : "\"") + " data-term=\"" + tag.label + "\" data-term-identity=\"" + tag.label.toLowerCase() + "\" id=\"" + checkboxId + "\" name=\"" + radioName + "\" />";
         var inputHtml = singleChoice ? radioHtml : checkboxHtml;
         var $li = $("<li>" +
                     inputHtml +
@@ -22,8 +22,8 @@
                     "<label class=\"forcheckbox\" for=\"" + checkboxId + "\">" + tag.label + "</label>" +
                   "</li>").hide();
 
-        if (singleChoice) {
-            $("input[type='radio']", $ul).removeAttr("checked");
+        if (checked && singleChoice) {
+        	$("input[type='radio']", $ul).removeAttr("checked");
             $("input[type='radio'][name$='IsChecked']", $ul).val("false");
         }
 
@@ -43,6 +43,7 @@
         var $tagIt = $("ul.tagit", $wrapper);
         var singleChoice = $(".terms-editor", $wrapper).data("singlechoice");
         var $terms = $("ul.terms", $wrapper);
+        var initialTags = $(".terms-editor", $wrapper).data("selected-terms");
 
         if (singleChoice && action == "added") {
             $tagIt.tagit("fill", tag);
@@ -50,8 +51,16 @@
 
         $terms.empty();
 
-        $($tagIt.tagit("tags")).each(function (index, tag) {
-            createTermCheckbox($wrapper, tag, this);
+        var tags = $tagIt.tagit("tags");
+        $(tags).each(function (index, tag) {
+        	createTermCheckbox($wrapper, tag, true);
+        });
+
+    	// Add any tags that are no longer selected but were initially on page load.
+    	// These are required to be posted back so they can be removed.
+        var removedTags = $.grep(initialTags, function (initialTag) { return $.grep(tags, function (tag) { return tag.value === initialTag.value }).length === 0 });
+        $(removedTags).each(function (index, tag) {
+        	createTermCheckbox($wrapper, tag, false);
         });
 
         $(".no-terms", $wrapper).hide();

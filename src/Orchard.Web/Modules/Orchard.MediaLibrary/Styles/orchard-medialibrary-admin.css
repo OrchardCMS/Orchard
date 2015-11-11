@@ -1,4 +1,4 @@
-﻿.zone-content, #content, #main, #layout-content, #layout-main {
+.zone-content, #content, #main, #layout-content, #layout-main {
     height: 100%;
     display: block;
     min-height: 400px;
@@ -153,6 +153,10 @@
             background-image: url('images/folders-loader.gif');
             background-repeat: no-repeat;
             background-position: center;
+        }
+
+        #media-library-main-list.pending li {
+            opacity:.3;
         }
 
     /* Remove the space for the editor, and the scrollbar in the import page */

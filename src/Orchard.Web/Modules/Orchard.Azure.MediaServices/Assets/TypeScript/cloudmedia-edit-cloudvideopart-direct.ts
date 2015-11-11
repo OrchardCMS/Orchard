@@ -5,7 +5,7 @@
 module Orchard.Azure.MediaServices.CloudVideoEdit {
     var requiredUploads: JQuery;
 
-    function uploadCompleted(sender, e, data) {
+    function uploadCompleted(sender: any, e: any, data: any) {
         var scope = $(sender).closest(".async-upload");
         var status = data.errorThrown && data.errorThrown.length > 0 ? data.errorThrown : data.textStatus;
         scope.find(".progress-bar").hide();
@@ -33,7 +33,7 @@ module Orchard.Azure.MediaServices.CloudVideoEdit {
         scope.data("upload-start-time", null);
     }
 
-    function cleanup(scope: JQuery, data) {
+    function cleanup(scope: JQuery, data: any) {
         var wamsAssetInput = scope.find("input[name$='.WamsAssetId']");
         var fileNameInput = scope.find("input[name$='.FileName']");
         var assetId = $.trim(wamsAssetInput.val());
@@ -82,7 +82,7 @@ module Orchard.Azure.MediaServices.CloudVideoEdit {
         return btoa(blockIdPrefix + pad(blockIndex, 6));
     }
 
-    function commitBlockList(scope: JQuery, data) {
+    function commitBlockList(scope: JQuery, data: any) {
         var deferred = $.Deferred();
         var blockIds = scope.data("block-ids");
 
@@ -183,12 +183,12 @@ module Orchard.Azure.MediaServices.CloudVideoEdit {
             acceptFileTypes: acceptFileTypesRegex,
             type: "PUT",
             maxChunkSize: 4 * 1024 * 1024, // 4 MB
-            beforeSend: (xhr: JQueryXHR, data) => {
+            beforeSend: (xhr: JQueryXHR, data: any) => {
                 xhr.setRequestHeader("x-ms-date", new Date().toUTCString());
                 xhr.setRequestHeader("x-ms-blob-type", "BlockBlob");
                 xhr.setRequestHeader("content-length", data.data.size.toString());
             },
-            chunksend: function (e, data) {
+            chunksend: function (e: any, data: any) {
                 var blockIndex = scope.data("block-index");
                 var blockIds = scope.data("block-ids");
                 var blockId = createBlockId(blockIndex);
@@ -198,7 +198,7 @@ module Orchard.Azure.MediaServices.CloudVideoEdit {
                 blockIds.push(blockId);
                 scope.data("block-index", blockIndex + 1);
             },
-            progressall: function (e, data) {
+            progressall: function (e: any, data: any) {
                 var percentComplete = Math.floor((data.loaded / data.total) * 100);
                 var startTime = new Date(scope.data("upload-start-time"));
                 var elapsedMilliseconds = new Date(Date.now()).getTime() - startTime.getTime();
@@ -212,16 +212,16 @@ module Orchard.Azure.MediaServices.CloudVideoEdit {
                 progressText.text(progressText.data("text-template").replace("{percentage}", percentComplete)).show();
                 progressDetails.text(progressDetails.data("text-template").replace("{uploaded}", uploaded).replace("{total}", total).replace("{kbps}", kbps).replace("{elapsed}", elapsed.humanize()).replace("{remaining}", remaining.humanize())).show();
             },
-            done: function (e, data) {
+            done: function (e: any, data: any) {
                 var self = this;
                 commitBlockList(scope, data).always(function () {
                     uploadCompleted(self, e, data);
                 });
             },
-            fail: function (e, data) {
+            fail: function (e: any, data: any) {
                 uploadCompleted(this, e, data);
             },
-            processdone: function (e, data) {
+            processdone: function (e: any, data: any) {
                 var selectedFilename = data.files[0].name;
                 scope.data("selected-filename", selectedFilename);
                 window.setTimeout(function () {
@@ -263,7 +263,7 @@ module Orchard.Azure.MediaServices.CloudVideoEdit {
                             __RequestVerificationToken: antiForgeryToken
                         },
                         type: "POST"
-                    }).done(function (asset) {
+                    }).done(function (asset: any) {
                             data.url = asset.sasLocator;
                             data.multipart = false;
 
@@ -277,7 +277,7 @@ module Orchard.Azure.MediaServices.CloudVideoEdit {
 
                             var xhr = data.submit();
                             scope.data("xhr", xhr);
-                        }).fail(function (xhr, status, error) {
+                        }).fail(function (xhr: any, status: any, error: any) {
                             fileUploadWrapper.show();
                             selectedFileWrapper.show();
                             preparingText.hide();
@@ -289,13 +289,13 @@ module Orchard.Azure.MediaServices.CloudVideoEdit {
                         });
                 };
             },
-            processfail: function (e, data) {
+            processfail: function (e: any, data: any) {
                 validationText.show();
                 filenameInput.val("");
                 filenameText.text("");
                 selectedFileWrapper.hide();
             },
-            change: function (e, data) {
+            change: function (e: any, data: any) {
                 var prompt = fileInput.data("prompt");
                 if (prompt && prompt.length > 0) {
                     if (!confirm(prompt)) {

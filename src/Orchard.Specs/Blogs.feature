@@ -155,7 +155,9 @@ Scenario: I set my blog to be the content for the home page and the posts for th
         And I go to "/"
     Then I should see "<h1>My Blog</h1>"
     When I go to "/my-blog"
-    Then the status should be 404 "Not Found"
+    Then the status should be 200 "OK"
+    When I go to "/"
+    Then the status should be 200 "OK"
     When I go to "/my-post"
     Then I should see "<h1>My Post</h1>"
 

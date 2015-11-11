@@ -151,6 +151,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BackgroundHttpContextFactory.cs" />
+    <Compile Include="Environment\Configuration\ExtensionLocations.cs" />
     <Compile Include="DisplayManagement\IPositioned.cs" />
     <Compile Include="DisplayManagement\PositionWrapper.cs" />
     <Compile Include="Data\Migration\Schema\AddUniqueConstraintCommand.cs" />
