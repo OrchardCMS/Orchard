@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Orchard.Alias;
 using Orchard.Autoroute.Models;
@@ -7,7 +8,6 @@ using Orchard.ContentManagement.Handlers;
 using Orchard.Data;
 using Orchard.DisplayManagement;
 using Orchard.Layouts.Framework.Elements;
-using Orchard.Layouts.Helpers;
 using Orchard.Layouts.Models;
 using Orchard.Layouts.Services;
 using Orchard.Utility.Extensions;
@@ -98,6 +98,7 @@ namespace Orchard.Layouts.Handlers {
             var elements = _layoutManager.LoadElements(part).ToList();
             var savingContext = new LayoutSavingContext {
                 Content = part,
+                Elements = new List<Element>(),
                 RemovedElements = elements
             };
             _elementManager.Removing(savingContext);
