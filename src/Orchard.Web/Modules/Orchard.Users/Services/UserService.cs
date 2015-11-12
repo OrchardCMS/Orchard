@@ -14,6 +14,7 @@ using System.Globalization;
 using System.Text;
 using Orchard.Messaging.Services;
 using Orchard.Environment.Configuration;
+using System.Web;
 
 namespace Orchard.Users.Services {
     public class UserService : IUserService {
@@ -85,7 +86,7 @@ namespace Orchard.Users.Services {
         public string CreateNonce(IUser user, TimeSpan delay) {
             var challengeToken = new XElement("n", new XAttribute("un", user.UserName), new XAttribute("utc", _clock.UtcNow.ToUniversalTime().Add(delay).ToString(CultureInfo.InvariantCulture))).ToString();
             var data = Encoding.UTF8.GetBytes(challengeToken);
-            return Convert.ToBase64String(_encryptionService.Encode(data));
+            return HttpServerUtility.UrlTokenEncode(_encryptionService.Encode(data));
         }
 
         public bool DecryptNonce(string nonce, out string username, out DateTime validateByUtc) {
@@ -93,7 +94,7 @@ namespace Orchard.Users.Services {
             validateByUtc = _clock.UtcNow;
 
             try {
-                var data = _encryptionService.Decode(Convert.FromBase64String(nonce));
+                var data = _encryptionService.Decode(HttpServerUtility.UrlTokenDecode(nonce));
                 var xml = Encoding.UTF8.GetString(data);
                 var element = XElement.Parse(xml);
                 username = element.Attribute("un").Value;
