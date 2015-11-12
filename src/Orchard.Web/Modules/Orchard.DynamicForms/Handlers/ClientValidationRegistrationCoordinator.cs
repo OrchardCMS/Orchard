@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Orchard.DynamicForms.Elements;
 using Orchard.DynamicForms.Services;
@@ -54,5 +55,11 @@ namespace Orchard.DynamicForms.Handlers {
         void IElementEventHandler.BuildEditor(ElementEditorContext context) { }
         void IElementEventHandler.UpdateEditor(ElementEditorContext context) { }
         void IElementEventHandler.Removing(ElementRemovingContext context) { }
+        void IElementEventHandler.LayoutSaving(ElementSavingContext context) { }
+        void IElementEventHandler.Exporting(ExportElementContext context) { }
+        void IElementEventHandler.Exported(ExportElementContext context) { }
+        void IElementEventHandler.Importing(ImportElementContext context) { }
+        void IElementEventHandler.Imported(ImportElementContext context) { }
+        void IElementEventHandler.ImportCompleted(ImportElementContext context) { }
     }
 }

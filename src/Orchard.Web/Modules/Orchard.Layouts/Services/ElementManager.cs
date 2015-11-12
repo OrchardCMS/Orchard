@@ -143,7 +143,7 @@ namespace Orchard.Layouts.Services {
             var elements = context.Elements.Flatten();
             
             foreach (var element in elements) {
-                var savingContext = new ElementSavingContext(context);
+                var savingContext = new ElementSavingContext(element, context);
                 _elementEventHandler.LayoutSaving(savingContext);
                 element.Descriptor.LayoutSaving(savingContext);
             }
