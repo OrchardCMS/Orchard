@@ -153,7 +153,7 @@ namespace Orchard.Layouts.Services {
             var elements = context.RemovedElements.Flatten().ToList();
 
             foreach (var element in elements) {
-                var removingContext = new ElementRemovingContext(element, context.Content);
+                var removingContext = new ElementRemovingContext(element, context.Elements, context.RemovedElements, context.Content);
                 _elementEventHandler.Removing(removingContext);
                 element.Descriptor.Removing(removingContext);
             }

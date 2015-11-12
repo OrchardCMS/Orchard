@@ -129,6 +129,19 @@ namespace Orchard.Layouts.Providers {
         private void RemoveContentItem(ElementRemovingContext context) {
             var element = (PlaceableContentItem) context.Element;
             var contentItemId = element.ContentItemId;
+
+            // Only remove the content item if no other elements are referencing this one.
+            // This can happen if the user cut an element and then pasted it back.
+            // That will delete the initial element and create a copy.
+            var placeableElements =
+                from e in context.Elements.Flatten()
+                let p = e as PlaceableContentItem
+                where p != null && p.ContentItemId == contentItemId
+                select p;
+
+            if (placeableElements.Any())
+                return;
+
             var contentItem = contentItemId != null ? _contentManager.Value.Get(contentItemId.Value, VersionOptions.Latest) : default(ContentItem);
 
             if(contentItem != null)
