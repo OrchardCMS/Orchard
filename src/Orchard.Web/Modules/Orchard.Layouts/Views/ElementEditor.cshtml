@@ -15,8 +15,6 @@
 }
 @Html.ValidationSummary()
 @using (Html.BeginFormAntiForgeryPost(Url.Action("Update", "Element", new { session = Model.SessionKey, area = "Orchard.Layouts" }))) {
-    @Html.HiddenFor(m => m.TypeName)
-    @Html.HiddenFor(m => m.ElementData)
     foreach (var tab in Model.Tabs) {
         var id = String.Format("element-{0}", tab.ToLowerInvariant());
         <div id="@id" class="tab-view">

@@ -133,7 +133,6 @@
     <Content Include="Assets\JavaScript\Models\Row.js" />
     <Content Include="Scripts\LayoutDecoder.js" />
     <Content Include="Scripts\dialog.js" />
-    <Content Include="Scripts\designer.canvas.js" />
     <Content Include="Data\Canvas.json" />
     <Content Include="Data\ContentTypes.json" />
     <Content Include="Images\Web.config">
