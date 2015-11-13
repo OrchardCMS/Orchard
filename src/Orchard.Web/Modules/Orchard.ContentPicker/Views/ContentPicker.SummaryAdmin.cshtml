@@ -3,27 +3,30 @@
     ContentItem contentItem = Model.ContentItem;
 }
 <div class="summary" itemscope="itemscope" itemid="@contentItem.Id" itemtype="http://orchardproject.net/data/ContentItem">
-    <div class="properties">
-        @*<input type="checkbox" value="@contentItem.Id" name="itemIds"/>*@
-        <h3>@Html.ItemDisplayText(contentItem)</h3> - <div class="contentType">@contentItem.TypeDefinition.DisplayName</div>
-        @if (Model.Header != null) {
-            <div class="header">@Display(Model.Header)</div>
-        }
-        @if (Model.Meta != null) {
-            <div class="metadata">@Display(Model.Meta)</div>
+    <input type="checkbox" class="content-picker-itemCheck" />
+    <div class="content-picker-item">
+        <div class="properties">
+            @*<input type="checkbox" value="@contentItem.Id" name="itemIds"/>*@
+            <h3>@Html.ItemDisplayText(contentItem)</h3> - <div class="contentType">@contentItem.TypeDefinition.DisplayName</div>
+            @if (Model.Header != null) {
+                <div class="header">@Display(Model.Header)</div>
+            }
+            @if (Model.Meta != null) {
+                <div class="metadata">@Display(Model.Meta)</div>
+            }
+        </div>
+        <div class="related" 
+             data-display-text="@Html.ItemDisplayText(contentItem)"
+             data-id="@contentItem.Id"
+             data-edit-link="@Html.Encode(Html.ItemEditLink(contentItem))"
+             data-edit-url="@Html.Encode(Url.ItemEditUrl(contentItem))"
+             data-admin-url="@Html.Encode(Url.ItemAdminUrl(contentItem))"
+             data-display-link="@Html.Encode(Html.ItemDisplayLink(contentItem))"
+             data-published="@contentItem.VersionRecord.Published.ToString().ToLower()" >
+            @Html.Link(T("Select").Text, "#", new { @class = "button select"})
+        </div>
+        @if (Model.Content != null) {
+            <div class="primary">@Display(Model.Content)</div>
         }
     </div>
-    <div class="related" 
-         data-display-text="@Html.ItemDisplayText(contentItem)"
-         data-id="@contentItem.Id"
-         data-edit-link="@Html.Encode(Html.ItemEditLink(contentItem))"
-         data-edit-url="@Html.Encode(Url.ItemEditUrl(contentItem))"
-         data-admin-url="@Html.Encode(Url.ItemAdminUrl(contentItem))"
-         data-display-link="@Html.Encode(Html.ItemDisplayLink(contentItem))"
-         data-published="@contentItem.VersionRecord.Published.ToString().ToLower()" >
-        @Html.Link(T("Select").Text, "#", new { @class = "button select"})
-    </div>
-    @if (Model.Content != null) {
-        <div class="primary">@Display(Model.Content)</div>
-    }
 </div>

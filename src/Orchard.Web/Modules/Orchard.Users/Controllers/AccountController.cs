@@ -150,11 +150,11 @@ namespace Orchard.Users.Controllers {
                         _userService.SendChallengeEmail(user.As<UserPart>(), nonce => Url.MakeAbsolute(Url.Action("ChallengeEmail", "Account", new {Area = "Orchard.Users", nonce = nonce}), siteUrl));
 
                         _userEventHandler.SentChallengeEmail(user);
-                        return RedirectToAction("ChallengeEmailSent");
+                        return RedirectToAction("ChallengeEmailSent", new { ReturnUrl = returnUrl });
                     }
 
                     if (user.As<UserPart>().RegistrationStatus == UserStatus.Pending) {
-                        return RedirectToAction("RegistrationPending");
+                        return RedirectToAction("RegistrationPending", new { ReturnUrl = returnUrl });
                     }
 
                     _userEventHandler.LoggingIn(userName, password);
@@ -193,7 +193,7 @@ namespace Orchard.Users.Controllers {
             }
 
             if(String.IsNullOrWhiteSpace(username)){
-                ModelState.AddModelError("userNameOrEmail", T("Invalid username or E-mail."));
+                ModelState.AddModelError("username", T("You must specify a username or e-mail."));
                 return View();
             }
 

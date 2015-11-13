@@ -17,6 +17,8 @@ namespace Orchard.Taxonomies.Handlers {
     public class TermsPartHandler : ContentHandler {
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly IContentManager _contentManager;
+        
+        private readonly HashSet<int> _processedTermParts = new HashSet<int>(); 
 
         public TermsPartHandler(
             IContentDefinitionManager contentDefinitionManager,
@@ -88,12 +90,17 @@ namespace Orchard.Taxonomies.Handlers {
             });
         }
 
-
-        // Fires off a processing engine task to run the count processing after the request so it's non-blocking.
+                // Fires off a processing engine task to run the count processing after the request so it's non-blocking.
         private void RecalculateCount(IProcessingEngine processingEngine, ShellSettings shellSettings, IShellDescriptorManager shellDescriptorManager, TermsPart part) {
             var termPartRecordIds = part.Terms.Select(t => t.TermRecord.Id).ToArray();
-            processingEngine.AddTask(shellSettings, shellDescriptorManager.GetShellDescriptor(), "ITermCountProcessor.Process", new Dictionary<string, object> { { "termPartRecordIds", termPartRecordIds } });
-
+            if (termPartRecordIds.Any()) {
+                if (!_processedTermParts.Any()) {
+                    processingEngine.AddTask(shellSettings, shellDescriptorManager.GetShellDescriptor(), "ITermCountProcessor.Process", new Dictionary<string, object> { { "termPartRecordIds", _processedTermParts } });
+                }
+                foreach (var termPartRecordId in termPartRecordIds) {
+                    _processedTermParts.Add(termPartRecordId);                    
+                }
+            }
         }
 
         protected override void Activating(ActivatingContentContext context) {

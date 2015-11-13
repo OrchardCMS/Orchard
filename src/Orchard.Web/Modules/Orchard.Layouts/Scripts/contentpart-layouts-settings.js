@@ -1,7 +1,7 @@
 ﻿(function ($) {
-    var placable = $("input[name=\"ContentPartLayoutSettings.Placable\"]");
+    var placeable = $("input[name=\"ContentPartLayoutSettings.Placeable\"]");
 
-    $(placable).on("change", function (e) {
+    $(placeable).on("change", function (e) {
         syncEnableEditorInput();
     });
 
@@ -11,9 +11,9 @@
 
     var syncEnableEditorInput = function () {
         var enableEditorDialog = $("input[name=\"ContentPartLayoutSettings.EnableEditorDialog\"]");
-        var isPlacable = placable.is(":checked");
+        var isPlaceable = placeable.is(":checked");
 
-        enableEditorDialog.prop("disabled", !isPlacable);
+        enableEditorDialog.prop("disabled", !isPlaceable);
     };
 
 })(jQuery);

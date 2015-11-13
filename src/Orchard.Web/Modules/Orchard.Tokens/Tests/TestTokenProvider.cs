@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.Localization;
 using Orchard.Security;
@@ -24,6 +25,9 @@ namespace Orchard.Tokens.Tests {
 
             context.For("Date")
                 .Token("Now", T("Now"), T("Current system date in short date format. You can chain a .NET DateTime format string to customize."));
+
+            context.For("Users")
+                .Token("Users[*:]", T("Users"), T("A user by its username"), "User");
         }
 
         public void Evaluate(EvaluateContext context) {
@@ -34,8 +38,12 @@ namespace Orchard.Tokens.Tests {
                 .Token("CurrentUser", o => new TestUser { UserName = "CurrentUser" })
                 .Chain("CurrentUser", "User", o => new TestUser { UserName = "CurrentUser" });
 
+            context.For<IContent>("Content")
+                .Token("Id", u => u.Id);
+
             context.For<IUser>("User", () => new TestUser { UserName = "CurrentUser" })
                 .Token("Name", u => u.UserName)
+                .Token("Email", u => u.Email)
                 .Token("Birthdate", u => "Nov 15")
                 .Chain("Birthdate", "DateTime", u => new DateTime(1978, 11, 15));
 
@@ -45,6 +53,29 @@ namespace Orchard.Tokens.Tests {
 
             context.For<DateTime>("DateTime")
                 .Token((token, value) => value.ToString(token));
+
+            context.For<TestUser[]>("Users", () => new TestUser[] {
+                new TestUser { UserName = "User1", Email = "user1@test.com" },
+                new TestUser { UserName = "User2", Email = "user2@test.com" },
+                new TestUser { UserName = "User3", Email = "user3@test.com" }
+            })
+                .Token(
+                    (token) => token.StartsWith("User:", StringComparison.OrdinalIgnoreCase) ? token.Substring("User:".Length) : null,
+                    (userName, users) => users.Where(u => u.UserName == userName).Select(u => u.UserName).FirstOrDefault()
+                )
+                .Chain(
+                    (token) => {
+                        int tokenLength = "User:".Length;
+                        int chainIndex = token.IndexOf('.');
+                        if (token.StartsWith("User:", StringComparison.OrdinalIgnoreCase) && chainIndex > tokenLength)
+                            return new Tuple<string, string>(token.Substring(tokenLength, chainIndex - tokenLength), token.Substring(chainIndex + 1));
+                        else
+                            return null;
+                    },
+                    "User",
+                    (userName, users) => users.Where(u => u.UserName == userName).FirstOrDefault()
+                );
+
         }
 
     }

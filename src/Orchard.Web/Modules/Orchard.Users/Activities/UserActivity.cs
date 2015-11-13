@@ -78,6 +78,17 @@ namespace Orchard.Users.Activities {
     }
 
     [OrchardFeature("Orchard.Users.Workflows")]
+    public class UserLogInFailedActivity : UserActivity {
+        public override string Name {
+            get { return "UserLogInFailed"; }
+        }
+
+        public override LocalizedString Description {
+            get { return T("User login failed."); }
+        }
+    }
+
+    [OrchardFeature("Orchard.Users.Workflows")]
     public class UserLoggedOutActivity : UserActivity {
         public override string Name {
             get { return "UserLoggedOut"; }

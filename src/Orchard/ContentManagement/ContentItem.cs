@@ -52,7 +52,8 @@ namespace Orchard.ContentManagement {
                         return true;
                     }
                 }
-                return false;
+                result = null;
+                return true;
             }
 
             return true;

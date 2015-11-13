@@ -162,6 +162,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ContentManagement\ContentQueryTests.cs" />
+    <Compile Include="ContentManagement\DefaultContentManagerImportTests.cs" />
+    <Compile Include="ContentManagement\Handlers\DummyHandler.cs" />
     <Compile Include="ContentManagement\Handlers\LambdaPartHandler.cs" />
     <Compile Include="ContentManagement\HqlExpressionTests.cs" />
     <Compile Include="ContentManagement\DynamicContentQueryTests.cs" />
@@ -208,6 +210,7 @@
     <Compile Include="ContentManagement\Records\GammaRecord.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ContentManagement\TestTransactionManager.cs" />
     <Compile Include="ContentManagement\XmlHelperTests.cs" />
     <Compile Include="DatabaseEnabledTestsBase.cs" />
     <Compile Include="DataMigration\SchemaBuilderTests.cs" />
@@ -242,9 +245,12 @@
     <Compile Include="Environment\Extensions\ExtensionLoaderCoordinatorTests.cs" />
     <Compile Include="Environment\Features\FeatureManagerTests.cs" />
     <Compile Include="Environment\Loaders\DynamicExtensionLoaderTests.cs" />
+    <Compile Include="Environment\ShellBuilders\CompositionStrategyTests.cs" />
     <Compile Include="Environment\State\DefaultProcessingEngineTests.cs" />
     <Compile Include="Environment\RunningShellTableTests.cs" />
     <Compile Include="Environment\StubHostEnvironment.cs" />
+    <Compile Include="Environment\TestDependencies\AlphaDependency.cs" />
+    <Compile Include="Environment\TestDependencies\BetaDependency.cs" />
     <Compile Include="Environment\Utility\Build.cs" />
     <Compile Include="Environment\Warmup\WarmupUtilityTests.cs" />
     <Compile Include="FileSystems\AppData\AppDataFolderTests.cs" />
@@ -266,6 +272,7 @@
     <Compile Include="Localization\DateTimePartsTests.cs" />
     <Compile Include="Localization\DefaultDateLocalizationServicesTests.cs" />
     <Compile Include="Localization\DefaultDateFormatterTests.cs" />
+    <Compile Include="Stubs\StubApplicationEnvironment.cs" />
     <Compile Include="Stubs\StubCultureSelector.cs" />
     <Compile Include="Localization\TestHelpers.cs" />
     <Compile Include="Logging\OrchardFileAppenderTests.cs" />
@@ -287,6 +294,8 @@
     <Compile Include="Stubs\StubVirtualPathMonitor.cs" />
     <Compile Include="Stubs\StubCacheManager.cs" />
     <Compile Include="Stubs\StubWebSiteFolder.cs" />
+    <Compile Include="Stubs\StubWorkContextScope.cs" />
+    <Compile Include="Tasks\DistributedLockServiceTests.cs" />
     <Compile Include="Time\TimeZoneSelectorTests.cs" />
     <Compile Include="UI\Resources\ResourceManagerTests.cs" />
     <Compile Include="UI\ShapeTests.cs" />

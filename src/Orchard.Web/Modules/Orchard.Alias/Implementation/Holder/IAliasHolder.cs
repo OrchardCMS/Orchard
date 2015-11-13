@@ -26,7 +26,7 @@ namespace Orchard.Alias.Implementation.Holder {
         /// Adds or updates a set of aliases in the tree
         /// </summary>
         void SetAliases(IEnumerable<AliasInfo> aliases);
-        
+
         /// <summary>
         /// Removes an alias from the tree based on its path
         /// </summary>

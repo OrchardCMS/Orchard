@@ -10,19 +10,26 @@ namespace Orchard.ContentManagement {
 
         public static TProperty Retrieve<TPart, TProperty>(this TPart contentPart,
             Expression<Func<TPart, TProperty>> targetExpression,
-            TProperty defaultValue = default(TProperty),
+            Func<TProperty> defaultValue,
             bool versioned = false) where TPart : ContentPart {
 
             var propertyInfo = ReflectionHelper<TPart>.GetPropertyInfo(targetExpression);
             var name = propertyInfo.Name;
-
             var infosetPart = contentPart.As<InfosetPart>();
             var el = infosetPart == null
                 ? null
                 : (versioned ? infosetPart.VersionInfoset.Element : infosetPart.Infoset.Element)
                 .Element(contentPart.GetType().Name);
             var attr = el != null ? el.Attribute(name) : default(XAttribute);
-            return attr == null ? defaultValue : XmlHelper.Parse<TProperty>(attr.Value);
+            return attr == null ? defaultValue != null ? defaultValue() : default(TProperty) : XmlHelper.Parse<TProperty>(attr.Value);
+        }
+
+        public static TProperty Retrieve<TPart, TProperty>(this TPart contentPart,
+            Expression<Func<TPart, TProperty>> targetExpression,
+            TProperty defaultValue = default(TProperty),
+            bool versioned = false) where TPart : ContentPart {
+
+            return Retrieve(contentPart, targetExpression, () => defaultValue, versioned);
         }
 
         public static TProperty Retrieve<TProperty>(this ContentPart contentPart, string name, 

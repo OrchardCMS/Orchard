@@ -1,6 +1,7 @@
 ﻿using System;
 using Orchard.Data.Migration.Interpreters;
 using Orchard.Localization;
+using Orchard.Exceptions;
 
 namespace Orchard.Data.Migration.Schema {
     public class SchemaBuilder {
@@ -30,12 +31,19 @@ namespace Orchard.Data.Migration.Schema {
         }
 
         /// <summary>
-        /// Translate Table name into database table name - including prefixes
+        /// Translate Table name into database table name - including prefixes.
         /// </summary>
         public virtual string TableDbName(string srcTable) {
             return _interpreter.PrefixTableName(String.Concat(FormatPrefix(FeaturePrefix), srcTable));
         }
-      
+
+        /// <summary>
+        /// Removes the data table prefix from the specified table name.
+        /// </summary>
+        public virtual string RemoveDataTablePrefix(string prefixedTableName) {
+            return _interpreter.RemovePrefixFromTableName(prefixedTableName);
+        }
+
         public SchemaBuilder CreateTable(string name, Action<CreateTableCommand> table) {
             var createTable = new CreateTableCommand(String.Concat(_formatPrefix(_featurePrefix), name));
             table(createTable);
@@ -65,6 +73,9 @@ namespace Orchard.Data.Migration.Schema {
                 Run(sqlStatmentCommand);
                 return this;
             } catch (Exception ex) {
+                if (ex.IsFatal()) {  
+                    throw;
+                } 
                 throw new OrchardException(T("An unexpected error occured while executing the SQL statement: {0}", sql), ex); // Add the sql to the nested exception information
             }
         }

@@ -26,7 +26,8 @@ namespace Orchard.Recipes.Services {
                 ExecutionId = executionId,
                 Steps =
                     from record in records
-                    select new RecipeStepResult() {
+                    select new RecipeStepResult {
+                        RecipeName = record.RecipeName,
                         StepName = record.StepName,
                         IsCompleted = record.IsCompleted,
                         IsSuccessful = record.IsSuccessful,

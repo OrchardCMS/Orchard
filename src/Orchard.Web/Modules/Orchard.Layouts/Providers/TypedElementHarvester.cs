@@ -6,7 +6,7 @@ using Orchard.Layouts.Framework.Harvesters;
 using Orchard.Layouts.Services;
 
 namespace Orchard.Layouts.Providers {
-    public class TypedElementHarvester : ElementHarvester {
+    public class TypedElementHarvester : IElementHarvester {
         private readonly Work<IElementManager> _elementManager;
         private readonly Work<IElementFactory> _factory;
 

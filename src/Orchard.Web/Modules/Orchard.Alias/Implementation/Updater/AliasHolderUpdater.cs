@@ -34,7 +34,7 @@ namespace Orchard.Alias.Implementation.Updater {
                 // update the last processed id
                 if (aliases.Any()) {
                     _cursor.Cursor = aliases.Last().Item5;
-                    _aliasHolder.SetAliases(aliases.Select(alias => new AliasInfo { Path = alias.Item1, Area = alias.Item2, RouteValues = alias.Item3 }));
+                    _aliasHolder.SetAliases(aliases.Select(alias => new AliasInfo { Path = alias.Item1, Area = alias.Item2, RouteValues = alias.Item3, IsManaged = alias.Item6 }));
                 }
             }
             catch (Exception ex) {
@@ -44,13 +44,13 @@ namespace Orchard.Alias.Implementation.Updater {
     }
 
     public class AliasUpdaterEvent : IOrchardShellEvents {
-        
+
         private readonly IAliasHolderUpdater _aliasHolderUpdater;
 
         public AliasUpdaterEvent(IAliasHolderUpdater aliasHolderUpdater) {
             _aliasHolderUpdater = aliasHolderUpdater;
         }
-        
+
         void IOrchardShellEvents.Activated() {
             _aliasHolderUpdater.Refresh();
         }

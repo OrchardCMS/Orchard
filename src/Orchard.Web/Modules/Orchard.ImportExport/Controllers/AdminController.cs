@@ -1,34 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Web.Mvc;
-using Orchard.ContentManagement.MetaData;
+using Orchard.ContentManagement;
+using Orchard.ImportExport.Models;
 using Orchard.ImportExport.Services;
 using Orchard.ImportExport.ViewModels;
 using Orchard.Localization;
 using Orchard.Recipes.Services;
-using Orchard.UI.Notify;
-using Orchard.ImportExport.Models;
-using Orchard.Utility.Extensions;
 
 namespace Orchard.ImportExport.Controllers {
-    public class AdminController : Controller {
+    public class AdminController : Controller, IUpdateModel {
         private readonly IImportExportService _importExportService;
-        private readonly IContentDefinitionManager _contentDefinitionManager;
-        private readonly ICustomExportStep _customExportStep;
         private readonly IRecipeResultAccessor _recipeResultAccessor;
+        private readonly IEnumerable<IExportAction> _exportActions;
+        private readonly IEnumerable<IImportAction> _importActions;
+        private readonly IRecipeParser _recipeParser;
 
         public AdminController(
             IOrchardServices services, 
-            IImportExportService importExportService, 
-            IContentDefinitionManager contentDefinitionManager,
-            ICustomExportStep customExportStep,
-            IRecipeResultAccessor recipeResultAccessor) {
+            IImportExportService importExportService,
+            IRecipeResultAccessor recipeResultAccessor,
+            IEnumerable<IExportAction> exportActions,
+            IEnumerable<IImportAction> importActions,
+            IRecipeParser recipeParser) {
+
             _importExportService = importExportService;
-            _contentDefinitionManager = contentDefinitionManager;
-            _customExportStep = customExportStep;
             _recipeResultAccessor = recipeResultAccessor;
+            _exportActions = exportActions;
+            _importActions = importActions;
+            _recipeParser = recipeParser;
             Services = services;
             T = NullLocalizer.Instance;
         }
@@ -37,7 +38,13 @@ namespace Orchard.ImportExport.Controllers {
         public Localizer T { get; set; }
 
         public ActionResult Import() {
-            var viewModel = new ImportViewModel();
+            var actions = _importActions.OrderByDescending(x => x.Priority).Select(x => new ImportActionViewModel {
+                Editor = x.BuildEditor(Services.New)
+            }).Where(x => x != null).ToList();
+
+            var viewModel = new ImportViewModel {
+                Actions = actions
+            };
 
             return View(viewModel);
         }
@@ -47,17 +54,23 @@ namespace Orchard.ImportExport.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.Import, T("Not allowed to import.")))
                 return new HttpUnauthorizedResult();
 
-            if (String.IsNullOrEmpty(Request.Files["RecipeFile"].FileName)) {
-                ModelState.AddModelError("RecipeFile", T("Please choose a recipe file to import.").Text);
-                Services.Notifier.Error(T("Please choose a recipe file to import."));
+            var actions = _importActions.OrderByDescending(x => x.Priority).ToList();
+            var viewModel = new ImportViewModel {
+                Actions = actions.Select(x => new ImportActionViewModel {
+                    Editor = x.UpdateEditor(Services.New, this)
+                }).Where(x => x != null).ToList()
+            };
+
+            if (!ModelState.IsValid) {
+                return View(viewModel);
             }
 
-            if (ModelState.IsValid) {
-                var executionId = _importExportService.Import(new StreamReader(Request.Files["RecipeFile"].InputStream).ReadToEnd());
-                return RedirectToAction("ImportResult", new { executionId = executionId });
-            }
+            var context = new ImportActionContext();
+            var executionId = _importExportService.Import(context, actions);
 
-            return View(new ImportViewModel());
+            return !String.IsNullOrEmpty(executionId)
+                ? RedirectToAction("ImportResult", new { executionId = context.ExecutionId })
+                : RedirectToAction("Import");
         }
 
         public ActionResult ImportResult(string executionId) {
@@ -71,59 +84,45 @@ namespace Orchard.ImportExport.Controllers {
         }
 
         public ActionResult Export() {
-            var customSteps = new List<string>();
-            _customExportStep.Register(customSteps);
+            var actions = _exportActions.OrderByDescending(x => x.Priority).Select(x => new ExportActionViewModel {
+                Editor = x.BuildEditor(Services.New)
+            }).Where(x => x != null).ToList();
 
             var viewModel = new ExportViewModel {
-                RecipeVersion = "1.0",
-                ContentTypes = new List<ContentTypeEntry>(),
-                CustomSteps = customSteps.Select(x => new CustomStepEntry { CustomStep = x }).ToList()
+                Actions = actions
             };
-
-            foreach (var contentType in _contentDefinitionManager.ListTypeDefinitions().OrderBy(c => c.Name)) {
-                viewModel.ContentTypes.Add(new ContentTypeEntry { ContentTypeName = contentType.Name });
-            }
 
             return View(viewModel);
         }
 
         [HttpPost, ActionName("Export")]
-        public ActionResult ExportPOST() {
+        public ActionResult ExportPOST(ExportViewModel viewModel) {
             if (!Services.Authorizer.Authorize(Permissions.Export, T("Not allowed to export.")))
                 return new HttpUnauthorizedResult();
 
-            var viewModel = new ExportViewModel {
-                ContentTypes = new List<ContentTypeEntry>(),
-                CustomSteps = new List<CustomStepEntry>()
-            };
+            var actions = _exportActions.OrderByDescending(x => x.Priority).ToList();
 
-            UpdateModel(viewModel);
-            var contentTypesToExport = viewModel.ContentTypes.Where(c => c.IsChecked).Select(c => c.ContentTypeName).ToList();
-            var customSteps = viewModel.CustomSteps.Where(c => c.IsChecked).Select(c => c.CustomStep);
-            
-            var exportOptions = new ExportOptions {
-                ExportMetadata = viewModel.Metadata, 
-                ExportSiteSettings = viewModel.SiteSettings,
-                SetupRecipe = viewModel.SetupRecipe,
-                RecipeName = viewModel.RecipeName,
-                RecipeDescription = viewModel.RecipeDescription,
-                RecipeWebsite = viewModel.RecipeWebsite,
-                RecipeTags = viewModel.RecipeTags,
-                RecipeVersion = viewModel.RecipeVersion,
-                CustomSteps = customSteps
-            };
-
-            if (viewModel.Data) {
-                exportOptions.ExportData = true;
-                exportOptions.VersionHistoryOptions = (VersionHistoryOptions)Enum.Parse(typeof(VersionHistoryOptions), viewModel.DataImportChoice, true);
-                exportOptions.ImportBatchSize = viewModel.ImportBatchSize;
+            foreach (var action in actions) {
+                action.UpdateEditor(Services.New, this);
             }
-            var exportFilePath = _importExportService.Export(contentTypesToExport, exportOptions);
-            var exportFileName = exportOptions.SetupRecipe && !String.IsNullOrWhiteSpace(exportOptions.RecipeName)
-                ? String.Format("{0}.recipe.xml", exportOptions.RecipeName.HtmlClassify())
-                : "export.xml";
+            
+            var exportActionContext = new ExportActionContext();
+            _importExportService.Export(exportActionContext, actions);
+
+            var recipeDocument = exportActionContext.RecipeDocument;
+            var exportFilePath = _importExportService.WriteExportFile(recipeDocument);
+            var recipe = _recipeParser.ParseRecipe(recipeDocument);
+            var exportFileName = recipe.GetExportFileName();
 
             return File(exportFilePath, "text/xml", exportFileName);
+        }
+
+        bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
+            return TryUpdateModel(model, prefix, includeProperties, excludeProperties);
+        }
+
+        void IUpdateModel.AddModelError(string key, LocalizedString errorMessage) {
+            ModelState.AddModelError(key, errorMessage.ToString());
         }
     }
 }

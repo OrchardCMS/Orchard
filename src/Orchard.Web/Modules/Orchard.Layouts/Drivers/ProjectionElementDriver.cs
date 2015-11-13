@@ -290,15 +290,15 @@ namespace Orchard.Layouts.Drivers {
             var query = element.QueryId != null ? _contentManager.Get<QueryPart>(element.QueryId.Value) : default(QueryPart);
             var layout = query != null && element.LayoutId != null ? _layoutRepository.Get(element.LayoutId.Value) : default(LayoutRecord);
             var queryIdentity = query != null ? _contentManager.GetItemMetadata(query).Identity.ToString() : default(string);
-            var layoutIndex = layout != null ? query.Layouts.IndexOf(layout) : default(int?);
+            var layoutIndex = layout != null ? query.Layouts.IndexOf(layout) : -1; // -1 is the Default Layout.
 
-            if (queryIdentity != null && layoutIndex != null) {
+            if (queryIdentity != null) {
                 context.ExportableData["QueryId"] = queryIdentity;
-                context.ExportableData["LayoutIndex"] = layoutIndex.Value.ToString();
+                context.ExportableData["LayoutIndex"] = layoutIndex.ToString();
             }
         }
 
-        protected override void OnImporting(Projection element, ImportElementContext context) {
+        protected override void OnImportCompleted(Projection element, ImportElementContext context) {
             var queryIdentity = context.ExportableData.Get("QueryId");
             var query = queryIdentity != null ? context.Session.GetItemFromSession(queryIdentity) : default(ContentManagement.ContentItem);
 
@@ -307,10 +307,9 @@ namespace Orchard.Layouts.Drivers {
 
             var queryPart = query.As<QueryPart>();
             var layoutIndex = XmlHelper.Parse<int>(context.ExportableData.Get("LayoutIndex"));
-            var layout = queryPart.Layouts[layoutIndex];
 
             element.QueryId = queryPart.Id;
-            element.LayoutId = layout.Id;
+            element.LayoutId = layoutIndex != -1 ? queryPart.Layouts[layoutIndex].Id : -1;
         }
 
         private static string GetLayoutDescription(IEnumerable<LayoutDescriptor> layouts, LayoutRecord l) {

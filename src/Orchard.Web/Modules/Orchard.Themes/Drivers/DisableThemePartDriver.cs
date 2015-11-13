@@ -1,6 +1,7 @@
-﻿using System.Web;
+using System.Web;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Themes.Models;
+using Orchard.UI.Admin;
 
 namespace Orchard.Themes.Drivers {
     public class DisableThemePartDriver : ContentPartDriver<DisableThemePart> {
@@ -11,6 +12,9 @@ namespace Orchard.Themes.Drivers {
         }
 
         protected override DriverResult Display(DisableThemePart part, string displayType, dynamic shapeHelper) {
+            if (AdminFilter.IsApplied(_httpContext.Request.RequestContext)) {
+                return null;
+            }
             return ContentShape("Parts_DisableTheme", () => {
                 ThemeFilter.Disable(_httpContext.Request.RequestContext);
                 return null;

@@ -1,5 +1,4 @@
 ﻿(function ($) {
-
     var LayoutDesignerHost = function (element) {
         var self = this;
         this.element = element;
@@ -13,12 +12,7 @@
             confirmDeletePrompt: self.element.data("confirm-delete-prompt"),
             displayType: self.element.data("display-type"),
             endpoints: {
-                render: self.element.data("render-url"),
                 edit: self.element.data("edit-url"),
-                add: self.element.data("add-url"),
-                addDirect: self.element.data("add-direct-url"),
-                settings: self.element.data("settings-url"),
-                browse: self.element.data("element-browser-url"),
                 applyTemplate: self.element.data("apply-template-url")
             },
             domOperations: {
@@ -125,5 +119,16 @@
 
     $(function () {
         var host = new LayoutDesignerHost($(".layout-designer"));
+        $(".layout-designer").each(function (e) {
+            var designer = $(this);
+            var dialog = designer.find(".layout-editor-help-dialog");
+            designer.find(".layout-editor-help-link").click(function (e) {
+                dialog.dialog({
+                    modal: true,
+                    width: 840
+                });
+                e.preventDefault();
+            });
+        });
     });
 })(jQuery);

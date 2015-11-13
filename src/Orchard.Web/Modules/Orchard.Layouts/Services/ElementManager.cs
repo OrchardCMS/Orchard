@@ -9,7 +9,7 @@ using Orchard.Layouts.Helpers;
 
 namespace Orchard.Layouts.Services {
     public class ElementManager : Component, IElementManager {
-        private readonly Lazy<IEnumerable<ElementHarvester>> _elementHarvesters;
+        private readonly Lazy<IEnumerable<IElementHarvester>> _elementHarvesters;
         private readonly ICacheManager _cacheManager;
         private readonly Lazy<IEnumerable<IElementDriver>> _drivers;
         private readonly Lazy<IEnumerable<ICategoryProvider>> _categoryProviders;
@@ -18,7 +18,7 @@ namespace Orchard.Layouts.Services {
         private readonly IElementEventHandler _elementEventHandler;
 
         public ElementManager(
-            Lazy<IEnumerable<ElementHarvester>> elementHarvesters,
+            Lazy<IEnumerable<IElementHarvester>> elementHarvesters,
             ICacheManager cacheManager,
             Lazy<IEnumerable<IElementDriver>> drivers,
             Lazy<IEnumerable<ICategoryProvider>> categoryProviders,
@@ -38,7 +38,7 @@ namespace Orchard.Layouts.Services {
         public IEnumerable<ElementDescriptor> DescribeElements(DescribeElementsContext context) {
             var contentType = context.Content != null ? context.Content.ContentItem.ContentType : default(string);
             var cacheKey = String.Format("LayoutElementTypes-{0}-{1}", contentType ?? "AnyType", context.CacheVaryParam);
-            return _cacheManager.Get(cacheKey, acquireContext => {
+            return _cacheManager.Get(cacheKey, true, acquireContext => {
                 var harvesterContext = new HarvestElementsContext {
                     Content = context.Content
                 };
@@ -55,7 +55,7 @@ namespace Orchard.Layouts.Services {
 
         public IEnumerable<CategoryDescriptor> GetCategories(DescribeElementsContext context) {
             var contentType = context.Content != null ? context.Content.ContentItem.ContentType : default(string);
-            return _cacheManager.Get(String.Format("ElementCategories-{0}-{1}", contentType ?? "AnyType", context.CacheVaryParam), acquireContext => {
+            return _cacheManager.Get(String.Format("ElementCategories-{0}-{1}", contentType ?? "AnyType", context.CacheVaryParam), true, acquireContext => {
                 var elements = DescribeElements(context);
                 var categoryDictionary = GetCategories();
                 var categoryDescriptorDictionary = new Dictionary<string, CategoryDescriptor>();
@@ -157,9 +157,22 @@ namespace Orchard.Layouts.Services {
             InvokeDriver(elements, (driver, element) => {
                 var exportElementContext = new ExportElementContext {
                     Layout = context.Layout,
-                    Element = element
+                    Element = element,
+                    ExportableData = element.ExportableData
                 };
                 driver.Exporting(exportElementContext);
+                element.ExportableData = new ElementDataDictionary(exportElementContext.ExportableData);
+            });
+        }
+
+        public void Exported(IEnumerable<Element> elements, ExportLayoutContext context) {
+            InvokeDriver(elements, (driver, element) => {
+                var exportElementContext = new ExportElementContext {
+                    Layout = context.Layout,
+                    Element = element,
+                    ExportableData = element.ExportableData
+                };
+                driver.Exported(exportElementContext);
                 element.ExportableData = new ElementDataDictionary(exportElementContext.ExportableData);
             });
         }
@@ -173,6 +186,30 @@ namespace Orchard.Layouts.Services {
                     Session = context.Session
                 };
                 driver.Importing(importElementContext);
+            });
+        }
+
+        public void Imported(IEnumerable<Element> elements, ImportLayoutContext context) {
+            InvokeDriver(elements, (driver, element) => {
+                var importElementContext = new ImportElementContext {
+                    Layout = context.Layout,
+                    Element = element,
+                    ExportableData = element.ExportableData,
+                    Session = context.Session
+                };
+                driver.Imported(importElementContext);
+            });
+        }
+
+        public void ImportCompleted(IEnumerable<Element> elements, ImportLayoutContext context) {
+            InvokeDriver(elements, (driver, element) => {
+                var importElementContext = new ImportElementContext {
+                    Layout = context.Layout,
+                    Element = element,
+                    ExportableData = element.ExportableData,
+                    Session = context.Session
+                };
+                driver.ImportCompleted(importElementContext);
             });
         }
 

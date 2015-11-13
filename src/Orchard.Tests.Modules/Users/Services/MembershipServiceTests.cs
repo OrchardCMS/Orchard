@@ -30,6 +30,7 @@ using Orchard.UI.PageClass;
 using Orchard.Users.Handlers;
 using Orchard.Users.Models;
 using Orchard.Users.Services;
+using Orchard.Tests.ContentManagement;
 using Orchard.Services;
 
 namespace Orchard.Tests.Modules.Users.Services {
@@ -41,19 +42,6 @@ namespace Orchard.Tests.Modules.Users.Services {
         private ISession _session;
         private IContainer _container;
         private StubClock _clock;
-
-        public class TestSessionLocator : ISessionLocator {
-            private readonly ISession _session;
-
-            public TestSessionLocator(ISession session) {
-                _session = session;
-            }
-
-            public ISession For(Type entityType) {
-                return _session;
-            }
-        }
-
         [TestFixtureSetUp]
         public void InitFixture() {
             var databaseFileName = System.IO.Path.GetTempFileName();
@@ -98,10 +86,17 @@ namespace Orchard.Tests.Modules.Users.Services {
             builder.RegisterType<InfosetHandler>().As<IContentHandler>();
 
             _session = _sessionFactory.OpenSession();
-            builder.RegisterInstance(new TestSessionLocator(_session)).As<ISessionLocator>();
+            builder.RegisterInstance(new TestTransactionManager(_session)).As<ITransactionManager>();
+
             _container = builder.Build();
             _membershipValidationService = _container.Resolve<IMembershipValidationService>();
             _membershipService = _container.Resolve<IMembershipService>();
+        }
+
+        [TearDown]
+        public void Cleanup() {
+            if (_container != null)
+                _container.Dispose();
         }
 
         [Test]

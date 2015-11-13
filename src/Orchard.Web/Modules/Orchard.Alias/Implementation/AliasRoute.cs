@@ -29,12 +29,13 @@ namespace Orchard.Alias.Implementation {
             var virtualPath = httpContext.Request.AppRelativeCurrentExecutionFilePath.Substring(2) + httpContext.Request.PathInfo;
 
             // Attempt to lookup RouteValues in the alias map
-            IDictionary<string, string> routeValues;
+            //IDictionary<string, string> routeValues;
+            AliasInfo aliasInfo;
             // TODO: Might as well have the lookup in AliasHolder...
-            if (_aliasMap.TryGetAlias(virtualPath, out routeValues)) {
+            if (_aliasMap.TryGetAlias(virtualPath, out aliasInfo)) {
                 // Construct RouteData from the route values
                 var data = new RouteData(this, _routeHandler);
-                foreach (var routeValue in routeValues) {
+                foreach (var routeValue in aliasInfo.RouteValues) {
                     var key = routeValue.Key;
                     if (key.EndsWith("-"))
                         data.Values.Add(key.Substring(0, key.Length - 1), routeValue.Value);

@@ -117,8 +117,7 @@ namespace Orchard.Modules.Controllers {
                 return new HttpUnauthorizedResult();
 
             IEnumerable<ModuleEntry> modules = _extensionManager.AvailableExtensions()
-                .Where(extensionDescriptor => DefaultExtensionTypes.IsModule(extensionDescriptor.ExtensionType))
-                .Where(extensionDescriptor => ModuleIsAllowed(extensionDescriptor))
+                .Where(extensionDescriptor => ExtensionIsAllowed(extensionDescriptor))
                 .OrderBy(extensionDescriptor => extensionDescriptor.Name)
                 .Select(extensionDescriptor => new ModuleEntry { Descriptor = extensionDescriptor });
 
@@ -143,7 +142,7 @@ namespace Orchard.Modules.Controllers {
                 return new HttpUnauthorizedResult();
 
             ModuleEntry module = _extensionManager.AvailableExtensions()
-                .Where(extensionDescriptor => extensionDescriptor.Id == moduleId && ModuleIsAllowed(extensionDescriptor))
+                .Where(extensionDescriptor => extensionDescriptor.Id == moduleId && ExtensionIsAllowed(extensionDescriptor))
                 .Select(extensionDescriptor => new ModuleEntry { Descriptor = extensionDescriptor }).FirstOrDefault();
 
             if (module == null) {
@@ -188,7 +187,7 @@ namespace Orchard.Modules.Controllers {
 
             return View(new FeaturesViewModel { 
                 Features = features,
-                IsAllowed = ModuleIsAllowed
+                IsAllowed = ExtensionIsAllowed
             });
         }
 
@@ -204,7 +203,7 @@ namespace Orchard.Modules.Controllers {
             }
 
             if (ModelState.IsValid) {
-                var availableFeatures = _moduleService.GetAvailableFeatures().Where(feature => ModuleIsAllowed(feature.Descriptor.Extension)).ToList();
+                var availableFeatures = _moduleService.GetAvailableFeatures().Where(feature => ExtensionIsAllowed(feature.Descriptor.Extension)).ToList();
                 var selectedFeatures = availableFeatures.Where(x => featureIds.Contains(x.Descriptor.Id)).ToList();
                 var enabledFeatures = availableFeatures.Where(x => x.IsEnabled && featureIds.Contains(x.Descriptor.Id)).Select(x => x.Descriptor.Id).ToList();
                 var disabledFeatures = availableFeatures.Where(x => !x.IsEnabled && featureIds.Contains(x.Descriptor.Id)).Select(x => x.Descriptor.Id).ToList();
@@ -248,7 +247,7 @@ namespace Orchard.Modules.Controllers {
         /// <summary>
         /// Checks whether the module is allowed for the current tenant
         /// </summary>
-        private bool ModuleIsAllowed(ExtensionDescriptor extensionDescriptor) {
+        private bool ExtensionIsAllowed(ExtensionDescriptor extensionDescriptor) {
             return _shellSettings.Modules.Length == 0 || _shellSettings.Modules.Contains(extensionDescriptor.Id);
         }
     }

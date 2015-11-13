@@ -12,7 +12,24 @@ using Orchard.Logging;
 using Orchard.Security;
 
 namespace Orchard.Data {
-    public class SessionLocator : ISessionLocator, ITransactionManager, IDisposable {
+
+    public class SessionLocator : ISessionLocator {
+        private readonly ITransactionManager _transactionManager;
+
+        public SessionLocator(ITransactionManager transactionManager) {
+            _transactionManager = transactionManager;
+            Logger = NullLogger.Instance;
+        }
+
+        public ILogger Logger { get; set; }
+
+        public ISession For(Type entityType) {
+            Logger.Debug("Acquiring session for {0}", entityType);
+            return _transactionManager.GetSession();
+        }
+    }
+
+    public class TransactionManager : ITransactionManager, IDisposable {
         private readonly ISessionFactoryHolder _sessionFactoryHolder;
         private readonly IEnumerable<ISessionInterceptor> _interceptors;
         private Func<IContentManagerSession> _contentManagerSessionFactory;
@@ -20,7 +37,7 @@ namespace Orchard.Data {
         private ISession _session;
         private IContentManagerSession _contentManagerSession;
 
-        public SessionLocator(
+        public TransactionManager(
             ISessionFactoryHolder sessionFactoryHolder,
             Func<IContentManagerSession> contentManagerSessionFactory,
             IEnumerable<ISessionInterceptor> interceptors) {
@@ -35,13 +52,10 @@ namespace Orchard.Data {
         public ILogger Logger { get; set; }
         public IsolationLevel IsolationLevel { get; set; }
 
-        public ISession For(Type entityType) {
-            Logger.Debug("Acquiring session for {0}", entityType);
+        public ISession GetSession() {
             Demand();
-
             return _session;
         }
-
         public void Demand() {
             EnsureSession(IsolationLevel);
         }
@@ -56,9 +70,11 @@ namespace Orchard.Data {
         }
 
         public void Cancel() {
-            if (_session!= null && !_session.Transaction.WasRolledBack && _session.Transaction.IsActive) {
+            // IsActive is true if the transaction hasn't been committed or rolled back
+            if (_session != null && _session.Transaction.IsActive) {
                 Logger.Debug("Rolling back transaction");
                 _session.Transaction.Rollback();
+                DisposeSession();
             }
         }
 
@@ -70,7 +86,8 @@ namespace Orchard.Data {
             if (_session != null) {
 
                 try {
-                    if (!_session.Transaction.WasRolledBack && _session.Transaction.IsActive) {
+                    // IsActive is true if the transaction hasn't been committed or rolled back
+                    if (_session.Transaction.IsActive) {
                         Logger.Debug("Committing transaction");
                         _session.Transaction.Commit();
                     }
