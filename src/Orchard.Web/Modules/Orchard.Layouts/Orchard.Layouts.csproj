@@ -366,10 +366,17 @@
     <Compile Include="Helpers\ObjectStoreHelper.cs" />
     <Compile Include="Helpers\PrefixHelper.cs" />
     <Compile Include="Helpers\JsonHelper.cs" />
+    <Compile Include="Helpers\SnippetHtmlExtensions.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
     <Compile Include="Permissions.cs" />
+    <Compile Include="Services\ICurrentThemeShapeBindingResolver.cs" />
+    <Compile Include="Services\CurrentThemeShapeBindingResolver.cs" />
     <Compile Include="Providers\PlaceableContentElementHarvester.cs" />
     <Compile Include="Elements\RecycleBin.cs" />
+    <Compile Include="Models\SnippetDescriptor.cs" />
+    <Compile Include="Models\SnippetFieldDescriptor.cs" />
+    <Compile Include="ViewModels\SnippetViewModel.cs" />
+    <Compile Include="ViewModels\SnippetFieldViewModel.cs" />
     <Compile Include="ViewModels\PlaceableContentItemViewModel.cs" />
     <Compile Include="Recipes\Builders\CustomElementsStep.cs" />
     <Compile Include="Recipes\Executors\CustomElementsStep.cs" />
@@ -607,6 +614,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EditorTemplates\Elements.PlaceableContentItem.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Elements.Snippet.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Elements.Snippet.Field.Text.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
