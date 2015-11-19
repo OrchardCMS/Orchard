@@ -217,7 +217,7 @@ namespace Orchard.Tests.Mvc.Html {
             var html = new HtmlHelper(viewContext, viewDataContainer.Object);
 
             //act
-            var result = html.Excerpt("<p>foo &amp; bar</p>", 5);
+            var result = html.Excerpt("<p>foo &amp; bar</p>", 7);
 
             //assert
             Assert.AreEqual("foo &amp;&#160;\u2026", result.ToString());
