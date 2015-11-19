@@ -1,0 +1,17 @@
+﻿Name: Resources
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardproject.net
+Version: 1.0
+OrchardVersion: 1.9
+Description: Provides a variety of client script libraries used for the Orchard dashboard.
+Features:
+    Orchard.Resources:
+        Name: Resources
+        Description: Provides a variety of client script libraries used for the Orchard dashboard.
+        Category: Core
+    Orchard.Resources.jQuery:
+        Name: jQuery
+        Description: Provides the jQuery and jQuery related libraries.
+        Category: Core
+        Dependencies: Orchard.Resources
