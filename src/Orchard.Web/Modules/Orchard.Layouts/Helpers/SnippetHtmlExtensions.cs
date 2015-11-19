@@ -36,7 +36,7 @@ namespace Orchard.Layouts.Helpers {
                 return this;
             }
 
-            public SnippetFieldDescriptorBuilder WithDisplayName(LocalizedString value) {
+            public SnippetFieldDescriptorBuilder DisplayedAs(LocalizedString value) {
                 Descriptor.DisplayName = value;
                 return this;
             }
