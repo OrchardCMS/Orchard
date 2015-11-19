@@ -30,9 +30,7 @@ namespace Orchard.Layouts.Providers {
             return contentTypeDefinitions.Select(contentTypeDefinition => {
                 var settings = contentTypeDefinition.Settings;
                 var description = settings.ContainsKey("Description") ? settings["Description"] : contentTypeDefinition.DisplayName;
-                var stereotype = settings.ContainsKey("Stereotype") ? settings["Stereotype"] : default(string);
-                var category = GetCategoryFromStereotype(stereotype);
-                return new ElementDescriptor(typeof (PlaceableContentItem), contentTypeDefinition.Name, T(contentTypeDefinition.DisplayName), T(description), category) {
+                return new ElementDescriptor(typeof (PlaceableContentItem), contentTypeDefinition.Name, T(contentTypeDefinition.DisplayName), T(description), category: "Content Items") {
                     Displaying = Displaying,
                     Editor = Editor,
                     UpdateEditor = UpdateEditor,
@@ -112,18 +110,11 @@ namespace Orchard.Layouts.Providers {
             }
 
             var elementEditorShape = context.ShapeFactory.EditorTemplate(TemplateName: "Elements.PlaceableContentItem", Model: elementViewModel, Prefix: context.Prefix);
-            var editorWrapper = context.ShapeFactory.PlacedContentElementEditor(ContentItem: contentItem);
-            var stereotype = contentItem.TypeDefinition.Settings.ContainsKey("Stereotype") ? contentItem.TypeDefinition.Settings["Stereotype"] : default(string);
-
-            if(!String.IsNullOrWhiteSpace(stereotype))
-                editorWrapper.Metadata.Alternates.Add(String.Format("PlacedContentElementEditor__{0}", stereotype));
-
-            editorWrapper.Metadata.Position = "Properties:0";
+            
             elementEditorShape.Metadata.Position = "Properties:0";
             contentEditorShape.Metadata.Position = "Properties:0";
             context.EditorResult.Add(elementEditorShape);
             context.EditorResult.Add(contentEditorShape);
-            context.EditorResult.Add(editorWrapper);
         }
 
         private void RemoveContentItem(ElementRemovingContext context) {
@@ -171,23 +162,13 @@ namespace Orchard.Layouts.Providers {
         }
 
         private IEnumerable<ContentTypeDefinition> GetPlaceableContentTypeDefinitions() {
-            // Select all types that have either "Placeable" set ot true or the "Widget" stereotype.
+            // Select all types that have either "Placeable" set to true.
             var contentTypeDefinitionsQuery =
                 from contentTypeDefinition in _contentManager.Value.GetContentTypeDefinitions()
-                let stereotype = contentTypeDefinition.Settings.ContainsKey("Stereotype") ? contentTypeDefinition.Settings["Stereotype"] : default(string)
-                where contentTypeDefinition.Settings.GetModel<ContentTypeLayoutSettings>().Placeable || stereotype == "Widget"
+                where contentTypeDefinition.Settings.GetModel<ContentTypeLayoutSettings>().Placeable
                 select contentTypeDefinition;
 
             return contentTypeDefinitionsQuery.ToList();
-        }
-
-        private string GetCategoryFromStereotype(string stereotype) {
-            switch (stereotype) {
-                case "Widget":
-                    return "Widgets";
-                default:
-                    return "Content Items";
-            }
         }
     }
 }

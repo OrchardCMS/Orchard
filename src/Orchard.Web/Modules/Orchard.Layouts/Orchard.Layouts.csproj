@@ -86,7 +86,6 @@
     <Content Include="Images\illustration.jpg" />
     <Content Include="Images\logo.svg" />
     <Content Include="Placement.info" />
-    <Content Include="Scripts\placeable-widget-editor.js" />
     <Content Include="Scripts\element-browser.js" />
     <Content Include="Scripts\AutoFocus.js" />
     <Content Include="Scripts\Elements\Image.js" />
@@ -291,6 +290,10 @@
       <Project>{66fccd76-2761-47e3-8d11-b45d0001ddaa}</Project>
       <Name>Orchard.Autoroute</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Orchard.Conditions\Orchard.Conditions.csproj">
+      <Project>{98251eae-a41b-47b2-aa91-e28b8482da70}</Project>
+      <Name>Orchard.Conditions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Orchard.Forms\Orchard.Forms.csproj">
       <Project>{642a49d7-8752-4177-80d6-bfbbcfad3de0}</Project>
       <Name>Orchard.Forms</Name>
@@ -311,10 +314,6 @@
     <ProjectReference Include="..\Orchard.Tokens\Orchard.Tokens.csproj">
       <Project>{6f759635-13d7-4e94-bcc9-80445d63f117}</Project>
       <Name>Orchard.Tokens</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Orchard.Widgets\Orchard.Widgets.csproj">
-      <Project>{194d3ccc-1153-474d-8176-fde8d7d0d0bd}</Project>
-      <Name>Orchard.Widgets</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -360,7 +359,6 @@
     <Compile Include="Framework\Elements\IElement.cs" />
     <Compile Include="Handlers\ElementDriversCoordinator.cs" />
     <Compile Include="Handlers\ElementRuleCoordinator.cs" />
-    <Compile Include="Handlers\WidgetPartHandler.cs" />
     <Compile Include="Helpers\PlaceableContentExtensions.cs" />
     <Compile Include="Helpers\DictionaryExtensions.cs" />
     <Compile Include="Helpers\EditorResultExtensions.cs" />
@@ -606,12 +604,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\DefinitionTemplates\ContentTypeLayoutSettings.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\PlacedContentElementEditor.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\PlacedContentElementEditor-Widget.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EditorTemplates\Elements.PlaceableContentItem.cshtml" />

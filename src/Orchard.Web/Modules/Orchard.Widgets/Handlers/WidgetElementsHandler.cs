@@ -1,15 +1,16 @@
 ﻿using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.Handlers;
+using Orchard.Environment.Extensions;
 using Orchard.Layouts.Helpers;
-using Orchard.Layouts.Models;
 using Orchard.Widgets.Models;
 
-namespace Orchard.Layouts.Handlers {
-    public class WidgetPartHandler : ContentHandler {
+namespace Orchard.Widgets.Handlers {
+    [OrchardFeature("Orchard.Widgets.Elements")]
+    public class WidgetElementsHandler : ContentHandler {
         private readonly IOrchardServices _orchardServices;
 
-        public WidgetPartHandler(IOrchardServices orchardServices) {
+        public WidgetElementsHandler(IOrchardServices orchardServices) {
             _orchardServices = orchardServices;
             OnUpdated<WidgetPart>(PostProcessPlacedWidget);
         }
