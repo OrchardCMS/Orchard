@@ -52,7 +52,7 @@ namespace Orchard.Tests.Utility.Extensions {
         [Test]
         public void Ellipsize_LongStringTruncatedToNearestWord() {
             const string toEllipsize = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sed purus quis purus orci aliquam.";
-            Assert.That(toEllipsize.Ellipsize(46), Is.StringMatching("Lorem ipsum dolor sit amet, consectetur …"));
+            Assert.That(toEllipsize.Ellipsize(46), Is.StringMatching("Lorem ipsum dolor sit amet, consectetur\u00A0\u2026"));
         }
 
         [Test]
