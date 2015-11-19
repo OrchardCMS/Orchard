@@ -17,18 +17,18 @@
 </fieldset>
 <fieldset>
     @Html.LabelFor(widget => widget.Title, T("Title"))
-    @Html.TextBoxFor(widget => widget.Title, new { @class = "text medium" })
+    @Html.TextBoxFor(widget => widget.Title, new { @class = "text large" })
     <span class="hint">@T("The title of the Widget.")</span>
     @Html.EditorFor(widget => widget.RenderTitle)
     <label class="forcheckbox" for="@Html.FieldIdFor(m => m.RenderTitle)">@T("Check to render the title on the front-end, uncheck to hide")</label>
 </fieldset>
 <fieldset>
     @Html.LabelFor(widget => widget.Name, T("Name"))
-    @Html.TextBoxFor(widget => widget.Name, new { @class = "text" })
+    @Html.TextBoxFor(widget => widget.Name, new { @class = "text large" })
     <span class="hint">@T("The technical name of the Widget, used for css class and alternates.")</span>
 </fieldset>
 <fieldset>
     @Html.LabelFor(widget => widget.CssClasses, T("Css classes"))
-    @Html.TextBoxFor(widget => widget.CssClasses, new { @class = "text medium" })
+    @Html.TextBoxFor(widget => widget.CssClasses, new { @class = "text large" })
     <span class="hint">@T("Add custom css classes for the widget separated by spaces.")</span>
 </fieldset>

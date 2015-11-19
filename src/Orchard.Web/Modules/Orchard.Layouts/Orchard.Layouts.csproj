@@ -79,15 +79,13 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\JavaScript\Models\RecycleBin.js" />
     <Content Include="Default.html" />
     <Content Include="Assets.json" />
     <Content Include="Images\azure.png" />
     <Content Include="Images\illustration.jpg" />
     <Content Include="Images\logo.svg" />
     <Content Include="Placement.info" />
-    <Content Include="Scripts\contentpart-layouts-settings.js" />
-    <Content Include="Scripts\DemoConfig.js" />
-    <Content Include="Scripts\DemoData.js" />
     <Content Include="Scripts\element-browser.js" />
     <Content Include="Scripts\AutoFocus.js" />
     <Content Include="Scripts\Elements\Image.js" />
@@ -292,6 +290,10 @@
       <Project>{66fccd76-2761-47e3-8d11-b45d0001ddaa}</Project>
       <Name>Orchard.Autoroute</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Orchard.Conditions\Orchard.Conditions.csproj">
+      <Project>{98251eae-a41b-47b2-aa91-e28b8482da70}</Project>
+      <Name>Orchard.Conditions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Orchard.Forms\Orchard.Forms.csproj">
       <Project>{642a49d7-8752-4177-80d6-bfbbcfad3de0}</Project>
       <Name>Orchard.Forms</Name>
@@ -312,10 +314,6 @@
     <ProjectReference Include="..\Orchard.Tokens\Orchard.Tokens.csproj">
       <Project>{6f759635-13d7-4e94-bcc9-80445d63f117}</Project>
       <Name>Orchard.Tokens</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Orchard.Widgets\Orchard.Widgets.csproj">
-      <Project>{194d3ccc-1153-474d-8176-fde8d7d0d0bd}</Project>
-      <Name>Orchard.Widgets</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -338,6 +336,7 @@
     <Compile Include="Elements\Shape.cs" />
     <Compile Include="Elements\Break.cs" />
     <Compile Include="Elements\UIElement.cs" />
+    <Compile Include="Elements\PlaceableContentItem.cs" />
     <Compile Include="Filters\TokensFilter.cs" />
     <Compile Include="Framework\Display\ElementDisplayedContext.cs" />
     <Compile Include="Framework\Display\ElementDisplayingContext.cs" />
@@ -360,6 +359,7 @@
     <Compile Include="Framework\Elements\IElement.cs" />
     <Compile Include="Handlers\ElementDriversCoordinator.cs" />
     <Compile Include="Handlers\ElementRuleCoordinator.cs" />
+    <Compile Include="Helpers\PlaceableContentExtensions.cs" />
     <Compile Include="Helpers\DictionaryExtensions.cs" />
     <Compile Include="Helpers\EditorResultExtensions.cs" />
     <Compile Include="Helpers\ElementDisplayContextHelper.cs" />
@@ -368,6 +368,9 @@
     <Compile Include="Helpers\JsonHelper.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
     <Compile Include="Permissions.cs" />
+    <Compile Include="Providers\PlaceableContentElementHarvester.cs" />
+    <Compile Include="Elements\RecycleBin.cs" />
+    <Compile Include="ViewModels\PlaceableContentItemViewModel.cs" />
     <Compile Include="Recipes\Builders\CustomElementsStep.cs" />
     <Compile Include="Recipes\Executors\CustomElementsStep.cs" />
     <Compile Include="Providers\BlueprintElementHarvester.cs" />
@@ -393,6 +396,8 @@
     <Compile Include="Services\LayoutModelMapper.cs" />
     <Compile Include="Services\ElementSerializer.cs" />
     <Compile Include="Services\ObjectStore.cs" />
+    <Compile Include="Settings\ContentTypeLayoutSettingsHooks.cs" />
+    <Compile Include="Settings\ContentTypeLayoutSettings.cs" />
     <Compile Include="Signals.cs" />
     <Compile Include="Tokens\ElementTokens.cs" />
     <Compile Include="ViewModels\BreadcrumbsEditorViewModel.cs" />
@@ -429,9 +434,9 @@
     <Compile Include="Services\ContentFieldDisplay.cs" />
     <Compile Include="Services\IContentFieldDisplay.cs" />
     <Compile Include="Settings\ContentPartLayoutSettings.cs" />
-    <Compile Include="Settings\LayoutSettingsHooks.cs" />
+    <Compile Include="Settings\LayoutTypePartSettingsHooks.cs" />
     <Compile Include="Settings\LayoutTypePartSettings.cs" />
-    <Compile Include="Settings\ContentPartSettingsHooks.cs" />
+    <Compile Include="Settings\ContentPartLayoutSettingsHooks.cs" />
     <Compile Include="ViewModels\BlueprintsIndexViewModel.cs" />
     <Compile Include="ViewModels\ContentItemEditorViewModel.cs" />
     <Compile Include="ViewModels\EditElementBlueprintViewModel.cs" />
@@ -590,6 +595,18 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assets\CSS\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\PlaceableContentItem.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\PlaceableContentItem.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\DefinitionTemplates\ContentTypeLayoutSettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Elements.PlaceableContentItem.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

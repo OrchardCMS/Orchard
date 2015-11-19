@@ -7,7 +7,7 @@ using Orchard.ContentManagement.ViewModels;
 using Orchard.Layouts.Helpers;
 
 namespace Orchard.Layouts.Settings {
-    public class ContentPartSettingsHooks : ContentDefinitionEditorEventsBase {
+    public class ContentPartLayoutSettingsHooks : ContentDefinitionEditorEventsBase {
 
         public override IEnumerable<TemplateViewModel> PartEditor(ContentPartDefinition definition) {
             var model = definition.Settings.GetModel<ContentPartLayoutSettings>();

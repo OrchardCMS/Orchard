@@ -8,11 +8,11 @@ using Orchard.ContentManagement.ViewModels;
 using Orchard.Layouts.Services;
 
 namespace Orchard.Layouts.Settings {
-    public class LayoutSettingsHooks : ContentDefinitionEditorEventsBase {
+    public class LayoutTypePartSettingsHooks : ContentDefinitionEditorEventsBase {
         private readonly ILayoutSerializer _serializer;
         private readonly ILayoutManager _layoutManager;
 
-        public LayoutSettingsHooks(ILayoutSerializer serializer, ILayoutManager layoutManager) {
+        public LayoutTypePartSettingsHooks(ILayoutSerializer serializer, ILayoutManager layoutManager) {
             _serializer = serializer;
             _layoutManager = layoutManager;
         }

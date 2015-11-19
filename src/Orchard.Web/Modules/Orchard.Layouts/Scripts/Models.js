@@ -58,6 +58,7 @@ var LayoutEditor;
         this.dropTargetElement = null;
         this.isDragging = false;
         this.isResizing = false;
+        this.recycleBin = new LayoutEditor.RecycleBin();
 
         this.resetToolboxElements = function () {
             this.toolboxElements = [
@@ -74,6 +75,34 @@ var LayoutEditor;
 
         this.resetToolboxElements();
         this.canvas.setEditor(this);
+    };
+
+})(LayoutEditor || (LayoutEditor = {}));
+
+var LayoutEditor;
+(function (LayoutEditor) {
+
+    LayoutEditor.RecycleBin = function () {
+        this.elements = [];
+
+        this.add = function(element) {
+            this.elements.push(element);
+        };
+
+        this.toObject = function () {
+            var result = {
+                type: "RecycleBin",
+                children: []
+            };
+
+            for (var i = 0; i < this.elements.length; i++) {
+                var element = this.elements[i];
+                var dto = element.toObject();
+                result.children.push(dto);
+            }
+
+            return result;
+        };
     };
 
 })(LayoutEditor || (LayoutEditor = {}));
@@ -154,9 +183,9 @@ var LayoutEditor;
 
         this.setIsFocused = function () {
             if (!this.editor)
-            	return;
+                return;
             if (!this.children && this.isTemplated)
-            	return;
+                return;
             if (this.editor.isDragging || this.editor.isResizing)
                 return;
 
@@ -208,7 +237,7 @@ var LayoutEditor;
         this.delete = function () {
             if (!this.canDelete())
                 return;
-            this.parent.deleteChild(this);
+                this.parent.deleteChild(this);
         };
 
         this.canMoveUp = function () {
@@ -220,7 +249,7 @@ var LayoutEditor;
         this.moveUp = function () {
             if (!this.canMoveUp())
                 return;
-            this.parent.moveChildUp(this);
+                this.parent.moveChildUp(this);
         };
 
         this.canMoveDown = function () {
@@ -232,7 +261,7 @@ var LayoutEditor;
         this.moveDown = function () {
             if (!this.canMoveDown())
                 return;
-            this.parent.moveChildDown(this);
+                this.parent.moveChildDown(this);
         };
 
         this.elementToObject = function () {
@@ -262,8 +291,8 @@ var LayoutEditor;
 
         this.cut = function (clipboardData) {
             if (this.canDelete()) {
-                this.copy(clipboardData);
-                this.delete();
+            this.copy(clipboardData);
+            this.delete();
             }
         };
 
@@ -322,6 +351,7 @@ var LayoutEditor;
             var index = _(this.children).indexOf(child);
             if (index >= 0) {
                 this.children.splice(index, 1);
+                this.editor.recycleBin.add(child);
                 if (child.getIsActive())
                     this.editor.activeElement = null;
                 if (child.getIsFocused()) {
@@ -431,7 +461,7 @@ var LayoutEditor;
             result.children = this.childrenToObject();
             return result;
         };
-    };
+        };
 
     LayoutEditor.Canvas.from = function (value) {
         var result = new LayoutEditor.Canvas(
