@@ -35,7 +35,7 @@ namespace Orchard.Tokens.Providers {
                 // {Text.Format:<formatstring>}
                 .Token(
                     token => FilterTokenParam("Format:", token),
-                    (token, d) => String.Format(d, token))
+                    (token, d) => String.Format(token, d))
                 // {Text.TrimEnd:<chars|number>}
                 .Token(token => FilterTokenParam("TrimEnd:", token), TrimEnd)
                 .Token("UrlEncode", HttpUtility.UrlEncode)
@@ -54,7 +54,7 @@ namespace Orchard.Tokens.Providers {
             return token.StartsWith(tokenName, StringComparison.OrdinalIgnoreCase) ? token.Substring(tokenName.Length) : null;
         }
 
-        private static string TrimEnd(string token, string param) {
+        private static string TrimEnd(string param, string token) {
             if (String.IsNullOrEmpty(param)) {
                 return token;
             }
