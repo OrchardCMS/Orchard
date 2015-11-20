@@ -23,22 +23,22 @@ namespace Orchard.Mvc.ViewEngines.Razor {
         private object _display;
         private object _layout;
 
-        public Localizer T { 
+        public Localizer T {
             get {
                 // first time used, create it
-                if(_localizer == NullLocalizer.Instance) {
-                
+                if (_localizer == NullLocalizer.Instance) {
+
                     // if the Model is a shape, get localization scopes from binding sources
                     // e.g., Logon.cshtml in a theme, overriging Users/Logon.cshtml, needs T to 
                     // fallback to the one in Users
                     var shape = Model as IShape;
-                    if(shape != null && shape.Metadata.BindingSources.Count > 1) {
+                    if (shape != null && shape.Metadata.BindingSources.Count > 1) {
                         var localizers = shape.Metadata.BindingSources.Reverse().Select(scope => LocalizationUtilities.Resolve(ViewContext, scope)).ToList();
-                        _localizer = (text, args) => { 
-                            foreach(var localizer in localizers) {
+                        _localizer = (text, args) => {
+                            foreach (var localizer in localizers) {
                                 var hint = localizer(text, args);
                                 // if not localized using this scope, use next scope
-                                if(hint.Text != text) {
+                                if (hint.Text != text) {
                                     return hint;
                                 }
                             }
@@ -54,7 +54,7 @@ namespace Orchard.Mvc.ViewEngines.Razor {
                 }
 
                 return _localizer;
-            } 
+            }
         }
 
         public dynamic Display { get { return _display; } }
@@ -79,7 +79,7 @@ namespace Orchard.Mvc.ViewEngines.Razor {
         }
 
         private IAuthorizer _authorizer;
-        public IAuthorizer Authorizer { 
+        public IAuthorizer Authorizer {
             get {
                 return _authorizer ?? (_authorizer = WorkContext.Resolve<IAuthorizer>());
             }
@@ -128,7 +128,7 @@ namespace Orchard.Mvc.ViewEngines.Razor {
 
         public void SetMeta(string name = null, string content = null, string httpEquiv = null, string charset = null) {
             var metaEntry = new MetaEntry();
-            
+
             if (!String.IsNullOrEmpty(name)) {
                 metaEntry.Name = name;
             }
@@ -164,7 +164,7 @@ namespace Orchard.Mvc.ViewEngines.Razor {
             base.InitHelpers();
 
             WorkContext = ViewContext.GetWorkContext();
-            
+
             _display = DisplayHelperFactory.CreateHelper(ViewContext, this);
             _layout = WorkContext.Layout;
         }
@@ -195,6 +195,11 @@ namespace Orchard.Mvc.ViewEngines.Razor {
 
         private string _tenantPrefix;
         public override string Href(string path, params object[] pathParts) {
+            if (path.StartsWith("http://", StringComparison.OrdinalIgnoreCase)
+                || path.StartsWith("https://", StringComparison.OrdinalIgnoreCase)) {
+                return path;
+            }
+
             if (_tenantPrefix == null) {
                 _tenantPrefix = WorkContext.Resolve<ShellSettings>().RequestUrlPrefix ?? "";
             }
