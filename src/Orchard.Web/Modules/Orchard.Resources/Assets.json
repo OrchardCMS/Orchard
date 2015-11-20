@@ -220,5 +220,25 @@
     {
         "inputs": [ "Assets/Js/Colorbox/jquery.colorbox.js" ],
         "output": "Scripts/jquery.colorbox.js"
+    },
+    {
+        "inputs": [ "Assets/Js/AngularJs/angular.js" ],
+        "output": "Scripts/angular.js"
+    },
+    {
+        "inputs": [ "Assets/Js/AngularJs/angular-sanitize.js" ],
+        "output": "Scripts/angular-sanitize.js"
+    },
+    {
+        "inputs": [ "Assets/Js/AngularJs/angular-resource.js" ],
+        "output": "Scripts/angular-resource.js"
+    },
+    {
+        "inputs": [ "Assets/Js/AngularJs/sortable.js" ],
+        "output": "Scripts/angular-sortable.js"
+    },
+    {
+        "inputs": [ "Assets/Js/Underscore/underscore.js" ],
+        "output": "Scripts/underscore.js"
     }
 ]

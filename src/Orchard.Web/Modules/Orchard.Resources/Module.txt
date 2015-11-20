@@ -15,3 +15,13 @@ Features:
         Description: Provides the jQuery and jQuery related libraries.
         Category: Core
         Dependencies: Orchard.Resources
+    Orchard.Resources.AngularJs:
+        Name: AngularJs
+        Description: Provides the AngularJs and related libraries.
+        Category: Core
+        Dependencies: Orchard.Resources, Orchard.Resources.jQuery
+    Orchard.Resources.Underscore:
+        Name: Underscore
+        Description: Provides the Underscore script library.
+        Category: Core
+        Dependencies: Orchard.Resources

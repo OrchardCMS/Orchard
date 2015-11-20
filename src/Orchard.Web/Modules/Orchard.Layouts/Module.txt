@@ -10,7 +10,7 @@ Features:
     Orchard.Layouts:
         Name: Layouts
         Description: Provides tools to create layouts.
-        Dependencies: Common, Orchard.Resources.jQuery, Orchard.Forms, Orchard.Tokens, Orchard.MediaLibrary, Orchard.Conditions
+        Dependencies: Common, Orchard.Resources.jQuery, Orchard.Resources.AngularJs, Orchard.Resources.Underscore, Orchard.Forms, Orchard.Tokens, Orchard.MediaLibrary, Orchard.Conditions
         Category: Layout
     Orchard.Layouts.Snippets:
         Name: Layout Snippets

@@ -77,6 +77,10 @@
     <Content Include="Assets\Css\jQueryUI\jquery-ui.structure.css" />
     <Content Include="Assets\Css\jQueryUI\jquery-ui.theme.css" />
     <Content Include="Assets\Css\TimeEntry\jquery.timeentry.css" />
+    <Content Include="Assets\Js\AngularJs\angular-resource.js" />
+    <Content Include="Assets\Js\AngularJs\angular-sanitize.js" />
+    <Content Include="Assets\Js\AngularJs\angular.js" />
+    <Content Include="Assets\Js\AngularJs\sortable.js" />
     <Content Include="Assets\Js\Calendars\jquery.calendars-af.js" />
     <Content Include="Assets\Js\Calendars\jquery.calendars-am.js" />
     <Content Include="Assets\Js\Calendars\jquery.calendars-ar-DZ.js" />
@@ -450,6 +454,15 @@
     <Content Include="Assets\Js\TimeEntry\jquery.timeentry-zh-CN.js" />
     <Content Include="Assets\Js\TimeEntry\jquery.timeentry-zh-TW.js" />
     <Content Include="Assets\Js\TimeEntry\jquery.timeentry.js" />
+    <Content Include="Assets\Js\Underscore\underscore.js" />
+    <Content Include="Scripts\angular-resource.js" />
+    <Content Include="Scripts\angular-resource.min.js" />
+    <Content Include="Scripts\angular-sanitize.js" />
+    <Content Include="Scripts\angular-sanitize.min.js" />
+    <Content Include="Scripts\angular-sortable.js" />
+    <Content Include="Scripts\angular-sortable.min.js" />
+    <Content Include="Scripts\angular.js" />
+    <Content Include="Scripts\angular.min.js" />
     <Content Include="Scripts\jquery-ui-effects.js" />
     <Content Include="Scripts\jquery-ui-effects.min.js" />
     <Content Include="Scripts\jquery-ui-interaction.js" />
@@ -514,6 +527,8 @@
     <Content Include="Scripts\ui\tabs.min.js" />
     <Content Include="Scripts\ui\tooltip.js" />
     <Content Include="Scripts\ui\tooltip.min.js" />
+    <Content Include="Scripts\underscore.js" />
+    <Content Include="Scripts\underscore.min.js" />
     <Content Include="Styles\Images\calendar-blue.gif" />
     <Content Include="Styles\Images\calendar-green.gif" />
     <Content Include="Styles\Images\calendar.gif" />
@@ -567,12 +582,15 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Assets\Js\KnockoutJs\" />
     <Folder Include="Assets\Less\" />
     <Folder Include="Controllers\" />
     <Folder Include="Models\" />
     <Folder Include="Views\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Underscore.cs" />
+    <Compile Include="AngularJs.cs" />
     <Compile Include="jQuery.cs" />
   </ItemGroup>
   <PropertyGroup>

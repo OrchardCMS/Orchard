@@ -110,13 +110,6 @@
     <Content Include="Assets\JavaScript\LayoutEditor\Module.js" />
     <Content Include="Assets\JavaScript\LayoutEditor\Services\Clipboard.js" />
     <Content Include="Assets\JavaScript\LayoutEditor\Services\ScopeConfigurator.js" />
-    <Content Include="Scripts\Lib.js" />
-    <Content Include="Scripts\Lib.min.js" />
-    <Content Include="Assets\JavaScript\Lib\angular-resource.js" />
-    <Content Include="Assets\JavaScript\Lib\angular-sanitize.js" />
-    <Content Include="Assets\JavaScript\Lib\angular.js" />
-    <Content Include="Assets\JavaScript\Lib\sortable.js" />
-    <Content Include="Assets\JavaScript\Lib\underscore.js" />
     <Content Include="Scripts\Models.js" />
     <Content Include="Scripts\Models.min.js" />
     <Content Include="Assets\JavaScript\Models\Canvas.js" />
