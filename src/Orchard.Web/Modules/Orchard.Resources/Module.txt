@@ -11,27 +11,37 @@ Features:
         Description: Provides a variety of client script libraries used for the Orchard dashboard.
         Category: Core
     Orchard.Resources.jQuery:
-        Name: jQuery
+        Name: jQuery Resources
         Description: Provides the jQuery and jQuery related libraries.
         Category: Core
         Dependencies: Orchard.Resources
     Orchard.Resources.AngularJs:
-        Name: AngularJs
+        Name: Angular Resources
         Description: Provides the AngularJs library.
         Category: Core
         Dependencies: Orchard.Resources, Orchard.Resources.jQuery
     Orchard.Resources.Underscore:
-        Name: Underscore
+        Name: Underscore Resources
         Description: Provides the Underscore library.
         Category: Core
         Dependencies: Orchard.Resources
     Orchard.Resources.Bootstrap:
-        Name: Bootstrap
+        Name: Bootstrap Resources
         Description: Provides the Bootstrap library.
         Category: Core
         Dependencies: Orchard.Resources, Orchard.Resources.jQuery
     Orchard.Resources.FontAwesome:
-        Name: FontAwesome
+        Name: FontAwesome Resources
         Description: Provides the FontAwesome library.
+        Category: Core
+        Dependencies: Orchard.Resources
+    Orchard.Resources.History:
+        Name: History Resources
+        Description: Provides the History script library.
+        Category: Core
+        Dependencies: Orchard.Resources
+    Orchard.Resources.Knockout:
+        Name: Knockout Resources
+        Description: Provides the Knockout script library.
         Category: Core
         Dependencies: Orchard.Resources

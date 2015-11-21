@@ -77,10 +77,10 @@
     <Content Include="Assets\Css\jQueryUI\jquery-ui.structure.css" />
     <Content Include="Assets\Css\jQueryUI\jquery-ui.theme.css" />
     <Content Include="Assets\Css\TimeEntry\jquery.timeentry.css" />
-    <Content Include="Assets\Js\AngularJs\angular-resource.js" />
-    <Content Include="Assets\Js\AngularJs\angular-sanitize.js" />
-    <Content Include="Assets\Js\AngularJs\angular.js" />
-    <Content Include="Assets\Js\AngularJs\sortable.js" />
+    <Content Include="Assets\Js\Angular\angular-resource.js" />
+    <Content Include="Assets\Js\Angular\angular-sanitize.js" />
+    <Content Include="Assets\Js\Angular\angular.js" />
+    <Content Include="Assets\Js\Angular\sortable.js" />
     <Content Include="Assets\Js\Bootstrap\affix.js" />
     <Content Include="Assets\Js\Bootstrap\alert.js" />
     <Content Include="Assets\Js\Bootstrap\button.js" />
@@ -309,6 +309,7 @@
     <Content Include="Assets\Js\Colorbox\i18n\jquery.colorbox-zh-CN.js" />
     <Content Include="Assets\Js\Colorbox\i18n\jquery.colorbox-zh-TW.js" />
     <Content Include="Assets\Js\Colorbox\jquery.colorbox.js" />
+    <Content Include="Assets\Js\History\history.js" />
     <Content Include="Assets\Js\jQueryUI\data.js" />
     <Content Include="Assets\Js\jQueryUI\effect.js" />
     <Content Include="Assets\Js\jQueryUI\effects\effect-blind.js" />
@@ -441,6 +442,7 @@
     <Content Include="Assets\Js\jQuery\jquery.iframe-transport.js" />
     <Content Include="Assets\Js\jQuery\jquery.plugin.js" />
     <Content Include="Assets\Js\jQuery\jquery.utils.js" />
+    <Content Include="Assets\Js\Knockout\knockout-3.4.0.js" />
     <Content Include="Assets\Js\TimeEntry\jquery.timeentry-ar.js" />
     <Content Include="Assets\Js\TimeEntry\jquery.timeentry-ca.js" />
     <Content Include="Assets\Js\TimeEntry\jquery.timeentry-cs.js" />
@@ -477,6 +479,8 @@
     <Content Include="Scripts\angular.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\history.js" />
+    <Content Include="Scripts\history.min.js" />
     <Content Include="Scripts\jquery-ui-effects.js" />
     <Content Include="Scripts\jquery-ui-effects.min.js" />
     <Content Include="Scripts\jquery-ui-interaction.js" />
@@ -503,6 +507,8 @@
     <Content Include="Scripts\jquery.timeentry.min.js" />
     <Content Include="Scripts\jquery.utils.js" />
     <Content Include="Scripts\jquery.utils.min.js" />
+    <Content Include="Scripts\knockout.js" />
+    <Content Include="Scripts\knockout.min.js" />
     <Content Include="Scripts\ui\accordion.js" />
     <Content Include="Scripts\ui\accordion.min.js" />
     <Content Include="Scripts\ui\autocomplete.js" />
@@ -601,11 +607,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Assets\Js\KnockoutJs\" />
     <Folder Include="Controllers\" />
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Knockout.cs" />
+    <Compile Include="History.cs" />
     <Compile Include="FontAwesome.cs" />
     <Compile Include="Bootstrap.cs" />
     <Compile Include="Underscore.cs" />

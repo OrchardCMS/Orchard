@@ -222,19 +222,19 @@
         "output": "Scripts/jquery.colorbox.js"
     },
     {
-        "inputs": [ "Assets/Js/AngularJs/angular.js" ],
+        "inputs": [ "Assets/Js/Angular/angular.js" ],
         "output": "Scripts/angular.js"
     },
     {
-        "inputs": [ "Assets/Js/AngularJs/angular-sanitize.js" ],
+        "inputs": [ "Assets/Js/Angular/angular-sanitize.js" ],
         "output": "Scripts/angular-sanitize.js"
     },
     {
-        "inputs": [ "Assets/Js/AngularJs/angular-resource.js" ],
+        "inputs": [ "Assets/Js/Angular/angular-resource.js" ],
         "output": "Scripts/angular-resource.js"
     },
     {
-        "inputs": [ "Assets/Js/AngularJs/sortable.js" ],
+        "inputs": [ "Assets/Js/Angular/sortable.js" ],
         "output": "Scripts/angular-sortable.js"
     },
     {
@@ -265,5 +265,13 @@
     {
         "inputs": [ "Assets/Less/FontAwesome/font-awesome.less" ],
         "output": "Styles/font-awesome.css"
+    },
+    {
+        "inputs": [ "Assets/Js/History/history.js" ],
+        "output": "Scripts/history.js"
+    },
+    {
+        "inputs": [ "Assets/Js/Knockout/knockout-3.4.0.js" ],
+        "output": "Scripts/knockout.js"
     }
 ]
