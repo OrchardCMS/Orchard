@@ -136,7 +136,7 @@
             });
         });
 
-        // prevents button default behaviour while designing a layout
+        // prevents button default behavior while designing a layout
         var buttonsNo = 0;
         setInterval(function() {
             var buttons = $('.layout-designer button');
