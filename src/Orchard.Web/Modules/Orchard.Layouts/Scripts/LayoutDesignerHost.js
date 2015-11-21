@@ -135,5 +135,19 @@
                 e.preventDefault();
             });
         });
+
+        // prevents button default behaviour while designing a layout
+        var buttonsNo = 0;
+        setInterval(function() {
+            var buttons = $('.layout-designer button');
+            if (buttonsNo != buttons.size()) {
+                buttonsNo = buttons.size();
+                buttons.off('click');
+                buttons.on('click', function(e) {
+                    e.preventDefault();
+                    return false;
+                });
+            }
+        }, 100);
     });
 })(jQuery);
