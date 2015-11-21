@@ -473,6 +473,7 @@
     <Content Include="Assets\Js\TimeEntry\jquery.timeentry-zh-TW.js" />
     <Content Include="Assets\Js\TimeEntry\jquery.timeentry.js" />
     <Content Include="Assets\Js\Underscore\underscore.js" />
+    <Content Include="Assets\Js\Uri\uri.js" />
     <Content Include="Scripts\angular-resource.js" />
     <Content Include="Scripts\angular-resource.min.js" />
     <Content Include="Scripts\angular-sanitize.js" />
@@ -557,6 +558,8 @@
     <Content Include="Scripts\ui\tooltip.min.js" />
     <Content Include="Scripts\underscore.js" />
     <Content Include="Scripts\underscore.min.js" />
+    <Content Include="Scripts\uri.js" />
+    <Content Include="Scripts\uri.min.js" />
     <Content Include="Styles\bootstrap.css" />
     <Content Include="Styles\bootstrap.min.css" />
     <Content Include="Styles\font-awesome.css" />
@@ -619,6 +622,7 @@
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Uri.cs" />
     <Compile Include="BlockUI.cs" />
     <Compile Include="Moment.cs" />
     <Compile Include="Knockout.cs" />

@@ -55,3 +55,8 @@ Features:
         Description: Provides the BlockUI script library.
         Category: Core
         Dependencies: Orchard.Resources, Orchard.Resources.jQuery
+    Orchard.Resources.Uri:
+        Name: Uri Resources
+        Description: Provides the Uri script library.
+        Category: Core
+        Dependencies: Orchard.Resources
