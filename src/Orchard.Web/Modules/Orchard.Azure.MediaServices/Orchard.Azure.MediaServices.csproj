@@ -202,7 +202,6 @@
     <Content Include="Scripts\cloudmedia-videoplayer-main.min.js" />
     <Content Include="Assets\JavaScript\Lib\console-shim.js" />
     <Content Include="Assets\JavaScript\Lib\dash.all.js" />
-    <Content Include="Assets\JavaScript\Lib\jquery.blockui.js" />
     <Content Include="Assets\TypeScript\cloudmedia-admin-job.ts" />
     <Content Include="Assets\TypeScript\cloudmedia-admin-common.ts" />
     <Content Include="Assets\TypeScript\cloudmedia-autorefresh.ts" />
@@ -212,11 +211,7 @@
     <Content Include="Assets\TypeScript\cloudmedia-edit-cloudvideopart.ts" />
     <Content Include="Assets\TypeScript\cloudmedia-edit-cloudvideopart-proxied.ts" />
     <Content Include="Assets\TypeScript\cloudmedia-metadata-cloudvideopart.ts" />
-    <Content Include="Assets\JavaScript\Lib\jquery.fileupload-process.js" />
-    <Content Include="Assets\JavaScript\Lib\jquery.fileupload-validate.js" />
-    <Content Include="Assets\JavaScript\Lib\jquery.fileupload.js" />
     <Content Include="Assets\JavaScript\Lib\jstree.js" />
-    <Content Include="Assets\JavaScript\Lib\moment.js" />
     <Content Include="Assets\JavaScript\Lib\swfobject.js" />
     <Content Include="Assets\JavaScript\Lib\uri.js" />
     <Content Include="Assets\JavaScript\Lib\underscore.js" />
@@ -226,16 +221,8 @@
     <Content Include="Scripts\Lib\dash.all.min.js" />
     <Content Include="Scripts\Lib\jquery.blockUI.js" />
     <Content Include="Scripts\Lib\jquery.blockUI.min.js" />
-    <Content Include="Scripts\Lib\jquery.fileupload-process.js" />
-    <Content Include="Scripts\Lib\jquery.fileupload-process.min.js" />
-    <Content Include="Scripts\Lib\jquery.fileupload-validate.js" />
-    <Content Include="Scripts\Lib\jquery.fileupload-validate.min.js" />
-    <Content Include="Scripts\Lib\jquery.fileupload.js" />
-    <Content Include="Scripts\Lib\jquery.fileupload.min.js" />
     <Content Include="Scripts\Lib\jstree.js" />
     <Content Include="Scripts\Lib\jstree.min.js" />
-    <Content Include="Scripts\Lib\moment.js" />
-    <Content Include="Scripts\Lib\moment.min.js" />
     <Content Include="Scripts\Lib\swfobject.js" />
     <Content Include="Scripts\Lib\swfobject.min.js" />
     <Content Include="Scripts\Lib\underscore.js" />

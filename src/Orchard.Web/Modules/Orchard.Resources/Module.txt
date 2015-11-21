@@ -45,3 +45,13 @@ Features:
         Description: Provides the Knockout script library.
         Category: Core
         Dependencies: Orchard.Resources
+    Orchard.Resources.Moment:
+        Name: Moment Resources
+        Description: Provides the Moment script library.
+        Category: Core
+        Dependencies: Orchard.Resources
+    Orchard.Resources.BlockUI:
+        Name: Moment Resources
+        Description: Provides the BlockUI script library.
+        Category: Core
+        Dependencies: Orchard.Resources, Orchard.Resources.jQuery

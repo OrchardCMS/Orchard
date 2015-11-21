@@ -182,8 +182,10 @@
     },
     {
         "inputs": [
-            "Assets/Js/jQuery/jquery.iframe-transport.js",
-            "Assets/Js/jQuery/jquery.fileupload.js"
+            "Assets/Js/FileUpload/jquery.iframe-transport.js",
+            "Assets/Js/FileUpload/jquery.fileupload.js",
+            "Assets/Js/FileUpload/jquery.fileupload-process.js",
+            "Assets/Js/FileUpload/jquery.fileupload-validate.js"
         ],
         "output": "Scripts/jquery.fileupload-full.js"
     },
@@ -273,5 +275,13 @@
     {
         "inputs": [ "Assets/Js/Knockout/knockout-3.4.0.js" ],
         "output": "Scripts/knockout.js"
+    },
+    {
+        "inputs": [ "Assets/Js/Moment/moment.js" ],
+        "output": "Scripts/moment.js"
+    },
+    {
+        "inputs": [ "Assets/Js/BlockUI/jquery.blockui.js" ],
+        "output": "Scripts/jquery.blockui.js"
     }
 ]

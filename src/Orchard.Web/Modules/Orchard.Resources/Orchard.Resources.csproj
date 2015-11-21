@@ -81,6 +81,7 @@
     <Content Include="Assets\Js\Angular\angular-sanitize.js" />
     <Content Include="Assets\Js\Angular\angular.js" />
     <Content Include="Assets\Js\Angular\sortable.js" />
+    <Content Include="Assets\Js\BlockUI\jquery.blockui.js" />
     <Content Include="Assets\Js\Bootstrap\affix.js" />
     <Content Include="Assets\Js\Bootstrap\alert.js" />
     <Content Include="Assets\Js\Bootstrap\button.js" />
@@ -309,6 +310,9 @@
     <Content Include="Assets\Js\Colorbox\i18n\jquery.colorbox-zh-CN.js" />
     <Content Include="Assets\Js\Colorbox\i18n\jquery.colorbox-zh-TW.js" />
     <Content Include="Assets\Js\Colorbox\jquery.colorbox.js" />
+    <Content Include="Assets\Js\FileUpload\jquery.fileupload-process.js" />
+    <Content Include="Assets\Js\FileUpload\jquery.fileupload-validate.js" />
+    <Content Include="Assets\Js\FileUpload\jquery.fileupload.js" />
     <Content Include="Assets\Js\History\history.js" />
     <Content Include="Assets\Js\jQueryUI\data.js" />
     <Content Include="Assets\Js\jQueryUI\effect.js" />
@@ -438,11 +442,11 @@
     <Content Include="Assets\Js\jQueryUI\widgets\tooltip.js" />
     <Content Include="Assets\Js\jQuery\jquery-2.1.4.js" />
     <Content Include="Assets\Js\jQuery\jquery.cookie.js" />
-    <Content Include="Assets\Js\jQuery\jquery.fileupload.js" />
-    <Content Include="Assets\Js\jQuery\jquery.iframe-transport.js" />
+    <Content Include="Assets\Js\FileUpload\jquery.iframe-transport.js" />
     <Content Include="Assets\Js\jQuery\jquery.plugin.js" />
     <Content Include="Assets\Js\jQuery\jquery.utils.js" />
     <Content Include="Assets\Js\Knockout\knockout-3.4.0.js" />
+    <Content Include="Assets\Js\Moment\moment.js" />
     <Content Include="Assets\Js\TimeEntry\jquery.timeentry-ar.js" />
     <Content Include="Assets\Js\TimeEntry\jquery.timeentry-ca.js" />
     <Content Include="Assets\Js\TimeEntry\jquery.timeentry-cs.js" />
@@ -489,6 +493,8 @@
     <Content Include="Scripts\jquery-ui-widgets.min.js" />
     <Content Include="Scripts\jquery-ui.js" />
     <Content Include="Scripts\jquery-ui.min.js" />
+    <Content Include="Scripts\jquery.blockui.js" />
+    <Content Include="Scripts\jquery.blockui.min.js" />
     <Content Include="Scripts\jquery.calendars.picker.full.js" />
     <Content Include="Scripts\jquery.calendars.picker.full.min.js" />
     <Content Include="Scripts\jquery.colorbox.js" />
@@ -509,6 +515,8 @@
     <Content Include="Scripts\jquery.utils.min.js" />
     <Content Include="Scripts\knockout.js" />
     <Content Include="Scripts\knockout.min.js" />
+    <Content Include="Scripts\moment.js" />
+    <Content Include="Scripts\moment.min.js" />
     <Content Include="Scripts\ui\accordion.js" />
     <Content Include="Scripts\ui\accordion.min.js" />
     <Content Include="Scripts\ui\autocomplete.js" />
@@ -611,6 +619,8 @@
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BlockUI.cs" />
+    <Compile Include="Moment.cs" />
     <Compile Include="Knockout.cs" />
     <Compile Include="History.cs" />
     <Compile Include="FontAwesome.cs" />
