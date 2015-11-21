@@ -1,13 +1,6 @@
 ﻿[
     {
         "inputs": [
-            "Assets/Less/Lib/Bootstrap/bootstrap.less",
-            "Assets/Less/Lib/FontAwesome/font-awesome.less"
-        ],
-        "output": "Styles/Lib.css"
-    },
-    {
-        "inputs": [
             "Assets/Less/LayoutEditor/Editor.less",
             "Assets/Less/LayoutEditor/Element.less",
             "Assets/Less/LayoutEditor/Container.less",

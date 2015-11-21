@@ -81,6 +81,18 @@
     <Content Include="Assets\Js\AngularJs\angular-sanitize.js" />
     <Content Include="Assets\Js\AngularJs\angular.js" />
     <Content Include="Assets\Js\AngularJs\sortable.js" />
+    <Content Include="Assets\Js\Bootstrap\affix.js" />
+    <Content Include="Assets\Js\Bootstrap\alert.js" />
+    <Content Include="Assets\Js\Bootstrap\button.js" />
+    <Content Include="Assets\Js\Bootstrap\carousel.js" />
+    <Content Include="Assets\Js\Bootstrap\collapse.js" />
+    <Content Include="Assets\Js\Bootstrap\dropdown.js" />
+    <Content Include="Assets\Js\Bootstrap\modal.js" />
+    <Content Include="Assets\Js\Bootstrap\popover.js" />
+    <Content Include="Assets\Js\Bootstrap\scrollspy.js" />
+    <Content Include="Assets\Js\Bootstrap\tab.js" />
+    <Content Include="Assets\Js\Bootstrap\tooltip.js" />
+    <Content Include="Assets\Js\Bootstrap\transition.js" />
     <Content Include="Assets\Js\Calendars\jquery.calendars-af.js" />
     <Content Include="Assets\Js\Calendars\jquery.calendars-am.js" />
     <Content Include="Assets\Js\Calendars\jquery.calendars-ar-DZ.js" />
@@ -463,6 +475,8 @@
     <Content Include="Scripts\angular-sortable.min.js" />
     <Content Include="Scripts\angular.js" />
     <Content Include="Scripts\angular.min.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\jquery-ui-effects.js" />
     <Content Include="Scripts\jquery-ui-effects.min.js" />
     <Content Include="Scripts\jquery-ui-interaction.js" />
@@ -529,6 +543,11 @@
     <Content Include="Scripts\ui\tooltip.min.js" />
     <Content Include="Scripts\underscore.js" />
     <Content Include="Scripts\underscore.min.js" />
+    <Content Include="Styles\bootstrap.css" />
+    <Content Include="Styles\bootstrap.min.css" />
+    <Content Include="Styles\font-awesome.css" />
+    <Content Include="Styles\font-awesome.min.css" />
+    <Content Include="Styles\Fonts\fontawesome-webfont.svg" />
     <Content Include="Styles\Images\calendar-blue.gif" />
     <Content Include="Styles\Images\calendar-green.gif" />
     <Content Include="Styles\Images\calendar.gif" />
@@ -583,15 +602,194 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assets\Js\KnockoutJs\" />
-    <Folder Include="Assets\Less\" />
     <Folder Include="Controllers\" />
     <Folder Include="Models\" />
-    <Folder Include="Views\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FontAwesome.cs" />
+    <Compile Include="Bootstrap.cs" />
     <Compile Include="Underscore.cs" />
     <Compile Include="AngularJs.cs" />
     <Compile Include="jQuery.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\FontAwesome\animated.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\FontAwesome\bordered-pulled.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\FontAwesome\core.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\FontAwesome\fixed-width.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\FontAwesome\font-awesome.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\FontAwesome\icons.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\FontAwesome\larger.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\FontAwesome\list.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\FontAwesome\mixins.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\FontAwesome\path.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\FontAwesome\rotated-flipped.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\FontAwesome\stacked.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\FontAwesome\variables.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\Bootstrap\bootstrap.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\Bootstrap\grid.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\Bootstrap\mixins\background-variant.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\Bootstrap\mixins\border-radius.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\Bootstrap\mixins\center-block.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\Bootstrap\mixins\clearfix.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\Bootstrap\mixins\gradients.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\Bootstrap\mixins\grid-framework.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\Bootstrap\mixins\grid.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\Bootstrap\mixins\hide-text.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\Bootstrap\mixins\image.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\Bootstrap\mixins\labels.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\Bootstrap\mixins\opacity.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\Bootstrap\mixins\reset-filter.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\Bootstrap\mixins\resize.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\Bootstrap\mixins\responsive-visibility.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\Bootstrap\mixins\size.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\Bootstrap\mixins\tab-focus.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\Bootstrap\mixins\text-emphasis.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\Bootstrap\mixins\text-overflow.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\Bootstrap\mixins\vendor-prefixes.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\Bootstrap\mixins.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\Bootstrap\scaffolding.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\Bootstrap\utilities.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\Bootstrap\variables.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\Fonts\fontawesome-webfont.eot" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\Fonts\fontawesome-webfont.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\Fonts\fontawesome-webfont.woff" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\Fonts\fontawesome-webfont.woff2" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\Fonts\FontAwesome.otf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\Bootstrap\mixins\alerts.less" />
+    <Content Include="Assets\Less\Bootstrap\mixins\buttons.less" />
+    <Content Include="Assets\Less\Bootstrap\mixins\forms.less" />
+    <Content Include="Assets\Less\Bootstrap\mixins\list-group.less" />
+    <Content Include="Assets\Less\Bootstrap\mixins\nav-divider.less" />
+    <Content Include="Assets\Less\Bootstrap\mixins\nav-vertical-align.less" />
+    <Content Include="Assets\Less\Bootstrap\mixins\pagination.less" />
+    <Content Include="Assets\Less\Bootstrap\mixins\panels.less" />
+    <Content Include="Assets\Less\Bootstrap\mixins\progress-bar.less" />
+    <Content Include="Assets\Less\Bootstrap\mixins\reset-text.less" />
+    <Content Include="Assets\Less\Bootstrap\mixins\table-row.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\Bootstrap\alerts.less" />
+    <Content Include="Assets\Less\Bootstrap\badges.less" />
+    <Content Include="Assets\Less\Bootstrap\breadcrumbs.less" />
+    <Content Include="Assets\Less\Bootstrap\button-groups.less" />
+    <Content Include="Assets\Less\Bootstrap\buttons.less" />
+    <Content Include="Assets\Less\Bootstrap\carousel.less" />
+    <Content Include="Assets\Less\Bootstrap\close.less" />
+    <Content Include="Assets\Less\Bootstrap\code.less" />
+    <Content Include="Assets\Less\Bootstrap\component-animations.less" />
+    <Content Include="Assets\Less\Bootstrap\dropdowns.less" />
+    <Content Include="Assets\Less\Bootstrap\forms.less" />
+    <Content Include="Assets\Less\Bootstrap\glyphicons.less" />
+    <Content Include="Assets\Less\Bootstrap\input-groups.less" />
+    <Content Include="Assets\Less\Bootstrap\jumbotron.less" />
+    <Content Include="Assets\Less\Bootstrap\labels.less" />
+    <Content Include="Assets\Less\Bootstrap\list-group.less" />
+    <Content Include="Assets\Less\Bootstrap\media.less" />
+    <Content Include="Assets\Less\Bootstrap\modals.less" />
+    <Content Include="Assets\Less\Bootstrap\navbar.less" />
+    <Content Include="Assets\Less\Bootstrap\navs.less" />
+    <Content Include="Assets\Less\Bootstrap\normalize.less" />
+    <Content Include="Assets\Less\Bootstrap\pager.less" />
+    <Content Include="Assets\Less\Bootstrap\pagination.less" />
+    <Content Include="Assets\Less\Bootstrap\panels.less" />
+    <Content Include="Assets\Less\Bootstrap\popovers.less" />
+    <Content Include="Assets\Less\Bootstrap\print.less" />
+    <Content Include="Assets\Less\Bootstrap\progress-bars.less" />
+    <Content Include="Assets\Less\Bootstrap\responsive-embed.less" />
+    <Content Include="Assets\Less\Bootstrap\responsive-utilities.less" />
+    <Content Include="Assets\Less\Bootstrap\tables.less" />
+    <Content Include="Assets\Less\Bootstrap\theme.less" />
+    <Content Include="Assets\Less\Bootstrap\thumbnails.less" />
+    <Content Include="Assets\Less\Bootstrap\tooltip.less" />
+    <Content Include="Assets\Less\Bootstrap\type.less" />
+    <Content Include="Assets\Less\Bootstrap\wells.less" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

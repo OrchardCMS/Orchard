@@ -240,5 +240,30 @@
     {
         "inputs": [ "Assets/Js/Underscore/underscore.js" ],
         "output": "Scripts/underscore.js"
+    },
+    {
+        "inputs": [ "Assets/Less/Bootstrap/bootstrap.less" ],
+        "output": "Styles/bootstrap.css"
+    },
+    {
+        "inputs": [
+            "Assets/Js/Bootstrap/affix.js",
+            "Assets/Js/Bootstrap/alert.js",
+            "Assets/Js/Bootstrap/button.js",
+            "Assets/Js/Bootstrap/carousel.js",
+            "Assets/Js/Bootstrap/collapse.js",
+            "Assets/Js/Bootstrap/dropdown.js",
+            "Assets/Js/Bootstrap/modal.js",
+            "Assets/Js/Bootstrap/popover.js",
+            "Assets/Js/Bootstrap/scrollspy.js",
+            "Assets/Js/Bootstrap/tab.js",
+            "Assets/Js/Bootstrap/tooltip.js",
+            "Assets/Js/Bootstrap/transition.js"
+        ],
+        "output": "Scripts/bootstrap.js"
+    },
+    {
+        "inputs": [ "Assets/Less/FontAwesome/font-awesome.less" ],
+        "output": "Styles/font-awesome.css"
     }
 ]

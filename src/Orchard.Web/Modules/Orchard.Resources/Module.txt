@@ -17,11 +17,21 @@ Features:
         Dependencies: Orchard.Resources
     Orchard.Resources.AngularJs:
         Name: AngularJs
-        Description: Provides the AngularJs and related libraries.
+        Description: Provides the AngularJs library.
         Category: Core
         Dependencies: Orchard.Resources, Orchard.Resources.jQuery
     Orchard.Resources.Underscore:
         Name: Underscore
-        Description: Provides the Underscore script library.
+        Description: Provides the Underscore library.
+        Category: Core
+        Dependencies: Orchard.Resources
+    Orchard.Resources.Bootstrap:
+        Name: Bootstrap
+        Description: Provides the Bootstrap library.
+        Category: Core
+        Dependencies: Orchard.Resources, Orchard.Resources.jQuery
+    Orchard.Resources.FontAwesome:
+        Name: FontAwesome
+        Description: Provides the FontAwesome library.
         Category: Core
         Dependencies: Orchard.Resources
