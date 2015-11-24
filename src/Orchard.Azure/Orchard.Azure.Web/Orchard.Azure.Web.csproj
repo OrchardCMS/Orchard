@@ -278,6 +278,10 @@
       <Name>Orchard.Comments</Name>
       <Private>True</Private>
     </ProjectReference>
+    <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Conditions\Orchard.Conditions.csproj">
+      <Project>{98251eae-a41b-47b2-aa91-e28b8482da70}</Project>
+      <Name>Orchard.Conditions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.ContentPermissions\Orchard.ContentPermissions.csproj">
       <Project>{e826f796-8ce3-4b5b-8423-5aa5f81d2fc3}</Project>
       <Name>Orchard.ContentPermissions</Name>
@@ -421,6 +425,10 @@
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Redis\Orchard.Redis.csproj">
       <Project>{2c5eb8b3-a313-413d-baa0-5c21d2a6ec6e}</Project>
       <Name>Orchard.Redis</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Resources\Orchard.Resources.csproj">
+      <Project>{d4e8f7c8-2db2-4c50-a422-da1df1e3cc73}</Project>
+      <Name>Orchard.Resources</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Roles\Orchard.Roles.csproj">
       <Project>{D10AD48F-407D-4DB5-A328-173EC7CB010F}</Project>
