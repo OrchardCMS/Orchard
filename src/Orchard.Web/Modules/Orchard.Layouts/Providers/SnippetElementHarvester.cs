@@ -141,7 +141,10 @@ namespace Orchard.Layouts.Providers {
             // Execute the shape and intercept calls to the Html.SnippetField method.
             var descriptor = new SnippetDescriptor();
             shape.DescriptorRegistrationCallback = (Action<SnippetFieldDescriptor>) (fieldDescriptor => {
-                descriptor.Fields.Add(fieldDescriptor);
+                var existingDescriptor = descriptor.Fields.SingleOrDefault(x => x.Name == fieldDescriptor.Name); // Not using Dictionary, as that will break rendering the view for some obscure reason.
+                
+                if (existingDescriptor == null)
+                    descriptor.Fields.Add(fieldDescriptor);
 
                 if (fieldDescriptor.DisplayName == null)
                     fieldDescriptor.DisplayName = new LocalizedString(fieldDescriptor.Name);
