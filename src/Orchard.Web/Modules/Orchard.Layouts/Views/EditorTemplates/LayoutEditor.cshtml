@@ -3,7 +3,8 @@
 @{
     // Library dependencies.
     Style.Require("jQueryUI_Orchard");
-    Style.Include("Lib.css", "Lib.min.css");
+    Style.Require("Bootstrap");
+    Style.Require("FontAwesome");
 
     // We need these styles to properly render selected media items.
     // Ideally the MediaLibrary is refactored such that each media item type provides its own set of styles, enabling extensibility of the set of media item types.
@@ -11,12 +12,7 @@
     Style.Include("~/Modules/Orchard.MediaLibrary/Styles/media-library-picker-admin.css");
 
     Script.Require("jQueryCookie");
-    Script.Require("jQueryUI_Draggable");
-    Script.Require("jQueryUI_Droppable");
-    Script.Require("jQueryUI_Sortable");
-    Script.Require("jQueryUI_Resizable");
-    Script.Require("jQueryUI_Position");
-    Script.Require("jQueryUI_Dialog");
+    Script.Require("jQueryUI_Widgets");
     Script.Require("Layouts.LayoutEditor");
     Script.Include("jquery.deserialize.js");
 

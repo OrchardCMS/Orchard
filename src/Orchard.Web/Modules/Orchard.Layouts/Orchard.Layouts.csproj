@@ -94,8 +94,6 @@
     <Content Include="Scripts\frame.js" />
     <Content Include="Scripts\jquery.browser.js" />
     <Content Include="Scripts\jquery.deserialize.js" />
-    <Content Include="Scripts\LayoutEditor.js" />
-    <Content Include="Scripts\LayoutEditor.min.js" />
     <Content Include="Assets\JavaScript\LayoutEditor\Directives\Html.js" />
     <Content Include="Assets\JavaScript\LayoutEditor\Directives\Editor.js" />
     <Content Include="Assets\JavaScript\LayoutEditor\Directives\Canvas.js" />
@@ -110,15 +108,6 @@
     <Content Include="Assets\JavaScript\LayoutEditor\Module.js" />
     <Content Include="Assets\JavaScript\LayoutEditor\Services\Clipboard.js" />
     <Content Include="Assets\JavaScript\LayoutEditor\Services\ScopeConfigurator.js" />
-    <Content Include="Scripts\Lib.js" />
-    <Content Include="Scripts\Lib.min.js" />
-    <Content Include="Assets\JavaScript\Lib\angular-resource.js" />
-    <Content Include="Assets\JavaScript\Lib\angular-sanitize.js" />
-    <Content Include="Assets\JavaScript\Lib\angular.js" />
-    <Content Include="Assets\JavaScript\Lib\sortable.js" />
-    <Content Include="Assets\JavaScript\Lib\underscore.js" />
-    <Content Include="Scripts\Models.js" />
-    <Content Include="Scripts\Models.min.js" />
     <Content Include="Assets\JavaScript\Models\Canvas.js" />
     <Content Include="Assets\JavaScript\Models\Editor.js" />
     <Content Include="Assets\JavaScript\Models\Column.js" />
@@ -136,12 +125,13 @@
     <Content Include="Images\Web.config">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Scripts\LayoutEditor.js" />
+    <Content Include="Scripts\LayoutEditor.min.js" />
+    <Content Include="Scripts\Models.js" />
+    <Content Include="Scripts\Models.min.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Styles\LayoutEditor.css" />
     <Content Include="Styles\LayoutEditor.min.css" />
-    <Content Include="Styles\Fonts\fontawesome-webfont.svg" />
-    <Content Include="Styles\Lib.css" />
-    <Content Include="Styles\Lib.min.css" />
     <Content Include="Styles\menu.layouts-admin.css" />
     <Content Include="Styles\menu.elements.png" />
     <Content Include="Styles\element-editor.css" />
@@ -206,35 +196,6 @@
     <Content Include="Views\EditorTemplates\Elements.Image.cshtml" />
     <Content Include="Views\Elements\Image.cshtml" />
     <Content Include="Views\Elements\Image.Design.cshtml" />
-    <Content Include="Styles\Fonts\fontawesome-webfont.eot" />
-    <Content Include="Styles\Fonts\fontawesome-webfont.ttf" />
-    <Content Include="Styles\Fonts\fontawesome-webfont.woff" />
-    <Content Include="Styles\Fonts\FontAwesome.otf" />
-    <Content Include="Assets\Less\Lib\Bootstrap\bootstrap.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\grid.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\background-variant.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\border-radius.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\center-block.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\clearfix.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\gradients.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\grid-framework.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\grid.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\hide-text.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\image.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\labels.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\opacity.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\reset-filter.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\resize.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\responsive-visibility.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\size.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\tab-focus.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\text-emphasis.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\text-overflow.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\vendor-prefixes.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\scaffolding.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\utilities.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\variables.less" />
     <Content Include="Assets\Less\LayoutEditor\Element.less" />
     <Content Include="Assets\Less\LayoutEditor\Container.less" />
     <Content Include="Assets\Less\LayoutEditor\Variables.less" />
@@ -549,24 +510,6 @@
     <Content Include="Views\Elements\Projection.Design.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\Less\Lib\FontAwesome\animated.less" />
-    <Content Include="Assets\Less\Lib\FontAwesome\bordered-pulled.less" />
-    <Content Include="Assets\Less\Lib\FontAwesome\core.less" />
-    <Content Include="Assets\Less\Lib\FontAwesome\fixed-width.less" />
-    <Content Include="Assets\Less\Lib\FontAwesome\font-awesome.less" />
-    <Content Include="Assets\Less\Lib\FontAwesome\icons.less" />
-    <Content Include="Assets\Less\Lib\FontAwesome\larger.less" />
-    <Content Include="Assets\Less\Lib\FontAwesome\list.less" />
-    <Content Include="Assets\Less\Lib\FontAwesome\mixins.less" />
-    <Content Include="Assets\Less\Lib\FontAwesome\path.less" />
-    <Content Include="Assets\Less\Lib\FontAwesome\rotated-flipped.less" />
-    <Content Include="Assets\Less\Lib\FontAwesome\stacked.less" />
-    <Content Include="Assets\Less\Lib\FontAwesome\variables.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Styles\Fonts\fontawesome-webfont.woff2" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Elements\Break.cshtml" />
     <Content Include="Styles\LayoutEditor\Menu.less" />
   </ItemGroup>
@@ -593,9 +536,7 @@
   <ItemGroup>
     <Content Include="Views\Elements\Heading.Design.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Assets\CSS\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="Views\Elements\PlaceableContentItem.cshtml" />
   </ItemGroup>

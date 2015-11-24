@@ -7,6 +7,6 @@ Version: 1.8
 OrchardVersion: 1.9
 LifecycleStatus: Deprecated
 Description: UI for browsing for, uploading, or selecting an image for an HTML editor.
-Dependencies: Orchard.Media, Orchard.jQuery
+Dependencies: Orchard.Media, Orchard.Resources
 FeatureDescription: UI for browsing for, uploading, or selecting an image for an HTML editor.
 Category: Input Editor
