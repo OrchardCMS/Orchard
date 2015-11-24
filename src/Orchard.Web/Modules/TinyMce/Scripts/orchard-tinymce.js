@@ -12,7 +12,6 @@ tinyMCE.init({
     selector: "textarea.tinymce",
     theme: "modern",
     schema: "html5",
-    entity_encoding : "raw",
     plugins: [
         "advlist autolink lists link image charmap print preview hr anchor pagebreak",
         "searchreplace wordcount visualblocks visualchars code fullscreen",
