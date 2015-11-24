@@ -1,5 +1,0 @@
-@{ Layout.Title = T("Create New Template").ToString(); }
-
-@foreach (var type in Model.ContentTypes) {
-    <p>@Html.ActionLink((string)type.DisplayName, "Create", new { area = "Contents", id = (string)type.Name, returnUrl = Request.QueryString["ReturnUrl"] })</p>
-}

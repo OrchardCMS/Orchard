@@ -1,0 +1,133 @@
+﻿@{
+    Model.PreviousText = T("&lt;");
+    Model.NextText = T("&gt;");
+
+    var routeData = new RouteValueDictionary(ViewContext.RouteData.Values);
+    var queryString = ViewContext.HttpContext.Request.QueryString;
+    if (queryString != null) {
+        foreach (string key in queryString.Keys) {
+            if (key != null && !routeData.ContainsKey(key)) {
+                var value = queryString[key];
+                routeData[key] = queryString[key];
+            }
+        }
+    }
+
+    if (routeData.ContainsKey("id") && !HasText(routeData["id"])) {
+        routeData.Remove("id");
+    }
+
+    var totalPageCount = Model.PageSize > 0 ? (int)Math.Ceiling((double)Model.TotalItemCount / Model.PageSize) : 1;
+
+    Model.Metadata.Type = "Pager_Links";
+    IHtmlString pagerLinks = Display(Model);
+
+    Model.Classes.Add("selector");
+    var pageSizeTag = Tag(Model, "ul");
+
+    if (Model.RouteData != null) {
+        foreach (var rd in Model.RouteData.Values) {
+            routeData[rd.Key] = rd.Value;
+        }
+    }
+
+    var pageSizes = new List<int?> { 10, 50, 100 };
+    var maxPageSize = WorkContext.CurrentSite.MaxPageSize;
+    var defaultPageSize = WorkContext.CurrentSite.PageSize;
+    if (maxPageSize > 0 && defaultPageSize > maxPageSize) {
+        defaultPageSize = maxPageSize;
+        pageSizes.RemoveAll(x => x > maxPageSize);
+    }
+    
+    if (defaultPageSize > 0 && !pageSizes.Contains(defaultPageSize)) {
+        pageSizes.Add(defaultPageSize);
+    }
+}
+
+@if (Model.TotalItemCount > 1) {
+    <div class="pager-footer">
+        @if (totalPageCount > 1 || Model.PageSize == 0 || Model.PageSize > pageSizes.First()) {
+            <div class="page-size-options group">
+                <div>@T("Show:")</div>
+
+                @pageSizeTag.StartElement
+
+                @{
+                    var pageId = String.IsNullOrEmpty(Model.PagerId) ? "page" : Model.PagerId;
+                    var nPage = Math.Max(1, Convert.ToInt32(routeData[pageId]));
+                    var firstItem = (nPage - 1)*Model.PageSize + 1;
+
+                    routeData["pageSize"] = 0;
+                    routeData[pageId] = 1;
+                }
+
+                    @if ((int)Model.PageSize == 0) {
+                        <li class="selected"><span>@T("All").ToString()</span></li>
+                    } else {
+                        <li>@Display.ActionLink(Value: T("All"), Action: (string)routeData["action"], Controller: (string)routeData["controller"], RouteValues: routeData)</li>
+                    }
+
+                    @foreach (int size in pageSizes.OrderBy(p => p)) {
+                        routeData["pageSize"] = size;
+
+                        routeData[pageId] = size > 0 ? Math.Ceiling((double) firstItem/size) : 1;
+                        
+                        if ((int)Model.PageSize == size) {
+                            <li class="selected"><span>@size.ToString()</span></li>
+                        } else {
+                            <li>@Display.ActionLink(Value: size, Action: (string)routeData["action"], Controller: (string)routeData["controller"], RouteValues: routeData)</li>
+                        }
+                    }
+
+                @pageSizeTag.EndElement
+            </div>
+        }
+
+        @if ((int) Model.PageSize >= 1) {
+            <span class="page-results">@T("Showing items {0} - {1} of {2}", (Model.Page - 1)*(int) Model.PageSize + 1, Model.PageSize == 0 ? Model.TotalItemCount : Math.Min(Model.TotalItemCount, (Model.Page)*(int) Model.PageSize), Model.TotalItemCount)</span>
+            @pagerLinks
+        }
+        else {
+            <span class="page-results">@T("Showing all {0} items", Model.TotalItemCount)</span>
+        }
+    </div>
+}
+@using (Script.Foot()) {
+<script type="text/javascript">
+    //<![CDATA[
+    $(function () {
+        var onSelectChange = function() {
+            // Rredirect to page with new page size.
+            // Disable button so that no other value can be chosen while the form is submitted.
+            window.location = $(this).attr("disabled", true).val();
+        };
+
+        var transformPager = function () {
+            $('ul.selector').each(function () {
+                var self = $(this),
+                    options = $.map(self.find("li"), function (li) {
+                        var self = $(li);
+                        return $("<option/>", {
+                            value: self.children("a").attr("href"),
+                            text: self.text(),
+                            selected: self.hasClass("selected")
+                        })[0];
+                    }),
+                    select = $("<select/>", {
+                        id: self.attr("id") + "Selector",
+                        "class": self.attr("class"),
+                        name: self.attr("name") + "Selector"
+                    }).change(onSelectChange).append(options);
+                self.replaceWith(select);
+            });
+        };
+
+        transformPager();
+
+        $(window).on("reinitialize", function() {
+            transformPager();
+        });
+    })
+//]]>
+</script>
+}

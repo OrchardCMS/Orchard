@@ -25,6 +25,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -64,27 +65,27 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="TheAdmin\Scripts\admin.js" />
-    <Content Include="TheAdmin\Styles\ie.css" />
-    <Content Include="TheAdmin\Styles\ie7.css" />
-    <Content Include="TheAdmin\Styles\ie8.css" />
-    <Content Include="TheAdmin\Styles\images\adminNavBackground.gif" />
-    <Content Include="TheAdmin\Styles\images\error.gif" />
-    <Content Include="TheAdmin\Styles\images\icon-advisory.png" />
-    <Content Include="TheAdmin\Styles\images\icon-contribute.png" />
-    <Content Include="TheAdmin\Styles\images\icon-docs.png" />
-    <Content Include="TheAdmin\Styles\images\icon-friends.png" />
-    <Content Include="TheAdmin\Styles\images\icon-gallery.png" />
-    <Content Include="TheAdmin\Styles\images\icon-settings.png" />
-    <Content Include="TheAdmin\Styles\images\info.gif" />
-    <Content Include="TheAdmin\Styles\images\menu-default.png" />
-    <Content Include="TheAdmin\Styles\images\menu-glyph.png" />
-    <Content Include="TheAdmin\Styles\images\menuClosed.gif" />
-    <Content Include="TheAdmin\Styles\images\menuClosedHover.gif" />
-    <Content Include="TheAdmin\Styles\images\menuOpen.gif" />
-    <Content Include="TheAdmin\Styles\images\menuOpenHover.gif" />
-    <Content Include="TheAdmin\Styles\images\vinesBackgroundBottom.gif" />
-    <Content Include="TheAdmin\Styles\images\menu-filter.png" />
+    <Content Include="TheOldAdmin\Scripts\admin.js" />
+    <Content Include="TheOldAdmin\Styles\ie.css" />
+    <Content Include="TheOldAdmin\Styles\ie7.css" />
+    <Content Include="TheOldAdmin\Styles\ie8.css" />
+    <Content Include="TheOldAdmin\Styles\images\adminNavBackground.gif" />
+    <Content Include="TheOldAdmin\Styles\images\error.gif" />
+    <Content Include="TheOldAdmin\Styles\images\icon-advisory.png" />
+    <Content Include="TheOldAdmin\Styles\images\icon-contribute.png" />
+    <Content Include="TheOldAdmin\Styles\images\icon-docs.png" />
+    <Content Include="TheOldAdmin\Styles\images\icon-friends.png" />
+    <Content Include="TheOldAdmin\Styles\images\icon-gallery.png" />
+    <Content Include="TheOldAdmin\Styles\images\icon-settings.png" />
+    <Content Include="TheOldAdmin\Styles\images\info.gif" />
+    <Content Include="TheOldAdmin\Styles\images\menu-default.png" />
+    <Content Include="TheOldAdmin\Styles\images\menu-glyph.png" />
+    <Content Include="TheOldAdmin\Styles\images\menuClosed.gif" />
+    <Content Include="TheOldAdmin\Styles\images\menuClosedHover.gif" />
+    <Content Include="TheOldAdmin\Styles\images\menuOpen.gif" />
+    <Content Include="TheOldAdmin\Styles\images\menuOpenHover.gif" />
+    <Content Include="TheOldAdmin\Styles\images\vinesBackgroundBottom.gif" />
+    <Content Include="TheOldAdmin\Styles\images\menu-filter.png" />
     <Content Include="TheThemeMachine\Styles\Site.css" />
     <Content Include="TheThemeMachine\Theme.png" />
     <Content Include="TheThemeMachine\Theme.txt" />
@@ -94,25 +95,25 @@
     <Content Include="SafeMode\Styles\Web.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="TheAdmin\Views\Pager.cshtml" />
-    <Content Include="TheAdmin\Views\OrchardVersion.cshtml" />
+    <Content Include="TheOldAdmin\Views\Pager.cshtml" />
+    <Content Include="TheOldAdmin\Views\OrchardVersion.cshtml" />
     <Content Include="TheThemeMachine\ThemeZonePreview.png" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="TheAdmin\Views\Menu.cshtml" />
+    <Content Include="TheOldAdmin\Views\Menu.cshtml" />
     <Content Include="TheThemeMachine\Views\Branding.cshtml" />
     <Content Include="TheThemeMachine\Views\BadgeOfHonor.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="TheAdmin\Styles\images\icons.png" />
-    <Content Include="TheAdmin\Styles\images\tableHeaderBackgroundRed.gif" />
-    <Content Include="TheAdmin\Styles\site.css" />
-    <Content Include="TheAdmin\Theme.txt" />
-    <Content Include="TheAdmin\Views\Layout.cshtml" />
+    <Content Include="TheOldAdmin\Styles\images\icons.png" />
+    <Content Include="TheOldAdmin\Styles\images\tableHeaderBackgroundRed.gif" />
+    <Content Include="TheOldAdmin\Styles\site.css" />
+    <Content Include="TheOldAdmin\Theme.txt" />
+    <Content Include="TheOldAdmin\Views\Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="TheAdmin\Styles\images\icons.psd" />
+    <Content Include="TheOldAdmin\Styles\images\icons.psd" />
     <Content Include="SafeMode\Content\orchard.ico" />
     <Content Include="SafeMode\Styles\ie6.css" />
     <Content Include="SafeMode\Styles\images\backgroundHeader.gif" />
@@ -122,12 +123,12 @@
     <Content Include="SafeMode\Theme.png" />
     <Content Include="SafeMode\Theme.txt" />
     <Content Include="SafeMode\Views\Layout.cshtml" />
-    <Content Include="TheAdmin\Styles\images\backgroundGradient.gif" />
-    <Content Include="TheAdmin\Styles\images\backgroundHeader.gif" />
-    <Content Include="TheAdmin\Styles\images\orchardLogo.gif" />
-    <Content Include="TheAdmin\Theme.png" />
-    <Content Include="TheAdmin\Views\User.cshtml" />
-    <Content Include="TheAdmin\Views\Header.cshtml" />
+    <Content Include="TheOldAdmin\Styles\images\backgroundGradient.gif" />
+    <Content Include="TheOldAdmin\Styles\images\backgroundHeader.gif" />
+    <Content Include="TheOldAdmin\Styles\images\orchardLogo.gif" />
+    <Content Include="TheOldAdmin\Theme.png" />
+    <Content Include="TheOldAdmin\Views\User.cshtml" />
+    <Content Include="TheOldAdmin\Views\Header.cshtml" />
     <Content Include="TheThemeMachine\Views\Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -136,12 +137,12 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="TheAdmin\Scripts\Web.config">
+    <Content Include="TheOldAdmin\Scripts\Web.config">
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="TheAdmin\Styles\Web.config">
+    <Content Include="TheOldAdmin\Styles\Web.config">
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
@@ -149,10 +150,10 @@
     <Content Include="TheThemeMachine\Placement.info" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="TheAdmin\Views\LocalMenu.cshtml" />
+    <Content Include="TheOldAdmin\Views\LocalMenu.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="TheAdmin\Views\Title.cshtml" />
+    <Content Include="TheOldAdmin\Views\Title.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Orchard\Orchard.Framework.csproj">
@@ -167,10 +168,10 @@
     <Content Include="TheThemeMachine\Views\Pager.Last.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="TheAdmin\Views\ErrorPage.cshtml" />
+    <Content Include="TheOldAdmin\Views\ErrorPage.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="TheAdmin\Views\AdminCultureSelector.cshtml" />
+    <Content Include="TheOldAdmin\Views\AdminCultureSelector.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

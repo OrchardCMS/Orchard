@@ -1,8 +1,0 @@
-﻿@model MenuItemPart
-@using Orchard.Core.Navigation.Models;
-
-<fieldset>
-<label for="@Html.FieldIdFor(m => m.Url)">@T("Url")</label>
-    @Html.TextBoxFor(m => m.Url, new { @class = "text large" })
-    <span class="hint">@T("A valid url, i.e. ~/my-page, http://orchardproject.net, /content/file.pdf, ...")</span>
-</fieldset>

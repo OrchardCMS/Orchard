@@ -1,7 +1,0 @@
-@{
-    Layout.Title = T("Create New Term").Text;
-}
-@using (Html.BeginFormAntiForgeryPost()) {
-    @Html.ValidationSummary()
-    @Display(Model)
-}

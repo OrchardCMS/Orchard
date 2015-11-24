@@ -17,7 +17,7 @@
                    Orchard.Scripting,Orchard.Scripting.Lightweight,PackagingServices,Orchard.Packaging,
                    Orchard.Projections,Orchard.Fields,Orchard.OutputCache,Orchard.Taxonomies,Orchard.Workflows,
                    Orchard.Layouts,Orchard.Layouts.Tokens,
-                   TheThemeMachine" />
+                   TheAdmin, TheThemeMachine" />
 
     <ContentDefinition>
         <Types>
