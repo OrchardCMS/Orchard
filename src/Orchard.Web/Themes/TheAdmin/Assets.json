@@ -1,0 +1,21 @@
+﻿[
+    {
+        "inputs": [
+            "Assets/Sass/Ionic/ionic.scss",
+            "Assets/Less/AdminLTE/AdminLTE.less"
+        ],
+        "output": "Styles/Site.css"
+    },
+    {
+        "inputs": [ "Assets/Less/AdminLTE/skins/skin-black-light.less" ],
+        "output": "Styles/Skins/skin.css"
+    },
+    {
+        "inputs": [ "Assets/Js/Plugins/*/*.js" ],
+        "output": "Scripts/Plugins.js"
+    },
+    {
+        "inputs": [ "Assets/Js/app.js" ],
+        "output": "Scripts/Site.js"
+    }
+]

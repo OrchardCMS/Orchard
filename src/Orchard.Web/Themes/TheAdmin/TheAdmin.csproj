@@ -69,13 +69,53 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\apple-touch-icon.png" />
-    <Content Include="Content\favicon.ico" />
+    <Content Include="Assets\Js\app.js" />
+    <Content Include="Assets\Js\Plugins\ChartJs\Chart.js" />
+    <Content Include="Assets\Js\Plugins\FastClick\fastclick.js" />
+    <Content Include="Assets\Js\Plugins\SlimScroll\jquery.slimscroll.js" />
+    <Content Include="Assets\Js\Plugins\Sparkline\jquery.sparkline.js" />
+    <Content Include="Images\apple-touch-icon.png" />
+    <Content Include="Images\avatar.png" />
+    <Content Include="Images\avatar04.png" />
+    <Content Include="Images\avatar2.png" />
+    <Content Include="Images\avatar3.png" />
+    <Content Include="Images\avatar5.png" />
+    <Content Include="Images\boxed-bg.jpg" />
+    <Content Include="Images\boxed-bg.png" />
+    <Content Include="Images\credit\american-express.png" />
+    <Content Include="Images\credit\cirrus.png" />
+    <Content Include="Images\credit\mastercard.png" />
+    <Content Include="Images\credit\mestro.png" />
+    <Content Include="Images\credit\paypal.png" />
+    <Content Include="Images\credit\paypal2.png" />
+    <Content Include="Images\credit\visa.png" />
+    <Content Include="Images\default-50x50.gif" />
+    <Content Include="Images\favicon.ico" />
     <Content Include="HtmlPage1.html" />
+    <Content Include="Images\icons.png" />
+    <Content Include="Images\photo1.png" />
+    <Content Include="Images\photo2.png" />
+    <Content Include="Images\photo3.jpg" />
+    <Content Include="Images\photo4.jpg" />
+    <Content Include="Images\user1-128x128.jpg" />
+    <Content Include="Images\user2-160x160.jpg" />
+    <Content Include="Images\user3-128x128.jpg" />
+    <Content Include="Images\user4-128x128.jpg" />
+    <Content Include="Images\user5-128x128.jpg" />
+    <Content Include="Images\user6-128x128.jpg" />
+    <Content Include="Images\user7-128x128.jpg" />
+    <Content Include="Images\user8-128x128.jpg" />
+    <Content Include="Scripts\Plugins.js" />
+    <Content Include="Scripts\Plugins.min.js" />
+    <Content Include="Scripts\Site.js" />
+    <Content Include="Scripts\Site.min.js" />
+    <Content Include="Styles\Fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Styles\Fonts\ionicons.svg" />
+    <Content Include="Styles\Site.css" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
-    <Content Include="Content\Web.config" />
+    <Content Include="Images\Web.config" />
     <Content Include="Theme.txt" />
     <Content Include="Theme.png" />
     <Content Include="Placement.info" />
@@ -127,6 +167,117 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Document.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\AdminLTE\404_500_errors.less" />
+    <Content Include="Assets\Less\AdminLTE\AdminLTE.less" />
+    <Content Include="Assets\Less\AdminLTE\alerts.less" />
+    <Content Include="Assets\Less\AdminLTE\bootstrap-social.less" />
+    <Content Include="Assets\Less\AdminLTE\boxes.less" />
+    <Content Include="Assets\Less\AdminLTE\buttons.less" />
+    <Content Include="Assets\Less\AdminLTE\callout.less" />
+    <Content Include="Assets\Less\AdminLTE\carousel.less" />
+    <Content Include="Assets\Less\AdminLTE\control-sidebar.less" />
+    <Content Include="Assets\Less\AdminLTE\core.less" />
+    <Content Include="Assets\Less\AdminLTE\direct-chat.less" />
+    <Content Include="Assets\Less\AdminLTE\dropdown.less" />
+    <Content Include="Assets\Less\AdminLTE\forms.less" />
+    <Content Include="Assets\Less\AdminLTE\fullcalendar.less" />
+    <Content Include="Assets\Less\AdminLTE\header.less" />
+    <Content Include="Assets\Less\AdminLTE\info-box.less" />
+    <Content Include="Assets\Less\AdminLTE\invoice.less" />
+    <Content Include="Assets\Less\AdminLTE\labels.less" />
+    <Content Include="Assets\Less\AdminLTE\lockscreen.less" />
+    <Content Include="Assets\Less\AdminLTE\login_and_register.less" />
+    <Content Include="Assets\Less\AdminLTE\mailbox.less" />
+    <Content Include="Assets\Less\AdminLTE\miscellaneous.less" />
+    <Content Include="Assets\Less\AdminLTE\mixins.less" />
+    <Content Include="Assets\Less\AdminLTE\modal.less" />
+    <Content Include="Assets\Less\AdminLTE\navs.less" />
+    <Content Include="Assets\Less\AdminLTE\print.less" />
+    <Content Include="Assets\Less\AdminLTE\products.less" />
+    <Content Include="Assets\Less\AdminLTE\profile.less" />
+    <Content Include="Assets\Less\AdminLTE\progress-bars.less" />
+    <Content Include="Assets\Less\AdminLTE\select2.less" />
+    <Content Include="Assets\Less\AdminLTE\sidebar-mini.less" />
+    <Content Include="Assets\Less\AdminLTE\sidebar.less" />
+    <Content Include="Assets\Less\AdminLTE\skins\skin-black-light.less" />
+    <Content Include="Assets\Less\AdminLTE\skins\skin-black.less" />
+    <Content Include="Assets\Less\AdminLTE\skins\skin-blue-light.less" />
+    <Content Include="Assets\Less\AdminLTE\skins\skin-blue.less" />
+    <Content Include="Assets\Less\AdminLTE\skins\skin-green-light.less" />
+    <Content Include="Assets\Less\AdminLTE\skins\skin-green.less" />
+    <Content Include="Assets\Less\AdminLTE\skins\skin-purple-light.less" />
+    <Content Include="Assets\Less\AdminLTE\skins\skin-purple.less" />
+    <Content Include="Assets\Less\AdminLTE\skins\skin-red-light.less" />
+    <Content Include="Assets\Less\AdminLTE\skins\skin-red.less" />
+    <Content Include="Assets\Less\AdminLTE\skins\skin-yellow-light.less" />
+    <Content Include="Assets\Less\AdminLTE\skins\skin-yellow.less" />
+    <Content Include="Assets\Less\AdminLTE\skins\_all-skins.less" />
+    <Content Include="Assets\Less\AdminLTE\small-box.less" />
+    <Content Include="Assets\Less\AdminLTE\social-widgets.less" />
+    <Content Include="Assets\Less\AdminLTE\table.less" />
+    <Content Include="Assets\Less\AdminLTE\timeline.less" />
+    <Content Include="Assets\Less\AdminLTE\users-list.less" />
+    <Content Include="Assets\Less\AdminLTE\variables.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Sass\Ionic\ionic.scss" />
+    <Content Include="Assets\Sass\Ionic\ionicons\ionicons.scss" />
+    <Content Include="Assets\Sass\Ionic\ionicons\_ionicons-font.scss" />
+    <Content Include="Assets\Sass\Ionic\ionicons\_ionicons-icons.scss" />
+    <Content Include="Assets\Sass\Ionic\ionicons\_ionicons-variables.scss" />
+    <Content Include="Assets\Sass\Ionic\_action-sheet.scss" />
+    <Content Include="Assets\Sass\Ionic\_animations.scss" />
+    <Content Include="Assets\Sass\Ionic\_backdrop.scss" />
+    <Content Include="Assets\Sass\Ionic\_badge.scss" />
+    <Content Include="Assets\Sass\Ionic\_bar.scss" />
+    <Content Include="Assets\Sass\Ionic\_button-bar.scss" />
+    <Content Include="Assets\Sass\Ionic\_button.scss" />
+    <Content Include="Assets\Sass\Ionic\_checkbox.scss" />
+    <Content Include="Assets\Sass\Ionic\_form.scss" />
+    <Content Include="Assets\Sass\Ionic\_grid.scss" />
+    <Content Include="Assets\Sass\Ionic\_items.scss" />
+    <Content Include="Assets\Sass\Ionic\_list.scss" />
+    <Content Include="Assets\Sass\Ionic\_loading.scss" />
+    <Content Include="Assets\Sass\Ionic\_menu.scss" />
+    <Content Include="Assets\Sass\Ionic\_mixins.scss" />
+    <Content Include="Assets\Sass\Ionic\_modal.scss" />
+    <Content Include="Assets\Sass\Ionic\_platform.scss" />
+    <Content Include="Assets\Sass\Ionic\_popover.scss" />
+    <Content Include="Assets\Sass\Ionic\_popup.scss" />
+    <Content Include="Assets\Sass\Ionic\_progress.scss" />
+    <Content Include="Assets\Sass\Ionic\_radio.scss" />
+    <Content Include="Assets\Sass\Ionic\_range.scss" />
+    <Content Include="Assets\Sass\Ionic\_refresher.scss" />
+    <Content Include="Assets\Sass\Ionic\_reset.scss" />
+    <Content Include="Assets\Sass\Ionic\_scaffolding.scss" />
+    <Content Include="Assets\Sass\Ionic\_select.scss" />
+    <Content Include="Assets\Sass\Ionic\_slide-box.scss" />
+    <Content Include="Assets\Sass\Ionic\_spinner.scss" />
+    <Content Include="Assets\Sass\Ionic\_tabs.scss" />
+    <Content Include="Assets\Sass\Ionic\_toggle.scss" />
+    <Content Include="Assets\Sass\Ionic\_transitions.scss" />
+    <Content Include="Assets\Sass\Ionic\_type.scss" />
+    <Content Include="Assets\Sass\Ionic\_util.scss" />
+    <Content Include="Assets\Sass\Ionic\_variables.scss" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Images\credit\Thumbs.db" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\Fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Styles\Fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Styles\Fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Styles\Fonts\glyphicons-halflings-regular.woff2" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\Fonts\ionicons.eot" />
+    <Content Include="Styles\Fonts\ionicons.ttf" />
+    <Content Include="Styles\Fonts\ionicons.woff" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
