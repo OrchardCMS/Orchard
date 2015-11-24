@@ -1,8 +1,6 @@
-using Orchard.Environment.Extensions;
 using Orchard.UI.Resources;
 
 namespace Orchard.Resources {
-    [OrchardFeature("Orchard.Resources.History")]
     public class History : IResourceManifestProvider {
         public void BuildManifests(ResourceManifestBuilder builder) {
             var manifest = builder.Add();

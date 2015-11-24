@@ -1,8 +1,6 @@
-using Orchard.Environment.Extensions;
 using Orchard.UI.Resources;
 
 namespace Orchard.Resources {
-    [OrchardFeature("Orchard.Resources.FontAwesome")]
     public class FontAwesome : IResourceManifestProvider {
         public void BuildManifests(ResourceManifestBuilder builder) {
             var manifest = builder.Add();
