@@ -170,6 +170,7 @@
     <Compile Include="Models\ShapePart.cs" />
     <Compile Include="Migrations\Migrations.cs" />
     <Compile Include="Migrations\RazorMigrations.cs" />
+    <Compile Include="Permissions.cs" />
     <Compile Include="Services\ITemplateProcessor.cs" />
     <Compile Include="Services\ITemplateService.cs" />
     <Compile Include="Services\NoTemplateProcessorBanner.cs" />

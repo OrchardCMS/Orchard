@@ -85,8 +85,10 @@
     <Reference Include="Microsoft.WindowsAzure.MediaServices.Client">
       <HintPath>..\..\..\..\lib\windowsazure\Microsoft.WindowsAzure.MediaServices.Client.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.WindowsAzure.MediaServices.Client.Common.BlobTransfer">
+      <HintPath>..\..\..\..\lib\windowsazure\Microsoft.WindowsAzure.MediaServices.Client.Common.BlobTransfer.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.WindowsAzure.Storage">
-      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\lib\windowsazure\Microsoft.WindowsAzure.Storage.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
@@ -200,7 +202,6 @@
     <Content Include="Scripts\cloudmedia-videoplayer-main.min.js" />
     <Content Include="Assets\JavaScript\Lib\console-shim.js" />
     <Content Include="Assets\JavaScript\Lib\dash.all.js" />
-    <Content Include="Assets\JavaScript\Lib\jquery.blockui.js" />
     <Content Include="Assets\TypeScript\cloudmedia-admin-job.ts" />
     <Content Include="Assets\TypeScript\cloudmedia-admin-common.ts" />
     <Content Include="Assets\TypeScript\cloudmedia-autorefresh.ts" />
@@ -210,36 +211,16 @@
     <Content Include="Assets\TypeScript\cloudmedia-edit-cloudvideopart.ts" />
     <Content Include="Assets\TypeScript\cloudmedia-edit-cloudvideopart-proxied.ts" />
     <Content Include="Assets\TypeScript\cloudmedia-metadata-cloudvideopart.ts" />
-    <Content Include="Assets\JavaScript\Lib\jquery.fileupload-process.js" />
-    <Content Include="Assets\JavaScript\Lib\jquery.fileupload-validate.js" />
-    <Content Include="Assets\JavaScript\Lib\jquery.fileupload.js" />
     <Content Include="Assets\JavaScript\Lib\jstree.js" />
-    <Content Include="Assets\JavaScript\Lib\moment.js" />
     <Content Include="Assets\JavaScript\Lib\swfobject.js" />
-    <Content Include="Assets\JavaScript\Lib\uri.js" />
     <Content Include="Scripts\Lib\console-shim.js" />
     <Content Include="Scripts\Lib\console-shim.min.js" />
     <Content Include="Scripts\Lib\dash.all.js" />
     <Content Include="Scripts\Lib\dash.all.min.js" />
-    <Content Include="Scripts\Lib\jquery.blockUI.js" />
-    <Content Include="Scripts\Lib\jquery.blockUI.min.js" />
-    <Content Include="Scripts\Lib\jquery.fileupload-process.js" />
-    <Content Include="Scripts\Lib\jquery.fileupload-process.min.js" />
-    <Content Include="Scripts\Lib\jquery.fileupload-validate.js" />
-    <Content Include="Scripts\Lib\jquery.fileupload-validate.min.js" />
-    <Content Include="Scripts\Lib\jquery.fileupload.js" />
-    <Content Include="Scripts\Lib\jquery.fileupload.min.js" />
     <Content Include="Scripts\Lib\jstree.js" />
     <Content Include="Scripts\Lib\jstree.min.js" />
-    <Content Include="Scripts\Lib\moment.js" />
-    <Content Include="Scripts\Lib\moment.min.js" />
     <Content Include="Scripts\Lib\swfobject.js" />
     <Content Include="Scripts\Lib\swfobject.min.js" />
-    <Content Include="Scripts\Lib\underscore.js" />
-    <Content Include="Scripts\Lib\underscore.min.js" />
-    <Content Include="Scripts\Lib\uri.js" />
-    <Content Include="Scripts\Lib\uri.min.js" />
-    <Content Include="Assets\JavaScript\Lib\underscore.js" />
     <Content Include="Styles\cloudmedia-admin-asset.css" />
     <Content Include="Styles\cloudmedia-admin-asset.min.css" />
     <Content Include="Styles\cloudmedia-admin-job.css" />
@@ -270,7 +251,9 @@
     <Content Include="Assets\Less\cloudmedia-edit-cloudvideopart.less" />
     <Content Include="Styles\menu.cloudmedia-mediaproviders.css" />
     <Content Include="Styles\menu.cloudmedia-mediaproviders.min.css" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
     <Content Include="Properties\AssemblyInfo.cs" />
@@ -284,7 +267,6 @@
     <Content Include="Assets\TypeScript\cloudmedia-videoplayer-main.ts" />
     <Content Include="Assets\TypeScript\Typings\moment.d.ts" />
     <Content Include="Assets\TypeScript\Typings\underscore.d.ts" />
-    <Content Include="Assets\TypeScript\Typings\uri.d.ts" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
@@ -547,7 +529,13 @@
   <ItemGroup>
     <None Include="Assets\JavaScript\Lib\MPEG Dash Notice.docx" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\TypeScript\Typings\moment-node.d.ts" />
+    <Content Include="Assets\TypeScript\Typings\URIjs.d.ts" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

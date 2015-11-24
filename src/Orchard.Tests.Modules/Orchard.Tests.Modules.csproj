@@ -190,9 +190,9 @@
     <Compile Include="Users\Services\MembershipServiceTests.cs" />
     <Compile Include="Warmup\WebDownloaderTests.cs" />
     <Compile Include="Warmup\WarmupUpdaterTests.cs" />
-    <Compile Include="Widgets\RuleEngine\UrlRuleProviderTest.cs" />
+    <Compile Include="Conditions\Providers\UrlRuleConditionTest.cs" />
     <Compile Include="Widgets\Services\WidgetsServiceTest.cs" />
-    <Compile Include="Widgets\WidgetsTests.cs" />
+    <Compile Include="Conditions\ConditionEvaluationTests.cs" />
     <Compile Include="Workflows\Activities\WebRequestActivityTests.cs" />
     <Compile Include="XmlRpc\Controllers\LiveWriterControllerTests.cs" />
     <Compile Include="XmlRpc\Controllers\HomeControllerTests.cs" />
@@ -224,6 +224,10 @@
     <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Comments\Orchard.Comments.csproj">
       <Project>{14C049FD-B35B-415A-A824-87F26B26E7FD}</Project>
       <Name>Orchard.Comments</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Conditions\Orchard.Conditions.csproj">
+      <Project>{98251eae-a41b-47b2-aa91-e28b8482da70}</Project>
+      <Name>Orchard.Conditions</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Web\Modules\Orchard.DesignerTools\Orchard.DesignerTools.csproj">
       <Project>{4A4595EF-6C37-4F99-96ED-4AE0B9E438D3}</Project>
@@ -280,6 +284,10 @@
     <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Tags\Orchard.Tags.csproj">
       <Project>{5D0F00F0-26C9-4785-AD61-B85710C60EB0}</Project>
       <Name>Orchard.Tags</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.TaskLease\Orchard.TaskLease.csproj">
+      <Project>{3f72a4e9-7b72-4260-b010-c16ec54f9baf}</Project>
+      <Name>Orchard.TaskLease</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Themes\Orchard.Themes.csproj">
       <Project>{CDE24A24-01D3-403C-84B9-37722E18DFB7}</Project>

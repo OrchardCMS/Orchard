@@ -21,6 +21,11 @@ namespace Orchard.Autoroute.Models {
             set { Store(x => x.DisplayAlias, value); }
         }
 
+        public bool PromoteToHomePage {
+            get { return this.Retrieve(x => x.PromoteToHomePage); }
+            set { this.Store(x => x.PromoteToHomePage, value); }
+        }
+
         public string Path {
             get { return DisplayAlias; }
         }

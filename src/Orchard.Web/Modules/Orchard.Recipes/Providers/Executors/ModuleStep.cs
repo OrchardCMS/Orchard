@@ -18,7 +18,8 @@ namespace Orchard.Recipes.Providers.Executors {
         public ModuleStep(
             IPackagingSourceManager packagingSourceManager, 
             IPackageManager packageManager, 
-            IExtensionManager extensionManager) {
+            IExtensionManager extensionManager,
+            RecipeExecutionLogger logger) : base(logger) {
 
             _packagingSourceManager = packagingSourceManager;
             _packageManager = packageManager;
@@ -47,7 +48,7 @@ namespace Orchard.Recipes.Providers.Executors {
             }
 
             if (packageId == null) {
-                throw new InvalidOperationException("PackageId is required in a Module declaration in a recipe file.");
+                throw new InvalidOperationException("PackageId is required in a module declaration in a recipe file.");
             }
 
             // download and install module from the orchard feed or a custom feed if repository is specified.

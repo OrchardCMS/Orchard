@@ -17,8 +17,8 @@ namespace Orchard.Localization.Services {
         private readonly ISignals _signals;
 
         const string CoreLocalizationFilePathFormat = "~/Core/App_Data/Localization/{0}/orchard.core.po";
-        const string ModulesLocalizationFilePathFormat = "~/Modules/{0}/App_Data/Localization/{1}/orchard.module.po";
-        const string ThemesLocalizationFilePathFormat = "~/Themes/{0}/App_Data/Localization/{1}/orchard.theme.po";
+        const string ModulesLocalizationFilePathFormat = "{0}/App_Data/Localization/{1}/orchard.module.po";
+        const string ThemesLocalizationFilePathFormat = "{0}/App_Data/Localization/{1}/orchard.theme.po";
         const string RootLocalizationFilePathFormat = "~/App_Data/Localization/{0}/orchard.root.po";
         const string TenantLocalizationFilePathFormat = "~/App_Data/Sites/{0}/Localization/{1}/orchard.po";
 
@@ -90,7 +90,7 @@ namespace Orchard.Localization.Services {
         // Cache entry will be invalidated any time the directories hosting 
         // the .po files are modified.
         private CultureDictionary LoadCulture(string culture) {
-            return _cacheManager.Get(culture, ctx => {
+            return _cacheManager.Get(culture, true, ctx => {
                 ctx.Monitor(_signals.When("culturesChanged"));
                 return new CultureDictionary {
                     CultureName = culture,
@@ -124,7 +124,7 @@ namespace Orchard.Localization.Services {
 
             foreach (var module in _extensionManager.AvailableExtensions()) {
                 if (DefaultExtensionTypes.IsModule(module.ExtensionType)) {
-                    string modulePath = string.Format(ModulesLocalizationFilePathFormat, module.Id, culture);
+                    string modulePath = string.Format(ModulesLocalizationFilePathFormat, module.VirtualPath, culture);
                     text = _webSiteFolder.ReadFile(modulePath);
                     if (text != null) {
                         _localizationStreamParser.ParseLocalizationStream(text, translations, true);
@@ -139,7 +139,7 @@ namespace Orchard.Localization.Services {
 
             foreach (var theme in _extensionManager.AvailableExtensions()) {
                 if (DefaultExtensionTypes.IsTheme(theme.ExtensionType)) {
-                    string themePath = string.Format(ThemesLocalizationFilePathFormat, theme.Id, culture);
+                    string themePath = string.Format(ThemesLocalizationFilePathFormat, theme.VirtualPath, culture);
                     text = _webSiteFolder.ReadFile(themePath);
                     if (text != null) {
                         _localizationStreamParser.ParseLocalizationStream(text, translations, true);

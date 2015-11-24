@@ -1,16 +1,10 @@
-﻿using Orchard.Autoroute.Models;
-using Orchard.Autoroute.Services;
-using Orchard.Autoroute.Settings;
-using Orchard.ContentManagement;
-using Orchard.ContentManagement.MetaData;
-using Orchard.ContentManagement.MetaData.Models;
+﻿using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace Orchard.Autoroute {
-    public class Migrations : DataMigrationImpl {
+namespace Orchard.Autoroute
+{
+	public class Migrations : DataMigrationImpl {
 
         public int Create() {
             SchemaBuilder.CreateTable("AutoroutePartRecord",

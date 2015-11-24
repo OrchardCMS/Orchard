@@ -61,7 +61,7 @@ namespace Orchard.Widgets.Controllers {
                 return RedirectToAction("Index", "Admin", new { area = "Dashboard" });
             }
 
-            IEnumerable<LayerPart> layers = _widgetsService.GetLayers().ToList();
+            IEnumerable<LayerPart> layers = _widgetsService.GetLayers().OrderBy(x => x.Name).ToList();
 
             if (!layers.Any()) {
                 Services.Notifier.Error(T("There are no widget layers defined. A layer will need to be added in order to add widgets to any part of the site."));
@@ -69,7 +69,8 @@ namespace Orchard.Widgets.Controllers {
             }
 
             LayerPart currentLayer = layerId == null
-                ? layers.FirstOrDefault()
+                // look for the "Default" layer, or take the first if it doesn't exist
+                ? layers.FirstOrDefault(x => x.Name == "Default") ?? layers.FirstOrDefault()
                 : layers.FirstOrDefault(layer => layer.Id == layerId);
 
             if (currentLayer == null && layerId != null) { // Incorrect layer id passed
@@ -87,10 +88,10 @@ namespace Orchard.Widgets.Controllers {
 
             if (!String.IsNullOrWhiteSpace(culture)) {
                 widgets = widgets.Where(x => {
-                    if(x.Has<ILocalizableAspect>()) {
+                    if (x.Has<ILocalizableAspect>()) {
                         return String.Equals(x.As<ILocalizableAspect>().Culture, culture, StringComparison.InvariantCultureIgnoreCase);
                     }
-                    
+
                     return false;
                 }).ToList();
             }
@@ -142,7 +143,7 @@ namespace Orchard.Widgets.Controllers {
                 return RedirectToAction("Index");
             }
 
-            IEnumerable<LayerPart> layers = _widgetsService.GetLayers().ToList();
+            IEnumerable<LayerPart> layers = _widgetsService.GetLayers().OrderBy(x => x.Name).ToList();
 
             if (!layers.Any()) {
                 Services.Notifier.Error(T("Layer not found: {0}", layerId));
@@ -315,7 +316,8 @@ namespace Orchard.Widgets.Controllers {
             try {
                 _widgetsService.DeleteLayer(id);
                 Services.Notifier.Information(T("Layer was successfully deleted"));
-            } catch (Exception exception) {
+            }
+            catch (Exception exception) {
                 Logger.Error(T("Removing Layer failed: {0}", exception.Message).Text);
                 Services.Notifier.Error(T("Removing Layer failed: {0}", exception.Message));
             }

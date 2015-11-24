@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Linq;
-using Orchard.Alias.Implementation.Holder;
-using Orchard.Alias.Implementation.Storage;
 using Orchard.Environment;
 using Orchard.Tasks;
 using Orchard.Logging;

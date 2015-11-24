@@ -238,8 +238,17 @@ namespace Orchard.Localization.Services {
                 if (!m.Groups["amPm"].Success) {
                     throw new FormatException("The string was not recognized as a valid time. The hour is in 12-hour notation but no AM/PM designator was found.");
                 }
-                var isPm = m.Groups["amPm"].Value.Equals(_dateTimeFormatProvider.AmPmDesignators[1], StringComparison.InvariantCultureIgnoreCase);
-                hour = ConvertToHour24(Int32.Parse(m.Groups["hour12"].Value), isPm);
+
+                var hour12 = Int32.Parse(m.Groups["hour12"].Value);
+                var isPm = false;
+                
+                // Fix for some cultures on Windows 10 where both designators for some reason are empty strings.
+                if (_dateTimeFormatProvider.AmPmDesignators[0] == _dateTimeFormatProvider.AmPmDesignators[1])
+                    isPm = hour12 >= 12;
+                else
+                    isPm = m.Groups["amPm"].Value.Equals(_dateTimeFormatProvider.AmPmDesignators[1], StringComparison.InvariantCultureIgnoreCase);
+
+                hour = ConvertToHour24(hour12, isPm);
             }
 
             if (m.Groups["minute"].Success) {

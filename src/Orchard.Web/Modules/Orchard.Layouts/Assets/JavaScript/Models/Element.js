@@ -57,7 +57,7 @@
         this.setIsActive = function (value) {
             if (!this.editor)
                 return;
-            if (this.editor.isDragging || this.editor.inlineEditingIsActive || this.editor.isResizing)
+            if (this.editor.isDragging || this.editor.isResizing)
                 return;
 
             if (value)
@@ -72,16 +72,12 @@
             return this.editor.focusedElement === this;
         };
 
-        this.allowSealedFocus = function() {
-            return false;
-        };
-
         this.setIsFocused = function () {
             if (!this.editor)
-                return;
-            if (this.isTemplated && !this.allowSealedFocus())
-                return;
-            if (this.editor.isDragging || this.editor.inlineEditingIsActive || this.editor.isResizing)
+            	return;
+            if (!this.children && this.isTemplated)
+            	return;
+            if (this.editor.isDragging || this.editor.isResizing)
                 return;
 
             this.editor.focusedElement = this;
@@ -124,34 +120,39 @@
         };
 
         this.canDelete = function () {
-            return !!this.parent;
+            if (this.isTemplated || !this.parent)
+                return false;
+            return true;
         };
 
         this.delete = function () {
-            if (!!this.parent)
-                this.parent.deleteChild(this);
+            if (!this.canDelete())
+                return;
+            this.parent.deleteChild(this);
         };
 
         this.canMoveUp = function () {
-            if (!this.parent)
+            if (this.isTemplated || !this.parent)
                 return false;
             return this.parent.canMoveChildUp(this);
         };
 
         this.moveUp = function () {
-            if (!!this.parent)
-                this.parent.moveChildUp(this);
+            if (!this.canMoveUp())
+                return;
+            this.parent.moveChildUp(this);
         };
 
         this.canMoveDown = function () {
-            if (!this.parent)
+            if (this.isTemplated || !this.parent)
                 return false;
             return this.parent.canMoveChildDown(this);
         };
 
         this.moveDown = function () {
-            if (!!this.parent)
-                this.parent.moveChildDown(this);
+            if (!this.canMoveDown())
+                return;
+            this.parent.moveChildDown(this);
         };
 
         this.elementToObject = function () {
@@ -180,8 +181,10 @@
         };
 
         this.cut = function (clipboardData) {
-            this.copy(clipboardData);
-            this.delete();
+            if (this.canDelete()) {
+                this.copy(clipboardData);
+                this.delete();
+            }
         };
 
         this.paste = function (clipboardData) {

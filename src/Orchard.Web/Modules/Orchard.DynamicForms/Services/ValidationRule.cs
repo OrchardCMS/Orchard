@@ -1,5 +1,4 @@
 using Orchard.DynamicForms.Services.Models;
-using Orchard.Localization;
 using Orchard.Tokens;
 
 namespace Orchard.DynamicForms.Services {

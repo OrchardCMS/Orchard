@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Orchard.Alias;
 using Orchard.Autoroute.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Data;
 using Orchard.DisplayManagement;
+using Orchard.Layouts.Framework.Elements;
 using Orchard.Layouts.Models;
 using Orchard.Layouts.Services;
 using Orchard.Utility.Extensions;
@@ -16,17 +19,17 @@ namespace Orchard.Layouts.Handlers {
         private readonly IContentPartDisplay _contentPartDisplay;
         private readonly IShapeDisplay _shapeDisplay;
         private readonly ILayoutSerializer _serializer;
-        private readonly IStaticHttpContextScopeFactory _staticHttpContextScopeFactory;
         private readonly IAliasService _aliasService;
+        private readonly IElementManager _elementManager;
 
         public LayoutPartHandler(
-            IRepository<LayoutPartRecord> repository, 
-            ILayoutManager layoutManager, 
-            IContentManager contentManager, 
-            IContentPartDisplay contentPartDisplay, 
-            IShapeDisplay shapeDisplay, 
+            IRepository<LayoutPartRecord> repository,
+            ILayoutManager layoutManager,
+            IElementManager elementManager,
+            IContentManager contentManager,
+            IContentPartDisplay contentPartDisplay,
+            IShapeDisplay shapeDisplay,
             ILayoutSerializer serializer,
-            IStaticHttpContextScopeFactory staticHttpContextScopeFactory,
             IAliasService aliasService) {
 
             _layoutManager = layoutManager;
@@ -34,30 +37,22 @@ namespace Orchard.Layouts.Handlers {
             _contentPartDisplay = contentPartDisplay;
             _shapeDisplay = shapeDisplay;
             _serializer = serializer;
-            _staticHttpContextScopeFactory = staticHttpContextScopeFactory;
             _aliasService = aliasService;
+            _elementManager = elementManager;
 
             Filters.Add(StorageFilter.For(repository));
             OnPublished<LayoutPart>(UpdateTemplateClients);
             OnIndexing<LayoutPart>(IndexLayout);
+            OnRemoved<LayoutPart>(RemoveElements);
         }
 
         private void IndexLayout(IndexContentContext context, LayoutPart part) {
             var layoutShape = _contentPartDisplay.BuildDisplay(part);
-            var layoutHtml = RenderShape(layoutShape);
+            var layoutHtml = _shapeDisplay.Display(layoutShape);
 
             context.DocumentIndex
                 .Add("body", layoutHtml).RemoveTags().Analyze()
                 .Add("format", "html").Store();
-        }
-
-        /// <summary>
-        /// This method of rendering is safe even in background tasks.
-        /// </summary>
-        private string RenderShape(dynamic shape) {
-            using (_staticHttpContextScopeFactory.CreateStaticScope()) {
-                return _shapeDisplay.Display(shape);
-            }
         }
 
         private void UpdateTemplateClients(PublishContentContext context, LayoutPart part) {
@@ -97,6 +92,16 @@ namespace Orchard.Layouts.Handlers {
                     UpdateTemplateClients(draft);
                 }
             }
+        }
+
+        private void RemoveElements(RemoveContentContext context, LayoutPart part) {
+            var elements = _layoutManager.LoadElements(part).ToList();
+            var savingContext = new LayoutSavingContext {
+                Content = part,
+                Elements = new List<Element>(),
+                RemovedElements = elements
+            };
+            _elementManager.Removing(savingContext);
         }
 
         private bool IsHomePage(IContent content) {

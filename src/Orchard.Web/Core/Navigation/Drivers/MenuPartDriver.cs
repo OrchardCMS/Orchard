@@ -80,23 +80,25 @@ namespace Orchard.Core.Navigation.Drivers {
         }
 
         protected override void Importing(MenuPart part, ContentManagement.Handlers.ImportContentContext context) {
-            var menuText = context.Attribute(part.PartDefinition.Name, "MenuText");
-            if (menuText != null) {
-                part.MenuText = menuText;
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
             }
 
-            var position = context.Attribute(part.PartDefinition.Name, "MenuPosition");
-            if (position != null) {
-                part.MenuPosition = position;
-            }
+            context.ImportAttribute(part.PartDefinition.Name, "MenuText", menuText =>
+                part.MenuText = menuText
+            );
 
-            var menuIdentity = context.Attribute(part.PartDefinition.Name, "Menu");
-            if (menuIdentity != null) {
+            context.ImportAttribute(part.PartDefinition.Name, "MenuPosition", position =>
+                part.MenuPosition = position
+            );
+
+            context.ImportAttribute(part.PartDefinition.Name, "Menu", menuIdentity => {
                 var menu = context.GetItemFromSession(menuIdentity);
                 if (menu != null) {
                     part.Menu = menu;
                 }
-            }
+            });
         }
 
         protected override void Exporting(MenuPart part, ContentManagement.Handlers.ExportContentContext context) {

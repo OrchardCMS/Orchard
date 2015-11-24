@@ -22,11 +22,11 @@ namespace Orchard.Roles.Recipes.Builders {
         }
 
         public override LocalizedString Description {
-            get { return T("Exports the user roles."); }
+            get { return T("Exports user roles."); }
         }
 
         public override void Build(BuildContext context) {
-            var roles = _roleRecordepository.Table.ToList();
+            var roles = _roleRecordepository.Table.OrderBy(x => x.Name).ToList();
 
             if (!roles.Any())
                 return;
@@ -34,7 +34,7 @@ namespace Orchard.Roles.Recipes.Builders {
             var root = new XElement("Roles");
             context.RecipeDocument.Element("Orchard").Add(root);
 
-            foreach (var role in roles.OrderBy(x => x.Name)) {
+            foreach (var role in roles) {
                 root.Add(
                     new XElement("Role",
                         new XAttribute("Name", role.Name),

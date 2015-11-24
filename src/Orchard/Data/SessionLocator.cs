@@ -74,6 +74,7 @@ namespace Orchard.Data {
             if (_session != null && _session.Transaction.IsActive) {
                 Logger.Debug("Rolling back transaction");
                 _session.Transaction.Rollback();
+                DisposeSession();
             }
         }
 

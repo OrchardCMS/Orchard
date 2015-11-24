@@ -1,4 +1,6 @@
 ﻿@{
+    Script.Require("SelectableContentTab");
+    
     var pageTitle = T("Search Content");
     Layout.Title = pageTitle;
 }
@@ -11,10 +13,18 @@
         <button type="submit">@T("Search")</button>
     </fieldset>
     
+    if (Model.ContentItems.Items.Count > 0)
+    {
+        <label for="selectAll">@T("Select All")</label>
+        <input name="selectAll" type="checkbox" class="content-picker-SelectAll" />
+    }
     <fieldset class="contentItems bulk-items">
-        @Display(Model.ContentItems)
+            @Display(Model.ContentItems)
     </fieldset>
-        
+    if (Model.ContentItems.Items.Count > 0)
+    {    
+        @Html.Link(T("Add Selected").Text, "#", new { @class = "button addSelected"})
+    }
     @Display(Model.Pager)
 }
 

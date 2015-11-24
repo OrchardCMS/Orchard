@@ -62,9 +62,11 @@ namespace Orchard.Fields.Drivers {
         }
 
         protected override void Exporting(ContentPart part, LinkField field, ExportContentContext context) {
-            context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Text", field.Text);
-            context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Url", field.Value);
-            context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Target", field.Target);
+            if (!String.IsNullOrEmpty(field.Text) || !String.IsNullOrEmpty(field.Value) || !String.IsNullOrEmpty(field.Target)) {
+                context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Text", field.Text);
+                context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Url", field.Value);
+                context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Target", field.Target);
+            }
         }
 
         protected override void Describe(DescribeMembersContext context) {

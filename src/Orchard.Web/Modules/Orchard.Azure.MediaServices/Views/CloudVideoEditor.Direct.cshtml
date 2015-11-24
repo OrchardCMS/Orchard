@@ -3,7 +3,7 @@
 
 @model CloudVideoPartViewModel
 @{
-    Script.Include("Lib/moment.js", "Lib/moment.min.js").AtFoot();
+    Script.Require("Moment").AtFoot();
     Script.Include("cloudmedia-edit-cloudvideopart-direct.js", "cloudmedia-edit-cloudvideopart-direct.min.js").AtFoot();
     var isCreatingItem = Model.Id == 0;
 }

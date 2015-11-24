@@ -20,15 +20,18 @@ namespace Orchard.MediaLibrary.Drivers {
         }
 
         protected override void Importing(ImagePart part, ContentManagement.Handlers.ImportContentContext context) {
-            var height = context.Attribute(part.PartDefinition.Name, "Height");
-            if (height != null) {
-                part.Height = int.Parse(height);
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
             }
 
-            var width = context.Attribute(part.PartDefinition.Name, "Width");
-            if (width != null) {
-                part.Width = int.Parse(width);
-            }
+            context.ImportAttribute(part.PartDefinition.Name, "Height", height =>
+                part.Height = int.Parse(height)
+            );
+
+            context.ImportAttribute(part.PartDefinition.Name, "Width", width =>
+                part.Width = int.Parse(width)
+            );
         }
     }
 }

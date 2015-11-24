@@ -6,7 +6,7 @@ using Orchard.Data;
 namespace Orchard.Autoroute.Services {
     public class PathResolutionService : IPathResolutionService {
         private readonly IContentManager _contentManager;
-        IRepository<AutoroutePartRecord> _autorouteRepository;
+        private readonly IRepository<AutoroutePartRecord> _autorouteRepository;
 
         public PathResolutionService(
             IRepository<AutoroutePartRecord> autorouteRepository,
@@ -17,8 +17,7 @@ namespace Orchard.Autoroute.Services {
 
         public AutoroutePart GetPath(string path) {
             var autorouteRecord = _autorouteRepository.Table
-                .Where(part => part.DisplayAlias == path && part.ContentItemVersionRecord.Published)
-                .FirstOrDefault();
+                .FirstOrDefault(part => part.DisplayAlias == path && part.ContentItemVersionRecord.Published);
 
             if (autorouteRecord == null) {
                 return null;

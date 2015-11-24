@@ -49,12 +49,12 @@ namespace Orchard.Core.Contents.ViewModels {
         Created
     }
 
-    public enum ContentsStatus
-    {
+    public enum ContentsStatus {
         Draft,
         Published,
         AllVersions,
-        Latest
+        Latest,
+        Owner
     }
 
     public enum ContentsBulkAction {

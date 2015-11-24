@@ -74,45 +74,6 @@
                             return host.addElement(contentType);
                         };
 
-                        $scope.toggleInlineEditing = function () {
-                            if (!$scope.element.inlineEditingIsActive) {
-                                $scope.element.inlineEditingIsActive = true;
-                                $element.find(".layout-toolbar-container").show();
-                                var selector = "#layout-editor-" + $scope.$id + " .layout-html .layout-content-markup[data-templated=false]";
-                                var firstContentEditorId = $(selector).first().attr("id");
-                                tinymce.init({
-                                    selector: selector,
-                                    theme: "modern",
-                                    schema: "html5",
-                                    plugins: [
-                                        "advlist autolink lists link image charmap print preview hr anchor pagebreak",
-                                        "searchreplace wordcount visualblocks visualchars code fullscreen",
-                                        "insertdatetime media nonbreaking table contextmenu directionality",
-                                        "emoticons template paste textcolor colorpicker textpattern",
-                                        "fullscreen autoresize"
-                                    ],
-                                    toolbar: "undo redo cut copy paste | bold italic | bullist numlist outdent indent formatselect | alignleft aligncenter alignright alignjustify ltr rtl | link unlink charmap | code fullscreen close",
-                                    convert_urls: false,
-                                    valid_elements: "*[*]",
-                                    // Shouldn't be needed due to the valid_elements setting, but TinyMCE would strip script.src without it.
-                                    extended_valid_elements: "script[type|defer|src|language]",
-                                    statusbar: false,
-                                    skin: "orchardlightgray",
-                                    inline: true,
-                                    fixed_toolbar_container: "#layout-editor-" + $scope.$id + " .layout-toolbar-container",
-                                    init_instance_callback: function (editor) {
-                                        if (editor.id == firstContentEditorId)
-                                            tinymce.execCommand("mceFocus", false, editor.id);
-                                    }
-                                });
-                            }
-                            else {
-                                tinymce.remove("#layout-editor-" + $scope.$id + " .layout-content-markup");
-                                $element.find(".layout-toolbar-container").hide();
-                                $scope.element.inlineEditingIsActive = false;
-                            }
-                        };
-
                         $(document).on("cut copy paste", function (e) {
                             // If the pseudo clipboard was already invoked (which happens on the first clipboard
                             // operation after page load even if native clipboard support exists) then sit this
@@ -164,23 +125,12 @@
                     element.find(".layout-toolbar-container").click(function (e) {
                         e.stopPropagation();
                     });
-                    // Intercept mousedown on editor while in inline editing mode to 
-                    // prevent current editor from losing focus.
-                    element.mousedown(function (e) {
-                        if (scope.element.inlineEditingIsActive) {
-                            e.preventDefault();
-                            e.stopPropagation();
-                        }
-                    })
                     // Unfocus and unselect everything on click outside of canvas.
                     $(window).click(function (e) {
-                        // Except when in inline editing mode.
-                        if (!scope.element.inlineEditingIsActive) {
-                            scope.$apply(function () {
-                                scope.element.activeElement = null;
-                                scope.element.focusedElement = null;
-                            });
-                        }
+                        scope.$apply(function () {
+                            scope.element.activeElement = null;
+                            scope.element.focusedElement = null;
+                        });
                     });
                 }
             };

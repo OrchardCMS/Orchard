@@ -16,7 +16,7 @@ namespace Orchard.Environment.Descriptor {
 
         /// <summary>
         /// Alters databased information to match information passed as arguments.
-        /// Prior SerialNumber used for optomistic concurrency, and an exception
+        /// Prior SerialNumber used for optimistic concurrency, and an exception
         /// should be thrown if the number in storage doesn't match what's provided.
         /// </summary>
         void UpdateShellDescriptor(

@@ -65,6 +65,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.WebPages.dll</HintPath>
+    </Reference>
     <Reference Include="System.XML" />
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
@@ -95,6 +99,9 @@
     <Content Include="Scripts\features.admin.min.js">
       <DependentUpon>features.admin.js</DependentUpon>
     </Content>
+    <Content Include="Styles\font-awesome.css" />
+    <Content Include="Styles\font-awesome.min.css" />
+    <Content Include="Styles\Fonts\fontawesome-webfont.svg" />
     <Content Include="Styles\images\menu.modules.png" />
     <Content Include="Styles\images\new.gif" />
     <Content Include="Styles\images\update.gif" />
@@ -141,9 +148,23 @@
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Styles\Fonts\fontawesome-webfont.eot" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EditorTemplates\BuilderSteps\Feature.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\Fonts\fontawesome-webfont.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\Fonts\fontawesome-webfont.woff" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\Fonts\fontawesome-webfont.woff2" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\Fonts\FontAwesome.otf" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

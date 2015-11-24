@@ -2,61 +2,54 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading;
+using Microsoft.WindowsAzure.MediaServices.Client;
 using Orchard.Azure.MediaServices.Helpers;
 using Orchard.Azure.MediaServices.Models;
 using Orchard.Azure.MediaServices.Models.Assets;
 using Orchard.Azure.MediaServices.Models.Jobs;
 using Orchard.Azure.MediaServices.Services.Assets;
 using Orchard.Azure.MediaServices.Services.Wams;
-using Microsoft.WindowsAzure.MediaServices.Client;
-using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Logging;
-using Orchard.Services;
-using Orchard.TaskLease.Services;
 using Orchard.Tasks;
+using Orchard.Tasks.Locking.Services;
 
 namespace Orchard.Azure.MediaServices.Services.Jobs {
     public class JobProcessor : Component, IBackgroundTask {
 
-        private static readonly object _sweepLock = new object();
-
         private readonly IWamsClient _wamsClient;
-        private readonly IClock _clock;
-        private readonly ITaskLeaseService _taskLeaseService;
         private readonly IAssetManager _assetManager;
         private readonly IJobManager _jobManager;
         private readonly IOrchardServices _orchardServices;
+        private readonly IDistributedLockService _distributedLockService;
 
         public JobProcessor(
             IWamsClient wamsClient,
-            IClock clock,
-            ITaskLeaseService taskLeaseService,
             IAssetManager assetManager,
             IJobManager jobManager,
-            IOrchardServices orchardServices) {
+            IOrchardServices orchardServices,
+            IDistributedLockService distributedLockService) {
 
             _wamsClient = wamsClient;
-            _clock = clock;
-            _taskLeaseService = taskLeaseService;
             _assetManager = assetManager;
             _jobManager = jobManager;
             _orchardServices = orchardServices;
+            _distributedLockService = distributedLockService;
         }
 
         public void Sweep() {
-            if (Monitor.TryEnter(_sweepLock)) {
-                try {
-                    Logger.Debug("Beginning sweep.");
+            Logger.Debug("Beginning sweep.");
 
-                    if (!_orchardServices.WorkContext.CurrentSite.As<CloudMediaSettingsPart>().IsValid()) {
-                        Logger.Debug("Settings are invalid; going back to sleep.");
-                        return;
-                    }
+            try {
+                if (!_orchardServices.WorkContext.CurrentSite.As<CloudMediaSettingsPart>().IsValid()) {
+                    Logger.Debug("Settings are invalid; going back to sleep.");
+                    return;
+                }
 
-                    // Only allow this task to run on one farm node at a time.
-                    if (_taskLeaseService.Acquire(GetType().FullName, _clock.UtcNow.AddHours(1)) != null) {
+                // Only allow this task to run on one farm node at a time.
+                IDistributedLock @lock;
+                if (_distributedLockService.TryAcquireLock(GetType().FullName, TimeSpan.FromHours(1), out @lock)) {
+                    using (@lock) {
                         var jobs = _jobManager.GetActiveJobs().ToDictionary(job => job.WamsJobId);
 
                         if (!jobs.Any()) {
@@ -97,7 +90,7 @@ namespace Orchard.Azure.MediaServices.Services.Jobs {
                                     Logger.Information("Job '{0}' was finished in WAMS; creating locators.", wamsJob.Name);
 
                                     var lastTask = job.Tasks.Last();
-                                    var lastWamsTask = wamsTasks.Where(task => task.Id == lastTask.WamsTaskId).Single();
+                                    var lastWamsTask = wamsTasks.Single(task => task.Id == lastTask.WamsTaskId);
                                     var outputAsset = lastWamsTask.OutputAssets.First();
                                     var outputAssetName = !String.IsNullOrWhiteSpace(job.OutputAssetName) ? job.OutputAssetName : lastWamsTask.Name;
                                     var outputAssetDescription = job.OutputAssetDescription.TrimSafe();
@@ -156,13 +149,14 @@ namespace Orchard.Azure.MediaServices.Services.Jobs {
                         }
                     }
                 }
-                catch (Exception ex) {
-                    Logger.Error(ex, "Error during sweep.");
-                }
-                finally {
-                    Monitor.Exit(_sweepLock);
-                    Logger.Debug("Ending sweep.");
-                }
+                else
+                    Logger.Debug("Distributed lock could not be acquired; going back to sleep.");
+            }
+            catch (Exception ex) {
+                Logger.Error(ex, "Error during sweep.");
+            }
+            finally {
+                Logger.Debug("Ending sweep.");
             }
         }
 

@@ -2,14 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.Commands;
+using Orchard.Recipes.Services;
 using Orchard.Setup.Services;
 
 namespace Orchard.Setup.Commands {
     public class SetupCommand : DefaultOrchardCommandHandler {
         private readonly ISetupService _setupService;
+        private readonly IRecipeHarvester _recipeHarvester;
 
-        public SetupCommand(ISetupService setupService) {
+        public SetupCommand(ISetupService setupService, IRecipeHarvester recipeHarvester) {
             _setupService = setupService;
+            _recipeHarvester = recipeHarvester;
         }
 
         [OrchardSwitch]
@@ -51,6 +54,7 @@ namespace Orchard.Setup.Commands {
                     .Where(s => !String.IsNullOrEmpty(s));
             }
             Recipe = String.IsNullOrEmpty(Recipe) ? "Default" : Recipe;
+            var recipe = _setupService.Recipes().GetRecipeByName(Recipe);
 
             var setupContext = new SetupContext {
                 SiteName = SiteName,
@@ -60,7 +64,7 @@ namespace Orchard.Setup.Commands {
                 DatabaseConnectionString = DatabaseConnectionString,
                 DatabaseTablePrefix = DatabaseTablePrefix,
                 EnabledFeatures = enabledFeatures,
-                Recipe = Recipe,
+                Recipe = recipe,
             };
 
             var executionId = _setupService.Setup(setupContext);

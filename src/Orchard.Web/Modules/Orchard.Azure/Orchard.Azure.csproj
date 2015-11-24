@@ -107,7 +107,7 @@
   <ItemGroup>
     <Compile Include="Services\Environment\Configuration\DefaultPlatformConfigurationAccessor.cs" />
     <Compile Include="Services\Environment\Configuration\IPlatformConfigurationAccessor.cs" />
-    <Compile Include="Services\TaskLease\AzureMachineNameProvider.cs" />
+    <Compile Include="Services\Environment\AzureApplicationEnvironment.cs" />
     <Content Include="Web.config" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />

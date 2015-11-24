@@ -31,8 +31,8 @@ namespace Orchard.MediaProcessing.Services {
         }
 
         public ImageProfilePart GetImageProfileByName(string name) {
-
-            var profileId = _cacheManager.Get("ProfileId_" + name, ctx => {
+            var profileId = _cacheManager.Get("ProfileId_" + name, true, ctx => {
+                ctx.Monitor(_signals.When("MediaProcessing_Published_" + name));
                 var profile = _contentManager.Query<ImageProfilePart, ImageProfilePartRecord>()
                     .Where(x => x.Name == name)
                     .Slice(0, 1)

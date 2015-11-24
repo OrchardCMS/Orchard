@@ -88,11 +88,12 @@ namespace Orchard.MultiTenancy.Controllers {
                         Modules = viewModel.Modules.Where(x => x.Checked).Select(x => x.ModuleId).ToArray()
                     });
 
+                Services.Notifier.Information(T("Tenant '{0}' was created successfully.", viewModel.Name));
                 return RedirectToAction("Index");
             }
             catch (ArgumentException ex) {
                 Logger.Error(ex, "Error while creating tenant.");
-                Services.Notifier.Error(T("Tenant creation failed with error: {0}", ex.Message));
+                Services.Notifier.Error(T("Tenant creation failed with error: {0}.", ex.Message));
                 return View(viewModel);
             }
         }

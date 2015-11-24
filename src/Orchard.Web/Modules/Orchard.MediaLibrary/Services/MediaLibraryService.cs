@@ -20,7 +20,7 @@ namespace Orchard.MediaLibrary.Services {
         private readonly IStorageProvider _storageProvider;
         private readonly IEnumerable<IMediaFactorySelector> _mediaFactorySelectors;
 
-        private static char[] HttpUnallowed = new char[] { '<', '>', '*', '%', '&', ':', '\\', '?' };
+        private static char[] HttpUnallowed = new char[] { '<', '>', '*', '%', '&', ':', '\\', '?', '#' };
 
         public MediaLibraryService(
             IOrchardServices orchardServices,
@@ -210,7 +210,21 @@ namespace Orchard.MediaLibrary.Services {
             return GetPublicUrl(Path.Combine(mediaPath, fileName));
         }
 
-        public MediaFolder GetRootMediaFolder() {
+        public IMediaFolder GetRootMediaFolder() {
+            if (_orchardServices.Authorizer.Authorize(Permissions.ManageMediaContent)) {
+                return null;
+            }
+
+            if (_orchardServices.Authorizer.Authorize(Permissions.ManageOwnMedia)) {
+                var currentUser = _orchardServices.WorkContext.CurrentUser;
+                var userPath = _storageProvider.Combine("Users", currentUser.UserName);
+
+                return new MediaFolder() {
+                    Name = currentUser.UserName,
+                    MediaPath = userPath
+                };
+            }
+
             return null;
         }
 

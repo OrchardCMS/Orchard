@@ -35,13 +35,6 @@
                 templateUrl: environment.templateUrl("Html"),
                 replace: true,
                 link: function (scope, element) {
-                    // Mouse down events must not be intercepted by drag and drop while inline editing is active,
-                    // otherwise clicks in inline editors will have no effect.
-                    element.find(".layout-content-markup").mousedown(function (e) {
-                        if (scope.element.editor.inlineEditingIsActive) {
-                            e.stopPropagation();
-                        }
-                    });
                 }
             };
         }

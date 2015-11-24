@@ -44,5 +44,9 @@
         <label class="forcheckbox" for="@Html.FieldIdFor(m => m.FilterCulture)">@T("Narrow search to current culture only")</label>
         <span class="hint">@T("If checked, search results will only include content items localized in the current culture of the request.")</span>
     </div>
-
+    <div>
+        <label for="@Html.FieldIdFor(m => m.DisplayType)">@T("Display Type")</label>
+        @Html.TextBoxFor(m => m.DisplayType, new { @class = "text single-line" })
+        <span class="hint">@T("The display type to use for content items in the search results page.")</span>
+    </div>
 </fieldset>

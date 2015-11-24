@@ -4,7 +4,6 @@ using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
 using Orchard.Layouts.Elements;
-using Orchard.Layouts.Framework.Drivers;
 using Orchard.Layouts.Framework.Elements;
 using Orchard.Layouts.Services;
 using Orchard.UI.Zones;
@@ -12,7 +11,7 @@ using Orchard.Utility.Extensions;
 using ContentItem = Orchard.ContentManagement.ContentItem;
 
 namespace Orchard.Layouts.Framework.Display {
-    public class ElementDisplay : IElementDisplay {
+    public class ElementDisplay : Component, IElementDisplay {
         private readonly IShapeFactory _shapeFactory;
         private readonly IElementEventHandler _elementEventHandlerHandler;
 
@@ -37,7 +36,7 @@ namespace Orchard.Layouts.Framework.Display {
             };
 
             _elementEventHandlerHandler.CreatingDisplay(createShapeContext);
-            InvokeDrivers(drivers, driver => driver.CreatingDisplay(createShapeContext));
+            drivers.Invoke(driver => driver.CreatingDisplay(createShapeContext), Logger);
             if (element.Descriptor.CreatingDisplay != null)
                 element.Descriptor.CreatingDisplay(createShapeContext);
 
@@ -62,7 +61,7 @@ namespace Orchard.Layouts.Framework.Display {
             };
 
             _elementEventHandlerHandler.Displaying(displayingContext);
-            InvokeDrivers(drivers, driver => driver.Displaying(displayingContext));
+            drivers.Invoke(driver => driver.Displaying(displayingContext), Logger);
 
             if (element.Descriptor.Displaying != null)
                 element.Descriptor.Displaying(displayingContext);
@@ -92,7 +91,7 @@ namespace Orchard.Layouts.Framework.Display {
             };
 
             _elementEventHandlerHandler.Displayed(displayedContext);
-            InvokeDrivers(drivers, driver => driver.Displayed(displayedContext));
+            drivers.Invoke(driver => driver.Displayed(displayedContext), Logger);
 
             if (element.Descriptor.Displayed != null)
                 element.Descriptor.Displayed(displayedContext);
@@ -121,12 +120,6 @@ namespace Orchard.Layouts.Framework.Display {
             };
 
             return Arguments.From(dictionary);
-        }
-
-        private void InvokeDrivers(IEnumerable<IElementDriver> drivers, Action<IElementDriver> driverAction) {
-            foreach (var driver in drivers) {
-                driverAction(driver);
-            }
         }
     }
 }

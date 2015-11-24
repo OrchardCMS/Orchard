@@ -28,12 +28,12 @@ namespace Orchard.Recipes.Services {
         public bool ExecuteNextStep(string executionId) {
             var nextRecipeStep = _recipeStepQueue.Dequeue(executionId);
             if (nextRecipeStep == null) {
-                Logger.Information("Recipe execution completed.");
+                Logger.Information("No more recipe steps left to execute.");
                 _recipeExecuteEventHandler.ExecutionComplete(executionId);
                 return false;
             }
 
-            Logger.Information("Running all recipe handlers for step '{0}'.", nextRecipeStep.Name);
+            Logger.Information("Executing recipe step '{0}'.", nextRecipeStep.Name);
 
             var recipeContext = new RecipeContext { RecipeStep = nextRecipeStep, Executed = false, ExecutionId = executionId };
 
@@ -74,7 +74,13 @@ namespace Orchard.Recipes.Services {
             if (!String.IsNullOrWhiteSpace(recipeName))
                 query = from record in query where record.RecipeName == recipeName select record;
 
-            var stepResultRecord = query.Single();
+            var stepResultRecord = query.SingleOrDefault();
+
+            if (stepResultRecord == null)
+                // No step result record was created when scheduling the step, so simply ignore.
+                // The only reason where one would not create such a record would be Setup,
+                // when no database exists to store the record but still wants to schedule a recipe step (such as the "StopViewsBackgroundCompilationStep").
+                return; 
 
             stepResultRecord.IsCompleted = true;
             stepResultRecord.IsSuccessful = isSuccessful;

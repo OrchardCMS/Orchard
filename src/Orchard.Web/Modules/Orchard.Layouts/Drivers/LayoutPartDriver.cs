@@ -5,6 +5,7 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.DisplayManagement;
+using Orchard.Layouts.Elements;
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
 using Orchard.Layouts.Framework.Elements;
@@ -90,9 +91,18 @@ namespace Orchard.Layouts.Drivers {
 
         protected override DriverResult Editor(LayoutPart part, IUpdateModel updater, dynamic shapeHelper) {
             return ContentShape("Parts_Layout_Edit", () => {
-
                 if (part.Id == 0 && String.IsNullOrWhiteSpace(part.LayoutData)) {
-                    part.LayoutData = part.TypePartDefinition.Settings.GetModel<LayoutTypePartSettings>().DefaultLayoutData;
+
+                    var settings = part.TypePartDefinition.Settings.GetModel<LayoutTypePartSettings>();
+
+                    // If the default layout setting is left empty, use the one from the service
+                    if (String.IsNullOrWhiteSpace(settings.DefaultLayoutData)) {
+                        var defaultData = _serializer.Serialize(_layoutManager.CreateDefaultLayout());
+                        part.LayoutData = defaultData;
+                    }
+                    else {
+                        part.LayoutData = settings.DefaultLayoutData;
+                    }
                 }
 
                 var viewModel = new LayoutPartViewModel {
@@ -103,12 +113,12 @@ namespace Orchard.Layouts.Drivers {
                     updater.TryUpdateModel(viewModel, Prefix, null, new[] { "Part", "Templates" });
                     var describeContext = new DescribeElementsContext { Content = part };
                     var elementInstances = _mapper.ToLayoutModel(viewModel.LayoutEditor.Data, describeContext).ToArray();
-                    var removedElementInstances = _serializer.Deserialize(viewModel.LayoutEditor.Trash, describeContext).ToArray();
+                    var recycleBin = (RecycleBin)_mapper.ToLayoutModel(viewModel.LayoutEditor.RecycleBin, describeContext).SingleOrDefault();
                     var context = new LayoutSavingContext {
                         Content = part,
                         Updater = updater,
                         Elements = elementInstances,
-                        RemovedElements = removedElementInstances
+                        RemovedElements = recycleBin != null ? recycleBin.Elements : Enumerable.Empty<Element>()
                     };
 
                     _elementManager.Saving(context);
@@ -126,9 +136,7 @@ namespace Orchard.Layouts.Drivers {
 
         protected override void Exporting(LayoutPart part, ExportContentContext context) {
             _layoutManager.Exporting(new ExportLayoutContext { Layout = part });
-
-            context.Element(part.PartDefinition.Name).SetElementValue("LayoutData", part.LayoutData);
-
+            
             if (part.TemplateId != null) {
                 var template = part.ContentItem.ContentManager.Get(part.TemplateId.Value);
 
@@ -137,18 +145,45 @@ namespace Orchard.Layouts.Drivers {
                     context.Element(part.PartDefinition.Name).SetAttributeValue("TemplateId", templateIdentity);
                 }
             }
+
+            context.Element(part.PartDefinition.Name).SetElementValue("LayoutData", part.LayoutData);
+        }
+
+        protected override void Exported(LayoutPart part, ExportContentContext context) {
+            _layoutManager.Exported(new ExportLayoutContext { Layout = part });
+
+            context.Element(part.PartDefinition.Name).SetElementValue("LayoutData", part.LayoutData);
         }
 
         protected override void Importing(LayoutPart part, ImportContentContext context) {
-            context.ImportChildEl(part.PartDefinition.Name, "LayoutData", s => {
-                part.LayoutData = s;
-                _layoutManager.Importing(new ImportLayoutContext {
-                    Layout = part,
-                    Session = new ImportContentContextWrapper(context)
+            HandleImportEvent(part, context, importLayoutContext => {
+                context.ImportChildEl(part.PartDefinition.Name, "LayoutData", s => {
+                    part.LayoutData = s;
+                    _layoutManager.Importing(importLayoutContext);
                 });
-            });
 
-            context.ImportAttribute(part.PartDefinition.Name, "TemplateId", s => part.TemplateId = GetTemplateId(context, s));
+                context.ImportAttribute(part.PartDefinition.Name, "TemplateId", s => part.TemplateId = GetTemplateId(context, s));
+            });
+        }
+
+        protected override void Imported(LayoutPart part, ImportContentContext context) {
+            HandleImportEvent(part, context, importLayoutContext => _layoutManager.Imported(importLayoutContext));
+        }
+
+        protected override void ImportCompleted(LayoutPart part, ImportContentContext context) {
+            HandleImportEvent(part, context, importLayoutContext => _layoutManager.ImportCompleted(importLayoutContext));
+        }
+
+        private void HandleImportEvent(LayoutPart part, ImportContentContext context, Action<ImportLayoutContext> callback) {
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
+            }
+
+            callback(new ImportLayoutContext {
+                Layout = part,
+                Session = new ImportContentContextWrapper(context)
+            });
         }
 
         private static int? GetTemplateId(ImportContentContext context, string templateIdentity) {
