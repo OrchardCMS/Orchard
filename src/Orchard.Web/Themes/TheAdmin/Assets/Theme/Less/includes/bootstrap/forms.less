@@ -1,0 +1,172 @@
+/*------------------------------------------------------------------
+  [Forms]
+*/
+.form-control{
+	border-width: 2px;
+	box-shadow: none;
+	padding: 10px 12px;
+	font-size: @font-size-base + 1px;
+
+	&:focus{
+		box-shadow: none;
+		border-color: darken(@input-border, 10%);
+	}
+
+  //Select multiple
+  &[multiple]{
+    padding: 0;
+
+    option{
+      padding: 8px 12px;
+    } 
+  }
+}
+
+//Remove default iOs input style
+input.form-control, textarea.form-control{
+  -webkit-appearance: none;
+}
+
+label{
+	font-weight: 400;
+	font-size: @font-size-base + 1px;
+	margin-bottom: 8px;
+}
+
+.am-checkbox, .am-radio{
+  display: block;
+  line-height: @input-check-component-size;
+  margin: 0;
+  padding: 7px 0;
+
+  .form-horizontal & {
+    padding: 7px 0;
+    min-height: auto;
+  }
+  
+  input[type="checkbox"], input[type="radio"]{
+    margin: 0;
+    display: none;
+    width: @input-check-component-size;
+  }
+
+  label{
+    margin-bottom: 0;
+  }
+ 
+  input[type="checkbox"] + label, input[type="radio"] + label{
+   padding-left: 0;
+    
+    &:before{
+      content: ""; 
+      width: @input-check-component-size;
+      height: @input-check-component-size;
+      display: inline-block;
+      border: 2px solid @input-border;
+      margin-right: 5px;
+      font-size: @input-check-component-size - 4px;
+      font-family: @icons-font;
+      font-weight: normal;
+      line-height: @input-check-component-size - 3px;
+      vertical-align: bottom;
+      text-align: center;
+      background-color: transparent;
+      cursor: pointer;
+    } 
+    
+    &:hover:before{
+      border-color: darken(@input-border, 10%);
+    }
+  }
+
+  input[type="checkbox"]:hover + label, input[type="radio"]:hover + label {
+
+    &:before{
+      border-color: darken(@input-border, 10%);
+    }
+  }
+  
+  input[type="checkbox"]:checked + label, input[type="radio"]:checked + label{
+    
+    &:before{
+      content: "\e6cd";
+      color: @primary-color;
+      border-color: @primary-color;
+    } 
+  }
+
+  input[type="checkbox"]:disabled + label, input[type="radio"]:disabled + label{
+    opacity: .5;
+    pointer-events: none;
+
+    &:before {
+      pointer-events: none !important;
+      background-color: @light-color;
+    }
+  }
+  
+  input[type="radio"] + label{
+
+    &:before{
+      border-radius: 50%;
+      font-family: @icons-font;
+      line-height: 19px;
+      font-size: 14px;
+
+      @media @webkit{
+        line-height: 18px;
+      }
+    }
+  }
+  
+  input[type="radio"]:checked + label{
+
+    &:before{
+      content: "\e6ce";
+    }
+  } 
+
+  //Inline style
+  &.inline{
+    display: inline-block;
+
+    & + & {
+      margin-left: 18px;
+    }
+  }
+}
+
+//Form horizontal
+.form-horizontal{
+  
+  .form-group{
+    margin-bottom: 0;
+    padding: 12px 0;
+  }
+}
+
+//Input group addon
+.input-group-addon {
+  font-size: 15px;
+
+  .am-checkbox, .am-radio{
+    padding: 0;
+    line-height: 21px;
+
+    input + label{
+      margin: 0;
+
+      &:before{
+        margin: 0;
+        border-color: darken(@input-border, 5%);
+      }
+    }
+  }
+}
+
+.input-group-btn{
+  
+  .btn{
+    height: @input-height-base;
+  }
+}

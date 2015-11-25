@@ -1,0 +1,284 @@
+/*------------------------------------------------------------------
+  [Alerts]
+*/
+.alert{
+	line-height: 25px;
+
+	.icon{
+		font-size: 24px;
+		color: @light-color;
+		vertical-align: middle;
+		margin-right: 9px;
+		line-height: 22px;
+	}
+
+	.close{
+		font-size: 31px;
+	}
+
+	.message{
+
+		// Improve alignment and spacing of inner content
+	  > p,
+	  > ul {
+	    margin-bottom: 0;
+	  }
+
+	  > p + p {
+	    margin-top: 5px;
+	  }
+	}
+}
+
+.alert-dismissible{
+
+	.close{
+		top: -4px;
+		right: -30px;
+	}
+}
+
+.alert-primary{
+  .alert-variant(@alert-primary-bg; @alert-primary-border; @alert-primary-text);
+}
+
+.alert-dismissible{
+
+	&.alert-primary{
+
+		.close{ 
+			color: darken(@alert-primary-bg, 30%);
+			text-shadow: 0 1px 0 darken(@alert-primary-bg, 30%);
+		}
+	}
+
+	&.alert-success{
+
+		.close{ 
+			color: darken(@alert-success-bg, 30%);
+			text-shadow: 0 1px 0 darken(@alert-success-bg, 30%);
+		}
+	}
+
+	&.alert-info{
+
+		.close{ 
+			color: darken(@alert-info-bg, 30%);
+			text-shadow: 0 1px 0 darken(@alert-info-bg, 30%);
+		}
+	}
+
+	&.alert-warning{
+
+		.close{ 
+			color: darken(@alert-warning-bg, 30%);
+			text-shadow: 0 1px 0 darken(@alert-warning-bg, 30%);
+		}
+	}
+
+	&.alert-danger{
+
+		.close{ 
+			color: darken(@alert-danger-bg, 30%);
+			text-shadow: 0 1px 0 darken(@alert-danger-bg, 30%);
+		}
+	}
+}
+
+.alert-icon{
+	background-color: @light-color;
+	border: 0;
+	padding: 0;
+	position: relative;
+	width: 100%;
+	display: table;
+	table-layout: fixed;
+
+	> .icon{
+		display: table-cell;
+		width: @alert-icon-width;
+		text-align: center;
+		vertical-align: middle;
+		cursor: default;
+
+		&:after{
+			position: absolute;
+			margin-left: @alert-icon-width - 1px;
+			top: 50%;
+			margin-top: -11px;
+			.triangle(right, 11px, @light-color);
+		}
+	}
+
+	> .message{
+		display: table-cell;
+		padding: @alert-padding;
+		color: @text-color;
+		border: 1px solid darken(@light-color, 17%);
+		border-left-width: 0;
+	}
+
+	&.alert-dismissible{
+
+		.close{
+			position: absolute;
+			right: 11px;
+			top: 14px;
+			color: @text-color;
+			text-shadow: 0 1px 0 @text-color;
+		}
+	}
+
+	//Colors
+	&.alert-primary{
+
+		> .icon{
+			background-color: @alert-primary-bg;
+
+			&:after{
+				border-left-color: @alert-primary-bg;
+			}
+		}
+	}
+	
+	&.alert-success{
+
+		> .icon{
+			background-color: @alert-success-bg;
+
+			&:after{
+				border-left-color: @alert-success-bg;
+			}
+		}
+	}
+	
+	&.alert-info{
+
+		> .icon{
+			background-color: @alert-info-bg;
+
+			&:after{
+				border-left-color: @alert-info-bg;
+			}
+		}
+	}
+	
+	&.alert-warning{
+
+		> .icon{
+			background-color: @alert-warning-bg;
+
+			&:after{
+				border-left-color: @alert-warning-bg;
+			}
+		}
+	}
+
+	&.alert-danger{
+
+		> .icon{
+			background-color: @alert-danger-bg;
+
+			&:after{
+				border-left-color: @alert-danger-bg;
+			}
+		}
+	}
+}
+
+.alert-border-color{
+
+	&.alert-primary{
+
+		.message{
+			border-color: @alert-primary-bg;
+		}
+	}
+	
+	&.alert-success{
+
+		.message{
+			border-color: @alert-success-bg;
+		}
+	}
+	
+	&.alert-info{
+
+		.message{
+			border-color: @alert-info-bg;
+		}
+	}
+
+	&.alert-warning{
+
+		.message{
+			border-color: @alert-warning-bg;
+		}
+	}
+
+	&.alert-danger{
+
+		.message{
+			border-color: @alert-danger-bg;
+		}
+	}
+}
+
+.alert-icon-color{
+	border: 1px solid darken(@light-color, 10%);
+
+	> .icon{
+		background-color: darken(@light-color, 2.8%) !important;
+		border-width: 0;
+
+		&:after{
+			border-left-color: @light-color !important;
+			display: none;
+		}
+	}
+
+	> .message{
+		border-width: 0;
+	}
+
+	&.alert-primary{
+
+		> .icon{
+			background-color: transparent;
+			color: @alert-primary-bg;
+		}
+	}
+
+	&.alert-success{
+
+		> .icon{
+			background-color: transparent;
+			color: @alert-success-bg;
+		}
+	}
+
+	&.alert-info{
+
+		> .icon{
+			background-color: transparent;
+			color: @alert-info-bg;
+		}
+	}
+
+	&.alert-warning{
+
+		> .icon{
+			background-color: transparent;
+			color: @alert-warning-bg;
+		}
+	}
+
+	&.alert-danger{
+
+		> .icon{
+			background-color: transparent;
+			color: @alert-danger-bg;
+		}
+	}
+	
+}

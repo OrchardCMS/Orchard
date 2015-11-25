@@ -1,0 +1,159 @@
+.widget-pie{
+
+	.chart-container{
+		display: table;
+		width: 100%;
+		margin: 0;
+
+		> div{
+			display: table-cell;
+			float: none;
+			vertical-align: middle;
+
+			@media @phone{
+				display: block;
+
+				&:first-child{
+					margin-bottom: 25px;
+				}
+			}
+		}
+
+		.chart{
+			min-height: 125px;
+		}
+
+		.legend{
+
+			> div{
+				background-color: transparent !important;
+			}
+
+			table{
+				width: 100%;
+
+				tr{
+
+					td{
+						padding-bottom: 7px;
+						font-size: 12px;
+					}
+
+					.legendColorBox{
+						width: 1%;
+
+						> div{
+							border: 0 !important;
+						}
+					}
+
+					.legendLabel{
+						padding-left: 8px;
+						font-size: 12px;
+					}
+
+					.legendData{
+						text-align: right;
+					}
+				}
+			}
+		}
+	}
+
+	.chart-info{
+		border-top: 1px solid darken(@light-color, 12%);
+		margin: 0;
+		margin-top: 30px;
+		text-align: center;
+
+		span{
+			display: block;
+
+			&.title{
+				margin-bottom: 3px;
+				text-transform: uppercase;
+				color: lighten(@text-color, 36.5%);
+				font-size: 12px;
+			}
+
+			&.number{
+				font-size: 18px;
+				font-weight: 300;
+			}
+		}
+
+		> div{
+			padding-top: 20px;
+		}
+
+		> div:first-child{
+			text-align: left;
+			padding-left: 0;
+		}
+
+		> div:last-child{
+			text-align: right;
+			padding-right: 0;
+		}
+
+		@media @small-phone{
+			padding-top: 15px;
+
+			> div{
+				float: none;
+				text-align: left !important;
+				width: 100%;
+				line-height: 40px;
+				padding-right: 0;
+				padding-left: 0;
+				padding-top: 0;
+
+				span{
+					display: inline-block;
+
+					&.title{
+						margin: 0;
+					}
+
+					&.number{
+						float: right;
+					}
+				}
+			}
+		}
+	}
+
+	&.widget-pie-stats{
+
+		.chart-info{
+
+			> div:last-child{
+				text-align: left;
+			}
+
+			.sparkline{
+				float: right;
+				margin-top: 11px;
+			}
+
+			@media @small-phone{
+
+				> div{
+					line-height: 25px;
+
+					span{
+						display: block;
+
+						&.number{
+							float: none;
+						}
+					}
+
+					&:first-child{
+						margin-bottom: 10px;
+					}
+				}
+			}
+		}
+	}
+}

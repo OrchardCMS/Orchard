@@ -1,0 +1,188 @@
+/*------------------------------------------------------------------
+  [Nestable list]
+*/
+.dd{
+	position: relative; d
+	isplay: block; 
+	margin: 0; 
+	padding: 0; 
+	max-width: 600px; 
+	list-style: none; 
+	font-size: 13px; 
+	line-height: 20px;
+}
+
+.dd-list{
+	display: block; 
+	position: relative; 
+	margin: 0; 
+	padding: 0; 
+	list-style: none;
+
+	.dd-item, .dd3-item{
+
+		.dd-handle{
+			cursor: default;
+			display: block; 
+			margin: 5px 0; 
+			padding: 7px 10px; 
+			text-decoration: none; 
+			border: 1px solid darken(@light-color, 13%);
+			background: @light-color;
+
+			&:hover{
+				color: @light-color; 
+				background: @primary-color; 
+				border-color: @primary-color;
+			}
+		}
+
+		> button{
+			font-family: FontAwesome;
+			display: block; 
+			position: relative; 
+			cursor: pointer; 
+			float: left; 
+			width: 25px; 
+			height: 20px; 
+			margin: 8px 2px; 
+			padding: 0; 
+			text-indent: 100%; 
+			white-space: nowrap; 
+			overflow: hidden; 
+			border: 0; 
+			background: 
+			transparent; 
+			font-size: 10px; 
+			line-height: 1; 
+			text-align: center;
+
+			&:before{
+				content: '\f067'; 
+				display: block; 
+				position: absolute; 
+				width: 100%; 
+				text-align: center; 
+				text-indent: 0;
+			}
+
+			&[data-action="collapse"]:before{
+			 content: '\f068';
+			}
+		}
+
+		.dd3-content{
+			display: block; 
+			margin: 5px 0; 
+			padding: 7px 10px 7px 40px;  
+			text-decoration: none;
+			background: none repeat scroll 0 0 @light-color;
+			border: 1px solid darken(@light-color, 13%);
+
+			&:hover{
+				background: @light-color;
+			}
+		} 
+
+		.dd3-handle{
+			position: absolute;
+			margin: 0; 
+			left: 0; 
+			top: 0; 
+			cursor: all-scroll; 
+			width: 34px; 
+			text-indent: 100%; 
+			white-space: nowrap; 
+			overflow: hidden;
+			border: 1px solid @primary-color;
+			background: @primary-color;
+			height:36px;
+
+			&:before{
+				content: '='; 
+				display: block; 
+				position: absolute; 
+				left: 0; 
+				top: 5px; 
+				width: 100%; 
+				text-align: center; 
+				text-indent: 0; 
+				color: @light-color; 
+				font-size: 20px; 
+				font-weight: normal;
+			}
+
+			&:hover{
+				background: lighten(@primary-color, 5%);
+				border-color: lighten(@primary-color, 5%);
+			}
+		}
+	}
+
+	.dd3-item{
+		
+		> button{
+			margin-left: 35px;
+		}
+	}
+
+	.dd-item, .dd-empty, .dd-placeholder{
+		display: block; 
+		position: relative; 
+		margin: 0; 
+		padding: 0;
+		min-height: 20px; 
+		font-size: 13px; 
+		line-height: 20px;
+	}
+
+	.dd-placeholder, .dd-empty{
+		margin: 5px 0; 
+		padding: 0; 
+		min-height: 30px; 
+		background: #FFF; 
+		border: 1px dashed darken(@light-color, 30%); 
+		box-sizing: border-box; 
+		-moz-box-sizing: border-box;
+	}
+
+	.dd-empty{
+		border: 1px dashed #bbb; 
+		min-height: 100px; 
+		background-color: #e5e5e5;
+		background-image: -webkit-linear-gradient(45deg, @light-color 25%, transparent 25%, transparent 75%, @light-color 75%,@light-color),
+		-webkit-linear-gradient(45deg, @light-color 25%, transparent 25%, transparent 75%, @light-color 75%, @light-color);
+		background-image: -moz-linear-gradient(45deg, @light-color 25%, transparent 25%, transparent 75%, @light-color 75%, @light-color),
+		-moz-linear-gradient(45deg, @light-color 25%, transparent 25%, transparent 75%, @light-color 75%, @light-color);
+		background-image: linear-gradient(45deg, @light-color 25%, transparent 25%, transparent 75%, @light-color 75%, @light-color),
+		linear-gradient(45deg, @light-color 25%, transparent 25%, transparent 75%, @light-color 75%, @light-color);
+		background-size: 60px 60px;
+		background-position: 0 0, 30px 30px;
+	}
+
+	.dd-collapsed{
+
+		.dd-list{ 
+			display: none; 
+		}
+	}
+
+	&.dd-dragel{
+		position: absolute; 
+		pointer-events: none; 
+		z-index: 9999;
+
+		> .dd-item .dd-handle{
+			margin-top: 0;
+		}
+
+		.dd-handle, .dd3-handle{
+			-webkit-box-shadow: 2px 4px 6px 0 rgba(0,0,0,.1);
+			box-shadow: 2px 4px 6px 0 rgba(0,0,0,.1);
+		}
+	}
+
+	.dd-list{
+		padding-left: 30px;
+	}
+}

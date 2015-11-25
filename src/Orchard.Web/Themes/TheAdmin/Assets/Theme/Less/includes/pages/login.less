@@ -1,0 +1,124 @@
+/*------------------------------------------------------------------
+  [Custom pages]
+*/
+/*------------------------------------------------------------------
+  [Login]
+*/
+.login-container{
+	max-width:400px;
+	margin: 80px auto;
+	padding: 10px;
+
+	.panel-default{
+		background: transparent;
+		padding:0;
+		border:0;
+		overflow:hidden;
+		margin-bottom:20px;
+
+		.panel-heading{
+			padding: 0;
+			background: transparent;
+			border: 0;
+			text-align: center;
+			margin-bottom: 20px;
+
+			span{
+				display: block;
+				color: lighten(@dark-color, 28%);
+				line-height: 20px;
+				font-size: 15px;
+				font-weight: 400;
+				font-family: @raleway;
+				margin-top: 10px;
+				padding-bottom: 10px;
+			}
+		}
+
+		.panel-body{
+
+			.form-group{
+				margin: 0;
+				padding: 0; 
+
+				> div{
+					padding: 0;
+				}
+
+				.input-group{
+					border-bottom: 2px solid lighten(@dark-color, 5%);
+					padding: 10px 0;
+
+					.input-group-addon{
+						border: 0;
+						background-color: transparent;
+
+						.icon{
+							font-size: 20px;
+							color: @light-color;
+						}
+					}
+
+					.form-control{
+						border: 0;
+						background-color: transparent;
+						box-shadow: none;
+						color: lighten(@dark-color, 40%);
+						padding: 0;
+						font-family: @raleway;
+						font-size: 14px;
+						font-weight: 500;
+						height: 36px;
+					}
+					
+					&.parsley-error{
+						border-color: lighten(@danger-color, 10%);
+					}
+				}
+
+				&.login-submit{
+					padding-top: 40px;
+					padding-bottom: 15px;
+
+					.btn{
+						width: 100%;
+					}
+				}
+
+				&.footer{
+					margin-top: 3px;
+					line-height: 35px;
+					font-size: 14px;
+				}
+
+				//Remember me checkbox
+				.remember{
+					text-align: right;
+					color: lighten(@dark-color, 40%);
+
+					label{
+						margin: 0;
+						cursor: pointer;
+					}
+
+					.am-checkbox{
+						display: inline-block;
+						margin-left: 7px;
+
+						input[type="checkbox"] + label:before{
+							border-color: lighten(@dark-color, 5%);
+						}
+
+						input[type="checkbox"] + label:hover:before{
+							border-color: lighten(@dark-color, 10%);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	@media @phone{
+		margin-top: 50px;
+	}
+}

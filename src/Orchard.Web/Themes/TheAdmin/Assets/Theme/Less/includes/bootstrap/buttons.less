@@ -1,0 +1,359 @@
+/*------------------------------------------------------------------
+  [Buttons]
+*/
+.btn{
+	border-radius: 0;
+
+  &:active,
+	&.active{
+		box-shadow: none;
+  }
+}
+
+.btn-xs{
+	font-size: @font-size-extra-small;
+	padding-top: 2px;
+	padding-bottom: 2px;
+}
+
+//Button with rounded borders
+.btn-rounded{
+	border-radius: 3px;
+
+	&.btn-lg{
+		border-radius: 5px;
+	}
+}
+
+//Buton spacer helpers
+.btn-hspace{
+	margin-right: 5px;
+}
+
+.btn-vspace{
+	margin-bottom: 5px;
+}
+
+.btn-space{
+	margin-right: 5px;
+	margin-bottom: 5px;
+}
+
+.btn-default{
+  color: @btn-default-color;
+  background-color: @btn-default-bg;
+  border-color: @btn-default-border;
+
+  &:focus,
+  &.focus {
+    color: @btn-default-color;
+    background-color: @btn-default-bg;
+        border-color: @btn-default-border;
+  }
+
+  &:hover {
+    color: @btn-default-color;
+    background-color: darken(@btn-default-bg, 3%);
+        border-color: darken(@btn-default-border, 5%);
+  }
+
+  &:active,
+  &.active,
+  .open > .dropdown-toggle& {
+    color: @btn-default-color;
+    background-color: darken(@btn-default-bg, 7%);
+        border-color: darken(@btn-default-border, 10%);
+
+    &:hover,
+    &:focus,
+    &.focus {
+      color: @btn-default-color;
+      background-color: darken(@btn-default-bg, 7%);
+          border-color: darken(@btn-default-border, 10%);
+    }
+  }
+
+  &:active,
+  &.active,
+  .open > .dropdown-toggle& {
+    background-image: none;
+  }
+
+  &.disabled,
+  &[disabled],
+  fieldset[disabled] & {
+    &,
+    &:hover,
+    &:focus,
+    &.focus,
+    &:active,
+    &.active {
+      background-color: @btn-default-bg;
+          border-color: @btn-default-border;
+    }
+  }
+
+  .badge {
+    color: @btn-default-bg;
+    background-color: @btn-default-color;
+  }
+}
+
+//Alternative color styles
+.btn-dark{
+	.button-variant(@btn-dark-color; @btn-dark-bg; @btn-dark-border);
+}
+
+.btn-alt1{
+	.button-variant(@btn-alt1-color; @btn-alt1-bg; @btn-alt1-border);
+}
+
+.btn-alt2{
+	.button-variant(@btn-alt2-color; @btn-alt2-bg; @btn-alt2-border);
+}
+
+.btn-alt3{
+	.button-variant(@btn-alt3-color; @btn-alt3-bg; @btn-alt3-border);
+}
+
+.btn-alt4{
+	.button-variant(@btn-alt4-color; @btn-alt4-bg; @btn-alt4-border);
+}
+
+//Shade colors
+//Primary
+.btn-primary.btn-shade1{
+	.button-shade( darken(@btn-primary-bg, 3%) );
+}
+
+.btn-primary.btn-shade2{
+	.button-shade( darken(@btn-primary-bg, 5%) );
+}
+
+.btn-primary.btn-shade3{
+	.button-shade( darken(@btn-primary-bg, 7%) );
+}
+
+.btn-primary.btn-shade4{
+	.button-shade( darken(@btn-primary-bg, 9%) );
+}
+
+//Success
+.btn-success.btn-shade1{
+	.button-shade( darken(@btn-success-bg, 3%) );
+}
+
+.btn-success.btn-shade2{
+	.button-shade( darken(@btn-success-bg, 5%) );
+}
+
+.btn-success.btn-shade3{
+	.button-shade( darken(@btn-success-bg, 7%) );
+}
+
+.btn-success.btn-shade4{
+	.button-shade( darken(@btn-success-bg, 9%) );
+}
+
+//Info
+.btn-info.btn-shade1{
+	.button-shade( darken(@btn-info-bg, 3%) );
+}
+
+.btn-info.btn-shade2{
+	.button-shade( darken(@btn-info-bg, 5%) );
+}
+
+.btn-info.btn-shade3{
+	.button-shade( darken(@btn-info-bg, 7%) );
+}
+
+.btn-info.btn-shade4{
+	.button-shade( darken(@btn-info-bg, 9%) );
+}
+
+//Warning
+.btn-warning.btn-shade1{
+	.button-shade( darken(@btn-warning-bg, 3%) );
+}
+
+.btn-warning.btn-shade2{
+	.button-shade( darken(@btn-warning-bg, 5%) );
+}
+
+.btn-warning.btn-shade3{
+	.button-shade( darken(@btn-warning-bg, 7%) );
+}
+
+.btn-warning.btn-shade4{
+	.button-shade( darken(@btn-warning-bg, 9%) );
+}
+
+//Danger
+.btn-danger.btn-shade1{
+	.button-shade( darken(@btn-danger-bg, 3%) );
+}
+
+.btn-danger.btn-shade2{
+	.button-shade( darken(@btn-danger-bg, 5%) );
+}
+
+.btn-danger.btn-shade3{
+	.button-shade( darken(@btn-danger-bg, 7%) );
+}
+
+.btn-danger.btn-shade4{
+	.button-shade( darken(@btn-danger-bg, 9%) );
+}
+
+//Dark
+.btn-dark.btn-shade1{
+	.button-shade( darken(@btn-dark-bg, 3%) );
+}
+
+.btn-dark.btn-shade2{
+	.button-shade( darken(@btn-dark-bg, 5%) );
+}
+
+.btn-dark.btn-shade3{
+	.button-shade( darken(@btn-dark-bg, 7%) );
+}
+
+.btn-dark.btn-shade4{
+	.button-shade( darken(@btn-dark-bg, 9%) );
+}
+
+//Alt1
+.btn-alt1.btn-shade1{
+	.button-shade( darken(@btn-alt1-bg, 3%) );
+}
+
+.btn-alt1.btn-shade2{
+	.button-shade( darken(@btn-alt1-bg, 5%) );
+}
+
+.btn-alt1.btn-shade3{
+	.button-shade( darken(@btn-alt1-bg, 7%) );
+}
+
+.btn-alt1.btn-shade4{
+	.button-shade( darken(@btn-alt1-bg, 9%) );
+}
+
+//Alt2
+.btn-alt2.btn-shade1{
+	.button-shade( darken(@btn-alt2-bg, 3%) );
+}
+
+.btn-alt2.btn-shade2{
+	.button-shade( darken(@btn-alt2-bg, 5%) );
+}
+
+.btn-alt2.btn-shade3{
+	.button-shade( darken(@btn-alt2-bg, 7%) );
+}
+
+.btn-alt2.btn-shade4{
+	.button-shade( darken(@btn-alt2-bg, 9%) );
+}
+
+//Alt3
+.btn-alt3.btn-shade1{
+	.button-shade( darken(@btn-alt3-bg, 3%) );
+}
+
+.btn-alt3.btn-shade2{
+	.button-shade( darken(@btn-alt3-bg, 5%) );
+}
+
+.btn-alt3.btn-shade3{
+	.button-shade( darken(@btn-alt3-bg, 7%) );
+}
+
+.btn-alt3.btn-shade4{
+	.button-shade( darken(@btn-alt3-bg, 9%) );
+}
+
+//Alt4
+.btn-alt4.btn-shade1{
+	.button-shade( darken(@btn-alt4-bg, 3%) );
+}
+
+.btn-alt4.btn-shade2{
+	.button-shade( darken(@btn-alt4-bg, 5%) );
+}
+
+.btn-alt4.btn-shade3{
+	.button-shade( darken(@btn-alt4-bg, 7%) );
+}
+
+.btn-alt4.btn-shade4{
+	.button-shade( darken(@btn-alt4-bg, 9%) );
+}
+
+//Social buttons colors
+.btn-default.btn-facebook{ color: @facebook; .button-active-color(@facebook) }
+.btn-default.btn-twitter{ color: @twitter; .button-active-color(@twitter) }
+.btn-default.btn-google-plus{ color: @google-plus; .button-active-color(@google-plus) }
+.btn-default.btn-dribbble{ color: @dribbble; .button-active-color(@dribbble) }
+.btn-default.btn-flickr{ color: @flickr; .button-active-color(@flickr) }
+.btn-default.btn-linkedin{ color: @linkedin; .button-active-color(@linkedin) }
+.btn-default.btn-youtube{ color: @youtube; .button-active-color(@youtube) }
+.btn-default.btn-pinterest{ color: @pinterest; .button-active-color(@pinterest) }
+.btn-default.btn-github{ color: @github; .button-active-color(@github) }
+.btn-default.btn-tumblr{ color: @tumblr; .button-active-color(@tumblr) }
+
+//Social buttons
+.btn-social.btn-facebook{ .button-variant(@light-color; @facebook; @facebook); }
+.btn-social.btn-twitter{ .button-variant(@light-color; @twitter; @twitter);  }
+.btn-social.btn-google-plus{ .button-variant(@light-color; @google-plus; @google-plus); }
+.btn-social.btn-dribbble{ .button-variant(@light-color; @dribbble; @dribbble); }
+.btn-social.btn-flickr{ .button-variant(@light-color; @flickr; @flickr); }
+.btn-social.btn-linkedin{ .button-variant(@light-color; @linkedin; @linkedin); }
+.btn-social.btn-youtube{ .button-variant(@light-color; @youtube; @youtube); }
+.btn-social.btn-pinterest{ .button-variant(@light-color; @pinterest; @pinterest); }
+.btn-social.btn-github{ .button-variant(@light-color; @github; @github); }
+.btn-social.btn-tumblr{ .button-variant(@light-color; @tumblr; @tumblr); }
+
+//Icons inside buttons
+.btn{
+
+	.icon{
+		font-size: 19px;
+		vertical-align: middle;
+
+		&.icon-left{
+			margin-right: @btn-icon-margin;
+		}
+
+		&.icon-right{
+			margin-left: @btn-icon-margin;
+		}
+
+		&.fa{
+			font-size: 15px;
+		}
+	}
+
+	&.btn-lg .icon{
+		font-size: 23px;
+		line-height: 25px;
+	}
+
+	&.btn-sm .icon{
+		font-size: 16px;
+		line-height: 16px;
+	}
+
+	&.btn-xs .icon{
+		font-size: 14px;
+		line-height: 16px;
+	}
+}
+
+
+// The clickable button for toggling the menu
+// Remove the gradient and set the same inset shadow as the :active state
+.btn-group.open .dropdown-toggle {
+	box-shadow: none;
+}

@@ -1,0 +1,92 @@
+
+@import 'mixins.scss';
+@import 'common.scss';
+
+div.dt-buttons {
+	position: relative;
+	float: left;
+
+	.dt-button {
+		margin-right: 0;
+
+		span.ui-icon {
+			display: inline-block;
+			vertical-align: middle;
+			margin-top: -2px;
+		}
+
+		&:active {
+			outline: none;
+		}
+
+		&:hover > span {
+			background-color: rgba(0, 0, 0, 0.05);
+		}
+	}
+}
+
+
+div.dt-button-collection {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 150px;
+	margin-top: 3px;
+	padding: 8px 8px 4px 8px;
+	border: 1px solid #ccc;
+	border: 1px solid rgba( 0, 0, 0, 0.4 );
+	background-color: #f3f3f3;
+	background-color: rgba( 255, 255, 255, 0.3 );
+	overflow: hidden;
+	z-index: 2002;
+	border-radius: 5px;
+	box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
+
+	z-index: 2002;
+
+	.dt-button {
+		position: relative;
+		left: 0;
+		right: 0;
+
+		display: block;
+		float: none;
+		margin-right: 0;
+
+		&:last-child {
+			margin-bottom: 4px;
+		}
+
+		&:hover > span {
+			background-color: rgba(0, 0, 0, 0.05);
+		}
+	}
+
+	@include dtb-fixed-collection();
+
+	-webkit-column-gap: 0;
+	   -moz-column-gap: 0;
+	    -ms-column-gap: 0;
+	     -o-column-gap: 0;
+	column-gap: 0;
+}
+
+div.dt-button-background {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+
+	@include dtb-radial-gradient( rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.7) );
+
+	z-index: 2001;
+}
+
+
+@media screen and (max-width: 640px) {
+	div.dt-buttons {
+		float: none !important;
+		text-align: center;
+	}
+}

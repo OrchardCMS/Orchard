@@ -1,0 +1,295 @@
+/*------------------------------------------------------------------
+	[Left sidebar]
+*/
+.am-left-sidebar{
+	background-color: @left-sidebar-bg;
+	width: @left-sidebar-width;
+	height: 100%;
+	left: 0;
+	position: absolute;
+
+	.sidebar-elements{
+		margin: 0;
+		padding: 0;
+
+		//First Level
+		> li{
+			border-bottom: 1px solid lighten(@dark-color, 4%);
+			list-style: none;
+
+			> a{
+				display: block;
+				padding: 15px;
+				color: @left-sidebar-color;
+				text-align: center;
+				font-size: @left-sidebar-main-level-font-size;
+
+				.icon{
+					display: block;
+					font-size: 33px;
+				}
+
+				span{
+					display: block;
+					margin-top: 5px;
+				}
+			}
+
+			//Second Level
+			> ul{
+				display: none;
+				position: fixed;
+				left: @left-sidebar-width;
+				top: 0;
+				height: 100%;
+				background-color: @left-sidebar-background-sub-item;
+				z-index: (@zindex-navbar-fixed + 1);
+				padding: 0;
+				table-layout: fixed;
+				list-style: none;
+				width: @left-sidebar-submenu-width;
+				
+				//Class helper for delay purposes
+				&.visible{
+					display: table;
+				}
+
+				//Class helper for closeSubMenu method
+				&.hide{
+					display: none;
+				}
+
+				> li.title{
+					color: @light-color;
+					border-bottom: 1px solid lighten(@dark-color, 18.5%);
+					font-size: 26px;
+					font-weight: 300;
+					margin: 0 25px 0;
+					padding-bottom: 18px;
+					padding-top: 25px;			
+				}
+				
+				> .nav-items{
+					display: table-row;
+    			height: 100%;
+					
+					.am-scroller{
+
+						.content{
+							padding-top: 15px;
+
+							// Second menu level items
+							> ul{
+		    				padding: 0;
+		    				margin: 0;
+
+				    		> li{
+
+									> a{
+										padding: 11px 25px;
+										color: @left-sidebar-color-sub-item;
+										font-size: 13px;
+										display: block;
+										font-weight: 300;
+
+										.label{
+											border-radius: 2px;
+											font-weight: 400;
+											line-height: 10px;
+											padding: 5px 10px;
+										}
+
+										&:hover{
+											background-color: @left-sidebar-hover-item;
+											color: @light-color;
+										}
+									}
+								}
+
+								li.active{
+
+									> a{
+										color: lighten(@primary-color, 5%);
+									}
+								}
+		    			}
+						}
+					}
+				}
+			}
+
+			&:hover{
+				background-color: @left-sidebar-hover-item;
+
+				> ul{
+					display: table;
+				}
+			}
+
+			&.active{
+				
+				> a{
+					border-left: 2px solid @primary-color;
+					padding-left: 13px;
+				}
+			}
+		}
+	}
+
+	.am-logo{
+		display: none;
+	}
+
+	&:before{
+		content: "";
+		position: fixed;
+		z-index: -1;
+		width: inherit;
+		top: 0;
+		left: 0;
+		bottom: 0;
+		background-color: inherit;
+
+		.am-animate & {
+			transition: @sidebars-push-effect;
+		}
+	}
+
+	@media @phone{
+		width: @left-sidebar-width-phone;
+		height: 100%;
+		overflow: auto;
+		-webkit-overflow-scrolling: touch;
+		position: fixed;
+		top: 0;
+	  -webkit-transform: translate3d(-100%, 0, 0);
+      	transform: translate3d(-100%, 0, 0);
+
+		.sidebar-elements{
+
+			> li{
+
+				> a{
+					text-align: left;
+					position: relative;
+
+					.icon{
+						display: inline-block;
+						font-size: 25px;
+						margin-right: 10px;
+						vertical-align: middle;
+					}
+
+					span{
+						display: inline-block;
+					}
+				}
+
+				&.parent{
+
+					> a:after{
+						content: '\e688';
+						float: right;
+						font-family: @icons-font;
+						font-size: 26px;
+						line-height: 28px;
+						color: darken(@left-sidebar-color, 25%);
+					}
+				}
+
+				//Second level style
+				> ul{
+					position: relative;
+					height: auto;
+					width: 100%;
+					left: 0;
+
+					> li.title{
+						display: none;
+					}
+
+					> li.nav-items{
+						display: block;
+						height: auto;
+
+						> .am-scroller{
+							height: auto;
+							overflow: visible;
+
+							> .content{
+								padding-top: 0;
+								overflow: visible;
+								position: relative;
+							}
+						}
+					}
+				}
+
+				&:hover{
+					background-color: inherit;
+
+					> ul{
+						display: none;
+					}
+				}
+			}
+
+			li.open{
+
+				> ul{
+					display: block;
+				}
+			}
+		}
+
+		.am-logo{
+			background: url("@{img-path}/logo-full.png") no-repeat 15px center;
+			height: @top-header-height-phone;
+			background-color: @left-sidebar-logo-bg;
+			border-bottom: 1px solid darken(@left-sidebar-logo-bg, 1.5%);
+			display: block;
+
+			@media @retina{
+				background-image: url("@{img-path}/logo-full-retina.png");
+				background-size: 150px 39px;
+			}
+		}
+	}
+
+	.am-animate & {
+		transition: @sidebars-push-effect;
+	}
+
+	.am-fixed-sidebar & {
+		margin-top: @top-header-height;
+		padding-bottom: @top-header-height;
+		position: fixed;
+		top: 0;
+		bottom: 0;
+		z-index: (@zindex-navbar-fixed + 1);
+	
+		@media @phone{
+			margin-top: 0;
+		}
+
+		&:before{
+			top: @top-header-height;
+		}
+
+		.nano-pane{
+			width: 4px;
+
+			> .nano-slider{
+				background-color: rgba(0, 0, 0, 0.15);
+			}
+		}
+	}
+}
+
+//Push sidebar animation
+body.open-left-sidebar{
+	
+	@media @phone{
+		.left-sidebar-animation(@sidebars-hardware-accelerated-animation);
+	}
+}

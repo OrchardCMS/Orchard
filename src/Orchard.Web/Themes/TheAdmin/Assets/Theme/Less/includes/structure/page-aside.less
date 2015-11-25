@@ -1,0 +1,118 @@
+/*------------------------------------------------------------------
+  [Page aside]
+*/
+.am-aside{
+
+	.main-content{
+		margin-left: @page-aside-width;
+
+		@media @phone{
+			margin-left: inherit;
+		}
+	}
+}
+
+.page-aside{
+  background: none repeat scroll 0 0 @light-color;
+  width: @page-aside-width;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: @left-sidebar-width;
+  border-right: 1px solid darken(@light-color, 10%);
+	padding-top: @top-header-height;
+
+  .am-animate & {
+    transition: @sidebars-push-effect;
+  }
+
+  .content{
+  	padding: @page-aside-padding;
+  }
+
+	@media @phone{
+    width: 100%;
+    display: block;
+    height: auto;
+    position: relative;
+    padding-top: 0;
+    left: 0;
+
+    .nano-content{
+      position: static;
+      overflow: visible;
+      margin: 0 !important;
+    }
+	}
+}
+
+.aside-header{
+  margin-bottom: 20px;
+
+  .navbar-toggle{
+    background: rgba(0,0,0,0.015);
+    padding: 5px 6px;
+
+    .icon{
+      font-size: 25px;
+    }
+  }
+
+  .description{
+    color: lighten(@text-color, 10%);
+  }
+}
+
+.aside-nav{
+  display: block;
+  visibility: visible;
+
+  .nav{
+
+    li{
+
+      a{
+        color: @text-color;
+        padding: 12px 15px;
+      }
+
+      &.active{
+        
+        a{
+          background-color: darken(@light-color, 5%);
+        }
+      }
+
+      .label{
+        float: right;
+        font-size: 12px;
+        font-weight: 300;
+      }
+
+      .icon{
+        font-size: 19px;
+        vertical-align: middle;
+        margin-right: 3px;
+      }
+    } 
+  }
+
+  .title{
+    color: lighten(@text-color, 20%);
+    margin: 5px 0 0 0;
+    padding: 8px 13px 4px;
+    border-bottom: 1px solid darken(@light-color, 10%);
+  }
+
+  @media @phone{
+    border-bottom: 1px solid darken(@light-color, 10%);
+
+    &.collapse{
+      display: none;
+    }
+
+    &.in{
+      display: block;
+    }
+  }
+}

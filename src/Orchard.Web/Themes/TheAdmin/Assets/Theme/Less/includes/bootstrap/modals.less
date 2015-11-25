@@ -1,0 +1,313 @@
+/*------------------------------------------------------------------
+  [Modals]
+*/
+.modal, .md-modal{
+
+	.modal-content, .md-content{
+		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+		border-radius: 3px;
+		overflow: hidden;
+		background-color: @light-color;
+		color: @text-color;
+
+		.modal-header{
+			border: 0;
+
+			h1, h2, h3, h4, h5, h6{
+				display: block;
+				margin: 0;
+			}
+
+			.close{
+				font-size: 26px;
+				opacity: 0.4;
+				text-shadow: none;
+
+				&:hover{
+					opacity: 0.8;
+				}
+			}
+		}
+
+		.modal-body{
+			padding: 30px 20px;
+
+			.i-circle{
+				border: 2px solid darken(@light-color, 5.5%);
+				border-radius: 50%;
+				display: inline-block;
+				height: 80px;
+				width: 80px;
+				margin-bottom: 15px;
+				line-height: 105px;
+
+				.icon{
+					font-size: 45px;
+				}
+			}
+		}
+
+		.modal-footer{
+			background-color: darken(@light-color, 1%);
+		}
+	}
+
+	//Full Color Alerts
+	&.full-color, .full-color{	
+
+		.modal-content, .md-content{
+			color: @light-color;
+
+			.modal-header{
+				background-color: darken(@primary-color, 4%);
+
+				.close{
+					color: @light-color;
+					line-height: 40px;
+					opacity: 0.6;
+
+					&:hover{
+						opacity: 1;
+					}
+				}
+			}
+
+			.modal-body, .modal-footer{
+				background-color: @primary-color;
+			}
+			
+			.modal-footer{
+				border: 0;
+			}
+		}
+
+		&.success{		
+			.modal-content, .md-content{
+
+				.modal-header{
+					background-color: darken(@success-color, 4%);
+				}
+
+				.modal-body, .modal-footer{
+					background-color: @success-color;
+				}
+			}
+		}
+
+		&.info{
+			.modal-content, .md-content{
+
+				.modal-header{
+					background-color: darken(@info-color, 4%);
+				}
+
+				.modal-body, .modal-footer{
+					background-color: @info-color;
+				}
+			}
+		}
+
+		&.warning{
+			.modal-content, .md-content{
+
+				.modal-header{
+					background-color: darken(@warning-color, 4%);
+				}
+
+				.modal-body, .modal-footer{
+					background-color: @warning-color;
+				}
+			}
+		}
+
+		&.danger{
+			.modal-content, .md-content{
+
+				.modal-header{
+					background-color: darken(@danger-color, 4%);
+				}
+
+				.modal-body, .modal-footer{
+					background-color: @danger-color;
+				}
+			}
+		}
+
+		&.dark{
+			.modal-content, .md-content{
+
+				.modal-header{
+					background-color: darken(@dark-color, 2%);
+				}
+
+				.modal-body, .modal-footer{
+					background-color: @dark-color;
+				}
+			}
+		}
+	}
+
+	//Bootstrap Modals
+	&.full-width, .full-width{
+		width: 90%;
+ 		max-width:none;
+	}
+
+	//Colored Header Modals
+	&.colored-header{
+
+		.modal-content, .md-content{
+
+			.modal-header{
+				background-color: @primary-color;
+				color: @light-color;
+				padding: 20px 15px;
+
+				.close{
+					color: @light-color;
+					margin-top: 2px;
+				}
+			}
+		}
+
+		&.success{
+			.modal-content, .md-content{
+
+				.modal-header{
+					background-color: @success-color;
+				}
+			}
+		}
+
+		&.info{
+			.modal-content, .md-content{
+
+				.modal-header{
+					background-color: @info-color;
+				}
+			}
+		}
+
+		&.warning{
+			.modal-content, .md-content{
+
+				.modal-header{
+					background-color: @warning-color;
+				}
+			}
+		}
+
+		&.danger{
+			.modal-content, .md-content{
+
+				.modal-header{
+					background-color: @danger-color;
+				}
+			}
+		}
+
+		&.dark{
+			.modal-content, .md-content{
+
+				.modal-header{
+					background-color: @dark-color;
+				}
+			}
+		}
+	}
+
+	//Dark Flat Side
+	&.md-dark{
+
+		.modal-content, .md-content{
+			color: @light-color;
+
+			.modal-header{
+				background-color: @primary-color;
+				padding: 20px 15px;
+
+				.close{
+					color: @light-color;
+					margin-top: 2px;
+				}
+			}
+
+			.modal-body{
+				&.form{
+					.form-control{
+						background-color: @dark-color;
+					}
+				}
+			}
+
+			.modal-body, .modal-footer{
+				background-color: @dark-color;
+			}
+
+			.modal-footer{
+				border: 0;
+			}
+		}
+
+		&.success{
+			.modal-content, .md-content{
+
+				.modal-header{
+					background-color: @success-color;
+				}
+			}
+		}
+
+		&.info{
+			.modal-content, .md-content{
+
+				.modal-header{
+					background-color: @info-color;
+				}
+			}
+		}
+
+		&.warning{
+			.modal-content, .md-content{
+
+				.modal-header{
+					background-color: @warning-color;
+				}
+			}
+		}
+
+		&.danger{
+			.modal-content, .md-content{
+
+				.modal-header{
+					background-color: @danger-color;
+				}
+			}
+		}
+
+		&.dark{
+			.modal-content, .md-content{
+
+				.modal-header{
+					background-color: darken(@dark-color, 2%);
+				}
+			}
+		}
+	}
+}
+
+@media @phone{
+
+	.md-modal{
+		min-width: 100%;
+		padding: 0 15px;
+	}
+}
+
+.md-overlay{
+	z-index: @zindex-modal;
+}
+
+.am-modal-open{
+	overflow-x: visible;
+}

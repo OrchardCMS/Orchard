@@ -1,0 +1,40 @@
+
+@import 'mixins.scss';
+@import 'common.scss';
+
+ul.dt-buttons {
+	li {
+		margin: 0;
+	}
+
+	li.active a {
+		box-shadow: inset 0 0 10px rgba(0,0,0,.6);
+	}
+}
+
+ul.dt-buttons.button-group a {
+	margin-bottom: 0; // Foundation has a -2px margin, but that causes the
+	                  // active class to look wrong
+}
+
+ul.dt-button-collection.f-dropdown {
+	@include dtb-fixed-collection();
+
+	&.fixed {
+		max-width: none;
+
+		&:before,
+		&:after {
+			display: none;
+		}
+	}
+}
+
+div.dt-button-background {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 88;
+}

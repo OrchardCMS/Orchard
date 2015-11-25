@@ -1,0 +1,107 @@
+/*------------------------------------------------------------------
+  [Tabs]
+*/
+.nav-tabs{
+	background-color: darken(@light-color, 4%);
+	border-bottom-width: 0;
+
+	> li{
+		margin-right: 2px;
+
+		a{
+			padding: 18px 20px;
+			margin-right: 0;  
+			min-width: 80px;
+    	text-align: center;
+    	border-radius: 0;
+    	color: @text-color;
+    	border-width: 0;
+
+    	&:hover{
+    		background: transparent;
+				color: @primary-color;
+    	}
+
+    	&:active{
+    		background-color: transparent;
+    	}
+		}
+
+		&.active{
+			position: relative;
+			background: transparent;
+			color: @primary-color;
+
+			a, a:hover, a:focus{
+				background-color: @light-color;
+			}
+		}
+	}
+}
+
+//Tab Bottom
+.tab-content{
+	background: @light-color;
+	padding: 20px;
+	margin-bottom: 40px;
+
+	.tab-pane{
+		
+		//First heading margin-top fix
+		h1, h2, h3, h4, h5, h6{
+
+			&:first-child{
+				margin-top: 5px;
+			}
+		}
+	}
+}
+
+.tab-bottom{
+
+	.tab-content{
+		margin-bottom: 0;
+	}
+
+	.nav-tabs{
+		margin-bottom: 40px;
+	}
+}
+
+//Tab Left and Tab Rgiht
+.tab-left, .tab-right{
+
+	.nav-tabs{
+		float: left;
+
+		> li{
+			float:none;
+			margin-right: 0;
+			margin-bottom: 0;
+
+			> a{
+				text-align: left;
+				min-width: 38px;
+				padding: 15px 17px;
+				border-radius: 0;
+				-webkit-border-radius: 0;
+
+				.icon{
+					font-size: 20px;
+				}
+			}
+		}
+	}
+
+	.tab-content{
+		overflow: auto;
+	}
+}
+
+//Tab Right
+.tab-right{
+
+	.nav-tabs{
+		float:right;
+	}
+}

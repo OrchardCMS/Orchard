@@ -1,0 +1,210 @@
+//Paths
+@img-path: 		"../Images"; 
+@fonts-path: 	"./fonts"; 
+@lib-path: 		"../assets/lib"; 
+
+//General colors palette
+@primary-color: saturate(#e66b6b, 10%);
+@alt-color1: 		#95d9f0;
+@alt-color2: 		#ffdc7a;
+@alt-color3: 		#7a98bf;
+@alt-color4: 		#cccccc;
+
+@dark-color: 		#3d3c3c;
+@light-color: 	#ffffff;
+@black-color: 	#000000;
+@body-color: 		#555555;
+
+//States Color
+@success-color: #7ACCBE;
+@warning-color: #FFC870;
+@danger-color: 	#EF6262;
+@info-color: 		#8dcadf;
+
+//Color variations
+@import "colors.less";
+
+//General elements
+@full-logo-width: 				150px;
+@full-logo-height: 				39px;
+@small-logo-width: 				67px;
+@small-logo-height: 			39px;
+@body-background: 				darken(@light-color, 6%);
+@content-padding: 				35px;
+@content-padding-tablet: 	25px;
+@content-padding-phone: 	15px;
+@link-color: 							(@primary-color + 10%);
+@scroller-width: 					6px;//Scroller plugin width
+
+//Aside
+@page-aside-width: 			280px;
+@page-aside-padding: 		20px;
+
+//Top Header
+@top-header-height: 				80px;
+@top-header-height-phone: 	70px;
+@icons-nav-dropdown-width: 	300px;
+
+//Left Sidebar
+@left-sidebar-bg: 									@dark-color;
+@left-sidebar-width: 								100px;
+@left-sidebar-submenu-width: 				280px;
+@left-sidebar-width-phone: 					85%;
+@left-sidebar-color: 								darken(@light-color, 11.8%);
+@left-sidebar-color-sub-item: 			darken(@light-color, 30%);
+@left-sidebar-background-sub-item: 	lighten(@dark-color, 4.3%);
+@left-sidebar-hover-item: 					lighten(@dark-color, 2%);
+@left-sidebar-logo-bg: 							darken(@dark-color, 1.5%);
+@left-sidebar-main-level-font-size: 12px;
+
+//Right Sidebar
+@right-sidebar-width: 							255px;
+@right-sidebar-width-phone: 				85%;
+@right-sidebar-icons-color: 				darken(@light-color, 33.2%);
+@right-sidebar-color: 							darken(@light-color, 11.8%);
+@right-sidebar-low-contrast-color: 	darken(@light-color, 30%);
+@right-sidebar-background: 					lighten(@dark-color, 4.3%);
+@right-sidebar-dark-color: 					lighten(@dark-color, 2%);
+
+//Fonts
+@raleway-path: 						"@{fonts-path}/raleway";
+@raleway: 								'Raleway', sans-serif;
+@open-sans-path: 					"@{fonts-path}/open-sans";
+@open-sans: 							'Open Sans', sans-serif;
+@icons-font:							'Stroke 7';
+
+@font-size-base:        	13px;
+@font-size-large:         ceil((@font-size-base * 1.15)); // ~18px
+@font-size-small:         ceil((@font-size-base * 0.85)); // ~12px
+@font-size-extra-small:   ceil((@font-size-base * 0.8)); // ~12px
+
+@font-size-h1:            floor((@font-size-base * 2.6)); // ~36px
+@font-size-h2:            floor((@font-size-base * 2.15)); // ~30px
+@font-size-h3:            ceil((@font-size-base * 1.7)); // ~24px
+@font-size-h4:            ceil((@font-size-base * 1.25)); // ~18px
+@font-size-h5:            @font-size-base;
+@font-size-h6:            ceil((@font-size-base * 0.85)); // ~12px
+
+@paragraph-font-size: 		inherit;
+@paragraph-line-height: 	21px;
+
+//Both sidebars
+@sidebars-hardware-accelerated-animation: true;
+@sidebars-push-effect: all .35s ease;
+
+//Forms
+@input-check-component-size: 22px;
+
+//Dropdowns
+@dropdown-text-color: lighten(@dark-color, 7.2%);
+
+//Panels & Widget Panels
+@panel-body-padding:          			15px 20px 20px;
+@panel-heading-horizontal-padding:  20px;
+@panel-heading-top-padding:   		 	20px;
+@panel-heading-bottom-padding:    	15px;
+@panel-heading-padding:       			@panel-heading-top-padding @panel-heading-horizontal-padding @panel-heading-bottom-padding;
+@panel-heading-font-size: 					18px;
+@panel-heading-font-weight: 				300;
+@widget-heading-font-size: 					16px;
+@widget-heading-font-weight: 				300;
+
+//Buttons
+@btn-font-weight:                normal;
+@btn-icon-margin:								 3px;	
+
+@btn-default-color:              @text-color;
+@btn-default-bg:                 #fff;
+@btn-default-border:             #dedede;
+
+@btn-primary-color:              #fff;
+@btn-primary-bg:                 @brand-primary;
+@btn-primary-border:             darken(@btn-primary-bg, 5%);
+
+@btn-dark-color:              	 #fff;
+@btn-dark-bg:                 	 @dark-color;
+@btn-dark-border:             	 darken(@btn-dark-bg, 5%);
+
+@btn-success-color:              #fff;
+@btn-success-bg:                 @brand-success;
+@btn-success-border:             darken(@btn-success-bg, 5%);
+
+@btn-info-color:                 #fff;
+@btn-info-bg:                    @brand-info;
+@btn-info-border:                darken(@btn-info-bg, 5%);
+
+@btn-warning-color:              #fff;
+@btn-warning-bg:                 @brand-warning;
+@btn-warning-border:             darken(@btn-warning-bg, 5%);
+
+@btn-danger-color:               #fff;
+@btn-danger-bg:                  @brand-danger;
+@btn-danger-border:              darken(@btn-danger-bg, 5%);
+
+@btn-alt1-color:								 #fff;
+@btn-alt1-bg:                 	 @alt-color1-text;
+@btn-alt1-border:              	 darken(@btn-alt1-bg, 5%);
+
+@btn-alt2-color:								 #fff;
+@btn-alt2-bg:                 	 @alt-color2-text;
+@btn-alt2-border:              	 darken(@btn-alt2-bg, 5%);
+
+@btn-alt3-color:								 #fff;
+@btn-alt3-bg:                 	 @alt-color3-text;
+@btn-alt3-border:              	 darken(@btn-alt3-bg, 5%);
+
+@btn-alt4-color:								 #fff;
+@btn-alt4-bg:                 	 @alt-color4-text;
+@btn-alt4-border:              	 darken(@btn-alt4-bg, 5%);
+
+@btn-link-disabled-color:        @gray-light;
+
+//Alerts
+@alert-icon-width: 			55px;
+
+//Progress bars
+@progress-bar-height: 	22px;	
+
+//Status color
+@status-online: 		#00b777;
+@status-offline: 		#e65a5a;
+@status-away: 			#f2c329;
+
+//Gritter Notifications
+@notification-width: 					360px;
+@notification-top-position: 	82px;
+
+//Social colors
+@facebook: 		#5d82d1;
+@twitter: 		#50bff5;
+@google-plus: #eb5e4c;
+@dribbble: 		#f7659c;
+@youtube: 		#ef4e41;
+@flickr: 			#0063dc;
+@yahoo: 			#ab47ac;
+@linkedin: 		#238cc8;
+@pinterest: 	#e13138;
+@github: 			#333;
+@tumblr: 			#426d9b;
+
+//Responsive Variables
+@desktop: 		~"(min-width: @{screen-lg})";
+@laptop: 			~"(min-width: @{screen-md}) and (max-width: @{screen-md-max})";
+@tablet: 			~"(min-width: @{screen-sm}) and (max-width: @{screen-sm-max})";
+@phone: 			~"(max-width: @{screen-xs-max})";
+@small-phone: ~"(max-width: @{screen-xs})";
+
+//Non responsive devices
+@non-responsive: ~"(min-width: @{screen-sm})";
+
+//Retina Display
+@retina: ~"(-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi)";
+
+//Google Chrome Query
+@webkit: ~"screen and (-webkit-min-device-pixel-ratio:0)";
+
+//IE8 Media Query
+@ie8: \0screen;
+
+//IE 10+ Media Query
+@ie10: ~"all and (-ms-high-contrast: none), (-ms-high-contrast: active)";

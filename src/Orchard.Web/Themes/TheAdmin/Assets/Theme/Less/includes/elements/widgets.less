@@ -1,0 +1,96 @@
+/*------------------------------------------------------------------
+  [Elements]
+*/
+/*------------------------------------------------------------------
+  [Widgets]
+*/
+.widget{
+	background-color: @light-color;
+	padding: 20px;
+	margin-bottom: 30px;
+
+	> .widget-head{
+		margin-bottom: 20px;
+		display: block;
+
+		.title{
+			font-size: @widget-heading-font-size;
+			font-weight: @widget-heading-font-weight;
+		}
+
+		.tools{
+			float: right;
+
+			> .icon{
+				display: inline-block;
+				margin-left: 5px;
+				font-size: 21px;
+				line-height: 23px;
+				vertical-align: middle;
+				cursor: pointer;
+
+				&:hover{
+					color: @primary-color;
+				}
+				
+				//Icon exceptions
+				&.s7-close{ font-size: 27px; margin-left: 1px; position: relative; top: 1px; }
+			}
+
+			.value{
+				font-size: 24px;
+				line-height: 22px;
+			}
+		}
+	}
+
+	.chart-container{
+		position: relative;
+
+		> .counter{
+			min-height: auto;
+			top: 0;
+			left: 0;
+			position: absolute;
+			z-index: 2;
+
+			.value{
+				font-size: 24px;
+			}
+
+			.desc{
+				text-transform: uppercase;
+				font-size: 11px;
+				color: lighten(@text-color, 36.5%);
+			}
+		}
+	}
+
+	&.widget-fullwidth{
+		padding: 0;
+		
+		> .widget-head{
+			padding: 20px 20px 10px;
+			margin-bottom: 0;
+		}
+
+		.chart-container{
+
+			> .counter{
+				min-height: auto;
+				left: 20px;
+			}
+		}
+	}
+
+	&.widget-small{
+		margin-bottom: 20px;
+
+		&.widget-fullwidth{
+
+			> .widget-head{
+				padding: 20px 15px 10px;
+			}
+		}
+	}
+}

@@ -1,0 +1,155 @@
+/*------------------------------------------------------------------
+  [Gallery]
+*/
+.gallery-container{
+
+	.item{
+		width: 25%;
+	  margin-bottom: 20px;
+	  padding: 0 10px;
+
+	  .photo{
+	  	background: @light-color;
+
+	  	.img{
+	  		position: relative;
+
+	  		img{
+	  			width: 100%;
+	  		}
+
+	  		.over{
+	  			top:0;
+				  opacity:0;
+				  position:absolute;
+				  height:100%;
+				  width:100%;
+				  background: rgba(red(@primary-color), green(@primary-color), blue(@primary-color), 0.8);
+				  transition: opacity 300ms ease;
+				  -webkit-transition: opacity 300ms ease;
+
+	  			.func{
+					  margin-top: -80px;
+					  position: relative;
+					  top: 50%;
+					  text-align: center;
+					  transition: margin-top 200ms ease-in-out;
+
+					  a{
+					  	display: inline-block;
+					  	height: 50px;
+					  	margin-right: 2px;
+					  	width: 50px;
+					  	margin-right: 10px;
+					  	background: rgba(255,255,255,0.2);
+					  	border-radius: 50%;
+
+					   	&:hover{
+								background: rgba(255,255,255,0.3);
+							}
+
+							i{
+							  font-size: 20px;
+							  color: @light-color;
+							  line-height: 2.4;
+							}
+						}
+					}
+				}
+
+				&:hover{
+					
+					.over{
+						opacity: 1;
+
+						.func{
+						  margin-top: -25px;
+						}
+					}
+				}
+	  	}
+
+	  	.description{
+			  line-height: 20px;
+			  display: table;
+			  width: 100%;
+
+			  .icon{
+					display: table-cell;
+					background-color: darken(@light-color, 10%);
+					padding: 20px;
+					vertical-align: middle;
+					width: 20px;
+
+					a{
+						color: lighten(@text-color, 5%);
+
+						i{
+							font-size: 30px;
+
+							@media @phone{
+								font-size: 20px;
+							}
+						}
+
+						&:hover{
+							color: @primary-color;
+						}
+					}
+
+					@media @phone{
+						padding: 15px;
+					}
+			  }
+			  
+			  .desc{
+ 					display: table-cell;
+ 					padding: 10px 20px;
+ 					vertical-align: middle;
+
+ 					 h4{
+				  	margin: 0;
+	 					font-size: 18px;
+
+	 					@media @phone{
+	 						font-size: 15px;
+	 					}
+				  }
+
+				  span{
+				  	color: lighten(@dark-color, 30%); 
+					  font-size: 12px;
+	 					font-weight: 300;
+				  }
+
+				  @media @phone{
+				  	padding: 10px;
+				  }
+				}
+			}
+	  }
+	}
+
+	.item.w2{
+	 width: 50%;
+	}
+
+	@media @phone{
+		max-width: 767px;
+
+  	.item{
+	  	width: 100%;
+	  	padding: 0;
+	  }
+
+	  .item.w2{ 
+	  	width: 100%; 
+	  }
+	}
+
+	@media @tablet{
+		.item{
+			width: 50%;
+		}
+	}
+}

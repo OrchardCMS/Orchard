@@ -1,0 +1,27 @@
+//Colored panel heading
+.panel-colored-heading(@color, @heading: true){
+
+  .panel-heading when (@heading = true){
+    background-color: @color;
+  }
+
+  .panel-heading{
+
+    .tools{
+
+      .icon:hover, > a:hover{
+        color: @color - 35%;
+      }
+    }
+  }
+}
+
+//Full colored panel
+.panel-full-color(@color){
+  background-color: @color;
+  color: @light-color;
+
+  .panel-heading{
+    border-color: @color - 10%;
+  }
+}

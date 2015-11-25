@@ -1,0 +1,190 @@
+.aside-compose{
+	text-align: center;
+	padding: 20px 25px;
+	margin-top: 10px;
+}
+
+//Email inbox
+.email-search{
+	background-color: @light-color;
+	padding: 20px 25px;
+
+	h3{
+		margin: 9px 0 15px 0;
+	}
+
+	span{
+		color:#888;
+	  font-weight:300;
+	  font-size:16px;
+	}
+}
+
+.email-filters{
+	padding: 9px 20px 10px 20px;
+  border-bottom: 1px solid darken(@light-color, 10%);
+  background-color: @light-color;
+  display: table;
+  width: 100%;
+
+  > div{
+  	display: table-cell;
+  	vertical-align: middle;
+  }
+
+  .am-select-all.am-checkbox{
+
+  	label:before{
+  		margin-right: 18px;
+  	}
+  }
+
+  .email-filters-right{
+  	text-align: right;
+  }
+
+  input{
+  	margin-right: 8px;
+  }
+}
+
+.email-list{
+	background: @light-color;
+
+	.item{
+		border-bottom: 1px solid darken(@light-color, 10%);
+	  padding: 17px 20px;
+	  display: table;
+	  width: 100%;
+	  cursor: pointer;
+
+	  &.active{
+	  	background-color: darken(@light-color, 2%);
+	  }
+
+	  > div{
+	  	vertical-align: top;
+  		display: table-cell;
+
+  		&:first-child{
+  			width: 40px;
+  		}
+	  }
+
+	  .icon{
+	  	margin-right: 7px;
+	  	font-size: 14px;
+	  }
+
+	  .from{
+	  	font-weight: 400;
+		  font-size: 13px;
+		  margin:0 0 3px 0;
+	  }
+
+	  .msg{
+  		margin: 0;
+  		color: lighten(@text-color, 20%);
+	  }
+
+	  &:hover{
+	  	background-color: darken(@light-color, 3%);
+	  }
+	}
+}
+
+//Email Detail
+.email-head{
+	background-color: @light-color;
+	padding: 20px 25px 24px;
+
+	.icons{
+		font-size: 25px;
+  	float: right; 	
+
+  	.icon{
+  		color: @text-color;
+  		margin-left: 5px;
+
+  		&:hover{
+	  		color: @primary-color;
+	  	}
+  	}
+	}
+
+	h4{
+		margin: 12px 0 15px 0;
+	}
+
+	.date{
+		float: right;
+
+		a{
+			vertical-align: middle;
+			margin-right: 5px;
+		}
+
+		.icon{
+			font-size: 20px;
+		}
+	}
+}
+
+.email-body{
+	background-color: @light-color;
+	border-top: 1px solid darken(@light-color, 10%);
+	padding: 30px;
+  font-size: 15px;
+  font-weight: 300;
+
+  p{
+  	line-height: 25px;
+  	margin-bottom: 20px;
+  }
+}
+
+//Email Compose
+.email-subject{
+
+	input{
+		font-weight: 300;
+	  font-size: 25px;
+	  height: auto;
+	  padding: 30px;
+	  border: 0;
+	  width: 100%;
+	}
+}
+
+.email-recipient{
+	background-color: @light-color;
+  border-bottom: 1px solid darken(@light-color, 10%);
+  border-top: 1px solid darken(@light-color, 10%);
+  padding: 30px 30px 10px;
+
+  label{
+  	padding-top: 15px;
+  }
+}
+
+.email.editor{
+	background-color: @light-color;
+	padding: 30px;
+
+	.note-toolbar{
+		border: 0;
+	}
+
+	.note-resizebar{
+		background-color: @light-color;
+	}
+
+	.form-group{
+		text-align: right;
+		margin-top: 15px;
+
+		.icon{
+			font-size: 23px;
+		}
+	}
+}

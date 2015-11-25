@@ -1,0 +1,931 @@
+/*------------------------------------------------------------------
+	[Top header]
+*/
+.am-top-header{
+	background-color: @primary-color;
+	border:	0;
+	margin-bottom: 0;
+
+  .am-animate & {
+    transition: @sidebars-push-effect;
+  }
+
+	//logo and toggle button
+	.navbar-header{
+
+		//logo
+		.navbar-brand{
+			background-color: @dark-color;
+			color: @light-color;
+			padding-top: 0;
+			padding-bottom: 0;
+			line-height: @top-header-height;
+			height: @top-header-height;
+			width: @left-sidebar-width;
+			background-image: url("@{img-path}/logo.png");
+			background-repeat: no-repeat;
+			background-position: center center;
+			margin-right: 20px;
+			border-bottom: 1px solid lighten(@dark-color, 4%);
+
+			//Phone style
+			@media @phone{
+				display: none;
+			}
+
+			//Reduce content spacing on tablet res.
+			@media @tablet{
+				margin-right: 10px;
+			}
+
+			//Whitout left sidebar style
+			.am-nosidebar-left &{
+				background-color: transparent;
+				border-bottom-width: 0;
+				margin-left: 0;
+				margin-right: 10px;
+				width: 180px;
+				background-image: url("@{img-path}/logo-full.png");
+
+				@media @tablet{
+					margin-right: 0;
+					padding-left: 0;
+					width: 160px;
+				}
+			}
+		}
+
+		.am-toggle-left-sidebar{
+			border-radius: 0;
+			position: absolute;
+			left: 0;
+			top: 0;
+			margin: 0;
+			font-size: 0;
+			text-align: center;
+			display: none;
+			padding: 0 18px;
+			border-width: 0;
+			line-height: @top-header-height-phone;
+
+			.icon-bar{
+				display: inline-block;
+				background-color: transparent;
+				height: auto;
+				width: auto;
+				vertical-align: middle;
+
+				span{
+					display: block;
+					width: 25px;
+					height: 1px;
+					margin-top: 6px;
+					background-color: @light-color;
+
+					&:first-child{
+						margin-top: 0;
+					}
+				}
+			}
+
+			&:hover, &:focus{
+				background-color: transparent;
+			}
+
+			@media @phone{
+				display: block;
+			}
+		}
+
+		//Phone page title
+		.page-title{
+			display: none;
+			color: @light-color;
+			font-family: @raleway;
+			font-size: 19px;
+			line-height: @top-header-height-phone;
+
+			@media @phone{
+				display: inline-block;
+			}
+		}
+
+		@media @phone{
+			text-align: center;
+		}
+	}
+
+	.navbar-collapse{
+		padding-right: 20px;
+
+		//menus
+		.navbar-nav{
+	
+			> li{
+	
+				> a{
+					line-height: @top-header-height;
+					color: @light-color;
+					font-family: @raleway;
+					font-size: 14px;
+					padding: 0 18px;
+					outline: none;
+
+					@media @tablet{
+						padding: 0 12px;
+					}
+				}
+
+				&.dropdown{
+
+					> a{
+
+						.angle-down{
+							font-size: 27px;
+							vertical-align: middle;
+						}
+					}
+
+					.dropdown-menu{
+						border: 0;
+						border-radius: 3px;
+						margin-top: 2px;
+
+						> li{
+
+							> a{
+								font-size: 12px;
+								font-weight: 300;
+								color: @dropdown-text-color;
+								padding: 10px 20px;
+								min-width: 175px;
+
+								&:hover{
+									background-color: @primary-color;
+									color: @light-color;
+								}
+
+								&:focus, &:active{
+									background-color: transparent;
+									color: @dropdown-text-color;
+								}
+							}
+						}
+
+						&:after{
+							border-bottom: 8px solid white;
+					    border-left: 8px solid transparent;
+					    border-right: 8px solid transparent;
+					    top: -8px;
+					    content: "";
+					    display: inline-block;
+					    left: 42px;
+					    margin-left: -6px;
+					    position: absolute;
+						}
+					}
+				}
+			}
+
+			&.am-nav-right{
+
+				> li:first-child{
+					
+					> a{
+						padding-left: 15px;
+					}
+				}
+			}
+		}
+
+		.am-user-nav{
+			margin-right: 0;
+
+			> li.dropdown{
+
+				> a{
+					padding-left: 16px;
+					padding-right: 4px;
+
+					@media @tablet{
+						padding-left: 10px;
+					}
+
+					img{
+						max-width: 43px;
+						max-height: 43px;
+						border-radius: 50%;
+					}
+
+					.user-name{
+						margin-left: 8px;
+						display: none;
+					}
+				}
+
+				.dropdown-menu{
+
+					li{
+
+						a{
+
+							.icon{
+								font-size: 20px;
+								vertical-align: middle;
+								margin-right: 6px;
+							}
+						}
+					}
+
+					&:after{
+						left: auto;
+						right: 20px;
+					}
+				}
+			}
+		}
+
+		.am-icons-nav{
+			margin-right: 20px;
+
+			@media @tablet{
+				margin-right: 10px;
+			}
+
+			> li.dropdown{
+
+				> a{
+					padding: 0 9px;
+					position: relative;
+
+					.icon{
+						font-size: 28px;
+						vertical-align: middle;
+						color: fade(@light-color, 80%);
+					}
+
+					.indicator{
+						background: @light-color;
+						border-radius: 50%;
+						display: block;
+						height: 6px;
+						width: 6px;
+						position: absolute;
+						top: 25px;
+						right: 9px;
+					}
+				}
+
+				.am-messages, .am-notifications, .am-connections{
+					width: @icons-nav-dropdown-width;
+					border-radius: 5px;
+					left: auto;
+					margin-right: -(@icons-nav-dropdown-width / 2);
+					right: 50%;
+					padding-bottom: 0;
+
+					.title{
+						font-family: @raleway;
+						font-size: 13px;
+						color: darken(@light-color, 45.7%);
+						text-align: center;
+						padding: 3px 0 7px;
+						border-bottom: 1px solid darken(@light-color, 7.7%);
+
+						.badge{
+							font-weight: 600;
+							font-size: 10px;
+							line-height: 9px;
+							vertical-align: middle;
+							margin-left: 4px;
+							background-color: darken(@light-color, 10.5%);
+							color: darken(@light-color, 45.7%);
+							min-width: 17px;
+							height: 17px;
+							text-align: center;
+							padding: 3px 6px; 
+						}
+					}
+
+					.footer{
+
+						a{
+							font-size: 13px;
+							color: darken(@light-color, 45.7%);
+							text-align: center;
+							padding: 10px 0;
+							border-top: 1px solid darken(@light-color, 7.7%);
+							display: block;
+							outline: none;
+							font-family: @raleway;
+
+							&:hover{
+								background-color: darken(@light-color, 4%);
+							}
+						}	
+					}
+
+					&:after{
+						left: 50%;
+						margin-left: -8px;
+					}
+				}
+
+				.am-notifications, .am-messages{
+
+					.am-scroller{
+						height: 222px;
+
+						> .content{
+
+							> ul{
+								list-style: none;
+								padding-left: 0;
+
+								> li{
+									overflow: hidden;
+									border-bottom: 1px solid darken(@light-color, 7.7%);
+
+									> a{
+										padding: 15px;
+										display: block;
+										overflow: hidden;
+
+										.logo{
+											height: 38px;
+											width: 38px;
+											border-radius: 50%;
+											background-color: darken(@light-color, 10.5%);
+											float: left;												
+											text-align: center;
+
+											.icon{
+												font-size: 25px;
+												color: lighten(@dark-color, 35%);
+												line-height: 36px;
+											}
+										}
+
+										.user-content{
+											padding-left: 50px;
+											line-height: 14px;
+
+											.circle{
+												width: 6px;
+												height: 6px;
+												background: @primary-color;
+												border-radius: 50%;
+												float: right;
+												position: relative;
+												top: 6px;
+											}
+
+											.name, .text-content{
+												font-family: @raleway;
+												font-weight: 500;
+												font-size: 13px;
+											}
+
+											.text-content{
+												color: darken(@light-color, 45.7%);
+												font-size: 12px;
+												line-height: 16px;
+											}
+
+											.date{
+												color: darken(@light-color, 45.7%);
+												display: block;
+												font-size: 9px;
+												margin-top: 4px;
+												text-transform: uppercase;
+											}
+										}
+									}
+
+									&.active{
+										background-color: fade(@primary-color, 10%);
+										border-bottom: 1px solid fade(@primary-color, 10%);
+									}
+
+									&:hover{
+										background-color: @primary-color;
+
+										> a{
+											color: @light-color;
+
+											.logo{
+												background-color: darken(@primary-color, 7%);
+
+												.icon{
+													color: @light-color;
+												}
+											}
+
+											.user-content{
+
+												.circle{
+													background: @light-color;
+												}
+
+												.text-content, .date{
+													color: @light-color;
+												}
+											}
+										}
+									}
+
+									&:last-child{
+										border-bottom: 0;
+									}
+								}
+							}
+						}
+					}
+				}
+
+				.am-messages{
+
+					.am-scroller{
+						height: 230px;
+
+						> .content{
+
+							> ul{
+
+								>li{
+
+									> a{
+
+										.logo{
+											width: 40px;
+											height: 40px;	
+											background-color: transparent;	
+											border-radius: 50%;
+											overflow: hidden;						
+
+											img{
+												max-width: 100%;
+											}
+										}
+
+										.user-content{
+
+											.date{
+												display: inline-block;
+												text-transform: none;
+												float: right;
+												margin-top: 0;
+												font-size: 10px;
+											}
+
+											.text-content{
+												display: block;
+												margin-top: 4px;
+											}
+										}
+									}
+
+									&:hover{
+										
+										> a{
+
+											.logo{
+												background-color: transparent;
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+
+				.am-connections{
+
+					.content{
+
+						ul{
+							padding: 0;
+
+							li{
+								display: block;
+								overflow: hidden;
+								list-style: none;
+								padding: 10px 20px;
+								line-height: 34px;
+								border-bottom: 1px solid darken(@light-color, 7.7%);
+
+								.logo{
+									width: 35px;
+									height: 35px;
+									float: left;
+									text-align: center;
+
+									img{
+										max-height: 100%;
+										max-width: 100%;
+									}
+								}	
+
+								.field{
+									padding-left: 45px;
+    							vertical-align: middle;
+
+    							> span{
+										font-family: @raleway;
+										color: darken(@light-color, 45.7%);
+										font-weight: 500;
+										font-size: 13px;
+									}
+
+									.switch-button{
+										vertical-align: middle;
+									}
+								}
+
+								&:hover{
+									background-color: darken(@light-color, 4%);
+								}	
+
+								&:last-child{
+									border-bottom: 0;
+								}						
+							}
+						}
+					}
+				}
+
+				&.open{
+
+					> a{
+						background-color: transparent;
+
+						.icon{
+							color: @light-color;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	.am-toggle-right-sidebar{
+		float: right;
+		display: block;
+		padding: 0 18px;
+		line-height: @top-header-height;
+		color: @light-color;
+		margin-right: 5px;
+			
+		@media @tablet{
+			margin-right: 0;
+			padding-left: 5px;
+			padding-right: 9px;
+		}
+
+		.icon{
+			font-size: 26px;
+			vertical-align: middle;
+			position: relative;
+			top: -1px;
+		}
+
+		@media @phone{
+			position: absolute;
+			top: 0;
+			right: 0;
+			line-height: @top-header-height-phone;
+			margin-right: 0;
+		}
+	}
+
+	.am-toggle-top-header-menu{
+		display: none;
+		text-align: center;
+		background-color: @left-sidebar-logo-bg;
+		font-size: 31px;
+		line-height: 41px;
+		color: @left-sidebar-color;
+
+		@media @phone{
+			display: block;
+		}
+	}
+
+	//White version
+	@media @non-responsive{
+		.am-white-header &{
+			background-color: @light-color;
+			border-bottom: 1px solid darken(@light-color, 10%);
+			
+			.navbar-brand{
+				background-color: @primary-color;
+				border-bottom-color: lighten(@dark-color, 4%);
+				position: relative;
+				top: 1px;
+
+				&:after{
+					content: "";
+					display: block;
+					height: 1px;
+					width: 100%;
+					background-color: inherit;
+					position: absolute;
+					top: -1px;
+					left: 0;
+				}
+			}
+
+			.navbar-collapse{
+
+				.navbar-nav{
+
+					> li{
+
+						> a{
+							color: @text-color;
+						}
+
+						&.open{
+
+							> a{
+								background-color: darken(@light-color, 3%);
+							}
+
+							.dropdown-menu{
+								margin-top: 10px;
+							}
+						}
+					}
+				}
+			}
+
+			.am-icons-nav{
+
+				> li.dropdown{
+
+					> a{
+
+						.icon{
+							color: fade(@text-color, 80%);
+						}
+
+						.indicator{
+							background-color: @primary-color;
+						}
+					}
+
+					&.open{
+
+						> a{
+							background-color: transparent;
+
+							.icon{
+								color: @primary-color;
+							}
+
+							.indicator{
+							}
+						}
+					}
+				}
+			}
+
+			.am-toggle-right-sidebar{
+				color: fade(@text-color, 80%);
+			}
+		}
+	}
+	
+	@media @phone{
+		position: relative;
+		
+		.navbar-collapse{
+			background-color: @dark-color;
+			border-top-color: darken(@left-sidebar-logo-bg, 1.5%);
+			overflow: hidden;
+			padding: 0;
+			margin: 0;
+			max-height: none;
+			box-shadow: none;
+			position: relative;
+
+			> .navbar-nav{
+				margin: 0;
+
+				> li{
+
+					> a{
+						padding: 0 20px;
+						line-height: 50px;
+						font-size: 13px;
+						position: relative;
+					}
+
+					&.open{
+
+						> a{
+							background-color: transparent;
+						}
+					}
+				}
+
+				> li.dropdown{
+					
+					.dropdown-menu {
+						background-color: @left-sidebar-background-sub-item;
+						
+						> li {
+							
+							> a{
+								color: @left-sidebar-color;
+								padding-left: 26px;
+
+								&:hover, &:active, &:focus{
+									background-color: transparent;
+									color: @left-sidebar-color;
+								}
+
+								&:active{
+									color: @light-color;
+								}
+							}
+						}
+
+						&:after{
+							content: "";
+							display: none;
+						}
+					}
+				}
+
+				&.am-nav-right{
+
+					> li:first-child{
+
+						> a{	
+							padding-left: 20px;
+						}
+					}
+				}
+			}
+
+			.am-user-nav{
+
+				> li.dropdown{
+					
+					> a{
+						padding: 0 15px;
+						line-height: 65px;
+
+						> img{
+							max-height: 32px;
+							max-width: 32px;
+						}
+
+						.user-name{
+							display: inline;
+						}
+					}				
+				}
+			}
+
+			.am-icons-nav{
+				border-top: 1px solid darken(@left-sidebar-logo-bg, 1.5%);
+				background-color: @left-sidebar-logo-bg;
+				text-align: center;
+
+				> li.dropdown{
+					display: inline-block;
+					position: static;
+
+					> a{
+
+						.icon{
+							color: @left-sidebar-color;
+						}
+
+						.indicator{
+							top: 10px;
+							background-color: lighten(@primary-color, 5%);
+						}
+					}
+
+					> ul.dropdown-menu{
+						position: absolute;
+						top: 0;
+						bottom: 51px;
+						left: 0;
+						width: 100%;
+						margin-top: 0;
+						padding-top: 0;
+						border-radius: 0;
+
+						> li{
+							height: 100%;
+							display: table;
+							table-layout: fixed;
+							width: 100%;
+
+							.title{
+								display: none;
+							}
+
+							> .list{
+								background-color: darken(@light-color, 6.5%);
+								height: 100%;
+								display: table-row;
+
+								.am-scroller{
+									height: 100%;
+								}
+							}
+									
+							.content{
+								background-color: darken(@light-color, 6.5%);
+								
+								> ul{
+
+									> li{
+										background-color: darken(@light-color, 6.5%);
+									}
+								}
+							}
+
+							.footer{
+								
+								> a{
+									border-top-color: darken(@light-color, 12%);
+									background-color: darken(@light-color, 8%);
+
+									&:hover{
+										background-color: darken(@light-color, 10%);
+									}
+								}
+							}
+						}
+
+						&:after{
+							display: none;
+						}
+					}
+
+					.am-messages, .am-notifications{
+
+						.am-scroller{
+
+							> .content{
+
+								> ul{
+
+									> li{
+										border-bottom-color: darken(@light-color, 12%);
+
+										&:hover{
+											background-color: darken(@light-color, 6.5%);
+
+											> a{
+												color: @link-color;
+
+												.user-content{
+
+													.date, .text-content{
+														color: darken(@light-color, 45.7%);
+													}
+
+													.circle{
+														background-color: @primary-color;
+													}
+												}
+
+												.logo{
+													background-color: darken(@light-color, 10.5%);
+
+													.icon{
+														color: lighten(@dark-color, 35%);
+													}
+												}
+											}
+										}
+
+										&.active{
+											border-bottom-color: darken(@light-color, 12%);
+
+											&:hover{
+												background-color: lighten(@primary-color, 30.5%);
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		.container-fluid{
+			padding: 0;
+		}
+	}
+}

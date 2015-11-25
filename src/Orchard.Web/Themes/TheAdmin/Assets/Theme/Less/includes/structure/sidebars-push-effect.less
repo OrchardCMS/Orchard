@@ -1,0 +1,88 @@
+//Sidebars push effect with HA enabled
+.sidebar-push-effect(@ha_animation) when (@ha_animation = true){
+  //This is making conflict with bootstrap modals due the position fixed inside main content
+  //transform: translate3d(0, 0, 0);
+}
+
+//Left sidebar animation
+	//Without HA
+	.left-sidebar-animation(@ha_animation) when (@ha_animation = false){
+
+		.am-content{
+			left: @left-sidebar-width-phone;
+		}
+
+		.am-top-header{
+		  right: -@left-sidebar-width-phone;
+	   	left: @left-sidebar-width-phone;	
+		}
+	}
+
+	//With HA
+	.left-sidebar-animation(@ha_animation) when (@ha_animation = true){
+		
+		.am-wrapper{
+			overflow: hidden;
+		}
+
+		.am-content, .am-top-header{
+	    transform: translate3d(@left-sidebar-width-phone, 0, 0);
+		}
+
+		.am-left-sidebar{
+	    transform: translate3d(0%, 0, 0);
+		}
+	}
+
+//Right sidebar animation
+	//Without HA
+	.right-sidebar-animation(@ha_animation) when (@ha_animation = false){
+
+		.am-content{
+			left: -@right-sidebar-width;
+		}
+
+		.page-aside{
+			left: @left-sidebar-width - @right-sidebar-width;
+		}
+
+		.am-top-header{
+		  right: @right-sidebar-width;
+	   	left: -@right-sidebar-width;	
+		}
+
+		.am-left-sidebar{
+			left: -@right-sidebar-width;
+
+			&:before{
+				left: -@right-sidebar-width;
+			}
+		}
+
+		.am-right-sidebar{
+			right: 0;
+		}
+	}
+
+	//With HA
+	.right-sidebar-animation(@ha_animation) when (@ha_animation = true){
+
+		.am-content, .am-top-header, .page-aside{
+	    transform: translate3d(-@right-sidebar-width, 0, 0);
+
+	    @media @phone{
+	    	transform: translate3d(-@right-sidebar-width-phone, 0, 0);
+	    }
+		}
+
+		@media @phone{
+
+			.am-wrapper{
+				overflow: hidden;
+			}
+
+			.am-right-sidebar{
+	    	transform: translate3d(0, 0, 0);
+			}
+		}
+	}

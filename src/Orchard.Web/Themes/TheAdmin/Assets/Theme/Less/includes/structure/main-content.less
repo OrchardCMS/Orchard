@@ -1,0 +1,47 @@
+/*------------------------------------------------------------------
+  [Main content]
+*/
+.am-content{
+	position: relative;
+	left: 0;
+	margin-left: @left-sidebar-width;
+	min-height: 100%;
+
+	@media @phone{
+		margin-left: 0;
+		.sidebar-push-effect(@sidebars-hardware-accelerated-animation);
+	}
+
+  .am-animate & {
+    transition: @sidebars-push-effect;
+  }
+
+	.am-nosidebar-left &{
+		margin-left: 0;
+	}
+}
+
+.main-content{
+	padding-left: @content-padding;
+	padding-right: @content-padding;
+	padding-top: @content-padding;
+
+	@media @tablet{
+		padding-left: @content-padding-tablet;
+		padding-right: @content-padding-tablet;
+		padding-top: @content-padding-tablet + 5px;
+	}
+
+	@media @phone{
+		height: 100%;
+		overflow: auto;
+		-webkit-overflow-scrolling: touch;
+		padding-left: @content-padding-phone;
+		padding-right: @content-padding-phone;
+		padding-top: 20px;
+	}
+
+	.am-no-padding &{
+		padding: 0;
+	}
+}

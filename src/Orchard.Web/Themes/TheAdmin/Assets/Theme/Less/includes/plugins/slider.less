@@ -1,0 +1,35 @@
+/*------------------------------------------------------------------
+  [Slider]
+*/
+/*Slider*/
+.slider.slider-vertical{
+	margin-right: 13px;
+}
+.slider-selection {
+	background: @primary-color;
+	border: 1px solid @primary-color;
+	box-shadow: none;
+}
+
+.slider-track{
+	background: darken(@light-color, 5%);
+	box-shadow: none;
+}
+
+.slider-handle {
+	opacity: 1;
+	background: #FFFFFF;
+	border: 3px solid @primary-color;
+	background-clip: padding-box;
+	box-shadow: none;
+	height: 23px;
+	width: 23px;
+	transition: box-shadow 200ms ease-in-out;
+}
+
+.slider.slider-horizontal .slider-handle {
+    margin-top: -7px;
+}
+.slider.slider-vertical .slider-handle {
+    margin-left: -6px;
+}

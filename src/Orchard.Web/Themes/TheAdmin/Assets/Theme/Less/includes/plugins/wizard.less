@@ -1,0 +1,287 @@
+/*------------------------------------------------------------------
+  [Wizard]
+*/
+.fuelux .wizard {
+  *zoom: 1;
+  border: 1px solid #d4d4d4;
+  border-radius: 4px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
+  background-color: #f9f9f9;
+  position: relative;
+  min-height: 48px;
+  overflow: hidden;
+}
+.fuelux .wizard:before,
+.fuelux .wizard:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+.fuelux .wizard:after {
+  clear: both;
+}
+.fuelux .wizard > .steps {
+  list-style: none outside none;
+  padding: 0;
+  margin: 0;
+}
+.fuelux .wizard > .steps.previous-disabled li.complete {
+  cursor: default;
+}
+.fuelux .wizard > .steps.previous-disabled li.complete:hover {
+  background: #f3f4f5;
+  color: #468847;
+  cursor: default;
+}
+.fuelux .wizard > .steps.previous-disabled li.complete:hover .chevron:before {
+  border-left-color: #f3f4f5;
+}
+.fuelux .wizard > .steps li {
+  float: left;
+  margin: 0;
+  padding: 0 20px 0 30px;
+  height: 46px;
+  line-height: 46px;
+  position: relative;
+  background: #ededed;
+  color: #999999;
+  font-size: 16px;
+  cursor: not-allowed;
+}
+.fuelux .wizard > .steps li .chevron {
+  border: 24px solid transparent;
+  border-left: 14px solid #d4d4d4;
+  border-right: 0;
+  display: block;
+  position: absolute;
+  right: -14px;
+  top: 0;
+  z-index: 1;
+}
+.fuelux .wizard > .steps li .chevron:before {
+  border: 24px solid transparent;
+  border-left: 14px solid #ededed;
+  border-right: 0;
+  content: "";
+  display: block;
+  position: absolute;
+  right: 1px;
+  top: -24px;
+}
+.fuelux .wizard > .steps li.complete {
+  background: #f3f4f5;
+  color: #468847;
+}
+.fuelux .wizard > .steps li.complete:hover {
+  background: #e7eff8;
+  cursor: pointer;
+}
+.fuelux .wizard > .steps li.complete:hover .chevron:before {
+  border-left: 14px solid #e7eff8;
+}
+.fuelux .wizard > .steps li.complete .chevron:before {
+  border-left: 14px solid #f3f4f5;
+}
+.fuelux .wizard > .steps li.active {
+  background: #f1f6fc;
+  color: #3a87ad;
+  cursor: default;
+}
+.fuelux .wizard > .steps li.active .chevron:before {
+  border-left: 14px solid #f1f6fc;
+}
+.fuelux .wizard > .steps li.active .badge {
+  background-color: #3a87ad;
+}
+.fuelux .wizard > .steps li .badge {
+  margin-right: 8px;
+}
+.fuelux .wizard > .steps li .badge-success {
+  background-color: #468847;
+}
+.fuelux .wizard > .steps li:first-child {
+  border-radius: 4px 0 0 4px;
+  padding-left: 20px;
+}
+.fuelux .wizard > .actions {
+  z-index: 1000;
+  position: absolute;
+  right: 0;
+  line-height: 46px;
+  float: right;
+  padding-left: 15px;
+  padding-right: 15px;
+  vertical-align: middle;
+  background-color: #e5e5e5;
+  border-left: 1px solid #d4d4d4;
+}
+.fuelux .wizard > .actions a {
+  line-height: 45px;
+  font-size: 12px;
+  margin-right: 8px;
+}
+.fuelux .wizard > .actions .btn-prev[disabled] {
+  cursor: not-allowed;
+}
+.fuelux .wizard > .actions .btn-prev span {
+  margin-right: 5px;
+}
+.fuelux .wizard > .actions .btn-next[disabled] {
+  cursor: not-allowed;
+}
+.fuelux .wizard > .actions .btn-next span {
+  margin-left: 5px;
+}
+.fuelux .wizard .step-content {
+  border-top: 1px solid #D4D4D4;
+  padding: 10px;
+  float: left;
+  width: 100%;
+}
+.fuelux .wizard .step-content .step-pane {
+  display: none;
+}
+.fuelux .wizard .step-content > .active {
+  display: block;
+}
+.fuelux .wizard .step-content > .active .btn-group .active {
+  display: inline-block;
+}
+.fuelux .wizard.complete > .actions .glyphicon-arrow-right:before {
+  display: none;
+}
+.fuelux .wizard.complete > .actions .glyphicon-arrow-right {
+  margin-left: 0;
+}
+
+//Amaretti - Wizard Style
+
+.block-wizard{
+	padding:0;
+}
+
+.fuelux .wizard {
+	box-shadow: none;
+	border-radius: 0;
+	-webkit-border-radius: 0;
+	border: 0;
+	background: @light-color;
+
+  label.control-label{
+    font-weight: 600;
+  }
+
+  .wizard-title{
+    margin: 10px 0 0;
+  }
+
+	>.actions{
+		line-height: 48px;
+    background: darken(@light-color, 3%);
+
+    .btn{
+
+      .icon{
+        font-size: 22px;
+      }
+    }
+	}
+
+	> .steps{
+
+		> li{
+			height: 48px;
+      background-color: darken(@light-color, 3%);
+      
+      .chevron{
+        border-left-color: darken(@light-color, 12%);
+
+        &:before{
+          border-left: 14px solid darken(@light-color, 3%);
+        }
+      }
+    
+		}
+
+		li{
+			font-size: 15px;
+
+			&:first-child{
+				border-radius: 0;
+			}
+
+			&.active{
+				background: @light-color;
+				color: @primary-color;
+
+				.chevron:before {
+					-moz-transform: scale(.9999);
+			    border-left: 14px solid @light-color;
+				}
+			}
+
+			&.complete{
+				color: @light-color;
+				background: @primary-color;
+
+				.chevron{
+					border-left-color: darken(@primary-color, 8%);
+
+					&:before{
+						border-left: 14px solid @primary-color;
+					}
+				}
+
+				&:hover{
+					background: #5c9aff;
+
+					.chevron:before{
+					    border-left-color: #5c9aff;
+					}
+				}
+			}
+
+			.chevron{
+				-moz-transform: scale(.9999);
+			}
+		}
+	}
+
+	> .actions{
+		button{
+			font-size: 12px;
+
+			i{
+				font-size: 11px;
+				line-height: 18px;
+			}
+
+			&.btn-prev{
+
+				i{
+					margin-right: 3px;
+				}
+			}
+
+			&.btn-next{
+
+				i{
+					margin-left: 3px;
+				}
+			}
+		}
+	}
+
+	.step-content{
+		padding: 20px 30px;
+		clear: both;
+		border-top: 1px solid #E2E2E2;
+	}
+}
+
+
+@media (max-width: 767px) {
+  .wizard-row .fuelux{
+  	position: static;
+  }
+}

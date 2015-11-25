@@ -1,0 +1,121 @@
+/*------------------------------------------------------------------
+  [Code]
+*/
+/* Pretty printing styles. Used with prettify.js. */
+
+.prettyprint {
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+
+/* Light Theme*/
+pre{
+  color: #555555;
+
+  .pln {
+    color: #777777;
+  }
+  .str {
+    color: #DD1144;
+  }
+  .kwd {
+    color: #445588;
+  }
+  .com {
+    color: #b8b6b1;
+  }
+  .typ {
+    color: #008080;
+  }
+  .lit {
+    color: #DD1144;
+  }
+  .pun,
+  .opn,
+  .clo {
+    color: #949494;
+  }
+  .tag {
+    color: darken(@alt-color3, 5%);
+  }
+  .atn {
+    color: lighten(@primary-color, 5%);
+  }
+  .atv {
+    color: #929292;
+  }
+  .dec,
+  .var {
+    color: #DD1144;
+  }
+  .fun {
+    color: #445588;
+  }
+}
+
+
+/*Dark Theme*/
+pre.am-code-dark {
+  background-color: #4d4342;
+  color: #FFFFFF;
+
+  .pln {
+    color: #ffffff;
+  }
+  .str {
+    color: #b5db99;
+  }
+  .kwd {
+    color: #e9c865;
+  }
+  .com {
+    color: #c3b8b7;
+  }
+  .typ {
+    color: #FF9787;
+  }
+  .lit {
+    color: #b5db99;
+  }
+  .pun,
+  .opn,
+  .clo {
+    color: #ffffff;
+  }
+  .tag {
+    color: #e9c865;
+  }
+  .atn {
+    color: #FF9787;
+  }
+  .atv {
+    color: #b5db99;
+  }
+  .dec,
+  .var {
+    color: #b5db99;
+  }
+  .fun {
+    color: #e9c865;
+  }
+}
+
+
+/* Specify class=linenums on a pre to get line numbering */
+ol.linenums { margin-top: 0; margin-bottom: 0 } /* IE indents via margin-left */
+li.L0,
+li.L1,
+li.L2,
+li.L3,
+li.L5,
+li.L6,
+li.L7,
+li.L8 { list-style-type: none }
+
+/* Alternate shading for lines */
+li.L1,
+li.L3,
+li.L5,
+li.L7,
+li.L9 { background: #eee }

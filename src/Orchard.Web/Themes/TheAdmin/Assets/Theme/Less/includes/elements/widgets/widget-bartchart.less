@@ -1,0 +1,31 @@
+.widget.bar-chart{
+
+	.chart-container{
+		padding: 0 5px 5px 5px;
+
+		> div{
+
+			@media @phone{
+				padding: 0 0 5px;
+				min-height: 160px;
+			}
+		}
+	}
+
+	.chart-table{
+		padding-top: 20px;
+
+		table{
+			margin: 0;
+
+			.number{
+				text-align: right;
+				width: 20%;
+			}
+		}
+
+		@media @phone{
+			padding: 10px 0 0;
+		}
+	}
+}

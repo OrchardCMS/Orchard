@@ -1,0 +1,82 @@
+/*------------------------------------------------------------------
+  [Error pages]
+*/
+.am-error{
+	
+	.error-container{
+		text-align: center;
+	}
+
+	.error-number{
+		display: block;
+		color: @light-color;
+		font-size: 130px;
+		font-family: @raleway;
+		font-weight: 400;
+		line-height: 120px;
+		text-shadow: 6px 5px 0 rgba(0, 0, 0, 0.1);
+		margin-bottom: 30px;
+
+		@media @phone{
+			font-size: 90px;
+			margin-bottom: 10px;
+			line-height: 100px;
+		}
+	}
+
+	.error-description{
+		font-size: 26px;
+		font-weight: 300;
+		line-height: 32px;
+		color: darken(@light-color, 20%);
+
+		@media @phone{
+			font-size: 19px;
+		}
+	}
+
+	.error-goback-text{
+		font-size: 20px;
+		font-weight: 300;
+		color: darken(@light-color, 35%);
+		margin-bottom: 30px;
+		margin-top: 15px;
+
+		@media @phone{
+			font-size: 15px;
+		}
+	}
+}
+
+/*------------------------------------------------------------------
+  [Page 404]
+*/
+.am-error-404{
+
+	.error-container{
+
+		.error-image{
+			display: inline-block;
+			background: url("@{img-path}/404-img.png") no-repeat right center;
+			background-size: 387px 292px;
+			width: 100%;
+			max-width: 587px;
+			height: 292px;
+
+			img{
+				max-width: 607px;
+				max-height: 459px;
+			}
+
+			@media @retina{
+				background-image: url("@{img-path}/404-img-2x.png");
+			}
+
+			@media @phone{
+				background-size: 190px 142px;
+				max-width: 295px;
+				height: 142px;
+			}
+		}
+	}
+}

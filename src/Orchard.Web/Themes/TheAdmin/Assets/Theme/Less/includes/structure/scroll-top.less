@@ -1,0 +1,31 @@
+/*------------------------------------------------------------------
+	[Scroll to top button]
+*/
+.am-scroll-top{
+	cursor: pointer;
+	position: fixed;
+	bottom: 10px;
+	right: 10px;
+	color: @light-color;
+	background-color: rgba(0,0,0, 0.6);
+	padding: 4px 9px;
+	display: none;
+	transition: background-color .2s ease;
+	border-radius: 4px;
+
+	&:hover{
+		background-color: rgba(0,0,0, 0.8);
+	}
+
+	&:hover, &:focus{
+		color: @light-color;
+	}
+
+	&:before{
+		content: '\e682';
+		font-family: @icons-font;
+		font-size: 30px;
+		display: inline-block;
+		vertical-align: middle;
+	}
+}

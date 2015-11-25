@@ -1,0 +1,52 @@
+/*------------------------------------------------------------------
+  [Summernote]
+*/
+.note-editor{
+	margin-bottom: 0;
+	
+	.note-toolbar{
+		margin: 0;
+		padding-bottom: 5px;
+
+		.btn{
+
+			.fa{
+				font-size: 14px;
+			}
+		}
+
+		> .btn-group{
+			margin-left: 0;
+	    margin-right: 5px;
+	    margin-top: 5px
+		}
+
+		.note-color .dropdown-toggle{
+			padding-left: 5px;
+    	width: 20px;
+		}
+	}
+
+	.note-statusbar{
+		background-color: darken(@light-color, 3.5%);
+
+		.note-resizebar{
+			height: auto;
+			padding-top: 3px; 
+			padding-bottom: 4px; 
+		}
+	}
+
+	.note-editable{
+		border: 2px solid @input-border;
+		padding: 10px 12px;
+		margin-top: 6px;
+	}
+
+	.note-editing-area{
+		
+		.note-editable{
+			color: @text-color;
+		}
+	}
+}

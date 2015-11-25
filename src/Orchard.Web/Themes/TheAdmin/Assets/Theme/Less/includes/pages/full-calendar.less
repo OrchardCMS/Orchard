@@ -1,0 +1,131 @@
+/*------------------------------------------------------------------
+  [Full calendar]
+*/
+.full-calendar{
+
+	.fc-header{
+
+		td {
+	    border-bottom: 0;
+	    border-left: 0;
+
+	    &.fc-header-left, &.fc-header-right{
+			  padding: 20px 0;
+			}
+
+			&.fc-header-left{
+
+				.fc-header-title{
+					padding: 0 10px;
+				}
+			}
+
+			&.fc-header-right{
+
+				.fc-button{
+					margin: 0;
+					vertical-align: middle;
+					padding: 10px;
+					display: inline !important;
+					border-radius: 0;
+
+					&.fc-state-default{
+						background-image: none;
+					  box-shadow: none;
+					  text-shadow: none;
+					  color: @text-color;
+					  border: 0;
+					  border-right: 1px solid rgba(0,0,0,0.1);
+					}
+
+					&.fc-corner-right{
+						border-right: 0;
+					}
+
+					&.fc-state-active, &.fc-state-hover{
+						background: @primary-color + 10%;
+					  color: @light-color;
+					  box-shadow: none;
+					  text-shadow: none;
+					}
+
+					@media @phone{
+						padding: 5px;
+					}
+				}
+
+				@media @phone{
+					padding-top: 0;
+				}
+			}
+		}
+
+		@media @phone{
+			text-align: center;
+		}
+	}
+
+	.fc-content{
+		
+		.fc-event-container{
+			.fc-event{
+			  background: @primary-color !important;
+			  border-color: darken(@primary-color, 8%) !important;
+			  color: @light-color !important;
+			  border-radius: 0;
+			}
+		}
+		
+		.fc-border-separate{
+			.fc-today{
+				background-color: darken(@light-color, 3%);
+			}
+		}
+
+		.fc-cell-overlay{
+			background-color: fade(@primary-color, 50%);
+		}
+	}
+
+	#external-events{
+
+		.external-event{
+			margin: 2px 0;
+		  padding: 5px;
+		  background: @primary-color;
+		  color: @light-color;
+		  font-size: .85em;
+		  cursor: pointer;
+		  display: inline-block;
+		}
+
+		p{
+			input{
+				margin-top: 15px;
+			}
+
+			label{
+				font-weight: 300;
+				vertical-align: middle;
+			}
+		}
+	}
+
+	@media @phone{
+		max-width: 767px;
+
+	  .fc-header{
+			
+			.fc-header-left, .fc-header-center, .fc-header-right{
+		    text-align: center;
+		    display: block;
+		    width: 100%;
+		    padding: 20px;
+		  }
+  	
+	  	.fc-header-center{
+			  padding: 0;
+			}
+		}
+	}
+}

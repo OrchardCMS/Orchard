@@ -1,0 +1,71 @@
+.widget.widget-tile{
+	padding: 24px 20px;
+	margin-bottom: 20px;
+
+	.data-info{
+		display: inline-block;
+
+		.value{
+			font-size: 23px;
+			font-weight: 300;
+		}
+
+		.desc{
+			font-size: 14px;
+			line-height: 18px;
+		}
+	}
+
+	.icon{
+		display: inline-block;
+		color: @primary-color;
+		float: right;
+		font-size: 45px;
+		line-height: 54px;
+	}
+
+	&.widget-tile-wide{
+		display: table;
+		width: 100%;
+		
+		> div{
+			display: table-cell;
+			width: 50%;
+			vertical-align: middle;
+		}
+
+		.data-info{
+			vertical-align: top;
+
+			.title{
+				font-size: 16px;
+		    line-height: 22px;
+		    margin-bottom: 2px;
+			}
+
+			.desc{
+				color: darken(@light-color, 50%);
+				font-size: 12px;
+			}
+		}
+
+		.tile-value{
+			text-align: right;
+
+			> span{
+				display: block;
+				padding-right: 10px;
+				font-weight: 300;
+				font-size: 31px;
+			}
+		}
+
+		.icon{
+			float: none;
+			line-height: 43px;
+			vertical-align: top;
+			margin-right: 5px;
+		}
+	}
+}
+

@@ -1,0 +1,205 @@
+.widget-calendar{
+	padding: 0;
+
+	.cal-container{
+		width: 100%;
+		display: table;
+
+		.cal-notes{
+			display: table-cell;
+			width: 40%;
+			background-color: @primary-color;
+			padding: 25px;
+
+			span{
+				display: block;
+				color: @light-color;
+
+				&.day{
+					font-size: 25px;
+					font-weight: 300;
+				}
+
+				&.date{
+					font-size: 15px;
+					font-weight: 300;
+					color: lighten(@primary-color, 25%);
+				}
+
+				&.title{
+					font-size: 14px;
+					border-bottom: 1px solid @light-color;
+					margin-top: 35px;
+					padding-bottom: 3px;
+
+					.icon{
+						float: right;
+						font-size: 19px;
+						line-height: 22px;
+						cursor: pointer;
+					}
+				}
+			}
+
+			ul{
+				padding: 0;
+				list-style: none;
+				padding-top: 20px;
+
+				li{
+					padding-bottom: 10px;
+					font-size: 12px;
+
+					span{
+						display: inline-block;
+
+						&.hour{
+							float: right;
+						}
+
+						&.event-name{}
+					}
+
+					&:last-child{
+						padding-bottom: 0;
+					}
+				}
+			}
+		}
+
+		.cal-calendar{
+			display: table-cell;
+			padding: 25px;
+
+			.ui-datepicker{
+				position: relative;
+				margin: 20px 0;
+
+				.ui-datepicker-header{
+					border-bottom: 1px solid rgba(255,255,255,0.6);
+				  padding-bottom: 5px;
+				  margin-bottom: 10px;
+
+				  .ui-datepicker-title{
+				  	cursor:default;
+				    line-height: 1.8em;
+				    margin: 0 2.3em;
+				    text-align: center;
+				    font-weight: 600;
+				    font-size: 14px;
+				  }
+
+				  .ui-datepicker-prev, .ui-datepicker-next {
+				  	height: 1.8em;
+				    position: absolute;
+				    top: -5px;
+				    width: 1.8em;
+				    color: @text-color;
+				    font-size: 28px;
+
+				    span{
+				    	overflow: hidden;
+						  display: block;
+						  text-indent: -99999px;
+
+						  &:after{
+						  	cursor: pointer;
+							  content: "\e686";
+							  font-family: @icons-font;
+							  display: block;
+							  position: absolute;
+							  width: 16px;
+							  height: 16px;
+							  top: 0;
+							  text-indent: 0;
+						  }
+				    }
+				  }
+
+				  .ui-datepicker-prev{
+				  	left: 2px;
+				  }
+
+				  .ui-datepicker-next{
+				  	right: 2px;
+
+				  	span{
+				  		&:after{
+				  			content: "\e684";
+							  right: 14px;
+				  		}
+				  	}
+				  }
+				}
+
+				table.ui-datepicker-calendar{
+					width: 100%;
+
+					th{
+						border: 0;
+ 						padding: 3px;
+ 						text-align: center;
+ 						font-weight: 400;
+ 						color: @text-color;
+
+ 						span{
+ 							font-size: 14px;
+ 						}
+					}
+
+					tr{
+
+						td{
+							border: 0;
+  						padding: 3px;
+  						text-align: center;
+
+  						a{
+  							display: inline-block;
+						    padding: 0.2em;
+						    text-align: center;
+						    text-decoration: none;
+						    color: lighten(@text-color, 20%);
+						    width: 25px;
+						    height: 25px;
+						    line-height: 20px;
+						    font-size: 12px;
+
+						    &.ui-state-active, &.ui-state-highlight{
+						    	background-color: darken(@light-color, 10%);
+						    	border-radius: 50%;
+						    	
+						    }
+
+						    //Curent day style
+						    &.ui-state-highlight{
+						    	background-color: @primary-color;
+						    	color: @light-color;
+						    }
+  						}
+						}
+					}
+				}
+			}
+		}
+
+		@media @phone{
+			display: block;
+
+			.cal-notes, .cal-calendar{
+				display: block;
+			}
+
+			.cal-notes{
+				width: 100%;
+			}
+
+			.cal-calendar{
+
+				.ui-datepicker{
+					margin: 10px 0;
+				}
+			}
+		}
+	}
+}
