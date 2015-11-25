@@ -81,12 +81,29 @@ namespace Orchard.Tags.Services {
                     }
 
                     // initialize centroids with a linear distribution
-                    var centroids = new int[buckets];
+                    var centroids = new double[buckets];
                     var maxCount = tagCounts.Any() ? tagCounts.Max(tc => tc.Count) : 0;
                     var minCount = tagCounts.Any() ? tagCounts.Min(tc => tc.Count) : 0;
-                    var maxDistance = maxCount - minCount;
-                    for (int i = 0; i < centroids.Length; i++) {
-                        centroids[i] = maxDistance/buckets * (i+1);
+                    double maxDistance = maxCount - minCount;
+                    if ( maxCount < buckets)
+                    {
+                        int i = 0;
+                        for (; i < buckets && i < maxCount;)
+                        {
+                            centroids[i] = minCount + i;
+                            i++;
+                        }
+                        for (; i < buckets; i++)
+                        {
+                            centroids[i] = int.MaxValue;
+                        }
+                    }
+                    else
+                    {
+                        for (int i = 0; i < centroids.Length ; i++)
+                        {
+                            centroids[i] = minCount + maxDistance / buckets * i;
+                        }
                     }
 
                     var balanced = false;
@@ -113,7 +130,7 @@ namespace Orchard.Tags.Services {
                         for (int i = 0; i < buckets; i++) {
                             var target = tagCounts.Where(x => x.Bucket == i + 1).ToArray();
                             if (target.Any()) {
-                                centroids[i] = (int)target.Average(x => x.Count);
+                                centroids[i] = target.Average(x => x.Count);
                             }
                         }
                     }
