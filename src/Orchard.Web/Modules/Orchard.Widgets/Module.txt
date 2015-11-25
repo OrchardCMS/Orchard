@@ -24,3 +24,8 @@ Features:
         Description: Enables widgets to be added as elements to layouts.
         Category: Layout
         Dependencies: Orchard.Layouts
+	Orchard.Widgets.LayerAlternates
+        Name: Widget Layer Alternates
+        Description: Create alternates based on Active layers.
+        Category: Design
+        Dependencies: Orchard.Widgets
