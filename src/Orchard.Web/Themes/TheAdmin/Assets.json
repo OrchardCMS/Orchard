@@ -17,7 +17,8 @@
         "inputs": [
             "Assets/Lib/jquery.nanoscroller/javascripts/jquery.nanoscroller.js",
             "Assets/Lib/jquery.sparkline/jquery.sparkline.js",
-            "Assets/Theme/Js/main.js"
+            "Assets/Theme/Js/main.js",
+            "Assets/Theme/Js/orchard-admin.js"
         ],
         "output": "Scripts/TheAdmin.js"
     }
