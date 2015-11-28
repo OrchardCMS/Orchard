@@ -7,12 +7,21 @@
     Script.Require("jQuery");
     Script.Require("jQueryUI");
     Script.Require("Bootstrap");
+    Script.Require("ShapesBase").AtFoot();
     Script.Include("TheAdmin.js");
 }
 <div class="am-wrapper @*am-fixed-sidebar*@">
     @Display.TopMenu()
     @Display.SideMenu()
     <div class="am-content">
+        <div class="page-head">
+            <h2>Content Items</h2>
+            <ol class="breadcrumb">
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Content Items</a></li>
+                <li class="active">Pages</li>
+            </ol>
+        </div>
         <div class="main-content">
             @Display(Model.Content)
             @*<div class="row">
