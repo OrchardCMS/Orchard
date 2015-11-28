@@ -577,6 +577,7 @@
     <Content Include="Assets\Theme\Js\app-tables-datatables.js" />
     <Content Include="Assets\Theme\Js\app-ui-nestable-lists.js" />
     <Content Include="Assets\Theme\Js\app-ui-notifications.js" />
+    <Content Include="Assets\Theme\Js\orchard-admin.js" />
     <Content Include="Assets\Theme\Js\main.js" />
     <Content Include="Images\140x140.png" />
     <Content Include="Images\404-img-2x.png" />
@@ -1213,6 +1214,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Theme\Less\includes\themes\theme-orchard.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\SideMenu.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\TopMenu.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Sidebar.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
