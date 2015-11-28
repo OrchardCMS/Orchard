@@ -14,8 +14,8 @@
     @Display.SideMenu()
     <div class="am-content">
         <div class="main-content">
-            <!--+general-chart("classes", "title", "height", "id", "counter value", "counter desc", tools enabled (use true or false))-->
-            <div class="row">
+            @Display(Model.Content)
+            @*<div class="row">
                 <div class="col-md-4">
                     <div class="widget widget-pie">
                         <div class="widget-head"><span class="title">Top Sales</span></div>
@@ -173,7 +173,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>*@
         </div>
     </div>
     @Display.Sidebar()
