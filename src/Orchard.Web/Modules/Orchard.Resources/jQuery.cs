@@ -59,6 +59,12 @@ namespace Orchard.Resources {
 
             // jQuery Cookie.
             manifest.DefineScript("jQueryCookie").SetUrl("jquery.cookie.min.js", "jquery.cookie.js").SetVersion("1.4.1").SetDependencies("jQuery");
+            
+            // datatables
+            manifest.DefineStyle("DataTables").SetUrl("dataTables/jquery.dataTables.min.css", "dataTables/jquery.dataTables.css");
+            manifest.DefineStyle("DataTablesBoostrap").SetUrl("dataTables/dataTables.bootstrap.min.css", "dataTables/dataTables.bootstrap.css").SetDependencies("Bootstrap");
+            manifest.DefineScript("DataTables").SetUrl("dataTables/jquery.dataTables.min.js", "dataTables/jquery.dataTables.js").SetDependencies("jQuery");
+            manifest.DefineScript("DataTablesBoostrap").SetUrl("dataTables/dataTables.bootstrap.min.js", "dataTables/dataTables.bootstrap.js").SetDependencies("jQuery", "DataTables");
         }
     }
 }

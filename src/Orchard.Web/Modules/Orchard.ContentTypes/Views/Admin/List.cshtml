@@ -1,22 +1,32 @@
 @model Orchard.ContentTypes.ViewModels.ListContentTypesViewModel
 @{
-    Style.Require("ContentTypesAdmin");
-    Script.Require("jQuery");
-    Script.Include("admin-contenttypes.js");
+    Style.Require("DataTablesBoostrap").AtHead();
+    Script.Require("DataTablesBoostrap");
+    Script.Require("ContentTypesAdmin");
     Layout.Title = T("Manage Content Types").ToString();
 }
 
-<div class="manage">
-    @Html.ActionLink(T("Create new type").ToString(), "Create", new{Controller="Admin",Area="Orchard.ContentTypes"}, new { @class = "button primaryAction" })
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div>
+                    @Html.ActionLink(T("Create new type").ToString(), "Create", new {Controller = "Admin", Area = "Orchard.ContentTypes"}, new {@class = "btn btn-primary"})
+                </div>
+                
+                <table id="contenttypes" class="table table-bordered table-striped table-hover dataTable">
+                    <thead>
+                    <tr><th>@T("Display Name")</th></tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var type in Model.Types) {
+                        <tr>
+                            <td>@Html.DisplayFor(m => type)</td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
-<fieldset class="bulk-actions">
-    <label for="search-box">@T("Filter:")</label>
-    <input id="search-box" class="text" type="text" autofocus="autofocus" />
-</fieldset>
-<ul class="contentItems">
-    @foreach (var type in Model.Types) {
-    <li data-record-text="@type.DisplayName">
-        @Html.DisplayFor(m => type)
-    </li>
-    }
-</ul>
