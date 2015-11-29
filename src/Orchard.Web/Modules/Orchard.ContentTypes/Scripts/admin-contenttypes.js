@@ -48,6 +48,7 @@
 
         //initialize the javascript
         $('#contenttypes').DataTable();
+        $('#contentparts').DataTable();
     });
 
 })(jQuery);

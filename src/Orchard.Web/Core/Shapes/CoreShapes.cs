@@ -138,8 +138,8 @@ namespace Orchard.Core.Shapes {
                 .OnDisplaying(displaying => {
                     var menu = displaying.Shape;
                     string menuName = menu.MenuName;
-                    menu.Classes.Add("localmenu-" + menuName.HtmlClassify());
-                    menu.Classes.Add("localmenu");
+                    menu.Classes.Add("nav-" + menuName.HtmlClassify());
+                    menu.Classes.Add("nav nav-tabs");
                     menu.Metadata.Alternates.Add("LocalMenu__" + EncodeAlternateElement(menuName));
                 });
             
