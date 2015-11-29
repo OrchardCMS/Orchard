@@ -14,7 +14,8 @@ namespace Orchard.MediaProcessing.Handlers {
         }
 
         protected override void Published(PublishContentContext context) {
-            _signals.Trigger("MediaProcessing_Published_" + context.ContentItem.As<ImageProfilePart>().Name);
+            if (context.ContentItem.Has<ImageProfilePart>())
+                _signals.Trigger("MediaProcessing_Published_" + context.ContentItem.As<ImageProfilePart>().Name);
             base.Published(context);
         }
     }
