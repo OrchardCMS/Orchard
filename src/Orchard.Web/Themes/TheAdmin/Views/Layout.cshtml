@@ -21,8 +21,14 @@
 
             @Display.Breadcrumb()
         </div>
-        @Display(Model.Content)
-        @*<div class="row">
+        <div class="main-content">
+            @if (Model.LocalNavigation != null) {
+                <div id="local-navigation">
+                    @Display(Model.LocalNavigation)
+                </div>
+            }
+            @Display(Model.Content)
+            @*<div class="row">
                 <div class="col-md-4">
                     <div class="widget widget-pie">
                         <div class="widget-head"><span class="title">Top Sales</span></div>
@@ -181,7 +187,7 @@
                     </div>
                 </div>
             </div>*@
-    </div>
+        </div>
 </div>
 @Display.Sidebar()
 </div>
