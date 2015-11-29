@@ -1,7 +1,7 @@
 @model Orchard.ContentTypes.ViewModels.ListContentPartsViewModel
 @{
     Script.Require("jQuery");
-    Script.Include("admin-contenttypes.js");
+    Script.Require("ContentTypesAdmin");
     Layout.Title = T("Content Parts").ToString();
 }
 <div class="manage">

@@ -121,10 +121,16 @@
   <ItemGroup>
     <Content Include="Module.txt" />
     <Content Include="Scripts\admin-contenttypes.js" />
+    <Content Include="Scripts\admin-contenttypes.min.js">
+      <DependentUpon>admin-contenttypes.js</DependentUpon>
+    </Content>
     <Content Include="Styles\Images\menu.contenttypes.png" />
     <Content Include="Styles\Images\move.gif" />
     <Content Include="Styles\menu.contenttypes-admin.css" />
     <Content Include="Styles\orchard-contenttypes-admin.css" />
+    <Content Include="Styles\orchard-contenttypes-admin.min.css">
+      <DependentUpon>orchard-contenttypes-admin.css</DependentUpon>
+    </Content>
     <Content Include="Views\Admin\AddFieldTo.cshtml" />
     <Content Include="Views\Admin\AddPartsTo.cshtml" />
     <Content Include="Views\Admin\CreatePart.cshtml" />

@@ -484,6 +484,10 @@
     <Content Include="Scripts\angular.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\dataTables\dataTables.bootstrap.js" />
+    <Content Include="Scripts\dataTables\dataTables.bootstrap.min.js" />
+    <Content Include="Scripts\dataTables\jquery.dataTables.js" />
+    <Content Include="Scripts\dataTables\jquery.dataTables.min.js" />
     <Content Include="Scripts\history.js" />
     <Content Include="Scripts\history.min.js" />
     <Content Include="Scripts\jquery-ui-effects.js" />
@@ -562,6 +566,16 @@
     <Content Include="Scripts\uri.min.js" />
     <Content Include="Styles\bootstrap.css" />
     <Content Include="Styles\bootstrap.min.css" />
+    <Content Include="Styles\dataTables\dataTables.bootstrap.css" />
+    <Content Include="Styles\dataTables\dataTables.bootstrap.min.css" />
+    <Content Include="Styles\dataTables\images\favicon.ico" />
+    <Content Include="Styles\dataTables\images\sort_asc.png" />
+    <Content Include="Styles\dataTables\images\sort_asc_disabled.png" />
+    <Content Include="Styles\dataTables\images\sort_both.png" />
+    <Content Include="Styles\dataTables\images\sort_desc.png" />
+    <Content Include="Styles\dataTables\images\sort_desc_disabled.png" />
+    <Content Include="Styles\dataTables\jquery.dataTables.css" />
+    <Content Include="Styles\dataTables\jquery.dataTables.min.css" />
     <Content Include="Styles\font-awesome.css" />
     <Content Include="Styles\font-awesome.min.css" />
     <Content Include="Styles\Fonts\fontawesome-webfont.svg" />
@@ -811,6 +825,9 @@
     <Content Include="Assets\Less\Bootstrap\tooltip.less" />
     <Content Include="Assets\Less\Bootstrap\type.less" />
     <Content Include="Assets\Less\Bootstrap\wells.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\dataTables\images\Sorting icons.psd" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
