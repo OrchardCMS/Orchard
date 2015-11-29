@@ -15,16 +15,14 @@
     @Display.SideMenu()
     <div class="am-content">
         <div class="page-head">
-            <h2>Content Items</h2>
-            <ol class="breadcrumb">
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Content Items</a></li>
-                <li class="active">Pages</li>
-            </ol>
+            @if (Model.Title != null) {
+                @Display.Title(Title: Model.Title)
+            }
+
+            @Display.Breadcrumb()
         </div>
-        <div class="main-content">
-            @Display(Model.Content)
-            @*<div class="row">
+        @Display(Model.Content)
+        @*<div class="row">
                 <div class="col-md-4">
                     <div class="widget widget-pie">
                         <div class="widget-head"><span class="title">Top Sales</span></div>
@@ -183,7 +181,7 @@
                     </div>
                 </div>
             </div>*@
-        </div>
     </div>
-    @Display.Sidebar()
+</div>
+@Display.Sidebar()
 </div>
