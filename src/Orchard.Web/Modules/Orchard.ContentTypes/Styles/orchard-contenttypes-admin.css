@@ -126,11 +126,13 @@ fieldset.action {
     padding-left:.5em;
 }
 
-.available-parts .part.hint {
+.part-hint {
     display: block;
-    margin-left: 29px;
+    margin-left: 31px;
     line-height: 16px;
     margin-bottom: 2px;
+    color: #7b7b7b;
+    font-size: 13px;
 }
 
 
