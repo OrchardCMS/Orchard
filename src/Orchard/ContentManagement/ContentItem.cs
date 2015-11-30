@@ -15,6 +15,8 @@ namespace Orchard.ContentManagement {
 
         ContentItem IContent.ContentItem { get { return this; } }
 
+        public dynamic Content { get { return (dynamic)this; } }
+
         public int Id { get { return Record == null ? 0 : Record.Id; } }
         public int Version { get { return VersionRecord == null ? 0 : VersionRecord.Number; } }
 
