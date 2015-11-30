@@ -84,9 +84,10 @@ namespace Orchard.Blogs {
                     .WithPart("CommonPart")
                     .WithPart("WidgetPart")
                     .WithSetting("Stereotype", "Widget")
+                    .WithPart("IdentityPart")
                 );
 
-            return 6;
+            return 7;
         }
 
         public int UpdateFrom1() {
@@ -133,5 +134,14 @@ namespace Orchard.Blogs {
 
             return 6;
         }
+
+        public int UpdateFrom6() {
+            ContentDefinitionManager.AlterTypeDefinition("BlogArchives",
+                cfg => cfg
+                    .WithPart("IdentityPart")
+                );
+
+           return 7;
+       }
     }
 }
