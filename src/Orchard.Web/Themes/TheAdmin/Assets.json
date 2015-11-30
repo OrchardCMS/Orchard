@@ -1,9 +1,7 @@
 ﻿[
     {
         "inputs": [
-            "Assets/Theme/Less/includes/themes/theme-orchard.less",
-            "Assets/Theme/Less/orchard-style.less",
-            "Assets/Theme/Less/orchard-adapter.less"
+            "Assets/Theme/Less/includes/themes/theme-orchard.less"
         ],
         "output": "Styles/TheAdmin.css"
     },
@@ -21,7 +19,6 @@
         "inputs": [
             "Assets/Lib/jquery.nanoscroller/javascripts/jquery.nanoscroller.js",
             "Assets/Lib/jquery.sparkline/jquery.sparkline.js",
-            "Assets/Lib/select2/js/select2.full.js",
             "Assets/Lib/datatables/js/jquery.dataTables.js",
             "Assets/Lib/datatables/js/dataTables.bootstrap.js",
             "Assets/Theme/Js/main.js",
