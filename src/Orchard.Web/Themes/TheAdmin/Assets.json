@@ -1,9 +1,7 @@
 ﻿[
     {
         "inputs": [
-            "Assets/Theme/Less/includes/themes/theme-orchard.less",
-            "Assets/Theme/Less/orchard-style.less",
-            "Assets/Theme/Less/orchard-adapter.less"
+            "Assets/Theme/Less/includes/themes/theme-orchard.less"
         ],
         "output": "Styles/TheAdmin.css"
     },
@@ -12,6 +10,7 @@
             "Assets/Lib/stroke-7/style.css",
             "Assets/Lib/jquery.nanoscroller/css/nanoscroller.css",
             "Assets/Lib/select2/css/select2.css",
+            "Assets/Lib/datatables/css/dataTables.bootstrap.css",
             "Assets/Lib/jquery.vectormap/jquery-jvectormap-1.2.2.css"
         ],
         "output": "Styles/Lib.css"
@@ -20,7 +19,8 @@
         "inputs": [
             "Assets/Lib/jquery.nanoscroller/javascripts/jquery.nanoscroller.js",
             "Assets/Lib/jquery.sparkline/jquery.sparkline.js",
-            "Assets/Lib/select2/js/select2.full.js",
+            "Assets/Lib/datatables/js/jquery.dataTables.js",
+            "Assets/Lib/datatables/js/dataTables.bootstrap.js",
             "Assets/Theme/Js/main.js",
             "Assets/Theme/Js/orchard-admin.js"
         ],
