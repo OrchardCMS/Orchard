@@ -3,12 +3,22 @@
 @import "../../Lib/bootstrap/less/utilities.less";
 @import "includes/config.less";
 
-// Form Elements.
+// Structure.
+.page-head {
+    padding: 10px @content-padding;
+}
 
 // Panels.
 .panel-heading {
     .tools-text {
         .pull-right();
+    }
+}
+
+// Tables.
+.table {
+    .actions {
+        text-align: right;
     }
 }
 
