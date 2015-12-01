@@ -1,32 +1,27 @@
 @model Orchard.ContentTypes.ViewModels.CreateTypeViewModel
 
 @{ Layout.Title = T("New Content Type").ToString(); }
-<div class="row">
-    <div class="col-md-12">
-        <div class="panel panel-default">
-            <div class="panel-body">
-                @using (Html.BeginFormAntiForgeryPost()) {
-                    @Html.ValidationSummary()
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="DisplayName">@T("Display Name")</label>
-                            @Html.TextBoxFor(m => m.DisplayName, new {@class = "form-control", placeholder = T("Enter Display Name")})
-                            <span class="hint">@T("Name of the type as it will be displayed in screens.")</span>
-                        </div>
 
-                        <div class="form-group">
-                            <label for="Name">@T("Content Type Id")</label>
-                            @Html.TextBoxFor(m => m.Name, new {@class = "form-control", placeholder = T("Enter Content Type Id")})
-                            <span class="hint">@T("Technical name of the type.")</span>
-                        </div>
-                        <div class="text-left">
-                            <button class="btn btn-primary" type="submit">@T("Create")</button>
-                        </div>
-                    </div>
-                }
+<div class="panel-body">
+    @using (Html.BeginFormAntiForgeryPost()) {
+        @Html.ValidationSummary()
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="DisplayName">@T("Display Name")</label>
+                @Html.TextBoxFor(m => m.DisplayName, new {@class = "form-control", placeholder = T("Enter Display Name")})
+                <span class="hint">@T("Name of the type as it will be displayed in screens.")</span>
+            </div>
+
+            <div class="form-group">
+                <label for="Name">@T("Content Type Id")</label>
+                @Html.TextBoxFor(m => m.Name, new {@class = "form-control", placeholder = T("Enter Content Type Id")})
+                <span class="hint">@T("Technical name of the type.")</span>
+            </div>
+            <div class="text-left">
+                <button class="btn btn-primary" type="submit">@T("Create")</button>
             </div>
         </div>
-    </div>
+    }
 </div>
 @using (Script.Foot()) {
     <script type="text/javascript">
