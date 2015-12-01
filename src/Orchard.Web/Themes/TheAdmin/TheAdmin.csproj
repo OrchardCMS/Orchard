@@ -645,7 +645,6 @@
     <Content Include="Styles\Fonts\Stroke-7.svg" />
     <Content Include="Styles\Lib.css" />
     <Content Include="Styles\Lib.min.css" />
-    <Content Include="Styles\TheAdmin.css" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
@@ -1234,7 +1233,28 @@
     <Content Include="Views\Pager.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\Theme\Less\orchard-adapter.less" />
+    <Content Include="Assets\Theme\Less\orchard.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Theme\Less\orchard-pager.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Theme\Less\orchard-admin-shim.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Theme\Less\orchard-content-items.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Theme\Less\orchard-structure.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Theme\Less\orchard-panels.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Theme\Less\orchard-tables.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Theme\Less\orchard-forms.less" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

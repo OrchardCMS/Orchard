@@ -5,6 +5,7 @@ namespace Orchard.MediaLibrary {
         public void BuildManifests(ResourceManifestBuilder builder) {
             var manifest = builder.Add();
             manifest.DefineStyle("MediaManagerAdmin").SetUrl("orchard-medialibrary-admin.css").SetDependencies("~/Themes/TheAdmin/Styles/Site.css");
+            manifest.DefineStyle("MediaLibraryPickerAdmin").SetUrl("media-library-picker-admin.css");
         }
     }
 }

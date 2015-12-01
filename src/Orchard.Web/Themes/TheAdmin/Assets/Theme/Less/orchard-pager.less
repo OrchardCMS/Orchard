@@ -1,0 +1,46 @@
+.pager-footer {
+    margin-top: 1em;
+
+    select.pager {
+        margin: 0;
+        min-width: 5em;
+    }
+
+    ul.pager {
+        margin: 0;
+        border-left: 1px solid @pager-border;
+    }
+
+    .page-size-options {
+        .pull-left();
+        .clearfix();
+        margin-right: 4em;
+    }
+
+    .pager-links {
+        .pull-right();
+    }
+
+    .clearfix();
+}
+
+.pager {
+    border-left: 1px solid @pager-border;
+
+    li {
+        display: block;
+        float: left;
+        
+        > span, > a {
+            border-radius: unset;
+            border-left: none;
+        }
+
+        > span {
+            background-color: @pager-active-bg;
+            color: @pager-active-color;
+        }
+    }
+
+    .clearfix();
+}

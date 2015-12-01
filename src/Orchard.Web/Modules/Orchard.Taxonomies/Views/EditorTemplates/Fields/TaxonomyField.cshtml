@@ -5,8 +5,9 @@
 
 @{
     Style.Include("admin-taxonomy.css");
-    Script.Require("jQuery"); 
-    Script.Include("~/Themes/TheAdmin/scripts/admin.js").AtFoot();
+    Script.Require("jQuery");
+
+    // TODO: Amaretti: Replace Expando with Accordion.
     Script.Include("admin-taxonomy-expando.js").AtFoot();
 
     int termIndex = 0;

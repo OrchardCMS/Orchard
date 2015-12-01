@@ -1,18 +1,72 @@
-// Form controls.
-.text {
-    .form-control();
+// Content Item List.
+.content-items {
+    border-top: 1px solid @table-border-color;
 
-    &.large {
-        .make-md-column(12);
+    ul {
+        margin: 0;
+        padding: 0;
+    }
+    ul, li {
+        list-style: none;
     }
 
-    &.wide {
-        .make-md-column(6);
+    li {
+        &:nth-of-type(odd) {
+            background: @table-bg-accent;
+        }
+
+        &:hover {
+            background: @table-bg-hover;
+        }
     }
 
-    &.small {
-        .make-md-column(1);
+    .summary {
+        border: 1px solid @table-border-color;
+        border-top: none;
+        padding: 1em;
+
+        .properties {
+            .head {
+                .am-checkbox {
+                    line-height: 15px;
+                }
+                h3 {
+                    display: inline;
+                    font-size: 22px;
+
+                    .content-type {
+                        font-size: @font-size-base;
+                    }
+                }
+            }
+            .metadata {
+                margin-left: 30px;
+
+                ul.pageStatus {
+                    display: inline-block;
+                    list-style: none;
+
+                    li {
+                        .pull-left();
+                        line-height: 19px;
+                    }
+
+                    .clearfix();
+                }
+            }
+        }
+
+        .related {
+            .pull-right();
+        }
+
+        .clearfix();
     }
+}
+
+// Bulk Actions.
+fieldset.bulk-actions {
+    display: inline-block;
 }
 
 // Edit Content.
@@ -105,10 +159,5 @@
                 padding-left: 0.5em;
             }
         }
-    }
-
-    .hint {
-        display: block;
-        line-height: 2em;
     }
 }
