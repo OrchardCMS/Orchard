@@ -2,13 +2,18 @@
 
 @{ Layout.Title = T("New Content Part").ToString(); }
 
-@using (Html.BeginFormAntiForgeryPost()) {
-    @Html.ValidationSummary()
-    <fieldset>
-        <label for="Name">@T("Name")</label>
-        @Html.TextBoxFor(m => m.Name, new {@class = "text medium", autofocus = "autofocus"})
-        <span class="hint">@T("Use no spaces or special characters. For example, \"MyCustomPart\"")</span>
-    </fieldset>
-    <fieldset>
-        <button class="primaryAction" type="submit">@T("Create")</button>
-    </fieldset>}
+<div class="panel-body">
+    @using (Html.BeginFormAntiForgeryPost()) {
+        @Html.ValidationSummary()
+        <div class="col-md-6">
+            <fieldset class="form-group">
+                <label for="Name">@T("Name")</label>
+                @Html.TextBoxFor(m => m.Name, new {@class = "text medium", autofocus = "autofocus"})
+                <span class="hint">@T("Use no spaces or special characters. For example, \"MyCustomPart\"")</span>
+            </fieldset>
+            <fieldset class="text-left">
+                <button class="btn btn-primary" type="submit">@T("Create")</button>
+            </fieldset>
+        </div>
+    }
+</div>
