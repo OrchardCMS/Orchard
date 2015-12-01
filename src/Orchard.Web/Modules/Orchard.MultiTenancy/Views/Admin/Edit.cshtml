@@ -6,7 +6,8 @@
 
     Script.Require("jQuery").AtFoot();
     Script.Require("ShapesBase").AtFoot();
-    Script.Include(Url.Content("~/Themes/TheAdmin/Scripts/admin.js")).AtFoot();
+
+    // TODO: Amaretti: Replace Expando with Accordion.
     Script.Include("multi-tenancy.admin.js").AtFoot();
 }
 

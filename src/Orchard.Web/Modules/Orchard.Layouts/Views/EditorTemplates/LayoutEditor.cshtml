@@ -3,13 +3,8 @@
 @{
     // Library dependencies.
     Style.Require("jQueryUI_Orchard");
-    Style.Require("Bootstrap");
     Style.Require("FontAwesome");
-
-    // We need these styles to properly render selected media items.
-    // Ideally the MediaLibrary is refactored such that each media item type provides its own set of styles, enabling extensibility of the set of media item types.
-    // In turn we could get rid of this cross-module reference.
-    Style.Include("~/Modules/Orchard.MediaLibrary/Styles/media-library-picker-admin.css");
+    Style.Require("MediaLibraryPickerAdmin");
 
     Script.Require("jQueryCookie");
     Script.Require("jQueryUI_Widgets");
@@ -90,127 +85,6 @@
             <orc-layout-editor model="window.layoutEditor" ng-app="LayoutEditor" />
         </div>
         @Display.DialogTemplate(Name: "Layout")
-        <div class="layout-editor-help-dialog" title="Layout editor help">
-            <div class="help-row">
-                <h3>Clipboard</h3>
-                <div class="help-column-full">
-                    <p>Elements (including containers) can be cut, copied and pasted using the standard clipboard shortcuts (<code>Ctrl+X</code> / <code>Ctrl+C</code> / <code>Ctrl-V</code> on Windows, <code>⌘+X</code> / <code>⌘+C</code> / <code>⌘+V</code> on Mac OS).</p>
-                    <p>On browsers that support native clipboard events, clipboard operations can be performed across different layout editor instances, in different tabs or browser windows. Text content can also be pasted into other applications.</p>
-                    <p>On other browsers, clipboard operations work only within the same layout editor instance.</p>
-                </div>
-            </div>
-            <div class="help-row">
-                <h3>Keyboard shortcuts</h3>
-                <div class="help-column-half">
-                    <h4>Resizing columns</h4>
-                    <table>
-                        <tbody>
-                            <tr>
-                                <td><code>Alt+Left</code></td>
-                                <td>Moves the left edge of the focused column left</td>
-                            </tr>
-                            <tr>
-                                <td><code>Alt+Right</code></td>
-                                <td>Moves the left edge of the focused column right</td>
-                            </tr>
-                            <tr>
-                                <td><code>Shift+Left</code></td>
-                                <td>Moves the right edge of the focused column left</td>
-                            </tr>
-                            <tr>
-                                <td><code>Shift+Right</code></td>
-                                <td>Moves the right edge of the focused column right</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <p>The <code>Alt</code> and <code>Shift</code> keys can also be combined to move both edges simultaneously.</p>
-                </div>
-                <div class="help-column-half">
-                    <h4>Focus</h4>
-                    <table>
-                        <tbody>
-                            <tr>
-                                <td><code>Up</code></td>
-                                <td>Moves focus to the previous element (above)</td>
-                            </tr>
-                            <tr>
-                                <td><code>Down</code></td>
-                                <td>Moves focus to the next element (below)</td>
-                            </tr>
-                            <tr>
-                                <td><code>Left</code></td>
-                                <td>Moves focus to the previous column (to the left)</td>
-                            </tr>
-                            <tr>
-                                <td><code>Right</code></td>
-                                <td>Moves focus to the next column (to the right)</td>
-                            </tr>
-                            <tr>
-                                <td><code>Alt+Up</code></td>
-                                <td>Moves focus to the parent element</td>
-                            </tr>
-                            <tr>
-                                <td><code>Alt+Down</code></td>
-                                <td>Moves focus to the first child element</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="help-column-half">
-                    <h4>Editing</h4>
-                    <table>
-                        <tbody>
-                            <tr>
-                                <td><code>Enter</code></td>
-                                <td>Opens the content editor of the focused element</td>
-                            </tr>
-                            <tr>
-                                <td><code>Space</code></td>
-                                <td>Opens the properties popup of the focused element</td>
-                            </tr>
-                            <tr>
-                                <td><code>Esc</code></td>
-                                <td>Closes the properties popup of the focused element</td>
-                            </tr>
-                            <tr>
-                                <td><code>Del</code></td>
-                                <td>Deletes the focused element</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="help-column-half">
-                    <h4>Moving</h4>
-                    <table>
-                        <tbody>
-                            <tr>
-                                <td><code>Ctrl+Up</code></td>
-                                <td>Moves (reorders) the focused element up</td>
-                            </tr>
-                            <tr>
-                                <td><code>Ctrl+Down</code></td>
-                                <td>Moves (reorders) the focused element down</td>
-                            </tr>
-                            <tr>
-                                <td><code>Ctrl+Left</code></td>
-                                <td>Moves (reorders) the focused column left</td>
-                            </tr>
-                            <tr>
-                                <td><code>Ctrl+Right</code></td>
-                                <td>Moves (reorders) the focused column right</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="help-row">
-                <h3>Drag and drop</h3>
-                <section class="help-column-full">
-                    <p>Drag any existing element to reorder within its parent.</p>
-                    <p>Drag a new element from the toolbox and drop it within a compatible container.</p>
-                    <p>Drag the left and right edges of a focused column to resize the column. By default any adjacent column will be attached and resized accordingly; holding down the <code>Alt</code> key while resizing unattaches from the adjacent column and instead modifies the offset between.</p>
-                </section>
-            </div>
-        </div>
+        @Display.LayoutEditor_HelpDialog()
     </div>
 </fieldset>
