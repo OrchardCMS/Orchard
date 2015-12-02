@@ -7,6 +7,5 @@
     tagBuilder.Attributes["type"] = "submit";
     tagBuilder.Attributes["name"] = element.Name;
     tagBuilder.SetInnerText(element.Text);
-    tagBuilder.Attributes["onclick"] = "return false;";
 }
 @tagBuilder.ToHtmlString()
