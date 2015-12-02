@@ -496,6 +496,8 @@
     <Content Include="Scripts\jquery-ui.min.js" />
     <Content Include="Scripts\jquery.blockui.js" />
     <Content Include="Scripts\jquery.blockui.min.js" />
+    <Content Include="Scripts\jquery.calendars.all.js" />
+    <Content Include="Scripts\jquery.calendars.all.min.js" />
     <Content Include="Scripts\jquery.calendars.picker.full.js" />
     <Content Include="Scripts\jquery.calendars.picker.full.min.js" />
     <Content Include="Scripts\jquery.colorbox.js" />
@@ -811,6 +813,15 @@
     <Content Include="Assets\Less\Bootstrap\tooltip.less" />
     <Content Include="Assets\Less\Bootstrap\type.less" />
     <Content Include="Assets\Less\Bootstrap\wells.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\CalendarsPickerLocalization.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\DateTimeEditor.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\TimeEntryLocalization.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

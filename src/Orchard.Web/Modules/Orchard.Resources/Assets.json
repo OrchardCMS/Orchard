@@ -191,6 +191,12 @@
     },
     {
         "inputs": [
+            "Assets/Js/Calendars/jquery.calendars.all.js"
+        ],
+        "output": "Scripts/jquery.calendars.all.js"
+    },
+    {
+        "inputs": [
             "Assets/Js/Calendars/jquery.calendars.picker.js",
             "Assets/Js/Calendars/jquery.calendars.picker.ext.js"
         ],
