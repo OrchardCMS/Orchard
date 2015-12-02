@@ -8,7 +8,9 @@ html.dyn input.hinted {
 }
 .date input{
     width:10em;
+    display: inline;
 }
 .time input {
-    width:7em;
+    width:8em;
+    display: inline;
 }
