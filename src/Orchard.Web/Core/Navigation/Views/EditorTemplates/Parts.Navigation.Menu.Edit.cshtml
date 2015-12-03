@@ -10,7 +10,7 @@
             <label for="@Html.FieldIdFor(m => m.OnMenu)" class="forcheckbox">@T("Show on a menu")</label>
         </div>
         <div data-controllerid="@Html.FieldIdFor(m => m.OnMenu)" class="">
-            <select id="@Html.FieldIdFor(m => m.CurrentMenuId)" name="@Html.FieldNameFor(m => m.CurrentMenuId)">
+            <select id="@Html.FieldIdFor(m => m.CurrentMenuId)" name="@Html.FieldNameFor(m => m.CurrentMenuId)" class="form-control auto-size">
                 @foreach (ContentItem menu in Model.Menus) {
                     @Html.SelectOption(Model.CurrentMenuId, menu.Id, Html.ItemDisplayText(menu, false).ToString())
                 }
