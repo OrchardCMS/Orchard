@@ -12,12 +12,7 @@
             confirmDeletePrompt: self.element.data("confirm-delete-prompt"),
             displayType: self.element.data("display-type"),
             endpoints: {
-                render: self.element.data("render-url"),
                 edit: self.element.data("edit-url"),
-                add: self.element.data("add-url"),
-                addDirect: self.element.data("add-direct-url"),
-                settings: self.element.data("settings-url"),
-                browse: self.element.data("element-browser-url"),
                 applyTemplate: self.element.data("apply-template-url")
             },
             domOperations: {
