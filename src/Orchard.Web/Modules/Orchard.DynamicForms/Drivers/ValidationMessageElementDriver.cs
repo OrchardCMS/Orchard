@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using Orchard.DynamicForms.Elements;
-using Orchard.Forms.Services;
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
 using Orchard.Layouts.Helpers;
+using Orchard.Layouts.Services;
 using Orchard.Tokens;
 using DescribeContext = Orchard.Forms.Services.DescribeContext;
 
@@ -11,7 +11,7 @@ namespace Orchard.DynamicForms.Drivers {
     public class ValidationMessageElementDriver : FormsElementDriver<ValidationMessage> {
         private readonly ITokenizer _tokenizer;
 
-        public ValidationMessageElementDriver(IFormManager formManager, ITokenizer tokenizer) : base(formManager) {
+        public ValidationMessageElementDriver(IFormsBasedElementServices formsServices, ITokenizer tokenizer) : base(formsServices) {
             _tokenizer = tokenizer;
         }
 

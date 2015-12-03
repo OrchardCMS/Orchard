@@ -3,18 +3,18 @@ using System.Linq;
 using System.Web.Mvc;
 using Orchard.DynamicForms.Elements;
 using Orchard.DynamicForms.Helpers;
-using Orchard.Forms.Services;
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
 using Orchard.Layouts.Helpers;
+using Orchard.Layouts.Services;
 using Orchard.Tokens;
 using DescribeContext = Orchard.Forms.Services.DescribeContext;
 
 namespace Orchard.DynamicForms.Drivers {
     public class EnumerationElementDriver : FormsElementDriver<Enumeration> {
         private readonly ITokenizer _tokenizer;
-        public EnumerationElementDriver(IFormManager formManager, ITokenizer tokenizer)
-            : base(formManager) {
+        public EnumerationElementDriver(IFormsBasedElementServices formsServices, ITokenizer tokenizer)
+            : base(formsServices) {
             _tokenizer = tokenizer;
         }
 

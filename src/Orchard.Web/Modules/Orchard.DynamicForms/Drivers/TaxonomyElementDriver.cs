@@ -5,10 +5,10 @@ using System.Linq;
 using System.Web.Mvc;
 using Orchard.DynamicForms.Elements;
 using Orchard.Environment.Extensions;
-using Orchard.Forms.Services;
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
 using Orchard.Layouts.Helpers;
+using Orchard.Layouts.Services;
 using Orchard.Taxonomies.Services;
 using Orchard.Tokens;
 using DescribeContext = Orchard.Forms.Services.DescribeContext;
@@ -19,8 +19,8 @@ namespace Orchard.DynamicForms.Drivers {
         private readonly ITaxonomyService _taxonomyService;
         private readonly ITokenizer _tokenizer;
 
-        public TaxonomyElementDriver(IFormManager formManager, ITaxonomyService taxonomyService, ITokenizer tokenizer)
-            : base(formManager) {
+        public TaxonomyElementDriver(IFormsBasedElementServices formsServices, ITaxonomyService taxonomyService, ITokenizer tokenizer)
+            : base(formsServices) {
             _taxonomyService = taxonomyService;
             _tokenizer = tokenizer;
         }

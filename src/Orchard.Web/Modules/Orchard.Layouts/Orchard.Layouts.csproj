@@ -330,12 +330,14 @@
     <Compile Include="Helpers\SnippetHtmlExtensions.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
     <Compile Include="Permissions.cs" />
+    <Compile Include="Services\FormElementServices.cs" />
     <Compile Include="Services\ICurrentThemeShapeBindingResolver.cs" />
     <Compile Include="Services\CurrentThemeShapeBindingResolver.cs" />
     <Compile Include="Providers\PlaceableContentElementHarvester.cs" />
     <Compile Include="Elements\RecycleBin.cs" />
     <Compile Include="Models\SnippetDescriptor.cs" />
     <Compile Include="Models\SnippetFieldDescriptor.cs" />
+    <Compile Include="Services\IFormElementServices.cs" />
     <Compile Include="ViewModels\SnippetViewModel.cs" />
     <Compile Include="ViewModels\SnippetFieldViewModel.cs" />
     <Compile Include="ViewModels\PlaceableContentItemViewModel.cs" />
