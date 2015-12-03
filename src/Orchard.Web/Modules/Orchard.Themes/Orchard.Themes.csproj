@@ -68,6 +68,7 @@
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Commands\ThemeCommands.cs" />
     <Compile Include="Drivers\DisableThemePartDriver.cs" />
+    <Compile Include="Events\ThemeDisableEventHandler.cs" />
     <Compile Include="Events\IExtensionDisplayEventHandler.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\ThemeEntry.cs" />
