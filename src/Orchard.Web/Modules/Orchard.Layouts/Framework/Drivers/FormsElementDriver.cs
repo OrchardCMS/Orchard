@@ -18,7 +18,19 @@ namespace Orchard.Layouts.Framework.Drivers {
 
         protected dynamic BuildForm(ElementEditorContext context, string formName, string position = null) {
             // TODO: Fix Forms API so that it works with prefixes. Right now only binding implements prefix, but building a form ignores the specified prefix.
-            var form = _formManager.Bind(_formManager.Build(formName), context.ValueProvider);
+
+            // If not a post-back, we need to bind the form with the element's data values. Otherwise, bind the form with the posted values.
+            var valueProvider = context.Updater == null
+                ? context.Element.Data.ToValueProvider(_cultureAccessor.CurrentCulture)
+                : context.ValueProvider;
+
+            var form = _formManager.Bind(_formManager.Build(formName), valueProvider);
+
+            if (context.Updater != null) {
+                // Update the element's data dictionary with the posted values.
+                Action<object> process = s => UpdateElementProperty(s, context);
+                FormNodesProcessor.ProcessForm(form, process);
+            }
 
             if (!String.IsNullOrWhiteSpace(position)) {
                 form.Metadata.Position = position;
