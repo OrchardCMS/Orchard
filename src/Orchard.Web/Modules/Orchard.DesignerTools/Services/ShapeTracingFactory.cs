@@ -41,6 +41,10 @@ namespace Orchard.DesignerTools.Services {
         }
 
         private bool IsActivable() {
+            // don't activate if no HttpContext
+            if (_workContext.HttpContext == null)
+                return false;
+
             // activate on front-end only
             if (AdminFilter.IsApplied(new RequestContext(_workContext.HttpContext, new RouteData())))
                 return false;
