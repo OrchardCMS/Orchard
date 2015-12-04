@@ -9,5 +9,7 @@ namespace Orchard.Core.Navigation.ViewModels {
 
         public ContentItem ContentItem { get; set; } 
         public string MenuText { get; set; }
+
+        public int ParentMenuItemId { get; set; }
     }
 }
