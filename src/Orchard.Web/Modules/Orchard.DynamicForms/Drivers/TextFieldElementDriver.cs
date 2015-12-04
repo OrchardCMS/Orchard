@@ -1,21 +1,25 @@
-﻿using System.Web;
-using Orchard.DynamicForms.Elements;
-using Orchard.Forms.Services;
+﻿using Orchard.DynamicForms.Elements;
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
 using Orchard.Layouts.Helpers;
+using Orchard.Layouts.Services;
 using Orchard.Tokens;
 using DescribeContext = Orchard.Forms.Services.DescribeContext;
 
-namespace Orchard.DynamicForms.Drivers {
-    public class TextFieldElementDriver : FormsElementDriver<TextField>{
+namespace Orchard.DynamicForms.Drivers
+{
+    public class TextFieldElementDriver : FormsElementDriver<TextField>
+    {
         private readonly ITokenizer _tokenizer;
 
-        public TextFieldElementDriver(IFormManager formManager, ITokenizer tokenizer) : base(formManager) {
+        public TextFieldElementDriver(IFormsBasedElementServices formsServices, ITokenizer tokenizer)
+            : base(formsServices)
+        {
             _tokenizer = tokenizer;
         }
 
-        protected override EditorResult OnBuildEditor(TextField element, ElementEditorContext context) {
+        protected override EditorResult OnBuildEditor(TextField element, ElementEditorContext context)
+        {
             var autoLabelEditor = BuildForm(context, "AutoLabel");
             var textFieldEditor = BuildForm(context, "TextField");
             var textFieldValidation = BuildForm(context, "TextFieldValidation", "Validation:10");
@@ -23,8 +27,10 @@ namespace Orchard.DynamicForms.Drivers {
             return Editor(context, autoLabelEditor, textFieldEditor, textFieldValidation);
         }
 
-        protected override void DescribeForm(DescribeContext context) {
-            context.Form("TextField", factory => {
+        protected override void DescribeForm(DescribeContext context)
+        {
+            context.Form("TextField", factory =>
+            {
                 var shape = (dynamic)factory;
                 var form = shape.Fieldset(
                     Id: "TextField",
@@ -38,7 +44,8 @@ namespace Orchard.DynamicForms.Drivers {
                 return form;
             });
 
-            context.Form("TextFieldValidation", factory => {
+            context.Form("TextFieldValidation", factory =>
+            {
                 var shape = (dynamic)factory;
                 var form = shape.Fieldset(
                     Id: "TextFieldValidation",
