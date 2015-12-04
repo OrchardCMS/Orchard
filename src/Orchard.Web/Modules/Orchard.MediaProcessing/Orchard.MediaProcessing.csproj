@@ -49,8 +49,8 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ImageResizer">
-      <HintPath>..\..\..\..\lib\imageresizer\ImageResizer.dll</HintPath>
+    <Reference Include="ImageResizer, Version=3.4.3.103, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\ImageResizer.3.4.3\lib\ImageResizer.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
@@ -159,6 +159,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Placement.info" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
