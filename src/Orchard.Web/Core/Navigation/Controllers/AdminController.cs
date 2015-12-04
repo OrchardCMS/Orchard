@@ -234,6 +234,21 @@ namespace Orchard.Core.Navigation.Controllers {
             return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
         }
 
+
+        public ActionResult GetMenuItemsForDropdown(int id)
+        {
+            var items = _menuService.GetMenuParts(id)
+                .Select(CreateMenuItemEntries)
+                .OrderBy(menuPartEntry => menuPartEntry.Position, new FlatPositionComparer())
+                .Select(m => new
+                {
+                    m.MenuItemId,
+                    m.Text,
+                    m.Position
+                }).ToList();
+            return Json(items, JsonRequestBehavior.AllowGet);
+        }
+
         private static string GetNextChildPosition(IEnumerable<MenuItemEntry> menuItems, string parentMenuItemPosition) {
             var parentMenuItemPositionPlusDot = parentMenuItemPosition + ".";
             var childElements = menuItems.Where(childElement => childElement.Position.StartsWith(parentMenuItemPositionPlusDot));

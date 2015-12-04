@@ -7,6 +7,7 @@ using Orchard.Core.Navigation.Services;
 using Orchard.Core.Navigation.ViewModels;
 using Orchard.Localization;
 using Orchard.Security;
+using Orchard.UI;
 using Orchard.UI.Navigation;
 using Orchard.Utility;
 
@@ -50,7 +51,8 @@ namespace Orchard.Core.Navigation.Drivers {
                     ContentItem = part.ContentItem,
                     Menus = allowedMenus,
                     OnMenu = part.Menu != null,
-                    MenuText = part.MenuText
+                    MenuText = part.MenuText,
+                    ParentMenuItemId = GetParentMenuItemIdFor(part.MenuPosition, part.Menu == null ? -1 : part.Menu.Id)
                 };
 
                 return shapeHelper.EditorTemplate(TemplateName: "Parts.Navigation.Menu.Edit", Model: model, Prefix: Prefix);
@@ -69,10 +71,37 @@ namespace Orchard.Core.Navigation.Drivers {
                 part.MenuText = model.MenuText;
                 part.Menu = menu;
 
-                if (string.IsNullOrEmpty(part.MenuPosition) && menu != null) {
-                    part.MenuPosition = Position.GetNext(_navigationManager.BuildMenu(menu));
 
-                    if (string.IsNullOrEmpty(part.MenuText)) {
+                if (menu != null)
+                {
+                    if (model.ParentMenuItemId == -1)
+                    {
+                        // new page and at the root
+                        part.MenuPosition = Position.GetNext(_navigationManager.BuildMenu(menu));
+                    }
+                    else
+                    {
+                        var selectedParent = _orchardServices.ContentManager.Get(model.ParentMenuItemId).As<MenuPart>();
+                        if (string.IsNullOrEmpty(part.MenuPosition))
+                        {
+                            // new page
+                            PositionMenuItem(part, selectedParent, model);
+                        }
+                        else
+                        {
+                            var posIndex = part.MenuPosition.Split('.');
+                            var parentPosition = string.Join(".", posIndex.Take(posIndex.Count() - 1));
+
+                            // we only move if the parent has changed so is the part's parent different?
+                            if (selectedParent != null && parentPosition != selectedParent.MenuPosition)
+                            {
+                                PositionMenuItem(part, selectedParent, model);
+                            }
+                        }
+                    }
+
+                    if (string.IsNullOrEmpty(part.MenuText))
+                    {
                         updater.AddModelError("MenuText", T("The MenuText field is required"));
                     }
                 }
@@ -115,6 +144,51 @@ namespace Orchard.Core.Navigation.Drivers {
 
             context.Element(part.PartDefinition.Name).SetAttributeValue("MenuText", part.MenuText);
             context.Element(part.PartDefinition.Name).SetAttributeValue("MenuPosition", part.MenuPosition);
+        }
+
+
+        private int GetParentMenuItemIdFor(string position, int menuId)
+        {
+            if (menuId == -1)
+                return menuId;
+
+            var posElements = position.Split('.');
+            if (posElements.Count() == 1)
+                return -1;
+
+            var parentPosition = string.Join(".", posElements.Take(posElements.Count() - 1));
+            var menuItem = _menuService.GetMenuParts(menuId).FirstOrDefault(mi => mi.MenuPosition == parentPosition);
+
+            if (menuItem != null)
+                return menuItem.Id;
+
+            return -1;
+        }
+
+        private void PositionMenuItem(MenuPart part, MenuPart selectedParent, MenuPartViewModel model)
+        {
+            // order items by position descending and
+            // ensure we only look at the items from the specific branch of the menu
+            var level = selectedParent.MenuPosition.Split('.').Count() + 1;
+            var maxMenuItem = _menuService.GetMenuParts(model.CurrentMenuId)
+                .Where(mi => mi.MenuPosition.StartsWith(selectedParent.MenuPosition) && mi.MenuPosition.Split('.').Count() == level)
+                .OrderByDescending(mi => mi.MenuPosition, new FlatPositionComparer()).FirstOrDefault();
+
+            // no existing descendants so its a new child
+            if (maxMenuItem == null)
+            {
+                part.MenuPosition = selectedParent.MenuPosition + ".1";
+            }
+            else
+            {
+                // get the last number of the last descendant and add 1
+                var lastDigit = maxMenuItem.MenuPosition.Split('.').LastOrDefault();
+                if (lastDigit != null)
+                {
+                    int last;
+                    part.MenuPosition = int.TryParse(lastDigit, out last) ? selectedParent.MenuPosition + "." + (++last) : selectedParent.MenuPosition + ".100";
+                }
+            }
         }
     }
 }

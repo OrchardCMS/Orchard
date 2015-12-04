@@ -2,6 +2,10 @@
 @using Orchard.ContentManagement
 @using Orchard.Core.Navigation.Models;
 
+@{
+    Script.Include("navigation-menupart.js").AtFoot();
+}
+
 @if (!Model.ContentItem.TypeDefinition.Settings.ContainsKey("Stereotype") || Model.ContentItem.TypeDefinition.Settings["Stereotype"] != "MenuItem") {
 
     <fieldset>
@@ -9,8 +13,9 @@
         @Html.EditorFor(m => m.OnMenu)
         <label for="@Html.FieldIdFor(m => m.OnMenu)" class="forcheckbox">@T("Show on a menu")</label>
         <div data-controllerid="@Html.FieldIdFor(m => m.OnMenu)" class="">
-            <select id="@Html.FieldIdFor(m => m.CurrentMenuId)" name="@Html.FieldNameFor(m => m.CurrentMenuId)">
-                @foreach (ContentItem menu in Model.Menus) {
+            <select id="currentMenuId" name="@Html.FieldNameFor(m => m.CurrentMenuId)">
+                @foreach (ContentItem menu in Model.Menus)
+                {
                     @Html.SelectOption(Model.CurrentMenuId, menu.Id, Html.ItemDisplayText(menu, false).ToString())
                 }
             </select>
@@ -19,6 +24,12 @@
             <label for="MenuText">@T("Menu text")</label>
             @Html.TextBoxFor(m => m.MenuText, new { @class = "text single-line" })
             <span class="hint">@T("The text that should appear in the menu.")</span>
+            
+            <label for="ParentMenuItem">@T("Menu Position")</label>
+            <select id="ParentMenuItem" name="@Html.FieldNameFor(m => m.ParentMenuItemId)"></select>
+            <span class="hint">@T("The parent menu item for this menu item. The menu item will be added as the last item below this selection. Select \"Default\" to add to the end of level 1 items.")</span>
+
+            @Html.HiddenFor(x => x.ParentMenuItemId, new { id = "originalParentMenuItem" })
         </div>
     </fieldset>
 
