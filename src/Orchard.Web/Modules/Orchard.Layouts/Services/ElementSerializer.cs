@@ -60,7 +60,6 @@ namespace Orchard.Layouts.Services {
             var htmlStyle = (string)node["htmlStyle"];
             var elementData = ElementDataHelper.Deserialize(data);
             var exportableData = ElementDataHelper.Deserialize((string)node["exportableData"]);
-            var childNodes = node["elements"];
             var elementDescriptor = _elementManager.GetElementDescriptorByTypeName(describeContext, elementTypeName);
 
             if (elementDescriptor == null)
@@ -79,8 +78,8 @@ namespace Orchard.Layouts.Services {
             var container = element as Container;
 
             if (container != null)
-                container.Elements = childNodes != null 
-                    ? childNodes.Select((x, i) => ParseNode(x, container, i, describeContext)).Where(x => x != null).ToList() 
+                container.Elements = node["elements"] != null 
+                    ? node["elements"].Select((x, i) => ParseNode(x, container, i, describeContext)).Where(x => x != null).ToList() 
                     : new List<Element>();
 
             element.IsTemplated = node.Value<bool>("isTemplated");
