@@ -17,5 +17,9 @@ namespace Orchard {
                 _output.WriteLine(format, args);
             }
         }
+
+        public override object InitializeLifetimeService() {
+            return null;
+        }
     }
 }

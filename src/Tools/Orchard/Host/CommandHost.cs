@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Remoting;
+using System.Runtime.Remoting.Lifetime;
 using System.Security;
 using System.Web.Hosting;
 using Orchard.Parameters;
@@ -32,8 +34,22 @@ namespace Orchard.Host {
 
         [SecurityCritical]
         public override object InitializeLifetimeService() {
-            // never expire the license
+            // never expire the lease
             return null;
+        }
+
+        private static void ExtendLifeTimeLeases(TextReader input, TextWriter output) {
+            // The Orchard objects passed as parameters into this AppDomain have infinite leases based on their InitializeLifetimeService 
+            // overrides.  For these objects we'll approximate that behavior with a 30 day lease.
+            ExtendLifeTimeLease(input);
+            ExtendLifeTimeLease(output);
+        }
+
+        private static void ExtendLifeTimeLease(MarshalByRefObject obj) {
+            if (RemotingServices.IsObjectOutOfAppDomain(obj)) {
+                var lease = (ILease)RemotingServices.GetLifetimeService(obj);
+                lease.Renew(TimeSpan.FromDays(30));
+            }
         }
 
         [SecuritySafeCritical]
@@ -42,18 +58,21 @@ namespace Orchard.Host {
         }
 
         public CommandReturnCodes StartSession(TextReader input, TextWriter output) {
+            ExtendLifeTimeLeases(input, output);
             _agent = CreateAgent();
             return StartHost(_agent, input, output);
         }
 
         public void StopSession(TextReader input, TextWriter output) {
             if (_agent != null) {
+                ExtendLifeTimeLeases(input, output);
                 StopHost(_agent, input, output);
                 _agent = null;
             }
         }
 
         public CommandReturnCodes RunCommand(TextReader input, TextWriter output, Logger logger, OrchardParameters args) {
+            ExtendLifeTimeLeases(input, output);
             var agent = CreateAgent();
             CommandReturnCodes result = (CommandReturnCodes)agent.GetType().GetMethod("RunSingleCommand").Invoke(agent, new object[] { 
                 input,
@@ -66,6 +85,7 @@ namespace Orchard.Host {
         }
 
         public CommandReturnCodes RunCommandInSession(TextReader input, TextWriter output, Logger logger, OrchardParameters args) {
+            ExtendLifeTimeLeases(input, output);
             CommandReturnCodes result = (CommandReturnCodes)_agent.GetType().GetMethod("RunCommand").Invoke(_agent, new object[] { 
                 input,
                 output,
@@ -77,6 +97,7 @@ namespace Orchard.Host {
         }
 
         public CommandReturnCodes RunCommands(TextReader input, TextWriter output, Logger logger, IEnumerable<ResponseLine> responseLines) {
+            ExtendLifeTimeLeases(input, output);
             var agent = CreateAgent();
 
             CommandReturnCodes result = StartHost(agent, input, output);
