@@ -10,6 +10,10 @@ namespace Orchard.ResponseFiles {
         public string LineText { get; set; }
         public int LineNumber { get; set; }
         public string[] Args { get; set; }
+
+        public override object InitializeLifetimeService() {
+            return null;
+        }
     }
 
     public class ResponseFileReader {

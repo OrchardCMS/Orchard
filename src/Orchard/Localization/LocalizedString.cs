@@ -78,5 +78,8 @@ namespace Orchard.Localization {
             return string.Equals(_localized, that._localized);
         }
 
+        public override object InitializeLifetimeService() {
+            return null;
+        }
     }
 }

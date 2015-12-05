@@ -10,5 +10,9 @@ namespace Orchard {
         public IList<string> Arguments { get; set; }
         public IList<string> ResponseFiles { get; set; }
         public IDictionary<string, string> Switches { get; set; }
+
+        public override object InitializeLifetimeService() {
+            return null;
+        }
     }
 }
