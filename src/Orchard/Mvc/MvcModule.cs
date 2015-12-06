@@ -38,6 +38,7 @@ namespace Orchard.Mvc {
             // so that the RequestContext will have been established when the time comes to actually load the site settings,
             // which requires activating the Site content item, which in turn requires a UrlHelper, which in turn requires a RequestContext,
             // thus preventing a StackOverflowException.
+
             var baseUrl = new Func<string>(() => siteService.GetSiteSettings().BaseUrl);
             var httpContextBase = new HttpContextPlaceholder(baseUrl);
 
@@ -45,8 +46,8 @@ namespace Orchard.Mvc {
         }
 
         static RequestContext RequestContextFactory(IComponentContext context) {
-            var httpContextAccessor = context.Resolve<IHttpContextAccessor>();
-            var httpContext = httpContextAccessor.Current();
+
+            var httpContext = HttpContextBaseFactory(context);
 
             if (!httpContext.IsBackgroundContext()) {
 
@@ -62,11 +63,7 @@ namespace Orchard.Mvc {
                 }
             }
             else if (httpContext is HttpContextPlaceholder) {
-                if (((HttpContextPlaceholder)httpContext).IsResolved)
-                    return httpContext.Request.RequestContext;
-            }
-            else if (httpContext == null) {
-                httpContext = HttpContextBaseFactory(context);
+                return ((HttpContextPlaceholder)httpContext).RequestContext;
             }
 
             return new RequestContext(httpContext, new RouteData());
@@ -81,6 +78,7 @@ namespace Orchard.Mvc {
         /// </summary>
         public class HttpContextPlaceholder : HttpContextBase, IDisposable {
             private HttpContext _httpContext;
+            private HttpRequestPlaceholder _request;
             private readonly Lazy<string> _baseUrl;
             private readonly IDictionary _items = new Dictionary<object, object>();
 
@@ -93,16 +91,18 @@ namespace Orchard.Mvc {
                 if (HttpContext.Current != null)
                     HttpContext.Current = null;
             }
- 
-            public bool IsResolved {
-                get {
-                    return _baseUrl.IsValueCreated;
-                }
-            }
 
             public override HttpRequestBase Request {
-                get {
 
+                // Note: To fully resolve the baseUrl, some factories are needed (HttpContextBase, RequestContext...),
+                // so, doing this in such a factory creates a circular dependency (see HttpContextBase factory comments).
+
+                // When rendering a view in a background task, an Html Helper can access HttpContext.Current directly,
+                // so, here we create a fake HttpContext based on the baseUrl, and use it to update HttpContext.Current.
+                // We cannot do this before in a factory (see note above), anyway, by doing this on each Request access,
+                // we have a better chance to maintain the HttpContext.Current state even with some asynchronous code.
+
+                get {
                     if (_httpContext == null) {
                         var httpContext = new HttpContext(new HttpRequest("", _baseUrl.Value, ""), new HttpResponse(new StringWriter()));
                         httpContext.Items[IsBackgroundHttpContextKey] = true;
@@ -111,7 +111,24 @@ namespace Orchard.Mvc {
 
                     if (HttpContext.Current != _httpContext)
                         HttpContext.Current = _httpContext;
-                    return new HttpRequestPlaceholder(this, new Uri(_baseUrl.Value));
+
+                    if (_request == null) {
+                        _request = new HttpRequestPlaceholder(this, _baseUrl);
+                    }
+                    return _request;
+                }
+            }
+
+            internal RequestContext RequestContext {
+
+                // Uses the Request object but without creating an HttpContext which would need to resolve the baseUrl,
+                // so, can be used by the RequestContext factory without creating a circular dependency (see note above).
+
+                get {
+                    if (_request == null) {
+                        _request = new HttpRequestPlaceholder(this, _baseUrl);
+                    }
+                    return _request.RequestContext;
                 }
             }
 
@@ -171,28 +188,34 @@ namespace Orchard.Mvc {
         /// </summary>
         public class HttpRequestPlaceholder : HttpRequestBase {
             private HttpContextBase _httpContext;
-            private readonly Uri _uri;
+            private RequestContext _requestContext;
+            private readonly Lazy<string> _baseUrl;
+            private readonly NameValueCollection _queryString = new NameValueCollection();
+            private Uri _uri;
 
-            public HttpRequestPlaceholder(HttpContextBase httpContext, Uri uri) {
+            public HttpRequestPlaceholder(HttpContextBase httpContext, Lazy<string> baseUrl) {
                 _httpContext = httpContext;
-                _uri = uri;
+                _baseUrl = baseUrl;
             }
 
             public override RequestContext RequestContext {
                 get {
-                    return new RequestContext(_httpContext, new RouteData());
+                    if (_requestContext == null) {
+                        _requestContext = new RequestContext(_httpContext, new RouteData());
+                    }
+                    return _requestContext;
                 }
             }
 
             public override NameValueCollection QueryString {
                 get {
-                    return new NameValueCollection();
+                    return _queryString;
                 }
             }
 
             public override string RawUrl {
                 get {
-                    return _uri.OriginalString;
+                    return Url.OriginalString;
                 }
             }
 
@@ -223,13 +246,16 @@ namespace Orchard.Mvc {
 
             public override Uri Url {
                 get {
+                    if (_uri == null) {
+                        _uri = new Uri(_baseUrl.Value);
+                    }
                     return _uri;
                 }
             }
 
             public override NameValueCollection Headers {
                 get {
-                    return new NameValueCollection { { "Host", _uri.Authority } };
+                    return new NameValueCollection { { "Host", Url.Authority } };
                 }
             }
 
@@ -253,16 +279,16 @@ namespace Orchard.Mvc {
 
             public override string ApplicationPath {
                 get {
-                    return _uri.LocalPath;
+                    return Url.LocalPath;
                 }
             }
 
             public override NameValueCollection ServerVariables {
                 get {
                     return new NameValueCollection {
-                        { "SERVER_PORT", _uri.Port.ToString(CultureInfo.InvariantCulture) },
-                        { "HTTP_HOST", _uri.Authority.ToString(CultureInfo.InvariantCulture) },
-                        
+                        { "SERVER_PORT", Url.Port.ToString(CultureInfo.InvariantCulture) },
+                        { "HTTP_HOST", Url.Authority.ToString(CultureInfo.InvariantCulture) },
+
                     };
                 }
             }
