@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.Remoting;
 using System.Runtime.Remoting.Messaging;
 using System.Web;
 using Autofac;
@@ -27,7 +28,8 @@ namespace Orchard.Environment {
             if (!httpContext.IsBackgroundContext())
                 return httpContext.Items[_workContextKey] as WorkContext;
 
-            return CallContext.LogicalGetData("WorkContext") as WorkContext;
+            var context = CallContext.LogicalGetData("WorkContext") as ObjectHandle;
+            return context != null ? context.Unwrap() as WorkContext : null;
         }
 
         public WorkContext GetContext() {
@@ -35,7 +37,8 @@ namespace Orchard.Environment {
             if (!httpContext.IsBackgroundContext())
                 return GetContext(httpContext);
 
-            return CallContext.LogicalGetData("WorkContext") as WorkContext;
+            var context = CallContext.LogicalGetData("WorkContext") as ObjectHandle;
+            return context != null ? context.Unwrap() as WorkContext : null;
         }
 
         public IWorkContextScope CreateWorkContextScope(HttpContextBase httpContext) {
@@ -104,11 +107,11 @@ namespace Orchard.Environment {
 
             public CallContextScopeImplementation(IEnumerable<IWorkContextEvents> events, ILifetimeScope lifetimeScope) {
                 _workContext = lifetimeScope.Resolve<WorkContext>();
-                CallContext.LogicalSetData("WorkContext", _workContext);
+                CallContext.LogicalSetData("WorkContext", new ObjectHandle(_workContext));
 
                 CallContext.LogicalSetData("HttpContext", null);
                 var httpContext = lifetimeScope.Resolve<HttpContextBase>();
-                CallContext.LogicalSetData("HttpContext", httpContext);
+                CallContext.LogicalSetData("HttpContext", new ObjectHandle(httpContext));
 
                 _disposer = () => {
                     events.Invoke(e => e.Finished(), NullLogger.Instance);
