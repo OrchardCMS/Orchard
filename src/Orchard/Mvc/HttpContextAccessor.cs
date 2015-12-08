@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.Remoting;
 using System.Runtime.Remoting.Messaging;
 using System.Web;
 
@@ -9,8 +10,15 @@ namespace Orchard.Mvc {
 
         public HttpContextBase Current() {
             var httpContext = GetStaticProperty();
-            return !IsBackgroundHttpContext(httpContext) ? new HttpContextWrapper(httpContext) :
-                _httpContext ?? CallContext.LogicalGetData("HttpContext") as HttpContextBase;
+
+            if (!IsBackgroundHttpContext(httpContext))
+                return new HttpContextWrapper(httpContext);
+
+            if (_httpContext != null)
+                return _httpContext;
+
+            var context = CallContext.LogicalGetData("HttpContext") as ObjectHandle;
+            return context != null ? context.Unwrap() as HttpContextBase : null;
         }
 
         public void Set(HttpContextBase httpContext) {
