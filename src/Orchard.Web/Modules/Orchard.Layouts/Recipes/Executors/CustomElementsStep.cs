@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Orchard.Data;
 using Orchard.Layouts.Models;
 using Orchard.Logging;
@@ -8,7 +9,6 @@ using Orchard.Recipes.Services;
 using Orchard.Layouts.Services;
 using Orchard.Layouts.Framework.Elements;
 using Orchard.Layouts.Helpers;
-using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.Layouts.Framework.Drivers;
 
@@ -40,51 +40,46 @@ namespace Orchard.Layouts.Recipes.Executors {
         public override void Execute(RecipeExecutionContext context)
         {
 
-            var blueprintEntries = new List<Tuple<ElementBlueprint, Element>>();
+            var blueprintEntries = context.RecipeStep.Step.Elements().Select(xmlBlueprint => {
 
-            foreach (var blueprintElement in context.RecipeStep.Step.Elements())
-            {
-                var typeName = blueprintElement.Attribute("ElementTypeName").Value;
+                var typeName = xmlBlueprint.Attribute("ElementTypeName").Value;
                 Logger.Information("Importing custom element '{0}'.", typeName);
 
-                try
-                {
+                try {
                     var blueprint = GetOrCreateElement(typeName);
-                    blueprint.BaseElementTypeName = blueprintElement.Attribute("BaseElementTypeName").Value;
-                    blueprint.ElementDisplayName = blueprintElement.Attribute("ElementDisplayName").Value;
-                    blueprint.ElementDescription = (string)blueprintElement.Attribute("ElementDescription");
-                    blueprint.ElementCategory = (string)blueprintElement.Attribute("ElementCategory");
-                    blueprint.BaseElementState = blueprintElement.Element("BaseElementState").Value;
+                    blueprint.BaseElementTypeName = xmlBlueprint.Attribute("BaseElementTypeName").Value;
+                    blueprint.ElementDisplayName = xmlBlueprint.Attribute("ElementDisplayName").Value;
+                    blueprint.ElementDescription = xmlBlueprint.Attribute("ElementDescription").Value;
+                    blueprint.ElementCategory = xmlBlueprint.Attribute("ElementCategory").Value;
+                    blueprint.BaseElementState = xmlBlueprint.Element("BaseElementState").Value;
 
                     var describeContext = DescribeElementsContext.Empty;
                     var descriptor = _elementManager.GetElementDescriptorByTypeName(describeContext, blueprint.BaseElementTypeName);
                     var baseElement = _elementManager.ActivateElement(descriptor);
                     baseElement.Data = ElementDataHelper.Deserialize(blueprint.BaseElementState);
-                    baseElement.ExportableData = ElementDataHelper.Deserialize(blueprintElement.Attribute("BaseExportableData").Value);
+                    baseElement.ExportableData = ElementDataHelper.Deserialize(xmlBlueprint.Attribute("BaseExportableData").Value);
 
-                    blueprintEntries.Add(new Tuple<ElementBlueprint, Element>(blueprint, baseElement));
+                    return new { Blueprint = blueprint, BaseElement = baseElement };
                 }
-                catch (Exception ex)
-                {
+                catch (Exception ex) {
                     Logger.Error(ex, "Error while importing custom element '{0}'.", typeName);
                     throw;
                 }
-            }
 
-            var baseElements = blueprintEntries.Select(e => e.Item2).ToList();
+            }).ToList();
 
+
+            var baseElements = blueprintEntries.Select(e => e.BaseElement).ToList();
             var importContentSession = new ImportContentSession(_orchardServices.ContentManager);
-            var importLayoutContext = new ImportLayoutContext
-            {
+            var importLayoutContext = new ImportLayoutContext {
                 Session = new ImportContentSessionWrapper(importContentSession)
             };
-
             _elementManager.Importing(baseElements, importLayoutContext);
             _elementManager.Imported(baseElements, importLayoutContext);
             _elementManager.ImportCompleted(baseElements, importLayoutContext);
 
             foreach (var blueprintEntry in blueprintEntries)
-                blueprintEntry.Item1.BaseElementState = blueprintEntry.Item2.Data.Serialize();
+                blueprintEntry.Blueprint.BaseElementState = blueprintEntry.BaseElement.Data.Serialize();
 
         }
 

@@ -58,21 +58,14 @@ namespace Orchard.Layouts.Recipes.Builders {
             context.RecipeDocument.Element("Orchard").Add(root);
 
             foreach (var bluprintEntry in blueprintEntries) {
-
-                var xmlElement = new XElement("Element",
+                root.Add(new XElement("Element",
                     new XAttribute("ElementTypeName", bluprintEntry.Blueprint.ElementTypeName),
                     new XAttribute("BaseElementTypeName", bluprintEntry.Blueprint.BaseElementTypeName),
                     new XAttribute("ElementDisplayName", bluprintEntry.Blueprint.ElementDisplayName),
+                    new XAttribute("ElementDescription", bluprintEntry.Blueprint.ElementDescription ?? ""),
+                    new XAttribute("ElementCategory", bluprintEntry.Blueprint.ElementCategory ?? ""),
                     new XAttribute("BaseExportableData", bluprintEntry.BaseElement.ExportableData.Serialize()),
-                    new XElement("BaseElementState", new XCData(bluprintEntry.Blueprint.BaseElementState)));
-
-                if (bluprintEntry.Blueprint.ElementDescription != null)
-                    xmlElement.Add(new XAttribute("ElementDescription", bluprintEntry.Blueprint.ElementDescription));
-
-                if (bluprintEntry.Blueprint.ElementCategory != null)
-                    xmlElement.Add(new XAttribute("ElementCategory", bluprintEntry.Blueprint.ElementCategory));
-
-                root.Add(xmlElement);
+                    new XElement("BaseElementState", new XCData(bluprintEntry.Blueprint.BaseElementState))));
             }
         }
     }
