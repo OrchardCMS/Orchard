@@ -90,6 +90,7 @@
     <Compile Include="Filters\WidgetFilter.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Conditions\ContentDisplayedRuleProvider.cs" />
+    <Compile Include="Services\LayerAlternatesFactory.cs" />
     <Compile Include="Services\RuleManager.cs" />
     <Compile Include="Services\DefaultLayerEvaluationService.cs" />
     <Compile Include="Services\ILayerEvaluationService.cs" />
