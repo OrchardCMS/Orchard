@@ -1,12 +1,15 @@
 using System;
-using System.Runtime.Remoting;
-using System.Runtime.Remoting.Messaging;
 using System.Web;
+using Autofac;
 
 namespace Orchard.Mvc {
-
     public class HttpContextAccessor : IHttpContextAccessor {
+        readonly ILifetimeScope _lifetimeScope;
         private HttpContextBase _httpContext;
+
+        public HttpContextAccessor(ILifetimeScope lifetimeScope) {
+            _lifetimeScope = lifetimeScope;
+        }
 
         public HttpContextBase Current() {
             var httpContext = GetStaticProperty();
@@ -17,8 +20,10 @@ namespace Orchard.Mvc {
             if (_httpContext != null)
                 return _httpContext;
 
-            var context = CallContext.LogicalGetData("HttpContext") as ObjectHandle;
-            return context != null ? context.Unwrap() as HttpContextBase : null;
+            var workContext = _lifetimeScope.IsRegistered<IWorkContextAccessor>() ?
+                _lifetimeScope.Resolve<IWorkContextAccessor>().GetContext(null) : null;
+
+            return workContext != null ? workContext.HttpContext : null;
         }
 
         public void Set(HttpContextBase httpContext) {
