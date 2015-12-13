@@ -30,12 +30,12 @@
                         return "@Url.Action("Get", "Template", new { area = "Orchard.Layouts" })" + "/" + templateName;
                     }
                 });
-            (function () {
+            jQuery(function () {
                 var editorConfig = JSON.parse(LayoutEditor.decode("@Html.Raw(Url.Encode(Model.ConfigurationData))"));
                 var editorCanvasData = JSON.parse(LayoutEditor.decode("@Html.Raw(Url.Encode(Model.Data))"));
 
                 window.layoutEditor = new LayoutEditor.Editor(editorConfig, editorCanvasData);
-            })(jQuery);
+            });
         </script>
     }
 

@@ -161,6 +161,10 @@
       <Name>Orchard.Framework</Name>
       <Private>False</Private>
     </ProjectReference>
+    <ProjectReference Include="..\Modules\Orchard.Layouts\Orchard.Layouts.csproj">
+      <Project>{6bd8b2fa-f2e3-4ac8-a4c3-2925a653889a}</Project>
+      <Name>Orchard.Layouts</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="TheThemeMachine\Views\Pager.cshtml" />
