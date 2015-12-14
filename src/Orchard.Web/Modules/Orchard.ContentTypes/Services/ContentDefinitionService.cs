@@ -19,6 +19,7 @@ namespace Orchard.ContentTypes.Services {
         private readonly IEnumerable<IContentFieldDriver> _contentFieldDrivers;
         private readonly IContentDefinitionEditorEvents _contentDefinitionEditorEvents;
         private readonly IContentDefinitionEventHandler _contentDefinitionEventHandlers;
+        private static readonly char _separator = '_';
 
         public ContentDefinitionService(
                 IOrchardServices services,
@@ -358,18 +359,18 @@ namespace Orchard.ContentTypes.Services {
 
         private static string VersionName(string name) {
             int version;
-            var nameParts = name.Split(new[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
+            var nameParts = name.Split(new[] { _separator }, StringSplitOptions.RemoveEmptyEntries);
 
             if (nameParts.Length > 1 && int.TryParse(nameParts.Last(), out version)) {
                 version = version > 0 ? ++version : 2;
                 //this could unintentionally chomp something that looks like a version
-                name = string.Join("-", nameParts.Take(nameParts.Length - 1));
+                name = string.Join(_separator.ToString(), nameParts.Take(nameParts.Length - 1));
             }
             else {
                 version = 2;
             }
 
-            return string.Format("{0}-{1}", name, version);
+            return name + _separator + version;
         }
     }
 }
