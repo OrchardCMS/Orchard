@@ -57,7 +57,6 @@ namespace Orchard.Mvc {
             var baseUrl = new Func<string>(() => siteService.GetSiteSettings().BaseUrl);
             var httpContextBase = new HttpContextPlaceholder(baseUrl);
 
-            context.Resolve<IWorkContextAccessor>().CreateWorkContextScope(httpContextBase);
             return httpContextBase;
         }
 
