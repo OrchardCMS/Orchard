@@ -8,16 +8,18 @@ namespace Orchard.MessageBus.Services {
     public class DistributedShellTrigger : IShellDescriptorManagerEventHandler, IShellSettingsManagerEventHandler {
     
         private readonly IMessageBus _messageBus;
+        private readonly IDistributedShellStarter _shellStarter;
         
-        public DistributedShellTrigger(IShellSettingsManager shellSettingsManager, IMessageBus messageBus, IShellSettingsManagerEventHandler shellSettingsManagerEventHandler) {
+        public DistributedShellTrigger(IShellSettingsManager shellSettingsManager, IMessageBus messageBus, IShellSettingsManagerEventHandler shellSettingsManagerEventHandler, IDistributedShellStarter shellStarter) {
             _messageBus = messageBus;
+            _shellStarter = shellStarter;
         }
 
         void IShellDescriptorManagerEventHandler.Changed(ShellDescriptor descriptor, string tenant) {
 
             // If this method was called as a result of a published message to 
             // start the shell, then prevent a recursive loop.
-            if(!DistributedShellStarter.IsStarting) {
+            if(!_shellStarter.IsStarting()) {
                 _messageBus.Publish(DistributedShellStarter.Channel, tenant);
             }
         }
@@ -26,7 +28,7 @@ namespace Orchard.MessageBus.Services {
 
             // If this method was called as a result of a published message to 
             // start the shell, then prevent a recursive loop.
-            if (!DistributedShellStarter.IsStarting) {
+            if (!_shellStarter.IsStarting()) {
                 _messageBus.Publish(DistributedShellStarter.Channel, settings.Name);
             }
         }

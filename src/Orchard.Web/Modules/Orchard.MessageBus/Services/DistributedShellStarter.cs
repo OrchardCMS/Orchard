@@ -8,7 +8,7 @@ using Orchard.Environment.Extensions;
 namespace Orchard.MessageBus.Services {
 
     public interface IDistributedShellStarter : ISingletonDependency {
-
+        bool IsStarting();
     }
 
     [OrchardFeature("Orchard.MessageBus.DistributedShellRestart")]
@@ -17,9 +17,13 @@ namespace Orchard.MessageBus.Services {
 
         private readonly IMessageBus _messageBus;
 
-        private static readonly object locker = new object();
+        private object locker = new object();
 
-        public static bool IsStarting { get; private set; }
+        public bool _isStarting { get; private set; }
+        
+        public bool IsStarting() {
+            return _isStarting;
+        }
         
         public readonly static string Channel = "ShellChanged";
 
@@ -44,7 +48,7 @@ namespace Orchard.MessageBus.Services {
                         lock (locker) { 
                             // Set a flag indicating that we are in the process of activating the shell. 
                             // This is used to prevent recursive message bus calls.
-                            IsStarting = true;
+                            _isStarting = true;
                             shellSettingsManagerEventHandler.Saved(shellSettings);
 
                             if(orchardHost != null) {
@@ -52,7 +56,7 @@ namespace Orchard.MessageBus.Services {
                                 startUpdatedShellsMethod.Invoke(orchardHost, null);
                             }
 
-                            IsStarting = false;
+                            _isStarting = false;
                         }
                     }
                 }
