@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.MetaData;
@@ -358,18 +359,17 @@ namespace Orchard.ContentTypes.Services {
 
         private static string VersionName(string name) {
             int version;
-            var nameParts = name.Split(new[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
+            var substring = Regex.Match(name, @"\d+$").Value;
 
-            if (nameParts.Length > 1 && int.TryParse(nameParts.Last(), out version)) {
+            if (int.TryParse(substring, out version)) {
+                name = name.Remove(name.Length - substring.Length);
                 version = version > 0 ? ++version : 2;
-                //this could unintentionally chomp something that looks like a version
-                name = string.Join("-", nameParts.Take(nameParts.Length - 1));
             }
             else {
                 version = 2;
             }
 
-            return string.Format("{0}-{1}", name, version);
+            return name + version;
         }
     }
 }
