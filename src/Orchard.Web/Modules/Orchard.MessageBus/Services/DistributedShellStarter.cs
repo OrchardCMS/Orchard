@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Concurrent;
+using System.Linq;
 using Orchard.Caching;
 using Orchard.Environment;
 using Orchard.Environment.Configuration;
@@ -16,6 +17,10 @@ namespace Orchard.MessageBus.Services {
 
         private readonly IMessageBus _messageBus;
 
+        private static readonly object locker = new object();
+
+        public static bool IsStarting { get; private set; }
+        
         public readonly static string Channel = "ShellChanged";
 
         public DistributedShellStarter(IMessageBus messageBus, IWorkContextAccessor workContextAccessor) {
@@ -33,12 +38,21 @@ namespace Orchard.MessageBus.Services {
 
                         // todo: this doesn't work as the new tenants list is lost right after
                         var shellSettingsManagerEventHandler = scope.Resolve<IShellSettingsManagerEventHandler>();
-                        shellSettingsManagerEventHandler.Saved(shellSettings);
-
                         var orchardHost = scope.Resolve<IOrchardHost>() as DefaultOrchardHost;
-                        if(orchardHost != null) {
-                            var startUpdatedShellsMethod = typeof(DefaultOrchardHost).GetMethod("StartUpdatedShells", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-                            startUpdatedShellsMethod.Invoke(orchardHost, null);
+
+                        // We only want a single thread setting the "IsStarting" flag
+                        lock (locker) { 
+                            // Set a flag indicating that we are in the process of activating the shell. 
+                            // This is used to prevent recursive message bus calls.
+                            IsStarting = true;
+                            shellSettingsManagerEventHandler.Saved(shellSettings);
+
+                            if(orchardHost != null) {
+                                var startUpdatedShellsMethod = typeof(DefaultOrchardHost).GetMethod("StartUpdatedShells", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                                startUpdatedShellsMethod.Invoke(orchardHost, null);
+                            }
+
+                            IsStarting = false;
                         }
                     }
                 }

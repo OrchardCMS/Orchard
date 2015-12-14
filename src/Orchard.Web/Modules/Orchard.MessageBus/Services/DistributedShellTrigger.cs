@@ -6,7 +6,7 @@ using Orchard.Environment.Extensions;
 namespace Orchard.MessageBus.Services {
     [OrchardFeature("Orchard.MessageBus.DistributedShellRestart")]
     public class DistributedShellTrigger : IShellDescriptorManagerEventHandler, IShellSettingsManagerEventHandler {
-
+    
         private readonly IMessageBus _messageBus;
         
         public DistributedShellTrigger(IShellSettingsManager shellSettingsManager, IMessageBus messageBus, IShellSettingsManagerEventHandler shellSettingsManagerEventHandler) {
@@ -14,11 +14,21 @@ namespace Orchard.MessageBus.Services {
         }
 
         void IShellDescriptorManagerEventHandler.Changed(ShellDescriptor descriptor, string tenant) {
-            _messageBus.Publish(DistributedShellStarter.Channel, tenant);
+
+            // If this method was called as a result of a published message to 
+            // start the shell, then prevent a recursive loop.
+            if(!DistributedShellStarter.IsStarting) {
+                _messageBus.Publish(DistributedShellStarter.Channel, tenant);
+            }
         }
 
         void IShellSettingsManagerEventHandler.Saved(ShellSettings settings) {
-            _messageBus.Publish(DistributedShellStarter.Channel, settings.Name);
+
+            // If this method was called as a result of a published message to 
+            // start the shell, then prevent a recursive loop.
+            if (!DistributedShellStarter.IsStarting) {
+                _messageBus.Publish(DistributedShellStarter.Channel, settings.Name);
+            }
         }
     }
 }
