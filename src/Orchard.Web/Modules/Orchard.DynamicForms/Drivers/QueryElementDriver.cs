@@ -149,7 +149,7 @@ namespace Orchard.DynamicForms.Drivers {
             foreach (var contentItem in contentItems) {
                 var data = new {Content = contentItem};
                 var value = _tokenizer.Replace(valueExpression, data);
-                var text = _tokenizer.Replace(textExpression, data);
+                var text = _tokenizer.Replace(textExpression, data, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
 
                 yield return new SelectListItem {
                     Text = text,

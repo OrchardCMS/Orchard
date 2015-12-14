@@ -127,7 +127,7 @@ namespace Orchard.DynamicForms.Drivers {
             var tokenData = context.GetTokenData();
 
             context.ElementShape.ProcessedName = _tokenizer.Replace(element.Name, tokenData);
-            context.ElementShape.ProcessedLabel = _tokenizer.Replace(element.Label, tokenData);
+            context.ElementShape.ProcessedLabel = _tokenizer.Replace(element.Label, tokenData, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
             context.ElementShape.TermOptions = GetTermOptions(element, context.DisplayType, taxonomyId, tokenData).ToArray();
             context.ElementShape.Metadata.Alternates.Add(String.Format("Elements_{0}__{1}", typeName, element.InputType));
             context.ElementShape.Metadata.Alternates.Add(String.Format("Elements_{0}_{1}__{2}", typeName, displayType, element.InputType));
