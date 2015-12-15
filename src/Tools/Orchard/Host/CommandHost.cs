@@ -34,7 +34,7 @@ namespace Orchard.Host {
 
         [SecurityCritical]
         public override object InitializeLifetimeService() {
-           // never expire the cross-AppDomain lease on this object
+            // never expire the cross-AppDomain lease on this object
             return null;
         }
 
