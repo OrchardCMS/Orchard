@@ -79,15 +79,13 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\JavaScript\Models\RecycleBin.js" />
     <Content Include="Default.html" />
     <Content Include="Assets.json" />
     <Content Include="Images\azure.png" />
     <Content Include="Images\illustration.jpg" />
     <Content Include="Images\logo.svg" />
     <Content Include="Placement.info" />
-    <Content Include="Scripts\contentpart-layouts-settings.js" />
-    <Content Include="Scripts\DemoConfig.js" />
-    <Content Include="Scripts\DemoData.js" />
     <Content Include="Scripts\element-browser.js" />
     <Content Include="Scripts\AutoFocus.js" />
     <Content Include="Scripts\Elements\Image.js" />
@@ -96,8 +94,6 @@
     <Content Include="Scripts\frame.js" />
     <Content Include="Scripts\jquery.browser.js" />
     <Content Include="Scripts\jquery.deserialize.js" />
-    <Content Include="Scripts\LayoutEditor.js" />
-    <Content Include="Scripts\LayoutEditor.min.js" />
     <Content Include="Assets\JavaScript\LayoutEditor\Directives\Html.js" />
     <Content Include="Assets\JavaScript\LayoutEditor\Directives\Editor.js" />
     <Content Include="Assets\JavaScript\LayoutEditor\Directives\Canvas.js" />
@@ -112,15 +108,6 @@
     <Content Include="Assets\JavaScript\LayoutEditor\Module.js" />
     <Content Include="Assets\JavaScript\LayoutEditor\Services\Clipboard.js" />
     <Content Include="Assets\JavaScript\LayoutEditor\Services\ScopeConfigurator.js" />
-    <Content Include="Scripts\Lib.js" />
-    <Content Include="Scripts\Lib.min.js" />
-    <Content Include="Assets\JavaScript\Lib\angular-resource.js" />
-    <Content Include="Assets\JavaScript\Lib\angular-sanitize.js" />
-    <Content Include="Assets\JavaScript\Lib\angular.js" />
-    <Content Include="Assets\JavaScript\Lib\sortable.js" />
-    <Content Include="Assets\JavaScript\Lib\underscore.js" />
-    <Content Include="Scripts\Models.js" />
-    <Content Include="Scripts\Models.min.js" />
     <Content Include="Assets\JavaScript\Models\Canvas.js" />
     <Content Include="Assets\JavaScript\Models\Editor.js" />
     <Content Include="Assets\JavaScript\Models\Column.js" />
@@ -138,12 +125,13 @@
     <Content Include="Images\Web.config">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Scripts\LayoutEditor.js" />
+    <Content Include="Scripts\LayoutEditor.min.js" />
+    <Content Include="Scripts\Models.js" />
+    <Content Include="Scripts\Models.min.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Styles\LayoutEditor.css" />
     <Content Include="Styles\LayoutEditor.min.css" />
-    <Content Include="Styles\Fonts\fontawesome-webfont.svg" />
-    <Content Include="Styles\Lib.css" />
-    <Content Include="Styles\Lib.min.css" />
     <Content Include="Styles\menu.layouts-admin.css" />
     <Content Include="Styles\menu.elements.png" />
     <Content Include="Styles\element-editor.css" />
@@ -208,35 +196,6 @@
     <Content Include="Views\EditorTemplates\Elements.Image.cshtml" />
     <Content Include="Views\Elements\Image.cshtml" />
     <Content Include="Views\Elements\Image.Design.cshtml" />
-    <Content Include="Styles\Fonts\fontawesome-webfont.eot" />
-    <Content Include="Styles\Fonts\fontawesome-webfont.ttf" />
-    <Content Include="Styles\Fonts\fontawesome-webfont.woff" />
-    <Content Include="Styles\Fonts\FontAwesome.otf" />
-    <Content Include="Assets\Less\Lib\Bootstrap\bootstrap.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\grid.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\background-variant.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\border-radius.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\center-block.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\clearfix.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\gradients.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\grid-framework.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\grid.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\hide-text.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\image.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\labels.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\opacity.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\reset-filter.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\resize.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\responsive-visibility.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\size.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\tab-focus.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\text-emphasis.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\text-overflow.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\vendor-prefixes.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\scaffolding.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\utilities.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\variables.less" />
     <Content Include="Assets\Less\LayoutEditor\Element.less" />
     <Content Include="Assets\Less\LayoutEditor\Container.less" />
     <Content Include="Assets\Less\LayoutEditor\Variables.less" />
@@ -292,6 +251,10 @@
       <Project>{66fccd76-2761-47e3-8d11-b45d0001ddaa}</Project>
       <Name>Orchard.Autoroute</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Orchard.Conditions\Orchard.Conditions.csproj">
+      <Project>{98251eae-a41b-47b2-aa91-e28b8482da70}</Project>
+      <Name>Orchard.Conditions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Orchard.Forms\Orchard.Forms.csproj">
       <Project>{642a49d7-8752-4177-80d6-bfbbcfad3de0}</Project>
       <Name>Orchard.Forms</Name>
@@ -312,10 +275,6 @@
     <ProjectReference Include="..\Orchard.Tokens\Orchard.Tokens.csproj">
       <Project>{6f759635-13d7-4e94-bcc9-80445d63f117}</Project>
       <Name>Orchard.Tokens</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Orchard.Widgets\Orchard.Widgets.csproj">
-      <Project>{194d3ccc-1153-474d-8176-fde8d7d0d0bd}</Project>
-      <Name>Orchard.Widgets</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -338,6 +297,7 @@
     <Compile Include="Elements\Shape.cs" />
     <Compile Include="Elements\Break.cs" />
     <Compile Include="Elements\UIElement.cs" />
+    <Compile Include="Elements\PlaceableContentItem.cs" />
     <Compile Include="Filters\TokensFilter.cs" />
     <Compile Include="Framework\Display\ElementDisplayedContext.cs" />
     <Compile Include="Framework\Display\ElementDisplayingContext.cs" />
@@ -360,14 +320,27 @@
     <Compile Include="Framework\Elements\IElement.cs" />
     <Compile Include="Handlers\ElementDriversCoordinator.cs" />
     <Compile Include="Handlers\ElementRuleCoordinator.cs" />
+    <Compile Include="Helpers\PlaceableContentExtensions.cs" />
     <Compile Include="Helpers\DictionaryExtensions.cs" />
     <Compile Include="Helpers\EditorResultExtensions.cs" />
     <Compile Include="Helpers\ElementDisplayContextHelper.cs" />
     <Compile Include="Helpers\ObjectStoreHelper.cs" />
     <Compile Include="Helpers\PrefixHelper.cs" />
     <Compile Include="Helpers\JsonHelper.cs" />
+    <Compile Include="Helpers\SnippetHtmlExtensions.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
     <Compile Include="Permissions.cs" />
+    <Compile Include="Services\FormElementServices.cs" />
+    <Compile Include="Services\ICurrentThemeShapeBindingResolver.cs" />
+    <Compile Include="Services\CurrentThemeShapeBindingResolver.cs" />
+    <Compile Include="Providers\PlaceableContentElementHarvester.cs" />
+    <Compile Include="Elements\RecycleBin.cs" />
+    <Compile Include="Models\SnippetDescriptor.cs" />
+    <Compile Include="Models\SnippetFieldDescriptor.cs" />
+    <Compile Include="Services\IFormElementServices.cs" />
+    <Compile Include="ViewModels\SnippetViewModel.cs" />
+    <Compile Include="ViewModels\SnippetFieldViewModel.cs" />
+    <Compile Include="ViewModels\PlaceableContentItemViewModel.cs" />
     <Compile Include="Recipes\Builders\CustomElementsStep.cs" />
     <Compile Include="Recipes\Executors\CustomElementsStep.cs" />
     <Compile Include="Providers\BlueprintElementHarvester.cs" />
@@ -393,6 +366,8 @@
     <Compile Include="Services\LayoutModelMapper.cs" />
     <Compile Include="Services\ElementSerializer.cs" />
     <Compile Include="Services\ObjectStore.cs" />
+    <Compile Include="Settings\ContentTypeLayoutSettingsHooks.cs" />
+    <Compile Include="Settings\ContentTypeLayoutSettings.cs" />
     <Compile Include="Signals.cs" />
     <Compile Include="Tokens\ElementTokens.cs" />
     <Compile Include="ViewModels\BreadcrumbsEditorViewModel.cs" />
@@ -429,9 +404,9 @@
     <Compile Include="Services\ContentFieldDisplay.cs" />
     <Compile Include="Services\IContentFieldDisplay.cs" />
     <Compile Include="Settings\ContentPartLayoutSettings.cs" />
-    <Compile Include="Settings\LayoutSettingsHooks.cs" />
+    <Compile Include="Settings\LayoutTypePartSettingsHooks.cs" />
     <Compile Include="Settings\LayoutTypePartSettings.cs" />
-    <Compile Include="Settings\ContentPartSettingsHooks.cs" />
+    <Compile Include="Settings\ContentPartLayoutSettingsHooks.cs" />
     <Compile Include="ViewModels\BlueprintsIndexViewModel.cs" />
     <Compile Include="ViewModels\ContentItemEditorViewModel.cs" />
     <Compile Include="ViewModels\EditElementBlueprintViewModel.cs" />
@@ -544,24 +519,6 @@
     <Content Include="Views\Elements\Projection.Design.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\Less\Lib\FontAwesome\animated.less" />
-    <Content Include="Assets\Less\Lib\FontAwesome\bordered-pulled.less" />
-    <Content Include="Assets\Less\Lib\FontAwesome\core.less" />
-    <Content Include="Assets\Less\Lib\FontAwesome\fixed-width.less" />
-    <Content Include="Assets\Less\Lib\FontAwesome\font-awesome.less" />
-    <Content Include="Assets\Less\Lib\FontAwesome\icons.less" />
-    <Content Include="Assets\Less\Lib\FontAwesome\larger.less" />
-    <Content Include="Assets\Less\Lib\FontAwesome\list.less" />
-    <Content Include="Assets\Less\Lib\FontAwesome\mixins.less" />
-    <Content Include="Assets\Less\Lib\FontAwesome\path.less" />
-    <Content Include="Assets\Less\Lib\FontAwesome\rotated-flipped.less" />
-    <Content Include="Assets\Less\Lib\FontAwesome\stacked.less" />
-    <Content Include="Assets\Less\Lib\FontAwesome\variables.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Styles\Fonts\fontawesome-webfont.woff2" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Elements\Break.cshtml" />
     <Content Include="Styles\LayoutEditor\Menu.less" />
   </ItemGroup>
@@ -588,8 +545,24 @@
   <ItemGroup>
     <Content Include="Views\Elements\Heading.Design.cshtml" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Assets\CSS\" />
+    <Content Include="Views\Elements\PlaceableContentItem.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\PlaceableContentItem.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\DefinitionTemplates\ContentTypeLayoutSettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Elements.PlaceableContentItem.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Elements.Snippet.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Elements.Snippet.Field.Text.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

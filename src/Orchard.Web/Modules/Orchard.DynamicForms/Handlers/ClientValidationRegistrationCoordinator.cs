@@ -1,9 +1,11 @@
+using System;
 using System.Linq;
 using Orchard.DynamicForms.Elements;
 using Orchard.DynamicForms.Services;
 using Orchard.DynamicForms.Services.Models;
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
+using Orchard.Layouts.Framework.Elements;
 using Orchard.Layouts.Services;
 
 namespace Orchard.DynamicForms.Handlers {
@@ -46,11 +48,18 @@ namespace Orchard.DynamicForms.Handlers {
         }
 
         void IElementEventHandler.CreatingDisplay(ElementCreatingDisplayShapeContext context) { }
-        void IElementEventHandler.Displayed(ElementDisplayedContext context) {}
+        void IElementEventHandler.Displayed(ElementDisplayedContext context) { }
         void IFormElementEventHandler.GetElementValue(FormElement element, ReadElementValuesContext context) { }
-        void IElementEventHandler.Creating(ElementCreatingContext context) {}
-        void IElementEventHandler.Created(ElementCreatedContext context) {}
-        void IElementEventHandler.BuildEditor(ElementEditorContext context) {}
-        void IElementEventHandler.UpdateEditor(ElementEditorContext context) {}
+        void IElementEventHandler.Creating(ElementCreatingContext context) { }
+        void IElementEventHandler.Created(ElementCreatedContext context) { }
+        void IElementEventHandler.BuildEditor(ElementEditorContext context) { }
+        void IElementEventHandler.UpdateEditor(ElementEditorContext context) { }
+        void IElementEventHandler.Removing(ElementRemovingContext context) { }
+        void IElementEventHandler.LayoutSaving(ElementSavingContext context) { }
+        void IElementEventHandler.Exporting(ExportElementContext context) { }
+        void IElementEventHandler.Exported(ExportElementContext context) { }
+        void IElementEventHandler.Importing(ImportElementContext context) { }
+        void IElementEventHandler.Imported(ImportElementContext context) { }
+        void IElementEventHandler.ImportCompleted(ImportElementContext context) { }
     }
 }

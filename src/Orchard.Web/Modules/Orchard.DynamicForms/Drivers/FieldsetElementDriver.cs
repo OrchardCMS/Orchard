@@ -13,7 +13,7 @@ namespace Orchard.DynamicForms.Drivers {
         }
 
         protected override void OnDisplaying(Fieldset element, ElementDisplayingContext context) {
-            context.ElementShape.ProcessedLegend = _tokenizer.Replace(element.Legend, context.GetTokenData());
+            context.ElementShape.ProcessedLegend = _tokenizer.Replace(element.Legend, context.GetTokenData(), new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
         }
     }
 }
