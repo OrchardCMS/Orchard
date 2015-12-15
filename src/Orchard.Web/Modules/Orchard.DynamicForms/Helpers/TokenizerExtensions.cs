@@ -5,9 +5,9 @@ using Orchard.Tokens;
 
 namespace Orchard.DynamicForms.Helpers {
     public static class TokenizerExtensions {
-        public static IEnumerable<SelectListItem> Replace(this ITokenizer tokenizer, IEnumerable<SelectListItem> items, IDictionary<string, object> data) {
+        public static IEnumerable<SelectListItem> Replace(this ITokenizer tokenizer, IEnumerable<SelectListItem> items, IDictionary<string, object> data, ReplaceOptions options) {
             return items.Select(item => new SelectListItem {
-                Text = tokenizer.Replace(item.Text, data),
+                Text = tokenizer.Replace(item.Text, data, options),
                 Value = item.Value,
                 Disabled = item.Disabled,
                 Group = item.Group,

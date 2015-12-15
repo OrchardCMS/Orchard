@@ -12,7 +12,7 @@
     </Recipe>
 
     <Feature disable="Feeds, Containers"
-             enable="Orchard.jQuery,Orchard.Alias,Orchard.Autoroute" />
+             enable="Orchard.Resources,Orchard.Alias,Orchard.Autoroute" />
 
     <ContentDefinition>
         <Types>

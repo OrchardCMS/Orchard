@@ -1,8 +1,4 @@
 ﻿@model Orchard.Layouts.Settings.ContentPartLayoutSettings
-@{
-    Script.Require("jQuery");
-    Script.Include("contentpart-layouts-settings.js");
-}
 <fieldset>
     @Html.CheckBoxFor(m => m.Placeable)
     <label for="@Html.FieldIdFor(m => m.Placeable)" class="forcheckbox">@T("Placeable")</label>

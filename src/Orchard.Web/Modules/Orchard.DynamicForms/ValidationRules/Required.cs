@@ -18,7 +18,9 @@ namespace Orchard.DynamicForms.ValidationRules {
         }
 
         private LocalizedString GetValidationMessage(ValidationContext context) {
-            return new LocalizedString(Tokenize(T(ErrorMessage.WithDefault(String.Format("{0} is a required field.", context.FieldName))).ToString(), context));
+            return String.IsNullOrWhiteSpace(ErrorMessage)
+                ? T("{0} is a required field.", context.FieldName)
+                : T(ErrorMessage);
         }
     }
 }

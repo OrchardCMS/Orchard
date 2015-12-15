@@ -1,0 +1,12 @@
+﻿Name: Resources
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardproject.net
+Version: 1.9.2
+OrchardVersion: 1.9
+Description: Provides a variety of third-party client-side libraries (stylesheets and scripts) used by other modules.
+Features:
+    Orchard.Resources:
+        Name: Resources
+        Description: Provides a variety of third-party client-side libraries (stylesheets and scripts) used by other modules.
+        Category: Core

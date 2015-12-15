@@ -76,8 +76,6 @@
 
             $(document).off("keyup", onKeyUp);
             closedDialogs.push(self);
-
-
         };
 
         this.load = function (url, data, method) {
@@ -135,8 +133,8 @@
             if (self.frame == null)
                 return;
 
-            self.frame.element.height($(window).height() * .75);
-            self.frame.element.width($(window).width() * .75);
+            self.frame.element.height($(window).height() * .80);
+            self.frame.element.width($(window).width() * .87);
         };
 
         var resizeView = function () {
@@ -176,8 +174,8 @@
                         break;
                     case "save":
                         {
-                            var frameDoc = self.frame.getDocument();
-                            var form = frameDoc.find("form:first");
+                            var frameWindow = self.frame.getWindow();
+                            var form = frameWindow.$("form:first");
                             form.submit();
                         }
                         break;

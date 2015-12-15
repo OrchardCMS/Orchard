@@ -7,7 +7,7 @@
 }
 @if (widgets.Count() > 0) {
 <div id="widgets-orphans" class="widgets-container widgets-listed message-Warning">
-    <h3>@T("Widgets with problems.")</h3>
+    <h3>@T("Widgets with problems")</h3>
     <p>@T("These widgets aren't going to appear anywhere because they're missing the CommonPart from their content type. To fix these widgets, if you still want to keep them around, start by fixing their <a href=\"{0}\">Content Types</a>.", Url.Action("Index", "Admin", new { area = "Orchard.ContentTypes" }))</p>
     <ul>
         @foreach (WidgetPart widget in widgets) {

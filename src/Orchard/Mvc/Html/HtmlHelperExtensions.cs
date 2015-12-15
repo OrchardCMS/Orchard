@@ -183,11 +183,11 @@ namespace Orchard.Mvc.Html {
         #region Ellipsize
 
         public static IHtmlString Ellipsize(this HtmlHelper htmlHelper, string text, int characterCount) {
-            return new HtmlString(htmlHelper.Encode(text).Ellipsize(characterCount));
+            return new HtmlString(htmlHelper.Encode(text.Ellipsize(characterCount)));
         }
 
         public static IHtmlString Ellipsize(this HtmlHelper htmlHelper, string text, int characterCount, string ellipsis) {
-            return new HtmlString(htmlHelper.Encode(text).Ellipsize(characterCount, ellipsis));
+            return new HtmlString(htmlHelper.Encode(text.Ellipsize(characterCount, ellipsis)));
         }
 
         #endregion
@@ -195,8 +195,7 @@ namespace Orchard.Mvc.Html {
         #region Excerpt
 
         public static MvcHtmlString Excerpt(this HtmlHelper html, string markup, int length) {
-
-            return MvcHtmlString.Create(markup.RemoveTags().Ellipsize(length));
+            return MvcHtmlString.Create(html.Encode(HttpUtility.HtmlDecode(markup.RemoveTags()).Ellipsize(length)));
         }
 
         #endregion

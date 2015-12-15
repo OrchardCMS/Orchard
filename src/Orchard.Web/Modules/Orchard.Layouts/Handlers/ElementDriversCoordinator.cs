@@ -1,5 +1,6 @@
 using System;
 using Orchard.Layouts.Framework.Drivers;
+using Orchard.Layouts.Framework.Elements;
 using Orchard.Layouts.Services;
 
 namespace Orchard.Layouts.Handlers {
@@ -15,6 +16,34 @@ namespace Orchard.Layouts.Handlers {
 
         public override void UpdateEditor(ElementEditorContext context) {
             BuildEditorInternal(context, driver => driver.UpdateEditor(context));
+        }
+
+        public override void LayoutSaving(ElementSavingContext context) {
+            InvokeDrivers(context.Element, driver => driver.LayoutSaving(context));
+        }
+
+        public override void Removing(ElementRemovingContext context) {
+            InvokeDrivers(context.Element, driver => driver.Removing(context));
+        }
+
+        public override void Exporting(ExportElementContext context) {
+            InvokeDrivers(context.Element, driver => driver.Exporting(context));
+        }
+
+        public override void Exported(ExportElementContext context) {
+            InvokeDrivers(context.Element, driver => driver.Exported(context));
+        }
+
+        public override void Importing(ImportElementContext context) {
+            InvokeDrivers(context.Element, driver => driver.Importing(context));
+        }
+
+        public override void Imported(ImportElementContext context) {
+            InvokeDrivers(context.Element, driver => driver.Imported(context));
+        }
+
+        public override void ImportCompleted(ImportElementContext context) {
+            InvokeDrivers(context.Element, driver => driver.ImportCompleted(context));
         }
 
         private void BuildEditorInternal(ElementEditorContext context, Func<IElementDriver, EditorResult> action) {
@@ -35,6 +64,11 @@ namespace Orchard.Layouts.Handlers {
                     context.EditorResult.Add(editor);
                 }
             }
+        }
+
+        private void InvokeDrivers(Element element, Action<IElementDriver> action) {
+            var drivers = _elementManager.GetDrivers(element.Descriptor);
+            drivers.Invoke(action, Logger);
         }
     }
 }

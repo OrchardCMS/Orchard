@@ -26,6 +26,7 @@
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
     <TargetFrameworkProfile />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -74,6 +75,9 @@
     <Compile Include="Handlers\DisplayedContentItemHandler.cs" />
     <Compile Include="Handlers\LayerHintHandler.cs" />
     <Compile Include="Drivers\WidgetPartDriver.cs" />
+    <Compile Include="Handlers\WidgetElementsHandler.cs" />
+    <Compile Include="Layouts\Elements\Widget.cs" />
+    <Compile Include="Layouts\Providers\WidgetElementHarvester.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Handlers\LayerPartHandler.cs" />
     <Compile Include="Handlers\WidgetPartHandler.cs" />
@@ -85,11 +89,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Filters\WidgetFilter.cs" />
     <Compile Include="ResourceManifest.cs" />
-    <Compile Include="RuleEngine\AuthenticatedRuleProvider.cs" />
-    <Compile Include="RuleEngine\BuiltinRuleProvider.cs" />
-    <Compile Include="RuleEngine\ContentDisplayedRuleProvider.cs" />
-    <Compile Include="RuleEngine\RuleManager.cs" />
-    <Compile Include="RuleEngine\UrlRuleProvider.cs" />
+    <Compile Include="Conditions\ContentDisplayedRuleProvider.cs" />
+    <Compile Include="Services\RuleManager.cs" />
     <Compile Include="Services\DefaultLayerEvaluationService.cs" />
     <Compile Include="Services\ILayerEvaluationService.cs" />
     <Compile Include="Services\IRuleManager.cs" />
@@ -99,12 +100,14 @@
     <Compile Include="Services\RuleContext.cs" />
     <Compile Include="Services\WidgetsService.cs" />
     <Compile Include="Shapes.cs" />
+    <Compile Include="ViewModels\WidgetElementViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Admin\images\edit.png" />
     <Content Include="Content\Admin\images\moveup.gif" />
     <Content Include="Content\Admin\images\movedown.gif" />
     <Content Include="Module.txt" />
+    <Content Include="Scripts\widget-element-editor.js" />
     <Content Include="Styles\images\all-zones-on.gif" />
     <Content Include="Styles\images\all-zones.gif" />
     <Content Include="Styles\images\arrows.png" />
@@ -130,6 +133,14 @@
       <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
       <Name>Orchard.Framework</Name>
       <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Conditions\Orchard.Conditions.csproj">
+      <Project>{98251eae-a41b-47b2-aa91-e28b8482da70}</Project>
+      <Name>Orchard.Conditions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Layouts\Orchard.Layouts.csproj">
+      <Project>{6bd8b2fa-f2e3-4ac8-a4c3-2925a653889a}</Project>
+      <Name>Orchard.Layouts</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Scripting\Orchard.Scripting.csproj">
       <Project>{99002B65-86F7-415E-BF4A-381AA8AB9CCC}</Project>
@@ -191,6 +202,20 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\WidgetPlacement.Orphans.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Widget.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Widget.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Elements.Widget.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

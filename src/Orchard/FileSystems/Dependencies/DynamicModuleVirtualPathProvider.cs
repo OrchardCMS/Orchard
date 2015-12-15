@@ -4,6 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Hosting;
+using Orchard.Environment.Configuration;
+using Orchard.Environment.Descriptor.Models;
+using Orchard.Environment.Extensions;
+using Orchard.Environment.Extensions.Folders;
 using Orchard.Environment.Extensions.Loaders;
 using Orchard.FileSystems.VirtualPath;
 using Orchard.Logging;
@@ -15,10 +19,14 @@ namespace Orchard.FileSystems.Dependencies {
     /// </summary>
     public class DynamicModuleVirtualPathProvider : VirtualPathProvider, ICustomVirtualPathProvider {
         private readonly IExtensionDependenciesManager _extensionDependenciesManager;
+        private string[] _extensionsVirtualPathPrefixes;
 
-        public DynamicModuleVirtualPathProvider(IExtensionDependenciesManager extensionDependenciesManager) {
+
+        public DynamicModuleVirtualPathProvider(IExtensionDependenciesManager extensionDependenciesManager, ExtensionLocations extensionLocations) {
             _extensionDependenciesManager = extensionDependenciesManager;
             Logger = NullLogger.Instance;
+
+            _extensionsVirtualPathPrefixes = extensionLocations.ExtensionsVirtualPathPrefixes;
         }
 
         public ILogger Logger { get; set; }
@@ -42,7 +50,7 @@ namespace Orchard.FileSystems.Dependencies {
         }
 
         private ActivatedExtensionDescriptor GetExtensionDescriptor(string virtualPath) {
-            var prefix = PrefixMatch(virtualPath, DynamicExtensionLoader.ExtensionsVirtualPathPrefixes);
+            var prefix = PrefixMatch(virtualPath, _extensionsVirtualPathPrefixes);
             if (prefix == null)
                 return null;
 
