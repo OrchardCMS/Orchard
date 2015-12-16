@@ -53,8 +53,9 @@
       <HintPath>..\..\..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="MSTranslitTools">
-      <HintPath>..\..\..\..\lib\mstranslittools\MSTranslitTools.DLL</HintPath>
+    <Reference Include="MSTranslitTools, Version=6.0.0.0, Culture=neutral, PublicKeyToken=66f9a1cf678daf62">
+      <HintPath>..\..\..\packages\Orchard.MSTranslitTools.6.0.0.0\lib\MSTranslitTools.DLL</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
