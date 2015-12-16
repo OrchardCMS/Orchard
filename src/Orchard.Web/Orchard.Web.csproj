@@ -85,7 +85,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="NuGet.Core, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\nuget\NuGet.Core.dll</HintPath>
+      <HintPath>..\packages\Orchard.NuGet.Core.1.1.0.0\lib\NuGet.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
