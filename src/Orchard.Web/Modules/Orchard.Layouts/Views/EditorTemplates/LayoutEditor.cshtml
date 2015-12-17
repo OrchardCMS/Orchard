@@ -38,8 +38,20 @@
             jQuery(function () {
                 var editorConfig = JSON.parse(LayoutEditor.decode("@Html.Raw(Url.Encode(Model.ConfigurationData))"));
                 var editorCanvasData = JSON.parse(LayoutEditor.decode("@Html.Raw(Url.Encode(Model.Data))"));
+                var layoutEditor = window.layoutEditor = new LayoutEditor.Editor(editorConfig, editorCanvasData);
 
-                window.layoutEditor = new LayoutEditor.Editor(editorConfig, editorCanvasData);
+                var host = new window.Orchard.Layouts.LayoutDesignerHost($(".layout-designer"), layoutEditor);
+                $(".layout-designer").each(function (e) {
+                    var designer = $(this);
+                    var dialog = designer.find(".layout-editor-help-dialog");
+                    designer.find(".layout-editor-help-link").click(function (e) {
+                        dialog.dialog({
+                            modal: true,
+                            width: 840
+                        });
+                        e.preventDefault();
+                    });
+                });
             });
         </script>
     }
