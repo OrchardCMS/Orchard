@@ -59,6 +59,14 @@ namespace Orchard.UI.Navigation {
 
             workContext.Layout.Navigation.Add(menuShape);
 
+            // Populate top nav
+            var topMenuName = string.Format("top_{0}", menuName);
+            IEnumerable<MenuItem> topMenuItems = _navigationManager.BuildMenu(topMenuName);
+            dynamic topMenuShape = _shapeFactory.TopMenu().MenuName(topMenuName);
+            NavigationHelper.PopulateMenu(_shapeFactory, topMenuShape, topMenuShape, topMenuItems);
+
+            workContext.Layout.Navigation.Add(topMenuShape);
+
             // Populate local nav
             dynamic localMenuShape = _shapeFactory.LocalMenu().MenuName(string.Format("local_{0}", menuName));
             NavigationHelper.PopulateLocalMenu(_shapeFactory, localMenuShape, localMenuShape, selectedPath);
