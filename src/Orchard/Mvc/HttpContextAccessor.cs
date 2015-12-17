@@ -6,6 +6,7 @@ namespace Orchard.Mvc {
     public class HttpContextAccessor : IHttpContextAccessor {
         readonly ILifetimeScope _lifetimeScope;
         private HttpContextBase _httpContext;
+        private IWorkContextAccessor _wca;
 
         public HttpContextAccessor(ILifetimeScope lifetimeScope) {
             _lifetimeScope = lifetimeScope;
@@ -20,9 +21,10 @@ namespace Orchard.Mvc {
             if (_httpContext != null)
                 return _httpContext;
 
-            var workContext = _lifetimeScope.IsRegistered<IWorkContextAccessor>() ?
-                _lifetimeScope.Resolve<IWorkContextAccessor>().GetContext(null) : null;
+            if (_wca == null && _lifetimeScope.IsRegistered<IWorkContextAccessor>())
+                _wca = _lifetimeScope.Resolve<IWorkContextAccessor>();
 
+            var workContext = _wca != null ? _wca.GetContext(null) : null;
             return workContext != null ? workContext.HttpContext : null;
         }
 
