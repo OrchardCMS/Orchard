@@ -358,8 +358,8 @@ namespace Orchard.ContentTypes.Services {
         }
 
         private static string VersionName(string name) {
-            int version;
             var substring = Regex.Match(name, @"\d+$").Value;
+            int version;
 
             if (int.TryParse(substring, out version)) {
                 name = name.Remove(name.Length - substring.Length);
