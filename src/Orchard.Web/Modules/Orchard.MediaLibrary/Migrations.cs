@@ -57,57 +57,37 @@ namespace Orchard.MediaLibrary {
 
             ContentDefinitionManager.AlterTypeDefinition("Image", td => td
                 .DisplayedAs("Image")
-                .WithSetting("Stereotype", "Media")
                 .WithSetting("MediaFileNameEditorSettings.ShowFileNameEditor", "True")
+                .AsImage()
                 .WithPart("IdentityPart")
-                .WithPart("CommonPart")
-                .WithPart("MediaPart")
-                .WithPart("ImagePart")
-                .WithPart("TitlePart")
             );
 
             ContentDefinitionManager.AlterTypeDefinition("VectorImage", td => td
                 .DisplayedAs("Vector Image")
-                .WithSetting("Stereotype", "Media")
                 .WithSetting("MediaFileNameEditorSettings.ShowFileNameEditor", "True")
+                .AsVectorImage()
                 .WithPart("IdentityPart")
-                .WithPart("CommonPart")
-                .WithPart("MediaPart")
-                .WithPart("VectorImagePart")
-                .WithPart("TitlePart")
             );
 
             ContentDefinitionManager.AlterTypeDefinition("Video", td => td
                 .DisplayedAs("Video")
-                .WithSetting("Stereotype", "Media")
                 .WithSetting("MediaFileNameEditorSettings.ShowFileNameEditor", "True")
+                .AsVideo()
                 .WithPart("IdentityPart")
-                .WithPart("CommonPart")
-                .WithPart("MediaPart")
-                .WithPart("VideoPart")
-                .WithPart("TitlePart")
             );
 
             ContentDefinitionManager.AlterTypeDefinition("Audio", td => td
                 .DisplayedAs("Audio")
-                .WithSetting("Stereotype", "Media")
                 .WithSetting("MediaFileNameEditorSettings.ShowFileNameEditor", "True")
+                .AsAudio()
                 .WithPart("IdentityPart")
-                .WithPart("CommonPart")
-                .WithPart("MediaPart")
-                .WithPart("AudioPart")
-                .WithPart("TitlePart")
             );
 
             ContentDefinitionManager.AlterTypeDefinition("Document", td => td
                 .DisplayedAs("Document")
-                .WithSetting("Stereotype", "Media")
                 .WithSetting("MediaFileNameEditorSettings.ShowFileNameEditor", "True")
+                .AsDocument()
                 .WithPart("IdentityPart")
-                .WithPart("CommonPart")
-                .WithPart("MediaPart")
-                .WithPart("DocumentPart")
-                .WithPart("TitlePart")
             );
 
             ContentDefinitionManager.AlterTypeDefinition("OEmbed", td => td

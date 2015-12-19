@@ -167,6 +167,10 @@
       <Project>{f301ef7d-f19c-4d83-aa94-cb64f29c037d}</Project>
       <Name>Orchard.ContentPicker</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Orchard.Widgets\Orchard.Widgets.csproj">
+      <Project>{194d3ccc-1153-474d-8176-fde8d7d0d0bd}</Project>
+      <Name>Orchard.Widgets</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Placement.info">
