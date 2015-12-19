@@ -76,6 +76,7 @@
     <Content Include="Styles\Images\move.gif" />
     <Content Include="Web.config" />
     <Content Include="Styles\Web.config" />
+    <Compile Include="Drivers\TextFieldDriver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
   </ItemGroup>
@@ -89,6 +90,10 @@
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
       <Private>false</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Tokens\Orchard.Tokens.csproj">
+      <Project>{6f759635-13d7-4e94-bcc9-80445d63f117}</Project>
+      <Name>Orchard.Tokens</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -148,6 +153,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Fields\Input.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\DefinitionTemplates\TextFieldDefaultValueEditor.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

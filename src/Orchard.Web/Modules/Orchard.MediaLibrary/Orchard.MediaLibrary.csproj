@@ -101,7 +101,7 @@
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
     <Compile Include="Drivers\VectorImagePartDriver.cs" />
-    <Compile Include="Extensions\MetaDataExtensions.cs" />
+    <Compile Include="Extensions\MediaMetaDataExtensions.cs" />
     <Compile Include="Factories\VectorImageFactory.cs" />
     <Compile Include="Handlers\MediaLibrarySettingsPartHandler.cs" />
     <Compile Include="Models\MediaLibrarySettingsPart.cs" />

@@ -5,7 +5,7 @@ using System.Web;
 using Orchard.ContentManagement.MetaData.Builders;
 
 namespace Orchard.ContentManagement.MetaData {
-    public static class MetaDataExtensions {
+    public static class WidgetsMetaDataExtensions {
         /// <summary>
         /// This extension method can be used for easy widget creation. Adds all necessary parts and settings to the part.
         /// </summary>

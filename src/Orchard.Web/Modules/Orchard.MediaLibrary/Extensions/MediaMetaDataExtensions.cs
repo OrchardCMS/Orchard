@@ -5,7 +5,7 @@ using System.Web;
 using Orchard.ContentManagement.MetaData.Builders;
 
 namespace Orchard.ContentManagement.MetaData {
-    public static class MetaDataExtensions {
+    public static class MediaMetaDataExtensions {
         /// <summary>
         /// This extension method can be used for easy image part creation. Adds all necessary parts and settings to the part.
         /// </summary>

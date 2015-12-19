@@ -72,7 +72,14 @@ namespace Orchard.Core.Common.Drivers {
                                         () => shapeHelper.EditorTemplate(TemplateName: "Fields.Common.Text.Edit", Model: viewModel, Prefix: GetPrefix(field, part)));
                 }
 
-                field.Value = viewModel.Text;
+                var settings = field.PartFieldDefinition.Settings.GetModel<TextFieldSettings>();
+
+                if (String.IsNullOrEmpty(field.Value) && !String.IsNullOrEmpty(settings.DefaultValue)) {
+                    field.Value = settings.DefaultValue;
+                }
+                else {
+                    field.Value = viewModel.Text;
+                }
             }
 
             return Editor(part, field, shapeHelper);
