@@ -100,7 +100,7 @@ namespace Orchard.Layouts.Services {
 
         public virtual string LayoutElementType { get { return "Content"; } }
         public virtual bool CanMap(Element element) {
-            return !(element is Container);
+            return true;
         }
 
         public virtual Element ToElement(IElementManager elementManager, DescribeElementsContext describeContext, JToken node) {
