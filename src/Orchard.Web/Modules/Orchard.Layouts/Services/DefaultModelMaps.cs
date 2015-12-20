@@ -134,34 +134,6 @@ namespace Orchard.Layouts.Services {
         }
     }
 
-    public class HtmlModelMap : ContentModelMap {
-        public HtmlModelMap(IShapeDisplay shapeDisplay, IElementDisplay elementDisplay)
-            : base(shapeDisplay, elementDisplay) {
-        }
-
-        public override int Priority {
-            get { return 1; }
-        }
-
-        public override string LayoutElementType {
-            get { return "Html"; }
-        }
-
-        public override bool CanMap(Element element) {
-            return element is Html;
-        }
-
-        public override Element ToElement(IElementManager elementManager, DescribeElementsContext describeContext, JToken node) {
-            var html = (string)node["html"];
-            var element = (Html)base.ToElement(elementManager, describeContext, node);
-
-            // To support inline editing, we need to update the element's content.
-            element.Content = html;
-
-            return element;
-        }
-    }
-
     public class RecycleBinModelMap : ILayoutModelMap {
         public int Priority { get { return 0; } }
         public string LayoutElementType { get { return "RecycleBin"; } }

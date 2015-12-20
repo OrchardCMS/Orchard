@@ -94,7 +94,6 @@
     <Content Include="Scripts\frame.js" />
     <Content Include="Scripts\jquery.browser.js" />
     <Content Include="Scripts\jquery.deserialize.js" />
-    <Content Include="Assets\JavaScript\LayoutEditor\Directives\Html.js" />
     <Content Include="Assets\JavaScript\LayoutEditor\Directives\Editor.js" />
     <Content Include="Assets\JavaScript\LayoutEditor\Directives\Canvas.js" />
     <Content Include="Assets\JavaScript\LayoutEditor\Directives\Child.js" />
@@ -114,7 +113,6 @@
     <Content Include="Assets\JavaScript\Models\Container.js" />
     <Content Include="Assets\JavaScript\Models\Content.js" />
     <Content Include="Assets\JavaScript\Models\Element.js" />
-    <Content Include="Assets\JavaScript\Models\Html.js" />
     <Content Include="Assets\JavaScript\Models\Grid.js" />
     <Content Include="Assets\JavaScript\Models\Helpers.js" />
     <Content Include="Assets\JavaScript\Models\Row.js" />
@@ -511,9 +509,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Elements\Shape.Design.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\LayoutEditor.Template.Html.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Elements\Projection.Design.cshtml" />
