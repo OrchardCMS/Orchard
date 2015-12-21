@@ -97,7 +97,6 @@ var mediaLibrarySettings = {
     deleteActionUrl: '@Url.Action("Delete", "Admin", new {area = "Orchard.MediaLibrary"})',
     cloneActionUrl: '@Url.Action("Clone", "Admin", new {area = "Orchard.MediaLibrary"})',
     hasFolderPath: @(viewModel.FolderPath != null ? "true" : "false"),
-    //folderPath: '@Server.UrlEncode(viewModel.FolderPath)',
     folderPath: '@Uri.EscapeUriString(viewModel.FolderPath)',
     deleteConfirmationMessage: '@HttpUtility.JavaScriptStringEncode(T("Are you sure you want to delete these media items ?").Text)',
     cloneConfirmationMessage: '@HttpUtility.JavaScriptStringEncode(T("Are you sure you want to clone this media item ?").Text)',
