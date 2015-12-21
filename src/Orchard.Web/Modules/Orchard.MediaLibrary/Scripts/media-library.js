@@ -197,7 +197,7 @@ $(function () {
                     var mediaItems = data.mediaItems;
                     var mediaItemsFolderPath = data.folderPath;
 
-                    if (mediaItemsFolderPath !== self.displayed()) {
+                    if (encodeURI(mediaItemsFolderPath).toLowerCase() !== self.displayed().toLowerCase()) {
                         return;
                     }
 

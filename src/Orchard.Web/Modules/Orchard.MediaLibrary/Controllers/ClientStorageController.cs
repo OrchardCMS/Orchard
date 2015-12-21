@@ -10,7 +10,7 @@ using Orchard.Themes;
 using Orchard.UI.Admin;
 
 namespace Orchard.MediaLibrary.Controllers {
-    [Admin, Themed(false)]
+    [Admin, Themed(false)]    
     public class ClientStorageController : Controller {
         private readonly IMediaLibraryService _mediaLibraryService;
         private readonly IContentManager _contentManager;
@@ -25,8 +25,10 @@ namespace Orchard.MediaLibrary.Controllers {
         }
 
         public IOrchardServices Services { get; set; }
-
+        [ValidateInput(false)]
         public ActionResult Index(string folderPath, string type) {
+
+            folderPath = Server.UrlDecode(folderPath);
 
             var viewModel = new ImportMediaViewModel {
                 FolderPath = folderPath,
@@ -37,9 +39,12 @@ namespace Orchard.MediaLibrary.Controllers {
         }
         
         [HttpPost]
+        [ValidateInput(false)]
         public ActionResult Upload(string folderPath, string type) {
             if (!Services.Authorizer.Authorize(Permissions.ManageOwnMedia))
                 return new HttpUnauthorizedResult();
+
+            folderPath = Server.UrlDecode(folderPath);
 
             // Check permission.
             var rootMediaFolder = _mediaLibraryService.GetRootMediaFolder();
