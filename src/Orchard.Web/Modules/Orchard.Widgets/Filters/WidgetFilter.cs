@@ -77,6 +77,9 @@ namespace Orchard.Widgets.Filters {
             var currentCulture = workContext.CurrentCulture;
 
             foreach (var widgetPart in widgetParts) {
+                if (widgetPart.Deactivated)
+                    continue;
+
                 var commonPart = widgetPart.As<ICommonPart>();
                 if (commonPart == null || commonPart.Container == null) {
                     Logger.Warning("The widget '{0}' is has no assigned layer or the layer does not exist.", widgetPart.Title);

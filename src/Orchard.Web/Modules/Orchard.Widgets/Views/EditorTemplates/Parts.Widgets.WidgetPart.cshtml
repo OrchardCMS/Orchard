@@ -27,3 +27,11 @@
     @Html.TextBoxFor(widget => widget.Name, new { @class = "text" })
     <span class="hint">@T("The technical name of the Widget, used for css class and alternates.")</span>
 </fieldset>
+<fieldset>
+    <div>
+        @Html.CheckBoxFor(m => m.Deactivated)
+        <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Deactivated)">@T("Deactivated")</label>
+        <span class="hint">@T("Flag indicating whether the Widget is deactivated or not.")</span>
+    </div>
+</fieldset>
+

@@ -42,6 +42,10 @@ namespace Orchard.Widgets.Commands {
         [OrchardSwitch]
         public string Name { get; set; }
 
+
+        [OrchardSwitch]
+        public bool Deactivated { get; set; }
+
         [OrchardSwitch]
         public bool RenderTitle { get; set; }
 
@@ -72,9 +76,10 @@ namespace Orchard.Widgets.Commands {
         [OrchardSwitch]
         public string MenuName { get; set; }
 
-        [CommandName("widget create")]
-        [CommandHelp("widget create <type> /Title:<title> /Name:<name> /Zone:<zone> /Position:<position> /Layer:<layer> [/Identity:<identity>] [/RenderTitle:true|false] [/Owner:<owner>] [/Text:<text>] [/UseLoremIpsumText:true|false] [/MenuName:<name>]\r\n\t" + "Creates a new widget")]
-        [OrchardSwitches("Title,Name,Zone,Position,Layer,Identity,Owner,Text,UseLoremIpsumText,MenuName,RenderTitle")]
+        [CommandName("widget create")]        
+        [CommandHelp("widget create <type> /Title:<title> /Name:<name> /Zone:<zone> /Position:<position> /Layer:<layer> [/Identity:<identity>] [/RenderTitle:true|false] [/Owner:<owner>] [/Text:<text>] [/UseLoremIpsumText:true|false] [/MenuName:<name>] [/Deactivated:true|false] \r\n\t" + "Creates a new widget")]
+
+        [OrchardSwitches("Title,Name,Zone,Position,Layer,Identity,Owner,Text,UseLoremIpsumText,MenuName,RenderTitle,Deactivated")]
         public void Create(string type) {
             var widgetTypeNames = _widgetsService.GetWidgetTypeNames().ToList();
             if (!widgetTypeNames.Contains(type)) {
@@ -95,6 +100,9 @@ namespace Orchard.Widgets.Commands {
             if (!String.IsNullOrWhiteSpace(Name)) {
                 widget.Name = Name.Trim();
             }
+
+            widget.Deactivated = Deactivated;
+
 
             var text = String.Empty;
             if (widget.Has<BodyPart>()) {

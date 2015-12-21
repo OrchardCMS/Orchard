@@ -112,7 +112,8 @@ namespace Orchard.Widgets.Controllers {
         }
 
         [HttpPost, ActionName("Index")]
-        public ActionResult IndexWidgetPOST(int widgetId, string returnUrl, int? layerId, string moveUp, string moveDown, string moveHere, string moveOut) {
+        public ActionResult IndexWidgetPOST(int widgetId, string returnUrl, int? layerId, string moveUp, string moveDown, string moveHere, string moveOut, string activateWidget, string deactivateWidget)
+        {
             if (!string.IsNullOrWhiteSpace(moveOut))
                 return DeleteWidget(widgetId, returnUrl);
 
@@ -125,6 +126,11 @@ namespace Orchard.Widgets.Controllers {
                 _widgetsService.MoveWidgetDown(widgetId);
             else if (!string.IsNullOrWhiteSpace(moveHere))
                 _widgetsService.MoveWidgetToLayer(widgetId, layerId);
+            else if (!string.IsNullOrWhiteSpace(activateWidget))
+                _widgetsService.ActivateWidget(widgetId, true);
+            else if (!string.IsNullOrWhiteSpace(deactivateWidget))
+                _widgetsService.ActivateWidget(widgetId, false);
+
 
             return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
         }

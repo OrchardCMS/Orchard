@@ -71,5 +71,13 @@ namespace Orchard.Widgets {
                 .WithDescription("Turns a content type into a Widget. Note: you need to set the stereotype to \"Widget\" as well."));
             return 5;
         }
+
+        public int UpdateFrom5()
+        {
+            SchemaBuilder
+                .AlterTable("WidgetPartRecord", table => table.AddColumn<bool>("Deactivated", c => c.WithDefault(false)));
+            return 6;
+        }
+
     }
 }

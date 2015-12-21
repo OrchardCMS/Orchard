@@ -253,5 +253,9 @@ namespace Orchard.Widgets.Services {
                 return 0;
             return value;
         }
+
+        public void ActivateWidget(int widgetId, bool activate) {
+            GetWidget(widgetId).Deactivated = !activate;
+        }
     }
 }

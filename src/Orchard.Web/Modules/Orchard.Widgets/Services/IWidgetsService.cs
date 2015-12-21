@@ -34,5 +34,6 @@ namespace Orchard.Widgets.Services {
         bool MoveWidgetToLayer(WidgetPart widgetPart, int? layerId);
         void MakeRoomForWidgetPosition(int widgetId);
         void MakeRoomForWidgetPosition(WidgetPart widgetPart);
+        void ActivateWidget(int widgetId, bool activate);
     }
 }
