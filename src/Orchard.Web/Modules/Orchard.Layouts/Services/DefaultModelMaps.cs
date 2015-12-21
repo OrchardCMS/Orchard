@@ -35,8 +35,13 @@ namespace Orchard.Layouts.Services {
             node["htmlId"] = element.HtmlId;
             node["htmlClass"] = element.HtmlClass;
             node["htmlStyle"] = element.HtmlStyle;
-            node["isTemplated"] = element.IsTemplated;
             node["rule"] = element.Rule;
+            node["isTemplated"] = element.IsTemplated;
+            node["hasEditor"] = element.Descriptor.EnableEditorDialog;
+            node["contentType"] = element.Descriptor.TypeName;
+            node["contentTypeLabel"] = element.Descriptor.DisplayText.Text;
+            node["contentTypeClass"] = element.DisplayText.Text.HtmlClassify();
+            node["contentTypeDescription"] = element.Descriptor.Description.Text;
         }
 
         protected virtual void ToElement(T element, JToken node) {

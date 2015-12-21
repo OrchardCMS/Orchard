@@ -13,6 +13,7 @@
         this.isTemplated = isTemplated;
         this.rule = rule;
 
+        this.templateStyles = {};
         this.editor = null;
         this.parent = null;
         this.setIsFocusedEventHandlers = [];
@@ -191,6 +192,17 @@
             if (!!this.parent)
                 this.parent.paste(clipboardData);
         };
+
+        this.getTemplateStyles = function () {
+            var styles = this.templateStyles || {};
+            var css = "";
+
+            for (var property in styles) {
+                css += property + ":" + styles[property] + ";";
+            }
+
+            return css;
+        }
     };
 
 })(LayoutEditor || (LayoutEditor = {}));

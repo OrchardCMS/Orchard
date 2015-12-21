@@ -6,6 +6,7 @@
         this.allowedChildTypes = allowedChildTypes;
         this.children = children;
         this.isContainer = true;
+        this.containerTemplateStyles = {};
 
         var self = this;
 
@@ -138,6 +139,17 @@
             }
             else if (!!this.parent)
                 this.parent.pasteChild(child);
+        }
+
+        this.getContainerTemplateStyles = function () {
+            var styles = this.containerTemplateStyles || {};
+            var css = "";
+
+            for (var property in styles) {
+                css += property + ":" + styles[property] + ";";
+            }
+
+            return css;
         }
     };
 
