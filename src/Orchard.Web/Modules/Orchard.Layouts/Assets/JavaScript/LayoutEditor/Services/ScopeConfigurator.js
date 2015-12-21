@@ -159,6 +159,10 @@
                                         return;
 
                                     $scope.element.data = args.element.data;
+                                    $scope.element.applyElementEditorModel(args.elementEditorModel);
+
+                                    if (!!$scope.element.setHtml)
+                                        $scope.element.setHtml(args.element.html);
                                 });
                             });
                         };

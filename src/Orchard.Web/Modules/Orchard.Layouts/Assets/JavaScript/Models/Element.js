@@ -5,6 +5,7 @@
         if (!type)
             throw new Error("Parameter 'type' is required.");
 
+        var self = this;
         this.type = type;
         this.data = data;
         this.htmlId = htmlId;
@@ -164,12 +165,18 @@
                 htmlClass: this.htmlClass,
                 htmlStyle: this.htmlStyle,
                 isTemplated: this.isTemplated,
-                rule: this.rule
+                rule: this.rule,
+                contentType: this.contentType,
+                hasEditor: this.hasEditor
             };
         };
 
         this.getEditorObject = function() {
             return {};
+        };
+
+        this.toObject = function () {
+            return self.elementToObject();
         };
 
         this.copy = function (clipboardData) {

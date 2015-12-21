@@ -20,19 +20,12 @@
             this.htmlUnsafe = html;
         }
 
+        var baseToObject = this.toObject;
         this.toObject = function () {
-            return {
-                "type": "Content"
-            };
-        };
-
-        this.toObject = function () {
-            var result = this.elementToObject();
-            result.contentType = this.contentType;
+            var result = baseToObject();
             result.contentTypeLabel = this.contentTypeLabel;
             result.contentTypeClass = this.contentTypeClass;
             result.html = this.html;
-            result.hasEditor = hasEditor;
             return result;
         };
 
