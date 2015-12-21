@@ -3,7 +3,6 @@
     @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(
     new {
         childFolders = Model.Children.Select(x => new {
-            //folderPath = Server.UrlEncode(x.MediaPath),
             folderPath = Uri.EscapeUriString(x.MediaPath),
             name = x.Name,
             lastUpdated = x.LastUpdated
