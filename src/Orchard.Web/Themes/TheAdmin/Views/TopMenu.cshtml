@@ -21,44 +21,48 @@
                 </li>
             </ul>
         <ul class="nav navbar-nav am-nav-right">
-            <li class="active"><a href="#">Dashboard</a></li>
-        @foreach (var firstLevelMenuItem in Layout.TopMenu) {
+           @* <li class="active"><a href="#">@T("Dashboard")</a></li>*@
+        @foreach (var firstLevelMenuItem in Model.Items) {
+
+            string sectionHeaderText = firstLevelMenuItem.Text.Text;
+
             <li class="dropdown">
-                <a href="#" data-toggle="dropdown" role="button" aria-expanded="false" class="dropdown-toggle">Definitions <span class="angle-down s7-angle-down"></span></a>
+                <a href="#" data-toggle="dropdown" role="button" aria-expanded="false" class="dropdown-toggle">@sectionHeaderText<span class="angle-down s7-angle-down"></span></a>
                 <ul role="menu" class="dropdown-menu">
                     <li><a href="#">Content Types</a></li>
                     <li><a href="#">Content Parts</a></li>
                 </ul>
             </li>
         }
+        @*
 
-
-            <li class="dropdown">
-                <a href="#" data-toggle="dropdown" role="button" aria-expanded="false" class="dropdown-toggle">Definitions <span class="angle-down s7-angle-down"></span></a>
-                <ul role="menu" class="dropdown-menu">
-                    <li><a href="#">Content Types</a></li>
-                    <li><a href="#">Content Parts</a></li>
-                </ul>
-            </li>
-            <li class="dropdown">
-                <a href="#" data-toggle="dropdown" role="button" aria-expanded="false" class="dropdown-toggle">Settings <span class="angle-down s7-angle-down"></span></a>
-                <ul role="menu" class="dropdown-menu">
-                    <li><a href="#">General</a></li>
-                    <li><a href="#">Gallery</a></li>
-                    <li><a href="#">Email</a></li>
-                    <li><a href="#">Media</a></li>
-                    <li><a href="#">Users</a></li>
-                    <li><a href="#">Cache</a></li>
-                </ul>
-            </li>
-            <li class="dropdown">
-                <a href="#" data-toggle="dropdown" role="button" aria-expanded="false" class="dropdown-toggle">Support <span class="angle-down s7-angle-down"></span></a>
-                <ul role="menu" class="dropdown-menu">
-                    <li><a href="#">Documentation</a></li>
-                    <li><a href="#">Forums</a></li>
-                    <li><a href="#">Report an Issue</a></li>
-                </ul>
-            </li>
+    <li class="dropdown">
+        <a href="#" data-toggle="dropdown" role="button" aria-expanded="false" class="dropdown-toggle">@T("Definitions") <span class="angle-down s7-angle-down"></span></a>
+        <ul role="menu" class="dropdown-menu">
+            <li><a href="#">Content Types</a></li>
+            <li><a href="#">Content Parts</a></li>
+        </ul>
+    </li>
+    <li class="dropdown">
+        <a href="#" data-toggle="dropdown" role="button" aria-expanded="false" class="dropdown-toggle">@T("Settings") <span class="angle-down s7-angle-down"></span></a>
+        <ul role="menu" class="dropdown-menu">
+            <li><a href="#">General</a></li>
+            <li><a href="#">Gallery</a></li>
+            <li><a href="#">Email</a></li>
+            <li><a href="#">Media</a></li>
+            <li><a href="#">Users</a></li>
+            <li><a href="#">Cache</a></li>
+        </ul>
+    </li>
+    <li class="dropdown">
+        <a href="#" data-toggle="dropdown" role="button" aria-expanded="false" class="dropdown-toggle">@("Support")<span class="angle-down s7-angle-down"></span></a>
+        <ul role="menu" class="dropdown-menu">
+            <li><a href="#">Documentation</a></li>
+            <li><a href="#">Forums</a></li>
+            <li><a href="#">Report an Issue</a></li>
+        </ul>
+    </li>
+        *@
         </ul>
             <ul class="nav navbar-nav navbar-right am-icons-nav">
                 <li class="dropdown">
