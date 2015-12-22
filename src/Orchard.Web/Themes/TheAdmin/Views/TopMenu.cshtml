@@ -1,4 +1,5 @@
-﻿@{
+﻿@using Orchard.Utility.Extensions;
+@{
     var title = (string)Convert.ToString(Layout.Title);
     IEnumerable<dynamic> firstLevelMenuItems = Layout.TopMenu;
 }
@@ -24,15 +25,32 @@
            @* <li class="active"><a href="#">@T("Dashboard")</a></li>*@
         @foreach (var firstLevelMenuItem in Model.Items) {
 
+            IEnumerable<dynamic> secondLevelMenuItems = firstLevelMenuItem;
             string sectionHeaderText = firstLevelMenuItem.Text.Text;
+            string firstLevelClass = firstLevelMenuItem.Items.Count > 0 ? "dropdown" : string.Empty;
 
-            <li class="dropdown">
+
+            if (firstLevelMenuItem.Selected) {
+                firstLevelMenuItem.Classes.Add("active");
+            }
+            if (firstLevelMenuItem.Items.Count > 0) {
+                firstLevelMenuItem.Classes.Add("dropdown");
+            }
+
+            var firstLevelTag = Tag(firstLevelMenuItem, "li");
+            @firstLevelTag.StartElement
+
+            if (firstLevelMenuItem.Items.Count > 0) {
                 <a href="#" data-toggle="dropdown" role="button" aria-expanded="false" class="dropdown-toggle">@sectionHeaderText<span class="angle-down s7-angle-down"></span></a>
                 <ul role="menu" class="dropdown-menu">
-                    <li><a href="#">Content Types</a></li>
-                    <li><a href="#">Content Parts</a></li>
+                    @foreach (var secondLevelMenuItem in firstLevelMenuItem.Items) {
+
+                        <li><a href="#">@secondLevelMenuItem.Text.Text</a></li>
+                    }
                 </ul>
-            </li>
+            }
+
+            @firstLevelTag.EndElement
         }
         @*
 
