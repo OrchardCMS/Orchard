@@ -68,9 +68,7 @@ namespace Orchard.Blogs {
             ContentDefinitionManager.AlterTypeDefinition("RecentBlogPosts",
                 cfg => cfg
                     .WithPart("RecentBlogPostsPart")
-                    .WithPart("CommonPart")
-                    .WithPart("WidgetPart")
-                    .WithSetting("Stereotype", "Widget")
+                    .AsWidgetWithIdentity()
                 );
 
             ContentDefinitionManager.AlterPartDefinition("BlogArchivesPart", part => part
@@ -134,6 +132,11 @@ namespace Orchard.Blogs {
         }
 
         public int UpdateFrom6() {
+            ContentDefinitionManager.AlterTypeDefinition("RecentBlogPosts",
+                cfg => cfg
+                    .WithPart("IdentityPart")
+                );
+
             ContentDefinitionManager.AlterTypeDefinition("BlogArchives",
                 cfg => cfg
                     .WithPart("IdentityPart")

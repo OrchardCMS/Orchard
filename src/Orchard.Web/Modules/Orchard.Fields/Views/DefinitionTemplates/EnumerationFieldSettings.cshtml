@@ -28,3 +28,11 @@
     <span class="hint">@T("The help text is written under the field when users are selecting an option.")</span>
     @Html.ValidationMessageFor(m => m.Hint)
 </fieldset>
+<fieldset>
+    <div>
+        <label class="forpicker" for="@Html.FieldIdFor(m => m.DefaultValue)">@T("Default value")</label>
+        @Html.TextBoxFor(m => m.DefaultValue, new { @class = "text large tokenized ui-autocomplete-input" })
+        <span class="hint">@T("Enter a default option for the field. You can use tokens in this field. If there is no equivalent choice among Options, it will not be used. (optional)")</span>
+        @Html.ValidationMessageFor(m => m.DefaultValue)
+    </div>
+</fieldset>

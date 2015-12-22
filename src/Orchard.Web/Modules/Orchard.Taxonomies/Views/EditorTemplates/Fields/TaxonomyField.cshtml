@@ -42,7 +42,9 @@
             }
         </ul>
             
-        @if (!Model.Terms.Any() && AuthorizedFor(Orchard.Taxonomies.Permissions.CreateTerm)) {
+         @if (Model.TaxonomyId == 0) {
+            <p>@T("Your haven't specified a taxonomy for {0}", Model.DisplayName)</p>
+        }else if (!Model.Terms.Any() && AuthorizedFor(Orchard.Taxonomies.Permissions.CreateTerm)) {
             <div class="no-terms">
                 @T("There are no terms defined for {0} yet.", Model.DisplayName)
                 <a href="@Url.Action("Index", "TermAdmin", new { taxonomyId = Model.TaxonomyId, area = "Orchard.Taxonomies" })">@T("Create some terms")</a>

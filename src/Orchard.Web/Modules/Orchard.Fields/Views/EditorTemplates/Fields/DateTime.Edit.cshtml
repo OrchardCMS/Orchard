@@ -6,4 +6,7 @@
     @if (HasText(Model.Hint)) {
         <span class="hint">@Model.Hint</span>
     }
+    @if (Model.HasDefaultValue) {
+        <span class="hint">@T("If the field is left empty then the default value will be used if one is configured.")</span>
+    }
 </fieldset>

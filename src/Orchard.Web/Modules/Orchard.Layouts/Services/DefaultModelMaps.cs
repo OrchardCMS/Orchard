@@ -35,8 +35,13 @@ namespace Orchard.Layouts.Services {
             node["htmlId"] = element.HtmlId;
             node["htmlClass"] = element.HtmlClass;
             node["htmlStyle"] = element.HtmlStyle;
-            node["isTemplated"] = element.IsTemplated;
             node["rule"] = element.Rule;
+            node["isTemplated"] = element.IsTemplated;
+            node["hasEditor"] = element.Descriptor.EnableEditorDialog;
+            node["contentType"] = element.Descriptor.TypeName;
+            node["contentTypeLabel"] = element.Descriptor.DisplayText.Text;
+            node["contentTypeClass"] = element.DisplayText.Text.HtmlClassify();
+            node["contentTypeDescription"] = element.Descriptor.Description.Text;
         }
 
         protected virtual void ToElement(T element, JToken node) {
@@ -100,7 +105,7 @@ namespace Orchard.Layouts.Services {
 
         public virtual string LayoutElementType { get { return "Content"; } }
         public virtual bool CanMap(Element element) {
-            return !(element is Container);
+            return true;
         }
 
         public virtual Element ToElement(IElementManager elementManager, DescribeElementsContext describeContext, JToken node) {
@@ -131,34 +136,6 @@ namespace Orchard.Layouts.Services {
             node["contentTypeClass"] = element.DisplayText.Text.HtmlClassify();
             node["contentTypeDescription"] = element.Descriptor.Description.Text;
             node["html"] = _shapeDisplay.Display(_elementDisplay.DisplayElement(element, content: describeContext.Content, displayType: "Design"));
-        }
-    }
-
-    public class HtmlModelMap : ContentModelMap {
-        public HtmlModelMap(IShapeDisplay shapeDisplay, IElementDisplay elementDisplay)
-            : base(shapeDisplay, elementDisplay) {
-        }
-
-        public override int Priority {
-            get { return 1; }
-        }
-
-        public override string LayoutElementType {
-            get { return "Html"; }
-        }
-
-        public override bool CanMap(Element element) {
-            return element is Html;
-        }
-
-        public override Element ToElement(IElementManager elementManager, DescribeElementsContext describeContext, JToken node) {
-            var html = (string)node["html"];
-            var element = (Html)base.ToElement(elementManager, describeContext, node);
-
-            // To support inline editing, we need to update the element's content.
-            element.Content = html;
-
-            return element;
         }
     }
 

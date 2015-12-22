@@ -1,16 +1,15 @@
-﻿using System;
-using System.Globalization;
-using System.Xml;
-using Orchard.ContentManagement;
+﻿using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
+using Orchard.Core.Common.ViewModels;
 using Orchard.Fields.Fields;
 using Orchard.Fields.Settings;
 using Orchard.Fields.ViewModels;
-using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
-using Orchard.Localization.Services;
-using Orchard.Core.Common.ViewModels;
 using Orchard.Localization.Models;
+using Orchard.Localization.Services;
+using System;
+using System.Xml;
 
 namespace Orchard.Fields.Drivers {
     public class DateTimeFieldDriver : ContentFieldDriver<DateTimeField> {
@@ -97,6 +96,7 @@ namespace Orchard.Fields.Drivers {
                 Name = field.DisplayName,
                 Hint = settings.Hint,
                 IsRequired = settings.Required,
+                HasDefaultValue = settings.DefaultValue.HasValue,
                 Editor = new DateTimeEditor() {
                     Date = showDate ? DateLocalizationServices.ConvertToLocalizedDateString(value, options) : null,
                     Time = showTime ? DateLocalizationServices.ConvertToLocalizedTimeString(value, options) : null,
@@ -150,7 +150,7 @@ namespace Orchard.Fields.Drivers {
                                 field.DateTime = utcDateTime.Value;
                             }
                         } else {
-                            field.DateTime = DateTime.MinValue;
+                            field.DateTime = settings.DefaultValue.HasValue ? settings.DefaultValue.Value : DateTime.MinValue;
                         }
                     }
                     catch {
