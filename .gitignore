@@ -187,5 +187,4 @@ src/Orchard.Azure/Orchard.Azure.CloudService/Staging/
 
 #enable all /lib artifacts
 !lib/**/*.*
-!src/Orchard.Web/Modules/Orchard.Scripting.CSharp/Lib/*.*
 */.vs/*
