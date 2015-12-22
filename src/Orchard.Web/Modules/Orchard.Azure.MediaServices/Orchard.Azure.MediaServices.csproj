@@ -89,9 +89,9 @@
       <HintPath>..\..\..\packages\Microsoft.WindowsAzure.ConfigurationManager.3.1.0\lib\net40\Microsoft.WindowsAzure.Configuration.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.WindowsAzure.Diagnostics">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\lib\windowsazure\Microsoft.WindowsAzure.Diagnostics.dll</HintPath>
+    <Reference Include="Microsoft.WindowsAzure.Diagnostics, Version=2.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Orchard.WindowsAzure.Diagnostics.2.7.0.0\lib\Microsoft.WindowsAzure.Diagnostics.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.WindowsAzure.MediaServices.Client, Version=3.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\windowsazure.mediaservices.3.4.0.0\lib\net45\Microsoft.WindowsAzure.MediaServices.Client.dll</HintPath>
