@@ -51,6 +51,15 @@ namespace Orchard.Widgets.Models {
         }
 
         /// <summary>
+        /// Flag indicating whether this widget is deactivated
+        /// </summary>
+        public bool Deactivated
+        {
+            get { return Retrieve(x => x.Deactivated); }
+            set { Store(x => x.Deactivated, value); }
+        }
+
+        /// <summary>
         /// The layerPart where the widget belongs.
         /// </summary>
         public LayerPart LayerPart {

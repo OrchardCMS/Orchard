@@ -48,6 +48,16 @@
                                         }
                                     }
                                     
+                                    @if (widget.Deactivated) {
+                                        <button name="activateWidget" class="link" type="submit" value="1">@T("Activate")</button>
+                                        @T(" | ")
+                                    }
+                                    else {
+                                        <button name="deactivateWidget" class="link" type="submit" value="1">@T("Deactivate")</button>
+                                        @T(" | ")
+                                    }
+
+
                                     @if (widget.LayerId != Model.CurrentLayer.Id) {
                                         <button name="moveHere" class="link" type="submit" value="1">@T("Move to current layer")</button>
                                     }
