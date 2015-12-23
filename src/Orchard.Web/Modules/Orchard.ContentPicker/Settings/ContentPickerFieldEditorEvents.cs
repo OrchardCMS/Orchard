@@ -28,6 +28,7 @@ namespace Orchard.ContentPicker.Settings {
                 builder.WithSetting("ContentPickerFieldSettings.Multiple", model.Multiple.ToString(CultureInfo.InvariantCulture));
                 builder.WithSetting("ContentPickerFieldSettings.ShowContentTab", model.ShowContentTab.ToString(CultureInfo.InvariantCulture));
                 builder.WithSetting("ContentPickerFieldSettings.DisplayedContentTypes", model.DisplayedContentTypes);
+                builder.WithSetting("ContentPickerFieldSettings.ShowOnlyOwnContent", model.ShowOnlyOwnContent.ToString(CultureInfo.InvariantCulture));
             }
 
             yield return DefinitionTemplate(model);

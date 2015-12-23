@@ -110,7 +110,14 @@ namespace Orchard.ContentPicker.Controllers {
                 query = query.ForType(model.Options.SelectedFilter);
 
             }
+
+            dynamic currentUser = Services.WorkContext.CurrentUser;            
+            bool admin = currentUser.UserRolesPart.Roles.Contains("Administrator");
             
+            if (settings != null && settings.ShowOnlyOwnContent && !admin) {                
+                query = query.Where<CommonPartRecord>(c => c.OwnerId == Services.WorkContext.CurrentUser.Id);
+            }
+
             switch (model.Options.OrderBy) {
                 case ContentsOrder.Modified:
                     query = query.OrderByDescending<CommonPartRecord>(cr => cr.ModifiedUtc);
