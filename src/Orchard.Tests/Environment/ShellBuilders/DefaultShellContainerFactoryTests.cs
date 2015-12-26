@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Web.Http.Controllers;
 using System.Web.Mvc;
 using Autofac;
@@ -347,5 +348,200 @@ namespace Orchard.Tests.Environment.ShellBuilders {
             Assert.That(proxa, Is.Not.SameAs(proxa2));
             Assert.That(setta, Is.Not.SameAs(setta2));
         }
+
+        public interface ITestDecorator : IDependency { ITestDecorator DecoratedService { get; } }
+        public class TestDecoratorImpl1 : ITestDecorator { public ITestDecorator DecoratedService => null; }
+        public class TestDecoratorImpl2 : ITestDecorator { public ITestDecorator DecoratedService => null; }
+        public class TestDecoratorImpl3 : ITestDecorator { public ITestDecorator DecoratedService => null; }
+
+        public class TestDecorator1 : IDecorator<ITestDecorator>, ITestDecorator {
+            public TestDecorator1(ITestDecorator decoratedService) {
+                DecoratedService = decoratedService;
+            }
+
+            public ITestDecorator DecoratedService { get; }
+        }
+
+        public class TestDecorator2 : IDecorator<ITestDecorator>, ITestDecorator {
+            public TestDecorator2(ITestDecorator decoratedService) {
+                DecoratedService = decoratedService;
+            }
+
+            public ITestDecorator DecoratedService { get; }
+        }
+
+        public class TestDecorator3 : IDecorator<ITestDecorator>, ITestDecorator {
+            public TestDecorator3(ITestDecorator decoratedService) {
+                DecoratedService = decoratedService;
+            }
+
+            public ITestDecorator DecoratedService { get; }
+        }
+
+        public class TestDecorator4 : IDecorator<ITestDecorator>, ITestDecorator {
+            public TestDecorator4(ITestDecorator decoratedService) {
+                DecoratedService = decoratedService;
+            }
+
+            public ITestDecorator DecoratedService { get; }
+        }
+
+        [Test]
+        public void DecoratedComponentsAreResolvedToTheDecorator() {
+            var settings = CreateSettings();
+            var blueprint = CreateBlueprint(
+                WithDependency<TestDecoratorImpl1>(),
+                WithDependency<TestDecorator1>()
+            );
+
+            var factory = _container.Resolve<IShellContainerFactory>();
+            var shellContainer = factory.CreateContainer(settings, blueprint);
+
+            var decorator = shellContainer.Resolve<ITestDecorator>();
+
+            Assert.That(decorator, Is.Not.Null);
+            Assert.That(decorator, Is.InstanceOf<TestDecorator1>());
+            Assert.That(decorator.DecoratedService, Is.InstanceOf<TestDecoratorImpl1>());
+        }
+
+        [Test]
+        public void DecoratedComponentsAreResolvedToTheDecoratorWhenTheDecoratorIsRegisteredFirst() {
+            var settings = CreateSettings();
+            var blueprint = CreateBlueprint(
+                WithDependency<TestDecorator1>(),
+                WithDependency<TestDecoratorImpl1>()
+            );
+
+            var factory = _container.Resolve<IShellContainerFactory>();
+            var shellContainer = factory.CreateContainer(settings, blueprint);
+
+            var decorator = shellContainer.Resolve<ITestDecorator>();
+
+            Assert.That(decorator, Is.Not.Null);
+            Assert.That(decorator, Is.InstanceOf<TestDecorator1>());
+            Assert.That(decorator.DecoratedService, Is.InstanceOf<TestDecoratorImpl1>());
+        }
+
+        [Test]
+        public void DecoratedComponentsAreNeverResolved() {
+            var settings = CreateSettings();
+            var blueprint = CreateBlueprint(
+                WithDependency<TestDecoratorImpl1>(),
+                WithDependency<TestDecorator1>()
+            );
+
+            var factory = _container.Resolve<IShellContainerFactory>();
+            var shellContainer = factory.CreateContainer(settings, blueprint);
+
+            var services = shellContainer.Resolve<IEnumerable<ITestDecorator>>();
+
+            Assert.That(services, Is.Not.Null);
+            Assert.That(services.Count(), Is.EqualTo(1));
+            Assert.That(services.First(), Is.InstanceOf<TestDecorator1>());
+            Assert.That(services.First().DecoratedService, Is.InstanceOf<TestDecoratorImpl1>());
+        }
+
+        [Test]
+        public void MultipleComponentsCanBeDecoratedWithASingleDecorator() {
+            var settings = CreateSettings();
+            var blueprint = CreateBlueprint(
+                WithDependency<TestDecoratorImpl1>(),
+                WithDependency<TestDecoratorImpl2>(),
+                WithDependency<TestDecoratorImpl3>(),
+                WithDependency<TestDecorator1>()
+            );
+
+            var factory = _container.Resolve<IShellContainerFactory>();
+            var shellContainer = factory.CreateContainer(settings, blueprint);
+
+            var services = shellContainer.Resolve<IEnumerable<ITestDecorator>>().ToArray();
+
+            Assert.That(services, Is.Not.Null);
+            Assert.That(services.Count(), Is.EqualTo(3));
+
+            foreach (var service in services)
+            {
+                Assert.That(service, Is.InstanceOf<TestDecorator1>());
+            }
+
+            Assert.That(services[0].DecoratedService, Is.InstanceOf<TestDecoratorImpl1>());
+            Assert.That(services[1].DecoratedService, Is.InstanceOf<TestDecoratorImpl2>());
+            Assert.That(services[2].DecoratedService, Is.InstanceOf<TestDecoratorImpl3>());
+        }
+
+        [Test]
+        public void ASingleComponentCanBeDecoratedWithMultipleDecorators() {
+            var settings = CreateSettings();
+            var blueprint = CreateBlueprint(
+                WithDependency<TestDecoratorImpl1>(),
+                WithDependency<TestDecorator1>(),
+                WithDependency<TestDecorator2>(),
+                WithDependency<TestDecorator3>()
+            );
+
+            var factory = _container.Resolve<IShellContainerFactory>();
+            var shellContainer = factory.CreateContainer(settings, blueprint);
+
+            var services = shellContainer.Resolve<IEnumerable<ITestDecorator>>().ToArray();
+
+            Assert.That(services, Is.Not.Null);
+            Assert.That(services.Count(), Is.EqualTo(1));
+
+            var service = services[0];
+
+            Assert.That(service, Is.InstanceOf<TestDecorator3>());
+            Assert.That(service.DecoratedService, Is.InstanceOf<TestDecorator2>());
+            Assert.That(service.DecoratedService.DecoratedService, Is.InstanceOf<TestDecorator1>());
+            Assert.That(service.DecoratedService.DecoratedService.DecoratedService, Is.InstanceOf<TestDecoratorImpl1>());
+        }
+
+        [Test]
+        public void MultipleComponentsCanBeDecoratedWithMultipleDecorators() {
+            var settings = CreateSettings();
+            var blueprint = CreateBlueprint(
+                    WithDependency<TestDecoratorImpl1>(),
+                    WithDependency<TestDecoratorImpl2>(),
+                    WithDependency<TestDecoratorImpl3>(),
+                    WithDependency<TestDecorator1>(),
+                    WithDependency<TestDecorator2>(),
+                    WithDependency<TestDecorator3>()
+            );
+
+            var factory = _container.Resolve<IShellContainerFactory>();
+            var shellContainer = factory.CreateContainer(settings, blueprint);
+
+            var services = shellContainer.Resolve<IEnumerable<ITestDecorator>>().ToArray();
+
+            Assert.That(services, Is.Not.Null);
+            Assert.That(services.Count(), Is.EqualTo(3));
+
+            foreach (var service in services)
+            {
+                Assert.That(service, Is.InstanceOf<TestDecorator3>());
+                Assert.That(service.DecoratedService, Is.InstanceOf<TestDecorator2>());
+                Assert.That(service.DecoratedService.DecoratedService, Is.InstanceOf<TestDecorator1>());
+            }
+
+            Assert.That(services[0].DecoratedService.DecoratedService.DecoratedService, Is.InstanceOf<TestDecoratorImpl1>());
+            Assert.That(services[1].DecoratedService.DecoratedService.DecoratedService, Is.InstanceOf<TestDecoratorImpl2>());
+            Assert.That(services[2].DecoratedService.DecoratedService.DecoratedService, Is.InstanceOf<TestDecoratorImpl3>());
+        }
+
+        [Test]
+        public void RegisteringDecoratorsWithoutConcreteThrowsFatalException() {
+            var settings = CreateSettings();
+            var blueprint = CreateBlueprint(
+                    WithDependency<TestDecorator1>(),
+                    WithDependency<TestDecorator2>(),
+                    WithDependency<TestDecorator3>()
+            );
+
+            var factory = _container.Resolve<IShellContainerFactory>();
+
+            Assert.Throws<OrchardFatalException>(delegate {
+                factory.CreateContainer(settings, blueprint);
+            });
+        }
+
     }
 }
