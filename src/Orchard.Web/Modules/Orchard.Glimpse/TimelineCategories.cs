@@ -10,6 +10,10 @@ namespace Orchard.Glimpse {
             get { return new TimelineCategoryItem("Layers", "#E6261D", "#E6261D"); }
         }
 
+        public static TimelineCategoryItem Parts {
+            get { return new TimelineCategoryItem("Parts", "#169871", "#169871"); }
+        }
+
         public static TimelineCategoryItem ContentManager {
             get { return new TimelineCategoryItem("Content Manager", "#603182", "#603182"); }
         }

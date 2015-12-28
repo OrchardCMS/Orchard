@@ -121,20 +121,14 @@ namespace Orchard.Glimpse.Services {
 
         private IExecutionTimer GetTimer() {
             var context = HttpContext.Current;
-            if (context == null) {
-                return null;
-            } 
 
-            return ((GlimpseRuntime) context.Application.Get("__GlimpseRuntime")).Configuration.TimerStrategy.Invoke();
+            return ((GlimpseRuntime) context?.Application.Get("__GlimpseRuntime"))?.Configuration.TimerStrategy.Invoke();
         }
 
         private IMessageBroker GetMessageBroker() {
             var context = HttpContext.Current;
-            if (context == null) {
-                return new NullMessageBroker();
-            }
 
-            return ((GlimpseRuntime) context.Application.Get("__GlimpseRuntime")).Configuration.MessageBroker;
+            return ((GlimpseRuntime) context?.Application.Get("__GlimpseRuntime"))?.Configuration.MessageBroker;
         }
     }
 

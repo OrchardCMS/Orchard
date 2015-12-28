@@ -1,30 +1,26 @@
-﻿//using System.Collections.Generic;
-//using System.Linq;
-//using Glimpse.Core.Extensibility;
-//using Glimpse.Core.Tab.Assist;
-//using Orchard.Glimpse.Extensions;
+﻿using System.Collections.Generic;
+using Glimpse.Core.Extensibility;
+using Glimpse.Core.Tab.Assist;
+using Orchard.Glimpse.Extensions;
+using Orchard.Utility.Extensions;
 
-//namespace Orchard.Glimpse.Tabs.Parts {
-//    public class PartMessagesConverter : SerializationConverter<IEnumerable<PartMessage>> {
-//        public override object Convert(IEnumerable<PartMessage> messages) {
-//            var root = new TabSection("Id", "Widget Title", "Widget Type", "Layer", "Layer Rule", "Zone", "Position", "Technical Name", "Actions", "Build Display Duration");
-//            foreach (var message in messages.OrderByDescending(m => m.Duration)) {
-//                root.AddRow()
-//                    .Column(message.ContentId)
-//                    .Column(message.Title)
-//                    .Column(message.Type)
-//                    .Column(message.Layer.Name)
-//                    .Column(message.Layer.LayerRule)
-//                    .Column(message.Zone)
-//                    .Column(message.Position)
-//                    .Column(message.TechnicalName)
-//                    .Column(@"<a href='" + message.EditUrl + "'>Edit</a>").Raw()
-//                    .Column(message.Duration.ToTimingString());
-//            }
+namespace Orchard.Glimpse.Tabs.Parts {
+    public class PartMessagesConverter : SerializationConverter<IEnumerable<PartMessage>> {
+        public override object Convert(IEnumerable<PartMessage> messages) {
+            var root = new TabSection("Content Id", "Content Name", "Content Type", "Part", "Display Type", "Duration");
+            foreach (var message in messages) {
+                root.AddRow()
+                    .Column(message.ContentId)
+                    .Column(message.ContentName)
+                    .Column(message.ContentType.CamelFriendly())
+                    .Column(message.PartDefinition?.Name.CamelFriendly())
+                    .Column(message.DisplayType)
+                    .Column(message.Duration.ToTimingString());
+            }
 
-//            root.AddTimingSummary(messages);
+            root.AddTimingSummary(messages);
 
-//            return root.Build();
-//        }
-//    }
-//}
+            return root.Build();
+        }
+    }
+}

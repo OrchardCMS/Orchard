@@ -132,17 +132,18 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AlternateImplementation\Class1.cs" />
+    <Compile Include="AlternateImplementation\GlimpseContentPartDriver.cs" />
     <Compile Include="AlternateImplementation\GlimpseLayerEvaluationService.cs" />
     <Compile Include="GlimpseHelpers.cs" />
+    <Compile Include="Models\GlimpseDriverResult.cs" />
     <Compile Include="Tabs\Parts\PartMessage.cs" />
     <Compile Include="Tabs\Parts\PartMessagesConverter.cs" />
     <Compile Include="Tabs\Parts\PartTab.cs" />
     <Compile Include="TestFilter.cs" />
     <Compile Include="GlimpseExtensions\WhitelistedIpAddressesSecurityPolicy.cs" />
-    <Compile Include="SQL\GlimpseSessionConfigurationEvents.cs" />
-    <Compile Include="SQL\GlimpseConnectionProvider.cs" />
-    <Compile Include="SQL\GlimpseDriver.cs" />
+    <Compile Include="ADO\GlimpseSessionConfigurationEvents.cs" />
+    <Compile Include="ADO\GlimpseConnectionProvider.cs" />
+    <Compile Include="ADO\GlimpseDriver.cs" />
     <Compile Include="AlternateImplementation\GlimpseWidgetContentManagerDecorator.cs" />
     <Compile Include="AlternateImplementation\GlimpseDisplayManager.cs" />
     <Compile Include="AlternateImplementation\GlimpseAuthorizerDecorator.cs" />

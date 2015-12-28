@@ -2,7 +2,6 @@
 using Glimpse.Core.Message;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.Glimpse.Models;
-using Orchard.Widgets.Models;
 
 namespace Orchard.Glimpse.Tabs.Parts {
     public class PartMessage : MessageBase, IDurationMessage {
@@ -11,7 +10,6 @@ namespace Orchard.Glimpse.Tabs.Parts {
         public string DisplayType { get; set; }
         public string ContentName { get; set; }
         public string ContentType { get; set; }
-        public LayerPart Layer { get; set; }
         public TimeSpan Duration { get; set; }
     }
 }
