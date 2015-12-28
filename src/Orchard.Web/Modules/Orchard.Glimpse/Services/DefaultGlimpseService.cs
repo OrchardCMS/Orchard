@@ -116,18 +116,14 @@ namespace Orchard.Glimpse.Services {
         public void PublishMessage<T>(T message) {
             var broker = GetMessageBroker();
 
-            if (broker == null) {
-                return;
-            }
-
-            broker.Publish(message);
+            broker?.Publish(message);
         }
 
         private IExecutionTimer GetTimer() {
             var context = HttpContext.Current;
             if (context == null) {
                 return null;
-            }
+            } 
 
             return ((GlimpseRuntime) context.Application.Get("__GlimpseRuntime")).Configuration.TimerStrategy.Invoke();
         }
