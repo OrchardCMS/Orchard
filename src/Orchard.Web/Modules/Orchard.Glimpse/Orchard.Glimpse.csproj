@@ -114,6 +114,10 @@
       <Project>{7528BF74-25C7-4ABE-883A-443B4EEC4776}</Project>
       <Name>Orchard.Caching</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Orchard.Conditions\Orchard.Conditions.csproj">
+      <Project>{98251eae-a41b-47b2-aa91-e28b8482da70}</Project>
+      <Name>Orchard.Conditions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Orchard.Tokens\Orchard.Tokens.csproj">
       <Project>{6f759635-13d7-4e94-bcc9-80445d63f117}</Project>
       <Name>Orchard.Tokens</Name>
@@ -130,7 +134,7 @@
   <ItemGroup>
     <Compile Include="AlternateImplementation\Class1.cs" />
     <Compile Include="AlternateImplementation\GlimpseLayerEvaluationService.cs" />
-    <Compile Include="DayOfTheWeekLayerRuleProvider.cs" />
+    <Compile Include="GlimpseHelpers.cs" />
     <Compile Include="Tabs\Parts\PartMessage.cs" />
     <Compile Include="Tabs\Parts\PartMessagesConverter.cs" />
     <Compile Include="Tabs\Parts\PartTab.cs" />
