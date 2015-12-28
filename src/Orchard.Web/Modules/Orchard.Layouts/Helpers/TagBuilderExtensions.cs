@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using Orchard.DisplayManagement.Shapes;
 using Orchard.Layouts.Framework.Elements;
@@ -45,7 +46,8 @@ namespace Orchard.Layouts.Helpers {
                 classes.Add(cssClass);
             }
 
-            attributes["class"] = String.Join(" ", classes);
+            if(classes.Any())
+                attributes["class"] = String.Join(" ", classes);
 
             return attributes;
         }
