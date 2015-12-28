@@ -151,8 +151,7 @@ namespace Orchard.Environment.ShellBuilders {
                         }
 
                         if (itemToBeRegistered.IsEventHandler) {
-                            // var interfaces = itemToBeRegistered.Item.Type.GetInterfaces();
-                            var interfaces = itemToBeRegistered.InterfaceTypes;
+                            var interfaces = itemToBeRegistered.Item.Type.GetInterfaces();
                             foreach (var interfaceType in interfaces) {
 
                                 // register named instance for each interface, for efficient filtering inside event bus
