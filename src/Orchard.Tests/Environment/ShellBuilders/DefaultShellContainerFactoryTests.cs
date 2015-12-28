@@ -16,6 +16,7 @@ using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.ShellBuilders;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.ShellBuilders.Models;
+using Orchard.Events;
 
 namespace Orchard.Tests.Environment.ShellBuilders {
     [TestFixture]
@@ -349,6 +350,32 @@ namespace Orchard.Tests.Environment.ShellBuilders {
             Assert.That(setta, Is.Not.SameAs(setta2));
         }
 
+        public interface IStubEventHandlerA : IEventHandler { }
+        public interface IStubEventHandlerB : IEventHandler { }
+        public class StubEventHandler1 : IStubEventHandlerA { }
+        public class StubEventHandler2 : IStubEventHandlerA { }
+        public class StubEventHandler3 : IStubEventHandlerB { }
+
+        [Test]
+        public void EventHandlersAreNamedAndResolvedCorrectly() {
+            var settings = CreateSettings();
+            var blueprint = CreateBlueprint(
+                WithDependency<StubEventHandler1>(),
+                WithDependency<StubEventHandler2>(),
+                WithDependency<StubEventHandler3>()
+                );
+
+            var factory = _container.Resolve<IShellContainerFactory>();
+            var shellContainer = factory.CreateContainer(settings, blueprint);
+
+            var eventHandlers = shellContainer.ResolveNamed<IEnumerable<IEventHandler>>(typeof(IStubEventHandlerA).Name).ToArray();
+
+            Assert.That(eventHandlers, Is.Not.Null);
+            Assert.That(eventHandlers.Count(), Is.EqualTo(2));
+            Assert.That(eventHandlers[0], Is.InstanceOf<StubEventHandler2>());
+            Assert.That(eventHandlers[1], Is.InstanceOf<StubEventHandler1>());
+        }
+
         public interface ITestDecorator : IDependency { ITestDecorator DecoratedService { get; } }
         public class TestDecoratorImpl1 : ITestDecorator { public ITestDecorator DecoratedService => null; }
         public class TestDecoratorImpl2 : ITestDecorator { public ITestDecorator DecoratedService => null; }
@@ -372,14 +399,6 @@ namespace Orchard.Tests.Environment.ShellBuilders {
 
         public class TestDecorator3 : IDecorator<ITestDecorator>, ITestDecorator {
             public TestDecorator3(ITestDecorator decoratedService) {
-                DecoratedService = decoratedService;
-            }
-
-            public ITestDecorator DecoratedService { get; }
-        }
-
-        public class TestDecorator4 : IDecorator<ITestDecorator>, ITestDecorator {
-            public TestDecorator4(ITestDecorator decoratedService) {
                 DecoratedService = decoratedService;
             }
 
