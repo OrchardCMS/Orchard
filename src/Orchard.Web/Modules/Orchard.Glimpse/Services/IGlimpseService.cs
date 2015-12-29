@@ -40,7 +40,7 @@ namespace Orchard.Glimpse.Services {
         /// <param name="eventName">The name of the event to be displayed on the Glimpse Timeline</param>
         /// <param name="eventSubText">Optional. A sub header to be displayed on the Glimpse Timeline that provides additional information about the action</param>
         /// <returns>A TimerResult depicting the measured time taken to execute the action</returns>
-        TimerResult PublishTimedAction<TMessage>(Action action, Func<TMessage> messageFactory, TimelineCategoryItem category, string eventName, string eventSubText = null);
+        TimerResult PublishTimedAction<TMessage>(Action action, Func<TMessage> messageFactory, TimelineCategoryItem category, string eventName, string eventSubText = null) where TMessage : class;
 
         /// <summary>
         /// Executes an action, times how long the action takes, adds the result of the timed action to the Glimpse Timeline, and adds an additional message to the Glimpse broker
@@ -52,7 +52,7 @@ namespace Orchard.Glimpse.Services {
         /// <param name="eventName">The name of the event to be displayed on the Glimpse Timeline</param>
         /// <param name="eventSubText">Optional. A sub header to be displayed on the Glimpse Timeline that provides additional information about the action</param>
         /// <returns>A TimerResult depicting the measured time taken to execute the action</returns>
-        TimerResult PublishTimedAction<TMessage>(Action action, Func<TimerResult, TMessage> messageFactory, TimelineCategoryItem category, string eventName, string eventSubText = null);
+        TimerResult PublishTimedAction<TMessage>(Action action, Func<TimerResult, TMessage> messageFactory, TimelineCategoryItem category, string eventName, string eventSubText = null) where TMessage : class;
 
         /// <summary>
         /// Executes an expression, times how long the expression takes, and adds the result of the timed expression to the Glimpse Timeline
@@ -67,15 +67,15 @@ namespace Orchard.Glimpse.Services {
 
         TimedActionResult<T> PublishTimedAction<T>(Func<T> action, TimelineCategoryItem category, Func<T, string> eventNameFactory, Func<T, string> eventSubTextFactory = null, Func<T, bool> publishCondition = null);
 
-        TimedActionResult<T> PublishTimedAction<T, TMessage>(Func<T> action, Func<T, TimerResult, TMessage> messageFactory, TimelineCategoryItem category, string eventName, string eventSubText = null, Func<T, bool> publishCondition = null);
+        TimedActionResult<T> PublishTimedAction<T, TMessage>(Func<T> action, Func<T, TimerResult, TMessage> messageFactory, TimelineCategoryItem category, string eventName, string eventSubText = null, Func<T, bool> publishCondition = null) where TMessage : class;
 
-        TimedActionResult<T> PublishTimedAction<T, TMessage>(Func<T> action, Func<T, TimerResult, TMessage> messageFactory, TimelineCategoryItem category, Func<T, string> eventNameFactory, Func<T, string> eventSubTextFactory = null, Func<T, bool> publishCondition = null);
+        TimedActionResult<T> PublishTimedAction<T, TMessage>(Func<T> action, Func<T, TimerResult, TMessage> messageFactory, TimelineCategoryItem category, Func<T, string> eventNameFactory, Func<T, string> eventSubTextFactory = null, Func<T, bool> publishCondition = null) where TMessage : class;
 
         /// <summary>
         /// Places a message into the Glimpse Broker
         /// </summary>
         /// <typeparam name="T">The type of the message to be published</typeparam>
         /// <param name="message">The message to be published</param>
-        void PublishMessage<T>(T message);
+        void PublishMessage<T>(T message) where T : class;
     }
 }

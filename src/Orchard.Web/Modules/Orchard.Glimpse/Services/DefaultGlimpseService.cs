@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Web;
 using Glimpse.Core.Extensibility;
 using Glimpse.Core.Framework;
 using Glimpse.Core.Message;
+using Orchard.Glimpse.Interceptors;
 using Orchard.Glimpse.Models;
 using Orchard.Glimpse.Tabs;
 using Orchard.Localization;
@@ -11,7 +13,10 @@ using NullLogger = Orchard.Logging.NullLogger;
 
 namespace Orchard.Glimpse.Services {
     public class DefaultGlimpseService : IGlimpseService {
-        public DefaultGlimpseService() {
+        private readonly IEnumerable<IGlimpseMessageInterceptor> _messageInterceptors;
+
+        public DefaultGlimpseService(IEnumerable<IGlimpseMessageInterceptor> messageInterceptors) {
+            _messageInterceptors = messageInterceptors;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
@@ -54,14 +59,14 @@ namespace Orchard.Glimpse.Services {
             return timedResult;
         }
 
-        public TimerResult PublishTimedAction<TMessage>(Action action, Func<TMessage> messageFactory, TimelineCategoryItem category, string eventName, string eventSubText = null) {
+        public TimerResult PublishTimedAction<TMessage>(Action action, Func<TMessage> messageFactory, TimelineCategoryItem category, string eventName, string eventSubText = null) where TMessage : class {
             var timedResult = PublishTimedAction(action, category, eventName, eventSubText);
             PublishMessage(messageFactory());
 
             return timedResult;
         }
 
-        public TimerResult PublishTimedAction<TMessage>(Action action, Func<TimerResult, TMessage> messageFactory, TimelineCategoryItem category, string eventName, string eventSubText = null) {
+        public TimerResult PublishTimedAction<TMessage>(Action action, Func<TimerResult, TMessage> messageFactory, TimelineCategoryItem category, string eventName, string eventSubText = null) where TMessage : class {
             var timedResult = PublishTimedAction(action, category, eventName, eventSubText);
             PublishMessage(messageFactory(timedResult));
 
@@ -93,7 +98,7 @@ namespace Orchard.Glimpse.Services {
             return timedResult;
         }
 
-        public TimedActionResult<T> PublishTimedAction<T, TMessage>(Func<T> action, Func<T, TimerResult, TMessage> messageFactory, TimelineCategoryItem category, string eventName, string eventSubText = null, Func<T, bool> publishCondition = null) {
+        public TimedActionResult<T> PublishTimedAction<T, TMessage>(Func<T> action, Func<T, TimerResult, TMessage> messageFactory, TimelineCategoryItem category, string eventName, string eventSubText = null, Func<T, bool> publishCondition = null) where TMessage : class {
             var actionResult = PublishTimedAction(action, category, eventName, eventSubText);
 
             if (publishCondition == null || publishCondition(actionResult.ActionResult)) {
@@ -103,7 +108,7 @@ namespace Orchard.Glimpse.Services {
             return actionResult;
         }
 
-        public TimedActionResult<T> PublishTimedAction<T, TMessage>(Func<T> action, Func<T, TimerResult, TMessage> messageFactory, TimelineCategoryItem category, Func<T, string> eventNameFactory, Func<T, string> eventSubTextFactory = null, Func<T, bool> publishCondition = null) {
+        public TimedActionResult<T> PublishTimedAction<T, TMessage>(Func<T> action, Func<T, TimerResult, TMessage> messageFactory, TimelineCategoryItem category, Func<T, string> eventNameFactory, Func<T, string> eventSubTextFactory = null, Func<T, bool> publishCondition = null) where TMessage : class {
             var actionResult = PublishTimedAction(action, category, eventNameFactory, eventSubTextFactory);
 
             if (publishCondition == null || publishCondition(actionResult.ActionResult)) {
@@ -113,8 +118,10 @@ namespace Orchard.Glimpse.Services {
             return actionResult;
         }
 
-        public void PublishMessage<T>(T message) {
+        public void PublishMessage<T>(T message) where T : class {
             var broker = GetMessageBroker();
+
+            _messageInterceptors.Invoke(i => i.MessageReceived(message), Logger);
 
             broker?.Publish(message);
         }

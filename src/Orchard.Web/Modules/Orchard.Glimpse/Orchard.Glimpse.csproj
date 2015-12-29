@@ -135,7 +135,9 @@
     <Compile Include="AlternateImplementation\GlimpseContentPartDriver.cs" />
     <Compile Include="AlternateImplementation\GlimpseLayerEvaluationService.cs" />
     <Compile Include="GlimpseHelpers.cs" />
+    <Compile Include="Interceptors\IGlimpseMessageInterceptor.cs" />
     <Compile Include="Models\GlimpseDriverResult.cs" />
+    <Compile Include="Interceptors\GlimpseMessageInterceptor.cs" />
     <Compile Include="Tabs\Parts\PartMessage.cs" />
     <Compile Include="Tabs\Parts\PartMessagesConverter.cs" />
     <Compile Include="Tabs\Parts\PartTab.cs" />
