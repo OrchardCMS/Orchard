@@ -31,6 +31,10 @@ namespace Orchard.Autoroute.Services {
 
         public IContent GetHomePage(VersionOptions version = null) {
             var homePageRoute = GetHomeRoute();
+            
+            if (homePageRoute == null)
+                return null;
+            
             var alias = LookupAlias(homePageRoute);
 
             if (alias == null)
