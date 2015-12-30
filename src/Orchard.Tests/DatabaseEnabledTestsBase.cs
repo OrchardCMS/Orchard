@@ -24,7 +24,7 @@ namespace Orchard.Tests {
         protected string _databaseFilePath;
         protected ISessionFactory _sessionFactory;
         protected StubClock _clock;
-
+        protected ShellSettings _shellSettings;
 
         [TestFixtureSetUp]
         public void InitFixture() {
@@ -47,9 +47,10 @@ namespace Orchard.Tests {
             builder.RegisterType<InfosetHandler>().As<IContentHandler>();
             builder.RegisterInstance(new StubLocator(_session)).As<ISessionLocator>();
             builder.RegisterInstance(_clock).As<IClock>();
-            builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
-            builder.RegisterInstance(new ShellSettings { Name = ShellSettings.DefaultName, DataProvider = "SqlCe" });
-            builder.RegisterInstance(new TestTransactionManager(_session)).As<ITransactionManager>();
+            builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
+            builder.RegisterInstance(_shellSettings = new ShellSettings { Name = ShellSettings.DefaultName, DataProvider = "SqlCe" });
+            builder.RegisterType<TestTransactionManager>().As<ITransactionManager>().InstancePerLifetimeScope();
+            builder.Register(context => _sessionFactory.OpenSession()).As<ISession>().InstancePerLifetimeScope();
 
             Register(builder);
             _container = builder.Build();

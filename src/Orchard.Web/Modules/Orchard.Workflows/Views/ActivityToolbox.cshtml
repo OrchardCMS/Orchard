@@ -1,4 +1,4 @@
-@using Orchard.Utility.Extensions
+﻿@using Orchard.Utility.Extensions
 @using Orchard.Workflows.Models
 @using Orchard.Workflows.Services
 
@@ -12,7 +12,7 @@
 <!-- List of available activities -->
 <ul>
     @foreach (var activity in allActivities) {
-        <li class="activity-toolbox-item toolbox-@(activity.IsEvent ? "event" : "task") toolbox-@activity.Name.HtmlClassify()" data-activity-name="@activity.Name" data-activity-text="@activity.Name.CamelFriendly()" title="@activity.Description">
+        <li class="activity-toolbox-item toolbox-@(activity.IsEvent ? "event" : "task") toolbox-@activity.Name.HtmlClassify()" data-activity-name="@activity.Name" title="@activity.Description">
             <div>
                 <h2>@activity.Name.CamelFriendly()</h2>
                 <span class="hint">@activity.Description</span>
@@ -27,7 +27,7 @@
         //<![CDATA[
         var activities = { @foreach (var activity in allActivities) { <text>
             '@activity.Name': {
-                outcomes: [@Html.Raw(String.Join(",", activity.GetPossibleOutcomes(new WorkflowContext(), new ActivityContext()).Where(x => !String.IsNullOrEmpty(x.Text)).Select(x => "{label:'" + HttpUtility.JavaScriptStringEncode(x.Text) + "', value:'" + HttpUtility.JavaScriptStringEncode(x.TextHint) + "'}").ToArray()))],
+                outcomes: [@Html.Raw(String.Join(",", activity.GetPossibleOutcomes(new WorkflowContext(), new ActivityContext()).Where(x => !String.IsNullOrEmpty(x.Text)).Select(x => "{ Id: '" + HttpUtility.JavaScriptStringEncode(x.TextHint) + "', Label: '" + HttpUtility.JavaScriptStringEncode(x.Text) + "' }").ToArray()))],
                 category: '@HttpUtility.JavaScriptStringEncode(activity.Category.Text)',
                 description: '@HttpUtility.JavaScriptStringEncode(activity.Description.Text)',
                 IsEvent: @(activity.IsEvent ? "true" : "false"),

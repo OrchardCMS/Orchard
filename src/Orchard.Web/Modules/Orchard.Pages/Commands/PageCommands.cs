@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Web;
+using Orchard.Autoroute.Services;
 using Orchard.Commands;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
@@ -21,6 +22,7 @@ namespace Orchard.Pages.Commands {
         private readonly IMenuService _menuService;
         private readonly INavigationManager _navigationManager;
         private readonly IAuthenticationService _authenticationService;
+        private readonly IHomeAliasService _homeAliasService;
 
         public PageCommands(
             IContentManager contentManager, 
@@ -28,12 +30,15 @@ namespace Orchard.Pages.Commands {
             IAuthenticationService authenticationService,
             ISiteService siteService,
             IMenuService menuService,
-            INavigationManager navigationManager) {
+            INavigationManager navigationManager, 
+            IHomeAliasService homeAliasService) {
+
             _contentManager = contentManager;
             _membershipService = membershipService;
             _siteService = siteService;
             _menuService = menuService;
             _navigationManager = navigationManager;
+            _homeAliasService = homeAliasService;
             _authenticationService = authenticationService;
         }
 
@@ -94,14 +99,8 @@ namespace Orchard.Pages.Commands {
                 }
             }
 
-            // (PH:Autoroute) Hackish way to leave Slug and Homepage switches intact without requiring a dependency on Autoroute. This may throw an Exception with
-            // no AutoroutePart. But it means that normal setup recipes will still be able to give you a homepage without issue.
-            if (Homepage || !String.IsNullOrWhiteSpace(Slug)) {
-                dynamic dpage = page;
-                if (dpage.AutoroutePart != null) {
-                    dpage.AutoroutePart.UseCustomPattern = true;
-                    dpage.AutoroutePart.CustomPattern = Homepage ? "/" : Slug;
-                }
+            if (Homepage) {
+                _homeAliasService.PublishHomeAlias(page);
             }
 
             var layout = default(string);

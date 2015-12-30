@@ -3,7 +3,8 @@
 @{
     // Library dependencies.
     Style.Require("jQueryUI_Orchard");
-    Style.Include("Lib.css", "Lib.min.css");
+    Style.Require("Bootstrap");
+    Style.Require("FontAwesome");
 
     // We need these styles to properly render selected media items.
     // Ideally the MediaLibrary is refactored such that each media item type provides its own set of styles, enabling extensibility of the set of media item types.
@@ -11,12 +12,7 @@
     Style.Include("~/Modules/Orchard.MediaLibrary/Styles/media-library-picker-admin.css");
 
     Script.Require("jQueryCookie");
-    Script.Require("jQueryUI_Draggable");
-    Script.Require("jQueryUI_Droppable");
-    Script.Require("jQueryUI_Sortable");
-    Script.Require("jQueryUI_Resizable");
-    Script.Require("jQueryUI_Position");
-    Script.Require("jQueryUI_Dialog");
+    Script.Require("jQueryUI_Widgets");
     Script.Require("Layouts.LayoutEditor");
     Script.Include("jquery.deserialize.js");
 
@@ -39,12 +35,24 @@
                         return "@Url.Action("Get", "Template", new { area = "Orchard.Layouts" })" + "/" + templateName;
                     }
                 });
-            (function () {
+            jQuery(function () {
                 var editorConfig = JSON.parse(LayoutEditor.decode("@Html.Raw(Url.Encode(Model.ConfigurationData))"));
                 var editorCanvasData = JSON.parse(LayoutEditor.decode("@Html.Raw(Url.Encode(Model.Data))"));
+                var layoutEditor = window.layoutEditor = new LayoutEditor.Editor(editorConfig, editorCanvasData);
 
-                window.layoutEditor = new LayoutEditor.Editor(editorConfig, editorCanvasData);
-            })(jQuery);
+                var host = new window.Orchard.Layouts.LayoutDesignerHost($(".layout-designer"), layoutEditor);
+                $(".layout-designer").each(function (e) {
+                    var designer = $(this);
+                    var dialog = designer.find(".layout-editor-help-dialog");
+                    designer.find(".layout-editor-help-link").click(function (e) {
+                        dialog.dialog({
+                            modal: true,
+                            width: 840
+                        });
+                        e.preventDefault();
+                    });
+                });
+            });
         </script>
     }
 
@@ -56,10 +64,8 @@
     <div class="layout-designer"
          data-modelstate-valid="@ViewData.ModelState.IsValid.ToString().ToLower()"
          data-display-type="Design"
-         data-edit-url="@Url.Action("Edit", "Element", new { session = Model.SessionKey, contentId = contentId, contentType = contentType, area = "Orchard.Layouts" })"
-         data-add-url="@Url.Action("Add", "Element", new {session = Model.SessionKey, contentId = contentId, contentType = contentType, area = "Orchard.Layouts"})"
-         data-add-direct-url="@Url.Action("CreateDirect", "Element", new { contentId = contentId, contentType = contentType, area = "Orchard.Layouts" })"
-         data-apply-template-url="@Url.Action("ApplyTemplate", "Layout", new { contentId = contentId, contentType = contentType, area = "Orchard.Layouts" })"
+         data-edit-url="@Url.Action("Edit", "Element", new { session = Model.SessionKey, contentId, contentType, area = "Orchard.Layouts" })"
+         data-apply-template-url="@Url.Action("ApplyTemplate", "Layout", new { contentId, contentType, area = "Orchard.Layouts" })"
          data-confirm-delete-prompt="@T("Are you sure you want to delete this element?")"
          data-editor-dialog-title-format="@T("$1 Properties")"
          data-editor-dialog-name="Layout"
@@ -68,6 +74,7 @@
 
         @Html.HiddenFor(m => m.SessionKey)
         @Html.HiddenFor(m => m.Data, new { @class = "layout-data-field" })
+        @Html.HiddenFor(m => m.RecycleBin, new { @class = "recycle-bin-data-field" })
         <div class="layout-editor-toolbar">
             <ol class="layout-editor-toolbar-group">
                 <li>

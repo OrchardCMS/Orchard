@@ -22,6 +22,7 @@
         public virtual void Indexed(IndexContentContext context) {}
         public virtual void Importing(ImportContentContext context) {}
         public virtual void Imported(ImportContentContext context) {}
+        public virtual void ImportCompleted(ImportContentContext importContentContext) {}
         public virtual void Exporting(ExportContentContext context) {}
         public virtual void Exported(ExportContentContext context) {}
         public virtual void Restoring(RestoreContentContext context) { }

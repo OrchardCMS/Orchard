@@ -36,11 +36,8 @@ namespace Orchard.Widgets {
 
             ContentDefinitionManager.AlterTypeDefinition("HtmlWidget",
                 cfg => cfg
-                    .WithPart("WidgetPart")
                     .WithPart("BodyPart")
-                    .WithPart("CommonPart")
-                    .WithPart("IdentityPart")
-                    .WithSetting("Stereotype", "Widget")
+                    .AsWidgetWithIdentity()
                 );
 
             return 5;

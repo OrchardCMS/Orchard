@@ -1,6 +1,6 @@
 ﻿using System.Xml.Linq;
 using Orchard.Azure.MediaServices.Models.Records;
-using Orchard.Core.Common.Utilities;
+using Orchard.ContentManagement.Utilities;
 
 namespace Orchard.Azure.MediaServices.Models.Jobs {
     public class Task {

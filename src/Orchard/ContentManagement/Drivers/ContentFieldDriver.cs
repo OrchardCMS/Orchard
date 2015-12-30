@@ -63,6 +63,10 @@ namespace Orchard.ContentManagement.Drivers {
             Process(context.ContentItem, (part, field) => Imported(part, field, context), context.Logger);
         }
 
+        void IContentFieldDriver.ImportCompleted(ImportContentContext context) {
+            Process(context.ContentItem, (part, field) => ImportCompleted(part, field, context), context.Logger);
+        }
+
         void IContentFieldDriver.Exporting(ExportContentContext context) {
             Process(context.ContentItem, (part, field) => Exporting(part, field, context), context.Logger);
         }
@@ -110,6 +114,7 @@ namespace Orchard.ContentManagement.Drivers {
         
         protected virtual void Importing(ContentPart part, TField field, ImportContentContext context) { }
         protected virtual void Imported(ContentPart part, TField field, ImportContentContext context) { }
+        protected virtual void ImportCompleted(ContentPart part, TField field, ImportContentContext context) { }
         protected virtual void Exporting(ContentPart part, TField field, ExportContentContext context) { }
         protected virtual void Exported(ContentPart part, TField field, ExportContentContext context) { }
 

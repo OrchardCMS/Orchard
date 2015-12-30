@@ -10,6 +10,7 @@
         this.dropTargetElement = null;
         this.isDragging = false;
         this.isResizing = false;
+        this.recycleBin = new LayoutEditor.RecycleBin();
 
         this.resetToolboxElements = function () {
             this.toolboxElements = [

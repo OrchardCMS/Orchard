@@ -35,11 +35,18 @@ using Orchard.Mvc.ViewEngines.ThemeAwareness;
 using Orchard.Services;
 using Orchard.WebApi;
 using Orchard.WebApi.Filters;
+using System.Linq;
+using System.Web.Configuration;
 
 namespace Orchard.Environment {
     public static class OrchardStarter {
         public static IContainer CreateHostContainer(Action<ContainerBuilder> registrations) {
+            ExtensionLocations extensionLocations = new ExtensionLocations();
+
             var builder = new ContainerBuilder();
+            // Application paths and parameters
+            builder.RegisterInstance(extensionLocations);
+
             builder.RegisterModule(new CollectionOrderModule());
             builder.RegisterModule(new LoggingModule());
             builder.RegisterModule(new EventsModule());
@@ -79,7 +86,6 @@ namespace Orchard.Environment {
             RegisterVolatileProvider<DefaultVirtualPathMonitor, IVirtualPathMonitor>(builder);
             RegisterVolatileProvider<DefaultVirtualPathProvider, IVirtualPathProvider>(builder);
             
-
             builder.RegisterType<DefaultOrchardHost>().As<IOrchardHost>().As<IEventHandler>()
                 .Named<IEventHandler>(typeof(IShellSettingsManagerEventHandler).Name)
                 .Named<IEventHandler>(typeof(IShellDescriptorManagerEventHandler).Name)
@@ -100,11 +106,11 @@ namespace Orchard.Environment {
                         {
                             builder.RegisterType<ExtensionHarvester>().As<IExtensionHarvester>().SingleInstance();
                             builder.RegisterType<ModuleFolders>().As<IExtensionFolders>().SingleInstance()
-                                .WithParameter(new NamedParameter("paths", new[] { "~/Modules" }));
+                                .WithParameter(new NamedParameter("paths", extensionLocations.ModuleLocations));
                             builder.RegisterType<CoreModuleFolders>().As<IExtensionFolders>().SingleInstance()
-                                .WithParameter(new NamedParameter("paths", new[] { "~/Core" }));
+                                .WithParameter(new NamedParameter("paths", extensionLocations.CoreLocations));
                             builder.RegisterType<ThemeFolders>().As<IExtensionFolders>().SingleInstance()
-                                .WithParameter(new NamedParameter("paths", new[] { "~/Themes" }));
+                                .WithParameter(new NamedParameter("paths", extensionLocations.ThemeLocations));
 
                             builder.RegisterType<CoreExtensionLoader>().As<IExtensionLoader>().SingleInstance();
                             builder.RegisterType<ReferencedExtensionLoader>().As<IExtensionLoader>().SingleInstance();
@@ -153,7 +159,7 @@ namespace Orchard.Environment {
             FilterProviders.Providers.Add(new OrchardFilterProvider());
 
             GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpControllerSelector), new DefaultOrchardWebApiHttpControllerSelector(GlobalConfiguration.Configuration));
-            GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpControllerActivator), new DefaultOrchardWebApiHttpHttpControllerActivator(GlobalConfiguration.Configuration));
+            GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpControllerActivator), new DefaultOrchardWebApiHttpControllerActivator(GlobalConfiguration.Configuration));
             GlobalConfiguration.Configuration.DependencyResolver = new AutofacWebApiDependencyResolver(container);
 
             GlobalConfiguration.Configuration.Filters.Add(new OrchardApiActionFilterDispatcher());
@@ -173,7 +179,6 @@ namespace Orchard.Environment {
 
             return container;
         }
-
 
         private static void RegisterVolatileProvider<TRegister, TService>(ContainerBuilder builder) where TService : IVolatileProvider {
             builder.RegisterType<TRegister>()

@@ -17,7 +17,7 @@ namespace Orchard.Tags.Handlers {
             _signals = signals;
 
             OnInitializing<TagCloudPart>((context, part) => part
-                ._tagCountField.Loader(tags =>
+                ._tagCountField.Loader(() =>
                     tagCloudService.GetPopularTags(part.Buckets, part.Slug).ToList()
                     ));
 

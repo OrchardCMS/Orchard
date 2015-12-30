@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Contents.Extensions;
@@ -126,7 +127,7 @@ namespace Orchard.Projections {
                     .Column<bool>("CreateLabel")
                     .Column<string>("Label", c => c.WithLength(255))
                     .Column<bool>("LinkToContent")
-                    
+
                     .Column<bool>("CustomizePropertyHtml")
                     .Column<string>("CustomPropertyTag", c => c.WithLength(64))
                     .Column<string>("CustomPropertyCss", c => c.WithLength(64))
@@ -190,8 +191,7 @@ namespace Orchard.Projections {
                      .WithPart("AutoroutePart", builder => builder
                         .WithSetting("AutorouteSettings.AllowCustomPattern", "True")
                         .WithSetting("AutorouteSettings.AutomaticAdjustmentOnEdit", "False")
-                        .WithSetting("AutorouteSettings.PatternDefinitions", "[{\"Name\":\"Title\",\"Pattern\":\"{Content.Slug}\",\"Description\":\"my-projections\"}]")
-                        .WithSetting("AutorouteSettings.DefaultPatternIndex", "0"))
+                        .WithSetting("AutorouteSettings.PatternDefinitions", "[{\"Name\":\"Title\",\"Pattern\":\"{Content.Slug}\",\"Description\":\"my-projections\"}]"))
                     .WithPart("MenuPart")
                     .WithPart("ProjectionPart")
                     .WithPart("AdminMenuPart", p => p.WithSetting("AdminMenuPartTypeSettings.DefaultPosition", "5"))
@@ -267,12 +267,20 @@ namespace Orchard.Projections {
         }
 
         public int UpdateFrom2() {
-            SchemaBuilder.AlterTable("ProjectionPartRecord",
-                            table => table
-                                .AlterColumn("PagerSuffix", c => c.WithType(DbType.String).WithLength(255))
-                            );
+            SchemaBuilder.AlterTable("ProjectionPartRecord", table => table
+                .AlterColumn("PagerSuffix", c => c.WithType(DbType.String).WithLength(255))
+            );
 
             return 3;
+        }
+
+        public int UpdateFrom3() {
+            ContentDefinitionManager.AlterTypeDefinition("NavigationQueryMenuItem",
+                cfg => cfg
+                    .WithPart("IdentityPart")
+                );
+
+            return 4;
         }
     }
 }

@@ -72,7 +72,7 @@ namespace Orchard.MediaLibrary.Factories {
                 }
             }
             catch (ArgumentException) {
-                // Still trying to get .ico dimensions when it's blocked in System.Drawing, see: https://orchard.codeplex.com/workitem/20644
+                // Still trying to get .ico dimensions when it's blocked in System.Drawing, see: https://github.com/OrchardCMS/Orchard/issues/4473
 
                 if (mimeType != "image/x-icon" && mimeType != "image/vnd.microsoft.icon") {
                     throw;

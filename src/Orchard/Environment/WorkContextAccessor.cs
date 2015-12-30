@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Runtime.Remoting;
+using System.Runtime.Remoting.Messaging;
 using System.Web;
 using Autofac;
 using Orchard.Logging;
@@ -15,19 +16,22 @@ namespace Orchard.Environment {
         // a different symbolic key is used for each tenant.
         // this guarantees the correct accessor is being resolved.
         readonly object _workContextKey = new object();
-
-        [ThreadStatic]
-        static ConcurrentDictionary<object, WorkContext> _threadStaticContexts;
+        private readonly string _workContextSlot;
 
         public WorkContextAccessor(
             IHttpContextAccessor httpContextAccessor,
             ILifetimeScope lifetimeScope) {
             _httpContextAccessor = httpContextAccessor;
             _lifetimeScope = lifetimeScope;
+            _workContextSlot = "WorkContext." + Guid.NewGuid().ToString("n");
         }
 
         public WorkContext GetContext(HttpContextBase httpContext) {
-            return httpContext.Items[_workContextKey] as WorkContext;
+            if (!httpContext.IsBackgroundContext())
+                return httpContext.Items[_workContextKey] as WorkContext;
+
+            var context = CallContext.LogicalGetData(_workContextSlot) as ObjectHandle;
+            return context != null ? context.Unwrap() as WorkContext : null;
         }
 
         public WorkContext GetContext() {
@@ -35,8 +39,8 @@ namespace Orchard.Environment {
             if (!httpContext.IsBackgroundContext())
                 return GetContext(httpContext);
 
-            WorkContext workContext;
-            return EnsureThreadStaticContexts().TryGetValue(_workContextKey, out workContext) ? workContext : null;
+            var context = CallContext.LogicalGetData(_workContextSlot) as ObjectHandle;
+            return context != null ? context.Unwrap() as WorkContext : null;
         }
 
         public IWorkContextScope CreateWorkContextScope(HttpContextBase httpContext) {
@@ -53,7 +57,6 @@ namespace Orchard.Environment {
                 _workContextKey);
         }
 
-
         public IWorkContextScope CreateWorkContextScope() {
             var httpContext = _httpContextAccessor.Current();
             if (!httpContext.IsBackgroundContext())
@@ -64,17 +67,8 @@ namespace Orchard.Environment {
             var events = workLifetime.Resolve<IEnumerable<IWorkContextEvents>>();
             events.Invoke(e => e.Started(), NullLogger.Instance);
 
-            return new ThreadStaticScopeImplementation(
-                events,
-                workLifetime,
-                EnsureThreadStaticContexts(),
-                _workContextKey);
+            return new CallContextScopeImplementation(events, workLifetime, _workContextSlot);
         }
-
-        static ConcurrentDictionary<object, WorkContext> EnsureThreadStaticContexts() {
-            return _threadStaticContexts ?? (_threadStaticContexts = new ConcurrentDictionary<object, WorkContext>());
-        }
-
 
         class HttpContextScopeImplementation : IWorkContextScope {
             readonly WorkContext _workContext;
@@ -109,19 +103,23 @@ namespace Orchard.Environment {
             }
         }
 
-        class ThreadStaticScopeImplementation : IWorkContextScope {
+        class CallContextScopeImplementation : IWorkContextScope {
             readonly WorkContext _workContext;
             readonly Action _disposer;
 
-            public ThreadStaticScopeImplementation(IEnumerable<IWorkContextEvents> events, ILifetimeScope lifetimeScope, ConcurrentDictionary<object, WorkContext> contexts, object workContextKey) {
+            public CallContextScopeImplementation(IEnumerable<IWorkContextEvents> events, ILifetimeScope lifetimeScope, string workContextSlot) {
+
+                CallContext.LogicalSetData(workContextSlot, null);
+
                 _workContext = lifetimeScope.Resolve<WorkContext>();
-                contexts.AddOrUpdate(workContextKey, _workContext, (a, b) => _workContext);
+                var httpContext = lifetimeScope.Resolve<HttpContextBase>();
+                _workContext.HttpContext = httpContext;
+
+                CallContext.LogicalSetData(workContextSlot, new ObjectHandle(_workContext));
 
                 _disposer = () => {
                     events.Invoke(e => e.Finished(), NullLogger.Instance);
-  
-                    WorkContext removedContext;
-                    contexts.TryRemove(workContextKey, out removedContext);
+                    CallContext.FreeNamedDataSlot(workContextSlot);
                     lifetimeScope.Dispose();
                 };
             }

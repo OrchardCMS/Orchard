@@ -9,6 +9,7 @@ using Orchard.ContentTypes.Events;
 using Orchard.ContentTypes.ViewModels;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Localization;
+using Orchard.Mvc;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.ContentTypes.Services {
@@ -107,7 +108,7 @@ namespace Orchard.ContentTypes.Services {
                     var partViewModel = part;
 
                     // enable updater to be aware of changing part prefix
-                    updater._prefix = secondHalf => String.Format("{0}.{1}", partViewModel.Prefix, secondHalf);
+                    updater.Prefix = secondHalf => String.Format("{0}.{1}", partViewModel.Prefix, secondHalf);
 
                     // allow extensions to alter typePart configuration
                     typeBuilder.WithPart(partViewModel.PartDefinition.Name, typePartBuilder => {
@@ -125,7 +126,7 @@ namespace Orchard.ContentTypes.Services {
                             var fieldViewModel = field;
 
                             // enable updater to be aware of changing field prefix
-                            updater._prefix = secondHalf =>
+                            updater.Prefix = secondHalf =>
                                 String.Format("{0}.{1}.{2}", fieldFirstHalf, fieldViewModel.Prefix, secondHalf);
                             // allow extensions to alter partField configuration
                             partBuilder.WithField(fieldViewModel.Name, partFieldBuilder => {
@@ -143,7 +144,7 @@ namespace Orchard.ContentTypes.Services {
                             var fieldViewModel = field;
 
                             // enable updater to be aware of changing field prefix
-                            updater._prefix = secondHalf =>
+                            updater.Prefix = secondHalf =>
                                 string.Format("{0}.{1}", fieldViewModel.Prefix, secondHalf);
 
                             // allow extensions to alter partField configuration
@@ -369,24 +370,6 @@ namespace Orchard.ContentTypes.Services {
             }
 
             return string.Format("{0}-{1}", name, version);
-        }
-
-        class Updater : IUpdateModel {
-            private readonly IUpdateModel _thunk;
-
-            public Updater(IUpdateModel thunk) {
-                _thunk = thunk;
-            }
-
-            public Func<string, string> _prefix = x => x;
-
-            public bool TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) where TModel : class {
-                return _thunk.TryUpdateModel(model, _prefix(prefix), includeProperties, excludeProperties);
-            }
-
-            public void AddModelError(string key, LocalizedString errorMessage) {
-                _thunk.AddModelError(_prefix(key), errorMessage);
-            }
         }
     }
 }

@@ -1,14 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Web.Mvc;
-using System.Web.Routing;
 using Orchard.ContentManagement;
-using Orchard.Core.Common.Models;
 using Orchard.Core.Navigation.Models;
 using Orchard.Core.Navigation.Services;
 using Orchard.Core.Navigation.ViewModels;
-using Orchard.Core.Title.Models;
 using Orchard.Localization;
 using Orchard.Mvc.Extensions;
 using Orchard.UI;
@@ -16,6 +12,7 @@ using Orchard.UI.Notify;
 using Orchard.UI.Navigation;
 using Orchard.Utility;
 using System;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Logging;
 using Orchard.Exceptions;
 
@@ -24,17 +21,20 @@ namespace Orchard.Core.Navigation.Controllers {
     public class AdminController : Controller, IUpdateModel {
         private readonly IMenuService _menuService;
         private readonly INavigationManager _navigationManager;
+        private readonly IEnumerable<IContentHandler> _handlers;
         private readonly IMenuManager _menuManager;
 
         public AdminController(
             IOrchardServices orchardServices,
             IMenuService menuService,
             IMenuManager menuManager,
-            INavigationManager navigationManager) {
+            INavigationManager navigationManager,
+            IEnumerable<IContentHandler> handlers) {
             _menuService = menuService;
             _menuManager = menuManager;
             _navigationManager = navigationManager;
-            
+            _handlers = handlers;
+
             Services = orchardServices;
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
@@ -91,11 +91,20 @@ namespace Orchard.Core.Navigation.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageMenus, T("Couldn't manage the main menu")))
                 return new HttpUnauthorizedResult();
 
-            // See http://orchard.codeplex.com/workitem/17116
+            // See https://github.com/OrchardCMS/Orchard/issues/948
             if (menuItemEntries != null) {
                 foreach (var menuItemEntry in menuItemEntries) {
                     MenuPart menuPart = _menuService.Get(menuItemEntry.MenuItemId);
-                    menuPart.MenuPosition = menuItemEntry.Position;
+
+                    if (menuPart.MenuPosition != menuItemEntry.Position) {
+                        var context = new UpdateContentContext(menuPart.ContentItem);
+
+                        _handlers.Invoke(handler => handler.Updating(context), Logger);
+
+                        menuPart.MenuPosition = menuItemEntry.Position;
+
+                        _handlers.Invoke(handler => handler.Updated(context), Logger);
+                    }
                 }
             }
 

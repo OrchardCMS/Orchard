@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Orchard.Caching;
 using Orchard.Core.Settings.State.Records;
 using Orchard.Data;
 using Orchard.Environment.State;
@@ -10,16 +11,19 @@ namespace Orchard.Core.Settings.State {
     public class ShellStateManager : Component, IShellStateManager {
         private readonly IRepository<ShellStateRecord> _shellStateRepository;
         private readonly IShellDescriptorManager _shellDescriptorManager;
+        private readonly ICacheManager _cacheManager;
 
         public ShellStateManager(
             IRepository<ShellStateRecord> shellStateRepository,
-            IShellDescriptorManager shellDescriptorManager) {
+            IShellDescriptorManager shellDescriptorManager,
+            ICacheManager cacheManager) {
             _shellStateRepository = shellStateRepository;
             _shellDescriptorManager = shellDescriptorManager;
+            _cacheManager = cacheManager;
         }
 
         public ShellState GetShellState() {
-            var stateRecord = _shellStateRepository.Get(x => x != null) ?? new ShellStateRecord();
+            var stateRecord = GetExistingOrNewShellStateRecord();
             var descriptor = _shellDescriptorManager.GetShellDescriptor();
             var extraFeatures = descriptor == null ? Enumerable.Empty<string>() : descriptor.Features
                 .Select(r => r.Name)
@@ -38,9 +42,23 @@ namespace Orchard.Core.Settings.State {
                     .ToArray(),
             };
         }
+        private ShellStateRecord GetExistingOrNewShellStateRecord() {
+            //Fix for https://orchard.codeplex.com/workitem/21176 / https://github.com/OrchardCMS/Orchard/issues/6075 change to get ensure ShellState record only retrieved once.
+            var shellStateRecordId = _cacheManager.Get("ShellStateRecordId", ctx => {
+                var shellState = _shellStateRepository.Table.FirstOrDefault();
+
+                if (shellState == null) {
+                    shellState = new ShellStateRecord();
+                    _shellStateRepository.Create(shellState);
+                }
+               return shellState.Id;
+               });
+            
+                return _shellStateRepository.Get(shellStateRecordId);
+        }
 
         private ShellFeatureStateRecord FeatureRecord(string name) {
-            var stateRecord = _shellStateRepository.Get(x => x != null) ?? new ShellStateRecord();
+            var stateRecord = GetExistingOrNewShellStateRecord();
             var record = stateRecord.Features.SingleOrDefault(x => x.Name == name);
             if (record == null) {
                 record = new ShellFeatureStateRecord { Name = name };

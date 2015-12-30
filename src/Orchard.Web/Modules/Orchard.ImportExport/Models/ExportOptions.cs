@@ -1,17 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Orchard.ImportExport.Models {
+    [Obsolete]
     public class ExportOptions {
-        public bool ExportMetadata { get; set; }
-        public bool ExportData { get; set; }
-        public int? ImportBatchSize { get; set; }
-        public VersionHistoryOptions VersionHistoryOptions { get; set; }
-        public bool ExportSiteSettings { get; set; }
         public IEnumerable<string> CustomSteps { get; set; }
-    }
-
-    public enum VersionHistoryOptions {
-        Published,
-        Draft,
     }
 }

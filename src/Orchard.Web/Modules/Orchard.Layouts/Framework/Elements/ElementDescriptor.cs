@@ -15,9 +15,16 @@ namespace Orchard.Layouts.Framework.Elements {
             Category = category;
             GetDrivers = Enumerable.Empty<IElementDriver>;
             CreatingDisplay = context => { };
-            Display = context => {};
+            Displaying = context => { };
             Editor = context => { };
             UpdateEditor = context => { };
+            LayoutSaving = context => { };
+            Removing = context => { };
+            Exporting = context => { };
+            Exported = context => { };
+            Importing = context => { };
+            Imported = context => { };
+            ImportCompleted = context => { };
             StateBag = new Dictionary<string, object>();
         }
 
@@ -29,9 +36,17 @@ namespace Orchard.Layouts.Framework.Elements {
         public string TypeName { get; set; }
         public Func<IEnumerable<IElementDriver>> GetDrivers { get; set; }
         public Action<ElementCreatingDisplayShapeContext> CreatingDisplay { get; set; }
-        public Action<ElementDisplayContext> Display { get; set; }
+        public Action<ElementDisplayingContext> Displaying { get; set; }
+        public Action<ElementDisplayedContext> Displayed { get; set; }
         public Action<ElementEditorContext> Editor { get; set; }
         public Action<ElementEditorContext> UpdateEditor { get; set; }
+        public Action<ElementSavingContext> LayoutSaving { get; set; }
+        public Action<ElementRemovingContext> Removing { get; set; }
+        public Action<ExportElementContext> Exporting { get; set; }
+        public Action<ExportElementContext> Exported { get; set; }
+        public Action<ImportElementContext> Importing { get; set; }
+        public Action<ImportElementContext> Imported { get; set; }
+        public Action<ImportElementContext> ImportCompleted { get; set; }
         public bool IsSystemElement { get; set; }
         public bool EnableEditorDialog { get; set; }
         public IDictionary<string, object> StateBag { get; set; }

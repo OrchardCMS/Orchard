@@ -1,41 +1,36 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using Newtonsoft.Json.Linq;
 using Orchard.Environment;
 using Orchard.Events;
-using Orchard.Logging;
 using Orchard.JobsQueue.Models;
-using Orchard.Services;
-using Orchard.TaskLease.Services;
+using Orchard.Logging;
+using Orchard.Tasks.Locking.Services;
 
 namespace Orchard.JobsQueue.Services {
     public class JobsQueueProcessor : IJobsQueueProcessor {
         private readonly Work<IJobsQueueManager> _jobsQueueManager;
-        private readonly Work<IClock> _clock;
-        private readonly Work<ITaskLeaseService> _taskLeaseService;
-        private readonly IEventBus _eventBus;
-        private readonly ReaderWriterLockSlim _rwl = new ReaderWriterLockSlim();
+        private readonly Work<IEventBus> _eventBus;
+        private readonly Work<IDistributedLockService> _distributedLockService;
 
         public JobsQueueProcessor(
-            Work<IClock> clock,
             Work<IJobsQueueManager> jobsQueueManager,
-            Work<ITaskLeaseService> taskLeaseService,
-            IEventBus eventBus) {
-            _clock = clock;
+            Work<IEventBus> eventBus,
+            Work<IDistributedLockService> distributedLockService) {
+
             _jobsQueueManager = jobsQueueManager;
-            _taskLeaseService = taskLeaseService;
             _eventBus = eventBus;
+            _distributedLockService = distributedLockService;
             Logger = NullLogger.Instance;
         }
 
         public ILogger Logger { get; set; }
+
         public void ProcessQueue() {
-            // prevent two threads on the same machine to process the message queue
-            if (_rwl.TryEnterWriteLock(0)) {
-                try {
-                    _taskLeaseService.Value.Acquire("JobsQueueProcessor", _clock.Value.UtcNow.AddMinutes(5));
+            IDistributedLock @lock;
+            if (_distributedLockService.Value.TryAcquireLock(GetType().FullName, TimeSpan.FromMinutes(5), out @lock)) {
+                using (@lock) {
                     IEnumerable<QueuedJobRecord> messages;
 
                     while ((messages = _jobsQueueManager.Value.GetJobs(0, 10).ToArray()).Any()) {
@@ -43,9 +38,6 @@ namespace Orchard.JobsQueue.Services {
                             ProcessMessage(message);
                         }
                     }
-                }
-                finally {
-                    _rwl.ExitWriteLock();
                 }
             }
         }
@@ -58,7 +50,7 @@ namespace Orchard.JobsQueue.Services {
                 var payload = JObject.Parse(job.Parameters);
                 var parameters = payload.ToDictionary();
 
-                _eventBus.Notify(job.Message, parameters);
+                _eventBus.Value.Notify(job.Message, parameters);
 
                 Logger.Debug("Processed job Id {0}.", job.Id);
             }

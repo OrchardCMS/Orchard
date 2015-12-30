@@ -1,0 +1,8 @@
+﻿@model Orchard.Core.Common.ViewModels.TextFieldSettingsEventsViewModel
+
+@* This is a token-less default value editor that can be overridden from features that can depend on Orchard.Tokens. *@
+
+<label for="@Html.FieldIdFor(m => m.Settings.DefaultValue)">@T("Default value")</label>
+@Html.TextBoxFor(m => m.Settings.DefaultValue, new { @class = "text large" })
+<span class="hint">@T("Default value for the field. If there is no value given for the actual field, this will be filled in. (optional)")</span>
+@Html.ValidationMessageFor(m => m.Settings.DefaultValue)

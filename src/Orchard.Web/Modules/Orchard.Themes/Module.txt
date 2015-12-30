@@ -8,3 +8,7 @@ OrchardVersion: 1.9
 Description: The themes module makes it possible for Orchard applications to customize the look and feel of an Orchard web site.
 FeatureDescription: Basic theming capability.
 Category: Core
+Features:
+    Orchard.Themes:
+        Description: Basic theming capability.
+        Category: Core

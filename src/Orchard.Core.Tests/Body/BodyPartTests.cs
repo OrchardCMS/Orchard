@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Autofac;
-using JetBrains.Annotations;
 using Moq;
 using NUnit.Framework;
 using Orchard.Caching;
@@ -83,7 +82,6 @@ namespace Orchard.Core.Tests.Body {
             }
         }
 
-        [UsedImplicitly]
         public class ThingHandler : ContentHandler {
             public ThingHandler() {
                 Filters.Add(new ActivatingFilter<Thing>(ThingDriver.ContentTypeName));

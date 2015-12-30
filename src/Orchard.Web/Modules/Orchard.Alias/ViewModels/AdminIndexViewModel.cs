@@ -13,6 +13,7 @@ namespace Orchard.Alias.ViewModels {
         public AliasInfo Alias { get; set; }
         public bool IsChecked { get; set; }
     }
+
     public class AdminIndexOptions {
         public string Search { get; set; }
         public AliasOrder Order { get; set; }
@@ -25,7 +26,9 @@ namespace Orchard.Alias.ViewModels {
     }
 
     public enum AliasFilter {
-        All
+        All,
+        Managed,
+        Unmanaged
     }
 
     public enum AliasBulkAction {

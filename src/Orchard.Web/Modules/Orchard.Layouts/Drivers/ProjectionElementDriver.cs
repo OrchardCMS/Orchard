@@ -19,6 +19,7 @@ using Orchard.Projections.ViewModels;
 using Orchard.Tokens;
 using Orchard.UI.Navigation;
 using Orchard.Layouts.Helpers;
+using Orchard.Layouts.Services;
 using DescribeContext = Orchard.Forms.Services.DescribeContext;
 
 namespace Orchard.Layouts.Drivers {
@@ -32,13 +33,13 @@ namespace Orchard.Layouts.Drivers {
         private readonly IDisplayHelperFactory _displayHelperFactory;
 
         public ProjectionElementDriver(
-            IFormManager formManager,
+            IFormsBasedElementServices formsServices,
             IProjectionManager projectionManager,
             IOrchardServices services,
             IRepository<LayoutRecord> layoutRepository,
             ITokenizer tokenizer,
             IDisplayHelperFactory displayHelperFactory)
-            : base(formManager) {
+            : base(formsServices) {
 
             _projectionManager = projectionManager;
             _contentManager = services.ContentManager;
@@ -54,7 +55,7 @@ namespace Orchard.Layouts.Drivers {
             }
         }
 
-        protected override void OnDisplaying(Projection element, ElementDisplayContext context) {
+        protected override void OnDisplaying(Projection element, ElementDisplayingContext context) {
             var queryId = element.QueryId;
             var layoutId = element.LayoutId;
             var query = queryId != null ? _contentManager.Get<QueryPart>(queryId.Value) : default(QueryPart);
@@ -298,7 +299,7 @@ namespace Orchard.Layouts.Drivers {
             }
         }
 
-        protected override void OnImporting(Projection element, ImportElementContext context) {
+        protected override void OnImportCompleted(Projection element, ImportElementContext context) {
             var queryIdentity = context.ExportableData.Get("QueryId");
             var query = queryIdentity != null ? context.Session.GetItemFromSession(queryIdentity) : default(ContentManagement.ContentItem);
 

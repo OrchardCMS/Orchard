@@ -5,10 +5,10 @@ using System.Linq;
 using System.Web.Mvc;
 using Orchard.DynamicForms.Elements;
 using Orchard.Environment.Extensions;
-using Orchard.Forms.Services;
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
 using Orchard.Layouts.Helpers;
+using Orchard.Layouts.Services;
 using Orchard.Taxonomies.Services;
 using Orchard.Tokens;
 using DescribeContext = Orchard.Forms.Services.DescribeContext;
@@ -19,8 +19,8 @@ namespace Orchard.DynamicForms.Drivers {
         private readonly ITaxonomyService _taxonomyService;
         private readonly ITokenizer _tokenizer;
 
-        public TaxonomyElementDriver(IFormManager formManager, ITaxonomyService taxonomyService, ITokenizer tokenizer)
-            : base(formManager) {
+        public TaxonomyElementDriver(IFormsBasedElementServices formsServices, ITaxonomyService taxonomyService, ITokenizer tokenizer)
+            : base(formsServices) {
             _taxonomyService = taxonomyService;
             _tokenizer = tokenizer;
         }
@@ -120,14 +120,14 @@ namespace Orchard.DynamicForms.Drivers {
             });
         }
 
-        protected override void OnDisplaying(Taxonomy element, ElementDisplayContext context) {
+        protected override void OnDisplaying(Taxonomy element, ElementDisplayingContext context) {
             var taxonomyId = element.TaxonomyId;
             var typeName = element.GetType().Name;
             var displayType = context.DisplayType;
             var tokenData = context.GetTokenData();
 
             context.ElementShape.ProcessedName = _tokenizer.Replace(element.Name, tokenData);
-            context.ElementShape.ProcessedLabel = _tokenizer.Replace(element.Label, tokenData);
+            context.ElementShape.ProcessedLabel = _tokenizer.Replace(element.Label, tokenData, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
             context.ElementShape.TermOptions = GetTermOptions(element, context.DisplayType, taxonomyId, tokenData).ToArray();
             context.ElementShape.Metadata.Alternates.Add(String.Format("Elements_{0}__{1}", typeName, element.InputType));
             context.ElementShape.Metadata.Alternates.Add(String.Format("Elements_{0}_{1}__{2}", typeName, displayType, element.InputType));

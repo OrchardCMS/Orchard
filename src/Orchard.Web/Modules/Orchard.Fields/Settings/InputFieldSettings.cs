@@ -18,6 +18,7 @@
         public string Pattern { get; set; }
         public string EditorCssClass { get; set; }
         public int MaxLength { get; set; }
+        public string DefaultValue { get; set; }
 
         public InputFieldSettings() {
             Type = InputType.Text;

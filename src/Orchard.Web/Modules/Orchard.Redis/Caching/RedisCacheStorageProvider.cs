@@ -54,7 +54,7 @@ namespace Orchard.Redis.Caching {
         }
 
         public void Remove(string key) {
-            Database.KeyDelete(key);
+            Database.KeyDelete(GetLocalizedKey(key));
         }
 
         public void Clear() {

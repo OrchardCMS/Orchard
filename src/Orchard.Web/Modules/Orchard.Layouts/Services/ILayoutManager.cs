@@ -6,7 +6,16 @@ using Orchard.Layouts.Models;
 
 namespace Orchard.Layouts.Services {
     public interface ILayoutManager : IDependency {
+        /// <summary>
+        /// Returns all content items with a LayoutPart whose IsTemplate setting is set to true.
+        /// </summary>
         IEnumerable<LayoutPart> GetTemplates();
+
+        /// <summary>
+        /// Returns all content items with a LayoutPart.
+        /// </summary>
+        IEnumerable<LayoutPart> GetLayouts();
+
         LayoutPart GetLayout(int id);
         IEnumerable<Element> LoadElements(ILayoutAspect layout);
 
@@ -45,6 +54,9 @@ namespace Orchard.Layouts.Services {
         IEnumerable<LayoutPart> GetTemplateClients(int templateId, VersionOptions versionOptions);
         IEnumerable<Element> CreateDefaultLayout();
         void Exporting(ExportLayoutContext context);
+        void Exported(ExportLayoutContext context);
         void Importing(ImportLayoutContext context);
+        void Imported(ImportLayoutContext context);
+        void ImportCompleted(ImportLayoutContext context);
     }
 }

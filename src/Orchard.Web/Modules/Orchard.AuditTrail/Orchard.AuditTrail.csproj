@@ -161,10 +161,12 @@
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
       <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
       <Name>Orchard.Framework</Name>
+      <Private>false</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Core\Orchard.Core.csproj">
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
+      <Private>false</Private>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.ContentTypes\Orchard.ContentTypes.csproj">
       <Project>{0e7646e8-fe8f-43c1-8799-d97860925ec4}</Project>
@@ -192,6 +194,8 @@
     <Compile Include="Menus\RecycleBinAdminMenu.cs" />
     <Compile Include="Providers\AuditTrail\AuditTrailEventSettingEventData.cs" />
     <Compile Include="Providers\AuditTrail\AuditTrailManagerExtensions.cs" />
+    <Compile Include="Recipes\Builders\AuditTrailStep.cs" />
+    <Compile Include="Recipes\Executors\AuditTrailStep.cs" />
     <Compile Include="ViewModels\RecycleBinCommand.cs" />
     <Compile Include="Controllers\RecycleBinController.cs" />
     <Compile Include="Controllers\ContentController.cs" />
@@ -210,9 +214,6 @@
     <Compile Include="Helpers\HtmlExtensions.cs" />
     <Compile Include="Helpers\XmlHelper.cs" />
     <Compile Include="Helpers\StringExtensions.cs" />
-    <Compile Include="ImportExport\AuditTrailExportStep.cs" />
-    <Compile Include="ImportExport\AuditTrailExportHandler.cs" />
-    <Compile Include="ImportExport\AuditTrailImportHandler.cs" />
     <Compile Include="Models\AuditTrailEventRecordResult.cs" />
     <Compile Include="Models\AuditTrailTrimmingSettingsPart.cs" />
     <Compile Include="Providers\AuditTrail\AuditTrailTrimmingSettingsEventProvider.cs" />
@@ -327,6 +328,7 @@
   <ItemGroup>
     <Content Include="Views\AuditTrailEvent-Content-Restored.SummaryAdmin.cshtml" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

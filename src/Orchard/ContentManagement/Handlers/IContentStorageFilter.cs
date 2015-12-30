@@ -21,6 +21,7 @@ namespace Orchard.ContentManagement.Handlers {
         void Indexed(IndexContentContext context);
         void Importing(ImportContentContext context);
         void Imported(ImportContentContext context);
+        void ImportCompleted(ImportContentContext context);
         void Exporting(ExportContentContext context);
         void Exported(ExportContentContext context);
         void Restoring(RestoreContentContext context);

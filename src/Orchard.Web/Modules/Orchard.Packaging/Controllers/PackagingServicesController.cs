@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -253,11 +254,13 @@ namespace Orchard.Packaging.Controllers {
                     // Enable the features and its dependencies using recipes, so that they are run after the module's recipes
 
                     var recipe = new Recipe {
+                        Name = "Test",
                         RecipeSteps = featureIds.Select(
-                            x => new RecipeStep {
-                                Name = "Feature",
-                                Step = new XElement("Feature", new XAttribute("enable", x))
-                            })
+                            (i,x) => new RecipeStep(
+                                id: i.ToString(CultureInfo.InvariantCulture),
+                                recipeName: "Test",
+                                name: "Feature",
+                                step: new XElement("Feature", new XAttribute("enable", x))))
                     };
 
                     _recipeManager.Execute(recipe);

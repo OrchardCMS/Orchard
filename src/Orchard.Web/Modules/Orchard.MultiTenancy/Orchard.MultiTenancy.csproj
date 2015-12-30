@@ -25,6 +25,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -48,6 +49,12 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>..\..\..\..\lib\autofac\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate">
+      <HintPath>..\..\..\..\lib\nhibernate\NHibernate.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -73,9 +80,11 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Extensions\UrlHelperExtensions.cs" />
     <Compile Include="Routes.cs" />
+    <Compile Include="Services\ITenantResetEventHandler.cs" />
     <Compile Include="Services\ITenantService.cs" />
     <Compile Include="Services\TenantService.cs" />
     <Compile Include="ViewModels\ModuleEntry.cs" />
+    <Compile Include="ViewModels\TenantResetViewModel.cs" />
     <Compile Include="ViewModels\TenantEditViewModel.cs" />
     <Compile Include="ViewModels\TenantAddViewModel.cs" />
     <Compile Include="ViewModels\TenantsIndexViewModel.cs" />
@@ -122,6 +131,9 @@
       <SubType>
       </SubType>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Admin\Reset.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

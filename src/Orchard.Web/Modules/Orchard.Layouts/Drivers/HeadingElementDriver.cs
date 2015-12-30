@@ -29,7 +29,7 @@ namespace Orchard.Layouts.Drivers {
             return Editor(context, editor);
         }
 
-        protected override void OnDisplaying(Heading element, ElementDisplayContext context) {
+        protected override void OnDisplaying(Heading element, ElementDisplayingContext context) {
             context.ElementShape.ProcessedContent = _processor.ProcessContent(element.Content, "html", context.GetTokenData());
             context.ElementShape.Level = element.Level;
         }

@@ -1,11 +1,9 @@
-﻿using JetBrains.Annotations;
-using Orchard.ContentManagement;
+﻿using Orchard.ContentManagement;
 using Orchard.ContentPicker.Models;
 using Orchard.Data;
 using Orchard.ContentManagement.Handlers;
 
 namespace Orchard.ContentPicker.Handlers {
-    [UsedImplicitly]
     public class NavigationPartHandler : ContentHandler {
         private readonly IContentManager _contentManager;
         private readonly IRepository<ContentMenuItemPartRecord> _repository;
