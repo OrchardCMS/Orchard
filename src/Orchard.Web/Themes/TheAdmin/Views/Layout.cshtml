@@ -22,6 +22,12 @@
             @Display.Breadcrumb()
         </div>
         <div class="main-content">
+            @if (Model.Messages != null) {
+                <div id="messages">
+                    @Display(Model.Messages)
+                </div>
+            }
+
             @if (Model.LocalNavigation != null) {
                 <div id="local-navigation">
                     @Display(Model.LocalNavigation)
