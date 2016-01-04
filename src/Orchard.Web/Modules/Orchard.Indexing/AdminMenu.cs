@@ -5,7 +5,7 @@ using Orchard.UI.Navigation;
 namespace Orchard.Indexing {
     public class AdminMenu : INavigationProvider {
         public Localizer T { get; set; }
-        public string MenuName { get { return "admin"; } }
+        public string MenuName { get { return "top_admin"; } }
 
         public void GetNavigation(NavigationBuilder builder) {
             builder.Add(T("Settings"),

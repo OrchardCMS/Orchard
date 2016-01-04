@@ -45,9 +45,6 @@ namespace Orchard.UI.Navigation {
                 }
             }
 
-            // Set the currently selected path
-            Stack<MenuItem> selectedPath = NavigationHelper.SetSelectedPath(menuItems, workContext.HttpContext.Request, routeData);
-
             // Populate main nav
             dynamic menuShape = _shapeFactory.Menu().MenuName(menuName);
             NavigationHelper.PopulateMenu(_shapeFactory, menuShape, menuShape, menuItems);
@@ -58,6 +55,18 @@ namespace Orchard.UI.Navigation {
                 menuShape.ImageSets(menuImageSets);
 
             workContext.Layout.Navigation.Add(menuShape);
+
+            // Populate top nav
+            var topMenuName = string.Format("top_{0}", menuName);
+            IEnumerable<MenuItem> topMenuItems = _navigationManager.BuildMenu(topMenuName);
+            dynamic topMenuShape = _shapeFactory.TopMenu().MenuName(topMenuName);
+            NavigationHelper.PopulateMenu(_shapeFactory, topMenuShape, topMenuShape, topMenuItems);
+
+            workContext.Layout.TopMenu.Add(topMenuShape);
+
+            // Set the currently selected path
+            Stack<MenuItem> selectedPath = NavigationHelper.SetSelectedPath(menuItems, workContext.HttpContext.Request, routeData) 
+                ?? NavigationHelper.SetSelectedPath(topMenuItems, workContext.HttpContext.Request, routeData);
 
             // Populate local nav
             dynamic localMenuShape = _shapeFactory.LocalMenu().MenuName(string.Format("local_{0}", menuName));
