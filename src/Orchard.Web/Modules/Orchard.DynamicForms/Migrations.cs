@@ -108,7 +108,7 @@ namespace Orchard.DynamicForms {
 
         public int UpdateFrom2() {
             ContentDefinitionManager.AlterTypeDefinition("FormWidget", type => type
-                .WithPart("IdentityPart"));
+                .WithIdentity());
 
             return 3;
         }

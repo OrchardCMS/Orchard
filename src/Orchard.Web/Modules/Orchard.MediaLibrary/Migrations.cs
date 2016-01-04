@@ -59,41 +59,41 @@ namespace Orchard.MediaLibrary {
                 .DisplayedAs("Image")
                 .WithSetting("MediaFileNameEditorSettings.ShowFileNameEditor", "True")
                 .AsImage()
-                .WithPart("IdentityPart")
+                .WithIdentity()
             );
 
             ContentDefinitionManager.AlterTypeDefinition("VectorImage", td => td
                 .DisplayedAs("Vector Image")
                 .WithSetting("MediaFileNameEditorSettings.ShowFileNameEditor", "True")
                 .AsVectorImage()
-                .WithPart("IdentityPart")
+                .WithIdentity()
             );
 
             ContentDefinitionManager.AlterTypeDefinition("Video", td => td
                 .DisplayedAs("Video")
                 .WithSetting("MediaFileNameEditorSettings.ShowFileNameEditor", "True")
                 .AsVideo()
-                .WithPart("IdentityPart")
+                .WithIdentity()
             );
 
             ContentDefinitionManager.AlterTypeDefinition("Audio", td => td
                 .DisplayedAs("Audio")
                 .WithSetting("MediaFileNameEditorSettings.ShowFileNameEditor", "True")
                 .AsAudio()
-                .WithPart("IdentityPart")
+                .WithIdentity()
             );
 
             ContentDefinitionManager.AlterTypeDefinition("Document", td => td
                 .DisplayedAs("Document")
                 .WithSetting("MediaFileNameEditorSettings.ShowFileNameEditor", "True")
                 .AsDocument()
-                .WithPart("IdentityPart")
+                .WithIdentity()
             );
 
             ContentDefinitionManager.AlterTypeDefinition("OEmbed", td => td
                .DisplayedAs("External Media")
                .WithSetting("Stereotype", "Media")
-               .WithPart("IdentityPart")
+               .WithIdentity()
                .WithPart("CommonPart")
                .WithPart("MediaPart")
                .WithPart("OEmbedPart")
@@ -105,23 +105,23 @@ namespace Orchard.MediaLibrary {
 
         public int UpdateFrom2() {
             ContentDefinitionManager.AlterTypeDefinition("Image", td => td
-                .WithPart("IdentityPart")
+                .WithIdentity()
             );
 
             ContentDefinitionManager.AlterTypeDefinition("Video", td => td
-                .WithPart("IdentityPart")
+                .WithIdentity()
             );
 
             ContentDefinitionManager.AlterTypeDefinition("Audio", td => td
-                .WithPart("IdentityPart")
+                .WithIdentity()
             );
 
             ContentDefinitionManager.AlterTypeDefinition("Document", td => td
-                .WithPart("IdentityPart")
+                .WithIdentity()
             );
 
             ContentDefinitionManager.AlterTypeDefinition("OEmbed", td => td
-                .WithPart("IdentityPart")
+                .WithIdentity()
             );
 
             return 3;
@@ -200,7 +200,7 @@ namespace Orchard.MediaLibrary {
                 .DisplayedAs("Vector Image")
                 .WithSetting("Stereotype", "Media")
                 .WithSetting("MediaFileNameEditorSettings.ShowFileNameEditor", "True")
-                .WithPart("IdentityPart")
+                .WithIdentity()
                 .WithPart("CommonPart")
                 .WithPart("MediaPart")
                 .WithPart("VectorImagePart")

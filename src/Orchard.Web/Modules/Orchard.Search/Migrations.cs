@@ -27,7 +27,7 @@ namespace Orchard.Search {
 
         public int UpdateFrom2() {
             ContentDefinitionManager.AlterTypeDefinition("SearchForm",
-                cfg => cfg.WithPart("IdentityPart"));
+                cfg => cfg.WithIdentity());
            
             return 3;
         }
