@@ -1,0 +1,33 @@
+﻿@using Orchard.UI.Notify
+@{
+    var alertIcon = "s7-info";
+    
+    Model.Classes.Add("alert alert-icon alert-dismissible alert-border-color");
+    NotifyType notifyType = Model.Type;
+    switch (notifyType) {
+        case NotifyType.Information:
+            Model.Classes.Add("alert-success");
+            alertIcon = "s7-check";
+            break;
+        case NotifyType.Warning:
+            Model.Classes.Add("alert-warning");
+            alertIcon = "s7-attention";
+            break;
+        case NotifyType.Error:
+            Model.Classes.Add("alert-danger");
+            alertIcon = "s7-close-circle";
+            break;
+        default:
+            Model.Classes.Add("alert-info");
+            break;
+    }
+
+    var messageTag = Tag(Model, "div");
+}
+
+@messageTag.StartElement
+<div class="icon"><span class="@alertIcon"></span></div>
+<div class="message">
+    <button class="close" aria-label="Close" data-dismiss="alert" type="button"><span class="s7-close" aria-hidden="true"></span></button>@Html.Raw(Html.Encode(Model.Message).Replace("\n", "<br />"))
+</div>
+@messageTag.EndElement
