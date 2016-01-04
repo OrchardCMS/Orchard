@@ -2,12 +2,11 @@
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Localization;
-using Orchard.Mvc.Html;
+using Orchard.Packaging.Helpers;
 using Orchard.Packaging.Services;
-using Orchard.Security;
 using Orchard.UI.Navigation;
 
-namespace Orchard.Packaging {
+namespace Orchard.Packaging.Navigation {
     [OrchardFeature("Gallery.Updates")]
     public class AdminMenuGalleryUpdates : INavigationProvider {
         public Localizer T { get; set; }
@@ -31,9 +30,9 @@ namespace Orchard.Packaging {
 
             builder
                 .Add(T("Modules"), menu => menu
-                    .Add(modulesCaption, "8", item => Describe(item, "ModulesUpdates", "GalleryUpdates", true)))
+                    .Add(modulesCaption, "8", item => NavigationHelpers.Describe(item, "ModulesUpdates", "GalleryUpdates", true)))
                 .Add(T("Themes"), menu => menu
-                    .Add(themesCaption, "8", item => Describe(item, "ThemesUpdates", "GalleryUpdates", true)));
+                    .Add(themesCaption, "8", item => NavigationHelpers.Describe(item, "ThemesUpdates", "GalleryUpdates", true)));
         }
 
         private int? GetUpdateCount(string extensionType) {
@@ -49,13 +48,6 @@ namespace Orchard.Packaging {
             catch {
                 return null;
             }
-        }
-
-        private static NavigationItemBuilder Describe(NavigationItemBuilder item, string actionName, string controllerName, bool localNav) {
-            item = item.Action(actionName, controllerName, new { area = "Orchard.Packaging" }).Permission(StandardPermissions.SiteOwner);
-            if (localNav)
-                item = item.LocalNav();
-            return item;
         }
     }
 }
