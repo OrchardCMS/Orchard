@@ -53,6 +53,18 @@
       <HintPath>..\..\lib\autofac\Autofac.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Glimpse.Ado">
+      <HintPath>..\..\lib\glimpse\Glimpse.Ado.dll</HintPath>
+    </Reference>
+    <Reference Include="Glimpse.AspNet">
+      <HintPath>..\..\lib\glimpse\Glimpse.AspNet.dll</HintPath>
+    </Reference>
+    <Reference Include="Glimpse.Core">
+      <HintPath>..\..\lib\glimpse\Glimpse.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Glimpse.Mvc5">
+      <HintPath>..\..\lib\glimpse\Glimpse.Mvc5.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Owin.Host.SystemWeb">
       <HintPath>..\..\lib\owin\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
     </Reference>
@@ -165,6 +177,10 @@
     <ProjectReference Include="Core\Orchard.Core.csproj">
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="Modules\Orchard.Glimpse\Orchard.Glimpse.csproj">
+      <Project>{71e17466-d937-49d7-8c7d-77ccbab8ccf4}</Project>
+      <Name>Orchard.Glimpse</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -287,5 +303,5 @@
 		<CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Parent" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" />
 		<CopyAreaManifests ManifestPath="$(AreasManifestDir)" CrossCopy="false" RenameViews="true" />
 		-->
-  </Target> 
+  </Target>
 </Project>
