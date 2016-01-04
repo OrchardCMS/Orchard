@@ -14,8 +14,9 @@ namespace Orchard.MediaLibrary {
         public void GetNavigation(NavigationBuilder builder) {
             builder.AddImageSet("media-library")
                 .Add(T("Media"), "6",
-                    menu => menu.Add(T("Media"), "0", item => item.Action("Index", "Admin", new { area = "Orchard.MediaLibrary" })
-                        .Permission(Permissions.ManageOwnMedia)));
+                    menu => menu.Add(T("Media"), "0", item => item.Action("Index", "Admin", new {area = "Orchard.MediaLibrary"})
+                        .Permission(Permissions.ManageOwnMedia)),
+                    new[] {"photo"});
         }
     }
 }

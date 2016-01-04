@@ -11,8 +11,9 @@ namespace Orchard.AuditTrail.Menus {
             builder
                 .Add(T("Audit Trail"), "12", auditTrail => auditTrail
                     .Add(T("Recycle Bin"), "2", history => history
-                        .Action("Index", "RecycleBin", new { area = "Orchard.AuditTrail" })
-                        .LocalNav()));
+                        .Action("Index", "RecycleBin", new {area = "Orchard.AuditTrail"})
+                        .LocalNav()),
+                    new[] {"note2"});
         }
     }
 }

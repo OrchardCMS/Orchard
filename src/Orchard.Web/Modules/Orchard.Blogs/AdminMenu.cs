@@ -22,7 +22,7 @@ namespace Orchard.Blogs {
 
         public void GetNavigation(NavigationBuilder builder) {
             builder.AddImageSet("blog")
-                .Add(T("Blog"), "1.5", BuildMenu);
+                .Add(T("Blog"), "1.5", BuildMenu, new[] { "news-paper" });
         }
 
         private void BuildMenu(NavigationItemBuilder menu) {

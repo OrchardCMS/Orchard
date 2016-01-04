@@ -11,10 +11,11 @@ namespace Orchard.Workflows {
             builder
                 .AddImageSet("workflows")
                 .Add(T("Workflows"), "10",
-                menu => menu
-                    .Add(T("Workflows"), "1.0",
-                        qi => qi.Action("Index", "Admin", new { area = "Orchard.Workflows" }).Permission(StandardPermissions.SiteOwner).LocalNav())
-            );
+                    menu => menu
+                        .Add(T("Workflows"), "1.0",
+                            qi => qi.Action("Index", "Admin", new {area = "Orchard.Workflows"}).Permission(StandardPermissions.SiteOwner).LocalNav()),
+                    new[] {"network"}
+                );
         }
     }
 }

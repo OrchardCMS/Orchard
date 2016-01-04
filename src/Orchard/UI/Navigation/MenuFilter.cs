@@ -46,7 +46,7 @@ namespace Orchard.UI.Navigation {
             }
 
             // Populate main nav
-            dynamic menuShape = _shapeFactory.Menu().MenuName(menuName);
+            dynamic menuShape = _shapeFactory.SideMenu().MenuName(menuName);
             NavigationHelper.PopulateMenu(_shapeFactory, menuShape, menuShape, menuItems);
 
             // Add any know image sets to the main nav
@@ -54,7 +54,7 @@ namespace Orchard.UI.Navigation {
             if (menuImageSets != null && menuImageSets.Any())
                 menuShape.ImageSets(menuImageSets);
 
-            workContext.Layout.Navigation.Add(menuShape);
+            workContext.Layout.SideMenu.Add(menuShape);
 
             // Populate top nav
             var topMenuName = string.Format("top_{0}", menuName);
