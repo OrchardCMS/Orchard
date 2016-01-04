@@ -8,16 +8,18 @@ namespace Orchard.Packaging.Navigation {
     public class AdminMenu : INavigationProvider {
         public Localizer T { get; set; }
 
-        public string MenuName {
-            get { return "admin"; }
-        }
+        public string MenuName { get { return "admin"; } }
 
         public void GetNavigation(NavigationBuilder builder) {
             builder
-                .Add(T("Modules"), menu => menu
-                    .Add(T("Gallery"), "3", item => NavigationHelpers.Describe(item, "Modules", "Gallery", true)))
-                .Add(T("Themes"), menu => menu
-                    .Add(T("Gallery"), "3", item => NavigationHelpers.Describe(item, "Themes", "Gallery", true)));
+                .Add(T("Modules"),
+                    menu => menu
+                        .Add(T("Gallery"), "3", item => NavigationHelpers.Describe(item, "Modules", "Gallery", true)),
+                    new[] {"plugin"})
+                .Add(T("Themes"),
+                    menu => menu
+                        .Add(T("Gallery"), "3", item => NavigationHelpers.Describe(item, "Themes", "Gallery", true)),
+                    new[] {"paint"});
         }
     }
 }

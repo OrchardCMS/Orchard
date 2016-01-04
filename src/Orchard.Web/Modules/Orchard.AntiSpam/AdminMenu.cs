@@ -8,9 +8,9 @@ namespace Orchard.AntiSpam {
 
         public void GetNavigation(NavigationBuilder builder) {
             builder.Add(T("Spam"), "4.1",
-                        menu => menu
-                                    .Add(T("Manage Spam"), "1.0", item => item.Action("Index", "Admin", new { area = "Orchard.AntiSpam" }).Permission(Permissions.ManageAntiSpam))
-                                    );
+                menu => menu
+                    .Add(T("Manage Spam"), "1.0", item => item.Action("Index", "Admin", new {area = "Orchard.AntiSpam"}).Permission(Permissions.ManageAntiSpam)),
+                new[] {"junk"});
         }
     }
 }

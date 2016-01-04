@@ -15,10 +15,8 @@ namespace Orchard.Core.Navigation {
         }
 
         public void GetNavigation(NavigationBuilder builder) {
-            var user = Services.WorkContext.CurrentUser;
-
             // if the current user cannot manage menus, check if they can manage at least one
-            if (!Services.Authorizer.Authorize(Permissions.ManageMenus)) { 
+            if (!Services.Authorizer.Authorize(Permissions.ManageMenus)) {
                 var menus = Services.ContentManager.Query("Menu").List();
 
                 if (!menus.Any(x => Services.Authorizer.Authorize(Permissions.ManageMenus, x))) {
@@ -29,8 +27,8 @@ namespace Orchard.Core.Navigation {
             builder.AddImageSet("navigation")
                 .Add(T("Navigation"), "7",
                     menu => menu
-                        .Add(T("Main Menu"), "0", item => item.Action("Index", "Admin", new { area = "Navigation" })
-                        ));
+                        .Add(T("Main Menu"), "0", item => item.Action("Index", "Admin", new {area = "Navigation"})),
+                    new[] {"menu"});
         }
     }
 }

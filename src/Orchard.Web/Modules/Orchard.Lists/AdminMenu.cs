@@ -38,9 +38,11 @@ namespace Orchard.Lists {
         }
 
         private void CreateListManagementMenuItem(NavigationBuilder builder) {
-            builder.Add(T("Lists"), "11", item => item
-                .Action("Index", "Admin", new {area = "Orchard.Lists"}).Permission(Permissions.ManageLists)
-            );
+            builder.Add(T("Lists"), "11",
+                item => item
+                    .Action("Index", "Admin", new {area = "Orchard.Lists"}).Permission(Permissions.ManageLists),
+                new[] {"menu3"}
+                );
         }
 
         private void CreateListMenuItems(NavigationBuilder builder) {
@@ -55,7 +57,7 @@ namespace Orchard.Lists {
                 var closureContainer = container;
 
                 if (!String.IsNullOrWhiteSpace(container.AdminMenuImageSet)) {
-                    builder.AddImageSet(container.AdminMenuImageSet.Trim());                    
+                    builder.AddImageSet(container.AdminMenuImageSet.Trim());
                 }
 
                 builder.Add(T(container.AdminMenuText), container.AdminMenuPosition, item => {
@@ -73,7 +75,7 @@ namespace Orchard.Lists {
                             foreach (var itemContentType in containedItem.ItemContentTypes) {
                                 var closureItemContentType = itemContentType;
                                 item.Add(T("New {0}", itemContentType.DisplayName), String.Format("1.{0}", position++), subItem => subItem
-                                    .Action("Create", "Admin", new { id = closureItemContentType.Name, containerid = containedItem.Id, area = "Contents" }));
+                                    .Action("Create", "Admin", new {id = closureItemContentType.Name, containerid = containedItem.Id, area = "Contents"}));
                             }
                         }
                     }
@@ -85,13 +87,14 @@ namespace Orchard.Lists {
                     item.AddClass("nav-list");
                     item.AddClass(closureContainer.AdminMenuText.HtmlClassify());
                     item.LinkToFirstChild(false);
-                    
+
                     foreach (var itemContentType in closureContainer.ItemContentTypes) {
                         var closureItemContentType = itemContentType;
                         item.Add(T("New {0}", itemContentType.DisplayName), String.Format("1.{0}", position++), subItem => subItem
-                            .Action("Create", "Admin", new { id = closureItemContentType.Name, containerid = container.Id, area = "Contents" }));
+                            .Action("Create", "Admin", new {id = closureItemContentType.Name, containerid = container.Id, area = "Contents"}));
                     }
-                });
+                },
+                    new[] {"menu3"});
             }
         }
     }

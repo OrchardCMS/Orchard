@@ -11,7 +11,9 @@ namespace Orchard.MediaProcessing {
         }
 
         public void GetNavigation(NavigationBuilder builder) {
-            builder.Add(T("Media"), "6", item => item.Add(T("Profiles"), "5", i => i.Action("Index", "Admin", new {area = "Orchard.MediaProcessing"}).Permission(StandardPermissions.SiteOwner)));
+            builder.Add(T("Media"), "6",
+                item => item.Add(T("Profiles"), "5", i => i.Action("Index", "Admin", new {area = "Orchard.MediaProcessing"}).Permission(StandardPermissions.SiteOwner)),
+                new[] {"photo"});
         }
     }
 }

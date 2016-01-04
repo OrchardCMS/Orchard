@@ -12,12 +12,13 @@ namespace Orchard.Alias {
 
         public void GetNavigation(NavigationBuilder builder) {
             builder.AddImageSet("aliases");
-            builder.Add(T("Aliases"), "1.4.1", menu => {
-                menu.LinkToFirstChild(true);
-
-                menu.Add(T("Unmanaged"), "1", item => item.Action("IndexUnmanaged", "Admin", new { area = "Orchard.Alias" }).Permission(StandardPermissions.SiteOwner).LocalNav());
-                menu.Add(T("Managed"), "2", item => item.Action("IndexManaged", "Admin", new { area = "Orchard.Alias" }).Permission(StandardPermissions.SiteOwner).LocalNav());
-            });
+            builder.Add(T("Aliases"), "1.4.1",
+                menu => {
+                    menu.LinkToFirstChild(true);
+                    menu.Add(T("Unmanaged"), "1", item => item.Action("IndexUnmanaged", "Admin", new {area = "Orchard.Alias"}).Permission(StandardPermissions.SiteOwner).LocalNav());
+                    menu.Add(T("Managed"), "2", item => item.Action("IndexManaged", "Admin", new {area = "Orchard.Alias"}).Permission(StandardPermissions.SiteOwner).LocalNav());
+                },
+                new[] {"way"});
         }
     }
 }

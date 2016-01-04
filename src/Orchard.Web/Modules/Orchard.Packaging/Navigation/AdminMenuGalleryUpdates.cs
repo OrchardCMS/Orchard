@@ -11,9 +11,7 @@ namespace Orchard.Packaging.Navigation {
     public class AdminMenuGalleryUpdates : INavigationProvider {
         public Localizer T { get; set; }
 
-        public string MenuName {
-            get { return "admin"; }
-        }
+        public string MenuName { get { return "admin"; } }
 
         readonly IBackgroundPackageUpdateStatus _backgroundPackageUpdateStatus;
 
@@ -29,10 +27,14 @@ namespace Orchard.Packaging.Navigation {
             var themesCaption = modulesCount == null ? T("Updates") : T("Updates ({0})", themesCount);
 
             builder
-                .Add(T("Modules"), menu => menu
-                    .Add(modulesCaption, "8", item => NavigationHelpers.Describe(item, "ModulesUpdates", "GalleryUpdates", true)))
-                .Add(T("Themes"), menu => menu
-                    .Add(themesCaption, "8", item => NavigationHelpers.Describe(item, "ThemesUpdates", "GalleryUpdates", true)));
+                .Add(T("Modules"),
+                    menu => menu
+                        .Add(modulesCaption, "8", item => NavigationHelpers.Describe(item, "ModulesUpdates", "GalleryUpdates", true)),
+                    new[] {"plugin"})
+                .Add(T("Themes"),
+                    menu => menu
+                        .Add(themesCaption, "8", item => NavigationHelpers.Describe(item, "ThemesUpdates", "GalleryUpdates", true)),
+                    new[] {"paint"});
         }
 
         private int? GetUpdateCount(string extensionType) {
