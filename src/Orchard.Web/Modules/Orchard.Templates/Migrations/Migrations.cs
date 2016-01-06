@@ -12,7 +12,7 @@ namespace Orchard.Templates {
 
             ContentDefinitionManager.AlterTypeDefinition("Template", type => type
                 .WithPart("CommonPart")
-                .WithPart("IdentityPart")
+                .WithIdentity()
                 .WithPart("TitlePart")
                 .WithPart("ShapePart")
                 .Draftable());

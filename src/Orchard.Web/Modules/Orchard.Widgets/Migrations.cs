@@ -44,7 +44,7 @@ namespace Orchard.Widgets {
         }
         
         public int UpdateFrom1() {
-            ContentDefinitionManager.AlterTypeDefinition("HtmlWidget", cfg => cfg.WithPart("IdentityPart"));
+            ContentDefinitionManager.AlterTypeDefinition("HtmlWidget", cfg => cfg.WithIdentity());
 
             return 2;
         }

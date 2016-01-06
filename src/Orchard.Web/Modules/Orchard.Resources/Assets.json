@@ -262,10 +262,10 @@
             "Assets/Js/Bootstrap/collapse.js",
             "Assets/Js/Bootstrap/dropdown.js",
             "Assets/Js/Bootstrap/modal.js",
+            "Assets/Js/Bootstrap/tooltip.js",
             "Assets/Js/Bootstrap/popover.js",
             "Assets/Js/Bootstrap/scrollspy.js",
-            "Assets/Js/Bootstrap/tab.js",
-            "Assets/Js/Bootstrap/tooltip.js",
+            "Assets/Js/Bootstrap/tab.js",            
             "Assets/Js/Bootstrap/transition.js"
         ],
         "output": "Scripts/bootstrap.js"

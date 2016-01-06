@@ -25,8 +25,8 @@ namespace Orchard.ContentManagement.MetaData {
             return builder
                 .WithPart("CommonPart")
                 .WithPart("WidgetPart")
-                .WithPart("IdentityPart")
-                .WithSetting("Stereotype", "Widget");
+                .WithSetting("Stereotype", "Widget")
+                .WithIdentity();
         }
     }
 }
