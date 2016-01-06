@@ -1,7 +1,7 @@
 @model UserRolesViewModel
 @using Orchard.Roles.ViewModels;
 
-<fieldset>
+<div class="form-group">
     <legend>@T("Roles")</legend>
     @if (Model.Roles.Count > 0) {
         var index = 0;
@@ -13,7 +13,7 @@
             @Html.Hidden("Roles[" + index + "].RoleId", entry.RoleId)
             @Html.Hidden("Roles[" + index + "].Name", entry.Name)
 
-    <div>
+    <div class="am-checkbox">
         @Html.CheckBox("Roles[" + index + "].Granted", entry.Granted)
         <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Roles[index].Granted)">@entry.Name</label>
     </div>
@@ -23,4 +23,4 @@
     else {
     <p>@T("There are no roles.")</p>
     }
-</fieldset>
+</div>
