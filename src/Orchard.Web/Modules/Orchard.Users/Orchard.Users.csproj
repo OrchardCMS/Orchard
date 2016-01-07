@@ -100,6 +100,7 @@
     <Compile Include="Models\UserStatus.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ResourceManifest.cs" />
     <Compile Include="Services\AuthenticationRedirectionFilter.cs" />
     <Compile Include="Services\IUserService.cs" />
     <Compile Include="Services\MembershipValidationService.cs" />
@@ -117,6 +118,10 @@
     <Content Include="Content\Admin\images\offline.gif" />
     <Content Include="Content\Admin\images\online.gif" />
     <Content Include="Module.txt" />
+    <Content Include="Scripts\admin-users.js" />
+    <Content Include="Scripts\admin-users.min.js">
+      <DependentUpon>admin-users.js</DependentUpon>
+    </Content>
     <Content Include="Styles\images\menu.users.png" />
     <Content Include="Styles\menu.users-admin.css" />
     <Content Include="Styles\workflows-activity-verify-user-unicity.css" />
@@ -211,6 +216,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Placement.info" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -1,7 +1,10 @@
 @{ Layout.Title = T("Add User").ToString(); }
-
-@using (Html.BeginFormAntiForgeryPost()) {
-    @Html.ValidationSummary()
-    // Model is a Shape, calling Display() so that it is rendered using the most specific template for its Shape type
-    @Display(Model)
-}
+<div class="panel-body">
+    <div class="col-md-6">
+        @using (Html.BeginFormAntiForgeryPost()) {
+            @Html.ValidationSummary()
+            // Model is a Shape, calling Display() so that it is rendered using the most specific template for its Shape type
+            @Display(Model)
+        }
+    </div>
+</div>
