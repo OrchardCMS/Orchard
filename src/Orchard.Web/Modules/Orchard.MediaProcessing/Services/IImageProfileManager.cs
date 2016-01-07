@@ -7,5 +7,6 @@ namespace Orchard.MediaProcessing.Services {
         string GetImageProfileUrl(string path, string profileName, ContentItem contentItem);
         string GetImageProfileUrl(string path, string profileName, FilterRecord customFilter);
         string GetImageProfileUrl(string path, string profileName, FilterRecord customFilter, ContentItem contentItem);
+        string GetImageProfileUrl(string path, string profileName, ContentItem contentItem, params FilterRecord[] customFilters);
     }
 }
