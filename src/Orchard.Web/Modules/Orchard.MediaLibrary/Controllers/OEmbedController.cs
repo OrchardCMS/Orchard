@@ -26,6 +26,9 @@ namespace Orchard.MediaLibrary.Controllers {
         public IOrchardServices Services { get; set; }
 
         public ActionResult Index(string folderPath, string type) {
+
+            folderPath = Server.UrlDecode(folderPath);
+
             var viewModel = new OEmbedViewModel {
                 FolderPath = folderPath,
                 Type = type
@@ -40,6 +43,8 @@ namespace Orchard.MediaLibrary.Controllers {
         public ActionResult IndexPOST(string folderPath, string url, string type, string title, string html, string thumbnail, string width, string height, string description) {
             if (!Services.Authorizer.Authorize(Permissions.ManageOwnMedia))
                 return new HttpUnauthorizedResult();
+
+            folderPath = Server.UrlDecode(folderPath);
 
             // Check permission.
             var rootMediaFolder = _mediaLibraryService.GetRootMediaFolder();
@@ -121,6 +126,9 @@ namespace Orchard.MediaLibrary.Controllers {
 
         [HttpPost, ValidateInput(false)]
         public ActionResult MediaPost(string folderPath, string url, string document) {
+
+            folderPath = Server.UrlDecode(folderPath);
+
             var content = XDocument.Parse(document);
             var oembed = content.Root;
 

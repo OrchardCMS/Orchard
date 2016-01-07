@@ -27,6 +27,9 @@ namespace Orchard.MediaLibrary.Controllers {
         public IOrchardServices Services { get; set; }
 
         public ActionResult Index(string folderPath, string type) {
+
+            folderPath = Server.UrlDecode(folderPath);
+
             var viewModel = new ImportMediaViewModel {
                 FolderPath = folderPath,
                 Type = type
@@ -40,6 +43,8 @@ namespace Orchard.MediaLibrary.Controllers {
         public ActionResult ImagePost(string folderPath, string type, string url) {
             if (!Services.Authorizer.Authorize(Permissions.ManageOwnMedia))
                 return new HttpUnauthorizedResult();
+
+            folderPath = Server.UrlDecode(folderPath);
 
             // Check permission.
             var rootMediaFolder = _mediaLibraryService.GetRootMediaFolder();
