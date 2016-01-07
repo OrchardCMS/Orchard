@@ -24,7 +24,7 @@ namespace Orchard.Mvc {
             if (_wca == null && _lifetimeScope.IsRegistered<IWorkContextAccessor>())
                 _wca = _lifetimeScope.Resolve<IWorkContextAccessor>();
 
-            var workContext = _wca != null ? _wca.GetContext(null) : null;
+            var workContext = _wca != null ? _wca.GetLogicalContext() : null;
             return workContext != null ? workContext.HttpContext : null;
         }
 
