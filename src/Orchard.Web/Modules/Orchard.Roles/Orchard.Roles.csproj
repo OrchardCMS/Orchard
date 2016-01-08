@@ -157,10 +157,6 @@
       <Name>Orchard.Core</Name>
       <Private>false</Private>
     </ProjectReference>
-    <ProjectReference Include="..\Orchard.Conditions\Orchard.Conditions.csproj">
-      <Project>{98251eae-a41b-47b2-aa91-e28b8482da70}</Project>
-      <Name>Orchard.Conditions</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Orchard.Forms\Orchard.Forms.csproj">
       <Project>{642a49d7-8752-4177-80d6-bfbbcfad3de0}</Project>
       <Name>Orchard.Forms</Name>

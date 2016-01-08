@@ -1,11 +1,15 @@
-﻿using Orchard.Conditions.Services;
-using Orchard.ContentManagement;
+﻿using Orchard.ContentManagement;
+using Orchard.Events;
 using Orchard.Roles.Models;
 using Orchard.Security;
 using System;
 using System.Linq;
 
 namespace Orchard.Roles.Conditions {
+    public interface IConditionProvider : IEventHandler {
+        void Evaluate(dynamic evaluationContext);
+    }
+
     public class RoleRuleProvider : IConditionProvider {
         private readonly IAuthenticationService _authenticationService;
 
@@ -13,7 +17,7 @@ namespace Orchard.Roles.Conditions {
             _authenticationService = authenticationService;
         }
 
-        public void Evaluate(ConditionEvaluationContext evaluationContext) {
+        public void Evaluate(dynamic evaluationContext) {
             if (!String.Equals(evaluationContext.FunctionName, "role", StringComparison.OrdinalIgnoreCase)) {
                 return;
             }
@@ -24,7 +28,7 @@ namespace Orchard.Roles.Conditions {
                 return;
             }
 
-            var roles = evaluationContext.Arguments.Cast<string>();
+            var roles = ((object[])evaluationContext.Arguments).Cast<string>();
             var userRoles = user.As<IUserRoles>();
             evaluationContext.Result = userRoles != null ? userRoles.Roles.Intersect(roles).Count() > 0 : false;
         }
