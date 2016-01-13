@@ -90,7 +90,10 @@ namespace Orchard.Core.Contents.Controllers {
                 model.TypeDisplayName = !string.IsNullOrWhiteSpace(contentTypeDefinition.DisplayName)
                                             ? contentTypeDefinition.DisplayName
                                             : contentTypeDefinition.Name;
-                query = query.ForType(model.TypeName);
+
+                // We display a specific type even if it's not listable so that admin pages
+                // can reuse the Content list page for specific types.
+                query = _contentManager.Query(versionOptions, model.TypeName);
             }
 
             switch (model.Options.OrderBy) {
