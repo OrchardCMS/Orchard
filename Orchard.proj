@@ -34,6 +34,7 @@
   </PropertyGroup>
 
   <Import Project="$(BuildFolder)\libs\MSBuildTasks\tools\MSBuild.Community.Tasks.Targets"/>
+  <Import Project="$(BuildFolder)\libs\SlowCheetah\tools\SlowCheetah.Transforms.targets"/>
 
   <!-- Coordinating Targets -->
 
@@ -111,12 +112,6 @@
     <RemoveDir Directories="$(ArtifactsFolder)" />
   </Target>
   
-  <!-- Restore necessary tooling -->
-  <Target Name="RestoreTooling">
-      <Exec Command="$(LibFolder)\nuget\nuget.exe install SlowCheetah -e -o $(BuildFolder)\libs" WorkingDirectory="$(MSBuildProjectDirectory)"/>
-      <Exec Command="$(LibFolder)\nuget\nuget.exe install MSBuildTasks -e -o $(BuildFolder)\libs" WorkingDirectory="$(MSBuildProjectDirectory)"/>
-  </Target>
-
   <Target Name="Compile" DependsOnTargets="RestoreTooling">
     <!-- Compile to "OutputFolder" -->
     <MSBuild

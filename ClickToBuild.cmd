@@ -27,7 +27,10 @@ SET project=%2
 IF "%target%" == "" SET target=Build
 IF "%project%" =="" SET project=Orchard.proj
 
-nuget.exe restore .\src\Orchard.sln
+lib\nuget\nuget.exe restore .\src\Orchard.sln
+lib\nuget\nuget.exe install SlowCheetah -e -o build\libs
+lib\nuget\nuget.exe install MSBuildTasks -e -o build\libs
+
 msbuild /t:%target% %project%
 
 pause
