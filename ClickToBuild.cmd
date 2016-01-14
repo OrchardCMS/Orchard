@@ -27,6 +27,7 @@ SET project=%2
 IF "%target%" == "" SET target=Build
 IF "%project%" =="" SET project=Orchard.proj
 
+nuget.exe restore .\src\Orchard.sln
 msbuild /t:%target% %project%
 
 pause
