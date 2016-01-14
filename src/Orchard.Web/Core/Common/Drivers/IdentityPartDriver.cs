@@ -28,5 +28,6 @@ namespace Orchard.Core.Common.Drivers {
         protected override void Exporting(IdentityPart part, ContentManagement.Handlers.ExportContentContext context) {
             context.Element(part.PartDefinition.Name).SetAttributeValue("Identifier", part.Identifier);
         }
+
     }
 }
