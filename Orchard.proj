@@ -111,8 +111,13 @@
     <RemoveDir Directories="$(BuildFolder)" ContinueOnError="true"/>
     <RemoveDir Directories="$(ArtifactsFolder)" />
   </Target>
+  
+  <!-- Restore necessary tooling -->
+  <Target Name="RestoreTooling">
+      <Exec Command="$(LibFolder)\nuget\nuget.exe install SlowCheetah -e -o $(BuildFolder)\libs" WorkingDirectory="$(MSBuildProjectDirectory)"/>
+  </Target>
 
-  <Target Name ="Compile">
+  <Target Name="Compile" DependsOnTargets="RestoreTooling">
     <!-- Compile to "OutputFolder" -->
     <MSBuild
       Projects="$(SrcFolder)\Orchard.sln"
@@ -175,7 +180,7 @@
 
   <!-- Packaging (Stage) -->
 
-  <UsingTask AssemblyFile="$(LibFolder)\slowcheetah\SlowCheetah.Xdt.dll" TaskName="SlowCheetah.Xdt.TransformXml" />
+  <UsingTask AssemblyFile="$(BuildFolder)\libs\slowcheetah\tools\SlowCheetah.Xdt.dll" TaskName="SlowCheetah.Xdt.TransformXml" />
 
   <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.FilterModuleBinaries" />
   <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.FileUpdateLines" />
