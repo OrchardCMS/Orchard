@@ -119,6 +119,11 @@ namespace Orchard.ContentPermissions.Drivers {
         }
 
         protected override DriverResult Editor(ContentPermissionsPart part, IUpdateModel updater, dynamic shapeHelper) {
+            // ensure the current user is allowed to define permissions
+            if (!_authorizer.Authorize(Permissions.GrantPermission)) {
+                return null;
+            }
+
             var model = new ContentPermissionsPartViewModel();
 
             if (!updater.TryUpdateModel(model, Prefix, null, null)) {

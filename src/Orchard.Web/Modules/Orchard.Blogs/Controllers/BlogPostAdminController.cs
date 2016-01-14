@@ -44,7 +44,7 @@ namespace Orchard.Blogs.Controllers {
             var blogPost = Services.ContentManager.New<BlogPostPart>("BlogPost");
             blogPost.BlogPart = blog;
 
-            if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, blog, T("Not allowed to create blog post")))
+            if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, blogPost, T("Not allowed to create blog post")))
                 return new HttpUnauthorizedResult();
 
             var model = Services.ContentManager.BuildEditor(blogPost);
@@ -76,7 +76,7 @@ namespace Orchard.Blogs.Controllers {
             var blogPost = Services.ContentManager.New<BlogPostPart>("BlogPost");
             blogPost.BlogPart = blog;
 
-            if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, blog, T("Couldn't create blog post")))
+            if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, blogPost, T("Couldn't create blog post")))
                 return new HttpUnauthorizedResult();
             
             Services.ContentManager.Create(blogPost, VersionOptions.Draft);
@@ -88,7 +88,7 @@ namespace Orchard.Blogs.Controllers {
             }
 
             if (publish) {
-                if (!Services.Authorizer.Authorize(Permissions.PublishBlogPost, blog.ContentItem, T("Couldn't publish blog post")))
+                if (!Services.Authorizer.Authorize(Permissions.PublishBlogPost, blogPost.ContentItem, T("Couldn't publish blog post")))
                     return new HttpUnauthorizedResult();
 
                 Services.ContentManager.Publish(blogPost.ContentItem);
