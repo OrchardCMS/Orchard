@@ -12,6 +12,7 @@
         public bool Required { get; set; }
         public string Options { get; set; }
         public ListMode ListMode { get; set; }
+        public string DefaultValue { get; set; }
 
         public EnumerationFieldSettings() {
             ListMode = ListMode.Dropdown;

@@ -65,7 +65,7 @@ namespace Orchard.MediaLibrary.Drivers {
             }
 
             if (settings.Required && field.Ids.Length == 0) {
-                updater.AddModelError("Id", T("The field {0} is mandatory", field.Name.CamelFriendly()));
+                updater.AddModelError("Id", T("The field {0} is mandatory", field.DisplayName));
             }
 
             return Editor(part, field, shapeHelper);
@@ -87,6 +87,7 @@ namespace Orchard.MediaLibrary.Drivers {
             if (field.Ids.Any()) {
                 var contentItemIds = field.Ids
                     .Select(x => _contentManager.Get(x))
+                    .Where(x => x != null)
                     .Select(x => _contentManager.GetItemMetadata(x).Identity.ToString())
                     .ToArray();
 

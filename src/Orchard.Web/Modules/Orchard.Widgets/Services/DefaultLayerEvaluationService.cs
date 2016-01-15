@@ -42,7 +42,7 @@ namespace Orchard.Widgets.Services{
             // Once the Condition Engine is done:
             // Get Layers and filter by zone and rule
             // NOTE: .ForType("Layer") is faster than .Query<LayerPart, LayerPartRecord>()
-            var activeLayers = _orchardServices.ContentManager.Query<LayerPart>().WithQueryHints(new QueryHints().ExpandParts<LayerPart>()).ForType("Layer").List();
+            var activeLayers = _orchardServices.ContentManager.Query<LayerPart>().ForType("Layer").List();
 
             var activeLayerIds = new List<int>();
             foreach (var activeLayer in activeLayers) {

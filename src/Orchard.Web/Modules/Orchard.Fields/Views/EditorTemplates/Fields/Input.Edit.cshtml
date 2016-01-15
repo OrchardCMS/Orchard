@@ -11,4 +11,7 @@
     @if (HasText(settings.Hint)) {
     <span class="hint">@settings.Hint</span>
     }
+    @if (!String.IsNullOrWhiteSpace(settings.DefaultValue)) {
+        <span class="hint">@T("If the field is left empty then the default value will be used.")</span>
+    }
 </fieldset>

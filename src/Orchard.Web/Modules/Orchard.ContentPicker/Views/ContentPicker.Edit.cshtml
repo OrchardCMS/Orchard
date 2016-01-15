@@ -50,7 +50,7 @@
                 <tr>
                     <td>&nbsp;</td>
                     <td>
-                        <span data-id="@contentItem.Id" data-fieldid="@idsFieldId" class="content-picker-item">@Html.ItemEditLink(contentItem) @if (!contentItem.HasPublished()){<text> - </text>@T("Not Published")}</span>
+                        <span data-id="@contentItem.Id" data-fieldid="@idsFieldId" class="content-picker-item">@Html.ItemAdminLink(contentItem) @if (!contentItem.HasPublished()){<text> - </text>@T("Not Published")}</span>
                     </td>
                     <td>
                         <span data-id="@contentItem.Id" class="content-picker-remove button grey">@T("Remove")</span>

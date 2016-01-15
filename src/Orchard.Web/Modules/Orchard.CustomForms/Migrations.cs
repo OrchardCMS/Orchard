@@ -37,7 +37,7 @@ namespace Orchard.CustomForms {
                 cfg => cfg
                     .WithPart("WidgetPart")
                     .WithPart("CommonPart")
-                    .WithPart("IdentityPart")
+                    .WithIdentity()
                     .WithPart("CustomFormPart")
                     .WithSetting("Stereotype", "Widget")
                 );
