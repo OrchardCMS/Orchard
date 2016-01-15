@@ -358,7 +358,12 @@ namespace Orchard.ContentTypes.Services {
         }
 
         private static string VersionName(string name) {
-            var substring = Regex.Match(name, @"\d+$").Value;
+            var i = name.Length - 1;
+            while (i >= 0 && char.IsDigit(name, i)) {
+                i--;
+            }
+
+            var substring = i != name.Length - 1 ? name.Substring(i + 1) : string.Empty;
             int version;
 
             if (int.TryParse(substring, out version)) {
