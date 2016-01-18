@@ -386,7 +386,7 @@ namespace Orchard.OutputCache.Filters {
 
             // Vary by authentication state if configured.
             if (CacheSettings.VaryByAuthenticationState) {
-                result["auth"] = result["auth"] = _workContext.CurrentUser != null;
+                result["auth"] = _workContext.CurrentUser != null;
             }
 
             return result;
