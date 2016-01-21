@@ -762,13 +762,9 @@ namespace Orchard.ContentManagement {
             }
 
             var context = new ImportContentContext(item, element, importContentSession);
-            foreach (var contentHandler in Handlers) {
-                contentHandler.Importing(context);
-            }
 
-            foreach (var contentHandler in Handlers) {
-                contentHandler.Imported(context);
-            }
+            Handlers.Invoke(handler => handler.Importing(context), Logger);
+            Handlers.Invoke(handler => handler.Imported(context), Logger);
 
             var savedItem = Get(item.Id, VersionOptions.Latest);
 
@@ -790,13 +786,8 @@ namespace Orchard.ContentManagement {
         public XElement Export(ContentItem contentItem) {
             var context = new ExportContentContext(contentItem, new XElement(XmlConvert.EncodeLocalName(contentItem.ContentType)));
 
-            foreach (var contentHandler in Handlers) {
-                contentHandler.Exporting(context);
-            }
-
-            foreach (var contentHandler in Handlers) {
-                contentHandler.Exported(context);
-            }
+            Handlers.Invoke(handler => handler.Exporting(context), Logger);
+            Handlers.Invoke(handler => handler.Exported(context), Logger);
 
             if (context.Exclude) {
                 return null;
