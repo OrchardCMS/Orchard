@@ -2,18 +2,26 @@
 @using Orchard.Layouts.Helpers
 @using Orchard.MediaLibrary.Models
 @{
+    int mobileWidth = 640;
+    int ratio = 3;
+    int mobileHeight = mobileWidth / ratio;
     var tagBuilder = TagBuilderExtensions.CreateElementTagBuilder(Model, "img");
     var imagePart = (ImagePart)Model.ImagePart;
-    var mediaPart = imagePart != null ? imagePart.As<MediaPart>() : default(MediaPart);
+    int imageWidth = imagePart.Width;
 
-    if (mediaPart != null) {
+    var mediaPart = imagePart != null ? imagePart.As<MediaPart>() : default(MediaPart);
+    if (mediaPart == null) {
+        tagBuilder.Attributes["alt"] = T("Image not found").Text;
+        tagBuilder.AddCssClass("layout-content-image");
+        @tagBuilder.ToHtmlString(TagRenderMode.SelfClosing)
+    }
+    else if (imageWidth < mobileWidth) {
         tagBuilder.Attributes["src"] = Url.Content(mediaPart.MediaUrl);
         tagBuilder.Attributes["alt"] = mediaPart.AlternateText;
+        tagBuilder.AddCssClass("layout-content-image");
+        @tagBuilder.ToHtmlString(TagRenderMode.SelfClosing)
     }
     else {
-        tagBuilder.Attributes["alt"] = T("Image not found").Text;
+        <img class="layout-content-image" src="@Display.ResizeMediaUrl(Width: mobileWidth, Height: mobileHeight, Mode: "crop", Alignment: "middlecenter", Path: mediaPart.MediaUrl)" />
     }
-    
-    tagBuilder.AddCssClass("layout-content-image");
 }
-@tagBuilder.ToHtmlString(TagRenderMode.SelfClosing)
