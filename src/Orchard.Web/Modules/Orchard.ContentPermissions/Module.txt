@@ -9,5 +9,5 @@ Features:
     Orchard.ContentPermissions:
         Name: Content Item Permissions
         Description: Allows item-level front end view permissions.
-		Dependencies: Orchard.Roles
-		Category: Security
+        Dependencies: Orchard.Roles
+        Category: Security

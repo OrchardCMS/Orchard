@@ -168,7 +168,6 @@
     <Content Include="Styles\admin-dialog.css" />
     <Content Include="Styles\split-arrow-down.png" />
     <Content Include="Styles\split-arrow-up.png" />
-    <Content Include="Notes.txt" />
     <Content Include="Views\BlueprintAdmin\Edit.cshtml">
       <SubType>Code</SubType>
     </Content>
