@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Microsoft.WindowsAzure;
 using Orchard.Azure.Services.FileSystems;
 using Orchard.Environment.Configuration;
 using Orchard.FileSystems.Media;
 using Orchard.Logging;
+using Microsoft.Azure;
 
 namespace Orchard.Azure.Services.Environment.Configuration {
 

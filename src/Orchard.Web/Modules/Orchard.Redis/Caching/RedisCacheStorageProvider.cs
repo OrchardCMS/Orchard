@@ -54,11 +54,11 @@ namespace Orchard.Redis.Caching {
         }
 
         public void Remove(string key) {
-            Database.KeyDelete(key);
+            Database.KeyDelete(GetLocalizedKey(key));
         }
 
         public void Clear() {
-            Database.KeyDeleteWithPrefix(GetLocalizedKey("*"));
+            _connectionMultiplexer.KeyDeleteWithPrefix(GetLocalizedKey("*"));
         }
 
         private string GetLocalizedKey(string key) {

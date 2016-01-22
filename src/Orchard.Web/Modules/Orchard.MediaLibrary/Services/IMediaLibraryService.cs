@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Web;
 using Orchard.ContentManagement;
@@ -36,7 +37,7 @@ namespace Orchard.MediaLibrary.Services {
         /// <returns>The public URL for the media.</returns>
         string GetMediaPublicUrl(string mediaPath, string fileName);
 
-        MediaFolder GetRootMediaFolder();
+        IMediaFolder GetRootMediaFolder();
 
         /// <summary>
         /// Retrieves the media folders within a given relative path.
@@ -130,5 +131,31 @@ namespace Orchard.MediaLibrary.Services {
         /// <param name="inputStream">The stream with the file's contents.</param>
         /// <returns>The path to the uploaded file.</returns>
         string UploadMediaFile(string folderPath, string fileName, Stream inputStream);
+    }
+
+    public static class MediaLibrayServiceExtensions {
+        public static bool CanManageMediaFolder(this IMediaLibraryService service, string folderPath) {
+            // The current user can manage a media if he has access to the whole hierarchy
+            // or the media is under his personal storage folder.
+
+            var rootMediaFolder = service.GetRootMediaFolder();
+            if (rootMediaFolder == null) {
+                return true;
+            }
+
+            var mediaPath = folderPath + "\\";
+            var rootPath = rootMediaFolder.MediaPath + "\\";
+
+            return mediaPath.StartsWith(rootPath, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public static string GetRootedFolderPath(this IMediaLibraryService service, string folderPath) {
+            var rootMediaFolder = service.GetRootMediaFolder();
+            if (rootMediaFolder != null) {
+                return Path.Combine(rootMediaFolder.MediaPath, folderPath ?? "");
+            }
+
+            return folderPath;
+        }
     }
 }

@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
@@ -119,6 +119,11 @@ namespace Orchard.ContentPermissions.Drivers {
         }
 
         protected override DriverResult Editor(ContentPermissionsPart part, IUpdateModel updater, dynamic shapeHelper) {
+
+            // ensure the current user is allowed to define permissions
+            if (!_authorizer.Authorize(Permissions.GrantPermission)) {
+                return null;
+            }
 
             var allRoles = _roleService.GetRoles().Select(x => x.Name).OrderBy(x => x).ToList();
 

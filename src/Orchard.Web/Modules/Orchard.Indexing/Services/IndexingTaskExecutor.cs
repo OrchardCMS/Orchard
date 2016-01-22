@@ -237,7 +237,10 @@ namespace Orchard.Indexing.Services {
                                 // skip items from types which are not indexed
                                 var settings = GetTypeIndexingSettings(item.ContentItem);
                                 if (settings.List.Contains(indexName)) {
-                                    documentIndex = ExtractDocumentIndex(item.ContentItem);
+                                    if (item.ContentItem.HasPublished()) {
+                                        var published = _contentManager.Get(item.Id, VersionOptions.Published);
+                                        documentIndex = ExtractDocumentIndex(published);
+                                    }
                                 }
                                 else if (settings.List.Contains(indexName + ":latest")) {
                                     var latest = _contentManager.Get(item.Id, VersionOptions.Latest);

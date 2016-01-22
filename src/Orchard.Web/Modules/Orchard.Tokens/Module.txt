@@ -2,7 +2,7 @@ Name: Tokens
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardtokens.codeplex.com
-Version: 1.9.1
+Version: 1.9.2
 OrchardVersion: 1.9
 Description: Provides a system for performing string replacements with common site values.
 Features:

@@ -195,6 +195,11 @@ namespace Orchard.Mvc.ViewEngines.Razor {
 
         private string _tenantPrefix;
         public override string Href(string path, params object[] pathParts) {
+            if (path.StartsWith("http://", StringComparison.OrdinalIgnoreCase)
+                || path.StartsWith("https://", StringComparison.OrdinalIgnoreCase)) {
+                return path;
+            }
+
             if (_tenantPrefix == null) {
                 _tenantPrefix = WorkContext.Resolve<ShellSettings>().RequestUrlPrefix ?? "";
             }

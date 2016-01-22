@@ -4,11 +4,11 @@ using System.Dynamic;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
-using System.Web.Mvc;
+using System.Web;
 
 namespace Orchard.DisplayManagement.Shapes {
     [DebuggerTypeProxy(typeof(ShapeDebugView))]
-    public class Shape : Composite, IShape, IEnumerable<object> {
+    public class Shape : Composite, IShape, IPositioned, IEnumerable<object> {
         private const string DefaultPosition = "5";
 
         private readonly IList<object> _items = new List<object>();
@@ -22,6 +22,12 @@ namespace Orchard.DisplayManagement.Shapes {
         public virtual IDictionary<string, string> Attributes { get { return _attributes; } }
         public virtual IEnumerable<dynamic> Items { get { return _items; } }
 
+        public string Position {
+            get {
+                return Metadata.Position;
+            }
+        }
+
         public Shape() {
             Metadata = new ShapeMetadata();
         }
@@ -33,13 +39,14 @@ namespace Orchard.DisplayManagement.Shapes {
             }
 
             try {
-                // todo: (sebros) this is a temporary implementation to prevent common known scenarios throwing exceptions. The final solution would need to filter based on the fact that it is a Shape instance
-                if (item is MvcHtmlString ||
-                    item is String) {
-                    // need to implement positioned wrapper for non-shape objects
+                if (position != null && item is IHtmlString) {
+                    item = new PositionWrapper((IHtmlString)item, position);
+                }
+                else if (position != null && item is string) {
+                    item = new PositionWrapper((string)item, position);
                 }
                 else if (item is IShape) {
-                    ((dynamic)item).Metadata.Position = position;
+                    ((IShape)item).Metadata.Position = position;
                 }
             }
             catch {

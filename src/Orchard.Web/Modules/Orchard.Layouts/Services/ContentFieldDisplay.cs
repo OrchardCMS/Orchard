@@ -33,7 +33,7 @@ namespace Orchard.Layouts.Services {
             var drivers = GetFieldDrivers(field.FieldDefinition.Name);
 
             drivers.Invoke(driver => {
-                var result = driver.BuildDisplayShape(context);
+                var result = Filter(driver.BuildDisplayShape(context), field);
                 if (result != null)
                     result.Apply(context);
             }, Logger);
@@ -65,6 +65,21 @@ namespace Orchard.Layouts.Services {
             }, Logger);
             
             return context.Shape;
+        }
+
+        private DriverResult Filter(DriverResult driverResult, ContentField field) {
+            DriverResult result = null;
+            var combinedResult = driverResult as CombinedResult;
+            var contentShapeResult = driverResult as ContentShapeResult;
+
+            if (combinedResult != null) {
+                result = combinedResult.GetResults().SingleOrDefault(x => x.ContentField != null && x.ContentField.Name == field.Name);
+            }
+            else if (contentShapeResult != null) {
+                result = contentShapeResult.ContentField != null && contentShapeResult.ContentField.Name == field.Name ? contentShapeResult : driverResult;
+            }
+
+            return result;
         }
 
         private IEnumerable<IContentFieldDriver> GetFieldDrivers(string fieldName) {

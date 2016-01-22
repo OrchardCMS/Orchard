@@ -26,7 +26,7 @@ namespace Orchard.Utility.Extensions {
         }
 
         public static string Ellipsize(this string text, int characterCount) {
-            return text.Ellipsize(characterCount, "&#160;&#8230;");
+            return text.Ellipsize(characterCount, "\u00A0\u2026");
         }
 
         public static string Ellipsize(this string text, int characterCount, string ellipsis, bool wordBoundary = false) {

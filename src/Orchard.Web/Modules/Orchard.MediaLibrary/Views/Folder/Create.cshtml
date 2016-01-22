@@ -6,10 +6,12 @@
 <div class="breadCrumbs">
     <p>@Html.ActionLink(T("Media Library").ToString(), "Index", "Admin", new { area = "Orchard.MediaLibrary" }, new {}) &#62; 
     @if (Model.FolderPath != null) {
-        foreach (var folder in Model.FolderPath.Split('/')) {
-             if (!String.IsNullOrEmpty(folder)) {
-                 @Html.ActionLink(folder, "Edit", new {folderPath = folder})
-                 <text>&#62;</text>
+        var fullPath = "";
+        foreach (var folder in Model.FolderPath.Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar })) {
+            if (!String.IsNullOrEmpty(folder)) {
+                fullPath = Path.Combine(fullPath, folder);
+                @Html.ActionLink(folder, "Index", "Admin", new {folderPath = fullPath }, null)
+                    <text>&#62;</text>
              }
          }
     }

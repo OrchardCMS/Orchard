@@ -214,7 +214,9 @@ namespace Orchard.ContentManagement {
                 return decimalValue.ToString(CultureInfo.InvariantCulture);
             }
 
-            if (type.IsEnum) {
+            var underlyingType = Nullable.GetUnderlyingType(type) ?? type;
+
+            if (underlyingType.IsEnum) {
                 return value.ToString();
             }
 
@@ -275,8 +277,10 @@ namespace Orchard.ContentManagement {
                 return (T)(object)decimal.Parse(value, CultureInfo.InvariantCulture);
             }
 
-            if (type.IsEnum) {
-                return (T)Enum.Parse(type, value);
+            var underlyingType = Nullable.GetUnderlyingType(type) ?? type;
+
+            if (underlyingType.IsEnum) {
+                return (T)Enum.Parse(underlyingType, value);
             }
 
             throw new NotSupportedException(String.Format("Could not handle type {0}", type.Name));
