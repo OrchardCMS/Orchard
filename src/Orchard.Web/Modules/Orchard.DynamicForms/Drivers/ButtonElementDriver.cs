@@ -38,7 +38,7 @@ namespace Orchard.DynamicForms.Drivers {
 
         protected override void OnDisplaying(Button element, ElementDisplayContext context) {
             context.ElementShape.ProcessedName = _tokenizer.Replace(element.Name, context.GetTokenData());
-            context.ElementShape.ProcessedText = _tokenizer.Replace(element.Text, context.GetTokenData());
+            context.ElementShape.ProcessedText = _tokenizer.Replace(element.Text, context.GetTokenData(), new ReplaceOptions {Encoding = ReplaceOptions.NoEncode});
         }
     }
 }

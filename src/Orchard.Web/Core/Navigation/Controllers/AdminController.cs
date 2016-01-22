@@ -34,7 +34,6 @@ namespace Orchard.Core.Navigation.Controllers {
             _menuService = menuService;
             _menuManager = menuManager;
             _navigationManager = navigationManager;
-            
             Services = orchardServices;
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
@@ -155,7 +154,7 @@ namespace Orchard.Core.Navigation.Controllers {
             ModelState.AddModelError(key, errorMessage.ToString());
         }
 
-        public ActionResult CreateMenuItem(string id, int menuId, string returnUrl) {
+        public ActionResult CreateMenuItem(string id, int menuId, string returnUrl, string parentMenuItemPosition = null) {
             if (!Services.Authorizer.Authorize(Permissions.ManageMenus, _menuService.GetMenu(menuId), T("Couldn't manage the main menu")))
                 return new HttpUnauthorizedResult();
 
@@ -164,25 +163,31 @@ namespace Orchard.Core.Navigation.Controllers {
 
             if (menuPart == null)
                 return HttpNotFound();
-            
+
             // load the menu
             var menu = Services.ContentManager.Get(menuId);
 
             if (menu == null)
                 return HttpNotFound();
-            
+
             try {
-                // filter the content items for this specific menu
-                menuPart.MenuPosition = Position.GetNext(_navigationManager.BuildMenu(menu));
-                
+                if (!String.IsNullOrEmpty(parentMenuItemPosition)) {
+                    var menuEntries = _menuService.GetMenuParts(menuId).Select(CreateMenuItemEntries);
+                    menuPart.MenuPosition = GetNextChildPosition(menuEntries, parentMenuItemPosition);
+                }
+                else {
+                    // filter the content items for this specific menu
+                    menuPart.MenuPosition = Position.GetNext(_navigationManager.BuildMenu(menu));
+                }
+
                 var model = Services.ContentManager.BuildEditor(menuPart);
-                
+
                 return View(model);
             }
             catch (Exception exception) {
                 if (exception.IsFatal()) {
                     throw;
-                } 
+                }
 
                 Logger.Error(T("Creating menu item failed: {0}", exception.Message).Text);
                 Services.Notifier.Error(T("Creating menu item failed: {0}", exception.Message));
@@ -191,7 +196,7 @@ namespace Orchard.Core.Navigation.Controllers {
         }
 
         [HttpPost, ActionName("CreateMenuItem")]
-        public ActionResult CreateMenuItemPost(string id, int menuId, string returnUrl) {
+        public ActionResult CreateMenuItemPost(string id, int menuId, string returnUrl, string parentMenuItemPosition = null) {
             if (!Services.Authorizer.Authorize(Permissions.ManageMenus, _menuService.GetMenu(menuId), T("Couldn't manage the main menu")))
                 return new HttpUnauthorizedResult();
 
@@ -205,12 +210,18 @@ namespace Orchard.Core.Navigation.Controllers {
 
             if (menu == null)
                 return HttpNotFound();
-            
+
             var model = Services.ContentManager.UpdateEditor(menuPart, this);
 
-            menuPart.MenuPosition = Position.GetNext(_navigationManager.BuildMenu(menu));
-            menuPart.Menu = menu;
+            if (!String.IsNullOrEmpty(parentMenuItemPosition)) {
+                var menuEntries = _menuService.GetMenuParts(menuId).Select(CreateMenuItemEntries);
+                menuPart.MenuPosition = GetNextChildPosition(menuEntries, parentMenuItemPosition);
+            }
+            else {
+                menuPart.MenuPosition = Position.GetNext( _navigationManager.BuildMenu(menu));
+            }
 
+            menuPart.Menu = menu;
             Services.ContentManager.Create(menuPart);
 
             if (!ModelState.IsValid) {
@@ -221,6 +232,24 @@ namespace Orchard.Core.Navigation.Controllers {
             Services.Notifier.Information(T("Your {0} has been added.", menuPart.TypeDefinition.DisplayName));
 
             return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
+        }
+
+        private static string GetNextChildPosition(IEnumerable<MenuItemEntry> menuItems, string parentMenuItemPosition) {
+            var parentMenuItemPositionPlusDot = parentMenuItemPosition + ".";
+            var childElements = menuItems.Where(childElement => childElement.Position.StartsWith(parentMenuItemPositionPlusDot));
+            if (childElements.Any()) {
+                var result = childElements
+                    .Select(childElement => {
+                        var positionParts = childElement.Position.Substring(parentMenuItemPositionPlusDot.Length).Split(new[] { '.' }, 2, StringSplitOptions.RemoveEmptyEntries);
+
+                        return positionParts.Any() ? int.Parse(positionParts[0]) : 0;
+                    })
+                    .Max();
+
+                return parentMenuItemPositionPlusDot + (result + 1);
+            }
+
+            return parentMenuItemPositionPlusDot + "1";
         }
     }
 }

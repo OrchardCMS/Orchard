@@ -274,5 +274,14 @@ namespace Orchard.Projections {
 
             return 3;
         }
+
+        public int UpdateFrom3() {
+            ContentDefinitionManager.AlterTypeDefinition("NavigationQueryMenuItem",
+                cfg => cfg
+                    .WithPart("IdentityPart")
+                );
+
+            return 4;
+        }
     }
 }

@@ -4,13 +4,15 @@ using Orchard.Security.Permissions;
 
 namespace Orchard.MediaLibrary {
     public class Permissions : IPermissionProvider {
-        public static readonly Permission ManageMediaContent = new Permission { Description = "Managing Media", Name = "ManageMediaContent" };
+        public static readonly Permission ManageMediaContent = new Permission { Description = "Manage Media", Name = "ManageMediaContent" };
+        public static readonly Permission ManageOwnMedia = new Permission { Description = "Manage Own Media", Name = "ManageOwnMedia", ImpliedBy = new[] { ManageMediaContent } };
 
         public virtual Feature Feature { get; set; }
 
         public IEnumerable<Permission> GetPermissions() {
             return new[] {
                 ManageMediaContent,
+                ManageOwnMedia,
             };
         }
 
@@ -29,10 +31,11 @@ namespace Orchard.MediaLibrary {
                 },
                 new PermissionStereotype {
                     Name = "Author",
-                    Permissions = new[] {ManageMediaContent}
+                    Permissions = new[] {ManageOwnMedia}
                 },
                 new PermissionStereotype {
                     Name = "Contributor",
+                    Permissions = new[] {ManageOwnMedia}
                 },
             };
         }

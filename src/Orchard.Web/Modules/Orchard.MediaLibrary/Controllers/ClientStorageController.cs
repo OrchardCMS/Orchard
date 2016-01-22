@@ -15,10 +15,16 @@ namespace Orchard.MediaLibrary.Controllers {
         private readonly IMediaLibraryService _mediaLibraryService;
         private readonly IContentManager _contentManager;
 
-        public ClientStorageController(IMediaLibraryService mediaManagerService, IContentManager contentManager) {
+        public ClientStorageController(
+            IMediaLibraryService mediaManagerService, 
+            IContentManager contentManager,
+            IOrchardServices orchardServices) {
             _mediaLibraryService = mediaManagerService;
             _contentManager = contentManager;
+            Services = orchardServices;
         }
+
+        public IOrchardServices Services { get; set; }
 
         public ActionResult Index(string folderPath, string type) {
 
@@ -32,6 +38,15 @@ namespace Orchard.MediaLibrary.Controllers {
         
         [HttpPost]
         public ActionResult Upload(string folderPath, string type) {
+            if (!Services.Authorizer.Authorize(Permissions.ManageOwnMedia))
+                return new HttpUnauthorizedResult();
+
+            // Check permission.
+            var rootMediaFolder = _mediaLibraryService.GetRootMediaFolder();
+            if (!Services.Authorizer.Authorize(Permissions.ManageMediaContent) && !_mediaLibraryService.CanManageMediaFolder(folderPath)) {
+                return new HttpUnauthorizedResult();
+            }
+
             var statuses = new List<object>();
 
             // Loop through each file in the request

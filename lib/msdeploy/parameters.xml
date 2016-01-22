@@ -23,19 +23,20 @@
 
 	<!-- Prompts for the database name and fills it into the database scripts -->
 	<parameter name="Database Name" description="Name of the database for Orchard." defaultValue="orchard" tags="SQL, dbName">
-		<parameterEntry type="TextFile" scope="install.sql" match="PlaceHolderForDb" />
+		
 	</parameter>	
 
         <!-- Prompts for the database username and fills it into the database scripts.
 	The SQL tag indicates it is a parameter required for SQL, the DbUsername tag indicates this is a Db username -->
 	<parameter name="Database Username" description="User name to access you application database." defaultValue="orcharduser" tags="SQL, DbUsername">
-		<parameterEntry type="TextFile" scope="install.sql" match="PlaceHolderForUser" />
+		<parameterEntry type="TextFile" scope="createuser.sql" match="PlaceHolderForUser" />
+		<parameterEntry type="TextFile" scope="createlogin.sql" match="PlaceHolderForUser" />
 	</parameter>
 
         <!-- Prompts for the database password and fills it into the database scripts.
 	The SQL tag indicates it is a parameter required for SQL, the DbUserPassword tag indicates this is a Db password -->
 	<parameter name="Database Password" description="Password for the Database Username." tags="New, Password, SQL, DbUserPassword">
-		<parameterEntry type="TextFile" scope="install.sql" match="PlaceHolderForPassword" />
+		<parameterEntry type="TextFile" scope="createlogin.sql" match="PlaceHolderForPassword" />
 	</parameter>
 
 	<!-- Prompts for the admin creds and uses it for the administrator connection string. This is used to create a login and assign permissions. 
@@ -47,19 +48,17 @@
 	<!-- Prompts for the admin password and uses it for the administrator connection string.  
         This is use to create a login and assign permissions. The SQL tag indicates it is a parameter required for SQL. 
         The DbAdminPassword tag indicates it should be used when the user is creating a new database. If they're not, it can be filled in with the DbUserPassword value. -->
-	<parameter name="Database Administrator Password" description="Password for the database administrator account." tags="New, Password, SQL, dbAdminPassword">
+	<parameter name="Database Administrator Password" description="Password for the database administrator account." tags="Password, SQL, dbAdminPassword">
 	</parameter>
 	
-	<parameter name="Admin Connection String SqlServer" 
-	tags="SQLConnectionString, AdminConnectionString, Hidden, Validate" description="Automatically sets the connection string for the connection request." 
-	defaultValue="Data Source={Database Server};Initial Catalog={Database Name};User Id={Database Administrator};Password={Database Administrator Password}">
-		<parameterEntry type="ProviderPath" scope="dbfullsql" match="install.sql" /> 
+	<parameter name="Admin Connection String SqlServer1" tags="SQLConnectionString, sql, Hidden" description="Automatically sets the connection string for the connection request." defaultValue="Data Source={Database Server};Initial Catalog=MASTER;User Id={Database Administrator};Password={Database Administrator Password}">
+		<parameterEntry type="ProviderPath" scope="dbfullsql" match="createlogin.sql" />
 	</parameter>
 	
-	<parameter name="Non-Admin Connection String SqlServer" 
-	tags="SQLConnectionString, UserConnectionString, Hidden" description="Automatically sets the connection string for the connection request." 
-	defaultValue="Data Source={Database Server};Initial Catalog={Database Name};User Id={Database Username};Password={Database Password}">
+	<parameter name="Admin Connection String SqlServer2" tags="SQLConnectionString, SQL, Hidden" description="Automatically sets the connection string for the connection request." defaultValue="Data Source={Database Server};Initial Catalog={Database Name};User Id={Database Administrator};Password={Database Administrator Password}">
+		<parameterEntry type="ProviderPath" scope="dbfullsql" match="createuser.sql" />
 	</parameter>
+
 	
 	<parameter name="Orchard Connection String" friendlyName="Orchard Connection String" description="Orchard SQL Data Connection String Setting" defaultValue="" tags="Sql, SqlCE, SingleLineConnectionString, Hidden">
 		<parameterEntry kind="TextFile" scope="\\Settings\.txt$" match="(?&lt;=\s*DataConnectionString:\s+)[^\s].*[^\r\n]" /> 

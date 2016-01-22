@@ -9,7 +9,6 @@
         this.focusedElement = null;
         this.dropTargetElement = null;
         this.isDragging = false;
-        this.inlineEditingIsActive = false;
         this.isResizing = false;
 
         this.resetToolboxElements = function () {

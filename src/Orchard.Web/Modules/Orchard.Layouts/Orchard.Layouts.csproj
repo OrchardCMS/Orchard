@@ -351,6 +351,7 @@
     <Compile Include="Helpers\PrefixHelper.cs" />
     <Compile Include="Helpers\JsonHelper.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
+    <Compile Include="Permissions.cs" />
     <Compile Include="Providers\BlueprintElementHarvester.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Services\CurrentControllerAccessor.cs" />

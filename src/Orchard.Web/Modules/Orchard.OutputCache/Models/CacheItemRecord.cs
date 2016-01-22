@@ -12,7 +12,7 @@ namespace Orchard.OutputCache.Models {
         public virtual int GraceTime { get; set; }
         public virtual DateTime ValidUntilUtc { get; set; }
         public virtual DateTime StoredUntilUtc { get; set; }
-        public virtual byte[] Output { get; set; }
+        [StringLengthMax] public virtual byte[] Output { get; set; }
         public virtual string ContentType { get; set; }
         [StringLength(2048)] public virtual string QueryString { get; set; }
         [StringLength(2048)] public virtual string CacheKey { get; set; }

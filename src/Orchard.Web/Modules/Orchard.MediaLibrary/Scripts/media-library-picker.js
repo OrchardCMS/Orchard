@@ -14,24 +14,30 @@
         var promptOnNavigate = element.data("prompt-on-navigate");
         var showSaveWarning = element.data("show-save-warning");
         var addButton = element.find(".button.add");
+        var saveButton = $('.button.save');
         var removeAllButton = element.find(".button.remove");
         var template = 
             '<li><div data-id="{contentItemId}" class="media-library-picker-item"><div class="thumbnail">{thumbnail}<div class="overlay"><h3>{title}</h3></div></div></div><a href="#" data-id="{contentItemId}" class="media-library-picker-remove">' + removeText + '</a>' + pipe + '<a href="{editLink}?ReturnUrl=' + returnUrl + '">' + editText + '</a></li>';
         
         var refreshIds = function() {
             var id = element.find('.selected-ids');
-            id.val('');
-            element.find(".media-library-picker-item").each(function() {
-                id.val(id.val() + "," + $(this).attr("data-id"));
+            var ids = [];
+
+            element.find(".media-library-picker-item").each(function () {
+                ids.push($(this).attr("data-id"));
             });
 
-            var itemsCount = element.find(".media-library-picker-item").length;
+            id.val(ids.join());
+
+            var itemsCount = ids.length;
             
             if(!multiple && itemsCount > 0) {
-                addButton.hide();    
+                addButton.hide();
+                saveButton.show();
             }
             else {
                 addButton.show();
+                saveButton.hide();
             }
 
             if(itemsCount > 1) {

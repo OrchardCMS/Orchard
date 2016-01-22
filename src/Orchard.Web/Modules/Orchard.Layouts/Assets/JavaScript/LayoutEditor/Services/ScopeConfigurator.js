@@ -15,7 +15,7 @@
                         var resetFocus = false;
                         var element = $scope.element;
                     
-                        if (element.editor.isDragging || element.editor.inlineEditingIsActive)
+                        if (element.editor.isDragging)
                             return;
 
                         // If native clipboard support exists, the pseudo-clipboard will have been disabled.

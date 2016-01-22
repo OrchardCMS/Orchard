@@ -156,7 +156,7 @@
       <Output TaskParameter="Include" ItemName="TestAssemblies" />
     </CreateItem>
 
-    <NUnit Assemblies="@(TestAssemblies)" ToolPath="$(LibFolder)\nunit" WorkingDirectory="$(CompileFolder)" OutputXmlFile="$(BuildFolder)\Orchard.Tests.xml" />
+    <NUnit Assemblies="@(TestAssemblies)" ToolPath="$(LibFolder)\nunit" WorkingDirectory="$(CompileFolder)" OutputXmlFile="$(BuildFolder)\Orchard.Tests.xml" ExcludeCategory="longrunning" />
   </Target>
 
   <Target Name ="Spec" DependsOnTargets="Package-Stage">

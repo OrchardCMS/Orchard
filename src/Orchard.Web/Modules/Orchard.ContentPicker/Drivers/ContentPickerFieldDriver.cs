@@ -90,6 +90,7 @@ namespace Orchard.ContentPicker.Drivers {
             if (field.Ids.Any()) {
                 var contentItemIds = field.Ids
                     .Select(x => _contentManager.Get(x))
+                    .Where(x => x != null)
                     .Select(x => _contentManager.GetItemMetadata(x).Identity.ToString())
                     .ToArray();
 
