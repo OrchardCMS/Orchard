@@ -173,3 +173,12 @@
         left:10px;
         right: inherit;
     }
+
+.navigation-menu li div.menu-item-selected {
+    background-color: #6a7b42;
+    color: #fff;
+}
+
+.navigation-menu li div.menu-item-selected a {
+   color: #edf9f5;
+}

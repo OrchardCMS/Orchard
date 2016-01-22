@@ -1,5 +1,4 @@
 ﻿using System;
-using Orchard.DynamicForms.Helpers;
 using Orchard.DynamicForms.Services;
 using Orchard.DynamicForms.Services.Models;
 using Orchard.Localization;
@@ -22,7 +21,9 @@ namespace Orchard.DynamicForms.ValidationRules {
         }
 
         private LocalizedString GetValidationMessage(ValidationContext context) {
-            return T(Tokenize(ErrorMessage.WithDefault(String.Format("{0} must match the value of {1}.", context.FieldName, TargetName)), context));
+            return String.IsNullOrWhiteSpace(ErrorMessage)
+                ? T("{0} must match the value of {1}.", context.FieldName, TargetName)
+                : T(ErrorMessage, context);
         }
     }
 }

@@ -42,7 +42,7 @@ namespace Orchard.DynamicForms.Drivers {
         }
 
         protected override void OnDisplaying(Label element, ElementDisplayContext context) {
-            context.ElementShape.ProcessedText = _tokenizer.Replace(element.Text, context.GetTokenData());
+            context.ElementShape.ProcessedText = _tokenizer.Replace(element.Text, context.GetTokenData(), new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
             context.ElementShape.ProcessedFor = _tokenizer.Replace(element.For, context.GetTokenData());
         }
     }

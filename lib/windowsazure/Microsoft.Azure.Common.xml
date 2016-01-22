@@ -161,6 +161,237 @@
             asynchronous request failed.
             </summary>
         </member>
+        <member name="T:Microsoft.Azure.ResourceBase">
+            <summary>
+            Resource information.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Azure.ResourceBase.#ctor">
+            <summary>
+            Initializes a new instance of the ResourceBase class.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Azure.ResourceBase.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the ResourceBase class with required
+            arguments.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Azure.ResourceBase.Location">
+            <summary>
+            Required. Gets or sets the location of the resource.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Azure.ResourceBase.Tags">
+            <summary>
+            Optional. Gets or sets the tags attached to the resource.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Azure.ResourceBaseExtended">
+            <summary>
+            Resource information with extended details.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Azure.ResourceBaseExtended.#ctor">
+            <summary>
+            Initializes a new instance of the ResourceBaseExtended class.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Azure.ResourceBaseExtended.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the ResourceBaseExtended class with
+            required arguments.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Azure.ResourceBaseExtended.Id">
+            <summary>
+            Optional. Gets or sets the ID of the resource.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Azure.ResourceBaseExtended.Name">
+            <summary>
+            Optional. Gets or sets the name of the resource.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Azure.ResourceBaseExtended.Type">
+            <summary>
+            Optional. Gets or sets the type of the resource.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Azure.ResourceIdentity">
+            <summary>
+            Resource identity.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Azure.ResourceIdentity.#ctor">
+            <summary>
+            Initializes a new instance of the ResourceIdentity class.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Azure.ResourceIdentity.#ctor(System.String,System.String,System.String)">
+            <summary>
+            Initializes a new instance of the ResourceIdentity class.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Azure.ResourceIdentity.GetProviderFromResourceType(System.String)">
+            <summary>
+            Returns provider string from resource type.
+            </summary>
+            <param name="resourceType">Resource type.</param>
+            <returns>Provider</returns>
+        </member>
+        <member name="M:Microsoft.Azure.ResourceIdentity.GetTypeFromResourceType(System.String)">
+            <summary>
+            Returns type string from resource type.
+            </summary>
+            <param name="resourceType">Resource type.</param>
+            <returns>Type</returns>
+        </member>
+        <member name="P:Microsoft.Azure.ResourceIdentity.ParentResourcePath">
+            <summary>
+            Optional. Gets or sets parent resource path (optional).
+            </summary>
+        </member>
+        <member name="P:Microsoft.Azure.ResourceIdentity.ResourceName">
+            <summary>
+            Required. Gets or sets resource name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Azure.ResourceIdentity.ResourceProviderApiVersion">
+            <summary>
+            Required. Gets or sets API version of the resource provider.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Azure.ResourceIdentity.ResourceProviderNamespace">
+            <summary>
+            Required. Gets or sets namespace of the resource provider.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Azure.ResourceIdentity.ResourceType">
+            <summary>
+            Required. Gets or sets resource type.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Azure.Common.OData.FilterParameterAttribute">
+            <summary>
+            Parameter attribute used with OData filters.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Azure.Common.OData.FilterParameterAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Azure.Common.OData.FilterParameterAttribute"/> class.
+            </summary>
+            <param name="name">Property name to use in the filter.</param>
+        </member>
+        <member name="M:Microsoft.Azure.Common.OData.FilterParameterAttribute.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Azure.Common.OData.FilterParameterAttribute"/> class.
+            </summary>
+            <param name="name">Property name to use in the filter.</param>
+            <param name="format">Format of the value.</param>
+        </member>
+        <member name="P:Microsoft.Azure.Common.OData.FilterParameterAttribute.Name">
+            <summary>
+            Property name to use in the filter.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Azure.Common.OData.FilterParameterAttribute.Format">
+            <summary>
+            Format of the value.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Azure.Common.OData.FilterString">
+            <summary>
+            Handles OData filter generation.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Azure.Common.OData.FilterString.Generate``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+            <summary>
+            Generates an OData filter from a specified Linq expression.
+            </summary>
+            <typeparam name="T">Filter type</typeparam>
+            <param name="filter">Entity to use for filter generation</param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.Azure.Common.OData.UrlExpressionVisitor">
+            <summary>
+            Expression visitor class that generates OData style $filter parameter.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Azure.Common.OData.UrlExpressionVisitor.VisitBinary(System.Linq.Expressions.BinaryExpression)">
+            <summary>
+            Visits binary expression like ==, &amp;&amp;, >, etc.
+            </summary>
+            <param name="node">Node to visit.</param>
+            <returns>Original node.</returns>
+        </member>
+        <member name="M:Microsoft.Azure.Common.OData.UrlExpressionVisitor.VisitUnary(System.Linq.Expressions.UnaryExpression)">
+            <summary>
+            Visits binary expression !foo.
+            </summary>
+            <param name="node">Node to visit.</param>
+            <returns>Original node.</returns>
+        </member>
+        <member name="M:Microsoft.Azure.Common.OData.UrlExpressionVisitor.VisitConditional(System.Linq.Expressions.ConditionalExpression)">
+            <summary>
+            Visits conditional expression foo == true ? bar : fee. Throws NotSupportedException.
+            </summary>
+            <param name="node">Node to visit.</param>
+            <returns>Throws NotSupportedException.</returns>
+        </member>
+        <member name="M:Microsoft.Azure.Common.OData.UrlExpressionVisitor.VisitNew(System.Linq.Expressions.NewExpression)">
+            <summary>
+            Visits new object expression like new DateTime().
+            </summary>
+            <param name="node">Node to visit.</param>
+            <returns>Original node.</returns>
+        </member>
+        <member name="M:Microsoft.Azure.Common.OData.UrlExpressionVisitor.VisitConstant(System.Linq.Expressions.ConstantExpression)">
+            <summary>
+            Visits constants like 'a' or 123.
+            </summary>
+            <param name="node">Node to visit.</param>
+            <returns>Original node.</returns>
+        </member>
+        <member name="M:Microsoft.Azure.Common.OData.UrlExpressionVisitor.VisitMember(System.Linq.Expressions.MemberExpression)">
+            <summary>
+            Visits object members like p.Foo or dateTime.Hour.
+            </summary>
+            <param name="node">Node to visit.</param>
+            <returns>Original node.</returns>
+        </member>
+        <member name="M:Microsoft.Azure.Common.OData.UrlExpressionVisitor.VisitMethodCall(System.Linq.Expressions.MethodCallExpression)">
+            <summary>
+            Visits method calls like Contains, StartsWith, etc. Methods that are not supported will throw an exception.
+            </summary>
+            <param name="node">Node to visit.</param>
+            <returns>Original node.</returns>
+        </member>
+        <member name="M:Microsoft.Azure.Common.OData.UrlExpressionVisitor.closeUnaryBooleanOperator">
+            <summary>
+            Appends 'eq true' to Boolean unary operators.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Azure.Common.OData.UrlExpressionVisitor.PrintConstant(System.Object)">
+            <summary>
+            Helper method to print constant.
+            </summary>
+            <param name="val">Object to print.</param>
+        </member>
+        <member name="M:Microsoft.Azure.Common.OData.UrlExpressionVisitor.GetPropertyName(System.Reflection.PropertyInfo)">
+            <summary>
+            Helper method to generate property name.
+            </summary>
+            <param name="property">Property to examine.</param>
+            <returns>Property name or value specified in the FilterParameterAttribute.</returns>
+        </member>
+        <member name="M:Microsoft.Azure.Common.OData.UrlExpressionVisitor.GetPropertyFormat(System.Reflection.PropertyInfo)">
+            <summary>
+            Helper method to retrieve format from the FilterParameterAttribute.
+            </summary>
+            <param name="property">Property to examine.</param>
+            <returns>Format from FilterParameterAttribute or null.</returns>
+        </member>
         <member name="T:Microsoft.Azure.Common.Properties.Resources">
             <summary>
               A strongly-typed resource class, for looking up localized strings, etc.

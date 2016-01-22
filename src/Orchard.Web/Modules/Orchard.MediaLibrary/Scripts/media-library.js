@@ -71,8 +71,11 @@ $(function () {
 
         var listWidth = $('#media-library-main-list').width();
         var listHeight = $('#media-library-main-list').height();
-        var itemWidth = $('.thumbnail').first().width();
-        var itemHeight = $('.thumbnail').first().height();
+        var itemWidth = $('#media-library-main-list li').first().width();
+        var itemHeight = $('#media-library-main-list li').first().height();
+        var defaultDimension = $(window).width() < 1420 ? 120 : 200;
+        if (itemHeight == 0 || itemHeight == null) itemHeight = defaultDimension;
+        if (itemWidth == 0 || itemWidth == null) itemWidth = defaultDimension;
         var draftText = $("#media-library").data("draft-text");
 
         var itemsPerRow = Math.floor(listWidth / itemWidth);
@@ -606,5 +609,8 @@ $(function () {
             });
             return false;
         });
+
+        // Select recent folder when the page is initialized.
+        viewModel.selectRecent();
     })(window.mediaLibrarySettings);
 })

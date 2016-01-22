@@ -301,9 +301,12 @@ namespace Orchard.Core.Shapes {
             var progress = 1;
             var flatPositionComparer = new FlatPositionComparer();
             var ordering = unordered.Select(item => {
-                var position = (item == null || item.GetType().GetProperty("Metadata") == null || item.Metadata.GetType().GetProperty("Position") == null)
-                                   ? null
-                                   : item.Metadata.Position;
+                string position = null;
+                var itemPosition = item as IPositioned;
+                if (itemPosition != null) {
+                    position = itemPosition.Position;
+                }
+
                 return new { item, position };
             }).ToList();
 
@@ -396,7 +399,8 @@ namespace Orchard.Core.Shapes {
                     break;
                 default:
                     Debug.Assert(site.ResourceDebugMode == ResourceDebugMode.FromAppSetting, "Unknown ResourceDebugMode value.");
-                    debugMode = _httpContextAccessor.Value.Current().IsDebuggingEnabled;
+                    var context = _httpContextAccessor.Value.Current();
+                    debugMode = context != null && context.IsDebuggingEnabled;
                     break;
             }
             var defaultSettings = new RequireSettings {
@@ -405,7 +409,11 @@ namespace Orchard.Core.Shapes {
                 Culture = _workContext.Value.CurrentCulture,
             };
             var requiredResources = _resourceManager.Value.BuildRequiredResources(resourceType);
-            var appPath = _httpContextAccessor.Value.Current().Request.ApplicationPath;
+            var httpContext = _httpContextAccessor.Value.Current();
+            var appPath = httpContext == null || httpContext.Request == null
+                ? null
+                : httpContext.Request.ApplicationPath;
+
             foreach (var context in requiredResources.Where(r =>
                 (includeLocation.HasValue ? r.Settings.Location == includeLocation.Value : true) &&
                 (excludeLocation.HasValue ? r.Settings.Location != excludeLocation.Value : true))) {

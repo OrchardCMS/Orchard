@@ -52,7 +52,7 @@
                     @if (!taxonomyEntry.IsInternal || Authorizer.Authorize(Orchard.Security.StandardPermissions.SiteOwner)) {
 					@Html.ItemEditLink(T("Edit").Text, taxonomyEntry.ContentItem) <text>|</text>
 					@Html.ActionLink(T("Terms").Text, "Index", "TermAdmin", new { taxonomyId = taxonomyEntry.Id }, new object { }) <text>|</text>
-					@Html.ActionLink(T("Delete").Text, "Delete", new { id = taxonomyEntry.Id }, new object { }) <text>|</text>
+					@Html.ActionLink(T("Delete").Text, "Delete", new { id = taxonomyEntry.Id }, new { itemprop = "RemoveUrl UnsafeUrl" }) <text>|</text>
 					@Html.ActionLink(T("Import").Text, "Import", new { id = taxonomyEntry.Id }, new object { })
                     }
 				</td>

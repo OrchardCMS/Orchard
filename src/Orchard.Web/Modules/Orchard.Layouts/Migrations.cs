@@ -33,7 +33,6 @@ namespace Orchard.Layouts {
                 .WithPart("LayoutPart", p => p
                     .WithSetting("LayoutTypePartSettings.IsTemplate", "True"))
                 .DisplayedAs("Layout")
-                .Listable()
                 .Draftable());
 
             ContentDefinitionManager.AlterTypeDefinition("LayoutWidget", type => type

@@ -36,7 +36,7 @@ namespace Orchard.DynamicForms.Drivers {
 
         protected override void OnDisplaying(HiddenField element, ElementDisplayContext context) {
             context.ElementShape.ProcessedName = _tokenizer.Replace(element.Name, context.GetTokenData());
-            context.ElementShape.ProcessedValue = _tokenizer.Replace(element.Value, context.GetTokenData());
+            context.ElementShape.ProcessedValue = element.RuntimeValue;
         }
     }
 }

@@ -119,7 +119,7 @@ namespace Orchard.Comments.Drivers {
 
             // prevent users from commenting on a closed thread by hijacking the commentedOn property
             var commentsPart = commentedOn.As<CommentsPart>();
-            if (!commentsPart.CommentsActive) {
+            if (commentsPart == null || !commentsPart.CommentsActive) {
                 _orchardServices.TransactionManager.Cancel();
                 return Editor(part, shapeHelper);
             }

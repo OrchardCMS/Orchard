@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Text.RegularExpressions;
-using Orchard.DynamicForms.Helpers;
 using Orchard.DynamicForms.Services;
 using Orchard.DynamicForms.Services.Models;
 using Orchard.Localization;
@@ -27,7 +26,9 @@ namespace Orchard.DynamicForms.ValidationRules {
         }
 
         private LocalizedString GetValidationMessage(ValidationContext context) {
-            return T(Tokenize(ErrorMessage.WithDefault(String.Format("{0} must match the following pattern: {1}.", context.FieldName, Pattern)), context));
+            return String.IsNullOrWhiteSpace(ErrorMessage)
+                ? T("{0} must match the following pattern: {1}.", context.FieldName, Pattern)
+                : T(ErrorMessage);
         }
     }
 }

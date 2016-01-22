@@ -1,0 +1,21 @@
+﻿@using Orchard.DynamicForms.Elements
+@using Orchard.Layouts.Helpers
+@{
+    var element = (UrlField)Model.Element;
+    var tagBuilder = TagBuilderExtensions.CreateElementTagBuilder(Model, "input");
+
+    tagBuilder.AddCssClass("text design");
+    tagBuilder.Attributes["type"] = "url";
+    tagBuilder.Attributes["value"] = element.Value;
+    tagBuilder.Attributes["name"] = element.Name;
+}
+
+@if (element.ShowLabel) {
+    <div>
+        <label for="@element.HtmlId">@element.Label</label>
+        @tagBuilder.ToHtmlString(TagRenderMode.SelfClosing)
+    </div>
+}
+else {
+    @tagBuilder.ToHtmlString(TagRenderMode.SelfClosing)
+}

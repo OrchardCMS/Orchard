@@ -151,6 +151,8 @@
   <ItemGroup>
     <Compile Include="BackgroundHttpContextFactory.cs" />
     <Compile Include="Data\Conventions\FlagsNumConvention.cs" />
+    <Compile Include="DisplayManagement\IPositioned.cs" />
+    <Compile Include="DisplayManagement\PositionWrapper.cs" />
     <Compile Include="Localization\Services\ILocalizationStreamParser.cs" />
     <Compile Include="Localization\Services\LocalizationStreamParser.cs" />
     <Compile Include="Mvc\Html\LinkExtensions.cs" />
