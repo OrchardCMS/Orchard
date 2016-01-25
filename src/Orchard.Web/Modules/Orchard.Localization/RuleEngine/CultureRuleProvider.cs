@@ -8,7 +8,12 @@ namespace Orchard.Localization.RuleEngine {
         void Process(dynamic ruleContext);
     }
 
-    public class CultureRuleProvider : IRuleProvider {
+    public interface IConditionProvider : IEventHandler {
+        void Evaluate(dynamic evaluationContext);
+    }
+
+    public class CultureRuleProvider : IRuleProvider, IConditionProvider
+    {
         private readonly WorkContext _workContext;
 
         public CultureRuleProvider(WorkContext workContext) {
@@ -30,6 +35,25 @@ namespace Orchard.Localization.RuleEngine {
 
             if (String.Equals(ruleContext.FunctionName, "culturelang", StringComparison.OrdinalIgnoreCase)) {
                 ProcessLanguageCode(ruleContext);
+            }
+        }
+
+        public void Evaluate(dynamic evaluationContext)
+        {
+            if (String.Equals(evaluationContext.FunctionName, "culturecode", StringComparison.OrdinalIgnoreCase)) {
+                ProcessCultureCode(evaluationContext);
+            }
+
+            if (String.Equals(evaluationContext.FunctionName, "culturelcid", StringComparison.OrdinalIgnoreCase)) {
+                ProcessCultureId(evaluationContext);
+            }
+
+            if (String.Equals(evaluationContext.FunctionName, "cultureisrtl", StringComparison.OrdinalIgnoreCase)) {
+                ProcessCurrentCultureIsRtl(evaluationContext);
+            }
+
+            if (String.Equals(evaluationContext.FunctionName, "culturelang", StringComparison.OrdinalIgnoreCase)) {
+                ProcessLanguageCode(evaluationContext);
             }
         }
 
@@ -69,5 +93,7 @@ namespace Orchard.Localization.RuleEngine {
                 .Select(CultureInfo.GetCultureInfo)
                 .Any(c => c.Name == currentUserCulture.Name);
         }
+
+        
     }
 }
