@@ -65,7 +65,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
-    <Compile Include="Conditions\CultureCondition.cs" />
     <Compile Include="Extensions\Constants.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\TransliterationAdminController.cs" />
