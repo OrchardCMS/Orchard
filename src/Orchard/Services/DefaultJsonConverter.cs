@@ -15,7 +15,7 @@ namespace Orchard.Services {
         }
 
         public dynamic Deserialize(string json) {
-            dynamic result = JObject.Parse(json);
+            dynamic result = JToken.Parse(json);
             return result;
         }
 
