@@ -141,7 +141,7 @@ namespace Orchard.Layouts.Drivers {
                 context.ExportableData["MenuId"] = menuIdentity;
         }
 
-        protected override void OnImportCompleted(Menu element, ImportElementContext context) {
+        protected override void OnImporting(Menu element, ImportElementContext context) {
             var menuIdentity = context.ExportableData.Get("MenuId");
             var menu = menuIdentity != null ? context.Session.GetItemFromSession(menuIdentity) : default(ContentManagement.ContentItem);
 
