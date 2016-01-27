@@ -252,6 +252,35 @@
 
         });
     });
+    // Boolean checkboxes (data-boolean="true").
+    // Ensures that a value is always sent on submission.
+    // This by adding an hidden input when unchecked.
+    $(function () {
+        $('form').find('input:checkbox')
+            .filter(function () {
+                return $(this).data('boolean');
+            })
+            .change(function () {
+                var _this = $(this);
+                var name = _this.prop('name');
+                var next = _this.next('input[type = hidden]')
+                    .filter(function () {
+                        return $(this).prop('name') == name;
+                    });
+
+                if (_this.prop('checked')) {
+                    if (next.length)
+                        next.remove();
+                }
+                else if (!next.length) {
+                    _this.after($('<input>')
+                        .prop('name', name)
+                        .prop('type', 'hidden')
+                        .val('false'));
+                }
+            })
+            .change();
+    });
 })(jQuery);
 
 ///////////////////////////////////////////////////////////////
