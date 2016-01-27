@@ -44,14 +44,23 @@ namespace Orchard.ContentManagement.Drivers {
 
         DriverResult IContentFieldDriver.UpdateEditorShape(UpdateEditorContext context) {
             return Process(context.ContentItem, (part, field) => {
-                DriverResult result = Editor(part, field, context.Updater, context.New);
+                // Checking if the editor needs to be updated (e.g. if any of the shapes were not hidden).
+                DriverResult editor = Editor(part, field, context.New);
+                IEnumerable<ContentShapeResult> contentShapeResults = editor.GetShapeResults();
                 
-                if (result != null) {
-                    result.ContentPart = part;
-                    result.ContentField = field;
+                if (contentShapeResults.Any(contentShapeResult =>
+                    contentShapeResult == null || contentShapeResult.WasDisplayed(context))) {
+                    DriverResult result = Editor(part, field, context.Updater, context.New);
+
+                    if (result != null) {
+                        result.ContentPart = part;
+                        result.ContentField = field;
+                    }
+
+                    return result;
                 }
-                
-                return result;
+
+                return editor;
             }, context.Logger);
         }
 

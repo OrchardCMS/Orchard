@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Orchard.ContentManagement.Handlers;
 using Orchard.DisplayManagement.Shapes;
+using Orchard.DisplayManagement.Descriptors;
 
 namespace Orchard.ContentManagement.Drivers {
     public class ContentShapeResult : DriverResult {
@@ -126,6 +127,40 @@ namespace Orchard.ContentManagement.Drivers {
 
         public string GetShapeType() {
             return _shapeType;
+        }
+
+        public bool WasDisplayed(UpdateEditorContext context) {
+            ShapeDescriptor descriptor;
+            if (context.ShapeTable.Descriptors.TryGetValue(_shapeType, out descriptor)) {
+                var placementContext = new ShapePlacementContext {
+                    Content = context.ContentItem,
+                    ContentType = context.ContentItem.ContentType,
+                    Differentiator = _differentiator,
+                    DisplayType = null,
+                    Path = context.Path
+                };
+
+                var placementInfo = descriptor.Placement(placementContext);
+
+                var location = placementInfo.Location;
+
+                if (String.IsNullOrEmpty(location) || location == "-") {
+                    return false;
+                }
+
+                var editorGroup = _groupId;
+                if (String.IsNullOrEmpty(editorGroup)) {
+                    editorGroup = placementInfo.GetGroup() ?? "";
+                }
+
+                var contextGroup = context.GroupId ?? "";
+
+                if (!String.Equals(editorGroup, contextGroup, StringComparison.OrdinalIgnoreCase)) {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }
