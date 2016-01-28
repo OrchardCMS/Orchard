@@ -18,3 +18,8 @@ Features:
         Description: Synchronizes aliases when created from different servers.
 		Dependencies: Orchard.Alias
 		Category: Content
+	Orchard.Alias.BreadcrumbLink:
+		Name: Alias Breadcrumb Link
+		Description: Provides Alias Breadcrumb Link menu item type that can be used to generate breadcrumb links, using Alias data, to content items without explicitly adding links to those content items in the menu.
+		Dependencies: Orchard.Alias
+		Category: Navigation
