@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Web;
 using Orchard.Conditions.Services;
 using Orchard.Environment.Configuration;
 using Orchard.Mvc;
 
-namespace Orchard.Widgets.RuleEngine {
+namespace Orchard.Conditions.Providers {
     public class UrlCondition : IConditionProvider {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ShellSettings _shellSettings;

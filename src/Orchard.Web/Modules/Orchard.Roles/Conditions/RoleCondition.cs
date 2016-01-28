@@ -10,10 +10,10 @@ namespace Orchard.Roles.Conditions {
         void Evaluate(dynamic evaluationContext);
     }
 
-    public class RoleRuleProvider : IConditionProvider {
+    public class RoleConditionProvider : IConditionProvider {
         private readonly IAuthenticationService _authenticationService;
 
-        public RoleRuleProvider(IAuthenticationService authenticationService) {
+        public RoleConditionProvider(IAuthenticationService authenticationService) {
             _authenticationService = authenticationService;
         }
 
@@ -30,7 +30,7 @@ namespace Orchard.Roles.Conditions {
 
             var roles = ((object[])evaluationContext.Arguments).Cast<string>();
             var userRoles = user.As<IUserRoles>();
-            evaluationContext.Result = userRoles != null ? userRoles.Roles.Intersect(roles).Count() > 0 : false;
+            evaluationContext.Result = userRoles != null && userRoles.Roles.Intersect(roles).Any();
         }
     }
 }

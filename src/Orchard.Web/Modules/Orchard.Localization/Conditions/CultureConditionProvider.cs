@@ -3,41 +3,20 @@ using System.Globalization;
 using System.Linq;
 using Orchard.Events;
 
-namespace Orchard.Localization.RuleEngine {
-    public interface IRuleProvider : IEventHandler {
-        void Process(dynamic ruleContext);
-    }
+namespace Orchard.Localization.Conditions {
 
     public interface IConditionProvider : IEventHandler {
         void Evaluate(dynamic evaluationContext);
     }
 
-    public class CultureRuleProvider : IRuleProvider, IConditionProvider
+    public class CultureConditionProvider : IConditionProvider
     {
         private readonly WorkContext _workContext;
 
-        public CultureRuleProvider(WorkContext workContext) {
+        public CultureConditionProvider(WorkContext workContext) {
             _workContext = workContext;
         }
-
-        public void Process(dynamic ruleContext) {
-            if (String.Equals(ruleContext.FunctionName, "culturecode", StringComparison.OrdinalIgnoreCase)) {
-                ProcessCultureCode(ruleContext);
-            }
-
-            if (String.Equals(ruleContext.FunctionName, "culturelcid", StringComparison.OrdinalIgnoreCase)) {
-                ProcessCultureId(ruleContext);
-            }
-
-            if (String.Equals(ruleContext.FunctionName, "cultureisrtl", StringComparison.OrdinalIgnoreCase)) {
-                ProcessCurrentCultureIsRtl(ruleContext);
-            }
-
-            if (String.Equals(ruleContext.FunctionName, "culturelang", StringComparison.OrdinalIgnoreCase)) {
-                ProcessLanguageCode(ruleContext);
-            }
-        }
-
+        
         public void Evaluate(dynamic evaluationContext)
         {
             if (String.Equals(evaluationContext.FunctionName, "culturecode", StringComparison.OrdinalIgnoreCase)) {
@@ -93,7 +72,5 @@ namespace Orchard.Localization.RuleEngine {
                 .Select(CultureInfo.GetCultureInfo)
                 .Any(c => c.Name == currentUserCulture.Name);
         }
-
-        
     }
 }
