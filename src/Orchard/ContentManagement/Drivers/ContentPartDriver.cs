@@ -76,14 +76,6 @@ namespace Orchard.ContentManagement.Drivers {
             return editor;
         }
 
-        private static IEnumerable<ContentShapeResult> GetShapeResults(DriverResult driverResult) {
-            if (driverResult is CombinedResult) {
-                return ((CombinedResult)driverResult).GetResults().Select(result => result as ContentShapeResult);
-            }
-
-            return new[] { driverResult as ContentShapeResult };
-        }
-
         void IContentPartDriver.Importing(ImportContentContext context) {
             var part = context.ContentItem.As<TContent>();
             if (part != null)
