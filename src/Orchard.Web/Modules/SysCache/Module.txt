@@ -8,4 +8,4 @@ Description: Enables database caching using the SysCache provider.
 Features:
     SysCache:
         Description: Enables database caching using the SysCache provider.
-		Category: Performance
+        Category: Performance

@@ -8,5 +8,5 @@ Description: Adds a client side image editor for Media Library
 Features:
     Orchard.ImageEditor:
         Description: Adds a client side image editor for Media Library
-		Dependencies: Orchard.MediaLibrary
-		Category: Media
+        Dependencies: Orchard.MediaLibrary
+        Category: Media

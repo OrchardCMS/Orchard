@@ -11,8 +11,8 @@ Features:
         Description: Standard content item comments.
         Dependencies: Settings, Orchard.Tokens
         Category: Social
-	Orchard.Comments.Workflows:
-		Name: Comments Workflows Activities
+    Orchard.Comments.Workflows:
+        Name: Comments Workflows Activities
         Description: Provides workflow activities for comments management.
-		Category: Workflows
-		Dependencies: Orchard.Workflows
+        Category: Workflows
+        Dependencies: Orchard.Workflows
