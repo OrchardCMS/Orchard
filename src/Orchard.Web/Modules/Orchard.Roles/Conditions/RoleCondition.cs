@@ -5,32 +5,32 @@ using Orchard.Security;
 using System;
 using System.Linq;
 
-namespace Orchard.Roles.RuleEngine {
-    public interface IRuleProvider : IEventHandler {
-        void Process(dynamic ruleContext);
+namespace Orchard.Roles.Conditions {
+    public interface IConditionProvider : IEventHandler {
+        void Evaluate(dynamic evaluationContext);
     }
 
-    public class RoleRuleProvider : IRuleProvider {
+    public class RoleRuleProvider : IConditionProvider {
         private readonly IAuthenticationService _authenticationService;
 
         public RoleRuleProvider(IAuthenticationService authenticationService) {
             _authenticationService = authenticationService;
         }
 
-        public void Process(dynamic ruleContext) {
-            if (!String.Equals(ruleContext.FunctionName, "role", StringComparison.OrdinalIgnoreCase)) {
+        public void Evaluate(dynamic evaluationContext) {
+            if (!String.Equals(evaluationContext.FunctionName, "role", StringComparison.OrdinalIgnoreCase)) {
                 return;
             }
 
             var user = _authenticationService.GetAuthenticatedUser();
             if (user == null) {
-                ruleContext.Result = false;
+                evaluationContext.Result = false;
                 return;
             }
 
-            var roles = ((object[])ruleContext.Arguments).Cast<string>();
+            var roles = ((object[])evaluationContext.Arguments).Cast<string>();
             var userRoles = user.As<IUserRoles>();
-            ruleContext.Result = userRoles != null ? userRoles.Roles.Intersect(roles).Count() > 0 : false;
+            evaluationContext.Result = userRoles != null ? userRoles.Roles.Intersect(roles).Count() > 0 : false;
         }
     }
 }
