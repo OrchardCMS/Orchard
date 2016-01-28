@@ -49,7 +49,7 @@ namespace Orchard.Core.Navigation.Drivers {
 
                 var menuName = menu.As<TitlePart>().Title.HtmlClassify();
                 var currentCulture = _workContextAccessor.GetContext().CurrentCulture;
-                var menuItems = _navigationManager.BuildMenu(menu);
+                var menuItems = _navigationManager.BuildMenu(menu, part.Breadcrumb);
                 var localized = new List<MenuItem>();
                 foreach(var menuItem in menuItems) {
                     // if there is no associated content, it as culture neutral

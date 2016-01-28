@@ -5,6 +5,6 @@ namespace Orchard.UI.Navigation {
     /// Provides a way to alter the main navigation, for instance by dynamically injecting new items
     /// </summary>
     public interface INavigationFilter : IDependency {
-        IEnumerable<MenuItem> Filter(IEnumerable<MenuItem> menuItems);
+        IEnumerable<MenuItem> Filter(IEnumerable<MenuItem> menuItems, bool isBreadcrumb = false);
     }
 }
