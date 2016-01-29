@@ -101,10 +101,12 @@
     <Content Include="Views\Admin\Edit.cshtml" />
     <Content Include="Views\Admin\IndexUnmanaged.cshtml" />
     <Content Include="Web.config" />
+    <Compile Include="AliasBreadcrumbLinkMigrations.cs" />
     <Compile Include="Implementation\Updater\AliasHolderUpdater.cs" />
     <Compile Include="Implementation\Updater\AliasUpdateCursor.cs" />
     <Compile Include="Implementation\Updater\AliasUpdaterBackgroundTask.cs" />
     <Compile Include="Implementation\Updater\IAliasUpdateCursor.cs" />
+    <Compile Include="Navigation\NavigationAliasProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
   </ItemGroup>
