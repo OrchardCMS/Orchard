@@ -44,29 +44,21 @@ namespace Orchard.Core.Navigation.Services {
         public ILogger Logger { get; set; }
 
         public IEnumerable<MenuItem> BuildMenu(string menuName) {
-            return BuildMenu(menuName, false);
-        }
-
-        public IEnumerable<MenuItem> BuildMenu(string menuName, bool isBreadcrumb) {
             var sources = GetSources(menuName);
             var hasDebugShowAllMenuItems = _authorizationService.TryCheckAccess(Permission.Named("DebugShowAllMenuItems"), _orchardServices.WorkContext.CurrentUser, null);
-            return FinishMenu(Reduce(Filter(Merge(sources), isBreadcrumb), menuName == "admin", hasDebugShowAllMenuItems).ToArray());
+            return FinishMenu(Reduce(Filter(Merge(sources)), menuName == "admin", hasDebugShowAllMenuItems).ToArray());
         }
 
         public IEnumerable<MenuItem> BuildMenu(IContent menu) {
-            return BuildMenu(menu,false);
-        }
-
-        public IEnumerable<MenuItem> BuildMenu(IContent menu, bool isBreadcrumb) {
             var sources = GetSources(menu);
             var hasDebugShowAllMenuItems = _authorizationService.TryCheckAccess(Permission.Named("DebugShowAllMenuItems"), _orchardServices.WorkContext.CurrentUser, null);
-            return FinishMenu(Reduce(Arrange(Filter(Merge(sources), isBreadcrumb)), false, hasDebugShowAllMenuItems).ToArray());
+            return FinishMenu(Reduce(Arrange(Filter(Merge(sources))), false, hasDebugShowAllMenuItems).ToArray());
         }
 
         public string GetNextPosition(IContent menu) {
             var sources = GetSources(menu);
             var hasDebugShowAllMenuItems = _authorizationService.TryCheckAccess(Permission.Named("DebugShowAllMenuItems"), _orchardServices.WorkContext.CurrentUser, null);
-            return Position.GetNext(Reduce(Arrange(Filter(Merge(sources), false)), false, hasDebugShowAllMenuItems).ToArray());
+            return Position.GetNext(Reduce(Arrange(Filter(Merge(sources))), false, hasDebugShowAllMenuItems).ToArray());
         }
 
         public IEnumerable<string> BuildImageSets(string menuName) {
@@ -82,10 +74,10 @@ namespace Orchard.Core.Navigation.Services {
             return menuItems;
         }
 
-        private IEnumerable<MenuItem> Filter(IEnumerable<MenuItem> menuItems, bool isBreadcrumb) {
+        private IEnumerable<MenuItem> Filter(IEnumerable<MenuItem> menuItems) {
             IEnumerable<MenuItem> result = menuItems;
             foreach (var filter in _navigationFilters) {
-                result = filter.Filter(result, isBreadcrumb);
+                result = filter.Filter(result);
             }
 
             return result;

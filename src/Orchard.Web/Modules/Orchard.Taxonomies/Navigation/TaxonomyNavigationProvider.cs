@@ -24,7 +24,7 @@ namespace Orchard.Taxonomies.Navigation {
             _taxonomyService = taxonomyService;
         }
 
-        public IEnumerable<MenuItem> Filter(IEnumerable<MenuItem> items, bool isBreadcrumb) {
+        public IEnumerable<MenuItem> Filter(IEnumerable<MenuItem> items) {
 
             foreach (var item in items) {
                 if (item.Content != null && item.Content.ContentItem.ContentType == "TaxonomyNavigationMenuItem") {
