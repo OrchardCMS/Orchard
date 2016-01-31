@@ -53,7 +53,8 @@ namespace Orchard.Tokens.Implementation {
             var replacements = Evaluate(options.Predicate == null ? tokens : tokens.Where(options.Predicate), data);
 
             return replacements.Aggregate(tokenset.Item1,
-                (current, replacement) => current.Replace((hashMode ? "#{" : "{") + replacement.Key + "}", (options.Encoding ?? ReplaceOptions.NoEncode)(replacement.Key, replacement.Value)));
+                (current, replacement) => current.Replace((hashMode ? "#{" : "{") + replacement.Key + "}",
+                (options.Encoding ?? ReplaceOptions.NoEncode)(replacement.Key, replacement.Value ?? "")));
         }
 
         private static Tuple<string, IEnumerable<string>> Parse(string text, bool hashMode) {

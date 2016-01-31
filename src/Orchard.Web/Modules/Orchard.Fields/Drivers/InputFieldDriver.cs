@@ -1,19 +1,22 @@
-﻿using System;
-using Orchard.ContentManagement;
+﻿using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Fields.Fields;
 using Orchard.Fields.Settings;
 using Orchard.Localization;
-using Orchard.Utility.Extensions;
+using Orchard.Tokens;
+using System;
+using System.Collections.Generic;
 
 namespace Orchard.Fields.Drivers {
     public class InputFieldDriver : ContentFieldDriver<InputField> {
         public IOrchardServices Services { get; set; }
         private const string TemplateName = "Fields/Input.Edit";
+        private readonly ITokenizer _tokenizer;
 
-        public InputFieldDriver(IOrchardServices services) {
+        public InputFieldDriver(IOrchardServices services, ITokenizer tokenizer) {
             Services = services;
+            _tokenizer = tokenizer;
             T = NullLocalizer.Instance;
         }
 
@@ -42,6 +45,10 @@ namespace Orchard.Fields.Drivers {
         protected override DriverResult Editor(ContentPart part, InputField field, IUpdateModel updater, dynamic shapeHelper) {
             if (updater.TryUpdateModel(field, GetPrefix(field, part), null, null)) {
                 var settings = field.PartFieldDefinition.Settings.GetModel<InputFieldSettings>();
+
+                if (field.Value == null && !String.IsNullOrEmpty(settings.DefaultValue)) {
+                     field.Value = _tokenizer.Replace(settings.DefaultValue, new Dictionary<string, object> { { "Content", part.ContentItem } });
+                }
 
                 if (settings.Required && string.IsNullOrWhiteSpace(field.Value)) {
                     updater.AddModelError(GetPrefix(field, part), T("The field {0} is mandatory.", T(field.DisplayName)));

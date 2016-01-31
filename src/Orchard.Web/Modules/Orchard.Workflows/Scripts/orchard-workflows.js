@@ -97,7 +97,7 @@
         } else {
             var lowerCaseText = text.toLowerCase();
             $(".activity-toolbox-item").each(function () {
-                var recordText = $(this).data("activity-text").toLowerCase();
+                var recordText = $(this).data("activity-name").toLowerCase();
                 $(this).toggle(recordText.indexOf(lowerCaseText) >= 0);
             });
         }

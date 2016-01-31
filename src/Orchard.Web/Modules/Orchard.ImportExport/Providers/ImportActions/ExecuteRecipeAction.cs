@@ -153,7 +153,9 @@ namespace Orchard.ImportExport.Providers.ImportActions {
             PrepareRecipe(recipeDocument);
 
             // Sets the request timeout to a configurable amount of seconds to give enough time to execute custom recipes.
-            _orchardServices.WorkContext.HttpContext.Server.ScriptTimeout = RecipeExecutionTimeout;
+            if (_orchardServices.WorkContext.HttpContext != null) {
+                _orchardServices.WorkContext.HttpContext.Server.ScriptTimeout = RecipeExecutionTimeout;
+            }
 
             // Suspend background task execution.
             _sweepGenerator.Terminate();

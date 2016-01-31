@@ -799,6 +799,11 @@ namespace Orchard.Core.Shapes {
             RenderInternal(Html, Output, "EditorTemplates/" + TemplateName, Model, Prefix);
         }
 
+        [Shape]
+        public void DefinitionTemplate(HtmlHelper Html, TextWriter Output, string TemplateName, object Model, string Prefix) {
+            RenderInternal(Html, Output, "DefinitionTemplates/" + TemplateName, Model, Prefix);
+        }
+
         static void RenderInternal(HtmlHelper Html, TextWriter Output, string TemplateName, object Model, string Prefix) {
             var adjustedViewData = new ViewDataDictionary(Html.ViewDataContainer.ViewData) {
                 Model = DetermineModel(Html, Model),

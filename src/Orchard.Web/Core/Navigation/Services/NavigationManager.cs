@@ -93,16 +93,15 @@ namespace Orchard.Core.Navigation.Services {
             var schemes = new[] { "http", "https", "tel", "mailto" };
             if (!string.IsNullOrEmpty(url) && _urlHelper.RequestContext.HttpContext != null &&
                 !(url.StartsWith("/") || schemes.Any(scheme => url.StartsWith(scheme + ":")))) {
-                if (url.StartsWith("~/")) {
-
-                    if (!String.IsNullOrEmpty(_shellSettings.RequestUrlPrefix)) {
-                        url = _shellSettings.RequestUrlPrefix + "/" + url.Substring(2);
-                    }
-                    else {
-                        url = url.Substring(2);
-                    }
-                }
                 if (!url.StartsWith("#")) {
+                    if (url.StartsWith("~/")) {
+                        if (!String.IsNullOrEmpty(_shellSettings.RequestUrlPrefix)) {
+                            url = _shellSettings.RequestUrlPrefix + "/" + url.Substring(2);
+                        }
+                        else {
+                            url = url.Substring(2);
+                        }
+                    }
                     var appPath = _urlHelper.RequestContext.HttpContext.Request.ApplicationPath;
                     if (appPath == "/")
                         appPath = "";

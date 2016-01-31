@@ -265,7 +265,7 @@
             "Assets/Js/Bootstrap/tooltip.js",
             "Assets/Js/Bootstrap/popover.js",
             "Assets/Js/Bootstrap/scrollspy.js",
-            "Assets/Js/Bootstrap/tab.js",
+            "Assets/Js/Bootstrap/tab.js",            
             "Assets/Js/Bootstrap/transition.js"
         ],
         "output": "Scripts/bootstrap.js"

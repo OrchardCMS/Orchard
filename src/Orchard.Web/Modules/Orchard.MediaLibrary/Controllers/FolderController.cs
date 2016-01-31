@@ -83,6 +83,12 @@ namespace Orchard.MediaLibrary.Controllers {
                 return new HttpUnauthorizedResult();
             }
 
+            // Shouldn't be able to rename the root folder
+            if (IsRootFolder(folderPath)) {
+                return new HttpUnauthorizedResult();
+            }
+
+
             var viewModel = new MediaManagerFolderEditViewModel {
                 FolderPath = folderPath,
                 Name = folderPath.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar).Last()
@@ -101,6 +107,11 @@ namespace Orchard.MediaLibrary.Controllers {
             UpdateModel(viewModel);
 
             if (!_mediaLibraryService.CanManageMediaFolder(viewModel.FolderPath)) {
+                return new HttpUnauthorizedResult();
+            }
+
+            // Shouldn't be able to rename the root folder
+            if(IsRootFolder(viewModel.FolderPath)) {
                 return new HttpUnauthorizedResult();
             }
 
@@ -164,6 +175,11 @@ namespace Orchard.MediaLibrary.Controllers {
             }
 
             return Json(true);
+        }
+
+        private bool IsRootFolder(string folderPath) {
+            var rootMediaFolder = _mediaLibraryService.GetRootMediaFolder();
+            return String.Equals(rootMediaFolder.MediaPath, folderPath, StringComparison.OrdinalIgnoreCase);
         }
     }
 }
