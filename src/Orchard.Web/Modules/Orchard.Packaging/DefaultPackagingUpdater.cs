@@ -20,7 +20,7 @@ namespace Orchard.Packaging {
 
         public void Installed(Feature feature) {
             if (feature.Descriptor.Id == "Gallery") {
-                _packagingSourceManager.AddSource("Orchard Gallery", "http://packages.orchardproject.net/FeedService.svc");
+                _packagingSourceManager.AddSource("Orchard Gallery", "https://gallery.orchardproject.net/api/FeedService");
             }
         }
 

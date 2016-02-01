@@ -441,7 +441,8 @@ namespace Orchard.Core.Shapes {
                     break;
                 default:
                     Debug.Assert(site.ResourceDebugMode == ResourceDebugMode.FromAppSetting, "Unknown ResourceDebugMode value.");
-                    debugMode = _httpContextAccessor.Value.Current().IsDebuggingEnabled;
+                    var context = _httpContextAccessor.Value.Current();
+                    debugMode = context != null && context.IsDebuggingEnabled;
                     break;
             }
             var defaultSettings = new RequireSettings {
@@ -450,7 +451,11 @@ namespace Orchard.Core.Shapes {
                 Culture = _workContext.Value.CurrentCulture,
             };
             var requiredResources = _resourceManager.Value.BuildRequiredResources(resourceType);
-            var appPath = _httpContextAccessor.Value.Current().Request.ApplicationPath;
+            var httpContext = _httpContextAccessor.Value.Current();
+            var appPath = httpContext == null || httpContext.Request == null
+                ? null
+                : httpContext.Request.ApplicationPath;
+
             foreach (var context in requiredResources.Where(r =>
                 (includeLocation.HasValue ? r.Settings.Location == includeLocation.Value : true) &&
                 (excludeLocation.HasValue ? r.Settings.Location != excludeLocation.Value : true))) {
