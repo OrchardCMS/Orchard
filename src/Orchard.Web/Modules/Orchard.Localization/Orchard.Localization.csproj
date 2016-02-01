@@ -101,7 +101,7 @@
     <Compile Include="Selectors\RouteCultureSelector.cs" />
     <Compile Include="Selectors\BrowserCultureSelector.cs" />
     <Compile Include="Providers\ICultureStorageProvider.cs" />
-    <Compile Include="RuleEngine\CultureRuleProvider.cs" />
+    <Compile Include="Conditions\CultureConditionProvider.cs" />
     <Compile Include="Services\AdminDirectionalityFactory.cs" />
     <Compile Include="Services\AdminCultureSelectorFactory.cs" />
     <Compile Include="Services\LocalizationCultureFilter.cs" />

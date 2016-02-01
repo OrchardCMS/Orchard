@@ -93,6 +93,7 @@
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Commands\LayerCommands.cs" />
     <Compile Include="Commands\WidgetCommands.cs" />
+    <Compile Include="Conditions\LegacyRulesEvaluator.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="ControlWrapper.cs" />
     <Compile Include="Drivers\LayerPartDriver.cs" />

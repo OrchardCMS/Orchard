@@ -1,11 +1,11 @@
 ﻿using System;
 using Autofac;
 using NUnit.Framework;
+using Orchard.Conditions.Providers;
 using Orchard.Conditions.Services;
 using Orchard.Environment.Configuration;
 using Orchard.Mvc;
 using Orchard.Tests.Stubs;
-using Orchard.Widgets.RuleEngine;
 
 namespace Orchard.Tests.Modules.Conditions.Providers {
     [TestFixture]
