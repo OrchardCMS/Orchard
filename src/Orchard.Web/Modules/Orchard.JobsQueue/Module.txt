@@ -9,7 +9,7 @@ Features:
     Orchard.JobsQueue:
         Description: Provides a jobs queue to process jobs asynchronously.
         Category: Developer
-        Dependencies: Settings, Orchard.TaskLease
+        Dependencies: Settings
         Name: Jobs Queue
     Orchard.JobsQueue.UI:
         Description: Provides a UI to manage queued jobs.
