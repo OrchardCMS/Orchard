@@ -586,7 +586,8 @@
     <Content Include="Styles\bootstrap.min.css" />
     <Content Include="Styles\font-awesome.css" />
     <Content Include="Styles\font-awesome.min.css" />
-    <Content Include="Styles\Fonts\fontawesome-webfont.svg" />
+    <Content Include="Fonts\fontawesome-webfont.svg" />
+    <Content Include="Fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Styles\Images\calendar-blue.gif" />
     <Content Include="Styles\Images\calendar-green.gif" />
     <Content Include="Styles\Images\calendar.gif" />
@@ -770,19 +771,19 @@
     <Content Include="Assets\Less\Bootstrap\variables.less" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\fontawesome-webfont.eot" />
+    <Content Include="Fonts\fontawesome-webfont.eot" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\fontawesome-webfont.ttf" />
+    <Content Include="Fonts\fontawesome-webfont.ttf" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\fontawesome-webfont.woff" />
+    <Content Include="Fonts\fontawesome-webfont.woff" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\fontawesome-webfont.woff2" />
+    <Content Include="Fonts\fontawesome-webfont.woff2" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\FontAwesome.otf" />
+    <Content Include="Fonts\FontAwesome.otf" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Less\Bootstrap\mixins\alerts.less" />
@@ -845,6 +846,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Fonts\glyphicons-halflings-regular.woff2" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\Web.config" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
