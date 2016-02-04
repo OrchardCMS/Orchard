@@ -8,13 +8,23 @@ namespace Orchard.Resources {
 
             // Full jQuery UI package.
             manifest.DefineScript("jQueryUI").SetUrl("jquery-ui.min.js", "jquery-ui.js").SetVersion("1.11.4").SetDependencies("jQuery").SetCdn("//ajax.aspnetcdn.com/ajax/jquery.ui/1.11.4/jquery-ui.min.js", "//ajax.aspnetcdn.com/ajax/jquery.ui/1.11.4/jquery-ui.js", true);
-            manifest.DefineStyle("jQueryUI_Orchard").SetUrl("jqueryui-orchard.min.css", "jqueryui-orchard.css").SetVersion("1.11.4");
-            manifest.DefineScript("jQueryUI_Interaction").SetUrl("jquery-ui-interaction.min.js", "jquery-ui-interaction.js").SetVersion("1.11.4").SetDependencies("jQueryUI");
-            manifest.DefineScript("jQueryUI_Widgets").SetUrl("jquery-ui-widgets.min.js", "jquery-ui-widgets.js").SetVersion("1.11.4").SetDependencies("jQueryUI_Interaction");
+
+            // Subsets and styles
+            manifest.DefineStyle("jQueryUI").SetUrl("jquery-ui.min.css", "jquery-ui.css").SetVersion("1.11.4");
+            manifest.DefineStyle("jQueryUI_Orchard").SetDependencies("jQueryUI"); // Right now no customization in the styles, but the resource is still use for later
+
+            manifest.DefineScript("jQueryUI_Interaction").SetUrl("jquery-ui-interaction.min.js", "jquery-ui-interaction.js").SetVersion("1.11.4").SetDependencies("jQuery");
+            manifest.DefineScript("jQueryUI_Widgets").SetUrl("jquery-ui-widgets.min.js", "jquery-ui-widgets.js").SetVersion("1.11.4").SetDependencies("jQuery");
             manifest.DefineScript("jQueryUI_Effects").SetUrl("jquery-ui-effects.min.js", "jquery-ui-effects.js").SetVersion("1.11.4").SetDependencies("jQuery");
 
-            // Individual jQuery UI components.
-            manifest.DefineScript("jQueryUI_Mouse").SetUrl("ui/mouse.min.js", "ui/mouse.js").SetVersion("1.11.4").SetDependencies("jQueryUI");
+            // DEPRECATED - FOR COMPATIBILITY WITH VERSIONS < 1.10
+            manifest.DefineScript("jQueryUI_Core").SetDependencies("jQueryUI"); // Core doesn't exist anymore
+            manifest.DefineScript("jQueryUI_Widget").SetDependencies("jQueryUI_Widgets"); // Subset has been renamed
+            manifest.DefineStyle("jQueryUI").SetUrl("jquery-ui.min.css", "jquery-ui.css").SetVersion("1.11.2");
+            manifest.DefineStyle("jQueryUI_Structure").SetUrl("jquery-ui.structure.min.css", "jquery-ui.structure.css").SetVersion("1.11.2");
+            manifest.DefineStyle("jQueryUI_Theme").SetUrl("jquery-ui.theme.min.css", "jquery-ui.theme.css").SetVersion("1.11.2");
+
+            manifest.DefineScript("jQueryUI_Mouse").SetVersion("1.11.4").SetDependencies("jQueryUI");
             manifest.DefineScript("jQueryUI_Position").SetUrl("ui/position.min.js", "ui/position.js").SetVersion("1.11.4").SetDependencies("jQuery");
             manifest.DefineScript("jQueryUI_Draggable").SetUrl("ui/draggable.min.js", "ui/draggable.js").SetVersion("1.11.4").SetDependencies("jQueryUI_Mouse");
             manifest.DefineScript("jQueryUI_Droppable").SetUrl("ui/droppable.min.js", "ui/droppable.js").SetVersion("1.11.4").SetDependencies("jQueryUI_Draggable");

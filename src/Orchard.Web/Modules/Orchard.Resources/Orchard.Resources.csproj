@@ -620,8 +620,6 @@
     <Content Include="Styles\jquery.calendars.picker.full.min.css" />
     <Content Include="Styles\jquery.timeentry.css" />
     <Content Include="Styles\jquery.timeentry.min.css" />
-    <Content Include="Styles\jqueryui-orchard.css" />
-    <Content Include="Styles\jqueryui-orchard.min.css" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
