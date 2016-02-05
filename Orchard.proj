@@ -301,9 +301,12 @@
       <!--<MsDeploy-Folder-Input Include="$(StageFolder)\**\*" Exclude="$(StageFolder)\**\bin\**\*.pdb;$(StageFolder)\**\bin\**\*.xml" />-->
 
       <MsDeploy-Exclude-Modules Include="
+        $(StageFolder)\**\Modules\Orchard.CustomForms\**;
+        $(StageFolder)\**\Modules\Orchard.jQuery\**;
         $(StageFolder)\**\Modules\Orchard.Media\**;
         $(StageFolder)\**\Modules\Orchard.MediaPicker\**;
         $(StageFolder)\**\Modules\Orchard.Rules\**;
+        $(StageFolder)\**\Modules\Orchard.TaskLease\**;
         " />
 
       <MsDeploy-Folder-Input Include="$(StageFolder)\**\*" Exclude="$(StageFolder)\**\bin\**\*.xml;$(StageFolder)\**\obj\**\*;@(MsDeploy-Exclude-Modules)" />

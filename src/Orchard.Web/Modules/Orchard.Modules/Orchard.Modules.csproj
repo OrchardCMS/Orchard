@@ -119,9 +119,6 @@
     <Content Include="Scripts\features.admin.min.js">
       <DependentUpon>features.admin.js</DependentUpon>
     </Content>
-    <Content Include="Styles\font-awesome.css" />
-    <Content Include="Styles\font-awesome.min.css" />
-    <Content Include="Styles\Fonts\fontawesome-webfont.svg" />
     <Content Include="Styles\images\menu.modules.png" />
     <Content Include="Styles\images\new.gif" />
     <Content Include="Styles\images\update.gif" />
@@ -169,22 +166,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\fontawesome-webfont.eot" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\EditorTemplates\BuilderSteps\Feature.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Styles\Fonts\fontawesome-webfont.ttf" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Styles\Fonts\fontawesome-webfont.woff" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Styles\Fonts\fontawesome-webfont.woff2" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Styles\Fonts\FontAwesome.otf" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
