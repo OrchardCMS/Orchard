@@ -25,7 +25,7 @@ namespace Orchard.Resources {
             manifest.DefineStyle("jQueryUI_Theme").SetUrl("jquery-ui.theme.min.css", "jquery-ui.theme.css").SetVersion("1.11.2");
 
             manifest.DefineScript("jQueryUI_Mouse").SetVersion("1.11.4").SetDependencies("jQueryUI");
-            manifest.DefineScript("jQueryUI_Position").SetUrl("ui/position.min.js", "ui/position.js").SetVersion("1.11.4").SetDependencies("jQuery");
+            manifest.DefineScript("jQueryUI_Position").SetUrl("ui/position.min.js", "ui/position.js").SetVersion("1.11.4").SetDependencies("jQueryUI");
             manifest.DefineScript("jQueryUI_Draggable").SetUrl("ui/draggable.min.js", "ui/draggable.js").SetVersion("1.11.4").SetDependencies("jQueryUI_Mouse");
             manifest.DefineScript("jQueryUI_Droppable").SetUrl("ui/droppable.min.js", "ui/droppable.js").SetVersion("1.11.4").SetDependencies("jQueryUI_Draggable");
             manifest.DefineScript("jQueryUI_Resizable").SetUrl("ui/resizable.min.js", "ui/resizable.js").SetVersion("1.11.4").SetDependencies("jQueryUI_Mouse");
