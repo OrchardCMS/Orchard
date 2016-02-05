@@ -17231,6 +17231,7 @@ label {
 .am-radio input[type="radio"]:disabled ~ label {
   opacity: .5;
   pointer-events: none;
+  cursor: not-allowed;
 }
 .am-checkbox input[type="checkbox"]:disabled ~ label:before,
 .am-radio input[type="checkbox"]:disabled ~ label:before,
