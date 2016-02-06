@@ -112,7 +112,7 @@ namespace Orchard.MediaProcessing.Services {
 
                 ImageProfilePart profilePart;
 
-                if (customFilters == null || !customFilters.Any()) {
+                if (customFilters == null || !customFilters.Any(c => c != null)) {
                     profilePart = _profileService.GetImageProfileByName(profileName);
                     if (profilePart == null)
                         return String.Empty;
