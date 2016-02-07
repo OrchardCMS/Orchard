@@ -20,7 +20,7 @@ namespace Orchard.Resources {
             // DEPRECATED - FOR COMPATIBILITY WITH VERSIONS < 1.10
             manifest.DefineScript("jQueryUI_Core").SetDependencies("jQueryUI"); // Core doesn't exist anymore
             manifest.DefineScript("jQueryUI_Widget").SetDependencies("jQueryUI_Widgets"); // Subset has been renamed
-            manifest.DefineStyle("jQueryUI").SetUrl("jquery-ui.min.css", "jquery-ui.css").SetVersion("1.11.2");
+            
             manifest.DefineStyle("jQueryUI_Structure").SetUrl("jquery-ui.structure.min.css", "jquery-ui.structure.css").SetVersion("1.11.2");
             manifest.DefineStyle("jQueryUI_Theme").SetUrl("jquery-ui.theme.min.css", "jquery-ui.theme.css").SetVersion("1.11.2");
 
