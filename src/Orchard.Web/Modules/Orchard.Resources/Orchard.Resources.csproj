@@ -59,10 +59,6 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Web.DynamicData" />
-    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\..\Orchard.Azure\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Abstractions" />
@@ -590,7 +586,8 @@
     <Content Include="Styles\bootstrap.min.css" />
     <Content Include="Styles\font-awesome.css" />
     <Content Include="Styles\font-awesome.min.css" />
-    <Content Include="Styles\Fonts\fontawesome-webfont.svg" />
+    <Content Include="Fonts\fontawesome-webfont.svg" />
+    <Content Include="Fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Styles\Images\calendar-blue.gif" />
     <Content Include="Styles\Images\calendar-green.gif" />
     <Content Include="Styles\Images\calendar.gif" />
@@ -623,8 +620,6 @@
     <Content Include="Styles\jquery.calendars.picker.full.min.css" />
     <Content Include="Styles\jquery.timeentry.css" />
     <Content Include="Styles\jquery.timeentry.min.css" />
-    <Content Include="Styles\jqueryui-orchard.css" />
-    <Content Include="Styles\jqueryui-orchard.min.css" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
@@ -774,19 +769,19 @@
     <Content Include="Assets\Less\Bootstrap\variables.less" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\fontawesome-webfont.eot" />
+    <Content Include="Fonts\fontawesome-webfont.eot" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\fontawesome-webfont.ttf" />
+    <Content Include="Fonts\fontawesome-webfont.ttf" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\fontawesome-webfont.woff" />
+    <Content Include="Fonts\fontawesome-webfont.woff" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\fontawesome-webfont.woff2" />
+    <Content Include="Fonts\fontawesome-webfont.woff2" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\FontAwesome.otf" />
+    <Content Include="Fonts\FontAwesome.otf" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Less\Bootstrap\mixins\alerts.less" />
@@ -849,6 +844,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Fonts\glyphicons-halflings-regular.woff2" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\Web.config" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

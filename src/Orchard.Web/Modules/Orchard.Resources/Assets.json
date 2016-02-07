@@ -9,7 +9,7 @@
             "Assets/Css/jQueryUI/jquery-ui.structure.css",
             "Assets/Css/jQueryUI/jquery-ui.theme.css"
         ],
-        "output": "Styles/jqueryui-orchard.css"
+        "output": "Styles/jquery-ui.css"
     },
     {
         "inputs": [
