@@ -64,6 +64,8 @@ namespace Orchard.Fields.Drivers {
                             Time = showTime ? DateLocalizationServices.ConvertToLocalizedTimeString(value, options) : null,
                             ShowDate = showDate,
                             ShowTime = showTime,
+                            DatePlaceholder = settings.DatePlaceholder,
+                            TimePlaceholder = settings.TimePlaceholder
                         }
                     };
 
@@ -102,6 +104,8 @@ namespace Orchard.Fields.Drivers {
                     Time = showTime ? DateLocalizationServices.ConvertToLocalizedTimeString(value, options) : null,
                     ShowDate = showDate,
                     ShowTime = showTime,
+                    DatePlaceholder = settings.DatePlaceholder,
+                    TimePlaceholder = settings.TimePlaceholder
                 }
             };
 

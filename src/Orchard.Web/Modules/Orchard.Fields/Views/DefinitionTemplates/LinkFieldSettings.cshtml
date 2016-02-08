@@ -45,6 +45,22 @@
     </div>
 </fieldset>
 <fieldset>
+    <div class="editor-field">
+        <label for="@Html.FieldIdFor(m => m.UrlPlaceholder)">@T("Watermark (placeholder) for the url")</label>
+        @Html.TextBoxFor(m => m.UrlPlaceholder, new { @class = "text large" })
+        @Html.ValidationMessageFor(m => m.UrlPlaceholder)
+        <span class="hint">@T("A hint to display when the input of url is empty. (optional)")</span>
+    </div>
+</fieldset>
+<fieldset>
+    <div class="editor-field">
+        <label for="@Html.FieldIdFor(m => m.TextPlaceholder)">@T("Watermark (placeholder) for the text of the link")</label>
+        @Html.TextBoxFor(m => m.TextPlaceholder, new { @class = "text large" })
+        @Html.ValidationMessageFor(m => m.TextPlaceholder)
+        <span class="hint">@T("A hint to display when the input of text is empty. (optional)")</span>
+    </div>
+</fieldset>
+<fieldset>
     <div>
         <label for="@Html.FieldIdFor(m => m.DefaultValue)">@T("Default value")</label>
         @Html.TextBoxFor(m => m.DefaultValue, new { @class = "text large tokenized ui-autocomplete-input" })

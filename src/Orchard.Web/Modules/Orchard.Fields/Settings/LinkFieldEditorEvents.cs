@@ -28,6 +28,8 @@ namespace Orchard.Fields.Settings {
                 builder.WithSetting("LinkFieldSettings.TargetMode", model.TargetMode.ToString());
                 builder.WithSetting("LinkFieldSettings.LinkTextMode", model.LinkTextMode.ToString());
                 builder.WithSetting("LinkFieldSettings.StaticText", model.StaticText);
+                builder.WithSetting("LinkFieldSettings.UrlPlaceholder", model.UrlPlaceholder);
+                builder.WithSetting("LinkFieldSettings.TextPlaceholder", model.TextPlaceholder);
                 builder.WithSetting("LinkFieldSettings.DefaultValue", model.DefaultValue);
                 builder.WithSetting("LinkFieldSettings.TextDefaultValue", model.TextDefaultValue);
 
