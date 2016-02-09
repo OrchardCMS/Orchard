@@ -42,7 +42,7 @@ namespace Orchard.Mvc {
 
             var baseUrl = new Func<string>(() => {
                 var url = siteService.GetSiteSettings().BaseUrl;
-                return !string.IsNullOrWhiteSpace(url) ? url : "http://localhost"
+                return !String.IsNullOrWhiteSpace(url) ? url : "http://localhost"
                     + HostingEnvironment.ApplicationVirtualPath.TrimEnd('/');
             });
 
