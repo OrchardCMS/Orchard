@@ -48,66 +48,66 @@
         </fieldset>
     </div>
     
-            <table class="table data-table table-striped table-hover">
-                <thead>
-                    <tr>
-                        <th scope="col">
-                            <div class="am-checkbox">
-                                <input type="checkbox" class="check-all" id="checkAllUsers"/>
-                                <label for="checkAllUsers"></label>
-                            </div>
-                        </th>
-                        <th scope="col">@T("Name")</th>
-                        <th scope="col">@T("Email")</th>
-                        <th scope="col">@T("Actions")</th>
-                        <th scope="col">@T("Creation Time")</th>
-                        <th scope="col">@T("Last Login Time")</th>
-                    </tr>
-                </thead>
-                @foreach (var entry in Model.Users) {
-                    <tr>
-                        <td>
-                            <input type="hidden" value="@Model.Users[userIndex].User.Id" name="@Html.NameOf(m => m.Users[userIndex].User.Id)"/>
-                            <div class="am-checkbox">
-                                <input type="checkbox" value="true" name="@Html.NameOf(m => m.Users[userIndex].IsChecked)" id="@Html.FieldIdFor(m => m.Users[userIndex].IsChecked)"/>
-                                <label for="@Html.FieldIdFor(m => m.Users[userIndex].IsChecked)"></label>
-                            </div>
-                        </td>
-                        <td>
-                            @if (entry.User.RegistrationStatus == UserStatus.Approved && entry.User.EmailStatus == UserStatus.Approved) {
-                                <img class="icon" src="@Href("~/Modules/Orchard.Users/Content/Admin/images/online.gif") " alt="@T("Approved") " title="@T("User is approved") " />
-                            }
-                            else {
-                                <img class="icon" src="@Href("~/Modules/Orchard.Users/Content/Admin/images/offline.gif") " alt="@T("Moderated") " title="@if (entry.User.EmailStatus == UserStatus.Approved) { @T("User is moderated") } else { @T("E-mail validation is pending") }" />
-                            }
-                            @Html.ActionLink(entry.User.UserName, "Edit", new { entry.User.Id })
-                        </td>
-                        <td>
-                            @entry.User.Email
-                        </td>
-                        <td>
-                            @Html.ActionLink(T("Edit").ToString(), "Edit", new { entry.User.Id }) |
-                            @Html.ActionLink(T("Delete").ToString(), "Delete", new { entry.User.Id }, new { itemprop = "RemoveUrl UnsafeUrl" }) |
-                            @if (entry.User.RegistrationStatus == UserStatus.Pending) {
-                                @Html.ActionLink(T("Approve").ToString(), "Approve", new { entry.User.Id }, new { itemprop = "UnsafeUrl" })
-                            }
-                            else {
-                                @Html.ActionLink(T("Disable").ToString(), "Moderate", new { entry.User.Id }, new { itemprop = "UnsafeUrl" })
-                            }
-                            @if (entry.User.EmailStatus == UserStatus.Pending) { <text>|</text>
-                                @Html.ActionLink(T("Send challenge E-mail").ToString(), "SendChallengeEmail", new { entry.User.Id }, new { itemprop = "UnsafeUrl" })
-                            }
-                        </td>
-                        <td>
-                            @Display(New.DateTimeRelative(dateTimeUtc: entry.User.CreatedUtc))
-                        </td>
-                        <td>
-                            @Display(New.DateTimeRelative(dateTimeUtc: entry.User.LastLoginUtc))
-                        </td>
-                    </tr>
-                    userIndex++;
-                }
-            </table>
+    <table class="table data-table table-striped table-hover">
+        <thead>
+            <tr>
+                <th scope="col">
+                    <div class="am-checkbox">
+                        <input type="checkbox" class="check-all" id="checkAllUsers"/>
+                        <label for="checkAllUsers"></label>
+                    </div>
+                </th>
+                <th scope="col">@T("Name")</th>
+                <th scope="col">@T("Email")</th>
+                <th scope="col">@T("Actions")</th>
+                <th scope="col">@T("Creation Time")</th>
+                <th scope="col">@T("Last Login Time")</th>
+            </tr>
+        </thead>
+        @foreach (var entry in Model.Users) {
+            <tr>
+                <td>
+                    <input type="hidden" value="@Model.Users[userIndex].User.Id" name="@Html.NameOf(m => m.Users[userIndex].User.Id)"/>
+                    <div class="am-checkbox">
+                        <input type="checkbox" value="true" name="@Html.NameOf(m => m.Users[userIndex].IsChecked)" id="@Html.FieldIdFor(m => m.Users[userIndex].IsChecked)"/>
+                        <label for="@Html.FieldIdFor(m => m.Users[userIndex].IsChecked)"></label>
+                    </div>
+                </td>
+                <td>
+                    @if (entry.User.RegistrationStatus == UserStatus.Approved && entry.User.EmailStatus == UserStatus.Approved) {
+                        <img class="icon" src="@Href("~/Modules/Orchard.Users/Content/Admin/images/online.gif") " alt="@T("Approved") " title="@T("User is approved") " />
+                    }
+                    else {
+                        <img class="icon" src="@Href("~/Modules/Orchard.Users/Content/Admin/images/offline.gif") " alt="@T("Moderated") " title="@if (entry.User.EmailStatus == UserStatus.Approved) { @T("User is moderated") } else { @T("E-mail validation is pending") }" />
+                    }
+                    @Html.ActionLink(entry.User.UserName, "Edit", new { entry.User.Id })
+                </td>
+                <td>
+                    @entry.User.Email
+                </td>
+                <td>
+                    @Html.ActionLink(T("Edit").ToString(), "Edit", new { entry.User.Id }) |
+                    @Html.ActionLink(T("Delete").ToString(), "Delete", new { entry.User.Id }, new { itemprop = "RemoveUrl UnsafeUrl" }) |
+                    @if (entry.User.RegistrationStatus == UserStatus.Pending) {
+                        @Html.ActionLink(T("Approve").ToString(), "Approve", new { entry.User.Id }, new { itemprop = "UnsafeUrl" })
+                    }
+                    else {
+                        @Html.ActionLink(T("Disable").ToString(), "Moderate", new { entry.User.Id }, new { itemprop = "UnsafeUrl" })
+                    }
+                    @if (entry.User.EmailStatus == UserStatus.Pending) { <text>|</text>
+                        @Html.ActionLink(T("Send challenge E-mail").ToString(), "SendChallengeEmail", new { entry.User.Id }, new { itemprop = "UnsafeUrl" })
+                    }
+                </td>
+                <td>
+                    @Display(New.DateTimeRelative(dateTimeUtc: entry.User.CreatedUtc))
+                </td>
+                <td>
+                    @Display(New.DateTimeRelative(dateTimeUtc: entry.User.LastLoginUtc))
+                </td>
+            </tr>
+            userIndex++;
+        }
+    </table>
 
-            @*@Display(Model.Pager)*@
+    @*@Display(Model.Pager)*@
 } 
