@@ -39,6 +39,9 @@ namespace Orchard.Localization.Services {
                     var translation = ParseTranslation(poLine);
                     // ignore incomplete localizations (empty msgid or msgstr)
                     if (!string.IsNullOrWhiteSpace(id) && !string.IsNullOrWhiteSpace(translation)) {
+                        if(scopes.Count == 0) {
+                            scopes.Add(string.Empty);
+                        }
                         foreach (var scope in scopes) {
                             var scopedKey = (scope + "|" + id).ToLowerInvariant();
                             if (!translations.ContainsKey(scopedKey)) {
