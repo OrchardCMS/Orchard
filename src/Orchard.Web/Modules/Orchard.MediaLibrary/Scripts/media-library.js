@@ -609,5 +609,8 @@ $(function () {
             });
             return false;
         });
+
+        // Select recent folder when the page is initialized.
+        viewModel.selectRecent();
     })(window.mediaLibrarySettings);
 })

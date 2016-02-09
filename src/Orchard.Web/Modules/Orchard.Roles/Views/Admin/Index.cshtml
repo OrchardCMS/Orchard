@@ -5,45 +5,52 @@
     Script.Require("ShapesBase");
 
     Layout.Title = T("Roles").ToString();
+    Script.Require("RolesAdmin");
 }
 
-@using(Html.BeginFormAntiForgeryPost()) {
-    @Html.ValidationSummary();
-    <fieldset class="bulk-actions">
-        <label for="publishActions">@T("Actions:")</label>
-        <select id="Select1" name="roleActions">
-            <option value="1">@T("Delete")</option>
-        </select>
-        <button type="submit">@T("Apply")</button>
-    </fieldset>
-    <div class="manage">@Html.ActionLink(T("Add a role").ToString(), "Create", new { }, new { @class = "button primaryAction" })</div>
-    <fieldset>
-        <table class="items" summary="@T("This is a table of the roles currently available for use in your application.")">
-            <colgroup>
-                <col id="Col1" />
-                <col id="Col2" />
-                <col id="Col3" />
-            </colgroup>
-            <thead>
-                <tr>
-                    <th scope="col"><input type="checkbox" class="check-all"/></th>
-                    <th scope="col">@T("Name")</th>
-                    <th scope="col"></th>
-                </tr>
-            </thead>
-            @foreach (var row in Model.Rows) {
-                <tr>
-                    <td><input type="checkbox" value="true" name="@("Checkbox." + row.Id)"/></td>
-                    <td>@Html.ActionLink(row.Name, "Edit", new { row.Id })</td>
-                    <td>
-                        @Html.ActionLink(T("Edit").ToString(), "Edit", new { row.Id })
-                        @if (row.Name != "Administrator") {
-                            @T(" | ")
-                            <a href="@Url.Action("Delete", new {row.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString()})" itemprop="RemoveUrl UnsafeUrl">@T("Delete")</a>                       
-                        }
-                    </td>
-                </tr>
-            }
-        </table>
-    </fieldset>
+@using (Html.BeginFormAntiForgeryPost()) {
+    <div class="panel-heading no-border form-inline">
+        @Html.ValidationSummary()
+        <div class="tools-text">@Html.ActionLink(T("Add a role").ToString(), "Create", new { }, new { @class = "btn btn-primary" })</div>
+        <fieldset class="bulk-actions">
+            <label for="publishActions">@T("Actions:")</label>
+            <select id="Select1" name="roleActions" class="form-control">
+                <option value="1">@T("Delete")</option>
+            </select>
+            <button type="submit" class="btn btn-primary">@T("Apply")</button>
+        </fieldset>
+    </div>
+    <table class="table data-table table-striped table-hover">
+        <thead>
+        <tr>
+            <th scope="col">
+                <div class="am-checkbox">
+                    <input type="checkbox" class="check-all" id="checkAllUsers" />
+                    <label for="checkAllUsers"></label>
+                </div>
+            </th>
+            <th scope="col">@T("Name")</th>
+            <th scope="col"></th>
+        </tr>
+        </thead>
+
+        @foreach (var row in Model.Rows) {
+            <tr>
+                <td>
+                    <div class="am-checkbox">
+                        <input type="checkbox" value="true" name="@("Checkbox." + row.Id)" id="@("Checkbox." + row.Id)" />
+                        <label for="@("Checkbox." + row.Id)"></label>
+                    </div>
+                </td>
+                <td>@Html.ActionLink(row.Name, "Edit", new { row.Id })</td>
+                <td>
+                    @Html.ActionLink(T("Edit").ToString(), "Edit", new { row.Id })
+                    @if (row.Name != "Administrator") {
+                        @T(" | ")
+                        <a href="@Url.Action("Delete", new { row.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString() })" itemprop="RemoveUrl UnsafeUrl">@T("Delete")</a>
+                    }
+                </td>
+            </tr>
+        }
+    </table>
 }

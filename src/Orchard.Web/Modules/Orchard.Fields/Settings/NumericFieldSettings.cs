@@ -5,6 +5,7 @@
         public int Scale { get; set; }
         public decimal? Minimum { get; set; }
         public decimal? Maximum { get; set; }
+        public string DefaultValue { get; set; }
 
         public NumericFieldSettings() {
             Scale = 0;

@@ -1,0 +1,7 @@
+﻿@model Orchard.Core.Common.ViewModels.TextFieldSettingsEventsViewModel
+@* This override is here so that the token helper can be used on the default value's textbox, which can not be used in Orchard.Core. *@
+
+<label for="@Html.FieldIdFor(m => m.Settings.DefaultValue)">@T("Default value")</label>
+@Html.TextBoxFor(m => m.Settings.DefaultValue, new { @class = "text large tokenized ui-autocomplete-input" })
+<span class="hint">@T("Default value for the field. You can use tokens in this field. If there is no value given for the actual field, this will be filled in. (optional)")</span>
+@Html.ValidationMessageFor(m => m.Settings.DefaultValue)

@@ -17230,14 +17230,13 @@ label {
 .am-checkbox input[type="radio"]:disabled ~ label,
 .am-radio input[type="radio"]:disabled ~ label {
   opacity: .5;
-  pointer-events: none;
 }
 .am-checkbox input[type="checkbox"]:disabled ~ label:before,
 .am-radio input[type="checkbox"]:disabled ~ label:before,
 .am-checkbox input[type="radio"]:disabled ~ label:before,
 .am-radio input[type="radio"]:disabled ~ label:before {
-  pointer-events: none !important;
   background-color: #ffffff;
+  cursor: not-allowed;
 }
 .am-checkbox input[type="radio"] ~ label:before,
 .am-radio input[type="radio"] ~ label:before {

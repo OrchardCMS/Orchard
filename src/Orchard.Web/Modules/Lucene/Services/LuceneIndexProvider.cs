@@ -41,8 +41,6 @@ namespace Lucene.Services {
             // TODO: (sebros) Find a common way to get where tenant's specific files should go. "Sites/Tenant" is hard coded in multiple places
             _basePath = _appDataFolder.Combine("Sites", shellSettings.Name, "Indexes");
 
-            Logger = NullLogger.Instance;
-
             // Ensures the directory exists
             EnsureDirectoryExists();
 
