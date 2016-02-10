@@ -149,9 +149,7 @@
   <ItemGroup>
     <Content Include="Views\Parts.ContentPermissions.SummaryAdmin.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Handlers\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="Views\DefinitionTemplates\SecurableContentItemsSettingsViewModel.cshtml" />
   </ItemGroup>
