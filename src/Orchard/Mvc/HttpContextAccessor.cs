@@ -32,7 +32,7 @@ namespace Orchard.Mvc {
             _httpContext = httpContext;
         }
 
-        private static bool IsBackgroundHttpContext(HttpContext httpContext) {
+        internal static bool IsBackgroundHttpContext(HttpContext httpContext) {
             return httpContext == null || httpContext.Items.Contains(MvcModule.IsBackgroundHttpContextKey);
         }
 
