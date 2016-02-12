@@ -488,6 +488,9 @@
   <ItemGroup>
     <Content Include="README.md" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Tools\Update-ViewsWithFileNameTag.ps1" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
