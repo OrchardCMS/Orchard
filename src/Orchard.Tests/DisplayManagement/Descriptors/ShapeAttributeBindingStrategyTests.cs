@@ -110,8 +110,8 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
             var displayContext = new DisplayContext();
             var result = shapeDescriptor.Binding(displayContext);
             var result2 = shapeDescriptor.Binding.Invoke(displayContext);
-            Assert.That(result.ToString(), Is.StringContaining("Simple"));
-            Assert.That(result2.ToString(), Is.StringContaining("Simple"));
+            Assert.That(result.ToString(), Contains.Substring("Simple"));
+            Assert.That(result2.ToString(), Contains.Substring("Simple"));
         }
 
     }

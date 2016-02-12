@@ -166,27 +166,29 @@ namespace Orchard.Tests.DataMigration
                 .DropForeignKey("Address", "FK_User");
         }
 
-        [Test, ExpectedException]
+        [Test]
         public void BiggerDataShouldNotFit() {
-            _schemaBuilder
+            Assert.Throws(typeof(InvalidCastException), delegate {
+                _schemaBuilder
                 .CreateTable("ContentItemRecord", table => table
                     .Column("Id", DbType.Int32, column => column.PrimaryKey().Identity())
                     .Column("Data", DbType.String, column => column.WithLength(255)));
 
-            // should write successfully less than 255 chars
-            _schemaBuilder
-                .ExecuteSql("insert into TEST_ContentItemRecord (Data) values('Hello World')");
+                // should write successfully less than 255 chars
+                _schemaBuilder
+                    .ExecuteSql("insert into TEST_ContentItemRecord (Data) values('Hello World')");
 
-            // should throw an exception if trying to write more data
-            _schemaBuilder
-                .ExecuteSql(String.Format("insert into TEST_ContentItemRecord (Data) values('{0}')", new String('x', 256)));
+                // should throw an exception if trying to write more data
+                _schemaBuilder
+                    .ExecuteSql(String.Format("insert into TEST_ContentItemRecord (Data) values('{0}')", new String('x', 256)));
 
-            _schemaBuilder
-                .AlterTable("ContentItemRecord", table => table
-                    .AlterColumn("Data", column => column.WithType(DbType.String).WithLength(257)));
+                _schemaBuilder
+                    .AlterTable("ContentItemRecord", table => table
+                        .AlterColumn("Data", column => column.WithType(DbType.String).WithLength(257)));
 
-            _schemaBuilder
-                .ExecuteSql(String.Format("insert into TEST_ContentItemRecord (Data) values('{0}')", new String('x', 256)));
+                _schemaBuilder
+                    .ExecuteSql(String.Format("insert into TEST_ContentItemRecord (Data) values('{0}')", new String('x', 256)));
+            });
         }
 
         [Test]
@@ -209,17 +211,19 @@ namespace Orchard.Tests.DataMigration
                 .ExecuteSql(String.Format("insert into TEST_ContentItemRecord (Data) values('{0}')", new String('x', 2048)));
         }
 
-        [Test, ExpectedException(typeof(OrchardException))]
+        [Test]
         public void ChangingSizeWithoutTypeShouldNotBeAllowed() {
             _schemaBuilder
                 .CreateTable("ContentItemRecord", table => table
                     .Column("Id", DbType.Int32, column => column.PrimaryKey().Identity())
                     .Column("Data", DbType.String, column => column.WithLength(255)));
-
-            _schemaBuilder
+            
+            Assert.Throws(typeof(OrchardException), delegate 
+            {
+                _schemaBuilder
                 .AlterTable("ContentItemRecord", table => table
                     .AlterColumn("Data", column => column.WithLength(2048)));
-
+            });
         }
 
         [Test]

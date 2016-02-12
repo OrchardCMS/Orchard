@@ -14,7 +14,7 @@ namespace Orchard.Tests.Data {
     public class RepositoryTests {
         #region Setup/Teardown
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void InitFixture() {
         }
 
@@ -31,7 +31,7 @@ namespace Orchard.Tests.Data {
             _session.Close();
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void TermFixture() {
             File.Delete(_databaseFilePath);
         }
@@ -64,11 +64,13 @@ namespace Orchard.Tests.Data {
             Assert.That(two.Name, Is.EqualTo("two"));
         }
 
-        [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
+        [Test]        
         public void GetThatReturnsTwoOrMoreShouldThrowException() {
             CreateThreeFoos();
-            _fooRepos.Get(f => f.Name == "one" || f.Name == "three");
+            Assert.Throws(typeof(InvalidOperationException), delegate
+            {
+                _fooRepos.Get(f => f.Name == "one" || f.Name == "three");
+            });
         }
 
         [Test]

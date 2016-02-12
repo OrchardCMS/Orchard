@@ -372,17 +372,17 @@ namespace Orchard.Specs.Bindings {
 
         [Then(@"the content type should be ""(.*)""")]
         public void ThenTheContentTypeShouldBe(string contentType) {
-            Assert.That(Details.ResponseHeaders["Content-Type"], Is.StringMatching(contentType));
+            Assert.That(Details.ResponseHeaders["Content-Type"], Has.All.Contains(contentType));
         }
 
         [Then(@"I should see ""(.*)""")]
         public void ThenIShouldSee(string text) {
-            Assert.That(Details.ResponseText, Is.StringMatching(text));
+            Assert.That(Details.ResponseText, Has.All.Contains(text));
         }
 
         [Then(@"I should not see ""(.*)""")]
-        public void ThenIShouldNotSee(string text) {
-            Assert.That(Details.ResponseText, Is.Not.StringContaining(text));
+        public void ThenIShouldNotSee(string text) {            
+            Assert.That(Details.ResponseText, Does.Not.Contain(text));
         }
 
         [Then(@"the title contains ""(.*)""")]

@@ -12,7 +12,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Orchard.Themes</RootNamespace>
     <AssemblyName>Orchard.Themes</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -54,6 +54,14 @@
       <HintPath>..\..\..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="RazorGenerator.Mvc, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\RazorGenerator.Mvc.2.4.2\lib\net40\RazorGenerator.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="RazorGenerator.Templating, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\RazorGenerator.Templating.2.3.11\lib\portable-Profile328\RazorGenerator.Templating.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Web" />
@@ -87,9 +95,14 @@
     </Reference>
     <Reference Include="System.XML" />
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="WebActivatorEx, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\WebActivatorEx.2.0.3\lib\net40\WebActivatorEx.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
+    <Compile Include="App_Start\RazorGeneratorMvcStart.cs" />
     <Compile Include="Commands\ThemeCommands.cs" />
     <Compile Include="Drivers\DisableThemePartDriver.cs" />
     <Compile Include="Events\ThemeDisableEventHandler.cs" />
@@ -124,8 +137,12 @@
     <Content Include="Styles\images\update.gif" />
     <Content Include="Styles\menu.themes-admin.css" />
     <Content Include="Styles\orchard-themes-admin.css" />
-    <Content Include="Views\Admin\Index.cshtml" />
-    <Content Include="Views\ThemePreview.cshtml" />
+    <Content Include="Views\Admin\Index.cshtml">
+      <Generator>RazorGenerator</Generator>
+    </Content>
+    <Content Include="Views\ThemePreview.cshtml">
+      <Generator>RazorGenerator</Generator>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
@@ -160,16 +177,25 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\ThemeEntry.cshtml" />
+    <Content Include="Views\ThemeEntry.cshtml">
+      <Generator>RazorGenerator</Generator>
+    </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\ThemeEntry.Current.cshtml" />
+    <Content Include="Views\ThemeEntry.Current.cshtml">
+      <Generator>RazorGenerator</Generator>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Placement.info" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="SampleTemplate.cshtml">
+      <Generator>RazorGenerator</Generator>
+    </Content>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

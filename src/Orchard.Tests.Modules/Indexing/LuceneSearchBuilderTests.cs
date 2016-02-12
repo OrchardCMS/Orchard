@@ -17,7 +17,7 @@ namespace Orchard.Tests.Modules.Indexing {
         private ShellSettings _shellSettings;
         private readonly string _basePath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
         
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void Clean() {
             if (Directory.Exists(_basePath)) {
                 Directory.Delete(_basePath, true);

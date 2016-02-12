@@ -37,7 +37,7 @@ namespace Orchard.Tests.Modules.Warmup {
         private const string WarmupFolder = "Warmup";
         private const string TenantFolder = "Sites/Default";
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void Clean() {
             if (Directory.Exists(_basePath)) {
                 Directory.Delete(_basePath, true);

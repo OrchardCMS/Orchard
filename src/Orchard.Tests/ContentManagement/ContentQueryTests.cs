@@ -31,7 +31,7 @@ namespace Orchard.Tests.ContentManagement {
         private ISession _session;
         private ITransactionManager _transactionManager;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void InitFixture() {
             var databaseFileName = System.IO.Path.GetTempFileName();
             _sessionFactory = DataUtility.CreateSessionFactory(

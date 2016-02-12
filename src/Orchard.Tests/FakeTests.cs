@@ -15,10 +15,12 @@ namespace Orchard.Tests {
 
         private int _x;
 
-        [Test]
-        [ExpectedException(typeof (ApplicationException), ExpectedMessage = "Boom")]
+        [Test]        
         public void ExceptionsCanBeVerified() {
-            throw new ApplicationException("Boom");
+            Assert.Throws(typeof(InvalidOperationException), delegate
+            {
+                throw new InvalidOperationException("Boom");
+            }, "Boom");
         }
 
         [Test]

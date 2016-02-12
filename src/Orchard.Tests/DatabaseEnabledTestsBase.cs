@@ -26,11 +26,11 @@ namespace Orchard.Tests {
         protected StubClock _clock;
         protected ShellSettings _shellSettings;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void InitFixture() {
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void TearDownFixture() {
             File.Delete(_databaseFilePath);
         }

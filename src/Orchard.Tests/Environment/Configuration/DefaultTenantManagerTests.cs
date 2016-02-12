@@ -63,9 +63,9 @@ namespace Orchard.Tests.Environment.Configuration {
             Assert.That(loader.LoadSettings().Count(), Is.EqualTo(2));
 
             var text = _appDataFolder.ReadFile("Sites\\Foo\\Settings.txt");
-            Assert.That(text, Is.StringContaining("Foo"));
-            Assert.That(text, Is.StringContaining("Bar"));
-            Assert.That(text, Is.StringContaining("Quux"));
+            Assert.That(text, Contains.Substring("Foo"));
+            Assert.That(text, Contains.Substring("Bar"));
+            Assert.That(text, Contains.Substring("Quux"));
         }
 
         [Test]

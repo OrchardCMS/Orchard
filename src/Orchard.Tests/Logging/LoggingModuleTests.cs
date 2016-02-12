@@ -62,14 +62,14 @@ namespace Orchard.Tests.Logging {
             Assert.That(thing.Logger, Is.Not.Null);
 
             MemoryAppender.Messages.Clear();
-            thing.Logger.Error("-boom{0}-", 42);
-            Assert.That(MemoryAppender.Messages, Has.Some.StringContaining("-boom42-"));
+            thing.Logger.Error("-boom{0}-", 42);            
+            Assert.That(MemoryAppender.Messages, Contains.Substring("-boom42-"));
 
             MemoryAppender.Messages.Clear();
-            thing.Logger.Warning(new ApplicationException("problem"), "crash");
-            Assert.That(MemoryAppender.Messages, Has.Some.StringContaining("problem"));
-            Assert.That(MemoryAppender.Messages, Has.Some.StringContaining("crash"));
-            Assert.That(MemoryAppender.Messages, Has.Some.StringContaining("ApplicationException"));
+            thing.Logger.Warning(new ApplicationException("problem"), "crash");            
+            Assert.That(MemoryAppender.Messages, Contains.Substring("problem"));
+            Assert.That(MemoryAppender.Messages, Contains.Substring("crash"));
+            Assert.That(MemoryAppender.Messages, Contains.Substring("ApplicationException"));
         }
     }
 

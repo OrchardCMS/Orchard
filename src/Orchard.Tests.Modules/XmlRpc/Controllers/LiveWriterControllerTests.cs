@@ -27,9 +27,9 @@ namespace Orchard.Tests.Modules.XmlRpc.Controllers {
             var controller = container.Resolve<LiveWriterController>();
             var result = controller.Manifest() as ContentResult;
             Assert.That(result, Is.Not.Null);
-            Assert.That(result.Content, Is.StringContaining("<supportsGetTags>No</supportsGetTags>"));
-            Assert.That(result.Content, Is.StringContaining("<keywordsAsTags>Yes</keywordsAsTags>"));
-            Assert.That(result.Content, Is.StringContaining("<supportsKeywords>Maybe</supportsKeywords>"));
+            Assert.That(result.Content, Contains.Substring("<supportsGetTags>No</supportsGetTags>"));
+            Assert.That(result.Content, Contains.Substring("<keywordsAsTags>Yes</keywordsAsTags>"));
+            Assert.That(result.Content, Contains.Substring("<supportsKeywords>Maybe</supportsKeywords>"));
 
         }
 

@@ -26,7 +26,7 @@ namespace Orchard.Core.Tests.Settings.Metadata {
         private IContainer _container;
         private ITransactionManager _transactionManager;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void InitFixture() {
             _databaseFileName = Path.GetTempFileName();
             _sessionFactory = DataUtility.CreateSessionFactory(
@@ -77,7 +77,7 @@ namespace Orchard.Core.Tests.Settings.Metadata {
             _session.Dispose();
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void TermFixture() {
             File.Delete(_databaseFileName);
         }

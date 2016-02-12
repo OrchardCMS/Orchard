@@ -54,7 +54,7 @@ namespace Orchard.Tests.Modules.Themes.Services {
         private ISession _session;
         private IFeatureManager _featureManager;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void InitFixture() {
             var databaseFileName = System.IO.Path.GetTempFileName();
             _sessionFactory = DataUtility.CreateSessionFactory(databaseFileName,
@@ -65,7 +65,7 @@ namespace Orchard.Tests.Modules.Themes.Services {
                 typeof(ContentTypeRecord));
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void TermFixture() { }
 
         [SetUp]
@@ -138,7 +138,7 @@ namespace Orchard.Tests.Modules.Themes.Services {
             try {
                 _siteThemeService.SetSiteTheme("ThemeFourBasedOnFive");
             } catch (InvalidOperationException ex) {
-                Assert.That(ex.Message, Is.StringMatching("ThemeFiveBasedOnFour"));
+                Assert.That(ex.Message, Has.All.Contains("ThemeFiveBasedOnFour"));
             }
             var siteTheme = _siteThemeService.GetSiteTheme();
             Assert.That(siteTheme.Name, Is.EqualTo("ThemeOne"));

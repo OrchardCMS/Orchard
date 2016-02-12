@@ -9,27 +9,27 @@ namespace Orchard.Tests.Utility.Extensions {
         [Test]
         public void CamelFriendly_CamelCasedStringMadeFriendly() {
             const string aCamel = "aCamel";
-            Assert.That(aCamel.CamelFriendly(), Is.StringMatching("a Camel"));
+            Assert.That(aCamel.CamelFriendly(), Has.All.Contains("a Camel"));
         }
         [Test]
         public void CamelFriendly_PascalCasedStringMadeFriendly() {
             const string aCamel = "ACamel";
-            Assert.That(aCamel.CamelFriendly(), Is.StringMatching("A Camel"));
+            Assert.That(aCamel.CamelFriendly(), Has.All.Contains("A Camel"));
         }
         [Test]
         public void CamelFriendly_LowerCasedStringMadeFriendly() {
             const string aCamel = "acamel";
-            Assert.That(aCamel.CamelFriendly(), Is.StringMatching("acamel"));
+            Assert.That(aCamel.CamelFriendly(), Has.All.Contains("acamel"));
         }
         [Test]
         public void CamelFriendly_EmptyStringReturnsEmptyString() {
             const string aCamel = "";
-            Assert.That(aCamel.CamelFriendly(), Is.StringMatching(""));
+            Assert.That(aCamel.CamelFriendly(), Has.All.Contains(""));
         }
         [Test]
         public void CamelFriendly_NullValueReturnsEmptyString() {
             const string aCamel = null;
-            Assert.That(aCamel.CamelFriendly(), Is.StringMatching(""));
+            Assert.That(aCamel.CamelFriendly(), Has.All.Contains(""));
         }
 
         [Test]
@@ -52,90 +52,90 @@ namespace Orchard.Tests.Utility.Extensions {
         [Test]
         public void Ellipsize_LongStringTruncatedToNearestWord() {
             const string toEllipsize = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sed purus quis purus orci aliquam.";
-            Assert.That(toEllipsize.Ellipsize(46), Is.StringMatching("Lorem ipsum dolor sit amet, consectetur\u00A0\u2026"));
+            Assert.That(toEllipsize.Ellipsize(46), Has.All.Contains("Lorem ipsum dolor sit amet, consectetur\u00A0\u2026"));
         }
 
         [Test]
         public void Ellipsize_ShortStringReturnedAsSame() {
             const string toEllipsize = "Lorem ipsum";
-            Assert.That(toEllipsize.Ellipsize(45), Is.StringMatching("Lorem ipsum"));
+            Assert.That(toEllipsize.Ellipsize(45), Has.All.Contains("Lorem ipsum"));
         }
         [Test]
         public void Ellipsize_EmptyStringReturnsEmptyString() {
             const string toEllipsize = "";
-            Assert.That(toEllipsize.Ellipsize(45), Is.StringMatching(""));
+            Assert.That(toEllipsize.Ellipsize(45), Has.All.Contains(""));
         }
         [Test]
         public void Ellipsize_NullValueReturnsEmptyString() {
             const string toEllipsize = null;
-            Assert.That(toEllipsize.Ellipsize(45), Is.StringMatching(""));
+            Assert.That(toEllipsize.Ellipsize(45), Has.All.Contains(""));
         }
         [Test]
         public void Ellipsize_CustomEllipsisStringIsUsed() {
             const string toEllipsize = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sed purus quis purus orci aliquam.";
-            Assert.That(toEllipsize.Ellipsize(45, "........"), Is.StringMatching("Lorem ipsum dolor sit amet, consectetur........"));
+            Assert.That(toEllipsize.Ellipsize(45, "........"), Has.All.Contains("Lorem ipsum dolor sit amet, consectetur........"));
         }
         [Test]
         public void Ellipsize_WordBoundary() {
             const string toEllipsize = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sed purus quis purus orci aliquam.";
-            Assert.That(toEllipsize.Ellipsize(43, "..."), Is.StringMatching("Lorem ipsum dolor sit amet, consectet..."));
-            Assert.That(toEllipsize.Ellipsize(43, "...", true), Is.StringMatching("Lorem ipsum dolor sit amet, ..."));
+            Assert.That(toEllipsize.Ellipsize(43, "..."), Has.All.Contains("Lorem ipsum dolor sit amet, consectet..."));
+            Assert.That(toEllipsize.Ellipsize(43, "...", true), Has.All.Contains("Lorem ipsum dolor sit amet, ..."));
         }
 
         [Test]
         public void HtmlClassify_ValidReallySimpleClassNameReturnsSame() {
             const string toClassify = "someclass";
-            Assert.That(toClassify.HtmlClassify(), Is.StringMatching(toClassify));
+            Assert.That(toClassify.HtmlClassify(), Has.All.Contains(toClassify));
         }
         [Test]
         public void HtmlClassify_NumbersAreMaintainedIfNotAtStart() {
             const string toClassify = "some4class5";
-            Assert.That(toClassify.HtmlClassify(), Is.StringMatching(toClassify));
+            Assert.That(toClassify.HtmlClassify(), Has.All.Contains(toClassify));
         }
         [Test]
         public void HtmlClassify_NumbersAreStrippedAtStart() {
             const string toClassify = "5someClass";
-            Assert.That(toClassify.HtmlClassify(), Is.StringMatching("some-class"));
+            Assert.That(toClassify.HtmlClassify(), Has.All.Contains("some-class"));
         }
         [Test]
         public void HtmlClassify_ValidSimpleClassNameReturnsSame() {
             const string toClassify = "some-class";
-            Assert.That(toClassify.HtmlClassify(), Is.StringMatching(toClassify));
+            Assert.That(toClassify.HtmlClassify(), Has.All.Contains(toClassify));
         }
         [Test]
         public void HtmlClassify_SimpleStringReturnsSimpleClassName() {
             const string toClassify = "this is something";
-            Assert.That(toClassify.HtmlClassify(), Is.StringMatching("this-is-something"));
+            Assert.That(toClassify.HtmlClassify(), Has.All.Contains("this-is-something"));
         }
         [Test]
         public void HtmlClassify_ValidComplexClassNameReturnsSimpleClassName() {
             const string toClassify = @"some-class\&some.other.class";
-            Assert.That(toClassify.HtmlClassify(), Is.StringMatching("some-class-some-other-class"));
+            Assert.That(toClassify.HtmlClassify(), Has.All.Contains("some-class-some-other-class"));
         }
         [Test]
         public void HtmlClassify_CompletelyInvalidClassNameReturnsEmptyString() {
             const string toClassify = @"0_1234_12";
-            Assert.That(toClassify.HtmlClassify(), Is.StringMatching(""));
+            Assert.That(toClassify.HtmlClassify(), Has.All.Contains(""));
         }
         [Test]
         public void HtmlClassify_LowerCamelCasedStringReturnsLowerHyphenatedClassName() {
             const string toClassify = "camelCased";
-            Assert.That(toClassify.HtmlClassify(), Is.StringMatching("camel-cased"));
+            Assert.That(toClassify.HtmlClassify(), Has.All.Contains("camel-cased"));
         }
         [Test]
         public void HtmlClassify_PascalCasedStringReturnsLowerHyphenatedClassName() {
             const string toClassify = "PascalCased";
-            Assert.That(toClassify.HtmlClassify(), Is.StringMatching("pascal-cased"));
+            Assert.That(toClassify.HtmlClassify(), Has.All.Contains("pascal-cased"));
         }
         [Test]
         public void HtmlClassify_EmptyStringReturnsEmptyString() {
             const string toClassify = "";
-            Assert.That(toClassify.HtmlClassify(), Is.StringMatching(""));
+            Assert.That(toClassify.HtmlClassify(), Has.All.Contains(""));
         }
         [Test]
         public void HtmlClassify_NullValueReturnsEmptyString() {
             const string toClassify = null;
-            Assert.That(toClassify.HtmlClassify(), Is.StringMatching(""));
+            Assert.That(toClassify.HtmlClassify(), Has.All.Contains(""));
         }
 
         [Test]
@@ -163,67 +163,67 @@ namespace Orchard.Tests.Utility.Extensions {
         [Test]
         public void RemoveTags_StringWithNoTagsReturnsSame() {
             const string fullOfTags = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sed purus quis purus orci aliquam.";
-            Assert.That(fullOfTags.RemoveTags(), Is.StringMatching("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sed purus quis purus orci aliquam."));
+            Assert.That(fullOfTags.RemoveTags(), Has.All.Contains("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sed purus quis purus orci aliquam."));
         }
         [Test]
         public void RemoveTags_SimpleWellFormedTagsAreRemoved() {
             const string fullOfTags = @"<p><em>Lorem ipsum</em> dolor sit amet, consectetur <a href=""#"">adipiscing</a> elit. Maecenas sed purus quis purus orci aliquam.</p>";
-            Assert.That(fullOfTags.RemoveTags(), Is.StringMatching("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sed purus quis purus orci aliquam."));
+            Assert.That(fullOfTags.RemoveTags(), Has.All.Contains("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sed purus quis purus orci aliquam."));
         }
         [Test]
         public void RemoveTags_EmptyStringReturnsEmptyString() {
             const string fullOfTags = "";
-            Assert.That(fullOfTags.RemoveTags(), Is.StringMatching(""));
+            Assert.That(fullOfTags.RemoveTags(), Has.All.Contains(""));
         }
         [Test]
         public void RemoveTags_NullValueReturnsEmptyString() {
             const string fullOfTags = null;
-            Assert.That(fullOfTags.RemoveTags(), Is.StringMatching(""));
+            Assert.That(fullOfTags.RemoveTags(), Has.All.Contains(""));
         }
 
         [Test]
         public void ReplaceNewLinesWith_ReplaceCRLFWithHtmlBR() {
             const string lotsOfLineFeeds = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\r\nMaecenas sed purus quis purus orci aliquam.";
-            Assert.That(lotsOfLineFeeds.ReplaceNewLinesWith("<br />"), Is.StringMatching("Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br />Maecenas sed purus quis purus orci aliquam."));
+            Assert.That(lotsOfLineFeeds.ReplaceNewLinesWith("<br />"), Has.All.Contains("Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br />Maecenas sed purus quis purus orci aliquam."));
         }
         [Test]
         public void ReplaceNewLinesWith_ReplaceCRLFWithHtmlPsAndCRLF() {
             const string lotsOfLineFeeds = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\r\nMaecenas sed purus quis purus orci aliquam.";
-            Assert.That(lotsOfLineFeeds.ReplaceNewLinesWith(@"</p>{0}<p>"), Is.StringMatching("Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>\r\n<p>Maecenas sed purus quis purus orci aliquam."));
+            Assert.That(lotsOfLineFeeds.ReplaceNewLinesWith(@"</p>{0}<p>"), Has.All.Contains("Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>\r\n<p>Maecenas sed purus quis purus orci aliquam."));
         }
         [Test]
         public void ReplaceNewLinesWith_EmptyStringReturnsEmptyString() {
             const string lotsOfLineFeeds = "";
-            Assert.That(lotsOfLineFeeds.ReplaceNewLinesWith("<br />"), Is.StringMatching(""));
+            Assert.That(lotsOfLineFeeds.ReplaceNewLinesWith("<br />"), Has.All.Contains(""));
         }
         [Test]
         public void ReplaceNewLinesWith_NullValueReturnsEmptyString() {
             const string lotsOfLineFeeds = null;
-            Assert.That(lotsOfLineFeeds.ReplaceNewLinesWith("<br />"), Is.StringMatching(""));
+            Assert.That(lotsOfLineFeeds.ReplaceNewLinesWith("<br />"), Has.All.Contains(""));
         }
 
         [Test]
         public void StripShouldRemoveStart() {
-            Assert.That("abc".Strip('a'), Is.StringMatching("bc"));
-            Assert.That("abc".Strip("ab".ToCharArray()), Is.StringMatching("c"));
+            Assert.That("abc".Strip('a'), Has.All.Contains("bc"));
+            Assert.That("abc".Strip("ab".ToCharArray()), Has.All.Contains("c"));
         }
 
         [Test]
         public void StripShouldRemoveInside() {
-            Assert.That("abc".Strip('b'), Is.StringMatching("ac"));
-            Assert.That("abc".Strip("abc".ToCharArray()), Is.StringMatching(""));
+            Assert.That("abc".Strip('b'), Has.All.Contains("ac"));
+            Assert.That("abc".Strip("abc".ToCharArray()), Has.All.Contains(""));
         }
 
         [Test]
         public void StripShouldRemoveEnd() {
-            Assert.That("abc".Strip('c'), Is.StringMatching("ab"));
-            Assert.That("abc".Strip("bc".ToCharArray()), Is.StringMatching("a"));
+            Assert.That("abc".Strip('c'), Has.All.Contains("ab"));
+            Assert.That("abc".Strip("bc".ToCharArray()), Has.All.Contains("a"));
         }
 
         [Test]
         public void StripShouldReturnIfEmpty() {
-            Assert.That("".Strip('a'), Is.StringMatching(""));
-            Assert.That("a".Strip("".ToCharArray()), Is.StringMatching("a"));
+            Assert.That("".Strip('a'), Has.All.Contains(""));
+            Assert.That("a".Strip("".ToCharArray()), Has.All.Contains("a"));
         }
 
         [Test]
@@ -272,15 +272,15 @@ namespace Orchard.Tests.Utility.Extensions {
 
         [Test]
         public void TranslateShouldReturnSource() {
-            Assert.That("a".Translate("".ToCharArray(), "".ToCharArray()), Is.StringMatching(""));
-            Assert.That("".Translate("abc".ToCharArray(), "abc".ToCharArray()), Is.StringMatching(""));
+            Assert.That("a".Translate("".ToCharArray(), "".ToCharArray()), Has.All.Contains(""));
+            Assert.That("".Translate("abc".ToCharArray(), "abc".ToCharArray()), Has.All.Contains(""));
         }
 
         [Test]
         public void TranslateShouldReplaceChars() {
-            Assert.That("abc".Translate("a".ToCharArray(), "d".ToCharArray()), Is.StringMatching("dbc"));
-            Assert.That("abc".Translate("d".ToCharArray(), "d".ToCharArray()), Is.StringMatching("abc"));
-            Assert.That("abc".Translate("abc".ToCharArray(), "def".ToCharArray()), Is.StringMatching("def"));
+            Assert.That("abc".Translate("a".ToCharArray(), "d".ToCharArray()), Has.All.Contains("dbc"));
+            Assert.That("abc".Translate("d".ToCharArray(), "d".ToCharArray()), Has.All.Contains("abc"));
+            Assert.That("abc".Translate("abc".ToCharArray(), "def".ToCharArray()), Has.All.Contains("def"));
         }
 
         [Test]

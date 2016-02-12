@@ -40,7 +40,7 @@ namespace Orchard.Tests.ContentManagement {
         private ISession _session;
         private Mock<IContentDefinitionManager> _contentDefinitionManager;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void InitFixture() {
             var databaseFileName = System.IO.Path.GetTempFileName();
             _sessionFactory = DataUtility.CreateSessionFactory(
@@ -115,9 +115,9 @@ namespace Orchard.Tests.ContentManagement {
             Assert.That(foo.GetType(), Is.EqualTo(typeof(AlphaPart)));
         }
 
-        [Test, ExpectedException(typeof(InvalidCastException))]
-        public void StronglyTypedNewShouldThrowCastExceptionIfNull() {
-            _manager.New<BetaPart>(DefaultAlphaName);
+        [Test]
+        public void StronglyTypedNewShouldThrowCastExceptionIfNull() {            
+            Assert.Throws(typeof(InvalidCastException), delegate { _manager.New<BetaPart>(DefaultAlphaName); });
         }
 
         [Test]
@@ -224,12 +224,15 @@ namespace Orchard.Tests.ContentManagement {
             _session.Flush();
         }
 
-        [Test, ExpectedException]
-        public void StandardStringsShouldNotHaveAStandardSize() {
-            var megaRepository = _container.Resolve<IRepository<MegaRecord>>();
-            var mega = new MegaRecord() { SmallStuff = new string('x', 256) };
-            megaRepository.Create(mega);
-            _session.Flush();
+        [Test]
+        public void StandardStringsShouldNotHaveAStandardSize() {            
+            Assert.Throws(typeof(Exception), delegate
+            {
+                var megaRepository = _container.Resolve<IRepository<MegaRecord>>();
+                var mega = new MegaRecord() { SmallStuff = new string('x', 256) };
+                megaRepository.Create(mega);
+                _session.Flush();
+            });
         }
 
         private ContentItemRecord CreateModelRecord(string contentType) {

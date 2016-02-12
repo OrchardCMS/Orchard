@@ -69,7 +69,7 @@ namespace Orchard.Tests.Modules.CodeGeneration.Commands {
             codeGenerationCommands.Context = new CommandContext { Output = textWriterOutput };
             codeGenerationCommands.CreateDataMigration("feature");
 
-            Assert.That(textWriterOutput.ToString(), Is.StringContaining("Creating data migration failed"));
+            Assert.That(textWriterOutput.ToString(), Contains.Substring("Creating data migration failed"));
         }
     }
 }

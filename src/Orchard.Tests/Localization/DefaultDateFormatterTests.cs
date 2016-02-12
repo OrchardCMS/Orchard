@@ -245,11 +245,15 @@ namespace Orchard.Tests.Localization {
 
         [Test]
         [Description("Date/time parsing throws a FormatException for unparsable date/time strings.")]
-        [ExpectedException(typeof(FormatException))]
-        public void ParseDateTimeTest05() {
+        public void ParseDateTimeTest05()
+        {
             var container = TestHelpers.InitializeContainer("en-US", null, TimeZoneInfo.Utc);
             var target = container.Resolve<IDateFormatter>();
-            target.ParseDateTime("BlaBlaBla");
+
+            Assert.Throws(typeof(FormatException), delegate
+            {
+                target.ParseDateTime("BlaBlaBla");
+            });
         }
 
         [Test]
@@ -302,12 +306,14 @@ namespace Orchard.Tests.Localization {
         }
 
         [Test]
-        [Description("Date parsing throws a FormatException for unparsable date strings.")]
-        [ExpectedException(typeof(FormatException))]
-        public void ParseDateTest02() {
-            var container = TestHelpers.InitializeContainer("en-US", null, TimeZoneInfo.Utc);
-            var target = container.Resolve<IDateFormatter>();
-            target.ParseDate("BlaBlaBla");
+        [Description("Date parsing throws a FormatException for unparsable date strings.")]        
+        public void ParseDateTest02() {            
+            Assert.Throws(typeof(FormatException), delegate
+            {
+                var container = TestHelpers.InitializeContainer("en-US", null, TimeZoneInfo.Utc);
+                var target = container.Resolve<IDateFormatter>();
+                target.ParseDate("BlaBlaBla");
+            });
         }
 
         [Test]
@@ -363,12 +369,14 @@ namespace Orchard.Tests.Localization {
         }
 
         [Test]
-        [Description("Time parsing throws a FormatException for unparsable time strings.")]
-        [ExpectedException(typeof(FormatException))]
-        public void ParseTimeTest02() {
-            var container = TestHelpers.InitializeContainer("en-US", null, TimeZoneInfo.Utc);
-            var target = container.Resolve<IDateFormatter>();
-            target.ParseTime("BlaBlaBla");
+        [Description("Time parsing throws a FormatException for unparsable time strings.")]        
+        public void ParseTimeTest02() {            
+            Assert.Throws(typeof(FormatException), delegate
+            {
+                var container = TestHelpers.InitializeContainer("en-US", null, TimeZoneInfo.Utc);
+                var target = container.Resolve<IDateFormatter>();
+                target.ParseTime("BlaBlaBla");
+            });
         }
 
         [Test]

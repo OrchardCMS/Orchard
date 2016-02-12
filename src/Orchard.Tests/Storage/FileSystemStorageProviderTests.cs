@@ -67,11 +67,10 @@ namespace Orchard.Tests.Storage {
             Assert.That(_storageProvider.FileExists("notexisting"), Is.False);
         }
 
-        [Test]
-        [ExpectedException(typeof(ArgumentException))]
+        [Test]        
         public void GetFileThatDoesNotExistShouldThrow() {
-            _storageProvider.GetFile("notexisting");
-        }
+            Assert.Throws(typeof(ArgumentException), delegate { _storageProvider.GetFile("notexisting"); });
+        }        
 
         [Test]
         public void ListFilesShouldReturnFilesFromFilesystem() {
