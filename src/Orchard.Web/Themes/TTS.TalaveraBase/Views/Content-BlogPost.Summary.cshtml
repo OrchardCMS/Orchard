@@ -1,0 +1,20 @@
+﻿@using Orchard.ContentManagement;
+@using Orchard.Tags.ViewModels;
+
+@{
+    var blogPost = Model.ContentItem;
+}
+
+<h3><a href="@Url.ItemDisplayUrl((IContent)blogPost)">@blogPost.TitlePart.Title</a></h3>
+<div class="metadata" style="margin-bottom: 10px;">
+    <time class="clearfix" datetime="@blogPost.CommonPart.CreatedUtc.ToLocalTime().ToString("yyyy-MM-dd")">@blogPost.CommonPart.CreatedUtc.ToLocalTime().ToString("dddd, MMMM d, yyyy")</time>
+    @if (Model.Tags.Items.Count > 0 && ((IEnumerable<ShowTagViewModel>)Model.Tags.Items[0].Tags).Any()) {
+        @Display(Model.Tags)
+    }
+    @Display(Model.CommentsCount)
+</div>
+
+
+@Display(Model.Summary)
+
+<hr />

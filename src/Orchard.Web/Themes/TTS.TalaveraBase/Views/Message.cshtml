@@ -1,0 +1,4 @@
+﻿<div class="alert alert-dismissable @((Model.Type).ToString() == "Error" ? "alert-danger" : (Model.Type).ToString() == "Information" ? "alert-info" : "alert-warning") fade in">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+    <i class="fa fa-@((Model.Type).ToString() == "Error" ? "times-circle" : (Model.Type).ToString() == "Information" ? "info-circle" : "warning")"></i>&nbsp;&nbsp;@Html.Raw(Html.Encode(Model.Message).Replace("\n", "<br />"))
+</div>

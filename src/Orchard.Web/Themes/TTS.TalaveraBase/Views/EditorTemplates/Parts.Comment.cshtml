@@ -1,0 +1,34 @@
+﻿@model Orchard.Comments.Models.CommentPart
+
+<fieldset class="who">
+    <legend id="add-comment">@T("Add a Comment")</legend>
+    @if (WorkContext.CurrentUser == null) {
+        <div class="form-group">
+            @Html.LabelFor(m => m.Author, T("Name"))
+            @Html.TextBoxFor(m => m.Author)
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Email, T("Email"))
+            @Html.TextBoxFor(m => m.Email)
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.SiteName, T("Url"))
+            @Html.TextBoxFor(m => m.SiteName)
+        </div>
+    }
+    else {
+        @Html.Hidden("Name", WorkContext.CurrentUser.UserName ?? "")
+        @Html.Hidden("Email", WorkContext.CurrentUser.Email ?? "")
+    }
+</fieldset>
+
+<fieldset class="what">
+    <div class="form-group">
+        @Html.LabelFor(m => m.CommentText, T("Comment"))
+        @Html.TextAreaFor(m => m.CommentText, new { rows = 10, cols = 30, @class = "comment-text" })
+    </div>
+    <div class="form-group">
+        @Html.HiddenFor(m => m.CommentedOn)
+        @Html.HiddenFor(m => m.RepliedOn)
+    </div>
+</fieldset>

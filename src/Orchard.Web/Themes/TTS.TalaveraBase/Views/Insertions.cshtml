@@ -1,0 +1,12 @@
+﻿@{
+    // the following code only runs if the site is live
+    if (!String.IsNullOrEmpty(WorkContext.CurrentSite.BaseUrl) && WorkContext.HttpContext.Request.Url.Host == new Uri(WorkContext.CurrentSite.BaseUrl).Host) {
+    }
+
+    // the following code only runs on the homepage
+    if (WorkContext.HttpContext.Request.RawUrl == Href("~/") || WorkContext.HttpContext.Request.RawUrl == Href("~//")) {
+        
+    }
+    
+    WorkContext.Layout.Footer.Add(New.BadgeOfHonor(), "5");
+}

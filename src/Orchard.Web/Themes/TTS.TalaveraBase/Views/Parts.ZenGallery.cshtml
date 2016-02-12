@@ -1,0 +1,74 @@
+﻿@using System.Linq;
+@using Orchard.MediaLibrary.Models
+
+@{
+    Script.Require("Stapel");
+    Script.Require("prettyPhoto");
+    Style.Require("Stapel");
+    Style.Require("prettyPhoto");
+
+    var images = (IEnumerable<MediaPart>)Model.Images;
+    var count = images.Count();
+    if (images != null && count > 0) {
+        <div style="margin-bottom: 10px;">
+            <a id="tp-close" class="btn btn-primary btn-xs" style="display: none;">Back to Albums</a>
+        </div>
+        <ul id="tp-grid" class="tp-grid">
+            @foreach (var img in images) {
+                string albums = "Photos";
+                dynamic taxonomy = img.Fields.Where(x => x.Name == "Album").FirstOrDefault();
+                if (taxonomy != null) {
+                    var terms = (IEnumerable<Orchard.Taxonomies.Models.TermPart>)taxonomy.Terms;
+                    if (terms.Count() > 0) {
+                        albums = string.Join(",", terms.Select(t => t.Name));
+                    }
+                }
+                <li data-pile="@albums" class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                    <a href="@img.MediaUrl" data-gal="photo[@albums]" rel="prettyPhoto[@albums]" title="@img.Title">
+                        <span class="tp-info"><span>@img.Title</span></span>
+                        <img src="@Display.ResizeMediaUrl(Path: img.MediaUrl, Width: 300)" alt="@img.AlternateText" />
+                    </a>
+                </li>
+            }
+        </ul>
+    }
+}
+
+@using (Script.Foot()) {
+    <script type="text/javascript">
+        // Gallery
+        if ($("#tp-grid")[0]) {
+            var $grid = $('#tp-grid'),
+                $name = $('#name'),
+                $oldname = $('#name').html(),
+                $close = $('#tp-close'),
+                $loader = $('<div class="loader"><i></i><i></i><i></i><i></i><i></i><i></i><span>Loading...</span></div>').insertBefore($grid),
+            stapel = $grid.stapel({
+                randomAngle: true,
+                delay: 100,
+                gutter: 0,
+                pileAngles: 3,
+                onLoad: function () {
+                    $loader.remove();
+                },
+                onBeforeOpen: function (pileName) {
+                    $name.html(pileName);
+                },
+                onAfterOpen: function (pileName) {
+                    $("a[data-gal^='photo']").prettyPhoto({ theme: 'light_rounded', social_tools: null });
+                    $close.show();
+                }
+            });
+            $close.on('click', function () {
+                $("a[data-gal^='photo']").prettyPhoto().unbind();
+                $close.hide();
+                $name.html($oldname);
+                stapel.closePile();
+            });
+        }
+        // prettyPhoto
+        if ($("a[data-gal^='photo']")[0]) {
+            $("a[data-gal^='photo']").prettyPhoto({ theme: 'light_rounded', social_tools: null });
+        }
+    </script>
+}

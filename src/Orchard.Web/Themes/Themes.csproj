@@ -86,6 +86,20 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="TTS.TalaveraBase\Assets.json" />
+    <Content Include="TTS.TalaveraBase\Assets\Styles.less" />
+    <Content Include="TTS.TalaveraBase\Styles\Styles.css" />
+    <Content Include="TTS.TalaveraBase\Scripts\Web.config" />
+    <Content Include="TTS.TalaveraBase\Content\Web.config" />
+    <Content Include="TTS.TalaveraBase\Theme.txt" />
+    <Content Include="TTS.TalaveraBase\Placement.info" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TTS.TalaveraBase\Styles\Styles.min.css" />
+    <Content Include="TTS.TalaveraBase\Web.config" />
+    <Content Include="TTS.TalaveraBase\Styles\Web.config" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -204,6 +218,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="TTS.TalaveraBase\Views\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

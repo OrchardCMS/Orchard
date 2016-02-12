@@ -1,0 +1,11 @@
+﻿@{
+    var RouteValues = (object)Model.RouteValues;
+    RouteValueDictionary rvd;
+    if (RouteValues == null) {
+        rvd = new RouteValueDictionary();
+    }
+    else {
+        rvd = RouteValues is RouteValueDictionary ? (RouteValueDictionary)RouteValues : new RouteValueDictionary(RouteValues);
+    }
+}
+<a href="@Url.Action((string)rvd["action"], rvd)"><i class="fa fa-angle-double-right"></i></a>

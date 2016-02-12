@@ -1,0 +1,54 @@
+﻿@using System.Text.RegularExpressions;
+
+@{
+    var whiteSpace = new Regex(@"\s+");
+}
+
+<ul class="latest-twitter-list">
+    @foreach (var tweet in Model.Tweets) {
+        string message = tweet.Message;
+        <text>
+            <li>
+                <h5><i class="fa fa-twitter"></i></h5>
+                @if (Model.ShowAvatars) {
+                    <img src="@tweet.Avatar" class="latest-twitter-avatar" height="24" width="24" />
+                }
+                @if (Model.ShowUsername) {
+                    <a href="http://www.twitter.com/@tweet.Username" rel="external">@tweet.Username</a><text>:</text><br />
+                }
+                @foreach (string substring in whiteSpace.Split(message)) {
+                    if (substring == string.Empty) {
+                        continue;
+                    }
+                    if (Model.ShowMentionsAsLinks && substring.StartsWith("@")) {
+                        string username = substring.Replace("@", string.Empty);
+                        <a href="http://www.twitter.com/@username" title="segui @username su twitter" rel="external">@substring</a>
+                    }
+                    else if (Model.ShowHashtagsAsLinks && substring.StartsWith("#")) {
+                        string hashTag = substring.Replace("#", string.Empty);
+                        string searchUrl = "http://twitter.com/#!/search?q=%23" + hashTag;
+                        <a href="@searchUrl" title="Search for mentions of @substring on twitter" rel="external">@substring</a>
+                    }
+                    else if (substring.StartsWith("http://")) {
+                        <a href="@substring" title="Open link" rel="external">@substring</a>
+                    }
+                    else {
+                        @substring @T(" ");
+                    }
+                }
+
+                @if (Model.ShowTimestamps) {
+                    <br />
+                    <span class="latest-twitter-timestamp">
+                        @if (Model.ShowTimestampsAsLinks) {
+                            <a href="http://twitter.com/@tweet.Username/statuses/@tweet.Id">@T(tweet.Timestamp)</a>
+                        }
+                        else {
+                            @T(tweet.Timestamp)
+                        }
+                    </span>
+                }
+            </li>
+        </text>
+    }
+</ul>

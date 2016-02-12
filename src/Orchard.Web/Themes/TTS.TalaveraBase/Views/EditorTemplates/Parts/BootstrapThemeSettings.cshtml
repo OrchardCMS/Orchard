@@ -1,0 +1,93 @@
+﻿@model TTS.TalaveraBase.Models.BootstrapThemeSettingsPart
+@using (Script.Foot()) {
+    <script type="text/javascript">
+        $(function () {
+            $('.swatchContainer.@Model.Swatch').addClass('active');
+
+            $('.swatchContainer img').click(function () {
+                var swatch = $(this).data("swatch");
+                $('#BootstrapThemeSettings_Swatch').val(swatch);
+                $('.swatchContainer').removeClass('active');
+                $('.' + swatch).addClass('active');
+                $('#inverseColorContainer').removeClass();
+                $('#inverseColorContainer').addClass(swatch);
+            });
+        });
+    </script>
+}
+<style type="text/css">
+    .swatchContainer { padding: 5px; border: 3px solid #fff; width: 17%; display: inline-block; }
+        .swatchContainer:hover { border: 3px solid #563d7c; cursor: pointer; }
+        .swatchContainer.active { border: 3px solid #563d7c; }
+        .swatchContainer img { display: block; max-width: 100%; height: auto; }
+        #inverseColorContainer { width: 100px; height: 50px; text-align: center; line-height: 50px; }
+        #inverseColorContainer.default { background-color: #222222; border: 1px solid #080808; color: #9d9d9d; }
+        #inverseColorContainer.cerulean { background-color: #033c73; border: 1px solid #022f5a; color: #ffffff; }
+        #inverseColorContainer.cosmo { background-color: #2780e3; border: 1px solid #1967be; color: #ffffff; }
+        #inverseColorContainer.cyborg { background-color: #222222; border: 1px solid #080808; color: #888888; }
+        #inverseColorContainer.darkly { background-color: #00bc8c; border: 1px solid transparent; color: #ffffff; }
+        #inverseColorContainer.flatly { background-color: #18bc9c; border: 1px solid transparent; color: #ffffff; }
+        #inverseColorContainer.journal { background-color: #eb6864; border: 1px solid #e53c37; color: #ffffff; }
+        #inverseColorContainer.lumen { background-color: #ffffff; border: 1px solid #e6e6e6; color: #999999; }
+        #inverseColorContainer.paper { background-color: #2196f3; border: 1px solid transparent; color: #b2dbfb; }
+        #inverseColorContainer.readable { background-color: #ffffff; border: 1px solid #dddddd; color: #333333; }
+        #inverseColorContainer.sandstone { background-color: #93c54b; border: 1px solid #93c54b; color: #6b9430; }
+        #inverseColorContainer.simplex { background-color: #d9230f; border: 1px solid #a91b0c; color: #fac0ba; }
+        #inverseColorContainer.slate { background-color: #7a8288; border: 1px solid #62686d; color: #cccccc; }
+        #inverseColorContainer.spacelab { background-color: #446e9b; border: 1px solid #345578; color: #dddddd; }
+        #inverseColorContainer.superhero { background-color: #df691a; border: 1px solid transparent; color: #ebebeb; }
+        #inverseColorContainer.united { background-color: #772953; border: 1px solid #511c39; color: #ffffff; }
+        #inverseColorContainer.yeti { background-color: #008cba; border: 1px solid #006687; color: #ffffff; }
+</style>
+<fieldset>
+    <legend>Select a Swatch</legend>
+    <div style="width: 100%">
+        @{
+            var swatchPath = Href("~/Themes/TTS.TalaveraBase/Content/Swatches");
+            var folder = Request.MapPath(swatchPath);
+            var swatchPattern = "*_th.png";
+            var swatchFiles = Directory.EnumerateFiles(folder, swatchPattern, SearchOption.TopDirectoryOnly);
+            foreach (var file in swatchFiles.OrderBy(x => x)) {
+                var start = file.IndexOf(folder) + folder.Length + 1;
+                var len = file.LastIndexOf("_th.") - start;
+                var swatch = file.Substring(start, len);
+                var swatchImg = swatchPath + "/" + swatch + "_th.png";
+                <div class="swatchContainer @swatch">
+                    <img data-swatch="@swatch" src="@swatchImg">
+                </div>
+            }
+        }
+    </div>
+    @Html.HiddenFor(x => x.Swatch)
+</fieldset>
+<fieldset>
+    <legend>Inverse Navigation Bar Color</legend>
+    @Html.CheckBoxFor(m => m.UseInverseNav) @T("Use Inverse Navigation Bar Color?")
+    <span class="hint">@T("Select this checkbox to use the inverse navigation bar color.")</span>
+    <div id="inverseColorContainer" class="@Model.Swatch">Text Color</div>
+</fieldset>
+<fieldset>
+    <legend>Fixed Navigation Bar</legend>
+    @Html.CheckBoxFor(m => m.UseFixedNav)@T("Use Fixed Navigation Bar?")
+    <span class="hint">@T("Select this checkbox to use a fixed navigation.")</span>
+</fieldset>
+<fieldset>
+    <legend>Navigation Bar Search Field</legend>
+    @Html.CheckBoxFor(m => m.UseNavSearch)@T("Use Navigation Bar Search Field?")
+    <span class="hint">@T("Select this checkbox to use a navigation bar search field. Requires the Search module.")</span>
+</fieldset>
+<fieldset>
+    <legend>Hover Menus</legend>
+    @Html.CheckBoxFor(m => m.UseHoverMenus)@T("Use Hover Menus?")
+    <span class="hint">@T("Select this checkbox to use hover menu items.")</span>
+</fieldset>
+<fieldset>
+    <legend>Fluid Layout</legend>
+    @Html.CheckBoxFor(m => m.UseFluidLayout)@T("Use a Fluid Layout?")
+    <span class="hint">@T("Select this checkbox to use a fluid layout instead of a boxed layout.")</span>
+</fieldset>
+<fieldset>
+    <legend>Sticky Footer</legend>
+    @Html.CheckBoxFor(m => m.UseStickyFooter)@T("Use a Sticky Footer?")
+    <span class="hint">@T("Select this checkbox to use a sticky footer.")</span>
+</fieldset>

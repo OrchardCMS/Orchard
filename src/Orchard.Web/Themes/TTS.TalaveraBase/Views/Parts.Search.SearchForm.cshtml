@@ -1,0 +1,6 @@
+﻿@using Orchard.Search.ViewModels;
+
+@using (Html.BeginForm("index", "search", new { area = "Orchard.Search" }, FormMethod.Get, new { @class = "search-form" })) {
+    @Html.TextBox("q", (SearchViewModel)Model.ViewModel.Query, new { placeholder = T("Search") + "..." })
+}
+<div class="clearfix"></div>

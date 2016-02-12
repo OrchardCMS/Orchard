@@ -1,0 +1,9 @@
+﻿@model dynamic
+
+@{
+    Html.TitleForPage(T("Access Denied"));
+}
+<div class="alert alert-dismissable alert-danger">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+    <i class="fa fa-times-circle"></i>&nbsp;&nbsp;@T("You do not have permission to complete your request.")
+</div>

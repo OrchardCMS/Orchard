@@ -1,0 +1,40 @@
+﻿@if (Html.ValidationSummary() != null) {
+    <div class="alert alert-dismissable alert-danger">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <i class="fa fa-times-circle"></i>&nbsp;&nbsp;@T("Account creation was unsuccessful. Please correct the errors and try again.")
+        <p>@Html.ValidationSummary()</p>
+    </div>
+}
+<h1>@Html.TitleForPage(T("Create a New Account").ToString())</h1>
+<div class="well">
+    <p>@T("Use the form below to create a new account.")</p>
+    <p>@T("Passwords are required to be a minimum of {0} characters in length.", ViewData["PasswordLength"])</p>
+    @using (Html.BeginFormAntiForgeryPost(Url.Action("Register", new { ReturnUrl = Request.QueryString["ReturnUrl"] }))) {
+        <fieldset>
+            <legend>@T("Account Information")</legend>
+            <div class="form-group">
+                <label for="username">@T("Username:")</label>
+                @Html.TextBox("username", null, new { @class = "validate[required,ajax[ajaxUserName]]" })
+                @Html.ValidationMessage("username")
+            </div>
+            <div class="form-group">
+                <label for="email">@T("Email:")</label>
+                @Html.TextBox("email", null, new { @class = "validate[required,custom[email],ajax[ajaxUserEmail]]" })
+                @Html.ValidationMessage("email")
+            </div>
+            <div class="form-group">
+                <label for="password">@T("Password:")</label>
+                @Html.Password("password", null, new { @class = "validate[required,minSize[" + ViewData["PasswordLength"] + "]]" })
+                @Html.ValidationMessage("password")
+            </div>
+            <div class="form-group">
+                <label for="confirmPassword">@T("Confirm password:")</label>
+                @Html.Password("confirmPassword", null, new { @class = "validate[required,minSize[" + ViewData["PasswordLength"] + "],equals[password]]" })
+                @Html.ValidationMessage("confirmPassword")
+            </div>
+            <div class="form-group">
+                <button class="primaryAction" type="submit">@T("Register")</button>
+            </div>
+        </fieldset>
+    }
+</div>

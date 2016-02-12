@@ -1,0 +1,539 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{5D37D97E-534E-48E9-8954-C360F2AD6202}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>TTS.TalaveraBase</RootNamespace>
+    <AssemblyName>TTS.TalaveraBase</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <TargetFrameworkProfile />
+    <UseIISExpress>false</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>..\..\..\OrchardBasicCorrectness.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.ComponentModel.DataAnnotations">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets.json" />
+    <Content Include="Content\apple-touch-icon.png" />
+    <Content Include="Content\favicon.ico" />
+    <Content Include="Content\prettyPhoto\dark_rounded\btnNext.png" />
+    <Content Include="Content\prettyPhoto\dark_rounded\btnPrevious.png" />
+    <Content Include="Content\prettyPhoto\dark_rounded\contentPattern.png" />
+    <Content Include="Content\prettyPhoto\dark_rounded\default_thumbnail.gif" />
+    <Content Include="Content\prettyPhoto\dark_rounded\loader.gif" />
+    <Content Include="Content\prettyPhoto\dark_rounded\sprite.png" />
+    <Content Include="Content\prettyPhoto\dark_square\btnNext.png" />
+    <Content Include="Content\prettyPhoto\dark_square\btnPrevious.png" />
+    <Content Include="Content\prettyPhoto\dark_square\contentPattern.png" />
+    <Content Include="Content\prettyPhoto\dark_square\default_thumbnail.gif" />
+    <Content Include="Content\prettyPhoto\dark_square\loader.gif" />
+    <Content Include="Content\prettyPhoto\dark_square\sprite.png" />
+    <Content Include="Content\prettyPhoto\default\default_thumb.png" />
+    <Content Include="Content\prettyPhoto\default\loader.gif" />
+    <Content Include="Content\prettyPhoto\default\sprite.png" />
+    <Content Include="Content\prettyPhoto\default\sprite_next.png" />
+    <Content Include="Content\prettyPhoto\default\sprite_prev.png" />
+    <Content Include="Content\prettyPhoto\default\sprite_x.png" />
+    <Content Include="Content\prettyPhoto\default\sprite_y.png" />
+    <Content Include="Content\prettyPhoto\facebook\btnNext.png" />
+    <Content Include="Content\prettyPhoto\facebook\btnPrevious.png" />
+    <Content Include="Content\prettyPhoto\facebook\contentPatternBottom.png" />
+    <Content Include="Content\prettyPhoto\facebook\contentPatternLeft.png" />
+    <Content Include="Content\prettyPhoto\facebook\contentPatternRight.png" />
+    <Content Include="Content\prettyPhoto\facebook\contentPatternTop.png" />
+    <Content Include="Content\prettyPhoto\facebook\default_thumbnail.gif" />
+    <Content Include="Content\prettyPhoto\facebook\loader.gif" />
+    <Content Include="Content\prettyPhoto\facebook\sprite.png" />
+    <Content Include="Content\prettyPhoto\light_rounded\btnNext.png" />
+    <Content Include="Content\prettyPhoto\light_rounded\btnPrevious.png" />
+    <Content Include="Content\prettyPhoto\light_rounded\default_thumbnail.gif" />
+    <Content Include="Content\prettyPhoto\light_rounded\loader.gif" />
+    <Content Include="Content\prettyPhoto\light_rounded\sprite.png" />
+    <Content Include="Content\prettyPhoto\light_square\btnNext.png" />
+    <Content Include="Content\prettyPhoto\light_square\btnPrevious.png" />
+    <Content Include="Content\prettyPhoto\light_square\default_thumbnail.gif" />
+    <Content Include="Content\prettyPhoto\light_square\loader.gif" />
+    <Content Include="Content\prettyPhoto\light_square\sprite.png" />
+    <Content Include="Content\swatches\cerulean_th.png" />
+    <Content Include="Content\swatches\cosmo_th.png" />
+    <Content Include="Content\swatches\cyborg_th.png" />
+    <Content Include="Content\swatches\darkly_th.png" />
+    <Content Include="Content\swatches\default_th.png" />
+    <Content Include="Content\swatches\flatly_th.png" />
+    <Content Include="Content\swatches\journal_th.png" />
+    <Content Include="Content\swatches\lumen_th.png" />
+    <Content Include="Content\swatches\paper_th.png" />
+    <Content Include="Content\swatches\readable_th.png" />
+    <Content Include="Content\swatches\sandstone_th.png" />
+    <Content Include="Content\swatches\simplex_th.png" />
+    <Content Include="Content\swatches\slate_th.png" />
+    <Content Include="Content\swatches\spacelab_th.png" />
+    <Content Include="Content\swatches\superhero_th.png" />
+    <Content Include="Content\swatches\united_th.png" />
+    <Content Include="Content\swatches\yeti_th.png" />
+    <Content Include="Directives\gulpfile.js" />
+    <Content Include="Scripts\bootstrap-3.3.5\js\affix.js" />
+    <Content Include="Scripts\bootstrap-3.3.5\js\alert.js" />
+    <Content Include="Scripts\bootstrap-3.3.5\js\bootstrap.js" />
+    <Content Include="Scripts\bootstrap-3.3.5\js\bootstrap.min.js" />
+    <Content Include="Scripts\bootstrap-3.3.5\js\button.js" />
+    <Content Include="Scripts\bootstrap-3.3.5\js\carousel.js" />
+    <Content Include="Scripts\bootstrap-3.3.5\js\collapse.js" />
+    <Content Include="Scripts\bootstrap-3.3.5\js\dropdown.js" />
+    <Content Include="Scripts\bootstrap-3.3.5\js\modal.js" />
+    <Content Include="Scripts\bootstrap-3.3.5\js\popover.js" />
+    <Content Include="Scripts\bootstrap-3.3.5\js\scrollspy.js" />
+    <Content Include="Scripts\bootstrap-3.3.5\js\tab.js" />
+    <Content Include="Scripts\bootstrap-3.3.5\js\tooltip.js" />
+    <Content Include="Scripts\bootstrap-3.3.5\js\transition.js" />
+    <Content Include="Scripts\custom.js" />
+    <Content Include="Scripts\hover-dropdown.js" />
+    <Content Include="Scripts\prettyPhoto\jquery.prettyPhoto.js" />
+    <Content Include="Scripts\stapel\jquery.stapel.js" />
+    <Content Include="Scripts\stapel\modernizr.custom.63321.js" />
+    <Content Include="Styles\bootstrap-3.3.1-rtl\css\bootstrap-rtl.css" />
+    <Content Include="Styles\bootstrap-3.3.1-rtl\css\bootstrap-rtl.min.css" />
+    <Content Include="Styles\bootstrap-3.3.1-rtl\less\bootstrap-rtl.css" />
+    <Content Include="Styles\bootstrap-3.3.5\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Styles\font-awesome-4.3.0\fonts\fontawesome-webfont.svg" />
+    <Content Include="Styles\latest-twitter.css" />
+    <Content Include="Styles\latest-twitter.min.css" />
+    <Content Include="Styles\prettyPhoto\prettyPhoto.css" />
+    <Content Include="Styles\site-cerulean.css" />
+    <Content Include="Styles\site-cerulean.min.css" />
+    <Content Include="Styles\site-cosmo.css" />
+    <Content Include="Styles\site-cosmo.min.css" />
+    <Content Include="Styles\site-cyborg.css" />
+    <Content Include="Styles\site-cyborg.min.css" />
+    <Content Include="Styles\site-darkly.css" />
+    <Content Include="Styles\site-darkly.min.css" />
+    <Content Include="Styles\site-default.css" />
+    <Content Include="Styles\site-default.min.css" />
+    <Content Include="Styles\site-flatly.css" />
+    <Content Include="Styles\site-flatly.min.css" />
+    <Content Include="Styles\site-journal.css" />
+    <Content Include="Styles\site-journal.min.css" />
+    <Content Include="Styles\site-lumen.css" />
+    <Content Include="Styles\site-lumen.min.css" />
+    <Content Include="Styles\site-paper.css" />
+    <Content Include="Styles\site-paper.min.css" />
+    <Content Include="Styles\site-readable.css" />
+    <Content Include="Styles\site-readable.min.css" />
+    <Content Include="Styles\site-rtl.css" />
+    <Content Include="Styles\site-rtl.min.css" />
+    <Content Include="Styles\site-sandstone.css" />
+    <Content Include="Styles\site-sandstone.min.css" />
+    <Content Include="Styles\site-simplex.css" />
+    <Content Include="Styles\site-simplex.min.css" />
+    <Content Include="Styles\site-slate.css" />
+    <Content Include="Styles\site-slate.min.css" />
+    <Content Include="Styles\site-spacelab.css" />
+    <Content Include="Styles\site-spacelab.min.css" />
+    <Content Include="Styles\site-superhero.css" />
+    <Content Include="Styles\site-superhero.min.css" />
+    <Content Include="Styles\site-united.css" />
+    <Content Include="Styles\site-united.min.css" />
+    <Content Include="Styles\site-yeti.css" />
+    <Content Include="Styles\site-yeti.min.css" />
+    <Content Include="Styles\stapel\stapel.css" />
+    <Content Include="Web.config" />
+    <Content Include="Scripts\Web.config" />
+    <Content Include="Styles\Web.config" />
+    <Content Include="Content\Web.config" />
+    <Content Include="Theme.txt" />
+    <Content Include="Theme.png" />
+    <Content Include="Placement.info" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
+      <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
+      <Name>Orchard.Framework</Name>
+      <Private>false</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\Orchard.Core.csproj">
+      <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
+      <Name>Orchard.Core</Name>
+      <Private>false</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Assets\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Code\ResourceManifest.cs" />
+    <Compile Include="Gravatar\Gravatar.cs" />
+    <Compile Include="Gravatar\Gremail.cs" />
+    <Compile Include="Gravatar\Grofile.cs" />
+    <Compile Include="Gravatar\GrofileInfo.cs" />
+    <Compile Include="Gravatar\Html\HtmlHelperExtensions.cs" />
+    <Compile Include="Gravatar\Html\UrlHelperExtensions.cs" />
+    <Compile Include="Handlers\BootstrapThemeSettingsPartHandler.cs" />
+    <Compile Include="Code\MainMenu.cs" />
+    <Compile Include="Models\BootstrapThemeSettingsPart.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\bootstrap-3.3.1-rtl\css\bootstrap-rtl.css.map" />
+    <Content Include="Styles\bootstrap-3.3.1-rtl\less\alerts-rtl.less" />
+    <Content Include="Styles\bootstrap-3.3.1-rtl\less\badges-rtl.less" />
+    <Content Include="Styles\bootstrap-3.3.1-rtl\less\bootstrap-rtl.css.map" />
+    <Content Include="Styles\bootstrap-3.3.1-rtl\less\bootstrap-rtl.less" />
+    <Content Include="Styles\bootstrap-3.3.1-rtl\less\button-groups-rtl.less" />
+    <Content Include="Styles\bootstrap-3.3.1-rtl\less\carousel-rtl.less" />
+    <Content Include="Styles\bootstrap-3.3.1-rtl\less\close-rtl.less" />
+    <Content Include="Styles\bootstrap-3.3.1-rtl\less\dropdowns-rtl.less" />
+    <Content Include="Styles\bootstrap-3.3.1-rtl\less\forms-rtl.less" />
+    <Content Include="Styles\bootstrap-3.3.1-rtl\less\grid-rtl.less" />
+    <Content Include="Styles\bootstrap-3.3.1-rtl\less\input-groups-rtl.less" />
+    <Content Include="Styles\bootstrap-3.3.1-rtl\less\list-group-rtl.less" />
+    <Content Include="Styles\bootstrap-3.3.1-rtl\less\media-rtl.less" />
+    <Content Include="Styles\bootstrap-3.3.1-rtl\less\mixins-rtl.less" />
+    <Content Include="Styles\bootstrap-3.3.1-rtl\less\mixins\gradients-rtl.less" />
+    <Content Include="Styles\bootstrap-3.3.1-rtl\less\mixins\grid-framework-rtl.less" />
+    <Content Include="Styles\bootstrap-3.3.1-rtl\less\mixins\grid-rtl.less" />
+    <Content Include="Styles\bootstrap-3.3.1-rtl\less\mixins\pagination-rtl.less" />
+    <Content Include="Styles\bootstrap-3.3.1-rtl\less\modals-rtl.less" />
+    <Content Include="Styles\bootstrap-3.3.1-rtl\less\navbar-rtl.less" />
+    <Content Include="Styles\bootstrap-3.3.1-rtl\less\navs-rtl.less" />
+    <Content Include="Styles\bootstrap-3.3.1-rtl\less\normalize-rtl.less" />
+    <Content Include="Styles\bootstrap-3.3.1-rtl\less\pager-rtl.less" />
+    <Content Include="Styles\bootstrap-3.3.1-rtl\less\pagination-rtl.less" />
+    <Content Include="Styles\bootstrap-3.3.1-rtl\less\panels-rtl.less" />
+    <Content Include="Styles\bootstrap-3.3.1-rtl\less\popovers-rtl.less" />
+    <Content Include="Styles\bootstrap-3.3.1-rtl\less\progress-bars-rtl.less" />
+    <Content Include="Styles\bootstrap-3.3.1-rtl\less\responsive-embed-rtl.less" />
+    <Content Include="Styles\bootstrap-3.3.1-rtl\less\tables-rtl.less" />
+    <Content Include="Styles\bootstrap-3.3.1-rtl\less\type-rtl.less" />
+    <Content Include="Styles\bootstrap-3.3.1-rtl\less\utilities-rtl.less" />
+    <Content Include="Styles\bootstrap-3.3.1-rtl\less\variables-rtl.less" />
+    <Content Include="Styles\bootstrap-3.3.5\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Styles\bootstrap-3.3.5\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Styles\bootstrap-3.3.5\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Styles\bootstrap-3.3.5\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="Styles\bootstrap-3.3.5\less\alerts.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\badges.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\bootstrap.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\breadcrumbs.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\button-groups.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\buttons.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\carousel.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\close.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\code.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\component-animations.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\dropdowns.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\forms.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\glyphicons.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\grid.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\input-groups.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\jumbotron.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\labels.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\list-group.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\media.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\mixins.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\mixins\alerts.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\mixins\background-variant.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\mixins\border-radius.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\mixins\buttons.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\mixins\center-block.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\mixins\clearfix.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\mixins\forms.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\mixins\gradients.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\mixins\grid-framework.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\mixins\grid.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\mixins\hide-text.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\mixins\image.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\mixins\labels.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\mixins\list-group.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\mixins\nav-divider.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\mixins\nav-vertical-align.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\mixins\opacity.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\mixins\pagination.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\mixins\panels.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\mixins\progress-bar.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\mixins\reset-filter.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\mixins\reset-text.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\mixins\resize.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\mixins\responsive-visibility.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\mixins\size.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\mixins\tab-focus.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\mixins\table-row.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\mixins\text-emphasis.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\mixins\text-overflow.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\mixins\vendor-prefixes.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\modals.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\navbar.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\navs.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\normalize.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\pager.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\pagination.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\panels.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\popovers.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\print.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\progress-bars.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\responsive-embed.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\responsive-utilities.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\scaffolding.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\tables.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\theme.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\thumbnails.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\tooltip.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\type.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\utilities.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\variables.less" />
+    <Content Include="Styles\bootstrap-3.3.5\less\wells.less" />
+    <Content Include="Styles\bootswatch-3.3.5\cerulean-bootswatch.less" />
+    <Content Include="Styles\bootswatch-3.3.5\cerulean-variables.less" />
+    <Content Include="Styles\bootswatch-3.3.5\cosmo-bootswatch.less" />
+    <Content Include="Styles\bootswatch-3.3.5\cosmo-variables.less" />
+    <Content Include="Styles\bootswatch-3.3.5\cyborg-bootswatch.less" />
+    <Content Include="Styles\bootswatch-3.3.5\cyborg-variables.less" />
+    <Content Include="Styles\bootswatch-3.3.5\darkly-bootswatch.less" />
+    <Content Include="Styles\bootswatch-3.3.5\darkly-variables.less" />
+    <Content Include="Styles\bootswatch-3.3.5\flatly-bootswatch.less" />
+    <Content Include="Styles\bootswatch-3.3.5\flatly-variables.less" />
+    <Content Include="Styles\bootswatch-3.3.5\journal-bootswatch.less" />
+    <Content Include="Styles\bootswatch-3.3.5\journal-variables.less" />
+    <Content Include="Styles\bootswatch-3.3.5\lumen-bootswatch.less" />
+    <Content Include="Styles\bootswatch-3.3.5\lumen-variables.less" />
+    <Content Include="Styles\bootswatch-3.3.5\paper-bootswatch.less" />
+    <Content Include="Styles\bootswatch-3.3.5\paper-variables.less" />
+    <Content Include="Styles\bootswatch-3.3.5\readable-bootswatch.less" />
+    <Content Include="Styles\bootswatch-3.3.5\readable-variables.less" />
+    <Content Include="Styles\bootswatch-3.3.5\sandstone-bootswatch.less" />
+    <Content Include="Styles\bootswatch-3.3.5\sandstone-variables.less" />
+    <Content Include="Styles\bootswatch-3.3.5\simplex-bootswatch.less" />
+    <Content Include="Styles\bootswatch-3.3.5\simplex-variables.less" />
+    <Content Include="Styles\bootswatch-3.3.5\slate-bootswatch.less" />
+    <Content Include="Styles\bootswatch-3.3.5\slate-variables.less" />
+    <Content Include="Styles\bootswatch-3.3.5\spacelab-bootswatch.less" />
+    <Content Include="Styles\bootswatch-3.3.5\spacelab-variables.less" />
+    <Content Include="Styles\bootswatch-3.3.5\superhero-bootswatch.less" />
+    <Content Include="Styles\bootswatch-3.3.5\superhero-variables.less" />
+    <Content Include="Styles\bootswatch-3.3.5\united-bootswatch.less" />
+    <Content Include="Styles\bootswatch-3.3.5\united-variables.less" />
+    <Content Include="Styles\bootswatch-3.3.5\yeti-bootswatch.less" />
+    <Content Include="Styles\bootswatch-3.3.5\yeti-variables.less" />
+    <Content Include="Styles\font-awesome-4.3.0\fonts\fontawesome-webfont.eot" />
+    <Content Include="Styles\font-awesome-4.3.0\fonts\fontawesome-webfont.ttf" />
+    <Content Include="Styles\font-awesome-4.3.0\fonts\fontawesome-webfont.woff" />
+    <Content Include="Styles\font-awesome-4.3.0\fonts\fontawesome-webfont.woff2" />
+    <Content Include="Styles\font-awesome-4.3.0\fonts\FontAwesome.otf" />
+    <Content Include="Styles\font-awesome-4.3.0\less\animated.less" />
+    <Content Include="Styles\font-awesome-4.3.0\less\bordered-pulled.less" />
+    <Content Include="Styles\font-awesome-4.3.0\less\core.less" />
+    <Content Include="Styles\font-awesome-4.3.0\less\fixed-width.less" />
+    <Content Include="Styles\font-awesome-4.3.0\less\font-awesome.less" />
+    <Content Include="Styles\font-awesome-4.3.0\less\icons.less" />
+    <Content Include="Styles\font-awesome-4.3.0\less\larger.less" />
+    <Content Include="Styles\font-awesome-4.3.0\less\list.less" />
+    <Content Include="Styles\font-awesome-4.3.0\less\mixins.less" />
+    <Content Include="Styles\font-awesome-4.3.0\less\path.less" />
+    <Content Include="Styles\font-awesome-4.3.0\less\rotated-flipped.less" />
+    <Content Include="Styles\font-awesome-4.3.0\less\stacked.less" />
+    <Content Include="Styles\font-awesome-4.3.0\less\variables.less" />
+    <Content Include="Styles\forms.less" />
+    <Content Include="Styles\latest-twitter.css.map" />
+    <Content Include="Styles\latest-twitter.less" />
+    <Content Include="Styles\layout.less" />
+    <Content Include="Styles\navigation.less" />
+    <Content Include="Styles\site-cerulean.css.map" />
+    <Content Include="Styles\site-cerulean.less" />
+    <Content Include="Styles\site-cosmo.css.map" />
+    <Content Include="Styles\site-cosmo.less" />
+    <Content Include="Styles\site-cyborg.css.map" />
+    <Content Include="Styles\site-cyborg.less" />
+    <Content Include="Styles\site-darkly.css.map" />
+    <Content Include="Styles\site-darkly.less" />
+    <Content Include="Styles\site-default.css.map" />
+    <Content Include="Styles\site-default.less" />
+    <Content Include="Styles\site-flatly.css.map" />
+    <Content Include="Styles\site-flatly.less" />
+    <Content Include="Styles\site-journal.css.map" />
+    <Content Include="Styles\site-journal.less" />
+    <Content Include="Styles\site-lumen.css.map" />
+    <Content Include="Styles\site-lumen.less" />
+    <Content Include="Styles\site-paper.css.map" />
+    <Content Include="Styles\site-paper.less" />
+    <Content Include="Styles\site-readable.css.map" />
+    <Content Include="Styles\site-readable.less" />
+    <Content Include="Styles\site-rtl.css.map" />
+    <Content Include="Styles\site-rtl.less" />
+    <Content Include="Styles\site-sandstone.css.map" />
+    <Content Include="Styles\site-sandstone.less" />
+    <Content Include="Styles\site-simplex.css.map" />
+    <Content Include="Styles\site-simplex.less" />
+    <Content Include="Styles\site-slate.css.map" />
+    <Content Include="Styles\site-slate.less" />
+    <Content Include="Styles\site-spacelab.css.map" />
+    <Content Include="Styles\site-spacelab.less" />
+    <Content Include="Styles\site-superhero.css.map" />
+    <Content Include="Styles\site-superhero.less" />
+    <Content Include="Styles\site-united.css.map" />
+    <Content Include="Styles\site-united.less" />
+    <Content Include="Styles\site-yeti.css.map" />
+    <Content Include="Styles\site-yeti.less" />
+    <Content Include="Styles\type.less" />
+    <Content Include="Styles\yamm\yamm.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\BadgeOfHonor.cshtml" />
+    <Content Include="Views\Branding.cshtml" />
+    <Content Include="Views\CommentGravatar.cshtml" />
+    <Content Include="Views\CommentReplyButton.cshtml" />
+    <Content Include="Views\Content-Blog.Detail.cshtml" />
+    <Content Include="Views\Content-BlogPost.cshtml" />
+    <Content Include="Views\Content-BlogPost.Summary.cshtml" />
+    <Content Include="Views\Document.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts.Comment.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts\BootstrapThemeSettings.cshtml" />
+    <Content Include="Views\Insertions.cshtml" />
+    <Content Include="Views\Layout.cshtml" />
+    <Content Include="Views\LogOn.cshtml" />
+    <Content Include="Views\Menu.cshtml" />
+    <Content Include="Views\MenuItem.cshtml" />
+    <Content Include="Views\MenuItemLinkdd.cshtml" />
+    <Content Include="Views\Message.cshtml" />
+    <Content Include="Views\NavSearch.cshtml" />
+    <Content Include="Views\Orchard.Users\Account\AccessDenied.cshtml" />
+    <Content Include="Views\Orchard.Users\Account\ChallengeEmailFail.cshtml" />
+    <Content Include="Views\Orchard.Users\Account\ChallengeEmailSent.cshtml" />
+    <Content Include="Views\Orchard.Users\Account\ChallengeEmailSuccess.cshtml" />
+    <Content Include="Views\Orchard.Users\Account\ChangePassword.cshtml" />
+    <Content Include="Views\Orchard.Users\Account\ChangePasswordSuccess.cshtml" />
+    <Content Include="Views\Orchard.Users\Account\LostPassword.cshtml" />
+    <Content Include="Views\Orchard.Users\Account\RegistrationPending.cshtml" />
+    <Content Include="Views\Orchard.Users\Account\RequestLostPassword.cshtml" />
+    <Content Include="Views\Pager.cshtml" />
+    <Content Include="Views\Pager.CurrentPage.cshtml" />
+    <Content Include="Views\Pager.First.cshtml" />
+    <Content Include="Views\Pager.Gap.cshtml" />
+    <Content Include="Views\Pager.Last.cshtml" />
+    <Content Include="Views\Pager.Next.cshtml" />
+    <Content Include="Views\Pager.Previous.cshtml" />
+    <Content Include="Views\Parts.Blogs.RecentBlogPosts.cshtml" />
+    <Content Include="Views\Parts.Comment.cshtml" />
+    <Content Include="Views\Parts.CommentForm.cshtml" />
+    <Content Include="Views\Parts.Comments.Count.cshtml" />
+    <Content Include="Views\Parts.Common.Body.Summary.cshtml" />
+    <Content Include="Views\Parts.ListOfComments.cshtml" />
+    <Content Include="Views\Parts.Search.SearchForm.cshtml" />
+    <Content Include="Views\Parts.Tags.ShowTags.cshtml" />
+    <Content Include="Views\Parts.TwitterWidget.cshtml" />
+    <Content Include="Views\Parts.ZenGallery.cshtml" />
+    <Content Include="Views\Register.cshtml" />
+    <Content Include="Views\Resources.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="README.md" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target> -->
+  <Target Name="AfterBuild" DependsOnTargets="AfterBuildCompiler">
+    <PropertyGroup>
+      <AreasManifestDir>$(ProjectDir)\..\Manifests</AreasManifestDir>
+    </PropertyGroup>
+    <!-- If this is an area child project, uncomment the following line:
+    <CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Child" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" />
+    -->
+    <!-- If this is an area parent project, uncomment the following lines:
+    <CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Parent" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" />
+    <CopyAreaManifests ManifestPath="$(AreasManifestDir)" CrossCopy="false" RenameViews="true" />
+    -->
+  </Target>
+  <Target Name="AfterBuildCompiler" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(ProjectDir)\..\$(ProjectName)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>45979</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>
+          </IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>True</UseCustomServer>
+          <CustomServerUrl>http://orchard.codeplex.com</CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

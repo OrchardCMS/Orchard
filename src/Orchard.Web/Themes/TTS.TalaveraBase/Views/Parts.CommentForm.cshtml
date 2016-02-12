@@ -1,0 +1,42 @@
+﻿@using Orchard.Comments;
+@using Orchard.Comments.Models
+@using Orchard.Comments.Settings
+@using Orchard.Utility.Extensions;
+
+@{
+    CommentsPart commentsPart = Model.ContentPart;
+    bool canStillCommentOn = Model.CanStillComment;
+    var settings = commentsPart.TypePartDefinition.Settings.GetModel<CommentsPartSettings>();
+}
+
+@if (!Model.ContentPart.CommentsActive || !canStillCommentOn) {
+    if (Model.ContentPart.Comments.Count > 0) {
+        <div id="comments">
+            <p class="comment-disabled alert alert-warning">@T("Comments have been disabled for this content.")</p>
+        </div>
+    }
+}
+else if (settings.MustBeAuthenticated && WorkContext.CurrentUser == null) {
+    <div id="comments">
+        <p class="comment-disabled alert alert-warning">@T("You must be authenticated in order to add a comment.")</p>
+    </div>
+}
+else if (WorkContext.CurrentUser == null && !AuthorizedFor(Permissions.AddComment)) {
+    <h2 id="add-comment">@T("Add a Comment")</h2>
+    <p class="info message alert alert-warning">
+        @T("You must {0} to comment.", Html.ActionLink(T("sign in").ToString(), "LogOn", new { Controller = "Account", Area = "Orchard.Users", ReturnUrl = string.Format("{0}#addacomment", Context.Request.RawUrl) }))
+    </p>
+}
+else {
+    @Html.ValidationSummary()
+    <span id="comment-form-beacon"></span>
+    using (Html.BeginFormAntiForgeryPost(Url.Action("Create", "Comment", new { Area = "Orchard.Comments", ReturnUrl = Context.Request.ToUrlString() }), FormMethod.Post, new { @class = "comment-form" })) {
+        if (TempData.ContainsKey("Comments.InvalidCommentEditorShape")) {
+            @Display(TempData["Comments.InvalidCommentEditorShape"]);
+        }
+        else {
+            @Display(Model.EditorShape)
+        }
+        <button class="primaryAction" type="submit">@T("Submit Comment")</button>
+    }
+}

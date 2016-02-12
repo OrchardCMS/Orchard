@@ -1,0 +1,26 @@
+﻿@using Orchard.Comments.Models
+@using Orchard.ContentManagement
+@using Orchard.Users.Models
+@using TTS.TalaveraBase.Gravatar
+@using TTS.TalaveraBase.Gravatar.Html
+
+@{
+    CommentPart comment = Model.ContentPart;
+    string gravatarEmail = string.Empty;
+
+    if (String.IsNullOrWhiteSpace(comment.UserName)) {
+        gravatarEmail = comment.Email;
+    }
+    else {
+        var cm = WorkContext.Resolve<IContentManager>();
+        var user = cm.Query<UserPart, UserPartRecord>().Where(x => x.NormalizedUserName == comment.UserName).List().FirstOrDefault();
+
+        if (user != null) {
+            gravatarEmail = user.Email;
+        }
+    }
+
+    var gravatarUrl = Url.Gravatar(string.IsNullOrWhiteSpace(gravatarEmail) ? "dummy@foobar.com" : gravatarEmail, 60, "mm", Rating.G);
+}
+
+<img src="@gravatarUrl" alt="@T("Gravatar Image")" class="media-object" />

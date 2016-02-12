@@ -1,0 +1,14 @@
+﻿@using Orchard.Search.ViewModels;
+
+@{
+    var searchText = new SearchViewModel();
+    if (Model.ViewModel != null) {
+        searchText = (SearchViewModel)Model.ViewModel;
+    }
+}
+
+@using (Html.BeginForm("index", "search", new { area = "Orchard.Search" }, FormMethod.Get, new { @class = "navbar-form navbar-right flip" })) {
+    <div class="form-group">
+        @Html.TextBox("q", searchText.Query, new { placeholder = "Search" })
+    </div>
+}
