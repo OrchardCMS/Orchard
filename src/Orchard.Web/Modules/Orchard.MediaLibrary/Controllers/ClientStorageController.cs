@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.IO;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
@@ -31,7 +30,14 @@ namespace Orchard.MediaLibrary.Controllers {
         public Localizer T { get; set; }
 
         public ActionResult Index(string folderPath, string type) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageMediaContent, T("Cannot manage media"))) {
+            if (!Services.Authorizer.Authorize(Permissions.ManageOwnMedia)) {
+                return new HttpUnauthorizedResult();
+            }
+            
+            // Check permission.
+            var rootMediaFolder = _mediaLibraryService.GetRootMediaFolder();
+
+            if (!Services.Authorizer.Authorize(Permissions.ManageMediaContent) && !_mediaLibraryService.CanManageMediaFolder(folderPath)) {
                 return new HttpUnauthorizedResult();
             }
 

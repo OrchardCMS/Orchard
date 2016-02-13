@@ -14,17 +14,19 @@ namespace Orchard.Localization.Services {
         };
 
         public void ParseLocalizationStream(string text, IDictionary<string, string> translations, bool merge) {
-            StringReader reader = new StringReader(text);
-            string poLine, id, scope;
-            id = scope = String.Empty;
+            var reader = new StringReader(text);
+            string poLine;
+            var scopes = new List<string>();
+            var id = string.Empty;
+
             while ((poLine = reader.ReadLine()) != null) {
                 if (poLine.StartsWith("#:")) {
-                    scope = ParseScope(poLine);
+                    scopes.Add(ParseScope(poLine));
                     continue;
                 }
 
                 if (poLine.StartsWith("msgctxt")) {
-                    scope = ParseContext(poLine);
+                    scopes.Add(ParseContext(poLine));
                     continue;
                 }
 
@@ -34,20 +36,27 @@ namespace Orchard.Localization.Services {
                 }
 
                 if (poLine.StartsWith("msgstr")) {
-                    string translation = ParseTranslation(poLine);
+                    var translation = ParseTranslation(poLine);
                     // ignore incomplete localizations (empty msgid or msgstr)
-                    if (!String.IsNullOrWhiteSpace(id) && !String.IsNullOrWhiteSpace(translation)) {
-                        string scopedKey = (scope + "|" + id).ToLowerInvariant();
-                        if (!translations.ContainsKey(scopedKey)) {
-                            translations.Add(scopedKey, translation);
+                    if (!string.IsNullOrWhiteSpace(id) && !string.IsNullOrWhiteSpace(translation)) {
+                        if(scopes.Count == 0) {
+                            scopes.Add(string.Empty);
                         }
-                        else {
-                            if (merge) {
-                                translations[scopedKey] = translation;
+                        foreach (var scope in scopes) {
+                            var scopedKey = (scope + "|" + id).ToLowerInvariant();
+                            if (!translations.ContainsKey(scopedKey)) {
+                                translations.Add(scopedKey, translation);
+                            }
+                            else {
+                                if (merge) {
+                                    translations[scopedKey] = translation;
+                                }
                             }
                         }
                     }
-                    id = scope = String.Empty;
+
+                    id = string.Empty;
+                    scopes = new List<string>();
                 }
 
             }
