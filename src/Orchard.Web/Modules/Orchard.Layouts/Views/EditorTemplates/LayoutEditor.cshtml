@@ -12,7 +12,7 @@
     Style.Include("~/Modules/Orchard.MediaLibrary/Styles/media-library-picker-admin.css");
 
     Script.Require("jQueryCookie");
-    Script.Require("jQueryUI_Widgets");
+    Script.Require("jQueryUI");
     Script.Require("Layouts.LayoutEditor");
     Script.Include("jquery.deserialize.js");
 
@@ -26,11 +26,12 @@
     Style.Include("LayoutEditor.css", "LayoutEditor.min.css");
     Script.Include("LayoutDesignerHost.js");
 
-    // The grid system
+    // The grid system.
     Style.Include("default-grid.css");
 
     using (Script.Foot()) {
         <script>
+
             angular
                 .module("LayoutEditor")
                 .constant("environment", {
@@ -38,7 +39,10 @@
                         return "@Url.Action("Get", "Template", new { area = "Orchard.Layouts" })" + "/" + templateName;
                     }
                 });
-            jQuery(function () {
+
+            angular.bootstrap($(".layout-editor-holder")[0], ["LayoutEditor"]);
+
+            $(function () {
                 var editorConfig = JSON.parse(LayoutEditor.decode("@Html.Raw(Url.Encode(Model.ConfigurationData))"));
                 var editorCanvasData = JSON.parse(LayoutEditor.decode("@Html.Raw(Url.Encode(Model.Data))"));
                 var layoutEditor = window.layoutEditor = new LayoutEditor.Editor(editorConfig, editorCanvasData);
@@ -56,6 +60,7 @@
                     });
                 });
             });
+
         </script>
     }
 
@@ -102,7 +107,7 @@
             </ol>
         </div>
         <div class="layout-editor-holder">
-            <orc-layout-editor model="window.layoutEditor" ng-app="LayoutEditor" />
+            <orc-layout-editor model="window.layoutEditor" />
         </div>
         @Display.DialogTemplate(Name: "Layout")
         <div class="layout-editor-help-dialog" title="@T("Layout editor help")">
