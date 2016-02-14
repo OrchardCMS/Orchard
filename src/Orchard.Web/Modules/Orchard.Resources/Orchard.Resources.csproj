@@ -59,10 +59,6 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Web.DynamicData" />
-    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\..\Orchard.Azure\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Abstractions" />
@@ -338,132 +334,7 @@
     <Content Include="Assets\Js\FileUpload\jquery.fileupload-validate.js" />
     <Content Include="Assets\Js\FileUpload\jquery.fileupload.js" />
     <Content Include="Assets\Js\History\history.js" />
-    <Content Include="Assets\Js\jQueryUI\data.js" />
-    <Content Include="Assets\Js\jQueryUI\effect.js" />
-    <Content Include="Assets\Js\jQueryUI\effects\effect-blind.js" />
-    <Content Include="Assets\Js\jQueryUI\effects\effect-bounce.js" />
-    <Content Include="Assets\Js\jQueryUI\effects\effect-clip.js" />
-    <Content Include="Assets\Js\jQueryUI\effects\effect-drop.js" />
-    <Content Include="Assets\Js\jQueryUI\effects\effect-explode.js" />
-    <Content Include="Assets\Js\jQueryUI\effects\effect-fade.js" />
-    <Content Include="Assets\Js\jQueryUI\effects\effect-fold.js" />
-    <Content Include="Assets\Js\jQueryUI\effects\effect-highlight.js" />
-    <Content Include="Assets\Js\jQueryUI\effects\effect-puff.js" />
-    <Content Include="Assets\Js\jQueryUI\effects\effect-pulsate.js" />
-    <Content Include="Assets\Js\jQueryUI\effects\effect-scale.js" />
-    <Content Include="Assets\Js\jQueryUI\effects\effect-shake.js" />
-    <Content Include="Assets\Js\jQueryUI\effects\effect-size.js" />
-    <Content Include="Assets\Js\jQueryUI\effects\effect-slide.js" />
-    <Content Include="Assets\Js\jQueryUI\effects\effect-transfer.js" />
-    <Content Include="Assets\Js\jQueryUI\escape-selector.js" />
-    <Content Include="Assets\Js\jQueryUI\focusable.js" />
-    <Content Include="Assets\Js\jQueryUI\form-reset-mixin.js" />
-    <Content Include="Assets\Js\jQueryUI\form.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-af.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-ar-DZ.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-ar.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-az.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-be.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-bg.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-bs.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-ca.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-cs.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-cy-GB.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-da.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-de.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-el.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-en-AU.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-en-GB.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-en-NZ.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-eo.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-es.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-et.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-eu.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-fa.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-fi.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-fo.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-fr-CA.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-fr-CH.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-fr.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-gl.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-he.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-hi.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-hr.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-hu.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-hy.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-id.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-is.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-it-CH.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-it.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-ja.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-ka.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-kk.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-km.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-ko.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-ky.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-lb.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-lt.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-lv.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-mk.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-ml.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-ms.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-nb.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-nl-BE.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-nl.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-nn.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-no.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-pl.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-pt-BR.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-pt.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-rm.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-ro.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-ru.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-sk.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-sl.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-sq.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-sr-SR.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-sr.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-sv.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-ta.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-th.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-tj.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-tr.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-uk.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-vi.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-zh-CN.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-zh-HK.js" />
-    <Content Include="Assets\Js\jQueryUI\i18n\datepicker-zh-TW.js" />
     <Content Include="Assets\Js\jQueryUI\jquery-ui.js" />
-    <Content Include="Assets\Js\jQueryUI\keycode.js" />
-    <Content Include="Assets\Js\jQueryUI\labels.js" />
-    <Content Include="Assets\Js\jQueryUI\position.js" />
-    <Content Include="Assets\Js\jQueryUI\safe-active-element.js" />
-    <Content Include="Assets\Js\jQueryUI\safe-blur.js" />
-    <Content Include="Assets\Js\jQueryUI\scroll-parent.js" />
-    <Content Include="Assets\Js\jQueryUI\tabbable.js" />
-    <Content Include="Assets\Js\jQueryUI\unique-id.js" />
-    <Content Include="Assets\Js\jQueryUI\version.js" />
-    <Content Include="Assets\Js\jQueryUI\widget.js" />
-    <Content Include="Assets\Js\jQueryUI\widgets\accordion.js" />
-    <Content Include="Assets\Js\jQueryUI\widgets\autocomplete.js" />
-    <Content Include="Assets\Js\jQueryUI\widgets\button.js" />
-    <Content Include="Assets\Js\jQueryUI\widgets\checkboxradio.js" />
-    <Content Include="Assets\Js\jQueryUI\widgets\controlgroup.js" />
-    <Content Include="Assets\Js\jQueryUI\widgets\datepicker.js" />
-    <Content Include="Assets\Js\jQueryUI\widgets\dialog.js" />
-    <Content Include="Assets\Js\jQueryUI\widgets\draggable.js" />
-    <Content Include="Assets\Js\jQueryUI\widgets\droppable.js" />
-    <Content Include="Assets\Js\jQueryUI\widgets\menu.js" />
-    <Content Include="Assets\Js\jQueryUI\widgets\mouse.js" />
-    <Content Include="Assets\Js\jQueryUI\widgets\progressbar.js" />
-    <Content Include="Assets\Js\jQueryUI\widgets\resizable.js" />
-    <Content Include="Assets\Js\jQueryUI\widgets\selectable.js" />
-    <Content Include="Assets\Js\jQueryUI\widgets\selectmenu.js" />
-    <Content Include="Assets\Js\jQueryUI\widgets\slider.js" />
-    <Content Include="Assets\Js\jQueryUI\widgets\sortable.js" />
-    <Content Include="Assets\Js\jQueryUI\widgets\spinner.js" />
-    <Content Include="Assets\Js\jQueryUI\widgets\tabs.js" />
-    <Content Include="Assets\Js\jQueryUI\widgets\tooltip.js" />
     <Content Include="Assets\Js\jQuery\jquery-2.1.4.js" />
     <Content Include="Assets\Js\jQuery\jquery.cookie.js" />
     <Content Include="Assets\Js\FileUpload\jquery.iframe-transport.js" />
@@ -510,12 +381,6 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\history.js" />
     <Content Include="Scripts\history.min.js" />
-    <Content Include="Scripts\jquery-ui-effects.js" />
-    <Content Include="Scripts\jquery-ui-effects.min.js" />
-    <Content Include="Scripts\jquery-ui-interaction.js" />
-    <Content Include="Scripts\jquery-ui-interaction.min.js" />
-    <Content Include="Scripts\jquery-ui-widgets.js" />
-    <Content Include="Scripts\jquery-ui-widgets.min.js" />
     <Content Include="Scripts\jquery-ui.js" />
     <Content Include="Scripts\jquery-ui.min.js" />
     <Content Include="Scripts\jquery.blockui.js" />
@@ -544,44 +409,6 @@
     <Content Include="Scripts\knockout.min.js" />
     <Content Include="Scripts\moment.js" />
     <Content Include="Scripts\moment.min.js" />
-    <Content Include="Scripts\ui\accordion.js" />
-    <Content Include="Scripts\ui\accordion.min.js" />
-    <Content Include="Scripts\ui\autocomplete.js" />
-    <Content Include="Scripts\ui\autocomplete.min.js" />
-    <Content Include="Scripts\ui\button.js" />
-    <Content Include="Scripts\ui\button.min.js" />
-    <Content Include="Scripts\ui\datepicker.js" />
-    <Content Include="Scripts\ui\datepicker.min.js" />
-    <Content Include="Scripts\ui\dialog.js" />
-    <Content Include="Scripts\ui\dialog.min.js" />
-    <Content Include="Scripts\ui\draggable.js" />
-    <Content Include="Scripts\ui\draggable.min.js" />
-    <Content Include="Scripts\ui\droppable.js" />
-    <Content Include="Scripts\ui\droppable.min.js" />
-    <Content Include="Scripts\ui\menu.js" />
-    <Content Include="Scripts\ui\menu.min.js" />
-    <Content Include="Scripts\ui\mouse.js" />
-    <Content Include="Scripts\ui\mouse.min.js" />
-    <Content Include="Scripts\ui\position.js" />
-    <Content Include="Scripts\ui\position.min.js" />
-    <Content Include="Scripts\ui\progressbar.js" />
-    <Content Include="Scripts\ui\progressbar.min.js" />
-    <Content Include="Scripts\ui\resizable.js" />
-    <Content Include="Scripts\ui\resizable.min.js" />
-    <Content Include="Scripts\ui\selectable.js" />
-    <Content Include="Scripts\ui\selectable.min.js" />
-    <Content Include="Scripts\ui\selectmenu.js" />
-    <Content Include="Scripts\ui\selectmenu.min.js" />
-    <Content Include="Scripts\ui\slider.js" />
-    <Content Include="Scripts\ui\slider.min.js" />
-    <Content Include="Scripts\ui\sortable.js" />
-    <Content Include="Scripts\ui\sortable.min.js" />
-    <Content Include="Scripts\ui\spinner.js" />
-    <Content Include="Scripts\ui\spinner.min.js" />
-    <Content Include="Scripts\ui\tabs.js" />
-    <Content Include="Scripts\ui\tabs.min.js" />
-    <Content Include="Scripts\ui\tooltip.js" />
-    <Content Include="Scripts\ui\tooltip.min.js" />
     <Content Include="Scripts\underscore.js" />
     <Content Include="Scripts\underscore.min.js" />
     <Content Include="Scripts\uri.js" />
@@ -590,7 +417,8 @@
     <Content Include="Styles\bootstrap.min.css" />
     <Content Include="Styles\font-awesome.css" />
     <Content Include="Styles\font-awesome.min.css" />
-    <Content Include="Styles\Fonts\fontawesome-webfont.svg" />
+    <Content Include="Fonts\fontawesome-webfont.svg" />
+    <Content Include="Fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Styles\Images\calendar-blue.gif" />
     <Content Include="Styles\Images\calendar-green.gif" />
     <Content Include="Styles\Images\calendar.gif" />
@@ -623,8 +451,6 @@
     <Content Include="Styles\jquery.calendars.picker.full.min.css" />
     <Content Include="Styles\jquery.timeentry.css" />
     <Content Include="Styles\jquery.timeentry.min.css" />
-    <Content Include="Styles\jqueryui-orchard.css" />
-    <Content Include="Styles\jqueryui-orchard.min.css" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
@@ -643,10 +469,7 @@
       <Private>false</Private>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-    <Folder Include="Models\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Compile Include="Uri.cs" />
     <Compile Include="BlockUI.cs" />
@@ -774,19 +597,19 @@
     <Content Include="Assets\Less\Bootstrap\variables.less" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\fontawesome-webfont.eot" />
+    <Content Include="Fonts\fontawesome-webfont.eot" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\fontawesome-webfont.ttf" />
+    <Content Include="Fonts\fontawesome-webfont.ttf" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\fontawesome-webfont.woff" />
+    <Content Include="Fonts\fontawesome-webfont.woff" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\fontawesome-webfont.woff2" />
+    <Content Include="Fonts\fontawesome-webfont.woff2" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\FontAwesome.otf" />
+    <Content Include="Fonts\FontAwesome.otf" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Less\Bootstrap\mixins\alerts.less" />
@@ -849,6 +672,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Fonts\glyphicons-halflings-regular.woff2" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\Web.config" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

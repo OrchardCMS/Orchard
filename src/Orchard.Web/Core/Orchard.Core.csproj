@@ -172,6 +172,7 @@
     <Compile Include="Dashboard\Services\CompilationErrorBanner.cs" />
     <Compile Include="Navigation\Commands\MenuCommands.cs" />
     <Compile Include="Navigation\Drivers\AdminMenuPartDriver.cs" />
+    <Compile Include="Navigation\Drivers\BreadcrumbMenuItemPartDriver.cs" />
     <Compile Include="Navigation\Drivers\MenuItemPartDriver.cs" />
     <Compile Include="Navigation\Drivers\MenuWidgetPartDriver.cs" />
     <Compile Include="Navigation\Drivers\ShapeMenuItemPartDriver.cs" />
@@ -182,6 +183,7 @@
     <Compile Include="Navigation\Handlers\MenuWidgetPartHandler.cs" />
     <Compile Include="Navigation\Models\AdminMenuPart.cs" />
     <Compile Include="Navigation\Models\AdminMenuPartRecord.cs" />
+    <Compile Include="Navigation\Models\BreadcrumbMenuItemPart.cs" />
     <Compile Include="Navigation\Models\MenuWidgetPart.cs" />
     <Compile Include="Navigation\Models\ShapeMenuItemPart.cs" />
     <Compile Include="Navigation\Security\AuthorizationEventHandler.cs" />
@@ -393,10 +395,7 @@
   <ItemGroup>
     <Content Include="Common\Views\Parts.Common.Body.Summary.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Data\" />
-    <Folder Include="Views\Gamma\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="Contents\Views\Content.cshtml" />
     <Content Include="Contents\Views\Content.SummaryAdmin.cshtml" />

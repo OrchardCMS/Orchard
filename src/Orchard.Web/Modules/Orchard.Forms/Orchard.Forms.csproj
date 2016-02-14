@@ -129,9 +129,7 @@
     <Compile Include="Services\IFormManager.cs" />
     <Compile Include="Shapes\PropertyItemsBehavior.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Views\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="packages.config" />
   </ItemGroup>

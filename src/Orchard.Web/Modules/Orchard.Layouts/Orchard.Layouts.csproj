@@ -105,7 +105,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\JavaScript\Models\RecycleBin.js" />
-    <Content Include="Default.html" />
     <Content Include="Assets.json" />
     <Content Include="Images\azure.png" />
     <Content Include="Images\illustration.jpg" />
@@ -168,7 +167,6 @@
     <Content Include="Styles\admin-dialog.css" />
     <Content Include="Styles\split-arrow-down.png" />
     <Content Include="Styles\split-arrow-up.png" />
-    <Content Include="Notes.txt" />
     <Content Include="Views\BlueprintAdmin\Edit.cshtml">
       <SubType>Code</SubType>
     </Content>

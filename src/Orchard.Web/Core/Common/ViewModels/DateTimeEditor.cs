@@ -9,5 +9,7 @@ namespace Orchard.Core.Common.ViewModels {
         public string Time { get; set; }
         public bool ShowDate { get; set; }
         public bool ShowTime { get; set; }
+        public string DatePlaceholder { get; set; }
+        public string TimePlaceholder { get; set; }
     }
 }
