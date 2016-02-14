@@ -108,13 +108,18 @@ namespace MSBuild.Orchard.Tasks {
             }
 
             private static bool IsValidExcludeFile(string filePath) {
+                var validFilenames = new[] { "packages.config" };
                 var validExtensions = new[] { ".sass", ".scss", ".less", ".coffee", ".ls", ".ts", ".md", ".docx" };
                 if (string.IsNullOrEmpty(filePath)) return true;
 
                 var fileExtension = Path.GetExtension(filePath);
+                var fileName = Path.GetFileName(filePath);
                 if (string.IsNullOrEmpty(fileExtension)) return false;
 
-                return validExtensions.Contains(fileExtension, StringComparer.InvariantCultureIgnoreCase);
+                return 
+                    validExtensions.Contains(fileExtension, StringComparer.InvariantCultureIgnoreCase) ||
+                    validFilenames.Contains(filePath, StringComparer.InvariantCultureIgnoreCase)
+                    ;
             }
 
             private void CheckCodeAnalysisRuleSet(XDocument document) {

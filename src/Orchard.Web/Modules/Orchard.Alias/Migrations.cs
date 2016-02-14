@@ -27,6 +27,5 @@ namespace Orchard.Alias {
                 );
             return 2;
         }
-
     }
 }

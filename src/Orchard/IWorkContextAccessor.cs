@@ -10,6 +10,10 @@ namespace Orchard {
         IWorkContextScope CreateWorkContextScope();
     }
 
+    public interface ILogicalWorkContextAccessor: IWorkContextAccessor {
+        WorkContext GetLogicalContext();
+    }
+
     public interface IWorkContextStateProvider : IDependency {
         Func<WorkContext, T> Get<T>(string name);
     }

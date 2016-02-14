@@ -38,8 +38,9 @@ namespace Orchard.Autoroute.Handlers {
 
             OnPublished<AutoroutePart>((ctx, part) => PublishAlias(part));
 
-            // Remove alias if removed or unpublished
+            // Remove alias if destroyed, removed or unpublished
             OnRemoving<AutoroutePart>((ctx, part) => RemoveAlias(part));
+            OnDestroyed<AutoroutePart>((ctx, part) => RemoveAlias(part));
             OnUnpublished<AutoroutePart>((ctx, part) => RemoveAlias(part));
 
             // Register alias as identity

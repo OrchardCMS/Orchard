@@ -37,6 +37,8 @@ namespace Orchard.Tests.Environment.Loaders {
             builder.RegisterType<StubAppDataFolder>().As<IAppDataFolder>();
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
 
+            builder.RegisterInstance(new ExtensionLocations());
+
             _mockedStubProjectFileParser = new Mock<IProjectFileParser>();
             builder.RegisterInstance(_mockedStubProjectFileParser.Object).As<IProjectFileParser>();
             builder.RegisterInstance(new StubFileSystem(new StubClock())).As<StubFileSystem>();

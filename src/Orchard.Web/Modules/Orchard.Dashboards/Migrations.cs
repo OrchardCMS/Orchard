@@ -7,7 +7,7 @@ namespace Orchard.Dashboards {
         public int Create() {
             ContentDefinitionManager.AlterTypeDefinition("Dashboard", type => type
                 .WithPart("CommonPart")
-                .WithPart("IdentityPart")
+                .WithIdentity()
                 .WithPart("TitlePart")
                 .WithPart("LayoutPart", p => p
                     .WithSetting("LayoutTypePartSettings.DefaultLayoutData", DefaultDashboardSelector.DefaultLayout)));

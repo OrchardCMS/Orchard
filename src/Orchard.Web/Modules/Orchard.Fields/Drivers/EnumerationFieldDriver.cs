@@ -1,18 +1,22 @@
 ﻿using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
-using Orchard.Fields.Settings;
 using Orchard.Fields.Fields;
+using Orchard.Fields.Settings;
 using Orchard.Localization;
+using Orchard.Tokens;
 using System;
+using System.Collections.Generic;
 
 namespace Orchard.Fields.Drivers {
     public class EnumerationFieldDriver : ContentFieldDriver<EnumerationField> {
         public IOrchardServices Services { get; set; }
         private const string TemplateName = "Fields/Enumeration.Edit";
+        private readonly ITokenizer _tokenizer;
 
-        public EnumerationFieldDriver(IOrchardServices services) {
+        public EnumerationFieldDriver(IOrchardServices services, ITokenizer tokenizer) {
             Services = services;
+            _tokenizer = tokenizer;
             T = NullLocalizer.Instance;
         }
 
@@ -33,7 +37,16 @@ namespace Orchard.Fields.Drivers {
 
         protected override DriverResult Editor(ContentPart part, EnumerationField field, dynamic shapeHelper) {
             return ContentShape("Fields_Enumeration_Edit", GetDifferentiator(field, part),
-                () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: field, Prefix: GetPrefix(field, part)));
+                () => {
+                    if (field.Value == null) {
+                        var settings = field.PartFieldDefinition.Settings.GetModel<EnumerationFieldSettings>();
+                        if (!String.IsNullOrEmpty(settings.DefaultValue)) {
+                            field.Value = _tokenizer.Replace(settings.DefaultValue, new Dictionary<string, object> { { "Content", part.ContentItem } });
+                        }
+                    }
+
+                    return shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: field, Prefix: GetPrefix(field, part));
+                });
         }
 
         protected override DriverResult Editor(ContentPart part, EnumerationField field, IUpdateModel updater, dynamic shapeHelper) {

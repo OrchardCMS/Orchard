@@ -9,6 +9,7 @@ using Orchard.Environment.Extensions;
 using Orchard.Layouts.Elements;
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
+using Orchard.Layouts.Helpers;
 using Orchard.Layouts.ViewModels;
 using Orchard.UI.Navigation;
 using Orchard.Utility.Extensions;
@@ -19,11 +20,18 @@ namespace Orchard.Layouts.Drivers {
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly IMenuService _menuService;
         private readonly INavigationManager _navigationManager;
+        private readonly IContentManager _contentManager;
 
-        public MenuElementDriver(IMenuService menuService, INavigationManager navigationManager, IWorkContextAccessor workContextAccessor, IShapeFactory shapeFactory) {
+        public MenuElementDriver(
+            IWorkContextAccessor workContextAccessor,
+            IMenuService menuService,
+            INavigationManager navigationManager,
+            IContentManager contentManager,
+            IShapeFactory shapeFactory) {
             _workContextAccessor = workContextAccessor;
             _menuService = menuService;
             _navigationManager = navigationManager;
+            _contentManager = contentManager;
             New = shapeFactory;
         }
 
@@ -123,6 +131,24 @@ namespace Orchard.Layouts.Drivers {
             NavigationHelper.PopulateMenu(shapeHelper, menuShape, menuShape, menuItems);
 
             context.ElementShape.Menu = menuShape;
+        }
+
+        protected override void OnExporting(Menu element, ExportElementContext context) {
+            var menu = _contentManager.Get(element.MenuContentItemId);
+            var menuIdentity = menu != null ? _contentManager.GetItemMetadata(menu).Identity.ToString() : default(string);
+
+            if (menuIdentity != null)
+                context.ExportableData["MenuId"] = menuIdentity;
+        }
+
+        protected override void OnImporting(Menu element, ImportElementContext context) {
+            var menuIdentity = context.ExportableData.Get("MenuId");
+            var menu = menuIdentity != null ? context.Session.GetItemFromSession(menuIdentity) : default(ContentManagement.ContentItem);
+
+            if (menu == null)
+                return;
+
+            element.MenuContentItemId = menu.Id;
         }
     }
 }

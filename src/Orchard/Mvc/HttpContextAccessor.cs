@@ -1,13 +1,31 @@
-﻿using System;
+using System;
 using System.Web;
+using Autofac;
 
 namespace Orchard.Mvc {
     public class HttpContextAccessor : IHttpContextAccessor {
+        readonly ILifetimeScope _lifetimeScope;
         private HttpContextBase _httpContext;
+        private IWorkContextAccessor _wca;
+
+        public HttpContextAccessor(ILifetimeScope lifetimeScope) {
+            _lifetimeScope = lifetimeScope;
+        }
 
         public HttpContextBase Current() {
             var httpContext = GetStaticProperty();
-            return !IsBackgroundHttpContext(httpContext) ? new HttpContextWrapper(httpContext) : _httpContext;
+
+            if (!IsBackgroundHttpContext(httpContext))
+                return new HttpContextWrapper(httpContext);
+
+            if (_httpContext != null)
+                return _httpContext;
+
+            if (_wca == null && _lifetimeScope.IsRegistered<IWorkContextAccessor>())
+                _wca = _lifetimeScope.Resolve<IWorkContextAccessor>();
+
+            var workContext = _wca != null ? _wca.GetLogicalContext() : null;
+            return workContext != null ? workContext.HttpContext : null;
         }
 
         public void Set(HttpContextBase httpContext) {
@@ -15,7 +33,7 @@ namespace Orchard.Mvc {
         }
 
         private static bool IsBackgroundHttpContext(HttpContext httpContext) {
-            return httpContext == null || httpContext.Items.Contains(BackgroundHttpContextFactory.IsBackgroundHttpContextKey);
+            return httpContext == null || httpContext.Items.Contains(MvcModule.IsBackgroundHttpContextKey);
         }
 
         private static HttpContext GetStaticProperty() {
