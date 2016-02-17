@@ -180,6 +180,7 @@
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Drivers\TitlePartDriver.cs" />
     <Compile Include="Helpers\StringExtensions.cs" />
     <Compile Include="Handlers\ShapePartHandler.cs" />
     <Compile Include="Drivers\ShapePartDriver.cs" />
