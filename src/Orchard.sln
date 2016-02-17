@@ -1201,7 +1201,7 @@ Global
 		{5D37D97E-534E-48E9-8954-C360F2AD6202} = {74492CBC-7201-417E-BC29-28B4C25A58B0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		{5D37D97E-534E-48E9-8954-C360F2AD6202} = {74492CBC-7201-417E-BC29-28B4C25A58B0}
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\TransientFaultHandling.Core.5.1.1209.1\lib\NET4
+		{5D37D97E-534E-48E9-8954-C360F2AD6202} = {74492CBC-7201-417E-BC29-28B4C25A58B0}
 	EndGlobalSection
 EndGlobal
