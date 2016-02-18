@@ -74,7 +74,8 @@
     <Content Include="Assets.json" />
     <Content Include="Assets\Styles.less" />
     <Content Include="Content\favicon.ico" />
-    <Content Include="Styles\Styles.css" />
+    <Content Include="Content\custom_logo.png" />
+    <Content Include="Styles\CustomerTheme.css" />
     <Content Include="Styles\Styles.min.css" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
@@ -101,7 +102,16 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Views\" />
+    <Content Include="Views\Layout.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\BadgeOfHonor.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Branding.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Code\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
