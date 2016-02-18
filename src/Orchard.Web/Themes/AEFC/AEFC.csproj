@@ -74,9 +74,9 @@
     <Content Include="Assets.json" />
     <Content Include="Assets\Styles.less" />
     <Content Include="Content\favicon.ico" />
-    <Content Include="Content\custom_logo.png" />
-    <Content Include="Styles\CustomerTheme.css" />
-    <Content Include="Styles\Styles.min.css" />
+    <Content Include="Content\customer_logo.png" />
+    <Content Include="Styles\customer_theme.css" />
+    <Content Include="ThemeZonePreview.png" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
@@ -111,7 +111,13 @@
     <Content Include="Views\Branding.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Code\" />
+    <Content Include="Views\Resources.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Layout-Working.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Code\ResourceManifest.cs" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
