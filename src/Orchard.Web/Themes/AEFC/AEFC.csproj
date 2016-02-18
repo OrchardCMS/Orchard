@@ -76,6 +76,7 @@
     <Content Include="Content\favicon.ico" />
     <Content Include="Content\customer_logo.png" />
     <Content Include="Styles\customer_theme.css" />
+    <Content Include="Styles\billionthemes-2608975.css" />
     <Content Include="ThemeZonePreview.png" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
