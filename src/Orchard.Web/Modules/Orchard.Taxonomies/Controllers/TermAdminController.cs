@@ -10,6 +10,7 @@ using Orchard.UI.Admin;
 using Orchard.ContentManagement;
 using Orchard.UI.Notify;
 using Orchard.Taxonomies.Helpers;
+using Orchard.Mvc.Html;
 
 namespace Orchard.Taxonomies.Controllers {
     [ValidateInput(false), Admin]
@@ -44,15 +45,24 @@ namespace Orchard.Taxonomies.Controllers {
             var checkedEntries = viewModel.Terms.Where(t => t.IsChecked).ToList();
             switch (viewModel.BulkAction) {
                 case TermsAdminIndexBulkAction.None:
+                    Services.Notifier.Information(T("No action selected."));
                     break;
                 case TermsAdminIndexBulkAction.Delete:
                     if (!Services.Authorizer.Authorize(Permissions.ManageTerms, T("Couldn't delete term")))
                         return new HttpUnauthorizedResult();
+                    
+                    if(!checkedEntries.Any()) {
+                        Services.Notifier.Information(T("No terms selected."));
+                        break;
+                    }
 
                     foreach (var entry in checkedEntries) {
                         var term = _taxonomyService.GetTerm(entry.Id);
                         _taxonomyService.DeleteTerm(term);
                     }
+
+                    Services.Notifier.Information(T.Plural("{0} term has been removed.", "{0} terms have been removed.", checkedEntries.Count));
+
                     break;
                 case TermsAdminIndexBulkAction.Merge:
                     if (!Services.Authorizer.Authorize(Permissions.ManageTerms, T("Couldn't delete term")))
@@ -73,8 +83,6 @@ namespace Orchard.Taxonomies.Controllers {
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-
-            Services.Notifier.Information(T("{0} term have been removed.", checkedEntries.Count));
 
             return RedirectToAction("Index", new { taxonomyId = viewModel.TaxonomyId });
         }
