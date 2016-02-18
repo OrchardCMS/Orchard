@@ -251,7 +251,7 @@ namespace Orchard.Projections.FilterEditors.Forms {
                 case DateTimeOperator.LessThan:
                     return T("{0} is less than {1}{2}", fieldName, value, T(valueUnit));
                 case DateTimeOperator.LessThanEquals:
-                    return T("{0} is less or equal than {1}{2}", fieldName, value, T(valueUnit));
+                    return T("{0} is less than or equal to {1}{2}", fieldName, value, T(valueUnit));
                 case DateTimeOperator.Equals:
                     return T("{0} equals {1}{2}", fieldName, value, T(valueUnit));
                 case DateTimeOperator.NotEquals:
@@ -259,7 +259,7 @@ namespace Orchard.Projections.FilterEditors.Forms {
                 case DateTimeOperator.GreaterThan:
                     return T("{0} is greater than {1}{2}", fieldName, value, T(valueUnit));
                 case DateTimeOperator.GreaterThanEquals:
-                    return T("{0} is greater or equal than {1}{2}", fieldName, value, T(valueUnit));
+                    return T("{0} is greater than or equal to {1}{2}", fieldName, value, T(valueUnit));
                 case DateTimeOperator.Between:
                     return T("{0} is between {1}{2} and {3}{4}", fieldName, min, T(minUnit), max, T(maxUnit));
                 case DateTimeOperator.NotBetween:
