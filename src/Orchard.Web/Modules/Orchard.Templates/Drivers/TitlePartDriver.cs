@@ -28,11 +28,14 @@ namespace Orchard.Templates.Drivers {
             var contentTypesWithShapePart = _contentManager
                 .GetContentTypeDefinitions()
                 .Where(typeDefinition => typeDefinition.Parts.Any(partDefinition => partDefinition.PartDefinition.Name == "ShapePart"))
-                .Select(typeDefinition => typeDefinition.Name)
-                .ToArray();
+                .Select(typeDefinition => typeDefinition.Name);
+
+            // If ShapePart is only dynamically added to this content type or even this content item then we won't find
+            // a corresponding content type definition, so using the current content type too.
+            contentTypesWithShapePart = contentTypesWithShapePart.Union(new[] { part.ContentItem.ContentType });
 
             var existingShapeCount = _contentManager
-                .Query(VersionOptions.Latest, contentTypesWithShapePart)
+                .Query(VersionOptions.Latest, contentTypesWithShapePart.ToArray())
                 .Where<TitlePartRecord>(record => record.Title == part.Title && record.ContentItemRecord.Id != part.ContentItem.Id)
                 .Count();
 
