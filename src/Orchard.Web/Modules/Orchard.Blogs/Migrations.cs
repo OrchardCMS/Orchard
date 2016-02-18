@@ -80,7 +80,7 @@ namespace Orchard.Blogs {
                     .WithPart("CommonPart")
                     .WithPart("WidgetPart")
                     .WithSetting("Stereotype", "Widget")
-                    .WithPart("IdentityPart")
+                    .WithIdentity()
                 );
 
             return 7;
@@ -134,12 +134,12 @@ namespace Orchard.Blogs {
         public int UpdateFrom6() {
             ContentDefinitionManager.AlterTypeDefinition("RecentBlogPosts",
                 cfg => cfg
-                    .WithPart("IdentityPart")
+                    .WithIdentity()
                 );
 
             ContentDefinitionManager.AlterTypeDefinition("BlogArchives",
                 cfg => cfg
-                    .WithPart("IdentityPart")
+                    .WithIdentity()
                 );
 
            return 7;

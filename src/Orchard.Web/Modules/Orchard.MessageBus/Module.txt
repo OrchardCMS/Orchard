@@ -10,17 +10,17 @@ Features:
         Name: Message Bus
         Description: Reusable API abstractions to communicate in a server farm.
         Category: Hosting
-	Orchard.MessageBus.DistributedSignals:
+    Orchard.MessageBus.DistributedSignals:
         Name: Distributed Signals
         Description: Distribute signals cache invalidation calls.
         Dependencies: Orchard.MessageBus
         Category: Hosting
-	Orchard.MessageBus.SqlServerServiceBroker:
+    Orchard.MessageBus.SqlServerServiceBroker:
         Name: SQL Server Service Broker
         Description: A message bus implementation using SQL Server Service Broker.
         Dependencies: Orchard.MessageBus
         Category: Hosting
-	Orchard.MessageBus.DistributedShellRestart
+    Orchard.MessageBus.DistributedShellRestart
         Name: Distributed Shell Restart
         Description: Distribute shell restarts.
         Dependencies: Orchard.MessageBus

@@ -21,12 +21,15 @@
         
         var refreshIds = function() {
             var id = element.find('.selected-ids');
-            id.val('');
-            element.find(".media-library-picker-item").each(function() {
-                id.val(id.val() + "," + $(this).attr("data-id"));
+            var ids = [];
+
+            element.find(".media-library-picker-item").each(function () {
+                ids.push($(this).attr("data-id"));
             });
 
-            var itemsCount = element.find(".media-library-picker-item").length;
+            id.val(ids.join());
+
+            var itemsCount = ids.length;
             
             if(!multiple && itemsCount > 0) {
                 addButton.hide();

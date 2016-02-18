@@ -1,11 +1,11 @@
 ﻿using System;
+using System.Runtime.Remoting;
 using System.Runtime.Remoting.Messaging;
-using System.Web;
 
 namespace Orchard.Environment.State {
 
     /// <summary>
-    /// Holds some state for the current HttpContext or thread
+    /// Holds some state through the logical call context
     /// </summary>
     /// <typeparam name="T">The type of data to store</typeparam>
     public class ContextState<T> where T : class {
@@ -22,35 +22,21 @@ namespace Orchard.Environment.State {
         }
 
         public T GetState() {
-            if (HttpContext.Current == null) {
-                var data = CallContext.GetData(_name);
+            var handle = CallContext.LogicalGetData(_name) as ObjectHandle;
+            var data = handle != null ? handle.Unwrap() : null;
 
-                if (data == null) {
-                    if (_defaultValue != null) {
-                        CallContext.SetData(_name, data = _defaultValue());
-                        return data as T;
-                    }
+            if (data == null) {
+                if (_defaultValue != null) {
+                    CallContext.LogicalSetData(_name, new ObjectHandle(data = _defaultValue()));
+                    return data as T;
                 }
-
-                return data as T;
             }
 
-            if (HttpContext.Current.Items[_name] == null) {
-                HttpContext.Current.Items[_name] = _defaultValue == null ? null : _defaultValue();
-            }
-
-            return HttpContext.Current.Items[_name] as T;
-
+            return data as T;
         }
 
         public void SetState(T state) {
-            if (HttpContext.Current == null) {
-                CallContext.SetData(_name, state);
-            }
-            else {
-                HttpContext.Current.Items[_name] = state;
-            }
+            CallContext.LogicalSetData(_name, new ObjectHandle(state));
         }
     }
 }
-

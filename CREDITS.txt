@@ -2,12 +2,6 @@ Orchard Project - Copyright .NET Foundation
 
 Orchard includes works distributed under the licenses listed below. The full text for most of the licenses listed below can be found in the LICENSE.txt file accompanying each work. The original copyright notices have been preserved within the respective files and or packages. Please refer to the specific files and/or packages for more detailed information about the authors, copyright notices, and licenses.
 
-Antlr
------
-Website:      http://www.antlr.org/
-Copyright:    Copyright (c) 2003-2008 Terence Parr
-License:      New BSD
-
 ASP.NET MVC
 -----
 Website:      http://aspnet.codeplex.com/wikipage?title=MVC&referringTitle=Home
@@ -28,17 +22,17 @@ Website:      http://code.google.com/p/autofac/
 Copyright:    Copyright (c) 2007-2008 Autofac Contributors
 License:      http://code.google.com/p/autofac/source/browse/trunk/contrib/AutofacContrib%20License.txt
 
+CamanJS
+-----
+Website:      http://camanjs.com/
+Copyright:    Copyright (c) 2010-2015, Ryan LeFevre
+License:      https://raw.githubusercontent.com/meltingice/CamanJS/3dd24d1bba3aed91d7072d1039e488a3af4c394b/LICENSE
+ 
 Castle
 -----
 Website:      http://www.castleproject.org/container/index.html
 Copyright:    Copyright (c) 2004-2009 Castle Project
 License:      Apache Software Foundation License 2.0
-
-Clay
-----
-Website:      http://clay.codeplex.com/
-Copyright:    Copyright (c) 2010 Louis Dejardin
-License:      MS-PL
 
 CodeMirror
 ----------
@@ -167,6 +161,12 @@ Website:      http://flesler.blogspot.com
 Copyright:    Copyright (c) 2007-2009 Ariel Flesler
 License:      MIT
 
+Json.NET
+-----
+Website:      http://www.newtonsoft.com/json
+Copyright:    Copyright (c) 2007 James Newton-King
+License:      MIT - https://github.com/JamesNK/Newtonsoft.Json/blob/master/LICENSE.md
+
 jsPlumb
 -----
 Website:      http://jsplumb.org
@@ -191,6 +191,12 @@ Website:      http://incubator.apache.org/projects/lucene.net.html
 Copyright:    Copyright (c) 2009 Apache Software Foundation
 License:      Apache Software Foundation License 2.0
 
+MarkdownSharp
+-----
+Website:     http://code.google.com/p/markdownsharp/
+Copyright:   Copyright (c) 2009-2011 Jeff Atwood
+License:     MIT
+ 
 Mono Class Library
 -----
 Website:      http://www.mono-project.com/The_Class_Library
@@ -206,9 +212,9 @@ License:      New BSD
 MySQL Connectors
 -----
 Copyright:    Copyright (c) 2004, 2011, Oracle and/or its affiliates
-License:      GNU GENERAL PUBLIC LICENSE Version 2; Oracle’s Free and Open Source Software ("FOSS") License Exception
+License:      GNU GENERAL PUBLIC LICENSE Version 2; Oracleï¿½s Free and Open Source Software ("FOSS") License Exception
 
-In order to comply with Section 2(a) of the FOSS License Exception, .NET Foundation hereby offers any recipient of this package a machine-readable copy of the corresponding source code for Oracle's MySQL Client Libraries upon written demand.  This offer is good for three years.
+In order to comply with Section 2(a) of the FOSS License Exception, .NET Foundation hereby offers any recipient of this package a machine-readable copy of the corresponding source code for Oracle's MySQL Client Libraries upon written demand.ï¿½ This offer is good for three years.
 
 NHibernate, NHibernate Linq
 -----
