@@ -1,0 +1,21 @@
+﻿@using Orchard.Mvc.Html;
+
+@{
+	var title = Convert.ToString((string)Model.Title);
+	var siteName = Convert.ToString(WorkContext.CurrentSite.SiteName);
+}
+
+<!DOCTYPE html>
+<html lang="@WorkContext.CurrentCulture" class="static @Html.ClassForPage()" xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>@Html.Title(title, siteName)</title>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		@Display(Model.Head)
+	</head>
+	<body>
+		@Display(Model.Body)
+		@Display(Model.Tail)
+	</body>
+</html>

@@ -1,0 +1,8 @@
+﻿Name: Canopy
+Author: DanielStolt
+Description: A modern responsive theme based on Bootstrap 4 that is designed to be visually appealing yet highly customizable and extensible. Designed for sites that take full advantage of Orchard.Layouts and therefore contains relatively few zones. Intended to be a default out-of-box Orchard theme with support for all non-deprecated core functionality.
+Version: 1.10
+Tags: Default, Responsive, Bootstrap, Layouts
+Website: http://orchardproject.net
+Zones: Header, Navigation, Messages, BeforeContent, Content, AfterContent, Footer, OuterLeft, OuterRight
+Dependencies: Orchard.Resources

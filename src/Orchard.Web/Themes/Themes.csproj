@@ -86,9 +86,31 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Canopy\ResourceManifest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Js\alert.js" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Js\button.js" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Js\carousel.js" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Js\collapse.js" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Js\dropdown.js" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Js\modal.js" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Js\popover.js" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Js\scrollspy.js" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Js\tab.js" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Js\tooltip.js" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Js\util.js" />
+    <Content Include="Canopy\Assets\Lib\Tether\Css\tether-theme-arrows-dark.css" />
+    <Content Include="Canopy\Assets\Lib\Tether\Css\tether-theme-arrows.css" />
+    <Content Include="Canopy\Assets\Lib\Tether\Css\tether-theme-basic.css" />
+    <Content Include="Canopy\Assets\Lib\Tether\Css\tether.css" />
+    <Content Include="Canopy\Assets\Lib\Tether\Js\tether.js" />
+    <Content Include="Canopy\Scripts\bootstrap.js" />
+    <Content Include="Canopy\Scripts\bootstrap.min.js" />
+    <Content Include="Canopy\Styles\bootstrap.css" />
+    <Content Include="Canopy\Styles\bootstrap.min.css" />
+    <Content Include="Canopy\Theme.txt" />
     <Content Include="TheAdmin\Scripts\admin.js" />
     <Content Include="TheAdmin\Styles\ie.css" />
     <Content Include="TheAdmin\Styles\ie7.css" />
@@ -204,6 +226,108 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Canopy\Scripts\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\bootstrap-flex.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\bootstrap-grid.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\bootstrap-reboot.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\bootstrap.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\_alert.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\_animation.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\_breadcrumb.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\_button-group.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\_buttons.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\_card.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\_carousel.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\_close.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\_code.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\_custom-forms.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\_dropdown.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\_forms.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\_grid.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\_images.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\_input-group.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\_jumbotron.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\_labels.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\_list-group.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\_media.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\_mixins.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\_modal.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\_nav.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\_navbar.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\_normalize.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\_pager.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\_pagination.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\_popover.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\_print.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\_progress.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\_reboot.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\_responsive-embed.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\_tables.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\_tooltip.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\_type.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\_utilities-background.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\_utilities-responsive.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\_utilities-spacing.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\_utilities.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\_variables.scss" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Canopy\Assets.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\mixins\_alert.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\mixins\_background-variant.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\mixins\_border-radius.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\mixins\_breakpoints.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\mixins\_buttons.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\mixins\_cards.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\mixins\_center-block.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\mixins\_clearfix.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\mixins\_forms.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\mixins\_gradients.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\mixins\_grid-framework.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\mixins\_grid.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\mixins\_hover.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\mixins\_image.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\mixins\_label.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\mixins\_list-group.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\mixins\_lists.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\mixins\_nav-divider.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\mixins\_navbar-align.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\mixins\_pagination.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\mixins\_progress.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\mixins\_pulls.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\mixins\_reset-filter.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\mixins\_reset-text.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\mixins\_resize.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\mixins\_screen-reader.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\mixins\_size.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\mixins\_tab-focus.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\mixins\_table-row.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\mixins\_text-emphasis.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\mixins\_text-hide.scss" />
+    <Content Include="Canopy\Assets\Lib\Bootstrap\Scss\mixins\_text-truncate.scss" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Canopy\Styles\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Canopy\Placement.info" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Canopy\Views\Document.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Canopy\Views\Layout.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

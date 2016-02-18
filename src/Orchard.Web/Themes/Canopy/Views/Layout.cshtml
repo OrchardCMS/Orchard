@@ -1,0 +1,32 @@
+﻿@{
+    //Style.Require("Canopy_Bootstrap");
+    //Script.Require("Canopy_Bootstrap");
+
+    Script.Require("jQuery");
+
+    Style.Include("bootstrap.css", "bootstrap.min.css");
+    Script.Include("bootstrap.js", "bootstrap.min.js");
+}
+
+<header>
+    @Display(Model.Header)
+</header>
+
+<nav>
+    @Display(Model.Navigation)
+</nav>
+
+@Display(Model.Messages)
+
+<main>
+    @Display(Model.BeforeContent)
+    @Display(Model.Content)
+    @Display(Model.AfterContent)
+</main>
+
+<footer>
+    @Display(Model.Footer)
+</footer>
+
+@Display(Model.OuterLeft)
+@Display(Model.OuterRight)

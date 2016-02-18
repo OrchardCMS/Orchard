@@ -1,0 +1,26 @@
+﻿[
+    {
+        "inputs": [
+            "Assets/Lib/Tether/Js/tether.js",
+            "Assets/Lib/Bootstrap/Js/util.js",
+            "Assets/Lib/Bootstrap/Js/alert.js",
+            "Assets/Lib/Bootstrap/Js/button.js",
+            "Assets/Lib/Bootstrap/Js/carousel.js",
+            "Assets/Lib/Bootstrap/Js/collapse.js",
+            "Assets/Lib/Bootstrap/Js/dropdown.js",
+            "Assets/Lib/Bootstrap/Js/modal.js",
+            "Assets/Lib/Bootstrap/Js/scrollspy.js",
+            "Assets/Lib/Bootstrap/Js/tab.js",
+            "Assets/Lib/Bootstrap/Js/tooltip.js",
+            "Assets/Lib/Bootstrap/Js/popover.js"
+        ],
+        "output": "Scripts/bootstrap.js"
+    },
+    {
+        "inputs": [
+            "Assets/Lib/Tether/Css/tether.css",
+            "Assets/Lib/Bootstrap/Scss/bootstrap-flex.scss"
+        ],
+        "output": "Styles/bootstrap.css"
+    }
+]
