@@ -503,13 +503,13 @@ namespace Orchard.OutputCache.Filters {
                     maxAge = TimeSpan.Zero;
                 }
                 response.Cache.SetCacheability(HttpCacheability.Public);
+                response.Cache.SetOmitVaryStar(true);
                 response.Cache.SetMaxAge(maxAge);
             }
 
             // Keeping this example for later usage.
             // response.DisableUserCache();
             // response.DisableKernelCache();
-            // response.Cache.SetOmitVaryStar(true);
 
             // An ETag is a string that uniquely identifies a specific version of a component.
             // We use the cache item to detect if it's a new one.
