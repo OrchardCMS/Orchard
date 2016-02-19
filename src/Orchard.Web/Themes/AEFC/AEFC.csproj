@@ -72,7 +72,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets.json" />
-    <Content Include="Assets\Styles.less" />
+    <Content Include="Content\menubig.png" />
     <Content Include="Content\favicon.ico" />
     <Content Include="Content\customer_logo.png" />
     <Content Include="Content\fitnesscenteratnight.jpg" />
@@ -263,6 +263,9 @@
     <Content Include="Styles\sources\forms.less" />
     <Content Include="Styles\sources\type.less" />
     <Content Include="Styles\sources\latest-twitter.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Assets\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
