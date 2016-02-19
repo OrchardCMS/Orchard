@@ -7,7 +7,6 @@ using Orchard.Logging;
 using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
 using Orchard.Layouts.Services;
-using Orchard.Layouts.Framework.Elements;
 using Orchard.Layouts.Helpers;
 using Orchard.ContentManagement;
 using Orchard.Layouts.Framework.Drivers;

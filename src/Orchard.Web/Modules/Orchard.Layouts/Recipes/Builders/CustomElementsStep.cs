@@ -52,22 +52,20 @@ namespace Orchard.Layouts.Recipes.Builders {
             var exportLayoutContext = new ExportLayoutContext();
             _elementManager.Exporting(baseElements, exportLayoutContext);
             _elementManager.Exported(baseElements, exportLayoutContext);
-
-
+            
             var root = new XElement("CustomElements");
             context.RecipeDocument.Element("Orchard").Add(root);
 
-            foreach (var bluprintEntry in blueprintEntries) {
+            foreach (var blueprintEntry in blueprintEntries) {
                 root.Add(new XElement("Element",
-                    new XAttribute("ElementTypeName", bluprintEntry.Blueprint.ElementTypeName),
-                    new XAttribute("BaseElementTypeName", bluprintEntry.Blueprint.BaseElementTypeName),
-                    new XAttribute("ElementDisplayName", bluprintEntry.Blueprint.ElementDisplayName),
-                    new XAttribute("ElementDescription", bluprintEntry.Blueprint.ElementDescription ?? ""),
-                    new XAttribute("ElementCategory", bluprintEntry.Blueprint.ElementCategory ?? ""),
-                    new XAttribute("BaseExportableData", bluprintEntry.BaseElement.ExportableData.Serialize()),
-                    new XElement("BaseElementState", new XCData(bluprintEntry.Blueprint.BaseElementState))));
+                    new XAttribute("ElementTypeName", blueprintEntry.Blueprint.ElementTypeName),
+                    new XAttribute("BaseElementTypeName", blueprintEntry.Blueprint.BaseElementTypeName),
+                    new XAttribute("ElementDisplayName", blueprintEntry.Blueprint.ElementDisplayName),
+                    new XAttribute("ElementDescription", blueprintEntry.Blueprint.ElementDescription ?? ""),
+                    new XAttribute("ElementCategory", blueprintEntry.Blueprint.ElementCategory ?? ""),
+                    new XAttribute("BaseExportableData", blueprintEntry.BaseElement.ExportableData.Serialize()),
+                    new XElement("BaseElementState", new XCData(blueprintEntry.Blueprint.BaseElementState))));
             }
         }
     }
 }
-
