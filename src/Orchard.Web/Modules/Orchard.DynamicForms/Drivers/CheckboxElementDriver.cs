@@ -45,9 +45,9 @@ namespace Orchard.DynamicForms.Drivers {
                     _IsRequired: shape.Checkbox(
                         Id: "IsMandatory",
                         Name: "IsMandatory",
-                        Title: "Mandatory",
+                        Title: "Required",
                         Value: "true",
-                        Description: T("Tick this checkbox to make this check box element mandatory.")),
+                        Description: T("Tick this checkbox to make this check box element required.")),
                     _CustomValidationMessage: shape.Textbox(
                         Id: "CustomValidationMessage",
                         Name: "CustomValidationMessage",
