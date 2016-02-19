@@ -326,7 +326,9 @@
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>Admin.feature.cs</LastGenOutput>
     </None>
-    <None Include="App.Config" />
+    <None Include="App.Config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Autoroute.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>Autoroute.feature.cs</LastGenOutput>
