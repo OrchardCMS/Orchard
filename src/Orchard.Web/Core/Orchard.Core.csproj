@@ -466,7 +466,9 @@
     <Content Include="Navigation\Views\DefinitionTemplates\AdminMenuPartTypeSettings.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Common\Views\Parts.Common.Date.Edit.cshtml" />
@@ -600,10 +602,10 @@
     <Content Include="Shapes\Views\AdminTabs.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="packages.config" />
+    <Content Include="Common\Views\DefinitionTemplates\TextFieldDefaultValueEditor.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Common\Views\DefinitionTemplates\TextFieldDefaultValueEditor.cshtml" />
+    <Content Include="packages.config" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
