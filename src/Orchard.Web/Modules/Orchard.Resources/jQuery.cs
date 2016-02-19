@@ -47,13 +47,13 @@ namespace Orchard.Resources {
             manifest.DefineScript("jQueryPlugin").SetUrl("jquery.plugin.min.js", "jquery.plugin.js").SetDependencies("jQuery");
 
             // jQuery Calendars.
-            manifest.DefineScript("jQueryCalendars").SetUrl("jquery.calendars.all.min.js", "jquery.calendars.all.js").SetDependencies("jQueryPlugin").SetVersion("2.0.1");
-            manifest.DefineScript("jQueryCalendars_Picker").SetUrl("jquery.calendars.picker.full.min.js", "jquery.calendars.picker.full.js").SetDependencies("jQueryCalendars").SetVersion("2.0.1");
-            manifest.DefineStyle("jQueryCalendars_Picker").SetUrl("jquery.calendars.picker.full.min.css", "jquery.calendars.picker.full.css").SetDependencies("jQueryUI_Orchard").SetVersion("2.0.1");
+            manifest.DefineScript("jQueryCalendars").SetUrl("Calendars/jquery.calendars.all.min.js", "Calendars/jquery.calendars.all.js").SetDependencies("jQueryPlugin").SetVersion("2.0.1");
+            manifest.DefineScript("jQueryCalendars_Picker").SetUrl("Calendars/jquery.calendars.picker.full.min.js", "Calendars/jquery.calendars.picker.full.js").SetDependencies("jQueryCalendars").SetVersion("2.0.1");
+            manifest.DefineStyle("jQueryCalendars_Picker").SetUrl("Calendars/jquery.calendars.picker.full.min.css", "Calendars/jquery.calendars.picker.full.css").SetDependencies("jQueryUI_Orchard").SetVersion("2.0.1");
 
             // jQuery Time Entry.
-            manifest.DefineScript("jQueryTimeEntry").SetUrl("jquery.timeentry.min.js", "jquery.timeentry.js").SetDependencies("jQueryPlugin").SetVersion("2.0.1");
-            manifest.DefineStyle("jQueryTimeEntry").SetUrl("jquery.timeentry.css").SetVersion("2.0.1");
+            manifest.DefineScript("jQueryTimeEntry").SetUrl("TimeEntry/timejquery.timeentry.min.js", "TimeEntry/jquery.timeentry.js").SetDependencies("jQueryPlugin").SetVersion("2.0.1");
+            manifest.DefineStyle("jQueryTimeEntry").SetUrl("TimeEntry/jquery.timeentry.css").SetVersion("2.0.1");
 
             // jQuery Date/Time Editor Enhancements.
             manifest.DefineStyle("jQueryDateTimeEditor").SetUrl("jquery-datetime-editor.css").SetDependencies("DateTimeEditor");
