@@ -1,11 +1,12 @@
 ﻿using System;
-using System.Runtime.Remoting;
 using System.Runtime.Remoting.Messaging;
+using System.Web;
+using Orchard.Mvc;
 
 namespace Orchard.Environment.State {
 
     /// <summary>
-    /// Holds some state through the logical call context
+    /// Holds some state for the current HttpContext or thread
     /// </summary>
     /// <typeparam name="T">The type of data to store</typeparam>
     public class ContextState<T> where T : class {
@@ -22,21 +23,38 @@ namespace Orchard.Environment.State {
         }
 
         public T GetState() {
-            var handle = CallContext.LogicalGetData(_name) as ObjectHandle;
-            var data = handle != null ? handle.Unwrap() : null;
+            if (!HttpContextIsValid()) {
+                var data = CallContext.GetData(_name);
 
-            if (data == null) {
-                if (_defaultValue != null) {
-                    CallContext.LogicalSetData(_name, new ObjectHandle(data = _defaultValue()));
-                    return data as T;
+                if (data == null) {
+                    if (_defaultValue != null) {
+                        CallContext.SetData(_name, data = _defaultValue());
+                        return data as T;
+                    }
                 }
+
+                return data as T;
             }
 
-            return data as T;
+            if (HttpContext.Current.Items[_name] == null) {
+                HttpContext.Current.Items[_name] = _defaultValue == null ? null : _defaultValue();
+            }
+
+            return HttpContext.Current.Items[_name] as T;
+
         }
 
         public void SetState(T state) {
-            CallContext.LogicalSetData(_name, new ObjectHandle(state));
+            if (!HttpContextIsValid()) {
+                CallContext.SetData(_name, state);
+            }
+            else {
+                HttpContext.Current.Items[_name] = state;
+            }
+        }
+
+        private bool HttpContextIsValid() {
+            return HttpContext.Current != null && !HttpContext.Current.Items.Contains(MvcModule.IsBackgroundHttpContextKey);
         }
     }
 }
