@@ -75,6 +75,7 @@
     <Content Include="Assets\Styles.less" />
     <Content Include="Content\favicon.ico" />
     <Content Include="Content\customer_logo.png" />
+    <Content Include="Content\fitnesscenteratnight.jpg" />
     <Content Include="Styles\customer_theme.css" />
     <Content Include="Styles\billionthemes-2608975.css" />
     <Content Include="ThemeZonePreview.png" />
@@ -115,10 +116,26 @@
     <Content Include="Views\Resources.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Layout-Working.cshtml" />
+    <Content Include="Views\Layout-Original.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Code\ResourceManifest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Document.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\MenuItem.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Menu.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\MenuItemLink.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\BillionWebFonts.ttf" />
+    <Content Include="Styles\BillionWebFonts.woff" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
