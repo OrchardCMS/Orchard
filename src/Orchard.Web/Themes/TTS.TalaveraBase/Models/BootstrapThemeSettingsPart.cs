@@ -30,5 +30,10 @@ namespace TTS.TalaveraBase.Models {
             get { return this.Retrieve(r => r.UseStickyFooter, false); }
             set { this.Store(r => r.UseStickyFooter, value); }
         }
+        public bool DisableTheme
+        {
+            get { return this.Retrieve(r => r.DisableTheme, false); }
+            set { this.Store(r => r.DisableTheme, value); }
+        }
     }
 }

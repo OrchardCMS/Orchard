@@ -76,8 +76,15 @@
     <Content Include="Content\favicon.ico" />
     <Content Include="Content\customer_logo.png" />
     <Content Include="Content\fitnesscenteratnight.jpg" />
-    <Content Include="Styles\customer_theme.css" />
     <Content Include="Styles\billionthemes-2608975.css" />
+    <Content Include="Styles\site-aefc.css">
+      <DependentUpon>site-aefc.less</DependentUpon>
+    </Content>
+    <Content Include="Styles\site-aefc.min.css">
+      <DependentUpon>site-aefc.css</DependentUpon>
+    </Content>
+    <Content Include="Styles\sources\bootstrap-3.3.5\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Styles\sources\font-awesome-4.3.0\fonts\fontawesome-webfont.svg" />
     <Content Include="ThemeZonePreview.png" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
@@ -136,6 +143,126 @@
   <ItemGroup>
     <Content Include="Styles\BillionWebFonts.ttf" />
     <Content Include="Styles\BillionWebFonts.woff" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\MenuItemLinkdd.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\site-aefc.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\sources\aefc-darkly-variables.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\sources\aefc-darkly-bootswatch.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\sources\site-default.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="compilerconfig.json" />
+    <None Include="compilerconfig.json.defaults">
+      <DependentUpon>compilerconfig.json</DependentUpon>
+    </None>
+    <Content Include="Styles\sources\yamm\yamm.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\alerts.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\badges.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\bootstrap.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\breadcrumbs.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\button-groups.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\buttons.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\carousel.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\close.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\code.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\component-animations.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\dropdowns.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\forms.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\glyphicons.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\grid.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\input-groups.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\jumbotron.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\labels.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\list-group.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\media.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\mixins\alerts.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\mixins\background-variant.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\mixins\border-radius.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\mixins\buttons.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\mixins\center-block.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\mixins\clearfix.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\mixins\forms.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\mixins\gradients.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\mixins\grid-framework.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\mixins\grid.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\mixins\hide-text.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\mixins\image.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\mixins\labels.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\mixins\list-group.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\mixins\nav-divider.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\mixins\nav-vertical-align.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\mixins\opacity.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\mixins\pagination.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\mixins\panels.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\mixins\progress-bar.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\mixins\reset-filter.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\mixins\reset-text.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\mixins\resize.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\mixins\responsive-visibility.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\mixins\size.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\mixins\tab-focus.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\mixins\table-row.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\mixins\text-emphasis.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\mixins\text-overflow.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\mixins\vendor-prefixes.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\mixins.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\modals.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\navbar.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\navs.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\normalize.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\pager.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\pagination.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\panels.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\popovers.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\print.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\progress-bars.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\responsive-embed.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\responsive-utilities.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\scaffolding.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\tables.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\theme.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\thumbnails.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\tooltip.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\type.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\utilities.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\variables.less" />
+    <Content Include="Styles\sources\bootstrap-3.3.5\less\wells.less" />
+    <Content Include="Styles\sources\font-awesome-4.3.0\fonts\fontawesome-webfont.eot" />
+    <Content Include="Styles\sources\font-awesome-4.3.0\fonts\fontawesome-webfont.ttf" />
+    <Content Include="Styles\sources\font-awesome-4.3.0\fonts\fontawesome-webfont.woff" />
+    <Content Include="Styles\sources\font-awesome-4.3.0\fonts\fontawesome-webfont.woff2" />
+    <Content Include="Styles\sources\font-awesome-4.3.0\fonts\FontAwesome.otf" />
+    <Content Include="Styles\sources\font-awesome-4.3.0\less\animated.less" />
+    <Content Include="Styles\sources\font-awesome-4.3.0\less\bordered-pulled.less" />
+    <Content Include="Styles\sources\font-awesome-4.3.0\less\core.less" />
+    <Content Include="Styles\sources\font-awesome-4.3.0\less\fixed-width.less" />
+    <Content Include="Styles\sources\font-awesome-4.3.0\less\font-awesome.less" />
+    <Content Include="Styles\sources\font-awesome-4.3.0\less\icons.less" />
+    <Content Include="Styles\sources\font-awesome-4.3.0\less\larger.less" />
+    <Content Include="Styles\sources\font-awesome-4.3.0\less\list.less" />
+    <Content Include="Styles\sources\font-awesome-4.3.0\less\mixins.less" />
+    <Content Include="Styles\sources\font-awesome-4.3.0\less\path.less" />
+    <Content Include="Styles\sources\font-awesome-4.3.0\less\rotated-flipped.less" />
+    <Content Include="Styles\sources\font-awesome-4.3.0\less\stacked.less" />
+    <Content Include="Styles\sources\font-awesome-4.3.0\less\variables.less" />
+    <Content Include="Styles\sources\layout.less" />
+    <Content Include="Styles\sources\navigation.less" />
+    <Content Include="Styles\sources\forms.less" />
+    <Content Include="Styles\sources\type.less" />
+    <Content Include="Styles\sources\latest-twitter.less" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
