@@ -153,6 +153,8 @@ function buildCssPipeline(assetGroup, doConcat, doRebuild) {
             autoprefixer: { browsers: ["last 2 versions"] },
             discardComments: { removeAll: true },
             discardUnused: false,
+            mergeIdents: false,
+            reduceIdents: false,
             zindex: false
         }))
         .pipe(rename({
