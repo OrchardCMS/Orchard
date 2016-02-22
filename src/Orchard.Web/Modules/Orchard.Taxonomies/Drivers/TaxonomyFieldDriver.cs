@@ -165,7 +165,7 @@ namespace Orchard.Taxonomies.Drivers {
                 term.Selectable = true;
 
                 Services.ContentManager.Create(term, VersionOptions.Published);
-                Services.Notifier.Information(T("The {0} term has been created.", term.Name));
+                Services.Notifier.Success(T("The {0} term has been created.", term.Name));
             }
 
             return term;

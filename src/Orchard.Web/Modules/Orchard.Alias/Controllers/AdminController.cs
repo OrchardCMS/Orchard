@@ -153,7 +153,7 @@ namespace Orchard.Alias.Controllers {
                 return View();
             }
 
-            Services.Notifier.Information(T("Alias {0} created", aliasPath));
+            Services.Notifier.Success(T("Alias {0} created", aliasPath));
 
             return RedirectToAction("Index");
         }
@@ -224,7 +224,7 @@ namespace Orchard.Alias.Controllers {
                 _aliasService.Delete(path == "/" ? String.Empty : path);
             }
 
-            Services.Notifier.Information(T("Alias {0} updated", path));
+            Services.Notifier.Success(T("Alias {0} updated", path));
 
             return RedirectToAction("Index");
         }
@@ -240,7 +240,7 @@ namespace Orchard.Alias.Controllers {
 
             _aliasService.Delete(path);
 
-            Services.Notifier.Information(T("Alias {0} deleted", path));
+            Services.Notifier.Success(T("Alias {0} deleted", path));
 
             return this.RedirectLocal(returnUrl, Url.Action("Index"));
         }

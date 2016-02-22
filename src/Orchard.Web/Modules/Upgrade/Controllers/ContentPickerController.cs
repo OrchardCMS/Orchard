@@ -45,8 +45,8 @@ namespace Upgrade.Controllers {
             try {
                 _upgradeService.ExecuteReader("DELETE FROM " + _upgradeService.GetPrefixedTableName("Orchard_ContentPicker_ContentMenuItemPartRecord"), null);
                 _upgradeService.CopyTable("Navigation_ContentMenuItemPartRecord", "Orchard_ContentPicker_ContentMenuItemPartRecord", new string[0]);
-                
-                _orchardServices.Notifier.Information(T("Content Picker menu items were migrated successfully."));
+
+                _orchardServices.Notifier.Success(T("Content Picker menu items were migrated successfully."));
             }
             catch(Exception e) {
                 Logger.Error(e, "Unexpected error while migrating to Orchard.ContentPicker. Please check the log.");
