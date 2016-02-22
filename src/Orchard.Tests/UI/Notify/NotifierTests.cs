@@ -11,16 +11,16 @@ namespace Orchard.Tests.UI.Notify {
             INotifier notifier = new Notifier();
             Localizer T = NullLocalizer.Instance;
 
+            notifier.Success(T("Success"));
             notifier.Warning(T("Hello world"));
             notifier.Information(T("More Info"));
             notifier.Error(T("Boom"));
-            notifier.Success(T("Success"));
 
             Assert.That(notifier.List(), Has.Count.EqualTo(4));
+            Assert.That(notifier.List(), Has.Some.Property("Message").EqualTo(T("Success")));
             Assert.That(notifier.List(), Has.Some.Property("Message").EqualTo(T("Hello world")));
             Assert.That(notifier.List(), Has.Some.Property("Message").EqualTo(T("More Info")));
             Assert.That(notifier.List(), Has.Some.Property("Message").EqualTo(T("Boom")));
-            Assert.That(notifier.List(), Has.Some.Property("Message").EqualTo(T("Success")));
         }
     }
 }
