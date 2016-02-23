@@ -264,6 +264,7 @@
     <Content Include="Styles\sources\type.less" />
     <Content Include="Styles\sources\latest-twitter.less" />
     <Content Include="Views\Layout-Original.cshtml" />
+    <Content Include="Views\Menu-button-menu.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assets\" />

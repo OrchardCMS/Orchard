@@ -1,6 +1,11 @@
 <Placement>
   <Match ContentType="Page">
     <Place Parts_Common_Metadata="-"/>
+    <!-- Begin Hide Title on Home Page-->
+    <Match Path="~/">
+      <Place Parts_Title="-"/>
+    </Match>
+    <!-- End Hide Title on Home Page-->
   </Match>
 
   <Match ContentType="Blog">
