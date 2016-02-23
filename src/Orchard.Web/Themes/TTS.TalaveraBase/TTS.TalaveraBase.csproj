@@ -78,10 +78,6 @@
   <ItemGroup>
     <Content Include="Assets.json" />
     <Content Include="Content\apple-touch-icon.png" />
-    <Content Include="Content\bootstrap-theme.css" />
-    <Content Include="Content\bootstrap-theme.min.css" />
-    <Content Include="Content\bootstrap.css" />
-    <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\favicon.ico" />
     <Content Include="Content\prettyPhoto\dark_rounded\btnNext.png" />
     <Content Include="Content\prettyPhoto\dark_rounded\btnPrevious.png" />
@@ -143,10 +139,6 @@
     <Content Include="Scripts\bootstrap\js\bootstrap.min.js" />
     <Content Include="Scripts\custom.js" />
     <Content Include="Scripts\hover-dropdown.js" />
-    <Content Include="Content\bootstrap.min.css.map" />
-    <Content Include="Content\bootstrap.css.map" />
-    <Content Include="Content\bootstrap-theme.min.css.map" />
-    <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Scripts\prettyPhoto\jquery.prettyPhoto.js" />
     <Content Include="Scripts\stapel\jquery.stapel.js" />
     <Content Include="Scripts\stapel\modernizr.custom.63321.js" />

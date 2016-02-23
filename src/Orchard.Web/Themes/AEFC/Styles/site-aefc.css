@@ -10679,3 +10679,13 @@ body {
   min-height: 100%;
   background-color: inherit;
 }
+html.fixed-nav.boxed-layout #layout-navigation {
+  width: inherit;
+}
+.panel-shade {
+  background-color: rgba(0, 0, 0, 0.61);
+  color: inherit;
+}
+.height-full {
+  height: 100vh;
+}

@@ -111,7 +111,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Layout.cshtml" />
+    <Content Include="Views\wipLayout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\BadgeOfHonor.cshtml" />
@@ -123,7 +123,7 @@
     <Content Include="Views\Resources.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Layout-Original.cshtml" />
+    <Content Include="Views\Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Code\ResourceManifest.cs" />
@@ -263,6 +263,7 @@
     <Content Include="Styles\sources\forms.less" />
     <Content Include="Styles\sources\type.less" />
     <Content Include="Styles\sources\latest-twitter.less" />
+    <Content Include="Views\Layout-Original.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assets\" />
