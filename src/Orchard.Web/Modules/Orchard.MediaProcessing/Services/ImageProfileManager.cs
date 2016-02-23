@@ -44,8 +44,8 @@ namespace Orchard.MediaProcessing.Services {
 
         public ILogger Logger { get; set; }
 
-        public string GetImageProfileUrl(string path, string profileName) {
-            return GetImageProfileUrl(path, profileName, null, null);
+          public string GetImageProfileUrl(string path, string profileName) {
+            return GetImageProfileUrl(path, profileName, null, new FilterRecord[] { });
         }
 
         public string GetImageProfileUrl(string path, string profileName, ContentItem contentItem) {
@@ -57,6 +57,11 @@ namespace Orchard.MediaProcessing.Services {
         }
 
         public string GetImageProfileUrl(string path, string profileName, FilterRecord customFilter, ContentItem contentItem) {
+            var customFilters = customFilter != null ? new FilterRecord[] { customFilter } : null;
+            return GetImageProfileUrl(path, profileName, contentItem, customFilters);
+        }
+
+        public string GetImageProfileUrl(string path, string profileName, ContentItem contentItem, params FilterRecord[] customFilters) {
 
             // path is the publicUrl of the media, so it might contain url-encoded chars
 
@@ -108,7 +113,7 @@ namespace Orchard.MediaProcessing.Services {
 
                 ImageProfilePart profilePart;
 
-                if (customFilter == null) {
+                if (customFilters == null || !customFilters.Any(c => c != null)) {
                     profilePart = _profileService.GetImageProfileByName(profileName);
                     if (profilePart == null)
                         return String.Empty;
@@ -116,7 +121,9 @@ namespace Orchard.MediaProcessing.Services {
                 else {
                     profilePart = _services.ContentManager.New<ImageProfilePart>("ImageProfile");
                     profilePart.Name = profileName;
-                    profilePart.Filters.Add(customFilter);
+                    foreach (var customFilter in customFilters) { 
+                        profilePart.Filters.Add(customFilter);
+                    }
                 }
 
                 // prevent two requests from processing the same file at the same time

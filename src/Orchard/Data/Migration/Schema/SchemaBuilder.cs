@@ -31,12 +31,19 @@ namespace Orchard.Data.Migration.Schema {
         }
 
         /// <summary>
-        /// Translate Table name into database table name - including prefixes
+        /// Translate Table name into database table name - including prefixes.
         /// </summary>
         public virtual string TableDbName(string srcTable) {
             return _interpreter.PrefixTableName(String.Concat(FormatPrefix(FeaturePrefix), srcTable));
         }
-      
+
+        /// <summary>
+        /// Removes the data table prefix from the specified table name.
+        /// </summary>
+        public virtual string RemoveDataTablePrefix(string prefixedTableName) {
+            return _interpreter.RemovePrefixFromTableName(prefixedTableName);
+        }
+
         public SchemaBuilder CreateTable(string name, Action<CreateTableCommand> table) {
             var createTable = new CreateTableCommand(String.Concat(_formatPrefix(_featurePrefix), name));
             table(createTable);

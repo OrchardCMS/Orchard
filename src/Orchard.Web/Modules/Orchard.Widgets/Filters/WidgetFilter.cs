@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
@@ -9,25 +8,24 @@ using Orchard.Logging;
 using Orchard.Mvc.Filters;
 using Orchard.Themes;
 using Orchard.UI.Admin;
-using Orchard.Widgets.Models;
 using Orchard.Widgets.Services;
 
 namespace Orchard.Widgets.Filters {
     public class WidgetFilter : FilterProvider, IResultFilter {
         private readonly IWorkContextAccessor _workContextAccessor;
-        private readonly IRuleManager _ruleManager;
         private readonly IWidgetsService _widgetsService;
         private readonly IOrchardServices _orchardServices;
+        private readonly ILayerEvaluationService _layerEvaluationService;
 
         public WidgetFilter(
-            IWorkContextAccessor workContextAccessor, 
-            IRuleManager ruleManager, 
+            IWorkContextAccessor workContextAccessor,
             IWidgetsService widgetsService,
-            IOrchardServices orchardServices) {
+            IOrchardServices orchardServices,
+            ILayerEvaluationService layerEvaluationService) {
             _workContextAccessor = workContextAccessor;
-            _ruleManager = ruleManager;
             _widgetsService = widgetsService;
             _orchardServices = orchardServices;
+            _layerEvaluationService = layerEvaluationService;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
@@ -51,25 +49,7 @@ namespace Orchard.Widgets.Filters {
                 return;
             }
 
-            // Once the Rule Engine is done:
-            // Get Layers and filter by zone and rule
-            // NOTE: .ForType("Layer") is faster than .Query<LayerPart, LayerPartRecord>()
-            IEnumerable<LayerPart> activeLayers = _orchardServices.ContentManager.Query<LayerPart>().ForType("Layer").List();
-
-            var activeLayerIds = new List<int>();
-            foreach (var activeLayer in activeLayers) {
-                // ignore the rule if it fails to execute
-                try {
-                    if (_ruleManager.Matches(activeLayer.LayerRule)) {
-                        activeLayerIds.Add(activeLayer.ContentItem.Id);
-                    }
-                }
-                catch(Exception e) {
-                    Logger.Warning(e, T("An error occured during layer evaluation on: {0}", activeLayer.Name).Text);
-                }
-            }
-
-            IEnumerable<WidgetPart> widgetParts = _widgetsService.GetWidgets(layerIds: activeLayerIds.ToArray());
+            var widgetParts = _widgetsService.GetWidgets(_layerEvaluationService.GetActiveLayerIds());
 
             // Build and add shape to zone.
             var zones = workContext.Layout.Zones;

@@ -52,6 +52,10 @@ namespace Orchard.Mvc.Html {
         }
 
         public static MvcHtmlString SelectOption<T>(this HtmlHelper html, T currentValue, T optionValue, string text, object htmlAttributes) {
+            return SelectOption(html, optionValue, object.Equals(optionValue, currentValue), text, new RouteValueDictionary(htmlAttributes));
+        }
+
+        public static MvcHtmlString SelectOption<T>(this HtmlHelper html, T currentValue, T optionValue, string text, RouteValueDictionary htmlAttributes) {
             return SelectOption(html, optionValue, object.Equals(optionValue, currentValue), text, htmlAttributes);
         }
 
@@ -60,6 +64,10 @@ namespace Orchard.Mvc.Html {
         }
 
         public static MvcHtmlString SelectOption(this HtmlHelper html, object optionValue, bool selected, string text, object htmlAttributes) {
+            return SelectOption(html, optionValue, selected, text, new RouteValueDictionary(htmlAttributes));
+        }
+
+        public static MvcHtmlString SelectOption(this HtmlHelper html, object optionValue, bool selected, string text, RouteValueDictionary htmlAttributes) {
             var builder = new TagBuilder("option");
 
             if (optionValue != null)
@@ -71,7 +79,7 @@ namespace Orchard.Mvc.Html {
             builder.SetInnerText(text);
 
             if (htmlAttributes != null) {
-                builder.MergeAttributes(new RouteValueDictionary(htmlAttributes));
+                builder.MergeAttributes(htmlAttributes);
             }
 
             return MvcHtmlString.Create(builder.ToString(TagRenderMode.Normal));

@@ -43,11 +43,11 @@ namespace Orchard.DynamicForms {
                     .WithSetting("OwnerEditorSettings.ShowOwnerEditor", "false")
                     .WithSetting("DateEditorSettings.ShowDateEditor", "false"))
                 .WithPart("TitlePart")
+                .WithPart("MenuPart")
                  .WithPart("AutoroutePart", builder => builder
                     .WithSetting("AutorouteSettings.AllowCustomPattern", "True")
                     .WithSetting("AutorouteSettings.AutomaticAdjustmentOnEdit", "False")
-                    .WithSetting("AutorouteSettings.PatternDefinitions", "[{\"Name\":\"Title\",\"Pattern\":\"{Content.Slug}\",\"Description\":\"my-form\"}]")
-                    .WithSetting("AutorouteSettings.DefaultPatternIndex", "0"))
+                    .WithSetting("AutorouteSettings.PatternDefinitions", "[{\"Name\":\"Title\",\"Pattern\":\"{Content.Slug}\",\"Description\":\"my-form\"}]"))
                 .WithPart("LayoutPart", p => p
                     .WithSetting("LayoutTypePartSettings.DefaultLayoutData", DefaultFormLayoutData))
                 .DisplayedAs("Form")
@@ -56,15 +56,14 @@ namespace Orchard.DynamicForms {
                 .Draftable());
 
             ContentDefinitionManager.AlterTypeDefinition("FormWidget", type => type
+                .AsWidgetWithIdentity()
+                .WithPart("LayoutPart", p => p
+                    .WithSetting("LayoutTypePartSettings.DefaultLayoutData", DefaultFormLayoutData))
                 .WithPart("CommonPart", p => p
                     .WithSetting("OwnerEditorSettings.ShowOwnerEditor", "false")
                     .WithSetting("DateEditorSettings.ShowDateEditor", "false"))
-                .WithPart("WidgetPart")
-                .WithPart("LayoutPart", p => p
-                    .WithSetting("LayoutTypePartSettings.DefaultLayoutData", DefaultFormLayoutData))
-                .WithSetting("Stereotype", "Widget")
                 .DisplayedAs("Form Widget"));
-            return 2;
+            return 3;
         }
 
         public int UpdateFrom1() {
@@ -105,6 +104,13 @@ namespace Orchard.DynamicForms {
             }
 
             return 2;
+        }
+
+        public int UpdateFrom2() {
+            ContentDefinitionManager.AlterTypeDefinition("FormWidget", type => type
+                .WithIdentity());
+
+            return 3;
         }
 
         private byte[] GetMD5(string text) {

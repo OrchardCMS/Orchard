@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Orchard.Caching;
+using Orchard.ContentManagement;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.WebSite;
 using Orchard.Localization;
@@ -30,6 +31,7 @@ namespace Orchard.Environment.Extensions.Folders {
         private const string PrioritySection = "priority";
         private const string FeaturesSection = "features";
         private const string SessionStateSection = "sessionstate";
+        private const string LifecycleStatusSection = "lifecyclestatus";
 
         private readonly ICacheManager _cacheManager;
         private readonly IWebSiteFolder _webSiteFolder;
@@ -127,7 +129,8 @@ namespace Orchard.Environment.Extensions.Folders {
                 AntiForgery = GetValue(manifest, AntiForgerySection),
                 Zones = GetValue(manifest, ZonesSection),
                 BaseTheme = GetValue(manifest, BaseThemeSection),
-                SessionState = GetValue(manifest, SessionStateSection)
+                SessionState = GetValue(manifest, SessionStateSection),
+                LifecycleStatus = GetValue(manifest, LifecycleStatusSection, LifecycleStatus.Production)
             };
             extensionDescriptor.Features = GetFeaturesForExtension(manifest, extensionDescriptor);
 
@@ -219,6 +222,9 @@ namespace Orchard.Environment.Extensions.Folders {
                             break;
                         case SessionStateSection:
                             manifest.Add(SessionStateSection, field[1]);
+                            break;
+                        case LifecycleStatusSection:
+                            manifest.Add(LifecycleStatusSection, field[1]);
                             break;
                         case FeaturesSection:
                             manifest.Add(FeaturesSection, reader.ReadToEnd());
@@ -357,6 +363,11 @@ namespace Orchard.Environment.Extensions.Folders {
         private static string GetValue(IDictionary<string, string> fields, string key) {
             string value;
             return fields.TryGetValue(key, out value) ? value : null;
+        }
+
+        private static T GetValue<T>(IDictionary<string, string> fields, string key, T defaultValue = default(T)) {
+            var value = GetValue(fields, key);
+            return String.IsNullOrWhiteSpace(value) ? defaultValue : XmlHelper.Parse<T>(value);
         }
     }
 }

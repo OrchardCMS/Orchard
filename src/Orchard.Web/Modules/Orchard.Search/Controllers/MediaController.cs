@@ -34,7 +34,7 @@ namespace Orchard.Search.Controllers {
             } 
             
             if (!String.IsNullOrEmpty(mediaType)) {
-                builder.WithField("type", mediaType).Mandatory().AsFilter();
+                builder.WithField("type", mediaType).NotAnalyzed().AsFilter();
             }
 
             if (!String.IsNullOrEmpty(folderPath)) {

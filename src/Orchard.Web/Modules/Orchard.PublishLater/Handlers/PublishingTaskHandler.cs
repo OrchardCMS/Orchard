@@ -1,10 +1,8 @@
-﻿using JetBrains.Annotations;
-using Orchard.ContentManagement;
+﻿using Orchard.ContentManagement;
 using Orchard.Logging;
 using Orchard.Tasks.Scheduling;
 
 namespace Orchard.PublishLater.Handlers {
-    [UsedImplicitly]
     public class PublishingTaskHandler : IScheduledTaskHandler {
         private readonly IContentManager _contentManager;
         private readonly IOrchardServices _orchardServices;

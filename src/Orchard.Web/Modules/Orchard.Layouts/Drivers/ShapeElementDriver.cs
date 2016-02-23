@@ -5,13 +5,14 @@ using Orchard.Forms.Services;
 using Orchard.Layouts.Elements;
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
+using Orchard.Layouts.Services;
 
 namespace Orchard.Layouts.Drivers {
     public class ShapeElementDriver : FormsElementDriver<Shape> {
         private readonly IShapeFactory _shapeFactory;
 
-        public ShapeElementDriver(IFormManager formManager, IShapeFactory shapeFactory)
-            : base(formManager) {
+        public ShapeElementDriver(IFormsBasedElementServices formsServices, IShapeFactory shapeFactory)
+            : base(formsServices) {
             _shapeFactory = shapeFactory;
         }
 
@@ -19,7 +20,7 @@ namespace Orchard.Layouts.Drivers {
             get { yield return "ShapeElement"; }
         }
 
-        protected override void OnDisplaying(Shape element, ElementDisplayContext context) {
+        protected override void OnDisplaying(Shape element, ElementDisplayingContext context) {
             if (String.IsNullOrWhiteSpace(element.ShapeType))
                 return;
 

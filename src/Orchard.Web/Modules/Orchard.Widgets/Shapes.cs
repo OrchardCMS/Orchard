@@ -43,6 +43,11 @@ namespace Orchard.Widgets {
                             displaying.ShapeMetadata.Alternates.Add("Widget__Name__" + widgetPart.Name.Replace("-", "__"));
                         }
 
+                        // Adding other css classes to the widget.
+                        if (!String.IsNullOrWhiteSpace(widgetPart.CssClasses)) {
+                            widget.Classes.Add(widgetPart.CssClasses);
+                        }
+
                     }
                 });
         }

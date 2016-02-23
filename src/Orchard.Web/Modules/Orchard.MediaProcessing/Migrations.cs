@@ -14,7 +14,7 @@ namespace Orchard.MediaProcessing {
                                                          cfg => cfg
                                                                     .WithPart("ImageProfilePart")
                                                                     .WithPart("CommonPart", p => p.WithSetting("OwnerEditorSettings.ShowOwnerEditor", "false"))
-                                                                    .WithPart("IdentityPart")
+                                                                    .WithIdentity()
                 );
 
             SchemaBuilder.CreateTable("FilterRecord",

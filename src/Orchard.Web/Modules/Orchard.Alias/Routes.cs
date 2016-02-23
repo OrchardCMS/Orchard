@@ -10,7 +10,7 @@ namespace Orchard.Alias {
     public class Routes : IRouteProvider {
         private readonly ShellBlueprint _blueprint;
         private readonly IAliasHolder _aliasHolder;
-        
+
         public Routes(ShellBlueprint blueprint, IAliasHolder aliasHolder) {
             _blueprint = blueprint;
             _aliasHolder = aliasHolder;

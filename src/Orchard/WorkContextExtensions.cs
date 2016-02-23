@@ -10,6 +10,11 @@ namespace Orchard {
             return workContextAccessor.GetContext(controllerContext.RequestContext.HttpContext);
         }
 
+        public static WorkContext GetLogicalContext(this IWorkContextAccessor workContextAccessor) {
+            var wca = workContextAccessor as ILogicalWorkContextAccessor;
+            return wca != null ? wca.GetLogicalContext() : null;
+        }
+
         public static WorkContext GetWorkContext(this RequestContext requestContext) {
             if (requestContext == null)
                 return null;

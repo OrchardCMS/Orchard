@@ -1,10 +1,9 @@
-using Orchard.Layouts.Framework.Elements;
 using Orchard.Layouts.Helpers;
 using Orchard.Localization;
 
 namespace Orchard.Layouts.Elements {
     public class Column : Container {
-        
+
         public override string Category {
             get { return "Layout"; }
         }
@@ -33,6 +32,11 @@ namespace Orchard.Layouts.Elements {
 
         public int Size {
             get { return Width.GetValueOrDefault() + Offset.GetValueOrDefault(); }
+        }
+
+        public bool? Collapsible {
+            get { return this.Retrieve(x => x.Collapsible); }
+            set { this.Store(x => x.Collapsible, value); }
         }
     }
 }

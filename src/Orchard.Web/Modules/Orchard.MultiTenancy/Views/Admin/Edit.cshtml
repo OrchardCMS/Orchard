@@ -17,9 +17,9 @@
             <h2>@Model.Name</h2>
         </div>
         <div>
-            <label for="@Html.FieldIdFor(m => m.RequestUrlHost)">@T("Host")</label>
+            <label for="@Html.FieldIdFor(m => m.RequestUrlHost)">@T("URL host")</label>
             @Html.TextBoxFor(m => m.RequestUrlHost, new { @class = "text medium" })
-            <span class="hint">@T("Example: If host is \"orchardproject.net\", the tenant site URL is \"http://orchardproject.net/\"")</span>
+            <span class="hint">@T("Example: If host is \"orchardproject.net\", the tenant site URL is \"http://orchardproject.net/\". Multiple hosts can be separated by a comma.")</span>
         </div>
         <div>
             <label for="@Html.FieldIdFor(m => m.RequestUrlPrefix)">@T("URL prefix")</label>
@@ -30,7 +30,7 @@
     <fieldset>
         <legend>@T("Database Setup")</legend>
         @if (Model.State != TenantState.Uninitialized) {
-            <div class="message message-Warning">@T("Warning: If you don't know what you're doing you *will* (likely) send this tenant into a downward spiral of irrecoverable disrepair. Have a nice day.")</div>
+            <div class="warning message">@T("Warning: If you don't know what you're doing you *will* (likely) send this tenant into a downward spiral of irrecoverable disrepair. Have a nice day.")</div>
         }
         else {
             <div>

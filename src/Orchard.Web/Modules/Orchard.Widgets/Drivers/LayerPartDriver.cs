@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
+using Orchard.Conditions.Services;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
@@ -11,16 +11,15 @@ using Orchard.Widgets.Services;
 
 namespace Orchard.Widgets.Drivers {
 
-    [UsedImplicitly]
     public class LayerPartDriver : ContentPartDriver<LayerPart> {
-        private readonly IRuleManager _ruleManager;
+        private readonly IConditionManager _conditionManager;
         private readonly IWidgetsService _widgetsService;
 
         public LayerPartDriver(
-            IRuleManager ruleManager,
+            IConditionManager conditionManager,
             IWidgetsService widgetsService) {
 
-            _ruleManager = ruleManager;
+            _conditionManager = conditionManager;
             _widgetsService = widgetsService;
 
             T = NullLocalizer.Instance;
@@ -55,7 +54,7 @@ namespace Orchard.Widgets.Drivers {
                 }
 
                 try {
-                    _ruleManager.Matches(layerPart.LayerRule);
+                    _conditionManager.Matches(layerPart.LayerRule);
                 }
                 catch (Exception e) {
                     updater.AddModelError("Description", T("The rule is not valid: {0}", e.Message));

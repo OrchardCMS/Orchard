@@ -404,6 +404,46 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
+        public void DraftRequiredShouldAlwaysBuildNewVersionFromPublishedIfDraftNotFound()
+        {
+            Trace.WriteLine("gamma1");
+            var gamma1 = _manager.Create(DefaultGammaName, VersionOptions.Published);
+            Trace.WriteLine("flush");
+            _session.Flush();
+            _session.Clear();
+
+            Trace.WriteLine("gammaDraft1");
+            var gammaDraft1 = _manager.Get(gamma1.Id, VersionOptions.DraftRequired);
+            Assert.That(gammaDraft1.Version, Is.EqualTo(2));
+            Trace.WriteLine("flush");
+            _session.Flush();
+            _session.Clear();
+
+            Trace.WriteLine("Delete gammaDraft1");
+            var gammaDraft2 = _manager.Get(gammaDraft1.Id, VersionOptions.Draft);
+            gammaDraft2.VersionRecord.Latest = false;
+
+            Trace.WriteLine("Restore gamma1 as Latest");
+            var gamma2 = _manager.Get(gamma1.Id, VersionOptions.Published);
+            var publishedVersion = gamma2.Record.Versions.SingleOrDefault(x => x.Published);
+            if (publishedVersion != null)
+            {
+                publishedVersion.Latest = true;
+            }
+            Trace.WriteLine("flush");
+            _session.Flush();
+            _session.Clear();
+
+            Trace.WriteLine("gammaDraft3");
+            var gammaDraft3 = _manager.Get(gamma1.Id, VersionOptions.DraftRequired);
+            Assert.That(gammaDraft3.Version, Is.EqualTo(3));
+            Assert.That(gammaDraft3.Record, Is.Not.SameAs(gammaDraft2.Record));
+            Trace.WriteLine("flush");
+            _session.Flush();
+            _session.Clear();
+        }
+
+        [Test]
         public void UsingGetManyDraftRequiredShouldBuildNewVersionIfLatestIsAlreadyPublished() {
             Trace.WriteLine("gamma1");
             var gamma1 = _manager.Create(DefaultGammaName, VersionOptions.Published);

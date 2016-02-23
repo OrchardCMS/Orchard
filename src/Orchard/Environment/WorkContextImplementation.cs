@@ -19,8 +19,16 @@ namespace Orchard.Environment {
             return _componentContext.Resolve<T>();
         }
 
+        public override object Resolve(Type serviceType) {
+            return _componentContext.Resolve(serviceType);
+        }
+
         public override bool TryResolve<T>(out T service) {
             return _componentContext.TryResolve(out service);
+        }
+
+        public override bool TryResolve(Type serviceType, out object service) {
+            return _componentContext.TryResolve(serviceType, out service);
         }
 
         public override T GetState<T>(string name) {

@@ -20,6 +20,12 @@ namespace Orchard.Environment.Features {
         IEnumerable<FeatureDescriptor> GetEnabledFeatures();
 
         /// <summary>
+        /// Retrieves the disabled features.
+        /// </summary>
+        /// <returns>An enumeration of feature descriptors for the disabled features.</returns>
+        IEnumerable<FeatureDescriptor> GetDisabledFeatures();
+
+        /// <summary>
         /// Enables a list of features.
         /// </summary>
         /// <param name="featureIds">The IDs for the features to be enabled.</param>

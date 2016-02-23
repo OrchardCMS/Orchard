@@ -14,7 +14,7 @@
         var promptOnNavigate = element.data("prompt-on-navigate");
         var showSaveWarning = element.data("show-save-warning");
         var addButton = element.find(".button.add");
-        var saveButton = $('.button.save');
+        var saveButton = element.find('.button.save');
         var removeAllButton = element.find(".button.remove");
         var template = 
             '<li><div data-id="{contentItemId}" class="media-library-picker-item"><div class="thumbnail">{thumbnail}<div class="overlay"><h3>{title}</h3></div></div></div><a href="#" data-id="{contentItemId}" class="media-library-picker-remove">' + removeText + '</a>' + pipe + '<a href="{editLink}?ReturnUrl=' + returnUrl + '">' + editText + '</a></li>';
@@ -84,12 +84,15 @@
                 onLoad: function() { // hide the scrollbars from the main window
                     $('html, body').css('overflow', 'hidden');
                     $('#cboxClose').remove();
+                    element.trigger("opened");
                 },
                 onClosed: function() {
                     $('html, body').css('overflow', '');
                     var selectedData = $.colorbox.selectedData;
-                    if (selectedData == null) // Dialog cancelled, do nothing
+                    if (selectedData == null) { // Dialog cancelled, do nothing
+                        element.trigger("closed");
                         return;
+                    }
 
                     var selectionLength = multiple ? selectedData.length : Math.min(selectedData.length, 1);
                     
@@ -108,6 +111,8 @@
                     if (selectedData.length) {
                         showSaveMsg();
                     }
+
+                    element.trigger("closed");
                 }
             });
             

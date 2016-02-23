@@ -12,7 +12,7 @@ namespace Orchard.Taxonomies.Services {
         public TermCountProcessor(ITaxonomyService taxonomyService) {
             _taxonomyService = taxonomyService;
         }
-        
+
         public void Process(IEnumerable<int> termPartRecordIds)
         {
             var processedTermPartRecordIds = new List<int>();

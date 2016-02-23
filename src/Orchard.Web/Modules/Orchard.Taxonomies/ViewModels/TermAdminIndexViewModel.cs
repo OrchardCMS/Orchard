@@ -8,6 +8,7 @@ namespace Orchard.Taxonomies.ViewModels {
         public TermsAdminIndexBulkAction BulkAction { get; set; }
         public TaxonomyPart Taxonomy { get; set; }
         public int TaxonomyId { get; set; }
+        public dynamic Pager { get; set; }
     }
 
     public class TermEntry {

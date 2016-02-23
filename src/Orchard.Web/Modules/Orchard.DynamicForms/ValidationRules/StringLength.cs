@@ -43,9 +43,8 @@ namespace Orchard.DynamicForms.ValidationRules {
             if(!String.IsNullOrWhiteSpace(ErrorMessage))
                 return T(ErrorMessage, context.FieldName, Minimum, Maximum);
 
-            if (Minimum != null && Maximum != null)
+            if(Minimum != null && Maximum != null)
                 return T("{0} must be between {1} and {2} characters long.", context.FieldName, Minimum, Maximum);
-
             if (Minimum != null)
                 return T("{0} must be at least {1} characters long.", context.FieldName, Minimum);
             

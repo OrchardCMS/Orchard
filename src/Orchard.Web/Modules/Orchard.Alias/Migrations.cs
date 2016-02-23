@@ -20,5 +20,12 @@ namespace Orchard.Alias {
             return 1;
         }
 
+        public int UpdateFrom1() {
+            SchemaBuilder.AlterTable("AliasRecord",
+                    table => table
+                        .AddColumn<bool>("IsManaged", column => column.WithDefault(false))
+                );
+            return 2;
+        }
     }
 }

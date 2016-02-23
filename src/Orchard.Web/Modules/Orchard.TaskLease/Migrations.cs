@@ -1,6 +1,4 @@
 ﻿using System;
-using Orchard.ContentManagement.MetaData;
-using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
 
 namespace Orchard.TaskLease {

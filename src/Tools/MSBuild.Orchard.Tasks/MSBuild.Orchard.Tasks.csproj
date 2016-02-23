@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MSBuild.Orchard.Tasks</RootNamespace>
     <AssemblyName>MSBuild.Orchard.Tasks</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -68,7 +68,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="TypeScriptFiles.cs" />
     <Compile Include="XmlDelete.cs" />
     <Compile Include="ValidateExtensionProjectFiles.cs" />
     <Compile Include="FileUpdateLines.cs" />
