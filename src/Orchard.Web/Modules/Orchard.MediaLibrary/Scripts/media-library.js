@@ -434,7 +434,7 @@ $(function () {
         
         ko.applyBindings(viewModel);
 
-        if (settings.hasFolderPath) {
+        if (settings.hasFolderPath && settings.folderPath != settings.rootFolderPath) {
             viewModel.displayFolder(settings.folderPath);
 
             //fetch displayed folder structure
