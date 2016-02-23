@@ -56,11 +56,13 @@ namespace Orchard.MediaLibrary.Controllers {
             explorer.Weld(new MediaLibraryExplorerPart());
 
             var explorerShape = Services.ContentManager.BuildDisplay(explorer);
+            var rootMediaFolderPath = rootMediaFolder == null ? null : rootMediaFolder.MediaPath;
 
             var viewModel = new MediaManagerIndexViewModel {
                 DialogMode = dialog,
                 FolderPath = folderPath,
-                ChildFoldersViewModel = new MediaManagerChildFoldersViewModel{Children = _mediaLibraryService.GetMediaFolders(rootMediaFolder == null ? null : rootMediaFolder.MediaPath)},
+                RootFolderPath = rootMediaFolderPath,
+                ChildFoldersViewModel = new MediaManagerChildFoldersViewModel { Children = _mediaLibraryService.GetMediaFolders(rootMediaFolderPath) },
                 MediaTypes = _mediaLibraryService.GetMediaTypes(),
                 CustomActionsShapes = explorerShape.Actions,
                 CustomNavigationShapes = explorerShape.Navigation,
@@ -158,8 +160,8 @@ namespace Orchard.MediaLibrary.Controllers {
 
             var rootMediaFolder = _mediaLibraryService.GetRootMediaFolder();
             var rootMediaFolderPath = rootMediaFolder == null ? null : rootMediaFolder.MediaPath;
-            var mediaParts = _mediaLibraryService.GetMediaContentItems(rootMediaFolderPath, skip, count, order, mediaType);
-            var mediaPartsCount = _mediaLibraryService.GetMediaContentItemsCount(rootMediaFolderPath, mediaType);
+            var mediaParts = _mediaLibraryService.GetMediaContentItemsRecursive(rootMediaFolderPath, skip, count, order, mediaType);
+            var mediaPartsCount = _mediaLibraryService.GetMediaContentItemsCountRecursive(rootMediaFolderPath, mediaType);
 
 
             var mediaItems = mediaParts.Select(x => new MediaManagerMediaItemViewModel {

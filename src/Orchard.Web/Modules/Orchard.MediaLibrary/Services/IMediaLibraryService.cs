@@ -13,8 +13,10 @@ namespace Orchard.MediaLibrary.Services {
         IContentQuery<MediaPart, MediaPartRecord> GetMediaContentItems(VersionOptions versionOptions = null);
         IEnumerable<MediaPart> GetMediaContentItems(string folderPath, int skip, int count, string order, string mediaType, VersionOptions versionOptions = null);
         IEnumerable<MediaPart> GetMediaContentItems(int skip, int count, string order, string mediaType, VersionOptions versionOptions = null);
+        IEnumerable<MediaPart> GetMediaContentItemsRecursive(string folderPath, int skip, int count, string order, string mediaType, VersionOptions versionOptions = null);
         int GetMediaContentItemsCount(string folderPath, string mediaType, VersionOptions versionOptions = null);
         int GetMediaContentItemsCount(string mediaType, VersionOptions versionOptions = null);
+        int GetMediaContentItemsCountRecursive(string folderPath, string mediaType, VersionOptions versionOptions = null);
         MediaPart ImportMedia(string relativePath, string filename);
         MediaPart ImportMedia(string relativePath, string filename, string contentType);
         MediaPart ImportMedia(Stream stream, string relativePath, string filename);
