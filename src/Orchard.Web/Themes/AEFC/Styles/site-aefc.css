@@ -10690,11 +10690,15 @@ html.fixed-nav.boxed-layout #layout-navigation {
   padding-left: inherit;
   padding-right: inherit;
 }
+#footer-quad:before {
+  content: none;
+  display: inherit;
+}
 html.fluid-layout #layout-main-container {
   padding-left: 0px;
   padding-right: 0px;
 }
-.body-shade {
+.element-shade {
   background-color: rgba(0, 0, 0, 0.61);
   color: inherit;
 }
