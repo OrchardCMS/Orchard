@@ -29,6 +29,24 @@
 </fieldset>
 
 <fieldset>
+    <div class="editor-field">
+        <label for="@Html.FieldIdFor(m => m.DatePlaceholder)">@T("Watermark (placeholder) for the date")</label>
+        @Html.TextBoxFor(m => m.DatePlaceholder, new { @class = "text large" })
+        @Html.ValidationMessageFor(m => m.DatePlaceholder)
+        <span class="hint">@T("A hint to display when the date is empty. (optional)")</span>
+    </div>
+</fieldset>
+
+<fieldset>
+    <div class="editor-field">
+        <label for="@Html.FieldIdFor(m => m.TimePlaceholder)">@T("Watermark (placeholder) for the time")</label>
+        @Html.TextBoxFor(m => m.TimePlaceholder, new { @class = "text large" })
+        @Html.ValidationMessageFor(m => m.TimePlaceholder)
+        <span class="hint">@T("A hint to display when the time is empty. (optional)")</span>
+    </div>
+</fieldset>
+
+<fieldset>
     <div>
         <label for="@Html.FieldIdFor(m => m.Editor)">@T("Default value")</label>
         @Html.EditorFor(m => m.Editor)

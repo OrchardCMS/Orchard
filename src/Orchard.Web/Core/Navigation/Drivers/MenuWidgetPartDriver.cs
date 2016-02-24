@@ -11,6 +11,7 @@ using Orchard.Core.Title.Models;
 using Orchard.Localization;
 using Orchard.UI.Navigation;
 using Orchard.Utility.Extensions;
+using Orchard.ContentManagement.Utilities;
 
 namespace Orchard.Core.Navigation.Drivers {
     public class MenuWidgetPartDriver : ContentPartDriver<MenuWidgetPart> {
@@ -50,6 +51,11 @@ namespace Orchard.Core.Navigation.Drivers {
                 var menuName = menu.As<TitlePart>().Title.HtmlClassify();
                 var currentCulture = _workContextAccessor.GetContext().CurrentCulture;
                 var menuItems = _navigationManager.BuildMenu(menu);
+
+                if (!part.Breadcrumb) {
+                    menuItems = menuItems.Where(x => !x.Content.Has<BreadcrumbMenuItemPart>());
+                }
+
                 var localized = new List<MenuItem>();
                 foreach(var menuItem in menuItems) {
                     // if there is no associated content, it as culture neutral

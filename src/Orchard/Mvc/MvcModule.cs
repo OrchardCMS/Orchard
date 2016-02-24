@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Web;
 using System.Web.Caching;
+using System.Web.Hosting;
 using System.Web.Instrumentation;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -39,10 +40,13 @@ namespace Orchard.Mvc {
             // which requires activating the Site content item, which in turn requires a UrlHelper, which in turn requires a RequestContext,
             // thus preventing a StackOverflowException.
 
-            var baseUrl = new Func<string>(() => siteService.GetSiteSettings().BaseUrl);
-            var httpContextBase = new HttpContextPlaceholder(baseUrl);
+            var baseUrl = new Func<string>(() => {
+                var url = siteService.GetSiteSettings().BaseUrl;
+                return !String.IsNullOrWhiteSpace(url) ? url : "http://localhost"
+                    + HostingEnvironment.ApplicationVirtualPath.TrimEnd('/');
+            });
 
-            return httpContextBase;
+            return new HttpContextPlaceholder(baseUrl);
         }
 
         static RequestContext RequestContextFactory(IComponentContext context) {

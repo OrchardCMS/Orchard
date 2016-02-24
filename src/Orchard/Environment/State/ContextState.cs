@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.Remoting.Messaging;
 using System.Web;
+using Orchard.Mvc;
 
 namespace Orchard.Environment.State {
 
@@ -22,7 +23,7 @@ namespace Orchard.Environment.State {
         }
 
         public T GetState() {
-            if (HttpContext.Current == null) {
+            if (!HttpContextIsValid()) {
                 var data = CallContext.GetData(_name);
 
                 if (data == null) {
@@ -44,13 +45,16 @@ namespace Orchard.Environment.State {
         }
 
         public void SetState(T state) {
-            if (HttpContext.Current == null) {
+            if (!HttpContextIsValid()) {
                 CallContext.SetData(_name, state);
             }
             else {
                 HttpContext.Current.Items[_name] = state;
             }
         }
+
+        private bool HttpContextIsValid() {
+            return HttpContext.Current != null && !HttpContext.Current.Items.Contains(MvcModule.IsBackgroundHttpContextKey);
+        }
     }
 }
-

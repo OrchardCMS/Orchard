@@ -204,7 +204,9 @@ namespace Orchard.UI.Resources {
                 url = VirtualPathUtility.Combine(BasePath, url);
             }
             if (VirtualPathUtility.IsAppRelative(url)) {
-                url = VirtualPathUtility.ToAbsolute(url, applicationPath);
+                url = applicationPath != null 
+                    ? VirtualPathUtility.ToAbsolute(url, applicationPath) 
+                    : VirtualPathUtility.ToAbsolute(url);
             }
             _urlResolveCache[settings] = url;
             return url;

@@ -53,7 +53,6 @@
 
   <Target Name="FullBuild">
     <CallTarget Targets="Clean"/>
-    <CallTarget Targets="TypeScript"/>
     <CallTarget Targets="Compile"/>
     <CallTarget Targets="Test"/>
     <CallTarget Targets="Package"/>
@@ -131,18 +130,6 @@
       Properties="Configuration=$(Configuration);OutputPath=$(MsBuildTasksFolder)" />
   </Target>
 
-  <Target Name="TypeScript" DependsOnTargets="CompileMsBuildTasks">
-    <ItemGroup>
-      <TypeScriptSources Include="$(SrcFolder)\**\Scripts\**\*.ts"/>
-    </ItemGroup>
-    <CompileTypeScriptFiles
-      InputFiles="@(TypeScriptSources)"
-      CompilerPath="$(LibFolder)\typescript\tsc.exe"
-      CompilerOptions="--target ES5">
-      <Output TaskParameter="OutputFiles" ItemName="Content" />
-    </CompileTypeScriptFiles>
-  </Target>
-
   <!-- Testing -->
 
   <Target Name ="Test">
@@ -179,7 +166,6 @@
   <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.FileUpdateLines" />
   <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.ValidateExtensionProjectFiles" />
   <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.XmlDelete" />
-  <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.CompileTypeScriptFiles" />
 
   <Target Name="Package-Stage" DependsOnTargets="Compile">
     <CallTarget Targets="CompileMsBuildTasks"/>
@@ -301,9 +287,12 @@
       <!--<MsDeploy-Folder-Input Include="$(StageFolder)\**\*" Exclude="$(StageFolder)\**\bin\**\*.pdb;$(StageFolder)\**\bin\**\*.xml" />-->
 
       <MsDeploy-Exclude-Modules Include="
+        $(StageFolder)\**\Modules\Orchard.CustomForms\**;
+        $(StageFolder)\**\Modules\Orchard.jQuery\**;
         $(StageFolder)\**\Modules\Orchard.Media\**;
         $(StageFolder)\**\Modules\Orchard.MediaPicker\**;
         $(StageFolder)\**\Modules\Orchard.Rules\**;
+        $(StageFolder)\**\Modules\Orchard.TaskLease\**;
         " />
 
       <MsDeploy-Folder-Input Include="$(StageFolder)\**\*" Exclude="$(StageFolder)\**\bin\**\*.xml;$(StageFolder)\**\obj\**\*;@(MsDeploy-Exclude-Modules)" />
