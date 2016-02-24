@@ -1,11 +1,7 @@
 ﻿@using Orchard.Utility.Extensions
-<div class="text-left">
+<div class="content-action-group">
     <button class="btn btn-primary" type="submit" name="submit.Save" value="submit.Save">@T("Save")</button>
-    
-    @{
-        var returnUrl = Request.QueryString["returnUrl"];
-    }
-    
+    @{ var returnUrl = Request.QueryString["returnUrl"]; }
     @if (!String.IsNullOrWhiteSpace(returnUrl) && Request.IsLocalUrl(returnUrl)) {
         <a id="button-cancel" href="@returnUrl" class="btn btn-default">@T("Cancel")</a>
     }
