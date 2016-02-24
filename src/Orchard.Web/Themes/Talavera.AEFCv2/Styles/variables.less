@@ -1,0 +1,41 @@
+﻿ // Commonly we add all of the global variable declarations to variables.less. As you can see this also imports the variables file from 
+ // PGBBT that in turn also imports Bootstrap's own variables.less. Take your time to look through the file
+ // ../../Lombiq.PrettyGoodBootstrapBaseTheme/Content/Bootstrap/less/variables.less so you see what can you configure in Bootstrap just by
+ // assigning some variables.
+
+ @import "../../Talavera.BootstrapBase/Styles/variables";
+
+
+/* Variables
+***************************************************************/
+
+/* Colors */
+// We tend to declare the main branding colors here too.
+@sample-grey: #4d4948;
+@sample-white: #fff; // It might seem silly to declare what white is but we may change this to some other color (like a very light grey) later.
+@sample-blue: #0093DD;
+
+/* Media queries */
+// Media queries are commonly used in responsive design. It's nice to declare them as variables too so it's simple to re-use them.
+@screen-sm-min: 47.95em; // ~768px
+@screen-md-min: 57.8em; // ~940px in Chrome, more in FF...
+@screen-lg-min: 68.6em; // ~1100px
+@screen-xl-min: 87.4em; // ~1400px
+@screen-xxl-min: 99.9em; // ~1600px
+// The tilde is needed so the quotes won't be printed
+@media-sm: ~"only screen and (min-width: @{screen-sm-min})";
+@media-md: ~"only screen and (min-width: @{screen-md-min})"; 
+@media-lg: ~"only screen and (min-width: @{screen-lg-min})";
+@media-xl: ~"only screen and (min-width: @{screen-xl-min})"; 
+@media-xxl: ~"only screen and (min-width: @{screen-xxl-min})";
+
+/* Setting Bootstrap vars */
+// Here we configure some of Bootstrap's variables. This way you can change the resulting CSS directly, you don't have to write your own
+// body background colour declaration from a CSS selector for example, the CSS will only contain one body background color.
+@body-bg: @sample-grey;
+@text-color: @sample-white;
+@link-color: @sample-blue;
+@link-hover-color: @link-color;
+@input-border-radius: 0;
+@border-radius-base: 0;
+@grid-float-breakpoint: @screen-md-min;

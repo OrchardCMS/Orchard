@@ -1233,3 +1233,8 @@ fieldset ol li,
 .zone-content fieldset ol li {
   margin: 0 0 .4615em 0;
 }
+/* Forms
+***************************************************************/
+.zone-content form {
+  padding-left: 1em;
+}

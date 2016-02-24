@@ -63,6 +63,10 @@
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Abstractions" />
     <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Xml.Linq" />
@@ -321,21 +325,87 @@
     <Content Include="Content\Bootstrap\package.js" />
     <Content Include="Content\Bootstrap\test-infra\requirements.txt" />
     <Content Include="Images\favicon.ico" />
-    <Content Include="Styles\breadcrumbs.css" />
-    <Content Include="Styles\common.css" />
-    <Content Include="Styles\forms.css" />
-    <Content Include="Styles\general.css" />
-    <Content Include="Styles\media.css" />
-    <Content Include="Styles\misc.css" />
-    <Content Include="Styles\navigation.css" />
-    <Content Include="Styles\pagination.css" />
-    <Content Include="Styles\reset.css" />
-    <Content Include="Styles\site.css" />
-    <Content Include="Styles\structure.css" />
-    <Content Include="Styles\Styles.css" />
-    <Content Include="Styles\Styles.min.css" />
-    <Content Include="Styles\type.css" />
-    <Content Include="Styles\variables.css" />
+    <Content Include="Styles\breadcrumbs.css">
+      <DependentUpon>breadcrumbs.less</DependentUpon>
+    </Content>
+    <Content Include="Styles\breadcrumbs.css.map">
+      <DependentUpon>breadcrumbs.css</DependentUpon>
+    </Content>
+    <Content Include="Styles\common.css">
+      <DependentUpon>common.less</DependentUpon>
+    </Content>
+    <Content Include="Styles\common.css.map">
+      <DependentUpon>common.css</DependentUpon>
+    </Content>
+    <Content Include="Styles\forms.css">
+      <DependentUpon>forms.less</DependentUpon>
+    </Content>
+    <Content Include="Styles\forms.css.map">
+      <DependentUpon>forms.css</DependentUpon>
+    </Content>
+    <Content Include="Styles\forms.min.css">
+      <DependentUpon>forms.css</DependentUpon>
+    </Content>
+    <Content Include="Styles\general.css">
+      <DependentUpon>general.less</DependentUpon>
+    </Content>
+    <Content Include="Styles\general.css.map">
+      <DependentUpon>general.css</DependentUpon>
+    </Content>
+    <Content Include="Styles\media.css">
+      <DependentUpon>media.less</DependentUpon>
+    </Content>
+    <Content Include="Styles\media.css.map">
+      <DependentUpon>media.css</DependentUpon>
+    </Content>
+    <Content Include="Styles\misc.css">
+      <DependentUpon>misc.less</DependentUpon>
+    </Content>
+    <Content Include="Styles\misc.css.map">
+      <DependentUpon>misc.css</DependentUpon>
+    </Content>
+    <Content Include="Styles\navigation.css">
+      <DependentUpon>navigation.less</DependentUpon>
+    </Content>
+    <Content Include="Styles\navigation.css.map">
+      <DependentUpon>navigation.css</DependentUpon>
+    </Content>
+    <Content Include="Styles\pagination.css">
+      <DependentUpon>pagination.less</DependentUpon>
+    </Content>
+    <Content Include="Styles\pagination.css.map">
+      <DependentUpon>pagination.css</DependentUpon>
+    </Content>
+    <Content Include="Styles\reset.css">
+      <DependentUpon>reset.less</DependentUpon>
+    </Content>
+    <Content Include="Styles\reset.css.map">
+      <DependentUpon>reset.css</DependentUpon>
+    </Content>
+    <Content Include="Styles\site.css">
+      <DependentUpon>site.less</DependentUpon>
+    </Content>
+    <Content Include="Styles\site.css.map">
+      <DependentUpon>site.css</DependentUpon>
+    </Content>
+    <Content Include="Styles\structure.css">
+      <DependentUpon>structure.less</DependentUpon>
+    </Content>
+    <Content Include="Styles\structure.css.map">
+      <DependentUpon>structure.css</DependentUpon>
+    </Content>
+    <Content Include="Styles\type.css">
+      <DependentUpon>type.less</DependentUpon>
+    </Content>
+    <Content Include="Styles\type.css.map">
+      <DependentUpon>type.css</DependentUpon>
+    </Content>
+    <Content Include="Styles\variables.css">
+      <DependentUpon>variables.less</DependentUpon>
+    </Content>
+    <Content Include="Styles\variables.css.map">
+      <DependentUpon>variables.css</DependentUpon>
+    </Content>
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
@@ -368,31 +438,18 @@
     <Content Include="Views\Resources.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\breadcrumbs.css.map" />
     <Content Include="Styles\breadcrumbs.less" />
-    <Content Include="Styles\common.css.map" />
     <Content Include="Styles\common.less" />
-    <Content Include="Styles\forms.css.map" />
     <Content Include="Styles\forms.less" />
-    <Content Include="Styles\general.css.map" />
     <Content Include="Styles\general.less" />
-    <Content Include="Styles\media.css.map" />
     <Content Include="Styles\media.less" />
-    <Content Include="Styles\misc.css.map" />
     <Content Include="Styles\misc.less" />
-    <Content Include="Styles\navigation.css.map" />
     <Content Include="Styles\navigation.less" />
-    <Content Include="Styles\pagination.css.map" />
     <Content Include="Styles\pagination.less" />
-    <Content Include="Styles\reset.css.map" />
     <Content Include="Styles\reset.less" />
-    <Content Include="Styles\site.css.map" />
     <Content Include="Styles\site.less" />
-    <Content Include="Styles\structure.css.map" />
     <Content Include="Styles\structure.less" />
-    <Content Include="Styles\type.css.map" />
     <Content Include="Styles\type.less" />
-    <Content Include="Styles\variables.css.map" />
     <Content Include="Styles\variables.less" />
   </ItemGroup>
   <ItemGroup>
@@ -527,6 +584,13 @@
   <ItemGroup>
     <Folder Include="Content\Bootstrap\docs\assets\ico\" />
     <Folder Include="Content\Bootstrap\docs\grunt\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="compilerconfig.json" />
+    <None Include="compilerconfig.json.defaults">
+      <DependentUpon>compilerconfig.json</DependentUpon>
+    </None>
+    <Content Include="Views\BadgeOfHonor.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

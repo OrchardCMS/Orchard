@@ -1,0 +1,46 @@
+﻿// Some general styling comes here.
+
+@import "../../Talavera.BootstrapBase/Styles/structure";
+@import "variables";
+
+
+/* General
+***************************************************************/
+
+// You remember the media query variables in variables.less? We use them here for some simple styling corresponding to various screen sizes.
+// Although the editor might underline these declarations in red like being wrong they are syntactically correct in reality.
+body
+{
+    @media @media-lg
+    {
+        font-size: 16px;
+    }
+
+    @media @media-xl
+    {
+        font-size: 18px;
+    }
+
+    @media @media-xxl
+    {
+        font-size: 20px;
+    }
+}
+
+#layout-wrapper
+{
+    @media @media-lg
+    {
+        width: 95%;
+    }
+
+    @media @media-xl
+    {
+        width: 85%;
+    }
+
+    @media @media-xxl
+    {
+        width: 80%;
+    }
+}
