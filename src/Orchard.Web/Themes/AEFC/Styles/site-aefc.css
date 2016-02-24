@@ -10690,9 +10690,8 @@ html.fixed-nav.boxed-layout #layout-navigation {
   padding-left: inherit;
   padding-right: inherit;
 }
-#footer-quad:before {
-  content: none;
-  display: inherit;
+#layout-footer {
+  clear: both;
 }
 html.fluid-layout #layout-main-container {
   padding-left: 0px;
