@@ -1,5 +1,5 @@
 Name: Talavera.AEFCv2
-Author: The Orchard Team
+Author: American Energy Management Systems
 Website: http://www.orchardproject.net
 Description: American Energy Fitness Center
 Version: 1.0

@@ -324,6 +324,7 @@
     <Content Include="Content\Bootstrap\js\transition.js" />
     <Content Include="Content\Bootstrap\package.js" />
     <Content Include="Content\Bootstrap\test-infra\requirements.txt" />
+    <Content Include="Images\customer_logo.png" />
     <Content Include="Images\favicon.ico" />
     <Content Include="Styles\breadcrumbs.css">
       <DependentUpon>breadcrumbs.less</DependentUpon>

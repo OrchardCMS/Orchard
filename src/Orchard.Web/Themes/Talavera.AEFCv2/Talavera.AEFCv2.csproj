@@ -74,6 +74,7 @@
   <ItemGroup>
     <Content Include="Assets.json" />
     <Content Include="Assets\Styles.less" />
+    <Content Include="Images\customer_logo.png" />
     <Content Include="Styles\forms.css">
       <DependentUpon>forms.less</DependentUpon>
     </Content>
@@ -117,9 +118,12 @@
     <Content Include="Styles\forms.less" />
     <Content Include="Styles\general.less" />
     <Content Include="Styles\variables.less" />
+    <Content Include="Views\Branding.cshtml" />
+    <Content Include="Images\Web.config" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Views\" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
