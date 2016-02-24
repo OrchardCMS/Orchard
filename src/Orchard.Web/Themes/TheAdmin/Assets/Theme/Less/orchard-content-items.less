@@ -2,23 +2,23 @@
 .content-items {
     border-top: 1px solid @table-border-color;
 
-    ul {
+    > ul {
         margin: 0;
         padding: 0;
+
+        > li {
+            &:nth-of-type(odd) {
+                background: @table-bg-accent;
+            }
+
+            &:hover {
+                background: @table-bg-hover;
+            }
+        }
     }
 
     ul, li {
         list-style: none;
-    }
-
-    li {
-        &:nth-of-type(odd) {
-            background: @table-bg-accent;
-        }
-
-        &:hover {
-            background: @table-bg-hover;
-        }
     }
 
     .summary {

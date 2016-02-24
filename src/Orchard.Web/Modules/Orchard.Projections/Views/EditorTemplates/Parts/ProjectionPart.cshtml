@@ -62,13 +62,3 @@
         <span class="hint">@T("Check to add a pager to the list.")</span>
     </div>
 </fieldset>
-
-@using (Script.Foot()) {
-<script type="text/javascript">
-//<![CDATA[
-    (function ($) {
-        $("fieldset legend").expandoControl(function (controller) { return controller.nextAll(".expando"); }, { collapse: true, remember: false });
-    })(jQuery);
-//]]>
-</script>
-}
