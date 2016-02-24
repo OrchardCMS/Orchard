@@ -1,0 +1,144 @@
+﻿@import "common";
+@import "../Content/Bootstrap/less/alerts";
+
+
+/* Misc
+   Various formatting not belonging elsewhere.
+***************************************************************/
+
+/* Metadata */
+.metadata
+{
+    margin: 0 0 .9230em 0;
+    color: @gray-light;
+    font-size: 0.846em;
+
+    .published
+    {
+        display: inline;
+        margin: 0 .4615em 0 0;
+    }
+
+    .comment-count
+    {
+        display: inline;
+    }
+}
+
+/* Alerts */
+.validation-summary-errors
+{
+    .alert;
+    .alert-danger;
+}
+
+.message
+{
+    .alert;
+
+    &.message-Error
+    {
+        .alert-danger;
+    }
+
+    &.message-Warning
+    {
+        .alert-info;
+    }
+
+    &.message-Information
+    {
+        .alert-success;
+    }
+}
+
+/* Lists */
+ul, ol
+{
+    padding-left: 0;
+}
+
+.zone-content
+{
+    ul, ol
+    {
+        padding-left: 2em;
+    }
+}
+
+.projection-list, .content-items, .widget-projection-widget > ul, .projection-page > ul
+{
+    list-style-type: none;
+    margin-left: 0;
+    padding-left: 0;
+}
+
+/* Comments */
+#comments
+{
+    margin: 1.846em 0 0 0;
+    padding: 0;
+}
+
+.comment-form
+{
+    margin: 1.846em 0 0 0;
+    padding: 0;
+}
+
+.comments
+{
+    margin: 0;
+    padding: 0 !important;
+    list-style: none;
+
+    li
+    {
+        margin: .9230em 0 0 0;
+        padding: 1.25%;
+        border: 1px solid @gray-light;
+    }
+}
+
+.comment
+{
+    margin: 0;
+    padding: 0;
+
+    h4
+    {
+        font-size: 1.077em;
+    }
+
+    .reply
+    {
+        float: right;
+    }
+}
+
+
+.comment-form #comment-by
+{
+    font-size: 1.231em;
+    font-weight: normal;
+    margin: 0 0 1.2em 0;
+    border: none;
+
+    li
+    {
+        border: inherit;
+        margin: inherit;
+        padding: inherit;
+    }
+}
+
+.comment-count
+{
+    font-size: 1.231em;
+}
+
+/* Images */
+img
+{
+    &:extend(.img-responsive); // Making all images responsive
+}

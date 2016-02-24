@@ -1,0 +1,43 @@
+﻿@import "variables";
+@import "../Content/Bootstrap/less/mixins";
+
+
+/* Common
+   Common imports needed in every PGBBT LESS file.
+***************************************************************/
+
+// Generic make-column-* mixins taken from a previous Bootstrap version
+.make-column(@columns, @gutter: @grid-gutter-width)
+{
+    position: relative;
+    // Float and set width: 100%; for easy stacking on mobile devices
+    float: left;
+    width: 100%;
+    // Prevent columns from collapsing when empty
+    min-height: 1px;
+    // Inner gutter via padding
+    padding-left: (@gutter / 2);
+    padding-right: (@gutter / 2);
+
+    // Calculate width based on number of columns available
+    @media (min-width: @grid-float-breakpoint)
+    {
+        width: percentage((@columns / @grid-columns));
+    }
+}
+
+.make-column-push(@columns)
+{
+    @media (min-width: @grid-float-breakpoint)
+    {
+        left: percentage((@columns / @grid-columns));
+    }
+}
+
+.make-column-pull(@columns)
+{
+    @media (min-width: @grid-float-breakpoint)
+    {
+        right: percentage((@columns / @grid-columns));
+    }
+}

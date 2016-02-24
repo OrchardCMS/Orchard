@@ -1,0 +1,76 @@
+﻿@import "common";
+@import "../Content/Bootstrap/less/forms";
+@import "../Content/Bootstrap/less/buttons";
+
+
+/* Forms
+   Forms-related styling.
+***************************************************************/
+
+select,
+textarea,
+input[type="text"],
+input[type="password"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="date"],
+input[type="month"],
+input[type="time"],
+input[type="week"],
+input[type="number"],
+input[type="email"],
+input[type="url"],
+input[type="search"],
+input[type="tel"],
+input[type="color"]
+{
+    &:extend(.form-control);
+    .form-control-focus();
+
+    &[disabled],
+    &[readonly],
+    fieldset[disabled] &
+    {
+        cursor: not-allowed;
+        background-color: @input-bg-disabled;
+    }
+}
+
+textarea
+{
+    height: auto;
+}
+
+input[type="submit"], input[type="button"], button, .button
+{
+    .btn;
+    .btn-default;
+}
+
+input[type="checkbox"]
+{
+    margin: .2em 0 1.2em 0;
+}
+
+label.forcheckbox
+{
+    margin: 0 0 0 .4em;
+    display: inline;
+}
+
+fieldset, .zone-content fieldset // The latter one is so list styles in the content don't kick in
+{
+    margin: 0 0 .923em 0;
+
+    ol
+    {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+
+        li
+        {
+            margin: 0 0 .4615em 0;
+        }
+    }
+}

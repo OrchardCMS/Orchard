@@ -1,0 +1,68 @@
+﻿@import "common";
+@import "../Content/Bootstrap/less/navs";
+@import "../Content/Bootstrap/less/dropdowns";
+//@import "../Content/Bootstrap/less/navbar";
+
+
+/* Navigation
+   Navigation-related stylings.
+***************************************************************/
+
+
+.widget-menu-widget
+{
+    .menu
+    {
+        .nav;
+        .nav-pills;
+
+
+        li
+        {
+            float: none;
+        }
+
+            li.dropdown
+            {
+                > ul
+                {
+                    .dropdown-menu;
+                    left: auto;
+                    top: auto;
+                    margin-top: 0;
+                }
+
+                &:hover > ul
+                {
+                    display: block;
+                }
+            }
+
+        @media (min-width: @grid-float-breakpoint)
+        {
+            .nav-justified;
+
+            // Copying this from navs.less is necessary, see: https://github.com/less/less.js/issues/1502
+            > li
+            {
+                display: table-cell;
+                width: 1%;
+            }
+        }
+
+        > li.current > a
+        {
+            &:extend(.nav-pills > li.active > a);
+
+            &:hover
+            {
+                &:extend(.nav-pills > li.active > a:hover);
+            }
+
+            &:focus
+            {
+                &:extend(.nav-pills > li.active > a:focus);
+            }
+        }
+    }
+}

@@ -1,0 +1,44 @@
+﻿@import "common";
+@import "../Content/Bootstrap/less/type";
+
+
+/* Typography
+   Typography styling for various cases.
+***************************************************************/
+
+/* Headings */
+.zone-content
+{
+    > .content-item:first-of-type > header h1, > h1
+    {
+        .page-header;
+    }
+
+    .projection-list, .content-items
+    {
+        h1:extend(h2) {}
+    }
+}
+
+.widget
+{
+    h1:extend(h2)
+    {
+    }
+
+    .projection-list, .content-items
+    {
+         h1:extend(h3) {}
+    }
+}
+
+/* General */
+#branding
+{
+    font-weight: bold;
+}
+
+p
+{
+    text-align: justify;
+}

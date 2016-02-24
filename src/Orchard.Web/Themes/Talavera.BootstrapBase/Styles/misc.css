@@ -1,0 +1,242 @@
+﻿/* Breadcrumbs
+   Some LESS variables that you can configure from your derived theme.
+***************************************************************/
+/* Common
+   Common imports needed in every PGBBT LESS file.
+***************************************************************/
+.alert {
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+.alert h4 {
+  margin-top: 0;
+  color: inherit;
+}
+.alert .alert-link {
+  font-weight: bold;
+}
+.alert > p,
+.alert > ul {
+  margin-bottom: 0;
+}
+.alert > p + p {
+  margin-top: 5px;
+}
+.alert-dismissable,
+.alert-dismissible {
+  padding-right: 35px;
+}
+.alert-dismissable .close,
+.alert-dismissible .close {
+  position: relative;
+  top: -2px;
+  right: -21px;
+  color: inherit;
+}
+.alert-success {
+  background-color: #dff0d8;
+  border-color: #d6e9c6;
+  color: #3c763d;
+}
+.alert-success hr {
+  border-top-color: #c9e2b3;
+}
+.alert-success .alert-link {
+  color: #2b542c;
+}
+.alert-info {
+  background-color: #d9edf7;
+  border-color: #bce8f1;
+  color: #31708f;
+}
+.alert-info hr {
+  border-top-color: #a6e1ec;
+}
+.alert-info .alert-link {
+  color: #245269;
+}
+.alert-warning {
+  background-color: #fcf8e3;
+  border-color: #faebcc;
+  color: #8a6d3b;
+}
+.alert-warning hr {
+  border-top-color: #f7e1b5;
+}
+.alert-warning .alert-link {
+  color: #66512c;
+}
+.alert-danger {
+  background-color: #f2dede;
+  border-color: #ebccd1;
+  color: #a94442;
+}
+.alert-danger hr {
+  border-top-color: #e4b9c0;
+}
+.alert-danger .alert-link {
+  color: #843534;
+}
+/* Misc
+   Various formatting not belonging elsewhere.
+***************************************************************/
+/* Metadata */
+.metadata {
+  margin: 0 0 .9230em 0;
+  color: #777777;
+  font-size: 0.846em;
+}
+.metadata .published {
+  display: inline;
+  margin: 0 .4615em 0 0;
+}
+.metadata .comment-count {
+  display: inline;
+}
+/* Alerts */
+.validation-summary-errors {
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background-color: #f2dede;
+  border-color: #ebccd1;
+  color: #a94442;
+}
+.validation-summary-errors h4 {
+  margin-top: 0;
+  color: inherit;
+}
+.validation-summary-errors .alert-link {
+  font-weight: bold;
+}
+.validation-summary-errors > p,
+.validation-summary-errors > ul {
+  margin-bottom: 0;
+}
+.validation-summary-errors > p + p {
+  margin-top: 5px;
+}
+.validation-summary-errors hr {
+  border-top-color: #e4b9c0;
+}
+.validation-summary-errors .alert-link {
+  color: #843534;
+}
+.message {
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+.message h4 {
+  margin-top: 0;
+  color: inherit;
+}
+.message .alert-link {
+  font-weight: bold;
+}
+.message > p,
+.message > ul {
+  margin-bottom: 0;
+}
+.message > p + p {
+  margin-top: 5px;
+}
+.message.message-Error {
+  background-color: #f2dede;
+  border-color: #ebccd1;
+  color: #a94442;
+}
+.message.message-Error hr {
+  border-top-color: #e4b9c0;
+}
+.message.message-Error .alert-link {
+  color: #843534;
+}
+.message.message-Warning {
+  background-color: #d9edf7;
+  border-color: #bce8f1;
+  color: #31708f;
+}
+.message.message-Warning hr {
+  border-top-color: #a6e1ec;
+}
+.message.message-Warning .alert-link {
+  color: #245269;
+}
+.message.message-Information {
+  background-color: #dff0d8;
+  border-color: #d6e9c6;
+  color: #3c763d;
+}
+.message.message-Information hr {
+  border-top-color: #c9e2b3;
+}
+.message.message-Information .alert-link {
+  color: #2b542c;
+}
+/* Lists */
+ul,
+ol {
+  padding-left: 0;
+}
+.zone-content ul,
+.zone-content ol {
+  padding-left: 2em;
+}
+.projection-list,
+.content-items,
+.widget-projection-widget > ul,
+.projection-page > ul {
+  list-style-type: none;
+  margin-left: 0;
+  padding-left: 0;
+}
+/* Comments */
+#comments {
+  margin: 1.846em 0 0 0;
+  padding: 0;
+}
+.comment-form {
+  margin: 1.846em 0 0 0;
+  padding: 0;
+}
+.comments {
+  margin: 0;
+  padding: 0 !important;
+  list-style: none;
+}
+.comments li {
+  margin: .9230em 0 0 0;
+  padding: 1.25%;
+  border: 1px solid #777777;
+}
+.comment {
+  margin: 0;
+  padding: 0;
+}
+.comment h4 {
+  font-size: 1.077em;
+}
+.comment .reply {
+  float: right;
+}
+.comment-form #comment-by {
+  font-size: 1.231em;
+  font-weight: normal;
+  margin: 0 0 1.2em 0;
+  border: none;
+}
+.comment-form #comment-by li {
+  border: inherit;
+  margin: inherit;
+  padding: inherit;
+}
+.comment-count {
+  font-size: 1.231em;
+}
+/* Images */
+/*# sourceMappingURL=misc.css.map */

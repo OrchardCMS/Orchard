@@ -1,0 +1,27 @@
+﻿@{
+    /// <summary>
+    /// Specify ad-hoc shape insertions here
+    /// 
+    /// By overriding this shape template in a child theme you can easily add shapes to the layout without overriding it or
+    /// using widgets.
+    /// To just add to this set, override AdditionalInsertions.cshtml
+    /// </summary>
+}
+
+@{
+    /* Inserting some ad hoc shapes
+    ***************************************************************/
+    
+    // See with the debugger what Layout has, so where you can insert shapes
+
+    // The Analytics script is only displayed if the site is live.
+    if (!string.IsNullOrEmpty(WorkContext.CurrentSite.BaseUrl) && WorkContext.HttpContext.Request.Url.Host == new Uri(WorkContext.CurrentSite.BaseUrl).Host)
+    {
+        Layout.Head.Add(New.Analytics(), "5");
+    }
+    
+    Layout.Header.Add(New.Branding(), "5"); // Site name and link to the home page
+    Layout.Footer.Add(New.User(), "10"); // Login and dashboard links
+
+    Display.AdditionalInsertions();
+}

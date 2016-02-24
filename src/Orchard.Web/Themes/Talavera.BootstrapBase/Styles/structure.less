@@ -1,0 +1,201 @@
+﻿@import "common";
+
+
+/* Structure
+   Only structure-related styles, mainly applying Bootstrap's grid system to Orchard's default markup.
+***************************************************************/
+
+
+*
+{
+    .box-sizing(border-box);
+}
+
+body
+{
+    width: 100%;
+}
+
+#layout-wrapper
+{
+    // The layout styles are separated so it's clearer how the rows and columns are wrapped.
+    .container-fixed();
+
+    #layout-header
+    {
+        .make-row();
+
+        #header
+        {
+            .make-column(@grid-columns);
+        }
+    }
+
+    #layout-navigation
+    {
+        .make-row();
+
+        .zone-navigation
+        {
+            .make-column(@grid-columns);
+        }
+    }
+
+    #layout-featured
+    {
+        .make-row();
+
+        .zone-featured
+        {
+            .make-column(@grid-columns);
+        }
+    }
+
+    #layout-before-main
+    {
+        .make-row();
+
+        .zone-before-main
+        {
+            .make-column(@grid-columns);
+        }
+    }
+}
+
+// Everything below should be inside #layout-wrapper too, but the the & Combinator would mess it up, see: https://github.com/less/less.js/issues/1500
+#layout-main-container
+{
+    .make-row();
+
+    #layout-content
+    {
+        .make-column(@grid-columns);
+
+        // Column-less rows
+        #messages, #before-content, #content, #after-content
+        {
+            .make-row();
+            margin-left: 0;
+            margin-right: 0;
+        }
+    }
+
+    .aside-1 &, .aside-2 &
+    {
+        #aside-first, #aside-second
+        {
+            .make-column(@grid-columns / 3);
+        }
+
+        #layout-content
+        {
+            .make-column(@grid-columns / 3 * 2);
+        }
+    }
+
+    .aside-12 &
+    {
+        #aside-first, #aside-second
+        {
+            .make-column(@grid-columns / 4);
+        }
+
+        #layout-content
+        {
+            .make-column(@grid-columns / 2);
+        }
+    }
+}
+
+#layout-after-main
+{
+    .make-row();
+
+    .zone-after-main
+    {
+        .make-column(@grid-columns);
+    }
+}
+
+#layout-tripel-container
+{
+    .make-row();
+
+    #tripel-first, #tripel-second, #tripel-third
+    {
+        .make-column(@grid-columns);
+    }
+
+    .tripel-123 &
+    {
+        #tripel-first, #tripel-second, #tripel-third
+        {
+            .make-column(@grid-columns / 3);
+        }
+    }
+
+    .tripel-12 &, .tripel-13 &, .tripel-23 &
+    {
+        #tripel-first, #tripel-second, #tripel-third
+        {
+            .make-column(@grid-columns / 2);
+        }
+    }
+}
+
+#layout-footer
+{
+    #footer-quad
+    {
+        .make-row();
+
+        #footer-quad-first, #footer-quad-second, #footer-quad-third, #footer-quad-fourth
+        {
+            .make-column(@grid-columns);
+        }
+
+        .split-12 &, .split-13 &, .split-14 &, .split-23 &, .split-24 &, .split-34 &
+        {
+            #footer-quad-first, #footer-quad-second, #footer-quad-third, #footer-quad-fourth
+            {
+                .make-column(@grid-columns / 2);
+            }
+        }
+
+        .split-123 &, .split-124 &, .split-134 &, .split-234 &
+        {
+            #footer-quad-first, #footer-quad-second, #footer-quad-third, #footer-quad-fourth
+            {
+                .make-column(@grid-columns / 3);
+            }
+        }
+
+        .split-1234 &
+        {
+            #footer-quad-first, #footer-quad-second, #footer-quad-third, #footer-quad-fourth
+            {
+                .make-column(@grid-columns / 4);
+            }
+        }
+    }
+
+    #footer-sig
+    {
+        .make-row();
+
+        .zone-footer
+        {
+            .make-column(@grid-columns);
+
+            .user-display
+            {
+                text-align: center;
+            }
+        }
+    }
+}
+
+.zone
+{
+    padding: @zone-padding;
+}
