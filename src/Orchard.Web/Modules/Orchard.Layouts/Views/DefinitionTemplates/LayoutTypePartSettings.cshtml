@@ -1,10 +1,12 @@
 ﻿@model Orchard.Layouts.Settings.LayoutTypePartSettings
 <fieldset>
     <div>
-        @Html.CheckBoxFor(m => m.IsTemplate)
-        @Html.LabelFor(m => m.IsTemplate, T("Use as Template").Text, new { @class = "forcheckbox" })
+        <div class="am-checkbox inline">
+            @Html.CheckBoxFor(m => m.IsTemplate)
+            @Html.LabelFor(m => m.IsTemplate, T("Use as Template").Text, new { @class = "forcheckbox" })
+        </div>
         @Html.Hint(T("Content items of this type will be usable as templates for other layouts."))
-    </div>
+        </div>
     <div>
         @Html.LabelFor(m => m.DefaultLayoutData, T("Default Layout Data"))
         @Html.TextAreaFor(m => m.DefaultLayoutData, 25, 100, new { @class = "text large" })

@@ -1,6 +1,34 @@
-﻿.orchard-contenttypes #main h2 {
-    margin:42px 0 0;
-    border-bottom:1px solid #ccc;
+﻿.orchard-contenttypes .manage-type .panel-group.accordion {
+    margin-bottom: 0;
+}
+
+.orchard-contenttypes .manage-type .panel-group.accordion .panel .panel-title {
+    position: relative;
+}
+
+.orchard-contenttypes .manage-type .panel-group.accordion .panel .panel-heading a.remove-part {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: none;
+}
+
+.orchard-contenttypes .content-type-part-settings,
+.orchard-contenttypes .content-type-part-fields {
+    background: #f9f9f9;
+    padding: 1em;
+}
+
+.orchard-contenttypes .content-type-part-fields h4 {
+    font-weight: 600;
+}
+
+.orchard-contenttypes .manage-type .panel-group.accordion .panel .panel-collapse .panel-body {
+    padding: 10px 0 15px 0;
+}
+
+.orchard-contenttypes .manage-type h2 {
+    margin: 42px 0 0;
 }
 
 .orchard-contenttypes .summary .properties h3 {
@@ -12,67 +40,79 @@
 }
 
 #main .properties p {
-    margin:0;
+    margin: 0;
 }
 
 .manage.add-to-type {
-    margin-top:-32px;
+    margin: -40px 0 1em;
 }
+
 .manage-part {
-    margin-bottom:1em;
+    margin-bottom: 1em;
 }
-.manage-part h3,
-.manage-field h3 {
-    border-bottom:1px solid #EAEAEA;
-    display:relative;
-    line-height:1.4em;
-    padding-bottom:0;
-    padding-top:0;
-}
-.manage-part h3,
-.manage-field h3,
-.manage-part h4,
-.manage-type .manage-field .details,
-.manage-type .manage-part .manage-field,
-.manage-type .manage-part .settings {
-    padding-left:20px;
-}
+
+    .manage-part h3,
+    .manage-field h3 {
+        border-bottom: 1px solid #EAEAEA;
+        display: relative;
+        line-height: 1.4em;
+        padding-bottom: 0;
+        padding-top: 0;
+    }
+
+    .manage-part h3,
+    .manage-field h3,
+    .manage-part h4,
+    .manage-type .manage-field .details,
+    .manage-type .manage-part .manage-field,
+    .manage-type .manage-part .settings {
+        padding-left: 20px;
+    }
+
 .manage-type .manage-field .settings {
-    padding-bottom:10px;
-    padding-left:0;
+    padding-bottom: 10px;
+    padding-left: 0;
 }
+
 .manage-part h4 {
-    padding-left:0;
+    padding-left: 0;
 }
+
 .manage-part .manage-field h4 {
-    line-height:1.8em;
-    padding-bottom:0;
-    padding-left:15px;
+    line-height: 1.8em;
+    padding-bottom: 0;
+    padding-left: 15px;
 }
+
 .manage-type .manage-part .manage,
 .manage-type .manage-field .manage,
 .manage-part .manage-field .manage {
-    margin-top:-2.4em;
+    margin-top: -2.4em;
 }
+
 .manage-field .details,
 .manage-part .details {
-    overflow:auto;
+    overflow: auto;
 }
+
 .manage-part .manage.minor {
-    margin:0 0 -1.2em;
+    margin: 0 0 -1.2em;
 }
+
 .manage-part label,
 .manage-field label {
-    font-weight:normal;
+    font-weight: normal;
 }
+
 .manage-field fieldset,
 .manage-part fieldset {
-    margin:.5em 0 1em;
-    padding:0;
+    margin: .5em 0 1em;
+    padding: 0;
 }
+
 .manage-field .settings {
-    margin:0 0 0 15px;
-    padding-left:0;
+    margin: 0 0 0 15px;
+    padding-left: 0;
 }
 
 .manage-part .description {
@@ -82,48 +122,56 @@
 }
 
 .manage-part .settings {
-    overflow:auto;
-}
-.manage-part .settings fieldset {
-    padding-left:0;
+    overflow: auto;
 }
 
+    .manage-part .settings fieldset {
+        padding-left: 0;
+    }
+
 fieldset.action {
-    margin-top:2em;
+    margin-top: 2em;
 }
 
 /* should pull this back into the base admin theme css, w/out the .manage-part of course */
 .manage-part dl {
-    margin:0 0 1em;
-    overflow:auto;
-    padding:6px 0 0;
+    margin: 0 0 1em;
+    overflow: auto;
+    padding: 6px 0 0;
 }
+
 .manage-part dt,
 .manage-part dd {
-    float:left;
+    float: left;
 }
+
 .manage-part dt {
-    clear:left;
+    clear: left;
 }
-.manage-part dt::after {
-    content:":";
-}
+
+    .manage-part dt::after {
+        content: ":";
+    }
+
 .manage-part dd {
-    font-style:italic;
-    padding-left:.5em;
+    font-style: italic;
+    padding-left: .5em;
 }
+
 .manage-part dl dl {
-    font-size:1em;
-    margin:0;
-    padding:0;
+    font-size: 1em;
+    margin: 0;
+    padding: 0;
 }
+
 .manage-part dd dt {
-    clear:left;
-    float:left;
+    clear: left;
+    float: left;
 }
+
 .manage-part dd dd {
-    float:left;
-    padding-left:.5em;
+    float: left;
+    padding-left: .5em;
 }
 
 .part-hint {
@@ -149,7 +197,7 @@ fieldset.action {
         background-color: #eee;
         background: #EEE url(images/move.gif) no-repeat 10px 15px;
         height: 30px;
-        padding: 10px 0px 0px 30px; 
+        padding: 10px 0px 0px 30px;
     }
 
     #placement li .shape-editor {
@@ -162,9 +210,8 @@ fieldset.action {
     margin-bottom: 10px;
 }
 
-#placement fieldset 
-{
-    float: inherit;  /* prevent bad layout if float is defined to left in specific parts, e.g. datetimepicker */
+#placement fieldset {
+    float: inherit; /* prevent bad layout if float is defined to left in specific parts, e.g. datetimepicker */
     height: auto;
 }
 
