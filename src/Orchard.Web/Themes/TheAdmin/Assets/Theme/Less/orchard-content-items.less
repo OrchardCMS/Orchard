@@ -6,6 +6,7 @@
         margin: 0;
         padding: 0;
     }
+
     ul, li {
         list-style: none;
     }
@@ -30,6 +31,7 @@
                 .am-checkbox {
                     line-height: 15px;
                 }
+
                 h3 {
                     display: inline;
                     font-size: 22px;
@@ -39,6 +41,7 @@
                     }
                 }
             }
+
             .metadata {
                 margin-left: 30px;
 
@@ -69,66 +72,67 @@ fieldset.bulk-actions {
     display: inline-block;
 }
 
+// Button
+button, a.button {
+    display: inline-block;
+    margin-bottom: 0; // For input.btn
+    font-weight: @btn-font-weight;
+    text-align: center;
+    vertical-align: middle;
+    touch-action: manipulation;
+    cursor: pointer;
+    background-image: none; // Reset unusual Firefox-on-Android default style; see https://github.com/necolas/normalize.css/issues/214
+    border: 1px solid transparent;
+    white-space: nowrap;
+    .button-size(@padding-base-vertical; @padding-base-horizontal; @font-size-base; @line-height-base; @btn-border-radius-base);
+    .user-select(none);
+
+    &,
+    &:active,
+    &.active {
+        &:focus,
+        &.focus {
+            .tab-focus();
+        }
+    }
+
+    &:hover,
+    &:focus,
+    &.focus {
+        color: @btn-default-color;
+        text-decoration: none;
+    }
+
+    &:active,
+    &.active {
+        outline: 0;
+        background-image: none;
+        .box-shadow(inset 0 3px 5px rgba(0,0,0,.125));
+    }
+
+    &.disabled,
+    &[disabled],
+    fieldset[disabled] & {
+        cursor: @cursor-disabled;
+        .opacity(.65);
+        .box-shadow(none);
+    }
+
+    a& {
+        &.disabled,
+        fieldset[disabled] & {
+            pointer-events: none; // Future-proof disabling of clicks on `<a>` elements
+        }
+    }
+
+    .button-variant(#ffffff; @primary-color; @btn-default-border);
+}
+
 // Edit Content.
 .edit-item {
     fieldset {
         .clearfix();
         margin-bottom: @form-group-margin-bottom;
-    }
-
-    button, a.button {
-        display: inline-block;
-        margin-bottom: 0; // For input.btn
-        font-weight: @btn-font-weight;
-        text-align: center;
-        vertical-align: middle;
-        touch-action: manipulation;
-        cursor: pointer;
-        background-image: none; // Reset unusual Firefox-on-Android default style; see https://github.com/necolas/normalize.css/issues/214
-        border: 1px solid transparent;
-        white-space: nowrap;
-        .button-size(@padding-base-vertical; @padding-base-horizontal; @font-size-base; @line-height-base; @btn-border-radius-base);
-        .user-select(none);
-
-        &,
-        &:active,
-        &.active {
-            &:focus,
-            &.focus {
-                .tab-focus();
-            }
-        }
-
-        &:hover,
-        &:focus,
-        &.focus {
-            color: @btn-default-color;
-            text-decoration: none;
-        }
-
-        &:active,
-        &.active {
-            outline: 0;
-            background-image: none;
-            .box-shadow(inset 0 3px 5px rgba(0,0,0,.125));
-        }
-
-        &.disabled,
-        &[disabled],
-        fieldset[disabled] & {
-            cursor: @cursor-disabled;
-            .opacity(.65);
-            .box-shadow(none);
-        }
-
-        a& {
-            &.disabled,
-            fieldset[disabled] & {
-                pointer-events: none; // Future-proof disabling of clicks on `<a>` elements
-            }
-        }
-
-        .button-variant(#ffffff; @primary-color; @btn-default-border);
     }
 
     .edit-item-sidebar {
