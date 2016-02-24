@@ -34,6 +34,8 @@ namespace Orchard.Environment {
         private IEnumerable<ShellContext> _shellContexts;
         private readonly ContextState<IList<ShellSettings>> _tenantsToRestart;
 
+        public int Retries { get; set; }
+
         public DefaultOrchardHost(
             IShellSettingsManager shellSettingsManager,
             IShellContextFactory shellContextFactory,
@@ -142,16 +144,25 @@ namespace Orchard.Environment {
             // Load all tenants, and activate their shell.
             if (allSettings.Any()) {
                 Parallel.ForEach(allSettings, settings => {
-                    try {
-                        var context = CreateShellContext(settings);
-                        ActivateShell(context);
+                    for (var i = 0; i <= Retries; i++) {
+                        bool failed = false;
+                        try {
+                            var context = CreateShellContext(settings);
+                            ActivateShell(context);
+                        }
+                        catch (Exception ex) {
+                            // An exception at this point is always fatal as it literally kills the
+                            // tenant. What is more fatal than something that kills you?
+                            Logger.Error(ex, "A tenant could not be started: " + settings.Name + " Try number: " + i);
+                            failed = true;
+                        }
+
+                        if(failed && i == Retries) {
+                            Logger.Fatal("A tenant could not be started: {0} after {1} retries.", settings.Name, Retries);
+                            return;
+                        }
                     }
-                    catch (Exception ex) {
-                        if (ex.IsFatal()) {
-                            throw;
-                        } 
-                        Logger.Error(ex, "A tenant could not be started: " + settings.Name);
-                    }
+
                     while (_processingEngine.AreTasksPending()) {
                         Logger.Debug("Processing pending task after activate Shell");
                         _processingEngine.ExecuteNextTask();
