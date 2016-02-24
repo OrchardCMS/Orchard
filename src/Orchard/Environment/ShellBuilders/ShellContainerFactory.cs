@@ -28,7 +28,6 @@ namespace Orchard.Environment.ShellBuilders {
     public class ShellContainerFactory : IShellContainerFactory {
         private readonly ILifetimeScope _lifetimeScope;
         private readonly IShellContainerRegistrations _shellContainerRegistrations;
-        private ConcurrentDictionary<Type, ConcurrentBag<NamedRegistration>> _concreteRegistrationNames;
 
         public ShellContainerFactory(ILifetimeScope lifetimeScope, IShellContainerRegistrations shellContainerRegistrations) {
             _lifetimeScope = lifetimeScope;
@@ -67,7 +66,7 @@ namespace Orchard.Environment.ShellBuilders {
                     builder.Register(ctx => blueprint.Descriptor);
                     builder.Register(ctx => blueprint);
 
-                    _concreteRegistrationNames = new ConcurrentDictionary<Type, ConcurrentBag<NamedRegistration>>();
+                    var concreteRegistrationNames = new ConcurrentDictionary<Type, ConcurrentBag<NamedRegistration>>();
 
                     var moduleIndex = intermediateScope.Resolve<IIndex<Type, IModule>>();
                     foreach (var item in blueprint.Dependencies.Where(t => typeof(IModule).IsAssignableFrom(t.Type))) {
@@ -146,7 +145,7 @@ namespace Orchard.Environment.ShellBuilders {
                             else {
                                 // This item is not a decorator.
                                 // We need to add it to the list of concrete implementations. This allows us to know the names of the implementations that need to be decorated should a decorator for this interface exist.
-                                AddConcreteRegistrationName(registrationName, interfaceType, itemToBeRegistered.Item.Type);
+                                AddConcreteRegistrationName(registrationName, interfaceType, itemToBeRegistered.Item.Type, concreteRegistrationNames);
                             }
                         }
 
@@ -171,7 +170,7 @@ namespace Orchard.Environment.ShellBuilders {
 
                     foreach (var decorator in decorators) {
                         // We need to ensure that there is an implementation of this service that can be decorated
-                        if (!_concreteRegistrationNames.ContainsKey(decorator.InterfaceType) || _concreteRegistrationNames[decorator.InterfaceType] == null || !_concreteRegistrationNames[decorator.InterfaceType].Any()) {
+                        if (!concreteRegistrationNames.ContainsKey(decorator.InterfaceType) || concreteRegistrationNames[decorator.InterfaceType] == null || !concreteRegistrationNames[decorator.InterfaceType].Any()) {
                             var exception = new OrchardFatalException(T("The only registered implementations of `{0}` are decorators. In order to avoid circular dependenices, there must be at least one implementation that is not marked with the `OrchardDecorator` attribute.", decorator.InterfaceType.FullName));
                             Logger.Fatal(exception, "Could not complete dependency registration as a circular dependency chain has been found.");
 
@@ -181,7 +180,7 @@ namespace Orchard.Environment.ShellBuilders {
                         var decoratorNames = new ConcurrentBag<NamedRegistration>();
 
                         // For every implementation that can be decorated
-                        foreach (var namedRegistration in _concreteRegistrationNames[decorator.InterfaceType]) {
+                        foreach (var namedRegistration in concreteRegistrationNames[decorator.InterfaceType]) {
                             var registration = RegisterType(builder, decorator.ItemToBeRegistered.Item)
                                 .AsSelf()
                                 .EnableDynamicProxy(dynamicProxyContext)
@@ -207,7 +206,7 @@ namespace Orchard.Environment.ShellBuilders {
                         }
 
                         // Update the collection of implmentation names that can be decorated to contain only the decorators (this allows us to stack decorators)
-                        _concreteRegistrationNames[decorator.InterfaceType] = decoratorNames;
+                        concreteRegistrationNames[decorator.InterfaceType] = decoratorNames;
                     }
 
                     foreach (var item in blueprint.Controllers) {
@@ -276,14 +275,14 @@ namespace Orchard.Environment.ShellBuilders {
             return decoratorRegistration;
         }
 
-        private void AddConcreteRegistrationName(string registrationName, Type interfaceType, Type implementationType) {
-            if (_concreteRegistrationNames.ContainsKey(interfaceType)
-                && _concreteRegistrationNames[interfaceType] != null
-                && !_concreteRegistrationNames[interfaceType].Any(nr=>nr.Name==registrationName)) {
-                _concreteRegistrationNames[interfaceType].Add(new NamedRegistration(registrationName, implementationType));
+        private void AddConcreteRegistrationName(string registrationName, Type interfaceType, Type implementationType, ConcurrentDictionary<Type, ConcurrentBag<NamedRegistration>> concreteRegistrationNames) {
+            if (concreteRegistrationNames.ContainsKey(interfaceType)
+                && concreteRegistrationNames[interfaceType] != null
+                && !concreteRegistrationNames[interfaceType].Any(nr=>nr.Name==registrationName)) {
+                concreteRegistrationNames[interfaceType].Add(new NamedRegistration(registrationName, implementationType));
             }
             else {
-                _concreteRegistrationNames[interfaceType] = new ConcurrentBag<NamedRegistration> {new NamedRegistration(registrationName, implementationType)};
+                concreteRegistrationNames[interfaceType] = new ConcurrentBag<NamedRegistration> {new NamedRegistration(registrationName, implementationType)};
             }
         }
         
