@@ -105,6 +105,10 @@
       <Name>Orchard.Core</Name>
       <Private>false</Private>
     </ProjectReference>
+    <ProjectReference Include="..\..\Modules\Orchard.Layouts\Orchard.Layouts.csproj">
+      <Project>{6bd8b2fa-f2e3-4ac8-a4c3-2925a653889a}</Project>
+      <Name>Orchard.Layouts</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TTS.TalaveraBase\TTS.TalaveraBase.csproj">
       <Project>{5d37d97e-534e-48e9-8954-c360f2ad6202}</Project>
       <Name>TTS.TalaveraBase</Name>
@@ -265,6 +269,9 @@
     <Content Include="Styles\sources\latest-twitter.less" />
     <Content Include="Views\Layout-Original.cshtml" />
     <Content Include="Views\Menu-button-menu.cshtml" />
+    <Content Include="Views\Elements\Grid.cshtml" />
+    <Content Include="Views\Elements\Column.cshtml" />
+    <Content Include="Views\Parts.Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assets\" />

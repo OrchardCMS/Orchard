@@ -1,0 +1,11 @@
+﻿@using Orchard.Layouts.Helpers
+@{
+    var tagBuilder = TagBuilderExtensions
+        .CreateElementTagBuilder(Model, "section");
+    tagBuilder.AddCssClass("container-fluid");
+}
+@tagBuilder.StartElement
+<div class="container intro-body">
+    @DisplayChildren(Model)
+</div>
+@tagBuilder.EndElement
