@@ -1,7 +1,0 @@
-Name: Talavera.BootstrapBase
-Author: Talavera Technology Solutions
-Website: http://talavera.tech
-Description: 
-Version: 1.0
-Tags: Talavera
-Zones: Header, Navigation, Featured, BeforeMain, AsideFirst, Messages, BeforeContent, Content, AfterContent, AsideSecond, AfterMain, TripelFirst, TripelSecond, TripelThird, FooterQuadFirst, FooterQuadSecond, FooterQuadThird, FooterQuadFourth, Footer
