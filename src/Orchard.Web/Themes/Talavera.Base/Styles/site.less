@@ -2,9 +2,7 @@
    The root stylesheet, importing everything. The single stylesheet that's included and that imports all other styles.
 ***************************************************************/
 
-
-// Note that the idea is that every file imports everything it needs, even if it was already import somewhere else (everything will be added
-// only once to the stylesheet in the end).
+// Note that the idea is that every file imports everything it needs, even if it was already import somewhere else (everything will be added// only once to the stylesheet in the end).
 @import "reset";
 @import "structure";
 @import "general";
@@ -14,6 +12,7 @@
 @import "misc";
 @import "media";
 
+@import "../Content/font-awesome/less/font-awesome.less";
 
-// From the inherited theme you can either completely override this stylesheet (by having a style.less/style.css there) or you can extend
-// it by having a site.less in your theme and importing this file at the top.
+/* add user icon before menu */
+.menuUserName > a:before { content: "\f007"; font-family: "FontAwesome"; margin-right: 5px; }

@@ -45,6 +45,7 @@
     ***************************************************************/
 
     Model.Id = "layout-wrapper";
+    Model.Classes.Add("container-fluid height-full");
     var tag = Tag(Model, "div"); // using Tag so the layout div gets the classes, id and other attributes added to the Model
 }
 @tag.StartElement
@@ -58,20 +59,44 @@
 }
 @if (Model.Navigation != null)
 {
-    <div id="layout-navigation" class="group">
-        @Zone(Model.Navigation)
+    <section id="layout-navigation" class="row group">
+        <div class="col-lg-12 bd-affix-1 affix-top">
+            <div class="bd-layoutbox-1 clearfix">
+                <div class="bd-container-inner">
+                    @Display.Branding()
+                    <div class="bd-layoutbox-5 clearfix">
+                        <div class="bd-container-inner">
+                            <nav class="bd-hmenu-1">
+                                <div class="bd-responsivemenu-1 collapse-button">
+                                    <div class="bd-container-inner">
+                                        <div class="bd-menuitem-4">
+                                            <a data-toggle="collapse" data-target=".bd-hmenu-1 .collapse-button + .navbar-collapse" href="#" onclick="return false;">
+                                                <span>Menu</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="navbar-collapse collapse">
+                                    @Zone(Model.Navigation)                                   
+                                </div>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+@if (Model.BeforeMain != null)
+{
+    <div id="layout-before-main" class="group">
+        @Zone(Model.BeforeMain)
     </div>
 }
 @if (Model.Featured != null)
 {
     <div id="layout-featured" class="group">
         @Zone(Model.Featured)
-    </div>
-}
-@if (Model.BeforeMain != null)
-{
-    <div id="layout-before-main" class="group">
-        @Zone(Model.BeforeMain)
     </div>
 }
 <div id="layout-main-container">
@@ -126,7 +151,7 @@
 @if (Model.TripelFirst != null || Model.TripelSecond != null || Model.TripelThird != null)
 {
     <div id="layout-tripel-container">
-        <div id="layout-tripel" class="group">@* as in beer *@
+        <div id="layout-tripel" class="group">
             @if (Model.TripelFirst != null)
             {
                 <div id="tripel-first">
@@ -184,7 +209,7 @@
         }
     </footer>
 </div>
-<div id="toTop">
+@tag.EndElement
+<div id="navigation-toTop">
     <h1><i class="fa fa-chevron-up"></i></h1>
 </div>
-@tag.EndElement

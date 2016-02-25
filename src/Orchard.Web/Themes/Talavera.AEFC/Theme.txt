@@ -1,0 +1,8 @@
+Name: Talavera.AEFC
+Author: American Energy Management Systems
+Website: http://talavera.tech
+Description: American Energy Fitness Center
+Version: 1.0
+Zones: Header, Navigation, BeforeMain, Featured, AsideFirst, Messages, BeforeContent, Content, AfterContent, AsideSecond, AfterMain, TripelFirst, TripelSecond, TripelThird, FooterQuadFirst, FooterQuadSecond, FooterQuadThird, FooterQuadFourth, Footer
+Tags: Bootstrap
+BaseTheme: Talavera.Base

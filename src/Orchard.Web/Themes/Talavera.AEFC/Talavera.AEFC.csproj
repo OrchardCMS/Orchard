@@ -73,8 +73,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets.json" />
-    <Content Include="Assets\Styles.less" />
+    <Content Include="Content\sources\billionthemes\menubig.png" />
     <Content Include="Images\customer_logo.png" />
+    <Content Include="Images\favicon.ico" />
     <Content Include="Images\fitnesscenteratnight.jpg" />
     <Content Include="Images\menubig.png" />
     <Content Include="Styles\forms.css">
@@ -126,6 +127,8 @@
     <Content Include="Images\Web.config" />
     <Content Include="Content\sources\billionthemes\BillionWebFonts.ttf" />
     <Content Include="Content\sources\billionthemes\BillionWebFonts.woff" />
+    <Content Include="Views\Layout.cshtml" />
+    <Content Include="Views\Insertions.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
