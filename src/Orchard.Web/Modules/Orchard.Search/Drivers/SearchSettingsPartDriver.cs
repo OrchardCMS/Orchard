@@ -54,6 +54,7 @@ namespace Orchard.Search.Drivers {
                             part.SearchFields = model.Entries.ToDictionary(x => x.Index, x => x.Fields.Where(e => e.Selected).Select(e => e.Field).ToArray());
                             part.FilterCulture = model.FilterCulture;
                             part.DisplayType = model.DisplayType;
+                            part.AllowAnonymousSearch = model.AllowAnonymousSearch;
                         }
                     }
                     else if (_indexManager.HasIndexProvider()) {

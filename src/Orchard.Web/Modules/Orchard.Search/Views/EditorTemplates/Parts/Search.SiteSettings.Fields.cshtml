@@ -46,7 +46,11 @@
     </div>
     <div>
         <label for="@Html.FieldIdFor(m => m.DisplayType)">@T("Display Type")</label>
-        @Html.TextBoxFor(m => m.DisplayType, new { @class = "text single-line" })
+        @Html.TextBoxFor(m => m.DisplayType, new {@class = "text single-line"})
         <span class="hint">@T("The display type to use for content items in the search results page.")</span>
+    </div>
+    <div>
+        <label>@T("Allow Anonymous Users to Search") @Html.EditorFor(m => m.AllowAnonymousSearch)</label>
+        <span class="hint">@T("If checked, search results will only be displayed to users who are authenticated.")</span>
     </div>
 </fieldset>
