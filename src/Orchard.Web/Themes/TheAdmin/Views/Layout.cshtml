@@ -9,6 +9,8 @@
     Script.Require("Bootstrap");
     Script.Require("ShapesBase").AtFoot();
     Script.Include("TheAdmin.js");
+
+    var overridePanel = Model.PanelOverride == true;
 }
 <div class="am-wrapper @*am-fixed-sidebar*@" data-default-remove-confirmation-prompt="@T("Are you sure you want to remove this element?")'">
     @Display(Model.TopMenu)
@@ -35,9 +37,14 @@
             }
             <div class="row">
                 <div class="col-md-12">
-                    <div class="panel panel-default">
+                    @if (overridePanel) {
                         @Display(Model.Content)
-                    </div>
+                    }
+                    else {
+                        <div class="panel panel-default">
+                            @Display(Model.Content)
+                        </div>
+                    }
                 </div>
             </div>
         </div>

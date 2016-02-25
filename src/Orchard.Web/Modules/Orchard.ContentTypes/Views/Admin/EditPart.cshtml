@@ -3,33 +3,47 @@
     Style.Require("ContentTypesAdmin");
     Script.Require("jQuery");
     Layout.Title = T("Edit Part").ToString();
+    Layout.PanelOverride = true;
 }
-<div class="panel-body">
-    @using (Html.BeginFormAntiForgeryPost()) {
-        @Html.ValidationSummary()
-        <fieldset class="input-group">
-            <label for="Name">@T("Name")</label>
-            @* has unintended consequences (renaming the part) - changing the name creates a new part of that name  *@
-            @Html.TextBoxFor(m => m.Name, new { @class = "text medium", disabled = "disabled" })
-            @Html.HiddenFor(m => m.Name)
-        </fieldset>
-        <fieldset class="manage-part input-group">
-            <div class="settings">
-                @{ Html.RenderTemplates(Model.Templates); }
-            </div>
-        </fieldset>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <span class="title">@T("Settings")</span>
+    </div>
+    <div class="panel-body">
+        @using (Html.BeginFormAntiForgeryPost()) {
+            @Html.ValidationSummary()
+            <fieldset class="input-group">
+                <label for="Name">@T("Name")</label>
+                @* has unintended consequences (renaming the part) - changing the name creates a new part of that name  *@
+                @Html.TextBoxFor(m => m.Name, new {@class = "text medium", disabled = "disabled"})
+                @Html.HiddenFor(m => m.Name)
+            </fieldset>
+            <fieldset class="manage-part input-group">
+                <div class="settings">
+                    @{ Html.RenderTemplates(Model.Templates); }
+                </div>
+            </fieldset>
+        }
+    </div>
+</div>
 
-        <h2>@T("Fields")</h2>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <span class="title">@T("Fields")</span>
         <div class="tools">
-            @Html.ActionLink(T("Add Field").Text, "AddFieldTo", new { area = "Orchard.ContentTypes", id = Model.Name }, new { @class = "btn btn-primary pull-right" })
+            @Html.ActionLink(T("Add Field").Text, "AddFieldTo", new {area = "Orchard.ContentTypes", id = Model.Name}, new {@class = "btn btn-primary pull-right"})
         </div>
-        <div class="manage-type">
-            @Html.EditorFor(m => m.Fields, "Fields", "")
-        </div>
+    </div>
+    <div class="panel-body">
+        @Html.EditorFor(m => m.Fields, "Fields", "")
+    </div>
+</div>
 
+<div class="panel panel-default">
+    <div class="panel-body">
         <fieldset class="text-left">
             <button class="btn btn-primary" type="submit" name="submit.Save" value="Save">@T("Save")</button>
             <button class="btn btn-danger" type="submit" name="submit.Delete" value="Delete" itemprop="RemoveUrl">@T("Delete")</button>
         </fieldset>
-    }
+    </div>
 </div>
