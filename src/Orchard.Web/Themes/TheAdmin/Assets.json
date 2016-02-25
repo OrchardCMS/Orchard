@@ -3,7 +3,8 @@
         "inputs": [
             "Assets/Theme/Less/includes/themes/theme-orchard.less"
         ],
-        "output": "Styles/TheAdmin.css"
+        "output": "Styles/TheAdmin.css",
+        "watch": ["Assets/Theme/**/*.less"]
     },
     {
         "inputs": [
