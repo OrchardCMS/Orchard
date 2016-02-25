@@ -396,6 +396,9 @@
     <Content Include="Styles\site.css.map">
       <DependentUpon>site.css</DependentUpon>
     </Content>
+    <Content Include="Styles\site.min.css">
+      <DependentUpon>site.css</DependentUpon>
+    </Content>
     <Content Include="Styles\structure.css">
       <DependentUpon>structure.less</DependentUpon>
     </Content>

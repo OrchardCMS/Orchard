@@ -3,6 +3,7 @@
    The root stylesheet, importing everything. The single stylesheet that's included and that imports all other styles.
 ***************************************************************/
 /*! normalize.css v3.0.2 | MIT License | git.io/normalize */
+@import url("https://file.myfontastic.com/n6vo44Re5QaWo8oCKShBs7/icons.css");
 @import url("https://fonts.googleapis.com/css?family=Lato:400,700,400italic");
 html {
   font-family: sans-serif;
@@ -19602,49 +19603,6 @@ input[type="text"].bd-bootstrapinput-5.form-control.input-sm:-ms-input-placehold
   font-style: normal;
 }
 /* Minor Changes Theme for AEFC */
-#navigation-toTop {
-  position: fixed;
-  right: 5px;
-  bottom: 10px;
-  cursor: pointer;
-  display: none;
-  text-align: center;
-  z-index: 500;
-}
-#navigation-toTop:hover {
-  opacity: .7;
-}
-.navbar-brand > img {
-  max-height: 50px;
-  overflow: visible;
-  padding-top: 0;
-  padding-bottom: 0;
-}
-.navbar-default {
-  background-color: #043F77;
-  border-color: transparent;
-}
-.navbar-default .navbar-nav > .active > a,
-.navbar-default .navbar-nav > .active > a:hover,
-.navbar-default .navbar-nav > .active > a:focus {
-  background-color: #ff0000;
-}
-.bd-slide-1 {
-  background: none;
-}
-.bd-slide-1:before {
-  background-color: transparent;
-}
-.bd-responsivemenu-1 .bd-menuitem-4 > a:before,
-.bd-responsivemenu-1 .bd-menuitem-4 > a:link:before,
-.bd-responsivemenu-1 .bd-menuitem-4 > a:visited:before,
-.bd-hmenu-1 .collapse-button .bd-menuitem-4 > a:before,
-.bd-hmenu-1 .collapse-button .bd-menuitem-4 > a:link:before,
-.bd-hmenu-1 .collapse-button .bd-menuitem-4 > a:visited:before {
-  content: url(../Content/sources/billionthemes/menubig.png);
-  font-size: 0 !important;
-  line-height: 0 !important;
-}
 html {
   /* This image will be displayed fullscreen */
   background: url('../Images/fitnesscenteratnight.jpg') no-repeat center center;
@@ -19679,6 +19637,56 @@ li.bd-linkbutton-2 > a {
 }
 h4.bd-textblock-4 {
   font-size: 250%;
+}
+#navigation-toTop {
+  position: fixed;
+  right: 5px;
+  bottom: 10px;
+  cursor: pointer;
+  display: none;
+  text-align: center;
+  z-index: 500;
+}
+#navigation-toTop:hover {
+  opacity: .7;
+}
+.navbar-brand > img {
+  max-height: 50px;
+  overflow: visible;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.navbar-default {
+  background-color: #043F77;
+  border-color: transparent;
+}
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus {
+  background-color: #ff0000;
+}
+bd-slider-1 {
+  height: inherit;
+}
+.bd-slide-1 {
+  background: none;
+}
+.bd-slide-1:before {
+  background-color: transparent;
+}
+.bd-responsivemenu-1 .bd-menuitem-4 > a:before,
+.bd-responsivemenu-1 .bd-menuitem-4 > a:link:before,
+.bd-responsivemenu-1 .bd-menuitem-4 > a:visited:before,
+.bd-hmenu-1 .collapse-button .bd-menuitem-4 > a:before,
+.bd-hmenu-1 .collapse-button .bd-menuitem-4 > a:link:before,
+.bd-hmenu-1 .collapse-button .bd-menuitem-4 > a:visited:before {
+  content: url(../Content/sources/billionthemes/menubig.png);
+  font-size: 0 !important;
+  line-height: 0 !important;
+}
+.bd-layoutbox-7 {
+  top: 20px;
+  transform: translateY(-1px);
 }
 @media (max-width: 767px) {
   .bd-container-inner {
