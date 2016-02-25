@@ -1,22 +1,28 @@
-﻿@using Orchard.Utility.Extensions
-@model IEnumerable<Orchard.ContentTypes.ViewModels.EditPartFieldViewModel>
+﻿@model IEnumerable<Orchard.ContentTypes.ViewModels.EditPartFieldViewModel>
 @{
     Script.Require("ContentTypesAdmin");
 }
 @if (Model.Any()) {
-    <table id="fields" class="table table-fw-widget data-table table-striped table-hover">
+    <table class="table table-fw-widget">
         <thead>
-        <tr>
-            <th>@T("Display Name")</th>
-            <th>@T("Field Type")</th>
-            <th class="actions"></th>
-        </tr>
+            <tr>
+                <th width="40%">@T("Name")</th>
+                <th width="40%">@T("Type")</th>
+                <th></th>
+            </tr>
         </thead>
-        <tbody>
-        @foreach (var field in Model) {
-            var f = field;
-            @Html.EditorFor(m => f, "Field", field.Prefix)
-        }
+        <tbody class="no-border-x">
+            @foreach (var field in Model) {
+                var f = field;
+                <tr>
+                    <td>@field.DisplayName</td>
+                    <td>@field.Name</td>
+                    <td>
+                        <a href="@Url.Action("EditField", new {area = "Orchard.ContentTypes", id = field.Part.Name, name = field.Name})">@T("Edit")</a>@T(" | ")
+                        <a href="@Url.Action("RemoveFieldFrom", new {area = "Orchard.ContentTypes", id = field.Part.Name, name = field.Name})" itemprop="RemoveUrl UnsafeUrl">@T("Remove")</a>
+                    </td>
+                </tr>
+            }
         </tbody>
     </table>
 }

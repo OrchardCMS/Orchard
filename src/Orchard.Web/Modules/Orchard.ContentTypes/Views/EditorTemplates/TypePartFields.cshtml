@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<Orchard.ContentTypes.ViewModels.EditPartFieldViewModel>
 @if (Model.Any()) {
-    <div class="content-type-part-fields">
+    <div class="content-type-settings">
         @foreach (var field in Model) {
             var f = field;
             @Html.EditorFor(m => f, "TypePartField", f.Prefix)

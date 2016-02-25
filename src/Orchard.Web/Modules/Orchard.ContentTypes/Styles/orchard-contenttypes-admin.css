@@ -6,20 +6,25 @@
     position: relative;
 }
 
-.orchard-contenttypes .manage-type .panel-group.accordion .panel .panel-heading a.remove-part {
+.orchard-contenttypes .manage-type .panel-group.accordion .panel .panel-heading a.remove-part,
+.orchard-contenttypes .manage-type .panel-group.accordion .panel .panel-heading a.remove-field,
+.orchard-contenttypes .manage-type .panel-group.accordion .panel .panel-heading a.edit-field {
     position: absolute;
     top: 0;
     right: 0;
     background: none;
 }
 
-.orchard-contenttypes .content-type-part-settings,
-.orchard-contenttypes .content-type-part-fields {
+.orchard-contenttypes .manage-type .panel-group.accordion .panel .panel-heading a.edit-field {
+    right: 30px;
+}
+
+.orchard-contenttypes .content-type-settings {
     background: #f9f9f9;
     padding: 1em;
 }
 
-.orchard-contenttypes .content-type-part-fields h4 {
+.orchard-contenttypes .content-type-settings h4 {
     font-weight: 600;
 }
 

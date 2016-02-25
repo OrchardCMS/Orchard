@@ -1,16 +1,34 @@
 ﻿@using Orchard.Utility.Extensions
 @model Orchard.ContentTypes.ViewModels.EditPartFieldViewModel
-<tr>
-    <td>@Model.DisplayName</td>
-    <td>
-        @Model.FieldDefinition.Name.CamelFriendly()
-        <div class="details">
-            @{Html.RenderTemplates(Model.Templates);}
-            @Html.HiddenFor(m => m.Name)@Html.HiddenFor(m => m.FieldDefinition.Name)@Html.HiddenFor(m => m.Index)
+@{
+    var fieldNameId = Model.Name.HtmlClassify();
+    var partNameId = Model.Part.Name.HtmlClassify();
+    var accordionId = String.Format("accordion-{0}-{1}", partNameId, fieldNameId);
+    var accordionPanelId = String.Format("accordion-panel-{0}", fieldNameId);
+}
+<div id="@accordionId" class="panel-group accordion accordion-semi">
+    <div class="panel panel-default">
+        <div class="panel-heading information">
+            <h4 class="panel-title group">
+                <a data-toggle="collapse" data-parent="#@accordionId" href="#@accordionPanelId" aria-expanded="false" class="collapsed">
+                    <i class="icon s7-angle-down"></i> @String.Format("{0} ({1})", Model.DisplayName, Model.FieldDefinition._Definition.Name)
+                </a>
+                <a href="@Url.Action("EditField", new {area = "Orchard.ContentTypes", id = Model.Part.Name, name = Model.Name})" class="edit-field">
+                    <span class="icon s7-note"></span>
+                </a>
+                <a href="@Url.Action("RemoveFieldFrom", new {area = "Orchard.ContentTypes", id = Model.Part.Name, name = Model.Name})" class="remove-field" itemprop="RemoveUrl UnsafeUrl">
+                    <span class="icon s7-close"></span>
+                </a>
+            </h4>
         </div>
-    </td>
-    <td class="actions">
-        @Html.ActionLink(T("Edit").Text, "EditField", new { area = "Orchard.ContentTypes", id = Model.Part.Name, Model.Name }) |
-        @Html.ActionLink(T("Remove").Text, "RemoveFieldFrom", new { area = "Orchard.ContentTypes", id = Model.Part.Name, Model.Name }, new { itemprop = "RemoveUrl UnsafeUrl" })
-    </td>
-</tr>
+        <div id="@accordionPanelId" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+            <div class="panel-body">
+                <div class="content-type-settings">
+                    @{Html.RenderTemplates(Model.Templates);}
+                    @Html.HiddenFor(m => m.Name)
+                    @Html.HiddenFor(m => m.FieldDefinition.Name)@Html.HiddenFor(m => m.Index)
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

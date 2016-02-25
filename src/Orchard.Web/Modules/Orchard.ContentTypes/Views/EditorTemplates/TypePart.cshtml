@@ -14,7 +14,7 @@
                     <i class="icon s7-angle-down"></i> @Model.PartDefinition.DisplayName
                 </a>
                 @if (Model.PartDefinition.Settings.GetModel<ContentPartSettings>().Attachable) {
-                    <a href="@Url.Action("RemovePartFrom", new {area = "Orchard.ContentTypes", id = Model.Type.Name, Model.PartDefinition.Name})" class="remove-part" itemprop="RemoveUrl UnsafeUrl">
+                    <a href="@Url.Action("RemovePartFrom", new {area = "Orchard.ContentTypes", id = Model.Type.Name, name = Model.PartDefinition.Name})" class="remove-part" itemprop="RemoveUrl UnsafeUrl">
                         <span class="icon s7-close"></span>
                     </a>
                 }
@@ -22,23 +22,22 @@
         </div>
         <div id="@accordionPanelId" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
             <div class="panel-body">
-                <div class="group">
-                    @if (!String.IsNullOrWhiteSpace(Model.Description)) {
-                        <div role="alert" class="alert alert-info alert-icon alert-icon-color">
-                            <div class="icon"><span class="s7-info"></span></div>
-                            <div class="message">@Model.Description</div>
-                        </div>
-                    }
-                </div>
+                @if (!String.IsNullOrWhiteSpace(Model.Description)) {
+                    <div role="alert" class="alert alert-info alert-icon alert-icon-color">
+                        <div class="icon"><span class="s7-info"></span></div>
+                        <div class="message">@Model.Description</div>
+                    </div>
+                }
                 <div class="content-type-details">
                     @Html.EditorFor(m => m.PartDefinition.Fields, "TypePartFields", "PartDefinition")
                     @if (Model.Templates.Any()) {
-                        <div class="content-type-part-settings">
+                        <div class="content-type-settings">
                             <span class="title">@T("Settings")</span>
                             @{ Html.RenderTemplates(Model.Templates); }
                         </div>
                     }
-                    @* don't show global part settings for now - @Html.DisplayFor(m => m.PartDefinition.Settings, "Settings", "PartDefinition") *@@Html.HiddenFor(m => m.PartDefinition.Name)
+                    @* don't show global part settings for now - @Html.DisplayFor(m => m.PartDefinition.Settings, "Settings", "PartDefinition") *@
+                    @Html.HiddenFor(m => m.PartDefinition.Name)
                     @Html.HiddenFor(m => m.Index)
                 </div>
             </div>
