@@ -1,4 +1,4 @@
-﻿@import "../../Talavera.Base/Styles/site";
+﻿@import "../../Talavera.Base/Styles/site.less";
 
 @import "variables";
 @import "general";
@@ -6,12 +6,12 @@
 
 @import "../../Talavera.Base/Content/bootswatch/darkly/bootswatch";
 @import "../../Talavera.Base/Content/bootswatch/darkly/variables";
-@import "../Content/sources/billionthemes/billionthemes-2608975.css";
+@import (inline) "../Content/sources/billionthemes/billionthemes-2608975.css";
 
 @charset "UTF-8";
 @font-face {
   font-family: 'Billion Web Font';
-  src: url("BillionWebFonts.woff") format('woff'), url("BillionWebFonts.ttf") format('truetype');
+  src: url("../Content/sources/billionthemes/BillionWebFonts.woff") format('woff'), url("../Content/sources/billionthemes/BillionWebFonts.ttf") format('truetype');
   font-weight: normal;
   font-style: normal;
 }

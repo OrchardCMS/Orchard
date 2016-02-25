@@ -52,10 +52,10 @@
 @if (Model.Header != null)
 {
     <header id="layout-header" class="group">
-    <div id="header">
-        @Zone(Model.Header)
-    </div>
-</header>
+        <div id="header">
+            @Zone(Model.Header)
+        </div>
+    </header>
 }
 @if (Model.Navigation != null)
 {
@@ -77,7 +77,7 @@
                                     </div>
                                 </div>
                                 <div class="navbar-collapse collapse">
-                                    @Zone(Model.Navigation)                                   
+                                    @Zone(Model.Navigation)
                                 </div>
                             </nav>
                         </div>
@@ -103,42 +103,42 @@
     <div id="layout-main" class="group">
         @if (Model.AsideFirst != null)
         {
-            <aside id="aside-first" class="aside-first group">
-        @Zone(Model.AsideFirst)
-    </aside>
+        <aside id="aside-first" class="aside-first group">
+            @Zone(Model.AsideFirst)
+        </aside>
         }
         <div id="layout-content" class="group">
             @if (Model.Messages != null)
             {
-                <div id="messages">
-                    @Zone(Model.Messages)
-                </div>
+            <div id="messages">
+                @Zone(Model.Messages)
+            </div>
             }
             @if (Model.BeforeContent != null)
             {
-                <div id="before-content">
-                    @Zone(Model.BeforeContent)
-                </div>
+            <div id="before-content">
+                @Zone(Model.BeforeContent)
+            </div>
             }
-@* the model content for the page is in the Content zone @ the default position (nothing, zero, zilch) *@
+            @* the model content for the page is in the Content zone @ the default position (nothing, zero, zilch) *@
             @if (Model.Content != null)
             {
-                <div id="content" class="group">
-                    @Zone(Model.Content)
-                </div>
+            <div id="content" class="group">
+                @Zone(Model.Content)
+            </div>
             }
             @if (Model.AfterContent != null)
             {
-                <div id="after-content">
-                    @Zone(Model.AfterContent)
-                </div>
+            <div id="after-content">
+                @Zone(Model.AfterContent)
+            </div>
             }
         </div>
         @if (Model.AsideSecond != null)
         {
-            <aside id="aside-second" class="aside-second">
-        @Zone(Model.AsideSecond)
-    </aside>
+        <aside id="aside-second" class="aside-second">
+            @Zone(Model.AsideSecond)
+        </aside>
         }
     </div>
 </div>
@@ -154,21 +154,21 @@
         <div id="layout-tripel" class="group">
             @if (Model.TripelFirst != null)
             {
-                <div id="tripel-first">
-                    @Zone(Model.TripelFirst)
-                </div>
+            <div id="tripel-first">
+                @Zone(Model.TripelFirst)
+            </div>
             }
             @if (Model.TripelSecond != null)
             {
-                <div id="tripel-second">
-                    @Zone(Model.TripelSecond)
-                </div>
+            <div id="tripel-second">
+                @Zone(Model.TripelSecond)
+            </div>
             }
             @if (Model.TripelThird != null)
             {
-                <div id="tripel-third">
-                    @Zone(Model.TripelThird)
-                </div>
+            <div id="tripel-third">
+                @Zone(Model.TripelThird)
+            </div>
             }
         </div>
     </div>
@@ -178,34 +178,34 @@
         <div id="footer-quad" class="group">
             @if (Model.FooterQuadFirst != null)
             {
-            <div id="footer-quad-first">
-                @Zone(Model.FooterQuadFirst)
-            </div>
+                <div id="footer-quad-first">
+                    @Zone(Model.FooterQuadFirst)
+                </div>
             }
             @if (Model.FooterQuadSecond != null)
             {
-            <div id="footer-quad-second">
-                @Zone(Model.FooterQuadSecond)
-            </div>
+                <div id="footer-quad-second">
+                    @Zone(Model.FooterQuadSecond)
+                </div>
             }
             @if (Model.FooterQuadThird != null)
             {
-            <div id="footer-quad-third">
-                @Zone(Model.FooterQuadThird)
-            </div>
+                <div id="footer-quad-third">
+                    @Zone(Model.FooterQuadThird)
+                </div>
             }
             @if (Model.FooterQuadFourth != null)
             {
-            <div id="footer-quad-fourth">
-                @Zone(Model.FooterQuadFourth)
-            </div>
+                <div id="footer-quad-fourth">
+                    @Zone(Model.FooterQuadFourth)
+                </div>
             }
         </div>
         @if (Model.Footer != null)
         {
-        <div id="footer-sig" class="group">
-            @Zone(Model.Footer)
-        </div>
+            <div id="footer-sig" class="group">
+                @Zone(Model.Footer)
+            </div>
         }
     </footer>
 </div>

@@ -78,19 +78,13 @@
     <Content Include="Images\favicon.ico" />
     <Content Include="Images\fitnesscenteratnight.jpg" />
     <Content Include="Images\menubig.png" />
-    <Content Include="Styles\forms.css">
-      <DependentUpon>forms.less</DependentUpon>
-    </Content>
-    <Content Include="Styles\forms.min.css">
-      <DependentUpon>forms.css</DependentUpon>
-    </Content>
+    <Content Include="Content\sources\billionthemes\billionthemes-2608975.css" />
     <Content Include="Styles\site.css">
       <DependentUpon>site.less</DependentUpon>
     </Content>
     <Content Include="Styles\site.min.css">
       <DependentUpon>site.css</DependentUpon>
     </Content>
-    <Content Include="Content\sources\billionthemes\billionthemes-2608975.css" />
     <Content Include="ThemeZonePreview.png" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
@@ -129,6 +123,10 @@
     <Content Include="Content\sources\billionthemes\BillionWebFonts.woff" />
     <Content Include="Views\Layout.cshtml" />
     <Content Include="Views\Insertions.cshtml" />
+    <Content Include="Views\Menu-button-menu.cshtml" />
+    <Content Include="Views\Menu.cshtml" />
+    <Content Include="Views\MenuItem.cshtml" />
+    <Content Include="Views\MenuItemLink.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
