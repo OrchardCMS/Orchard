@@ -26202,6 +26202,13 @@ body {
   /* Workaround for some mobile browsers */
   min-height: 100%;
   background-color: inherit;
+  padding-bottom: 125px;
+}
+.affix {
+  bottom: 0;
+}
+.navbar {
+  -webkit-backface-visibility: hidden;
 }
 .element-shade {
   background-color: rgba(0, 0, 0, 0.61);
@@ -26277,6 +26284,7 @@ li.bd-linkbutton-2 > a {
   color: white;
 }
 #layout-wrapper {
+  min-height: 100%;
   width: 100%;
 }
 #layout-main-container {
@@ -26294,7 +26302,7 @@ li.bd-linkbutton-2 > a {
 #navigation-toTop:hover {
   opacity: .7;
 }
-.zone-footer .navbar-fixed-bottom {
+#badgeofhonor {
   background-color: transparent;
 }
 .social-media-icons a.btn.btn-danger {
@@ -26307,6 +26315,9 @@ i[class^="socicon"] {
   color: white;
 }
 @media (max-width: 767px) {
+  body {
+    padding-bottom: 350px;
+  }
   .bd-menu-3.nav-pills .bd-menuitem-6 > a,
   .bd-menu-3.nav-pills .bd-menuitem-6 > a:link,
   .bd-menu-3.nav-pills .bd-menuitem-6 > a:visited {

@@ -34,6 +34,15 @@ body {
     /* Workaround for some mobile browsers */
     min-height: 100%;
     background-color: inherit;
+    padding-bottom: 125px;
+}
+
+.affix {
+    bottom: 0;
+}
+
+.navbar {
+    -webkit-backface-visibility: hidden;
 }
 
 .element-shade {
@@ -46,8 +55,7 @@ li.bd-linkbutton-2 > a {
     color: #fff;
 }
 
-.bd-affix-1
-{
+.bd-affix-1 {
     position: inherit;
 }
 
@@ -80,24 +88,20 @@ li.bd-linkbutton-2 > a {
     line-height: 0 !important;
 }
 
-.widget-menu-widget .menu > li > a:hover, 
+.widget-menu-widget .menu > li > a:hover,
 .widget-menu-widget .menu > li > a:focus,
 .widget-menu-widget .menu > li.current > a,
-.widget-menu-widget .menu li.dropdown > ul
-.widget-menu-widget .menu .dropdown-menu > li > a:hover,
-.widget-menu-widget .menu .dropdown-menu > li > a:focus
-{
+.widget-menu-widget .menu li.dropdown > ul .widget-menu-widget .menu .dropdown-menu > li > a:hover,
+.widget-menu-widget .menu .dropdown-menu > li > a:focus {
     background-color: transparent;
 }
 
-.widget-menu-widget .menu-main-menu li.dropdown > ul
-{
-    background-color: transparent;   
+.widget-menu-widget .menu-main-menu li.dropdown > ul {
+    background-color: transparent;
 }
 
-.widget-menu-widget .menu-main-menu .dropdown-menu > li > a:hover, 
-.widget-menu-widget .menu-main-menu .dropdown-menu > li > a:focus
-{
+.widget-menu-widget .menu-main-menu .dropdown-menu > li > a:hover,
+.widget-menu-widget .menu-main-menu .dropdown-menu > li > a:focus {
     background-color: transparent;
 }
 
@@ -105,8 +109,7 @@ li.bd-linkbutton-2 > a {
     border-left: 2px solid #33add6; 
 }*/
 
-.bd-section-1
-{
+.bd-section-1 {
     margin-top: 17vh;
 }
 
@@ -133,6 +136,7 @@ li.bd-linkbutton-2 > a {
 }
 
 #layout-wrapper {
+    min-height: 100%;
     width: 100%;
 }
 
@@ -154,39 +158,37 @@ li.bd-linkbutton-2 > a {
     opacity: .7;
 }
 
-.zone-footer .navbar-fixed-bottom
-{
+#badgeofhonor {
     background-color: transparent;
 }
 
-.social-media-icons a.btn.btn-danger
-{
+.social-media-icons a.btn.btn-danger {
     font-size: 150%;
     color: red;
     border-color: red;
     background-color: red;
 }
 
-i[class^="socicon"]
-{
+i[class^="socicon"] {
     color: white;
 }
 
 @media (max-width: 767px) {
-.bd-menu-3.nav-pills .bd-menuitem-6 > a, 
-.bd-menu-3.nav-pills .bd-menuitem-6 > a:link, 
-.bd-menu-3.nav-pills .bd-menuitem-6 > a:visited
-    {
+    body {
+        padding-bottom: 350px;
+    }
+
+    .bd-menu-3.nav-pills .bd-menuitem-6 > a,
+    .bd-menu-3.nav-pills .bd-menuitem-6 > a:link,
+    .bd-menu-3.nav-pills .bd-menuitem-6 > a:visited {
         color: inherit;
     }
 
-.bd-section-1
-    {
+    .bd-section-1 {
         margin-top: inherit;
     }
 
-.zone-content ul.menu-button-menu
-    {
+    .zone-content ul.menu-button-menu {
         padding-left: inherit;
     }
 }
