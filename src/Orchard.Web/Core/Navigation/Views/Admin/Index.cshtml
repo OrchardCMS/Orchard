@@ -33,7 +33,7 @@
     }
     @if (hasPermission) { 
     <div id="navigation-menu-add">
-        @Html.Link(T("Add a new menu...").Text, Url.Action("Create", "Admin", new { area = "Contents", id = "Menu", returnUrl = Request.RawUrl }))
+        @Html.Link(T("Add a new menu...").Text, Url.Action("Create", "Admin", new { area = "Contents", id = "Menu", returnUrl = Request.RawUrl }), new { @class = "btn btn-link" })
     </div>
     }
 </div>
@@ -41,21 +41,19 @@
 
 @using (Html.BeginFormAntiForgeryPost()) {
     @Html.Hidden("menuId", Model.CurrentMenu.Id)
-    <div class="sections">
-        <div class="primary">
-            <div class="container">
-                <div class="navigation-menu">
-                    @if (Model.MenuItemEntries.Any()) {
-                        @RenderMenuItems(Model.MenuItemEntries, 0)
-                    }
-                    else {
-                        <h2>@T("The menu is empty")</h2>
-                    }
-                </div>
+    <div class="sections row">
+        <div class="col-md-8 col-lg-9">
+            <div class="navigation-menu">
+                @if (Model.MenuItemEntries.Any()) {
+                    @RenderMenuItems(Model.MenuItemEntries, 0)
+                }
+                else {
+                    <h2>@T("The menu is empty")</h2>
+                }
             </div>
         </div>
 
-        <div class="secondary">
+        <div class="col-md-4 col-lg-3">
             <ul class="menu-items-zone">
                 @foreach (var descriptor in Model.MenuItemDescriptors.OrderBy(x => x.DisplayName)) {
                     <li>

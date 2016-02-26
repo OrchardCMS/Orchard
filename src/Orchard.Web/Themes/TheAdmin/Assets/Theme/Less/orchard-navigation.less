@@ -18,8 +18,9 @@
                 text-align: center;
                 border-radius: 0;
                 display: block;
-                &:hover{
-                    background:rgba(255,255,255,.5);
+
+                &:hover {
+                    background: rgba(255,255,255,.5);
                 }
             }
 
@@ -33,6 +34,48 @@
                     background: white;
                 }
             }
+        }
+    }
+}
+
+#display-menu-controls {
+    margin-bottom: 1em;
+
+    form {
+        display: inline-block;
+        vertical-align:bottom;
+        white-space:nowrap;
+        max-width:100%;
+        margin-right:60px;
+    }
+
+    fieldset {
+        display: inline-block;
+        label {
+            display: block;
+        }
+
+        select {
+            display: inline-block;
+            vertical-align: middle;
+            max-width:100%;
+
+        }
+    }
+    #navigation-menu-add{
+        display:inline-block;
+    }
+}
+
+.navigation-menu {
+    ol, ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    li {
+        div {
+            display: inline-block;
         }
     }
 }
