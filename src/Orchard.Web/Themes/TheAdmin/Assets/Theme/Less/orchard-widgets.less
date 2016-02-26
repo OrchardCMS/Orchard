@@ -1,0 +1,111 @@
+﻿.orchard-widgets {
+    .button, a.button, #widgets-layer-add a {
+        padding: 8px 12px;
+    }
+
+    #widgets-layers-control {
+        fieldset {
+            display: inline-block;
+        }
+
+        label {
+            vertical-align: text-top;
+        }
+    }
+
+    .bulk-actions-auto {
+        select {
+            width: auto;
+            display: inline-block;
+        }
+    }
+
+    .widgets-listed, #widgets-available, {
+        ol {
+            padding: 0;
+        }
+
+        li {
+            background: #FFF;
+            color: #AEC3CE;
+            border: 1px solid #EAEAEA;
+            padding: 5px 5px 0px 10px;
+            position: relative;
+            list-style: none;
+            clear:both;
+            .clearfix();
+
+            .widgets-actions {
+                position: relative;
+                top: auto;
+                right: auto;
+                .pull-right();
+                .clearfix();
+            }
+
+            h2 {
+                display: inline-block;
+                margin: 8px 0;
+                font-size: 1.077em;
+                padding:2px;
+            }
+
+
+            &:after {
+                clear: both;
+            }
+        }
+
+        ul.widgets-zone-widgets {
+            margin-top: 5px;
+            padding: 0;
+            line-height: 36px;
+
+            li {
+                padding: 5px 5px 5px 30px;
+                .clearfix();
+            }
+
+            h3 {
+                font-size: 16px;
+                margin: 10px 5px 10px 0;
+                .pull-left();
+                .clearfix();
+            }
+
+            .contentType {
+                display:inline-block;
+            }
+
+            .widgets-move-somewhere {
+                top: 5px;
+                width: 24px;
+            }
+
+            button {
+                vertical-align: top;
+
+                &.widgets-move {
+                    height: 18px;
+                    width: 24px;
+
+                    &.widgets-move-up {
+                        background-position: 8px 10px;
+                    }
+
+                    &.widgets-move-down {
+                        background-position: 8px -13px;
+                    }
+
+                    &:hover {
+                        background-color: transparent;
+                        color: @primary-color;
+                        text-shadow: 0px 1px 3px rgba(0,0,0,.4);
+                        opacity: 1;
+                        cursor: pointer;
+                    }
+                }
+            }
+        }
+    }
+}
