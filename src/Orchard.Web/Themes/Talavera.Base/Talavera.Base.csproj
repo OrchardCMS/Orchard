@@ -614,7 +614,6 @@
     <Content Include="Views\Content-BlogPost.Summary.cshtml" />
     <Content Include="Views\EditorTemplates\Parts.Comment.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\BootstrapThemeSettings.cshtml" />
-    <Content Include="Views\Layout %282%29.cshtml" />
     <Content Include="Views\LogOn.cshtml" />
     <Content Include="Views\Menu.cshtml" />
     <Content Include="Views\MenuItem.cshtml" />
@@ -648,7 +647,6 @@
     <Content Include="Views\Parts.TwitterWidget.cshtml" />
     <Content Include="Views\Parts.ZenGallery.cshtml" />
     <Content Include="Views\Register.cshtml" />
-    <Content Include="Views\Resources %282%29.cshtml" />
     <Content Include="Content\font-awesome\fonts\fontawesome-webfont.eot" />
     <Content Include="Content\font-awesome\fonts\fontawesome-webfont.ttf" />
     <Content Include="Content\font-awesome\fonts\fontawesome-webfont.woff" />
@@ -668,6 +666,7 @@
     <Content Include="Content\font-awesome\less\stacked.less" />
     <Content Include="Content\font-awesome\less\variables.less" />
     <Content Include="Tools\Update-ViewsWithFileNameTag.ps1" />
+    <Content Include="Views\User.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

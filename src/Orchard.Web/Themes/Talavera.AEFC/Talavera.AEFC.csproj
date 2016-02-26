@@ -127,6 +127,7 @@
     <Content Include="Views\Menu.cshtml" />
     <Content Include="Views\MenuItem.cshtml" />
     <Content Include="Views\MenuItemLink.cshtml" />
+    <Content Include="Views\BadgeOfHonor.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
