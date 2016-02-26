@@ -53,12 +53,16 @@
         float:none;
         display:inline-block;
         margin:0;
+        
+        .summary{
+            overflow:auto;
+            height:100%
+        }
 
-
-        &:only-child{
+        /*&:only-child{
             height:auto;
             width:100%;
-        }
+        }*/
 
         @media (max-width: @screen-md-max) {
             width: 33%
