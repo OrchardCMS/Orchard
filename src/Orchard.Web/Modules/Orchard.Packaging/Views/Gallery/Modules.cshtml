@@ -9,33 +9,37 @@
 }
 
 @using (Html.BeginFormAntiForgeryPost(Url.Action("Modules", "Gallery"))) {
-    <fieldset class="bulk-actions bulk-actions-auto">
-        <label for="sourceId">@T("Feed:")</label>
-        <select id="sourceId" name="@Html.NameOf(m => m.Options.SourceId)">
-            @Html.SelectOption(Model.Options.SourceId, null, T("All feeds").ToString())
-            @foreach (var source in Model.Sources) {
-                @Html.SelectOption(Model.Options.SourceId, source.Id, source.FeedTitle)
-            }
-        </select>
-    </fieldset>
+    <div class="row">
+        <div class="col-md-8 col-sm-6 col-xs-12">
+            <fieldset class="bulk-actions bulk-actions-auto">
+                <label for="sourceId">@T("Feed:")</label>
+                <select id="sourceId" name="@Html.NameOf(m => m.Options.SourceId)">
+                    @Html.SelectOption(Model.Options.SourceId, null, T("All feeds").ToString())
+                    @foreach (var source in Model.Sources) {
+                        @Html.SelectOption(Model.Options.SourceId, source.Id, source.FeedTitle)
+                    }
+                </select>
+            </fieldset>
 
-    <fieldset class="bulk-actions bulk-actions-auto">
-        <label for="filterResults">@T("Sort by:")</label>
-        <select id="filterResults" name="@Html.NameOf(m => m.Options.Order)">
-            @Html.SelectOption(Model.Options.Order, PackagingExtensionsOrder.Downloads, T("Downloads").ToString())
-            @Html.SelectOption(Model.Options.Order, PackagingExtensionsOrder.Ratings, T("Ratings").ToString())
-            @Html.SelectOption(Model.Options.Order, PackagingExtensionsOrder.Alphanumeric, T("Alphanumeric").ToString())
-        </select>
+            <fieldset class="bulk-actions bulk-actions-auto">
+                <label for="filterResults">@T("Sort by:")</label>
+                <select id="filterResults" name="@Html.NameOf(m => m.Options.Order)">
+                    @Html.SelectOption(Model.Options.Order, PackagingExtensionsOrder.Downloads, T("Downloads").ToString())
+                    @Html.SelectOption(Model.Options.Order, PackagingExtensionsOrder.Ratings, T("Ratings").ToString())
+                    @Html.SelectOption(Model.Options.Order, PackagingExtensionsOrder.Alphanumeric, T("Alphanumeric").ToString())
+                </select>
 
-        <button id="apply-bulk-actions" class="apply-bulk-actions-auto" type="submit">@T("Apply")</button>
-    </fieldset>
-
-    <fieldset class="search-actions">
-        <input type="text" id="searchText" class="text single-line" name="@Html.NameOf(m => m.Options.SearchText)" value="@Model.Options.SearchText" />
-
-        <button type="submit">@T("Search")</button>
-    </fieldset>
-
+                <button id="apply-bulk-actions" class="apply-bulk-actions-auto" type="submit">@T("Apply")</button>
+            </fieldset>
+        </div>
+        <fieldset class="pull-right col-md-4 col-sm-6 col-xs-12">
+            <div class="input-group xs-mb-15">
+                <input id="searchText" type="text" class="form-control" name="@Html.NameOf(m => m.Options.SearchText)" value="@Model.Options.SearchText"><span class="input-group-btn">
+                    <button type="button" class="btn btn-primary">@T("Search").ToString()</button>
+                </span>
+            </div>
+        </fieldset>
+    </div>
     if (Model.Extensions.Any()) {
         <ul class="contentItems">
         @foreach (var item in Model.Extensions) {
