@@ -9,44 +9,103 @@
 @import (inline) "../Content/sources/billionthemes/billionthemes-2608975.css";
 
 @charset "UTF-8";
+
 @font-face {
-  font-family: 'Billion Web Font';
-  src: url("../Content/sources/billionthemes/BillionWebFonts.woff") format('woff'), url("../Content/sources/billionthemes/BillionWebFonts.ttf") format('truetype');
-  font-weight: normal;
-  font-style: normal;
+    font-family: 'Billion Web Font';
+    src: url("../Content/sources/billionthemes/BillionWebFonts.woff") format('woff'), url("../Content/sources/billionthemes/BillionWebFonts.ttf") format('truetype');
+    font-weight: normal;
+    font-style: normal;
 }
 
 /* Minor Changes Theme for AEFC */
 html {
-	/* This image will be displayed fullscreen */
-	background:url('../Images/fitnesscenteratnight.jpg') no-repeat center center;
-	/* Ensure the html element always takes up the full height of the browser window */
-	min-height:100%;
-	/* The Magic */
-	background-size:cover;
+    /* This image will be displayed fullscreen */
+    background: url('../Images/fitnesscenteratnight.jpg') no-repeat center center;
+    /* Ensure the html element always takes up the full height of the browser window */
+    min-height: 100%;
+    /* The Magic */
+    background-size: cover;
     background-attachment: fixed;
 }
 
 body {
-	/* Workaround for some mobile browsers */
-	min-height:100%;
+    /* Workaround for some mobile browsers */
+    min-height: 100%;
     background-color: inherit;
 }
 
-.element-shade{
-  background-color: rgba(0,0,0, 0.61);
-  color: inherit;
+.element-shade {
+    background-color: rgba(0,0,0, 0.61);
+    color: inherit;
 }
 
 li.bd-linkbutton-1 > a,
-li.bd-linkbutton-2 > a
- {
+li.bd-linkbutton-2 > a {
     color: #fff;
 }
 
-h4.bd-textblock-4
-{
+h4.bd-textblock-4 {
     font-size: 250%;
+}
+
+.bd-affix-1
+{
+    position: relative;
+}
+
+.navbar-brand > img {
+    max-height: 50px;
+    overflow: visible;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.navbar-default {
+    background-color: #043F77;
+    border-color: transparent;
+}
+
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus {
+    background-color: #ff0000;
+}
+
+.bd-responsivemenu-1 .bd-menuitem-4 > a:before,
+.bd-responsivemenu-1 .bd-menuitem-4 > a:link:before,
+.bd-responsivemenu-1 .bd-menuitem-4 > a:visited:before,
+.bd-hmenu-1 .collapse-button .bd-menuitem-4 > a:before,
+.bd-hmenu-1 .collapse-button .bd-menuitem-4 > a:link:before,
+.bd-hmenu-1 .collapse-button .bd-menuitem-4 > a:visited:before {
+    content: url(../Content/sources/billionthemes/menubig.png);
+    font-size: 0 !important;
+    line-height: 0 !important;
+}
+
+.bd-slide-1 {
+    background: none;
+}
+
+.bd-slide-1:before {
+    background-color: transparent;
+}
+
+.bd-slider-1 {
+    height: inherit;
+}
+
+.bd-layoutbox-7 {
+    position: relative;
+    transform: inherit;
+    -webkit-transform: inherit;
+}
+
+#layout-wrapper{
+    width: 100%;
+}
+
+#layout-main-container {
+    background-color: transparent;
 }
 
 #navigation-toTop {
@@ -63,53 +122,7 @@ h4.bd-textblock-4
     opacity: .7;
 }
 
-.navbar-brand > img { 
-    max-height: 50px;    
-    overflow: visible;
-    padding-top: 0;
-    padding-bottom: 0; 
-}
-
-.navbar-default {
-    background-color: #043F77;
-    border-color: transparent;
-}
-
-.navbar-default .navbar-nav>.active>a, 
-.navbar-default .navbar-nav>.active>a:hover, 
-.navbar-default .navbar-nav>.active>a:focus {
-    background-color: #ff0000;
-}
-.bd-responsivemenu-1 .bd-menuitem-4 > a:before,
-.bd-responsivemenu-1 .bd-menuitem-4 > a:link:before,
-.bd-responsivemenu-1 .bd-menuitem-4 > a:visited:before,
-.bd-hmenu-1 .collapse-button .bd-menuitem-4 > a:before,
-.bd-hmenu-1 .collapse-button .bd-menuitem-4 > a:link:before,
-.bd-hmenu-1 .collapse-button .bd-menuitem-4 > a:visited:before {
-  content: url(../Content/sources/billionthemes/menubig.png);
-  font-size: 0 !important;
-  line-height: 0 !important;
-}
-
-.bd-slide-1 {
-    background: none;
-}
-.bd-slide-1:before
-{
-    background-color: transparent;
-}
-.bd-slider-1{
-    height: inherit;
-}
-
-.bd-layoutbox-7
-{    
-    position: relative;
-    transform: inherit;
-    -webkit-transform: inherit;
-}
-
-@media (max-width: 767px) {
+/*@media (max-width: 767px) {
   .bd-container-inner {
     max-width: none;
   }
@@ -128,4 +141,4 @@ h4.bd-textblock-4
   .bd-container-inner {
     max-width: none;
   }
-}
+}*/

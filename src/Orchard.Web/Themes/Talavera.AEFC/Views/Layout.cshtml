@@ -45,7 +45,7 @@
     ***************************************************************/
 
     Model.Id = "layout-wrapper";
-    Model.Classes.Add("container-fluid height-full");
+    Model.Classes.Add("container-fluid");
     var tag = Tag(Model, "div"); // using Tag so the layout div gets the classes, id and other attributes added to the Model
 }
 @tag.StartElement
@@ -60,9 +60,9 @@
 @if (Model.Navigation != null)
 {
     <section id="layout-navigation" class="group">
-        <div class="col-lg-12 bd-affix-1 affix-top">
+        <div class="bd-affix-1 affix-top">
             <div class="bd-layoutbox-1 clearfix">
-                <div class="bd-container-inner">
+                <div class="">
                     @Display.Branding()
                     <div class="bd-layoutbox-5 clearfix">
                         <div class="bd-container-inner">

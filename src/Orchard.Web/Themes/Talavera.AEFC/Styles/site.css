@@ -19628,17 +19628,8 @@ li.bd-linkbutton-2 > a {
 h4.bd-textblock-4 {
   font-size: 250%;
 }
-#navigation-toTop {
-  position: fixed;
-  right: 5px;
-  bottom: 10px;
-  cursor: pointer;
-  display: none;
-  text-align: center;
-  z-index: 500;
-}
-#navigation-toTop:hover {
-  opacity: .7;
+.bd-affix-1 {
+  position: relative;
 }
 .navbar-brand > img {
   max-height: 50px;
@@ -19679,7 +19670,25 @@ h4.bd-textblock-4 {
   transform: inherit;
   -webkit-transform: inherit;
 }
-@media (max-width: 767px) {
+#layout-wrapper {
+  width: 100%;
+}
+#layout-main-container {
+  background-color: transparent;
+}
+#navigation-toTop {
+  position: fixed;
+  right: 5px;
+  bottom: 10px;
+  cursor: pointer;
+  display: none;
+  text-align: center;
+  z-index: 500;
+}
+#navigation-toTop:hover {
+  opacity: .7;
+}
+/*@media (max-width: 767px) {
   .bd-container-inner {
     max-width: none;
   }
@@ -19698,4 +19707,4 @@ h4.bd-textblock-4 {
   .bd-container-inner {
     max-width: none;
   }
-}
+}*/
