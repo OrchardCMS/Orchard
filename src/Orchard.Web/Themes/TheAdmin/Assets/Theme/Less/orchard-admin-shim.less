@@ -1,7 +1,7 @@
 // Form controls.
 .text {
     .form-control();
-
+    height:36px;
     &.large {
         width: 100%;
     }
@@ -17,6 +17,9 @@
     &.small {
         width: 8.33%;
     }
+}
+.form-control{
+    height:36px;
 }
 
 select {
@@ -70,6 +73,19 @@ select {
         color: @warning-color-text;
     }
 }
+
+/* Filters */
+.bulk-actions, .bulk-actions-auto{
+    vertical-align:middle;
+    margin-bottom:1em;
+    select{
+        width:auto;
+        display: inline-block;
+        vertical-align:middle;
+    }
+}
+
+
 
 
 /* Making text classes responsive */
