@@ -2,21 +2,29 @@
 @model Orchard.ContentTypes.ViewModels.EditFieldNameViewModel
 @{
     Style.Require("ContentTypesAdmin");
-
-    Layout.Title = T("Edit Field \"{0}\"", Html.Raw(Model.DisplayName)).ToString();
+    Layout.Title = T("Edit {0} Field", Model.Name.CamelFriendly()).ToString();
+    Layout.PanelOverride = true;
 }
-<div class="panel-body">
-    @using (Html.BeginFormAntiForgeryPost()) {
-        @Html.ValidationSummary()
-        <fieldset>
-            <label for="DisplayName">@T("Display Name")</label>
-            @Html.TextBoxFor(m => m.DisplayName, new { @class = "text medium", autofocus = "autofocus" })
-            <span class="hint">@T("Name of the field as it will be displayed in screens.")</span>
+@using (Html.BeginFormAntiForgeryPost()) {
+    <div class="panel panel-default panel-heading-fullwidth panel-borders">
+        <div class="panel-heading">
+            <span class="title">@T("Settings")</span>
+        </div>
+        <div class="panel-body form-horizontal">
+            @Html.ValidationSummary()
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="@Html.FieldIdFor(m => m.DisplayName)">@T("Display Name")</label>
+                <div class="col-sm-6">
+                    @Html.TextBoxFor(m => m.DisplayName, new {@class = "text large", placeholder = T("Name of the field as it will be displayed in screens.")})
+                    @Html.HiddenFor(m => m.Name)
+                </div>
+            </div>
+        </div>
+    </div>
 
-            @Html.HiddenFor(m => m.Name)
-        </fieldset>
-        <fieldset>
+    <div class="panel panel-default panel-borders">
+        <div class="panel-body form-horizontal">
             <button class="btn btn-primary" type="submit" name="submit.Save" value="Save">@T("Save")</button>
-        </fieldset>
-    }
-</div>
+        </div>
+    </div>
+}

@@ -32,7 +32,6 @@
                     @Html.EditorFor(m => m.PartDefinition.Fields, "TypePartFields", "PartDefinition")
                     @if (Model.Templates.Any()) {
                         <div class="content-type-settings">
-                            <span class="title">@T("Settings")</span>
                             @{ Html.RenderTemplates(Model.Templates); }
                         </div>
                     }

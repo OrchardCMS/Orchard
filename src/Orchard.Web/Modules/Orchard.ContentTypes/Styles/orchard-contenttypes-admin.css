@@ -20,7 +20,7 @@
 }
 
 .orchard-contenttypes .content-type-settings {
-    background: #f9f9f9;
+    border: 1px solid #e6e6e6;
     padding: 1em;
 }
 

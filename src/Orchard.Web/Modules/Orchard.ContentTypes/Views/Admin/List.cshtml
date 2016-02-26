@@ -4,42 +4,44 @@
     Script.Require("ContentTypesAdmin");
     Layout.Title = T("Manage Content Types").ToString();
 }
-<div class="panel-heading no-border">
-    <div class="tools">
-        @Html.ActionLink(T("Create new type").ToString(), "Create", new {Controller = "Admin", Area = "Orchard.ContentTypes"}, new {@class = "btn btn-primary create-new"})
+<div class="panel panel-default">
+    <div class="panel-heading no-border">
+        <div class="tools">
+            @Html.ActionLink(T("Create new type").ToString(), "Create", new { Controller = "Admin", Area = "Orchard.ContentTypes" }, new { @class = "btn btn-primary create-new" })
+        </div>
+        <div class="title">
+            <fieldset class="bulk-actions input-group-sm">
+                <input id="search-box" class="text large" type="search" aria-controls="contenttypes" autofocus="autofocus" placeholder="@T("Filter")">
+            </fieldset>
+        </div>
     </div>
-    <div class="title">
-        <fieldset class="bulk-actions input-group-sm">
-            <input id="search-box" class="form-control" type="search" aria-controls="contenttypes" autofocus="autofocus" placeholder="@T("Filter")">
-        </fieldset>
-    </div>
+    <table id="contenttypes" class="table table-fw-widget data-table table-striped">
+        <thead>
+            <tr>
+                <th>@T("Display Name")</th>
+                <th>@T("Stereotype")</th>
+                <th class="actions"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var type in Model.Types) {
+                var typeName = type.Name;
+                var displayName = type.DisplayName;
+                var settings = type.Settings.GetModel<ContentTypeSettings>();
+                var creatable = settings.Creatable;
+                var stereotype = type.Settings.ContainsKey("Stereotype") ? type.Settings["Stereotype"] : default(string);
+                <tr>
+                    <td>@displayName</td>
+                    <td>@stereotype</td>
+                    <td class="actions">
+                        @if (creatable) {
+                            @Html.ActionLink(T("Create New {0}", Html.Raw(displayName)).Text, "Create", new { area = "Contents", id = typeName })@T(" | ")
+                            @Html.ActionLink(T("List Items").ToString(), "List", new { area = "Contents", id = typeName })@T(" | ")
+                        }
+                        @Html.ActionLink(T("Edit").ToString(), "Edit", new { area = "Orchard.ContentTypes", id = typeName }, new { @class = "edit-link" })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
-<table id="contenttypes" class="table table-fw-widget data-table table-striped table-hover">
-    <thead>
-    <tr>
-        <th>@T("Display Name")</th>
-        <th>@T("Stereotype")</th>
-        <th class="actions"></th>
-    </tr>
-    </thead>
-    <tbody>
-    @foreach (var type in Model.Types) {
-        var typeName = type.Name;
-        var displayName = type.DisplayName;
-        var settings = type.Settings.GetModel<ContentTypeSettings>();
-        var creatable = settings.Creatable;
-        var stereotype = type.Settings.ContainsKey("Stereotype") ? type.Settings["Stereotype"] : default(string);
-        <tr>
-            <td>@displayName</td>
-            <td>@stereotype</td>
-            <td class="actions">
-                @if (creatable) {
-                    @Html.ActionLink(T("Create New {0}", Html.Raw(displayName)).Text, "Create", new {area = "Contents", id = typeName})@T(" | ")
-                    @Html.ActionLink(T("List Items").ToString(), "List", new {area = "Contents", id = typeName})@T(" | ")
-                }
-                @Html.ActionLink(T("Edit").ToString(), "Edit", new {area = "Orchard.ContentTypes", id = typeName}, new {@class = "edit-link"})
-            </td>
-        </tr>
-    }
-    </tbody>
-</table>

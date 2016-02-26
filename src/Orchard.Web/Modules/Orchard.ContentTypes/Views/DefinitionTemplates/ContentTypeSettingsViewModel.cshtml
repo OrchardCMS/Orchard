@@ -1,44 +1,49 @@
 ﻿@model Orchard.ContentTypes.ViewModels.ContentTypeSettingsViewModel
 
-<fieldset>
-    <div class="am-checkbox inline">
-        @Html.EditorFor(m => m.Creatable)
-        <label for="@Html.FieldIdFor(m => m.Creatable)" class="forcheckbox">@T("Creatable")</label>
+<div class="form-group">
+    <label class="col-sm-2 control-label" for="@Html.FieldIdFor(m => m.Stereotype)">@T("Stereotype")</label>
+    <div class="col-sm-6">
+        @Html.TextBoxFor(m => m.Stereotype, new { @class = "text large", placeholder = T("(Optional) The stereotype of the content type. e.g., Widget, MenuItem, ...") })
+        @Html.ValidationMessageFor(m => m.Stereotype)
     </div>
-    @Html.ValidationMessageFor(m => m.Creatable)
-    <span class="hint">@T("Determines if an instance of this content type can be created through the UI.")</span>
-</fieldset>
+</div>
 
-<fieldset>
-    <div class="am-checkbox inline">
-        @Html.EditorFor(m => m.Listable)
-        <label for="@Html.FieldIdFor(m => m.Listable)" class="forcheckbox">@T("Listable")</label>
+<div class="form-group">
+    <div class="col-sm-9 col-sm-offset-2">
+        <div class="am-checkbox inline">
+            @Html.EditorFor(m => m.Creatable)
+            <label for="@Html.FieldIdFor(m => m.Creatable)" class="forcheckbox">@T("Creatable")</label>
+        </div>
+        <span class="hint">@T("Determines if an instance of this content type can be created through the UI.")</span>
     </div>
-    @Html.ValidationMessageFor(m => m.Listable)
-    <span class="hint">@T("Determines if an instance of this content type can be listed through the UI.")</span>
-</fieldset>
+</div>
 
-<fieldset>
-    <div class="am-checkbox inline">
-        @Html.EditorFor(m => m.Draftable)
-        <label for="@Html.FieldIdFor(m => m.Draftable)" class="forcheckbox">@T("Draftable")</label>
+<div class="form-group">
+    <div class="col-sm-9 col-sm-offset-2">
+        <div class="am-checkbox inline">
+            @Html.EditorFor(m => m.Listable)
+            <label for="@Html.FieldIdFor(m => m.Listable)" class="forcheckbox">@T("Listable")</label>
+        </div>
+        <span class="hint">@T("Determines if an instance of this content type can be listed through the UI.")</span>
     </div>
-    @Html.ValidationMessageFor(m => m.Draftable)
-    <span class="hint">@T("Determines if this content type supports draft versions.")</span>
-</fieldset>
+</div>
 
-<fieldset>
-    <div class="am-checkbox inline">
-        @Html.EditorFor(m => m.Securable)
-        <label for="@Html.FieldIdFor(m => m.Securable)" class="forcheckbox">@T("Securable")</label>
+<div class="form-group">
+    <div class="col-sm-9 col-sm-offset-2">
+        <div class="am-checkbox inline">
+            @Html.EditorFor(m => m.Draftable)
+            <label for="@Html.FieldIdFor(m => m.Draftable)" class="forcheckbox">@T("Draftable")</label>
+        </div>
+        <span class="hint">@T("Determines if this content type supports draft versions.")</span>
     </div>
-    @Html.ValidationMessageFor(m => m.Securable)
-    <span class="hint">@T("Determines if this content type can have custom permissions.")</span>
-</fieldset>
+</div>
 
-<fieldset>
-    <label for="@Html.FieldIdFor(m => m.Stereotype)">@T("Stereotype")</label>
-    @Html.TextBoxFor(m => m.Stereotype, new { @class = "text medium" })
-    @Html.ValidationMessageFor(m => m.Stereotype)
-    <span class="hint">@T("(Optional) The stereotype of the content type. e.g., Widget, MenuItem, ...")</span>
-</fieldset>
+<div class="form-group">
+    <div class="col-sm-9 col-sm-offset-2">
+        <div class="am-checkbox inline">
+            @Html.EditorFor(m => m.Securable)
+            <label for="@Html.FieldIdFor(m => m.Securable)" class="forcheckbox">@T("Securable")</label>
+        </div>
+        <span class="hint">@T("Determines if this content type can have custom permissions.")</span>
+    </div>
+</div>

@@ -6,8 +6,9 @@
     <table class="table table-fw-widget">
         <thead>
             <tr>
-                <th width="40%">@T("Name")</th>
-                <th width="40%">@T("Type")</th>
+                <th width="25%">@T("Display Name")</th>
+                <th width="25%">@T("Technical Name")</th>
+                <th width="25%">@T("Type")</th>
                 <th></th>
             </tr>
         </thead>
@@ -17,6 +18,7 @@
                 <tr>
                     <td>@field.DisplayName</td>
                     <td>@field.Name</td>
+                    <td>@field.FieldDefinition.Name</td>
                     <td>
                         <a href="@Url.Action("EditField", new {area = "Orchard.ContentTypes", id = field.Part.Name, name = field.Name})">@T("Edit")</a>@T(" | ")
                         <a href="@Url.Action("RemoveFieldFrom", new {area = "Orchard.ContentTypes", id = field.Part.Name, name = field.Name})" itemprop="RemoveUrl UnsafeUrl">@T("Remove")</a>
