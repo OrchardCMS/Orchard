@@ -21,9 +21,9 @@
 
 select {
     .form-control();
-    height:36px;
-    line-height:36px;
-    padding:0 12px;
+    height: 36px;
+    line-height: 36px;
+    padding: 0 12px;
 }
 
 // Hint.
@@ -46,5 +46,24 @@ select {
     a, button {
         float: right;
         margin-left: 1em;
+    }
+}
+
+/*.sections {
+    .clearfix();
+
+    > div {
+        .clearfix();
+    }
+
+    .primary {
+        margin-right: -320px;
+        padding-right: 320px;
+    }
+}*/
+.message {
+    padding:0 0 1em 0;
+    &.message-Warning{
+        color: @warning-color-text;
     }
 }
