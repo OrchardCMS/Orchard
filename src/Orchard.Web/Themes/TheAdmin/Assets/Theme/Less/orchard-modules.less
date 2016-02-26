@@ -8,7 +8,6 @@
         /*display: flex;
         justify-content: space-between;
         flex-wrap: wrap;*/
-
         li {
             padding: 0;
         }
@@ -24,7 +23,7 @@
     }
 
     h3 {
-        margin-top: 0;
+        margin: 0;
     }
 
     h4 {
@@ -50,22 +49,26 @@
     &.summary-view .feature {
         height: 8em;
         width: 33%;
-        float:none;
-        display:inline-block;
-        margin:0;
-        
-        .summary{
-            overflow:auto;
-            height:100%
-        }
+        float: none;
+        display: inline-block;
+        margin: 0;
 
+        .summary {
+            overflow: hidden;
+            height: 100%;
+
+            .description, .dependencies {
+                white-space:nowrap;
+                overflow:hidden;
+                text-overflow:ellipsis;
+            }
+        }
         /*&:only-child{
             height:auto;
             width:100%;
         }*/
-
         @media (max-width: @screen-md-max) {
-            width: 33%
+            width: 33%;
         }
 
         @media (max-width: @screen-sm-max) {
@@ -73,8 +76,8 @@
         }
 
         @media (max-width: @screen-xs-max) {
-            width:100%;
-            height:auto;
+            width: 100%;
+            height: auto;
         }
     }
 }
