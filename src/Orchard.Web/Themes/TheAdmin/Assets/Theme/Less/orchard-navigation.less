@@ -1,0 +1,38 @@
+﻿.zone-local-navigation {
+    position: relative;
+    z-index: 1;
+
+    ul.localmenu {
+        margin-bottom: 0;
+        padding-left: 0;
+        list-style: none;
+
+        li {
+            display: inline-block;
+            margin-bottom: -1px;
+
+            a {
+                padding: 18px 20px;
+                margin-right: 0;
+                min-width: 80px;
+                text-align: center;
+                border-radius: 0;
+                display: block;
+                &:hover{
+                    background:rgba(255,255,255,.5);
+                }
+            }
+
+            &.active {
+                a {
+                    color: black;
+                    cursor: default;
+                    border: 1px solid #bbb;
+                    border-bottom-color: white;
+                    z-index: 2;
+                    background: white;
+                }
+            }
+        }
+    }
+}
