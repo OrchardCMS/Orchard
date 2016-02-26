@@ -99,6 +99,10 @@ li.bd-linkbutton-2 > a {
     background-color: transparent;
 }
 
+/*#layout-navigation .menu-main-menu li+li {
+    border-left: 2px solid #33add6; 
+}*/
+
 .bd-section-1
 {
     margin-top: 20vh;
@@ -146,4 +150,23 @@ li.bd-linkbutton-2 > a {
 
 #navigation-toTop:hover {
     opacity: .7;
+}
+
+@media (max-width: 767px) {
+.bd-menu-3.nav-pills .bd-menuitem-6 > a, 
+.bd-menu-3.nav-pills .bd-menuitem-6 > a:link, 
+.bd-menu-3.nav-pills .bd-menuitem-6 > a:visited
+    {
+        color: inherit;
+    }
+
+.bd-section-1
+    {
+        margin-top: inherit;
+    }
+
+.zone-content ul.menu-button-menu
+    {
+        padding-left: inherit;
+    }
 }
