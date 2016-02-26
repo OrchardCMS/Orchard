@@ -1,12 +1,12 @@
-﻿using System;
+using System;
+using System.Runtime.Remoting;
 using System.Runtime.Remoting.Messaging;
 using System.Web;
-using Orchard.Mvc;
+using Orchard.Mvc.Extensions;
 
 namespace Orchard.Environment.State {
-
     /// <summary>
-    /// Holds some state for the current HttpContext or thread
+    /// Holds some state for the current HttpContext or Logical Context
     /// </summary>
     /// <typeparam name="T">The type of data to store</typeparam>
     public class ContextState<T> where T : class {
@@ -23,12 +23,13 @@ namespace Orchard.Environment.State {
         }
 
         public T GetState() {
-            if (!HttpContextIsValid()) {
-                var data = CallContext.GetData(_name);
+            if (HttpContext.Current.IsBackgroundHttpContext()) {
+                var handle = CallContext.LogicalGetData(_name) as ObjectHandle;
+                var data = handle != null ? handle.Unwrap() : null;
 
                 if (data == null) {
                     if (_defaultValue != null) {
-                        CallContext.SetData(_name, data = _defaultValue());
+                        CallContext.LogicalSetData(_name, new ObjectHandle(data = _defaultValue()));
                         return data as T;
                     }
                 }
@@ -41,20 +42,15 @@ namespace Orchard.Environment.State {
             }
 
             return HttpContext.Current.Items[_name] as T;
-
         }
 
         public void SetState(T state) {
-            if (!HttpContextIsValid()) {
-                CallContext.SetData(_name, state);
+            if (HttpContext.Current.IsBackgroundHttpContext()) {
+                CallContext.LogicalSetData(_name, new ObjectHandle(state));
             }
             else {
                 HttpContext.Current.Items[_name] = state;
             }
-        }
-
-        private bool HttpContextIsValid() {
-            return HttpContext.Current != null && !HttpContext.Current.Items.Contains(MvcModule.IsBackgroundHttpContextKey);
         }
     }
 }
