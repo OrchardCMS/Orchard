@@ -324,8 +324,6 @@
     <Content Include="Content\Bootstrap\js\transition.js" />
     <Content Include="Content\Bootstrap\package.js" />
     <Content Include="Content\Bootstrap\test-infra\requirements.txt" />
-    <Content Include="Content\Bootswatch\darkly\bootstrap.css" />
-    <Content Include="Content\Bootswatch\darkly\bootstrap.min.css" />
     <Content Include="Content\Bootswatch\darkly\index.html" />
     <Content Include="Content\Bootswatch\darkly\thumbnail.png" />
     <Content Include="Content\font-awesome\fonts\fontawesome-webfont.svg" />
