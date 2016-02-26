@@ -17,7 +17,6 @@
 }
 
 /* Minor Changes Theme for AEFC */
-
 html {
 	/* This image will be displayed fullscreen */
 	background:url('../Images/fitnesscenteratnight.jpg') no-repeat center center;
@@ -34,22 +33,9 @@ body {
     background-color: inherit;
 }
 
-html.fixed-nav.boxed-layout #layout-navigation {
-    width: inherit;
-}
-
-html.fluid-layout #layout-main-container{
-    padding-left: 0px;
-    padding-right: 0px;
-}
-
 .element-shade{
   background-color: rgba(0,0,0, 0.61);
   color: inherit;
-}
-
-.height-full {
-    height: 100vh;
 }
 
 li.bd-linkbutton-1 > a,
@@ -94,17 +80,6 @@ h4.bd-textblock-4
 .navbar-default .navbar-nav>.active>a:focus {
     background-color: #ff0000;
 }
-
-bd-slider-1 {
-    height: inherit;
-}
-.bd-slide-1 {
-    background: none;
-}
-.bd-slide-1:before
-{
-    background-color: transparent;
-}
 .bd-responsivemenu-1 .bd-menuitem-4 > a:before,
 .bd-responsivemenu-1 .bd-menuitem-4 > a:link:before,
 .bd-responsivemenu-1 .bd-menuitem-4 > a:visited:before,
@@ -116,12 +91,23 @@ bd-slider-1 {
   line-height: 0 !important;
 }
 
-.bd-layoutbox-7
+.bd-slide-1 {
+    background: none;
+}
+.bd-slide-1:before
 {
-    top: 20px;
-    transform: translateY(-1px);
+    background-color: transparent;
+}
+.bd-slider-1{
+    height: inherit;
 }
 
+.bd-layoutbox-7
+{    
+    position: relative;
+    transform: inherit;
+    -webkit-transform: inherit;
+}
 
 @media (max-width: 767px) {
   .bd-container-inner {
