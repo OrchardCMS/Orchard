@@ -263,7 +263,7 @@ namespace Orchard.DynamicForms.Services {
                 ReadElementValues(element, context);
 
                 var value = context.Output[element.Name];
-                var bindingSettings = element.Data.GetModel<FormBindingSettings>(null);
+                var bindingSettings = element.Data.GetModel<FormBindingSettings>();
 
                 if (bindingSettings != null) {
                     foreach (var partBindingSettings in bindingSettings.Parts) {
