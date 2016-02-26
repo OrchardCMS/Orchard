@@ -28,9 +28,13 @@
         @Html.Hidden("force", true)
         @Html.Hidden("featureIds")
         <div class="bulk-actions-wrapper">
-            <fieldset class="bulk-actions">
+            @*<fieldset class="bulk-actions">
                 <label for="search-box">@T("Filter:")</label>
                 <input id="search-box" class="text" type="text" autofocus="autofocus" />
+            </fieldset>*@
+
+            <fieldset class="bulk-actions">
+                <input id="search-box" class="form-control" type="search" aria-controls="contenttypes" autofocus="autofocus" placeholder="@T("Filter")">
             </fieldset>
             <fieldset class="bulk-actions">
                 <label for="publishActions">@T("Actions:")</label>
