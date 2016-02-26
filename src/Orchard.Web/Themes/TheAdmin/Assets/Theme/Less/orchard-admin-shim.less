@@ -59,12 +59,68 @@ select {
     .primary {
         margin-right: -320px;
         padding-right: 320px;
-        margin-bottom:20px;
+        margin-bottom: 20px;
     }
 }
+
 .message {
-    padding:0 0 1em 0;
-    &.message-Warning{
+    padding: 0 0 1em 0;
+
+    &.message-Warning {
         color: @warning-color-text;
+    }
+}
+
+
+/* Making text classes responsive */
+
+@media (max-width: @screen-md-max) {
+    .text {
+        
+        &.wide {
+            width: 75%;
+        }
+
+        &.medium {
+            width: 50%;
+        }
+
+        &.small {
+            width: 25%;
+        }
+    }
+}
+
+@media (max-width: @screen-sm-max) {
+    .text {
+        
+        &.wide {
+            width: 100%;
+        }
+
+        &.medium {
+            width: 75%;
+        }
+
+        &.small {
+            width: 50%;
+        }
+    }
+}
+
+@media (max-width: @screen-xs-max) {
+    .text {
+
+        &.wide {
+            width: 100%;
+        }
+
+        &.medium {
+            width: 100%;
+        }
+
+        &.small {
+            width: 100%;
+        }
     }
 }
