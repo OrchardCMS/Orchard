@@ -12,6 +12,7 @@ namespace Orchard.MultiTenancy.ViewModels {
 
         [Required]
         public string Name { get; set; }
+        [Required]
         public string RequestUrlHost { get; set; }
         public string RequestUrlPrefix { get; set; }
         public string DataProvider { get; set; }
