@@ -215,6 +215,27 @@
   <ItemGroup>
     <Content Include="Assets\Lib\Bootstrap\Scss\bootstrap-canopy.scss" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Column.cshtml" />
+    <Content Include="Views\Elements\Grid.cshtml" />
+    <Content Include="Views\Elements\Row.cshtml" />
+    <Content Include="Views\Elements\Shape.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Zone.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Menu.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\MenuItem.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\MenuItemLink.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Widget.Wrapper.cshtml" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

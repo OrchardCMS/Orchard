@@ -7,23 +7,25 @@
     <link href="https://fonts.googleapis.com/css?family=Raleway:400,400italic|Lato:400,400italic,700,700italic" rel="stylesheet" type="text/css" />
 }
 
-<header>
+<header class="container">
     @Display(Model.Header)
 </header>
 
-<nav>
-    @Display(Model.Navigation)
+<nav class="navbar navbar-fixed-top navbar-dark bg-inverse">
+    <div class="container">
+        @Display(Model.Navigation)
+    </div>
 </nav>
 
 @Display(Model.Messages)
 
-<main>
+<main class="container">
     @Display(Model.BeforeContent)
     @Display(Model.Content)
     @Display(Model.AfterContent)
 </main>
 
-<footer>
+<footer class="container">
     @Display(Model.Footer)
 </footer>
 

@@ -1,0 +1,38 @@
+﻿@{
+    var items = Enumerable.Cast<dynamic>((System.Collections.IEnumerable)Model);
+}
+@{
+    if (!HasText(Model.Text)) {
+        @DisplayChildren(Model)
+    }
+    else {
+
+        Model.Classes.Add("nav-item");
+        if ((bool) Model.Selected) {
+            Model.Classes.Add("active");
+        }
+        //if (items.Any()) {
+        //    Model.Classes.Add("dropdown");
+        //}
+
+        @* Morphing the shape to keep Model untouched. *@
+        Model.Metadata.Alternates.Clear();
+        Model.Metadata.Type = "MenuItemLink";
+
+        @* Render the menu item only if it has content of its own. *@
+        var renderedMenuItemLink = Display(Model);
+        if (HasText(renderedMenuItemLink)) {
+            var tag = Tag(Model, "li");
+            @tag.StartElement
+            @renderedMenuItemLink
+            
+            if (items.Any()) {
+                <ul>
+                    @DisplayChildren(Model)
+                </ul>
+            }
+            
+            @tag.EndElement
+        }
+    }
+}
