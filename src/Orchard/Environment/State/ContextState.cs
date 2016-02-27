@@ -1,5 +1,4 @@
 using System;
-using System.Runtime.Remoting;
 using System.Runtime.Remoting.Messaging;
 using System.Web;
 using Orchard.Mvc.Extensions;
@@ -50,6 +49,13 @@ namespace Orchard.Environment.State {
             }
             else {
                 HttpContext.Current.Items[_name] = state;
+            }
+        }
+
+        internal class ObjectHandle : System.Runtime.Remoting.ObjectHandle {
+            public ObjectHandle(object o) : base(o) { }
+            public override object InitializeLifetimeService() {
+                return null;
             }
         }
     }
