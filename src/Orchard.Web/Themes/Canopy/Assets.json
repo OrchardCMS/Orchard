@@ -19,7 +19,7 @@
     {
         "inputs": [
             "Assets/Lib/Tether/Css/tether.css",
-            "Assets/Lib/Bootstrap/Scss/bootstrap-flex.scss"
+            "Assets/Lib/Bootstrap/Scss/bootstrap-canopy.scss"
         ],
         "output": "Styles/bootstrap.css"
     }

@@ -1,0 +1,17 @@
+/*
+    Bootstrap customized for the Canopy theme.
+    
+    Includes all the imports from the standard Bootstrap project, but substitutes a
+    number of variables to customize appearance. Also enables flexbox support.
+*/
+
+/*
+** Fonts.
+*/
+
+$font-family-sans-serif: Lato, "Helvetica Neue", Helvetica, Arial, sans-serif !default;
+$headings-font-family: Raleway, Georgia, "Times New Roman", Times, serif !default;
+
+$enable-flex: true;
+
+@import "bootstrap";
