@@ -8,7 +8,9 @@
 @using (Html.BeginFormAntiForgeryPost()) {
     <div class="panel panel-default panel-heading-fullwidth panel-borders">
         <div class="panel-heading">
-            <span class="title">@T("Settings")</span>
+            <div class="panel-heading-primary-group">
+                <span class="title">@T("Settings")</span>
+            </div>
         </div>
         <div class="panel-body form-horizontal">
             @Html.ValidationSummary()
@@ -25,10 +27,12 @@
 
     <div class="panel panel-default panel-heading-fullwidth panel-borders">
         <div class="panel-heading">
-            <div class="tools">
+            <div class="panel-heading-primary-group">
+                <span class="title">@T("Fields")</span>
+            </div>
+            <div class="panel-heading-actions">
                 <a class="icon s7-plus" href="@Url.Action("AddFieldTo", new {area = "Orchard.ContentTypes", id = Model.Name})" title="@T("Add Field")"></a>
             </div>
-            <span class="title">@T("Fields")</span>
         </div>
         <div class="panel-body">
             @Html.EditorFor(m => m.Fields, "Fields", "")

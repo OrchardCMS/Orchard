@@ -3,36 +3,39 @@
     Script.Require("ContentTypesAdmin");
     Layout.Title = T("Manage Content Parts").ToString();
 }
+<div class="panel">
 
-<div class="panel-heading no-border">
-    <div class="tools">
-        @Html.ActionLink(T("Create new part").ToString(), "CreatePart", new {Controller = "Admin", Area = "Orchard.ContentTypes"}, new {@class = "btn btn-primary"})
+    <div class="panel-heading no-border form-inline">
+        <div class="panel-heading-actions">
+            @Html.ActionLink(T("Create new part").ToString(), "CreatePart", new { Controller = "Admin", Area = "Orchard.ContentTypes" }, new { @class = "btn btn-primary" })
+        </div>
+        <div class="panel-heading-primary-group">
+            <fieldset class="bulk-actions">
+                <label>Filter: </label>
+                <input id="search-box" class="form-control auto-size" type="search" aria-controls="contenttypes" autofocus="autofocus" placeholder="@T("Display Name")">
+            </fieldset>
+        </div>
     </div>
-    <div class="title">
-        <fieldset class="bulk-actions input-group-sm">
-            <input id="search-box" class="text large" type="search" aria-controls="contenttypes" autofocus="autofocus" placeholder="@T("Filter")">
-        </fieldset>
-    </div>
+    <table id="contenttypes" class="table table-fw-widget data-table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>@T("Display Name")</th>
+                <th>@T("Description")</th>
+                <th class="actions"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var type in Model.Parts) {
+                var displayName = type.DisplayName;
+                var description = type.Description;
+                <tr>
+                    <td>@displayName</td>
+                    <td>@description</td>
+                    <td class="actions">
+                        @Html.ActionLink(T("Edit").ToString(), "EditPart", new { area = "Orchard.ContentTypes", id = type.Name })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
-<table id="contenttypes" class="table table-fw-widget data-table table-striped table-hover">
-    <thead>
-    <tr>
-        <th>@T("Display Name")</th>
-        <th>@T("Description")</th>
-        <th class="actions"></th>
-    </tr>
-    </thead>
-    <tbody>
-    @foreach (var type in Model.Parts) {
-        var displayName = type.DisplayName;
-        var description = type.Description;
-        <tr>
-            <td>@displayName</td>
-            <td>@description</td>
-            <td class="actions">
-                @Html.ActionLink(T("Edit").ToString(), "EditPart", new {area = "Orchard.ContentTypes", id = type.Name})
-            </td>
-        </tr>
-    }
-    </tbody>
-</table>
