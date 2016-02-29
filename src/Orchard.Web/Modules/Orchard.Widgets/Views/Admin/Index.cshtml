@@ -3,21 +3,23 @@
     Layout.Title = T("Widgets").ToString();
 }
 @Display.WidgetPlacement_Orphans(OrphanWidgets: Model.OrphanWidgets)
-<div id="widgets" class="group">
+<div id="widgets" class="group panel">
     @Display.WidgetFiltersControl(Layers: Model.Layers, CurrentLayer: Model.CurrentLayer, Cultures: Model.Cultures, CurrentCulture: Model.CurrentCulture)
-    <div class="flex-2-column">
-        <div>
-            @Display.WidgetPlacement(Widgets: Model.Widgets, Zones: Model.Zones, OrphanZones: Model.OrphanZones, CurrentLayer: Model.CurrentLayer)
-        </div>
+    <div class="panel-body">
+        <div class="flex-2-column">
+            <div>
+                @Display.WidgetPlacement(Widgets: Model.Widgets, Zones: Model.Zones, OrphanZones: Model.OrphanZones, CurrentLayer: Model.CurrentLayer)
+            </div>
 
-        @*<div id="widgets-assistance">
-            @Display.WidgetLayerVisibility(Layers: Model.Layers, CurrentLayer: Model.CurrentLayer)
-            @Display.WidgetSimplePreview(ZonePreviewImage: Model.ZonePreviewImage, CurrentTheme: Model.CurrentTheme)
-        </div>*@
-        <div>
-            <div id="widgets-assistance">
+            @*<div id="widgets-assistance">
                     @Display.WidgetLayerVisibility(Layers: Model.Layers, CurrentLayer: Model.CurrentLayer)
                     @Display.WidgetSimplePreview(ZonePreviewImage: Model.ZonePreviewImage, CurrentTheme: Model.CurrentTheme)
+                </div>*@
+            <div>
+                <div id="widgets-assistance">
+                    @Display.WidgetLayerVisibility(Layers: Model.Layers, CurrentLayer: Model.CurrentLayer)
+                    @Display.WidgetSimplePreview(ZonePreviewImage: Model.ZonePreviewImage, CurrentTheme: Model.CurrentTheme)
+                </div>
             </div>
         </div>
     </div>
