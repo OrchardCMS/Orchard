@@ -75,6 +75,7 @@
     <Content Include="Assets.json" />
     <Content Include="Content\sources\billionthemes\menubig.png" />
     <Content Include="Images\customer_logo.png" />
+    <Content Include="Images\customer_logo_scaled.png" />
     <Content Include="Images\favicon.ico" />
     <Content Include="Images\fitnesscenteratnight.jpg" />
     <Content Include="Images\menubig.png" />
