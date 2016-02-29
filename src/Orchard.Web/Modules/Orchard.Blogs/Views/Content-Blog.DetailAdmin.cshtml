@@ -8,7 +8,15 @@
     Layout.Title = T("Manage {0}", displayText);
 }
 
-@Display(Model.Header)
-@Display(Model.Actions)
-<div class="manage"><a href="@Url.BlogPostCreate((BlogPart)Model.ContentItem.Get(typeof(BlogPart)))" class="add button primaryAction">@T("New Post")</a></div>
-@Display(Model.Content)
+<div class="panel-heading form-inline">
+    @Display(Model.Header)
+    <div class="panel-heading-primary-group">
+        <fieldset class="bulk-actions">
+            @Display(Model.Actions)
+        </fieldset>
+    </div>
+    <div class="panel-heading-actions"><a href="@Url.BlogPostCreate((BlogPart)Model.ContentItem.Get(typeof(BlogPart)))" class="add button primaryAction">@T("New Post")</a></div>
+</div>
+<div class="panel-body">
+    @Display(Model.Content)
+</div>
