@@ -4,23 +4,38 @@
 
 @{ Layout.Title = T("Manage Blogs").ToString(); }
 
-@if (Model.ContentItems.Items.Count > 0) { 
-<div class="actions"><a class="add button primaryAction" href="@Url.BlogCreate()">@T("New Blog")</a></div>
-    using(Html.BeginFormAntiForgeryPost(Url.Action("List", "Admin", new { area = "Contents", id = "" }))) {
-        <fieldset class="bulk-actions">
-            <label><input type="checkbox" class="check-all" />@T("Select all")</label>@T(" | ")
-            <label for="publishActions">@T("Actions:")</label>
-            <select id="publishActions" name="Options.BulkAction">
-                @Html.SelectOption(ContentsBulkAction.None, ContentsBulkAction.None, T("Choose action...").ToString())
-                @Html.SelectOption(ContentsBulkAction.None, ContentsBulkAction.Remove, T("Delete").ToString())
-            </select>
-            @Html.Hidden("returnUrl", ViewContext.RequestContext.HttpContext.Request.ToUrlString())
-            <button type="submit" name="submit.BulkEdit" value="yes">@T("Apply")</button>
-        </fieldset>
-        <fieldset class="contentItems bulk-items">
-            @Display(Model.ContentItems)
-        </fieldset>
+<div class="panel panel-default panel-bordered ">
+    @if (Model.ContentItems.Items.Count > 0) {
+        using (Html.BeginFormAntiForgeryPost(Url.Action("List", "Admin", new { area = "Contents", id = "" }))) {
+            <div class="panel-heading no-border form-inline">
+                <div class="panel-heading-actions">
+                    <div class="actions"><a class="add button primaryAction" href="@Url.BlogCreate()">@T("New Blog")</a></div>
+                </div>
+                <div class="panel-heading-primary-group">
+                    <fieldset class="bulk-actions">
+                        <div class="am-checkbox inline">
+                            <input type="checkbox" class="check-all" id="blog-list-select-all" />
+                            <label for="blog-list-select-all">@T("Select all")</label>
+                        </div>
+                        <select id="publishActions" name="Options.BulkAction" class="form-control auto-size">
+                            @Html.SelectOption(ContentsBulkAction.None, ContentsBulkAction.None, T("Choose action...").ToString())
+                            @Html.SelectOption(ContentsBulkAction.None, ContentsBulkAction.Remove, T("Delete").ToString())
+                        </select>
+                        @Html.Hidden("returnUrl", ViewContext.RequestContext.HttpContext.Request.ToUrlString())
+                        <button type="submit" name="submit.BulkEdit" value="yes">@T("Apply")</button>
+                    </fieldset>
+                </div>
+
+            </div>
+            <div class="panel-body">
+                <fieldset class="content-items bulk-items">
+                    @Display(Model.ContentItems)
+                </fieldset>
+            </div>
+        }
     }
-} else {
-<div class="info message">@T("There are no blogs for you to see. Want to <a href=\"{0}\">add one</a>?", Url.BlogCreate())</div>
-}
+    else {
+        <div class="info message">@T("There are no blogs for you to see. Want to <a href=\"{0}\">add one</a>?", Url.BlogCreate())</div>
+    }
+
+</div>
