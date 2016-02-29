@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.Remoting;
 using System.Runtime.Remoting.Messaging;
 using System.Web;
 using Orchard.Mvc.Extensions;
@@ -23,11 +24,15 @@ namespace Orchard.Environment.State {
 
         public T GetState() {
             if (HttpContext.Current.IsBackgroundHttpContext()) {
+                // Because CallContext Logical Data can be shared across application domains,
+                // here we also check if it's a real local instance, not a tranparent proxy.
                 var handle = CallContext.LogicalGetData(_name) as ObjectHandle;
-                var data = handle != null ? handle.Unwrap() : null;
+                var data = handle != null && !RemotingServices.IsTransparentProxy(handle) ? handle.Unwrap() : null;
 
                 if (data == null) {
                     if (_defaultValue != null) {
+                        // Because CallContext Logical Data can be shared across application domains,
+                        // data are wrapped in an ObjectHandle that inherits from MarshalByRefObject.
                         CallContext.LogicalSetData(_name, new ObjectHandle(data = _defaultValue()));
                         return data as T;
                     }
@@ -49,13 +54,6 @@ namespace Orchard.Environment.State {
             }
             else {
                 HttpContext.Current.Items[_name] = state;
-            }
-        }
-
-        internal class ObjectHandle : System.Runtime.Remoting.ObjectHandle {
-            public ObjectHandle(object o) : base(o) { }
-            public override object InitializeLifetimeService() {
-                return null;
             }
         }
     }
