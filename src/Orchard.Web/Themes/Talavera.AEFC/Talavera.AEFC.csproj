@@ -80,6 +80,12 @@
     <Content Include="Images\fitnesscenteratnight.jpg" />
     <Content Include="Images\menubig.png" />
     <Content Include="Content\sources\billionthemes\billionthemes-2608975.css" />
+    <Content Include="Styles\general.css">
+      <DependentUpon>general.less</DependentUpon>
+    </Content>
+    <Content Include="Styles\general.min.css">
+      <DependentUpon>general.css</DependentUpon>
+    </Content>
     <Content Include="Styles\site.css">
       <DependentUpon>site.less</DependentUpon>
     </Content>
