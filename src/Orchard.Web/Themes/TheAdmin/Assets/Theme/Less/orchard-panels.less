@@ -42,12 +42,13 @@
 
         .panel-heading-primary-group {
             order: 0;
-            align-items: flex-start;
+            align-items: center;
             display: flex;
             flex-wrap: wrap;
 
             @media (max-width: @screen-xs-max) {
                 flex-basis:100%;
+                align-items:flex-start;
                 > * {
                     white-space: normal;
                     width: 100%;
@@ -93,9 +94,19 @@
     .panel {
         border:none;
         .panel-heading {
-            .tools {
-                a, span {
-                    display: inline-block;
+            .panel-title{
+                display:flex;
+                align-content:center;
+                width:100%;
+                justify-content:space-between;
+
+                a{
+                    background:transparent;
+                    color:inherit;
+                    &.btn-link.btn-danger{
+                        color:@danger-color-text;
+                        font-size:1em;
+                    }
                 }
             }
         }
