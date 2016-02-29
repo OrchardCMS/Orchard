@@ -10,32 +10,39 @@
 
 
 @using (Html.BeginFormAntiForgeryPost(Url.Action("Index", "Admin"))) {
-    <div class="row">
-        <fieldset class="pull-right col-md-4 col-sm-6 col-xs-12">
-            <div class="input-group xs-mb-15">
-                <input id="searchText" type="text" class="form-control" name="@Html.NameOf(m => m.Options.SearchText)" value="@Model.Options.SearchText"><span class="input-group-btn">
-                    <button type="button" class="btn btn-primary">@T("Search").ToString()</button>
-                </span>
+    <div class="panel panel-default panel-bordered">
+        <div class="panel-heading no-border form-inline">
+            <div class="panel-heading-actions">
+                @if (Model.InstallModules) {
+                    @Html.ActionLink(T("Install a module from your computer").ToString(), "AddModule", "PackagingServices", new { area = "Orchard.Packaging", returnUrl = HttpContext.Current.Request.RawUrl }, new { @class = "button" })
+                }
             </div>
-        </fieldset>
+            <div class="panel-heading-primary-group">
+                <fieldset class="bulk-actions">
+                    <div class="input-group">
+                        <input id="searchText" type="text" class="form-control" name="@Html.NameOf(m => m.Options.SearchText)" value="@Model.Options.SearchText"><span class="input-group-btn">
+                            <button type="button" class="btn btn-primary">@T("Search").ToString()</button>
+                        </span>
+                    </div>
+                </fieldset>
+            </div>
 
-        @if (Model.InstallModules) {
-            <div class="pull-left col-md-8 col-sm-6 col-xs-12">
-                @Html.ActionLink(T("Install a module from your computer").ToString(), "AddModule", "PackagingServices", new { area = "Orchard.Packaging", returnUrl = HttpContext.Current.Request.RawUrl }, new { @class="button"})
-            </div>
-        }
-    </div>
-    if (Model.Modules.Any()) {
-        <ul class="contentItems">
-            @foreach (ModuleEntry module in Model.Modules.OrderBy(m => m.Descriptor.Name)) {
-                <li>@Display.ModuleEntry(Module: module)</li>
+        </div>
+        <div class="panel-body">
+            @if (Model.Modules.Any()) {
+            <ul class="contentItems">
+                @foreach (ModuleEntry module in Model.Modules.OrderBy(m => m.Descriptor.Name)) {
+                    <li>@Display.ModuleEntry(Module: module)</li>
+                }
+            </ul>
             }
-        </ul>
-    }
-    else {
-        <p>@T("No modules available").ToString()</p>
-    }
+            else {
+            <p>@T("No modules available").ToString()</p>
+            }
 
-    @Display(Model.Pager)
+            @Display(Model.Pager)
+        </div>
+    </div>
+    
 }
 

@@ -98,11 +98,16 @@ select {
     background: rgb(249, 249, 249);
     border: solid 1px #ddd;
     margin-right: 10px;
-    white-space:nowrap;
+    white-space: nowrap;
+
     select {
         /*width: auto;*/
         display: inline-block;
         vertical-align: middle;
+    }
+
+    &:only-child {
+        margin-right: 0;
     }
 }
 
@@ -111,10 +116,11 @@ select {
     padding: 0;
 }
 
-.am-datatable-header:empty{
-    display:none;
-    border:none;
-    margin:0;padding:0;
+.am-datatable-header:empty {
+    display: none;
+    border: none;
+    margin: 0;
+    padding: 0;
 }
 
 /* Making text classes responsive */
