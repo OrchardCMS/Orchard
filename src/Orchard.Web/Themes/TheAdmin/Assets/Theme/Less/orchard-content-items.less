@@ -25,6 +25,9 @@
         border: 1px solid @table-border-color;
         border-top: none;
         padding: 1em;
+        display:flex;
+        justify-content:space-between;
+        flex-wrap:wrap;
 
         .properties {
             .head {
@@ -60,10 +63,14 @@
         }
 
         .related {
+            order:100;
             .pull-right();
         }
-
-        .clearfix();
+        
+         &:before,  &:after{
+            content:none;
+            display:none;
+        }
     }
 }
 
