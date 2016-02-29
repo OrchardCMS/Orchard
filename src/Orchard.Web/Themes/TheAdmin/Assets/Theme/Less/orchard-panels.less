@@ -10,7 +10,7 @@
 }
 
 .panel {
-    .panel-heading {
+    .panel-heading, .panel-heading>form {
         /*margin: 0 0 20px 0;
         padding: 0;*/
         display: flex;
@@ -18,7 +18,7 @@
         align-content: space-between;
         flex-basis: 100%;
         flex-wrap: wrap;
-
+        
         @media (max-width: @screen-xs-max) {
             /*justify-content: flex-end;*/
             /*flex-wrap: wrap-reverse;*/
@@ -31,6 +31,7 @@
         .panel-heading-actions {
             order: 10;
             align-self: flex-start;
+            display: inline-flex;
             margin: 0;
             padding: 6px 0;
 
@@ -43,7 +44,7 @@
         .panel-heading-primary-group {
             order: 0;
             align-items: center;
-            display: flex;
+            display: inline-flex;
             flex-wrap: wrap;
 
             @media (max-width: @screen-xs-max) {
