@@ -10,14 +10,16 @@
     <div class="panel panel-default">
         <div class="panel-heading information">
             <h4 class="panel-title group">
-                <a data-toggle="collapse" data-parent="#@accordionId" href="#@accordionPanelId" aria-expanded="false" class="collapsed">
-                    <i class="icon s7-angle-down"></i> @String.Format("{0} ({1})", Model.DisplayName, Model.FieldDefinition._Definition.Name)
-                </a>
-                <a href="@Url.Action("EditField", new {area = "Orchard.ContentTypes", id = Model.Part.Name, name = Model.Name})" class="edit-field">
-                    <span class="icon s7-note"></span>
-                </a>
-                <a href="@Url.Action("RemoveFieldFrom", new {area = "Orchard.ContentTypes", id = Model.Part.Name, name = Model.Name})" class="remove-field" itemprop="RemoveUrl UnsafeUrl">
-                    <span class="icon s7-close"></span>
+                <span>
+                    <a data-toggle="collapse" data-parent="#@accordionId" href="#@accordionPanelId" aria-expanded="false" class="collapsed">
+                        <i class="icon fa fa-angle-down"></i> @String.Format("{0} ({1})", Model.DisplayName, Model.FieldDefinition._Definition.Name)
+                    </a>
+                    <a href="@Url.Action("EditField", new {area = "Orchard.ContentTypes", id = Model.Part.Name, name = Model.Name})" class="btn-link">
+                        <span class="icon fa fa-pencil-square-o"></span>
+                    </a>
+                </span>
+                <a href="@Url.Action("RemoveFieldFrom", new {area = "Orchard.ContentTypes", id = Model.Part.Name, name = Model.Name})" class="btn-link btn-danger" itemprop="RemoveUrl UnsafeUrl">
+                    <span class="fa fa-trash-o"></span>
                 </a>
             </h4>
         </div>

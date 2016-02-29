@@ -9,13 +9,13 @@
 <div id="@accordionId" class="panel-group accordion accordion-semi">
     <div class="panel panel-default">
         <div class="panel-heading information">
-            <h4 class="panel-title group">
+            <h4 class="panel-title">
                 <a data-toggle="collapse" data-parent="#@accordionId" href="#@accordionPanelId" aria-expanded="false" class="collapsed">
-                    <i class="icon s7-angle-down"></i> @Model.PartDefinition.DisplayName
+                    <i class="icon fa fa-angle-down"></i> @Model.PartDefinition.DisplayName
                 </a>
                 @if (Model.PartDefinition.Settings.GetModel<ContentPartSettings>().Attachable) {
-                    <a href="@Url.Action("RemovePartFrom", new {area = "Orchard.ContentTypes", id = Model.Type.Name, name = Model.PartDefinition.Name})" class="remove-part" itemprop="RemoveUrl UnsafeUrl">
-                        <span class="icon s7-close"></span>
+                    <a href="@Url.Action("RemovePartFrom", new {area = "Orchard.ContentTypes", id = Model.Type.Name, name = Model.PartDefinition.Name})" class="btn-link btn-danger" itemprop="RemoveUrl UnsafeUrl">
+                        <i class="fa fa-trash-o"></i>
                     </a>
                 }
             </h4>

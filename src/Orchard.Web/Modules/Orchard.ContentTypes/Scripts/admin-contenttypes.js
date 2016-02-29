@@ -2,7 +2,7 @@
     $(function () {
         $.extend(true, $.fn.dataTable.defaults, {
             dom:
-                "<'row am-datatable-header'<'col-sm-6'><'col-sm-6 pull-right'>>" +
+                //"<'row am-datatable-header'<'col-sm-6'><'col-sm-6 pull-right'>>" +
                 "<'row am-datatable-body'<'col-sm-12'tr>>" +
                 "<'row am-datatable-footer'<'col-sm-5'><'col-sm-7'>>",
             columns: [

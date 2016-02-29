@@ -10,7 +10,7 @@
 }
 
 .panel {
-    .panel-heading {
+    .panel-heading, .panel-heading>form {
         /*margin: 0 0 20px 0;
         padding: 0;*/
         display: flex;
@@ -18,7 +18,7 @@
         align-content: space-between;
         flex-basis: 100%;
         flex-wrap: wrap;
-
+        
         @media (max-width: @screen-xs-max) {
             /*justify-content: flex-end;*/
             /*flex-wrap: wrap-reverse;*/
@@ -31,6 +31,7 @@
         .panel-heading-actions {
             order: 10;
             align-self: flex-start;
+            display: inline-flex;
             margin: 0;
             padding: 6px 0;
 
@@ -42,12 +43,13 @@
 
         .panel-heading-primary-group {
             order: 0;
-            align-items: flex-start;
-            display: flex;
+            align-items: center;
+            display: inline-flex;
             flex-wrap: wrap;
 
             @media (max-width: @screen-xs-max) {
                 flex-basis:100%;
+                align-items:flex-start;
                 > * {
                     white-space: normal;
                     width: 100%;
@@ -86,18 +88,26 @@
         }
     }
 
-    .panel-body {
-        /*padding: 0;*/
-    }
 }
 
 // Accordions and Panels.
 .panel-group.accordion {
     .panel {
+        border:none;
         .panel-heading {
-            .tools {
-                a, span {
-                    display: inline-block;
+            .panel-title{
+                display:flex;
+                align-content:center;
+                width:100%;
+                justify-content:space-between;
+
+                a{
+                    background:transparent;
+                    color:inherit;
+                    &.btn-link.btn-danger{
+                        color:@danger-color-text;
+                        font-size:1em;
+                    }
                 }
             }
         }
