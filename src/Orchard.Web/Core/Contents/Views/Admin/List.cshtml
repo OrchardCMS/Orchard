@@ -11,70 +11,73 @@
     IEnumerable<string> cultures = Model.Options.Cultures;
     Layout.Title = pageTitle.Text;
 }
-@using (Html.BeginFormAntiForgeryPost()) {
-    <div class="panel-heading no-border form-inline">
-        <div class="panel-heading-main-actions">
-            @Html.ActionLink(createLinkText.Text, "Create", new {Area = "Contents", Id = (string) Model.Options.SelectedFilter}, new {@class = "btn btn-primary"})
-        </div>
-        <div class="panel-heading-primary-group">
-            <fieldset class="bulk-actions">
-                <div class="am-checkbox inline">
-                    <input id="checkAll" class="check-all" type="checkbox">
-                    <label for="checkAll">@T("Select all")</label>
-                </div> 
-                @*<label for="publishActions">@T("Actions:")</label>*@
-                <select id="publishActions" name="Options.BulkAction" class="form-control">
-                    @Html.SelectOption((ContentsBulkAction) Model.Options.BulkAction, ContentsBulkAction.None, T("Choose action...").ToString())
-                    @Html.SelectOption((ContentsBulkAction) Model.Options.BulkAction, ContentsBulkAction.PublishNow, T("Publish Now").ToString())
-                    @Html.SelectOption((ContentsBulkAction) Model.Options.BulkAction, ContentsBulkAction.Unpublish, T("Unpublish").ToString())
-                    @Html.SelectOption((ContentsBulkAction) Model.Options.BulkAction, ContentsBulkAction.Remove, T("Delete").ToString())
-                </select>
-                <button type="submit" class="btn btn-primary" name="submit.BulkEdit" value="yes">@T("Apply")</button>
-            </fieldset>
+<div class="panel">
 
-            <fieldset class="bulk-actions"> 
-                @*<label for="filterResults" class="bulk-filter">@T("Show")</label>*@
-                <select id="filterResults" name="Options.SelectedFilter" class="form-control">
-                    @Html.SelectOption((string) Model.Options.SelectedFilter, "", T("any (show all)").ToString())
-                    @foreach (var filterOption in Model.Options.FilterOptions) {
-                        @Html.SelectOption((string) Model.Options.SelectedFilter, (string) filterOption.Key, (string) filterOption.Value)
-                }
-                </select>
-
-                @if (cultures.Count() > 1) {
-                    @*<label for="filterCultures" class="bulk-culture">@T("Culture")</label>*@
-                    <select id="filterCultures" name="Options.SelectedCulture" class="form-control">
-                        @Html.SelectOption((string) Model.Options.SelectedCulture, "", T("any (show all)").ToString())
-                        @foreach (string culture in cultures) {
-                            @Html.SelectOption((string) Model.Options.SelectedCulture, culture, System.Globalization.CultureInfo.GetCultureInfo(culture).DisplayName)
-                    }
+    @using (Html.BeginFormAntiForgeryPost()) {
+        <div class="panel-heading no-border form-inline">
+            <div class="panel-heading-actions">
+                @Html.ActionLink(createLinkText.Text, "Create", new { Area = "Contents", Id = (string)Model.Options.SelectedFilter }, new { @class = "btn btn-primary" })
+            </div>
+            <div class="panel-heading-primary-group">
+                <fieldset class="bulk-actions">
+                    <div class="am-checkbox inline">
+                        <input id="checkAll" class="check-all" type="checkbox">
+                        <label for="checkAll">@T("Select all")</label>
+                    </div>
+                    @*<label for="publishActions">@T("Actions:")</label>*@
+                    <select id="publishActions" name="Options.BulkAction" class="form-control">
+                        @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.None, T("Choose action...").ToString())
+                        @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.PublishNow, T("Publish Now").ToString())
+                        @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.Unpublish, T("Unpublish").ToString())
+                        @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.Remove, T("Delete").ToString())
                     </select>
-            }@*<label for="orderResults" class="bulk-order">@T("Ordered by")</label>*@<select id="orderResults" name="Options.OrderBy" class="form-control">
-                @Html.SelectOption((ContentsOrder) Model.Options.OrderBy, ContentsOrder.Created, T("recently created").ToString())
-                @Html.SelectOption((ContentsOrder) Model.Options.OrderBy, ContentsOrder.Modified, T("recently modified").ToString())
-                @Html.SelectOption((ContentsOrder) Model.Options.OrderBy, ContentsOrder.Published, T("recently published").ToString())
-            </select>
-            @*<label for="contentResults" class="bulk-order">@T("Filter by")</label>*@
-            <select id="contentResults" name="Options.ContentsStatus" class="form-control">
-                @Html.SelectOption((ContentsStatus) Model.Options.ContentsStatus, ContentsStatus.Owner, T("owned by me").ToString())
-                @Html.SelectOption((ContentsStatus) Model.Options.ContentsStatus, ContentsStatus.Latest, T("latest").ToString())
-                @Html.SelectOption((ContentsStatus) Model.Options.ContentsStatus, ContentsStatus.Published, T("published").ToString())
-                @Html.SelectOption((ContentsStatus) Model.Options.ContentsStatus, ContentsStatus.Draft, T("unpublished").ToString())
-                @Html.SelectOption((ContentsStatus) Model.Options.ContentsStatus, ContentsStatus.AllVersions, T("all versions").ToString())
-            </select>
-            <button type="submit" name="submit.Filter" value="yes please" class="btn btn-primary">@T("Apply")</button>
-        </fieldset>
-    </div>
-    </div>
-    <div class="panel-body">
-        @if (Model.ContentItems.Items.Count > 0) {
-            <fieldset class="content-items bulk-items">
-                @Display(Model.ContentItems)
-            </fieldset>
-            @Display(Model.Pager)
-        }
-        else {
-            <div class="title">@T("No Content Items to display.") </div>
-        }
-    </div>
-}
+                    <button type="submit" class="btn btn-primary" name="submit.BulkEdit" value="yes">@T("Apply")</button>
+                </fieldset>
+
+                <fieldset class="bulk-actions">
+                    @*<label for="filterResults" class="bulk-filter">@T("Show")</label>*@
+                    <select id="filterResults" name="Options.SelectedFilter" class="form-control">
+                        @Html.SelectOption((string)Model.Options.SelectedFilter, "", T("any (show all)").ToString())
+                        @foreach (var filterOption in Model.Options.FilterOptions) {
+                            @Html.SelectOption((string)Model.Options.SelectedFilter, (string)filterOption.Key, (string)filterOption.Value)
+                        }
+                    </select>
+
+                    @if (cultures.Count() > 1) {
+                        @*<label for="filterCultures" class="bulk-culture">@T("Culture")</label>*@
+                        <select id="filterCultures" name="Options.SelectedCulture" class="form-control">
+                            @Html.SelectOption((string)Model.Options.SelectedCulture, "", T("any (show all)").ToString())
+                            @foreach (string culture in cultures) {
+                                @Html.SelectOption((string)Model.Options.SelectedCulture, culture, System.Globalization.CultureInfo.GetCultureInfo(culture).DisplayName)
+                            }
+                        </select>
+                    }@*<label for="orderResults" class="bulk-order">@T("Ordered by")</label>*@<select id="orderResults" name="Options.OrderBy" class="form-control">
+                        @Html.SelectOption((ContentsOrder)Model.Options.OrderBy, ContentsOrder.Created, T("recently created").ToString())
+                        @Html.SelectOption((ContentsOrder)Model.Options.OrderBy, ContentsOrder.Modified, T("recently modified").ToString())
+                        @Html.SelectOption((ContentsOrder)Model.Options.OrderBy, ContentsOrder.Published, T("recently published").ToString())
+                    </select>
+                    @*<label for="contentResults" class="bulk-order">@T("Filter by")</label>*@
+                    <select id="contentResults" name="Options.ContentsStatus" class="form-control">
+                        @Html.SelectOption((ContentsStatus)Model.Options.ContentsStatus, ContentsStatus.Owner, T("owned by me").ToString())
+                        @Html.SelectOption((ContentsStatus)Model.Options.ContentsStatus, ContentsStatus.Latest, T("latest").ToString())
+                        @Html.SelectOption((ContentsStatus)Model.Options.ContentsStatus, ContentsStatus.Published, T("published").ToString())
+                        @Html.SelectOption((ContentsStatus)Model.Options.ContentsStatus, ContentsStatus.Draft, T("unpublished").ToString())
+                        @Html.SelectOption((ContentsStatus)Model.Options.ContentsStatus, ContentsStatus.AllVersions, T("all versions").ToString())
+                    </select>
+                    <button type="submit" name="submit.Filter" value="yes please" class="btn btn-primary">@T("Apply")</button>
+                </fieldset>
+            </div>
+        </div>
+        <div class="panel-body">
+            @if (Model.ContentItems.Items.Count > 0) {
+                <fieldset class="content-items bulk-items">
+                    @Display(Model.ContentItems)
+                </fieldset>
+                @Display(Model.Pager)
+            }
+            else {
+                <div class="title">@T("No Content Items to display.") </div>
+            }
+        </div>
+    }
+</div>

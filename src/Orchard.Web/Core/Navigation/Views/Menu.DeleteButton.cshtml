@@ -7,8 +7,8 @@
     string returnUrl = Request["returnUrl"];
 }
 
-@if (Authorizer.Authorize(Permissions.DeleteContent, contentItem)) {
+@if (Authorizer.Authorize(Permissions.DeleteContent, contentItem) && contentItem.Id > 0) {
     <fieldset class="delete-button">
-        @Html.Link(T("Delete").Text, Url.ItemRemoveUrl(contentItem, new {returnUrl}), new { @class = "button", itemprop = "RemoveUrl UnsafeUrl"})
+        @Html.Link(T("Delete").Text, Url.ItemRemoveUrl(contentItem, new {returnUrl}), new { @class = "btn btn-danger", itemprop = "RemoveUrl UnsafeUrl"})
     </fieldset>
 }
