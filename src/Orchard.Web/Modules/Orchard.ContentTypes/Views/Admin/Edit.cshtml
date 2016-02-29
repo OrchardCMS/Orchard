@@ -8,8 +8,10 @@
 @using (Html.BeginFormAntiForgeryPost()) {
     <div class="panel panel-default panel-heading-fullwidth panel-borders">
         <div class="panel-heading">
-            <span class="title">@T("Settings")</span>
-            <div class="tools">
+            <div class="panel-heading-primary-group">
+                <span class="title">@T("Settings")</span>
+            </div>
+            <div class="panel-heading-actions">
                 <a class="icon s7-display2" href="@Url.Action("EditPlacement", new {area = "Orchard.ContentTypes", id = Model.Name})" title="@T("Edit Placement")"></a>
             </div>
         </div>
@@ -33,7 +35,7 @@
             <div class="panel-heading-primary-group">
                 <span class="title">@T("Fields")</span>
             </div>
-            <div class="tools">
+            <div class="panel-heading-actions">
                 <a class="icon s7-plus" href="@Url.Action("AddFieldTo", new {area = "Orchard.ContentTypes", id = Model.Name})" title="@T("Add Field")"></a>
             </div>
         </div>
@@ -44,8 +46,10 @@
 
     <div class="panel panel-default panel-heading-fullwidth panel-borders">
         <div class="panel-heading">
-            <span class="title">@T("Parts")</span>
-            <div class="tools">
+            <div class="panel-heading-primary-group">
+                <span class="title">@T("Parts")</span>
+            </div>
+            <div class="panel-heading-actions">
                 <a class="icon s7-plus" href="@Url.Action("AddPartsTo", new {area = "Orchard.ContentTypes", id = Model.Name})" title="@T("Add Field")"></a>
             </div>
         </div>
