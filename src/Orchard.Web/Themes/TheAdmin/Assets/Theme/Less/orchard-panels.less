@@ -1,11 +1,11 @@
 // Panels.
-/*.panel{
-    padding:2em;
-    border:solid 1px #bbb;
+.panel {
+    padding: 2em;
+    border: solid 1px #bbb;
     //no border on nested panels
-    .panel{
-        border:none;
-        padding:0;
+    .panel {
+        border: none;
+        padding: 0;
     }
 }
 
@@ -15,15 +15,67 @@
     }
 }
 
-.panel{
-    .panel-heading{
-        margin:0 0 20px 0;
-        padding:0;
+.panel {
+    .panel-heading {
+        margin: 0 0 20px 0;
+        padding: 0;
+        display: flex;
+        justify-content: space-between;
+        align-content: space-between;
+        flex-basis: 100%;
+        flex-wrap: wrap;
+
+        @media (max-width: @screen-xs-max) {
+            justify-content: flex-end;
+            flex-wrap:wrap-reverse;
+        }
+
+        .panel-heading-primary-group {
+            order: 0;
+            align-items: flex-start;
+            display: flex;
+            flex-wrap: wrap;
+
+            @media (max-width: @screen-xs-max) {
+
+                > * {
+                    white-space: normal;
+                    width: 100%;
+                    margin-right: 0;
+                }
+            }
+        }
+
+        .panel-heading-main-actions {
+            order: 10;
+            align-self: flex-start;
+            margin: 0;
+            padding: 6px 0;
+
+            @media (max-width: @screen-xs-max) {
+                margin-bottom:10px;
+                padding:0;
+            }
+        }
+
+        .panel-heading-primary-group .bulk-actions > * {
+            margin-bottom: 0;
+
+            @media (max-width: @screen-xs-max) {
+                margin-bottom: 5px;
+                width: 100%;
+
+                &:last-child {
+                    margin-bottom: 0;
+                }
+            }
+        }
     }
-    .panel-body{
-        padding:0;
+
+    .panel-body {
+        padding: 0;
     }
-}*/
+}
 
 
 // Accordions and Panels.

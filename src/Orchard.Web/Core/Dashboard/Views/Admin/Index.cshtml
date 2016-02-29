@@ -56,11 +56,21 @@
     <div class="col-md-4">
         <div class="panel panel-default">
             <div class="panel-heading"><span class="title"><i class="icon s7-clock"></i> @T("Stay up to date")</span></div>
-            <div class="panel-body">
-                <iframe id="advisory" src="http://www.orchardproject.net/advisory" frameborder="0" height="100%" width="100%" scrolling="no">
+            <div class="panel-body" id="advisory">
+                @*<iframe id="advisory" src="http://www.orchardproject.net/advisory" frameborder="0" height="100%" width="100%" scrolling="no">
                     <p>@T("Your browser does not support iframes. You can't see advisory messages.")</p>
-                </iframe>
+                </iframe>*@
             </div>
         </div>
     </div>
 </div>
+    @using (Script.Foot()) {
+<script type="text/javascript">
+            //<![CDATA[
+    $(function(){
+        var url = "http://www.orchardproject.net/advisory";
+        $("#advisory").load(url);
+    });
+            //]]>
+</script>
+    }
