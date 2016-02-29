@@ -1,33 +1,16 @@
 ﻿.orchard-widgets {
-    #widgets-layer-add{
-        height:36px;
-        vertical-align:middle;
-        display: inline-block;
-    }
-    .button, a.button, #widgets-layer-add a {
-        padding: 8px 12px;
-        height:36px;
+
+    #widgets-assistance{
+        padding:10px;
+        width:100%;
+        border:1px solid #ccc;
     }
 
-    #widgets-layers-control {
-        fieldset, form {
-            display: inline-block;
-            height:auto;
-        }
-
-        label {
-            vertical-align: text-top;
-        }
+    #widgets-placement .switch-for-switchable{
+        margin:0;
     }
 
-    .bulk-actions-auto {
-        select {
-            width: auto;
-            display: inline-block;
-        }
-    }
-
-    .widgets-listed, #widgets-available, {
+    .widgets-listed, #widgets-available {
         ol {
             padding: 0;
         }
@@ -41,6 +24,7 @@
             list-style: none;
             clear:both;
             .clearfix();
+
 
             .widgets-actions {
                 position: relative;
@@ -56,7 +40,17 @@
                 font-size: 1.077em;
                 padding:2px;
             }
-
+            
+            &.widgets-none{
+                padding-bottom:5px;
+                h2{
+                    margin:4px 0;
+                }
+                .widgets-zone-widgets{
+                    display:none;
+                    margin:0;
+                }
+            }
 
             &:after {
                 clear: both;

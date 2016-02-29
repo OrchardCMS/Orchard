@@ -17,28 +17,28 @@
 
 <div class="panel-heading form-inline">
 
-        @using (Html.BeginForm("Index", "Admin", FormMethod.Get, new { area = "Navigation", @class = "panel-heading-primary-group" })) {
-            <div class="panel-heading-primary-group">
-                <fieldset class="bulk-actions-auto">
-                    @if (Model.Menus.Any()) {
-                        <label for="menuId">@T("Current Menu:")</label>
-                        <select id="menuId" name="menuId" class="form-control">
-                            @foreach (var menu in Model.Menus) {
-                                @Html.SelectOption(Model.CurrentMenu.Id, menu.Id, Convert.ToString(Html.ItemDisplayText(menu, false)))
-                            }
-                        </select>
-                        if (hasPermission) {
-                            @Html.ActionLink(T("Edit").Text, "Edit", "Admin", new { area = "Contents", id = Model.CurrentMenu.Id, returnUrl = Url.Action("Index", "Admin", new { area = "Navigation", menuId = Model.CurrentMenu.Id }) }, new { @class = "button" })
+    <div class="panel-heading-primary-group">
+        @using (Html.BeginForm("Index", "Admin", FormMethod.Get, new { area = "Navigation" })) {
+            <fieldset class="bulk-actions-auto">
+                @if (Model.Menus.Any()) {
+                    <label for="menuId">@T("Current Menu:")</label>
+                    <select id="menuId" name="menuId" class="form-control">
+                        @foreach (var menu in Model.Menus) {
+                            @Html.SelectOption(Model.CurrentMenu.Id, menu.Id, Convert.ToString(Html.ItemDisplayText(menu, false)))
                         }
+                    </select>
+                    if (hasPermission) {
+                        @Html.ActionLink(T("Edit").Text, "Edit", "Admin", new { area = "Contents", id = Model.CurrentMenu.Id, returnUrl = Url.Action("Index", "Admin", new { area = "Navigation", menuId = Model.CurrentMenu.Id }) }, new { @class = "button" })
                     }
-                </fieldset>
-            </div>
-            if (hasPermission) {
-                    <div class="panel-heading-main-actions">
-                        @Html.Link(T("Add a new menu...").Text, Url.Action("Create", "Admin", new { area = "Contents", id = "Menu", returnUrl = Request.RawUrl }), new { @class = "btn btn-link" })
-                    </div>
                 }
+            </fieldset>
         }
+    </div>    
+    @if (hasPermission) {
+    <div class="panel-heading-actions">
+        @Html.Link(T("Add a new menu...").Text, Url.Action("Create", "Admin", new { area = "Contents", id = "Menu", returnUrl = Request.RawUrl }), new { @class = "btn btn-link" })
+    </div>
+    }
 </div>
 
 

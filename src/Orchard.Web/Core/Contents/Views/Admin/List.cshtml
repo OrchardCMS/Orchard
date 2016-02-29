@@ -13,7 +13,7 @@
 }
 @using (Html.BeginFormAntiForgeryPost()) {
     <div class="panel-heading no-border form-inline">
-        <div class="panel-heading-main-actions">
+        <div class="panel-heading-actions">
             @Html.ActionLink(createLinkText.Text, "Create", new {Area = "Contents", Id = (string) Model.Options.SelectedFilter}, new {@class = "btn btn-primary"})
         </div>
         <div class="panel-heading-primary-group">

@@ -1,7 +1,7 @@
 // Panels.
 .panel {
-    padding: 2em;
-    border: solid 1px #bbb;
+    /*padding: 2em;
+    border: solid 1px #bbb;*/
     //no border on nested panels
     .panel {
         border: none;
@@ -17,8 +17,8 @@
 
 .panel {
     .panel-heading {
-        margin: 0 0 20px 0;
-        padding: 0;
+        /*margin: 0 0 20px 0;
+        padding: 0;*/
         display: flex;
         justify-content: space-between;
         align-content: space-between;
@@ -27,14 +27,14 @@
 
         @media (max-width: @screen-xs-max) {
             /*justify-content: flex-end;*/
-            flex-wrap: wrap-reverse;
+            /*flex-wrap: wrap-reverse;*/
         }
 
         &.inline-flex {
             display: inline-flex;
         }
 
-        .panel-heading-main-actions {
+        .panel-heading-actions {
             order: 10;
             align-self: flex-start;
             margin: 0;
@@ -53,7 +53,7 @@
             flex-wrap: wrap;
 
             @media (max-width: @screen-xs-max) {
-
+                flex-basis:100%;
                 > * {
                     white-space: normal;
                     width: 100%;
@@ -62,6 +62,11 @@
             }
 
             .bulk-actions, .bulk-actions-auto {
+                @media (max-width: @screen-xs-max) {
+                    white-space: normal;
+                    margin-right:0;
+                }
+
                 > * {
                     margin-bottom: 0;
 
@@ -75,11 +80,20 @@
                     }
                 }
             }
+            .hint{
+                margin-top:5px;
+                font-size:.8em;
+                width:100%;
+                white-space:normal;
+                @media (max-width: @screen-xs-max) {
+                    white-space: normal;
+                }
+            }
         }
     }
 
     .panel-body {
-        padding: 0;
+        /*padding: 0;*/
     }
 }
 
