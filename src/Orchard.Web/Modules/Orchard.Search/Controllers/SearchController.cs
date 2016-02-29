@@ -56,7 +56,7 @@ namespace Orchard.Search.Controllers {
                 return HttpNotFound();
             }
 
-            if (!User.Identity.IsAuthenticated && !searchSettingPart.AllowAnonymousSearch) {
+            if (!User.Identity.IsAuthenticated && searchSettingPart.DoNotAllowAnonymousSearch) {
                 return new HttpUnauthorizedResult();
             }
 
