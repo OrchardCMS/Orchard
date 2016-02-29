@@ -3,7 +3,6 @@
 @{
     Style.Require("ContentTypesAdmin");
     Layout.Title = T("Edit {0} Field", Model.Name.CamelFriendly()).ToString();
-    Layout.PanelOverride = true;
 }
 @using (Html.BeginFormAntiForgeryPost()) {
     <div class="panel panel-default panel-heading-fullwidth panel-borders">

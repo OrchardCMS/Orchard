@@ -4,7 +4,6 @@
     Style.Require("ContentTypesAdmin");
     Script.Require("jQuery");
     Layout.Title = T("Edit {0}", Model.Name.CamelFriendly()).ToString();
-    Layout.PanelOverride = true;
 }
 @using (Html.BeginFormAntiForgeryPost()) {
     <div class="panel panel-default panel-heading-fullwidth panel-borders">

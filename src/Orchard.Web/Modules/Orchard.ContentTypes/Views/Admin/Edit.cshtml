@@ -3,7 +3,6 @@
     Style.Require("ContentTypesAdmin");
     Script.Require("jQuery");
     Layout.Title = T("Edit {0} Definition", Html.Raw(Model.DisplayName)).Text;
-    Layout.PanelOverride = true;
 }
 
 @using (Html.BeginFormAntiForgeryPost()) {
