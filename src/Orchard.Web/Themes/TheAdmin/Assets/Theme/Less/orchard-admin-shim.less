@@ -1,7 +1,8 @@
 // Form controls.
 .text {
     .form-control();
-    height:36px;
+    height: 36px;
+
     &.large {
         width: 100%;
     }
@@ -18,11 +19,12 @@
         width: 8.33%;
     }
 }
-.form-control, .input-group-btn .btn{
-    height:44px;
 
-    &.pager{
-        height:44px;
+.form-control, .input-group-btn .btn {
+    height: 36px;
+
+    &.pager {
+        height: 44px;
     }
 }
 
@@ -31,6 +33,10 @@ select {
     height: 36px;
     line-height: 36px;
     padding: 0 12px;
+
+    &.form-control {
+        padding: 0 12px;
+    }
 }
 
 // Hint.
@@ -85,16 +91,25 @@ select {
 }
 
 /* Filters */
-.bulk-actions, .bulk-actions-auto{
-    vertical-align:middle;
-    margin-bottom:1em;
-    select{
-        width:auto;
+.bulk-actions, .bulk-actions-auto {
+    vertical-align: middle;
+    margin-bottom: 1em;
+    padding: 5px;
+    background: rgb(249, 249, 249);
+    border: solid 1px #ddd;
+    margin-right: 10px;
+    white-space:nowrap;
+    select {
+        /*width: auto;*/
         display: inline-block;
-        vertical-align:middle;
+        vertical-align: middle;
     }
 }
 
+
+.am-checkbox, .am-radio {
+    padding: 0;
+}
 
 
 
@@ -102,7 +117,7 @@ select {
 
 @media (max-width: @screen-md-max) {
     .text {
-        
+
         &.wide {
             width: 75%;
         }
@@ -119,7 +134,7 @@ select {
 
 @media (max-width: @screen-sm-max) {
     .text {
-        
+
         &.wide {
             width: 100%;
         }
