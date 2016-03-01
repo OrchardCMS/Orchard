@@ -76,8 +76,10 @@
     <Content Include="Content\sources\billionthemes\menubig.png" />
     <Content Include="Images\customer_logo.png" />
     <Content Include="Images\customer_logo_scaled.png" />
+    <Content Include="Images\facebook.png" />
     <Content Include="Images\favicon.ico" />
     <Content Include="Images\fitnesscenteratnight.jpg" />
+    <Content Include="Images\instagram.png" />
     <Content Include="Images\menubig.png" />
     <Content Include="Content\sources\billionthemes\billionthemes-2608975.css" />
     <Content Include="Styles\general.css">
@@ -93,6 +95,7 @@
       <DependentUpon>site.css</DependentUpon>
     </Content>
     <Content Include="ThemeZonePreview.png" />
+    <Content Include="Images\twitter.png" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />

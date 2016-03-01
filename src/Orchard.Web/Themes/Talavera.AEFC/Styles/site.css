@@ -26281,6 +26281,21 @@ li.bd-linkbutton-2 > a {
 .bd-textblock-4 * {
   color: white;
 }
+.social-media-icons img {
+  height: 48px;
+  width: 48px;
+  max-width: 48px;
+  max-height: 48px;
+}
+.social-media-icons .link-text {
+  color: white;
+}
+.bd-section-1 h2 {
+  font-size: 100px;
+}
+.zone-content ul.menu-button-menu {
+  padding-left: inherit;
+}
 #layout-wrapper {
   min-height: 100%;
   width: 100%;
@@ -26303,18 +26318,7 @@ li.bd-linkbutton-2 > a {
 #badgeofhonor {
   background-color: transparent;
 }
-.social-media-icons .btn.btn-danger {
-  font-size: 150%;
-  border-color: red;
-  background-color: red;
-}
-.social-media-icons .link-text {
-  color: white;
-}
-i[class^="socicon"] {
-  color: white;
-}
-@media (max-width: 767px) {
+@media (max-width: 47.95em) {
   body {
     padding-bottom: 350px;
   }
@@ -26326,7 +26330,7 @@ i[class^="socicon"] {
   .bd-section-1 {
     margin-top: inherit;
   }
-  .zone-content ul.menu-button-menu {
-    padding-left: inherit;
+  .bd-section-1 h2 {
+    font-size: 70px;
   }
 }
