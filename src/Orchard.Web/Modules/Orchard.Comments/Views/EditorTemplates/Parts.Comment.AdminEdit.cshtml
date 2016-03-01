@@ -3,24 +3,23 @@
 @using Orchard.Comments.Models;
 
 <fieldset class="who">
-    <ol>
-        <li>
-            @Html.LabelFor(m => m.Author, T("Name"))
-            @Html.TextBoxFor(m => m.Author, new { @class = "text medium"})
-            <span class="hint">@T("The author's name.")</span>
-        </li>
-        <li>
-            @Html.LabelFor(m => m.Email, T("Email"))
-            @Html.TextBoxFor(m => m.Email, new { @class = "text medium"})
-            <span class="hint">@T("The email address the author has provided with the comment.")</span>
-        </li>
-        <li>
-            @Html.LabelFor(m => m.SiteName, T("Url"))
-            @Html.TextBoxFor(m => m.SiteName, new { @class = "text large"})
-            <span class="hint">@T("The website url the author has provided with the comment.")</span>
-        </li>
-    </ol>
-    </fieldset>
+    <div>
+        @Html.LabelFor(m => m.Author, T("Name"))
+        @Html.TextBoxFor(m => m.Author, new { @class = "text medium" })
+        <span class="hint">@T("The author's name.")</span>
+    </div>
+    <div>
+        @Html.LabelFor(m => m.Email, T("Email"))
+        @Html.TextBoxFor(m => m.Email, new { @class = "text medium" })
+        <span class="hint">@T("The email address the author has provided with the comment.")</span>
+    </div>
+    <div>
+        @Html.LabelFor(m => m.SiteName, T("Url"))
+        @Html.TextBoxFor(m => m.SiteName, new { @class = "text large" })
+        <span class="hint">@T("The website url the author has provided with the comment.")</span>
+    </div>
+</fieldset>
+
 <fieldset class="what">
     <div>
         @Html.LabelFor(m => m.CommentText, T("Comment"))
