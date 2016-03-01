@@ -30,7 +30,7 @@
         </div>
         <div class="panel-body">
             @if (Model.Modules.Any()) {
-            <ul class="contentItems">
+            <ul class="content-items no-selection">
                 @foreach (ModuleEntry module in Model.Modules.OrderBy(m => m.Descriptor.Name)) {
                     <li>@Display.ModuleEntry(Module: module)</li>
                 }

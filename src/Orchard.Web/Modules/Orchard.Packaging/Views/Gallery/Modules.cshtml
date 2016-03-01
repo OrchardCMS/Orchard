@@ -47,7 +47,7 @@
         </div>
         <div class="panel-body">
             @if (Model.Extensions.Any()) {
-                <ul class="contentItems">
+                <ul class="content-items no-selection with-thumbnail">
                     @foreach (var item in Model.Extensions) {
                         <li>
                             @{
@@ -57,7 +57,7 @@
                                 }
                             }
 
-                            <div class="summary">
+                            <div class="notifications">
                                 @if (item.Notifications != null && item.Notifications.Count > 0) {
                                     <div class="notifications">
                                         @foreach (string notification in item.Notifications) {
@@ -66,57 +66,66 @@
                                     </div>
                                 }
                             </div>
-                            <div class="iconThumbnail">
-                                <div class="extensionDetails column">
-                                    <div class="extensionName @if (item.Installed) {<text>installed</text>}">
-                                        <h2>@item.Title<span> - @T("Version: {0}", item.Version)</span></h2>
+                            <div class="summary">
+                                <div class="properties">
+                                    <div class="head @if (item.Installed) {<text>installed</text>}">
+                                        <div class="thumbnail-wrapper">
+                                            <img src="@iconUrl" class="thumbnail" alt="module" />
+                                        </div>
+                                        <div class="description">
+                                            <h2>@item.Title<span> - @T("Version: {0}", item.Version)</span></h2>
+
+                                            @{
+                                                var description = item.Description ?? T("(No description").Text;
+                                            }
+                                            <p>@Html.Raw(Html.Encode(description).Replace("\n", "<br />"))</p>
+
+                                            @if (!string.IsNullOrWhiteSpace(item.GalleryDetailsUrl)) {
+                                                <p>
+                                                    <a href="@item.GalleryDetailsUrl">@T("more...")</a>
+                                                </p>
+                                            }
+                                        </div>
                                     </div>
 
 
                                     <div class="related">
-                                        @Html.ActionLink(T("Install").ToString(), "InstallGallery", "PackagingServices", new RouteValueDictionary { { "packageId", item.PackageId }, { "version", item.Version }, { "sourceId", item.Source.Id }, { "redirectUrl", HttpContext.Current.Request.RawUrl } }, null)@T(" | ")
-                                        <a href="@item.PackageStreamUri">@T("Download")</a>
-                                    </div>
-
-                                    <div class="properties">
-                                        @{
-                                            var description = item.Description ?? T("(No description").Text;
-                                        }
-                                        <p>@Html.Raw(Html.Encode(description).Replace("\n", "<br />"))</p>
-                                        <p>
-                                            @if (!string.IsNullOrWhiteSpace(item.GalleryDetailsUrl)) {
-                                                <a href="@item.GalleryDetailsUrl">@T("more...")</a>
-                                            }
-                                        </p>
-
-                                        <ul class="pageStatus group">
-                                            <li>@T("Last Updated: {0}", item.LastUpdated)</li>
-                                            <li>&nbsp;&#124;&nbsp;@T("Author: {0}", !string.IsNullOrEmpty(item.Authors) ? item.Authors : T("Unknown").ToString())</li>
-                                            <li>&nbsp;&#124;&nbsp;@T("Downloads: {0}", item.DownloadCount)</li>
-                                            <li>
-                                                &nbsp;&#124;&nbsp;@T("Website: ")
-                                                @if (!string.IsNullOrEmpty(item.ProjectUrl)) { <a href="@item.ProjectUrl">@item.ProjectUrl</a> }
-                                                else { @T("Unknown").ToString() }
-                                            </li>
-                                            <li class="rating">
-                                                &nbsp;&#124;&nbsp;@T("Rating: ")
-                                                <div class="ratings" style="width:@(15 * 5)px" title="@T("Rating: {0} out of 5 ({1} total).", item.Rating, item.RatingsCount)">
-                                                    <div class="score" style="width:@(15 * (item.Rating))px">&nbsp;</div>
-                                                </div>
-                                            </li>
-                                        </ul>
+                                        @Html.ActionLink(T("Install").ToString(),
+                                       "InstallGallery", "PackagingServices",
+                                       new RouteValueDictionary { { "packageId", item.PackageId },
+                                           { "version", item.Version }, { "sourceId", item.Source.Id },
+                                           { "redirectUrl", HttpContext.Current.Request.RawUrl } }, new {
+                                               @class="btn btn-danger"
+                                           })
+                                        <a href="@item.PackageStreamUri" class="btn btn-primary">@T("Download")</a>
                                     </div>
                                 </div>
 
-                                <div class="extensionThumbnail column">
-                                    <img src="@iconUrl" class="thumbnail" alt="module" />
+                                <div class="metadata">
+                                    <ul class="pageStatus group">
+                                        <li>@T("Last Updated: {0}", item.LastUpdated)</li>
+                                        <li>&nbsp;&#124;&nbsp;@T("Author: {0}", !string.IsNullOrEmpty(item.Authors) ? item.Authors : T("Unknown").ToString())</li>
+                                        <li>&nbsp;&#124;&nbsp;@T("Downloads: {0}", item.DownloadCount)</li>
+                                        <li>
+                                            &nbsp;&#124;&nbsp;@T("Website: ")
+                                            @if (!string.IsNullOrEmpty(item.ProjectUrl)) { <a href="@item.ProjectUrl">@item.ProjectUrl</a> }
+                                            else { @T("Unknown").ToString() }
+                                        </li>
+                                        <li class="rating">
+                                            &nbsp;&#124;&nbsp;@T("Rating: ")
+                                            <div class="ratings" style="width:@(15 * 5)px" title="@T("Rating: {0} out of 5 ({1} total).", item.Rating, item.RatingsCount)">
+                                                <div class="score" style="width:@(15 * (item.Rating))px">&nbsp;</div>
+                                            </div>
+                                        </li>
+                                    </ul>
+
                                 </div>
                             </div>
                         </li>}
                 </ul>
-                                            }
+                                        }
 
         </div>
         @Display(Model.Pager)
-                                            }
+                                        }
 </div>

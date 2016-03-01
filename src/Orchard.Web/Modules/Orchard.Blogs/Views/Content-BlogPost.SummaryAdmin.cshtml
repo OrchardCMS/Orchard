@@ -7,7 +7,16 @@
     var returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString();
 }
 <div class="summary" itemscope="itemscope" itemid="@contentItem.Id" itemtype="http://orchardproject.net/data/ContentItem">
-    <div class="related">
+
+    <div class="properties">
+        <div class="head">
+                <div class="am-checkbox inline">
+                    <input type="checkbox" value="@contentItem.Id" name="itemIds" id="content-summary-@contentItem.Id" />
+                    <label for="content-summary-@contentItem.Id"></label>
+                </div>
+                <h3>@Html.ItemAdminLink(contentItem)<span class="content-type"> - @contentItem.TypeDefinition.DisplayName</span></h3>
+        </div>
+            <div class="related">
         @Display(Model.Actions)
 
         @if (contentItem.HasPublished()) {
@@ -47,22 +56,16 @@
             @Html.Link(T("Delete").Text, Url.ItemRemoveUrl(contentItem, new { returnUrl }), new { itemprop = "RemoveUrl UnsafeUrl" })
         }
     </div>
-    <div class="properties">
-        <div class="head">
-            <div class="am-checkbox inline">
-                <input type="checkbox" value="@contentItem.Id" name="itemIds" id="content-summary-@contentItem.Id" />
-                <label for="content-summary-@contentItem.Id"></label>
-            </div>
-            <h3>@Html.ItemAdminLink(contentItem)</h3><span class="contentType"> - @contentItem.TypeDefinition.DisplayName</span>
-        </div>
+
+
         @if (Model.Header != null) {
         <div class="header">@Display(Model.Header)</div>
         }
-        @if (Model.Meta != null) {
-        <div class="metadata">@Display(Model.Meta)</div>
-        }
     </div>
     @if (Model.Content != null) {
-    <div class="primary">@Display(Model.Content)</div>
+        <div class="primary">@Display(Model.Content)</div>
+    }
+    @if (Model.Meta != null) {
+        <div class="metadata">@Display(Model.Meta)</div>
     }
 </div>

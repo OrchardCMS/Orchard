@@ -25,52 +25,135 @@
         border: 1px solid @table-border-color;
         border-top: none;
         padding: 1em;
-        display:flex;
-        justify-content:space-between;
-        flex-wrap:wrap;
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+        flex-basis: 100%;
 
         .properties {
+            overflow: hidden;
+            flex-shrink: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+
+            @media (max-width: @screen-xs-max) {
+                flex-direction: column-reverse;
+            }
+
             .head {
+                display: inline-flex;
+                align-items: flex-start;
+                flex-wrap: nowrap;
+                /*flex-basis: 80%;*/
+
+                @media (max-width: @screen-xs-max) {
+                    flex-wrap: wrap;
+                    flex-basis: 100%;
+                }
+
+                .thumbnail-wrapper {
+                    display: inline-flex;
+                    max-width: 74px;
+                    max-height: 74px;
+                    margin-right: 20px;
+                    flex-shrink: 0;
+
+                    @media (max-width: @screen-xs-max) {
+                        margin-bottom: 10px;
+                    }
+
+                    .thumbnail {
+                        width: 100%;
+                        margin-bottom: 0;
+                    }
+                }
+
+                .description {
+                    display: inline-flex;
+                    flex-flow: column wrap;
+                }
+
                 .am-checkbox {
                     line-height: 15px;
                 }
 
-                h3 {
-                    display: inline;
+                h2, h3 {
+                    display: inline-block;
                     font-size: 22px;
+                    margin-top: 0;
 
-                    .content-type {
+                    &:first-child {
+                        margin-top: 0;
+                    }
+
+                    .content-type, span:first-child {
                         font-size: @font-size-base;
                     }
                 }
             }
+        }
 
-            .metadata {
-                margin-left: 30px;
+        .metadata {
+            margin-top: 10px;
 
-                ul.pageStatus {
-                    display: inline-block;
-                    list-style: none;
-                    padding:0;
-                    li {
-                        .pull-left();
-                        line-height: 19px;
+            ul.pageStatus {
+                display: inline-flex;
+                list-style: none;
+                padding: 0;
+                flex-wrap: wrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 100%;
+
+                li {
+                    white-space: nowrap;
+                    line-height: 19px;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    max-width: 100%;
+                }
+
+                .rating {
+                    width: auto;
+
+                    .ratings {
+                        display: inline-block;
+                        float: none;
                     }
-
-                    .clearfix();
                 }
             }
         }
 
         .related {
-            order:100;
-            .pull-right();
+            display: inline-flex;
+            order: 100;
+            margin-bottom: 10px;
+            text-align: right;
+            max-width:100%;
+            flex-wrap:wrap;
+            flex-shrink:0;
+            a.btn{
+                &:last-child{
+                    margin-left:5px;
+                }
+                &:only-child{
+                    margin-left:0;
+                }
+            }
         }
-        
-         &:before,  &:after{
-            content:none;
-            display:none;
+
+        &:before, &:after {
+            content: none;
+            display: none;
         }
+    }
+
+    &.no-selection {
+        padding-left: 0;
+    }
+
+    &.with-thumbnail {
     }
 }
 
@@ -134,10 +217,10 @@ button, a.button {
 
     .button-variant(#ffffff; @primary-color; @btn-default-border);
 
-    &.ui-dialog-titlebar-close{
-        background:transparent;
-        border:inherit;
-        border-radius:2px;
+    &.ui-dialog-titlebar-close {
+        background: transparent;
+        border: inherit;
+        border-radius: 2px;
     }
 }
 
