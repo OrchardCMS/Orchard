@@ -5,26 +5,33 @@
 @{
     Layout.Title = T("Add a Filter");
 }
+<div class="panel panel-default panel-bordered">
 
-@if (!Model.Filters.Any()) {
-    <h3>@T("There are no currently available filters")</h3>
-}
+    @if (!Model.Filters.Any()) {
+        <div class="panel-body">
+            <h4>@T("There are currently no available filters")</h4>
+        </div>
+    }
+    <div class="panel-body">
+    @foreach (var filter in Model.Filters.OrderBy(x => x.Name.Text)) {
+        
+        <h4>@filter.Name</h4>
 
-@foreach (var filter in Model.Filters.OrderBy(x => x.Name.Text)) {
-    <h2>@filter.Name</h2>
-    
-    <table class="items">
-        <thead>
-            <tr>
-                <th scope="col" style="width:300px">@T("Name")</th>
-                <th scope="col">@T("Description")</th>
-            </tr>
-        </thead>
-        @foreach (var descriptor in filter.Descriptors) {
-        <tr>
-            <td>@Html.ActionLink(descriptor.Name.Text, "Edit", new { id = Model.Id, category = descriptor.Category, type = descriptor.Type })</td>
-            <td>@descriptor.Description</td>    
-        </tr>
-        }
-    </table>
-}
+        <table class="table table-condensed table-hover table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th scope="col" style="width:300px">@T("Name")</th>
+                    <th scope="col">@T("Description")</th>
+                </tr>
+            </thead>
+            @foreach (var descriptor in filter.Descriptors) {
+                <tr>
+                    <td>@Html.ActionLink(descriptor.Name.Text, "Edit", new { id = Model.Id, category = descriptor.Category, type = descriptor.Type })</td>
+                    <td class="left-align">@descriptor.Description</td>
+                </tr>
+            }
+        </table>
+    }
+    </div>
+
+</div>

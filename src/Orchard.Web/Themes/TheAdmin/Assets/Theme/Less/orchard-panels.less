@@ -84,6 +84,15 @@
                     white-space: normal;
                 }
             }
+            h1, h2, h3, h4, h5{
+                
+                &:first-child{
+                    margin:0;
+                }
+                .hint{
+                    font-size:14px;
+                }
+            }
         }
     }
     .panel-body{
@@ -91,6 +100,9 @@
             padding:0;
             margin:0;
         }
+        fieldset + fieldset{
+        margin-top:20px;
+    }
     }
 }
 
