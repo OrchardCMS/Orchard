@@ -10,13 +10,11 @@
 
     <div class="properties">
         <div class="head">
-            <div class="">
                 <div class="am-checkbox inline">
                     <input type="checkbox" value="@contentItem.Id" name="itemIds" id="content-summary-@contentItem.Id" />
                     <label for="content-summary-@contentItem.Id"></label>
                 </div>
                 <h3>@Html.ItemAdminLink(contentItem)<span class="content-type"> - @contentItem.TypeDefinition.DisplayName</span></h3>
-            </div>
         </div>
             <div class="related">
         @Display(Model.Actions)
@@ -64,10 +62,10 @@
         <div class="header">@Display(Model.Header)</div>
         }
     </div>
+    @if (Model.Content != null) {
+        <div class="primary">@Display(Model.Content)</div>
+    }
     @if (Model.Meta != null) {
         <div class="metadata">@Display(Model.Meta)</div>
-    }
-    @if (Model.Content != null) {
-    <div class="primary">@Display(Model.Content)</div>
     }
 </div>

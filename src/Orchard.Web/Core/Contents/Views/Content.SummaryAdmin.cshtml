@@ -29,10 +29,10 @@
             <div class="header">@Display(Model.Header)</div>
         }
     </div>
-    @if (Model.Meta != null) {
-        <div class="metadata">@Display(Model.Meta)</div>
-    }
     @if (Model.Content != null) {
         <div class="primary">@Display(Model.Content)</div>
+    }
+    @if (Model.Meta != null) {
+        <div class="metadata">@Display(Model.Meta)</div>
     }
 </div>
