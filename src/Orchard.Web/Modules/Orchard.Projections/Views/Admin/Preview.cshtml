@@ -2,10 +2,15 @@
     Layout.Title = T("Manage Queries");
     Style.Include("admin-projections.css");
 }
+<div class="panel panel-default panel-bordered">
 
-@if (Model.Items.Count == 0) {
-    @T("The query returned no results")
-}
-else {
-    @Display(Model);
-}
+    <div class="panel-body">
+        @if (Model.Items.Count == 0) {
+            @T("The query returned no results")
+        }
+        else {
+            @Display(Model);
+        }
+    </div>
+
+</div>

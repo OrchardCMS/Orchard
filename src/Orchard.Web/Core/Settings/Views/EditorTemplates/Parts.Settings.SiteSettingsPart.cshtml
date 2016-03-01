@@ -17,49 +17,49 @@
     <fieldset class="form-group">
         <label for="@Html.FieldIdFor(m => m.BaseUrl)">@T("Base URL")</label>
         @Html.TextBoxFor(m => m.BaseUrl,
-            (object) (AuthorizedFor(Orchard.Security.StandardPermissions.SiteOwner)
-                ? (dynamic) new { @class = "text medium is-url" }
-                : (dynamic) new { @class = "text medium is-url", @readonly = "readonly" }))
+            (object)(AuthorizedFor(Orchard.Security.StandardPermissions.SiteOwner)
+                ? (dynamic)new { @class = "text medium is-url" }
+                : (dynamic)new { @class = "text medium is-url", @readonly = "readonly" }))
         <span class="hint">@T("Enter the fully qualified base URL of the web site.")</span>
         <span class="hint">@T("e.g., http://localhost:30320/orchardlocal, http://www.yourdomain.com")</span>
     </fieldset>
     <fieldset class="form-group">
         <label for="SiteCulture">@T("Default Site Culture")</label>
-        @Html.DropDownList("SiteCulture", new SelectList(Model.SiteCultures, Model.SiteCulture), new { @class = "form-control" })
+        @Html.DropDownList("SiteCulture", new SelectList(Model.SiteCultures, Model.SiteCulture), new { @class = "form-control auto-size" })
         @Html.ValidationMessage("SiteCulture", "*")
         <span class="hint">@T("Determines the default culture used to localize strings and to format and parse numbers, date and times.")</span>
         <p>@Html.ActionLink(T("Add or remove supported cultures for the site").ToString(), "Culture")</p>
     </fieldset>
     <fieldset class="form-group">
         <label for="SiteCalendar">@T("Default Site Calendar")</label>
-        @Html.DropDownList("SiteCalendar", new[] { new SelectListItem { Text = T("Culture calendar").Text, Value = "" } }.Union(new SelectList(Model.SiteCalendars, Model.SiteCalendar)), new { @class = "form-control" })
+        @Html.DropDownList("SiteCalendar", new[] { new SelectListItem { Text = T("Culture calendar").Text, Value = "" } }.Union(new SelectList(Model.SiteCalendars, Model.SiteCalendar)), new { @class = "form-control auto-size" })
         @Html.ValidationMessage("SiteCalendar", "*")
         <span class="hint">@T("Determines the default calendar used when displaying and editing dates and times.")</span>
         <span class="hint">@T("The 'Culture calendar' option means the default calendar for the culture of the current request will be used (not necessarily the configured default site culture).")</span>
     </fieldset>
     <fieldset class="form-group">
         <label for="TimeZone">@T("Default Time Zone")</label>
-        @Html.DropDownList("TimeZone", new[] { new SelectListItem { Text = T("Local to server").Text, Value = "" } }.Union(new SelectList(Model.TimeZones, "Id", "", Model.TimeZone)), new { @class = "form-control" })
+        @Html.DropDownList("TimeZone", new[] { new SelectListItem { Text = T("Local to server").Text, Value = "" } }.Union(new SelectList(Model.TimeZones, "Id", "", Model.TimeZone)), new { @class = "form-control auto-size" })
         @Html.ValidationMessage("TimeZone", "*")
         <span class="hint">@T("Determines the default time zone used when displaying and editing dates and times.")</span>
     </fieldset>
     <fieldset class="form-group">
         <label for="PageTitleSeparator">@T("Page title separator")</label>
-        @Html.TextBoxFor(x => x.PageTitleSeparator, new { @class = "form-control" })
+        @Html.TextBoxFor(x => x.PageTitleSeparator, new { @class = "form-control  auto-size" })
         @Html.ValidationMessage("PageTitleSeparator", "*")
     </fieldset>
     <fieldset class="form-group">
         <label for="SuperUser">@T("Super user")</label>
         @Html.TextBoxFor(x => x.SuperUser,
-            (object) (AuthorizedFor(Orchard.Security.StandardPermissions.SiteOwner)
-                ? (dynamic) new { @class = "form-control" }
-                : (dynamic) new { @class = "form-control" , @readonly = "readonly" }))
+            (object)(AuthorizedFor(Orchard.Security.StandardPermissions.SiteOwner)
+                ? (dynamic)new { @class = "form-control auto-size" }
+                : (dynamic)new { @class = "form-control auto-size", @readonly = "readonly" }))
         @Html.ValidationMessage("SuperUser", "*")
         <span class="hint">@T("Enter an existing account name, or nothing if you don't want a Super user account")</span>
     </fieldset>
     <fieldset class="form-group">
         <label for="SiteDebugMode">@T("Resource Debug Mode")</label>
-        @Html.DropDownList("ResourceDebugMode", resourceDebugMode, new { @class = "form-control" })
+        @Html.DropDownList("ResourceDebugMode", resourceDebugMode, new { @class = "form-control auto-size" })
         <span class="hint">@T("Determines whether scripts and stylesheets load in their debuggable or minified form.")</span>
     </fieldset>
     <fieldset class="form-group">
@@ -67,22 +67,22 @@
             @Html.CheckBoxFor(m => m.UseCdn)
             @Html.LabelFor(m => m.UseCdn, T("Use CDN"))
         </div>
-        <span class="hint">@T("Determines whether the defined CDN value is used for scripts and stylesheets, or their local version", new { @class = "form-control" })</span>
+        <span class="hint">@T("Determines whether the defined CDN value is used for scripts and stylesheets, or their local version", new { @class = "form-control auto-size" })</span>
     </fieldset>
     <fieldset class="form-group">
         <label for="DefaultPageSize">@T("Default number of items per page")</label>
-        @Html.TextBoxFor(m => m.PageSize, new { @class = "form-control" })
+        @Html.TextBoxFor(m => m.PageSize, new { @class = "form-control auto-size" })
         <span class="hint">@T("Determines the default number of items that are shown per page.")</span>
     </fieldset>
     @if (AuthorizedFor(Orchard.Security.StandardPermissions.SiteOwner)) {
         <fieldset class="form-group">
             <label for="MaxPageSize">@T("Maximum number of items per page")</label>
-            @Html.TextBoxFor(m => m.MaxPageSize, new { @class = "form-control" })
+            @Html.TextBoxFor(m => m.MaxPageSize, new { @class = "form-control auto-size" })
             <span class="hint">@T("Determines the maximum number of items that are shown per page. Leave 0 for unlimited.")</span>
         </fieldset>
         <fieldset class="form-group">
             <label for="MaxPagedCount">@T("Last index of items in pages")</label>
-            @Html.TextBoxFor(m => m.MaxPagedCount, new { @class = "form-control" })
+            @Html.TextBoxFor(m => m.MaxPagedCount, new { @class = "form-control auto-size" })
             <span class="hint">@T("Determines the last element of the database that can be displayed. Leave 0 for unlimited.")</span>
         </fieldset>
     }

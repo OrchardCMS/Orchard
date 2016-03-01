@@ -7,26 +7,38 @@
 }
 
 @Html.ValidationSummary()
+<div class="panel panel-default panel-heading-fullwidth panel-borders">
+    <div class="panel-heading">
+        <div class="panel-heading-primary-group">
+            <h2>
+                @Model.SortCriterion.Name
+                <span class="hint">@Model.SortCriterion.Description</span>
+            </h2>
+        </div>
+    </div>
+    <div class="panel-body">
 
-<h2>@Model.SortCriterion.Name</h2>
-<span class="hint">@Model.SortCriterion.Description</span>
+        @using (Html.BeginFormAntiForgeryPost()) {
+            <fieldset>
+                @Html.LabelFor(m => m.Description, T("Description"))
+                @Html.TextBoxFor(m => m.Description, new { @class = "text medium" })
+                <span class="hint">@T("You may optionally give a description to this sort criterion, to be used in the dashboard screens.")</span>
+            </fieldset>
 
-@using (Html.BeginFormAntiForgeryPost()) {
+            @* Render the dynamic form *@
+        if (Model.Form != null) {
+            <fieldset>
+                @DisplayChildren(Model.Form)
+            </fieldset>
+        }
 
-<fieldset>
-    @Html.LabelFor(m => m.Description, T("Description"))
-    @Html.TextBoxFor(m => m.Description, new { @class = "text medium" })
-    <span class="hint">@T("You may optionally give a description to this sort criterion, to be used in the dashboard screens.")</span>
-</fieldset>
+        @Display.TokenHint()
+            <hr />
+            <fieldset>
+                <button class="primaryAction" type="submit">@T("Save")</button>
+            </fieldset>
+        }
+    </div>
 
-    @* Render the dynamic form *@    
-<fieldset>
-    @DisplayChildren(Model.Form)
-</fieldset>
-    
-    @Display.TokenHint()
+</div>
 
-<fieldset>
-    <button class="primaryAction" type="submit">@T("Save")</button>
-</fieldset>
-}
