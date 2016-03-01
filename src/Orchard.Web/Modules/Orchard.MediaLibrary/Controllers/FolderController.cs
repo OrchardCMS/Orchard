@@ -165,7 +165,7 @@ namespace Orchard.MediaLibrary.Controllers {
             foreach (var media in Services.ContentManager.Query().ForPart<MediaPart>().ForContentItems(mediaItemIds).List()) {
 
                 // don't try to rename the file if there is no associated media file
-                if (!String.IsNullOrEmpty(media.FileName)) {
+                if (!string.IsNullOrEmpty(media.FileName)) {
                     var uniqueFilename = _mediaLibraryService.GetUniqueFilename(folderPath, media.FileName);
                     _mediaLibraryService.MoveFile(media.FolderPath, media.FileName, folderPath, uniqueFilename);
                     media.FileName = uniqueFilename;
@@ -179,7 +179,10 @@ namespace Orchard.MediaLibrary.Controllers {
 
         private bool IsRootFolder(string folderPath) {
             var rootMediaFolder = _mediaLibraryService.GetRootMediaFolder();
-            return String.Equals(rootMediaFolder.MediaPath, folderPath, StringComparison.OrdinalIgnoreCase);
+            
+            return rootMediaFolder == null ?
+                string.IsNullOrEmpty(folderPath) :
+                string.Equals(rootMediaFolder.MediaPath, folderPath, StringComparison.OrdinalIgnoreCase);
         }
     }
 }
