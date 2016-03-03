@@ -189,7 +189,7 @@ namespace Orchard.Taxonomies.Controllers {
 
         public ActionResult Edit(int id) {
 
-            if (!Services.Authorizer.Authorize(Permissions.ManageTerms, T("Not allowed to manage taxonomies")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageTerms, T("Not allowed to manage terms")))
                 return new HttpUnauthorizedResult();
 
             var term = _taxonomyService.GetTerm(id);
@@ -202,7 +202,7 @@ namespace Orchard.Taxonomies.Controllers {
 
         [HttpPost, ActionName("Edit")]
         public ActionResult EditPost(int id) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageTaxonomies, T("Couldn't edit taxonomy")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageTerms, T("Couldn't edit term")))
                 return new HttpUnauthorizedResult();
 
             var term = _taxonomyService.GetTerm(id);
