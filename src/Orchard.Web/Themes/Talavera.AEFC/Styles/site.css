@@ -12277,7 +12277,7 @@ a.list-group-item-danger.active:focus {
   min-height: 20px;
   padding: 19px;
   margin-bottom: 20px;
-  background-color: #303030;
+  background-color: #464545;
   border: 1px solid transparent;
   border-radius: 0;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
@@ -26301,6 +26301,52 @@ li.bd-linkbutton-2 > a {
 }
 #layout-main-container {
   background-color: transparent;
+}
+.standard-text {
+  color: #fff;
+}
+.orchard-layouts-root > .container-fluid > .row {
+  background-color: #464545;
+}
+.orchard-layouts-root > .container-fluid > .row > * > .container-fluid > .row hr {
+  border-top: 2px solid #33add6;
+}
+.orchard-layouts-root > .container-fluid > .row .well-lg {
+  border-radius: unset;
+}
+.shadow-dark {
+  background-color: rgba(0, 0, 0, 0.83);
+}
+.shadow-gray {
+  background-color: #464545;
+}
+.active-icon-color {
+  color: #33add6;
+}
+.bwf:before {
+  font-family: 'Billion Web Font';
+  font-style: normal;
+  font-weight: normal;
+  text-decoration: inherit;
+  text-align: center;
+  text-transform: none;
+  width: 1em;
+}
+.bwf-icon-enevlope:before {
+  content: '\0157';
+}
+.bwf-icon-enevlope {
+  text-decoration: inherit;
+  display: inline-block;
+  speak: none;
+}
+.bwf-icon-earphone:before {
+  content: '\0288';
+}
+.bwf-icon-earphone {
+  text-decoration: inherit;
+  display: inline-block;
+  speak: none;
 }
 #navigation-toTop {
   position: fixed;

@@ -153,8 +153,8 @@ li.bd-linkbutton-2 > a {
 }
 
 .zone-content ul.menu-button-menu {
-        padding-left: inherit;
-    }
+    padding-left: inherit;
+}
 
 #layout-wrapper {
     min-height: 100%;
@@ -164,6 +164,65 @@ li.bd-linkbutton-2 > a {
 #layout-main-container {
     background-color: transparent;
 }
+
+.standard-text {
+    color: @text-color;
+}
+.orchard-layouts-root > .container-fluid > .row  {
+    background-color: @gray;
+}
+
+.orchard-layouts-root > .container-fluid > .row > * > .container-fluid > .row hr {
+    border-top: 2px solid #33add6; 
+}
+
+.orchard-layouts-root > .container-fluid > .row .well-lg
+{
+    border-radius: unset;
+}
+
+.shadow-dark {
+    background-color: @shadow-dark-background-color;
+}
+
+.shadow-gray {
+    background-color: @shadow-light-background-color;
+}
+
+.active-icon-color {
+    color: @active-icon-color;
+}
+
+
+//Icons Begin:
+.bwf:before {
+  font-family: 'Billion Web Font';
+  font-style: normal;
+  font-weight: normal;
+  text-decoration: inherit;
+  text-align: center;
+  text-transform: none;
+  width: 1em;
+}
+
+.bwf-icon-enevlope:before {
+  content: '\0157';
+}
+.bwf-icon-enevlope {
+  text-decoration: inherit;
+  display: inline-block;
+  speak: none;
+}
+
+.bwf-icon-earphone:before {
+  content: '\0288';
+}
+.bwf-icon-earphone {
+  text-decoration: inherit;
+  display: inline-block;
+  speak: none;
+}
+//Icons End.
 
 #navigation-toTop {
     position: fixed;
@@ -200,5 +259,5 @@ li.bd-linkbutton-2 > a {
 
     .bd-section-1 h2 {
         font-size: 58px;
-    }    
+    }
 }

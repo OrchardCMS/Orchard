@@ -434,6 +434,10 @@
       <Name>Orchard.Core</Name>
       <Private>false</Private>
     </ProjectReference>
+    <ProjectReference Include="..\..\Modules\Orchard.Layouts\Orchard.Layouts.csproj">
+      <Project>{6bd8b2fa-f2e3-4ac8-a4c3-2925a653889a}</Project>
+      <Name>Orchard.Layouts</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\AdditionalInsertions.cshtml" />
@@ -667,6 +671,8 @@
     <Content Include="Content\font-awesome\less\variables.less" />
     <Content Include="Tools\Update-ViewsWithFileNameTag.ps1" />
     <Content Include="Views\User.cshtml" />
+    <Content Include="Views\Elements\Grid.cshtml" />
+    <Content Include="Views\Elements\Column.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
