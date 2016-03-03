@@ -11,7 +11,6 @@ using Orchard.DisplayManagement.Shapes;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Mvc;
-using Orchard.Mvc.Extensions;
 
 namespace Orchard.DisplayManagement.Implementation {
     public class DefaultDisplayManager : IDisplayManager {
@@ -62,7 +61,9 @@ namespace Orchard.DisplayManagement.Implementation {
                 return CoerceHtmlString(context.Value);
 
             var workContext = _workContextAccessor.GetContext();
-            var shapeTable = !_httpContextAccessor.Current().IsBackgroundContext()
+            // CurrentTheme is now available in the background, so here we no longer use IsBackgroundContext().
+            // We only do a null check, so we can render in the background a view that only exists in the theme.
+            var shapeTable = _httpContextAccessor.Current() != null
                 ? _shapeTableLocator.Value.Lookup(workContext.CurrentTheme.Id)
                 : _shapeTableLocator.Value.Lookup(null);
 
