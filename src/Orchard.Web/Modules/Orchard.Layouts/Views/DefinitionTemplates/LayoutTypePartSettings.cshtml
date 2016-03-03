@@ -1,16 +1,15 @@
 ﻿@model Orchard.Layouts.Settings.LayoutTypePartSettings
-<fieldset>
-    <div>
-        <div class="am-checkbox inline">
-            @Html.CheckBoxFor(m => m.IsTemplate)
-            @Html.LabelFor(m => m.IsTemplate, T("Use as Template").Text, new { @class = "forcheckbox" })
-        </div>
-        @Html.Hint(T("Content items of this type will be usable as templates for other layouts."))
-        </div>
-    <div>
-        @Html.LabelFor(m => m.DefaultLayoutData, T("Default Layout Data"))
-        @Html.TextAreaFor(m => m.DefaultLayoutData, 25, 100, new { @class = "text large" })
-        @Html.ValidationMessageFor(m => m.DefaultLayoutData)
-        @Html.Hint(T("The default layout Data is used when a new content item is created."))
+
+<div class="form-group">
+    <div class="am-checkbox inline">
+        @Html.CheckBoxFor(m => m.IsTemplate)
+        @Html.LabelFor(m => m.IsTemplate, T("Use as Template").Text, new { @class = "forcheckbox" })
     </div>
-</fieldset>
+    @Html.Hint(T("Content items of this type will be usable as templates for other layouts."))
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.DefaultLayoutData, T("Default Layout Data"))
+    @Html.TextAreaFor(m => m.DefaultLayoutData, 25, 100, new { @class = "text large" })
+    @Html.ValidationMessageFor(m => m.DefaultLayoutData)
+    @Html.Hint(T("The default layout Data is used when a new content item is created."))
+</div>

@@ -15,15 +15,13 @@
                 <a class="icon s7-display2" href="@Url.Action("EditPlacement", new {area = "Orchard.ContentTypes", id = Model.Name})" title="@T("Edit Placement")"></a>
             </div>
         </div>
-        <div class="panel-body form-horizontal">
-            <div class="form-horizontal" itemscope="itemscope" itemid="@Model.Name" itemtype="http://orchardproject.net/data/ContentType">
+        <div class="panel-body">
+            <div itemscope="itemscope" itemid="@Model.Name" itemtype="http://orchardproject.net/data/ContentType">
                 @Html.ValidationSummary()
                 <div class="form-group">
-                    <label class="col-sm-2 control-label" for="DisplayName">@T("Display Name")</label>
-                    <div class="col-sm-6">
-                        @Html.TextBoxFor(m => m.DisplayName, new { @class = "text large", placeholder = T("Content Type Id: {0}", Model.Name) })
-                        @Html.HiddenFor(m => m.Name)
-                    </div>
+                    <label class="control-label" for="DisplayName">@T("Display Name")</label>
+                    @Html.TextBoxFor(m => m.DisplayName, new { @class = "text large", placeholder = T("Content Type Id: {0}", Model.Name) })
+                    @Html.HiddenFor(m => m.Name)
                 </div>
                 @{ Html.RenderTemplates(Model.Templates); }
             </div>

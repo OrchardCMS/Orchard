@@ -12,14 +12,12 @@
                 <span class="title">@T("Settings")</span>
             </div>
         </div>
-        <div class="panel-body form-horizontal">
+        <div class="panel-body">
             @Html.ValidationSummary()
             <div class="form-group">
-                <label class="col-sm-2 control-label" for="@Html.FieldIdFor(m => m.Name)">@T("Name")</label>
-                <div class="col-sm-6">
-                    @Html.TextBoxFor(m => m.Name, new { @class = "text large", disabled = "disabled" })
-                    @Html.HiddenFor(m => m.Name)
-                </div>
+                <label class="control-label" for="@Html.FieldIdFor(m => m.Name)">@T("Name")</label>
+                @Html.TextBoxFor(m => m.Name, new { @class = "text large", disabled = "disabled" })
+                @Html.HiddenFor(m => m.Name)
             </div>
             @{Html.RenderTemplates(Model.Templates);}
         </div>

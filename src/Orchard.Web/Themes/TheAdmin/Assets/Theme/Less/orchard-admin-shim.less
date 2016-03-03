@@ -1,7 +1,9 @@
 // Form controls.
+@control-height: 44px;
+
 .text {
     .form-control();
-    height: 36px;
+    height: @control-height;
 
     &.large {
         width: 100%;
@@ -21,17 +23,17 @@
 }
 
 .form-control, .input-group-btn .btn {
-    height: 36px;
+    height: @control-height;
 
     &.pager {
-        height: 44px;
+        height: @control-height;
     }
 }
 
 select {
     .form-control();
-    height: 36px;
-    line-height: 36px;
+    height: @control-height;
+    line-height: @control-height;
     padding: 0 12px;
 
     &.form-control {

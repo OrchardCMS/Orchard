@@ -1,10 +1,8 @@
 ﻿@model Orchard.Layouts.Settings.ContentPartLayoutSettings
 <div class="form-group">
-    <div class="col-sm-9 col-sm-offset-2">
-        <div class="am-checkbox inline">
-            @Html.CheckBoxFor(m => m.Placeable)
-            <label for="@Html.FieldIdFor(m => m.Placeable)" class="forcheckbox">@T("Placeable")</label>
-        </div>
-        <span class="hint">@T("Check to allow this part to be placeable on a layout.")</span>
+    <div class="am-checkbox inline">
+        @Html.CheckBoxFor(m => m.Placeable)
+        <label for="@Html.FieldIdFor(m => m.Placeable)" class="forcheckbox">@T("Placeable")</label>
     </div>
+    <span class="hint">@T("Check to allow this part to be placeable on a layout.")</span>
 </div>
