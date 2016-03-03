@@ -26305,10 +26305,7 @@ li.bd-linkbutton-2 > a {
 .standard-text {
   color: #fff;
 }
-.orchard-layouts-root > .container-fluid > .row {
-  background-color: #464545;
-}
-.orchard-layouts-root > .container-fluid > .row > * > .container-fluid > .row hr {
+.orchard-layouts-root > .shadow-gray > .container-fluid > .row > * > .container-fluid > .row > * > hr {
   border-top: 2px solid #33add6;
 }
 .orchard-layouts-root > .container-fluid > .row .well-lg {

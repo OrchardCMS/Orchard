@@ -1,13 +1,16 @@
 <Placement>
   <Match ContentType="Page">
-    <Place Parts_Common_Metadata="-"/>
-    <!-- Begin Hide Title on Home Page-->
+    <Place Parts_Common_Metadata="-"/>    
     <Match Path="~/">
       <Place Parts_Title="-"/>
-    </Match>
-    <!-- End Hide Title on Home Page-->
+    </Match>    
   </Match>
 
+  <Match ContentType="Bubble">
+    <Place Parts_Common_Metadata="-"/>    
+    <Place Parts_Title="-"/>    
+  </Match>
+  
   <Match ContentType="Blog">
     <Place Parts_Common_Metadata="-"/>
   </Match>
