@@ -852,10 +852,6 @@
     <Content Include="Assets\Theme\Less\includes\structure\splash-screen.less" />
     <Content Include="Assets\Theme\Less\includes\structure\top-header.less" />
     <Content Include="Assets\Theme\Less\includes\table-of-content.less" />
-    <Content Include="Assets\Theme\Less\includes\themes\theme-cake.less" />
-    <Content Include="Assets\Theme\Less\includes\themes\theme-google.less" />
-    <Content Include="Assets\Theme\Less\includes\themes\theme-sunrise.less" />
-    <Content Include="Assets\Theme\Less\includes\themes\theme-twilight.less" />
     <Content Include="Assets\Theme\Less\style.less" />
   </ItemGroup>
   <ItemGroup>

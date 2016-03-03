@@ -1,4 +1,8 @@
-﻿.autoroute-settings-default {
+﻿.autoroute-settings-wrapper {
+    border: 1px solid #e6e6e6;
+}
+
+.autoroute-settings-default {
     width: 5%;
 }
 .autoroute-settings-name {
