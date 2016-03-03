@@ -15,7 +15,7 @@
     }
 }
 
-<div class="panel panel-default panel-borders  panel-heading-fullwidth ">
+<div class="panel panel-default  panel-heading-fullwidth ">
         @using (Html.BeginFormAntiForgeryPost()) {
             @Html.ValidationSummary()
             <div class="panel-heading">
@@ -68,16 +68,14 @@
                         </tr>
                     </thead>
                     @foreach (var entry in Model.Bindings) {
+                        var checkboxId = Html.IdFor(m => m.Bindings[index].Binding.Id);
                         <tr>
                             <td>
-                                <input type="hidden" value="@Model.Bindings[index].Binding.Id" name="@Html.NameOf(m => m.Bindings[index].Binding.Id)" />
-                                <input type="checkbox" value="true" name="@Html.NameOf(m => m.Bindings[index].IsChecked)" />
-
-                                @*<input type="hidden" value="@Model.Bindings[index].Binding.Id" name="@Html.NameOf(m => m.Bindings[index].Binding.Id)" />
-                        <div class="am-checkbox">
-                            <input type="checkbox" value="true" name="@Html.NameOf(m => m.Bindings[index].IsChecked)" />
-                            <label for="@Html.NameOf(m => m.Bindings[index].IsChecked)"></label>
-                        </div>*@
+                                <div class="am-checkbox">
+                                    <input type="hidden" value="@Model.Bindings[index].Binding.Id" name="@Html.NameOf(m => m.Bindings[index].Binding.Id)" />
+                                    <input type="checkbox" value="true" name="@Html.NameOf(m => m.Bindings[index].IsChecked)" id="@checkboxId" />
+                                    <label for="@checkboxId"></label>
+                                </div>
                             </td>
                             <td>
                                 @entry.Binding.Type

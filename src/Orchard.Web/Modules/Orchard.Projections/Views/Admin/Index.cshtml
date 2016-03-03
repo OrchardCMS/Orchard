@@ -13,7 +13,7 @@
         pageSizes.Add(defaultPageSize);
     }
 }
-<div class="panel panel-default panel-borders">
+<div class="panel panel-default">
     @using (Html.BeginFormAntiForgeryPost()) {
         @Html.ValidationSummary()
         <div class="panel-heading">
@@ -49,7 +49,6 @@
                 </fieldset>
             </div>
         </div>
-
     }
 
     <div class="row">
@@ -64,10 +63,14 @@
                         </tr>
                     </thead>
                     @foreach (var entry in Model.Queries) {
+                        var checkboxId = Html.IdFor(m => m.Queries[index].QueryId);
                         <tr>
                             <td>
-                                <input type="hidden" value="@Model.Queries[index].QueryId" name="@Html.NameOf(m => m.Queries[index].QueryId)" />
-                                <input type="checkbox" value="true" name="@Html.NameOf(m => m.Queries[index].IsChecked)" />
+                                <div class="am-checkbox">
+                                    <input type="hidden" value="@Model.Queries[index].QueryId" name="@Html.NameOf(m => m.Queries[index].QueryId)" />
+                                    <input type="checkbox" value="true" name="@Html.NameOf(m => m.Queries[index].IsChecked)" id="@checkboxId" />
+                                    <label for="@checkboxId"></label>
+                                </div>
                             </td>
                             <td>
                                 @Html.ActionLink(entry.Name, "Edit", new { id = entry.QueryId })
