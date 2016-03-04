@@ -3,15 +3,14 @@
     Layout.Title = T("Settings").ToString();
 }
 
+@using (Html.BeginFormAntiForgeryPost()) {
 <div class="panel panel-default ">
     <div class="panel-body">
-        @using (Html.BeginFormAntiForgeryPost()) {
             @Html.ValidationSummary()
             @Display(Model.Content)
-            <hr />
-            <fieldset>
-                <button class="btn btn-primary" type="submit">@T("Save")</button>
-            </fieldset>
-        }
+    </div>
+    <div class="panel-footer">
+        <button class="btn btn-primary" type="submit">@T("Save")</button>
     </div>
 </div>
+}
