@@ -13,17 +13,17 @@
     <div class="panel panel-default panel-bordered">
         <div class="panel-heading no-border form-inline">
             <div class="panel-heading-actions">
-                @if (Model.InstallModules) {
-                    @Html.ActionLink(T("Install a module from your computer").ToString(), "AddModule", "PackagingServices", new { area = "Orchard.Packaging", returnUrl = HttpContext.Current.Request.RawUrl }, new { @class = "button" })
-                }
+                <div class="input-group">
+                    <input id="searchText" type="text" class="form-control" name="@Html.NameOf(m => m.Options.SearchText)" value="@Model.Options.SearchText"><span class="input-group-btn">
+                        <button type="submit" class="btn btn-primary">@T("Search").ToString()</button>
+                    </span>
+                </div>
             </div>
             <div class="panel-heading-primary-group">
                 <fieldset class="bulk-actions">
-                    <div class="input-group">
-                        <input id="searchText" type="text" class="form-control" name="@Html.NameOf(m => m.Options.SearchText)" value="@Model.Options.SearchText"><span class="input-group-btn">
-                            <button type="button" class="btn btn-primary">@T("Search").ToString()</button>
-                        </span>
-                    </div>
+                    @if (Model.InstallModules) {
+                        @Html.ActionLink(T("Install a module from your computer").ToString(), "AddModule", "PackagingServices", new { area = "Orchard.Packaging", returnUrl = HttpContext.Current.Request.RawUrl }, new { @class = "button" })
+                    }
                 </fieldset>
             </div>
 

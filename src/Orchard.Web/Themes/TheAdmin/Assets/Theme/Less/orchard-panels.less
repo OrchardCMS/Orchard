@@ -71,12 +71,13 @@
                 /*padding-right: 20px;*/
                 margin-right: 15px;
                 /*border-right: 1px solid #ccc;*/
-                flex-grow:1;
+                flex-grow:0;
 
                 + .bulk-actions, + .bulk-actions-auto {
                     /*margin-left: 1em;
                     padding-left: 1em;
                     border-left: 1px solid #ccc;*/
+                    flex-grow:1;
                 }
 
                 &:last-child {
@@ -117,6 +118,11 @@
 
                     &[type="checkbox"] + label {
                         margin-right: 10px;
+                    }
+                }
+                .input-group{
+                    &:only-child{
+                        width:100%;
                     }
                 }
             }
