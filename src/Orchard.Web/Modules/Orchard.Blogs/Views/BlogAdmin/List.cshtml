@@ -4,7 +4,7 @@
 
 @{ Layout.Title = T("Manage Blogs").ToString(); }
 
-<div class="panel panel-default panel-bordered ">
+<div class="panel panel-default  ">
     @if (Model.ContentItems.Items.Count > 0) {
         using (Html.BeginFormAntiForgeryPost(Url.Action("List", "Admin", new { area = "Contents", id = "" }))) {
             <div class="panel-heading no-border form-inline">
