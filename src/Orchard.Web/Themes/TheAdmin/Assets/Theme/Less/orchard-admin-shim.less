@@ -139,7 +139,21 @@ select {
 button.close:hover{
     background:0 0;
 }
-
+@indent-unit: 1.5em;
+/* Taxonomy / Term checkbox indent levels */
+.indent-level-1{
+    margin-left:@indent-unit;
+}.indent-level-2{
+    margin-left:calc((@indent-unit * 2));
+}.indent-level-3{
+    margin-left:calc((@indent-unit * 3));
+}.indent-level-4{
+    margin-left:calc((@indent-unit * 4));
+}.indent-level-5{
+    margin-left:calc((@indent-unit * 5));
+}.indent-level-6{
+    margin-left:calc((@indent-unit * 6));
+}
 
 /* Making text classes responsive */
 

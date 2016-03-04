@@ -2,8 +2,11 @@
 
 @Html.ValidationSummary()
 <fieldset>
-    @Html.CheckBoxFor(m => m.Selectable, new { @class = "" }) <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Selectable)">@T("Selectable")</label>
-    <span class="hint">@T("Uncheck if users should not be able to select this term")</span>
+    <div class="am-checkbox">
+        @Html.CheckBoxFor(m => m.Selectable, new { @class = "" }) 
+        <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Selectable)">@T("Selectable")</label>
+        <span class="hint">@T("Uncheck if users should not be able to select this term")</span>
+    </div>
 </fieldset>
 <fieldset>
     @Html.LabelFor(m => m.Weight)
