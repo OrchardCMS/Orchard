@@ -53,10 +53,10 @@
 @if (!Model.IsHomePage) {
     if (AuthorizedFor(Permissions.SetHomePage)) {
         <fieldset>
-            <span class="checkbox-and-label">
+            <div class="am-checkbox">
                 @Html.CheckBoxFor(m => m.PromoteToHomePage)
                 <label for="@Html.FieldIdFor(m => m.PromoteToHomePage)" class="forcheckbox">@T("Set as home page")</label>
-            </span>
+            </div>
             <span class="hint">@T("Check to promote this content as the home page.")</span>
         </fieldset>
     }
