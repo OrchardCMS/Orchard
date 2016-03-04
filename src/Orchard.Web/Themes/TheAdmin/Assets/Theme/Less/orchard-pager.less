@@ -12,16 +12,20 @@
     }
 
     .page-size-options {
-        .pull-left();
+        /*.pull-left();
         .clearfix();
-        margin-right: 4em;
+        margin-right: 4em;*/
+        justify-content:flex-start;
+        align-self:center;
     }
 
     .pager-links {
-        .pull-right();
+        /*.pull-right();*/
+        justify-content:flex-end;
+        align-self:center;
     }
 
-    .clearfix();
+    /*.clearfix();*/
 }
 
 .pager {
@@ -42,11 +46,14 @@
         }
     }
 
-    .clearfix();
+    /*.clearfix();*/
 }
 
 .panel-footer, .am-datatable-footer {
     .pager-footer {
+        display:flex;
+        justify-content:space-between;
+        align-content:stretch;
         margin-top: 0;
     }
 }

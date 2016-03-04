@@ -17,13 +17,13 @@
             <fieldset>
                 <div>
                     @Html.LabelFor(m => m.FullName, T("Content Part Record"))
-                    @Html.TextBoxFor(m => m.FullName, new { @class = "text medium", @readonly = "readonly" })
+                    @Html.TextBoxFor(m => m.FullName, new { @class = "text wide", @readonly = "readonly" })
                     <span class="hint">@T("The content part to add to the providers.")</span>
                 </div>
 
                 <div>
                     @Html.LabelFor(m => m.Member, T("Member"))
-                    @Html.TextBoxFor(m => m.Member, new { @class = "text small", @readonly = "readonly" })
+                    @Html.TextBoxFor(m => m.Member, new { @class = "text medium", @readonly = "readonly" })
                     <span class="hint">@T("The name of the member.")</span>
                 </div>
             </fieldset>
