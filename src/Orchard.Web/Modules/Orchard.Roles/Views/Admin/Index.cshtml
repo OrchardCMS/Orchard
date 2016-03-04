@@ -1,4 +1,4 @@
-@model RolesIndexViewModel
+﻿@model RolesIndexViewModel
 @using Orchard.Roles.ViewModels;
 @using Orchard.Utility.Extensions;
 @{
@@ -9,48 +9,65 @@
 }
 
 @using (Html.BeginFormAntiForgeryPost()) {
-    <div class="panel-heading no-border form-inline">
-        @Html.ValidationSummary()
-        <div class="tools-text">@Html.ActionLink(T("Add a role").ToString(), "Create", new { }, new { @class = "btn btn-primary" })</div>
-        <fieldset class="bulk-actions">
-            <label for="publishActions">@T("Actions:")</label>
-            <select id="Select1" name="roleActions" class="form-control">
-                <option value="1">@T("Delete")</option>
-            </select>
-            <button type="submit" class="btn btn-primary">@T("Apply")</button>
-        </fieldset>
-    </div>
-    <table class="table data-table table-striped table-hover">
-        <thead>
-        <tr>
-            <th scope="col">
-                <div class="am-checkbox">
-                    <input type="checkbox" class="check-all" id="checkAllUsers" />
-                    <label for="checkAllUsers"></label>
-                </div>
-            </th>
-            <th scope="col">@T("Name")</th>
-            <th scope="col"></th>
-        </tr>
-        </thead>
-
-        @foreach (var row in Model.Rows) {
-            <tr>
-                <td>
-                    <div class="am-checkbox">
-                        <input type="checkbox" value="true" name="@("Checkbox." + row.Id)" id="@("Checkbox." + row.Id)" />
-                        <label for="@("Checkbox." + row.Id)"></label>
+    <div class="panel panel-default">
+        <div class="panel-heading no-border form-inline">
+            @Html.ValidationSummary()
+            <div class="panel-heading-actions">@Html.ActionLink(T("Add a role").ToString(), "Create", new { }, new { @class = "btn btn-primary" })</div>
+            <div class="panel-heading-primary-group">
+                <fieldset class="bulk-actions">
+                    <div class="am-checkbox inline">
+                        <input id="checkAll" class="check-all" type="checkbox">
+                        <label for="checkAll">Select all</label>
                     </div>
-                </td>
-                <td>@Html.ActionLink(row.Name, "Edit", new { row.Id })</td>
-                <td>
-                    @Html.ActionLink(T("Edit").ToString(), "Edit", new { row.Id })
-                    @if (row.Name != "Administrator") {
-                        @T(" | ")
-                        <a href="@Url.Action("Delete", new { row.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString() })" itemprop="RemoveUrl UnsafeUrl">@T("Delete")</a>
-                    }
-                </td>
-            </tr>
-        }
-    </table>
+                    <label class="control-label">Action: </label>
+                    <select id="Select1" name="roleActions" class="form-control">
+                        <option value="1">@T("Delete")</option>
+                    </select>
+                    <button type="submit" class="btn btn-primary">@T("Apply")</button>
+                </fieldset>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover table-fw-widget data-table no-footer">
+                        <thead>
+                            <tr>
+                                <th class="no-sort" scope="col" width="10">
+                                    ↓
+                                </th>
+                                <th scope="col" width="400">@T("Name")</th>
+                                <th class="no-sort" scope="col" width="100"></th>
+                            </tr>
+                        </thead>
+
+                        @foreach (var row in Model.Rows) {
+                            <tr>
+                                <td>
+                                    <div class="am-checkbox">
+                                        <input type="checkbox" value="true" name="@("Checkbox." + row.Id)" id="@("Checkbox." + row.Id)" />
+                                        <label for="@("Checkbox." + row.Id)"></label>
+                                    </div>
+                                </td>
+                                <td>@Html.ActionLink(row.Name, "Edit", new { row.Id })</td>
+                                <td>
+                                    @Html.ActionLink(T("Edit").ToString(), "Edit", new { row.Id })
+                                    @if (row.Name != "Administrator") {
+                                        @T(" | ")
+                                        <a href="@Url.Action("Delete", new { row.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString() })" itemprop="RemoveUrl UnsafeUrl">@T("Delete")</a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+            </div>
+        </div>
+        @*<div class="row am-datatable-footer">
+                <div class="col-sm-12">
+                    @Display(Model.Pager)
+                </div>
+            </div>*@
+
+    </div>
 }

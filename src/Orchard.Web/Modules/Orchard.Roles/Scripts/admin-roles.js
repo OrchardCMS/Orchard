@@ -9,7 +9,12 @@
 
         // Initialize the data tables.
         var dataTableOptions = {
-            pageLength: 50
+            pageLength: 50,
+            "columnDefs": [{
+                "targets": 'no-sort',
+                "orderable": false,
+                "order": []
+            }]
         };
 
         var dataTable = $(".data-table").DataTable(dataTableOptions);

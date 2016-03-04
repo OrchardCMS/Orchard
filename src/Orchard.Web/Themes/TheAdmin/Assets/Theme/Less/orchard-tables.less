@@ -5,11 +5,24 @@
     .actions {
         text-align: right;
     }
-    td:last-child{
-        text-align:right;
-        &.left-align, 
-        &:only-child{
-            text-align:left;
+
+    th {
+        &.no-sort {
+            pointer-events: none !important;
+            cursor: default !important;
+
+            &::after {
+                display: none !important;
+            }
+        }
+    }
+
+    td:last-child {
+        text-align: right;
+
+        &.left-align,
+        &:only-child {
+            text-align: left;
         }
     }
 }
@@ -17,7 +30,19 @@
 .table-responsive {
     &.table-with-footer {
         .table {
-            margin-bottom:0;
+            margin-bottom: 0;
+        }
+    }
+    .row{
+        &.am-datatable-header,
+        &.am-datatable-body,
+        &.am-datatable-footer{
+            margin-left:0;
+            margin-right:0;
+
+            .col-sm-12{
+                padding:0;
+            }
         }
     }
 }
