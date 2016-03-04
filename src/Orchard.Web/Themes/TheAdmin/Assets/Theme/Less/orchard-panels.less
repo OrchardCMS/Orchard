@@ -4,7 +4,7 @@
     border: solid 1px #bbb;*/
     //no border on nested panels
     &.panel-bordered {
-        border-width: 1px;
+        /*border-width: 1px;*/
     }
 
     .panel {
@@ -14,6 +14,11 @@
 }
 
 .panel {
+    .panel-heading > div{
+        &:only-child{
+            flex-grow:1;
+        }
+    }
     .panel-heading, .panel-heading > form {
         /*margin: 0 0 20px 0;
         padding: 0;*/
@@ -45,7 +50,7 @@
         .panel-heading-primary-group {
             order: 0;
             align-items: center;
-            /*display: inline-flex;*/
+            display: flex;
             flex-wrap: wrap;
             justify-content: flex-start;
             flex: 3 auto;
@@ -63,10 +68,10 @@
             }
 
             .bulk-actions, .bulk-actions-auto {
-                padding-right: 20px;
+                /*padding-right: 20px;*/
                 margin-right: 15px;
-                border-right: 1px solid #ccc;
-
+                /*border-right: 1px solid #ccc;*/
+                flex-grow:1;
 
                 + .bulk-actions, + .bulk-actions-auto {
                     /*margin-left: 1em;
@@ -77,6 +82,7 @@
                 &:last-child {
                     border-right: 0;
                     padding-right: 0;
+                    flex-grow:2;
                 }
 
                 @media (max-width: @screen-xs-max) {
