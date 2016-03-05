@@ -23,7 +23,7 @@
 <fieldset class="what">
     <div>
         @Html.LabelFor(m => m.CommentText, T("Comment"))
-        @Html.TextAreaFor(m => m.CommentText, new { rows = 10, cols = 30, @class = "comment-text" })
+        @Html.TextAreaFor(m => m.CommentText, new { rows = 10, cols = 30, @class = "text wide" })
         <span class="hint">@T("The body of the comment.")</span>
         @Html.HiddenFor(m => m.RepliedOn)
         @Html.HiddenFor(m => m.Id)

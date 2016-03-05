@@ -17,7 +17,10 @@
         <div class="panel-heading no-border form-inline">
             <div class="panel-heading-primary-group">
                 <fieldset class="bulk-actions">
-                    <label for="publishActions">@T("Actions:")</label>
+                    <div class="am-checkbox inline">
+                        <input id="checkAll" class="check-all" type="checkbox">
+                        <label for="checkAll">Select all</label>
+                    </div>
                     <select id="publishActions" name="@Html.NameOf(m => m.Options.BulkAction)" class="form-control auto-size">
                         @Html.SelectOption(Model.Options.BulkAction, CommentIndexBulkAction.None, T("Choose action...").ToString())
                         @Html.SelectOption(Model.Options.BulkAction, CommentIndexBulkAction.Approve, T("Approve").ToString())
@@ -37,92 +40,84 @@
                 </fieldset>
             </div>
         </div>
-        <div class="panel-body">
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="table-responsive table-with-footer">
-                        <table class="table table-fw-widget data-table table-striped dataTable no-footer" summary="@T("This is a table of the comments in your application")">
-                            <colgroup>
-                                <col id="Col1" />
-                                <col id="Col2" />
-                                <col id="Col3" />
-                                <col id="Col4" />
-                                <col id="Col5" />
-                                <col id="Col6" />
-                            </colgroup>
-                            <thead>
-                                <tr>
-                                    <th scope="col"><input type="checkbox" class="check-all" /></th>
-                                    <th scope="col">@T("Status")</th>
-                                    <th scope="col">@T("Author")</th>
-                                    <th scope="col">@T("Comment")</th>
-                                    <th scope="col">@T("Commented On")</th>
-                                    <th scope="col"></th>
-                                </tr>
-                            </thead>
-                            @{var commentIndex = 0;}
-                            @foreach (var commentEntry in Model.Comments) {
-                                var commentClass = "";
-                                if (!HasText(commentEntry.Comment.UserName)) {
-                                    commentClass = "anonymous";
-                                }
-                                <tr itemscope="itemscope" itemid="@Model.Comments[commentIndex].Comment.Id" itemtype="http://orchardproject.net/data/Comment" class="@commentClass">
-                                    <td>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="table-responsive table-with-footer">
+                    <table class="table table-fw-widget data-table table-striped dataTable no-footer" summary="@T("This is a table of the comments in your application")">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="no-sort" width="10"><i class="fa fa-long-arrow-down"></i></th>
+                                <th scope="col" width="100">@T("Status")</th>
+                                <th scope="col" width="200">@T("Author")</th>
+                                <th scope="col" width="1000">@T("Comment")</th>
+                                <th scope="col" width="300">@T("Commented On")</th>
+                                <th scope="col" width="200"></th>
+                            </tr>
+                        </thead>
+                        @{var commentIndex = 0;}
+                        @foreach (var commentEntry in Model.Comments) {
+                            var commentClass = "";
+                            if (!HasText(commentEntry.Comment.UserName)) {
+                                commentClass = "anonymous";
+                            }
+                            <tr itemscope="itemscope" itemid="@Model.Comments[commentIndex].Comment.Id" itemtype="http://orchardproject.net/data/Comment" class="@commentClass">
+                                <td>
+                                    <div class="am-checkbox">
                                         <input type="hidden" value="@Model.Comments[commentIndex].Comment.Id" name="@Html.NameOf(m => m.Comments[commentIndex].Comment.Id)" />
-                                        <input type="checkbox" value="true" name="@Html.NameOf(m => m.Comments[commentIndex].IsChecked)" />
-                                    </td>
-                                    <td>
-                                        @if (commentEntry.Comment.Status == CommentStatus.Pending) { @T("Pending") }
-                                        else { @T("Approved") }
-                                    </td>
-                                    <td>
-                                        <div>@commentEntry.Comment.Author</div>
-                                        @if (HasText(commentEntry.Comment.UserName) && commentEntry.Comment.Author != commentEntry.Comment.UserName) {
-                                            <div class="authenticated-commenter-id">@commentEntry.Comment.UserName</div>
-                                        }
-                                    </td>
-                                    <td>
-                                        @* would ideally have permalinks for individual comments *@
-                                        <p><a href="@Url.ItemDisplayUrl(commentEntry.CommentedOn)#comments"><time>@Display.DateTime(DateTimeUtc: commentEntry.Comment.CommentDateUtc.GetValueOrDefault())</time></a></p>
-                                        @if (commentEntry.Comment.CommentText != null) {
+                                        <input type="checkbox" value="true" name="@Html.NameOf(m => m.Comments[commentIndex].IsChecked)" id="@Html.NameOf(m => m.Comments[commentIndex].IsChecked)"/>
+                                        <label for="@Html.NameOf(m => m.Comments[commentIndex].IsChecked)"></label>
+                                    </div>
+                                </td>
+                                <td>
+                                    @if (commentEntry.Comment.Status == CommentStatus.Pending) { @T("Pending") }
+                                    else { @T("Approved") }
+                                </td>
+                                <td>
+                                    <div>@commentEntry.Comment.Author</div>
+                                    @if (HasText(commentEntry.Comment.UserName) && commentEntry.Comment.Author != commentEntry.Comment.UserName) {
+                                        <div class="authenticated-commenter-id">@commentEntry.Comment.UserName</div>
+                                    }
+                                </td>
+                                <td>
+                                    @* would ideally have permalinks for individual comments *@
+                                    <p><a href="@Url.ItemDisplayUrl(commentEntry.CommentedOn)#comments"><time>@Display.DateTime(DateTimeUtc: commentEntry.Comment.CommentDateUtc.GetValueOrDefault())</time></a></p>
+                                    @if (commentEntry.Comment.CommentText != null) {
                         var ellipsized = Html.Ellipsize(commentEntry.Comment.CommentText, 500);
                         var paragraphed = new HtmlString(ellipsized.ToHtmlString().Replace("\r\n", "</p><p>"));
-                                            <p>@paragraphed</p>
+                                        <p>@paragraphed</p>
+                                    }
+                                    else {
+                                        @T("[Empty]")
+                                    }
+                                </td>
+                                <td>@Html.ItemDisplayLink(commentEntry.CommentedOn)</td>
+                                <td>
+                                    <div class="actions">
+                                        @if (commentEntry.Comment.Status != CommentStatus.Approved) {
+                                            <a href="@Url.Action("Approve", new {commentEntry.Comment.Id, returnUrl = Request.ToUrlString()})" itemprop="ApproveUrl UnsafeUrl">@T("Approve")</a>@T(" | ")
                                         }
                                         else {
-                                            @T("[Empty]")
-                                        }
-                                    </td>
-                                    <td>@Html.ItemDisplayLink(commentEntry.CommentedOn)</td>
-                                    <td>
-                                        <div class="actions">
-                                            @if (commentEntry.Comment.Status != CommentStatus.Approved) {
-                                                <a href="@Url.Action("Approve", new {commentEntry.Comment.Id, returnUrl = Request.ToUrlString()})" itemprop="ApproveUrl UnsafeUrl">@T("Approve")</a>@T(" | ")
-                                            }
-                                            else {
-                                                <a href="@Url.Action("Unapprove", new {commentEntry.Comment.Id, returnUrl=Request.ToUrlString()})" itemprop="UnapproveUrl UnsafeUrl">@T("Unapprove")</a>@T(" | ")
+                                            <a href="@Url.Action("Unapprove", new {commentEntry.Comment.Id, returnUrl=Request.ToUrlString()})" itemprop="UnapproveUrl UnsafeUrl">@T("Unapprove")</a>@T(" | ")
 
-                                            }                                            
-                                            <a href="@Url.Action("Edit", new {commentEntry.Comment.Id})" title="@T("Edit")">@T("Edit")</a>@T(" | ")
-                                            <a href="@Url.Action("Delete", new {commentEntry.Comment.Id, returnUrl=ViewContext.RequestContext.HttpContext.Request.ToUrlString()})" itemprop="RemoveUrl UnsafeUrl">@T("Delete")</a>
-                                        </div>
-                                    </td>
-                                </tr>
-                                commentIndex = commentIndex + 1;
-                            }
-                        </table>
-                    </div>
-                    <div class="row am-datatable-footer">
-                        <div class="col-sm-5"></div>
-                        <div class="col-sm-7">
-                            @using (Html.BeginFormAntiForgeryPost()) {
-                                @Display(Model.Pager)
-                            }
-                        </div>
+                                        }
+                                        <a href="@Url.Action("Edit", new {commentEntry.Comment.Id})" title="@T("Edit")">@T("Edit")</a>@T(" | ")
+                                        <a href="@Url.Action("Delete", new {commentEntry.Comment.Id, returnUrl=ViewContext.RequestContext.HttpContext.Request.ToUrlString()})" itemprop="RemoveUrl UnsafeUrl">@T("Delete")</a>
+                                    </div>
+                                </td>
+                            </tr>
+                            commentIndex = commentIndex + 1;
+                        }
+                    </table>
+                </div>
+                <div class="row am-datatable-footer">
+                    <div class="col-sm-5"></div>
+                    <div class="col-sm-7">
+                        @using (Html.BeginFormAntiForgeryPost()) {
+                            @Display(Model.Pager)
+                        }
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
-                                }
+}
