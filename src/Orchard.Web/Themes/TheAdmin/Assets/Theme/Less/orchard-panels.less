@@ -1,10 +1,11 @@
 
 .panel {
-    .panel-heading > div{
-        &:only-child{
-            flex-grow:1;
+    .panel-heading > div {
+        &:only-child {
+            flex-grow: 1;
         }
     }
+
     .panel-heading, .panel-heading > form {
         /*margin: 0 0 20px 0;
         padding: 0;*/
@@ -57,19 +58,19 @@
                 /*padding-right: 20px;*/
                 margin-right: 15px;
                 /*border-right: 1px solid #ccc;*/
-                flex-grow:0;
+                flex-grow: 0;
 
                 + .bulk-actions, + .bulk-actions-auto {
                     /*margin-left: 1em;
                     padding-left: 1em;
                     border-left: 1px solid #ccc;*/
-                    flex-grow:1;
+                    flex-grow: 1;
                 }
 
                 &:last-child {
                     border-right: 0;
                     padding-right: 0;
-                    flex-grow:2;
+                    flex-grow: 2;
                 }
 
                 @media (max-width: @screen-xs-max) {
@@ -77,8 +78,8 @@
                     margin-right: 0;
                     padding-bottom: 1em;
                     border-bottom: 1px solid #ccc;
-                    padding-right:0;
-                    border-right:0;
+                    padding-right: 0;
+                    border-right: 0;
 
                     + .bulk-actions, + .bulk-actions-auto {
                         margin-left: 0;
@@ -98,9 +99,9 @@
                         }
                     }
                 }
-                
+
                 input {
-                    &[type="text"]{
+                    &[type="text"] {
                         width: 100%;
                     }
 
@@ -108,9 +109,10 @@
                         margin-right: 10px;
                     }
                 }
-                .input-group{
-                    &:only-child{
-                        width:100%;
+
+                .input-group {
+                    &:only-child {
+                        width: 100%;
                     }
                 }
             }
@@ -145,12 +147,22 @@
             margin: 0;
         }
 
+        fieldset {
+            &:first-child {
+                h1, h2, h3, h4 {
+                    &:first-child {
+                        margin-top: 0;
+                    }
+                }
+            }
+        }
+
         fieldset + fieldset {
             margin-top: 20px;
         }
     }
 
-    .panel-footer{
+    .panel-footer {
         .clearfix();
     }
 }

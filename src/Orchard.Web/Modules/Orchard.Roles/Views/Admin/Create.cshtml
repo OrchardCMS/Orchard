@@ -2,46 +2,49 @@
 @using Orchard.Roles.ViewModels;
 
 @{ Layout.Title = T("Add Role").ToString(); }
-
-<div class="panel-body">
+<div class="panel panel-default">
     @using (Html.BeginFormAntiForgeryPost()) {
-        @Html.ValidationSummary()
-        <fieldset>
-            <h3>@T("Information")</h3>
-            <label for="pageTitle">@T("Role Name:")</label>
-            <input id="Name" class="text" name="Name" type="text" value="@Model.Name"/>
-        </fieldset>
-        <fieldset>
-            <h3>@T("Permissions")</h3>
-            <div class="row">
-                @foreach (var featureName in Model.FeaturePermissions.Keys) {
-                    <div class="col-lg-4 col-md-6">
-                        <h4>@T("{0} Module", featureName)</h4>
-                        <table class="table data-table table-striped table-hover table-bordered">
-                            <thead>
-                                <tr>
-                                    <th scope="col">@T("Permission")</th>
-                                    <th scope="col">@T("Allow")</th>
-                                </tr>
-                            </thead>
-                            @foreach (var permission in Model.FeaturePermissions[featureName]) {
-                                <tr>
-                                    <td>@permission.Description</td>
-                                    <td style="width: 60px;">
-                                        <div class="am-checkbox">
-                                            <input type="checkbox" value="true" name="Checkbox.@permission.Name" id="Checkbox.@permission.Name" />
-                                            <label for="Checkbox.@permission.Name"></label>
-                                        </div>
-                                    </td>
-                                </tr>
-                            }
-                        </table>
-                    </div>
-                }
-            </div>
-        </fieldset>
-        <fieldset>
-            <button class="btn btn-primary" type="submit">@T("Save")</button>
-        </fieldset>
+        <div class="panel-body">
+            @Html.ValidationSummary()
+            <fieldset>
+                <h3>@T("Information")</h3>
+                <label for="pageTitle">@T("Role Name:")</label>
+                <input id="Name" class="text" name="Name" type="text" value="@Model.Name" />
+            </fieldset>
+            <fieldset>
+                <h3>@T("Permissions")</h3>
+                <div class="flex flex-columns">
+                    @foreach (var featureName in Model.FeaturePermissions.Keys) {
+                        <div class="flex-column-container">
+                            <h4>@T("{0} Module", featureName)</h4>
+                            <table class="table data-table table-striped table-hover table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">@T("Permission")</th>
+                                        <th scope="col">@T("Allow")</th>
+                                    </tr>
+                                </thead>
+                                @foreach (var permission in Model.FeaturePermissions[featureName]) {
+                                    <tr>
+                                        <td>@permission.Description</td>
+                                        <td style="width: 60px;">
+                                            <div class="am-checkbox">
+                                                <input type="checkbox" value="true" name="Checkbox.@permission.Name" id="Checkbox.@permission.Name" />
+                                                <label for="Checkbox.@permission.Name"></label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </table>
+                        </div>
+                    }
+                </div>
+            </fieldset>
+        </div>
+        <div class="panel-footer">
+            <fieldset>
+                <button class="btn btn-primary" type="submit">@T("Save")</button>
+            </fieldset>
+        </div>
     }
 </div>

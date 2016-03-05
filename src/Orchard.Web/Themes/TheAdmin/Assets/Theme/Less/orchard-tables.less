@@ -1,6 +1,5 @@
 // Tables.
 
-
 .table {
     .actions {
         text-align: right;
@@ -49,4 +48,19 @@
 
 .am-datatable-header {
     padding: 0;
+}
+
+td{
+    &.center-align{
+        text-align:center;
+        > *{
+            margin:0 auto;
+        }
+    }
+    &.left-align{
+        text-align:left;
+    }
+    &.right-align{
+        text-align:right;
+    }
 }

@@ -124,9 +124,15 @@ select {
 }
 
 
-/*.am-checkbox, .am-radio {
-    padding: 0;
-}*/
+.am-checkbox, .am-radio {
+    >label{
+        &:empty{
+            &:before{
+                margin-right:0;
+            }
+        }
+    }
+}
 
 .am-datatable-header:empty {
     display: none;
