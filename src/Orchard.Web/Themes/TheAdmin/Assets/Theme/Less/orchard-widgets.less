@@ -13,6 +13,9 @@
     .widgets-listed, #widgets-available {
         ol {
             padding: 0;
+            &:last-child{
+                margin-bottom:0;
+            }
         }
 
         li {
@@ -24,7 +27,6 @@
             list-style: none;
             clear:both;
             .clearfix();
-
 
             .widgets-actions {
                 position: relative;
@@ -55,6 +57,10 @@
             &:after {
                 clear: both;
             }
+
+            &:last-child{
+                margin-bottom:0;
+            }
         }
 
         ul.widgets-zone-widgets {
@@ -65,6 +71,7 @@
             li {
                 padding: 5px 5px 5px 30px;
                 .clearfix();
+                margin-bottom:5px;
             }
 
             h3 {
