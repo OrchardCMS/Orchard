@@ -4,8 +4,10 @@
     Script.Require("ShapesBase");
 }
 <fieldset>
-    @Html.EditorFor(m => m.OnAdminMenu)
-    <label for="@Html.FieldIdFor(m => m.OnAdminMenu)" class="forcheckbox">@T("Show on admin menu")</label>
+    <div class="am-checkbox">
+        @Html.EditorFor(m => m.OnAdminMenu)
+        <label for="@Html.FieldIdFor(m => m.OnAdminMenu)" class="forcheckbox">@T("Show on admin menu")</label>
+    </div>
     <div data-controllerid="@Html.FieldIdFor(m => m.OnAdminMenu)" class="">
         <label for="@Html.FieldIdFor(m => m.AdminMenuText)">@T("Menu text")</label>
         @Html.TextBoxFor(m => m.AdminMenuText, new { @class = "text single-line" })

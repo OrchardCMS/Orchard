@@ -4,9 +4,9 @@
 
 @{ Layout.Title = T("Manage Blogs").ToString(); }
 
-<div class="panel panel-default  ">
-    @if (Model.ContentItems.Items.Count > 0) {
-        using (Html.BeginFormAntiForgeryPost(Url.Action("List", "Admin", new { area = "Contents", id = "" }))) {
+@if (Model.ContentItems.Items.Count > 0) {
+    using (Html.BeginFormAntiForgeryPost(Url.Action("List", "Admin", new { area = "Contents", id = "" }))) {
+        <div class="panel panel-default">
             <div class="panel-heading no-border form-inline">
                 <div class="panel-heading-actions">
                     <div class="actions"><a class="add button primaryAction" href="@Url.BlogCreate()">@T("New Blog")</a></div>
@@ -32,10 +32,14 @@
                     @Display(Model.ContentItems)
                 </fieldset>
             </div>
-        }
+        </div>
     }
-    else {
-        <div class="info message">@T("There are no blogs for you to see. Want to <a href=\"{0}\">add one</a>?", Url.BlogCreate())</div>
-    }
+}
+else {
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="info message">@T("There are no blogs for you to see. Want to <a href=\"{0}\">add one</a>?", Url.BlogCreate())</div>
+        </div>
+    </div>
+}
 
-</div>

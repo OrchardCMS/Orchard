@@ -1,8 +1,5 @@
 @{
     Layout.Title = T("Manage Blog").ToString();
 }
-
-<div class="panel  panel-default">
-        @* Model is a Shape, calling Display() so that it is rendered using the most specific template for its Shape type *@
-        @Display(Model)
-    </div>
+@* Model is a Shape, calling Display() so that it is rendered using the most specific template for its Shape type *@
+@Display(Model)

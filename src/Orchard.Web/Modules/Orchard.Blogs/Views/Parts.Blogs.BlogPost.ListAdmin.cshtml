@@ -1,32 +1,40 @@
 ﻿@using Orchard.Core.Contents.ViewModels;
 @using Orchard.Utility.Extensions;
+
 @if (Model.ContentItems.Items.Count > 0) {
     using (Html.BeginFormAntiForgeryPost(Url.Action("List", "Admin", new { area = "Contents", id = "" }))) {
+        <div class="panel panel-default">
+            <div class="panel-heading no-border form-inline">
+                <div class="panel-heading-primary-group">
+                    <fieldset class="bulk-actions">
+                        <div class="am-checkbox inline">
+                            <input type="checkbox" class="check-all" id="blog-post-list-select-all" />
+                            <label for="blog-post-list-select-all">@T("Select all")</label>
+                        </div>
 
-        <div class="panel-heading no-border form-inline">
-            <div class="panel-heading-primary-group">
-                <fieldset class="bulk-actions">
-                    <div class="am-checkbox inline">
-                        <input type="checkbox" class="check-all" id="blog-post-list-select-all" />
-                        <label for="blog-post-list-select-all">@T("Select all")</label>
-                    </div>
-
-                    <select id="publishActions" name="Options.BulkAction" class="form-control auto-size">
-                        @Html.SelectOption(ContentsBulkAction.None, ContentsBulkAction.None, T("Choose action...").ToString())
-                        @Html.SelectOption(ContentsBulkAction.None, ContentsBulkAction.PublishNow, T("Publish Now").ToString())
-                        @Html.SelectOption(ContentsBulkAction.None, ContentsBulkAction.Unpublish, T("Unpublish").ToString())
-                        @Html.SelectOption(ContentsBulkAction.None, ContentsBulkAction.Remove, T("Delete").ToString())
-                    </select>
-                    @Html.Hidden("returnUrl", ViewContext.RequestContext.HttpContext.Request.ToUrlString())
-                    <button type="submit" name="submit.BulkEdit" value="yes">@T("Apply")</button>
+                        <select id="publishActions" name="Options.BulkAction" class="form-control auto-size">
+                            @Html.SelectOption(ContentsBulkAction.None, ContentsBulkAction.None, T("Choose action...").ToString())
+                            @Html.SelectOption(ContentsBulkAction.None, ContentsBulkAction.PublishNow, T("Publish Now").ToString())
+                            @Html.SelectOption(ContentsBulkAction.None, ContentsBulkAction.Unpublish, T("Unpublish").ToString())
+                            @Html.SelectOption(ContentsBulkAction.None, ContentsBulkAction.Remove, T("Delete").ToString())
+                        </select>
+                        @Html.Hidden("returnUrl", ViewContext.RequestContext.HttpContext.Request.ToUrlString())
+                        <button type="submit" name="submit.BulkEdit" value="yes">@T("Apply")</button>
+                    </fieldset>
+                </div>
+            </div>
+            <div class="panel-body">
+                <fieldset class="content-items bulk-items">
+                    @Display(Model.ContentItems)
                 </fieldset>
             </div>
         </div>
-        <fieldset class="content-items bulk-items">
-            @Display(Model.ContentItems)
-        </fieldset>
     }
 }
 else {
-    <div class="info message">@T("There are no posts for this blog.")</div>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="info message">@T("There are no posts for this blog.")</div>
+        </div>
+    </div>
 }

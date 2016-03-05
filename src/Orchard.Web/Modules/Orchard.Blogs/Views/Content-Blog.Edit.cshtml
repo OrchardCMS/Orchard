@@ -2,7 +2,7 @@
 @{
     Layout.Title = T("New Blog");
 }
-<div class="edit-item">
+<div class="panel-body">
     <div class="edit-item-primary">
         @if (Model.Content != null) {
             <div class="edit-item-content">
@@ -10,16 +10,16 @@
             </div>
         }
     </div>
-    <div class="edit-item-secondary group">
-        @if (Model.Actions != null) {
-            <div class="edit-item-actions">
-                @Display(Model.Actions)
-            </div>
-        }
-        @if (Model.Sidebar != null) {
-            <div class="edit-item-sidebar group">
-                @Display(Model.Sidebar)
-            </div>
-        }
-    </div>
+</div>
+<div class="panel-footer">
+    @if (Model.Actions != null) {
+        <div class="edit-item-actions">
+            @Display(Model.Actions)
+        </div>
+    }
+    @if (Model.Sidebar != null) {
+        <div class="edit-item-sidebar group">
+            @Display(Model.Sidebar)
+        </div>
+    }
 </div>

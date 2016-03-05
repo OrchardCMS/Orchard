@@ -3,7 +3,7 @@
 
 <fieldset>
     @Html.LabelFor(m => m.Description, T("Description"))
-    @Html.TextAreaFor(m => m.Description, 5, 60, null)
+    @Html.TextAreaFor(m => m.Description, 5, 60, new { @class="text"})
 </fieldset>
 
 <fieldset>
@@ -14,9 +14,11 @@
 </fieldset>
 
 <fieldset>
-    @Html.CheckBoxFor(m => m.EnableCommentsFeed)
-    @Html.LabelFor(m => m.EnableCommentsFeed, T("Render a comments rss feed").Text, new { @class = "forcheckbox" })
-    <span class="hint">@T("Enable to render the comments rss feed.")</span>
+    <div class="am-checkbox">
+        @Html.CheckBoxFor(m => m.EnableCommentsFeed)
+        @Html.LabelFor(m => m.EnableCommentsFeed, T("Render a comments rss feed").Text, new { @class = "forcheckbox" })
+        <span class="hint">@T("Enable to render the comments rss feed.")</span>
+    </div>
 </fieldset>
 
 <fieldset>
