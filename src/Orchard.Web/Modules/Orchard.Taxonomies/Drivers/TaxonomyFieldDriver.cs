@@ -96,6 +96,10 @@ namespace Orchard.Taxonomies.Drivers {
                 if (appliedViewModel != null) {
                     terms.ForEach(t => t.IsChecked = appliedViewModel.Terms.Any(at => at.Id == t.Id && at.IsChecked) || t.Id == appliedViewModel.SingleTermId);
                 }
+                else if (part.Id == 0) {
+                    // New content item (cloned content could have terms)
+                    terms.ForEach(t => t.IsChecked = field.Terms.Any(term => term.Id == t.Id));
+                }
                 else {
                     terms.ForEach(t => t.IsChecked = appliedTerms.ContainsKey(t.Id));
                 }
