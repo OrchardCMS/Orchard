@@ -7,6 +7,7 @@ using Orchard.ContentManagement.Handlers;
 using Orchard.MediaLibrary.ViewModels;
 using Orchard.Localization;
 using Orchard.Utility.Extensions;
+using Orchard.MediaLibrary.Fields;
 
 namespace Orchard.MediaLibrary.Drivers {
     public class MediaLibraryPickerFieldDriver : ContentFieldDriver<Fields.MediaLibraryPickerField> {
@@ -93,6 +94,10 @@ namespace Orchard.MediaLibrary.Drivers {
 
                 context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("ContentItems", string.Join(",", contentItemIds));
             }
+        }
+
+        protected override void Cloning(ContentPart part, MediaLibraryPickerField originalField, MediaLibraryPickerField cloneField, CloneContentContext context) {
+            cloneField.Ids = originalField.Ids;
         }
 
         protected override void Describe(DescribeMembersContext context) {
