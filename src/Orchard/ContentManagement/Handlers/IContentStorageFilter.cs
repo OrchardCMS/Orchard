@@ -26,6 +26,8 @@ namespace Orchard.ContentManagement.Handlers {
         void ImportCompleted(ImportContentContext context);
         void Exporting(ExportContentContext context);
         void Exported(ExportContentContext context);
+        void Cloning(CloneContentContext context);
+        void Cloned(CloneContentContext context);
         void Restoring(RestoreContentContext context);
         void Restored(RestoreContentContext context);
         void Destroying(DestroyContentContext context);

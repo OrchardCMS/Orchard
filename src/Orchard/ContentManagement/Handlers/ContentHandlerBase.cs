@@ -1,4 +1,6 @@
-﻿namespace Orchard.ContentManagement.Handlers {
+﻿using System;
+
+namespace Orchard.ContentManagement.Handlers {
     public class ContentHandlerBase : IContentHandler {
         public virtual void Activating(ActivatingContentContext context) {}
         public virtual void Activated(ActivatedContentContext context) {}
@@ -27,6 +29,8 @@
         public virtual void ImportCompleted(ImportContentContext importContentContext) {}
         public virtual void Exporting(ExportContentContext context) {}
         public virtual void Exported(ExportContentContext context) {}
+        public virtual void Cloning(CloneContentContext context) { }
+        public virtual void Cloned(CloneContentContext context) { }
         public virtual void Restoring(RestoreContentContext context) { }
         public virtual void Restored(RestoreContentContext context) { }
         public virtual void Destroying(DestroyContentContext context) {}

@@ -27,6 +27,8 @@
         void ImportCompleted(ImportContentContext importContentContext);
         void Exporting(ExportContentContext context);
         void Exported(ExportContentContext context);
+        void Cloning(CloneContentContext context);
+        void Cloned(CloneContentContext context);
 
         void GetContentItemMetadata(GetContentItemMetadataContext context);
         void BuildDisplay(BuildDisplayContext context);

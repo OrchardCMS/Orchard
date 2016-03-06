@@ -124,6 +124,14 @@ namespace Orchard.ContentManagement.Handlers {
             Filters.Add(new InlineStorageFilter<TPart> { OnExported = handler });
         }
 
+        protected void OnCloning<TPart>(Action<CloneContentContext, TPart> handler) where TPart : class, IContent {
+            Filters.Add(new InlineStorageFilter<TPart> { OnCloning = handler });
+        }
+
+        protected void OnCloned<TPart>(Action<CloneContentContext, TPart> handler) where TPart : class, IContent {
+            Filters.Add(new InlineStorageFilter<TPart> { OnCloned = handler });
+        }
+
         protected void OnRestoring<TPart>(Action<RestoreContentContext, TPart> handler) where TPart : class, IContent {
             Filters.Add(new InlineStorageFilter<TPart> { OnRestoring = handler });
         }
@@ -174,6 +182,8 @@ namespace Orchard.ContentManagement.Handlers {
             public Action<ImportContentContext, TPart> OnImportCompleted { get; set; }
             public Action<ExportContentContext, TPart> OnExporting { get; set; }
             public Action<ExportContentContext, TPart> OnExported { get; set; }
+            public Action<CloneContentContext, TPart> OnCloning { get; set; }
+            public Action<CloneContentContext, TPart> OnCloned { get; set; }
             public Action<RestoreContentContext, TPart> OnRestoring { get; set; }
             public Action<RestoreContentContext, TPart> OnRestored { get; set; }
             public Action<DestroyContentContext, TPart> OnDestroying { get; set; }
@@ -264,6 +274,14 @@ namespace Orchard.ContentManagement.Handlers {
             protected override void Exported(ExportContentContext context, TPart instance) {
                 if (OnExported != null)
                     OnExported(context, instance);
+            }
+            protected override void Cloning(CloneContentContext context, TPart instance) {
+                if (OnCloning != null)
+                    OnCloning(context, instance);
+            }
+            protected override void Cloned(CloneContentContext context, TPart instance) {
+                if (OnCloned != null)
+                    OnCloned(context, instance);
             }
             protected override void Restoring(RestoreContentContext context, TPart instance) {
                 if (OnRestoring != null)
@@ -464,6 +482,18 @@ namespace Orchard.ContentManagement.Handlers {
             Exported(context);
         }
 
+        void IContentHandler.Cloning(CloneContentContext context) {
+            foreach (var filter in Filters.OfType<IContentStorageFilter>())
+                filter.Cloning(context);
+            Cloning(context);
+        }
+
+        void IContentHandler.Cloned(CloneContentContext context) {
+            foreach (var filter in Filters.OfType<IContentStorageFilter>())
+                filter.Cloned(context);
+            Cloned(context);
+        }
+
         void IContentHandler.Restoring(RestoreContentContext context) {
             foreach (var filter in Filters.OfType<IContentStorageFilter>())
                 filter.Restoring(context);
@@ -546,6 +576,8 @@ namespace Orchard.ContentManagement.Handlers {
         protected virtual void ImportCompleted(ImportContentContext context) { }
         protected virtual void Exporting(ExportContentContext context) { }
         protected virtual void Exported(ExportContentContext context) { }
+        protected virtual void Cloning(CloneContentContext context) { }
+        protected virtual void Cloned(CloneContentContext context) { }
         protected virtual void Restoring(RestoreContentContext context) { }
         protected virtual void Restored(RestoreContentContext context) { }
         protected virtual void Destroying(DestroyContentContext context) { }
