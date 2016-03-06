@@ -193,5 +193,10 @@ namespace Orchard.Layouts.Drivers {
             var template = context.GetItemFromSession(templateIdentity);
             return template != null ? template.Id : default(int?);
         }
+
+        protected override void Cloning(LayoutPart originalPart, LayoutPart clonePart, CloneContentContext context) {
+            clonePart.LayoutData = originalPart.LayoutData;
+            clonePart.TemplateId = originalPart.TemplateId;
+        }
     }
 }
