@@ -69,6 +69,7 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\TransliterationAdminController.cs" />
     <Compile Include="Controllers\AdminCultureSelectorController.cs" />
+    <Compile Include="Handlers\TranslateContentContext.cs" />
     <Compile Include="Helpers\ContextHelpers.cs" />
     <Compile Include="Models\TransliterationSpecificationRecord.cs" />
     <Compile Include="Providers\ContentLocalizationTokens.cs" />
