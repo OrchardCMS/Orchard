@@ -563,19 +563,22 @@ namespace Orchard.ContentManagement {
 
         public virtual ContentItem Clone(ContentItem contentItem) {
             var cloneContentItem = New(contentItem.ContentType);
-
             var context = new CloneContentContext(contentItem, cloneContentItem);
+            return Clone(contentItem, null);
+        }
+
+        public virtual ContentItem Clone(ContentItem contentItem, CloneContentContext cloneContext) {
             foreach (var contentHandler in Handlers) {
-                contentHandler.Cloning(context);
+                contentHandler.Cloning(cloneContext);
             }
 
             foreach (var contentHandler in Handlers) {
-                contentHandler.Cloned(context);
+                contentHandler.Cloned(cloneContext);
             }
             var importContentSession = new ImportContentSession(this);
             CompleteImport(element, importContentSession);
 
-            return cloneContentItem;
+            return cloneContext.CloneContentItem;
         }
 
         public virtual ContentItem Restore(ContentItem contentItem, VersionOptions options) {

@@ -43,6 +43,14 @@ namespace Orchard.ContentManagement {
         ContentItem Clone(ContentItem contentItem);
 
         /// <summary>
+        /// Makes a clone of the content item with a special context
+        /// </summary>
+        /// <param name="contentItem">The content item to clone</param>
+        /// <param name="cloneContext">The cloning context</param>
+        /// <returns>Clone of the item</returns>
+        ContentItem Clone(ContentItem contentItem, Handlers.CloneContentContext cloneContext);
+
+        /// <summary>
         /// Rolls back the specified content item by creating a new version based on the specified version.
         /// </summary>
         /// <param name="contentItem">The content item to roll back.</param>
