@@ -563,8 +563,7 @@ namespace Orchard.ContentManagement {
 
         public virtual ContentItem Clone(ContentItem contentItem) {
             var cloneContentItem = New(contentItem.ContentType);
-            var context = new CloneContentContext(contentItem, cloneContentItem);
-            return Clone(contentItem, null);
+            return Clone(contentItem, new CloneContentContext(contentItem, cloneContentItem));
         }
 
         public virtual ContentItem Clone(ContentItem contentItem, CloneContentContext cloneContext) {
