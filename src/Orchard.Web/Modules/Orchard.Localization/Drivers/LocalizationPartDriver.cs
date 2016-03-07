@@ -6,6 +6,7 @@ using Orchard.ContentManagement.Handlers;
 using Orchard.Localization.Models;
 using Orchard.Localization.Services;
 using Orchard.Localization.ViewModels;
+using Orchard.Localization.Handlers;
 
 namespace Orchard.Localization.Drivers {
     public class LocalizationPartDriver : ContentPartDriver<LocalizationPart> {
@@ -143,8 +144,17 @@ namespace Orchard.Localization.Drivers {
             }
         }
 
-        protected override void Cloned(LocalizationPart originalPart, LocalizationPart clonePart, CloneContentContext context) {
-            clonePart.Culture = originalPart.Culture;
+        protected override void Cloning(LocalizationPart originalPart, LocalizationPart clonePart, CloneContentContext context) {
+            if(context is TranslateContentContext) {
+                var translateContext = context as TranslateContentContext;
+                if(translateContext.TagetCulture != null) {
+                    clonePart.Culture = translateContext.TagetCulture;
+                }
+                clonePart.MasterContentItem = translateContext.ContentItem;
+            }
+            else {
+                clonePart.Culture = originalPart.Culture;
+            }
         }
     }
 }

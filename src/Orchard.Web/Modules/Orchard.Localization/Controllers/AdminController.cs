@@ -9,19 +9,23 @@ using Orchard.Localization.Services;
 using Orchard.Localization.ViewModels;
 using Orchard.Mvc;
 using Orchard.UI.Notify;
+using Orchard.Localization.Handlers;
 
 namespace Orchard.Localization.Controllers {
     [ValidateInput(false)]
     public class AdminController : Controller, IUpdateModel {
         private readonly IContentManager _contentManager;
+        private readonly ICultureManager _cultureManager;
         private readonly ILocalizationService _localizationService;
 
         public AdminController(
             IOrchardServices orchardServices,
             IContentManager contentManager,
+            ICultureManager cultureManager,
             ILocalizationService localizationService,
             IShapeFactory shapeFactory) {
             _contentManager = contentManager;
+            _cultureManager = cultureManager;
             _localizationService = localizationService;
             T = NullLocalizer.Instance;
             Services = orchardServices;
@@ -50,8 +54,14 @@ namespace Orchard.Localization.Controllers {
                     existingTranslationMetadata.EditorRouteValues);
             }
 
-            var contentItemTranslation = _contentManager.New<LocalizationPart>(masterContentItem.ContentType);
-            contentItemTranslation.MasterContentItem = masterContentItem;
+            var contentItemTranslation = _contentManager.New(masterContentItem.ContentType);
+            var translateContext = new TranslateContentContext(masterContentItem, contentItemTranslation);
+
+            if(!string.IsNullOrWhiteSpace(to)) {
+                translateContext.TagetCulture = _cultureManager.GetCultureByName(to);
+            }
+
+            contentItemTranslation = _contentManager.Clone(masterContentItem, translateContext);
 
             var content = _contentManager.BuildEditor(contentItemTranslation);
             
