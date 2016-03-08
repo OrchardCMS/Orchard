@@ -4,33 +4,37 @@
     Layout.Title = T("Add Parts To \"{0}\"", Model.Type.DisplayName).ToString();
     var i = 0;
 }
-<div class="panel-body">
-    @T("Choose the Parts to add to this Content Type.")
-    @using (Html.BeginFormAntiForgeryPost()) {
-        @Html.ValidationSummary()
-        <fieldset>
-            @foreach (var partSelection in Model.PartSelections) {
-                <div class="am-checkbox">
-                    @{
-                        var fieldNameStart = "PartSelections[" + i + "].";
-                        var fieldName = fieldNameStart + "IsSelected";
-                        var fieldId = ViewData.TemplateInfo.GetFullHtmlFieldId(fieldNameStart + "IsSelected");
-                        i++;
-                    }
+@using (Html.BeginFormAntiForgeryPost()) {
+    @Html.ValidationSummary()
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            @T("Choose the Parts to add to this Content Type.")
+        </div>
+        <div class="panel-body">
+            <fieldset>
+                @foreach (var partSelection in Model.PartSelections) {
+                    <div class="am-checkbox">
+                        @{
+                            var fieldNameStart = "PartSelections[" + i + "].";
+                            var fieldName = fieldNameStart + "IsSelected";
+                            var fieldId = ViewData.TemplateInfo.GetFullHtmlFieldId(fieldNameStart + "IsSelected");
+                            i++;
+                        }
 
-                    <input name="@fieldName" type="checkbox" id="@fieldId" value="true"/>
-                    <label for="@fieldId">
-                        @partSelection.PartDisplayName
-                    </label>
-                    @if (!string.IsNullOrWhiteSpace(partSelection.PartDescription)) {
-                        <span class="part-hint" for="@fieldId">@partSelection.PartDescription</span>
-                    }
-                    @Html.Hidden(fieldNameStart + "PartName", partSelection.PartName)
-                </div>
-            }
-        </fieldset>
-        <fieldset>
+                        <input name="@fieldName" type="checkbox" id="@fieldId" value="true" />
+                        <label for="@fieldId">
+                            @partSelection.PartDisplayName
+                        </label>
+                        @if (!string.IsNullOrWhiteSpace(partSelection.PartDescription)) {
+                            <span class="part-hint" for="@fieldId">@partSelection.PartDescription</span>
+                        }
+                        @Html.Hidden(fieldNameStart + "PartName", partSelection.PartName)
+                    </div>
+                            }
+            </fieldset>
+        </div>
+        <div class="panel-footer">
             <button class="btn btn-primary" type="submit">@T("Save")</button>
-        </fieldset>
-    }
-</div>
+        </div>
+    </div>
+                            }
