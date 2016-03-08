@@ -1,12 +1,13 @@
-﻿<div class="edit-item">
-    <div class="edit-item-primary">
+﻿<div class="panel panel-default">
+
+    <div class="panel-body">
         @if (Model.Content != null) {
             <div class="edit-item-content">
                 @Display(Model.Content)
             </div>
         }
     </div>
-    <div class="edit-item-secondary group">
+    <div class="panel-footer">
         @if (Model.Actions != null) {
             <div class="edit-item-actions">
                 @Display(Model.Actions)

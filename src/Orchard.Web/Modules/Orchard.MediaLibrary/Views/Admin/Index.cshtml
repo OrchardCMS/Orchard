@@ -14,71 +14,78 @@
 
     Layout.Title = T("Media Library");
 }
-
-<div id="media-library" data-draft-text="@T("Draft")">
-    <div id="media-library-toolbar">
-        <a href="#" data-bind="visible: displayed(), click: importMedia" class="button" id="button-import">@T("Import")</a>
-        <a href="#" data-bind="visible: displayed(), attr: { href: '@HttpUtility.JavaScriptStringEncode(Url.Action("Edit", "Folder", new { area = "Orchard.MediaLibrary"}))?folderPath=' + encodeURIComponent(displayed()) }" class="button"  id="button-edit-folder">@T("Edit Folder")</a>
-        <a href="#" data-bind="attr: { href: '@HttpUtility.JavaScriptStringEncode(Url.Action("Create", "Folder", new { area = "Orchard.MediaLibrary"}))?folderPath=' + encodeURIComponent(displayed() ? displayed() : '') }" class="button"  id="button-create-folder">@T("Create Folder")</a>
-        
-        @Display(Model.CustomActionsShapes)
+<div class="panel panel-default">
+    <div class="panel-heading no-border">
+        <div class="panel-heading-primary-group">
+            <fieldset class="bulk-actions">
+                <a href="#" data-bind="visible: displayed(), click: importMedia" class="button" id="button-import">@T("Import")</a>
+                <a href="#" data-bind="visible: displayed(), attr: { href: '@HttpUtility.JavaScriptStringEncode(Url.Action("Edit", "Folder", new { area = "Orchard.MediaLibrary"}))?folderPath=' + encodeURIComponent(displayed()) }" class="button" id="button-edit-folder">@T("Edit Folder")</a>
+                <a href="#" data-bind="attr: { href: '@HttpUtility.JavaScriptStringEncode(Url.Action("Create", "Folder", new { area = "Orchard.MediaLibrary"}))?folderPath=' + encodeURIComponent(displayed() ? displayed() : '') }" class="button" id="button-create-folder">@T("Create Folder")</a>
+            </fieldset>
+            <fieldset class="bulk-actions">
+                @Display(Model.CustomActionsShapes)
+            </fieldset>
+        </div>
     </div>
-    <div id="media-library-main">
-        <div id="media-library-main-navigation">
-            <ul>
-                    
-                @Display(Model.CustomNavigationShapes)
+    <div class="panel-body">
+        <div id="media-library" data-draft-text="@T("Draft")">
+            <div id="media-library-main">
+                <div id="media-library-main-navigation">
+                    <ul>
 
-                <li id="media-library-main-navigation-tree">
-                    <ul data-bind="template: { name: 'media-folder-template', foreach: mediaFolders, afterRender: afterRenderMediaFolderTemplate}">
+                        @Display(Model.CustomNavigationShapes)
+
+                        <li id="media-library-main-navigation-tree">
+                            <ul data-bind="template: { name: 'media-folder-template', foreach: mediaFolders, afterRender: afterRenderMediaFolderTemplate}"></ul>
+                        </li>
                     </ul>
-                </li>
-            </ul>
-        </div>
-        <div id="media-library-main-list-wrapper">
-            <div id="media-library-main-list" data-bind="event: { scroll: scrolled }, css: { pending: pendingRequest() }">
-                <ul data-bind="foreach: results">
-                    <li data-bind="css: cssClass">
-                        <div class="thumbnail" data-bind="html: data.thumbnail">
-                        </div>
-                        <div class="media-library-main-list-overlay">
-                            <p class="title" data-bind="text: data.title"></p>
-                            <p class="publication-status" data-bind="text: publicationStatus"></p>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <div id="media-library-main-editor">
-            <div id="media-library-main-editor-focus" data-bind="with: focus">
-                <h1>@T("PROPERTIES")</h1>
-                <div class="summary" data-bind="html: summary">
-                    
                 </div>
-            </div>
-            <article>
-                <header>
-                    <div id="media-library-main-selection" data-bind="visible: selection().length > 0">
-                        <h1>@T("SELECTION")</h1>
-                        <ul data-bind="foreach: selection">
+                <div id="media-library-main-list-wrapper">
+                    <div id="media-library-main-list" data-bind="event: { scroll: scrolled }, css: { pending: pendingRequest() }">
+                        <ul data-bind="foreach: results">
                             <li data-bind="css: cssClass">
-                                <div class="thumbnail selection" data-bind="html: data.thumbnail, click: $parent.focus">
+                                <div class="thumbnail" data-bind="html: data.thumbnail">
+                                </div>
+                                <div class="media-library-main-list-overlay">
+                                    <p class="title" data-bind="text: data.title"></p>
+                                    <p class="publication-status" data-bind="text: publicationStatus"></p>
                                 </div>
                             </li>
                         </ul>
-                        <div id="media-library-main-selection-actions">
-                            <button id="delete-selection-button">@T("Delete")</button>
-                            <button id="clone-selection-button" data-bind="visible: selection().length == 1">@T("Clone")</button>
+                    </div>
+                </div>
+                <div id="media-library-main-editor">
+                    <div id="media-library-main-editor-focus" data-bind="with: focus">
+                        <h1>@T("PROPERTIES")</h1>
+                        <div class="summary" data-bind="html: summary">
+
                         </div>
                     </div>
-                </header>
-                <footer>
-                    <div id="media-library-main-selection-select">
-                        <button class="button-select" data-bind="visible: selection().length > 0">@T("Select")</button>
-                        <button class="button-cancel">@T("Cancel")</button>
-                    </div>
-                </footer>
-            </article>
+                    <article>
+                        <header>
+                            <div id="media-library-main-selection" data-bind="visible: selection().length > 0">
+                                <h1>@T("SELECTION")</h1>
+                                <ul data-bind="foreach: selection">
+                                    <li data-bind="css: cssClass">
+                                        <div class="thumbnail selection" data-bind="html: data.thumbnail, click: $parent.focus">
+                                        </div>
+                                    </li>
+                                </ul>
+                                <div id="media-library-main-selection-actions">
+                                    <button id="delete-selection-button">@T("Delete")</button>
+                                    <button id="clone-selection-button" data-bind="visible: selection().length == 1">@T("Clone")</button>
+                                </div>
+                            </div>
+                        </header>
+                        <footer>
+                            <div id="media-library-main-selection-select">
+                                <button class="button-select" data-bind="visible: selection().length > 0">@T("Select")</button>
+                                <button class="button-cancel">@T("Cancel")</button>
+                            </div>
+                        </footer>
+                    </article>
+                </div>
+            </div>
         </div>
     </div>
 </div>

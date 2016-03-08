@@ -13,40 +13,48 @@
 
     Style.Require("FontAwesome");
 }
+<div class="panel panel-default">
+    <div class="panel-heading no-border">
+        <div class="panel-heading-primary-group">
+            <fieldset class="bulk-actions">
+                @Html.ActionLink(T("Media Library").ToString(), "Index", "Admin", new { area = "Orchard.MediaLibrary" }, null)
+                @foreach (var folder in Model.FolderPath.Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries)) {<text> &gt; </text>@folder}
+            </fieldset>
 
-<div id="media-library-import">
-    <div id="media-library-toolbar">
-
-        <div id="media-library-toolbar-actions">
-
-            <label for="filterMediaType">@T("Create")</label>
-            <select id="filterMediaType" name="FilteredMediaType">
-                @Html.SelectOption("", true, T("Any").ToString())
-                @foreach (var mediaType in Model.MediaTypes) {
-                    @Html.SelectOption(mediaType.Name, false, mediaType.DisplayName)
-                }
-            </select>
-
-            <a href="@Url.Action("Index", "Admin", new { folderPath = Model.FolderPath})" class="button">@T("Close")</a>
         </div>
+        <div class="panel-heading-actions">
+            <fieldset class="bulk-actions">
+                <div id="media-library-toolbar-actions">
+                    <label for="filterMediaType" class="control-label">@T("Create")</label>
+                    <select id="filterMediaType" name="FilteredMediaType" class="form-control auto-size">
+                        @Html.SelectOption("", true, T("Any").ToString())
+                        @foreach (var mediaType in Model.MediaTypes) {
+                            @Html.SelectOption(mediaType.Name, false, mediaType.DisplayName)
+                        }
+                    </select>
 
-        @Html.ActionLink(T("Media Library").ToString(), "Index", "Admin", new { area = "Orchard.MediaLibrary" }, null)
-        @foreach (var folder in Model.FolderPath.Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries)) {<text> &gt; </text>@folder}
+                    <a href="@Url.Action("Index", "Admin", new { folderPath = Model.FolderPath})" class="button">@T("Close")</a>
+                </div>
+            </fieldset>
 
+        </div>
     </div>
-
-    <div id="media-library-main">
-        <div id="media-library-main-navigation">
-            @foreach (var menuItem in Model.Menu) {
+    <div class="panel-body">
+        <div id="media-library-import">
+            <div id="media-library-main">
+                <div id="media-library-main-navigation">
+                    @foreach (var menuItem in Model.Menu) {
                 string sectionHeaderTextHint = menuItem.Text.TextHint;
                 var itemClassName = "navicon-" + sectionHeaderTextHint.HtmlClassify();
 
-                <div class="import-provider"><a class="navicon @itemClassName" href="@menuItem.Href/Index?folderPath=@HttpUtility.UrlEncode(Model.FolderPath)">@menuItem.Text</a></div>
-            }
-        </div>
-        <div id="media-library-main-list-wrapper">
-            <div id="media-library-main-list">
-                <iframe id="media-library-main-list-frame"></iframe>
+                        <div class="import-provider"><a class="navicon @itemClassName" href="@menuItem.Href/Index?folderPath=@HttpUtility.UrlEncode(Model.FolderPath)">@menuItem.Text</a></div>
+                    }
+                </div>
+                <div id="media-library-main-list-wrapper">
+                    <div id="media-library-main-list">
+                        <iframe id="media-library-main-list-frame"></iframe>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
