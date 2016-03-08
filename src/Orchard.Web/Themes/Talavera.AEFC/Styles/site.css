@@ -26321,29 +26321,48 @@ li.bd-linkbutton-2 > a {
   color: #33add6;
 }
 .bwf:before {
+  display: inline-block;
   font-family: 'Billion Web Font';
+  font-size: 20px;
   font-style: normal;
   font-weight: normal;
+  line-height: 18.57142858px;
+  line-height: 13px;
   text-decoration: inherit;
   text-align: center;
   text-transform: none;
+  vertical-align: middle;
+  visibility: inherit;
   width: 1em;
-}
-.bwf-icon-enevlope:before {
-  content: '\0157';
+  width: auto;
 }
 .bwf-icon-enevlope {
   text-decoration: inherit;
   display: inline-block;
   speak: none;
 }
-.bwf-icon-earphone:before {
-  content: '\0288';
+.bwf-icon-enevlope:before {
+  content: '\0157';
+}
+.bwf-icon-enevlope:hover.active:before,
+.bwf-icon-enevlope.active:before {
+  display: inline-block;
+  vertical-align: middle;
+  text-decoration: none;
 }
 .bwf-icon-earphone {
   text-decoration: inherit;
   display: inline-block;
   speak: none;
+}
+.bwf-icon-earphone:before {
+  content: '\0288';
+}
+.bwf-icon-earphone:hover.active:before,
+.bwf-icon-earphone.active:before {
+  display: inline-block;
+  vertical-align: middle;
+  text-decoration: none;
 }
 #navigation-toTop {
   position: fixed;
