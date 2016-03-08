@@ -16,15 +16,6 @@
                 <h3>@Html.ItemAdminLink(contentItem) <span class="content-type">- @T(contentItem.TypeDefinition.DisplayName)</span></h3>
             </div>
         </div>
-        <div class="related">
-            @Display(Model.Actions)
-            @if (Authorizer.Authorize(Permissions.EditContent, contentItem)) {
-                @Html.ItemEditLink(T("Edit").Text, contentItem)@T(" | ")
-            }
-            @if (Authorizer.Authorize(Permissions.DeleteContent, contentItem)) {
-                @Html.Link(T("Delete").Text, Url.ItemRemoveUrl(contentItem, new { returnUrl }), new { itemprop = "RemoveUrl UnsafeUrl" })
-            }
-        </div>
         @if (Model.Header != null) {
             <div class="header">@Display(Model.Header)</div>
         }
@@ -34,5 +25,27 @@
     }
     @if (Model.Meta != null) {
         <div class="metadata">@Display(Model.Meta)</div>
+    }
+    <div class="content-item-actions-dropdown">
+        <div class="dropdown">
+            @{
+                var ddlId = "ddl" + @contentItem.Id;
+            }
+            <a class="button-classes" href="#" data-toggle="dropdown" id="@ddlId">
+                Actions
+                <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                <li>@Display(Model.Actions)</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="content-item-actions">
+    @if (Authorizer.Authorize(Permissions.EditContent, contentItem)) {
+        @Html.ItemEditLink(T("Edit").Text, contentItem)
+    }
+    @if (Authorizer.Authorize(Permissions.DeleteContent, contentItem)) {
+        @Html.Link(T("Delete").Text, Url.ItemRemoveUrl(contentItem, new { returnUrl }), new { itemprop = "RemoveUrl UnsafeUrl" })
     }
 </div>

@@ -73,11 +73,13 @@
                 <fieldset class="content-items bulk-items">
                     @Display(Model.ContentItems)
                 </fieldset>
-                @Display(Model.Pager)
             }
             else {
                 <div class="title">@T("No Content Items to display.") </div>
             }
+        </div>
+        <div class="panel-footer">
+            @Display(Model.Pager)
         </div>
     }
 </div>

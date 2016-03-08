@@ -30,16 +30,19 @@
         </div>
         <div class="panel-body">
             @if (Model.Modules.Any()) {
-            <ul class="content-items no-selection">
-                @foreach (ModuleEntry module in Model.Modules.OrderBy(m => m.Descriptor.Name)) {
-                    <li>@Display.ModuleEntry(Module: module)</li>
-                }
-            </ul>
+            <div class="content-items">
+                <ul class="content-items no-selection">
+                    @foreach (ModuleEntry module in Model.Modules.OrderBy(m => m.Descriptor.Name)) {
+                        <li>@Display.ModuleEntry(Module: module)</li>
+                    }
+                </ul>
+            </div>
             }
             else {
             <p>@T("No modules available").ToString()</p>
             }
-
+        </div>
+        <div class="panel-footer">
             @Display(Model.Pager)
         </div>
     </div>

@@ -35,7 +35,6 @@ select {
     height: @control-height;
     line-height: @control-height;
     /*padding: 5px 6px;*/
-
     &.form-control {
         padding: 5px 6px;
     }
@@ -86,7 +85,6 @@ select {
 
 .message {
     /*padding: 0 0 1em 0;*/
-
     &.message-Warning {
         color: @warning-color-text;
     }
@@ -100,19 +98,20 @@ select {
     background: rgb(249, 249, 249);
     border: solid 1px #ddd;*/
     /*margin-right: 10px;*/
-    white-space: nowrap;    
-    display:inline-block;
+    white-space: nowrap;
+    display: inline-block;
 
     &:only-child {
         margin-right: 0;
-        margin-bottom:0;
-        display:block;
+        margin-bottom: 0;
+        display: block;
     }
 
     @media (max-width: @screen-xs-max) {
-        margin-bottom:1em;
-        &:last-child{
-            margin-bottom:0;
+        margin-bottom: 1em;
+
+        &:last-child {
+            margin-bottom: 0;
         }
     }
 
@@ -125,10 +124,10 @@ select {
 
 
 .am-checkbox, .am-radio {
-    >label{
-        &:empty{
-            &:before{
-                margin-right:0;
+    > label {
+        &:empty {
+            &:before {
+                margin-right: 0;
             }
         }
     }
@@ -142,23 +141,43 @@ select {
 }
 
 /* Modals */
-button.close:hover{
-    background:0 0;
+button.close:hover {
+    background: 0 0;
 }
+
 @indent-unit: 1.5em;
 /* Taxonomy / Term checkbox indent levels */
-.indent-level-1{
-    margin-left:@indent-unit;
-}.indent-level-2{
-    margin-left:calc((@indent-unit * 2));
-}.indent-level-3{
-    margin-left:calc((@indent-unit * 3));
-}.indent-level-4{
-    margin-left:calc((@indent-unit * 4));
-}.indent-level-5{
-    margin-left:calc((@indent-unit * 5));
-}.indent-level-6{
-    margin-left:calc((@indent-unit * 6));
+.indent-level-1 {
+    margin-left: @indent-unit;
+}
+
+.indent-level-2 {
+    margin-left: calc((@indent-unit * 2));
+}
+
+.indent-level-3 {
+    margin-left: calc((@indent-unit * 3));
+}
+
+.indent-level-4 {
+    margin-left: calc((@indent-unit * 4));
+}
+
+.indent-level-5 {
+    margin-left: calc((@indent-unit * 5));
+}
+
+.indent-level-6 {
+    margin-left: calc((@indent-unit * 6));
+}
+
+/* danger links */
+a[itemprop='RemoveUrl UnsafeUrl'] {
+    color: @danger-color-text;
+
+    &:hover {
+        color: darken(@danger-color-text,20%);
+    }
 }
 
 /* Making text classes responsive */

@@ -2,6 +2,8 @@
 
 ul.content-items {
     > li {
+        position: relative;
+
         &:nth-of-type(odd) {
             background: @table-bg-accent;
         }
@@ -14,19 +16,25 @@ ul.content-items {
 
 
 .content-items {
-    border-top: 1px solid @table-border-color;
-
+    /*border-top: 1px solid @table-border-color;*/
     > ul {
         margin: 0;
         padding: 0;
 
         > li {
-            &:nth-of-type(odd) {
+            /*&:nth-of-type(odd) {
                 background: @table-bg-accent;
             }
 
             &:hover {
                 background: @table-bg-hover;
+            }*/
+            margin-bottom: 2em;
+            box-shadow: 0 1px 3px 0px rgba(145, 145, 145, 0.125);
+            position: relative;
+
+            &:last-child {
+                margin-bottom: 0;
             }
         }
     }
@@ -36,13 +44,13 @@ ul.content-items {
     }
 
     .summary {
-        border: 1px solid @table-border-color;
-        border-top: none;
+        /*border-top: none;*/
         padding: 1em;
         display: flex;
         justify-content: space-between;
         flex-direction: column;
         flex-basis: 100%;
+        border: 1px solid @table-border-color;
 
         .properties {
             overflow: hidden;
@@ -104,9 +112,10 @@ ul.content-items {
                         font-size: @font-size-base;
                     }
                 }
+
                 .am-checkbox + h2,
-                .am-checkbox + h3{
-                    margin-top:4px;
+                .am-checkbox + h3 {
+                    margin-top: 4px;
                 }
             }
         }
@@ -122,6 +131,7 @@ ul.content-items {
                 overflow: hidden;
                 text-overflow: ellipsis;
                 max-width: 100%;
+                align-items: center;
 
                 li {
                     white-space: nowrap;
@@ -129,6 +139,7 @@ ul.content-items {
                     overflow: hidden;
                     text-overflow: ellipsis;
                     max-width: 100%;
+                    height: 22px;
                 }
 
                 .rating {
@@ -273,5 +284,58 @@ button, a.button {
                 padding-left: 0.5em;
             }
         }
+    }
+}
+
+.content-item-actions {
+    display: flex;
+    justify-content: space-between;
+    background: @table-bg-accent;
+
+    a {
+        border: 1px solid @table-border-color;
+        border-top: none;
+        min-height: 44px;
+        width: 100%;
+        text-align: center;
+        height: 100%;
+        align-items: center;
+        display: inline-flex;
+        justify-content: center;
+        border-right-width: 0;
+
+        &:hover {
+            background: @table-bg-hover;
+        }
+
+        &:last-child {
+            border-right-width: 1px;
+        }
+        /* danger links */
+        &[itemprop='RemoveUrl UnsafeUrl'] {
+            &:hover {
+                background-color: lighten(@danger-color,30%);
+            }
+        }
+    }
+}
+
+.content-item-actions-dropdown {
+    position: absolute;
+    top: 1px;
+    right: 1px;
+
+    a {
+        display: block;
+        padding: .5em .85em;
+
+        &:hover {
+            /*background: @table-bg-hover;*/
+        }
+    }
+
+    .dropdown-menu {
+        left: auto;
+        right: 0;
     }
 }
