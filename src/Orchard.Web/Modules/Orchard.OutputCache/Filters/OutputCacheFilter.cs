@@ -314,7 +314,7 @@ namespace Orchard.OutputCache.Filters {
                 return false;
             }
 
-            // Don't cache ignored routes
+            // Don't cache if individual route configuration says no.
             if (_cacheRouteConfig != null && _cacheRouteConfig.Duration == 0) {
                 Logger.Debug("Request for item '{0}' ignored because route is configured to not be cached.", itemDescriptor);
                 return false;
