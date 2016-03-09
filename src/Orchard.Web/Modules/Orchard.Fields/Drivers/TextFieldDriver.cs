@@ -19,7 +19,7 @@ namespace Orchard.Fields.Drivers {
         protected override DriverResult Editor(ContentPart part, TextField field, IUpdateModel updater, dynamic shapeHelper) {
             var settings = field.PartFieldDefinition.Settings.GetModel<TextFieldSettings>();
 
-            if (String.IsNullOrEmpty(field.Value) && !String.IsNullOrEmpty(settings.DefaultValue)) {
+            if (!String.IsNullOrEmpty(settings.DefaultValue) && (String.IsNullOrEmpty(field.Value) || field.Value.Equals(settings.DefaultValue))) {
                 field.Value = _tokenizer.Replace(settings.DefaultValue, new Dictionary<string, object> { { "Content", part.ContentItem } });
             }
 
