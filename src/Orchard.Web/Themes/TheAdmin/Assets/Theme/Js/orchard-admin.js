@@ -49,5 +49,109 @@
             e.preventDefault();
             submitButton.click();
         });
+
+        //more-actions
+
+        function renderContentItemActions() {
+            var container = $('.content-items li');
+            var containerWidth = $('.content-items').outerWidth(true);
+            $.each(container, function (i, c) {
+                var dropdownToggleWidth = 0;// getElementMinWidth();
+                //var ddToggle = $(c).find('a.dropdown-toggle');
+                //console.log(ddToggle[0])
+                //console.log('ddtoggle: ' + getElementMinWidth($(ddToggle[0])));
+                var mainActions = $(c).find('ul.main-actions');
+                var moreactions = $(c).find('ul.more-actions');
+                $.each(mainActions, function (i, el) {
+                    var $el = $(el);
+                    var loop = 1;
+                    do {
+                        var MAWidth = 37;
+                        var links = $el.find('li:first-child > a');
+                        $.each(links, function (i, a) {
+                            MAWidth += getElementMinWidth($(a));
+                        });
+                        console.log(MAWidth + ' > ' + containerWidth);
+                        if (MAWidth >= containerWidth) {
+                            var last = links.last();
+                            var li = $('<li>');
+                            li.append(last.clone())
+                            moreactions.prepend(li);
+                            last.remove();
+                        } else {
+                            var first = moreactions.find('li:first > a');
+                            mainActions.find('li:first-child').append(first.clone());
+                            first.parent('li').remove();
+                        }
+                        var MAWidth = 37;
+                        console.log(MAWidth);
+                        var links = $el.find('li:first-child > a');
+                        $.each(links, function (i, a) {
+                            MAWidth += getElementMinWidth($(a));
+                        });
+                        console.log(MAWidth + ' > ' + containerWidth);
+                        loop++;
+                    } while (loop < 20 && MAWidth > containerWidth)//(MAWidth > containerWidth)
+                });
+
+                $.each(moreactions, function (i, el) {
+                    console.log(el);
+                    var $el = $(el);
+                    if ($el.find('li').length > 0) {
+                        $(c).find('.more-actions-dropdown').show();
+                    }
+                    else {
+                        $(c).find('.more-actions-dropdown').hide();
+                    }
+                });
+            });
+        }
+
+        function getElementMinWidth(el) {
+            var props = { position: "absolute", visibility: "hidden", display: "inline-block" };
+            var itemWidth = 0;
+            if (el != undefined) {
+                $.swap(el[0], props, function () {
+                    itemWidth = el.outerWidth();
+                });
+            }
+            return itemWidth;
+        }
+
+
+        (function ($, sr) {
+
+            // debouncing function from John Hann
+            // http://unscriptable.com/index.php/2009/03/20/debouncing-javascript-methods/
+            var debounce = function (func, threshold, execAsap) {
+                var timeout;
+
+                return function debounced() {
+                    var obj = this, args = arguments;
+                    function delayed() {
+                        if (!execAsap)
+                            func.apply(obj, args);
+                        timeout = null;
+                    };
+
+                    if (timeout)
+                        clearTimeout(timeout);
+                    else if (execAsap)
+                        func.apply(obj, args);
+
+                    timeout = setTimeout(delayed, threshold || 100);
+                };
+            }
+            // smartresize 
+            jQuery.fn[sr] = function (fn) { return fn ? this.bind('resize', debounce(fn)) : this.trigger(sr); };
+
+        })(jQuery, 'smartresize');
+
+        renderContentItemActions();
+
+        $(window).smartresize(function () {
+            renderContentItemActions();
+        },200);
+
     });
 })(jQuery);

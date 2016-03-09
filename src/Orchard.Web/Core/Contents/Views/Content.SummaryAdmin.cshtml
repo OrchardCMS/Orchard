@@ -26,26 +26,41 @@
     @if (Model.Meta != null) {
         <div class="metadata">@Display(Model.Meta)</div>
     }
-    <div class="content-item-actions-dropdown">
-        <div class="dropdown">
-            @{
-                var ddlId = "ddl" + @contentItem.Id;
-            }
-            <a class="button-classes" href="#" data-toggle="dropdown" id="@ddlId">
-                Actions
-                <span class="caret"></span>
-            </a>
-            <ul class="dropdown-menu">
-                <li>@Display(Model.Actions)</li>
-            </ul>
-        </div>
-    </div>
+    @*<div class="content-item-actions-dropdown">
+            <div class="dropdown">
+                @{
+                    var ddlId = "ddl" + @contentItem.Id;
+                }
+                <a class="button-classes" href="#" data-toggle="dropdown" id="@ddlId">
+                    Actions
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li>@Display(Model.Actions)</li>
+                </ul>
+            </div>
+        </div>*@
 </div>
 <div class="content-item-actions">
-    @if (Authorizer.Authorize(Permissions.EditContent, contentItem)) {
-        @Html.ItemEditLink(T("Edit").Text, contentItem)
-    }
-    @if (Authorizer.Authorize(Permissions.DeleteContent, contentItem)) {
-        @Html.Link(T("Delete").Text, Url.ItemRemoveUrl(contentItem, new { returnUrl }), new { itemprop = "RemoveUrl UnsafeUrl" })
-    }
+    <ul class="main-actions">
+        <li>
+            @Display(Model.Actions)
+            @if (Authorizer.Authorize(Permissions.EditContent, contentItem)) {
+                @Html.ItemEditLink(T("Edit").Text, contentItem)
+            }
+            @if (Authorizer.Authorize(Permissions.DeleteContent, contentItem)) {
+                @Html.Link(T("Delete").Text, Url.ItemRemoveUrl(contentItem, new { returnUrl }), new { itemprop = "RemoveUrl UnsafeUrl" })
+            }
+        </li>
+    </ul>
+    <div class="more-actions-dropdown">
+        @{
+            var ddlId = "ddl" + @contentItem.Id;
+        }
+        <a class="btn btn-link dropdown-toggle" href="#" data-toggle="dropdown" id="@ddlId">
+            <i class="fa fa-bars"></i>
+        </a>
+        <ul class="more-actions dropdown-menu">
+        </ul>
+    </div>
 </div>
