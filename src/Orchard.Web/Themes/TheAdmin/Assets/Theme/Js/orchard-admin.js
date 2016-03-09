@@ -53,7 +53,7 @@
         //more-actions
 
         function renderContentItemActions() {
-            var container = $('.content-items li');
+            var container = $('.content-items-with-actions li');
             var containerWidth = $('.content-items').outerWidth(true);
             $.each(container, function (i, c) {
                 var dropdownToggleWidth = 37;// getElementMinWidth();
