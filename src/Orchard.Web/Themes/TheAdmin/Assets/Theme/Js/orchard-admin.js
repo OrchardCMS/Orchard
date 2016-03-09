@@ -56,23 +56,19 @@
             var container = $('.content-items li');
             var containerWidth = $('.content-items').outerWidth(true);
             $.each(container, function (i, c) {
-                var dropdownToggleWidth = 0;// getElementMinWidth();
-                //var ddToggle = $(c).find('a.dropdown-toggle');
-                //console.log(ddToggle[0])
-                //console.log('ddtoggle: ' + getElementMinWidth($(ddToggle[0])));
+                var dropdownToggleWidth = 37;// getElementMinWidth();
                 var mainActions = $(c).find('ul.main-actions');
                 var moreactions = $(c).find('ul.more-actions');
                 $.each(mainActions, function (i, el) {
                     var $el = $(el);
                     var loop = 1;
                     do {
-                        var MAWidth = 37;
+                        var mainActionsWidth = dropdownToggleWidth;
                         var links = $el.find('li:first-child > a');
                         $.each(links, function (i, a) {
-                            MAWidth += getElementMinWidth($(a));
+                            mainActionsWidth += getElementMinWidth($(a));
                         });
-                        console.log(MAWidth + ' > ' + containerWidth);
-                        if (MAWidth >= containerWidth) {
+                        if (mainActionsWidth >= containerWidth) {
                             var last = links.last();
                             var li = $('<li>');
                             li.append(last.clone())
@@ -83,19 +79,16 @@
                             mainActions.find('li:first-child').append(first.clone());
                             first.parent('li').remove();
                         }
-                        var MAWidth = 37;
-                        console.log(MAWidth);
+                        var mainActionsWidth = dropdownToggleWidth;
                         var links = $el.find('li:first-child > a');
                         $.each(links, function (i, a) {
-                            MAWidth += getElementMinWidth($(a));
+                            mainActionsWidth += getElementMinWidth($(a));
                         });
-                        console.log(MAWidth + ' > ' + containerWidth);
                         loop++;
-                    } while (loop < 20 && MAWidth > containerWidth)//(MAWidth > containerWidth)
+                    } while (loop < 20 && mainActionsWidth > containerWidth)//(mainActionsWidth > containerWidth)
                 });
 
                 $.each(moreactions, function (i, el) {
-                    console.log(el);
                     var $el = $(el);
                     if ($el.find('li').length > 0) {
                         $(c).find('.more-actions-dropdown').show();

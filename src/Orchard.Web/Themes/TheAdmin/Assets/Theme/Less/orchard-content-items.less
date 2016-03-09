@@ -292,114 +292,121 @@ button, a.button {
         display: flex;
         flex-direction: column;
     }
-    .summary{
-        border-bottom-width:0;
+
+    .summary {
+        border-bottom-width: 0;
     }
+
     ul.main-actions,
-    ul.more-actions{
-         padding:0;
-     }
-    .more-actions-dropdown{
-        display:none;
-        flex-grow:0;
-        flex-shrink:0;
-        a{
-            &.dropdown-toggle{
-                height:46px;
-                display:flex;
-                align-items:center;
+    ul.more-actions {
+        padding: 0;
+    }
+
+    .more-actions-dropdown {
+        display: none;
+        flex-grow: 0;
+        flex-shrink: 0;
+
+        a {
+            &.dropdown-toggle {
+                height: 46px;
+                display: flex;
+                align-items: center;
                 background: @table-bg-accent;
                 border: 1px solid @table-border-color;
-                border-left-width:0;
+                border-left-width: 0;
             }
         }
-        .dropdown-menu{
-            right:0;
-            left:initial;
+
+        .dropdown-menu {
+            right: 0;
+            left: initial;
         }
     }
-}
 
-.content-item-actions{
-    display: inline-flex;
-    overflow:hidden;
-    .main-actions{
-        flex-grow:1;
-    }
-    > ul > li  {
-    display: flex;
-    justify-content: space-between;
-    background: @table-bg-accent;
-    /*flex-direction: column;
+    .content-item-actions {
+        display: inline-flex;
+        overflow: hidden;
+
+        .main-actions {
+            flex-grow: 1;
+        }
+
+        > ul > li {
+            display: flex;
+            justify-content: space-between;
+            background: @table-bg-accent;
+            /*flex-direction: column;
     flex-wrap: wrap;
     max-height:100%;*/
-    flex-wrap: nowrap;
-    border: 1px solid @table-border-color;
-    border-bottom-width:0;
-    border-right-width:0;
-    flex-direction:row;
+            flex-wrap: nowrap;
+            border: 1px solid @table-border-color;
+            border-bottom-width: 0;
+            border-right-width: 0;
+            flex-direction: row;
 
-    a {
-        border: 1px solid @table-border-color;
-        min-height: 45px;
-        /*width: 100%;*/
-        text-align: center;
-        height: 100%;
-        align-items: center;
-        display: inline-flex;
-        justify-content: center;
-        border-top: none;
-        border-left-width: 0;
-        padding: 1em 1.5em;
-        /*border-left-width:0;
+            a {
+                border: 1px solid @table-border-color;
+                min-height: 45px;
+                /*width: 100%;*/
+                text-align: center;
+                height: 100%;
+                align-items: center;
+                display: inline-flex;
+                justify-content: center;
+                border-top: none;
+                border-left-width: 0;
+                padding: 1em 1.5em;
+                /*border-left-width:0;
         border-bottom-width:0;
         padding: 1em 1.5em;*/
-        white-space: nowrap;
-        flex-grow: 1;
+                white-space: nowrap;
+                flex-grow: 1;
 
-        &:hover {
-            background: @table-bg-hover;
-        }
+                &:hover {
+                    background: @table-bg-hover;
+                }
 
-        &:last-child {
-            /*border-right-width: 0px;*/
-            /*border-bottom-width:1px;*/
-        }
+                &:last-child {
+                    /*border-right-width: 0px;*/
+                    /*border-bottom-width:1px;*/
+                }
 
-        &:first-child {
-            border-left-width: 0px;
-            /*border-bottom-width:1px;*/
-        }
-        /* danger links */
-        &[itemprop='RemoveUrl UnsafeUrl'] {
-            &:hover {
-                background-color: lighten(@danger-color,30%);
-            }
-        }
-        /*&:nth-child(n + 3) {
+                &:first-child {
+                    border-left-width: 0px;
+                    /*border-bottom-width:1px;*/
+                }
+                /* danger links */
+                &[itemprop='RemoveUrl UnsafeUrl'] {
+                    &:hover {
+                        background-color: lighten(@danger-color,30%);
+                    }
+                }
+                /*&:nth-child(n + 3) {
             page-break-after: always; 
             break-after:always;            
         }*/
-    }
-}
-} 
-
-.content-item-actions-dropdown {
-    position: absolute;
-    top: 1px;
-    right: 1px;
-
-    a {
-        display: block;
-        padding: .5em .85em;
-
-        &:hover {
-            /*background: @table-bg-hover;*/
+            }
         }
     }
 
-    .dropdown-menu {
-        left: auto;
-        right: 0;
+    .content-item-actions-dropdown {
+        position: absolute;
+        top: 1px;
+        right: 1px;
+
+        a {
+            display: block;
+            padding: .5em .85em;
+
+            &:hover {
+                /*background: @table-bg-hover;*/
+            }
+        }
+
+        .dropdown-menu {
+            left: auto;
+            right: 0;
+        }
     }
 }
