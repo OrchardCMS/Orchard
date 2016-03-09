@@ -63,7 +63,7 @@
                     filter_b = -1;
                     return -1;
                 }
-                console.log(filter_a + ' > ' + filter_b);
+                //console.log(filter_a + ' > ' + filter_b);
                 return filter_a > filter_b
                 ? -1
                 : (filter_a > filter_b ? 1 : 0);
@@ -75,7 +75,13 @@
                 return elm;
             }).sort(sortBy(filter))
         }
-
+        function last (array, n) {
+            if (array == null)
+                return void 0;
+            if (n == null)
+                return array[array.length - 1];
+            return array.slice(Math.max(array.length - n, 0));
+        };
         function init() {
             var links = $('.content-items-with-actions li > a');
             //sets the initial sort order
@@ -102,25 +108,30 @@
                             mainActionsWidth += getElementMinWidth($(a));
                         });
                         if (mainActionsWidth >= containerWidth) {
-                            var last = $(sortDom('priority',links)).last();
-                            var li = $('<li>');
-                            li.append(last.clone())
-                            moreactions.prepend(li);
-                            last.hide();
+                            var last = $(sortDom('priority', links)).last();
+                            if (last.length > 0) {
+                                var li = $('<li>');
+                                li.append(last.clone())
+                                moreactions.prepend(li);
+                                last.hide();
+                                mainActionsWidth -= getElementMinWidth(last);
+                            }
                         } else {
-                            var first = moreactions.find('li:first > a');
-                            var actionId = first.attr('data-id');
-                            mainActions
-                                .find('li:first-child')
-                                .find("a[data-id='" + actionId + "']")
-                                .show();//.append(first.clone());
-                            first.parent('li').remove();
+                            var first = moreactions.find('li:first > a').first();
+                            if (first.length > 0) {
+                                var actionId = first.attr('data-id');
+                                var mainAction = mainActions
+                                    .find('li a[data-id="' + actionId + '"]');
+                                mainAction.show()
+                                first.parent('li').remove();
+                                mainActionsWidth += getElementMinWidth(mainAction);
+                            }
                         }
-                        var mainActionsWidth = dropdownToggleWidth;
-                        var links = $el.find('li:first-child > a:visible');
-                        $.each(links, function (i, a) {
-                            mainActionsWidth += getElementMinWidth($(a));
-                        });
+                        //var mainActionsWidth = dropdownToggleWidth;
+                        //var links = $el.find('li:first-child > a:visible');
+                        //$.each(links, function (i, a) {
+                        //    mainActionsWidth += getElementMinWidth($(a));
+                        //});
                         loop++;
                     } while (loop < 20 && mainActionsWidth > containerWidth)//(mainActionsWidth > containerWidth)
                 });
