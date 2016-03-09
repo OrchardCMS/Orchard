@@ -68,12 +68,12 @@
                         <p>@(theme.NewVersionToInstall.Description == null ? T("(No description").Text : theme.NewVersionToInstall.Description)</p>
                         <ul class="pageStatus">
                             <li>@T("Last Updated: {0}", theme.NewVersionToInstall.LastUpdated)</li>
-                            <li>&nbsp;&#124;&nbsp;@T("Author: {0}", !string.IsNullOrEmpty(theme.NewVersionToInstall.Authors) ? theme.NewVersionToInstall.Authors : T("Unknown").ToString())</li>
-                            <li>&nbsp;&#124;&nbsp;@T("Downloads: {0}", theme.NewVersionToInstall.DownloadCount)</li>
-                            <li>&nbsp;&#124;&nbsp;@T("Website: ")
+                            <li>@T("Author: {0}", !string.IsNullOrEmpty(theme.NewVersionToInstall.Authors) ? theme.NewVersionToInstall.Authors : T("Unknown").ToString())</li>
+                            <li>@T("Downloads: {0}", theme.NewVersionToInstall.DownloadCount)</li>
+                            <li>@T("Website: ")
                                 @if (!string.IsNullOrEmpty(theme.NewVersionToInstall.ProjectUrl)) { <a href="@theme.NewVersionToInstall.ProjectUrl">@theme.NewVersionToInstall.ProjectUrl</a> } else { @T("Unknown").ToString() }
                             </li>
-                            <li><div>&nbsp;&#124;&nbsp;@T("Rating: ")
+                            <li><div>@T("Rating: ")
                                     <div class="ratings" style="width:@(15 * 5)px" title="@T("Rating: {0} out of 5 ({1} total).", theme.NewVersionToInstall.Rating, theme.NewVersionToInstall.RatingsCount)">
                                         <div class="score" style="width:@(15 * (theme.NewVersionToInstall.Rating))px">&nbsp;</div>
                                     </div>

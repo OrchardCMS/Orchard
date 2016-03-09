@@ -43,9 +43,9 @@
         <ul class="pageStatus">
             @{ var features = module.Descriptor.Features; }
             <li>@T("Features: {0}", MvcHtmlString.Create(String.Join(", ", features.Select(f => Html.Link(String.IsNullOrEmpty(f.Name) ? f.Id : f.Name, String.Format("{0}#{1}", Url.Action("features", new { area = "Orchard.Modules" }), f.Id.AsFeatureId(n => T(n)))).ToString()).OrderBy(s => s).ToArray())))</li>
-            <li>&nbsp;&#124;&nbsp;@T("Author: {0}", !String.IsNullOrEmpty(module.Descriptor.Author) ? module.Descriptor.Author : T("Unknown").ToString())</li>
+            <li>@T("Author: {0}", !String.IsNullOrEmpty(module.Descriptor.Author) ? module.Descriptor.Author : T("Unknown").ToString())</li>
             <li>
-                &nbsp;&#124;&nbsp;@T("Website: ")
+                @T("Website: ")
                 @if (!String.IsNullOrEmpty(module.Descriptor.WebSite)) { <a href="@module.Descriptor.WebSite">@module.Descriptor.WebSite</a> }
                 else { @T("Unknown").ToString() }
             </li>

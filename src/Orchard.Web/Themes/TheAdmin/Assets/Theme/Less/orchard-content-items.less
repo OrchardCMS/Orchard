@@ -121,7 +121,9 @@ ul.content-items {
         }
 
         .metadata {
-            margin-top: 10px;
+            margin-top: 0;
+            display:inline-flex;
+            align-items:center;
 
             ul.pageStatus {
                 display: inline-flex;
@@ -131,15 +133,19 @@ ul.content-items {
                 overflow: hidden;
                 text-overflow: ellipsis;
                 max-width: 100%;
-                align-items: center;
+                align-self: flex-start;
 
                 li {
-                    white-space: nowrap;
+                    margin-top:10px;
+                    white-space: normal;
                     line-height: 19px;
                     overflow: hidden;
                     text-overflow: ellipsis;
                     max-width: 100%;
-                    height: 22px;
+                    margin-right: 1em;
+                    display:inline-block;
+                    padding-bottom:5px;
+                    border-bottom: solid 1px #e0e0e0;
                 }
 
                 .rating {
