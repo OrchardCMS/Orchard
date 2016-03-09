@@ -51,6 +51,39 @@
         });
 
         //more-actions
+        function sortBy(prop) {
+            return function (a, b) {
+                var filter_a = parseInt($(a).attr(prop));
+                var filter_b = parseInt($(b).attr(prop));
+                if (isNaN(filter_a)) {
+                    filter_a = -1;
+                    return 1;
+                }
+                if (isNaN(filter_b)) {
+                    filter_b = -1;
+                    return -1;
+                }
+                console.log(filter_a + ' > ' + filter_b);
+                return filter_a > filter_b
+                ? -1
+                : (filter_a > filter_b ? 1 : 0);
+            }
+        }
+        function sortDom(filter, elements) {
+            //Transform our nodeList into array and apply sort function
+            return [].map.call(elements, function (elm) {
+                return elm;
+            }).sort(sortBy(filter))
+        }
+
+        function init() {
+            var links = $('.content-items-with-actions li > a');
+            //sets the initial sort order
+            $.each(links, function (i, el) {
+                $(el).attr('data-id', 'action-' + i);
+            });
+        }
+        init();
 
         function renderContentItemActions() {
             var container = $('.content-items-with-actions li');
@@ -64,23 +97,27 @@
                     var loop = 1;
                     do {
                         var mainActionsWidth = dropdownToggleWidth;
-                        var links = $el.find('li:first-child > a');
+                        var links = $el.find('li:first-child > a:visible');
                         $.each(links, function (i, a) {
                             mainActionsWidth += getElementMinWidth($(a));
                         });
                         if (mainActionsWidth >= containerWidth) {
-                            var last = links.last();
+                            var last = $(sortDom('priority',links)).last();
                             var li = $('<li>');
                             li.append(last.clone())
                             moreactions.prepend(li);
-                            last.remove();
+                            last.hide();
                         } else {
                             var first = moreactions.find('li:first > a');
-                            mainActions.find('li:first-child').append(first.clone());
+                            var actionId = first.attr('data-id');
+                            mainActions
+                                .find('li:first-child')
+                                .find("a[data-id='" + actionId + "']")
+                                .show();//.append(first.clone());
                             first.parent('li').remove();
                         }
                         var mainActionsWidth = dropdownToggleWidth;
-                        var links = $el.find('li:first-child > a');
+                        var links = $el.find('li:first-child > a:visible');
                         $.each(links, function (i, a) {
                             mainActionsWidth += getElementMinWidth($(a));
                         });
@@ -110,41 +147,17 @@
             }
             return itemWidth;
         }
-
-
-        (function ($, sr) {
-
-            // debouncing function from John Hann
-            // http://unscriptable.com/index.php/2009/03/20/debouncing-javascript-methods/
-            var debounce = function (func, threshold, execAsap) {
-                var timeout;
-
-                return function debounced() {
-                    var obj = this, args = arguments;
-                    function delayed() {
-                        if (!execAsap)
-                            func.apply(obj, args);
-                        timeout = null;
-                    };
-
-                    if (timeout)
-                        clearTimeout(timeout);
-                    else if (execAsap)
-                        func.apply(obj, args);
-
-                    timeout = setTimeout(delayed, threshold || 100);
-                };
-            }
-            // smartresize 
-            jQuery.fn[sr] = function (fn) { return fn ? this.bind('resize', debounce(fn)) : this.trigger(sr); };
-
-        })(jQuery, 'smartresize');
+        var id;
+        var startWidth = window.innerWidth; //get the original screen width
 
         renderContentItemActions();
-
-        $(window).smartresize(function () {
+        $(window).resize(function () {
+            clearTimeout(id);
+            id = setTimeout(doneResizing, 200);
+        });
+        function doneResizing() {
             renderContentItemActions();
-        },200);
+        }
 
     });
 })(jQuery);

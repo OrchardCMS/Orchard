@@ -46,10 +46,10 @@
         <li>
             @Display(Model.Actions)
             @if (Authorizer.Authorize(Permissions.EditContent, contentItem)) {
-                @Html.ItemEditLink(T("Edit").Text, contentItem)
+                @Html.ItemEditLink(T("Edit").Text, contentItem, null, new { priority = 2 })
             }
             @if (Authorizer.Authorize(Permissions.DeleteContent, contentItem)) {
-                @Html.Link(T("Delete").Text, Url.ItemRemoveUrl(contentItem, new { returnUrl }), new { itemprop = "RemoveUrl UnsafeUrl" })
+                @Html.Link(T("Delete").Text, Url.ItemRemoveUrl(contentItem, new { returnUrl }), new { itemprop = "RemoveUrl UnsafeUrl", priority = 1 })
             }
         </li>
     </ul>
