@@ -20,7 +20,7 @@
                     <td>@field.Name</td>
                     <td>@field.FieldDefinition.Name</td>
                     <td>
-                        <a href="@Url.Action("EditField", new {area = "Orchard.ContentTypes", id = field.Part.Name, name = field.Name})">@T("Edit")</a>@T(" | ")
+                        <a href="@Url.Action("EditField", new {area = "Orchard.ContentTypes", id = field.Part.Name, name = field.Name})">@T("Edit")</a>
                         <a href="@Url.Action("RemoveFieldFrom", new {area = "Orchard.ContentTypes", id = field.Part.Name, name = field.Name})" itemprop="RemoveUrl UnsafeUrl">@T("Remove")</a>
                     </td>
                 </tr>

@@ -68,8 +68,8 @@
                     @entry.CustomForm.ContentType.CamelFriendly()
                 </td>
                 <td>
-                    @Html.ItemEditLink(T("Edit").Text, entry.CustomForm.ContentItem) @T(" | ")
-                    @Html.Link(T("Delete").Text, Url.ItemRemoveUrl(entry.CustomForm.ContentItem, new { returnUrl = Request.RawUrl }), new { itemprop = "RemoveUrl UnsafeUrl" }) @T(" | ")
+                    @Html.ItemEditLink(T("Edit").Text, entry.CustomForm.ContentItem) 
+                    @Html.Link(T("Delete").Text, Url.ItemRemoveUrl(entry.CustomForm.ContentItem, new { returnUrl = Request.RawUrl }), new { itemprop = "RemoveUrl UnsafeUrl" }) 
                     @Html.ActionLink(T("Submissions").Text, "Item", "Admin", new { area = "Orchard.CustomForms", id = entry.CustomForm.Id }, new { })
                 </td>
             </tr>

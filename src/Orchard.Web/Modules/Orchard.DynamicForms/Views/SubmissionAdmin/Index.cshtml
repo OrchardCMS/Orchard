@@ -42,7 +42,7 @@
                         <td>@dataRow[dataColumn]</td>
                     }
                     <td>
-                        @Html.ActionLink(T("Details").Text, "Details", "SubmissionAdmin", new { id = id, area = "Orchard.DynamicForms" }, null) @T(" | ")
+                        @Html.ActionLink(T("Details").Text, "Details", "SubmissionAdmin", new { id = id, area = "Orchard.DynamicForms" }, null) 
                         @Html.ActionLink(T("Remove").Text, "Delete", "SubmissionAdmin", new { id = id, area = "Orchard.DynamicForms" }, new { itemprop = "RemoveUrl UnsafeUrl" })
                     </td>
                 </tr>

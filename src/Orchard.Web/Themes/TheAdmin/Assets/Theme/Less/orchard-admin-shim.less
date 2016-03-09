@@ -171,6 +171,19 @@ button.close:hover {
     margin-left: calc((@indent-unit * 6));
 }
 
+/* warning links */
+/*a[itemprop='UnsafeUrl'] {
+    color: @warning-color-text;
+
+    &:hover {
+        color: darken(@warning-color-text,20%);
+    }
+
+    &.btn.btn-warning {
+        color: white;
+    }
+}*/
+
 /* danger links */
 a[itemprop='RemoveUrl UnsafeUrl'] {
     color: @danger-color-text;
@@ -178,8 +191,9 @@ a[itemprop='RemoveUrl UnsafeUrl'] {
     &:hover {
         color: darken(@danger-color-text,20%);
     }
-    &.btn.btn-danger{
-        color:white;
+
+    &.btn.btn-danger {
+        color: white;
     }
 }
 

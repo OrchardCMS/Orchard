@@ -26,7 +26,7 @@
           data-remove-all-prompt="@T("Do you really want to remove all media?")"
           data-edit-text="@T("Edit")"
           data-dirty-text="@T("You have unsaved changes. Please only accept to leave if you don't mind losing those changes.")"
-          data-pipe="@T(" | ")"
+          data-pipe=""
           data-add-url="@HttpUtility.JavaScriptStringEncode(Url.Action("Index", "Admin", new { area = "Orchard.MediaLibrary", dialog = true }))"
           data-return-url="@HttpUtility.JavaScriptStringEncode(Request.RawUrl)"
           data-prompt-on-navigate="@promptOnNavigate.ToString().ToLower()"
@@ -49,7 +49,7 @@
                             </div>
                         </div>
                     </div>
-                    <a href="#" data-id="@contentItem.Id" class="media-library-picker-remove">@T("Remove")</a>@T(" | ")
+                    <a href="#" data-id="@contentItem.Id" class="media-library-picker-remove">@T("Remove")</a>
                     <a href="@editUrl">@T("Edit")</a>
                 </li>
             }

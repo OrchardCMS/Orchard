@@ -17,7 +17,7 @@
         <div class="related">
             @Display(Model.Actions)
             @if (Authorizer.Authorize(Permissions.EditContent, contentItem)) {
-                @Html.ItemEditLink(T("Edit").Text, contentItem)@T(" | ")
+                @Html.ItemEditLink(T("Edit").Text, contentItem)
             }
             @if (Authorizer.Authorize(Permissions.DeleteContent, contentItem)) {
                 @Html.Link(T("Delete").Text, Url.ItemRemoveUrl(contentItem, new { returnUrl }), new { itemprop = "RemoveUrl UnsafeUrl" })

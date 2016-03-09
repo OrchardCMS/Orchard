@@ -55,7 +55,7 @@
                     </div>
 
                     <div class="related">
-                        @Html.Link(T("Install Latest").Text, InstallAction(module.NewVersionToInstall))@T(" | ")
+                        @Html.Link(T("Install Latest").Text, InstallAction(module.NewVersionToInstall))
                         <a href="@module.NewVersionToInstall.PackageStreamUri">@T("Download")</a>
                     </div>
 
