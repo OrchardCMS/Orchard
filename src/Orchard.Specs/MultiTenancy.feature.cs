@@ -129,6 +129,9 @@ this.ScenarioSetup(scenarioInfo);
             table1.AddRow(new string[] {
                         "Name",
                         "Scott"});
+            table1.AddRow(new string[] {
+                        "RequestUrlPrefix",
+                        "scott"});
 #line 25
         testRunner.And("I fill in", ((string)(null)), table1, "And ");
 #line 28
@@ -163,6 +166,9 @@ this.ScenarioSetup(scenarioInfo);
             table2.AddRow(new string[] {
                         "Name",
                         "Scott"});
+            table2.AddRow(new string[] {
+                        "RequestUrlPrefix",
+                        "scott"});
 #line 37
         testRunner.And("I fill in", ((string)(null)), table2, "And ");
 #line 40
