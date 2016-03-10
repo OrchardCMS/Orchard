@@ -71,6 +71,7 @@ namespace Orchard.OutputCache.Filters {
 
         // State.
         private CacheSettings _cacheSettings;
+        private CacheRouteConfig _cacheRouteConfig;
         private DateTime _now;
         private WorkContext _workContext;
         private string _cacheKey;
@@ -91,6 +92,13 @@ namespace Orchard.OutputCache.Filters {
 
             _now = _clock.UtcNow;
             _workContext = _workContextAccessor.GetContext();
+
+            var configurations = _cacheService.GetRouteConfigs();
+            if (configurations.Any()) {
+                var route = filterContext.Controller.ControllerContext.RouteData.Route;
+                var key = _cacheService.GetRouteDescriptorKey(filterContext.HttpContext, route);
+                _cacheRouteConfig = configurations.FirstOrDefault(c => c.RouteKey == key);
+            }
 
             if (!RequestIsCacheable(filterContext))
                 return;
@@ -180,16 +188,8 @@ namespace Orchard.OutputCache.Filters {
 
                 Logger.Debug("Item '{0}' was rendered.", _cacheKey);
 
-                // Obtain individual route configuration, if any.
-                CacheRouteConfig configuration = null;
-                var configurations = _cacheService.GetRouteConfigs();
-                if (configurations.Any()) {
-                    var route = filterContext.Controller.ControllerContext.RouteData.Route;
-                    var key = _cacheService.GetRouteDescriptorKey(filterContext.HttpContext, route);
-                    configuration = configurations.FirstOrDefault(c => c.RouteKey == key);
-                }
-
-                if (!ResponseIsCacheable(filterContext, configuration)) {
+  
+                if (!ResponseIsCacheable(filterContext)) {
                     filterContext.HttpContext.Response.Cache.SetCacheability(HttpCacheability.NoCache);
                     filterContext.HttpContext.Response.Cache.SetNoStore();
                     filterContext.HttpContext.Response.Cache.SetMaxAge(new TimeSpan(0));
@@ -197,8 +197,8 @@ namespace Orchard.OutputCache.Filters {
                 }
 
                 // Determine duration and grace time.
-                var cacheDuration = configuration != null && configuration.Duration.HasValue ? configuration.Duration.Value : CacheSettings.DefaultCacheDuration;
-                var cacheGraceTime = configuration != null && configuration.GraceTime.HasValue ? configuration.GraceTime.Value : CacheSettings.DefaultCacheGraceTime;
+                var cacheDuration = _cacheRouteConfig != null && _cacheRouteConfig.Duration.HasValue ? _cacheRouteConfig.Duration.Value : CacheSettings.DefaultCacheDuration;
+                var cacheGraceTime = _cacheRouteConfig != null && _cacheRouteConfig.GraceTime.HasValue ? _cacheRouteConfig.GraceTime.Value : CacheSettings.DefaultCacheGraceTime;
 
                 // Include each content item ID as tags for the cache entry.
                 var contentItemIds = _displayedContentItemHandler.GetDisplayed().Select(x => x.ToString(CultureInfo.InvariantCulture)).ToArray();
@@ -312,6 +312,12 @@ namespace Orchard.OutputCache.Filters {
                 return false;
             }
 
+            // Don't cache if individual route configuration says no.
+            if (_cacheRouteConfig != null && _cacheRouteConfig.Duration == 0) {
+                Logger.Debug("Request for item '{0}' ignored because route is configured to not be cached.", itemDescriptor);
+                return false;
+            }
+
             // Ignore requests with the refresh key on the query string.
             foreach (var key in filterContext.RequestContext.HttpContext.Request.QueryString.AllKeys) {
                 if (String.Equals(_refreshKey, key, StringComparison.OrdinalIgnoreCase)) {
@@ -323,7 +329,7 @@ namespace Orchard.OutputCache.Filters {
             return true;
         }
 
-        protected virtual bool ResponseIsCacheable(ResultExecutedContext filterContext, CacheRouteConfig configuration) {
+        protected virtual bool ResponseIsCacheable(ResultExecutedContext filterContext) {
 
             if (filterContext.HttpContext.Request.Url == null) {
                 return false;
@@ -332,12 +338,6 @@ namespace Orchard.OutputCache.Filters {
             // Don't cache non-200 responses or results of a redirect.
             var response = filterContext.HttpContext.Response;
             if (response.StatusCode != (int)HttpStatusCode.OK || _transformRedirect) {
-                return false;
-            }
-
-            // Don't cache in individual route configuration says no.
-            if (configuration != null && configuration.Duration == 0) {
-                Logger.Debug("Response for item '{0}' will not be cached because route is configured to not be cached.", _cacheKey);
                 return false;
             }
 
