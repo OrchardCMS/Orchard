@@ -53,8 +53,10 @@ namespace Orchard.Packaging.Services {
             // gets an IPackage instance from the repository
             var packageVersion = String.IsNullOrEmpty(version) ? null : new Version(version);
             var package = packageRepository.FindPackage(packageId, packageVersion);
-            if (package == null) {
-                throw new ArgumentException(T("The specified package could not be found, id:{0} version:{1}", packageId, String.IsNullOrEmpty(version) ? T("No version").Text : version).Text);
+            if (package == null)
+            {
+                var message = String.Format(T("The specified package could not be found, id:{0} version:{1}").Text, packageId, String.IsNullOrEmpty(version) ? T("No version").Text : version);
+                throw new OrchardException(new LocalizedString(message));
             }
 
             return InstallPackage(package, packageRepository, location, applicationPath);
