@@ -207,6 +207,15 @@ namespace Orchard.OutputCache.Filters {
                 var response = filterContext.HttpContext.Response;
                 var captureStream = new CaptureStream(response.Filter);
                 response.Filter = captureStream;
+
+                // Add ETag header for the newly created item
+                var etag = Guid.NewGuid().ToString("n");
+                if (HttpRuntime.UsingIntegratedPipeline) {
+                    if (response.Headers.Get("ETag") == null) {
+                        response.Headers["ETag"] = etag;
+                    }
+                }
+
                 captureStream.Captured += (output) => {
                     try {
                         // Since this is a callback any call to injected dependencies can result in an Autofac exception: "Instances 
@@ -227,12 +236,12 @@ namespace Orchard.OutputCache.Filters {
                                 Url = filterContext.HttpContext.Request.Url.AbsolutePath,
                                 Tenant = scope.Resolve<ShellSettings>().Name,
                                 StatusCode = response.StatusCode,
-                                Tags = new[] { _invariantCacheKey }.Union(contentItemIds).ToArray()
+                                Tags = new[] { _invariantCacheKey }.Union(contentItemIds).ToArray(),
+                                ETag = etag
                             };
 
                             // Write the rendered item to the cache.
                             var cacheStorageProvider = scope.Resolve<IOutputCacheStorageProvider>();
-                            cacheStorageProvider.Remove(_cacheKey);
                             cacheStorageProvider.Set(_cacheKey, cacheItem);
 
                             Logger.Debug("Item '{0}' was written to cache.", _cacheKey);
@@ -465,6 +474,7 @@ namespace Orchard.OutputCache.Filters {
 
         private void ServeCachedItem(ActionExecutingContext filterContext, CacheItem cacheItem) {
             var response = filterContext.HttpContext.Response;
+            var request = filterContext.HttpContext.Request;
 
             // Fix for missing charset in response headers
             response.Charset = response.Charset;
@@ -474,11 +484,26 @@ namespace Orchard.OutputCache.Filters {
                 response.AddHeader("X-Cached-On", cacheItem.CachedOnUtc.ToString("r"));
                 response.AddHeader("X-Cached-Until", cacheItem.ValidUntilUtc.ToString("r"));
             }
-
+            
             // Shorcut action execution.
             filterContext.Result = new FileContentResult(cacheItem.Output, cacheItem.ContentType);
-
             response.StatusCode = cacheItem.StatusCode;
+
+            // Add ETag header
+            if (HttpRuntime.UsingIntegratedPipeline && response.Headers.Get("ETag") == null) {
+                response.Headers["ETag"] = cacheItem.ETag;
+            }
+
+            // Check ETag in request
+            // https://www.w3.org/2005/MWI/BPWG/techs/CachingWithETag.html
+            var etag = request.Headers["If-None-Match"];
+            if (!String.IsNullOrEmpty(etag)) {
+                if (String.Equals(etag, cacheItem.ETag, StringComparison.Ordinal)) {
+                    // ETag matches the cached item, we return a 304
+                    filterContext.Result = new HttpStatusCodeResult(HttpStatusCode.NotModified);
+                    return;
+                }
+            }
 
             ApplyCacheControl(response);
         }
@@ -508,15 +533,6 @@ namespace Orchard.OutputCache.Filters {
             // response.DisableUserCache();
             // response.DisableKernelCache();
             // response.Cache.SetOmitVaryStar(true);
-
-            // An ETag is a string that uniquely identifies a specific version of a component.
-            // We use the cache item to detect if it's a new one.
-            if (HttpRuntime.UsingIntegratedPipeline) {
-                if (response.Headers.Get("ETag") == null) {
-                    // What is the point of GetHashCode() of a newly generated item? /DanielStolt
-                    response.Cache.SetETag(new CacheItem().GetHashCode().ToString(CultureInfo.InvariantCulture));
-                }
-            }
 
             if (CacheSettings.VaryByQueryStringParameters == null) {
                 response.Cache.VaryByParams["*"] = true;
