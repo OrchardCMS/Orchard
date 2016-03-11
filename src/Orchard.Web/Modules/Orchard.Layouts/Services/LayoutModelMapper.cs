@@ -20,7 +20,7 @@ namespace Orchard.Layouts.Services {
 
         public object ToEditorModel(string layoutData, DescribeElementsContext describeContext) {
             var elements = _serializer.Deserialize(layoutData, describeContext);
-            var canvas = elements.FirstOrDefault(x => x is Canvas) ?? new Canvas();
+            var canvas = elements.FirstOrDefault(x => x is Canvas) ?? _elementManager.ActivateElement<Canvas>();
             return ToEditorModel(canvas, describeContext);
         }
 

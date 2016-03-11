@@ -34,7 +34,7 @@ namespace Orchard.Search.Controllers {
             } 
             
             if (!String.IsNullOrEmpty(mediaType)) {
-                builder.WithField("type", mediaType).Mandatory().AsFilter();
+                builder.WithField("type", mediaType).NotAnalyzed().AsFilter();
             }
 
             if (!String.IsNullOrEmpty(folderPath)) {
@@ -59,7 +59,8 @@ namespace Orchard.Search.Controllers {
 
             var viewModel = new MediaManagerMediaItemsViewModel {
                 MediaItems = mediaItems,
-                MediaItemsCount = mediaPartsCount
+                MediaItemsCount = mediaPartsCount,
+                FolderPath = folderPath
             };
 
             return View(viewModel);

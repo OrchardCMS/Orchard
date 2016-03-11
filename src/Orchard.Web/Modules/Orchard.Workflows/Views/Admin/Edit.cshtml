@@ -7,6 +7,7 @@
     Style.Require("WorkflowsAdmin");
     Style.Require("WorkflowsActivities");
     Style.Require("jQueryUI_Orchard");
+    Script.Require("jQueryUI_Dialog").AtFoot();
     Script.Require("jsPlumb").AtFoot();
     Script.Include("orchard-workflows-serialize.js").AtFoot();
     Script.Include("orchard-workflows.js").AtFoot();
@@ -42,6 +43,7 @@
     //<![CDATA[
     var renderActivityUrl = '@HttpUtility.JavaScriptStringEncode(Url.Action("RenderActivity", "Admin", new { area = "Orchard.Workflows" }))';
     var editActivityUrl = '@HttpUtility.JavaScriptStringEncode(Url.Action("EditActivity", "Admin", new { area = "Orchard.Workflows" }))';
+    var stateUrl = '@HttpUtility.JavaScriptStringEncode(Url.Action("State", "Admin", new { area = "Orchard.Workflows" }))';
     var requestAntiForgeryToken = '@HttpUtility.JavaScriptStringEncode(Html.AntiForgeryTokenValueOrchard().ToString())';
     var localId = '@HttpUtility.JavaScriptStringEncode(Model.LocalId)';
     var updatedActivityClientId = null;
@@ -73,15 +75,44 @@
 @Html.Hidden("data", String.Empty)
 
 @Html.Hidden("confirm-delete-activity", T("Are you sure you want to remove this activity?"))
+@Html.Hidden("confirm-delete-instances", T("You have running instances of this workflow, do you want to stop them?"))
 
     using (Script.Foot()) {
 <script type="text/javascript">
     //<![CDATA[
-    $("form").submit(function () {
-        saveLocal(localId);
-        var workflow = loadWorkflow(localId);
-        var data = JSON.stringify(workflow);
-        $("[name='data']").val(data);
+    $("form").submit(function (e, submit, clearWorkflows) {
+        if(submit){
+            saveLocal(localId);
+            var workflow = loadWorkflow(localId);
+            var data = JSON.stringify(workflow);
+            $("[name='data']").val(data);
+            var values = [$("<input>", { type: "hidden", name: "clearWorkflows", value: clearWorkflows }), $("<input>", { type: "hidden", name: "submit.Save", value: "Save" })];
+            $(this).append(values);
+            return true;
+        }
+
+        e.preventDefault();
+
+        $.ajax({
+            url: stateUrl + "/" + $("#id").val(),
+            async: false,
+            success: function(state) {
+                if (state.isRunning) {
+                    var dialog = $('<p>' + $("#confirm-delete-instances").val() + '</p>').dialog({
+                        buttons: {
+                            '@T("Yes")': function() { $('form').trigger('submit', [true, true]); },
+                            '@T("No")': function() { $('form').trigger('submit', [true, false]); },
+                            '@T("Cancel")': function() {
+                                dialog.dialog('close');
+                            }
+                        }
+                    });
+                } 
+                else {
+                    $('form').trigger('submit', [true, false]);
+                }
+            }
+        });
     });
     //]]>
 </script>

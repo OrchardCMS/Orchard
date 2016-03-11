@@ -5,6 +5,7 @@ namespace Orchard.Taxonomies.ViewModels {
     public class TaxonomyAdminIndexViewModel {
         public IList<TaxonomyEntry> Taxonomies { get; set; }
         public TaxonomiesAdminIndexBulkAction BulkAction { get; set; }
+        public dynamic Pager { get; set; }
     }
 
     public class TaxonomyEntry {

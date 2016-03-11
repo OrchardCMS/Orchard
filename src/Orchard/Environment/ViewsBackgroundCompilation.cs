@@ -6,6 +6,7 @@ using System.Timers;
 using System.Web.Compilation;
 using Orchard.FileSystems.VirtualPath;
 using Orchard.Logging;
+using Orchard.Exceptions;
 
 namespace Orchard.Environment {
     public interface IViewsBackgroundCompilation {
@@ -119,7 +120,7 @@ namespace Orchard.Environment {
         }
 
         private void CompileDirectory(CompilationContext context, string viewDirectory) {
-            // Prevent processing of the same directories multiple times (sligh performance optimization,
+            // Prevent processing of the same directories multiple times (slight performance optimization,
             // as the build manager second call to compile a view is essentially a "no-op".
             if (context.ProcessedDirectories.Contains(viewDirectory))
                 return;
@@ -136,10 +137,13 @@ namespace Orchard.Environment {
                 if (firstFile != null)
                     BuildManager.GetCompiledAssembly(firstFile);
             }
-            catch(Exception e) {
+            catch(Exception ex) {
+                if (ex.IsFatal()) {
+                    throw;
+                } 
                 // Some views might not compile, this is ok and harmless in this
                 // context of pre-compiling views.
-                Logger.Information(e, "Compilation of directory '{0}' skipped", viewDirectory);
+                Logger.Information(ex, "Compilation of directory '{0}' skipped", viewDirectory);
             }
             stopwatch.Stop();
             Logger.Information("Directory '{0}' compiled in {1} msec", viewDirectory, stopwatch.ElapsedMilliseconds);

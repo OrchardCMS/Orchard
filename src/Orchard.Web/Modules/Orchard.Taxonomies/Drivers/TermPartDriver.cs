@@ -42,7 +42,7 @@ namespace Orchard.Taxonomies.Drivers {
         protected override DriverResult Display(TermPart part, string displayType, dynamic shapeHelper) {
             return Combined(
                 ContentShape("Parts_TermPart_Feed", () => {
-                    
+
                     // generates a link to the RSS feed for this term
                     _feedManager.Register(part.Name, "rss", new RouteValueDictionary { { "term", part.Id } });
                     return null;
@@ -53,7 +53,7 @@ namespace Orchard.Taxonomies.Drivers {
                     if (httpContext != null) {
                         pagerParameters.Page = Convert.ToInt32(httpContext.Request.QueryString["page"]);
                     }
-                    
+
                     var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
                     var taxonomy = _taxonomyService.GetTaxonomy(part.TaxonomyId);
                     var totalItemCount = _taxonomyService.GetContentItemsCount(part);
@@ -113,8 +113,8 @@ namespace Orchard.Taxonomies.Drivers {
             context.Element(part.PartDefinition.Name).SetAttributeValue("TaxonomyId", identity);
 
             var identityPaths = new List<string>();
-            foreach(var pathPart in part.Path.Split('/')) {
-                if(String.IsNullOrEmpty(pathPart)) {
+            foreach (var pathPart in part.Path.Split('/')) {
+                if (String.IsNullOrEmpty(pathPart)) {
                     continue;
                 }
 
@@ -126,21 +126,26 @@ namespace Orchard.Taxonomies.Drivers {
         }
 
         protected override void Importing(TermPart part, ImportContentContext context) {
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
+            }
+
             part.Count = Int32.Parse(context.Attribute(part.PartDefinition.Name, "Count"));
             part.Selectable = Boolean.Parse(context.Attribute(part.PartDefinition.Name, "Selectable"));
             part.Weight = Int32.Parse(context.Attribute(part.PartDefinition.Name, "Weight"));
 
             var identity = context.Attribute(part.PartDefinition.Name, "TaxonomyId");
             var contentItem = context.GetItemFromSession(identity);
-            
+
             if (contentItem == null) {
                 throw new OrchardException(T("Unknown taxonomy: {0}", identity));
-            } 
-            
+            }
+
             part.TaxonomyId = contentItem.Id;
             part.Path = "/";
 
-            foreach(var identityPath in context.Attribute(part.PartDefinition.Name, "Path").Split(new [] {','}, StringSplitOptions.RemoveEmptyEntries)) {
+            foreach (var identityPath in context.Attribute(part.PartDefinition.Name, "Path").Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)) {
                 var pathContentItem = context.GetItemFromSession(identityPath);
                 part.Path += pathContentItem.Id + "/";
             }

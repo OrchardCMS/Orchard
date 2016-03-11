@@ -1,3 +1,9 @@
-﻿@foreach (var contentItem in Model.ContentItems) {
-    @Display(contentItem)
+﻿@using Orchard.ContentManagement
+@foreach (var contentItemShape in Model.ContentItems) {
+    var contentItem = (ContentItem)contentItemShape.ContentItem;
+    var displayTextHtmlString = Html.ItemDisplayText(contentItem);
+    var displayText = displayTextHtmlString != null ? (IHtmlString)displayTextHtmlString : T("-");
+    <div class="layout-snippet">
+        @displayText
+    </div>
 }

@@ -11,6 +11,11 @@ namespace Orchard.Users.Drivers {
     public class UserPartDriver : ContentPartDriver<UserPart> {
 
         protected override void Importing(UserPart part, ContentManagement.Handlers.ImportContentContext context) {
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
+            }
+
             part.Email = context.Attribute(part.PartDefinition.Name, "Email");
             part.EmailChallengeToken = context.Attribute(part.PartDefinition.Name, "EmailChallengeToken");
             part.EmailStatus = (UserStatus)Enum.Parse(typeof(UserStatus), context.Attribute(part.PartDefinition.Name, "EmailStatus"));

@@ -7,13 +7,13 @@ using Orchard.ContentManagement;
 using Orchard.Core.Title.Models;
 using Orchard.DynamicForms.Elements;
 using Orchard.Environment.Extensions;
-using Orchard.Forms.Services;
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
+using Orchard.Layouts.Helpers;
+using Orchard.Layouts.Services;
 using Orchard.Projections.Models;
 using Orchard.Projections.Services;
 using Orchard.Tokens;
-using Orchard.Utility.Extensions;
 using DescribeContext = Orchard.Forms.Services.DescribeContext;
 
 namespace Orchard.DynamicForms.Drivers {
@@ -23,8 +23,8 @@ namespace Orchard.DynamicForms.Drivers {
         private readonly IContentManager _contentManager;
         private readonly ITokenizer _tokenizer;
 
-        public QueryElementDriver(IFormManager formManager, IProjectionManager projectionManager, IContentManager contentManager, ITokenizer tokenizer)
-            : base(formManager) {
+        public QueryElementDriver(IFormsBasedElementServices formsServices, IProjectionManager projectionManager, IContentManager contentManager, ITokenizer tokenizer)
+            : base(formsServices) {
             _projectionManager = projectionManager;
             _contentManager = contentManager;
             _tokenizer = tokenizer;
@@ -68,6 +68,12 @@ namespace Orchard.DynamicForms.Drivers {
                         Value: "{Content.Id}",
                         Description: T("Specify the expression to get the value of each option."),
                         Classes: new[]{"text", "large", "tokenized"}),
+                    _DefaultValue: shape.Textbox(
+                        Id: "DefaultValue",
+                        Name: "DefaultValue",
+                        Title: "Default Value",
+                        Classes: new[] { "text", "large", "tokenized" },
+                        Description: T("The default value of this query field.")),
                     _InputType: shape.SelectList(
                         Id: "InputType",
                         Name: "InputType",
@@ -119,24 +125,33 @@ namespace Orchard.DynamicForms.Drivers {
         protected override void OnDisplaying(Query element, ElementDisplayingContext context) {
             var queryId = element.QueryId;
             var typeName = element.GetType().Name;
-            var category = element.Category.ToSafeName();
             var displayType = context.DisplayType;
+            var tokenData = context.GetTokenData();
 
-            context.ElementShape.Options = GetOptions(element, queryId).ToArray();
+            // Allow the initially selected value to be tokenized.
+            // If a value was posted, use that value instead (without tokenizing it).
+            if (element.PostedValue == null) {
+                var defaultValue = _tokenizer.Replace(element.DefaultValue, tokenData, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
+                element.RuntimeValue = defaultValue;
+            }
+
+            context.ElementShape.ProcessedName = _tokenizer.Replace(element.Name, tokenData);
+            context.ElementShape.ProcessedLabel = _tokenizer.Replace(element.Label, tokenData);
+            context.ElementShape.Options = GetOptions(element, context.DisplayType, queryId, tokenData).ToArray();
             context.ElementShape.Metadata.Alternates.Add(String.Format("Elements_{0}__{1}", typeName, element.InputType));
             context.ElementShape.Metadata.Alternates.Add(String.Format("Elements_{0}_{1}__{2}", typeName, displayType, element.InputType));
         }
 
-        private IEnumerable<SelectListItem> GetOptions(Query element, int? queryId) {
+        private IEnumerable<SelectListItem> GetOptions(Query element, string displayType, int? queryId, IDictionary<string, object> tokenData) {
             var optionLabel = element.OptionLabel;
+            var runtimeValues = GetRuntimeValues(element);
 
             if (!String.IsNullOrWhiteSpace(optionLabel)) {
-                yield return new SelectListItem { Text = optionLabel };
+                yield return new SelectListItem { Text = displayType != "Design" ? _tokenizer.Replace(optionLabel, tokenData) : optionLabel, Value = string.Empty };
             }
 
             if (queryId == null)
                 yield break;
-
 
             var contentItems = _projectionManager.GetContentItems(queryId.Value).ToArray();
             var valueExpression = !String.IsNullOrWhiteSpace(element.ValueExpression) ? element.ValueExpression : "{Content.Id}";
@@ -145,13 +160,19 @@ namespace Orchard.DynamicForms.Drivers {
             foreach (var contentItem in contentItems) {
                 var data = new {Content = contentItem};
                 var value = _tokenizer.Replace(valueExpression, data);
-                var text = _tokenizer.Replace(textExpression, data);
+                var text = _tokenizer.Replace(textExpression, data, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
 
                 yield return new SelectListItem {
                     Text = text,
-                    Value = value
+                    Value = value,
+                    Selected = runtimeValues.Contains(value, StringComparer.OrdinalIgnoreCase)
                 };
             }
+        }
+
+        private IEnumerable<string> GetRuntimeValues(Query element) {
+            var runtimeValue = element.RuntimeValue;
+            return runtimeValue != null ? runtimeValue.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries) : Enumerable.Empty<string>();
         }
     }
 }

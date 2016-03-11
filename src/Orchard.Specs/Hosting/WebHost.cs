@@ -96,6 +96,12 @@ namespace Orchard.Specs.Hosting {
                     .DeepCopy("*.*", _tempSite.Combine("bin").Combine("amd64"));
             }
 
+            //Log("Copy roslyn binaries");
+            //if (_orchardWebPath.Combine("bin").Combine("roslyn").IsDirectory) {
+            //    _orchardWebPath.Combine("bin").Combine("roslyn")
+            //        .DeepCopy("*.*", _tempSite.Combine("bin").Combine("roslyn"));
+            //}
+
             // Copy binaries of this project, so that remote execution of lambda
             // can be achieved through serialization to the ASP.NET appdomain
             // (see Execute(Action) method)

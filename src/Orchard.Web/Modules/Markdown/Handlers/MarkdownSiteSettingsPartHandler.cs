@@ -1,9 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Markdown.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
-using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.Localization;
 
 namespace Markdown.Handlers {
@@ -18,24 +18,6 @@ namespace Markdown.Handlers {
                 part.UseMarkdownForBlogs = false;
             });
 
-            OnUpdated<MarkdownSiteSettingsPart>((context, part) => {
-                var blogPost = _contentDefinitionManager.GetTypeDefinition("BlogPost");
-                if (blogPost == null) {
-                        return;
-                }
-
-                var bodyPart = blogPost.Parts.FirstOrDefault(x => x.PartDefinition.Name == "BodyPart");
-                if (bodyPart == null) {
-                    return;
-                }
-
-                _contentDefinitionManager.AlterTypeDefinition("BlogPost", build => build
-                    .WithPart("BodyPart", cfg => cfg
-                        .WithSetting("BodyTypePartSettings.Flavor", part.UseMarkdownForBlogs ? "markdown" : "html")
-                    )
-                );
-            });
-
             T = NullLocalizer.Instance;
         }
 
@@ -45,6 +27,34 @@ namespace Markdown.Handlers {
                 return;
             base.GetItemMetadata(context);
             context.Metadata.EditorGroupInfo.Add(new GroupInfo(T("Markdown")));
+        }
+
+        protected override void UpdateEditorShape(UpdateEditorContext context) {
+            if (!string.Equals("markdown", context.GroupId, StringComparison.OrdinalIgnoreCase))
+                return;
+
+            var part = context.ContentItem.As<MarkdownSiteSettingsPart>();
+            if (part == null) {
+                return;
+            }
+
+            base.UpdateEditorShape(context);
+            
+            var blogPost = _contentDefinitionManager.GetTypeDefinition("BlogPost");
+            if (blogPost == null) {
+                return;
+            }
+
+            var bodyPart = blogPost.Parts.FirstOrDefault(x => x.PartDefinition.Name == "BodyPart");
+            if (bodyPart == null) {
+                return;
+            }
+
+            _contentDefinitionManager.AlterTypeDefinition("BlogPost", build => build
+                .WithPart("BodyPart", cfg => cfg
+                    .WithSetting("BodyTypePartSettings.Flavor", part.UseMarkdownForBlogs ? "markdown" : "html")
+                )
+            );
         }
     }
 }

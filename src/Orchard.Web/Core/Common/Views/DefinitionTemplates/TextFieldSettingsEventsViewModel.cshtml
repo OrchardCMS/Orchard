@@ -19,3 +19,14 @@
     <span class="hint">@T("The help text is written under the field when authors are editing the content item.")</span>
     @Html.ValidationMessageFor(m => m.Settings.Hint)
 </fieldset>
+<fieldset>
+    <div class="editor-field">
+        <label for="@Html.FieldIdFor(m => m.Settings.Placeholder)">@T("Watermark (placeholder)")</label>
+        @Html.TextBoxFor(m => m.Settings.Placeholder, new { @class = "text large" })
+        @Html.ValidationMessageFor(m => m.Settings.Placeholder)
+        <span class="hint">@T("A hint to display when the input of text is empty. (optional)")</span>
+    </div>
+</fieldset>
+<fieldset>
+    @Display.DefinitionTemplate(TemplateName: "TextFieldDefaultValueEditor", Model: Model)
+</fieldset>

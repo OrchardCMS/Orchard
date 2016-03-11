@@ -1,0 +1,44 @@
+﻿@import "Variables.less";
+@import "Reset.less";
+
+.layout-editor {
+    .layout-content, .layout-html {
+        min-height: 1em;
+
+        > .layout-element-wrapper {
+            .layout-content-markup {
+
+                padding: 2px;
+                overflow-x: hidden;
+                line-height: normal;
+
+                // Reset to HTML5 W3C standard default styling within content.
+                .reset();
+
+                > *:first-child {
+                    margin-top: 0 !important; // Important because site.css of the admin theme styles heading margins with a very high specificity.
+                }
+
+                > *:last-child {
+                    margin-bottom: 0 !important;
+                }
+            }
+        }
+
+        &.layout-content-image, &.layout-content-vector-image {
+            > .layout-element-wrapper > .layout-content-markup > img {
+                display: block;
+                width: 100%;
+                max-width: 100%;
+                height: auto;
+            }
+        }
+    }
+
+    .img-responsive, .img-responsive img {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+    }
+}

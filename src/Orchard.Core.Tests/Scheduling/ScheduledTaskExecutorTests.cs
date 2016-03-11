@@ -35,7 +35,6 @@ namespace Orchard.Core.Tests.Scheduling {
         public override void Register(ContainerBuilder builder) {
             _handler = new StubTaskHandler();
             builder.RegisterInstance(new Mock<IOrchardServices>().Object);
-            builder.RegisterInstance(new Mock<ITransactionManager>().Object);
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
             builder.RegisterType<Signals>().As<ISignals>();

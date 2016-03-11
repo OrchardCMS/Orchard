@@ -9,6 +9,7 @@ using Orchard.Environment.Descriptor;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.ShellBuilders.Models;
 using Orchard.Mvc;
+using Orchard.Tests.Stubs;
 using Orchard.Tests.Utility;
 
 namespace Orchard.Tests.Environment.ShellBuilders {
@@ -20,6 +21,7 @@ namespace Orchard.Tests.Environment.ShellBuilders {
         public void Init() {
             var builder = new ContainerBuilder();
             builder.RegisterType<ShellContextFactory>().As<IShellContextFactory>();
+            builder.RegisterModule(new MvcModule());
             builder.RegisterModule(new WorkContextModule());
             builder.RegisterType<WorkContextAccessor>().As<IWorkContextAccessor>();
             builder.RegisterAutoMocking(Moq.MockBehavior.Strict);
@@ -32,6 +34,7 @@ namespace Orchard.Tests.Environment.ShellBuilders {
             var descriptor = new ShellDescriptor { SerialNumber = 6655321 };
             var blueprint = new ShellBlueprint();
             var shellLifetimeScope = _container.BeginLifetimeScope("shell");
+            var httpContext = new StubHttpContext();
 
             _container.Mock<IShellDescriptorCache>()
                 .Setup(x => x.Fetch(ShellSettings.DefaultName))
@@ -48,6 +51,9 @@ namespace Orchard.Tests.Environment.ShellBuilders {
             _container.Mock<IShellDescriptorManager>()
                 .Setup(x => x.GetShellDescriptor())
                 .Returns(descriptor);
+
+            _container.Mock<IWorkContextEvents>()
+                .Setup(x => x.Started());
 
             _container.Mock<IHttpContextAccessor>()
                 .Setup(x => x.Current())

@@ -75,7 +75,8 @@ header, footer, aside, nav, article { display: block; }
 }
 
 .zone-content .edit-widget .primary .widget-props,
-.zone-content .edit-widget .secondary {
+.zone-content .edit-widget .secondary,
+.zone-content .edit-item .edit-item-secondary {
     display: none;
 }
 
@@ -200,7 +201,6 @@ hr {border:0; height:1px; color:#e4e5e6; background-color:#e4e5e6;}
     clear:both;
     height:70px;
     margin-top:-70px; /*Top margin set negative px of footer height*/
-    background:url(images/vinesBackgroundBottom.gif) no-repeat bottom left;
 }
 
 /* Links
@@ -247,7 +247,6 @@ ul.disc {list-style:disc inside; margin:12px 0;}
     padding:.4em 0;
 }
 #header #app a {
-    background:url(images/orchardLogo.gif) no-repeat;
     display:block;
     height:60px;
     margin:-11px 0 0 14px;
@@ -306,18 +305,7 @@ ul.disc {list-style:disc inside; margin:12px 0;}
 }
 #menu .expando-glyph-container .expando-glyph {
     background:transparent no-repeat 0 -19px;
-    background-image:url(images/menu-glyph.png);
     left:160px;
-}
-#menu .expando-glyph-container .expando-glyph:hover {
-    background-image:url(images/menu-glyph.png);
-}
-#menu .expando-glyph-container.closed .expando-glyph {
-    background-image:url(images/menu-glyph.png);
-    background-position:0 3px;
-}
-#menu .expando-glyph-container.closed .expando-glyph:hover {
-    background-image:url(images/menu-glyph.png);
 }
 #menu .expando-glyph-container.closing .expando-glyph {
     -webkit-transition:all .2s ease-in-out;
@@ -346,7 +334,6 @@ ul.disc {list-style:disc inside; margin:12px 0;}
 }
 #menu .menu-admin li h3 a,
 #menu .menu-admin li h3 span { /* only the h3 gets an icon by default */
-    background-image:url(images/menu-default.png);
     padding:0 0 0 20px;
 }
 #menu .menu-admin a:hover, #menu .menu-admin .selected a, #menu .menu-admin .selected h3 span {
@@ -541,12 +528,12 @@ span.message {
     color:#fff;
 }
 .info { 
-    background: url(images/info.gif) no-repeat 5px 5px #fff;
+    background: #fff;
     border:1px solid #e4e8ee;  /* blue */
     padding-left:26px;
 }
 .error { 
-    background: url(images/error.gif) no-repeat 5px 5px #fff;
+    background: #fff;
     border:1px solid #e5cece;  /* red */
     padding-left:26px;
 }
@@ -677,7 +664,6 @@ textarea {
 /*----buttons----*/
 button.remove, .remove.button, .remove.button:link, .remove.button:visited {
     background-color:#DECCCA;
-    background-image:url(images/tableHeaderBackgroundRed.gif);
     border-color:#d6c9c7;
     color:#5c3732;
 }
@@ -1163,37 +1149,37 @@ fieldset.delete-button {
 }
 .dashboard .help-item h2.gallery
 {
-    background: #f1f1f2 url('images/icon-gallery.png') no-repeat 5px 50%;
+    background: #f1f1f2 no-repeat 5px 50%;
     padding-left: 40px;
 }
 
 .dashboard .help-item h2.friends
 {
-    background: #f1f1f2 url('images/icon-friends.png') no-repeat 5px 50%;
+    background: #f1f1f2 no-repeat 5px 50%;
     padding-left: 40px;
 }
 
 .dashboard .help-item h2.start
 {
-    background: #f1f1f2 url('images/icon-settings.png') no-repeat 5px 50%;
+    background: #f1f1f2 no-repeat 5px 50%;
     padding-left: 40px;
 }
 
 .dashboard .help-item h2.docs
 {
-    background: #f1f1f2 url('images/icon-docs.png') no-repeat 5px 50%;
+    background: #f1f1f2 no-repeat 5px 50%;
     padding-left: 38px;
 }
 
 .dashboard .help-item h2.contribute
 {
-    background: #f1f1f2 url('images/icon-contribute.png') no-repeat 5px 50%;
+    background: #f1f1f2 no-repeat 5px 50%;
     padding-left: 40px;
 }
 
 .dashboard .help-item h2.advisory
 {
-    background: #f1f1f2 url('images/icon-advisory.png') no-repeat 5px 50%;
+    background: #f1f1f2 no-repeat 5px 50%;
     padding-left: 40px;
 }
 

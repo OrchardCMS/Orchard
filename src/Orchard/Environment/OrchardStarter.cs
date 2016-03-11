@@ -35,11 +35,18 @@ using Orchard.Mvc.ViewEngines.ThemeAwareness;
 using Orchard.Services;
 using Orchard.WebApi;
 using Orchard.WebApi.Filters;
+using System.Linq;
+using System.Web.Configuration;
 
 namespace Orchard.Environment {
     public static class OrchardStarter {
         public static IContainer CreateHostContainer(Action<ContainerBuilder> registrations) {
+            ExtensionLocations extensionLocations = new ExtensionLocations();
+
             var builder = new ContainerBuilder();
+            // Application paths and parameters
+            builder.RegisterInstance(extensionLocations);
+
             builder.RegisterModule(new CollectionOrderModule());
             builder.RegisterModule(new LoggingModule());
             builder.RegisterModule(new EventsModule());
@@ -63,7 +70,7 @@ namespace Orchard.Environment {
             builder.RegisterType<AppDomainAssemblyNameResolver>().As<IAssemblyNameResolver>().SingleInstance();
             builder.RegisterType<GacAssemblyNameResolver>().As<IAssemblyNameResolver>().SingleInstance();
             builder.RegisterType<OrchardFrameworkAssemblyNameResolver>().As<IAssemblyNameResolver>().SingleInstance();
-            builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().SingleInstance();
+            builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().InstancePerDependency();
             builder.RegisterType<ViewsBackgroundCompilation>().As<IViewsBackgroundCompilation>().SingleInstance();
             builder.RegisterType<DefaultExceptionPolicy>().As<IExceptionPolicy>().SingleInstance();
             builder.RegisterType<DefaultCriticalErrorProvider>().As<ICriticalErrorProvider>().SingleInstance();
@@ -79,7 +86,6 @@ namespace Orchard.Environment {
             RegisterVolatileProvider<DefaultVirtualPathMonitor, IVirtualPathMonitor>(builder);
             RegisterVolatileProvider<DefaultVirtualPathProvider, IVirtualPathProvider>(builder);
             
-
             builder.RegisterType<DefaultOrchardHost>().As<IOrchardHost>().As<IEventHandler>()
                 .Named<IEventHandler>(typeof(IShellSettingsManagerEventHandler).Name)
                 .Named<IEventHandler>(typeof(IShellDescriptorManagerEventHandler).Name)
@@ -100,11 +106,11 @@ namespace Orchard.Environment {
                         {
                             builder.RegisterType<ExtensionHarvester>().As<IExtensionHarvester>().SingleInstance();
                             builder.RegisterType<ModuleFolders>().As<IExtensionFolders>().SingleInstance()
-                                .WithParameter(new NamedParameter("paths", new[] { "~/Modules" }));
+                                .WithParameter(new NamedParameter("paths", extensionLocations.ModuleLocations));
                             builder.RegisterType<CoreModuleFolders>().As<IExtensionFolders>().SingleInstance()
-                                .WithParameter(new NamedParameter("paths", new[] { "~/Core" }));
+                                .WithParameter(new NamedParameter("paths", extensionLocations.CoreLocations));
                             builder.RegisterType<ThemeFolders>().As<IExtensionFolders>().SingleInstance()
-                                .WithParameter(new NamedParameter("paths", new[] { "~/Themes" }));
+                                .WithParameter(new NamedParameter("paths", extensionLocations.ThemeLocations));
 
                             builder.RegisterType<CoreExtensionLoader>().As<IExtensionLoader>().SingleInstance();
                             builder.RegisterType<ReferencedExtensionLoader>().As<IExtensionLoader>().SingleInstance();
@@ -173,7 +179,6 @@ namespace Orchard.Environment {
 
             return container;
         }
-
 
         private static void RegisterVolatileProvider<TRegister, TService>(ContainerBuilder builder) where TService : IVolatileProvider {
             builder.RegisterType<TRegister>()

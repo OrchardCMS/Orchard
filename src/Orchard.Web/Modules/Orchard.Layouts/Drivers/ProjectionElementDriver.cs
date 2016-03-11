@@ -18,6 +18,8 @@ using Orchard.Projections.Services;
 using Orchard.Projections.ViewModels;
 using Orchard.Tokens;
 using Orchard.UI.Navigation;
+using Orchard.Layouts.Helpers;
+using Orchard.Layouts.Services;
 using DescribeContext = Orchard.Forms.Services.DescribeContext;
 
 namespace Orchard.Layouts.Drivers {
@@ -31,13 +33,13 @@ namespace Orchard.Layouts.Drivers {
         private readonly IDisplayHelperFactory _displayHelperFactory;
 
         public ProjectionElementDriver(
-            IFormManager formManager, 
-            IProjectionManager projectionManager, 
-            IOrchardServices services, 
-            IRepository<LayoutRecord> layoutRepository, 
-            ITokenizer tokenizer, 
+            IFormsBasedElementServices formsServices,
+            IProjectionManager projectionManager,
+            IOrchardServices services,
+            IRepository<LayoutRecord> layoutRepository,
+            ITokenizer tokenizer,
             IDisplayHelperFactory displayHelperFactory)
-            : base(formManager) {
+            : base(formsServices) {
 
             _projectionManager = projectionManager;
             _contentManager = services.ContentManager;
@@ -56,11 +58,15 @@ namespace Orchard.Layouts.Drivers {
         protected override void OnDisplaying(Projection element, ElementDisplayingContext context) {
             var queryId = element.QueryId;
             var layoutId = element.LayoutId;
+            var query = queryId != null ? _contentManager.Get<QueryPart>(queryId.Value) : default(QueryPart);
+            var emptyContentItemsList = Enumerable.Empty<ContentManagement.ContentItem>();
 
-            if (queryId == null || layoutId == null)
+            context.ElementShape.ContentItems = emptyContentItemsList;
+            context.ElementShape.BuildShapes = (Func<string, IEnumerable<dynamic>>)(displayType => emptyContentItemsList.Select(x => _contentManager.BuildDisplay(x, displayType)));
+
+            if (query == null || layoutId == null) {
                 return;
-
-            var query = _contentManager.Get<QueryPart>(queryId.Value);
+            }
 
             // Retrieving paging parameters.
             var queryString = _services.WorkContext.HttpContext.Request.QueryString;
@@ -103,12 +109,15 @@ namespace Orchard.Layouts.Drivers {
             // Execute the query.
             var contentItems = _projectionManager.GetContentItems(query.Id, pager.GetStartIndex() + element.Skip, pager.PageSize).ToList();
 
+            context.ElementShape.ContentItems = contentItems;
+            context.ElementShape.BuildShapes = (Func<string, IEnumerable<dynamic>>)(displayType => contentItems.Select(x => _contentManager.BuildDisplay(x, displayType)));
+
             // TODO: Figure out if we need this for a Projection Element, and if so, how.
             //// Sanity check so that content items with ProjectionPart can't be added here, or it will result in an infinite loop.
             //contentItems = contentItems.Where(x => !x.Has<ProjectionPart>()).ToList();
 
             // Applying layout.
-            var layout = _layoutRepository.Get(layoutId.Value);
+            var layout = layoutId != null ? _layoutRepository.Get(layoutId.Value) : default(LayoutRecord);
             var layoutDescriptor = layout == null ? null : _projectionManager.DescribeLayouts().SelectMany(x => x.Descriptors).FirstOrDefault(x => x.Category == layout.Category && x.Type == layout.Type);
 
             // Create pager shape.
@@ -137,7 +146,7 @@ namespace Orchard.Layouts.Drivers {
 
             var layoutComponents = contentItems.Select(contentItem => {
                 var contentItemMetadata = _contentManager.GetItemMetadata(contentItem);
-                var propertyDescriptors = fieldDescriptors.Select( d => {
+                var propertyDescriptors = fieldDescriptors.Select(d => {
                     var fieldContext = new PropertyContext {
                         State = FormParametersHelper.ToDynamic(d.Property.State),
                         Tokens = new Dictionary<string, object> { { "Content", contentItem } }
@@ -192,7 +201,7 @@ namespace Orchard.Layouts.Drivers {
                 var list = context.ElementShape.List = _services.New.List();
                 foreach (var group in groups) {
                     var localResult = layoutDescriptor.Render(renderLayoutContext, group.Components);
-                    
+
                     // Add the Context to the shape.
                     localResult.Context(renderLayoutContext);
                     list.Add(_services.New.LayoutGroup(Key: new MvcHtmlString(group.Key), List: localResult));
@@ -225,27 +234,27 @@ namespace Orchard.Layouts.Drivers {
                         Title: T("Items to display"),
                         Value: "0",
                         Description: T("The number of items to display. Enter 0 for no limit. When using pagination, this is the number of items per page."),
-                        Classes: new[] { "text", "medium", "tokenized" }),
+                        Classes: new[] { "text", "medium" }),
                     _Skip: shape.Textbox(
                         Id: "Skip",
                         Name: "Skip",
                         Title: T("Offset"),
                         Value: "0",
                         Description: T("The number of items to skip (e.g., if 2 is entered, the first 2 items won't be diplayed)."),
-                        Classes: new[] { "text", "medium", "tokenized" }),
+                        Classes: new[] { "text", "medium" }),
                     _MaxItems: shape.Textbox(
                         Id: "MaxItems",
                         Name: "MaxItems",
                         Title: T("MaxItems items"),
                         Value: "20",
                         Description: T("Maximum number of items which can be queried at once. Use 0 for unlimited. This is only used as a failsafe when the number of items comes from a user-provided source such as the query string."),
-                        Classes: new[] { "text", "medium", "tokenized" }),
+                        Classes: new[] { "text", "medium" }),
                     _PagerSuffix: shape.Textbox(
                         Id: "PagerSuffix",
                         Name: "PagerSuffix",
                         Title: T("Suffix"),
                         Description: T("Optional. Provide a suffix to use when multiple pagers are displayed on the same page, e.g., when using multiple Projection Widgets, or to define alternates."),
-                        Classes: new[] { "text", "medium", "tokenized" }),
+                        Classes: new[] { "text", "medium" }),
                     _DisplayPager: shape.Checkbox(
                         Id: "DisplayPager",
                         Name: "DisplayPager",
@@ -276,6 +285,32 @@ namespace Orchard.Layouts.Drivers {
 
                 return form;
             });
+        }
+
+        protected override void OnExporting(Projection element, ExportElementContext context) {
+            var query = element.QueryId != null ? _contentManager.Get<QueryPart>(element.QueryId.Value) : default(QueryPart);
+            var layout = query != null && element.LayoutId != null ? _layoutRepository.Get(element.LayoutId.Value) : default(LayoutRecord);
+            var queryIdentity = query != null ? _contentManager.GetItemMetadata(query).Identity.ToString() : default(string);
+            var layoutIndex = layout != null ? query.Layouts.IndexOf(layout) : -1; // -1 is the Default Layout.
+
+            if (queryIdentity != null) {
+                context.ExportableData["QueryId"] = queryIdentity;
+                context.ExportableData["LayoutIndex"] = layoutIndex.ToString();
+            }
+        }
+
+        protected override void OnImportCompleted(Projection element, ImportElementContext context) {
+            var queryIdentity = context.ExportableData.Get("QueryId");
+            var query = queryIdentity != null ? context.Session.GetItemFromSession(queryIdentity) : default(ContentManagement.ContentItem);
+
+            if (query == null)
+                return;
+
+            var queryPart = query.As<QueryPart>();
+            var layoutIndex = XmlHelper.Parse<int>(context.ExportableData.Get("LayoutIndex"));
+
+            element.QueryId = queryPart.Id;
+            element.LayoutId = layoutIndex != -1 ? queryPart.Layouts[layoutIndex].Id : -1;
         }
 
         private static string GetLayoutDescription(IEnumerable<LayoutDescriptor> layouts, LayoutRecord l) {

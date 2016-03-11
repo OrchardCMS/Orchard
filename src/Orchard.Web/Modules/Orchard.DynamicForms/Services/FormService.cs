@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using Orchard.Collections;
 using Orchard.ContentManagement;
@@ -77,10 +78,11 @@ namespace Orchard.DynamicForms.Services {
             return GetFormElements(form).Select(x => x.Name).Where(x => !String.IsNullOrWhiteSpace(x)).Distinct();
         }
 
-        public NameValueCollection SubmitForm(Form form, IValueProvider valueProvider, ModelStateDictionary modelState, IUpdateModel updater) {
+        public NameValueCollection SubmitForm(IContent content, Form form, IValueProvider valueProvider, ModelStateDictionary modelState, IUpdateModel updater) {
             var values = ReadElementValues(form, valueProvider);
 
             _formEventHandler.Submitted(new FormSubmittedEventContext {
+                Content = content,
                 Form = form,
                 FormService = this,
                 ValueProvider = valueProvider,
@@ -89,6 +91,7 @@ namespace Orchard.DynamicForms.Services {
             });
 
             _formEventHandler.Validating(new FormValidatingEventContext {
+                Content = content,
                 Form = form,
                 FormService = this,
                 Values = values,
@@ -98,6 +101,7 @@ namespace Orchard.DynamicForms.Services {
             });
 
             _formEventHandler.Validated(new FormValidatedEventContext {
+                Content = content,
                 Form = form,
                 FormService = this,
                 Values = values,
@@ -176,7 +180,12 @@ namespace Orchard.DynamicForms.Services {
                 ReadElementValues(element, context);
 
                 foreach (var key in from string key in context.Output where !String.IsNullOrWhiteSpace(key) && values[key] == null select key) {
-                    values.Add(key, context.Output[key]);
+                    var value = context.Output[key];
+
+                    if (form.HtmlEncode)
+                        value = HttpUtility.HtmlEncode(value);
+
+                    values.Add(key, value);
                 }
             }
 
@@ -254,7 +263,7 @@ namespace Orchard.DynamicForms.Services {
                 ReadElementValues(element, context);
 
                 var value = context.Output[element.Name];
-                var bindingSettings = element.Data.GetModel<FormBindingSettings>(null);
+                var bindingSettings = element.Data.GetModel<FormBindingSettings>();
 
                 if (bindingSettings != null) {
                     foreach (var partBindingSettings in bindingSettings.Parts) {

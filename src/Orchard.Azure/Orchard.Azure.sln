@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{8E3DE014-9B28-4B32-8AC1-B2BE404E9B2D}"
 EndProject
@@ -156,6 +156,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.MessageBus", "..\Orchard.Web\Modules\Orchard.MessageBus\Orchard.MessageBus.csproj", "{ED715544-E649-4F48-B8EE-9368C41C3AC0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Redis", "..\Orchard.Web\Modules\Orchard.Redis\Orchard.Redis.csproj", "{2C5EB8B3-A313-413D-BAA0-5C21D2A6EC6E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Conditions", "..\Orchard.Web\Modules\Orchard.Conditions\Orchard.Conditions.csproj", "{98251EAE-A41B-47B2-AA91-E28B8482DA70}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Resources", "..\Orchard.Web\Modules\Orchard.Resources\Orchard.Resources.csproj", "{D4E8F7C8-2DB2-4C50-A422-DA1DF1E3CC73}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -451,6 +455,14 @@ Global
 		{2C5EB8B3-A313-413D-BAA0-5C21D2A6EC6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2C5EB8B3-A313-413D-BAA0-5C21D2A6EC6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2C5EB8B3-A313-413D-BAA0-5C21D2A6EC6E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98251EAE-A41B-47B2-AA91-E28B8482DA70}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98251EAE-A41B-47B2-AA91-E28B8482DA70}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98251EAE-A41B-47B2-AA91-E28B8482DA70}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98251EAE-A41B-47B2-AA91-E28B8482DA70}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4E8F7C8-2DB2-4C50-A422-DA1DF1E3CC73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4E8F7C8-2DB2-4C50-A422-DA1DF1E3CC73}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4E8F7C8-2DB2-4C50-A422-DA1DF1E3CC73}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4E8F7C8-2DB2-4C50-A422-DA1DF1E3CC73}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -525,5 +537,7 @@ Global
 		{6BD8B2FA-F2E3-4AC8-A4C3-2925A653889A} = {8E3DE014-9B28-4B32-8AC1-B2BE404E9B2D}
 		{ED715544-E649-4F48-B8EE-9368C41C3AC0} = {8E3DE014-9B28-4B32-8AC1-B2BE404E9B2D}
 		{2C5EB8B3-A313-413D-BAA0-5C21D2A6EC6E} = {8E3DE014-9B28-4B32-8AC1-B2BE404E9B2D}
+		{98251EAE-A41B-47B2-AA91-E28B8482DA70} = {8E3DE014-9B28-4B32-8AC1-B2BE404E9B2D}
+		{D4E8F7C8-2DB2-4C50-A422-DA1DF1E3CC73} = {8E3DE014-9B28-4B32-8AC1-B2BE404E9B2D}
 	EndGlobalSection
 EndGlobal

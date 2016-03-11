@@ -31,18 +31,20 @@ namespace Orchard.Alias.Implementation {
             return _aliasStorage.Get(aliasPath).ToRouteValueDictionary();
         }
 
-        public void Set(string aliasPath, RouteValueDictionary routeValues, string aliasSource) {
+        public void Set(string aliasPath, RouteValueDictionary routeValues, string aliasSource, bool isManaged) {
             _aliasStorage.Set(
                 aliasPath,
                 ToDictionary(routeValues),
-                aliasSource);
+                aliasSource,
+                isManaged);
         }
 
-        public void Set(string aliasPath, string routePath, string aliasSource) {
+        public void Set(string aliasPath, string routePath, string aliasSource, bool isManaged) {
             _aliasStorage.Set(
                 aliasPath.TrimStart('/'),
                 ToDictionary(routePath),
-                aliasSource);
+                aliasSource,
+                isManaged);
         }
 
         public void Delete(string aliasPath) {
@@ -71,15 +73,15 @@ namespace Orchard.Alias.Implementation {
             return Lookup(ToDictionary(routePath).ToRouteValueDictionary());
         }
 
-        public void Replace(string aliasPath, RouteValueDictionary routeValues, string aliasSource) {
+        public void Replace(string aliasPath, RouteValueDictionary routeValues, string aliasSource, bool isManaged) {
             foreach (var lookup in Lookup(routeValues).Where(path => path != aliasPath)) {
                 Delete(lookup, aliasSource);
             }
-            Set(aliasPath, routeValues, aliasSource);
+            Set(aliasPath, routeValues, aliasSource, isManaged);
         }
 
-        public void Replace(string aliasPath, string routePath, string aliasSource) {
-            Replace(aliasPath, ToDictionary(routePath).ToRouteValueDictionary(), aliasSource);
+        public void Replace(string aliasPath, string routePath, string aliasSource, bool isManaged) {
+            Replace(aliasPath, ToDictionary(routePath).ToRouteValueDictionary(), aliasSource, isManaged);
         }
 
         public IEnumerable<string> Lookup(RouteValueDictionary routeValues) {
@@ -89,7 +91,7 @@ namespace Orchard.Alias.Implementation {
                 // the route has an area, lookup in the specific alias map
 
                 var map = _aliasHolder.GetMap(area.ToString());
-                
+
                 if (map == null) {
                     return Enumerable.Empty<string>();
                 }
@@ -102,7 +104,7 @@ namespace Orchard.Alias.Implementation {
 
                 return new[] { locate.Item2 };
             }
-            
+
             // no specific area, lookup in all alias maps
             var result = new List<string>();
             foreach (var map in _aliasHolder.GetMaps()) {
@@ -115,7 +117,7 @@ namespace Orchard.Alias.Implementation {
 
             return result;
         }
-        
+
         public IEnumerable<Tuple<string, RouteValueDictionary>> List() {
             return _aliasStorage.List().Select(item => Tuple.Create(item.Item1, item.Item3.ToRouteValueDictionary()));
         }
@@ -145,21 +147,20 @@ namespace Orchard.Alias.Implementation {
         private IEnumerable<RouteDescriptor> GetRouteDescriptors() {
             return _routeProviders
                 .SelectMany(routeProvider => {
-                                var routes = new List<RouteDescriptor>();
-                                routeProvider.GetRoutes(routes);
-                                return routes;
-                            })
+                    var routes = new List<RouteDescriptor>();
+                    routeProvider.GetRoutes(routes);
+                    return routes;
+                })
                 .Where(routeDescriptor => !(routeDescriptor.Route is AliasRoute))
                 .OrderByDescending(routeDescriptor => routeDescriptor.Priority);
         }
 
         private class StubHttpContext : HttpContextBase {
-            public override HttpRequestBase Request
-            {
-                get{return new StubHttpRequest();}
+            public override HttpRequestBase Request {
+                get { return new StubHttpRequest(); }
             }
 
-            private class StubHttpRequest : HttpRequestBase {}
+            private class StubHttpRequest : HttpRequestBase { }
         }
     }
 }

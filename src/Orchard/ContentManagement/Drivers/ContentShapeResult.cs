@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using Orchard.ContentManagement.Handlers;
 using Orchard.DisplayManagement.Shapes;
+using Orchard.DisplayManagement.Descriptors;
 
 namespace Orchard.ContentManagement.Drivers {
     public class ContentShapeResult : DriverResult {
@@ -27,16 +29,16 @@ namespace Orchard.ContentManagement.Drivers {
 
         private void ApplyImplementation(BuildShapeContext context, string displayType) {
             var placement = context.FindPlacement(_shapeType, _differentiator, _defaultLocation);
-            if (string.IsNullOrEmpty(placement.Location) || placement.Location == "-")
+            if (String.IsNullOrEmpty(placement.Location) || placement.Location == "-")
                 return;
 
-            // parse group placement
+            // Parse group placement.
             var group = placement.GetGroup();
             if (!String.IsNullOrEmpty(group)) {
                 _groupId = group;
             }
 
-            if (!string.Equals(context.GroupId ?? "", _groupId ?? "", StringComparison.OrdinalIgnoreCase))
+            if (!String.Equals(context.GroupId ?? "", _groupId ?? "", StringComparison.OrdinalIgnoreCase))
                 return;
 
             dynamic parentShape = context.Shape;
@@ -44,17 +46,17 @@ namespace Orchard.ContentManagement.Drivers {
 
             var newShape = _shapeBuilder(context);
 
-            // ignore it if the driver returned a null shape
-            if(newShape == null) {
+            // Ignore it if the driver returned a null shape.
+            if (newShape == null) {
                 return;
             }
 
-            // add a ContentPart property to the final shape 
+            // Add a ContentPart property to the final shape.
             if (ContentPart != null && newShape.ContentPart == null) {
                 newShape.ContentPart = ContentPart;
             }
 
-            // add a ContentField property to the final shape 
+            // Add a ContentField property to the final shape.
             if (ContentField != null && newShape.ContentField == null) {
                 newShape.ContentField = ContentField;
             }
@@ -63,8 +65,9 @@ namespace Orchard.ContentManagement.Drivers {
             newShapeMetadata.Prefix = _prefix;
             newShapeMetadata.DisplayType = displayType;
             newShapeMetadata.PlacementSource = placement.Source;
+            newShapeMetadata.Tab = placement.GetTab();
             
-            // if a specific shape is provided, remove all previous alternates and wrappers
+            // If a specific shape is provided, remove all previous alternates and wrappers.
             if (!String.IsNullOrEmpty(placement.ShapeType)) {
                 newShapeMetadata.Type = placement.ShapeType;
                 newShapeMetadata.Alternates.Clear();
@@ -79,7 +82,7 @@ namespace Orchard.ContentManagement.Drivers {
                 newShapeMetadata.Wrappers.Add(wrapper);
             }
 
-            // the zone name is in reference of Layout, e.g. /AsideSecond
+            // Check if the zone name is in reference of Layout, e.g. /AsideSecond.
             if (placement.IsLayoutZone()) {
                 parentShape = context.Layout;
             }
@@ -106,7 +109,7 @@ namespace Orchard.ContentManagement.Drivers {
         }
 
         public ContentShapeResult OnGroup(string groupId) {
-            _groupId=groupId;
+            _groupId = groupId;
             return this;
         }
 
@@ -124,6 +127,40 @@ namespace Orchard.ContentManagement.Drivers {
 
         public string GetShapeType() {
             return _shapeType;
+        }
+
+        public bool WasDisplayed(UpdateEditorContext context) {
+            ShapeDescriptor descriptor;
+            if (context.ShapeTable.Descriptors.TryGetValue(_shapeType, out descriptor)) {
+                var placementContext = new ShapePlacementContext {
+                    Content = context.ContentItem,
+                    ContentType = context.ContentItem.ContentType,
+                    Differentiator = _differentiator,
+                    DisplayType = null,
+                    Path = context.Path
+                };
+
+                var placementInfo = descriptor.Placement(placementContext);
+
+                var location = placementInfo.Location;
+
+                if (String.IsNullOrEmpty(location) || location == "-") {
+                    return false;
+                }
+
+                var editorGroup = _groupId;
+                if (String.IsNullOrEmpty(editorGroup)) {
+                    editorGroup = placementInfo.GetGroup() ?? "";
+                }
+
+                var contextGroup = context.GroupId ?? "";
+
+                if (!String.Equals(editorGroup, contextGroup, StringComparison.OrdinalIgnoreCase)) {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }

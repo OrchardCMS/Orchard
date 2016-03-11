@@ -19,6 +19,10 @@ namespace Orchard.Security {
 
             var accessFrontEnd = filterContext.ActionDescriptor.GetCustomAttributes(typeof (AlwaysAccessibleAttribute), true).Any();
 
+            if (!accessFrontEnd && filterContext.ActionDescriptor.ControllerDescriptor.ControllerType.GetCustomAttributes(typeof(AlwaysAccessibleAttribute), true).Any()) {
+                accessFrontEnd = true;
+            }
+
             if (!AdminFilter.IsApplied(filterContext.RequestContext) && !accessFrontEnd && !_authorizer.Authorize(StandardPermissions.AccessFrontEnd)) {
                 filterContext.Result = new HttpUnauthorizedResult();
             }

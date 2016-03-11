@@ -27,12 +27,14 @@
 
     <BuildPlatform Condition="$(ProgramW6432) != ''">x64</BuildPlatform>
     <BuildPlatform Condition="$(BuildPlatform) == ''">x86</BuildPlatform>
+    <Configuration Condition="$(Configuration) == ''">Release</Configuration>
 
     <!-- TeamCity build number -->
     <Version>$(BUILD_NUMBER)</Version>
   </PropertyGroup>
 
-  <Import Project="$(LibFolder)\msbuild\MSBuild.Community.Tasks.Targets"/>
+  <Import Project="$(LibFolder)\msbuildtasks\MSBuild.Community.Tasks.Targets"/>
+  <Import Project="$(LibFolder)\slowcheetah\SlowCheetah.Transforms.targets"/>
 
   <!-- Coordinating Targets -->
 
@@ -51,7 +53,6 @@
 
   <Target Name="FullBuild">
     <CallTarget Targets="Clean"/>
-    <CallTarget Targets="TypeScript"/>
     <CallTarget Targets="Compile"/>
     <CallTarget Targets="Test"/>
     <CallTarget Targets="Package"/>
@@ -109,13 +110,13 @@
     <RemoveDir Directories="$(BuildFolder)" ContinueOnError="true"/>
     <RemoveDir Directories="$(ArtifactsFolder)" />
   </Target>
-
-  <Target Name ="Compile">
+  
+  <Target Name="Compile">
     <!-- Compile to "OutputFolder" -->
     <MSBuild
       Projects="$(SrcFolder)\Orchard.sln"
       Targets="Build"
-      Properties="Configuration=Release;OutputPath=$(CompileFolder)" />
+      Properties="Configuration=$(Configuration);OutputPath=$(CompileFolder)" />
     <!-- Compile to "regular" output folder for devs using VS locally -->
     <MSBuild
       Projects="$(SrcFolder)\Orchard.sln"
@@ -126,19 +127,7 @@
     <MSBuild
       Projects="$(SrcFolder)\Tools\MSBuild.Orchard.Tasks\MSBuild.Orchard.Tasks.csproj"
       Targets="Build"
-      Properties="Configuration=Release;OutputPath=$(MsBuildTasksFolder)" />
-  </Target>
-
-  <Target Name="TypeScript" DependsOnTargets="CompileMsBuildTasks">
-    <ItemGroup>
-      <TypeScriptSources Include="$(SrcFolder)\**\Scripts\**\*.ts"/>
-    </ItemGroup>
-    <CompileTypeScriptFiles
-      InputFiles="@(TypeScriptSources)"
-      CompilerPath="$(LibFolder)\typescript\tsc.exe"
-      CompilerOptions="--target ES5">
-      <Output TaskParameter="OutputFiles" ItemName="Content" />
-    </CompileTypeScriptFiles>
+      Properties="Configuration=$(Configuration);OutputPath=$(MsBuildTasksFolder)" />
   </Target>
 
   <!-- Testing -->
@@ -155,7 +144,7 @@
       <Output TaskParameter="Include" ItemName="TestAssemblies" />
     </CreateItem>
 
-    <NUnit Assemblies="@(TestAssemblies)" ToolPath="$(LibFolder)\nunit" WorkingDirectory="$(CompileFolder)" OutputXmlFile="$(BuildFolder)\Orchard.Tests.xml" />
+    <NUnit Assemblies="@(TestAssemblies)" ToolPath="$(LibFolder)\nunit" WorkingDirectory="$(CompileFolder)" OutputXmlFile="$(BuildFolder)\Orchard.Tests.xml" ExcludeCategory="longrunning" />
   </Target>
 
   <Target Name ="Spec" DependsOnTargets="Package-Stage">
@@ -173,13 +162,10 @@
 
   <!-- Packaging (Stage) -->
 
-  <UsingTask AssemblyFile="$(LibFolder)\slowcheetah\SlowCheetah.Xdt.dll" TaskName="SlowCheetah.Xdt.TransformXml" />
-
   <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.FilterModuleBinaries" />
   <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.FileUpdateLines" />
   <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.ValidateExtensionProjectFiles" />
   <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.XmlDelete" />
-  <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.CompileTypeScriptFiles" />
 
   <Target Name="Package-Stage" DependsOnTargets="Compile">
     <CallTarget Targets="CompileMsBuildTasks"/>
@@ -273,19 +259,19 @@
     <!-- extra processing of the staged config files -->
     <TransformXml 
       Source="$(StageFolder)\Web.Config"
-      Transform="$(SrcFolder)\Orchard.Web\Web.Release.Config"
+      Transform="$(SrcFolder)\Orchard.Web\Web.$(Configuration).Config"
       Destination="$(StageFolder)\Web.Config"
     />
 
     <TransformXml 
       Source="$(StageFolder)\Config\HostComponents.Config"
-      Transform="$(SrcFolder)\Orchard.Web\Config\HostComponents.Release.Config"
+      Transform="$(SrcFolder)\Orchard.Web\Config\HostComponents.$(Configuration).Config"
       Destination="$(StageFolder)\Config\HostComponents.Config"
     />
 
     <TransformXml 
       Source="$(StageFolder)\Config\log4net.Config"
-      Transform="$(SrcFolder)\Orchard.Web\Config\log4net.Release.Config"
+      Transform="$(SrcFolder)\Orchard.Web\Config\log4net.$(Configuration).Config"
       Destination="$(StageFolder)\Config\log4net.Config"
     />
     
@@ -301,9 +287,12 @@
       <!--<MsDeploy-Folder-Input Include="$(StageFolder)\**\*" Exclude="$(StageFolder)\**\bin\**\*.pdb;$(StageFolder)\**\bin\**\*.xml" />-->
 
       <MsDeploy-Exclude-Modules Include="
+        $(StageFolder)\**\Modules\Orchard.CustomForms\**;
+        $(StageFolder)\**\Modules\Orchard.jQuery\**;
         $(StageFolder)\**\Modules\Orchard.Media\**;
         $(StageFolder)\**\Modules\Orchard.MediaPicker\**;
         $(StageFolder)\**\Modules\Orchard.Rules\**;
+        $(StageFolder)\**\Modules\Orchard.TaskLease\**;
         " />
 
       <MsDeploy-Folder-Input Include="$(StageFolder)\**\*" Exclude="$(StageFolder)\**\bin\**\*.xml;$(StageFolder)\**\obj\**\*;@(MsDeploy-Exclude-Modules)" />
@@ -337,6 +326,7 @@
         $(MSBuildProjectDirectory)\src\**\bin\**\*;
         $(MSBuildProjectDirectory)\src\**\obj\**\*;
         $(MSBuildProjectDirectory)\**\App_Data\**\*;
+        $(MSBuildProjectDirectory)\**\node_modules\**\*;
         $(MSBuildProjectDirectory)\**\_ReSharper*\**\*;
         $(MSBuildProjectDirectory)\**\*.sln.cache;
         $(MSBuildProjectDirectory)\**\*.suo;

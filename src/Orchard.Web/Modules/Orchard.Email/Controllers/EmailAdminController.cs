@@ -23,6 +23,7 @@ namespace Orchard.Email.Controllers {
         public Localizer T { get; set; }
 
         [HttpPost]
+        [ValidateInput(false)]
         public ActionResult TestSettings(TestSmtpSettings testSettings) {
             ILogger logger = null;
             try {
@@ -41,6 +42,7 @@ namespace Orchard.Email.Controllers {
                 smtpSettings.Port = testSettings.Port;
                 smtpSettings.EnableSsl = testSettings.EnableSsl;
                 smtpSettings.RequireCredentials = testSettings.RequireCredentials;
+                smtpSettings.UseDefaultCredentials = testSettings.UseDefaultCredentials;
                 smtpSettings.UserName = testSettings.UserName;
                 smtpSettings.Password = testSettings.Password;
 
@@ -97,6 +99,7 @@ namespace Orchard.Email.Controllers {
             public int Port { get; set; }
             public bool EnableSsl { get; set; }
             public bool RequireCredentials { get; set; }
+            public bool UseDefaultCredentials { get; set; }
             public string UserName { get; set; }
             public string Password { get; set; }
             public string To { get; set; }

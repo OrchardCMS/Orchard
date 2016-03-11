@@ -65,7 +65,6 @@ namespace Orchard.Alias.Implementation {
             return key.EndsWith("-", StringComparison.InvariantCulture) ? key.Substring(0, key.Length - 1) : key;
         }
 
-
         private static Dictionary<string, string> ToRouteValues(RouteData routeData, string queryString) {
             var routeValues = routeData.Values
                 .Select(kv => {

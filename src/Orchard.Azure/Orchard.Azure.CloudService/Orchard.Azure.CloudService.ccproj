@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>2.5</ProductVersion>
+    <ProductVersion>2.7</ProductVersion>
     <ProjectGuid>{03c5327d-4e8e-45a7-acd1-e18e7caa3c4a}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -35,8 +35,9 @@
   </PropertyGroup>
   <!-- Items for the project -->
   <ItemGroup>
+    <ServiceConfiguration Include="ServiceConfiguration.Local.cscfg" />
     <ServiceDefinition Include="ServiceDefinition.csdef" />
-    <ServiceConfiguration Include="ServiceConfiguration.cscfg" />
+    <ServiceConfiguration Include="ServiceConfiguration.Cloud.cscfg" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Orchard.Azure.Web\Orchard.Azure.Web.csproj">
@@ -65,7 +66,7 @@
   <!-- Import the target files for this project template -->
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
-    <CloudExtensionsDir Condition=" '$(CloudExtensionsDir)' == '' ">$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Windows Azure Tools\2.5\</CloudExtensionsDir>
+    <CloudExtensionsDir Condition=" '$(CloudExtensionsDir)' == '' ">$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Windows Azure Tools\2.7\</CloudExtensionsDir>
   </PropertyGroup>
   <Import Project="$(CloudExtensionsDir)Microsoft.WindowsAzure.targets" />
   <!-- The BeforeAddRoleContent override ensures that content in themes and modules get added

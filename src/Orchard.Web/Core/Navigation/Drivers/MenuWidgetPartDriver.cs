@@ -11,6 +11,7 @@ using Orchard.Core.Title.Models;
 using Orchard.Localization;
 using Orchard.UI.Navigation;
 using Orchard.Utility.Extensions;
+using Orchard.ContentManagement.Utilities;
 
 namespace Orchard.Core.Navigation.Drivers {
     public class MenuWidgetPartDriver : ContentPartDriver<MenuWidgetPart> {
@@ -50,6 +51,11 @@ namespace Orchard.Core.Navigation.Drivers {
                 var menuName = menu.As<TitlePart>().Title.HtmlClassify();
                 var currentCulture = _workContextAccessor.GetContext().CurrentCulture;
                 var menuItems = _navigationManager.BuildMenu(menu);
+
+                if (!part.Breadcrumb) {
+                    menuItems = menuItems.Where(x => !x.Content.Has<BreadcrumbMenuItemPart>());
+                }
+
                 var localized = new List<MenuItem>();
                 foreach(var menuItem in menuItems) {
                     // if there is no associated content, it as culture neutral
@@ -190,6 +196,11 @@ namespace Orchard.Core.Navigation.Drivers {
         }
 
         protected override void Importing(MenuWidgetPart part, ImportContentContext context) {
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
+            }
+
             context.ImportAttribute(part.PartDefinition.Name, "StartLevel", x => part.StartLevel = Convert.ToInt32(x));
             context.ImportAttribute(part.PartDefinition.Name, "Levels", x => part.Levels = Convert.ToInt32(x));
             context.ImportAttribute(part.PartDefinition.Name, "Breadcrumb", x => part.Breadcrumb = Convert.ToBoolean(x));

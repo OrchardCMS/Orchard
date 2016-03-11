@@ -1,16 +1,17 @@
+using System.Web;
 using System.Web.Mvc;
 using Orchard.Layouts.Filters;
-using Orchard.Mvc;
 
 namespace Orchard.Layouts.Services {
     public class CurrentControllerAccessor : ICurrentControllerAccessor {
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        public CurrentControllerAccessor(IHttpContextAccessor httpContextAccessor) {
-            _httpContextAccessor = httpContextAccessor;
+        private readonly HttpContextBase _httpContext;
+
+        public CurrentControllerAccessor(HttpContextBase httpContext) {
+            _httpContext = httpContext;
         }
 
         public Controller CurrentController {
-            get { return (Controller) _httpContextAccessor.Current().Items[ControllerAccessorFilter.CurrentControllerKey]; }
+            get { return (Controller) _httpContext.Items[ControllerAccessorFilter.CurrentControllerKey]; }
         }
     }
 }

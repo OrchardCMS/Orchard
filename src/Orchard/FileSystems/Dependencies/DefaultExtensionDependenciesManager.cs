@@ -5,6 +5,7 @@ using System.Xml.Linq;
 using Orchard.Caching;
 using Orchard.FileSystems.AppData;
 using Orchard.Logging;
+using Orchard.Exceptions;
 
 namespace Orchard.FileSystems.Dependencies {
     /// <summary>
@@ -64,7 +65,7 @@ namespace Orchard.FileSystems.Dependencies {
         }
 
         public IEnumerable<ActivatedExtensionDescriptor> LoadDescriptors() {
-            return _cacheManager.Get(PersistencePath, ctx => {
+            return _cacheManager.Get(PersistencePath, true, ctx => {
                 _appDataFolder.CreateDirectory(BasePath);
 
                 if (!DisableMonitoring) {
@@ -135,8 +136,11 @@ namespace Orchard.FileSystems.Dependencies {
                     return XDocument.Load(stream);
                 }
             }
-            catch (Exception e) {
-                Logger.Information(e, "Error reading file '{0}'. Assuming empty.", persistancePath);
+            catch (Exception ex) {
+                if (ex.IsFatal()) {
+                    throw;
+                } 
+                Logger.Information(ex, "Error reading file '{0}'. Assuming empty.", persistancePath);
                 return new XDocument();
             }
         }

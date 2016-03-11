@@ -33,6 +33,8 @@ namespace Orchard.Core.Common.Settings {
                 builder.WithSetting("TextFieldSettings.Flavor", model.Settings.Flavor);
                 builder.WithSetting("TextFieldSettings.Hint", model.Settings.Hint);
                 builder.WithSetting("TextFieldSettings.Required", model.Settings.Required.ToString(CultureInfo.InvariantCulture));
+                builder.WithSetting("TextFieldSettings.Placeholder", model.Settings.Placeholder);
+                builder.WithSetting("TextFieldSettings.DefaultValue", model.Settings.DefaultValue);
 
                 yield return DefinitionTemplate(model);
             }

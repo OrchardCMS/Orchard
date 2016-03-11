@@ -5,20 +5,18 @@
     Style.Require("jQueryUI_Calendars_Picker");
     Style.Require("jQueryTimeEntry");
     Style.Require("jQueryDateTimeEditor");
-
-    Script.Require("jQueryCalendars_All").AtFoot();
-    Script.Require("jQueryCalendars_Picker_Ext").AtFoot();
+    Script.Require("jQueryCalendars_Picker").AtFoot();
     Script.Require("jQueryTimeEntry").AtFoot();
 }
 
 @if (Model.ShowDate) {
     <label class="forpicker" for="@Html.FieldIdFor(m => Model.Date)">@T("Date")</label>
-    <span class="date">@Html.TextBoxFor(m => m.Date, new { placeholder = T("Date").Text, @class = "text" })</span>
+    <span class="date">@Html.TextBoxFor(m => m.Date, new { placeholder = Model.DatePlaceholder ?? T("Date").Text, @class = "text" })</span>
 }
 
 @if (Model.ShowTime) {
     <label class="forpicker" for="@Html.FieldIdFor(m => Model.Time)">@T("Time")</label>
-    <span class="time">@Html.TextBoxFor(m => m.Time, new { placeholder = T("Time").Text, @class = "text" })</span>
+    <span class="time">@Html.TextBoxFor(m => m.Time, new { placeholder = Model.TimePlaceholder ?? T("Time").Text, @class = "text" })</span>
 }
 
 @if (Model.ShowDate) { <text>@Html.ValidationMessageFor(m => m.Date)</text> }

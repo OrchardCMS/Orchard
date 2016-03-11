@@ -175,7 +175,7 @@
             if (controller.is(":checkbox")) {
                 controller.click($(this).toggleWhatYouControl).each($(this).toggleWhatYouControl);
             } else if (controller.is(":radio")) {
-                $("[name=" + controller.attr("name") + "]").click(function () { $("[name=" + $(this).attr("name") + "]").each($(this).toggleWhatYouControl); });
+                $("[name='" + controller.attr("name") + "']").click(function () { $("[name='" + $(this).attr("name") + "']").each($(this).toggleWhatYouControl); });
             }
             else if (controller.is("option")) {
                 controller.parent().change(function() {
@@ -236,7 +236,13 @@
             }
 
             if (_this.filter("[itemprop~='RemoveUrl']").length == 1) {
-                if (!confirm(confirmRemoveMessage)) {
+            	// use a custom message if its set in data-message
+            	var dataMessage = _this.data('message');
+            	if (dataMessage === undefined) {
+            		dataMessage = confirmRemoveMessage;
+            	}
+
+                if (!confirm(dataMessage)) {
                     return false;
                 }
             }

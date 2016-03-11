@@ -6,6 +6,7 @@ using System.Linq;
 using NHibernate;
 using NUnit.Framework;
 using Orchard.Data;
+using Orchard.Tests.ContentManagement;
 using Orchard.Tests.Records;
 
 namespace Orchard.Tests.Data {
@@ -22,7 +23,7 @@ namespace Orchard.Tests.Data {
             _databaseFilePath = Path.GetTempFileName();
             _sessionFactory = DataUtility.CreateSessionFactory(_databaseFilePath, typeof(FooRecord));
             _session = _sessionFactory.OpenSession();
-            _fooRepos = new Repository<FooRecord>(new StubLocator(_session));
+            _fooRepos = new Repository<FooRecord>(new TestTransactionManager(_session));
         }
 
         [TearDown]

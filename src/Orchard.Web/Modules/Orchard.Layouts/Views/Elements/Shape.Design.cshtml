@@ -2,7 +2,6 @@
 @{
     var element = (Shape) Model.Element;
 }
-<div class="element-snippet layout-placeholder">
-    <span class="fa fa-circle"></span>
-    @T("{0} {1}", element.ShapeType, element.Descriptor.DisplayText)
+<div class="layout-snippet">
+    @element.ShapeType
 </div>

@@ -1,12 +1,18 @@
 ﻿using Orchard.Environment.Extensions;
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
+using Orchard.Layouts.Helpers;
+using Orchard.Layouts.Services;
 using Orchard.Layouts.ViewModels;
 using MarkdownElement = Orchard.Layouts.Elements.Markdown;
 
 namespace Orchard.Layouts.Drivers {
     [OrchardFeature("Orchard.Layouts.Markdown")]
     public class MarkdownElementDriver : ElementDriver<MarkdownElement> {
+        private readonly IElementFilterProcessor _processor;
+        public MarkdownElementDriver(IElementFilterProcessor processor) {
+            _processor = processor;
+        }
 
         protected override EditorResult OnBuildEditor(MarkdownElement element, ElementEditorContext context) {
             var viewModel = new MarkdownEditorViewModel {
@@ -23,11 +29,7 @@ namespace Orchard.Layouts.Drivers {
         }
 
         protected override void OnDisplaying(MarkdownElement element, ElementDisplayingContext context) {
-            context.ElementShape.ProcessedContent = ToHtml(element.Content);
-        }
-
-        private string ToHtml(string markdown) {
-            return new MarkdownSharp.Markdown().Transform(markdown);
+            context.ElementShape.ProcessedContent = _processor.ProcessContent(element.Content, "markdown", context.GetTokenData());
         }
     }
 }

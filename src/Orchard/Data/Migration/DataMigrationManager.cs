@@ -9,6 +9,7 @@ using Orchard.Data.Migration.Schema;
 using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.Exceptions;
 
 namespace Orchard.Data.Migration {
     /// <summary>
@@ -123,6 +124,9 @@ namespace Orchard.Data.Migration {
                             current = (int)lookupTable[current].Invoke(migration, new object[0]);
                         }
                         catch (Exception ex) {
+                            if (ex.IsFatal()) {
+                                throw;
+                            } 
                             Logger.Error(ex, "An unexpected error occurred while applying migration on {0} from version {1}.", feature, current);
                             throw;
                         }
@@ -139,10 +143,13 @@ namespace Orchard.Data.Migration {
                         dataMigrationRecord.Version = current;
                     }
                 }
-                catch (Exception e) {
-                    Logger.Error(e, "Error while running migration version {0} for {1}.", current, feature);
+                catch (Exception ex) {
+                    if (ex.IsFatal()) {
+                        throw;
+                    } 
+                    Logger.Error(ex, "Error while running migration version {0} for {1}.", current, feature);
                     _transactionManager.Cancel();
-                    throw new OrchardException(T("Error while running migration version {0} for {1}.", current, feature), e);
+                    throw new OrchardException(T("Error while running migration version {0} for {1}.", current, feature), ex);
                 }
 
             }

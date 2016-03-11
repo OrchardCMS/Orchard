@@ -161,6 +161,38 @@ namespace Orchard.Tests.Environment.ShellBuilders {
         }
 
         [Test]
+        public void ComponentsImplementingMultipleContractsAreResolvableOnce() {
+            var settings = CreateSettings();
+            var blueprint = CreateBlueprint(
+                WithDependency<MultipleDependency>()
+            );
+
+            var factory = _container.Resolve<IShellContainerFactory>();
+            var shellContainer = factory.CreateContainer(settings, blueprint);
+
+            var multipleDependency1 = shellContainer.Resolve<IMultipleDependency1>();
+            var multipleDependency2 = shellContainer.Resolve<IMultipleDependency2>();
+
+            Assert.That(multipleDependency1, Is.Not.Null);
+            Assert.That(multipleDependency2, Is.Not.Null);
+
+            Assert.That(multipleDependency1, Is.InstanceOf<MultipleDependency>());
+            Assert.That(multipleDependency2, Is.InstanceOf<MultipleDependency>());
+
+            Assert.True(multipleDependency1 == multipleDependency2);
+        }
+
+        public interface IMultipleDependency1 : IDependency {
+
+        }
+        public interface IMultipleDependency2 : IDependency {
+
+        }
+        public class MultipleDependency : IMultipleDependency1, IMultipleDependency2 {
+
+        }
+
+        [Test]
         public void ExtraInformationCanDropIntoProperties() {
             var settings = CreateSettings();
             var blueprint = CreateBlueprint(

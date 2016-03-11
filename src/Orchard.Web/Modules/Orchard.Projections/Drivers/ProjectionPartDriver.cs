@@ -294,34 +294,32 @@ namespace Orchard.Projections.Drivers {
         }
 
         protected override void Importing(ProjectionPart part, ImportContentContext context) {
-            IfNotNull(context.Attribute(part.PartDefinition.Name, "Items"), x => part.Record.Items = Int32.Parse(x));
-            IfNotNull(context.Attribute(part.PartDefinition.Name, "ItemsPerPage"), x => part.Record.ItemsPerPage = Int32.Parse(x));
-            IfNotNull(context.Attribute(part.PartDefinition.Name, "Offset"), x => part.Record.Skip = Int32.Parse(x));
-            IfNotNull(context.Attribute(part.PartDefinition.Name, "PagerSuffix"), x => part.Record.PagerSuffix = x);
-            IfNotNull(context.Attribute(part.PartDefinition.Name, "MaxItems"), x => part.Record.MaxItems = Int32.Parse(x));
-            IfNotNull(context.Attribute(part.PartDefinition.Name, "DisplayPager"), x => part.Record.DisplayPager = Boolean.Parse(x));
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
+            }
+
+            context.ImportAttribute(part.PartDefinition.Name, "Items", x => part.Record.Items = Int32.Parse(x));
+            context.ImportAttribute(part.PartDefinition.Name, "ItemsPerPage", x => part.Record.ItemsPerPage = Int32.Parse(x));
+            context.ImportAttribute(part.PartDefinition.Name, "Offset", x => part.Record.Skip = Int32.Parse(x));
+            context.ImportAttribute(part.PartDefinition.Name, "PagerSuffix", x => part.Record.PagerSuffix = x);
+            context.ImportAttribute(part.PartDefinition.Name, "MaxItems", x => part.Record.MaxItems = Int32.Parse(x));
+            context.ImportAttribute(part.PartDefinition.Name, "DisplayPager", x => part.Record.DisplayPager = Boolean.Parse(x));
         }
 
-        protected override void Imported(ProjectionPart part, ImportContentContext context) {
-            // assign the query only when everythin is imported
+        protected override void ImportCompleted(ProjectionPart part, ImportContentContext context) {
+            // Assign the query only when everything is imported.
             var query = context.Attribute(part.PartDefinition.Name, "Query");
             if (query != null) {
                 part.Record.QueryPartRecord = context.GetItemFromSession(query).As<QueryPart>().Record;
                 var layoutIndex = context.Attribute(part.PartDefinition.Name, "LayoutIndex");
                 int layoutIndexValue;
-                if (layoutIndex != null 
+                if (layoutIndex != null
                     && Int32.TryParse(layoutIndex, out layoutIndexValue)
                     && layoutIndexValue >= 0
-                    && part.Record.QueryPartRecord.Layouts.Count > layoutIndexValue)
-                {
+                    && part.Record.QueryPartRecord.Layouts.Count > layoutIndexValue) {
                     part.Record.LayoutRecord = part.Record.QueryPartRecord.Layouts[Int32.Parse(layoutIndex)];
                 }
-            }
-        }
-
-        private static void IfNotNull<T>(T value, Action<T> then) {
-            if(value != null) {
-                then(value);
             }
         }
 

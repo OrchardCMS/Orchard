@@ -12,6 +12,7 @@
 
     SetMeta(httpEquiv: "X-UA-Compatible", content: "IE=edge,chrome=1");
     Style.Include("//fonts.googleapis.com/css?family=Lobster&subset=latin");
+    Style.Include("default-grid.css");
     Style.Include("site.css");
 
     /* Some useful shortcuts or settings
@@ -49,7 +50,7 @@
 
     /* Last bit of code to prep the layout wrapper
     ***************************************************************/
-    
+
     Model.Id = "layout-wrapper";
     var tag = Tag(Model, "div"); // using Tag so the layout div gets the classes, id and other attributes added to the Model
 }

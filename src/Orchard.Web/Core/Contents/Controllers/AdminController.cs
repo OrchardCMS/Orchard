@@ -65,8 +65,7 @@ namespace Orchard.Core.Contents.Controllers {
             Pager pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
 
             var versionOptions = VersionOptions.Latest;
-            switch (model.Options.ContentsStatus)
-            {
+            switch (model.Options.ContentsStatus) {
                 case ContentsStatus.Published:
                     versionOptions = VersionOptions.Published;
                     break;
@@ -91,7 +90,10 @@ namespace Orchard.Core.Contents.Controllers {
                 model.TypeDisplayName = !string.IsNullOrWhiteSpace(contentTypeDefinition.DisplayName)
                                             ? contentTypeDefinition.DisplayName
                                             : contentTypeDefinition.Name;
-                query = query.ForType(model.TypeName);
+
+                // We display a specific type even if it's not listable so that admin pages
+                // can reuse the Content list page for specific types.
+                query = _contentManager.Query(versionOptions, model.TypeName);
             }
 
             switch (model.Options.OrderBy) {
@@ -110,6 +112,10 @@ namespace Orchard.Core.Contents.Controllers {
 
             if(!String.IsNullOrWhiteSpace(model.Options.SelectedCulture)) {
                 query = _cultureFilter.FilterCulture(query, model.Options.SelectedCulture);
+            }
+
+            if(model.Options.ContentsStatus == ContentsStatus.Owner) {
+                query = query.Where<CommonPartRecord>(cr => cr.OwnerId == Services.WorkContext.CurrentUser.Id);
             }
 
             model.Options.SelectedFilter = model.TypeName;

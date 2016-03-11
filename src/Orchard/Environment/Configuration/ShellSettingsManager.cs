@@ -9,7 +9,7 @@ namespace Orchard.Environment.Configuration {
 
     public class ShellSettingsManager : Component, IShellSettingsManager {
 
-        private const string _settingsFileName = "Settings.txt";
+        private const string SettingsFileName = "Settings.txt";
         private readonly IAppDataFolder _appDataFolder;
         private readonly IShellSettingsManagerEventHandler _events;
 
@@ -37,7 +37,7 @@ namespace Orchard.Environment.Configuration {
                 throw new ArgumentException("The Name property of the supplied ShellSettings object is null or empty; the settings cannot be saved.", "settings");
 
             Logger.Information("Saving ShellSettings for tenant '{0}'...", settings.Name);
-            var filePath = Path.Combine(Path.Combine("Sites", settings.Name), _settingsFileName);
+            var filePath = Path.Combine(Path.Combine("Sites", settings.Name), SettingsFileName);
             _appDataFolder.CreateFile(filePath, ShellSettingsSerializer.ComposeSettings(settings));
 
             Logger.Information("ShellSettings saved successfully; flagging tenant '{0}' for restart.", settings.Name);
@@ -48,7 +48,7 @@ namespace Orchard.Environment.Configuration {
             var filePaths = _appDataFolder
                 .ListDirectories("Sites")
                 .SelectMany(path => _appDataFolder.ListFiles(path))
-                .Where(path => String.Equals(Path.GetFileName(path), _settingsFileName, StringComparison.OrdinalIgnoreCase));
+                .Where(path => String.Equals(Path.GetFileName(path), SettingsFileName, StringComparison.OrdinalIgnoreCase));
 
             foreach (var filePath in filePaths) {
                 yield return ShellSettingsSerializer.ParseSettings(_appDataFolder.ReadFile(filePath));

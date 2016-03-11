@@ -1,0 +1,11 @@
+﻿@using Orchard.DynamicForms.Elements
+@using Orchard.Layouts.Helpers
+@{
+    var tagBuilder = TagBuilderExtensions.CreateElementTagBuilder(Model, "label");
+    var label = (Label)Model.Element;
+
+    tagBuilder.Attributes["for"] = label.For;
+    tagBuilder.InnerHtml = label.Text;
+}
+
+@tagBuilder.ToHtmlString(TagRenderMode.Normal)

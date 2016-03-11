@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Environment.Extensions;
 using Orchard.Indexing;
 using Orchard.Search.Models;
@@ -36,6 +37,17 @@ namespace Orchard.Search.Drivers {
                 
                 return shapeHelper.EditorTemplate(TemplateName: "Parts/AdminSearch.SiteSettings", Model: model, Prefix: Prefix);
             }).OnGroup("search");
+        }
+        
+        protected override void Importing(AdminSearchSettingsPart part, ImportContentContext context) {
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
+            }
+
+            context.ImportAttribute(part.PartDefinition.Name, "SearchFields", value => {
+                part.Store("SearchFields", value);
+            });
         }
     }
 }

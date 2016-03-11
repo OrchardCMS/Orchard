@@ -1,7 +1,8 @@
 ﻿using Orchard.DynamicForms.Elements;
-using Orchard.Forms.Services;
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
+using Orchard.Layouts.Helpers;
+using Orchard.Layouts.Services;
 using Orchard.Tokens;
 using DescribeContext = Orchard.Forms.Services.DescribeContext;
 
@@ -9,7 +10,7 @@ namespace Orchard.DynamicForms.Drivers {
     public class TextFieldElementDriver : FormsElementDriver<TextField>{
         private readonly ITokenizer _tokenizer;
 
-        public TextFieldElementDriver(IFormManager formManager, ITokenizer tokenizer) : base(formManager) {
+        public TextFieldElementDriver(IFormsBasedElementServices formsServices, ITokenizer tokenizer) : base(formsServices) {
             _tokenizer = tokenizer;
         }
 
@@ -50,13 +51,13 @@ namespace Orchard.DynamicForms.Drivers {
                         Id: "MinimumLength",
                         Name: "MinimumLength",
                         Title: "Minimum Length",
-                        Classes: new[] { "text", "medium", "tokenized" },
+                        Classes: new[] { "text", "medium" },
                         Description: T("The minimum length required.")),
                     _MaximumLength: shape.Textbox(
                         Id: "MaximumLength",
                         Name: "MaximumLength",
                         Title: "Maximum Length",
-                        Classes: new[] { "text", "medium", "tokenized" },
+                        Classes: new[] { "text", "medium" },
                         Description: T("The maximum length allowed.")),
                     _CustomValidationMessage: shape.Textbox(
                         Id: "CustomValidationMessage",
@@ -76,7 +77,13 @@ namespace Orchard.DynamicForms.Drivers {
         }
 
         protected override void OnDisplaying(TextField element, ElementDisplayingContext context) {
-            context.ElementShape.TokenizedValue = _tokenizer.Replace(element.RuntimeValue, null);
+            var tokenData = context.GetTokenData();
+            context.ElementShape.ProcessedName = _tokenizer.Replace(element.Name, tokenData);
+            context.ElementShape.ProcessedLabel = _tokenizer.Replace(element.Label, tokenData, new ReplaceOptions {Encoding = ReplaceOptions.NoEncode});
+
+            // Allow the initial value to be tokenized.
+            // If a value was posted, use that value instead (without tokenizing it).
+            context.ElementShape.ProcessedValue = element.PostedValue != null ? element.PostedValue : _tokenizer.Replace(element.RuntimeValue, tokenData, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
         }
     }
 }

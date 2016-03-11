@@ -15,7 +15,7 @@ using Orchard.Caching;
 
 namespace Orchard.ContentManagement {
     public class DefaultContentQuery : IContentQuery {
-        private readonly ISessionLocator _sessionLocator;
+        private readonly ITransactionManager _transactionManager;
         private ISession _session;
         private ICriteria _itemVersionCriteria;
         private VersionOptions _versionOptions;
@@ -25,11 +25,11 @@ namespace Orchard.ContentManagement {
 
         public DefaultContentQuery(
             IContentManager contentManager, 
-            ISessionLocator sessionLocator, 
+            ITransactionManager transactionManager, 
             ICacheManager cacheManager,
             ISignals signals,
             IRepository<ContentTypeRecord> contentTypeRepository) {
-            _sessionLocator = sessionLocator;
+            _transactionManager = transactionManager;
             ContentManager = contentManager;
             _cacheManager = cacheManager;
             _signals = signals;
@@ -40,7 +40,7 @@ namespace Orchard.ContentManagement {
 
         ISession BindSession() {
             if (_session == null)
-                _session = _sessionLocator.For(typeof(ContentItemVersionRecord));
+                _session = _transactionManager.GetSession();
             return _session;
         }
 
@@ -76,7 +76,7 @@ namespace Orchard.ContentManagement {
         }
 
         private int GetContentTypeRecordId(string contentType) {
-            return _cacheManager.Get(contentType + "_Record", ctx => {
+            return _cacheManager.Get(contentType + "_Record", true, ctx => {
                 ctx.Monitor(_signals.When(contentType + "_Record"));
 
                 var contentTypeRecord = _contentTypeRepository.Get(x => x.Name == contentType);
@@ -92,7 +92,7 @@ namespace Orchard.ContentManagement {
         }
 
         private void ForType(params string[] contentTypeNames) {
-            if (contentTypeNames != null && contentTypeNames.Length != 0) {
+            if (contentTypeNames != null) {
                 var contentTypeIds = contentTypeNames.Select(GetContentTypeRecordId).ToArray();
                 // don't use the IN operator if not needed for performance reasons
                 if (contentTypeNames.Length == 1) {

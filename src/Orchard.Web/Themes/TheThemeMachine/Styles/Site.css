@@ -66,6 +66,7 @@ header, footer, aside, nav, article { display: block; }
     content: ".";
     display: block;
     height: 0;
+    font-size: 0;
     clear: both;
     visibility: hidden;
 }
@@ -75,6 +76,7 @@ header, footer, aside, nav, article { display: block; }
     content: ".";
     display: block;
     height: 0;
+    font-size: 0;
     clear: both;
     visibility: hidden;
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Orchard.Localization;
+using Orchard.Exceptions;
 
 namespace Orchard.Commands {
     public abstract class DefaultOrchardCommandHandler : ICommandHandler {
@@ -41,12 +42,15 @@ namespace Orchard.Commands {
                 object value = Convert.ChangeType(commandSwitch.Value, propertyInfo.PropertyType);
                 propertyInfo.SetValue(this, value, null/*index*/);
             }
-            catch(Exception e) {
+            catch(Exception ex) {
+                if (ex.IsFatal()) {
+                    throw;
+                } 
                 string message = T("Error converting value \"{0}\" to \"{1}\" for switch \"{2}\"",
                     LocalizedString.TextOrDefault(commandSwitch.Value, T("(empty)")), 
                     propertyInfo.PropertyType.FullName, 
                     commandSwitch.Key).Text;
-                throw new InvalidOperationException(message, e);
+                throw new InvalidOperationException(message, ex);
             }
         }
 

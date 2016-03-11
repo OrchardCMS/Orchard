@@ -35,8 +35,13 @@ namespace Orchard.Layouts.Services {
             node["htmlId"] = element.HtmlId;
             node["htmlClass"] = element.HtmlClass;
             node["htmlStyle"] = element.HtmlStyle;
-            node["isTemplated"] = element.IsTemplated;
             node["rule"] = element.Rule;
+            node["isTemplated"] = element.IsTemplated;
+            node["hasEditor"] = element.Descriptor.EnableEditorDialog;
+            node["contentType"] = element.Descriptor.TypeName;
+            node["contentTypeLabel"] = element.Descriptor.DisplayText.Text;
+            node["contentTypeClass"] = element.DisplayText.Text.HtmlClassify();
+            node["contentTypeDescription"] = element.Descriptor.Description.Text;
         }
 
         protected virtual void ToElement(T element, JToken node) {
@@ -45,7 +50,7 @@ namespace Orchard.Layouts.Services {
             element.HtmlClass = (string)node["htmlClass"];
             element.HtmlStyle = (string)node["htmlStyle"];
             element.IsTemplated = (bool)(node["isTemplated"] ?? false);
-            element.Rule = (string) node["rule"];
+            element.Rule = (string)node["rule"];
         }
 
         protected bool? ReadBoolean(JToken node) {
@@ -100,7 +105,7 @@ namespace Orchard.Layouts.Services {
 
         public virtual string LayoutElementType { get { return "Content"; } }
         public virtual bool CanMap(Element element) {
-            return !(element is Container);
+            return true;
         }
 
         public virtual Element ToElement(IElementManager elementManager, DescribeElementsContext describeContext, JToken node) {
@@ -113,7 +118,7 @@ namespace Orchard.Layouts.Services {
             element.HtmlClass = (string)node["htmlClass"];
             element.HtmlStyle = (string)node["htmlStyle"];
             element.IsTemplated = (bool)(node["isTemplated"] ?? false);
-            element.Rule = (string) node["rule"];
+            element.Rule = (string)node["rule"];
 
             return element;
         }
@@ -125,7 +130,7 @@ namespace Orchard.Layouts.Services {
             node["htmlStyle"] = element.HtmlStyle;
             node["rule"] = element.Rule;
             node["isTemplated"] = element.IsTemplated;
-            node["hasEditor"] = element.HasEditor;
+            node["hasEditor"] = element.Descriptor.EnableEditorDialog;
             node["contentType"] = element.Descriptor.TypeName;
             node["contentTypeLabel"] = element.Descriptor.DisplayText.Text;
             node["contentTypeClass"] = element.DisplayText.Text.HtmlClassify();
@@ -134,31 +139,18 @@ namespace Orchard.Layouts.Services {
         }
     }
 
-    public class HtmlModelMap : ContentModelMap {
-        public HtmlModelMap(IShapeDisplay shapeDisplay, IElementDisplay elementDisplay)
-            : base(shapeDisplay, elementDisplay) {
+    public class RecycleBinModelMap : ILayoutModelMap {
+        public int Priority { get { return 0; } }
+        public string LayoutElementType { get { return "RecycleBin"; } }
+        public bool CanMap(Element element) {
+            return element.Type == "RecycleBin";
         }
 
-        public override int Priority {
-            get { return 1; }
+        public Element ToElement(IElementManager elementManager, DescribeElementsContext describeContext, JToken node) {
+            return new RecycleBin();
         }
 
-        public override string LayoutElementType {
-            get { return "Html"; }
-        }
-
-        public override bool CanMap(Element element) {
-            return element is Html;
-        }
-
-        public override Element ToElement(IElementManager elementManager, DescribeElementsContext describeContext, JToken node) {
-            var html = (string)node["html"];
-            var element = (Html)base.ToElement(elementManager, describeContext, node);
-
-            // To support inline editing, we need to update the element's content.
-            element.Content = html;
-
-            return element;
+        public void FromElement(Element element, DescribeElementsContext describeContext, JToken node) {
         }
     }
 }

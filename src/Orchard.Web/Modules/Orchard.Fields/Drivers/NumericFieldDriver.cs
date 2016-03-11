@@ -1,21 +1,25 @@
-﻿using System;
-using System.Globalization;
-using Orchard.ContentManagement;
+﻿using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Fields.Fields;
 using Orchard.Fields.Settings;
-using Orchard.Localization;
 using Orchard.Fields.ViewModels;
+using Orchard.Localization;
+using Orchard.Tokens;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
 
 namespace Orchard.Fields.Drivers {
     public class NumericFieldDriver : ContentFieldDriver<NumericField> {
         public IOrchardServices Services { get; set; }
         private const string TemplateName = "Fields/Numeric.Edit";
         private readonly Lazy<CultureInfo> _cultureInfo;
+        private readonly ITokenizer _tokenizer;
 
-        public NumericFieldDriver(IOrchardServices services) {
+        public NumericFieldDriver(IOrchardServices services, ITokenizer tokenizer) {
             Services = services;
+            _tokenizer = tokenizer;
             T = NullLocalizer.Instance;
 
             _cultureInfo = new Lazy<CultureInfo>(() => CultureInfo.GetCultureInfo(Services.WorkContext.CurrentCulture));
@@ -40,7 +44,6 @@ namespace Orchard.Fields.Drivers {
         }
 
         protected override DriverResult Editor(ContentPart part, NumericField field, dynamic shapeHelper) {
-
             return ContentShape("Fields_Numeric_Edit", GetDifferentiator(field, part),
                 () => {
                     var model = new NumericFieldViewModel {
@@ -66,7 +69,16 @@ namespace Orchard.Fields.Drivers {
                 }
 
                 if (!settings.Required && String.IsNullOrWhiteSpace(viewModel.Value)) {
-                    field.Value = null;
+                    if (settings.DefaultValue != null) {
+                        if (Decimal.TryParse(_tokenizer.Replace(settings.DefaultValue, new Dictionary<string, object> { { "Content", part.ContentItem } }), NumberStyles.Any, _cultureInfo.Value, out value)
+                            && Math.Round(value, settings.Scale) == value
+                            && !String.IsNullOrEmpty(settings.DefaultValue)) {
+                            field.Value = value;
+                        }
+                    }
+                    else {
+                        field.Value = null;
+                    }
                 }
                 else if (Decimal.TryParse(viewModel.Value, NumberStyles.Any, _cultureInfo.Value, out value)) { 
                     field.Value = value;
@@ -104,7 +116,8 @@ namespace Orchard.Fields.Drivers {
         }
 
         protected override void Exporting(ContentPart part, NumericField field, ExportContentContext context) {
-            context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Value", !field.Value.HasValue ? String.Empty : field.Value.Value.ToString(CultureInfo.InvariantCulture));
+            if (field.Value.HasValue)
+                context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Value", field.Value.Value.ToString(CultureInfo.InvariantCulture));
         }
 
         protected override void Describe(DescribeMembersContext context) {

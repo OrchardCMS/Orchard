@@ -303,5 +303,24 @@ namespace Orchard.Tests.Modules.Indexing {
             _provider.Store("default", _provider.New(1).Add("field", "value2"));
             Assert.That(searchBuilder.WithField("id", "1").Count(), Is.EqualTo(1));
         }
+
+        [Test]
+        public void IndexProviderShouldDeleteMoreThanMaxTermsCount() {
+            _provider.CreateIndex("default");
+
+            var documents = Enumerable.Range(1, 1025).Select(i => _provider.New(i).Add("field", "value1"));
+            _provider.Store("default", documents);
+            
+            var searchBuilder = _provider.CreateSearchBuilder("default");
+
+            Assert.That(searchBuilder.Count(), Is.EqualTo(1025));
+            Assert.That(searchBuilder.Get(1).ContentItemId, Is.EqualTo(1));
+            Assert.That(searchBuilder.Get(1025).ContentItemId, Is.EqualTo(1025));
+
+            _provider.Delete("default", Enumerable.Range(1, 1025));
+
+
+            Assert.That(searchBuilder.Count(), Is.EqualTo(0));
+        }
     }
 }

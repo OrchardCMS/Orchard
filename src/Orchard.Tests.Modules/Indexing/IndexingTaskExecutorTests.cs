@@ -75,7 +75,6 @@ namespace Orchard.Tests.Modules.Indexing {
             builder.RegisterInstance(new Mock<IContentDisplay>().Object);
 
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
-            builder.RegisterInstance(new Mock<ITransactionManager>().Object);
             builder.RegisterInstance(new Mock<IAuthorizer>().Object);
             builder.RegisterType<OrchardServices>().As<IOrchardServices>();
 

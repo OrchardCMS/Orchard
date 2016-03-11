@@ -93,10 +93,13 @@ namespace Orchard.Users.Controllers {
         }
 
         public ActionResult LogOff(string returnUrl) {
-            var wasLoggedInUser = _authenticationService.GetAuthenticatedUser();
             _authenticationService.SignOut();
-            if (wasLoggedInUser != null)
-                _userEventHandler.LoggedOut(wasLoggedInUser);
+
+            var loggedUser = _authenticationService.GetAuthenticatedUser();
+            if (loggedUser != null) {
+                _userEventHandler.LoggedOut(loggedUser);
+            }
+
             return this.RedirectLocal(returnUrl);
         }
 
@@ -147,14 +150,17 @@ namespace Orchard.Users.Controllers {
                         _userService.SendChallengeEmail(user.As<UserPart>(), nonce => Url.MakeAbsolute(Url.Action("ChallengeEmail", "Account", new {Area = "Orchard.Users", nonce = nonce}), siteUrl));
 
                         _userEventHandler.SentChallengeEmail(user);
-                        return RedirectToAction("ChallengeEmailSent");
+                        return RedirectToAction("ChallengeEmailSent", new { ReturnUrl = returnUrl });
                     }
 
                     if (user.As<UserPart>().RegistrationStatus == UserStatus.Pending) {
-                        return RedirectToAction("RegistrationPending");
+                        return RedirectToAction("RegistrationPending", new { ReturnUrl = returnUrl });
                     }
 
+                    _userEventHandler.LoggingIn(userName, password);
                     _authenticationService.SignIn(user, false /* createPersistentCookie */);
+                    _userEventHandler.LoggedIn(user);
+
                     return this.RedirectLocal(returnUrl);
                 }
                 
@@ -187,7 +193,7 @@ namespace Orchard.Users.Controllers {
             }
 
             if(String.IsNullOrWhiteSpace(username)){
-                ModelState.AddModelError("userNameOrEmail", T("Invalid username or E-mail."));
+                ModelState.AddModelError("username", T("You must specify a username or e-mail."));
                 return View();
             }
 
@@ -242,6 +248,7 @@ namespace Orchard.Users.Controllers {
             }
         }
 
+        [AlwaysAccessible]
         public ActionResult LostPassword(string nonce) {
             if ( _userService.ValidateLostPassword(nonce) == null ) {
                 return RedirectToAction("LogOn");
@@ -253,6 +260,7 @@ namespace Orchard.Users.Controllers {
         }
 
         [HttpPost]
+        [AlwaysAccessible]
         [ValidateInput(false)]
         public ActionResult LostPassword(string nonce, string newPassword, string confirmPassword) {
             IUser user;
@@ -281,6 +289,7 @@ namespace Orchard.Users.Controllers {
             return RedirectToAction("ChangePasswordSuccess");
         }
 
+        [AlwaysAccessible]
         public ActionResult ChangePasswordSuccess() {
             return View();
         }

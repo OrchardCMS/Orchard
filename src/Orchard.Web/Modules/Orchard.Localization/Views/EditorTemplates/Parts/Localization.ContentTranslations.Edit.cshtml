@@ -65,7 +65,7 @@
 
 
 @functions{
-    private string BuildSelectedCultureList(string id, string name, IEnumerable<string> siteCultures, string culture) {
+    private IHtmlString BuildSelectedCultureList(string id, string name, IEnumerable<string> siteCultures, string culture) {
         TagBuilder selectTag = new TagBuilder("select");
         selectTag.Attributes["id"] = id;
         selectTag.Attributes["name"] = name;
@@ -77,11 +77,11 @@
             if (siteCulture == culture) {
                 optionTag.Attributes["selected"] = "selected";
             }
-            optionTag.SetInnerText(siteCulture);
+            optionTag.SetInnerText(Html.Encode(siteCulture));
             selectTag.InnerHtml += optionTag.ToString();
         }
 
-        return selectTag.ToString();
+        return Html.Raw(selectTag);
     }
 }
 @using (Script.Foot()) {

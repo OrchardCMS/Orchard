@@ -5,6 +5,7 @@ using Orchard.Alias;
 using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
 using Orchard.Localization.Services;
+using Orchard.Environment.Configuration;
 
 namespace Orchard.Localization.Selectors {
     [OrchardFeature("Orchard.Localization.CultureSelector")]
@@ -12,14 +13,17 @@ namespace Orchard.Localization.Selectors {
         private readonly IAliasService _aliasService;
         private readonly IContentManager _contentManager;
         private readonly Lazy<ILocalizationService> _localizationService;
+        private readonly ShellSettings _shellSettings;
 
         public ContentCultureSelector(
             IAliasService aliasService,
             IContentManager contentManager,
-            Lazy<ILocalizationService> localizationService) {
+            Lazy<ILocalizationService> localizationService,
+            ShellSettings shellSettings) {
             _aliasService = aliasService;
             _contentManager = contentManager;
             _localizationService = localizationService;
+            _shellSettings = shellSettings;
         }
 
         public CultureSelectorResult GetCulture(HttpContextBase context) {
@@ -39,6 +43,11 @@ namespace Orchard.Localization.Selectors {
 
             var appPath = context.Request.ApplicationPath ?? "/";
             var requestUrl = (path.StartsWith(appPath) ? path.Substring(appPath.Length) : path).TrimStart('/');
+
+            var prefix = _shellSettings.RequestUrlPrefix;
+            if (!string.IsNullOrEmpty(prefix)) {
+                requestUrl = (requestUrl.StartsWith(prefix) ? requestUrl.Substring(prefix.Length) : requestUrl).TrimStart('/');
+            }
 
             var content = GetByPath(requestUrl);
             if (content != null) {

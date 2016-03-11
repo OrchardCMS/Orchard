@@ -46,7 +46,6 @@ namespace Orchard.Tests.Localization {
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
             builder.RegisterInstance(new Mock<IContentDefinitionManager>().Object);
-            builder.RegisterInstance(new Mock<ITransactionManager>().Object);
             builder.RegisterInstance(new Mock<IAuthorizer>().Object);
             builder.RegisterInstance(new Mock<INotifier>().Object);
             builder.RegisterInstance(new Mock<IContentDisplay>().Object);
@@ -60,7 +59,7 @@ namespace Orchard.Tests.Localization {
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
             _session = _sessionFactory.OpenSession();
-            builder.RegisterInstance(new DefaultContentManagerTests.TestSessionLocator(_session)).As<ISessionLocator>();
+            builder.RegisterInstance(new TestTransactionManager(_session)).As<ITransactionManager>();
             _container = builder.Build();
             _cultureManager = _container.Resolve<ICultureManager>();
         }

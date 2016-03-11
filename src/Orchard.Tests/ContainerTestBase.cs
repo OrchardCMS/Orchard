@@ -14,6 +14,12 @@ namespace Orchard.Tests {
             Resolve(_container);
         }
 
+        [TearDown]
+        public void Cleanup() {
+            if (_container != null)
+                _container.Dispose();
+        }
+
 #if false
         // technically more accurate, and doesn't work
         [SetUp]

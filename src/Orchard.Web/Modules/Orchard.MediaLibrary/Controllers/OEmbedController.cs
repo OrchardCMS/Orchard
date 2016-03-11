@@ -9,12 +9,18 @@ using Orchard.MediaLibrary.ViewModels;
 using Orchard.Themes;
 using Orchard.UI.Admin;
 using Orchard.ContentManagement;
+using Orchard.MediaLibrary.Services;
 
 namespace Orchard.MediaLibrary.Controllers {
     [Admin, Themed(false)]
     public class OEmbedController : Controller {
-        public OEmbedController(IOrchardServices services) {
+        private readonly IMediaLibraryService _mediaLibraryService;
+
+        public OEmbedController(
+            IOrchardServices services,
+            IMediaLibraryService mediaManagerService) {
             Services = services;
+            _mediaLibraryService = mediaManagerService;
         }
 
         public IOrchardServices Services { get; set; }
@@ -32,6 +38,15 @@ namespace Orchard.MediaLibrary.Controllers {
         [ActionName("Index")]
         [ValidateInput(false)]
         public ActionResult IndexPOST(string folderPath, string url, string type, string title, string html, string thumbnail, string width, string height, string description) {
+            if (!Services.Authorizer.Authorize(Permissions.ManageOwnMedia))
+                return new HttpUnauthorizedResult();
+
+            // Check permission.
+            var rootMediaFolder = _mediaLibraryService.GetRootMediaFolder();
+            if (!Services.Authorizer.Authorize(Permissions.ManageMediaContent) && !_mediaLibraryService.CanManageMediaFolder(folderPath)) {
+                return new HttpUnauthorizedResult();
+            }
+
             var viewModel = new OEmbedViewModel {
                 Url = url,
                 FolderPath = folderPath

@@ -10,5 +10,5 @@
     }
 }
 @if (tagBuilder != null) { @tagBuilder.StartElement }
-@Html.Raw(Model.ProcessedText)
+@Html.Raw(Model.ProcessedContent)
 @if (tagBuilder != null) { @tagBuilder.EndElement }

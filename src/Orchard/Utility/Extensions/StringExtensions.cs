@@ -16,8 +16,7 @@ namespace Orchard.Utility.Extensions {
             var sb = new StringBuilder(camel);
 
             for (int i = camel.Length-1; i>0; i--) {
-                var current = sb[i];
-                if('A' <= current && current <= 'Z') {
+                if(char.IsUpper(sb[i])) {
                     sb.Insert(i, ' ');
                 }
             }
@@ -26,7 +25,7 @@ namespace Orchard.Utility.Extensions {
         }
 
         public static string Ellipsize(this string text, int characterCount) {
-            return text.Ellipsize(characterCount, "&#160;&#8230;");
+            return text.Ellipsize(characterCount, "\u00A0\u2026");
         }
 
         public static string Ellipsize(this string text, int characterCount, string ellipsis, bool wordBoundary = false) {
@@ -347,6 +346,14 @@ namespace Orchard.Utility.Extensions {
         public static string ReplaceAll(this string original, IDictionary<string, string> replacements) {
             var pattern = String.Format("{0}", String.Join("|", replacements.Keys));
             return Regex.Replace(original, pattern, match => replacements[match.Value]);
+        }
+
+        public static string ToBase64(this string value) {
+            return Convert.ToBase64String(Encoding.UTF8.GetBytes(value));
+        }
+
+        public static string FromBase64(this string value) {
+            return Encoding.UTF8.GetString(Convert.FromBase64String(value));
         }
     }
 }

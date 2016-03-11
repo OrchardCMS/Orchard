@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Globalization;
-using Orchard.ContentManagement;
+﻿using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.ViewModels;
+using System.Collections.Generic;
+using System.Globalization;
 
 namespace Orchard.Fields.Settings {
     public class NumericFieldListModeEvents : ContentDefinitionEditorEventsBase {
@@ -28,6 +28,8 @@ namespace Orchard.Fields.Settings {
                 builder.WithSetting("NumericFieldSettings.Scale", model.Scale.ToString(CultureInfo.InvariantCulture));
                 builder.WithSetting("NumericFieldSettings.Minimum", model.Minimum.HasValue ? model.Minimum.Value.ToString(CultureInfo.InvariantCulture) : string.Empty);
                 builder.WithSetting("NumericFieldSettings.Maximum", model.Maximum.HasValue ? model.Maximum.Value.ToString(CultureInfo.InvariantCulture) : string.Empty);
+                builder.WithSetting("NumericFieldSettings.Placeholder", model.Placeholder);
+                builder.WithSetting("NumericFieldSettings.DefaultValue", model.DefaultValue);
             }
 
             yield return DefinitionTemplate(model);

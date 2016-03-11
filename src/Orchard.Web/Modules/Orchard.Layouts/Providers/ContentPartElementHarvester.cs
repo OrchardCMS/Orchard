@@ -13,7 +13,7 @@ using Orchard.Layouts.Settings;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.Layouts.Providers {
-    public class ContentPartElementHarvester : Component, ElementHarvester {
+    public class ContentPartElementHarvester : Component, IElementHarvester {
         private readonly Work<IContentDefinitionManager> _contentDefinitionManager;
         private readonly Work<IElementFactory> _elementFactory;
         private readonly Work<IElementManager> _elementManager;
@@ -57,7 +57,7 @@ namespace Orchard.Layouts.Providers {
                 ? contentTypeDefinition.Parts.Select(x => x.PartDefinition)
                 : _contentDefinitionManager.Value.ListPartDefinitions();
 
-            return parts.Where(p => p.Settings.GetModel<ContentPartLayoutSettings>().Placable);
+            return parts.Where(p => p.Settings.GetModel<ContentPartLayoutSettings>().Placeable);
         }
 
         private void Displaying(ElementDisplayingContext context) {

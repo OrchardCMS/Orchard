@@ -1,11 +1,18 @@
 ﻿using Orchard.DynamicForms.Elements;
-using Orchard.Forms.Services;
+using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
+using Orchard.Layouts.Helpers;
+using Orchard.Layouts.Services;
+using Orchard.Tokens;
 using DescribeContext = Orchard.Forms.Services.DescribeContext;
 
 namespace Orchard.DynamicForms.Drivers {
     public class PasswordFieldElementDriver : FormsElementDriver<PasswordField>{
-        public PasswordFieldElementDriver(IFormManager formManager) : base(formManager) {}
+        private readonly ITokenizer _tokenizer;
+
+        public PasswordFieldElementDriver(IFormsBasedElementServices formsServices, ITokenizer tokenizer) : base(formsServices) {
+            _tokenizer = tokenizer;
+        }
 
         protected override EditorResult OnBuildEditor(PasswordField element, ElementEditorContext context) {
             var autoLabelEditor = BuildForm(context, "AutoLabel");
@@ -64,6 +71,11 @@ namespace Orchard.DynamicForms.Drivers {
 
                 return form;
             });
+        }
+
+        protected override void OnDisplaying(PasswordField element, ElementDisplayingContext context) {
+            context.ElementShape.ProcessedName = _tokenizer.Replace(element.Name, context.GetTokenData());
+            context.ElementShape.ProcessedLabel = _tokenizer.Replace(element.Label, context.GetTokenData(), new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
         }
     }
 }

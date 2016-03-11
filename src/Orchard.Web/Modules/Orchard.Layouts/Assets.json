@@ -1,0 +1,51 @@
+﻿[
+    {
+        "inputs": [
+            "Assets/Less/LayoutEditor/Editor.less",
+            "Assets/Less/LayoutEditor/Element.less",
+            "Assets/Less/LayoutEditor/Container.less",
+            "Assets/Less/LayoutEditor/Canvas.less",
+            "Assets/Less/LayoutEditor/Row.less",
+            "Assets/Less/LayoutEditor/Column.less",
+            "Assets/Less/LayoutEditor/Content.less",
+            "Assets/Less/LayoutEditor/Toolbox.less",
+            "Assets/Less/LayoutEditor/Popup.less"
+        ],
+        "output": "Styles/LayoutEditor.css"
+    },
+    {
+        "inputs": [
+            "Assets/JavaScript/LayoutEditor/Module.js",
+            "Assets/JavaScript/LayoutEditor/Services/Clipboard.js",
+            "Assets/JavaScript/LayoutEditor/Services/ScopeConfigurator.js",
+            "Assets/JavaScript/LayoutEditor/Directives/Editor.js",
+            "Assets/JavaScript/LayoutEditor/Directives/Canvas.js",
+            "Assets/JavaScript/LayoutEditor/Directives/Child.js",
+            "Assets/JavaScript/LayoutEditor/Directives/Column.js",
+            "Assets/JavaScript/LayoutEditor/Directives/Content.js",
+            "Assets/JavaScript/LayoutEditor/Directives/Html.js",
+            "Assets/JavaScript/LayoutEditor/Directives/Grid.js",
+            "Assets/JavaScript/LayoutEditor/Directives/Row.js",
+            "Assets/JavaScript/LayoutEditor/Directives/Popup.js",
+            "Assets/JavaScript/LayoutEditor/Directives/Toolbox.js",
+            "Assets/JavaScript/LayoutEditor/Directives/ToolboxGroup.js"
+        ],
+        "output": "Scripts/LayoutEditor.js"
+    },
+    {
+        "inputs": [
+            "Assets/JavaScript/Models/Helpers.js",
+            "Assets/JavaScript/Models/Editor.js",
+            "Assets/JavaScript/Models/RecycleBin.js",
+            "Assets/JavaScript/Models/Element.js",
+            "Assets/JavaScript/Models/Container.js",
+            "Assets/JavaScript/Models/Canvas.js",
+            "Assets/JavaScript/Models/Grid.js",
+            "Assets/JavaScript/Models/Row.js",
+            "Assets/JavaScript/Models/Column.js",
+            "Assets/JavaScript/Models/Content.js",
+            "Assets/JavaScript/Models/Html.js"
+        ],
+        "output": "Scripts/Models.js"
+    }
+]

@@ -52,7 +52,7 @@ namespace Orchard.Tests.Utility.Extensions {
         [Test]
         public void Ellipsize_LongStringTruncatedToNearestWord() {
             const string toEllipsize = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sed purus quis purus orci aliquam.";
-            Assert.That(toEllipsize.Ellipsize(46), Is.StringMatching("Lorem ipsum dolor sit amet, consectetur&#160;&#8230;"));
+            Assert.That(toEllipsize.Ellipsize(46), Is.StringMatching("Lorem ipsum dolor sit amet, consectetur\u00A0\u2026"));
         }
 
         [Test]
@@ -281,6 +281,22 @@ namespace Orchard.Tests.Utility.Extensions {
             Assert.That("abc".Translate("a".ToCharArray(), "d".ToCharArray()), Is.StringMatching("dbc"));
             Assert.That("abc".Translate("d".ToCharArray(), "d".ToCharArray()), Is.StringMatching("abc"));
             Assert.That("abc".Translate("abc".ToCharArray(), "def".ToCharArray()), Is.StringMatching("def"));
+        }
+
+        [Test]
+        public void ShouldEncodeToBase64() {
+            Assert.That("abc".ToBase64(), Is.EqualTo("YWJj"));
+        }
+
+        [Test]
+        public void ShouldDecodeFromBase64() {
+            Assert.That("YWJj".FromBase64(), Is.EqualTo("abc"));
+        }
+
+        [Test]
+        public void ShouldRoundtripBase64() {
+            Assert.That("abc".ToBase64().FromBase64(), Is.EqualTo("abc"));
+            Assert.That("YWJj".FromBase64().ToBase64(), Is.EqualTo("YWJj"));
         }
     }
 }

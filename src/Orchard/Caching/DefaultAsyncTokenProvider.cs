@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Orchard.Logging;
+using Orchard.Exceptions;
 
 namespace Orchard.Caching {
     public class DefaultAsyncTokenProvider : IAsyncTokenProvider {
@@ -37,9 +38,12 @@ namespace Orchard.Caching {
                     try {
                         _task(token => _taskTokens.Add(token));
                     }
-                    catch (Exception e) {
-                        Logger.Error(e, "Error while monitoring extension files. Assuming extensions are not current.");
-                        _taskException = e;
+                    catch (Exception ex) {
+                        if (ex.IsFatal()) {                 
+                            throw;
+                        }
+                        Logger.Error(ex, "Error while monitoring extension files. Assuming extensions are not current.");
+                        _taskException = ex;
                     }
                     finally {
                         _isTaskFinished = true;

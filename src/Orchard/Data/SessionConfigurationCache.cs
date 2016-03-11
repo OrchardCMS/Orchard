@@ -11,6 +11,7 @@ using Orchard.Environment.ShellBuilders.Models;
 using Orchard.FileSystems.AppData;
 using Orchard.Logging;
 using Orchard.Utility;
+using Orchard.Exceptions;
 
 namespace Orchard.Data {
     public class SessionConfigurationCache : ISessionConfigurationCache {
@@ -80,11 +81,11 @@ namespace Orchard.Data {
                     formatter.Serialize(stream, cache.Configuration);
                 }
             }
-            catch (SerializationException e) {
+            catch (SerializationException ex) {
                 //Note: This can happen when multiple processes/AppDomains try to save
                 //      the cached configuration at the same time. Only one concurrent
                 //      writer will win, and it's harmless for the other ones to fail.
-                for (Exception scan = e; scan != null; scan = scan.InnerException)
+                for (Exception scan = ex; scan != null; scan = scan.InnerException)
                     Logger.Warning("Error storing new NHibernate cache configuration: {0}", scan.Message);
             }
         }
@@ -118,8 +119,11 @@ namespace Orchard.Data {
                     };
                 }
             }
-            catch (Exception e) {
-                for (var scan = e; scan != null; scan = scan.InnerException)
+            catch (Exception ex) {
+                if (ex.IsFatal()) {
+                    throw;
+                } 
+                for (var scan = ex; scan != null; scan = scan.InnerException)
                     Logger.Warning("Error reading the cached NHibernate configuration: {0}", scan.Message);
                 Logger.Information("A new one will be re-generated.");
                 return null;

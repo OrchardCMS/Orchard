@@ -1,16 +1,8 @@
 ﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Autofac;
 using NUnit.Framework;
 using Orchard.Localization.Models;
 using Orchard.Localization.Services;
-using Orchard.Services;
 
 namespace Orchard.Tests.Localization {
 
@@ -215,6 +207,17 @@ namespace Orchard.Tests.Localization {
             var result = target.ConvertFromSiteTimeZone(dateTimeLocal);
             Assert.AreEqual(DateTimeKind.Utc, result.Kind);
             Assert.AreEqual(dateTimeLocal, result);
+        }
+
+        [Test]
+        [Description("DateTime which is DateTimeKind.Local is converted to DateTimeKind.Utc.")]
+        public void ConvertFromLocalizedDateStringTest01() {
+            var container = TestHelpers.InitializeContainer("en-US", "GregorianCalendar", TimeZoneInfo.Utc);
+            var target = container.Resolve<IDateLocalizationServices>();
+            var dateTimeLocal = new DateTime(1998, 1, 15);
+            var dateTimeLocalString = target.ConvertToLocalizedDateString(dateTimeLocal);
+            var result = target.ConvertFromLocalizedDateString(dateTimeLocalString);
+            Assert.AreEqual(DateTimeKind.Utc, result.Value.Kind);
         }
 
         [Test]

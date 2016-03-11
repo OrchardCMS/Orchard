@@ -53,13 +53,14 @@ namespace Orchard.Tokens.Implementation {
             var replacements = Evaluate(options.Predicate == null ? tokens : tokens.Where(options.Predicate), data);
 
             return replacements.Aggregate(tokenset.Item1,
-                (current, replacement) => current.Replace((hashMode ? "#{" : "{") + replacement.Key + "}", (options.Encoding ?? ReplaceOptions.NoEncode)(replacement.Key, replacement.Value)));
+                (current, replacement) => current.Replace((hashMode ? "#{" : "{") + replacement.Key + "}",
+                (options.Encoding ?? ReplaceOptions.NoEncode)(replacement.Key, replacement.Value ?? "")));
         }
 
         private static Tuple<string, IEnumerable<string>> Parse(string text, bool hashMode) {
             var tokens = new List<string>();
             if (!String.IsNullOrEmpty(text)) {
-                var inToken = false;
+                var inTokenDepth = 0;
                 var tokenStart = 0;
                 for (var i = 0; i < text.Length; i++) {
                     var c = text[i];
@@ -70,29 +71,32 @@ namespace Orchard.Tokens.Implementation {
                             continue;
                         }
                     }
-                    else if (c == '}' && !(inToken)) {
+                    else if (c == '}' && inTokenDepth == 0) {
                         if (i + 1 < text.Length && text[i + 1] == '}') {
                             text = text.Substring(0, i) + text.Substring(i + 1);
                             continue;
                         }
                     }
 
-                    if (inToken) {
+                    if (inTokenDepth > 0) {
                         if (c == '}') {
-                            inToken = false;
-                            var token = text.Substring(tokenStart + 1, i - tokenStart - 1);
-                            tokens.Add(token);
+                            inTokenDepth--;
+                            if (inTokenDepth == 0) {
+                                var token = text.Substring(tokenStart + 1, i - tokenStart - 1);
+                                tokens.Add(token);
+                            }
                         }
                     }
-                    else if (!hashMode && c == '{') {
-                        inToken = true;
-                        tokenStart = i;
+                    
+                    if (!hashMode && c == '{') {                       
+                        if (inTokenDepth == 0) tokenStart = i;
+                        inTokenDepth++;
                     }
                     else if (hashMode && c == '#' 
                         && i + 1 < text.Length && text[i + 1] == '{'
-                        && (i + 2 > text.Length || text[i + 2] != '{') ) {
-                        inToken = true;
-                        tokenStart = i+1;
+                        && (i + 2 > text.Length || text[i + 2] != '{') ) {          
+                        if (inTokenDepth == 0) tokenStart = i+1;
+                        inTokenDepth++;
                     }
                 }
             }

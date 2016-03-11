@@ -44,14 +44,23 @@ namespace Orchard.ContentManagement.Drivers {
 
         DriverResult IContentFieldDriver.UpdateEditorShape(UpdateEditorContext context) {
             return Process(context.ContentItem, (part, field) => {
-                DriverResult result = Editor(part, field, context.Updater, context.New);
+                // Checking if the editor needs to be updated (e.g. if any of the shapes were not hidden).
+                DriverResult editor = Editor(part, field, context.New);
+                IEnumerable<ContentShapeResult> contentShapeResults = editor.GetShapeResults();
                 
-                if (result != null) {
-                    result.ContentPart = part;
-                    result.ContentField = field;
+                if (contentShapeResults.Any(contentShapeResult =>
+                    contentShapeResult == null || contentShapeResult.WasDisplayed(context))) {
+                    DriverResult result = Editor(part, field, context.Updater, context.New);
+
+                    if (result != null) {
+                        result.ContentPart = part;
+                        result.ContentField = field;
+                    }
+
+                    return result;
                 }
-                
-                return result;
+
+                return editor;
             }, context.Logger);
         }
 
@@ -61,6 +70,10 @@ namespace Orchard.ContentManagement.Drivers {
 
         void IContentFieldDriver.Imported(ImportContentContext context) {
             Process(context.ContentItem, (part, field) => Imported(part, field, context), context.Logger);
+        }
+
+        void IContentFieldDriver.ImportCompleted(ImportContentContext context) {
+            Process(context.ContentItem, (part, field) => ImportCompleted(part, field, context), context.Logger);
         }
 
         void IContentFieldDriver.Exporting(ExportContentContext context) {
@@ -110,6 +123,7 @@ namespace Orchard.ContentManagement.Drivers {
         
         protected virtual void Importing(ContentPart part, TField field, ImportContentContext context) { }
         protected virtual void Imported(ContentPart part, TField field, ImportContentContext context) { }
+        protected virtual void ImportCompleted(ContentPart part, TField field, ImportContentContext context) { }
         protected virtual void Exporting(ContentPart part, TField field, ExportContentContext context) { }
         protected virtual void Exported(ContentPart part, TField field, ExportContentContext context) { }
 

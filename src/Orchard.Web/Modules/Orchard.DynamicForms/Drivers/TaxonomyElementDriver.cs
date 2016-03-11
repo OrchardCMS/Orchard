@@ -5,12 +5,12 @@ using System.Linq;
 using System.Web.Mvc;
 using Orchard.DynamicForms.Elements;
 using Orchard.Environment.Extensions;
-using Orchard.Forms.Services;
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
+using Orchard.Layouts.Helpers;
+using Orchard.Layouts.Services;
 using Orchard.Taxonomies.Services;
 using Orchard.Tokens;
-using Orchard.Utility.Extensions;
 using DescribeContext = Orchard.Forms.Services.DescribeContext;
 
 namespace Orchard.DynamicForms.Drivers {
@@ -19,8 +19,8 @@ namespace Orchard.DynamicForms.Drivers {
         private readonly ITaxonomyService _taxonomyService;
         private readonly ITokenizer _tokenizer;
 
-        public TaxonomyElementDriver(IFormManager formManager, ITaxonomyService taxonomyService, ITokenizer tokenizer)
-            : base(formManager) {
+        public TaxonomyElementDriver(IFormsBasedElementServices formsServices, ITaxonomyService taxonomyService, ITokenizer tokenizer)
+            : base(formsServices) {
             _taxonomyService = taxonomyService;
             _tokenizer = tokenizer;
         }
@@ -67,6 +67,12 @@ namespace Orchard.DynamicForms.Drivers {
                         Value: "{Content.Id}",
                         Description: T("Specify the expression to get the value of each option."),
                         Classes: new[] { "text", "large", "tokenized" }),
+                    _DefaultValue: shape.Textbox(
+                        Id: "DefaultValue",
+                        Name: "DefaultValue",
+                        Title: "Default Value",
+                        Classes: new[] { "text", "large", "tokenized" },
+                        Description: T("The default value of this query field.")),
                     _InputType: shape.SelectList(
                         Id: "InputType",
                         Name: "InputType",
@@ -124,17 +130,28 @@ namespace Orchard.DynamicForms.Drivers {
             var taxonomyId = element.TaxonomyId;
             var typeName = element.GetType().Name;
             var displayType = context.DisplayType;
+            var tokenData = context.GetTokenData();
 
-            context.ElementShape.TermOptions = GetTermOptions(element, taxonomyId).ToArray();
+            // Allow the initially selected value to be tokenized.
+            // If a value was posted, use that value instead (without tokenizing it).
+            if (element.PostedValue == null) {
+                var defaultValue = _tokenizer.Replace(element.DefaultValue, tokenData, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
+                element.RuntimeValue = defaultValue;
+            }
+
+            context.ElementShape.ProcessedName = _tokenizer.Replace(element.Name, tokenData);
+            context.ElementShape.ProcessedLabel = _tokenizer.Replace(element.Label, tokenData, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
+            context.ElementShape.TermOptions = GetTermOptions(element, context.DisplayType, taxonomyId, tokenData).ToArray();
             context.ElementShape.Metadata.Alternates.Add(String.Format("Elements_{0}__{1}", typeName, element.InputType));
             context.ElementShape.Metadata.Alternates.Add(String.Format("Elements_{0}_{1}__{2}", typeName, displayType, element.InputType));
         }
 
-        private IEnumerable<SelectListItem> GetTermOptions(Taxonomy element, int? taxonomyId) {
+        private IEnumerable<SelectListItem> GetTermOptions(Taxonomy element, string displayType, int? taxonomyId, IDictionary<string, object> tokenData) {
             var optionLabel = element.OptionLabel;
+            var runtimeValues = GetRuntimeValues(element);
 
             if (!String.IsNullOrWhiteSpace(optionLabel)) {
-                yield return new SelectListItem { Text = optionLabel };
+                yield return new SelectListItem { Text = displayType != "Design" ? _tokenizer.Replace(optionLabel, tokenData) : optionLabel, Value = string.Empty };
             }
 
             if (taxonomyId == null)
@@ -151,7 +168,8 @@ namespace Orchard.DynamicForms.Drivers {
 
                 return new SelectListItem {
                     Text = text,
-                    Value = value
+                    Value = value,
+                    Selected = runtimeValues.Contains(value, StringComparer.OrdinalIgnoreCase)
                 };
             });
 
@@ -167,6 +185,11 @@ namespace Orchard.DynamicForms.Drivers {
             foreach (var item in projection) {
                 yield return item;
             }
+        }
+
+        private IEnumerable<string> GetRuntimeValues(Taxonomy element) {
+            var runtimeValue = element.RuntimeValue;
+            return runtimeValue != null ? runtimeValue.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries) : Enumerable.Empty<string>();
         }
     }
 }

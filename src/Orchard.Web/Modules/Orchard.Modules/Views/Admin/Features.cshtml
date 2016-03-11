@@ -1,4 +1,5 @@
 ﻿@model FeaturesViewModel
+@using Orchard.Environment.Extensions.Models
 @using Orchard.Localization;
 @using Orchard.Modules.Extensions;
 @using Orchard.Modules.ViewModels;
@@ -8,37 +9,44 @@
 @{
     Style.Require("ModulesAdmin");
     Style.Require("Switchable");
+    Style.Require("FontAwesome");
     Script.Require("Switchable").AtFoot();
     Script.Include("features.admin.js", "features.admin.min.js").AtFoot();
 
     Layout.Title = T("Modules").ToString();
 }
-
+@{
+    var lifecycleStatusClassDictionary = new Dictionary<LifecycleStatus, string> {
+        { LifecycleStatus.Production, "fa-check" },
+        { LifecycleStatus.Preview, "fa-info-circle" },
+        { LifecycleStatus.Deprecated, "fa-exclamation-circle" }
+    };
+}
 @if (Model.Features.Any()) {
     using (Html.BeginFormAntiForgeryPost()) {
-    @Html.Hidden("submit.BulkExecute")
-    @Html.Hidden("force", true)
-    @Html.Hidden("featureIds")
-    <div class="bulk-actions-wrapper">
-        <fieldset class="bulk-actions">
-            <label for="search-box">@T("Filter:")</label>
-            <input id="search-box" class="text" type="text" autofocus="autofocus" />
-        </fieldset>
-        <fieldset class="bulk-actions">
-            <label for="publishActions">@T("Actions:")</label>
-            <select id="publishActions" name="bulkAction">
-                @Html.SelectOption(Model.BulkAction, FeaturesBulkAction.None, T("Choose action...").ToString())
-                @Html.SelectOption(Model.BulkAction, FeaturesBulkAction.Enable, T("Enable").ToString())
-                @Html.SelectOption(Model.BulkAction, FeaturesBulkAction.Disable, T("Disable").ToString())
-                @Html.SelectOption(Model.BulkAction, FeaturesBulkAction.Update, T("Update").ToString())
-                @Html.SelectOption(Model.BulkAction, FeaturesBulkAction.Toggle, T("Toggle").ToString())
-            </select>
-            <button type="submit" name="submit.BulkExecute" value="yes">@T("Execute")</button>
-        </fieldset>
-    </div>
+        @Html.Hidden("submit.BulkExecute")
+        @Html.Hidden("force", true)
+        @Html.Hidden("featureIds")
+        <div class="bulk-actions-wrapper">
+            <fieldset class="bulk-actions">
+                <label for="search-box">@T("Filter:")</label>
+                <input id="search-box" class="text" type="text" autofocus="autofocus" />
+            </fieldset>
+            <fieldset class="bulk-actions">
+                <label for="publishActions">@T("Actions:")</label>
+                <select id="publishActions" name="bulkAction">
+                    @Html.SelectOption(Model.BulkAction, FeaturesBulkAction.None, T("Choose action...").ToString())
+                    @Html.SelectOption(Model.BulkAction, FeaturesBulkAction.Enable, T("Enable").ToString())
+                    @Html.SelectOption(Model.BulkAction, FeaturesBulkAction.Disable, T("Disable").ToString())
+                    @Html.SelectOption(Model.BulkAction, FeaturesBulkAction.Update, T("Update").ToString())
+                    @Html.SelectOption(Model.BulkAction, FeaturesBulkAction.Toggle, T("Toggle").ToString())
+                </select>
+                <button type="submit" name="submit.BulkExecute" value="yes">@T("Execute")</button>
+            </fieldset>
+        </div>
 
-    <ul class="features summary-view switchable">
-        @{
+        <ul class="features summary-view switchable">
+            @{
         var featureGroups = Model.Features.OrderBy(f => f.Descriptor.Category, new DoghouseComparer("Core")).GroupBy(f => f.Descriptor.Category).ToList();
         foreach (var featureGroup in featureGroups) {
             if (!featureGroup.Any(x => Model.IsAllowed(x.Descriptor.Extension))) {
@@ -63,6 +71,7 @@
                     continue;
                 }
                 //hmmm...I feel like I've done this before...
+                var lifecycleStatus = feature.Descriptor.Extension.LifecycleStatus;
                 var featureId = feature.Descriptor.Id.AsFeatureId(n => T(n));
                 var featureName = string.IsNullOrEmpty(feature.Descriptor.Name) ? feature.Descriptor.Id : feature.Descriptor.Name;
                 var featureState = feature.IsEnabled ? "enabled" : "disabled";
@@ -89,13 +98,13 @@
                     featureClassName += " missingDependencies";
                 }
 
-                <li class="@featureClassName" id="@featureId" title="@T("{0} is {1}", Html.AttributeEncode(featureName), featureState)">
+                <li class="@featureClassName" id="@featureId" title="@T(feature.IsEnabled ? "{0} is enabled" : "{0} is disabled", Html.AttributeEncode(featureName))">
                     <div class="summary">
                         <div class="properties">
                             <h3>
                                 @if ((showEnable && !feature.IsEnabled) || (showDisable && feature.IsEnabled)) {
                                     <label>
-                                        <input type="checkbox" name="featureIds" value="@feature.Descriptor.Id" />
+                                        <input type="checkbox" name="featureIds" value="@feature.Descriptor.Id"/>
                                         @featureName
                                     </label>
                                 }
@@ -108,10 +117,10 @@
                                 <div class="dependencies">
                                     <h4>@T("Depends on:")</h4>
                                     @Html.UnorderedList(dependencies,
-                            (s, i) => Html.Link(string.IsNullOrEmpty(s.Descriptor.Name) ? s.Descriptor.Id : s.Descriptor.Name, string.Format("#{0}", s.Descriptor.Id.AsFeatureId(n => T(n)))),
-                        "",
-                        "dependency",
-                        "")
+                                        (s, i) => Html.Link(string.IsNullOrEmpty(s.Descriptor.Name) ? s.Descriptor.Id : s.Descriptor.Name, string.Format("#{0}", s.Descriptor.Id.AsFeatureId(n => T(n)))),
+                                        "",
+                                        "dependency",
+                                        "")
                                 </div>}
                             @if (missingDependencies.Any()) {
                                 <div class="missingdependencies">
@@ -134,18 +143,25 @@
                             }
                         </div>
                     </div>
+                    @if (lifecycleStatus != LifecycleStatus.Production) {
+                        var iconClass = lifecycleStatusClassDictionary[lifecycleStatus];
+                        <div class="lifecycle-status lifecycle-status-@feature.Descriptor.Extension.LifecycleStatus.ToString().HtmlClassify()">
+                            <i class="fa @iconClass"></i>
+                            @T(lifecycleStatus.ToString())
+                        </div>
+                    }
                 </li>}
                     }
                 </ul>
             </li>}
-    }
-</ul>}
+            }
+        </ul>}
 
     using (Script.Foot()) {
         <script type="text/javascript">
-        //<![CDATA[
-            var confirmDisableMessage = '@T("Disabling this feature will also disable the following dependent features. Are you sure you want to continue?")';
-        //]]>
+            //<![CDATA[
+            var confirmDisableMessage = '@HttpUtility.JavaScriptStringEncode(T("Disabling this feature will also disable the following dependent features. Are you sure you want to continue?").Text)';
+            //]]>
         </script>
     }
 }

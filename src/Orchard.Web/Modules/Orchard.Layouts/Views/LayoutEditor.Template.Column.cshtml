@@ -12,15 +12,15 @@
     <ul class="layout-panel layout-panel-main">
         <li class="layout-panel-item layout-panel-label">Column ({{element.width}})</li>
         @Display(New.LayoutEditor_Template_Properties(ElementTypeName: "column", Items: additionalItems))
-        <li class="layout-panel-item layout-panel-action" title="@T("Delete column (Del)")" ng-click="delete(element)"><i class="fa fa-remove"></i></li>
+        <li class="layout-panel-item layout-panel-action" title="@T("Delete column (Del)")" ng-click="delete(element)" ng-class="{disabled: !element.canDelete()}"><i class="fa fa-remove"></i></li>
         <li class="layout-panel-item layout-panel-action" title="@T("Move column left (Ctrl+Left)")" ng-click="element.moveUp()" ng-class="{disabled: !element.canMoveUp()}"><i class="fa fa-chevron-left"></i></li>
         <li class="layout-panel-item layout-panel-action" title="@T("Move column right (Ctrl+Right)")" ng-click="element.moveDown()" ng-class="{disabled: !element.canMoveDown()}"><i class="fa fa-chevron-right"></i></li>
         <li class="layout-panel-item layout-panel-action" title="@T("Split column")" ng-click="element.split()" ng-class="{disabled: !element.canSplit()}"><i class="fa fa-columns"></i></li>
         <li class="layout-panel-item layout-panel-action" title="@T("Decrease column offset (Alt+Left)")" ng-click="element.expandLeft(false)" ng-class="{disabled: !element.canExpandLeft(false)}"><i class="fa fa-outdent"></i></li>
         <li class="layout-panel-item layout-panel-action" title="@T("Increase column offset (Alt+Right)")" ng-click="element.contractLeft(false)" ng-class="{disabled: !element.canContractLeft(false)}"><i class="fa fa-indent"></i></li>
     </ul>
-    <div class="layout-column-resize-bar layout-column-resize-bar-left"></div>
-    <div class="layout-column-resize-bar layout-column-resize-bar-right"></div>
+    <div class="layout-column-resize-bar layout-column-resize-bar-left" ng-show="{{!element.isTemplated}}"></div>
+    <div class="layout-column-resize-bar layout-column-resize-bar-right" ng-show="{{!element.isTemplated}}"></div>
     <div class="layout-container-children-placeholder">
         @T("Drag an element from the toolbox and drop it here to add content.")
     </div>

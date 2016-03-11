@@ -36,7 +36,7 @@ namespace Orchard.Tokens.Providers {
                 .Token("DisplayUrl", T("Display Url"), T("Url to display the content."), "Url")
                 .Token("EditUrl", T("Edit Url"), T("Url to edit the content."), "Url")
                 .Token("Container", T("Container"), T("The container Content Item."), "Content")
-                .Token("Body", T("Body"), T("The body text of the content item."), "Content")
+                .Token("Body", T("Body"), T("The body text of the content item."), "Text")
                 ;
 
             // Token descriptors for fields

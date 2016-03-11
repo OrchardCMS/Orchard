@@ -20,7 +20,7 @@ namespace Orchard.MediaLibrary.Services {
         private readonly IStorageProvider _storageProvider;
         private readonly IEnumerable<IMediaFactorySelector> _mediaFactorySelectors;
 
-        private static char[] HttpUnallowed = new char[] { '<', '>', '*', '%', '&', ':', '\\', '?' };
+        private static char[] HttpUnallowed = new char[] { '<', '>', '*', '%', '&', ':', '\\', '?', '#' };
 
         public MediaLibraryService(
             IOrchardServices orchardServices,
@@ -59,6 +59,11 @@ namespace Orchard.MediaLibrary.Services {
             return GetMediaContentItems(null, skip, count, order, mediaType, versionOptions);
         }
 
+        public IEnumerable<MediaPart> GetMediaContentItemsRecursive(string folderPath, int skip, int count, string order, string mediaType, VersionOptions versionOptions = null) {
+            return BuildGetMediaContentItemsQuery(_orchardServices.ContentManager, folderPath, true, order, mediaType, versionOptions)
+                .Slice(skip, count);
+        }
+
         public int GetMediaContentItemsCount(string folderPath, string mediaType, VersionOptions versionOptions = null) {
             return BuildGetMediaContentItemsQuery(_orchardServices.ContentManager, folderPath, mediaType: mediaType, versionOptions: versionOptions)
                 .Count();
@@ -66,6 +71,11 @@ namespace Orchard.MediaLibrary.Services {
 
         public int GetMediaContentItemsCount(string mediaType, VersionOptions versionOptions = null) {
             return GetMediaContentItemsCount(null, mediaType, versionOptions);
+        }
+
+        public int GetMediaContentItemsCountRecursive(string folderPath, string mediaType, VersionOptions versionOptions = null) {
+            return BuildGetMediaContentItemsQuery(_orchardServices.ContentManager, folderPath, true, mediaType: mediaType, versionOptions: versionOptions)
+                .Count();
         }
 
         private static IContentQuery<MediaPart> BuildGetMediaContentItemsQuery(
@@ -210,7 +220,21 @@ namespace Orchard.MediaLibrary.Services {
             return GetPublicUrl(Path.Combine(mediaPath, fileName));
         }
 
-        public MediaFolder GetRootMediaFolder() {
+        public IMediaFolder GetRootMediaFolder() {
+            if (_orchardServices.Authorizer.Authorize(Permissions.ManageMediaContent)) {
+                return null;
+            }
+
+            if (_orchardServices.Authorizer.Authorize(Permissions.ManageOwnMedia)) {
+                var currentUser = _orchardServices.WorkContext.CurrentUser;
+                var userPath = _storageProvider.Combine("Users", currentUser.UserName);
+
+                return new MediaFolder() {
+                    Name = currentUser.UserName,
+                    MediaPath = userPath
+                };
+            }
+
             return null;
         }
 
@@ -222,7 +246,6 @@ namespace Orchard.MediaLibrary.Services {
         public IEnumerable<IMediaFolder> GetMediaFolders(string relativePath) {
             return _storageProvider
                 .ListFolders(relativePath)
-                .Where(f => !f.GetName().Equals("RecipeJournal", StringComparison.OrdinalIgnoreCase))
                 .Where(f => !f.GetName().StartsWith("_"))
                 .Select(BuildMediaFolder)
                 .ToList();

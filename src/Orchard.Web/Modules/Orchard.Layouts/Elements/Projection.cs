@@ -19,11 +19,17 @@ namespace Orchard.Layouts.Elements {
             get {
                 return String.IsNullOrWhiteSpace(QueryLayoutId) ? null : XmlHelper.Parse<int?>(QueryLayoutId.Split(new[] { ';' })[0]);
             }
+            set {
+                QueryLayoutId = String.Format("{0};{1}", value, LayoutId);
+            }
         }
 
         public int? LayoutId {
             get {
                 return String.IsNullOrWhiteSpace(QueryLayoutId) ? null : XmlHelper.Parse<int?>(QueryLayoutId.Split(new[] { ';' })[1]);
+            }
+            set {
+                QueryLayoutId = String.Format("{0};{1}", QueryId, value);
             }
         }
 

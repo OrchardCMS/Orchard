@@ -153,7 +153,7 @@ namespace Orchard.ContentManagement {
         /// <returns>The string representation of the value.</returns>
         public static string ToString<T>(T value) {
             var type = typeof(T);
-            if (type == typeof(string)) {
+            if (type == typeof(string) || type == typeof(char)) {
                 return Convert.ToString(value);
             }
             if ((!type.IsValueType || Nullable.GetUnderlyingType(type) != null) &&
@@ -214,7 +214,9 @@ namespace Orchard.ContentManagement {
                 return decimalValue.ToString(CultureInfo.InvariantCulture);
             }
 
-            if (type.IsEnum) {
+            var underlyingType = Nullable.GetUnderlyingType(type) ?? type;
+
+            if (underlyingType.IsEnum) {
                 return value.ToString();
             }
 
@@ -250,6 +252,9 @@ namespace Orchard.ContentManagement {
                 if (type == typeof(double)) return (T)(object)double.NegativeInfinity;
                 throw new NotSupportedException(String.Format("Infinity not supported for type {0}", type.Name));
             }
+            if (type == typeof(char) || type == typeof(char?)) {
+                return (T)(object)char.Parse(value);
+            }
             if (type == typeof(int) || type == typeof(int?)) {
                 return (T)(object)int.Parse(value, CultureInfo.InvariantCulture);
             }
@@ -272,8 +277,10 @@ namespace Orchard.ContentManagement {
                 return (T)(object)decimal.Parse(value, CultureInfo.InvariantCulture);
             }
 
-            if (type.IsEnum) {
-                return (T)Enum.Parse(type, value);
+            var underlyingType = Nullable.GetUnderlyingType(type) ?? type;
+
+            if (underlyingType.IsEnum) {
+                return (T)Enum.Parse(underlyingType, value);
             }
 
             throw new NotSupportedException(String.Format("Could not handle type {0}", type.Name));

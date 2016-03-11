@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Globalization;
-using Orchard.ContentManagement;
+﻿using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.ViewModels;
+using System.Collections.Generic;
+using System.Globalization;
 
 namespace Orchard.Fields.Settings {
     public class EnumerationFieldListModeEvents : ContentDefinitionEditorEventsBase {
@@ -27,6 +27,7 @@ namespace Orchard.Fields.Settings {
                 builder.WithSetting("EnumerationFieldSettings.Required", model.Required.ToString(CultureInfo.InvariantCulture));
                 builder.WithSetting("EnumerationFieldSettings.Options", model.Options);
                 builder.WithSetting("EnumerationFieldSettings.ListMode", model.ListMode.ToString());
+                builder.WithSetting("EnumerationFieldSettings.DefaultValue", model.DefaultValue);
             }
 
             yield return DefinitionTemplate(model);

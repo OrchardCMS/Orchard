@@ -1,0 +1,11 @@
+﻿@using Orchard.Dashboards
+<div class="orchard-layouts-root">
+    @Display(Model.LayoutRoot)
+</div>
+@if (AuthorizedFor(Permissions.ManageDashboards)) {
+    <div class="group">
+        <div class="pull-right">
+            @Html.ActionLink(T("Edit").ToString(), "Edit", new {controller = "Dashboard", area = "Orchard.Dashboards"}, new {@class = "button"})
+        </div>
+    </div>
+}

@@ -61,6 +61,7 @@ namespace Orchard.Projections.Providers.Layouts {
 
             var classes = String.IsNullOrEmpty(listClass) ? Enumerable.Empty<string>() : new[] { listClass };
             var itemClasses = String.IsNullOrEmpty(itemClass) ? Enumerable.Empty<string>() : new[] { itemClass };
+            classes = classes.Union(new[] {"projector-layout", "projector-list-layout"});
 
             return Shape.List(Id: listId, Items: shapes, Tag: listTag, Classes: classes, ItemClasses: itemClasses);
         }

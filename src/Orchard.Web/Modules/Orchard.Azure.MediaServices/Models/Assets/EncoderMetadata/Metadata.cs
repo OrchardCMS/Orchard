@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using Orchard.FileSystems.Media;
 using Orchard.Azure.MediaServices.Helpers;
+using Newtonsoft.Json;
 
 namespace Orchard.Azure.MediaServices.Models.Assets.EncoderMetadata {
     public class Metadata {
@@ -46,6 +45,7 @@ namespace Orchard.Azure.MediaServices.Models.Assets.EncoderMetadata {
             }
         }
 
+        [JsonIgnore]
         public string PrivateLocatorUrl {
             get {
                 return _privateLocatorUrl;

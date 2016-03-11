@@ -4,7 +4,7 @@ using Orchard.Localization.Models;
 
 namespace Orchard.Tests.Localization {
 
-    [TestFixture]
+    [TestFixture()]
     public class DateTimePartsTests {
 
         [Test]

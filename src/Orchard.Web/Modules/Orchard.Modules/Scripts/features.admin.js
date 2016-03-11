@@ -43,7 +43,7 @@
             var force = actionLink.data("feature-force");
             var dependants = actionLink.data("feature-dependants");
 
-            if (!dependants || /^\s*$/.test(dependants) || confirm(confirmDisableMessage + "\n\n" + dependants)) {
+            if (!dependants || /^\s*$/.test(dependants) || confirm($("<div/>").html(confirmDisableMessage + "\n\n" + dependants).text())) {
 
                 $("[name='submit.BulkExecute']").val("yes");
                 $("[name='featureIds']").val(featureId);

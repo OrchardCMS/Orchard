@@ -2,17 +2,22 @@
 using Orchard.ContentManagement;
 using Orchard.DynamicForms.Elements;
 using Orchard.Environment.Extensions;
-using Orchard.Forms.Services;
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
+using Orchard.Layouts.Helpers;
+using Orchard.Layouts.Services;
+using Orchard.Tokens;
+using DescribeContext = Orchard.Forms.Services.DescribeContext;
 
 namespace Orchard.DynamicForms.Drivers {
     [OrchardFeature("Orchard.DynamicForms.AntiSpam")]
     public class ReCaptchaElementDriver : FormsElementDriver<ReCaptcha>{
         private readonly IOrchardServices _services;
+        private readonly ITokenizer _tokenizer;
 
-        public ReCaptchaElementDriver(IFormManager formManager, IOrchardServices services) : base(formManager) {
+        public ReCaptchaElementDriver(IFormsBasedElementServices formsServices, IOrchardServices services, ITokenizer tokenizer) : base(formsServices) {
             _services = services;
+            _tokenizer = tokenizer;
         }
 
         protected override EditorResult OnBuildEditor(ReCaptcha element, ElementEditorContext context) {
@@ -51,6 +56,7 @@ namespace Orchard.DynamicForms.Drivers {
                 return;
             }
 
+            context.ElementShape.ProcessedName = _tokenizer.Replace(element.Name, context.GetTokenData());
             context.ElementShape.PublicKey = settings.PublicKey;
         }
     }

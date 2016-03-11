@@ -12,6 +12,9 @@ namespace Orchard.Layouts.Framework.Drivers {
         void LayoutSaving(ElementSavingContext context);
         void Removing(ElementRemovingContext context);
         void Exporting(ExportElementContext context);
+        void Exported(ExportElementContext context);
         void Importing(ImportElementContext context);
+        void Imported(ImportElementContext context);
+        void ImportCompleted(ImportElementContext context);
     }
 }

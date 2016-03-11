@@ -68,7 +68,13 @@
             return false;
         }
 
-        return confirm(confirmRemoveMessage);
+    	// use a custom message if its set in data-message
+        var dataMessage = $(this).data('message');
+        if (dataMessage === undefined) {
+        	dataMessage = confirmRemoveMessage;
+        }
+
+        return confirm(dataMessage);
     });
 
     $(".check-all").change(function () {

@@ -81,23 +81,25 @@ namespace Orchard.Core.Containers.Drivers {
         }
 
         protected override void Importing(ContainerWidgetPart part, ImportContentContext context) {
-            var containerIdentity = context.Attribute(part.PartDefinition.Name, "Container");
-            if (containerIdentity != null) {
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
+            }
+
+            context.ImportAttribute(part.PartDefinition.Name, "Container", containerIdentity => {
                 var container = context.GetItemFromSession(containerIdentity);
                 if (container != null) {
                     part.Record.ContainerId = container.Id;
                 }
-            }
+            });
 
-            var pageSize = context.Attribute(part.PartDefinition.Name, "PageSize");
-            if (pageSize != null) {
-                part.Record.PageSize = Convert.ToInt32(pageSize);
-            }
+            context.ImportAttribute(part.PartDefinition.Name, "PageSize", pageSize =>
+                part.Record.PageSize = Convert.ToInt32(pageSize)
+            );
 
-            var filterByValue = context.Attribute(part.PartDefinition.Name, "FilterByValue");
-            if (filterByValue != null) {
-                part.Record.FilterByValue = filterByValue;
-            }
+            context.ImportAttribute(part.PartDefinition.Name, "FilterByValue", filterByValue =>
+                part.Record.FilterByValue = filterByValue
+            );
         }
 
         protected override void Exporting(ContainerWidgetPart part, ExportContentContext context) {

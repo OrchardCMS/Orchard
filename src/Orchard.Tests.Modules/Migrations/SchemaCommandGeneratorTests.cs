@@ -94,7 +94,7 @@ namespace Orchard.Tests.Modules.Migrations {
             builder.RegisterType<StubHostEnvironment>().As<IHostEnvironment>();
 
             _session = _sessionFactory.OpenSession();
-            builder.RegisterInstance(new DefaultContentManagerTests.TestSessionLocator(_session)).As<ISessionLocator>();
+            builder.RegisterInstance(new TestTransactionManager(_session)).As<ITransactionManager>();
 
             builder.RegisterInstance(new ShellBlueprint());
 

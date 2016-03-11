@@ -76,6 +76,8 @@ namespace Orchard.ContentManagement {
             ((IShape)itemShape).Metadata.Alternates.Add(actualShapeType + "__" + content.ContentItem.ContentType);
 
             var context = new BuildEditorContext(itemShape, content, groupId, _shapeFactory);
+            var workContext = _workContextAccessor.GetContext(_requestContext.HttpContext);
+            context.Layout = workContext.Layout;
             BindPlacement(context, null, stereotype);
 
             _handlers.Value.Invoke(handler => handler.BuildEditor(context), Logger);
@@ -104,6 +106,7 @@ namespace Orchard.ContentManagement {
             ((IShape)itemShape).Metadata.Alternates.Add(actualShapeType + "__" + content.ContentItem.ContentType);
 
             var context = new UpdateEditorContext(itemShape, content, updater, groupInfoId, _shapeFactory, shapeTable, GetPath());
+            context.Layout = workContext.Layout;
             BindPlacement(context, null, stereotype);
 
             _handlers.Value.Invoke(handler => handler.UpdateEditor(context), Logger);
