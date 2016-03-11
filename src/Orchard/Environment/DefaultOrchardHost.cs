@@ -56,7 +56,6 @@ namespace Orchard.Environment {
             _extensionLoaderCoordinator = extensionLoaderCoordinator;
             _extensionMonitoringCoordinator = extensionMonitoringCoordinator;
             _cacheManager = cacheManager;
-            _hca = hca;
             _hostLocalRestart = hostLocalRestart;
             _httpContextAccessor = httpContextAccessor;
 
@@ -249,8 +248,8 @@ namespace Orchard.Environment {
 
         protected virtual void BeginRequest() {
             BlockRequestsDuringSetup();
-            Action ensureInitialized = () => {
 
+            Action ensureInitialized = () => {
                 // Ensure all shell contexts are loaded, or need to be reloaded if
                 // extensions have changed
                 MonitorExtensions();
@@ -259,7 +258,7 @@ namespace Orchard.Environment {
 
             ShellSettings currentShellSettings = null;
 
-            var httpContext = _hca.Current();
+            var httpContext = _httpContextAccessor.Current();
             if (httpContext != null) {
                 currentShellSettings = _runningShellTable.Match(httpContext);
             }
