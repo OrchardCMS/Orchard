@@ -115,11 +115,13 @@
     <Compile Include="Services\DefaultTagCache.cs" />
     <Compile Include="Services\ICacheControlStrategy.cs" />
     <Compile Include="Services\IDisplayedContentItemHandler.cs" />
+    <Compile Include="Services\IOutputCacheFilterState.cs" />
     <Compile Include="Services\ITagCache.cs" />
     <Compile Include="Services\DefaultCacheStorageProvider.cs" />
     <Compile Include="Services\ICacheService.cs" />
     <Compile Include="Services\IOutputCacheStorageProvider.cs" />
     <Compile Include="Models\CacheSettings.cs" />
+    <Compile Include="Services\OutputCacheFilterState.cs" />
     <Compile Include="ViewModels\StatisticsViewModel.cs" />
     <Compile Include="ViewModels\IndexViewModel.cs" />
     <Compile Include="Models\CacheRouteConfig.cs" />

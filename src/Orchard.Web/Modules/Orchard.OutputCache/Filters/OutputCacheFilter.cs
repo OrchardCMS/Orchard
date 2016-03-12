@@ -5,7 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Text;
-using System.Threading;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -39,9 +39,12 @@ namespace Orchard.OutputCache.Filters {
         private readonly ICacheService _cacheService;
         private readonly ISignals _signals;
         private readonly ShellSettings _shellSettings;
+        private readonly IOutputCacheFilterState _state;
+
         private bool _isDisposed = false;
 
         public ILogger Logger { get; set; }
+
 
         public OutputCacheFilter(
             ICacheManager cacheManager,
@@ -53,8 +56,9 @@ namespace Orchard.OutputCache.Filters {
             IClock clock,
             ICacheService cacheService,
             ISignals signals,
-            ShellSettings shellSettings) {
-
+            ShellSettings shellSettings,
+            IOutputCacheFilterState state) {
+            _state = state;
             _cacheManager = cacheManager;
             _cacheStorageProvider = cacheStorageProvider;
             _tagCache = tagCache;
@@ -104,7 +108,7 @@ namespace Orchard.OutputCache.Filters {
                 return;
 
             // Computing the cache key after we know that the request is cacheable means that we are only performing this calculation on requests that require it
-            _cacheKey = String.Intern(ComputeCacheKey(filterContext, GetCacheKeyParameters(filterContext)));
+            _cacheKey = ComputeCacheKey(filterContext, GetCacheKeyParameters(filterContext));
             _invariantCacheKey = ComputeCacheKey(filterContext, null);
 
             Logger.Debug("Cache key '{0}' was created.", _cacheKey);
@@ -117,53 +121,44 @@ namespace Orchard.OutputCache.Filters {
                 if (allowServeFromCache && cacheItem != null) {
 
                     Logger.Debug("Item '{0}' was found in cache.", _cacheKey);
+                    
+                    if(cacheItem.IsValid(_now)) {
+                        Logger.Debug("Cached item is valid: {0}", _cacheKey);
+                        ServeCachedItem(filterContext, cacheItem);
+                        return;
+                    }
+                    else {
+                        Logger.Debug("Cached item is invalid: {0}", _cacheKey);
 
-                    // Is the cached item in its grace period?
-                    if (cacheItem.IsInGracePeriod(_now)) {
-
-                        // Render the content unless another request is already doing so.
-                        if (Monitor.TryEnter(_cacheKey)) {
+                        // If the cached item is in its grace period 
+                        // and there are no current renderer, this request renders the new content
+                        if (cacheItem.IsInGracePeriod(_now) &&
+                            !_state.Renderers.ContainsKey(_cacheKey)) {
                             Logger.Debug("Item '{0}' is in grace period and not currently being rendered; rendering item...", _cacheKey);
-                            BeginRenderItem(filterContext);
+                            BeginRenderItem(filterContext, _cacheKey);
                             return;
                         }
-                    }
-
-                    // Cached item is not yet in its grace period, or is already being
-                    // rendered by another request; serve it from cache.
-                    Logger.Debug("Serving item '{0}' from cache.", _cacheKey);
-                    ServeCachedItem(filterContext, cacheItem);
-                    return;
-                }
-
-                // No cached item found, or client doesn't want it; acquire the cache key
-                // lock to render the item.
-                Logger.Debug("Item '{0}' was not found in cache or client refuses it. Acquiring cache key lock...", _cacheKey);
-                if (Monitor.TryEnter(_cacheKey)) {
-                    Logger.Debug("Cache key lock for item '{0}' was acquired.", _cacheKey);
-
-                    // Item might now have been rendered and cached by another request; if so serve it from cache.
-                    if (allowServeFromCache) {
-                        cacheItem = GetCacheItem(_cacheKey);
-                        if (cacheItem != null) {
-                            Logger.Debug("Item '{0}' was now found; releasing cache key lock and serving from cache.", _cacheKey);
-                            Monitor.Exit(_cacheKey);
+                        else {
+                            // Cached item not is in its grace period
+                            // or is already being rendered by another request; serve it from cache.
+                            Logger.Debug("Cache item is invalid: {0}", _cacheKey);
                             ServeCachedItem(filterContext, cacheItem);
                             return;
                         }
-                    }
+                    }                    
                 }
 
                 // Either we acquired the cache key lock and the item was still not in cache, or
                 // the lock acquisition timed out. In either case render the item.
                 Logger.Debug("Rendering item '{0}'...", _cacheKey);
-                BeginRenderItem(filterContext);
-
+                BeginRenderItem(filterContext, _cacheKey);
             }
             catch {
                 // Remember to release the cache key lock in the event of an exception!
                 Logger.Debug("Exception occurred for item '{0}'; releasing any acquired lock.", _cacheKey);
-                ReleaseCacheKeyLock();
+
+                ReleaseWorkers();
+
                 throw;
             }
         }
@@ -177,97 +172,91 @@ namespace Orchard.OutputCache.Filters {
 
         public void OnResultExecuted(ResultExecutedContext filterContext) {
 
-            var captureHandlerIsAttached = false;
-
-            try {
-                
-                // This filter is not reentrant (multiple executions within the same request are
-                // not supported) so child actions are ignored completely.
-                if (filterContext.IsChildAction || !_isCachingRequest)
+            // This filter is not reentrant (multiple executions within the same request are
+            // not supported) so child actions are ignored completely.
+            if (filterContext.IsChildAction || !_isCachingRequest)
                 return;
 
-                Logger.Debug("Item '{0}' was rendered.", _cacheKey);
+            Logger.Debug("Item '{0}' was rendered.", _cacheKey);
 
-  
-                if (!ResponseIsCacheable(filterContext)) {
-                    filterContext.HttpContext.Response.Cache.SetCacheability(HttpCacheability.NoCache);
-                    filterContext.HttpContext.Response.Cache.SetNoStore();
-                    filterContext.HttpContext.Response.Cache.SetMaxAge(new TimeSpan(0));
-                    return;
+
+            if (!ResponseIsCacheable(filterContext)) {
+                filterContext.HttpContext.Response.Cache.SetCacheability(HttpCacheability.NoCache);
+                filterContext.HttpContext.Response.Cache.SetNoStore();
+                filterContext.HttpContext.Response.Cache.SetMaxAge(new TimeSpan(0));
+                return;
+            }
+
+            // Determine duration and grace time.
+            var cacheDuration = _cacheRouteConfig != null && _cacheRouteConfig.Duration.HasValue ? _cacheRouteConfig.Duration.Value : CacheSettings.DefaultCacheDuration;
+            var cacheGraceTime = _cacheRouteConfig != null && _cacheRouteConfig.GraceTime.HasValue ? _cacheRouteConfig.GraceTime.Value : CacheSettings.DefaultCacheGraceTime;
+
+            // Include each content item ID as tags for the cache entry.
+            var contentItemIds = _displayedContentItemHandler.GetDisplayed().Select(x => x.ToString(CultureInfo.InvariantCulture)).ToArray();
+
+            // Capture the response output using a custom filter stream.
+            var response = filterContext.HttpContext.Response;
+            var captureStream = new CaptureStream(response.Filter);
+            response.Filter = captureStream;
+
+            // Add ETag header for the newly created item
+            var etag = Guid.NewGuid().ToString("n");
+            if (HttpRuntime.UsingIntegratedPipeline) {
+                if (response.Headers.Get("ETag") == null) {
+                    response.Headers["ETag"] = etag;
                 }
+            }
 
-                // Determine duration and grace time.
-                var cacheDuration = _cacheRouteConfig != null && _cacheRouteConfig.Duration.HasValue ? _cacheRouteConfig.Duration.Value : CacheSettings.DefaultCacheDuration;
-                var cacheGraceTime = _cacheRouteConfig != null && _cacheRouteConfig.GraceTime.HasValue ? _cacheRouteConfig.GraceTime.Value : CacheSettings.DefaultCacheGraceTime;
+            captureStream.Captured += (output) => {
+                try {
+                    // Since this is a callback any call to injected dependencies can result in an Autofac exception: "Instances 
+                    // cannot be resolved and nested lifetimes cannot be created from this LifetimeScope as it has already been disposed."
+                    // To prevent access to the original lifetime scope a new work context scope should be created here and dependencies
+                    // should be resolved from it.
 
-                // Include each content item ID as tags for the cache entry.
-                var contentItemIds = _displayedContentItemHandler.GetDisplayed().Select(x => x.ToString(CultureInfo.InvariantCulture)).ToArray();
+                    using (var scope = _workContextAccessor.CreateWorkContextScope()) {
+                        var cacheItem = new CacheItem() {
+                            CachedOnUtc = _now,
+                            Duration = cacheDuration,
+                            GraceTime = cacheGraceTime,
+                            Output = output,
+                            ContentType = response.ContentType,
+                            QueryString = filterContext.HttpContext.Request.Url.Query,
+                            CacheKey = _cacheKey,
+                            InvariantCacheKey = _invariantCacheKey,
+                            Url = filterContext.HttpContext.Request.Url.AbsolutePath,
+                            Tenant = scope.Resolve<ShellSettings>().Name,
+                            StatusCode = response.StatusCode,
+                            Tags = new[] { _invariantCacheKey }.Union(contentItemIds).ToArray(),
+                            ETag = etag
+                        };
 
-                // Capture the response output using a custom filter stream.
-                var response = filterContext.HttpContext.Response;
-                var captureStream = new CaptureStream(response.Filter);
-                response.Filter = captureStream;
+                        // Notifying any awaiting thread that the content is ready
+                        // for this page
+                        TaskCompletionSource<CacheItem> tcs;
+                        if (_state.Renderers.TryRemove(_cacheKey, out tcs)) {
+                            Logger.Debug("Page rendered, notifying awaiters: {0}", _cacheKey);
+                            tcs.SetResult(cacheItem);
+                        }
 
-                // Add ETag header for the newly created item
-                var etag = Guid.NewGuid().ToString("n");
-                if (HttpRuntime.UsingIntegratedPipeline) {
-                    if (response.Headers.Get("ETag") == null) {
-                        response.Headers["ETag"] = etag;
-                    }
-                }
+                        // Write the rendered item to the cache.
+                        var cacheStorageProvider = scope.Resolve<IOutputCacheStorageProvider>();
+                        cacheStorageProvider.Set(_cacheKey, cacheItem);
 
-                captureStream.Captured += (output) => {
-                    try {
-                        // Since this is a callback any call to injected dependencies can result in an Autofac exception: "Instances 
-                        // cannot be resolved and nested lifetimes cannot be created from this LifetimeScope as it has already been disposed."
-                        // To prevent access to the original lifetime scope a new work context scope should be created here and dependencies
-                        // should be resolved from it.
+                        Logger.Debug("Item '{0}' was written to cache.", _cacheKey);
 
-                        using (var scope = _workContextAccessor.CreateWorkContextScope()) {
-                            var cacheItem = new CacheItem() {
-                                CachedOnUtc = _now,
-                                Duration = cacheDuration,
-                                GraceTime = cacheGraceTime,
-                                Output = output,
-                                ContentType = response.ContentType,
-                                QueryString = filterContext.HttpContext.Request.Url.Query,
-                                CacheKey = _cacheKey,
-                                InvariantCacheKey = _invariantCacheKey,
-                                Url = filterContext.HttpContext.Request.Url.AbsolutePath,
-                                Tenant = scope.Resolve<ShellSettings>().Name,
-                                StatusCode = response.StatusCode,
-                                Tags = new[] { _invariantCacheKey }.Union(contentItemIds).ToArray(),
-                                ETag = etag
-                            };
-
-                            // Write the rendered item to the cache.
-                            var cacheStorageProvider = scope.Resolve<IOutputCacheStorageProvider>();
-                            cacheStorageProvider.Set(_cacheKey, cacheItem);
-
-                            Logger.Debug("Item '{0}' was written to cache.", _cacheKey);
-
-                            // Also add the item tags to the tag cache.
-                            var tagCache = scope.Resolve<ITagCache>();
-                            foreach (var tag in cacheItem.Tags) {
-                                tagCache.Tag(tag, _cacheKey);
-                            }
+                        // Also add the item tags to the tag cache.
+                        var tagCache = scope.Resolve<ITagCache>();
+                        foreach (var tag in cacheItem.Tags) {
+                            tagCache.Tag(tag, _cacheKey);
                         }
                     }
-                    finally {
-                        // Always release the cache key lock when the request ends.
-                        ReleaseCacheKeyLock();
-                    }
-                };
-
-                captureHandlerIsAttached = true;
-            }
-            finally {
-                // If the response filter stream capture handler was attached then we'll trust
-                // it to release the cache key lock at some point in the future when the stream
-                // is flushed; otherwise we'll make sure we'll release it here.
-                if (!captureHandlerIsAttached)
-                    ReleaseCacheKeyLock();
-            }
+                }
+                catch {
+                    // Release the renderer task in case something happened
+                    ReleaseWorkers();
+                }
+            };
         }
 
         protected virtual bool RequestIsCacheable(ActionExecutingContext filterContext) {
@@ -465,7 +454,7 @@ namespace Orchard.OutputCache.Filters {
 
         private CacheSettings CacheSettings {
             get {
-                return _cacheSettings ?? (_cacheSettings = _cacheManager.Get(CacheSettings.CacheKey, true, context => {
+                return _cacheSettings ?? (_cacheSettings = _cacheManager.Get(CacheSettings.CacheKey, context => {
                     context.Monitor(_signals.When(CacheSettings.CacheKey));
                     return new CacheSettings(_workContext.CurrentSite.As<CacheSettingsPart>());
                 }));
@@ -508,14 +497,44 @@ namespace Orchard.OutputCache.Filters {
             ApplyCacheControl(response);
         }
 
-        private void BeginRenderItem(ActionExecutingContext filterContext) {
-
+        private void BeginRenderItem(ActionExecutingContext filterContext, string key) {
             var response = filterContext.HttpContext.Response;
+            CacheItem cacheItem = null;
 
-            ApplyCacheControl(response);
+            // Tries to acquire a lock to render an item, or wait for the 
+            // actual render to finish an get the CachedItem directly
+            TaskCompletionSource<CacheItem> tcs;
+            if (!_state.Renderers.TryGetValue(key, out tcs)) {
+                Logger.Debug("Acquired processing role: {0}", _cacheKey);
 
-            // Remember that we should intercept the rendered response output.
-            _isCachingRequest = true;
+                tcs = new TaskCompletionSource<CacheItem>();
+
+                // If the key could not be added it means another thread got there first,
+                // and in this case they will both try to render the page which is fine.
+                // The chances are very low however as even at it needs to happen between two 
+                // statements, even at a high RPS it would be uncommon.
+                _state.Renderers.TryAdd(key, tcs);
+            }
+            else {
+                Logger.Debug("Waiting for processed page: {0}", _cacheKey);
+
+                // We got a task completion source that will have the CacheItem once finished
+                cacheItem = tcs.Task.Result;
+            }
+
+            // the cache item can be null if an error occured while rendering
+            if (cacheItem != null) {
+                Logger.Debug("Serving result: {0}", _cacheKey);
+                ServeCachedItem(filterContext, cacheItem);
+            }
+            else {
+                Logger.Debug("Processing page: {0}", _cacheKey);
+
+                ApplyCacheControl(response);
+
+                // Remember that we should intercept the rendered response output.
+                _isCachingRequest = true;
+            }
         }
 
         private void ApplyCacheControl(HttpResponseBase response) {
@@ -547,15 +566,7 @@ namespace Orchard.OutputCache.Filters {
                 response.Cache.VaryByHeaders[varyRequestHeader] = true;
             }
         }
-
-        private void ReleaseCacheKeyLock() {
-            if (_cacheKey != null && Monitor.IsEntered(_cacheKey)) {
-                Logger.Debug("Releasing cache key lock for item '{0}'.", _cacheKey);
-                Monitor.Exit(_cacheKey);
-                _cacheKey = null;
-            }
-        }
-
+        
         protected virtual bool IsIgnoredUrl(string url, IEnumerable<string> ignoredUrls) {
             if (ignoredUrls == null || !ignoredUrls.Any()) {
                 return false;
@@ -602,15 +613,53 @@ namespace Orchard.OutputCache.Filters {
         }
 
         protected virtual CacheItem GetCacheItem(string key) {
-            try {
-                var cacheItem = _cacheStorageProvider.GetCacheItem(key);
-                return cacheItem;
-            }
-            catch (Exception e) {
-                Logger.Error(e, "An unexpected error occured while reading a cache entry");
-            }
+            TaskCompletionSource<CacheItem> tcs;
+            if (!_state.Cachers.TryGetValue(key, out tcs)) {
+                tcs = new TaskCompletionSource<CacheItem>();
 
-            return null;
+                // If the key could not be added it means another thread got there first,
+                // and in this case they will both try to get the cache which is fine.
+                // The chances are very low however as even at it needs to happen between two 
+                // statements, even at a high RPS it would be uncommon.
+                _state.Cachers.TryAdd(key, tcs);
+
+                Logger.Debug("Fetching cache item: {0}", _cacheKey);
+
+                try {
+                    var cacheItem = _cacheStorageProvider.GetCacheItem(key);
+                    if (_state.Cachers.TryRemove(key, out tcs)) {
+                        tcs.SetResult(cacheItem);
+                    }
+                    return cacheItem;
+                }
+                catch (Exception e) {
+                    Logger.Error(e, "An unexpected error occured while reading a cache entry");
+                    if (_state.Cachers.TryRemove(key, out tcs)) {
+                        tcs.SetResult(null);
+                    }
+                    return null;
+                }
+            }
+            else {
+                Logger.Debug("Awaiting cache worker: {0}", _cacheKey);
+
+                // We got a task completion source that will have the CacheItem once finished
+                return tcs.Task.Result;
+            }
+        }
+
+        private void ReleaseWorkers() {
+            if (_cacheKey != null) {
+                TaskCompletionSource<CacheItem> tcs;
+
+                if (_state.Renderers.TryRemove(_cacheKey, out tcs)) {
+                    tcs.SetResult(null);
+                }
+
+                if (_state.Cachers.TryRemove(_cacheKey, out tcs)) {
+                    tcs.SetResult(null);
+                }
+            }
         }
 
         public void Dispose() {
@@ -624,9 +673,7 @@ namespace Orchard.OutputCache.Filters {
                     // Free other state (managed objects).
                 }
 
-                if (_cacheKey != null && Monitor.IsEntered(_cacheKey)) {
-                    Monitor.Exit(_cacheKey);
-                }
+                ReleaseWorkers();
 
                 _isDisposed = true;
             }

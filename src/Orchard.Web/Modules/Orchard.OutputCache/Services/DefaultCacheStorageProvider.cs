@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Orchard.OutputCache.Models;
 using Orchard.Environment.Configuration;
+using Orchard.Logging;
 
 namespace Orchard.OutputCache.Services {
     public class DefaultCacheStorageProvider : IOutputCacheStorageProvider {
@@ -15,7 +16,11 @@ namespace Orchard.OutputCache.Services {
             _tenantName = shellSettings.Name;
         }
 
+        public ILogger Logger { get; set; }
+         
         public void Set(string key, CacheItem cacheItem) {
+            Logger.Debug("Set {0}", key);
+
             _workContext.HttpContext.Cache.Remove(key);
             _workContext.HttpContext.Cache.Add(
                 key,
@@ -28,10 +33,14 @@ namespace Orchard.OutputCache.Services {
         }
 
         public void Remove(string key) {
+            Logger.Debug("Remove {0}", key);
+
             _workContext.HttpContext.Cache.Remove(key);
         }
 
         public void RemoveAll() {
+            Logger.Debug("RemoveAll");
+
             var items = GetCacheItems(0, 100).ToList();
             while (items.Any()) {
                 foreach (var item in items) {
@@ -42,10 +51,14 @@ namespace Orchard.OutputCache.Services {
         }
 
         public CacheItem GetCacheItem(string key) {
+            Logger.Debug("GetCacheItem {0}", key);
+
             return _workContext.HttpContext.Cache.Get(key) as CacheItem;
         }
 
         public IEnumerable<CacheItem> GetCacheItems(int skip, int count) {
+            Logger.Debug("GetCacheItems");
+
             // the ASP.NET cache can also contain other types of items
             return _workContext.HttpContext.Cache.AsParallel()
                         .Cast<DictionaryEntry>()
@@ -57,6 +70,8 @@ namespace Orchard.OutputCache.Services {
         }
 
         public int GetCacheItemsCount() {
+            Logger.Debug("GetCacheItemsCount");
+
             return _workContext.HttpContext.Cache.AsParallel()
                         .Cast<DictionaryEntry>()
                         .Select(x => x.Value)
