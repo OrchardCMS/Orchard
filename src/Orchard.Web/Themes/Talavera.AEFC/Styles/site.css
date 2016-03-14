@@ -10501,7 +10501,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .nav > li > a:hover,
 .nav > li > a:focus {
   text-decoration: none;
-  background-color: #303030;
+  background-color: transparent;
 }
 .nav > li.disabled > a {
   color: #605e5e;
@@ -10516,7 +10516,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .nav .open > a,
 .nav .open > a:hover,
 .nav .open > a:focus {
-  background-color: #303030;
+  background-color: transparent;
   border-color: #0093DD;
 }
 .nav .nav-divider {
@@ -12277,7 +12277,7 @@ a.list-group-item-danger.active:focus {
   min-height: 20px;
   padding: 19px;
   margin-bottom: 20px;
-  background-color: #464545;
+  background-color: transparent;
   border: 1px solid transparent;
   border-radius: 0;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
@@ -13699,7 +13699,7 @@ p {
 .widget-menu-widget .menu > li > a:hover,
 .widget-menu-widget .menu > li > a:focus {
   text-decoration: none;
-  background-color: #303030;
+  background-color: transparent;
 }
 .widget-menu-widget .menu > li.disabled > a {
   color: #605e5e;
@@ -13714,7 +13714,7 @@ p {
 .widget-menu-widget .menu .open > a,
 .widget-menu-widget .menu .open > a:hover,
 .widget-menu-widget .menu .open > a:focus {
-  background-color: #303030;
+  background-color: transparent;
   border-color: #0093DD;
 }
 .widget-menu-widget .menu .nav-divider {
@@ -13748,52 +13748,6 @@ p {
 }
 .widget-menu-widget .menu li {
   float: none;
-}
-.widget-menu-widget .menu li.dropdown > ul {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  z-index: 1000;
-  display: none;
-  float: left;
-  min-width: 160px;
-  padding: 5px 0;
-  margin: 2px 0 0;
-  list-style: none;
-  font-size: 15px;
-  text-align: left;
-  background-color: #303030;
-  border: 1px solid #ccc;
-  border: 1px solid rgba(0, 0, 0, 0.15);
-  border-radius: 0;
-  -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
-  background-clip: padding-box;
-  left: auto;
-  top: auto;
-  margin-top: 0;
-}
-.widget-menu-widget .menu li.dropdown > ul.pull-right {
-  right: 0;
-  left: auto;
-}
-.widget-menu-widget .menu li.dropdown > ul .divider {
-  height: 1px;
-  margin: 9.5px 0;
-  overflow: hidden;
-  background-color: #464545;
-}
-.widget-menu-widget .menu li.dropdown > ul > li > a {
-  display: block;
-  padding: 3px 20px;
-  clear: both;
-  font-weight: normal;
-  line-height: 1.42857143;
-  color: #EBEBEB;
-  white-space: nowrap;
-}
-.widget-menu-widget .menu li.dropdown:hover > ul {
-  display: block;
 }
 @media (min-width: 57.8em) {
   .widget-menu-widget .menu {
@@ -26187,19 +26141,24 @@ fieldset ol li,
 }
 /* Minor Changes Theme for AEFC */
 html {
-  /* This image will be displayed fullscreen */
-  background: url('../Images/fitnesscenteratnight.jpg') no-repeat center center;
-  /* Ensure the html element always takes up the full height of the browser window */
   min-height: 100%;
-  /* The Magic */
-  background-size: cover;
-  background-attachment: fixed;
 }
 body {
   /* Workaround for some mobile browsers */
   min-height: 100%;
-  background-color: inherit;
-  padding-bottom: 125px;
+  height: 100%;
+  overflow: auto;
+}
+.layer-default {
+  background-color: #030a27;
+}
+.layer-thehomepage {
+  background: url('../Images/fitnesscenteratnight.jpg') no-repeat center center;
+  background-size: cover;
+  background-attachment: fixed;
+  overflow: auto;
+  min-height: 100%;
+  height: 100%;
 }
 .affix {
   bottom: 0;
@@ -26208,7 +26167,7 @@ body {
   -webkit-backface-visibility: hidden;
 }
 .element-shade {
-  background-color: rgba(0, 0, 0, 0.61);
+  background-color: rgba(3, 10, 39, 0.61);
   color: inherit;
 }
 li.bd-linkbutton-1 > a,
@@ -26257,9 +26216,6 @@ li.bd-linkbutton-2 > a {
 .widget-menu-widget .menu-main-menu .dropdown-menu > li > a:focus {
   background-color: transparent;
 }
-/*#layout-navigation .menu-main-menu li+li {
-    border-left: 2px solid #33add6; 
-}*/
 .bd-section-1 {
   margin-top: 17vh;
 }
@@ -26287,7 +26243,7 @@ li.bd-linkbutton-2 > a {
   max-height: 48px;
 }
 .social-media-icons .link-text {
-  color: white;
+  color: #030a27;
 }
 .bd-section-1 h2 {
   font-size: 100px;
@@ -26295,18 +26251,15 @@ li.bd-linkbutton-2 > a {
 .zone-content ul.menu-button-menu {
   padding-left: inherit;
 }
-#layout-wrapper {
-  min-height: 100%;
-  width: 100%;
-}
-#layout-main-container {
-  background-color: transparent;
-}
 .standard-text {
   color: #fff;
 }
 .orchard-layouts-root > .shadow-gray > .container-fluid > .row > * > .container-fluid > .row > * > hr {
   border-top: 2px solid #33add6;
+}
+.orchard-layouts-root .text-center hr {
+  border-top: 2px solid #33add6;
+  width: 300px;
 }
 .orchard-layouts-root > .container-fluid > .row .well-lg {
   border-radius: unset;
@@ -26315,7 +26268,7 @@ li.bd-linkbutton-2 > a {
   background-color: rgba(0, 0, 0, 0.83);
 }
 .shadow-gray {
-  background-color: #464545;
+  background-color: transparent;
 }
 .active-icon-color {
   color: #33add6;
@@ -26364,6 +26317,13 @@ li.bd-linkbutton-2 > a {
   vertical-align: middle;
   text-decoration: none;
 }
+#layout-wrapper {
+  min-height: 100%;
+  width: 100%;
+}
+#layout-main-container {
+  background-color: transparent;
+}
 #navigation-toTop {
   position: fixed;
   right: 5px;
@@ -26377,11 +26337,19 @@ li.bd-linkbutton-2 > a {
   opacity: .7;
 }
 #badgeofhonor {
-  background-color: transparent;
+  padding-top: 1rem;
+  background-color: white;
+  color: #030a27;
 }
 @media (max-width: 47.95em) {
-  body {
-    padding-bottom: 350px;
+  .bd-menuitem-6 {
+    display: inline-block;
+  }
+  .widget-menu-widget .menu li.dropdown > ul {
+    position: relative;
+  }
+  .dropdown-menu > li {
+    display: inline;
   }
   .bd-menu-3.nav-pills .bd-menuitem-6 > a,
   .bd-menu-3.nav-pills .bd-menuitem-6 > a:link,
@@ -26393,5 +26361,8 @@ li.bd-linkbutton-2 > a {
   }
   .bd-section-1 h2 {
     font-size: 58px;
+  }
+  #layout-footer {
+    padding-top: 300px;
   }
 }

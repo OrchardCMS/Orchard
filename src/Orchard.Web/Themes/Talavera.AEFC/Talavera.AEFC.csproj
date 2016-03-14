@@ -10,8 +10,8 @@
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Talavera.AEFCv2</RootNamespace>
-    <AssemblyName>Talavera.AEFCv2</AssemblyName>
+    <RootNamespace>Talavera.AEFC</RootNamespace>
+    <AssemblyName>Talavera.AEFC</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <FileUpgradeFlags>
@@ -115,6 +115,10 @@
       <Name>Orchard.Core</Name>
       <Private>false</Private>
     </ProjectReference>
+    <ProjectReference Include="..\Talavera.Base\Talavera.Base.csproj">
+      <Project>{c09ce546-289f-414d-b5ad-e5591501b7f0}</Project>
+      <Name>Talavera.Base</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Styles\site.less" />
@@ -139,7 +143,9 @@
     <Content Include="Views\MenuItemLink.cshtml" />
     <Content Include="Views\BadgeOfHonor.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Code\" />
+  </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

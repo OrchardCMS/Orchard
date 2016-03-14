@@ -9,8 +9,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Talavera Technology Solutions")]
-[assembly: AssemblyProduct("Talavera.AEFCv2.Properties")]
-[assembly: AssemblyCopyright("Copyright © Microsoft 2016")]
+[assembly: AssemblyProduct("Talavera.AEFC")]
+[assembly: AssemblyCopyright("Copyright © Talavera Technology Solutions 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

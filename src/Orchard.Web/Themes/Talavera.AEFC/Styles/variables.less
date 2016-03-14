@@ -6,9 +6,13 @@
 
 /* Colors */
 // We tend to declare the main branding colors here too.
+@aelp-dark-blue: rgb(3,10,39);
+@aelp-dark-blue-shade: rgba(3,10,39, 0.61);
+
 @sample-grey: #4d4948;
-@sample-white: #fff; // It might seem silly to declare what white is but we may change this to some other color (like a very light grey) later.
+@sample-white: #fff; 
 @sample-blue: #0093DD;
+@footer-link-text-color: @aelp-dark-blue;
 
 /* Media queries */
 // Media queries are commonly used in responsive design. It's nice to declare them as variables too so it's simple to re-use them.
@@ -34,8 +38,10 @@
 @input-border-radius: 0;
 @border-radius-base: 0;
 @grid-float-breakpoint: @screen-md-min;
-@well-bg:                     @gray;
+@well-bg: transparent;
 
 @shadow-dark-background-color: rgba(0, 0, 0, 0.83);
 @shadow-light-background-color: @gray;
 @active-icon-color: #33add6;
+
+@nav-link-hover-bg: transparent;

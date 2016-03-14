@@ -329,8 +329,9 @@
     <Content Include="Content\font-awesome\fonts\fontawesome-webfont.svg" />
     <Content Include="Images\customer_logo.png" />
     <Content Include="Images\favicon.ico" />
+    <Content Include="Scripts\bootstrap\js\bootstrap.js" />
+    <Content Include="Scripts\bootstrap\js\bootstrap.min.js" />
     <Content Include="Scripts\custom.js" />
-    <Content Include="Scripts\hover-dropdown.js" />
     <Content Include="Styles\breadcrumbs.css">
       <DependentUpon>breadcrumbs.less</DependentUpon>
     </Content>
@@ -369,12 +370,6 @@
     </Content>
     <Content Include="Styles\misc.css.map">
       <DependentUpon>misc.css</DependentUpon>
-    </Content>
-    <Content Include="Styles\navigation.css">
-      <DependentUpon>navigation.less</DependentUpon>
-    </Content>
-    <Content Include="Styles\navigation.css.map">
-      <DependentUpon>navigation.css</DependentUpon>
     </Content>
     <Content Include="Styles\pagination.css">
       <DependentUpon>pagination.less</DependentUpon>
@@ -434,9 +429,17 @@
       <Name>Orchard.Core</Name>
       <Private>false</Private>
     </ProjectReference>
+    <ProjectReference Include="..\..\Modules\Orchard.Conditions\Orchard.Conditions.csproj">
+      <Project>{98251eae-a41b-47b2-aa91-e28b8482da70}</Project>
+      <Name>Orchard.Conditions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Modules\Orchard.Layouts\Orchard.Layouts.csproj">
       <Project>{6bd8b2fa-f2e3-4ac8-a4c3-2925a653889a}</Project>
       <Name>Orchard.Layouts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Modules\Orchard.Widgets\Orchard.Widgets.csproj">
+      <Project>{194d3ccc-1153-474d-8176-fde8d7d0d0bd}</Project>
+      <Name>Orchard.Widgets</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -465,6 +468,7 @@
     <Content Include="Styles\variables.less" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Code\WorkContextExtensions.cs" />
     <Compile Include="Code\ResourceManifest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Code\MainMenu.cs" />
@@ -598,7 +602,6 @@
   <ItemGroup>
     <Folder Include="Content\Bootstrap\docs\assets\ico\" />
     <Folder Include="Content\Bootstrap\docs\grunt\" />
-    <Folder Include="Scripts\bootstrap\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="compilerconfig.json" />

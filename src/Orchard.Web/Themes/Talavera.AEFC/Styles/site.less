@@ -1,4 +1,4 @@
-﻿//Begin Talavera.AEFC:Site
+﻿//Begin: Talavera.AEFC
 
 @import "../../Talavera.Base/Styles/site.less";
 
@@ -22,22 +22,33 @@
 }
 
 /* Minor Changes Theme for AEFC */
-html {
-    /* This image will be displayed fullscreen */
-    background: url('../Images/fitnesscenteratnight.jpg') no-repeat center center;
-    /* Ensure the html element always takes up the full height of the browser window */
-    min-height: 100%;
-    /* The Magic */
-    background-size: cover;
-    background-attachment: fixed;
+html {    
+    min-height: 100%;    
 }
 
 body {
     /* Workaround for some mobile browsers */
     min-height: 100%;
-    background-color: inherit;
-    padding-bottom: 125px;
+    height: 100%;    
+    overflow: auto;
 }
+//Begin: Layers
+
+.layer-default {
+    background-color: @aelp-dark-blue;
+}
+
+.layer-thehomepage {
+    //Begin: Background
+    background: url('../Images/fitnesscenteratnight.jpg') no-repeat center center;
+    background-size: cover;
+    background-attachment: fixed;    
+    //End: Background
+    overflow: auto;
+    min-height: 100%;
+    height: 100%;
+}
+//End: Layers
 
 .affix {
     bottom: 0;
@@ -48,7 +59,7 @@ body {
 }
 
 .element-shade {
-    background-color: rgba(0,0,0, 0.61);
+    background-color: @aelp-dark-blue-shade;
     color: inherit;
 }
 
@@ -107,10 +118,6 @@ li.bd-linkbutton-2 > a {
     background-color: transparent;
 }
 
-/*#layout-navigation .menu-main-menu li+li {
-    border-left: 2px solid #33add6; 
-}*/
-
 .bd-section-1 {
     margin-top: 17vh;
 }
@@ -145,7 +152,7 @@ li.bd-linkbutton-2 > a {
 }
 
 .social-media-icons .link-text {
-    color: white;
+    color: @footer-link-text-color;
 }
 
 .bd-section-1 h2 {
@@ -156,21 +163,18 @@ li.bd-linkbutton-2 > a {
     padding-left: inherit;
 }
 
-#layout-wrapper {
-    min-height: 100%;
-    width: 100%;
-}
-
-#layout-main-container {
-    background-color: transparent;
-}
-
 .standard-text {
     color: @text-color;
 }
 
-.orchard-layouts-root > .shadow-gray > .container-fluid > .row > * > .container-fluid > .row > * > hr {    
+.orchard-layouts-root > .shadow-gray > .container-fluid > .row > * > .container-fluid > .row > * > hr
+{    
     border-top: 2px solid #33add6; 
+}
+
+.orchard-layouts-root .text-center hr {
+    border-top: 2px solid #33add6; 
+    width: 300px;
 }
 
 .orchard-layouts-root > .container-fluid > .row .well-lg
@@ -183,15 +187,14 @@ li.bd-linkbutton-2 > a {
 }
 
 .shadow-gray {
-    background-color: @shadow-light-background-color;
+    background-color: transparent;
 }
 
 .active-icon-color {
     color: @active-icon-color;
 }
 
-
-//Icons Begin:
+//Begin: Icons
 .bwf:before {
   display: inline-block;
   font-family: 'Billion Web Font';
@@ -242,8 +245,16 @@ li.bd-linkbutton-2 > a {
   vertical-align: middle;
   text-decoration: none;
 }
+//End: Icons
 
-//Icons End.
+#layout-wrapper {
+    min-height: 100%;
+    width: 100%;
+}
+
+#layout-main-container {
+    background-color: transparent;
+}
 
 #navigation-toTop {
     position: fixed;
@@ -260,19 +271,34 @@ li.bd-linkbutton-2 > a {
 }
 
 #badgeofhonor {
-    background-color: transparent;
+    padding-top: 1rem;
+    background-color: white;
+    color: @footer-link-text-color; 
 }
 
 @media (max-width: @screen-sm-min) {
-    body {
-        padding-bottom: 350px;
+    .bd-menuitem-6 {
+        display: inline-block;
+    }
+
+    .widget-menu-widget .menu li.dropdown > ul {
+        position: relative;
+    }
+
+    .dropdown-menu > li{
+        display: inline;
+    }
+
+    .bd-menu-3.nav-pills .bd-menuitem-6
+    {      
+        //display: inline-block;  
     }
 
     .bd-menu-3.nav-pills .bd-menuitem-6 > a,
     .bd-menu-3.nav-pills .bd-menuitem-6 > a:link,
     .bd-menu-3.nav-pills .bd-menuitem-6 > a:visited {
         color: inherit;
-    }
+    }    
 
     .bd-section-1 {
         margin-top: inherit;
@@ -280,5 +306,11 @@ li.bd-linkbutton-2 > a {
 
     .bd-section-1 h2 {
         font-size: 58px;
+    }    
+
+    #layout-footer{
+        padding-top: 300px;
     }
 }
+
+//End: Talavera.AEFC

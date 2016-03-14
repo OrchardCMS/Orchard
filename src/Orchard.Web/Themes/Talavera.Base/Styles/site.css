@@ -14069,52 +14069,6 @@ fieldset ol li,
 .widget-menu-widget .menu li {
   float: none;
 }
-.widget-menu-widget .menu li.dropdown > ul {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  z-index: 1000;
-  display: none;
-  float: left;
-  min-width: 160px;
-  padding: 5px 0;
-  margin: 2px 0 0;
-  list-style: none;
-  font-size: 14px;
-  text-align: left;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  border: 1px solid rgba(0, 0, 0, 0.15);
-  border-radius: 4px;
-  -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
-  background-clip: padding-box;
-  left: auto;
-  top: auto;
-  margin-top: 0;
-}
-.widget-menu-widget .menu li.dropdown > ul.pull-right {
-  right: 0;
-  left: auto;
-}
-.widget-menu-widget .menu li.dropdown > ul .divider {
-  height: 1px;
-  margin: 9px 0;
-  overflow: hidden;
-  background-color: #e5e5e5;
-}
-.widget-menu-widget .menu li.dropdown > ul > li > a {
-  display: block;
-  padding: 3px 20px;
-  clear: both;
-  font-weight: normal;
-  line-height: 1.42857143;
-  color: #333333;
-  white-space: nowrap;
-}
-.widget-menu-widget .menu li.dropdown:hover > ul {
-  display: block;
-}
 @media (min-width: 48em) {
   .widget-menu-widget .menu {
     width: 100%;
