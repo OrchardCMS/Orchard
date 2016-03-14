@@ -337,6 +337,7 @@
     <ItemGroup>
     
       <Zip-Exclude Include="
+        $(MSBuildProjectDirectory)\src\**\packages\**\*;
         $(MSBuildProjectDirectory)\src\**\bin\**\*;
         $(MSBuildProjectDirectory)\src\**\obj\**\*;
         $(MSBuildProjectDirectory)\**\App_Data\**\*;
