@@ -354,7 +354,7 @@
 
       <Zip-Stage Include="$(StageFolder)\**\*" />
 
-      <Zip-MsDeploy Include="$(MsDeployFolder)\**\*" />
+      <Zip-MsDeploy Include="$(MsDeployFolder)\**\*" Exclude="$(MSBuildProjectDirectory)\**\bin\**\*.pdb;"/>
 
       <Zip-Source Include="
         $(MSBuildProjectDirectory)\lib\**\*;
