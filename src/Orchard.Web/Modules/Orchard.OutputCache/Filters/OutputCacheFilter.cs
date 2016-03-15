@@ -122,7 +122,7 @@ namespace Orchard.OutputCache.Filters {
 
                     Logger.Debug("Item '{0}' was found in cache.", _cacheKey);
                     
-                    if(cacheItem.IsValid(_now)) {
+                    if (cacheItem.IsValid(_now)) {
                         Logger.Debug("Cached item is valid: {0}", _cacheKey);
                         ServeCachedItem(filterContext, cacheItem);
                         return;
@@ -131,7 +131,7 @@ namespace Orchard.OutputCache.Filters {
                         Logger.Debug("Cached item is invalid: {0}", _cacheKey);
 
                         // If the cached item is in its grace period 
-                        // and there are no current renderer, this request renders the new content
+                        // and there is no current renderer, this request renders the new content.
                         if (cacheItem.IsInGracePeriod(_now) &&
                             !_state.Renderers.ContainsKey(_cacheKey)) {
                             Logger.Debug("Item '{0}' is in grace period and not currently being rendered; rendering item...", _cacheKey);
