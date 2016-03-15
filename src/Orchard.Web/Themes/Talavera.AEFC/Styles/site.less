@@ -6,7 +6,7 @@
 @import "../../Talavera.Base/Content/bootswatch/darkly/variables";
 
 //Begin billionthemes-2608975
-@import (inline) "../Content/sources/billionthemes/billionthemes-2608975.css";
+//@import (inline) "../Content/sources/billionthemes/billionthemes-2608975.css";
 
 @import "variables";
 @import "general";
@@ -23,19 +23,26 @@
 
 /* Minor Changes Theme for AEFC */
 html {    
-    min-height: 100%;    
+    min-height: 100%; 
+    height: 100%;
+    overflow: auto;   
 }
 
 body {
     /* Workaround for some mobile browsers */
     min-height: 100%;
     height: 100%;    
-    overflow: auto;
+    overflow: auto;    
+    position: relative;
+    display: flex;
+    flex-direction: column;
 }
 //Begin: Layers
 
 .layer-default {
     background-color: @aelp-dark-blue;
+    flex-grow: 1;
+    overflow: auto;
 }
 
 .layer-thehomepage {
@@ -49,6 +56,69 @@ body {
     height: 100%;
 }
 //End: Layers
+
+//Begin: Top Navigation
+.nav.nav-pills > li + li {
+  margin: 0;
+}
+
+.zone-navigation .widget-navigation .menu-main-menu.nav-pills > li > a,
+.zone-navigation .widget-navigation .menu-main-menu.nav-pills > li > a:link,
+.zone-navigation .widget-navigation .menu-main-menu.nav-pills > li > a:visited {
+  -webkit-transition: all 500ms;
+  transition: all 500ms;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: #d6d6d6;
+  font-size: 14px;
+  margin-right: 15px;
+  padding: 10px 0px 5px;
+  border-bottom: 2px solid rgba(0, 0, 0, 0);
+  border-radius: 0px;
+  line-height: 20.00000001px;
+  display: block;
+  white-space: nowrap;
+}
+
+.zone-navigation .widget-navigation .menu-main-menu.nav-pills > li > a.active {
+  color: #ffffff;
+  border-bottom: 2px solid #33add6;
+  display: block;
+}
+
+.zone-navigation .widget-navigation.widget-menu-widget.widget
+{
+  position: relative;
+  height: 100%;
+  padding-left: 20px;
+  padding-right: 20px;
+  float: right;
+}
+
+@media (max-width: @screen-sm-max) {
+  .zone-navigation .widget-navigation.widget-menu-widget.widget {
+    max-width: none;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+@media (min-width: @screen-sm-min) {
+  .zone-navigation .widget-navigation.widget-menu-widget.widget {
+    max-width: @screen-sm-max - 20;
+  }
+}
+@media (min-width: @screen-md-min) {
+  .zone-navigation .widget-navigation.widget-menu-widget.widget {
+   max-width: @screen-md-max - 10;
+  }
+}
+@media (min-width: @screen-lg-min) {
+  .zone-navigation .widget-navigation.widget-menu-widget.widget {      
+    max-width: 1160px;
+  }
+}
+//End: Top Navigation
 
 .affix {
     bottom: 0;
@@ -77,17 +147,7 @@ li.bd-linkbutton-2 > a {
     overflow: visible;
     padding-top: 0;
     padding-bottom: 0;
-}
-
-.navbar-default {
-    background-color: #043F77;
-    border-color: transparent;
-}
-
-.navbar-default .navbar-nav > .active > a,
-.navbar-default .navbar-nav > .active > a:hover,
-.navbar-default .navbar-nav > .active > a:focus {
-    background-color: #ff0000;
+    position: absolute;
 }
 
 .bd-responsivemenu-1 .bd-menuitem-4 > a:before,
@@ -103,7 +163,7 @@ li.bd-linkbutton-2 > a {
 
 .widget-menu-widget .menu > li > a:hover,
 .widget-menu-widget .menu > li > a:focus,
-.widget-menu-widget .menu > li.current > a,
+.widget-menu-widget .menu > li.active > a,
 .widget-menu-widget .menu li.dropdown > ul .widget-menu-widget .menu .dropdown-menu > li > a:hover,
 .widget-menu-widget .menu .dropdown-menu > li > a:focus {
     background-color: transparent;
@@ -118,11 +178,11 @@ li.bd-linkbutton-2 > a {
     background-color: transparent;
 }
 
-.bd-section-1 {
+/*.bd-section-1 {
     margin-top: 17vh;
-}
+}*/
 
-.bd-slide-1 {
+/*.bd-slide-1 {
     background: none;
 }
 
@@ -142,7 +202,7 @@ li.bd-linkbutton-2 > a {
 
 .bd-textblock-4 * {
     color: white;
-}
+}*/
 
 .social-media-icons img {
     height: 48px;
@@ -155,8 +215,14 @@ li.bd-linkbutton-2 > a {
     color: @footer-link-text-color;
 }
 
-.bd-section-1 h2 {
+/*.bd-section-1 h2 {
     font-size: 100px;
+}*/
+
+.orchard-layouts-root{
+  min-height: 20px;
+  clear: both;    
+  z-index: 1;
 }
 
 .zone-content ul.menu-button-menu {
@@ -256,6 +322,12 @@ li.bd-linkbutton-2 > a {
     background-color: transparent;
 }
 
+#layout-navigation
+{
+    flex: 1;
+    overflow: auto;
+}
+
 #navigation-toTop {
     position: fixed;
     right: 5px;
@@ -281,9 +353,9 @@ li.bd-linkbutton-2 > a {
         display: inline-block;
     }
 
-    .widget-menu-widget .menu li.dropdown > ul {
+    /*.widget-menu-widget .menu li.dropdown > ul {
         position: relative;
-    }
+    }*/
 
     .dropdown-menu > li{
         display: inline;
@@ -300,7 +372,7 @@ li.bd-linkbutton-2 > a {
         color: inherit;
     }    
 
-    .bd-section-1 {
+    /*.bd-section-1 {
         margin-top: inherit;
     }
 
@@ -310,7 +382,7 @@ li.bd-linkbutton-2 > a {
 
     #layout-footer{
         padding-top: 300px;
-    }
+    }*/
 }
 
 //End: Talavera.AEFC

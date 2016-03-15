@@ -47,13 +47,13 @@
 
     Model.Id = "layout-wrapper";
     Model.Classes.Add("container-fluid");
-    
+
     //Adds CSS for each visible layer
     foreach (string className in WorkContext.GetLayerCssClasses())
     {
         Model.Classes.Add(className);
     }
-    var tag = Tag(Model, "div"); // using Tag so the layout div gets the classes, id and other attributes added to the Model
+    var tag = Tag(Model, "div"); // using Tag so the layout div gets the classes, id and other attributes added to the Model      
 }
 @tag.StartElement
 @if (Model.Header != null)
@@ -66,33 +66,7 @@
 }
 @if (Model.Navigation != null)
 {
-    <section id="layout-navigation" class="group">
-        <div class="bd-affix-1 affix-top">
-            <div class="bd-layoutbox-1 clearfix">
-                <div class="">
-                    @Display.Branding()
-                    <div class="bd-layoutbox-5 clearfix">
-                        <div class="bd-container-inner">
-                            <nav class="bd-hmenu-1">
-                                <div class="bd-responsivemenu-1 collapse-button">
-                                    <div class="bd-container-inner">
-                                        <div class="bd-menuitem-4">
-                                            <a data-toggle="collapse" data-target=".bd-hmenu-1 .collapse-button + .navbar-collapse" href="#" onclick="return false;">
-                                                <span>Menu</span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="navbar-collapse collapse">
-                                    @Zone(Model.Navigation)
-                                </div>
-                            </nav>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    @Display.TopNavigation();
 }
 @if (Model.BeforeMain != null)
 {

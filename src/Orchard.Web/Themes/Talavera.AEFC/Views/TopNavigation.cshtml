@@ -1,0 +1,72 @@
+﻿@{ 
+    var theme = WorkContext.CurrentTheme;
+   
+
+    Func<dynamic, dynamic>
+    Zone = x => Display(x); // Zone as an alias for Display to help make it obvious when we're displaying zones
+}
+    <section id="layout-navigation" class="group">
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#aefc-navbar-collapse-1" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">
+                        <img class="bd-imagestyles-8" alt="@WorkContext.CurrentSite.SiteName" src="@Url.Content("~/Themes/" + theme.Path + "/Images/" + "customer_logo_scaled.png")" />
+                    </a>
+                </div>
+
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse" id="aefc-navbar-collapse-1" role="navigation">
+                    @Zone(Layout.Navigation)
+                    @*<ul class="nav navbar-nav">
+                            <li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>
+                            <li><a href="#">Link</a></li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#">Action</a></li>
+                                    <li><a href="#">Another action</a></li>
+                                    <li><a href="#">Something else here</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="#">Separated link</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="#">One more separated link</a></li>
+                                </ul>
+                            </li>
+                        </ul>*@
+                </div><!-- /.navbar-collapse -->
+            </div><!-- /.container-fluid -->
+        </nav>
+
+        @*<div class="bd-affix-1 affix-top">
+                <div class="container bd-layoutbox-1 clearfix">
+                    <div class="row">
+                        @Display.Branding()
+                        <div class="bd-layoutbox-5 clearfix">
+                            <div class="bd-container-inner">
+                                <nav class="bd-hmenu-1">
+                                    <div class="bd-responsivemenu-1 collapse-button">
+                                        <div class="bd-container-inner">
+                                            <div class="bd-menuitem-4">
+                                                <a data-toggle="collapse" data-target=".bd-hmenu-1 .collapse-button + .navbar-collapse" href="#" onclick="return false;">
+                                                    <span>Menu</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="navbar-collapse collapse">
+                                        @Zone(Model.Navigation)
+                                    </div>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>*@
+    </section>

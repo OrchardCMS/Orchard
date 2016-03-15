@@ -139,9 +139,10 @@
     <Content Include="Views\Insertions.cshtml" />
     <Content Include="Views\Menu-button-menu.cshtml" />
     <Content Include="Views\Menu.cshtml" />
-    <Content Include="Views\MenuItem.cshtml" />
+    <Content Include="Views\d_MenuItem.cshtml" />
     <Content Include="Views\MenuItemLink.cshtml" />
     <Content Include="Views\BadgeOfHonor.cshtml" />
+    <Content Include="Views\TopNavigation.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Code\" />
