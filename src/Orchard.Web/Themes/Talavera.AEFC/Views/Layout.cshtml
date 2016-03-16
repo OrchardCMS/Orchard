@@ -1,6 +1,4 @@
-﻿@using Talavera.Base;
-
-@functions {
+﻿@functions {
     // To support the layout classifaction below. Implementing as a razor function because we can, could otherwise be a Func<string[], string, string> in the code block following.
     string CalcuClassify(string[] zoneNames, string classNamePrefix)
     {
@@ -46,13 +44,7 @@
     ***************************************************************/
 
     Model.Id = "layout-wrapper";
-    Model.Classes.Add("container-fluid");
-
-    //Adds CSS for each visible layer
-    foreach (string className in WorkContext.GetLayerCssClasses())
-    {
-        Model.Classes.Add(className);
-    }
+    Model.Classes.Add("container-fluid");    
     var tag = Tag(Model, "div"); // using Tag so the layout div gets the classes, id and other attributes added to the Model      
 }
 @tag.StartElement

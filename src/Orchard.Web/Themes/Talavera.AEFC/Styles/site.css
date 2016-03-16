@@ -16087,6 +16087,7 @@ body {
 #layout-wrapper {
   display: flex;
   min-height: 100vh;
+  min-width: 100%;
   flex-direction: column;
 }
 #layout-main-container {
@@ -16115,12 +16116,12 @@ body {
   margin-right: 0;
 }
 /*#region Layers */
-.layer-default {
+html.layer-default > body {
   background-color: #030a27;
   overflow: auto;
   width: 100%;
 }
-.layer-thehomepage {
+html.layer-thehomepage > body {
   background: url('../Images/fitnesscenteratnight.jpg') no-repeat center center;
   background-size: cover;
   background-attachment: fixed;
@@ -16130,6 +16131,9 @@ body {
 }
 /*#endregion Layers */
 /*#region Layouts */
+.orchard-layouts-root {
+  padding-top: 33vh;
+}
 .orchard-layouts-root > .layout-homepage-canvas-top > h2 {
   color: #33add6;
   text-transform: uppercase;
@@ -16180,6 +16184,10 @@ body {
 /*#region menu-button-menu*/
 .menu-button-menu {
   padding-top: 2rem;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: center;
 }
 .menu-button-menu > .btn-group > .btn-default {
   transition: all 300ms ease-in-out;

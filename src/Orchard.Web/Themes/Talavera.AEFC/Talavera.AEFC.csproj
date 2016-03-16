@@ -144,7 +144,6 @@
     <Content Include="Views\BadgeOfHonor.cshtml" />
     <Content Include="Views\TopNavigation.cshtml" />
     <Content Include="Views\MenuItem-button-menu.cshtml" />
-    <Content Include="Views\Document.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Code\" />
