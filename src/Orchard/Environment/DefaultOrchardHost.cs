@@ -146,26 +146,28 @@ namespace Orchard.Environment {
 
                         // Not the first attempt, wait for a while ...
                         if (DelayRetries && i > 0) {
-                            // Waits for i^2 which means 1, 2, 4, 8 ... seconds
+
+                            // Wait for i^2 which means 1, 2, 4, 8 ... seconds
                             Thread.Sleep(TimeSpan.FromSeconds(Math.Pow(i, 2)));
                         }
 
-                        bool failed = false;
                         try {
                             var context = CreateShellContext(settings);
                             ActivateShell(context);
-                        }
-                        catch (Exception ex) {
-                            // An exception at this point is always fatal as it literally kills the
-                            // tenant. What is more fatal than something that kills you?
-                            Logger.Error(ex, "A tenant could not be started: " + settings.Name + " Attempt number: " + i);
-                            failed = true;
-                        }
 
-                        if(failed && i == Retries) {
-                            Logger.Fatal("A tenant could not be started: {0} after {1} retries.", settings.Name, Retries);
+                            // If everything went well, return to stop the retry loop
                             return;
                         }
+                        catch (Exception ex) {
+                            if (i == Retries) {
+                                Logger.Fatal("A tenant could not be started: {0} after {1} retries.", settings.Name, Retries);
+                                return;
+                            }
+                            else {
+                                Logger.Error(ex, "A tenant could not be started: " + settings.Name + " Attempt number: " + i);
+                            }
+                        }
+                        
                     }
 
                     while (_processingEngine.AreTasksPending()) {
