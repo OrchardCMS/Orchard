@@ -10606,10 +10606,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 }
 .nav-pills > li.active > a,
 .nav-pills > li.active > a:hover,
-.nav-pills > li.active > a:focus,
-.widget-menu-widget .menu > li.current > a,
-.widget-menu-widget .menu > li.current > a:hover,
-.widget-menu-widget .menu > li.current > a:focus {
+.nav-pills > li.active > a:focus {
   color: #fff;
   background-color: #337ab7;
 }
@@ -12946,9 +12943,7 @@ button.close {
 #layout-footer #footer-quad:before,
 #layout-footer #footer-quad:after,
 #layout-footer #footer-sig:before,
-#layout-footer #footer-sig:after,
-.widget-menu-widget .menu:before,
-.widget-menu-widget .menu:after {
+#layout-footer #footer-sig:after {
   content: " ";
   display: table;
 }
@@ -12980,8 +12975,7 @@ button.close {
 #layout-after-main:after,
 #layout-tripel-container:after,
 #layout-footer #footer-quad:after,
-#layout-footer #footer-sig:after,
-.widget-menu-widget .menu:after {
+#layout-footer #footer-sig:after {
   clear: both;
 }
 .center-block {
@@ -13229,9 +13223,6 @@ button.close {
 }
 /* Breadcrumbs
    Imports styles needed for removing browser inconsistencies.
-***************************************************************/
-/* Breadcrumbs
-   Some LESS variables that you can configure from your derived theme.
 ***************************************************************/
 /* Common
    Common imports needed in every PGBBT LESS file.
@@ -14004,100 +13995,6 @@ fieldset ol li,
 /* General
    Imports some styles generally needed from Bootstrap and from PGBBT.
 ***************************************************************/
-/* Navigation
-   Navigation-related stylings.
-***************************************************************/
-.widget-menu-widget .menu {
-  margin-bottom: 0;
-  padding-left: 0;
-  list-style: none;
-}
-.widget-menu-widget .menu > li {
-  position: relative;
-  display: block;
-}
-.widget-menu-widget .menu > li > a {
-  position: relative;
-  display: block;
-  padding: 10px 15px;
-}
-.widget-menu-widget .menu > li > a:hover,
-.widget-menu-widget .menu > li > a:focus {
-  text-decoration: none;
-  background-color: #eeeeee;
-}
-.widget-menu-widget .menu > li.disabled > a {
-  color: #777777;
-}
-.widget-menu-widget .menu > li.disabled > a:hover,
-.widget-menu-widget .menu > li.disabled > a:focus {
-  color: #777777;
-  text-decoration: none;
-  background-color: transparent;
-  cursor: not-allowed;
-}
-.widget-menu-widget .menu .open > a,
-.widget-menu-widget .menu .open > a:hover,
-.widget-menu-widget .menu .open > a:focus {
-  background-color: #eeeeee;
-  border-color: #337ab7;
-}
-.widget-menu-widget .menu .nav-divider {
-  height: 1px;
-  margin: 9px 0;
-  overflow: hidden;
-  background-color: #e5e5e5;
-}
-.widget-menu-widget .menu > li > a > img {
-  max-width: none;
-}
-.widget-menu-widget .menu > li {
-  float: left;
-}
-.widget-menu-widget .menu > li > a {
-  border-radius: 4px;
-}
-.widget-menu-widget .menu > li + li {
-  margin-left: 2px;
-}
-.widget-menu-widget .menu > li.active > a,
-.widget-menu-widget .menu > li.active > a:hover,
-.widget-menu-widget .menu > li.active > a:focus {
-  color: #fff;
-  background-color: #337ab7;
-}
-.widget-menu-widget .menu li {
-  float: none;
-}
-@media (min-width: 48em) {
-  .widget-menu-widget .menu {
-    width: 100%;
-  }
-  .widget-menu-widget .menu > li {
-    float: none;
-  }
-  .widget-menu-widget .menu > li > a {
-    text-align: center;
-    margin-bottom: 5px;
-  }
-  .widget-menu-widget .menu > .dropdown .dropdown-menu {
-    top: auto;
-    left: auto;
-  }
-  .widget-menu-widget .menu > li {
-    display: table-cell;
-    width: 1%;
-  }
-}
-@media (min-width: 48em) and (min-width: 768px) {
-  .widget-menu-widget .menu > li {
-    display: table-cell;
-    width: 1%;
-  }
-  .widget-menu-widget .menu > li > a {
-    margin-bottom: 0;
-  }
-}
 /* Breadcrumbs
    Styling for menu breadcrumb widgets.
 ***************************************************************/
@@ -16154,4 +16051,7 @@ ol {
   content: "\f007";
   font-family: "FontAwesome";
   margin-right: 5px;
+}
+#layout-footer #footer-sig .zone-footer {
+  padding: 0;
 }

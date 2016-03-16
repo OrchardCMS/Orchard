@@ -2,8 +2,8 @@
 
 @import "../../Talavera.Base/Styles/site.less";
 
-@import "../../Talavera.Base/Content/bootswatch/darkly/bootswatch";
-@import "../../Talavera.Base/Content/bootswatch/darkly/variables";
+//@import "../../Talavera.Base/Content/bootswatch/darkly/bootswatch";
+//@import "../../Talavera.Base/Content/bootswatch/darkly/variables";
 
 //Begin billionthemes-2608975
 //@import (inline) "../Content/sources/billionthemes/billionthemes-2608975.css";
@@ -22,103 +22,172 @@
 }
 
 /* Minor Changes Theme for AEFC */
-html {    
-    min-height: 100%; 
+html {
     height: 100%;
-    overflow: auto;   
+    font-size: 62.5%;    
 }
 
 body {
-    /* Workaround for some mobile browsers */
     min-height: 100%;
-    height: 100%;    
-    overflow: auto;    
-    position: relative;
     display: flex;
     flex-direction: column;
 }
-//Begin: Layers
 
+#layout-wrapper {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+#layout-main-container {
+    background-color: transparent;
+    flex: 1;
+}
+
+#navigation-toTop {
+    position: fixed;
+    right: 5px;
+    bottom: 10px;
+    cursor: pointer;
+    display: none;
+    text-align: center;
+    z-index: 500;
+}
+
+#navigation-toTop:hover {
+    opacity: .7;
+}
+
+#badgeofhonor {
+    padding-top: 1rem;
+    background-color: white;
+    color: @footer-link-text-color;
+}
+
+#badgeofhonor > .row {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+/*#region Layers */
 .layer-default {
-    background-color: @aelp-dark-blue;
-    flex-grow: 1;
+    background-color: @aefc-dark-blue;    
     overflow: auto;
+    width: 100%;
 }
 
 .layer-thehomepage {
     //Begin: Background
     background: url('../Images/fitnesscenteratnight.jpg') no-repeat center center;
     background-size: cover;
-    background-attachment: fixed;    
+    background-attachment: fixed;
     //End: Background
     overflow: auto;
     min-height: 100%;
-    height: 100%;
+    height: 100%;    
 }
-//End: Layers
+.layer-thehomepage > .layout-header {
+    
+}
+/*#endregion Layers */
 
-//Begin: Top Navigation
-.nav.nav-pills > li + li {
-  margin: 0;
+/*#region Layouts */
+.orchard-layouts-root > .layout-homepage-canvas-top > h2 {
+    color: @aefc-xl-text-color;
+    text-transform: uppercase;
+    font-weight: 800;
 }
 
+.orchard-layouts-root .layout-homepage-canvas-bottom-wrapper-upper {
+    font-size: 2.4rem;
+}
+
+.orchard-layouts-root > .layout-homepage-canvas-bottom
+{
+    background-color: @aefc-background-black;
+    text-align: center;
+    padding: 3.2rem;
+}
+/*#endregion Layouts */
+
+/*#region Top Navigation */
 .zone-navigation .widget-navigation .menu-main-menu.nav-pills > li > a,
 .zone-navigation .widget-navigation .menu-main-menu.nav-pills > li > a:link,
 .zone-navigation .widget-navigation .menu-main-menu.nav-pills > li > a:visited {
-  -webkit-transition: all 500ms;
-  transition: all 500ms;
-  text-transform: uppercase;
-  font-weight: 600;
-  letter-spacing: 1px;
-  color: #d6d6d6;
-  font-size: 14px;
-  margin-right: 15px;
-  padding: 10px 0px 5px;
-  border-bottom: 2px solid rgba(0, 0, 0, 0);
-  border-radius: 0px;
-  line-height: 20.00000001px;
-  display: block;
-  white-space: nowrap;
+    -webkit-transition: all 500ms;
+    transition: all 500ms;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: #d6d6d6;    
+    margin-right: 15px;
+    padding: 10px 0px 5px;
+    border-bottom: 2px solid rgba(0, 0, 0, 0);
+    border-radius: 0px;    
+    display: block;
+    white-space: nowrap;
+    .font-size(1.3);
 }
 
 .zone-navigation .widget-navigation .menu-main-menu.nav-pills > li > a.active {
-  color: #ffffff;
-  border-bottom: 2px solid #33add6;
-  display: block;
+    color: #ffffff;
+    border-bottom: 2px solid #33add6;
+    display: block;
 }
 
-.zone-navigation .widget-navigation.widget-menu-widget.widget
+.zone-navigation .widget-navigation.widget-menu-widget.widget {
+    position: relative;
+    height: 100%;
+    padding-left: 20px;
+    padding-right: 20px;
+    float: right;    
+}
+/*#endregion Top Navigation */
+
+/*#region menu-button-menu*/
+.menu-button-menu
 {
-  position: relative;
-  height: 100%;
-  padding-left: 20px;
-  padding-right: 20px;
-  float: right;
+    padding-top: 2rem;
 }
 
-@media (max-width: @screen-sm-max) {
-  .zone-navigation .widget-navigation.widget-menu-widget.widget {
-    max-width: none;
-    padding-left: 10px;
-    padding-right: 10px;
-  }
+.menu-button-menu > .btn-group > .btn-default
+{
+    transition: all 300ms ease-in-out;
+    padding: 1em 2em;
+    border: 1px solid @aefc-light-blue;
+    background-color: @aefc-background-black;
+    border-radius: 5px;   
+    color: @text-color; 
+    letter-spacing: 1px;
+    vertical-align: central;
 }
-@media (min-width: @screen-sm-min) {
-  .zone-navigation .widget-navigation.widget-menu-widget.widget {
-    max-width: @screen-sm-max - 20;
-  }
+
+.menu-button-menu .btn-group  .btn-default.bwf:hover
+{    
+    background-color: @aefc-light-blue;        
+    color: @text-color;
 }
-@media (min-width: @screen-md-min) {
-  .zone-navigation .widget-navigation.widget-menu-widget.widget {
-   max-width: @screen-md-max - 10;
-  }
+
+.menu-button-menu > .btn-group:last-child > .btn-default
+{
+    background-color: @aefc-light-blue;
+    color: @aefc-light-blue;
 }
-@media (min-width: @screen-lg-min) {
-  .zone-navigation .widget-navigation.widget-menu-widget.widget {      
-    max-width: 1160px;
-  }
+
+.menu-button-menu .btn-group .btn-default.bwf
+{    
+    color: @aefc-light-blue;
 }
-//End: Top Navigation
+
+.menu-button-menu .btn-group:last-child .btn-default,
+.menu-button-menu > .btn-group > .btn-default.bwf > a
+{    
+    color: @text-color;
+    text-decoration: none;
+}
+
+/*#endregion menu-button-menu*/
+
 
 .affix {
     bottom: 0;
@@ -129,7 +198,7 @@ body {
 }
 
 .element-shade {
-    background-color: @aelp-dark-blue-shade;
+    background-color: @aefc-dark-blue-shade;
     color: inherit;
 }
 
@@ -178,73 +247,38 @@ li.bd-linkbutton-2 > a {
     background-color: transparent;
 }
 
-/*.bd-section-1 {
-    margin-top: 17vh;
-}*/
-
-/*.bd-slide-1 {
-    background: none;
-}
-
-.bd-slide-1:before {
-    background-color: transparent;
-}
-
-.bd-slider-1 {
-    height: inherit;
-}
-
-.bd-layoutbox-7 {
-    position: relative;
-    transform: inherit;
-    -webkit-transform: inherit;
-}
-
-.bd-textblock-4 * {
-    color: white;
-}*/
-
 .social-media-icons img {
     height: 48px;
     width: 48px;
     max-width: 48px;
     max-height: 48px;
+    margin: 0 auto;
 }
 
 .social-media-icons .link-text {
     color: @footer-link-text-color;
 }
 
-/*.bd-section-1 h2 {
-    font-size: 100px;
-}*/
-
-.orchard-layouts-root{
-  min-height: 20px;
-  clear: both;    
-  z-index: 1;
-}
-
-.zone-content ul.menu-button-menu {
-    padding-left: inherit;
+.orchard-layouts-root {
+    min-height: 20px;
+    clear: both;
+    z-index: 1;
 }
 
 .standard-text {
     color: @text-color;
 }
 
-.orchard-layouts-root > .shadow-gray > .container-fluid > .row > * > .container-fluid > .row > * > hr
-{    
-    border-top: 2px solid #33add6; 
+.orchard-layouts-root > .shadow-gray > .container-fluid > .row > * > .container-fluid > .row > * > hr {
+    border-top: 2px solid #33add6;
 }
 
 .orchard-layouts-root .text-center hr {
-    border-top: 2px solid #33add6; 
+    border-top: 2px solid #33add6;
     width: 300px;
 }
 
-.orchard-layouts-root > .container-fluid > .row .well-lg
-{
+.orchard-layouts-root > .container-fluid > .row .well-lg {
     border-radius: unset;
 }
 
@@ -256,133 +290,160 @@ li.bd-linkbutton-2 > a {
     background-color: transparent;
 }
 
-.active-icon-color {
-    color: @active-icon-color;
-}
-
-//Begin: Icons
+/*#region Icons */
 .bwf:before {
-  display: inline-block;
-  font-family: 'Billion Web Font';
-  font-size: 20px;
-  font-style: normal;
-  font-weight: normal;
-  line-height: 18.57142858px;
-  line-height: 13px;
-  text-decoration: inherit;
-  text-align: center;
-  text-transform: none;
-  vertical-align: middle;
-  visibility: inherit;
-  width: 1em;
-  width: auto;
+    display: inline-block;
+    font-family: 'Billion Web Font';
+    font-size: 20px;
+    font-style: normal;
+    font-weight: normal;
+    line-height: 18.57142858px;
+    line-height: 13px;
+    text-decoration: inherit;
+    text-align: center;
+    text-transform: none;
+    vertical-align: middle;
+    visibility: inherit;
+    width: 1em;
+    width: auto;
 }
 
-.bwf-icon-enevlope {
-  text-decoration: inherit;
-  display: inline-block;
-  speak: none;
+/*#region Icon enevelope */
+.bwf-icon-enevelope {
+    text-decoration: inherit;
+    display: inline-block;
+    speak: none;
 }
 
-.bwf-icon-enevlope:before {
-  content: '\0157';
+.bwf-icon-enevelope:before {
+    content: '\0157';
 }
 
-.bwf-icon-enevlope:hover.active:before,
-.bwf-icon-enevlope.active:before {
-  display: inline-block;
-  vertical-align: middle;
-  text-decoration: none;
+.bwf-icon-enevelope:hover.active:before,
+.bwf-icon-enevelope.active:before {
+    display: inline-block;
+    vertical-align: middle;
+    text-decoration: none;
 }
+/*#endregion Icon enevelope */
 
+/*#region Icon Earphone */
 .bwf-icon-earphone {
-  text-decoration: inherit;
-  display: inline-block;
-  speak: none;
+    text-decoration: inherit;
+    display: inline-block;
+    speak: none;
 }
 
 .bwf-icon-earphone:before {
-  content: '\0288';
+    content: '\0288';
 }
 
 .bwf-icon-earphone:hover.active:before,
 .bwf-icon-earphone.active:before {
-  display: inline-block;
-  vertical-align: middle;
-  text-decoration: none;
+    display: inline-block;
+    vertical-align: middle;
+    text-decoration: none;
 }
-//End: Icons
+/*#endregion Icon Earphone */
 
-#layout-wrapper {
-    min-height: 100%;
-    width: 100%;
-}
-
-#layout-main-container {
-    background-color: transparent;
+/*#region Icon Map Pin */
+.bwf-icon-mappin {
+    text-decoration: inherit;
+    display: inline-block;
+    speak: none;
 }
 
-#layout-navigation
-{
-    flex: 1;
-    overflow: auto;
+.bwf-icon-mappin:before {
+    content: '\0129';
 }
 
-#navigation-toTop {
-    position: fixed;
-    right: 5px;
-    bottom: 10px;
-    cursor: pointer;
-    display: none;
-    text-align: center;
-    z-index: 500;
+.bwf-icon-mappin:hover.active:before,
+.bwf-icon-mappin.active:before {
+    display: inline-block;
+    vertical-align: middle;
+    text-decoration: none;
+}
+/*#endregion Icon Map Pin */
+
+/*#region Icon Information */
+.bwf-icon-information {
+    text-decoration: inherit;
+    display: inline-block;
+    speak: none;
 }
 
-#navigation-toTop:hover {
-    opacity: .7;
+.bwf-icon-information:before {
+    content: '\27a';
 }
 
-#badgeofhonor {
-    padding-top: 1rem;
-    background-color: white;
-    color: @footer-link-text-color; 
+.bwf-icon-information:hover.active:before,
+.bwf-icon-information.active:before {
+    display: inline-block;
+    vertical-align: middle;
+    text-decoration: none;
 }
+/*#endregion Icon Information */
 
-@media (max-width: @screen-sm-min) {
-    .bd-menuitem-6 {
-        display: inline-block;
+/*#endregion Icons */
+
+/*#region Media Queries */
+@media (max-width: @screen-sm-max) {
+    body {
+        .font-size(1.0);
     }
 
-    /*.widget-menu-widget .menu li.dropdown > ul {
-        position: relative;
+    /*.zone-navigation .widget-navigation.widget-menu-widget.widget {
+        max-width: none;
+        padding-left: 10px;
+        padding-right: 10px;
     }*/
 
-    .dropdown-menu > li{
-        display: inline;
+    .orchard-layouts-root > .layout-homepage-canvas-top > h2 {
+        .font-size(5);
     }
-
-    .bd-menu-3.nav-pills .bd-menuitem-6
-    {      
-        //display: inline-block;  
-    }
-
-    .bd-menu-3.nav-pills .bd-menuitem-6 > a,
-    .bd-menu-3.nav-pills .bd-menuitem-6 > a:link,
-    .bd-menu-3.nav-pills .bd-menuitem-6 > a:visited {
-        color: inherit;
-    }    
-
-    /*.bd-section-1 {
-        margin-top: inherit;
-    }
-
-    .bd-section-1 h2 {
-        font-size: 58px;
-    }    
-
-    #layout-footer{
-        padding-top: 300px;
-    }*/
 }
+
+@media (min-width: @screen-sm-min) {
+    body {
+        .font-size(1.2);
+    }
+
+    /*.zone-navigation .widget-navigation.widget-menu-widget.widget {
+        max-width: @screen-sm-max - 20;
+    }*/
+
+    .orchard-layouts-root > .layout-homepage-canvas-top > h2 {
+        .font-size(7);
+    }
+}
+
+@media (min-width: @screen-md-min) {
+    body {
+        .font-size(1.6);
+    }
+
+    /*.zone-navigation .widget-navigation.widget-menu-widget.widget {
+        max-width: @screen-md-max - 10;
+    }*/
+
+    .orchard-layouts-root > .layout-homepage-canvas-top > h2 {
+        .font-size(9);
+    }
+}
+
+@media (min-width: @screen-lg-min) {
+    body {
+        .font-size(2);
+    }
+    /*.zone-navigation .widget-navigation.widget-menu-widget.widget {
+        max-width: 1160px;
+    }*/
+
+    .orchard-layouts-root > .layout-homepage-canvas-top > h2 {
+        .font-size(11)
+    }
+}
+
+/*#endregion Media Queries */
 
 //End: Talavera.AEFC
