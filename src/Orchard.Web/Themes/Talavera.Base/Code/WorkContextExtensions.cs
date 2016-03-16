@@ -8,7 +8,7 @@ namespace Talavera.Base
 {
     static public class WorkContextExtensions
     {
-        static public IList<string> GetLayerCssClasses(this WorkContext workContext)
+        static public IList<string> GetLayerCssClassesAsList(this WorkContext workContext)
         {
             var widgetsService = workContext.Resolve<IWidgetsService>();
             var conditionManager = workContext.Resolve<IConditionManager>();
@@ -49,6 +49,7 @@ namespace Talavera.Base
                 {
                 }
             }
+            
             return sb.ToString();
         }
     }
