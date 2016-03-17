@@ -70,15 +70,24 @@ namespace Orchard.Taxonomies.Controllers {
             var checkedEntries = viewModel.Terms.Where(t => t.IsChecked).ToList();
             switch (viewModel.BulkAction) {
                 case TermsAdminIndexBulkAction.None:
+                    Services.Notifier.Information(T("No action selected."));
                     break;
                 case TermsAdminIndexBulkAction.Delete:
                     if (!Services.Authorizer.Authorize(Permissions.ManageTerms, T("Couldn't delete term")))
                         return new HttpUnauthorizedResult();
+                    
+                    if(!checkedEntries.Any()) {
+                        Services.Notifier.Information(T("No terms selected."));
+                        break;
+                    }
 
                     foreach (var entry in checkedEntries) {
                         var term = _taxonomyService.GetTerm(entry.Id);
                         _taxonomyService.DeleteTerm(term);
                     }
+
+                    Services.Notifier.Information(T.Plural("{0} term has been removed.", "{0} terms have been removed.", checkedEntries.Count));
+
                     break;
                 case TermsAdminIndexBulkAction.Merge:
                     if (!Services.Authorizer.Authorize(Permissions.ManageTerms, T("Couldn't delete term")))
@@ -99,8 +108,6 @@ namespace Orchard.Taxonomies.Controllers {
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-
-            Services.Notifier.Information(T("{0} term have been removed.", checkedEntries.Count));
 
             return RedirectToAction("Index", new { taxonomyId = viewModel.TaxonomyId });
         }
@@ -207,7 +214,7 @@ namespace Orchard.Taxonomies.Controllers {
 
         public ActionResult Edit(int id) {
 
-            if (!Services.Authorizer.Authorize(Permissions.ManageTerms, T("Not allowed to manage taxonomies")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageTerms, T("Not allowed to manage terms")))
                 return new HttpUnauthorizedResult();
 
             var term = _taxonomyService.GetTerm(id);
@@ -220,7 +227,7 @@ namespace Orchard.Taxonomies.Controllers {
 
         [HttpPost, ActionName("Edit")]
         public ActionResult EditPost(int id) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageTaxonomies, T("Couldn't edit taxonomy")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageTerms, T("Couldn't edit term")))
                 return new HttpUnauthorizedResult();
 
             var term = _taxonomyService.GetTerm(id);

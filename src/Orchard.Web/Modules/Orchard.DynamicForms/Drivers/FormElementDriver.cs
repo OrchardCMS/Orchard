@@ -82,7 +82,6 @@ namespace Orchard.DynamicForms.Drivers {
                         Name: "HtmlEncode",
                         Title: "Html Encode",
                         Value: "true",
-                        Checked: true,
                         Description: T("Check this option to automatically HTML encode submitted values to prevent code injection.")),
                     _CreateContent: shape.Checkbox(
                         Id: "CreateContent",

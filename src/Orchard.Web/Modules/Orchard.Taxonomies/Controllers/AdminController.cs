@@ -85,7 +85,7 @@ namespace Orchard.Taxonomies.Controllers {
 
         [HttpPost]
         public ActionResult Delete(int id) {
-            if (!Services.Authorizer.Authorize(Permissions.CreateTaxonomy, T("Couldn't delete taxonomy")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageTaxonomies, T("Couldn't delete taxonomy")))
                 return new HttpUnauthorizedResult();
 
             var taxonomy = _taxonomyService.GetTaxonomy(id);

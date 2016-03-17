@@ -4,7 +4,7 @@ namespace Orchard.OutputCache.Models {
     [Serializable]
     public class CacheItem {
         // used for serialization compatibility
-        public static readonly string Version = "1";
+        public static readonly string Version = "2";
 
         public DateTime CachedOnUtc { get; set; }
         public int Duration { get; set; }
@@ -18,6 +18,7 @@ namespace Orchard.OutputCache.Models {
         public string Tenant { get; set; }
         public int StatusCode { get; set; }
         public string[] Tags { get; set; }
+        public string ETag { get; set; }
 
         public int ValidFor {
             get { return Duration; }
