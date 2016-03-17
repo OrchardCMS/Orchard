@@ -65,8 +65,9 @@ Scenario: Creating and using Boolean fields
     # The value should be required
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
-            | name                                    | value |
-            | Fields[0].BooleanFieldSettings.Optional | false |
+            | name                                        | value    |
+            | Fields[0].BooleanFieldSettings.Optional     | false    |
+            | Fields[0].BooleanFieldSettings.DefaultValue | Neutral  |
         And I fill in 
             | name                                       | value  |
             | Fields[0].BooleanFieldSettings.NotSetLabel | May be |
