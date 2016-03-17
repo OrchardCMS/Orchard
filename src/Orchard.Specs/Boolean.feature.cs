@@ -193,6 +193,9 @@ this.ScenarioSetup(scenarioInfo);
             table6.AddRow(new string[] {
                         "Fields[0].BooleanFieldSettings.Optional",
                         "false"});
+            table6.AddRow(new string[] {
+                        "Fields[0].BooleanFieldSettings.DefaultValue",
+                        "Neutral"});
 #line 67
         testRunner.And("I fill in", ((string)(null)), table6, "And ");
 #line hidden
@@ -202,7 +205,7 @@ this.ScenarioSetup(scenarioInfo);
             table7.AddRow(new string[] {
                         "Fields[0].BooleanFieldSettings.NotSetLabel",
                         "May be"});
-#line 70
+#line 71
         testRunner.And("I fill in", ((string)(null)), table7, "And ");
 #line hidden
             TechTalk.SpecFlow.Table table8 = new TechTalk.SpecFlow.Table(new string[] {
@@ -211,11 +214,11 @@ this.ScenarioSetup(scenarioInfo);
             table8.AddRow(new string[] {
                         "Fields[0].BooleanFieldSettings.SelectionMode",
                         "Radiobutton"});
-#line 73
+#line 74
         testRunner.And("I fill in", ((string)(null)), table8, "And ");
-#line 76
-        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 77
+        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 78
         testRunner.And("I go to \"Admin/Contents/Create/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             TechTalk.SpecFlow.Table table9 = new TechTalk.SpecFlow.Table(new string[] {
@@ -224,11 +227,11 @@ this.ScenarioSetup(scenarioInfo);
             table9.AddRow(new string[] {
                         "Event.Active.Value",
                         ""});
-#line 78
+#line 79
         testRunner.And("I fill in", ((string)(null)), table9, "And ");
-#line 81
-        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 82
+        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 83
     testRunner.Then("I should see \"The field Active is mandatory.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
