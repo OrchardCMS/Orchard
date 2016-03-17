@@ -1,0 +1,45 @@
+﻿.display-flex {
+    display: -webkit-box; /* OLD - iOS 6-, Safari 3.1-6 */
+    display: -moz-box; /* OLD - Firefox 19- (buggy but mostly works) */
+    display: -ms-flexbox; /* TWEENER - IE 10 */
+    display: -webkit-flex; /* NEW - Chrome */
+    display: flex;
+}
+
+.flex-direction-column {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+}
+
+.flex-direction-row {
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+}
+
+.flex(@flexValue) {
+    -webkit-box-flex: @flexValue;
+    -webkit-flex: @flexValue;
+    -ms-flex: @flexValue;
+    flex: @flexValue;
+}
+
+
+.navbar-styling {
+    -webkit-transition: all 500ms;
+    transition: all 500ms;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin-right: 15px;
+    padding: 10px 0px 5px;
+    border-radius: 0px;
+    display: block;
+    white-space: nowrap;
+    .font-size(1.4);
+}

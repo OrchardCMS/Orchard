@@ -1,7 +1,7 @@
 ﻿@using System.Web.Mvc;
 
-<div class="user-display">
-    @*@if (WorkContext.CurrentUser != null) {
+@*<div class="user-display">
+    @if (WorkContext.CurrentUser != null) {
         <span class="user-actions welcome">
             @T("Welcome, <strong>{0}</strong>!", Html.Raw("<a href=\"" + @Url.Action("ChangePassword", new { Controller = "Account", Area = "Orchard.Users" }) + "\">" + Html.ItemDisplayText(WorkContext.CurrentUser) + "</a>"))
         </span>
@@ -13,5 +13,5 @@
         </span>
     } else {
         <span class="user-actions">@Html.ActionLink(T("Sign In").ToString(), "LogOn", new { Controller = "Account", Area = "Orchard.Users", ReturnUrl = (Request.QueryString["ReturnUrl"] ?? Request.RawUrl) }, new { rel = "nofollow" })</span>
-    }*@
-</div>
+    }
+</div>*@

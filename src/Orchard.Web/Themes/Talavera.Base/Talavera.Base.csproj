@@ -52,14 +52,6 @@
     <Reference Include="Orchard.Conditions">
       <HintPath>..\..\Modules\Orchard.Conditions\bin\Orchard.Conditions.dll</HintPath>
     </Reference>
-    <Reference Include="Orchard.Core, Version=1.9.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Core\bin\Orchard.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Orchard.Framework, Version=1.9.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Orchard\bin\Debug\Orchard.Framework.dll</HintPath>
-    </Reference>
     <Reference Include="Orchard.Widgets">
       <HintPath>..\..\Modules\Orchard.Widgets\bin\Orchard.Widgets.dll</HintPath>
     </Reference>
@@ -666,6 +658,16 @@
     <Content Include="Views\User.cshtml" />
     <Content Include="Views\Elements\Grid.cshtml" />
     <Content Include="Views\Elements\Column.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
+      <Project>{2d1d92bb-4555-4cbe-8d0e-63563d6ce4c6}</Project>
+      <Name>Orchard.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\Orchard.Core.csproj">
+      <Project>{9916839c-39fc-4ceb-a5af-89ca7e87119f}</Project>
+      <Name>Orchard.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
