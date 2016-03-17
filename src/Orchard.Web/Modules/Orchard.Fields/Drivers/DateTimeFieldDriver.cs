@@ -133,7 +133,12 @@ namespace Orchard.Fields.Drivers {
                 var showTime = settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.TimeOnly;
 
                 if (settings.Required && ((showDate && String.IsNullOrWhiteSpace(viewModel.Editor.Date)) || (showTime && String.IsNullOrWhiteSpace(viewModel.Editor.Time)))) {
-                    updater.AddModelError(GetPrefix(field, part), T("{0} is required.", field.DisplayName));
+                    if (settings.DefaultValue.HasValue) {
+                        field.DateTime = settings.DefaultValue.Value;
+                    }
+                    else {
+                        updater.AddModelError(GetPrefix(field, part), T("{0} is required.", field.DisplayName));
+                    }
                 }
                 else {
                     try {
@@ -149,7 +154,8 @@ namespace Orchard.Fields.Drivers {
                             else {
                                 field.DateTime = utcDateTime.Value;
                             }
-                        } else {
+                        }
+                        else {
                             field.DateTime = settings.DefaultValue.HasValue ? settings.DefaultValue.Value : DateTime.MinValue;
                         }
                     }
