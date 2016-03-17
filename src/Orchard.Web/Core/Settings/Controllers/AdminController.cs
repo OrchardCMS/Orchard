@@ -82,7 +82,7 @@ namespace Orchard.Core.Settings.Controllers {
                 return View(model);
             }
 
-            Services.Notifier.Information(T("Settings updated"));
+            Services.Notifier.Success(T("Settings updated"));
             return RedirectToAction("Index");
         }
 

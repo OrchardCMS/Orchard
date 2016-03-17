@@ -167,7 +167,7 @@ namespace Orchard.Modules.Controllers {
                 Services.Notifier.Error(T("Recipes contains {0} unsupported module installation steps.", recipe.Name));
             }
 
-            Services.Notifier.Information(T("The recipe {0} was executed successfully.", recipe.Name));
+            Services.Notifier.Success(T("The recipe {0} was executed successfully.", recipe.Name));
             
             return RedirectToAction("Recipes");
 
@@ -234,7 +234,7 @@ namespace Orchard.Modules.Controllers {
                             try {
                                 _reportsCoordinator.Register("Data Migration", "Upgrade " + id, "Orchard installation");
                                 _dataMigrationManager.Update(id);
-                                Services.Notifier.Information(T("The feature {0} was updated successfully", id));
+                                Services.Notifier.Success(T("The feature {0} was updated successfully", id));
                             }
                             catch (Exception exception) {
                                 Services.Notifier.Error(T("An error occured while updating the feature {0}: {1}", id, exception.Message));

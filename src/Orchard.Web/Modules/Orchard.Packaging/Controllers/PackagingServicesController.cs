@@ -130,10 +130,10 @@ namespace Orchard.Packaging.Controllers {
                 PackageInfo packageInfo = _packageManager.Install(packageId, version, source.FeedUrl, MapAppRoot());
 
                 if (DefaultExtensionTypes.IsTheme(packageInfo.ExtensionType)) {
-                    Services.Notifier.Information(T("The theme has been successfully installed. It can be enabled in the \"Themes\" page accessible from the menu."));
+                    Services.Notifier.Success(T("The theme has been successfully installed. It can be enabled in the \"Themes\" page accessible from the menu."));
                 } 
                 else if (DefaultExtensionTypes.IsModule(packageInfo.ExtensionType)) {
-                    Services.Notifier.Information(T("The module has been successfully installed."));
+                    Services.Notifier.Success(T("The module has been successfully installed."));
 
                     IPackageRepository packageRepository = PackageRepositoryFactory.Default.CreateRepository(new PackageSource(source.FeedUrl, "Default"));
                     IPackage package = packageRepository.FindPackage(packageId);
@@ -174,10 +174,10 @@ namespace Orchard.Packaging.Controllers {
                 System.IO.File.Delete(fullFileName);
 
                 if (DefaultExtensionTypes.IsTheme(extensionDescriptor.ExtensionType)) {
-                    Services.Notifier.Information(T("The theme has been successfully installed. It can be enabled in the \"Themes\" page accessible from the menu."));
+                    Services.Notifier.Success(T("The theme has been successfully installed. It can be enabled in the \"Themes\" page accessible from the menu."));
                 }
                 else if (DefaultExtensionTypes.IsModule(extensionDescriptor.ExtensionType)) {
-                    Services.Notifier.Information(T("The module has been successfully installed."));
+                    Services.Notifier.Success(T("The module has been successfully installed."));
 
                     return InstallPackageDetails(extensionDescriptor, redirectUrl);
                 }
@@ -278,7 +278,7 @@ namespace Orchard.Packaging.Controllers {
                 return Redirect(!String.IsNullOrEmpty(retryUrl) ? retryUrl : returnUrl);
             }
 
-            Services.Notifier.Information(T("Uninstalled package \"{0}\"", id));
+            Services.Notifier.Success(T("Uninstalled package \"{0}\"", id));
             return this.RedirectLocal(returnUrl, "~/");
         }
 

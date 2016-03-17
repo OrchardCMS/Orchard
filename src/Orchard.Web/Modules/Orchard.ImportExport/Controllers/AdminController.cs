@@ -54,7 +54,7 @@ namespace Orchard.ImportExport.Controllers {
 
             if (ModelState.IsValid) {
                 var executionId = _importExportService.Import(new StreamReader(Request.Files["RecipeFile"].InputStream).ReadToEnd());
-                Services.Notifier.Information(T("Your recipe has been imported."));
+                Services.Notifier.Success(T("Your recipe has been imported."));
 
                 return RedirectToAction("ImportResult", new { ExecutionId = executionId });
             }

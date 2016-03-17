@@ -199,7 +199,7 @@ namespace Orchard.Workflows.Controllers {
 
             if (workflowDefinition != null) {
                 _workflowDefinitionRecords.Delete(workflowDefinition);
-                Services.Notifier.Information(T("Workflow {0} deleted", workflowDefinition.Name));
+                Services.Notifier.Success(T("Workflow {0} deleted", workflowDefinition.Name));
             }
 
             return RedirectToAction("Index");
@@ -214,7 +214,7 @@ namespace Orchard.Workflows.Controllers {
 
             if (workflow != null) {
                 _workflowRecords.Delete(workflow);
-                Services.Notifier.Information(T("Workflow deleted"));
+                Services.Notifier.Success(T("Workflow deleted"));
             }
 
             return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
@@ -325,7 +325,7 @@ namespace Orchard.Workflows.Controllers {
                 }
             }
 
-            Services.Notifier.Information(T("Workflow saved successfully"));
+            Services.Notifier.Success(T("Workflow saved successfully"));
 
             // Don't pass the localId to force the activites to refresh and use the deterministic clientId.
             return RedirectToAction("Edit", new { id });

@@ -124,7 +124,7 @@ namespace Orchard.Templates.Controllers {
 
                             _contentManager.Publish(item);
                         }
-                        Services.Notifier.Information(T("Content successfully published."));
+                        Services.Notifier.Success(T("Content successfully published."));
                         break;
                     case ContentsBulkAction.Unpublish:
                         foreach (var item in checkedContentItems) {
@@ -135,7 +135,7 @@ namespace Orchard.Templates.Controllers {
 
                             _contentManager.Unpublish(item);
                         }
-                        Services.Notifier.Information(T("Content successfully unpublished."));
+                        Services.Notifier.Success(T("Content successfully unpublished."));
                         break;
                     case ContentsBulkAction.Remove:
                         foreach (var item in checkedContentItems) {
@@ -146,7 +146,7 @@ namespace Orchard.Templates.Controllers {
 
                             _contentManager.Remove(item);
                         }
-                        Services.Notifier.Information(T("Content successfully removed."));
+                        Services.Notifier.Success(T("Content successfully removed."));
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();

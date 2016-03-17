@@ -160,7 +160,7 @@ namespace Upgrade.Controllers {
                         _orchardServices.Notifier.Warning(T("Some content items could not be imported. Please refer to the corresponding Report."));
                     }
                     else {
-                        _orchardServices.Notifier.Information(T("{0} was migrated successfully", contentType));
+                        _orchardServices.Notifier.Success(T("{0} was migrated successfully", contentType));
                     }
                 }
             }
