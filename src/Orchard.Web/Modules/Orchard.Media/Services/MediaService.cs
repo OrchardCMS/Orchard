@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using Ionic.Zip;
-using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.FileSystems.Media;
 using Orchard.Localization;
@@ -19,7 +18,6 @@ namespace Orchard.Media.Services {
     /// Among other things it provides filtering functionalities on file types.
     /// The actual manipulation of the files is, however, delegated to the IStorageProvider.
     /// </summary>
-    [UsedImplicitly]
     public class MediaService : IMediaService {
         private readonly IStorageProvider _storageProvider;
         private readonly IOrchardServices _orchardServices;
@@ -74,7 +72,7 @@ namespace Orchard.Media.Services {
                     Size = folder.GetSize(),
                     LastUpdated = folder.GetLastUpdated(),
                     MediaPath = folder.GetPath()
-                }).Where(f => !f.Name.Equals("RecipeJournal", StringComparison.OrdinalIgnoreCase)).ToList();
+                }).ToList();
         }
 
         /// <summary>

@@ -78,7 +78,7 @@
     });
 
     $(".check-all").change(function () {
-        $(this).parents("table.items").find(":checkbox:not(:disabled)").prop('checked', $(this).prop("checked"));
+        $("input[type=checkbox]:not(:disabled)").prop('checked', $(this).prop("checked"))
     });
 
     // Handle keypress events in bulk action fieldsets that are part of a single form.

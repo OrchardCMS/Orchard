@@ -76,7 +76,7 @@ namespace Orchard.Layouts.Services {
                             icon = descriptor.ToolboxIcon,
                             hasEditor = descriptor.EnableEditorDialog,
 
-                            // If the element has no editor then the toolbox will add the element straight to to designer when being dragged & dropped,
+                            // If the element has no editor then the toolbox will add the element straight to the designer when being dragged & dropped,
                             // so we'll want to present the user with a prerendered element.
                             html = descriptor.EnableEditorDialog ? "" : RenderElement(element, new DescribeElementsContext { Content = content })
                         };

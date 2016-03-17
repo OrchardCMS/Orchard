@@ -37,7 +37,7 @@ namespace Orchard.Layouts.Drivers {
             return Editor(context, editor);
         }
 
-        protected override void OnDisplaying(ContentItem element, ElementDisplayContext context) {
+        protected override void OnDisplaying(ContentItem element, ElementDisplayingContext context) {
             var contentItemIds = context.Content != null ? RemoveCurrentContentItemId(element.ContentItemIds, context.Content.Id) : element.ContentItemIds;
             var displayType = element.DisplayType;
             var contentItems = GetContentItems(contentItemIds).ToArray();

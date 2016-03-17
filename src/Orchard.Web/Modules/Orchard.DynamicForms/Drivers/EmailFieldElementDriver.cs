@@ -1,8 +1,8 @@
 ﻿using Orchard.DynamicForms.Elements;
-using Orchard.Forms.Services;
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
 using Orchard.Layouts.Helpers;
+using Orchard.Layouts.Services;
 using Orchard.Tokens;
 using DescribeContext = Orchard.Forms.Services.DescribeContext;
 
@@ -10,7 +10,7 @@ namespace Orchard.DynamicForms.Drivers {
     public class EmailFieldElementDriver : FormsElementDriver<EmailField>{
         private readonly ITokenizer _tokenizer;
 
-        public EmailFieldElementDriver(IFormManager formManager, ITokenizer tokenizer) : base(formManager) {
+        public EmailFieldElementDriver(IFormsBasedElementServices formsServices, ITokenizer tokenizer) : base(formsServices) {
             _tokenizer = tokenizer;
         }
 
@@ -76,10 +76,10 @@ namespace Orchard.DynamicForms.Drivers {
             });
         }
 
-        protected override void OnDisplaying(EmailField element, ElementDisplayContext context) {
+        protected override void OnDisplaying(EmailField element, ElementDisplayingContext context) {
             context.ElementShape.ProcessedName = _tokenizer.Replace(element.Name, context.GetTokenData());
-            context.ElementShape.ProcessedLabel = _tokenizer.Replace(element.Label, context.GetTokenData());
-            context.ElementShape.ProcessedValue = _tokenizer.Replace(element.RuntimeValue, context.GetTokenData());
+            context.ElementShape.ProcessedLabel = _tokenizer.Replace(element.Label, context.GetTokenData(), new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
+            context.ElementShape.ProcessedValue = element.RuntimeValue;
         }
     }
 }

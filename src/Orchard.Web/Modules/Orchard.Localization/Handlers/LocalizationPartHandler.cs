@@ -1,5 +1,4 @@
 ﻿using System.Globalization;
-using JetBrains.Annotations;
 using Orchard.Data;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
@@ -7,7 +6,6 @@ using Orchard.Localization.Models;
 using Orchard.Localization.Services;
 
 namespace Orchard.Localization.Handlers {
-    [UsedImplicitly]
     public class LocalizationPartHandler : ContentHandler {
         private readonly ICultureManager _cultureManager;
         private readonly IContentManager _contentManager;
@@ -44,10 +42,10 @@ namespace Orchard.Localization.Handlers {
         }
 
         protected void LazyLoadHandlers(LocalizationPart localizationPart) {
-            localizationPart.CultureField.Loader(ctx => 
+            localizationPart.CultureField.Loader(() => 
                 _cultureManager.GetCultureById(localizationPart.Record.CultureId));
 
-            localizationPart.MasterContentItemField.Loader(ctx =>
+            localizationPart.MasterContentItemField.Loader(() =>
                 _contentManager.Get(localizationPart.Record.MasterContentItemId, VersionOptions.AllVersions));
         }
     }

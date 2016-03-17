@@ -47,5 +47,15 @@ namespace Orchard.Data.Migration.Schema {
             var command = new DropIndexCommand(Name, indexName);
             TableCommands.Add(command);
         }
+
+        public void AddUniqueConstraint(string constraintName, params string[] columnNames) {
+            var command = new AddUniqueConstraintCommand(Name, constraintName, columnNames);
+            TableCommands.Add(command);
+        }
+
+        public void DropUniqueConstraint(string constraintName) {
+            var command = new DropUniqueConstraintCommand(Name, constraintName);
+            TableCommands.Add(command);
+        }
     }
 }

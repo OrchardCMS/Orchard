@@ -12,7 +12,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Orchard.Layouts</RootNamespace>
     <AssemblyName>Orchard.Layouts</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -49,55 +49,75 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\lib\newtonsoft.json\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.ComponentModel.DataAnnotations">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
-    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\lib\aspnetwebapi\System.Web.Http.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.Mvc, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
-    </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Web.Routing" />
-    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.WebPages.dll</HintPath>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Default.html" />
+    <Content Include="Assets\JavaScript\Models\RecycleBin.js" />
     <Content Include="Assets.json" />
     <Content Include="Images\azure.png" />
     <Content Include="Images\illustration.jpg" />
     <Content Include="Images\logo.svg" />
     <Content Include="Placement.info" />
-    <Content Include="Scripts\contentpart-layouts-settings.js" />
-    <Content Include="Scripts\DemoConfig.js" />
-    <Content Include="Scripts\DemoData.js" />
     <Content Include="Scripts\element-browser.js" />
     <Content Include="Scripts\AutoFocus.js" />
+    <Content Include="Scripts\Elements\Image.js" />
     <Content Include="Scripts\LayoutDesignerHost.js" />
     <Content Include="Scripts\element-editor.js" />
     <Content Include="Scripts\frame.js" />
     <Content Include="Scripts\jquery.browser.js" />
     <Content Include="Scripts\jquery.deserialize.js" />
-    <Content Include="Scripts\LayoutEditor.js" />
-    <Content Include="Scripts\LayoutEditor.min.js" />
-    <Content Include="Assets\JavaScript\LayoutEditor\Directives\Html.js" />
     <Content Include="Assets\JavaScript\LayoutEditor\Directives\Editor.js" />
     <Content Include="Assets\JavaScript\LayoutEditor\Directives\Canvas.js" />
     <Content Include="Assets\JavaScript\LayoutEditor\Directives\Child.js" />
@@ -111,39 +131,29 @@
     <Content Include="Assets\JavaScript\LayoutEditor\Module.js" />
     <Content Include="Assets\JavaScript\LayoutEditor\Services\Clipboard.js" />
     <Content Include="Assets\JavaScript\LayoutEditor\Services\ScopeConfigurator.js" />
-    <Content Include="Scripts\Lib.js" />
-    <Content Include="Scripts\Lib.min.js" />
-    <Content Include="Assets\JavaScript\Lib\angular-resource.js" />
-    <Content Include="Assets\JavaScript\Lib\angular-sanitize.js" />
-    <Content Include="Assets\JavaScript\Lib\angular.js" />
-    <Content Include="Assets\JavaScript\Lib\sortable.js" />
-    <Content Include="Assets\JavaScript\Lib\underscore.js" />
-    <Content Include="Scripts\Models.js" />
-    <Content Include="Scripts\Models.min.js" />
     <Content Include="Assets\JavaScript\Models\Canvas.js" />
     <Content Include="Assets\JavaScript\Models\Editor.js" />
     <Content Include="Assets\JavaScript\Models\Column.js" />
     <Content Include="Assets\JavaScript\Models\Container.js" />
     <Content Include="Assets\JavaScript\Models\Content.js" />
     <Content Include="Assets\JavaScript\Models\Element.js" />
-    <Content Include="Assets\JavaScript\Models\Html.js" />
     <Content Include="Assets\JavaScript\Models\Grid.js" />
     <Content Include="Assets\JavaScript\Models\Helpers.js" />
     <Content Include="Assets\JavaScript\Models\Row.js" />
     <Content Include="Scripts\LayoutDecoder.js" />
     <Content Include="Scripts\dialog.js" />
-    <Content Include="Scripts\designer.canvas.js" />
     <Content Include="Data\Canvas.json" />
     <Content Include="Data\ContentTypes.json" />
     <Content Include="Images\Web.config">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Scripts\LayoutEditor.js" />
+    <Content Include="Scripts\LayoutEditor.min.js" />
+    <Content Include="Scripts\Models.js" />
+    <Content Include="Scripts\Models.min.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Styles\LayoutEditor.css" />
     <Content Include="Styles\LayoutEditor.min.css" />
-    <Content Include="Styles\Fonts\fontawesome-webfont.svg" />
-    <Content Include="Styles\Lib.css" />
-    <Content Include="Styles\Lib.min.css" />
     <Content Include="Styles\menu.layouts-admin.css" />
     <Content Include="Styles\menu.elements.png" />
     <Content Include="Styles\element-editor.css" />
@@ -157,7 +167,6 @@
     <Content Include="Styles\admin-dialog.css" />
     <Content Include="Styles\split-arrow-down.png" />
     <Content Include="Styles\split-arrow-up.png" />
-    <Content Include="Notes.txt" />
     <Content Include="Views\BlueprintAdmin\Edit.cshtml">
       <SubType>Code</SubType>
     </Content>
@@ -208,35 +217,6 @@
     <Content Include="Views\EditorTemplates\Elements.Image.cshtml" />
     <Content Include="Views\Elements\Image.cshtml" />
     <Content Include="Views\Elements\Image.Design.cshtml" />
-    <Content Include="Styles\Fonts\fontawesome-webfont.eot" />
-    <Content Include="Styles\Fonts\fontawesome-webfont.ttf" />
-    <Content Include="Styles\Fonts\fontawesome-webfont.woff" />
-    <Content Include="Styles\Fonts\FontAwesome.otf" />
-    <Content Include="Assets\Less\Lib\Bootstrap\bootstrap.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\grid.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\background-variant.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\border-radius.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\center-block.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\clearfix.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\gradients.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\grid-framework.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\grid.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\hide-text.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\image.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\labels.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\opacity.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\reset-filter.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\resize.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\responsive-visibility.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\size.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\tab-focus.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\text-emphasis.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\text-overflow.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\mixins\vendor-prefixes.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\scaffolding.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\utilities.less" />
-    <Content Include="Assets\Less\Lib\Bootstrap\variables.less" />
     <Content Include="Assets\Less\LayoutEditor\Element.less" />
     <Content Include="Assets\Less\LayoutEditor\Container.less" />
     <Content Include="Assets\Less\LayoutEditor\Variables.less" />
@@ -292,9 +272,14 @@
       <Project>{66fccd76-2761-47e3-8d11-b45d0001ddaa}</Project>
       <Name>Orchard.Autoroute</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Orchard.Conditions\Orchard.Conditions.csproj">
+      <Project>{98251eae-a41b-47b2-aa91-e28b8482da70}</Project>
+      <Name>Orchard.Conditions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Orchard.Forms\Orchard.Forms.csproj">
       <Project>{642a49d7-8752-4177-80d6-bfbbcfad3de0}</Project>
       <Name>Orchard.Forms</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.MediaLibrary\Orchard.MediaLibrary.csproj">
       <Project>{73a7688a-5bd3-4f7e-adfa-ce36c5a10e3b}</Project>
@@ -317,16 +302,26 @@
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\BlueprintAdminController.cs" />
     <Compile Include="Controllers\TemplateController.cs" />
+    <Compile Include="Drivers\BreadcrumbsElementDriver.cs" />
     <Compile Include="Drivers\CanvasElementDriver.cs" />
+    <Compile Include="Drivers\MenuElementDriver.cs" />
+    <Compile Include="Drivers\NotificationsElementDriver.cs" />
     <Compile Include="Drivers\HeadingElementDriver.cs" />
     <Compile Include="Drivers\ShapeElementDriver.cs" />
     <Compile Include="Drivers\BreakElementDriver.cs" />
+    <Compile Include="Elements\Breadcrumbs.cs" />
     <Compile Include="Elements\Canvas.cs" />
     <Compile Include="Elements\ContentElement.cs" />
+    <Compile Include="Elements\Menu.cs" />
+    <Compile Include="Elements\Notifications.cs" />
     <Compile Include="Elements\Heading.cs" />
     <Compile Include="Elements\Shape.cs" />
     <Compile Include="Elements\Break.cs" />
+    <Compile Include="Elements\UIElement.cs" />
+    <Compile Include="Elements\PlaceableContentItem.cs" />
     <Compile Include="Filters\TokensFilter.cs" />
+    <Compile Include="Framework\Display\ElementDisplayedContext.cs" />
+    <Compile Include="Framework\Display\ElementDisplayingContext.cs" />
     <Compile Include="Framework\Drivers\ImportContentContextWrapper.cs" />
     <Compile Include="Framework\Drivers\IContentImportSession.cs" />
     <Compile Include="Framework\Drivers\ExportElementContext.cs" />
@@ -343,15 +338,32 @@
     <Compile Include="Framework\Display\ElementCreatingDisplayShapeContext.cs" />
     <Compile Include="Framework\Drivers\ImportElementContext.cs" />
     <Compile Include="Framework\Drivers\ImportLayoutContext.cs" />
+    <Compile Include="Framework\Elements\IElement.cs" />
     <Compile Include="Handlers\ElementDriversCoordinator.cs" />
+    <Compile Include="Handlers\ElementRuleCoordinator.cs" />
+    <Compile Include="Helpers\PlaceableContentExtensions.cs" />
     <Compile Include="Helpers\DictionaryExtensions.cs" />
     <Compile Include="Helpers\EditorResultExtensions.cs" />
     <Compile Include="Helpers\ElementDisplayContextHelper.cs" />
     <Compile Include="Helpers\ObjectStoreHelper.cs" />
     <Compile Include="Helpers\PrefixHelper.cs" />
     <Compile Include="Helpers\JsonHelper.cs" />
+    <Compile Include="Helpers\SnippetHtmlExtensions.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
     <Compile Include="Permissions.cs" />
+    <Compile Include="Services\FormElementServices.cs" />
+    <Compile Include="Services\ICurrentThemeShapeBindingResolver.cs" />
+    <Compile Include="Services\CurrentThemeShapeBindingResolver.cs" />
+    <Compile Include="Providers\PlaceableContentElementHarvester.cs" />
+    <Compile Include="Elements\RecycleBin.cs" />
+    <Compile Include="Models\SnippetDescriptor.cs" />
+    <Compile Include="Models\SnippetFieldDescriptor.cs" />
+    <Compile Include="Services\IFormElementServices.cs" />
+    <Compile Include="ViewModels\SnippetViewModel.cs" />
+    <Compile Include="ViewModels\SnippetFieldViewModel.cs" />
+    <Compile Include="ViewModels\PlaceableContentItemViewModel.cs" />
+    <Compile Include="Recipes\Builders\CustomElementsStep.cs" />
+    <Compile Include="Recipes\Executors\CustomElementsStep.cs" />
     <Compile Include="Providers\BlueprintElementHarvester.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Services\CurrentControllerAccessor.cs" />
@@ -375,8 +387,11 @@
     <Compile Include="Services\LayoutModelMapper.cs" />
     <Compile Include="Services\ElementSerializer.cs" />
     <Compile Include="Services\ObjectStore.cs" />
+    <Compile Include="Settings\ContentTypeLayoutSettingsHooks.cs" />
+    <Compile Include="Settings\ContentTypeLayoutSettings.cs" />
     <Compile Include="Signals.cs" />
     <Compile Include="Tokens\ElementTokens.cs" />
+    <Compile Include="ViewModels\BreadcrumbsEditorViewModel.cs" />
     <Compile Include="ViewModels\ElementBlueprintPropertiesViewModel.cs" />
     <Compile Include="ViewModels\CreateElementBlueprintViewModel.cs" />
     <Compile Include="Models\ElementBlueprint.cs" />
@@ -410,9 +425,9 @@
     <Compile Include="Services\ContentFieldDisplay.cs" />
     <Compile Include="Services\IContentFieldDisplay.cs" />
     <Compile Include="Settings\ContentPartLayoutSettings.cs" />
-    <Compile Include="Settings\LayoutSettingsHooks.cs" />
+    <Compile Include="Settings\LayoutTypePartSettingsHooks.cs" />
     <Compile Include="Settings\LayoutTypePartSettings.cs" />
-    <Compile Include="Settings\ContentPartSettingsHooks.cs" />
+    <Compile Include="Settings\ContentPartLayoutSettingsHooks.cs" />
     <Compile Include="ViewModels\BlueprintsIndexViewModel.cs" />
     <Compile Include="ViewModels\ContentItemEditorViewModel.cs" />
     <Compile Include="ViewModels\EditElementBlueprintViewModel.cs" />
@@ -420,6 +435,7 @@
     <Compile Include="ViewModels\HtmlEditorViewModel.cs" />
     <Compile Include="ViewModels\LayoutEditor.cs" />
     <Compile Include="ViewModels\LayoutEditorPropertiesViewModel.cs" />
+    <Compile Include="ViewModels\MenuEditorViewModel.cs" />
     <Compile Include="ViewModels\HeadingEditorViewModel.cs" />
     <Compile Include="ViewModels\VectorImageEditorViewModel.cs" />
     <Compile Include="ViewModels\ImageEditorViewModel.cs" />
@@ -469,7 +485,6 @@
     <Compile Include="Services\ILayoutSerializer.cs" />
     <Compile Include="Helpers\ElementDataHelper.cs" />
     <Compile Include="Models\ElementInstance.cs" />
-    <Compile Include="Framework\Display\ElementDisplayContext.cs" />
     <Compile Include="Elements\Column.cs" />
     <Compile Include="Services\LayoutSerializer.cs" />
     <Compile Include="Providers\SnippetElementHarvester.cs" />
@@ -519,35 +534,25 @@
     <Content Include="Views\Elements\Shape.Design.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\LayoutEditor.Template.Html.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Elements\Projection.Design.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\Less\Lib\FontAwesome\animated.less" />
-    <Content Include="Assets\Less\Lib\FontAwesome\bordered-pulled.less" />
-    <Content Include="Assets\Less\Lib\FontAwesome\core.less" />
-    <Content Include="Assets\Less\Lib\FontAwesome\fixed-width.less" />
-    <Content Include="Assets\Less\Lib\FontAwesome\font-awesome.less" />
-    <Content Include="Assets\Less\Lib\FontAwesome\icons.less" />
-    <Content Include="Assets\Less\Lib\FontAwesome\larger.less" />
-    <Content Include="Assets\Less\Lib\FontAwesome\list.less" />
-    <Content Include="Assets\Less\Lib\FontAwesome\mixins.less" />
-    <Content Include="Assets\Less\Lib\FontAwesome\path.less" />
-    <Content Include="Assets\Less\Lib\FontAwesome\rotated-flipped.less" />
-    <Content Include="Assets\Less\Lib\FontAwesome\stacked.less" />
-    <Content Include="Assets\Less\Lib\FontAwesome\variables.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Styles\Fonts\fontawesome-webfont.woff2" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Elements\Break.cshtml" />
+    <Content Include="Styles\LayoutEditor\Menu.less" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Parts.Layout.Recursive.cshtml" />
     <Content Include="Views\Parts.Layout.Summary.Recursive.cshtml" />
+    <Content Include="Views\EditorTemplates\Elements.Breadcrumbs.cshtml" />
+    <Content Include="Views\EditorTemplates\Elements.Menu.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Breadcrumbs.cshtml" />
+    <Content Include="Views\Elements\Breadcrumbs.Design.cshtml" />
+    <Content Include="Views\Elements\Menu.cshtml" />
+    <Content Include="Views\Elements\Menu.Design.cshtml" />
+    <Content Include="Views\Elements\Notifications.cshtml" />
+    <Content Include="Views\Elements\Notifications.Design.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Elements\Heading.cshtml" />
@@ -559,7 +564,25 @@
     <Content Include="Views\Elements\Heading.Design.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Assets\CSS\" />
+    <Content Include="Views\Elements\PlaceableContentItem.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\PlaceableContentItem.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\DefinitionTemplates\ContentTypeLayoutSettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Elements.PlaceableContentItem.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Elements.Snippet.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Elements.Snippet.Field.Text.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

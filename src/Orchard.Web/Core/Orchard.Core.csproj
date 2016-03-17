@@ -12,7 +12,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Orchard.Core</RootNamespace>
     <AssemblyName>Orchard.Core</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -25,6 +25,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -50,6 +51,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -60,14 +65,28 @@
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.Extensions" />
-    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Web.WebPages, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\lib\aspnetmvc\System.Web.WebPages.dll</HintPath>
+    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Xml" />
@@ -76,6 +95,7 @@
   <ItemGroup>
     <Compile Include="Common\Controllers\ErrorController.cs" />
     <Compile Include="Common\DateEditor\DateEditorSettings.cs" />
+    <Compile Include="Common\Extensions\CommonMetaDataExtensions.cs" />
     <Compile Include="Common\OwnerEditor\OwnerEditorSettings.cs" />
     <Compile Include="Common\OwnerEditor\OwnerEditorDriver.cs" />
     <Compile Include="Common\DateEditor\DateEditorDriver.cs" />
@@ -117,7 +137,6 @@
     <Compile Include="Containers\ListViews\DefaultListView.cs" />
     <Compile Include="Containers\Migrations.cs" />
     <Compile Include="Containers\Models\ContainablePart.cs" />
-    <Compile Include="Containers\Models\OrderByDirection.cs" />
     <Compile Include="Containers\Models\ContainerPart.cs" />
     <Compile Include="Common\Shapes.cs" />
     <Compile Include="Common\Fields\TextField.cs" />
@@ -153,6 +172,7 @@
     <Compile Include="Dashboard\Services\CompilationErrorBanner.cs" />
     <Compile Include="Navigation\Commands\MenuCommands.cs" />
     <Compile Include="Navigation\Drivers\AdminMenuPartDriver.cs" />
+    <Compile Include="Navigation\Drivers\BreadcrumbMenuItemPartDriver.cs" />
     <Compile Include="Navigation\Drivers\MenuItemPartDriver.cs" />
     <Compile Include="Navigation\Drivers\MenuWidgetPartDriver.cs" />
     <Compile Include="Navigation\Drivers\ShapeMenuItemPartDriver.cs" />
@@ -163,6 +183,7 @@
     <Compile Include="Navigation\Handlers\MenuWidgetPartHandler.cs" />
     <Compile Include="Navigation\Models\AdminMenuPart.cs" />
     <Compile Include="Navigation\Models\AdminMenuPartRecord.cs" />
+    <Compile Include="Navigation\Models\BreadcrumbMenuItemPart.cs" />
     <Compile Include="Navigation\Models\MenuWidgetPart.cs" />
     <Compile Include="Navigation\Models\ShapeMenuItemPart.cs" />
     <Compile Include="Navigation\Security\AuthorizationEventHandler.cs" />
@@ -176,12 +197,7 @@
     <Compile Include="Contents\ViewModels\ListContentTypesViewModel.cs" />
     <Compile Include="Navigation\ViewModels\MenuPartViewModel.cs" />
     <Compile Include="Navigation\ViewModels\MenuWidgetViewModel.cs" />
-    <Compile Include="Reports\AdminMenu.cs" />
-    <Compile Include="Reports\Controllers\AdminController.cs" />
-    <Compile Include="Reports\Routes.cs" />
     <Compile Include="Navigation\Migrations.cs" />
-    <Compile Include="Reports\ViewModels\DisplayReportViewModel.cs" />
-    <Compile Include="Reports\ViewModels\ReportsAdminIndexViewModel.cs" />
     <Compile Include="Common\Utilities\LazyField.cs" />
     <Compile Include="Common\Handlers\CommonPartHandler.cs" />
     <Compile Include="Common\Models\CommonPart.cs" />
@@ -228,6 +244,11 @@
     <Compile Include="Navigation\ViewModels\MenuItemEntry.cs" />
     <Compile Include="Navigation\ViewModels\NavigationManagementViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reports\AdminMenu.cs" />
+    <Compile Include="Reports\Controllers\AdminController.cs" />
+    <Compile Include="Reports\Routes.cs" />
+    <Compile Include="Reports\ViewModels\DisplayReportViewModel.cs" />
+    <Compile Include="Reports\ViewModels\ReportsAdminIndexViewModel.cs" />
     <Compile Include="Scheduling\Migrations.cs" />
     <Compile Include="Scheduling\Models\ScheduledTaskRecord.cs" />
     <Compile Include="Scheduling\Services\ScheduledTaskManager.cs" />
@@ -292,8 +313,9 @@
     <Content Include="Common\Views\Fields.Common.Text.cshtml" />
     <Content Include="Common\Views\Parts.Common.Body.SummaryAdmin.cshtml" />
     <Content Include="Common\Views\Parts.Common.Metadata.cshtml" />
-    <Content Include="Common\Views\CommonMetadataOwner.cshtml" />
+    <Content Include="Common\Views\CommonMetadataLastModified.cshtml" />
     <Content Include="Containers\Module.txt" />
+    <Content Include="Shapes\Scripts\admin-localnavigation.js" />
     <Content Include="Contents\Styles\images\menu.content.png" />
     <Content Include="Contents\Styles\menu.content-admin.css" />
     <Content Include="Contents\Views\Admin\Create.cshtml" />
@@ -318,8 +340,6 @@
     <Content Include="Reports\Module.txt" />
     <Content Include="Reports\Styles\images\menu.reports.png" />
     <Content Include="Reports\Styles\menu.reports-admin.css" />
-    <Content Include="Reports\Views\Admin\Display.cshtml" />
-    <Content Include="Reports\Views\Admin\Index.cshtml" />
     <Content Include="Settings\Module.txt" />
     <Content Include="Settings\Styles\admin.css" />
     <Content Include="Settings\Styles\images\menu.settings.png" />
@@ -342,6 +362,7 @@
     <Content Include="Shapes\Styles\Images\toolBarBackground.gif" />
     <Content Include="Shapes\Styles\Images\toolBarHoverButtonBackground.gif" />
     <Content Include="Shapes\Styles\jquery.switchable.css" />
+    <Content Include="Shapes\Styles\site.css" />
     <Content Include="Shapes\Styles\special.css" />
     <Content Include="Shapes\Views\HeadPreload.cshtml" />
     <Content Include="Shapes\Views\Message.cshtml" />
@@ -354,7 +375,7 @@
     <ProjectReference Include="..\..\Orchard\Orchard.Framework.csproj">
       <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
       <Name>Orchard.Framework</Name>
-      <Private>True</Private>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -436,9 +457,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Reports\Styles\Web.config" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Common\Views\Parts.Common.Metadata.SummaryAdmin.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -448,7 +466,9 @@
     <Content Include="Navigation\Views\DefinitionTemplates\AdminMenuPartTypeSettings.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Common\Views\Parts.Common.Date.Edit.cshtml" />
@@ -569,6 +589,23 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Common\Views\EditorTemplates\Flavor.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Reports\Styles\Web.config" />
+    <Content Include="Reports\Views\Admin\Display.cshtml" />
+    <Content Include="Reports\Views\Admin\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Shapes\Views\LocalNavigation.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Shapes\Views\AdminTabs.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Common\Views\DefinitionTemplates\TextFieldDefaultValueEditor.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

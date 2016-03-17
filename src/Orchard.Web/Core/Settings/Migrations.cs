@@ -111,5 +111,27 @@ namespace Orchard.Core.Settings {
 
             return 4;            
         }
+
+        public int UpdateFrom4() {
+            SchemaBuilder.AlterTable("ContentFieldDefinitionRecord",
+                table => table.AddUniqueConstraint("UC_CFDR_Name", "Name"));
+            SchemaBuilder.AlterTable("ContentPartDefinitionRecord",
+                table => table.AddUniqueConstraint("UC_CPDR_Name", "Name"));
+            SchemaBuilder.AlterTable("ContentPartFieldDefinitionRecord",
+                table => table.AddUniqueConstraint("UC_CPFDR_CPDRId_Name", "ContentPartDefinitionRecord_Id", "Name"));
+            SchemaBuilder.AlterTable("ContentTypeDefinitionRecord",
+                table => table.AddUniqueConstraint("UC_CTDR_CPDRId", "Name"));
+            SchemaBuilder.AlterTable("ContentTypePartDefinitionRecord",
+                table => table.AddUniqueConstraint("UC_CTPDR_CPDRId_CTDRId", "ContentPartDefinitionRecord_id", "ContentTypeDefinitionRecord_Id"));
+            // TODO: Orchard creates dupes in this table so no can do for now.
+            //SchemaBuilder.AlterTable("ShellFeatureRecord",
+            //    table => table.AddUniqueConstraint("UC_SFR_SDRId_Name", "ShellDescriptorRecord_id", "Name"));
+            SchemaBuilder.AlterTable("ShellFeatureStateRecord",
+                table => table.AddUniqueConstraint("UC_SFSR_SSRId_Name", "ShellStateRecord_Id", "Name"));
+            SchemaBuilder.AlterTable("ShellParameterRecord",
+                table => table.AddUniqueConstraint("UC_SPR_SDRId_Component_Name", "ShellDescriptorRecord_id", "Component", "Name"));
+
+            return 5;
+        }
     }
 }

@@ -83,7 +83,7 @@ namespace Orchard.Taxonomies {
 
                         foreach (var parent in GetHierarchyAlternates(termPart).Reverse()) {
                             var formatted = FormatAlternate(parent);
-                            
+
                             metadata.Alternates.Add(String.Concat("Content__", contentItem.ContentType, "__", field, "__", formatted));
                             metadata.Alternates.Add(String.Concat("Content_", metadata.DisplayType, "__", contentItem.ContentType, "__", field, "__", formatted));
                         }

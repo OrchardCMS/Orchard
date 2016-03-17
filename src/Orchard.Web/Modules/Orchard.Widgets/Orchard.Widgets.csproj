@@ -13,7 +13,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Orchard.Widgets</RootNamespace>
     <AssemblyName>Orchard.Widgets</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>false</UseIISExpress>
     <FileUpgradeFlags>
@@ -26,6 +26,7 @@
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
     <TargetFrameworkProfile />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -49,6 +50,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -56,11 +61,31 @@
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.Extensions" />
-    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
-    </Reference>
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
@@ -68,12 +93,17 @@
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Commands\LayerCommands.cs" />
     <Compile Include="Commands\WidgetCommands.cs" />
+    <Compile Include="Conditions\LegacyRulesEvaluator.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="ControlWrapper.cs" />
     <Compile Include="Drivers\LayerPartDriver.cs" />
+    <Compile Include="Extensions\WidgetsMetaDataExtensions.cs" />
     <Compile Include="Handlers\DisplayedContentItemHandler.cs" />
     <Compile Include="Handlers\LayerHintHandler.cs" />
     <Compile Include="Drivers\WidgetPartDriver.cs" />
+    <Compile Include="Handlers\WidgetElementsHandler.cs" />
+    <Compile Include="Layouts\Elements\Widget.cs" />
+    <Compile Include="Layouts\Providers\WidgetElementHarvester.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Handlers\LayerPartHandler.cs" />
     <Compile Include="Handlers\WidgetPartHandler.cs" />
@@ -85,11 +115,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Filters\WidgetFilter.cs" />
     <Compile Include="ResourceManifest.cs" />
-    <Compile Include="RuleEngine\AuthenticatedRuleProvider.cs" />
-    <Compile Include="RuleEngine\BuiltinRuleProvider.cs" />
-    <Compile Include="RuleEngine\ContentDisplayedRuleProvider.cs" />
-    <Compile Include="RuleEngine\RuleManager.cs" />
-    <Compile Include="RuleEngine\UrlRuleProvider.cs" />
+    <Compile Include="Conditions\ContentDisplayedRuleProvider.cs" />
+    <Compile Include="Services\RuleManager.cs" />
+    <Compile Include="Services\DefaultLayerEvaluationService.cs" />
+    <Compile Include="Services\ILayerEvaluationService.cs" />
     <Compile Include="Services\IRuleManager.cs" />
     <Compile Include="Services\IRuleProvider.cs" />
     <Compile Include="Services\IWidgetsService.cs" />
@@ -97,12 +126,14 @@
     <Compile Include="Services\RuleContext.cs" />
     <Compile Include="Services\WidgetsService.cs" />
     <Compile Include="Shapes.cs" />
+    <Compile Include="ViewModels\WidgetElementViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Admin\images\edit.png" />
     <Content Include="Content\Admin\images\moveup.gif" />
     <Content Include="Content\Admin\images\movedown.gif" />
     <Content Include="Module.txt" />
+    <Content Include="Scripts\widget-element-editor.js" />
     <Content Include="Styles\images\all-zones-on.gif" />
     <Content Include="Styles\images\all-zones.gif" />
     <Content Include="Styles\images\arrows.png" />
@@ -122,11 +153,20 @@
     <ProjectReference Include="..\..\Core\Orchard.Core.csproj">
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
+      <Private>false</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
       <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
       <Name>Orchard.Framework</Name>
       <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Conditions\Orchard.Conditions.csproj">
+      <Project>{98251eae-a41b-47b2-aa91-e28b8482da70}</Project>
+      <Name>Orchard.Conditions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Layouts\Orchard.Layouts.csproj">
+      <Project>{6bd8b2fa-f2e3-4ac8-a4c3-2925a653889a}</Project>
+      <Name>Orchard.Layouts</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Scripting\Orchard.Scripting.csproj">
       <Project>{99002B65-86F7-415E-BF4A-381AA8AB9CCC}</Project>
@@ -188,6 +228,23 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\WidgetPlacement.Orphans.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Widget.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Widget.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Elements.Widget.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

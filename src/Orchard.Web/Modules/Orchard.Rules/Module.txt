@@ -1,13 +1,14 @@
 Name: Rules
 AntiForgery: enabled
 Author: The Orchard Team
-Website: http://orchardrules.codeplex.com
+Website: https://github.com/OrchardCMS/Orchard
 Version: 1.8
 OrchardVersion: 1.9
+LifecycleStatus: Deprecated
 Description: Provides a system to trigger actions based on events.
 Features:
     Orchard.Rules:
         Name: Rules
         Description: Provides a system to trigger actions based on events.
         Dependencies: Orchard.Tokens, Orchard.Scripting, Orchard.Forms
-		Category: Rules
+        Category: Rules

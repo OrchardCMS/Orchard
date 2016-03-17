@@ -1,12 +1,12 @@
 /// <reference path="Typings/jquery.d.ts" />
 
-($=> {
-    var hasFocus = (videoId: number)=> {
+(($ : JQueryStatic) => {
+    var hasFocus = (videoId: number) => {
         var focusedVideoId: number = $("#media-library-main-list li.has-focus .media-thumbnail-cloud-video").data("id");
         return focusedVideoId == videoId;
     };
 
-    var updateUploadProgressLabel = ()=> {
+    var updateUploadProgressLabel = () => {
         var containers: JQuery = $("#media-library-main-editor-focus .properties");
 
         containers.each(function () {
@@ -32,7 +32,7 @@
                 $.ajax({
                     url: statusUrl,
                     cache: false
-                }).done(data=> {
+                }).done((data : any) => {
                     progressLabel.text(data.uploadState.percentComplete + "%");
                     uploadStatusLabel.text(data.uploadState.status);
                     publicationStatusLabel.text(data.published ? statusWrapper.data("published-text") : statusWrapper.data("draft-text"));

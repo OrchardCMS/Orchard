@@ -19,6 +19,7 @@ namespace Orchard.Tests.Environment {
         }
 
         protected override void Register(ContainerBuilder builder) {
+            builder.RegisterModule(new MvcModule());
             builder.RegisterModule(new WorkContextModule());
             builder.RegisterType<WorkContextAccessor>().As<IWorkContextAccessor>();
             builder.RegisterAutoMocking();

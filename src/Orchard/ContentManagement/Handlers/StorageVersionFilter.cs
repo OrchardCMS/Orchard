@@ -12,7 +12,10 @@ namespace Orchard.ContentManagement.Handlers {
             return _repository.Get(versionRecord.Id);
         }
 
-        protected override TRecord CreateRecordCore(ContentItemVersionRecord versionRecord, TRecord record) {
+        protected override TRecord CreateRecordCore(ContentItemVersionRecord versionRecord, TRecord record = null) {
+            if (record == null) {
+                record = new TRecord();
+            }
             record.ContentItemRecord = versionRecord.ContentItemRecord;
             record.ContentItemVersionRecord = versionRecord;
             _repository.Create(record);

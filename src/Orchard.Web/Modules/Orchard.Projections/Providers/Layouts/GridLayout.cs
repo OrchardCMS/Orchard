@@ -45,6 +45,8 @@ namespace Orchard.Projections.Providers.Layouts {
             
             string gridTag = Convert.ToString(context.State.GridTag);
             string gridClass = Convert.ToString(context.State.GridClass);
+            if (!String.IsNullOrEmpty(gridClass)) gridClass += " ";
+            gridClass += "projector-layout projector-grid-layout";
             string gridId = Convert.ToString(context.State.GridId);
 
             string rowTag = Convert.ToString(context.State.RowTag);

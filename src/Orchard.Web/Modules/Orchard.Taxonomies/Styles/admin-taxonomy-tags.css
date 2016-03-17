@@ -2,6 +2,10 @@
     opacity: 0.3;
 }
 
+.ui-autocomplete  .ui-menu-item {
+    float: none;
+}
+
 .ui-autocomplete  .ui-menu-item a {
     font-size: 0.8em;
 }

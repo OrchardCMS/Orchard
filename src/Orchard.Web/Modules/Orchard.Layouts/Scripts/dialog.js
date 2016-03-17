@@ -76,8 +76,6 @@
 
             $(document).off("keyup", onKeyUp);
             closedDialogs.push(self);
-
-
         };
 
         this.load = function (url, data, method) {
@@ -124,12 +122,19 @@
             this.element.trigger(event, args);
         };
 
+        this.toggleCommands = function (show) {
+            var scope = this.element;
+            var buttons = scope.find(".buttons");
+
+            buttons.toggle(show);
+        };
+
         var resizeIFrame = function () {
             if (self.frame == null)
                 return;
 
-            self.frame.element.height($(window).height() * .75);
-            self.frame.element.width($(window).width() * .75);
+            self.frame.element.height($(window).height() * .80);
+            self.frame.element.width($(window).width() * .87);
         };
 
         var resizeView = function () {
@@ -169,8 +174,8 @@
                         break;
                     case "save":
                         {
-                            var frameDoc = self.frame.getDocument();
-                            var form = frameDoc.find("form:first");
+                            var frameWindow = self.frame.getWindow();
+                            var form = frameWindow.$("form:first");
                             form.submit();
                         }
                         break;
@@ -202,7 +207,7 @@
                     var button = $(this);
                     var command = button.data("command");
 
-                    if (!command || command.length == 0)
+                    if (!command || command.length === 0)
                         return;
 
                     self.trigger("command", {

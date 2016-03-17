@@ -23,7 +23,7 @@ namespace Orchard.Logging {
             Logger = logger;
             Factory = factory;
 
-            _shellSettings = new Lazy<ShellSettings>(LoadSettings);
+             _shellSettings = new Lazy<ShellSettings>(LoadSettings, System.Threading.LazyThreadSafetyMode.PublicationOnly);
         }
 
         internal OrchardLog4netLogger() {
@@ -63,11 +63,17 @@ namespace Orchard.Logging {
             if (_shellSettings.Value != null) {
                 ThreadContext.Properties["Tenant"] = _shellSettings.Value.Name;
             }
+            else {
+                ThreadContext.Properties.Remove("Tenant");
+            }
 
             try {
                 var ctx = HttpContext.Current;
                 if (ctx != null) {
                     ThreadContext.Properties["Url"] = ctx.Request.Url.ToString();
+                }
+                else {
+                    ThreadContext.Properties.Remove("Url");
                 }
             }
             catch(HttpException) {
@@ -415,5 +421,9 @@ namespace Orchard.Logging {
             }
         }
 
+        public override object InitializeLifetimeService() {
+            // never expire the cross-AppDomain lease on this object
+            return null;
+        }
     }
 }

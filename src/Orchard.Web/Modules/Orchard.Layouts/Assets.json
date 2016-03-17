@@ -1,13 +1,6 @@
 ﻿[
     {
         "inputs": [
-            "Assets/Less/Lib/Bootstrap/bootstrap.less",
-            "Assets/Less/Lib/FontAwesome/font-awesome.less"
-        ],
-        "output": "Styles/Lib.css"
-    },
-    {
-        "inputs": [
             "Assets/Less/LayoutEditor/Editor.less",
             "Assets/Less/LayoutEditor/Element.less",
             "Assets/Less/LayoutEditor/Container.less",
@@ -19,16 +12,6 @@
             "Assets/Less/LayoutEditor/Popup.less"
         ],
         "output": "Styles/LayoutEditor.css"
-    },
-    {
-        "inputs": [
-            "Assets/JavaScript/Lib/underscore.js",
-            "Assets/JavaScript/Lib/angular.js",
-            "Assets/JavaScript/Lib/angular-sanitize.js",
-            "Assets/JavaScript/Lib/angular-resource.js",
-            "Assets/JavaScript/Lib/sortable.js"
-        ],
-        "output": "Scripts/Lib.js"
     },
     {
         "inputs": [
@@ -53,6 +36,7 @@
         "inputs": [
             "Assets/JavaScript/Models/Helpers.js",
             "Assets/JavaScript/Models/Editor.js",
+            "Assets/JavaScript/Models/RecycleBin.js",
             "Assets/JavaScript/Models/Element.js",
             "Assets/JavaScript/Models/Container.js",
             "Assets/JavaScript/Models/Canvas.js",

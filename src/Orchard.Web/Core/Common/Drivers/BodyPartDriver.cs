@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using JetBrains.Annotations;
 using Orchard.Mvc.Html;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
@@ -14,7 +13,6 @@ using System.Web.Mvc;
 using System.Web.Routing;
 
 namespace Orchard.Core.Common.Drivers {
-    [UsedImplicitly]
     public class BodyPartDriver : ContentPartDriver<BodyPart> {
         private readonly IEnumerable<IHtmlFilter> _htmlFilters;
         private readonly RequestContext _requestContext;

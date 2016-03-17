@@ -282,8 +282,26 @@ namespace Orchard.Core.Shapes {
 
         [Shape]
         public void ContentZone(dynamic Display, dynamic Shape, TextWriter Output) {
-            foreach (var item in Order(Shape))
-                Output.Write(Display(item));
+            var unordered = ((IEnumerable<dynamic>)Shape).ToArray();
+            var tabbed = unordered.GroupBy(x => (string)x.Metadata.Tab);
+
+            if (tabbed.Count() > 1) {
+                foreach (var tab in tabbed) {
+                    var tabName = String.IsNullOrWhiteSpace(tab.Key) ? "Content" : tab.Key;
+                    var tabBuilder = new TagBuilder("div");
+                    tabBuilder.Attributes["id"] = "tab-" + tabName.HtmlClassify();
+                    tabBuilder.Attributes["data-tab"] = tabName;
+                    Output.Write(tabBuilder.ToString(TagRenderMode.StartTag));
+                    foreach (var item in Order(tab))
+                        Output.Write(Display(item));
+
+                    Output.Write(tabBuilder.ToString(TagRenderMode.EndTag));
+                }
+            }
+            else {
+                foreach (var item in Order(unordered))
+                    Output.Write(Display(item));
+            }
         }
 
         [Shape]
@@ -328,6 +346,30 @@ namespace Orchard.Core.Shapes {
             }
 
             return ordering.Select(ordered => ordered.item).ToList();
+        }
+
+        public static IEnumerable<string> HarvestAndSortTabs(IEnumerable<dynamic> shapes) {
+            var orderedShapes = Order(shapes).ToArray();
+            var tabs = new List<string>();
+
+            foreach (var shape in orderedShapes) {
+                var tab = (string)shape.Metadata.Tab;
+
+                if (String.IsNullOrEmpty(tab))
+                    continue;
+
+                if(!tabs.Contains(tab))
+                    tabs.Add(tab);
+            }
+
+            // If we have any tabs, make sure we have at least the Content tab and that it is the first one,
+            // since that's where we will put anything else not part of a tab.
+            if (tabs.Any()) {
+                tabs.Remove("Content");
+                tabs.Insert(0, "Content");
+            }
+
+            return tabs;
         }
 
         [Shape]
@@ -399,7 +441,8 @@ namespace Orchard.Core.Shapes {
                     break;
                 default:
                     Debug.Assert(site.ResourceDebugMode == ResourceDebugMode.FromAppSetting, "Unknown ResourceDebugMode value.");
-                    debugMode = _httpContextAccessor.Value.Current().IsDebuggingEnabled;
+                    var context = _httpContextAccessor.Value.Current();
+                    debugMode = context != null && context.IsDebuggingEnabled;
                     break;
             }
             var defaultSettings = new RequireSettings {
@@ -408,7 +451,11 @@ namespace Orchard.Core.Shapes {
                 Culture = _workContext.Value.CurrentCulture,
             };
             var requiredResources = _resourceManager.Value.BuildRequiredResources(resourceType);
-            var appPath = _httpContextAccessor.Value.Current().Request.ApplicationPath;
+            var httpContext = _httpContextAccessor.Value.Current();
+            var appPath = httpContext == null || httpContext.Request == null
+                ? null
+                : httpContext.Request.ApplicationPath;
+
             foreach (var context in requiredResources.Where(r =>
                 (includeLocation.HasValue ? r.Settings.Location == includeLocation.Value : true) &&
                 (excludeLocation.HasValue ? r.Settings.Location != excludeLocation.Value : true))) {
@@ -755,6 +802,11 @@ namespace Orchard.Core.Shapes {
         [Shape]
         public void EditorTemplate(HtmlHelper Html, TextWriter Output, string TemplateName, object Model, string Prefix) {
             RenderInternal(Html, Output, "EditorTemplates/" + TemplateName, Model, Prefix);
+        }
+
+        [Shape]
+        public void DefinitionTemplate(HtmlHelper Html, TextWriter Output, string TemplateName, object Model, string Prefix) {
+            RenderInternal(Html, Output, "DefinitionTemplates/" + TemplateName, Model, Prefix);
         }
 
         static void RenderInternal(HtmlHelper Html, TextWriter Output, string TemplateName, object Model, string Prefix) {

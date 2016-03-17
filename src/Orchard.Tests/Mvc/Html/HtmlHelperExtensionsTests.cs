@@ -193,5 +193,35 @@ namespace Orchard.Tests.Mvc.Html {
             Assert.AreEqual(@"<label for=""prefix_SomeString"">bar</label>", result.ToString());
         }
         private class FooController : Controller { }
+
+        [Test]
+        public void Ellipsize_DontCutHtmlEncodedChars() {
+            //arrange
+            var viewContext = new ViewContext();
+            var viewDataContainer = new Mock<IViewDataContainer>();
+            var html = new HtmlHelper(viewContext, viewDataContainer.Object);
+
+            //act
+            var result = html.Ellipsize("foo & bar", 5);
+
+            //assert
+            Assert.AreEqual("foo &amp;&#160;\u2026", result.ToString());
+
+        }
+
+        [Test]
+        public void Excerpt_DontCutHtmlEncodedChars() {
+            //arrange
+            var viewContext = new ViewContext();
+            var viewDataContainer = new Mock<IViewDataContainer>();
+            var html = new HtmlHelper(viewContext, viewDataContainer.Object);
+
+            //act
+            var result = html.Excerpt("<p>foo &amp; bar</p>", 7);
+
+            //assert
+            Assert.AreEqual("foo &amp;&#160;\u2026", result.ToString());
+
+        }
     }
 }

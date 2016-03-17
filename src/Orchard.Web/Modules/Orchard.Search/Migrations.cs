@@ -11,10 +11,7 @@ namespace Orchard.Search {
             ContentDefinitionManager.AlterTypeDefinition("SearchForm",
                 cfg => cfg
                     .WithPart("SearchFormPart")
-                    .WithPart("CommonPart")
-                    .WithPart("WidgetPart")
-                    .WithPart("IdentityPart")
-                    .WithSetting("Stereotype", "Widget")
+                    .AsWidgetWithIdentity()
                 );
 
             return 3;
@@ -30,7 +27,7 @@ namespace Orchard.Search {
 
         public int UpdateFrom2() {
             ContentDefinitionManager.AlterTypeDefinition("SearchForm",
-                cfg => cfg.WithPart("IdentityPart"));
+                cfg => cfg.WithIdentity());
            
             return 3;
         }

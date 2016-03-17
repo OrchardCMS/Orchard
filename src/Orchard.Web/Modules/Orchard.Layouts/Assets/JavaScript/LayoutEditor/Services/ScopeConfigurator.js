@@ -150,6 +150,23 @@
                     $scope.delete = function (element) {
                         element.delete();
                     }
+
+                    if ($scope.element.hasEditor) {
+                        $scope.edit = function () {
+                            $scope.$root.editElement($scope.element).then(function (args) {
+                                $scope.$apply(function () {
+                                    if (args.cancel)
+                                        return;
+
+                                    $scope.element.data = args.element.data;
+                                    $scope.element.applyElementEditorModel(args.elementEditorModel);
+
+                                    if (!!$scope.element.setHtml)
+                                        $scope.element.setHtml(args.element.html);
+                                });
+                            });
+                        };
+                    }
                 },
 
                 configureForContainer: function ($scope, $element) {

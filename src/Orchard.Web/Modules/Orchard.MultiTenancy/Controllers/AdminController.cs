@@ -19,7 +19,7 @@ namespace Orchard.MultiTenancy.Controllers {
         public AdminController(ITenantService tenantService, IOrchardServices orchardServices, ShellSettings shellSettings) {
             _tenantService = tenantService;
             _thisShellSettings = shellSettings;
-            
+
             Services = orchardServices;
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
@@ -30,32 +30,34 @@ namespace Orchard.MultiTenancy.Controllers {
         public ILogger Logger { get; set; }
 
         public ActionResult Index() {
-            return View(new TenantsIndexViewModel { TenantSettings = _tenantService.GetTenants() });
+            return View(new TenantsIndexViewModel {
+                TenantSettings = _tenantService.GetTenants()
+            });
         }
 
         public ActionResult Add() {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Cannot create tenant")))
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("You don't have permission to create tenants.")))
                 return new HttpUnauthorizedResult();
 
-            if ( !EnsureDefaultTenant() )
+            if (!IsExecutingInDefaultTenant())
                 return new HttpUnauthorizedResult();
 
-            var model = new TenantAddViewModel();
+            var viewModel = new TenantAddViewModel();
 
-            // fetches all available themes and modules
-            model.Themes = _tenantService.GetInstalledThemes().Select(x => new ThemeEntry { ThemeId = x.Id, ThemeName = x.Name }).ToList();
-            model.Modules = _tenantService.GetInstalledModules().Select(x => new ModuleEntry { ModuleId = x.Id, ModuleName = x.Name }).ToList();
+            // Fetches all available themes and modules.
+            viewModel.Themes = _tenantService.GetInstalledThemes().Select(x => new ThemeEntry { ThemeId = x.Id, ThemeName = x.Name }).ToList();
+            viewModel.Modules = _tenantService.GetInstalledModules().Select(x => new ModuleEntry { ModuleId = x.Id, ModuleName = x.Name }).ToList();
 
-            return View(model);
+            return View(viewModel);
         }
 
         [HttpPost, ActionName("Add")]
-        public ActionResult AddPOST(TenantAddViewModel viewModel) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Couldn't create tenant"))) {
+        public ActionResult AddPost(TenantAddViewModel viewModel) {
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("You don't have permission to create tenants."))) {
                 return new HttpUnauthorizedResult();
             }
 
-            if (!EnsureDefaultTenant()) {
+            if (!IsExecutingInDefaultTenant()) {
                 return new HttpUnauthorizedResult();
             }
 
@@ -63,7 +65,7 @@ namespace Orchard.MultiTenancy.Controllers {
                 ModelState.AddModelError("Name", T("A tenant with the same name already exists.", viewModel.Name).Text);
             }
 
-            // ensure tenants name are valid
+            // Ensure tenants name are valid.
             if (!String.IsNullOrEmpty(viewModel.Name) && !Regex.IsMatch(viewModel.Name, @"^\w+$")) {
                 ModelState.AddModelError("Name", T("Invalid tenant name. Must contain characters only and no spaces.").Text);
             }
@@ -86,56 +88,58 @@ namespace Orchard.MultiTenancy.Controllers {
                         Modules = viewModel.Modules.Where(x => x.Checked).Select(x => x.ModuleId).ToArray()
                     });
 
+                Services.Notifier.Information(T("Tenant '{0}' was created successfully.", viewModel.Name));
                 return RedirectToAction("Index");
             }
-            catch (ArgumentException exception) {
-                Services.Notifier.Error(T("Creating Tenant failed: {0}", exception.Message));
+            catch (ArgumentException ex) {
+                Logger.Error(ex, "Error while creating tenant.");
+                Services.Notifier.Error(T("Tenant creation failed with error: {0}.", ex.Message));
                 return View(viewModel);
             }
         }
 
         public ActionResult Edit(string name) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Cannot edit tenant")))
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("You don't have permission to edit tenants.")))
                 return new HttpUnauthorizedResult();
 
-            if ( !EnsureDefaultTenant() )
+            if (!IsExecutingInDefaultTenant())
                 return new HttpUnauthorizedResult();
 
             var tenant = _tenantService.GetTenants().FirstOrDefault(ss => ss.Name == name);
-            
             if (tenant == null)
                 return HttpNotFound();
 
             return View(new TenantEditViewModel {
-                                                    Name = tenant.Name,
-                                                    RequestUrlHost = tenant.RequestUrlHost,
-                                                    RequestUrlPrefix = tenant.RequestUrlPrefix,
-                                                    DataProvider = tenant.DataProvider,
-                                                    DatabaseConnectionString = tenant.DataConnectionString,
-                                                    DatabaseTablePrefix = tenant.DataTablePrefix,
-                                                    State = tenant.State,
-                                                    Themes = _tenantService.GetInstalledThemes().Select(x => new ThemeEntry { 
-                                                        ThemeId = x.Id, 
-                                                        ThemeName = x.Name,
-                                                        Checked = tenant.Themes.Contains(x.Id)
-                                                    }).ToList(),
-                                                    Modules = _tenantService.GetInstalledModules().Select(x => new ModuleEntry {
-                                                        ModuleId = x.Id,
-                                                        ModuleName = x.Name,
-                                                        Checked = tenant.Modules.Contains(x.Id)
-                                                    }).ToList()
-                                                });
+                Name = tenant.Name,
+                RequestUrlHost = tenant.RequestUrlHost,
+                RequestUrlPrefix = tenant.RequestUrlPrefix,
+                DataProvider = tenant.DataProvider,
+                DatabaseConnectionString = tenant.DataConnectionString,
+                DatabaseTablePrefix = tenant.DataTablePrefix,
+                State = tenant.State,
+                Themes = _tenantService.GetInstalledThemes().Select(x => new ThemeEntry {
+                    ThemeId = x.Id,
+                    ThemeName = x.Name,
+                    Checked = tenant.Themes.Contains(x.Id)
+                }).ToList(),
+                Modules = _tenantService.GetInstalledModules().Select(x => new ModuleEntry {
+                    ModuleId = x.Id,
+                    ModuleName = x.Name,
+                    Checked = tenant.Modules.Contains(x.Id)
+                }).ToList()
+            });
         }
 
         [HttpPost, ActionName("Edit")]
         public ActionResult EditPost(TenantEditViewModel viewModel) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Couldn't edit tenant")))
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("You don't have permission to edit tenants.")))
                 return new HttpUnauthorizedResult();
 
-            if ( !EnsureDefaultTenant() )
+            if (!IsExecutingInDefaultTenant())
                 return new HttpUnauthorizedResult();
 
             var tenant = _tenantService.GetTenants().FirstOrDefault(ss => ss.Name == viewModel.Name);
+
             if (tenant == null)
                 return HttpNotFound();
 
@@ -163,18 +167,19 @@ namespace Orchard.MultiTenancy.Controllers {
 
                 return RedirectToAction("Index");
             }
-            catch (Exception exception) {
-                Services.Notifier.Error(T("Failed to edit tenant: {0} ", exception.Message));
+            catch (Exception ex) {
+                Logger.Error(ex, "Error while editing tenant.");
+                Services.Notifier.Error(T("Failed to edit tenant: {0} ", ex.Message));
                 return View(viewModel);
             }
         }
 
         [HttpPost]
         public ActionResult Disable(string name) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Couldn't disable tenant")))
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("You don't have permission to disable tenants.")))
                 return new HttpUnauthorizedResult();
 
-            if ( !EnsureDefaultTenant() )
+            if (!IsExecutingInDefaultTenant())
                 return new HttpUnauthorizedResult();
 
             var tenant = _tenantService.GetTenants().FirstOrDefault(ss => ss.Name == name);
@@ -189,10 +194,10 @@ namespace Orchard.MultiTenancy.Controllers {
 
         [HttpPost]
         public ActionResult Enable(string name) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Couldn't enable tenant")))
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("You don't have permission to enable tenants.")))
                 return new HttpUnauthorizedResult();
 
-            if ( !EnsureDefaultTenant() )
+            if (!IsExecutingInDefaultTenant())
                 return new HttpUnauthorizedResult();
 
             var tenant = _tenantService.GetTenants().FirstOrDefault(ss => ss.Name == name);
@@ -205,7 +210,55 @@ namespace Orchard.MultiTenancy.Controllers {
             return RedirectToAction("Index");
         }
 
-        private bool EnsureDefaultTenant() {
+        public ActionResult Reset(string name) {
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("You don't have permission to reset tenants.")))
+                return new HttpUnauthorizedResult();
+
+            if (!IsExecutingInDefaultTenant())
+                return new HttpUnauthorizedResult();
+
+            var tenant = _tenantService.GetTenants().FirstOrDefault(ss => ss.Name == name);
+            if (tenant == null)
+                return HttpNotFound();
+
+            return View(new TenantResetViewModel() {
+                Name = name,
+                DatabaseTableNames = _tenantService.GetTenantDatabaseTableNames(tenant)
+            });
+        }
+
+        [HttpPost, ActionName("Reset")]
+        public ActionResult ResetPost(TenantResetViewModel viewModel) {
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("You don't have permission to reset tenants.")))
+                return new HttpUnauthorizedResult();
+
+            if (!IsExecutingInDefaultTenant())
+                return new HttpUnauthorizedResult();
+
+            var tenant = _tenantService.GetTenants().FirstOrDefault(ss => ss.Name == viewModel.Name);
+            if (tenant == null)
+                return HttpNotFound();
+            else if (tenant.Name == _thisShellSettings.Name)
+                return new HttpUnauthorizedResult();
+
+            if (!ModelState.IsValid) {
+                viewModel.DatabaseTableNames = _tenantService.GetTenantDatabaseTableNames(tenant);
+                return View(viewModel);
+            }
+
+            try {
+                _tenantService.ResetTenant(tenant, viewModel.DropDatabaseTables, force: false);
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex) {
+                Logger.Error(ex, "Error while resetting tenant.");
+                Services.Notifier.Error(T("Failed to reset tenant: {0} ", ex.Message));
+                viewModel.DatabaseTableNames = _tenantService.GetTenantDatabaseTableNames(tenant);
+                return View(viewModel);
+            }
+        }
+
+        private bool IsExecutingInDefaultTenant() {
             return _thisShellSettings.Name == ShellSettings.DefaultName;
         }
     }

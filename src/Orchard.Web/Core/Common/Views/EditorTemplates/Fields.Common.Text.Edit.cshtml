@@ -12,4 +12,7 @@
     @if (HasText(Model.Settings.Hint)) {
     <span class="hint">@Model.Settings.Hint</span>
     }
+    @if (!String.IsNullOrWhiteSpace(Model.Settings.DefaultValue)) {
+        <span class="hint">@T("If the field is left empty then the default value will be used.")</span>
+    }
 </fieldset>

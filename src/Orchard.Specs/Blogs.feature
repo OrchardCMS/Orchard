@@ -67,7 +67,7 @@ Scenario: I can create a new blog with multiple blog posts each with the same ti
         And I fill in
             | name | value |
             | Title.Title | My Post |
-            | Autoroute.CurrentUrl | my-blog/my-post |
+            | AutoroutePart.CurrentUrl | my-blog/my-post |
             | Body.Text | Are you still there? |
         And I hit "Publish Now"
         And I go to "my-blog/my-post-3"
@@ -141,7 +141,7 @@ Scenario: I set my blog to be the content for the home page and the posts for th
         And I fill in
             | name | value |
             | Title.Title | My Blog |
-            | Autoroute.PromoteToHomePage | true |
+            | AutoroutePart.PromoteToHomePage | true |
         And I hit "Save"
         And I go to "admin/blogs"
         And I follow "My Blog"
@@ -155,7 +155,9 @@ Scenario: I set my blog to be the content for the home page and the posts for th
         And I go to "/"
     Then I should see "<h1>My Blog</h1>"
     When I go to "/my-blog"
-    Then the status should be 404 "Not Found"
+    Then the status should be 200 "OK"
+    When I go to "/"
+    Then the status should be 200 "OK"
     When I go to "/my-post"
     Then I should see "<h1>My Post</h1>"
 
@@ -275,20 +277,20 @@ Scenario: I can create browse blog posts on several pages
         And I should not see "<h1[^>]*>.*?My Post 3.*?</h1>"
 
 Scenario: I can create a new blog with a percent sign in the title and it gets stripped out of the slug
-	   Given I have installed Orchard
-	   When I go to "admin/blogs/create"
-	   And I fill in
-	     | name        | value   |
-	     | Title.Title | My Blog |
-	   And I hit "Save"
-	   And I go to "admin/blogs"
-	   And I follow "My Blog"
-	   And I follow "New Post" where class name has "primaryAction"
-	   And I fill in
-	     | name        | value                 |
-	     | Title.Title | My Post with a % Sign |
-	     | Body.Text   | Hi there.             |
-	   And I hit "Publish Now"
-	   And I go to "my-blog/my-post-with-a-sign"
-	   Then I should see "<h1[^>]*>.*?My Post with a % Sign.*?</h1>"
- 	   And I should see "Hi there."
+       Given I have installed Orchard
+       When I go to "admin/blogs/create"
+       And I fill in
+         | name        | value   |
+         | Title.Title | My Blog |
+       And I hit "Save"
+       And I go to "admin/blogs"
+       And I follow "My Blog"
+       And I follow "New Post" where class name has "primaryAction"
+       And I fill in
+         | name        | value                 |
+         | Title.Title | My Post with a % Sign |
+         | Body.Text   | Hi there.             |
+       And I hit "Publish Now"
+       And I go to "my-blog/my-post-with-a-sign"
+       Then I should see "<h1[^>]*>.*?My Post with a % Sign.*?</h1>"
+       And I should see "Hi there."

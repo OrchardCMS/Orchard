@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Localization.Models;
@@ -8,7 +7,6 @@ using Orchard.Localization.Services;
 using Orchard.Localization.ViewModels;
 
 namespace Orchard.Localization.Drivers {
-    [UsedImplicitly]
     public class LocalizationPartDriver : ContentPartDriver<LocalizationPart> {
         private const string TemplatePrefix = "Localization";
         private readonly ICultureManager _cultureManager;

@@ -39,7 +39,7 @@ namespace Orchard.Layouts.Drivers {
             return Editor(context, editor);
         }
 
-        protected override void OnDisplaying(MediaItem element, ElementDisplayContext context) {
+        protected override void OnDisplaying(MediaItem element, ElementDisplayingContext context) {
             var contentItemIds = RemoveCurrentContentItemId(element.MediaItemIds, context.Content.Id);
             var displayType = context.DisplayType != "Design" ? element.DisplayType : "Thumbnail";
             var contentItems = GetContentItems(contentItemIds).ToArray();

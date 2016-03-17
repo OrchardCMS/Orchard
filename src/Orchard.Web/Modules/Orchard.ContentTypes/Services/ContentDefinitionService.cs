@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.MetaData;
@@ -9,6 +10,7 @@ using Orchard.ContentTypes.Events;
 using Orchard.ContentTypes.ViewModels;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Localization;
+using Orchard.Mvc;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.ContentTypes.Services {
@@ -107,7 +109,7 @@ namespace Orchard.ContentTypes.Services {
                     var partViewModel = part;
 
                     // enable updater to be aware of changing part prefix
-                    updater._prefix = secondHalf => String.Format("{0}.{1}", partViewModel.Prefix, secondHalf);
+                    updater.Prefix = secondHalf => String.Format("{0}.{1}", partViewModel.Prefix, secondHalf);
 
                     // allow extensions to alter typePart configuration
                     typeBuilder.WithPart(partViewModel.PartDefinition.Name, typePartBuilder => {
@@ -125,7 +127,7 @@ namespace Orchard.ContentTypes.Services {
                             var fieldViewModel = field;
 
                             // enable updater to be aware of changing field prefix
-                            updater._prefix = secondHalf =>
+                            updater.Prefix = secondHalf =>
                                 String.Format("{0}.{1}.{2}", fieldFirstHalf, fieldViewModel.Prefix, secondHalf);
                             // allow extensions to alter partField configuration
                             partBuilder.WithField(fieldViewModel.Name, partFieldBuilder => {
@@ -143,7 +145,7 @@ namespace Orchard.ContentTypes.Services {
                             var fieldViewModel = field;
 
                             // enable updater to be aware of changing field prefix
-                            updater._prefix = secondHalf =>
+                            updater.Prefix = secondHalf =>
                                 string.Format("{0}.{1}", fieldViewModel.Prefix, secondHalf);
 
                             // allow extensions to alter partField configuration
@@ -270,8 +272,8 @@ namespace Orchard.ContentTypes.Services {
             _contentDefinitionEventHandlers.ContentPartRemoved(new ContentPartRemovedContext {ContentPartDefinition = partDefinition});
         }
 
-        public IEnumerable<ContentFieldInfo> GetFields() {
-            return _contentFieldDrivers.SelectMany(d => d.GetFieldInfo());
+        public IEnumerable<ContentFieldInfo> GetFields() {            
+            return _contentFieldDrivers.SelectMany(d => d.GetFieldInfo()).GroupBy(x => x.FieldTypeName).Select(g => g.First());
         }
 
         public void AddFieldToPart(string fieldName, string fieldTypeName, string partName) {
@@ -356,37 +358,23 @@ namespace Orchard.ContentTypes.Services {
         }
 
         private static string VersionName(string name) {
-            int version;
-            var nameParts = name.Split(new[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
+            var i = name.Length - 1;
+            while (i >= 0 && char.IsDigit(name, i)) {
+                i--;
+            }
 
-            if (nameParts.Length > 1 && int.TryParse(nameParts.Last(), out version)) {
+            var substring = i != name.Length - 1 ? name.Substring(i + 1) : string.Empty;
+            int version;
+
+            if (int.TryParse(substring, out version)) {
+                name = name.Remove(name.Length - substring.Length);
                 version = version > 0 ? ++version : 2;
-                //this could unintentionally chomp something that looks like a version
-                name = string.Join("-", nameParts.Take(nameParts.Length - 1));
             }
             else {
                 version = 2;
             }
 
-            return string.Format("{0}-{1}", name, version);
-        }
-
-        class Updater : IUpdateModel {
-            private readonly IUpdateModel _thunk;
-
-            public Updater(IUpdateModel thunk) {
-                _thunk = thunk;
-            }
-
-            public Func<string, string> _prefix = x => x;
-
-            public bool TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) where TModel : class {
-                return _thunk.TryUpdateModel(model, _prefix(prefix), includeProperties, excludeProperties);
-            }
-
-            public void AddModelError(string key, LocalizedString errorMessage) {
-                _thunk.AddModelError(_prefix(key), errorMessage);
-            }
+            return name + version;
         }
     }
 }

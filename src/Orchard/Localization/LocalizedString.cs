@@ -78,5 +78,9 @@ namespace Orchard.Localization {
             return string.Equals(_localized, that._localized);
         }
 
+        public override object InitializeLifetimeService() {
+            // never expire the cross-AppDomain lease on this object
+            return null;
+        }
     }
 }

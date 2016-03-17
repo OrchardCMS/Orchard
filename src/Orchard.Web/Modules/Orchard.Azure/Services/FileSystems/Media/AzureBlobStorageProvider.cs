@@ -11,12 +11,15 @@ namespace Orchard.Azure.Services.FileSystems.Media {
     [OrchardSuppressDependency("Orchard.FileSystems.Media.FileSystemStorageProvider")]
     public class AzureBlobStorageProvider : AzureFileSystem, IStorageProvider {
 
-        public AzureBlobStorageProvider(ShellSettings shellSettings, IMimeTypeProvider mimeTypeProvider, IPlatformConfigurationAccessor pca)
-            : this(pca.GetSetting(Constants.MediaStorageStorageConnectionStringSettingName, shellSettings.Name, null),
-                   Constants.MediaStorageContainerName,
-                   pca.GetSetting(Constants.MediaStorageRootFolderPathSettingName, shellSettings.Name, null) ?? shellSettings.Name,
+        public AzureBlobStorageProvider(
+            ShellSettings shellSettings,
+            IMimeTypeProvider mimeTypeProvider,
+            IPlatformConfigurationAccessor platformConfigurationAccessor)
+            : this(platformConfigurationAccessor.GetSetting(Constants.MediaStorageStorageConnectionStringSettingName, shellSettings.Name, null),
+                   platformConfigurationAccessor.GetSetting(Constants.MediaStorageContainerNameSettingName, shellSettings.Name, null) ?? Constants.MediaStorageDefaultContainerName,
+                   platformConfigurationAccessor.GetSetting(Constants.MediaStorageRootFolderPathSettingName, shellSettings.Name, null) ?? shellSettings.Name,
                    mimeTypeProvider,
-                   pca.GetSetting(Constants.MediaStoragePublicHostName, shellSettings.Name, null))
+                   platformConfigurationAccessor.GetSetting(Constants.MediaStoragePublicHostName, shellSettings.Name, null))
         {
         }
 
@@ -60,6 +63,7 @@ namespace Orchard.Azure.Services.FileSystems.Media {
         /// <param name="url">The public URL of the media.</param>
         /// <returns>The corresponding local path.</returns>
         public string GetStoragePath(string url) {
+            EnsureInitialized();
             if (url.StartsWith(_absoluteRoot)) {
                 return HttpUtility.UrlDecode(url.Substring(Combine(_absoluteRoot, "/").Length));
             }

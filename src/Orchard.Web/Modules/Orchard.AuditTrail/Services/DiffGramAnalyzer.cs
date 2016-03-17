@@ -66,7 +66,6 @@ namespace Orchard.AuditTrail.Services {
                                             var originalContent = currentElement.Value;
                                             var currentContent = reader.ReadElementContentAsString();
 
-                                            stack.Pop();
                                             readNext = false;
                                             yield return
                                                 new DiffNode {

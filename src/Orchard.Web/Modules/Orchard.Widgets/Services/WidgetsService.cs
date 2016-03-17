@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
@@ -11,7 +10,6 @@ using Orchard.Core.Common.Models;
 
 namespace Orchard.Widgets.Services {
 
-    [UsedImplicitly]
     public class WidgetsService : IWidgetsService {
         private readonly IFeatureManager _featureManager;
         private readonly IExtensionManager _extensionManager;
