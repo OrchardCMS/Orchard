@@ -3,9 +3,11 @@ using System.Linq;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Localization.Models;
 using Orchard.Localization.Services;
 using Orchard.Localization.ViewModels;
+using Orchard.Localization.Handlers;
 
 namespace Orchard.Localization.Drivers {
     [UsedImplicitly]
@@ -44,7 +46,7 @@ namespace Orchard.Localization.Drivers {
 
             var missingCultures = part.HasTranslationGroup ?
                 RetrieveMissingCultures(part.MasterContentItem.As<LocalizationPart>(), true) :
-                RetrieveMissingCultures(part, part.Culture != null);
+                RetrieveMissingCultures(part, part.Culture != null && part.Id != 0);
 
             var model = new EditLocalizationViewModel {
                 SelectedCulture = GetCulture(part),
@@ -141,6 +143,19 @@ namespace Orchard.Localization.Drivers {
 
             if (part.Culture != null) {
                 context.Element(part.PartDefinition.Name).SetAttributeValue("Culture", part.Culture.Culture);
+            }
+        }
+
+        protected override void Cloning(LocalizationPart originalPart, LocalizationPart clonePart, CloneContentContext context) {
+            if(context is TranslateContentContext) {
+                var translateContext = context as TranslateContentContext;
+                if(translateContext.TagetCulture != null) {
+                    clonePart.Culture = translateContext.TagetCulture;
+                }
+                clonePart.MasterContentItem = translateContext.ContentItem;
+            }
+            else {
+                clonePart.Culture = originalPart.Culture;
             }
         }
     }

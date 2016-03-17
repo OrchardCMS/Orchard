@@ -90,7 +90,7 @@ namespace Orchard.Layouts.Drivers {
 
         protected override DriverResult Editor(LayoutPart part, IUpdateModel updater, dynamic shapeHelper) {
             return ContentShape("Parts_Layout_Edit", () => {
-                if (part.Id == 0) {
+                if (part.Id == 0 && string.IsNullOrEmpty(part.LayoutData)) {
                     var settings = part.TypePartDefinition.Settings.GetModel<LayoutTypePartSettings>();
 
                     // If the default layout setting is left empty, use the one from the service
@@ -170,6 +170,11 @@ namespace Orchard.Layouts.Drivers {
 
             var template = context.GetItemFromSession(templateIdentity);
             return template != null ? template.Id : default(int?);
+        }
+
+        protected override void Cloning(LayoutPart originalPart, LayoutPart clonePart, CloneContentContext context) {
+            clonePart.LayoutData = originalPart.LayoutData;
+            clonePart.TemplateId = originalPart.TemplateId;
         }
     }
 }

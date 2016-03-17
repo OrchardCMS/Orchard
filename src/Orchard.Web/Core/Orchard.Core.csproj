@@ -570,6 +570,9 @@
   <ItemGroup>
     <Content Include="Common\Views\EditorTemplates\Flavor.cshtml" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Contents\Views\Admin\Clone.cshtml" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

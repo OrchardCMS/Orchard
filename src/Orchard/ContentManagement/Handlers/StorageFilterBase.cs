@@ -25,6 +25,8 @@ namespace Orchard.ContentManagement.Handlers {
         protected virtual void Imported(ImportContentContext context, TPart instance) { }
         protected virtual void Exporting(ExportContentContext context, TPart instance) { }
         protected virtual void Exported(ExportContentContext context, TPart instance) { }
+        protected virtual void Cloning(CloneContentContext context, TPart instance) { }
+        protected virtual void Cloned(CloneContentContext context, TPart instance) { }
         protected virtual void Restoring(RestoreContentContext context, TPart instance) { }
         protected virtual void Restored(RestoreContentContext context, TPart instance) { }
         protected virtual void Destroying(DestroyContentContext context, TPart instance) { }
@@ -143,6 +145,16 @@ namespace Orchard.ContentManagement.Handlers {
         void IContentStorageFilter.Exported(ExportContentContext context) {
             if (context.ContentItem.Is<TPart>())
                 Exported(context, context.ContentItem.As<TPart>());
+        }
+
+        void IContentStorageFilter.Cloning(CloneContentContext context) {
+            if (context.ContentItem.Is<TPart>())
+                Cloning(context, context.ContentItem.As<TPart>());
+        }
+
+        void IContentStorageFilter.Cloned(CloneContentContext context) {
+            if (context.ContentItem.Is<TPart>())
+                Cloned(context, context.ContentItem.As<TPart>());
         }
 
         void IContentStorageFilter.Restoring(RestoreContentContext context) {
