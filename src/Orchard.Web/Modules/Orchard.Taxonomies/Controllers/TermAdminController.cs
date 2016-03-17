@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web.Mvc;
 using Orchard.Taxonomies.Models;
 using Orchard.Localization;
+using Orchard.Mvc.Html;
 using Orchard.Taxonomies.ViewModels;
 using Orchard.Taxonomies.Services;
 using Orchard.UI.Admin;
