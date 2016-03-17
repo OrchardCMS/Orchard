@@ -35,7 +35,7 @@ namespace Orchard.Environment {
         private IEnumerable<ShellContext> _shellContexts;
         private readonly ContextState<IList<ShellSettings>> _tenantsToRestart;
 
-
+        public int Retries { get; set; }
         public bool DelayRetries { get; set; }
 
         public DefaultOrchardHost(
