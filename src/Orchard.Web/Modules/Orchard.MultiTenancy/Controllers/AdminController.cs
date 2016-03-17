@@ -139,10 +139,9 @@ namespace Orchard.MultiTenancy.Controllers {
                 return new HttpUnauthorizedResult();
 
             var tenant = _tenantService.GetTenants().FirstOrDefault(ss => ss.Name == viewModel.Name);
+
             if (tenant == null)
                 return HttpNotFound();
-            else if (tenant.Name == _thisShellSettings.Name)
-                return new HttpUnauthorizedResult();
 
             if (!ModelState.IsValid) {
                 return View(viewModel);

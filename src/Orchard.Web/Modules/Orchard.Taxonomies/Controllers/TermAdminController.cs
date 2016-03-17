@@ -41,7 +41,7 @@ namespace Orchard.Taxonomies.Controllers {
 
             var taxonomy = _taxonomyService.GetTaxonomy(taxonomyId);
 
-            var terms = _taxonomyService.GetTermsQuery(taxonomyId).Slice(pager.GetStartIndex(), pager.PageSize);
+            var terms = TermPart.Sort(_taxonomyService.GetTermsQuery(taxonomyId).Slice(pager.GetStartIndex(), pager.PageSize));
 
             var pagerShape = Shape.Pager(pager).TotalItemCount(_taxonomyService.GetTermsQuery(taxonomyId).Count());
 

@@ -323,6 +323,7 @@
     <ItemGroup>
     
       <Zip-Exclude Include="
+        $(MSBuildProjectDirectory)\src\**\packages\**\*;
         $(MSBuildProjectDirectory)\src\**\bin\**\*;
         $(MSBuildProjectDirectory)\src\**\obj\**\*;
         $(MSBuildProjectDirectory)\**\App_Data\**\*;
@@ -339,7 +340,7 @@
 
       <Zip-Stage Include="$(StageFolder)\**\*" />
 
-      <Zip-MsDeploy Include="$(MsDeployFolder)\**\*" />
+      <Zip-MsDeploy Include="$(MsDeployFolder)\**\*" Exclude="$(MSBuildProjectDirectory)\**\bin\**\*.pdb;"/>
 
       <Zip-Source Include="
         $(MSBuildProjectDirectory)\lib\**\*;

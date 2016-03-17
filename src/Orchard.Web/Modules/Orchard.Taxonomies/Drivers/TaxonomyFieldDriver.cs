@@ -62,8 +62,7 @@ namespace Orchard.Taxonomies.Drivers {
 
         protected override DriverResult Editor(ContentPart part, TaxonomyField field, IUpdateModel updater, dynamic shapeHelper) {
             // Initializing viewmodel using the terms that are already selected to prevent loosing them when updating an editor group this field isn't displayed in.
-            // Get all the selected, published terms of all the TaxonomyFields of the content item.
-            var appliedTerms = GetAppliedTerms(part).ToList();
+            var appliedTerms = GetAppliedTerms(part, field, VersionOptions.Latest).ToList();
             var viewModel = new TaxonomyFieldViewModel { Terms = appliedTerms.Select(t => t.CreateTermEntry()).ToList() };
             foreach (var item in viewModel.Terms) item.IsChecked = true;
             
