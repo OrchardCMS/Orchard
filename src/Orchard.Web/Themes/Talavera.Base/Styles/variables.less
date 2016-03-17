@@ -9,6 +9,10 @@
   @pxValue: (@sizeValue * 10);
   @lineHeightValue:(@sizeValue * 1.6);
   font-size: ~"@{pxValue}px"; 
-  font-size: ~"@{remValue}rem";
+  font-size: ~"@{remValue}rem";  
+}
+
+.font-size-line-height(@sizeValue) { 
+  @lineHeightValue:(@sizeValue * 1.6);  
   line-height: ~"@{lineHeightValue}rem";
 }

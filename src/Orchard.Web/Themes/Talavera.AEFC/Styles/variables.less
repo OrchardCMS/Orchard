@@ -3,6 +3,7 @@
 /* Theme Overide Variables
 ***************************************************************/
 @font-family-sans-serif:  "Helvetica Neue", Helvetica, Arial, sans-serif;
+@font-size-base: 2.0rem;
 
 /* Colors */
 // We tend to declare the main branding colors here too.
@@ -12,13 +13,10 @@
 @aefc-light-blue: #33add6;
 @aefc-xl-text-color: @aefc-light-blue;
 @aefc-icon-display: inline;
-
-@font-size-base: 2.0rem;
-
-@sample-grey: #4d4948;
-@sample-white: #fff; 
-@sample-blue: #0093DD;
-@footer-link-text-color: @aefc-dark-blue;
+@aefc-navbar-brand-size: 50px;
+@aefc-grey: #4d4948;
+@aefc-white: #fff; 
+@aefc-blue: #0093DD;
 
 /* Media queries */
 // Media queries are commonly used in responsive design. It's nice to declare them as variables too so it's simple to re-use them.
@@ -38,17 +36,28 @@
 /* Setting Bootstrap vars */
 // Here we configure some of Bootstrap's variables. This way you can change the resulting CSS directly, you don't have to write your own
 // body background colour declaration from a CSS selector for example, the CSS will only contain one body background color.
-@body-bg: @sample-grey;
-@text-color: @sample-white;
-@link-color: @sample-blue;
+@body-bg: @aefc-grey;
+@text-color: @aefc-white;
+@link-color: @aefc-blue;
 @link-hover-color: @link-color;
 @input-border-radius: 0;
 @border-radius-base: 0;
 @grid-float-breakpoint: @screen-md-min;
-@well-bg: transparent;
 
-@shadow-dark-background-color: rgba(0, 0, 0, 0.83);
-@shadow-light-background-color: @gray;
-
-@navbar-default-bg: transparent;
+@navbar-default-bg: white;
+@navbar-default-brand-color: red;
 @nav-link-hover-bg: transparent;
+
+.navbar-styling {
+    -webkit-transition: all 500ms;
+    transition: all 500ms;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 1px;       
+    margin-right: 15px;
+    padding: 10px 0px 5px;    
+    border-radius: 0px;    
+    display: block;
+    white-space: nowrap;
+    .font-size(1.4);
+}

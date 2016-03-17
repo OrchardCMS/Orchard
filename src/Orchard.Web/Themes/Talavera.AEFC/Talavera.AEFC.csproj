@@ -74,8 +74,9 @@
   <ItemGroup>
     <Content Include="Assets.json" />
     <Content Include="Content\sources\billionthemes\menubig.png" />
-    <Content Include="Images\customer_logo.png" />
-    <Content Include="Images\customer_logo_scaled.png" />
+    <Content Include="Images\aefc_logo.png" />
+    <Content Include="Images\aefc_logo_scaled-blacktext.png" />
+    <Content Include="Images\aefc_logo_scaled.png" />
     <Content Include="Images\facebook.png" />
     <Content Include="Images\favicon.ico" />
     <Content Include="Images\fitnesscenteratnight.jpg" />
@@ -121,7 +122,6 @@
     <Content Include="Styles\forms.less" />
     <Content Include="Styles\general.less" />
     <Content Include="Styles\variables.less" />
-    <Content Include="Views\Branding.cshtml" />
     <Content Include="Images\Web.config" />
     <Content Include="Content\sources\billionthemes\BillionWebFonts.ttf" />
     <Content Include="Content\sources\billionthemes\BillionWebFonts.woff" />

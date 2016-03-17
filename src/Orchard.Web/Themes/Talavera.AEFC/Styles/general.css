@@ -430,5 +430,19 @@ body {
 /* Colors */
 /* Media queries */
 /* Setting Bootstrap vars */
+.navbar-styling {
+  -webkit-transition: all 500ms;
+  transition: all 500ms;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 1px;
+  margin-right: 15px;
+  padding: 10px 0px 5px;
+  border-radius: 0px;
+  display: block;
+  white-space: nowrap;
+  font-size: 14px;
+  font-size: 1.4rem;
+}
 /* General
 ***************************************************************/
