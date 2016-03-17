@@ -49,6 +49,20 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Orchard.Conditions">
+      <HintPath>..\..\Modules\Orchard.Conditions\bin\Orchard.Conditions.dll</HintPath>
+    </Reference>
+    <Reference Include="Orchard.Core, Version=1.9.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Core\bin\Orchard.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Orchard.Framework, Version=1.9.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Orchard\bin\Debug\Orchard.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Orchard.Widgets">
+      <HintPath>..\..\Modules\Orchard.Widgets\bin\Orchard.Widgets.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.ComponentModel.DataAnnotations">
@@ -417,30 +431,6 @@
     <Content Include="Theme.txt" />
     <Content Include="Theme.png" />
     <Content Include="Placement.info" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
-      <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
-      <Name>Orchard.Framework</Name>
-      <Private>false</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Core\Orchard.Core.csproj">
-      <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
-      <Name>Orchard.Core</Name>
-      <Private>false</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Modules\Orchard.Conditions\Orchard.Conditions.csproj">
-      <Project>{98251eae-a41b-47b2-aa91-e28b8482da70}</Project>
-      <Name>Orchard.Conditions</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Modules\Orchard.Layouts\Orchard.Layouts.csproj">
-      <Project>{6bd8b2fa-f2e3-4ac8-a4c3-2925a653889a}</Project>
-      <Name>Orchard.Layouts</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Modules\Orchard.Widgets\Orchard.Widgets.csproj">
-      <Project>{194d3ccc-1153-474d-8176-fde8d7d0d0bd}</Project>
-      <Name>Orchard.Widgets</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\AdditionalInsertions.cshtml" />

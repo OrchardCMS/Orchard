@@ -1,0 +1,82 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Themes", "Themes", "{74492CBC-7201-417E-BC29-28B4C25A58B0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DF3909B0-1DDD-4D8A-9919-56FC438E25E2}"
+	ProjectSection(SolutionItems) = preProject
+		Rebracer.xml = Rebracer.xml
+		WebEssentials-Settings.json = WebEssentials-Settings.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Gulp", "Gulp", "{90EBEE36-B5CD-42A8-A21B-76270E2C5D24}"
+	ProjectSection(SolutionItems) = preProject
+		Gulpfile.js = Gulpfile.js
+		Package.json = Package.json
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Talavera.Base", "Orchard.Web\Themes\Talavera.Base\Talavera.Base.csproj", "{C09CE546-289F-414D-B5AD-E5591501B7F0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Talavera.AEFC", "Orchard.Web\Themes\Talavera.AEFC\Talavera.AEFC.csproj", "{4B65A8A1-1020-463C-959E-E354FC43DF02}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Web", "Orchard.Web\Orchard.Web.csproj", "{50B779EA-EC00-4699-84C0-03B395C365D2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		CodeCoverage|Any CPU = CodeCoverage|Any CPU
+		Coverage|Any CPU = Coverage|Any CPU
+		Debug|Any CPU = Debug|Any CPU
+		FxCop|Any CPU = FxCop|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C09CE546-289F-414D-B5AD-E5591501B7F0}.CodeCoverage|Any CPU.ActiveCfg = Release|Any CPU
+		{C09CE546-289F-414D-B5AD-E5591501B7F0}.CodeCoverage|Any CPU.Build.0 = Release|Any CPU
+		{C09CE546-289F-414D-B5AD-E5591501B7F0}.Coverage|Any CPU.ActiveCfg = Release|Any CPU
+		{C09CE546-289F-414D-B5AD-E5591501B7F0}.Coverage|Any CPU.Build.0 = Release|Any CPU
+		{C09CE546-289F-414D-B5AD-E5591501B7F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C09CE546-289F-414D-B5AD-E5591501B7F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C09CE546-289F-414D-B5AD-E5591501B7F0}.FxCop|Any CPU.ActiveCfg = Release|Any CPU
+		{C09CE546-289F-414D-B5AD-E5591501B7F0}.FxCop|Any CPU.Build.0 = Release|Any CPU
+		{C09CE546-289F-414D-B5AD-E5591501B7F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C09CE546-289F-414D-B5AD-E5591501B7F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B65A8A1-1020-463C-959E-E354FC43DF02}.CodeCoverage|Any CPU.ActiveCfg = Release|Any CPU
+		{4B65A8A1-1020-463C-959E-E354FC43DF02}.CodeCoverage|Any CPU.Build.0 = Release|Any CPU
+		{4B65A8A1-1020-463C-959E-E354FC43DF02}.Coverage|Any CPU.ActiveCfg = Release|Any CPU
+		{4B65A8A1-1020-463C-959E-E354FC43DF02}.Coverage|Any CPU.Build.0 = Release|Any CPU
+		{4B65A8A1-1020-463C-959E-E354FC43DF02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B65A8A1-1020-463C-959E-E354FC43DF02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B65A8A1-1020-463C-959E-E354FC43DF02}.FxCop|Any CPU.ActiveCfg = Release|Any CPU
+		{4B65A8A1-1020-463C-959E-E354FC43DF02}.FxCop|Any CPU.Build.0 = Release|Any CPU
+		{4B65A8A1-1020-463C-959E-E354FC43DF02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B65A8A1-1020-463C-959E-E354FC43DF02}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50B779EA-EC00-4699-84C0-03B395C365D2}.CodeCoverage|Any CPU.ActiveCfg = Release|Any CPU
+		{50B779EA-EC00-4699-84C0-03B395C365D2}.CodeCoverage|Any CPU.Build.0 = Release|Any CPU
+		{50B779EA-EC00-4699-84C0-03B395C365D2}.Coverage|Any CPU.ActiveCfg = Release|Any CPU
+		{50B779EA-EC00-4699-84C0-03B395C365D2}.Coverage|Any CPU.Build.0 = Release|Any CPU
+		{50B779EA-EC00-4699-84C0-03B395C365D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50B779EA-EC00-4699-84C0-03B395C365D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50B779EA-EC00-4699-84C0-03B395C365D2}.FxCop|Any CPU.ActiveCfg = Release|Any CPU
+		{50B779EA-EC00-4699-84C0-03B395C365D2}.FxCop|Any CPU.Build.0 = Release|Any CPU
+		{50B779EA-EC00-4699-84C0-03B395C365D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50B779EA-EC00-4699-84C0-03B395C365D2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{90EBEE36-B5CD-42A8-A21B-76270E2C5D24} = {DF3909B0-1DDD-4D8A-9919-56FC438E25E2}
+		{C09CE546-289F-414D-B5AD-E5591501B7F0} = {74492CBC-7201-417E-BC29-28B4C25A58B0}
+		{4B65A8A1-1020-463C-959E-E354FC43DF02} = {74492CBC-7201-417E-BC29-28B4C25A58B0}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		{4B65A8A1-1020-463C-959E-E354FC43DF02} = {74492CBC-7201-417E-BC29-28B4C25A58B0}
+		{AB8E07C9-801D-4CC2-9186-866CB6076404} = {74492CBC-7201-417E-BC29-28B4C25A58B0}
+		EnterpriseLibraryConfigurationToolBinariesPath = packages\TransientFaultHandling.Core.5.1.1209.1\lib\NET4
+		{5D37D97E-534E-48E9-8954-C360F2AD6202} = {74492CBC-7201-417E-BC29-28B4C25A58B0}
+		{B5C277C0-4A37-4EEC-966F-C6331BFFFEAC} = {74492CBC-7201-417E-BC29-28B4C25A58B0}
+		{9F3A78B9-0DFE-4FD8-A904-856F41FE72C9} = {74492CBC-7201-417E-BC29-28B4C25A58B0}
+		{C09CE546-289F-414D-B5AD-E5591501B7F0} = {74492CBC-7201-417E-BC29-28B4C25A58B0}
+	EndGlobalSection
+EndGlobal
