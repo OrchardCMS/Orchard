@@ -44,7 +44,7 @@
     ***************************************************************/
 
     Model.Id = "layout-wrapper";
-    Model.Classes.Add("container-fluid");    
+    //Model.Classes.Add("container-fluid");    //Seems to be duplicating margin when its applied by boostrap orchard in structure.less
     var tag = Tag(Model, "div"); // using Tag so the layout div gets the classes, id and other attributes added to the Model      
 }
 @tag.StartElement

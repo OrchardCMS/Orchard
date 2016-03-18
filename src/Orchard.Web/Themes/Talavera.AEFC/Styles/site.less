@@ -1,16 +1,9 @@
-﻿//Begin: Talavera.AEFC
+﻿/*#region Talavera.AEFC */
 
-@import "../../Talavera.Base/Styles/site.less";
-
-//@import "../../Talavera.Base/Content/bootswatch/darkly/bootswatch";
-//@import "../../Talavera.Base/Content/bootswatch/darkly/variables";
-
-//Begin billionthemes-2608975
-//@import (inline) "../Content/sources/billionthemes/billionthemes-2608975.css";
+@import "../../Talavera.Base/Styles/site";
 
 @import "variables";
 @import "mixins";
-@import "general";
 @import "forms";
 
 @charset "UTF-8";
@@ -26,22 +19,9 @@ html {
     font-size: 62.5%;
 }
 
-body {
-    min-height: 100%;
+body {    
     .display-flex;
     .flex-direction-column;
-}
-
-#layout-wrapper {
-    min-height: 100vh;
-    min-width: 100%;
-    .display-flex;
-    .flex-direction-column;
-}
-
-#layout-main-container {
-    background-color: transparent;
-    .flex(1);
 }
 
 #navigation-toTop {
@@ -66,16 +46,39 @@ html.layer-default > body {
 }
 
 html.layer-thehomepage > body {
-    //Begin: Background
+    /*Begin: Background */
     background: url('../Images/fitnesscenteratnight.jpg') no-repeat center center;
     background-size: cover;
     background-attachment: fixed;
-    //End: Background
+    /*End: Background */
     overflow: auto;
 }
 /*#endregion Layers */
 
 /*#region Layouts */
+
+#layout-main-container #layout-content
+{
+    padding-left: 0;
+    padding-right: 0;
+}
+
+#layout-wrapper {
+    min-height: 100vh;
+    min-width: 100%;
+    .display-flex;
+    .flex-direction-column;
+}
+
+#layout-main-container {
+    background-color: transparent;
+    .flex(1);
+}
+
+.zone{
+    padding: 0;
+}
+
 .orchard-layouts-root {
     min-height: 20px;
     clear: both;
@@ -115,8 +118,7 @@ html.layer-thehomepage > body {
 /*#region Navbar*/
 .navbar-default .zone-navigation,
 .navbar-default .zone-navigation ul.nav > li > a {
-    color: @aefc-dark-blue;
-    line-height: @aefc-navbar-brand-size;
+    color: @aefc-dark-blue;    
 }
 
 .nav-pills > li.active > a,
@@ -125,9 +127,13 @@ html.layer-thehomepage > body {
     background-color: transparent;
 }
 
+.navbar > .container-fluid .navbar-brand  {
+    margin-left: 0;
+    padding: 0;
+}
+
 .navbar-brand > img {
-    max-height: @aefc-navbar-brand-size;
-    overflow: visible;
+    max-height: @aefc-navbar-brand-size;    
     padding-top: 0;
     padding-bottom: 0;
     position: absolute;
@@ -135,23 +141,6 @@ html.layer-thehomepage > body {
 /*#endregion Navbar*/
 
 /*#region Top Navigation */
-/*.widget-menu-widget .menu > li > a:hover,
-.widget-menu-widget .menu > li > a:focus,
-.widget-menu-widget .menu > li.active > a,
-.widget-menu-widget .menu li.dropdown > ul .widget-menu-widget .menu .dropdown-menu > li > a:hover,
-.widget-menu-widget .menu .dropdown-menu > li > a:focus {
-    background-color: transparent;
-}
-
-.widget-menu-widget .menu-main-menu li.dropdown > ul {
-    background-color: transparent;
-}
-
-.widget-menu-widget .menu-main-menu .dropdown-menu > li > a:hover,
-.widget-menu-widget .menu-main-menu .dropdown-menu > li > a:focus {
-    background-color: transparent;
-}*/
-
 .zone-navigation .widget-navigation .menu-main-menu.nav-pills > li > a:focus,
 .zone-navigation .widget-navigation .menu-main-menu.nav-pills > li > a:hover,
 .dropdown-menu > .active > a,
@@ -176,17 +165,13 @@ html.layer-thehomepage > body {
     .navbar-styling;
 }
 
-.zone-navigation .widget-navigation .menu-main-menu.nav-pills > li > a.active {
-    //border-bottom: 2px solid #33add6;
+.zone-navigation .widget-navigation .menu-main-menu.nav-pills > li > a.active {    
     color: @aefc-light-blue;
 }
 
 .zone-navigation .widget-navigation.widget-menu-widget.widget {
-    position: relative;
-    height: 100%;
-    padding-left: 20px;
-    padding-right: 20px;
-    float: right;
+    //keeps brand image from overlapping menu
+    padding-left: 50px;
 }
 /*#endregion Top Navigation */
 
@@ -237,28 +222,6 @@ html.layer-thehomepage > body {
 /*#endregion menu-button-menu*/
 
 /*#endregion Navigation*/
-
-.affix {
-    bottom: 0;
-}
-
-.element-shade {
-    background-color: @aefc-dark-blue-shade;
-    color: inherit;
-}
-
-.orchard-layouts-root > * > .container-fluid > .row > * > .container-fluid > .row > * > hr {
-    border-top: 2px solid #33add6;
-}
-
-.orchard-layouts-root .text-center hr {
-    border-top: 2px solid #33add6;
-    width: 300px;
-}
-
-.orchard-layouts-root > .container-fluid > .row .well-lg {
-    border-radius: unset;
-}
 
 /*#region Icons */
 .bwf:before {
@@ -385,7 +348,7 @@ article.widget-content {
 }
 /*#endregion Widgets*/
 
-/*#region footer*/
+/*#region Footer*/
 #badgeofhonor,
 #badgeofhonor a,
 #badgeofhonor a:hover {
@@ -395,6 +358,7 @@ article.widget-content {
 
 #badgeofhonor {
     padding-top: 1rem;
+    background-color: rgba(255, 255, 255, 0.75);
 }
 
 #badgeofhonor .social-media-icons {
@@ -425,6 +389,7 @@ article.widget-content {
 
 #badgeofhonor .credits .copyright {
     .font-size(1.5);
+    padding-left: 1rem;
 }
 /*#endregion footer*/
 
@@ -507,6 +472,38 @@ article.widget-content {
     }
 }
 
+@media (max-width: @screen-sm-min) {
+
+    /*#region Force hamburger to hide until @screen-sm-min*/
+    .navbar-header {
+        float: none;
+    }
+    .navbar-toggle {
+        display: block;
+    }
+    .navbar-collapse {
+        border-top: 1px solid transparent;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+    }
+    .navbar-collapse.collapse {
+        display: none!important;
+    }
+    .navbar-collapse.collapse.in {
+        display: block!important;
+    }
+    .navbar-nav {
+        float: none!important;
+        margin: 7.5px -15px;
+    }
+    .navbar-nav>li {
+        float: none;
+    }
+    .navbar-nav>li>a {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+    /*#endregion Force hamburger to hide until @screen-sm-min*/
+}
 /*#endregion Media Queries */
 
-//End: Talavera.AEFC
+/*#endregion Talavera.AEFC */

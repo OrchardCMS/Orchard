@@ -83,11 +83,11 @@
     <Content Include="Images\fitnesscenteratnight.jpg" />
     <Content Include="Images\instagram.png" />
     <Content Include="Images\menubig.png" />
-    <Content Include="Styles\general.css">
-      <DependentUpon>general.less</DependentUpon>
+    <Content Include="Styles\forms.css">
+      <DependentUpon>forms.less</DependentUpon>
     </Content>
-    <Content Include="Styles\general.min.css">
-      <DependentUpon>general.css</DependentUpon>
+    <Content Include="Styles\forms.min.css">
+      <DependentUpon>forms.css</DependentUpon>
     </Content>
     <Content Include="Styles\site.css">
       <DependentUpon>site.less</DependentUpon>
@@ -120,7 +120,6 @@
       <DependentUpon>compilerconfig.json</DependentUpon>
     </None>
     <Content Include="Styles\forms.less" />
-    <Content Include="Styles\general.less" />
     <Content Include="Styles\variables.less" />
     <Content Include="Images\Web.config" />
     <Content Include="Content\sources\billionthemes\BillionWebFonts.ttf" />

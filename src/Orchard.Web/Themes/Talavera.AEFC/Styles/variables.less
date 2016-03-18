@@ -1,7 +1,4 @@
-﻿ @import "../../Talavera.Base/Styles/variables";
-
-/* Theme Overide Variables
-***************************************************************/
+﻿ /* Theme Overide Variables */
 @font-family-sans-serif:  "Helvetica Neue", Helvetica, Arial, sans-serif;
 @font-size-base: 2.0rem;
 
@@ -20,11 +17,13 @@
 
 /* Media queries */
 // Media queries are commonly used in responsive design. It's nice to declare them as variables too so it's simple to re-use them.
-@screen-sm-min: 47.95em; // ~768px
-@screen-md-min: 57.8em; // ~940px in Chrome, more in FF...
-@screen-lg-min: 68.6em; // ~1100px
-@screen-xl-min: 87.4em; // ~1400px
-@screen-xxl-min: 99.9em; // ~1600px
+/*
+    @screen-sm-min: 47.95em; // ~768px
+    @screen-md-min: 57.8em; // ~940px in Chrome, more in FF...
+    @screen-lg-min: 68.6em; // ~1100px 
+*/
+@screen-xl-min: 1400px;  //87.4em; // 
+@screen-xxl-min: 1600px; //99.9em; // 
 
 // The tilde is needed so the quotes won't be printed
 @media-sm: ~"only screen and (min-width: @{screen-sm-min})";
@@ -42,8 +41,6 @@
 @link-hover-color: @link-color;
 @input-border-radius: 0;
 @border-radius-base: 0;
-@grid-float-breakpoint: @screen-md-min;
 
 @navbar-default-bg: white;
-@navbar-default-brand-color: red;
 @nav-link-hover-bg: transparent;
