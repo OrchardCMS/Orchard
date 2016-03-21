@@ -134,6 +134,7 @@
     <Content Include="Views\TopNavigation.cshtml" />
     <Content Include="Views\MenuItem-button-menu.cshtml" />
     <Content Include="Styles\mixins.less" />
+    <Content Include="Styles\reset.less" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Code\" />

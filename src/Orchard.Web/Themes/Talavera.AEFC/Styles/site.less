@@ -1,10 +1,13 @@
-﻿/*#region Talavera.AEFC */
+﻿/*#region Talavera.AEFC site.less */
 
 @import "../../Talavera.Base/Styles/site";
+
+@import "reset";
 
 @import "variables";
 @import "mixins";
 @import "forms";
+
 
 @charset "UTF-8";
 
@@ -14,7 +17,6 @@
     font-weight: normal;
     font-style: normal;
 }
-
 html {
     font-size: 62.5%;
 }
@@ -43,6 +45,13 @@ html.layer-default > body {
     background-color: @aefc-dark-blue;
     overflow: auto;
     width: 100%;
+}
+
+html.layer-default > body #badgeofhonor
+{
+    background: url('../Images/fitnesscenteratnight.jpg') no-repeat center center;
+    background-size: cover;
+    background-attachment: fixed;
 }
 
 html.layer-thehomepage > body {
@@ -75,10 +84,6 @@ html.layer-thehomepage > body {
     .flex(1);
 }
 
-.zone{
-    padding: 0;
-}
-
 .orchard-layouts-root {
     min-height: 20px;
     clear: both;
@@ -104,6 +109,11 @@ html.layer-thehomepage > body {
     text-align: center;
     padding: 3.2rem;
 }
+
+//sets text from content author's to white
+.page.content-item{
+    color: @aefc-white;
+}
 /*#endregion Layouts */
 
 /*#region Bubbles*/
@@ -115,7 +125,7 @@ html.layer-thehomepage > body {
 
 /*#region Navigation*/
 
-/*#region Navbar*/
+/*#region Top Navbar*/
 .navbar-default .zone-navigation,
 .navbar-default .zone-navigation ul.nav > li > a {
     color: @aefc-dark-blue;    
@@ -123,7 +133,7 @@ html.layer-thehomepage > body {
 
 .nav-pills > li.active > a,
 .nav-pills > li.active > a:hover,
-.nav-pills > li.active > a:focus {
+.nav-pills > li.active > a:focus {    
     background-color: transparent;
 }
 
@@ -138,9 +148,8 @@ html.layer-thehomepage > body {
     padding-bottom: 0;
     position: absolute;
 }
-/*#endregion Navbar*/
 
-/*#region Top Navigation */
+//top navigation
 .zone-navigation .widget-navigation .menu-main-menu.nav-pills > li > a:focus,
 .zone-navigation .widget-navigation .menu-main-menu.nav-pills > li > a:hover,
 .dropdown-menu > .active > a,
@@ -149,7 +158,7 @@ html.layer-thehomepage > body {
 .dropdown-menu > li > a:hover,
 .dropdown-menu > li > a:focus {
     background-color: black;
-    color: @text-color;
+    color: @aefc-white;
 }
 
 .zone-navigation .widget-navigation .menu-main-menu.nav-pills .dropdown-menu > li > a,
@@ -168,12 +177,13 @@ html.layer-thehomepage > body {
 .zone-navigation .widget-navigation .menu-main-menu.nav-pills > li > a.active {    
     color: @aefc-light-blue;
 }
+/*#endregion Top Navbar*/
 
 .zone-navigation .widget-navigation.widget-menu-widget.widget {
     //keeps brand image from overlapping menu
     padding-left: 50px;
 }
-/*#endregion Top Navigation */
+/*#endregion Navigation */
 
 /*#region menu-button-menu*/
 .menu-button-menu {
@@ -214,8 +224,8 @@ html.layer-thehomepage > body {
 }
 
 .menu-button-menu .btn-group:last-child .btn-default,
-.menu-button-menu > .btn-group > .btn-default.bwf > a {
-    color: @text-color;
+.menu-button-menu > .btn-group > .btn-default.bwf > a {    
+    color: @aefc-white;
     text-decoration: none;
 }
 

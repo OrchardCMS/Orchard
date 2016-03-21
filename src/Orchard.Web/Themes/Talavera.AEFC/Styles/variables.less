@@ -14,6 +14,7 @@
 @aefc-grey: #4d4948;
 @aefc-white: #fff; 
 @aefc-blue: #0093DD;
+@aefc-text-color: rgb(0, 0, 0);
 
 /* Media queries */
 // Media queries are commonly used in responsive design. It's nice to declare them as variables too so it's simple to re-use them.
@@ -35,8 +36,11 @@
 /* Setting Bootstrap vars */
 // Here we configure some of Bootstrap's variables. This way you can change the resulting CSS directly, you don't have to write your own
 // body background colour declaration from a CSS selector for example, the CSS will only contain one body background color.
+//** Background color for `<body>`.
 @body-bg: @aefc-grey;
-@text-color: @aefc-white;
+//** Global text color on `<body>`.
+@text-color: @aefc-text-color;
+
 @link-color: @aefc-blue;
 @link-hover-color: @link-color;
 @input-border-radius: 0;
@@ -44,3 +48,5 @@
 
 @navbar-default-bg: white;
 @nav-link-hover-bg: transparent;
+
+//@input-height-base: 
