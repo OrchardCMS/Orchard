@@ -47,19 +47,8 @@ html.layer-default > body {
     width: 100%;
 }
 
-html.layer-default > body #badgeofhonor
-{
-    background: url('../Images/fitnesscenteratnight.jpg') no-repeat center center;
-    background-size: cover;
-    background-attachment: fixed;
-}
-
 html.layer-thehomepage > body {
-    /*Begin: Background */
-    background: url('../Images/fitnesscenteratnight.jpg') no-repeat center center;
-    background-size: cover;
-    background-attachment: fixed;
-    /*End: Background */
+    .fitnesscenterbackground;
     overflow: auto;
 }
 /*#endregion Layers */
@@ -366,8 +355,12 @@ article.widget-content {
     text-decoration: none;
 }
 
-#badgeofhonor {
-    padding-top: 1rem;
+#badgeofhonor {    
+    .fitnesscenterbackground;
+}
+
+
+#badgeofhonor .background{
     background-color: rgba(255, 255, 255, 0.75);
 }
 
@@ -382,11 +375,6 @@ article.widget-content {
     vertical-align: middle;
     padding: 1rem;
     .flex-direction-row;
-}
-
-#badgeofhonor > .row {
-    margin-left: 0;
-    margin-right: 0;
 }
 
 #badgeofhonor .social-media-icons img {

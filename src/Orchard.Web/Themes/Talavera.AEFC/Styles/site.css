@@ -11306,12 +11306,17 @@ input[type="color"] {
   font-weight: 600;
   letter-spacing: 1px;
   margin-right: 15px;
-  padding: 10px 0px 5px;
+  padding: 10px 5px 5px;
   border-radius: 0px;
   display: block;
   white-space: nowrap;
   font-size: 14px;
   font-size: 1.4rem;
+}
+.fitnesscenterbackground {
+  background: url('../Images/fitnesscenteratnight.jpg') no-repeat center center;
+  background-size: cover;
+  background-attachment: fixed;
 }
 /*#endregion Talavera.AEFC\Styles\mixins.less*/
 fieldset {
@@ -12588,17 +12593,10 @@ html.layer-default > body {
   overflow: auto;
   width: 100%;
 }
-html.layer-default > body #badgeofhonor {
-  background: url('../Images/fitnesscenteratnight.jpg') no-repeat center center;
-  background-size: cover;
-  background-attachment: fixed;
-}
 html.layer-thehomepage > body {
-  /*Begin: Background */
   background: url('../Images/fitnesscenteratnight.jpg') no-repeat center center;
   background-size: cover;
   background-attachment: fixed;
-  /*End: Background */
   overflow: auto;
 }
 /*#endregion Layers */
@@ -12703,7 +12701,7 @@ html.layer-thehomepage > body {
   font-weight: 600;
   letter-spacing: 1px;
   margin-right: 15px;
-  padding: 10px 0px 5px;
+  padding: 10px 5px 5px;
   border-radius: 0px;
   display: block;
   white-space: nowrap;
@@ -12720,7 +12718,7 @@ html.layer-thehomepage > body {
   font-weight: 600;
   letter-spacing: 1px;
   margin-right: 15px;
-  padding: 10px 0px 5px;
+  padding: 10px 5px 5px;
   border-radius: 0px;
   display: block;
   white-space: nowrap;
@@ -12892,7 +12890,11 @@ article.widget-content {
   text-decoration: none;
 }
 #badgeofhonor {
-  padding-top: 1rem;
+  background: url('../Images/fitnesscenteratnight.jpg') no-repeat center center;
+  background-size: cover;
+  background-attachment: fixed;
+}
+#badgeofhonor .background {
   background-color: rgba(255, 255, 255, 0.75);
 }
 #badgeofhonor .social-media-icons {
@@ -12917,10 +12919,6 @@ article.widget-content {
   -webkit-flex-direction: row;
   -ms-flex-direction: row;
   flex-direction: row;
-}
-#badgeofhonor > .row {
-  margin-left: 0;
-  margin-right: 0;
 }
 #badgeofhonor .social-media-icons img {
   height: 48px;
