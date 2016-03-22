@@ -54,6 +54,15 @@ namespace Orchard.Taxonomies.Handlers {
                         }
                     }
                 });
+
+            OnCloning<TermsPart>((context, part) => {
+                if (part._termParts != null) {
+                    var originalTerms = part._termParts.Value.ToList();
+                    foreach (var field in context.CloneContentItem.Parts.SelectMany(p => p.Fields).OfType<TaxonomyField>()) {
+                        field.TermsField.Loader(() => originalTerms.Where(t => t.Field == field.Name).Select(t => t.TermPart));
+                    }
+                }
+            });
         }
 
         private void InitializerTermsLoader(TermsPart part) {
