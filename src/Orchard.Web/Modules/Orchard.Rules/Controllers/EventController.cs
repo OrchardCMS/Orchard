@@ -48,7 +48,7 @@ namespace Orchard.Rules.Controllers {
                 return new HttpUnauthorizedResult();
 
             _rulesServices.DeleteEvent(eventId);
-            Services.Notifier.Success(T("Event Deleted"));
+            Services.Notifier.Information(T("Event Deleted"));
 
             return RedirectToAction("Edit", "Admin", new { id });
         }

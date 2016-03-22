@@ -28,14 +28,5 @@ namespace Orchard.UI.Notify {
         public static void Error(this INotifier notifier, LocalizedString message) {
             notifier.Add(NotifyType.Error, message);
         }
-
-        /// <summary>
-        /// Adds a new UI notification of type Success
-        /// </summary>
-        /// <seealso cref="Orchard.UI.Notify.INotifier.Add()"/>
-        /// <param name="message">A localized message to display</param>
-        public static void Success(this INotifier notifier, LocalizedString message) {
-            notifier.Add(NotifyType.Success, message);
-        }
     }
 }

@@ -210,7 +210,7 @@ namespace Orchard.Users.Controllers {
                 return View(model);
             }
 
-            Services.Notifier.Success(T("User created"));
+            Services.Notifier.Information(T("User created"));
             return RedirectToAction("Index");
         }
 
@@ -268,7 +268,7 @@ namespace Orchard.Users.Controllers {
 
             Services.ContentManager.Publish(user.ContentItem);
 
-            Services.Notifier.Success(T("User information updated"));
+            Services.Notifier.Information(T("User information updated"));
             return RedirectToAction("Index");
         }
 
@@ -288,7 +288,7 @@ namespace Orchard.Users.Controllers {
                 }
                 else{
                     Services.ContentManager.Remove(user.ContentItem);
-                    Services.Notifier.Success(T("User {0} deleted", user.UserName));
+                    Services.Notifier.Information(T("User {0} deleted", user.UserName));
                 }
             }
 
@@ -309,8 +309,9 @@ namespace Orchard.Users.Controllers {
                 }
 
                 _userService.SendChallengeEmail(user.As<UserPart>(), nonce => Url.MakeAbsolute(Url.Action("ChallengeEmail", "Account", new { Area = "Orchard.Users", nonce = nonce }), siteUrl));
-                Services.Notifier.Success(T("Challenge email sent to {0}", user.UserName));
+                Services.Notifier.Information(T("Challenge email sent to {0}", user.UserName));
             }
+
 
             return RedirectToAction("Index");
         }
@@ -324,7 +325,7 @@ namespace Orchard.Users.Controllers {
 
             if ( user != null ) {
                 user.As<UserPart>().RegistrationStatus = UserStatus.Approved;
-                Services.Notifier.Success(T("User {0} approved", user.UserName));
+                Services.Notifier.Information(T("User {0} approved", user.UserName));
                 _userEventHandlers.Approved(user);
             }
 
@@ -344,7 +345,7 @@ namespace Orchard.Users.Controllers {
                 }
                 else {
                     user.As<UserPart>().RegistrationStatus = UserStatus.Pending;
-                    Services.Notifier.Success(T("User {0} disabled", user.UserName));
+                    Services.Notifier.Information(T("User {0} disabled", user.UserName));
                 }
             }
 
