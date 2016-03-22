@@ -318,6 +318,7 @@
     <Content Include="Shapes\Scripts\admin-localnavigation.js" />
     <Content Include="Contents\Styles\images\menu.content.png" />
     <Content Include="Contents\Styles\menu.content-admin.css" />
+    <Content Include="Contents\Views\Admin\Clone.cshtml" />
     <Content Include="Contents\Views\Admin\Create.cshtml" />
     <Content Include="Contents\Views\Admin\Edit.cshtml" />
     <Content Include="Contents\Views\Admin\List.cshtml" />

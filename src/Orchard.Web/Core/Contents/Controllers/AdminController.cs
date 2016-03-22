@@ -382,27 +382,16 @@ namespace Orchard.Core.Contents.Controllers {
             return this.RedirectLocal(returnUrl, () => RedirectToAction("Edit", new RouteValueDictionary { { "Id", contentItem.Id } }));
         }
 
-        [HttpPost]
-        public ActionResult Clone(int id, string returnUrl) {
-            var contentItem = _contentManager.GetLatest(id);
+        public ActionResult Clone(int id) {
+            var originalContentItem = _contentManager.GetLatest(id);
 
-            if (contentItem == null)
-                return HttpNotFound();
+            var cloneContentItem = _contentManager.Clone(originalContentItem);
 
-            if (!Services.Authorizer.Authorize(Permissions.EditContent, contentItem, T("Couldn't clone content")))
+            if (!Services.Authorizer.Authorize(Permissions.EditContent, cloneContentItem, T("Cannot create content")))
                 return new HttpUnauthorizedResult();
 
-            try {
-                Services.ContentManager.Clone(contentItem);
-            }
-            catch (InvalidOperationException) {
-                Services.Notifier.Warning(T("Could not clone the content item."));
-                return this.RedirectLocal(returnUrl, () => RedirectToAction("List"));
-            }
-
-            Services.Notifier.Success(T("Successfully cloned. The clone was saved as a draft."));
-
-            return this.RedirectLocal(returnUrl, () => RedirectToAction("List"));
+            var model = _contentManager.BuildEditor(cloneContentItem);
+            return View(model);
         }
 
         [HttpPost]
