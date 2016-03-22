@@ -84,6 +84,14 @@ namespace Orchard.ContentManagement.Drivers {
             Process(context.ContentItem, (part, field) => Exported(part, field, context), context.Logger);
         }
 
+        void IContentFieldDriver.Cloning(CloneContentContext context) {
+            ProcessClone(context.ContentItem, context.CloneContentItem, (part, originalField, cloneField) => Cloning(part, originalField, cloneField, context), context.Logger);
+        }
+
+        void IContentFieldDriver.Cloned(CloneContentContext context) {
+            ProcessClone(context.ContentItem, context.CloneContentItem, (part, originalField, cloneField) => Cloned(part, originalField, cloneField, context), context.Logger);
+        }
+
         void IContentFieldDriver.Describe(DescribeMembersContext context) {
             Describe(context);
         }
@@ -91,6 +99,12 @@ namespace Orchard.ContentManagement.Drivers {
         void Process(ContentItem item, Action<ContentPart, TField> effort, ILogger logger) {
             var occurences = item.Parts.SelectMany(part => part.Fields.OfType<TField>().Select(field => new { part, field }));
             occurences.Invoke(pf => effort(pf.part, pf.field), logger);
+        }
+
+        void ProcessClone(ContentItem originalItem, ContentItem cloneItem, Action<ContentPart, TField, TField> effort, ILogger logger) {
+            var occurences = originalItem.Parts.SelectMany(part => part.Fields.OfType<TField>().Select(field => new { part, field }))
+                .Join(cloneItem.Parts.SelectMany(part => part.Fields.OfType<TField>()), original => original.field.Name, cloneField => cloneField.Name, (original, cloneField) => new { original, cloneField } );
+            occurences.Invoke(pf => effort(pf.original.part, pf.original.field, pf.cloneField), logger);
         }
 
         DriverResult Process(ContentItem item, Func<ContentPart, TField, DriverResult> effort, ILogger logger) {
@@ -126,6 +140,8 @@ namespace Orchard.ContentManagement.Drivers {
         protected virtual void ImportCompleted(ContentPart part, TField field, ImportContentContext context) { }
         protected virtual void Exporting(ContentPart part, TField field, ExportContentContext context) { }
         protected virtual void Exported(ContentPart part, TField field, ExportContentContext context) { }
+        protected virtual void Cloning(ContentPart part, TField originalField, TField cloneField, CloneContentContext context) { }
+        protected virtual void Cloned(ContentPart part, TField originalField, TField cloneField, CloneContentContext context) { }
 
         protected virtual void Describe(DescribeMembersContext context) { }
 
