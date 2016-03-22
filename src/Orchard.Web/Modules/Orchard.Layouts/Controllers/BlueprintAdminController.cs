@@ -177,7 +177,7 @@ namespace Orchard.Layouts.Controllers {
 
             blueprint.BaseElementState = data.Serialize();
             _signals.Trigger(Signals.ElementDescriptors);
-            _notifier.Information(T("That blueprint has been saved."));
+            _notifier.Success(T("That blueprint has been saved."));
             return RedirectToAction("Index");
         }
 
@@ -223,7 +223,7 @@ namespace Orchard.Layouts.Controllers {
             blueprint.ElementDescription = model.ElementDescription.TrimSafe();
             blueprint.ElementCategory = model.ElementCategory.TrimSafe();
 
-            _notifier.Information(T("That blueprint's properties have been saved."));
+            _notifier.Success(T("That blueprint's properties have been saved."));
             return RedirectToAction("Index");
         }
 
@@ -239,7 +239,7 @@ namespace Orchard.Layouts.Controllers {
                 return HttpNotFound();
 
             _elementBlueprintService.DeleteBlueprint(blueprint);
-            _notifier.Information(T("That blueprint has been deleted."));
+            _notifier.Success(T("That blueprint has been deleted."));
             return Redirect(Request.UrlReferrer.ToString());
         }
 
@@ -256,7 +256,7 @@ namespace Orchard.Layouts.Controllers {
             }
             else {
                 var numDeletedBlueprints = _elementBlueprintService.DeleteBlueprints(blueprintIds);
-                _notifier.Information(T("{0} blueprints have been deleted.", numDeletedBlueprints));
+                _notifier.Success(T("{0} blueprints have been deleted.", numDeletedBlueprints));
             }
 
             return Redirect(Request.UrlReferrer.ToString());

@@ -67,7 +67,7 @@ namespace Orchard.MediaProcessing.Controllers {
 
             _signals.Trigger("MediaProcessing_Saved_" + filter.ImageProfilePartRecord.Name);
 
-            Services.Notifier.Information(T("Filter deleted"));
+            Services.Notifier.Success(T("Filter deleted"));
 
             return RedirectToAction("Edit", "Admin", new {id});
         }
