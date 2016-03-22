@@ -15,14 +15,17 @@ namespace Orchard.Localization.Controllers {
     public class AdminController : Controller, IUpdateModel {
         private readonly IContentManager _contentManager;
         private readonly ILocalizationService _localizationService;
+        private readonly ICultureManager _cultureManager;
 
         public AdminController(
             IOrchardServices orchardServices,
             IContentManager contentManager,
             ILocalizationService localizationService,
+            ICultureManager cultureManager,
             IShapeFactory shapeFactory) {
             _contentManager = contentManager;
             _localizationService = localizationService;
+            _cultureManager = cultureManager;
             T = NullLocalizer.Instance;
             Services = orchardServices;
             Shape = shapeFactory;
@@ -50,8 +53,12 @@ namespace Orchard.Localization.Controllers {
                     existingTranslationMetadata.EditorRouteValues);
             }
 
-            var contentItemTranslation = _contentManager.New<LocalizationPart>(masterContentItem.ContentType);
-            contentItemTranslation.MasterContentItem = masterContentItem;
+            var contentItemTranslation = _contentManager.Clone(masterContentItem);
+            var localizationPart = contentItemTranslation.As<LocalizationPart>();
+            if(localizationPart != null) {
+                localizationPart.MasterContentItem = masterContentItem;
+                localizationPart.Culture = string.IsNullOrWhiteSpace(to) ? null : _cultureManager.GetCultureByName(to);
+            }
 
             var content = _contentManager.BuildEditor(contentItemTranslation);
             
