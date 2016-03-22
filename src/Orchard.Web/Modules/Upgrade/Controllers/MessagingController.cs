@@ -97,7 +97,7 @@ namespace Upgrade.Controllers {
                         record.State = JsonConvert.SerializeObject(newState);
                     });
 
-                _orchardServices.Notifier.Information(T("Email activities updated successfully"));
+                _orchardServices.Notifier.Success(T("Email activities updated successfully"));
             }
             else {
                 _orchardServices.Notifier.Warning(T("No email activities were updated."));

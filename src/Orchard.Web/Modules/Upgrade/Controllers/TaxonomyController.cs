@@ -61,7 +61,7 @@ namespace Upgrade.Controllers {
                 _upgradeService.CopyTable("Contrib_Taxonomies_TermPartRecord", "Orchard_Taxonomies_TermPartRecord", new string[0]);
                 _upgradeService.CopyTable("Contrib_Taxonomies_TermsPartRecord", "Orchard_Taxonomies_TermsPartRecord", new string[0]);
 
-                _orchardServices.Notifier.Information(T("Taxonomies were migrated successfully."));
+                _orchardServices.Notifier.Success(T("Taxonomies were migrated successfully."));
             }
             catch(Exception e) {
                 Logger.Error(e, "Unexpected error while migrating to Orchard.Taxonomies. Please check the log.");
