@@ -213,5 +213,10 @@ namespace Orchard.Layouts.Drivers {
             var layoutDataString = JsonConvert.SerializeObject(layoutData, Formatting.None);
             return layoutDataString;
         }
+
+        protected override void Cloning(LayoutPart originalPart, LayoutPart clonePart, CloneContentContext context) {
+            clonePart.LayoutData = originalPart.LayoutData;
+            clonePart.TemplateId = originalPart.TemplateId;
+        }
     }
 }
