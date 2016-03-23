@@ -6,7 +6,7 @@ Orchard is a free, open source, community-focused Content Management System buil
 
 You can try it for free on [DotNest.com](https://dotnest.com) or on Microsoft Azure by clicking on this button.
 
-[![Deploy to Azure](https://azuredeploy.net/deploybutton.png)](https://ms.portal.azure.com/#create/OutercurveFoundation.OrchardCMS.0.5.9)
+[![Deploy to Azure](https://azuredeploy.net/deploybutton.png)](https://portal.azure.com/#create/OutercurveFoundation.OrchardCMS.1.0.4)
 
 ## About The Orchard Project
 
