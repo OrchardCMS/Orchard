@@ -310,7 +310,7 @@ namespace Orchard.Azure.Services.FileSystems {
             path = ConvertToRelativeUriPath(path);
             var uri = new UriBuilder(Container.GetBlockBlobReference(String.Concat(_root, path)).Uri);
             if (!string.IsNullOrEmpty(_publicHostName)) uri.Host = _publicHostName;
-            return uri.ToString();
+            return uri.Uri.ToString();
         }
 
         private class AzureBlobFileStorage : IStorageFile {
