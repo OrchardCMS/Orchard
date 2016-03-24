@@ -148,7 +148,7 @@ namespace Orchard.Azure.MediaServices.Controllers {
                     _contentManager.Publish(mediaPart.ContentItem);
 
                 Logger.Information("Cloud video item with ID {0} was saved.", part.Id);
-                _notifier.Information(notification);
+                _notifier.Success(notification);
             }
             catch (Exception ex) {
                 _transactionManager.Cancel();

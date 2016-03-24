@@ -246,7 +246,7 @@ namespace Orchard.Themes.Controllers {
 
             try {
                 _dataMigrationManager.Update(themeId);
-                Services.Notifier.Information(T("The theme {0} was updated successfully.", themeId));
+                Services.Notifier.Success(T("The theme {0} was updated successfully", themeId));
                 Logger.Information("The theme {0} was updated successfully.", themeId);
             } catch (Exception exception) {
                 Logger.Error(T("An error occured while updating the theme {0}: {1}", themeId, exception.Message).Text);
