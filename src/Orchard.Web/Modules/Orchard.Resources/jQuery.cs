@@ -52,7 +52,7 @@ namespace Orchard.Resources {
             manifest.DefineStyle("jQueryCalendars_Picker").SetUrl("Calendars/jquery.calendars.picker.full.min.css", "Calendars/jquery.calendars.picker.full.css").SetDependencies("jQueryUI_Orchard").SetVersion("2.0.1");
 
             // jQuery Time Entry.
-            manifest.DefineScript("jQueryTimeEntry").SetUrl("TimeEntry/timejquery.timeentry.min.js", "TimeEntry/jquery.timeentry.js").SetDependencies("jQueryPlugin").SetVersion("2.0.1");
+            manifest.DefineScript("jQueryTimeEntry").SetUrl("TimeEntry/jquery.timeentry.min.js", "TimeEntry/jquery.timeentry.js").SetDependencies("jQueryPlugin").SetVersion("2.0.1");
             manifest.DefineStyle("jQueryTimeEntry").SetUrl("TimeEntry/jquery.timeentry.css").SetVersion("2.0.1");
 
             // jQuery Date/Time Editor Enhancements.
