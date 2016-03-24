@@ -78,6 +78,12 @@ namespace Orchard.Layouts.Framework.Drivers {
                 if (value != null) {
                     context.Element.Data[name] = value.AttemptedValue;
                 }
+                else if (formElementShape.Metadata.Type == "Checkbox") {
+                    var shapeValue = formElementShape.Value as string;
+                    if (shapeValue != null && shapeValue.ToLower() == "true") {
+                        context.Element.Data[name] = "false";
+                    }
+                }
             }
         }
 
