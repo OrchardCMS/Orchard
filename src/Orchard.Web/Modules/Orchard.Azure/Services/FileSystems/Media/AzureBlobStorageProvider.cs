@@ -67,7 +67,7 @@ namespace Orchard.Azure.Services.FileSystems.Media {
             EnsureInitialized();
             var rootUri = new Uri(_absoluteRoot);
             var uri = new Uri(url);
-            if((uri.Host == rootUri.Host || (!string.IsNullOrWhiteSpace(_publicHostName) && uri.Host == _publicHostName)) && uri.AbsolutePath.StartsWith(rootUri.AbsolutePath)) {
+            if((uri.Host == rootUri.Host || (!string.IsNullOrEmpty(_publicHostName) && uri.Host == _publicHostName)) && uri.AbsolutePath.StartsWith(rootUri.AbsolutePath)) {
                 return HttpUtility.UrlDecode(uri.PathAndQuery.Substring(Combine(rootUri.AbsolutePath, "/").Length));
             }
 
