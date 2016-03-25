@@ -2,24 +2,26 @@
 using System.IO;
 using System.Web;
 using NUnit.Framework;
-using Microsoft.WindowsAzure;
 using System.Linq;
-using Orchard.Caching;
 using Orchard.Environment.Configuration;
 using Orchard.Azure.Services.FileSystems.Media;
 using Orchard.FileSystems.Media;
+using Microsoft.WindowsAzure.Storage;
+using Orchard.Azure.Services.Environment.Configuration;
 
 namespace Orchard.Azure.Tests.FileSystems.Media {
     [TestFixture]
     public class AzureBlobStorageProviderTests : AzureVirtualEnvironmentTest {
 
-        CloudStorageAccount _devAccount;
+        private CloudStorageAccount _devAccount;
+        private IPlatformConfigurationAccessor _platformConfigurationAccessor;
         private AzureBlobStorageProvider _azureBlobStorageProvider;
 
         protected override void OnInit() {
-            CloudStorageAccount.TryParse("UseDevelopmentStorage=true", out _devAccount);
 
-            _azureBlobStorageProvider = new AzureBlobStorageProvider(new ShellSettings { Name = "default" }, new ConfigurationMimeTypeProvider(new DefaultCacheManager(typeof(ConfigurationMimeTypeProvider), new DefaultCacheHolder(new DefaultCacheContextAccessor()))));
+            CloudStorageAccount.TryParse("UseDevelopmentStorage=true", out _devAccount);
+            _platformConfigurationAccessor = new DefaultPlatformConfigurationAccessor();
+            _azureBlobStorageProvider = new AzureBlobStorageProvider(new ShellSettings { Name = "default" }, new ConfigurationMimeTypeProvider(), _platformConfigurationAccessor);
         }
 
         [SetUp]

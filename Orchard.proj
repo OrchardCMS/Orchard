@@ -93,16 +93,6 @@
     <CallTarget Targets="Gallery-Setup"/>
   </Target>
 
-  <Target Name="AzureBuild">
-    <MSBuild Projects="AzurePackage.proj" Targets="Build">
-    </MSBuild>
-  </Target>
-
-  <Target Name="AzureCIBuild">
-    <MSBuild Projects="AzurePackage.proj" Targets="CIBuild">
-    </MSBuild>
-  </Target>
-
   <!-- Building -->
 
   <Target Name="Clean">
@@ -335,12 +325,11 @@
         $(MSBuildProjectDirectory)\**\*.patch;
         $(MSBuildProjectDirectory)\**\*.hgignore;
         $(MSBuildProjectDirectory)\**\*.hg*\**\*;
-        $(LibFolder)\nunit\addins\**\*;
-        " Exclude="$(MSBuildProjectDirectory)\src\Orchard.Azure\Orchard.Azure.CloudService\*Content\**\*" />
+        $(LibFolder)\nunit\addins\**\*;" />
 
       <Zip-Stage Include="$(StageFolder)\**\*" />
 
-      <Zip-MsDeploy Include="$(MsDeployFolder)\**\*" Exclude="$(MSBuildProjectDirectory)\**\bin\**\*.pdb;"/>
+      <Zip-MsDeploy Include="$(MsDeployFolder)\**\*" Exclude="$(MSBuildProjectDirectory)\**\bin\**\*.pdb;" />
 
       <Zip-Source Include="
         $(MSBuildProjectDirectory)\lib\**\*;
@@ -352,7 +341,7 @@
 
     </ItemGroup>
 
-    <MakeDir Directories="$(MsDeployArtifactFolder);$(SourceArtifactFolder)"/>
+    <MakeDir Directories="$(MsDeployArtifactFolder);$(SourceArtifactFolder)" />
 
     <PropertyGroup>
       <ZipVersionFileSuffix Condition="$(Version) != ''">.$(Version)</ZipVersionFileSuffix>
