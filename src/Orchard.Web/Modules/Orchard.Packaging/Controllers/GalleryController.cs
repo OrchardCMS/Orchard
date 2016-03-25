@@ -69,7 +69,7 @@ namespace Orchard.Packaging.Controllers {
                 return new HttpUnauthorizedResult();
 
             _packagingSourceManager.RemoveSource(id);
-            Services.Notifier.Information(T("The feed has been removed successfully."));
+            Services.Notifier.Success(T("The feed has been removed successfully."));
             return RedirectToAction("Sources");
         }
 
@@ -115,7 +115,7 @@ namespace Orchard.Packaging.Controllers {
                 return View(new PackagingAddSourceViewModel { Url = url });
 
             _packagingSourceManager.AddSource(title, url);
-            Services.Notifier.Information(T("The feed has been added successfully."));
+            Services.Notifier.Success(T("The feed has been added successfully."));
 
             return RedirectToAction("Sources");
         }

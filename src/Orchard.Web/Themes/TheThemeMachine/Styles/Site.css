@@ -494,7 +494,8 @@ nav ul.breadcrumb
 /* Confirmations */
 .message, .validation-summary-errors { margin:10px 0 4px 0; padding:4px; }
 .messages a { font-weight:bold; }
-.message-Information { background:#e6f1c9; /* green */ border:1px solid #cfe493; color:#062232; }
+.message-Success { background:#e6f1c9; /* green */ border:1px solid #cfe493; color:#062232; }
+.message-Information { background:#d9edf7; /* blue */ border:1px solid #bce8f1; color:#31708f; }
 .message-Warning { background:#fdf5bc; /* yellow */ border:1px solid #ffea9b; }
 .critical.message, .validation-summary-errors, .message-Error { background:#e68585; /* red */ border:1px solid #990808; color:#fff; }
 

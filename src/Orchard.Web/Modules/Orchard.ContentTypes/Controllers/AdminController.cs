@@ -108,7 +108,7 @@ namespace Orchard.ContentTypes.Controllers {
             var typeViewModel = new EditTypeViewModel(contentTypeDefinition);
 
 
-            Services.Notifier.Information(T("The \"{0}\" content type has been created.", typeViewModel.DisplayName));
+            Services.Notifier.Success(T("The \"{0}\" content type has been created.", typeViewModel.DisplayName));
 
             return RedirectToAction("AddPartsTo", new { id = typeViewModel.Name });
         }
@@ -252,7 +252,7 @@ namespace Orchard.ContentTypes.Controllers {
                 return View(typeViewModel);
             }
 
-            Services.Notifier.Information(T("\"{0}\" settings have been saved.", typeViewModel.DisplayName));
+            Services.Notifier.Success(T("\"{0}\" settings have been saved.", typeViewModel.DisplayName));
 
             return RedirectToAction("Edit", new { id });
         }
@@ -270,7 +270,7 @@ namespace Orchard.ContentTypes.Controllers {
 
             _contentDefinitionService.RemoveType(id, true);
 
-            Services.Notifier.Information(T("\"{0}\" has been removed.", typeViewModel.DisplayName));
+            Services.Notifier.Success(T("\"{0}\" has been removed.", typeViewModel.DisplayName));
             
             return RedirectToAction("List");
         }
@@ -314,7 +314,7 @@ namespace Orchard.ContentTypes.Controllers {
             var partsToAdd = viewModel.PartSelections.Where(ps => ps.IsSelected).Select(ps => ps.PartName);
             foreach (var partToAdd in partsToAdd) {
                 _contentDefinitionService.AddPartToType(partToAdd, typeViewModel.Name);
-                Services.Notifier.Information(T("The \"{0}\" part has been added.", partToAdd));
+                Services.Notifier.Success(T("The \"{0}\" part has been added.", partToAdd));
             }
 
             if (!ModelState.IsValid) {
@@ -362,7 +362,7 @@ namespace Orchard.ContentTypes.Controllers {
                 return View(viewModel);
             }
 
-            Services.Notifier.Information(T("The \"{0}\" part has been removed.", viewModel.Name));
+            Services.Notifier.Success(T("The \"{0}\" part has been removed.", viewModel.Name));
 
             return RedirectToAction("Edit", new {id});
         }
@@ -399,11 +399,11 @@ namespace Orchard.ContentTypes.Controllers {
             var partViewModel = _contentDefinitionService.AddPart(viewModel);
 
             if (partViewModel == null) {
-                Services.Notifier.Information(T("The content part could not be created."));
+                Services.Notifier.Error(T("The content part could not be created."));
                 return View(viewModel);
             }
 
-            Services.Notifier.Information(T("The \"{0}\" content part has been created.", partViewModel.Name));
+            Services.Notifier.Success(T("The \"{0}\" content part has been created.", partViewModel.Name));
             return RedirectToAction("EditPart", new { id = partViewModel.Name });
         }
 
@@ -440,7 +440,7 @@ namespace Orchard.ContentTypes.Controllers {
                 return View(partViewModel);
             }
 
-            Services.Notifier.Information(T("\"{0}\" settings have been saved.", partViewModel.Name));
+            Services.Notifier.Success(T("\"{0}\" settings have been saved.", partViewModel.Name));
 
             return RedirectToAction("ListParts");
         }
@@ -458,8 +458,8 @@ namespace Orchard.ContentTypes.Controllers {
                 return HttpNotFound();
 
             _contentDefinitionService.RemovePart(id);
-            
-            Services.Notifier.Information(T("\"{0}\" has been removed.", partViewModel.DisplayName));
+
+            Services.Notifier.Success(T("\"{0}\" has been removed.", partViewModel.DisplayName));
 
             return RedirectToAction("ListParts");
         }
@@ -547,12 +547,12 @@ namespace Orchard.ContentTypes.Controllers {
                 _contentDefinitionService.AddFieldToPart(viewModel.Name, viewModel.DisplayName, viewModel.FieldTypeName, partViewModel.Name);
             }
             catch (Exception ex) {
-                Services.Notifier.Information(T("The \"{0}\" field was not added. {1}", viewModel.DisplayName, ex.Message));
+                Services.Notifier.Error(T("The \"{0}\" field was not added. {1}", viewModel.DisplayName, ex.Message));
                 Services.TransactionManager.Cancel();
                 return AddFieldTo(id);
             }
 
-            Services.Notifier.Information(T("The \"{0}\" field has been added.", viewModel.DisplayName));
+            Services.Notifier.Success(T("The \"{0}\" field has been added.", viewModel.DisplayName));
 
             if (typeViewModel != null) {
                 return RedirectToAction("Edit", new {id});
@@ -626,7 +626,7 @@ namespace Orchard.ContentTypes.Controllers {
 
             _contentDefinitionService.AlterField(partViewModel, viewModel);
 
-            Services.Notifier.Information(T("Display name changed to {0}.", viewModel.DisplayName));
+            Services.Notifier.Success(T("Display name changed to {0}.", viewModel.DisplayName));
 
             // redirect to the type editor if a type exists with this name
             var typeViewModel = _contentDefinitionService.GetType(id);
@@ -674,7 +674,7 @@ namespace Orchard.ContentTypes.Controllers {
                 return View(viewModel);
             }
 
-            Services.Notifier.Information(T("The \"{0}\" field has been removed.", viewModel.Name));
+            Services.Notifier.Success(T("The \"{0}\" field has been removed.", viewModel.Name));
 
             if (_contentDefinitionService.GetType(id) != null)
                 return RedirectToAction("Edit", new { id });

@@ -1,8 +1,8 @@
 ﻿using System.Configuration;
 using System.Diagnostics;
 using System.IO;
-using Microsoft.WindowsAzure;
-using Microsoft.WindowsAzure.StorageClient;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Blob;
 using NUnit.Framework;
 
 namespace Orchard.Azure.Tests {

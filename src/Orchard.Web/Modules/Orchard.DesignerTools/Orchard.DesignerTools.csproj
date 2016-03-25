@@ -123,9 +123,7 @@
   <ItemGroup>
     <Content Include="Views\ShapeTracingWrapper.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="Views\ShapeTracingMeta.cshtml" />
   </ItemGroup>

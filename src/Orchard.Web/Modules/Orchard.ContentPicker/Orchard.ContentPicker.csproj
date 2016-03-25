@@ -118,9 +118,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Views\Admin\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Drivers\ContentPickerFieldDriver.cs" />

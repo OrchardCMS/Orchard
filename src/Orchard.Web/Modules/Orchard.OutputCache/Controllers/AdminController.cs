@@ -127,7 +127,7 @@ namespace Orchard.OutputCache.Controllers {
                 _signals.Trigger(CacheSettings.CacheKey);
                 _cacheService.SaveRouteConfigs(model.RouteConfigs);
 
-                Services.Notifier.Information(T("Output cache settings saved successfully."));
+                Services.Notifier.Success(T("Output cache settings saved successfully."));
             }
             else {
                 Services.Notifier.Error(T("Could not save output cache settings."));
