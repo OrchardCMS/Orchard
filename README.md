@@ -45,7 +45,7 @@ There are many ways you can [contribute to Orchard](http://orchardproject.net/co
 * [Participate in our gitter.im chatroom](https://gitter.im/OrchardCMS/Orchard)
 * [Participate in forum discussions](http://orchard.codeplex.com/discussions)
 * [Submit a pull request](http://docs.orchardproject.net/Documentation/Contributing-patches)
-* [Translate Orchard](http://orchardproject.net/localize)
+* [Translate Orchard](http://orchardproject.net/localization)
 * [Contribute modules and themes to our gallery](http://gallery.orchardproject.net/)
 * [Send us feedback](mailto:ofeedbk@microsoft.com)
 
