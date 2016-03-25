@@ -15,10 +15,7 @@ using Orchard.Mvc;
 using Orchard.Mvc.Extensions;
 using Orchard.Utility.Extensions;
 using Orchard.Utility;
-using Orchard.Exceptions;
 using System.Threading;
-using System.Web;
-using Orchard.Mvc;
 
 namespace Orchard.Environment {
     // All the event handlers that DefaultOrchardHost implements have to be declared in OrchardStarter.
