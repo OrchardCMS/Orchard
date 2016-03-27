@@ -32,6 +32,13 @@
     <!-- TeamCity build number -->
     <Version>$(BUILD_NUMBER)</Version>
   </PropertyGroup>
+  
+  <!-- Finding the restored NuGet package of NUnit (version number doesn't matter)
+       to be able to reference the test runner executable (http://stackoverflow.com/a/25617556). -->
+  <ItemGroup>
+    <NUnitPackageFiles Include="$(SrcFolder)\packages\NUnit*\*.*" />
+    <NUnitPackageFolder Include="@(NUnitPackageFiles->'%(RootDir)%(Directory)'->Distinct())" />
+  </ItemGroup>
 
   <Import Project="$(LibFolder)\msbuildtasks\MSBuild.Community.Tasks.Targets"/>
   <Import Project="$(LibFolder)\slowcheetah\SlowCheetah.Transforms.targets"/>
@@ -127,14 +134,14 @@
     <ItemGroup>
       <NUnitAddinFiles Include="$(teamcity_dotnet_nunitaddin)-2.5.2.*" />
     </ItemGroup>
-    <Copy SourceFiles="@(NUnitAddinFiles)" DestinationFolder="$(LibFolder)\nunit\addins" />
+    <Copy SourceFiles="@(NUnitAddinFiles)" DestinationFolder="$(NUnitPackageFolder)\addins" />
 
     <!-- Run unit test assemblies -->
     <CreateItem Include="$(CompileFolder)\*.Tests.*dll">
       <Output TaskParameter="Include" ItemName="TestAssemblies" />
     </CreateItem>
-
-    <NUnit Assemblies="@(TestAssemblies)" ToolPath="$(LibFolder)\nunit" WorkingDirectory="$(CompileFolder)" OutputXmlFile="$(BuildFolder)\Orchard.Tests.xml" ExcludeCategory="longrunning" />
+    
+    <NUnit Assemblies="@(TestAssemblies)" ToolPath="@(NUnitPackageFolder)\tools" WorkingDirectory="$(CompileFolder)" OutputXmlFile="$(BuildFolder)\Orchard.Tests.xml" ExcludeCategory="longrunning" />
   </Target>
 
   <Target Name ="Spec" DependsOnTargets="Package-Stage">
@@ -142,12 +149,12 @@
     <ItemGroup>
       <NUnitAddinFiles Include="$(teamcity_dotnet_nunitaddin)-2.5.2.*" />
     </ItemGroup>
-    <Copy SourceFiles="@(NUnitAddinFiles)" DestinationFolder="$(LibFolder)\nunit\addins" />
+    <Copy SourceFiles="@(NUnitAddinFiles)" DestinationFolder="$(NUnitPackageFolder)\addins" />
 
     <CreateItem Include="$(CompileFolder)\*.Specs.dll">
       <Output TaskParameter="Include" ItemName="SpecAssemblies" />
     </CreateItem>
-    <NUnit Assemblies="@(SpecAssemblies)" ToolPath="$(LibFolder)\nunit" />
+    <NUnit Assemblies="@(SpecAssemblies)" ToolPath="$(NUnitPackageFolder)\tools" />
   </Target>
 
   <!-- Packaging (Stage) -->
@@ -324,8 +331,7 @@
         $(MSBuildProjectDirectory)\**\*.user;
         $(MSBuildProjectDirectory)\**\*.patch;
         $(MSBuildProjectDirectory)\**\*.hgignore;
-        $(MSBuildProjectDirectory)\**\*.hg*\**\*;
-        $(LibFolder)\nunit\addins\**\*;" />
+        $(MSBuildProjectDirectory)\**\*.hg*\**\*;" />
 
       <Zip-Stage Include="$(StageFolder)\**\*" />
 
