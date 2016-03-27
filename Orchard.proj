@@ -129,7 +129,7 @@
 
   <!-- Testing -->
 
-  <Target Name ="Test">
+  <Target Name ="Test" DependsOnTargets="Compile">
     <!-- TeamCity support -->
     <ItemGroup>
       <NUnitAddinFiles Include="$(teamcity_dotnet_nunitaddin)-2.5.2.*" />
