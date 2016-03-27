@@ -269,11 +269,11 @@ namespace Orchard.Azure.Tests.FileSystems.Media {
         }
 
         [Test]
-        public void UnknownMimeTypeShouldBeAssigned() {
+        public void DefaultMimeTypeShouldBeAssigned() {
             _azureBlobStorageProvider.CreateFile("foo1.xyz");
             var file = _azureBlobStorageProvider.Container.GetBlockBlobReference("default/foo1.xyz");
             file.FetchAttributes();
-            Assert.That(file.Properties.ContentType, Is.EqualTo("application/unknown"));
+            Assert.That(file.Properties.ContentType, Is.EqualTo("application/octet-stream"));
         }
 
 
