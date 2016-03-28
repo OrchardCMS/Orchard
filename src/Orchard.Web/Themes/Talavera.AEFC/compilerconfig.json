@@ -6,9 +6,5 @@
   {
     "outputFile": "Styles/site.css",
     "inputFile": "Styles/site.less"
-  },
-  {
-    "outputFile": "Styles/general.css",
-    "inputFile": "Styles/general.less"
-  }
+  }  
 ]

@@ -1,0 +1,8 @@
+﻿Name: Resource Timestamper
+Author: Shane Porter
+Website: http://freshclickmedia.com
+Version: 1.0
+OrchardVersion: 1.5
+Description: Prevents indefinite caching of Orchard resources 
+Category: Media
+FeatureDescription: Prevents indefinite caching of Orchard resources

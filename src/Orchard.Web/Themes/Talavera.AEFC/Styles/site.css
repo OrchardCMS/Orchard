@@ -1,6 +1,6 @@
 ﻿@charset "UTF-8";
 /*#region Talavera.AEFC site.less */
-/*#region Talavera.Base:Site*/
+/*#region Talavera.Base site.less*/
 /*#region bootstrap.css*/
 /*!
  * Bootstrap v3.3.4 (http://getbootstrap.com)
@@ -12732,7 +12732,6 @@ html.layer-thehomepage > body {
 .zone-navigation .widget-navigation.widget-menu-widget.widget {
   padding-left: 50px;
 }
-/*#endregion Navigation */
 /*#region menu-button-menu*/
 .menu-button-menu {
   padding-top: 2rem;

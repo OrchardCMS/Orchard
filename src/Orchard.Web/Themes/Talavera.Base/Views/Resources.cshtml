@@ -23,13 +23,14 @@
 
     /* Styles
     ***************************************************************/
-    Style.Include("site.css", "site.min.css");
+
+    Style.Include("site.css", "site.min.css").SetAttribute("data-timestamped", "true");
 
     /* Scripts
     ***************************************************************/
     Script.Include("~/Core/Shapes/Scripts/html5.js").AtHead();
     Script.Require("Bootstrap");
-    Script.Require("Custom");    
+    Script.Require("talavera.base").SetAttribute("data-timestamped", "true");
 
     Display.AdditionalResources();
 }

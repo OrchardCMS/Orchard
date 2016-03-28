@@ -83,6 +83,7 @@
     <Content Include="Images\fitnesscenteratnight.jpg" />
     <Content Include="Images\instagram.png" />
     <Content Include="Images\menubig.png" />
+    <Content Include="Scripts\talavera.aefc.js" />
     <Content Include="Styles\forms.css">
       <DependentUpon>forms.less</DependentUpon>
     </Content>
@@ -106,6 +107,14 @@
     <Content Include="Placement.info" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
+      <Project>{2d1d92bb-4555-4cbe-8d0e-63563d6ce4c6}</Project>
+      <Name>Orchard.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\Orchard.Core.csproj">
+      <Project>{9916839c-39fc-4ceb-a5af-89ca7e87119f}</Project>
+      <Name>Orchard.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Talavera.Base\Talavera.Base.csproj">
       <Project>{c09ce546-289f-414d-b5ad-e5591501b7f0}</Project>
       <Name>Talavera.Base</Name>
@@ -135,11 +144,11 @@
     <Content Include="Views\MenuItem-button-menu.cshtml" />
     <Content Include="Styles\mixins.less" />
     <Content Include="Styles\reset.less" />
+    <Content Include="Views\AdditionalResources.cshtml" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Code\" />
-  </ItemGroup>
-  <ItemGroup>
+    <Compile Include="Code\ResourceManifest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <PropertyGroup>
