@@ -135,7 +135,6 @@
     <Compile Include="Implementation\Holder\IAliasHolder.cs" />
     <Compile Include="Implementation\Map\AliasMap.cs" />
     <Compile Include="Implementation\Storage\AliasStorage.cs" />
-    <Compile Include="Implementation\Updater\AliasHolderUpdaterTask.cs" />
     <Compile Include="Implementation\Utils.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Recipes\Builders\AliasStep.cs" />

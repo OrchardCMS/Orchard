@@ -25,6 +25,7 @@ Scenario: A new tenant is created
         And I fill in 
             | name | value |
             | Name | Scott |
+            | RequestUrlPrefix | scott |
         And I hit "Save"
         And I am redirected
     Then I should see "<h3>Scott\s*</h3>"
@@ -37,6 +38,7 @@ Scenario: A new tenant is created with uninitialized state
         And I fill in 
             | name | value |
             | Name | Scott |
+            | RequestUrlPrefix | scott |
         And I hit "Save"
         And I am redirected
     Then I should see "<li class="tenant Uninitialized">"

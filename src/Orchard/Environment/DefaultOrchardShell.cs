@@ -104,7 +104,7 @@ namespace Orchard.Environment {
                     throw;
                 }
 
-                Logger.Error(ex, "An unexcepted error occured while terminating the Shell");
+                Logger.Error(ex, "An unexpected error occured while terminating the Shell");
             }
         }
     }
