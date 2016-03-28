@@ -53,7 +53,7 @@ Scenario: Creating and using Boolean fields
         And I go to "Admin/Contents/Create/Event"
     Then I should see "Check if the event is active"
     
-    # The default value should be selected
+    # The default value should be used on creation
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                                        | value |
@@ -81,3 +81,22 @@ Scenario: Creating and using Boolean fields
             | Event.Active.Value |       |
         And I hit "Save"
     Then I should see "The field Active is mandatory."
+	
+    # If required and no value, the default value should be used
+    When I go to "Admin/ContentTypes/Edit/Event"
+        And I fill in 
+            | name                                        | value |
+            | Fields[0].BooleanFieldSettings.Optional     | false |
+            | Fields[0].BooleanFieldSettings.DefaultValue | True  |
+        And I fill in 
+            | name                                         | value         |
+            | Fields[0].BooleanFieldSettings.SelectionMode | Dropdown list |
+        And I hit "Save"
+        And I go to "Admin/Contents/Create/Event"
+        And I fill in 
+            | name               | value |
+            | Event.Active.Value |       |
+        And I hit "Save"
+        And I am redirected
+    Then I should see "Your Event has been created."
+        And I should see "selected=\"selected\" value=\"true\""
