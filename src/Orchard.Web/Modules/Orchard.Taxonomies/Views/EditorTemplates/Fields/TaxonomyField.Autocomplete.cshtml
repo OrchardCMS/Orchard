@@ -3,7 +3,7 @@
 @using Orchard.Taxonomies.Models
 @using Orchard.Utility.Extensions;
 @using Orchard.Taxonomies.ViewModels;
-
+@using Orchard.Environment.Configuration
 
 @{
     if (Model.Settings.Autocomplete) {
@@ -18,6 +18,7 @@
     Script.Include("~/Themes/TheAdmin/scripts/admin.js").AtFoot();
     Script.Include("admin-taxonomy-expando.js").AtFoot();
 
+    var baseUrl = Href("~/");
 }
 @functions {
     bool IsTermDisabled(TermPart term) {
@@ -27,13 +28,13 @@
 @{
     var termIndex = 0;
     var checkedTerms = Model.SelectedTerms.ToList();
-    var selectedTerms = Newtonsoft.Json.JsonConvert.SerializeObject(checkedTerms.Select(x => new { label = x.Name, value = x.Id, levels = 0, disabled = true })); 
+    var selectedTerms = Newtonsoft.Json.JsonConvert.SerializeObject(checkedTerms.Select(x => new { label = x.Name, value = x.Id, levels = 0, disabled = true }));
 
 }
 <fieldset class="taxonomy-wrapper" data-name-prefix="@Html.FieldNameFor(m => m)" data-id-prefix="@Html.FieldIdFor(m => m)">
     <label @if(Model.Settings.Required) { <text>class="required"</text> }>@Model.DisplayName</label>
     @if (Model.Settings.Autocomplete) {
-    <div class="terms-editor text text-medium" data-taxonomy-id="@Model.TaxonomyId" data-leaves-only="@Model.Settings.LeavesOnly" data-selected-terms="@selectedTerms" data-allow-new-terms="@Model.Settings.AllowCustomTerms.ToString().ToLower()" data-singlechoice="@Model.Settings.SingleChoice.ToString().ToLower()">
+    <div class="terms-editor text text-medium" data-base-url="@baseUrl" data-taxonomy-id="@Model.TaxonomyId" data-leaves-only="@Model.Settings.LeavesOnly" data-selected-terms="@selectedTerms" data-allow-new-terms="@Model.Settings.AllowCustomTerms.ToString().ToLower()" data-singlechoice="@Model.Settings.SingleChoice.ToString().ToLower()">
             <ul></ul>
             @if (Model.Settings.SingleChoice) {
                 <div class="hint">@T("Enter a single term. Hit <i>tab</i> or <i>enter</i> to apply the term.") @if (!Model.Settings.AllowCustomTerms) { <text>@T("This taxonomy does not allow you to create new terms.") </text> }</div>
