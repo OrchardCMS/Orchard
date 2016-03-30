@@ -6,7 +6,8 @@ Version: 1.10
 OrchardVersion: 1.10
 Description: Provides a variety of third-party client-side libraries (stylesheets and scripts) used by other modules.
 Features:
-    Orchard.Resources:
-        Name: Resources
-        Description: Provides a variety of third-party client-side libraries (stylesheets and scripts) used by other modules.
-        Category: Core
+	Orchard.Resources:
+		Name: Resources
+		Description: Provides a variety of third-party client-side libraries (stylesheets and scripts) used by other modules.
+		Category: Core
+		Dependencies: Common
