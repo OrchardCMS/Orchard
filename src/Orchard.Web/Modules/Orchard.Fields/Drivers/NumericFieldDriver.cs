@@ -64,47 +64,41 @@ namespace Orchard.Fields.Drivers {
 
                 var settings = field.PartFieldDefinition.Settings.GetModel<NumericFieldSettings>();
 
-                if (settings.Required && String.IsNullOrWhiteSpace(viewModel.Value)) {
-                    updater.AddModelError(GetPrefix(field, part), T("The field {0} is mandatory.", T(field.DisplayName)));
+                if (String.IsNullOrWhiteSpace(viewModel.Value) && !String.IsNullOrWhiteSpace(settings.DefaultValue)) {
+                    viewModel.Value = _tokenizer.Replace(settings.DefaultValue, new Dictionary<string, object> { { "Content", part.ContentItem } });
                 }
 
-                if (!settings.Required && String.IsNullOrWhiteSpace(viewModel.Value)) {
-                    if (settings.DefaultValue != null) {
-                        if (Decimal.TryParse(_tokenizer.Replace(settings.DefaultValue, new Dictionary<string, object> { { "Content", part.ContentItem } }), NumberStyles.Any, _cultureInfo.Value, out value)
-                            && Math.Round(value, settings.Scale) == value
-                            && !String.IsNullOrEmpty(settings.DefaultValue)) {
-                            field.Value = value;
-                        }
-                    }
-                    else {
-                        field.Value = null;
+                field.Value = null;
+
+                if (String.IsNullOrWhiteSpace(viewModel.Value)) {
+                    if (settings.Required) {
+                        updater.AddModelError(GetPrefix(field, part), T("The field {0} is mandatory.", T(field.DisplayName)));
                     }
                 }
-                else if (Decimal.TryParse(viewModel.Value, NumberStyles.Any, _cultureInfo.Value, out value)) { 
-                    field.Value = value;
+                else if (!Decimal.TryParse(viewModel.Value, NumberStyles.Any, _cultureInfo.Value, out value)) {
+                    updater.AddModelError(GetPrefix(field, part), T("{0} or its default value is an invalid number", field.DisplayName));
                 }
                 else {
-                    updater.AddModelError(GetPrefix(field, part), T("{0} is an invalid number", field.DisplayName));
-                    field.Value = null;
-                }
 
-                if (settings.Minimum.HasValue && field.Value.HasValue && field.Value.Value < settings.Minimum.Value) {
-                    updater.AddModelError(GetPrefix(field, part), T("The value must be greater than {0}", settings.Minimum.Value));
-                }
+                    field.Value = value;
 
-                if (settings.Maximum.HasValue && field.Value.HasValue && field.Value.Value > settings.Maximum.Value) {
-                    updater.AddModelError(GetPrefix(field, part), T("The value must be less than {0}", settings.Maximum.Value));
-                }
-
-                // checking the number of decimals
-                if(field.Value.HasValue && Math.Round(field.Value.Value, settings.Scale) != field.Value.Value) {
-                    if(settings.Scale == 0) {
-                        updater.AddModelError(GetPrefix(field, part), T("The field {0} must be an integer", field.DisplayName));    
+                    if (settings.Minimum.HasValue && value < settings.Minimum.Value) {
+                        updater.AddModelError(GetPrefix(field, part), T("The value must be greater than {0}", settings.Minimum.Value));
                     }
-                    else {
-                        updater.AddModelError(GetPrefix(field, part), T("Invalid number of digits for {0}, max allowed: {1}", field.DisplayName, settings.Scale));
+
+                    if (settings.Maximum.HasValue && value > settings.Maximum.Value) {
+                        updater.AddModelError(GetPrefix(field, part), T("The value must be less than {0}", settings.Maximum.Value));
                     }
-                    
+
+                    // checking the number of decimals
+                    if (Math.Round(value, settings.Scale) != value) {
+                        if (settings.Scale == 0) {
+                            updater.AddModelError(GetPrefix(field, part), T("The field {0} must be an integer", field.DisplayName));
+                        }
+                        else {
+                            updater.AddModelError(GetPrefix(field, part), T("Invalid number of digits for {0}, max allowed: {1}", field.DisplayName, settings.Scale));
+                        }
+                    }
                 }
             }
 
