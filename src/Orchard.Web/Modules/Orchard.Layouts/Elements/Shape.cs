@@ -5,7 +5,7 @@ using Orchard.Localization;
 namespace Orchard.Layouts.Elements {
     public class Shape : Element {
         public override string Category {
-            get { return "Snippets"; }
+            get { return "Content"; }
         }
 
         public override LocalizedString Description {

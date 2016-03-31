@@ -10,4 +10,4 @@ Features:
         Name: Microsoft Azure Media Services
         Description: Provides integration of Microsoft Azure Media Services functionality into Orchard.
         Category: Hosting
-        Dependencies: Orchard.MediaLibrary, Orchard.PublishLater, Orchard.TaskLease, Orchard.Resources
+        Dependencies: Orchard.MediaLibrary, Orchard.PublishLater, Orchard.Resources

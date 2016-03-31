@@ -107,3 +107,95 @@ Scenario: Creating and using Enumeration fields
         And I go to "Admin/Contents/Create/Event"
         And I hit "Save"
     Then I should see "The field Location is mandatory."
+    
+    # The default value should be used on creation
+    When I go to "Admin/ContentTypes/Edit/Event"
+        And I fill in 
+            | name                                            | value    |
+            | Fields[0].EnumerationFieldSettings.Options      | Seattle  |
+            | Fields[0].EnumerationFieldSettings.ListMode     | Dropdown |
+            | Fields[0].EnumerationFieldSettings.DefaultValue | Seattle  |
+        And I hit "Save"
+        And I go to "Admin/Contents/Create/Event"
+    Then I should see "selected=\"selected">Seattle"
+    
+    # If not required and no value, the default value should be used
+    When I go to "Admin/ContentTypes/Edit/Event"
+        And I fill in 
+            | name                                            | value          |
+            | Fields[0].EnumerationFieldSettings.Required     | false          |
+            | Fields[0].EnumerationFieldSettings.Options      | Boston         |
+            | Fields[0].EnumerationFieldSettings.ListMode     | Checkbox       |
+            | Fields[0].EnumerationFieldSettings.DefaultValue | foo;Boston;bar |
+        And I hit "Save"
+        And I go to "Admin/Contents/Create/Event"
+    Then I should see "Location"
+    When I fill in 
+            | name                          | value |
+            | Event.Location.SelectedValues |       |
+        And I hit "Save"
+        And I am redirected
+    Then I should see "Your Event has been created."
+    When I go to "Admin/Contents/List"
+    Then I should see "Location:" 
+        And I should see "Boston"
+    
+    # If required and no value, the default value should be used
+    When I go to "Admin/ContentTypes/Edit/Event"
+        And I fill in 
+            | name                                            | value           |
+            | Fields[0].EnumerationFieldSettings.Required     | true            |
+            | Fields[0].EnumerationFieldSettings.Options      | Phoenix         |
+            | Fields[0].EnumerationFieldSettings.ListMode     | Checkbox        |
+            | Fields[0].EnumerationFieldSettings.DefaultValue | foo;Phoenix;bar |
+        And I hit "Save"
+        And I go to "Admin/Contents/Create/Event"
+    Then I should see "Location"
+    When I fill in 
+            | name                          | value |
+            | Event.Location.SelectedValues |       |
+        And I hit "Save"
+        And I am redirected
+    Then I should see "Your Event has been created."
+    When I go to "Admin/Contents/List"
+    Then I should see "Location:" 
+        And I should see "Phoenix"
+
+    # If required and the default value is not valid, the value should be required
+    When I go to "Admin/ContentTypes/Edit/Event"
+        And I fill in 
+            | name                                            | value    |
+            | Fields[0].EnumerationFieldSettings.Required     | true     |
+            | Fields[0].EnumerationFieldSettings.Options      | Phoenix  |
+            | Fields[0].EnumerationFieldSettings.ListMode     | Checkbox |
+            | Fields[0].EnumerationFieldSettings.DefaultValue | foo;bar  |
+        And I hit "Save"
+        And I go to "Admin/Contents/Create/Event"
+    Then I should see "Location"
+    When I fill in 
+            | name                          | value |
+            | Event.Location.SelectedValues |       |
+        And I hit "Save"
+    Then I should see "The field Location is mandatory."
+	
+    # If required and no default value, the list box should have the required attribute
+    When I go to "Admin/ContentTypes/Edit/Event"
+        And I fill in 
+            | name                                            | value   |
+            | Fields[0].EnumerationFieldSettings.Required     | true    |
+            | Fields[0].EnumerationFieldSettings.ListMode     | Listbox |
+            | Fields[0].EnumerationFieldSettings.DefaultValue |         |
+        And I hit "Save"
+        And I go to "Admin/Contents/Create/Event"
+    Then I should see "required=\"required\""
+	
+    # If required and a default value is set, the list box should not have the required attribute
+    When I go to "Admin/ContentTypes/Edit/Event"
+        And I fill in 
+            | name                                            | value   |
+            | Fields[0].EnumerationFieldSettings.Required     | true    |
+            | Fields[0].EnumerationFieldSettings.ListMode     | Listbox |
+            | Fields[0].EnumerationFieldSettings.DefaultValue | Phoenix |
+        And I hit "Save"
+        And I go to "Admin/Contents/Create/Event"
+    Then I should not see "required=\"required\""

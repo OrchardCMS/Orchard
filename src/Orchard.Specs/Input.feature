@@ -128,3 +128,59 @@ Scenario: Creating and using Input fields
     When I go to "Admin/Contents/List"
     Then I should see "Contact:" 
         And I should see "contact@orchardproject.net"
+
+    # If not required and no value, the default value should be used
+    When I go to "Admin/ContentTypes/Edit/Event"
+        And I fill in 
+            | name                                      | value                       |
+            | Fields[0].InputFieldSettings.Required     | false                       |
+            | Fields[0].InputFieldSettings.DefaultValue | contact1@orchardproject.net |
+        And I hit "Save"
+        And I go to "Admin/Contents/Create/Event"
+        And I fill in 
+            | name                | value |
+            | Event.Contact.Value |       |
+        And I hit "Save"
+        And I am redirected
+    Then I should see "Your Event has been created."
+    When I go to "Admin/Contents/List"
+    Then I should see "Contact:" 
+        And I should see "contact1@orchardproject.net"
+
+    # If required and no value, the default value should be used
+    When I go to "Admin/ContentTypes/Edit/Event"
+        And I fill in 
+            | name                                      | value                       |
+            | Fields[0].InputFieldSettings.Required     | true                        |
+            | Fields[0].InputFieldSettings.DefaultValue | contact2@orchardproject.net |
+        And I hit "Save"
+        And I go to "Admin/Contents/Create/Event"
+        And I fill in 
+            | name                | value |
+            | Event.Contact.Value |       |
+        And I hit "Save"
+        And I am redirected
+    Then I should see "Your Event has been created."
+    When I go to "Admin/Contents/List"
+    Then I should see "Contact:" 
+        And I should see "contact2@orchardproject.net"
+
+    # If required and no default value, the required attribute should be used
+    When I go to "Admin/ContentTypes/Edit/Event"
+        And I fill in 
+            | name                                      | value |
+            | Fields[0].InputFieldSettings.Required     | true  |
+            | Fields[0].InputFieldSettings.DefaultValue |       |
+        And I hit "Save"
+        And I go to "Admin/Contents/Create/Event"
+    Then I should see "required=\"required\""
+
+    # If required and a default value is set, the required attribute should not be used
+    When I go to "Admin/ContentTypes/Edit/Event"
+        And I fill in 
+            | name                                      | value                      |
+            | Fields[0].InputFieldSettings.Required     | true                       |
+            | Fields[0].InputFieldSettings.DefaultValue | contact@orchardproject.net |
+        And I hit "Save"
+        And I go to "Admin/Contents/Create/Event"
+    Then I should not see "required=\"required\""

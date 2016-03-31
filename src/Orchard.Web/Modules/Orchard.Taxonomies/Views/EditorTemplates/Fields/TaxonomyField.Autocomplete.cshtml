@@ -70,7 +70,7 @@
             
     @if (!Model.HasTerms && AuthorizedFor(Orchard.Taxonomies.Permissions.CreateTerm)) {
         <div class="no-terms">
-            @T("There are no terms defined for {0} yet.", Model.DisplayName.CamelFriendly())
+            @T("There are no terms defined for {0} yet.", Model.DisplayName)
             <a href="@Url.Action("Index", "TermAdmin", new { taxonomyId = Model.TaxonomyId, area = "Orchard.Taxonomies" })">@T("Create some terms")</a>
         </div>        
     }

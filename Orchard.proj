@@ -6,6 +6,7 @@
   <PropertyGroup>
     <LibFolder>$(MSBuildProjectDirectory)\lib</LibFolder>
     <SrcFolder>$(MSBuildProjectDirectory)\src</SrcFolder>
+    <AzureSrcFolder>$(SrcFolder)\Orchard.Azure</AzureSrcFolder>
     <BuildFolder>$(MSBuildProjectDirectory)\build</BuildFolder>
     <MsBuildTasksFolder>$(MSBuildProjectDirectory)\buildtasks</MsBuildTasksFolder>
     <ArtifactsFolder>$(MSBuildProjectDirectory)\artifacts</ArtifactsFolder>
@@ -28,6 +29,10 @@
     <BuildPlatform Condition="$(ProgramW6432) != ''">x64</BuildPlatform>
     <BuildPlatform Condition="$(BuildPlatform) == ''">x86</BuildPlatform>
     <Configuration Condition="$(Configuration) == ''">Release</Configuration>
+    
+    <OrchardSolution>$(SrcFolder)\Orchard.sln</OrchardSolution>
+    <OrchardAzureSolution>$(AzureSrcFolder)\Orchard.Azure.sln</OrchardAzureSolution>
+    <Solution Condition="$(Solution) == ''">$(OrchardSolution)</Solution>
 
     <!-- TeamCity build number -->
     <Version>$(BUILD_NUMBER)</Version>
@@ -38,11 +43,11 @@
 
   <!-- Coordinating Targets -->
 
-  <Target Name ="Build">
+  <Target Name="Build">
     <CallTarget Targets="Clean"/>
     <CallTarget Targets="Compile"/>
     <CallTarget Targets="Test"/>
-    <CallTarget Targets="Package"/> 
+    <CallTarget Targets="Package"/>
   </Target>
 
   <Target Name="FastBuild">
@@ -95,19 +100,19 @@
   </Target>
 
   <Target Name="AzureBuild">
-    <MSBuild Projects="AzurePackage.proj" Targets="Build">
+    <MSBuild Projects="$(OrchardAzureSolution)" Targets="Build">
     </MSBuild>
   </Target>
 
   <Target Name="AzureCIBuild">
-    <MSBuild Projects="AzurePackage.proj" Targets="CIBuild">
+    <MSBuild Projects="$(OrchardAzureSolution)" Targets="CIBuild">
     </MSBuild>
   </Target>
 
   <!-- Building -->
 
   <Target Name="Clean">
-    <MSBuild Projects="$(SrcFolder)\Orchard.sln" Targets="Clean" />
+    <MSBuild Projects="$(Solution)" Targets="Clean" />
     <RemoveDir Directories="$(BuildFolder)" ContinueOnError="true"/>
     <RemoveDir Directories="$(ArtifactsFolder)" />
   </Target>
@@ -115,16 +120,16 @@
   <Target Name="Compile">
     <!-- Compile to "OutputFolder" -->
     <MSBuild
-      Projects="$(SrcFolder)\Orchard.sln"
+      Projects="$(Solution)"
       Targets="Build"
       Properties="Configuration=$(Configuration);OutputPath=$(CompileFolder)" />
     <!-- Compile to "regular" output folder for devs using VS locally -->
     <MSBuild
-      Projects="$(SrcFolder)\Orchard.sln"
+      Projects="$(Solution)"
       Targets="Build"/>
   </Target>
 
-  <Target Name ="CompileMsBuildTasks">
+  <Target Name="CompileMsBuildTasks">
     <MSBuild
       Projects="$(SrcFolder)\Tools\MSBuild.Orchard.Tasks\MSBuild.Orchard.Tasks.csproj"
       Targets="Build"
@@ -145,7 +150,7 @@
 
   <!-- Testing -->
 
-  <Target Name ="Test">
+  <Target Name="Test">
     <!-- TeamCity support -->
     <ItemGroup>
       <NUnitAddinFiles Include="$(teamcity_dotnet_nunitaddin)-2.5.2.*" />
@@ -160,7 +165,7 @@
     <NUnit Assemblies="@(TestAssemblies)" ToolPath="$(LibFolder)\nunit" WorkingDirectory="$(CompileFolder)" OutputXmlFile="$(BuildFolder)\Orchard.Tests.xml" ExcludeCategory="longrunning" />
   </Target>
 
-  <Target Name ="Spec" DependsOnTargets="Package-Stage">
+  <Target Name="Spec" DependsOnTargets="Package-Stage">
     <!-- TeamCity support -->
     <ItemGroup>
       <NUnitAddinFiles Include="$(teamcity_dotnet_nunitaddin)-2.5.2.*" />
@@ -350,7 +355,7 @@
         $(MSBuildProjectDirectory)\**\*.hgignore;
         $(MSBuildProjectDirectory)\**\*.hg*\**\*;
         $(LibFolder)\nunit\addins\**\*;
-        " Exclude="$(MSBuildProjectDirectory)\src\Orchard.Azure\Orchard.Azure.CloudService\*Content\**\*" />
+        " Exclude="$(AzureSrcFolder)\Orchard.Azure.CloudService\*Content\**\*" />
 
       <Zip-Stage Include="$(StageFolder)\**\*" />
 
