@@ -10,4 +10,3 @@ Features:
 		Name: Resources
 		Description: Provides a variety of third-party client-side libraries (stylesheets and scripts) used by other modules.
 		Category: Core
-		Dependencies: Common
