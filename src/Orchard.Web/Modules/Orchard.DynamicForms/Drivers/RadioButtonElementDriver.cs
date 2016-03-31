@@ -34,8 +34,14 @@ namespace Orchard.DynamicForms.Drivers {
                         Name: "Value",
                         Title: "Value",
                         Classes: new[] { "text", "medium", "tokenized" },
-                        Description: T("The value of this radio button.")));
-
+                        Description: T("The value of this radio button.")),
+                    _DefaultValue:
+                        shape.Checkbox(
+                        Id: "DefaultValue",
+                        Name: "DefaultValue",
+                        Title: "Default Value",
+                        Value: "true",
+                        Description: T("Sets default value to unchecked or checked.")));
                 return form;
             });
         }
