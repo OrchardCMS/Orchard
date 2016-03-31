@@ -192,3 +192,15 @@ function f() { return function () { } }
         }
     }); a.clear || (a.clear = f()); a.trace || (a.trace = f()); a.group || (a.group = f()); a.groupCollapsed || (a.groupCollapsed = f()); a.groupEnd || (a.groupEnd = f()); a.timeStamp || (a.timeStamp = f()); a.profile || (a.profile = f()); a.profileEnd || (a.profileEnd = f()); a.count || (a.count = f())
 })();
+
+//Prevent double-click on Publish/Save
+$(function () {
+    var formSubmitted = false;
+    $("button[name='submit.Save'], button[name='submit.Publish']").click(function (e) {
+        if (formSubmitted) {
+            e.preventDefault();
+            return;
+        }
+        formSubmitted = true;
+    });
+});
