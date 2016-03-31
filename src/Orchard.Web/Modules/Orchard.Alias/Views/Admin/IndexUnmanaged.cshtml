@@ -11,7 +11,7 @@
     Layout.Title = T("Manage Aliases").Text;
     var aliasService = WorkContext.Resolve<IAliasService>();
     AdminIndexOptions options = Model.Options;
-    int index = -1;
+    int index = 0;
 
     var pageSizes = new List<int?>() { 10, 50, 100 };
     var defaultPageSize = WorkContext.CurrentSite.PageSize;
@@ -19,73 +19,95 @@
         pageSizes.Add(defaultPageSize);
     }
 }
+<div class="panel panel-default">
+    @using (Html.BeginFormAntiForgeryPost()) {
+        @Html.ValidationSummary()
+        <div class="panel-heading">
+            <div class="panel-heading-actions">
+                @Html.ActionLink(T("Add new Alias").Text, "Add", new { returnurl = HttpContext.Current.Request.RawUrl }, new { @class = "button primaryAction" })
+            </div>
+            <div class="panel-heading-primary-group">
+                <fieldset class="bulk-actions">
+                    <div class="am-checkbox inline">
+                        <input id="checkAll" class="check-all" type="checkbox">
+                        <label for="checkAll">@T("Select all")</label>
+                    </div>
+                    <select id="publishActions" name="@Html.NameOf(m => m.Options.BulkAction)" class="form-control auto-size">
+                        @Html.SelectOption(options.BulkAction, AliasBulkAction.None, T("Choose action...").ToString())
+                        @Html.SelectOption(options.BulkAction, AliasBulkAction.Delete, T("Delete").ToString())
+                    </select>
+                    <button type="submit" name="submit.BulkEdit" value="@T("Apply")">@T("Apply")</button>
+                </fieldset>
+                <fieldset class="bulk-actions">
+                    <label for="filterResults">@T("Sort by:")</label>
+                    <select id="filterResults" name="@Html.NameOf(m => m.Options.Order)" class="form-control auto-size">
+                        @Html.SelectOption(options.Order, AliasOrder.Path, T("Path").ToString())
+                    </select>
+                    <input type="hidden" name="Page" value="1" />
+                    <label for="pageSize">@T("Show:")</label>
+                    <select id="pageSize" name="PageSize" class="form-control auto-size">
+                        @Html.SelectOption((int)Model.Pager.PageSize, 0, T("All").ToString())
+                        @foreach (int size in pageSizes.OrderBy(p => p)) {
+                            @Html.SelectOption((int)Model.Pager.PageSize, size, size.ToString())
+                        }
+                    </select>
+                    <button type="submit" name="submit.Filter" value="@T("Filter")">@T("Filter")</button>
+                </fieldset>
+            </div>
+        </div>
 
-@using (Html.BeginFormAntiForgeryPost()) {
-    @Html.ValidationSummary()
-    <div class="manage">@Html.ActionLink(T("Add new Alias").Text, "Add", new { returnurl = HttpContext.Current.Request.RawUrl }, new { @class = "button primaryAction" })</div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="table-responsive table-with-footer">
+                    <table class="table table-fw-widget data-table table-striped dataTable no-footer">
+                        <thead>
+                            <tr>
+                                <th scope="col"><i class="fa fa-long-arrow-down"></i></th>
+                                <th scope="col">@T("Alias")</th>
+                                <th scope="col">@T("Route")</th>
+                                <th scope="col">&nbsp;</th>
+                            </tr>
+                        </thead>
+                        @foreach (var aliasEntry in Model.AliasEntries) {
+                            var alias = aliasEntry.Alias;
+                            var checkboxId = Html.IdFor(m => m.AliasEntries[index].Alias.Path);
 
-    <fieldset class="bulk-actions">
-        <label for="publishActions">@T("Actions:")</label>
-        <select id="publishActions" name="@Html.NameOf(m => m.Options.BulkAction)">
-            @Html.SelectOption(options.BulkAction, AliasBulkAction.None, T("Choose action...").ToString())
-            @Html.SelectOption(options.BulkAction, AliasBulkAction.Delete, T("Delete").ToString())
-        </select>
-        <button type="submit" name="submit.BulkEdit" value="@T("Apply")">@T("Apply")</button>
-    </fieldset>
-    <fieldset class="bulk-actions">
-        <label for="filterResults">@T("Sort by:")</label>
-        <select id="filterResults" name="@Html.NameOf(m => m.Options.Order)">
-            @Html.SelectOption(options.Order, AliasOrder.Path, T("Path").ToString())
-        </select>
-        <input type="hidden" name="Page" value="1" />
-        <label for="pageSize">@T("Show:")</label>
-        <select id="pageSize" name="PageSize">
-            @Html.SelectOption((int)Model.Pager.PageSize, 0, T("All").ToString())
-            @foreach (int size in pageSizes.OrderBy(p => p)) {
-                @Html.SelectOption((int)Model.Pager.PageSize, size, size.ToString())
-            }
-        </select>
-        <button type="submit" name="submit.Filter" value="@T("Filter")">@T("Filter")</button>
-    </fieldset>
-    <fieldset>
-        <table class="items">
-            <thead>
-                <tr>
-                    <th scope="col" class="checkbox"><input type="checkbox" class="check-all" /></th>
-                    <th scope="col">@T("Alias")</th>
-                    <th scope="col">@T("Route")</th>
-                    <th scope="col">&nbsp;</th>
-                </tr>
-            </thead>
-            @foreach (var aliasEntry in Model.AliasEntries) {
-                var alias = aliasEntry.Alias;
-                index++;
-                var virtualPathData = aliasService.LookupVirtualPaths(alias.RouteValues.ToRouteValueDictionary(), ViewContext.HttpContext).FirstOrDefault();
+                            var virtualPathData = aliasService.LookupVirtualPaths(alias.RouteValues.ToRouteValueDictionary(), ViewContext.HttpContext).FirstOrDefault();
 
-                if (virtualPathData == null) {
-                    continue;
-                }
+                            if (virtualPathData == null) {
+                                continue;
+                            }
 
-                var url = virtualPathData.VirtualPath;
-                <tr>
-                    <td>
-                        <input type="hidden" value="@alias.Path" name="@Html.FieldNameFor(m => Model.AliasEntries[index].Alias.Path)" />
-                        <input type="checkbox" value="true" name="@Html.FieldNameFor(m => Model.AliasEntries[index].IsChecked)" />
-                    </td>
-                    <td>
-                        @Html.Link(alias.Path == String.Empty ? "/" : alias.Path, Href("~/" + urlPrefix + alias.Path))
-                    </td>
-                    <td>
-                        @Html.Link(url, Href("~/" + urlPrefix + "/" + url))
-                    </td>
-                    <td>
-                        @Html.ActionLink(T("Edit").Text, "Edit", new { path = alias.Path == String.Empty ? "/" : alias.Path })
-                        @Html.ActionLink(T("Delete").Text, "Delete", new { path = alias.Path }, new { itemprop = "UnsafeUrl RemoveUrl" })
-                    </td>
-                </tr>
-            }
-        </table>
-
-        @Display(Model.Pager)
-    </fieldset>
-}
+                            var url = virtualPathData.VirtualPath;
+                            <tr>
+                                <td>
+                                    <div class="am-checkbox">
+                                        <input type="hidden" value="@(alias.Path == string.Empty ? "/" : alias.Path)" name="@Html.FieldNameFor(m => Model.AliasEntries[index].Alias.Path)" />
+                                        <input type="checkbox" value="true" name="@Html.FieldNameFor(m => Model.AliasEntries[index].IsChecked)" id="@checkboxId" />
+                                        <label for="@checkboxId"></label>
+                                    </div>
+                                </td>
+                                <td>
+                                    @Html.Link(alias.Path == String.Empty ? "/" : alias.Path, Href("~/" + urlPrefix + alias.Path))
+                                </td>
+                                <td>
+                                    @Html.Link(url, Href("~/" + urlPrefix + "/" + url))
+                                </td>
+                                <td>
+                                    @Html.ActionLink(T("Edit").Text, "Edit", new { path = alias.Path == String.Empty ? "/" : alias.Path })
+                                    @Html.ActionLink(T("Delete").Text, "Delete", new { path = alias.Path }, new { itemprop = "UnsafeUrl RemoveUrl" })
+                                </td>
+                            </tr>
+                            index++;
+                        }
+                    </table>
+                </div>
+                <div class="row am-datatable-footer">
+                    <div class="col-sm-12">
+                        @Display(Model.Pager)
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
