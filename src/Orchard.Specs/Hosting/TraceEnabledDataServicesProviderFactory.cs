@@ -13,7 +13,8 @@ namespace Orchard.Specs.Hosting {
             }
             public override IPersistenceConfigurer GetPersistenceConfigurer(bool createDatabase) {
                 var config = (MsSqlCeConfiguration)base.GetPersistenceConfigurer(createDatabase);
-                config.ShowSql();
+                // Uncomment to display SQL while running tests
+                // config.ShowSql();
                 return config;
             }
         }
