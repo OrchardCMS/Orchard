@@ -205,6 +205,11 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="Text.feature.cs">
+      <DependentUpon>Text.feature</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="Input.feature.cs">
       <DependentUpon>Input.feature</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -370,6 +375,10 @@
     </None>
     <None Include="Hosting\Orchard.Web\Config\HostComponents.Release.config">
       <DependentUpon>HostComponents.config</DependentUpon>
+    </None>
+    <None Include="Text.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Text.feature.cs</LastGenOutput>
     </None>
     <None Include="Input.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
