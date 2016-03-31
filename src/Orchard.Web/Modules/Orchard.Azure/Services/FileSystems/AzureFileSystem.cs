@@ -113,6 +113,14 @@ namespace Orchard.Azure.Services.FileSystems {
             return (path1.TrimEnd('/') + '/' + path2.TrimStart('/'));
         }
 
+        public string AppendDelimiter(string path) {
+            if (string.IsNullOrWhiteSpace(path))
+                return "/";
+            if (!path.EndsWith("/"))
+                path = path + "/";
+            return path;
+        }
+
         public IStorageFile GetFile(string path) {
 
             path = ConvertToRelativeUriPath(path);

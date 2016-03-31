@@ -128,11 +128,18 @@ namespace Orchard.FileSystems.Media {
         void SaveStream(string path, Stream inputStream);
 
         /// <summary>
-        /// Combines to paths.
+        /// Combines two paths.
         /// </summary>
         /// <param name="path1">The parent path.</param>
         /// <param name="path2">The child path.</param>
         /// <returns>The combined path.</returns>
         string Combine(string path1, string path2);
+
+        /// <summary>
+        /// Appends delimiter to path.
+        /// </summary>
+        /// <param name="path">Folder path.</param>
+        /// <returns>Path with delimiter appended at the end.</returns>
+        string AppendDelimiter(string path);
     }
 }

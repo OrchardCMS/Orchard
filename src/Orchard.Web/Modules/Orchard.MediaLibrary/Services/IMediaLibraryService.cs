@@ -133,31 +133,19 @@ namespace Orchard.MediaLibrary.Services {
         /// <param name="inputStream">The stream with the file's contents.</param>
         /// <returns>The path to the uploaded file.</returns>
         string UploadMediaFile(string folderPath, string fileName, Stream inputStream);
-    }
 
-    public static class MediaLibrayServiceExtensions {
-        public static bool CanManageMediaFolder(this IMediaLibraryService service, string folderPath) {
-            // The current user can manage a media if he has access to the whole hierarchy
-            // or the media is under his personal storage folder.
+        /// <summary>
+        /// Checks if current user can manage the storage folder
+        /// </summary>
+        /// <param name="folderPath"></param>
+        /// <returns></returns>
+        bool CanManageMediaFolder(string folderPath);
 
-            var rootMediaFolder = service.GetRootMediaFolder();
-            if (rootMediaFolder == null) {
-                return true;
-            }
-
-            var mediaPath = folderPath + "\\";
-            var rootPath = rootMediaFolder.MediaPath + "\\";
-
-            return mediaPath.StartsWith(rootPath, StringComparison.OrdinalIgnoreCase);
-        }
-
-        public static string GetRootedFolderPath(this IMediaLibraryService service, string folderPath) {
-            var rootMediaFolder = service.GetRootMediaFolder();
-            if (rootMediaFolder != null) {
-                return Path.Combine(rootMediaFolder.MediaPath, folderPath ?? "");
-            }
-
-            return folderPath;
-        }
+        /// <summary>
+        /// Combines given folderPath to user's root folder path
+        /// </summary>
+        /// <param name="folderPath"></param>
+        /// <returns>Rooted folder path</returns>
+        string GetRootedFolderPath(string folderPath);
     }
 }
