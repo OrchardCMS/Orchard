@@ -6,7 +6,6 @@
   <PropertyGroup>
     <LibFolder>$(MSBuildProjectDirectory)\lib</LibFolder>
     <SrcFolder>$(MSBuildProjectDirectory)\src</SrcFolder>
-    <AzureSrcFolder>$(SrcFolder)\Orchard.Azure</AzureSrcFolder>
     <BuildFolder>$(MSBuildProjectDirectory)\build</BuildFolder>
     <MsBuildTasksFolder>$(MSBuildProjectDirectory)\buildtasks</MsBuildTasksFolder>
     <ArtifactsFolder>$(MSBuildProjectDirectory)\artifacts</ArtifactsFolder>
@@ -31,7 +30,6 @@
     <Configuration Condition="$(Configuration) == ''">Release</Configuration>
     
     <OrchardSolution>$(SrcFolder)\Orchard.sln</OrchardSolution>
-    <OrchardAzureSolution>$(AzureSrcFolder)\Orchard.Azure.sln</OrchardAzureSolution>
     <Solution Condition="$(Solution) == ''">$(OrchardSolution)</Solution>
 
     <!-- TeamCity build number -->
@@ -136,7 +134,16 @@
 
   <Target Name="Test">
     <!-- Run unit test assemblies -->
-    <CreateItem Include="$(CompileFolder)\*.Tests.*dll">
+    <CreateItem Include="$(CompileFolder)\*.Tests.*dll" Exclude="$(CompileFolder)\Orchard.Azure.Tests.dll">
+      <Output TaskParameter="Include" ItemName="TestAssemblies" />
+    </CreateItem>
+
+    <NUnit Assemblies="@(TestAssemblies)" ToolPath="@(NUnitPackageToolsFolder)" WorkingDirectory="$(CompileFolder)" OutputXmlFile="$(BuildFolder)\Orchard.Tests.xml" ExcludeCategory="longrunning" />
+  </Target>
+
+  <Target Name="TestAzure">
+    <!-- Run unit test assemblies -->
+    <CreateItem Include="$(CompileFolder)\Orchard.Azure.Tests.dll">
       <Output TaskParameter="Include" ItemName="TestAssemblies" />
     </CreateItem>
 
