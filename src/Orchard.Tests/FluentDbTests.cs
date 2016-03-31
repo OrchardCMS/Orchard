@@ -46,7 +46,8 @@ namespace Orchard.Tests {
 
             var fileName = "temp.sdf";
             var persistenceConfigurer = new SqlCeDataServicesProvider(fileName).GetPersistenceConfigurer(true/*createDatabase*/);
-            ((MsSqlCeConfiguration)persistenceConfigurer).ShowSql();
+            // Uncomment to display SQL while running tests
+            // ((MsSqlCeConfiguration)persistenceConfigurer).ShowSql();
 
             var sessionFactory = Fluently.Configure()
                 .Database(persistenceConfigurer)

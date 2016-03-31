@@ -11,7 +11,6 @@ namespace Orchard.Alias {
         public string MenuName { get { return "admin"; } }
 
         public void GetNavigation(NavigationBuilder builder) {
-            builder.AddImageSet("aliases");
             builder.Add(T("Aliases"), "1.4.1", menu => {
                 menu.LinkToFirstChild(true);
 
