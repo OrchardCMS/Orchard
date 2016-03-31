@@ -2,6 +2,7 @@
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Common.Fields;
 using Orchard.Core.Common.Settings;
+using Orchard.Localization;
 using Orchard.Tokens;
 using System;
 using System.Collections.Generic;
@@ -14,13 +15,20 @@ namespace Orchard.Fields.Drivers {
 
         public TextFieldDriver(ITokenizer tokenizer) {
             _tokenizer = tokenizer;
+            T = NullLocalizer.Instance;
         }
+
+        public Localizer T { get; set; }
 
         protected override DriverResult Editor(ContentPart part, TextField field, IUpdateModel updater, dynamic shapeHelper) {
             var settings = field.PartFieldDefinition.Settings.GetModel<TextFieldSettings>();
 
-            if (!String.IsNullOrEmpty(settings.DefaultValue) && (String.IsNullOrEmpty(field.Value) || field.Value.Equals(settings.DefaultValue))) {
+            if (!String.IsNullOrWhiteSpace(settings.DefaultValue) && (String.IsNullOrWhiteSpace(field.Value) || field.Value.Equals(settings.DefaultValue))) {
                 field.Value = _tokenizer.Replace(settings.DefaultValue, new Dictionary<string, object> { { "Content", part.ContentItem } });
+
+                if (settings.Required && String.IsNullOrWhiteSpace(field.Value)) {
+                    updater.AddModelError("Text", T("The field {0} is mandatory", T(field.DisplayName)));
+                }
             }
 
             return null;
