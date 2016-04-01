@@ -9,7 +9,7 @@
 
 @using (Html.BeginFormAntiForgeryPost()) {
     @Html.ValidationSummary()
-    <div class="manage">@Html.ActionLink(T("Evict All").ToString(), "EvictAll", new { Area = "Orchard.OutputCache", Controller = "Statistics" }, new { @class = "button primaryAction", itemprop = "UnsafeUrl" })</div>
+    <div class="manage">@Html.ActionLink(T("Evict All").ToString(), "EvictAll", new { Area = "Orchard.OutputCache", Controller = "Statistics" }, new { @class = "btn btn-primary", itemprop = "UnsafeUrl" })</div>
 }
 
 <h2>@T("Cached Items")</h2>

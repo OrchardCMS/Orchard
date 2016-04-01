@@ -2,12 +2,9 @@
 @{
     Style.Require("TagsAdmin");
 }
-@using (Html.BeginFormAntiForgeryPost()) { 
-    <fieldset>
-        @Html.LabelFor(m => m.TagName, T("New Tag Name"))
-        @Html.TextBoxFor(m => m.TagName, new { @class = "text", placeholder = T("New Tag Name"), @required = "required" })
-    </fieldset>
-    <fieldset>
-        <button class="primaryAction" type="submit" name="submit.Create" value="yes">@T("Add Tag")</button>
-    </fieldset>
+@using (Html.BeginFormAntiForgeryPost()) {
+    <div class="form-inline">
+        @Html.TextBoxFor(m => m.TagName, new { @class = "form-control", placeholder = T("New Tag Name"), @required = "required" })
+        <button class="btn btn-primary" type="submit" name="submit.Create" value="yes">@T("Add Tag")</button>
+    </div>
 }

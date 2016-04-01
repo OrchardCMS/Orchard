@@ -18,7 +18,7 @@
         @Html.ValidationSummary()
         <div class="panel-heading">
             <div class="panel-heading-actions">
-                @Html.ActionLink(T("Add a new Query").ToString(), "Create", new { Area = "Contents", id = "Query", returnurl = HttpContext.Current.Request.RawUrl }, new { @class = "button primaryAction" })
+                @Html.ActionLink(T("Add a new Query").ToString(), "Create", new { Area = "Contents", id = "Query", returnurl = HttpContext.Current.Request.RawUrl }, new { @class = "btn btn-primary" })
             </div>
             <div class="panel-heading-primary-group">
                 <fieldset class="bulk-actions">
@@ -45,7 +45,7 @@
                             @Html.SelectOption((int)Model.Pager.PageSize, size, size.ToString())
                         }
                     </select>
-                    <button type="submit" name="submit.Filter" value="@T("Filter")">@T("Filter")</button>
+                    <button class="btn btn-default" type="submit" name="submit.Filter" value="@T("Filter")">@T("Filter")</button>
                 </fieldset>
             </div>
         </div>
@@ -76,9 +76,9 @@
                                 @Html.ActionLink(entry.Name, "Edit", new { id = entry.QueryId })
                             </td>
                             <td>
-                                @Html.ActionLink(T("Properties").ToString(), "Edit", new { Area = "Contents", id = entry.QueryId, returnurl = HttpContext.Current.Request.RawUrl }) |
-                                @Html.ActionLink(T("Edit").ToString(), "Edit", new { id = entry.QueryId }) |
-                                @Html.ActionLink(T("Delete").ToString(), "Delete", new { id = entry.QueryId }, new { itemprop = "RemoveUrl UnsafeUrl" })
+                                @Html.ActionLink(T("Properties").ToString(), "Edit", new { Area = "Contents", id = entry.QueryId, returnurl = HttpContext.Current.Request.RawUrl }, new { @class = "btn btn-default" })
+                                @Html.ActionLink(T("Edit").ToString(), "Edit", new { id = entry.QueryId }, new { @class = "btn btn-primary" })
+                                @Html.ActionLink(T("Delete").ToString(), "Delete", new { id = entry.QueryId }, new { itemprop = "RemoveUrl UnsafeUrl", @class = "btn btn-danger" })
                                 @if (entry.Query.FilterGroups.SelectMany(x => x.Filters).Any()) {
                                     <text>| </text> @Html.ActionLink(T("Preview").ToString(), "Preview", new { id = entry.QueryId })
                                 }
@@ -90,14 +90,9 @@
             </div>
             <div class="row am-datatable-footer">
                 <div class="col-sm-12">
-                    @using (Html.BeginFormAntiForgeryPost()) {
-                        @Display(Model.Pager)
-                    }
+                    @Display(Model.Pager)
                 </div>
             </div>
-
         </div>
-
-
     </div>
 </div>

@@ -21,7 +21,7 @@
             <div class="panel-heading">
 
                 <div class="panel-heading-actions">
-                    @Html.ActionLink(T("Add a new Binding").ToString(), "Select", new { }, new { @class = "button primaryAction" })
+                    @Html.ActionLink(T("Add a new Binding").ToString(), "Select", new { }, new { @class = "btn btn-primary" })
                 </div>
                 <div class="panel-heading-primary-group">
                     <fieldset class="bulk-actions">
@@ -48,7 +48,7 @@
                                 @Html.SelectOption((int)Model.Pager.PageSize, size, size.ToString())
                             }
                         </select>
-                        <button type="submit" name="submit.Filter" value="@T("Filter")">@T("Filter")</button>
+                        <button class="btn btn-default" type="submit" name="submit.Filter" value="@T("Filter")">@T("Filter")</button>
                     </fieldset>
                 </div>
             </div>
@@ -90,10 +90,10 @@
                                 @entry.Binding.Description
                             </td>
                             <td>
-                                @Html.ActionLink(T("Edit").ToString(), "Edit", new { entry.Binding.Id }) |
+                                @Html.ActionLink(T("Edit").ToString(), "Edit", new { entry.Binding.Id }, new { @class = "btn btn-primary" })
                                 @using (Html.BeginFormAntiForgeryPost(Url.Action("Delete"), FormMethod.Post, new { @class = "inline link" })) {
                                     @Html.Hidden("id", entry.Binding.Id)
-                                    <button type="submit" itemprop="RemoveUrl">@T("Delete")</button>
+                                    <button class="btn btn-danger" type="submit" itemprop="RemoveUrl">@T("Delete")</button>
                                 }
                             </td>
                         </tr>
@@ -101,16 +101,11 @@
                     }
                 </table>
             </div>
-
             <div class="row am-datatable-footer">
                 <div class="col-sm-12">
-                    @using (Html.BeginFormAntiForgeryPost()) {
-                        @Display(Model.Pager)
-                    }
+                    @Display(Model.Pager)
                 </div>
             </div>
         </div>
     </div>
-
-
 </div>

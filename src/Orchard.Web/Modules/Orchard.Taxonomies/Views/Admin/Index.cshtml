@@ -5,10 +5,9 @@
     Layout.Title = T("Manage Taxonomies").ToString();
     int taxonomyIndex = 0, ti;
 }
-
-@using (Html.BeginFormAntiForgeryPost()) {
-    @Html.ValidationSummary()
-    <div class="panel panel-default">
+<div class="panel panel-default">
+    @using (Html.BeginFormAntiForgeryPost()) {
+        @Html.ValidationSummary()
         <div class="panel-heading no-border">
             <div class="panel-heading-primary-group">
                 <fieldset class="bulk-actions form-inline">
@@ -24,74 +23,67 @@
                 </fieldset>
             </div>
             <div class="panel-heading-actions">
-                @Html.ActionLink(T("Add a taxonomy").Text, "Create", new { Area = "Contents", Id = "Taxonomy", ReturnUrl = Request.RawUrl }, new { @class = "button primaryAction" })
+                @Html.ActionLink(T("Add a taxonomy").Text, "Create", new { Area = "Contents", Id = "Taxonomy", ReturnUrl = Request.RawUrl }, new { @class = "btn btn-primary" })
             </div>
         </div>
-            @if (Model.Taxonomies.Any()) {
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="table-responsive">
-                            <table class="table table-striped table-fw-widget table-hover" summary="@T("This is a table of the taxonomies in your application")">
-                                <thead>
-                                    <tr>
-                                        <th scope="col" width="10"><i class="fa fa-long-arrow-down"></i>
-                                        </th>
-                                        <th scope="col" width="500">@T("Name")</th>
-                                        <th scope="col" width="500"></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var taxonomyEntry in Model.Taxonomies) {
-                                        ti = taxonomyIndex;
-                                        <tr class="@(taxonomyEntry.IsInternal ? "internal" : null)">
-                                            <td width="">
-                                                <input type="hidden" value="@Model.Taxonomies[taxonomyIndex].Id" name="@Html.NameOf(m => m.Taxonomies[ti].Id)" />
-                                                @if (!taxonomyEntry.IsInternal || Authorizer.Authorize(Orchard.Security.StandardPermissions.SiteOwner)) {
-                                                    <div class="am-checkbox">
-                                                        <input type="checkbox" value="true" name="@Html.NameOf(m => m.Taxonomies[ti].IsChecked)" id="@Html.NameOf(m => m.Taxonomies[ti].IsChecked)" />
-                                                        <label for="@Html.NameOf(m => m.Taxonomies[ti].IsChecked)"></label>
-                                                    </div>
-
-                                                }
-                                            </td>
-                                            <td width="">
-                                                @if (!taxonomyEntry.IsInternal || Authorizer.Authorize(Orchard.Security.StandardPermissions.SiteOwner)) {
-                                                    @Html.ActionLink(taxonomyEntry.Name, "Index", "TermAdmin", new { taxonomyId = taxonomyEntry.Id }, new object { })
-                                                }
-                                                else {
-                                                    @Html.ItemDisplayText(taxonomyEntry.ContentItem)
-                                                }
-                                            </td>
-                                            <td width="">
-                                                @if (!taxonomyEntry.IsInternal || Authorizer.Authorize(Orchard.Security.StandardPermissions.SiteOwner)) {
-                                                    @Html.ItemEditLink(T("Edit").Text, taxonomyEntry.ContentItem) <text>|</text>
-                                                    @Html.ActionLink(T("Terms").Text, "Index", "TermAdmin", new { taxonomyId = taxonomyEntry.Id }, new object { }) <text>|</text>
-                                                    @Html.ActionLink(T("Delete").Text, "Delete", new { id = taxonomyEntry.Id }, new { itemprop = "RemoveUrl UnsafeUrl" }) <text>|</text>
-                                                    @Html.ActionLink(T("Import").Text, "Import", new { id = taxonomyEntry.Id }, new object { })
-                                                }
-                                            </td>
-                                        </tr>
-                                        taxonomyIndex++;
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
+        if (Model.Taxonomies.Any()) {
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="table-responsive table-with-footer">
+                        <table class="table table-fw-widget data-table table-striped dataTable no-footer" summary="@T("This is a table of the taxonomies in your application")">
+                            <thead>
+                                <tr>
+                                    <th scope="col" width="10"><i class="fa fa-long-arrow-down"></i></th>
+                                    <th scope="col" width="500">@T("Name")</th>
+                                    <th scope="col" width="500">&nbsp;</th>
+                                </tr>
+                            </thead>
+                            @foreach (var taxonomyEntry in Model.Taxonomies) {
+                                ti = taxonomyIndex;
+                                <tr class="@(taxonomyEntry.IsInternal ? "internal" : null)">
+                                    <td>
+                                        <input type="hidden" value="@Model.Taxonomies[taxonomyIndex].Id" name="@Html.NameOf(m => m.Taxonomies[ti].Id)" />
+                                        @if (!taxonomyEntry.IsInternal || Authorizer.Authorize(Orchard.Security.StandardPermissions.SiteOwner)) {
+                                            <div class="am-checkbox">
+                                                <input type="checkbox" value="true" name="@Html.NameOf(m => m.Taxonomies[ti].IsChecked)" id="@Html.NameOf(m => m.Taxonomies[ti].IsChecked)" />
+                                                <label for="@Html.NameOf(m => m.Taxonomies[ti].IsChecked)"></label>
+                                            </div>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (!taxonomyEntry.IsInternal || Authorizer.Authorize(Orchard.Security.StandardPermissions.SiteOwner)) {
+                                            @Html.ActionLink(taxonomyEntry.Name, "Index", "TermAdmin", new { taxonomyId = taxonomyEntry.Id }, new object { })
+                                        } else {
+                                            @Html.ItemDisplayText(taxonomyEntry.ContentItem)
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (!taxonomyEntry.IsInternal || Authorizer.Authorize(Orchard.Security.StandardPermissions.SiteOwner)) {
+                                            @Html.ActionLink(T("Terms").Text, "Index", "TermAdmin", new { taxonomyId = taxonomyEntry.Id }, new { @class = "btn btn-default" })<text>&nbsp;</text>
+                                            @Html.ActionLink(T("Import").Text, "Import", new { id = taxonomyEntry.Id }, new { @class = "btn btn-default" })<text>&nbsp;</text>
+                                            @Html.ItemEditLink(T("Edit").Text, taxonomyEntry.ContentItem, null, new { @class = "btn btn-primary" })<text>&nbsp;</text>
+                                            @Html.ActionLink(T("Delete").Text, "Delete", new { id = taxonomyEntry.Id }, new { itemprop = "RemoveUrl UnsafeUrl", @class = "btn btn-danger" })
+                                        }
+                                    </td>
+                                </tr>
+                                taxonomyIndex++;
+                            }
+                        </table>
                     </div>
                 </div>
-
-                <div class="row am-datatable-footer">
-                    <div class="col-sm-12">
-                        @Display(Model.Pager)
-                    </div>
-                </div>
-            }
-            else {
-                <div class="panel-body">
-                    <p>
-                        There are currently no taxonomies.
-                        @Html.ActionLink(T("Add one now").Text, "Create", new { Area = "Contents", Id = "Taxonomy", ReturnUrl = Request.RawUrl }, new { @class = "" })
-                    </p>
-                </div>
-            }
-    </div>
-}
+            </div>
+        } else {
+            <div class="panel-body">
+                <p>
+                    @T("There are currently no taxonomies.")
+                    @Html.ActionLink(T("Add one now").Text, "Create", new { Area = "Contents", Id = "Taxonomy", ReturnUrl = Request.RawUrl }, new { @class = "" })
+                </p>
+            </div>
+        }
+        <div class="row am-datatable-footer">
+            <div class="col-sm-12">
+                @Display(Model.Pager)
+            </div>
+        </div>
+    }
+</div>

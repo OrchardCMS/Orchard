@@ -7,7 +7,7 @@
     Layout.Title = T("List of Site's Tenants").ToString();
 }
 
-<div class="manage">@Html.ActionLink(T("Add a Tenant").ToString(), "Add", new { area = "Orchard.MultiTenancy" }, new { @class = "button primaryAction" })</div>
+<div class="manage">@Html.ActionLink(T("Add a Tenant").ToString(), "Add", new { area = "Orchard.MultiTenancy" }, new { @class = "btn btn-primary" })</div>
 <ul class="contentItems tenants">
     @foreach (var tenant in Model.TenantSettings) {
         <li class="tenant @tenant.State">

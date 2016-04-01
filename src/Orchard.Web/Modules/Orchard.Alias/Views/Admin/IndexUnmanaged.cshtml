@@ -24,7 +24,7 @@
         @Html.ValidationSummary()
         <div class="panel-heading">
             <div class="panel-heading-actions">
-                @Html.ActionLink(T("Add new Alias").Text, "Add", new { returnurl = HttpContext.Current.Request.RawUrl }, new { @class = "button primaryAction" })
+                @Html.ActionLink(T("Add new Alias").Text, "Add", new { returnurl = HttpContext.Current.Request.RawUrl }, new { @class = "btn btn-primary" })
             </div>
             <div class="panel-heading-primary-group">
                 <fieldset class="bulk-actions">
@@ -51,7 +51,7 @@
                             @Html.SelectOption((int)Model.Pager.PageSize, size, size.ToString())
                         }
                     </select>
-                    <button type="submit" name="submit.Filter" value="@T("Filter")">@T("Filter")</button>
+                    <button class="btn btn-default" type="submit" name="submit.Filter" value="@T("Filter")">@T("Filter")</button>
                 </fieldset>
             </div>
         </div>
@@ -94,8 +94,8 @@
                                     @Html.Link(url, Href("~/" + urlPrefix + "/" + url))
                                 </td>
                                 <td>
-                                    @Html.ActionLink(T("Edit").Text, "Edit", new { path = alias.Path == String.Empty ? "/" : alias.Path })
-                                    @Html.ActionLink(T("Delete").Text, "Delete", new { path = alias.Path }, new { itemprop = "UnsafeUrl RemoveUrl" })
+                                    @Html.ActionLink(T("Edit").Text, "Edit", new { path = alias.Path == String.Empty ? "/" : alias.Path }, new { @class = "btn btn-primary" })
+                                    @Html.ActionLink(T("Delete").Text, "Delete", new { path = alias.Path }, new { itemprop = "UnsafeUrl RemoveUrl", @class = "btn btn-danger" })
                                 </td>
                             </tr>
                             index++;

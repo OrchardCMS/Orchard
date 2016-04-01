@@ -50,10 +50,10 @@
                                 </td>
                                 <td>@Html.ActionLink(row.Name, "Edit", new { row.Id })</td>
                                 <td>
-                                    @Html.ActionLink(T("Edit").ToString(), "Edit", new { row.Id })
+                                    @Html.ActionLink(T("Edit").ToString(), "Edit", new { row.Id }, new { @class = "btn btn-primary" })
                                     @if (row.Name != "Administrator") {
                                         
-                                        <a href="@Url.Action("Delete", new { row.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString() })" itemprop="RemoveUrl UnsafeUrl">@T("Delete")</a>
+                                        <a class="btn btn-danger" href="@Url.Action("Delete", new { row.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString() })" itemprop="RemoveUrl UnsafeUrl">@T("Delete")</a>
                                     }
                                 </td>
                             </tr>

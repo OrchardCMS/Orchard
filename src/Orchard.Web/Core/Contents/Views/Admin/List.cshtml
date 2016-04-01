@@ -64,7 +64,7 @@
                         @Html.SelectOption((ContentsStatus)Model.Options.ContentsStatus, ContentsStatus.Draft, T("unpublished").ToString())
                         @Html.SelectOption((ContentsStatus)Model.Options.ContentsStatus, ContentsStatus.AllVersions, T("all versions").ToString())
                     </select>
-                    <button type="submit" name="submit.Filter" value="yes please" class="btn btn-primary">@T("Apply")</button>
+                    <button type="submit" name="submit.Filter" value="yes please" class="btn btn-default">@T("Filter")</button>
                 </fieldset>
             </div>
         </div>

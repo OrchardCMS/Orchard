@@ -22,8 +22,8 @@
         </div>
         <div class="panel-footer">
             <fieldset>
-                <button class="primaryAction" type="submit" name="submit.Save" value="@T("Save")">@T("Save")</button>
-                <button class="primaryAction" type="submit" name="submit.Delete" value="@T("Delete")" itemprop="RemoveUrl">@T("Delete")</button>
+                <button class="btn btn-primary" type="submit" name="submit.Save" value="@T("Save")">@T("Save")</button>
+                <button class="btn btn-primary" type="submit" name="submit.Delete" value="@T("Delete")" itemprop="RemoveUrl">@T("Delete")</button>
                 @Html.ActionLink(T("Cancel").ToString(), "Index", "Admin", new { area = "Orchard.MediaLibrary" }, new { @class = "button" })
             </fieldset>
         </div>

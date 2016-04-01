@@ -2,8 +2,8 @@
 
     var initializeFeaturesUI = function() {
         var bulkActions = $(".bulk-actions-wrapper").addClass("visible");
-        var theSwitch = $(".switch-for-switchable");
-        theSwitch.prepend(bulkActions);
+        //var theSwitch = $(".switch-for-switchable");
+        //theSwitch.prepend(bulkActions);
         $("#search-box").keyup(function() {
             var text = $(this).val();
 

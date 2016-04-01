@@ -6,50 +6,75 @@
     Style.Require("TagsAdmin");
     Layout.Title = T("Tags").ToString();
 }
+<div class="panel panel-default">
+    @using (Html.BeginFormAntiForgeryPost()) {
+        @Html.ValidationSummary()
+        <div class="panel-heading">
+            <div class="panel-heading-actions">
+                @Display.EditorTemplate(TemplateName: "Parts/CreateTag", Model: ViewData["CreateTag"] != null ? ViewData["CreateTag"] : new TagsAdminCreateViewModel())
+            </div>
+            <div class="panel-heading-primary-group">
 
-@Html.ValidationSummary() 
-<div class="manage">
-    @Display.EditorTemplate(TemplateName: "Parts/CreateTag", Model: ViewData["CreateTag"] != null ? ViewData["CreateTag"] : new TagsAdminCreateViewModel())
+                <fieldset class="bulk-actions">
+                    <div class="am-checkbox inline">
+                        <input id="checkAll" class="check-all" type="checkbox">
+                        <label for="checkAll">@T("Select all")</label>
+                    </div>
+                    <label for="publishActions">@T("Actions:")</label>
+                    <select id="publishActions" name="@Html.NameOf(m => m.BulkAction)" class="form-control auto-size">
+                        @Html.SelectOption(Model.BulkAction, TagAdminIndexBulkAction.None, T("Choose action...").ToString())
+                        @Html.SelectOption(Model.BulkAction, TagAdminIndexBulkAction.Delete, T("Delete").ToString())
+                    </select>
+                    <button type="submit" name="submit.BulkEdit" value="@T("Apply")">@T("Apply")</button>
+                </fieldset>
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="table-responsive table-with-footer">
+                    <table class="table table-fw-widget data-table table-striped dataTable no-footer" summary="@T("This is a table of the tags in your application")">
+                        <colgroup>
+                            <col id="Name" />
+                            <col id="Email" />
+                            <col id="Edit" />
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th scope="col"><i class="fa fa-long-arrow-down"></i></th>
+                                <th scope="col">@T("Name")</th>
+                                <th scope="col" class="text-right">@T("Actions")</th>
+                            </tr>
+                        </thead>
+                        @{var tagIndex = 0;}
+                        @foreach (var tagEntry in Model.Tags) {
+                            <tr>
+                                <td>
+                                    <div class="am-checkbox">
+                                        <input type="hidden" value="@Model.Tags[tagIndex].Tag.Id" name="@Html.NameOf(m => m.Tags[tagIndex].Tag.Id)" />
+                                        <input id="@("Checkbox." + tagEntry.Tag.Id)" type="checkbox" value="true" name="@Html.NameOf(m => m.Tags[tagIndex].IsChecked)" />
+                                        <label for="@("Checkbox." + tagEntry.Tag.Id)"></label>
+                                    </div>
+                                </td>
+                                <td>
+                                    @Html.ActionLink(tagEntry.Tag.TagName, "Edit", new { id = tagEntry.Tag.Id })
+                                </td>
+                                <td>
+                                    @Html.ActionLink(T("Edit").ToString(), "Edit", new { id = tagEntry.Tag.Id }, new { @class = "btn btn-primary" })
+                                    <a class="btn btn-danger" href="@Url.Action("Remove", new {tagEntry.Tag.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString()})" itemprop="RemoveUrl UnsafeUrl">@T("Delete")</a>
+                                </td>
+                            </tr>
+                            tagIndex = tagIndex + 1;
+                        }
+                    </table>
+                </div>
+                <div class="row am-datatable-footer">
+                    <div class="col-sm-12">
+                        @Display(Model.Pager)
+                    </div>
+                </div>
+            </div>
+        </div>
+                            }
 </div>
-@using(Html.BeginFormAntiForgeryPost()) {
-    <fieldset class="bulk-actions">
-        <label for="publishActions">@T("Actions:")</label>
-        <select id="publishActions" name="@Html.NameOf(m => m.BulkAction)">
-            @Html.SelectOption(Model.BulkAction, TagAdminIndexBulkAction.None, T("Choose action...").ToString())
-            @Html.SelectOption(Model.BulkAction, TagAdminIndexBulkAction.Delete, T("Delete").ToString())
-        </select>
-        <button type="submit"name="submit.BulkEdit" value="@T("Apply")">@T("Apply")</button>
-    </fieldset>
-    <fieldset>
-        <table class="items" summary="@T("This is a table of the tags in your application")" >
-            <colgroup>
-                <col id="Name" />
-                <col id="Email" />
-                <col id="Edit" />
-            </colgroup>
-            <thead>
-                    <th scope="col"><input type="checkbox" class="check-all"/></th>
-                    <th scope="col">@T("Name")</th>
-                    <th scope="col"></th>
-            </thead>
-            @{var tagIndex = 0;}
-            @foreach (var tagEntry in Model.Tags) { 
-            <tr>
-                <td>
-                    <input type="hidden" value="@Model.Tags[tagIndex].Tag.Id" name="@Html.NameOf(m => m.Tags[tagIndex].Tag.Id)"/>
-                    <input type="checkbox" value="true" name="@Html.NameOf(m => m.Tags[tagIndex].IsChecked)"/>
-                </td>
-                <td>
-                    @Html.ActionLink(tagEntry.Tag.TagName, "Edit", new {id = tagEntry.Tag.Id})
-                </td>
-                <td>
-                    @Html.ActionLink(T("Edit").ToString(), "Edit", new {id = tagEntry.Tag.Id}) 
-                    <a href="@Url.Action("Remove", new {tagEntry.Tag.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString()})" itemprop="RemoveUrl UnsafeUrl">@T("Delete")</a>
-                </td>
-            </tr>
-            tagIndex = tagIndex + 1;
-            }
-        </table>
-        @Display(Model.Pager)
-    </fieldset>
-}

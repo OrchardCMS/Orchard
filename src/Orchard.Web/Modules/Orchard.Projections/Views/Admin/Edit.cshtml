@@ -16,7 +16,7 @@
                     <span class="title">@T("Filters")</span>
                 </div>
                 <div class="panel-heading-actions">
-                    @Html.ActionLink(T("Add a new Group").Text, "AddGroup", new { controller = "Filter", id = Model.Id }, new { @class = "button primaryAction" })
+                    @Html.ActionLink(T("Add a new Group").Text, "AddGroup", new { controller = "Filter", id = Model.Id }, new { @class = "btn btn-primary" })
                 </div>
             </panel>
 
@@ -135,7 +135,7 @@
                 @* Render a button at the bottom only if there are several layouts in the table *@
                 @*if (Model.Layouts.Count() > 5) {
                         <div class="manage">
-                            @Html.ActionLink(T("Add a new Layout").Text, "Add", new { controller = "Layout", id = Model.Id }, new { @class = "button primaryAction" })
+                            @Html.ActionLink(T("Add a new Layout").Text, "Add", new { controller = "Layout", id = Model.Id }, new { @class = "btn btn-primary" })
                         </div>
                     }*@
             </div>

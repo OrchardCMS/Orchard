@@ -15,7 +15,7 @@
 <h1>@Html.TitleForPage(T("Manage Custom Forms").ToString()) </h1>
 @using (Html.BeginFormAntiForgeryPost()) { 
     @Html.ValidationSummary()
-    <div class="manage">@Html.ActionLink(T("Add a new Custom Form").ToString(), "Create", "Admin", new { area = "Contents", id = "CustomForm", returUrl = Request.RawUrl }, new { @class = "button primaryAction" })</div>
+    <div class="manage">@Html.ActionLink(T("Add a new Custom Form").ToString(), "Create", "Admin", new { area = "Contents", id = "CustomForm", returUrl = Request.RawUrl }, new { @class = "btn btn-primary" })</div>
 
     <fieldset class="bulk-actions">
         <label for="publishActions">@T("Actions:")</label>

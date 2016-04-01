@@ -3,7 +3,7 @@
     Layout.Title = T("Element Blueprints");
 }
 <div class="manage">
-    @Html.ActionLink(T("Create").Text, "Create", new { area = "BlueprintAdmin" }, new { @class = "button primaryAction" })
+    @Html.ActionLink(T("Create").Text, "Create", new { area = "BlueprintAdmin" }, new { @class = "btn btn-primary" })
 </div>
 @using (Html.BeginFormAntiForgeryPost()) {
     <fieldset class="bulk-actions">

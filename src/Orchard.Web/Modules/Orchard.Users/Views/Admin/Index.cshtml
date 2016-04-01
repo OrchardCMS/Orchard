@@ -54,7 +54,7 @@
                             @Html.SelectOption(Model.Options.Order, UsersOrder.LastLoginUtc, T("Last Login Time").ToString())
                         </select>
                     *@
-                    <button type="submit" name="submit.Filter" value="@T("Filter")" class="btn btn-primary">@T("Filter")</button>
+                    <button type="submit" name="submit.Filter" value="@T("Filter")" class="btn btn-default">@T("Filter")</button>
                 </fieldset>
             </div>
         </div>
@@ -105,16 +105,16 @@
                                     }
                                 </td>
                                 <td>
-                                    @Html.ActionLink(T("Edit").ToString(), "Edit", new { entry.User.Id }) |
-                                    @Html.ActionLink(T("Delete").ToString(), "Delete", new { entry.User.Id }, new { itemprop = "RemoveUrl UnsafeUrl" }) |
+                                    @Html.ActionLink(T("Edit").ToString(), "Edit", new { entry.User.Id }, new { @class = "btn btn-primary" })
+                                    @Html.ActionLink(T("Delete").ToString(), "Delete", new { entry.User.Id }, new { itemprop = "RemoveUrl UnsafeUrl", @class = "btn btn-danger" })
                                     @if (entry.User.RegistrationStatus == UserStatus.Pending) {
-                                        @Html.ActionLink(T("Approve").ToString(), "Approve", new { entry.User.Id }, new { itemprop = "UnsafeUrl" })
+                                        @Html.ActionLink(T("Approve").ToString(), "Approve", new { entry.User.Id }, new { itemprop = "UnsafeUrl", @class = "btn btn-warning" })
                                     }
                                     else {
-                                        @Html.ActionLink(T("Disable").ToString(), "Moderate", new { entry.User.Id }, new { itemprop = "UnsafeUrl" })
+                                        @Html.ActionLink(T("Disable").ToString(), "Moderate", new { entry.User.Id }, new { itemprop = "UnsafeUrl", @class = "btn btn-warning" })
                                     }
-                                    @if (entry.User.EmailStatus == UserStatus.Pending) { <text>|</text>
-                                        @Html.ActionLink(T("Send challenge E-mail").ToString(), "SendChallengeEmail", new { entry.User.Id }, new { itemprop = "UnsafeUrl" })
+                                    @if (entry.User.EmailStatus == UserStatus.Pending) {
+                                        @Html.ActionLink(T("Send challenge E-mail").ToString(), "SendChallengeEmail", new { entry.User.Id }, new { itemprop = "UnsafeUrl", @class = "btn btn-primary" })
                                     }
                                 </td>
                             </tr>

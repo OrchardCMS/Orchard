@@ -121,7 +121,7 @@
     <fieldset>
         @* Can only save if not debugging a workflow *@
         @if (Model.Workflow == null) {
-            <button class="primaryAction" type="submit" name="submit.Save" value="@T("Save")">@T("Save")</button>    
+            <button class="btn btn-primary" type="submit" name="submit.Save" value="@T("Save")">@T("Save")</button>    
         }
         
         @Html.ActionLink(T("Close").Text, "Index", "Admin", new { area = "Orchard.Workflows" }, new { @class = "primaryAction button" })
