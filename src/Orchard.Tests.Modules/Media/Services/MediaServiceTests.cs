@@ -261,6 +261,10 @@ namespace Orchard.Tests.Modules.Media.Services {
                 return FileSystemStorageProvider.Combine(path1, path2);
             }
 
+            public string AppendDelimiter(string path) {
+                return FileSystemStorageProvider.AppendDelimiter(path);
+            }
+
             public bool TrySaveStream(string path, Stream inputStream) {
                 try { SaveStream(path, inputStream); }
                 catch { return false; }

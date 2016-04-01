@@ -353,13 +353,27 @@ namespace Orchard.FileSystems.Media {
         }
 
         /// <summary>
-        /// Combines to paths.
+        /// Combines two paths.
         /// </summary>
         /// <param name="path1">The parent path.</param>
         /// <param name="path2">The child path.</param>
         /// <returns>The combined path.</returns>
         public string Combine(string path1, string path2) {
             return Path.Combine(path1, path2);
+        }
+
+        /// <summary>
+        /// Appends delimiter to path.
+        /// </summary>
+        /// <param name="path">Folder path.</param>
+        /// <returns>Path with delimiter appended at the end.</returns>
+        public string AppendDelimiter(string path) {
+            if (string.IsNullOrWhiteSpace(path))
+                return Path.DirectorySeparatorChar.ToString();
+            path = Fix(path);
+            if (path.ElementAt(path.Length - 1) != Path.DirectorySeparatorChar)
+                path = path + Path.DirectorySeparatorChar;
+            return path;
         }
 
         private static bool IsHidden(FileSystemInfo di) {
