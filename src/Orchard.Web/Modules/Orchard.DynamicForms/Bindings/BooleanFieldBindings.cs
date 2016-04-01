@@ -8,7 +8,7 @@ namespace Orchard.DynamicForms.Bindings {
         
         public void Describe(BindingDescribeContext context) {
             context.For<BooleanField>()
-                .Binding("Value", (contentItem, field, s) => field.Value = IsTrueish(s));
+                .Binding("Value", (contentItem, field) => field.ToString(), (contentItem, field, s) => field.Value = IsTrueish(s));
         }
 
         private bool IsTrueish(string s) {

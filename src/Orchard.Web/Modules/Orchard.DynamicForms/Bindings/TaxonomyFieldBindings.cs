@@ -18,7 +18,14 @@ namespace Orchard.DynamicForms.Bindings {
 
         public void Describe(BindingDescribeContext context) {
             context.For<TaxonomyField>()
-                .Binding("Terms", (contentItem, field, s) => {
+                .Binding("Terms", (contentItem, field) => { 
+                    var terms = _taxonomyService.GetTermsForContentItem(contentItem.Id, field.Name);
+                    if (terms == null || !terms.Any())
+                        return null;
+                    return terms.Select(t => t.Id.ToString()).Aggregate((current, next) => current + "," + next);
+                }
+                ,
+                (contentItem, field, s) => {
                     var selectedTerms = 
                         s.Split(new []{',', ';'}, StringSplitOptions.RemoveEmptyEntries)
                         .Select(XmlHelper.Parse<int?>)

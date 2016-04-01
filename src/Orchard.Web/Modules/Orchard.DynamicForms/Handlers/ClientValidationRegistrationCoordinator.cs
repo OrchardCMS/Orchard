@@ -50,6 +50,7 @@ namespace Orchard.DynamicForms.Handlers {
         void IElementEventHandler.CreatingDisplay(ElementCreatingDisplayShapeContext context) { }
         void IElementEventHandler.Displayed(ElementDisplayedContext context) { }
         void IFormElementEventHandler.GetElementValue(FormElement element, ReadElementValuesContext context) { }
+        void IFormElementEventHandler.SetElementValue(FormElement element, WriteElementValuesContext context) { }
         void IElementEventHandler.Creating(ElementCreatingContext context) { }
         void IElementEventHandler.Created(ElementCreatedContext context) { }
         void IElementEventHandler.BuildEditor(ElementEditorContext context) { }

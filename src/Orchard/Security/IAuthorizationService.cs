@@ -8,6 +8,9 @@ namespace Orchard.Security {
     /// </summary>
     public interface IAuthorizationService : IDependency {
         void CheckAccess(Permission permission, IUser user, IContent content);
+        void CheckAccess(Permission permission, IUser user, IContent content, string formName);
         bool TryCheckAccess(Permission permission, IUser user, IContent content);
+
+        bool TryCheckAccess(Permission permission, IUser user, IContent content, string formName);
     }
 }

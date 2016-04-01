@@ -6,7 +6,7 @@ namespace Orchard.DynamicForms.Bindings {
     public class InputFieldBindings : Component, IBindingProvider {
         public void Describe(BindingDescribeContext context) {
             context.For<InputField>()
-                .Binding("Text", (contentItem, field, s) => field.Value = s);
+                .Binding("Text", (contentItem, field) => field.Value, (contentItem, field, s) => field.Value = s);
         }
     }
 }

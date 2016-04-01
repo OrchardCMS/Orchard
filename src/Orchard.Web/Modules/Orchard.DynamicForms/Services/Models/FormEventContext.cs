@@ -10,6 +10,6 @@ namespace Orchard.DynamicForms.Services.Models {
         public NameValueCollection Values { get; set; }
         public IFormService FormService { get; set; }
         public IValueProvider ValueProvider { get; set; }
-        public IUpdateModel Updater { get; set; }
+        public IUpdateModel Updater { get; set; }        
     }
 }

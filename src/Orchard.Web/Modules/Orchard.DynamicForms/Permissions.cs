@@ -1,20 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using Orchard.DynamicForms.Elements;
+﻿using System.Collections.Generic;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Security.Permissions;
 
 namespace Orchard.DynamicForms {
     public class Permissions : IPermissionProvider {
-        private static readonly Permission SubmitAnyForm = new Permission { Description = "Submit any forms", Name = "Submit" };
-        private static readonly Permission SubmitForm = new Permission { Description = "Submit {0} forms", Name = "Submit_{0}", ImpliedBy = new[] { SubmitAnyForm } };
-        public static readonly Permission ManageForms = new Permission { Description = "Manage custom forms", Name = "ManageForms" };
-
+        public static readonly Permission ManageForms = new Permission { Description = "Manage custom form", Name = "ManageForms" };
+        public static readonly Permission SubmitAnyForm = new Permission { Description = "Submit any form", Name = "SubmitAny" };
+        public static readonly Permission SubmitAnyFormForModifyData = new Permission { Description = "Submit any form for modify data own by others", Name = "SubmitAnyForModify" };
+        public static readonly Permission SubmitAnyFormForModifyOwnData = new Permission { Description = "Submit any form for modify own data", Name = "SubmitAnyForModifyOwn", ImpliedBy = new[] { SubmitAnyFormForModifyData } };
+        public static readonly Permission SubmitAnyFormForDeleteData = new Permission { Description = "Submit any form for delete data own by others", Name = "SubmitAnyForDelete" };
+        public static readonly Permission SubmitAnyFormForDeleteOwnData = new Permission { Description = "Submit any form for delete own data", Name = "SubmitAnyForDeleteOwn", ImpliedBy = new[] { SubmitAnyFormForDeleteData } };
+        
         public virtual Feature Feature { get; set; }
-
+        
         public IEnumerable<Permission> GetPermissions() {
             yield return SubmitAnyForm;
-            yield return ManageForms;
+            yield return SubmitAnyFormForModifyData;
+            yield return SubmitAnyFormForModifyOwnData;
+            yield return SubmitAnyFormForDeleteData;
+            yield return SubmitAnyFormForDeleteOwnData;
+            yield return ManageForms;            
         }
 
         public IEnumerable<PermissionStereotype> GetDefaultStereotypes() {
@@ -42,16 +47,13 @@ namespace Orchard.DynamicForms {
             };
         }
 
-        /// <summary>
-        /// Generates a permission dynamically for a content type
-        /// </summary>
-        public static Permission CreateSubmitPermission(Form form) {
-            return new Permission {
-                Name = String.Format(SubmitForm.Name, form.Name),
-                Description = String.Format(SubmitForm.Description, form.Name),
-                Category = "Dynamic Forms",
-                ImpliedBy = new [] { SubmitForm }
-            };
+        public static Permission GetOwnerVariation(Permission permission) {
+            if (permission.Name == Permissions.SubmitAnyFormForModifyData.Name)
+                return Permissions.SubmitAnyFormForModifyOwnData;
+            if (permission.Name == Permissions.SubmitAnyFormForDeleteData.Name)
+                return Permissions.SubmitAnyFormForDeleteOwnData;
+
+            return null;
         }
     }
 }

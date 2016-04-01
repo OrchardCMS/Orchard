@@ -27,9 +27,14 @@ namespace Orchard.Tests.UI.Navigation {
         }
 
         public class StubAuth : IAuthorizationService {
+            public void CheckAccess(Permission permission, IUser user, IContent content, string userName) {
+            }
             public void CheckAccess(Permission permission, IUser user, IContent content) {
             }
 
+            public bool TryCheckAccess(Permission permission, IUser user, IContent content, string userName) {
+                return true;
+            }
             public bool TryCheckAccess(Permission permission, IUser user, IContent content) {
                 return true;
             }
