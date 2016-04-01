@@ -26,11 +26,12 @@
   },
   "Css": {
     "AdjustRelativePaths": true,
-    "AutoMinify": true,
+    //"AutoMinify": true,
+    "AutoMinify": false,
     "Autoprefix": false,
     "AutoprefixerBrowsers": null,
     "GzipMinifiedFiles": false,
-    "MakeMinified": true,
+    "MakeMinified": false,
     "OutputDirectory": null,
     "RunOnBuild": false,
     "ShowBrowserTooltip": true,
@@ -77,7 +78,7 @@
         "Name": "Inline CSS"
       }
     ],
-    "MakeMinified": true,
+    "MakeMinified": false,
     "MinificationMode": "KeepQuotes",
     "OutputDirectory": null,
     "RunOnBuild": false,
@@ -88,7 +89,8 @@
     "ProcessableScriptTypeList": null
   },
   "JavaScript": {
-    "AutoMinify": true,
+    //"AutoMinify": true,
+    "AutoMinify": false,
     "BlockCommentCompletion": true,
     "EvalTreatment": "MakeImmediateSafe",
     "GenerateSourceMaps": false,
@@ -96,7 +98,7 @@
     "LintOnBuild": false,
     "LintOnSave": true,
     "LintResultLocation": "Message",
-    "MakeMinified": true,
+    "MakeMinified": false,
     "OutputDirectory": null,
     "RootDirectory": "/Scripts/",
     "RunOnBuild": false,
