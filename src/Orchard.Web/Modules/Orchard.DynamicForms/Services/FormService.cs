@@ -8,7 +8,9 @@ using System.Web.Mvc;
 using Orchard.Collections;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
+using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.Records;
+using Orchard.Core.Common.Models;
 using Orchard.Core.Contents.Settings;
 using Orchard.Data;
 using Orchard.DynamicForms.Elements;
@@ -20,6 +22,7 @@ using Orchard.Layouts.Helpers;
 using Orchard.Layouts.Models;
 using Orchard.Layouts.Services;
 using Orchard.Localization.Services;
+using Orchard.Security;
 using Orchard.Services;
 
 namespace Orchard.DynamicForms.Services {
@@ -36,6 +39,8 @@ namespace Orchard.DynamicForms.Services {
         private readonly IDateLocalizationServices _dateLocalizationServices;
         private readonly IOrchardServices _services;
         private readonly ICultureAccessor _cultureAccessor;
+        private readonly IAuthenticationService _authenticationService;
+        private readonly IAuthorizationService _authorizationService;
 
         public FormService(
             ILayoutSerializer serializer, 
@@ -48,7 +53,9 @@ namespace Orchard.DynamicForms.Services {
             Lazy<IEnumerable<IElementValidator>> validators,
             IDateLocalizationServices dateLocalizationServices, 
             IOrchardServices services, 
-            ICultureAccessor cultureAccessor) {
+            ICultureAccessor cultureAccessor,
+            IAuthenticationService authenticationService,
+            IAuthorizationService authorizationService) {
 
             _serializer = serializer;
             _clock = clock;
@@ -62,12 +69,17 @@ namespace Orchard.DynamicForms.Services {
             _dateLocalizationServices = dateLocalizationServices;
             _services = services;
             _cultureAccessor = cultureAccessor;
+            _authenticationService = authenticationService;
+            _authorizationService = authorizationService;
         }
 
         public Form FindForm(LayoutPart layoutPart, string formName = null) {
+            return String.IsNullOrWhiteSpace(formName) ? GetAllForms(layoutPart).FirstOrDefault() : GetAllForms(layoutPart).FirstOrDefault(x => x.Name == formName);
+        }
+
+        public IEnumerable<Form> GetAllForms(LayoutPart layoutPart) {
             var elements = _serializer.Deserialize(layoutPart.LayoutData, new DescribeElementsContext { Content = layoutPart });
-            var forms = elements.Flatten().Where(x => x is Form).Cast<Form>();
-            return String.IsNullOrWhiteSpace(formName) ? forms.FirstOrDefault() : forms.FirstOrDefault(x => x.Name == formName);
+            return elements.Flatten().Where(x => x is Form).Cast<Form>();            
         }
 
         public IEnumerable<FormElement> GetFormElements(Form form) {
@@ -78,7 +90,7 @@ namespace Orchard.DynamicForms.Services {
             return GetFormElements(form).Select(x => x.Name).Where(x => !String.IsNullOrWhiteSpace(x)).Distinct();
         }
 
-        public NameValueCollection SubmitForm(IContent content, Form form, IValueProvider valueProvider, ModelStateDictionary modelState, IUpdateModel updater) {
+        public NameValueCollection SubmitForm(IContent content, Form form, IValueProvider valueProvider, ModelStateDictionary modelState, IUpdateModel updater, int contentIdToEdit) {
             var values = ReadElementValues(form, valueProvider);
 
             _formEventHandler.Submitted(new FormSubmittedEventContext {
@@ -99,7 +111,7 @@ namespace Orchard.DynamicForms.Services {
                 ValueProvider = valueProvider,
                 Updater = updater
             });
-
+            
             _formEventHandler.Validated(new FormValidatedEventContext {
                 Content = content,
                 Form = form,
@@ -107,7 +119,8 @@ namespace Orchard.DynamicForms.Services {
                 Values = values,
                 ModelState = modelState,
                 ValueProvider = valueProvider,
-                Updater = updater
+                Updater = updater,
+                ContentIdToEdit = contentIdToEdit
             });
 
             return values;
@@ -191,7 +204,7 @@ namespace Orchard.DynamicForms.Services {
 
             // Collect any remaining form values not handled by any specific element.
             var requestForm = _services.WorkContext.HttpContext.Request.Form;
-            var blackList = new[] {"__RequestVerificationToken", "formName", "contentId"};
+            var blackList = new[] {"__RequestVerificationToken", "formName", "contentId", "contentIdToEdit"};
             foreach (var key in 
                 from string key in requestForm 
                 where !String.IsNullOrWhiteSpace(key) && !blackList.Contains(key) && values[key] == null 
@@ -255,6 +268,41 @@ namespace Orchard.DynamicForms.Services {
                 Published = true
             };
 
+            InvokeBindings(form, valueProvider, contentTypeDefinition, contentItem);
+
+            var contentTypeSettings = contentTypeDefinition.Settings.GetModel<ContentTypeSettings>();
+            _contentManager.Create(contentItem, VersionOptions.Draft);
+
+            if (form.Publication == "Publish" || !contentTypeSettings.Draftable) {
+                _contentManager.Publish(contentItem);
+            }
+
+            return contentItem;
+        }
+
+        public ContentItem UpdateContentItem(int contentId, Form form, IValueProvider valueProvider) {
+            ContentTypeDefinition contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(form.FormBindingContentType);
+            ContentItem contentItem = null;
+
+            var versionOptions = VersionOptions.Latest;
+            if (form.Publication == "Publish" || !contentTypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
+                versionOptions = VersionOptions.Published;
+
+            if (contentId == 0 || (contentItem = _contentManager.Get(contentId, versionOptions)) == null
+                || contentItem.TypeDefinition.Name != form.FormBindingContentType)
+                return null;
+
+            InvokeBindings(form, valueProvider, contentTypeDefinition, contentItem);
+
+            var contentTypeSettings = contentTypeDefinition.Settings.GetModel<ContentTypeSettings>();
+            if (form.Publication == "Publish" || !contentTypeSettings.Draftable) {
+                _contentManager.Publish(contentItem);
+            }
+
+            return contentItem;
+        }
+
+        private void InvokeBindings(Form form, IValueProvider valueProvider, ContentManagement.MetaData.Models.ContentTypeDefinition contentTypeDefinition, ContentItem contentItem) {
             var lookup = _bindingManager.DescribeBindingsFor(contentTypeDefinition);
             var formElements = GetFormElements(form);
 
@@ -275,15 +323,119 @@ namespace Orchard.DynamicForms.Services {
                     }
                 }
             }
-
-            var contentTypeSettings = contentTypeDefinition.Settings.GetModel<ContentTypeSettings>();
-            _contentManager.Create(contentItem, VersionOptions.Draft);
-
-            if (form.Publication == "Publish" || !contentTypeSettings.Draftable) {
-                _contentManager.Publish(contentItem);
-            }
+        }
+        
+        public NameValueCollection GetValuesFromContentItem(ContentItem contentItem, Form form) {
+            var nameValueCollection = new NameValueCollection();
+            var contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(form.FormBindingContentType);
             
-            return contentItem;
+            if (contentTypeDefinition == null || (contentItem.ContentType != form.FormBindingContentType))
+                return nameValueCollection;           
+            
+            var lookup = _bindingManager.DescribeBindingsFor(contentTypeDefinition);
+            var formElements = GetFormElements(form);
+
+            
+            foreach (var element in formElements) {
+                var bindingSettings = element.Data.GetModel<FormBindingSettings>();
+
+                if (bindingSettings != null) {
+                    foreach (var partBindingSettings in bindingSettings.Parts) {                      
+                        string partValue = InvokeFirstPartOutputBindings(contentItem, lookup, partBindingSettings);
+                        string fieldValue = null;
+                        if (partValue != null) {
+                            nameValueCollection.Add(element.Name, partValue);
+                            continue;
+                        }
+                        
+                        foreach (var fieldBindingSettings in partBindingSettings.Fields) {
+                            fieldValue = InvokeFirstFieldOutputBindings(contentItem, lookup, partBindingSettings, fieldBindingSettings);
+                            if (fieldValue != null) {
+                                nameValueCollection.Add(element.Name, fieldValue);
+                                continue;
+                            }
+                        }
+                        if (partValue != null || fieldValue != null)
+                            continue;
+                    }
+                }
+            }            
+            return nameValueCollection;
+        }
+
+        public bool TryGetNextContentIdAfterApplyDynamicFormCommand(LayoutPart layoutPart, Form form, string command, IContent currentContent, out int contentId) {
+            contentId = 0;
+            if (form.CreateContent != true || string.IsNullOrWhiteSpace(form.FormBindingContentType)
+                || (currentContent != null && form.FormBindingContentType != currentContent.ContentItem.ContentType))
+                return false;
+
+            var versionOptions = VersionOptions.Latest;
+            var contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(form.FormBindingContentType);
+            if (form.Publication == "Publish" || !contentTypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
+                versionOptions = VersionOptions.Published;
+    
+            var user = _authenticationService.GetAuthenticatedUser();
+            int userId = user != null ? user.Id : 0;
+            bool navigationEnabled = _authorizationService.TryCheckAccess(Permissions.SubmitAnyFormForModifyData, user, layoutPart.ContentItem, form.Name);
+            bool navigationEnabledOnlyInOwnData = !navigationEnabled && _authorizationService.TryCheckAccess(Permissions.SubmitAnyFormForModifyOwnData, user, layoutPart.ContentItem, form.Name);
+            if (!navigationEnabled && !navigationEnabledOnlyInOwnData)                 
+                return false;
+            try {
+                if (string.Compare(command, DynamicFormCommand.First.ToString(), true) == 0) {
+                    if (navigationEnabledOnlyInOwnData)
+                        contentId = _contentManager.Query<CommonPart>(versionOptions, form.FormBindingContentType).Where<CommonPartRecord>(c => c.OwnerId== userId).OrderBy(c => c.Id).Slice(0, 1).First().Id;
+                    else
+                        contentId = _contentManager.Query<CommonPart>(versionOptions, form.FormBindingContentType).OrderBy<CommonPartRecord>(c => c.Id).Slice(0, 1).First().Id;
+                    if (currentContent != null && currentContent.Id == contentId)
+                        return false;
+                    return true;
+                }
+                else if (string.Compare(command, DynamicFormCommand.Last.ToString(), true) == 0) {
+                    if (navigationEnabledOnlyInOwnData)
+                        contentId = _contentManager.Query<CommonPart>(versionOptions, form.FormBindingContentType).Where<CommonPartRecord>(c => c.OwnerId == userId).OrderByDescending(c => c.Id).Slice(0, 1).First().Id;
+                    else
+                        contentId = _contentManager.Query<CommonPart>(versionOptions, form.FormBindingContentType).OrderByDescending<CommonPartRecord>(c => c.Id).Slice(0, 1).First().Id;
+                    if (currentContent != null && currentContent.Id == contentId)
+                        return false;
+                    return true;
+                }
+                else if (string.Compare(command, DynamicFormCommand.Previous.ToString(), true) == 0) {
+                    if (navigationEnabledOnlyInOwnData)
+                        contentId = _contentManager.Query<CommonPart>(versionOptions, form.FormBindingContentType).Where<CommonPartRecord>(c => c.OwnerId == userId && c.Id < currentContent.Id).OrderByDescending(c => c.Id).Slice(0, 1).First().Id;
+                    else
+                        contentId = _contentManager.Query<CommonPart>(versionOptions, form.FormBindingContentType).Where<CommonPartRecord>(c => c.Id < currentContent.Id).OrderByDescending(c => c.Id).Slice(0, 1).First().Id;
+                    return true;
+                }
+                else if (string.Compare(command, DynamicFormCommand.Next.ToString(), true) == 0) {
+                    if (navigationEnabledOnlyInOwnData)
+                        contentId = _contentManager.Query<CommonPart>(versionOptions, form.FormBindingContentType).Where<CommonPartRecord>(c => c.OwnerId == userId && c.Id > currentContent.Id).OrderBy(c => c.Id).Slice(0, 1).First().Id;
+                    else
+                        contentId = _contentManager.Query<CommonPart>(versionOptions, form.FormBindingContentType).Where<CommonPartRecord>(c => c.Id > currentContent.Id).OrderBy(c => c.Id).Slice(0, 1).First().Id;
+                    return true;
+                }
+                else if (string.Compare(command, DynamicFormCommand.Delete.ToString(), true) == 0) {
+                    bool deleteEnabled = _authorizationService.TryCheckAccess(Permissions.SubmitAnyFormForDeleteData, user, layoutPart.ContentItem, form.Name);
+                    bool deleteEnabledOnlyInOwnData = !deleteEnabled && _authorizationService.TryCheckAccess(Permissions.SubmitAnyFormForDeleteOwnData, user, layoutPart.ContentItem, form.Name);
+                    if ((!deleteEnabled && !deleteEnabledOnlyInOwnData)
+                        || (deleteEnabledOnlyInOwnData && currentContent.As<CommonPart>().Owner.Id != userId)) {
+                        return false;
+                    }
+                    if (!TryGetNextContentIdAfterApplyDynamicFormCommand(layoutPart, form, DynamicFormCommand.Previous.ToString(), currentContent, out contentId))
+                        if (!TryGetNextContentIdAfterApplyDynamicFormCommand(layoutPart, form, DynamicFormCommand.Next.ToString(), currentContent, out contentId))
+                            contentId = 0;
+                    return true;
+                }
+                else if (string.Compare(command, DynamicFormCommand.New.ToString(), true) == 0) {
+                    if (!_authorizationService.TryCheckAccess(Permissions.SubmitAnyForm, user, layoutPart.ContentItem, form.Name))
+                        return false;
+                    return true;
+                }
+                else
+                    return false;
+            }
+            catch (InvalidOperationException) {
+                return false;
+            }
         }
 
         public IEnumerable<IElementValidator> GetValidators<TElement>() where TElement : FormElement {
@@ -328,9 +480,36 @@ namespace Orchard.DynamicForms.Services {
             foreach (var binding in partBindingSettings.Bindings.Where(x => x.Enabled)) {
                 var localBinding = binding;
                 foreach (var partBinding in partBindings.Where(x => x.Name == localBinding.Name)) {
-                    partBinding.Setter.DynamicInvoke(contentItem, part, value);
+                    partBinding.Setter.DynamicInvoke(contentItem, part, value);                    
                 }
             }
+        }
+
+        private static string InvokeFirstPartOutputBindings(
+            ContentItem contentItem,
+            IEnumerable<ContentPartBindingDescriptor> lookup,
+            PartBindingSettings partBindingSettings) {
+
+            var part = contentItem.Parts.FirstOrDefault(x => x.PartDefinition.Name == partBindingSettings.Name);
+            if (part == null)
+                return null;
+
+            var partBindingDescriptors = lookup.Where(x => x.Part.PartDefinition.Name == partBindingSettings.Name);
+            var partBindingsQuery =
+                from descriptor in partBindingDescriptors
+                from bindingContext in descriptor.BindingContexts
+                where bindingContext.ContextName == part.PartDefinition.Name
+                from binding in bindingContext.Bindings
+                select binding;
+            var partBindings = partBindingsQuery.ToArray();
+
+            var bindingSettings = partBindingSettings.Bindings.FirstOrDefault(x => x.Enabled);
+            if (bindingSettings == null)
+                return null;
+            var partBinding = partBindings.FirstOrDefault(x => x.Name == bindingSettings.Name);
+            if (partBinding == null)
+                return null;
+            return partBinding.Getter.DynamicInvoke(contentItem, part) as string;            
         }
 
         private static void InvokeFieldBindings(
@@ -369,6 +548,44 @@ namespace Orchard.DynamicForms.Services {
                     fieldBinding.Setter.DynamicInvoke(contentItem, field, value);
                 }
             }
+        }
+
+        private static string InvokeFirstFieldOutputBindings(
+            ContentItem contentItem,
+            IEnumerable<ContentPartBindingDescriptor> lookup,
+            PartBindingSettings partBindingSettings,
+            FieldBindingSettings fieldBindingSettings            ) {
+
+            var part = contentItem.Parts.FirstOrDefault(x => x.PartDefinition.Name == partBindingSettings.Name);
+            if (part == null)
+                return null;
+
+            var field = part.Fields.FirstOrDefault(x => x.Name == fieldBindingSettings.Name);
+            if (field == null)
+                return null;
+
+            var fieldBindingDescriptorsQuery =
+                from partBindingDescriptor in lookup
+                where partBindingDescriptor.Part.PartDefinition.Name == partBindingSettings.Name
+                from fieldBindingDescriptor in partBindingDescriptor.FieldBindings
+                where fieldBindingDescriptor.Field.Name == fieldBindingSettings.Name
+                select fieldBindingDescriptor;
+            var fieldBindingDescriptors = fieldBindingDescriptorsQuery.ToArray();
+            var fieldBindingsQuery =
+                from descriptor in fieldBindingDescriptors
+                from bindingContext in descriptor.BindingContexts
+                where bindingContext.ContextName == field.FieldDefinition.Name
+                from binding in bindingContext.Bindings
+                select binding;
+            var fieldBindings = fieldBindingsQuery.ToArray();
+
+            var bindingSettings = fieldBindingSettings.Bindings.FirstOrDefault(x => x.Enabled);
+            if (bindingSettings == null)
+                return null;
+            var fieldBinding = fieldBindings.FirstOrDefault(x => x.Name == bindingSettings.Name);
+            if (fieldBinding == null) 
+                return null;
+            return fieldBinding.Getter.DynamicInvoke(contentItem, field) as string;            
         }
 
         private static bool IsFormElementType(IElementValidator validator, Type elementType) {

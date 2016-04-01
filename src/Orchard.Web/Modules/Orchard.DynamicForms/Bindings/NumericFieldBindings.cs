@@ -7,7 +7,7 @@ namespace Orchard.DynamicForms.Bindings {
     public class NumericFieldBindings : Component, IBindingProvider {
         public void Describe(BindingDescribeContext context) {
             context.For<NumericField>()
-                .Binding("Value", (contentItem, field, s) => field.Value = XmlHelper.Parse<decimal>(s));
+                .Binding("Value", (contentItem, field) => XmlHelper.ToString(field.Value), (contentItem, field, s) => field.Value = XmlHelper.Parse<decimal>(s));
         }
     }
 }

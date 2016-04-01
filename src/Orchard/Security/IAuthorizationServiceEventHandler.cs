@@ -13,6 +13,7 @@ namespace Orchard.Security {
         public Permission Permission { get; set; }
         public IUser User { get; set; }
         public IContent Content { get; set; }
+        public string FormName { get; set; }
         
         // true if the permission has been granted to the user.
         public bool Granted { get; set; }

@@ -12,7 +12,7 @@
     var processedAction = (string)Model.ProcessedAction;
     var formAction = String.IsNullOrWhiteSpace(processedAction) ? Url.Action("Submit", "Form", new { area = "Orchard.DynamicForms"}) : processedAction;
     var formMethod = !String.IsNullOrWhiteSpace(element.Method) ? element.Method : "POST";
-    
+    int contentIdToEdit = Model.ContentIdToEdit ?? 0;
     tagBuilder.AddCssClass("dynamic-form");
 
     if (element.EnableClientValidation == true) {
@@ -26,6 +26,7 @@
 @tagBuilder.StartElement
 <form action="@formAction" method="@formMethod" enctype="multipart/form-data">
     @DisplayChildren(Model)
+    <input type="hidden" name="contentIdToEdit" value="@contentIdToEdit" />
     <input type="hidden" name="formName" value="@formName" />
     <input type="hidden" name="contentId" value="@contentItem.Id" />
     @Html.AntiForgeryToken()

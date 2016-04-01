@@ -5,6 +5,7 @@ using Orchard.Events;
 namespace Orchard.DynamicForms.Services {
     public interface IFormElementEventHandler : IEventHandler{
         void GetElementValue(FormElement element, ReadElementValuesContext context);
-        void RegisterClientValidation(FormElement element, RegisterClientValidationAttributesContext context);
+        void SetElementValue(FormElement element, WriteElementValuesContext context);
+        void RegisterClientValidation(FormElement element, RegisterClientValidationAttributesContext context);        
     }
 }

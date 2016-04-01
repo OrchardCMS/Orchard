@@ -21,7 +21,7 @@ namespace Orchard.DynamicForms.Handlers {
             _tokenizer = tokenizer;
         }
 
-        public override void Validated(FormValidatedEventContext context) {
+        public override void Validated(FormValidatedEventContext context) {            
             if (!context.ModelState.IsValid)
                 return;
 
@@ -49,7 +49,14 @@ namespace Orchard.DynamicForms.Handlers {
             // Create content item.
             var contentItem = default(ContentItem);
             if (form.CreateContent == true && !String.IsNullOrWhiteSpace(form.FormBindingContentType)) {
-                contentItem = formService.CreateContentItem(form, context.ValueProvider);
+                if (context.ContentIdToEdit == 0)
+                    contentItem = formService.CreateContentItem(form, context.ValueProvider);
+                else if (form.CreateContent == true && !String.IsNullOrWhiteSpace(form.FormBindingContentType))
+                    contentItem = formService.UpdateContentItem(context.ContentIdToEdit, form, context.ValueProvider);
+                if (contentItem == null) {
+                    context.ModelState.AddModelError("contentIdToEdit", "Error storing content item.");
+                    return;
+                }
             }
 
             // Notifiy.
@@ -58,6 +65,7 @@ namespace Orchard.DynamicForms.Handlers {
 
             // Trigger workflow event.
             _workflowManager.TriggerEvent(DynamicFormSubmittedActivity.EventName, contentItem, () => tokenData);
+            return;
         }
     }
 }

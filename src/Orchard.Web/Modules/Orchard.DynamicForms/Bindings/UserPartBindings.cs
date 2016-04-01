@@ -14,15 +14,18 @@ namespace Orchard.DynamicForms.Bindings {
 
         public void Describe(BindingDescribeContext context) {
             context.For<UserPart>()
-                .Binding("UserName", (contentItem, part, s) => {
-                    part.UserName = s;
-                    part.NormalizedUserName = s.ToLowerInvariant();
-                })
-                .Binding("Email", (contentItem, part, s) => part.Email = s)
-                .Binding("Password", (contentItem, part, s) => {
-                    part.HashAlgorithm = "SHA1";
-                    _membershipService.SetPassword(part, s);
-                });
+                .Binding("UserName", 
+                    (contentItem, part) => part.UserName, 
+                    (contentItem, part, s) => {
+                        part.UserName = s;
+                        part.NormalizedUserName = s.ToLowerInvariant();
+                    })
+                .Binding("Email", (contentItem, part) => part.Email, (contentItem, part, s) => part.Email = s)
+                .Binding("Password", (contentItem, part) => null,
+                    (contentItem, part, s) => {
+                        part.HashAlgorithm = "SHA1";
+                        _membershipService.SetPassword(part, s);
+                    });
         }
     }
 }

@@ -5,5 +5,7 @@ namespace Orchard.DynamicForms.Services {
     public abstract class FormElementEventHandlerBase : IFormElementEventHandler {
         public virtual void GetElementValue(FormElement element, ReadElementValuesContext context) {}
         public virtual void RegisterClientValidation(FormElement element, RegisterClientValidationAttributesContext context) {}
+
+        public virtual void SetElementValue(FormElement element, WriteElementValuesContext context) { }
     }
 }

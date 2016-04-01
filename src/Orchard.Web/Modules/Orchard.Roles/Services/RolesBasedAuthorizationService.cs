@@ -30,7 +30,10 @@ namespace Orchard.Roles.Services {
 
 
         public void CheckAccess(Permission permission, IUser user, IContent content) {
-            if (!TryCheckAccess(permission, user, content)) {
+            CheckAccess(permission, user, content, null);
+        }
+        public void CheckAccess(Permission permission, IUser user, IContent content, string formName) {
+            if (!TryCheckAccess(permission, user, content, formName)) {
                 throw new OrchardSecurityException(T("A security exception occurred in the content management system.")) {
                     PermissionName = permission.Name,
                     User = user,
@@ -40,10 +43,14 @@ namespace Orchard.Roles.Services {
         }
 
         public bool TryCheckAccess(Permission permission, IUser user, IContent content) {
-            var context = new CheckAccessContext { Permission = permission, User = user, Content = content };
+            return TryCheckAccess(permission, user, content, null);
+        }
+
+        public bool TryCheckAccess(Permission permission, IUser user, IContent content, string formName) {
+            var context = new CheckAccessContext { Permission = permission, User = user, Content = content, FormName = formName};
             _authorizationServiceEventHandler.Checking(context);
 
-            for (var adjustmentLimiter = 0; adjustmentLimiter != 3; ++adjustmentLimiter) {
+            for (var adjustmentLimiter = 0; adjustmentLimiter != 4; ++adjustmentLimiter) {
                 if (!context.Granted && context.User != null) {
                     if (!String.IsNullOrEmpty(_workContextAccessor.GetContext().CurrentSite.SuperUser) &&
                            String.Equals(context.User.UserName, _workContextAccessor.GetContext().CurrentSite.SuperUser, StringComparison.Ordinal)) {

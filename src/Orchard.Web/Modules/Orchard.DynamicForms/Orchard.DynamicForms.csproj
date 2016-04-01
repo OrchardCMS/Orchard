@@ -142,6 +142,10 @@
       <Project>{91bc2e7f-da04-421c-98ef-76d37cec130c}</Project>
       <Name>Orchard.AntiSpam</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Orchard.ContentPermissions\Orchard.ContentPermissions.csproj">
+      <Project>{e826f796-8ce3-4b5b-8423-5aa5f81d2fc3}</Project>
+      <Name>Orchard.ContentPermissions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Orchard.Fields\Orchard.Fields.csproj">
       <Project>{3787dde5-e5c8-4841-bda7-dcb325388064}</Project>
       <Name>Orchard.Fields</Name>
@@ -193,8 +197,10 @@
     <Compile Include="Bindings\InputFieldBindings.cs" />
     <Compile Include="Bindings\TaxonomyFieldBindings.cs" />
     <Compile Include="Drivers\FieldsetElementDriver.cs" />
+    <Compile Include="Drivers\CommandLinkElementDriver.cs" />
     <Compile Include="Drivers\UrlFieldElementDriver.cs" />
     <Compile Include="Elements\Fieldset.cs" />
+    <Compile Include="Elements\CommandLink.cs" />
     <Compile Include="Elements\UrlField.cs" />
     <Compile Include="Bindings\NumericFieldBindings.cs" />
     <Compile Include="Forms\AddModelErrorForm.cs" />
@@ -222,6 +228,8 @@
     <Compile Include="Handlers\LayoutEditorShapeEventHandler.cs" />
     <Compile Include="Handlers\WorkflowValidatorCoordinator.cs" />
     <Compile Include="ResourceManifest.cs" />
+    <Compile Include="Security\AuthorizationEventHandler.cs" />
+    <Compile Include="Services\DynamicPermissions.cs" />
     <Compile Include="Services\FieldsetModelMap.cs" />
     <Compile Include="Services\FormElementServices.cs" />
     <Compile Include="Services\FormModelMap.cs" />
@@ -239,6 +247,7 @@
     <Compile Include="Services\IElementValidator.cs" />
     <Compile Include="Services\Models\RegisterClientValidationAttributesContext.cs" />
     <Compile Include="Services\Models\ValidationContext.cs" />
+    <Compile Include="Services\WriteElementValuesContext.cs" />
     <Compile Include="Services\ValidationRuleFactory.cs" />
     <Compile Include="Services\IValidationRule.cs" />
     <Compile Include="Tokens\FormTokens.cs" />
@@ -548,6 +557,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\CommandLink.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\CommandLink.Design.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

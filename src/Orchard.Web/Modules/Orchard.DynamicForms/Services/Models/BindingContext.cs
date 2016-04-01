@@ -21,11 +21,12 @@ namespace Orchard.DynamicForms.Services.Models {
         public BindingContext() : base(typeof(T).Name) {
         }
 
-        public BindingContext<T> Binding(string name, Action<ContentItem, T, string> setter) {
+        public BindingContext<T> Binding(string name, Func<ContentItem, T, string> getter, Action<ContentItem, T, string> setter) {
 
             _bindings.Add(new BindingDescriptor<T> {
                 Name = name,
-                Setter = setter
+                Getter = getter,
+                Setter = setter,                
             });
 
             return this;
