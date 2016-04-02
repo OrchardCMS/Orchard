@@ -178,15 +178,16 @@ namespace Orchard.OutputCache.Filters {
         }
 
         public void OnResultExecuted(ResultExecutedContext filterContext) {
+            // This filter is not reentrant (multiple executions within the same request are
+            // not supported) so child actions are ignored completely.
+            if (filterContext.IsChildAction)
+                return;
 
             var captureHandlerIsAttached = false;
 
             try {
-                
-                // This filter is not reentrant (multiple executions within the same request are
-                // not supported) so child actions are ignored completely.
-                if (filterContext.IsChildAction || !_isCachingRequest)
-                return;
+                if (!_isCachingRequest)
+                    return;
 
                 Logger.Debug("Item '{0}' was rendered.", _cacheKey);
 
