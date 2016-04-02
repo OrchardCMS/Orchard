@@ -34,7 +34,7 @@ namespace Orchard.Layouts.Providers {
         private readonly Work<ICurrentThemeShapeBindingResolver> _currentThemeShapeBindingResolver;
         private readonly Work<ITokenizer> _tokenizer;
         private readonly IWorkContextAccessor _wca;
-        private Work<IYamlParser> _yamlParser;
+        private readonly Work<IYamlParser> _yamlParser;
 
         public SnippetElementHarvester(
             IWorkContextAccessor workContextAccessor,
@@ -71,7 +71,7 @@ namespace Orchard.Layouts.Providers {
                 var closureDescriptor = shapeDescriptor;
                 var snippetDescriptor = ParseSnippetDescriptor(shapeDescriptor.Value.BindingSource);
                 yield return new ElementDescriptor(elementType, shapeType, new LocalizedString(elementName), new LocalizedString(String.Format("An element that renders the {0} shape.", shapeType)), snippetElement.Category) {
-                    Displaying = displayContext => Displaying(displayContext, closureDescriptor.Value),
+                    Displaying = displayContext => Displaying(displayContext, closureDescriptor.Value, snippetDescriptor),
                     ToolboxIcon = "\uf10c",
                     EnableEditorDialog = snippetDescriptor != null || HasSnippetFields(shapeDescriptor.Value),
                     Editor = ctx => Editor(snippetDescriptor ?? DescribeSnippet(shapeType, snippetElement), ctx),
@@ -118,11 +118,18 @@ namespace Orchard.Layouts.Providers {
             context.EditorResult.Add(snippetEditorShape);
         }
 
-        private void Displaying(ElementDisplayingContext context, ShapeDescriptor shapeDescriptor) {
+        private void Displaying(ElementDisplayingContext context, ShapeDescriptor shapeDescriptor, SnippetDescriptor snippetDescriptor) {
             var shapeType = shapeDescriptor.ShapeType;
             var shape = (dynamic)_shapeFactory.Value.Create(shapeType);
 
             shape.Element = context.Element;
+
+            if (snippetDescriptor != null) {
+                foreach (var fieldDescriptor in snippetDescriptor.Fields) {
+                    var value = context.Element.Data.Get(fieldDescriptor.Name);
+                    shape.Properties[fieldDescriptor.Name] = value;
+                }
+            }
 
             ElementShapes.AddTokenizers(shape, _tokenizer.Value);
             context.ElementShape.Snippet = shape;
@@ -136,7 +143,7 @@ namespace Orchard.Layouts.Providers {
 
         private SnippetDescriptor ParseSnippetDescriptor(string bindingSource) {
             var physicalSourcePath = _wca.GetContext().HttpContext.Server.MapPath(bindingSource);
-            var paramsFileName = Path.Combine(Path.GetDirectoryName(physicalSourcePath) ?? "", Path.GetFileNameWithoutExtension(physicalSourcePath) + ".Params.txt");
+            var paramsFileName = Path.Combine(Path.GetDirectoryName(physicalSourcePath) ?? "", Path.GetFileNameWithoutExtension(physicalSourcePath) + ".txt");
 
             if (!File.Exists(paramsFileName))
                 return null;
