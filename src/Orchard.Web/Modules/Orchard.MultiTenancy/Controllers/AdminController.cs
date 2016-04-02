@@ -70,6 +70,10 @@ namespace Orchard.MultiTenancy.Controllers {
                 ModelState.AddModelError("Name", T("Invalid tenant name. Must contain characters only and no spaces.").Text);
             }
 
+            if (!string.Equals(viewModel.Name, "default", StringComparison.OrdinalIgnoreCase) && string.IsNullOrWhiteSpace( viewModel.RequestUrlHost) && string.IsNullOrWhiteSpace(viewModel.RequestUrlPrefix)) {
+                ModelState.AddModelError("RequestUrlHostRequestUrlPrefix", T("RequestUrlHost and RequestUrlPrefix can not be empty at the same time.").Text);
+            }
+
             if (!ModelState.IsValid) {
                 return View(viewModel);
             }
@@ -88,7 +92,7 @@ namespace Orchard.MultiTenancy.Controllers {
                         Modules = viewModel.Modules.Where(x => x.Checked).Select(x => x.ModuleId).ToArray()
                     });
 
-                Services.Notifier.Information(T("Tenant '{0}' was created successfully.", viewModel.Name));
+                Services.Notifier.Success(T("Tenant '{0}' was created successfully.", viewModel.Name));
                 return RedirectToAction("Index");
             }
             catch (ArgumentException ex) {
@@ -139,10 +143,13 @@ namespace Orchard.MultiTenancy.Controllers {
                 return new HttpUnauthorizedResult();
 
             var tenant = _tenantService.GetTenants().FirstOrDefault(ss => ss.Name == viewModel.Name);
+
             if (tenant == null)
                 return HttpNotFound();
-            else if (tenant.Name == _thisShellSettings.Name)
-                return new HttpUnauthorizedResult();
+
+            if (!string.Equals(viewModel.Name, "default", StringComparison.OrdinalIgnoreCase) && string.IsNullOrWhiteSpace(viewModel.RequestUrlHost) && string.IsNullOrWhiteSpace(viewModel.RequestUrlPrefix)) {
+                ModelState.AddModelError("RequestUrlHostRequestUrlPrefix", T("RequestUrlHost and RequestUrlPrefix can not be empty at the same time.").Text);
+            }
 
             if (!ModelState.IsValid) {
                 return View(viewModel);

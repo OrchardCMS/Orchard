@@ -108,7 +108,7 @@ namespace Orchard.Localization.Controllers {
 
             conditionallyPublish(contentItemTranslation.ContentItem);
 
-            Services.Notifier.Information(T("Created content item translation."));
+            Services.Notifier.Success(T("Created content item translation."));
 
             var metadata = _contentManager.GetItemMetadata(contentItemTranslation);
             return RedirectToAction(Convert.ToString(metadata.EditorRouteValues["action"]), metadata.EditorRouteValues);

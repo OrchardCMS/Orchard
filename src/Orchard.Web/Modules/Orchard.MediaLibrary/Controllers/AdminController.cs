@@ -24,7 +24,7 @@ namespace Orchard.MediaLibrary.Controllers {
         private readonly IContentDefinitionManager _contentDefinitionManager;
 
         public AdminController(
-            IOrchardServices services, 
+            IOrchardServices services,
             IMediaLibraryService mediaLibraryService,
             INavigationManager navigationManager,
             IContentDefinitionManager contentDefinitionManager) {
@@ -56,11 +56,13 @@ namespace Orchard.MediaLibrary.Controllers {
             explorer.Weld(new MediaLibraryExplorerPart());
 
             var explorerShape = Services.ContentManager.BuildDisplay(explorer);
+            var rootMediaFolderPath = rootMediaFolder == null ? null : rootMediaFolder.MediaPath;
 
             var viewModel = new MediaManagerIndexViewModel {
                 DialogMode = dialog,
                 FolderPath = folderPath,
-                ChildFoldersViewModel = new MediaManagerChildFoldersViewModel{Children = _mediaLibraryService.GetMediaFolders(rootMediaFolder == null ? null : rootMediaFolder.MediaPath)},
+                RootFolderPath = rootMediaFolderPath,
+                ChildFoldersViewModel = new MediaManagerChildFoldersViewModel { Children = _mediaLibraryService.GetMediaFolders(rootMediaFolderPath) },
                 MediaTypes = _mediaLibraryService.GetMediaTypes(),
                 CustomActionsShapes = explorerShape.Actions,
                 CustomNavigationShapes = explorerShape.Navigation,
@@ -109,7 +111,7 @@ namespace Orchard.MediaLibrary.Controllers {
 
                 return View(model);
             }
-            
+
             var mediaParts = _mediaLibraryService.GetMediaContentItems(folderPath, skip, count, order, mediaType, VersionOptions.Latest);
             var mediaPartsCount = _mediaLibraryService.GetMediaContentItemsCount(folderPath, mediaType, VersionOptions.Latest);
 
@@ -147,7 +149,7 @@ namespace Orchard.MediaLibrary.Controllers {
             };
 
             Response.ContentType = "text/json";
-            
+
             return View(viewModel);
         }
 
@@ -158,8 +160,8 @@ namespace Orchard.MediaLibrary.Controllers {
 
             var rootMediaFolder = _mediaLibraryService.GetRootMediaFolder();
             var rootMediaFolderPath = rootMediaFolder == null ? null : rootMediaFolder.MediaPath;
-            var mediaParts = _mediaLibraryService.GetMediaContentItems(rootMediaFolderPath, skip, count, order, mediaType);
-            var mediaPartsCount = _mediaLibraryService.GetMediaContentItemsCount(rootMediaFolderPath, mediaType);
+            var mediaParts = _mediaLibraryService.GetMediaContentItemsRecursive(rootMediaFolderPath, skip, count, order, mediaType);
+            var mediaPartsCount = _mediaLibraryService.GetMediaContentItemsCountRecursive(rootMediaFolderPath, mediaType);
 
 
             var mediaItems = mediaParts.Select(x => new MediaManagerMediaItemViewModel {
@@ -211,8 +213,7 @@ namespace Orchard.MediaLibrary.Controllers {
                 }
 
                 return Json(true);
-            }
-            catch(Exception e) {
+            } catch (Exception e) {
                 Logger.Error(e, "Could not delete media items.");
                 return Json(false);
             }
@@ -226,12 +227,12 @@ namespace Orchard.MediaLibrary.Controllers {
             try {
                 var media = Services.ContentManager.Get(mediaItemId).As<MediaPart>();
 
-                if(!_mediaLibraryService.CanManageMediaFolder(media.FolderPath)) {
+                if (!_mediaLibraryService.CanManageMediaFolder(media.FolderPath)) {
                     return new HttpUnauthorizedResult();
                 }
 
-                var newFileName = Path.GetFileNameWithoutExtension(media.FileName) + " Copy" + Path.GetExtension(media.FileName);
-                
+                var newFileName = _mediaLibraryService.GetUniqueFilename(media.FolderPath, media.FileName);
+
                 _mediaLibraryService.CopyFile(media.FolderPath, media.FileName, media.FolderPath, newFileName);
 
                 var clonedContentItem = Services.ContentManager.Clone(media.ContentItem);
@@ -239,13 +240,14 @@ namespace Orchard.MediaLibrary.Controllers {
                 var clonedTitlePart = clonedContentItem.As<TitlePart>();
 
                 clonedMediaPart.FileName = newFileName;
+                clonedMediaPart.FolderPath = media.FolderPath;
+                clonedMediaPart.MimeType = media.MimeType;
                 clonedTitlePart.Title = clonedTitlePart.Title + " Copy";
-
+                Services.ContentManager.Create(clonedContentItem);
                 Services.ContentManager.Publish(clonedContentItem);
 
                 return Json(true);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 Logger.Error(e, "Could not clone media item.");
                 return Json(false);
             }
@@ -253,7 +255,7 @@ namespace Orchard.MediaLibrary.Controllers {
 
         private FolderHierarchy GetFolderHierarchy(IMediaFolder root) {
             Argument.ThrowIfNull(root, "root");
-            return new FolderHierarchy(root) {Children = _mediaLibraryService.GetMediaFolders(root.MediaPath).Select(GetFolderHierarchy)};
+            return new FolderHierarchy(root) { Children = _mediaLibraryService.GetMediaFolders(root.MediaPath).Select(GetFolderHierarchy) };
         }
     }
 }

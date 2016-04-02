@@ -46,11 +46,11 @@ namespace Orchard.Fields.Drivers {
             if (updater.TryUpdateModel(field, GetPrefix(field, part), null, null)) {
                 var settings = field.PartFieldDefinition.Settings.GetModel<InputFieldSettings>();
 
-                if (field.Value == null && !String.IsNullOrEmpty(settings.DefaultValue)) {
+                if (String.IsNullOrWhiteSpace(field.Value) && !String.IsNullOrWhiteSpace(settings.DefaultValue)) {
                      field.Value = _tokenizer.Replace(settings.DefaultValue, new Dictionary<string, object> { { "Content", part.ContentItem } });
                 }
 
-                if (settings.Required && string.IsNullOrWhiteSpace(field.Value)) {
+                if (settings.Required && String.IsNullOrWhiteSpace(field.Value)) {
                     updater.AddModelError(GetPrefix(field, part), T("The field {0} is mandatory.", T(field.DisplayName)));
                 }
             }

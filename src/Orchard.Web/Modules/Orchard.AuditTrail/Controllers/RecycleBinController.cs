@@ -56,7 +56,7 @@ namespace Orchard.AuditTrail.Controllers {
             var restoredContentItem = _recycleBin.Restore(contentItem);
             var restoredContentItemTitle = _contentManager.GetItemMetadata(restoredContentItem).DisplayText;
 
-            _notifier.Information(T("&quot;{0}&quot; has been restored.", restoredContentItemTitle));
+            _notifier.Success(T("&quot;{0}&quot; has been restored.", restoredContentItemTitle));
 
             return this.RedirectReturn(returnUrl, () => Url.Action("Index", "RecycleBin"));
         }
@@ -115,7 +115,7 @@ namespace Orchard.AuditTrail.Controllers {
                 }
 
                 _recycleBin.Restore(contentItem);
-                _notifier.Information(T("&quot;{0}&quot; has been restored.", contentItemTitle));
+                _notifier.Success(T("&quot;{0}&quot; has been restored.", contentItemTitle));
             }
         }
 
@@ -131,7 +131,7 @@ namespace Orchard.AuditTrail.Controllers {
 
                 try {
                     _contentManager.Destroy(contentItem);
-                    _notifier.Information(T("&quot;{0}&quot; has been permanently deleted.", contentItemTitle));
+                    _notifier.Success(T("&quot;{0}&quot; has been permanently deleted.", contentItemTitle));
                 }
                 catch (Exception ex) {
                     Logger.Error(ex, "An exception occurred while trying to permanently delete content with ID {0}.", contentItem.Id);
