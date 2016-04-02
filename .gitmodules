@@ -1,0 +1,4 @@
+[submodule "src/Orchard.Web/ThirdParty/Themes/PJS.Bootstrap"]
+	path = src/Orchard.Web/ThirdParty/Themes/PJS.Bootstrap
+	url = D:/PROYECTOSXK/Orchard/src/Orchard.Web/ThirdParty/Themes/PJS.Bootstrap
+	branch = Master_XK

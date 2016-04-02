@@ -4,9 +4,6 @@
 # XK custom 
 Orchard.XK/
 
-# XK ThirdParty
-ThirdParty/
-
 # XK web.release.config   
 src/Orchard.Web/Web.Release.config
 
