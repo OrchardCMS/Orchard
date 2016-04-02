@@ -11,7 +11,9 @@ namespace Orchard.Mvc.Html {
 
         protected override void Dispose(bool disposing) {
             if (disposing) {
-                _htmlHelper.ViewContext.Writer.Write(_htmlHelper.AntiForgeryTokenOrchard());
+                if (!_htmlHelper.ViewContext.HttpContext.Response.HeadersWritten) {
+                    _htmlHelper.ViewContext.Writer.Write(_htmlHelper.AntiForgeryTokenOrchard());
+                }
             }
 
             base.Dispose(disposing);
