@@ -81,10 +81,6 @@
         $("input[type=checkbox]:not(:disabled)").prop('checked', $(this).prop("checked"))
     });
 
-    function preventDoubleClick() {
-
-    }
-
     //Prevent double-click on buttons of type "submit"
     $("form button[type='submit'], form input[type='submit']").click(function (e) {
         var form = $(this).closest("form")[0];
