@@ -15,16 +15,20 @@
         /*.pull-left();
         .clearfix();
         margin-right: 4em;*/
-        justify-content:flex-start;
-        align-self:center;
+        justify-content: flex-start;
+        align-self: center;
     }
 
     .pager-links {
         /*.pull-right();*/
-        justify-content:flex-end;
-        align-self:center;
+        justify-content: flex-end;
+        align-self: center;
     }
 
+    .page-results {
+        display: inline-block;
+        margin-top: 8px;
+    }
     /*.clearfix();*/
 }
 
@@ -45,15 +49,14 @@
             color: @pager-active-color;
         }
     }
-
     /*.clearfix();*/
 }
 
 .panel-footer, .am-datatable-footer {
     .pager-footer {
-        display:flex;
-        justify-content:space-between;
-        align-content:stretch;
+        display: flex;
+        justify-content: space-between;
+        align-content: stretch;
         margin-top: 0;
     }
 }

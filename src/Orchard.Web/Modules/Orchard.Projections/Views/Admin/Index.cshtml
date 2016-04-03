@@ -17,33 +17,27 @@
     @using (Html.BeginFormAntiForgeryPost()) {
         @Html.ValidationSummary()
         <div class="panel-heading">
-            <div class="panel-heading-actions">
+            <div class="panel-heading-actions col-md-6">
+                <fieldset>
+                    <input id="publishActions" name="@Html.NameOf(m => m.Options.BulkAction)" type="hidden" value="@QueriesBulkAction.None" />
+                    <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                            Bulk Actions <span class="caret"></span>
+                        </button>&nbsp;
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="javascript:submitForm($('form'), '@QueriesBulkAction.Delete');">@T("Delete").ToString()</a></li>
+                        </ul>
+                    </div>
+                </fieldset>
                 @Html.ActionLink(T("Add a new Query").ToString(), "Create", new { Area = "Contents", id = "Query", returnurl = HttpContext.Current.Request.RawUrl }, new { @class = "btn btn-primary" })
             </div>
-            <div class="panel-heading-primary-group">
-                <fieldset class="bulk-actions">
-                    <div class="am-checkbox inline">
-                        <input id="checkAll" class="check-all" type="checkbox">
-                        <label for="checkAll">@T("Select all")</label>
-                    </div>
-                    <select id="publishActions" name="@Html.NameOf(m => m.Options.BulkAction)" class="form-control auto-size">
-                        @Html.SelectOption(Model.Options.BulkAction, QueriesBulkAction.None, T("Choose action...").ToString())
-                        @Html.SelectOption(Model.Options.BulkAction, QueriesBulkAction.Delete, T("Delete").ToString())
-                    </select>
-                    <button type="submit" name="submit.BulkEdit" value="@T("Apply")">@T("Apply")</button>
-                </fieldset>
+            <div class="panel-heading-primary-group col-md-6">
+
                 <fieldset class="bulk-actions">
                     <label for="filterResults">@T("Sort by:")</label>
                     <select id="filterResults" name="@Html.NameOf(m => m.Options.Order)" class="form-control auto-size">
                         @Html.SelectOption(Model.Options.Order, QueriesOrder.Name, T("Name").ToString())
-                    </select>
-                    <input type="hidden" name="Page" value="1" />
-                    <label for="pageSize">@T("Show:")</label>
-                    <select id="pageSize" name="PageSize" class="form-control auto-size">
-                        @Html.SelectOption((int)Model.Pager.PageSize, 0, T("All").ToString())
-                        @foreach (int size in pageSizes.OrderBy(p => p)) {
-                            @Html.SelectOption((int)Model.Pager.PageSize, size, size.ToString())
-                        }
                     </select>
                     <button class="btn btn-default" type="submit" name="submit.Filter" value="@T("Filter")">@T("Filter")</button>
                 </fieldset>
@@ -57,9 +51,14 @@
                 <table class="table table-fw-widget data-table table-striped dataTable no-footer">
                     <thead>
                         <tr>
-                            <th scope="col"><i class="fa fa-long-arrow-down"></i></th>
+                            <th scope="col">
+                                <div class="am-checkbox inline">
+                                    <input id="checkAll" class="check-all" type="checkbox">
+                                    <label for="checkAll">@T("Select all")</label>
+                                </div>
+                            </th>
                             <th scope="col">@T("Name")</th>
-                            <th scope="col">&nbsp;</th>
+                            <th scope="col" class="text-right">@T("Actions")</th>
                         </tr>
                     </thead>
                     @foreach (var entry in Model.Queries) {

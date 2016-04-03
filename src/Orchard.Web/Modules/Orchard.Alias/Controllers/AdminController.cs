@@ -88,9 +88,13 @@ namespace Orchard.Alias.Controllers {
                 case AliasBulkAction.None:
                     break;
                 case AliasBulkAction.Delete:
+                    List<string> deletedItemsList = new List<string>();
                     foreach (var checkedItem in checkedItems) {
                         _aliasService.Delete(checkedItem.Alias.Path);
+                        deletedItemsList.Add(checkedItem.Alias.Path);
                     }
+                    string deletedItems = string.Join(", ", deletedItemsList);
+                    Services.Notifier.Information(T("Alias {0} deleted", deletedItems));
 
                     break;
                 default:

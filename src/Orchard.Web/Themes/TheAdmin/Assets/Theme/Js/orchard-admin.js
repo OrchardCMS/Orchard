@@ -75,7 +75,7 @@
                 return elm;
             }).sort(sortBy(filter))
         }
-        function last (array, n) {
+        function last(array, n) {
             if (array == null)
                 return void 0;
             if (n == null)
@@ -169,6 +169,105 @@
         function doneResizing() {
             renderContentItemActions();
         }
+
+        // Bulk edit bootstrap dropdown button actions
+
+        // Verify if object exist
+        jQuery.fn.exists = function () { return this.length > 0; }
+
+        $("#dataConfirmOK").on("click", function () {
+            var _this = $(this);
+            var hrefParts = _this.attr("href").split("?");
+
+            //for single action
+            if (hrefParts.length > 1) {
+                var magicToken = $("input[name=__RequestVerificationToken]").first();
+                if (!magicToken) { return; } // no sense in continuing if form POSTS will fail
+
+
+                var form = $("<form action=\"" + hrefParts[0] + "\" method=\"POST\" />");
+                form.append(magicToken.clone());
+                if (hrefParts.length > 1) {
+                    var queryParts = hrefParts[1].split("&");
+                    for (var i = 0; i < queryParts.length; i++) {
+                        var queryPartKVP = queryParts[i].split("=");
+                        //trusting hrefs in the page here
+                        form.append($("<input type=\"hidden\" name=\"" + decodeURIComponent(queryPartKVP[0]) + "\" value=\"" + decodeURIComponent(queryPartKVP[1]) + "\" />"));
+                    }
+                }
+                form.css({ "position": "absolute", "left": "-9999em" });
+                $("body").append(form);
+
+                var unsafeUrlPrompt = _this.data("unsafe-url");
+
+                if (unsafeUrlPrompt && unsafeUrlPrompt.length > 0) {
+                    if (!confirm(unsafeUrlPrompt)) {
+                        return false;
+                    }
+                }
+
+                if (_this.filter("[itemprop~='RemoveUrl']").length == 1) {
+                    // use a custom message if its set in data-message
+                    var dataMessage = _this.data('message');
+                    if (dataMessage === undefined) {
+                        dataMessage = confirmRemoveMessage;
+                    }
+
+                    if (!confirm(dataMessage)) {
+                        return false;
+                    }
+                }
+
+                form.submit();
+                return false;
+            }
+            else {
+                //for bulk actions
+                submitForm($("#btn-bulk-delete").data("action"));
+            }
+        });
+
+        function submitForm(action) {
+            $('input#publishActions').val(action);
+
+            //verify the use of one name or the other
+            //TODO standardize name in all views
+            if ($('button[name="submit.BulkEdit"]').exists()) {
+                var button = $('button[name="submit.BulkEdit"]').click();
+            }
+            else if ($('button[name="submit.BulkExecute"]').exists()) {
+                var button = $('button[name="submit.BulkExecute"]').click();
+            }
+        }
+        // End Bulk edit bootstrap dropdown button actions
+
+        //Bootstrap modal confirm
+        $('a[data-confirm]').click(function (ev) {
+            var href = $(this).attr('href');
+
+            $('#dataConfirmModal').find('.modal-body').text($(this).attr('data-confirm'));
+            $('#dataConfirmOK').attr('href', href);
+            $('#dataConfirmModal').modal({ show: true });
+
+            return false;
+        });
+
+        //Recenter Bootstrap modal vertically
+        function reposition() {
+            var modal = $(this),
+                dialog = modal.find('.modal-dialog');
+            modal.css('display', 'block');
+
+            // Dividing by two centers the modal exactly, but dividing by three 
+            // or four works better for larger screens.
+            dialog.css("margin-top", Math.max(0, ($(window).height() - dialog.height()) / 2));
+        }
+        // Reposition when a modal is shown
+        $('.modal').on('show.bs.modal', reposition);
+        // Reposition when the window is resized
+        $(window).on('resize', function () {
+            $('.modal:visible').each(reposition);
+        });
 
     });
 })(jQuery);

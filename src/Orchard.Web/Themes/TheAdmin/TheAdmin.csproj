@@ -1276,6 +1276,12 @@
   <ItemGroup>
     <Content Include="Assets\Theme\Less\orchard-media-library.less" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Theme\Less\orchard-modal.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Modal.cshtml" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
