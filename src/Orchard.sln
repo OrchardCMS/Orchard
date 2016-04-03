@@ -292,7 +292,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SS.XKProjectBase", "Orchard
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules.ThirdParty", "Modules.ThirdParty", "{9F090F5B-3230-44FB-9F95-E93E21AC09A5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contrib.ImportExportBindings", "Orchard.Web\ThirdParty\Modules\Orchard-ImportExportBindings\Contrib.ImportExportBindings.csproj", "{94604EB8-C9C6-4A2F-9937-9FBCF28341BF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contrib.ImportExportBindings", "Orchard.Web\ThirdParty\Modules\Contrib.ImportExportBindings\Contrib.ImportExportBindings.csproj", "{94604EB8-C9C6-4A2F-9937-9FBCF28341BF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

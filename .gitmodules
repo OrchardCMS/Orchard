@@ -2,7 +2,6 @@
 	path = src/Orchard.Web/ThirdParty/Themes/PJS.Bootstrap
 	url = D:/PROYECTOSXK/Orchard/src/Orchard.Web/ThirdParty/Themes/PJS.Bootstrap
 	branch = Master_XK
-[submodule "src/Orchard.Web/ThirdParty/Modules/Orchard-ImportExportBindings"]
-	path = src/Orchard.Web/ThirdParty/Modules/Orchard-ImportExportBindings
-	url = D:/PROYECTOSXK/Orchard/src/Orchard.Web/ThirdParty/Modules/Orchard-ImportExportBindings
-	branch = 1.10.x_XK
+[submodule "src/Orchard.Web/ThirdParty/Modules/Contrib.ImportExportBindings"]
+	path = src/Orchard.Web/ThirdParty/Modules/Contrib.ImportExportBindings
+	url = https://github.com/xkproject/Orchard-ImportExportBindings.git
