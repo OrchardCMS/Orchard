@@ -81,6 +81,20 @@
         $("input[type=checkbox]:not(:disabled)").prop('checked', $(this).prop("checked"))
     });
 
+    function preventDoubleClick() {
+
+    }
+
+    //Prevent double-click on buttons of type "submit"
+    $("form button[type='submit'], form input[type='submit']").click(function (e) {
+        var form = $(this).closest("form")[0];
+        if (typeof(form.formSubmitted) != "undefined") {
+            e.preventDefault();
+            return;
+        }
+        form.formSubmitted = true;
+    });
+
     // Handle keypress events in bulk action fieldsets that are part of a single form.
     // This will make sure the expected action executes when pressing "enter" on a text field.
     $("form .bulk-actions").on("keypress", "input[type='text']", function (e) {
@@ -192,15 +206,3 @@ function f() { return function () { } }
         }
     }); a.clear || (a.clear = f()); a.trace || (a.trace = f()); a.group || (a.group = f()); a.groupCollapsed || (a.groupCollapsed = f()); a.groupEnd || (a.groupEnd = f()); a.timeStamp || (a.timeStamp = f()); a.profile || (a.profile = f()); a.profileEnd || (a.profileEnd = f()); a.count || (a.count = f())
 })();
-
-//Prevent double-click on Publish/Save
-$(function () {
-    var formSubmitted = false;
-    $("button[name='submit.Save'], button[name='submit.Publish']").click(function (e) {
-        if (formSubmitted) {
-            e.preventDefault();
-            return;
-        }
-        formSubmitted = true;
-    });
-});
