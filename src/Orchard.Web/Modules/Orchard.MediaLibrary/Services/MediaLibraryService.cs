@@ -441,5 +441,37 @@ namespace Orchard.MediaLibrary.Services {
 
             return _storageProvider.GetPublicUrl(filePath);
         }
+
+        /// <summary>
+        /// Checks if current user can manage the storage folder
+        /// </summary>
+        /// <param name="folderPath"></param>
+        /// <returns></returns>
+        public bool CanManageMediaFolder(string folderPath) {
+            // The current user can manage a media if he has access to the whole hierarchy
+            // or the media is under his personal storage folder.
+            var rootMediaFolder = GetRootMediaFolder();
+            if (rootMediaFolder == null) {
+                return true;
+            }
+
+            var mediaPath = _storageProvider.Combine(folderPath, " ").Trim();
+            var rootPath = _storageProvider.Combine(rootMediaFolder.MediaPath, " ").Trim();
+            return mediaPath.StartsWith(rootPath, StringComparison.OrdinalIgnoreCase);
+        }
+
+        /// <summary>
+        /// Combines given folderPath to user's root folder path
+        /// </summary>
+        /// <param name="folderPath"></param>
+        /// <returns>Rooted folder path</returns>
+        public string GetRootedFolderPath(string folderPath) {
+            var rootMediaFolder = GetRootMediaFolder();
+            if (rootMediaFolder != null) {
+                return _storageProvider.Combine(rootMediaFolder.MediaPath, folderPath ?? "");
+            }
+
+            return folderPath;
+        }
     }
 }
