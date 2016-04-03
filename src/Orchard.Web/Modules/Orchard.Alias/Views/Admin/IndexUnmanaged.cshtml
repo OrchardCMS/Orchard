@@ -39,13 +39,14 @@
                     </fieldset>
                 </div>
                 <div class="col-sm-4 text-center">
-                    <fieldset class="bulk-actions">
+                    @* No need to filter if there is only one option in the dropdownlist *@
+                    @*<fieldset class="bulk-actions">
                         <label for="filterResults">@T("Sort by:")</label>
                         <select id="filterResults" name="@Html.NameOf(m => m.Options.Order)" class="form-control auto-size">
                             @Html.SelectOption(options.Order, AliasOrder.Path, T("Alias").ToString())
                         </select>
                         <button class="btn btn-default" type="submit" name="submit.Filter" value="@T("Filter")">@T("Filter")</button>
-                    </fieldset>
+                    </fieldset>*@
                 </div>
                 <div class="col-sm-4 text-right">
                     @Html.ActionLink(T("Add new Alias").Text, "Add", new { returnurl = HttpContext.Current.Request.RawUrl }, new { @class = "btn btn-primary" })
