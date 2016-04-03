@@ -7,6 +7,7 @@ using Orchard.Localization;
 using Orchard.Security;
 using Orchard.Settings;
 using Orchard.ContentManagement.FieldStorage;
+using Orchard.Environment.Configuration;
 
 namespace Orchard.Core.Settings.Tokens {
     public interface ITokenProvider : IEventHandler {
@@ -20,7 +21,7 @@ namespace Orchard.Core.Settings.Tokens {
         private readonly IMembershipService _membershipService;
 
         public SettingsTokens(
-            IOrchardServices orchardServices, 
+            IOrchardServices orchardServices,
             IContentDefinitionManager contentDefinitionManager,
             IMembershipService membershipService) {
             _orchardServices = orchardServices;
@@ -40,6 +41,10 @@ namespace Orchard.Core.Settings.Tokens {
                 .Token("TimeZone", T("Time Zone"), T("The current time zone of the site."), "Text")
                 ;
 
+            context.For("Shell", T("shell Settings"), T("Tokens for Shell Settings"))
+                .Token("RequestUrlPrefix", T("Request Url Prefix"), T("The current url prefix of the site."), "Text")
+                ;
+
             // Token descriptors for fields
             var customSettingsPart = _contentDefinitionManager.GetTypeDefinition("Site");
             if (customSettingsPart != null && customSettingsPart.Parts.SelectMany(x => x.PartDefinition.Fields).Any()) {
@@ -56,9 +61,9 @@ namespace Orchard.Core.Settings.Tokens {
         }
 
         public void Evaluate(dynamic context) {
-            var forContent = context.For<ISite>("Site", (Func<ISite>)(() => _orchardServices.WorkContext.CurrentSite));
+            var forSiteContent = context.For<ISite>("Site", (Func<ISite>)(() => _orchardServices.WorkContext.CurrentSite));
 
-            forContent
+            forSiteContent
                 .Token("SiteName", (Func<ISite, object>)(content => content.SiteName))
                 .Chain("SiteName", "Text", (Func<ISite, object>)(content => content.SiteName))
                 .Token("SuperUser", (Func<ISite, object>)(content => content.SuperUser))
@@ -71,17 +76,25 @@ namespace Orchard.Core.Settings.Tokens {
                 .Chain("TimeZone", "Text", (Func<ISite, object>)(content => content.SiteTimeZone))
                 ;
 
+            var forShellContent = context.For<ShellSettings>("Shell", (Func<ShellSettings>)(() => _orchardServices.WorkContext.Resolve<ShellSettings>()));
+
+            forShellContent
+                .Token("RequestUrlPrefix", (Func<ShellSettings, object>)(content => content.RequestUrlPrefix))
+                .Chain("RequestUrlPrefix", "Text", (Func<ShellSettings, object>)(content => content.RequestUrlPrefix))
+                ;
+
+
             if (context.Target == "Site") {
                 // is there a content available in the context ?
-                if (forContent.Data != null && forContent.Data.ContentItem != null) {
+                if (forSiteContent.Data != null && forSiteContent.Data.ContentItem != null) {
                     var customSettingsPart = _contentDefinitionManager.GetTypeDefinition("Site");
                     foreach (var partField in customSettingsPart.Parts.SelectMany(x => x.PartDefinition.Fields)) {
                         var field = partField;
                         var tokenName = partField.Name;
-                        forContent.Token(
+                        forSiteContent.Token(
                             tokenName,
                             (Func<IContent, object>)(content => LookupField(content, field.Name).Storage.Get<string>()));
-                        forContent.Chain(
+                        forSiteContent.Chain(
                             tokenName,
                             partField.FieldDefinition.Name,
                             (Func<IContent, object>)(content => LookupField(content, field.Name)));
