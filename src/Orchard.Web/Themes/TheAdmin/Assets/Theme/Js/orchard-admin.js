@@ -180,7 +180,7 @@
             var hrefParts = _this.attr("href").split("?");
 
             //for single action
-            if ($('input#publishActions').val() == 'None') {
+            if ($('#publishActions').val() == 'None') {
                 var magicToken = $("input[name=__RequestVerificationToken]").first();
                 if (!magicToken) { return; } // no sense in continuing if form POSTS will fail
 
@@ -230,7 +230,7 @@
         //Bootstrap modal confirm
         $('[data-confirm]').click(function (ev) {
             var href = $(this).attr('href');
-            $('input#publishActions').val('None');
+            $('#publishActions').val('None');
 
             $('#dataConfirmModal').find('.modal-body').text($(this).attr('data-confirm'));
             $('#dataConfirmOK').attr('href', href);
@@ -241,7 +241,7 @@
 
         $('[data-action]').click(function (ev) {
             var action = $(this).attr("data-action");
-            $('input#publishActions').val(action);
+            $('#publishActions').val(action);
 
             var href = $(this).attr('href');
             $('#dataConfirmModal').find('.modal-body').text($(this).attr('data-confirm'));
