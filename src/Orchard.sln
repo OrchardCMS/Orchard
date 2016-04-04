@@ -1,10 +1,13 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{74E681ED-FECC-4034-B9BD-01B0BB1BDECA}"
+	ProjectSection(SolutionItems) = preProject
+		Orchard.Web\Orchard.XK\Modules\XKProject.Upgrade.SS\Recipes\XKProkect.SS.recipe.xml = Orchard.Web\Orchard.XK\Modules\XKProject.Upgrade.SS\Recipes\XKProkect.SS.recipe.xml
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{383DBA32-4A3E-48D1-AAC3-75377A694452}"
 EndProject
