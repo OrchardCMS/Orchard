@@ -3,7 +3,7 @@
     var isRequired = Model.Settings.Required && String.IsNullOrWhiteSpace(Model.Settings.DefaultValue);
 }
 <fieldset>
-    <label for="@Html.FieldIdFor(m => m.Text)" @if(Model.Settings.Required) { <text>class="required"</text> }>@Model.Field.DisplayName</label>
+    <label for="@Html.FieldIdFor(m => m.Text)" @if(Model.Settings.Required) { <text>class="required"</text> }>@T(Model.Field.DisplayName)</label>
     @if (String.IsNullOrWhiteSpace(Model.Settings.Flavor)) {
         @(isRequired ? Html.TextBoxFor(m => m.Text, new {@class = "text", required = "required"}) : Html.TextBoxFor(m => m.Text, new {@class = "text"}))
         @Html.ValidationMessageFor(m => m.Text)

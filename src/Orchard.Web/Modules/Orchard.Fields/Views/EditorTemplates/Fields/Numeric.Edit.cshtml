@@ -1,7 +1,6 @@
 ﻿@model Orchard.Fields.ViewModels.NumericFieldViewModel
 @using System.Globalization
 @using Orchard.Fields.Settings;
-
 @{
     var isRequired = Model.Settings.Required && String.IsNullOrWhiteSpace(Model.Settings.DefaultValue);
     var hasValue = !String.IsNullOrWhiteSpace(Model.Value);
@@ -22,7 +21,7 @@
 }
 
 <fieldset>
-    <label for="@Html.FieldIdFor(m => m.Value)" @if (Model.Settings.Required) { <text> class="required" </text>     }>@Model.Field.DisplayName</label>
+    <label for="@Html.FieldIdFor(m => m.Value)" @if (Model.Settings.Required) { <text> class="required" </text>     }>@T(Model.Field.DisplayName)</label>
     @Html.TextBoxFor(m => m.Value, attributes)
     @Html.ValidationMessageFor(m => m.Value)
     @if (HasText(Model.Settings.Hint)) {

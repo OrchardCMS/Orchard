@@ -6,7 +6,7 @@
     var isRequired = settings.Required && String.IsNullOrWhiteSpace(settings.DefaultValue);
 }
 <fieldset>
-    <label for="@Html.FieldIdFor(m => m.Value)" @if (settings.Required) { <text> class="required" </text>  }>@Model.DisplayName</label>
+    <label for="@Html.FieldIdFor(m => m.Value)" @if (settings.Required) { <text> class="required" </text>  }>@T(Model.DisplayName)</label>
     @switch (settings.ListMode) {
         case ListMode.Dropdown:
             @Html.DropDownListFor(m => m.Value, new SelectList(options, Model.Value), isRequired ? new { required = "required" } : null)

@@ -12,7 +12,7 @@
     if (!string.IsNullOrEmpty(valueToDisplay)) {
         string name = Model.ContentField.DisplayName;
     <p class="enumeration-field enumeration-field-@name.HtmlClassify()">
-        <span class="name">@name:</span>
+        <span class="name">@T(name):</span>
         <span class="value">@Html.Raw(valueToDisplay)</span>
     </p>
     
