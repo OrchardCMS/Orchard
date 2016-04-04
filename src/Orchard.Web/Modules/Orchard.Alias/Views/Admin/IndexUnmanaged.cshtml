@@ -97,7 +97,7 @@
                                     @Html.Link(url, Href("~/" + urlPrefix + "/" + url))
                                 </td>
                                 <td>
-                                    @Html.ActionLink(T("Edit").Text, "Edit", new { path = alias.Path == String.Empty ? "/" : alias.Path }, new { @class = "btn btn-primary" })
+                                    @Html.ActionLink(T("Edit").Text, "Edit", new { path = alias.Path == String.Empty ? "/" : alias.Path }, new { @class = "btn btn-primary", @data_confirm = @T("Are you sure you want to edit this item?") })
                                     @Html.ActionLink(T("Delete").Text, "Delete", new { path = alias.Path }, new { @class = "btn btn-danger", @data_confirm = @T("Are you sure you want to delete this item?")})
                                 </td>
                             </tr>
