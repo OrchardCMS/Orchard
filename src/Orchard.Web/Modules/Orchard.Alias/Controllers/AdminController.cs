@@ -93,9 +93,10 @@ namespace Orchard.Alias.Controllers {
                         _aliasService.Delete(checkedItem.Alias.Path);
                         deletedItemsList.Add(checkedItem.Alias.Path);
                     }
-                    string deletedItems = string.Join(", ", deletedItemsList);
-                    Services.Notifier.Information(T("Alias {0} deleted", deletedItems));
-
+                    if (deletedItemsList.Count > 0) {
+                        Services.Notifier.Information(T("Alias {0} deleted", string.Join(", ", deletedItemsList)));
+                    }
+                    
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

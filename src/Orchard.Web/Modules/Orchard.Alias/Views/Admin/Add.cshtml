@@ -3,9 +3,9 @@
 }
 
 <div class="panel panel-default">
-    <div class="panel-body">
-        @using (Html.BeginFormAntiForgeryPost()) {
-            @Html.ValidationSummary()
+    @using (Html.BeginFormAntiForgeryPost()) {
+        @Html.ValidationSummary()
+        <div class="panel-body">
             <fieldset>
                 <legend>@T("Create Alias")</legend>
                 <div>
@@ -21,16 +21,16 @@
                     <span class="hint">@T("The actual route Orchard should call when the path is requested e.g., Blogs/Blog/Item?blogId=18")</span>
                 </div>
             </fieldset>
-        }
-    </div>
-    <div class="row am-datatable-footer">
-        <div class="col-sm-12">
-            <fieldset>
-                <div>
-                    <button class="btn btn-primary" type="submit">@T("Save")</button>
-                    @Html.ActionLink(T("Cancel").ToString(), "IndexUnmanaged", new { }, new { @class = "btn btn-default" })
-                </div>
-            </fieldset>
         </div>
-    </div>
+        <div class="row am-datatable-footer">
+            <div class="col-sm-12">
+                <fieldset>
+                    <div>
+                        <button class="btn btn-primary" type="submit">@T("Save")</button>
+                        @Html.ActionLink(T("Cancel").ToString(), "IndexUnmanaged", new { }, new { @class = "btn btn-default" })
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    }
 </div>

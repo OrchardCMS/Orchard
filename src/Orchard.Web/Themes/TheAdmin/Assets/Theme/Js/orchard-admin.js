@@ -180,7 +180,7 @@
             var hrefParts = _this.attr("href").split("?");
 
             //for single action
-            if (hrefParts.length > 1) {
+            if ($('input#publishActions').val() == 'None') {
                 var magicToken = $("input[name=__RequestVerificationToken]").first();
                 if (!magicToken) { return; } // no sense in continuing if form POSTS will fail
 
@@ -227,9 +227,30 @@
             }
         });
 
-        function submitForm(action) {
+        //Bootstrap modal confirm
+        $('[data-confirm]').click(function (ev) {
+            var href = $(this).attr('href');
+
+            $('#dataConfirmModal').find('.modal-body').text($(this).attr('data-confirm'));
+            $('#dataConfirmOK').attr('href', href);
+            $('#dataConfirmModal').modal({ show: true });
+
+            return false;
+        });
+
+        $('[data-action]').click(function (ev) {
+            var action = $(this).attr("data-action");
             $('input#publishActions').val(action);
 
+            var href = $(this).attr('href');
+            $('#dataConfirmModal').find('.modal-body').text($(this).attr('data-confirm'));
+            $('#dataConfirmOK').attr('href', href);
+            $('#dataConfirmModal').modal({ show: true });
+
+            return false;
+        });
+
+        function submitForm(action) {
             //verify the use of one name or the other
             //TODO standardize name in all views
             if ($('button[name="submit.BulkEdit"]').exists()) {
@@ -240,17 +261,6 @@
             }
         }
         // End Bulk edit bootstrap dropdown button actions
-
-        //Bootstrap modal confirm
-        $('a[data-confirm]').click(function (ev) {
-            var href = $(this).attr('href');
-
-            $('#dataConfirmModal').find('.modal-body').text($(this).attr('data-confirm'));
-            $('#dataConfirmOK').attr('href', href);
-            $('#dataConfirmModal').modal({ show: true });
-
-            return false;
-        });
 
         //Recenter Bootstrap modal vertically
         function reposition() {

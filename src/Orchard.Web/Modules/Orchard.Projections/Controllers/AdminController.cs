@@ -118,8 +118,13 @@ namespace Orchard.Projections.Controllers {
                 case QueriesBulkAction.None:
                     break;
                 case QueriesBulkAction.Delete:
+                    List<string> deletedItemsList = new List<string>();
                     foreach (var checkedItem in checkedItems) {
                         _queryService.DeleteQuery(checkedItem.QueryId);
+                        deletedItemsList.Add(checkedItem.Name);
+                    }
+                    if (deletedItemsList.Count > 0) {
+                        Services.Notifier.Information(T("Query {0} deleted", string.Join(", ", deletedItemsList)));
                     }
 
                     break;

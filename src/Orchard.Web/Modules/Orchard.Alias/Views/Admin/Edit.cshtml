@@ -1,28 +1,35 @@
 @{
     Layout.Title = T("Edit Alias");
 }
-
-@using (Html.BeginFormAntiForgeryPost()) {
-    @Html.ValidationSummary()
-    <fieldset>
-        <legend>@T("Edit alias")</legend>
-        <div>
-            <label for="aliasPath">@T("Alias Path")</label>
-            @Html.TextBox("aliasPath", null, new { @class = "text large" })
-            @Html.ValidationMessage("aliasPath")
-            <span class="hint">@T("The path of the alias e.g., my-blog/my-post")</span>
+<div class="panel panel-default">
+    @using (Html.BeginFormAntiForgeryPost()) {
+        @Html.ValidationSummary()
+        <div class="panel-body">
+            <fieldset>
+                <legend>@T("Edit alias")</legend>
+                <div>
+                    <label for="aliasPath">@T("Alias Path")</label>
+                    @Html.TextBox("aliasPath", null, new { @class = "text large" })
+                    @Html.ValidationMessage("aliasPath")
+                    <span class="hint">@T("The path of the alias e.g., my-blog/my-post")</span>
+                </div>
+                <div>
+                    <label for="routePath">@T("Route Path")</label>
+                    @Html.TextBox("routePath", null, new { @class = "text medium" })
+                    @Html.ValidationMessage("routePath")
+                    <span class="hint">@T("The actual route Orchard should call when the path is requested e.g., Blogs/Blog/Item?blogId=18")</span>
+                </div>
+            </fieldset>
         </div>
-        <div>
-            <label for="routePath">@T("Route Path")</label>
-            @Html.TextBox("routePath", null, new { @class = "text medium" })
-            @Html.ValidationMessage("routePath")
-            <span class="hint">@T("The actual route Orchard should call when the path is requested e.g., Blogs/Blog/Item?blogId=18")</span>
+        <div class="row am-datatable-footer">
+            <div class="col-sm-12">
+                <fieldset>
+                    <div>
+                        <button class="btn btn-primary" type="submit">@T("Save")</button>
+                        @Html.ActionLink(T("Cancel").ToString(), "IndexUnmanaged", new { }, new { @class = "btn btn-default" })
+                    </div>
+                </fieldset>
+            </div>
         </div>
-    </fieldset>
-    <fieldset>
-        <div>
-            <button class="btn btn-primary" type="submit">@T("Save")</button>
-            @Html.ActionLink(T("Cancel").ToString(), "IndexUnmanaged", new { }, new { @class = "button" })
-        </div>
-    </fieldset>
-}
+    }
+</div>
