@@ -230,6 +230,7 @@
         //Bootstrap modal confirm
         $('[data-confirm]').click(function (ev) {
             var href = $(this).attr('href');
+            $('input#publishActions').val('None');
 
             $('#dataConfirmModal').find('.modal-body').text($(this).attr('data-confirm'));
             $('#dataConfirmOK').attr('href', href);
