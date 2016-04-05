@@ -27,7 +27,7 @@ namespace Orchard.DynamicForms.Drivers {
                         Id: "Value",
                         Name: "Value",
                         Title: "Value",
-                        Classes: new[] { "text", "medium" },
+                        Classes: new[] { "text", "medium", "tokenized" },
                         Description: T("The value of this hidden field.")));
 
                 return form;
@@ -35,8 +35,12 @@ namespace Orchard.DynamicForms.Drivers {
         }
 
         protected override void OnDisplaying(HiddenField element, ElementDisplayingContext context) {
-            context.ElementShape.ProcessedName = _tokenizer.Replace(element.Name, context.GetTokenData());
-            context.ElementShape.ProcessedValue = element.RuntimeValue ?? string.Empty;
+            var tokenData = context.GetTokenData();
+            context.ElementShape.ProcessedName = _tokenizer.Replace(element.Name, tokenData);
+
+            // Allow the initial value to be tokenized.
+            // If a value was posted, use that value instead (without tokenizing it).
+            context.ElementShape.ProcessedValue = element.PostedValue != null ? element.PostedValue : _tokenizer.Replace(element.RuntimeValue, tokenData, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
         }
     }
 }
