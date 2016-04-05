@@ -34,7 +34,7 @@ namespace Orchard.Azure.Tests.FileSystems.Media {
         [ExpectedException(typeof(ArgumentException))]
         public void GetFileShouldOnlyAcceptRelativePath() {
             _azureBlobStorageProvider.CreateFile("foo.txt");
-            _azureBlobStorageProvider.GetFile("/foot.txt");
+            _azureBlobStorageProvider.GetFile("/foo.txt");
         }
 
         [Test]
