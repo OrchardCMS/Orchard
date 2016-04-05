@@ -16,10 +16,6 @@
             <div class="panel-heading-primary-group">
 
                 <fieldset class="bulk-actions">
-                    <div class="am-checkbox inline">
-                        <input id="checkAll" class="check-all" type="checkbox">
-                        <label for="checkAll">@T("Select all")</label>
-                    </div>
                     <label for="publishActions">@T("Actions:")</label>
                     <select id="publishActions" name="@Html.NameOf(m => m.BulkAction)" class="form-control auto-size">
                         @Html.SelectOption(Model.BulkAction, TagAdminIndexBulkAction.None, T("Choose action...").ToString())
@@ -42,7 +38,12 @@
                         </colgroup>
                         <thead>
                             <tr>
-                                <th scope="col"><i class="fa fa-long-arrow-down"></i></th>
+                                <th scope="col">
+                                    <div class="am-checkbox inline">
+                                        <input id="checkAll" class="check-all" type="checkbox">
+                                        <label for="checkAll">@T("Select all")</label>
+                                    </div>
+                                </th>
                                 <th scope="col">@T("Name")</th>
                                 <th scope="col" class="text-right">@T("Actions")</th>
                             </tr>

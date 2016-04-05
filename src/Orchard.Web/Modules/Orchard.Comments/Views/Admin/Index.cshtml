@@ -14,29 +14,35 @@
     @using (Html.BeginFormAntiForgeryPost()) {
         @Html.ValidationSummary()
         <div class="panel-heading no-border form-inline">
-            <div class="panel-heading-primary-group">
-                <fieldset class="bulk-actions">
-                    <div class="am-checkbox inline">
-                        <input id="checkAll" class="check-all" type="checkbox">
-                        <label for="checkAll">Select all</label>
-                    </div>
-                    <select id="publishActions" name="@Html.NameOf(m => m.Options.BulkAction)" class="form-control auto-size">
-                        @Html.SelectOption(Model.Options.BulkAction, CommentIndexBulkAction.None, T("Choose action...").ToString())
-                        @Html.SelectOption(Model.Options.BulkAction, CommentIndexBulkAction.Approve, T("Approve").ToString())
-                        @Html.SelectOption(Model.Options.BulkAction, CommentIndexBulkAction.Unapprove, T("Unapprove").ToString())
-                        @Html.SelectOption(Model.Options.BulkAction, CommentIndexBulkAction.Delete, T("Delete").ToString())
-                    </select>
-                    <button type="submit" name="submit.BulkEdit" value="@T("Apply")">@T("Apply")</button>
-                </fieldset>
-                <fieldset class="bulk-actions">
-                    <label for="filterResults">@T("Filter:")</label>
-                    <select id="filterResults" name="@Html.NameOf(m => m.Options.Filter)" class="form-control auto-size">
-                        @Html.SelectOption(Model.Options.Filter, CommentIndexFilter.All, T("All Comments").ToString())
-                        @Html.SelectOption(Model.Options.Filter, CommentIndexFilter.Approved, T("Approved Comments").ToString())
-                        @Html.SelectOption(Model.Options.Filter, CommentIndexFilter.Pending, T("Pending Comments").ToString())
-                    </select>
-                    <button type="submit" name="submit.Filter" value="@T("Apply")">@T("Apply")</button>
-                </fieldset>
+            <div class="row">
+                <div class="col-md-4">
+                    <fieldset>
+                        <input id="publishActions" name="@Html.NameOf(m => m.Options.BulkAction)" type="hidden" value="@CommentIndexBulkAction.None" />
+                        <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                                Bulk Actions <span class="caret"></span>
+                            </button>&nbsp;
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a id="btn-bulk-delete" href="#" data-confirm="@T("Are you sure you want to approve these items?")" data-action="@CommentIndexBulkAction.Approve">@T("Approve").ToString()</a></li>
+                                <li><a id="btn-bulk-delete" href="#" data-confirm="@T("Are you sure you want to unapprove these items?")" data-action="@CommentIndexBulkAction.Unapprove">@T("Unapprove").ToString()</a></li>
+                                <li><a id="btn-bulk-delete" href="#" data-confirm="@T("Are you sure you want to delete these items?")" data-action="@CommentIndexBulkAction.Delete">@T("Delete").ToString()</a></li>
+                            </ul>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="col-md-4">
+                    <fieldset class="bulk-actions">
+                        <label for="filterResults">@T("Filter:")</label>
+                        <select id="filterResults" name="@Html.NameOf(m => m.Options.Filter)" class="form-control auto-size">
+                            @Html.SelectOption(Model.Options.Filter, CommentIndexFilter.All, T("All Comments").ToString())
+                            @Html.SelectOption(Model.Options.Filter, CommentIndexFilter.Approved, T("Approved Comments").ToString())
+                            @Html.SelectOption(Model.Options.Filter, CommentIndexFilter.Pending, T("Pending Comments").ToString())
+                        </select>
+                        <button type="submit" name="submit.Filter" value="@T("Apply")">@T("Apply")</button>
+                    </fieldset>
+                </div>
+                <div class="col-md-4">&nbsp;</div>
             </div>
         </div>
         if (Model.Comments.Any()) {
@@ -46,12 +52,17 @@
                         <table class="table table-fw-widget data-table table-striped dataTable no-footer" summary="@T("This is a table of the comments in your application")">
                             <thead>
                                 <tr>
-                                    <th scope="col" class="no-sort" width="10"><i class="fa fa-long-arrow-down"></i></th>
-                                    <th scope="col" width="100">@T("Status")</th>
-                                    <th scope="col" width="200">@T("Author")</th>
-                                    <th scope="col" width="1000">@T("Comment")</th>
-                                    <th scope="col" width="300">@T("Commented On")</th>
-                                    <th scope="col" width="200"></th>
+                                    <th scope="col" class="text-nowrap">
+                                        <div class="am-checkbox inline">
+                                            <input id="checkAll" class="check-all" type="checkbox">
+                                            <label for="checkAll">Select all</label>
+                                        </div>
+                                    </th>
+                                    <th scope="col">@T("Status")</th>
+                                    <th scope="col">@T("Author")</th>
+                                    <th scope="col">@T("Comment")</th>
+                                    <th scope="col" class="text-nowrap">@T("Commented On")</th>
+                                    <th scope="col"></th>
                                 </tr>
                             </thead>
                             @foreach (var commentEntry in Model.Comments) {
@@ -97,7 +108,7 @@
 
                                             }
                                             <a class="btn btn-primary" href="@Url.Action("Edit", new { commentEntry.Comment.Id })" title="@T("Edit")">@T("Edit")</a>
-                                            <a class="btn btn-danger" href="@Url.Action("Delete", new { commentEntry.Comment.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString() })" itemprop="RemoveUrl UnsafeUrl">@T("Delete")</a>
+                                            <a class="btn btn-danger" href="@Url.Action("Delete", new { commentEntry.Comment.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString() })" data-confirm="@T("Are you sure you want to delete this item?")">@T("Delete")</a>
                                         </div>
                                     </td>
                                 </tr>
@@ -108,6 +119,7 @@
 
                 </div>
             </div>
+            @Display.Modal()
         } else {
             <div class="panel-body">
                 <p>

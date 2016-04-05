@@ -1,6 +1,12 @@
 ﻿@using Orchard.Core.Contents.ViewModels;
 @using Orchard.Utility.Extensions;
-
+@{
+    var pageSizes = new List<int?>() { 10, 50, 100 };
+    var defaultPageSize = WorkContext.CurrentSite.PageSize;
+    if (!pageSizes.Contains(defaultPageSize)) {
+        pageSizes.Add(defaultPageSize);
+    }
+}
 @if (Model.ContentItems.Items.Count > 0) {
     using (Html.BeginFormAntiForgeryPost(Url.Action("List", "Admin", new { area = "Contents", id = "" }))) {
         <div class="panel panel-default">
@@ -11,15 +17,19 @@
                             <input type="checkbox" class="check-all" id="blog-post-list-select-all" />
                             <label for="blog-post-list-select-all">@T("Select all")</label>
                         </div>
-
-                        <select id="publishActions" name="Options.BulkAction" class="form-control auto-size">
-                            @Html.SelectOption(ContentsBulkAction.None, ContentsBulkAction.None, T("Choose action...").ToString())
-                            @Html.SelectOption(ContentsBulkAction.None, ContentsBulkAction.PublishNow, T("Publish Now").ToString())
-                            @Html.SelectOption(ContentsBulkAction.None, ContentsBulkAction.Unpublish, T("Unpublish").ToString())
-                            @Html.SelectOption(ContentsBulkAction.None, ContentsBulkAction.Remove, T("Delete").ToString())
-                        </select>
+                        <input id="publishActions" name="Options.BulkAction" type="hidden" value="@ContentsBulkAction.None" />
                         @Html.Hidden("returnUrl", ViewContext.RequestContext.HttpContext.Request.ToUrlString())
-                        <button type="submit" name="submit.BulkEdit" value="yes">@T("Apply")</button>
+                        <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                                Bulk Actions <span class="caret"></span>
+                            </button>&nbsp;
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a id="btn-bulk-publish" href="#" data-confirm="@T("Are you sure you want to publish these items?")" data-action="@ContentsBulkAction.PublishNow">@T("Publish Now").ToString()</a></li>
+                                <li><a id="btn-bulk-unpublish" href="#" data-confirm="@T("Are you sure you want to unpublish these items?")" data-action="@ContentsBulkAction.Unpublish">@T("Unpublish").ToString()</a></li>
+                                <li><a id="btn-bulk-delete" href="#" data-confirm="@T("Are you sure you want to delete these items?")" data-action="@ContentsBulkAction.Remove">@T("Delete").ToString()</a></li>
+                            </ul>
+                        </div>
                     </fieldset>
                 </div>
             </div>
@@ -28,10 +38,15 @@
                     @Display(Model.ContentItems)
                 </fieldset>
             </div>
+            <div class="row am-datatable-footer">
+                <div class="col-sm-12">
+                    @Display(Model.Pager)
+                </div>
+            </div>
         </div>
+        @Display.Modal()
     }
-}
-else {
+} else {
     <div class="panel panel-default">
         <div class="panel-body">
             <div class="info message">@T("There are no posts for this blog.")</div>

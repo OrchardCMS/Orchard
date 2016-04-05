@@ -225,7 +225,7 @@ namespace Orchard.Blogs.Controllers {
                 return new HttpUnauthorizedResult();
 
             _blogPostService.Delete(post);
-            Services.Notifier.Information(T("Blog post was successfully deleted"));
+            Services.Notifier.Information(T("Blog post {0} was successfully deleted", post.Title));
 
             return Redirect(Url.BlogForAdmin(blog.As<BlogPart>()));
         }
