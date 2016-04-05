@@ -20,7 +20,7 @@
         @Html.ValidationSummary()
         <div class="panel-heading">
             <div class="panel-heading-actions">
-                @Html.ActionLink(T("Add a new Binding").ToString(), "Select", new { }, new { @class = "btn btn-primary" })
+                <a class="btn btn-primary" href="@Url.Action("Select", new { })"><i class="fa fa-plus"></i> @T("Add a new Binding").Text</a>
             </div>
             <div class="panel-heading-primary-group">
                 <fieldset>
@@ -28,7 +28,7 @@
                     <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
                     <div class="btn-group">
                         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                            Bulk Actions <span class="caret"></span>
+                            <i class="fa fa-bolt"></i> Bulk Actions <span class="caret"></span>
                         </button>&nbsp;
                         <ul class="dropdown-menu" role="menu">
                             <li><a id="btn-bulk-delete" href="#" data-confirm="@T("Are you sure you want to delete these items?")" data-action="@BindingsBulkAction.Delete">@T("Delete").ToString()</a></li>
@@ -50,7 +50,7 @@
                     <table class="table table-striped table-fw-widget table-hover">
                         <thead>
                             <tr>
-                                <th scope="col">
+                                <th scope="col" class="text-nowrap">
                                     <div class="am-checkbox inline">
                                         <input id="checkAll" class="check-all" type="checkbox">
                                         <label for="checkAll">@T("Select all")</label>
@@ -85,9 +85,9 @@
                                 <td>
                                     @entry.Binding.Description
                                 </td>
-                                <td>
-                                    @Html.ActionLink(T("Edit").ToString(), "Edit", new { entry.Binding.Id }, new { @class = "btn btn-primary" })
-                                    @Html.ActionLink(T("Delete").Text, "Delete", new { id = entry.Binding.Id }, new { @class = "btn btn-danger", @data_confirm = @T("Are you sure you want to delete this item?") })
+                                <td class="text-nowrap">
+                                    <a class="btn btn-primary" href="@Url.Action("Edit",  new { entry.Binding.Id })"><i class="fa fa-pencil-square-o"></i> @T("Edit")</a>
+                                    <a class="btn btn-danger" href="@Url.Action("Delete", new { id = entry.Binding.Id })" data-confirm="@T("Are you sure you want to delete this item?")"><i class="fa fa-trash"></i> @T("Delete")</a>
                                 </td>
                             </tr>
                             index++;

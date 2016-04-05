@@ -15,7 +15,7 @@
                 @Display(Model.Actions)
             </fieldset>
         </div>
-        <div class="panel-heading-actions"><a href="@Url.BlogPostCreate((BlogPart)Model.ContentItem.Get(typeof(BlogPart)))" class="add button primaryAction">@T("New Post")</a></div>
+        <div class="panel-heading-actions"><a href="@Url.BlogPostCreate((BlogPart)Model.ContentItem.Get(typeof(BlogPart)))" class="btn btn-primary"><i class="fa fa-plus"></i> @T("New Post")</a></div>
     </div>
 </div>
 @Display(Model.Content)
