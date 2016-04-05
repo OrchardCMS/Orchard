@@ -17,12 +17,17 @@
                             <input type="checkbox" class="check-all" id="blog-list-select-all" />
                             <label for="blog-list-select-all">@T("Select all")</label>
                         </div>
-                        <select id="publishActions" name="Options.BulkAction" class="form-control auto-size">
-                            @Html.SelectOption(ContentsBulkAction.None, ContentsBulkAction.None, T("Choose action...").ToString())
-                            @Html.SelectOption(ContentsBulkAction.None, ContentsBulkAction.Remove, T("Delete").ToString())
-                        </select>
+                        <input id="publishActions" name="Options.BulkAction" type="hidden" value="@ContentsBulkAction.None" />
                         @Html.Hidden("returnUrl", ViewContext.RequestContext.HttpContext.Request.ToUrlString())
-                        <button type="submit" name="submit.BulkEdit" value="yes">@T("Apply")</button>
+                        <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                                Bulk Actions <span class="caret"></span>
+                            </button>&nbsp;
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a id="btn-bulk-delete" href="#" data-confirm="@T("Are you sure you want to delete these items?")" data-action="@ContentsBulkAction.Remove">@T("Delete").ToString()</a></li>
+                            </ul>
+                        </div>
                     </fieldset>
                 </div>
 
