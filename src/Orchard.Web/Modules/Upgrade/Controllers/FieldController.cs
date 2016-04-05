@@ -89,8 +89,8 @@ namespace Upgrade.Controllers {
                         _orchardServices.ContentManager.Clear();
 
                     } while (contents.Any());
- 
-                    _orchardServices.Notifier.Information(T("{0} fields were migrated successfully", contentType));
+
+                    _orchardServices.Notifier.Success(T("{0} fields were migrated successfully", contentType));
                 }
             }
 

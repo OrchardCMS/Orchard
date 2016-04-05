@@ -4,6 +4,7 @@ using Orchard.Azure.Services.Environment.Configuration;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.FileSystems.Media;
+using System;
 
 namespace Orchard.Azure.Services.FileSystems.Media {
 
@@ -64,8 +65,10 @@ namespace Orchard.Azure.Services.FileSystems.Media {
         /// <returns>The corresponding local path.</returns>
         public string GetStoragePath(string url) {
             EnsureInitialized();
-            if (url.StartsWith(_absoluteRoot)) {
-                return HttpUtility.UrlDecode(url.Substring(Combine(_absoluteRoot, "/").Length));
+            var rootUri = new Uri(_absoluteRoot);
+            var uri = new Uri(url);
+            if((uri.Host == rootUri.Host || (!string.IsNullOrEmpty(_publicHostName) && uri.Host == _publicHostName)) && uri.AbsolutePath.StartsWith(rootUri.AbsolutePath)) {
+                return HttpUtility.UrlDecode(uri.PathAndQuery.Substring(Combine(rootUri.AbsolutePath, "/").Length));
             }
 
             return null;

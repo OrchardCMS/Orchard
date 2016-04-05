@@ -537,10 +537,15 @@ span.message {
     border:1px solid #e5cece;  /* red */
     padding-left:26px;
 }
-.message-Information, .notifications {
+.message-Success, .notifications {
     background:#e6f1c9; /* green */
     border:1px solid #cfe493;
     color:#062232;
+}
+.message-Information {
+    background:#d9edf7; /* blue */
+    border:1px solid #bce8f1;
+    color:#31708f;
 }
 .message-Warning {
     background:#fdf5bc; /* yellow */

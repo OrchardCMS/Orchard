@@ -351,6 +351,10 @@ namespace Orchard.Mvc {
 
         public class HttpServerUtilityPlaceholder : HttpServerUtilityBase {
             public override int ScriptTimeout { get; set; }
+
+            public override string MapPath(string path) {
+                return HostingEnvironment.MapPath(path);
+            }
         }
     }
 }

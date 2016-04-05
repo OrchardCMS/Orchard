@@ -1,28 +1,43 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Configuration;
 using System.Diagnostics;
 using System.IO;
-using Microsoft.WindowsAzure;
-using Microsoft.WindowsAzure.StorageClient;
+using System.Linq;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Blob;
 using NUnit.Framework;
 
 namespace Orchard.Azure.Tests {
     public abstract class AzureVirtualEnvironmentTest {
-        private Process _dsService;
+        private Process _storageEmulator;
 
         protected abstract void OnInit();
 
+        
         [TestFixtureSetUp]
         public void FixtureSetup() {
-            var count = Process.GetProcessesByName("DSService").Length;
-            if ( count == 0 ) {
-                var start = new ProcessStartInfo {
-                    Arguments = "/devstore:start",
-                    FileName = Path.Combine(ConfigurationManager.AppSettings["AzureSDK"], @"emulator\csrun.exe")
+            if (!Process.GetProcessesByName("AzureStorageEmulator").Any()) {
+                var azureSDKPath = ConfigurationManager.AppSettings["AzureSDK"];
+                var storageEmulatorRelativePath = "Storage Emulator\\AzureStorageEmulator.exe";
+
+                if (String.IsNullOrEmpty(azureSDKPath)) {
+                    throw new ConfigurationErrorsException("Could not find the AppSetting \"AzureSDK\" that indicates the path to the Azure SDK on the local file system.");
+                }
+
+                var storageEmulatorAbsolutePath = Path.Combine(azureSDKPath, storageEmulatorRelativePath);
+
+                if (!File.Exists(storageEmulatorAbsolutePath)) {
+                    throw new ConfigurationErrorsException("Could not find the executable to start the Azure Storage Emulator.");
+                }
+
+                var storageEmulatorStartInfo = new ProcessStartInfo {
+                    Arguments = "start",
+                    FileName = storageEmulatorAbsolutePath
                 };
 
-                _dsService = new Process { StartInfo = start };
-                _dsService.Start();
-                _dsService.WaitForExit();
+                _storageEmulator = new Process { StartInfo = storageEmulatorStartInfo };
+                _storageEmulator.Start();
+                _storageEmulator.WaitForExit();
             }
 
             OnInit();
@@ -30,34 +45,32 @@ namespace Orchard.Azure.Tests {
 
         [TestFixtureTearDown]
         public void FixtureTearDown() {
-
-            if ( _dsService != null )
-                _dsService.Close();
+            if (_storageEmulator != null)
+                _storageEmulator.Close();
         }
 
-        protected void DeleteAllBlobs(string containerName, CloudStorageAccount account)
-        {
+        protected void DeleteAllBlobs(string containerName, CloudStorageAccount account) {
             var blobClient = account.CreateCloudBlobClient();
             var container = blobClient.GetContainerReference(containerName);
 
-            foreach ( var blob in container.ListBlobs() ) {
-                if ( blob is CloudBlob ) {
-                    ( (CloudBlob)blob ).DeleteIfExists();
+            foreach (var blob in container.ListBlobs()) {
+                if (blob is CloudBlob) {
+                    ((CloudBlob)blob).DeleteIfExists();
                 }
 
-                if ( blob is CloudBlobDirectory ) {
+                if (blob is CloudBlobDirectory) {
                     DeleteAllBlobs((CloudBlobDirectory)blob);
                 }
             }
         }
 
         private static void DeleteAllBlobs(CloudBlobDirectory cloudBlobDirectory) {
-            foreach ( var blob in cloudBlobDirectory.ListBlobs() ) {
-                if ( blob is CloudBlob ) {
-                    ( (CloudBlob)blob ).DeleteIfExists();
+            foreach (var blob in cloudBlobDirectory.ListBlobs()) {
+                if (blob is CloudBlob) {
+                    ((CloudBlob)blob).DeleteIfExists();
                 }
 
-                if ( blob is CloudBlobDirectory ) {
+                if (blob is CloudBlobDirectory) {
                     DeleteAllBlobs((CloudBlobDirectory)blob);
                 }
             }
