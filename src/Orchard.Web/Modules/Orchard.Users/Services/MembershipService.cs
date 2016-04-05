@@ -66,8 +66,8 @@ namespace Orchard.Users.Services {
             Logger.Information("CreateUser {0} {1}", createUserParams.Username, createUserParams.Email);
 
             var registrationSettings = _orchardServices.WorkContext.CurrentSite.As<RegistrationSettingsPart>();
-
-            var user = _orchardServices.ContentManager.New<UserPart>("User");
+            var contentType = !string.IsNullOrEmpty(createUserParams.ContentType) ? createUserParams.ContentType : "User";
+            var user = _orchardServices.ContentManager.New<UserPart>(contentType);
 
             user.UserName = createUserParams.Username;
             user.Email = createUserParams.Email;
