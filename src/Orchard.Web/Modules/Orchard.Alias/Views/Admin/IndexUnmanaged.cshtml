@@ -97,8 +97,8 @@
                                     @Html.Link(url, Href("~/" + urlPrefix + "/" + url))
                                 </td>
                                 <td>
-                                    @Html.ActionLink(T("Edit").Text, "Edit", new { path = alias.Path == String.Empty ? "/" : alias.Path }, new { @class = "btn btn-primary", @data_confirm = @T("Are you sure you want to edit this item?") })
-                                    @Html.ActionLink(T("Delete").Text, "Delete", new { path = alias.Path }, new { @class = "btn btn-danger", @data_confirm = @T("Are you sure you want to delete this item?")})
+                                    <a class="btn btn-primary" href="@Url.Action("Edit",  new { path = alias.Path == String.Empty ? "/" : alias.Path })" ><i class="fa fa-pencil-square-o"></i> @T("Edit")</a>
+                                    <a class="btn btn-danger" href="@Url.Action("Delete", new { path = alias.Path })" data-confirm="@T("Are you sure you want to delete this item?")"><i class="fa fa-trash"></i> @T("Delete")</a>
                                 </td>
                             </tr>
                             index++;
