@@ -30,7 +30,7 @@
                         <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
                         <div class="btn-group">
                             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                                Bulk Actions <span class="caret"></span>
+                                <i class="fa fa-bolt"></i> Bulk Actions <span class="caret"></span>
                             </button>&nbsp;
                             <ul class="dropdown-menu" role="menu">
                                 <li><a id="btn-bulk-delete" href="#" data-confirm="@T("Are you sure you want to delete these items?")" data-action="@AliasBulkAction.Delete">@T("Delete").ToString()</a></li>
@@ -49,7 +49,7 @@
                     </fieldset>*@
                 </div>
                 <div class="col-sm-4 text-right">
-                    @Html.ActionLink(T("Add new Alias").Text, "Add", new { returnurl = HttpContext.Current.Request.RawUrl }, new { @class = "btn btn-primary" })
+                    <a class="btn btn-primary" href="@Url.Action("Add", new { returnurl = HttpContext.Current.Request.RawUrl })"><i class="fa fa-plus"></i> @T("Add new Alias").Text</a>
                 </div>
             </div>
         </div>

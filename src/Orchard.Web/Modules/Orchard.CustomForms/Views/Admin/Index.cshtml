@@ -23,7 +23,7 @@
                         <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
                         <div class="btn-group">
                             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                                Bulk Actions <span class="caret"></span>
+                                <i class="fa fa-bolt"></i> Bulk Actions <span class="caret"></span>
                             </button>&nbsp;
                             <ul class="dropdown-menu" role="menu">
                                 <li><a id="btn-bulk-delete" href="#" data-confirm="@T("Are you sure you want to delete these items?")" data-action="@CustomFormBulkAction.Delete">@T("Delete").ToString()</a></li>
@@ -41,7 +41,9 @@
                             </select>*@
                     </fieldset>
                 </div>
-                <div class="col-sm-4 text-right">@Html.ActionLink(T("Add a new Custom Form").ToString(), "Create", "Admin", new { area = "Contents", id = "CustomForm", returUrl = Request.RawUrl }, new { @class = "btn btn-primary" })</div>
+                <div class="col-sm-4 text-right">
+                    <a class="btn btn-primary" href="@Url.Action("Create", "Admin", new { area = "Contents", id = "CustomForm", returUrl = Request.RawUrl })"><i class="fa fa-plus"></i> @T("Add a new Custom Form").Text</a>
+                </div>
             </div>
 
         </div>
@@ -64,30 +66,30 @@
                         </thead>
                         @foreach (var entry in Model.CustomForms) {
                             var checkboxId = Html.IdFor(m => m.CustomForms[formIndex].CustomForm.Id);
-                            <tr>
-                                <td>
-                                    <div class="am-checkbox">
-                                        <input type="hidden" value="@Model.CustomForms[formIndex].CustomForm.Id" name="@Html.NameOf(m => m.CustomForms[formIndex].CustomForm.Id)" />
-                                        <input type="hidden" value="@Model.CustomForms[formIndex].CustomForm.ContentType" name="@Html.NameOf(m => m.CustomForms[formIndex].CustomForm.ContentType)" />
-                                        <input id="@checkboxId" type="checkbox" value="true" name="@Html.NameOf(m => m.CustomForms[formIndex].IsChecked)" />
-                                        <label for="@checkboxId"></label>
-                                    </div>
-                                </td>
-                                <td>
-                                    @Html.ItemEditLink(entry.CustomForm.Title, entry.CustomForm.ContentItem)
-                                    @if (entry.CustomForm.ContentItem.ContentType == "CustomFormWidget") {
-                                        @T("-")<text> </text>@T("Widget")
+                        <tr>
+                            <td>
+                                <div class="am-checkbox">
+                                    <input type="hidden" value="@Model.CustomForms[formIndex].CustomForm.Id" name="@Html.NameOf(m => m.CustomForms[formIndex].CustomForm.Id)" />
+                                    <input type="hidden" value="@Model.CustomForms[formIndex].CustomForm.ContentType" name="@Html.NameOf(m => m.CustomForms[formIndex].CustomForm.ContentType)" />
+                                    <input id="@checkboxId" type="checkbox" value="true" name="@Html.NameOf(m => m.CustomForms[formIndex].IsChecked)" />
+                                    <label for="@checkboxId"></label>
+                                </div>
+                            </td>
+                            <td>
+                                @Html.ItemEditLink(entry.CustomForm.Title, entry.CustomForm.ContentItem)
+                                @if (entry.CustomForm.ContentItem.ContentType == "CustomFormWidget") {
+                                    @T("-")<text> </text>@T("Widget")
                                     }
-                                </td>
-                                <td>
-                                    @entry.CustomForm.ContentType.CamelFriendly()
-                                </td>
-                                <td>
-                                    @Html.ActionLink(T("Submissions").Text, "Item", "Admin", new { area = "Orchard.CustomForms", id = entry.CustomForm.Id }, new { @class = "btn btn-default" })
-                                    @Html.ItemEditLink(T("Edit").Text, entry.CustomForm.ContentItem, null, new { @class = "btn btn-primary" })
-                                    @Html.Link(T("Delete").Text, Url.ItemRemoveUrl(entry.CustomForm.ContentItem, new { returnUrl = Request.RawUrl }), new Dictionary<string, Object> { { "class", "btn btn-danger" }, { "data-confirm", T("Are you sure you want to delete this item?") } })
-                                </td>
-                            </tr>
+                            </td>
+                            <td>
+                                @entry.CustomForm.ContentType.CamelFriendly()
+                            </td>
+                            <td>
+                                <a class="btn btn-default" href="@Url.Action("Item", "Admin", new { area = "Orchard.CustomForms", id = entry.CustomForm.Id })"><i class="fa fa-list"></i> @T("Submissions")</a>
+                                <a class="btn btn-primary" href="@Url.ItemEditUrl(entry.CustomForm.ContentItem)"><i class="fa fa-pencil-square-o"></i> @T("Edit")</a>
+                                <a class="btn btn-danger" href="@Url.ItemRemoveUrl(entry.CustomForm.ContentItem, new { returnUrl = Request.RawUrl })" data-confirm="@T("Are you sure you want to delete this item?")"><i class="fa fa-trash"></i> @T("Delete")</a>
+                            </td>
+                        </tr>
                             formIndex++;
                         }
                     </table>
