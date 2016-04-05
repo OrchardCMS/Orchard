@@ -48,7 +48,7 @@ namespace Orchard.Dashboards.Controllers {
             return UpdateDashboard(dashboard => {
                 if (!dashboard.Has<IPublishingControlAspect>() && !dashboard.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
                     _services.ContentManager.Publish(dashboard);
-                _services.Notifier.Information(T("Your dashboard has been saved."));
+                _services.Notifier.Success(T("Your dashboard has been saved."));
             });
         }
 
@@ -61,7 +61,7 @@ namespace Orchard.Dashboards.Controllers {
 
             return UpdateDashboard(dashboard => {
                 _services.ContentManager.Publish(dashboard);
-                _services.Notifier.Information(T("Your dashboard has been published."));
+                _services.Notifier.Success(T("Your dashboard has been published."));
             });
         }
 
@@ -79,7 +79,7 @@ namespace Orchard.Dashboards.Controllers {
             if (contentItem != null)
                 conditonallyPublish(contentItem);
             else
-                _services.Notifier.Information(T("Your dashboard has been saved."));
+                _services.Notifier.Success(T("Your dashboard has been saved."));
 
             return RedirectToAction("Edit");
         }

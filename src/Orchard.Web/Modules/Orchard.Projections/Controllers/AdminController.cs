@@ -233,7 +233,7 @@ namespace Orchard.Projections.Controllers {
             }
 
             Services.ContentManager.Remove(query.ContentItem);
-            Services.Notifier.Information(T("Query {0} deleted", query.Name));
+            Services.Notifier.Success(T("Query {0} deleted", query.Name));
 
             return RedirectToAction("Index");
         }

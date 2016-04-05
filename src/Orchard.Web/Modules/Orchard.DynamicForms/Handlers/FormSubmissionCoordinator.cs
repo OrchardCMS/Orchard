@@ -54,7 +54,7 @@ namespace Orchard.DynamicForms.Handlers {
 
             // Notifiy.
             if (!String.IsNullOrWhiteSpace(form.Notification))
-                _notifier.Information(T(_tokenizer.Replace(T(form.Notification).Text, tokenData)));
+                _notifier.Success(T(_tokenizer.Replace(T(form.Notification).Text, tokenData)));
 
             // Trigger workflow event.
             _workflowManager.TriggerEvent(DynamicFormSubmittedActivity.EventName, contentItem, () => tokenData);

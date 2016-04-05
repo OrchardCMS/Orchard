@@ -52,7 +52,7 @@ namespace Upgrade.Controllers {
 
             // create a Main Menu
             var mainMenu = _menuService.Create("Main Menu");
-            _orchardServices.Notifier.Information(T("Main menu created"));
+            _orchardServices.Notifier.Success(T("Main menu created"));
 
             // assign the Main Menu to all current menu items
             foreach (var menuItem in _menuService.Get()) {
@@ -62,7 +62,7 @@ namespace Upgrade.Controllers {
                 }
                 menuItem.Menu = mainMenu.ContentItem;
             }
-            _orchardServices.Notifier.Information(T("Menu items moved to Main menu"));
+            _orchardServices.Notifier.Success(T("Menu items moved to Main menu"));
 
             // a widget should is created to display the navigation
             var layer = _widgetsService.GetLayers().FirstOrDefault(x => x.Name == "Default");

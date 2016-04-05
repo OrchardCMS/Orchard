@@ -94,7 +94,7 @@ namespace Orchard.Azure.MediaServices.Controllers {
                         return View("Index", viewModel);
                     }
                     else {
-                        _services.Notifier.Information(T("The new account credentials were successfully verified."));
+                        _services.Notifier.Success(T("The new account credentials were successfully verified."));
                     }
                 }
             }
@@ -132,7 +132,7 @@ namespace Orchard.Azure.MediaServices.Controllers {
 
                         if (addedOrigins.Any()) {
                             Logger.Information("CORS rules were added to the configured storage account for the following URLs: {0}.", String.Join("; ", addedOrigins));
-                            _services.Notifier.Information(T("CORS rules have been configured on your storage account for the following URLs: {0}.", String.Join("; ", addedOrigins)));
+                            _services.Notifier.Success(T("CORS rules have been configured on your storage account for the following URLs: {0}.", String.Join("; ", addedOrigins)));
                         }
                     }
                     catch (Exception ex) {
@@ -143,7 +143,7 @@ namespace Orchard.Azure.MediaServices.Controllers {
             }
 
             Logger.Information("Module settings were saved.");
-            _services.Notifier.Information(T("The settings were saved successfully."));
+            _services.Notifier.Success(T("The settings were saved successfully."));
 
             return RedirectToAction("Index");
         }
@@ -156,7 +156,7 @@ namespace Orchard.Azure.MediaServices.Controllers {
             Logger.Debug("User requested to verify WAMS account credentials.");
 
             if (TestCredentialsInternal(viewModel.General.WamsAccountName, viewModel.General.WamsAccountKey, viewModel.General.StorageAccountKey)) {
-                _services.Notifier.Information(T("The account credentials were successfully verified."));
+                _services.Notifier.Success(T("The account credentials were successfully verified."));
             }
             else {
                 _services.Notifier.Error(T("The account credentials verification failed."));
