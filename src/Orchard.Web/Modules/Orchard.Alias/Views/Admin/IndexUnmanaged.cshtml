@@ -63,11 +63,11 @@
                                 <th scope="col">
                                     <div class="am-checkbox am-select-all inline">
                                         <input id="checkAll" class="check-all" type="checkbox">
-                                        <label for="checkAll">@T("Select all")</label>
+                                        <label class="check-all" for="checkAll"></label>
                                     </div>
                                 </th>
-                                <th scope="col">@T("Alias")</th>
-                                <th scope="col">@T("Route")</th>
+                                <th scope="col" width="50%">@T("Alias")</th>
+                                <th scope="col" width="50%">@T("Route")</th>
                                 <th scope="col">&nbsp;</th>
                             </tr>
                         </thead>
@@ -96,7 +96,7 @@
                                 <td>
                                     @Html.Link(url, Href("~/" + urlPrefix + "/" + url))
                                 </td>
-                                <td>
+                                <td class="text-nowrap">
                                     <a class="btn btn-primary" href="@Url.Action("Edit",  new { path = alias.Path == String.Empty ? "/" : alias.Path })" ><i class="fa fa-pencil-square-o"></i> @T("Edit")</a>
                                     <a class="btn btn-danger" href="@Url.Action("Delete", new { path = alias.Path })" data-confirm="@T("Are you sure you want to delete this item?")"><i class="fa fa-trash"></i> @T("Delete")</a>
                                 </td>

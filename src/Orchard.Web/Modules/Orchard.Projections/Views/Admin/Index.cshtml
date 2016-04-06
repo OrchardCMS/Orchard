@@ -56,10 +56,10 @@
                                 <th scope="col">
                                     <div class="am-checkbox inline">
                                         <input id="checkAll" class="check-all" type="checkbox">
-                                        <label for="checkAll">@T("Select all")</label>
+                                        <label class="check-all" for="checkAll"></label>
                                     </div>
                                 </th>
-                                <th scope="col">@T("Name")</th>
+                                <th scope="col" width="100%">@T("Name")</th>
                                 <th scope="col"></th>
                             </tr>
                         </thead>
@@ -77,7 +77,7 @@
                                 <td>
                                     @Html.ActionLink(entry.Name, "Edit", new { id = entry.QueryId })
                                 </td>
-                                <td>
+                                <td class="text-nowrap">
                                     @if (entry.Query.FilterGroups.SelectMany(x => x.Filters).Any()) {
                                         <a class="btn btn-default" href="@Url.Action("Preview",  new { id = entry.QueryId })"><i class="fa fa-eye"></i> @T("Preview")</a>
                                     }

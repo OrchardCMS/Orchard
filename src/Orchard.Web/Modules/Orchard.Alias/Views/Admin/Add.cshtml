@@ -7,7 +7,6 @@
         @Html.ValidationSummary()
         <div class="panel-body">
             <fieldset>
-                <legend>@T("Create Alias")</legend>
                 <div>
                     <label for="aliasPath">@T("Alias Path")</label>
                     @Html.TextBox("aliasPath", (object)ViewBag.Path, new { @class = "text large" })

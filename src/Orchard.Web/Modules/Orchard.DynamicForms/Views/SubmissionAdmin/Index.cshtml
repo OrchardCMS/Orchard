@@ -39,11 +39,11 @@
                                 <th width="100" class="text-nowrap">
                                     <div class="am-checkbox am-select-all inline">
                                         <input id="checkAll" class="check-all" type="checkbox">
-                                        <label for="checkAll">@T("Select all")</label>
+                                        <label class="check-all" for="checkAll"></label>
                                     </div>
                                 </th>
                                 @foreach (var dataColumn in dataColumns) {
-                                    <th>@dataColumn.ToString().CamelFriendly()</th>
+                                    <th width="100%">@dataColumn.ToString().CamelFriendly()</th>
                                 }
                                 <th></th>
                             </tr>
@@ -59,9 +59,9 @@
                                         </div>
                                     </td>
                                     @foreach (var dataColumn in dataColumns) {
-                                        <td>@dataRow[dataColumn]</td>
+                                        <td class="text-nowrap">@dataRow[dataColumn]</td>
                                     }
-                                    <td>
+                                    <td class="text-nowrap">
                                         <a class="btn btn-primary" href="@Url.Action("Details", "SubmissionAdmin", new { id = id, area = "Orchard.DynamicForms" })"><i class="fa fa-table"></i> @T("Details")</a>
                                         <a class="btn btn-danger" href="@Url.Action("Delete", "SubmissionAdmin", new { id = id, area = "Orchard.DynamicForms" })" data-confirm="@T("Are you sure you want to delete this item?")"><i class="fa fa-trash"></i> @T("Delete")</a>
                                     </td>

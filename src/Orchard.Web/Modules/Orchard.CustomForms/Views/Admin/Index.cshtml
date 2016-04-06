@@ -56,11 +56,11 @@
                                 <th scope="col">
                                     <div class="am-checkbox am-select-all inline">
                                         <input id="checkAll" class="check-all" type="checkbox">
-                                        <label for="checkAll">@T("Select all")</label>
+                                        <label class="check-all" for="checkAll"></label>
                                     </div>
                                 </th>
-                                <th scope="col">@T("Title")</th>
-                                <th scope="col">@T("Content Type")</th>
+                                <th scope="col" width="50%">@T("Title")</th>
+                                <th scope="col" width="50%">@T("Content Type")</th>
                                 <th scope="col">&nbsp;</th>
                             </tr>
                         </thead>
@@ -84,7 +84,7 @@
                             <td>
                                 @entry.CustomForm.ContentType.CamelFriendly()
                             </td>
-                            <td>
+                            <td class="text-nowrap">
                                 <a class="btn btn-default" href="@Url.Action("Item", "Admin", new { area = "Orchard.CustomForms", id = entry.CustomForm.Id })"><i class="fa fa-list"></i> @T("Submissions")</a>
                                 <a class="btn btn-primary" href="@Url.ItemEditUrl(entry.CustomForm.ContentItem)"><i class="fa fa-pencil-square-o"></i> @T("Edit")</a>
                                 <a class="btn btn-danger" href="@Url.ItemRemoveUrl(entry.CustomForm.ContentItem, new { returnUrl = Request.RawUrl })" data-confirm="@T("Are you sure you want to delete this item?")"><i class="fa fa-trash"></i> @T("Delete")</a>
