@@ -223,7 +223,7 @@
             }
             else {
                 //for bulk actions
-                submitForm($("#btn-bulk-delete").data("action"));
+                submitForm($('#publishActions').val());
             }
         });
 

@@ -3,32 +3,63 @@
     Style.Require("DynamicForms.FormElements");
     Layout.Title = T("Dynamic Forms");
 }
-<table class="items dynamic-forms">
-    <thead>
-        <tr>
-            <th>@T("Form")</th>
-            <th>@T("Submissions")</th>
-            <th></th>
-        </tr>
-    </thead>
-    @if (!Model.Forms.Any()) {
-        <tbody>
-            <tr>
-                <td colspan="3">@T("There are no submissions yet.")</td>
-            </tr>
-        </tbody>
-    }
-    else {
-        <tbody class="forms">
-            @foreach (var form in Model.Forms) {
-                var formName = form.Key;
-                var submissions = form.Count();
-                <tr>
-                    <td>@formName</td>
-                    <td>@submissions</td>
-                    <td>@Html.ActionLink(T("Submissions").Text, "Index", "SubmissionAdmin", new { id = formName, area = "Orchard.DynamicForms" }, null)</td>
-                </tr>
-            }
-        </tbody>
-    }
-</table>
+<div class="panel panel-default">
+    <div class="panel-heading no-border">
+        <div class="row">
+            <div class="col-sm-4">&nbsp;</div>
+            <div class="col-sm-4">&nbsp;</div>
+            <div class="col-sm-4">&nbsp;</div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="table-responsive table-with-footer">
+                <table class="table table-fw-widget data-table table-striped dataTable no-footer">
+                    <thead>
+                        <tr>
+                            <th width="100" class="text-nowrap">
+                                <div class="am-checkbox am-select-all inline">
+                                    <input id="checkAll" class="check-all" type="checkbox">
+                                    <label for="checkAll">@T("Select all")</label>
+                                </div>
+                            </th>
+                            <th>@T("Form")</th>
+                            <th>@T("Submissions")</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    @if (!Model.Forms.Any()) {
+                        <tbody>
+                            <tr>
+                                <td colspan="3">@T("There are no submissions yet.")</td>
+                            </tr>
+                        </tbody>
+                    } else {
+                        <tbody class="forms">
+                            @foreach (var form in Model.Forms) {
+                    var formName = form.Key;
+                    var submissions = form.Count();
+                                <tr>
+                                    <td>
+                                        <div class="am-checkbox">
+                                            <input id="@formName" type="checkbox" value="" name="@formName" />
+                                            <label for="@formName"></label>
+                                        </div>
+                                    </td>
+                                    <td>@formName</td>
+                                    <td>@submissions</td>
+                                    <td>@Html.ActionLink(T("Submissions").Text, "Index", "SubmissionAdmin", new { id = formName, area = "Orchard.DynamicForms" }, new { @class = "btn btn-default" })</td>
+                                </tr>
+                            }
+                        </tbody>
+                    }
+                </table>
+            </div>
+            <div class="row am-datatable-footer">
+                <div class="col-sm-12">
+                    @*@Display(Model.Pager)*@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

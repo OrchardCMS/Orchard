@@ -9,21 +9,23 @@
 <div class="panel panel-default">
     @using (Html.BeginFormAntiForgeryPost()) {
         @Html.ValidationSummary()
-        <div class="panel-heading">
+        <div class="panel-heading no-border">
             <div class="panel-heading-actions">
                 @Display.EditorTemplate(TemplateName: "Parts/CreateTag", Model: ViewData["CreateTag"] != null ? ViewData["CreateTag"] : new TagsAdminCreateViewModel())
             </div>
             <div class="panel-heading-primary-group">
-
-                <fieldset class="bulk-actions">
-                    <label for="publishActions">@T("Actions:")</label>
-                    <select id="publishActions" name="@Html.NameOf(m => m.BulkAction)" class="form-control auto-size">
-                        @Html.SelectOption(Model.BulkAction, TagAdminIndexBulkAction.None, T("Choose action...").ToString())
-                        @Html.SelectOption(Model.BulkAction, TagAdminIndexBulkAction.Delete, T("Delete").ToString())
-                    </select>
-                    <button type="submit" name="submit.BulkEdit" value="@T("Apply")">@T("Apply")</button>
+                <fieldset>
+                    <input id="publishActions" name="@Html.NameOf(m => m.BulkAction)" type="hidden" value="@TagAdminIndexBulkAction.None" />
+                    <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa fa-bolt"></i> Bulk Actions <span class="caret"></span>
+                        </button>&nbsp;
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="#" data-confirm="@T("Are you sure you want to delete these items?")" data-action="@TagAdminIndexBulkAction.Delete">@T("Delete").ToString()</a></li>
+                        </ul>
+                    </div>
                 </fieldset>
-
             </div>
         </div>
 
@@ -38,35 +40,37 @@
                         </colgroup>
                         <thead>
                             <tr>
-                                <th scope="col">
+                                <th scope="col" width="100">
                                     <div class="am-checkbox inline">
                                         <input id="checkAll" class="check-all" type="checkbox">
                                         <label for="checkAll">@T("Select all")</label>
                                     </div>
                                 </th>
                                 <th scope="col">@T("Name")</th>
-                                <th scope="col" class="text-right">@T("Actions")</th>
+                                <th scope="col"></th>
                             </tr>
                         </thead>
                         @{var tagIndex = 0;}
                         @foreach (var tagEntry in Model.Tags) {
+                            var checkboxId = Html.IdFor(m => m.Tags[tagIndex].Tag.Id);
                             <tr>
                                 <td>
                                     <div class="am-checkbox">
-                                        <input type="hidden" value="@Model.Tags[tagIndex].Tag.Id" name="@Html.NameOf(m => m.Tags[tagIndex].Tag.Id)" />
-                                        <input id="@("Checkbox." + tagEntry.Tag.Id)" type="checkbox" value="true" name="@Html.NameOf(m => m.Tags[tagIndex].IsChecked)" />
-                                        <label for="@("Checkbox." + tagEntry.Tag.Id)"></label>
+                                        <input type="hidden" value="@Model.Tags[tagIndex].Tag.Id" name="@Html.FieldNameFor(m => m.Tags[tagIndex].Tag.Id)" />
+                                        <input type="hidden" value="@Model.Tags[tagIndex].Tag.TagName" name="@Html.FieldNameFor(m => m.Tags[tagIndex].Tag.TagName)" />
+                                        <input id="@checkboxId" type="checkbox" value="true" name="@Html.FieldNameFor(m => m.Tags[tagIndex].IsChecked)" />
+                                        <label for="@checkboxId"></label>
                                     </div>
                                 </td>
                                 <td>
                                     @Html.ActionLink(tagEntry.Tag.TagName, "Edit", new { id = tagEntry.Tag.Id })
                                 </td>
                                 <td>
-                                    @Html.ActionLink(T("Edit").ToString(), "Edit", new { id = tagEntry.Tag.Id }, new { @class = "btn btn-primary" })
-                                    <a class="btn btn-danger" href="@Url.Action("Remove", new {tagEntry.Tag.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString()})" itemprop="RemoveUrl UnsafeUrl">@T("Delete")</a>
+                                    <a class="btn btn-primary" href="@Url.Action("Edit",  new { id = tagEntry.Tag.Id })"><i class="fa fa-pencil-square-o"></i> @T("Edit")</a>
+                                    <a class="btn btn-danger" href="@Url.Action("Remove", new {tagEntry.Tag.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString()})" data-confirm="@T("Are you sure you want to delete this item?")"><i class="fa fa-trash"></i> @T("Delete")</a>
                                 </td>
                             </tr>
-                            tagIndex = tagIndex + 1;
+                            tagIndex++;
                         }
                     </table>
                 </div>
@@ -77,5 +81,6 @@
                 </div>
             </div>
         </div>
-                            }
+    }
 </div>
+@Display.Modal()

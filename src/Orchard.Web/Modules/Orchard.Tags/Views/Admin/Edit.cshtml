@@ -4,39 +4,51 @@
 
 @{ Layout.Title = T("Manage tag: {0}", Model.TagName).ToString(); }
 
-@using (Html.BeginFormAntiForgeryPost()) { 
-    @Html.ValidationSummary()  
-    <fieldset>
-        @Html.HiddenFor(m=>m.Id)
-        @Html.LabelFor(m => m.TagName, T("Tag Name"))
-        @Html.TextBoxFor(m=>m.TagName, new { @class = "text" })
-    </fieldset>
-
-    <fieldset>
-        <button class="btn btn-primary" type="submit">@T("Save")</button>
-    </fieldset>
-}
-<h2>@T("Content items tagged with {0}", Model.TagName)</h2>
-@if (ViewData["ContentItems"] == null) {
-    <p>@T("There is nothing tagged with {0}", Model.TagName)</p>
-}
-else {
-    <table class="items">
-        <colgroup>
-            <col id="Col1" />
-            <col id="Col2" />
-        </colgroup>
-        <thead>
-            <tr>
-                <th scope="col">@T("Content Type")</th>
-                <th scope="co2">@T("Name")</th>
-            </tr>
-        </thead>
-        @foreach (IContent content in (IEnumerable<IContent>)ViewData["ContentItems"]) { 
-        <tr>
-            <td>@content.ContentItem.ContentType.CamelFriendly()</td>
-            <td>@Html.ItemEditLink(content.ContentItem)</td>
-        </tr>
-        }
-    </table>
-}
+<div class="panel panel-default">
+    @using (Html.BeginFormAntiForgeryPost()) {
+        @Html.ValidationSummary()
+        <div class="panel-heading">
+            <div class="col-sm-6">
+                <fieldset class="form-inline">
+                    @Html.HiddenFor(m => m.Id)
+                    @Html.LabelFor(m => m.TagName, T("Tag Name"))
+                    @Html.TextBoxFor(m => m.TagName, new { @class = "form-control" })
+                </fieldset>
+            </div>
+            <div class="col-sm-6 text-right">
+                <fieldset>
+                    <button class="btn btn-primary" type="submit">@T("Save")</button>
+                </fieldset>
+            </div>
+        </div>
+    }
+    <div class="row">
+        <div class="col-sm-12">
+            <h2>@T("Content items tagged with {0}", Model.TagName)</h2>
+            @if (ViewData["ContentItems"] == null) {
+                <p>@T("There is nothing tagged with {0}", Model.TagName)</p>
+            } else {
+                <div class="table-responsive table-with-footer">
+                    <table class="table table-fw-widget data-table table-striped dataTable no-footer">
+                        <colgroup>
+                            <col id="Col1" />
+                            <col id="Col2" />
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th scope="col">@T("Content Type")</th>
+                                <th scope="co2">@T("Name")</th>
+                            </tr>
+                        </thead>
+                        @foreach (IContent content in (IEnumerable<IContent>)ViewData["ContentItems"]) {
+                            <tr>
+                                <td>@content.ContentItem.ContentType.CamelFriendly()</td>
+                                <td>@Html.ItemEditLink(content.ContentItem)</td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+</div>
