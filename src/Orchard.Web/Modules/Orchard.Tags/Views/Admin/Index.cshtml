@@ -40,13 +40,13 @@
                         </colgroup>
                         <thead>
                             <tr>
-                                <th scope="col" width="100">
+                                <th scope="col">
                                     <div class="am-checkbox inline">
                                         <input id="checkAll" class="check-all" type="checkbox">
-                                        <label for="checkAll">@T("Select all")</label>
+                                        <label class="check-all" for="checkAll"></label>
                                     </div>
                                 </th>
-                                <th scope="col">@T("Name")</th>
+                                <th scope="col" width="100%">@T("Name")</th>
                                 <th scope="col"></th>
                             </tr>
                         </thead>
@@ -65,7 +65,7 @@
                                 <td>
                                     @Html.ActionLink(tagEntry.Tag.TagName, "Edit", new { id = tagEntry.Tag.Id })
                                 </td>
-                                <td>
+                                <td class="text-nowrap">
                                     <a class="btn btn-primary" href="@Url.Action("Edit",  new { id = tagEntry.Tag.Id })"><i class="fa fa-pencil-square-o"></i> @T("Edit")</a>
                                     <a class="btn btn-danger" href="@Url.Action("Remove", new {tagEntry.Tag.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString()})" data-confirm="@T("Are you sure you want to delete this item?")"><i class="fa fa-trash"></i> @T("Delete")</a>
                                 </td>
