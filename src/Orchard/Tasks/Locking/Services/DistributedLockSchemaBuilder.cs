@@ -13,14 +13,6 @@ namespace Orchard.Tasks.Locking.Services {
             _schemaBuilder = schemaBuilder;
         }
 
-        public bool EnsureSchema() {
-            if (SchemaExists())
-                return false;
-
-            CreateSchema();
-            return true;
-        }
-
         public void CreateSchema() {
             _schemaBuilder.CreateTable(TableName, table => table
                 .Column<int>("Id", column => column.PrimaryKey().Identity())
@@ -36,8 +28,8 @@ namespace Orchard.Tasks.Locking.Services {
 
         public bool SchemaExists() {
             try {
-                var tablePrefix = String.IsNullOrEmpty(_shellSettings.DataTablePrefix) ? "" : _shellSettings.DataTablePrefix + "_";
-                _schemaBuilder.ExecuteSql(String.Format("select * from {0}{1}", tablePrefix, TableName));
+                var tablePrefix = string.IsNullOrEmpty(_shellSettings.DataTablePrefix) ? "" : _shellSettings.DataTablePrefix + "_";
+                _schemaBuilder.ExecuteSql(string.Format("select * from {0}{1}", tablePrefix, TableName));
                 return true;
             }
             catch {
