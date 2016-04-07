@@ -1,5 +1,7 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
+using Orchard.ContentManagement.MetaData;
 using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.Security;
@@ -12,10 +14,12 @@ namespace Orchard.Users.Activities {
     public class CreateUserActivity : Task {
         private readonly IUserService _userService;
         private readonly IMembershipService _membershipService;
+        private readonly IContentDefinitionManager _contentDefinitionManager;
 
-        public CreateUserActivity(IUserService userService, IMembershipService membershipService) {
+        public CreateUserActivity(IUserService userService, IMembershipService membershipService, IContentDefinitionManager contentDefinitionManager) {
             _userService = userService;
             _membershipService = membershipService;
+            _contentDefinitionManager = contentDefinitionManager;
             T = NullLocalizer.Instance;
         }
 
@@ -42,6 +46,7 @@ namespace Orchard.Users.Activities {
                 T("InvalidUserNameOrEmail"),
                 T("InvalidPassword"),
                 T("UserNameOrEmailNotUnique"),
+                T("WrongConfiguration"),
                 T("Done")
             };
         }
@@ -51,6 +56,8 @@ namespace Orchard.Users.Activities {
             var email = activityContext.GetState<string>("Email");
             var password = activityContext.GetState<string>("Password");
             var approved = activityContext.GetState<bool>("Approved");
+            var contentType = activityContext.GetState<string>("ContentType");
+            
 
             if (String.IsNullOrWhiteSpace(userName) || String.IsNullOrWhiteSpace(email)) {
                 yield return T("InvalidUserNameOrEmail");
@@ -62,10 +69,17 @@ namespace Orchard.Users.Activities {
                 yield break;
             }
 
+            if (!String.IsNullOrWhiteSpace(contentType) &&
+                (_contentDefinitionManager.GetTypeDefinition(contentType) == null ||
+                    !_contentDefinitionManager.GetTypeDefinition(contentType).Parts.Any(p => p.PartDefinition.Name == "UserPart"))) {
+                yield return T("WrongConfiguration");
+                yield break;
+            }
+
             if (!_userService.VerifyUserUnicity(userName, email)) {
                 yield return T("UserNameOrEmailNotUnique");
                 yield break;
-            }
+            }            
 
             var user = _membershipService.CreateUser(
                 new CreateUserParams(
@@ -74,7 +88,9 @@ namespace Orchard.Users.Activities {
                     email,
                     isApproved: approved,
                     passwordQuestion: null,
-                    passwordAnswer: null));
+                    passwordAnswer: null,
+                    contentType: contentType
+                    ));
 
             workflowContext.Content = user;
 

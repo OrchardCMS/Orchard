@@ -1,10 +1,19 @@
 ﻿using System;
+using System.Linq;
+using Orchard.ContentManagement.MetaData;
 using Orchard.Environment.Extensions;
 using Orchard.Forms.Services;
 
 namespace Orchard.Users.Forms {
     [OrchardFeature("Orchard.Users.Workflows")]
     public class CreateUserForm : Component, IFormProvider, IFormEventHandler {
+
+        private readonly IContentDefinitionManager _contentDefinitionManager;
+
+        public CreateUserForm(IContentDefinitionManager contentDefinitionManager) {
+            _contentDefinitionManager = contentDefinitionManager;
+        }
+
         void IFormProvider.Describe(DescribeContext context) {
             context.Form("CreateUser", factory => {
                 var shape = (dynamic) factory;
@@ -33,7 +42,13 @@ namespace Orchard.Users.Forms {
                         Name: "Approved",
                         Title: T("Approved"),
                         Description: T("Check to approve the created user."),
-                        Value: true));
+                        Value: true),
+                    _ContentType: shape.Textbox(
+                        Id: "contentType",
+                        Name: "ContentType",
+                        Title: T("ContentType"),                        
+                        Description: T("The user content type to be created. If none is set Content Type User will be used."),
+                        Classes: new[] { "text" }));
 
                 return form;
             });
@@ -45,6 +60,7 @@ namespace Orchard.Users.Forms {
             var userName = context.ValueProvider.GetValue("UserName").AttemptedValue;
             var email = context.ValueProvider.GetValue("Email").AttemptedValue;
             var password = context.ValueProvider.GetValue("Password").AttemptedValue;
+            var contentType = context.ValueProvider.GetValue("ContentType").AttemptedValue;
 
             if (String.IsNullOrWhiteSpace(userName)) {
                 context.ModelState.AddModelError("UserName", T("You must specify a username or a token that evaluates to a username.").Text);
@@ -56,6 +72,12 @@ namespace Orchard.Users.Forms {
 
             if (String.IsNullOrWhiteSpace(password)) {
                 context.ModelState.AddModelError("Password", T("You must specify a password or a token that evaluates to a password.").Text);
+            }
+
+            if (!String.IsNullOrWhiteSpace(contentType) && 
+                (_contentDefinitionManager.GetTypeDefinition(contentType)==null || 
+                    !_contentDefinitionManager.GetTypeDefinition(contentType).Parts.Any(p=>p.PartDefinition.Name=="UserPart"))) {
+                context.ModelState.AddModelError("CreateUser", T("You must specify a content type composed by an UserPart.").Text);
             }
         }
 
