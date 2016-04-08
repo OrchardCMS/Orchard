@@ -141,9 +141,19 @@ namespace Orchard.Tasks.Locking.Services {
 
             ExecuteOnSeparateTransaction(repository => {
                 // Try to find a valid lock record in the database.
-                var record = repository.Table.FirstOrDefault(x => x.Name == internalName && (x.ValidUntilUtc == null || x.ValidUntilUtc >= _clock.UtcNow));
+                var records = repository.Table.Where(x => x.Name == internalName).ToList();
+                var record = records.FirstOrDefault(x => x.ValidUntilUtc == null || x.ValidUntilUtc >= _clock.UtcNow);
                 if (record == null) {
-                    // No record existed, so we're good to create a new one.
+                    if (records.Any()) {
+                        // No record matched the criteria, but at least one expired record with the specified name was found.
+                        // Delete the expired records before creating a new one. In theory no more than one record can exist
+                        // due to the unique key constraint on the 'Name' column, it won't hurt to work on a collection.
+                        foreach(var expiredRecord in records) {
+                            repository.Delete(expiredRecord);
+                        }
+                    }
+
+                    // No valid record existed, so we're good to create a new one.
                     Logger.Debug("No valid record was found for lock '{0}'; creating a new record.", internalName);
 
                     repository.Create(new DistributedLockRecord {
