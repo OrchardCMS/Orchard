@@ -71,7 +71,7 @@ namespace Orchard.Data {
 
         public void Cancel() {
             // IsActive is true if the transaction hasn't been committed or rolled back
-            if (_session?.Transaction?.IsActive == true) {
+            if (_session != null && _session.Transaction != null && _session.Transaction.IsActive) {
                 Logger.Debug("Rolling back transaction");
                 _session.Transaction.Rollback();
                 DisposeSession();
@@ -86,15 +86,15 @@ namespace Orchard.Data {
             if (_session != null) {
                 try {
                     // IsActive is true if the transaction hasn't been committed or rolled back
-                    if (_session.Transaction?.IsActive == true) {
+                    if (_session.Transaction != null && _session.Transaction.IsActive) {
                         Logger.Debug("Committing transaction");
                         _session.Transaction.Commit();
                     }
                 }
                 finally {
-                    // The other changes should have made sure that _session and _contentManagerSession are both assigned or both not assigned.
-                    // However, just to be extreme cautious, we still do a null-checking here using null-condition operator (?.).
-                    _contentManagerSession?.Clear();
+                    if (_contentManagerSession != null) {
+                        _contentManagerSession.Clear();
+                    }
 
                     Logger.Debug("Disposing session");
                     _session.Close();
@@ -111,18 +111,10 @@ namespace Orchard.Data {
 
             var sessionFactory = _sessionFactoryHolder.GetSessionFactory();
             Logger.Debug("Opening NHibernate session");
-            var session = sessionFactory.OpenSession(new OrchardSessionInterceptor(_interceptors.ToArray(), Logger));
-
-            try {
-                // We have seen cases where this call could fail, say due to DB connection pool maxed out.
-                session.BeginTransaction(level);
-            }
-            catch {
-                session.Dispose();
-                throw;
-            }
-
-            _session = session;
+            _session = sessionFactory.OpenSession(new OrchardSessionInterceptor(_interceptors.ToArray(), Logger));
+            // When BeginTransaction fails, the exception will be propagated so that
+            // global exception handling code will dispose this session.
+            _session.BeginTransaction(level);
             _contentManagerSession = _contentManagerSessionFactory();
         }
 
