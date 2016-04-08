@@ -4,6 +4,8 @@
     @Html.EditorFor(m => m.PageSizeDefault)
 </fieldset>
 <fieldset>
-    @Html.EditorFor(m => m.PaginatedDefault)
-    <label for="@Html.FieldIdFor( m => m.PaginatedDefault)" class="forcheckbox">@T("Show paging controls")</label>
+    <div class="am-checkbox">
+        @Html.EditorFor(m => m.PaginatedDefault)
+        <label for="@Html.FieldIdFor( m => m.PaginatedDefault)" class="forcheckbox">@T("Show paging controls")</label>
+    </div>
 </fieldset>

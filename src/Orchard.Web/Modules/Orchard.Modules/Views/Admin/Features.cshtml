@@ -109,10 +109,10 @@
                                                 <li class="@featureClassName" id="@featureId" title="@T(feature.IsEnabled ? "{0} is enabled" : "{0} is disabled", Html.AttributeEncode(featureName))">
                                                     <div class="summary">
                                                         <div class="properties">
-                                                            <h3>
+                                                            <h3 class="am-checkbox">
                                                                 @if ((showEnable && !feature.IsEnabled) || (showDisable && feature.IsEnabled)) {
+                                                                    <input type="checkbox" name="featureIds" value="@feature.Descriptor.Id" />
                                                                     <label>
-                                                                        <input type="checkbox" name="featureIds" value="@feature.Descriptor.Id" />
                                                                         @featureName
                                                                     </label>
                                                                 }

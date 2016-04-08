@@ -1,0 +1,9 @@
+﻿@model dynamic
+@if (Model.CurrentUser != null) {
+<a href="#" data-toggle="dropdown" role="button" aria-expanded="false" class="dropdown-toggle"><img src="http://www.gravatar.com/avatar/bc39890670aa7453e97f613481eee489"><span class="user-name">@Html.ItemDisplayText((Orchard.ContentManagement.IContent)Model.CurrentUser)</span><span class="angle-down s7-angle-down"></span></a>
+<ul role="menu" class="dropdown-menu">
+    @*<li><a href="#"> <span class="icon s7-user"></span>My profile</a></li>*@
+    <li>@*<span class="icon s7-config"></span>*@@Html.ActionLink(T("Change password").ToString(), "ChangePassword", new { area = "Orchard.Users", Controller = "Account" })</li>
+    <li>@*<span class="icon s7-power"></span>*@@Html.ActionLink(T("Logout").ToString(), "LogOff", new { Area = "Orchard.Users", Controller = "Account", ReturnUrl = Href("~/") })</li>
+</ul>
+}

@@ -3,7 +3,7 @@
     Script.Require("ShapesBase");
 }
 <fieldset>
-    <span class="checkbox-and-label">
+    <span class="checkbox-and-label am-checkbox">
         @Html.EditorFor(m => m.ItemsShown)
         <label for="@Html.FieldIdFor(m => m.ItemsShown)" class="forcheckbox">@T("Show contained items list")</label>
         <span class="hint">@T("Renders the contained items when this list is displayed.")</span>
@@ -11,7 +11,7 @@
 </fieldset>
 @if (Model.OverrideEnablePositioning) {
     <fieldset>
-        <span class="checkbox-and-label">
+        <span class="checkbox-and-label am-checkbox">
             @Html.EditorFor(m => m.EnablePositioning)
             @Html.LabelFor(m => m.EnablePositioning, @T("Enable positoning").ToString(), new { @class = "forcheckbox" })
             <span class="hint">@T("Check this option to enable manual repositioning of items.")</span>
@@ -35,7 +35,7 @@
         @Html.LabelFor(m => m.PageSize, T("Page size"))
         @Html.TextBoxFor(m => m.PageSize, new { @class = "text text-small" })
     </span>
-    <span class="checkbox-and-label">
+    <span class="checkbox-and-label am-checkbox">
         @Html.CheckBoxFor(m => m.Paginated)
         <label for="@Html.FieldIdFor(m => m.Paginated)" class="forcheckbox">@T("Show paging controls")</label>
     </span>
