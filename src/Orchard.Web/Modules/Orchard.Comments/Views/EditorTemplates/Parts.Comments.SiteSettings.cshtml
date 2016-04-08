@@ -9,7 +9,7 @@
 
 <fieldset>
     <legend>@T("Comments")</legend>
-    <div>
+    <div class="am-checkbox">
         @Html.EditorFor(m => m.ModerateComments)
         <label class="forcheckbox" for="CommentSettings_ModerateComments">@T("Comments must be approved before they appear")</label>
         @Html.ValidationMessage("ModerateComments", "*")
@@ -22,8 +22,8 @@
         @Html.ValidationMessage("ClosedCommentsDelay", "*")
         <span class="hint">@T("Number of days after comments are automatically closed. Leave to 0 to have them always available.")</span>
     </div>
-
-    <div>
+    
+    <div class="am-checkbox">
         @if (emailEnabled) {
             @Html.EditorFor(m => m.NotificationEmail, new { disabled = emailEnabled ? "" : "disabled" })
             <label class="forcheckbox" for="CommentSettings_NotificationEmail">@T("Notification email")</label>

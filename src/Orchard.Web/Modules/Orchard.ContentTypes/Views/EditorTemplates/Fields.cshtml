@@ -3,30 +3,11 @@
     Script.Require("ContentTypesAdmin");
 }
 @if (Model.Any()) {
-    <table class="table table-fw-widget">
-        <thead>
-            <tr>
-                <th width="25%">@T("Display Name")</th>
-                <th width="25%">@T("Technical Name")</th>
-                <th width="25%">@T("Type")</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody class="no-border-x">
-            @foreach (var field in Model) {
-                var f = field;
-                <tr>
-                    <td>@field.DisplayName</td>
-                    <td>@field.Name</td>
-                    <td>@field.FieldDefinition.Name</td>
-                    <td>
-                        <a href="@Url.Action("EditField", new {area = "Orchard.ContentTypes", id = field.Part.Name, name = field.Name})">@T("Edit")</a>
-                        <a href="@Url.Action("RemoveFieldFrom", new {area = "Orchard.ContentTypes", id = field.Part.Name, name = field.Name})" itemprop="RemoveUrl UnsafeUrl">@T("Remove")</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <fieldset>
+        @foreach (var field in Model) {
+        var f = field;
+        @Html.EditorFor(m => f, "Field", field.Prefix)}
+    </fieldset>
 }
 else {
     <div role="alert" class="alert alert-info alert-icon alert-icon-color">

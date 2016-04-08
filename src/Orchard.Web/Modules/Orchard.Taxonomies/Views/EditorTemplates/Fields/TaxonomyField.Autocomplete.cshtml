@@ -34,7 +34,7 @@
 <fieldset class="taxonomy-wrapper" data-name-prefix="@Html.FieldNameFor(m => m)" data-id-prefix="@Html.FieldIdFor(m => m)">
     <label @if(Model.Settings.Required) { <text>class="required"</text> }>@Model.DisplayName</label>
     @if (Model.Settings.Autocomplete) {
-    <div class="terms-editor text text-medium" data-autocomplete-url="@Url.HttpRouteUrl("", new { area = "Orchard.Taxonomies", controller = "Tags" })" data-taxonomy-id="@Model.TaxonomyId" data-leaves-only="@Model.Settings.LeavesOnly" data-selected-terms="@selectedTerms" data-allow-new-terms="@Model.Settings.AllowCustomTerms.ToString().ToLower()" data-singlechoice="@Model.Settings.SingleChoice.ToString().ToLower()">
+    <div class="terms-editor text-medium" data-autocomplete-url="@Url.HttpRouteUrl("", new { area = "Orchard.Taxonomies", controller = "Tags" })" data-taxonomy-id="@Model.TaxonomyId" data-leaves-only="@Model.Settings.LeavesOnly" data-selected-terms="@selectedTerms" data-allow-new-terms="@Model.Settings.AllowCustomTerms.ToString().ToLower()" data-singlechoice="@Model.Settings.SingleChoice.ToString().ToLower()">
             <ul></ul>
             @if (Model.Settings.SingleChoice) {
                 <div class="hint">@T("Enter a single term. Hit <i>tab</i> or <i>enter</i> to apply the term.") @if (!Model.Settings.AllowCustomTerms) { <text>@T("This taxonomy does not allow you to create new terms.") </text> }</div>
@@ -48,7 +48,7 @@
         <span class="hint">@Model.Settings.Hint</span>
     }
     <div class="hidden-taxonomy-state">
-        <ul class="terms">
+        <ul class="terms list-unstyled">
             @foreach (var entry in checkedTerms) {
                 var ti = termIndex;
                 <li>
@@ -61,9 +61,11 @@
                             <input @if (disabled){ <text>disabled="disabled"</text> } type="checkbox" value="true" checked="checked" name="@Html.FieldNameFor(m => m.Terms[ti].IsChecked)" id="@Html.FieldIdFor(m => m.Terms[ti].IsChecked)" data-term="@entry.Name" data-term-identity="@entry.Name.ToLower()" /> 
                         }
                     }
-                    <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Terms[ti].IsChecked)">@entry.Name</label>
-                    <input type="hidden" name="@Html.FieldNameFor(m => m.Terms[ti].Id)" id="@Html.FieldIdFor(m => m.Terms[ti].Id)" value="@entry.Id" />
-                </li>
+                    <div class="am-checkbox">
+                        <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Terms[ti].IsChecked)">@entry.Name</label>
+                        <input type="hidden" name="@Html.FieldNameFor(m => m.Terms[ti].Id)" id="@Html.FieldIdFor(m => m.Terms[ti].Id)" value="@entry.Id" />
+                    </div>
+</li>
                 termIndex++;
             }
         </ul>

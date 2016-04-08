@@ -20,7 +20,7 @@
 
 <fieldset class="archive-later-datetime">
     <legend>@T("Archive Settings")</legend>
-    <div>
+    <div class="am-checkbox">
         @Html.CheckBoxFor(m => m.ArchiveLater)
         <label class="forcheckbox" for="@Html.FieldIdFor(m => m.ArchiveLater)">@T("Archive Later")</label>
     </div>

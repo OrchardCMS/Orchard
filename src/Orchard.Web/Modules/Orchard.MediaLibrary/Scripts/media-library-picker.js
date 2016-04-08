@@ -13,9 +13,9 @@
         var addUrl = element.data("add-url");
         var promptOnNavigate = element.data("prompt-on-navigate");
         var showSaveWarning = element.data("show-save-warning");
-        var addButton = element.find(".button.add");
-        var saveButton = element.find('.button.save');
-        var removeAllButton = element.find(".button.remove");
+        var addButton = element.find(".btn.add");
+        var saveButton = element.find('.btn.save');
+        var removeAllButton = element.find(".btn.remove");
         var template = 
             '<li><div data-id="{contentItemId}" class="media-library-picker-item"><div class="thumbnail">{thumbnail}<div class="overlay"><h3>{title}</h3></div></div></div><a href="#" data-id="{contentItemId}" class="media-library-picker-remove">' + removeText + '</a>' + pipe + '<a href="{editLink}?ReturnUrl=' + returnUrl + '">' + editText + '</a></li>';
         

@@ -57,7 +57,7 @@
                 <span class="hint">@T("Optional. Provide a suffix to use when multiple pagers are displayed on the same page, e.g., when using multiple Projection Widgets, or to define alternates.")</span>
             </div>
 
-            <div>
+            <div class="am-checkbox">
                 @Html.CheckBoxFor(m => m.DisplayPager)
                 <label class="forcheckbox" for="@Html.FieldIdFor(m => m.DisplayPager)">@T("Show pager")</label>
                 <span class="hint">@T("Check to add a pager to the list.")</span>

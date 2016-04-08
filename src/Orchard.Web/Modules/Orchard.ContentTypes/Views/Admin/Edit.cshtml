@@ -37,7 +37,7 @@
                 <a class="icon s7-plus" href="@Url.Action("AddFieldTo", new {area = "Orchard.ContentTypes", id = Model.Name})" title="@T("Add Field")"></a>
             </div>
         </div>
-        <div class="panel-body">
+        <div class="panel-body manage-type">
             @Html.EditorFor(m => m.Fields, "Fields", "")
         </div>
     </div>

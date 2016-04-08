@@ -2,56 +2,60 @@
 <div class="am-left-sidebar">
     <div class="content">
         <div class="am-logo"></div>
-        <ul class="sidebar-elements">
-            @foreach (var firstLevelMenuItem in Model.Items) {
+        <nav>
+            <ul class="sidebar-elements">
+                @foreach (var firstLevelMenuItem in Model.Items) {
                 IEnumerable<dynamic> secondLevelMenuItems = firstLevelMenuItem;
 
                 string iconClass = string.Join(" ", firstLevelMenuItem.Classes);
                 var itemClassName = HasText(iconClass)
                     ? "icon s7-" + iconClass.HtmlClassify()
                     : "icon s7-link";
-                
-                firstLevelMenuItem.Classes.Add("parent");
+
+                if (secondLevelMenuItems.Count() > 1) {
+                    firstLevelMenuItem.Classes.Add("parent");
+                }
                 if (firstLevelMenuItem.Item.Selected) {
                     firstLevelMenuItem.Classes.Add("active");
                 }
-                
+
                 var firstLevelTag = Tag(firstLevelMenuItem, "li");
                 var firstLevelHref = "#";
 
                 string sectionHeaderText = firstLevelMenuItem.Text.Text;
-                @firstLevelTag.StartElement
+                    @firstLevelTag.StartElement
 
 
-                if (secondLevelMenuItems.Any()) {
-                    firstLevelHref = secondLevelMenuItems.First().Href;
-                }
+                    if (secondLevelMenuItems.Any()) {
+                        firstLevelHref = secondLevelMenuItems.First().Href;
+                    }
 
-                <a href="@firstLevelHref">
-                    <i class="@itemClassName"></i>
-                    <span>@sectionHeaderText</span>
-                </a>
+                    <a href="@firstLevelHref">
+                        <i class="@itemClassName"></i>
+                        <span>@sectionHeaderText</span>
+                    </a>
 
-                if (secondLevelMenuItems.Count() > 1) {
-                    <ul class="sub-menu">
-                        @foreach (var secondLevelMenuItem in firstLevelMenuItem.Items) {
-                            if (secondLevelMenuItem.Item.Selected) {
-                                secondLevelMenuItem.Classes.Add("active");
+                    if (secondLevelMenuItems.Count() > 1) {
+                        <ul class="sub-menu">
+                            @foreach (var secondLevelMenuItem in firstLevelMenuItem.Items) {
+                                if (secondLevelMenuItem.Item.Selected) {
+                                    secondLevelMenuItem.Classes.Add("active");
+                                }
+                                var secondLevelTag = Tag(secondLevelMenuItem, "li");
+                                var secondLevelUrl = secondLevelMenuItem.Href;
+
+                                @secondLevelTag.StartElement
+                                <a href="@secondLevelUrl">@secondLevelMenuItem.Text.Text</a>
+                                    @secondLevelTag.EndElement
+
                             }
-                            var secondLevelTag = Tag(secondLevelMenuItem, "li");
-                            var secondLevelUrl = secondLevelMenuItem.Href;
+                        </ul>
+                    }
 
-                            @secondLevelTag.StartElement
-                            <a href="@secondLevelUrl">@secondLevelMenuItem.Text.Text</a>
-                            @secondLevelTag.EndElement
-
-                        }
-                    </ul>
+                    @firstLevelTag.EndElement
                 }
-
-                @firstLevelTag.EndElement
-            }
-        </ul>
+            </ul>
+        </nav>
         <!--Sidebar bottom content-->
     </div>
 </div>

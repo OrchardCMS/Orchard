@@ -7,7 +7,7 @@
     <div class="form-group">
         @if (Model.Entries != null && Model.Entries.Any()) {
             <label>@T("Fields")</label>
-            <ul class="search-indexes group">
+            <ul class="search-indexes group list-unstyled">
                 @{
                     var indexes = Model.Entries.Select(x => x.Index);
                     var entryIndex = 0;
@@ -17,32 +17,36 @@
                         @Html.HiddenFor(m => m.Entries[entryIndex].Index)
                         <li>
                             <h3>@index</h3>
-                            <ul>
+                            <ul class="list-unstyled">
                                 @{ var fieldIndex = 0; }
                                 @foreach (var fieldEntry in fieldEntries) {
                                     var fieldIndexClosure = fieldIndex;
                                     <li>
-                                        @Html.EditorFor(m => m.Entries[entryIndex].Fields[fieldIndex].Selected)
-                                        @Html.HiddenFor(m => m.Entries[entryIndex].Fields[fieldIndex].Field)
-                                        <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Entries[entryIndexClosure].Fields[fieldIndexClosure].Selected)">@Model.Entries[entryIndex].Fields[fieldIndex].Field</label>
+                                        <div class="am-checkbox">
+                                            @Html.EditorFor(m => m.Entries[entryIndex].Fields[fieldIndex].Selected)
+                                            @Html.HiddenFor(m => m.Entries[entryIndex].Fields[fieldIndex].Field)
+                                            <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Entries[entryIndexClosure].Fields[fieldIndexClosure].Selected)">@Model.Entries[entryIndex].Fields[fieldIndex].Field</label>
+                                        </div>
                                     </li>
                                     fieldIndex++;
                                 }
                             </ul>
                         </li>
-                        entryIndex++;
-                    }
+                                        entryIndex++;
+                                    }
                 }
             </ul>
             <span class="hint">@T("Check any field for each index which should be used for search queries.")</span>
 
-        }
+                                    }
     </div>
     <div>
         <label>@T("Localization")</label>
-        @Html.EditorFor(m => m.FilterCulture)
-        <label class="forcheckbox" for="@Html.FieldIdFor(m => m.FilterCulture)">@T("Narrow search to current culture only")</label>
-        <span class="hint">@T("If checked, search results will only include content items localized in the current culture of the request.")</span>
+        <div class="am-checkbox">
+            @Html.EditorFor(m => m.FilterCulture)
+            <label class="forcheckbox" for="@Html.FieldIdFor(m => m.FilterCulture)">@T("Narrow search to current culture only")</label>
+            <span class="hint">@T("If checked, search results will only include content items localized in the current culture of the request.")</span>
+        </div>
     </div>
     <div>
         <label for="@Html.FieldIdFor(m => m.DisplayType)">@T("Display Type")</label>

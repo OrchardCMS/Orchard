@@ -6,18 +6,19 @@
     var isRequired = settings.Required && String.IsNullOrWhiteSpace(settings.DefaultValue);
 }
 <fieldset>
-    <label for="@Html.FieldIdFor(m => m.Value)" @if (settings.Required) { <text> class="required" </text>  }>@Model.DisplayName</label>
+    <label for="@Html.FieldIdFor(m => m.Value)" @if (settings.Required) { <text> class="required" </text>    }>@Model.DisplayName</label>
     @switch (settings.ListMode) {
         case ListMode.Dropdown:
             @Html.DropDownListFor(m => m.Value, new SelectList(options, Model.Value), isRequired ? new { required = "required" } : null)
             break;
 
         case ListMode.Radiobutton:
+            int indexRadio = 0;
             foreach (var option in options) {
-                if (string.IsNullOrWhiteSpace(option)) {
-                    <label>@Html.RadioButton("Value", "", string.IsNullOrWhiteSpace(Model.Value), isRequired ? new { required = "required" } : null)<i>@T("unset")</i></label>            }
-                else {
-                    <label>@Html.RadioButton("Value", option, (option == Model.Value), isRequired ? new { required = "required" } : null)@option</label>         }
+                indexRadio++;
+                <div class="am-radio">
+                    <input type="radio" name="@Html.FieldNameFor(m => m.Value)" id="@Html.FieldIdFor(m => m.Value)-@indexRadio" value="@option" @if (option == Model.Value) { <text> checked="checked" </text>  } /> <label for="@Html.FieldIdFor(m => m.Value)-@indexRadio">@option</label>
+                </div>
             }
             break;
 
@@ -32,7 +33,7 @@
             foreach (var option in options) {
                 index++;
                 if (!string.IsNullOrWhiteSpace(option)) {
-                    <div>
+                    <div class="am-checkbox">
                         <input type="checkbox" name="@Html.FieldNameFor(m => m.SelectedValues)" value="@option" @((Model.SelectedValues != null && Model.SelectedValues.Contains(option)) ? "checked=\"checked\"" : "") class="check-box" id="@Html.FieldIdFor(m => m.SelectedValues)-@index" />
                         <label class="forcheckbox" for="@Html.FieldIdFor(m => m.SelectedValues)-@index">@T(option)</label>
                     </div>

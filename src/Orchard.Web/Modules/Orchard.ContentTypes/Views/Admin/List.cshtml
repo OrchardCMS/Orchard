@@ -37,8 +37,8 @@
                         <td>@stereotype</td>
                         <td class="actions">
                             @if (creatable) {
-                                @Html.ActionLink(T("Create New {0}", Html.Raw(displayName)).Text, "Create", new { area = "Contents", id = typeName })
-                                @Html.ActionLink(T("List Items").ToString(), "List", new { area = "Contents", id = typeName })
+                                @Html.ActionLink(T("Create New {0}", Html.Raw(displayName)).Text, "Create", new { area = "Contents", id = typeName })@T(" | ")
+                                @Html.ActionLink(T("List Items").ToString(), "List", new { area = "Contents", id = typeName })@T(" | ")
                             }
                             @Html.ActionLink(T("Edit").ToString(), "Edit", new { area = "Orchard.ContentTypes", id = typeName }, new { @class = "edit-link" })
                         </td>

@@ -848,7 +848,6 @@
       <Private>false</Private>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <Compile Include="Uri.cs" />
     <Compile Include="BlockUI.cs" />
