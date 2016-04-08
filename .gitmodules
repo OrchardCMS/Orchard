@@ -5,3 +5,7 @@
 [submodule "src/Orchard.Web/ThirdParty/Modules/Contrib.ImportExportBindings"]
 	path = src/Orchard.Web/ThirdParty/Modules/Contrib.ImportExportBindings
 	url = https://github.com/xkproject/Orchard-ImportExportBindings.git
+[submodule "src/Orchard.Web/ThirdParty/Modules/River.DynamicForms"]
+	path = src/Orchard.Web/ThirdParty/Modules/River.DynamicForms
+	url = https://github.com/xkproject/River.DynamicForms.git
+	branch = master
