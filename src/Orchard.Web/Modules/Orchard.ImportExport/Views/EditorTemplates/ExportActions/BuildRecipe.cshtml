@@ -18,8 +18,10 @@
             @foreach (var option in exportOptions) {
                 var exportOptionId = String.Format("{0}_{1}", Html.FieldIdFor(m => m.UploadConfigurationFile), option.Value);
                 <li>
-                    <input type="radio" id="@exportOptionId" name="@Html.FieldNameFor(m => m.UploadConfigurationFile)" value="@option.Value" @if (option.Selected) { <text> checked="checked" </text> }/>
-                    <label for="@exportOptionId" class="forradiobutton">@option.Text</label>
+                    <div class="am-radio">
+                        <input type="radio" id="@exportOptionId" name="@Html.FieldNameFor(m => m.UploadConfigurationFile)" value="@option.Value" @if (option.Selected) { <text> checked="checked" </text>   } />
+                        <label for="@exportOptionId" class="forradiobutton">@option.Text</label>
+                    </div>
                 </li>
             }
         </ul>
@@ -36,9 +38,9 @@
                 <hr />
             }
             <fieldset class="recipe-builder-step recipe-builder-step-@step.Name.HtmlClassify()">
-                <legend>
-                    <input type="hidden" name="@Html.NameFor(m => m.Steps[stepIndex].Name)" value="@steps[stepIndex].Name"/>
-                    <input type="checkbox" id="@stepId" name="@stepName" value="true"/>
+                <legend class="am-checkbox">
+                    <input type="hidden" name="@Html.NameFor(m => m.Steps[stepIndex].Name)" value="@steps[stepIndex].Name" />
+                    <input type="checkbox" id="@stepId" name="@stepName" value="true" />
                     <label for="@stepId" class="forcheckbox">@step.DisplayName</label>
                 </legend>
                 @Html.Hint(step.Description)

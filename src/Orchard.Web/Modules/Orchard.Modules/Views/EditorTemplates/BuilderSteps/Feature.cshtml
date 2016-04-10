@@ -1,10 +1,10 @@
 ﻿@model Orchard.Modules.ViewModels.FeatureStepViewModel
-<div>
+<div class="am-checkbox">
     @Html.CheckBoxFor(m => m.ExportEnabledFeatures)
     @Html.LabelFor(m => m.ExportEnabledFeatures, T("Enabled Features").ToString(), new {@class = "forcheckbox"})
     @Html.Hint(T("Check this option to export the set of enabled features."))
 </div>
-<div>
+<div class="am-checkbox">
     @Html.CheckBoxFor(m => m.ExportDisabledFeatures)
     @Html.LabelFor(m => m.ExportDisabledFeatures, T("Disabled Features").ToString(), new { @class = "forcheckbox" })
     @Html.Hint(T("Check this option to export the set of disabled features."))

@@ -15,7 +15,7 @@
         @Html.ValidationSummary()
         <div class="panel-heading no-border form-inline">
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-sm-4">
                     <fieldset>
                         <input id="publishActions" name="@Html.NameOf(m => m.Options.BulkAction)" type="hidden" value="@CommentIndexBulkAction.None" />
                         <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
@@ -31,7 +31,7 @@
                         </div>
                     </fieldset>
                 </div>
-                <div class="col-md-4">
+                <div class="col-sm-4">
                     <fieldset class="bulk-actions">
                         <label for="filterResults">@T("Filter:")</label>
                         <select id="filterResults" name="@Html.NameOf(m => m.Options.Filter)" class="form-control auto-size">
@@ -42,7 +42,7 @@
                         <button class="btn btn-default" type="submit" name="submit.Filter" value="@T("Apply")">@T("Apply")</button>
                     </fieldset>
                 </div>
-                <div class="col-md-4">&nbsp;</div>
+                <div class="col-sm-4">&nbsp;</div>
             </div>
         </div>
         if (Model.Comments.Any()) {

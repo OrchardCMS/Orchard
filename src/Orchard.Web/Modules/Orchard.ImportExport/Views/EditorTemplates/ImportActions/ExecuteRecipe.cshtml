@@ -14,7 +14,7 @@
 </p>
 <fieldset>
     <label for="RecipeFile">@T("Recipe File")</label>
-    <input type="file" id="RecipeFile" size="64" name="RecipeFile" value="@T("Browse...")"/>
+    <input type="file" id="RecipeFile" size="64" name="RecipeFile" value="@T("Browse...")" />
 </fieldset>
 <fieldset>
     <legend>
@@ -24,8 +24,10 @@
         @foreach (var option in importOptions) {
                 var importOptionId = String.Format("{0}_{1}", Html.FieldIdFor(m => m.ResetSite), option.Value);
             <li>
-                <input type="radio" id="@importOptionId" name="@Html.FieldNameFor(m => m.ResetSite)" value="@option.Value" @if (option.Selected) { <text> checked="checked" </text> } />
-                <label for="@importOptionId" class="forradiobutton">@option.Text</label>
+                <div class="am-radio">
+                    <input type="radio" id="@importOptionId" name="@Html.FieldNameFor(m => m.ResetSite)" value="@option.Value" @if (option.Selected) { <text> checked="checked" </text>   } />
+                    <label for="@importOptionId" class="forradiobutton">@option.Text</label>
+                </div>
             </li>
         }
     </ul>
@@ -34,12 +36,12 @@
         <div class="message message-Warning">@T("This will delete your database tables. Please consider creating a backup first.")</div>
         <div>
             @Html.LabelFor(m => m.SuperUserPassword, T("Site Owner Password"))
-            @Html.PasswordFor(m => m.SuperUserPassword, new {@class = "text"})
+            @Html.PasswordFor(m => m.SuperUserPassword, new { @class = "text" })
             @Html.Hint(T("Specify a new password for the site owner in case your recipe doesn't contain the current site owner."))
         </div>
         <div>
             @Html.LabelFor(m => m.SuperUserPasswordConfirmation, T("Confirm Site Owner Password"))
-            @Html.PasswordFor(m => m.SuperUserPasswordConfirmation, new {@class = "text"})
+            @Html.PasswordFor(m => m.SuperUserPasswordConfirmation, new { @class = "text" })
             @Html.Hint(T("Repeat the password to make sure you didn't mistype anything."))
         </div>
     </div>

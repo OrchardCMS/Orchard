@@ -10,12 +10,16 @@
             <tr>
                 <th>@T("Content Type")</th>
                 <th>
-                    <input type="checkbox" class="check-all-in-column" />
-                    @T("Content")
+                    <div class="am-checkbox">
+                        <input id="checkall-contenttype" type="checkbox" class="check-all-in-column" />
+                        <label for="checkall-contenttype">@T("Content")</label>
+                    </div>
                 </th>
                 <th>
-                    <input type="checkbox" class="check-all-in-column" />
-                    @T("Content Definition")
+                    <div class="am-checkbox">
+                        <input id="checkall-contentdef" type="checkbox" class="check-all-in-column" />
+                        <label for="checkall-contentdef">@T("Content Definition")</label>
+                    </div>
                 </th>
             </tr>
         </thead>
@@ -26,10 +30,16 @@
                     <td>@contentType.DisplayName</td>
                     <td>
                         <input type="hidden" name="@Html.NameFor(m => m.ContentTypes[contentTypeIndex].Name)" value="@Model.ContentTypes[contentTypeIndex].Name" />
-                        <input type="checkbox" class="check-data" name="@Html.NameFor(m => m.ContentTypes[contentTypeIndex].ExportData)" value="true" />
+                        <div class="am-checkbox">
+                            <input id="@Html.NameFor(m => m.ContentTypes[contentTypeIndex].ExportData)" type="checkbox" class="check-data" name="@Html.NameFor(m => m.ContentTypes[contentTypeIndex].ExportData)" value="true" />
+                            <label for="@Html.NameFor(m => m.ContentTypes[contentTypeIndex].ExportData)"></label>
+                        </div>
                     </td>
                     <td>
-                        <input type="checkbox" class="check-schema" name="@Html.NameFor(m => m.ContentTypes[contentTypeIndex].ExportSchema)" value="true" />
+                        <div class="am-checkbox">
+                            <input id="@Html.NameFor(m => m.ContentTypes[contentTypeIndex].ExportSchema)" type="checkbox" class="check-schema" name="@Html.NameFor(m => m.ContentTypes[contentTypeIndex].ExportSchema)" value="true" />
+                            <label for="@Html.NameFor(m => m.ContentTypes[contentTypeIndex].ExportSchema)"></label>
+                        </div>
                     </td>
                 </tr>
                 contentTypeIndex++;
@@ -40,12 +50,18 @@
 </div>
 <div>
     <p>@T("Version History")</p>
-    @Html.RadioButtonFor(m => m.VersionHistoryOptions, "Published", new { id = "Published", Checked = "Checked" })
-    <label for="Published" class="forcheckbox">@T("Only Published Versions")</label>
+    <div class="am-radio">
+        @Html.RadioButtonFor(m => m.VersionHistoryOptions, "Published", new { id = "Published", Checked = "Checked" })
+        <label for="Published" class="forcheckbox">@T("Only Published Versions")</label>
+    </div>
     <br />
-    @Html.RadioButtonFor(m => m.VersionHistoryOptions, "Draft", new { id = "Draft" })
-    <label for="Draft" class="forcheckbox">@T("Only Drafts")</label>
+    <div class="am-radio">
+        @Html.RadioButtonFor(m => m.VersionHistoryOptions, "Draft", new { id = "Draft" })
+        <label for="Draft" class="forcheckbox">@T("Only Drafts")</label>
+    </div>
     <br />
-    @Html.RadioButtonFor(m => m.VersionHistoryOptions, "Latest", new { id = "Latest" })
-    <label for="Latest" class="forcheckbox">@T("Latest Versions")</label>
+    <div class="am-radio">
+        @Html.RadioButtonFor(m => m.VersionHistoryOptions, "Latest", new { id = "Latest" })
+        <label for="Latest" class="forcheckbox">@T("Latest Versions")</label>
+    </div>
 </div>
