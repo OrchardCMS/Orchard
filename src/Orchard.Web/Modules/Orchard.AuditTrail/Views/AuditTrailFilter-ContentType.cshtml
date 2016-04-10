@@ -8,4 +8,4 @@
     @T("Content type:")
     <a href="#" title="@T("Applies to content type events only, not to content item events.")">@T("?")</a>
 </label>
-@Html.DropDownList("contenttype", listItems, "")
+@Html.DropDownList("contenttype", listItems, new { @class = "form-control" })

@@ -15,18 +15,23 @@
         @Html.ValidationSummary()
         <div class="panel-heading no-border form-inline">
             <div class="panel-heading-actions">
-                @Html.ActionLink(T("Add a new user").ToString(), "Create", new { }, new { @class = "btn btn-primary" })
+                <a class="btn btn-primary" href="@Url.Action("Create", new { })"><i class="fa fa-plus"></i> @T("Add a new user").Text</a>
             </div>
             <div class="panel-heading-primary-group">
                 <fieldset class="bulk-actions">
-                    <select id="publishActions" name="@Html.NameOf(m => m.Options.BulkAction)" class="form-control">
-                        @Html.SelectOption(Model.Options.BulkAction, UsersBulkAction.None, T("Choose action...").ToString())
-                        @Html.SelectOption(Model.Options.BulkAction, UsersBulkAction.Approve, T("Approve").ToString())
-                        @Html.SelectOption(Model.Options.BulkAction, UsersBulkAction.Disable, T("Disable").ToString())
-                        @Html.SelectOption(Model.Options.BulkAction, UsersBulkAction.ChallengeEmail, T("Send challenge E-mail").ToString())
-                        @Html.SelectOption(Model.Options.BulkAction, UsersBulkAction.Delete, T("Delete").ToString())
-                    </select>
-                    <button type="submit" name="submit.BulkEdit" value="@T("Apply")" class="btn btn-primary">@T("Apply")</button>
+                    <input id="publishActions" name="@Html.NameOf(m => m.Options.BulkAction)" type="hidden" value="@UsersBulkAction.None" />
+                    <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa fa-bolt"></i> Bulk Actions <span class="caret"></span>
+                        </button>&nbsp;
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="#" data-confirm="@T("Are you sure you want to approve these users?")" data-action="@UsersBulkAction.Approve">@T("Approve").ToString()</a></li>
+                            <li><a href="#" data-confirm="@T("Are you sure you want to disable these users?")" data-action="@UsersBulkAction.Disable">@T("Disable").ToString()</a></li>
+                            <li><a href="#" data-confirm="@T("Are you sure you want to send challenge email to these users?")" data-action="@UsersBulkAction.ChallengeEmail">@T("Send challenge E-mail").ToString()</a></li>
+                            <li><a href="#" data-confirm="@T("Are you sure you want to delete these users?")" data-action="@UsersBulkAction.Delete">@T("Delete").ToString()</a></li>
+                        </ul>
+                    </div>
                 </fieldset>
                 <fieldset class="bulk-actions">
                     <div class="input-group">
@@ -66,8 +71,8 @@
                                         <label class="check-all" for="checkAll"></label>
                                     </div>
                                 </th>
-                                <th scope="col">@T("Name")</th>
-                                <th scope="col">@T("Email")</th>
+                                <th scope="col" width="50%">@T("Name")</th>
+                                <th scope="col" width="50%">@T("Email")</th>
                                 <th scope="col" class="text-nowrap">@T("Last Login Time")</th>
                                 <th scope="col" class="text-nowrap">@T("Creation Time")</th>
                                 <th scope="col"></th>
@@ -84,10 +89,9 @@
                                 </td>
                                 <td class="text-nowrap">
                                     @if (entry.User.RegistrationStatus == UserStatus.Approved && entry.User.EmailStatus == UserStatus.Approved) {
-                                        <img class="icon" src="@Href("~/Modules/Orchard.Users/Content/Admin/images/online.gif") " alt="@T("Approved") " title="@T("User is approved") " />
-                                    }
-                                    else {
-                                        <img class="icon" src="@Href("~/Modules/Orchard.Users/Content/Admin/images/offline.gif") " alt="@T("Moderated") " title="@if (entry.User.EmailStatus == UserStatus.Approved) { @T("User is moderated") } else { @T("E-mail validation is pending") }" />
+                                        <i class="fa fa-check-circle text-success"></i>
+                                    } else {
+                                        <i class="fa fa-check-circle text-danger"></i>
                                     }
                                     @Html.ActionLink(entry.User.UserName, "Edit", new { entry.User.Id })
                                 </td>
@@ -107,15 +111,14 @@
                                 <td class="text-nowrap">
                                     @if (entry.User.RegistrationStatus == UserStatus.Pending) {
                                         @Html.ActionLink(T("Approve").ToString(), "Approve", new { entry.User.Id }, new { itemprop = "UnsafeUrl", @class = "btn btn-warning" })
-                                    }
-                                    else {
+                                    } else {
                                         @Html.ActionLink(T("Disable").ToString(), "Moderate", new { entry.User.Id }, new { itemprop = "UnsafeUrl", @class = "btn btn-warning" })
                                     }
                                     @if (entry.User.EmailStatus == UserStatus.Pending) {
                                         @Html.ActionLink(T("Send challenge E-mail").ToString(), "SendChallengeEmail", new { entry.User.Id }, new { itemprop = "UnsafeUrl", @class = "btn btn-primary" })
                                     }
-                                    @Html.ActionLink(T("Edit").ToString(), "Edit", new { entry.User.Id }, new { @class = "btn btn-primary" })
-                                    @Html.ActionLink(T("Delete").ToString(), "Delete", new { entry.User.Id }, new { @class = "btn btn-danger", @data_confirm = @T("Are you sure you want to delete this item?") })
+                                    <a class="btn btn-primary" href="@Url.Action("Edit",  new { entry.User.Id })"><i class="fa fa-pencil-square-o"></i> @T("Edit")</a>
+                                    <a class="btn btn-danger" href="@Url.Action("Delete", new { entry.User.Id })" data-confirm="@T("Are you sure you want to delete this item?")"><i class="fa fa-trash"></i> @T("Delete")</a>
                                 </td>
                             </tr>
                             userIndex++;

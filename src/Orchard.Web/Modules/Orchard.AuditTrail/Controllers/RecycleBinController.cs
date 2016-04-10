@@ -63,11 +63,11 @@ namespace Orchard.AuditTrail.Controllers {
 
         [ActionName("Index")]
         [HttpPost]
-        [FormValueRequired("ExecuteActionButton")]
+        [FormValueRequired("submit.BulkEdit")]
         public ActionResult ExecuteAction(RecycleBinViewModel viewModel, PagerParameters pagerParameters) {
-            if (viewModel.RecycleBinCommand == null) {
-                ModelState.AddModelError("RecycleBinCommand", T("Please select an action to execute.").Text);
-            }
+            //if (viewModel.Options.BulkAction == null) {
+            //    ModelState.AddModelError("RecycleBinBulkAction", T("Please select an action to execute.").Text);
+            //}
 
             if (viewModel.SelectedContentItems == null || !viewModel.SelectedContentItems.Any()) {
                 ModelState.AddModelError("SelectedContentItems", T("Please select one or more content items.").Text);
@@ -80,11 +80,11 @@ namespace Orchard.AuditTrail.Controllers {
 
             if (ModelState.IsValid) {
                 var selectedContentItemIds = viewModel.SelectedContentItems.Where(x => x.Selected).Select(x => x.Id).ToArray();
-                switch (viewModel.RecycleBinCommand) {
-                    case RecycleBinCommand.Restore:
+                switch (viewModel.Options.BulkAction) {
+                    case RecycleBinBulkAction.Restore:
                         RestoreContentItems(selectedContentItemIds);
                         break;
-                    case RecycleBinCommand.Destroy:
+                    case RecycleBinBulkAction.Destroy:
                         DeleteContentItems(selectedContentItemIds);
                         break;
                 }

@@ -12,67 +12,85 @@
     var contentItems = Model.ContentItems;
     var dateLocalizationServices = WorkContext.Resolve<IDateLocalizationServices>();
 }
-<div id="recycle-bin">
-    @Html.ValidationSummary()
+<div id="recycle-bin" class="panel panel-default">
     @using (Html.BeginFormAntiForgeryPost()) {
-        <fieldset class="bulk-actions">
-            <label>@T("Actions:")</label>
-            <select name="RecycleBinCommand">
-                <option></option>
-                <option value="@RecycleBinCommand.Restore" data-unsafe-action="@T("Are you sure you want to restore the selected items?")" @if(Model.RecycleBinCommand == RecycleBinCommand.Restore){<text>selected="selected"</text>}>@T("Restore")</option>
-                @**TODO: Decide wether or not to allow users to permanently delete items. Commented out for now.*@
-                @*<option value="@RecycleBinCommand.Destroy" data-unsafe-action="@T("WARNING: This will PERMANENTLY delete the selected content items, including related content part records, never to be seen again. Are you sure you want to do this?")" @if (Model.RecycleBinCommand == RecycleBinCommand.Destroy) { <text> selected="selected" </text>  }>@T("Remove Permanently ☠")</option>*@
-            </select>
-        </fieldset>
-        <div class="bulk-actions">
-            <button type="submit" class="filter-apply-button" name="ExecuteActionButton" value="ExecuteActionButton">@T("Execute")</button>
+        @Html.ValidationSummary()
+        <div class="panel-heading">
+            <fieldset>
+                <input id="publishActions" name="@Html.NameOf(m => m.Options.BulkAction)" type="hidden" value="@RecycleBinBulkAction.None" />
+                <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                        <i class="fa fa-bolt"></i> Bulk Actions <span class="caret"></span>
+                    </button>&nbsp;
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="#" data-confirm="@T("Are you sure you want to restore the selected items?")" data-action="@RecycleBinBulkAction.Restore">@T("Restore").ToString()</a></li>
+                        <li><a href="#" data-confirm="@T("Are you sure you want to delete these items?")" data-action="@RecycleBinBulkAction.Destroy">@T("Delete").ToString()</a></li>
+                    </ul>
+                </div>
+            </fieldset>
         </div>
-        <section class="recycle-bin-list-section">
-            @if (!contentItems.Any()) {
-                <p class="info">@T("There are no records to display.")</p>
-            }
-            else {
-                <table class="items">
-                    <thead>
-                        <tr>
-                            <th class="content-checkbox"><input type="checkbox" class="check-all" /></th>
-                            <th class="content-column">@T("Content Item")</th>
-                            <th class="content-removed-column">@T("Removed")</th>
-                            <th class="actions-column"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @{
-                            var index = 0;
-                            foreach (var contentItem in contentItems) {
-                                var isSelected = Model.SelectedContentItems.Where(x => x.Id == contentItem.Id && x.Selected).Select(x => x.Id).Any();
-                                var commonPart = contentItem.As<CommonPart>();
-                                var removedText = commonPart != null ? dateLocalizationServices.ConvertToLocalizedString(commonPart.VersionModifiedUtc) : T("-").Text;
-                                var contentDisplayTextHtmlString = Html.ItemDisplayText(contentItem);
-                                var contentDisplayText = contentDisplayTextHtmlString != null ? contentDisplayTextHtmlString.ToString() : contentItem.ContentType;
-                                var contentDisplayUrl = Url.Action("Detail", "Content", new {id = contentItem.Id, version = contentItem.Version, area = "Orchard.AuditTrail"});
+        <div class="row">
+            <div class="col-sm-12">
+                @if (!contentItems.Any()) {
+                    <p class="info">@T("There are no records to display.")</p>
+                } else {
+                    <div class="table-responsive table-with-footer">
+                        <table class="table table-fw-widget data-table table-striped dataTable no-footer">
+                            <thead>
                                 <tr>
-                                    <td>
-                                        <input type="hidden" name="SelectedContentItems[@index].Id" value="@contentItem.Id" />
-                                        <input type="checkbox" name="SelectedContentItems[@index].Selected" value="true" @if(isSelected){<text>checked="checked"</text>} />
-                                    </td>
-                                    <td class="content-column"><a href="@contentDisplayUrl">@contentDisplayText</a></td>
-                                    <td class="content-removed-column">@removedText</td>
-                                    <td class="actions-column">
-                                        <a href="@contentDisplayUrl">@T("View")</a> 
-                                        @Html.ActionLink(T("View Audit Trail").Text, "Index", "Admin", new {content = contentItem.Id, area = "Orchard.AuditTrail"}, null) 
-                                        <a href="@Url.Action("Restore", "RecycleBin", new {id = contentItem.Id, area = "Orchard.AuditTrail"})" data-unsafe-url="@T("Are you sure you want to restore this item?")">@T("Restore")</a>
-                                    </td>
+                                    <th class="content-checkbox">
+                                        <div class="am-checkbox am-select-all inline">
+                                            <input id="checkAll" class="check-all" type="checkbox">
+                                            <label class="check-all" for="checkAll"></label>
+                                        </div>
+                                    </th>
+                                    <th class="content-column">@T("Content Item")</th>
+                                    <th class="content-removed-column">@T("Removed")</th>
+                                    <th class="actions-column"></th>
                                 </tr>
-                                index++;
-                            }
-                        }
-                    </tbody>
-                </table>
-            }
-        </section>
-        <section class="pager">
-            @Display(Model.Pager)
-        </section>
-    }
+                            </thead>
+                            <tbody>
+                                @{
+                                    var index = 0;
+                                    foreach (var contentItem in contentItems) {
+                                        var isSelected = Model.SelectedContentItems.Where(x => x.Id == contentItem.Id && x.Selected).Select(x => x.Id).Any();
+                                        var commonPart = contentItem.As<CommonPart>();
+                                        var removedText = commonPart != null ? dateLocalizationServices.ConvertToLocalizedString(commonPart.VersionModifiedUtc) : T("-").Text;
+                                        var contentDisplayTextHtmlString = Html.ItemDisplayText(contentItem);
+                                        var contentDisplayText = contentDisplayTextHtmlString != null ? contentDisplayTextHtmlString.ToString() : contentItem.ContentType;
+                                        var contentDisplayUrl = Url.Action("Detail", "Content", new { id = contentItem.Id, version = contentItem.Version, area = "Orchard.AuditTrail" });
+                                        var checkboxId = Html.IdFor(m => m.SelectedContentItems[index].Id);
+                                        <tr>
+                                            <td>
+                                                <div class="am-checkbox">
+                                                    <input type="hidden" name="SelectedContentItems[@index].Id" value="@contentItem.Id" />
+                                                    <input id="@checkboxId" type="checkbox" name="SelectedContentItems[@index].Selected" value="true" @if (isSelected) { <text> checked="checked" </text>             } />
+                                                    <label for="@checkboxId"></label>
+                                                </div>
+                                            </td>
+                                            <td class="content-column"><a href="@contentDisplayUrl">@contentDisplayText</a></td>
+                                            <td class="content-removed-column">@removedText</td>
+                                            <td class="actions-column">
+                                                <a href="@contentDisplayUrl" class="btn btn-default"><i class="fa fa-eye"></i> @T("View")</a>
+                                                <a href="@Url.Action("Index", "Admin", new { content = contentItem.Id, area = "Orchard.AuditTrail" })" class="btn btn-default"><i class="icon s7-note2"></i> @T("View Audit Trail")</a>
+                                                <a class="btn btn-primary" href="@Url.Action("Restore", "RecycleBin", new {id = contentItem.Id, area = "Orchard.AuditTrail"})" data-confirm="@T("Are you sure you want to restore this item?")"><i class="fa fa-recycle"></i> @T("Restore")</a>
+                                            </td>
+                                        </tr>
+                                        index++;
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="row am-datatable-footer">
+                        <div class="col-sm-12">
+                            @Display(Model.Pager)
+                        </div>
+                    </div>
+                                    }
+            </div>
+        </div>
+                                    }
 </div>
+@Display.Modal()

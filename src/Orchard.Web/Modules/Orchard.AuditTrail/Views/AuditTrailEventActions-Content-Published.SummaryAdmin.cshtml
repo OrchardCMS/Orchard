@@ -7,7 +7,7 @@
     var versionNumber = eventData.Get<int>("VersionNumber");
     var contentItem = (ContentItem) Model.ContentItem;
 }
-@Html.ActionLink(T("Details").Text, "Detail", "Admin", new { id = record.Id, area = "Orchard.AuditTrail" }, null)
+@Html.ActionLink(T("Details").Text, "Detail", "Admin", new { id = record.Id, area = "Orchard.AuditTrail" }, new { @class="btn btn-default" })
 @if (contentItem != null) {
     var isLatest = contentItem.VersionRecord.Number == versionNumber;
     if (!isLatest) {

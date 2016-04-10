@@ -14,12 +14,24 @@
             @Html.ValidationSummary()
             <div class="panel-heading-actions">@Html.ActionLink(T("Add a role").ToString(), "Create", new { }, new { @class = "btn btn-primary" })</div>
             <div class="panel-heading-primary-group">
-                <fieldset class="bulk-actions">
+                @*<fieldset class="bulk-actions">
                     <label class="control-label">Action: </label>
                     <select id="Select1" name="roleActions" class="form-control">
                         <option value="1">@T("Delete")</option>
                     </select>
                     <button type="submit" class="btn btn-primary">@T("Apply")</button>
+                </fieldset>*@
+                <fieldset>
+                    <input id="publishActions" name="@Html.NameOf(m => m.Options.BulkAction)" type="hidden" value="@RolesBulkAction.None" />
+                    <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa fa-bolt"></i> Bulk Actions <span class="caret"></span>
+                        </button>&nbsp;
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="#" data-confirm="@T("Are you sure you want to delete these items?")" data-action="@RolesBulkAction.Delete">@T("Delete").ToString()</a></li>
+                        </ul>
+                    </div>
                 </fieldset>
             </div>
         </div>
@@ -36,7 +48,7 @@
                                     </div>
                                 </th>
                                 <th scope="col" width="100%">@T("Name")</th>
-                                <th scope="col"></th>
+                                <th scope="col" class="no-sort"></th>
                             </tr>
                         </thead>
 
@@ -50,9 +62,9 @@
                                 </td>
                                 <td>@Html.ActionLink(row.Name, "Edit", new { row.Id })</td>
                                 <td class="text-nowrap">
-                                    @Html.ActionLink(T("Edit").ToString(), "Edit", new { row.Id }, new { @class = "btn btn-primary" })
+                                    <a href="@Url.Action("Edit", new { row.Id })" class = "btn btn-primary"><i class="fa fa-pencil-square-o"></i> @T("Edit")</a>
                                     @if (row.Name != "Administrator") {
-                                        <a class="btn btn-danger" href="@Url.Action("Delete", new { row.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString() })" itemprop="RemoveUrl UnsafeUrl">@T("Delete")</a>
+                                        <a class="btn btn-danger" href="@Url.Action("Delete", new { row.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString() })" data-confirm="@T("Are you sure you want to delete this item?")"><i class="fa fa-trash"></i> @T("Delete")</a>
                                     }
                                 </td>
                             </tr>
@@ -70,3 +82,4 @@
 
     </div>
 }
+@Display.Modal()

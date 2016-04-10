@@ -9,13 +9,15 @@
 
     Layout.Title = T("Audit Trail Event");
 }
-<section class="audittrail-event-metadata-section">
-    @T("Event:") <strong>@descriptor.Name</strong><br />
-    @T("Category:") <strong>@descriptor.CategoryDescriptor.Name</strong><br />
-    @T("Timestamp:") <strong>@Display.DateTime(DateTimeUtc: record.CreatedUtc)</strong><br />
-    @T("Username:") <strong>@record.UserName</strong><br />
-    @T("Client IP address:") <strong>@record.ClientIpAddress</strong>
-</section>
-<section class="audittrail-event-details-section">
-    @Display(Model.DetailsShape)
-</section>
+<div class="panel panel-default">
+    <section class="panel-body">
+        @T("Event:") <strong>@descriptor.Name</strong><br />
+        @T("Category:") <strong>@descriptor.CategoryDescriptor.Name</strong><br />
+        @T("Timestamp:") <strong>@Display.DateTime(DateTimeUtc: record.CreatedUtc)</strong><br />
+        @T("Username:") <strong>@record.UserName</strong><br />
+        @T("Client IP address:") <strong>@record.ClientIpAddress</strong>
+    </section>
+    <section class="panel-body">
+        @Display(Model.DetailsShape)
+    </section>
+</div>

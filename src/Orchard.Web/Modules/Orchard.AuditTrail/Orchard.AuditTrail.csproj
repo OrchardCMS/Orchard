@@ -229,7 +229,7 @@
     <Compile Include="Providers\AuditTrail\AuditTrailManagerExtensions.cs" />
     <Compile Include="Recipes\Builders\AuditTrailStep.cs" />
     <Compile Include="Recipes\Executors\AuditTrailStep.cs" />
-    <Compile Include="ViewModels\RecycleBinCommand.cs" />
+    <Compile Include="ViewModels\RecycleBinBulkAction.cs" />
     <Compile Include="Controllers\RecycleBinController.cs" />
     <Compile Include="Controllers\ContentController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
