@@ -3,48 +3,59 @@
     Layout.Title = T("Edit Media Profile - {0}", Model.Name).Text;
 }
 
-@using (Html.BeginFormAntiForgeryPost())
-{
-    @Html.ValidationSummary()
-
-    <fieldset class="bulk-actions">
-        <h2>@T("Filters")</h2>
-    </fieldset>
-
-    <div class="manage">
-        @Html.ActionLink(T("Add a new Filter").Text, "Add", new { controller = "Filter", id = Model.Id }, new { @class = "btn btn-primary" })
-    </div>
-    
-    <table class="items">
-        <thead>
-            <tr>
-                <th scope="col" >@T("Description")</th>
-                <th scope="col" class="actions">&nbsp;</th>
-            </tr>
-        </thead>
-        @foreach (var filter in Model.Filters)
-        {
-            <tr>
-                <td>@filter.DisplayText</td>
-                <td>
-                    @Html.ActionLink(T("Edit").Text, "Edit", new { controller = "Filter", id = Model.Id, category = filter.Category, type = filter.Type, filterId = filter.FilterRecordId }) |
-                    @Html.ActionLink(T("Delete").Text, "Delete", new { controller = "Filter", id = Model.Id, filterId = filter.FilterRecordId }, new { itemprop = "RemoveUrl UnsafeUrl" }) |
-                    @if (filter != Model.Filters.First()) {
-                        @Html.ActionLink(T("Up").Text, "Move", new { controller = "Admin", id = Model.Id, direction = "up", filterId = filter.FilterRecordId }) @:|
-                    }
-                    @if (filter != Model.Filters.Last()) {
-                        @Html.ActionLink(T("Down").Text, "Move", new { controller = "Admin", id = Model.Id, direction = "down", filterId = filter.FilterRecordId })
-                    }
-
-                </td>    
-            </tr>
-        }
-    </table>
-    
-    <span class="hint">@T("Usage example: ")@("@Display.MediaUrl(Profile: \"")@Model.Name@("\", Path: Model.ContentItem.Contact.Picture.Url)")</span>
-        
-    <fieldset>
-        @*@Html.ActionLink(T("Preview").ToString(), "Preview", new { Model.Id }, new { @class = "button" })*@
-        @Html.ActionLink(T("Close").ToString(), "Index", new { }, new { @class = "button" })
-    </fieldset>
-}
+<div class="panel panel-default">
+    @using (Html.BeginFormAntiForgeryPost()) {
+        @Html.ValidationSummary()
+        <div class="panel-heading">
+            <div class="col-sm-12">
+                <div class="row form-group pull-right">
+                    <a href="@Url.Action("Add", new { controller = "Filter", id = Model.Id })" class="btn btn-primary"><i class="fa fa-plus"></i> @T("Add a new Filter")</a>
+                </div>
+            </div>
+            <div role="alert" class="alert alert-info alert-icon alert-border-color alert-dismissible">
+                <div class="icon"><span class="s7-info"></span></div>
+                <div class="message">
+                    <button type="button" data-dismiss="alert" aria-label="Close" class="close"></button><span>@T("Usage example: ")<strong>@("@Display.MediaUrl(Profile: \"")@Model.Name@("\", Path: Model.ContentItem.Contact.Picture.Url)")</strong></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="table-responsive table-with-footer">
+                    <table class="table table-fw-widget data-table table-striped dataTable no-footer">
+                        <thead>
+                            <tr>
+                                <th scope="col">@T("Description")</th>
+                                <th scope="col" class="actions">&nbsp;</th>
+                            </tr>
+                        </thead>
+                        @foreach (var filter in Model.Filters) {
+                            <tr>
+                                <td>@filter.DisplayText</td>
+                                <td>
+                                    @if (filter != Model.Filters.First()) {
+                                        <a class="btn btn-default" href="@Url.Action("Move", new { controller = "Admin", id = Model.Id, direction = "up", filterId = filter.FilterRecordId })"><i class="fa fa-chevron-up"></i></a>
+                                    }
+                                    @if (filter != Model.Filters.Last()) {
+                                        <a class="btn btn-default" href="@Url.Action("Move", new { controller = "Admin", id = Model.Id, direction = "down", filterId = filter.FilterRecordId })"><i class="fa fa-chevron-down"></i></a>
+                                    }
+                                    <a class="btn btn-primary" href="@Url.Action("Edit", new { controller = "Filter", id = Model.Id, category = filter.Category, type = filter.Type, filterId = filter.FilterRecordId })"><i class="fa fa-pencil-square-o"></i> @T("Edit")</a>
+                                    <a class="btn btn-danger" href="@Url.Action("Delete", new { controller = "Filter", id = Model.Id, filterId = filter.FilterRecordId })" data-confirm="@T("Are you sure you want to delete this item?")"><i class="fa fa-trash"></i> @T("Delete")</a>
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+                <div class="row am-datatable-footer">
+                    <div class="col-sm-12">
+                        <fieldset>
+                            @*@Html.ActionLink(T("Preview").ToString(), "Preview", new { Model.Id }, new { @class = "button" })*@
+                            @Html.ActionLink(T("Close").ToString(), "Index", new { }, new { @class = "button" })
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+@Display.Modal()
