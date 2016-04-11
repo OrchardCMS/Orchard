@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.DynamicForms.Services;
@@ -26,12 +27,13 @@ namespace Orchard.DynamicForms.Bindings {
                 }
                 ,
                 (contentItem, field, s) => {
-                    var selectedTerms = 
-                        s.Split(new []{',', ';'}, StringSplitOptions.RemoveEmptyEntries)
+                    var selectedTerms = new List<TermPart>();
+                    if (s!=null) {
+                        selectedTerms = s.Split(new []{',', ';'},      StringSplitOptions.RemoveEmptyEntries)
                         .Select(XmlHelper.Parse<int?>)
                         .Select(t => GetTerm(t.GetValueOrDefault()))
                         .Where(t => t != null).ToList();
-
+                    }
                     _taxonomyService.UpdateTerms(contentItem, selectedTerms, field.Name);
                 });
         }
