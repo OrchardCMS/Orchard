@@ -89,7 +89,7 @@ namespace Orchard.Tasks.Locking.Services {
                 DistributedLock dLock = null;
 
                 // If there's already a distributed lock object in our dictionary, that means
-                // this acquisition is a reentrance. Use the existing lock object from the 
+                // this acquisition is a reentrance. Use the existing lock object from the
                 // dictionary but increment its count.
                 if (_locks.TryGetValue(monitorObj, out dLock)) {
                     Logger.Debug("Current thread is re-entering lock '{0}'; incrementing count.", internalName);
@@ -144,13 +144,12 @@ namespace Orchard.Tasks.Locking.Services {
                 var records = repository.Table.Where(x => x.Name == internalName).ToList();
                 var record = records.FirstOrDefault(x => x.ValidUntilUtc == null || x.ValidUntilUtc >= _clock.UtcNow);
                 if (record == null) {
-                    if (records.Any()) {
-                        // No record matched the criteria, but at least one expired record with the specified name was found.
-                        // Delete the expired records before creating a new one. In theory no more than one record can exist
-                        // due to the unique key constraint on the 'Name' column, it won't hurt to work on a collection.
-                        foreach(var expiredRecord in records) {
-                            repository.Delete(expiredRecord);
-                        }
+
+                    // No record matched the criteria, but at least one expired record with the specified name was found.
+                    // Delete the expired records before creating a new one. In theory no more than one record can exist
+                    // due to the unique key constraint on the 'Name' column, it won't hurt to work on a collection.
+                    foreach (var expiredRecord in records) {
+                        repository.Delete(expiredRecord);
                     }
 
                     // No valid record existed, so we're good to create a new one.
