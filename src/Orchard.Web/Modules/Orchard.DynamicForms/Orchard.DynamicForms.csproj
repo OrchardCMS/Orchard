@@ -227,6 +227,7 @@
     <Compile Include="Handlers\ClientValidationRegistrationCoordinator.cs" />
     <Compile Include="Handlers\LayoutEditorShapeEventHandler.cs" />
     <Compile Include="Handlers\WorkflowValidatorCoordinator.cs" />
+    <Compile Include="Helpers\WriteElementValuesContextHelper.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Security\AuthorizationEventHandler.cs" />
     <Compile Include="Services\DynamicPermissions.cs" />

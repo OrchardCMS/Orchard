@@ -26,8 +26,8 @@ namespace Orchard.DynamicForms.Services {
         void ReadElementValues(FormElement element, ReadElementValuesContext context);
         NameValueCollection ReadElementValues(Form form, IValueProvider valueProvider);
         DataTable GenerateDataTable(IEnumerable<Submission> submissions);
-        ContentItem CreateContentItem(Form form, IValueProvider valueProvider);
-        ContentItem UpdateContentItem(int contentId, Form form, IValueProvider valueProvider);
+        ContentItem CreateContentItem(IContent content, Form form, IValueProvider valueProvider);
+        ContentItem UpdateContentItem(int contentId, IContent content, Form form, IValueProvider valueProvider);
         
         NameValueCollection GetValuesFromContentItem(ContentItem contentItem, Form form);
         IEnumerable<IElementValidator> GetValidators<TElement>() where TElement : FormElement;

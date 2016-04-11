@@ -92,7 +92,7 @@ namespace Orchard.DynamicForms.Services {
 
         public NameValueCollection SubmitForm(IContent content, Form form, IValueProvider valueProvider, ModelStateDictionary modelState, IUpdateModel updater, int contentIdToEdit) {
             var values = ReadElementValues(form, valueProvider);
-
+            
             _formEventHandler.Submitted(new FormSubmittedEventContext {
                 Content = content,
                 Form = form,
@@ -251,7 +251,7 @@ namespace Orchard.DynamicForms.Services {
             return dataTable;
         }
 
-        public ContentItem CreateContentItem(Form form, IValueProvider valueProvider) {
+        public ContentItem CreateContentItem(IContent content, Form form, IValueProvider valueProvider) {
             var contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(form.FormBindingContentType);
 
             if (contentTypeDefinition == null)
@@ -268,7 +268,7 @@ namespace Orchard.DynamicForms.Services {
                 Published = true
             };
 
-            InvokeBindings(form, valueProvider, contentTypeDefinition, contentItem);
+            InvokeBindings(content, form, valueProvider, contentTypeDefinition, contentItem);
 
             var contentTypeSettings = contentTypeDefinition.Settings.GetModel<ContentTypeSettings>();
             _contentManager.Create(contentItem, VersionOptions.Draft);
@@ -280,7 +280,7 @@ namespace Orchard.DynamicForms.Services {
             return contentItem;
         }
 
-        public ContentItem UpdateContentItem(int contentId, Form form, IValueProvider valueProvider) {
+        public ContentItem UpdateContentItem(int contentId, IContent content, Form form, IValueProvider valueProvider) {
             ContentTypeDefinition contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(form.FormBindingContentType);
             ContentItem contentItem = null;
 
@@ -292,7 +292,7 @@ namespace Orchard.DynamicForms.Services {
                 || contentItem.TypeDefinition.Name != form.FormBindingContentType)
                 return null;
 
-            InvokeBindings(form, valueProvider, contentTypeDefinition, contentItem);
+            InvokeBindings(content, form, valueProvider, contentTypeDefinition, contentItem);
 
             var contentTypeSettings = contentTypeDefinition.Settings.GetModel<ContentTypeSettings>();
             if (form.Publication == "Publish" || !contentTypeSettings.Draftable) {
@@ -302,15 +302,17 @@ namespace Orchard.DynamicForms.Services {
             return contentItem;
         }
 
-        private void InvokeBindings(Form form, IValueProvider valueProvider, ContentManagement.MetaData.Models.ContentTypeDefinition contentTypeDefinition, ContentItem contentItem) {
+        private void InvokeBindings(IContent content, Form form, IValueProvider valueProvider, ContentManagement.MetaData.Models.ContentTypeDefinition contentTypeDefinition, ContentItem contentItem) {
             var lookup = _bindingManager.DescribeBindingsFor(contentTypeDefinition);
             var formElements = GetFormElements(form);
 
             foreach (var element in formElements) {
-                var context = new ReadElementValuesContext { ValueProvider = valueProvider };
-                ReadElementValues(element, context);
+                var contextForReadValues = new ReadElementValuesContext { ValueProvider = valueProvider };
+                ReadElementValues(element, contextForReadValues);
+                var contextForWriteValues = new WriteElementValuesContext { ValueProvider = valueProvider, Output = contextForReadValues.Output, Content = content };
+                _elementHandlers.SetElementValue(element, contextForWriteValues);
 
-                var value = context.Output[element.Name];
+                var value = contextForWriteValues.Output[element.Name];
                 var bindingSettings = element.Data.GetModel<FormBindingSettings>();
 
                 if (bindingSettings != null) {
@@ -338,7 +340,6 @@ namespace Orchard.DynamicForms.Services {
             
             foreach (var element in formElements) {
                 var bindingSettings = element.Data.GetModel<FormBindingSettings>();
-
                 if (bindingSettings != null) {
                     foreach (var partBindingSettings in bindingSettings.Parts) {                      
                         string partValue = InvokeFirstPartOutputBindings(contentItem, lookup, partBindingSettings);
