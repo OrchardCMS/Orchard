@@ -27,7 +27,7 @@
         <label for="@Html.FieldIdFor(m => m.Value)" @if (settings.Required) { <text> class="required" </text>  }>@T("Url")</label>
     </div>
     <div class="editor-field">
-        @(isRequired ? Html.TextBoxFor(m => m.Value, new { @class = "text large", placeholder = settings.UrlPlaceholder, required = "required" }) : Html.TextBoxFor(m => m.Value, new { @class = "text large", placeholder = settings.UrlPlaceholder }))
+        @(isRequired ? Html.TextBoxFor(m => m.Value, new { @class = "text large", placeholder = settings.TextPlaceholder, required = "required" }) : Html.TextBoxFor(m => m.Value, new { @class = "text large", placeholder = settings.TextPlaceholder }))
         <span class="hint">@T("A valid url, i.e. http://orchardproject.net, /content/file.pdf, ...")</span>
     </div>
     @if (!String.IsNullOrWhiteSpace(settings.DefaultValue)) {
