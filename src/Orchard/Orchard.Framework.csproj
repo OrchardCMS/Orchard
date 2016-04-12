@@ -170,10 +170,6 @@
       <HintPath>..\packages\YamlDotNet.3.8.0\lib\net35\YamlDotNet.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="YamlDotNet.Dynamic, Version=3.2.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\YamlDotNet.Dynamic.3.2.3\lib\net40\YamlDotNet.Dynamic.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ContentManagement\Extensions\DriverResultExtensions.cs" />
@@ -427,9 +423,7 @@
     <Compile Include="Services\ClientHostAddressAccessor.cs" />
     <Compile Include="Services\DefaultJsonConverter.cs" />
     <Compile Include="Services\IClientHostAddressAccessor.cs" />
-    <Compile Include="Services\IYamlParser.cs" />
     <Compile Include="Services\IJsonConverter.cs" />
-    <Compile Include="Services\YamlParser.cs" />
     <Compile Include="Settings\CurrentSiteWorkContext.cs" />
     <Compile Include="Settings\ResourceDebugMode.cs" />
     <Compile Include="Tasks\Locking\Services\DistributedLockSchemaBuilder.cs" />
