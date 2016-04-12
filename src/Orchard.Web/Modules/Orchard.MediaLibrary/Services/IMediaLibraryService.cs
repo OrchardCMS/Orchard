@@ -135,17 +135,37 @@ namespace Orchard.MediaLibrary.Services {
         string UploadMediaFile(string folderPath, string fileName, Stream inputStream);
 
         /// <summary>
-        /// Checks if current user can manage the storage folder
+        /// Combines two paths.
         /// </summary>
-        /// <param name="folderPath"></param>
-        /// <returns></returns>
-        bool CanManageMediaFolder(string folderPath);
+        /// <param name="path1">The parent path.</param>
+        /// <param name="path2">The child path.</param>
+        /// <returns>The combined path.</returns>
+        string Combine(string path1, string path2);
+    }
 
-        /// <summary>
-        /// Combines given folderPath to user's root folder path
-        /// </summary>
-        /// <param name="folderPath"></param>
-        /// <returns>Rooted folder path</returns>
-        string GetRootedFolderPath(string folderPath);
+    public static class MediaLibrayServiceExtensions {
+        public static bool CanManageMediaFolder(this IMediaLibraryService service, string folderPath) {
+            // The current user can manage a media if he has access to the whole hierarchy
+            // or the media is under his personal storage folder.
+
+            var rootMediaFolder = service.GetRootMediaFolder();
+            if (rootMediaFolder == null) {
+                return true;
+            }
+
+            var mediaPath = service.Combine(folderPath, " ").Trim();
+            var rootPath = service.Combine(rootMediaFolder.MediaPath, " ").Trim();
+
+            return mediaPath.StartsWith(rootPath, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public static string GetRootedFolderPath(this IMediaLibraryService service, string folderPath) {
+            var rootMediaFolder = service.GetRootMediaFolder();
+            if (rootMediaFolder != null) {
+                return service.Combine(rootMediaFolder.MediaPath, folderPath ?? "");
+            }
+
+            return folderPath;
+        }
     }
 }
