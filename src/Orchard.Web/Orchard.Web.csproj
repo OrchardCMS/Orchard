@@ -180,7 +180,6 @@
   <ItemGroup>
     <Content Include="Config\Sites.config" />
     <Content Include="packages.config" />
-    <None Include="Properties\PublishProfiles\Test.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -268,7 +267,7 @@
       </RootBinFiles>
     </ItemGroup>
     <PropertyGroup>
-      <ExcludeFilesFromDeployment>@(RootBinFiles->'Modules\**\bin\%(Filename)%(Extension)');@(RootBinFiles->'Themes\**\%(Filename)%(Extension)');@(RootBinFiles->'Core\**\bin\%(Filename)%(Extension)');**\*.Debug.config;**\*.Release.config;**\obj\**;**\bin\*.xml;**\bin\*.pdb;;**\bin\*.dll.config;**\*.cs;**\*.csproj;Modules\**\Tests\**;Modules\**\Specs\**;Themes\bin\**;**\.hgignore;**\.hgtags;**\.hg\**;**\.gitignore;**\.git\**;**\*.csproj.user;Properties\**\*;App_Data\Dependencies\*;App_Data\RecipeQueue\*;App_Data\Logs\*;App_Data\**\mappings.bin;App_Data\**\cache.dat;App_Data\**\hrestart.txt</ExcludeFilesFromDeployment>
+      <ExcludeFilesFromDeployment>@(RootBinFiles->'Modules\**\bin\%(Filename)%(Extension)');@(RootBinFiles->'Themes\**\%(Filename)%(Extension)');@(RootBinFiles->'Core\**\bin\%(Filename)%(Extension)');**\*.Debug.config;**\*.Release.config;**\obj\**;**\bin\*.xml;**\bin\*.pdb;**\bin\*.dll.config;**\*.cs;**\*.csproj;Modules\**\Tests\**;Modules\**\Specs\**;Themes\bin\**;**\.hgignore;**\.hgtags;**\.hg\**;**\.gitignore;**\.git\**;**\*.csproj.user;Properties\**\*;App_Data\Dependencies\*;App_Data\RecipeQueue\*;App_Data\Logs\*;App_Data\**\mappings.bin;App_Data\**\cache.dat;App_Data\**\hrestart.txt</ExcludeFilesFromDeployment>
     </PropertyGroup>
   </Target>
   <Target Name="ExcludeRootBinariesPackage" DependsOnTargets="ExcludeRootBinariesDeployment" BeforeTargets="ExcludeFilesFromPackage">
