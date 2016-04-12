@@ -1,14 +1,15 @@
-﻿using System;
-using Orchard.ContentManagement;
-using Orchard.ContentManagement.FieldStorage;
+﻿using Orchard.ContentManagement;
+using Orchard.ContentManagement.Utilities;
+using System;
 
 namespace Orchard.Fields.Fields {
     public class BooleanField : ContentField {
+        internal LazyField<Boolean?> _valueField = new LazyField<Boolean?>();
 
         public Boolean? Value {
-            get { return Storage.Get<Boolean?>(); }
+            get { return _valueField.Value; }
 
-            set { Storage.Set(value); }
+            set { _valueField.Value = value; }
         }
     }
 }
