@@ -320,7 +320,6 @@
     <Compile Include="Localization\DateTimePartsTests.cs" />
     <Compile Include="Localization\DefaultDateLocalizationServicesTests.cs" />
     <Compile Include="Localization\DefaultDateFormatterTests.cs" />
-    <Compile Include="Services\YamlParserTests.cs" />
     <Compile Include="Stubs\StubApplicationEnvironment.cs" />
     <Compile Include="Stubs\StubCultureSelector.cs" />
     <Compile Include="Localization\TestHelpers.cs" />
