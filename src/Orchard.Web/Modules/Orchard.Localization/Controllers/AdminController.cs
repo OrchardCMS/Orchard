@@ -41,7 +41,7 @@ namespace Orchard.Localization.Controllers {
             if (masterLocalizationPart == null)
                 return HttpNotFound();
 
-            // Check is current item stll exists, and redirect.
+            // Check if current item still exists, and redirect.
             var existingTranslation = _localizationService.GetLocalizedContentItem(masterContentItem, to);
             if (existingTranslation != null) {
                 var existingTranslationMetadata = _contentManager.GetItemMetadata(existingTranslation);
