@@ -190,9 +190,10 @@ namespace Orchard.DynamicForms.Drivers {
                         if (element.Publication == "Publish" || !contentTypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
                             versionOptions = VersionOptions.Published;                        
                         contentItemToEdit = _contentManager.Get(contentIdToEdit, versionOptions);
+                        var isAUserType = contentTypeDefinition.Parts.Any(p => p.PartDefinition.Name == "UserPart");
                         if (onlyOwnContent 
-                            && !(element.FormBindingContentType == "User" && currentUser.Id == contentItemToEdit.Id) 
-                            && (element.FormBindingContentType != "User" && contentItemToEdit.As<CommonPart>().Owner.Id != currentUser.Id)) {
+                            && !(isAUserType && currentUser.Id == contentItemToEdit.Id) 
+                            && (!isAUserType && contentItemToEdit.As<CommonPart>().Owner.Id != currentUser.Id)) {
                             Logger.Warning("The form \"{0}\" cannot be loaded due to edition permissions", element.Name);
                             return;
                         }
