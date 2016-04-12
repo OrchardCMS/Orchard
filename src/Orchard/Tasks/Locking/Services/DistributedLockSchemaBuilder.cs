@@ -28,8 +28,8 @@ namespace Orchard.Tasks.Locking.Services {
 
         public bool SchemaExists() {
             try {
-                var tablePrefix = string.IsNullOrEmpty(_shellSettings.DataTablePrefix) ? "" : _shellSettings.DataTablePrefix + "_";
-                _schemaBuilder.ExecuteSql(string.Format("select * from {0}{1}", tablePrefix, TableName));
+                var tablePrefix = String.IsNullOrEmpty(_shellSettings.DataTablePrefix) ? "" : _shellSettings.DataTablePrefix + "_";
+                _schemaBuilder.ExecuteSql(String.Format("select * from {0}{1}", tablePrefix, TableName));
                 return true;
             }
             catch {
