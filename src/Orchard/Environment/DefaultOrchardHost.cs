@@ -161,7 +161,7 @@ namespace Orchard.Environment {
                             ActivateShell(context);
 
                             // If everything went well, return to stop the retry loop
-                            return;
+                            break;
                         }
                         catch (Exception ex) {
                             if (i == Retries) {

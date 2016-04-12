@@ -81,6 +81,16 @@
         $("input[type=checkbox]:not(:disabled)").prop('checked', $(this).prop("checked"))
     });
 
+    //Prevent double-click on buttons of type "submit"
+    $("form button[type='submit'], form input[type='submit']").click(function (e) {
+        var form = $(this).closest("form")[0];
+        if (typeof(form.formSubmitted) != "undefined") {
+            e.preventDefault();
+            return;
+        }
+        form.formSubmitted = true;
+    });
+
     // Handle keypress events in bulk action fieldsets that are part of a single form.
     // This will make sure the expected action executes when pressing "enter" on a text field.
     $("form .bulk-actions").on("keypress", "input[type='text']", function (e) {

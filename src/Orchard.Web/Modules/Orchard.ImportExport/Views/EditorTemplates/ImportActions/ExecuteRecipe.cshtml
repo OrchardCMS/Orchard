@@ -29,7 +29,7 @@
             </li>
         }
     </ul>
-    @Html.Hint(T("Select wether you want to import the selected recipe into the current site or if you want to do a full site reset first."))
+    @Html.Hint(T("Select whether you want to import the selected recipe into the current site or if you want to do a full site reset first."))
     <div data-controllerid="@String.Format("{0}_{1}", Html.FieldIdFor(m => m.ResetSite), "true")" style="display: none;">
         <div class="message message-Warning">@T("This will delete your database tables. Please consider creating a backup first.")</div>
         <div>
