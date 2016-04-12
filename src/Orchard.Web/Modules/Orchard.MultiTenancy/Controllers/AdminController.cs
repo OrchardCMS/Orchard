@@ -70,6 +70,10 @@ namespace Orchard.MultiTenancy.Controllers {
                 ModelState.AddModelError("Name", T("Invalid tenant name. Must contain characters only and no spaces.").Text);
             }
 
+            if (!string.Equals(viewModel.Name, "default", StringComparison.OrdinalIgnoreCase) && string.IsNullOrWhiteSpace( viewModel.RequestUrlHost) && string.IsNullOrWhiteSpace(viewModel.RequestUrlPrefix)) {
+                ModelState.AddModelError("RequestUrlHostRequestUrlPrefix", T("RequestUrlHost and RequestUrlPrefix can not be empty at the same time.").Text);
+            }
+
             if (!ModelState.IsValid) {
                 return View(viewModel);
             }
@@ -142,6 +146,10 @@ namespace Orchard.MultiTenancy.Controllers {
 
             if (tenant == null)
                 return HttpNotFound();
+
+            if (!string.Equals(viewModel.Name, "default", StringComparison.OrdinalIgnoreCase) && string.IsNullOrWhiteSpace(viewModel.RequestUrlHost) && string.IsNullOrWhiteSpace(viewModel.RequestUrlPrefix)) {
+                ModelState.AddModelError("RequestUrlHostRequestUrlPrefix", T("RequestUrlHost and RequestUrlPrefix can not be empty at the same time.").Text);
+            }
 
             if (!ModelState.IsValid) {
                 return View(viewModel);

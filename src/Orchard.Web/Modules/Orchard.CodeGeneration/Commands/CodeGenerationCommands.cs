@@ -426,14 +426,21 @@ namespace Orchard.CodeGeneration.Commands {
                 var solutionPath = Directory.GetParent(_orchardWebProj).Parent.FullName + "\\Orchard.sln";
                 if (File.Exists(solutionPath)) {
                     var projectReference = string.Format("EndProject\r\nProject(\"{{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}}\") = \"{0}\", \"Orchard.Web\\{2}\\{0}\\{0}.csproj\", \"{{{1}}}\"\r\n", projectName, projectGuid, containingFolder);
-                    var projectConfiguationPlatforms = string.Format("GlobalSection(ProjectConfigurationPlatforms) = postSolution\r\n\t\t{{{0}}}.Debug|Any CPU.ActiveCfg = Debug|Any CPU\r\n\t\t{{{0}}}.Debug|Any CPU.Build.0 = Debug|Any CPU\r\n\t\t{{{0}}}.Release|Any CPU.ActiveCfg = Release|Any CPU\r\n\t\t{{{0}}}.Release|Any CPU.Build.0 = Release|Any CPU\r\n", projectGuid);
+                    var projectConfiguationPlatforms = string.Format("\t{{{0}}}.Debug|Any CPU.ActiveCfg = Debug|Any CPU\r\n\t\t{{{0}}}.Debug|Any CPU.Build.0 = Debug|Any CPU\r\n\t\t{{{0}}}.Release|Any CPU.ActiveCfg = Release|Any CPU\r\n\t\t{{{0}}}.Release|Any CPU.Build.0 = Release|Any CPU\r\n\t", projectGuid);
                     var solutionText = File.ReadAllText(solutionPath);
-                    solutionText = solutionText.Insert(solutionText.LastIndexOf("EndProject\r\n"), projectReference).Replace("GlobalSection(ProjectConfigurationPlatforms) = postSolution\r\n", projectConfiguationPlatforms);
-                    solutionText = solutionText.Insert(solutionText.LastIndexOf("EndGlobalSection"), "\t{" + projectGuid + "} = {" + solutionFolderGuid + "}\r\n\t");
+                    solutionText = solutionText.Insert(solutionText.LastIndexOf("EndProject\r\n"), projectReference);
+                    solutionText = AppendGlobalSection(solutionText, "ProjectConfigurationPlatforms", projectConfiguationPlatforms);
+                    solutionText = AppendGlobalSection(solutionText, "NestedProjects", "\t{" + projectGuid + "} = {" + solutionFolderGuid + "}\r\n\t");
                     File.WriteAllText(solutionPath, solutionText);
                     TouchSolution(output);
                 }
             }
+        }
+
+        private string AppendGlobalSection(string solutionText, string sectionName, string content) {
+            var sectionStart = solutionText.IndexOf(string.Format("GlobalSection({0})", sectionName));
+            var sectionEnd = solutionText.IndexOf("EndGlobalSection", sectionStart);
+            return solutionText.Insert(sectionEnd, content);
         }
 
         private static string CreateProjectItemGroup(string relativeFromPath, HashSet<string> content, HashSet<string> folders) {
