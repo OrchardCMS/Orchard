@@ -100,9 +100,10 @@ namespace Orchard.DynamicForms.Controllers {
                     versionOptions = VersionOptions.Published;
 
                 var contentItemToEdit = _contentManager.Get(contenItemIdToEdit, versionOptions);
+                var isAUserType = contentTypeDefinition.Parts.Any(p => p.PartDefinition.Name == "UserPart");
                 if (onlyOwnContent
-                    && !(form.FormBindingContentType == "User" && user.Id == contentItemToEdit.Id)
-                    && (form.FormBindingContentType != "User" && contentItemToEdit.As<CommonPart>().Owner.Id != user.Id)) {
+                    && !(isAUserType && user.Id == contentItemToEdit.Id)
+                    && (!isAUserType && contentItemToEdit.As<CommonPart>().Owner.Id != user.Id)) {
                     Logger.Warning("The form \"{0}\" cannot be loaded due to edition permissions", form.Name);
                     _notifier.Warning(T("Insufficient permissions for submitting the specified form \"{0}\".", formName));
                     return Redirect(urlReferrer);
