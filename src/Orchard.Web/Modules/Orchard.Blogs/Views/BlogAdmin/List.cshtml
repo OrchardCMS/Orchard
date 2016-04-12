@@ -15,7 +15,7 @@
                     <fieldset class="bulk-actions">
                         <div class="am-checkbox inline">
                             <input type="checkbox" class="check-all" id="blog-list-select-all" />
-                            <label class="check-all" for="blog-list-select-all"></label>
+                            <label class="check-all" title="@T("Select All")" for="blog-list-select-all"></label>
                         </div>
                         <input id="publishActions" name="Options.BulkAction" type="hidden" value="@ContentsBulkAction.None" />
                         @Html.Hidden("returnUrl", ViewContext.RequestContext.HttpContext.Request.ToUrlString())
