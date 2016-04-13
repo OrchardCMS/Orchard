@@ -36,8 +36,10 @@ namespace Orchard.Fields.Drivers {
         protected override DriverResult Editor(ContentPart part, InputField field, dynamic shapeHelper) {
             return ContentShape("Fields_Input_Edit", GetDifferentiator(field, part),
                 () => {
-                    var settings = field.PartFieldDefinition.Settings.GetModel<InputFieldSettings>();
-                    field.Value = !part.IsNew() ? field.Value : settings.DefaultValue;
+                    if (part.IsNew()) {
+                        var settings = field.PartFieldDefinition.Settings.GetModel<InputFieldSettings>();
+                        field.Value = settings.DefaultValue;
+                    }
                     return shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: field, Prefix: GetPrefix(field, part));
                 });
         }

@@ -46,7 +46,7 @@ namespace Orchard.Core.Common.Drivers {
             return ContentShape("Fields_Common_Text_Edit", GetDifferentiator(field, part),
                 () => {
                     var settings = field.PartFieldDefinition.Settings.GetModel<TextFieldSettings>();
-                    var text = !part.IsNew() ? field.Value : settings.DefaultValue;
+                    var text = part.IsNew() ? settings.DefaultValue : field.Value;
 
                     var viewModel = new TextFieldDriverViewModel {
                         Field = field,
