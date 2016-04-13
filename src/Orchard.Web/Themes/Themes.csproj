@@ -102,8 +102,10 @@
     <Content Include="TheAdmin\Styles\images\icon-gallery.png" />
     <Content Include="TheAdmin\Styles\images\icon-settings.png" />
     <Content Include="TheAdmin\Styles\images\info.gif" />
+    <Content Include="TheAdmin\Styles\images\menu-closed.png" />
     <Content Include="TheAdmin\Styles\images\menu-default.png" />
     <Content Include="TheAdmin\Styles\images\menu-glyph.png" />
+    <Content Include="TheAdmin\Styles\images\menu-open.png" />
     <Content Include="TheAdmin\Styles\images\menuClosed.gif" />
     <Content Include="TheAdmin\Styles\images\menuClosedHover.gif" />
     <Content Include="TheAdmin\Styles\images\menuOpen.gif" />
