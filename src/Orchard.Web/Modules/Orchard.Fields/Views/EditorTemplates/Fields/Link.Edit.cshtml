@@ -38,7 +38,7 @@
             <label for="@Html.FieldIdFor(m => m.Text)" @if (settings.LinkTextMode == LinkTextMode.Required) { <text> class="required" </text>  }>@T("Text")</label>
         </div>
         <div class="editor-field">
-            @(isTextRequired ? Html.TextBoxFor(m => m.Text, new { @class = "text medium", required = "required" }) : Html.TextBoxFor(m => m.Text, new { @class = "text medium" }))
+            @(isTextRequired ? Html.TextBoxFor(m => m.Text, new { @class = "text medium", placeholder = settings.TextPlaceholder, required = "required" }) : Html.TextBoxFor(m => m.Text, new { @class = "text medium", placeholder = settings.TextPlaceholder }))
             @if (!String.IsNullOrWhiteSpace(settings.TextDefaultValue)) {
                 <span class="hint">@T("If the field is left empty then the default value will be used.")</span>
             }
