@@ -7,6 +7,9 @@
     tagBuilder.Attributes["type"] = "radio";
     tagBuilder.Attributes["name"] = Model.ProcessedName;
     tagBuilder.Attributes["value"] = Model.ProcessedValue;
+    if ((String.IsNullOrWhiteSpace(element.PostedValue) && element.DefaultValue) || Model.ProcessedValue == element.PostedValue) {
+        tagBuilder.Attributes["checked"] = "checked";
+    }
 }
 @if (element.ShowLabel) {
     <label>
