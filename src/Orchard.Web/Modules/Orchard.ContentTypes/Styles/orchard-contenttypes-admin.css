@@ -46,7 +46,6 @@
 .manage-part h3, .manage-field h3 {
     margin: 1em 0 !important;
     padding-left: 30px;
-    width: 90%;
 }
 
 .manage-part .expando-glyph, .manage-field .expando-glyph {

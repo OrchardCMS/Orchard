@@ -28,7 +28,7 @@ namespace Orchard.AuditTrail.Services {
             var totalCount = query.List().Count;
             
             query.SetFirstResult((page - 1) * pageSize);
-            query.SetFetchSize(pageSize);
+            query.SetMaxResults(pageSize);
 
             var contentItems = LoadContentItems<T>(query);
             
