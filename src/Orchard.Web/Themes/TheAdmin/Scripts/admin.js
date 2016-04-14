@@ -84,13 +84,13 @@
     //Prevent double-click on buttons of type "submit"
     $("form button[type='submit'], form input[type='submit']").click(function (e) {
         var form = $(this).closest("form")[0];
-        if (typeof (form.formSubmitted) != "undefined" && form.formSubmitted == true) {
+        if (!!form.submitted) {
             e.preventDefault();
             return;
         }
-        form.formSubmitted = true;
+        form.submitted = true;
         setTimeout(function () {
-            form.formSubmitted = false;
+            form.submitted = false;
         }, 1000);
     });
 
