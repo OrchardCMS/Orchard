@@ -17,10 +17,10 @@ using Orchard.Layouts.Services;
 using Orchard.Layouts.Shapes;
 using Orchard.Layouts.ViewModels;
 using Orchard.Localization;
-using Orchard.Services;
 using Orchard.Themes.Services;
 using Orchard.Tokens;
 using Orchard.Utility.Extensions;
+using YamlDotNet.Dynamic;
 
 namespace Orchard.Layouts.Providers {
     [OrchardFeature("Orchard.Layouts.Snippets")]
@@ -34,7 +34,6 @@ namespace Orchard.Layouts.Providers {
         private readonly Work<ICurrentThemeShapeBindingResolver> _currentThemeShapeBindingResolver;
         private readonly Work<ITokenizer> _tokenizer;
         private readonly IWorkContextAccessor _wca;
-        private readonly Work<IYamlParser> _yamlParser;
 
         public SnippetElementHarvester(
             IWorkContextAccessor workContextAccessor,
@@ -44,8 +43,7 @@ namespace Orchard.Layouts.Providers {
             Work<IElementFactory> elementFactory,
             Work<IShapeDisplay> shapeDisplay,
             Work<ITokenizer> tokenizer,
-            Work<ICurrentThemeShapeBindingResolver> currentThemeShapeBindingResolver,
-            Work<IYamlParser> yamlParser) {
+            Work<ICurrentThemeShapeBindingResolver> currentThemeShapeBindingResolver) {
 
             _shapeFactory = shapeFactory;
             _siteThemeService = siteThemeService;
@@ -54,7 +52,6 @@ namespace Orchard.Layouts.Providers {
             _shapeDisplay = shapeDisplay;
             _tokenizer = tokenizer;
             _currentThemeShapeBindingResolver = currentThemeShapeBindingResolver;
-            _yamlParser = yamlParser;
             _wca = workContextAccessor;
         }
 
@@ -149,7 +146,7 @@ namespace Orchard.Layouts.Providers {
                 return null;
 
             var yaml = File.ReadAllText(paramsFileName);
-            var snippetConfig = _yamlParser.Value.Deserialize(yaml);
+            var snippetConfig = Deserialize(yaml);
             var fieldsConfig = snippetConfig.Fields != null ? snippetConfig.Fields.Children : new dynamic[0];
             var descriptor = new SnippetDescriptor();
 
@@ -201,6 +198,10 @@ namespace Orchard.Layouts.Providers {
 
             var markup = File.ReadAllText(localFileName);
             return markup.Contains("@Html.SnippetField");
+        }
+
+        private dynamic Deserialize(string yaml) {
+            return new DynamicYaml(yaml);
         }
     }
 }
