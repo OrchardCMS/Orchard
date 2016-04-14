@@ -1,0 +1,9 @@
+﻿@model Orchard.Layouts.ViewModels.BlockquoteEditorViewModel
+@{
+    Script.Include("AutoFocus.js");
+}
+<fieldset class="autofocus">
+    @Html.LabelFor(m => m.Text, T("Text"))
+    @Html.TextAreaFor(m => m.Text, new { @class = "text large tokenized", autofocus = "autofocus" })
+    @Html.Hint(T("Note: HTML markup will be rendered unencoded."))
+</fieldset>
