@@ -78,6 +78,8 @@
 .manage-part .manage-field .manage {
     margin-top: -2.9em;
     padding-right: 20px;
+    position: relative;
+    z-index: 999;
 }
 
 .manage-field .details,
