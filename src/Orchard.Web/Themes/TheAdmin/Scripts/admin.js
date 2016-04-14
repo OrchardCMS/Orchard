@@ -84,11 +84,14 @@
     //Prevent double-click on buttons of type "submit"
     $("form button[type='submit'], form input[type='submit']").click(function (e) {
         var form = $(this).closest("form")[0];
-        if (typeof(form.formSubmitted) != "undefined") {
+        if (typeof (form.formSubmitted) != "undefined" && form.formSubmitted == true) {
             e.preventDefault();
             return;
         }
         form.formSubmitted = true;
+        setTimeout(function () {
+            form.formSubmitted = false;
+        }, 1000);
     });
 
     // Handle keypress events in bulk action fieldsets that are part of a single form.
