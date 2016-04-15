@@ -15,13 +15,15 @@ namespace Orchard.Layouts.Drivers {
 
         protected override EditorResult OnBuildEditor(Blockquote element, ElementEditorContext context) {
             var viewModel = new BlockquoteEditorViewModel {
-                Text = element.Content
+                Text = element.Content,
+                Citation = element.Citation
             };
             var editor = context.ShapeFactory.EditorTemplate(TemplateName: "Elements.Blockquote", Model: viewModel);
 
             if (context.Updater != null) {
                 context.Updater.TryUpdateModel(viewModel, context.Prefix, null, null);
                 element.Content = viewModel.Text;
+                element.Citation = viewModel.Citation;
             }
             
             return Editor(context, editor);

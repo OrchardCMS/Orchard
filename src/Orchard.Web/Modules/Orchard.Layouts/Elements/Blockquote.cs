@@ -15,5 +15,10 @@ namespace Orchard.Layouts.Elements {
         public override string ToolboxIcon {
             get { return "\uf10d"; }
         }
+
+        public string Citation {
+            get { return this.Retrieve(x => x.Citation); }
+            set { this.Store(x => x.Citation, value); }
+        }
     }
 }
