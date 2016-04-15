@@ -493,7 +493,7 @@ namespace Orchard.OutputCache.Filters {
             response.StatusCode = cacheItem.StatusCode;
 
             // Add ETag header
-            if (HttpRuntime.UsingIntegratedPipeline && response.Headers.Get("ETag") == null) {
+            if (HttpRuntime.UsingIntegratedPipeline && response.Headers.Get("ETag") == null && cacheItem.ETag != null) {
                 response.Headers["ETag"] = cacheItem.ETag;
             }
 
