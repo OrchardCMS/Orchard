@@ -81,14 +81,30 @@
         $("input[type=checkbox]:not(:disabled)").prop('checked', $(this).prop("checked"))
     });
 
-    //Prevent double-click on buttons of type "submit"
-    $("form button[type='submit'], form input[type='submit']").click(function (e) {
-        var form = $(this).closest("form")[0];
-        if (typeof(form.formSubmitted) != "undefined") {
+    //Prevent multi submissions on forms
+    $("body").on("submit", "form.no-multisubmit", function (e) {
+        var submittingClass = "submitting";
+        form = $(this);
+
+        if (form.hasClass(submittingClass)) {
             e.preventDefault();
             return;
         }
-        form.formSubmitted = true;
+
+        form.addClass(submittingClass);
+
+        buttons = form.find("[type='submit']");
+        buttons.prop("disabled", true)
+
+        // safety-nest in case the form didn't refresh the page
+        setTimeout(function () {
+            form.removeClass(submittingClass);
+            buttons.prop("disabled", false)
+        }, 5000);
+
+        e.preventDefault();
+        return;
+
     });
 
     // Handle keypress events in bulk action fieldsets that are part of a single form.
