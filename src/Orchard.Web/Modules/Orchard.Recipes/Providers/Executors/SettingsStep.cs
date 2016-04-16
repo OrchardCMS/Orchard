@@ -38,7 +38,7 @@ namespace Orchard.Recipes.Providers.Executors {
         public override void Execute(RecipeExecutionContext context) {
             var siteContentItem = _siteService.GetSiteSettings().ContentItem;
             var importContentSession = new ImportContentSession(_contentManager);
-            var importContentContext = new ImportContentContext(siteContentItem, context.RecipeStep.Step, importContentSession);
+            var importContentContext = new ImportContentContext(siteContentItem, context.RecipeStep.Step,null, importContentSession);
 
             foreach (var contentHandler in Handlers) {
                 contentHandler.Importing(importContentContext);

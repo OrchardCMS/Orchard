@@ -37,5 +37,25 @@ namespace Orchard.Recipes.Services {
 
             return result;
         }
+
+        public void SetResult(RecipeResult result)
+        {
+            int stepId = 1;
+            foreach (var s in result.Steps)
+            { 
+            _recipeStepResultRecordRepository.Create(new RecipeStepResultRecord
+            {
+                ExecutionId = result.ExecutionId,
+                RecipeName = s.RecipeName,
+                StepName = s.StepName,
+                StepId = stepId.ToString(),
+                ErrorMessage = s.ErrorMessage,
+                IsCompleted = s.IsCompleted,
+                IsSuccessful = s.IsSuccessful                 
+            });
+            stepId++;
+
+        }
+        }
     }
 }

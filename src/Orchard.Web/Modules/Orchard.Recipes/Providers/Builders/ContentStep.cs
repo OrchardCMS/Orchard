@@ -47,7 +47,10 @@ namespace Orchard.Recipes.Providers.Builders {
 
         public IList<string> SchemaContentTypes { get; set; }
         public IList<string> DataContentTypes { get; set; }
+
+        public IEnumerable<ContentItem> DataContentItems { get; set; }
         public VersionHistoryOptions VersionHistoryOptions { get; set; }
+
 
         public override dynamic BuildEditor(dynamic shapeFactory) {
             return UpdateEditor(shapeFactory, null);
@@ -96,15 +99,15 @@ namespace Orchard.Recipes.Providers.Builders {
             var dataContentTypes = DataContentTypes;
             var schemaContentTypes = SchemaContentTypes;
             var exportVersionOptions = GetContentExportVersionOptions(VersionHistoryOptions);
-            var contentItems = dataContentTypes.Any()
+            DataContentItems = (dataContentTypes.Any() || DataContentItems != null )
                 ? _orchardServices.ContentManager.Query(exportVersionOptions, dataContentTypes.ToArray()).List().ToArray()
                 : Enumerable.Empty<ContentItem>();
 
             if(schemaContentTypes.Any())
                 context.RecipeDocument.Element("Orchard").Add(ExportMetadata(schemaContentTypes));
 
-            if(contentItems.Any())
-                context.RecipeDocument.Element("Orchard").Add(ExportData(dataContentTypes, contentItems));
+            if(DataContentItems.Any())
+                context.RecipeDocument.Element("Orchard").Add(ExportData(dataContentTypes, DataContentItems));
         }
 
         private XElement ExportMetadata(IEnumerable<string> contentTypes) {

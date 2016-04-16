@@ -76,8 +76,14 @@ namespace Orchard.Recipes.Providers.Executors {
         // Import Data.
         public override void Execute(RecipeExecutionContext context) {
             // Run the import.
+
+         
+      
+
             BatchedInvoke(context, "Import", (itemId, nextIdentityValue, element, importContentSession, elementDictionary) => {
-                _orchardServices.ContentManager.Import(element, importContentSession);
+
+                var importContext = new ImportContentContext(element,null,importContentSession);
+                _orchardServices.ContentManager.Import(importContext);
             });
             
             // Invoke ImportCompleted.
