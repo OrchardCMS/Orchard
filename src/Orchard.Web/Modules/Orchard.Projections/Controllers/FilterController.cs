@@ -96,7 +96,7 @@ namespace Orchard.Projections.Controllers {
             filter.FilterGroupRecord.Filters.Remove(filter);
             _repository.Delete(filter);
 
-            Services.Notifier.Information(T("Filter deleted"));
+            Services.Notifier.Success(T("Filter deleted"));
 
             return RedirectToAction("Edit", "Admin", new { id });
         }

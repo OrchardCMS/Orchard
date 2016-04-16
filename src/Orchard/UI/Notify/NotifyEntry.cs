@@ -4,7 +4,8 @@ namespace Orchard.UI.Notify {
     public enum NotifyType {
         Information,
         Warning,
-        Error
+        Error,
+        Success
     }
 
     public class NotifyEntry {

@@ -1,0 +1,12 @@
+﻿@using Orchard.Layouts.Helpers
+@using Orchard.Layouts.Elements
+@{
+    var element = (Blockquote)Model.Element;
+    var tagBuilder = TagBuilderExtensions.CreateElementTagBuilder(Model, "blockquote");
+    tagBuilder.InnerHtml = Model.ProcessedContent;
+
+    if (!String.IsNullOrWhiteSpace(element.Citation)) {
+        tagBuilder.Attributes["cite"] = element.Citation.Trim();
+    }
+}
+@tagBuilder.ToHtmlString()

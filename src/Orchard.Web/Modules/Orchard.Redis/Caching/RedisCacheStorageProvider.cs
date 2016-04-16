@@ -38,7 +38,7 @@ namespace Orchard.Redis.Caching {
         public object Get<T>(string key) {
             var json = Database.StringGet(GetLocalizedKey(key));
             if(String.IsNullOrEmpty(json)) {
-                return default(T);
+                return null;
             }
             return JsonConvert.DeserializeObject<T>(json);
         }

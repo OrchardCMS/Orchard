@@ -1,17 +1,7 @@
 ﻿@using Orchard.Layouts.Elements
-@using Orchard.Layouts.Helpers
-@using Orchard.Layouts.Models
 @{
     var element = (Snippet) Model.Element;
-    var snippetDescriptor = (SnippetDescriptor)Model.SnippetDescriptor;
 }
 <div class="element-snippet layout-placeholder">
     @T("{0} Snippet", element.Descriptor.DisplayText)
-    @if (snippetDescriptor.Fields.Any()) {
-        <ul>
-            @foreach(var field in snippetDescriptor.Fields) {
-                <li>@field.DisplayName: @element.Data.Get(field.Name)</li>
-            }
-        </ul>
-    }
 </div>

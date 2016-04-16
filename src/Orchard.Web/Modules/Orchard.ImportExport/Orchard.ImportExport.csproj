@@ -281,9 +281,6 @@
     <Content Include="Views\Admin\Export.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\EditorTemplates\ImportActions\ExecuteRecipe.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -303,6 +300,12 @@
     <Content Include="Views\Subscription\Create.cshtml" />
     <Content Include="Views\Subscription\Edit.cshtml" />
     <Content Include="Views\Subscription\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+  <Content Include="Views\Admin\ImportResult.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EditorTemplates\Parts\Deployment.DeployablePart.cshtml" />

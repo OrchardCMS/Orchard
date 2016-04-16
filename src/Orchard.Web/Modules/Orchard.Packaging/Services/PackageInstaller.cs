@@ -270,7 +270,7 @@ namespace Orchard.Packaging.Services {
 
                 var backupFolder = new DirectoryInfo(localTempPath);
                 _folderUpdater.Restore(backupFolder, source);
-                _notifier.Information(T("Successfully restored local package to local folder \"{0}\"", source));
+                _notifier.Success(T("Successfully restored local package to local folder \"{0}\"", source));
 
                 return true;
             }
@@ -299,7 +299,7 @@ namespace Orchard.Packaging.Services {
 
                 var backupFolder = new DirectoryInfo(localTempPath);
                 _folderUpdater.Backup(source, backupFolder);
-                _notifier.Information(T("Successfully backed up local package to local folder \"{0}\"", backupFolder));
+                _notifier.Success(T("Successfully backed up local package to local folder \"{0}\"", backupFolder));
 
                 return true;
             }
@@ -312,7 +312,7 @@ namespace Orchard.Packaging.Services {
             // package is the same version or an older version
             try {
                 Uninstall(package.Id, _virtualPathProvider.MapPath("~\\"));
-                _notifier.Information(T("Successfully un-installed local package {0}", package.ExtensionId()));
+                _notifier.Success(T("Successfully un-installed local package {0}", package.ExtensionId()));
             }
             catch {}
         }

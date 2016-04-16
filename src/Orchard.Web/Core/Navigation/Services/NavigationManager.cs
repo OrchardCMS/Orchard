@@ -76,7 +76,7 @@ namespace Orchard.Core.Navigation.Services {
 
         private IEnumerable<MenuItem> Filter(IEnumerable<MenuItem> menuItems) {
             IEnumerable<MenuItem> result = menuItems;
-            foreach(var filter in _navigationFilters) {
+            foreach (var filter in _navigationFilters) {
                 result = filter.Filter(result);
             }
 

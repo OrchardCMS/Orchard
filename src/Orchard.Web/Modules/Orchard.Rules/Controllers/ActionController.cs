@@ -49,7 +49,7 @@ namespace Orchard.Rules.Controllers {
                 return new HttpUnauthorizedResult();
 
             _rulesServices.DeleteAction(actionId);
-            Services.Notifier.Information(T("Action Deleted"));
+            Services.Notifier.Success(T("Action Deleted"));
 
             return RedirectToAction("Edit", "Admin", new { id });
         }

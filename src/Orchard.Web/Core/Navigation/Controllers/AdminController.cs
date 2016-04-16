@@ -227,7 +227,7 @@ namespace Orchard.Core.Navigation.Controllers {
                 return View(model);
             }
 
-            Services.Notifier.Information(T("Your {0} has been added.", menuPart.TypeDefinition.DisplayName));
+            Services.Notifier.Success(T("Your {0} has been added.", menuPart.TypeDefinition.DisplayName));
 
             return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
         }

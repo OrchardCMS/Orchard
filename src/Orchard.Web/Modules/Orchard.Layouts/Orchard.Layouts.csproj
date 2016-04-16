@@ -68,6 +68,8 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Abstractions" />
     <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
       <Private>True</Private>
@@ -76,8 +78,6 @@
       <HintPath>..\..\..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.Abstractions" />
     <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
       <Private>True</Private>
@@ -102,10 +102,17 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="YamlDotNet, Version=3.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\YamlDotNet.3.8.0\lib\net35\YamlDotNet.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="YamlDotNet.Dynamic, Version=3.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\YamlDotNet.Dynamic.3.2.3\lib\net40\YamlDotNet.Dynamic.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\JavaScript\Models\RecycleBin.js" />
-    <Content Include="Default.html" />
     <Content Include="Assets.json" />
     <Content Include="Images\azure.png" />
     <Content Include="Images\illustration.jpg" />
@@ -168,7 +175,6 @@
     <Content Include="Styles\admin-dialog.css" />
     <Content Include="Styles\split-arrow-down.png" />
     <Content Include="Styles\split-arrow-up.png" />
-    <Content Include="Notes.txt" />
     <Content Include="Views\BlueprintAdmin\Edit.cshtml">
       <SubType>Code</SubType>
     </Content>
@@ -306,6 +312,7 @@
     <Compile Include="Controllers\TemplateController.cs" />
     <Compile Include="Drivers\BreadcrumbsElementDriver.cs" />
     <Compile Include="Drivers\CanvasElementDriver.cs" />
+    <Compile Include="Drivers\BlockquoteElementDriver.cs" />
     <Compile Include="Drivers\MenuElementDriver.cs" />
     <Compile Include="Drivers\NotificationsElementDriver.cs" />
     <Compile Include="Drivers\HeadingElementDriver.cs" />
@@ -314,6 +321,7 @@
     <Compile Include="Elements\Breadcrumbs.cs" />
     <Compile Include="Elements\Canvas.cs" />
     <Compile Include="Elements\ContentElement.cs" />
+    <Compile Include="Elements\Blockquote.cs" />
     <Compile Include="Elements\Menu.cs" />
     <Compile Include="Elements\Notifications.cs" />
     <Compile Include="Elements\Heading.cs" />
@@ -338,6 +346,7 @@
     <Compile Include="Elements\Projection.cs" />
     <Compile Include="Filters\ControllerAccessorFilter.cs" />
     <Compile Include="Framework\Display\ElementCreatingDisplayShapeContext.cs" />
+    <Compile Include="Framework\Drivers\ImportContentSessionWrapper.cs" />
     <Compile Include="Framework\Drivers\ImportElementContext.cs" />
     <Compile Include="Framework\Drivers\ImportLayoutContext.cs" />
     <Compile Include="Framework\Elements\IElement.cs" />
@@ -361,6 +370,7 @@
     <Compile Include="Models\SnippetDescriptor.cs" />
     <Compile Include="Models\SnippetFieldDescriptor.cs" />
     <Compile Include="Services\IFormElementServices.cs" />
+    <Compile Include="ViewModels\BlockquoteEditorViewModel.cs" />
     <Compile Include="ViewModels\SnippetViewModel.cs" />
     <Compile Include="ViewModels\SnippetFieldViewModel.cs" />
     <Compile Include="ViewModels\PlaceableContentItemViewModel.cs" />
@@ -566,9 +576,6 @@
     <Content Include="Views\Elements\Heading.Design.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Elements\PlaceableContentItem.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -585,6 +592,18 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EditorTemplates\Elements.Snippet.Field.Text.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Blockquote.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Blockquote.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Elements.Blockquote.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

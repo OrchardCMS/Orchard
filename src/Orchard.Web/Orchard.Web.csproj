@@ -1,7 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.1\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.1\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
-  <Import Project="..\packages\Microsoft.Net.Compilers.1.1.1\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.1.1.1\build\Microsoft.Net.Compilers.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -58,10 +56,6 @@
     </Reference>
     <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.1\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Owin, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -248,11 +242,11 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>False</UseIIS>
+          <UseIIS>True</UseIIS>
           <AutoAssignPort>False</AutoAssignPort>
           <DevelopmentServerPort>30321</DevelopmentServerPort>
           <DevelopmentServerVPath>/OrchardLocal</DevelopmentServerVPath>
-          <IISUrl>http://localhost:30322/OrchardLocal</IISUrl>
+          <IISUrl>http://localhost:30321/OrchardLocal</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
@@ -273,7 +267,7 @@
       </RootBinFiles>
     </ItemGroup>
     <PropertyGroup>
-      <ExcludeFilesFromDeployment>@(RootBinFiles->'Modules\**\bin\%(Filename)%(Extension)');@(RootBinFiles->'Themes\**\%(Filename)%(Extension)');@(RootBinFiles->'Core\**\bin\%(Filename)%(Extension)');**\*.Debug.config;**\*.Release.config;**\obj\**;**\bin\*.xml;**\*.cs;**\*.csproj;Modules\**\Tests\**;Modules\**\Specs\**;Themes\bin\**;**\.hgignore;**\.hgtags;**\.hg\**;**\.gitignore;**\.git\**;**\*.csproj.user;Properties\**\*;App_Data\Dependencies\*;App_Data\RecipeQueue\*;App_Data\Logs\*;App_Data\**\mappings.bin;App_Data\**\cache.dat;App_Data\**\hrestart.txt</ExcludeFilesFromDeployment>
+      <ExcludeFilesFromDeployment>@(RootBinFiles->'Modules\**\bin\%(Filename)%(Extension)');@(RootBinFiles->'Themes\**\%(Filename)%(Extension)');@(RootBinFiles->'Core\**\bin\%(Filename)%(Extension)');**\*.Debug.config;**\*.Release.config;**\obj\**;**\bin\*.xml;**\bin\*.pdb;**\bin\*.dll.config;**\*.cs;**\*.csproj;Modules\**\Tests\**;Modules\**\Specs\**;Themes\bin\**;**\.hgignore;**\.hgtags;**\.hg\**;**\.gitignore;**\.git\**;**\*.csproj.user;Properties\**\*;App_Data\Dependencies\*;App_Data\RecipeQueue\*;App_Data\Logs\*;App_Data\**\mappings.bin;App_Data\**\cache.dat;App_Data\**\hrestart.txt</ExcludeFilesFromDeployment>
     </PropertyGroup>
   </Target>
   <Target Name="ExcludeRootBinariesPackage" DependsOnTargets="ExcludeRootBinariesDeployment" BeforeTargets="ExcludeFilesFromPackage">
@@ -301,12 +295,5 @@
 		<CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Parent" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" />
 		<CopyAreaManifests ManifestPath="$(AreasManifestDir)" CrossCopy="false" RenameViews="true" />
 		-->
-  </Target>
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.1.1.1\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.1.1.1\build\Microsoft.Net.Compilers.props'))" />
-    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.1\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.1\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
   </Target>
 </Project>
