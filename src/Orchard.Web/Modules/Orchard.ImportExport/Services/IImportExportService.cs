@@ -4,12 +4,15 @@ using System.Xml.Linq;
 using Orchard.ImportExport.Models;
 using Orchard.Recipes.Models;
 using Orchard.Utility.Extensions;
+using Orchard.ContentManagement;
 
 namespace Orchard.ImportExport.Services {
     public interface IImportExportService : IDependency {
         string Import(ImportActionContext context, IEnumerable<IImportAction> actions = null);
         void Export(ExportActionContext context, IEnumerable<IExportAction> actions = null);
-        string WriteExportFile(XDocument recipeDocument);
+
+        void Export(ExportActionContext context, IEnumerable<ContentItem> contentitems);
+        string WriteExportFile(ExportActionContext exportActionContext);
         IEnumerable<IExportAction> ParseExportActions(XDocument configurationDocument);
         void ConfigureImportActions(ConfigureImportActionsContext context);
     }

@@ -8,6 +8,7 @@ using Orchard.ImportExport.Services;
 using Orchard.ImportExport.ViewModels;
 using Orchard.Localization;
 using Orchard.Recipes.Services;
+using Orchard.Recipes.Providers.Builders;
 
 namespace Orchard.ImportExport.Controllers {
     public class AdminController : Controller, IUpdateModel {
@@ -102,16 +103,17 @@ namespace Orchard.ImportExport.Controllers {
 
             var actions = _exportActions.OrderByDescending(x => x.Priority).ToList();
 
-            foreach (var action in actions) {
+            foreach (var action in actions)
+            {
                 action.UpdateEditor(Services.New, this);
             }
-            
+
             var exportActionContext = new ExportActionContext();
             _importExportService.Export(exportActionContext, actions);
 
-            var recipeDocument = exportActionContext.RecipeDocument;
-            var exportFilePath = _importExportService.WriteExportFile(recipeDocument);
-            var recipe = _recipeParser.ParseRecipe(recipeDocument);
+            //var recipeDocument = exportActionContext.RecipeDocument;
+            var exportFilePath = _importExportService.WriteExportFile(exportActionContext);
+            var recipe = _recipeParser.ParseRecipe(exportActionContext.RecipeDocument);
             var exportFileName = recipe.GetExportFileName();
 
             return File(exportFilePath, "text/xml", exportFileName);

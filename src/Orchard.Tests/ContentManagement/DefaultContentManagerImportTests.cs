@@ -201,7 +201,7 @@ namespace Orchard.Tests.ContentManagement {
 
         private void Import(XElement element) {
             var importContentSession = new ImportContentSession(_contentManager);
-            _contentManager.Import(element, importContentSession);
+            _contentManager.Import(new ImportContentContext(element, null, importContentSession));
             _contentManager.CompleteImport(element, importContentSession);
         }
 

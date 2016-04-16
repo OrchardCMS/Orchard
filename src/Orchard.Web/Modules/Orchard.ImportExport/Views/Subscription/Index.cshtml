@@ -1,0 +1,18 @@
+﻿@using Orchard.ImportExport.ViewModels
+@model SubscriptionsViewModel
+@{
+  Layout.Title = T("Schedule Deployments");
+}
+
+@using (Html.BeginFormAntiForgeryPost())
+{ 
+  @Html.ValidationSummary()
+   
+  <div class="manage">
+    @Html.ActionLink(T("Add a new deployment").ToString(), "Create", new { }, new { @class = "button primaryAction" })
+  </div>
+    <fieldset>
+        @Display.SubscriptionList(Subscriptions: Model.Subscriptions)
+        @Display(Model.Pager)
+    </fieldset>
+}

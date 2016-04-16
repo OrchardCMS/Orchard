@@ -107,7 +107,7 @@ namespace Orchard.ImportExport.Commands {
             Context.Output.WriteLine(T("Export starting..."));
             var exportContext = new ExportActionContext();
             _importExportService.Export(exportContext, actions);
-            var exportFilePath = _importExportService.WriteExportFile(exportContext.RecipeDocument);
+            var exportFilePath = _importExportService.WriteExportFile(exportContext);
 
             if (!String.IsNullOrEmpty(Filename)) {
                 var directory = Path.GetDirectoryName(Filename);

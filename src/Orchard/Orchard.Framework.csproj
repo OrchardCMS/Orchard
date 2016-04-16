@@ -170,6 +170,8 @@
   <ItemGroup>
     <Compile Include="BackgroundHttpContextFactory.cs" />
     <Compile Include="ContentManagement\Handlers\CloneContentContext.cs" />
+    <Compile Include="ContentManagement\Handlers\ExportedFileDescription.cs" />
+    <Compile Include="ContentManagement\Handlers\RegisteringIdentityResolversContext.cs" />
     <Compile Include="Environment\Configuration\ExtensionLocations.cs" />
     <Compile Include="DisplayManagement\IPositioned.cs" />
     <Compile Include="DisplayManagement\PositionWrapper.cs" />
