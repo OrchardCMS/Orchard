@@ -93,18 +93,10 @@
 
         form.addClass(submittingClass);
 
-        buttons = form.find("[type='submit']");
-        buttons.prop("disabled", true)
-
         // safety-nest in case the form didn't refresh the page
         setTimeout(function () {
             form.removeClass(submittingClass);
-            buttons.prop("disabled", false)
         }, 5000);
-
-        e.preventDefault();
-        return;
-
     });
 
     // Handle keypress events in bulk action fieldsets that are part of a single form.
