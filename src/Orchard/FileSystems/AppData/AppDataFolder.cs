@@ -45,9 +45,11 @@ namespace Orchard.FileSystems.AppData {
                 else 
                     File.Delete(destinationFileName);
             }
-            catch {
-                // We land here if the file is in use, for example. Let's move on.
-            }
+            catch (IOException) { }
+            catch (UnauthorizedAccessException) { }
+
+            // We land here if the file is in use, for example. Let's move on.
+        
 
             if (isDirectory && Directory.Exists(destinationFileName)) {
                 Logger.Warning("Could not delete recipe execution folder {0} under \"App_Data\" folder", destinationFileName);
@@ -69,9 +71,11 @@ namespace Orchard.FileSystems.AppData {
                     // If successful, we are done...
                     return;
                 }
-                catch {
+
                     // We need to try with another extension
-                }
+                catch (IOException) { }
+                catch (UnauthorizedAccessException) { }
+
             }
 
             // Try again with the original filename. This should throw the same exception
