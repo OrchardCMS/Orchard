@@ -91,8 +91,12 @@ namespace Orchard.ContentManagement {
         void Destroy(ContentItem contentItem);
         void Index(ContentItem contentItem, IDocumentIndex documentIndex);
 
-        XElement Export(ContentItem contentItem);
-        void Import(XElement element, ImportContentSession importContentSession);
+        XElement Export(ContentItem contentItem); //removed in deployments
+       // void Import(XElement element, ImportContentSession importContentSession); //removed in deployments
+
+        ExportContentContext Export(ContentItem contentItem, ExportContentContext context = null);
+        void Import(ImportContentContext context);
+
         void CompleteImport(XElement element, ImportContentSession importContentSession);
 
         /// <summary>
@@ -112,6 +116,7 @@ namespace Orchard.ContentManagement {
         GroupInfo GetEditorGroupInfo(IContent contentItem, string groupInfoId);
         GroupInfo GetDisplayGroupInfo(IContent contentItem, string groupInfoId);
 
+        bool HasResolverForIdentity(ContentIdentity contentIdentity);
         ContentItem ResolveIdentity(ContentIdentity contentIdentity);
 
         /// <summary>

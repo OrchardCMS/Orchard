@@ -30,9 +30,11 @@
         public virtual void Restoring(RestoreContentContext context) { }
         public virtual void Restored(RestoreContentContext context) { }
         public virtual void Destroying(DestroyContentContext context) {}
-        public virtual void Destroyed(DestroyContentContext context) {}
+        public virtual void Destroyed(DestroyContentContext context) { }
 
-        public virtual void GetContentItemMetadata(GetContentItemMetadataContext context) {}
+        public virtual void RegisteringIdentityResolvers(RegisteringIdentityResolversContext context) { }
+        public virtual void GetContentItemMetadata(GetContentItemMetadataContext context) { }
+
         public virtual void BuildDisplay(BuildDisplayContext context) {}
         public virtual void BuildEditor(BuildEditorContext context) {}
         public virtual void UpdateEditor(UpdateEditorContext context) {}

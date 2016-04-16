@@ -367,6 +367,10 @@ namespace Orchard.ContentManagement.Handlers {
                 filter.Versioning(context);
             Versioning(context);
         }
+        void IContentHandler.RegisteringIdentityResolvers(RegisteringIdentityResolversContext context)
+        {
+            RegisteringIdentityResolvers(context);
+        }
 
         void IContentHandler.Versioned(VersionContentContext context) {
             foreach (var filter in Filters.OfType<IContentStorageFilter>())
@@ -550,6 +554,7 @@ namespace Orchard.ContentManagement.Handlers {
         protected virtual void Restored(RestoreContentContext context) { }
         protected virtual void Destroying(DestroyContentContext context) { }
         protected virtual void Destroyed(DestroyContentContext context) { }
+        protected virtual void RegisteringIdentityResolvers(RegisteringIdentityResolversContext context) { }
 
         protected virtual void GetItemMetadata(GetContentItemMetadataContext context) { }
         protected virtual void BuildDisplayShape(BuildDisplayContext context) { }

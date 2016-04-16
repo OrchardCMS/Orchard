@@ -6,6 +6,7 @@ namespace Orchard.ContentManagement {
     // Maps content identities to content items on the importer.
     public class ImportContentSession {
         private readonly IContentManager _contentManager;
+        private readonly ContentIdentity.ContentIdentityEqualityComparer _identityComparer;
 
         private readonly Dictionary<ContentIdentity, int> _identities;
         private readonly Dictionary<ContentIdentity, string> _contentTypes;
@@ -18,25 +19,34 @@ namespace Orchard.ContentManagement {
         private int _startIndex;
         private int _batchSize = 100;
         private int _currentIndex;
+        //for identity scanning
+        private const int BulkPage = 128;
+        private int _lastIndex;
+
 
         public ImportContentSession(IContentManager contentManager) {
             var identityComparer = new ContentIdentity.ContentIdentityEqualityComparer();
             _contentManager = contentManager;
 
-            _identities = new Dictionary<ContentIdentity, int>(identityComparer);
-            _contentTypes = new Dictionary<ContentIdentity, string>(identityComparer);
+            _identities = new Dictionary<ContentIdentity, int>(_identityComparer);
+            _contentTypes = new Dictionary<ContentIdentity, string>(_identityComparer);
             _draftVersionRecordIds = new Dictionary<int, int>();
 
             _allIdentitiesForImport = new List<ContentIdentity>();
-            _allIdentitiesForImportStatus = new Dictionary<ContentIdentity, bool>(identityComparer);
+            _allIdentitiesForImportStatus = new Dictionary<ContentIdentity, bool>(_identityComparer);
             _dependencyIdentities = new Queue<ContentIdentity>();
         }
 
         public void Set(string id, string contentType) {
             var contentIdentity = new ContentIdentity(id);
             _contentTypes[contentIdentity] = contentType;
-            _allIdentitiesForImport.Add(contentIdentity);
-            _allIdentitiesForImportStatus[contentIdentity] = false;
+
+            if (!_allIdentitiesForImport.Contains(contentIdentity))
+            {
+                _allIdentitiesForImport.Add(contentIdentity);
+                _allIdentitiesForImportStatus[contentIdentity] = false;
+            }           
+
         }
 
         public void InitializeBatch(int startIndex, int batchSize) {
@@ -96,11 +106,21 @@ namespace Orchard.ContentManagement {
                 }
             }
 
-            ContentItem existingItem  = _contentManager.ResolveIdentity(contentIdentity);
+            ContentItem existingItem;
 
             //ensure we have the correct version
-            if (existingItem != null) {
-                existingItem = _contentManager.Get(existingItem.Id, versionOptions);
+            //try retrieve the item using handlers to resolve, otherwise scan all
+            if (_contentManager.HasResolverForIdentity(contentIdentity))
+            {
+                existingItem = _contentManager.ResolveIdentity(contentIdentity);
+
+                //ensure we have the correct version
+                if (existingItem != null)
+                    existingItem = _contentManager.Get(existingItem.Id, versionOptions);
+            }
+            else {
+                existingItem = ScanForContentItemByIdentity(contentIdentity, versionOptions, contentTypeHint);
+
             }
 
             if (existingItem == null && _identities.ContainsKey(contentIdentity)) {
@@ -139,6 +159,52 @@ namespace Orchard.ContentManagement {
                 return contentItem;
             }
 
+            return null;
+        }
+        private ContentItem ScanForContentItemByIdentity(ContentIdentity contentIdentity, VersionOptions versionOptions, string contentTypeHint)
+        {
+            // no result ? then check if there are some more content items to load from the db
+            if (_lastIndex != int.MaxValue)
+            {
+
+                IEnumerable<ContentItem> block;
+
+                var query = _contentManager.HqlQuery()
+                                           .ForVersion(VersionOptions.Latest);
+
+                // restrict to a single type if hint is provided
+                if (!string.IsNullOrEmpty(contentTypeHint))
+                    query = query.ForType(contentTypeHint);
+
+                // load identities in blocks
+                while ((block = query
+                    .OrderBy(x => x.ContentItemVersion(), x => x.Asc("Id"))
+                    .Slice(_lastIndex, BulkPage)).Any())
+                {
+
+                    foreach (var item in block)
+                    {
+                        _lastIndex++;
+
+                        var identity = _contentManager.GetItemMetadata(item).Identity;
+
+                        // ignore content item if the same identity is already present
+                        if (_identities.ContainsKey(identity))
+                        {
+                            continue;
+                        }
+
+                        if (_identityComparer.Equals(identity, contentIdentity))
+                        {
+                            return _contentManager.Get(item.Id, versionOptions);
+                        }
+                    }
+
+                    _contentManager.Clear();
+                }
+            }
+
+            _lastIndex = int.MaxValue;
             return null;
         }
 

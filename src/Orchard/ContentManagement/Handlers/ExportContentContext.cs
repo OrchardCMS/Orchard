@@ -1,7 +1,14 @@
+using Orchard.FileSystems.Media;
+using System.Collections.Generic;
 using System.Xml.Linq;
+using System.Xml;
+using System.Linq;
 
 namespace Orchard.ContentManagement.Handlers {
-    public class ExportContentContext : ContentContextBase {
+    public class ExportContentContext : ContentContextBase
+    {
+        private readonly IList<ExportedFileDescription> _files;
+
         public XElement Data { get; set; }
 
         /// <summary>
@@ -9,9 +16,23 @@ namespace Orchard.ContentManagement.Handlers {
         /// </summary>
         public bool Exclude { get; set; }
 
+        protected ExportContentContext(ContentItem contentItem) : base(contentItem)
+        {
+            _files = new List<ExportedFileDescription>();
+        }
+
+
         public ExportContentContext(ContentItem contentItem, XElement data)
-            : base(contentItem) {
+                          : this(contentItem) {
+             Data = data;
+         }
+ 
+         public ExportContentContext(ContentItem contentItem, XElement data, IList<ExportedFileDescription> files)
+
+                           : base(contentItem)
+        {
             Data = data;
+            _files = files;
         }
 
         public XElement Element(string elementName) {
@@ -22,5 +43,16 @@ namespace Orchard.ContentManagement.Handlers {
             }
             return element;
         }
+
+        public void AddFile(string localPath, IStorageFile contents)
+        {
+            if (_files.Any(file => file.LocalPath == localPath)) return;
+            _files.Add(new ExportedFileDescription
+            {
+                LocalPath = localPath,
+                Contents = contents
+            });
+        }
+
     }
 }

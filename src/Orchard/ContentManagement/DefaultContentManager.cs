@@ -35,7 +35,7 @@ namespace Orchard.ContentManagement {
         private readonly Lazy<IContentDisplay> _contentDisplay;
         private readonly Lazy<ITransactionManager> _transactionManager; 
         private readonly Lazy<IEnumerable<IContentHandler>> _handlers;
-        private readonly Lazy<IEnumerable<IIdentityResolverSelector>> _identityResolverSelectors;
+
         private readonly Lazy<IEnumerable<ISqlStatementProvider>> _sqlStatementProviders;
         private readonly ShellSettings _shellSettings;
         private readonly ISignals _signals;
@@ -54,7 +54,7 @@ namespace Orchard.ContentManagement {
             Lazy<IContentDisplay> contentDisplay,
             Lazy<ITransactionManager> transactionManager,
             Lazy<IEnumerable<IContentHandler>> handlers,
-            Lazy<IEnumerable<IIdentityResolverSelector>> identityResolverSelectors,
+
             Lazy<IEnumerable<ISqlStatementProvider>> sqlStatementProviders,
             ShellSettings shellSettings,
             ISignals signals) {
@@ -65,7 +65,7 @@ namespace Orchard.ContentManagement {
             _contentDefinitionManager = contentDefinitionManager;
             _cacheManager = cacheManager;
             _contentManagerSession = contentManagerSession;
-            _identityResolverSelectors = identityResolverSelectors;
+ 
             _sqlStatementProviders = sqlStatementProviders;
             _shellSettings = shellSettings;
             _signals = signals;
@@ -86,10 +86,8 @@ namespace Orchard.ContentManagement {
         }
 
         public virtual ContentItem New(string contentType) {
-            var contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(contentType);
-            if (contentTypeDefinition == null) {
-                contentTypeDefinition = new ContentTypeDefinitionBuilder().Named(contentType).Build();
-            }
+            var contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(contentType)
+                ?? new ContentTypeDefinitionBuilder().Named(contentType).Build();
 
             // create a new kernel for the model instance
             var context = new ActivatingContentContext {
@@ -135,7 +133,7 @@ namespace Orchard.ContentManagement {
             var session = _contentManagerSession();
             ContentItem contentItem;
 
-            ContentItemVersionRecord versionRecord = null;
+            ContentItemVersionRecord versionRecord;
 
             // obtain the root records based on version options
             if (options.VersionRecordId != 0) {
@@ -395,15 +393,10 @@ namespace Orchard.ContentManagement {
         }
 
         public virtual void Unpublish(ContentItem contentItem) {
-            ContentItem publishedItem;
-            if (contentItem.VersionRecord.Published) {
+            var publishedItem = contentItem.VersionRecord.Published ? contentItem : Get(contentItem.Id, VersionOptions.Published);
                 // the version passed in is the published one
-                publishedItem = contentItem;
-            }
-            else {
                 // try to locate the published version of this item
-                publishedItem = Get(contentItem.Id, VersionOptions.Published);
-            }
+                
 
             if (publishedItem == null) {
                 // no published version exists. no work to perform.
@@ -578,7 +571,9 @@ namespace Orchard.ContentManagement {
 
             var importContentSession = new ImportContentSession(this);
             importContentSession.Set(copyId, element.Name.LocalName);
-            Import(element, importContentSession);
+            var importContext = new ImportContentContext(element, null, importContentSession);
+            Import(importContext);
+
             CompleteImport(element, importContentSession);
 
             return importContentSession.Get(copyId, element.Name.LocalName);
@@ -625,35 +620,50 @@ namespace Orchard.ContentManagement {
         /// </summary>
         /// <param name="contentIdentity">The <see cref="ContentIdentity"/> instance to lookup</param>
         /// <returns>The <see cref="ContentItem"/> instance represented by the identity object.</returns>
-        public ContentItem ResolveIdentity(ContentIdentity contentIdentity) {
-            var resolvers = _identityResolverSelectors.Value
-                .Select(x => x.GetResolver(contentIdentity))
-                .Where(x => x != null)
-                .OrderByDescending(x => x.Priority);
+        /// 
 
-            if (!resolvers.Any())
-                return null;
+        //public ContentItem ResolveIdentity(ContentIdentity contentIdentity) {  //removed by deployemnts
+        //    var resolvers = _identityResolverSelectors.Value
+        //        .Select(x => x.GetResolver(contentIdentity))
+        //        .Where(x => x != null)
+        //        .OrderByDescending(x => x.Priority);
 
-            IEnumerable<ContentItem> contentItems = null;
-            foreach (var resolver in resolvers) {
-                var resolved = resolver.Resolve(contentIdentity).ToArray();
-                
-                // first pass
-                if (contentItems == null) {
-                    contentItems = resolved;
-                }
-                else { // subsquent passes means we need to intersect 
-                    contentItems = contentItems.Intersect(resolved).ToArray();
-                }
+        //    if (!resolvers.Any())
+        //        return null;
 
-                if (contentItems.Count() == 1) {
-                    return contentItems.First();
-                }
-            }
+        //    IEnumerable<ContentItem> contentItems = null;
+        //    foreach (var resolver in resolvers) {
+        //        var resolved = resolver.Resolve(contentIdentity).ToArray();
 
-            return contentItems.FirstOrDefault();
+        //        // first pass
+        //        if (contentItems == null) {
+        //            contentItems = resolved;
+        //        }
+        //        else { // subsquent passes means we need to intersect 
+        //            contentItems = contentItems.Intersect(resolved).ToArray();
+        //        }
+
+        //        if (contentItems.Count() == 1) {
+        //            return contentItems.First();
+        //        }
+        //    }
+
+        //    return contentItems.FirstOrDefault();
+        //}
+        public bool HasResolverForIdentity(ContentIdentity contentIdentity)
+        {
+            var context = new RegisteringIdentityResolversContext();
+            Handlers.Invoke(handler => handler.RegisteringIdentityResolvers(context), Logger);
+            return context.HasResolverForIdentity(contentIdentity);
         }
-        
+
+        public ContentItem ResolveIdentity(ContentIdentity contentIdentity)
+        {
+            var context = new RegisteringIdentityResolversContext();
+            Handlers.Invoke(handler => handler.RegisteringIdentityResolvers(context), Logger);
+            return context.ResolveIdentity(contentIdentity);
+        }
+
         public ContentItemMetadata GetItemMetadata(IContent content) {
             var context = new GetContentItemMetadataContext {
                 ContentItem = content.ContentItem,
@@ -719,9 +729,14 @@ namespace Orchard.ContentManagement {
             return new DefaultHqlQuery(this, _transactionManager.Value.GetSession(), _sqlStatementProviders.Value, _shellSettings);
         }
 
+
+         
+
         // Insert or Update imported data into the content manager.
         // Call content item handlers.
-        public void Import(XElement element, ImportContentSession importContentSession) {
+        public void Import(ImportContentContext context)
+        { 
+            var element = context.Data;
             var elementId = element.Attribute("Id");
             if (elementId == null) {
                 return;
@@ -735,7 +750,8 @@ namespace Orchard.ContentManagement {
 
             var status = element.Attribute("Status");
 
-            var item = importContentSession.Get(identity, VersionOptions.Latest, XmlConvert.DecodeName(element.Name.LocalName));
+            var versionRequired = (status != null && status.Value == "Draft") ? VersionOptions.DraftRequired : VersionOptions.Latest;
+            var item = context.Session.Get(identity, versionRequired, XmlConvert.DecodeName(element.Name.LocalName));
             if (item == null) {
                 item = New(XmlConvert.DecodeName(element.Name.LocalName));
                 if (status != null && status.Value == "Draft") {
@@ -763,7 +779,7 @@ namespace Orchard.ContentManagement {
                 };                
             }
 
-            var context = new ImportContentContext(item, element, importContentSession);
+            context.ContentItem = item;
 
             Handlers.Invoke(contentHandler => contentHandler.Importing(context), Logger);
             Handlers.Invoke(contentHandler => contentHandler.Imported(context), Logger);
@@ -798,13 +814,19 @@ namespace Orchard.ContentManagement {
             }
 
             var item = importContentSession.Get(identity, VersionOptions.Latest, XmlConvert.DecodeName(element.Name.LocalName));
-            var context = new ImportContentContext(item, element, importContentSession);
+            var context = new ImportContentContext(item, element,null, importContentSession);
 
             Handlers.Invoke(contentHandler => contentHandler.ImportCompleted(context), Logger);
         }
 
-        public XElement Export(ContentItem contentItem) {
-            var context = new ExportContentContext(contentItem, new XElement(XmlConvert.EncodeLocalName(contentItem.ContentType)));
+        public XElement Export(ContentItem contentItem)
+        {
+            return Export(contentItem, null).Data;
+
+        }
+        public ExportContentContext Export(ContentItem contentItem, ExportContentContext context = null)
+        {
+            context = context ?? new ExportContentContext(contentItem, new XElement(XmlConvert.EncodeLocalName(contentItem.ContentType)));
 
             Handlers.Invoke(contentHandler => contentHandler.Exporting(context), Logger);
             Handlers.Invoke(contentHandler => contentHandler.Exported(context), Logger);
@@ -821,8 +843,10 @@ namespace Orchard.ContentManagement {
                 context.Data.SetAttributeValue("Status", Draft);
             }
 
-            return context.Data;
+            return context;
         }
+
+          
 
         private ContentTypeRecord AcquireContentTypeRecord(string contentType) {
             var contentTypeId = _cacheManager.Get(contentType + "_Record", true, ctx => {
