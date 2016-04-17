@@ -90,10 +90,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
+    <Compile Include="Controllers\AdminCultureSelectorController.cs" />
     <Compile Include="Extensions\Constants.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\TransliterationAdminController.cs" />
-    <Compile Include="Controllers\AdminCultureSelectorController.cs" />
+    <Compile Include="Controllers\UserCultureSelectorController.cs" />
     <Compile Include="Helpers\ContextHelpers.cs" />
     <Compile Include="Models\TransliterationSpecificationRecord.cs" />
     <Compile Include="Providers\ContentLocalizationTokens.cs" />
@@ -120,6 +121,7 @@
     <Compile Include="Services\LocalizationService.cs" />
     <Compile Include="Services\TransliterationService.cs" />
     <Compile Include="Events\TransliterationSlugEventHandler.cs" />
+    <Compile Include="Services\Utils.cs" />
     <Compile Include="ViewModels\ContentLocalizationsViewModel.cs" />
     <Compile Include="ViewModels\EditLocalizationViewModel.cs" />
     <Compile Include="ViewModels\CreateTransliterationViewModel.cs" />
@@ -197,6 +199,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\UserCultureSelector.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
