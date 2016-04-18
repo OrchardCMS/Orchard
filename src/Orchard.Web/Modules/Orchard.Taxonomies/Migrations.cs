@@ -48,12 +48,13 @@ namespace Orchard.Taxonomies {
                    .WithPart("TaxonomyNavigationPart")
                    .WithPart("MenuPart")
                    .WithPart("CommonPart")
+                   .WithIdentity()
                    .DisplayedAs("Taxonomy Link")
                    .WithSetting("Description", "Injects menu items from a Taxonomy")
                    .WithSetting("Stereotype", "MenuItem")
                );
 
-            return 4;
+            return 5;
         }
 
         public int UpdateFrom1() {
@@ -76,6 +77,15 @@ namespace Orchard.Taxonomies {
             );
 
             return 4;
+        }
+
+        public int UpdateFrom4() {
+            ContentDefinitionManager.AlterTypeDefinition("TaxonomyNavigationMenuItem",
+               cfg => cfg
+                   .WithIdentity()
+               );
+
+            return 5;
         }
     }
 }

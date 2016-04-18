@@ -291,7 +291,7 @@ namespace Orchard.Azure.Tests.FileSystems.Media {
         [Test]
         public void GetStoragePathShouldReturnNullIfPathIsNotLocal()
         {
-            var storagePath = _azureBlobStorageProvider.GetStoragePath("foo");
+            var storagePath = _azureBlobStorageProvider.GetStoragePath("http://orchardproject.net/foo");
 
             Assert.IsNull(storagePath);
         }

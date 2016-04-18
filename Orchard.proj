@@ -282,7 +282,6 @@
   <!-- Packaging (MsDeploy) -->
   <Target Name="Package-MsDeploy">
     <ItemGroup>
-      <!--<MsDeploy-Folder-Input Include="$(StageFolder)\**\*" Exclude="$(StageFolder)\**\bin\**\*.pdb;$(StageFolder)\**\bin\**\*.xml" />-->
 
       <MsDeploy-Exclude-Modules Include="
         $(StageFolder)\**\Modules\Orchard.CustomForms\**;
@@ -293,7 +292,7 @@
         $(StageFolder)\**\Modules\Orchard.TaskLease\**;
         " />
 
-      <MsDeploy-Folder-Input Include="$(StageFolder)\**\*" Exclude="$(StageFolder)\**\bin\**\*.xml;$(StageFolder)\**\obj\**\*;@(MsDeploy-Exclude-Modules)" />
+      <MsDeploy-Folder-Input Include="$(StageFolder)\**\*" Exclude="$(StageFolder)\**\bin\**\*.xml;$(StageFolder)\**\obj\**\*;$(StageFolder)\**\bin\**\*.pdb;$(StageFolder)\**\bin\**\*.dll.config;@(MsDeploy-Exclude-Modules)" />
       <MsDeploy-Parameters Include="$(LibFolder)\msdeploy\*.xml;$(LibFolder)\msdeploy\*.sql"/>
     </ItemGroup>
 
@@ -337,7 +336,7 @@
 
       <Zip-Stage Include="$(StageFolder)\**\*" />
 
-      <Zip-MsDeploy Include="$(MsDeployFolder)\**\*" Exclude="$(MSBuildProjectDirectory)\**\bin\**\*.pdb;" />
+      <Zip-MsDeploy Include="$(MsDeployFolder)\**\*" Exclude=""/>
 
       <Zip-Source Include="
         $(MSBuildProjectDirectory)\lib\**\*;

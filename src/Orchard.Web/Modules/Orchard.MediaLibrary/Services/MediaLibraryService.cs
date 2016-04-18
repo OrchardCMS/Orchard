@@ -441,5 +441,15 @@ namespace Orchard.MediaLibrary.Services {
 
             return _storageProvider.GetPublicUrl(filePath);
         }
+
+        /// <summary>
+        /// Combines two paths.
+        /// </summary>
+        /// <param name="path1">The parent path.</param>
+        /// <param name="path2">The child path.</param>
+        /// <returns>The combined path.</returns>
+        public string Combine(string path1, string path2) {
+            return _storageProvider.Combine(path1, path2);
+        }
     }
 }

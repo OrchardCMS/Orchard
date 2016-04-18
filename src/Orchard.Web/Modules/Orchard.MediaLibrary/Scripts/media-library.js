@@ -379,12 +379,17 @@ $(function () {
                     var nextFetch = self.folderPath();
 
                     if (deepestChildPath !== undefined && deepestChildPath !== null && (deepestChildPath.indexOf(self.folderPath()) === 0)) {
-                        var deepestChildPathBreadCrumbs = deepestChildPath.split('\\');
-                        var currentBreadCrumbs = self.folderPath().split('\\');
+                        /* NTFS uses "\" as the directory separator, but AFS uses "/".
+                           Since both of them are illegal characters for file and folder names, it's safe to determine the type of file storage
+                           currently in use based on the directory separator character. */
+                        var separator = deepestChildPath.contains('/') ? '/' : '\\';
+
+                        var deepestChildPathBreadCrumbs = deepestChildPath.split(separator);
+                        var currentBreadCrumbs = self.folderPath().split(separator);
 
                         var diff = deepestChildPathBreadCrumbs.length - currentBreadCrumbs.length;
                         if (diff > 0) {
-                            nextFetch = self.folderPath() + '\\' + deepestChildPathBreadCrumbs[deepestChildPathBreadCrumbs.length - diff];
+                            nextFetch = self.folderPath() + separator + deepestChildPathBreadCrumbs[deepestChildPathBreadCrumbs.length - diff];
                         }
                     }
 

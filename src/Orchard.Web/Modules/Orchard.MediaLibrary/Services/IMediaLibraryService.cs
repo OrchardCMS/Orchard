@@ -133,6 +133,14 @@ namespace Orchard.MediaLibrary.Services {
         /// <param name="inputStream">The stream with the file's contents.</param>
         /// <returns>The path to the uploaded file.</returns>
         string UploadMediaFile(string folderPath, string fileName, Stream inputStream);
+
+        /// <summary>
+        /// Combines two paths.
+        /// </summary>
+        /// <param name="path1">The parent path.</param>
+        /// <param name="path2">The child path.</param>
+        /// <returns>The combined path.</returns>
+        string Combine(string path1, string path2);
     }
 
     public static class MediaLibrayServiceExtensions {
@@ -145,8 +153,8 @@ namespace Orchard.MediaLibrary.Services {
                 return true;
             }
 
-            var mediaPath = folderPath + "\\";
-            var rootPath = rootMediaFolder.MediaPath + "\\";
+            var mediaPath = service.Combine(folderPath, " ").Trim();
+            var rootPath = service.Combine(rootMediaFolder.MediaPath, " ").Trim();
 
             return mediaPath.StartsWith(rootPath, StringComparison.OrdinalIgnoreCase);
         }
@@ -154,7 +162,7 @@ namespace Orchard.MediaLibrary.Services {
         public static string GetRootedFolderPath(this IMediaLibraryService service, string folderPath) {
             var rootMediaFolder = service.GetRootMediaFolder();
             if (rootMediaFolder != null) {
-                return Path.Combine(rootMediaFolder.MediaPath, folderPath ?? "");
+                return service.Combine(rootMediaFolder.MediaPath, folderPath ?? "");
             }
 
             return folderPath;
