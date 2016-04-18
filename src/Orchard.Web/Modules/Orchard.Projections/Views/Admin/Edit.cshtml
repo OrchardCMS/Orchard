@@ -11,15 +11,14 @@
         @Html.ValidationSummary()
 
         <div class="panel panel-default ">
-            <panel class="panel-heading  no-border">
+            <panel class="panel-heading no-border">
                 <div class="panel-heading-primary-group">
                     <span class="title">@T("Filters")</span>
                 </div>
                 <div class="panel-heading-actions">
-                    @Html.ActionLink(T("Add a new Group").Text, "AddGroup", new { controller = "Filter", id = Model.Id }, new { @class = "btn btn-primary" })
+                    <a href="@Url.Action("AddGroup", new { controller = "Filter", id = Model.Id })" class="btn btn-primary"><i class="fa fa-plus"></i> @T("Add a new Group")</a>
                 </div>
             </panel>
-
             <div class="panel-body">
                 @foreach (var group in Model.FilterGroups) {
                     bool isFirstGroup = group == Model.FilterGroups.First();
@@ -102,7 +101,7 @@
             </div>
         </div>
         <hr />
-        <div class="panel panel-default ">
+        <div class="panel panel-default">
             <panel class="panel-heading no-border">
                 <div class="panel-heading-primary-group">
                     <span class="title">@T("Layouts")</span>
@@ -139,20 +138,15 @@
                         </div>
                     }*@
             </div>
-
-
         </div>
 
-        <hr />
-        <div class="panel-body">
+        <div class="panel-footer">
             <fieldset>
                 @if (Model.FilterGroups.SelectMany(x => x.Filters).Any()) {
-                    @Html.ActionLink(T("Preview").ToString(), "Preview", new { Model.Id }, new { @class = "button" });
+                    <a href="@Url.Action("Preview", new { Model.Id })" class="btn btn-default"><i class="fa fa-eye" aria-hidden="true"></i> @T("Preview")</a>
                 }
-                @Html.ActionLink(T("Close").ToString(), "Index", new { }, new { @class = "button" })
+                <a href="@Url.Action("Index", new { })" class="btn btn-default"><i class="fa fa-times" aria-hidden="true"></i> @T("Close")</a>
             </fieldset>
         </div>
-
     }
-
 </div>

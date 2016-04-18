@@ -114,8 +114,8 @@
             @Display.TokenHint()
             <hr />
             <fieldset>
-                <button class="primaryAction button" type="submit">@T("Save")</button>
-                @Html.ActionLink(T("Close").Text, "Edit", "Admin", new { id = Model.QueryId }, new { @class = "primaryAction button" })
+                <button class="btn btn-primary" type="submit">@T("Save")</button>
+                @Html.ActionLink(T("Close").Text, "Edit", "Admin", new { id = Model.QueryId }, new { @class = "btn btn-default" })
             </fieldset>
         }
     </div>

@@ -5,11 +5,10 @@
 @{
     var selectedQueryRecordId = -1;
 }
-<div class="panel panel-default ">
-    <div class="panel-body">
+
         <fieldset>
             @Html.LabelFor(m => m.QueryLayoutRecordId, T("For Query"))
-            <select id="@Html.FieldIdFor(m => m.QueryLayoutRecordId)" name="@Html.FieldNameFor(m => m.QueryLayoutRecordId)">
+            <select class="form-control" id="@Html.FieldIdFor(m => m.QueryLayoutRecordId)" name="@Html.FieldNameFor(m => m.QueryLayoutRecordId)">
                 @foreach (QueryRecordEntry queryRecord in Model.QueryRecordEntries.OrderBy(x => x.Name)) {
                     <optgroup label="@queryRecord.Name">
                         @Html.SelectOption(Model.QueryLayoutRecordId, queryRecord.Id + ";-1", queryRecord.Name + " " + T("(Default Layout)").Text)
@@ -63,5 +62,4 @@
                 <span class="hint">@T("Check to add a pager to the list.")</span>
             </div>
         </fieldset>
-    </div>
-</div>
+

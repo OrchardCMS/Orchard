@@ -25,8 +25,8 @@
             <div class="col-sm-12">
                 <fieldset>
                     <div>
-                        <button class="btn btn-primary" type="submit">@T("Save")</button>
-                        @Html.ActionLink(T("Cancel").ToString(), "IndexUnmanaged", new { }, new { @class = "btn btn-default" })
+                        <button class="btn btn-primary" type="submit"><i class="fa fa-floppy-o" aria-hidden="true"></i> @T("Save")</button>
+                        <a href="@Url.Action("IndexUnmanaged", new { })" class="btn btn-default"><i class="fa fa-ban" aria-hidden="true"></i> @T("Cancel")</a>
                     </div>
                 </fieldset>
             </div>
