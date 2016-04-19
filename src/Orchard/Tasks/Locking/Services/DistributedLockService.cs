@@ -150,6 +150,7 @@ namespace Orchard.Tasks.Locking.Services {
                     // due to the unique key constraint on the 'Name' column, it won't hurt to work on a collection.
                     foreach (var expiredRecord in records) {
                         repository.Delete(expiredRecord);
+                        repository.Flush();
                     }
 
                     // No valid record existed, so we're good to create a new one.
