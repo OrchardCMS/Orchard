@@ -148,8 +148,10 @@ namespace Orchard.Tasks.Locking.Services {
                     // No record matched the criteria, but at least one expired record with the specified name was found.
                     // Delete the expired records before creating a new one. In theory no more than one record can exist
                     // due to the unique key constraint on the 'Name' column, it won't hurt to work on a collection.
-                    foreach (var expiredRecord in records) {
-                        repository.Delete(expiredRecord);
+                    if (records.Any()) {
+                        foreach (var expiredRecord in records) {
+                            repository.Delete(expiredRecord);
+                        }
                         repository.Flush();
                     }
 
