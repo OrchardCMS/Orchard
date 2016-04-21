@@ -11,7 +11,7 @@ namespace Orchard.Indexing {
         IDocumentIndex Add(string name, int value);
         IDocumentIndex Add(string name, bool value);
         IDocumentIndex Add(string name, double value);
-
+        IDocumentIndex Add(string name, object value);
         /// <summary>
         /// Stores the original value to the index.
         /// </summary>
