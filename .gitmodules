@@ -5,3 +5,8 @@
 [submodule "src/Orchard.Web/ThirdParty/Modules/Contrib.ImportExportBindings"]
 	path = src/Orchard.Web/ThirdParty/Modules/Contrib.ImportExportBindings
 	url = https://github.com/xkproject/Orchard-ImportExportBindings.git
+[submodule "src/Orchard.Web/ThirdParty/Modules/Downplay.Orchard.LayoutSelector"]
+	path = src/Orchard.Web/ThirdParty/Modules/Downplay.Orchard.LayoutSelector
+	url = https://github.com/xkproject/Downplay.Orchard.LayoutSelector.git
+	
+	
