@@ -163,10 +163,13 @@ namespace Orchard.Taxonomies.Services {
             return term;
         }
 
-        public IEnumerable<TermPart> GetTerms(int taxonomyId) {
-            var result = _contentManager.Query<TermPart, TermPartRecord>()
-                .Where(x => x.TaxonomyId == taxonomyId)
-                .List();
+        public IEnumerable<TermPart> GetTerms(int taxonomyId, int numberOfLevelsLimit = 0) {
+            var query = _contentManager.Query<TermPart, TermPartRecord>();
+            if (numberOfLevelsLimit > 0)
+                query = query.Where(x => x.TaxonomyId == taxonomyId && x.Level <= numberOfLevelsLimit);
+            else
+                query = query.Where(x => x.TaxonomyId == taxonomyId);
+            var result = query.List();
 
             return TermPart.Sort(result);
         }
@@ -317,12 +320,13 @@ namespace Orchard.Taxonomies.Services {
             return GetChildren(term, false);
         }
 
-        public IEnumerable<TermPart> GetChildren(TermPart term, bool includeParent) {
+        public IEnumerable<TermPart> GetChildren(TermPart term, bool includeParent, int numberOfLevelsLimit = 0) {
             var rootPath = term.FullPath + "/";
 
-            var result = _contentManager.Query<TermPart, TermPartRecord>()
-                .Where(x => x.Path.StartsWith(rootPath))
-                .List();
+            var query = _contentManager.Query<TermPart, TermPartRecord>().Where(x => x.TaxonomyId == term.TaxonomyId && x.Level > term.Level);
+            if (numberOfLevelsLimit > 0)
+                query = query.Where(x => x.Path.StartsWith(rootPath) && x.Level <= term.Level + numberOfLevelsLimit);                        
+            var result = query.List();
 
             if (includeParent) {
                 result = result.Concat(new[] { term });

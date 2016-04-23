@@ -40,7 +40,7 @@ namespace Orchard.Taxonomies.Services {
         IContentQuery<TaxonomyPart, TaxonomyPartRecord> GetTaxonomiesQuery();
 
 
-        IEnumerable<TermPart> GetTerms(int taxonomyId);
+        IEnumerable<TermPart> GetTerms(int taxonomyId, int numberOfLevelsLimit = 0);
         int GetTermsCount(int taxonomyId);
         TermPart GetTerm(int id);
         TermPart GetTermByName(int taxonomyId, string name);
@@ -72,7 +72,7 @@ namespace Orchard.Taxonomies.Services {
         void UpdateTerms(ContentItem contentItem, IEnumerable<TermPart> terms, string field);
         IEnumerable<TermPart> GetParents(TermPart term);
         IEnumerable<TermPart> GetChildren(TermPart term);
-        IEnumerable<TermPart> GetChildren(TermPart term, bool includeParent);
+        IEnumerable<TermPart> GetChildren(TermPart term, bool includeParent, int numberOfLevelsLimit = 0);
         IEnumerable<IContent> GetContentItems(TermPart term, int skip = 0, int count = 0, string fieldName = null);
         long GetContentItemsCount(TermPart term, string fieldName = null);
         IContentQuery<TermsPart, TermsPartRecord> GetContentItemsQuery(TermPart term, string fieldName = null);

@@ -112,6 +112,10 @@
     <Content Include="Assets\JavaScript\Lib\jquery.validate.js" />
     <Content Include="Assets\JavaScript\Lib\jquery.validate.unobtrusive.additional.js" />
     <Content Include="Assets\JavaScript\Lib\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\TaxonomyElement.js" />
+    <Content Include="Scripts\TaxonomyElement.min.js">
+      <DependentUpon>TaxonomyElement.js</DependentUpon>
+    </Content>
     <Content Include="Styles\DynamicForms-Admin.css" />
     <Content Include="Styles\DynamicForms-Admin.min.css" />
     <Content Include="Styles\DynamicForms.css" />
@@ -196,6 +200,7 @@
     <Compile Include="Bindings\EnumerationFieldBindings.cs" />
     <Compile Include="Bindings\InputFieldBindings.cs" />
     <Compile Include="Bindings\TaxonomyFieldBindings.cs" />
+    <Compile Include="Controllers\TaxonomyElementController.cs" />
     <Compile Include="Drivers\FieldsetElementDriver.cs" />
     <Compile Include="Drivers\CommandLinkElementDriver.cs" />
     <Compile Include="Drivers\UrlFieldElementDriver.cs" />
@@ -228,6 +233,7 @@
     <Compile Include="Handlers\LayoutEditorShapeEventHandler.cs" />
     <Compile Include="Handlers\WorkflowValidatorCoordinator.cs" />
     <Compile Include="Helpers\WriteElementValuesContextHelper.cs" />
+    <Compile Include="Helpers\EnumerableTermPartExtensions.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Security\AuthorizationEventHandler.cs" />
     <Compile Include="Services\DynamicPermissions.cs" />
@@ -563,7 +569,13 @@
     <Content Include="Views\Elements\CommandLink.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Views\TaxonomyElement\" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="Views\Elements\CommandLink.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bundleconfig.json" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

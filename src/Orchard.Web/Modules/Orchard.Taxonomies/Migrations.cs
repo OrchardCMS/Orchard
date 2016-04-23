@@ -1,9 +1,16 @@
-﻿using Orchard.ContentManagement.MetaData;
+﻿using System.Linq;
+using Orchard.ContentManagement;
+using Orchard.ContentManagement.MetaData;
 using Orchard.Data.Migration;
+using Orchard.Taxonomies.Models;
 
 namespace Orchard.Taxonomies {
     public class Migrations : DataMigrationImpl {
+        private readonly IContentManager _contentManager;
 
+        public Migrations(IContentManager contentManager) {
+            _contentManager = contentManager;
+        }
         public int Create() {
             SchemaBuilder.CreateTable("TaxonomyPartRecord", table => table
                 .ContentPartRecord()
@@ -76,6 +83,23 @@ namespace Orchard.Taxonomies {
             );
 
             return 4;
+        }
+
+        public int UpdateFrom4() {
+            SchemaBuilder.AlterTable("TermPartRecord", table => table
+                .AddColumn<int>("Level")                
+            );
+
+            SchemaBuilder.AlterTable("TermPartRecord", table => table
+                .CreateIndex("IDX_Level", "Level")
+            );
+
+            var terms = _contentManager.Query<TermPart, TermPartRecord>().List();
+            foreach (var term in terms) {
+                term.Level = term.Path.Count(c => c == '/');
+            }
+
+            return 5;
         }
     }
 }

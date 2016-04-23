@@ -13,7 +13,16 @@ namespace Orchard.DynamicForms.Elements {
             get { return this.Retrieve(x => x.TaxonomyId); }
             set { this.Store(x => x.TaxonomyId, value); }
         }
-
+        public string ParentTaxonomyElementName
+        {
+            get { return this.Retrieve(x => x.ParentTaxonomyElementName); }
+            set { this.Store(x => x.ParentTaxonomyElementName, value); }
+        }
+        public int? LevelsToRender
+        {
+            get { return this.Retrieve(x => x.LevelsToRender); }
+            set { this.Store(x => x.LevelsToRender, value); }
+        }
         public string SortOrder {
             get { return this.Retrieve(x => x.SortOrder); }
             set { this.Store(x => x.SortOrder, value); }

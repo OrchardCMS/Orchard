@@ -3,8 +3,28 @@
 @using Orchard.Layouts.Helpers
 @{
     var element = (Taxonomy)Model.Element;
+    string parentTaxonomyElementName = Model.ParentTaxonomyElementName;
+    string parentTaxonomyElementInputType = Model.ParentTaxonomyElementInputType;
+    var attributes = (IDictionary<string, object>)TagBuilderExtensions.GetCommonElementAttributes(Model);
+    if (!string.IsNullOrWhiteSpace(parentTaxonomyElementName)) {
+        Script.Require("DynamicForms.TaxonomyElement").AtFoot();
+        if (attributes.ContainsKey("class")) {
+            attributes["class"] += " taxonomy-element";
+        }
+        else {
+            attributes.Add("class", "taxonomy-element");
+        }
+        attributes["data-taxonomy-element-ajax-url"] = Url.Action("GetChildrenTerms", "TaxonomyElement", new { contentId = Model.ContentItem.Id, formName = element.Form.Name, elementName = element.Name, area = "Orchard.DynamicForms" });
+        attributes["data-taxonomy-element-input-type"] = "CheckList";
+        attributes["data-taxonomy-element-parent-name"] = parentTaxonomyElementName;
+        attributes["data-taxonomy-element-parent-input-type"] = parentTaxonomyElementInputType;
+    }
     var name = String.IsNullOrWhiteSpace((string)Model.ProcessedName) ? "CheckList1" : (string)Model.ProcessedName;
     var tagBuilder = (OrchardTagBuilder)TagBuilderExtensions.CreateElementTagBuilder(Model, "ol");
+    tagBuilder.Attributes.Add("id",name);
+    foreach (var attribute in attributes) {
+        tagBuilder.Attributes.Add(attribute.Key, attribute.Value.ToString());
+    }
     var index = 0;
 }
 @if (element.ShowLabel) {
