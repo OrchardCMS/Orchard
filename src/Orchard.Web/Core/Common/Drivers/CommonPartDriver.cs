@@ -110,18 +110,18 @@ namespace Orchard.Core.Common.Drivers {
                 context.Element(part.PartDefinition.Name).SetAttributeValue("Container", containerIdentity.ToString()); 
             }
 
-            //if (part.CreatedUtc != null) {
-            //    context.Element(part.PartDefinition.Name)
-            //        .SetAttributeValue("CreatedUtc", XmlConvert.ToString(part.CreatedUtc.Value, XmlDateTimeSerializationMode.Utc));
-            //}
-            //if (part.PublishedUtc != null) {
-            //    context.Element(part.PartDefinition.Name)
-            //        .SetAttributeValue("PublishedUtc", XmlConvert.ToString(part.PublishedUtc.Value, XmlDateTimeSerializationMode.Utc));
-            //}
-            //if (part.ModifiedUtc != null) {
-            //    context.Element(part.PartDefinition.Name)
-            //        .SetAttributeValue("ModifiedUtc", XmlConvert.ToString(part.ModifiedUtc.Value, XmlDateTimeSerializationMode.Utc));
-            //}
+            if (part.CreatedUtc != null) {
+                context.Element(part.PartDefinition.Name)
+                    .SetAttributeValue("CreatedUtc", XmlConvert.ToString(part.CreatedUtc.Value, XmlDateTimeSerializationMode.Utc));
+            }
+            if (part.PublishedUtc != null) {
+                context.Element(part.PartDefinition.Name)
+                    .SetAttributeValue("PublishedUtc", XmlConvert.ToString(part.PublishedUtc.Value, XmlDateTimeSerializationMode.Utc));
+            }
+            if (part.ModifiedUtc != null) {
+                context.Element(part.PartDefinition.Name)
+                    .SetAttributeValue("ModifiedUtc", XmlConvert.ToString(part.ModifiedUtc.Value, XmlDateTimeSerializationMode.Utc));
+            }
         }
     }
 }
