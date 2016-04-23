@@ -4,25 +4,33 @@ using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.DynamicForms.Elements;
+using Orchard.DynamicForms.Services;
 using Orchard.Environment.Extensions;
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
 using Orchard.Layouts.Helpers;
 using Orchard.Layouts.Services;
+using Orchard.Taxonomies.Models;
 using Orchard.Taxonomies.Services;
 using Orchard.Tokens;
+using Orchard.DynamicForms.Helpers;
 using DescribeContext = Orchard.Forms.Services.DescribeContext;
+using Orchard.ContentManagement;
 
 namespace Orchard.DynamicForms.Drivers {
     [OrchardFeature("Orchard.DynamicForms.Taxonomies")]
     public class TaxonomyElementDriver : FormsElementDriver<Taxonomy> {
         private readonly ITaxonomyService _taxonomyService;
         private readonly ITokenizer _tokenizer;
+        private readonly IFormService _formService;
+        private readonly IContentManager _contentManager;
 
-        public TaxonomyElementDriver(IFormsBasedElementServices formsServices, ITaxonomyService taxonomyService, ITokenizer tokenizer)
+        public TaxonomyElementDriver(IFormsBasedElementServices formsServices, ITaxonomyService taxonomyService, ITokenizer tokenizer, IFormService formService, IContentManager contentManager)
             : base(formsServices) {
             _taxonomyService = taxonomyService;
             _tokenizer = tokenizer;
+            _formService = formService;
+            _contentManager = contentManager;
         }
 
         protected override EditorResult OnBuildEditor(Taxonomy element, ElementEditorContext context) {
@@ -48,6 +56,18 @@ namespace Orchard.DynamicForms.Drivers {
                         Name: "TaxonomyId",
                         Title: "Taxonomy",
                         Description: T("Select the taxonomy to use as a source for the list.")),
+                    _ParentTaxonomyElementName: shape.Textbox(
+                        Id: "ParentTaxonomyElementName",
+                        Name: "ParentTaxonomyElementName",
+                        Title: "Parent Taxonomy Element Name",
+                        Classes: new[] { "text" },
+                        Description: T("The name of the parent Taxonomy Element to get childent taxonomy terms to render. An empty value means that root term of the taxonomy will be used.")),
+                    _LevelsToRender: shape.Textbox(
+                        Id: "LevelsToRender",
+                        Name: "LevelsToRender",
+                        Title: "Number of Levels to render",
+                        Classes: new[] { "text", "small" },
+                        Description: T("Select the numbers of levels to render. A 0 value means all the levels will be rendered.")),
                     _SortOrder: shape.SelectList(
                         Id: "SortOrder",
                         Name: "SortOrder",
@@ -115,7 +135,6 @@ namespace Orchard.DynamicForms.Drivers {
                         Title: "Show Validation Message",
                         Value: "true",
                         Description: T("Autogenerate a validation message when a validation error occurs for the current field. Alternatively, to control the placement of the validation message you can use the ValidationMessage element instead.")));
-
                 return form;
             });
         }
@@ -125,8 +144,15 @@ namespace Orchard.DynamicForms.Drivers {
             var typeName = element.GetType().Name;
             var displayType = context.DisplayType;
             var tokenData = context.GetTokenData();
-
+            
             context.ElementShape.ProcessedName = _tokenizer.Replace(element.Name, tokenData);
+            if (!string.IsNullOrWhiteSpace(element.ParentTaxonomyElementName)) {
+                var parentElement = _formService.GetFormElements(element.Form).FirstOrDefault(e => e.Name == element.ParentTaxonomyElementName) as Taxonomy;
+                if (parentElement != null) {                    
+                    context.ElementShape.ParentTaxonomyElementName = element.ParentTaxonomyElementName;
+                    context.ElementShape.ParentTaxonomyElementInputType = parentElement.InputType;
+                }
+            }
             context.ElementShape.ProcessedLabel = _tokenizer.Replace(element.Label, tokenData, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
             context.ElementShape.TermOptions = GetTermOptions(element, context.DisplayType, taxonomyId, tokenData).ToArray();
             context.ElementShape.Metadata.Alternates.Add(String.Format("Elements_{0}__{1}", typeName, element.InputType));
@@ -144,34 +170,69 @@ namespace Orchard.DynamicForms.Drivers {
             if (taxonomyId == null)
                 yield break;
 
-            var terms = _taxonomyService.GetTerms(taxonomyId.Value);
-            var valueExpression = !String.IsNullOrWhiteSpace(element.ValueExpression) ? element.ValueExpression : "{Content.Id}";
-            var textExpression = !String.IsNullOrWhiteSpace(element.TextExpression) ? element.TextExpression : "{Content.DisplayText}";
+            var taxonomyElements = _formService.GetFormElements(element.Form).Select(e => e as Taxonomy).Where(e => e != null).ToArray();
+            var termIds = GetRuntimeTermIds(element,taxonomyElements);
+            
+            IEnumerable<TermPart> parentTerms = null;
+            if (termIds.Any()) {
+                var levelsToSkip = GetTaxonomyLevelsToSkip(element, taxonomyElements);
 
-            var projection = terms.Select(x => {
-                var data = new {Content = x};
-                var value = _tokenizer.Replace(valueExpression, data);
-                var text = _tokenizer.Replace(textExpression, data);
+                IEnumerable<TermPart> selectedTerms = _contentManager.GetMany<TermPart>(termIds.Select(s=>int.Parse(s)),VersionOptions.Published,QueryHints.Empty).ToArray();
 
-                return new SelectListItem {
-                    Text = text,
-                    Value = value,
-                    Selected = runtimeValues.Contains(value, StringComparer.OrdinalIgnoreCase)
-                };
-            });
+                IEnumerable<TermPart> selectedPartialTerms = selectedTerms.Where(t => t.Level > levelsToSkip + 1)
+                    .Select(t => _taxonomyService.GetTerm(int.Parse(t.FullPath.Split('/').Skip(levelsToSkip + 1).First()))).ToArray();
+                runtimeValues = runtimeValues.Union(selectedPartialTerms.Select(t=>t.Id.ToString()));
 
-            switch (element.SortOrder) {
-                case "Asc":
-                    projection = projection.OrderBy(x => x.Text);
-                    break;
-                case "Desc":
-                    projection = projection.OrderByDescending(x => x.Text);
-                    break;
+                parentTerms = selectedTerms.Where(t => levelsToSkip > 0 && t.Level > levelsToSkip)
+                    .Select(t => int.Parse(t.FullPath.Split('/').Skip(levelsToSkip).First())).Distinct()
+                    .Select(id => _taxonomyService.GetTerm(id)).ToArray();      
             }
+
+            IEnumerable<TermPart> terms = null;
+            if (string.IsNullOrWhiteSpace(element.ParentTaxonomyElementName))
+                terms = _taxonomyService.GetTerms(taxonomyId.Value, element.LevelsToRender.GetValueOrDefault());
+            else if (parentTerms != null) 
+                terms = parentTerms.SelectMany(t=>_taxonomyService.GetChildren(t, false, element.LevelsToRender.GetValueOrDefault()));            
+            else
+                yield break;
+
+            IEnumerable<SelectListItem> projection = terms.GetSelectListItems(element,_tokenizer, runtimeValues);
 
             foreach (var item in projection) {
                 yield return item;
             }
+        }
+
+        private IEnumerable<string> GetRuntimeTermIds(Taxonomy element, IEnumerable<Taxonomy> taxonomyElements) {
+            Taxonomy childElement = element;
+            IEnumerable<string> termIds = new string[0];
+            var remainingTaxonomyElements = taxonomyElements.Where(t => !string.IsNullOrWhiteSpace(t.ParentTaxonomyElementName)).ToDictionary(t=>t.ParentTaxonomyElementName);
+            do {
+                termIds = GetRuntimeValues(childElement);
+                if (!termIds.Any()) {
+                    if (remainingTaxonomyElements.TryGetValue(element.Name, out childElement))
+                        remainingTaxonomyElements.Remove(element.Name);
+                    else
+                        return termIds;
+                }
+            } while (!termIds.Any() && childElement != null);
+
+            return termIds;
+        }
+
+        private int GetTaxonomyLevelsToSkip(Taxonomy element, IEnumerable<Taxonomy> taxonomyElements) {
+            var levelsToSkip = 0;          
+            var parentFormName = element.ParentTaxonomyElementName;
+            Taxonomy parentElement;
+            do {
+                parentElement = taxonomyElements.FirstOrDefault(e => e.Name == parentFormName);
+                parentFormName = null;
+                if (parentElement != null && parentElement.LevelsToRender.GetValueOrDefault() > 0) {
+                    levelsToSkip += parentElement.LevelsToRender.Value;
+                    parentFormName = parentElement.ParentTaxonomyElementName;
+                }
+            } while (parentFormName != null && parentElement.LevelsToRender.GetValueOrDefault() > 0);
+            return levelsToSkip;
         }
 
         private IEnumerable<string> GetRuntimeValues(Taxonomy element) {

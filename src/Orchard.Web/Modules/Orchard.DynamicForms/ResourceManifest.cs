@@ -6,6 +6,7 @@ namespace Orchard.DynamicForms {
             var manifest = builder.Add();
             manifest.DefineStyle("DynamicForms.FormElements").SetUrl("DynamicForms-Admin.min.css", "DynamicForms-Admin.css");
             manifest.DefineScript("DynamicForms.FormElements").SetUrl("LayoutEditor.min.js", "LayoutEditor.js").SetDependencies("Layouts.LayoutEditor");
+            manifest.DefineScript("DynamicForms.TaxonomyElement").SetUrl("TaxonomyElement.min.js", "TaxonomyElement.js").SetDependencies("jQuery");            
         }
     }
 }

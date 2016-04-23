@@ -33,7 +33,9 @@ namespace Orchard.Taxonomies.Models {
         /// </summary>
         public string Path {
             get { return Retrieve(x => x.Path); }
-            set { Store(x => x.Path, value); }
+            set { Store(x => x.Path, value);
+                  Level = value.Count(c => c == '/');
+            }
         }
 
         public int Count {
@@ -49,6 +51,12 @@ namespace Orchard.Taxonomies.Models {
         public int Weight {
             get { return Retrieve(x => x.Weight); }
             set { Store(x => x.Weight, value); }
+        }
+
+        public int Level
+        {
+            get { return Retrieve(x => x.Level); }
+            set { Store(x => x.Level, value); }
         }
 
         public string FullPath { get { return String.Concat(Path, Id); } }
