@@ -146,7 +146,7 @@ namespace Orchard.DynamicForms.Drivers {
             var tokenData = context.GetTokenData();
             
             context.ElementShape.ProcessedName = _tokenizer.Replace(element.Name, tokenData);
-            if (!string.IsNullOrWhiteSpace(element.ParentTaxonomyElementName)) {
+            if (!string.IsNullOrWhiteSpace(element.ParentTaxonomyElementName) && element.Form != null ) {
                 var parentElement = _formService.GetFormElements(element.Form).FirstOrDefault(e => e.Name == element.ParentTaxonomyElementName) as Taxonomy;
                 if (parentElement != null) {                    
                     context.ElementShape.ParentTaxonomyElementName = element.ParentTaxonomyElementName;
@@ -157,6 +157,24 @@ namespace Orchard.DynamicForms.Drivers {
             context.ElementShape.TermOptions = GetTermOptions(element, context.DisplayType, taxonomyId, tokenData).ToArray();
             context.ElementShape.Metadata.Alternates.Add(String.Format("Elements_{0}__{1}", typeName, element.InputType));
             context.ElementShape.Metadata.Alternates.Add(String.Format("Elements_{0}_{1}__{2}", typeName, displayType, element.InputType));
+        }
+
+        protected override void OnExporting(Taxonomy element, ExportElementContext context) {
+            var taxonomy = element.TaxonomyId != null ? _contentManager.Get<TaxonomyPart>(element.TaxonomyId.Value) : default(TaxonomyPart);
+            var taxonomyIdentity = taxonomy != null ? _contentManager.GetItemMetadata(taxonomy).Identity.ToString() : default(string);
+
+            if (taxonomyIdentity != null)
+                context.ExportableData["TaxonomyId"] = taxonomyIdentity;
+        }
+
+        protected override void OnImportCompleted(Taxonomy element, ImportElementContext context) {
+            var taxonomyIdentity = context.ExportableData.Get("TaxonomyId");
+            var taxonomy = taxonomyIdentity != null ? context.Session.GetItemFromSession(taxonomyIdentity) : default(ContentManagement.ContentItem);
+
+            if (taxonomy == null)
+                return;
+            
+            element.TaxonomyId = taxonomy.Id;            
         }
 
         private IEnumerable<SelectListItem> GetTermOptions(Taxonomy element, string displayType, int? taxonomyId, IDictionary<string, object> tokenData) {
@@ -170,7 +188,11 @@ namespace Orchard.DynamicForms.Drivers {
             if (taxonomyId == null)
                 yield break;
 
-            var taxonomyElements = _formService.GetFormElements(element.Form).Select(e => e as Taxonomy).Where(e => e != null).ToArray();
+            Taxonomy[] taxonomyElements;
+            if (element.Form == null)
+                taxonomyElements = new Taxonomy[1] { element };
+            else
+                taxonomyElements = _formService.GetFormElements(element.Form).Select(e => e as Taxonomy).Where(e => e != null).ToArray();
             var termIds = GetRuntimeTermIds(element,taxonomyElements);
             
             IEnumerable<TermPart> parentTerms = null;
@@ -210,8 +232,9 @@ namespace Orchard.DynamicForms.Drivers {
             do {
                 termIds = GetRuntimeValues(childElement);
                 if (!termIds.Any()) {
-                    if (remainingTaxonomyElements.TryGetValue(element.Name, out childElement))
-                        remainingTaxonomyElements.Remove(element.Name);
+                    var currentElementName = childElement.Name;
+                    if (remainingTaxonomyElements.TryGetValue(currentElementName, out childElement))
+                        remainingTaxonomyElements.Remove(currentElementName);
                     else
                         return termIds;
                 }

@@ -25,7 +25,12 @@
     var htmlId = !String.IsNullOrWhiteSpace(element.HtmlId) ? element.HtmlId : name;
 
     foreach (var attribute in clientValidationAttributes) {
-        attributes.Add(attribute.Key, attribute.Value);
+        if (attributes.ContainsKey(attribute.Key)) {
+            attributes[attribute.Key] = " " + attribute.Value.ToString();
+        }
+        else {
+            attributes.Add(attribute.Key, attribute.Value.ToString());
+        }
     }
 }
 @if (element.ShowLabel) {

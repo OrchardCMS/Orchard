@@ -23,7 +23,12 @@
     var tagBuilder = (OrchardTagBuilder)TagBuilderExtensions.CreateElementTagBuilder(Model, "ol");
     tagBuilder.Attributes.Add("id",name);
     foreach (var attribute in attributes) {
-        tagBuilder.Attributes.Add(attribute.Key, attribute.Value.ToString());
+        if (tagBuilder.Attributes.ContainsKey(attribute.Key)) {
+            tagBuilder.Attributes[attribute.Key] = " " + attribute.Value.ToString();
+        }
+        else {
+            tagBuilder.Attributes.Add(attribute.Key, attribute.Value.ToString());
+        }
     }
     var index = 0;
 }
@@ -44,7 +49,7 @@
     if (element.ValidationSettings.Required == true && index == 0) {
         inputTagBuilder.AddClientValidationAttributes((IDictionary<string, string>)Model.ClientValidationAttributes);
     }
-    <li>
+    <li class="checkbox">
         <label>
             @inputTagBuilder.ToHtmlString(TagRenderMode.SelfClosing)
             @option.Text

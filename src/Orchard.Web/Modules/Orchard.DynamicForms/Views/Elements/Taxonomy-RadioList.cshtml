@@ -23,7 +23,12 @@
     var name = String.IsNullOrWhiteSpace((string)Model.ProcessedName) ? "RadioList1" : (string)Model.ProcessedName;
     tagBuilder.Attributes.Add("id", name);
     foreach (var attribute in attributes) {
-        tagBuilder.Attributes.Add(attribute.Key, attribute.Value.ToString());
+        if (tagBuilder.Attributes.ContainsKey(attribute.Key)) {
+            tagBuilder.Attributes[attribute.Key] = " " + attribute.Value.ToString();
+        }
+        else {
+            tagBuilder.Attributes.Add(attribute.Key, attribute.Value.ToString());
+        }
     }
     var index = 0;
 }

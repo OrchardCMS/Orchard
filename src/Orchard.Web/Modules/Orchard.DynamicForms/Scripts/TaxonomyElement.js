@@ -8,14 +8,22 @@
                 var taxonomySelectListId = this.id;
                 var url = taxonomySelectList.data("taxonomy-element-ajax-url");
                 var inputType = taxonomySelectList.data("taxonomy-element-input-type");
-                var parentTaxonomyElementOptions = $("[name=" + taxonomySelectList.data("taxonomy-element-parent-name") + "]");
+                 var parentTaxonomyElement = $("#" + taxonomySelectList.data("taxonomy-element-parent-name"));
                 var parentInputType = taxonomySelectList.data("taxonomy-element-parent-input-type");
-                parentTaxonomyElementOptions.on('change', updateChildrenTerms);
-
+                parentTaxonomyElement.on('change', updateChildrenTerms);
                 function updateChildrenTerms() {
+                    var currentInput = taxonomySelectList.find("input");
+                    $.each(currentInput, function () {
+                        if (this.checked) {
+                            this.checked = false;
+                        }
+                    });
+                    taxonomySelectList.trigger("change");
+                    
                     taxonomySelectList.children().remove().end();
                     var parentTermIds = [];
-                    if (parentInputType == "CheckList" || parentInputType == "RadioList") {
+                    var parentTaxonomyElementOptions = $("[name=" + taxonomySelectList.data("taxonomy-element-parent-name") + "]");
+                    if (parentInputType == "CheckList" || parentInputType == "RadioList") {                        
                         $.each(parentTaxonomyElementOptions, function () {
                             if (this.checked)
                                 parentTermIds.push($(this).val());
@@ -25,10 +33,13 @@
                         parentTermIds = parentTaxonomyElementOptions.val();
                     if (typeof parentTermIds === 'string') {
                         if (parentTermIds === 0)
-                            return;
+                            parentTermIds = [];
                         parentTermIds = [parentTermIds];
                     }
-                    var ajaxUrl = url + "&parentTermIds=" + parentTermIds.toString();
+                    var param = "";
+                    if (parentTermIds != null)
+                        param = parentTermIds.toString();
+                    var ajaxUrl = url + "&parentTermIds=" + param;
                     var parent = taxonomySelectList.parent();
                     if (ajaxUrl) {
                         var update = function (url, target) {
