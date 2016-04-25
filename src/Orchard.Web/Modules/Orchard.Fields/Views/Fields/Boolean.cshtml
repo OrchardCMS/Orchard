@@ -13,7 +13,7 @@
     if (!string.IsNullOrEmpty(valueToDisplay)) {
         string name = Model.ContentField.DisplayName;
     <p class="text-field text-field-@name.HtmlClassify()">
-        <span class="name">@name:</span>
+        <span class="name">@T(name):</span>
         <span class="value">@valueToDisplay</span>
     </p>    
     }
