@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
+using Orchard.ContentManagement;
 using Orchard.DynamicForms.Elements;
 using Orchard.DynamicForms.Services;
 using Orchard.Environment.Extensions;
@@ -157,6 +158,24 @@ namespace Orchard.DynamicForms.Drivers {
             context.ElementShape.TermOptions = GetTermOptions(element, context.DisplayType, taxonomyId, tokenData).ToArray();
             context.ElementShape.Metadata.Alternates.Add(String.Format("Elements_{0}__{1}", typeName, element.InputType));
             context.ElementShape.Metadata.Alternates.Add(String.Format("Elements_{0}_{1}__{2}", typeName, displayType, element.InputType));
+        }
+
+        protected override void OnExporting(Taxonomy element, ExportElementContext context) {
+            var taxonomy = element.TaxonomyId != null ? _contentManager.Get<TaxonomyPart>(element.TaxonomyId.Value) : default(TaxonomyPart);
+            var taxonomyIdentity = taxonomy != null ? _contentManager.GetItemMetadata(taxonomy).Identity.ToString() : default(string);
+
+            if (taxonomyIdentity != null)
+                context.ExportableData["TaxonomyId"] = taxonomyIdentity;
+        }
+
+        protected override void OnImportCompleted(Taxonomy element, ImportElementContext context) {
+            var taxonomyIdentity = context.ExportableData.Get("TaxonomyId");
+            var taxonomy = taxonomyIdentity != null ? context.Session.GetItemFromSession(taxonomyIdentity) : default(ContentManagement.ContentItem);
+            
+            if (taxonomy == null)
+                return;
+            
+            element.TaxonomyId = taxonomy.Id;
         }
 
         protected override void OnExporting(Taxonomy element, ExportElementContext context) {
