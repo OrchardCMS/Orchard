@@ -1,13 +1,12 @@
-using System;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
 using Orchard.Autoroute.Models;
 using Orchard.CulturePicker.Services;
 using Orchard.Environment.Extensions;
 using Orchard.Localization.Providers;
 using Orchard.Localization.Services;
 using Orchard.Mvc.Extensions;
+using System;
+using System.Web;
+using System.Web.Mvc;
 
 namespace Orchard.Localization.Controllers {
     [OrchardFeature("Orchard.Localization.CultureSelector")]
@@ -23,10 +22,12 @@ namespace Orchard.Localization.Controllers {
             _cultureStorageProvider = cultureStorageProvider;
         }
 
-        public ActionResult ChangeCulture(string culture) {//, string returnUrl) {
+        public ActionResult ChangeCulture(string culture) {
             if (string.IsNullOrEmpty(culture)) {
                 throw new ArgumentNullException(culture);
             }
+            var request = Services.WorkContext.HttpContext.Request;
+            var query = HttpUtility.ParseQueryString(request.UrlReferrer.Query);
 
             var returnUrl = Utils.GetReturnUrl(Services.WorkContext.HttpContext.Request);
             if (string.IsNullOrEmpty(returnUrl))
@@ -44,7 +45,9 @@ namespace Orchard.Localization.Controllers {
             if (!returnUrl.StartsWith("~//")) {
                 returnUrl = "~//" + returnUrl;
             }
-            ActionResult r = this.RedirectLocal(returnUrl + "?culture=" + culture);
+            query["culture"] = culture;
+            returnUrl += "?" + query.ToQueryString();            
+            ActionResult r = this.RedirectLocal(returnUrl);
             return r;
         }
     }
