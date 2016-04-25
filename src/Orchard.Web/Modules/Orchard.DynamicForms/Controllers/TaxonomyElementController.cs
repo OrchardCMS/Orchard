@@ -43,8 +43,7 @@ namespace Orchard.DynamicForms.Controllers
         }
 
         public ActionResult GetChildrenTerms(int contentId, string formName, string elementName, string parentTermIds) {
-            if (string.IsNullOrWhiteSpace(parentTermIds))
-                return new HttpNotFoundResult();
+            
             var layoutPart = _layoutManager.GetLayout(contentId);
             if (layoutPart == null)
                 return new HttpNotFoundResult();
@@ -65,18 +64,25 @@ namespace Orchard.DynamicForms.Controllers
                 )
                 return new HttpUnauthorizedResult();
 
+            var result = new List<object>();
+            var optionLabel = element.OptionLabel;
+            if (!String.IsNullOrWhiteSpace(optionLabel)) {
+                result.Add(new { Text = _tokenizer.Replace(optionLabel, null), Value = string.Empty });
+            }
+            if (string.IsNullOrWhiteSpace(parentTermIds))
+                return Json(result, JsonRequestBehavior.AllowGet);
+
             var parentTerms = _contentManager.GetMany<TermPart>(parentTermIds.Split(',').Select(int.Parse).Where(id => id > 0),VersionOptions.Published, QueryHints.Empty).Where(t=>t.TaxonomyId == element.TaxonomyId.Value);
             
             if (parentTerms == null || !parentTerms.Any())
-                return new HttpNotFoundResult();
+                return Json(result, JsonRequestBehavior.AllowGet);
 
             List<TermPart> terms = new List<TermPart>();
             foreach (var parentTerm in parentTerms) {
                 terms.AddRange(_taxonomyService.GetChildren(parentTerm, false, element.LevelsToRender.GetValueOrDefault()));
             }
             var projection = terms.GetSelectListItems(element, _tokenizer);
-            var result = new List<object>();
-
+            
             foreach (var item in projection) {
                 result.Add(new {
                     text = item.Text,
