@@ -54,8 +54,15 @@ namespace Orchard.Recipes.Providers.Builders {
         }
 
         public override dynamic UpdateEditor(dynamic shapeFactory, IUpdateModel updater) {
-            var contentTypeViewModels = _contentDefinitionManager.ListTypeDefinitions()
-                .OrderBy(x => x.Name)
+
+            var contentTypeDefinitionsWithUserPart = _contentDefinitionManager.ListTypeDefinitions()
+                .Where(d => d.Name == "User" || d.Parts.Any(p => p.PartDefinition.Name == "UserPart"))
+                .OrderBy(x => x.Name).ToList();
+            var otherContentTypeDefinitions = _contentDefinitionManager.ListTypeDefinitions()
+                .Where(d => !contentTypeDefinitionsWithUserPart.Any(u => u.Name == d.Name))
+                .OrderBy(x => x.Name).ToList();
+
+            var contentTypeViewModels = contentTypeDefinitionsWithUserPart.Union(otherContentTypeDefinitions)
                 .Select(x => new ContentTypeEntry { Name = x.Name, DisplayName = x.DisplayName })
                 .ToList();
 
@@ -97,7 +104,7 @@ namespace Orchard.Recipes.Providers.Builders {
             var schemaContentTypes = SchemaContentTypes;
             var exportVersionOptions = GetContentExportVersionOptions(VersionHistoryOptions);
             var contentItems = dataContentTypes.Any()
-                ? _orchardServices.ContentManager.Query(exportVersionOptions, dataContentTypes.ToArray()).List().ToArray()
+                ? _orchardServices.ContentManager.Query(exportVersionOptions, dataContentTypes.ToArray()).List().Join(dataContentTypes, c=>c.ContentType, t => t, (c,t)=>c).ToArray()
                 : Enumerable.Empty<ContentItem>();
 
             if(schemaContentTypes.Any())
@@ -143,7 +150,7 @@ namespace Orchard.Recipes.Providers.Builders {
 
             var orderedContentItems = orderedContentItemsQuery.ToList();
 
-            foreach (var contentType in contentTypes.OrderBy(x => x)) {
+            foreach (var contentType in contentTypes) {
                 var type = contentType;
                 var items = orderedContentItems.Where(i => i.ContentType == type);
                 foreach (var contentItem in items) {
