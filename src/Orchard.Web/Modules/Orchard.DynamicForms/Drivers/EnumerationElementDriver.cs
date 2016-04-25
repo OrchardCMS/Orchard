@@ -36,7 +36,7 @@ namespace Orchard.DynamicForms.Drivers {
                         Name: "Options",
                         Title: "Options",
                         Classes: new[] { "text", "large", "tokenized" },
-                        Description: T("Enter one option per line. To differentiate between an option's text and value, separate the two by a colon. For example: &quot;Option 1:1&quot;")),
+                        Description: T("Enter one option per line. To differentiate between an option's text and value, separate the two by a &quot;|&quot; character. For example: &quot;Option 1|1&quot;")),
                     _InputType: shape.SelectList(
                         Id: "InputType",
                         Name: "InputType",

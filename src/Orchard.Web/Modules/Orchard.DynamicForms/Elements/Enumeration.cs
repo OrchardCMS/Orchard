@@ -52,7 +52,7 @@ namespace Orchard.DynamicForms.Elements {
             if (String.IsNullOrWhiteSpace(line))
                 return null;
 
-            var parts = line.Split(':');
+            var parts = line.Split('|');
 
             if (parts.Length == 1) {
                 var value = parts[0].Trim();
@@ -64,7 +64,7 @@ namespace Orchard.DynamicForms.Elements {
             }
             else {
                 var text = parts[0].Trim();
-                var value = String.Join(":", parts.Skip(1)).Trim();
+                var value = String.Join("|", parts.Skip(1)).Trim();
                 return new SelectListItem {
                     Text = text,
                     Value = value,
