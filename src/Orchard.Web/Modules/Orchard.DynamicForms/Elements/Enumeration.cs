@@ -52,7 +52,11 @@ namespace Orchard.DynamicForms.Elements {
             if (String.IsNullOrWhiteSpace(line))
                 return null;
 
-            var parts = line.Split('|');
+            string[] parts=null;
+            if (line.Contains('|'))
+                parts = line.Split('|');
+            else
+                parts = line.Split(':');
 
             if (parts.Length == 1) {
                 var value = parts[0].Trim();
