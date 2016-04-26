@@ -180,25 +180,7 @@ namespace Orchard.DynamicForms.Drivers {
             
             element.TaxonomyId = taxonomy.Id;
         }
-
-        protected override void OnExporting(Taxonomy element, ExportElementContext context) {
-            var taxonomy = element.TaxonomyId != null ? _contentManager.Get<TaxonomyPart>(element.TaxonomyId.Value) : default(TaxonomyPart);
-            var taxonomyIdentity = taxonomy != null ? _contentManager.GetItemMetadata(taxonomy).Identity.ToString() : default(string);
-
-            if (taxonomyIdentity != null)
-                context.ExportableData["TaxonomyId"] = taxonomyIdentity;
-        }
-
-        protected override void OnImportCompleted(Taxonomy element, ImportElementContext context) {
-            var taxonomyIdentity = context.ExportableData.Get("TaxonomyId");
-            var taxonomy = taxonomyIdentity != null ? context.Session.GetItemFromSession(taxonomyIdentity) : default(ContentManagement.ContentItem);
-
-            if (taxonomy == null)
-                return;
-            
-            element.TaxonomyId = taxonomy.Id;            
-        }
-
+        
         private IEnumerable<SelectListItem> GetTermOptions(Taxonomy element, string displayType, int? taxonomyId, IDictionary<string, object> tokenData) {
             var optionLabel = element.OptionLabel;
             var runtimeValues = GetRuntimeValues(element);
