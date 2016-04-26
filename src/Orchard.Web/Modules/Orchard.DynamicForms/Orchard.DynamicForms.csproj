@@ -146,6 +146,10 @@
       <Project>{91bc2e7f-da04-421c-98ef-76d37cec130c}</Project>
       <Name>Orchard.AntiSpam</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Orchard.Conditions\Orchard.Conditions.csproj">
+      <Project>{98251EAE-A41B-47B2-AA91-E28B8482DA70}</Project>
+      <Name>Orchard.Conditions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Orchard.ContentPermissions\Orchard.ContentPermissions.csproj">
       <Project>{e826f796-8ce3-4b5b-8423-5aa5f81d2fc3}</Project>
       <Name>Orchard.ContentPermissions</Name>
@@ -209,6 +213,7 @@
     <Compile Include="Elements\UrlField.cs" />
     <Compile Include="Bindings\NumericFieldBindings.cs" />
     <Compile Include="Forms\AddModelErrorForm.cs" />
+    <Compile Include="Forms\EditableForm.cs" />
     <Compile Include="Forms\SelectDynamicForms.cs" />
     <Compile Include="Bindings\TextFieldBindings.cs" />
     <Compile Include="Bindings\BodyPartBindings.cs" />
@@ -282,7 +287,6 @@
     <Compile Include="Validators\Settings\TextFieldValidationSettings.cs" />
     <Compile Include="Services\Models\ValidationSettingsBase.cs" />
     <Compile Include="Services\Models\FormEventContext.cs" />
-    <Compile Include="Drivers\ValidationElementDriver.cs" />
     <Compile Include="Drivers\BindingsElementDriver.cs" />
     <Compile Include="Drivers\TaxonomyElementDriver.cs" />
     <Compile Include="Drivers\HiddenFieldElementDriver.cs" />

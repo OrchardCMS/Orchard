@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Orchard.Conditions.Services;
 using Orchard.DisplayManagement;
 using Orchard.Forms.Services;
 using Orchard.Layouts.Elements;
@@ -11,8 +12,8 @@ namespace Orchard.Layouts.Drivers {
     public class ShapeElementDriver : FormsElementDriver<Shape> {
         private readonly IShapeFactory _shapeFactory;
 
-        public ShapeElementDriver(IFormsBasedElementServices formsServices, IShapeFactory shapeFactory)
-            : base(formsServices) {
+        public ShapeElementDriver(IFormsBasedElementServices formsServices, IConditionManager conditionManager, IShapeFactory shapeFactory)
+            : base(formsServices, conditionManager) {
             _shapeFactory = shapeFactory;
         }
 

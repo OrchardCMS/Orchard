@@ -1,4 +1,6 @@
-﻿using Orchard.DynamicForms.Elements;
+﻿using System;
+using Orchard.Conditions.Services;
+using Orchard.DynamicForms.Elements;
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
 using Orchard.Layouts.Helpers;
@@ -10,16 +12,17 @@ namespace Orchard.DynamicForms.Drivers {
     public class EmailFieldElementDriver : FormsElementDriver<EmailField>{
         private readonly ITokenizer _tokenizer;
 
-        public EmailFieldElementDriver(IFormsBasedElementServices formsServices, ITokenizer tokenizer) : base(formsServices) {
+        public EmailFieldElementDriver(IFormsBasedElementServices formsServices, IConditionManager conditionManager, ITokenizer tokenizer) : base(formsServices, conditionManager) {
             _tokenizer = tokenizer;
         }
 
         protected override EditorResult OnBuildEditor(EmailField element, ElementEditorContext context) {
             var autoLabelEditor = BuildForm(context, "AutoLabel");
+            var editableEditor = BuildForm(context, "Editable");
             var emailFieldEditor = BuildForm(context, "EmailField");
             var emailFieldValidation = BuildForm(context, "EmailFieldValidation", "Validation:10");
 
-            return Editor(context, autoLabelEditor, emailFieldEditor, emailFieldValidation);
+            return Editor(context, autoLabelEditor, editableEditor, emailFieldEditor, emailFieldValidation);
         }
 
         protected override void DescribeForm(DescribeContext context) {
@@ -80,6 +83,7 @@ namespace Orchard.DynamicForms.Drivers {
             context.ElementShape.ProcessedName = _tokenizer.Replace(element.Name, context.GetTokenData());
             context.ElementShape.ProcessedLabel = _tokenizer.Replace(element.Label, context.GetTokenData(), new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
             context.ElementShape.ProcessedValue = element.RuntimeValue;
+            context.ElementShape.Disabled = (!String.IsNullOrWhiteSpace(element.ReadOnlyRule) && EvaluateRule(element.ReadOnlyRule));
         }
     }
 }

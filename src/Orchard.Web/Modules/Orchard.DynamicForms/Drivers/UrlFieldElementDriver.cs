@@ -5,21 +5,24 @@ using Orchard.Layouts.Helpers;
 using Orchard.Layouts.Services;
 using Orchard.Tokens;
 using DescribeContext = Orchard.Forms.Services.DescribeContext;
+using Orchard.Conditions.Services;
+using System;
 
 namespace Orchard.DynamicForms.Drivers {
     public class UrlFieldElementDriver : FormsElementDriver<UrlField> {
         private readonly ITokenizer _tokenizer;
 
-        public UrlFieldElementDriver(IFormsBasedElementServices formsServices, ITokenizer tokenizer) : base(formsServices) {
+        public UrlFieldElementDriver(IFormsBasedElementServices formsServices, IConditionManager conditionManager, ITokenizer tokenizer) : base(formsServices, conditionManager) {
             _tokenizer = tokenizer;
         }
 
         protected override EditorResult OnBuildEditor(UrlField element, ElementEditorContext context) {
             var autoLabelEditor = BuildForm(context, "AutoLabel");
+            var editableEditor = BuildForm(context, "Editable");
             var webAddressFieldEditor = BuildForm(context, "UrlField");
             var webAddressFieldValidation = BuildForm(context, "UrlFieldValidation", "Validation:10");
 
-            return Editor(context, autoLabelEditor, webAddressFieldEditor, webAddressFieldValidation);
+            return Editor(context, autoLabelEditor, editableEditor, webAddressFieldEditor, webAddressFieldValidation);
         }
 
         protected override void DescribeForm(DescribeContext context) {
@@ -74,6 +77,7 @@ namespace Orchard.DynamicForms.Drivers {
             context.ElementShape.ProcessedName = _tokenizer.Replace(element.Name, context.GetTokenData());
             context.ElementShape.ProcessedLabel = _tokenizer.Replace(element.Label, context.GetTokenData(), new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
             context.ElementShape.ProcessedValue = element.RuntimeValue;
+            context.ElementShape.Disabled = (!String.IsNullOrWhiteSpace(element.ReadOnlyRule) && EvaluateRule(element.ReadOnlyRule));
         }
     }
 }

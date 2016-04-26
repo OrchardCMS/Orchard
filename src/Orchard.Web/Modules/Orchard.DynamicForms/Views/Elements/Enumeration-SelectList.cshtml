@@ -7,7 +7,9 @@
     var options = (IEnumerable<SelectListItem>)Model.ProcessedOptions;
     var clientValidationAttributes = (IDictionary<string, string>)Model.ClientValidationAttributes;
     var htmlId = !String.IsNullOrWhiteSpace(element.HtmlId) ? element.HtmlId : name;
-
+    if (Model.Disabled) {
+        attributes["disabled"] = null;
+    }
     foreach (var attribute in clientValidationAttributes) {
         attributes.Add(attribute.Key, attribute.Value);
     }

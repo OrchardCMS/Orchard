@@ -5,6 +5,9 @@
     string parentTaxonomyElementName = Model.ParentTaxonomyElementName;
     string parentTaxonomyElementInputType = Model.ParentTaxonomyElementInputType;
     var attributes = (IDictionary<string, object>)TagBuilderExtensions.GetCommonElementAttributes(Model);
+    if (Model.Disabled) {
+        attributes["disabled"] = null;
+    }
     if (!string.IsNullOrWhiteSpace(parentTaxonomyElementName)) {
         Script.Require("DynamicForms.TaxonomyElement").AtFoot();
         if (attributes.ContainsKey("class")) {

@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Orchard.Conditions.Services;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Models;
@@ -36,7 +37,8 @@ namespace Orchard.DynamicForms.Drivers {
 
 
         public FormElementDriver(
-            IFormsBasedElementServices formsServices, 
+            IFormsBasedElementServices formsServices,
+            IConditionManager conditionManager,
             IContentDefinitionManager contentDefinitionManager,
             IContentManager contentManager,
             IFormService formService, 
@@ -47,7 +49,7 @@ namespace Orchard.DynamicForms.Drivers {
             IAuthenticationService authenticationService,
             INotifier notifier)
 
-            : base(formsServices) {
+            : base(formsServices, conditionManager) {
             _contentDefinitionManager = contentDefinitionManager;
             _contentManager = contentManager;
             _formService = formService;

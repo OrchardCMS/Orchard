@@ -21,6 +21,7 @@ using Orchard.UI.Navigation;
 using Orchard.Layouts.Helpers;
 using Orchard.Layouts.Services;
 using DescribeContext = Orchard.Forms.Services.DescribeContext;
+using Orchard.Conditions.Services;
 
 namespace Orchard.Layouts.Drivers {
     [OrchardFeature("Orchard.Layouts.Projections")]
@@ -33,13 +34,14 @@ namespace Orchard.Layouts.Drivers {
         private readonly IDisplayHelperFactory _displayHelperFactory;
 
         public ProjectionElementDriver(
-            IFormsBasedElementServices formsServices,
+            IFormsBasedElementServices formsServices, 
+            IConditionManager conditionManager, 
             IProjectionManager projectionManager,
             IOrchardServices services,
             IRepository<LayoutRecord> layoutRepository,
             ITokenizer tokenizer,
             IDisplayHelperFactory displayHelperFactory)
-            : base(formsServices) {
+            : base(formsServices, conditionManager) {
 
             _projectionManager = projectionManager;
             _contentManager = services.ContentManager;

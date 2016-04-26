@@ -4,7 +4,7 @@ using Orchard.Layouts.Helpers;
 
 namespace Orchard.DynamicForms.Elements {
     public abstract class FormElement : Element {
-        private Lazy<string> _runtimeValue;
+        private Lazy<string> _runtimeValue; 
 
         protected FormElement() {
             _runtimeValue = new Lazy<string>(() => Value);
@@ -38,6 +38,12 @@ namespace Orchard.DynamicForms.Elements {
         public string FormBindingContentType {
             get { return this.Retrieve(x => x.FormBindingContentType); }
             set { this.Store(x => x.FormBindingContentType, value); }
+        }
+        
+        public string ReadOnlyRule
+        {
+            get { return this.Retrieve(x => x.ReadOnlyRule); }
+            set { this.Store(x => x.ReadOnlyRule, value); }
         }
 
         public Form Form {

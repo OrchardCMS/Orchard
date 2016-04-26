@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
+using Orchard.Conditions.Services;
 using Orchard.ContentManagement;
 using Orchard.Core.Title.Models;
 using Orchard.DynamicForms.Elements;
@@ -23,8 +24,8 @@ namespace Orchard.DynamicForms.Drivers {
         private readonly IContentManager _contentManager;
         private readonly ITokenizer _tokenizer;
 
-        public QueryElementDriver(IFormsBasedElementServices formsServices, IProjectionManager projectionManager, IContentManager contentManager, ITokenizer tokenizer)
-            : base(formsServices) {
+        public QueryElementDriver(IFormsBasedElementServices formsServices, IConditionManager conditionManager, IProjectionManager projectionManager, IContentManager contentManager, ITokenizer tokenizer)
+            : base(formsServices, conditionManager) {
             _projectionManager = projectionManager;
             _contentManager = contentManager;
             _tokenizer = tokenizer;
@@ -32,10 +33,11 @@ namespace Orchard.DynamicForms.Drivers {
 
         protected override EditorResult OnBuildEditor(Query element, ElementEditorContext context) {
             var autoLabelEditor = BuildForm(context, "AutoLabel");
+            var editableEditor = BuildForm(context, "Editable");
             var enumerationEditor = BuildForm(context, "QueryForm");
             var checkBoxValidation = BuildForm(context, "QueryValidation", "Validation:10");
 
-            return Editor(context, autoLabelEditor, enumerationEditor, checkBoxValidation);
+            return Editor(context, editableEditor, autoLabelEditor, enumerationEditor, checkBoxValidation);
         }
 
         protected override void DescribeForm(DescribeContext context) {

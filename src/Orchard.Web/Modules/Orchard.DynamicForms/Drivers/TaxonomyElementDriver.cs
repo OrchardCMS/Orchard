@@ -16,6 +16,7 @@ using Orchard.Tokens;
 using Orchard.DynamicForms.Helpers;
 using DescribeContext = Orchard.Forms.Services.DescribeContext;
 using Orchard.ContentManagement;
+using Orchard.Conditions.Services;
 
 namespace Orchard.DynamicForms.Drivers {
     [OrchardFeature("Orchard.DynamicForms.Taxonomies")]
@@ -25,8 +26,8 @@ namespace Orchard.DynamicForms.Drivers {
         private readonly IFormService _formService;
         private readonly IContentManager _contentManager;
 
-        public TaxonomyElementDriver(IFormsBasedElementServices formsServices, ITaxonomyService taxonomyService, ITokenizer tokenizer, IFormService formService, IContentManager contentManager)
-            : base(formsServices) {
+        public TaxonomyElementDriver(IFormsBasedElementServices formsServices, IConditionManager conditionManager, ITaxonomyService taxonomyService, ITokenizer tokenizer, IFormService formService, IContentManager contentManager)
+            : base(formsServices, conditionManager) {
             _taxonomyService = taxonomyService;
             _tokenizer = tokenizer;
             _formService = formService;
@@ -35,10 +36,11 @@ namespace Orchard.DynamicForms.Drivers {
 
         protected override EditorResult OnBuildEditor(Taxonomy element, ElementEditorContext context) {
             var autoLabelEditor = BuildForm(context, "AutoLabel");
+            var editableEditor = BuildForm(context, "Editable");
             var enumerationEditor = BuildForm(context, "TaxonomyForm");
             var checkBoxValidation = BuildForm(context, "TaxonomyValidation", "Validation:10");
 
-            return Editor(context, autoLabelEditor, enumerationEditor, checkBoxValidation);
+            return Editor(context, autoLabelEditor, editableEditor, enumerationEditor, checkBoxValidation);
         }
 
         protected override void DescribeForm(DescribeContext context) {
@@ -155,6 +157,7 @@ namespace Orchard.DynamicForms.Drivers {
             }
             context.ElementShape.ProcessedLabel = _tokenizer.Replace(element.Label, tokenData, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
             context.ElementShape.TermOptions = GetTermOptions(element, context.DisplayType, taxonomyId, tokenData).ToArray();
+            context.ElementShape.Disabled = (!String.IsNullOrWhiteSpace(element.ReadOnlyRule) && EvaluateRule(element.ReadOnlyRule));
             context.ElementShape.Metadata.Alternates.Add(String.Format("Elements_{0}__{1}", typeName, element.InputType));
             context.ElementShape.Metadata.Alternates.Add(String.Format("Elements_{0}_{1}__{2}", typeName, displayType, element.InputType));
         }

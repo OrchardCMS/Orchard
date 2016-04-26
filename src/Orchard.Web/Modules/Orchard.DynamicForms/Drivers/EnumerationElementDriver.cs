@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
+using Orchard.Conditions.Services;
 using Orchard.DynamicForms.Elements;
 using Orchard.DynamicForms.Helpers;
 using Orchard.Layouts.Framework.Display;
@@ -13,17 +14,18 @@ using DescribeContext = Orchard.Forms.Services.DescribeContext;
 namespace Orchard.DynamicForms.Drivers {
     public class EnumerationElementDriver : FormsElementDriver<Enumeration> {
         private readonly ITokenizer _tokenizer;
-        public EnumerationElementDriver(IFormsBasedElementServices formsServices, ITokenizer tokenizer)
-            : base(formsServices) {
+        public EnumerationElementDriver(IFormsBasedElementServices formsServices, IConditionManager conditionManager, ITokenizer tokenizer)
+            : base(formsServices, conditionManager) {
             _tokenizer = tokenizer;
         }
 
         protected override EditorResult OnBuildEditor(Enumeration element, ElementEditorContext context) {
             var autoLabelEditor = BuildForm(context, "AutoLabel");
+            var editableEditor = BuildForm(context, "Editable");
             var enumerationEditor = BuildForm(context, "Enumeration");
             var checkBoxValidation = BuildForm(context, "EnumerationValidation", "Validation:10");
 
-            return Editor(context, autoLabelEditor, enumerationEditor, checkBoxValidation);
+            return Editor(context, autoLabelEditor, editableEditor, enumerationEditor, checkBoxValidation);
         }
 
         protected override void DescribeForm(DescribeContext context) {
@@ -88,6 +90,7 @@ namespace Orchard.DynamicForms.Drivers {
             context.ElementShape.ProcessedOptions = _tokenizer.Replace(element.Options, tokenData, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode }).ToArray();
             context.ElementShape.Metadata.Alternates.Add(String.Format("Elements_{0}__{1}", typeName, element.InputType));
             context.ElementShape.Metadata.Alternates.Add(String.Format("Elements_{0}_{1}__{2}", typeName, displayType, element.InputType));
+            context.ElementShape.Disabled = (!String.IsNullOrWhiteSpace(element.ReadOnlyRule) && EvaluateRule(element.ReadOnlyRule));
         }
     }
 }

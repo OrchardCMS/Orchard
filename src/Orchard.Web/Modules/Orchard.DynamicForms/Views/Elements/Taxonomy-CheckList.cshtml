@@ -42,7 +42,9 @@
     inputTagBuilder.Attributes["type"] = "checkbox";
     inputTagBuilder.Attributes["name"] = element.Name;
     inputTagBuilder.Attributes["value"] = option.Value;
-
+    if (Model.Disabled) {
+        inputTagBuilder.Attributes["disabled"] = null;
+    }
     if (option.Selected) {
         inputTagBuilder.Attributes["checked"] = "checked";
     }

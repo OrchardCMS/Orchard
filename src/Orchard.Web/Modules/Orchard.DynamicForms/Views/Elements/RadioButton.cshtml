@@ -7,6 +7,9 @@
     tagBuilder.Attributes["type"] = "radio";
     tagBuilder.Attributes["name"] = Model.ProcessedName;
     tagBuilder.Attributes["value"] = Model.ProcessedValue;
+    if (Model.Disabled) {
+        tagBuilder.Attributes["disabled"] = null;
+    }
 }
 @if (element.ShowLabel) {
     <label>
