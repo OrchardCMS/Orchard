@@ -2,7 +2,7 @@ Name: Fields
 AntiForgery: enabled
 Author: Antoine Griffard, Sébastien Ros
 Website: https://github.com/OrchardCMS/Orchard
-Version: 1.10
+Version: 1.10.1
 OrchardVersion: 1.9
 Description: Some content fields
 Features:
