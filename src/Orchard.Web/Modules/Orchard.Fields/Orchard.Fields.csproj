@@ -100,7 +100,6 @@
     <Content Include="Styles\Images\move.gif" />
     <Content Include="Web.config" />
     <Content Include="Styles\Web.config" />
-    <Compile Include="Drivers\TextFieldDriver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
   </ItemGroup>
@@ -177,9 +176,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Fields\Input.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\DefinitionTemplates\TextFieldDefaultValueEditor.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
