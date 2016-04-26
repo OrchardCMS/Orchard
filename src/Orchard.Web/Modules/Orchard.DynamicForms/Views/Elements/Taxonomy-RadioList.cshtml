@@ -42,7 +42,9 @@
     inputTagBuilder.Attributes["type"] = "radio";
     inputTagBuilder.Attributes["name"] = name;
     inputTagBuilder.Attributes["value"] = option.Value;
-
+    if (Model.Disabled) {
+        inputTagBuilder.Attributes["disabled"] = null;
+    }
     if (option.Selected) {
         inputTagBuilder.Attributes["checked"] = "checked";
     }

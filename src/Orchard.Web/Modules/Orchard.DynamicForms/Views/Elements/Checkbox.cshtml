@@ -8,6 +8,9 @@
     tagBuilder.Attributes["type"] = "checkbox";
     tagBuilder.Attributes["name"] = Model.ProcessedName;
     tagBuilder.Attributes["value"] = Model.ProcessedValue;
+    if (Model.Disabled) {
+        tagBuilder.Attributes["disabled"] = null;
+    }
     tagBuilder.AddClientValidationAttributes((IDictionary<string, string>)Model.ClientValidationAttributes);
 
     if (!String.IsNullOrWhiteSpace(element.PostedValue)) {

@@ -4,6 +4,9 @@
 @{
     var element = (Enumeration)Model.Element;
     var tagBuilder = (OrchardTagBuilder)TagBuilderExtensions.CreateElementTagBuilder(Model, "ol");
+    if (Model.Disabled) {
+        tagBuilder.Attributes["disabled"] = null;
+    }
     var index = 0;
 }
 @if (element.ShowLabel) {

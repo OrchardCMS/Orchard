@@ -18,6 +18,7 @@ using Orchard.DynamicForms.Services;
 using Orchard.Layouts.Models;
 using System.Collections.Specialized;
 using Orchard.DynamicForms.Helpers;
+using Orchard.Conditions.Services;
 
 namespace Orchard.DynamicForms.Drivers {
     public class CommandLinkElementDriver : FormsElementDriver<CommandLink> {
@@ -27,11 +28,12 @@ namespace Orchard.DynamicForms.Drivers {
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly IFormService _formService;
         public CommandLinkElementDriver(IFormsBasedElementServices formsServices
+            , IConditionManager conditionManager
             , ITokenizer tokenizer
             , ICurrentControllerAccessor currentControllerAccessor
             , IContentManager contentManager
             , IContentDefinitionManager contentDefinitionManager
-            , IFormService formService) : base(formsServices) {
+            , IFormService formService) : base(formsServices, conditionManager) {
             _tokenizer = tokenizer;
             _currentControllerAccessor = currentControllerAccessor;
             _contentManager = contentManager;

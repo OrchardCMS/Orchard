@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Orchard.Conditions.Services;
 using Orchard.DynamicForms.Elements;
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
@@ -10,7 +11,7 @@ using DescribeContext = Orchard.Forms.Services.DescribeContext;
 namespace Orchard.DynamicForms.Drivers {
     public class HiddenFieldElementDriver : FormsElementDriver<HiddenField> {
         private readonly ITokenizer _tokenizer;
-        public HiddenFieldElementDriver(IFormsBasedElementServices formsServices, ITokenizer tokenizer) : base(formsServices) {
+        public HiddenFieldElementDriver(IFormsBasedElementServices formsServices, IConditionManager conditionManager, ITokenizer tokenizer) : base(formsServices, conditionManager) {
             _tokenizer = tokenizer;
         }
 

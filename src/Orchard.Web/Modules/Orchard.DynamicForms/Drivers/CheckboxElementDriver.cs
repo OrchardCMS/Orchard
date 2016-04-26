@@ -1,4 +1,6 @@
-﻿using Orchard.DynamicForms.Elements;
+﻿using System;
+using Orchard.Conditions.Services;
+using Orchard.DynamicForms.Elements;
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
 using Orchard.Layouts.Helpers;
@@ -10,17 +12,18 @@ namespace Orchard.DynamicForms.Drivers {
     public class CheckboxElementDriver : FormsElementDriver<CheckBox> {
         private readonly ITokenizer _tokenizer;
 
-        public CheckboxElementDriver(IFormsBasedElementServices formsServices, ITokenizer tokenizer)
-            : base(formsServices) {
+        public CheckboxElementDriver(IFormsBasedElementServices formsServices, IConditionManager conditionManager, ITokenizer tokenizer)
+            : base(formsServices, conditionManager) {
             _tokenizer = tokenizer;
         }
 
         protected override EditorResult OnBuildEditor(CheckBox element, ElementEditorContext context) {
             var autoLabelEditor = BuildForm(context, "AutoLabel");
+            var editableEditor = BuildForm(context, "Editable");
             var checkBoxEditor = BuildForm(context, "CheckBox");
             var checkBoxValidation = BuildForm(context, "CheckBoxValidation", "Validation:10");
 
-            return Editor(context, autoLabelEditor, checkBoxEditor, checkBoxValidation);
+            return Editor(context, autoLabelEditor, editableEditor, checkBoxEditor, checkBoxValidation);
         }
 
         protected override void DescribeForm(DescribeContext context) {
@@ -69,6 +72,7 @@ namespace Orchard.DynamicForms.Drivers {
             context.ElementShape.ProcessedName = _tokenizer.Replace(element.Name, context.GetTokenData());
             context.ElementShape.ProcessedLabel = _tokenizer.Replace(element.Label, context.GetTokenData(), new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
             context.ElementShape.ProcessedValue = _tokenizer.Replace(element.Value, context.GetTokenData());
+            context.ElementShape.Disabled = (!String.IsNullOrWhiteSpace(element.ReadOnlyRule) && EvaluateRule(element.ReadOnlyRule));
         }
     }
 }

@@ -6,6 +6,9 @@
     var tagBuilder = (OrchardTagBuilder)TagBuilderExtensions.CreateElementTagBuilder(Model, "ol");
     var name = String.IsNullOrWhiteSpace((string)Model.ProcessedName) ? "RadioList1" : (string)Model.ProcessedName;
     var index = 0;
+    if (Model.Disabled) {
+        tagBuilder.Attributes["disabled"] = null;
+    }
 }
 @if (element.ShowLabel) {
     <label>@Html.Raw(Model.ProcessedLabel)</label>
@@ -20,7 +23,6 @@
     if (option.Selected) {
         inputTagBuilder.Attributes["checked"] = "checked";
     }
-
     if (element.ValidationSettings.Required == true && index == 0) {
         inputTagBuilder.AddClientValidationAttributes((IDictionary<string, string>)Model.ClientValidationAttributes);
     }

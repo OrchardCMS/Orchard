@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Orchard.Conditions.Services;
 using Orchard.DynamicForms.Elements;
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
@@ -11,7 +12,7 @@ namespace Orchard.DynamicForms.Drivers {
     public class LabelElementDriver : FormsElementDriver<Label> {
         private readonly ITokenizer _tokenizer;
 
-        public LabelElementDriver(IFormsBasedElementServices formsServices, ITokenizer tokenizer) : base(formsServices) {
+        public LabelElementDriver(IFormsBasedElementServices formsServices, IConditionManager conditionManager, ITokenizer tokenizer) : base(formsServices, conditionManager) {
             _tokenizer = tokenizer;
         }
 

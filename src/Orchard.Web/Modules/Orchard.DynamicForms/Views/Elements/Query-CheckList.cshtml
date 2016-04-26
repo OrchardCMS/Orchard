@@ -5,6 +5,9 @@
     var element = (Query)Model.Element;
     var name = String.IsNullOrWhiteSpace((string)Model.ProcessedName) ? "CheckList1" : (string)Model.ProcessedName;
     var tagBuilder = (OrchardTagBuilder)TagBuilderExtensions.CreateElementTagBuilder(Model, "ol");
+    if (Model.Disabled) {
+        tagBuilder.Attributes["disabled"] = null;
+    }
     var index = 0;
 }
 @if (element.ShowLabel) {

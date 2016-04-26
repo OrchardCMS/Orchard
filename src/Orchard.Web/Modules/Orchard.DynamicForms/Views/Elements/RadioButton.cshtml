@@ -9,6 +9,8 @@
     tagBuilder.Attributes["value"] = Model.ProcessedValue;
     if ((String.IsNullOrWhiteSpace(element.PostedValue) && element.DefaultValue) || Model.ProcessedValue == element.PostedValue) {
         tagBuilder.Attributes["checked"] = "checked";
+    if (Model.Disabled) {
+        tagBuilder.Attributes["disabled"] = null;
     }
 }
 @if (element.ShowLabel) {
