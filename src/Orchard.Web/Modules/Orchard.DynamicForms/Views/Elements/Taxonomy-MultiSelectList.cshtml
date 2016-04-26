@@ -25,10 +25,10 @@
 
     foreach (var attribute in clientValidationAttributes) {
         if (attributes.ContainsKey(attribute.Key)) {
-            attributes[attribute.Key] = " " + attribute.Value.ToString();
+            attributes[attribute.Key] = " " + attribute.Value as string;
         }
         else {
-            attributes.Add(attribute.Key, attribute.Value.ToString());
+            attributes.Add(attribute.Key, attribute.Value as string);
         }
     }
 }

@@ -6,6 +6,7 @@
     string parentTaxonomyElementName = Model.ParentTaxonomyElementName;
     string parentTaxonomyElementInputType = Model.ParentTaxonomyElementInputType;
     var attributes = (IDictionary<string, object>)TagBuilderExtensions.GetCommonElementAttributes(Model);
+
     if (!string.IsNullOrWhiteSpace(parentTaxonomyElementName)) {
         Script.Require("DynamicForms.TaxonomyElement").AtFoot();
         if (attributes.ContainsKey("class")) {
@@ -24,10 +25,10 @@
     tagBuilder.Attributes.Add("id",name);
     foreach (var attribute in attributes) {
         if (tagBuilder.Attributes.ContainsKey(attribute.Key)) {
-            tagBuilder.Attributes[attribute.Key] = " " + attribute.Value.ToString();
+            tagBuilder.Attributes[attribute.Key] = " " + attribute.Value as string;
         }
         else {
-            tagBuilder.Attributes.Add(attribute.Key, attribute.Value.ToString());
+            tagBuilder.Attributes.Add(attribute.Key, attribute.Value as string);
         }
     }
     var index = 0;
