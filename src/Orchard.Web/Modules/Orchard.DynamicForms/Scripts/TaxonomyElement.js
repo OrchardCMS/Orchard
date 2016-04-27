@@ -68,9 +68,14 @@
                                         .attr("selected", selected)
                                         .text(this.text));
                                     }
-                                });
-                                if (json.length===0)
-                                    taxonomySelectList.append($("<option></option>"));
+                                });                                
+                                if (json.length === 1) {
+                                    var value = json[0].Text;
+                                    taxonomySelectList.append($("<option></option>")
+                                      .attr("value", value)
+                                        .attr("selected", true)
+                                        .text(value));
+                                }
                             }).fail(function () {
                             });
                         };
