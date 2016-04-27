@@ -43,7 +43,7 @@ namespace Orchard.Localization.Drivers {
 
             var missingCultures = part.HasTranslationGroup ?
                 RetrieveMissingCultures(part.MasterContentItem.As<LocalizationPart>(), true) :
-                RetrieveMissingCultures(part, part.Culture != null && part.Id != 0);
+                RetrieveMissingCultures(part, part.Culture != null);
 
             var model = new EditLocalizationViewModel {
                 SelectedCulture = GetCulture(part),
@@ -90,20 +90,22 @@ namespace Orchard.Localization.Drivers {
 
         private IEnumerable<LocalizationPart> GetDisplayLocalizations(LocalizationPart part, VersionOptions versionOptions) {
             return _localizationService.GetLocalizations(part.ContentItem, versionOptions)
+                .Where(c => c.Culture != null)
                 .Select(c => {
                     var localized = c.ContentItem.As<LocalizationPart>();
-                    if (localized.Culture == null)
-                        localized.Culture = _cultureManager.GetCultureByName(_cultureManager.GetSiteCulture());
+                    //if (localized.Culture == null)
+                    //    localized.Culture = _cultureManager.GetCultureByName(_cultureManager.GetSiteCulture());
                     return c;
                 }).ToList();
         }
 
         private IEnumerable<LocalizationPart> GetEditorLocalizations(LocalizationPart part) {
             return _localizationService.GetLocalizations(part.ContentItem, VersionOptions.Latest)
+                .Where(c => c.Culture != null)
                 .Select(c => {
                     var localized = c.ContentItem.As<LocalizationPart>();
-                    if (localized.Culture == null)
-                        localized.Culture = _cultureManager.GetCultureByName(_cultureManager.GetSiteCulture());
+                    //if (localized.Culture == null)
+                    //    localized.Culture = _cultureManager.GetCultureByName(_cultureManager.GetSiteCulture());
                     return c;
                 }).ToList();
         }
