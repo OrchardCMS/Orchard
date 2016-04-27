@@ -1,17 +1,14 @@
-﻿using System;
-using System.Web.Mvc;
-using Orchard.ContentManagement;
-using Orchard.ContentManagement.Aspects;
-using Orchard.Core.Contents.Settings;
+﻿using Orchard.ContentManagement;
+using Orchard.Core.Contents;
 using Orchard.DisplayManagement;
 using Orchard.Localization.Models;
 using Orchard.Localization.Services;
-using Orchard.Localization.ViewModels;
-using Orchard.Mvc;
 using Orchard.UI.Notify;
-using Orchard.Core.Contents;
+using System;
+using System.Web.Mvc;
 
-namespace Orchard.Localization.Controllers {
+namespace Orchard.Localization.Controllers
+{
     [ValidateInput(false)]
     public class AdminController : Controller {
         private readonly IContentManager _contentManager;

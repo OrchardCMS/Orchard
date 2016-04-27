@@ -93,8 +93,6 @@ namespace Orchard.Localization.Drivers {
                 .Where(c => c.Culture != null)
                 .Select(c => {
                     var localized = c.ContentItem.As<LocalizationPart>();
-                    //if (localized.Culture == null)
-                    //    localized.Culture = _cultureManager.GetCultureByName(_cultureManager.GetSiteCulture());
                     return c;
                 }).ToList();
         }
@@ -104,13 +102,11 @@ namespace Orchard.Localization.Drivers {
                 .Where(c => c.Culture != null)
                 .Select(c => {
                     var localized = c.ContentItem.As<LocalizationPart>();
-                    //if (localized.Culture == null)
-                    //    localized.Culture = _cultureManager.GetCultureByName(_cultureManager.GetSiteCulture());
                     return c;
                 }).ToList();
         }
 
-        protected override void Importing(LocalizationPart part, ContentManagement.Handlers.ImportContentContext context) {
+        protected override void Importing(LocalizationPart part, ImportContentContext context) {
             // Don't do anything if the tag is not specified.
             if (context.Data.Element(part.PartDefinition.Name) == null) {
                 return;
@@ -134,7 +130,7 @@ namespace Orchard.Localization.Drivers {
             });
         }
 
-        protected override void Exporting(LocalizationPart part, ContentManagement.Handlers.ExportContentContext context) {
+        protected override void Exporting(LocalizationPart part, ExportContentContext context) {
             if (part.MasterContentItem != null) {
                 var masterContentItemIdentity = _contentManager.GetItemMetadata(part.MasterContentItem).Identity;
                 context.Element(part.PartDefinition.Name).SetAttributeValue("MasterContentItem", masterContentItemIdentity.ToString());
