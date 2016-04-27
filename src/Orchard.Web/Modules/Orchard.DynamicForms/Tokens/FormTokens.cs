@@ -20,7 +20,7 @@ namespace Orchard.DynamicForms.Tokens {
         public void Evaluate(EvaluateContext context) {
             context.For<FormSubmissionTokenContext>("FormSubmission")
                 .Token(token => token.StartsWith("Field:", StringComparison.OrdinalIgnoreCase) ? token.Substring("Field:".Length) : null, GetFieldValue)
-                .Chain(FilterChainParam, "Text", GetFieldValue)
+                .Chain(FilterChainParam, "Text", GetFieldValue);
             context.For<Element>("Element")
                 .Token("ContentToEdit", GetContentToEdit)
                 .Chain("ContentToEdit", "Content", GetContentToEdit);
