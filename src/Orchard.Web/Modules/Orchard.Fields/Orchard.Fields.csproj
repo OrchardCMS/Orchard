@@ -101,7 +101,6 @@
     <Content Include="Web.config" />
     <Content Include="Styles\Web.config" />
     <Compile Include="Drivers\TextFieldDriver.cs" />
-    <Compile Include="Handlers\BooleanFieldHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
   </ItemGroup>
