@@ -61,5 +61,7 @@ namespace Orchard.DynamicForms.Elements {
             get { return this.Retrieve(x => x.RedirectUrl); }
             set { this.Store(x => x.RedirectUrl, value); }
         }
+
+        public ContentManagement.IContent ContentItemToEdit { get; set; }
     }
 }

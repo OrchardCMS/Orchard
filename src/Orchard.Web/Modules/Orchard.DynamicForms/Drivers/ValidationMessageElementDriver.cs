@@ -12,7 +12,7 @@ namespace Orchard.DynamicForms.Drivers {
     public class ValidationMessageElementDriver : FormsElementDriver<ValidationMessage> {
         private readonly ITokenizer _tokenizer;
 
-        public ValidationMessageElementDriver(IFormsBasedElementServices formsServices, IConditionManager conditionManager, ITokenizer tokenizer) : base(formsServices, conditionManager) {
+        public ValidationMessageElementDriver(IFormsBasedElementServices formsServices, IConditionManager conditionManager, ITokenizer tokenizer) : base(formsServices, conditionManager, tokenizer) {
             _tokenizer = tokenizer;
         }
 

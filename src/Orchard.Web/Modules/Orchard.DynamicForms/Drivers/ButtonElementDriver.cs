@@ -12,7 +12,7 @@ namespace Orchard.DynamicForms.Drivers {
     public class ButtonElementDriver : FormsElementDriver<Button> {
         private readonly ITokenizer _tokenizer;
 
-        public ButtonElementDriver(IFormsBasedElementServices formsServices, IConditionManager conditionManager, ITokenizer tokenizer) : base(formsServices, conditionManager) {
+        public ButtonElementDriver(IFormsBasedElementServices formsServices, IConditionManager conditionManager, ITokenizer tokenizer) : base(formsServices, conditionManager, tokenizer) {
             _tokenizer = tokenizer;
         }
 

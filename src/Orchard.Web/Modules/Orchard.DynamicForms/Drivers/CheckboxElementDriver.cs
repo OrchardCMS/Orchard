@@ -1,6 +1,7 @@
 ﻿using System;
 using Orchard.Conditions.Services;
 using Orchard.DynamicForms.Elements;
+using Orchard.DynamicForms.Services.Models;
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
 using Orchard.Layouts.Helpers;
@@ -13,7 +14,7 @@ namespace Orchard.DynamicForms.Drivers {
         private readonly ITokenizer _tokenizer;
 
         public CheckboxElementDriver(IFormsBasedElementServices formsServices, IConditionManager conditionManager, ITokenizer tokenizer)
-            : base(formsServices, conditionManager) {
+            : base(formsServices, conditionManager, tokenizer) {
             _tokenizer = tokenizer;
         }
 
@@ -72,7 +73,7 @@ namespace Orchard.DynamicForms.Drivers {
             context.ElementShape.ProcessedName = _tokenizer.Replace(element.Name, context.GetTokenData());
             context.ElementShape.ProcessedLabel = _tokenizer.Replace(element.Label, context.GetTokenData(), new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
             context.ElementShape.ProcessedValue = _tokenizer.Replace(element.Value, context.GetTokenData());
-            context.ElementShape.Disabled = (!String.IsNullOrWhiteSpace(element.ReadOnlyRule) && EvaluateRule(element.ReadOnlyRule));
+            context.ElementShape.Disabled = ((context.DisplayType != "Design") && !String.IsNullOrWhiteSpace(element.ReadOnlyRule) && EvaluateRule(element.ReadOnlyRule, new { Element = element }));
         }
     }
 }

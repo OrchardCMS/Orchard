@@ -113,6 +113,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Providers\IsNullOrWhiteSpaceCondition.cs" />
+    <Compile Include="Providers\CompareCondition.cs" />
     <Compile Include="Providers\AuthenticatedCondition.cs" />
     <Compile Include="Providers\BuiltinCondition.cs" />
     <Compile Include="Services\ConditionManager.cs" />

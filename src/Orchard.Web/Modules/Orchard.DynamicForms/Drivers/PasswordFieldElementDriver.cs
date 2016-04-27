@@ -1,6 +1,7 @@
 ﻿using System;
 using Orchard.Conditions.Services;
 using Orchard.DynamicForms.Elements;
+using Orchard.DynamicForms.Services.Models;
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
 using Orchard.Layouts.Helpers;
@@ -12,7 +13,7 @@ namespace Orchard.DynamicForms.Drivers {
     public class PasswordFieldElementDriver : FormsElementDriver<PasswordField>{
         private readonly ITokenizer _tokenizer;
 
-        public PasswordFieldElementDriver(IFormsBasedElementServices formsServices, IConditionManager conditionManager, ITokenizer tokenizer) : base(formsServices, conditionManager) {
+        public PasswordFieldElementDriver(IFormsBasedElementServices formsServices, IConditionManager conditionManager, ITokenizer tokenizer) : base(formsServices, conditionManager, tokenizer) {
             _tokenizer = tokenizer;
         }
 
@@ -79,7 +80,7 @@ namespace Orchard.DynamicForms.Drivers {
         protected override void OnDisplaying(PasswordField element, ElementDisplayingContext context) {
             context.ElementShape.ProcessedName = _tokenizer.Replace(element.Name, context.GetTokenData());
             context.ElementShape.ProcessedLabel = _tokenizer.Replace(element.Label, context.GetTokenData(), new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
-            context.ElementShape.Disabled = (!String.IsNullOrWhiteSpace(element.ReadOnlyRule) && EvaluateRule(element.ReadOnlyRule));
+            context.ElementShape.Disabled = ((context.DisplayType != "Design") && !String.IsNullOrWhiteSpace(element.ReadOnlyRule) && EvaluateRule(element.ReadOnlyRule, new { Element = element }));
         }
     }
 }

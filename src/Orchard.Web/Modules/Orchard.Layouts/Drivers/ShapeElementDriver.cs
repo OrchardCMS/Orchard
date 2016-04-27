@@ -12,8 +12,8 @@ namespace Orchard.Layouts.Drivers {
     public class ShapeElementDriver : FormsElementDriver<Shape> {
         private readonly IShapeFactory _shapeFactory;
 
-        public ShapeElementDriver(IFormsBasedElementServices formsServices, IConditionManager conditionManager, IShapeFactory shapeFactory)
-            : base(formsServices, conditionManager) {
+        public ShapeElementDriver(IFormsBasedElementServices formsServices, IConditionManager conditionManager, IShapeFactory shapeFactory, Orchard.Tokens.ITokenizer tokenizer)
+            : base(formsServices, conditionManager, tokenizer) {
             _shapeFactory = shapeFactory;
         }
 

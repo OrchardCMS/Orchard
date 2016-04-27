@@ -12,7 +12,7 @@ namespace Orchard.DynamicForms.Drivers {
     public class LabelElementDriver : FormsElementDriver<Label> {
         private readonly ITokenizer _tokenizer;
 
-        public LabelElementDriver(IFormsBasedElementServices formsServices, IConditionManager conditionManager, ITokenizer tokenizer) : base(formsServices, conditionManager) {
+        public LabelElementDriver(IFormsBasedElementServices formsServices, IConditionManager conditionManager, ITokenizer tokenizer) : base(formsServices, conditionManager, tokenizer) {
             _tokenizer = tokenizer;
         }
 

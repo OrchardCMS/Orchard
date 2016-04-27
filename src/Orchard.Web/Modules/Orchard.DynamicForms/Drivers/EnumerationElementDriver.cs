@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using Orchard.Conditions.Services;
 using Orchard.DynamicForms.Elements;
 using Orchard.DynamicForms.Helpers;
+using Orchard.DynamicForms.Services.Models;
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
 using Orchard.Layouts.Helpers;
@@ -15,7 +16,7 @@ namespace Orchard.DynamicForms.Drivers {
     public class EnumerationElementDriver : FormsElementDriver<Enumeration> {
         private readonly ITokenizer _tokenizer;
         public EnumerationElementDriver(IFormsBasedElementServices formsServices, IConditionManager conditionManager, ITokenizer tokenizer)
-            : base(formsServices, conditionManager) {
+            : base(formsServices, conditionManager, tokenizer) {
             _tokenizer = tokenizer;
         }
 
@@ -90,7 +91,7 @@ namespace Orchard.DynamicForms.Drivers {
             context.ElementShape.ProcessedOptions = _tokenizer.Replace(element.Options, tokenData, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode }).ToArray();
             context.ElementShape.Metadata.Alternates.Add(String.Format("Elements_{0}__{1}", typeName, element.InputType));
             context.ElementShape.Metadata.Alternates.Add(String.Format("Elements_{0}_{1}__{2}", typeName, displayType, element.InputType));
-            context.ElementShape.Disabled = (!String.IsNullOrWhiteSpace(element.ReadOnlyRule) && EvaluateRule(element.ReadOnlyRule));
+            context.ElementShape.Disabled = ((context.DisplayType != "Design") && !String.IsNullOrWhiteSpace(element.ReadOnlyRule) && EvaluateRule(element.ReadOnlyRule, new { Element = element }));
         }
     }
 }

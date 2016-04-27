@@ -12,12 +12,14 @@ namespace Orchard.Layouts.Framework.Drivers {
         private readonly IFormManager _formManager;
         private readonly ICultureAccessor _cultureAccessor;
         private readonly IConditionManager _conditionManager;
+        private readonly Orchard.Tokens.ITokenizer _tokenizer;
         private readonly Dictionary<string, bool> _evaluations = new Dictionary<string, bool>();
 
-        protected FormsElementDriver(IFormsBasedElementServices formsServices, IConditionManager conditionManager) {
+        protected FormsElementDriver(IFormsBasedElementServices formsServices, IConditionManager conditionManager, Orchard.Tokens.ITokenizer tokenizer) {
             _formManager = formsServices.FormManager;
             _cultureAccessor = formsServices.CultureAccessor;
             _conditionManager = conditionManager;
+            _tokenizer = tokenizer;
         }
 
         protected dynamic BuildForm(ElementEditorContext context, string formName, string position = null) {
@@ -75,10 +77,11 @@ namespace Orchard.Layouts.Framework.Drivers {
             return formShape;
         }
 
-        protected bool EvaluateRule(string rule) {
+        protected bool EvaluateRule(string rule, object tokenData) {
             if (_evaluations.ContainsKey(rule))
                 return _evaluations[rule];
-
+            
+            rule = _tokenizer.Replace(rule, tokenData);
             var result = _conditionManager.Matches(rule);
             _evaluations[rule] = result;
             return result;
