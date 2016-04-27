@@ -13,9 +13,16 @@
                 parentTaxonomyElement.on('change', updateChildrenTerms);
                 function updateChildrenTerms() {
                     var currentInput = taxonomySelectList.find("input");
+                    var currentSelect = taxonomySelectList.find("option");
+                    var LastInputsCheked = [];
                     $.each(currentInput, function () {
                         if (this.checked) {
-                            this.checked = false;
+                            LastInputsCheked.push($(this).val());
+                        }
+                    });
+                    $.each(currentSelect, function () {
+                        if (this.selected) {
+                            LastInputsCheked.push($(this).val());
                         }
                     });
                     taxonomySelectList.trigger("change");
@@ -47,11 +54,18 @@
                                 jQuery.each(json, function () {
                                     if (inputType == "CheckList" || inputType == "RadioList") {
                                         var type = (inputType == "CheckList") ? "checkbox" : "radio";
-                                        taxonomySelectList.append($("<li><label><input name='" + taxonomySelectListId + "' type='" + type + "' value='" + this.value + "'>" + this.text + "</label></li>"));
+                                        var checked = "";
+                                        if (LastInputsCheked.indexOf(this.value) > -1)
+                                            checked = "' checked='" + "checked";
+                                        taxonomySelectList.append($("<li><label><input name='" + taxonomySelectListId + "' type='" + type + checked + "' value='" + this.value + "'>" + this.text + "</label></li>"));
                                     }
                                     else {
+                                        var selected = false;
+                                        if (LastInputsCheked.indexOf(this.value) > -1)
+                                            selected = true;
                                         taxonomySelectList.append($("<option></option>")
                                         .attr("value", this.value)
+                                        .attr("selected", selected)
                                         .text(this.text));
                                     }
                                 });
