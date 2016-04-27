@@ -35,7 +35,7 @@ namespace Orchard.Fields.Drivers {
 
         protected override DriverResult Editor(ContentPart part, BooleanField field, dynamic shapeHelper) {
             // if the content item is new, assign the default value
-            if(!field.Value.HasValue) {
+            if(!part.HasDraft() && !part.HasPublished()) {
                 var settings = field.PartFieldDefinition.Settings.GetModel<BooleanFieldSettings>();
                 field.Value = settings.DefaultValue;
             }
