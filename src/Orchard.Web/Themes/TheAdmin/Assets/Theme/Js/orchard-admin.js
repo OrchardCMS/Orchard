@@ -180,7 +180,7 @@
             var hrefParts = _this.attr("href").split("?");
 
             //for single action
-            if ($('#publishActions').val() == 'None') {
+            if ($('#publishActions').val() == 'None' || !$('#publishActions').val()) {
                 var magicToken = $("input[name=__RequestVerificationToken]").first();
                 if (!magicToken) { return; } // no sense in continuing if form POSTS will fail
 
