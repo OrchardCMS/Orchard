@@ -9,6 +9,7 @@ using Orchard.Localization.Services;
 using Orchard.Localization.ViewModels;
 using Orchard.Mvc;
 using Orchard.UI.Notify;
+using Orchard.Core.Contents;
 
 namespace Orchard.Localization.Controllers {
     [ValidateInput(false)]
@@ -40,11 +41,14 @@ namespace Orchard.Localization.Controllers {
             if (masterContentItem == null)
                 return HttpNotFound();
 
+            if (!Services.Authorizer.Authorize(Permissions.ViewContent, masterContentItem, T("Couldn't open original content")))
+                return new HttpUnauthorizedResult();
+
             var masterLocalizationPart = masterContentItem.As<LocalizationPart>();
             if (masterLocalizationPart == null)
                 return HttpNotFound();
 
-            // Check is current item stll exists, and redirect.
+            // Check if current item still exists, and redirect.
             var existingTranslation = _localizationService.GetLocalizedContentItem(masterContentItem, to);
             if (existingTranslation != null) {
                 var existingTranslationMetadata = _contentManager.GetItemMetadata(existingTranslation);
@@ -54,15 +58,20 @@ namespace Orchard.Localization.Controllers {
             }
 
             var contentItemTranslation = _contentManager.Clone(masterContentItem);
+
+            if (!Services.Authorizer.Authorize(Permissions.EditContent, contentItemTranslation, T("Couldn't create translated content")))
+                return new HttpUnauthorizedResult();
+
             var localizationPart = contentItemTranslation.As<LocalizationPart>();
             if(localizationPart != null) {
                 localizationPart.MasterContentItem = masterContentItem;
                 localizationPart.Culture = string.IsNullOrWhiteSpace(to) ? null : _cultureManager.GetCultureByName(to);
             }
 
-            var content = _contentManager.BuildEditor(contentItemTranslation);
-            
-            return View(content);
+            Services.Notifier.Success(T("Successfully cloned. The translated content was saved as a draft."));
+
+            var adminRouteValues = _contentManager.GetItemMetadata(contentItemTranslation).AdminRouteValues;
+            return RedirectToRoute(adminRouteValues);
         }
 
         [HttpPost, ActionName("Translate")]
