@@ -33,7 +33,7 @@ namespace Orchard.DynamicForms.Drivers {
             , ICurrentControllerAccessor currentControllerAccessor
             , IContentManager contentManager
             , IContentDefinitionManager contentDefinitionManager
-            , IFormService formService) : base(formsServices, conditionManager) {
+            , IFormService formService) : base(formsServices, conditionManager, tokenizer) {
             _tokenizer = tokenizer;
             _currentControllerAccessor = currentControllerAccessor;
             _contentManager = contentManager;

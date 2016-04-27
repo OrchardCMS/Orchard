@@ -110,9 +110,10 @@ namespace Orchard.DynamicForms.Controllers {
                     _notifier.Warning(T("Insufficient permissions for submitting the specified form \"{0}\".", formName));
                     return Redirect(urlReferrer);
                 }
+                form.ContentItemToEdit = contentItemToEdit;
             }
-
-            var values = _formService.SubmitForm(layoutPart, form, ValueProvider, ModelState, this, contenItemIdToEdit);
+            
+            var values = _formService.SubmitForm(layoutPart, form, ValueProvider, ModelState, this);
             this.TransferFormSubmission(form, values);
 
             if (!ModelState.IsValid) {

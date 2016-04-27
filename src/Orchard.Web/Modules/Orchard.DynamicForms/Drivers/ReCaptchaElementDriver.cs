@@ -16,7 +16,7 @@ namespace Orchard.DynamicForms.Drivers {
         private readonly IOrchardServices _services;
         private readonly ITokenizer _tokenizer;
 
-        public ReCaptchaElementDriver(IFormsBasedElementServices formsServices, IConditionManager conditionManager, IOrchardServices services, ITokenizer tokenizer) : base(formsServices, conditionManager) {
+        public ReCaptchaElementDriver(IFormsBasedElementServices formsServices, IConditionManager conditionManager, IOrchardServices services, ITokenizer tokenizer) : base(formsServices, conditionManager, tokenizer) {
             _services = services;
             _tokenizer = tokenizer;
         }

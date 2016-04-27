@@ -17,6 +17,7 @@ using Orchard.DynamicForms.Helpers;
 using DescribeContext = Orchard.Forms.Services.DescribeContext;
 using Orchard.ContentManagement;
 using Orchard.Conditions.Services;
+using Orchard.DynamicForms.Services.Models;
 
 namespace Orchard.DynamicForms.Drivers {
     [OrchardFeature("Orchard.DynamicForms.Taxonomies")]
@@ -27,7 +28,7 @@ namespace Orchard.DynamicForms.Drivers {
         private readonly IContentManager _contentManager;
 
         public TaxonomyElementDriver(IFormsBasedElementServices formsServices, IConditionManager conditionManager, ITaxonomyService taxonomyService, ITokenizer tokenizer, IFormService formService, IContentManager contentManager)
-            : base(formsServices, conditionManager) {
+            : base(formsServices, conditionManager, tokenizer) {
             _taxonomyService = taxonomyService;
             _tokenizer = tokenizer;
             _formService = formService;
@@ -157,7 +158,7 @@ namespace Orchard.DynamicForms.Drivers {
             }
             context.ElementShape.ProcessedLabel = _tokenizer.Replace(element.Label, tokenData, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
             context.ElementShape.TermOptions = GetTermOptions(element, context.DisplayType, taxonomyId, tokenData).ToArray();
-            context.ElementShape.Disabled = (!String.IsNullOrWhiteSpace(element.ReadOnlyRule) && EvaluateRule(element.ReadOnlyRule));
+            context.ElementShape.Disabled = ((context.DisplayType != "Design") && !String.IsNullOrWhiteSpace(element.ReadOnlyRule) && EvaluateRule(element.ReadOnlyRule, new { Element = element }));
             context.ElementShape.Metadata.Alternates.Add(String.Format("Elements_{0}__{1}", typeName, element.InputType));
             context.ElementShape.Metadata.Alternates.Add(String.Format("Elements_{0}_{1}__{2}", typeName, displayType, element.InputType));
         }

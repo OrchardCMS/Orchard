@@ -7,12 +7,13 @@ using Orchard.Tokens;
 using DescribeContext = Orchard.Forms.Services.DescribeContext;
 using Orchard.Conditions.Services;
 using System;
+using Orchard.DynamicForms.Services.Models;
 
 namespace Orchard.DynamicForms.Drivers {
     public class UrlFieldElementDriver : FormsElementDriver<UrlField> {
         private readonly ITokenizer _tokenizer;
 
-        public UrlFieldElementDriver(IFormsBasedElementServices formsServices, IConditionManager conditionManager, ITokenizer tokenizer) : base(formsServices, conditionManager) {
+        public UrlFieldElementDriver(IFormsBasedElementServices formsServices, IConditionManager conditionManager, ITokenizer tokenizer) : base(formsServices, conditionManager, tokenizer) {
             _tokenizer = tokenizer;
         }
 
@@ -77,7 +78,7 @@ namespace Orchard.DynamicForms.Drivers {
             context.ElementShape.ProcessedName = _tokenizer.Replace(element.Name, context.GetTokenData());
             context.ElementShape.ProcessedLabel = _tokenizer.Replace(element.Label, context.GetTokenData(), new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
             context.ElementShape.ProcessedValue = element.RuntimeValue;
-            context.ElementShape.Disabled = (!String.IsNullOrWhiteSpace(element.ReadOnlyRule) && EvaluateRule(element.ReadOnlyRule));
+            context.ElementShape.Disabled = ((context.DisplayType != "Design") && !String.IsNullOrWhiteSpace(element.ReadOnlyRule) && EvaluateRule(element.ReadOnlyRule, new { Element = element }));
         }
     }
 }

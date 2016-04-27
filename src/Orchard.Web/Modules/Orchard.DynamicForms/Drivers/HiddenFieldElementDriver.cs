@@ -11,7 +11,7 @@ using DescribeContext = Orchard.Forms.Services.DescribeContext;
 namespace Orchard.DynamicForms.Drivers {
     public class HiddenFieldElementDriver : FormsElementDriver<HiddenField> {
         private readonly ITokenizer _tokenizer;
-        public HiddenFieldElementDriver(IFormsBasedElementServices formsServices, IConditionManager conditionManager, ITokenizer tokenizer) : base(formsServices, conditionManager) {
+        public HiddenFieldElementDriver(IFormsBasedElementServices formsServices, IConditionManager conditionManager, ITokenizer tokenizer) : base(formsServices, conditionManager, tokenizer) {
             _tokenizer = tokenizer;
         }
 

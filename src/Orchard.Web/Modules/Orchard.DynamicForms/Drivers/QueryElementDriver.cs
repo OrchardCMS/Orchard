@@ -25,7 +25,7 @@ namespace Orchard.DynamicForms.Drivers {
         private readonly ITokenizer _tokenizer;
 
         public QueryElementDriver(IFormsBasedElementServices formsServices, IConditionManager conditionManager, IProjectionManager projectionManager, IContentManager contentManager, ITokenizer tokenizer)
-            : base(formsServices, conditionManager) {
+            : base(formsServices, conditionManager, tokenizer) {
             _projectionManager = projectionManager;
             _contentManager = contentManager;
             _tokenizer = tokenizer;

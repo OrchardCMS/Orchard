@@ -16,7 +16,7 @@ namespace Orchard.DynamicForms.Services {
         IEnumerable<Form> GetAllForms(LayoutPart layoutPart);
         IEnumerable<FormElement> GetFormElements(Form form);
         IEnumerable<string> GetFormElementNames(Form form);
-        NameValueCollection SubmitForm(IContent content, Form form, IValueProvider valueProvider, ModelStateDictionary modelState, IUpdateModel updater, int contentIdToEdit);
+        NameValueCollection SubmitForm(IContent content, Form form, IValueProvider valueProvider, ModelStateDictionary modelState, IUpdateModel updater);
         Submission CreateSubmission(string formName, NameValueCollection values);
         Submission CreateSubmission(Submission submission);
         Submission GetSubmission(int id);
@@ -26,10 +26,10 @@ namespace Orchard.DynamicForms.Services {
         void ReadElementValues(FormElement element, ReadElementValuesContext context);
         NameValueCollection ReadElementValues(Form form, IValueProvider valueProvider);
         DataTable GenerateDataTable(IEnumerable<Submission> submissions);
-        ContentItem CreateContentItem(IContent content, Form form, IValueProvider valueProvider);
-        ContentItem UpdateContentItem(int contentId, IContent content, Form form, IValueProvider valueProvider);
+        void CreateContentItem(IContent content, Form form, IValueProvider valueProvider);
+        void UpdateContentItem(IContent content, Form form, IValueProvider valueProvider);
         
-        NameValueCollection GetValuesFromContentItem(ContentItem contentItem, Form form);
+        NameValueCollection GetValuesFromContentItem(Form form);
         IEnumerable<IElementValidator> GetValidators<TElement>() where TElement : FormElement;
         IEnumerable<IElementValidator> GetValidators(FormElement element);
         IEnumerable<IElementValidator> GetValidators(Type elementType);
