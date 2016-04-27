@@ -178,7 +178,7 @@ namespace Orchard.DynamicForms.Drivers {
                     context.ElementShape.ContentIdToEdit = contentIdToEdit;                    
                     if (!_authorizationService.TryCheckAccess(Orchard.DynamicForms.Permissions.SubmitAnyFormForModifyData, currentUser, context.Content, element.Name)
                         &&
-                        !(onlyOwnContent =_authorizationService.TryCheckAccess(Orchard.DynamicForms.Permissions.SubmitAnyFormForModifyOwnData, currentUser, context.Content, element.Name))) {
+                        !(onlyOwnContent = _authorizationService.TryCheckAccess(Orchard.DynamicForms.Permissions.SubmitAnyFormForModifyOwnData, currentUser, context.Content, element.Name))) {
                         Logger.Warning("The form \"{0}\" cannot be loaded due to edition permissions", element.Name);
                         return;
                     }
