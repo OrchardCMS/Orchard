@@ -41,7 +41,7 @@ namespace Orchard.Layouts.Drivers {
             IRepository<LayoutRecord> layoutRepository,
             ITokenizer tokenizer,
             IDisplayHelperFactory displayHelperFactory)
-            : base(formsServices, conditionManager) {
+            : base(formsServices, conditionManager, tokenizer) {
 
             _projectionManager = projectionManager;
             _contentManager = services.ContentManager;

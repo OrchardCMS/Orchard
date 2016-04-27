@@ -25,6 +25,7 @@ using Orchard.Layouts.Services;
 using Orchard.Localization.Services;
 using Orchard.Security;
 using Orchard.Services;
+using Orchard.Tokens;
 
 namespace Orchard.DynamicForms.Services {
     public class FormService : IFormService {
@@ -43,6 +44,7 @@ namespace Orchard.DynamicForms.Services {
         private readonly IAuthenticationService _authenticationService;
         private readonly IAuthorizationService _authorizationService;
         private readonly IConditionManager _conditionManager;
+        private readonly ITokenizer _tokenizer;
         private readonly Dictionary<string, bool> _evaluations = new Dictionary<string, bool>();
 
         public FormService(
@@ -59,7 +61,8 @@ namespace Orchard.DynamicForms.Services {
             ICultureAccessor cultureAccessor,
             IAuthenticationService authenticationService,
             IAuthorizationService authorizationService,
-            IConditionManager conditionManager) {
+            IConditionManager conditionManager,
+            ITokenizer tokenizer) {
 
             _serializer = serializer;
             _clock = clock;
@@ -76,6 +79,7 @@ namespace Orchard.DynamicForms.Services {
             _authenticationService = authenticationService;
             _authorizationService = authorizationService;
             _conditionManager = conditionManager;
+            _tokenizer = tokenizer;
         }
 
         public Form FindForm(LayoutPart layoutPart, string formName = null) {
@@ -95,7 +99,7 @@ namespace Orchard.DynamicForms.Services {
             return GetFormElements(form).Select(x => x.Name).Where(x => !String.IsNullOrWhiteSpace(x)).Distinct();
         }
 
-        public NameValueCollection SubmitForm(IContent content, Form form, IValueProvider valueProvider, ModelStateDictionary modelState, IUpdateModel updater, int contentIdToEdit) {
+        public NameValueCollection SubmitForm(IContent content, Form form, IValueProvider valueProvider, ModelStateDictionary modelState, IUpdateModel updater) {
             var values = ReadElementValues(form, valueProvider);
             
             _formEventHandler.Submitted(new FormSubmittedEventContext {
@@ -124,8 +128,7 @@ namespace Orchard.DynamicForms.Services {
                 Values = values,
                 ModelState = modelState,
                 ValueProvider = valueProvider,
-                Updater = updater,
-                ContentIdToEdit = contentIdToEdit
+                Updater = updater
             });
 
             return values;
@@ -256,13 +259,14 @@ namespace Orchard.DynamicForms.Services {
             return dataTable;
         }
 
-        public ContentItem CreateContentItem(IContent content, Form form, IValueProvider valueProvider) {
+        public void CreateContentItem(IContent content, Form form, IValueProvider valueProvider) {
             var contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(form.FormBindingContentType);
 
             if (contentTypeDefinition == null)
-                return null;
+                return;
 
             var contentItem = _contentManager.New(contentTypeDefinition.Name);
+            form.ContentItemToEdit = contentItem;
 
             // Create the version record before updating fields to prevent those field values from being lost when invoking Create.
             // If Create is invoked while VersionRecord is null, a new VersionRecord will be created, wiping out our field values.
@@ -273,47 +277,36 @@ namespace Orchard.DynamicForms.Services {
                 Published = true
             };
 
-            InvokeBindings(content, form, valueProvider, contentTypeDefinition, contentItem);
+            InvokeBindings(content, form, valueProvider, contentTypeDefinition);
 
             var contentTypeSettings = contentTypeDefinition.Settings.GetModel<ContentTypeSettings>();
             _contentManager.Create(contentItem, VersionOptions.Draft);
 
             if (form.Publication == "Publish" || !contentTypeSettings.Draftable) {
                 _contentManager.Publish(contentItem);
-            }
-
-            return contentItem;
+            }            
         }
 
-        public ContentItem UpdateContentItem(int contentId, IContent content, Form form, IValueProvider valueProvider) {
+        public void UpdateContentItem(IContent content, Form form, IValueProvider valueProvider) {
             ContentTypeDefinition contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(form.FormBindingContentType);
-            ContentItem contentItem = null;
 
-            var versionOptions = VersionOptions.Latest;
-            if (form.Publication == "Publish" || !contentTypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
-                versionOptions = VersionOptions.Published;
-
-            if (contentId == 0 || (contentItem = _contentManager.Get(contentId, versionOptions)) == null
-                || contentItem.TypeDefinition.Name != form.FormBindingContentType)
-                return null;
-
-            InvokeBindings(content, form, valueProvider, contentTypeDefinition, contentItem);
+            InvokeBindings(content, form, valueProvider, contentTypeDefinition);
 
             var contentTypeSettings = contentTypeDefinition.Settings.GetModel<ContentTypeSettings>();
             if (form.Publication == "Publish" || !contentTypeSettings.Draftable) {
-                _contentManager.Publish(contentItem);
-            }
-
-            return contentItem;
+                _contentManager.Publish(form.ContentItemToEdit as ContentItem);
+            }            
         }
 
-        private void InvokeBindings(IContent content, Form form, IValueProvider valueProvider, ContentManagement.MetaData.Models.ContentTypeDefinition contentTypeDefinition, ContentItem contentItem) {
+        private void InvokeBindings(IContent content, Form form, IValueProvider valueProvider, ContentManagement.MetaData.Models.ContentTypeDefinition contentTypeDefinition) {
             var lookup = _bindingManager.DescribeBindingsFor(contentTypeDefinition);
             var formElements = GetFormElements(form);
+            var contentItem = form.ContentItemToEdit as ContentItem;
 
+            var values = GetValuesFromContentItem(form);
             foreach (var element in formElements) {
                 if (!String.IsNullOrWhiteSpace(element.ReadOnlyRule) &&
-                    EvaluateRule(element.ReadOnlyRule))
+                    EvaluateRule(element.ReadOnlyRule, new { Element = element }))
                     continue;                
 
                 var contextForReadValues = new ReadElementValuesContext { ValueProvider = valueProvider };
@@ -336,7 +329,8 @@ namespace Orchard.DynamicForms.Services {
             }
         }
         
-        public NameValueCollection GetValuesFromContentItem(ContentItem contentItem, Form form) {
+        public NameValueCollection GetValuesFromContentItem(Form form) {
+            ContentItem contentItem = form.ContentItemToEdit as ContentItem;
             var nameValueCollection = new NameValueCollection();
             var contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(form.FormBindingContentType);
             
@@ -468,10 +462,11 @@ namespace Orchard.DynamicForms.Services {
             _elementHandlers.RegisterClientValidation(element, context);
         }
 
-        private bool EvaluateRule(string rule) {
+        private bool EvaluateRule(string rule, object tokenData) {
             if (_evaluations.ContainsKey(rule))
                 return _evaluations[rule];
 
+            rule = _tokenizer.Replace(rule, tokenData);
             var result = _conditionManager.Matches(rule);
             _evaluations[rule] = result;
             return result;

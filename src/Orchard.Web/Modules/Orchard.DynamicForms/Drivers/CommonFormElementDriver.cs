@@ -10,7 +10,7 @@ using Orchard.Layouts.Services;
 namespace Orchard.DynamicForms.Drivers {
     public class CommonFormElementDriver : FormsElementDriver<FormElement> {
 
-        public CommonFormElementDriver(IFormsBasedElementServices formsServices, IConditionManager conditionManager, IShapeFactory shapeFactory) : base(formsServices, conditionManager) {
+        public CommonFormElementDriver(IFormsBasedElementServices formsServices, IConditionManager conditionManager, IShapeFactory shapeFactory, Orchard.Tokens.ITokenizer tokenizer) : base(formsServices, conditionManager, tokenizer) {
             New = shapeFactory;
         }
 
