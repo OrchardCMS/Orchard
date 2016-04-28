@@ -199,5 +199,5 @@ src/Rebracer.xml
 !App_Data/Localization/**/*.*
 
 # XK Project enable some media files
-!src/Orchard.Web/Media/Default/favicon.png
-!src/Orchard.Web/Media/Default/sayandsail-logo.svg
+! src/Orchard.Web/Media/Default/favicon.png
+! src/Orchard.Web/Media/Default/favicon.png
