@@ -2,13 +2,17 @@
 
 @{ Layout.Title = T("Add a Feed").ToString(); }
 
-@using ( Html.BeginFormAntiForgeryPost(Url.Action("AddSource")) ) {
-    @Html.ValidationSummary()
-    <fieldset>
-        <label for="Url">@T("Feed Url")</label>
-        <input id="Url" class="text medium" name="Url" type="text" value="@Model.Url"/>
-    </fieldset>
-    <fieldset>
-        <button class="btn btn-primary" type="submit">@T("Add Feed")</button>
-    </fieldset>
- }
+<div class="panel panel-default">
+    @using (Html.BeginFormAntiForgeryPost(Url.Action("AddSource"))) {
+        @Html.ValidationSummary()
+        <div class="panel-body">
+            <fieldset>
+                <label for="Url">@T("Feed Url")</label>
+                <input id="Url" class="form-control" name="Url" type="text" value="@Model.Url" />
+            </fieldset>
+        </div>
+        <div class="panel-footer">
+            <button class="btn btn-primary" type="submit">@T("Add Feed")</button>
+        </div>
+    }
+</div>
