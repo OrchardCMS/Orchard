@@ -1,60 +1,54 @@
-﻿.tokenized-popup 
-{
-    position:absolute;
+﻿.tokenized-popup {
+    position: absolute;
     background: url('images/tokensPopup.gif');
     background-repeat: no-repeat;
-    width:10px;
-    height:10px;
+    width: 10px;
+    height: 10px;
     cursor: pointer;
-    
-    padding-right:8px;
-    margin-top:0.15em;
-    right:100%;
+    padding-right: 8px;
+    margin-top: 0.15em;
+    right: 100%;
 }
 
 .token-wrapper {
-    position:relative;
+    position: relative;
 }
 
 .token-wrapper > div {
-    float:left; 
-    left:100%;
+    float: left;
+    left: 100%;
     position: absolute;
-    margin-bottom: 0px;
+    margin-bottom: 0;
 }
 
-    .token-wrapper span[role="status"] {
-        display: none;
-    }
-.ui-autocomplete 
-{
-	max-height: 12em;
+.token-wrapper span[role="status"] {
+    display: none;
+}
+
+.ui-autocomplete {
+    max-height: 12em;
     background: white;
     border: 1px solid #BDBCBC;
     width: 700px;
-    overflow :auto;
+    overflow: auto;
 }
 
-.ui-autocomplete .acdesc
-{
+.ui-autocomplete .acdesc {
     padding-right: 5px;
     float: right;
 }
-	
-.ui-autocomplete .acvalue
-{
+
+.ui-autocomplete .acvalue {
     left: 150px;
     position: absolute;
 }
-	
-.ui-autocomplete .accategory
-{
+
+.ui-autocomplete .accategory {
     font-weight: bold;
 }
 
 .ui-autocomplete li a {
-	
-	padding-left: 5px;
+    padding-left: 1%;
     background-color: transparent;
     color: #333;
 }
@@ -65,3 +59,21 @@
     cursor: pointer;
 }
 
+.ui-autocomplete .listitemtext {
+    display: inline-block;
+    vertical-align: top;
+    padding-right: 1%;
+    word-wrap: break-word;
+}
+
+.ui-autocomplete .acdescmod {
+    width: 42%;
+}
+
+.ui-autocomplete .acvaluemod {
+    width: 28%;
+}
+
+.ui-autocomplete .aclabelmod {
+    width: 24%;
+}
