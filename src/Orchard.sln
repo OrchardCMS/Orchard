@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}"
 EndProject
@@ -306,6 +306,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XKProject.QueryStringConditions", "Orchard.Web\Orchard.XK\Modules\XKProject.QueryStringConditions\XKProject.QueryStringConditions.csproj", "{CE8C3365-B15C-43CA-9A56-20B960DC5E09}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Downplay.Orchard.LayoutSelector", "Orchard.Web\ThirdParty\Modules\Downplay.Orchard.LayoutSelector\Downplay.Orchard.LayoutSelector.csproj", "{FD5F4F61-5819-41CB-8703-D1DFBAD8A45B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XKProject.Localization", "Orchard.Web\Orchard.XK\Modules\XKProject.Localization\XKProject.Localization.csproj", "{41CAE42B-F722-4A91-A535-EEAA7C49E0A4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -1253,6 +1255,16 @@ Global
 		{FD5F4F61-5819-41CB-8703-D1DFBAD8A45B}.FxCop|Any CPU.Build.0 = Release|Any CPU
 		{FD5F4F61-5819-41CB-8703-D1DFBAD8A45B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD5F4F61-5819-41CB-8703-D1DFBAD8A45B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{41CAE42B-F722-4A91-A535-EEAA7C49E0A4}.CodeCoverage|Any CPU.ActiveCfg = Release|Any CPU
+		{41CAE42B-F722-4A91-A535-EEAA7C49E0A4}.CodeCoverage|Any CPU.Build.0 = Release|Any CPU
+		{41CAE42B-F722-4A91-A535-EEAA7C49E0A4}.Coverage|Any CPU.ActiveCfg = Release|Any CPU
+		{41CAE42B-F722-4A91-A535-EEAA7C49E0A4}.Coverage|Any CPU.Build.0 = Release|Any CPU
+		{41CAE42B-F722-4A91-A535-EEAA7C49E0A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{41CAE42B-F722-4A91-A535-EEAA7C49E0A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{41CAE42B-F722-4A91-A535-EEAA7C49E0A4}.FxCop|Any CPU.ActiveCfg = Release|Any CPU
+		{41CAE42B-F722-4A91-A535-EEAA7C49E0A4}.FxCop|Any CPU.Build.0 = Release|Any CPU
+		{41CAE42B-F722-4A91-A535-EEAA7C49E0A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{41CAE42B-F722-4A91-A535-EEAA7C49E0A4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1352,6 +1364,7 @@ Global
 		{87BDD761-0C09-46AD-80BB-A16E8159464E} = {C715858F-167D-4199-81C5-8D9EAEA7993B}
 		{CE8C3365-B15C-43CA-9A56-20B960DC5E09} = {C715858F-167D-4199-81C5-8D9EAEA7993B}
 		{FD5F4F61-5819-41CB-8703-D1DFBAD8A45B} = {9F090F5B-3230-44FB-9F95-E93E21AC09A5}
+		{41CAE42B-F722-4A91-A535-EEAA7C49E0A4} = {C715858F-167D-4199-81C5-8D9EAEA7993B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\TransientFaultHandling.Core.5.1.1209.1\lib\NET4
