@@ -370,7 +370,7 @@ namespace Orchard.OutputCache.Filters {
             foreach (var p in filterContext.ActionParameters)
                 result.Add("PARAM:" + p.Key, p.Value);
 
-            // Vary by scheme (See #6850)
+            // Vary by scheme.
             result.Add("scheme", filterContext.RequestContext.HttpContext.Request.Url.Scheme);
 
             // Vary by theme.
