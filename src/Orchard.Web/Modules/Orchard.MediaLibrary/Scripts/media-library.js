@@ -509,7 +509,7 @@ $(function () {
         	pickAndClose();
         });
 
-        $("#media-library-main-selection-select > .button-select-all").on('click', function () {
+        $("#media-library-toolbar > .button-select-all").on('click', function () {
             viewModel.selectAll();
         });
 
