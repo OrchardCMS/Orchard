@@ -100,7 +100,22 @@ namespace Orchard.Core.Navigation.Drivers {
 
                     // inject the current page
                     if (!part.AddCurrentPage && selectedPath != null) {
-                        result.RemoveAt(result.Count - 1);
+                        var lastMenuItem = result[result.Count - 1];
+                        // we need to be ensure that breadcrumbs last item represents current page before deleting one.
+                        if (lastMenuItem.RouteValues != null && NavigationHelper.RouteMatches(lastMenuItem.RouteValues, routeData.Values)) {
+                            result.Remove(lastMenuItem);
+                        }
+                        else {
+                            string appPath = request.ApplicationPath ?? "/";
+                            string requestUrl = request.Path.StartsWith(appPath) ? request.Path.Substring(appPath.Length) : request.Path;
+
+                            string lastMenuItemUrl = lastMenuItem.Href.Replace("~/", appPath);
+                            lastMenuItemUrl = lastMenuItemUrl.StartsWith(appPath) ? lastMenuItemUrl.Substring(appPath.Length) : lastMenuItemUrl;
+
+                            if (requestUrl.Equals(lastMenuItemUrl, StringComparison.OrdinalIgnoreCase)) {
+                                result.Remove(lastMenuItem);
+                            }
+                        }
                     }
 
                     // prevent the home page to be added as the home page and the current page
