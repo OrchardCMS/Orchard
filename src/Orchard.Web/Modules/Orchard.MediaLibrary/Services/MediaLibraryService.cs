@@ -379,6 +379,8 @@ namespace Orchard.MediaLibrary.Services {
             Argument.ThrowIfNullOrEmpty(filename, "filename");
             Argument.ThrowIfNullOrEmpty(newFilename, "newFilename");
 
+            if (!_storageProvider.FolderExists(newPath))
+                _storageProvider.TryCreateFolder(newPath);
             _storageProvider.RenameFile(_storageProvider.Combine(currentPath, filename), _storageProvider.Combine(newPath, newFilename));
         }
 
