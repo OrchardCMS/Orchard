@@ -273,6 +273,7 @@ namespace Orchard.CodeGeneration.Commands {
             string propertiesPath = modulePath + "Properties";
             var content = new HashSet<string>();
             var folders = new HashSet<string>();
+            var compile = new HashSet<string>();
 
             foreach (var folder in _moduleDirectories) {
                 Directory.CreateDirectory(modulePath + folder);
@@ -297,27 +298,29 @@ namespace Orchard.CodeGeneration.Commands {
             File.WriteAllText(modulePath + "Styles\\Web.config", File.ReadAllText(_codeGenTemplatePath + "StaticFilesWebConfig.txt"));
             content.Add(modulePath + "Styles\\Web.config");
 
-            string templateText = File.ReadAllText(_codeGenTemplatePath + "ModuleAssemblyInfo.txt");
-            templateText = templateText.Replace("$$ModuleName$$", moduleName);
-            templateText = templateText.Replace("$$ModuleTypeLibGuid$$", Guid.NewGuid().ToString());
-            File.WriteAllText(propertiesPath + "\\AssemblyInfo.cs", templateText);
-            content.Add(propertiesPath + "\\AssemblyInfo.cs");
-
-            templateText = File.ReadAllText(_codeGenTemplatePath + "ModuleManifest.txt");
+            string templateText = File.ReadAllText(_codeGenTemplatePath + "ModuleManifest.txt");
             templateText = templateText.Replace("$$ModuleName$$", moduleName);
             File.WriteAllText(modulePath + "Module.txt", templateText, System.Text.Encoding.UTF8);
             content.Add(modulePath + "Module.txt");
 
-            var itemGroup = CreateProjectItemGroup(modulePath, content, folders);
+            templateText = File.ReadAllText(_codeGenTemplatePath + "ModuleAssemblyInfo.txt");
+            templateText = templateText.Replace("$$ModuleName$$", moduleName);
+            templateText = templateText.Replace("$$ModuleTypeLibGuid$$", Guid.NewGuid().ToString());
+            File.WriteAllText(propertiesPath + "\\AssemblyInfo.cs", templateText);
+            compile.Add(propertiesPath + "\\AssemblyInfo.cs");
 
-            File.WriteAllText(modulePath + moduleName + ".csproj", CreateCsProject(moduleName, projectGuid, itemGroup));
+            var contentItemGroup = CreateProjectItemGroup(modulePath, content, folders);
+            var compileItemGroup = CreateCompileItemGroup(modulePath, compile);
+
+            File.WriteAllText(modulePath + moduleName + ".csproj", CreateCsProject(moduleName, projectGuid, contentItemGroup, compileItemGroup));
         }
 
-        private static string CreateCsProject(string projectName, string projectGuid, string itemGroup) {
+        private static string CreateCsProject(string projectName, string projectGuid, string contentItemGroup, string compileItemGroup) {
             string text = File.ReadAllText(_codeGenTemplatePath + "\\ModuleCsProj.txt");
             text = text.Replace("$$ModuleName$$", projectName);
             text = text.Replace("$$ModuleProjectGuid$$", projectGuid);
-            text = text.Replace("$$FileIncludes$$", itemGroup ?? "");
+            text = text.Replace("$$ContentIncludes$$", contentItemGroup ?? "");
+            text = text.Replace("$$CompileIncludes$$", compileItemGroup ?? "");
             text = text.Replace("$$OrchardReferences$$", GetOrchardReferences());
             return text;
         }
@@ -402,7 +405,7 @@ namespace Orchard.CodeGeneration.Commands {
             // create new csproj for the theme
             if (projectGuid != null) {
                 var itemGroup = CreateProjectItemGroup(themePath, createdFiles, createdFolders);
-                string projectText = CreateCsProject(themeName, projectGuid, itemGroup);
+                string projectText = CreateCsProject(themeName, projectGuid, itemGroup, null);
                 File.WriteAllText(themePath + "\\" + themeName + ".csproj", projectText);
             }
 
@@ -462,6 +465,23 @@ namespace Orchard.CodeGeneration.Commands {
                                                                select "    <Folder Include=\"" + folder.Replace(relativeFromPath, "") + "\" />");
             }
             return string.Format(CultureInfo.InvariantCulture, "<ItemGroup>\r\n{0}\r\n  </ItemGroup>\r\n  ", contentInclude);
+        }
+
+        private static string CreateCompileItemGroup(string relativeFromPath, HashSet<string> compile) {
+            var compileInclude = "";
+            if (relativeFromPath != null && !relativeFromPath.EndsWith("\\", StringComparison.OrdinalIgnoreCase)) {
+                relativeFromPath += "\\";
+            }
+            else if (relativeFromPath == null) {
+                relativeFromPath = "";
+            }
+
+            if (compile != null && compile.Count > 0) {
+                compileInclude = string.Join("\r\n",
+                                             from file in compile
+                                             select "    <Compile Include=\"" + file.Replace(relativeFromPath, "") + "\" />");
+            }
+            return string.Format(CultureInfo.InvariantCulture, "<ItemGroup>\r\n{0}\r\n  </ItemGroup>\r\n  ", compileInclude);
         }
 
         private void AddFilesToOrchardThemesProject(TextWriter output, string itemGroup) {

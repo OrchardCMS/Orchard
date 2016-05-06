@@ -45,10 +45,13 @@ namespace Orchard.Core.Common.Drivers {
         protected override DriverResult Editor(ContentPart part, TextField field, dynamic shapeHelper) {
             return ContentShape("Fields_Common_Text_Edit", GetDifferentiator(field, part),
                 () => {
+                    var settings = field.PartFieldDefinition.Settings.GetModel<TextFieldSettings>();
+                    var text = part.IsNew() ? settings.DefaultValue : field.Value;
+
                     var viewModel = new TextFieldDriverViewModel {
                         Field = field,
-                        Text = field.Value,
-                        Settings = field.PartFieldDefinition.Settings.GetModel<TextFieldSettings>(),
+                        Text = text,
+                        Settings = settings,
                         ContentItem = part.ContentItem
                     };
 
@@ -64,10 +67,6 @@ namespace Orchard.Core.Common.Drivers {
                 var settings = field.PartFieldDefinition.Settings.GetModel<TextFieldSettings>();
 
                 field.Value = viewModel.Text;
-
-                if (String.IsNullOrWhiteSpace(field.Value) && !String.IsNullOrWhiteSpace(settings.DefaultValue)) {
-                    field.Value = settings.DefaultValue;
-                }
 
                 if (settings.Required && String.IsNullOrWhiteSpace(field.Value)) {
                     updater.AddModelError("Text", T("The field {0} is mandatory", T(field.DisplayName)));

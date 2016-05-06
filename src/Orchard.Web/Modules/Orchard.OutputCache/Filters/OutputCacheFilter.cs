@@ -370,6 +370,9 @@ namespace Orchard.OutputCache.Filters {
             foreach (var p in filterContext.ActionParameters)
                 result.Add("PARAM:" + p.Key, p.Value);
 
+            // Vary by scheme.
+            result.Add("scheme", filterContext.RequestContext.HttpContext.Request.Url.Scheme);
+
             // Vary by theme.
             result.Add("theme", _themeManager.GetRequestTheme(filterContext.RequestContext).Id.ToLowerInvariant());
 
@@ -384,7 +387,7 @@ namespace Orchard.OutputCache.Filters {
             // Vary by configured request headers.
             var requestHeaders = filterContext.RequestContext.HttpContext.Request.Headers;
             foreach (var varyByRequestHeader in CacheSettings.VaryByRequestHeaders) {
-                if (requestHeaders.AllKeys.Contains(varyByRequestHeader))
+                if (requestHeaders[varyByRequestHeader]!=null)
                     result["HEADER:" + varyByRequestHeader] = requestHeaders[varyByRequestHeader];
             }
 

@@ -11,6 +11,7 @@ var fs = require("fs"),
     sourcemaps = require("gulp-sourcemaps"),
     less = require("gulp-less"),
     cssnano = require("gulp-cssnano"),
+    sass = require("gulp-sass"),
     typescript = require("gulp-typescript"),
     uglify = require("gulp-uglify"),
     rename = require("gulp-rename"),
@@ -131,7 +132,7 @@ function createAssetGroupTask(assetGroup, doRebuild) {
 function buildCssPipeline(assetGroup, doConcat, doRebuild) {
     assetGroup.inputPaths.forEach(function (inputPath) {
         var ext = path.extname(inputPath).toLowerCase();
-        if (ext !== ".less" && ext !== ".css")
+        if (ext !== ".less" && ext !== ".scss" && ext !== ".css")
             throw "Input file '" + inputPath + "' is not of a valid type for output file '" + assetGroup.outputPath + "'.";
     });
     var generateSourceMaps = assetGroup.hasOwnProperty("generateSourceMaps") ? assetGroup.generateSourceMaps : true;
@@ -173,6 +174,9 @@ function buildCssPipeline(assetGroup, doConcat, doRebuild) {
         .pipe(plumber())
         .pipe(gulpif(generateSourceMaps, sourcemaps.init()))
         .pipe(gulpif("*.less", less()))
+        .pipe(gulpif("*.scss", sass({
+        	precision: 10
+        })))
         .pipe(gulpif(doConcat, concat(assetGroup.outputFileName)))
         .pipe(header(
             "/*\n" +

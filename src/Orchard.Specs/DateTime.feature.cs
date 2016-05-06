@@ -360,138 +360,31 @@ this.ScenarioSetup(scenarioInfo);
                         "Fields[0].DateTimeFieldSettings.Display",
                         "DateAndTime"});
             table15.AddRow(new string[] {
-                        "Fields[0].DateTimeFieldSettings.Required",
-                        "false"});
-            table15.AddRow(new string[] {
                         "Fields[0].DateTimeFieldSettings.Editor.Date",
-                        "01/31/2012"});
+                        "01/31/2016"});
             table15.AddRow(new string[] {
-                        "Fields[0].DateTimeFieldSettings.Editor.Time",
-                        "11:00 AM"});
-#line 144
-        testRunner.And("I fill in", ((string)(null)), table15, "And ");
-#line 150
-        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 151
-        testRunner.And("I go to \"Admin/Contents/Create/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 152
-    testRunner.Then("I should see \"Event.EventDate.Editor.Date\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line hidden
-            TechTalk.SpecFlow.Table table16 = new TechTalk.SpecFlow.Table(new string[] {
-                        "name",
-                        "value"});
-            table16.AddRow(new string[] {
-                        "Event.EventDate.Editor.Date",
-                        ""});
-            table16.AddRow(new string[] {
-                        "Event.EventDate.Editor.Time",
-                        ""});
-#line 153
-    testRunner.When("I fill in", ((string)(null)), table16, "When ");
-#line 157
-        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 158
-        testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 159
-    testRunner.Then("I should see \"Your Event has been created.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 160
-    testRunner.When("I go to \"Admin/Contents/List\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 161
-    testRunner.Then("I should see \"Date of the event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 162
-        testRunner.And("I should see \"1/31/2012 11:00\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 165
-    testRunner.When("I go to \"Admin/ContentTypes/Edit/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line hidden
-            TechTalk.SpecFlow.Table table17 = new TechTalk.SpecFlow.Table(new string[] {
-                        "name",
-                        "value"});
-            table17.AddRow(new string[] {
-                        "Fields[0].DateTimeFieldSettings.Display",
-                        "DateAndTime"});
-            table17.AddRow(new string[] {
-                        "Fields[0].DateTimeFieldSettings.Required",
-                        "true"});
-            table17.AddRow(new string[] {
-                        "Fields[0].DateTimeFieldSettings.Editor.Date",
-                        "01/31/2012"});
-            table17.AddRow(new string[] {
                         "Fields[0].DateTimeFieldSettings.Editor.Time",
                         "10:00 AM"});
-#line 166
-        testRunner.And("I fill in", ((string)(null)), table17, "And ");
-#line 172
+#line 144
+        testRunner.And("I fill in", ((string)(null)), table15, "And ");
+#line 149
         testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 173
+#line 150
         testRunner.And("I go to \"Admin/Contents/Create/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 174
+#line 151
     testRunner.Then("I should see \"Event.EventDate.Editor.Date\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line hidden
-            TechTalk.SpecFlow.Table table18 = new TechTalk.SpecFlow.Table(new string[] {
-                        "name",
-                        "value"});
-            table18.AddRow(new string[] {
-                        "Event.EventDate.Editor.Date",
-                        ""});
-            table18.AddRow(new string[] {
-                        "Event.EventDate.Editor.Time",
-                        ""});
-#line 175
-    testRunner.When("I fill in", ((string)(null)), table18, "When ");
-#line 179
-        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 180
+#line 152
+    testRunner.When("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 153
         testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 181
+#line 154
     testRunner.Then("I should see \"Your Event has been created.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 182
+#line 155
     testRunner.When("I go to \"Admin/Contents/List\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 183
+#line 156
     testRunner.Then("I should see \"Date of the event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 184
-        testRunner.And("I should see \"1/31/2012 10:00\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 187
-    testRunner.When("I go to \"Admin/ContentTypes/Edit/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line hidden
-            TechTalk.SpecFlow.Table table19 = new TechTalk.SpecFlow.Table(new string[] {
-                        "name",
-                        "value"});
-            table19.AddRow(new string[] {
-                        "Fields[0].DateTimeFieldSettings.Display",
-                        "DateAndTime"});
-            table19.AddRow(new string[] {
-                        "Fields[0].DateTimeFieldSettings.Required",
-                        "true"});
-            table19.AddRow(new string[] {
-                        "Fields[0].DateTimeFieldSettings.Editor.Date",
-                        ""});
-            table19.AddRow(new string[] {
-                        "Fields[0].DateTimeFieldSettings.Editor.Time",
-                        "12:00 AM"});
-#line 188
-        testRunner.And("I fill in", ((string)(null)), table19, "And ");
-#line 194
-        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 195
-        testRunner.And("I go to \"Admin/Contents/Create/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 196
-    testRunner.Then("I should see \"Event.EventDate.Editor.Date\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line hidden
-            TechTalk.SpecFlow.Table table20 = new TechTalk.SpecFlow.Table(new string[] {
-                        "name",
-                        "value"});
-            table20.AddRow(new string[] {
-                        "Event.EventDate.Editor.Date",
-                        ""});
-            table20.AddRow(new string[] {
-                        "Event.EventDate.Editor.Time",
-                        ""});
-#line 197
-    testRunner.When("I fill in", ((string)(null)), table20, "When ");
-#line 201
-        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 202
-    testRunner.Then("I should see \"Date of the event is required.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 157
+        testRunner.And("I should see \"1/31/2016 10:00\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
         }
@@ -501,119 +394,119 @@ this.ScenarioSetup(scenarioInfo);
         public virtual void CreatingAndUsingDateTimeFieldsInAnotherCulture()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Creating and using date time fields in another culture", ((string[])(null)));
-#line 204
+#line 159
 this.ScenarioSetup(scenarioInfo);
-#line 207
+#line 162
     testRunner.Given("I have installed Orchard", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 208
+#line 163
         testRunner.And("I have installed \"Orchard.Fields\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 209
+#line 164
         testRunner.And("I have the file \"Content\\orchard.core.po\" in \"Core\\App_Data\\Localization\\fr-FR\\or" +
                     "chard.core.po\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 210
+#line 165
     testRunner.When("I go to \"Admin/ContentTypes\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 211
+#line 166
     testRunner.Then("I should see \"<a[^>]*>.*?Create new type</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 212
+#line 167
     testRunner.When("I go to \"Admin/ContentTypes/Create\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-            TechTalk.SpecFlow.Table table21 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table16 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
                         "value"});
-            table21.AddRow(new string[] {
+            table16.AddRow(new string[] {
                         "DisplayName",
                         "Event"});
-            table21.AddRow(new string[] {
+            table16.AddRow(new string[] {
                         "Name",
                         "Event"});
-#line 213
-        testRunner.And("I fill in", ((string)(null)), table21, "And ");
-#line 217
+#line 168
+        testRunner.And("I fill in", ((string)(null)), table16, "And ");
+#line 172
         testRunner.And("I hit \"Create\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 218
+#line 173
         testRunner.And("I go to \"Admin/ContentTypes/\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 219
+#line 174
     testRunner.Then("I should see \"Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 222
+#line 177
     testRunner.When("I go to \"Admin/ContentTypes/Edit/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 223
+#line 178
         testRunner.And("I follow \"Add Field\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-            TechTalk.SpecFlow.Table table22 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table17 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
                         "value"});
-            table22.AddRow(new string[] {
+            table17.AddRow(new string[] {
                         "DisplayName",
                         "Date of the event"});
-            table22.AddRow(new string[] {
+            table17.AddRow(new string[] {
                         "Name",
                         "EventDate"});
-            table22.AddRow(new string[] {
+            table17.AddRow(new string[] {
                         "FieldTypeName",
                         "DateTimeField"});
-#line 224
-        testRunner.And("I fill in", ((string)(null)), table22, "And ");
-#line 229
+#line 179
+        testRunner.And("I fill in", ((string)(null)), table17, "And ");
+#line 184
         testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 230
+#line 185
         testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 231
+#line 186
     testRunner.Then("I should see \"The \\\"Date of the event\\\" field has been added.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 234
+#line 189
     testRunner.When("I have \"fr-FR\" as the default culture", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 235
+#line 190
         testRunner.And("I go to \"Admin/ContentTypes/Edit/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-            TechTalk.SpecFlow.Table table23 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table18 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
                         "value"});
-            table23.AddRow(new string[] {
+            table18.AddRow(new string[] {
                         "Fields[0].DateTimeFieldSettings.Display",
                         "DateAndTime"});
-            table23.AddRow(new string[] {
+            table18.AddRow(new string[] {
                         "Fields[0].DateTimeFieldSettings.Required",
                         "true"});
-#line 236
-        testRunner.And("I fill in", ((string)(null)), table23, "And ");
-#line 240
+#line 191
+        testRunner.And("I fill in", ((string)(null)), table18, "And ");
+#line 195
         testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 241
+#line 196
     testRunner.When("I go to \"Admin/Contents/Create/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-            TechTalk.SpecFlow.Table table24 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table19 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
                         "value"});
-            table24.AddRow(new string[] {
+            table19.AddRow(new string[] {
                         "Event.EventDate.Editor.Date",
                         "01/31/2012"});
-            table24.AddRow(new string[] {
+            table19.AddRow(new string[] {
                         "Event.EventDate.Editor.Time",
                         "12:00 AM"});
-#line 242
-        testRunner.And("I fill in", ((string)(null)), table24, "And ");
-#line 246
+#line 197
+        testRunner.And("I fill in", ((string)(null)), table19, "And ");
+#line 201
         testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 247
+#line 202
     testRunner.Then("I should see \"Date of the event could not be parsed as a valid date and time\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 248
+#line 203
     testRunner.When("I go to \"Admin/Contents/Create/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-            TechTalk.SpecFlow.Table table25 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table20 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
                         "value"});
-            table25.AddRow(new string[] {
+            table20.AddRow(new string[] {
                         "Event.EventDate.Editor.Date",
                         "31/01/2012"});
-            table25.AddRow(new string[] {
+            table20.AddRow(new string[] {
                         "Event.EventDate.Editor.Time",
                         "18:00"});
-#line 249
-        testRunner.And("I fill in", ((string)(null)), table25, "And ");
-#line 253
+#line 204
+        testRunner.And("I fill in", ((string)(null)), table20, "And ");
+#line 208
         testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 254
+#line 209
         testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 255
+#line 210
     testRunner.Then("I should see \"Your Event has been created.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
