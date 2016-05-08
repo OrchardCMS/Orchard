@@ -38,7 +38,7 @@ namespace Orchard.Redis.Configuration {
         public ConnectionMultiplexer GetConnection(string connectionString) {
 
             if (String.IsNullOrWhiteSpace(connectionString)) {
-                throw new ArgumentNullException("connectionString");
+                return null;
             }
 
             // when using ConcurrentDictionary, multiple threads can create the value
