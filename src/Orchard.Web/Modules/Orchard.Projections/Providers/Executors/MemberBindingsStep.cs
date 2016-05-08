@@ -27,9 +27,13 @@ namespace Orchard.Projections.Providers.Executors {
                 Logger.Information("Importing member bindings.");
 
                 try {
+                    var member = memberBindingElement.Attribute("Member").Value;
+                    var type = memberBindingElement.Attribute("Type").Value;
+                    if (_repository.Get(b => b.Member == member && b.Type == type) != null)
+                        continue;
                     _repository.Create(new MemberBindingRecord {
-                    Member = memberBindingElement.Attribute("Member").Value,
-                    Type = memberBindingElement.Attribute("Type").Value,
+                    Member = member,
+                    Type = type,
                     DisplayName = memberBindingElement.Attribute("DisplayName").Value,
                     Description = memberBindingElement.Attribute("Description").Value,
                     });
