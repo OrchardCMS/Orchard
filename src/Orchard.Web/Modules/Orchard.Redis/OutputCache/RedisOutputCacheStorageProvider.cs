@@ -54,17 +54,19 @@ namespace Orchard.Redis.OutputCache {
         }
 
         public void Set(string key, CacheItem cacheItem) {
-            if(cacheItem == null) {
-                throw new ArgumentNullException("cacheItem");
-            }
+            if (_connectionMultiplexer != null) {
+                if (cacheItem == null) {
+                    throw new ArgumentNullException("cacheItem");
+                }
 
-            if (cacheItem.ValidFor <= 0) {
-                return;
-            }
+                if (cacheItem.ValidFor <= 0) {
+                    return;
+                }
 
-            using (var decompressedStream = Serialize(cacheItem)) {
-                using (var compressedStream = Compress(decompressedStream)) {
-                    Database.StringSet(GetLocalizedKey(key), compressedStream.ToArray(), TimeSpan.FromSeconds(cacheItem.ValidFor));
+                using (var decompressedStream = Serialize(cacheItem)) {
+                    using (var compressedStream = Compress(decompressedStream)) {
+                        Database.StringSet(GetLocalizedKey(key), compressedStream.ToArray(), TimeSpan.FromSeconds(cacheItem.ValidFor));
+                    }
                 }
             }
         }
@@ -85,11 +87,11 @@ namespace Orchard.Redis.OutputCache {
             }
 
             using (var compressedStream = new MemoryStream(value)) {
-                if(compressedStream.Length == 0) {
+                if (compressedStream.Length == 0) {
                     return null;
                 }
 
-                using(var decompressedStream = Decompress(compressedStream)) {
+                using (var decompressedStream = Decompress(compressedStream)) {
                     return Deserialize(decompressedStream);
                 }
             }

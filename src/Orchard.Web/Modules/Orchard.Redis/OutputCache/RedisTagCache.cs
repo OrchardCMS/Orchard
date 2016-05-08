@@ -28,18 +28,25 @@ namespace Orchard.Redis.OutputCache {
         }
 
         public void Tag(string tag, params string[] keys) {
-            Database.SetAdd(GetLocalizedKey(tag),  Array.ConvertAll(keys, x=> (RedisValue) x));
+            if (_connectionMultiplexer != null) {
+                Database.SetAdd(GetLocalizedKey(tag), Array.ConvertAll(keys, x => (RedisValue)x));
+            }
         }
 
         public IEnumerable<string> GetTaggedItems(string tag) {
-            var values = Database.SetMembers(GetLocalizedKey(tag));
-            if (values == null || values.Length == 0)
-                return Enumerable.Empty<string>();
-            return Array.ConvertAll(values, x => (string) x);
+            if (_connectionMultiplexer != null) {
+                var values = Database.SetMembers(GetLocalizedKey(tag));
+                if (values == null || values.Length == 0)
+                    return Enumerable.Empty<string>();
+                return Array.ConvertAll(values, x => (string)x);
+            }
+            return new string[0];
         }
 
         public void RemoveTag(string tag) {
-            Database.KeyDelete(GetLocalizedKey(tag));
+            if (_connectionMultiplexer != null) {
+                Database.KeyDelete(GetLocalizedKey(tag));
+            }
         }
 
         private string GetLocalizedKey(string key) {
