@@ -18,13 +18,13 @@
                 <div>
                     @Html.LabelFor(m => m.FullName, T("Content Part Record"))
                     @Html.TextBoxFor(m => m.FullName, new { @class = "text wide", @readonly = "readonly" })
-                    <span class="hint">@T("The content part to add to the providers.")</span>
+                    <span class="help-block">@T("The content part to add to the providers.")</span>
                 </div>
 
                 <div>
                     @Html.LabelFor(m => m.Member, T("Member"))
                     @Html.TextBoxFor(m => m.Member, new { @class = "text medium", @readonly = "readonly" })
-                    <span class="hint">@T("The name of the member.")</span>
+                    <span class="help-block">@T("The name of the member.")</span>
                 </div>
             </fieldset>
 
@@ -32,13 +32,13 @@
                 <div>
                     @Html.LabelFor(m => m.Display, T("Display"))
                     @Html.TextBoxFor(m => m.Display, new { @class = "text medium" })
-                    <span class="hint">@T("Text to display in lists for this property.")</span>
+                    <span class="help-block">@T("Text to display in lists for this property.")</span>
                 </div>
 
                 <div>
                     @Html.LabelFor(m => m.Description, T("Description"))
                     @Html.TextBoxFor(m => m.Description, new { @class = "text large" })
-                    <span class="hint">@T("Description to display in lists for this property.")</span>
+                    <span class="help-block">@T("Description to display in lists for this property.")</span>
                 </div>
             </fieldset>
 

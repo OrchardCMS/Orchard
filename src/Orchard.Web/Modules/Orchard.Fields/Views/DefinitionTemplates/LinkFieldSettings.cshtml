@@ -16,7 +16,7 @@
 <fieldset>
     <div class="am-checkbox">
         @Html.CheckBoxFor(m => m.Required) <label for="@Html.FieldIdFor(m => m.Required)" class="forcheckbox">@T("Required")</label>
-        <span class="hint">@T("Whether the url is required.")</span>
+        <span class="help-block">@T("Whether the url is required.")</span>
     </div>
 </fieldset>
 <fieldset>
@@ -28,11 +28,11 @@
             @Html.SelectOption(LinkTextMode.Static, Model.LinkTextMode == LinkTextMode.Static, T("Static").ToString(), new { id = Html.FieldIdFor(m => m.LinkTextMode) + "-static" })
             @Html.SelectOption(LinkTextMode.Url, Model.LinkTextMode == LinkTextMode.Url, T("Url").ToString())
         </select> 
-        <span class="hint">@T("Define how the title field should behave in the editor.")</span>
+        <span class="help-block">@T("Define how the title field should behave in the editor.")</span>
     </div>
     <div class="editor-field" data-controllerid="@(Html.FieldIdFor(m => m.LinkTextMode) + "-static")">
         @Html.TextBoxFor(m => m.StaticText, new { @class = "text medium" })
-        <span class="hint">@T("The title to display for the link")</span>
+        <span class="help-block">@T("The title to display for the link")</span>
         @Html.ValidationMessageFor(m => m.Hint)
     </div>
 </fieldset>
@@ -40,7 +40,7 @@
     <div>
         <label for="@Html.FieldIdFor(m => m.Hint)">@T("Help text")</label>
         @Html.TextAreaFor(m => m.Hint, new { @class = "text medium", rows = "5" } )
-        <span class="hint">@T("The help text is written under the field.")</span>
+        <span class="help-block">@T("The help text is written under the field.")</span>
         @Html.ValidationMessageFor(m => m.Hint)
     </div>
 </fieldset>
@@ -49,7 +49,7 @@
         <label for="@Html.FieldIdFor(m => m.UrlPlaceholder)">@T("Watermark (placeholder) for the url")</label>
         @Html.TextBoxFor(m => m.UrlPlaceholder, new { @class = "text large" })
         @Html.ValidationMessageFor(m => m.UrlPlaceholder)
-        <span class="hint">@T("A hint to display when the input of url is empty. (optional)")</span>
+        <span class="help-block">@T("A hint to display when the input of url is empty. (optional)")</span>
     </div>
 </fieldset>
 <fieldset>
@@ -57,14 +57,14 @@
         <label for="@Html.FieldIdFor(m => m.TextPlaceholder)">@T("Watermark (placeholder) for the text of the link")</label>
         @Html.TextBoxFor(m => m.TextPlaceholder, new { @class = "text large" })
         @Html.ValidationMessageFor(m => m.TextPlaceholder)
-        <span class="hint">@T("A hint to display when the input of text is empty. (optional)")</span>
+        <span class="help-block">@T("A hint to display when the input of text is empty. (optional)")</span>
     </div>
 </fieldset>
 <fieldset>
     <div>
         <label for="@Html.FieldIdFor(m => m.DefaultValue)">@T("Default value")</label>
         @Html.TextBoxFor(m => m.DefaultValue, new { @class = "text large tokenized ui-autocomplete-input" })
-        <span class="hint">@T("A valid url as a default value, i.e. http://orchardproject.net, /content/file.pdf ... You can use tokens in this field. (optional)")</span>
+        <span class="help-block">@T("A valid url as a default value, i.e. http://orchardproject.net, /content/file.pdf ... You can use tokens in this field. (optional)")</span>
         @Html.ValidationMessageFor(m => m.DefaultValue)
     </div>
 </fieldset>
@@ -72,7 +72,7 @@
     <div>
         <label for="@Html.FieldIdFor(m => m.TextDefaultValue)">@T("Link text default value")</label>
         @Html.TextBoxFor(m => m.TextDefaultValue, new { @class = "text large tokenized ui-autocomplete-input" })
-        <span class="hint">@T("If the Link text is set to Optional or Required, a default value can be set for it. You can use tokens in this field. (optional)")</span>
+        <span class="help-block">@T("If the Link text is set to Optional or Required, a default value can be set for it. You can use tokens in this field. (optional)")</span>
         @Html.ValidationMessageFor(m => m.TextDefaultValue)
     </div>
 </fieldset>

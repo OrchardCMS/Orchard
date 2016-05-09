@@ -2,12 +2,16 @@
 
 @{ Layout.Title = T("Create Index").ToString(); }
 
-@using(Html.BeginFormAntiForgeryPost()) {
-    <fieldset>
-        @Html.TextBox("id", Model, new { @class = "text medium", autofocus = "autofocus" })
-        <span class="hint">@T("The technical name of the index to create. Must contain letters and numbers only.")</span>
-    </fieldset>
-    <fieldset>
-        <button type="submit">@T("Create")</button>
-    </fieldset>
-}
+<div class="panel panel-default">
+    @using (Html.BeginFormAntiForgeryPost()) {
+        <div class="panel-body no-border form-inline">
+            <fieldset>
+                @Html.TextBox("id", Model, new { @class = "form-control", autofocus = "autofocus" })
+                <span class="help-block">@T("The technical name of the index to create. Must contain letters and numbers only.")</span>
+            </fieldset>
+        </div>
+        <div class="panel-footer">
+            <button class="btn btn-primary" type="submit">@T("Create")</button>
+        </div>
+    }
+</div>

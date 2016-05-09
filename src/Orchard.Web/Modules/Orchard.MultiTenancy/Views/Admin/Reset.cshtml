@@ -15,7 +15,7 @@
         <label class="forcheckbox" for="@Html.FieldIdFor(m => m.DropDatabaseTables)">@("Also delete tenant database tables:")</label>
         <ul style="margin-left: 4em; margin-top: 1em; -webkit-column-width: 24em; -moz-column-width: 24em; column-width: 24em;">
             @foreach (var tableName in Model.DatabaseTableNames) {
-                <li><span class="hint">@tableName</span></li>
+                <li><span class="help-block">@tableName</span></li>
             }
         </ul>
     </fieldset>

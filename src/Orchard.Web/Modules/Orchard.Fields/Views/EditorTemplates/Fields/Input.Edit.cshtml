@@ -10,9 +10,9 @@
     <input type="@settings.Type.ToString().ToLower()" id="@Html.FieldIdFor(m => m.Value)" name="@Html.FieldNameFor(m => m.Value)" @if (!String.IsNullOrWhiteSpace(settings.Title)) { <text> title="@settings.Title" </text> } value="@Model.Value" @if (isRequired) { <text> required="required" </text>  } @if (settings.AutoFocus) { <text> autofocus="autofocus" </text>  } @if (settings.AutoComplete) { <text> autocomplete="on" </text>  } @if (!String.IsNullOrWhiteSpace(settings.Placeholder)) { <text> placeholder="@settings.Placeholder" </text> } @if (!String.IsNullOrWhiteSpace(settings.Pattern)) { <text> pattern="@settings.Pattern" </text> } @if (!String.IsNullOrWhiteSpace(settings.EditorCssClass)) { <text> class="@settings.EditorCssClass" </text> } else { <text> class="text medium" </text> } @if (settings.MaxLength > 1) { <text> maxlength="@settings.MaxLength.ToString()" </text> } />
     @Html.ValidationMessageFor(m => m.Value)
     @if (HasText(settings.Hint)) {
-        <span class="hint">@settings.Hint</span>
+        <span class="help-block">@settings.Hint</span>
     }
     @if (!String.IsNullOrWhiteSpace(settings.DefaultValue)) {
-        <span class="hint">@T("If the field is left empty then the default value will be used.")</span>
+        <span class="help-block">@T("If the field is left empty then the default value will be used.")</span>
     }
 </fieldset>

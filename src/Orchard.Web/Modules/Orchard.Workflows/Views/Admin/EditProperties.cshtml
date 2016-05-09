@@ -7,7 +7,7 @@
         <div class="panel-body">
             <label for="name">@T("Name")</label>
             @Html.TextBoxFor(m => m.WorkflowDefinition.Name, new { @class = "text medium" })
-            <span class="hint">@T("The name of the Workflow.")</span>
+            <span class="help-block">@T("The name of the Workflow.")</span>
         </div>
         <div class="panel-footer">
             <button class="btn btn-primary" type="submit">@T("Save")</button>

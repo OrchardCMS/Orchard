@@ -44,9 +44,9 @@
 
     @Html.ValidationMessageFor(m => m.SelectedValues)
     @if (HasText(settings.Hint)) {
-        <span class="hint">@settings.Hint</span>
+        <span class="help-block">@settings.Hint</span>
     }
     @if (!String.IsNullOrWhiteSpace(settings.DefaultValue)) {
-        <span class="hint">@T("If no option is selected then the default value will be used.")</span>
+        <span class="help-block">@T("If no option is selected then the default value will be used.")</span>
     }
 </fieldset>

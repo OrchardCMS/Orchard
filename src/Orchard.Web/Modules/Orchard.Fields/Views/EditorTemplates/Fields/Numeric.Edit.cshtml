@@ -27,9 +27,9 @@
     @Html.TextBoxFor(m => m.Value, attributes)
     @Html.ValidationMessageFor(m => m.Value)
     @if (HasText(Model.Settings.Hint)) {
-        <span class="hint">@Model.Settings.Hint</span>
+        <span class="help-block">@Model.Settings.Hint</span>
     }
     @if (!String.IsNullOrWhiteSpace(Model.Settings.DefaultValue)) {
-        <span class="hint">@T("If the field is left empty then the default value will be used.")</span>
+        <span class="help-block">@T("If the field is left empty then the default value will be used.")</span>
     }
 </fieldset>

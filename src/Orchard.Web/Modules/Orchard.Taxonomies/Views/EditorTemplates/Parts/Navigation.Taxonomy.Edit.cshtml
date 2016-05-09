@@ -8,7 +8,7 @@
 <fieldset>
     @Html.LabelFor(m => m.SelectedTaxonomyId, T("Taxonomy"))
     @Html.DropDownListFor(m => m.SelectedTaxonomyId, Model.AvailableTaxonomies)
-    <span class="hint">@T("Select the taxonomy whose terms will be rendered in the menu.")</span>
+    <span class="help-block">@T("Select the taxonomy whose terms will be rendered in the menu.")</span>
 </fieldset>
 
 <fieldset>
@@ -17,32 +17,32 @@
         @Html.SelectOption(-1, false, T("- Parent Taxonomy -").ToString())
         @{Html.RenderAction("RenderTermSelect", "TermAdmin", new { area = "Orchard.Taxonomies", taxonomyId = Model.SelectedTaxonomyId, selectedTermId = Model.SelectedTermId });}
     </select>
-    <span class="hint">@T("Select the root term to display")</span>
+    <span class="help-block">@T("Select the root term to display")</span>
 </fieldset>
 
 <fieldset>
     @Html.CheckBoxFor(m => m.DisplayTopMenuItem)
     <label for="@Html.FieldIdFor(m => m.DisplayTopMenuItem)" class="forcheckbox">@T("Display top level menu item")</label>
-    <span class="hint">@T("When checked, the selected term to display will be rendered as a root element in the menu.")</span>
+    <span class="help-block">@T("When checked, the selected term to display will be rendered as a root element in the menu.")</span>
 </fieldset>
 
 <fieldset>
     <label for="@Html.FieldIdFor( m => m.LevelsToDisplay)">@T("Levels to display")</label>
     @Html.TextBoxFor(m => m.LevelsToDisplay, new { @class = "text small" })
     @Html.ValidationMessage("LevelsToDisplay", "*")
-    <span class="hint">@T("The number of levels to display in the hierarchy. 0 to display all levels.")</span>
+    <span class="help-block">@T("The number of levels to display in the hierarchy. 0 to display all levels.")</span>
 </fieldset>
 
 <fieldset>
     @Html.CheckBoxFor(m => m.HideEmptyTerms)
     <label for="@Html.FieldIdFor(m => m.HideEmptyTerms)" class="forcheckbox">@T("Hide empty entries")</label>
-    <span class="hint">@T("When checked, any term which has no content item associated to it won't be rendered.")</span>
+    <span class="help-block">@T("When checked, any term which has no content item associated to it won't be rendered.")</span>
 </fieldset>
 
 <fieldset>
     @Html.CheckBoxFor(m => m.DisplayContentCount)
     <label for="@Html.FieldIdFor(m => m.DisplayContentCount)" class="forcheckbox">@T("Display content count")</label>
-    <span class="hint">@T("When checked, the number of content items is rendered following the term name.")</span>
+    <span class="help-block">@T("When checked, the number of content items is rendered following the term name.")</span>
 </fieldset>
 
 @using (Script.Foot()) {

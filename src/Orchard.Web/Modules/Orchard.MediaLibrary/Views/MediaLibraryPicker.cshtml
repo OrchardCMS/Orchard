@@ -60,5 +60,5 @@
         <span class="btn btn-danger remove" style="display: none;">@T("Remove All")</span>
     </div>
     <input type="hidden" name="@fieldName" value="@String.Join(",", contentItems.Select(x => x.Id))" class="selected-ids" />
-    <span class="hint">@hint</span>
+    <span class="help-block">@hint</span>
 </fieldset>

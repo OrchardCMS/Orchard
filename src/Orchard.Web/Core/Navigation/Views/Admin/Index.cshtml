@@ -65,7 +65,7 @@
                                 <div class="menu-item-description">
                                     <h2>@T(descriptor.DisplayName)</h2>
                                     @if (!string.IsNullOrWhiteSpace(descriptor.Description)) {
-                                        <span class="hint">@T(descriptor.Description)</span>
+                                        <span class="help-block">@T(descriptor.Description)</span>
                                     }
                                 </div>
                                 <div class="menu-item-actions">@Html.ActionLink(T("Add").Text, "CreateMenuItem", "Admin", new { area = "Navigation", id = descriptor.Type, menuId = Model.CurrentMenu.Id, returnUrl = Request.RawUrl }, new { @class = "button grey" })</div>

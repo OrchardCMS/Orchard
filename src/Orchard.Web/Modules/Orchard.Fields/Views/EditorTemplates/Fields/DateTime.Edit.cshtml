@@ -4,9 +4,9 @@
     <label for="@Html.FieldIdFor(m => Model.Editor.Date)" @if (Model.IsRequired) { <text> class="required" </text> }>@Model.Name</label>
     @Html.EditorFor(m => m.Editor)
     @if (HasText(Model.Hint)) {
-        <span class="hint">@Model.Hint</span>
+        <span class="help-block">@Model.Hint</span>
     }
     @if (Model.HasDefaultValue) {
-        <span class="hint">@T("If the field is left empty then the default value will be used if one is configured.")</span>
+        <span class="help-block">@T("If the field is left empty then the default value will be used if one is configured.")</span>
     }
 </fieldset>

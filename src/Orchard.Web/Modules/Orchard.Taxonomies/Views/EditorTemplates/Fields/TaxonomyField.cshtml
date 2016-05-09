@@ -16,7 +16,7 @@
     <legend @if (settings.Required) { <text> class="required" </text>           }>@Model.DisplayName</legend>
     <div class="expando">
         @if (!String.IsNullOrWhiteSpace(Model.Settings.Hint)) {
-            <span class="hint">@Model.Settings.Hint</span>
+            <span class="help-block">@Model.Settings.Hint</span>
         }
         @foreach (var entry in Model.Terms) {
             var ti = termIndex;

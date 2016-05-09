@@ -10,25 +10,25 @@
         <label for="@Html.FieldIdFor(m => m.Address)">@T("Sender email address")</label>
         @Html.TextBoxFor(m => m.Address, new { @class = "text medium", placeholder = Model.AddressPlaceholder })
         @Html.ValidationMessage("Address", "*")
-        <span class="hint">@T("The default email address to use as a sender.")</span>
+        <span class="help-block">@T("The default email address to use as a sender.")</span>
     </div>
     <div>
         <label for="@Html.FieldIdFor(m => m.Host)">@T("Host name")</label>
         @Html.TextBoxFor(m => m.Host, new { placeholder = smtpClient.Host, @class = "text medium" })
         @Html.ValidationMessage("Host", "*")
-        <span class="hint">@T("The SMTP server domain, e.g. <i>smtp.mailprovider.com</i>.")</span>
+        <span class="help-block">@T("The SMTP server domain, e.g. <i>smtp.mailprovider.com</i>.")</span>
     </div>
     <div>
         <label for="@Html.FieldIdFor(m => m.Port)">@T("Port number")</label>
         @Html.TextBoxFor(m => m.Port, new { placeholder = smtpClient.Port, @class = "text small" })
         @Html.ValidationMessage("Port", "*")
-        <span class="hint">@T("The SMTP server port, usually 25.")</span>
+        <span class="help-block">@T("The SMTP server port, usually 25.")</span>
     </div>
     <div>
         @Html.EditorFor(m => m.EnableSsl)
         <label for="@Html.FieldIdFor(m => m.EnableSsl)" class="forcheckbox">@T("Enable SSL communications")</label>
         @Html.ValidationMessage("EnableSsl", "*")
-        <span class="hint">@T("Check if the SMTP server requires SSL communications.")</span>
+        <span class="help-block">@T("Check if the SMTP server requires SSL communications.")</span>
     </div>
     <div>
         @Html.EditorFor(m => m.RequireCredentials)
@@ -48,20 +48,20 @@
             @Html.RadioButtonFor(m => m.UseDefaultCredentials, true, new { id = "defaultCredentialsOptions", name = "UseDefaultCredentials" })
             <label for="defaultCredentialsOptions" class="forcheckbox">@T("Use Windows authentication")</label>
             @Html.ValidationMessage("UseDefaultCredentials", "*")
-            <span class="hint">@T("When this option is selected, the aplication pool or host-process identity is used to authenticate with the mail server. ")</span>
+            <span class="help-block">@T("When this option is selected, the aplication pool or host-process identity is used to authenticate with the mail server. ")</span>
         </div>
         <div class="options">
             <span data-controllerid="customCredentialsOption">
                 <label for="@Html.FieldIdFor(m => m.UserName)">@T("User name")</label>
                 @Html.TextBoxFor(m => m.UserName, new { @class = "text" })
                 @Html.ValidationMessage("UserName", "*")
-                <span class="hint">@T("The username for authentication.")</span>
+                <span class="help-block">@T("The username for authentication.")</span>
             </span>
             <span data-controllerid="customCredentialsOption">
                 <label for="@Html.FieldIdFor(m => m.Password)">@T("Password")</label>
                 @Html.TextBoxFor(m => m.Password, new { type = "password", @class = "text medium" })
                 @Html.ValidationMessage("Password", "*")
-                <span class="hint">@T("The password for authentication.")</span>
+                <span class="help-block">@T("The password for authentication.")</span>
             </span>
         </div>
     </div>

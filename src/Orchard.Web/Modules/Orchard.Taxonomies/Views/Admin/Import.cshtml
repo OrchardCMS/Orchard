@@ -12,12 +12,12 @@
             <fieldset>
                 <input type="hidden" value="@Model.Taxonomy.Id" name="id" />
                 <textarea class="text" rows="25" cols="80" onkeydown="return interceptTabs(event, this);" name="terms">@Model.Terms</textarea>
-                <span class="hint">@T("One term per line, followed by a semi-colon and the slug")</span>
-                <span class="hint">@T("Hierarchies are defined using tabs (handled in this editor zone)")</span>
-                <span class="hint">@T("e.g,")</span>
-                <span class="hint" style="margin-left:1em;">&nbsp;&nbsp;@T("Red; red")</span>
-                <span class="hint" style="margin-left:1em;">&nbsp;&nbsp;@T("Blue; blue")</span>
-                <span class="hint" style="margin-left:3em;">&nbsp;&nbsp;&nbsp;&nbsp;@T("Light Blue; light-blue")</span>
+                <span class="help-block">@T("One term per line, followed by a semi-colon and the slug")</span>
+                <span class="help-block">@T("Hierarchies are defined using tabs (handled in this editor zone)")</span>
+                <span class="help-block">@T("e.g,")</span>
+                <span class="help-block" style="margin-left:1em;">&nbsp;&nbsp;@T("Red; red")</span>
+                <span class="help-block" style="margin-left:1em;">&nbsp;&nbsp;@T("Blue; blue")</span>
+                <span class="help-block" style="margin-left:3em;">&nbsp;&nbsp;&nbsp;&nbsp;@T("Light Blue; light-blue")</span>
             </fieldset>
         </div>
         <div class="panel-footer">

@@ -14,7 +14,7 @@
                         <option @if (term.Id == Model.SelectedTermId) { <text> selected="selected" </text>   } value="@term.Id">@for (var i = 1; i <= term.GetLevels(); i++) { <span class="gap">&nbsp;</span> }@term.Name</option>
                     }
                 </select>
-                <span class="hint">@T("By selecting a parent term you can create hierarchies")</span>
+                <span class="help-block">@T("By selecting a parent term you can create hierarchies")</span>
             </fieldset>
         </div>
         <div class="panel-footer">

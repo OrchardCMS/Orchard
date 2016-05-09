@@ -42,7 +42,7 @@ namespace Orchard.Forms.Shapes {
 
         [Shape]
         public void InputHint(dynamic Display, dynamic Shape, HtmlHelper Html, TextWriter Output, object Description/*, object ActionLinkValue, object ActionLink*/) {
-            // <span class="hint">
+            // <span class="help-block">
             if (Description != null) {
                 var span = _tagBuilderFactory.Create(Shape, "span");
                 span.AddCssClass("hint");
@@ -114,7 +114,7 @@ namespace Orchard.Forms.Shapes {
                 <label for="inputfieldname">{DisplayName}</label>
                 {ChildContent}
                 {ValidationMessage}
-                <span class="hint">{Description}</span>
+                <span class="help-block">{Description}</span>
                 <p><a href="{ActionLinkRouteUrl}">{ActionLinkText}</a></p>
             </div>
              * Note: For a checkbox, the label comes after

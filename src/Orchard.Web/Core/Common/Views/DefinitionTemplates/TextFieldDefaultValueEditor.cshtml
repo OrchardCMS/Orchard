@@ -4,5 +4,5 @@
 
 <label for="@Html.FieldIdFor(m => m.Settings.DefaultValue)">@T("Default value")</label>
 @Html.TextBoxFor(m => m.Settings.DefaultValue, new { @class = "text large" })
-<span class="hint">@T("Default value for the field. If there is no value given for the actual field, this will be filled in. (optional)")</span>
+<span class="help-block">@T("Default value for the field. If there is no value given for the actual field, this will be filled in. (optional)")</span>
 @Html.ValidationMessageFor(m => m.Settings.DefaultValue)

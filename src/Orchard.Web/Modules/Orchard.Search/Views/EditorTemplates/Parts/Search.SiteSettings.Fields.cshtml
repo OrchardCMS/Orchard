@@ -36,7 +36,7 @@
                                     }
                 }
             </ul>
-            <span class="hint">@T("Check any field for each index which should be used for search queries.")</span>
+            <span class="help-block">@T("Check any field for each index which should be used for search queries.")</span>
 
                                     }
     </div>
@@ -45,12 +45,12 @@
         <div class="am-checkbox">
             @Html.EditorFor(m => m.FilterCulture)
             <label class="forcheckbox" for="@Html.FieldIdFor(m => m.FilterCulture)">@T("Narrow search to current culture only")</label>
-            <span class="hint">@T("If checked, search results will only include content items localized in the current culture of the request.")</span>
+            <span class="help-block">@T("If checked, search results will only include content items localized in the current culture of the request.")</span>
         </div>
     </div>
     <div>
         <label for="@Html.FieldIdFor(m => m.DisplayType)">@T("Display Type")</label>
         @Html.TextBoxFor(m => m.DisplayType, new { @class = "text single-line" })
-        <span class="hint">@T("The display type to use for content items in the search results page.")</span>
+        <span class="help-block">@T("The display type to use for content items in the search results page.")</span>
     </div>
 </fieldset>

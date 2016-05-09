@@ -18,7 +18,7 @@
         
 @*        <label for="@Html.FieldIdFor(m => m.ForcePublish)">@T("Republish content")</label>
         <input name="@Html.FieldNameFor(m => m.ForcePublish)" id="@Html.FieldIdFor(m => m.ForcePublish)" value="@Model.ForcePublish" type="checkbox" />
-        <span class="hint">@T("This will republish all content that is currently published. It will not publish out content if the latest version is in draft.")</span>*@
+        <span class="help-block">@T("This will republish all content that is currently published. It will not publish out content if the latest version is in draft.")</span>*@
     </fieldset>
     
     @Html.HiddenFor(o => o.TaxonomyId)

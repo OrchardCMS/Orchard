@@ -10,13 +10,13 @@
 <fieldset>
     <div>
         @Html.CheckBoxFor(m => m.Settings.Required) <label for="@Html.FieldIdFor(m => m.Settings.Required)" class="forcheckbox">@T("Required")</label>
-        <span class="hint">@T("Check to ensure the user enters a value in this field.")</span>
+        <span class="help-block">@T("Check to ensure the user enters a value in this field.")</span>
     </div>
 </fieldset>
 <fieldset>
     <label for="@Html.FieldIdFor(m => m.Settings.Hint)">@T("Help text")</label>
     @Html.TextAreaFor(m => m.Settings.Hint, new { @class = "text medium", rows = "5" })
-    <span class="hint">@T("The help text is written under the field when authors are editing the content item.")</span>
+    <span class="help-block">@T("The help text is written under the field when authors are editing the content item.")</span>
     @Html.ValidationMessageFor(m => m.Settings.Hint)
 </fieldset>
 <fieldset>
@@ -24,7 +24,7 @@
         <label for="@Html.FieldIdFor(m => m.Settings.Placeholder)">@T("Watermark (placeholder)")</label>
         @Html.TextBoxFor(m => m.Settings.Placeholder, new { @class = "text large" })
         @Html.ValidationMessageFor(m => m.Settings.Placeholder)
-        <span class="hint">@T("A hint to display when the input of text is empty. (optional)")</span>
+        <span class="help-block">@T("A hint to display when the input of text is empty. (optional)")</span>
     </div>
 </fieldset>
 <fieldset>

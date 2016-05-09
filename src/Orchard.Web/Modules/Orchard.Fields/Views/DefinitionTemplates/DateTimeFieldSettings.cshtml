@@ -15,7 +15,7 @@
 <fieldset>
     <div class="am-checkbox">
         @Html.CheckBoxFor(m => m.Required) <label for="@Html.FieldIdFor(m => m.Required)" class="forcheckbox">@T("Required")</label>
-        <span class="hint">@T("Check if the field is required.")</span>
+        <span class="help-block">@T("Check if the field is required.")</span>
     </div>
 </fieldset>
 
@@ -23,7 +23,7 @@
     <div>
         <label for="@Html.FieldIdFor(m => m.Hint)">@T("Help text")</label>
         @Html.TextAreaFor(m => m.Hint, new { @class = "text medium", rows = "5" })
-        <span class="hint">@T("The help text is written under the field when the user is entering a value.")</span>
+        <span class="help-block">@T("The help text is written under the field when the user is entering a value.")</span>
         @Html.ValidationMessageFor(m => m.Hint)
     </div>
 </fieldset>
@@ -33,7 +33,7 @@
         <label for="@Html.FieldIdFor(m => m.DatePlaceholder)">@T("Watermark (placeholder) for the date")</label>
         @Html.TextBoxFor(m => m.DatePlaceholder, new { @class = "text large" })
         @Html.ValidationMessageFor(m => m.DatePlaceholder)
-        <span class="hint">@T("A hint to display when the date is empty. (optional)")</span>
+        <span class="help-block">@T("A hint to display when the date is empty. (optional)")</span>
     </div>
 </fieldset>
 
@@ -42,7 +42,7 @@
         <label for="@Html.FieldIdFor(m => m.TimePlaceholder)">@T("Watermark (placeholder) for the time")</label>
         @Html.TextBoxFor(m => m.TimePlaceholder, new { @class = "text large" })
         @Html.ValidationMessageFor(m => m.TimePlaceholder)
-        <span class="hint">@T("A hint to display when the time is empty. (optional)")</span>
+        <span class="help-block">@T("A hint to display when the time is empty. (optional)")</span>
     </div>
 </fieldset>
 
@@ -50,7 +50,7 @@
     <div>
         <label for="@Html.FieldIdFor(m => m.Editor)">@T("Default value")</label>
         @Html.EditorFor(m => m.Editor)
-        <span class="hint">@T("Pick a default date for the field. (optional)")</span>
+        <span class="help-block">@T("Pick a default date for the field. (optional)")</span>
         @Html.ValidationMessageFor(m => m.Editor)
     </div>
 </fieldset>

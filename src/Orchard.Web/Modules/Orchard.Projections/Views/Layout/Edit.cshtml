@@ -12,7 +12,7 @@
         <div class="panel-heading-primary-group">
             <h2>
                 @Model.Layout.Name
-                <span class="hint">@Model.Layout.Description</span>
+                <span class="help-block">@Model.Layout.Description</span>
             </h2>
         </div>
     </div>
@@ -27,7 +27,7 @@
             <fieldset>
                 @Html.LabelFor(m => m.Description, T("Description"))
                 @Html.TextBoxFor(m => m.Description, new { @class = "text medium" })
-                <span class="hint">@T("You may optionally give a description to this layout, to be used in the dashboard screens.")</span>
+                <span class="help-block">@T("You may optionally give a description to this layout, to be used in the dashboard screens.")</span>
             </fieldset>
 
             <fieldset>
@@ -38,13 +38,13 @@
                     <br />
                     @Html.RadioButton(Html.FieldNameFor(m => m.Display), (int)LayoutRecord.Displays.Properties, Model.Display == (int)LayoutRecord.Displays.Properties, new { id = "display-fields-radio" })
                     <label for="display-fields-radio" class="forcheckbox">@T("Properties")</label>
-                    <span class="hint">@T("You can choose to display each content item using specific properties only.")</span>
+                    <span class="help-block">@T("You can choose to display each content item using specific properties only.")</span>
 
                     <div class="options">
                         <span data-controllerid="display-content-radio">
                             <label for="DatabaseConnectionString">@T("Display Type")</label>
                             @Html.TextBoxFor(m => m.DisplayType, new { @class = "text medium" })
-                            <span class="hint">@T("The display type determines how the content item should be formatted. e.g., Summary, SummaryAdmin, Detail, ...")</span>
+                            <span class="help-block">@T("The display type determines how the content item should be formatted. e.g., Summary, SummaryAdmin, Detail, ...")</span>
                         </span>
                     </div>
 
@@ -99,10 +99,10 @@
                         @Html.SelectOption(Model.GroupPropertyId, property.PropertyRecordId, property.DisplayText)
                     }
                 </select>
-                <span class="hint">@T("Optionally, select a property which will be used to group content items.")</span>
+                <span class="help-block">@T("Optionally, select a property which will be used to group content items.")</span>
                 }
                 else {
-                <span class="hint">@T("No properties are currently available in order to group this view.")</span>
+                <span class="help-block">@T("No properties are currently available in order to group this view.")</span>
                 }
 
                 @* Render the dynamic form *@

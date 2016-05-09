@@ -6,7 +6,7 @@
 }
 <fieldset>
     <label>@T("Menu Items")</label>
-    <span class="hint">@T("The menu items linking to this content item.")</span>
+    <span class="help-block">@T("The menu items linking to this content item.")</span>
     @if(Model.ContentMenuItems.Any()) {
         <ul>
             @foreach(var menuPart in Model.ContentMenuItems) {
@@ -32,11 +32,11 @@
                 @Html.SelectOption(Model.CurrentMenuId, menu.Id, Html.ItemDisplayText(menu, false).ToString())
             }
         </select>
-        <span class="hint">@T("Select which menu you want the content item to be added on.")</span>
+        <span class="help-block">@T("Select which menu you want the content item to be added on.")</span>
 
         <label for="MenuText">@T("Menu text")</label>
         @Html.TextBoxFor(m => m.MenuText, new { @class = "text single-line" })
-        <span class="hint">@T("The text that should appear in the menu.")</span>
+        <span class="help-block">@T("The text that should appear in the menu.")</span>
     </div>
 
     

@@ -4,7 +4,7 @@
 <fieldset>
     <div>
         @Html.TextBoxFor(m => m.Limit, new { @class = "text small"})
-        <span class="hint">@T("The number of allowed submissions.")</span>
+        <span class="help-block">@T("The number of allowed submissions.")</span>
     </div>
 </fieldset>
 <fieldset>
@@ -16,6 +16,6 @@
             @Html.SelectOption(Model.Unit, (int)SubmissionLimitUnit.Year, T("Year").Text)
             @Html.SelectOption(Model.Unit, (int)SubmissionLimitUnit.Overall, T("Overall").Text)
         </select>
-        <span class="hint">@T("The period to take into account.")</span>
+        <span class="help-block">@T("The period to take into account.")</span>
     </div>
 </fieldset>

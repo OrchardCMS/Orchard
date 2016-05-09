@@ -3,7 +3,7 @@
 <fieldset>
     <div class="am-checkbox">
         @Html.CheckBoxFor(m => m.Required) <label for="@Html.FieldIdFor(m => m.Required)" class="forcheckbox">@T("An option is required")</label>
-        <span class="hint">@T("Check to ensure the user is providing an option for this field.")</span>
+        <span class="help-block">@T("Check to ensure the user is providing an option for this field.")</span>
     </div>
 </fieldset>
 <fieldset>
@@ -11,7 +11,7 @@
     <div class="editor-field">
         @Html.TextAreaFor(m => m.Options, new { @class = "text medium", rows = "5" })
         @Html.ValidationMessageFor(m => m.Options)
-        <span class="hint">@T("Enter an option per line.")</span>
+        <span class="help-block">@T("Enter an option per line.")</span>
     </div>
 </fieldset>
 <fieldset>
@@ -26,14 +26,14 @@
 <fieldset>
     <label for="@Html.FieldIdFor(m => m.Hint)">@T("Help text")</label>
     @Html.TextAreaFor(m => m.Hint, new { @class = "text medium", rows = "5" } )
-    <span class="hint">@T("The help text is written under the field when users are selecting an option.")</span>
+    <span class="help-block">@T("The help text is written under the field when users are selecting an option.")</span>
     @Html.ValidationMessageFor(m => m.Hint)
 </fieldset>
 <fieldset>
     <div>
         <label for="@Html.FieldIdFor(m => m.DefaultValue)">@T("Default value")</label>
         @Html.TextBoxFor(m => m.DefaultValue, new { @class = "text large tokenized ui-autocomplete-input" })
-        <span class="hint">@T("Enter a default option for the field. You can use tokens in this field. If there is no equivalent choice among Options, it will not be used. (optional)")</span>
+        <span class="help-block">@T("Enter a default option for the field. You can use tokens in this field. If there is no equivalent choice among Options, it will not be used. (optional)")</span>
         @Html.ValidationMessageFor(m => m.DefaultValue)
     </div>
 </fieldset>

@@ -8,74 +8,74 @@
         <fieldset>
             @using (Html.BeginFormAntiForgeryPost(Url.Action("Index", "Infoset"))) {
                 <legend>@T("Migrating Site Settings:")</legend>
-                <span class="hint">@T("This migration step will migrate your Site Settings to Infosets and delete the deprecated records.")</span>
+                <span class="help-block">@T("This migration step will migrate your Site Settings to Infosets and delete the deprecated records.")</span>
                 <button class="btn btn-primary" type="submit">@T("Migrate")</button>
             }
         </fieldset>
         <fieldset>
             <legend>@T("Migrating Body Parts:")</legend>
-            <span class="hint">@T("This migration step will copy all Body Parts to Infosets.")</span>
+            <span class="help-block">@T("This migration step will copy all Body Parts to Infosets.")</span>
             <button type="button" class="btn btn-primary" data-url="@Url.Action("MigrateBody", "Infoset")">@T("Migrate")</button>
         </fieldset>
 
         <fieldset>
             <legend>@T("Migrating Media Parts:")</legend>
-            <span class="hint">@T("This migration step will copy all Media Parts to Infosets.")</span>
+            <span class="help-block">@T("This migration step will copy all Media Parts to Infosets.")</span>
             <button type="button" class="btn btn-primary" data-url="@Url.Action("MigrateMedia", "Infoset")">@T("Migrate")</button>
         </fieldset>
 
         <fieldset>
             <legend>@T("Migrating Content Item Permissions Parts:")</legend>
-            <span class="hint">@T("This migration step will copy all Content Item Permissions parts to Infosets.")</span>
+            <span class="help-block">@T("This migration step will copy all Content Item Permissions parts to Infosets.")</span>
             <button type="button" class="btn btn-primary" data-url="@Url.Action("MigrateContentPermissionsPart", "Infoset")">@T("Migrate")</button>
         </fieldset>
 
         <fieldset>
             <legend>@T("Migrating Content Item Menu Parts:")</legend>
-            <span class="hint">@T("This migration step will copy all Content Item Menu parts to Infosets.")</span>
+            <span class="help-block">@T("This migration step will copy all Content Item Menu parts to Infosets.")</span>
             <button type="button" class="btn btn-primary" data-url="@Url.Action("MigrateContentMenuItemPart", "Infoset")">@T("Migrate")</button>
         </fieldset>
 
         <fieldset>
             <legend>@T("Migrating Tags Parts:")</legend>
-            <span class="hint">@T("This migration step will copy all Tags parts to Infosets.")</span>
+            <span class="help-block">@T("This migration step will copy all Tags parts to Infosets.")</span>
             <button type="button" class="btn btn-primary" data-url="@Url.Action("MigrateTagsPart", "Infoset")">@T("Migrate")</button>
         </fieldset>
 
         <fieldset>
             <legend>@T("Migrating Widget Parts:")</legend>
-            <span class="hint">@T("This migration step will copy all Widget parts to Infosets.")</span>
+            <span class="help-block">@T("This migration step will copy all Widget parts to Infosets.")</span>
             <button type="button" class="btn btn-primary" data-url="@Url.Action("MigrateWidgetPart", "Infoset")">@T("Migrate")</button>
         </fieldset>
 
         <fieldset>
             <legend>@T("Migrating Layer Parts:")</legend>
-            <span class="hint">@T("This migration step will copy all Layer parts to Infosets.")</span>
+            <span class="help-block">@T("This migration step will copy all Layer parts to Infosets.")</span>
             <button type="button" class="btn btn-primary" data-url="@Url.Action("MigrateLayerPart", "Infoset")">@T("Migrate")</button>
         </fieldset>
 
         <fieldset>
             <legend>@T("Migrating Menu Widget Parts:")</legend>
-            <span class="hint">@T("This migration step will copy all Menu Widget parts to Infosets.")</span>
+            <span class="help-block">@T("This migration step will copy all Menu Widget parts to Infosets.")</span>
             <button type="button" class="btn btn-primary" data-url="@Url.Action("MigrateMenuWidgetPart", "Infoset")">@T("Migrate")</button>
         </fieldset>
 
         <fieldset>
             <legend>@T("Migrating Shape Menu Item Parts:")</legend>
-            <span class="hint">@T("This migration step will copy all Shape Menu Item parts to Infosets.")</span>
+            <span class="help-block">@T("This migration step will copy all Shape Menu Item parts to Infosets.")</span>
             <button type="button" class="btn btn-primary" data-url="@Url.Action("MigrateShapeMenuItemPart", "Infoset")">@T("Migrate")</button>
         </fieldset>
 
         <fieldset>
             <legend>@T("Migrating Menu Item Parts:")</legend>
-            <span class="hint">@T("This migration step will copy all Menu Item parts to Infosets.")</span>
+            <span class="help-block">@T("This migration step will copy all Menu Item parts to Infosets.")</span>
             <button type="button" class="btn btn-primary" data-url="@Url.Action("MigrateMenuItemPart", "Infoset")">@T("Migrate")</button>
         </fieldset>
 
         @if (Request.RawUrl.EndsWith("1.x")) {
             <fieldset>
                 <legend>@T("FIXING 1.x VERSIONS:")</legend>
-                <span class="hint">@T("This migration step will merge version infosets.")</span>
+                <span class="help-block">@T("This migration step will merge version infosets.")</span>
                 <button class="btn btn-primary" type="button" data-url="@Url.Action("FixContentItemVersionPart", "Infoset")">@T("Migrate")</button>
             </fieldset>
         }

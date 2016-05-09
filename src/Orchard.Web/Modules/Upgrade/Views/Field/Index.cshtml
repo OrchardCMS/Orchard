@@ -11,7 +11,7 @@
         <div class="panel-body">
             <fieldset>
                 <legend>@T("Choose the types to migrate:")</legend>
-                <span class="hint">@T("The migration process fields data. You will still need to enable Orchard.Fields, and remove Contrib.DateTime and Contrib.MediaPicker if you have installed them.")</span>
+                <span class="help-block">@T("The migration process fields data. You will still need to enable Orchard.Fields, and remove Contrib.DateTime and Contrib.MediaPicker if you have installed them.")</span>
                 <ol>
                     @foreach (var contentTypeEntry in Model.ContentTypes) {
                         <li>

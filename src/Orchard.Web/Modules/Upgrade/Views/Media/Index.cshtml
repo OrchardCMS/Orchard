@@ -8,9 +8,9 @@
     <div class="panel-body">
         <fieldset>
             <legend>@T("Migrating Media Files:")</legend>
-            <span class="hint">@T("This migration step will create and organize new Media Content Items based on the media files in your ~/Media folder.")</span>
+            <span class="help-block">@T("This migration step will create and organize new Media Content Items based on the media files in your ~/Media folder.")</span>
             @if (ViewBag.CanMigrate) {
-                <span class="hint">@T("Before importing, please ensure the server has the expected mime types already registered as explained here: <a href=\"http://www.iis.net/configreference/system.webserver/staticcontent/mimemap\">http://www.iis.net/configreference/system.webserver/staticcontent/mimemap</a>")</span>
+                <span class="help-block">@T("Before importing, please ensure the server has the expected mime types already registered as explained here: <a href=\"http://www.iis.net/configreference/system.webserver/staticcontent/mimemap\">http://www.iis.net/configreference/system.webserver/staticcontent/mimemap</a>")</span>
             }
             @if (ViewBag.CanMigrate) {
                 <button type="button" class="button" id="button-migrate">@T("Migrate")</button>
@@ -21,9 +21,9 @@
         <fieldset>
             @using (Html.BeginFormAntiForgeryPost(Url.Action("MediaPicker", "Media"))) {
                 <legend>@T("Migrating Media Picker Fields:")</legend>
-                <span class="hint">@T("This migration step will migrate your Media Picker and Media Gallery Picker fields to the new Media Library Field.")</span>
+                <span class="help-block">@T("This migration step will migrate your Media Picker and Media Gallery Picker fields to the new Media Library Field.")</span>
                 if (!ViewBag.CanMigrateFields) {
-                    <span class="hint">@T("Before migrating fields, please migrate all the Media files.")</span>
+                    <span class="help-block">@T("Before migrating fields, please migrate all the Media files.")</span>
                 }
                 if (ViewBag.CanMigrateFields) {
                     <button type="submit">@T("Migrate")</button>

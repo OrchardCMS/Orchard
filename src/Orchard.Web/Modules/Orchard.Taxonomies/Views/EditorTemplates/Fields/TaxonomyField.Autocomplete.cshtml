@@ -37,15 +37,15 @@
     <div class="terms-editor text-medium" data-autocomplete-url="@Url.HttpRouteUrl("", new { area = "Orchard.Taxonomies", controller = "Tags" })" data-taxonomy-id="@Model.TaxonomyId" data-leaves-only="@Model.Settings.LeavesOnly" data-selected-terms="@selectedTerms" data-allow-new-terms="@Model.Settings.AllowCustomTerms.ToString().ToLower()" data-singlechoice="@Model.Settings.SingleChoice.ToString().ToLower()">
             <ul></ul>
             @if (Model.Settings.SingleChoice) {
-                <div class="hint">@T("Enter a single term. Hit <i>tab</i> or <i>enter</i> to apply the term.") @if (!Model.Settings.AllowCustomTerms) { <text>@T("This taxonomy does not allow you to create new terms.") </text> }</div>
+                <div class="help-block">@T("Enter a single term. Hit <i>tab</i> or <i>enter</i> to apply the term.") @if (!Model.Settings.AllowCustomTerms) { <text>@T("This taxonomy does not allow you to create new terms.") </text> }</div>
             }
             else {
-                <div class="hint">@T("Enter multiple terms. Hit <i>tab</i>, <i>enter</i> or <i>,</i> to add multiple terms.") @if (!Model.Settings.AllowCustomTerms) { <text>@T("This taxonomy does not allow you to create new terms.") </text> }</div>
+                <div class="help-block">@T("Enter multiple terms. Hit <i>tab</i>, <i>enter</i> or <i>,</i> to add multiple terms.") @if (!Model.Settings.AllowCustomTerms) { <text>@T("This taxonomy does not allow you to create new terms.") </text> }</div>
             }
         </div>
     }
     @if (!String.IsNullOrWhiteSpace(Model.Settings.Hint)) {
-        <span class="hint">@Model.Settings.Hint</span>
+        <span class="help-block">@Model.Settings.Hint</span>
     }
     <div class="hidden-taxonomy-state">
         <ul class="terms list-unstyled">

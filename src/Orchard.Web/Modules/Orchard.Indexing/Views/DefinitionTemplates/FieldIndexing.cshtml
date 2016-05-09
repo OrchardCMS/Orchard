@@ -5,6 +5,6 @@
         @Html.EditorFor(m => m.Included)
         <label for="@Html.FieldIdFor(m => m.Included)" class="forcheckbox">@T("Include in the index")</label>
         @Html.ValidationMessageFor(m => m.Included)
-        <span class="hint">@T("Check to add content of this field in the selected indexes.")</span>
+        <span class="help-block">@T("Check to add content of this field in the selected indexes.")</span>
     </div>
 </fieldset>

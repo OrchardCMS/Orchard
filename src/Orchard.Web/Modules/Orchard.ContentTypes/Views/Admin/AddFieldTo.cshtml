@@ -11,12 +11,12 @@
             <div class="form-group">
                 <label for="DisplayName">@T("Display Name")</label>
                 @Html.TextBoxFor(m => m.DisplayName, new { @class = "text wide", autofocus = "autofocus" })
-                <span class="hint">@T("Name of the field as it will be displayed in screens.")</span>
+                <span class="help-block">@T("Name of the field as it will be displayed in screens.")</span>
             </div>
             <div class="form-group">
                 <label for="Name">@T("Technical Name")</label>
                 @Html.TextBoxFor(m => m.Name, new { @class = "text wide " })
-                <span class="hint">@T("Technical name of the field.")</span>
+                <span class="help-block">@T("Technical name of the field.")</span>
             </div>
             <div class="form-group">
                 <label for="FieldTypeName">@T("Field Type")</label>

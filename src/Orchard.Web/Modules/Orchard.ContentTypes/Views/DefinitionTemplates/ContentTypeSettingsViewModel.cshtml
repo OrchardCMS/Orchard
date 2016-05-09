@@ -11,7 +11,7 @@
         @Html.EditorFor(m => m.Creatable)
         <label for="@Html.FieldIdFor(m => m.Creatable)" class="forcheckbox">@T("Creatable")</label>
     </div>
-    <span class="hint">@T("Determines if an instance of this content type can be created through the UI.")</span>
+    <span class="help-block">@T("Determines if an instance of this content type can be created through the UI.")</span>
 </div>
 
 <div class="form-group">
@@ -19,7 +19,7 @@
         @Html.EditorFor(m => m.Listable)
         <label for="@Html.FieldIdFor(m => m.Listable)" class="forcheckbox">@T("Listable")</label>
     </div>
-    <span class="hint">@T("Determines if an instance of this content type can be listed through the UI.")</span>
+    <span class="help-block">@T("Determines if an instance of this content type can be listed through the UI.")</span>
 </div>
 
 <div class="form-group">
@@ -27,7 +27,7 @@
         @Html.EditorFor(m => m.Draftable)
         <label for="@Html.FieldIdFor(m => m.Draftable)" class="forcheckbox">@T("Draftable")</label>
     </div>
-    <span class="hint">@T("Determines if this content type supports draft versions.")</span>
+    <span class="help-block">@T("Determines if this content type supports draft versions.")</span>
 </div>
 
 <div class="form-group">
@@ -35,5 +35,5 @@
         @Html.EditorFor(m => m.Securable)
         <label for="@Html.FieldIdFor(m => m.Securable)" class="forcheckbox">@T("Securable")</label>
     </div>
-    <span class="hint">@T("Determines if this content type can have custom permissions.")</span>
+    <span class="help-block">@T("Determines if this content type can have custom permissions.")</span>
 </div>

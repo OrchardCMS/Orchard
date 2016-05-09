@@ -9,26 +9,26 @@
             @Html.SelectOption(Model.CurrentMenuId, menu.Id, Html.ItemDisplayText(menu, false).ToString())
         }
     </select>
-    <span class="hint">@T("Select which menu you want to display")</span>
+    <span class="help-block">@T("Select which menu you want to display")</span>
 </fieldset>
 
 <fieldset>
     <label for="@Html.FieldIdFor(m => m.StartLevel)">@T("Start Level")</label>
     @Html.TextBoxFor(m => m.StartLevel, new { @class = "text small" })
-    <span class="hint">@T("The level the menu should start at.")</span>
+    <span class="help-block">@T("The level the menu should start at.")</span>
 </fieldset>
 
 <fieldset>
     <label for="@Html.FieldIdFor(m => m.StopLevel)">@T("Levels to display")</label>
     @Html.TextBoxFor(m => m.StopLevel, new { @class = "text small" })
-    <span class="hint">@T("The number of levels to display, \"0\" meaning all levels.")</span>
+    <span class="help-block">@T("The number of levels to display, \"0\" meaning all levels.")</span>
 </fieldset>
 
 <fieldset>
     <div class="am-checkbox">
         @Html.EditorFor(m => m.Breadcrumb)
         <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Breadcrumb)">@T("Display as Breadcrumb")</label>
-        <span class="hint">@T("Check to render the path to the current content item.")</span>
+        <span class="help-block">@T("Check to render the path to the current content item.")</span>
     </div>
 </fieldset>
 
@@ -37,7 +37,7 @@
         <div class="am-checkbox">
             @Html.EditorFor(m => m.AddHomePage)
             <label class="forcheckbox" for="@Html.FieldIdFor(m => m.AddHomePage)">@T("Add the home page as the first element")</label>
-            <span class="hint">@T("Check to render the home page as the first element of the breadcrumb.")</span>
+            <span class="help-block">@T("Check to render the home page as the first element of the breadcrumb.")</span>
         </div>
     </fieldset>
 
@@ -45,7 +45,7 @@
         <div class="am-checkbox">
             @Html.EditorFor(m => m.AddCurrentPage)
             <label class="forcheckbox" for="@Html.FieldIdFor(m => m.AddCurrentPage)">@T("Add the current content item as the last element")</label>
-            <span class="hint">@T("Check to render the current content item as the last element.")</span>
+            <span class="help-block">@T("Check to render the current content item as the last element.")</span>
         </div>
     </fieldset>
 </div>
@@ -54,6 +54,6 @@
     <div class="am-checkbox">
         @Html.EditorFor(m => m.ShowFullMenu)
         <label class="forcheckbox" for="@Html.FieldIdFor(m => m.ShowFullMenu)">@T("No filter on selected page")</label>
-        <span class="hint">@T("Check for the menu to be display without filtering the selected current page.")</span>
+        <span class="help-block">@T("Check for the menu to be display without filtering the selected current page.")</span>
     </div>
 </fieldset>

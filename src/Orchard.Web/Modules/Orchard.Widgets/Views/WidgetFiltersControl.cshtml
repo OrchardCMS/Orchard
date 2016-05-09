@@ -23,7 +23,7 @@
                     @Html.Link(T("Edit").Text, Url.Action("EditLayer", "Admin", new { area = "Orchard.Widgets", id = Model.CurrentLayer.Id, returnUrl }), new { @class = "btn btn-primary" })
 
                     @if (!String.IsNullOrEmpty(Model.CurrentLayer.Description)) {
-                        <p class="hint">
+                        <p class="help-block">
                             @Model.CurrentLayer.Description
                         </p>
                     }
