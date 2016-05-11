@@ -6,6 +6,7 @@
   <PropertyGroup>
     <LibFolder>$(MSBuildProjectDirectory)\lib</LibFolder>
     <SrcFolder>$(MSBuildProjectDirectory)\src</SrcFolder>
+    <AzureSrcFolder>$(SrcFolder)\Orchard.Azure</AzureSrcFolder>
     <BuildFolder>$(MSBuildProjectDirectory)\build</BuildFolder>
     <MsBuildTasksFolder>$(MSBuildProjectDirectory)\buildtasks</MsBuildTasksFolder>
     <ArtifactsFolder>$(MSBuildProjectDirectory)\artifacts</ArtifactsFolder>
@@ -28,21 +29,32 @@
     <BuildPlatform Condition="$(ProgramW6432) != ''">x64</BuildPlatform>
     <BuildPlatform Condition="$(BuildPlatform) == ''">x86</BuildPlatform>
     <Configuration Condition="$(Configuration) == ''">Release</Configuration>
+    
+    <OrchardSolution>$(SrcFolder)\Orchard.sln</OrchardSolution>
+    <OrchardAzureSolution>$(AzureSrcFolder)\Orchard.Azure.sln</OrchardAzureSolution>
+    <Solution Condition="$(Solution) == ''">$(OrchardSolution)</Solution>
 
     <!-- TeamCity build number -->
     <Version>$(BUILD_NUMBER)</Version>
   </PropertyGroup>
+
+  <!-- Finding the restored NuGet package of NUnit (version number doesn't matter)
+       to be able to reference the test runner executable (http://stackoverflow.com/a/25617556). -->
+  <ItemGroup>
+    <NUnitPackageFiles Include="$(SrcFolder)\packages\NUnit*\tools\nunit-console.exe" />
+    <NUnitPackageToolsFolder Include="@(NUnitPackageFiles->'%(RootDir)%(Directory)'->Distinct())" />
+  </ItemGroup>
 
   <Import Project="$(LibFolder)\msbuildtasks\MSBuild.Community.Tasks.Targets"/>
   <Import Project="$(LibFolder)\slowcheetah\SlowCheetah.Transforms.targets"/>
 
   <!-- Coordinating Targets -->
 
-  <Target Name ="Build">
+  <Target Name="Build">
     <CallTarget Targets="Clean"/>
     <CallTarget Targets="Compile"/>
     <CallTarget Targets="Test"/>
-    <CallTarget Targets="Package"/> 
+    <CallTarget Targets="Package"/>
   </Target>
 
   <Target Name="FastBuild">
@@ -95,19 +107,19 @@
   </Target>
 
   <Target Name="AzureBuild">
-    <MSBuild Projects="AzurePackage.proj" Targets="Build">
+    <MSBuild Projects="$(OrchardAzureSolution)" Targets="Build">
     </MSBuild>
   </Target>
 
   <Target Name="AzureCIBuild">
-    <MSBuild Projects="AzurePackage.proj" Targets="CIBuild">
+    <MSBuild Projects="$(OrchardAzureSolution)" Targets="CIBuild">
     </MSBuild>
   </Target>
 
   <!-- Building -->
 
   <Target Name="Clean">
-    <MSBuild Projects="$(SrcFolder)\Orchard.sln" Targets="Clean" />
+    <MSBuild Projects="$(Solution)" Targets="Clean" />
     <RemoveDir Directories="$(BuildFolder)" ContinueOnError="true"/>
     <RemoveDir Directories="$(ArtifactsFolder)" />
   </Target>
@@ -115,16 +127,16 @@
   <Target Name="Compile">
     <!-- Compile to "OutputFolder" -->
     <MSBuild
-      Projects="$(SrcFolder)\Orchard.sln"
+      Projects="$(Solution)"
       Targets="Build"
       Properties="Configuration=$(Configuration);OutputPath=$(CompileFolder)" />
     <!-- Compile to "regular" output folder for devs using VS locally -->
     <MSBuild
-      Projects="$(SrcFolder)\Orchard.sln"
+      Projects="$(Solution)"
       Targets="Build"/>
   </Target>
 
-  <Target Name ="CompileMsBuildTasks">
+  <Target Name="CompileMsBuildTasks">
     <MSBuild
       Projects="$(SrcFolder)\Tools\MSBuild.Orchard.Tasks\MSBuild.Orchard.Tasks.csproj"
       Targets="Build"
@@ -145,32 +157,21 @@
 
   <!-- Testing -->
 
-  <Target Name ="Test">
-    <!-- TeamCity support -->
-    <ItemGroup>
-      <NUnitAddinFiles Include="$(teamcity_dotnet_nunitaddin)-2.5.2.*" />
-    </ItemGroup>
-    <Copy SourceFiles="@(NUnitAddinFiles)" DestinationFolder="$(LibFolder)\nunit\addins" />
-
+  <Target Name="Test">
     <!-- Run unit test assemblies -->
     <CreateItem Include="$(CompileFolder)\*.Tests.*dll">
       <Output TaskParameter="Include" ItemName="TestAssemblies" />
     </CreateItem>
 
-    <NUnit Assemblies="@(TestAssemblies)" ToolPath="$(LibFolder)\nunit" WorkingDirectory="$(CompileFolder)" OutputXmlFile="$(BuildFolder)\Orchard.Tests.xml" ExcludeCategory="longrunning" />
+    <NUnit Assemblies="@(TestAssemblies)" ToolPath="@(NUnitPackageToolsFolder)" WorkingDirectory="$(CompileFolder)" OutputXmlFile="$(BuildFolder)\Orchard.Tests.xml" ExcludeCategory="longrunning" />
   </Target>
 
-  <Target Name ="Spec" DependsOnTargets="Package-Stage">
-    <!-- TeamCity support -->
-    <ItemGroup>
-      <NUnitAddinFiles Include="$(teamcity_dotnet_nunitaddin)-2.5.2.*" />
-    </ItemGroup>
-    <Copy SourceFiles="@(NUnitAddinFiles)" DestinationFolder="$(LibFolder)\nunit\addins" />
+  <Target Name="Spec" DependsOnTargets="Package-Stage">
 
     <CreateItem Include="$(CompileFolder)\*.Specs.dll">
       <Output TaskParameter="Include" ItemName="SpecAssemblies" />
     </CreateItem>
-    <NUnit Assemblies="@(SpecAssemblies)" ToolPath="$(LibFolder)\nunit" />
+    <NUnit Assemblies="@(SpecAssemblies)" ToolPath="$(NUnitPackageToolsFolder)" />
   </Target>
 
   <!-- Packaging (Stage) -->
@@ -298,7 +299,6 @@
   <!-- Packaging (MsDeploy) -->
   <Target Name="Package-MsDeploy">
     <ItemGroup>
-      <!--<MsDeploy-Folder-Input Include="$(StageFolder)\**\*" Exclude="$(StageFolder)\**\bin\**\*.pdb;$(StageFolder)\**\bin\**\*.xml" />-->
 
       <MsDeploy-Exclude-Modules Include="
         $(StageFolder)\**\Modules\Orchard.CustomForms\**;
@@ -309,7 +309,7 @@
         $(StageFolder)\**\Modules\Orchard.TaskLease\**;
         " />
 
-      <MsDeploy-Folder-Input Include="$(StageFolder)\**\*" Exclude="$(StageFolder)\**\bin\**\*.xml;$(StageFolder)\**\obj\**\*;@(MsDeploy-Exclude-Modules)" />
+      <MsDeploy-Folder-Input Include="$(StageFolder)\**\*" Exclude="$(StageFolder)\**\bin\**\*.xml;$(StageFolder)\**\obj\**\*;$(StageFolder)\**\bin\**\*.pdb;$(StageFolder)\**\bin\**\*.dll.config;@(MsDeploy-Exclude-Modules)" />
       <MsDeploy-Parameters Include="$(LibFolder)\msdeploy\*.xml;$(LibFolder)\msdeploy\*.sql"/>
     </ItemGroup>
 
@@ -350,11 +350,11 @@
         $(MSBuildProjectDirectory)\**\*.hgignore;
         $(MSBuildProjectDirectory)\**\*.hg*\**\*;
         $(LibFolder)\nunit\addins\**\*;
-        " Exclude="$(MSBuildProjectDirectory)\src\Orchard.Azure\Orchard.Azure.CloudService\*Content\**\*" />
+        " Exclude="$(AzureSrcFolder)\Orchard.Azure.CloudService\*Content\**\*" />
 
       <Zip-Stage Include="$(StageFolder)\**\*" />
 
-      <Zip-MsDeploy Include="$(MsDeployFolder)\**\*" Exclude="$(MSBuildProjectDirectory)\**\bin\**\*.pdb;"/>
+      <Zip-MsDeploy Include="$(MsDeployFolder)\**\*" Exclude=""/>
 
       <Zip-Source Include="
         $(MSBuildProjectDirectory)\lib\**\*;

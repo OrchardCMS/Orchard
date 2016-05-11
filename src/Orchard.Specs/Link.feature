@@ -68,3 +68,30 @@ Scenario: Creating and using Link fields
             | Event.SiteUrl.Value |       |
         And I hit "Save"
     Then I should see "Url is required for Site Url."
+
+    # The default value should be proposed on creation
+    When I go to "Admin/ContentTypes/Edit/Event"
+        And I fill in 
+            | name                                     | value                         |
+            | Fields[0].LinkFieldSettings.DefaultValue | http://www.orchardproject.net |
+        And I hit "Save"
+        And I go to "Admin/Contents/Create/Event"
+    Then I should see "value=\"http://www.orchardproject.net\""
+
+    # The required attribute should be used
+    When I go to "Admin/ContentTypes/Edit/Event"
+        And I fill in 
+            | name                                     | value |
+            | Fields[0].LinkFieldSettings.Required     | true  |
+        And I hit "Save"
+        And I go to "Admin/Contents/Create/Event"
+    Then I should see "required=\"required\""
+
+    # The required attribute should not be used
+    When I go to "Admin/ContentTypes/Edit/Event"
+        And I fill in 
+            | name                                     | value |
+            | Fields[0].LinkFieldSettings.Required     | false |
+        And I hit "Save"
+        And I go to "Admin/Contents/Create/Event"
+    Then I should not see "required=\"required\""

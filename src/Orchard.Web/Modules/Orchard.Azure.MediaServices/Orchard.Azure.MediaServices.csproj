@@ -276,7 +276,7 @@
     </Content>
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
-    <Content Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
     <Content Include="Assets\TypeScript\cloudmedia-videoplayer-data.ts" />
     <Content Include="Assets\TypeScript\cloudmedia-videoplayer-injectors-dash.ts" />
@@ -306,10 +306,6 @@
     <ProjectReference Include="..\Orchard.PublishLater\Orchard.PublishLater.csproj">
       <Project>{c889167c-e52c-4a65-a419-224b3d1b957d}</Project>
       <Name>Orchard.PublishLater</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Orchard.TaskLease\Orchard.TaskLease.csproj">
-      <Project>{3f72a4e9-7b72-4260-b010-c16ec54f9baf}</Project>
-      <Name>Orchard.TaskLease</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

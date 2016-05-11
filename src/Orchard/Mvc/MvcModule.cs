@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Web;
 using System.Web.Caching;
+using System.Web.Hosting;
 using System.Web.Instrumentation;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -350,6 +351,10 @@ namespace Orchard.Mvc {
 
         public class HttpServerUtilityPlaceholder : HttpServerUtilityBase {
             public override int ScriptTimeout { get; set; }
+
+            public override string MapPath(string path) {
+                return HostingEnvironment.MapPath(path);
+            }
         }
     }
 }

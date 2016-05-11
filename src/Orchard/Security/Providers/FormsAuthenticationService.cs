@@ -93,6 +93,7 @@ namespace Orchard.Security.Providers {
             httpContext.Response.Cookies.Add(cookie);
 
             _isAuthenticated = true;
+            _isNonOrchardUser = false;
             _signedInUser = user;
         }
 
@@ -117,6 +118,7 @@ namespace Orchard.Security.Providers {
         public void SetAuthenticatedUserForRequest(IUser user) {
             _signedInUser = user;
             _isAuthenticated = true;
+            _isNonOrchardUser = false;
         }
 
         public IUser GetAuthenticatedUser() {

@@ -166,6 +166,10 @@
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="YamlDotNet, Version=3.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\YamlDotNet.3.8.0\lib\net35\YamlDotNet.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ContentManagement\Extensions\DriverResultExtensions.cs" />
@@ -699,6 +703,7 @@
     <Compile Include="Messaging\Services\IMessagingChannel.cs" />
     <Compile Include="IWorkContextAccessor.cs" />
     <Compile Include="Utility\Extensions\VirtualPathProviderExtensions.cs" />
+    <Compile Include="Utility\NamedReaderWriterLock.cs" />
     <Compile Include="Utility\ReflectionHelper.cs" />
     <Compile Include="Validation\PathValidation.cs" />
     <Compile Include="Wcf\OrchardDependencyInjectionServiceBehavior.cs" />

@@ -154,7 +154,7 @@
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
-    <Content Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -180,6 +180,7 @@
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Drivers\TitlePartDriver.cs" />
     <Compile Include="Helpers\StringExtensions.cs" />
     <Compile Include="Handlers\ShapePartHandler.cs" />
     <Compile Include="Drivers\ShapePartDriver.cs" />

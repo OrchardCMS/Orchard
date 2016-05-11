@@ -4,7 +4,6 @@ using Orchard.ContentManagement.Handlers;
 using Orchard.Fields.Fields;
 using Orchard.Fields.Settings;
 using Orchard.Localization;
-using Orchard.Tokens;
 using System;
 using System.Collections.Generic;
 
@@ -12,11 +11,9 @@ namespace Orchard.Fields.Drivers {
     public class LinkFieldDriver : ContentFieldDriver<LinkField> {
         public IOrchardServices Services { get; set; }
         private const string TemplateName = "Fields/Link.Edit";
-        private readonly ITokenizer _tokenizer;
 
-        public LinkFieldDriver(IOrchardServices services, ITokenizer tokenizer) {
+        public LinkFieldDriver(IOrchardServices services) {
             Services = services;
-            _tokenizer = tokenizer;
             T = NullLocalizer.Instance;
         }
 
@@ -39,28 +36,27 @@ namespace Orchard.Fields.Drivers {
 
         protected override DriverResult Editor(ContentPart part, LinkField field, dynamic shapeHelper) {
             return ContentShape("Fields_Link_Edit", GetDifferentiator(field, part),
-                () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: field, Prefix: GetPrefix(field, part)));
+                () => {
+                    if (part.IsNew()) {
+                        var settings = field.PartFieldDefinition.Settings.GetModel<LinkFieldSettings>();
+                        field.Value = settings.DefaultValue;
+                        field.Text = settings.TextDefaultValue;
+                    }
+                    return shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: field, Prefix: GetPrefix(field, part));
+                });
         }
 
         protected override DriverResult Editor(ContentPart part, LinkField field, IUpdateModel updater, dynamic shapeHelper) {
             if (updater.TryUpdateModel(field, GetPrefix(field, part), null, null)) {
                 var settings = field.PartFieldDefinition.Settings.GetModel<LinkFieldSettings>();
 
-                if (String.IsNullOrEmpty(field.Value) && !String.IsNullOrEmpty(settings.DefaultValue)) {
-                   field.Value = _tokenizer.Replace(settings.DefaultValue, new Dictionary<string, object> { { "Content", part.ContentItem } });
-                }
-
-                if(!String.IsNullOrEmpty(settings.TextDefaultValue) && String.IsNullOrWhiteSpace(field.Text)) {
-                    field.Text = _tokenizer.Replace(settings.TextDefaultValue, new Dictionary<string, object> { { "Content", part.ContentItem } });
-                }
-
-                if (settings.Required && string.IsNullOrWhiteSpace(field.Value)) {
+                if (settings.Required && String.IsNullOrWhiteSpace(field.Value)) {
                     updater.AddModelError(GetPrefix(field, part), T("Url is required for {0}", field.DisplayName));
                 }
-                else if (!string.IsNullOrWhiteSpace(field.Value) && !Uri.IsWellFormedUriString(field.Value, UriKind.RelativeOrAbsolute)) {
+                else if (!String.IsNullOrWhiteSpace(field.Value) && !Uri.IsWellFormedUriString(field.Value, UriKind.RelativeOrAbsolute)) {
                     updater.AddModelError(GetPrefix(field, part), T("{0} is an invalid url.", field.Value));
                 }
-                else if (settings.LinkTextMode == LinkTextMode.Required && string.IsNullOrWhiteSpace(field.Text)) {
+                else if (settings.LinkTextMode == LinkTextMode.Required && String.IsNullOrWhiteSpace(field.Text)) {
                     updater.AddModelError(GetPrefix(field, part), T("Text is required for {0}.", field.DisplayName));
                 }
             }
