@@ -29,7 +29,7 @@ Features:
         Dependencies: Orchard.Layouts, Orchard.Projections
     Orchard.Layouts.Tokens:
         Name: Element Tokens
-        Description: Provides an element token provider that enables elements to be rendered using a token and enables tokens to be used inside of various elements such as Html, Text and Paragraph.
+        Description: Provides an element token provider that enables elements to be rendered using a token.
         Category: Layout
         Dependencies: Orchard.Layouts, Orchard.Tokens
     Orchard.Layouts.UI:

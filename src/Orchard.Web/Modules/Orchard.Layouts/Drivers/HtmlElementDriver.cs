@@ -2,14 +2,15 @@
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
 using Orchard.Layouts.Helpers;
-using Orchard.Layouts.Services;
 using Orchard.Layouts.ViewModels;
+using Orchard.Services;
 
-namespace Orchard.Layouts.Drivers {
+namespace Orchard.Layouts.Drivers
+{
     public class HtmlElementDriver : ElementDriver<Html> {
-        private readonly IElementFilterProcessor _processor;
+        private readonly IHtmlFilterProcessor _processor;
 
-        public HtmlElementDriver(IElementFilterProcessor processor) {
+        public HtmlElementDriver(IHtmlFilterProcessor processor) {
             _processor = processor;
         }
 
@@ -28,7 +29,7 @@ namespace Orchard.Layouts.Drivers {
         }
 
         protected override void OnDisplaying(Html element, ElementDisplayingContext context) {
-            context.ElementShape.ProcessedContent = _processor.ProcessContent(element.Content, "html", context.GetTokenData());
+            context.ElementShape.ProcessedContent = _processor.ProcessContent(element.Content, new HtmlFilterContext { Flavor = "html", Data = context.GetTokenData() });
         }
     }
 }
