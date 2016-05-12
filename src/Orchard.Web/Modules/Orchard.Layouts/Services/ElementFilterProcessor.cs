@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Orchard.Services;
+using Orchard.Tokens.Filters;
 
 namespace Orchard.Layouts.Services {
     public class ElementFilterProcessor : IElementFilterProcessor {
@@ -10,8 +11,10 @@ namespace Orchard.Layouts.Services {
 
         public string ProcessContent(string text, string flavor, IDictionary<string, object> context) {
             foreach (var htmlFilter in _filters) {
-                var elementFilter = htmlFilter as IElementFilter;
-                text = elementFilter != null ? elementFilter.ProcessContent(text, flavor, context) : htmlFilter.ProcessContent(text, flavor);
+                if (!(htmlFilter is TokensFilter)) {
+                    var elementFilter = htmlFilter as IElementFilter;
+                    text = elementFilter != null ? elementFilter.ProcessContent(text, flavor, context) : htmlFilter.ProcessContent(text, flavor);
+                }
             }
             return text;
         }
