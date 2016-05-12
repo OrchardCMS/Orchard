@@ -1,11 +1,16 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
+using NHibernate.Hql;
+using Orchard.Environment;
 
 namespace Orchard.Validation {
     /// <summary>
     /// Provides methods to validate paths.
     /// </summary>
     public static class PathValidation {
+
         /// <summary>
         /// Determines if a path lies within the base path boundaries.
         /// If not, an exception is thrown.
@@ -26,10 +31,22 @@ namespace Orchard.Validation {
             }
 
             if (!valid) {
-                throw new ArgumentException("Invalid path");
+                if (System.Environment.OSVersion.Platform == PlatformID.Win32NT)
+                    throw new InvalidWindowsPathException("Invalid path");
+                else
+                    throw new ArgumentException("Invalid path");
             }
 
             return mappedPath;
+        }
+    }
+
+    /// <summary>
+    /// Thrown when an invalid path is encountered on a Windows platform.
+    /// </summary>
+    [Serializable]
+    public class InvalidWindowsPathException : ApplicationException {
+        public InvalidWindowsPathException(string message) : base(message) {
         }
     }
 }
