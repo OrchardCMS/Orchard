@@ -1,9 +1,6 @@
 ﻿using System;
 using System.IO;
-using System.Runtime.Serialization;
-using System.Text.RegularExpressions;
-using NHibernate.Hql;
-using Orchard.Environment;
+using Orchard.Localization;
 
 namespace Orchard.Validation {
     /// <summary>
@@ -31,22 +28,10 @@ namespace Orchard.Validation {
             }
 
             if (!valid) {
-                if (System.Environment.OSVersion.Platform == PlatformID.Win32NT)
-                    throw new InvalidWindowsPathException("Invalid path");
-                else
-                    throw new ArgumentException("Invalid path");
+                throw new OrchardException(new LocalizedString("Invalid Path"));
             }
 
             return mappedPath;
-        }
-    }
-
-    /// <summary>
-    /// Thrown when an invalid path is encountered on a Windows platform.
-    /// </summary>
-    [Serializable]
-    public class InvalidWindowsPathException : ApplicationException {
-        public InvalidWindowsPathException(string message) : base(message) {
         }
     }
 }
