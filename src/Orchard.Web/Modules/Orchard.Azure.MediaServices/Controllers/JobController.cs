@@ -156,7 +156,7 @@ namespace Orchard.Azure.MediaServices.Controllers {
                     });
 
                     Logger.Information("Job was created with task of type {0} on cloud video item with ID {1}.", task, id);
-                    _notifier.Information(T("The job '{0}' was successfully created.", job.Name));
+                    _notifier.Success(T("The job '{0}' was successfully created.", job.Name));
 
                     return Redirect(Url.ItemEditUrl(cloudVideoPart));
                 }
@@ -187,7 +187,7 @@ namespace Orchard.Azure.MediaServices.Controllers {
             job.Status = JobStatus.Archived;
 
             Logger.Information("Job with ID {0} was archived.", id);
-            _notifier.Information(T("The job '{0}' was successfully archived.", job.Name));
+            _notifier.Success(T("The job '{0}' was successfully archived.", job.Name));
 
             return RedirectToReturnUrl(returnUrl, Url.ItemEditUrl(job.CloudVideoPart));
         }
@@ -212,7 +212,7 @@ namespace Orchard.Azure.MediaServices.Controllers {
                 wamsJob.Cancel();
 
                 Logger.Information("Job with ID {0} was canceled.", id);
-                _notifier.Information(T("The job '{0}' was successfully canceled.", job.Name));
+                _notifier.Success(T("The job '{0}' was successfully canceled.", job.Name));
             }
             catch (Exception ex) {
                 _transactionManager.Cancel();

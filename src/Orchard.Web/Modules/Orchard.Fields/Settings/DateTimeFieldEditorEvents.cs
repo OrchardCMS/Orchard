@@ -40,6 +40,8 @@ namespace Orchard.Fields.Settings {
                 builder.WithSetting("DateTimeFieldSettings.Display", model.Display.ToString());
                 builder.WithSetting("DateTimeFieldSettings.Hint", model.Hint);
                 builder.WithSetting("DateTimeFieldSettings.Required", model.Required.ToString(CultureInfo.InvariantCulture));
+                builder.WithSetting("DateTimeFieldSettings.DatePlaceholder", model.DatePlaceholder);
+                builder.WithSetting("DateTimeFieldSettings.TimePlaceholder", model.TimePlaceholder);
                 model.DefaultValue = model.Editor == null ? model.DefaultValue : _dateLocalizationServices.ConvertFromLocalizedString(model.Editor.Date, model.Editor.Time);
                 builder.WithSetting("DateTimeFieldSettings.DefaultValue", model.DefaultValue.HasValue ? model.DefaultValue.Value.ToString(CultureInfo.InvariantCulture) : String.Empty);
 

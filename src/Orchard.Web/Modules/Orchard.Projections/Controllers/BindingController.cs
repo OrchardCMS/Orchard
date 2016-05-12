@@ -151,7 +151,7 @@ namespace Orchard.Projections.Controllers {
                     Description = model.Description
                 });
 
-                Services.Notifier.Information(T("Binding created successfully"));
+                Services.Notifier.Success(T("Binding created successfully"));
 
                 return RedirectToAction("Index");
             }
@@ -174,14 +174,14 @@ namespace Orchard.Projections.Controllers {
             var record = recordBluePrints.FirstOrDefault(r => String.Equals(r.Type.FullName, binding.Type, StringComparison.OrdinalIgnoreCase));
 
             if (record == null) {
-                Services.Notifier.Information(T("The record for this binding is no longer available, please remove it."));
+                Services.Notifier.Warning(T("The record for this binding is no longer available, please remove it."));
                 return RedirectToAction("Index");
             }
 
             var property = record.Type.GetProperty(binding.Member, BindingFlags.Instance | BindingFlags.Public);
 
             if (property == null) {
-                Services.Notifier.Information(T("The member for this binding is no longer available, please remove it."));
+                Services.Notifier.Warning(T("The member for this binding is no longer available, please remove it."));
                 return RedirectToAction("Index");
             }
 
@@ -212,7 +212,7 @@ namespace Orchard.Projections.Controllers {
                 binding.DisplayName = model.Display;
                 binding.Description = model.Description;
 
-                Services.Notifier.Information(T("Binding updated successfully"));
+                Services.Notifier.Success(T("Binding updated successfully"));
 
                 return RedirectToAction("Index");
             }
@@ -232,7 +232,7 @@ namespace Orchard.Projections.Controllers {
             }
 
             _repository.Delete(binding);
-            Services.Notifier.Information(T("Binding deleted"));
+            Services.Notifier.Success(T("Binding deleted"));
 
             return RedirectToAction("Index");
         }

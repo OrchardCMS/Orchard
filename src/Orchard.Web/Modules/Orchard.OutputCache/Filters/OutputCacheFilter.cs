@@ -532,13 +532,13 @@ namespace Orchard.OutputCache.Filters {
                     maxAge = TimeSpan.Zero;
                 }
                 response.Cache.SetCacheability(HttpCacheability.Public);
+                response.Cache.SetOmitVaryStar(true);
                 response.Cache.SetMaxAge(maxAge);
             }
 
             // Keeping this example for later usage.
             // response.DisableUserCache();
             // response.DisableKernelCache();
-            // response.Cache.SetOmitVaryStar(true);
 
             if (CacheSettings.VaryByQueryStringParameters == null) {
                 response.Cache.VaryByParams["*"] = true;
