@@ -1,10 +1,8 @@
 ﻿using Orchard.Environment.Extensions;
-using Orchard.Environment.Features;
 using Orchard.Localization;
 using Orchard.UI.Admin.Notification;
 using Orchard.UI.Notify;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Orchard.Redis.Configuration {
 
