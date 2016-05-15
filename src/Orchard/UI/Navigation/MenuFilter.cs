@@ -64,14 +64,25 @@ namespace Orchard.UI.Navigation {
 
             workContext.Layout.TopMenu.Add(topMenuShape);
 
-            // Set the currently selected path
-            Stack<MenuItem> selectedPath = NavigationHelper.SetSelectedPath(menuItems, workContext.HttpContext.Request, routeData) 
-                ?? NavigationHelper.SetSelectedPath(topMenuItems, workContext.HttpContext.Request, routeData);
+            //SIDE MENU
+            // Set the currently side menu selected path
+            Stack<MenuItem> selectedSideMenuPath = NavigationHelper.SetSelectedPath(menuItems, workContext.HttpContext.Request, routeData) ?? NavigationHelper.SetSelectedPath(topMenuItems, workContext.HttpContext.Request, routeData);
 
-            // Populate local nav
-            dynamic localMenuShape = _shapeFactory.LocalMenu().MenuName(string.Format("local_{0}", menuName));
-            NavigationHelper.PopulateLocalMenu(_shapeFactory, localMenuShape, localMenuShape, selectedPath);
-            workContext.Layout.LocalNavigation.Add(localMenuShape);
+            // Populate local nav related to side menu
+            dynamic localSideMenuShape = _shapeFactory.LocalMenu().MenuName(string.Format("local_{0}", menuName));
+            NavigationHelper.PopulateLocalMenu(_shapeFactory, localSideMenuShape, localSideMenuShape, selectedSideMenuPath);
+            if (localSideMenuShape.Items.Count > 0) { 
+                workContext.Layout.LocalNavigation.Add(localSideMenuShape);
+            }
+
+            //TOP MENU
+            // Set the currently side menu selected path
+            Stack<MenuItem> selectedTopMenuPath = NavigationHelper.SetSelectedPath(topMenuItems, workContext.HttpContext.Request, routeData);
+
+            // Populate local nav related to top menu
+            dynamic localTopMenuShape = _shapeFactory.LocalMenu().MenuName(string.Format("local_{0}", topMenuName)) ?? NavigationHelper.SetSelectedPath(topMenuItems, workContext.HttpContext.Request, routeData);
+            NavigationHelper.PopulateLocalMenu(_shapeFactory, localTopMenuShape, localTopMenuShape, selectedTopMenuPath);
+            workContext.Layout.LocalNavigation.Add(localTopMenuShape);
         }
 
         public void OnResultExecuted(ResultExecutedContext filterContext) { }
