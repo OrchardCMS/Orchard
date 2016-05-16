@@ -1,17 +1,22 @@
 ﻿@model string
 
-@{ Layout.Title = T("Create Index").ToString(); }
+@{ Layout.Title = T("Create Index").Text; }
 
-<div class="panel panel-default">
-    @using (Html.BeginFormAntiForgeryPost()) {
-        <div class="panel-body no-border form-inline">
+@using (Html.BeginFormAntiForgeryPost()) {
+    <div class="panel panel-default">
+        <div class="panel-body">
             <fieldset>
-                @Html.TextBox("id", Model, new { @class = "form-control", autofocus = "autofocus" })
-                <span class="help-block">@T("The technical name of the index to create. Must contain letters and numbers only.")</span>
+                <legend class="sr-only">@T("Create Index")</legend>
+                <label for="@Html.Id("id")">@T("Index ID")</label>
+                @Html.TextBox("id", Model, new { @class = "text medium", autofocus = "autofocus" })
+                <div class="help-block">@T("The technical name of the index to create. Must contain letters and numbers only.")</div>
             </fieldset>
         </div>
         <div class="panel-footer">
-            <button class="btn btn-primary" type="submit">@T("Create")</button>
+            <button type="submit" class="btn btn-primary">@T("Create Index")</button>
+            <a id="button-cancel" href="@Url.Action("Index")" class="btn btn-default">
+                <i class="fa fa-ban" aria-hidden="true"></i> Cancel
+            </a>
         </div>
-    }
-</div>
+    </div>
+}

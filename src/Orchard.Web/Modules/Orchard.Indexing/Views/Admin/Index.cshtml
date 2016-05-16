@@ -1,81 +1,133 @@
 ﻿@model Orchard.Indexing.ViewModels.IndexViewModel
 @using Orchard.Indexing.Services;
 
-@{ Layout.Title = T("Indexes").ToString(); }
+@{ Layout.Title = T("Indexes").Text; }
 
-<div class="panel panel-default">
-    <div class="panel-body no-border form-inline">
-        <div class="row">
-            <div class="col-sm-12">
-                @if (Model.IndexEntries.Any()) {
-                    using (Html.BeginFormAntiForgeryPost()) {
-                        <fieldset class="contentItems bulk-items">
-                            <ul class="list-unstyled">
-                                @foreach (var index in Model.IndexEntries) {
-                                    <li>
-                                        <div class="summary">
-                                            <div class="properties">
-                                                @*<input type="checkbox" value="@contentItem.Id" name="itemIds"/>*@
-                                                <h2>@index.IndexName</h2>
-                                                <div class="metadata">
-                                                    <ul class="pageStatus list-unstyled">
-                                                        <li>@T("{0} document(s)", index.DocumentCount)</li>
-
-                                                        @if (index.LastUpdateUtc != DateTime.MinValue) {
-                                                            <li>&nbsp;|&nbsp;</li>
-                                                            <li>@T("Updated {0}", Display.DateTimeRelative(DateTimeUtc: index.LastUpdateUtc))</li>
-                                                        }
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                            <div class="related">
-                                                @Html.ActionLink(T("Update").Text, "Update", "Admin", new { area = "Orchard.Indexing", id = index.IndexName }, new { itemprop = "UnsafeUrl" }) |
-                                                @Html.ActionLink(T("Rebuild").Text, "Rebuild", "Admin", new { area = "Orchard.Indexing", id = index.IndexName }, new { itemprop = "UnsafeUrl" }) |
-                                                @Html.ActionLink(T("Delete").Text, "Delete", "Admin", new { area = "Orchard.Indexing", id = index.IndexName }, new { itemprop = "RemoveUrl UnsafeUrl" })
-                                            </div>
-                                            <div class="primary">
-                                                @if (index.LastUpdateUtc == DateTime.MinValue) {
-                                                    <p>@T("The search index has not been built yet.")</p>
-                                                }
-
-                                                @if (index.Fields == null || !index.Fields.Any()) {
-                                                    <p>@T("No fields.")</p>
-                                                }
-                                                else {
-                                                    <p>@T("Fields: {0}.", string.Join(T(", ").Text, index.Fields))</p>
-                                                }
-                                                @switch (index.IndexingStatus) {
-                            case IndexingStatus.Rebuilding:
-                                                        <p>@T("The indexing process is currently being rebuilt.");</p>
-                                                        break;
-                                                    case IndexingStatus.Updating:
-                                                        <p>@T("The indexing process is currently being updated.");</p>
-                                                        break;
-                                                    case IndexingStatus.Unavailable:
-                                                        <p>@T("The index is currently not available. Try to rebuild it.")</p>
-                                                        break;
-                                                }
-                                            </div>
+@if (Model.IndexEntries.Any()) {
+    <div class="panel panel-default">
+        <div class="panel-body">
+            @using (Html.BeginFormAntiForgeryPost()) {
+                <div class="row">
+                    <div class="col-sm-4">
+                        @* EXAMPLE: <input id="publishActions" name="Options.BulkAction" type="hidden" value="None">
+                            <button name="submit.BulkEdit" type="submit" class="hidden" value="Apply">@T("Apply")</button>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                    <i class="fa fa-bolt"></i> @T("Bulk actions") <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="#" data-confirm="Are you sure you want to update these items?" data-action="Update">Update</a></li>
+                                    <li><a href="#" data-confirm="Are you sure you want to rebuild these items?" data-action="Rebuild">Rebuild</a></li>
+                                    <li><a href="#" data-confirm="Are you sure you want to delete these items?" data-action="Delete">Delete</a></li>
+                                </ul>
+                            </div>*@
+                    </div>
+                    <div class="col-sm-4"></div>
+                    <div class="col-sm-4 text-right">
+                        @if (Model.IndexProvider != null) {
+                            <a href="@Url.Action("Create", "Admin" , new { area="Orchard.Indexing" })" class="btn btn-primary">
+                                <i class="fa fa-plus"></i> @T("Add an index")
+                            </a>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+        @using (Html.BeginFormAntiForgeryPost()) {
+            <div class="table-responsive table-with-footer">
+                <table class="table table-striped" role="grid">
+                    <thead>
+                        <tr role="rowheader">
+                            @* EXAMPLE: <th width="1%">
+                                    <div class="am-checkbox inline">
+                                        <input id="checkAll" class="check-all" type="checkbox">
+                                        <label class="check-all" title="@T("Select All")" for="checkAll"></label>
+                                    </div>
+                                </th>*@
+                            <th>@T("Index ID")</th>
+                            <th>@T("Documents")</th>
+                            <th>@T("Status")</th>
+                            <th>@T("Updated")</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var index in Model.IndexEntries) {
+                        var id = System.Text.RegularExpressions.Regex.Replace(index.IndexName, "[^A-Za-z0-9-]+", "_");
+                            <tr>
+                                @* EXAMPLE: <td>
+                                        <div class="am-checkbox">
+                                            <input type="checkbox" name="itemIds" value="@index.IndexName" id="@id">
+                                            <label for="@id">
+                                                <span class="sr-only">@T("Select")</span>
+                                            </label>
                                         </div>
-                                    </li>
-                                }
-                            </ul>
+                                    </td>*@
+                                <td>@index.IndexName</td>
+                                <td>@index.DocumentCount</td>
+                                <td>
+                                    @if (index.LastUpdateUtc == DateTime.MinValue) {
+                                        <p>@T("The search index has not been built yet.")</p>
+                                    }
 
-                        </fieldset>
-                    }
-                }
-                else {
-                    <div>@T("There is currently no index.")</div>
-                }
+                                    @if (index.Fields == null || !index.Fields.Any()) {
+                                        <p>@T("No fields.")</p>
+                                    }
+                                    else {
+                                        <p>@T("Fields: {0}.", string.Join(T(", ").Text, index.Fields))</p>
+                                    }
+
+                                    @switch (index.IndexingStatus) {
+                                        case IndexingStatus.Rebuilding:
+                                            <p>@T("The indexing process is currently being rebuilt.")</p>
+                                            break;
+                                        case IndexingStatus.Updating:
+                                            <p>@T("The indexing process is currently being updated.")</p>
+                                            break;
+                                        case IndexingStatus.Unavailable:
+                                            <p>@T("The index is currently not available. Try to rebuild it.")</p>
+                                            break;
+                                    }
+                                </td>
+                                <td>
+                                    @if (index.LastUpdateUtc != DateTime.MinValue) {
+                                        @Display.DateTimeRelative(DateTimeUtc: index.LastUpdateUtc)
+                                    }
+                                    else {
+                                        @:Never
+                                    }
+                                </td>
+                                <td class="actions text-nowrap">
+                                    <a class="btn btn-primary" href="@Url.Action("Update", "Admin" , new { id=index.IndexName })" data-confirm="Are you sure you want to update this item?">
+                                        @T("Update")
+                                    </a>
+                                    <a class="btn btn-primary" href="@Url.Action("Rebuild", "Admin" , new { id=index.IndexName })" data-confirm="Are you sure you want to rebuild this item?">
+                                        @T("Rebuild")
+                                    </a>
+                                    <a href="@Url.Action("Delete", "Admin" , new { id=index.IndexName })" class="btn btn-danger" data-confirm="Are you sure you want to delete this item?">
+                                        <i class="fa fa-trash"></i>
+                                        @T("Delete")
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
             </div>
+            @* EXAMPLE: <div class="panel-footer">
+                    @Display(Model.Pager)
+                </div>*@
+        }
+    </div>
+    @Display.Modal()
+}
+else {
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <p class="h3 no-content">
+                @T("There are currently no indices.")
+                <a href="@Url.Action("Create", "Admin" , new { area="Orchard.Indexing" })">@T("Add one now")</a>
+            </p>
         </div>
     </div>
-
-    @if (Model.IndexProvider != null) {
-        <div class="panel-footer">
-            <fieldset>
-                @Html.ActionLink(T("Create").Text, "Create", "Admin", new { area = "Orchard.Indexing", @class = "button" })
-            </fieldset>
-        </div>
-    }
-</div>
+}
