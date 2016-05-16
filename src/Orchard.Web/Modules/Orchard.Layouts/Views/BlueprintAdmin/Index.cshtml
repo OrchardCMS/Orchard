@@ -3,57 +3,66 @@
     Layout.Title = T("Elements");
 }
 <div class="panel panel-default">
-    @using (Html.BeginFormAntiForgeryPost()) {
-        <div class="panel-heading">
-            <fieldset class="bulk-actions">
-                <label for="publishActions">@T("Actions:")</label>
-                <select id="publishActions" name="Options.BulkAction">
-                    @Html.SelectOption("", false, T("Choose action...").ToString())
-                    @Html.SelectOption("Delete", false, T("Delete").ToString())
-                </select>
-                <button type="submit" name="submit.BulkEdit" value="yes">@T("Apply")</button>
-            </fieldset>
-            <div class="manage">
-                @Html.ActionLink(T("Create").Text, "Create", "BlueprintAdmin", new { area = "Orchard.Layouts" }, new { @class = "btn btn-primary" })
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="table-responsive table-with-footer">
-                    <table class="table table-fw-widget data-table table-striped dataTable no-footer">
-                        <thead>
-                            <tr>
-                                <th><input type="checkbox" class="check-all" /></th>
-                                <th>@T("Display Name")</th>
-                                <th>@T("Name")</th>
-                                <th>@T("Base Element")</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var blueprint in Model.Blueprints) {
-                                <tr>
-                                    <td><input type="checkbox" value="@blueprint.Id" name="blueprintIds" /></td>
-                                    <td>@blueprint.ElementDisplayName</td>
-                                    <td>@blueprint.ElementTypeName</td>
-                                    <td>@blueprint.BaseElementTypeName</td>
-                                    <td>
-                                        @Html.ActionLink(T("Edit").Text, "Edit", "BlueprintAdmin", new { id = blueprint.Id, area = "Orchard.Layouts" }, null)
-                                        @Html.ActionLink(T("Properties").Text, "Properties", "BlueprintAdmin", new { id = blueprint.Id, area = "Orchard.Layouts" }, null)
-                                        @Html.ActionLink(T("Remove").Text, "Delete", "BlueprintAdmin", new { id = blueprint.Id, area = "Orchard.Layouts" }, new { itemprop = "RemoveUrl UnsafeUrl" })
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
+    @if (Model.Blueprints.Any()) {
+        using (Html.BeginFormAntiForgeryPost()) {
+            <div class="panel-heading">
+                <fieldset class="bulk-actions">
+                    <label for="publishActions">@T("Actions:")</label>
+                    <select id="publishActions" name="Options.BulkAction">
+                        @Html.SelectOption("", false, T("Choose action...").ToString())
+                        @Html.SelectOption("Delete", false, T("Delete").ToString())
+                    </select>
+                    <button type="submit" name="submit.BulkEdit" value="yes">@T("Apply")</button>
+                </fieldset>
+                <div class="manage">
+                    @Html.ActionLink(T("Create").Text, "Create", "BlueprintAdmin", new { area = "Orchard.Layouts" }, new { @class = "btn btn-primary" })
                 </div>
-                <div class="row am-datatable-footer">
-                    <div class="col-sm-12">
-                        @*@Display(Model.Pager)*@
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="table-responsive table-with-footer">
+                        <table class="table table-fw-widget data-table table-striped dataTable no-footer">
+                            <thead>
+                                <tr>
+                                    <th><input type="checkbox" class="check-all" /></th>
+                                    <th>@T("Display Name")</th>
+                                    <th>@T("Name")</th>
+                                    <th>@T("Base Element")</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var blueprint in Model.Blueprints) {
+                                    <tr>
+                                        <td><input type="checkbox" value="@blueprint.Id" name="blueprintIds" /></td>
+                                        <td>@blueprint.ElementDisplayName</td>
+                                        <td>@blueprint.ElementTypeName</td>
+                                        <td>@blueprint.BaseElementTypeName</td>
+                                        <td>
+                                            @Html.ActionLink(T("Edit").Text, "Edit", "BlueprintAdmin", new { id = blueprint.Id, area = "Orchard.Layouts" }, null)
+                                            @Html.ActionLink(T("Properties").Text, "Properties", "BlueprintAdmin", new { id = blueprint.Id, area = "Orchard.Layouts" }, null)
+                                            @Html.ActionLink(T("Remove").Text, "Delete", "BlueprintAdmin", new { id = blueprint.Id, area = "Orchard.Layouts" }, new { itemprop = "RemoveUrl UnsafeUrl" })
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="row am-datatable-footer">
+                        <div class="col-sm-12">
+                            @*@Display(Model.Pager)*@
+                        </div>
                     </div>
                 </div>
             </div>
+        }
+    } else {
+        <div class="panel-body">
+            <h3 class="no-content">
+                @T("There is no layout element yet.")
+                @Html.ActionLink(T("Add one now").Text, "Create", "BlueprintAdmin", new { Area = "Orchard.Layouts", ReturnUrl = Request.RawUrl })
+            </h3>
         </div>
     }
 </div>

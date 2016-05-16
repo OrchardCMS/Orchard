@@ -590,6 +590,7 @@
     <Content Include="Images\avatar6.jpg" />
     <Content Include="Images\avatar7.jpg" />
     <Content Include="Images\avatar8.jpg" />
+    <Content Include="Images\background-logo.png" />
     <Content Include="Images\bitbucket.png" />
     <Content Include="Images\db-icon.png" />
     <Content Include="Images\dribbble.png" />

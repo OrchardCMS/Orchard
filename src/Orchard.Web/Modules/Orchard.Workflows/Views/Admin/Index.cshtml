@@ -13,7 +13,8 @@
 }
 
 <div class="panel panel-default">
-    @using (Html.BeginFormAntiForgeryPost()) {
+    @if (Model.WorkflowDefinitions.Any()) { 
+    using (Html.BeginFormAntiForgeryPost()) {
         @Html.ValidationSummary()
         <div class="panel-heading">
             <div class="row">
@@ -95,6 +96,14 @@
                     </div>
                 </div>
             </div>
+        </div>
+        }
+    } else {
+        <div class="panel-body">
+            <h3 class="no-content">
+                @T("There are no workflow definitions yet.")
+                @Html.ActionLink(T("Add one now").Text, "EditProperties", new { Area = "Orchard.Workflows", ReturnUrl = Request.RawUrl })
+            </h3>
         </div>
     }
 </div>

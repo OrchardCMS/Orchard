@@ -12,8 +12,8 @@
     Layout.Title = pageTitle.Text;
 }
 <div class="panel">
-
-    @using (Html.BeginFormAntiForgeryPost()) {
+@if (Model.ContentItems.Items.Count > 0) {
+    using (Html.BeginFormAntiForgeryPost()) {
         <div class="panel-heading no-border">
             <div class="row">
                 <div class="col-sm-4 form-group form-inline">
@@ -143,6 +143,14 @@
         <div class="panel-footer">
             @Display(Model.Pager)
         </div>
+        @Display.Modal()
     }
+} else {
+    <div class="panel-body">
+        <h3 class="no-content">
+            @T("There are no content items created yet. Why not ")
+            @Html.ActionLink(T("Create one").Text, "Create", new { Area = "Contents", Id = (string)Model.Options.SelectedFilter })?
+        </h3>
+    </div>
+}
 </div>
-@Display.Modal()

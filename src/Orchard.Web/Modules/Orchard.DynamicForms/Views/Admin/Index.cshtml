@@ -4,50 +4,44 @@
     Layout.Title = T("Dynamic Forms");
 }
 <div class="panel panel-default">
-    <div class="panel-heading no-border">
-        <div class="row">
-            <div class="col-sm-4">
-                <fieldset>
-                    <input id="publishActions" name="Options.BulkAction" type="hidden" value="" />
-                    <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-bolt"></i> Bulk Actions <span class="caret"></span>
-                        </button>&nbsp;
-                        <ul class="dropdown-menu" role="menu">
-                            <li><a href="#" data-confirm="@T("Are you sure you want to delete these items?")" data-action="delete">@T("Delete").ToString()</a></li>
-                        </ul>
-                    </div>
-                </fieldset>
+    @if (Model.Forms.Any()) {
+        <div class="panel-heading no-border">
+            <div class="row">
+                <div class="col-sm-4">
+                    <fieldset>
+                        <input id="publishActions" name="Options.BulkAction" type="hidden" value="" />
+                        <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                                <i class="fa fa-bolt"></i> Bulk Actions <span class="caret"></span>
+                            </button>&nbsp;
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="#" data-confirm="@T("Are you sure you want to delete these items?")" data-action="delete">@T("Delete").ToString()</a></li>
+                            </ul>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="col-sm-4">&nbsp;</div>
+                <div class="col-sm-4">&nbsp;</div>
             </div>
-            <div class="col-sm-4">&nbsp;</div>
-            <div class="col-sm-4">&nbsp;</div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="table-responsive table-with-footer">
-                <table class="table table-fw-widget data-table table-striped dataTable no-footer">
-                    <thead>
-                        <tr>
-                            <th width="100" class="text-nowrap">
-                                <div class="am-checkbox am-select-all inline">
-                                    <input id="checkAll" class="check-all" type="checkbox">
-                                    <label class="check-all" title="@T("Select All")" for="checkAll"></label>
-                                </div>
-                            </th>
-                            <th width="50%">@T("Form")</th>
-                            <th width="50%">@T("Submissions")</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    @if (!Model.Forms.Any()) {
-                        <tbody>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="table-responsive table-with-footer">
+                    <table class="table table-fw-widget data-table table-striped dataTable no-footer">
+                        <thead>
                             <tr>
-                                <td colspan="3">@T("There are no submissions yet.")</td>
+                                <th width="100" class="text-nowrap">
+                                    <div class="am-checkbox am-select-all inline">
+                                        <input id="checkAll" class="check-all" type="checkbox">
+                                        <label class="check-all" title="@T("Select All")" for="checkAll"></label>
+                                    </div>
+                                </th>
+                                <th width="50%">@T("Form")</th>
+                                <th width="50%">@T("Submissions")</th>
+                                <th></th>
                             </tr>
-                        </tbody>
-                    } else {
+                        </thead>
                         <tbody class="forms">
                             @foreach (var form in Model.Forms) {
                     var formName = form.Key;
@@ -67,15 +61,22 @@
                                 </tr>
                             }
                         </tbody>
-                    }
-                </table>
-            </div>
-            <div class="row am-datatable-footer">
-                <div class="col-sm-12">
-                    @*@Display(Model.Pager)*@
+                        }
+                    </table>
+                </div>
+                <div class="row am-datatable-footer">
+                    <div class="col-sm-12">
+                        @*@Display(Model.Pager)*@
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+        @Display.Modal()
+        } else {
+        <div class="panel-body">
+            <h3 class="no-content">
+                @T("There are no dynamic form submissions yet.")
+            </h3>
+        </div>
+    }
 </div>
-@Display.Modal()

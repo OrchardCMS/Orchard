@@ -11,60 +11,65 @@
     Layout.Title = pageTitle;
 }
 <div class="panel panel-default">
-    @using (Html.BeginFormAntiForgeryPost()) {
-        <div class="panel-heading">
-            <fieldset class="form-group">
-                <div class="am-checkbox inline">
-                    <input id="checkAll" class="check-all" type="checkbox">
-                    <label class="check-all" title="@T("Select All")" for="checkAll"></label>
-                </div>
-                <input id="publishActions" name="Options.BulkAction" type="hidden" value="@ContentsBulkAction.None" />
-                <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
-                <div class="btn-group">
-                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                        <i class="fa fa-bolt"></i> Bulk Actions <span class="caret"></span>
-                    </button>&nbsp;
-                    <ul class="dropdown-menu" role="menu">
-                        <li><a href="#" data-confirm="@T("Are you sure you want to publish these items?")" data-action="@ContentsBulkAction.PublishNow">@T("Publish Now").ToString()</a></li>
-                        <li><a href="#" data-confirm="@T("Are you sure you want to unpublish these items?")" data-action="@ContentsBulkAction.Unpublish">@T("Unpublish").ToString()</a></li>
-                        <li><a href="#" data-confirm="@T("Are you sure you want to delete these items?")" data-action="@ContentsBulkAction.Remove">@T("Delete").ToString()</a></li>
-                    </ul>
-                </div>
-            </fieldset>
-            <fieldset class="form-group form-inline">
-                <label for="filterResults" class="bulk-filter">@T("Show")</label>
-                <select class="form-control" id="filterResults" name="Options.SelectedFilter">
-                    @Html.SelectOption((string)Model.Options.SelectedFilter, "", T("any (show all)").ToString())
-                    @foreach (var filterOption in Model.Options.FilterOptions) {
-                        @Html.SelectOption((string)Model.Options.SelectedFilter, (string)filterOption.Key, (string)filterOption.Value)
-                    }
-                </select>
-                <label for="orderResults" class="bulk-order">@T("Ordered by")</label>
-                <select class="form-control" id="orderResults" name="Options.OrderBy">
-                    @Html.SelectOption((ContentsOrder)Model.Options.OrderBy, ContentsOrder.Created, T("recently created").ToString())
-                    @Html.SelectOption((ContentsOrder)Model.Options.OrderBy, ContentsOrder.Modified, T("recently modified").ToString())
-                    @Html.SelectOption((ContentsOrder)Model.Options.OrderBy, ContentsOrder.Published, T("recently published").ToString())
-                </select>
-                <button class="btn btn-default" type="submit" name="submit.Filter" value="yes please">@T("Apply")</button>
-            </fieldset>
-            <fieldset class="form-group pull-right">
-                <a href="@Url.Action("Create", new { Area = "Orchard.Templates", Id = (string)Model.Options.SelectedFilter })" class="btn btn-primary"><i class="fa fa-plus"></i> @createLinkText.Text</a>
-            </fieldset>
-        </div>
-        <div class="panel-body">
-            @if (Model.ContentItems.Items.Count > 0) {
+    @if (Model.ContentItems.Items.Count > 0) {
+        using (Html.BeginFormAntiForgeryPost()) {
+            <div class="panel-heading">
+                <fieldset class="form-group">
+                    <div class="am-checkbox inline">
+                        <input id="checkAll" class="check-all" type="checkbox">
+                        <label class="check-all" title="@T("Select All")" for="checkAll"></label>
+                    </div>
+                    <input id="publishActions" name="Options.BulkAction" type="hidden" value="@ContentsBulkAction.None" />
+                    <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa fa-bolt"></i> Bulk Actions <span class="caret"></span>
+                        </button>&nbsp;
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="#" data-confirm="@T("Are you sure you want to publish these items?")" data-action="@ContentsBulkAction.PublishNow">@T("Publish Now").ToString()</a></li>
+                            <li><a href="#" data-confirm="@T("Are you sure you want to unpublish these items?")" data-action="@ContentsBulkAction.Unpublish">@T("Unpublish").ToString()</a></li>
+                            <li><a href="#" data-confirm="@T("Are you sure you want to delete these items?")" data-action="@ContentsBulkAction.Remove">@T("Delete").ToString()</a></li>
+                        </ul>
+                    </div>
+                </fieldset>
+                <fieldset class="form-group form-inline">
+                    <label for="filterResults" class="bulk-filter">@T("Show")</label>
+                    <select class="form-control" id="filterResults" name="Options.SelectedFilter">
+                        @Html.SelectOption((string)Model.Options.SelectedFilter, "", T("any (show all)").ToString())
+                        @foreach (var filterOption in Model.Options.FilterOptions) {
+                            @Html.SelectOption((string)Model.Options.SelectedFilter, (string)filterOption.Key, (string)filterOption.Value)
+                        }
+                    </select>
+                    <label for="orderResults" class="bulk-order">@T("Ordered by")</label>
+                    <select class="form-control" id="orderResults" name="Options.OrderBy">
+                        @Html.SelectOption((ContentsOrder)Model.Options.OrderBy, ContentsOrder.Created, T("recently created").ToString())
+                        @Html.SelectOption((ContentsOrder)Model.Options.OrderBy, ContentsOrder.Modified, T("recently modified").ToString())
+                        @Html.SelectOption((ContentsOrder)Model.Options.OrderBy, ContentsOrder.Published, T("recently published").ToString())
+                    </select>
+                    <button class="btn btn-default" type="submit" name="submit.Filter" value="yes please">@T("Apply")</button>
+                </fieldset>
+                <fieldset class="form-group pull-right">
+                    <a href="@Url.Action("Create", new { Area = "Orchard.Templates", Id = (string)Model.Options.SelectedFilter })" class="btn btn-primary"><i class="fa fa-plus"></i> @createLinkText.Text</a>
+                </fieldset>
+            </div>
+            <div class="panel-body">
                 <fieldset class="content-items bulk-items content-items-with-actions">
                     @Display(Model.ContentItems)
                 </fieldset>
-            } else {
-                @T("There is no template")
-            }
-        </div>
-        <div class="row am-datatable-footer">
-            <div class="col-sm-12">
-                @Display(Model.Pager)
             </div>
+            <div class="panel-footer">
+                <div class="col-sm-12">
+                    @Display(Model.Pager)
+                </div>
+            </div>
+            @Display.Modal()
+        }
+    } else {
+        <div class="panel-body">
+            <h3 class="no-content">
+                @T("There is no template yet.")
+                @Html.ActionLink(T("Add one now").Text, "Create", new { Area = "Orchard.Templates", Id = (string)Model.Options.SelectedFilter, ReturnUrl = Request.RawUrl }, new { @class = "" })
+            </h3>
         </div>
     }
 </div>
-@Display.Modal()

@@ -6,28 +6,29 @@
     int taxonomyIndex = 0, ti;
 }
 <div class="panel panel-default">
-    @using (Html.BeginFormAntiForgeryPost()) {
-        @Html.ValidationSummary()
-        <div class="panel-heading no-border">
-            <div class="panel-heading-primary-group">
-                <fieldset>
-                    <input id="publishActions" name="@Html.NameOf(m => m.BulkAction)" type="hidden" value="@TaxonomiesAdminIndexBulkAction.None" />
-                    <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-bolt"></i> Bulk Actions <span class="caret"></span>
-                        </button>&nbsp;
-                        <ul class="dropdown-menu" role="menu">
-                            <li><a id="btn-bulk-delete" href="#" data-confirm="@T("Are you sure you want to delete these items?")" data-action="@TaxonomiesAdminIndexBulkAction.Delete">@T("Delete").ToString()</a></li>
-                        </ul>
-                    </div>
-                </fieldset>
+    @if (Model.Taxonomies.Any()) {
+        using (Html.BeginFormAntiForgeryPost()) {
+            @Html.ValidationSummary()
+            <div class="panel-heading no-border">
+                <div class="panel-heading-primary-group">
+                    <fieldset>
+                        <input id="publishActions" name="@Html.NameOf(m => m.BulkAction)" type="hidden" value="@TaxonomiesAdminIndexBulkAction.None" />
+                        <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                                <i class="fa fa-bolt"></i> Bulk Actions <span class="caret"></span>
+                            </button>&nbsp;
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a id="btn-bulk-delete" href="#" data-confirm="@T("Are you sure you want to delete these items?")" data-action="@TaxonomiesAdminIndexBulkAction.Delete">@T("Delete").ToString()</a></li>
+                            </ul>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="panel-heading-actions">
+                    <a class="btn btn-primary" href="@Url.Action("Create", new { Area = "Contents", Id = "Taxonomy", ReturnUrl = Request.RawUrl })"><i class="fa fa-plus"></i> @T("Add a taxonomy").Text</a>
+                </div>
             </div>
-            <div class="panel-heading-actions">
-                <a class="btn btn-primary" href="@Url.Action("Create", new { Area = "Contents", Id = "Taxonomy", ReturnUrl = Request.RawUrl })"><i class="fa fa-plus"></i> @T("Add a taxonomy").Text</a>
-            </div>
-        </div>
-        if (Model.Taxonomies.Any()) {
+
             <div class="row">
                 <div class="col-sm-12">
                     <div class="table-responsive table-with-footer">
@@ -79,18 +80,18 @@
                     </div>
                 </div>
             </div>
-        } else {
-            <div class="panel-body">
-                <p>
-                    @T("There are currently no taxonomies.")
-                    @Html.ActionLink(T("Add one now").Text, "Create", new { Area = "Contents", Id = "Taxonomy", ReturnUrl = Request.RawUrl }, new { @class = "" })
-                </p>
+            <div class="row am-datatable-footer">
+                <div class="col-sm-12">
+                    @Display(Model.Pager)
+                </div>
             </div>
         }
-        <div class="row am-datatable-footer">
-            <div class="col-sm-12">
-                @Display(Model.Pager)
-            </div>
+    } else {
+        <div class="panel-body">
+            <h3 class="no-content">
+                @T("There are currently no taxonomies.")
+                @Html.ActionLink(T("Add one now").Text, "Create", new { Area = "Contents", Id = "Taxonomy", ReturnUrl = Request.RawUrl }, new { @class = "" })
+            </h3>
         </div>
     }
 </div>

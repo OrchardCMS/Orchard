@@ -16,91 +16,100 @@
 }
 
 <div class="panel panel-default panel-heading-fullwidth ">
-    @using (Html.BeginFormAntiForgeryPost()) {
-        @Html.ValidationSummary()
-        <div class="panel-heading">
-            <div class="panel-heading-actions">
-                <a class="btn btn-primary" href="@Url.Action("Select", new { })"><i class="fa fa-plus"></i> @T("Add a new Binding").Text</a>
-            </div>
-            <div class="panel-heading-primary-group">
-                <fieldset>
-                    <input id="publishActions" name="@Html.NameOf(m => m.Options.BulkAction)" type="hidden" value="@BindingsBulkAction.None" />
-                    <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-bolt"></i> Bulk Actions <span class="caret"></span>
-                        </button>&nbsp;
-                        <ul class="dropdown-menu" role="menu">
-                            <li><a id="btn-bulk-delete" href="#" data-confirm="@T("Are you sure you want to delete these items?")" data-action="@BindingsBulkAction.Delete">@T("Delete").ToString()</a></li>
-                        </ul>
-                    </div>
-                </fieldset>
-                <fieldset class="bulk-actions">
-                    @* No need to filter if there is only one option in the dropdownlist *@
-                    @*<label for="filterResults">@T("Sort by:")</label>
-                        <select id="filterResults" name="@Html.NameOf(m => m.Options.Order)" class="form-control auto-size">
-                            @Html.SelectOption(Model.Options.Order, BindingsOrder.Name, T("Name").ToString())
-                        </select>*@
-                </fieldset>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="table-responsive table-with-footer">
-                    <table class="table table-striped table-fw-widget table-hover">
-                        <thead>
-                            <tr>
-                                <th scope="col" class="text-nowrap">
-                                    <div class="am-checkbox inline">
-                                        <input id="checkAll" class="check-all" type="checkbox">
-                                        <label class="check-all" title="@T("Select All")" for="checkAll"></label>
-                                    </div>
-                                </th>
-                                <th scope="col">@T("Type")</th>
-                                <th scope="col">@T("Member")</th>
-                                <th scope="col">@T("Display")</th>
-                                <th scope="col">@T("Description")</th>
-                                <th scope="col">&nbsp;</th>
-                            </tr>
-                        </thead>
-                        @foreach (var entry in Model.Bindings) {
-                            var checkboxId = Html.IdFor(m => m.Bindings[index].Binding.Id);
-                            <tr>
-                                <td>
-                                    <div class="am-checkbox">
-                                        <input type="hidden" value="@Model.Bindings[index].Binding.Id" name="@Html.NameOf(m => m.Bindings[index].Binding.Id)" />
-                                        <input type="checkbox" value="true" name="@Html.NameOf(m => m.Bindings[index].IsChecked)" id="@checkboxId" />
-                                        <label for="@checkboxId"></label>
-                                    </div>
-                                </td>
-                                <td>
-                                    @entry.Binding.Type
-                                </td>
-                                <td>
-                                    @entry.Binding.Member
-                                </td>
-                                <td>
-                                    @entry.Binding.DisplayName
-                                </td>
-                                <td>
-                                    @entry.Binding.Description
-                                </td>
-                                <td class="text-nowrap">
-                                    <a class="btn btn-primary" href="@Url.Action("Edit",  new { entry.Binding.Id })"><i class="fa fa-pencil-square-o"></i> @T("Edit")</a>
-                                    <a class="btn btn-danger" href="@Url.Action("Delete", new { id = entry.Binding.Id })" data-confirm="@T("Are you sure you want to delete this item?")"><i class="fa fa-trash"></i> @T("Delete")</a>
-                                </td>
-                            </tr>
-                            index++;
-                        }
-                    </table>
+    @if (Model.Bindings.Any()) {
+        using (Html.BeginFormAntiForgeryPost()) {
+            @Html.ValidationSummary()
+            <div class="panel-heading">
+                <div class="panel-heading-actions">
+                    <a class="btn btn-primary" href="@Url.Action("Select", new { })"><i class="fa fa-plus"></i> @T("Add a new Binding").Text</a>
                 </div>
-                <div class="row am-datatable-footer">
-                    <div class="col-sm-12">
-                        @Display(Model.Pager)
-                    </div>
+                <div class="panel-heading-primary-group">
+                    <fieldset>
+                        <input id="publishActions" name="@Html.NameOf(m => m.Options.BulkAction)" type="hidden" value="@BindingsBulkAction.None" />
+                        <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                                <i class="fa fa-bolt"></i> Bulk Actions <span class="caret"></span>
+                            </button>&nbsp;
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a id="btn-bulk-delete" href="#" data-confirm="@T("Are you sure you want to delete these items?")" data-action="@BindingsBulkAction.Delete">@T("Delete").ToString()</a></li>
+                            </ul>
+                        </div>
+                    </fieldset>
+                    <fieldset class="bulk-actions">
+                        @* No need to filter if there is only one option in the dropdownlist *@
+                        @*<label for="filterResults">@T("Sort by:")</label>
+                            <select id="filterResults" name="@Html.NameOf(m => m.Options.Order)" class="form-control auto-size">
+                                @Html.SelectOption(Model.Options.Order, BindingsOrder.Name, T("Name").ToString())
+                            </select>*@
+                    </fieldset>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="table-responsive table-with-footer">
+                        <table class="table table-striped table-fw-widget table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col" class="text-nowrap">
+                                        <div class="am-checkbox inline">
+                                            <input id="checkAll" class="check-all" type="checkbox">
+                                            <label class="check-all" title="@T("Select All")" for="checkAll"></label>
+                                        </div>
+                                    </th>
+                                    <th scope="col">@T("Type")</th>
+                                    <th scope="col">@T("Member")</th>
+                                    <th scope="col">@T("Display")</th>
+                                    <th scope="col">@T("Description")</th>
+                                    <th scope="col">&nbsp;</th>
+                                </tr>
+                            </thead>
+                            @foreach (var entry in Model.Bindings) {
+                                var checkboxId = Html.IdFor(m => m.Bindings[index].Binding.Id);
+                                <tr>
+                                    <td>
+                                        <div class="am-checkbox">
+                                            <input type="hidden" value="@Model.Bindings[index].Binding.Id" name="@Html.NameOf(m => m.Bindings[index].Binding.Id)" />
+                                            <input type="checkbox" value="true" name="@Html.NameOf(m => m.Bindings[index].IsChecked)" id="@checkboxId" />
+                                            <label for="@checkboxId"></label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        @entry.Binding.Type
+                                    </td>
+                                    <td>
+                                        @entry.Binding.Member
+                                    </td>
+                                    <td>
+                                        @entry.Binding.DisplayName
+                                    </td>
+                                    <td>
+                                        @entry.Binding.Description
+                                    </td>
+                                    <td class="text-nowrap">
+                                        <a class="btn btn-primary" href="@Url.Action("Edit",  new { entry.Binding.Id })"><i class="fa fa-pencil-square-o"></i> @T("Edit")</a>
+                                        <a class="btn btn-danger" href="@Url.Action("Delete", new { id = entry.Binding.Id })" data-confirm="@T("Are you sure you want to delete this item?")"><i class="fa fa-trash"></i> @T("Delete")</a>
+                                    </td>
+                                </tr>
+                                index++;
+                            }
+                        </table>
+                    </div>
+                    <div class="row am-datatable-footer">
+                        <div class="col-sm-12">
+                            @Display(Model.Pager)
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @Display.Modal()
+        }
+    } else {
+        <div class="panel-body">
+            <h3 class="no-content">
+                @T("There are no bindings created yet.")
+                Why not @Html.ActionLink(T("Create one").Text, "Select", new { })?
+            </h3>
         </div>
     }
 </div>
-@Display.Modal()

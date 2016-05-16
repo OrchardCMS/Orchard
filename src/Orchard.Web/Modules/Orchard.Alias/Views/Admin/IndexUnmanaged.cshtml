@@ -20,98 +20,107 @@
     }
 }
 <div class="panel panel-default">
-    @using (Html.BeginFormAntiForgeryPost()) {
-        @Html.ValidationSummary()
-        <div class="panel-heading">
-            <div class="row">
-                <div class="col-sm-4">
-                    <fieldset>
-                        <input id="publishActions" name="@Html.NameOf(m => m.Options.BulkAction)" type="hidden" value="@AliasBulkAction.None" />
-                        <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                                <i class="fa fa-bolt"></i> Bulk Actions <span class="caret"></span>
-                            </button>&nbsp;
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="#" data-confirm="@T("Are you sure you want to delete these items?")" data-action="@AliasBulkAction.Delete">@T("Delete").ToString()</a></li>
-                            </ul>
-                        </div>
-                    </fieldset>
-                </div>
-                <div class="col-sm-4 text-center">
-                    @* No need to filter if there is only one option in the dropdownlist *@
-                    @*<fieldset class="bulk-actions">
-                        <label for="filterResults">@T("Sort by:")</label>
-                        <select id="filterResults" name="@Html.NameOf(m => m.Options.Order)" class="form-control auto-size">
-                            @Html.SelectOption(options.Order, AliasOrder.Path, T("Alias").ToString())
-                        </select>
-                        <button class="btn btn-default" type="submit" name="submit.Filter" value="@T("Filter")">@T("Filter")</button>
-                    </fieldset>*@
-                </div>
-                <div class="col-sm-4 text-right">
-                    <a class="btn btn-primary" href="@Url.Action("Add", new { returnurl = HttpContext.Current.Request.RawUrl })"><i class="fa fa-plus"></i> @T("Add new Alias").Text</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="table-responsive table-with-footer">
-                    <table class="table table-fw-widget data-table table-striped dataTable no-footer">
-                        <thead>
-                            <tr>
-                                <th scope="col">
-                                    <div class="am-checkbox am-select-all inline">
-                                        <input id="checkAll" class="check-all" type="checkbox">
-                                        <label class="check-all" title="@T("Select All")" for="checkAll"></label>
-                                    </div>
-                                </th>
-                                <th scope="col" width="50%">@T("Alias")</th>
-                                <th scope="col" width="50%">@T("Route")</th>
-                                <th scope="col">&nbsp;</th>
-                            </tr>
-                        </thead>
-                        @foreach (var aliasEntry in Model.AliasEntries) {
-                            var alias = aliasEntry.Alias;
-                            var checkboxId = Html.IdFor(m => m.AliasEntries[index].Alias.Path);
-
-                            var virtualPathData = aliasService.LookupVirtualPaths(alias.RouteValues.ToRouteValueDictionary(), ViewContext.HttpContext).FirstOrDefault();
-
-                            if (virtualPathData == null) {
-                                continue;
-                            }
-
-                            var url = virtualPathData.VirtualPath;
-                            <tr>
-                                <td>
-                                    <div class="am-checkbox">
-                                        <input type="hidden" value="@(alias.Path == string.Empty ? "/" : alias.Path)" name="@Html.FieldNameFor(m => Model.AliasEntries[index].Alias.Path)" />
-                                        <input id="@checkboxId" type="checkbox" value="true" name="@Html.FieldNameFor(m => Model.AliasEntries[index].IsChecked)" />
-                                        <label for="@checkboxId"></label>
-                                    </div>
-                                </td>
-                                <td>
-                                    @Html.Link(alias.Path == String.Empty ? "/" : alias.Path, Href("~/" + urlPrefix + alias.Path))
-                                </td>
-                                <td>
-                                    @Html.Link(url, Href("~/" + urlPrefix + "/" + url))
-                                </td>
-                                <td class="text-nowrap">
-                                    <a class="btn btn-primary" href="@Url.Action("Edit",  new { path = alias.Path == String.Empty ? "/" : alias.Path })" ><i class="fa fa-pencil-square-o"></i> @T("Edit")</a>
-                                    <a class="btn btn-danger" href="@Url.Action("Delete", new { path = alias.Path })" data-confirm="@T("Are you sure you want to delete this item?")"><i class="fa fa-trash"></i> @T("Delete")</a>
-                                </td>
-                            </tr>
-                            index++;
-                        }
-                    </table>
-                </div>
-                <div class="row am-datatable-footer">
-                    <div class="col-sm-12">
-                        @Display(Model.Pager)
+    @if (Model.AliasEntries.Any()) {
+        using (Html.BeginFormAntiForgeryPost()) {
+            @Html.ValidationSummary()
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <fieldset>
+                            <input id="publishActions" name="@Html.NameOf(m => m.Options.BulkAction)" type="hidden" value="@AliasBulkAction.None" />
+                            <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                                    <i class="fa fa-bolt"></i> Bulk Actions <span class="caret"></span>
+                                </button>&nbsp;
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="#" data-confirm="@T("Are you sure you want to delete these items?")" data-action="@AliasBulkAction.Delete">@T("Delete").ToString()</a></li>
+                                </ul>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="col-sm-4 text-center">
+                        @* No need to filter if there is only one option in the dropdownlist *@
+                        @*<fieldset class="bulk-actions">
+                                <label for="filterResults">@T("Sort by:")</label>
+                                <select id="filterResults" name="@Html.NameOf(m => m.Options.Order)" class="form-control auto-size">
+                                    @Html.SelectOption(options.Order, AliasOrder.Path, T("Alias").ToString())
+                                </select>
+                                <button class="btn btn-default" type="submit" name="submit.Filter" value="@T("Filter")">@T("Filter")</button>
+                            </fieldset>*@
+                    </div>
+                    <div class="col-sm-4 text-right">
+                        <a class="btn btn-primary" href="@Url.Action("Add", new { returnurl = HttpContext.Current.Request.RawUrl })"><i class="fa fa-plus"></i> @T("Add new Alias").Text</a>
                     </div>
                 </div>
             </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="table-responsive table-with-footer">
+                        <table class="table table-fw-widget data-table table-striped dataTable no-footer">
+                            <thead>
+                                <tr>
+                                    <th scope="col">
+                                        <div class="am-checkbox am-select-all inline">
+                                            <input id="checkAll" class="check-all" type="checkbox">
+                                            <label class="check-all" title="@T("Select All")" for="checkAll"></label>
+                                        </div>
+                                    </th>
+                                    <th scope="col" width="50%">@T("Alias")</th>
+                                    <th scope="col" width="50%">@T("Route")</th>
+                                    <th scope="col">&nbsp;</th>
+                                </tr>
+                            </thead>
+                            @foreach (var aliasEntry in Model.AliasEntries) {
+                                var alias = aliasEntry.Alias;
+                                var checkboxId = Html.IdFor(m => m.AliasEntries[index].Alias.Path);
+
+                                var virtualPathData = aliasService.LookupVirtualPaths(alias.RouteValues.ToRouteValueDictionary(), ViewContext.HttpContext).FirstOrDefault();
+
+                                if (virtualPathData == null) {
+                                    continue;
+                                }
+
+                                var url = virtualPathData.VirtualPath;
+                                <tr>
+                                    <td>
+                                        <div class="am-checkbox">
+                                            <input type="hidden" value="@(alias.Path == string.Empty ? "/" : alias.Path)" name="@Html.FieldNameFor(m => Model.AliasEntries[index].Alias.Path)" />
+                                            <input id="@checkboxId" type="checkbox" value="true" name="@Html.FieldNameFor(m => Model.AliasEntries[index].IsChecked)" />
+                                            <label for="@checkboxId"></label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        @Html.Link(alias.Path == String.Empty ? "/" : alias.Path, Href("~/" + urlPrefix + alias.Path))
+                                    </td>
+                                    <td>
+                                        @Html.Link(url, Href("~/" + urlPrefix + "/" + url))
+                                    </td>
+                                    <td class="text-nowrap">
+                                        <a class="btn btn-primary" href="@Url.Action("Edit",  new { path = alias.Path == String.Empty ? "/" : alias.Path })"><i class="fa fa-pencil-square-o"></i> @T("Edit")</a>
+                                        <a class="btn btn-danger" href="@Url.Action("Delete", new { path = alias.Path })" data-confirm="@T("Are you sure you want to delete this item?")"><i class="fa fa-trash"></i> @T("Delete")</a>
+                                    </td>
+                                </tr>
+                                index++;
+                            }
+                        </table>
+                    </div>
+                    <div class="row am-datatable-footer">
+                        <div class="col-sm-12">
+                            @Display(Model.Pager)
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @Display.Modal()
+        }
+    } else {
+        <div class="panel-body">
+            <h3 class="no-content">
+                @T("There is no unmanaged alias yet.")
+                @Html.ActionLink(T("Add one now").Text, "Add", new { ReturnUrl = Request.RawUrl })
+            </h3>
         </div>
     }
 </div>
-@Display.Modal()
