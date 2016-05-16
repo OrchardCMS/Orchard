@@ -4,47 +4,55 @@
 @{ Layout.Title = T("Reports").ToString(); }
 
 <div class="panel panel-default">
-    @using (Html.BeginFormAntiForgeryPost()) {
-        @Html.ValidationSummary()
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="table-responsive table-with-footer">
-                    <table class="table table-fw-widget data-table table-striped dataTable no-footer" summary="@T("This is a table of the reports in your application")">
-                        <colgroup>
-                            <col id="Col1" />
-                            <col id="Col2" />
-                            <col id="Col3" />
-                            <col id="Col4" />
-                        </colgroup>
-                        <thead>
-                            <tr>
-                                <th scope="col">@T("Name")</th>
-                                <th scope="col">@T("Title")</th>
-                                <th scope="col">@T("Date")</th>
-                                <th scope="col"></th>
-                            </tr>
-                        </thead>
-                        @foreach (var report in Model.Reports) {
-                            <tr>
-                                <td>
-                                    @Html.ActionLink(report.ActivityName, "Display", new { id = report.ReportId })
-                                </td>
-                                <td>
-                                    @report.Title
-                                </td>
-                                <td>
-                                    @report.Utc.ToLocalTime().ToShortDateString() @report.Utc.ToLocalTime().ToShortTimeString()
-                                </td>
-                            </tr>
-                        }
-                    </table>
-                </div>
-                <div class="row am-datatable-footer">
-                    <div class="col-sm-12">
-                        @*@Display(Model.Pager)*@
+    @if (Model.Reports.Any()) {
+        using (Html.BeginFormAntiForgeryPost()) {
+            @Html.ValidationSummary()
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="table-responsive table-with-footer">
+                        <table class="table table-fw-widget data-table table-striped dataTable no-footer" summary="@T("This is a table of the reports in your application")">
+                            <colgroup>
+                                <col id="Col1" />
+                                <col id="Col2" />
+                                <col id="Col3" />
+                                <col id="Col4" />
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th scope="col">@T("Name")</th>
+                                    <th scope="col">@T("Title")</th>
+                                    <th scope="col">@T("Date")</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            @foreach (var report in Model.Reports) {
+                                <tr>
+                                    <td>
+                                        @Html.ActionLink(report.ActivityName, "Display", new { id = report.ReportId })
+                                    </td>
+                                    <td>
+                                        @report.Title
+                                    </td>
+                                    <td>
+                                        @report.Utc.ToLocalTime().ToShortDateString() @report.Utc.ToLocalTime().ToShortTimeString()
+                                    </td>
+                                </tr>
+                            }
+                        </table>
+                    </div>
+                    <div class="row am-datatable-footer">
+                        <div class="col-sm-12">
+                            @*@Display(Model.Pager)*@
+                        </div>
                     </div>
                 </div>
             </div>
+        }
+    } else {
+        <div class="panel-body">
+            <h3 class="no-content">
+                @T("There are no reports yet.")
+            </h3>
         </div>
     }
 </div>

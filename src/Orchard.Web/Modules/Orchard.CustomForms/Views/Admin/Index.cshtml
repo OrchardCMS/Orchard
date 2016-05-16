@@ -13,94 +13,102 @@
     }
 }
 <div class="panel panel-default">
-    @using (Html.BeginFormAntiForgeryPost()) {
-        @Html.ValidationSummary()
-        <div class="panel-heading">
-            <div class="row">
-                <div class="col-sm-4">
-                    <fieldset>
-                        <input id="publishActions" name="@Html.NameOf(m => m.Options.BulkAction)" type="hidden" value="@CustomFormBulkAction.None" />
-                        <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                                <i class="fa fa-bolt"></i> Bulk Actions <span class="caret"></span>
-                            </button>&nbsp;
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a id="btn-bulk-delete" href="#" data-confirm="@T("Are you sure you want to delete these items?")" data-action="@CustomFormBulkAction.Delete">@T("Delete").ToString()</a></li>
-                            </ul>
-                        </div>
-                    </fieldset>
-                </div>
-                <div class="col-sm-4">
-                    &nbsp;
-                    <fieldset class="bulk-actions">
-                        @* No need to filter if there is only one option in the dropdownlist *@
-                        @*<label for="filterResults">@T("Sort by:")</label>
-                            <select id="filterResults" name="@Html.NameOf(m => m.Options.Order)">
-                                @Html.SelectOption(Model.Options.Order, CustomFormOrder.Creation, T("Creation date").ToString())
-                            </select>*@
-                    </fieldset>
-                </div>
-                <div class="col-sm-4 text-right">
-                    <a class="btn btn-primary" href="@Url.Action("Create", "Admin", new { area = "Contents", id = "CustomForm", returUrl = Request.RawUrl })"><i class="fa fa-plus"></i> @T("Add a new Custom Form").Text</a>
-                </div>
-            </div>
-
-        </div>
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="table-responsive table-with-footer">
-                    <table class="table table-fw-widget data-table table-striped dataTable no-footer">
-                        <thead>
-                            <tr>
-                                <th scope="col">
-                                    <div class="am-checkbox am-select-all inline">
-                                        <input id="checkAll" class="check-all" type="checkbox">
-                                        <label class="check-all" title="@T("Select All")" for="checkAll"></label>
-                                    </div>
-                                </th>
-                                <th scope="col" width="50%">@T("Title")</th>
-                                <th scope="col" width="50%">@T("Content Type")</th>
-                                <th scope="col">&nbsp;</th>
-                            </tr>
-                        </thead>
-                        @foreach (var entry in Model.CustomForms) {
-                            var checkboxId = Html.IdFor(m => m.CustomForms[formIndex].CustomForm.Id);
-                        <tr>
-                            <td>
-                                <div class="am-checkbox">
-                                    <input type="hidden" value="@Model.CustomForms[formIndex].CustomForm.Id" name="@Html.NameOf(m => m.CustomForms[formIndex].CustomForm.Id)" />
-                                    <input type="hidden" value="@Model.CustomForms[formIndex].CustomForm.ContentType" name="@Html.NameOf(m => m.CustomForms[formIndex].CustomForm.ContentType)" />
-                                    <input id="@checkboxId" type="checkbox" value="true" name="@Html.NameOf(m => m.CustomForms[formIndex].IsChecked)" />
-                                    <label for="@checkboxId"></label>
-                                </div>
-                            </td>
-                            <td>
-                                @Html.ItemEditLink(entry.CustomForm.Title, entry.CustomForm.ContentItem)
-                                @if (entry.CustomForm.ContentItem.ContentType == "CustomFormWidget") {
-                                    @T("-")<text> </text>@T("Widget")
-                                    }
-                            </td>
-                            <td>
-                                @entry.CustomForm.ContentType.CamelFriendly()
-                            </td>
-                            <td class="text-nowrap">
-                                <a class="btn btn-default" href="@Url.Action("Item", "Admin", new { area = "Orchard.CustomForms", id = entry.CustomForm.Id })"><i class="fa fa-list"></i> @T("Submissions")</a>
-                                <a class="btn btn-primary" href="@Url.ItemEditUrl(entry.CustomForm.ContentItem)"><i class="fa fa-pencil-square-o"></i> @T("Edit")</a>
-                                <a class="btn btn-danger" href="@Url.ItemRemoveUrl(entry.CustomForm.ContentItem, new { returnUrl = Request.RawUrl })" data-confirm="@T("Are you sure you want to delete this item?")"><i class="fa fa-trash"></i> @T("Delete")</a>
-                            </td>
-                        </tr>
-                            formIndex++;
-                        }
-                    </table>
-                </div>
-                <div class="row am-datatable-footer">
-                    <div class="col-sm-12">
-                        @Display(Model.Pager)
+    @if (Model.CustomForms.Any()) {
+        using (Html.BeginFormAntiForgeryPost()) {
+            @Html.ValidationSummary()
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <fieldset>
+                            <input id="publishActions" name="@Html.NameOf(m => m.Options.BulkAction)" type="hidden" value="@CustomFormBulkAction.None" />
+                            <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                                    <i class="fa fa-bolt"></i> Bulk Actions <span class="caret"></span>
+                                </button>&nbsp;
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a id="btn-bulk-delete" href="#" data-confirm="@T("Are you sure you want to delete these items?")" data-action="@CustomFormBulkAction.Delete">@T("Delete").ToString()</a></li>
+                                </ul>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="col-sm-4">
+                        &nbsp;
+                        <fieldset class="bulk-actions">
+                            @* No need to filter if there is only one option in the dropdownlist *@
+                            @*<label for="filterResults">@T("Sort by:")</label>
+                                <select id="filterResults" name="@Html.NameOf(m => m.Options.Order)">
+                                    @Html.SelectOption(Model.Options.Order, CustomFormOrder.Creation, T("Creation date").ToString())
+                                </select>*@
+                        </fieldset>
+                    </div>
+                    <div class="col-sm-4 text-right">
+                        <a class="btn btn-primary" href="@Url.Action("Create", "Admin", new { area = "Contents", id = "CustomForm", returUrl = Request.RawUrl })"><i class="fa fa-plus"></i> @T("Add a new Custom Form").Text</a>
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="table-responsive table-with-footer">
+                        <table class="table table-fw-widget data-table table-striped dataTable no-footer">
+                            <thead>
+                                <tr>
+                                    <th scope="col">
+                                        <div class="am-checkbox am-select-all inline">
+                                            <input id="checkAll" class="check-all" type="checkbox">
+                                            <label class="check-all" title="@T("Select All")" for="checkAll"></label>
+                                        </div>
+                                    </th>
+                                    <th scope="col" width="50%">@T("Title")</th>
+                                    <th scope="col" width="50%">@T("Content Type")</th>
+                                    <th scope="col">&nbsp;</th>
+                                </tr>
+                            </thead>
+                            @foreach (var entry in Model.CustomForms) {
+                                var checkboxId = Html.IdFor(m => m.CustomForms[formIndex].CustomForm.Id);
+                                <tr>
+                                    <td>
+                                        <div class="am-checkbox">
+                                            <input type="hidden" value="@Model.CustomForms[formIndex].CustomForm.Id" name="@Html.NameOf(m => m.CustomForms[formIndex].CustomForm.Id)" />
+                                            <input type="hidden" value="@Model.CustomForms[formIndex].CustomForm.ContentType" name="@Html.NameOf(m => m.CustomForms[formIndex].CustomForm.ContentType)" />
+                                            <input id="@checkboxId" type="checkbox" value="true" name="@Html.NameOf(m => m.CustomForms[formIndex].IsChecked)" />
+                                            <label for="@checkboxId"></label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        @Html.ItemEditLink(entry.CustomForm.Title, entry.CustomForm.ContentItem)
+                                        @if (entry.CustomForm.ContentItem.ContentType == "CustomFormWidget") {
+                                            @T("-")<text> </text>@T("Widget")
+                                        }
+                                    </td>
+                                    <td>
+                                        @entry.CustomForm.ContentType.CamelFriendly()
+                                    </td>
+                                    <td class="text-nowrap">
+                                        <a class="btn btn-default" href="@Url.Action("Item", "Admin", new { area = "Orchard.CustomForms", id = entry.CustomForm.Id })"><i class="fa fa-list"></i> @T("Submissions")</a>
+                                        <a class="btn btn-primary" href="@Url.ItemEditUrl(entry.CustomForm.ContentItem)"><i class="fa fa-pencil-square-o"></i> @T("Edit")</a>
+                                        <a class="btn btn-danger" href="@Url.ItemRemoveUrl(entry.CustomForm.ContentItem, new { returnUrl = Request.RawUrl })" data-confirm="@T("Are you sure you want to delete this item?")"><i class="fa fa-trash"></i> @T("Delete")</a>
+                                    </td>
+                                </tr>
+                                formIndex++;
+                            }
+                        </table>
+                    </div>
+                    <div class="row am-datatable-footer">
+                        <div class="col-sm-12">
+                            @Display(Model.Pager)
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @Display.Modal()
+        }
+    } else {
+        <div class="panel-body">
+            <h3 class="no-content">
+                @T("There are no custom forms created yet.")
+                Why not <a href="@Url.Action("Create", "Admin", new { area = "Contents", id = "CustomForm", returUrl = Request.RawUrl })">@T("Create one").Text</a>?
+            </h3>
         </div>
-        @Display.Modal()
     }
 </div>

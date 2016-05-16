@@ -61,8 +61,8 @@
         </div>
         <div class="row">
             <div class="col-sm-12">
-                <div class="table-responsive">
-                    <table class="table table-striped table-fw-widget table-hover no-footer">
+                <div class="table-responsive table-with-footer">
+                    <table class="table table-fw-widget data-table table-striped dataTable no-footer">
                         <thead>
                             <tr>
                                 <th scope="col" class="text-nowrap">
@@ -125,11 +125,11 @@
                         }
                     </table>
                 </div>
-            </div>
-        </div>
-        <div class="row am-datatable-footer">
-            <div class="col-sm-12">
-                @Display(Model.Pager)
+                <div class="row am-datatable-footer">
+                    <div class="col-sm-12">
+                        @Display(Model.Pager)
+                    </div>
+                </div>
             </div>
         </div>
     </div>
