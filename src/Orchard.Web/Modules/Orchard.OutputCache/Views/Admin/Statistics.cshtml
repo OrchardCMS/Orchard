@@ -7,48 +7,57 @@
     var dateTimeFormatProvider = WorkContext.Resolve<IDateTimeFormatProvider>();
 }
 <div class="panel panel-default">
-    @using (Html.BeginFormAntiForgeryPost()) {
-        @Html.ValidationSummary()
-        <div class="panel-heading">
-            <div class="manage">
-                <a class="btn btn-danger" href="@Url.Action("EvictAll", new { Area = "Orchard.OutputCache", Controller = "Statistics" })" data-confirm="@T("Are you sure you want to delete all these items?")"><i class="fa fa-refresh" aria-hidden="true"></i> @T("Evict All").Text</a>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="table-responsive table-with-footer">
-                    <table class="table table-fw-widget data-table table-striped dataTable no-footer">
-                        <thead>
-                            <tr>
-                                <th scope="col">@T("URL")</th>
-                                <th scope="col" class="text-nowrap">@T("Cache Key")</th>
-                                <th scope="col">@T("Cached")</th>
-                                <th scope="col" class="text-nowrap">@T("Valid Until")</th>
-                                <th scope="col" class="text-nowrap">@T("Stored Until")</th>
-                                <th scope="col">&nbsp;</th>
-                            </tr>
-                        </thead>
-                        @foreach (var cacheItem in Model.CacheItems) {
-                            <tr>
-                                <td><span title="@cacheItem.QueryString">@cacheItem.Url</span></td>
-                                <td>@cacheItem.CacheKey</td>
-                                <td class="text-nowrap">@Display.DateTimeRelative(DateTimeUtc: cacheItem.CachedOnUtc)</td>
-                                <td class="text-nowrap">@Display.DateTime(DateTimeUtc: cacheItem.ValidUntilUtc, CustomFormat: T("{0} {1}", dateTimeFormatProvider.ShortDateFormat, dateTimeFormatProvider.LongTimeFormat))</td>
-                                <td class="text-nowrap">@Display.DateTime(DateTimeUtc: cacheItem.StoredUntilUtc, CustomFormat: T("{0} {1}", dateTimeFormatProvider.ShortDateFormat, dateTimeFormatProvider.LongTimeFormat))</td>
-                                <td class="text-nowrap">
-                                    <a class="btn btn-danger" href="@Url.Action("Evict", new { Area = "Orchard.OutputCache", Controller = "Statistics", cacheKey = cacheItem.CacheKey })" data-confirm="@T("Are you sure you want to delete this item?")"><i class="fa fa-trash" aria-hidden="true"></i> @T("Evict").Text</a>
-                                </td>
-                            </tr>
-                        }
-                    </table>
+    @if (Model.CacheItems.Any()) {
+        using (Html.BeginFormAntiForgeryPost()) {
+            @Html.ValidationSummary()
+            <div class="panel-heading">
+                <div class="manage">
+                    <a class="btn btn-danger" href="@Url.Action("EvictAll", new { Area = "Orchard.OutputCache", Controller = "Statistics" })" data-confirm="@T("Are you sure you want to delete all these items?")"><i class="fa fa-refresh" aria-hidden="true"></i> @T("Evict All").Text</a>
                 </div>
-                <div class="row am-datatable-footer">
-                    <div class="col-sm-12">
-                        @Display(Model.Pager)
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="table-responsive table-with-footer">
+                        <table class="table table-fw-widget data-table table-striped dataTable no-footer">
+                            <thead>
+                                <tr>
+                                    <th scope="col">@T("URL")</th>
+                                    <th scope="col" class="text-nowrap">@T("Cache Key")</th>
+                                    <th scope="col">@T("Cached")</th>
+                                    <th scope="col" class="text-nowrap">@T("Valid Until")</th>
+                                    <th scope="col" class="text-nowrap">@T("Stored Until")</th>
+                                    <th scope="col">&nbsp;</th>
+                                </tr>
+                            </thead>
+                            @foreach (var cacheItem in Model.CacheItems) {
+                                <tr>
+                                    <td><span title="@cacheItem.QueryString">@cacheItem.Url</span></td>
+                                    <td>@cacheItem.CacheKey</td>
+                                    <td class="text-nowrap">@Display.DateTimeRelative(DateTimeUtc: cacheItem.CachedOnUtc)</td>
+                                    <td class="text-nowrap">@Display.DateTime(DateTimeUtc: cacheItem.ValidUntilUtc, CustomFormat: T("{0} {1}", dateTimeFormatProvider.ShortDateFormat, dateTimeFormatProvider.LongTimeFormat))</td>
+                                    <td class="text-nowrap">@Display.DateTime(DateTimeUtc: cacheItem.StoredUntilUtc, CustomFormat: T("{0} {1}", dateTimeFormatProvider.ShortDateFormat, dateTimeFormatProvider.LongTimeFormat))</td>
+                                    <td class="text-nowrap">
+                                        <a class="btn btn-danger" href="@Url.Action("Evict", new { Area = "Orchard.OutputCache", Controller = "Statistics", cacheKey = cacheItem.CacheKey })" data-confirm="@T("Are you sure you want to delete this item?")"><i class="fa fa-trash" aria-hidden="true"></i> @T("Evict").Text</a>
+                                    </td>
+                                </tr>
+                            }
+                        </table>
+                    </div>
+                    <div class="row am-datatable-footer">
+                        <div class="col-sm-12">
+                            @Display(Model.Pager)
+                        </div>
                     </div>
                 </div>
             </div>
+            @Display.Modal()
+        }
+    } else {
+        <div class="panel-body">
+            <h3 class="no-content">
+                @T("There are no cached items yet.")
+                <a href="@Request.RawUrl">@T("Refresh this page")</a>
+            </h3>
         </div>
     }
 </div>
-@Display.Modal()
