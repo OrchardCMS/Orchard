@@ -818,8 +818,6 @@
     <Content Include="Styles\Images\ui-icons_cc0000_256x240.png" />
     <Content Include="Styles\Images\ui-icons_cd0a0a_256x240.png" />
     <Content Include="Styles\Images\ui-icons_ffffff_256x240.png" />
-    <Content Include="Styles\jquery-colorbox.css" />
-    <Content Include="Styles\jquery-colorbox.min.css" />
     <Content Include="Styles\jquery-datetime-editor.css" />
     <Content Include="Styles\jquery-datetime-editor.min.css" />
     <Content Include="Styles\jquery-ui.css" />
