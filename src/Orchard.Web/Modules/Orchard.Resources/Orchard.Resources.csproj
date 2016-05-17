@@ -824,6 +824,8 @@
     <Content Include="Styles\jquery-datetime-editor.min.css" />
     <Content Include="Styles\jquery-ui.css" />
     <Content Include="Styles\jquery-ui.min.css" />
+    <Content Include="Styles\jquery.colorbox.css" />
+    <Content Include="Styles\jquery.colorbox.min.css" />
     <Content Include="Styles\TimeEntry\jquery.timeentry.css" />
     <Content Include="Styles\TimeEntry\jquery.timeentry.min.css" />
     <Content Include="Web.config" />
