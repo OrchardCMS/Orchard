@@ -41,7 +41,7 @@
                         <thead>
                             <tr>
                                 <th scope="col">
-                                    <div class="am-checkbox inline">
+                                    <div class="or-checkbox inline">
                                         <input id="checkAll" class="check-all" type="checkbox">
                                         <label class="check-all" title="@T("Select All")" for="checkAll"></label>
                                     </div>
@@ -55,7 +55,7 @@
                             var checkboxId = Html.IdFor(m => m.Tags[tagIndex].Tag.Id);
                             <tr>
                                 <td>
-                                    <div class="am-checkbox">
+                                    <div class="or-checkbox">
                                         <input type="hidden" value="@Model.Tags[tagIndex].Tag.Id" name="@Html.FieldNameFor(m => m.Tags[tagIndex].Tag.Id)" />
                                         <input type="hidden" value="@Model.Tags[tagIndex].Tag.TagName" name="@Html.FieldNameFor(m => m.Tags[tagIndex].Tag.TagName)" />
                                         <input id="@checkboxId" type="checkbox" value="true" name="@Html.FieldNameFor(m => m.Tags[tagIndex].IsChecked)" />
@@ -74,7 +74,7 @@
                         }
                     </table>
                 </div>
-                <div class="row am-datatable-footer">
+                <div class="row or-datatable-footer">
                     <div class="col-sm-12">
                         @Display(Model.Pager)
                     </div>

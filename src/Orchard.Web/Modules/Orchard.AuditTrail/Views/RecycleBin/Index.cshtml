@@ -40,7 +40,7 @@
                             <thead>
                                 <tr>
                                     <th class="content-checkbox">
-                                        <div class="am-checkbox am-select-all inline">
+                                        <div class="or-checkbox or-select-all inline">
                                             <input id="checkAll" class="check-all" type="checkbox">
                                             <label class="check-all" title="@T("Select All")" for="checkAll"></label>
                                         </div>
@@ -63,7 +63,7 @@
                                         var checkboxId = Html.IdFor(m => m.SelectedContentItems[index].Id);
                                         <tr>
                                             <td>
-                                                <div class="am-checkbox">
+                                                <div class="or-checkbox">
                                                     <input type="hidden" name="SelectedContentItems[@index].Id" value="@contentItem.Id" />
                                                     <input id="@checkboxId" type="checkbox" name="SelectedContentItems[@index].Selected" value="true" @if (isSelected) { <text> checked="checked" </text>             } />
                                                     <label for="@checkboxId"></label>
@@ -83,7 +83,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="row am-datatable-footer">
+                    <div class="row or-datatable-footer">
                         <div class="col-sm-12">
                             @Display(Model.Pager)
                         </div>

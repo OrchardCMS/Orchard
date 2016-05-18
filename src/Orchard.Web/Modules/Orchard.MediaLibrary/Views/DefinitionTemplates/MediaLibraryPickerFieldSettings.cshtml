@@ -1,13 +1,13 @@
 ﻿@model Orchard.MediaLibrary.Settings.MediaLibraryPickerFieldSettings
 
 <fieldset>
-    <div class="am-checkbox">
+    <div class="or-checkbox">
         @Html.CheckBoxFor(m => m.Required) <label for="@Html.FieldIdFor(m => m.Required)" class="forcheckbox">@T("A content item is required")</label>
         <span class="help-block">@T("Check to ensure the user is providing at least one media item.")</span>
     </div>
 </fieldset>
 <fieldset>
-    <div class="am-checkbox">
+    <div class="or-checkbox">
         @Html.CheckBoxFor(m => m.Multiple) <label for="@Html.FieldIdFor(m => m.Multiple)" class="forcheckbox">@T("Allow multiple content items")</label>
         <span class="help-block">@T("Check to allow the user to select multiple media items.")</span>
     </div>

@@ -1,5 +1,5 @@
 /*! DataTables Foundation integration
- * ©2011-2014 SpryMedia Ltd - datatables.net/license
+ * ©2011-2015 SpryMedia Ltd - datatables.net/license
  */
 
 /**
@@ -10,14 +10,44 @@
  * controls using Foundation. See http://datatables.net/manual/styling/foundation
  * for further information.
  */
-(function(window, document, undefined){
+(function( factory ){
+	if ( typeof define === 'function' && define.amd ) {
+		// AMD
+		define( ['jquery', 'datatables.net'], function ( $ ) {
+			return factory( $, window, document );
+		} );
+	}
+	else if ( typeof exports === 'object' ) {
+		// CommonJS
+		module.exports = function (root, $) {
+			if ( ! root ) {
+				root = window;
+			}
 
-var factory = function( $, DataTable ) {
-"use strict";
+			if ( ! $ || ! $.fn.dataTable ) {
+				$ = require('datatables.net')(root, $).$;
+			}
+
+			return factory( $, root, root.document );
+		};
+	}
+	else {
+		// Browser
+		factory( jQuery, window, document );
+	}
+}(function( $, window, document, undefined ) {
+'use strict';
+var DataTable = $.fn.dataTable;
+
+// Detect Foundation 5 / 6 as they have different element and class requirements
+var meta = $('<meta class="foundation-mq"/>').appendTo('head');
+DataTable.ext.foundationVersion = meta.css('font-family').match(/small|medium|large/) ? 6 : 5;
+meta.remove();
 
 
 $.extend( DataTable.ext.classes, {
-	sWrapper: "dataTables_wrapper dt-foundation"
+	sWrapper:    "dataTables_wrapper dt-foundation",
+	sProcessing: "dataTables_processing panel"
 } );
 
 
@@ -36,13 +66,16 @@ DataTable.ext.renderer.pageButton.foundation = function ( settings, host, idx, b
 	var api = new DataTable.Api( settings );
 	var classes = settings.oClasses;
 	var lang = settings.oLanguage.oPaginate;
+	var aria = settings.oLanguage.oAria.paginate || {};
 	var btnDisplay, btnClass;
+	var tag;
+	var v5 = DataTable.ext.foundationVersion === 5;
 
 	var attach = function( container, buttons ) {
 		var i, ien, node, button;
 		var clickHandler = function ( e ) {
 			e.preventDefault();
-			if ( e.data.action !== 'ellipsis' ) {
+			if ( !$(e.currentTarget).hasClass('unavailable') && api.page() != e.data.action ) {
 				api.page( e.data.action ).draw( 'page' );
 			}
 		};
@@ -56,57 +89,69 @@ DataTable.ext.renderer.pageButton.foundation = function ( settings, host, idx, b
 			else {
 				btnDisplay = '';
 				btnClass = '';
+				tag = null;
 
 				switch ( button ) {
 					case 'ellipsis':
-						btnDisplay = '&hellip;';
-						btnClass = 'unavailable';
+						btnDisplay = '&#x2026;';
+						btnClass = 'unavailable disabled';
+						tag = null;
 						break;
 
 					case 'first':
 						btnDisplay = lang.sFirst;
 						btnClass = button + (page > 0 ?
-							'' : ' unavailable');
+							'' : ' unavailable disabled');
+						tag = page > 0 ? 'a' : null;
 						break;
 
 					case 'previous':
 						btnDisplay = lang.sPrevious;
 						btnClass = button + (page > 0 ?
-							'' : ' unavailable');
+							'' : ' unavailable disabled');
+						tag = page > 0 ? 'a' : null;
 						break;
 
 					case 'next':
 						btnDisplay = lang.sNext;
 						btnClass = button + (page < pages-1 ?
-							'' : ' unavailable');
+							'' : ' unavailable disabled');
+						tag = page < pages-1 ? 'a' : null;
 						break;
 
 					case 'last':
 						btnDisplay = lang.sLast;
 						btnClass = button + (page < pages-1 ?
-							'' : ' unavailable');
+							'' : ' unavailable disabled');
+						tag = page < pages-1 ? 'a' : null;
 						break;
 
 					default:
 						btnDisplay = button + 1;
 						btnClass = page === button ?
 							'current' : '';
+						tag = page === button ?
+							null : 'a';
 						break;
+				}
+
+				if ( v5 ) {
+					tag = 'a';
 				}
 
 				if ( btnDisplay ) {
 					node = $('<li>', {
 							'class': classes.sPageButton+' '+btnClass,
 							'aria-controls': settings.sTableId,
+							'aria-label': aria[ button ],
 							'tabindex': settings.iTabIndex,
 							'id': idx === 0 && typeof button === 'string' ?
 								settings.sTableId +'_'+ button :
 								null
 						} )
-						.append( $('<a>', {
-								'href': '#'
-							} )
-							.html( btnDisplay )
+						.append( tag ?
+							$('<'+tag+'/>', {'href': '#'} ).html( btnDisplay ) :
+							btnDisplay
 						)
 						.appendTo( container );
 
@@ -125,22 +170,5 @@ DataTable.ext.renderer.pageButton.foundation = function ( settings, host, idx, b
 };
 
 
-}; // /factory
-
-
-// Define as an AMD module if possible
-if ( typeof define === 'function' && define.amd ) {
-	define( ['jquery', 'datatables'], factory );
-}
-else if ( typeof exports === 'object' ) {
-    // Node/CommonJS
-    factory( require('jquery'), require('datatables') );
-}
-else if ( jQuery ) {
-	// Otherwise simply initialise as normal, stopping multiple evaluation
-	factory( jQuery, jQuery.fn.dataTable );
-}
-
-
-})(window, document);
-
+return DataTable;
+}));

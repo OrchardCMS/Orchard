@@ -24,7 +24,7 @@
         @foreach (var option in importOptions) {
                 var importOptionId = String.Format("{0}_{1}", Html.FieldIdFor(m => m.ResetSite), option.Value);
             <li>
-                <div class="am-radio">
+                <div class="or-radio">
                     <input type="radio" id="@importOptionId" name="@Html.FieldNameFor(m => m.ResetSite)" value="@option.Value" @if (option.Selected) { <text> checked="checked" </text>   } />
                     <label for="@importOptionId" class="forradiobutton">@option.Text</label>
                 </div>

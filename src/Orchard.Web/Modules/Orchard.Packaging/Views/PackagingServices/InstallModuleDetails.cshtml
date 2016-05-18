@@ -19,7 +19,7 @@
 
             @{ var recipeIndex = 0; }
             @foreach (PackagingInstallRecipeViewModel recipe in Model.Recipes) {
-                <div class="am-checkbox">
+                <div class="or-checkbox">
                     @Html.HiddenFor(m => m.Recipes[recipeIndex].Recipe.Name)
 
                     @Html.EditorFor(m => m.Recipes[recipeIndex].Execute)
@@ -37,7 +37,7 @@
 
         @{ var featureIndex = 0; }
         @foreach (PackagingInstallFeatureViewModel feature in Model.Features) {
-            <div class="am-checkbox">
+            <div class="or-checkbox">
                 @Html.HiddenFor(m => m.Features[featureIndex].FeatureDescriptor.Id)
                 @Html.HiddenFor(m => m.Features[featureIndex].FeatureDescriptor.Name)
 

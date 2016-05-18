@@ -22,7 +22,7 @@
                         </div>
                     </fieldset>
                     <fieldset>
-                        <div class="am-checkbox">
+                        <div class="or-checkbox">
                             @Html.EditorFor(m => m.Settings.Scheduled)
                             <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Settings.Scheduled)">@T("Generate warmup pages periodically")</label>
                         </div>
@@ -32,7 +32,7 @@
                             @T("minutes")
                             @Html.ValidationMessage("Delay", "*")
                         </div>
-                        <div class="am-checkbox">
+                        <div class="or-checkbox">
                             @Html.EditorFor(m => m.Settings.OnPublish)
                             <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Settings.OnPublish)">@T("Generate warmup pages any time some content is published")</label>
                         </div>

@@ -26,7 +26,7 @@
                          var partBindingState = partState.Bindings.ElementAtOrDefault(partBindingIndex) ?? new BindingSettings();
                          <tr>
                              <td colspan="2">
-                                 <div class="am-checkbox">
+                                 <div class="or-checkbox">
                                      <input type="hidden" name="Parts[@partIndex].Bindings[@partBindingIndex].Name" value="@partBinding.Name" />
                                      <input type="checkbox" id="@partBindingId" name="Parts[@partIndex].Bindings[@partBindingIndex].Enabled" value="@Boolean.TrueString" @if (partBindingState.Enabled) { <text> checked="checked" </text>  } />
                                      <label class="forcheckbox" for="@partBindingId">@partBinding.Name</label>
@@ -45,7 +45,7 @@
                             var fieldBindingstate = fieldState.Bindings.ElementAtOrDefault(fieldBindingIndex) ?? new BindingSettings();
                             <tr>
                                 <td class="property-name">
-                                    <div class="am-checkbox">
+                                    <div class="or-checkbox">
                                         <input type="hidden" name="Parts[@partIndex].Fields[@fieldIndex].Name" value="@fieldDescriptor.Field.Name" />
                                         <input type="hidden" name="Parts[@partIndex].Fields[@fieldIndex].Bindings[@fieldBindingIndex].Name" value="@fieldBinding.Name" />
                                         <input type="checkbox" id="@fieldBindingId" name="Parts[@partIndex].Fields[@fieldIndex].Bindings[@fieldBindingIndex].Enabled" value="@Boolean.TrueString" @if (fieldBindingstate.Enabled) { <text> checked="checked" </text>    } />

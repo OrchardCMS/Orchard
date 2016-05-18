@@ -36,7 +36,7 @@
                             <thead>
                                 <tr>
                                     <th scope="col" class="text-nowrap">
-                                        <div class="am-checkbox inline">
+                                        <div class="or-checkbox inline">
                                             <input id="checkAll" class="check-all" type="checkbox">
                                             <label class="check-all" title="@T("Select All")" for="checkAll"></label>
                                         </div>
@@ -52,7 +52,7 @@
                                         <input type="hidden" value="@Model.Taxonomies[taxonomyIndex].Id" name="@Html.NameOf(m => m.Taxonomies[ti].Id)" />
                                         <input type="hidden" value="@Model.Taxonomies[taxonomyIndex].Name" name="@Html.NameOf(m => m.Taxonomies[taxonomyIndex].Name)" />
                                         @if (!taxonomyEntry.IsInternal || Authorizer.Authorize(Orchard.Security.StandardPermissions.SiteOwner)) {
-                                            <div class="am-checkbox">
+                                            <div class="or-checkbox">
                                                 <input type="checkbox" value="true" name="@Html.NameOf(m => m.Taxonomies[ti].IsChecked)" id="@Html.NameOf(m => m.Taxonomies[ti].IsChecked)" />
                                                 <label for="@Html.NameOf(m => m.Taxonomies[ti].IsChecked)"></label>
                                             </div>
@@ -80,7 +80,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row am-datatable-footer">
+            <div class="row or-datatable-footer">
                 <div class="col-sm-12">
                     @Display(Model.Pager)
                 </div>

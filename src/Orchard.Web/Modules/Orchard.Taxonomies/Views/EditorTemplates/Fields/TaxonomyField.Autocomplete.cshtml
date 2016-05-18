@@ -61,7 +61,7 @@
                             <input @if (disabled){ <text>disabled="disabled"</text> } type="checkbox" value="true" checked="checked" name="@Html.FieldNameFor(m => m.Terms[ti].IsChecked)" id="@Html.FieldIdFor(m => m.Terms[ti].IsChecked)" data-term="@entry.Name" data-term-identity="@entry.Name.ToLower()" /> 
                         }
                     }
-                    <div class="am-checkbox">
+                    <div class="or-checkbox">
                         <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Terms[ti].IsChecked)">@entry.Name</label>
                         <input type="hidden" name="@Html.FieldNameFor(m => m.Terms[ti].Id)" id="@Html.FieldIdFor(m => m.Terms[ti].Id)" value="@entry.Id" />
                     </div>

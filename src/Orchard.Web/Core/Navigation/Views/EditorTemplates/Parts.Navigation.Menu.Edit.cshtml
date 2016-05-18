@@ -5,7 +5,7 @@
 @if (!Model.ContentItem.TypeDefinition.Settings.ContainsKey("Stereotype") || Model.ContentItem.TypeDefinition.Settings["Stereotype"] != "MenuItem") {
 
     <fieldset>
-        <div class="am-checkbox inline">
+        <div class="or-checkbox inline">
             @Html.CheckBoxFor(m => m.OnMenu)
             <label for="@Html.FieldIdFor(m => m.OnMenu)" class="forcheckbox">@T("Show on a menu")</label>
         </div>

@@ -19,7 +19,7 @@
     @Html.LabelFor(widget => widget.Title, T("Title"))
     @Html.TextBoxFor(widget => widget.Title, new { @class = "text large" })
     <span class="help-block">@T("The title of the Widget.")</span>
-    <div class="am-checkbox">
+    <div class="or-checkbox">
         @Html.EditorFor(widget => widget.RenderTitle)
         <label class="forcheckbox" for="@Html.FieldIdFor(m => m.RenderTitle)">@T("Check to render the title on the front-end, uncheck to hide")</label>
     </div>

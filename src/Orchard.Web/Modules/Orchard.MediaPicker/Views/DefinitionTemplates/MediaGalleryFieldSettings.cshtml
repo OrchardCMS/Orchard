@@ -1,14 +1,14 @@
 ﻿@model Orchard.MediaPicker.Settings.MediaGalleryFieldSettings
 
 <fieldset>
-    <div class="am-checkbox">
+    <div class="or-checkbox">
         @Html.CheckBoxFor(m => m.Required) 
         <label for="@Html.FieldIdFor(m => m.Required)" class="forcheckbox">@T("A media is required")</label>
         <span class="help-block">@T("Check to ensure the user is providing at least one media.")</span>
     </div>
 </fieldset>
 <fieldset>
-    <div class="am-checkbox">
+    <div class="or-checkbox">
         <input name="ext-@Html.FieldNameFor(m => m)" id="ext-@Html.FieldIdFor(m => m)" type="checkbox" @if (!String.IsNullOrWhiteSpace(Model.AllowedExtensions)) { <text>checked="checked"</text> } />
         <label for="ext-@Html.FieldIdFor(m => m)" class="forcheckbox">@T("Allow only specific extensions")</label>
     </div>
@@ -21,7 +21,7 @@
     </div>
 </fieldset>
 <fieldset>
-    <div class="am-checkbox">
+    <div class="or-checkbox">
         @Html.CheckBoxFor(m => m.Multiple) <label for="@Html.FieldIdFor(m => m.Multiple)" class="forcheckbox">@T("Allow multiple media items")</label>
         <span class="help-block">@T("Check to allow the user to select multiple media items.")</span>
     </div>

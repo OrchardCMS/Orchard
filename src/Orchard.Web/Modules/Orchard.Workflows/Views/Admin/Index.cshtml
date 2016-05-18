@@ -51,7 +51,7 @@
                         <thead>
                             <tr>
                                 <th scope="col">
-                                    <div class="am-checkbox am-select-all inline">
+                                    <div class="or-checkbox or-select-all inline">
                                         <input id="checkAll" class="check-all" type="checkbox">
                                         <label class="check-all" title="@T("Select All")" for="checkAll"></label>
                                     </div>
@@ -65,7 +65,7 @@
                             var checkboxId = Html.IdFor(m => m.WorkflowDefinitions[index].WokflowDefinitionId);
                             <tr>
                                 <td>
-                                    <div class="am-checkbox">
+                                    <div class="or-checkbox">
                                         <input type="hidden" value="@Model.WorkflowDefinitions[index].WokflowDefinitionId" name="@Html.NameOf(m => m.WorkflowDefinitions[index].WokflowDefinitionId)" />
                                         <input id="@checkboxId" type="checkbox" value="true" name="@Html.NameOf(m => m.WorkflowDefinitions[index].IsChecked)" />
                                         <label for="@checkboxId"></label>
@@ -90,7 +90,7 @@
                         }
                     </table>
                 </div>
-                <div class="row am-datatable-footer">
+                <div class="row or-datatable-footer">
                     <div class="col-sm-12">
                         @Display(Model.Pager)
                     </div>

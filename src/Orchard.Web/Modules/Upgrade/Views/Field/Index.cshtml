@@ -16,7 +16,7 @@
                     @foreach (var contentTypeEntry in Model.ContentTypes) {
                         <li>
                             <input type="hidden" value="@Model.ContentTypes[contentTypeIndex].ContentTypeName" name="@Html.NameOf(m => m.ContentTypes[contentTypeIndex].ContentTypeName)" />
-                            <div class="am-checkbox am-select-all inline">
+                            <div class="or-checkbox or-select-all inline">
                                 <input name="@Html.NameOf(m => m.ContentTypes[contentTypeIndex].IsChecked)" id="@Html.NameOf(m => m.ContentTypes[contentTypeIndex].IsChecked)" value="true" class="check-all" type="checkbox">
                                 <label title="@T("Select All")" for="@Html.NameOf(m => m.ContentTypes[contentTypeIndex].IsChecked)">@Model.ContentTypes[contentTypeIndex].ContentTypeName.CamelFriendly()</label>
                             </div>

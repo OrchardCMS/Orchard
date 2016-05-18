@@ -8,23 +8,23 @@
     <label for="@Html.FieldIdFor(m => m.Value)">@Model.DisplayName</label>
     @switch (settings.SelectionMode) {
         case SelectionMode.Checkbox:
-            <div class="am-checkbox">
+            <div class="or-checkbox">
                 <input type="checkbox" id="@(Html.FieldIdFor(m => m.Value))" class="check-box" value="true" name="@Html.FieldNameFor(m => m.Value)" @if (Model.Value.HasValue && Model.Value.Value) { <text> checked="checked" </text>   } />
                 <label class="forcheckbox" for="@(Html.FieldIdFor(m => m.Value))">@T(settings.OnLabel)</label>
             </div>
             break;
         case SelectionMode.Radiobutton:
             if (settings.Optional) {
-                <div class="am-radio">
+                <div class="or-radio">
                     <input type="radio" name="@Html.FieldNameFor(m => m.Value)" id="radio-unknown" value="" @if (!Model.Value.HasValue) { <text> checked="checked" </text>  } />
                     <label for="radio-unknown" class="forcheckbox">@T(settings.NotSetLabel)</label>
                 </div>
             }
-            <div class="am-radio">
+            <div class="or-radio">
                 <input type="radio" name="@Html.FieldNameFor(m => m.Value)" id="radio-true" value="true" @if (Model.Value.HasValue && Model.Value.Value) { <text> checked="checked" </text>   } />
                 <label for="radio-true" class="forcheckbox">@T(settings.OnLabel)</label>
             </div>
-            <div class="am-radio">
+            <div class="or-radio">
                 <input type="radio" name="@Html.FieldNameFor(m => m.Value)" id="radio-false" value="false" @if (Model.Value.HasValue && !Model.Value.Value) { <text> checked="checked" </text>   } />
                 <label for="radio-false" class="forcheckbox">@T(settings.OffLabel)</label>
             </div>

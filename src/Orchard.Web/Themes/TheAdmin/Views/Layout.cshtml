@@ -11,10 +11,10 @@
     Script.Require("ShapesBase").AtFoot();
     Script.Include("TheAdmin.js");
 }
-<div id="layout-content" class="am-wrapper @*am-fixed-sidebar*@" data-default-remove-confirmation-prompt="@T("Are you sure you want to remove this element?")'">
+<div id="layout-content" class="or-wrapper @*or-fixed-sidebar*@" data-default-remove-confirmation-prompt="@T("Are you sure you want to remove this element?")'">
     @Display(Model.TopMenu)
     @Display(Model.SideMenu)
-    <div class="am-content">
+    <div class="or-content">
         <div class="page-head">
             @if (Model.Title != null) {
                 @Display.Title(Title: Model.Title)

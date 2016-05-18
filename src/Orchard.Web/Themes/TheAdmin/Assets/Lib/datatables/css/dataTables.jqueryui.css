@@ -375,6 +375,9 @@ table.dataTable td {
   *margin-top: -1px;
   -webkit-overflow-scrolling: touch;
 }
+.dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody th, .dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody td {
+  vertical-align: middle;
+}
 .dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody th > div.dataTables_sizing,
 .dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody td > div.dataTables_sizing {
   height: 0;
@@ -428,11 +431,11 @@ table.dataTable thead th div.DataTables_sort_wrapper span {
 }
 table.dataTable thead th.ui-state-default,
 table.dataTable tfoot th.ui-state-default {
-  border-right-width: 0;
+  border-left-width: 0;
 }
-table.dataTable thead th.ui-state-default:last-child,
-table.dataTable tfoot th.ui-state-default:last-child {
-  border-right-width: 1px;
+table.dataTable thead th.ui-state-default:first-child,
+table.dataTable tfoot th.ui-state-default:first-child {
+  border-left-width: 1px;
 }
 
 /*
@@ -448,7 +451,6 @@ table.dataTable tfoot th.ui-state-default:last-child {
   text-decoration: none !important;
   cursor: pointer;
   *cursor: hand;
-  color: #333 !important;
   border: 1px solid transparent;
 }
 .dataTables_wrapper .dataTables_paginate .fg-button:active {
@@ -470,4 +472,11 @@ table.dataTable tfoot th.ui-state-default:last-child {
 }
 .dataTables_wrapper.no-footer .dataTables_scrollBody {
   border-bottom: none;
+}
+.dataTables_wrapper .dataTables_length,
+.dataTables_wrapper .dataTables_filter,
+.dataTables_wrapper .dataTables_info,
+.dataTables_wrapper .dataTables_processing,
+.dataTables_wrapper .dataTables_paginate {
+  color: inherit;
 }

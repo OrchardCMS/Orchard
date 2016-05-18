@@ -22,7 +22,7 @@
                                 @foreach (var fieldEntry in fieldEntries) {
                                     var fieldIndexClosure = fieldIndex;
                                     <li>
-                                        <div class="am-checkbox">
+                                        <div class="or-checkbox">
                                             @Html.EditorFor(m => m.Entries[entryIndex].Fields[fieldIndex].Selected)
                                             @Html.HiddenFor(m => m.Entries[entryIndex].Fields[fieldIndex].Field)
                                             <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Entries[entryIndexClosure].Fields[fieldIndexClosure].Selected)">@Model.Entries[entryIndex].Fields[fieldIndex].Field</label>
@@ -42,7 +42,7 @@
     </div>
     <div>
         <label>@T("Localization")</label>
-        <div class="am-checkbox">
+        <div class="or-checkbox">
             @Html.EditorFor(m => m.FilterCulture)
             <label class="forcheckbox" for="@Html.FieldIdFor(m => m.FilterCulture)">@T("Narrow search to current culture only")</label>
             <span class="help-block">@T("If checked, search results will only include content items localized in the current culture of the request.")</span>

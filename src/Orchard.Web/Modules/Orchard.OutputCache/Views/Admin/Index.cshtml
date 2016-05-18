@@ -56,23 +56,23 @@
 
             <fieldset>
                 <h4>@T("Advanced Settings")</h4>
-                <div class="am-checkbox">
+                <div class="or-checkbox">
                     @Html.CheckBoxFor(m => m.IgnoreNoCache)
                     <label for="@Html.FieldIdFor(m => m.IgnoreNoCache)" class="forcheckbox">@T("Ignore no-cache headers")</label>
                     @Html.Hint(T("When checked, requests containing a 'Content-Cache: no-cache' header will still return cached values if available."))
-                </div><div class="am-checkbox">
+                </div><div class="or-checkbox">
                     @Html.CheckBoxFor(m => m.VaryByCulture)
                     <label for="@Html.FieldIdFor(m => m.VaryByCulture)" class="forcheckbox">@T("Vary by culture")</label>
                     @Html.Hint(T("When checked, caching will vary by request culture. For better performance, leave this unchecked if your site uses only one culture."))
-                </div><div class="am-checkbox">
+                </div><div class="or-checkbox">
                     @Html.CheckBoxFor(m => m.CacheAuthenticatedRequests)
                     <label for="@Html.FieldIdFor(m => m.CacheAuthenticatedRequests)" class="forcheckbox">@T("Cache authenticated requests")</label>
                     @Html.Hint(T("When checked, caching will apply even if the user is authenticated. When unchecked, caching will be bypassed for authenticated requests."))
-                </div><div class="am-checkbox">
+                </div><div class="or-checkbox">
                     @Html.CheckBoxFor(m => m.VaryByAuthenticationState)
                     <label for="@Html.FieldIdFor(m => m.VaryByAuthenticationState)" class="forcheckbox">@T("Vary by authentication state")</label>
                     @Html.Hint(T("When checked (and 'Cache authenticated requests' is also checked) caching will vary by whether the user is authenticated or not. This is useful if content is rendered differently for authenticated vs. anonymous users."))
-                </div><div class="am-checkbox">
+                </div><div class="or-checkbox">
                     @Html.CheckBoxFor(m => m.DebugMode)
                     <label for="@Html.FieldIdFor(m => m.DebugMode)" class="forcheckbox">@T("Render caching information in cached pages")</label>
                 </div>

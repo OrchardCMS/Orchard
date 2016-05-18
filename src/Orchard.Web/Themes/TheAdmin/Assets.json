@@ -1,10 +1,10 @@
 ﻿[
     {
         "inputs": [
-            "Assets/Theme/Less/includes/themes/theme-orchard.less"
+            "Assets/Less/orchard.less"
         ],
         "output": "Styles/TheAdmin.css",
-        "watch": ["Assets/Theme/**/*.less"]
+        "watch": ["Assets/**/*.less"]
     },
     {
         "inputs": [
@@ -22,8 +22,8 @@
             "Assets/Lib/jquery.sparkline/jquery.sparkline.js",
             "Assets/Lib/datatables/js/jquery.dataTables.js",
             "Assets/Lib/datatables/js/dataTables.bootstrap.js",
-            "Assets/Theme/Js/main.js",
-            "Assets/Theme/Js/orchard-admin.js"
+            "Assets/Js/main.js",
+            "Assets/Js/orchard-admin.js"
         ],
         "output": "Scripts/TheAdmin.js"
     }

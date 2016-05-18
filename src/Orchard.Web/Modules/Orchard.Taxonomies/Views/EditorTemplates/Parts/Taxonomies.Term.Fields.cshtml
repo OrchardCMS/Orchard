@@ -2,7 +2,7 @@
 
 @Html.ValidationSummary()
 <fieldset>
-    <div class="am-checkbox">
+    <div class="or-checkbox">
         @Html.CheckBoxFor(m => m.Selectable, new { @class = "" }) 
         <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Selectable)">@T("Selectable")</label>
         <span class="help-block">@T("Uncheck if users should not be able to select this term")</span>

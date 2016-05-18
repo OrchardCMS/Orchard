@@ -1,7 +1,7 @@
 ﻿@model Orchard.ContentPermissions.ViewModels.SecurableContentItemsSettingsViewModel
 
 <fieldset>
-    <div class="am-checkbox">
+    <div class="or-checkbox">
         @Html.EditorFor(m => m.SecurableContentItems)
         <label for="@Html.FieldIdFor(m => m.SecurableContentItems)" class="forcheckbox">@T("Securable Content Items")</label>
         @Html.ValidationMessageFor(m => m.SecurableContentItems)

@@ -54,7 +54,7 @@
                             <thead>
                                 <tr>
                                     <th scope="col" class="text-nowrap">
-                                        <div class="am-checkbox inline">
+                                        <div class="or-checkbox inline">
                                             <input id="checkAll" class="check-all" type="checkbox">
                                             <label class="check-all" title="@T("Select All")" for="checkAll"></label>
                                         </div>
@@ -73,7 +73,7 @@
                                 }
                             <tr itemscope="itemscope" itemid="@Model.Comments[commentIndex].Comment.Id" itemtype="http://orchardproject.net/data/Comment" class="@commentClass">
                                 <td>
-                                    <div class="am-checkbox">
+                                    <div class="or-checkbox">
                                         <input type="hidden" value="@Model.Comments[commentIndex].Comment.Id" name="@Html.NameOf(m => m.Comments[commentIndex].Comment.Id)" />
                                         <input type="checkbox" value="true" name="@Html.NameOf(m => m.Comments[commentIndex].IsChecked)" id="@Html.NameOf(m => m.Comments[commentIndex].IsChecked)" />
                                         <label for="@Html.NameOf(m => m.Comments[commentIndex].IsChecked)"></label>
@@ -118,7 +118,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row am-datatable-footer">
+            <div class="row or-datatable-footer">
                 <div class="col-sm-12">
                     @Display(Model.Pager)
                 </div>

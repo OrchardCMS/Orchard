@@ -1,13 +1,13 @@
 ﻿@model Orchard.ContentPicker.Settings.ContentPickerFieldSettings
 
 <fieldset>
-    <div class="am-checkbox">
+    <div class="or-checkbox">
         @Html.CheckBoxFor(m => m.Required) <label for="@Html.FieldIdFor(m => m.Required)" class="forcheckbox">@T("A content item is required")</label>
         <span class="help-block">@T("Check to ensure the user is providing at least one content item.")</span>
     </div>
 </fieldset>
 <fieldset>
-    <div class="am-checkbox">
+    <div class="or-checkbox">
         @Html.CheckBoxFor(m => m.Multiple) <label for="@Html.FieldIdFor(m => m.Multiple)" class="forcheckbox">@T("Allow multiple content items")</label>
         <span class="help-block">@T("Check to allow the user to select multiple content items.")</span>
     </div>
@@ -19,7 +19,7 @@
     @Html.ValidationMessageFor(m => m.Hint)
 </fieldset>
 <fieldset>
-    <div class="am-checkbox">
+    <div class="or-checkbox">
         @Html.CheckBoxFor(m => m.ShowContentTab) <label for="@Html.FieldIdFor(m => m.ShowContentTab)" class="forcheckbox">@T("Show Content tab")</label>
         <span class="help-block">@T("Uncheck to hide the Content tab from the picker window.")</span>
     </div>

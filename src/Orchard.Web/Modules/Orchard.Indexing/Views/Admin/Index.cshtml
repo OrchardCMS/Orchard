@@ -39,7 +39,7 @@
                     <thead>
                         <tr role="rowheader">
                             @* EXAMPLE: <th width="1%">
-                                    <div class="am-checkbox inline">
+                                    <div class="or-checkbox inline">
                                         <input id="checkAll" class="check-all" type="checkbox">
                                         <label class="check-all" title="@T("Select All")" for="checkAll"></label>
                                     </div>
@@ -56,7 +56,7 @@
                         var id = System.Text.RegularExpressions.Regex.Replace(index.IndexName, "[^A-Za-z0-9-]+", "_");
                             <tr>
                                 @* EXAMPLE: <td>
-                                        <div class="am-checkbox">
+                                        <div class="or-checkbox">
                                             <input type="checkbox" name="itemIds" value="@index.IndexName" id="@id">
                                             <label for="@id">
                                                 <span class="sr-only">@T("Select")</span>

@@ -10,13 +10,13 @@
             <tr>
                 <th>@T("Content Type")</th>
                 <th>
-                    <div class="am-checkbox">
+                    <div class="or-checkbox">
                         <input id="checkall-contenttype" type="checkbox" class="check-all-in-column" />
                         <label for="checkall-contenttype">@T("Content")</label>
                     </div>
                 </th>
                 <th>
-                    <div class="am-checkbox">
+                    <div class="or-checkbox">
                         <input id="checkall-contentdef" type="checkbox" class="check-all-in-column" />
                         <label for="checkall-contentdef">@T("Content Definition")</label>
                     </div>
@@ -30,13 +30,13 @@
                     <td>@contentType.DisplayName</td>
                     <td>
                         <input type="hidden" name="@Html.NameFor(m => m.ContentTypes[contentTypeIndex].Name)" value="@Model.ContentTypes[contentTypeIndex].Name" />
-                        <div class="am-checkbox">
+                        <div class="or-checkbox">
                             <input id="@Html.NameFor(m => m.ContentTypes[contentTypeIndex].ExportData)" type="checkbox" class="check-data" name="@Html.NameFor(m => m.ContentTypes[contentTypeIndex].ExportData)" value="true" />
                             <label for="@Html.NameFor(m => m.ContentTypes[contentTypeIndex].ExportData)"></label>
                         </div>
                     </td>
                     <td>
-                        <div class="am-checkbox">
+                        <div class="or-checkbox">
                             <input id="@Html.NameFor(m => m.ContentTypes[contentTypeIndex].ExportSchema)" type="checkbox" class="check-schema" name="@Html.NameFor(m => m.ContentTypes[contentTypeIndex].ExportSchema)" value="true" />
                             <label for="@Html.NameFor(m => m.ContentTypes[contentTypeIndex].ExportSchema)"></label>
                         </div>
@@ -50,17 +50,17 @@
 </div>
 <div>
     <p>@T("Version History")</p>
-    <div class="am-radio">
+    <div class="or-radio">
         @Html.RadioButtonFor(m => m.VersionHistoryOptions, "Published", new { id = "Published", Checked = "Checked" })
         <label for="Published" class="forcheckbox">@T("Only Published Versions")</label>
     </div>
     <br />
-    <div class="am-radio">
+    <div class="or-radio">
         @Html.RadioButtonFor(m => m.VersionHistoryOptions, "Draft", new { id = "Draft" })
         <label for="Draft" class="forcheckbox">@T("Only Drafts")</label>
     </div>
     <br />
-    <div class="am-radio">
+    <div class="or-radio">
         @Html.RadioButtonFor(m => m.VersionHistoryOptions, "Latest", new { id = "Latest" })
         <label for="Latest" class="forcheckbox">@T("Latest Versions")</label>
     </div>

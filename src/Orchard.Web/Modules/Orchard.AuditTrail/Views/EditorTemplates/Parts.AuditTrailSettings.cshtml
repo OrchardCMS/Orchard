@@ -30,7 +30,7 @@
                                     <input type="hidden" name="AuditTrailSettingsPart.Categories[@i].Category" value="@category.Category" />
                                 </th>
                                 <th class="audittrail-event-enabled-cell text-center">
-                                    <div class="am-checkbox am-select-all inline">
+                                    <div class="or-checkbox or-select-all inline">
                                         <input id="check-all-@i" class="check-all-master" type="checkbox">
                                         <label class="check-all" title="@T("Select All")" for="check-all-@i"></label>
                                     </div>
@@ -46,7 +46,7 @@
                                     </td>
                                     <td>@e.Description</td>
                                     <td class="audittrail-event-enabled-cell text-center">
-                                        <div class="am-checkbox">
+                                        <div class="or-checkbox">
                                             <input class="check-all-slave" id="@checkboxId" type="checkbox" value="@Boolean.TrueString" name="AuditTrailSettingsPart.Categories[@i].Events[@j].IsEnabled" value="@Boolean.TrueString" @if (e.IsEnabled || e.IsMandatory) { <text> checked="checked" </text>  } @if (e.IsMandatory) { <text> disabled="disabled" </text>  } />
                                             <label for="@checkboxId"></label>
                                         </div>
@@ -63,7 +63,7 @@
     </div>
     <h2>@T("Client IP address logging")</h2>
     <div class="col-sm-12">
-        <div class="am-checkbox">
+        <div class="or-checkbox">
             @Html.CheckBoxFor(m => m.EnableClientIpAddressLogging)
             <label for="AuditTrailSettingsPart_EnableClientIpAddressLogging">@T("Enable client IP address logging").Text</label>
         </div>

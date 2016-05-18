@@ -3,14 +3,14 @@
     Script.Require("ShapesBase");
 }
 <fieldset>
-    <div class="am-checkbox">
+    <div class="or-checkbox">
         @Html.CheckBoxFor(m => m.DisplayContainerEditor)
         @Html.LabelFor(m => m.DisplayContainerEditor, @T("Display settings editor").ToString(), new { @class = "forcheckbox" })
         <span class="help-block">@T("When checked, users can change the settings for each content item.")</span>
     </div>
 </fieldset>
 <fieldset>
-    <div class="am-checkbox">
+    <div class="or-checkbox">
         <label for="@Html.FieldIdFor(m => m.ItemsShownDefault)">@T("Default Items Shown")</label>
         @Html.EditorFor(m => m.ItemsShownDefault)
     </div>
@@ -20,13 +20,13 @@
         @Html.EditorFor(m => m.PageSizeDefault)
 </fieldset>
 <fieldset>
-    <div class="am-checkbox">
+    <div class="or-checkbox">
         <label for="@Html.FieldIdFor(m => m.PaginatedDefault)">@T("Show paging controls")</label>
         @Html.EditorFor(m => m.PaginatedDefault)
     </div>
 </fieldset>
 <fieldset>
-    <div class="am-checkbox">
+    <div class="or-checkbox">
         @Html.LabelFor(m => m.EnablePositioning, @T("Enable drag and drop"))
         @Html.EditorFor(m => m.EnablePositioning)
         <span class="help-block">@T("Check this option to enable manual repositioning of items using. If not set, this option will be configurable on the list content item itself.")</span>
@@ -39,7 +39,7 @@
 </fieldset>
 @if (Model.AvailableItemContentTypes.Any()) {
     <fieldset>
-        <div class="am-checkbox">
+        <div class="or-checkbox">
             @Html.CheckBoxFor(m => m.RestrictItemContentTypes)
             @Html.LabelFor(m => m.RestrictItemContentTypes, @T("Restrict the item content types this type supports.").ToString(), new { @class = "forcheckbox" })
         </div>

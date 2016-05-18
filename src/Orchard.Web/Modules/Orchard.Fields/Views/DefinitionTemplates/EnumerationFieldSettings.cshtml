@@ -1,7 +1,7 @@
 ﻿@model Orchard.Fields.Settings.EnumerationFieldSettings
 @using Orchard.Fields.Settings;
 <fieldset>
-    <div class="am-checkbox">
+    <div class="or-checkbox">
         @Html.CheckBoxFor(m => m.Required) <label for="@Html.FieldIdFor(m => m.Required)" class="forcheckbox">@T("An option is required")</label>
         <span class="help-block">@T("Check to ensure the user is providing an option for this field.")</span>
     </div>

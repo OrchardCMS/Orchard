@@ -7,7 +7,7 @@
 }
 
 <div class="form-group">
-    <div class="am-checkbox">
+    <div class="or-checkbox">
         @Html.CheckBoxFor(m => m.AllowCustomPattern)
         <label class="forcheckbox" for="@Html.FieldIdFor(m => m.AllowCustomPattern)">@T("Allow custom patterns")</label>
         <span class="help-block">@T("Allow the user to change the pattern on each item")</span>
@@ -15,7 +15,7 @@
     
 </div>
 <div class="form-group">
-    <div class="am-checkbox">
+    <div class="or-checkbox">
         @Html.CheckBoxFor(m => m.AutomaticAdjustmentOnEdit)
         <label class="forcheckbox" for="@Html.FieldIdFor(m => m.AutomaticAdjustmentOnEdit)">@T("Automatically regenerate when editing content")</label>
         <span class="help-block">@T("This option will cause the Url to automatically be regenerated when you edit existing content and publish it again, otherwise it will always keep the old route, or you have to perform bulk update in the Autoroute admin.")</span>
@@ -23,7 +23,7 @@
 </div>
 @if (Model.SiteCultures.Count > 1) {
     <div class="form-group">
-        <div class="am-checkbox">
+        <div class="or-checkbox">
             @Html.CheckBoxFor(m => m.UseCulturePattern, new { @class = "use-culture-pattern" })
             <label class="forcheckbox" for="@Html.FieldIdFor(m => m.UseCulturePattern)">@T("Use culture pattern(s)")</label>
             <span class="help-block">@T("Allow to set pattern(s) for each culture. If left unchecked this means it will use the default website culture pattern(s).")</span>
@@ -67,7 +67,7 @@
                                 var radioId = Html.IdFor(m => m.DefaultPatterns[Model.SiteCultures.IndexOf(culture)].Culture) + "|" + patternCultureCount;
                                 <tr>
                                     <td>
-                                        <div class="am-radio">
+                                        <div class="or-radio">
                                             <input type="radio" id="@radioId" name="@Html.NameFor(m => m.DefaultPatterns[Model.SiteCultures.IndexOf(culture)].Culture)" value="@(culture + "|" + patternCultureCount)" @if (patternCultureCount.ToString() == Model.DefaultPatterns[Model.SiteCultures.IndexOf(culture)].PatternIndex) { <text>checked="checked"</text>} />
                                             <label for="@radioId"></label>
                                         </div>

@@ -1,0 +1,72 @@
+// Tables.
+
+.table {
+    .actions {
+        text-align: right;
+    }
+
+    th {
+        &.no-sort {
+            pointer-events: none !important;
+            cursor: default !important;
+
+            &::after {
+                display: none !important;
+            }
+        }
+
+        > i.fa {
+            &.fa-long-arrow-down {
+                margin-left: 7px;
+            }
+        }
+    }
+}
+
+.table > thead > tr > th {
+    vertical-align: middle;
+    font-size: 1.2em;
+}
+
+.table-responsive {
+    &.table-with-footer {
+        .table {
+            margin-bottom: 0;
+        }
+    }
+
+    .row {
+        &.or-datatable-header,
+        &.or-datatable-body,
+        &.or-datatable-footer {
+            margin-left: 0;
+            margin-right: 0;
+
+            .col-sm-12 {
+                padding: 0;
+            }
+        }
+    }
+}
+
+.or-datatable-header {
+    padding: 0;
+}
+
+td {
+    &.center-align {
+        text-align: center;
+
+        > * {
+            margin: 0 auto;
+        }
+    }
+
+    &.left-align {
+        text-align: left;
+    }
+
+    &.right-align {
+        text-align: right;
+    }
+}

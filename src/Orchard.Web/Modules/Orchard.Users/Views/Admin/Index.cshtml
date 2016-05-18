@@ -66,7 +66,7 @@
                         <thead>
                             <tr>
                                 <th scope="col" class="text-nowrap">
-                                    <div class="am-checkbox inline">
+                                    <div class="or-checkbox inline">
                                         <input id="checkAll" class="check-all" type="checkbox">
                                         <label class="check-all" title="@T("Select All")" for="checkAll"></label>
                                     </div>
@@ -82,7 +82,7 @@
                             <tr>
                                 <td>
                                     <input type="hidden" value="@Model.Users[userIndex].User.Id" name="@Html.NameOf(m => m.Users[userIndex].User.Id)" />
-                                    <div class="am-checkbox">
+                                    <div class="or-checkbox">
                                         <input type="checkbox" value="true" name="@Html.NameOf(m => m.Users[userIndex].IsChecked)" id="@Html.FieldIdFor(m => m.Users[userIndex].IsChecked)" />
                                         <label for="@Html.FieldIdFor(m => m.Users[userIndex].IsChecked)"></label>
                                     </div>
@@ -125,7 +125,7 @@
                         }
                     </table>
                 </div>
-                <div class="row am-datatable-footer">
+                <div class="row or-datatable-footer">
                     <div class="col-sm-12">
                         @Display(Model.Pager)
                     </div>

@@ -37,7 +37,7 @@
                                     <tr>
                                         <td>@T(permission.Description)</td>
                                         <td class="left-align">
-                                            <div class="am-checkbox inline">
+                                            <div class="or-checkbox inline">
                                                 @if (Model.CurrentPermissions.Contains(permission.Name)) {
                                                     <input type="checkbox" value="true" name="Checkbox.@permission.Name" checked="checked" id="Checkbox.@permission.Name" />
                                                 }
@@ -48,7 +48,7 @@
                                             </div>
                                         </td>
                                         <td class="left-align">
-                                            <div class="am-checkbox inline">
+                                            <div class="or-checkbox inline">
                                                 @if (Model.EffectivePermissions.Contains(permission.Name)) {
                                                     <input type="checkbox" disabled="disabled" value="true" name="Effective.@permission.Name" checked="checked" id="Effective.@permission.Name" />
                                                 }

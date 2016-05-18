@@ -25,7 +25,7 @@
 </fieldset>
 
 <fieldset>
-    <div class="am-checkbox">
+    <div class="or-checkbox">
         @Html.EditorFor(m => m.Breadcrumb)
         <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Breadcrumb)">@T("Display as Breadcrumb")</label>
         <span class="help-block">@T("Check to render the path to the current content item.")</span>
@@ -34,7 +34,7 @@
 
 <div data-controllerid="@Html.FieldIdFor(m => m.Breadcrumb)">
     <fieldset>
-        <div class="am-checkbox">
+        <div class="or-checkbox">
             @Html.EditorFor(m => m.AddHomePage)
             <label class="forcheckbox" for="@Html.FieldIdFor(m => m.AddHomePage)">@T("Add the home page as the first element")</label>
             <span class="help-block">@T("Check to render the home page as the first element of the breadcrumb.")</span>
@@ -42,7 +42,7 @@
     </fieldset>
 
     <fieldset>
-        <div class="am-checkbox">
+        <div class="or-checkbox">
             @Html.EditorFor(m => m.AddCurrentPage)
             <label class="forcheckbox" for="@Html.FieldIdFor(m => m.AddCurrentPage)">@T("Add the current content item as the last element")</label>
             <span class="help-block">@T("Check to render the current content item as the last element.")</span>
@@ -51,7 +51,7 @@
 </div>
 
 <fieldset>
-    <div class="am-checkbox">
+    <div class="or-checkbox">
         @Html.EditorFor(m => m.ShowFullMenu)
         <label class="forcheckbox" for="@Html.FieldIdFor(m => m.ShowFullMenu)">@T("No filter on selected page")</label>
         <span class="help-block">@T("Check for the menu to be display without filtering the selected current page.")</span>

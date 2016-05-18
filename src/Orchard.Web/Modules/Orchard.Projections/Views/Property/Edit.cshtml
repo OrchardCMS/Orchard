@@ -29,12 +29,12 @@
 
             <fieldset>
                 <legend>@T("Display")</legend>
-                <div class="am-checkbox">
+                <div class="or-checkbox">
                     @Html.CheckBoxFor(m => m.LinkToContent)
                     <label class="forcheckbox" for="@Html.FieldIdFor(m => m.LinkToContent)">@T("Link to original content item")</label>
                     <span class="help-block">@T("Check to make this property a link to the original content item.")</span>
                 </div>
-                <div class="am-checkbox">
+                <div class="or-checkbox">
                     @Html.CheckBoxFor(m => m.ExcludeFromDisplay)
                     <label class="forcheckbox" for="@Html.FieldIdFor(m => m.ExcludeFromDisplay)">@T("Exclude from display")</label>
                     <span class="help-block">@T("Check if this property should not be displayed, but only used by the layout for grouping for instance.")</span>
@@ -50,7 +50,7 @@
 
         <fieldset>
             <legend>@T("Label")</legend>
-            <div class="expando am-checkbox">
+            <div class="expando or-checkbox">
                 @Html.CheckBoxFor(m => m.CreateLabel)
                 <label class="forcheckbox" for="@Html.FieldIdFor(m => m.CreateLabel)">@T("Create a label")</label>
                 <div data-controllerid="@Html.FieldIdFor(m => m.CreateLabel)">
@@ -66,7 +66,7 @@
             <fieldset>
                 <legend>@T("Style")</legend>
                 <div class="expando">
-                    <div class="am-checkbox">
+                    <div class="or-checkbox">
                         @Html.CheckBoxFor(m => m.CustomizePropertyHtml)
                         <label class="forcheckbox" for="@Html.FieldIdFor(m => m.CustomizePropertyHtml)">@T("Customize property HTML")</label>
                         <div data-controllerid="@Html.FieldIdFor(m => m.CustomizePropertyHtml)">
@@ -82,7 +82,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="am-checkbox">
+                    <div class="or-checkbox">
                         @Html.CheckBoxFor(m => m.CustomizeLabelHtml)
                         <label class="forcheckbox" for="@Html.FieldIdFor(m => m.CustomizeLabelHtml)">@T("Customize label HTML")</label>
                         <div data-controllerid="@Html.FieldIdFor(m => m.CustomizeLabelHtml)">
@@ -98,7 +98,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="am-checkbox">
+                    <div class="or-checkbox">
                         @Html.CheckBoxFor(m => m.CustomizeWrapperHtml)
                         <label class="forcheckbox" for="@Html.FieldIdFor(m => m.CustomizeWrapperHtml)">@T("Customize Wrapper HTML")</label>
                         <div data-controllerid="@Html.FieldIdFor(m => m.CustomizeWrapperHtml)">
@@ -127,13 +127,13 @@
                             <span class="help-block">@T("Text to display when the property is empty.")</span>
                         </div>
 
-                        <div class="am-checkbox">
+                        <div class="or-checkbox">
                             @Html.CheckBoxFor(m => m.ZeroIsEmpty)
                             <label class="forcheckbox" for="@Html.FieldIdFor(m => m.ZeroIsEmpty)">@T("Number 0 as empty")</label>
                             <span class="help-block">@T("Check to simulate empty text when result is the number 0")</span>
                         </div>
 
-                        <div class="am-checkbox">
+                        <div class="or-checkbox">
                             @Html.CheckBoxFor(m => m.HideEmpty)
                             <label class="forcheckbox" for="@Html.FieldIdFor(m => m.HideEmpty)">@T("Hide if empty")</label>
                             <span class="help-block">@T("Check to hide the whole property when the value is empty.")</span>
@@ -146,7 +146,7 @@
                 <legend>@T("Rewrite Results")</legend>
                 <div class="expando">
                     <div>
-                        <div class="am-checkbox">
+                        <div class="or-checkbox">
                             @Html.CheckBoxFor(m => m.RewriteOutput)
                             <label class="forcheckbox" for="@Html.FieldIdFor(m => m.RewriteOutput)">@T("Rewrite output")</label>
                             <span class="help-block">@T("Check to override the output of this property.")</span>
@@ -160,7 +160,7 @@
                             </div>
                         </div>
 
-                        <div class="am-checkbox">
+                        <div class="or-checkbox">
                             @Html.CheckBoxFor(m => m.TrimLength)
                             <label class="forcheckbox" for="@Html.FieldIdFor(m => m.TrimLength)">@T("Trim")</label>
                             <span class="help-block">@T("Check to trim the result if it's longer that a specified amount of characters.")</span>
@@ -173,32 +173,32 @@
                                 <span class="help-block">@T("The maximum number of characters this property can be.")</span>
                             </div>
 
-                            <div class="am-checkbox">
+                            <div class="or-checkbox">
                                 @Html.CheckBoxFor(m => m.TrimOnWordBoundary)
                                 <label class="forcheckbox" for="@Html.FieldIdFor(m => m.TrimOnWordBoundary)">@T("Trim only on a word boundary")</label>
                                 <span class="help-block">@T("Checked to trim the property only on a word boundary.")</span>
                             </div>
 
-                            <div class="am-checkbox">
+                            <div class="or-checkbox">
                                 @Html.CheckBoxFor(m => m.AddEllipsis)
                                 <label class="forcheckbox" for="@Html.FieldIdFor(m => m.AddEllipsis)">@T("Add an Ellipsis")</label>
                                 <span class="help-block">@T("Check to insert and ellipsis ({0}) if the property is trimmed.", new HtmlString("&#160;&#8230;"))</span>
                             </div>
                         </div>
 
-                        <div class="am-checkbox">
+                        <div class="or-checkbox">
                             @Html.CheckBoxFor(m => m.StripHtmlTags)
                             <label class="forcheckbox" for="@Html.FieldIdFor(m => m.StripHtmlTags)">@T("Strip HTML tags")</label>
                             <span class="help-block">@T("Check to remove any HTML tag from the property.")</span>
                         </div>
 
-                        <div class="am-checkbox">
+                        <div class="or-checkbox">
                             @Html.CheckBoxFor(m => m.TrimWhiteSpace)
                             <label class="forcheckbox" for="@Html.FieldIdFor(m => m.TrimWhiteSpace)">@T("Remove whitespace")</label>
                             <span class="help-block">@T("Check to remove the spaces at both the beginning and the end of the property.")</span>
                         </div>
 
-                        <div class="am-checkbox">
+                        <div class="or-checkbox">
                             @Html.CheckBoxFor(m => m.PreserveLines)
                             <label class="forcheckbox" for="@Html.FieldIdFor(m => m.PreserveLines)">@T("Preserve new lines")</label>
                             <span class="help-block">@T("Check to convert a line break to a &lt;br /&gt; tag.")</span>

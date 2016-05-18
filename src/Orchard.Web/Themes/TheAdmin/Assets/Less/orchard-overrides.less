@@ -1,0 +1,24 @@
+// Theme/Less/includes/structure/top-header.less
+.or-top-header
+{
+    z-index: 100;
+}
+
+// Theme/Less/includes/bootstrap/forms.less
+input[type="checkbox"]:disabled ~ label, input[type="radio"]:disabled ~ label
+{
+    pointer-events: initial;
+    cursor: initial;
+
+    &:before
+    {
+        pointer-events: initial !important;
+        cursor: not-allowed;
+    }
+}
+
+// Lib/jquery.nanoscroller/css/nanoscroller.css
+.nano > .nano-content
+{
+    position: relative;
+}

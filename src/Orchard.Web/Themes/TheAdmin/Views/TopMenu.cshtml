@@ -3,19 +3,19 @@
     var title = (string)Convert.ToString(Layout.Title);
     IEnumerable<dynamic> firstLevelMenuItems = Layout.TopMenu;
 }
-<nav class="navbar navbar-default navbar-fixed-top am-top-header">
+<nav class="navbar navbar-default navbar-fixed-top or-top-header">
     <div class="container-fluid">
         <div class="navbar-header">
-            <div class="page-title"><span>@Html.Title(title)</span></div><a href="#" class="am-toggle-left-sidebar navbar-toggle collapsed"><span class="icon-bar"><span></span><span></span><span></span></span></a><a href="~/" target="_blank" class="navbar-brand"></a>
+            <div class="page-title"><span>@Html.Title(title)</span></div><a href="#" class="or-toggle-left-sidebar navbar-toggle collapsed"><span class="icon-bar"><span></span><span></span><span></span></span></a><a href="~/" target="_blank" class="navbar-brand"></a>
         </div>
-        <a href="#" class="am-toggle-right-sidebar"><span class="icon s7-menu2"></span></a><a href="#" data-toggle="collapse" data-target="#am-navbar-collapse" class="am-toggle-top-header-menu collapsed"><span class="icon s7-angle-down"></span></a>
-        <div id="am-navbar-collapse" class="collapse navbar-collapse">
-        <ul class="nav navbar-nav navbar-right am-user-nav">
+        <a href="#" class="or-toggle-right-sidebar"><span class="icon s7-menu2"></span></a><a href="#" data-toggle="collapse" data-target="#or-navbar-collapse" class="or-toggle-top-header-menu collapsed"><span class="icon s7-angle-down"></span></a>
+        <div id="or-navbar-collapse" class="collapse navbar-collapse">
+        <ul class="nav navbar-nav navbar-right or-user-nav">
             <li class="dropdown">
                 @Display.User(CurrentUser: WorkContext.CurrentUser)
             </li>
         </ul>
-        <ul class="nav navbar-nav am-nav-right">
+        <ul class="nav navbar-nav or-nav-right">
             @foreach (var firstLevelMenuItem in Model.Items) {
 
                 IEnumerable<dynamic> secondLevelMenuItems = firstLevelMenuItem;
@@ -48,14 +48,14 @@
                 @firstLevelTag.EndElement
             }
         </ul>
-            <ul class="nav navbar-nav navbar-right am-icons-nav">
+            <ul class="nav navbar-nav navbar-right or-icons-nav">
                 <li class="dropdown">
                     <a href="#" data-toggle="dropdown" role="button" aria-expanded="false" class="dropdown-toggle"><span class="icon s7-comment"></span></a>
-                    <ul class="dropdown-menu am-messages">
+                    <ul class="dropdown-menu or-messages">
                         <li>
                             <div class="title">Messages<span class="badge">3</span></div>
                             <div class="list">
-                                <div class="am-scroller nano">
+                                <div class="or-scroller nano">
                                     <div class="content nano-content">
                                         <ul>
                                             <li class="active">
@@ -102,11 +102,11 @@
                 </li>
                 <li class="dropdown">
                     <a href="#" data-toggle="dropdown" role="button" aria-expanded="false" class="dropdown-toggle"><span class="icon s7-bell"></span><span class="indicator"></span></a>
-                    <ul class="dropdown-menu am-notifications">
+                    <ul class="dropdown-menu or-notifications">
                         <li>
                             <div class="title">Notifications<span class="badge">3</span></div>
                             <div class="list">
-                                <div class="am-scroller nano">
+                                <div class="or-scroller nano">
                                     <div class="content nano-content">
                                         <ul>
                                             <li class="active">
@@ -145,7 +145,7 @@
                 </li>
                 <li class="dropdown">
                     <a href="#" data-toggle="dropdown" role="button" aria-expanded="false" class="dropdown-toggle"><span class="icon s7-share"></span></a>
-                    <ul class="dropdown-menu am-connections">
+                    <ul class="dropdown-menu or-connections">
                         <li>
                             <div class="title">Connections</div>
                             <div class="list">

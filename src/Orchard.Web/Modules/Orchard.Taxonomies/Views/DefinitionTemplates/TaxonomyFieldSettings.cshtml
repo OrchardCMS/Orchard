@@ -16,18 +16,18 @@
 <fieldset>
     <label>@T("Restrictions")</label>
     <div class="help">
-        <div class="am-checkbox">
+        <div class="or-checkbox">
             @Html.CheckBoxFor(m => m.LeavesOnly) <label class="forcheckbox" for="@Html.FieldIdFor(m => m.LeavesOnly)">@T("Restrict selectable elements to leaves (parent / child terms) only")</label>
         </div>
         <a class="help" title="@T("A leaf is the last descendant in a parent/child hierarchy")"></a>
     </div>
-    <div class="am-checkbox">
+    <div class="or-checkbox">
         @Html.CheckBoxFor(m => m.SingleChoice) <label class="forcheckbox" for="@Html.FieldIdFor(m => m.SingleChoice)">@T("Allow only one term to be selected")</label>
     </div>
 </fieldset>
 
 <fieldset>
-    <div class="am-checkbox">
+    <div class="or-checkbox">
         @Html.CheckBoxFor(m => m.Required) <label for="@Html.FieldIdFor(m => m.Required)" class="forcheckbox">@T("Required")</label>
         <span class="help-block">@T("Check if the field is required.")</span>
     </div>
@@ -35,10 +35,10 @@
 
 <fieldset class="autocomplete-settings">
     <label>@T("Autocomplete")</label>
-    <div class="am-checkbox">
+    <div class="or-checkbox">
         @Html.CheckBoxFor(m => m.Autocomplete) <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Autocomplete)">@T("Enable Autocomplete")</label>
     </div>
-    <div class="am-checkbox allow-custom-terms-wrapper">
+    <div class="or-checkbox allow-custom-terms-wrapper">
         @Html.CheckBoxFor(m => m.AllowCustomTerms) <label class="forcheckbox" for="@Html.FieldIdFor(m => m.AllowCustomTerms)">@T("Allow new terms to be created")</label>
     </div>
 </fieldset>
