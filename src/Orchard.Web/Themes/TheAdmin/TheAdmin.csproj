@@ -101,6 +101,7 @@
     <Content Include="Images\avatar6.jpg" />
     <Content Include="Images\avatar7.jpg" />
     <Content Include="Images\avatar8.jpg" />
+    <Content Include="Images\background-logo.png" />
     <Content Include="Images\bitbucket.png" />
     <Content Include="Images\db-icon.png" />
     <Content Include="Images\dribbble.png" />
@@ -130,30 +131,29 @@
     <Content Include="Images\tu-icon.png" />
     <Content Include="Images\tw-icon.png" />
     <Content Include="Images\yt-icon.png" />
-    <Content Include="Lib\bootstrap\dist\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Scripts\TheAdmin.js" />
     <Content Include="Scripts\TheAdmin.min.js" />
-    <Content Include="Styles\Fonts\glyphicons-halflings-regular.svg" />
-    <Content Include="Styles\Fonts\open-sans\bold-italic\opensans-bold-italic-webfont.svg" />
-    <Content Include="Styles\Fonts\open-sans\bold\opensans-bold-webfont.svg" />
-    <Content Include="Styles\Fonts\open-sans\extrabold-italic\opensans-extrabold-italic-webfont.svg" />
-    <Content Include="Styles\Fonts\open-sans\extrabold\opensans-extrabold-webfont.svg" />
-    <Content Include="Styles\Fonts\open-sans\italic\opensans-italic-webfont.svg" />
-    <Content Include="Styles\Fonts\open-sans\light-italic\opensans-light-italic-webfont.svg" />
-    <Content Include="Styles\Fonts\open-sans\light\opensans-light-webfont.svg" />
-    <Content Include="Styles\Fonts\open-sans\regular\opensans-regular-webfont.svg" />
-    <Content Include="Styles\Fonts\open-sans\semibold-italic\opensans-semibold-italic-webfont.svg" />
-    <Content Include="Styles\Fonts\open-sans\semibold\opensans-semibold-webfont.svg" />
-    <Content Include="Styles\Fonts\raleway\bold\raleway-bold.svg" />
-    <Content Include="Styles\Fonts\raleway\extrabold\raleway-extrabold.svg" />
-    <Content Include="Styles\Fonts\raleway\extralight\raleway-extralight.svg" />
-    <Content Include="Styles\Fonts\raleway\heavy\raleway-heavy.svg" />
-    <Content Include="Styles\Fonts\raleway\light\raleway-light.svg" />
-    <Content Include="Styles\Fonts\raleway\medium\raleway-medium.svg" />
-    <Content Include="Styles\Fonts\raleway\regular\raleway-regular.svg" />
-    <Content Include="Styles\Fonts\raleway\semibold\raleway-semibold.svg" />
-    <Content Include="Styles\Fonts\raleway\thin\raleway-thin.svg" />
-    <Content Include="Styles\Fonts\Stroke-7.svg" />
+    <Content Include="Fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Fonts\open-sans\bold-italic\opensans-bold-italic-webfont.svg" />
+    <Content Include="Fonts\open-sans\bold\opensans-bold-webfont.svg" />
+    <Content Include="Fonts\open-sans\extrabold-italic\opensans-extrabold-italic-webfont.svg" />
+    <Content Include="Fonts\open-sans\extrabold\opensans-extrabold-webfont.svg" />
+    <Content Include="Fonts\open-sans\italic\opensans-italic-webfont.svg" />
+    <Content Include="Fonts\open-sans\light-italic\opensans-light-italic-webfont.svg" />
+    <Content Include="Fonts\open-sans\light\opensans-light-webfont.svg" />
+    <Content Include="Fonts\open-sans\regular\opensans-regular-webfont.svg" />
+    <Content Include="Fonts\open-sans\semibold-italic\opensans-semibold-italic-webfont.svg" />
+    <Content Include="Fonts\open-sans\semibold\opensans-semibold-webfont.svg" />
+    <Content Include="Fonts\raleway\bold\raleway-bold.svg" />
+    <Content Include="Fonts\raleway\extrabold\raleway-extrabold.svg" />
+    <Content Include="Fonts\raleway\extralight\raleway-extralight.svg" />
+    <Content Include="Fonts\raleway\heavy\raleway-heavy.svg" />
+    <Content Include="Fonts\raleway\light\raleway-light.svg" />
+    <Content Include="Fonts\raleway\medium\raleway-medium.svg" />
+    <Content Include="Fonts\raleway\regular\raleway-regular.svg" />
+    <Content Include="Fonts\raleway\semibold\raleway-semibold.svg" />
+    <Content Include="Fonts\raleway\thin\raleway-thin.svg" />
+    <Content Include="Fonts\Stroke-7.svg" />
     <Content Include="Styles\images\menu-closed.png" />
     <Content Include="Styles\images\menu-open.png" />
     <Content Include="Styles\Lib.css" />
@@ -217,204 +217,189 @@
     <Content Include="Assets\Less\style.less" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="Styles\Fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="Styles\Fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="Styles\Fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="Fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Fonts\glyphicons-halflings-regular.woff2" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\Stroke-7.eot" />
-    <Content Include="Styles\Fonts\Stroke-7.ttf" />
-    <Content Include="Styles\Fonts\Stroke-7.woff" />
+    <Content Include="Fonts\Stroke-7.eot" />
+    <Content Include="Fonts\Stroke-7.ttf" />
+    <Content Include="Fonts\Stroke-7.woff" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\raleway\bold\raleway-bold.eot" />
+    <Content Include="Fonts\raleway\bold\raleway-bold.eot" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Lib\Web.config" />
+    <Content Include="Fonts\raleway\bold\raleway-bold.ttf" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Lib\bootstrap\dist\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Fonts\raleway\bold\raleway-bold.woff" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Lib\bootstrap\dist\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Fonts\raleway\extrabold\raleway-extrabold.eot" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Lib\bootstrap\dist\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Fonts\raleway\extrabold\raleway-extrabold.ttf" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Lib\bootstrap\dist\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="Fonts\raleway\extrabold\raleway-extrabold.woff" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\raleway\bold\raleway-bold.ttf" />
+    <Content Include="Fonts\raleway\extralight\raleway-extralight.eot" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\raleway\bold\raleway-bold.woff" />
+    <Content Include="Fonts\raleway\extralight\raleway-extralight.ttf" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\raleway\extrabold\raleway-extrabold.eot" />
+    <Content Include="Fonts\raleway\extralight\raleway-extralight.woff" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\raleway\extrabold\raleway-extrabold.ttf" />
+    <Content Include="Fonts\raleway\heavy\raleway-heavy.eot" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\raleway\extrabold\raleway-extrabold.woff" />
+    <Content Include="Fonts\raleway\heavy\raleway-heavy.ttf" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\raleway\extralight\raleway-extralight.eot" />
+    <Content Include="Fonts\raleway\heavy\raleway-heavy.woff" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\raleway\extralight\raleway-extralight.ttf" />
+    <Content Include="Fonts\raleway\light\raleway-light.eot" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\raleway\extralight\raleway-extralight.woff" />
+    <Content Include="Fonts\raleway\light\raleway-light.ttf" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\raleway\heavy\raleway-heavy.eot" />
+    <Content Include="Fonts\raleway\light\raleway-light.woff" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\raleway\heavy\raleway-heavy.ttf" />
+    <Content Include="Fonts\raleway\medium\raleway-medium.eot" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\raleway\heavy\raleway-heavy.woff" />
+    <Content Include="Fonts\raleway\medium\raleway-medium.ttf" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\raleway\light\raleway-light.eot" />
+    <Content Include="Fonts\raleway\medium\raleway-medium.woff" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\raleway\light\raleway-light.ttf" />
+    <Content Include="Fonts\raleway\regular\raleway-regular.eot" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\raleway\light\raleway-light.woff" />
+    <Content Include="Fonts\raleway\regular\raleway-regular.ttf" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\raleway\medium\raleway-medium.eot" />
+    <Content Include="Fonts\raleway\regular\raleway-regular.woff" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\raleway\medium\raleway-medium.ttf" />
+    <Content Include="Fonts\raleway\semibold\raleway-semibold.eot" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\raleway\medium\raleway-medium.woff" />
+    <Content Include="Fonts\raleway\semibold\raleway-semibold.ttf" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\raleway\regular\raleway-regular.eot" />
+    <Content Include="Fonts\raleway\semibold\raleway-semibold.woff" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\raleway\regular\raleway-regular.ttf" />
+    <Content Include="Fonts\raleway\thin\raleway-thin.eot" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\raleway\regular\raleway-regular.woff" />
+    <Content Include="Fonts\raleway\thin\raleway-thin.ttf" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\raleway\semibold\raleway-semibold.eot" />
+    <Content Include="Fonts\raleway\thin\raleway-thin.woff" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\raleway\semibold\raleway-semibold.ttf" />
+    <Content Include="Fonts\open-sans\bold\opensans-bold-webfont.eot" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\raleway\semibold\raleway-semibold.woff" />
+    <Content Include="Fonts\open-sans\bold\opensans-bold-webfont.ttf" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\raleway\thin\raleway-thin.eot" />
+    <Content Include="Fonts\open-sans\bold\opensans-bold-webfont.woff" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\raleway\thin\raleway-thin.ttf" />
+    <Content Include="Fonts\open-sans\bold-italic\opensans-bold-italic-webfont.eot" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\raleway\thin\raleway-thin.woff" />
+    <Content Include="Fonts\open-sans\bold-italic\opensans-bold-italic-webfont.ttf" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\open-sans\bold\opensans-bold-webfont.eot" />
+    <Content Include="Fonts\open-sans\bold-italic\opensans-bold-italic-webfont.woff" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\open-sans\bold\opensans-bold-webfont.ttf" />
+    <Content Include="Fonts\open-sans\extrabold\opensans-extrabold-webfont.eot" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\open-sans\bold\opensans-bold-webfont.woff" />
+    <Content Include="Fonts\open-sans\extrabold\opensans-extrabold-webfont.ttf" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\open-sans\bold-italic\opensans-bold-italic-webfont.eot" />
+    <Content Include="Fonts\open-sans\extrabold\opensans-extrabold-webfont.woff" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\open-sans\bold-italic\opensans-bold-italic-webfont.ttf" />
+    <Content Include="Fonts\open-sans\extrabold-italic\opensans-extrabold-italic-webfont.eot" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\open-sans\bold-italic\opensans-bold-italic-webfont.woff" />
+    <Content Include="Fonts\open-sans\extrabold-italic\opensans-extrabold-italic-webfont.ttf" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\open-sans\extrabold\opensans-extrabold-webfont.eot" />
+    <Content Include="Fonts\open-sans\extrabold-italic\opensans-extrabold-italic-webfont.woff" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\open-sans\extrabold\opensans-extrabold-webfont.ttf" />
+    <Content Include="Fonts\open-sans\italic\opensans-italic-webfont.eot" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\open-sans\extrabold\opensans-extrabold-webfont.woff" />
+    <Content Include="Fonts\open-sans\italic\opensans-italic-webfont.ttf" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\open-sans\extrabold-italic\opensans-extrabold-italic-webfont.eot" />
+    <Content Include="Fonts\open-sans\italic\opensans-italic-webfont.woff" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\open-sans\extrabold-italic\opensans-extrabold-italic-webfont.ttf" />
+    <Content Include="Fonts\open-sans\light\opensans-light-webfont.eot" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\open-sans\extrabold-italic\opensans-extrabold-italic-webfont.woff" />
+    <Content Include="Fonts\open-sans\light\opensans-light-webfont.ttf" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\open-sans\italic\opensans-italic-webfont.eot" />
+    <Content Include="Fonts\open-sans\light\opensans-light-webfont.woff" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\open-sans\italic\opensans-italic-webfont.ttf" />
+    <Content Include="Fonts\open-sans\light-italic\opensans-light-italic-webfont.eot" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\open-sans\italic\opensans-italic-webfont.woff" />
+    <Content Include="Fonts\open-sans\light-italic\opensans-light-italic-webfont.ttf" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\open-sans\light\opensans-light-webfont.eot" />
+    <Content Include="Fonts\open-sans\light-italic\opensans-light-italic-webfont.woff" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\open-sans\light\opensans-light-webfont.ttf" />
+    <Content Include="Fonts\open-sans\regular\opensans-regular-webfont.eot" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\open-sans\light\opensans-light-webfont.woff" />
+    <Content Include="Fonts\open-sans\regular\opensans-regular-webfont.ttf" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\open-sans\light-italic\opensans-light-italic-webfont.eot" />
+    <Content Include="Fonts\open-sans\regular\opensans-regular-webfont.woff" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\open-sans\light-italic\opensans-light-italic-webfont.ttf" />
+    <Content Include="Fonts\open-sans\semibold\opensans-semibold-webfont.eot" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\open-sans\light-italic\opensans-light-italic-webfont.woff" />
+    <Content Include="Fonts\open-sans\semibold\opensans-semibold-webfont.ttf" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\open-sans\regular\opensans-regular-webfont.eot" />
+    <Content Include="Fonts\open-sans\semibold\opensans-semibold-webfont.woff" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\open-sans\regular\opensans-regular-webfont.ttf" />
+    <Content Include="Fonts\open-sans\semibold-italic\opensans-semibold-italic-webfont.eot" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\open-sans\regular\opensans-regular-webfont.woff" />
+    <Content Include="Fonts\open-sans\semibold-italic\opensans-semibold-italic-webfont.ttf" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\Fonts\open-sans\semibold\opensans-semibold-webfont.eot" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Styles\Fonts\open-sans\semibold\opensans-semibold-webfont.ttf" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Styles\Fonts\open-sans\semibold\opensans-semibold-webfont.woff" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Styles\Fonts\open-sans\semibold-italic\opensans-semibold-italic-webfont.eot" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Styles\Fonts\open-sans\semibold-italic\opensans-semibold-italic-webfont.ttf" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Styles\Fonts\open-sans\semibold-italic\opensans-semibold-italic-webfont.woff" />
+    <Content Include="Fonts\open-sans\semibold-italic\opensans-semibold-italic-webfont.woff" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\SideMenu.cshtml" />
@@ -617,6 +602,12 @@
     <Content Include="Assets\Less\includes\structure\splash-screen.less" />
     <Content Include="Assets\Less\includes\structure\top-header.less" />
     <Content Include="Assets\Less\includes\table-of-content.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Images\Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\Web.config" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -4,7 +4,7 @@
             "Assets/Less/orchard.less"
         ],
         "output": "Styles/TheAdmin.css",
-        "watch": ["Assets/**/*.less"]
+        "watch": [ "Assets/**/*.less", "Assets/**/**/*.less" ]
     },
     {
         "inputs": [
