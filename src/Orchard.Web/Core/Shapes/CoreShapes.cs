@@ -455,12 +455,12 @@ namespace Orchard.Core.Shapes {
             var appPath = httpContext == null || httpContext.Request == null
                 ? null
                 : httpContext.Request.ApplicationPath;
-
+            var ssl = httpContext?.Request?.IsSecureConnection ?? false;
             foreach (var context in requiredResources.Where(r =>
                 (includeLocation.HasValue ? r.Settings.Location == includeLocation.Value : true) &&
                 (excludeLocation.HasValue ? r.Settings.Location != excludeLocation.Value : true))) {
 
-                var path = context.GetResourceUrl(defaultSettings, appPath);
+                var path = context.GetResourceUrl(defaultSettings, appPath, ssl);
                 var condition = context.Settings.Condition;
                 var attributes = context.Settings.HasAttributes ? context.Settings.Attributes : null;
                 IHtmlString result;

@@ -8,7 +8,7 @@
     Layout.Title = T("New {0}", Html.Raw(typeDisplayName)).Text;
 }
 
-@using (Html.BeginFormAntiForgeryPost(Url.Action("Create", new { ReturnUrl = Request.QueryString["ReturnUrl"] }), FormMethod.Post, new { enctype = "multipart/form-data" })) {
+@using (Html.BeginFormAntiForgeryPost(Url.Action("Create", new { ReturnUrl = Request.QueryString["ReturnUrl"] }), FormMethod.Post, new { enctype = "multipart/form-data", @class = "no-multisubmit" })) {
     @Html.ValidationSummary()
     // Model is a Shape, calling Display() so that it is rendered using the most specific template for its Shape type
     @Display(Model)

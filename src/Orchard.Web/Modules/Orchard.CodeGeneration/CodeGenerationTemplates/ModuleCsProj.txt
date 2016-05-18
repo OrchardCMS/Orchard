@@ -69,7 +69,9 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
-  $$FileIncludes$$<ItemGroup>
+  $$CompileIncludes$$
+  $$ContentIncludes$$
+  <ItemGroup>
     $$OrchardReferences$$
   </ItemGroup>
   <PropertyGroup>

@@ -27,9 +27,9 @@
                     <span class="help-block">@T("You may define multiple domains using the comma (,) as a separator. Use the '*.' prefix to map all subdomains.")</span>
                 </div>
                 <div>
-                    <label for="@Html.FieldIdFor(m => m.RequestUrlPrefix)">@T("URL prefix")</label>
+            <label for="@Html.FieldIdFor(m => m.RequestUrlPrefix)">@T("URL suffix")</label>
                     @Html.TextBoxFor(m => m.RequestUrlPrefix, new { @class = "text medium" })
-                    <span class="help-block">@T("(Optional) Example: If prefix is \"site1\", the tenant URL prefix is \"http://orchardproject.net/site1\"")</span>
+            <span class="help-block">@T("(Optional) Example: If suffix is \"site1\", the tenant URL suffix is \"http://orchardproject.net/site1\"")</span>
                 </div>
             </fieldset>
             <fieldset>

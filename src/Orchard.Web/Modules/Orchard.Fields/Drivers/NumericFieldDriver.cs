@@ -5,7 +5,6 @@ using Orchard.Fields.Fields;
 using Orchard.Fields.Settings;
 using Orchard.Fields.ViewModels;
 using Orchard.Localization;
-using Orchard.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -15,11 +14,9 @@ namespace Orchard.Fields.Drivers {
         public IOrchardServices Services { get; set; }
         private const string TemplateName = "Fields/Numeric.Edit";
         private readonly Lazy<CultureInfo> _cultureInfo;
-        private readonly ITokenizer _tokenizer;
 
-        public NumericFieldDriver(IOrchardServices services, ITokenizer tokenizer) {
+        public NumericFieldDriver(IOrchardServices services) {
             Services = services;
-            _tokenizer = tokenizer;
             T = NullLocalizer.Instance;
 
             _cultureInfo = new Lazy<CultureInfo>(() => CultureInfo.GetCultureInfo(Services.WorkContext.CurrentCulture));
@@ -46,10 +43,13 @@ namespace Orchard.Fields.Drivers {
         protected override DriverResult Editor(ContentPart part, NumericField field, dynamic shapeHelper) {
             return ContentShape("Fields_Numeric_Edit", GetDifferentiator(field, part),
                 () => {
+                    var settings = field.PartFieldDefinition.Settings.GetModel<NumericFieldSettings>();
+                    var value = part.IsNew() ? settings.DefaultValue : Convert.ToString(field.Value, _cultureInfo.Value);
+
                     var model = new NumericFieldViewModel {
                         Field = field,
-                        Settings = field.PartFieldDefinition.Settings.GetModel<NumericFieldSettings>(),
-                        Value = Convert.ToString(field.Value, _cultureInfo.Value)
+                        Settings = settings,
+                        Value = value
                     };
 
                     return shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: GetPrefix(field, part));
@@ -64,10 +64,6 @@ namespace Orchard.Fields.Drivers {
 
                 var settings = field.PartFieldDefinition.Settings.GetModel<NumericFieldSettings>();
 
-                if (String.IsNullOrWhiteSpace(viewModel.Value) && !String.IsNullOrWhiteSpace(settings.DefaultValue)) {
-                    viewModel.Value = _tokenizer.Replace(settings.DefaultValue, new Dictionary<string, object> { { "Content", part.ContentItem } });
-                }
-
                 field.Value = null;
 
                 if (String.IsNullOrWhiteSpace(viewModel.Value)) {
@@ -76,7 +72,7 @@ namespace Orchard.Fields.Drivers {
                     }
                 }
                 else if (!Decimal.TryParse(viewModel.Value, NumberStyles.Any, _cultureInfo.Value, out value)) {
-                    updater.AddModelError(GetPrefix(field, part), T("{0} or its default value is an invalid number", field.DisplayName));
+                    updater.AddModelError(GetPrefix(field, part), T("{0} is an invalid number", field.DisplayName));
                 }
                 else {
 
