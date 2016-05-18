@@ -1,0 +1,11 @@
+// Theme/Less/includes/bootstrap/forms.less
+input[type="checkbox"]:disabled ~ label, input[type="radio"]:disabled ~ label {
+    pointer-events: initial;
+    cursor: initial;
+
+    &:before {
+        pointer-events: initial !important;
+        background-color: @light-color;
+        cursor: not-allowed;
+    }
+}
