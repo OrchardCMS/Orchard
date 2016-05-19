@@ -80,20 +80,12 @@ namespace Orchard.UI.Navigation {
         /// <param name="currentRouteData">The current route data.</param>
         /// <returns>A stack with the selection path being the last node the currently selected one.</returns>
         public static Stack<MenuItem> SetSelectedPath(IEnumerable<MenuItem> menuItems, HttpRequestBase currentRequest, RouteValueDictionary currentRouteData) {
-            // doing route data comparison first
-            var path = GetSelectedPath(menuItems, currentRouteData);
+            // doing route data comparison first and if that fails, fallback to string-based URL lookup
+            var path = SetSelectedPath(menuItems, currentRequest, currentRouteData, false) 
+                    ?? SetSelectedPath(menuItems, currentRequest, currentRouteData, true);
 
-            // if route data comparison fails, fallback to string-based URL lookup
-            if (path == null)
-            {
-                var currentUrl = GetUrl(currentRequest.Path, currentRequest.ApplicationPath);
-                path = GetSelectedPath(menuItems, currentUrl, currentRequest.ApplicationPath);
-            }
-
-            if (path != null)
-            {
-                foreach (var menuItem in path)
-                {
+            if(path != null) {
+                foreach(var menuItem in path) {
                     menuItem.Selected = true;
                 }
             }
@@ -102,84 +94,58 @@ namespace Orchard.UI.Navigation {
         }
 
         /// <summary>
-        /// Identifies the currently selected path by route data, starting from the selected node.
+        /// Identifies the currently selected path, starting from the selected node.
         /// </summary>
         /// <param name="menuItems">All the menuitems in the navigation menu.</param>
+        /// <param name="currentRequest">The currently executed request if any</param>
         /// <param name="currentRouteData">The current route data.</param>
+        /// <param name="compareUrls">Should compare raw string URLs instead of route data.</param>
         /// <returns>A stack with the selection path being the last node the currently selected one.</returns>
-        private static Stack<MenuItem> GetSelectedPath(IEnumerable<MenuItem> menuItems, RouteValueDictionary currentRouteData)
-        {
-            foreach (MenuItem menuItem in menuItems)
-            {
-                Stack<MenuItem> selectedPath = GetSelectedPath(menuItem.Items, currentRouteData);
-                if (selectedPath != null)
-                {
-                    selectedPath.Push(menuItem);
-                    return selectedPath;
-                }
-
-                bool match = menuItem.RouteValues != null && RouteMatches(menuItem.RouteValues, currentRouteData);
-
-                if (match)
-                {
-                    selectedPath = new Stack<MenuItem>();
-                    selectedPath.Push(menuItem);
-                    return selectedPath;
-                }
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Identifies the currently selected path by string-based URL, starting from the selected node.
-        /// </summary>
-        /// <param name="menuItems">All the menuitems in the navigation menu.</param>
-        /// <param name="currentUrl">The current url.</param>
-        /// <param name="appPath">The application path.</param>
-        /// <returns>A stack with the selection path being the last node the currently selected one.</returns>
-        private static Stack<MenuItem> GetSelectedPath(IEnumerable<MenuItem> menuItems, string currentUrl, string appPath)
-        {
+        private static Stack<MenuItem> SetSelectedPath(IEnumerable<MenuItem> menuItems, HttpRequestBase currentRequest, RouteValueDictionary currentRouteData, bool compareUrls) {
             var selectedPathes = new List<Stack<MenuItem>>();
-
-            foreach (MenuItem menuItem in menuItems)
-            {
-                Stack<MenuItem> selectedPath = GetSelectedPath(menuItem.Items, currentUrl, appPath);
-                if (selectedPath != null)
-                {
+            foreach (MenuItem menuItem in menuItems) {
+                Stack<MenuItem> selectedPath = SetSelectedPath(menuItem.Items, currentRequest, currentRouteData, compareUrls);
+                if (selectedPath != null) {
                     selectedPath.Push(menuItem);
-                    selectedPathes.Add(selectedPath);
-                    continue;
+                    if (compareUrls) {
+                        selectedPathes.Add(selectedPath);
+                    }
+                    else {
+                        return selectedPath;
+                    }
                 }
 
-                var modelUrl = GetUrl(menuItem.Href, appPath);
+                // compare route values (if any) first
+                // if URL string comparison is used it means all previous route matches failed, thus no need to do them twice
+                bool match = !compareUrls && menuItem.RouteValues != null && RouteMatches(menuItem.RouteValues, currentRouteData);
 
-                if (currentUrl.Equals(modelUrl, StringComparison.OrdinalIgnoreCase)
-                    || (!string.IsNullOrEmpty(modelUrl) && currentUrl.StartsWith(modelUrl + "/", StringComparison.OrdinalIgnoreCase)))
-                {
+                // if route match failed, try comparing URL strings, if
+                if (currentRequest != null && !match && compareUrls) {
+                    string appPath = currentRequest.ApplicationPath ?? "/";
+                    string requestUrl = currentRequest.Path.StartsWith(appPath) ? currentRequest.Path.Substring(appPath.Length) : currentRequest.Path;
+
+                    string modelUrl = menuItem.Href.Replace("~/", appPath);
+                    modelUrl = modelUrl.StartsWith(appPath) ? modelUrl.Substring(appPath.Length) : modelUrl;
+
+                    if (requestUrl.Equals(modelUrl, StringComparison.OrdinalIgnoreCase) || (!string.IsNullOrEmpty(modelUrl) && requestUrl.StartsWith(modelUrl + "/", StringComparison.OrdinalIgnoreCase))) {
+                        match = true;
+                    }
+                }
+
+                if (match) {
                     selectedPath = new Stack<MenuItem>();
                     selectedPath.Push(menuItem);
-                    selectedPathes.Add(selectedPath);
+
+                    if (compareUrls) {
+                        selectedPathes.Add(selectedPath);
+                    }
+                    else {
+                        return selectedPath;
+                    }
                 }
             }
 
             return selectedPathes.OrderByDescending(p => p.First().Href.Split('/').Length).FirstOrDefault();
-        }
-
-        private static string GetUrl(string url, string appPath)
-        {
-            if (url.StartsWith("~/"))
-            {
-                return url.Substring(2);
-            }
-
-            var applicationPath = appPath ?? "/";
-            if (url.StartsWith(applicationPath))
-            {
-                return url.Substring(applicationPath.Length);
-            }
-
-            return url;
         }
 
         /// <summary>
