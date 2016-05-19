@@ -23,8 +23,11 @@ namespace Orchard.Tokens.Filters {
             // Optimize code path if nothing to do.
             if (!text.Contains("#{"))
                 return text;
-            
-            return _tokenizer.Replace(text, context.Data);
+
+            return _tokenizer.Replace(text, context.Data,
+                String.Equals(context.Flavor, "html", StringComparison.OrdinalIgnoreCase)
+                ? new ReplaceOptions { Encoding = ReplaceOptions.HtmlEncode }
+                : new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
         }
     }
 }
