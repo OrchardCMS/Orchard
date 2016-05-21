@@ -3,12 +3,18 @@
     ContentItem contentItem = Model.ContentItem;
 }
 <div class="summary" itemscope="itemscope" itemid="@contentItem.Id" itemtype="http://orchardproject.net/data/ContentItem">
-    <input type="checkbox" class="content-picker-itemCheck" />
     <div class="content-picker-item">
         <div class="properties">
             <div class="head">
-                @*<input type="checkbox" value="@contentItem.Id" name="itemIds"/>*@
-                <h3>@Html.ItemDisplayText(contentItem)<span class="content-type"> - @contentItem.TypeDefinition.DisplayName</span></h3>
+                <div class="or-checkbox inline">
+                    <h3>
+                        <input type="checkbox" class="content-picker-itemCheck" id="@contentItem.Id" />
+                        <label title="@T("Select")" for="@contentItem.Id">
+                            @*<input type="checkbox" value="@contentItem.Id" name="itemIds"/>*@
+                            @Html.ItemDisplayText(contentItem)<span class="content-type"> - @contentItem.TypeDefinition.DisplayName</span>
+                        </label>
+                    </h3>
+                </div>
                 @if (Model.Header != null) {
                     <div class="header">@Display(Model.Header)</div>
                 }
