@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.Environment;
@@ -66,7 +69,7 @@ namespace Orchard.Layouts.Providers {
                 var snippetManifest = ParseSnippetManifest(shapeDescriptor.Value.BindingSource);
                 var shapeType = shapeDescriptor.Value.ShapeType;
                 var elementName = GetDisplayName(snippetManifest, shapeDescriptor.Value.BindingSource);
-                string toolboxIcon = GetToolboxIcon(snippetManifest);
+                var toolboxIcon = GetToolboxIcon(snippetManifest);
                 var closureDescriptor = shapeDescriptor;
                 var snippetDescriptor = ParseSnippetDescriptor(snippetManifest);
                 yield return new ElementDescriptor(elementType, shapeType, new LocalizedString(elementName), new LocalizedString(String.Format("An element that renders the {0} shape.", shapeType)), snippetElement.Category) {
@@ -156,12 +159,12 @@ namespace Orchard.Layouts.Providers {
             var lastIndex = fileName.IndexOf(SnippetShapeSuffix, StringComparison.OrdinalIgnoreCase);
             return fileName.Substring(0, lastIndex).CamelFriendly();
         }
-        
+
         private string GetToolboxIcon(dynamic snippetManifest) {
             if (snippetManifest != null && snippetManifest.ToolboxIcon != null) {
-                return (string)snippetManifest.ToolboxIcon;
+                return Regex.Unescape((string)snippetManifest.ToolboxIcon);
             }
-            
+
             return "\uf10c";
         }
 
