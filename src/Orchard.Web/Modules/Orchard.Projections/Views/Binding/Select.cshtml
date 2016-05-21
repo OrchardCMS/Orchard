@@ -1,14 +1,14 @@
 ﻿@model BindingSelectViewModel
 @using Orchard.Projections.Models;
 @using Orchard.Projections.ViewModels;
-           
+
 @{
     Layout.Title = T("Add a Binding");
 }
-<div class="panel panel-default ">
+<div class="panel panel-default">
     <div class="panel-body">
         @if (!Model.Records.Any()) {
-            <h4>@T("There are no currently available bindings")</h4>
+            <h3 class="no-content">@T("There are no currently available bindings")</h3>
         }
 
         @foreach (var record in Model.Records.OrderBy(x => x.FullName)) {
@@ -32,6 +32,5 @@
                 }
             </table>
         }
-
     </div>
 </div>

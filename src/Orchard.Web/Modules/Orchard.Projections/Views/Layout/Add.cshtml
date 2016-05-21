@@ -1,19 +1,17 @@
 ﻿@model LayoutAddViewModel
 @using Orchard.Projections.Models;
 @using Orchard.Projections.ViewModels;
-           
+
 @{
     Layout.Title = T("Add a Layout");
 }
 
-<div class="panel panel-default ">
-
-    @if (!Model.Layouts.Any()) {
-        <div class="panel-body">
-            <h4>@T("There are currently no available layouts")</h4>
-        </div>
-    }
+<div class="panel panel-default">
     <div class="panel-body">
+        @if (!Model.Layouts.Any()) {
+            <h3 class="no-content">@T("There are currently no available layouts")</h3>
+        }
+
         @foreach (var layout in Model.Layouts.OrderBy(x => x.Name.Text)) {
 
             <h4>@(layout.Name)</h4>
@@ -28,11 +26,10 @@
                 @foreach (var descriptor in layout.Descriptors) {
                     <tr>
                         <td>@Html.ActionLink(descriptor.Name.Text, "Create", new { id = Model.Id, category = descriptor.Category, type = descriptor.Type })</td>
-                        <td>@descriptor.Description</td>  
+                        <td>@descriptor.Description</td>
                     </tr>
                 }
             </table>
         }
     </div>
-
 </div>

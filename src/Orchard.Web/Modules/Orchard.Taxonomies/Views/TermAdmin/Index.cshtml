@@ -81,12 +81,13 @@
                 </div>
             </div>
             @Display.Modal()
-        } else {
+        }
+        else {
             <div class="panel-body">
-                <p>
-                    There are currently no terms.
+                <h3 class="no-content">
+                    @T("There are currently no terms.")
                     @Html.ActionLink(T("Add one now").Text, "SelectTerm", new { taxonomyId = Model.Taxonomy.Id }, new { @class = "" })
-                </p>
+                </h3>
             </div>
         }
     </div>

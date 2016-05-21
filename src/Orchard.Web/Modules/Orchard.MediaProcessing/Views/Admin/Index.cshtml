@@ -80,7 +80,7 @@
                 } else {
                     <div class="panel panel-default">
                         <div class="panel-body">
-                            <div class="info message text-center">@T("There are no media profiles for you to see. Want to <a href=\"{0}\">add one</a>?", Url.Action("Create", new { Area = "Contents", id = "ImageProfile", returnurl = HttpContext.Current.Request.RawUrl }))</div>
+                            <h3 class="no-content">@T("There are no media profiles for you to see. Want to <a href=\"{0}\">add one</a>?", Url.Action("Create", new { Area = "Contents", id = "ImageProfile", returnurl = HttpContext.Current.Request.RawUrl }))</h3>
                         </div>
                     </div>
                 }
