@@ -14,6 +14,9 @@
             target = "_top";
             break;
     }
+
+    var isRequired = settings.Required && String.IsNullOrWhiteSpace(settings.DefaultValue);
+    var isTextRequired = settings.LinkTextMode == LinkTextMode.Required && String.IsNullOrWhiteSpace(settings.TextDefaultValue);
 }
 <fieldset>
     <label for="@Html.FieldIdFor(m => m.Value)">@Model.DisplayName</label>
