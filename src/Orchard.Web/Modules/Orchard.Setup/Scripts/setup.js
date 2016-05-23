@@ -19,6 +19,7 @@
             var description = $(this).find(":selected").data("recipe-description"); // reads the html attribute of the selected option
             $("#recipedescription").text(description); // make the contents of <div id="recipe-description"></div> be the escaped description string
         });
+        $("select.recipe").change(); // trigger at page load to bring in sync
         $(".data").find('input[name=DatabaseProvider]:checked').click();
     });
 })(jQuery);
