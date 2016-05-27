@@ -34,6 +34,7 @@ namespace Orchard.Modules.Controllers {
         private readonly IRecipeManager _recipeManager;
         private readonly ShellDescriptor _shellDescriptor;
         private readonly ShellSettings _shellSettings;
+        private readonly IRecipeResultAccessor _recipeResultAccessor;
 
         public AdminController(
             IEnumerable<IExtensionDisplayEventHandler> extensionDisplayEventHandlers,
@@ -44,6 +45,7 @@ namespace Orchard.Modules.Controllers {
             IFeatureManager featureManager,
             IRecipeHarvester recipeHarvester,
             IRecipeManager recipeManager,
+            IRecipeResultAccessor recipeResultAccessor,
             ShellDescriptor shellDescriptor,
             ShellSettings shellSettings,
             IShapeFactory shapeFactory)
@@ -56,6 +58,7 @@ namespace Orchard.Modules.Controllers {
             _featureManager = featureManager;
             _recipeHarvester = recipeHarvester;
             _recipeManager = recipeManager;
+            _recipeResultAccessor = recipeResultAccessor;
             _shellDescriptor = shellDescriptor;
             _shellSettings = shellSettings;
             Shape = shapeFactory;
@@ -112,7 +115,7 @@ namespace Orchard.Modules.Controllers {
             });
         }
 
-        public ActionResult Recipes() {
+        public ActionResult Recipes(string executionId) {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not allowed to manage modules")))
                 return new HttpUnauthorizedResult();
 
@@ -130,6 +133,20 @@ namespace Orchard.Modules.Controllers {
                 })
                 .Where(x => x.Recipes.Any())
                 .ToList();
+            }
+
+            if (!string.IsNullOrEmpty(executionId))
+            {
+                var result = _recipeResultAccessor.GetResult(executionId);
+
+                if (result.IsSuccessful)
+                {
+                    Services.Notifier.Information(T("The recipe was executed successfully. Check the logs (recipe execution ID <strong>{0}</strong>) for more information.", result.ExecutionId));
+                }
+                else
+                {
+                    Services.Notifier.Error(T("The recipe execution failed. Check the logs (recipe execution ID <strong>{0}</strong>) for more information.", result.ExecutionId));
+                }
             }
 
             return View(viewModel);
@@ -155,17 +172,19 @@ namespace Orchard.Modules.Controllers {
                 return HttpNotFound();
             }
 
-            try {
-                _recipeManager.Execute(recipe);
+            var executionId = _recipeManager.Execute(recipe);
+
+            if (String.IsNullOrEmpty(executionId))
+            {
+                Logger.Error("Error while executing recipe {0} in {1}", moduleId, name);
+                Services.Notifier.Error(T("Error while executing recipe {0} in {1}", moduleId, name));
             }
-            catch(Exception e) {
-                Logger.Error(e, "Error while executing recipe {0} in {1}", moduleId, name);
-                Services.Notifier.Error(T("Recipes {0} contains  unsupported module installation steps.", recipe.Name));
+            else
+            {
+                Services.Notifier.Information(T("The recipe {0} execution was started successfully.", recipe.Name));
             }
 
-            Services.Notifier.Information(T("The recipe {0} was executed successfully.", recipe.Name));
-            
-            return RedirectToAction("Recipes");
+            return RedirectToAction("Recipes", new { executionId = executionId });
 
         }
         public ActionResult Features() {
