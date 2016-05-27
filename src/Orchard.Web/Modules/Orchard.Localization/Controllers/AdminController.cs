@@ -1,28 +1,29 @@
-﻿using System;
-using System.Web.Mvc;
-using Orchard.ContentManagement;
-using Orchard.ContentManagement.Aspects;
-using Orchard.Core.Contents.Settings;
+﻿using Orchard.ContentManagement;
+using Orchard.Core.Contents;
 using Orchard.DisplayManagement;
 using Orchard.Localization.Models;
 using Orchard.Localization.Services;
-using Orchard.Localization.ViewModels;
-using Orchard.Mvc;
 using Orchard.UI.Notify;
+using System;
+using System.Web.Mvc;
 
-namespace Orchard.Localization.Controllers {
+namespace Orchard.Localization.Controllers
+{
     [ValidateInput(false)]
-    public class AdminController : Controller, IUpdateModel {
+    public class AdminController : Controller {
         private readonly IContentManager _contentManager;
         private readonly ILocalizationService _localizationService;
+        private readonly ICultureManager _cultureManager;
 
         public AdminController(
             IOrchardServices orchardServices,
             IContentManager contentManager,
             ILocalizationService localizationService,
+            ICultureManager cultureManager,
             IShapeFactory shapeFactory) {
             _contentManager = contentManager;
             _localizationService = localizationService;
+            _cultureManager = cultureManager;
             T = NullLocalizer.Instance;
             Services = orchardServices;
             Shape = shapeFactory;
@@ -32,16 +33,20 @@ namespace Orchard.Localization.Controllers {
         public Localizer T { get; set; }
         public IOrchardServices Services { get; set; }
 
+        [HttpPost]
         public ActionResult Translate(int id, string to) {
             var masterContentItem = _contentManager.Get(id, VersionOptions.Latest);
             if (masterContentItem == null)
                 return HttpNotFound();
 
+            if (!Services.Authorizer.Authorize(Permissions.ViewContent, masterContentItem, T("Couldn't open original content")))
+                return new HttpUnauthorizedResult();
+
             var masterLocalizationPart = masterContentItem.As<LocalizationPart>();
             if (masterLocalizationPart == null)
                 return HttpNotFound();
 
-            // Check is current item stll exists, and redirect.
+            // Check if current item still exists, and redirect.
             var existingTranslation = _localizationService.GetLocalizedContentItem(masterContentItem, to);
             if (existingTranslation != null) {
                 var existingTranslationMetadata = _contentManager.GetItemMetadata(existingTranslation);
@@ -50,76 +55,24 @@ namespace Orchard.Localization.Controllers {
                     existingTranslationMetadata.EditorRouteValues);
             }
 
-            var contentItemTranslation = _contentManager.New<LocalizationPart>(masterContentItem.ContentType);
-            contentItemTranslation.MasterContentItem = masterContentItem;
+            // pass a dummy content to the authorization check to check for "own" variations
+            var dummyContent = _contentManager.New(masterContentItem.ContentType);
 
-            var content = _contentManager.BuildEditor(contentItemTranslation);
-            
-            return View(content);
-        }
+            var contentItemTranslation = _contentManager.Clone(masterContentItem);
 
-        [HttpPost, ActionName("Translate")]
-        [FormValueRequired("submit.Save")]
-        public ActionResult TranslatePOST(int id) {
-            return TranslatePOST(id, contentItem => {
-                if (!contentItem.Has<IPublishingControlAspect>() && !contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
-                    Services.ContentManager.Publish(contentItem);
-            });
-        }
+            if (!Services.Authorizer.Authorize(Permissions.EditContent, contentItemTranslation, T("Couldn't create translated content")))
+                return new HttpUnauthorizedResult();
 
-        [HttpPost, ActionName("Translate")]
-        [FormValueRequired("submit.Publish")]
-        public ActionResult TranslateAndPublishPOST(int id) {
-            return TranslatePOST(id, contentItem => Services.ContentManager.Publish(contentItem));
-        }
-
-        public ActionResult TranslatePOST(int id, Action<ContentItem> conditionallyPublish) {
-            var masterContentItem = _contentManager.Get(id, VersionOptions.Latest);
-            if (masterContentItem == null)
-                return HttpNotFound();
-
-            var masterLocalizationPart = masterContentItem.As<LocalizationPart>();
-            if (masterLocalizationPart == null)
-                return HttpNotFound();
-
-            var model = new EditLocalizationViewModel();
-            TryUpdateModel(model, "Localization");
-
-            var existingTranslation = _localizationService.GetLocalizedContentItem(masterContentItem, model.SelectedCulture);
-            if (existingTranslation != null) {
-                var existingTranslationMetadata = _contentManager.GetItemMetadata(existingTranslation);
-                return RedirectToAction(
-                    Convert.ToString(existingTranslationMetadata.EditorRouteValues["action"]), 
-                    existingTranslationMetadata.EditorRouteValues);
+            var localizationPart = contentItemTranslation.As<LocalizationPart>();
+            if(localizationPart != null) {
+                localizationPart.MasterContentItem = masterContentItem;
+                localizationPart.Culture = string.IsNullOrWhiteSpace(to) ? null : _cultureManager.GetCultureByName(to);
             }
 
-            var contentItemTranslation = _contentManager
-                .Create<LocalizationPart>(masterContentItem.ContentType, VersionOptions.Draft, part => {
-                    part.MasterContentItem = masterContentItem;
-            });
+            Services.Notifier.Success(T("Successfully cloned. The translated content was saved as a draft."));
 
-            var content = _contentManager.UpdateEditor(contentItemTranslation, this);
-
-            if (!ModelState.IsValid) {
-                Services.TransactionManager.Cancel();
-
-                return View(content);
-            }
-
-            conditionallyPublish(contentItemTranslation.ContentItem);
-
-            Services.Notifier.Success(T("Created content item translation."));
-
-            var metadata = _contentManager.GetItemMetadata(contentItemTranslation);
-            return RedirectToAction(Convert.ToString(metadata.EditorRouteValues["action"]), metadata.EditorRouteValues);
-        }
-
-        bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
-            return TryUpdateModel(model, prefix, includeProperties, excludeProperties);
-        }
-
-        void IUpdateModel.AddModelError(string key, LocalizedString errorMessage) {
-            ModelState.AddModelError(key, errorMessage.ToString());
+            var adminRouteValues = _contentManager.GetItemMetadata(contentItemTranslation).AdminRouteValues;
+            return RedirectToRoute(adminRouteValues);
         }
     }
 }
