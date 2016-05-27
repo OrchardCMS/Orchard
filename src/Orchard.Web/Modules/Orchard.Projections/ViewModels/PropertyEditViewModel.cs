@@ -43,7 +43,7 @@ namespace Orchard.Projections.ViewModels {
         public bool HideEmpty { get; set; }
 
         public bool RewriteOutput { get; set; }
-        [StringLength(255)]
+        [StringLength(1024)]
         public string RewriteText { get; set; }
         public bool StripHtmlTags { get; set; }
         public bool TrimLength { get; set; }
