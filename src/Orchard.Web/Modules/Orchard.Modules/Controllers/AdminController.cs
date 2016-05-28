@@ -176,8 +176,8 @@ namespace Orchard.Modules.Controllers {
 
             if (String.IsNullOrEmpty(executionId))
             {
-                Logger.Error("Error while executing recipe {0} in {1}", moduleId, name);
-                Services.Notifier.Error(T("Error while executing recipe {0} in {1}", moduleId, name));
+                Logger.Error("Error while executing recipe {0} in {1}.", moduleId, name);
+                Services.Notifier.Error(T("Error while executing recipe {0} in {1}.", moduleId, name));
             }
             else
             {
