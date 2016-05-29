@@ -14,12 +14,12 @@ using Orchard.Utility.Extensions;
 namespace Orchard.Projections.Services {
     public class PropertyShapes : IDependency {
         private readonly Work<ITokenizer> _tokenizerWork;
-        private readonly IConditionManager _conditionManager;
+        private readonly Work<IConditionManager> _conditionManagerWork;
         private readonly Dictionary<string, bool> _evaluations = new Dictionary<string, bool>();
 
-        public PropertyShapes(Work<ITokenizer> tokenizerWork, IConditionManager conditionManager) {
+        public PropertyShapes(Work<ITokenizer> tokenizerWork, Work<IConditionManager> conditionManagerWork) {
             _tokenizerWork = tokenizerWork;
-            _conditionManager = conditionManager;
+            _conditionManagerWork = conditionManagerWork;
             T = NullLocalizer.Instance;
         }
 
@@ -158,12 +158,12 @@ namespace Orchard.Projections.Services {
             }
         }
 
-        protected bool EvaluateRule(string rule, object tokenData) {
+        protected bool EvaluateRule(string rule, Dictionary<string, object> tokenData) {
             if (_evaluations.ContainsKey(rule))
                 return _evaluations[rule];
 
             rule = _tokenizerWork.Value.Replace(rule, tokenData);
-            var result = _conditionManager.Matches(rule);
+            var result = _conditionManagerWork.Value.Matches(rule);
             _evaluations[rule] = result;
             return result;
         }
