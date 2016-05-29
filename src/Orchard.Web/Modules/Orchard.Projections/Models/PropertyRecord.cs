@@ -42,6 +42,7 @@ namespace Orchard.Projections.Models {
         public virtual bool HideEmpty { get; set; }
 
         // Rewrite Result
+        public virtual string RewriteAsEmptyRule { get; set; }
         public virtual bool RewriteOutput { get; set; }
         public virtual string RewriteText { get; set; }
         public virtual bool StripHtmlTags { get; set; }

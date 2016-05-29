@@ -42,6 +42,7 @@ namespace Orchard.Projections.ViewModels {
         public bool ZeroIsEmpty { get; set; }
         public bool HideEmpty { get; set; }
 
+        public string RewriteAsEmptyRule { get; set; }
         public bool RewriteOutput { get; set; }
         [StringLength(255)]
         public string RewriteText { get; set; }

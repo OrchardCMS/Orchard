@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Web.Mvc;
+using Orchard.Conditions.Services;
 using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
 using Orchard.Environment;
@@ -13,9 +14,12 @@ using Orchard.Utility.Extensions;
 namespace Orchard.Projections.Services {
     public class PropertyShapes : IDependency {
         private readonly Work<ITokenizer> _tokenizerWork;
+        private readonly IConditionManager _conditionManager;
+        private readonly Dictionary<string, bool> _evaluations = new Dictionary<string, bool>();
 
-        public PropertyShapes(Work<ITokenizer> tokenizerWork) {
+        public PropertyShapes(Work<ITokenizer> tokenizerWork, IConditionManager conditionManager) {
             _tokenizerWork = tokenizerWork;
+            _conditionManager = conditionManager;
             T = NullLocalizer.Instance;
         }
 
@@ -58,8 +62,12 @@ namespace Orchard.Projections.Services {
                 return;
             }
 
-            if(Property.RewriteOutput) {
-                resultOutput = _tokenizerWork.Value.Replace(Property.RewriteText, new Dictionary<string, object> { { "Text", resultOutput }, { "Content", ContentItem } });
+            var tokenData = new Dictionary<string, object> { { "Text", resultOutput }, { "Content", ContentItem } };
+
+            if (!string.IsNullOrWhiteSpace(Property.RewriteAsEmptyRule) && EvaluateRule(Property.RewriteAsEmptyRule, tokenData))
+                resultOutput = " ";
+            else if (Property.RewriteOutput) {
+                resultOutput = _tokenizerWork.Value.Replace(Property.RewriteText, tokenData);
             }
 
             if(Property.StripHtmlTags) {
@@ -148,6 +156,16 @@ namespace Orchard.Projections.Services {
             if (!(Property.CustomizeWrapperHtml && Property.CustomWrapperTag == "-")) {
                 Output.Write(wrapperTag.ToString(TagRenderMode.EndTag));
             }
+        }
+
+        protected bool EvaluateRule(string rule, object tokenData) {
+            if (_evaluations.ContainsKey(rule))
+                return _evaluations[rule];
+
+            rule = _tokenizerWork.Value.Replace(rule, tokenData);
+            var result = _conditionManager.Matches(rule);
+            _evaluations[rule] = result;
+            return result;
         }
     }
 }

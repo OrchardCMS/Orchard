@@ -141,7 +141,7 @@ namespace Orchard.Projections {
                     .Column<string>("NoResultText", c => c.Unlimited())
                     .Column<bool>("ZeroIsEmpty")
                     .Column<bool>("HideEmpty")
-
+                    
                     .Column<bool>("RewriteOutput")
                     .Column<string>("RewriteText", c => c.Unlimited())
                     .Column<bool>("StripHtmlTags")
@@ -281,6 +281,14 @@ namespace Orchard.Projections {
                 );
 
             return 4;
+        }
+
+        public int UpdateFrom4() {
+
+            SchemaBuilder.AlterTable("PropertyRecord", table => table
+                .AddColumn<string>("RewriteAsEmptyRule", c => c.Unlimited())
+            );
+            return 5;
         }
     }
 }

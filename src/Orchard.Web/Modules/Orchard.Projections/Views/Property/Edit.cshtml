@@ -140,6 +140,14 @@
         <legend>@T("Rewrite Results")</legend>
         <div class="expando">
             <div>
+                <div data-controllerid="@Html.FieldIdFor(m => m.RewriteAsEmptyRule)">
+                    <div>
+                        <label for="@Html.FieldIdFor(m => m.RewriteAsEmptyRule)">@T("Rewrite as empty (rule)")</label>
+                        @Html.TextBoxFor(m => m.RewriteAsEmptyRule, new { @class = "text large tokenized" })
+                        <span class="hint">@T("A rule to check if result has to be empty.")</span>
+                    </div>
+                </div>
+
                 <div>
                     @Html.CheckBoxFor(m => m.RewriteOutput)
                     <label class="forcheckbox" for="@Html.FieldIdFor(m => m.RewriteOutput)">@T("Rewrite output")</label>
