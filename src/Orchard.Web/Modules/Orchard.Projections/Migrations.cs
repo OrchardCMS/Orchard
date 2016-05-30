@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using System.Data;
+using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Contents.Extensions;
@@ -8,13 +10,16 @@ using Orchard.Data;
 using Orchard.Data.Migration;
 using Orchard.Localization;
 using Orchard.Projections.Models;
+using Orchard.Projections.Services;
 
 namespace Orchard.Projections {
     public class Migrations : DataMigrationImpl {
         private readonly IRepository<MemberBindingRecord> _memberBindingRepository;
+        private readonly IContentManager _contentManager;        
 
-        public Migrations(IRepository<MemberBindingRecord> memberBindingRepository) {
+        public Migrations(IRepository<MemberBindingRecord> memberBindingRepository, IContentManager contentManager) {
             _memberBindingRepository = memberBindingRepository;
+            _contentManager = contentManager;
             T = NullLocalizer.Instance;
         }
 
@@ -283,11 +288,19 @@ namespace Orchard.Projections {
             return 4;
         }
 
-        public int UpdateFrom4() {
-
+        public int UpdateFrom4() {            
             SchemaBuilder.AlterTable("PropertyRecord", table => table
                 .AddColumn<string>("RewriteAsEmptyRule", c => c.Unlimited())
             );
+            var queries = _contentManager.Query<QueryPart, QueryPartRecord>().List();
+            foreach(var query in queries) {
+                foreach(var layout in query.Layouts){
+                    foreach (var property in layout.Properties) {
+                        property.RewriteAsEmptyRule = "";
+                    }
+                }
+            }
+            
             return 5;
         }
     }
