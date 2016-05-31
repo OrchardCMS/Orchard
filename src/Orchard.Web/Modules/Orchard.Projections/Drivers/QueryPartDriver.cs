@@ -215,7 +215,7 @@ namespace Orchard.Projections.Drivers {
                 new XAttribute("MaxLength", property.MaxLength),
                 new XAttribute("NoResultText", property.NoResultText ?? ""),
                 new XAttribute("PreserveLines", property.PreserveLines),
-                new XAttribute("RewriteAsEmptyRule", property.RewriteAsEmptyRule),
+                new XAttribute("RewriteAsEmptyRule", property.RewriteAsEmptyRule ?? ""),
                 new XAttribute("RewriteOutput", property.RewriteOutput),
                 new XAttribute("RewriteText", property.RewriteText ?? ""),
                 new XAttribute("StripHtmlTags", property.StripHtmlTags),
