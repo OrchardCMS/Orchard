@@ -1,0 +1,79 @@
+.widget-weather{
+	padding: 0;
+
+	.wt-container{
+
+		.wt-hour{
+			background-color: @primary-color + 17%;
+			color: @light-color;
+			font-size: 35px;
+			font-weight: 300;
+			padding: 20px;
+			text-align: center;
+
+			.meridian{
+				font-size: 14px;
+				vertical-align: middle;
+				margin-left: 8px;
+				vertical-align: top;
+				line-height: 38px;
+			}
+		}
+
+		.wt-info{
+			display: table;
+			width: 100%;
+			border-bottom: 1px solid darken(@light-color, 10%);
+
+			.wt-day{
+				display: table-cell;
+				text-align: center;
+				padding: 30px 0;
+				border-right: 1px solid darken(@light-color, 10%);
+
+				span{
+					display: block;
+					font-weight: 300;
+					font-size: 15px;
+
+					&.day{
+						margin-bottom: 10px;
+						color: @primary-color;
+					}
+
+					&.date{
+						margin-top: 10px;
+					}
+				}
+
+				canvas{
+
+					@media @phone{
+						height: auto !important;
+						width: auto !important;
+					}
+				}
+
+				&:last-child{
+					border-right: 0;
+				}
+			}
+		}
+
+		.wt-location{
+			padding: 19px;
+			font-size: 15px;
+			font-weight: 300;
+
+			.icon{
+				float: right;
+				cursor: pointer;
+				font-size: 20px;
+
+				&:hover{
+					color: @primary-color;
+				}
+			}
+		}
+	}
+}

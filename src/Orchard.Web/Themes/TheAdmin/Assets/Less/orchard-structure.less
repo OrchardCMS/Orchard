@@ -1,0 +1,100 @@
+// Structure.
+.page-head {
+    padding: 10px @content-padding;
+}
+
+.masonry {
+
+    #wrapper {
+        width: 90%;
+        max-width: 1100px;
+        min-width: 800px;
+        margin: 50px auto;
+    }
+
+    #columns {
+        -webkit-column-count: 3;
+        -webkit-column-gap: 10px;
+        -webkit-column-fill: auto;
+        -moz-column-count: 3;
+        -moz-column-gap: 10px;
+        -moz-column-fill: auto;
+        column-count: 3;
+        column-gap: 15px;
+        column-fill: auto;
+    }
+
+    .pin {
+        width: 100%;
+        display: inline-block;
+        background: #FEFEFE;
+        border: 2px solid #FAFAFA;
+        box-shadow: 0 1px 2px rgba(34, 25, 25, 0.4);
+        margin: 0 2px 15px;
+        -webkit-column-break-inside: avoid;
+        -moz-column-break-inside: avoid;
+        column-break-inside: avoid;
+        padding: 15px;
+        padding-bottom: 5px;
+        background: -webkit-linear-gradient(45deg, #FFF, #F9F9F9);
+        -webkit-transition: all .2s ease;
+        -moz-transition: all .2s ease;
+        -o-transition: all .2s ease;
+        transition: all .2s ease;
+
+        h3 {
+            margin: 0 0 15px 0;
+        }
+    }
+
+    .pin img {
+        margin-bottom: 15px;
+        width:100%;
+    }
+
+    .pin p {
+        font: 12px/18px Arial, sans-serif;
+        color: #333;
+        margin: 0;
+    }
+
+    @media (max-width: @screen-xs) {
+        #columns {
+            -webkit-column-count: 1;
+            -moz-column-count: 1;
+            column-count: 1;
+        }
+    }
+
+    @media (min-width: @screen-xs) {
+        #columns {
+            -webkit-column-count: 1;
+            -moz-column-count: 1;
+            column-count: 1;
+        }
+    }
+
+    @media (min-width: @screen-sm) {
+        #columns {
+            -webkit-column-count: 2;
+            -moz-column-count: 2;
+            column-count: 2;
+        }
+    }
+
+    @media (min-width: @screen-md) {
+        #columns {
+            -webkit-column-count: 3;
+            -moz-column-count: 3;
+            column-count: 3;
+        }
+    }
+
+    @media (min-width: @screen-lg) {
+        #columns {
+            -webkit-column-count: 4;
+            -moz-column-count: 4;
+            column-count: 4;
+        }
+    }
+}

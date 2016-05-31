@@ -1,0 +1,65 @@
+.form-control.auto-size {
+    width: auto;
+}
+
+.content-action-group {
+    float: left;
+    margin-right: 1em;
+}
+
+fieldset {
+    label {
+        margin-bottom: 0px;
+    }
+}
+
+.validation-summary-errors {
+    color: @alert-danger-text;
+    margin-bottom: 1em;
+
+    ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+
+        li {
+            background-color: @alert-danger-bg;
+            border: solid 1px @alert-danger-border;
+            margin: 0;
+            margin-bottom: 1em;
+            padding: .5em 1em;
+        }
+    }
+}
+
+.or-checkbox {
+    .check-all {
+        border: 2px dashed #ddd;
+        margin-right: -5px;
+        padding: 1px;
+        padding-left: 1px !important;
+        position: relative !important;
+        left: 0 !important;
+        width: 33px !important;
+    }
+
+    .check-all:hover {
+        border: 2px dashed #9c9b9b;
+    }
+}
+
+.or-checkbox input[type="checkbox"] ~ label, .or-radio input[type="checkbox"] ~ label, .or-checkbox input[type="radio"] ~ label, .or-radio input[type="radio"] ~ label {
+    position: relative;
+    left: 5px;
+}
+
+.permalink input[type="text"] {
+    background: transparent;
+    border-color: #EAE9D9;
+    border-style: dashed;
+    display: inline;
+    margin-left: 0;
+    margin-right: 2em;
+    width: 350px;
+    direction: ltr;
+}

@@ -10,10 +10,12 @@ namespace Orchard.JobsQueue {
         public void GetNavigation(NavigationBuilder builder) {
             builder
                 .AddImageSet("jobsqueue")
-                .Add(T("Jobs Queue"), "15.0", item => {
-                    item.Action("List", "Admin", new { area = "Orchard.JobsQueue" });
-                    item.LinkToFirstChild(false);
-                });
+                .Add(T("Jobs Queue"), "15.0",
+                    item => {
+                        item.Action("List", "Admin", new {area = "Orchard.JobsQueue"});
+                        item.LinkToFirstChild(false);
+                    },
+                    new[] {"stopwatch"});
         }
     }
 }

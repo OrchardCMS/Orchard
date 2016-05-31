@@ -1,0 +1,132 @@
+/*------------------------------------------------------------------
+  [Tables]
+*/
+.table{
+
+	> thead{
+		
+		> tr{
+
+			> th{
+				border-bottom-width: 1px;
+				font-weight: 400;
+				font-size: 13px;
+			}
+		}
+
+		//Color classes
+		&.primary{
+			> tr{
+				>th{
+					color: @primary-color;
+				}
+			}
+		}
+
+		&.alt3{
+			> tr{
+				>th{
+					color: @alt-color3;
+				}
+			}
+		}
+	}
+
+	> tbody{
+
+		> tr{
+
+			> td{
+				font-weight: 300;
+				vertical-align: middle;
+			}
+		}
+
+		&.no-border-x{
+
+			> tr{
+
+				> td{
+					border-top-width: 0;
+				}
+			}
+		}
+	}
+}
+
+.table-condensed{
+
+	> thead{
+
+		> tr{
+
+			> th{
+				padding-top: 10px;
+				padding-bottom: 8px;
+			}
+		}
+	}
+}
+
+.table-responsive{
+	border: 0;
+}
+
+//Avatar img
+.table{
+
+	tbody{
+		tr{
+
+			td{
+				&.user-avatar{
+
+					img{
+						height: 30px;
+						width: 30px;
+						border-radius: 50%;
+						margin-right: 10px;
+
+						@media @phone{
+							display: none;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	.number{
+		text-align: right;
+	}
+
+}
+
+//Table inside full-width widget
+.table-fw-widget{
+	
+	tr{
+
+		th, td{
+
+			&:first-child{
+				padding-left: 15px;
+			}
+
+			&:last-child{
+				padding-right: 15px;
+			}
+		}
+	}
+
+	thead{
+
+		tr{
+
+			th{
+				padding-top: 15px;
+				padding-bottom: 10px;
+			}
+		}
+	}
+}

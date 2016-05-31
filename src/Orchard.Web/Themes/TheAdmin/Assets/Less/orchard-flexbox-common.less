@@ -1,0 +1,51 @@
+﻿.flex-2-column {
+    display: flex;
+    justify-content: space-between;
+    align-content: flex-start;
+    flex-wrap: nowrap;
+
+    @media (max-width: @screen-xs-max) {
+        flex-wrap: wrap;
+    }
+
+    > div {
+        width: auto;
+        display: flex;
+
+        &:first-child {
+            margin-right: 10px;
+        }
+
+        @media (max-width: @screen-xs-max) {
+            margin-right: 0px;
+            margin-bottom: 20px;
+            width: 100%;
+
+            &:first-child {
+                margin-right: 0px;
+            }
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
+
+    h1, h2, h3 {
+        &:first-child {
+            margin-top: 0;
+        }
+    }
+}
+
+.flex {
+    display: flex;
+}
+
+.flex-columns {
+    flex-direction: column;
+
+    .flex-column-container {
+        display: block;
+    }
+}

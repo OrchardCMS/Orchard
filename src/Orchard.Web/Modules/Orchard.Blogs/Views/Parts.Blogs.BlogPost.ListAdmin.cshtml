@@ -1,24 +1,55 @@
 ﻿@using Orchard.Core.Contents.ViewModels;
 @using Orchard.Utility.Extensions;
-@if (Model.ContentItems.Items.Count > 0) {
-    using (Html.BeginFormAntiForgeryPost(Url.Action("List", "Admin", new { area = "Contents", id = "" }))) {
-        <fieldset class="bulk-actions">
-            <label><input type="checkbox" class="check-all" />@T("Select all")</label>@T(" | ")
-            <label for="publishActions">@T("Actions:")</label>
-            <select id="publishActions" name="Options.BulkAction">
-                @Html.SelectOption(ContentsBulkAction.None, ContentsBulkAction.None, T("Choose action...").ToString())
-                @Html.SelectOption(ContentsBulkAction.None, ContentsBulkAction.PublishNow, T("Publish Now").ToString())
-                @Html.SelectOption(ContentsBulkAction.None, ContentsBulkAction.Unpublish, T("Unpublish").ToString())
-                @Html.SelectOption(ContentsBulkAction.None, ContentsBulkAction.Remove, T("Delete").ToString())
-            </select>
-            @Html.Hidden("returnUrl", ViewContext.RequestContext.HttpContext.Request.ToUrlString())
-            <button type="submit" name="submit.BulkEdit" value="yes">@T("Apply")</button>
-        </fieldset>
-        <fieldset class="contentItems bulk-items">
-            @Display(Model.ContentItems)
-        </fieldset>
+@{
+    var pageSizes = new List<int?>() { 10, 50, 100 };
+    var defaultPageSize = WorkContext.CurrentSite.PageSize;
+    if (!pageSizes.Contains(defaultPageSize)) {
+        pageSizes.Add(defaultPageSize);
     }
 }
-else {
-    <div class="info message">@T("There are no posts for this blog.")</div>
+@if (Model.ContentItems.Items.Count > 0) {
+    using (Html.BeginFormAntiForgeryPost(Url.Action("List", "Admin", new { area = "Contents", id = "" }))) {
+        <div class="panel panel-default">
+            <div class="panel-heading no-border form-inline">
+                <div class="panel-heading-primary-group">
+                    <fieldset class="bulk-actions">
+                        <div class="or-checkbox inline">
+                            <input type="checkbox" class="check-all" id="blog-post-list-select-all" />
+                            <label class="check-all" title="@T("Select All")" for="blog-post-list-select-all"></label>
+                        </div>
+                        <input id="publishActions" name="Options.BulkAction" type="hidden" value="@ContentsBulkAction.None" />
+                        @Html.Hidden("returnUrl", ViewContext.RequestContext.HttpContext.Request.ToUrlString())
+                        <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                                <i class="fa fa-bolt"></i> Bulk Actions <span class="caret"></span>
+                            </button>&nbsp;
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a id="btn-bulk-publish" href="#" data-confirm="@T("Are you sure you want to publish these items?")" data-action="@ContentsBulkAction.PublishNow">@T("Publish Now").ToString()</a></li>
+                                <li><a id="btn-bulk-unpublish" href="#" data-confirm="@T("Are you sure you want to unpublish these items?")" data-action="@ContentsBulkAction.Unpublish">@T("Unpublish").ToString()</a></li>
+                                <li><a id="btn-bulk-delete" href="#" data-confirm="@T("Are you sure you want to delete these items?")" data-action="@ContentsBulkAction.Remove">@T("Delete").ToString()</a></li>
+                            </ul>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+            <div class="panel-body">
+                <fieldset class="content-items bulk-items content-items-with-actions">
+                    @Display(Model.ContentItems)
+                </fieldset>
+            </div>
+            <div class="row or-datatable-footer">
+                <div class="col-sm-12">
+                    @Display(Model.Pager)
+                </div>
+            </div>
+        </div>
+        @Display.Modal()
+    }
+} else {
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <h3 class="no-content">@T("There are no posts for this blog.")</h3>
+        </div>
+    </div>
 }

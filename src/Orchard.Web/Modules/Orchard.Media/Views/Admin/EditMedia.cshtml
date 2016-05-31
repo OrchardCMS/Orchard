@@ -42,7 +42,7 @@
         <div>
             <label for="embedPath">@T("Embed:")</label>
             <input id="embedPath" class="text medium" name="embedPath" type="text" readonly="readonly" value="@embedHTML" />
-            <span class="hint">@T("Copy this html to add this media file to your site.")</span>
+            <span class="help-block">@T("Copy this html to add this media file to your site.")</span>
         </div>
 
         @using (Html.BeginFormAntiForgeryPost()) {
@@ -62,7 +62,7 @@
             </fieldset>
 
             <fieldset>
-                <button class="primaryAction" type="submit" name="submit.Save" value="@T("Save")">@T("Save")</button>
+                <button class="btn btn-primary" type="submit" name="submit.Save" value="@T("Save")">@T("Save")</button>
             </fieldset>
         }
     </div>

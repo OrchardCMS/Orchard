@@ -121,7 +121,6 @@
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
-    <Compile Include="Controllers\StatisticsController.cs" />
     <Compile Include="Filters\CaptureStream.cs" />
     <Compile Include="Filters\OutputCacheFilter.cs" />
     <Compile Include="Handlers\CacheSettingsPartHandler.cs" />
@@ -152,13 +151,13 @@
     <Compile Include="Models\CacheRouteConfig.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Statistics\Index.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Admin\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Admin\Statistics.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

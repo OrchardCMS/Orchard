@@ -294,13 +294,13 @@ namespace Orchard.Mvc.Html {
         }
 
         public static IHtmlString Hint(this HtmlHelper htmlHelper, LocalizedString text, IDictionary<string, object> htmlAttributes) {
-            var tagBuilder = new TagBuilder("span") { InnerHtml = text.Text };
+            var tagBuilder = new TagBuilder("p") { InnerHtml = text.Text };
 
             if (htmlAttributes != null) {
                 tagBuilder.MergeAttributes(htmlAttributes);
             }
 
-            tagBuilder.AddCssClass("hint");
+            tagBuilder.AddCssClass("help-block");
             return new HtmlString(tagBuilder.ToString(TagRenderMode.Normal));
         }
         #endregion

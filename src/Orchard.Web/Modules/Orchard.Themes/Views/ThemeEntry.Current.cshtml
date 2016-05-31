@@ -6,11 +6,12 @@
     Orchard.Themes.Models.ThemeEntry theme = Model.Theme;
 }
 
-<div id="currentTheme">
-    @Html.Image(Href(Html.ThemePath(theme.Descriptor, "/Theme.png")), Html.Encode(theme.Name), new { @class = "themePreviewImage" })
-
-    <div class="details">
-        <h4>@theme.Name</h4>
+<div class="row vert-offset-top-1" id="currentTheme">
+    <div class="col-sm-4">
+        @Html.Image(Href(Html.ThemePath(theme.Descriptor, "/Theme.png")), Html.Encode(theme.Name), new { @class = "img-thumbnail" })
+    </div>
+    <div class="col-sm-8">
+        <h4 class="border-bottom">@theme.Name</h4>
         <h5>
             @T("By") @theme.Descriptor.Author<br />
             @T("Version:") @theme.Descriptor.Version<br />

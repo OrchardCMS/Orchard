@@ -1,27 +1,37 @@
-﻿@model Orchard.MediaProcessing.ViewModels.FilterAddViewModel        
+﻿@model Orchard.MediaProcessing.ViewModels.FilterAddViewModel
 @{
     Layout.Title = T("Add a Filter");
 }
+<div class="panel panel-default">
 
-@if (!Model.Filters.Any()) {
-    <h3>@T("There are no currently available filters")</h3>
-}
+    @if (!Model.Filters.Any()) {
+        <div class="panel-body">
+            <h3 class="no-content">@T("There are no currently available filters")</h3>
+        </div>
+    }
 
-@foreach (var filter in Model.Filters.OrderBy(x => x.Name.Text)) {
-    <h2>@filter.Name</h2>
-    
-    <table class="items">
-        <thead>
-            <tr>
-                <th scope="col" style="width:300px">@T("Name")</th>
-                <th scope="col">@T("Description")</th>
-            </tr>
-        </thead>
-        @foreach (var descriptor in filter.Descriptors) {
-        <tr>
-            <td>@Html.ActionLink(descriptor.Name.Text, "Edit", new { id = Model.Id, category = descriptor.Category, type = descriptor.Type })</td>
-            <td>@descriptor.Description</td>    
-        </tr>
-        }
-    </table>
-}
+    @foreach (var filter in Model.Filters.OrderBy(x => x.Name.Text)) {
+        <div class="panel-body">
+            <div class="col-sm-12">
+                <h2>@filter.Name</h2>
+                <div class="table-responsive table-with-footer">
+                    <table class="table table-fw-widget table-bordered data-table table-striped dataTable no-footer">
+                        <thead>
+                            <tr>
+                                <th scope="col" style="width:300px">@T("Name")</th>
+                                <th scope="col">@T("Description")</th>
+                            </tr>
+                        </thead>
+                        @foreach (var descriptor in filter.Descriptors) {
+                            <tr>
+                                <td>@Html.ActionLink(descriptor.Name.Text, "Edit", new { id = Model.Id, category = descriptor.Category, type = descriptor.Type })</td>
+                                <td>@descriptor.Description</td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+    <div class="panel-footer"></div>
+</div>

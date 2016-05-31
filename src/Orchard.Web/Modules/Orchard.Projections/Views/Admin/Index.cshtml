@@ -4,74 +4,108 @@
 
 @{
     Style.Include("admin-projections.css");
-	Layout.Title = T("Manage Queries").ToString();
+    Layout.Title = T("Manage Queries").ToString();
     var index = 0;
 
-	var pageSizes = new List<int?>() { 10, 50, 100 };
-	var defaultPageSize = WorkContext.CurrentSite.PageSize;
-	if(!pageSizes.Contains(defaultPageSize)) { 
-		pageSizes.Add(defaultPageSize);
-	}
+    var pageSizes = new List<int?>() { 10, 50, 100 };
+    var defaultPageSize = WorkContext.CurrentSite.PageSize;
+    if (!pageSizes.Contains(defaultPageSize)) {
+        pageSizes.Add(defaultPageSize);
+    }
 }
-
-<h1>@Html.TitleForPage(T("Manage Queries").ToString()) </h1>
-@using (Html.BeginFormAntiForgeryPost()) { 
-    @Html.ValidationSummary()
-    <div class="manage">@Html.ActionLink(T("Add a new Query").ToString(), "Create", new { Area = "Contents", id = "Query", returnurl = HttpContext.Current.Request.RawUrl }, new { @class = "button primaryAction" })</div>
-    <fieldset class="bulk-actions">
-        <label><input type="checkbox" class="check-all" />@T("Select all")</label>@T(" | ")
-        <label for="publishActions">@T("Actions:")</label>
-        <select id="publishActions" name="@Html.NameOf(m => m.Options.BulkAction)">
-            @Html.SelectOption(Model.Options.BulkAction, QueriesBulkAction.None, T("Choose action...").ToString())
-            @Html.SelectOption(Model.Options.BulkAction, QueriesBulkAction.Delete, T("Delete").ToString())
-        </select>
-        <button type="submit" name="submit.BulkEdit" value="@T("Apply")">@T("Apply")</button>
-    </fieldset>
-    <fieldset class="bulk-actions">
-		<label for="filterResults">@T("Sort by:")</label>
-        <select id="filterResults" name="@Html.NameOf(m => m.Options.Order)">
-            @Html.SelectOption(Model.Options.Order, QueriesOrder.Name, T("Name").ToString())
-        </select>
-		<input type="hidden" name="Page" value="1" />
-		<label for="pageSize">@T("Show:")</label>
-		<select id="pageSize" name="PageSize">
-			@Html.SelectOption((int)Model.Pager.PageSize, 0, T("All").ToString())
-			@foreach(int size in pageSizes.OrderBy(p => p)) {
-				@Html.SelectOption((int)Model.Pager.PageSize, size, size.ToString())
-			}
-		</select>
-        <button type="submit" name="submit.Filter" value="@T("Filter")">@T("Filter")</button>
-    </fieldset>
-    <fieldset>		
-        <table class="items">
-            <thead>
-                <tr>
-                    <th scope="col" class="checkbox">&nbsp;&darr;</th>
-                    <th scope="col">@T("Name")</th>
-                    <th scope="col" class="actions">&nbsp;</th>
-                </tr>
-            </thead>
-            @foreach (var entry in Model.Queries) { 
-                <tr>
-                    <td>
-                        <input type="hidden" value="@Model.Queries[index].QueryId" name="@Html.NameOf(m => m.Queries[index].QueryId)"/>
-                        <input type="checkbox" value="true" name="@Html.NameOf(m => m.Queries[index].IsChecked)"/>
-                    </td>
-                    <td>
-                        @Html.ActionLink(entry.Name, "Edit", new { id = entry.QueryId }) 
-                    </td>
-                    <td>
-                        @Html.ActionLink(T("Properties").ToString(), "Edit", new { Area = "Contents", id = entry.QueryId, returnurl = HttpContext.Current.Request.RawUrl }) |
-                        @Html.ActionLink(T("Edit").ToString(), "Edit", new { id = entry.QueryId }) |
-                        @Html.ActionLink(T("Delete").ToString(), "Delete", new { id = entry.QueryId }, new { itemprop = "RemoveUrl UnsafeUrl" })
-                        @if (entry.Query.FilterGroups.SelectMany(x => x.Filters).Any()) {
-                            <text>| </text> @Html.ActionLink(T("Preview").ToString(), "Preview", new { id = entry.QueryId })
-                        }
-                    </td>
-                </tr>
-                index++;
-            }
-        </table>
-	@Display(Model.Pager)
-    </fieldset>
-} 
+<div class="panel panel-default">
+    @if (Model.Queries.Any()) {
+        using (Html.BeginFormAntiForgeryPost()) {
+            @Html.ValidationSummary()
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-md-4">
+                        <fieldset>
+                            <input id="publishActions" name="@Html.NameOf(m => m.Options.BulkAction)" type="hidden" value="@QueriesBulkAction.None" />
+                            <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                                    <i class="fa fa-bolt"></i> Bulk Actions <span class="caret"></span>
+                                </button>&nbsp;
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="#" data-confirm="@T("Are you sure you want to delete these items?")" data-action="@QueriesBulkAction.Delete">@T("Delete").ToString()</a></li>
+                                </ul>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        @* No need to filter if there is only one option in the dropdownlist *@
+                        @*<fieldset class="bulk-actions">
+                                <label for="filterResults">@T("Sort by:")</label>
+                                <select id="filterResults" name="@Html.NameOf(m => m.Options.Order)" class="form-control auto-size">
+                                    @Html.SelectOption(Model.Options.Order, QueriesOrder.Name, T("Name").ToString())
+                                </select>
+                                <button class="btn btn-default" type="submit" name="submit.Filter" value="@T("Filter")">@T("Filter")</button>
+                            </fieldset>*@
+                    </div>
+                    <div class="col-md-4 text-right">
+                        <a class="btn btn-primary" href="@Url.Action("Create", new { Area = "Contents", id = "Query", returnurl = HttpContext.Current.Request.RawUrl })"><i class="fa fa-plus"></i> @T("Add new Query").Text</a>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="table-responsive table-with-footer">
+                        <table class="table table-fw-widget data-table table-striped dataTable no-footer">
+                            <thead>
+                                <tr>
+                                    <th scope="col">
+                                        <div class="or-checkbox inline">
+                                            <input id="checkAll" class="check-all" type="checkbox">
+                                            <label class="check-all" title="@T("Select All")" for="checkAll"></label>
+                                        </div>
+                                    </th>
+                                    <th scope="col" width="100%">@T("Name")</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            @foreach (var entry in Model.Queries) {
+                                var checkboxId = Html.IdFor(m => m.Queries[index].QueryId);
+                                <tr>
+                                    <td>
+                                        <div class="or-checkbox">
+                                            <input type="hidden" value="@Model.Queries[index].QueryId" name="@Html.FieldNameFor(m => m.Queries[index].QueryId)" />
+                                            <input type="hidden" value="@Model.Queries[index].Name" name="@Html.FieldNameFor(m => m.Queries[index].Name)" />
+                                            <input id="@checkboxId" type="checkbox" value="true" name="@Html.FieldNameFor(m => m.Queries[index].IsChecked)" />
+                                            <label for="@checkboxId"></label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        @Html.ActionLink(entry.Name, "Edit", new { id = entry.QueryId })
+                                    </td>
+                                    <td class="text-nowrap">
+                                        @if (entry.Query.FilterGroups.SelectMany(x => x.Filters).Any()) {
+                                            <a class="btn btn-default" href="@Url.Action("Preview",  new { id = entry.QueryId })"><i class="fa fa-eye"></i> @T("Preview")</a>
+                                        }
+                                        <a class="btn btn-default" href="@Url.Action("Edit",  new { Area = "Contents", id = entry.QueryId, returnurl = HttpContext.Current.Request.RawUrl })"><i class="fa fa-pencil-square-o"></i> @T("Properties")</a>
+                                        <a class="btn btn-primary" href="@Url.Action("Edit",  new { id = entry.QueryId })"><i class="fa fa-pencil-square-o"></i> @T("Edit")</a>
+                                        <a class="btn btn-danger" href="@Url.Action("Delete", new { id = entry.QueryId })" data-confirm="@T("Are you sure you want to delete this item?")"><i class="fa fa-trash"></i> @T("Delete")</a>
+                                    </td>
+                                </tr>
+                                index++;
+                            }
+                        </table>
+                    </div>
+                    <div class="row or-datatable-footer">
+                        <div class="col-sm-12">
+                            @Display(Model.Pager)
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @Display.Modal()
+        }
+    } else {
+        <div class="panel-body">
+            <h3 class="no-content">
+                @T("There are no queries created yet.")
+                Why not @Html.ActionLink(T("Create one").Text, "Create", new { Area = "Contents", id = "Query", returnurl = HttpContext.Current.Request.RawUrl })?
+            </h3>
+        </div>
+    }
+</div>

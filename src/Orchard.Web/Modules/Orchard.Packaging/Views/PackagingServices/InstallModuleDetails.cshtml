@@ -19,7 +19,7 @@
 
             @{ var recipeIndex = 0; }
             @foreach (PackagingInstallRecipeViewModel recipe in Model.Recipes) {
-                <div>
+                <div class="or-checkbox">
                     @Html.HiddenFor(m => m.Recipes[recipeIndex].Recipe.Name)
 
                     @Html.EditorFor(m => m.Recipes[recipeIndex].Execute)
@@ -28,7 +28,7 @@
 
                     @{ recipeIndex++; }
                 </div>
-            }
+                        }
         </fieldset>
     }
 
@@ -37,7 +37,7 @@
 
         @{ var featureIndex = 0; }
         @foreach (PackagingInstallFeatureViewModel feature in Model.Features) {
-            <div>
+            <div class="or-checkbox">
                 @Html.HiddenFor(m => m.Features[featureIndex].FeatureDescriptor.Id)
                 @Html.HiddenFor(m => m.Features[featureIndex].FeatureDescriptor.Name)
 
@@ -46,15 +46,16 @@
                 <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Features[featureIndex].Enable)">
                     @if (!string.IsNullOrEmpty(@feature.FeatureDescriptor.Name)) {
                         @feature.FeatureDescriptor.Name
-                    } else {
+                    }
+                    else {
                         @feature.FeatureDescriptor.Id
                     }
                 </label>
 
                 @{ featureIndex++; }
             </div>
-        }
+                    }
     </fieldset>
 
-    <button class="primaryAction" type="submit">@T("Ok")</button>
+    <button class="btn btn-primary" type="submit">@T("Ok")</button>
 }

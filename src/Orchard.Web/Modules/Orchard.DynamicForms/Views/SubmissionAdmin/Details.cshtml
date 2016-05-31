@@ -6,27 +6,35 @@
 @{
     Layout.Title = T("Submission for {0}", Model.Submission.FormName);
 }
-<table class="items">
-    <thead>
-        <tr>
-            <th>@T("Field")</th>
-            <th>@T("Value")</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>@T("ID")</td>
-            <td>@Model.Submission.Id</td>
-        </tr>
-        <tr>
-            <td>@T("Created")</td>
-            <td>@Display.DateTime(DateTimeUtc: Model.Submission.CreatedUtc)</td>
-        </tr>
-        @foreach (string key in Model.NameValues) {
-            <tr>
-                <td>@key</td>
-                <td>@Model.NameValues[key]</td>
-            </tr>
-        }
-    </tbody>
-</table>
+<div class="panel panel-default">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="table-responsive table-with-footer">
+                <table class="table table-fw-widget data-table table-bordered table-striped dataTable no-footer">
+                    <thead>
+                        <tr>
+                            <th width="50%">@T("Field")</th>
+                            <th width="50%">@T("Value")</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>@T("ID")</td>
+                            <td>@Model.Submission.Id</td>
+                        </tr>
+                        <tr>
+                            <td>@T("Created")</td>
+                            <td>@Display.DateTime(DateTimeUtc: Model.Submission.CreatedUtc)</td>
+                        </tr>
+                        @foreach (string key in Model.NameValues) {
+                            <tr>
+                                <td>@key</td>
+                                <td>@Model.NameValues[key]</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

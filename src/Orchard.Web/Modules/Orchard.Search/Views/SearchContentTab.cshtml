@@ -1,30 +1,34 @@
 ﻿@{
     Script.Require("SelectableContentTab");
-    
+
     var pageTitle = T("Search Content");
     Layout.Title = pageTitle;
 }
-
-@using (Html.BeginFormAntiForgeryPost()) {
-    <fieldset class="bulk-actions">
-        <label for="search-text">@T("Search")</label>
-        @Html.TextBox("searchText", (string)Model.SearchText, new { @class = "text medium", autofocus = "autofocus" })
-
-        <button type="submit">@T("Search")</button>
-    </fieldset>
-    
-    if (Model.ContentItems.Items.Count > 0)
-    {
-        <label for="selectAll">@T("Select All")</label>
-        <input name="selectAll" type="checkbox" class="content-picker-SelectAll" />
+<div class="panel panel-default">
+    @using (Html.BeginFormAntiForgeryPost()) {
+        <div class="panel-heading">
+            <fieldset class="bulk-actions form-inline">
+                <label for="search-text"class="control-label">@T("Search")</label>
+                @Html.TextBox("searchText", (string)Model.SearchText, new { @class = "text medium", autofocus = "autofocus" })
+                <button type="submit">@T("Search")</button>
+            </fieldset>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="table-responsive table-with-footer">
+                    @if (Model.ContentItems.Items.Count > 0) {
+                    <label for="selectAll">@T("Select All")</label>
+                    <input name="selectAll" type="checkbox" class="content-picker-SelectAll" />
+                    }
+                    <fieldset class="contentItems bulk-items">
+                        @Display(Model.ContentItems)
+                    </fieldset>
+                    @if (Model.ContentItems.Items.Count > 0) {
+                    @Html.Link(T("Add Selected").Text, "#", new { @class = "button addSelected" })
+                    }
+                    @Display(Model.Pager)
+                </div>
+            </div>
+        </div>
     }
-    <fieldset class="contentItems bulk-items">
-            @Display(Model.ContentItems)
-    </fieldset>
-    if (Model.ContentItems.Items.Count > 0)
-    {    
-        @Html.Link(T("Add Selected").Text, "#", new { @class = "button addSelected"})
-    }
-    @Display(Model.Pager)
-}
-
+</div>

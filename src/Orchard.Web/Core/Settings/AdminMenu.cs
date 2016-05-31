@@ -14,7 +14,7 @@ namespace Orchard.Core.Settings {
         }
 
         public Localizer T { get; set; }
-        public string MenuName { get { return "admin"; } }
+        public string MenuName { get { return "top_admin"; } }
         public IOrchardServices Services { get; private set; }
 
         public void GetNavigation(NavigationBuilder builder) {

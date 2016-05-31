@@ -6,48 +6,50 @@
 
     var hiddenShapes = Model.AllPlacements.Where(x => String.IsNullOrEmpty(x.PlacementSettings.Zone) && (String.IsNullOrWhiteSpace(x.PlacementSettings.Position) || x.PlacementSettings.Position == "-"));
 }
+<div class="panel-body">
+    <div id="save-message" class="message message-Warning">
+        @T("You need to hit \"Save\" in order to save your changes.")
+    </div>
 
-<div id="save-message" class="message message-Warning">@T("You need to hit \"Save\" in order to save your changes.")</div>
-
-@using (Html.BeginFormAntiForgeryPost()) {
-    @Html.ValidationSummary()
+    @using (Html.BeginFormAntiForgeryPost()) {
+        @Html.ValidationSummary()
 
 
-    <ul id="placement">
-        @for (int i = 0; i < Model.AllPlacements.Count; i++ ) {
+        <ul id="placement">
+            @for (int i = 0; i < Model.AllPlacements.Count; i++) {
 
-            var placement = Model.AllPlacements[i].PlacementSettings;
+                var placement = Model.AllPlacements[i].PlacementSettings;
 
-            if(placement.Zone != "Content") {
-                continue;
+                if (placement.Zone != "Content") {
+                    continue;
+                }
+
+                <li data-shape-type="@placement.ShapeType" data-shape-differentiator="@placement.Differentiator" data-shape-zone="Content" data-shape-position="@placement.Position">
+                    <div class="shape-type"><h3>@placement.ShapeType @placement.Differentiator</h3></div>
+                    <div class="shape-editor">
+                        @try {
+                            @Display(Model.AllPlacements[i].Shape)
+                        }
+                        catch {
+                        }
+                    </div>
+
+                    @*  @shape.Position @(Model.PlacementSettings.Any(x => x.Equals(shape)))*@
+                    @Html.HiddenFor(m => m.AllPlacements[i].PlacementSettings.ShapeType, new { @class = "type" })
+                    @Html.HiddenFor(m => m.AllPlacements[i].PlacementSettings.Differentiator, new { @class = "differentiator" })
+                    @Html.HiddenFor(m => m.AllPlacements[i].PlacementSettings.Zone, new { @class = "zone" })
+                    @Html.HiddenFor(m => m.AllPlacements[i].PlacementSettings.Position, new { @class = "position" })
+                </li>
             }
-            
-            <li data-shape-type="@placement.ShapeType" data-shape-differentiator="@placement.Differentiator" data-shape-zone="Content" data-shape-position="@placement.Position">
-                <div class="shape-type"><h3>@placement.ShapeType @placement.Differentiator</h3></div>
-				<div class="shape-editor">
-					@try {
-						@Display(Model.AllPlacements[i].Shape)
-					}
-					catch {
-					}
-				</div>
-                
-                @*  @shape.Position @(Model.PlacementSettings.Any(x => x.Equals(shape)))*@
-                @Html.HiddenFor(m => m.AllPlacements[i].PlacementSettings.ShapeType, new { @class = "type" })
-                @Html.HiddenFor(m => m.AllPlacements[i].PlacementSettings.Differentiator, new { @class = "differentiator" })
-                @Html.HiddenFor(m => m.AllPlacements[i].PlacementSettings.Zone, new { @class = "zone" })
-                @Html.HiddenFor(m => m.AllPlacements[i].PlacementSettings.Position, new { @class = "position" })
-            </li>
-        }
-    </ul>
-    
-    <fieldset class="action">
-        <button class="primaryAction" type="submit" name="submit.Save" value="Save">@T("Save")</button>
-        <button class="primaryAction" type="submit" name="submit.Restore" value="Restore" itemprop="RemoveUrl" data-message="@T("Are you sure you want to restore these placements?")">@T("Restore")</button>
-    </fieldset>
+        </ul>
 
-}
+        <fieldset class="action">
+            <button class="btn btn-primary" type="submit" name="submit.Save" value="Save">@T("Save")</button>
+            <button class="btn btn-default" type="submit" name="submit.Restore" value="Restore" itemprop="RemoveUrl" data-message="@T("Are you sure you want to restore these placements?")">@T("Restore")</button>
+        </fieldset>
 
+    }
+</div>
 @using (Script.Foot()) {
 <script type="text/javascript">
 //<![CDATA[

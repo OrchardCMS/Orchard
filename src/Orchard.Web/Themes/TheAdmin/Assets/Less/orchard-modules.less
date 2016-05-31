@@ -1,0 +1,150 @@
+﻿ul {
+    &.features, &.contentItems {
+        list-style: none;
+        padding: 0;
+
+        ul, ol {
+            list-style: none;
+            padding: 0;
+            li {
+                padding: 0;
+            }
+        }
+
+        li {
+            padding: 0;
+        }
+
+        h2 {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        h3 {
+            margin: 0;
+        }
+
+        h4 {
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+
+        .feature {
+            .lifecycle-status {
+                height: auto;
+            }
+        }
+
+        &.detail-view .feature,
+        .feature {
+            padding: 0;
+
+            .actions {
+                right: 5px;
+            }
+        }
+
+        &.summary-view .feature {
+
+            .summary {
+                display:flex;
+                flex-direction:column;
+                .properties{
+                    order:1;
+                }
+                .actions{
+                    /*order:0;
+                    position:relative;
+                    display:flex;
+                    justify-content:flex-end;*/
+                }
+            }
+            @media (max-width: @screen-sm-max) {
+                width: 49%;
+            }
+
+            @media (max-width: @screen-xs-max) {
+                width: 100%;
+                height: auto;
+            }
+        }
+    }
+
+    &.contentItems {
+        border: 1px solid #eaeaea;
+        border-bottom: none;
+        background: #FFF;
+        clear: both;
+        margin: 1em 0;
+        padding: 0;
+
+        h2 {
+            margin-top: 0;
+        }
+
+        > li {
+            .clearfix();
+            padding: 1em;
+            border-bottom: 1px solid #eaeaea;
+
+            &:nth-child(even) {
+                background-color: #f9f9f9;
+            }
+
+            &:hover {
+                background-color: #EDF9F5;
+            }
+
+            ul li {
+                border: none;
+                display: inline-block;
+                width: auto;
+            }
+
+            .extensionName {
+                padding-right: 10px;
+
+                &.installed {
+                    background-color: transparent;
+                    background-position: 0px 0px;
+                }
+            }
+
+            .related {
+                display: inline-block;
+                padding: 0;
+            }
+        }
+
+        .ratings {
+            margin: 3px 0 0 8px;
+        }
+    }
+}
+
+.features.detail-view .category > ul {
+    border:1px solid #EAEAEA;
+    margin-bottom:2em;
+	display: flex;
+	flex-direction: column;
+}
+.features.summary-view .category {
+    padding-bottom:1em;
+}
+
+.features.summary-view .category > ul {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.features.summary-view .feature {
+    border:1px solid #EAEAEA;
+    margin:0 .5% 1% .5%;
+    width:32%;
+    height:auto;
+}
+.features .feature .lifecycle-status{
+    position:relative;
+    display:flex;
+    justify-content:flex-end;
+}

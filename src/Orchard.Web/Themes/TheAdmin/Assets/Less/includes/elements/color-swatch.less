@@ -1,0 +1,31 @@
+/*------------------------------------------------------------------
+  [Color swatch]
+*/
+.color-swatch{
+	margin-top: 20px;
+	display: inline-block;
+	min-width: 230px;
+  overflow: hidden;
+  border-radius: 3px;
+
+  .colors{
+		margin: 0;
+
+  	> div{
+  		min-height: 90px;
+  	}
+  }
+
+  .desc{
+		margin: 0;
+
+  	> div{
+  		text-align: center;
+  		background-color: @light-color;
+  		line-height: 50px;
+  		font-family: @raleway;
+  		font-weight: 600;
+  		color: lighten(@text-color, 7.5%);
+  	}
+  }
+}

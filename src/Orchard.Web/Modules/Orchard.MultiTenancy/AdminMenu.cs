@@ -20,8 +20,9 @@ namespace Orchard.MultiTenancy {
                 return;
 
             builder.Add(T("Tenants"), "90",
-                menu => menu.Add(T("List"), "0", item => item.Action("Index", "Admin", new { area = "Orchard.MultiTenancy" })
-                    .Permission(StandardPermissions.SiteOwner)));
+                menu => menu.Add(T("List"), "0", item => item.Action("Index", "Admin", new {area = "Orchard.MultiTenancy"})
+                    .Permission(StandardPermissions.SiteOwner)),
+                new[] {"helm"});
         }
     }
 }

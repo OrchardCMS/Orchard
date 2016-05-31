@@ -30,7 +30,7 @@
     </fieldset>
 
     <div class="manage">
-        @Html.ActionLink(T("Add media").ToString(), "Add", new { folderName = Model.FolderName, mediaPath = Model.MediaPath }, new { @class = "button primaryAction" })
+        @Html.ActionLink(T("Add media").ToString(), "Add", new { folderName = Model.FolderName, mediaPath = Model.MediaPath }, new { @class = "btn btn-primary" })
         @Html.ActionLink(T("Add a folder").ToString(), "Create", new { Model.MediaPath }, new { @class = "button" })
     </div>
 
@@ -47,7 +47,7 @@
 
             <thead>
                 <tr>
-                    <th scope="col">&nbsp;&darr;@{/* todo: (heskew) something more appropriate for "this applies to the bulk actions */ }</th>
+                    <th scope="col"><i class="fa fa-long-arrow-down"></i> @{/* todo: (heskew) something more appropriate for "this applies to the bulk actions */ }</th>
                     <th scope="col">@T("Name")</th>
                     <th scope="col">@T("Author")</th>
                     <th scope="col">@T("Last Updated")</th>

@@ -17,7 +17,7 @@
 <h1>@Html.TitleForPage(T("Manage Rules").ToString()) </h1>
 @using (Html.BeginFormAntiForgeryPost()) { 
     @Html.ValidationSummary()
-    <div class="manage">@Html.ActionLink(T("Add a new Rule").ToString(), "Create", new { }, new { @class = "button primaryAction" })</div>
+    <div class="manage">@Html.ActionLink(T("Add a new Rule").ToString(), "Create", new { }, new { @class = "btn btn-primary" })</div>
 
     <fieldset class="bulk-actions">
         <label for="publishActions">@T("Actions:")</label>

@@ -1,0 +1,25 @@
+﻿@using Orchard.Localization
+@{
+    var title = (string)Convert.ToString(Model.Title);
+    var siteName = Convert.ToString(WorkContext.CurrentSite.SiteName);
+    var isRtl = WorkContext.CurrentCultureInfo().TextInfo.IsRightToLeft;
+    Html.AddPageClassNames("dir-" + (isRtl ? "rtl" : "ltr"));
+}
+<!DOCTYPE html>
+<html lang="@WorkContext.CurrentCulture" class="static @Html.ClassForPage()" dir="@(isRtl?"rtl":"ltr")">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="~/Modules/Orchard.Themes/Content/orchard.ico">
+    <title>@Html.Title(title, siteName)</title>
+    <script>(function(d) { d.className = "dyn" + d.className.substring(6, d.className.length); })(document.documentElement);</script>
+    <script>window.isRTL = @(isRtl.ToString().ToLowerInvariant());</script>
+    @Display(Model.Head)
+</head>
+<body>
+    @Display(Model.Body)
+    @Display(Model.Tail)
+</body>
+</html>

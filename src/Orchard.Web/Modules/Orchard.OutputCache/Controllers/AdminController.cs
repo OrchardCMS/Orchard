@@ -14,6 +14,9 @@ using Orchard.OutputCache.ViewModels;
 using Orchard.Security;
 using Orchard.UI.Admin;
 using Orchard.UI.Notify;
+using Orchard.UI.Navigation;
+using Orchard.Settings;
+using System.Linq;
 
 namespace Orchard.OutputCache.Controllers {
     [Admin]
@@ -21,17 +24,23 @@ namespace Orchard.OutputCache.Controllers {
         private readonly IEnumerable<Meta<IRouteProvider>> _routeProviders;
         private readonly ISignals _signals;
         private readonly ICacheService _cacheService;
+        private readonly IOutputCacheStorageProvider _cacheStorageProvider;
+        private readonly ISiteService _siteService;
 
         public AdminController(
             IOrchardServices services,
             IEnumerable<Meta<IRouteProvider>> routeProviders,
             ISignals signals,
-            ICacheService cacheService) {
+            ICacheService cacheService,
+            IOutputCacheStorageProvider cacheStorageProvider,
+            ISiteService siteService) {
             _routeProviders = routeProviders;
             _signals = signals;
             _cacheService = cacheService;
             Services = services;
-            }
+            _cacheStorageProvider = cacheStorageProvider;
+            _siteService = siteService;
+        }
 
         public IOrchardServices Services { get; set; }
         public Localizer T { get; set; }
@@ -56,7 +65,7 @@ namespace Orchard.OutputCache.Controllers {
                 foreach (var routeDescriptor in routes) {
                     var route = routeDescriptor.Route as Route;
 
-                    if(route == null) {
+                    if (route == null) {
                         continue;
                     }
 
@@ -109,7 +118,7 @@ namespace Orchard.OutputCache.Controllers {
                 RouteConfigs = new List<CacheRouteConfig>()
             };
 
-            if(TryUpdateModel(model)) {
+            if (TryUpdateModel(model)) {
                 var settings = Services.WorkContext.CurrentSite.As<CacheSettingsPart>();
                 settings.DefaultCacheDuration = model.DefaultCacheDuration;
                 settings.DefaultCacheGraceTime = model.DefaultCacheGraceTime;
@@ -128,13 +137,47 @@ namespace Orchard.OutputCache.Controllers {
                 _cacheService.SaveRouteConfigs(model.RouteConfigs);
 
                 Services.Notifier.Success(T("Output cache settings saved successfully."));
-            }
-            else {
+            } else {
                 Services.Notifier.Error(T("Could not save output cache settings."));
             }
 
             return RedirectToAction("Index");
         }
 
+        public ActionResult Statistics(PagerParameters pagerParameters) {
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("You do not have permission to manage output cache.")))
+                return new HttpUnauthorizedResult();
+
+            var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
+            var pagerShape = Services.New.Pager(pager).TotalItemCount(_cacheStorageProvider.GetCacheItemsCount());
+
+            var model = new StatisticsViewModel {
+                CacheItems = _cacheStorageProvider
+                    .GetCacheItems(pager.GetStartIndex(), pager.PageSize)
+                    .ToList(),
+                Pager = pagerShape
+            };
+
+            return View(model);
+        }
+
+        public ActionResult Evict(string cacheKey) {
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("You do not have permission to manage output cache.")))
+                return new HttpUnauthorizedResult();
+
+            _cacheStorageProvider.Remove(cacheKey);
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public ActionResult EvictAll() {
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("You do not have permission to manage output cache.")))
+                return new HttpUnauthorizedResult();
+
+            _cacheStorageProvider.RemoveAll();
+
+            return RedirectToAction("Index");
+        }
     }
 }

@@ -8,11 +8,11 @@
 
 <fieldset>
     <legend>@T("Users")</legend>
-    <div>
+    <div class="or-checkbox">
         @Html.EditorFor(m => m.UsersCanRegister) 
         <label class="forcheckbox" for="@Html.FieldIdFor( m => m.UsersCanRegister)">@T("Users can create new accounts on the site")</label>
     </div>
-    <div>
+    <div class="or-checkbox">
         <input type="checkbox" value="true" class="check-box" id="@Html.FieldIdFor(m => m.EnableLostPassword)" name="@Html.FieldNameFor(m => m.EnableLostPassword)" @(Model.EnableLostPassword ? "checked=\"checked\"" : "") @(emailEnabled ? "" : "disabled=\"disabled\"")/>
         <input name="@Html.FieldNameFor(m => m.EnableLostPassword)" type="hidden" value="false">
         <label class="forcheckbox" for="@Html.FieldIdFor( m => m.EnableLostPassword)">@T("Display a link to enable users to reset their password")</label>
@@ -21,7 +21,7 @@
             <div class="message message-Warning">@T("This option is available when an email module is activated.")</div>
         }
     </div>
-    <div>
+    <div class="or-checkbox">
         <input type="checkbox" value="true" class="check-box" id="@Html.FieldIdFor(m => m.UsersMustValidateEmail)" name="@Html.FieldNameFor(m => m.UsersMustValidateEmail)" @(Model.UsersMustValidateEmail ? "checked=\"checked\"" : "") @(emailEnabled ? "" : "disabled=\"disabled\"")/>  
         <input name="@Html.FieldNameFor(m => m.UsersMustValidateEmail)" type="hidden" value="false">
         <label class="forcheckbox" for="@Html.FieldIdFor( m => m.UsersMustValidateEmail)">@T("Users must verify their email address")</label>
@@ -30,22 +30,22 @@
             <div class="message message-Warning">@T("This option is available when an email module is activated.")</div>
         }
     </div>
-    <div data-controllerid="@Html.FieldIdFor(m => m.UsersMustValidateEmail)">
+    <div class="or-checkbox" data-controllerid="@Html.FieldIdFor(m => m.UsersMustValidateEmail)">
         <label for="@Html.FieldIdFor( m => m.ValidateEmailRegisteredWebsite)">@T("Website public name")</label>
         @Html.TextBoxFor(m => m.ValidateEmailRegisteredWebsite, new { @class = "text medium" } )
         @Html.ValidationMessage("ValidateEmailRegisteredWebsite", "*")
-        <span class="hint">@T("The name of your website as it will appear in the verification e-mail.")</span>
+        <span class="help-block">@T("The name of your website as it will appear in the verification e-mail.")</span>
         
         <label for="@Html.FieldIdFor( m => m.ValidateEmailContactEMail)">@T("Contact Us E-Mail address")</label>
         @Html.TextBoxFor(m => m.ValidateEmailContactEMail, new { @class = "text medium" } )
         @Html.ValidationMessage("ValidateEmailContactEMail", "*")
-        <span class="hint">@T("The e-mail address displayed in the verification e-mail for a Contact Us link. Leave empty for no link.")</span>
+        <span class="help-block">@T("The e-mail address displayed in the verification e-mail for a Contact Us link. Leave empty for no link.")</span>
     </div>
-    <div>
+    <div class="or-checkbox">
         @Html.EditorFor(m => m.UsersAreModerated)
         <label class="forcheckbox" for="@Html.FieldIdFor( m => m.UsersAreModerated)">@T("Users must be approved before they can log in")</label>
     </div>    
-    <div data-controllerid="@Html.FieldIdFor(m => m.UsersAreModerated)">
+    <div class="or-checkbox" data-controllerid="@Html.FieldIdFor(m => m.UsersAreModerated)">
         <input type="checkbox" value="true" class="check-box" id="@Html.FieldIdFor(m => m.NotifyModeration)" name="@Html.FieldNameFor(m => m.NotifyModeration)" @(Model.NotifyModeration ? "checked=\"checked\"" : "") @(emailEnabled ? "" : "disabled=\"disabled\"")/>
         <input name="@Html.FieldNameFor(m => m.NotifyModeration)" type="hidden" value="false">
         <label class="forcheckbox" for="@Html.FieldIdFor( m => m.NotifyModeration)">@T("Send a notification when a user needs moderation")</label>
@@ -55,10 +55,10 @@
         }
 
     </div>
-    <div data-controllerid="@Html.FieldIdFor(m => m.NotifyModeration)">
+    <div class="or-checkbox" data-controllerid="@Html.FieldIdFor(m => m.NotifyModeration)">
         <label for="@Html.FieldIdFor( m => m.NotificationsRecipients)">@T("Moderators")</label>
         @Html.TextBoxFor(m => m.NotificationsRecipients, new { @class = "text medium" } )
         @Html.ValidationMessage("NotificationsRecipients", "*")
-        <span class="hint">@T("The usernames to send the notifications to (e.g., \"admin, user1, ...\").")</span>
+        <span class="help-block">@T("The usernames to send the notifications to (e.g., \"admin, user1, ...\").")</span>
     </div>    
 </fieldset>

@@ -5,4 +5,4 @@
     var listItems = categories.Select(x => new SelectListItem { Text = x.Name.Text, Value = x.Category, Selected = x.Category == currentCategory });
 }
 @Html.Label("category", T("Category:").Text)
-@Html.DropDownList("category", listItems, "")
+@Html.DropDownList("category", listItems, new { @class="form-control" })

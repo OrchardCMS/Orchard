@@ -1,103 +1,53 @@
-﻿@model dynamic
-@using Orchard.Security;
-@using Orchard.DisplayManagement.Descriptors;
-@using Orchard.UI.Resources;
-@using Orchard;
-@using Orchard.ContentManagement;
+﻿@{
+    Style.Include("Lib.css", "Lib.min.css");
+    Style.Include("FontAwesome");
+    Style.Include("TheAdmin.css");
 
-@{
-    SetMeta("X-UA-Compatible", "IE=edge,chrome=1");
-    Style.Include("site.css");
-    Style.Include("ie.css").UseCondition("gte IE 9").SetAttribute("media", "screen, projection");
-    Style.Include("ie8.css").UseCondition("IE 8").SetAttribute("media", "screen, projection");
-    Style.Include("ie7.css").UseCondition("lte IE 7").SetAttribute("media", "screen, projection");
-    Script.Require("jQuery").AtFoot();
+    Script.Include("https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js").UseCondition("lt IE 9").AtHead();
+    Script.Include("https://oss.maxcdn.com/respond/1.4.2/respond.min.js").UseCondition("lt IE 9").AtHead();
+    Script.Require("jQuery");
+    Script.Require("jQueryUI");
+    Script.Require("Bootstrap");
     Script.Require("ShapesBase").AtFoot();
-    Script.Include("admin.js").AtFoot();
-
-    /* Some useful shortcuts or settings
-    ***************************************************************/
-
-    Func<dynamic, dynamic> Zone = x => Display(x); // Zone as an alias for Display to help make it obvious when we're displaying zones
-
-    /* Inserting some ad hoc shapes
-    ***************************************************************/
-
-    // these are just hacked together to fire existing partials... can change
-    Model.Header.Add(Display.Header());
-
-    Model.Header.Add(Display.User(CurrentUser: WorkContext.CurrentUser));
-    Model.Footer.Add(Display.OrchardVersion());
-
-    if (Model.Title != null) {
-        Model.Header.Add(Display.Title(Title: Model.Title));
-    }
+    Script.Include("TheAdmin.js");
 }
-
-<div id="layout-content">
-
-@if (Model.Header != null) {
-<div id="header" role="banner">
-    @Zone(Model.Header)
-</div>
-}
-    <div id="navshortcut">
-        <a href="#Menu-admin">
-            @T("Skip to navigation")
-        </a>
-    </div>
-
-    <div id="layout-main">
-        <div id="main" role="main">
-            @if (Model.Messages != null) {
-            <div id="messages">
-                @Zone(Model.Messages)
-            </div>
+<div id="layout-content" class="or-wrapper @*or-fixed-sidebar*@" data-default-remove-confirmation-prompt="@T("Are you sure you want to remove this element?")'">
+    @Display(Model.TopMenu)
+    @Display(Model.SideMenu)
+    <div class="or-content">
+        <div class="page-head">
+            @if (Model.Title != null) {
+                @Display.Title(Title: Model.Title)
             }
 
-            @if (Model.BeforeContent != null) {
-            <div id="before-content">
-                @Zone(Model.BeforeContent)
-            </div>
+            @Display.Breadcrumb()
+        </div>
+        <div class="main-content">
+            @if (Model.Messages != null) {
+                <div id="messages">
+                    @Display(Model.Messages)
+                </div>
             }
 
             @if (Model.LocalNavigation != null) {
-            <div id="local-navigation">
-                @Zone(Model.LocalNavigation)
-            </div>
+                <div id="local-navigation">
+                    @Display(Model.LocalNavigation)
+                </div>
             }
-
-            @if (Model.Content != null) {
-            <div id="content" class="group">
-                @Zone(Model.Content)
+            <div class="row">
+                <div class="col-md-12">
+                    @Display(Model.Content)
+                </div>
             </div>
-            }
-
-            @if (Model.AfterContent != null) {
-            <div id="after-content">
-                @Zone(Model.AfterContent)
-            </div>
-            }
         </div>
     </div>
-
-    @if (Model.Navigation != null) {
-    <div id="menu">
-        @Zone(Model.Navigation)
-    </div>
-    }
+    @Display.Sidebar()
 </div>
-
-@if (Model.Footer != null) {
-<div id="footer" role="contentinfo">
-    @Zone(Model.Footer)
-</div>
-}
 
 @using (Script.Foot()) {
-<script type="text/javascript">
-//<![CDATA[
-	var confirmRemoveMessage = '@T("Are you sure you want to remove this element?")';
-//]]>
-</script>
+    <script type="text/javascript">
+        //<![CDATA[
+        var confirmRemoveMessage = '@T("Are you sure you want to remove this element ?")';
+        //]]>
+    </script>
 }

@@ -5,7 +5,7 @@
     string[] options = (!String.IsNullOrWhiteSpace(settings.Options)) ? settings.Options.Split(new string[] { System.Environment.NewLine }, StringSplitOptions.None) : new string[] { T("Select an option").ToString() };
 }
 <fieldset>
-    <label for="@Html.FieldIdFor(m => m.Value)" @if (settings.Required) { <text> class="required" </text>  }>@Model.DisplayName</label>
+    <label for="@Html.FieldIdFor(m => m.Value)" @if (settings.Required) { <text> class="required" </text>    }>@Model.DisplayName</label>
     @switch (settings.ListMode) {
         case ListMode.Dropdown:
             @Html.DropDownListFor(m => m.Value, new SelectList(options, Model.Value), settings.Required ? new { required = "required" } : null)
@@ -31,7 +31,7 @@
             foreach (var option in options) {
                 index++;
                 if (!string.IsNullOrWhiteSpace(option)) {
-                    <div>
+                    <div class="or-checkbox">
                         <input type="checkbox" name="@Html.FieldNameFor(m => m.SelectedValues)" value="@option" @((Model.SelectedValues != null && Model.SelectedValues.Contains(option)) ? "checked=\"checked\"" : "") class="check-box" id="@Html.FieldIdFor(m => m.SelectedValues)-@index" />
                         <label class="forcheckbox" for="@Html.FieldIdFor(m => m.SelectedValues)-@index">@T(option)</label>
                     </div>
@@ -42,6 +42,6 @@
 
     @Html.ValidationMessageFor(m => m.SelectedValues)
     @if (HasText(settings.Hint)) {
-        <span class="hint">@settings.Hint</span>
+        <span class="help-block">@settings.Hint</span>
     }
 </fieldset>

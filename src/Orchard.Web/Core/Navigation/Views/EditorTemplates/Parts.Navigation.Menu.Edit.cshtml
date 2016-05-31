@@ -5,20 +5,21 @@
 @if (!Model.ContentItem.TypeDefinition.Settings.ContainsKey("Stereotype") || Model.ContentItem.TypeDefinition.Settings["Stereotype"] != "MenuItem") {
 
     <fieldset>
-        
-        @Html.EditorFor(m => m.OnMenu)
-        <label for="@Html.FieldIdFor(m => m.OnMenu)" class="forcheckbox">@T("Show on a menu")</label>
+        <div class="or-checkbox inline">
+            @Html.CheckBoxFor(m => m.OnMenu)
+            <label for="@Html.FieldIdFor(m => m.OnMenu)" class="forcheckbox">@T("Show on a menu")</label>
+        </div>
         <div data-controllerid="@Html.FieldIdFor(m => m.OnMenu)" class="">
-            <select id="@Html.FieldIdFor(m => m.CurrentMenuId)" name="@Html.FieldNameFor(m => m.CurrentMenuId)">
+            <select id="@Html.FieldIdFor(m => m.CurrentMenuId)" name="@Html.FieldNameFor(m => m.CurrentMenuId)" class="form-control auto-size">
                 @foreach (ContentItem menu in Model.Menus) {
                     @Html.SelectOption(Model.CurrentMenuId, menu.Id, Html.ItemDisplayText(menu, false).ToString())
                 }
             </select>
-            <span class="hint">@T("Select which menu you want the content item to be displayed on.")</span>
+            @Html.Hint(T("Select which menu you want the content item to be displayed on."))
 
             <label for="MenuText">@T("Menu text")</label>
             @Html.TextBoxFor(m => m.MenuText, new { @class = "text single-line" })
-            <span class="hint">@T("The text that should appear in the menu.")</span>
+            @Html.Hint(T("The text that should appear in the menu."))
         </div>
     </fieldset>
 
@@ -28,7 +29,7 @@ else {
     <fieldset>
         <label for="MenuText">@T("Menu text")</label>
         @Html.TextBoxFor(m => m.MenuText, new { @class = "text medium", autofocus = "autofocus" })
-        <span class="hint">@T("The text that should appear in the menu.")</span>
+        @Html.Hint(T("The text that should appear in the menu."))
         @Html.HiddenFor(m => m.OnMenu, true)
         @Html.HiddenFor(m => m.CurrentMenuId, Request["menuId"])
     </fieldset>

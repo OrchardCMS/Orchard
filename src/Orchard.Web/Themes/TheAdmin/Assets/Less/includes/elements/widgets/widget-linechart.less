@@ -1,0 +1,71 @@
+.widget.line-chart{
+
+	.chart-container{
+		position: relative;
+		padding: 0 5px 5px 5px;
+
+		> div{
+			z-index: 1;
+
+			@media @phone{
+				padding: 0 0 5px;
+				min-height: 160px;
+			}
+		}
+
+		> .counter{
+			min-height: auto;
+			top: 0;
+			left: 0;
+			position: absolute;
+			z-index: 2;
+
+			.value{
+				font-size: 24px;
+			}
+
+			.desc{
+				text-transform: uppercase;
+				font-size: 11px;
+				color: lighten(@text-color, 36.5%);
+			}
+		}
+	}
+
+	.chart-table{
+		padding-top: 20px;
+
+		table{
+			margin: 0;
+
+			.number{
+				text-align: right;
+				width: 20%;
+			}
+		}
+
+		@media @phone{
+			padding: 10px 0 0;
+		}
+	}
+
+	&.widget-fullwidth{
+		
+		.chart-container{
+			padding: 0;
+
+			> div{
+
+				.tickLabel{
+					font-size: 0;
+				}
+			}
+
+			> .counter{
+				min-height: auto;
+				left: 20px;
+			}
+		}
+	}
+}
+

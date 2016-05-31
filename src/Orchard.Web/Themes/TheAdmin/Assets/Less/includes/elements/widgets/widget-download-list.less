@@ -1,0 +1,55 @@
+.widget-download-list{
+	padding: 0;
+
+	> .widget-head{
+		background-color: @primary-color + 17%;
+		color: @light-color;
+		line-height: 33px;
+		overflow: hidden;
+		padding: 19px 20px;
+		margin-bottom: 0;
+
+		.icon{
+			float: right;
+			background-color: @primary-color;
+			border-radius: 50%;
+			font-size: 20px;
+			line-height: 19px;
+			padding: 8px;
+			height: 35px;
+			width: 35px;
+		}
+	}
+
+	.widget-list{
+		padding: 0;
+		list-style: none;
+		margin-bottom: 0;
+
+		li{
+			border-bottom: 1px solid darken(@light-color, 10%);
+
+			a{
+				padding: 21px 20px;
+				color: @text-color;
+				display: block;
+				font-weight: 300;
+				font-size: 12px;
+
+				.icon{
+					float: right;
+					color: @primary-color;
+					font-size: 20px;
+				}
+
+				&:hover{
+					background-color: darken(@light-color, 2%);
+				}
+			}
+
+			&:last-child{
+				border: 0;
+			}
+		}
+	}
+}

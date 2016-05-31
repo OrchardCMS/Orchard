@@ -30,31 +30,31 @@
         <div class="form-group">   
             @Html.LabelFor(m => jobViewModel.SelectedInputAssetId, T("Input Asset"))
             @Html.DropDownListFor(m => jobViewModel.SelectedInputAssetId, inputAssetListItemQuery)
-            <span class="hint">@T("Select the input asset for the job.")</span>
+            <span class="help-block">@T("Select the input asset for the job.")</span>
         </div>
     </fieldset>
     <fieldset>
         <div class="form-group">
             @Html.LabelFor(m => jobViewModel.OutputAssetName, T("Output Asset Name"))
             @Html.TextBoxFor(m => jobViewModel.OutputAssetName, new { @class = "text medium" })
-            <span class="hint">@T("Optional. Specify the name you wish to assign to the output asset. When left blank, the task name will be used.")</span>
+            <span class="help-block">@T("Optional. Specify the name you wish to assign to the output asset. When left blank, the task name will be used.")</span>
         </div>
         <div class="form-group">
             @Html.LabelFor(m => jobViewModel.OutputAssetDescription, T("Output Asset Description"))
             @Html.TextBoxFor(m => jobViewModel.OutputAssetDescription, new { @class = "text large" })
-            <span class="hint">@T("Optional. Specify a description you wish to assign to the output asset.")</span>
+            <span class="help-block">@T("Optional. Specify a description you wish to assign to the output asset.")</span>
         </div>
     </fieldset>
     <fieldset>
         <div class="form-group">
             @Html.LabelFor(m => jobViewModel.Name, T("Job Name"))
             @Html.TextBoxFor(m => jobViewModel.Name, new { @class = "text medium" })
-            <span class="hint">@T("Optional. Specify the name of this job. When left blank, the task name will be used.")</span>
+            <span class="help-block">@T("Optional. Specify the name of this job. When left blank, the task name will be used.")</span>
         </div>
         <div class="form-group">
             @Html.LabelFor(m => jobViewModel.Description, T("Job Description"))
             @Html.TextBoxFor(m => jobViewModel.Description, new { @class = "text large" })
-            <span class="hint">@T("Optional. Specify a description for this job.")</span>
+            <span class="help-block">@T("Optional. Specify a description for this job.")</span>
         </div>
     </fieldset>
     <fieldset>

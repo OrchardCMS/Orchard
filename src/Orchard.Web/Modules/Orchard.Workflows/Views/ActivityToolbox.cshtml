@@ -15,7 +15,7 @@
         <li class="activity-toolbox-item toolbox-@(activity.IsEvent ? "event" : "task") toolbox-@activity.Name.HtmlClassify()" data-activity-name="@activity.Name" title="@activity.Description">
             <div>
                 <h2>@activity.Name.CamelFriendly()</h2>
-                <span class="hint">@activity.Description</span>
+                <span class="help-block">@activity.Description</span>
             </div>
         </li>
     }   

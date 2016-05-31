@@ -42,9 +42,9 @@
 }
 
 #media-library-toolbar {
-    display: table-caption;
+    /*display: table-caption;
     border-bottom: 1px solid #e0e0e0;
-    height: 32px;
+    height: 32px;*/
 }
 
 #media-library-toolbar-actions {

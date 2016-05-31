@@ -1,10 +1,14 @@
 ﻿@{
     // Model is Model.Menu from the layout (Layout.Menu)
     var tag = Tag(Model, "ul");
+
+    tag.AddCssClass("nav nav-tabs");
 }
-<nav>
-    @tag.StartElement
+@if (Model.Items.Count > 1) {
+    <div class="tab-container">
+        @tag.StartElement
         @* see MenuItem shape template *@
         @DisplayChildren(Model)
-    @tag.EndElement
-</nav>
+        @tag.EndElement
+    </div>
+}

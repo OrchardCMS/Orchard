@@ -168,6 +168,7 @@
     <Compile Include="Contents\Settings\ContentPartSettings.cs" />
     <Compile Include="Contents\Shapes.cs" />
     <Compile Include="Contents\ViewModels\PublishContentViewModel.cs" />
+    <Compile Include="Dashboard\TopAdminMenu.cs" />
     <Compile Include="Dashboard\Services\CompilationErrorBanner.cs" />
     <Compile Include="Navigation\Commands\MenuCommands.cs" />
     <Compile Include="Navigation\Drivers\AdminMenuPartDriver.cs" />

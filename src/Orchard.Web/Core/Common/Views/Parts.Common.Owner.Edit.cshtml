@@ -4,6 +4,6 @@
 }
 <fieldset>
     @Html.LabelFor(m => OwnerEditor.Owner, T("Owner"))
-    @Html.EditorFor(m => OwnerEditor.Owner)
+    @Html.TextBoxFor(m => OwnerEditor.Owner, new { @class = "text medium" })
     @Html.ValidationMessageFor(m => OwnerEditor.Owner)
 </fieldset>

@@ -121,6 +121,9 @@ namespace Orchard.Projections.Controllers {
                     foreach (var checkedItem in checkedItems) {
                         _queryService.DeleteQuery(checkedItem.QueryId);
                     }
+                    if (checkedItems.Any()) {
+                        Services.Notifier.Information(T("Query {0} deleted", string.Join(", ", checkedItems.Select(e => e.Name).ToList())));
+                    }
 
                     break;
                 default:

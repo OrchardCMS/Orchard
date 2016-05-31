@@ -1,0 +1,36 @@
+// Lib/stroke-7/style.css
+@font-face {
+	font-family: 'Stroke 7';
+	src:url('../Fonts/Stroke-7.eot?21lgsr');
+	src:url('../Fonts/Stroke-7.eot?#iefix21lgsr') format('embedded-opentype'),
+		url('../Fonts/Stroke-7.ttf?21lgsr') format('truetype'),
+		url('../Fonts/Stroke-7.woff?21lgsr') format('woff'),
+		url('../Fonts/Stroke-7.svg?21lgsr#Stroke-7') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+// Theme/Less/includes/structure/top-header.less
+.or-top-header
+{
+    z-index: 100;
+}
+
+// Theme/Less/includes/bootstrap/forms.less
+input[type="checkbox"]:disabled ~ label, input[type="radio"]:disabled ~ label
+{
+    pointer-events: initial;
+    cursor: initial;
+
+    &:before
+    {
+        pointer-events: initial !important;
+        cursor: not-allowed;
+    }
+}
+
+// Lib/jquery.nanoscroller/css/nanoscroller.css
+.nano > .nano-content
+{
+    position: relative;
+}

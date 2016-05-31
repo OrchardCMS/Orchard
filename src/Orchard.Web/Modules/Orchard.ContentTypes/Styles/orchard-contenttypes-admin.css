@@ -1,6 +1,39 @@
-﻿.orchard-contenttypes #main h2 {
+﻿.orchard-contenttypes .manage-type .panel-group.accordion {
+    margin-bottom: 0;
+}
+
+.orchard-contenttypes .manage-type .panel-group.accordion .panel .panel-title {
+    position: relative;
+}
+
+.orchard-contenttypes .manage-type .panel-group.accordion .panel .panel-heading a.remove-part,
+.orchard-contenttypes .manage-type .panel-group.accordion .panel .panel-heading a.remove-field,
+.orchard-contenttypes .manage-type .panel-group.accordion .panel .panel-heading a.edit-field {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: none;
+}
+
+.orchard-contenttypes .manage-type .panel-group.accordion .panel .panel-heading a.edit-field {
+    right: 30px;
+}
+
+.orchard-contenttypes .content-type-settings {
+    border: 1px solid #e6e6e6;
+    padding: 1em;
+}
+
+.orchard-contenttypes .content-type-settings h4 {
+    font-weight: 600;
+}
+
+.orchard-contenttypes .manage-type .panel-group.accordion .panel .panel-collapse .panel-body {
+    padding: 10px 0 15px 0;
+}
+
+.orchard-contenttypes .manage-type h2 {
     margin: 42px 0 0;
-    border-bottom: 1px solid #ccc;
 }
 
 .orchard-contenttypes .summary .properties h3 {
@@ -16,43 +49,30 @@
 }
 
 .manage.add-to-type {
-    margin-top: -32px;
+    margin: -40px 0 1em;
 }
 
-.manage-part, .manage-field {
-    margin-bottom: 0;
-    padding:0;
-    border-bottom: 1px solid #EAEAEA;
+.manage-part {
+    margin-bottom: 1em;
 }
 
-.manage-part h3,
-.manage-field h3 {
-    display: relative;
-    line-height: 1.4em;
-    padding-bottom: 0;
-    padding-top: 0;
-}
+    .manage-part h3,
+    .manage-field h3 {
+        border-bottom: 1px solid #EAEAEA;
+        display: relative;
+        line-height: 1.4em;
+        padding-bottom: 0;
+        padding-top: 0;
+    }
 
-.manage-part h3,
-.manage-field h3,
-.manage-part h4,
-.manage-type .manage-field .details,
-.manage-type .manage-part .manage-field,
-.manage-type .manage-part .settings {
-    padding-left: 30px;
-    padding-right: 30px;
-}
-
-.manage-part h3, .manage-field h3 {
-    margin: 1em 0 !important;
-    padding-left: 30px;
-    width: 90%;
-}
-
-.manage-part .expando-glyph, .manage-field .expando-glyph {
-    width:16px;
-    height:16px;
-}
+    .manage-part h3,
+    .manage-field h3,
+    .manage-part h4,
+    .manage-type .manage-field .details,
+    .manage-type .manage-part .manage-field,
+    .manage-type .manage-part .settings {
+        padding-left: 20px;
+    }
 
 .manage-type .manage-field .settings {
     padding-bottom: 10px;
@@ -69,23 +89,15 @@
     padding-left: 15px;
 }
 
-.manage-part .settings #content {
-    margin-bottom: 15px;
-}
-
 .manage-type .manage-part .manage,
 .manage-type .manage-field .manage,
 .manage-part .manage-field .manage {
-    margin-top: -2.9em;
-    padding-right: 20px;
-    position: relative;
-    z-index: 999;
+    margin-top: -2.4em;
 }
 
 .manage-field .details,
 .manage-part .details {
     overflow: auto;
-    margin-top: 20px;
 }
 
 .manage-part .manage.minor {
@@ -167,11 +179,13 @@ fieldset.action {
     padding-left: .5em;
 }
 
-.available-parts .part.hint {
+.part-hint {
     display: block;
-    margin-left: 29px;
+    margin-left: 31px;
     line-height: 16px;
     margin-bottom: 2px;
+    color: #7b7b7b;
+    font-size: 13px;
 }
 
 

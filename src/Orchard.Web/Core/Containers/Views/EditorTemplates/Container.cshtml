@@ -3,18 +3,18 @@
     Script.Require("ShapesBase");
 }
 <fieldset>
-    <span class="checkbox-and-label">
+    <span class="checkbox-and-label or-checkbox">
         @Html.EditorFor(m => m.ItemsShown)
         <label for="@Html.FieldIdFor(m => m.ItemsShown)" class="forcheckbox">@T("Show contained items list")</label>
-        <span class="hint">@T("Renders the contained items when this list is displayed.")</span>
+        <span class="help-block">@T("Renders the contained items when this list is displayed.")</span>
     </span>
 </fieldset>
 @if (Model.OverrideEnablePositioning) {
     <fieldset>
-        <span class="checkbox-and-label">
+        <span class="checkbox-and-label or-checkbox">
             @Html.EditorFor(m => m.EnablePositioning)
             @Html.LabelFor(m => m.EnablePositioning, @T("Enable positoning").ToString(), new { @class = "forcheckbox" })
-            <span class="hint">@T("Check this option to enable manual repositioning of items.")</span>
+            <span class="help-block">@T("Check this option to enable manual repositioning of items.")</span>
         </span>
     </fieldset>
 }
@@ -27,7 +27,7 @@
                 @Html.SelectOption(contentType.Name, Model.SelectedItemContentTypes.Contains(contentType.Name), contentType.DisplayName)
             }
         </select>
-        <span class="hint">@T("Select zero or more content types. Selecting zero content types means the list can contain any content type. Only types with the Containable part can be contained in a list.")</span>
+        <span class="help-block">@T("Select zero or more content types. Selecting zero content types means the list can contain any content type. Only types with the Containable part can be contained in a list.")</span>
     </fieldset>
 }
 <fieldset class="with-checkbox">
@@ -35,14 +35,16 @@
         @Html.LabelFor(m => m.PageSize, T("Page size"))
         @Html.TextBoxFor(m => m.PageSize, new { @class = "text text-small" })
     </span>
-    <span class="checkbox-and-label">
+    <span class="checkbox-and-label or-checkbox">
         @Html.CheckBoxFor(m => m.Paginated)
         <label for="@Html.FieldIdFor(m => m.Paginated)" class="forcheckbox">@T("Show paging controls")</label>
     </span>
 </fieldset>
 <fieldset>
-    @Html.EditorFor(m => m.ShowOnAdminMenu)
-    @Html.LabelFor(m => m.ShowOnAdminMenu, T("Show on admin menu").ToString(), new { @class = "forcheckbox" })
+    <div class="or-checkbox">
+        @Html.EditorFor(m => m.ShowOnAdminMenu)
+        @Html.LabelFor(m => m.ShowOnAdminMenu, T("Show on admin menu").ToString(), new { @class = "forcheckbox" })
+    </div>
     <div data-controllerid="@Html.FieldIdFor(m => m.ShowOnAdminMenu)">
         @Html.LabelFor(m => m.AdminMenuText, T("Menu text"))
         @Html.TextBoxFor(m => m.AdminMenuText, new { @class = "text-box single-line" })

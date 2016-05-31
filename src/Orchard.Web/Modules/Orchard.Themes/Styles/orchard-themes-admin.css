@@ -51,5 +51,5 @@
 #main .themeInfo {margin:12px 0 0 0;}
 /***Recently installed**/
 .recentlyInstalledTheme { }
-.recentlyInstalledTheme {background:#fff url(images/new.gif) no-repeat 0px 5px;}
+.recentlyInstalledTheme {background: url(images/new.gif) no-repeat 0px 5px;}
 h3.recentlyInstalledTheme {padding:0 0 0 40px;}

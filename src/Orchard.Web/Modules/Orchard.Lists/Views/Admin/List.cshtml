@@ -18,25 +18,36 @@
 
     Layout.Title = T("Manage {0}", Model.ContainerDisplayName);
 }
-<div id="listManagement" @if (container.EnablePositioning) { <text>class="sortable"</text> }
-     data-baseurl="@WorkContext.CurrentSite.BaseUrl"
-     data-itemtypes="@String.Join(",", itemContentTypes.Select(x => x.Name))"
-     data-update-url="@Url.Action("UpdatePositions", "Admin", new { containerId = Model.ContainerId, page = Model.Pager.Page, pageSize = Model.Pager.PageSize })"
-     data-insert-url="@Url.Action("Insert", "Admin", new { containerId = Model.ContainerId, page = Model.Pager.Page, pageSize = Model.Pager.PageSize })"
-     data-refresh-url="@Url.Action("List", "Admin", new { containerId = Model.ContainerId, page = Model.Pager.Page, pageSize = Model.Pager.PageSize })"
-     data-dragdrop="@container.EnablePositioning.ToString().ToLower()">
-    @Display.Breadcrumbs_ContentItem(ContentItem: Model.Container, ContainerAccessor: Model.ContainerAccessor)
-    @Display.Parts_Container_Manage(
-        ContainerDisplayName: Model.ContainerDisplayName, 
-        ContainerContentType: Model.ContainerContentType, 
-        ContainerId: containerId,
-        ItemContentTypes: itemContentTypes)
-    @using (Html.BeginFormAntiForgeryPost()) {
-        @Display.Parts_Container_BulkActions(Options: Model.Options, Container: container)
-        @Display.ListViewButtons(Providers: Model.ListViewProviders, ActiveProvider: Model.ListViewProvider)
-        @Display(Model.ListView)
-    }
+<div class="panel panel-default">
+    <div id="listManagement" @if (container.EnablePositioning) { <text> class="sortable" </text>      }
+         data-baseurl="@WorkContext.CurrentSite.BaseUrl"
+         data-itemtypes="@String.Join(",", itemContentTypes.Select(x => x.Name))"
+         data-update-url="@Url.Action("UpdatePositions", "Admin", new { containerId = Model.ContainerId, page = Model.Pager.Page, pageSize = Model.Pager.PageSize })"
+         data-insert-url="@Url.Action("Insert", "Admin", new { containerId = Model.ContainerId, page = Model.Pager.Page, pageSize = Model.Pager.PageSize })"
+         data-refresh-url="@Url.Action("List", "Admin", new { containerId = Model.ContainerId, page = Model.Pager.Page, pageSize = Model.Pager.PageSize })"
+         data-dragdrop="@container.EnablePositioning.ToString().ToLower()">
+
+        @using (Html.BeginFormAntiForgeryPost()) {
+            <div class="panel-heading">
+                @*@Display.Breadcrumbs_ContentItem(ContentItem: Model.Container, ContainerAccessor: Model.ContainerAccessor)*@
+
+                @Display.Parts_Container_BulkActions(Options: Model.Options, Container: container)
+                
+                @Display.Parts_Container_Manage(
+                ContainerDisplayName: Model.ContainerDisplayName,
+                ContainerContentType: Model.ContainerContentType,
+                ContainerId: containerId,
+                ItemContentTypes: itemContentTypes)
+            </div>
+
+            @Display.ListViewButtons(Providers: Model.ListViewProviders, ActiveProvider: Model.ListViewProvider)
+            @Display(Model.ListView)
+
+            if (Model.ListNavigation != null) {
+                @Display(Model.ListNavigation)
+            }
+
+        }
+    </div>
 </div>
-@if (Model.ListNavigation != null) {
-    @Display(Model.ListNavigation)
-}
+@Display.Modal()

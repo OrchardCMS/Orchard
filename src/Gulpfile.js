@@ -10,6 +10,7 @@ var fs = require("fs"),
     plumber = require("gulp-plumber"),
     sourcemaps = require("gulp-sourcemaps"),
     less = require("gulp-less"),
+    sass = require("gulp-sass"),
     cssnano = require("gulp-cssnano"),
     sass = require("gulp-sass"),
     typescript = require("gulp-typescript"),
@@ -178,7 +179,7 @@ function buildCssPipeline(assetGroup, doConcat, doRebuild) {
         .pipe(gulpif(generateSourceMaps, sourcemaps.init()))
         .pipe(gulpif("*.less", less()))
         .pipe(gulpif("*.scss", sass({
-        	precision: 10
+            precision: 10
         })))
         .pipe(gulpif(doConcat, concat(assetGroup.outputFileName)))
         .pipe(header(

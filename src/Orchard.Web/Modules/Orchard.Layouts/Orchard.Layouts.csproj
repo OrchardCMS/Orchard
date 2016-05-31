@@ -573,6 +573,7 @@
     <Content Include="Views\Elements\Heading.Design.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Views\LayoutEditor.HelpDialog.cshtml" />
     <Content Include="Views\Elements\PlaceableContentItem.cshtml" />
   </ItemGroup>
   <ItemGroup>

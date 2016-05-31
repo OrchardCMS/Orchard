@@ -3,36 +3,46 @@
     Script.Require("ShapesBase");
 }
 <fieldset>
-    @Html.CheckBoxFor(m => m.DisplayContainerEditor)
-    @Html.LabelFor(m => m.DisplayContainerEditor, @T("Display settings editor").ToString(), new { @class = "forcheckbox" })
-    <span class="hint">@T("When checked, users can change the settings for each content item.")</span>
+    <div class="or-checkbox">
+        @Html.CheckBoxFor(m => m.DisplayContainerEditor)
+        @Html.LabelFor(m => m.DisplayContainerEditor, @T("Display settings editor").ToString(), new { @class = "forcheckbox" })
+        <span class="help-block">@T("When checked, users can change the settings for each content item.")</span>
+    </div>
 </fieldset>
 <fieldset>
-    <label for="@Html.FieldIdFor(m => m.ItemsShownDefault)">@T("Default Items Shown")</label>
-    @Html.EditorFor(m => m.ItemsShownDefault)
+    <div class="or-checkbox">
+        <label for="@Html.FieldIdFor(m => m.ItemsShownDefault)">@T("Default Items Shown")</label>
+        @Html.EditorFor(m => m.ItemsShownDefault)
+    </div>
 </fieldset>
 <fieldset>
-    <label for="@Html.FieldIdFor(m => m.PageSizeDefault)">@T("Default Page Size")</label>
-    @Html.EditorFor(m => m.PageSizeDefault)
+        <label for="@Html.FieldIdFor(m => m.PageSizeDefault)">@T("Default Page Size")</label>
+        @Html.EditorFor(m => m.PageSizeDefault)
 </fieldset>
 <fieldset>
-    <label for="@Html.FieldIdFor(m => m.PaginatedDefault)">@T("Show paging controls")</label>
-    @Html.EditorFor(m => m.PaginatedDefault)
+    <div class="or-checkbox">
+        <label for="@Html.FieldIdFor(m => m.PaginatedDefault)">@T("Show paging controls")</label>
+        @Html.EditorFor(m => m.PaginatedDefault)
+    </div>
 </fieldset>
 <fieldset>
-    @Html.LabelFor(m => m.EnablePositioning, @T("Enable drag and drop"))
-    @Html.EditorFor(m => m.EnablePositioning)
-    <span class="hint">@T("Check this option to enable manual repositioning of items using. If not set, this option will be configurable on the list content item itself.")</span>
+    <div class="or-checkbox">
+        @Html.LabelFor(m => m.EnablePositioning, @T("Enable drag and drop"))
+        @Html.EditorFor(m => m.EnablePositioning)
+        <span class="help-block">@T("Check this option to enable manual repositioning of items using. If not set, this option will be configurable on the list content item itself.")</span>
+    </div>
 </fieldset>
 <fieldset>
     @Html.LabelFor(m => m.AdminListViewName, @T("List View"))
     @Html.EditorFor(m => m.AdminListViewName, new { Providers = Model.ListViewProviders })
-    <span class="hint">@T("The default list view to use when rendering this list in the admin. This is configurable per individual list.")</span>
+    <span class="help-block">@T("The default list view to use when rendering this list in the admin. This is configurable per individual list.")</span>
 </fieldset>
 @if (Model.AvailableItemContentTypes.Any()) {
     <fieldset>
-        @Html.CheckBoxFor(m => m.RestrictItemContentTypes)
-        @Html.LabelFor(m => m.RestrictItemContentTypes, @T("Restrict the item content types this type supports.").ToString(), new { @class = "forcheckbox" })
+        <div class="or-checkbox">
+            @Html.CheckBoxFor(m => m.RestrictItemContentTypes)
+            @Html.LabelFor(m => m.RestrictItemContentTypes, @T("Restrict the item content types this type supports.").ToString(), new { @class = "forcheckbox" })
+        </div>
 
         <div data-controllerid="@Html.FieldIdFor(m => m.RestrictItemContentTypes)">
             @Html.LabelFor(m => m.RestrictedItemContentTypes, T("Supported Types"))
@@ -42,7 +52,7 @@
                     @Html.SelectOption(contentType.Name, Model.RestrictedItemContentTypes.Contains(contentType.Name), contentType.DisplayName)
                 }
             </select>
-            <span class="hint">@T("Select zero or more content types that this content type supports. Selecting zero content types means the list can contain any content type. Only types with the Containable part can be contained in a list.")</span>
+            <span class="help-block">@T("Select zero or more content types that this content type supports. Selecting zero content types means the list can contain any content type. Only types with the Containable part can be contained in a list.")</span>
         </div>
     </fieldset>
 }

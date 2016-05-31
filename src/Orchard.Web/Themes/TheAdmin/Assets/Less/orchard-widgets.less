@@ -1,0 +1,119 @@
+﻿.orchard-widgets {
+
+    #widgets-assistance{
+        padding:10px;
+        width:100%;
+        border:1px solid #ccc;
+    }
+
+    #widgets-placement .switch-for-switchable{
+        margin:0;
+    }
+
+    .widgets-listed, #widgets-available {
+        ol {
+            padding: 0;
+            &:last-child{
+                margin-bottom:0;
+            }
+        }
+
+        li {
+            background: #FFF;
+            color: #AEC3CE;
+            border: 1px solid #EAEAEA;
+            padding: 5px 5px 0px 10px;
+            position: relative;
+            list-style: none;
+            clear:both;
+            .clearfix();
+
+            .widgets-actions {
+                position: relative;
+                top: auto;
+                right: auto;
+                .pull-right();
+                .clearfix();
+            }
+
+            h2 {
+                display: inline-block;
+                margin: 8px 0;
+                font-size: 1.077em;
+                padding:2px;
+            }
+            
+            &.widgets-none{
+                padding-bottom:5px;
+                h2{
+                    margin:4px 0;
+                }
+                .widgets-zone-widgets{
+                    display:none;
+                    margin:0;
+                }
+            }
+
+            &:after {
+                clear: both;
+            }
+
+            &:last-child{
+                margin-bottom:0;
+            }
+        }
+
+        ul.widgets-zone-widgets {
+            margin-top: 5px;
+            padding: 0;
+            line-height: 36px;
+
+            li {
+                padding: 5px 5px 5px 30px;
+                .clearfix();
+                margin-bottom:5px;
+            }
+
+            h3 {
+                font-size: 16px;
+                margin: 10px 5px 10px 0;
+                .pull-left();
+                .clearfix();
+            }
+
+            .contentType {
+                display:inline-block;
+            }
+
+            .widgets-move-somewhere {
+                top: 5px;
+                width: 24px;
+            }
+
+            button {
+                vertical-align: top;
+
+                &.widgets-move {
+                    height: 18px;
+                    width: 24px;
+
+                    &.widgets-move-up {
+                        background-position: 8px 10px;
+                    }
+
+                    &.widgets-move-down {
+                        background-position: 8px -13px;
+                    }
+
+                    &:hover {
+                        background-color: transparent;
+                        color: @primary-color;
+                        text-shadow: 0px 1px 3px rgba(0,0,0,.4);
+                        opacity: 1;
+                        cursor: pointer;
+                    }
+                }
+            }
+        }
+    }
+}

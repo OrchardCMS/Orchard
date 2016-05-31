@@ -2,54 +2,64 @@
 @{
     Style.Require("ContentTypesAdmin");
     Script.Require("jQuery");
-    Layout.Title = T("Edit Content Type - {0}", Html.Raw(Model.DisplayName)).Text;
+    Layout.Title = T("Edit {0} Definition", Html.Raw(Model.DisplayName)).Text;
 }
-
-<div class="manage">
-    @Html.ActionLink(T("Edit Placement").Text, "EditPlacement", new { area = "Orchard.ContentTypes", id = Model.Name }, new { @class = "button" })
-</div>
 
 @using (Html.BeginFormAntiForgeryPost()) {
-    // todo: come up with real itemtype definitions and locations for said definitions
-    <div itemscope="itemscope" itemid="@Model.Name" itemtype="http://orchardproject.net/data/ContentType">
-        @Html.ValidationSummary()
-        <fieldset>
-            <label for="DisplayName">@T("Display Name")</label>
-            @Html.TextBoxFor(m => m.DisplayName, new { @class = "text medium" })
-            <span class="hint">@T("Content Type Id: {0}", Model.Name)</span>
-            @* todo: if we continue to go down the midrodata route, some helpers would be nice *@
-            <meta itemprop="DisplayName" content="@Model.DisplayName" />
-            @* has unintended consequences (renamging the type) - changing the name creates a new type of that name *@
-            <meta itemprop="Id" content="@Model.Name" />
-            @Html.HiddenFor(m => m.Name)
-        </fieldset>
-        @{ Html.RenderTemplates(Model.Templates); }    
-        <div class="manage-type">
-            <h2>@T("Fields")</h2>
-            <div class="manage add-to-type">
-                @Html.ActionLink(T("Add Field").Text, "AddFieldTo", new { area = "Orchard.ContentTypes", id = Model.Name }, new { @class = "button" })
+    <div class="panel panel-default panel-heading-fullwidth panel-borders">
+        <div class="panel-heading">
+            <div class="panel-heading-primary-group">
+                <span class="title">@T("Settings")</span>
             </div>
-                @Html.EditorFor(m => m.Fields, "Fields", "")
-            <h2>@T("Parts")</h2>
-            <div class="manage add-to-type">
-                @Html.ActionLink(T("Add Parts").Text, "AddPartsTo", new { area = "Orchard.ContentTypes", id = Model.Name }, new { @class = "button" })
+            <div class="panel-heading-actions">
+                <a class="icon s7-display2" href="@Url.Action("EditPlacement", new {area = "Orchard.ContentTypes", id = Model.Name})" title="@T("Edit Placement")"></a>
             </div>
+        </div>
+        <div class="panel-body">
+            <div itemscope="itemscope" itemid="@Model.Name" itemtype="http://orchardproject.net/data/ContentType">
+                @Html.ValidationSummary()
+                <div class="form-group">
+                    <label class="control-label" for="DisplayName">@T("Display Name")</label>
+                    @Html.TextBoxFor(m => m.DisplayName, new { @class = "text large", placeholder = T("Content Type Id: {0}", Model.Name) })
+                    @Html.HiddenFor(m => m.Name)
+                </div>
+                @{ Html.RenderTemplates(Model.Templates); }
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default panel-heading-fullwidth panel-borders">
+        <div class="panel-heading">
+            <div class="panel-heading-primary-group">
+                <span class="title">@T("Fields")</span>
+            </div>
+            <div class="panel-heading-actions">
+                <a class="icon s7-plus" href="@Url.Action("AddFieldTo", new {area = "Orchard.ContentTypes", id = Model.Name})" title="@T("Add Field")"></a>
+            </div>
+        </div>
+        <div class="panel-body manage-type">
+            @Html.EditorFor(m => m.Fields, "Fields", "")
+        </div>
+    </div>
+
+    <div class="panel panel-default panel-heading-fullwidth panel-borders">
+        <div class="panel-heading">
+            <div class="panel-heading-primary-group">
+                <span class="title">@T("Parts")</span>
+            </div>
+            <div class="panel-heading-actions">
+                <a class="icon s7-plus" href="@Url.Action("AddPartsTo", new {area = "Orchard.ContentTypes", id = Model.Name})" title="@T("Add Field")"></a>
+            </div>
+        </div>
+        <div class="panel-body manage-type">
             @Html.EditorFor(m => m.Parts, "TypeParts", "")
         </div>
-        <fieldset class="action">
-            <button class="primaryAction" type="submit" name="submit.Save" value="Save">@T("Save")</button>
-            <button class="primaryAction" type="submit" name="submit.Delete" value="Delete" itemprop="RemoveUrl">@T("Delete")</button>
-        </fieldset>
-    </div> 
-}
+    </div>
 
-@using(Script.Foot()){
-<script type="text/javascript">
-//<![CDATA[
-    (function ($) {
-        $(".manage-field h3,.manage-part h3").expandoControl(function (controller) { return controller.nextAll(".details"); }, { collapse: true, remember: false });
-        $(".manage-field h4").expandoControl(function (controller) { return controller.nextAll(".settings"); }, { collapse: true, remember: false });
-    })(jQuery);
-//]]>
-</script>
-}
+    <div class="panel panel-default panel-borders">
+        <div class="panel-body form-horizontal">
+            <button class="btn btn-primary" type="submit" name="submit.Save" value="Save">@T("Save")</button>
+            <button class="btn btn-danger" type="submit" name="submit.Delete" value="Delete" itemprop="RemoveUrl">@T("Delete")</button>
+        </div>
+    </div>
+                    }

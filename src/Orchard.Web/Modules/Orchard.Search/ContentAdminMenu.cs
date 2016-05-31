@@ -11,16 +11,14 @@ namespace Orchard.Search {
 
         public Localizer T { get; set; }
 
-        public string MenuName {
-            get { return "admin"; }
-        }
+        public string MenuName { get { return "admin"; } }
 
         public void GetNavigation(NavigationBuilder builder) {
             builder.Add(T("Content"),
                 menu => menu
-                    .Add(T("Search"), "1.5", item => item.Action("Index", "Admin", new {area = "Orchard.Search"}).LocalNav())
+                    .Add(T("Search"), "1.5", item => item.Action("Index", "Admin", new {area = "Orchard.Search"}).LocalNav()),
+                new[] {"file"}
                 );
-
         }
     }
 }

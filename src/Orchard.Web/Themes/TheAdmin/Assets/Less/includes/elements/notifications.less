@@ -1,0 +1,175 @@
+/*------------------------------------------------------------------
+  [Notifications]
+*/
+#gritter-notice-wrapper{
+	width: @notification-width;
+	top: @notification-top-position;
+}
+
+//Social Color Mixin
+.social-gritter(@background){
+	background: @background;
+
+	.gritter-item{
+
+		.gritter-img-container{
+			background-color: darken(@background, 3%);
+		}
+	}
+}
+
+.gritter-item-wrapper{
+	background: url("@{lib-path}/jquery.gritter/images/gritter-bg.png");
+	box-shadow: 0 0px 4px rgba(0, 0, 0, 0.2);
+
+	.gritter-item{
+		font-family:'Open Sans',sans-serif;
+		background: transparent;
+		color: @light-color;
+		padding: 0;
+		display: table;
+		table-layout: fixed;
+		width: 100%;
+
+		.gritter-img-container{
+			display: table-cell;
+			width: 26%;
+			vertical-align: middle;
+			text-align: center;
+			background-color: darken(@dark-color, 5%);
+
+			.gritter-image{
+				float: none;
+			}
+		}
+
+		.gritter-content{
+			width: auto;
+
+			&.gritter-with-image, &.gritter-without-image{
+				padding: 15px 35px 17px 15px;
+				color: darken(@light-color, 15%);
+				width: 267px;
+				display: table-cell;
+
+				.gritter-close{
+					display: block !important;
+					top: 0;
+					right: 0;
+					left: auto;
+					height: 30px;
+					width: 35px;
+					font-size: 0;
+					background: transparent;
+					text-indent: inherit;
+					opacity: 0.4;
+
+					&:hover{
+						opacity: 0.8;
+					}
+
+					&:after{
+						content: '\e680';
+						font-family: @icons-font;
+						position: absolute;
+						color: @light-color;
+						font-size: 24px;
+						left: 5px;
+						text-shadow: none;
+					}
+				}
+
+				.gritter-title{
+					text-shadow: none;
+					font-weight:300;
+					font-size:17px;
+				}
+
+				p{
+					font-size:12px;
+					line-height:19px;
+				}
+			}
+
+			.gritter-without-image{
+				border-left: 0;
+			}
+		}	
+	}
+
+	&.img-rounded{
+		border-radius: 0;
+
+		.gritter-img-container{
+			
+			.gritter-image{
+				border-radius: 50%;
+			}
+		}
+	}
+
+	&.clean{
+		background: @light-color;
+
+		.gritter-item{
+			color: @text-color;
+
+			.gritter-img-container{
+				background-color: darken(@light-color, 2%);
+			}
+
+			.gritter-content{
+				color: @text-color;
+
+				.gritter-close{
+					opacity: 0.5;
+					
+					&:after{
+						color: @text-color;
+					}
+				}
+			}
+		}
+	}
+
+	&.color{
+
+		.gritter-item{
+			.gritter-content{
+				color: @light-color;
+
+				.gritter-close{
+					opacity: 0.7;
+					
+					&:hover{
+						opacity: 1;
+					}
+				}
+			}
+		}
+	}
+
+	&.primary	{ background: @primary-color; }
+	&.success	{ background: @success-color; }
+	&.info		{ background: @info-color; 		}
+	&.warning { background: @warning-color; }
+	&.danger	{ background: @danger-color; 	}
+
+	&.alt1 { background: @alt-color1; }
+	&.alt2 { background: @alt-color2; }
+	&.alt3 { background: @alt-color3; }
+	&.alt4 { background: @alt-color4; }
+	&.dark { background: @dark-color; }
+
+
+	&.facebook 		{ .social-gritter(@facebook); 		}
+	&.twitter			{ .social-gritter(@twitter);  		}
+	&.google-plus	{ .social-gritter(@google-plus);  }
+	&.dribbble		{ .social-gritter(@dribbble);			}
+	&.flickr			{ .social-gritter(@flickr);				}
+	&.linkedin		{ .social-gritter(@linkedin);			}
+	&.youtube			{ .social-gritter(@youtube);			}
+	&.pinterest		{ .social-gritter(@pinterest);		}
+	&.github			{ .social-gritter(@github);				}
+	&.tumblr			{ .social-gritter(@tumblr);				}
+}

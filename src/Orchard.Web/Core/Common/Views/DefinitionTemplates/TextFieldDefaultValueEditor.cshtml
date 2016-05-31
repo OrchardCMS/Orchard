@@ -2,5 +2,5 @@
 
 <label for="@Html.FieldIdFor(m => m.Settings.DefaultValue)">@T("Default value")</label>
 @Html.TextBoxFor(m => m.Settings.DefaultValue, new { @class = "text large" })
-<span class="hint">@T("The default value proposed when creating a content item. (optional)")</span>
+<span class="help-block">@T("The default value proposed when creating a content item. (optional)")</span>
 @Html.ValidationMessageFor(m => m.Settings.DefaultValue)

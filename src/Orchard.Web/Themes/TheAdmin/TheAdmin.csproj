@@ -1,0 +1,656 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{84D93BB0-1B18-43C6-A601-B4A6119AFDB8}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>TheAdmin</RootNamespace>
+    <AssemblyName>TheAdmin</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <TargetFrameworkProfile />
+    <UseIISExpress>false</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Mvc, Version=4.0.0.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.XML" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Js\app-charts-morris.js" />
+    <Content Include="Assets\Js\app-charts-sparkline.js" />
+    <Content Include="Assets\Js\app-charts.js" />
+    <Content Include="Assets\Js\app-dashboard.js" />
+    <Content Include="Assets\Js\app-dashboard2.js" />
+    <Content Include="Assets\Js\app-email-compose.js" />
+    <Content Include="Assets\Js\app-form-elements.js" />
+    <Content Include="Assets\Js\app-form-masks.js" />
+    <Content Include="Assets\Js\app-form-wizard.js" />
+    <Content Include="Assets\Js\app-form-wysiwyg.js" />
+    <Content Include="Assets\Js\app-mail-inbox.js" />
+    <Content Include="Assets\Js\app-maps-google.js" />
+    <Content Include="Assets\Js\app-maps-vector.js" />
+    <Content Include="Assets\Js\app-page-calendar.js" />
+    <Content Include="Assets\Js\app-page-gallery.js" />
+    <Content Include="Assets\Js\app-page-profile.js" />
+    <Content Include="Assets\Js\app-tables-datatables.js" />
+    <Content Include="Assets\Js\app-ui-nestable-lists.js" />
+    <Content Include="Assets\Js\app-ui-notifications.js" />
+    <Content Include="Assets\Js\main.js" />
+    <Content Include="Assets\Js\orchard-admin.js" />
+    <Content Include="Images\140x140.png" />
+    <Content Include="Images\404-img-2x.png" />
+    <Content Include="Images\404-img.png" />
+    <Content Include="Images\avatar.jpg" />
+    <Content Include="Images\avatar2.jpg" />
+    <Content Include="Images\avatar3.jpg" />
+    <Content Include="Images\avatar4.jpg" />
+    <Content Include="Images\avatar5.jpg" />
+    <Content Include="Images\avatar6.jpg" />
+    <Content Include="Images\avatar7.jpg" />
+    <Content Include="Images\avatar8.jpg" />
+    <Content Include="Images\background-logo.png" />
+    <Content Include="Images\bitbucket.png" />
+    <Content Include="Images\db-icon.png" />
+    <Content Include="Images\dribbble.png" />
+    <Content Include="Images\fb-icon.png" />
+    <Content Include="Images\fl-icon.png" />
+    <Content Include="Images\gallery1.jpg" />
+    <Content Include="Images\gallery2.jpg" />
+    <Content Include="Images\gallery3.jpg" />
+    <Content Include="Images\gallery4.jpg" />
+    <Content Include="Images\gallery5.jpg" />
+    <Content Include="Images\gallery6.jpg" />
+    <Content Include="Images\gallery7.jpg" />
+    <Content Include="Images\gallery8.jpg" />
+    <Content Include="Images\gh-icon.png" />
+    <Content Include="Images\github.png" />
+    <Content Include="Images\gp-icon.png" />
+    <Content Include="Images\in-icon.png" />
+    <Content Include="Images\logo-full-retina.png" />
+    <Content Include="Images\logo-full.png" />
+    <Content Include="Images\logo.png" />
+    <Content Include="Images\mail-open-file.svg" />
+    <Content Include="Images\note2.svg" />
+    <Content Include="Images\pi-icon.png" />
+    <Content Include="Images\profile.jpg" />
+    <Content Include="Images\slack.png" />
+    <Content Include="Images\slack_logo.png" />
+    <Content Include="Images\tu-icon.png" />
+    <Content Include="Images\tw-icon.png" />
+    <Content Include="Images\yt-icon.png" />
+    <Content Include="Scripts\TheAdmin.js" />
+    <Content Include="Scripts\TheAdmin.min.js" />
+    <Content Include="Fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Fonts\open-sans\bold-italic\opensans-bold-italic-webfont.svg" />
+    <Content Include="Fonts\open-sans\bold\opensans-bold-webfont.svg" />
+    <Content Include="Fonts\open-sans\extrabold-italic\opensans-extrabold-italic-webfont.svg" />
+    <Content Include="Fonts\open-sans\extrabold\opensans-extrabold-webfont.svg" />
+    <Content Include="Fonts\open-sans\italic\opensans-italic-webfont.svg" />
+    <Content Include="Fonts\open-sans\light-italic\opensans-light-italic-webfont.svg" />
+    <Content Include="Fonts\open-sans\light\opensans-light-webfont.svg" />
+    <Content Include="Fonts\open-sans\regular\opensans-regular-webfont.svg" />
+    <Content Include="Fonts\open-sans\semibold-italic\opensans-semibold-italic-webfont.svg" />
+    <Content Include="Fonts\open-sans\semibold\opensans-semibold-webfont.svg" />
+    <Content Include="Fonts\raleway\bold\raleway-bold.svg" />
+    <Content Include="Fonts\raleway\extrabold\raleway-extrabold.svg" />
+    <Content Include="Fonts\raleway\extralight\raleway-extralight.svg" />
+    <Content Include="Fonts\raleway\heavy\raleway-heavy.svg" />
+    <Content Include="Fonts\raleway\light\raleway-light.svg" />
+    <Content Include="Fonts\raleway\medium\raleway-medium.svg" />
+    <Content Include="Fonts\raleway\regular\raleway-regular.svg" />
+    <Content Include="Fonts\raleway\semibold\raleway-semibold.svg" />
+    <Content Include="Fonts\raleway\thin\raleway-thin.svg" />
+    <Content Include="Fonts\Stroke-7.svg" />
+    <Content Include="Styles\images\menu-closed.png" />
+    <Content Include="Styles\images\menu-open.png" />
+    <Content Include="Styles\Lib.css" />
+    <Content Include="Styles\Lib.min.css" />
+    <Content Include="Styles\TheAdmin.css" />
+    <Content Include="Styles\TheAdmin.min.css" />
+    <Content Include="Web.config" />
+    <Content Include="Scripts\Web.config" />
+    <Content Include="Styles\Web.config" />
+    <Content Include="Theme.txt" />
+    <Content Include="Theme.png" />
+    <Content Include="Placement.info" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
+      <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
+      <Name>Orchard.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\Orchard.Core.csproj">
+      <Project>{9916839c-39fc-4ceb-a5af-89ca7e87119f}</Project>
+      <Name>Orchard.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Modules\Orchard.Blogs\Orchard.Blogs.csproj">
+      <Project>{63fbd4d9-e1da-4a7b-aa6a-d6074fe50867}</Project>
+      <Name>Orchard.Blogs</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Modules\Orchard.Comments\Orchard.Comments.csproj">
+      <Project>{14c049fd-b35b-415a-a824-87f26b26e7fd}</Project>
+      <Name>Orchard.Comments</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Modules\Orchard.MediaLibrary\Orchard.MediaLibrary.csproj">
+      <Project>{73a7688a-5bd3-4f7e-adfa-ce36c5a10e3b}</Project>
+      <Name>Orchard.MediaLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Modules\Orchard.Roles\Orchard.Roles.csproj">
+      <Project>{d10ad48f-407d-4db5-a328-173ec7cb010f}</Project>
+      <Name>Orchard.Roles</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Modules\Orchard.Search\Orchard.Search.csproj">
+      <Project>{4be4eb01-ac56-4048-924e-2ca77f509aba}</Project>
+      <Name>Orchard.Search</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Modules\Orchard.Users\Orchard.Users.csproj">
+      <Project>{79aed36e-abd0-4747-93d3-8722b042454b}</Project>
+      <Name>Orchard.Users</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Models\AdminThemeSettingsPart.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Layout.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Document.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\style.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Fonts\glyphicons-halflings-regular.woff2" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\Stroke-7.eot" />
+    <Content Include="Fonts\Stroke-7.ttf" />
+    <Content Include="Fonts\Stroke-7.woff" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\raleway\bold\raleway-bold.eot" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\raleway\bold\raleway-bold.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\raleway\bold\raleway-bold.woff" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\raleway\extrabold\raleway-extrabold.eot" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\raleway\extrabold\raleway-extrabold.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\raleway\extrabold\raleway-extrabold.woff" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\raleway\extralight\raleway-extralight.eot" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\raleway\extralight\raleway-extralight.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\raleway\extralight\raleway-extralight.woff" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\raleway\heavy\raleway-heavy.eot" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\raleway\heavy\raleway-heavy.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\raleway\heavy\raleway-heavy.woff" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\raleway\light\raleway-light.eot" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\raleway\light\raleway-light.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\raleway\light\raleway-light.woff" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\raleway\medium\raleway-medium.eot" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\raleway\medium\raleway-medium.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\raleway\medium\raleway-medium.woff" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\raleway\regular\raleway-regular.eot" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\raleway\regular\raleway-regular.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\raleway\regular\raleway-regular.woff" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\raleway\semibold\raleway-semibold.eot" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\raleway\semibold\raleway-semibold.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\raleway\semibold\raleway-semibold.woff" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\raleway\thin\raleway-thin.eot" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\raleway\thin\raleway-thin.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\raleway\thin\raleway-thin.woff" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\open-sans\bold\opensans-bold-webfont.eot" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\open-sans\bold\opensans-bold-webfont.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\open-sans\bold\opensans-bold-webfont.woff" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\open-sans\bold-italic\opensans-bold-italic-webfont.eot" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\open-sans\bold-italic\opensans-bold-italic-webfont.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\open-sans\bold-italic\opensans-bold-italic-webfont.woff" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\open-sans\extrabold\opensans-extrabold-webfont.eot" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\open-sans\extrabold\opensans-extrabold-webfont.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\open-sans\extrabold\opensans-extrabold-webfont.woff" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\open-sans\extrabold-italic\opensans-extrabold-italic-webfont.eot" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\open-sans\extrabold-italic\opensans-extrabold-italic-webfont.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\open-sans\extrabold-italic\opensans-extrabold-italic-webfont.woff" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\open-sans\italic\opensans-italic-webfont.eot" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\open-sans\italic\opensans-italic-webfont.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\open-sans\italic\opensans-italic-webfont.woff" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\open-sans\light\opensans-light-webfont.eot" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\open-sans\light\opensans-light-webfont.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\open-sans\light\opensans-light-webfont.woff" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\open-sans\light-italic\opensans-light-italic-webfont.eot" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\open-sans\light-italic\opensans-light-italic-webfont.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\open-sans\light-italic\opensans-light-italic-webfont.woff" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\open-sans\regular\opensans-regular-webfont.eot" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\open-sans\regular\opensans-regular-webfont.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\open-sans\regular\opensans-regular-webfont.woff" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\open-sans\semibold\opensans-semibold-webfont.eot" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\open-sans\semibold\opensans-semibold-webfont.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\open-sans\semibold\opensans-semibold-webfont.woff" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\open-sans\semibold-italic\opensans-semibold-italic-webfont.eot" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\open-sans\semibold-italic\opensans-semibold-italic-webfont.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\open-sans\semibold-italic\opensans-semibold-italic-webfont.woff" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\SideMenu.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\TopMenu.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Sidebar.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Breadcrumb.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Title.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Pager.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\orchard.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\orchard-pager.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\orchard-admin-shim.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\orchard-content-items.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\orchard-structure.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\orchard-panels.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\orchard-tables.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\orchard-forms.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Message.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\orchard-tabs.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\orchard-alerts.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\orchard-navigation.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\orchard-widgets.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\orchard-modules.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\orchard-flexbox-common.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\orchard-media-library.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\orchard-modal.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Modal.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\User.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\OrchardVersion.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\orchard-voffset.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\orchard-overrides.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Assets\Lib\bootstrap-markdown\" />
+    <Folder Include="Assets\Lib\bootstrap-slider\" />
+    <Folder Include="Assets\Lib\bootstrap\" />
+    <Folder Include="Assets\Lib\chartjs\" />
+    <Folder Include="Assets\Lib\countup\" />
+    <Folder Include="Assets\Lib\datatables\" />
+    <Folder Include="Assets\Lib\datetimepicker\" />
+    <Folder Include="Assets\Lib\dropzone\" />
+    <Folder Include="Assets\Lib\fastclick\" />
+    <Folder Include="Assets\Lib\font-awesome\" />
+    <Folder Include="Assets\Lib\fuelux\" />
+    <Folder Include="Assets\Lib\jquery-breakpoint-check\" />
+    <Folder Include="Assets\Lib\jquery-flot\" />
+    <Folder Include="Assets\Lib\jquery-touchswipe\" />
+    <Folder Include="Assets\Lib\jquery-ui\" />
+    <Folder Include="Assets\Lib\jquery.fullcalendar\" />
+    <Folder Include="Assets\Lib\jquery.gritter\" />
+    <Folder Include="Assets\Lib\jquery.magnific-popup\" />
+    <Folder Include="Assets\Lib\jquery.maskedinput\" />
+    <Folder Include="Assets\Lib\jquery.nanoscroller\" />
+    <Folder Include="Assets\Lib\jquery.nestable\" />
+    <Folder Include="Assets\Lib\jquery.niftymodals\" />
+    <Folder Include="Assets\Lib\jquery.sparkline\" />
+    <Folder Include="Assets\Lib\jquery.vectormap\" />
+    <Folder Include="Assets\Lib\jquery\" />
+    <Folder Include="Assets\Lib\markdown-js\" />
+    <Folder Include="Assets\Lib\masonry\" />
+    <Folder Include="Assets\Lib\moment.js\" />
+    <Folder Include="Assets\Lib\morrisjs\" />
+    <Folder Include="Assets\Lib\open-sans\" />
+    <Folder Include="Assets\Lib\parsley\" />
+    <Folder Include="Assets\Lib\prettify\" />
+    <Folder Include="Assets\Lib\raleway\" />
+    <Folder Include="Assets\Lib\raphael\" />
+    <Folder Include="Assets\Lib\select2\" />
+    <Folder Include="Assets\Lib\skycons\" />
+    <Folder Include="Assets\Lib\stroke-7\" />
+    <Folder Include="Assets\Lib\summernote\" />
+    <Folder Include="Assets\Lib\tinycolor\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\includes\bootstrap-variables.less" />
+    <Content Include="Assets\Less\includes\bootstrap\accordions.less" />
+    <Content Include="Assets\Less\includes\bootstrap\alerts.less" />
+    <Content Include="Assets\Less\includes\bootstrap\badges.less" />
+    <Content Include="Assets\Less\includes\bootstrap\button-group.less" />
+    <Content Include="Assets\Less\includes\bootstrap\buttons.less" />
+    <Content Include="Assets\Less\includes\bootstrap\code.less" />
+    <Content Include="Assets\Less\includes\bootstrap\dropdowns.less" />
+    <Content Include="Assets\Less\includes\bootstrap\forms.less" />
+    <Content Include="Assets\Less\includes\bootstrap\images.less" />
+    <Content Include="Assets\Less\includes\bootstrap\labels.less" />
+    <Content Include="Assets\Less\includes\bootstrap\list-group.less" />
+    <Content Include="Assets\Less\includes\bootstrap\mixins\buttons.less" />
+    <Content Include="Assets\Less\includes\bootstrap\mixins\panels.less" />
+    <Content Include="Assets\Less\includes\bootstrap\mixins\table-row.less" />
+    <Content Include="Assets\Less\includes\bootstrap\modals.less" />
+    <Content Include="Assets\Less\includes\bootstrap\panels.less" />
+    <Content Include="Assets\Less\includes\bootstrap\progress-bars.less" />
+    <Content Include="Assets\Less\includes\bootstrap\tables.less" />
+    <Content Include="Assets\Less\includes\bootstrap\tabs.less" />
+    <Content Include="Assets\Less\includes\bootstrap\type.less" />
+    <Content Include="Assets\Less\includes\colors.less" />
+    <Content Include="Assets\Less\includes\config.less" />
+    <Content Include="Assets\Less\includes\elements\code.less" />
+    <Content Include="Assets\Less\includes\elements\color-swatch.less" />
+    <Content Include="Assets\Less\includes\elements\colors.less" />
+    <Content Include="Assets\Less\includes\elements\grid.less" />
+    <Content Include="Assets\Less\includes\elements\icons.less" />
+    <Content Include="Assets\Less\includes\elements\notifications.less" />
+    <Content Include="Assets\Less\includes\elements\widgets.less" />
+    <Content Include="Assets\Less\includes\elements\widgets\widget-bartchart.less" />
+    <Content Include="Assets\Less\includes\elements\widgets\widget-calendar.less" />
+    <Content Include="Assets\Less\includes\elements\widgets\widget-download-list.less" />
+    <Content Include="Assets\Less\includes\elements\widgets\widget-linechart.less" />
+    <Content Include="Assets\Less\includes\elements\widgets\widget-map.less" />
+    <Content Include="Assets\Less\includes\elements\widgets\widget-radarchart.less" />
+    <Content Include="Assets\Less\includes\elements\widgets\widget-tiles.less" />
+    <Content Include="Assets\Less\includes\elements\widgets\widget-top-pie.less" />
+    <Content Include="Assets\Less\includes\elements\widgets\widget-weather.less" />
+    <Content Include="Assets\Less\includes\fonts\open-sans.less" />
+    <Content Include="Assets\Less\includes\fonts\raleway.less" />
+    <Content Include="Assets\Less\includes\forms\switch-button.less" />
+    <Content Include="Assets\Less\includes\general.less" />
+    <Content Include="Assets\Less\includes\helpers.less" />
+    <Content Include="Assets\Less\includes\mixins\triangle.less" />
+    <Content Include="Assets\Less\includes\pages\404.less" />
+    <Content Include="Assets\Less\includes\pages\email.less" />
+    <Content Include="Assets\Less\includes\pages\forgot-password.less" />
+    <Content Include="Assets\Less\includes\pages\full-calendar.less" />
+    <Content Include="Assets\Less\includes\pages\gallery.less" />
+    <Content Include="Assets\Less\includes\pages\login.less" />
+    <Content Include="Assets\Less\includes\pages\profile.less" />
+    <Content Include="Assets\Less\includes\pages\sign-up.less" />
+    <Content Include="Assets\Less\includes\plugins\bootstrap-markdown.less" />
+    <Content Include="Assets\Less\includes\plugins\datatables.less" />
+    <Content Include="Assets\Less\includes\plugins\datetimepicker.less" />
+    <Content Include="Assets\Less\includes\plugins\dropzone.less" />
+    <Content Include="Assets\Less\includes\plugins\nanoscroller.less" />
+    <Content Include="Assets\Less\includes\plugins\nestable-lists.less" />
+    <Content Include="Assets\Less\includes\plugins\parsley.less" />
+    <Content Include="Assets\Less\includes\plugins\select2.less" />
+    <Content Include="Assets\Less\includes\plugins\slider.less" />
+    <Content Include="Assets\Less\includes\plugins\summernote.less" />
+    <Content Include="Assets\Less\includes\plugins\wizard.less" />
+    <Content Include="Assets\Less\includes\structure\left-sidebar.less" />
+    <Content Include="Assets\Less\includes\structure\main-content.less" />
+    <Content Include="Assets\Less\includes\structure\main-wrapper.less" />
+    <Content Include="Assets\Less\includes\structure\page-aside.less" />
+    <Content Include="Assets\Less\includes\structure\page-head.less" />
+    <Content Include="Assets\Less\includes\structure\right-sidebar.less" />
+    <Content Include="Assets\Less\includes\structure\scroll-top.less" />
+    <Content Include="Assets\Less\includes\structure\sidebars-push-effect.less" />
+    <Content Include="Assets\Less\includes\structure\splash-screen.less" />
+    <Content Include="Assets\Less\includes\structure\top-header.less" />
+    <Content Include="Assets\Less\includes\table-of-content.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Images\Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fonts\Web.config" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target> -->
+  <Target Name="AfterBuild" DependsOnTargets="AfterBuildCompiler">
+    <PropertyGroup>
+      <AreasManifestDir>$(ProjectDir)\..\Manifests</AreasManifestDir>
+    </PropertyGroup>
+    <!-- If this is an area child project, uncomment the following line:
+    <CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Child" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" />
+    -->
+    <!-- If this is an area parent project, uncomment the following lines:
+    <CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Parent" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" />
+    <CopyAreaManifests ManifestPath="$(AreasManifestDir)" CrossCopy="false" RenameViews="true" />
+    -->
+  </Target>
+  <Target Name="AfterBuildCompiler" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(ProjectDir)\..\$(ProjectName)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>45979</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>
+          </IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>True</UseCustomServer>
+          <CustomServerUrl>http://orchard.codeplex.com</CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

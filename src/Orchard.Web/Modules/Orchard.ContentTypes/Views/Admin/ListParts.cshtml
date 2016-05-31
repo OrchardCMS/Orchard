@@ -1,20 +1,41 @@
 @model Orchard.ContentTypes.ViewModels.ListContentPartsViewModel
 @{
-    Script.Require("jQuery");
-    Script.Include("admin-contenttypes.js");
-    Layout.Title = T("Content Parts").ToString();
+    Script.Require("ContentTypesAdmin");
+    Layout.Title = T("Manage Content Parts").ToString();
 }
-<div class="manage">
-    @Html.ActionLink(T("Create new part").ToString(), "CreatePart", new{Controller="Admin",Area="Orchard.ContentTypes"}, new { @class = "button primaryAction" })
+<div class="panel panel-default">
+
+    <div class="panel-heading no-border form-inline">
+        <div class="panel-heading-actions">
+            @Html.ActionLink(T("Create new part").ToString(), "CreatePart", new { Controller = "Admin", Area = "Orchard.ContentTypes" }, new { @class = "btn btn-primary" })
+        </div>
+        <div class="panel-heading-primary-group">
+            <fieldset class="bulk-actions">
+                <label>Filter: </label>
+                <input id="search-box" class="form-control" type="search" aria-controls="contenttypes" autofocus="autofocus" placeholder="@T("Display Name")">
+            </fieldset>
+        </div>
+    </div>
+    <table id="contenttypes" class="table table-fw-widget data-table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>@T("Display Name")</th>
+                <th>@T("Description")</th>
+                <th class="actions"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var type in Model.Parts) {
+                var displayName = type.DisplayName;
+                var description = type.Description;
+                <tr>
+                    <td>@displayName</td>
+                    <td>@description</td>
+                    <td class="actions">
+                        @Html.ActionLink(T("Edit").ToString(), "EditPart", new { area = "Orchard.ContentTypes", id = type.Name })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
-<fieldset class="bulk-actions">
-    <label for="search-box">@T("Filter:")</label>
-    <input id="search-box" class="text" type="text" autofocus="autofocus" />
-</fieldset>
-<ul class="contentItems">
-    @foreach (var type in Model.Parts) {
-    <li data-record-text="@type.DisplayName">
-        @Html.DisplayFor(m => type)
-    </li>
-    }
-</ul>

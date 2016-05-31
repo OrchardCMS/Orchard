@@ -99,6 +99,7 @@ namespace Orchard.Comments.Controllers {
                     foreach (CommentEntry entry in checkedEntries) {
                         _commentService.UnapproveComment(entry.Comment.Id);
                     }
+                    _orchardServices.Notifier.Information(T("Comment(s) unapproved"));
                     break;
                 case CommentIndexBulkAction.Approve:
                     if (!_orchardServices.Authorizer.Authorize(Permissions.ManageComments, T("Couldn't moderate comment")))
@@ -107,6 +108,7 @@ namespace Orchard.Comments.Controllers {
                     foreach (CommentEntry entry in checkedEntries) {
                         _commentService.ApproveComment(entry.Comment.Id);
                     }
+                    _orchardServices.Notifier.Information(T("Comment(s) approved"));
                     break;
                 case CommentIndexBulkAction.Delete:
                     if (!_orchardServices.Authorizer.Authorize(Permissions.ManageComments, T("Couldn't delete comment")))
@@ -115,6 +117,7 @@ namespace Orchard.Comments.Controllers {
                     foreach (CommentEntry entry in checkedEntries) {
                         _commentService.DeleteComment(entry.Comment.Id);
                     }
+                    _orchardServices.Notifier.Information(T("Comment(s) deleted"));
                     break;
 
                 default:
@@ -256,6 +259,7 @@ namespace Orchard.Comments.Controllers {
 
             int commentedOn = commentPart.Record.CommentedOn;
             _commentService.ApproveComment(id);
+            _orchardServices.Notifier.Information(T("Comment approved"));
 
             return this.RedirectLocal(returnUrl, () => RedirectToAction("Details", new { id = commentedOn }));
         }
@@ -271,6 +275,7 @@ namespace Orchard.Comments.Controllers {
 
             int commentedOn = commentPart.Record.CommentedOn;
             _commentService.UnapproveComment(id);
+            _orchardServices.Notifier.Information(T("Comment unaproved"));
 
             return this.RedirectLocal(returnUrl, () => RedirectToAction("Details", new { id = commentedOn }));
         }
@@ -286,6 +291,7 @@ namespace Orchard.Comments.Controllers {
 
             int commentedOn = commentPart.Record.CommentedOn;
             _commentService.DeleteComment(id);
+            _orchardServices.Notifier.Information(T("Comment deleted"));
 
             return this.RedirectLocal(returnUrl, () => RedirectToAction("Details", new { id = commentedOn }));
         }

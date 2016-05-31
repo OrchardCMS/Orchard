@@ -65,6 +65,9 @@ namespace Orchard.Tags.Controllers {
                     foreach (TagEntry entry in checkedEntries) {
                         _tagService.DeleteTag(entry.Tag.Id);
                     }
+                    if (checkedEntries.Any()) {
+                        Services.Notifier.Add(UI.Notify.NotifyType.Information, T("Tag(s) {0} deleted", string.Join(", ", checkedEntries.Select(e => e.Tag.TagName).ToList())));
+                    }
                     break;
 
                 default:
@@ -94,7 +97,8 @@ namespace Orchard.Tags.Controllers {
             }
 
             _tagService.CreateTag(viewModel.TagName);
-            
+            Services.Notifier.Add(UI.Notify.NotifyType.Information, (T("Tag {0} created", viewModel.TagName)));
+
             return RedirectToAction("Index");
         }
 
@@ -146,6 +150,7 @@ namespace Orchard.Tags.Controllers {
                 return new HttpNotFoundResult();
 
             _tagService.DeleteTag(id);
+            Services.Notifier.Add(UI.Notify.NotifyType.Information, (T("Tag {0} deleted", tagRecord.TagName)));
 
             return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
         }

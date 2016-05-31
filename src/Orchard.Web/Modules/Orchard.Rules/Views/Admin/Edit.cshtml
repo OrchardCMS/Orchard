@@ -12,7 +12,7 @@
     <fieldset>
         @Html.LabelFor(m => m.Name)
         @Html.TextBoxFor(m => m.Name, new { @class = "text medium" }) 
-        <span class="hint">@T("The name of the Rule")</span>
+        <span class="help-block">@T("The name of the Rule")</span>
     </fieldset>
 
     <fieldset class="bulk-actions">
@@ -20,7 +20,7 @@
     </fieldset>
 
     <div class="manage">
-    @Html.ActionLink(T("Add a new Event").Text, "Add", new { controller = "Event", id = Model.Id }, new { @class = "button primaryAction" })
+    @Html.ActionLink(T("Add a new Event").Text, "Add", new { controller = "Event", id = Model.Id }, new { @class = "btn btn-primary" })
     </div>
 
     <table class="items">
@@ -46,7 +46,7 @@
     if (Model.Events.Count() > 5)
     {
         <div class="manage">
-        @Html.ActionLink(T("Add a new Event").Text, "Add", new { controller = "Event", id = Model.Id }, new { @class = "button primaryAction" })
+        @Html.ActionLink(T("Add a new Event").Text, "Add", new { controller = "Event", id = Model.Id }, new { @class = "btn btn-primary" })
         </div>
     }
     
@@ -57,7 +57,7 @@
     </fieldset>
 
     <div class="manage">
-    @Html.ActionLink(T("Add a new Action").Text, "Add", new { controller = "Action", id = Model.Id }, new { @class = "button primaryAction" })
+    @Html.ActionLink(T("Add a new Action").Text, "Add", new { controller = "Action", id = Model.Id }, new { @class = "btn btn-primary" })
     </div>
 
     <table class="items">
@@ -89,16 +89,16 @@
     @if (Model.Actions.Count() > 5)
     {
         <div class="manage">
-        @Html.ActionLink(T("Add a new Action").Text, "Add", new { controller = "Action", id = Model.Id }, new { @class = "button primaryAction" })
+        @Html.ActionLink(T("Add a new Action").Text, "Add", new { controller = "Action", id = Model.Id }, new { @class = "btn btn-primary" })
         </div>
     }
 	    
     </fieldset>
 
     <fieldset>
-        <button class="primaryAction" type="submit" name="submit.Save" value="submit.Save" >@T("Save")</button>
+        <button class="btn btn-primary" type="submit" name="submit.Save" value="submit.Save" >@T("Save")</button>
         @if (!Model.Enabled) {
-            <button class="primaryAction" type="submit" name="submit.SaveAndEnable" value="submit.SaveAndEnable" >@T("Save and Enable")</button>
+            <button class="btn btn-primary" type="submit" name="submit.SaveAndEnable" value="submit.SaveAndEnable" >@T("Save and Enable")</button>
         }
         else {
             @Html.HiddenFor(m => m.Enabled)

@@ -1,12 +1,8 @@
 ﻿@using Orchard.Utility.Extensions
-<fieldset class="save-button">
-    <button class="primaryAction" type="submit" name="submit.Save" value="submit.Save">@T("Save")</button>
-    
-    @{
-        var returnUrl = Request.QueryString["returnUrl"];
-    }
-    
+<div class="content-action-group">
+    <button class="btn btn-primary" type="submit" name="submit.Save" value="submit.Save"><i class="fa fa-floppy-o" aria-hidden="true"></i> @T("Save")</button>
+    @{ var returnUrl = Request.QueryString["returnUrl"]; }
     @if (!String.IsNullOrWhiteSpace(returnUrl) && Request.IsLocalUrl(returnUrl)) {
-        <a id="button-cancel" href="@returnUrl" class="button">@T("Cancel")</a>
+        <a id="button-cancel" href="@returnUrl" class="btn btn-default"><i class="fa fa-ban" aria-hidden="true"></i> @T("Cancel")</a>
     }
-</fieldset>
+</div>

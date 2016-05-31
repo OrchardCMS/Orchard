@@ -1,0 +1,66 @@
+/*------------------------------------------------------------------
+  [Helper classes]
+*/
+//Space helpers
+// global
+.make-space(@prefix: xs; @value:50;   );
+.make-space(@prefix: xs; @value:40;   );
+.make-space(@prefix: xs; @value:30;   );
+.make-space(@prefix: xs; @value:20;   );
+.make-space(@prefix: xs; @value:15;   );
+.make-space(@prefix: xs; @value:10;   );
+.make-space(@prefix: xs; @value:5;    );
+.make-space(@prefix: xs; @value:0;    );
+
+// mobile
+@media (min-width: @screen-sm) {
+  .make-space(@prefix: sm; @value:50; );
+  .make-space(@prefix: sm; @value:40; );
+  .make-space(@prefix: sm; @value:30; );
+  .make-space(@prefix: sm; @value:20; );
+  .make-space(@prefix: sm; @value:15; );
+  .make-space(@prefix: sm; @value:10; );
+  .make-space(@prefix: sm; @value:5;  );
+  .make-space(@prefix: sm; @value:0;  );
+}
+
+// tablet
+@media (min-width: @screen-md) {
+  .make-space(@prefix: md; @value:50; );
+  .make-space(@prefix: md; @value:40; );
+  .make-space(@prefix: md; @value:30; );
+  .make-space(@prefix: md; @value:20; );
+  .make-space(@prefix: md; @value:15; );
+  .make-space(@prefix: md; @value:10; );
+  .make-space(@prefix: md; @value:5;  );
+  .make-space(@prefix: md; @value:0;  );
+}
+
+// desktop
+@media (min-width: @screen-lg) {
+  .make-space(@prefix: lg; @value:200; );
+  .make-space(@prefix: lg; @value:150; );
+  .make-space(@prefix: lg; @value:100; );
+  .make-space(@prefix: lg; @value:50; );
+  .make-space(@prefix: lg; @value:40; );
+  .make-space(@prefix: lg; @value:30; );
+  .make-space(@prefix: lg; @value:20; );
+  .make-space(@prefix: lg; @value:15; );
+  .make-space(@prefix: lg; @value:10; );
+  .make-space(@prefix: lg; @value:5;  );
+  .make-space(@prefix: lg; @value:0;  );
+}
+
+// init functions
+.make-space(@prefix; @value) {
+  .@{prefix}-p-@{value}   { padding:        ~"@{value}px"; }
+  .@{prefix}-pt-@{value}  { padding-top:    ~"@{value}px"; }
+  .@{prefix}-pl-@{value}  { padding-left:   ~"@{value}px"; }
+  .@{prefix}-pr-@{value}  { padding-right:  ~"@{value}px"; }
+  .@{prefix}-pb-@{value}  { padding-bottom: ~"@{value}px"; }
+  .@{prefix}-m-@{value}   { margin:         ~"@{value}px"; }
+  .@{prefix}-mt-@{value}  { margin-top:     ~"@{value}px"; }
+  .@{prefix}-ml-@{value}  { margin-left:    ~"@{value}px"; }
+  .@{prefix}-mr-@{value}  { margin-right:   ~"@{value}px"; }
+  .@{prefix}-mb-@{value}  { margin-bottom:  ~"@{value}px"; }
+}

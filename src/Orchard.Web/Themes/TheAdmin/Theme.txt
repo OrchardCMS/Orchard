@@ -1,7 +1,8 @@
 ﻿Name: The Admin
 Version: 1.10.1
-Author: Jon Wall
+Author: The Orchard Team
 Tags: hidden, admin
 Description: The Orchard admin theme.
 Website: http://www.orchardproject.net
 Zones: Header, Messages, BeforeContent, LocalNavigation, Content, AfterContent, Footer
+Dependencies: Orchard.Resources

@@ -1,0 +1,114 @@
+/*------------------------------------------------------------------
+  [Bootstrap dateTime Picker]
+*/
+.datetimepicker{
+
+	.input-group-addon{
+		padding: 0 9px;
+		font-size: 24px;
+	}
+
+	//Datepicker dropdown
+	&.dropdown-menu{
+		.box-shadow(0 2px 4px rgba(0,0,0,.08));
+		border-color: rgba(0, 0, 0, 0.1);
+		padding: 10px;
+
+		&:before{
+			border-bottom-color: rgba(0, 0, 0, 0.08);
+		}
+
+		table{
+			border-collapse: separate;
+			border-spacing: 7px 2px;
+
+			thead{
+
+				tr{
+
+					th{
+
+						&.prev, &.next{
+							padding: 0;
+							
+							.s7-angle-right, .s7-angle-left{
+								font-size: 28px;
+							}
+
+							&:hover{
+								background-color: transparent;
+								color: @primary-color;
+							}
+						}
+
+						&.switch{
+							font-weight: 600;
+							font-size: 14px;
+
+							&:hover{
+								background-color: transparent;
+								color: lighten(@text-color, 10%);
+							}
+						}
+
+						&.dow{
+							font-weight: 400;
+							font-size: 14px;
+							padding-top: 10px;
+						}
+					}
+				}
+			}
+
+			tbody{
+
+				tr{
+
+					td{
+						line-height: 30px;
+    				padding: 0 8px;
+
+    				&.day{
+    					border-radius: 50%;
+    					color: lighten(@text-color, 20%);
+
+    					&.old, &.new{
+    						color: lighten(@text-color, 45%);
+    					}
+
+    					&.active{
+    						background: @primary-color;
+    						color: @light-color;
+    						text-shadow: none;
+    					}
+    				}
+
+    				.year, .month, .hour, .minute{
+    					color: lighten(@text-color, 20%);
+
+    					&.old, &.new{
+    						color: lighten(@text-color, 45%);
+    					}
+
+    					&.active{
+    						background: @primary-color;
+    						color: @light-color;
+    						text-shadow: none;
+    					}
+    				}
+
+    				fieldset{
+
+    					legend{
+    						font-size: 17px;
+    						font-weight: 400;
+    						color: lighten(@text-color, 10%);
+    						margin-bottom: 5px;
+    					}
+    				}
+					}
+				}
+			}
+		}
+	}
+}

@@ -4,7 +4,7 @@
 
 @{
     var attributes = new Dictionary<string, object>();
-    attributes.Add("class", "text-small"); attributes.Add("type", "text");
+    attributes.Add("class", "text small"); attributes.Add("type", "text");
     attributes.Add("min", Model.Settings.Minimum.HasValue ? Model.Settings.Minimum.Value : 0);
     attributes.Add("max", Model.Settings.Maximum.HasValue ? Model.Settings.Maximum.Value : 1000000);
     attributes.Add("step", Math.Pow(10, 0 - Model.Settings.Scale).ToString(CultureInfo.InvariantCulture));
@@ -24,6 +24,6 @@
     @Html.TextBoxFor(m => m.Value, attributes)
     @Html.ValidationMessageFor(m => m.Value)
     @if (HasText(Model.Settings.Hint)) {
-        <span class="hint">@Model.Settings.Hint</span>
+        <span class="help-block">@Model.Settings.Hint</span>
     }
 </fieldset>

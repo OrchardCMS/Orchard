@@ -46,7 +46,7 @@
             var self = this;
             var required = $(self).data("required");
             var multiple = $(self).data("multiple");
-            var addButton = $(self).find(".button.add");
+            var addButton = $(self).find(".btn.add");
             var removeText = $(self).data("remove-text");
             var notPublishedText = $(self).data("not-published-text");
             var template = '<tr><td>&nbsp;</td><td><span data-id="{contentItemId}" data-fieldid="@idsFieldId" class="content-picker-item">{edit-link}{status-text}</span></td><td><span data-id="{contentItemId}" class="content-picker-remove button grey">' + removeText + '</span></td></tr>';

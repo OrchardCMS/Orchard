@@ -1,4 +1,5 @@
-﻿using Orchard.Localization;
+﻿using System;
+using Orchard.Localization;
 using Orchard.UI.Navigation;
 
 namespace Orchard.Taxonomies {
@@ -10,8 +11,8 @@ namespace Orchard.Taxonomies {
             builder
                 .AddImageSet("taxonomies")
                 .Add(T("Taxonomies"), "4", menu => menu
-                .Add(T("Manage Taxonomies"), "1.0", item => item.Action("Index", "Admin", new { area = "Orchard.Taxonomies" }).Permission(Permissions.ManageTaxonomies))
-            );
+                    .Add(T("Manage Taxonomies"), "1.0", item => item.Action("Index", "Admin", new {area = "Orchard.Taxonomies"}).Permission(Permissions.ManageTaxonomies)), 
+                    new[] {"ticket"});
         }
     }
 }

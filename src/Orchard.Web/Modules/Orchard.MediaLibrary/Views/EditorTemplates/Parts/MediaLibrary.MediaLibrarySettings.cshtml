@@ -5,6 +5,6 @@
     <div>
         <label for="@Html.IdFor(m => m.UploadAllowedFileTypeWhitelist)">@T("Accepted file extensions")</label>
         @Html.TextBoxFor(m => m.UploadAllowedFileTypeWhitelist, new { @class = "text large"})
-        <span class="hint">@T("A comma separated list of file extensions, e.g., \".jpg, .avi, .txt\". Leave empty to accept any file types.")</span>
+        <span class="help-block">@T("A comma separated list of file extensions, e.g., \".jpg, .avi, .txt\". Leave empty to accept any file types.")</span>
     </div>
 </fieldset>

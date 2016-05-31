@@ -2,37 +2,38 @@
     Layout.Title = @T("Edit Activity");
     Script.Include("orchard-workflows-serialize.js").AtFoot();
 }
+<div class="panel panel-default">
+    @using (Html.BeginFormAntiForgeryPost()) {
+        @Html.ValidationSummary()
+        <div class="panel-body">
+            @* Render the dynamic form *@
+            @if (Model.Form != null) {
+            <fieldset>
+                @DisplayChildren(Model.Form)
+            </fieldset>
+            }
 
-@Html.ValidationSummary()
+            @Display.TokenHint()
 
-@using (Html.BeginFormAntiForgeryPost()) {
+            <fieldset>
+                <button class="btn btn-primary" type="submit" name="_submit.Save" value="@T("Save")">@T("Save")</button>
+                <button class="btn btn-default" type="submit" name="_submit.Cancel" value="@T("Cancel")">@T("Cancel")</button>
+            </fieldset>
 
-    @* Render the dynamic form *@    
-    if (Model.Form != null) {
-        <fieldset>
-            @DisplayChildren(Model.Form)
-        </fieldset>
+            @using (Script.Head()) {
+                <script type="text/javascript">
+                    //<![CDATA[
+                    var requestAntiForgeryToken = '@Html.AntiForgeryTokenValueOrchard()';
+                    var localId = '@Model.LocalId';
+                    //]]>
+                </script>
+            }
+
+            @using (Script.Foot()) {
+                <script type="text/javascript">
+                    loadForm('@Model.LocalId', '@Model.ClientId');
+                </script>
+            }
+        </div>
     }
-
-    @Display.TokenHint()
-
-<fieldset>
-    <button class="primaryAction" type="submit" name="_submit.Save" value="@T("Save")">@T("Save")</button>
-    <button class="cancel" type="submit" name="_submit.Cancel" value="@T("Cancel")">@T("Cancel")</button>
-</fieldset>
-}
-
-@using (Script.Head()) {
-<script type="text/javascript">
-    //<![CDATA[
-    var requestAntiForgeryToken = '@Html.AntiForgeryTokenValueOrchard()';
-    var localId = '@Model.LocalId';
-    //]]>
-</script>
-}
-
-@using (Script.Foot()) {
-    <script type="text/javascript">
-        loadForm('@Model.LocalId', '@Model.ClientId');
-    </script>
-}
+</div>

@@ -9,11 +9,11 @@
         <div>
             <label for="name">@T("Name")</label>
             @Html.TextBox("name", String.Empty, new { @class= "text medium" })
-            <span class="hint">@T("The name of the Workflow")</span>
+            <span class="help-block">@T("The name of the Workflow")</span>
         </div>
     </fieldset>
     
     <fieldset>
-        <button class="primaryAction" type="submit">@T("Save")</button>
+        <button class="btn btn-primary" type="submit">@T("Save")</button>
     </fieldset>
 }

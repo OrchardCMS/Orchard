@@ -1,10 +1,13 @@
 ﻿@{ Layout.Title = T("Install a module from your computer").ToString(); }
-
-@using (Html.BeginFormAntiForgeryPost(Url.Action("InstallLocally", "PackagingServices", new { redirectUrl = HttpContext.Current.Request["returnUrl"] }), FormMethod.Post, new { enctype = "multipart/form-data" })) {
-    @Html.ValidationSummary();
-    <fieldset>
-        <label for="ModulePackage">@T("Module Package")</label>
-        <input type="file" id="ModulePackage" size="64" name="ModulePackage" />
-    </fieldset>
-    <button type="submit" class="primaryAction">@T("Install")</button>
-}
+<div class="panel panel-default">
+    @using (Html.BeginFormAntiForgeryPost(Url.Action("InstallLocally", "PackagingServices", new { redirectUrl = HttpContext.Current.Request["returnUrl"] }), FormMethod.Post, new { enctype = "multipart/form-data" })) {
+        @Html.ValidationSummary();
+        <div class="panel-body">
+            <fieldset>
+                <label for="ModulePackage">@T("Module Package")</label>
+                <input type="file" id="ModulePackage" size="64" name="ModulePackage" />
+            </fieldset>
+        </div>
+        <div class="panel-footer"><button type="submit" class="primaryAction">@T("Install")</button></div>
+    }
+</div>

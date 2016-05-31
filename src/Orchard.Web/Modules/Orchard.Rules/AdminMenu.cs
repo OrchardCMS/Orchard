@@ -11,8 +11,9 @@ namespace Orchard.Rules {
             builder.Add(T("Rules"), "4",
                 menu => menu
                     .Add(T("Manage Rules"), "1.0",
-                        item => item.Action("Index", "Admin", new { area = "Orchard.Rules" }).Permission(StandardPermissions.SiteOwner))
-            );
+                        item => item.Action("Index", "Admin", new {area = "Orchard.Rules"}).Permission(StandardPermissions.SiteOwner)),
+                new[] {"shield"}
+                );
         }
     }
 }

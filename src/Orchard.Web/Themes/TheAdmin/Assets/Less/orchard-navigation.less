@@ -1,0 +1,97 @@
+﻿.zone-local-navigation {
+    position: relative;
+    z-index: 1;
+
+    ul.localmenu {
+        margin-bottom: 0;
+        padding-left: 0;
+        list-style: none;
+
+        li {
+            display: inline-block;
+            margin-bottom: -1px;
+
+            a {
+                padding: 18px 20px;
+                margin-right: 0;
+                min-width: 80px;
+                text-align: center;
+                border-radius: 0;
+                display: block;
+
+                &:hover {
+                    background: rgba(255,255,255,.5);
+                }
+            }
+
+            &.active {
+                a {
+                    color: black;
+                    cursor: default;
+                    border: 1px solid #bbb;
+                    border-bottom-color: white;
+                    z-index: 2;
+                    background: white;
+                }
+            }
+        }
+    }
+}
+
+#display-menu-controls {
+    margin-bottom: 1em;
+
+    form {
+        display: inline-block;
+        vertical-align:bottom;
+        white-space:nowrap;
+        max-width:100%;
+        margin-right:60px;
+    }
+
+    fieldset {
+        display: inline-block;
+        label {
+            display: block;
+        }
+
+        select {
+            display: inline-block;
+            vertical-align: middle;
+            max-width:100%;
+
+        }
+    }
+    #navigation-menu-add{
+        display:inline-block;
+    }
+}
+
+.navigation-menu {
+    ol, ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    li {
+        div {
+            display: inline-block;
+            padding-left:10px;
+            &:hover{
+                padding-left:30px;
+            }
+        }
+    }
+}
+.menu-items-zone{
+    h2{
+        margin-top:0;
+    }
+    div.menu-item-actions{
+        top:5px;
+        right:5px;
+    }
+}
+.menu-item-edit-fields{
+    margin-bottom:20px;
+}

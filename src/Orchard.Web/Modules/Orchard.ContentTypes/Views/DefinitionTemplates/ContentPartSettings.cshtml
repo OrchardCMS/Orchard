@@ -1,13 +1,14 @@
 ﻿@model Orchard.Core.Contents.Settings.ContentPartSettings
-<fieldset>
-    <label for="@Html.FieldIdFor(m => m.Description)">@T("Description")</label>
-    @Html.TextBoxFor(m => m.Description, new { @class = "text large"})
-    <span class="hint">@T("Optionally provide a description for this part")</span>
+<div class="form-group">
+    <label class="control-label" for="@Html.FieldIdFor(m => m.Description)">@T("Description")</label>
+    @Html.TextBoxFor(m => m.Description, new {@class = "text large", placeholder = T("Optionally provide a description for this part") })
     @Html.ValidationMessageFor(m => m.Description)
-</fieldset>
-<fieldset>
-    @Html.EditorFor(m => m.Attachable)
-    <label for="@Html.FieldIdFor(m => m.Attachable)" class="forcheckbox">@T("Attachable")</label>
-    <span class="hint">@T("Check to allow this part to be attached to other content types.")</span> 
-    @Html.ValidationMessageFor(m => m.Attachable)
-</fieldset>
+</div>
+
+<div class="form-group">
+    <div class="or-checkbox inline">
+        @Html.EditorFor(m => m.Attachable)
+        <label for="@Html.FieldIdFor(m => m.Attachable)" class="forcheckbox">@T("Attachable")</label>
+        <span class="help-block">@T("Check to allow this part to be attached to other content types.")</span>
+    </div>
+</div>

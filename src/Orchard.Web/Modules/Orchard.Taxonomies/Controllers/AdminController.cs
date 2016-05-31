@@ -74,6 +74,9 @@ namespace Orchard.Taxonomies.Controllers {
                     foreach (var entry in checkedEntries) {
                         _taxonomyService.DeleteTaxonomy(_taxonomyService.GetTaxonomy(entry.Id));
                     }
+                    if (checkedEntries.Any()) {
+                        Services.Notifier.Information(T("Taxonomy(ies) {0} deleted", string.Join(", ", checkedEntries.Select(e => e.Name).ToList())));
+                    }
                     break;
 
                 default:
@@ -94,6 +97,8 @@ namespace Orchard.Taxonomies.Controllers {
             }
 
             _taxonomyService.DeleteTaxonomy(taxonomy);
+
+            Services.Notifier.Information(T("Taxonomy {0} deleted", taxonomy.Name));
 
             return RedirectToAction("Index");
         }

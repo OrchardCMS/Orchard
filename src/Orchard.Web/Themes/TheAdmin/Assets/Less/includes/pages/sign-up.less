@@ -1,0 +1,58 @@
+/*------------------------------------------------------------------
+  [Sign up]
+*/
+.sign-up{
+	margin-top: 20px;
+	max-width: 440px;
+	margin-bottom: 20px;
+	padding: 0;
+
+	.panel-heading{
+		margin-bottom: 15px !important;
+	}
+
+	.panel-body{
+		
+		.form-horizontal{
+
+			.title{
+				font-size: 15px;
+				color: darken(@light-color, 15%);
+				text-align: center;
+			}
+
+			.sign-up-form{
+				margin-bottom: 25px;
+
+				.social-signup{
+					margin-top: 20px;
+					margin-bottom: 20px;
+
+					> div{
+
+						&:first-child{
+							padding-right: 8px;
+						}
+
+						&:last-child{
+							padding-left: 8px;
+						}
+					}
+				}
+			}
+
+			.conditions{
+				color: lighten(@dark-color, 35%);
+				margin-bottom: 25px;
+
+				a{
+					color: darken(@light-color, 15%);
+
+					&:hover{
+						color: @light-color;
+					}
+				}
+			}
+		}
+	}
+}

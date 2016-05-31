@@ -9,48 +9,86 @@
     var termIndex = 0;
 }
 
-@using(Html.BeginFormAntiForgeryPost()) {
+@using (Html.BeginFormAntiForgeryPost()) {
     @Html.ValidationSummary()
-    @Html.HiddenFor(m=>m.TaxonomyId)
-    <fieldset class="bulk-actions">
-        <label for="publishActions">@T("Actions:")</label>
-        <select id="publishActions" name="@Html.NameOf(m => m.BulkAction)">
-            @Html.SelectOption(Model.BulkAction, TermsAdminIndexBulkAction.None, T("Choose action...").ToString())
-            @Html.SelectOption(Model.BulkAction, TermsAdminIndexBulkAction.Delete, T("Remove").ToString())
-            @Html.SelectOption(Model.BulkAction, TermsAdminIndexBulkAction.Move, T("Move").ToString())
-        </select>
-        <input class="button" type="submit" name="submit.BulkEdit" value="@T("Apply")" />
-    </fieldset>
-    <div class="manage">@Html.ActionLink(T("Add a term").ToString(), "SelectTerm", new { taxonomyId = Model.Taxonomy.Id }, new { @class = "button primaryAction" })</div>
-    <fieldset>
-        <table class="items" summary="@T("This is a table of the terms in your application")">
-            <colgroup>
-                <col id="Col1" />
-                <col id="Col2" />
-            </colgroup>
-            <thead>
-                <tr>
-                    <th scope="col"><input type="checkbox" class="check-all" /> @T("Name")</th>
-                    <th scope="col"></th>
-                </tr>
-            </thead>
-                @foreach ( var termEntry in Model.Terms) {
-                    var ti = termIndex;
-                    <tr>
-                <td>
-                    <input type="hidden" value="@Model.Terms[termIndex].Id" name="@Html.NameOf(m => m.Terms[ti].Id)"/>
-                    @* Tabs for levels *@ @for ( var i = 1; i <= termEntry.GetLevels(); i++ ) { <span class="gap">&nbsp;</span> }
-                    <input type="checkbox" value="true" name="@Html.NameOf(m => m.Terms[ti].IsChecked)"/>
-                    @Html.ItemDisplayLink(termEntry.Name, termEntry.ContentItem)
-                </td>
-                <td>
-                @Html.ItemEditLink(T("Edit").Text, termEntry.ContentItem, new { returnUrl = Url.Action("Index", "TermAdmin", new { taxonomyId = Model.Taxonomy.Id }) }) |
-                @Html.ActionLink(T("Move").ToString(), "MoveTerm", new { taxonomyId = Model.Taxonomy.Id, termIds = termEntry.Id })
-                </td>
-            </tr>
-                termIndex++;
-            }
-        </table>
-        @Display(Model.Pager)
-    </fieldset>
+    @Html.HiddenFor(m => m.TaxonomyId)
+    <div class="panel panel-default">
+        <div class="panel-heading no-border">
+            <div class="panel-heading-primary-group">
+                <fieldset>
+                    <input id="publishActions" name="@Html.NameOf(m => m.BulkAction)" type="hidden" value="@TermsAdminIndexBulkAction.None" />
+                    <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa fa-bolt"></i> Bulk Actions <span class="caret"></span>
+                        </button>&nbsp;
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="#" data-confirm="@T("Are you sure you want to move these items?")" data-action="@TermsAdminIndexBulkAction.Move">@T("Move").ToString()</a></li>
+                            <li><a href="#" data-confirm="@T("Are you sure you want to delete these items?")" data-action="@TermsAdminIndexBulkAction.Delete">@T("Delete").ToString()</a></li>
+                        </ul>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="panel-heading-actions">
+                <a class="btn btn-primary" href="@Url.Action("SelectTerm", new { taxonomyId = Model.Taxonomy.Id })"><i class="fa fa-plus"></i> @T("Add a term").Text</a>
+            </div>
+        </div>
+        @if (Model.Terms.Any()) {
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-fw-widget table-hover no-footer" summary="@T("This is a table of the terms in your application")">
+                            <thead>
+                                <tr>
+                                    <th class="text-nowrap">
+                                        <div class="or-checkbox inline">
+                                            <input id="checkAll" class="check-all" type="checkbox">
+                                            <label class="check-all" title="@T("Select All")" for="checkAll"></label>
+                                        </div>
+                                    </th>
+                                    <th scope="col" width="100%">@T("Term Name")</th>
+                                    <th scope="col">&nbsp;</th>
+                                </tr>
+                            </thead>
+                            @foreach (var termEntry in Model.Terms) {
+                                var ti = termIndex;
+                                <tr>
+                                    <td>
+                                        <input type="hidden" value="@Model.Terms[termIndex].Id" name="@Html.NameOf(m => m.Terms[ti].Id)" />
+                                        <div class="or-checkbox indent-level-@termEntry.GetLevels() inline">
+                                            <input id="@Html.NameOf(m => m.Terms[ti].IsChecked)" type="checkbox" value="true" name="@Html.NameOf(m => m.Terms[ti].IsChecked)" />
+                                            <label for="@Html.NameOf(m => m.Terms[ti].IsChecked)"></label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        @Html.ItemDisplayLink(termEntry.Name, termEntry.ContentItem)
+                                    </td>
+                                    <td class="text-nowrap">
+                                        <a class="btn btn-primary" href="@Url.Action("MoveTerm", new { taxonomyId = Model.Taxonomy.Id, termIds = termEntry.Id })"><i class="fa fa-arrows"></i> @T("Move")</a>
+                                        <a class="btn btn-primary" href="@Url.ItemEditUrl(termEntry.ContentItem, new { returnUrl = Url.Action("Index", "TermAdmin", new { taxonomyId = Model.Taxonomy.Id }) })"><i class="fa fa-pencil-square-o"></i> @T("Edit")</a>
+                                        <a class="btn btn-danger" href="@Url.ItemRemoveUrl(termEntry.ContentItem, new { returnUrl = Url.Action("Index", "TermAdmin", new { taxonomyId = Model.Taxonomy.Id }) })" data-confirm="@T("Are you sure you want to delete this item?")"><i class="fa fa-trash"></i> @T("Delete")</a>
+                                    </td>
+                                </tr>
+                                termIndex++;
+                            }
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row or-datatable-footer">
+                <div class="col-sm-12">
+                    @Display(Model.Pager)
+                </div>
+            </div>
+            @Display.Modal()
+        }
+        else {
+            <div class="panel-body">
+                <h3 class="no-content">
+                    @T("There are currently no terms.")
+                    @Html.ActionLink(T("Add one now").Text, "SelectTerm", new { taxonomyId = Model.Taxonomy.Id }, new { @class = "" })
+                </h3>
+            </div>
+        }
+    </div>
 }

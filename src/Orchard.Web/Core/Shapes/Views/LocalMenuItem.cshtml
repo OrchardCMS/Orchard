@@ -7,7 +7,7 @@ if (!HasText(Model.Text)) {
     @DisplayChildren(Model)
 } else {
     if (Model.Href.TrimEnd('/').ToUpperInvariant() == Request.Path.TrimEnd('/').ToUpperInvariant()) {
-        Model.Classes.Add("current");
+        Model.Classes.Add("active");
     }
     var tag = Tag(Model, "li");
     @tag.StartElement

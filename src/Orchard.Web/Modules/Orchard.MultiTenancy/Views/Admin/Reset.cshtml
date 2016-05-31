@@ -1,10 +1,6 @@
 ﻿@model Orchard.MultiTenancy.ViewModels.TenantResetViewModel
-
 @{
     Layout.Title = T("Reset Tenant").ToString();
-
-    Script.Require("jQuery");
-    Script.Include(Url.Content("~/Themes/TheAdmin/Scripts/admin.js")).AtFoot();
 }
 
 @using (Html.BeginFormAntiForgeryPost()) {
@@ -19,12 +15,12 @@
         <label class="forcheckbox" for="@Html.FieldIdFor(m => m.DropDatabaseTables)">@("Also delete tenant database tables:")</label>
         <ul style="margin-left: 4em; margin-top: 1em; -webkit-column-width: 24em; -moz-column-width: 24em; column-width: 24em;">
             @foreach (var tableName in Model.DatabaseTableNames) {
-                <li><span class="hint">@tableName</span></li>
+                <li><span class="help-block">@tableName</span></li>
             }
         </ul>
     </fieldset>
 
     <fieldset>
-        <button class="primaryAction" type="submit">@T("Reset")</button>
+        <button class="btn btn-primary" type="submit">@T("Reset")</button>
     </fieldset>
 }

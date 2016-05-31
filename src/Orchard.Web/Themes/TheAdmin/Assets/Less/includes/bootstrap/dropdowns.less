@@ -1,0 +1,46 @@
+/*------------------------------------------------------------------
+  [Dropdown menu]
+*/
+.dropdown-menu{
+	.box-shadow(0 2px 4px rgba(0,0,0,.08));
+	border-color: rgba(0, 0, 0, 0.1);
+
+	> li{
+
+		//First level
+		> a{
+			font-weight: 300;
+			color: @dropdown-text-color;
+			padding: 9px 20px;
+
+			.icon{
+				font-size: 17px;
+				line-height: 15px;
+				vertical-align: middle;
+				margin-right: 4px;
+			}
+
+			&:hover{
+				background-color: @primary-color;
+				color: @light-color;
+			}
+
+			&:focus, &:active{
+				background-color: transparent;
+				color: @dropdown-text-color;
+			}
+		}
+	}
+
+	.divider{
+		margin: 6px 0;
+		background-color: rgba(0, 0, 0, 0.1);
+	}
+}
+
+.dropdown-header{
+	padding: 5px 20px 1px;
+	font-weight: 600;
+	color: lighten(@dropdown-text-color, 45%);
+	cursor: default;
+}

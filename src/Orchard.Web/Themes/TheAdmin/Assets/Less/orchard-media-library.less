@@ -1,0 +1,55 @@
+﻿#media-library, #media-library-import {
+    border-top-width: 1px;
+
+    #media-library-main-navigation {
+        height: 100vh;
+
+        > ul {
+            list-style: none;
+            padding: 0;
+        }
+    }
+
+    #media-library-main-list {
+        ul {
+            padding: 1em;
+            .clearfix();
+
+            li {
+                overflow: hidden;
+            }
+        }
+
+        .thumbnail {
+            padding: 0;
+            border: none;
+        }
+    }
+
+    #media-library-main-editor {
+        h1 {
+            &:first-child {
+                margin-top: 0;
+            }
+
+            line-height: 1em;
+        }
+
+        .properties {
+            ul {
+                &.pageStatus {
+                    padding: 0;
+                    list-style: none;
+                }
+            }
+        }
+
+        #media-library-main-selection {
+            margin-top: 2em;
+
+            ul {
+                padding: 0;
+            }
+        }
+    }
+}

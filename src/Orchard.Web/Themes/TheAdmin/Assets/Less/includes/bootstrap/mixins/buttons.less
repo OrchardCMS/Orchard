@@ -1,0 +1,124 @@
+/*------------------------------------------------------------------
+  [Bootstrap elements]
+*/
+.button-variant(@color; @background; @border) {
+  color: @color;
+  background-color: @background;
+  border-color: @background;
+
+  &:focus,
+  &.focus {
+    color: @color;
+    background-color: @background;
+        border-color: @background;
+  }
+
+  &:hover {
+    color: @color;
+    background-color: lighten(@background, 5%);
+        border-color: lighten(@background, 5%);
+  }
+
+  &:active,
+  &.active,
+  .open > .dropdown-toggle& {
+    color: @color;
+    background-color: darken(@background, 5%);
+        border-color: darken(@background, 5%);
+
+    &:hover,
+    &:focus,
+    &.focus {
+      color: @color;
+      background-color: darken(@background, 5%);
+          border-color: darken(@background, 5%);
+    }
+  }
+
+  &:active,
+  &.active,
+  .open > .dropdown-toggle& {
+    background-image: none;
+  }
+
+  &.disabled,
+  &[disabled],
+  fieldset[disabled] & {
+    &,
+    &:hover,
+    &:focus,
+    &.focus,
+    &:active,
+    &.active {
+      background-color: @background;
+          border-color: @background;
+    }
+  }
+
+  .badge {
+    color: @background;
+    background-color: @color;
+  }
+}
+
+.button-shade(@background) {
+  background-color: @background;
+  border-color: @background;
+
+  &:focus,
+  &.focus {
+    background-color: @background;
+        border-color: @background;
+  }
+
+  &:hover {
+    background-color: lighten(@background, 5%);
+        border-color: lighten(@background, 5%);
+  }
+
+  &:active,
+  &.active,
+  .open > .dropdown-toggle& {
+    background-color: darken(@background, 3%);
+        border-color: darken(@background, 3%);
+
+    &:hover,
+    &:focus,
+    &.focus {
+      background-color: darken(@background, 3%);
+          border-color: darken(@background, 3%);
+    }
+  }
+
+  &.disabled,
+  &[disabled],
+  fieldset[disabled] & {
+    &,
+    &:hover,
+    &:focus,
+    &.focus,
+    &:active,
+    &.active {
+      background-color: @background;
+          border-color: @background;
+    }
+  }
+
+  .badge {
+    color: @background;
+  }
+}
+
+.button-active-color(@color){
+  &:active,
+  &.active,
+  .open > .dropdown-toggle& {
+    color: @color;
+
+    &:hover,
+    &:focus,
+    &.focus {
+      color: @color;
+    }
+  }
+}

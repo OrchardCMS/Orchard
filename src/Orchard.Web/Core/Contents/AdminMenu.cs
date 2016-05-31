@@ -21,24 +21,28 @@ namespace Orchard.Core.Contents {
         public void GetNavigation(NavigationBuilder builder) {
             var contentTypeDefinitions = _contentDefinitionManager.ListTypeDefinitions().OrderBy(d => d.Name);
             builder.AddImageSet("content")
-                .Add(T("Content"), "1.4", menu => menu
-                    .Permission(Permissions.EditOwnContent)
-                    .Add(T("Content Items"), "1", item => item.Action("List", "Admin", new { area = "Contents", id = "" }).LocalNav()));
+                .Add(T("Content"), "1.4",
+                    menu => menu
+                        .Permission(Permissions.EditOwnContent)
+                        .Add(T("Content Items"), "1", item => item.Action("List", "Admin", new {area = "Contents", id = ""}).LocalNav()),
+                    new[] {"file"});
             var contentTypes = contentTypeDefinitions.Where(ctd => ctd.Settings.GetModel<ContentTypeSettings>().Creatable).OrderBy(ctd => ctd.DisplayName);
             if (contentTypes.Any()) {
-                builder.Add(T("New"), "-1", menu => {
-                    menu.LinkToFirstChild(false);
-                    foreach (var contentTypeDefinition in contentTypes) {
-                        var ci = _contentManager.New(contentTypeDefinition.Name);
-                        var cim = _contentManager.GetItemMetadata(ci);
-                        var createRouteValues = cim.CreateRouteValues;
-                        // review: the display name should be a LocalizedString
-                        if (createRouteValues.Any())
-                            menu.Add(T(contentTypeDefinition.DisplayName), "5", item => item.Action(cim.CreateRouteValues["Action"] as string, cim.CreateRouteValues["Controller"] as string, cim.CreateRouteValues)
-                                // Apply "PublishOwn" permission for the content type
-                                .Permission(DynamicPermissions.CreateDynamicPermission(DynamicPermissions.PermissionTemplates[Permissions.PublishOwnContent.Name], contentTypeDefinition)));
-                    }
-                });
+                builder.Add(T("New"), "-1",
+                    menu => {
+                        menu.LinkToFirstChild(false);
+                        foreach (var contentTypeDefinition in contentTypes) {
+                            var ci = _contentManager.New(contentTypeDefinition.Name);
+                            var cim = _contentManager.GetItemMetadata(ci);
+                            var createRouteValues = cim.CreateRouteValues;
+                            // review: the display name should be a LocalizedString
+                            if (createRouteValues.Any())
+                                menu.Add(T(contentTypeDefinition.DisplayName), "5", item => item.Action(cim.CreateRouteValues["Action"] as string, cim.CreateRouteValues["Controller"] as string, cim.CreateRouteValues)
+                                    // Apply "PublishOwn" permission for the content type
+                                    .Permission(DynamicPermissions.CreateDynamicPermission(DynamicPermissions.PermissionTemplates[Permissions.PublishOwnContent.Name], contentTypeDefinition)));
+                        }
+                    },
+                    new[] {"plus"});
             }
         }
     }

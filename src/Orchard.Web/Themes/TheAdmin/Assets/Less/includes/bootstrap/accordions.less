@@ -1,0 +1,130 @@
+/*------------------------------------------------------------------
+  [Accordions]
+*/
+.panel-group.accordion{
+	margin-bottom: 40px;
+	padding: 0;
+	
+	.panel{
+		padding: 0;
+
+		.panel-heading{
+			background: @light-color;
+			padding: 0;
+			margin: 0;
+
+			a{
+				padding: 17px 10px;
+				display: block;
+				color: @primary-color;
+				font-weight: 300;
+
+				.icon{
+					transition: transform 200ms ease-in-out;
+					font-size: 25px;
+					vertical-align: middle;
+					position: relative;
+					top: -1px;
+					display: inline-block;
+				}
+
+				&.collapsed{
+					color: @text-color;
+
+					.icon{
+						transform: rotate(-90deg);
+					}
+				}
+			}
+		}
+
+		.panel-collapse{
+
+			.panel-body{
+				padding: 0 30px 20px 40px;
+				border-top: 0;
+			}
+		}
+	}
+
+	//Full color accordion
+	&.accordion-color{
+
+		.panel{
+
+			.panel-heading{
+
+				a{
+					background-color: @alt-color3;
+					color: @light-color;
+
+					&.collapsed{
+						background-color: @light-color;
+						color: @text-color;
+					}
+				}
+			}
+
+			.panel-collapse{
+
+				.panel-body{
+					background-color: @alt-color3;
+					color: @light-color;
+				}
+			}
+		}
+	}
+
+	//Semi color accordion
+	&.accordion-semi{
+
+		.panel{
+
+			.panel-heading{
+
+				a{
+					background-color: @primary-color;
+					color: @light-color;
+					transition: background-color 200ms ease-in-out;
+
+					&.collapsed{
+						background-color: @light-color;
+						color: @text-color;
+						border-bottom: 0;
+					}
+				}
+			}
+
+			.panel-collapse{
+
+				.panel-body{
+					padding-top: 15px;
+				}
+			}
+		}
+
+		.panel-heading{
+
+			&.success{
+
+				a{
+					background-color: @success-color;
+				}
+			} 
+
+			&.warning{
+
+				a{
+					background-color: @warning-color;
+				}
+			}
+
+			&.danger{
+
+				a{
+					background-color: @danger-color;
+				}
+			}
+		}
+	}
+}

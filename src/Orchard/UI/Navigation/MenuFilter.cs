@@ -45,11 +45,8 @@ namespace Orchard.UI.Navigation {
                 }
             }
 
-            // Set the currently selected path
-            Stack<MenuItem> selectedPath = NavigationHelper.SetSelectedPath(menuItems, workContext.HttpContext.Request, routeData);
-
             // Populate main nav
-            dynamic menuShape = _shapeFactory.Menu().MenuName(menuName);
+            dynamic menuShape = _shapeFactory.SideMenu().MenuName(menuName);
             NavigationHelper.PopulateMenu(_shapeFactory, menuShape, menuShape, menuItems);
 
             // Add any know image sets to the main nav
@@ -57,12 +54,35 @@ namespace Orchard.UI.Navigation {
             if (menuImageSets != null && menuImageSets.Any())
                 menuShape.ImageSets(menuImageSets);
 
-            workContext.Layout.Navigation.Add(menuShape);
+            workContext.Layout.SideMenu.Add(menuShape);
 
-            // Populate local nav
-            dynamic localMenuShape = _shapeFactory.LocalMenu().MenuName(string.Format("local_{0}", menuName));
-            NavigationHelper.PopulateLocalMenu(_shapeFactory, localMenuShape, localMenuShape, selectedPath);
-            workContext.Layout.LocalNavigation.Add(localMenuShape);
+            // Populate top nav
+            var topMenuName = string.Format("top_{0}", menuName);
+            IEnumerable<MenuItem> topMenuItems = _navigationManager.BuildMenu(topMenuName);
+            dynamic topMenuShape = _shapeFactory.TopMenu().MenuName(topMenuName);
+            NavigationHelper.PopulateMenu(_shapeFactory, topMenuShape, topMenuShape, topMenuItems);
+
+            workContext.Layout.TopMenu.Add(topMenuShape);
+
+            //SIDE MENU
+            // Set the currently side menu selected path
+            Stack<MenuItem> selectedSideMenuPath = NavigationHelper.SetSelectedPath(menuItems, workContext.HttpContext.Request, routeData) ?? NavigationHelper.SetSelectedPath(topMenuItems, workContext.HttpContext.Request, routeData);
+
+            // Populate local nav related to side menu
+            dynamic localSideMenuShape = _shapeFactory.LocalMenu().MenuName(string.Format("local_{0}", menuName));
+            NavigationHelper.PopulateLocalMenu(_shapeFactory, localSideMenuShape, localSideMenuShape, selectedSideMenuPath);
+            if (localSideMenuShape.Items.Count > 0) { 
+                workContext.Layout.LocalNavigation.Add(localSideMenuShape);
+            }
+
+            //TOP MENU
+            // Set the currently side menu selected path
+            Stack<MenuItem> selectedTopMenuPath = NavigationHelper.SetSelectedPath(topMenuItems, workContext.HttpContext.Request, routeData);
+
+            // Populate local nav related to top menu
+            dynamic localTopMenuShape = _shapeFactory.LocalMenu().MenuName(string.Format("local_{0}", topMenuName)) ?? NavigationHelper.SetSelectedPath(topMenuItems, workContext.HttpContext.Request, routeData);
+            NavigationHelper.PopulateLocalMenu(_shapeFactory, localTopMenuShape, localTopMenuShape, selectedTopMenuPath);
+            workContext.Layout.LocalNavigation.Add(localTopMenuShape);
         }
 
         public void OnResultExecuted(ResultExecutedContext filterContext) { }

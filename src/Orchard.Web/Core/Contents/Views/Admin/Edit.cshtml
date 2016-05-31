@@ -2,7 +2,7 @@
     var typeDisplayName = Model.ContentItem.TypeDefinition.DisplayName;
     var pageTitle = T("Edit Content");
     if (!string.IsNullOrWhiteSpace(typeDisplayName)) {
-        pageTitle = T("Edit {0}", typeDisplayName);
+        pageTitle = T("Edit {0}", T(typeDisplayName));
     }
 
     Layout.Title = pageTitle;

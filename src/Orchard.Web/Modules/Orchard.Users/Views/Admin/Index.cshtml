@@ -1,107 +1,137 @@
-@model Orchard.Users.ViewModels.UsersIndexViewModel
+﻿@model Orchard.Users.ViewModels.UsersIndexViewModel
 @using Orchard.Core.Shapes;
 @using Orchard.Users.Models;
 @using Orchard.Users.ViewModels;
-
-
 
 @{
     var userIndex = 0;
 
     Layout.Title = T("Users").ToString();
+    Script.Require("UsersAdmin");
 }
 
-@using (Html.BeginFormAntiForgeryPost()) { 
-    @Html.ValidationSummary()
-    <div class="manage">@Html.ActionLink(T("Add a new user").ToString(), "Create", new { }, new { @class = "button primaryAction" })</div>
-
-    <fieldset class="bulk-actions">
-        <label for="publishActions">@T("Actions:")</label>
-        <select id="publishActions" name="@Html.NameOf(m => m.Options.BulkAction)">
-            @Html.SelectOption(Model.Options.BulkAction, UsersBulkAction.None, T("Choose action...").ToString())
-            @Html.SelectOption(Model.Options.BulkAction, UsersBulkAction.Approve, T("Approve").ToString()) 
-            @Html.SelectOption(Model.Options.BulkAction, UsersBulkAction.Disable, T("Disable").ToString())
-            @Html.SelectOption(Model.Options.BulkAction, UsersBulkAction.ChallengeEmail, T("Send challenge E-mail").ToString())
-            @Html.SelectOption(Model.Options.BulkAction, UsersBulkAction.Delete, T("Delete").ToString())
-        </select>
-        <button type="submit" name="submit.BulkEdit" value="@T("Apply")">@T("Apply")</button>
-    </fieldset>
-    <fieldset class="bulk-actions">
-        @Html.TextBoxFor(m => m.Options.Search, new { @class = "text" })        
-        <label for="filterResults">@T("Filter:")</label>
-        <select id="filterResults" name="@Html.NameOf(m => m.Options.Filter)">
-            @Html.SelectOption(Model.Options.Filter, UsersFilter.All, T("All Users").ToString())
-            @Html.SelectOption(Model.Options.Filter, UsersFilter.Approved, T("Approved Users").ToString())
-            @Html.SelectOption(Model.Options.Filter, UsersFilter.Pending, T("Pending Users").ToString())
-            @Html.SelectOption(Model.Options.Filter, UsersFilter.EmailPending, T("Pending Emails").ToString())
-        </select>
-        <label for="sortResults">@T("Sort by:")</label>
-        <select id="sortResults" name="@Html.NameOf(m => m.Options.Order)">
-            @Html.SelectOption(Model.Options.Order, UsersOrder.Name, T("Name").ToString())
-            @Html.SelectOption(Model.Options.Order, UsersOrder.Email, T("Email").ToString())
-            @Html.SelectOption(Model.Options.Order, UsersOrder.CreatedUtc, T("Creation Time").ToString())
-            @Html.SelectOption(Model.Options.Order, UsersOrder.LastLoginUtc, T("Last Login Time").ToString())
-        </select>
-
-        <button type="submit" name="submit.Filter" value="@T("Filter")">@T("Filter")</button>
-    </fieldset>
-    <fieldset>
-        <table class="items">
-            <thead>
-                <tr>
-                    <th scope="col"><input type="checkbox" class="check-all"/></th>
-                    <th scope="col">@T("Name")</th>
-                    <th scope="col">@T("Email")</th>
-                    <th scope="col">@T("Actions")</th>
-                    <th scope="col">@T("Creation Time")</th>
-                    <th scope="col">@T("Last Login Time")</th>
-                </tr>
-            </thead>
-            @foreach (var entry in Model.Users) { 
-            <tr>
-                <td>
-                    <input type="hidden" value="@Model.Users[userIndex].User.Id" name="@Html.NameOf(m => m.Users[userIndex].User.Id)"/>
-                    <input type="checkbox" value="true" name="@Html.NameOf(m => m.Users[userIndex].IsChecked)"/>
-                </td>
-                <td>
-                    @if (entry.User.RegistrationStatus == UserStatus.Approved && entry.User.EmailStatus == UserStatus.Approved) { 
-                    <img class="icon" src="@Href("~/Modules/Orchard.Users/Content/Admin/images/online.gif") " alt="@T("Approved") " title="@T("User is approved") " /> 
-                    } else { 
-                    <img class="icon" src="@Href("~/Modules/Orchard.Users/Content/Admin/images/offline.gif") " alt="@T("Moderated") " title="@if (entry.User.EmailStatus == UserStatus.Approved) { @T("User is moderated") } else { @T("E-mail validation is pending") }" />
-                    } 
-                    @Html.ActionLink(entry.User.UserName, "Edit", new { entry.User.Id }) 
-                </td>
-                <td>
-                    @entry.User.Email 
-                </td>
-                <td>
-                    @Html.ActionLink(T("Edit").ToString(), "Edit", new { entry.User.Id }) |
-                    @Html.ActionLink(T("Delete").ToString(), "Delete", new { entry.User.Id}, new { itemprop = "RemoveUrl UnsafeUrl" }) |
-                    @if (entry.User.RegistrationStatus == UserStatus.Pending) {
-                        @Html.ActionLink(T("Approve").ToString(), "Approve", new { entry.User.Id }, new { itemprop = "UnsafeUrl" })
-                    } else {
-                        @Html.ActionLink(T("Disable").ToString(), "Moderate", new { entry.User.Id }, new { itemprop = "UnsafeUrl" })
-                    }
-                    @if (entry.User.EmailStatus == UserStatus.Pending) { <text>|</text>
-                        @Html.ActionLink(T("Send challenge E-mail").ToString(), "SendChallengeEmail", new { entry.User.Id }, new { itemprop = "UnsafeUrl" })
-                    } 
-                </td>
-                <td>
-                    @if (entry.User.CreatedUtc != null) {
-                        @Display(New.DateTimeRelative(dateTimeUtc: entry.User.CreatedUtc))
-                    }
-                </td>
-                <td>
-                    @if (entry.User.LastLoginUtc != null) {
-                        @Display(New.DateTimeRelative(dateTimeUtc: entry.User.LastLoginUtc))
-                    }
-                </td>
-            </tr>
-                    userIndex++;
-            }
-        </table>
-
-    @Display(Model.Pager)
-
-    </fieldset>
-} 
+@using (Html.BeginFormAntiForgeryPost()) {
+    <div class="panel panel-default">
+        @Html.ValidationSummary()
+        <div class="panel-heading no-border form-inline">
+            <div class="panel-heading-actions">
+                <a class="btn btn-primary" href="@Url.Action("Create", new { })"><i class="fa fa-plus"></i> @T("Add a new user").Text</a>
+            </div>
+            <div class="panel-heading-primary-group">
+                <fieldset class="bulk-actions">
+                    <input id="publishActions" name="@Html.NameOf(m => m.Options.BulkAction)" type="hidden" value="@UsersBulkAction.None" />
+                    <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa fa-bolt"></i> Bulk Actions <span class="caret"></span>
+                        </button>&nbsp;
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="#" data-confirm="@T("Are you sure you want to approve these users?")" data-action="@UsersBulkAction.Approve">@T("Approve").ToString()</a></li>
+                            <li><a href="#" data-confirm="@T("Are you sure you want to disable these users?")" data-action="@UsersBulkAction.Disable">@T("Disable").ToString()</a></li>
+                            <li><a href="#" data-confirm="@T("Are you sure you want to send challenge email to these users?")" data-action="@UsersBulkAction.ChallengeEmail">@T("Send challenge E-mail").ToString()</a></li>
+                            <li><a href="#" data-confirm="@T("Are you sure you want to delete these users?")" data-action="@UsersBulkAction.Delete">@T("Delete").ToString()</a></li>
+                        </ul>
+                    </div>
+                </fieldset>
+                <fieldset class="bulk-actions">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                        @Html.TextBoxFor(m => m.Options.Search, new { @class = "text", placeholder = T("Filter") })
+                    </div>
+                </fieldset>
+                <fieldset class="bulk-actions">
+                    <label for="filterResults">@T("Filter:")</label>
+                    <select id="filterResults" name="@Html.NameOf(m => m.Options.Filter)" class="form-control">
+                        @Html.SelectOption(Model.Options.Filter, UsersFilter.All, T("All Users").ToString())
+                        @Html.SelectOption(Model.Options.Filter, UsersFilter.Approved, T("Approved Users").ToString())
+                        @Html.SelectOption(Model.Options.Filter, UsersFilter.Pending, T("Pending Users").ToString())
+                        @Html.SelectOption(Model.Options.Filter, UsersFilter.EmailPending, T("Pending Emails").ToString())
+                    </select>
+                    @*<label for="sortResults">@T("Sort by:")</label>
+                        <select id="sortResults" name="@Html.NameOf(m => m.Options.Order)" class="form-control">
+                            @Html.SelectOption(Model.Options.Order, UsersOrder.Name, T("Name").ToString())
+                            @Html.SelectOption(Model.Options.Order, UsersOrder.Email, T("Email").ToString())
+                            @Html.SelectOption(Model.Options.Order, UsersOrder.CreatedUtc, T("Creation Time").ToString())
+                            @Html.SelectOption(Model.Options.Order, UsersOrder.LastLoginUtc, T("Last Login Time").ToString())
+                        </select>
+                    *@
+                    <button type="submit" name="submit.Filter" value="@T("Filter")" class="btn btn-default">@T("Filter")</button>
+                </fieldset>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="table-responsive table-with-footer">
+                    <table class="table table-fw-widget data-table table-striped dataTable no-footer">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="text-nowrap">
+                                    <div class="or-checkbox inline">
+                                        <input id="checkAll" class="check-all" type="checkbox">
+                                        <label class="check-all" title="@T("Select All")" for="checkAll"></label>
+                                    </div>
+                                </th>
+                                <th scope="col" width="50%">@T("Name")</th>
+                                <th scope="col" width="50%">@T("Email")</th>
+                                <th scope="col" class="text-nowrap">@T("Last Login Time")</th>
+                                <th scope="col" class="text-nowrap">@T("Creation Time")</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        @foreach (var entry in Model.Users) {
+                            <tr>
+                                <td>
+                                    <input type="hidden" value="@Model.Users[userIndex].User.Id" name="@Html.NameOf(m => m.Users[userIndex].User.Id)" />
+                                    <div class="or-checkbox">
+                                        <input type="checkbox" value="true" name="@Html.NameOf(m => m.Users[userIndex].IsChecked)" id="@Html.FieldIdFor(m => m.Users[userIndex].IsChecked)" />
+                                        <label for="@Html.FieldIdFor(m => m.Users[userIndex].IsChecked)"></label>
+                                    </div>
+                                </td>
+                                <td class="text-nowrap">
+                                    @if (entry.User.RegistrationStatus == UserStatus.Approved && entry.User.EmailStatus == UserStatus.Approved) {
+                                        <i class="fa fa-check-circle text-success"></i>
+                                    } else {
+                                        <i class="fa fa-check-circle text-danger"></i>
+                                    }
+                                    @Html.ActionLink(entry.User.UserName, "Edit", new { entry.User.Id })
+                                </td>
+                                <td>
+                                    @entry.User.Email
+                                </td>
+                                <td>
+                                    @if (entry.User.LastLoginUtc != null) {
+                                        @Display(New.DateTimeRelative(dateTimeUtc: entry.User.LastLoginUtc))
+                                    }
+                                </td>
+                                <td>
+                                    @if (entry.User.CreatedUtc != null) {
+                                        @Display(New.DateTimeRelative(dateTimeUtc: entry.User.CreatedUtc))
+                                    }
+                                </td>
+                                <td class="text-nowrap">
+                                    @if (entry.User.RegistrationStatus == UserStatus.Pending) {
+                                        @Html.ActionLink(T("Approve").ToString(), "Approve", new { entry.User.Id }, new { itemprop = "UnsafeUrl", @class = "btn btn-warning" })
+                                    } else {
+                                        @Html.ActionLink(T("Disable").ToString(), "Moderate", new { entry.User.Id }, new { itemprop = "UnsafeUrl", @class = "btn btn-warning" })
+                                    }
+                                    @if (entry.User.EmailStatus == UserStatus.Pending) {
+                                        @Html.ActionLink(T("Send challenge E-mail").ToString(), "SendChallengeEmail", new { entry.User.Id }, new { itemprop = "UnsafeUrl", @class = "btn btn-primary" })
+                                    }
+                                    <a class="btn btn-primary" href="@Url.Action("Edit",  new { entry.User.Id })"><i class="fa fa-pencil-square-o"></i> @T("Edit")</a>
+                                    <a class="btn btn-danger" href="@Url.Action("Delete", new { entry.User.Id })" data-confirm="@T("Are you sure you want to delete this item?")"><i class="fa fa-trash"></i> @T("Delete")</a>
+                                </td>
+                            </tr>
+                            userIndex++;
+                        }
+                    </table>
+                </div>
+                <div class="row or-datatable-footer">
+                    <div class="col-sm-12">
+                        @Display(Model.Pager)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@Display.Modal()

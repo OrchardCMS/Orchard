@@ -1,6 +1,19 @@
 ﻿@model IEnumerable<Orchard.ContentTypes.ViewModels.EditPartFieldViewModel>
+@{
+    Script.Require("ContentTypesAdmin");
+}
 @if (Model.Any()) {
-    <fieldset>@foreach (var field in Model) {
-            var f = field;
-            @Html.EditorFor(m => f, "Field", field.Prefix)}
-    </fieldset>}
+    <fieldset>
+        @foreach (var field in Model) {
+        var f = field;
+        @Html.EditorFor(m => f, "Field", field.Prefix)}
+    </fieldset>
+}
+else {
+    <div role="alert" class="alert alert-info alert-icon alert-icon-color">
+        <div class="icon"><span class="s7-info"></span></div>
+        <div class="message">
+            @T("No fields yet.")
+        </div>
+    </div>
+}

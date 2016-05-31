@@ -1,33 +1,36 @@
 ﻿@model BindingSelectViewModel
 @using Orchard.Projections.Models;
 @using Orchard.Projections.ViewModels;
-           
+
 @{
     Layout.Title = T("Add a Binding");
 }
-
-@if (!Model.Records.Any()) {
-    <h3>@T("There are no currently available bindings")</h3>
-}
-
-@foreach (var record in Model.Records.OrderBy(x => x.FullName)) {
-
-    if (!record.Members.Any()) {
-        continue;
-    }
-    
-    <h2>@record.FullName</h2>
-    
-    <table class="items">
-        <thead>
-            <tr>
-                <th scope="col" style="width:300px">@T("Name")</th>
-            </tr>
-        </thead>
-        @foreach (var member in record.Members) {
-        <tr>
-            <td>@Html.ActionLink(member.Member, "Create", new { fullName = record.FullName, member = member.Member })</td>
-        </tr>
+<div class="panel panel-default">
+    <div class="panel-body">
+        @if (!Model.Records.Any()) {
+            <h3 class="no-content">@T("There are no currently available bindings")</h3>
         }
-    </table>
-}
+
+        @foreach (var record in Model.Records.OrderBy(x => x.FullName)) {
+
+            if (!record.Members.Any()) {
+                continue;
+            }
+
+            <h4>@record.FullName</h4>
+
+            <table class="table table-condensed table-hover table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col" style="width:300px">@T("Name")</th>
+                    </tr>
+                </thead>
+                @foreach (var member in record.Members) {
+                    <tr>
+                        <td>@Html.ActionLink(member.Member, "Create", new { fullName = record.FullName, member = member.Member })</td>
+                    </tr>
+                }
+            </table>
+        }
+    </div>
+</div>

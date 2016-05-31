@@ -1,0 +1,34 @@
+/*------------------------------------------------------------------
+[General elements style]
+*/
+
+html{
+	height:100%;
+	overflow-x: hidden;
+}
+
+body {
+	padding: 0;
+	background-color: @body-background;
+	height: 100%;
+}
+
+a{
+
+	&:hover, &:focus{
+		text-decoration: none;
+		outline: none;
+	}	
+}
+
+p{
+	font-size: @paragraph-font-size;
+	line-height: @paragraph-line-height;
+}
+
+button{
+
+	&:focus{
+		outline: none !important;
+	}
+}

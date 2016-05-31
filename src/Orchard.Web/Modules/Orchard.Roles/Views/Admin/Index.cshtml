@@ -1,49 +1,85 @@
-@model RolesIndexViewModel
+﻿@model RolesIndexViewModel
 @using Orchard.Roles.ViewModels;
 @using Orchard.Utility.Extensions;
 @{
     Script.Require("ShapesBase");
 
     Layout.Title = T("Roles").ToString();
+    Script.Require("RolesAdmin");
 }
 
-@using(Html.BeginFormAntiForgeryPost()) {
-    @Html.ValidationSummary();
-    <fieldset class="bulk-actions">
-        <label for="publishActions">@T("Actions:")</label>
-        <select id="Select1" name="roleActions">
-            <option value="1">@T("Delete")</option>
-        </select>
-        <button type="submit">@T("Apply")</button>
-    </fieldset>
-    <div class="manage">@Html.ActionLink(T("Add a role").ToString(), "Create", new { }, new { @class = "button primaryAction" })</div>
-    <fieldset>
-        <table class="items" summary="@T("This is a table of the roles currently available for use in your application.")">
-            <colgroup>
-                <col id="Col1" />
-                <col id="Col2" />
-                <col id="Col3" />
-            </colgroup>
-            <thead>
-                <tr>
-                    <th scope="col"><input type="checkbox" class="check-all"/></th>
-                    <th scope="col">@T("Name")</th>
-                    <th scope="col"></th>
-                </tr>
-            </thead>
-            @foreach (var row in Model.Rows) {
-                <tr>
-                    <td><input type="checkbox" value="true" name="@("Checkbox." + row.Id)"/></td>
-                    <td>@Html.ActionLink(row.Name, "Edit", new { row.Id })</td>
-                    <td>
-                        @Html.ActionLink(T("Edit").ToString(), "Edit", new { row.Id })
-                        @if (row.Name != "Administrator") {
-                            @T(" | ")
-                            <a href="@Url.Action("Delete", new {row.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString()})" itemprop="RemoveUrl UnsafeUrl">@T("Delete")</a>                       
+@using (Html.BeginFormAntiForgeryPost()) {
+    <div class="panel panel-default">
+        <div class="panel-heading no-border form-inline">
+            @Html.ValidationSummary()
+            <div class="panel-heading-actions">@Html.ActionLink(T("Add a role").ToString(), "Create", new { }, new { @class = "btn btn-primary" })</div>
+            <div class="panel-heading-primary-group">
+                @*<fieldset class="bulk-actions">
+                    <label class="control-label">Action: </label>
+                    <select id="Select1" name="roleActions" class="form-control">
+                        <option value="1">@T("Delete")</option>
+                    </select>
+                    <button type="submit" class="btn btn-primary">@T("Apply")</button>
+                </fieldset>*@
+                <fieldset>
+                    <input id="publishActions" name="@Html.NameOf(m => m.Options.BulkAction)" type="hidden" value="@RolesBulkAction.None" />
+                    <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa fa-bolt"></i> Bulk Actions <span class="caret"></span>
+                        </button>&nbsp;
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="#" data-confirm="@T("Are you sure you want to delete these items?")" data-action="@RolesBulkAction.Delete">@T("Delete").ToString()</a></li>
+                        </ul>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="table-responsive table-with-footer">
+                    <table class="table table-fw-widget data-table table-striped dataTable no-footer">
+                        <thead>
+                            <tr>
+                                <th scope="col">
+                                    <div class="or-checkbox inline">
+                                        <input id="checkAll" class="check-all" type="checkbox">
+                                        <label class="check-all" title="@T("Select All")" for="checkAll"></label>
+                                    </div>
+                                </th>
+                                <th scope="col" width="100%">@T("Name")</th>
+                                <th scope="col" class="no-sort"></th>
+                            </tr>
+                        </thead>
+
+                        @foreach (var row in Model.Rows) {
+                            <tr>
+                                <td>
+                                    <div class="or-checkbox">
+                                        <input type="checkbox" value="true" name="@("Checkbox." + row.Id)" id="@("Checkbox." + row.Id)" />
+                                        <label for="@("Checkbox." + row.Id)"></label>
+                                    </div>
+                                </td>
+                                <td>@Html.ActionLink(row.Name, "Edit", new { row.Id })</td>
+                                <td class="text-nowrap">
+                                    <a href="@Url.Action("Edit", new { row.Id })" class = "btn btn-primary"><i class="fa fa-pencil-square-o"></i> @T("Edit")</a>
+                                    @if (row.Name != "Administrator") {
+                                        <a class="btn btn-danger" href="@Url.Action("Delete", new { row.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString() })" data-confirm="@T("Are you sure you want to delete this item?")"><i class="fa fa-trash"></i> @T("Delete")</a>
+                                    }
+                                </td>
+                            </tr>
                         }
-                    </td>
-                </tr>
-            }
-        </table>
-    </fieldset>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+        @*<div class="row or-datatable-footer">
+                <div class="col-sm-12">
+                    @Display(Model.Pager)
+                </div>
+            </div>*@
+
+    </div>
 }
+@Display.Modal()

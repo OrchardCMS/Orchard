@@ -1,0 +1,199 @@
+
+.panel {
+    .panel-heading > div {
+        &:only-child {
+            flex-grow: 1;
+        }
+    }
+
+    .panel-heading, .panel-heading > form {
+        /*margin: 0 0 20px 0;
+        padding: 0;*/
+        display: flex;
+        justify-content: space-between;
+        align-content: space-between;
+        flex-basis: 100%;
+        flex-wrap: wrap;
+        margin:0 15px;
+
+        &.inline-flex {
+            display: inline-flex;
+        }
+
+        .panel-heading-actions {
+            order: 10;
+            align-self: flex-start;
+            display: inline-flex;
+            margin: 0;
+            padding: 0;
+            justify-content: flex-end;
+            flex: 2 auto;
+
+            @media (max-width: @screen-xs-max) {
+                margin-bottom: 10px;
+                padding: 0;
+            }
+        }
+
+        .panel-heading-primary-group {
+            order: 0;
+            align-items: center;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            flex: 3 auto;
+
+            @media (max-width: @screen-xs-max) {
+                flex-basis: 100%;
+                align-items: flex-start;
+                margin-bottom: 1em;
+
+                > * {
+                    white-space: normal;
+                    width: 100%;
+                    margin-right: 0;
+                }
+            }
+
+            .bulk-actions, .bulk-actions-auto {
+                /*padding-right: 20px;*/
+                margin-right: 15px;
+                /*border-right: 1px solid #ccc;*/
+                flex-grow: 0;
+
+                + .bulk-actions, + .bulk-actions-auto {
+                    /*margin-left: 1em;
+                    padding-left: 1em;
+                    border-left: 1px solid #ccc;*/
+                    flex-grow: 1;
+                }
+
+                &:last-child {
+                    border-right: 0;
+                    padding-right: 0;
+                    flex-grow: 2;
+                }
+
+                @media (max-width: @screen-xs-max) {
+                    white-space: normal;
+                    margin-right: 0;
+                    padding-bottom: 1em;
+                    border-bottom: 1px solid #ccc;
+                    padding-right: 0;
+                    border-right: 0;
+
+                    + .bulk-actions, + .bulk-actions-auto {
+                        margin-left: 0;
+                        padding-left: 0;
+                        border-left: none;
+                    }
+                }
+
+                > * {
+
+                    @media (max-width: @screen-xs-max) {
+                        margin-bottom: 5px;
+                        width: 100%;
+
+                        &:last-child {
+                            margin-bottom: 0;
+                        }
+                    }
+                }
+
+                input {
+                    &[type="text"] {
+                        width: 100%;
+                    }
+                }
+
+                .input-group {
+                    &:only-child {
+                        width: 100%;
+                    }
+                }
+            }
+
+            .hint {
+                margin-top: 5px;
+                font-size: .8em;
+                width: 100%;
+                white-space: normal;
+
+                @media (max-width: @screen-xs-max) {
+                    white-space: normal;
+                }
+            }
+
+            h1, h2, h3, h4, h5 {
+
+                &:first-child {
+                    margin: 0;
+                }
+
+                .hint {
+                    font-size: 14px;
+                }
+            }
+        }
+    }
+
+    .panel-body {
+        /*.panel-heading {
+            padding: 0;
+            margin: 0;
+        }*/
+
+        fieldset {
+            &:first-child {
+                h1, h2, h3, h4 {
+                    &:first-child {
+                        margin-top: 0;
+                    }
+                }
+            }
+        }
+
+        fieldset + fieldset {
+            margin-top: 20px;
+        }
+    }
+
+    .panel-footer {
+        .clearfix();
+    }
+}
+
+// Accordions and Panels.
+.panel-group.accordion {
+    .panel {
+        border: none;
+
+        .panel-heading {
+            .panel-title {
+                display: flex;
+                align-content: center;
+                width: 100%;
+                justify-content: space-between;
+
+                a {
+                    background: transparent;
+                    color: inherit;
+
+                    &.btn-link.btn-danger {
+                        color: @danger-color-text;
+                        font-size: 1em;
+                    }
+                }
+            }
+        }
+
+        /*.panel-footer{
+            margin-top:-30px;
+        }
+        .panel-body + .panel-footer,
+        .panel-heading + .panel-footer{
+            margin-top:0;
+        }*/
+    }
+}

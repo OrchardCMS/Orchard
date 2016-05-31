@@ -1,82 +1,92 @@
 ﻿@model Orchard.Autoroute.Settings.AutorouteSettings
-@using Orchard.Utility.Extensions;
-
 @{
     Script.Require("AutorouteBrowser");
     Style.Require("AutorouteSettings");
     int patternCount = 0;
     int patternCultureCount = 0;
 }
-<fieldset>
-    <div>
+
+<div class="form-group">
+    <div class="or-checkbox">
         @Html.CheckBoxFor(m => m.AllowCustomPattern)
         <label class="forcheckbox" for="@Html.FieldIdFor(m => m.AllowCustomPattern)">@T("Allow custom patterns")</label>
-        <span class="hint">@T("Allow the user to change the pattern on each item")</span>
+        <span class="help-block">@T("Allow the user to change the pattern on each item")</span>
     </div>
-</fieldset>
-<fieldset>
-    <div>
+    
+</div>
+<div class="form-group">
+    <div class="or-checkbox">
         @Html.CheckBoxFor(m => m.AutomaticAdjustmentOnEdit)
         <label class="forcheckbox" for="@Html.FieldIdFor(m => m.AutomaticAdjustmentOnEdit)">@T("Automatically regenerate when editing content")</label>
-        <span class="hint">@T("This option will cause the Url to automatically be regenerated when you edit existing content and publish it again, otherwise it will always keep the old route, or you have to perform bulk update in the Autoroute admin.")</span>
+        <span class="help-block">@T("This option will cause the Url to automatically be regenerated when you edit existing content and publish it again, otherwise it will always keep the old route, or you have to perform bulk update in the Autoroute admin.")</span>
     </div>
-</fieldset>
+</div>
 @if (Model.SiteCultures.Count > 1) {
-    <fieldset>
-        <div>
+    <div class="form-group">
+        <div class="or-checkbox">
             @Html.CheckBoxFor(m => m.UseCulturePattern, new { @class = "use-culture-pattern" })
             <label class="forcheckbox" for="@Html.FieldIdFor(m => m.UseCulturePattern)">@T("Use culture pattern(s)")</label>
-            <span class="hint">@T("Allow to set pattern(s) for each culture. If left unchecked this means it will use the default website culture pattern(s).")</span>
+            <span class="help-block">@T("Allow to set pattern(s) for each culture. If left unchecked this means it will use the default website culture pattern(s).")</span>
         </div>
-    </fieldset>
+    </div>
 }
-<fieldset>
-    <h4>@T("Patterns") :</h4>
-</fieldset>
-<fieldset>
-    <div id="local-navigation">
-        <ul class="autoroute-cultures localmenu group">
-            @{
-                int i = 1;
-                string cssClass = "";
-            }
-            <li class="first selected"><a class="culture" href="#cat-@Model.DefaultSiteCulture">@Model.DefaultSiteCulture</a></li>
-            @foreach (var culture in Model.SiteCultures) {
-                if (culture != Model.DefaultSiteCulture) {
-                    cssClass = i == Model.SiteCultures.Count - 1 ? "last" : "middle";
-                    <li class="@cssClass" style="@(Model.UseCulturePattern == false ? "display:none;" : "")"><a class="culture" href="#cat-@culture">@culture</a></li>
-                    i++;
+
+<h4>@T("Patterns")</h4>
+
+<div class="form-group">
+    <div class="autoroute-settings-wrapper">
+        <div class="tab-container">
+            <ul class="nav nav-tabs">
+                @{
+                    int i = 1;
+                    string cssClass = "";
                 }
-            }
-        </ul>
-    </div>
-    <div id="content">
-        @foreach (var culture in Model.SiteCultures) {
-            <fieldset id="cat-@culture" class="items @(culture == Model.DefaultSiteCulture ? "default" : "")" style="@(culture == Model.DefaultSiteCulture ? "display:block;" : "display:none;")">
-                <table class="autoroute-settings-patterns">
-                    <tr>
-                        <th class="autoroute-settings-default">@T("Default")</th>
-                        <th class="autoroute-settings-name">@T("Name")<span class="hint">@T("Name of the pattern")</span></th>
-                        <th class="autoroute-settings-pat">@T("Pattern")<span class="hint">@T("The definition of the pattern")</span></th>
-                        <th class="autoroute-settings-desc">@T("Description")<span class="hint">@T("The description of the pattern, displayed in the editor")</span></th>
-                        <th class="autoroute-settings-actions">&nbsp;</th>
-                    </tr>
-                    @for (int index = 0; index < Model.Patterns.Where(x => x.Culture == culture).Count(); index++) {
-                        <tr>
-                            <td>@Html.RadioButtonFor(m => m.DefaultPatterns[Model.SiteCultures.IndexOf(culture)].Culture, culture + "|" + patternCultureCount, patternCultureCount.ToString() == Model.DefaultPatterns[Model.SiteCultures.IndexOf(culture)].PatternIndex ? new { @checked = "checked" } : null)</td>
-                            <td>@Html.TextBoxFor(m => m.Patterns[patternCount].Name, new { @class = "text" })</td>
-                            <td>@Html.TextBoxFor(m => m.Patterns[patternCount].Pattern, new { @class = "tokenized text" })</td>
-                            <td>@Html.TextBoxFor(m => m.Patterns[patternCount].Description, new { @class = "text" })</td>
-                            <td>@Html.HiddenFor(m => m.Patterns[patternCount].Culture)&nbsp;</td>
-                        </tr>
-                        if (Model.Patterns[patternCount].Pattern != null) { patternCultureCount++; } else { patternCultureCount = 0; }
-                        patternCount++;
+                <li class="active">
+                    <a data-toggle="tab" class="culture" href="#cat-@Model.DefaultSiteCulture">@Model.DefaultSiteCulture</a>
+                </li>
+                @foreach (var culture in Model.SiteCultures) {
+                if (culture != Model.DefaultSiteCulture) {
+                        <li style="@(Model.UseCulturePattern == false ? "display:none;" : "")">
+                            <a data-toggle="tab" class="culture" href="#cat-@culture">@culture</a>
+                        </li>
                     }
-                    <tr></tr>
-                </table>
-            </fieldset>
-        }
+                }
+            </ul>
+            <div class="tab-content">
+                @foreach (var culture in Model.SiteCultures) {
+                    <div id="cat-@culture" class="tab-pane @(culture == Model.DefaultSiteCulture ? "active" : "")">
+                        <table class="autoroute-settings-patterns">
+                            <tr>
+                                <th class="autoroute-settings-default">@T("Default")</th>
+                                <th class="autoroute-settings-name">@T("Name")<span class="help-block">@T("Name of the pattern")</span></th>
+                                <th class="autoroute-settings-pat">@T("Pattern")<span class="help-block">@T("The definition of the pattern")</span></th>
+                                <th class="autoroute-settings-desc">@T("Description")<span class="help-block">@T("The description of the pattern, displayed in the editor")</span></th>
+                                <th class="autoroute-settings-actions">&nbsp;</th>
+                            </tr>
+                            @for (int index = 0; index < Model.Patterns.Where(x => x.Culture == culture).Count(); index++) {
+                                var radioId = Html.IdFor(m => m.DefaultPatterns[Model.SiteCultures.IndexOf(culture)].Culture) + "|" + patternCultureCount;
+                                <tr>
+                                    <td>
+                                        <div class="or-radio">
+                                            <input type="radio" id="@radioId" name="@Html.NameFor(m => m.DefaultPatterns[Model.SiteCultures.IndexOf(culture)].Culture)" value="@(culture + "|" + patternCultureCount)" @if (patternCultureCount.ToString() == Model.DefaultPatterns[Model.SiteCultures.IndexOf(culture)].PatternIndex) { <text>checked="checked"</text>} />
+                                            <label for="@radioId"></label>
+                                        </div>
+                                    </td>
+                                    <td>@Html.TextBoxFor(m => m.Patterns[patternCount].Name, new { @class = "text" })</td>
+                                    <td>@Html.TextBoxFor(m => m.Patterns[patternCount].Pattern, new { @class = "tokenized text" })</td>
+                                    <td>@Html.TextBoxFor(m => m.Patterns[patternCount].Description, new { @class = "text" })</td>
+                                    <td>@Html.HiddenFor(m => m.Patterns[patternCount].Culture)&nbsp;</td>
+                                </tr>
+                                if (Model.Patterns[patternCount].Pattern != null) { patternCultureCount++; } else { patternCultureCount = 0; }
+                                patternCount++;
+                            }
+                            <tr></tr>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
     </div>
-</fieldset>
+</div>
 
 @Display.TokenHint()

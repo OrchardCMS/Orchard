@@ -9,7 +9,7 @@
 }
 
 <div class="manage">
-    @Html.ActionLink(createLinkText.Text, "Create", "Admin", new { area = "Contents", id = "Dashboard", returnUrl = Url.Action("List", "Dashboard", new { area = "Orchard.Dashboards" }) }, new { @class = "button primaryAction" })
+    @Html.ActionLink(createLinkText.Text, "Create", "Admin", new { area = "Contents", id = "Dashboard", returnUrl = Url.Action("List", "Dashboard", new { area = "Orchard.Dashboards" }) }, new { @class = "btn btn-primary" })
 </div>
 @using (Html.BeginFormAntiForgeryPost()) {
     <fieldset class="bulk-actions">

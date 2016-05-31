@@ -11,7 +11,7 @@
     Layout.Title = T("Manage Aliases").Text;
     var aliasService = WorkContext.Resolve<IAliasService>();
     AdminIndexOptions options = Model.Options;
-    int index = -1;
+    int index = 0;
 
     var pageSizes = new List<int?>() { 10, 50, 100 };
     var defaultPageSize = WorkContext.CurrentSite.PageSize;
@@ -19,56 +19,67 @@
         pageSizes.Add(defaultPageSize);
     }
 }
+<div class="panel panel-default">
+    @if (Model.AliasEntries.Any()) {
+        using (Html.BeginFormAntiForgeryPost()) {
+            @Html.ValidationSummary()
+            <div class="panel-heading">
+                <div class="panel-heading-primary-group">
+                    @* No need to filter if there is only one option in the dropdownlist *@
+                    @*<fieldset class="bulk-actions">
+                            <label for="filterResults">@T("Sort by:")</label>
+                            <select id="filterResults" name="@Html.NameOf(m => m.Options.Order)" class="form-control auto-size">
+                                @Html.SelectOption(options.Order, AliasOrder.Path, T("Path").ToString())
+                            </select>
+                            <button class="btn btn-default" type="submit" name="submit.Filter" value="@T("Filter")">@T("Filter")</button>
+                        </fieldset>*@
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="table-responsive table-with-footer">
+                        <table class="table table-fw-widget data-table table-striped dataTable no-footer">
+                            <thead>
+                                <tr>
+                                    <th scope="col">@T("Alias")</th>
+                                    <th scope="col">@T("Route")</th>
+                                </tr>
+                            </thead>
+                            @foreach (var aliasEntry in Model.AliasEntries) {
+                                var alias = aliasEntry.Alias;
+                                index++;
+                                var virtualPathData = aliasService.LookupVirtualPaths(alias.RouteValues.ToRouteValueDictionary(), ViewContext.HttpContext).FirstOrDefault();
 
-@using (Html.BeginFormAntiForgeryPost()) {
-    @Html.ValidationSummary()
+                                if (virtualPathData == null) {
+                                    continue;
+                                }
 
-    <fieldset class="bulk-actions">
-        <label for="filterResults">@T("Sort by:")</label>
-        <select id="filterResults" name="@Html.NameOf(m => m.Options.Order)">
-            @Html.SelectOption(options.Order, AliasOrder.Path, T("Path").ToString())
-        </select>
-        <input type="hidden" name="Page" value="1" />
-        <label for="pageSize">@T("Show:")</label>
-        <select id="pageSize" name="PageSize">
-            @Html.SelectOption((int)Model.Pager.PageSize, 0, T("All").ToString())
-            @foreach (int size in pageSizes.OrderBy(p => p)) {
-                @Html.SelectOption((int)Model.Pager.PageSize, size, size.ToString())
-            }
-        </select>
-        <button type="submit" name="submit.Filter" value="@T("Filter")">@T("Filter")</button>
-    </fieldset>
-    <fieldset>
-        <table class="items">
-            <thead>
-                <tr>                    
-                    <th scope="col">@T("Alias")</th>
-                    <th scope="col">@T("Route")</th>                    
-                    <th scope="col">&nbsp;</th>
-                </tr>
-            </thead>
-            @foreach (var aliasEntry in Model.AliasEntries) {
-                var alias = aliasEntry.Alias;
-                index++;
-                var virtualPathData = aliasService.LookupVirtualPaths(alias.RouteValues.ToRouteValueDictionary(), ViewContext.HttpContext).FirstOrDefault();
-
-                if (virtualPathData == null) {
-                    continue;
-                }
-
-                var url = virtualPathData.VirtualPath;
-                <tr>
-                    <td>
-                        <input type="hidden" value="@alias.Path" name="@Html.FieldNameFor(m => Model.AliasEntries[index].Alias.Path)" />
-                        @Html.Link(alias.Path == String.Empty ? "/" : alias.Path, Href("~/" + urlPrefix + alias.Path))
-                    </td>
-                    <td>
-                        @Html.Link(url, Href("~/" + urlPrefix + "/" + url))
-                    </td>                   
-                </tr>
-            }
-        </table>
-
-        @Display(Model.Pager)
-    </fieldset>
-}
+                                var url = virtualPathData.VirtualPath;
+                                <tr>
+                                    <td>
+                                        <input type="hidden" value="@alias.Path" name="@Html.FieldNameFor(m => Model.AliasEntries[index].Alias.Path)" />
+                                        @Html.Link(alias.Path == String.Empty ? "/" : alias.Path, Href("~/" + urlPrefix + alias.Path))
+                                    </td>
+                                    <td>
+                                        @Html.Link(url, Href("~/" + urlPrefix + "/" + url))
+                                    </td>
+                                </tr>
+                            }
+                        </table>
+                    </div>
+                    <div class="row or-datatable-footer">
+                        <div class="col-sm-12">
+                            @Display(Model.Pager)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    } else {
+        <div class="panel-body">
+            <h3 class="no-content">
+                @T("There are no managed alias yet.")
+            </h3>
+        </div>
+    }
+</div>

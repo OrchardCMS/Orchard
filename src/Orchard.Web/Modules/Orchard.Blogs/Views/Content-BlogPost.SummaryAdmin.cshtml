@@ -7,56 +7,91 @@
     var returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString();
 }
 <div class="summary" itemscope="itemscope" itemid="@contentItem.Id" itemtype="http://orchardproject.net/data/ContentItem">
+
     <div class="properties">
-        <input type="checkbox" value="@contentItem.Id" name="itemIds"/>
-        <h3>@Html.ItemAdminLink(contentItem)</h3> - <div class="contentType">@contentItem.TypeDefinition.DisplayName</div>
+        <div class="head">
+            <div class="or-checkbox inline">
+                <input type="checkbox" value="@contentItem.Id" name="itemIds" id="content-summary-@contentItem.Id" />
+                <label for="content-summary-@contentItem.Id"></label>
+            </div>
+            <h3>@Html.ItemAdminLink(contentItem)<span class="content-type"> - @contentItem.TypeDefinition.DisplayName</span></h3>
+        </div>
+
+
         @if (Model.Header != null) {
-        <div class="header">@Display(Model.Header)</div>
-        }
-        @if (Model.Meta != null) {
-        <div class="metadata">@Display(Model.Meta)</div>
-        }
-    </div>
-    <div class="related">
-        @Display(Model.Actions)
-        
-        @if (contentItem.HasPublished()) {
-            @Html.ItemDisplayLink(T("View").Text, contentItem)
-            @T(" | ")
-
-            if (contentItem.HasDraft()) {
-                @Html.Link(T("Publish Draft").Text, Url.Action("Publish", "Admin", new { area = "Contents", id = contentItem.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "UnsafeUrl" })
-                @T(" | ")
-
-                if (Authorizer.Authorize(Orchard.Blogs.Permissions.PublishBlogPost, contentItem)) {
-                    @Html.ActionLink(T("Preview").Text, "Preview", "Item", new { area = "Contents", id = contentItem.Id }, new { })
-                    @T(" | ")
-                }
-            }
-
-            if (Authorizer.Authorize(Orchard.Blogs.Permissions.PublishBlogPost, contentItem)) {
-                @Html.Link(T("Unpublish").Text, Url.Action("Unpublish", "Admin", new { area = "Contents", id = contentItem.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "UnsafeUrl" })
-                @T(" | ")
-            }
-        } else {
-            if (contentItem.HasDraft()) {    
-                @Html.ActionLink(T("Preview").Text, "Preview", "Item", new { area = "Contents", id = contentItem.Id }, new { })
-                @T(" | ")
-            }
-
-            if (Authorizer.Authorize(Orchard.Blogs.Permissions.PublishBlogPost, contentItem)) {
-                @Html.Link(T("Publish").Text, Url.Action("Publish", "Admin", new { area = "Contents", id = contentItem.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "UnsafeUrl" })
-                @T(" | ")
-            }
-        }
-        @if (Authorizer.Authorize(Orchard.Blogs.Permissions.EditBlogPost, contentItem)) {
-            @Html.ItemEditLink(T("Edit").Text, contentItem)@T(" | ")
-        }
-        @if (Authorizer.Authorize(Orchard.Blogs.Permissions.DeleteBlogPost, contentItem)) {
-            @Html.Link(T("Delete").Text, Url.ItemRemoveUrl(contentItem, new {returnUrl}), new {itemprop = "RemoveUrl UnsafeUrl"})
+            <div class="header">@Display(Model.Header)</div>
         }
     </div>
     @if (Model.Content != null) {
-    <div class="primary">@Display(Model.Content)</div>
+        <div class="primary">@Display(Model.Content)</div>
     }
+    @if (Model.Meta != null) {
+        <div class="metadata">@Display(Model.Meta)</div>
+    }
+    @*<div class="content-item-actions-dropdown">
+            <div class="dropdown">
+                @{
+                    var ddlId = "ddl" + @contentItem.Id;
+                }
+                <a class="button-classes" href="#" data-toggle="dropdown" id="@ddlId">
+                    Actions
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li>@Display(Model.Actions)</li>
+                </ul>
+            </div>
+        </div>*@
+</div>
+<div class="content-item-actions">
+    <ul class="main-actions">
+        <li>
+            @Display(Model.Actions)
+            @if (contentItem.HasPublished()) {
+                @Html.ItemDisplayLink(T("View").Text, contentItem)
+
+                if (contentItem.HasDraft()) {
+                    @Html.Link(T("Publish Draft").Text, Url.Action("Publish", "Admin", new { area = "Contents", id = contentItem.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "UnsafeUrl" })
+
+
+                    if (Authorizer.Authorize(Orchard.Blogs.Permissions.PublishBlogPost, contentItem)) {
+                        @Html.ActionLink(T("Preview").Text, "Preview", "Item", new { area = "Contents", id = contentItem.Id }, new { })
+
+                    }
+                }
+
+                if (Authorizer.Authorize(Orchard.Blogs.Permissions.PublishBlogPost, contentItem)) {
+                    @Html.Link(T("Unpublish").Text, Url.Action("Unpublish", "Admin", new { area = "Contents", id = contentItem.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "UnsafeUrl" })
+
+                }
+            }
+            else {
+                if (contentItem.HasDraft()) {
+                    @Html.ActionLink(T("Preview").Text, "Preview", "Item", new { area = "Contents", id = contentItem.Id }, new { })
+
+                }
+
+                if (Authorizer.Authorize(Orchard.Blogs.Permissions.PublishBlogPost, contentItem)) {
+                    @Html.Link(T("Publish").Text, Url.Action("Publish", "Admin", new { area = "Contents", id = contentItem.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "UnsafeUrl" })
+
+                }
+            }
+            @if (Authorizer.Authorize(Orchard.Blogs.Permissions.EditBlogPost, contentItem)) {
+                @Html.ItemEditLink(T("Edit").Text, contentItem)
+            }
+            @if (Authorizer.Authorize(Orchard.Blogs.Permissions.DeleteBlogPost, contentItem)) {
+                @Html.Link(T("Delete").Text, Url.ItemRemoveUrl(contentItem, new { returnUrl }), new Dictionary<string, Object> { { "data-confirm", @T("Are you sure you want to delete this item?") } } )
+            }
+        </li>
+    </ul>
+    <div class="more-actions-dropdown">
+        @{
+            var ddlId = "ddl" + @contentItem.Id;
+        }
+        <a class="btn btn-link dropdown-toggle" href="#" data-toggle="dropdown" id="@ddlId">
+            <i class="fa fa-bars"></i>
+        </a>
+        <ul class="more-actions dropdown-menu"></ul>
+    </div>
+
 </div>

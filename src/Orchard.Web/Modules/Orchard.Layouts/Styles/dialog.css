@@ -9,7 +9,7 @@
         top: 0;
         bottom: 0;
         background: url('overlay.png');
-        z-index: 500;
+        z-index: 2000;
         /* Restore styles inherited from media-library-picker-admin.css when a media picker field is rendered. */
         -ms-opacity: inherit;
         opacity: inherit;
@@ -67,6 +67,7 @@
     .dialog-wrapper iframe {
         width: 100%;
         height: 600px;
+        border: none;
     }
 
 .dialog-settings {

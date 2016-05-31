@@ -5,5 +5,11 @@
 }
 @Display(Model.ContentItems)
 @if (blogPosts == null || blogPosts.Count() < 1) {
-<p>@T("There are no posts for this blog.")</p>
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <h3 class="no-content">
+                @T("There are no posts for this blog.")</h3>
+        </div>
+    </div>
 }
