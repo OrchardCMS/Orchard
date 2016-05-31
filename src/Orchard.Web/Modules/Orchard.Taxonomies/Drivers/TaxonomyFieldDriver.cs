@@ -141,6 +141,10 @@ namespace Orchard.Taxonomies.Drivers {
             _taxonomyService.UpdateTerms(part.ContentItem, terms.Select(x => x.As<TermPart>()), field.Name);
         }
 
+        protected override void Cloning(ContentPart part, TaxonomyField originalField, TaxonomyField cloneField, CloneContentContext context) {
+            _taxonomyService.UpdateTerms(context.CloneContentItem, originalField.Terms, cloneField.Name);
+        }
+
         private TermPart GetOrCreateTerm(TermEntry entry, int taxonomyId, TaxonomyField field) {
             var term = default(TermPart);
 

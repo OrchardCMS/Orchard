@@ -174,6 +174,10 @@ namespace Orchard.Fields.Drivers {
                 context.Element(GetPrefix(field, part)).SetAttributeValue("Value", XmlConvert.ToString(value, XmlDateTimeSerializationMode.Utc));
         }
 
+        protected override void Cloning(ContentPart part, DateTimeField originalField, DateTimeField cloneField, CloneContentContext context) {
+            cloneField.DateTime = originalField.DateTime;
+        }
+
         protected override void Describe(DescribeMembersContext context) {
             context
                 .Member(null, typeof(DateTime), T("Value"), T("The date and time value of the field."))
