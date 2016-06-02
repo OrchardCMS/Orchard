@@ -106,6 +106,26 @@ namespace Orchard.Tests.UI.Resources {
         }
 
         [Test]
+        public void CdnProtocolRelativePathSupportsSsl() {
+            _testManifest.DefineManifest = m => {
+                m.DefineResource("script", "Script1").SetUrl("script1.js").SetCdn("//cdn/script1.min.js");
+            };
+            _resourceManager.Require("script", "Script1");
+            VerifyPaths("script", new RequireSettings { CdnMode = true }, "https://cdn/script1.min.js", true);
+            VerifyPaths("script", new RequireSettings { CdnMode = true }, "https://cdn/script1.min.js", false);
+        }
+
+        [Test]
+        public void CdnProtocolRelativeDebugPathSupportsSsl() {
+            _testManifest.DefineManifest = m => {
+                m.DefineResource("script", "Script1").SetUrl("script1.js").SetCdn("//cdn/script1.min.js", "//cdn/script1.js");
+            };
+            _resourceManager.Require("script", "Script1");
+            VerifyPaths("script", new RequireSettings { CdnMode = true, DebugMode = true }, "https://cdn/script1.js", true);
+            VerifyPaths("script", new RequireSettings { CdnMode = true, DebugMode = true }, "https://cdn/script1.js", false);
+        }
+
+        [Test]
         public void LocalPathIsUsedInCdnModeNotSupportsSsl() {
             _testManifest.DefineManifest = m => {
                 m.DefineResource("script", "Script1").SetUrl("script1.min.js", "script1.js").SetCdn("http://cdn/script1.min.js", "http://cdn/script1.js", false);
