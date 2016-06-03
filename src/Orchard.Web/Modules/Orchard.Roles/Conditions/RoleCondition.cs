@@ -22,15 +22,16 @@ namespace Orchard.Roles.Conditions {
                 return;
             }
 
-            var user = _authenticationService.GetAuthenticatedUser();
-            if (user == null) {
-                evaluationContext.Result = false;
-                return;
-            }
-
             var roles = ((object[])evaluationContext.Arguments).Cast<string>();
-            var userRoles = user.As<IUserRoles>();
-            evaluationContext.Result = userRoles != null && userRoles.Roles.Intersect(roles).Any();
+            var user = _authenticationService.GetAuthenticatedUser();
+            if (user == null){
+                evaluationContext.Result = false;
+                evaluationContext.Result= roles.Contains("Anonymous");
+            }
+            else {
+                var userRoles = user.As<IUserRoles>();
+                evaluationContext.Result = userRoles != null && userRoles.Roles.Intersect(roles).Any();
+            }            
         }
     }
 }
