@@ -145,15 +145,15 @@ namespace Orchard.UI.Resources {
             if (String.IsNullOrEmpty(cdnUrl)) {
                 throw new ArgumentNullException("cdnUrl");
             }
-            UrlCdn = cdnUrl;
+            UrlCdn = cdnUrl.StartsWith("//", StringComparison.OrdinalIgnoreCase) ? "https:" + cdnUrl : cdnUrl;
             if (cdnUrlDebug != null) {
-                UrlCdnDebug = cdnUrlDebug;
+                UrlCdnDebug = cdnUrlDebug.StartsWith("//", StringComparison.OrdinalIgnoreCase) ? "https:" + cdnUrlDebug : cdnUrlDebug;
             }
             if (cdnSupportsSsl.HasValue) {
                 CdnSupportsSsl = cdnSupportsSsl.Value;
             }
             else {
-                CdnSupportsSsl = cdnUrl.StartsWith("https", StringComparison.OrdinalIgnoreCase);
+                CdnSupportsSsl = UrlCdn.StartsWith("https", StringComparison.OrdinalIgnoreCase);
             }
             return this;
         }
