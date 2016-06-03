@@ -66,7 +66,7 @@ namespace Orchard.Users.Activities {
                 yield return T("UserNameOrEmailNotUnique");
                 yield break;
             }
-            userName = userName.Trim();
+
             var user = _membershipService.CreateUser(
                 new CreateUserParams(
                     userName,
