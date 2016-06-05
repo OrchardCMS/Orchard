@@ -47,7 +47,7 @@
                             handled = true;
                         }
 
-                        if (element.type == "Content") { // This is a content element.
+                        if (!!element.hasEditor) { // This element has an editor dialog.
                             if (!e.ctrlKey && !e.shiftKey && !e.altKey && e.which == 13) { // Enter
                                 $element.find(".layout-panel-action-edit").first().click();
                                 handled = true;
