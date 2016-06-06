@@ -1,4 +1,5 @@
 ﻿@{
+    var title = (string)Convert.ToString(Layout.Title);
     Style.Include("Lib.css", "Lib.min.css");
     Style.Include("FontAwesome");
     Style.Include("TheAdmin.css");
@@ -10,17 +11,50 @@
     Script.Require("Bootstrap");
     Script.Require("ShapesBase").AtFoot();
     Script.Include("TheAdmin.js");
+
+    /* Some useful shortcuts or settings
+    ***************************************************************/
+
+    Func<dynamic, dynamic> Zone = x => Display(x); // Zone as an alias for Display to help make it obvious when we're displaying zones
+
+    /* Inserting some ad hoc shapes
+    ***************************************************************/
+
+    Model.TopHeader.Add(Model.TopMenu);
+    Model.Header.Add(Display.Header());
+    Model.Breadcrumbs.Add(Display.Breadcrumb());
+    Model.Footer.Add(Display.OrchardVersion());
+
+    if (Model.Title != null) {
+        Model.Header.Add(Display.Title(Title: Model.Title));
+    }
 }
 <div id="layout-content" class="or-wrapper @*or-fixed-sidebar*@" data-default-remove-confirmation-prompt="@T("Are you sure you want to remove this element?")'">
-    @Display(Model.TopMenu)
+    <nav class="navbar navbar-default navbar-fixed-top or-top-header">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <div class="page-title"><span>@Html.Title(title)</span></div><a href="#" class="or-toggle-left-sidebar navbar-toggle collapsed"><span class="icon-bar"><span></span><span></span><span></span></span></a><a href="~/" target="_blank" class="navbar-brand"></a>
+            </div>
+            @*<a href="#" class="or-toggle-right-sidebar"><span class="icon s7-menu2"></span></a>*@
+            <a href="#" data-toggle="collapse" data-target="#or-navbar-collapse" class="or-toggle-top-header-menu collapsed"><span class="icon s7-angle-down"></span></a>
+            <div id="or-navbar-collapse" class="collapse navbar-collapse">
+                @Display.User(CurrentUser: WorkContext.CurrentUser)
+                @if (Model.TopHeader != null) {
+                    @Display(Model.TopHeader)
+                }
+            </div>
+        </div>
+    </nav>
     @Display(Model.SideMenu)
     <div class="or-content">
         <div class="page-head">
-            @if (Model.Title != null) {
-                @Display.Title(Title: Model.Title)
+            @if (Model.Header != null) {
+                @Display(Model.Header)
             }
 
-            @Display.Breadcrumb()
+            @if (Model.Breadcrumbs != null) {
+                @Display(Model.Breadcrumbs)
+            }
         </div>
         <div class="main-content">
             @if (Model.Messages != null) {
@@ -43,6 +77,12 @@
     </div>
     @Display.Sidebar()
 </div>
+
+@if (Model.Footer != null) {
+    <div id="footer" role="contentinfo">
+        @Zone(Model.Footer)
+    </div>
+}
 
 @using (Script.Foot()) {
     <script type="text/javascript">
