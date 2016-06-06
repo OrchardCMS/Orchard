@@ -105,8 +105,11 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdminMenu.cs" />
     <Compile Include="Commands\RecipesCommands.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Migrations.cs" />
+    <Compile Include="Models\ModuleEntry.cs" />
     <Compile Include="Models\RecipeResultRecord.cs" />
     <Compile Include="Models\RecipeStepResultRecord.cs" />
     <Compile Include="Models\VersionHistoryOptions.cs" />
@@ -137,8 +140,9 @@
     <Compile Include="ViewModels\ContentTypeEntry.cs" />
     <Compile Include="ViewModels\CustomStepEntry.cs" />
     <Compile Include="ViewModels\ContentBuilderStepViewModel.cs" />
-    <Compile Include="ViewModels\ImportResultViewModel.cs" />
+    <Compile Include="ViewModels\RecipeResultViewModel.cs" />
     <Compile Include="ViewModels\ImportViewModel.cs" />
+    <Compile Include="ViewModels\RecipesViewModel.cs" />
     <Compile Include="ViewModels\SetupRecipeStepViewModel.cs" />
     <Compile Include="ViewModels\SiteSettingsStepViewModel.cs" />
   </ItemGroup>
@@ -178,6 +182,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Admin\RecipeResult.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Admin\Index.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
