@@ -235,7 +235,7 @@ namespace Orchard.Users.Controllers {
 
                 if ( validated != null ) {
                     _membershipService.SetPassword(validated, newPassword);
-                    _userEventHandler.ChangedPassword(validated);
+                    _userEventHandler.ChangedPassword(validated, newPassword);
                     return RedirectToAction("ChangePasswordSuccess");
                 }
                 
@@ -284,7 +284,7 @@ namespace Orchard.Users.Controllers {
 
             _membershipService.SetPassword(user, newPassword);
 
-            _userEventHandler.ChangedPassword(user);
+            _userEventHandler.ChangedPassword(user, newPassword);
 
             return RedirectToAction("ChangePasswordSuccess");
         }

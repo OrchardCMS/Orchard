@@ -54,10 +54,10 @@ namespace Orchard.Users.Handlers {
                                          () => new Dictionary<string, object> {{"User", user}});
         }
 
-        public void ChangedPassword(Security.IUser user) {
+        public void ChangedPassword(Security.IUser user, string password) {
             _workflowManager.TriggerEvent("UserChangedPassword",
                                          user,
-                                         () => new Dictionary<string, object> {{"User", user}});
+                                         () => new Dictionary<string, object> {{"User", user}, { "Password", password } });
         }
 
         public void SentChallengeEmail(Security.IUser user) {

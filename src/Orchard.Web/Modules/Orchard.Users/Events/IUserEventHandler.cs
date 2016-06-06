@@ -41,7 +41,7 @@ namespace Orchard.Users.Events {
         /// <summary>
         /// Called after a user has changed password
         /// </summary>
-        void ChangedPassword(IUser user);
+        void ChangedPassword(IUser user, string password);
 
         /// <summary>
         /// Called after a user has confirmed their email address
