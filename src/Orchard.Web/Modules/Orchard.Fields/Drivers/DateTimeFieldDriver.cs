@@ -154,7 +154,7 @@ namespace Orchard.Fields.Drivers {
                     updater.AddModelError(GetPrefix(field, part), T("{0} is required.", field.DisplayName));
                 }
 
-                field.DateTime = value.HasValue ? value.Value : DateTime.MinValue;
+                field.DateTime = value.HasValue ? value.Value : (System.DateTime?)null;
             }
 
             return Editor(part, field, shapeHelper);
