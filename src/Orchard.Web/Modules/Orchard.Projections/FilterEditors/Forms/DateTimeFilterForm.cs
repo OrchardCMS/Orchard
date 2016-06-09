@@ -127,7 +127,7 @@ namespace Orchard.Projections.FilterEditors.Forms {
 
             string type = Convert.ToString(formState.ValueType);
 
-            DateTime min, max;
+            DateTime? min, max;
 
             // Are those dates or time spans
             if (type == "0") {
@@ -150,15 +150,36 @@ namespace Orchard.Projections.FilterEditors.Forms {
                 }
             }
 
-            min = min.ToUniversalTime();
-            max = max.ToUniversalTime();
+            if (min.HasValue)
+              min = min.Value.ToUniversalTime();
 
-            object minValue = min;
-            object maxValue = max;
+            if (max.HasValue)
+              max = max.Value.ToUniversalTime();
+
+            object minValue;
+            
+            if (min.HasValue)
+                minValue = min.Value;
+            else
+                minValue = "";
+
+            object maxValue;
+
+            if (max.HasValue)
+                maxValue = max.Value;
+            else
+                maxValue = "";
 
             if(asTicks) {
-                minValue = min.Ticks;
-                maxValue = max.Ticks;
+                if (min.HasValue)
+                    minValue = min.Value.Ticks;
+                else
+                    minValue = 0;
+
+                if (max.HasValue)
+                    maxValue = max.Value.Ticks;
+                else
+                    maxValue = 0;
             }
 
             switch (op) {
@@ -193,18 +214,23 @@ namespace Orchard.Projections.FilterEditors.Forms {
         /// Returns the low bound value of a date pattern. e.g., 2011-10 will return 2011-10-01 00:00:00
         /// </summary>
         /// <remarks>DateTime is stored in UTC but entered in local</remarks>
-        protected static DateTime GetLowBoundPattern(string datePattern) {
-            var match = _dateRegEx.Match(datePattern);
+        protected static DateTime? GetLowBoundPattern(string datePattern) {
+            if (string.IsNullOrEmpty(datePattern)) {
+              return null;
+            }
+            else {
+              var match = _dateRegEx.Match(datePattern);
 
-            return DateTime.Parse(
-                String.Format("{0}-{1}-{2} {3}:{4}:{5}",
-                              match.Groups["year"].Success ? match.Groups["year"].Value : "1980",
-                              match.Groups["month"].Success ? match.Groups["month"].Value : "01",
-                              match.Groups["day"].Success ? match.Groups["day"].Value : "01",
-                              match.Groups["hour"].Success ? match.Groups["hour"].Value : "00",
-                              match.Groups["minute"].Success ? match.Groups["minute"].Value : "00",
-                              match.Groups["second"].Success ? match.Groups["second"].Value : "00"),
-                CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal);
+              return DateTime.Parse(
+                  String.Format("{0}-{1}-{2} {3}:{4}:{5}",
+                                match.Groups["year"].Success ? match.Groups["year"].Value : "1980",
+                                match.Groups["month"].Success ? match.Groups["month"].Value : "01",
+                                match.Groups["day"].Success ? match.Groups["day"].Value : "01",
+                                match.Groups["hour"].Success ? match.Groups["hour"].Value : "00",
+                                match.Groups["minute"].Success ? match.Groups["minute"].Value : "00",
+                                match.Groups["second"].Success ? match.Groups["second"].Value : "00"),
+                  CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal);
+            }
         }
 
         protected static DateTime ApplyDelta(DateTime now, string unit, int value) {
@@ -274,19 +300,24 @@ namespace Orchard.Projections.FilterEditors.Forms {
         /// Returns the low bound value of a date pattern. e.g., 2011-10 will return 2011-10-01 00:00:00
         /// </summary>
         /// <remarks>DateTime is stored in UTC but entered in local</remarks>
-        protected static DateTime GetHighBoundPattern(string datePattern) {
-            var match = _dateRegEx.Match(datePattern);
+        protected static DateTime? GetHighBoundPattern(string datePattern) {
+            if (string.IsNullOrEmpty(datePattern)) {
+                return null;
+            }
+            else {
+                var match = _dateRegEx.Match(datePattern);
 
-            string year, month;
-            return DateTime.Parse(
-                String.Format("{0}-{1}-{2} {3}:{4}:{5}",
-                              year = match.Groups["year"].Success ? match.Groups["year"].Value : "2099",
-                              month = match.Groups["month"].Success ? match.Groups["month"].Value : "12",
-                              match.Groups["day"].Success ? match.Groups["day"].Value : DateTime.DaysInMonth(Int32.Parse(year), Int32.Parse(month)).ToString(),
-                              match.Groups["hour"].Success ? match.Groups["hour"].Value : "23",
-                              match.Groups["minute"].Success ? match.Groups["minute"].Value : "59",
-                              match.Groups["second"].Success ? match.Groups["second"].Value : "59"),
-                CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal);
+                string year, month;
+                return DateTime.Parse(
+                    String.Format("{0}-{1}-{2} {3}:{4}:{5}",
+                                  year = match.Groups["year"].Success ? match.Groups["year"].Value : "2099",
+                                  month = match.Groups["month"].Success ? match.Groups["month"].Value : "12",
+                                  match.Groups["day"].Success ? match.Groups["day"].Value : DateTime.DaysInMonth(Int32.Parse(year), Int32.Parse(month)).ToString(),
+                                  match.Groups["hour"].Success ? match.Groups["hour"].Value : "23",
+                                  match.Groups["minute"].Success ? match.Groups["minute"].Value : "59",
+                                  match.Groups["second"].Success ? match.Groups["second"].Value : "59"),
+                    CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal);
+            }
         }
 
     }
