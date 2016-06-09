@@ -102,13 +102,13 @@ namespace Orchard.UI.Navigation {
         /// <param name="compareUrls">Should compare raw string URLs instead of route data.</param>
         /// <returns>A stack with the selection path being the last node the currently selected one.</returns>
         private static Stack<MenuItem> SetSelectedPath(IEnumerable<MenuItem> menuItems, HttpRequestBase currentRequest, RouteValueDictionary currentRouteData, bool compareUrls) {
-            var selectedPathes = new List<Stack<MenuItem>>();
+            var selectedPaths = new List<Stack<MenuItem>>();
             foreach (MenuItem menuItem in menuItems) {
                 Stack<MenuItem> selectedPath = SetSelectedPath(menuItem.Items, currentRequest, currentRouteData, compareUrls);
                 if (selectedPath != null) {
                     selectedPath.Push(menuItem);
                     if (compareUrls) {
-                        selectedPathes.Add(selectedPath);
+                        selectedPaths.Add(selectedPath);
                     }
                     else {
                         return selectedPath;
@@ -137,7 +137,7 @@ namespace Orchard.UI.Navigation {
                     selectedPath.Push(menuItem);
 
                     if (compareUrls) {
-                        selectedPathes.Add(selectedPath);
+                        selectedPaths.Add(selectedPath);
                     }
                     else {
                         return selectedPath;
@@ -145,7 +145,7 @@ namespace Orchard.UI.Navigation {
                 }
             }
 
-            return selectedPathes.OrderByDescending(p => p.First().Href.Split('/').Length).FirstOrDefault();
+            return selectedPaths.OrderByDescending(p => p.First().Href.Split('/').Length).FirstOrDefault();
         }
 
         /// <summary>
