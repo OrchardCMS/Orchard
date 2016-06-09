@@ -29,10 +29,6 @@ namespace Orchard.Localization.Services {
             if (localized == null)
                 return null;
 
-            if (localized.Record.CultureId == cultureRecord.Id) {
-                return localized;
-            }
-
             int masterContentItemId = localized.HasTranslationGroup ? localized.Record.MasterContentItemId : localized.Id;
 
             // Warning: Returns only the first of same culture localizations.
