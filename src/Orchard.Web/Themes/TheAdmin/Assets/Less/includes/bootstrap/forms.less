@@ -54,7 +54,7 @@ label{
     margin-bottom: 0;
   }
  
-  label{
+  input[type="checkbox"] + input[type="hidden"] + label, input[type="radio"] + input[type="hidden"] + label{
    padding-left: 0;
     
     &:before{
@@ -79,14 +79,14 @@ label{
     }
   }
 
-  input[type="checkbox"]:hover + label, input[type="radio"]:hover + label {
+  input[type="checkbox"]:hover + input[type="hidden"] + label, input[type="radio"]:hover + input[type="hidden"] + label {
 
     &:before{
       border-color: darken(@input-border, 10%);
     }
   }
   
-  input[type="checkbox"]:checked + label, input[type="radio"]:checked + label{
+  input[type="checkbox"]:checked + input[type="hidden"] + label, input[type="radio"]:checked + input[type="hidden"] + label{
     
     &:before{
       content: "\e6cd";
@@ -95,7 +95,7 @@ label{
     } 
   }
 
-  input[type="checkbox"]:disabled + label, input[type="radio"]:disabled + label{
+  input[type="checkbox"]:disabled + input[type="hidden"] + label, input[type="radio"]:disabled + input[type="hidden"] + label{
     opacity: .5;
     pointer-events: none;
 
@@ -105,7 +105,7 @@ label{
     }
   }
   
-  input[type="radio"] + label{
+  input[type="radio"] + input[type="hidden"] + label{
 
     &:before{
       border-radius: 50%;
@@ -123,7 +123,7 @@ label{
     }
   }
   
-  input[type="radio"]:checked + label{
+  input[type="radio"]:checked + input[type="hidden"] + label{
 
     &:before{
       content: "\e6ce";
