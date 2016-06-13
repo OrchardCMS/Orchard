@@ -17092,10 +17092,7 @@ label {
 .or-radio input[type="radio"] + label {
   padding-left: 0;
 }
-.or-checkbox input[type="checkbox"] + label:before,
-.or-radio input[type="checkbox"] + label:before,
-.or-checkbox input[type="radio"] + label:before,
-.or-radio input[type="radio"] + label:before {
+.or-checkbox label:before {
   content: "";
   width: 22px;
   height: 22px;
