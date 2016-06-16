@@ -21,7 +21,7 @@
             window.opener.jQuery[query("callback")](itemsToAdd);
             window.close();
         });
-        $('.content-picker-SelectAll').on('click', function () {
+        $('.check-all').on('click', function () {
             $('.content-picker-itemCheck').prop('checked', $(this).prop("checked"));
         });
     };

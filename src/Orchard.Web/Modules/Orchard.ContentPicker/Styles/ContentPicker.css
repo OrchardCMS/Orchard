@@ -15,10 +15,8 @@ body {
 
 .content-picker-tab 
 {
-    margin: 6px;
     padding: 18px;
     background: white;
-    border: 1px solid #E4E5E6;
 }
 
 .content-picker-item
@@ -30,18 +28,6 @@ body {
 {
     position:absolute;
 
-}
-
-label[for="selectAll"]:before
-{
-    content:'';
-    display:block;
-    margin-top:20px;
-}
-
-label[for="selectAll"]
-{
-    display:inline;
 }
 
 .addSelected
