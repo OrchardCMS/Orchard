@@ -84,6 +84,12 @@ namespace Orchard.UI.Navigation {
             var path = SetSelectedPath(menuItems, currentRequest, currentRouteData, false) 
                     ?? SetSelectedPath(menuItems, currentRequest, currentRouteData, true);
 
+            if(path != null) {
+                foreach(var menuItem in path) {
+                    menuItem.Selected = true;
+                }
+            }
+
             return path;
         }
 
@@ -96,12 +102,17 @@ namespace Orchard.UI.Navigation {
         /// <param name="compareUrls">Should compare raw string URLs instead of route data.</param>
         /// <returns>A stack with the selection path being the last node the currently selected one.</returns>
         private static Stack<MenuItem> SetSelectedPath(IEnumerable<MenuItem> menuItems, HttpRequestBase currentRequest, RouteValueDictionary currentRouteData, bool compareUrls) {
+            var selectedPaths = new List<Stack<MenuItem>>();
             foreach (MenuItem menuItem in menuItems) {
                 Stack<MenuItem> selectedPath = SetSelectedPath(menuItem.Items, currentRequest, currentRouteData, compareUrls);
                 if (selectedPath != null) {
-                    menuItem.Selected = true;
                     selectedPath.Push(menuItem);
-                    return selectedPath;
+                    if (compareUrls) {
+                        selectedPaths.Add(selectedPath);
+                    }
+                    else {
+                        return selectedPath;
+                    }
                 }
 
                 // compare route values (if any) first
@@ -122,15 +133,19 @@ namespace Orchard.UI.Navigation {
                 }
 
                 if (match) {
-                    menuItem.Selected = true;
-
                     selectedPath = new Stack<MenuItem>();
                     selectedPath.Push(menuItem);
-                    return selectedPath;
+
+                    if (compareUrls) {
+                        selectedPaths.Add(selectedPath);
+                    }
+                    else {
+                        return selectedPath;
+                    }
                 }
             }
 
-            return null;
+            return selectedPaths.OrderByDescending(p => p.First().Href.Split('/').Length).FirstOrDefault();
         }
 
         /// <summary>
