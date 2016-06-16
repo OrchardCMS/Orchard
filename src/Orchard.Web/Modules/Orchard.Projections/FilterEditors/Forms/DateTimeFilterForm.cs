@@ -104,6 +104,8 @@ namespace Orchard.Projections.FilterEditors.Forms {
                     f._Operator.Add(new SelectListItem { Value = Convert.ToString(DateTimeOperator.GreaterThan), Text = T("Is greater than").Text });
                     f._Operator.Add(new SelectListItem { Value = Convert.ToString(DateTimeOperator.Between), Text = T("Is between").Text });
                     f._Operator.Add(new SelectListItem { Value = Convert.ToString(DateTimeOperator.NotBetween), Text = T("Is not between").Text });
+                    f._Operator.Add(new SelectListItem { Value = Convert.ToString(DateTimeOperator.IsNull), Text = T("Is null").Text });
+                    f._Operator.Add(new SelectListItem { Value = Convert.ToString(DateTimeOperator.IsNotNull), Text = T("Is not null").Text });
 
                     foreach (var unit in new[] { f._FieldSetSingle._ValueUnit, f._FieldSetMin._MinUnit, f._FieldSetMax._MaxUnit }) {
                         unit.Add(new SelectListItem { Value = Convert.ToString(DateTimeSpan.Year), Text = T("Year").Text });
@@ -125,88 +127,95 @@ namespace Orchard.Projections.FilterEditors.Forms {
 
             var op = (DateTimeOperator)Enum.Parse(typeof(DateTimeOperator), Convert.ToString(formState.Operator));
 
-            string type = Convert.ToString(formState.ValueType);
-
-            DateTime? min, max;
-
-            // Are those dates or time spans
-            if (type == "0") {
-                if (op == DateTimeOperator.Between || op == DateTimeOperator.NotBetween) {
-                    min = GetLowBoundPattern(Convert.ToString(formState.Min));
-                    max = GetHighBoundPattern(Convert.ToString(formState.Max));
-                }
-                else {
-                    min = GetLowBoundPattern(Convert.ToString(formState.Value));
-                    max = GetHighBoundPattern(Convert.ToString(formState.Value));
-                }
-            }
+            if (op == DateTimeOperator.IsNull)
+                return y => y.IsNull(property);
+            else
+            if (op == DateTimeOperator.IsNotNull)
+                return y => y.IsNotNull(property);
             else {
-                if (op == DateTimeOperator.Between || op == DateTimeOperator.NotBetween) {
-                    min = ApplyDelta(now, formState.MinUnit.Value, Int32.Parse(formState.Min.Value));
-                    max = ApplyDelta(now, formState.MaxUnit.Value, Int32.Parse(formState.Max.Value));
+                string type = Convert.ToString(formState.ValueType);
+
+                DateTime? min, max;
+
+                // Are those dates or time spans
+                if (type == "0") {
+                    if (op == DateTimeOperator.Between || op == DateTimeOperator.NotBetween) {
+                        min = GetLowBoundPattern(Convert.ToString(formState.Min));
+                        max = GetHighBoundPattern(Convert.ToString(formState.Max));
+                    }
+                    else {
+                        min = GetLowBoundPattern(Convert.ToString(formState.Value));
+                        max = GetHighBoundPattern(Convert.ToString(formState.Value));
+                    }
                 }
                 else {
-                    min = max = ApplyDelta(now, Convert.ToString(formState.ValueUnit), Convert.ToInt32(formState.Value));
+                    if (op == DateTimeOperator.Between || op == DateTimeOperator.NotBetween) {
+                        min = ApplyDelta(now, formState.MinUnit.Value, Int32.Parse(formState.Min.Value));
+                        max = ApplyDelta(now, formState.MaxUnit.Value, Int32.Parse(formState.Max.Value));
+                    }
+                    else {
+                        min = max = ApplyDelta(now, Convert.ToString(formState.ValueUnit), Convert.ToInt32(formState.Value));
+                    }
                 }
-            }
 
-            if (min.HasValue)
-              min = min.Value.ToUniversalTime();
-
-            if (max.HasValue)
-              max = max.Value.ToUniversalTime();
-
-            object minValue;
-            
-            if (min.HasValue)
-                minValue = min.Value;
-            else
-                minValue = "";
-
-            object maxValue;
-
-            if (max.HasValue)
-                maxValue = max.Value;
-            else
-                maxValue = "";
-
-            if(asTicks) {
                 if (min.HasValue)
-                    minValue = min.Value.Ticks;
-                else
-                    minValue = 0;
+                  min = min.Value.ToUniversalTime();
 
                 if (max.HasValue)
-                    maxValue = max.Value.Ticks;
-                else
-                    maxValue = 0;
-            }
+                  max = max.Value.ToUniversalTime();
 
-            switch (op) {
-                case DateTimeOperator.LessThan:
-                    return x => x.Lt(property, maxValue);
-                case DateTimeOperator.LessThanEquals:
-                    return x => x.Le(property, maxValue);
-                case DateTimeOperator.Equals:
-                    if (min == max) {
-                        return x => x.Eq(property, minValue);
-                    }
-                    return y => y.And(x => x.Ge(property, minValue), x => x.Le(property, maxValue));
-                case DateTimeOperator.NotEquals:
-                    if (min == max) {
-                        return x => x.Not(y => y.Eq(property, minValue));
-                    }
-                    return y => y.Or(x => x.Lt(property, minValue), x => x.Gt(property, maxValue));
-                case DateTimeOperator.GreaterThan:
-                    return x => x.Gt(property, minValue);
-                case DateTimeOperator.GreaterThanEquals:
-                    return x => x.Ge(property, minValue);
-                case DateTimeOperator.Between:
-                    return y => y.And(x => x.Ge(property, minValue), x => x.Le(property, maxValue));
-                case DateTimeOperator.NotBetween:
-                    return y => y.Or(x => x.Lt(property, minValue), x => x.Gt(property, maxValue));
-                default:
-                    throw new ArgumentOutOfRangeException();
+                object minValue;
+            
+                if (min.HasValue)
+                    minValue = min.Value;
+                else
+                    minValue = "";
+
+                object maxValue;
+
+                if (max.HasValue)
+                    maxValue = max.Value;
+                else
+                    maxValue = "";
+
+                if(asTicks) {
+                    if (min.HasValue)
+                        minValue = min.Value.Ticks;
+                    else
+                        minValue = 0;
+
+                    if (max.HasValue)
+                        maxValue = max.Value.Ticks;
+                    else
+                        maxValue = 0;
+                }
+
+                switch (op) {
+                    case DateTimeOperator.LessThan:
+                        return x => x.Lt(property, maxValue);
+                    case DateTimeOperator.LessThanEquals:
+                        return x => x.Le(property, maxValue);
+                    case DateTimeOperator.Equals:
+                        if (min == max) {
+                            return x => x.Eq(property, minValue);
+                        }
+                        return y => y.And(x => x.Ge(property, minValue), x => x.Le(property, maxValue));
+                    case DateTimeOperator.NotEquals:
+                        if (min == max) {
+                            return x => x.Not(y => y.Eq(property, minValue));
+                        }
+                        return y => y.Or(x => x.Lt(property, minValue), x => x.Gt(property, maxValue));
+                    case DateTimeOperator.GreaterThan:
+                        return x => x.Gt(property, minValue);
+                    case DateTimeOperator.GreaterThanEquals:
+                        return x => x.Ge(property, minValue);
+                    case DateTimeOperator.Between:
+                        return y => y.And(x => x.Ge(property, minValue), x => x.Le(property, maxValue));
+                    case DateTimeOperator.NotBetween:
+                        return y => y.Or(x => x.Lt(property, minValue), x => x.Gt(property, maxValue));
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
             }
         }
 
@@ -256,40 +265,48 @@ namespace Orchard.Projections.FilterEditors.Forms {
 
         public static LocalizedString DisplayFilter(string fieldName, dynamic formState, Localizer T) {
             var op = (DateTimeOperator)Enum.Parse(typeof(DateTimeOperator), Convert.ToString(formState.Operator));
-            string type = Convert.ToString(formState.ValueType);
-            string value = Convert.ToString(formState.Value);
-            string min = Convert.ToString(formState.Min);
-            string max = Convert.ToString(formState.Max);
-            string valueUnit = Convert.ToString(formState.ValueUnit);
-            string minUnit = Convert.ToString(formState.MinUnit);
-            string maxUnit = Convert.ToString(formState.MaxUnit);
 
-            if (type == "0") {
-                valueUnit = minUnit = maxUnit = String.Empty;
-            }
+            if (op == DateTimeOperator.IsNull)
+                return T("{0} is null", fieldName);
+            else
+            if (op == DateTimeOperator.IsNotNull)
+                return T("{0} is not null", fieldName);
             else {
-                valueUnit = " " + valueUnit;
-                minUnit = " " + minUnit;
-                maxUnit = " " + maxUnit;
-            }
+                string type = Convert.ToString(formState.ValueType);
+                string value = Convert.ToString(formState.Value);
+                string min = Convert.ToString(formState.Min);
+                string max = Convert.ToString(formState.Max);
+                string valueUnit = Convert.ToString(formState.ValueUnit);
+                string minUnit = Convert.ToString(formState.MinUnit);
+                string maxUnit = Convert.ToString(formState.MaxUnit);
 
-            switch (op) {
-                case DateTimeOperator.LessThan:
-                    return T("{0} is less than {1}{2}", fieldName, value, T(valueUnit));
-                case DateTimeOperator.LessThanEquals:
-                    return T("{0} is less than or equal to {1}{2}", fieldName, value, T(valueUnit));
-                case DateTimeOperator.Equals:
-                    return T("{0} equals {1}{2}", fieldName, value, T(valueUnit));
-                case DateTimeOperator.NotEquals:
-                    return T("{0} is not equal to {1}{2}", fieldName, value, T(valueUnit));
-                case DateTimeOperator.GreaterThan:
-                    return T("{0} is greater than {1}{2}", fieldName, value, T(valueUnit));
-                case DateTimeOperator.GreaterThanEquals:
-                    return T("{0} is greater than or equal to {1}{2}", fieldName, value, T(valueUnit));
-                case DateTimeOperator.Between:
-                    return T("{0} is between {1}{2} and {3}{4}", fieldName, min, T(minUnit), max, T(maxUnit));
-                case DateTimeOperator.NotBetween:
-                    return T("{0} is not between {1}{2} and {3}{4}", fieldName, min, T(minUnit), max, T(maxUnit));
+                if (type == "0") {
+                    valueUnit = minUnit = maxUnit = String.Empty;
+                }
+                else {
+                    valueUnit = " " + valueUnit;
+                    minUnit = " " + minUnit;
+                    maxUnit = " " + maxUnit;
+                }
+
+                switch (op) {
+                    case DateTimeOperator.LessThan:
+                        return T("{0} is less than {1}{2}", fieldName, value, T(valueUnit));
+                    case DateTimeOperator.LessThanEquals:
+                        return T("{0} is less than or equal to {1}{2}", fieldName, value, T(valueUnit));
+                    case DateTimeOperator.Equals:
+                        return T("{0} equals {1}{2}", fieldName, value, T(valueUnit));
+                    case DateTimeOperator.NotEquals:
+                        return T("{0} is not equal to {1}{2}", fieldName, value, T(valueUnit));
+                    case DateTimeOperator.GreaterThan:
+                        return T("{0} is greater than {1}{2}", fieldName, value, T(valueUnit));
+                    case DateTimeOperator.GreaterThanEquals:
+                        return T("{0} is greater than or equal to {1}{2}", fieldName, value, T(valueUnit));
+                    case DateTimeOperator.Between:
+                        return T("{0} is between {1}{2} and {3}{4}", fieldName, min, T(minUnit), max, T(maxUnit));
+                    case DateTimeOperator.NotBetween:
+                        return T("{0} is not between {1}{2} and {3}{4}", fieldName, min, T(minUnit), max, T(maxUnit));
+                }
             }
 
             // should never be hit, but fail safe
@@ -330,7 +347,9 @@ namespace Orchard.Projections.FilterEditors.Forms {
         GreaterThan,
         GreaterThanEquals,
         Between,
-        NotBetween
+        NotBetween,
+        IsNull,
+        IsNotNull
     }
 
     public enum DateTimeSpan {
