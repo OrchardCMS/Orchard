@@ -3,9 +3,10 @@
 @{
     var settings = Model.PartFieldDefinition.Settings.GetModel<EnumerationFieldSettings>();
     string[] options = (!String.IsNullOrWhiteSpace(settings.Options)) ? settings.Options.Split(new string[] { System.Environment.NewLine }, StringSplitOptions.None) : new string[] { T("Select an option").ToString() };
+    int index = 0;
 }
 <fieldset>
-    <label for="@Html.FieldIdFor(m => m.Value)" @if (settings.Required) { <text> class="required" </text>    }>@Model.DisplayName</label>
+    <label for="@Html.FieldIdFor(m => m.Value)" @if (settings.Required) { <text> class="required" </text>       }>@Model.DisplayName</label>
     @switch (settings.ListMode) {
         case ListMode.Dropdown:
             @Html.DropDownListFor(m => m.Value, new SelectList(options, Model.Value), settings.Required ? new { required = "required" } : null)
@@ -13,10 +14,16 @@
 
         case ListMode.Radiobutton:
             foreach (var option in options) {
-                if (string.IsNullOrWhiteSpace(option)) {
-                    <label>@Html.RadioButton("Value", "", string.IsNullOrWhiteSpace(Model.Value), settings.Required ? new { required = "required" } : null)<i>@T("unset")</i></label>            }
-                else {
-                    <label>@Html.RadioButton("Value", option, (option == Model.Value), settings.Required ? new { required = "required" } : null)@option</label>         }
+                index++;
+                <div class="or-radio">
+                    <input type="radio" name="@Html.FieldNameFor(m => m.Value)" value="@option" @((!string.IsNullOrWhiteSpace(Model.Value) && Model.Value == option) ? "checked=\"checked\"" : "") id="@Html.FieldIdFor(m => m.Value)-@index" @(settings.Required ? "required" : "" )/>
+                    @if (string.IsNullOrWhiteSpace(option)) {
+                    <label for="@Html.FieldIdFor(m => m.Value)-@index"><i>@T("unset")</i></label>
+                    }
+                    else {
+                    <label for="@Html.FieldIdFor(m => m.Value)-@index">@option</label>
+                    }
+                </div>
             }
             break;
 
@@ -26,7 +33,6 @@
             break;
 
         case ListMode.Checkbox:
-            int index = 0;
             <input name="@Html.FieldNameFor(m => m.SelectedValues)" type="hidden" />
             foreach (var option in options) {
                 index++;
