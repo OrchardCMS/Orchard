@@ -4,8 +4,13 @@ using Orchard.Services;
 
 namespace Orchard.Tests.Stubs {
     public class StubClock : IClock {
-        public StubClock() {
-            UtcNow = new DateTime(2009, 10, 14, 12, 34, 56, DateTimeKind.Utc);
+
+        public StubClock()
+            : this(new DateTime(2009, 10, 14, 12, 34, 56, DateTimeKind.Utc)) {
+        }
+
+        public StubClock(DateTime utcNow) {
+            UtcNow = utcNow;
         }
 
         public DateTime UtcNow { get; private set; }
@@ -17,7 +22,6 @@ namespace Orchard.Tests.Stubs {
         public DateTime FutureMoment(TimeSpan span) {
             return UtcNow.Add(span);
         }
-
 
         public IVolatileToken When(TimeSpan duration) {
             return new Clock.AbsoluteExpirationToken(this, duration);

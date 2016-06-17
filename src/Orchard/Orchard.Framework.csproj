@@ -71,8 +71,8 @@
       <HintPath>..\packages\Castle.Core.3.3.1\lib\net45\Castle.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="FluentNHibernate, Version=1.4.0.0, Culture=neutral, PublicKeyToken=8aa435e3cb308880, processorArchitecture=MSIL">
-      <HintPath>..\packages\FluentNHibernate.1.4.0.0\lib\net35\FluentNHibernate.dll</HintPath>
+    <Reference Include="FluentNHibernate, Version=2.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentNHibernate.2.0.3.0\lib\net40\FluentNHibernate.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Iesi.Collections, Version=4.0.0.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
@@ -933,9 +933,7 @@
     <Compile Include="Mvc\Routes\UrlPrefix.cs" />
     <Compile Include="Mvc\Routes\UrlPrefixAdjustedHttpContext.cs" />
     <Compile Include="Mvc\Routes\ShellRoute.cs" />
-    <Compile Include="Mvc\ViewUserControl.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
+    <Compile Include="Mvc\ViewUserControl.cs" />
     <Compile Include="Mvc\Wrappers\HttpContextBaseWrapper.cs" />
     <Compile Include="Mvc\Wrappers\HttpRequestBaseWrapper.cs" />
     <Compile Include="Mvc\Wrappers\HttpResponseBaseWrapper.cs" />
@@ -1015,9 +1013,7 @@
     <Compile Include="UI\Resources\LinkEntry.cs" />
     <Compile Include="UI\Resources\ResourceFilter.cs" />
     <Compile Include="UI\Resources\ResourceManager.cs" />
-    <Compile Include="Mvc\ViewPage.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
+    <Compile Include="Mvc\ViewPage.cs" />
     <Compile Include="Security\IAuthenticationService.cs" />
     <Compile Include="Security\Authorizer.cs" />
     <Compile Include="Security\Providers\FormsAuthenticationService.cs" />

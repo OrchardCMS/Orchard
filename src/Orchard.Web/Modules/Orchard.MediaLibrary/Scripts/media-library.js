@@ -382,7 +382,7 @@ $(function () {
                         /* NTFS uses "\" as the directory separator, but AFS uses "/".
                            Since both of them are illegal characters for file and folder names, it's safe to determine the type of file storage
                            currently in use based on the directory separator character. */
-                        var separator = deepestChildPath.contains('/') ? '/' : '\\';
+                        var separator = deepestChildPath.indexOf('/') > -1 ? '/' : '\\';
 
                         var deepestChildPathBreadCrumbs = deepestChildPath.split(separator);
                         var currentBreadCrumbs = self.folderPath().split(separator);
