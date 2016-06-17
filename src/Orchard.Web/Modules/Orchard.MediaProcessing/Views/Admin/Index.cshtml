@@ -14,7 +14,10 @@
 
 @using (Html.BeginFormAntiForgeryPost()) { 
     @Html.ValidationSummary()
-    <div class="manage">@Html.ActionLink(T("Add a new Media Profile").ToString(), "Create", new { Area = "Contents", id = "ImageProfile", returnurl = HttpContext.Current.Request.RawUrl }, new { @class = "button primaryAction" })</div>
+    <div class="manage">
+        @Html.ActionLink(T("Purge Obsolete").ToString(), "PurgeObsolete", null, new { itemprop = "UnsafeUrl", @class = "button remove", data_unsafe_url = @T("Are you sure you wish to purge all obsolete profile images and force all dynamic profile images to be regenerated?").ToString() })
+        @Html.ActionLink(T("Add a new Media Profile").ToString(), "Create", new { Area = "Contents", id = "ImageProfile", returnurl = HttpContext.Current.Request.RawUrl }, new { @class = "button primaryAction" })
+    </div>
 
     <fieldset class="bulk-actions">
         <label for="publishActions">@T("Actions:")</label>
@@ -56,6 +59,7 @@
                     <td>
                         @Html.ActionLink(T("Properties").ToString(), "Edit", new { Area = "Contents", id = entry.ImageProfileId, returnurl = HttpContext.Current.Request.RawUrl }) |
                         @Html.ActionLink(T("Edit").ToString(), "Edit", new { id = entry.ImageProfileId }) |
+                        @Html.ActionLink(T("Purge").ToString(), "Purge", new { id = entry.ImageProfileId }, new { itemprop = "UnsafeUrl", data_unsafe_url = @T("Are you sure you wish to purge all images for this profile?").ToString() }) |
                         @Html.ActionLink(T("Delete").ToString(), "Delete", new { id = entry.ImageProfileId }, new { itemprop = "RemoveUrl UnsafeUrl" })
                         @*@Html.ActionLink(T("Preview").ToString(), "Preview", new { id = entry.ImageProfileId })*@
                     </td>

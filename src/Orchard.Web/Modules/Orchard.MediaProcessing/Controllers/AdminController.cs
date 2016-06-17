@@ -22,6 +22,7 @@ namespace Orchard.MediaProcessing.Controllers {
     public class AdminController : Controller, IUpdateModel {
         private readonly ISiteService _siteService;
         private readonly IImageProfileService _profileService;
+        private readonly IImageProfileManager _imageProfileManager;
         private readonly IImageProcessingManager _imageProcessingManager;
 
         public AdminController(
@@ -29,9 +30,11 @@ namespace Orchard.MediaProcessing.Controllers {
             IShapeFactory shapeFactory,
             ISiteService siteService,
             IImageProfileService profileService,
+            IImageProfileManager imageProfileManager,
             IImageProcessingManager imageProcessingManager) {
             _siteService = siteService;
             _profileService = profileService;
+            _imageProfileManager = imageProfileManager;
             _imageProcessingManager = imageProcessingManager;
             Services = services;
 
@@ -183,6 +186,36 @@ namespace Orchard.MediaProcessing.Controllers {
                 return new HttpUnauthorizedResult();
 
             throw new NotImplementedException();
+        }
+
+        [HttpPost]
+        public ActionResult Purge(int id) {
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage media profiles")))
+                return new HttpUnauthorizedResult();
+
+            if (_imageProfileManager.PurgeImageProfile(id)) {
+                Services.Notifier.Information(T("The Image Profile has been purged"));
+            }
+            else {
+                Services.Notifier.Warning(T("Unable to purge the Image Profile, it may already have been purged"));
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public ActionResult PurgeObsolete() {
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage media profiles")))
+                return new HttpUnauthorizedResult();
+
+            if (_imageProfileManager.PurgeObsoleteImageProfiles()) {
+                Services.Notifier.Information(T("The obsolete Image Profiles have been purged"));
+            }
+            else {
+                Services.Notifier.Warning(T("Unable to purge the obsolete Image Profiles"));
+            }
+
+            return RedirectToAction("Index");
         }
 
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
