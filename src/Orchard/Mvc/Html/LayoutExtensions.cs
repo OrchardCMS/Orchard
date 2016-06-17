@@ -48,6 +48,16 @@ namespace Orchard.Mvc.Html {
             return MvcHtmlString.Create(html.Encode(titleParts[0]));
         }
 
+        public static MvcHtmlString TitleForPage(this HtmlHelper html, params MvcHtmlString[] titleParts) {
+            if (titleParts == null || titleParts.Length < 1)
+                return null;
+
+            string[] parts = titleParts.Select(t => t.ToString()).ToArray();
+            html.AppendTitleParts(parts);
+
+            return MvcHtmlString.Create(html.Encode(titleParts[0]));
+        }
+
         public static MvcHtmlString TitleForPage(this HtmlHelper html, params LocalizedString[] titleParts) {
             if (titleParts == null || titleParts.Length < 1)
                 return null;
