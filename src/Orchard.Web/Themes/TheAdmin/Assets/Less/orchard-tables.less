@@ -70,6 +70,7 @@ td {
         text-align: right;
     }
 }
+
 table.items > th {
     border-bottom: 1px solid #eaeaea;
     border-spacing: 0;
@@ -79,4 +80,66 @@ table.items > th {
     overflow: hidden;
     text-align: left;
     white-space: nowrap;
+}
+
+table.items {
+    margin:0 0 1.4em 0;
+    background:#fff;
+    border:1px solid #eaeaea;
+    border-bottom:none;
+    border-collapse:separate;
+    border-spacing:0;
+    width:100%;
+}
+table.items caption {
+    padding:8px 0;
+    text-indent:0;
+}
+table.items col {
+    border-spacing:0;
+    display:table-column;
+}
+table.items colgroup
+{
+    border-spacing:0;
+    display:table-column-group;
+}
+table.items tbody {
+    border-spacing:0;
+    vertical-align:middle;
+}
+table.items thead, table.items th {
+    background:#f5f5f5;
+    overflow:hidden;
+    text-align:left;
+    white-space:nowrap;
+}
+table.items th.actions {
+    width:300px;
+    text-align:right;
+}
+table.items th.checkbox {
+    width:50px;
+}
+
+table.items tr.hover {
+    background-color:#f0f3d6;
+}
+table.items tr.critical {background:#e68585; border:inherit;}
+table.items tr.warning {background:#fdf5bc; border:inherit;}
+table.items th, table.items td {
+    border-bottom:1px solid #eaeaea;
+    border-spacing:0;
+    display:table-cell;
+    padding:8px 12px;
+}
+
+table.items td .add
+{
+    float: right;
+}
+
+table.items tr.internal *{
+    background-color: #eee;
+    color: grey;
 }
