@@ -28,12 +28,17 @@ namespace Orchard.Mvc.Extensions {
             if(url != null && url.StartsWith("http", StringComparison.OrdinalIgnoreCase)) {
                 return url;
             }
-            
-            if(String.IsNullOrEmpty(baseUrl)) {
-                var workContextAccessor = urlHelper.RequestContext.GetWorkContext();
-                baseUrl = workContextAccessor.CurrentSite.BaseUrl;
 
-                if (String.IsNullOrWhiteSpace(baseUrl)) {
+            if (String.IsNullOrEmpty(baseUrl))
+            {
+                var workContextAccessor = urlHelper.RequestContext.GetWorkContext();
+
+                if (workContextAccessor != null)
+                {
+                    baseUrl = workContextAccessor.CurrentSite.BaseUrl;
+                }
+                if(workContextAccessor == null || String.IsNullOrWhiteSpace(baseUrl))
+                {
                     baseUrl = urlHelper.RequestContext.HttpContext.Request.ToApplicationRootUrlString();
                 }
             }
