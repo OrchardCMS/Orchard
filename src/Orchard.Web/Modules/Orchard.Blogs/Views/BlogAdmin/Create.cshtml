@@ -1,4 +1,8 @@
-@{ Layout.Title = T("New Blog").ToString(); }
+@using Orchard.Blogs.Extensions;
+@{
+    Layout.Title = T("New Blog").ToString();
+    Html.AdminBreadcrumbs();
+}
 
 <div class="panel  panel-default">
     @using (Html.BeginFormAntiForgeryPost()) {

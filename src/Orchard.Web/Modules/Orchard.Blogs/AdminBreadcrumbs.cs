@@ -20,19 +20,25 @@ namespace Orchard.Blogs {
         protected override void AddItems(NavigationItemBuilder root) {
             var context = _orchardServices.WorkContext.Layout.Breadcrumbs.Context as RouteValueDictionary;
             var currentBlog = context != null ? context["CurrentBlog"] as IContent : default(IContent);
-            
-            if(currentBlog != null) {
-                var blogMetadata = _orchardServices.ContentManager.GetItemMetadata(currentBlog);
-                root.Add(new LocalizedString(blogMetadata.DisplayText), blog => {
-                    blog.Action(blogMetadata.AdminRouteValues);
-                    blog.Add(T("New Post"), newPost => newPost.Action("Create", "BlogPostAdmin", new { area = "Orchard.Blogs", blogId = currentBlog.Id }));
 
-                    var currentBlogPost = context["CurrentBlogPost"] as IContent;
+            root.Add(T("Blogs"), blogs => {
+                blogs.Action("List", "BlogAdmin", new { area = "Orchard.Blogs" });
+                blogs.Add(T("New"), newBlog => newBlog.Action("Create", "BlogAdmin", new { area = "Orchard.Blogs" }));
 
-                    if(currentBlogPost != null)
-                        blog.Add(T("Edit Post"), editPost => editPost.Action("Edit", "BlogPostAdmin", new { area = "Orchard.Blogs", blogId = currentBlog.Id, postId = currentBlogPost.Id }));
-                });
-            }
+                if (currentBlog != null) {
+                    var blogMetadata = _orchardServices.ContentManager.GetItemMetadata(currentBlog);
+                    blogs.Add(new LocalizedString(blogMetadata.DisplayText), blog => {
+                        blog.Action(blogMetadata.AdminRouteValues);
+                        blog.Add(T("Properties"), edit => edit.Action("Edit", "BlogAdmin", new { area = "Orchard.Blogs", blogId = currentBlog.Id }));   
+                        blog.Add(T("New Post"), newPost => newPost.Action("Create", "BlogPostAdmin", new { area = "Orchard.Blogs", blogId = currentBlog.Id }));
+
+                        var currentBlogPost = context["CurrentBlogPost"] as IContent;
+
+                        if (currentBlogPost != null)
+                            blog.Add(T("Edit Post"), editPost => editPost.Action("Edit", "BlogPostAdmin", new { area = "Orchard.Blogs", blogId = currentBlog.Id, postId = currentBlogPost.Id }));
+                    });
+                }
+            });
         }
     }
 }
