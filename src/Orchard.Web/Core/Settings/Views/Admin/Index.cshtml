@@ -1,6 +1,7 @@
-﻿﻿@using Orchard.ContentManagement
+﻿@using Orchard.Core.Settings.Helpers
 @{
     Layout.Title = T("Settings").ToString();
+    Html.AdminBreadcrumbs();
 }
 
 @using (Html.BeginFormAntiForgeryPost()) {

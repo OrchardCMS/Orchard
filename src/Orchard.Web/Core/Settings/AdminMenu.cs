@@ -1,6 +1,5 @@
 ﻿using Orchard.ContentManagement;
 using Orchard.Localization;
-using Orchard.Security;
 using Orchard.Settings;
 using Orchard.UI.Navigation;
 

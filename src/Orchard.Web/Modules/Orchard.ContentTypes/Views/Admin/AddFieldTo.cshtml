@@ -1,8 +1,10 @@
+@using Orchard.ContentTypes.Extensions
 @using Orchard.Utility.Extensions
 @model Orchard.ContentTypes.ViewModels.AddFieldViewModel
 @{
     Style.Require("ContentTypesAdmin");
     Layout.Title = T("Add New Field To \"{0}\"", Model.Part.DisplayName).ToString();
+    Html.AdminBreadcrumbs(new { CurrentContentType = Model.Part.TypeDefinition, CurrentContentPart = Model.Part.Definition });
 }
 @using (Html.BeginFormAntiForgeryPost()) {
     @Html.ValidationSummary()

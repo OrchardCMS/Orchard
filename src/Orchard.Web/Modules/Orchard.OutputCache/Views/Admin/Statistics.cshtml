@@ -1,9 +1,11 @@
 ﻿@using Orchard.Localization.Services
 @using Orchard.OutputCache.ViewModels
+@using Orchard.OutputCache.Helpers
 @model StatisticsViewModel
 
 @{
     Layout.Title = T("Cache Statistics");
+    Html.AdminBreadcrumbs();
     var dateTimeFormatProvider = WorkContext.Resolve<IDateTimeFormatProvider>();
 }
 <div class="panel panel-default">

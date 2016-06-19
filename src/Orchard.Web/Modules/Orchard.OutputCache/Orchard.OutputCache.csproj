@@ -103,6 +103,8 @@
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
+    <Compile Include="AdminBreadcrumbs.cs" />
+    <Compile Include="Helpers\AdminBreadcrumbsHtmlHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
   </ItemGroup>

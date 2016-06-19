@@ -89,6 +89,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdminBreadcrumbs.cs" />
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Events\ContentFieldAttachedContext.cs" />
     <Compile Include="Events\ContentFieldDetachedContext.cs" />
@@ -107,6 +108,7 @@
     <Compile Include="Events\ContentTypePartContext.cs" />
     <Compile Include="Events\ContentTypeRemovedContext.cs" />
     <Compile Include="Events\IContentDefinitionEventHandler.cs" />
+    <Compile Include="Extensions\AdminBreadcrumbsHtmlHelper.cs" />
     <Compile Include="Extensions\MetadataExtensions.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="ResourceManifest.cs" />

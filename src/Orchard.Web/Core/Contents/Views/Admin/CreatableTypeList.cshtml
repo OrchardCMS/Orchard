@@ -1,4 +1,8 @@
-@{ Layout.Title = T("Create New Content").ToString(); }
+@using Orchard.Core.Contents.Extensions
+@{
+    Layout.Title = T("Create New Content").ToString();
+    Html.AdminBreadcrumbs();
+}
 
 <div class="panel panel-default">
     <div class="panel-body">

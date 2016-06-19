@@ -1,7 +1,10 @@
+@using Orchard.ContentTypes.Extensions
 @model Orchard.ContentTypes.ViewModels.AddPartsViewModel
 @{
     Style.Require("ContentTypesAdmin");
     Layout.Title = T("Add Parts To \"{0}\"", Model.Type.DisplayName).ToString();
+    Html.AdminBreadcrumbs(new { CurrentContentType = Model.Type.Definition});
+
     var i = 0;
 }
 @using (Html.BeginFormAntiForgeryPost()) {

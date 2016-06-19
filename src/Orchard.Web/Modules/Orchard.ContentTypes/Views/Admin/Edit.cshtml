@@ -1,8 +1,10 @@
+@using Orchard.ContentTypes.Extensions
 @model Orchard.ContentTypes.ViewModels.EditTypeViewModel
 @{
     Style.Require("ContentTypesAdmin");
     Script.Require("jQuery");
     Layout.Title = T("Edit {0} Definition", Html.Raw(Model.DisplayName)).Text;
+    Html.AdminBreadcrumbs(new { CurrentContentType = Model.Definition });
 }
 
 @using (Html.BeginFormAntiForgeryPost()) {

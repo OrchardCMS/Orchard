@@ -18,7 +18,7 @@ namespace Orchard.ContentTypes.ViewModels {
             Settings = contentTypeDefinition.Settings;
             Fields = GetTypeFields(contentTypeDefinition).ToList();
             Parts = GetTypeParts(contentTypeDefinition).ToList();
-            _Definition = contentTypeDefinition;
+            Definition = contentTypeDefinition;
         }
 
         public string Name { get; set; }
@@ -27,7 +27,7 @@ namespace Orchard.ContentTypes.ViewModels {
         public IEnumerable<EditPartFieldViewModel> Fields { get; set; }
         public IEnumerable<EditTypePartViewModel> Parts { get; set; }
         public IEnumerable<TemplateViewModel> Templates { get; set; }
-        public ContentTypeDefinition _Definition { get; private set; }
+        public ContentTypeDefinition Definition { get; private set; }
 
         private IEnumerable<EditPartFieldViewModel> GetTypeFields(ContentTypeDefinition contentTypeDefinition) {
             var implicitTypePart = contentTypeDefinition.Parts.SingleOrDefault(p => string.Equals(p.PartDefinition.Name, Name, StringComparison.OrdinalIgnoreCase));

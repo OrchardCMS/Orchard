@@ -1,6 +1,9 @@
+@using Orchard.ContentTypes.Extensions
 @model Orchard.ContentTypes.ViewModels.CreateTypeViewModel
-
-@{ Layout.Title = T("New Content Type").ToString(); }
+@{ 
+    Layout.Title = T("New Content Type").ToString();
+    Html.AdminBreadcrumbs();
+}
 
 <div class="panel panel-default">
 

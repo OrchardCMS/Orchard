@@ -471,10 +471,10 @@ namespace Orchard.ContentTypes.Controllers {
             var partViewModel = _contentDefinitionService.GetPart(id);
 
             if (partViewModel == null) {
-                //id passed in might be that of a type w/ no implicit field
+                // Id passed in might be that of a type w/ no implicit field.
                 var typeViewModel = _contentDefinitionService.GetType(id);
                 if (typeViewModel != null)
-                    partViewModel = new EditPartViewModel(new ContentPartDefinition(id));
+                    partViewModel = new EditPartViewModel(new ContentPartDefinition(id), typeViewModel.Definition);
                 else
                     return HttpNotFound();
             }
@@ -497,7 +497,7 @@ namespace Orchard.ContentTypes.Controllers {
             if (partViewModel == null) {
                 // id passed in might be that of a type w/ no implicit field
                 if (typeViewModel != null) {
-                    partViewModel = new EditPartViewModel {Name = typeViewModel.Name};
+                    partViewModel = new EditPartViewModel (typeViewModel.Definition) { Name = typeViewModel.Name };
                     _contentDefinitionService.AddPart(new CreatePartViewModel {Name = partViewModel.Name});
                     _contentDefinitionService.AddPartToType(partViewModel.Name, typeViewModel.Name);
                 }
@@ -577,7 +577,9 @@ namespace Orchard.ContentTypes.Controllers {
                 return HttpNotFound();
             }
 
-            var viewModel = new EditFieldNameViewModel {
+            var typeViewModel = _contentDefinitionService.GetType(id);
+            
+            var viewModel = new EditFieldNameViewModel(partViewModel.Definition, typeViewModel != null ? typeViewModel.Definition : null) {
                 Name = fieldViewModel.Name,
                 DisplayName = fieldViewModel.DisplayName
             };
@@ -600,10 +602,18 @@ namespace Orchard.ContentTypes.Controllers {
                 return HttpNotFound();
             }
 
-            // prevent null reference exception in validation
+            var typeViewModel = _contentDefinitionService.GetType(id);
+
+            if (typeViewModel != null)
+                viewModel = new EditFieldNameViewModel(partViewModel.Definition, typeViewModel.Definition) {
+                    Name = viewModel.Name,
+                    DisplayName = viewModel.DisplayName
+                };
+
+            // Prevent null reference exception in validation.
             viewModel.DisplayName = viewModel.DisplayName ?? String.Empty;
             
-            // remove extra spaces
+            // Remove extra spaces.
             viewModel.DisplayName = viewModel.DisplayName.Trim();
 
             if (String.IsNullOrWhiteSpace(viewModel.DisplayName)) {
@@ -628,8 +638,7 @@ namespace Orchard.ContentTypes.Controllers {
 
             Services.Notifier.Success(T("Display name changed to {0}.", viewModel.DisplayName));
 
-            // redirect to the type editor if a type exists with this name
-            var typeViewModel = _contentDefinitionService.GetType(id);
+            // Redirect to the type editor if a type exists with this name.
             if (typeViewModel != null) {
                 return RedirectToAction("Edit", new { id });
             }

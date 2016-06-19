@@ -1,13 +1,13 @@
-﻿@model Orchard.OutputCache.ViewModels.IndexViewModel
-
+﻿@using Orchard.OutputCache.Helpers
+@model Orchard.OutputCache.ViewModels.IndexViewModel
 @{
     Layout.Title = T("Cache Settings");
+    Html.AdminBreadcrumbs();
 
     // Group configurations by feature name.
-    var featureRouteConfigs =
-        Model.RouteConfigs
-            .GroupBy(x => x.FeatureName)
-            .ToDictionary(x => x.Key, x => x.Select(y => y));
+    var featureRouteConfigs = Model.RouteConfigs
+        .GroupBy(x => x.FeatureName)
+        .ToDictionary(x => x.Key, x => x.Select(y => y));
 }
 <div class="panel panel-default">
     @using (Html.BeginFormAntiForgeryPost()) {

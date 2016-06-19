@@ -8,16 +8,18 @@ using Orchard.ContentTypes.Extensions;
 
 namespace Orchard.ContentTypes.ViewModels {
     public class EditPartViewModel {
-        public EditPartViewModel() {
+        public EditPartViewModel(ContentTypeDefinition typeDefinition = null) {
             Fields = new List<EditPartFieldViewModel>();
             Settings = new SettingsDictionary();
+            TypeDefinition = typeDefinition;
         }
 
-        public EditPartViewModel(ContentPartDefinition contentPartDefinition) {
+        public EditPartViewModel(ContentPartDefinition contentPartDefinition, ContentTypeDefinition typeDefinition = null) {
             Name = contentPartDefinition.Name;
             Fields = contentPartDefinition.Fields.Select((f, i) => new EditPartFieldViewModel(i, f) { Part = this }).ToList();
             Settings = contentPartDefinition.Settings;
-            _Definition = contentPartDefinition;
+            Definition = contentPartDefinition;
+            TypeDefinition = typeDefinition;
         }
 
         public string Prefix { get { return "PartDefinition"; } }
@@ -38,6 +40,7 @@ namespace Orchard.ContentTypes.ViewModels {
         public IEnumerable<TemplateViewModel> Templates { get; set; }
         public IEnumerable<EditPartFieldViewModel> Fields { get; set; }
         public SettingsDictionary Settings { get; set; }
-        public ContentPartDefinition _Definition { get; private set; }
+        public ContentPartDefinition Definition { get; private set; }
+        public ContentTypeDefinition TypeDefinition { get; private set; }
     }
 }

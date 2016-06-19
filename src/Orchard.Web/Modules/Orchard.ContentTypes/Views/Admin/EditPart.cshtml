@@ -1,9 +1,11 @@
 @using Orchard.Utility.Extensions
+@using Orchard.ContentTypes.Extensions
 @model Orchard.ContentTypes.ViewModels.EditPartViewModel
 @{
     Style.Require("ContentTypesAdmin");
     Script.Require("jQuery");
     Layout.Title = T("Edit {0}", Model.Name.CamelFriendly()).ToString();
+    Html.AdminBreadcrumbs(new { CurrentContentPart = Model.Definition });
 }
 @using (Html.BeginFormAntiForgeryPost()) {
     <div class="panel panel-default panel-heading-fullwidth panel-borders">

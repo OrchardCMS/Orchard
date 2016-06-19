@@ -411,7 +411,7 @@
     <Content Include="Views\Sidebar.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Breadcrumb.cshtml" />
+    <Content Include="Views\AdminBreadcrumbs.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Title.cshtml" />
@@ -525,6 +525,7 @@
     <Folder Include="Assets\Lib\stroke-7\" />
     <Folder Include="Assets\Lib\summernote\" />
     <Folder Include="Assets\Lib\tinycolor\" />
+    <Folder Include="Shapes\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Less\includes\bootstrap-variables.less" />

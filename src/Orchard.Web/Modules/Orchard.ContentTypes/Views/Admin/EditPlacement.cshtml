@@ -1,8 +1,10 @@
+@using Orchard.ContentTypes.Extensions
 @model Orchard.ContentTypes.ViewModels.EditPlacementViewModel
 @{
     Style.Require("ContentTypesAdmin");
     Script.Require("jQueryUI_Sortable");
     Layout.Title = T("Edit Placement - {0}", Model.ContentTypeDefinition.DisplayName).ToString();
+    Html.AdminBreadcrumbs(new { CurrentContentType = Model.ContentTypeDefinition });
 
     var hiddenShapes = Model.AllPlacements.Where(x => String.IsNullOrEmpty(x.PlacementSettings.Zone) && (String.IsNullOrWhiteSpace(x.PlacementSettings.Position) || x.PlacementSettings.Position == "-"));
 }

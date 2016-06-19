@@ -1,0 +1,13 @@
+﻿@using Orchard.UI.Navigation
+@{
+    var menuItems = ((IEnumerable<MenuItem>)Model.MenuItems).ToList();
+    var lastMenuItem = menuItems.LastOrDefault();
+}
+<ol class="breadcrumb">
+    @foreach (var item in menuItems.Take(menuItems.Count - 1)) {
+        <li><a href="@item.Href">@item.Text</a></li>
+    }
+    @if (lastMenuItem != null) {
+        <li class="active">@lastMenuItem.Text</li>
+    }
+</ol>

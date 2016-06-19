@@ -1,8 +1,10 @@
 @using Orchard.Utility.Extensions
+@using Orchard.ContentTypes.Extensions
 @model Orchard.ContentTypes.ViewModels.EditFieldNameViewModel
 @{
     Style.Require("ContentTypesAdmin");
     Layout.Title = T("Edit {0} Field", Model.Name.CamelFriendly()).ToString();
+    Html.AdminBreadcrumbs(new { CurrentContentType = Model.TypeDefinition, CurrentContentPart = Model.PartDefinition });
 }
 @using (Html.BeginFormAntiForgeryPost()) {
     <div class="panel panel-default panel-heading-fullwidth panel-borders">
