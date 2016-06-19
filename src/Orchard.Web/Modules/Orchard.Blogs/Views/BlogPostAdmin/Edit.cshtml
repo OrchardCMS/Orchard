@@ -1,4 +1,12 @@
-@{ Layout.Title = T("Edit Blog Post").ToString(); }
+@using Orchard.Blogs.Extensions
+@{ 
+    var contentItem = Model.ContentItem;
+    var blogPostPart = contentItem.BlogPostPart;
+    var blogPart = blogPostPart.BlogPart;
+
+    Layout.Title = T("Edit Blog Post").ToString();
+    Html.AdminBreadcrumbs(new { CurrentBlog = blogPart, CurrentBlogPost = blogPostPart });
+}
 
 @using (Html.BeginFormAntiForgeryPost()) {
     @Html.ValidationSummary()
