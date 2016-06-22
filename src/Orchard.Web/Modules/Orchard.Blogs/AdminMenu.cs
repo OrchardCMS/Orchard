@@ -26,7 +26,7 @@ namespace Orchard.Blogs {
         }
 
         private void BuildMenu(NavigationItemBuilder menu) {
-            var blogs = _blogService.Get().Where(x => _authorizationService.TryCheckAccess(Permissions.MetaListBlogs, _workContextAccessor.GetContext().CurrentUser, x)).ToArray();
+            var blogs = _blogService.Get().Where(x => _authorizationService.TryCheckAccess(Permissions.MetaListOwnBlogs, _workContextAccessor.GetContext().CurrentUser, x)).ToArray();
             var blogCount = blogs.Count();
             var singleBlog = blogCount == 1 ? blogs.ElementAt(0) : null;
 
