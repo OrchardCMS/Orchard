@@ -3,12 +3,12 @@
     Layout.Title = T("Import Result").ToString();
 }
 @if (Model.Result.IsSuccessful) {
-    <div class="message message-Information">
+    <div class="alert alert-info">
         @T("The recipe file was successfully imported.")
     </div>
 }
 else {
-    <div class="message message-Error">
+    <div class="alert alert-danger">
         @T("The recipe file import failed. Check the logs (recipe execution ID <strong>{0}</strong>) for more information.", Model.Result.ExecutionId)
     </div>
 }

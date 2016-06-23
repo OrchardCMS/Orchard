@@ -31,7 +31,7 @@
     @if (!String.IsNullOrWhiteSpace(displayName)) {
         <label @if (required) { <text> class="required" </text>  }>@displayName</label>
     }
-    <div class="message message-Warning content-picker-message">@T("You need to save your changes.")</div>
+    <div class="alert alert-warning content-picker-message">@T("You need to save your changes.")</div>
     <table class="items content-picker" summary="@displayName">
         <colgroup>
             <col id="Col1" style="width:20px" />

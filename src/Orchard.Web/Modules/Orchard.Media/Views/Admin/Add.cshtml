@@ -46,7 +46,7 @@
             var allowed = allowedExtensions == '  ' || allowedExtensions.indexOf(ext) != -1;
 
             if(!allowed) {
-                $('#messages>div').append($('<div class="message message-Error">@T("Can't upload file. Supported file types are {0}.", Model.AllowedExtensions).Text</div>'));
+                $('#messages>div').append($('<div class="alert alert-danger">@T("Can't upload file. Supported file types are {0}.", Model.AllowedExtensions).Text</div>'));
                 return false;
             }
         });

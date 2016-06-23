@@ -53,7 +53,7 @@
             ApplyMediaQueries: true,
             AutoPlay: false)
         @if (!Model.Part.Assets.Filter<VideoAsset>().Any()) {
-            <div class="message message-Warning">@T("No video assets exist on this cloud video item other than the mezzanine. Mezzanine assets are not supported for preview or playback. To create additional video assets, start an encoding job.")</div>
+            <div class="alert alert-warning">@T("No video assets exist on this cloud video item other than the mezzanine. Mezzanine assets are not supported for preview or playback. To create additional video assets, start an encoding job.")</div>
         }
     </div>
 </div>

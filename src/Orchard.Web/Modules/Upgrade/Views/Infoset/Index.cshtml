@@ -4,7 +4,7 @@
 }
 <div class="panel panel-default">
     <div class="panel-body">
-        <div class="message message-Warning" id="message-progress" style="display: none"></div>
+        <div class="alert alert-warning" id="message-progress" style="display: none"></div>
         <fieldset>
             @using (Html.BeginFormAntiForgeryPost(Url.Action("Index", "Infoset"))) {
                 <legend>@T("Migrating Site Settings:")</legend>

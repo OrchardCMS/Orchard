@@ -4,7 +4,7 @@
 @model Orchard.Autoroute.ViewModels.AutoroutePartEditViewModel
 
 @if (Model.Settings.Patterns.Where(x => x.Culture == Model.CurrentCulture).Count() == 0) {
-    <div class="message message-Error">@T("The current Content Type does not have a default Autoroute Pattern. Please edit the settings first.")</div>
+    <div class="alert alert-danger">@T("The current Content Type does not have a default Autoroute Pattern. Please edit the settings first.")</div>
     return;
 }
 
