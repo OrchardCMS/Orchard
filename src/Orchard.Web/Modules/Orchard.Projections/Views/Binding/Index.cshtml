@@ -90,7 +90,7 @@
                                     <td>
                                         @entry.Binding.Description
                                     </td>
-                                    <td class="text-nowrap">
+                                    <td class="text-nowrap text-right">
                                         <a class="btn btn-primary" href="@Url.Action("Edit",  new { entry.Binding.Id })"><i class="fa fa-pencil-square-o"></i> @T("Edit")</a>
                                         <a class="btn btn-danger" href="@Url.Action("Delete", new { id = entry.Binding.Id })" data-confirm="@T("Are you sure you want to delete this item?")"><i class="fa fa-trash"></i> @T("Delete")</a>
                                     </td>
