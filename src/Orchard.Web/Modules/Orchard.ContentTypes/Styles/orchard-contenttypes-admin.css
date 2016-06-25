@@ -200,10 +200,15 @@ fieldset.action {
     #placement li .shape-type {
         cursor: move;
         background-color: #eee;
-        background: #EEE url(images/move.gif) no-repeat 10px 15px;
+        background: #EEE url(images/move.gif) no-repeat 10px 10px;
         height: 30px;
-        padding: 10px 0px 0px 30px;
+        padding: 0px 0px 0px 30px;
+        margin-top: 0;
     }
+
+        #placement li .shape-type h3 {
+            margin-top: 0;
+        }
 
     #placement li .shape-editor {
         padding: 10px;
