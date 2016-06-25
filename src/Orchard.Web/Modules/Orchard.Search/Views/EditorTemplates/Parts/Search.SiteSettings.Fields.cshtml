@@ -24,8 +24,8 @@
                                     <li>
                                         <div class="or-checkbox">
                                             @Html.EditorFor(m => m.Entries[entryIndex].Fields[fieldIndex].Selected)
-                                            @Html.HiddenFor(m => m.Entries[entryIndex].Fields[fieldIndex].Field)
                                             <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Entries[entryIndexClosure].Fields[fieldIndexClosure].Selected)">@Model.Entries[entryIndex].Fields[fieldIndex].Field</label>
+                                            @Html.HiddenFor(m => m.Entries[entryIndex].Fields[fieldIndex].Field)
                                         </div>
                                     </li>
                                     fieldIndex++;

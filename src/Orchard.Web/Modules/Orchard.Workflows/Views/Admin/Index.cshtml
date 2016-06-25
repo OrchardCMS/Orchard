@@ -17,33 +17,34 @@
     using (Html.BeginFormAntiForgeryPost()) {
         @Html.ValidationSummary()
         <div class="panel-heading">
-            <div class="row">
-                <fieldset class="col-sm-4 form-group">
-                    <input id="publishActions" name="@Html.NameOf(m => m.Options.BulkAction)" type="hidden" value="@WorkflowDefinitionBulk.None" />
-                    <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-bolt"></i> Bulk Actions <span class="caret"></span>
-                        </button>&nbsp;
-                        <ul class="dropdown-menu" role="menu">
-                            <li><a href="#" data-confirm="@T("Are you sure you want to delete these items?")" data-action="@WorkflowDefinitionBulk.Delete">@T("Delete").ToString()</a></li>
-                        </ul>
-                    </div>
-                </fieldset>
-                <fieldset class="col-sm-4 form-group text-center"></fieldset>
-                @* No need to filter if there is only one option in the dropdownlist *@
-                @*<fieldset class="col-sm-4 form-group form-inline">
-                        <label for="filterResults">@T("Sort by:")</label>
-                        <select class="form-control" id="filterResults" name="@Html.NameOf(m => m.Options.Order)">
-                            @Html.SelectOption(Model.Options.Order, WorkflowDefinitionOrder.Name, T("Name").ToString())
-                        </select>
-                        <button type="submit" name="submit.Filter" value="@T("Filter")">@T("Filter")</button>
-                    </fieldset>*@
-                <fieldset class="col-sm-4 form-group text-right">
-                    <a class="btn btn-primary" href="@Url.Action("EditProperties", new { Area = "Orchard.Workflows", returnurl = HttpContext.Current.Request.RawUrl })"><i class="fa fa-plus"></i> @T("Create new Workflow Definition").Text</a>
-                </fieldset>
+            <div class="panel-heading-actions">
+                <a class="btn btn-primary" href="@Url.Action("EditProperties", new { Area = "Orchard.Workflows", returnurl = HttpContext.Current.Request.RawUrl })"><i class="fa fa-plus"></i> @T("Create new Workflow Definition").Text</a>
             </div>
-        </div>
+            <div class="panel-heading-primary-group">
+                <div class="row">
+                    <fieldset class="col-sm-4 form-group">
+                        <input id="publishActions" name="@Html.NameOf(m => m.Options.BulkAction)" type="hidden" value="@WorkflowDefinitionBulk.None" />
+                        <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                                <i class="fa fa-bolt"></i> Bulk Actions <span class="caret"></span>
+                            </button>&nbsp;
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="#" data-confirm="@T("Are you sure you want to delete these items?")" data-action="@WorkflowDefinitionBulk.Delete">@T("Delete").ToString()</a></li>
+                            </ul>
+                        </div>
+                    </fieldset>
+                    @* No need to filter if there is only one option in the dropdownlist *@
+                    @*<fieldset class="col-sm-4 form-group form-inline">
+                    <label for="filterResults">@T("Sort by:")</label>
+                    <select class="form-control" id="filterResults" name="@Html.NameOf(m => m.Options.Order)">
+                        @Html.SelectOption(Model.Options.Order, WorkflowDefinitionOrder.Name, T("Name").ToString())
+                    </select>
+                    <button type="submit" name="submit.Filter" value="@T("Filter")">@T("Filter")</button>
+                </fieldset>*@
+                </div>
+            </div>
+            </div>
         <div class="row">
             <div class="col-sm-12">
                 <div class="table-responsive table-with-footer">

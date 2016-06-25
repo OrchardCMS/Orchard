@@ -15,7 +15,7 @@
     }
 }
 
-<div class="panel panel-default panel-heading-fullwidth ">
+<div class="panel panel-default panel-heading-fullwidth">
     @if (Model.Bindings.Any()) {
         using (Html.BeginFormAntiForgeryPost()) {
             @Html.ValidationSummary()

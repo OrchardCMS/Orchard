@@ -3,15 +3,20 @@
     var tabs = (IEnumerable<string>)CoreShapes.HarvestAndSortTabs(Model.Content);
     Display.LocalNavigation(Tabs: tabs);
 }
-<div class="sections">
-    <div class="menu-item-edit-fields">
-        @Display(Model.Content)
-    </div>
-    <div class="menu-item-edit-actions">
-        @Display(Model.Sidebar)
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="sections">
+            <div class="menu-item-edit-fields">
+                @Display(Model.Content)
+            </div>
+            <div class="menu-item-edit-actions">
+                @Display(Model.Sidebar)
+            </div>
+        </div>
+
+        @if (!String.IsNullOrWhiteSpace(Request.QueryString["returnUrl"])) {
+            @Html.Hidden("returnUrl", Request.QueryString["returnUrl"])
+        }
     </div>
 </div>
-
-@if (!String.IsNullOrWhiteSpace(Request.QueryString["returnUrl"])) {
-    @Html.Hidden("returnUrl", Request.QueryString["returnUrl"])
-}

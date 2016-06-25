@@ -21,9 +21,11 @@
 </fieldset>
 
 <fieldset>
-    @Html.CheckBoxFor(m => m.DisplayTopMenuItem)
-    <label for="@Html.FieldIdFor(m => m.DisplayTopMenuItem)" class="forcheckbox">@T("Display top level menu item")</label>
-    <span class="help-block">@T("When checked, the selected term to display will be rendered as a root element in the menu.")</span>
+    <div class="or-checkbox">
+        @Html.CheckBoxFor(m => m.DisplayTopMenuItem)
+        <label for="@Html.FieldIdFor(m => m.DisplayTopMenuItem)" class="forcheckbox">@T("Display top level menu item")</label>
+        <span class="help-block">@T("When checked, the selected term to display will be rendered as a root element in the menu.")</span>
+    </div>
 </fieldset>
 
 <fieldset>
@@ -34,15 +36,19 @@
 </fieldset>
 
 <fieldset>
-    @Html.CheckBoxFor(m => m.HideEmptyTerms)
-    <label for="@Html.FieldIdFor(m => m.HideEmptyTerms)" class="forcheckbox">@T("Hide empty entries")</label>
-    <span class="help-block">@T("When checked, any term which has no content item associated to it won't be rendered.")</span>
+    <div class="or-checkbox">
+        @Html.CheckBoxFor(m => m.HideEmptyTerms)
+        <label for="@Html.FieldIdFor(m => m.HideEmptyTerms)" class="forcheckbox">@T("Hide empty entries")</label>
+        <span class="help-block">@T("When checked, any term which has no content item associated to it won't be rendered.")</span>
+    </div>
 </fieldset>
 
 <fieldset>
-    @Html.CheckBoxFor(m => m.DisplayContentCount)
-    <label for="@Html.FieldIdFor(m => m.DisplayContentCount)" class="forcheckbox">@T("Display content count")</label>
-    <span class="help-block">@T("When checked, the number of content items is rendered following the term name.")</span>
+    <div class="or-checkbox">
+        @Html.CheckBoxFor(m => m.DisplayContentCount)
+        <label for="@Html.FieldIdFor(m => m.DisplayContentCount)" class="forcheckbox">@T("Display content count")</label>
+        <span class="help-block">@T("When checked, the number of content items is rendered following the term name.")</span>
+    </div>
 </fieldset>
 
 @using (Script.Foot()) {

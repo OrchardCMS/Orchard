@@ -10,7 +10,11 @@
     Html.AdminBreadcrumbs(new { CurrentItem = Model.ContentItem });
 }
 
-@using (Html.BeginFormAntiForgeryPost(Url.Action("Edit"), FormMethod.Post, new { enctype = "multipart/form-data", @class= "no-multisubmit" })) {
-    @Html.ValidationSummary()
-    @Display(Model)
-}
+<div class="panel panel-default">
+    <div class="panel-body">
+        @using (Html.BeginFormAntiForgeryPost(Url.Action("Edit"), FormMethod.Post, new { enctype = "multipart/form-data", @class = "no-multisubmit" })) {
+            @Html.ValidationSummary()
+            @Display(Model)
+        }
+    </div>
+</div>

@@ -148,10 +148,12 @@
 			}
 		}
 	}
-
+    
+	@media @phone{
 	.or-logo{
 		display: none;
 	}
+    }
 
 	&:before{
 		content: "";
@@ -172,15 +174,16 @@
 		}
 	}
 
-	@media @phone{
 		width: @left-sidebar-width-phone;
 		height: 100%;
 		overflow: auto;
 		-webkit-overflow-scrolling: touch;
 		position: fixed;
-		top: 0;
-    transform: translate3d(-100%, 0, 0);
-		z-index: (@zindex-navbar-fixed + 1);
+             
+	    @media @phone{
+		    top: 0;
+            transform: translate3d(-100%, 0, 0);
+	    }
 
 		.sidebar-elements{
 
@@ -260,18 +263,17 @@
 		}
 
 		.or-logo{
-			background: url("@{img-path}/logo-full.png") no-repeat 15px center;
+			background: url("@{img-path}/logo.png") no-repeat 15px center;
 			height: @top-header-height-phone;
 			background-color: @left-sidebar-logo-bg;
 			border-bottom: 1px solid darken(@left-sidebar-logo-bg, 1.5%);
 			display: block;
 
-			@media @retina{
+			/*@media @retina{
 				background-image: url("@{img-path}/logo-full-retina.png");
 				background-size: 150px 39px;
-			}
+			}*/
 		}
-	}
 
 	.or-animate & {
 		transition: @sidebars-push-effect;

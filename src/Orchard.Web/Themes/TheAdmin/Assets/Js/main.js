@@ -97,19 +97,19 @@ var App = (function () {
 
     /*Sub-menu title func*/
       firstAnchor.on('mouseover',function(){
-        var amScroller = $(this).parent().find(".or-scroller");
+        var orScroller = $(this).parent().find(".or-scroller");
         var li = $(this).parent();
         var subMenu = li.find("> ul");
 
-        //Delay after mouse leave
-        if( !$.isXs() ){
-          $("ul.visible", leftSidebar).removeClass("visible");
-          subMenu.removeClass("hide");
-          subMenu.addClass("visible");
-        }
+        ////Delay after mouse leave
+        //if( !$.isXs() ){
+        //  $("ul.visible", leftSidebar).removeClass("visible");
+        //  subMenu.removeClass("hide");
+        //  subMenu.addClass("visible");
+        //}
 
-        amScroller.nanoScroller({ destroy: true });
-        amScroller.nanoScroller();
+        orScroller.nanoScroller({ destroy: true });
+        orScroller.nanoScroller();
 
         //Create sub-menu elements
         if( config.syncSubMenuOnHover ){
@@ -119,18 +119,18 @@ var App = (function () {
       });
 
     /*Sub-menu delay on mouse leave*/
-      firstAnchor.on('mouseleave',function(){
-        var subMenu = $(this).parent().find("> ul");
-        if( !$.isXs() ){
-          setTimeout(function(){
-            subMenu.removeClass("visible");
-          }, 300);
-        }
-      });
+      //firstAnchor.on('mouseleave',function(){
+      //  var subMenu = $(this).parent().find("> ul");
+      //  if( !$.isXs() ){
+      //    setTimeout(function(){
+      //      subMenu.removeClass("visible");
+      //    }, 300);
+      //  }
+      //});
 
     /*Open sub-menu on small devices*/
       $(".sidebar-elements li a", leftSidebar).on("click",function( e ){
-        if( $.isXs() ){
+        //if( $.isXs() ){
           var $el = $(this), $open, $speed = config.leftSidebarSlideSpeed;
           var $li = $el.parent();
           var $subMenu = $el.next();
@@ -159,11 +159,11 @@ var App = (function () {
           if( $el.next().is('ul') ){
             e.preventDefault();
           }
-        }else{
-          //Close sub-menu on anchor click
-          var subMenu = $(".sidebar-elements > li > ul:visible", leftSidebar);
-          subMenu.addClass('hide');
-        }
+        //}else{
+        //  //Close sub-menu on anchor click
+        //  var subMenu = $(".sidebar-elements > li > ul:visible", leftSidebar);
+        //  subMenu.addClass('hide');
+        //}
       });
 
     /*Calculate sidebar tree active & open classes*/
@@ -173,12 +173,12 @@ var App = (function () {
       syncSubMenu();
 
     /*Nanoscroller when left sidebar is fixed*/
-      if( wrapper.hasClass("or-fixed-sidebar") ){
+      //if( wrapper.hasClass("or-fixed-sidebar") ){
         var lsc = $(".or-left-sidebar > .content");
         lsc.wrap('<div class="or-scroller nano"></div>');
         lsc.addClass("nano-content");
         lsc.parent().nanoScroller();
-      }
+      //}
 
     /*On window resize check for small resolution classes to remove them*/
       $(window).resize(function () {

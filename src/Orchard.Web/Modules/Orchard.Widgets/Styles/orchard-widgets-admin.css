@@ -255,7 +255,7 @@ list-style:decimal inside;
 }
 
 /* begin: switchable tweaks for admin/widgets */
-.orchard-widgets .switch-for-switchable .summary-view {
+/*.orchard-widgets .switch-for-switchable .summary-view {
     background: url("images/widget-zones.gif") no-repeat left top;
 }
 
@@ -269,7 +269,7 @@ list-style:decimal inside;
 
 .orchard-widgets .switch-for-switchable.detail-switched .detail-view {
     background: url("images/all-zones-on.gif") no-repeat left top;
-}
+}*/
 
 #widgets-placement .switch-for-switchable {
     margin: -32px 10px -2px 0;
