@@ -2,7 +2,7 @@
 
 @{ Layout.Title = T("Settings").ToString(); }
 <div class="panel panel-default">
-    <div class="panel-heading">
+    <div class="panel-heading no-border">
         <h2>@T("Gallery")</h2>
         <div class="manage">
             <a href="@Url.Action("AddSource", new { })" class="btn btn-primary"><i class="fa fa-plus"></i> @T("Add Feed").Text</a>
@@ -29,7 +29,7 @@
                             <tr>
                                 <td>@item.FeedTitle</td>
                                 <td>@Html.Link(item.FeedUrl, item.FeedUrl)</td>
-                                <td>
+                                <td class="text-right">
                                     <a class="btn btn-danger" href="@Url.Action("Remove", new { id = item.Id })" data-confirm="@T("Are you sure you want to delete this item?")"><i class="fa fa-trash"></i> @T("Delete")</a>
                                 </td>
                             </tr>
