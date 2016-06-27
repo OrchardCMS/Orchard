@@ -19,6 +19,7 @@ using Orchard.FileSystems.AppData;
 using Orchard.FileSystems.VirtualPath;
 using Orchard.Mvc.ModelBinders;
 using Orchard.Mvc.Routes;
+using Orchard.Owin;
 using Orchard.Tests.Environment.TestDependencies;
 using Orchard.Tests.Stubs;
 using Orchard.Tests.Utility;
@@ -62,7 +63,9 @@ namespace Orchard.Tests.Environment {
                         .Ignore<IExtensionFolders>()
                         .Ignore<IRouteProvider>()
                         .Ignore<IHttpRouteProvider>()
-                        .Ignore<IModelBinderProvider>();
+                        .Ignore<IModelBinderProvider>()
+                        .Ignore<IWorkContextEvents>()
+                        .Ignore<IOwinMiddlewareProvider>();
                 });
             _lifetime = _container.BeginLifetimeScope();
 
@@ -92,6 +95,10 @@ namespace Orchard.Tests.Environment {
                 var ext = new ExtensionDescriptor { Id = "Orchard.Framework" };
                 ext.Features = new[] { new FeatureDescriptor { Extension = ext, Id = ext.Id } };
                 yield return ext;
+
+                var settings = new ExtensionDescriptor { Id = "Settings" };
+                settings.Features = new[] { new FeatureDescriptor { Extension = settings, Id = settings.Id } };
+                yield return settings;
             }
 
             public IEnumerable<FeatureDescriptor> AvailableFeatures() {
@@ -124,7 +131,7 @@ namespace Orchard.Tests.Environment {
         }
 
         public class StubShellSettingsLoader : IShellSettingsManager {
-            private readonly List<ShellSettings> _shellSettings = new List<ShellSettings> { new ShellSettings { Name = ShellSettings.DefaultName } };
+            private readonly List<ShellSettings> _shellSettings = new List<ShellSettings> { new ShellSettings { Name = ShellSettings.DefaultName, State = TenantState.Running } };
 
             public IEnumerable<ShellSettings> LoadSettings() {
                 return _shellSettings.AsEnumerable();
@@ -134,8 +141,6 @@ namespace Orchard.Tests.Environment {
                 _shellSettings.Add(settings);
             }
         }
-
-
 
         [Test, Ignore("containers are disposed when calling BeginRequest, maybe by the StubVirtualPathMonitor")]
         public void NormalDependenciesShouldBeUniquePerRequestContainer() {
@@ -176,6 +181,7 @@ namespace Orchard.Tests.Environment {
             Assert.That(again2a, Is.SameAs(dep2a));
             Assert.That(again2b, Is.SameAs(dep2b));
         }
+
         [Test]
         public void SingletonDependenciesShouldBeUniquePerShell() {
             var host = _lifetime.Resolve<IOrchardHost>();
@@ -199,6 +205,7 @@ namespace Orchard.Tests.Environment {
             Assert.That(dep2, Is.SameAs(dep2a));
             Assert.That(dep2, Is.SameAs(dep2b));
         }
+
         [Test]
         public void TransientDependenciesShouldBeUniquePerResolve() {
             var host = _lifetime.Resolve<IOrchardHost>();

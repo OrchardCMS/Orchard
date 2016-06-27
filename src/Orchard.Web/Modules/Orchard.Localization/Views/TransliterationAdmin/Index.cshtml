@@ -1,0 +1,41 @@
+@using System.Globalization
+@using Orchard.Localization.Models
+@{
+    Layout.Title = T("Transliteration Settings");
+
+    var currentSpecifications = (IEnumerable<TransliterationSpecificationRecord>)Model.Specifications;
+}
+
+@using (Html.BeginFormAntiForgeryPost()) {
+    @Html.ValidationSummary()
+
+    if (currentSpecifications.Any()) {
+        <div class="actions" style="margin-bottom: 15px;"><a class="add button primaryAction" href="@Url.Action("Create", "TransliterationAdmin")">@T("Create a new specification")</a></div>
+        <table class="items">
+            <thead>
+                <tr>
+                    <th scope="col">@T("Culture From")</th>
+                    <th scope="col">@T("Culture To")</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+
+            @foreach (var currentSpecification in currentSpecifications) {
+                CultureInfo cultureInfoFrom = string.IsNullOrWhiteSpace(currentSpecification.CultureFrom) ? CultureInfo.InvariantCulture : CultureInfo.GetCultureInfo(currentSpecification.CultureFrom);
+                CultureInfo cultureInfoTo = string.IsNullOrWhiteSpace(currentSpecification.CultureTo) ? CultureInfo.InvariantCulture : CultureInfo.GetCultureInfo(currentSpecification.CultureTo);
+                
+                <tr>
+                    <td>@cultureInfoFrom.DisplayName</td>
+                    <td>@cultureInfoTo.DisplayName</td>
+                    <td>
+                        <a href="@Url.Action("Edit", "TransliterationAdmin", new { id = currentSpecification.Id})">@T("Edit")</a> |
+                        <a href="@Url.Action("Remove", "TransliterationAdmin", new { id = currentSpecification.Id})">@T("Remove")</a>
+                    </td>
+                </tr>
+            }
+        </table>
+    }
+    else {
+        <p class="nospecifications">@T("There are no specifications registered. Why not <a href=\"{0}\">Create one</a>?", Url.Action("Create", "TransliterationAdmin"))</p>
+    }
+}

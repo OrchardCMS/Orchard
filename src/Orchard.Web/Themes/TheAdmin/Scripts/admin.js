@@ -68,12 +68,127 @@
             return false;
         }
 
-        return confirm(confirmRemoveMessage);
+    	// use a custom message if its set in data-message
+        var dataMessage = $(this).data('message');
+        if (dataMessage === undefined) {
+        	dataMessage = confirmRemoveMessage;
+        }
+
+        return confirm(dataMessage);
     });
-    
+
     $(".check-all").change(function () {
-        $(this).parents("table.items").find(":checkbox:not(:disabled)").prop('checked', $(this).prop("checked"));
-    }); 
+        $("input[type=checkbox]:not(:disabled)").prop('checked', $(this).prop("checked"))
+    });
+
+    //Prevent multi submissions on forms
+    $("body").on("submit", "form.no-multisubmit", function (e) {
+        var submittingClass = "submitting";
+        form = $(this);
+
+        if (form.hasClass(submittingClass)) {
+            e.preventDefault();
+            return;
+        }
+
+        form.addClass(submittingClass);
+
+        // safety-nest in case the form didn't refresh the page
+        setTimeout(function () {
+            form.removeClass(submittingClass);
+        }, 5000);
+    });
+
+    // Handle keypress events in bulk action fieldsets that are part of a single form.
+    // This will make sure the expected action executes when pressing "enter" on a text field.
+    $("form .bulk-actions").on("keypress", "input[type='text']", function (e) {
+        if (e.which != 13)
+            return;
+
+        var sender = $(this);
+        var fieldset = sender.closest("fieldset.bulk-actions");
+        var submitButton = fieldset.find("button[type='submit']");
+
+        if (submitButton.length == 0)
+            return;
+
+        e.preventDefault();
+        submitButton.click();
+    });
+
+    var generateMenuFilter = function () {
+        var adminMenu = $("ul.menu-admin");
+        var filterText = adminMenu.data("filter-watermark");
+        var filterMenuItem = $('<li><div class="admin-menu-filter"><input id="adminfilter" type="text" class="text-box" placeholder=' + filterText + '></div></li>');
+
+        $("ul.menu-admin").prepend(filterMenuItem);
+
+        var allListItems = $("ul.menu-admin li ul li").not("#NavFilter");
+        var itemHeading = $("ul.menu-admin li h3");
+
+        $("#adminfilter").on("keyup", function (e) {
+            var a = $(this).val().toLowerCase();
+
+            var filteredItemHeading = itemHeading.filter(function (b, c) {
+                return $(c).text().toLowerCase().indexOf(a) !== -1;
+            });
+
+            itemHeading.show();
+            itemHeading.parent().hide();
+            filteredItemHeading.parent().show();
+            if (filteredItemHeading.length == 0) {
+                itemHeading.parent().hide();
+                var childListItem = allListItems.filter(function (b, c) {
+                    return $(c).text().toLowerCase().indexOf(a) !== -1;
+                });
+
+                allListItems.hide();
+                childListItem.parent().parent().show();
+                childListItem.show();
+            } else {
+                allListItems.show();
+            }
+
+            if (e.keyCode == 13) {
+                var visibleItems = adminMenu.find("li a").filter(":visible");
+
+                if (visibleItems.length > 0) {
+                    var hit = visibleItems.filter(function(b, c) {
+                        return $(c).text().toLowerCase().indexOf(a) !== -1;
+                    });
+                    location.href = hit.attr("href");
+                }
+            }
+        });
+
+        // Bind global hotkey 'CTRL+M' and 'ESC.
+        $(document).on("keyup", function (e) {
+            if ((e.which == 77 && e.ctrlKey) || e.which == 27) {
+                var filterWrapper = $(".admin-menu-filter");
+
+                var hideFilter = function() {
+                    $("#adminfilter").val("");
+                    filterWrapper.slideUp(75);
+                };
+
+                switch(e.keyCode) {
+                    case 77: // 'm'
+                        if (filterWrapper.is(":visible")) {
+                            hideFilter();
+                        } else {
+                            filterWrapper.slideDown(75);
+                            $("#adminfilter").focus();
+                        }
+                        break;
+                    case 27: // 'esc'
+                        hideFilter();
+                        break;
+                }
+            }
+        });
+    };
+
+    generateMenuFilter();
 })(jQuery);
 
 

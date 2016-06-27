@@ -12,6 +12,7 @@ namespace Orchard.DisplayManagement.Descriptors.ShapePlacementStrategy {
     /// </summary>
     public interface IPlacementFileParser : IDependency {
         PlacementFile Parse(string virtualPath);
+        PlacementFile ParseText(string placementText);
     }
 
 
@@ -29,7 +30,7 @@ namespace Orchard.DisplayManagement.Descriptors.ShapePlacementStrategy {
         public bool DisableMonitoring { get; set; }
 
         public PlacementFile Parse(string virtualPath) {
-            return _cacheManager.Get(virtualPath, context => {
+            return _cacheManager.Get(virtualPath, true, context => {
 
                 if (!DisableMonitoring) {
                     Logger.Debug("Monitoring virtual path \"{0}\"", virtualPath);
@@ -37,11 +38,11 @@ namespace Orchard.DisplayManagement.Descriptors.ShapePlacementStrategy {
                 }
 
                 var placementText = _webSiteFolder.ReadFile(virtualPath);
-                return ParseImplementation(virtualPath, placementText);
+                return ParseText(placementText);
             });
         }
 
-        private PlacementFile ParseImplementation(string virtualPath, string placementText) {
+        public PlacementFile ParseText(string placementText) {
             if (placementText == null)
                 return null;
 

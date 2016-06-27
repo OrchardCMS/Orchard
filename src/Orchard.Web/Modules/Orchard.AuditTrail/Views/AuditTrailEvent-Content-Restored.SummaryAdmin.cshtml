@@ -1,0 +1,22 @@
+﻿@using Orchard.AuditTrail.Helpers
+@using Orchard.AuditTrail.Services.Models
+@using Orchard.ContentManagement
+@{
+    var descriptor = (AuditTrailEventDescriptor)Model.Descriptor;
+    var eventData = (IDictionary<string, object>) Model.EventData;
+    var eventPastTense = descriptor.Name.Text.ToLower();
+    var contentItemId = (int)Model.ContentItemId;
+    var contentItem = (ContentItem) Model.ContentItem;
+    var eventVersionNumber = eventData.Get<int>("VersionNumber");
+    var itemDisplayText = contentItem != null ? Html.ItemDisplayText(contentItem) : default(IHtmlString);
+    var title = itemDisplayText != null ? itemDisplayText.ToString() : eventData.Get<string>("Title") ?? "[untitled]";
+}
+<section class="audittrail-content-eventsummary">
+    @if (contentItem != null) {
+        var contentType = contentItem.ContentType;
+        @T("The {1} {2} was {3} as {0}.", Html.ActionLink(T("Version {0}", eventVersionNumber).Text, "Detail", "Content", new { area = "Orchard.AuditTrail", id = contentItemId, version = eventVersionNumber }, null), contentType.ToLower(), Html.ItemEditLink(title, contentItemId).ToString(), eventPastTense)
+    }
+    else {
+        @T("Content item <strong>{1}</strong> was {2} as <strong>Version {0}</strong>.", eventVersionNumber, title, eventPastTense)
+    }
+</section>

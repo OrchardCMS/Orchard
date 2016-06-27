@@ -33,7 +33,7 @@ namespace Orchard.ContentManagement {
         private readonly ICacheManager _cacheManager;
         private readonly Func<IContentManagerSession> _contentManagerSession;
         private readonly Lazy<IContentDisplay> _contentDisplay;
-        private readonly Lazy<ISessionLocator> _sessionLocator; 
+        private readonly Lazy<ITransactionManager> _transactionManager; 
         private readonly Lazy<IEnumerable<IContentHandler>> _handlers;
         private readonly Lazy<IEnumerable<IIdentityResolverSelector>> _identityResolverSelectors;
         private readonly Lazy<IEnumerable<ISqlStatementProvider>> _sqlStatementProviders;
@@ -52,7 +52,7 @@ namespace Orchard.ContentManagement {
             ICacheManager cacheManager,
             Func<IContentManagerSession> contentManagerSession,
             Lazy<IContentDisplay> contentDisplay,
-            Lazy<ISessionLocator> sessionLocator,
+            Lazy<ITransactionManager> transactionManager,
             Lazy<IEnumerable<IContentHandler>> handlers,
             Lazy<IEnumerable<IIdentityResolverSelector>> identityResolverSelectors,
             Lazy<IEnumerable<ISqlStatementProvider>> sqlStatementProviders,
@@ -71,7 +71,7 @@ namespace Orchard.ContentManagement {
             _signals = signals;
             _handlers = handlers;
             _contentDisplay = contentDisplay;
-            _sessionLocator = sessionLocator;
+            _transactionManager = transactionManager;
             Logger = NullLogger.Instance;
         }
 
@@ -146,6 +146,14 @@ namespace Orchard.ContentManagement {
 
                 versionRecord = _contentItemVersionRepository.Get(options.VersionRecordId);
             }
+            else if (options.VersionNumber != 0) {
+                // short-circuit if item held in session
+                if (session.RecallVersionNumber(id, options.VersionNumber, out contentItem)) {
+                    return contentItem;
+                }
+
+                versionRecord = _contentItemVersionRepository.Get(x => x.ContentItemRecord.Id == id && x.Number == options.VersionNumber);
+            }
             else if (session.RecallContentRecordId(id, out contentItem)) {
                 // try to reload a previously loaded published content item
 
@@ -188,7 +196,7 @@ namespace Orchard.ContentManagement {
                                x => x.ContentItemRecord.Id == id && x.Number == options.VersionNumber);
                 }
                 else {
-                    versionRecord = contentItemVersionRecords.FirstOrDefault();
+                    versionRecord = contentItemVersionRecords.LastOrDefault();
                 }
             }
 
@@ -323,7 +331,7 @@ namespace Orchard.ContentManagement {
         }
 
         private IEnumerable<ContentItemVersionRecord> GetManyImplementation(QueryHints hints, Action<ICriteria, ICriteria> predicate) {
-            var session = _sessionLocator.Value.For(typeof (ContentItemRecord));
+            var session = _transactionManager.Value.GetSession();
             var contentItemVersionCriteria = session.CreateCriteria(typeof (ContentItemVersionRecord));
             var contentItemCriteria = contentItemVersionCriteria.CreateCriteria("ContentItemRecord");
             predicate(contentItemCriteria, contentItemVersionCriteria);
@@ -434,6 +442,28 @@ namespace Orchard.ContentManagement {
             Handlers.Invoke(handler => handler.Removed(context), Logger);
         }
 
+        public virtual void Destroy(ContentItem contentItem) {
+            var session = _transactionManager.Value.GetSession();
+            var context = new DestroyContentContext(contentItem);
+
+            // Give storage filters a chance to delete content part records.
+            Handlers.Invoke(handler => handler.Destroying(context), Logger);
+
+            // Delete content item version and content item records.
+            session
+                .CreateQuery("delete from Orchard.ContentManagement.Records.ContentItemVersionRecord civ where civ.ContentItemRecord.Id = (:id)")
+                .SetParameter("id", contentItem.Id)
+                .ExecuteUpdate();
+
+            // Delete the content item record itself.
+            session
+                .CreateQuery("delete from Orchard.ContentManagement.Records.ContentItemRecord ci where ci.Id = (:id)")
+                .SetParameter("id", contentItem.Id)
+                .ExecuteUpdate();
+
+            Handlers.Invoke(handler => handler.Destroyed(context), Logger);
+        }
+
         protected virtual ContentItem BuildNewVersion(ContentItem existingContentItem) {
             var contentItemRecord = existingContentItem.Record;
 
@@ -451,11 +481,9 @@ namespace Orchard.ContentManagement {
 
             if (latestVersion != null) {
                 latestVersion.Latest = false;
-                buildingItemVersionRecord.Number = latestVersion.Number + 1;
             }
-            else {
-                buildingItemVersionRecord.Number = contentItemRecord.Versions.Max(x => x.Number) + 1;
-            }
+            ////The new version should always be the next highest available number.
+            buildingItemVersionRecord.Number = contentItemRecord.Versions.Max(x => x.Number) + 1;
 
             contentItemRecord.Versions.Add(buildingItemVersionRecord);
             _contentItemVersionRepository.Create(buildingItemVersionRecord);
@@ -486,9 +514,7 @@ namespace Orchard.ContentManagement {
             if (contentItem.VersionRecord == null) {
                 // produce root record to determine the model id
                 contentItem.VersionRecord = new ContentItemVersionRecord {
-                    ContentItemRecord = new ContentItemRecord {
-                        
-                    },
+                    ContentItemRecord = new ContentItemRecord(),
                     Number = 1,
                     Latest = true,
                     Published = true
@@ -537,11 +563,9 @@ namespace Orchard.ContentManagement {
 
         public virtual ContentItem Clone(ContentItem contentItem) {
             // Mostly taken from: http://orchard.codeplex.com/discussions/396664
-            var importContentSession = new ImportContentSession(this);
-
             var element = Export(contentItem);
 
-            // If a handler prevents this element from being exported, it can't be cloned
+            // If a handler prevents this element from being exported, it can't be cloned.
             if (element == null) {
                 throw new InvalidOperationException("The content item couldn't be cloned because a handler prevented it from being exported.");
             }
@@ -552,11 +576,46 @@ namespace Orchard.ContentManagement {
             var status = element.Attribute("Status");
             if (status != null) status.SetValue("Draft"); // So the copy is always a draft.
 
+            var importContentSession = new ImportContentSession(this);
             importContentSession.Set(copyId, element.Name.LocalName);
-
             Import(element, importContentSession);
+            CompleteImport(element, importContentSession);
 
             return importContentSession.Get(copyId, element.Name.LocalName);
+        }
+
+        public virtual ContentItem Restore(ContentItem contentItem, VersionOptions options) {
+            // Invoke handlers.
+            Handlers.Invoke(handler => handler.Restoring(new RestoreContentContext(contentItem, options)), Logger);
+
+            // Get the latest version.
+            var versions = contentItem.Record.Versions.OrderBy(x => x.Number).ToArray();
+            var latestVersionRecord = versions.SingleOrDefault(x => x.Latest) ?? versions.Last();
+
+            // Get the specified version.
+            var specifiedVersionContentItem =
+                contentItem.VersionRecord.Number == options.VersionNumber || contentItem.VersionRecord.Id == options.VersionRecordId 
+                ? contentItem 
+                : Get(contentItem.Id, options);
+
+            // Create a new version record based on the specified version record.
+            var rolledBackContentItem = BuildNewVersion(specifiedVersionContentItem);
+            rolledBackContentItem.VersionRecord.Published = options.IsPublished;
+
+            // Invoke handlers.
+            Handlers.Invoke(handler => handler.Restored(new RestoreContentContext(rolledBackContentItem, options)), Logger);
+
+            if (options.IsPublished) {
+                // Unpublish the latest version.
+                latestVersionRecord.Published = false;
+
+                var publishContext = new PublishContentContext(rolledBackContentItem, previousItemVersionRecord: latestVersionRecord);
+
+                Handlers.Invoke(handler => handler.Publishing(publishContext), Logger);
+                Handlers.Invoke(handler => handler.Published(publishContext), Logger);
+            }
+
+            return rolledBackContentItem;
         }
 
         /// <summary>
@@ -649,9 +708,6 @@ namespace Orchard.ContentManagement {
         }
 
         public void Clear() {
-            var session = _sessionLocator.Value.For(typeof(ContentItemRecord));
-            session.Clear();
-            _contentManagerSession().Clear();
         }
 
         public IContentQuery<ContentItem> Query() {
@@ -660,7 +716,7 @@ namespace Orchard.ContentManagement {
         }
 
         public IHqlQuery HqlQuery() {
-            return new DefaultHqlQuery(this, _sessionLocator.Value.For(typeof(ContentItemVersionRecord)), _sqlStatementProviders.Value, _shellSettings);
+            return new DefaultHqlQuery(this, _transactionManager.Value.GetSession(), _sqlStatementProviders.Value, _shellSettings);
         }
 
         // Insert or Update imported data into the content manager.
@@ -689,8 +745,13 @@ namespace Orchard.ContentManagement {
                     Create(item);
                 }
             }
+            else {
+                // If the existing item is published, create a new draft for that item.
+                if (item.IsPublished())
+                    item = Get(item.Id, VersionOptions.DraftRequired);
+            }
 
-            // create a version record if import handlers need it
+            // Create a version record if import handlers need it.
             if(item.VersionRecord == null) {
                 item.VersionRecord = new ContentItemVersionRecord {
                     ContentItemRecord = new ContentItemRecord {
@@ -703,17 +764,13 @@ namespace Orchard.ContentManagement {
             }
 
             var context = new ImportContentContext(item, element, importContentSession);
-            foreach (var contentHandler in Handlers) {
-                contentHandler.Importing(context);
-            }
 
-            foreach (var contentHandler in Handlers) {
-                contentHandler.Imported(context);
-            }
+            Handlers.Invoke(contentHandler => contentHandler.Importing(context), Logger);
+            Handlers.Invoke(contentHandler => contentHandler.Imported(context), Logger);
 
             var savedItem = Get(item.Id, VersionOptions.Latest);
 
-            // the item has been pre-created in the first pass of the import, create it in db
+            // The item has been pre-created in the first pass of the import, create it in db.
             if(savedItem == null) {
                 if (status != null && status.Value == "Draft") {
                     Create(item, VersionOptions.Draft);
@@ -728,17 +785,30 @@ namespace Orchard.ContentManagement {
             }
         }
 
+        public void CompleteImport(XElement element, ImportContentSession importContentSession) {
+            var elementId = element.Attribute("Id");
+            if (elementId == null) {
+                return;
+            }
+
+            var identity = elementId.Value;
+
+            if (String.IsNullOrWhiteSpace(identity)) {
+                return;
+            }
+
+            var item = importContentSession.Get(identity, VersionOptions.Latest, XmlConvert.DecodeName(element.Name.LocalName));
+            var context = new ImportContentContext(item, element, importContentSession);
+
+            Handlers.Invoke(contentHandler => contentHandler.ImportCompleted(context), Logger);
+        }
+
         public XElement Export(ContentItem contentItem) {
             var context = new ExportContentContext(contentItem, new XElement(XmlConvert.EncodeLocalName(contentItem.ContentType)));
 
-            foreach (var contentHandler in Handlers) {
-                contentHandler.Exporting(context);
-            }
-
-            foreach (var contentHandler in Handlers) {
-                contentHandler.Exported(context);
-            }
-
+            Handlers.Invoke(contentHandler => contentHandler.Exporting(context), Logger);
+            Handlers.Invoke(contentHandler => contentHandler.Exported(context), Logger);
+            
             if (context.Exclude) {
                 return null;
             }
@@ -755,7 +825,7 @@ namespace Orchard.ContentManagement {
         }
 
         private ContentTypeRecord AcquireContentTypeRecord(string contentType) {
-            var contentTypeId = _cacheManager.Get(contentType + "_Record", ctx => {
+            var contentTypeId = _cacheManager.Get(contentType + "_Record", true, ctx => {
                 ctx.Monitor(_signals.When(contentType + "_Record"));
 
                 var contentTypeRecord = _contentTypeRepository.Get(x => x.Name == contentType);

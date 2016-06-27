@@ -22,6 +22,9 @@
         void Indexed(IndexContentContext context);
         void Importing(ImportContentContext context);
         void Imported(ImportContentContext context);
+        void Cloning(CloneContentContext context);
+        void Cloned(CloneContentContext context);
+        void ImportCompleted(ImportContentContext importContentContext);
         void Exporting(ExportContentContext context);
         void Exported(ExportContentContext context);
 
@@ -29,5 +32,9 @@
         void BuildDisplay(BuildDisplayContext context);
         void BuildEditor(BuildEditorContext context);
         void UpdateEditor(UpdateEditorContext context);
+        void Restoring(RestoreContentContext context);
+        void Restored(RestoreContentContext context);
+        void Destroying(DestroyContentContext context);
+        void Destroyed(DestroyContentContext context);
     }
 }

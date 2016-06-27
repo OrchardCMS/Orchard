@@ -143,3 +143,33 @@
     .menu-items-zone li a:hover {
         border-color:#487328;
     }
+
+.dir-rtl .navigation-menu li div  {
+	padding: 3px 30px 3px 10px;
+}
+.dir-rtl .navigation-menu li div:hover  {
+	background: #eee url(images/move.gif) no-repeat right 7px;
+}
+.dir-rtl .navigation-actions {
+    float: left;
+}
+.dir-rtl .primary {
+    float: right;
+}
+.dir-rtl .secondary {
+    float: left;
+    margin: 2px -300px 0 0;
+}
+.dir-rtl .container {
+    margin: 0 0 0 350px;
+}
+
+.dir-rtl .menu-items-zone li {
+    padding-right: 5px;
+    padding-left: 65px;
+}
+
+    .dir-rtl div.menu-item-actions {
+        left:10px;
+        right: inherit;
+    }

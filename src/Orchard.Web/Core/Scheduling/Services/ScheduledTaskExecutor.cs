@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.Core.Scheduling.Models;
 using Orchard.Data;
@@ -9,9 +8,9 @@ using Orchard.Logging;
 using Orchard.Services;
 using Orchard.Tasks;
 using Orchard.Tasks.Scheduling;
+using Orchard.Exceptions;
 
 namespace Orchard.Core.Scheduling.Services {
-    [UsedImplicitly]
     public class ScheduledTaskExecutor : IBackgroundTask {
         private readonly IClock _clock;
         private readonly IRepository<ScheduledTaskRecord> _repository;
@@ -65,6 +64,9 @@ namespace Orchard.Core.Scheduling.Services {
                     }
                 }
                 catch (Exception ex) {
+                    if (ex.IsFatal()) {
+                        throw;
+                    }
                     Logger.Warning(ex, "Unable to process scheduled task #{0} of type {1}", taskEntry.Id, taskEntry.Action);
                     _transactionManager.Cancel();
                 }

@@ -1,0 +1,11 @@
+﻿<div class="layout-element-wrapper">
+    <ul class="layout-panel layout-panel-main">
+        <li class="layout-panel-item layout-panel-label">{{::element.contentTypeLabel}}</li>
+        <li class="layout-panel-item layout-panel-action layout-panel-action-edit" ng-show="{{element.hasEditor}}" title="Edit {{element.contentTypeLabel.toLowerCase()}} content (Enter)" ng-click="edit()"><i class="fa fa-code"></i></li>
+        @Display(New.LayoutEditor_Template_Properties(ElementTypeName: "{{element.contentTypeLabel.toLowerCase()}}"))
+        <li class="layout-panel-item layout-panel-action" title="@T("Delete {{element.contentTypeLabel.toLowerCase()}} (Del)")" ng-click="delete(element)" ng-class="{disabled: !element.canDelete()}"><i class="fa fa-remove"></i></li>
+        <li class="layout-panel-item layout-panel-action" title="@T("Move {{element.contentTypeLabel.toLowerCase()}} up (Ctrl+Up)")" ng-click="element.moveUp()" ng-class="{disabled: !element.canMoveUp()}"><i class="fa fa-chevron-up"></i></li>
+        <li class="layout-panel-item layout-panel-action" title="@T("Move {{element.contentTypeLabel.toLowerCase()}} down (Ctrl+Down)")" ng-click="element.moveDown()" ng-class="{disabled: !element.canMoveDown()}"><i class="fa fa-chevron-down"></i></li>
+    </ul>
+    <div id="layout-content-markup-{{::$id}}" class="layout-content-markup" ng-bind-html="element.htmlUnsafe" data-templated="{{element.isTemplated}}" style="{{element.getTemplateStyles()}}"></div>
+</div>

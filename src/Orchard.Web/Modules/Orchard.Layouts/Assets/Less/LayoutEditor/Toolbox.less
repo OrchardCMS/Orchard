@@ -1,0 +1,84 @@
+﻿@import "Variables.less";
+
+.layout-editor {
+    > .layout-toolbox-wrapper {
+        position: relative;
+        margin-left: @container-padding;
+        width: 220px;
+        flex-shrink: 0;
+
+        > .layout-toolbox {
+            border: 1px solid @gray-border;
+            width: 220px;
+            min-height: 400px;
+            padding: @container-padding / 2;
+            background-color: @gray-bg;
+
+            &.sticky-top {
+                position: fixed;
+                top: 0;
+                max-height: 100%;
+                overflow-y: auto;
+            }
+
+            &.sticky-bottom {
+                position: absolute;
+                bottom: 0;
+            }
+
+            .layout-toolbox-group {
+                margin-top: @container-padding;
+
+                .layout-toolbox-group-heading {
+                    display: block;
+                    margin-bottom: @container-padding / 3;
+                    text-decoration: none;
+                
+                    &:before {
+                        display: inline-block;
+                        width: 10px;
+                        margin-right: @container-padding / 3;
+                        font: normal normal normal 14px/1 FontAwesome;
+                        text-align: center;
+                        content: "\f0d7";
+                    }
+                }
+            
+                &.collapsed {
+                    .layout-toolbox-group-heading:before {
+                        content: "\f0da";
+                    }
+
+                    .layout-toolbox-items {
+                        display: none;
+                    }
+                }
+
+                .layout-toolbox-section + .layout-toolbox-section {
+                    margin-top: @container-padding / 3;
+                }
+
+                .layout-toolbox-item {
+                    border: 1px solid @gray-border;
+                    background-color: #fff;
+                    padding: (@container-padding - 3) @container-padding;
+                    cursor: default;
+
+                    i {
+                        display: inline-block;
+                        width: 16px;
+                        font: normal normal normal 14px/1 FontAwesome;
+                    }
+
+                    + .layout-toolbox-item {
+                        margin-top: @container-padding / 3;
+                    }
+                }
+
+                + .layout-toolbox-group {
+                    margin-top: @container-padding / 2;
+                }
+            }
+        }
+    }
+}

@@ -19,7 +19,6 @@ using Orchard.Mvc;
 using Orchard.Mvc.Extensions;
 using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
-using Orchard.Reports.Services;
 using Orchard.Security;
 using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
@@ -29,7 +28,6 @@ namespace Orchard.Modules.Controllers {
         private readonly IExtensionDisplayEventHandler _extensionDisplayEventHandler;
         private readonly IModuleService _moduleService;
         private readonly IDataMigrationManager _dataMigrationManager;
-        private readonly IReportsCoordinator _reportsCoordinator;
         private readonly IExtensionManager _extensionManager;
         private readonly IFeatureManager _featureManager;
         private readonly IRecipeHarvester _recipeHarvester;
@@ -42,7 +40,6 @@ namespace Orchard.Modules.Controllers {
             IOrchardServices services,
             IModuleService moduleService,
             IDataMigrationManager dataMigrationManager,
-            IReportsCoordinator reportsCoordinator,
             IExtensionManager extensionManager,
             IFeatureManager featureManager,
             IRecipeHarvester recipeHarvester,
@@ -55,7 +52,6 @@ namespace Orchard.Modules.Controllers {
             _extensionDisplayEventHandler = extensionDisplayEventHandlers.FirstOrDefault();
             _moduleService = moduleService;
             _dataMigrationManager = dataMigrationManager;
-            _reportsCoordinator = reportsCoordinator;
             _extensionManager = extensionManager;
             _featureManager = featureManager;
             _recipeHarvester = recipeHarvester;
@@ -92,9 +88,13 @@ namespace Orchard.Modules.Controllers {
                 modules = modules.Skip((pager.Page - 1) * pager.PageSize).Take(pager.PageSize);
             }
 
+            // This way we can more or less reliably handle this implicit dependency.
+            var installModules = _featureManager.GetEnabledFeatures().FirstOrDefault(f => f.Id == "PackagingServices") != null;
+
             modules = modules.ToList();
             foreach (ModuleEntry moduleEntry in modules) {
                 moduleEntry.IsRecentlyInstalled = _moduleService.IsRecentlyInstalled(moduleEntry.Descriptor);
+                moduleEntry.CanUninstall = installModules;
 
                 if (_extensionDisplayEventHandler != null) {
                     foreach (string notification in _extensionDisplayEventHandler.Displaying(moduleEntry.Descriptor, ControllerContext.RequestContext)) {
@@ -103,9 +103,10 @@ namespace Orchard.Modules.Controllers {
                 }
             }
 
+
             return View(new ModulesIndexViewModel {
                 Modules = modules,
-                InstallModules = _featureManager.GetEnabledFeatures().FirstOrDefault(f => f.Id == "PackagingServices") != null,
+                InstallModules = installModules,
                 Options = options,
                 Pager = Shape.Pager(pager).TotalItemCount(totalItemCount)
             });
@@ -116,8 +117,7 @@ namespace Orchard.Modules.Controllers {
                 return new HttpUnauthorizedResult();
 
             IEnumerable<ModuleEntry> modules = _extensionManager.AvailableExtensions()
-                .Where(extensionDescriptor => DefaultExtensionTypes.IsModule(extensionDescriptor.ExtensionType))
-                .Where(extensionDescriptor => extensionDescriptor.Id != "Orchard.Setup" && ModuleIsAllowed(extensionDescriptor))
+                .Where(extensionDescriptor => ExtensionIsAllowed(extensionDescriptor))
                 .OrderBy(extensionDescriptor => extensionDescriptor.Name)
                 .Select(extensionDescriptor => new ModuleEntry { Descriptor = extensionDescriptor });
 
@@ -126,9 +126,10 @@ namespace Orchard.Modules.Controllers {
             if (_recipeHarvester != null) {
                 viewModel.Modules = modules.Select(x => new ModuleRecipesViewModel {
                     Module = x,
-                    Recipes = _recipeHarvester.HarvestRecipes(x.Descriptor.Id).ToList()
+                    Recipes = _recipeHarvester.HarvestRecipes(x.Descriptor.Id).Where(recipe => !recipe.IsSetupRecipe).ToList()
                 })
-                .Where(x => x.Recipes.Any());
+                .Where(x => x.Recipes.Any())
+                .ToList();
             }
 
             return View(viewModel);
@@ -141,14 +142,14 @@ namespace Orchard.Modules.Controllers {
                 return new HttpUnauthorizedResult();
 
             ModuleEntry module = _extensionManager.AvailableExtensions()
-                .Where(extensionDescriptor => extensionDescriptor.Id == moduleId && ModuleIsAllowed(extensionDescriptor))
+                .Where(extensionDescriptor => extensionDescriptor.Id == moduleId && ExtensionIsAllowed(extensionDescriptor))
                 .Select(extensionDescriptor => new ModuleEntry { Descriptor = extensionDescriptor }).FirstOrDefault();
 
             if (module == null) {
                 return HttpNotFound();
             }
 
-            Recipe recipe = _recipeHarvester.HarvestRecipes(module.Descriptor.Id).FirstOrDefault(x => x.Name == name);
+            Recipe recipe = _recipeHarvester.HarvestRecipes(module.Descriptor.Id).FirstOrDefault(x => !x.IsSetupRecipe && x.Name == name);
 
             if (recipe == null) {
                 return HttpNotFound();
@@ -159,7 +160,7 @@ namespace Orchard.Modules.Controllers {
             }
             catch(Exception e) {
                 Logger.Error(e, "Error while executing recipe {0} in {1}", moduleId, name);
-                Services.Notifier.Error(T("Recipes contains {0} unsupported module installation steps.", recipe.Name));
+                Services.Notifier.Error(T("Recipes {0} contains  unsupported module installation steps.", recipe.Name));
             }
 
             Services.Notifier.Information(T("The recipe {0} was executed successfully.", recipe.Name));
@@ -186,7 +187,7 @@ namespace Orchard.Modules.Controllers {
 
             return View(new FeaturesViewModel { 
                 Features = features,
-                IsAllowed = ModuleIsAllowed
+                IsAllowed = ExtensionIsAllowed
             });
         }
 
@@ -202,7 +203,7 @@ namespace Orchard.Modules.Controllers {
             }
 
             if (ModelState.IsValid) {
-                var availableFeatures = _moduleService.GetAvailableFeatures().Where(feature => ModuleIsAllowed(feature.Descriptor.Extension)).ToList();
+                var availableFeatures = _moduleService.GetAvailableFeatures().Where(feature => ExtensionIsAllowed(feature.Descriptor.Extension)).ToList();
                 var selectedFeatures = availableFeatures.Where(x => featureIds.Contains(x.Descriptor.Id)).ToList();
                 var enabledFeatures = availableFeatures.Where(x => x.IsEnabled && featureIds.Contains(x.Descriptor.Id)).Select(x => x.Descriptor.Id).ToList();
                 var disabledFeatures = availableFeatures.Where(x => !x.IsEnabled && featureIds.Contains(x.Descriptor.Id)).Select(x => x.Descriptor.Id).ToList();
@@ -221,10 +222,12 @@ namespace Orchard.Modules.Controllers {
                         _moduleService.DisableFeatures(enabledFeatures, force == true);
                         break;
                     case FeaturesBulkAction.Update:
-                        foreach (var feature in selectedFeatures.Where(x => x.NeedsUpdate)) {
+                        var featuresThatNeedUpdate = _dataMigrationManager.GetFeaturesThatNeedUpdate();
+                        var selectedFeaturesThatNeedUpdate = selectedFeatures.Where(x => featuresThatNeedUpdate.Contains(x.Descriptor.Id));
+
+                        foreach (var feature in selectedFeaturesThatNeedUpdate) {
                             var id = feature.Descriptor.Id;
                             try {
-                                _reportsCoordinator.Register("Data Migration", "Upgrade " + id, "Orchard installation");
                                 _dataMigrationManager.Update(id);
                                 Services.Notifier.Information(T("The feature {0} was updated successfully", id));
                             }
@@ -244,7 +247,7 @@ namespace Orchard.Modules.Controllers {
         /// <summary>
         /// Checks whether the module is allowed for the current tenant
         /// </summary>
-        private bool ModuleIsAllowed(ExtensionDescriptor extensionDescriptor) {
+        private bool ExtensionIsAllowed(ExtensionDescriptor extensionDescriptor) {
             return _shellSettings.Modules.Length == 0 || _shellSettings.Modules.Contains(extensionDescriptor.Id);
         }
     }

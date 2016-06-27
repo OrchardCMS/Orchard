@@ -1,0 +1,21 @@
+﻿@using Orchard.DynamicForms.Elements
+@using Orchard.Layouts.Helpers
+@{
+    var element = (Taxonomy)Model.Element;
+    var attributes = (IDictionary<string, object>)TagBuilderExtensions.GetCommonElementAttributes(Model);
+    var name = String.IsNullOrWhiteSpace((string)Model.ProcessedName) ? "MultiSelectList1" : (string)Model.ProcessedName;
+    var options = (IEnumerable<SelectListItem>)Model.TermOptions;
+    var clientValidationAttributes = (IDictionary<string, string>)Model.ClientValidationAttributes;
+    var htmlId = !String.IsNullOrWhiteSpace(element.HtmlId) ? element.HtmlId : name;
+
+    foreach (var attribute in clientValidationAttributes) {
+        attributes.Add(attribute.Key, attribute.Value);
+    }
+}
+@if (element.ShowLabel) {
+    <label for="@htmlId">@Html.Raw(Model.ProcessedLabel)</label>
+}
+@Html.ListBox(name, options, attributes)
+@if (element.ValidationSettings.ShowValidationMessage == true) {
+    @Html.ValidationMessage(name)
+}

@@ -9,7 +9,7 @@
 <head>
     @{
         Script.Require("jQuery").AtFoot();
-        Script.Include("knockout-2.3.0.js").AtFoot();
+        Script.Require("Knockout").AtFoot();
         
         Style.Include("orchard-mediaproviders-admin.css");
         Style.Include("orchard-websearch-admin.css");
@@ -37,7 +37,7 @@
         <form data-bind="submit: doSearch">
             <div class="query-container">
                 <div id="icon">
-                    <button type="submit" class="icon-search"></button>    
+                    <button type="submit" class="fa fa-search"></button>    
                 </div>
                 <div id="query">
                     <input type="text" autofocus placeholder="@T("search")"/>

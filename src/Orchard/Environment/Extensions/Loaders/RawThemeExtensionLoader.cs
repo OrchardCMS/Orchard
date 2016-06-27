@@ -25,7 +25,8 @@ namespace Orchard.Environment.Extensions.Loaders {
             if (Disabled)
                 return null;
 
-            if (descriptor.Location == "~/Themes") {
+            // Temporary - theme without own project should be under ~/themes
+            if (descriptor.Location.StartsWith("~/Themes",StringComparison.InvariantCultureIgnoreCase)) {
                 string projectPath = _virtualPathProvider.Combine(descriptor.Location, descriptor.Id,
                                            descriptor.Id + ".csproj");
 
@@ -44,7 +45,7 @@ namespace Orchard.Environment.Extensions.Loaders {
                 return new ExtensionProbeEntry {
                     Descriptor = descriptor,
                     Loader = this,
-                    VirtualPath = "~/Theme/" + descriptor.Id,
+                    VirtualPath = descriptor.VirtualPath,
                     VirtualPathDependencies = Enumerable.Empty<string>(),
                 };
             }

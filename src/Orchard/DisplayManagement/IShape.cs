@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using Orchard.DisplayManagement.Shapes;
+﻿using Orchard.DisplayManagement.Shapes;
 
 namespace Orchard.DisplayManagement {
     /// <summary>

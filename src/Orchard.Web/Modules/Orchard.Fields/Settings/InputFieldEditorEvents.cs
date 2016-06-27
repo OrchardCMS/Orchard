@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
-using Orchard.ContentManagement;
+﻿using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.ViewModels;
+using System.Collections.Generic;
+using System.Globalization;
 
 namespace Orchard.Fields.Settings {
     public class InputFieldListModeEvents : ContentDefinitionEditorEventsBase {
@@ -32,6 +33,7 @@ namespace Orchard.Fields.Settings {
                 builder.WithSetting("InputFieldSettings.Pattern", model.Pattern);
                 builder.WithSetting("InputFieldSettings.EditorCssClass", model.EditorCssClass);
                 builder.WithSetting("InputFieldSettings.MaxLength", model.MaxLength.ToString());
+                builder.WithSetting("InputFieldSettings.DefaultValue", model.DefaultValue);
             }
 
             yield return DefinitionTemplate(model);

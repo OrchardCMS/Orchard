@@ -88,7 +88,7 @@ namespace Upgrade.Controllers {
             if (ViewBag.CanMigrate) {
 
                 // crawl media file, ignore recipes and profiles
-                IEnumerable<MediaFolder> mediaFolders = _mediaLibraryService.GetMediaFolders(null);
+                IEnumerable<IMediaFolder> mediaFolders = _mediaLibraryService.GetMediaFolders(null);
                 foreach (var mediaFolder in mediaFolders) {
                     ImportMediaFolder(mediaFolder, x => {
                         MediaList.Enqueue(new MediaEntry { FolderName = x.FolderName, FileName = x.Name });
@@ -102,7 +102,7 @@ namespace Upgrade.Controllers {
 
             if (hasMore) {
                 _orchardServices.Notifier.Warning(T("Some media files need to be migrated."));
-                _orchardServices.Notifier.Information(T("{0} media files have been found, {1} media are in the library.", MediaList.Count, _orchardServices.ContentManager.Query<MediaPart>().Count()));
+                _orchardServices.Notifier.Information(T("{0} media files have been found, {1} media are in the library.", MediaList.Count, _orchardServices.ContentManager.Query<MediaPart, MediaPartRecord>().Count()));
             }
             else {
                 _orchardServices.Notifier.Warning(T("All media files have been migrated."));
@@ -126,7 +126,7 @@ namespace Upgrade.Controllers {
             return new JsonResult { Data = MediaList.Count };
         }
 
-        private void ImportMediaFolder(MediaFolder mediaFolder, Action<MediaFile> action, CancellationTokenSource cts) {
+        private void ImportMediaFolder(IMediaFolder mediaFolder, Action<MediaFile> action, CancellationTokenSource cts) {
             if (cts.IsCancellationRequested) {
                 return;
             }

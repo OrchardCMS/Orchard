@@ -66,22 +66,25 @@ namespace Orchard.Blogs.Drivers {
         }
 
         protected override void Importing(RecentBlogPostsPart part, ImportContentContext context) {
-            var blog = context.Attribute(part.PartDefinition.Name, "Blog");
-            if (blog != null) {
-                part.BlogId = context.GetItemFromSession(blog).Id;
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
             }
 
-            var count = context.Attribute(part.PartDefinition.Name, "Count");
-            if (count != null) {
-                part.Count = Convert.ToInt32(count);
-            }
+            context.ImportAttribute(part.PartDefinition.Name, "Blog", blog =>
+                part.BlogId = context.GetItemFromSession(blog).Id
+            );
+
+            context.ImportAttribute(part.PartDefinition.Name, "Count", count =>
+               part.Count = Convert.ToInt32(count)
+            );
         }
 
         protected override void Exporting(RecentBlogPostsPart part, ExportContentContext context) {
             var blog = _contentManager.Get(part.BlogId);
             var blogIdentity = _contentManager.GetItemMetadata(blog).Identity;
-            context.Element(part.PartDefinition.Name).SetAttributeValue("Blog", blogIdentity);
 
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Blog", blogIdentity);
             context.Element(part.PartDefinition.Name).SetAttributeValue("Count", part.Count);
         }
     }

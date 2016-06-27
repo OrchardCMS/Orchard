@@ -3,7 +3,7 @@
 namespace Orchard.ContentManagement.Utilities {
     public class LazyField<T> {
         private T _value;
-        private Func<T, T> _loader;
+        private Func<T> _loader;
         private Func<T, T> _setter;
 
         public T Value {
@@ -11,8 +11,13 @@ namespace Orchard.ContentManagement.Utilities {
             set { SetValue(value); }
         }
 
-        public void Loader(Func<T, T> loader) {
+        public void Loader(Func<T> loader) {
             _loader = loader;
+        }
+
+        [Obsolete]
+        public void Loader(Func<T, T> loader) {
+            _loader = () => loader(_value);
         }
 
         public void Setter(Func<T, T> setter) {
@@ -21,7 +26,7 @@ namespace Orchard.ContentManagement.Utilities {
 
         private T GetValue() {
             if (_loader != null) {
-                _value = _loader(_value);
+                _value = _loader();
                 _loader = null;
             }
             return _value;

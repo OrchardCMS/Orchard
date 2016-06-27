@@ -16,7 +16,10 @@
     </div>
     <div>
         <label for="@Html.FieldIdFor(m => m.BaseUrl)">@T("Base URL")</label>
-        @Html.TextBoxFor(m => m.BaseUrl, new { @class = "text medium" })
+        @Html.TextBoxFor(m => m.BaseUrl,
+            (object)(AuthorizedFor(Orchard.Security.StandardPermissions.SiteOwner)
+                ? (dynamic)new { @class = "text medium is-url" }
+                : (dynamic)new { @class = "text medium is-url", @readonly = "readonly" }))
         <span class="hint">@T("Enter the fully qualified base URL of the web site.")</span>
         <span class="hint">@T("e.g., http://localhost:30320/orchardlocal, http://www.yourdomain.com")</span>
     </div>
@@ -45,18 +48,24 @@
         @Html.EditorFor(x => x.PageTitleSeparator)
         @Html.ValidationMessage("PageTitleSeparator", "*")
     </div>
-@if (AuthorizedFor(Orchard.Security.StandardPermissions.SiteOwner)) {
     <div>
         <label for="SuperUser">@T("Super user")</label>
-        @Html.EditorFor(x => x.SuperUser)
+        @Html.TextBoxFor(x => x.SuperUser, 
+            (object)(AuthorizedFor(Orchard.Security.StandardPermissions.SiteOwner)
+                ? (dynamic)new { @class = "text single-line" }
+                : (dynamic)new { @class = "text single-line", @readonly = "readonly" }))
         @Html.ValidationMessage("SuperUser", "*")
         <span class="hint">@T("Enter an existing account name, or nothing if you don't want a Super user account")</span>
     </div>
-}
     <div>
         <label for="SiteDebugMode">@T("Resource Debug Mode")</label>
         @Html.DropDownList("ResourceDebugMode", resourceDebugMode)
         <span class="hint">@T("Determines whether scripts and stylesheets load in their debuggable or minified form.")</span>
+    </div>
+    <div>
+        @Html.LabelFor(m => m.UseCdn, T("Use CDN"))
+        @Html.CheckBoxFor(m => m.UseCdn)
+	    <span class="hint">@T("Determines whether the defined CDN value is used for scripts and stylesheets, or their local version")</span>
     </div>
     <div>
         <label for="DefaultPageSize">@T("Default number of items per page")</label>
@@ -68,6 +77,11 @@
         <label for="MaxPageSize">@T("Maximum number of items per page")</label>
         @Html.TextBoxFor(m => m.MaxPageSize, new {@class = "text small"})
         <span class="hint">@T("Determines the maximum number of items that are shown per page. Leave 0 for unlimited.")</span>
+    </div>
+    <div>
+        <label for="MaxPagedCount">@T("Last index of items in pages")</label>
+        @Html.TextBoxFor(m => m.MaxPagedCount, new { @class = "text small" })
+        <span class="hint">@T("Determines the last element of the database that can be displayed. Leave 0 for unlimited.")</span>
     </div>
 }
 </fieldset>

@@ -5,45 +5,43 @@
     string[] options = (!String.IsNullOrWhiteSpace(settings.Options)) ? settings.Options.Split(new string[] { System.Environment.NewLine }, StringSplitOptions.None) : new string[] { T("Select an option").ToString() };
 }
 <fieldset>
-    <label for="@Html.FieldIdFor(m => m.Value)" @if(settings.Required) { <text>class="required"</text> }>@Model.DisplayName</label>
+    <label for="@Html.FieldIdFor(m => m.Value)" @if (settings.Required) { <text> class="required" </text>  }>@Model.DisplayName</label>
     @switch (settings.ListMode) {
         case ListMode.Dropdown:
-            @Html.DropDownListFor(m => m.Value, new SelectList(options, Model.Value))
+            @Html.DropDownListFor(m => m.Value, new SelectList(options, Model.Value), settings.Required ? new { required = "required" } : null)
             break;
-        
+
         case ListMode.Radiobutton:
             foreach (var option in options) {
                 if (string.IsNullOrWhiteSpace(option)) {
-                    <label>@Html.RadioButton("Value", "", string.IsNullOrWhiteSpace(Model.Value))<i>@T("unset")</i></label>			
-                }
+                    <label>@Html.RadioButton("Value", "", string.IsNullOrWhiteSpace(Model.Value), settings.Required ? new { required = "required" } : null)<i>@T("unset")</i></label>            }
                 else {
-                    <label>@Html.RadioButton("Value", option, (option == Model.Value))@option</label>
-                }
+                    <label>@Html.RadioButton("Value", option, (option == Model.Value), settings.Required ? new { required = "required" } : null)@option</label>         }
             }
             break;
-        
+
         case ListMode.Listbox:
             <input name="@Html.FieldNameFor(m => m.SelectedValues)" type="hidden" />
-            @Html.ListBoxFor(m => m.SelectedValues, new MultiSelectList(options, Model.SelectedValues))
-       break;
+            @Html.ListBoxFor(m => m.SelectedValues, new MultiSelectList(options, Model.SelectedValues), settings.Required ? new { required = "required" } : null)
+            break;
 
         case ListMode.Checkbox:
-       int index = 0;
+            int index = 0;
             <input name="@Html.FieldNameFor(m => m.SelectedValues)" type="hidden" />
-                    foreach (var option in options) {
-                        index++;
-                        if (!string.IsNullOrWhiteSpace(option)) {
+            foreach (var option in options) {
+                index++;
+                if (!string.IsNullOrWhiteSpace(option)) {
                     <div>
                         <input type="checkbox" name="@Html.FieldNameFor(m => m.SelectedValues)" value="@option" @((Model.SelectedValues != null && Model.SelectedValues.Contains(option)) ? "checked=\"checked\"" : "") class="check-box" id="@Html.FieldIdFor(m => m.SelectedValues)-@index" />
                         <label class="forcheckbox" for="@Html.FieldIdFor(m => m.SelectedValues)-@index">@T(option)</label>
                     </div>
-                        }
-                    }
-                    break;
+                }
+            }
+            break;
     }
-    
+
     @Html.ValidationMessageFor(m => m.SelectedValues)
     @if (HasText(settings.Hint)) {
-    <span class="hint">@settings.Hint</span>
+        <span class="hint">@settings.Hint</span>
     }
 </fieldset>

@@ -1,0 +1,5 @@
+﻿<Placement>
+  <Match Path="~/Admin/Users/Edit/*">
+    <Place Parts_User_EditPassword_Edit="Content:1"/>
+  </Match>
+</Placement>

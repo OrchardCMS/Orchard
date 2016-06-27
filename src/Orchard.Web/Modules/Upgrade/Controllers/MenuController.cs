@@ -8,7 +8,6 @@ using Orchard.Localization;
 using Orchard.Security;
 using Orchard.UI.Admin;
 using Orchard.UI.Notify;
-using Orchard.Widgets.Models;
 using Orchard.Widgets.Services;
 
 namespace Upgrade.Controllers {

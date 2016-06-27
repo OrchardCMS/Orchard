@@ -3,7 +3,9 @@ using Autofac;
 using Moq;
 using NUnit.Framework;
 using Orchard.Environment;
+using Orchard.Mvc;
 using Orchard.Tasks;
+using Orchard.Tests.Stubs;
 using Orchard.Tests.Utility;
 
 namespace Orchard.Tests.Tasks {
@@ -11,9 +13,19 @@ namespace Orchard.Tests.Tasks {
     public class SweepGeneratorTests : ContainerTestBase {
         protected override void Register(ContainerBuilder builder) {
             builder.RegisterAutoMocking(MockBehavior.Loose);
+            builder.RegisterModule(new MvcModule());
             builder.RegisterModule(new WorkContextModule());
             builder.RegisterType<WorkContextAccessor>().As<IWorkContextAccessor>();
             builder.RegisterType<SweepGenerator>();
+        }
+
+        protected override void Resolve(ILifetimeScope container) {
+            container.Mock<IHttpContextAccessor>()
+                .Setup(x => x.Current())
+                .Returns(() => null);
+
+            container.Mock<IWorkContextEvents>()
+                .Setup(x => x.Started());
         }
 
         [Test]

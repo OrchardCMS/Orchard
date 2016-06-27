@@ -1,0 +1,14 @@
+﻿@{
+    var tabs = (IList<string>)Model.Tabs;
+    var index = 0;
+}
+@if (tabs.Count > 1) {
+    <ul class="localmenu localmenu-element-admin">
+    @foreach (var tab in tabs) {
+        var id = String.Format("#element-{0}", tab.ToLowerInvariant());
+        var cssClass = index == 0 ? "selected first" : index == tabs.Count - 1 ? "last" : "middle";
+        <li class="@cssClass"><a href="@id">@T(tab)</a></li>
+        index++;
+    }
+    </ul>
+}

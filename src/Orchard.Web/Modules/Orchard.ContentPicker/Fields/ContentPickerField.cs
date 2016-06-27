@@ -17,7 +17,7 @@ namespace Orchard.ContentPicker.Fields {
 
         public IEnumerable<ContentItem> ContentItems { 
             get {
-                return _contentItems.Value;
+                return _contentItems.Value ?? Enumerable.Empty<ContentItem>();
             }
         }
 

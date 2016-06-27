@@ -1,0 +1,24 @@
+﻿<div class="layout-toolbox-wrapper">
+<div class="layout-toolbox">
+        <ul class="layout-toolbox-groups">
+        <li class="layout-toolbox-group" ng-class="{collapsed: layoutIsCollapsed}">
+            <a href="#" class="layout-toolbox-group-heading" ng-click="toggleLayoutIsCollapsed($event)">@T("Layout")</a>
+            <ul class="layout-toolbox-items">
+                <section class="layout-toolbox-section layout-toolbox-section-grid" ng-model="gridElements" ui-sortable="getSortableOptions('Grid')">
+                    <li class="layout-toolbox-item layout-toolbox-item-grid" title="{{item.toolboxDescription}}" ng-repeat="item in gridElements"><i>{{item.toolboxIcon}}</i> {{item.toolboxLabel}}</li>
+                </section>
+                <section class="layout-toolbox-section layout-toolbox-section-row" ng-model="rowElements" ui-sortable="getSortableOptions('Row')">
+                    <li class="layout-toolbox-item layout-toolbox-item-row" title="{{item.toolboxDescription}}" ng-repeat="item in rowElements"><i>{{item.toolboxIcon}}</i> {{item.toolboxLabel}}</li>
+                </section>
+                <section class="layout-toolbox-section layout-toolbox-section-column" ng-model="columnElements" ui-sortable="getSortableOptions('Column')">
+                    <li class="layout-toolbox-item layout-toolbox-item-column" title="{{item.toolboxDescription}}" ng-repeat="item in columnElements"><i>{{item.toolboxIcon}}</i> {{item.toolboxLabel}}</li>
+                </section>
+                <section class="layout-toolbox-section layout-toolbox-section-canvas" ng-model="canvasElements" ui-sortable="getSortableOptions('Canvas')">
+                    <li class="layout-toolbox-item layout-toolbox-item-canvas" title="{{item.toolboxDescription}}" ng-repeat="item in canvasElements"><i>{{item.toolboxIcon}}</i> {{item.toolboxLabel}}</li>
+                </section>
+            </ul>
+        </li>
+        <orc-layout-toolbox-group category="category" ng-repeat="category in contentElementCategories" />
+    </ul>
+</div>
+</div>

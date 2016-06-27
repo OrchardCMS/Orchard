@@ -38,8 +38,8 @@ namespace Orchard.Azure.MediaServices.Services.Tasks.Providers {
         public override TaskConfiguration Editor(dynamic shapeFactory, IUpdateModel updater) {
             var settings = _orchardServices.WorkContext.CurrentSite.As<CloudMediaSettingsPart>();
             var viewModel = new EncodeViewModel() {
-                EncodingPresets = settings.WamsEncodingPresets,
-                SelectedEncodingPreset = settings.WamsEncodingPresets.Any() ? settings.WamsEncodingPresets.ToArray()[settings.DefaultWamsEncodingPresetIndex] : null
+                EncodingPresets = settings.WamsEncodingPresets.Select(x => x.Name),
+                SelectedEncodingPreset = settings.WamsEncodingPresets.Any() ? settings.WamsEncodingPresets.ToArray()[settings.DefaultWamsEncodingPresetIndex].Name : null
             };
 
             if (updater != null) {
@@ -66,12 +66,14 @@ namespace Orchard.Azure.MediaServices.Services.Tasks.Providers {
         }
 
         public override ITask CreateTask(TaskConfiguration config, TaskCollection tasks, IEnumerable<IAsset> inputAssets) {
+            var settings = _orchardServices.WorkContext.CurrentSite.As<CloudMediaSettingsPart>();
             var viewModel = (EncodeViewModel)config.Settings;
+            var encodingPreset = settings.WamsEncodingPresets.Where(x => x.Name == viewModel.SelectedEncodingPreset).Single();
 
             var task = tasks.AddNew(
                 viewModel.SelectedEncodingPreset,
                 _wamsClient.GetLatestMediaProcessorByName(MediaProcessorName.WindowsAzureMediaEncoder),
-                viewModel.SelectedEncodingPreset,
+                !String.IsNullOrEmpty(encodingPreset.CustomXml) ? encodingPreset.CustomXml : encodingPreset.Name,
                 TaskOptions.None);
 
             task.InputAssets.AddRange(inputAssets);

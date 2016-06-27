@@ -34,6 +34,7 @@ using Orchard.Users.Services;
 using Orchard.Services;
 using Orchard.Tests.Messaging;
 using Orchard.Tests.Modules.Stubs;
+using Orchard.Tests.ContentManagement;
 
 namespace Orchard.Tests.Modules.Users.Services {
     [TestFixture]
@@ -46,19 +47,6 @@ namespace Orchard.Tests.Modules.Users.Services {
         private ISession _session;
         private IContainer _container;
         private CultureInfo _currentCulture;
-
-
-        public class TestSessionLocator : ISessionLocator {
-            private readonly ISession _session;
-
-            public TestSessionLocator(ISession session) {
-                _session = session;
-            }
-
-            public ISession For(Type entityType) {
-                return _session;
-            }
-        }
 
         [TestFixtureSetUp]
         public void InitFixture() {
@@ -109,9 +97,8 @@ namespace Orchard.Tests.Modules.Users.Services {
             builder.RegisterInstance(ShellSettingsUtility.CreateEncryptionEnabled());
 
             _session = _sessionFactory.OpenSession();
-            _session.BeginTransaction();
+            builder.RegisterInstance(new TestTransactionManager(_session)).As<ITransactionManager>();
 
-            builder.RegisterInstance(new TestSessionLocator(_session)).As<ISessionLocator>();
             _container = builder.Build();
             _membershipService = _container.Resolve<IMembershipService>();
             _userService = _container.Resolve<IUserService>();
@@ -119,8 +106,8 @@ namespace Orchard.Tests.Modules.Users.Services {
 
         [TearDown]
         public void TearDown() {
-            _session.Transaction.Commit();
-            _session.Transaction.Dispose();
+            if (_container != null)
+                _container.Dispose();
         }
 
         [Test]

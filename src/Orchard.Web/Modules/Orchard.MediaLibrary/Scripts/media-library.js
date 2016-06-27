@@ -9,13 +9,77 @@ var baseViewModel = function() {
 $(function () {
     (function (settings) {
 
+        function attachFolderTitleDropEvent (elements) {
+            elements.droppable({
+                accept: function () {
+                    var targetId = $(this).data('term-id');
+                    return targetId != viewModel.displayed();
+                },
+                over: function (event, ui) {
+                    $(ui.helper).addClass('over');
+                    $(this).addClass('dropping');
+                },
+                out: function (event, ui) {
+                    $(ui.helper).removeClass('over');
+                    $(this).removeClass('dropping');
+                },
+                tolerance: "pointer",
+                drop: function () {
+                    $(this).removeClass('dropping');
+                    var folderPath = $(this).data('media-path');
+
+                    if (folderPath == viewModel.displayed()) {
+                        return;
+                    }
+
+                    var ids = [];
+                    viewModel.selection().forEach(function (item) { ids.push(item.data.id); });
+                    var url = settings.moveActionUrl;
+
+                    console.log(folderPath);
+
+                    $.ajax({
+                        type: "POST",
+                        url: url,
+                        dataType: "json",
+                        traditional: true,
+                        data: {
+                            folderPath: folderPath,
+                            mediaItemIds: ids,
+                            __RequestVerificationToken: settings.antiForgeryToken
+                        },
+                    }).done(function (result) {
+                        if (result) {
+                            if (viewModel.displayed()) {
+                                viewModel.results.remove(function (item) {
+                                    return ids.indexOf(item.data.id) != -1;
+                                });
+                            }
+
+                            viewModel.clearSelection();
+                        } else {
+                            alert(errorMessage);
+                            console.log('failed to move media items: ' + result.toString());
+                        }
+                    }).fail(function (result) {
+                        alert(errorMessage);
+                        console.log('failed to move media items: ' + result.toString());
+                    });
+                }
+            });
+        };
+
         var listWidth = $('#media-library-main-list').width();
         var listHeight = $('#media-library-main-list').height();
-        var itemSize = $('.thumbnail').first().width();
+        var itemWidth = $('#media-library-main-list li').first().width();
+        var itemHeight = $('#media-library-main-list li').first().height();
+        var defaultDimension = $(window).width() < 1420 ? 120 : 200;
+        if (itemHeight == 0 || itemHeight == null) itemHeight = defaultDimension;
+        if (itemWidth == 0 || itemWidth == null) itemWidth = defaultDimension;
         var draftText = $("#media-library").data("draft-text");
 
-        var itemsPerRow = Math.floor(listWidth / itemSize);
-        var itemsPerColumn = Math.ceil(listHeight / itemSize);
+        var itemsPerRow = Math.floor(listWidth / itemWidth);
+        var itemsPerColumn = Math.ceil(listHeight / itemHeight);
 
         var pageCount = itemsPerRow * itemsPerColumn;
 
@@ -131,6 +195,12 @@ $(function () {
                     cache: false
                 }).done(function(data) {
                     var mediaItems = data.mediaItems;
+                    var mediaItemsFolderPath = data.folderPath;
+
+                    if (mediaItemsFolderPath !== self.displayed()) {
+                        return;
+                    }
+
                     self.mediaItemsCount = data.mediaItemsCount;
                     for (var i = 0; i < mediaItems.length; i++) {
                         var item = new mediaPartViewModel(mediaItems[i]);
@@ -166,6 +236,11 @@ $(function () {
                     oldValue.hasFocus(false);
                 }
             }, this, "beforeChange");
+
+            self.afterRenderMediaFolderTemplate = function(elements, model) {
+                var childTitles = $(elements).find(".media-library-folder-title");
+                attachFolderTitleDropEvent(childTitles);
+            };
 
             self.focus.subscribe(function(newValue) {
                 if (newValue) {
@@ -261,17 +336,6 @@ $(function () {
             };
             self.orderMedia.subscribe(selectFolderOrRecent);
             self.mediaType.subscribe(selectFolderOrRecent);
-
-            self.fetchDisplayedFolderStructure = function(displayedFolder) {
-                var folders = self.mediaFolders();
-                for (var x = 0; x < folders.length; x++) {
-                    var folder = folders[x];
-                    if (displayedFolder.indexOf(folder.folderPath()) === 0) {
-                        folder.fetchChildren(displayedFolder);
-                        folder.isExpanded(true);
-                    }
-                }
-            };
         }
 
         var viewModel = new mediaIndexViewModel();
@@ -290,7 +354,6 @@ $(function () {
             self.childFoldersFetchStatus = 0;  //0 = unfetched, 1 = fetching, 2 = fetched
 
             self.isExpanded = ko.observable(false);
-            self.isVisible = ko.observable(true);
 
             self.isSelected = ko.computed(function() {
                 return (self.mediaIndexViewModel.displayed() == self.folderPath());
@@ -316,12 +379,17 @@ $(function () {
                     var nextFetch = self.folderPath();
 
                     if (deepestChildPath !== undefined && deepestChildPath !== null && (deepestChildPath.indexOf(self.folderPath()) === 0)) {
-                        var deepestChildPathBreadCrumbs = deepestChildPath.split('\\');
-                        var currentBreadCrumbs = self.folderPath().split('\\');
+                        /* NTFS uses "\" as the directory separator, but AFS uses "/".
+                           Since both of them are illegal characters for file and folder names, it's safe to determine the type of file storage
+                           currently in use based on the directory separator character. */
+                        var separator = deepestChildPath.contains('/') ? '/' : '\\';
+
+                        var deepestChildPathBreadCrumbs = deepestChildPath.split(separator);
+                        var currentBreadCrumbs = self.folderPath().split(separator);
 
                         var diff = deepestChildPathBreadCrumbs.length - currentBreadCrumbs.length;
                         if (diff > 0) {
-                            nextFetch = self.folderPath() + '\\' + deepestChildPathBreadCrumbs[deepestChildPathBreadCrumbs.length - diff];
+                            nextFetch = self.folderPath() + separator + deepestChildPathBreadCrumbs[deepestChildPathBreadCrumbs.length - diff];
                         }
                     }
 
@@ -331,7 +399,6 @@ $(function () {
                             newChildFolder.fetchChildren(deepestChildPath);
                             newChildFolder.isExpanded(true);
                         }
-                        newChildFolder.isVisible(true);
                         self.childFolders.push(newChildFolder);
                     }
 
@@ -350,25 +417,17 @@ $(function () {
                 }
 
                 self.mediaIndexViewModel.selectFolder(self.folderPath());
-                
-                var childFolders = self.childFolders();
 
-                if (self.isExpanded()) {    
-                    for (var x = 0; x < childFolders.length; x++) {
-                        childFolders[x].isVisible(false);
-                    }
-                    self.isExpanded(false);
-                } else {
-                    if (self.childFoldersFetchStatus !== 0) {
-                        for (var x = 0; x < childFolders.length; x++) {
-                            childFolders[x].isVisible(true);
-                        }
-                    } else {
-                        self.fetchChildren();
-                    }
-                    
-                    self.isExpanded(true);
+                if (self.childFoldersFetchStatus === 0) {
+                    self.fetchChildren();
                 }
+
+                self.isExpanded(!self.isExpanded());
+            };
+
+            self.afterRenderMediaFolderTemplate = function (elements, model) {
+                var childTitles = $(elements).find(".media-library-folder-title");
+                attachFolderTitleDropEvent(childTitles);
             };
         }
 
@@ -376,14 +435,26 @@ $(function () {
             viewModel.mediaFolders.push(new mediaFolderViewModel(childFolder));
         });
 
-        viewModel.fetchDisplayedFolderStructure(settings.folderPath);
-
         enhanceViewModel(viewModel);
         
         ko.applyBindings(viewModel);
 
-        if (settings.hasFolderPath) {
+        if (settings.hasFolderPath && settings.folderPath != settings.rootFolderPath) {
             viewModel.displayFolder(settings.folderPath);
+
+            //fetch displayed folder structure
+            (function (displayedFolder) {
+                var folders = viewModel.mediaFolders();
+                for (var x = 0; x < folders.length; x++) {
+                    var folder = folders[x];
+                    if (displayedFolder.indexOf(folder.folderPath()) === 0) {
+                        folder.fetchChildren(displayedFolder);
+                        folder.isExpanded(true);
+                        break;
+                    }
+                }
+            })(settings.folderPath);
+
             History.pushState({
                 action: 'displayFolder',
                 folderPath: settings.folderPath
@@ -421,17 +492,24 @@ $(function () {
             return false;
         });
 
-        $("#media-library-main-selection-select > .button-select").on('click', function() {
-            if (parent.$.colorbox) {
-                var selectedData = [];
-                for (var i = 0; i < viewModel.selection().length; i++) {
-                    var selection = viewModel.selection()[i];
-                    selectedData.push(selection.data);
-                }
-                parent.$.colorbox.selectedData = selectedData;
-                parent.$.colorbox.close();
-            }
-            ;
+        var pickAndClose = function () {
+        	if (parent.$.colorbox) {
+        		var selectedData = [];
+        		for (var i = 0; i < viewModel.selection().length; i++) {
+        			var selection = viewModel.selection()[i];
+        			selectedData.push(selection.data);
+        		}
+        		parent.$.colorbox.selectedData = selectedData;
+        		parent.$.colorbox.close();
+        	};
+        }
+
+        $("#media-library-main-selection-select > .button-select").on('click', function () {
+        	pickAndClose();
+        });
+
+        $("#media-library-main-list").on('dblclick', function () {
+        	pickAndClose();
         });
 
         $("#media-library-main-selection-select > .button-cancel").on('click', function() {
@@ -440,64 +518,6 @@ $(function () {
                 parent.$.colorbox.close();
             }
             ;
-        });
-
-        $(".media-library-folder-title").droppable({
-            accept: function() {
-                var targetId = $(this).data('term-id');
-                return targetId != viewModel.displayed();
-            },
-            over: function(event, ui) {
-                $(ui.helper).addClass('over');
-                $(this).addClass('dropping');
-            },
-            out: function(event, ui) {
-                $(ui.helper).removeClass('over');
-                $(this).removeClass('dropping');
-            },
-            tolerance: "pointer",
-            drop: function() {
-                $(this).removeClass('dropping');
-                var folderPath = $(this).data('media-path');
-
-                if (folderPath == viewModel.displayed()) {
-                    return;
-                }
-
-                var ids = [];
-                viewModel.selection().forEach(function(item) { ids.push(item.data.id); });
-                var url = settings.moveActionUrl;
-
-                console.log(folderPath);
-
-                $.ajax({
-                    type: "POST",
-                    url: url,
-                    dataType: "json",
-                    traditional: true,
-                    data: {
-                        folderPath: folderPath,
-                        mediaItemIds: ids,
-                        __RequestVerificationToken: settings.antiForgeryToken
-                    },
-                }).done(function(result) {
-                    if (result) {
-                        if (viewModel.displayed()) {
-                            viewModel.results.remove(function(item) {
-                                return ids.indexOf(item.data.id) != -1;
-                            });
-                        }
-
-                        viewModel.clearSelection();
-                    } else {
-                        alert(errorMessage);
-                        console.log('failed to move media items: ' + result.toString());
-                    }
-                }).fail(function (result) {
-                    alert(errorMessage);
-                    console.log('failed to move media items: ' + result.toString());
-                });
-            }
         });
 
         $("#media-library-main-list").on("mouseover", ".media-thumbnail", function() {
@@ -560,5 +580,40 @@ $(function () {
             });
             return false;
         });
+
+        $('#clone-selection-button').click(function () {
+            if (!confirm(settings.cloneConfirmationMessage)) {
+                return false;
+            }
+
+            var ids = [];
+            viewModel.selection().forEach(function (item) { ids.push(item.data.id); });
+
+            if (ids.length != 1) {
+                return false;
+            }
+
+            var url = settings.cloneActionUrl;
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                dataType: "json",
+                traditional: true,
+                data: {
+                    mediaItemId: ids[0],
+                    __RequestVerificationToken: settings.antiForgeryToken
+                }
+            }).done(function (result) {
+                if (result) {
+                    viewModel.getMediaItems(viewModel.pageCount);
+                } else {
+                    console.log('failed to clone media items');
+                }
+                return false;
+            });
+            return false;
+        });
+
     })(window.mediaLibrarySettings);
 })

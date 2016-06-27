@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using Autofac;
+using Moq;
 using NUnit.Framework;
 using Orchard.Caching;
 using Orchard.Environment.Extensions.Models;
+using Orchard.Roles.Events;
 using Orchard.Roles.Models;
 using Orchard.Roles.Services;
 using Orchard.Security.Permissions;
@@ -18,6 +20,7 @@ namespace Orchard.Tests.Modules.Roles.Services {
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
             builder.RegisterType<Signals>().As<ISignals>();
             builder.RegisterType<TestPermissionProvider>().As<IPermissionProvider>();
+            builder.RegisterInstance(new Mock<IRoleEventHandler>().Object);
         }
 
         public class TestPermissionProvider : IPermissionProvider {

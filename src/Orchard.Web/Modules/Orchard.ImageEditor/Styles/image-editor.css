@@ -55,3 +55,11 @@
     width: 200px;
     margin-top: 10px;
 }
+
+/* RTL */
+
+.dir-rtl .filter {
+    float: right;
+    margin-right: inherit;
+    margin-left: 20px;
+}

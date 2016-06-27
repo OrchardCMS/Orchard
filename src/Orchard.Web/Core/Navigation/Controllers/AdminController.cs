@@ -1,14 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Web.Mvc;
-using System.Web.Routing;
 using Orchard.ContentManagement;
-using Orchard.Core.Common.Models;
 using Orchard.Core.Navigation.Models;
 using Orchard.Core.Navigation.Services;
 using Orchard.Core.Navigation.ViewModels;
-using Orchard.Core.Title.Models;
 using Orchard.Localization;
 using Orchard.Mvc.Extensions;
 using Orchard.UI;
@@ -16,24 +12,29 @@ using Orchard.UI.Notify;
 using Orchard.UI.Navigation;
 using Orchard.Utility;
 using System;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Logging;
+using Orchard.Exceptions;
 
 namespace Orchard.Core.Navigation.Controllers {
     [ValidateInput(false)]
     public class AdminController : Controller, IUpdateModel {
         private readonly IMenuService _menuService;
         private readonly INavigationManager _navigationManager;
+        private readonly IEnumerable<IContentHandler> _handlers;
         private readonly IMenuManager _menuManager;
 
         public AdminController(
             IOrchardServices orchardServices,
             IMenuService menuService,
             IMenuManager menuManager,
-            INavigationManager navigationManager) {
+            INavigationManager navigationManager,
+            IEnumerable<IContentHandler> handlers) {
             _menuService = menuService;
             _menuManager = menuManager;
             _navigationManager = navigationManager;
-            
+            _handlers = handlers;
+
             Services = orchardServices;
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
@@ -44,19 +45,26 @@ namespace Orchard.Core.Navigation.Controllers {
         public IOrchardServices Services { get; set; }
 
         public ActionResult Index(NavigationManagementViewModel model, int? menuId) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageMainMenu, T("Not allowed to manage the main menu"))) {
+            var menus = Services.ContentManager.Query("Menu").List().ToList()
+                .OrderBy(x => x.ContentManager.GetItemMetadata(x).DisplayText);
+
+            if (!menus.Any()) {
+                if (!Services.Authorizer.Authorize(Permissions.ManageMenus, T("Not allowed to manage menus"))) {
+                    return new HttpUnauthorizedResult();
+                }
+
+                return RedirectToAction("Create", "Admin", new { area = "Contents", id = "Menu", returnUrl = Request.RawUrl });
+            }
+
+            var allowedMenus = menus.Where(menu => Services.Authorizer.Authorize(Permissions.ManageMenus, menu)).ToList();
+
+            if (!allowedMenus.Any()) {
                 return new HttpUnauthorizedResult();
             }
 
-            IEnumerable<TitlePart> menus = Services.ContentManager.Query<TitlePart, TitlePartRecord>().OrderBy(x => x.Title).ForType("Menu").List();
-
-            if (!menus.Any()) {
-                return RedirectToAction("Create", "Admin", new {area = "Contents", id = "Menu", returnUrl = Request.RawUrl});
-            }
-
             IContent currentMenu = menuId == null
-                ? menus.FirstOrDefault()
-                : menus.FirstOrDefault(menu => menu.Id == menuId);
+                ? allowedMenus.FirstOrDefault()
+                : allowedMenus.FirstOrDefault(menu => menu.Id == menuId);
 
             if (currentMenu == null && menuId != null) { // incorrect menu id passed
                 return RedirectToAction("Index");
@@ -71,7 +79,7 @@ namespace Orchard.Core.Navigation.Controllers {
             }
 
             model.MenuItemDescriptors = _menuManager.GetMenuItemTypes();
-            model.Menus = menus;
+            model.Menus = allowedMenus;
             model.CurrentMenu = currentMenu;
 
             // need action name as this action is referenced from another action
@@ -80,14 +88,23 @@ namespace Orchard.Core.Navigation.Controllers {
 
         [HttpPost, ActionName("Index")]
         public ActionResult IndexPOST(IList<MenuItemEntry> menuItemEntries, int? menuId) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageMainMenu, T("Couldn't manage the main menu")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageMenus, T("Couldn't manage the main menu")))
                 return new HttpUnauthorizedResult();
 
-            // See http://orchard.codeplex.com/workitem/17116
+            // See https://github.com/OrchardCMS/Orchard/issues/948
             if (menuItemEntries != null) {
                 foreach (var menuItemEntry in menuItemEntries) {
                     MenuPart menuPart = _menuService.Get(menuItemEntry.MenuItemId);
-                    menuPart.MenuPosition = menuItemEntry.Position;
+
+                    if (menuPart.MenuPosition != menuItemEntry.Position) {
+                        var context = new UpdateContentContext(menuPart.ContentItem);
+
+                        _handlers.Invoke(handler => handler.Updating(context), Logger);
+
+                        menuPart.MenuPosition = menuItemEntry.Position;
+
+                        _handlers.Invoke(handler => handler.Updated(context), Logger);
+                    }
                 }
             }
 
@@ -109,7 +126,7 @@ namespace Orchard.Core.Navigation.Controllers {
 
         [HttpPost]
         public ActionResult Delete(int id) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageMainMenu, T("Couldn't manage the main menu")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageMenus, T("Couldn't manage the main menu")))
                 return new HttpUnauthorizedResult();
 
             MenuPart menuPart = _menuService.Get(id);
@@ -148,7 +165,7 @@ namespace Orchard.Core.Navigation.Controllers {
         }
 
         public ActionResult CreateMenuItem(string id, int menuId, string returnUrl) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageMainMenu, T("Couldn't manage the main menu")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageMenus, _menuService.GetMenu(menuId), T("Couldn't manage the main menu")))
                 return new HttpUnauthorizedResult();
 
             // create a new temporary menu item
@@ -172,6 +189,10 @@ namespace Orchard.Core.Navigation.Controllers {
                 return View(model);
             }
             catch (Exception exception) {
+                if (exception.IsFatal()) {
+                    throw;
+                } 
+
                 Logger.Error(T("Creating menu item failed: {0}", exception.Message).Text);
                 Services.Notifier.Error(T("Creating menu item failed: {0}", exception.Message));
                 return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
@@ -180,7 +201,7 @@ namespace Orchard.Core.Navigation.Controllers {
 
         [HttpPost, ActionName("CreateMenuItem")]
         public ActionResult CreateMenuItemPost(string id, int menuId, string returnUrl) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageMainMenu, T("Couldn't manage the main menu")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageMenus, _menuService.GetMenu(menuId), T("Couldn't manage the main menu")))
                 return new HttpUnauthorizedResult();
 
             var menuPart = Services.ContentManager.New<MenuPart>(id);

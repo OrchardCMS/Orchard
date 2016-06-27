@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Routing;
 using Autofac;
-using JetBrains.Annotations;
 using Moq;
 using NUnit.Framework;
 using Orchard.DisplayManagement;
@@ -19,7 +18,7 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
     public class ShapeAttributeBindingStrategyTests : ContainerTestBase {
         private Feature _testFeature;
 
-        protected override void Register([NotNull] ContainerBuilder builder) {
+        protected override void Register(ContainerBuilder builder) {
             if (builder == null) {
                 throw new ArgumentNullException("builder");
             }

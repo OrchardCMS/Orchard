@@ -4,6 +4,7 @@ using System.IO;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
+using Orchard.Environment;
 using Orchard.Localization;
 using Orchard.Projections.Models;
 using Orchard.Tokens;
@@ -11,10 +12,10 @@ using Orchard.Utility.Extensions;
 
 namespace Orchard.Projections.Services {
     public class PropertyShapes : IDependency {
-        private readonly ITokenizer _tokenizer;
+        private readonly Work<ITokenizer> _tokenizerWork;
 
-        public PropertyShapes(ITokenizer tokenizer) {
-            _tokenizer = tokenizer;
+        public PropertyShapes(Work<ITokenizer> tokenizerWork) {
+            _tokenizerWork = tokenizerWork;
             T = NullLocalizer.Instance;
         }
 
@@ -58,7 +59,7 @@ namespace Orchard.Projections.Services {
             }
 
             if(Property.RewriteOutput) {
-                resultOutput = _tokenizer.Replace(Property.RewriteText, new Dictionary<string, object> { { "Text", resultOutput }, { "Content", ContentItem } });
+                resultOutput = _tokenizerWork.Value.Replace(Property.RewriteText, new Dictionary<string, object> { { "Text", resultOutput }, { "Content", ContentItem } });
             }
 
             if(Property.StripHtmlTags) {
@@ -90,7 +91,7 @@ namespace Orchard.Projections.Services {
             var wrapperTag = new TagBuilder(Property.CustomizeWrapperHtml && !String.IsNullOrEmpty(Property.CustomWrapperTag) ? Property.CustomWrapperTag : "div");
             
             if (Property.CustomizeWrapperHtml && !String.IsNullOrEmpty(Property.CustomWrapperCss)) {
-                wrapperTag.AddCssClass(_tokenizer.Replace(Property.CustomWrapperCss, new Dictionary<string, object>()));
+                wrapperTag.AddCssClass(_tokenizerWork.Value.Replace(Property.CustomWrapperCss, new Dictionary<string, object>()));
             }
 
             if (!(Property.CustomizeWrapperHtml && Property.CustomWrapperTag == "-")) {
@@ -101,14 +102,14 @@ namespace Orchard.Projections.Services {
                 var labelTag = new TagBuilder(Property.CustomizeLabelHtml && !String.IsNullOrEmpty(Property.CustomLabelTag) ? Property.CustomLabelTag : "span");
 
                 if (Property.CustomizeLabelHtml && !String.IsNullOrEmpty(Property.CustomLabelCss)) {
-                    labelTag.AddCssClass(_tokenizer.Replace(Property.CustomLabelCss, new Dictionary<string, object>()));
+                    labelTag.AddCssClass(_tokenizerWork.Value.Replace(Property.CustomLabelCss, new Dictionary<string, object>()));
                 }
 
                 if (!(Property.CustomizeLabelHtml && Property.CustomLabelTag == "-")) {
                     Output.Write(labelTag.ToString(TagRenderMode.StartTag));
                 }
 
-                Output.Write(_tokenizer.Replace(Property.Label, new Dictionary<string, object>()));
+                Output.Write(_tokenizerWork.Value.Replace(Property.Label, new Dictionary<string, object>()));
 
                 if (!(Property.CustomizeLabelHtml && Property.CustomLabelTag == "-")) {
                     Output.Write(labelTag.ToString(TagRenderMode.EndTag));
@@ -118,7 +119,7 @@ namespace Orchard.Projections.Services {
             var propertyTag = new TagBuilder(Property.CustomizePropertyHtml && !String.IsNullOrEmpty(Property.CustomPropertyTag) ? Property.CustomPropertyTag : "span");
             
             if (Property.CustomizePropertyHtml && !String.IsNullOrEmpty(Property.CustomPropertyCss)) {
-                propertyTag.AddCssClass(_tokenizer.Replace(Property.CustomPropertyCss, new Dictionary<string, object>()));
+                propertyTag.AddCssClass(_tokenizerWork.Value.Replace(Property.CustomPropertyCss, new Dictionary<string, object>()));
             }
 
             if (!(Property.CustomizePropertyHtml && Property.CustomPropertyTag == "-")) {
@@ -137,7 +138,7 @@ namespace Orchard.Projections.Services {
                 }
             }
             else {
-                Output.Write(_tokenizer.Replace(Property.NoResultText, new Dictionary<string, object>()));
+                Output.Write(_tokenizerWork.Value.Replace(Property.NoResultText, new Dictionary<string, object>()));
             }
 
             if (!(Property.CustomizePropertyHtml && Property.CustomPropertyTag == "-")) {

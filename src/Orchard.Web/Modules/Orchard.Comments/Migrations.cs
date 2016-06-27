@@ -56,7 +56,7 @@ namespace Orchard.Comments {
                         p => p
                             .WithSetting("OwnerEditorSettings.ShowOwnerEditor", "false")
                             .WithSetting("DateEditorSettings.ShowDateEditor", "false"))
-                   .WithPart("IdentityPart")
+                   .WithIdentity()
                 );
 
             ContentDefinitionManager.AlterTypeDefinition("Blog",
@@ -82,7 +82,7 @@ namespace Orchard.Comments {
         }
 
         public int UpdateFrom1() {
-            ContentDefinitionManager.AlterTypeDefinition("Comment", cfg => cfg.WithPart("IdentityPart"));
+            ContentDefinitionManager.AlterTypeDefinition("Comment", cfg => cfg.WithIdentity());
 
             return 2;
         }
@@ -181,7 +181,7 @@ namespace Orchard.Comments {
                );
 
             // populate the CommentsPartRecord.CommentsCount property
-            foreach (var commentsPart in _contentManager.Query<CommentsPart>().List()) {
+            foreach (var commentsPart in _contentManager.Query<CommentsPart, CommentsPartRecord>().List()) {
                 _commentService.ProcessCommentsCount(commentsPart.Id);
             }
 

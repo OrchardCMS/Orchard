@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Orchard.Logging;
+using Orchard.Exceptions;
+
 
 namespace Orchard.Environment {
     public interface IAssemblyLoader {
@@ -25,8 +27,11 @@ namespace Orchard.Environment {
             try {
                 return _loadedAssemblies.GetOrAdd(this.ExtractAssemblyShortName(assemblyName), shortName => LoadWorker(shortName, assemblyName));
             }
-            catch (Exception e) {
-                Logger.Error(e, "Error loading assembly '{0}'", assemblyName);
+            catch (Exception ex) {
+                if (ex.IsFatal()) {
+                    throw;
+                }
+                Logger.Error(ex, "Error loading assembly '{0}'", assemblyName);
                 return null;
             }
         }

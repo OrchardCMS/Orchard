@@ -5,6 +5,10 @@
 @{
     IList<IActivity> allActivities = Model.AllActivities;
 }
+<fieldset class="bulk-actions">
+    <label for="search-box">@T("Filter:")</label>
+    <input id="search-box" class="text" type="text" autocomplete="off" />
+</fieldset>
 <!-- List of available activities -->
 <ul>
     @foreach (var activity in allActivities) {
@@ -23,7 +27,7 @@
         //<![CDATA[
         var activities = { @foreach (var activity in allActivities) { <text>
             '@activity.Name': {
-                outcomes: [@Html.Raw(String.Join(",", activity.GetPossibleOutcomes(new WorkflowContext(), new ActivityContext()).Where(x => !String.IsNullOrEmpty(x.Text)).Select(x => "'" + HttpUtility.JavaScriptStringEncode(x.Text) + "'").ToArray()))],
+                outcomes: [@Html.Raw(String.Join(",", activity.GetPossibleOutcomes(new WorkflowContext(), new ActivityContext()).Where(x => !String.IsNullOrEmpty(x.Text)).Select(x => "{ Id: '" + HttpUtility.JavaScriptStringEncode(x.TextHint) + "', Label: '" + HttpUtility.JavaScriptStringEncode(x.Text) + "' }").ToArray()))],
                 category: '@HttpUtility.JavaScriptStringEncode(activity.Category.Text)',
                 description: '@HttpUtility.JavaScriptStringEncode(activity.Description.Text)',
                 IsEvent: @(activity.IsEvent ? "true" : "false"),

@@ -1,0 +1,22 @@
+﻿@using Orchard.DynamicForms.Elements
+@using Orchard.Layouts.Helpers
+@{
+    var element = (RadioButton)Model.Element;
+    var tagBuilder = TagBuilderExtensions.CreateElementTagBuilder(Model, "input");
+
+    tagBuilder.Attributes["type"] = "radio";
+    tagBuilder.Attributes["name"] = Model.ProcessedName;
+    tagBuilder.Attributes["value"] = Model.ProcessedValue;
+    if ((String.IsNullOrWhiteSpace(element.PostedValue) && element.DefaultValue) || Model.ProcessedValue == element.PostedValue) {
+        tagBuilder.Attributes["checked"] = "checked";
+    }
+}
+@if (element.ShowLabel) {
+    <label>
+        @tagBuilder.ToHtmlString(TagRenderMode.SelfClosing)
+        @Html.Raw(Model.ProcessedLabel)
+    </label>
+}
+else {
+    @tagBuilder.ToHtmlString(TagRenderMode.SelfClosing)
+}

@@ -18,6 +18,8 @@ namespace Orchard.Taxonomies {
                 .Column<int>("Count")
                 .Column<int>("Weight")
                 .Column<bool>("Selectable")
+            ).AlterTable("TermPartRecord", table => table
+                .CreateIndex("IDX_Path", "Path")
             );
 
             SchemaBuilder.CreateTable("TermContentItem", table => table
@@ -32,10 +34,9 @@ namespace Orchard.Taxonomies {
                 .WithPart("CommonPart")
                 .WithPart("TitlePart")
                 .WithPart("AutoroutePart", builder => builder
-                .WithSetting("AutorouteSettings.AllowCustomPattern", "true")
-                .WithSetting("AutorouteSettings.AutomaticAdjustmentOnEdit", "false")
-                .WithSetting("AutorouteSettings.PatternDefinitions", "[{Name:'Title', Pattern: '{Content.Slug}', Description: 'my-taxonomy'}]")
-                .WithSetting("AutorouteSettings.DefaultPatternIndex", "0"))
+                .WithSetting("AutorouteSettings.AllowCustomPattern", "True")
+                .WithSetting("AutorouteSettings.AutomaticAdjustmentOnEdit", "False")
+                .WithSetting("AutorouteSettings.PatternDefinitions", "[{\"Name\":\"Title\",\"Pattern\":\"{Content.Slug}\",\"Description\":\"my-taxonomy\"}]"))
             );
 
             SchemaBuilder.CreateTable("TermsPartRecord", table => table
@@ -47,12 +48,13 @@ namespace Orchard.Taxonomies {
                    .WithPart("TaxonomyNavigationPart")
                    .WithPart("MenuPart")
                    .WithPart("CommonPart")
+                   .WithIdentity()
                    .DisplayedAs("Taxonomy Link")
                    .WithSetting("Description", "Injects menu items from a Taxonomy")
                    .WithSetting("Stereotype", "MenuItem")
                );
 
-            return 3;
+            return 5;
         }
 
         public int UpdateFrom1() {
@@ -67,6 +69,23 @@ namespace Orchard.Taxonomies {
                );
 
             return 3;
+        }
+
+        public int UpdateFrom3() {
+            SchemaBuilder.AlterTable("TermPartRecord", table => table
+                .CreateIndex("IDX_Path", "Path")
+            );
+
+            return 4;
+        }
+
+        public int UpdateFrom4() {
+            ContentDefinitionManager.AlterTypeDefinition("TaxonomyNavigationMenuItem",
+               cfg => cfg
+                   .WithIdentity()
+               );
+
+            return 5;
         }
     }
 }

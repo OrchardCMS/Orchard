@@ -45,16 +45,22 @@ namespace Orchard.Tests.DataMigration {
                 typeof(ContentTypeRecord));
         }
 
-        [TearDown]
         public void InitDb() {
             foreach ( var record in _repository.Fetch(m => m != null) ) {
                 _repository.Delete(record);
             }
-            _repository.Flush();
+
+            _transactionManager.RequireNew();
+        }
+
+        [TearDown]
+        public void CleanUp() {
+            if (_container != null)
+                _container.Dispose();
         }
 
         public void Init(IEnumerable<Type> dataMigrations) {
-           
+                      
             var builder = new ContainerBuilder();
             _folders = new StubFolders();
             var contentDefinitionManager = new Mock<IContentDefinitionManager>().Object;
@@ -73,7 +79,7 @@ namespace Orchard.Tests.DataMigration {
             builder.RegisterType<StubParallelCacheContext>().As<IParallelCacheContext>();
             builder.RegisterType<StubAsyncTokenProvider>().As<IAsyncTokenProvider>();
             _session = _sessionFactory.OpenSession();
-            builder.RegisterInstance(new DefaultContentManagerTests.TestSessionLocator(_session)).As<ISessionLocator>().As<ITransactionManager>();
+            builder.RegisterInstance(new TestTransactionManager(_session)).As<ITransactionManager>();
             foreach(var type in dataMigrations) {
                 builder.RegisterType(type).As<IDataMigration>();
             }
@@ -235,6 +241,24 @@ namespace Orchard.Tests.DataMigration {
 
             public int UpdateFrom2() {
                 return 3;
+            }
+        }
+
+        public class FailingDataMigration : DataMigrationImpl {
+            public override Feature Feature {
+                get { return new Feature() { Descriptor = new FeatureDescriptor { Id = "Feature4", Extension = new ExtensionDescriptor { Id = "Module4" } } }; }
+            }
+
+            public int Create() {
+                SchemaBuilder.CreateTable("FOO", table =>
+                    table.Column("Id", DbType.Int32, column =>
+                        column.PrimaryKey().Identity()));
+
+                return 1;
+            }
+
+            public int UpdateFrom1() {
+                throw new Exception();
             }
         }
         
@@ -471,9 +495,28 @@ Features:
         Description: Feature
 ");
 
-            _dataMigrationManager.Update("Feature1");
+            try {_dataMigrationManager.Update("Feature1"); } 
+            catch (OrchardException) {}
+            
             Assert.That(_repository.Table.Count(), Is.EqualTo(0));
+
             _dataMigrationManager.Update("Feature1");
+        }
+
+        [Test]
+        public void FailingDataMigrationShouldThrowOrchardException() {
+            Init(new[] { typeof(FailingDataMigration) });
+
+            _folders.Manifests.Add("Module4", @"
+Name: Module4
+Version: 0.1
+OrchardVersion: 1
+Features:
+    Feature4: 
+        Description: Feature
+");
+
+            Assert.Throws<OrchardException>(() => _dataMigrationManager.Update("Feature4"));
         }
     }
 }

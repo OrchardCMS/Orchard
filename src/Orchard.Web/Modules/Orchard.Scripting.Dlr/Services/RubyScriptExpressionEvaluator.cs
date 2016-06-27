@@ -14,7 +14,7 @@ namespace Orchard.Scripting.Dlr.Services {
         }
 
         public object Evaluate(string expression, IEnumerable<IGlobalMethodProvider> providers) {
-            object execContextType = _cacheManager.Get("---", ctx => (object)_scriptingManager.ExecuteExpression(@"
+            object execContextType = _cacheManager.Get("---", true, ctx => (object)_scriptingManager.ExecuteExpression(@"
 class ExecBlock
     def initialize(callbacks)
         @callbacks = callbacks
@@ -38,7 +38,7 @@ class ExecContext
 end
 ExecContext
                                         "));
-            var ops = _cacheManager.Get("----", ctx => (ObjectOperations)_scriptingManager.ExecuteOperation(x => x));
+            var ops = _cacheManager.Get("----", true, ctx => (ObjectOperations)_scriptingManager.ExecuteOperation(x => x));
             object execContext = _cacheManager.Get(expression, ctx => (object)ops.InvokeMember(execContextType, "alloc", expression));
             dynamic result = ops.InvokeMember(execContext, "evaluate", new CallbackApi(this, providers));
             return ConvertRubyValue(result);

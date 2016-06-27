@@ -1,0 +1,13 @@
+﻿@using Orchard.DynamicForms.Elements
+@{
+    var element = (ValidationMessage)Model.Element;
+    var forField = element.For;
+}
+<div class="layout-snippet">
+    @if (String.IsNullOrWhiteSpace(forField)) {
+        @T("Validation message (target not specified)")
+    }
+    else {
+        @T("Validation message for field <em>{0}</em>", Model.Element.For)
+    }
+</div>

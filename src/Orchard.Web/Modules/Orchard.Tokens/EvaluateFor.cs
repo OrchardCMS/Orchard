@@ -7,5 +7,6 @@ namespace Orchard.Tokens {
         public abstract EvaluateFor<TData> Chain(string token, string chainTarget, Func<TData, object> chainValue);
         public abstract EvaluateFor<TData> Token(Func<string, TData, object> tokenValue);
         public abstract EvaluateFor<TData> Token(Func<string, string> filter, Func<string, TData, object> tokenValue);
+        public abstract EvaluateFor<TData> Chain(Func<string, Tuple<string, string>> filter, string chainTarget, Func<string, TData, object> chainValue);
     }
 }

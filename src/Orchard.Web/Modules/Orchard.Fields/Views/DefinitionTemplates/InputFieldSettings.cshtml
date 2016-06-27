@@ -1,5 +1,4 @@
 ﻿@model Orchard.Fields.Settings.InputFieldSettings
-@using Orchard.Fields.Settings;
 
 <fieldset>
     <div>
@@ -75,5 +74,13 @@
         @Html.TextAreaFor(m => m.Hint, new { @class = "text medium", rows = "5" })
         <span class="hint">@T("The help text is written under the field when the user is entering a value.")</span>
         @Html.ValidationMessageFor(m => m.Hint)
+    </div>
+</fieldset>
+<fieldset>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.DefaultValue)">@T("Default value")</label>
+        @Html.TextBoxFor(m => m.DefaultValue, new { @class = "text large" })
+        <span class="hint">@T("The default value proposed when creating a content item. (optional)")</span>
+        @Html.ValidationMessageFor(m => m.DefaultValue)
     </div>
 </fieldset>

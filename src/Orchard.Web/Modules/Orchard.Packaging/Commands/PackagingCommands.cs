@@ -3,10 +3,12 @@ using System.IO;
 using System.Web;
 using System.Web.Hosting;
 using Orchard.Commands;
+using Orchard.Environment.Extensions;
 using Orchard.Packaging.Services;
 using Orchard.UI.Notify;
 
 namespace Orchard.Packaging.Commands {
+    [OrchardFeature("PackagingServices")]
     public class PackagingCommands : DefaultOrchardCommandHandler {
         private static readonly string ApplicationPath = HostingEnvironment.MapPath("~/");
 

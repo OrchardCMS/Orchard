@@ -1,0 +1,51 @@
+﻿@using Orchard.Layouts.ViewModels
+<li class="layout-panel-item layout-panel-action layout-panel-action-properties layout-popup-trigger" title="@T("Edit {0} properties (Space)", Model.ElementTypeName)" ng-show="{{!element.isTemplated}}">
+    <i class="fa fa-edit"></i>
+    <ul class="layout-popup layout-popup-edit" orc-layout-popup>
+        <li class="layout-popup-item layout-popup-input">
+            <label>
+                @T("HTML ID:")<br/>
+                <input type="text" ng-model="element.htmlId" />
+            </label>
+            
+        </li>
+        <li class="layout-popup-item layout-popup-input">
+            <label>
+                @T("CSS classes:")<br/>
+                <input type="text" ng-model="element.htmlClass" />
+            </label>
+            
+        </li>
+        <li class="layout-popup-item layout-popup-input">
+            <label>
+                @T("CSS styles:")<br/>
+                <textarea rows="3" cols="25" ng-model="element.htmlStyle"></textarea>
+            </label>
+        </li>
+        <li class="layout-popup-item layout-popup-input">
+            <label>
+                @T("Visibility Rule:")<br />
+                <textarea rows="3" cols="25" ng-model="element.rule"></textarea>
+            </label>
+        </li>
+        @if (Model.Items != null) {
+            foreach (LayoutEditorPropertiesItem item in Model.Items) {
+                var type = !String.IsNullOrEmpty(item.Type) ? item.Type : "text";
+                <li class="layout-popup-item layout-popup-input">
+                    @if (type == "boolean") {
+                        <label>
+                            <input type="checkbox" ng-model="@item.Model" ng-true-value="true" ng-false-value="false" />
+                            @item.Label
+                        </label>
+                    }
+                    else {
+                        <label>
+                            @item.Label<br />
+                            <input type="@type" ng-model="@item.Model" />
+                        </label>
+                    }
+                </li>
+            }
+        }
+    </ul>
+</li>

@@ -1,0 +1,8 @@
+﻿@using Orchard.Core.Common.Services
+@using Orchard.Utility.Extensions
+@{
+	var flavors = WorkContext.Resolve<IFlavorService>().GetFlavors();
+	var selectedFlavor = ViewData.TemplateInfo.FormattedModelValue as string;
+	var options = flavors.Select(x => new SelectListItem {Text = x.CamelFriendly(), Value = x, Selected = String.Equals(x, selectedFlavor, StringComparison.OrdinalIgnoreCase)}).ToArray();
+}
+@Html.DropDownList("", options, T("Default Flavor").Text)

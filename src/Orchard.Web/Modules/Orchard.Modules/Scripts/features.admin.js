@@ -4,7 +4,7 @@
         var bulkActions = $(".bulk-actions-wrapper").addClass("visible");
         var theSwitch = $(".switch-for-switchable");
         theSwitch.prepend(bulkActions);
-        $("#search-box").focus().keyup(function() {
+        $("#search-box").keyup(function() {
             var text = $(this).val();
 
             if (text == '') {
@@ -43,7 +43,7 @@
             var force = actionLink.data("feature-force");
             var dependants = actionLink.data("feature-dependants");
 
-            if (!dependants || /^\s*$/.test(dependants) || confirm(confirmDisableMessage + "\n\n" + dependants)) {
+            if (!dependants || /^\s*$/.test(dependants) || confirm($("<div/>").html(confirmDisableMessage + "\n\n" + dependants).text())) {
 
                 $("[name='submit.BulkExecute']").val("yes");
                 $("[name='featureIds']").val(featureId);

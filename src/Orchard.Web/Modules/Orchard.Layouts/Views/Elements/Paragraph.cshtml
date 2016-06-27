@@ -1,0 +1,6 @@
+﻿@using Orchard.Layouts.Helpers
+@{
+    var tagBuilder = TagBuilderExtensions.CreateElementTagBuilder(Model, "p");
+    tagBuilder.InnerHtml = Model.ProcessedContent;
+}
+@tagBuilder.ToHtmlString()

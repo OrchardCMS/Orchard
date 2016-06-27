@@ -85,7 +85,7 @@ namespace Orchard.Tokens.Providers {
 
                             FeedItem<ContentItem> item = feedItem;
                             context.Response.Contextualize(requestContext => {
-                                description.Value = _tokenizer.Replace(settings.Description, new { Content = item.Item, Text = description.Value });
+                                description.Value = _tokenizer.Replace(settings.Description, new { Content = item.Item, Text = description.Value }, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
                             });
                         }
                     }

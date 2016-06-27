@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
-using Orchard.Core.Title.Models;
 
 namespace Orchard.CustomForms.Models {
     public class CustomFormPart : ContentPart<CustomFormPartRecord> {
@@ -34,6 +33,12 @@ namespace Orchard.CustomForms.Models {
         public string RedirectUrl {
             get { return Record.RedirectUrl; }
             set { Record.RedirectUrl = value; }
+        }
+
+        [Required]
+        public string SubmitButtonText {
+            get { return Record.SubmitButtonText; }
+            set { Record.SubmitButtonText = value; }
         }
 
         public string Title {

@@ -19,7 +19,7 @@ Scenario: I can create and publish a new Home Page
         And I fill in
             | name | value |
             | Title.Title | Foo |
-			| Autoroute.PromoteToHomePage | True |
+            | AutoroutePart.PromoteToHomePage | True |
         And I hit "Publish Now"
         And I go to "/"
     Then I should see "<h1[^>]*>.*?Foo.*?</h1>"

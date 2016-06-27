@@ -1,5 +1,6 @@
 ﻿using System.Web;
 using Autofac;
+using Moq;
 using NUnit.Framework;
 using Orchard.Environment;
 using Orchard.Mvc;
@@ -18,6 +19,7 @@ namespace Orchard.Tests.Environment {
         }
 
         protected override void Register(ContainerBuilder builder) {
+            builder.RegisterModule(new MvcModule());
             builder.RegisterModule(new WorkContextModule());
             builder.RegisterType<WorkContextAccessor>().As<IWorkContextAccessor>();
             builder.RegisterAutoMocking();

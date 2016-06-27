@@ -1,47 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Text;
 using NHibernate.Dialect;
 using NHibernate.SqlTypes;
-using Orchard.ContentManagement.Records;
 using Orchard.Data.Migration.Schema;
 using Orchard.Environment.Configuration;
 using Orchard.Localization;
 using Orchard.Logging;
-using Orchard.Reports.Services;
 
 namespace Orchard.Data.Migration.Interpreters {
     public class DefaultDataMigrationInterpreter : AbstractDataMigrationInterpreter, IDataMigrationInterpreter {
         private readonly ShellSettings _shellSettings;
-        private readonly ISessionLocator _sessionLocator;
+        private readonly ITransactionManager _transactionManager;
         private readonly IEnumerable<ICommandInterpreter> _commandInterpreters;
-        private readonly Dialect _dialect;
+        private readonly Lazy<Dialect> _dialectLazy;
         private readonly List<string> _sqlStatements;
-        private readonly ISessionFactoryHolder _sessionFactoryHolder;
-        private readonly IReportsCoordinator _reportsCoordinator;
 
         private const char Space = ' ';
 
         public DefaultDataMigrationInterpreter(
             ShellSettings shellSettings,
-            ISessionLocator sessionLocator,
+            ITransactionManager transactionManager,
             IEnumerable<ICommandInterpreter> commandInterpreters,
-            ISessionFactoryHolder sessionFactoryHolder,
-            IReportsCoordinator reportsCoordinator) {
+            ISessionFactoryHolder sessionFactoryHolder) {
+
             _shellSettings = shellSettings;
-            _sessionLocator = sessionLocator;
+            _transactionManager = transactionManager;
             _commandInterpreters = commandInterpreters;
             _sqlStatements = new List<string>();
-            _sessionFactoryHolder = sessionFactoryHolder;
-            _reportsCoordinator = reportsCoordinator;
 
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
-            var configuration = _sessionFactoryHolder.GetConfiguration();
-            _dialect = Dialect.GetDialect(configuration.Properties);
+            _dialectLazy = new Lazy<Dialect>(() => Dialect.GetDialect(sessionFactoryHolder.GetConfiguration().Properties));
         }
 
         public ILogger Logger { get; set; }
@@ -59,9 +53,9 @@ namespace Orchard.Data.Migration.Interpreters {
 
             var builder = new StringBuilder();
 
-            builder.Append(_dialect.CreateMultisetTableString)
+            builder.Append(_dialectLazy.Value.CreateMultisetTableString)
                 .Append(' ')
-                .Append(_dialect.QuoteForTableName(PrefixTableName(command.Name)))
+                .Append(_dialectLazy.Value.QuoteForTableName(PrefixTableName(command.Name)))
                 .Append(" (");
 
             var appendComma = false;
@@ -80,9 +74,14 @@ namespace Orchard.Data.Migration.Interpreters {
                     builder.Append(", ");
                 }
 
-                builder.Append(_dialect.PrimaryKeyString)
+                var primaryKeysQuoted = new List<string>(primaryKeys.Length);
+                foreach (string pk in primaryKeys) {
+                    primaryKeysQuoted.Add(_dialectLazy.Value.QuoteForColumnName(pk));
+                }
+
+                builder.Append(_dialectLazy.Value.PrimaryKeyString)
                     .Append(" ( ")
-                    .Append(String.Join(", ", primaryKeys.ToArray()))
+                    .Append(String.Join(", ", primaryKeysQuoted.ToArray()))
                     .Append(" )");
             }
 
@@ -92,10 +91,16 @@ namespace Orchard.Data.Migration.Interpreters {
             RunPendingStatements();
         }
 
-        private string PrefixTableName(string tableName) {
+        public string PrefixTableName(string tableName) {
             if (string.IsNullOrEmpty(_shellSettings.DataTablePrefix))
                 return tableName;
             return _shellSettings.DataTablePrefix + "_" + tableName;
+        }
+
+        public string RemovePrefixFromTableName(string prefixedTableName) {
+            if (string.IsNullOrEmpty(_shellSettings.DataTablePrefix))
+                return prefixedTableName;
+            return prefixedTableName.Substring(_shellSettings.DataTablePrefix.Length + 1);
         }
 
         public override void Visit(DropTableCommand command) {
@@ -105,7 +110,7 @@ namespace Orchard.Data.Migration.Interpreters {
 
             var builder = new StringBuilder();
 
-            builder.Append(_dialect.GetDropTableString(PrefixTableName(command.Name)));
+            builder.Append(_dialectLazy.Value.GetDropTableString(PrefixTableName(command.Name)));
             _sqlStatements.Add(builder.ToString());
 
             RunPendingStatements();
@@ -120,41 +125,54 @@ namespace Orchard.Data.Migration.Interpreters {
                 return;
             }
 
-            // drop columns
+            // Drop columns.
             foreach (var dropColumn in command.TableCommands.OfType<DropColumnCommand>()) {
                 var builder = new StringBuilder();
                 Visit(builder, dropColumn);
                 RunPendingStatements();
             }
 
-            // add columns
+            // Add columns.
             foreach (var addColumn in command.TableCommands.OfType<AddColumnCommand>()) {
                 var builder = new StringBuilder();
                 Visit(builder, addColumn);
                 RunPendingStatements();
             }
 
-            // alter columns
+            // Alter columns.
             foreach (var alterColumn in command.TableCommands.OfType<AlterColumnCommand>()) {
                 var builder = new StringBuilder();
                 Visit(builder, alterColumn);
                 RunPendingStatements();
             }
 
-            // add index
+            // Add index.
             foreach (var addIndex in command.TableCommands.OfType<AddIndexCommand>()) {
                 var builder = new StringBuilder();
                 Visit(builder, addIndex);
                 RunPendingStatements();
             }
 
-            // drop index
+            // Drop index.
             foreach (var dropIndex in command.TableCommands.OfType<DropIndexCommand>()) {
                 var builder = new StringBuilder();
                 Visit(builder, dropIndex);
                 RunPendingStatements();
             }
 
+            // Add unique constraint.
+            foreach (var addUniqueConstraint in command.TableCommands.OfType<AddUniqueConstraintCommand>()) {
+                var builder = new StringBuilder();
+                Visit(builder, addUniqueConstraint);
+                RunPendingStatements();
+            }
+
+            // Drop unique constraint.
+            foreach (var dropUniqueConstraint in command.TableCommands.OfType<DropUniqueConstraintCommand>()) {
+                var builder = new StringBuilder();
+                Visit(builder, dropUniqueConstraint);
+                RunPendingStatements();
+            }
         }
 
         public void Visit(StringBuilder builder, AddColumnCommand command) {
@@ -162,7 +180,7 @@ namespace Orchard.Data.Migration.Interpreters {
                 return;
             }
 
-            builder.AppendFormat("alter table {0} add ", _dialect.QuoteForTableName(PrefixTableName(command.TableName)));
+            builder.AppendFormat("alter table {0} add ", _dialectLazy.Value.QuoteForTableName(PrefixTableName(command.TableName)));
 
             Visit(builder, (CreateColumnCommand)command);
             _sqlStatements.Add(builder.ToString());
@@ -174,8 +192,8 @@ namespace Orchard.Data.Migration.Interpreters {
             }
 
             builder.AppendFormat("alter table {0} drop column {1}",
-                _dialect.QuoteForTableName(PrefixTableName(command.TableName)),
-                _dialect.QuoteForColumnName(command.ColumnName));
+                _dialectLazy.Value.QuoteForTableName(PrefixTableName(command.TableName)),
+                _dialectLazy.Value.QuoteForColumnName(command.ColumnName));
             _sqlStatements.Add(builder.ToString());
         }
 
@@ -185,12 +203,12 @@ namespace Orchard.Data.Migration.Interpreters {
             }
 
             builder.AppendFormat("alter table {0} alter column {1} ",
-                _dialect.QuoteForTableName(PrefixTableName(command.TableName)),
-                _dialect.QuoteForColumnName(command.ColumnName));
+                _dialectLazy.Value.QuoteForTableName(PrefixTableName(command.TableName)),
+                _dialectLazy.Value.QuoteForColumnName(command.ColumnName));
 
             // type
             if (command.DbType != DbType.Object) {
-                builder.Append(GetTypeName(_dialect, command.DbType, command.Length, command.Precision, command.Scale));
+                builder.Append(GetTypeName(_dialectLazy.Value, command.DbType, command.Length, command.Precision, command.Scale));
             }
             else {
                 if(command.Length > 0 || command.Precision > 0 || command.Scale > 0) {
@@ -205,15 +223,14 @@ namespace Orchard.Data.Migration.Interpreters {
             _sqlStatements.Add(builder.ToString());
         }
 
-
         public void Visit(StringBuilder builder, AddIndexCommand command) {
             if (ExecuteCustomInterpreter(command)) {
                 return;
             }
 
             builder.AppendFormat("create index {1} on {0} ({2}) ",
-                _dialect.QuoteForTableName(PrefixTableName(command.TableName)),
-                _dialect.QuoteForColumnName(PrefixTableName(command.IndexName)),
+                _dialectLazy.Value.QuoteForTableName(PrefixTableName(command.TableName)),
+                _dialectLazy.Value.QuoteForColumnName(PrefixTableName(command.IndexName)),
                 String.Join(", ", command.ColumnNames));
 
             _sqlStatements.Add(builder.ToString());
@@ -225,8 +242,33 @@ namespace Orchard.Data.Migration.Interpreters {
             }
 
             builder.AppendFormat("drop index {0} ON {1}",
-                _dialect.QuoteForColumnName(PrefixTableName(command.IndexName)),
-                _dialect.QuoteForTableName(PrefixTableName(command.TableName)));
+                _dialectLazy.Value.QuoteForColumnName(PrefixTableName(command.IndexName)),
+                _dialectLazy.Value.QuoteForTableName(PrefixTableName(command.TableName)));
+            _sqlStatements.Add(builder.ToString());
+        }
+
+        public void Visit(StringBuilder builder, AddUniqueConstraintCommand command) {
+            if (ExecuteCustomInterpreter(command)) {
+                return;
+            }
+
+            builder.AppendFormat("alter table {0} add constraint {1} unique ({2})",
+                _dialectLazy.Value.QuoteForTableName(PrefixTableName(command.TableName)),
+                _dialectLazy.Value.QuoteForColumnName(PrefixTableName(command.ConstraintName)),
+                String.Join(", ", command.ColumnNames));
+
+            _sqlStatements.Add(builder.ToString());
+        }
+
+        public void Visit(StringBuilder builder, DropUniqueConstraintCommand command) {
+            if (ExecuteCustomInterpreter(command)) {
+                return;
+            }
+
+            builder.AppendFormat("alter table {0} drop constraint {1}",
+                _dialectLazy.Value.QuoteForTableName(PrefixTableName(command.TableName)),
+                _dialectLazy.Value.QuoteForColumnName(PrefixTableName(command.ConstraintName)));
+
             _sqlStatements.Add(builder.ToString());
         }
 
@@ -251,11 +293,11 @@ namespace Orchard.Data.Migration.Interpreters {
             var builder = new StringBuilder();
 
             builder.Append("alter table ")
-                .Append(_dialect.QuoteForTableName(PrefixTableName(command.SrcTable)));
+                .Append(_dialectLazy.Value.QuoteForTableName(PrefixTableName(command.SrcTable)));
 
-            builder.Append(_dialect.GetAddForeignKeyConstraintString(PrefixTableName(command.Name),
+            builder.Append(_dialectLazy.Value.GetAddForeignKeyConstraintString(PrefixTableName(command.Name),
                 command.SrcColumns,
-                _dialect.QuoteForTableName(PrefixTableName(command.DestTable)),
+                _dialectLazy.Value.QuoteForTableName(PrefixTableName(command.DestTable)),
                 command.DestColumns,
                 false));
 
@@ -271,7 +313,9 @@ namespace Orchard.Data.Migration.Interpreters {
 
             var builder = new StringBuilder();
 
-            builder.AppendFormat("alter table {0} drop constraint {1}", _dialect.QuoteForTableName(PrefixTableName(command.SrcTable)), PrefixTableName(command.Name));
+            builder.Append("alter table ")
+                .Append(_dialectLazy.Value.QuoteForTableName(PrefixTableName(command.SrcTable)))
+                .Append(_dialectLazy.Value.GetDropForeignKeyConstraintString(PrefixTableName(command.Name)));
             _sqlStatements.Add(builder.ToString());
 
             RunPendingStatements();
@@ -291,15 +335,15 @@ namespace Orchard.Data.Migration.Interpreters {
             }
 
             // name
-            builder.Append(_dialect.QuoteForColumnName(command.ColumnName)).Append(Space);
+            builder.Append(_dialectLazy.Value.QuoteForColumnName(command.ColumnName)).Append(Space);
 
-            if (!command.IsIdentity || _dialect.HasDataTypeInIdentityColumn) {
-                builder.Append(GetTypeName(_dialect, command.DbType, command.Length, command.Precision, command.Scale));
+            if (!command.IsIdentity || _dialectLazy.Value.HasDataTypeInIdentityColumn) {
+                builder.Append(GetTypeName(_dialectLazy.Value, command.DbType, command.Length, command.Precision, command.Scale));
             }
 
             // append identity if handled
-            if (command.IsIdentity && _dialect.SupportsIdentityColumns) {
-                builder.Append(Space).Append(_dialect.IdentityColumnString);
+            if (command.IsIdentity && _dialectLazy.Value.SupportsIdentityColumns) {
+                builder.Append(Space).Append(_dialectLazy.Value.IdentityColumnString);
             }
 
             // [default value]
@@ -311,36 +355,34 @@ namespace Orchard.Data.Migration.Interpreters {
             builder.Append(command.IsNotNull
                                ? " not null"
                                : !command.IsPrimaryKey && !command.IsUnique
-                                     ? _dialect.NullColumnString
+                                     ? _dialectLazy.Value.NullColumnString
                                      : string.Empty);
 
             // append unique if handled, otherwise at the end of the satement
-            if (command.IsUnique && _dialect.SupportsUnique) {
+            if (command.IsUnique && _dialectLazy.Value.SupportsUnique) {
                 builder.Append(" unique");
             }
 
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities", Justification = "Nothing comes from user input.")]
+        [SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities", Justification = "Nothing comes from user input.")]
         private void RunPendingStatements() {
 
-            var session = _sessionLocator.For(typeof(ContentItemRecord));
+            var session = _transactionManager.GetSession();
 
             try {
                 foreach (var sqlStatement in _sqlStatements) {
-                    Logger.Debug(sqlStatement);
+                    Logger.Debug("Executing SQL query: {0}", sqlStatement);
 
                     using (var command = session.Connection.CreateCommand()) {
                         command.CommandText = sqlStatement;
                         session.Transaction.Enlist(command);
                         command.ExecuteNonQuery();
                     }
-                 
-                    _reportsCoordinator.Information("Data Migration", String.Format("Executing SQL Query: {0}", sqlStatement));
                 }
             }
             finally {
-                _sqlStatements.Clear();    
+                _sqlStatements.Clear();
             }
         }
 
@@ -359,7 +401,7 @@ namespace Orchard.Data.Migration.Interpreters {
             return false;
         }
 
-        public static string ConvertToSqlValue(object value) {
+        public string ConvertToSqlValue(object value) {
             if ( value == null ) {
                 return "null";
             }
@@ -373,7 +415,7 @@ namespace Orchard.Data.Migration.Interpreters {
                 case TypeCode.Char:
                     return String.Concat("'", Convert.ToString(value).Replace("'", "''"), "'");
                 case TypeCode.Boolean:
-                    return (bool) value ? "1" : "0";
+                    return this._dialectLazy.Value.ToBooleanValueString((bool)value);
                 case TypeCode.SByte:
                 case TypeCode.Int16:
                 case TypeCode.UInt16:

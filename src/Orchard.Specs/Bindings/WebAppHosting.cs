@@ -93,11 +93,12 @@ namespace Orchard.Specs.Bindings {
             _webHost = new WebHost(_orchardTemp);
             Host.Initialize(siteFolder, virtualDirectory ?? "/", _dynamicCompilationOption);
             var shuttle = new Shuttle();
-            Host.Execute(() => {
-                log4net.Config.BasicConfigurator.Configure(new CastleAppender());
-                HostingTraceListener.SetHook(msg => shuttle._sink.Receive(msg));
-            });
+            Host.Execute(() => Executor(shuttle));
             _messages = shuttle._sink;
+        }
+
+        private static void Executor(Shuttle shuttle) {
+            HostingTraceListener.SetHook(msg => shuttle._sink.Receive(msg));
         }
 
         private class CastleAppender : IAppender {
@@ -306,10 +307,26 @@ namespace Orchard.Specs.Bindings {
             var submit = _doc.DocumentNode
                 .SelectSingleNode(string.Format("(//input[@type='submit'][@value='{0}']|//button[@type='submit'][text()='{0}'])", submitText));
 
+            string urlPath = null;
+
+            if (submit == null) {
+                // could be a simple link using "unsafeurl" property
+
+                submit = _doc.DocumentNode
+                            .SelectNodes("//a")
+                            .SingleOrDefault(elt => elt.InnerHtml == submitText)
+                       ?? _doc.DocumentNode
+                            .SelectSingleNode(string.Format("//a[@title='{0}']", submitText));
+
+                urlPath = HttpUtility.HtmlDecode(submit.Attributes["href"].Value);
+            }
+
             var form = Form.LocateAround(submit);
-            var urlPath = HttpUtility.HtmlDecode(form.Start.GetAttributeValue("action", Details.UrlPath));
-
-
+            
+            if (urlPath == null) {
+                urlPath = HttpUtility.HtmlDecode(form.Start.GetAttributeValue("action", Details.UrlPath));
+            }
+            
             var inputs = form.Children
                     .SelectMany(elt => elt.DescendantsAndSelf("input").Concat(elt.Descendants("textarea")))
                     .Where(node => !((node.GetAttributeValue("type", "") == "radio" || node.GetAttributeValue("type", "") == "checkbox") && node.GetAttributeValue("checked", "") != "checked"))

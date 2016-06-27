@@ -29,7 +29,7 @@
     <div data-controllerid="@Html.FieldIdFor(m => m.AddMenuItem)">
         <select id="@Html.FieldIdFor(m => m.CurrentMenuId)" name="@Html.FieldNameFor(m => m.CurrentMenuId)">
             @foreach (ContentItem menu in Model.Menus) {
-                @Html.SelectOption(Model.CurrentMenuId, menu.Id, Html.ItemDisplayText(menu).ToString())
+                @Html.SelectOption(Model.CurrentMenuId, menu.Id, Html.ItemDisplayText(menu, false).ToString())
             }
         </select>
         <span class="hint">@T("Select which menu you want the content item to be added on.")</span>

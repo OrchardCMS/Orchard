@@ -1,0 +1,64 @@
+﻿@using Orchard.ContentManagement
+@using Orchard.Utility.Extensions;
+
+@{
+    Style.Include("media-library-picker-admin.css");
+    Style.Require("jQueryColorBox");
+    Script.Require("jQueryUI_Sortable").AtFoot();
+    Script.Require("jQueryColorBox").AtFoot();
+    Script.Include("media-library-picker.js").AtFoot();
+
+    var fieldName = (string) Model.FieldName;
+    var displayName = (string) Model.DisplayName;
+    var multiple = (bool)(Model.Multiple ?? false);
+    var required = (bool)(Model.Required ?? false);
+    var hint = (string) Model.Hint;
+    var promptOnNavigate = (bool) (Model.PromptOnNavigate ?? true);
+    var showSaveWarning = (bool)(Model.ShowSaveWarning);
+    var contentItems = (IEnumerable<ContentItem>)Model.ContentItems ?? Enumerable.Empty<ContentItem>();
+    var contentManager = WorkContext.Resolve<IContentManager>();
+}
+
+<fieldset class="media-library-picker-field"
+          data-multiple="@multiple.ToString().ToLower()"
+          data-remove-text="@T("Remove")"
+          data-remove-prompt="@T("Do you really want to remove that media?")"
+          data-remove-all-prompt="@T("Do you really want to remove all media?")"
+          data-edit-text="@T("Edit")"
+          data-dirty-text="@T("You have unsaved changes. Please only accept to leave if you don't mind losing those changes.")"
+          data-pipe="@T(" | ")"
+          data-add-url="@HttpUtility.JavaScriptStringEncode(Url.Action("Index", "Admin", new { area = "Orchard.MediaLibrary", dialog = true }))"
+          data-return-url="@HttpUtility.JavaScriptStringEncode(Request.RawUrl)"
+          data-prompt-on-navigate="@promptOnNavigate.ToString().ToLower()"
+          data-show-save-warning="@showSaveWarning.ToString().ToLower()">
+    <label @if (required) { <text> class="required" </text>    }>@displayName</label>
+    <div class="message message-Warning media-library-picker-message">@T("You need to save your changes.")</div>
+    <div class="items media-library-picker" summary="@displayName">
+        <ul>
+            @foreach (var contentItem in contentItems) {
+                var editRouteValues = contentManager.GetItemMetadata(contentItem).EditorRouteValues;
+                var editUrl = Url.Action(
+                    Convert.ToString(editRouteValues["action"]),
+                    editRouteValues.Merge(new RouteValueDictionary { { "ReturnUrl", Request.RawUrl } }));
+                <li>
+                    <div data-id="@contentItem.Id" class="media-library-picker-item">
+                        <div class="thumbnail">
+                            @Display(BuildDisplay(contentItem, "Thumbnail"))
+                            <div class="overlay">
+                                <h3>@Html.ItemDisplayText(contentItem)</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="#" data-id="@contentItem.Id" class="media-library-picker-remove">@T("Remove")</a>@T(" | ")
+                    <a href="@editUrl">@T("Edit")</a>
+                </li>
+            }
+        </ul>
+    </div>
+    <div>
+        <span class="button add">@T("Add")</span>
+        <span class="button remove" style="display: none;">@T("Remove All")</span>
+    </div>
+    <input type="hidden" name="@fieldName" value="@String.Join(",", contentItems.Select(x => x.Id))" class="selected-ids" />
+    <span class="hint">@hint</span>
+</fieldset>

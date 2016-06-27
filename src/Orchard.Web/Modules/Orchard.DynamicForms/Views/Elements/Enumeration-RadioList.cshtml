@@ -1,0 +1,37 @@
+﻿@using Orchard.DisplayManagement.Shapes
+@using Orchard.DynamicForms.Elements
+@using Orchard.Layouts.Helpers
+@{
+    var element = (Enumeration)Model.Element;
+    var tagBuilder = (OrchardTagBuilder)TagBuilderExtensions.CreateElementTagBuilder(Model, "ol");
+    var index = 0;
+}
+@if (element.ShowLabel) {
+    <label>@Html.Raw(Model.ProcessedLabel)</label>
+}
+@tagBuilder.StartElement
+@foreach (var option in Model.ProcessedOptions) {
+    var inputTagBuilder = new OrchardTagBuilder("input");
+    inputTagBuilder.Attributes["type"] = "radio";
+    inputTagBuilder.Attributes["name"] = Model.ProcessedName;
+    inputTagBuilder.Attributes["value"] = option.Value;
+
+    if (option.Selected) {
+        inputTagBuilder.Attributes["checked"] = "checked";
+    }
+
+    if (element.ValidationSettings.Required == true && index == 0) {
+        inputTagBuilder.AddClientValidationAttributes((IDictionary<string, string>) Model.ClientValidationAttributes);
+    }
+    <li>   
+        <label>
+            @inputTagBuilder.ToHtmlString(TagRenderMode.SelfClosing)
+            @option.Text
+        </label>
+    </li>
+    ++index;
+}
+@tagBuilder.EndElement
+@if (element.ValidationSettings.ShowValidationMessage == true) {
+    @Html.ValidationMessage((string)Model.ProcessedName)
+}

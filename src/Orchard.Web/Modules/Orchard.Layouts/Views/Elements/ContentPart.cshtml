@@ -1,0 +1,7 @@
+﻿@using Orchard.Layouts.Helpers
+@if (Model.Content != null) {
+    var tagBuilder = TagBuilderExtensions.CreateElementTagBuilder(Model);
+    @tagBuilder.StartElement
+    @Display(Model.Content)
+    @tagBuilder.EndElement
+}

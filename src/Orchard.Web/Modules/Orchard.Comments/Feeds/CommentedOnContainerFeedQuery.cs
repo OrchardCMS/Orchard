@@ -1,12 +1,10 @@
 using System;
-using JetBrains.Annotations;
 using Orchard.Comments.Models;
 using Orchard.ContentManagement;
 using Orchard.Core.Feeds;
 using Orchard.Core.Feeds.Models;
 
 namespace Orchard.Comments.Feeds {
-    [UsedImplicitly]
     public class CommentedOnContainerFeedQuery : IFeedQueryProvider, IFeedQuery {
         private readonly IContentManager _contentManager;
 
@@ -29,6 +27,8 @@ namespace Orchard.Comments.Feeds {
             if (limitValue != null) {
                 Int32.TryParse(Convert.ToString(limitValue), out limit);
             }
+
+            limit = Math.Min(limit, 100);
 
             var comments = _contentManager
                 .Query<CommentPart, CommentPartRecord>()

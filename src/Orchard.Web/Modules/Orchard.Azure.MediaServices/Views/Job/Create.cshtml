@@ -4,8 +4,8 @@
 @using Orchard.Azure.MediaServices.ViewModels.Jobs
 @{
     Style.Include("cloudmedia-admin-job.css", "cloudmedia-admin-job.min.css");
-    Script.Require("JQuery");
-    Script.Include("cloudmedia-admin-job.js");
+    Script.Require("jQuery");
+    Script.Include("cloudmedia-admin-job.js", "cloudmedia-admin-job.min.js");
 
     var taskProvider = (ITaskProvider)Model.TaskProvider;
     var cloudVideoPart = (CloudVideoPart)Model.CloudVideoPart;

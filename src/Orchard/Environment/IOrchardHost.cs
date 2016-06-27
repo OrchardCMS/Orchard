@@ -1,6 +1,5 @@
 using Orchard.Environment.Configuration;
 using Orchard.Environment.ShellBuilders;
-using Orchard.Localization;
 
 namespace Orchard.Environment {
     public interface IOrchardHost {
@@ -29,7 +28,7 @@ namespace Orchard.Environment {
 
         /// <summary>
         /// Can be used to build an temporary self-contained instance of a shell's configured code.
-        /// Services may be resolved from within this instance to configure and initialize it's storage.
+        /// Services may be resolved from within this instance to configure and initialize its storage.
         /// </summary>
         IWorkContextScope CreateStandaloneEnvironment(ShellSettings shellSettings);
     }

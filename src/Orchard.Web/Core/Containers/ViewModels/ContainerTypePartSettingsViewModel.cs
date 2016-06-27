@@ -5,6 +5,7 @@ using Orchard.Core.Containers.Services;
 
 namespace Orchard.Core.Containers.ViewModels {
     public class ContainerTypePartSettingsViewModel {
+        public bool? ItemsShownDefault { get; set; }
         public int? PageSizeDefault { get; set; }
         public bool? PaginatedDefault { get; set; }
         public bool RestrictItemContentTypes { get; set; }
@@ -15,5 +16,6 @@ namespace Orchard.Core.Containers.ViewModels {
 
         [UIHint("ListViewPicker")]
         public string AdminListViewName { get; set; }
+        public bool DisplayContainerEditor { get; set; }
     }
 }

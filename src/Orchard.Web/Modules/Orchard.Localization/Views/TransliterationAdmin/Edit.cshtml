@@ -1,0 +1,24 @@
+﻿@using System.Globalization
+@model Orchard.Localization.ViewModels.EditTransliterationViewModel
+
+@{
+    Layout.Title = T("Edit Transliteration").Text;
+
+    var cultures = CultureInfo.GetCultures(CultureTypes.SpecificCultures);
+}
+
+@using(Html.BeginFormAntiForgeryPost()) {
+    @Html.ValidationSummary()
+    <fieldset>
+        <label for="CultureFrom">@T("From")</label>
+        @Html.DropDownList("CultureFrom", new SelectList(cultures, "Name", "DisplayName", Model.CultureFrom))
+        <label for="CultureTo">@T("To")</label>
+        @Html.DropDownList("CultureTo", new SelectList(cultures, "Name", "DisplayName", Model.CultureTo))
+
+        <textarea rows="25" cols="80" name="Rules" id="Rules">@Model.Rules</textarea>
+        
+        @Html.HiddenFor(x => x.Id)
+    </fieldset>
+
+    <input class="button" type="submit" value="@T("Save")" />
+}

@@ -1,4 +1,4 @@
-﻿.zone-content, #content, #main, #layout-content, #layout-main {
+.zone-content, #content, #main, #layout-content, #layout-main {
     height: 100%;
     display: block;
     min-height: 400px;
@@ -65,8 +65,10 @@
 #media-library-main-navigation {
     vertical-align: top;
     min-width: 220px; /*Width of left column*/
+    max-width: 220px;
     height: 85vh;
     overflow-y: scroll;
+    overflow-x: auto;
     border-right: 1px solid #e0e0e0;
 }
     #media-library-main-navigation > ul { /* sub-navigations, e.g. folders */
@@ -128,6 +130,7 @@
 
     .media-library-folder-title {
         display: inline-block;
+        white-space: nowrap;
     }
 
 #media-library-main-list-wrapper {
@@ -150,6 +153,10 @@
             background-image: url('images/folders-loader.gif');
             background-repeat: no-repeat;
             background-position: center;
+        }
+
+        #media-library-main-list.pending li {
+            opacity:.3;
         }
 
     /* Remove the space for the editor, and the scrollbar in the import page */
@@ -429,4 +436,91 @@
     .media-library-main-list-overlay {
         display: none;
     }
+}
+
+
+/* RTL */
+
+.dir-rtl #media-library-toolbar-actions {
+    float: left;
+}
+
+.dir-rtl #media-library-main-navigation {
+    border-right: inherit;
+    border-left: 1px solid #e0e0e0;
+}
+
+.dir-rtl #button-recent i {
+    padding-left: 5px;
+    padding-right: 3px;
+}
+
+.dir-rtl .media-library-navigation-folder-link i {
+    padding-left: 5px;
+    padding-right: 3px;
+}
+
+.dir-rtl .media-library-folder ul {
+    padding-left: 0;
+    padding-right: 16px;
+}
+
+.dir-rtl #media-library-main-list {
+    padding-left: inherit;
+    padding-right: 3px;
+}
+
+.dir-rtl #media-library-import .import-provider {
+    padding-left: inherit;
+    padding-right: 5px;
+}
+
+.dir-rtl #media-library-main-editor {
+    border-left: inherit;
+    border-right: 1px solid #e0e0e0;
+}
+
+.dir-rtl #media-library-main-selection li {
+    float: right;
+    margin: 0 0 3px 3px;
+}
+
+.dir-rtl #media-library-main-list-frame {
+    margin-right: inherit;
+    margin-left: 10px;
+}
+
+.dir-rtl #media-library-main-list li {
+    margin-right: inherit;
+    margin-left: 4px;
+    float: right;
+}
+
+.dir-rtl #media-library-main-list li.selected:after {
+    border-left: inherit;
+    border-right: 40px solid transparent;
+    right: inherit;
+    left: -3px;
+}
+
+.dir-rtl #media-library-main-list li.selected:before {
+    margin-right: inherit;
+    margin-left: 0;
+    right: inherit;
+    left: 5px;
+}
+
+.dir-rtl .media-library-main-list-overlay {
+    left: inherit;
+    right: 0;
+    text-align: left;
+}
+
+.dir-rtl .media-library-main-list-overlay p {
+    padding-right: inherit;
+    padding-left: 5px;
+}
+
+.dir-rtl #media-library-main-navigation .navicon {
+    background-position: right;
 }

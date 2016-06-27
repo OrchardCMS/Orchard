@@ -3,6 +3,7 @@ using System.Globalization;
 using Orchard.ContentManagement;
 using System;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace Orchard.Azure.MediaServices.Models {
 
@@ -18,10 +19,10 @@ namespace Orchard.Azure.MediaServices.Models {
             set { this.Store(x => x.WamsAccountKey, value); }
         }
 
-		public string StorageAccountKey {
-			get { return this.Retrieve(x => x.StorageAccountKey); }
-			set { this.Store(x => x.StorageAccountKey, value); }
-		}
+        public string StorageAccountKey {
+            get { return this.Retrieve(x => x.StorageAccountKey); }
+            set { this.Store(x => x.StorageAccountKey, value); }
+        }
 
         public bool EnableDynamicPackaging {
             get { return this.Retrieve(x => x.EnableDynamicPackaging); }
@@ -49,14 +50,21 @@ namespace Orchard.Azure.MediaServices.Models {
             }
         }
 
-        public IEnumerable<string> WamsEncodingPresets {
+        public IEnumerable<EncodingPreset> WamsEncodingPresets {
             get {
-                var presets = Retrieve<string>("WamsEncodingPresets");
-                return !String.IsNullOrEmpty(presets) ? presets.Split(';') : new string[] { };
+                var presets = Retrieve<string>("WamsEncodingPresetsJson");
+                if (!String.IsNullOrEmpty(presets)) {
+                    return JsonConvert.DeserializeObject<EncodingPreset[]>(presets);
+                }
+                // Fall back to old style property for compatibility with existing data.
+                presets = Retrieve<string>("WamsEncodingPresets");
+                var presetNames = !String.IsNullOrEmpty(presets) ? presets.Split(';') : new string[] { };
+                return presetNames.Select(x => new EncodingPreset() { Name = x });
             }
             set {
-                var presets = value != null && value.Any() ? String.Join(";", value) : null;
-                Store("WamsEncodingPresets", presets);
+                // Clear out old style property, migrate setting to the new one.
+                Store("WamsEncodingPresets", default(string));
+                Store("WamsEncodingPresetsJson", JsonConvert.SerializeObject(value.ToArray()));
             }
         }
 

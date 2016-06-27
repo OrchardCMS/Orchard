@@ -46,6 +46,11 @@ namespace Orchard.Core.Settings.ViewModels {
             set { Site.ResourceDebugMode = value; }
         }
 
+        public bool UseCdn {
+            get { return Site.UseCdn; }
+            set { Site.UseCdn = value; }
+        }
+
         public int PageSize {
             get { return Site.PageSize; }
             set { Site.PageSize = value; }
@@ -54,6 +59,11 @@ namespace Orchard.Core.Settings.ViewModels {
         public int MaxPageSize {
             get { return Site.MaxPageSize; }
             set { Site.MaxPageSize = value; }
+        }
+
+        public int MaxPagedCount {
+            get { return Site.MaxPagedCount; }
+            set { Site.MaxPagedCount = value; }
         }
 
         public string BaseUrl {

@@ -1,7 +1,7 @@
-﻿using Orchard.ContentManagement;
-using System.Text.RegularExpressions;
-using Orchard.Utility.Extensions;
-using System;
+﻿using System;
+using System.Globalization;
+using System.Text;
+using Orchard.ContentManagement;
 
 namespace Orchard.Autoroute.Services {
 
@@ -26,19 +26,56 @@ namespace Orchard.Autoroute.Services {
             _slugEventHandler.FillingSlugFromTitle(slugContext);
 
             if (!slugContext.Adjusted) {
+                string stFormKD = slugContext.Title.ToLower().Normalize(NormalizationForm.FormKD);
+                var sb = new StringBuilder();
 
-                var disallowed = new Regex(@"[/:?#\[\]@!$&'()*+,.;=\s\""\<\>\\\|%]+");
+                foreach (char t in stFormKD) {
+                    // Allowed symbols
+                    if (t == '-' || t == '_' || t == '~') {
+                        sb.Append(t);
+                        continue;
+                    }
 
-                var cleanedSlug = disallowed.Replace(slugContext.Title, "-").Trim('-','.');
+                    UnicodeCategory uc = CharUnicodeInfo.GetUnicodeCategory(t);
+                    switch (uc) {
+                        case UnicodeCategory.LowercaseLetter:
+                        case UnicodeCategory.OtherLetter:
+                        case UnicodeCategory.DecimalDigitNumber:
+                            // Keep letters and digits
+                            sb.Append(t);
+                            break;
+                        case UnicodeCategory.NonSpacingMark:
+                            // Remove diacritics
+                            break;
+                        default:
+                            // Replace all other chars with dash
+                            sb.Append('-');
+                            break;
+                    }
+                }
 
-                slugContext.Slug = Regex.Replace(cleanedSlug, @"\-{2,}", "-");
+                slugContext.Slug = sb.ToString().Normalize(NormalizationForm.FormC);
 
-                if (slugContext.Slug.Length > 1000)
-                    slugContext.Slug = slugContext.Slug.Substring(0, 1000).Trim('-', '.');
+                // Simplifies dash groups 
+                for (int i = 0; i < slugContext.Slug.Length - 1; i++) {
+                    if (slugContext.Slug[i] == '-') {
+                        int j = 0;
+                        while (i + j + 1 < slugContext.Slug.Length && slugContext.Slug[i + j + 1] == '-') {
+                            j++;
+                        }
+                        if (j > 0) {
+                            slugContext.Slug = slugContext.Slug.Remove(i + 1, j);
+                        }
+                    }
+                }
 
-                slugContext.Slug = StringExtensions.RemoveDiacritics(slugContext.Slug.ToLower());
+                if (slugContext.Slug.Length > 1000) {
+                    slugContext.Slug = slugContext.Slug.Substring(0, 1000);
+                }
+
+                slugContext.Slug = slugContext.Slug.Trim('-', '_', '.');
             }
-            
+
             _slugEventHandler.FilledSlugFromTitle(slugContext);
 
             return slugContext.Slug;
@@ -47,6 +84,5 @@ namespace Orchard.Autoroute.Services {
         public string Slugify(string text) {
             return Slugify(new FillSlugContext(null, text));
         }
-       
     }
 }

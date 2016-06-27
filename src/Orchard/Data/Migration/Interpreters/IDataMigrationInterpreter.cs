@@ -9,5 +9,7 @@ namespace Orchard.Data.Migration.Interpreters {
         void Visit(SqlStatementCommand command);
         void Visit(CreateForeignKeyCommand command);
         void Visit(DropForeignKeyCommand command);
+        string PrefixTableName(string tableName);
+        string RemovePrefixFromTableName(string prefixedTableName);
     }
 }

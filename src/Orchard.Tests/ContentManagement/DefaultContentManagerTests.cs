@@ -86,84 +86,16 @@ namespace Orchard.Tests.ContentManagement {
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
 
             _session = _sessionFactory.OpenSession();
-            builder.RegisterInstance(new TestSessionLocator(_session)).As<ISessionLocator>();
+            builder.RegisterInstance(new TestTransactionManager(_session)).As<ITransactionManager>();
 
             _container = builder.Build();
             _manager = _container.Resolve<IContentManager>();
         }
 
-        public class TestSessionLocator : ISessionLocator, ITransactionManager, IDisposable {
-            private readonly ISession _session;
-            private ITransaction _transaction;
-            private bool _cancelled;
-
-            public TestSessionLocator(ISession session) {
-                _session = session;
-            }
-
-            public ISession For(Type entityType) {
-                return _session;
-            }
-
-            void ITransactionManager.Demand() {
-                EnsureSession();
-
-                if (_transaction == null) {
-                    _transaction = _session.BeginTransaction(IsolationLevel.ReadCommitted);
-                }
-            }
-
-            void ITransactionManager.RequireNew() {
-                ((ITransactionManager)this).RequireNew(IsolationLevel.ReadCommitted);
-            }
-
-            void ITransactionManager.RequireNew(IsolationLevel level) {
-                EnsureSession();
-
-                if (_cancelled) {
-                    _transaction.Rollback();
-                    _transaction.Dispose();
-                    _transaction = null;
-                }
-                else {
-                    if (_transaction != null) {
-                        _transaction.Commit();
-                    }
-                }
-
-                _transaction = _session.BeginTransaction(level);
-            }
-
-            void ITransactionManager.Cancel() {
-                _cancelled = true;
-            }
-
-            void IDisposable.Dispose() {
-                if (_transaction != null) {
-                    try {
-                        if (!_cancelled) {
-                            _transaction.Commit();
-                        }
-                        else {
-                            _transaction.Rollback();
-                        }
-
-                        _transaction.Dispose();
-                    }
-                    catch {
-                    }
-                    finally {
-                        _transaction = null;
-                        _cancelled = false;
-                    }
-                }
-            }
-
-            private void EnsureSession() {
-                if (_session != null) {
-                    return;
-                }
-            }
+        [TearDown]
+        public void Cleanup() {
+            if (_container != null)
+                _container.Dispose();
         }
 
         [Test]
@@ -472,6 +404,46 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
+        public void DraftRequiredShouldAlwaysBuildNewVersionFromPublishedIfDraftNotFound()
+        {
+            Trace.WriteLine("gamma1");
+            var gamma1 = _manager.Create(DefaultGammaName, VersionOptions.Published);
+            Trace.WriteLine("flush");
+            _session.Flush();
+            _session.Clear();
+
+            Trace.WriteLine("gammaDraft1");
+            var gammaDraft1 = _manager.Get(gamma1.Id, VersionOptions.DraftRequired);
+            Assert.That(gammaDraft1.Version, Is.EqualTo(2));
+            Trace.WriteLine("flush");
+            _session.Flush();
+            _session.Clear();
+
+            Trace.WriteLine("Delete gammaDraft1");
+            var gammaDraft2 = _manager.Get(gammaDraft1.Id, VersionOptions.Draft);
+            gammaDraft2.VersionRecord.Latest = false;
+
+            Trace.WriteLine("Restore gamma1 as Latest");
+            var gamma2 = _manager.Get(gamma1.Id, VersionOptions.Published);
+            var publishedVersion = gamma2.Record.Versions.SingleOrDefault(x => x.Published);
+            if (publishedVersion != null)
+            {
+                publishedVersion.Latest = true;
+            }
+            Trace.WriteLine("flush");
+            _session.Flush();
+            _session.Clear();
+
+            Trace.WriteLine("gammaDraft3");
+            var gammaDraft3 = _manager.Get(gamma1.Id, VersionOptions.DraftRequired);
+            Assert.That(gammaDraft3.Version, Is.EqualTo(3));
+            Assert.That(gammaDraft3.Record, Is.Not.SameAs(gammaDraft2.Record));
+            Trace.WriteLine("flush");
+            _session.Flush();
+            _session.Clear();
+        }
+
+        [Test]
         public void UsingGetManyDraftRequiredShouldBuildNewVersionIfLatestIsAlreadyPublished() {
             Trace.WriteLine("gamma1");
             var gamma1 = _manager.Create(DefaultGammaName, VersionOptions.Published);
@@ -655,6 +627,29 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
+        public void GetWithAllVersionsOptionsReturnsLatestVersion() {
+            // Generate some versions
+            var gamma1 = _manager.Create(DefaultGammaName, VersionOptions.Published);
+            Flush();
+
+            var gamma2 = _manager.GetDraftRequired(gamma1.Id);
+            _manager.Publish(gamma2);
+            Flush();
+
+            var gamma3 = _manager.GetDraftRequired(gamma1.Id);
+            _manager.Publish(gamma3);
+            Flush();
+
+            var gamma4 = _manager.GetDraftRequired(gamma1.Id);
+            _manager.Publish(gamma4);
+            FlushAndClear();
+
+            // Assert that the latest version is returned when using AllVersions
+            var gamma = _manager.Get(gamma1.Id, VersionOptions.AllVersions);
+            Assert.That(gamma.Version, Is.EqualTo(4));
+        }
+
+        [Test]
         public void EmptyTypeDefinitionShouldBeCreatedIfNotAlreadyDefined() {
             var contentItem = _manager.New("no-such-type");
             Assert.That(contentItem.ContentType, Is.EqualTo("no-such-type"));
@@ -664,6 +659,99 @@ namespace Orchard.Tests.ContentManagement {
             Assert.That(contentItem.TypeDefinition.Parts.Count(), Is.EqualTo(0));
         }
 
+        [Test]
+        public void RestoreCreatesNewVersionBasedOnLatestVersion() {
+            // Generate some versions
+            var gamma1 = _manager.Create(DefaultGammaName, VersionOptions.Published);
+            Flush();
+
+            var gamma2 = _manager.GetDraftRequired(gamma1.Id);
+            _manager.Publish(gamma2);
+            Flush();
+
+            var gamma3 = _manager.GetDraftRequired(gamma1.Id);
+            _manager.Publish(gamma3);
+            Flush();
+
+            // Restore to version 1.
+            var gamma4 = _manager.Restore(gamma1, VersionOptions.Number(1));
+            FlushAndClear();
+
+            // Assert that a new version was created and that it is the latest.
+            var gamma = _manager.Get(gamma1.Id, VersionOptions.Number(4));
+            Assert.That(gamma.Version, Is.EqualTo(4));
+            Assert.That(gamma.VersionRecord.Latest, Is.True);
+        }
+
+        [Test]
+        public void RestoreUnsetsPreviousLatestVersion() {
+            // Generate some versions
+            var gamma1 = _manager.Create(DefaultGammaName, VersionOptions.Published);
+            Flush();
+
+            var gamma2 = _manager.GetDraftRequired(gamma1.Id);
+            _manager.Publish(gamma2);
+            Flush();
+
+            var gamma3 = _manager.GetDraftRequired(gamma1.Id);
+            _manager.Publish(gamma3);
+            Flush();
+
+            // Restore to version 1.
+            var gamma4 = _manager.Restore(gamma1, VersionOptions.Number(1));
+            FlushAndClear();
+
+            // Assert that version 3 is no longer the latest version.
+            var gamma = _manager.Get(gamma1.Id, VersionOptions.Number(3));
+            Assert.That(gamma.VersionRecord.Latest, Is.False);
+        }
+
+        [Test]
+        public void RestoreDoesNotUnpublishPreviousLatestVersion() {
+            // Generate some versions
+            var gamma1 = _manager.Create(DefaultGammaName, VersionOptions.Published);
+            Flush();
+
+            var gamma2 = _manager.GetDraftRequired(gamma1.Id);
+            _manager.Publish(gamma2);
+            Flush();
+
+            var gamma3 = _manager.GetDraftRequired(gamma1.Id);
+            _manager.Publish(gamma3);
+            Flush();
+
+            // Restore to version 1.
+            var gamma4 = _manager.Restore(gamma1, VersionOptions.Number(1));
+            FlushAndClear();
+
+            // Assert that version 3 is still published.
+            var gamma = _manager.Get(gamma1.Id, VersionOptions.Number(3));
+            Assert.That(gamma.VersionRecord.Published, Is.True);
+        }
+
+        [Test]
+        public void RestoreWithPublishUnpublishesPreviousLatestVersion() {
+            // Generate some versions
+            var gamma1 = _manager.Create(DefaultGammaName, VersionOptions.Published);
+            Flush();
+
+            var gamma2 = _manager.GetDraftRequired(gamma1.Id);
+            _manager.Publish(gamma2);
+            Flush();
+
+            var gamma3 = _manager.GetDraftRequired(gamma1.Id);
+            _manager.Publish(gamma3);
+            Flush();
+
+            // Restore to version 1.
+            var gamma4 = _manager.Restore(gamma1, VersionOptions.Restore(1, publish: true));
+            FlushAndClear();
+
+            // Assert that version 3 is no longer published and that version 4 is now published.
+            var gamma = _manager.Get(gamma1.Id, VersionOptions.Number(3));
+            Assert.That(gamma.VersionRecord.Published, Is.False);
+            Assert.That(gamma4.VersionRecord.Published, Is.True);
+        }
 
         [Test]
         public void ExistingTypeAndPartDefinitionShouldBeUsed() {

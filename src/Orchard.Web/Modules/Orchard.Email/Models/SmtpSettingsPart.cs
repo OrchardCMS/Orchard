@@ -1,7 +1,5 @@
-﻿using System.ComponentModel;
-using System.Configuration;
+﻿using System.Configuration;
 using System.Net.Configuration;
-using System.Net.Mail;
 using Orchard.ContentManagement;
 using System;
 using Orchard.ContentManagement.Utilities;
@@ -41,6 +39,11 @@ namespace Orchard.Email.Models {
         public bool RequireCredentials {
             get { return this.Retrieve(x => x.RequireCredentials); }
             set { this.Store(x => x.RequireCredentials, value); }
+        }
+
+        public bool UseDefaultCredentials {
+            get { return this.Retrieve(x => x.UseDefaultCredentials); }
+            set { this.Store(x => x.UseDefaultCredentials, value); }
         }
 
         public string UserName {

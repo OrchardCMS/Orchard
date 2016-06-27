@@ -6,6 +6,7 @@ using System.Web.Hosting;
 using Orchard.Environment.Configuration;
 using Orchard.Localization;
 using Orchard.Validation;
+using Orchard.Exceptions;
 
 namespace Orchard.FileSystems.Media {
     public class FileSystemStorageProvider : IStorageProvider {
@@ -155,6 +156,9 @@ namespace Orchard.FileSystems.Media {
                     directoryInfo.Create();
                 }
                 catch (Exception ex) {
+                    if (ex.IsFatal()) {
+                        throw;
+                    } 
                     throw new ArgumentException(T("The folder could not be created at path: {0}. {1}", path, ex).ToString());
                 }
             }
@@ -268,6 +272,20 @@ namespace Orchard.FileSystems.Media {
             File.Move(sourceFileInfo.FullName, targetFileInfo.FullName);
         }
 
+        public void CopyFile(string originalPath, string duplicatePath) {
+            FileInfo sourceFileInfo = new FileInfo(MapStorage(originalPath));
+            if (!sourceFileInfo.Exists) {
+                throw new ArgumentException(T("File {0} does not exist", originalPath).ToString());
+            }
+
+            FileInfo targetFileInfo = new FileInfo(MapStorage(duplicatePath));
+            if (targetFileInfo.Exists) {
+                throw new ArgumentException(T("File {0} already exists", duplicatePath).ToString());
+            }
+
+            File.Copy(sourceFileInfo.FullName, targetFileInfo.FullName);
+        }
+
         /// <summary>
         /// Creates a file in the storage provider.
         /// </summary>
@@ -298,6 +316,10 @@ namespace Orchard.FileSystems.Media {
         /// <returns>True if success; False otherwise.</returns>
         public bool TrySaveStream(string path, Stream inputStream) {
             try {
+                if (FileExists(path)) {
+                    return false;
+                }
+
                 SaveStream(path, inputStream);
             }
             catch {
@@ -318,16 +340,16 @@ namespace Orchard.FileSystems.Media {
             // The CreateFile method will map the still relative path
             var file = CreateFile(path);
 
-            var outputStream = file.OpenWrite();
-            var buffer = new byte[8192];
-            for (;;) {
+            using (var outputStream = file.OpenWrite()) {
+                var buffer = new byte[8192];
+                for (; ; ) {
 
-                var length = inputStream.Read(buffer, 0, buffer.Length);
-                if (length <= 0)
-                    break;
-                outputStream.Write(buffer, 0, length);
+                    var length = inputStream.Read(buffer, 0, buffer.Length);
+                    if (length <= 0)
+                        break;
+                    outputStream.Write(buffer, 0, length);
+                }
             }
-            outputStream.Dispose();
         }
 
         /// <summary>

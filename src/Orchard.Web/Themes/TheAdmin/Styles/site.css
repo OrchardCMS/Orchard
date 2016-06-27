@@ -8,10 +8,10 @@ Copyright: 2010, Orchard. All Rights Reserved
 **************************************************************
 
 Background: #f3f4f5
-Borders: 
+Borders:
 Text: #333333
-Secondary Text: 
-Main Accent: 
+Secondary Text:
+Main Accent:
 Links: 1e5d7d
 New Links: #3a822e;
 */
@@ -52,7 +52,7 @@ blockquote:before, blockquote:after,
 q:before, q:after { content: ""; }
 blockquote, q { quotes: "" ""; }
 
-/* HTML 5 elements as block */  
+/* HTML 5 elements as block */
 header, footer, aside, nav, article { display: block; }
 /* end: reset */
 
@@ -71,8 +71,8 @@ header, footer, aside, nav, article { display: block; }
 /* General
 ***************************************************************/
 
-/* Default font settings. 
-The font-size 81.3% sets the base font to 13px 
+/* Default font settings.
+The font-size 81.3% sets the base font to 13px
 
 Pixels   EMs         Percent    Points
 1px      0.077em     7.7%       1pt
@@ -104,17 +104,17 @@ Pixels   EMs         Percent    Points
 html, body { height:100%; }
 
 html {
-    background:#f3f4f5 url(images/adminNavBackground.gif) repeat-y top left;  
+    background:#f3f4f5 url(images/adminNavBackground.gif) repeat-y top left;
     color:#333;
 }
 
 body {
   font-size: 81.3%;
-  color: #333; 
+  color: #333;
   background:#f3f4f5 url(images/adminNavBackground.gif) repeat-y top left;
   font-family: Segoe UI,Trebuchet,Arial,Sans-Serif;
   line-height:1.6em;
-  margin:0 auto;  
+  margin:0 auto;
   min-width:74em; /* 946px */
   padding:0;
 }
@@ -138,16 +138,16 @@ h1, h2, h3, h4, h5, legend {
     font-weight:normal;
 }
 
-h1 img, h2 img, h3 img, 
+h1 img, h2 img, h3 img,
 h4 img, h5 img, h6 img {
   margin: 0;
 }
 
-strong {font-weight:600;}
+strong {font-weight:bold;}
 .smallText {font-size:1em; line-height:1.4em;}
 
 hr {border:0; height:1px; color:#e4e5e6; background-color:#e4e5e6;}
-    
+
 #header, #footer {
     width:100%;
 }
@@ -212,7 +212,7 @@ form.link button:hover, button.link:hover {
 ol.decimal {list-style:decimal inside; margin:12px 0;}
 ul.disc {list-style:disc inside; margin:12px 0;}
 
-/* Header - Branding and Login  
+/* Header - Branding, Login and Culture Selection
 ***************************************************************/
 #header {
     height:50px;
@@ -225,6 +225,10 @@ ul.disc {list-style:disc inside; margin:12px 0;}
     width: 240px;
     height:50px;
     float:left;
+}
+#culture-selection {
+    float: right;
+    margin: 10px 20px 0 0;
 }
 #header #app {
     float:left;
@@ -254,7 +258,7 @@ ul.disc {list-style:disc inside; margin:12px 0;}
     color:#fff;
     float:left;
     line-height:50px;
-    position:relative;  
+    position:relative;
     text-shadow: rgba(0,0,0,.9) 0px 0px 2px;
 }
 #page-title {
@@ -262,7 +266,7 @@ ul.disc {list-style:disc inside; margin:12px 0;}
     top:12px;
     left:24px;*/
     padding:14px 0 0 260px;
-    text-shadow:rgba(0,0,0,.1) 0px 0px 1px;    
+    text-shadow:rgba(0,0,0,.1) 0px 0px 1px;
 }
 #login {
     display:block;
@@ -366,6 +370,26 @@ ul.disc {list-style:disc inside; margin:12px 0;}
 }
 ul.menuItems {margin:6px 0 0 0;}
 
+.admin-menu-filter {
+    background: #2b2b2b url('./images/menu-filter.png') no-repeat 8px 6px;
+    border: 1px solid #404040;
+    -ms-border-radius: 2px;
+    border-radius: 2px;
+    -webkit-box-shadow: 0 0 1px rgba(64, 64, 64, 1) inset, 1px 1px 1px rgba(54, 54, 65, 1);
+    -ms-box-shadow: 0 0 1px rgba(64, 64, 64, 1) inset, 1px 1px 1px rgba(54, 54, 65, 1);
+    box-shadow: 0 0 1px rgba(64, 64, 64, 1) inset, 1px 1px 1px rgba(54, 54, 65, 1);
+    padding: 3px 0 3px 26px;
+    width: 180px;
+    display: none;
+}
+
+.admin-menu-filter input#adminfilter {
+    border: none;
+    color: #8a8a8a;
+    width: 95%;
+    background: #2b2b2b;
+}
+
 /******Tabs******/
 #local-navigation {margin:8px 0 -8px 0;}
 
@@ -400,7 +424,7 @@ ul.menuItems {margin:6px 0 0 0;}
     margin:8px 0 0 0;
     border: 1px solid #e4e5e6;
     clear:both;
-   
+
      /*CSS3 properties*/
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
@@ -410,13 +434,13 @@ ul.menuItems {margin:6px 0 0 0;}
     background:#2b2b2b;
     border:1px solid #404040;
     padding:6px 0;
-    
+
      /*CSS3 properties*/
      -webkit-border-radius: 2px;
      -moz-border-radius: 2px;
       border-radius: 2px;
       box-shadow: inset 0px 0px 1px rgba(64, 64, 64, 1.0), 1px 1px 1px rgba(54, 54, 65, 1.0);
-     -webkit-box-shadow: inset 0px 0px 1px rgba(64, 64, 64, 1.0), 1px 1px 1px rgba(54, 54, 65, 1.0); 
+     -webkit-box-shadow: inset 0px 0px 1px rgba(64, 64, 64, 1.0), 1px 1px 1px rgba(54, 54, 65, 1.0);
      -moz-box-shadow: inset 0px 0px 1px rgba(64, 64, 64, 1.0), 1px 1px 1px rgba(54, 54, 65, 1.0);
 }
 .section-dashboard h3, .section-new h3,
@@ -432,8 +456,7 @@ ul.menuItems {margin:6px 0 0 0;}
     position:relative;
 }
 .expando-glyph {
-    background:#fcfcfc no-repeat center center;
-    background-image:url(data:image/gif;base64,R0lGODlhCwALAKIFAPDz2/b70mhpREJEPjI0Lf///wAAAAAAACH/C1hNUCBEYXRhWE1QPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS4wLWMwNjAgNjEuMTM0Nzc3LCAyMDEwLzAyLzEyLTE3OjMyOjAwICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyIgeG1wTU06T3JpZ2luYWxEb2N1bWVudElEPSJ4bXAuZGlkOjJDNDlGNjgyMjg5NERGMTE4RUZGQkY0Q0JCRDA3OTc2IiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkQzQjUyNTNFOTQyODExREY5MDkxQ0U0MzJGRTdGNEExIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkQzQjUyNTNEOTQyODExREY5MDkxQ0U0MzJGRTdGNEExIiB4bXA6Q3JlYXRvclRvb2w9IkFkb2JlIFBob3Rvc2hvcCBDUzUgV2luZG93cyI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjJENDlGNjgyMjg5NERGMTE4RUZGQkY0Q0JCRDA3OTc2IiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjJDNDlGNjgyMjg5NERGMTE4RUZGQkY0Q0JCRDA3OTc2Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+Af/+/fz7+vn49/b19PPy8fDv7u3s6+rp6Ofm5eTj4uHg397d3Nva2djX1tXU09LR0M/OzczLysnIx8bFxMPCwcC/vr28u7q5uLe2tbSzsrGwr66trKuqqainpqWko6KhoJ+enZybmpmYl5aVlJOSkZCPjo2Mi4qJiIeGhYSDgoGAf359fHt6eXh3dnV0c3JxcG9ubWxramloZ2ZlZGNiYWBfXl1cW1pZWFdWVVRTUlFQT05NTEtKSUhHRkVEQ0JBQD8+PTw7Ojk4NzY1NDMyMTAvLi0sKyopKCcmJSQjIiEgHx4dHBsaGRgXFhUUExIREA8ODQwLCgkIBwYFBAMCAQAAIfkEAQAABQAsAAAAAAsACwAAAx1YutxeIbYIghBgWVwA4daQKZ4QjkspPsD6dG8sJwA7);
+    background-image: url("images/menu-open.png");
     /*url("images/menuOpen.gif")*/
     bottom:0;
     cursor:pointer;
@@ -445,18 +468,12 @@ ul.menuItems {margin:6px 0 0 0;}
     width:17px;
     -webkit-transform:rotate(0deg);
 }
-.expando-glyph:hover {
-    background-image:url(data:image/gif;base64,R0lGODlhCwALAJEDAB5dfcbVyMvbwf///yH/C1hNUCBEYXRhWE1QPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS4wLWMwNjAgNjEuMTM0Nzc3LCAyMDEwLzAyLzEyLTE3OjMyOjAwICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyIgeG1wTU06T3JpZ2luYWxEb2N1bWVudElEPSJ4bXAuZGlkOjJDNDlGNjgyMjg5NERGMTE4RUZGQkY0Q0JCRDA3OTc2IiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkUxMUUzODE2OTQyODExREZBN0ZBOURGNEI3NDVDRkMxIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkUxMUUzODE1OTQyODExREZBN0ZBOURGNEI3NDVDRkMxIiB4bXA6Q3JlYXRvclRvb2w9IkFkb2JlIFBob3Rvc2hvcCBDUzUgV2luZG93cyI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjJENDlGNjgyMjg5NERGMTE4RUZGQkY0Q0JCRDA3OTc2IiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjJDNDlGNjgyMjg5NERGMTE4RUZGQkY0Q0JCRDA3OTc2Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+Af/+/fz7+vn49/b19PPy8fDv7u3s6+rp6Ofm5eTj4uHg397d3Nva2djX1tXU09LR0M/OzczLysnIx8bFxMPCwcC/vr28u7q5uLe2tbSzsrGwr66trKuqqainpqWko6KhoJ+enZybmpmYl5aVlJOSkZCPjo2Mi4qJiIeGhYSDgoGAf359fHt6eXh3dnV0c3JxcG9ubWxramloZ2ZlZGNiYWBfXl1cW1pZWFdWVVRTUlFQT05NTEtKSUhHRkVEQ0JBQD8+PTw7Ojk4NzY1NDMyMTAvLi0sKyopKCcmJSQjIiEgHx4dHBsaGRgXFhUUExIREA8ODQwLCgkIBwYFBAMCAQAAIfkEAQAAAwAsAAAAAAsACwAAAhqcj6kjnR0EAOFIOsKstxoNdAmIKZq3oMvKFgA7);
-    /*url("images/menuOpenHover.gif");*/
-}
+
 .expando-glyph-container.closed .expando-glyph {
-    background-image:url(data:image/gif;base64,R0lGODlhCwALAKIFAPDz2/b70mhpREJEPjI0Lf///wAAAAAAACH/C1hNUCBEYXRhWE1QPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS4wLWMwNjAgNjEuMTM0Nzc3LCAyMDEwLzAyLzEyLTE3OjMyOjAwICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyIgeG1wTU06T3JpZ2luYWxEb2N1bWVudElEPSJ4bXAuZGlkOjJDNDlGNjgyMjg5NERGMTE4RUZGQkY0Q0JCRDA3OTc2IiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkY2OEJCRkEyOTQyODExREY5ODMwQkQwQjI2MEMzREUwIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkY2OEJCRkExOTQyODExREY5ODMwQkQwQjI2MEMzREUwIiB4bXA6Q3JlYXRvclRvb2w9IkFkb2JlIFBob3Rvc2hvcCBDUzUgV2luZG93cyI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjJENDlGNjgyMjg5NERGMTE4RUZGQkY0Q0JCRDA3OTc2IiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjJDNDlGNjgyMjg5NERGMTE4RUZGQkY0Q0JCRDA3OTc2Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+Af/+/fz7+vn49/b19PPy8fDv7u3s6+rp6Ofm5eTj4uHg397d3Nva2djX1tXU09LR0M/OzczLysnIx8bFxMPCwcC/vr28u7q5uLe2tbSzsrGwr66trKuqqainpqWko6KhoJ+enZybmpmYl5aVlJOSkZCPjo2Mi4qJiIeGhYSDgoGAf359fHt6eXh3dnV0c3JxcG9ubWxramloZ2ZlZGNiYWBfXl1cW1pZWFdWVVRTUlFQT05NTEtKSUhHRkVEQ0JBQD8+PTw7Ojk4NzY1NDMyMTAvLi0sKyopKCcmJSQjIiEgHx4dHBsaGRgXFhUUExIREA8ODQwLCgkIBwYFBAMCAQAAIfkEAQAABQAsAAAAAAsACwAAAx1YBaD+QbTn4pi0WEx3Vh4FCASnjGUWpar0acGXAAA7);
+    background-image:url("images/menu-closed.png");
     /*url("images/menuClosed.gif");*/
 }
-.expando-glyph-container.closed .expando-glyph:hover {
-    background-image:url(data:image/gif;base64,R0lGODlhCwALAJEDAB5dfcbVyMvbwf///yH/C1hNUCBEYXRhWE1QPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS4wLWMwNjAgNjEuMTM0Nzc3LCAyMDEwLzAyLzEyLTE3OjMyOjAwICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyIgeG1wTU06T3JpZ2luYWxEb2N1bWVudElEPSJ4bXAuZGlkOjJDNDlGNjgyMjg5NERGMTE4RUZGQkY0Q0JCRDA3OTc2IiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjA1NTdBNkZFOTQyOTExREY4QjNERjI1RjMzMUYxRjk1IiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjA1NTdBNkZEOTQyOTExREY4QjNERjI1RjMzMUYxRjk1IiB4bXA6Q3JlYXRvclRvb2w9IkFkb2JlIFBob3Rvc2hvcCBDUzUgV2luZG93cyI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjJENDlGNjgyMjg5NERGMTE4RUZGQkY0Q0JCRDA3OTc2IiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjJDNDlGNjgyMjg5NERGMTE4RUZGQkY0Q0JCRDA3OTc2Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+Af/+/fz7+vn49/b19PPy8fDv7u3s6+rp6Ofm5eTj4uHg397d3Nva2djX1tXU09LR0M/OzczLysnIx8bFxMPCwcC/vr28u7q5uLe2tbSzsrGwr66trKuqqainpqWko6KhoJ+enZybmpmYl5aVlJOSkZCPjo2Mi4qJiIeGhYSDgoGAf359fHt6eXh3dnV0c3JxcG9ubWxramloZ2ZlZGNiYWBfXl1cW1pZWFdWVVRTUlFQT05NTEtKSUhHRkVEQ0JBQD8+PTw7Ojk4NzY1NDMyMTAvLi0sKyopKCcmJSQjIiEgHx4dHBsaGRgXFhUUExIREA8ODQwLCgkIBwYFBAMCAQAAIfkEAQAAAwAsAAAAAAsACwAAAhrcEqYrkKuagxFMOuSjmga7Kd/FgFgTMgJWAAA7);
-    /*url("images/menuClosedHover.gif");*/
-}
+
 .expando-glyph-container.closing .expando-glyph {
     -webkit-transition:all .2s ease-in-out;
     -moz-transition:all .2s ease-in-out;
@@ -525,15 +542,15 @@ span.message {
     background:#e68585; /* red */
     color:#fff;
 }
-.info { 
-    background: url(images/info.gif) no-repeat 5px 5px #fff;
+.info {
+    background: url(images/info.gif) no-repeat 6px 6px #fff;
     border:1px solid #e4e8ee;  /* blue */
-    padding-left:26px;
+    padding:4px 4px 4px 26px;
 }
-.error { 
-    background: url(images/error.gif) no-repeat 5px 5px #fff;
+.error {
+    background: url(images/error.gif) no-repeat 6px 6px #fff;
     border:1px solid #e5cece;  /* red */
-    padding-left:26px;
+    padding-left:4px 4px 4px 26px;
 }
 .message-Information, .notifications {
     background:#e6f1c9; /* green */
@@ -566,8 +583,9 @@ legend            { font-size: 1.231em; font-weight: normal; border:none;}
 fieldset          { padding:6px 0 0; margin:0 0 12px 0; border: 0px solid #dbdbdb; }
 label             { font-weight:normal; display:block; padding: 0 0 0.3em 0; }
 label.forcheckbox { margin:0 0 0 .4em; display:inline; }
+label.forradiobutton { margin:0 0 0 .4em; display:inline; }
 label.required:after {margin-left: 1ex; content: "*"; color: red; }
-legend.required:after {margin-left: 1ex; content: "*"; color: red; }    
+legend.required:after {margin-left: 1ex; content: "*"; color: red; }
 
 form.inline, form.inline fieldset { /* todo: (heskew) need something other than .inline ... */
     display:inline;
@@ -600,6 +618,9 @@ legend span {
 label.bulk-order {
     text-transform:lowercase;
 }
+label.bulk-culture {
+    text-transform:lowercase;
+}
 label span {
     font-weight:normal;
 }
@@ -629,7 +650,7 @@ input.textMedium, input.text-medium, input.text.medium {
     width:26em;
 }
 select {
-    padding:1px;	
+    padding:1px;
 }
 select:focus, textarea:focus, input.text:focus, input.text-box:focus, input.text-small:focus, input.textMedium:focus, input.text-medium:focus  {
     border-color:#666d51;
@@ -686,19 +707,19 @@ button.remove:focus::-moz-focus-inner, .remove.button:focus::-moz-focus-inner {
 
         /*CSS3 properties*/
         text-shadow:none;
-        
-        -webkit-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0); 
-        -moz-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0); 
+
+        -webkit-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0);
+        -moz-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0);
         box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0);
-        
-        /*----In ie the first couplet sets the alpha value so 00=transparent and ff=opaque)----*/    
+
+        /*----In ie the first couplet sets the alpha value so 00=transparent and ff=opaque)----*/
         filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#fff5f5f5',  endColorstr='#ffd9d9d9');
-        background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(245, 245, 245, 1.0)), to(rgba(217, 217, 217, 1.0)));   
+        background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(245, 245, 245, 1.0)), to(rgba(217, 217, 217, 1.0)));
         background: -moz-linear-gradient(top, rgba(245, 245, 245, 1.0), rgba(217, 217, 217, 1.0));
-        
+
         -webkit-border-radius: 2px;
         -moz-border-radius: 2px;
-         border-radius: 2px;	
+         border-radius: 2px;
 }
 button, .button, a.button {
     background:#6a7b42;
@@ -708,26 +729,26 @@ button, .button, a.button {
     display: inline-block;
     font: 12px Arial,Helvetica,sans-serif;
     padding: 5px 14px 5px 14px;
-    
+
     /*position: relative;*/
     text-align: center;
     text-decoration: none;
-    
+
     /*----CSS3 properties----*/
      text-shadow: rgba(40,53,9,.2) 0px 0px 1px;
-    -webkit-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.2); 
-    -moz-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.2); 
+    -webkit-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.2);
+    -moz-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.2);
      box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.2);
 
-     
-    /*----In ie the first couplet sets the alpha value so 00=transparent and ff=opaque)----*/    
-     filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ff9bb36c',  endColorstr='#ff809f43');	
-     background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(155, 179, 108, 1.0)), to(rgba(128, 159, 67, 1.0)));    
+
+    /*----In ie the first couplet sets the alpha value so 00=transparent and ff=opaque)----*/
+     filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ff9bb36c',  endColorstr='#ff809f43');
+     background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(155, 179, 108, 1.0)), to(rgba(128, 159, 67, 1.0)));
      background: -moz-linear-gradient(top, rgba(155, 179, 108, 1.0), rgba(128, 159, 67, 1.0));
 
      /*test - base green in pallet is 155,179,108*/
      background: -moz-linear-gradient(top, rgba(155, 179, 108, 1.0), rgba(133, 154, 93, 1.0));
-        
+
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
      border-radius: 2px;
@@ -735,7 +756,7 @@ button, .button, a.button {
 
 .button, a.button /* For link buttons */
 {
-   padding: 5px 14px 5px 14px; 
+   padding: 5px 14px 5px 14px;
 }
 
 button, input.button, x:-moz-any-link {
@@ -745,25 +766,25 @@ button, input.button, x:-moz-any-link {
 button:hover, .button:hover, a.button:hover {
     border-color:#3a822e;
     color:#eefcec;
-    text-decoration:none; 
+    text-decoration:none;
     background: #809f43;
-    
-    /*CSS3 properties*/  
+
+    /*CSS3 properties*/
      filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ff6e7f45',  endColorstr='#ff6a7b42');
-     background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(110, 127, 69, 1.0)), to(rgba(106, 123, 66, 1.0)));    
+     background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(110, 127, 69, 1.0)), to(rgba(106, 123, 66, 1.0)));
      background: -moz-linear-gradient(top, rgba(110, 127, 69, 1.0), rgba(106, 123, 66, 1.0));
 }
 
 button:active, .buton:active, a.button:active {
-    text-decoration:none; 
+    text-decoration:none;
     background:#6a7b42;
     border:1px solid #487328;
     color:#fff;
 
     /*CSS3 properties*/
     text-shadow: rgba(0,0,0,.5) 0px 0px 1px;
-     filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ff9bb36c',  endColorstr='#ff809f43');	
-     background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(155, 179, 108, 1.0)), to(rgba(128, 159, 67, 1.0)));   
+     filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ff9bb36c',  endColorstr='#ff809f43');
+     background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(155, 179, 108, 1.0)), to(rgba(128, 159, 67, 1.0)));
      background: -moz-linear-gradient(top, rgba(155, 179, 108, 1.0), rgba(128, 159, 67, 1.0));
 }
 button:focus::-moz-focus-inner, .button:focus::-moz-focus-inner {
@@ -775,11 +796,11 @@ button:focus::-moz-focus-inner, .button:focus::-moz-focus-inner {
     border:1px solid #ababab;
     color:#ababab;
     cursor:default;
-    
+
     filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ffeeeeee',  endColorstr='#ffeeeeee');
-    background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(238, 238, 238, 1.0)), to(rgba(238, 238, 238, 1.0)));   
+    background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(238, 238, 238, 1.0)), to(rgba(238, 238, 238, 1.0)));
     background: -moz-linear-gradient(top, rgba(238, 238, 238, 1.0), rgba(238, 238, 238, 1.0));
-    
+
     text-shadow: none;
     -webkit-box-shadow: none;
     -moz-box-shadow: none;
@@ -791,10 +812,10 @@ button.link {
     border:0;
     padding:inherit;
     text-shadow:none;
-    -webkit-box-shadow:none; 
-    -moz-box-shadow:none; 
+    -webkit-box-shadow:none;
+    -moz-box-shadow:none;
     box-shadow:none;
-    filter:none;	
+    filter:none;
     -webkit-border-radius:0;
     -moz-border-radius:0;
     border-radius:0;
@@ -831,7 +852,7 @@ button.link {
     margin-left:4px;
 }
 
-.options 
+.options
 {
     margin: 12px 0px 12px 0px;
 }
@@ -873,7 +894,7 @@ table.items col {
     border-spacing:0;
     display:table-column;
 }
-table.items colgroup 
+table.items colgroup
 {
     border-spacing:0;
     display:table-column-group;
@@ -909,14 +930,14 @@ table.items th, table.items td {
     padding:8px 12px;
 }
 
-table.items td .add 
+table.items td .add
 {
     float: right;
 }
 
 table.items tr.internal *{
     background-color: #eee;
-    color: grey; 
+    color: grey;
 }
 
 /* Content item lists
@@ -1010,15 +1031,20 @@ table.items tr:nth-child(odd) {
 
 #main .contentItems > ul > li:nth-child(even),
 ul.contentItems > li:nth-child(even) ,
-table.items tr:nth-child(even) {
+table.items tr:nth-child(even) ,
+fieldset.manage-part:nth-child(even),
+fieldset.manage-field:nth-child(even) {
     background-color: #f9f9f9;
 }
 
 #main .contentItems > ul > li:hover,
 ul.contentItems > li:hover,
-table.items tbody tr:hover {
+table.items tbody tr:hover ,
+fieldset.manage-part:hover,
+fieldset.manage-field:hover {
     background-color: #EDF9F5;
 }
+
 
 /* Pager
 ***************************************************************/
@@ -1038,22 +1064,22 @@ html.dyn #submit-pager, html.dyn .apply-bulk-actions-auto { display:none; }
     border: 1px solid #bdbcbc;
     color: #333333;
     cursor: pointer;
-    
+
 
     /*CSS3 properties*/
-    text-shadow: rgba(0,0,0,.2) 0px 0px 1px;      
+    text-shadow: rgba(0,0,0,.2) 0px 0px 1px;
     /*In ie the first couplet sets the alpha value so 00=transparent and ff=opaque)*/
     filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#fff5f5f5',  endColorstr='#ffd9d9d9');
-    background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(245, 245, 245, 1.0)), to(rgba(217, 217, 217, 1.0)));    
+    background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(245, 245, 245, 1.0)), to(rgba(217, 217, 217, 1.0)));
     background: -moz-linear-gradient(top, rgba(245, 245, 245, 1.0), rgba(217, 217, 217, 1.0));
-               
+
     box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.1);
-    -webkit-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.1); 
-    -moz-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.1); 
-            
+    -webkit-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.1);
+    -moz-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.1);
+
     border-radius: 2px;
     -webkit-border-radius: 2px;
-    -moz-border-radius: 2px;  
+    -moz-border-radius: 2px;
     }
 
 
@@ -1072,11 +1098,15 @@ html.dyn #submit-pager, html.dyn .apply-bulk-actions-auto { display:none; }
     margin-left:0;
     margin-right:2em;
     width:350px;
+    direction: ltr;
 }
 .permalink input.text:focus {
     background:#FFF;
     border-color:#666d51;
     border-style:solid;
+}
+.is-url {
+    direction: ltr !important;
 }
 /* Routable and Containers (Core) */
 .with-checkbox .checkbox-and-label { /* todo: (heskew) routable should be changed to use this too */
@@ -1100,7 +1130,7 @@ html.dyn #submit-pager, html.dyn .apply-bulk-actions-auto { display:none; }
     padding:0;
 }
 
-fieldset.publish-button, fieldset.delete-button, fieldset.save-button { 
+fieldset.publish-button, fieldset.delete-button, fieldset.save-button {
     clear:none;
     float:left;
 }
@@ -1118,12 +1148,12 @@ fieldset.delete-button {
 
 /* Dashboard */
 
-.dashboard 
+.dashboard
 {
     padding: 10px 0 0 0;
 }
 
-.dashboard .help-item 
+.dashboard .help-item
 {
     width: 245px;
     min-height: 180px;
@@ -1131,12 +1161,12 @@ fieldset.delete-button {
     margin: 0 55px 55px 0;
 }
 
-.dashboard a:hover 
+.dashboard a:hover
 {
     text-decoration: underline;
 }
 
-.dashboard p 
+.dashboard p
 {
      padding: 0 8px 0px 8px;
 }
@@ -1200,7 +1230,7 @@ fieldset.delete-button {
     color:#ccc;
     font-style:italic;
 }
-#orchard-version 
+#orchard-version
 {
     position:relative;
     float:right;
@@ -1221,5 +1251,327 @@ fieldset.delete-button {
     html, body, #layout-content {
         background: white;
         height: auto;
+    }
+}
+
+
+
+/* RTL Reset
+***************************************************************/
+
+html.dir-rtl {
+    background:#f3f4f5 url(images/adminNavBackground.gif) repeat-y top right;
+    color:#333;
+}
+
+/* Tables still need 'cellspacing="0"' in the markup */
+.dir-rtl caption, .dir-rtl th, .dir-rtl td { text-align: right; }
+
+/* end: reset */
+
+/* RTL General
+***************************************************************/
+
+.dir-rtl #layout-content {
+    background:#f3f4f5 url(images/adminNavBackground.gif) repeat-y top right;
+}
+.dir-rtl #layout-main {
+    float:left;
+    margin-left:inherit;
+    margin-right:-240px;
+}
+.dir-rtl #main {
+    margin-left:20px;
+    margin-right:260px;
+}
+.dir-rtl #menu {
+    float:right;
+}
+    .dir-rtl #menu .menu-admin a {
+        background-position: right 2px !important;
+    }
+
+.dir-rtl #footer {
+    background: url(images/vinesBackgroundBottom.gif) no-repeat bottom right;
+}
+
+/* Header - Branding, Login and Culture Selection
+***************************************************************/
+.dir-rtl #branding {
+    float:right;
+}
+.dir-rtl #culture-selection {
+    float: left;
+    margin: 10px 0 0 20px ;
+}
+.dir-rtl #header #app {
+    float:right;
+}
+.dir-rtl #header #app a {
+    margin:-11px 14px 0 0;
+}
+.dir-rtl #site a, .dir-rtl #site a:visited, .dir-rtl #site a:active {
+    float:right;
+}
+.dir-rtl #page-title {
+    padding:14px 260px 0 0;
+}
+.dir-rtl #login {
+    float:left;
+    margin:14px 0 0 20px;
+}
+
+.dir-rtl .manage,
+.dir-rtl .manage a.button {
+    float: left;
+}
+
+
+/* RTL Navigation
+***************************************************************/
+.dir-rtl #menu .expando-glyph-container .expando-glyph {
+    left:inherit;
+    right:160px;
+}
+.dir-rtl #menu .menu-admin li h3 {
+    padding:0 10px 0 0;
+}
+.dir-rtl #menu .menu-admin li h3 a,
+.dir-rtl #menu .menu-admin li h3 span { /* only the h3 gets an icon by default */
+    padding:0 20px 0 0;
+}
+.dir-rtl #menu .menu-admin ul a, .dir-rtl #menu .menu-admin ul a:link, .dir-rtl #menu .menu-admin ul a:visited {
+    padding:4px 20px 6px 0;
+}
+
+.dir-rtl .admin-menu-filter {
+    padding: 3px 26px 3px 0;
+}
+
+/* RTL Tabs
+***************************************************************/
+.dir-rtl .localmenu li.first {
+    margin-right:16px;
+}
+.dir-rtl .expando-glyph {
+    right:-20px;
+}
+.dir-rtl .expando-glyph-container {
+    float: right;
+}
+
+/* RTL Confirmations, Messages and the like
+***************************************************************/
+.dir-rtl span.message {
+    margin:4px 4px 4px 0;
+}
+.dir-rtl .info {
+    padding:4px 26px 4px 4px;
+}
+.dir-rtl .error {
+    padding:4px 26px 4px 4px;
+}
+
+/* RTL Forms
+***************************************************************/
+.dir-rtl .bulk-actions {
+    margin:0 0 0 4px;
+}
+
+.dir-rtl input.check-box, .dir-rtl input[type=checkbox] {
+    margin-left:inherit;
+    margin-right:0;
+}
+
+.dir-rtl .cancel {
+    margin:0 .93em 0 0;
+}
+.dir-rtl .manage {
+    float:left;
+}
+.dir-rtl .actions {
+    clear:left;
+    text-align:left;
+}
+.dir-rtl .actions .construct {
+    float:right;
+}
+.dir-rtl .actions .destruct {
+    float:left;
+}
+.dir-rtl .manage a.button {
+    float:left;
+    margin-left:inherit;
+    margin-right:4px;
+}
+
+.content-ltr textarea,
+.content-ltr input {
+    direction: ltr;
+}
+
+.content-rtl textarea,
+.content-rtl input {
+    direction: rtl;
+}
+
+
+/* RTL (Items) Tables
+***************************************************************/
+
+.dir-rtl table.items thead, .dir-rtl table.items th {
+    text-align:right;
+}
+.dir-rtl table.items th.actions {
+    text-align:left;
+}
+
+.dir-rtl table.items td .add {
+    float: left;
+}
+
+/* RTL Content item lists
+----------------------------------------------------------*/
+.dir-rtl .contentItems li {
+    padding:0 .8em .8em 1.4em;
+}
+.dir-rtl .contentItems.bulk-items li {
+    padding-left:inherit;
+}
+.dir-rtl #main .contentItems li .actions {
+    padding:0 .1em .1em 0;
+}
+.dir-rtl #main .contentItems li .actions .ibutton {
+    margin-right:inherit;
+    margin-left:6px;
+}
+.dir-rtl #main .contentItems li .actions .destruct .ibutton {
+    margin-left:0;
+    margin-right:8px;
+}
+
+.dir-rtl .contentItems .summary {
+    padding:1.2em .5em .5em .4em;
+}
+.dir-rtl .contentItems .properties {
+    float:right;
+}
+.dir-rtl .contentItems.bulk-items .metadata, .dir-rtl .contentItems.bulk-items .primary {
+    margin:.7em 2em .7em 0;
+}
+.dir-rtl .contentItems .properties li {
+    float:right;
+}
+.dir-rtl .contentItems .properties .icon {
+    margin:0 -.2em -.2em .2em;
+}
+.dir-rtl .contentItems .related {
+    text-align:left;
+}
+
+/* RTL Pager
+***************************************************************/
+
+.dir-rtl .page-size-options {
+    float: right;
+    padding-right: inherit;
+    padding-left: 40px;
+    margin-left: inherit;
+    margin-right: auto;
+}
+.dir-rtl .pager li {
+    float: right;
+    margin:0 0 0 6px;
+    }
+
+/* RTL Core Modules
+***************************************************************/
+/* Routable */
+.dir-rtl .permalink input.text {
+    margin-right:0;
+}
+/* Routable and Containers (Core) */
+.dir-rtl .with-checkbox .checkbox-and-label { /* todo: (heskew) routable should be changed to use this too */
+    margin-left:inherit;
+    margin-right:10px;
+}
+.dir-rtl fieldset.publish-button, fieldset.delete-button, .dir-rtl fieldset.save-button {
+    float:right;
+}
+.dir-rtl fieldset.save-button {
+    clear:right;
+}
+.dir-rtl fieldset.publish-button {
+    margin: 0 0 0 12px ;
+}
+.dir-rtl fieldset.delete-button {
+    margin: 0 12px 0 0;
+}
+
+.content-rtl .permalink input.text {
+    direction: rtl;
+}
+
+/* Dashboard */
+
+.dir-rtl .dashboard .help-item
+{
+    float: right;
+    margin: 0 0 55px 55px;
+}
+
+.dir-rtl .dashboard .help-item h2.gallery
+{
+    padding-left: inherit;
+    padding-right: 40px;
+}
+
+.dir-rtl .dashboard .help-item h2.friends
+{
+    padding-left: inherit;
+    padding-right: 40px;
+}
+
+.dir-rtl .dashboard .help-item h2.start
+{
+    padding-left: inherit;
+    padding-right: 40px;
+}
+
+.dir-rtl .dashboard .help-item h2.docs
+{
+    padding-left: inherit;
+    padding-right: 38px;
+}
+
+.dir-rtl .dashboard .help-item h2.contribute
+{
+    padding-left: inherit;
+    padding-right: 40px;
+}
+
+.dir-rtl .dashboard .help-item h2.advisory
+{
+    padding-left: inherit;
+    padding-right: 40px;
+}
+
+/* RTL Fields
+***************************************************************/
+.dir-rtl #orchard-version
+{
+    float:left;
+    right:inherit;
+    left:16px;
+}
+
+/* RTL Print
+***************************************************************/
+@media print {
+    .dir-rtl #main, .dir-rtl #page-title {
+        margin-left: inherit;
+        margin-right: 20px;
+        padding-left: inherit;
+        padding-right: 20px;
     }
 }

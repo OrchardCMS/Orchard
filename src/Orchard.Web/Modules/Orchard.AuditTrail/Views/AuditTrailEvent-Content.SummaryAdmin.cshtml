@@ -1,0 +1,34 @@
+﻿@using Orchard.AuditTrail.Helpers
+@using Orchard.AuditTrail.Services.Models
+@using Orchard.ContentManagement
+@{
+    var descriptor = (AuditTrailEventDescriptor)Model.Descriptor;
+    var eventData = (IDictionary<string, object>) Model.EventData;
+    var eventPastTense = descriptor.Name.Text.ToLower();
+    var contentItemId = (int)Model.ContentItemId;
+    var contentItem = (ContentItem) Model.ContentItem;
+    var eventVersionNumber = eventData.Get<int>("VersionNumber");
+    var isPublishedEvent = eventData.Get<bool>("Published");
+    var itemDisplayText = contentItem != null ? Html.ItemDisplayText(contentItem) : default(IHtmlString);
+    var title = itemDisplayText != null ? itemDisplayText.ToString() : eventData.Get<string>("Title") ?? "[untitled]";
+}
+<section class="audittrail-content-eventsummary">
+    @if (contentItem != null) {
+        var contentType = contentItem.ContentType;
+        var isLatest = contentItem.VersionRecord.Number == eventVersionNumber;
+        var isRemoved = !contentItem.VersionRecord.Latest && !contentItem.VersionRecord.Published;
+        if (isPublishedEvent || isLatest) {
+            @T("{0} of the {1} {2} was {3}.", Html.ActionLink(T("Version {0}", eventVersionNumber).Text, "Detail", "Content", new { area = "Orchard.AuditTrail", id = contentItemId, version = eventVersionNumber }, null), contentType.ToLower(), isRemoved ? Html.Raw("<strong>" + title + "</strong>") : Html.ItemEditLink(title, contentItemId), eventPastTense)
+        }
+        else if (isRemoved) {
+            @T("The {0} <strong>{1}</strong> was {2}.", contentType.ToLower(), title, eventPastTense)
+        }
+        else {
+            @T("The {0} {1} was {2}.", contentType.ToLower(), Html.ItemEditLink(title, contentItemId), eventPastTense)
+
+        }
+    }
+    else {
+        @T("<strong>Version {0}</strong> of content item <strong>{1}</strong> was {2}.", eventVersionNumber, title, eventPastTense)
+    }
+</section>

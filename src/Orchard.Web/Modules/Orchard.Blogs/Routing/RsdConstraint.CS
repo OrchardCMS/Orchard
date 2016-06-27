@@ -25,18 +25,19 @@ namespace Orchard.Blogs.Routing {
                     return false;
                 }
 
-                IDictionary<string, string> routeValues;
-                if (!_aliasHolder.GetMap("Orchard.Blogs").TryGetAlias(path, out routeValues)) {
+                AliasInfo aliasInfo;
+                if (!_aliasHolder.GetMap("Orchard.Blogs").TryGetAlias(path, out aliasInfo))
+                {
                     return false;
                 }
 
                 var isBlog =
                     //routeValues.ContainsKey("area") &&
                     //routeValues["area"] == "Orchard.Blogs" &&
-                    routeValues.ContainsKey("controller") &&
-                    routeValues["controller"] == "Blog" &&
-                    routeValues.ContainsKey("action") &&
-                    routeValues["action"] == "Item"
+                    aliasInfo.RouteValues.ContainsKey("controller") &&
+                    aliasInfo.RouteValues["controller"] == "Blog" &&
+                    aliasInfo.RouteValues.ContainsKey("action") &&
+                    aliasInfo.RouteValues["action"] == "Item"
                     ;
 
                 return isBlog;

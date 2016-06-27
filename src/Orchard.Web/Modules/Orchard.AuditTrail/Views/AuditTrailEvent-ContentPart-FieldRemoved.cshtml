@@ -1,0 +1,9 @@
+﻿@using Orchard.AuditTrail.Helpers
+@{
+    var eventData = (IDictionary<string, object>) Model.EventData;
+    var contentPartName = eventData.Get<string>("ContentPartName");
+    var contentFieldName = eventData.Get<string>("ContentFieldName");
+}
+<section class="audittrail-contentpart-eventsummary">
+    @T("The content field <strong>{0}</strong> was removed from the content part {1}.", contentFieldName, Html.ContentPartEditLink(contentPartName))
+</section>

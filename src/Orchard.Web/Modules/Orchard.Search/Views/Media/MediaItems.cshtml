@@ -17,7 +17,8 @@
             mimeTypeClass = x.MediaPart.MimeType.HtmlClassify(), 
             thumbnail = Display(x.Shape).ToString(),
             editLink = Url.ItemEditUrl(x.MediaPart)
-        }).ToArray()
+        }).ToArray(),
+        folderPath = Model.FolderPath
     }))
 }
 

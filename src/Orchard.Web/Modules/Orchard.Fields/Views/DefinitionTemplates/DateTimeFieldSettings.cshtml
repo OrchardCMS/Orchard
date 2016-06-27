@@ -27,3 +27,12 @@
         @Html.ValidationMessageFor(m => m.Hint)
     </div>
 </fieldset>
+
+<fieldset>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.Editor)">@T("Default value")</label>
+        @Html.EditorFor(m => m.Editor)
+        <span class="hint">@T("Pick a default date to be proposed when creating a content item. (optional)")</span>
+        @Html.ValidationMessageFor(m => m.Editor)
+    </div>
+</fieldset>

@@ -30,7 +30,10 @@ namespace Orchard.ContentManagement.Handlers {
             return _repository.Get(versionRecord.ContentItemRecord.Id);
         }
 
-        protected virtual TRecord CreateRecordCore(ContentItemVersionRecord versionRecord, TRecord record) {
+        protected virtual TRecord CreateRecordCore(ContentItemVersionRecord versionRecord, TRecord record = null) {
+            if (record == null) {
+                record = new TRecord();
+            }
             record.ContentItemRecord = versionRecord.ContentItemRecord;
             _repository.Create(record);
             return record;
@@ -51,11 +54,15 @@ namespace Orchard.ContentManagement.Handlers {
 
         protected override void Loading(LoadContentContext context, ContentPart<TRecord> instance) {
             var versionRecord = context.ContentItemVersionRecord;
-            instance._record.Loader(prior => GetRecordCore(versionRecord) ?? CreateRecordCore(versionRecord, prior));
+            instance._record.Loader(() => GetRecordCore(versionRecord) ?? CreateRecordCore(versionRecord));
         }
 
         protected override void Versioning(VersionContentContext context, ContentPart<TRecord> existing, ContentPart<TRecord> building) {
             building.Record = existing.Record;
+        }
+
+        protected override void Destroying(DestroyContentContext context, ContentPart<TRecord> instance) {
+            _repository.Delete(instance.Record);
         }
     }
 }

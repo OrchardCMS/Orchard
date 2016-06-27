@@ -1,0 +1,12 @@
+﻿@using Orchard.Search.ViewModels
+@model AdminSearchSettingsViewModel
+@{
+    var indexOptions = Model.AvailableIndexes.Select(x => new SelectListItem { Text = x, Value = x, Selected = x == Model.SelectedIndex });
+}
+<fieldset>
+    <div class="form-group">
+        @Html.LabelFor(m => m.SelectedIndex, T("Admin Index"))
+        @Html.DropDownListFor(m => m.SelectedIndex, indexOptions)
+        @Html.Hint(T("The index to search when used in the dashboard."))
+    </div>
+</fieldset>

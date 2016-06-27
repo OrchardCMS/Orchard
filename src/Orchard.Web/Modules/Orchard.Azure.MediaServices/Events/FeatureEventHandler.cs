@@ -1,4 +1,5 @@
-﻿using Orchard.Azure.MediaServices.Models;
+﻿using System.Linq;
+using Orchard.Azure.MediaServices.Models;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Environment;
@@ -53,7 +54,7 @@ namespace Orchard.Azure.MediaServices.Events {
                 "H264 Adaptive Bitrate MP4 Set SD 4x3 for iOS Cellular Only",
                 "H264 Smooth Streaming 720p Xbox Live ADK",
                 "H264 Smooth Streaming Windows Phone 7 Series"
-            };
+            }.Select(x => new EncodingPreset() { Name = x });
             settings.SubtitleLanguages = new[] {
                 "da-DK",
                 "nl-BE",

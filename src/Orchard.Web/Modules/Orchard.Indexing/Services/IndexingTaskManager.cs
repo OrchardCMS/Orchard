@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.Data;
 using Orchard.Indexing.Models;
@@ -9,7 +8,6 @@ using Orchard.Tasks.Indexing;
 using Orchard.Services;
 
 namespace Orchard.Indexing.Services {
-    [UsedImplicitly]
     public class IndexingTaskManager : IIndexingTaskManager {
         private readonly IRepository<IndexingTaskRecord> _repository;
         private readonly IClock _clock;
@@ -26,11 +24,17 @@ namespace Orchard.Indexing.Services {
         public ILogger Logger { get; set; }
 
         private void CreateTask(ContentItem contentItem, int action) {
-            if ( contentItem == null ) {
+            if (contentItem == null) {
                 throw new ArgumentNullException("contentItem");
             }
 
-            foreach (var task in _repository.Table.Where(task => task.ContentItemRecord == contentItem.Record)) {
+            if (contentItem.Record == null) {
+                // ignore that case, when Update is called on a content item which has not be "created" yet
+
+                return;
+            }
+
+            foreach (var task in _repository.Fetch(task => task.ContentItemRecord == contentItem.Record)) {
                 _repository.Delete(task);
             }
 

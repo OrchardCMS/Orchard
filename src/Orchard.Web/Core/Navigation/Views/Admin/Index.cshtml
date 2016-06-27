@@ -9,6 +9,8 @@
     Script.Require("jQueryUI_Sortable").AtFoot();
     Script.Include("jquery.mjs.nestedSortable.js").AtFoot();
     Script.Include("navigation-admin.js").AtFoot();
+
+    var hasPermission = Authorizer.Authorize(Orchard.Core.Navigation.Permissions.ManageMenus);
 }
 
 <div id="save-message" class="message message-Warning">@T("You need to hit \"Save All\" in order to save your changes.")</div>
@@ -20,17 +22,20 @@
                 <label for="menuId">@T("Current Menu:")</label>
                 <select id="menuId" name="menuId">
                     @foreach (var menu in Model.Menus) {
-                        @Html.SelectOption(Model.CurrentMenu.Id, menu.Id, Convert.ToString(Html.ItemDisplayText(menu)))
+                        @Html.SelectOption(Model.CurrentMenu.Id, menu.Id, Convert.ToString(Html.ItemDisplayText(menu, false)))
                     }
                 </select>
-                <button type="submit" class="apply-bulk-actions-auto">@T("Show")</button>
-                @Html.ActionLink(T("Edit").Text, "Edit", "Admin", new { area = "Contents", id = Model.CurrentMenu.Id, returnUrl = Url.Action("Index", "Admin", new { area = "Navigation", menuId = Model.CurrentMenu.Id }) }, new { @class = "button" })
+                @if (hasPermission) { 
+                    @Html.ActionLink(T("Edit").Text, "Edit", "Admin", new { area = "Contents", id = Model.CurrentMenu.Id, returnUrl = Url.Action("Index", "Admin", new { area = "Navigation", menuId = Model.CurrentMenu.Id }) }, new { @class = "button" })
+                }
             </fieldset>
         }
     }
+    @if (hasPermission) { 
     <div id="navigation-menu-add">
         @Html.Link(T("Add a new menu...").Text, Url.Action("Create", "Admin", new { area = "Contents", id = "Menu", returnUrl = Request.RawUrl }))
     </div>
+    }
 </div>
 
 
@@ -54,7 +59,7 @@
             <ul class="menu-items-zone">
                 @foreach (var descriptor in Model.MenuItemDescriptors.OrderBy(x => x.DisplayName)) {
                     <li>
-                        <div class="menu-item-description"><h2>@T(descriptor.DisplayName.CamelFriendly())</h2>
+                        <div class="menu-item-description"><h2>@T(descriptor.DisplayName)</h2>
                             @if (!string.IsNullOrWhiteSpace(descriptor.Description)) {
                                 <span class="hint">@T(descriptor.Description)</span>
                             }
@@ -129,8 +134,12 @@
 
 @using (Script.Foot()) {
 <script type="text/javascript">
-//<![CDATA[
-    var leaveConfirmation = '@T("Some items where not saved.")';
-//]]>
+    //<![CDATA[
+    var leaveConfirmation = '@HttpUtility.JavaScriptStringEncode(T("Some items where not saved.").Text)';
+
+    $('#menuId').change(function () {
+        $(this).parents('form').submit();
+    });
+    //]]>
 </script>
 }

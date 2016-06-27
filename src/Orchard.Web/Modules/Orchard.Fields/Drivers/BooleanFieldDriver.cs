@@ -34,19 +34,20 @@ namespace Orchard.Fields.Drivers {
         }
 
         protected override DriverResult Editor(ContentPart part, BooleanField field, dynamic shapeHelper) {
-            // if the content item is new, assign the default value
-            if(!part.HasDraft() && !part.HasPublished()) {
-                var settings = field.PartFieldDefinition.Settings.GetModel<BooleanFieldSettings>();
-                field.Value = settings.DefaultValue;
-            }
-
             return ContentShape("Fields_Boolean_Edit", GetDifferentiator(field, part),
-                () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: field, Prefix: GetPrefix(field, part)));
+                () => {
+                    if (part.IsNew()) {
+                        var settings = field.PartFieldDefinition.Settings.GetModel<BooleanFieldSettings>();
+                        field.Value = settings.DefaultValue;
+                    }
+                    return shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: field, Prefix: GetPrefix(field, part));
+                });
         }
 
         protected override DriverResult Editor(ContentPart part, BooleanField field, IUpdateModel updater, dynamic shapeHelper) {
             if (updater.TryUpdateModel(field, GetPrefix(field, part), null, null)) {
                 var settings = field.PartFieldDefinition.Settings.GetModel<BooleanFieldSettings>();
+
                 if (!settings.Optional && !field.Value.HasValue) {
                     updater.AddModelError(field.Name, T("The field {0} is mandatory.", T(field.DisplayName)));
                 }
@@ -61,7 +62,8 @@ namespace Orchard.Fields.Drivers {
         }
 
         protected override void Exporting(ContentPart part, BooleanField field, ExportContentContext context) {
-            context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Value", field.Value);
+			if (field.Value.HasValue)
+				context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Value", field.Value);
         }
 
         protected override void Describe(DescribeMembersContext context) {

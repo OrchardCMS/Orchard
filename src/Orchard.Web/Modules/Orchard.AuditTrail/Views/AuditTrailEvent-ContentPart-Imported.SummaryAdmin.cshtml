@@ -1,0 +1,10 @@
+﻿@using Orchard.AuditTrail.Helpers
+@using Orchard.AuditTrail.Services.Models
+@{
+    var eventData = (IDictionary<string, object>) Model.EventData;
+    var contentPartName = eventData.Get<string>("ContentPartName");
+    var diffNodes = (IList<DiffNode>)Model.DiffNodes;
+}
+<section class="audittrail-contentpart-eventsummary">
+    @T(diffNodes != null ? "The content part {0} was altered during an import." : "The content part {0} was added during an import.", Html.ContentPartEditLink(contentPartName))
+</section>

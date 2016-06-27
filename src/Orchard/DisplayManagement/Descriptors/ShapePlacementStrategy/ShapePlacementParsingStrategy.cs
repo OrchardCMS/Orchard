@@ -110,10 +110,18 @@ namespace Orchard.DisplayManagement.Descriptors.ShapePlacementStrategy {
         private void GetShapeType(PlacementShapeLocation shapeLocation, out string shapeType, out string differentiator) {
             differentiator = "";
             shapeType = shapeLocation.ShapeType;
+            var separatorLengh = 2;
+            var separatorIndex = shapeType.LastIndexOf("__");
+
             var dashIndex = shapeType.LastIndexOf('-');
-            if (dashIndex > 0 && dashIndex < shapeType.Length - 1) {
-                differentiator = shapeType.Substring(dashIndex + 1);
-                shapeType = shapeType.Substring(0, dashIndex);
+            if (dashIndex > separatorIndex) {
+                separatorIndex = dashIndex;
+                separatorLengh = 1;
+            }
+
+            if (separatorIndex > 0 && separatorIndex < shapeType.Length - separatorLengh) {
+                differentiator = shapeType.Substring(separatorIndex + separatorLengh);
+                shapeType = shapeType.Substring(0, separatorIndex);
             }
         }
 

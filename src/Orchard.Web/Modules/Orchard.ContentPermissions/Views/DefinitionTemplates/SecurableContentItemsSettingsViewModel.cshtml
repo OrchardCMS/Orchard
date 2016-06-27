@@ -1,0 +1,8 @@
+﻿@model Orchard.ContentPermissions.ViewModels.SecurableContentItemsSettingsViewModel
+
+<fieldset>
+    @Html.EditorFor(m => m.SecurableContentItems)
+    <label for="@Html.FieldIdFor(m => m.SecurableContentItems)" class="forcheckbox">@T("Securable Content Items")</label>
+    @Html.ValidationMessageFor(m => m.SecurableContentItems)
+    <span class="hint">@T("Determines if an instance of this content type can have custom permissions.")</span>
+</fieldset>

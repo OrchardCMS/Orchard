@@ -21,19 +21,19 @@ namespace Orchard.OutputCache.Services {
         void RemoveByTag(string tag);
 
         /// <summary>
-        /// Returns the key representing a specific route in the db
+        /// Returns the key representing a specific route in the DB.
         /// </summary>
         string GetRouteDescriptorKey(HttpContextBase httpContext, RouteBase route);
 
         /// <summary>
-        /// Saves a set of <see cref="RouteConfiguration"/> to the database
+        /// Saves a set of <see cref="CacheRouteConfig"/> to the database.
         /// </summary>
-        /// <param name="routeConfigurations"></param>
-        void SaveCacheConfigurations(IEnumerable<RouteConfiguration> routeConfigurations);
+        /// <param name="routeConfigs"></param>
+        void SaveRouteConfigs(IEnumerable<CacheRouteConfig> routeConfigs);
 
         /// <summary>
-        /// Returns all defined configurations for specific routes
+        /// Returns all defined configurations for specific routes.
         /// </summary>
-        IEnumerable<RouteConfiguration> GetRouteConfigurations();
+        IEnumerable<CacheRouteConfig> GetRouteConfigs();
     }
 }

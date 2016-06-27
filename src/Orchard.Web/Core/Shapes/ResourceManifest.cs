@@ -5,13 +5,17 @@ namespace Orchard.Core.Shapes {
         public void BuildManifests(ResourceManifestBuilder builder) {
             var manifest = builder.Add();
             manifest.DefineScript("ShapesBase").SetUrl("base.js").SetDependencies("jQuery");
-            manifest.DefineStyle("Shapes").SetUrl("site.css"); // todo: missing
+            manifest.DefineStyle("Shapes").SetUrl("site.css");
             manifest.DefineStyle("ShapesSpecial").SetUrl("special.css");
+
+            manifest.DefineScript("Html5Shiv").SetUrl("html5.js");
 
             manifest.DefineScript("Switchable").SetUrl("jquery.switchable.js")
                 .SetDependencies("jQuery")
                 .SetDependencies("ShapesBase");
             manifest.DefineStyle("Switchable").SetUrl("jquery.switchable.css");
+
+            manifest.DefineScript("LocalNavigation").SetUrl("admin-localnavigation.js").SetDependencies("jQuery");
         }
     }
 }

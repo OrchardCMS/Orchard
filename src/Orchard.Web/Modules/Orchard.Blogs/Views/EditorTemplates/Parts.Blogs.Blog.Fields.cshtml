@@ -18,3 +18,9 @@
     @Html.LabelFor(m => m.EnableCommentsFeed, T("Render a comments rss feed").Text, new { @class = "forcheckbox" })
     <span class="hint">@T("Enable to render the comments rss feed.")</span>
 </fieldset>
+
+<fieldset>
+    @Html.LabelFor(m => m.PostsPerPage, T("Posts per page"))
+    @Html.TextBoxFor(m => m.PostsPerPage, new { @class = "text small" })
+    <span class="hint">@T("The number of items to display on the main blog page.")</span>
+</fieldset>

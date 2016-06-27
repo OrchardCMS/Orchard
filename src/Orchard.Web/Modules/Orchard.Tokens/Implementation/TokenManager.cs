@@ -153,6 +153,27 @@ namespace Orchard.Tokens.Implementation {
                     }
                     return this;
                 }
+
+                public override EvaluateFor<TData> Chain(Func<string, Tuple<string, string>> filter, string chainTarget, Func<string, TData, object> chainValue) {
+                    var subTokens = _context.Tokens
+                        .Where(kv => kv.Key.Contains('.'))
+                        .Select(kv => {
+                            var filterResult = filter(kv.Key);
+                            return filterResult != null ? new Tuple<string, string, string>(filterResult.Item1, filterResult.Item2, kv.Value) : null;
+                        })
+                        .Where(st => st != null)
+                        .ToList();
+                    if (!subTokens.Any()) {
+                        return this;
+                    }
+                    foreach(var chainGroup in subTokens.GroupBy(st => st.Item1)) {
+                        var subValues = _context._manager.Evaluate(chainTarget, chainGroup.ToDictionary(cg => cg.Item2, cg => cg.Item3), new Dictionary<string, object> { { chainTarget, chainValue(chainGroup.Key, _data) } });
+                        foreach (var subValue in subValues) {
+                            _context.Values[subValue.Key] = subValue.Value;
+                        }
+                    }
+                    return this;
+                }
             }
 
             private class EvaluateForSilent<TData> : EvaluateFor<TData> {
@@ -173,6 +194,10 @@ namespace Orchard.Tokens.Implementation {
                 }
 
                 public override EvaluateFor<TData> Chain(string token, string chainTarget, Func<TData, object> chainValue) {
+                    return this;
+                }
+
+                public override EvaluateFor<TData> Chain(Func<string, Tuple<string, string>> filter, string chainTarget, Func<string, TData, object> chainValue) {
                     return this;
                 }
             }

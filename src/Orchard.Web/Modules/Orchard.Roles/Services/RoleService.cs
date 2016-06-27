@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using Orchard.Caching;
 using Orchard.Data;
 using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.Roles.Events;
 using Orchard.Roles.Models;
 using Orchard.Security.Permissions;
 
 namespace Orchard.Roles.Services {
-    [UsedImplicitly]
     public class RoleService : IRoleService {
         private const string SignalName = "Orchard.Roles.Services.RoleService";
 
@@ -20,6 +19,7 @@ namespace Orchard.Roles.Services {
         private readonly IEnumerable<IPermissionProvider> _permissionProviders;
         private readonly ICacheManager _cacheManager;
         private readonly ISignals _signals;
+        private readonly IRoleEventHandler _roleEventHandlers;
 
         public RoleService(
             IRepository<RoleRecord> roleRepository,
@@ -27,14 +27,16 @@ namespace Orchard.Roles.Services {
             IRepository<UserRolesPartRecord> userRolesRepository,
             IEnumerable<IPermissionProvider> permissionProviders,
             ICacheManager cacheManager,
-            ISignals signals
-            ) {
+            ISignals signals, 
+            IRoleEventHandler roleEventHandlers) {
+
             _roleRepository = roleRepository;
             _permissionRepository = permissionRepository;
             _userRolesRepository = userRolesRepository;
             _permissionProviders = permissionProviders;
             _cacheManager = cacheManager;
             _signals = signals;
+            _roleEventHandlers = roleEventHandlers;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
@@ -59,7 +61,9 @@ namespace Orchard.Roles.Services {
             if (GetRoleByName(roleName) != null)
                 return;
 
-            _roleRepository.Create(new RoleRecord { Name = roleName });
+            var roleRecord = new RoleRecord {Name = roleName};
+            _roleRepository.Create(roleRecord);
+            _roleEventHandlers.Created(new RoleCreatedContext { Role = roleRecord });
             TriggerSignal();
         }
 
@@ -74,13 +78,22 @@ namespace Orchard.Roles.Services {
             RoleRecord roleRecord = GetRoleByName(roleName);
             PermissionRecord permissionRecord = _permissionRepository.Get(x => x.Name == permissionName);
             roleRecord.RolesPermissions.Add(new RolesPermissionsRecord { Permission = permissionRecord, Role = roleRecord });
+            _roleEventHandlers.PermissionAdded(new PermissionAddedContext { Role = roleRecord, Permission = permissionRecord });
             TriggerSignal();
+            
         }
 
         public void UpdateRole(int id, string roleName, IEnumerable<string> rolePermissions) {
-            RoleRecord roleRecord = GetRole(id);
+            var roleRecord = GetRole(id);
+            var currentRoleName = roleRecord.Name;
+            var currentPermissions = roleRecord.RolesPermissions.ToDictionary(x => x.Permission.Name);
             roleRecord.Name = roleName;
             roleRecord.RolesPermissions.Clear();
+
+            if (!String.Equals(currentRoleName, roleName)) {
+                _roleEventHandlers.Renamed(new RoleRenamedContext {Role = roleRecord, NewRoleName = roleName, PreviousRoleName = currentRoleName});
+            }
+
             foreach (var rolePermission in rolePermissions) {
                 string permission = rolePermission;
                 if (_permissionRepository.Get(x => x.Name == permission) == null) {
@@ -92,7 +105,17 @@ namespace Orchard.Roles.Services {
                 }
                 PermissionRecord permissionRecord = _permissionRepository.Get(x => x.Name == permission);
                 roleRecord.RolesPermissions.Add(new RolesPermissionsRecord { Permission = permissionRecord, Role = roleRecord });
+
+                if(!currentPermissions.ContainsKey(permission))
+                    _roleEventHandlers.PermissionAdded(new PermissionAddedContext { Role = roleRecord, Permission = permissionRecord });
+                else {
+                    currentPermissions.Remove(permission);
+                }
             }
+
+            foreach(var permission in currentPermissions.Values)
+                _roleEventHandlers.PermissionRemoved(new PermissionRemovedContext { Role = roleRecord, Permission = permission.Permission });
+
             TriggerSignal();
         }
 
@@ -125,7 +148,9 @@ namespace Orchard.Roles.Services {
                 _userRolesRepository.Delete(userRoleRecord);
             }
 
-            _roleRepository.Delete(GetRole(id));
+            var roleRecord = GetRole(id);
+            _roleRepository.Delete(roleRecord);
+            _roleEventHandlers.Removed(new RoleRemovedContext { Role = roleRecord});
             TriggerSignal();
         }
 

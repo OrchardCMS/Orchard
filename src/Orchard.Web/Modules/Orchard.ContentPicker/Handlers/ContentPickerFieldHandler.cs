@@ -30,7 +30,7 @@ namespace Orchard.ContentPicker.Handlers {
 
             foreach (var field in fields) {
                 var localField = field;
-                field._contentItems.Loader(x => _contentManager.GetMany<ContentItem>(localField.Ids, VersionOptions.Published, QueryHints.Empty));
+                field._contentItems.Loader(() => _contentManager.GetMany<ContentItem>(localField.Ids, VersionOptions.Published, QueryHints.Empty));
             }
         }
     }

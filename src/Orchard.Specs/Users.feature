@@ -256,11 +256,12 @@ Scenario: I should be able to filter users by status
         | Options.Search | user1 |
         And I hit "Filter"
     Then I should see "<a[^>]*>user1</a>"
-    When I follow "Disable"
+    When I hit "Disable"
         And I am redirected
     Then I should see "User user1 disabled"
     When I fill in
         | name | value |
+        | Options.Search | |
         | Options.Filter | Pending |
         And I hit "Filter"
     Then I should see "<a[^>]*>user1</a>"
@@ -268,6 +269,7 @@ Scenario: I should be able to filter users by status
         And I should not see "<a[^>]*>admin</a>"
     When I fill in
         | name | value |
+        | Options.Search | |
         | Options.Filter | EmailPending |
         And I hit "Filter"
     Then I should not see "<a[^>]*>user1</a>"
@@ -275,6 +277,7 @@ Scenario: I should be able to filter users by status
         And I should not see "<a[^>]*>admin</a>"
     When I fill in
         | name | value |
+        | Options.Search | |
         | Options.Filter | Approved |
         And I hit "Filter"
     Then I should not see "<a[^>]*>user1</a>"
@@ -282,6 +285,7 @@ Scenario: I should be able to filter users by status
         And I should see "<a[^>]*>admin</a>"
     When I fill in
         | name | value |
+        | Options.Search | |
         | Options.Filter | All |
         And I hit "Filter"
     Then I should see "<a[^>]*>user1</a>"

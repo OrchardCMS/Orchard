@@ -1,0 +1,9 @@
+﻿<div id="layout-editor-{{$id}}" class="layout-editor" ng-class="{'layout-editor-dragging': element.isDragging}">
+    <div class="layout-canvas-wrapper">
+        <div class="layout-toolbar-container"></div>
+        <div ng-class="getClasses(element.canvas)" ng-mouseenter="element.canvas.setIsActive(true)" ng-mouseleave="element.canvas.setIsActive(false)" ng-click="click(element.canvas, $event)" tabindex="{{$id}}">
+            <orc-layout-canvas element="element.canvas" />
+        </div>
+    </div>
+    <orc-layout-toolbox />
+</div>

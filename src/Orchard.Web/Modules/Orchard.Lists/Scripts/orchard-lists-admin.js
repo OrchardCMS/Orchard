@@ -71,16 +71,6 @@
     };
 
     var bindActions = function () {
-        $("#layout-content").on("change", "#publishActions", function () {
-            var value = $(this).val();
-            var target = $("#TargetContainerId");
-            if (value === "MoveToList") {
-                target.css("display", "inline");
-            } else {
-                target.css("display", "none");
-            }
-        });
-        
         $("#layout-content").on("change", "#listOperations", function () {
             var value = $(this).val();
             var sortBy = $("#SortBy");
@@ -101,8 +91,15 @@
             $("form:first").trigger("orchard-admin-contentpicker-open", {
                 types: $("#listManagement").data("itemtypes"),
                 callback: function(data) {
-                    var id = parseInt(data.id);
-                    insertItem(id);
+                    if (Array.isArray && Array.isArray(data)) {
+                        data.forEach(function (item) {
+                            var id = parseInt(item.id);
+                            insertItem(id);
+                        });
+                    } else {
+                        var id = parseInt(data.id);
+                        insertItem(id);
+                    }
                 },
                 baseUrl: $("#listManagement").data("baseurl")
             });

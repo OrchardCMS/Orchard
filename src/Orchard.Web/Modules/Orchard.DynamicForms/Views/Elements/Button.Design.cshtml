@@ -1,0 +1,11 @@
+﻿@using Orchard.DynamicForms.Elements
+@using Orchard.Layouts.Helpers
+@{
+    var element = (Button)Model.Element;
+    var tagBuilder = TagBuilderExtensions.CreateElementTagBuilder(Model, "button");
+
+    tagBuilder.Attributes["type"] = "submit";
+    tagBuilder.Attributes["name"] = element.Name;
+    tagBuilder.SetInnerText(element.Text);
+}
+@tagBuilder.ToHtmlString()

@@ -1,0 +1,64 @@
+﻿@using Orchard.DynamicForms.ViewModels
+@using Orchard.Utility.Extensions
+@model FormBindingSettings
+@{
+    Style.Require("DynamicForms.FormElements");
+    var partIndex = 0;
+}
+<fieldset class="bindings">
+    @foreach (var partDescriptor in Model.AvailableBindings.Where(x => x.BindingContexts.Any() || x.FieldBindings.Any())) {
+        var partBindingIndex = 0;
+        var fieldIndex = 0;
+        var partState = Model.Parts.ElementAtOrDefault(partIndex) ?? new PartBindingSettings();
+
+        <input type="hidden" name="Parts[@partIndex].Name" value="@partDescriptor.Part.PartDefinition.Name" />
+        <table class="items">
+            <thead>
+                <tr>
+                    <th class="property-name">@partDescriptor.Part.PartDefinition.Name</th>
+                    <th class="property-type">&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (partDescriptor.BindingContexts.Any()) {
+                    foreach (var partBinding in partDescriptor.BindingContexts.SelectMany(x => x.Bindings)) {
+                        var partBindingId = String.Format("binding-{0}-{1}", partDescriptor.Part.PartDefinition.Name.HtmlClassify(), partBinding.Name.HtmlClassify());
+                        var partBindingState = partState.Bindings.FirstOrDefault(f => f.Name == partBinding.Name) ?? new BindingSettings();
+                         <tr>
+                             <td colspan="2">
+                                 <input type="hidden" name="Parts[@partIndex].Bindings[@partBindingIndex].Name" value="@partBinding.Name" />
+                                 <input type="checkbox" id="@partBindingId" name="Parts[@partIndex].Bindings[@partBindingIndex].Enabled" value="@Boolean.TrueString" @if (partBindingState.Enabled) {<text> checked="checked" </text>} />
+                                 <label class="forcheckbox" for="@partBindingId">@partBinding.Name</label>
+                             </td>
+                         </tr>
+                         partBindingIndex++;
+                     }
+                }
+                @foreach (var fieldDescriptor in partDescriptor.FieldBindings) {
+                    var fieldBindingIndex = 0;
+                    var fieldState = partState.Fields.FirstOrDefault(f=>f.Name == fieldDescriptor.Field.Name) ?? new FieldBindingSettings();                    
+                    if (fieldDescriptor.BindingContexts.Any()) {
+                        foreach (var fieldBinding in fieldDescriptor.BindingContexts.SelectMany(x => x.Bindings)) {
+                            var fieldBindingId = String.Format("binding-{0}-{1}-{2}", partDescriptor.Part.PartDefinition.Name.HtmlClassify(), fieldDescriptor.Field.Name.HtmlClassify(), fieldBinding.Name.HtmlClassify());
+                            var fieldBindingstate = fieldState.Bindings.ElementAtOrDefault(fieldBindingIndex) ?? new BindingSettings();
+                            <tr>
+                                <td class="property-name">
+                                    <input type="hidden" name="Parts[@partIndex].Fields[@fieldIndex].Name" value="@fieldDescriptor.Field.Name" />
+                                    <input type="hidden" name="Parts[@partIndex].Fields[@fieldIndex].Bindings[@fieldBindingIndex].Name" value="@fieldBinding.Name" />
+                                    <input type="checkbox" id="@fieldBindingId" name="Parts[@partIndex].Fields[@fieldIndex].Bindings[@fieldBindingIndex].Enabled" value="@Boolean.TrueString" @if (fieldBindingstate.Enabled) { <text> checked="checked" </text>  } />
+                                    <label class="forcheckbox" for="@fieldBindingId">@String.Format("{0}.{1}", fieldDescriptor.Field.Name, fieldBinding.Name)</label>
+                                </td>
+                                <td class="property-type">
+                                    @fieldDescriptor.Field.FieldDefinition.Name
+                                </td>
+                            </tr>
+                            fieldBindingIndex++;
+                        }
+                        fieldIndex++;
+                    }
+                }
+            </tbody>
+        </table>
+        partIndex++;
+    }
+</fieldset>

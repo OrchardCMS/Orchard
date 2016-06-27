@@ -2,6 +2,7 @@
 using Orchard.ContentManagement;
 using Orchard.Core.Settings.Models;
 using Orchard.Mvc;
+using Orchard.Mvc.Extensions;
 using Orchard.Settings;
 using Orchard.Utility.Extensions;
 
@@ -38,7 +39,7 @@ namespace Orchard.Core.Settings.Commands {
 
             // Retrieve request URL if BaseUrl not provided as a switch value
             if (string.IsNullOrEmpty(BaseUrl)) {
-                if (_httpContextAccessor.Current() == null) {
+                if (_httpContextAccessor.Current().IsBackgroundContext()) {
                     Context.Output.WriteLine(T("No HTTP request available to determine the base url of the site"));
                     return;
                 }

@@ -1,0 +1,16 @@
+﻿@using Orchard.Layouts.Framework.Elements
+@using Orchard.Utility.Extensions
+@{
+    var categories = ((IEnumerable<CategoryDescriptor>)Model.Categories).Where(x => x.Elements.Any()).ToArray();
+    var first = categories.First();
+    var last = categories.Last();
+}
+<ul class="element-categories localmenu group">
+    @foreach (var category in categories) {
+        var isFirst = category == first;
+        var isLast = category == last;
+        var cssClass = isFirst ? "first" : isLast ? "last" : "middle";
+
+        <li class="@cssClass"><a class="category" href="#cat-@category.Name.HtmlClassify()">@category.DisplayName</a></li>
+    }
+</ul>

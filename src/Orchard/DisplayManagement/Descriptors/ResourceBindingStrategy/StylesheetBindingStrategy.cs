@@ -16,7 +16,7 @@ namespace Orchard.DisplayManagement.Descriptors.ResourceBindingStrategy {
         private readonly IExtensionManager _extensionManager;
         private readonly ShellDescriptor _shellDescriptor;
         private readonly IVirtualPathProvider _virtualPathProvider;
-        private static readonly char[] unsafeCharList = "/:?#[]@!&'()*+,;=\r\n\t\f\" <>.-_".ToCharArray();
+        private static readonly char[] UnsafeCharList = "/:?#[]@!&'()*+,;=\r\n\t\f\" <>.-_".ToCharArray();
 
         protected StaticFileBindingStrategy(IExtensionManager extensionManager, ShellDescriptor shellDescriptor, IVirtualPathProvider virtualPathProvider) {
             _extensionManager = extensionManager;
@@ -32,7 +32,7 @@ namespace Orchard.DisplayManagement.Descriptors.ResourceBindingStrategy {
             if (string.IsNullOrWhiteSpace(name))
                 return String.Empty;
 
-            return name.Strip(unsafeCharList).ToLowerInvariant();
+            return name.Strip(UnsafeCharList).ToLowerInvariant();
         }
 
         public static string GetAlternateShapeNameFromFileName(string fileName) {
@@ -40,7 +40,12 @@ namespace Orchard.DisplayManagement.Descriptors.ResourceBindingStrategy {
                 throw new ArgumentNullException("fileName");
             }
             string shapeName;
-            if (Uri.IsWellFormedUriString(fileName, UriKind.Absolute)) {
+            if (Uri.IsWellFormedUriString(fileName, UriKind.Absolute)
+                || (fileName.StartsWith("//", StringComparison.InvariantCulture)
+                && Uri.IsWellFormedUriString("http:" + fileName, UriKind.Absolute))) {
+                if (fileName.StartsWith("//", StringComparison.InvariantCulture)) {
+                    fileName = "http:" + fileName;
+                }
                 var uri = new Uri(fileName);
                 shapeName = uri.Authority + "$" + uri.AbsolutePath + "$" + uri.Query;
             }

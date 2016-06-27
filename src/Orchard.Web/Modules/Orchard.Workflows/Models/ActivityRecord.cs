@@ -38,5 +38,14 @@ namespace Orchard.Workflows.Models {
         /// containing this activity.
         /// </summary>
         public virtual WorkflowDefinitionRecord WorkflowDefinitionRecord { get; set; }
+
+
+        /// <summary>
+        /// Gets the Id which can be used on the client. 
+        /// </summary>
+        /// <returns>An unique Id to represent this activity on the client.</returns>
+        public string GetClientId() {
+            return Name + "_" + Id;
+        }
     }
 }

@@ -4,6 +4,7 @@ using Orchard.Tags.Models;
 namespace Orchard.Tags.ViewModels {
     public class TagsAdminIndexViewModel {
         public IList<TagEntry> Tags { get; set; }
+        public dynamic Pager { get; set; }
         public TagAdminIndexBulkAction BulkAction { get; set; }
     }
 

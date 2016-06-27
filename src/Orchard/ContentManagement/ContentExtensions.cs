@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using NHibernate.Criterion;
 using Orchard.ContentManagement.Records;
 
 namespace Orchard.ContentManagement {
@@ -234,6 +233,9 @@ namespace Orchard.ContentManagement {
         }
         public static bool HasPublished(this IContent content) {
             return content.IsPublished() || content.ContentItem.ContentManager.Get(content.ContentItem.Id, VersionOptions.Published) != null;
+        }
+        public static bool IsNew(this IContent content) {
+            return content.ContentItem.VersionRecord == null;
         }
     }
 }

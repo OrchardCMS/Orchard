@@ -25,7 +25,7 @@ namespace Orchard.Users.Controllers {
     public class AdminController : Controller, IUpdateModel {
         private readonly IMembershipService _membershipService;
         private readonly IUserService _userService;
-        private readonly IEnumerable<IUserEventHandler> _userEventHandlers;
+        private readonly IUserEventHandler _userEventHandlers;
         private readonly ISiteService _siteService;
 
         public AdminController(
@@ -33,7 +33,7 @@ namespace Orchard.Users.Controllers {
             IMembershipService membershipService,
             IUserService userService,
             IShapeFactory shapeFactory,
-            IEnumerable<IUserEventHandler> userEventHandlers,
+            IUserEventHandler userEventHandlers,
             ISiteService siteService) {
             Services = services;
             _membershipService = membershipService;
@@ -74,7 +74,7 @@ namespace Orchard.Users.Controllers {
                     break;
             }
 
-            if(!String.IsNullOrWhiteSpace(options.Search)) {
+            if(!string.IsNullOrWhiteSpace(options.Search)) {
                 users = users.Where(u => u.UserName.Contains(options.Search) || u.Email.Contains(options.Search));
             }
 
@@ -86,6 +86,12 @@ namespace Orchard.Users.Controllers {
                     break;
                 case UsersOrder.Email:
                     users = users.OrderBy(u => u.Email);
+                    break;
+                case UsersOrder.CreatedUtc:
+                    users = users.OrderBy(u => u.CreatedUtc);
+                    break;
+                case UsersOrder.LastLoginUtc:
+                    users = users.OrderBy(u => u.LastLoginUtc);
                     break;
             }
 
@@ -213,6 +219,10 @@ namespace Orchard.Users.Controllers {
                 return new HttpUnauthorizedResult();
 
             var user = Services.ContentManager.Get<UserPart>(id);
+
+            if (user == null)
+                return HttpNotFound();
+
             var editor = Shape.EditorTemplate(TemplateName: "Parts/User.Edit", Model: new UserEditViewModel {User = user}, Prefix: null);
             editor.Metadata.Position = "2";
             var model = Services.ContentManager.BuildEditor(user);
@@ -227,11 +237,15 @@ namespace Orchard.Users.Controllers {
                 return new HttpUnauthorizedResult();
 
             var user = Services.ContentManager.Get<UserPart>(id, VersionOptions.DraftRequired);
+
+            if (user == null)
+                return HttpNotFound();
+
             string previousName = user.UserName;
 
             var model = Services.ContentManager.UpdateEditor(user, this);
 
-            var editModel = new UserEditViewModel {User = user};
+            var editModel = new UserEditViewModel { User = user };
             if (TryUpdateModel(editModel)) {
                 if (!_userService.VerifyUserUnicity(id, editModel.UserName, editModel.Email)) {
                     AddModelError("NotUniqueUserName", T("User with that username and/or email already exists."));
@@ -242,7 +256,7 @@ namespace Orchard.Users.Controllers {
                 }
                 else {
                     // also update the Super user if this is the renamed account
-                    if (String.Equals(Services.WorkContext.CurrentSite.SuperUser, previousName, StringComparison.Ordinal)) {
+                    if (string.Equals(Services.WorkContext.CurrentSite.SuperUser, previousName, StringComparison.Ordinal)) {
                         _siteService.GetSiteSettings().As<SiteSettingsPart>().SuperUser = editModel.UserName;
                     }
 
@@ -273,73 +287,79 @@ namespace Orchard.Users.Controllers {
 
             var user = Services.ContentManager.Get<IUser>(id);
 
-            if (user != null) {
-                if (String.Equals(Services.WorkContext.CurrentSite.SuperUser, user.UserName, StringComparison.Ordinal)) {
-                    Services.Notifier.Error(T("The Super user can't be removed. Please disable this account or specify another Super user account."));
-                }
-                else if (String.Equals(Services.WorkContext.CurrentUser.UserName, user.UserName, StringComparison.Ordinal)) {
-                    Services.Notifier.Error(T("You can't remove your own account. Please log in with another account."));
-                }
-                else{
-                    Services.ContentManager.Remove(user.ContentItem);
-                    Services.Notifier.Information(T("User {0} deleted", user.UserName));
-                }
+            if (user == null)
+                return HttpNotFound();
+
+            if (string.Equals(Services.WorkContext.CurrentSite.SuperUser, user.UserName, StringComparison.Ordinal)) {
+                Services.Notifier.Error(T("The Super user can't be removed. Please disable this account or specify another Super user account."));
+            }
+            else if (string.Equals(Services.WorkContext.CurrentUser.UserName, user.UserName, StringComparison.Ordinal)) {
+                Services.Notifier.Error(T("You can't remove your own account. Please log in with another account."));
+            }
+            else {
+                Services.ContentManager.Remove(user.ContentItem);
+                Services.Notifier.Information(T("User {0} deleted", user.UserName));
             }
 
             return RedirectToAction("Index");
         }
 
+        [HttpPost]
         public ActionResult SendChallengeEmail(int id) {
             if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage users")))
                 return new HttpUnauthorizedResult();
 
             var user = Services.ContentManager.Get<IUser>(id);
 
-            if ( user != null ) {
-                var siteUrl = Services.WorkContext.CurrentSite.BaseUrl;
-                if (String.IsNullOrWhiteSpace(siteUrl)) {
-                    siteUrl = HttpContext.Request.ToRootUrlString();
-                }
+            if (user == null)
+                return HttpNotFound();
 
-                _userService.SendChallengeEmail(user.As<UserPart>(), nonce => Url.MakeAbsolute(Url.Action("ChallengeEmail", "Account", new { Area = "Orchard.Users", nonce = nonce }), siteUrl));
-                Services.Notifier.Information(T("Challenge email sent to {0}", user.UserName));
+            var siteUrl = Services.WorkContext.CurrentSite.BaseUrl;
+
+            if (string.IsNullOrWhiteSpace(siteUrl)) {
+                siteUrl = HttpContext.Request.ToRootUrlString();
             }
+
+            _userService.SendChallengeEmail(user.As<UserPart>(), nonce => Url.MakeAbsolute(Url.Action("ChallengeEmail", "Account", new { Area = "Orchard.Users", nonce = nonce }), siteUrl));
+            Services.Notifier.Information(T("Challenge email sent to {0}", user.UserName));
 
 
             return RedirectToAction("Index");
         }
 
+        [HttpPost]
         public ActionResult Approve(int id) {
             if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage users")))
                 return new HttpUnauthorizedResult();
 
             var user = Services.ContentManager.Get<IUser>(id);
 
-            if ( user != null ) {
-                user.As<UserPart>().RegistrationStatus = UserStatus.Approved;
-                Services.Notifier.Information(T("User {0} approved", user.UserName));
-                foreach (var userEventHandler in _userEventHandlers) {
-                    userEventHandler.Approved(user);
-                }
-            }
+            if (user == null)
+                return HttpNotFound();
+
+            user.As<UserPart>().RegistrationStatus = UserStatus.Approved;
+            Services.Notifier.Information(T("User {0} approved", user.UserName));
+            _userEventHandlers.Approved(user);
 
             return RedirectToAction("Index");
         }
 
+        [HttpPost]
         public ActionResult Moderate(int id) {
             if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage users")))
                 return new HttpUnauthorizedResult();
 
             var user = Services.ContentManager.Get<IUser>(id);
 
-            if (user != null) {
-                if (String.Equals(Services.WorkContext.CurrentUser.UserName, user.UserName, StringComparison.Ordinal)) {
-                    Services.Notifier.Error(T("You can't disable your own account. Please log in with another account"));
-                }
-                else {
-                    user.As<UserPart>().RegistrationStatus = UserStatus.Pending;
-                    Services.Notifier.Information(T("User {0} disabled", user.UserName));
-                }
+            if (user == null)
+                return HttpNotFound();
+
+            if (string.Equals(Services.WorkContext.CurrentUser.UserName, user.UserName, StringComparison.Ordinal)) {
+                Services.Notifier.Error(T("You can't disable your own account. Please log in with another account"));
+            }
+            else {
+                user.As<UserPart>().RegistrationStatus = UserStatus.Pending;
+                Services.Notifier.Information(T("User {0} disabled", user.UserName));
             }
 
             return RedirectToAction("Index");

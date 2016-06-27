@@ -97,6 +97,13 @@ namespace Orchard.FileSystems.Media {
         void RenameFile(string oldPath, string newPath);
 
         /// <summary>
+        /// Copies a file in the storage provider.
+        /// </summary>
+        /// <param name="originalPath">The relative path to the file to be copied.</param>
+        /// <param name="duplicatePath">The relative path to the new file.</param>
+        void CopyFile(string originalPath, string duplicatePath);
+
+        /// <summary>
         /// Creates a file in the storage provider.
         /// </summary>
         /// <param name="path">The relative path to the file to be created.</param>

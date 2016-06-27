@@ -16,7 +16,9 @@ namespace Orchard.ContentTypes.Settings {
             var settings = definition.Settings.GetModel<ContentTypeSettings>();
             var model = new ContentTypeSettingsViewModel {
                 Creatable = settings.Creatable,
+                Listable = settings.Listable,
                 Draftable = settings.Draftable,
+                Securable = settings.Securable,
             };
 
             if(definition.Settings.ContainsKey("Stereotype")) {
@@ -31,7 +33,9 @@ namespace Orchard.ContentTypes.Settings {
             updateModel.TryUpdateModel(model, "ContentTypeSettingsViewModel", null, null);
 
             builder.Creatable(model.Creatable);
+            builder.Listable(model.Listable);
             builder.Draftable(model.Draftable);
+            builder.Securable(model.Securable);
             builder.WithSetting("Stereotype", model.Stereotype);
 
             yield return DefinitionTemplate(model);

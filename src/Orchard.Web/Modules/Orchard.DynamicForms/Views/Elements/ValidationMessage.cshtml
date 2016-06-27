@@ -1,0 +1,11 @@
+﻿@using Orchard.Layouts.Helpers
+@{
+    var commonAttributes = (IDictionary<string, object>) TagBuilderExtensions.GetCommonElementAttributes(Model);
+    var forField = (string) Model.ProcessedFor;
+}
+@if (!String.IsNullOrWhiteSpace(forField)) {
+@Html.ValidationMessage(forField, commonAttributes)
+}
+else {
+  <!--@T("ValidationMessage (target not specified)")-->
+}

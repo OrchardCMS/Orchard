@@ -1,0 +1,13 @@
+﻿<div class="layout-element-wrapper" ng-class="{'layout-container-empty': getShowChildrenPlaceholder()}">
+    <ul class="layout-panel layout-panel-main">
+        <li class="layout-panel-item layout-panel-label">Grid</li>
+        @Display(New.LayoutEditor_Template_Properties(ElementTypeName: "grid"))
+        <li class="layout-panel-item layout-panel-action" title="@T("Delete grid (Del)")" ng-click="delete(element)"><i class="fa fa-remove"></i></li>
+        <li class="layout-panel-item layout-panel-action" title="@T("Move grid up (Ctrl+Up)")" ng-click="element.moveUp()" ng-class="{disabled: !element.canMoveUp()}"><i class="fa fa-chevron-up"></i></li>
+        <li class="layout-panel-item layout-panel-action" title="@T("Move grid down (Ctrl+Down)")" ng-click="element.moveDown()" ng-class="{disabled: !element.canMoveDown()}"><i class="fa fa-chevron-down"></i></li>
+    </ul>
+    <div class="layout-container-children-placeholder">
+        @T("Drag a row element from the toolbox and drop it here to add a row.")
+    </div>
+    @Display(New.LayoutEditor_Template_Children())
+</div>

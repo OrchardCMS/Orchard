@@ -1,12 +1,10 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
-using JetBrains.Annotations;
 using Orchard.Logging;
 using Orchard.Mvc.Filters;
 using Orchard.UI.Admin;
 
 namespace Orchard.Security {
-    [UsedImplicitly]
     public class SecurityFilter : FilterProvider, IExceptionFilter, IAuthorizationFilter {
         private readonly IAuthorizer _authorizer;
 
@@ -20,6 +18,10 @@ namespace Orchard.Security {
         public void OnAuthorization(AuthorizationContext filterContext) {
 
             var accessFrontEnd = filterContext.ActionDescriptor.GetCustomAttributes(typeof (AlwaysAccessibleAttribute), true).Any();
+
+            if (!accessFrontEnd && filterContext.ActionDescriptor.ControllerDescriptor.ControllerType.GetCustomAttributes(typeof(AlwaysAccessibleAttribute), true).Any()) {
+                accessFrontEnd = true;
+            }
 
             if (!AdminFilter.IsApplied(filterContext.RequestContext) && !accessFrontEnd && !_authorizer.Authorize(StandardPermissions.AccessFrontEnd)) {
                 filterContext.Result = new HttpUnauthorizedResult();

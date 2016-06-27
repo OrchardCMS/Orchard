@@ -1,0 +1,25 @@
+﻿<Placement>
+    <Place Parts_Layout_Edit="Content:5" />
+    <Place Parts_ZonesLayout_Edit="Content:6" />
+    <Place Parts_ElementWrapper_Edit="Content:3" />
+
+    <Match DisplayType="Detail">
+        <Place Parts_Layout="Content:5"/>
+        <Place Parts_ElementWrapper="Content:3" />
+    </Match>
+
+    <Match DisplayType="Summary">
+        <Place Parts_Layout_Summary="Content:5"/>
+    </Match>
+
+    <Match DisplayType="Layout">
+        <Place Parts_Common_Body="Content:0"
+               Parts_Common_Body_Summary="-"
+               Parts_Common_Metadata="Meta:0"
+               Parts_Title="Header:0"
+               Parts_Tags_ShowTags="Footer:0"
+               Fields_MediaLibraryPicker_Summary="Content:0"
+               Fields_ContentPicker="Content:0"
+            />
+    </Match>
+</Placement>

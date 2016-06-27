@@ -9,24 +9,32 @@ using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Title.Models;
 using Orchard.Data;
+using Orchard.Environment.State;
+using Orchard.Environment.Configuration;
+using Orchard.Environment.Descriptor;
 
 namespace Orchard.Taxonomies.Handlers {
     public class TermsPartHandler : ContentHandler {
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly IContentManager _contentManager;
+        
+        private readonly HashSet<int> _processedTermParts = new HashSet<int>(); 
 
         public TermsPartHandler(
             IContentDefinitionManager contentDefinitionManager,
             IRepository<TermsPartRecord> repository,
             ITaxonomyService taxonomyService,
-            IContentManager contentManager) {
+            IContentManager contentManager,
+            IProcessingEngine processingEngine,
+            ShellSettings shellSettings,
+            IShellDescriptorManager shellDescriptorManager) {
             _contentDefinitionManager = contentDefinitionManager;
             _contentManager = contentManager;
 
             Filters.Add(StorageFilter.For(repository));
-            OnPublished<TermsPart>((context, part) => RecalculateCount(taxonomyService, part));
-            OnUnpublished<TermsPart>((context, part) => RecalculateCount(taxonomyService, part));
-            OnRemoved<TermsPart>((context, part) => RecalculateCount(taxonomyService, part));
+            OnPublished<TermsPart>((context, part) => RecalculateCount(processingEngine, shellSettings, shellDescriptorManager, part));
+            OnUnpublished<TermsPart>((context, part) => RecalculateCount(processingEngine, shellSettings, shellDescriptorManager, part));
+            OnRemoved<TermsPart>((context, part) => RecalculateCount(processingEngine, shellSettings, shellDescriptorManager, part));
 
             // Tells how to load the field terms on demand, when a content item it loaded or when it has been created
             OnInitialized<TermsPart>((context, part) => InitializerTermsLoader(part));
@@ -59,7 +67,7 @@ namespace Orchard.Taxonomies.Handlers {
 
             foreach (var field in part.ContentItem.Parts.SelectMany(p => p.Fields).OfType<TaxonomyField>()) {
                 var tempField = field.Name;
-                field.TermsField.Loader(value => {
+                field.TermsField.Loader(() => {
                     var fieldTermRecordIds = part.Record.Terms.Where(t => t.Field == tempField).Select(tci => tci.TermRecord.Id);
                     var terms = _contentManager.GetMany<TermPart>(fieldTermRecordIds, VersionOptions.Published, queryHint);
                     return terms.ToList();
@@ -67,8 +75,8 @@ namespace Orchard.Taxonomies.Handlers {
             }
 
             part._termParts = new LazyField<IEnumerable<TermContentItemPart>>();
-            part._termParts.Loader(value => {
-                var ids = part.Terms.Select(t => t.TermRecord.Id);
+            part._termParts.Loader(() => {
+                var ids = part.Terms.Select(t => t.TermRecord.Id).Distinct();
                 var terms = _contentManager.GetMany<TermPart>(ids, VersionOptions.Published, queryHint)
                     .ToDictionary(t => t.Id, t => t);
                 return
@@ -82,18 +90,15 @@ namespace Orchard.Taxonomies.Handlers {
             });
         }
 
-        // Retrieve the number of associated content items, for the whole hierarchy
-        private static void RecalculateCount(ITaxonomyService taxonomyService, TermsPart part) {
-            foreach (var term in part.Terms) {
-                var termPart = taxonomyService.GetTerm(term.TermRecord.Id);
-                while (termPart != null) {
-                    termPart.Count = (int)taxonomyService.GetContentItemsCount(termPart);
-
-                    // compute count for the hierarchy too
-                    if (termPart.Container != null) {
-                        var parentTerm = termPart.Container.As<TermPart>();
-                        termPart = parentTerm;
-                    }
+                // Fires off a processing engine task to run the count processing after the request so it's non-blocking.
+        private void RecalculateCount(IProcessingEngine processingEngine, ShellSettings shellSettings, IShellDescriptorManager shellDescriptorManager, TermsPart part) {
+            var termPartRecordIds = part.Terms.Select(t => t.TermRecord.Id).ToArray();
+            if (termPartRecordIds.Any()) {
+                if (!_processedTermParts.Any()) {
+                    processingEngine.AddTask(shellSettings, shellDescriptorManager.GetShellDescriptor(), "ITermCountProcessor.Process", new Dictionary<string, object> { { "termPartRecordIds", _processedTermParts } });
+                }
+                foreach (var termPartRecordId in termPartRecordIds) {
+                    _processedTermParts.Add(termPartRecordId);                    
                 }
             }
         }

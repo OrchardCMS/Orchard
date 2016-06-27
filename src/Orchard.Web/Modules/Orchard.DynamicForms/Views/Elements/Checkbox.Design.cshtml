@@ -1,0 +1,19 @@
+﻿@using Orchard.DynamicForms.Elements
+@using Orchard.Layouts.Helpers
+@{
+    var element = (CheckBox)Model.Element;
+    var tagBuilder = TagBuilderExtensions.CreateElementTagBuilder(Model, "input");
+    
+    tagBuilder.Attributes["type"] = "checkbox";
+    tagBuilder.Attributes["name"] = element.Name;
+    tagBuilder.Attributes["value"] = element.Value;
+}
+@if (element.ShowLabel) {
+    <label>
+        @tagBuilder.ToHtmlString(TagRenderMode.SelfClosing)
+        @Html.Raw(element.Label)
+    </label>
+}
+else {
+    @tagBuilder.ToHtmlString(TagRenderMode.SelfClosing)
+}

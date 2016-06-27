@@ -10,8 +10,8 @@
     Script.Require("jQuery");
     Script.Require("jQueryUI");
     Script.Require("jQueryUI_Tabs");
-    Script.Include("cloudmedia-admin-common.js");
-    Script.Include("cloudmedia-edit-asset.js");
+    Script.Include("cloudmedia-admin-common.js", "cloudmedia-admin-common.min.js");
+    Script.Include("cloudmedia-edit-asset.js", "cloudmedia-edit-asset.min.js");
     
     Layout.Title = T("Edit {0}", Model.Asset.GetType().Name.CamelFriendly());
 

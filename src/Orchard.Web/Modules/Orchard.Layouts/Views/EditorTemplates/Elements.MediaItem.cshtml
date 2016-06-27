@@ -1,0 +1,19 @@
+﻿@model Orchard.Layouts.ViewModels.ContentItemEditorViewModel
+<fieldset>
+    <div>
+        @Display.MediaLibraryPicker(
+            Required: false,
+            Multiple: true,
+            DisplayName: T("Media").Text,
+            FieldName: Html.FieldNameFor(m => m.ContentItemIds),
+            ContentItems: Model.ContentItems,
+            Hint: "",
+            PromptOnNavigate: false,
+            ShowSaveWarning: false)
+    </div>
+    <div>
+        @Html.LabelFor(m => m.DisplayType, T("Display Type"))
+        @Html.TextBoxFor(m => m.DisplayType, new { @class = "text medium" })
+        <span class="hint">@T("The display type to use when rendering the selected media items. The default Detail display type will be used when left empty.")</span>
+    </div>
+</fieldset>

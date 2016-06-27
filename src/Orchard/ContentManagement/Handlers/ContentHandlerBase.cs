@@ -20,10 +20,17 @@
         public virtual void Removed(RemoveContentContext context) {}
         public virtual void Indexing(IndexContentContext context) {}
         public virtual void Indexed(IndexContentContext context) {}
-        public virtual void Importing(ImportContentContext context) {}
-        public virtual void Imported(ImportContentContext context) {}
+        public virtual void Cloning(CloneContentContext context) { }
+        public virtual void Cloned(CloneContentContext context) { }
+        public virtual void Importing(ImportContentContext context) { }
+        public virtual void Imported(ImportContentContext context) { }
+        public virtual void ImportCompleted(ImportContentContext importContentContext) {}
         public virtual void Exporting(ExportContentContext context) {}
         public virtual void Exported(ExportContentContext context) {}
+        public virtual void Restoring(RestoreContentContext context) { }
+        public virtual void Restored(RestoreContentContext context) { }
+        public virtual void Destroying(DestroyContentContext context) {}
+        public virtual void Destroyed(DestroyContentContext context) {}
 
         public virtual void GetContentItemMetadata(GetContentItemMetadataContext context) {}
         public virtual void BuildDisplay(BuildDisplayContext context) {}

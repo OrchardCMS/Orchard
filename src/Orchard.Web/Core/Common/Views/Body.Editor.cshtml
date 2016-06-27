@@ -1,7 +1,18 @@
 ﻿@using Orchard.Utility.Extensions;
 @{
     string editorFlavor = Model.EditorFlavor;
+
+    var htmlAttributes = new Dictionary<string, object> {
+        {"class", editorFlavor.HtmlClassify()}
+    };
+
+    if (Model.Required == true) {
+        htmlAttributes["required"] = "required";
+    }
+
+    if (Model.AutoFocus == true) {
+        htmlAttributes["autofocus"] = "autofocus";
+    }
 }
-@(Model.Required != null && Model.Required
-         ? Html.TextArea("Text", (string)Model.Text, 25, 80, new { @class = editorFlavor.HtmlClassify(), required = "required" })
-         : Html.TextArea("Text", (string)Model.Text, 25, 80, new { @class = editorFlavor.HtmlClassify() }))
+
+@Html.TextArea("Text", (string)Model.Text, 25, 80, htmlAttributes)

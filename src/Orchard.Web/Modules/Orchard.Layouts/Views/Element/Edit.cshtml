@@ -1,0 +1,6 @@
+﻿@model Orchard.Layouts.ViewModels.EditElementViewModel
+@{
+    ViewBag.Command = "update";
+    ViewBag.TitleFormat = String.IsNullOrWhiteSpace(Model.ElementData) ? "Add {0}" : "Edit {0}";
+}
+@Html.Partial("ElementEditor", Model, ViewData)

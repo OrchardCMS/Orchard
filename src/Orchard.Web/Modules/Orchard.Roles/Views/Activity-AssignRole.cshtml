@@ -1,0 +1,8 @@
+﻿@{
+    var rolesData = (string)Model.State.Roles;
+    var roles = !String.IsNullOrWhiteSpace(rolesData) ? rolesData.Split(',') : Enumerable.Empty<string>();
+    var description = roles.Any() ? T("Assign roles: {0}", String.Join(", ", roles)) : T("No roles specified");
+}
+
+<div class="activity-assign-role" title="@description">
+</div>

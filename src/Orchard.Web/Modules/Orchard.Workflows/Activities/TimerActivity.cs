@@ -3,19 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.Data;
+using Orchard.Environment.Extensions;
+using Orchard.Exceptions;
 using Orchard.Forms.Services;
 using Orchard.Localization;
+using Orchard.Localization.Services;
+using Orchard.Logging;
 using Orchard.Services;
 using Orchard.Tasks;
 using Orchard.Workflows.Models;
 using Orchard.Workflows.Services;
 
 namespace Orchard.Workflows.Activities {
+    [OrchardFeature("Orchard.Workflows.Timer")]
     public class TimerActivity : Event {
         private readonly IClock _clock;
+        private readonly IDateLocalizationServices _dateServices;
 
-        public TimerActivity(IClock clock) {
+        public TimerActivity(IClock clock, IDateLocalizationServices dateServices) {
             _clock = clock;
+            _dateServices = dateServices;
             T = NullLocalizer.Instance;
         }
 
@@ -55,7 +62,11 @@ namespace Orchard.Workflows.Activities {
             DateTime started;
 
             if (!workflowContext.HasStateFor(activityContext.Record, "StartedUtc")) {
-                workflowContext.SetStateFor(activityContext.Record, "StartedUtc", started = _clock.UtcNow);
+                var dateString = activityContext.GetState<string>("Date");
+                var date = _dateServices.ConvertFromLocalizedString(dateString);
+                started = date ?? _clock.UtcNow;
+
+                workflowContext.SetStateFor(activityContext.Record, "StartedUtc", started);
             }
             else {
                 started = workflowContext.GetStateFor<DateTime>(activityContext.Record, "StartedUtc");
@@ -69,7 +80,6 @@ namespace Orchard.Workflows.Activities {
 
         public static DateTime When(DateTime started, int amount, string type) {
             try {
-
                 var when = started;
 
                 switch (type) {
@@ -101,6 +111,7 @@ namespace Orchard.Workflows.Activities {
         }
     }
 
+    [OrchardFeature("Orchard.Workflows.Timer")]
     public class TimerBackgroundTask : IBackgroundTask {
         private readonly IContentManager _contentManager;
         private readonly IWorkflowManager _workflowManager;
@@ -113,19 +124,29 @@ namespace Orchard.Workflows.Activities {
             _contentManager = contentManager;
             _workflowManager = workflowManager;
             _awaitingActivityRepository = awaitingActivityRepository;
+            Logger = NullLogger.Instance;
         }
 
+        public ILogger Logger { get; set; }
         public void Sweep() {
             var awaiting = _awaitingActivityRepository.Table.Where(x => x.ActivityRecord.Name == "Timer").ToList();
-            
-            
+
+
             foreach (var action in awaiting) {
-                var contentItem = _contentManager.Get(action.WorkflowRecord.ContentItemRecord.Id, VersionOptions.Latest);
-                var tokens = new Dictionary<string, object> { { "Content", contentItem } };
-                var workflowState = FormParametersHelper.FromJsonString(action.WorkflowRecord.State);
-                workflowState.TimerActivity_StartedUtc = null;
-                action.WorkflowRecord.State = FormParametersHelper.ToJsonString(workflowState);
-                _workflowManager.TriggerEvent("Timer", contentItem, () => tokens);
+                try {
+                    var contentItem = action.WorkflowRecord.ContentItemRecord != null ? _contentManager.Get(action.WorkflowRecord.ContentItemRecord.Id, VersionOptions.Latest) : null;
+                    var tokens = new Dictionary<string, object> { { "Content", contentItem } };
+                    var workflowState = FormParametersHelper.FromJsonString(action.WorkflowRecord.State);
+                    workflowState.TimerActivity_StartedUtc = null;
+                    action.WorkflowRecord.State = FormParametersHelper.ToJsonString(workflowState);
+                    _workflowManager.TriggerEvent("Timer", contentItem, () => tokens);
+                }
+                catch (Exception ex) {
+                    if (ex.IsFatal()) {
+                        throw;
+                    }
+                    Logger.Error(ex, "TimerBackgroundTask: Error while processing background task \"{0}\".", action.ActivityRecord.Name);
+                }
             }
         }
     }

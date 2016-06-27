@@ -225,6 +225,12 @@ namespace Orchard.Forms.Shapes {
         }
 
         [Shape]
+        public IHtmlString Password(dynamic Display, dynamic Shape) {
+            Shape.Classes.Add("password");
+            return DisplayShapeAsInput(Display, Shape, "password");
+        }
+
+        [Shape]
         public void Textarea(
             TextWriter Output,
             dynamic Display,
@@ -314,6 +320,19 @@ namespace Orchard.Forms.Shapes {
             return option.ToString(TagRenderMode.Normal);
         }
 
+        private static string ListGroupToOption(string name = null, bool isFirstGroup = false, bool finalize = false) {
+            var option = new TagBuilder("optgroup");
+            option.Attributes["label"] = name;
+
+            if(isFirstGroup)
+                return option.ToString(TagRenderMode.StartTag);
+
+            if(finalize)
+                return option.ToString(TagRenderMode.EndTag);
+
+            return String.Concat(option.ToString(TagRenderMode.EndTag), option.ToString(TagRenderMode.StartTag));
+        }
+
         private static object GetSelectProperty(object obj, string propertyName) {
             if (string.IsNullOrEmpty(propertyName)) {
                 return obj.ToString();
@@ -352,10 +371,13 @@ namespace Orchard.Forms.Shapes {
 
             string selectedValue = Convert.ToString(Shape.Value) ?? "";
             var selectedValues = selectedValue.Split(new[] { ',' });
+            var isFirstGroup = true;
+            var hasGroups = false;
 
             foreach (var item in Items) {
                 var selectItem = item as SelectListItem;
-                if (selectItem == null) {
+                var selectGroup = item as SelectListGroup;
+                if (selectItem == null && selectGroup == null) {
                     selectItem = new SelectListItem();
                     if (item is string) {
                         var itemStr = (string)item;
@@ -371,12 +393,21 @@ namespace Orchard.Forms.Shapes {
                         }
                     }
                 }
-                else {
+                else if (selectItem != null) {
                     selectItem.Selected = selectedValues.Any(x => x == selectItem.Value);
                 }
 
-                Output.WriteLine(ListItemToOption(selectItem));
+                if (selectGroup != null) {
+                    isFirstGroup = isFirstGroup == false;
+                    hasGroups = true;
+                    Output.WriteLine(ListGroupToOption(selectGroup.Name, isFirstGroup));
+                }
+                else
+                    Output.WriteLine(ListItemToOption(selectItem));
             }
+
+            if(hasGroups)
+                Output.WriteLine(ListGroupToOption(finalize: true));
 
             Output.WriteLine(select.ToString(TagRenderMode.EndTag));
         }

@@ -1,0 +1,7 @@
+﻿@using Orchard.Layouts.Elements
+@{
+    var element = (Snippet) Model.Element;
+}
+<div class="element-snippet layout-placeholder">
+    @T("{0} Snippet", element.Descriptor.DisplayText)
+</div>

@@ -1,0 +1,16 @@
+﻿@using Orchard.ContentManagement
+@{
+    var contentItems = (IList<ContentItem>)Model.ContentItems;
+}
+@if (contentItems.Any()) {
+    foreach (var contentItem in contentItems) {
+        var displayTextHtmlString = Html.ItemDisplayText(contentItem);
+        var displayText = displayTextHtmlString != null ? displayTextHtmlString.ToString() : T("-").ToString();
+        <div class="layout-snippet">
+            @displayText
+        </div>
+    }
+}
+else {
+    <p>@T("The query returned no results.")</p>
+}

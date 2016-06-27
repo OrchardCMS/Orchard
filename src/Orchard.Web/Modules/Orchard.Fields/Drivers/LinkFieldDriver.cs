@@ -1,10 +1,11 @@
-﻿using System;
-using Orchard.ContentManagement;
+﻿using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Fields.Fields;
 using Orchard.Fields.Settings;
 using Orchard.Localization;
+using System;
+using System.Collections.Generic;
 
 namespace Orchard.Fields.Drivers {
     public class LinkFieldDriver : ContentFieldDriver<LinkField> {
@@ -35,19 +36,27 @@ namespace Orchard.Fields.Drivers {
 
         protected override DriverResult Editor(ContentPart part, LinkField field, dynamic shapeHelper) {
             return ContentShape("Fields_Link_Edit", GetDifferentiator(field, part),
-                () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: field, Prefix: GetPrefix(field, part)));
+                () => {
+                    if (part.IsNew()) {
+                        var settings = field.PartFieldDefinition.Settings.GetModel<LinkFieldSettings>();
+                        field.Value = settings.DefaultValue;
+                        field.Text = settings.TextDefaultValue;
+                    }
+                    return shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: field, Prefix: GetPrefix(field, part));
+                });
         }
 
         protected override DriverResult Editor(ContentPart part, LinkField field, IUpdateModel updater, dynamic shapeHelper) {
             if (updater.TryUpdateModel(field, GetPrefix(field, part), null, null)) {
                 var settings = field.PartFieldDefinition.Settings.GetModel<LinkFieldSettings>();
-                if (settings.Required && string.IsNullOrWhiteSpace(field.Value)) {
+
+                if (settings.Required && String.IsNullOrWhiteSpace(field.Value)) {
                     updater.AddModelError(GetPrefix(field, part), T("Url is required for {0}", field.DisplayName));
                 }
-                else if (!string.IsNullOrWhiteSpace(field.Value) && !Uri.IsWellFormedUriString(field.Value, UriKind.RelativeOrAbsolute)) {
+                else if (!String.IsNullOrWhiteSpace(field.Value) && !Uri.IsWellFormedUriString(field.Value, UriKind.RelativeOrAbsolute)) {
                     updater.AddModelError(GetPrefix(field, part), T("{0} is an invalid url.", field.Value));
                 }
-                else if (settings.LinkTextMode == LinkTextMode.Required && string.IsNullOrWhiteSpace(field.Text)) {
+                else if (settings.LinkTextMode == LinkTextMode.Required && String.IsNullOrWhiteSpace(field.Text)) {
                     updater.AddModelError(GetPrefix(field, part), T("Text is required for {0}.", field.DisplayName));
                 }
             }
@@ -62,9 +71,11 @@ namespace Orchard.Fields.Drivers {
         }
 
         protected override void Exporting(ContentPart part, LinkField field, ExportContentContext context) {
-            context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Text", field.Text);
-            context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Url", field.Value);
-            context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Target", field.Target);
+            if (!String.IsNullOrEmpty(field.Text) || !String.IsNullOrEmpty(field.Value) || !String.IsNullOrEmpty(field.Target)) {
+                context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Text", field.Text);
+                context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Url", field.Value);
+                context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Target", field.Target);
+            }
         }
 
         protected override void Describe(DescribeMembersContext context) {

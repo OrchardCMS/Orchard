@@ -1,13 +1,14 @@
 ﻿/* http://keith-wood.name/calendars.html
-   Calendars localisations for jQuery v1.2.1.
+   Calendars localisations for jQuery v2.0.0.
    Written by Keith Wood (kbwood{at}iinet.com.au) August 2009.
    Available under the MIT (https://github.com/jquery/jquery/blob/master/MIT-LICENSE.txt) license. 
    Please attribute the author if you use it. */
+
 /* http://keith-wood.name/calendars.html
    Afrikaans localisation for Gregorian/Julian calendars for jQuery.
    Written by Renier Pretorius and Ruediger Thiede. */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['af'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['af'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Januarie','Februarie','Maart','April','Mei','Junie',
@@ -22,15 +23,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['af'] =
-			$.calendars.calendars.gregorian.prototype.regional['af'];
+		$.calendars.calendars.julian.prototype.regionalOptions['af'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['af'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Amharic (አማርኛ) localisation for Gregorian/Julian calendars for jQuery.
    Leyu Sisay. */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['am'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['am'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['ጃንዋሪ','ፈብርዋሪ','ማርች','አፕሪል','ሜይ','ጁን',
@@ -45,15 +46,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['am'] =
-			$.calendars.calendars.gregorian.prototype.regional['am'];
+		$.calendars.calendars.julian.prototype.regionalOptions['am'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['am'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Algerian (and Tunisian) Arabic localisation for Gregorian/Julian calendars for jQuery.
    Mohamed Cherif BOUCHELAGHEM -- cherifbouchelaghem@yahoo.fr */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['ar-DZ'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['ar-DZ'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['جانفي', 'فيفري', 'مارس', 'أفريل', 'ماي', 'جوان',
@@ -67,8 +68,8 @@
 		isRTL: true
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['ar-DZ'] =
-			$.calendars.calendars.gregorian.prototype.regional['ar-DZ'];
+		$.calendars.calendars.julian.prototype.regionalOptions['ar-DZ'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['ar-DZ'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
@@ -76,7 +77,7 @@
    Mahmoud Khaled -- mahmoud.khaled@badrit.com
    NOTE: monthNames are the new months names */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['ar-EG'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['ar-EG'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['يناير', 'فبراير', 'مارس', 'إبريل', 'مايو', 'يونية',
@@ -90,8 +91,8 @@
 		isRTL: true
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['ar-EG'] =
-			$.calendars.calendars.gregorian.prototype.regional['ar-EG'];
+		$.calendars.calendars.julian.prototype.regionalOptions['ar-EG'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['ar-EG'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
@@ -100,7 +101,7 @@
 /* NOTE: monthNames are the original months names and they are the Arabic names,
    not the new months name فبراير - يناير and there isn't any Arabic roots for these months */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['ar'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['ar'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['كانون الثاني', 'شباط', 'آذار', 'نيسان', 'آذار', 'حزيران',
@@ -114,15 +115,15 @@
 		isRTL: true
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['ar'] =
-			$.calendars.calendars.gregorian.prototype.regional['ar'];
+		$.calendars.calendars.julian.prototype.regionalOptions['ar'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['ar'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Azerbaijani localisation for Gregorian/Julian calendars for jQuery.
    Written by Jamil Najafov (necefov33@gmail.com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['az'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['az'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Yanvar','Fevral','Mart','Aprel','May','İyun',
@@ -137,15 +138,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['az'] =
-			$.calendars.calendars.gregorian.prototype.regional['az'];
+		$.calendars.calendars.julian.prototype.regionalOptions['az'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['az'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Bulgarian localisation for Gregorian/Julian calendars for jQuery.
    Written by Stoyan Kyosev (http://svest.org). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['bg'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['bg'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
         monthNames: ['Януари','Февруари','Март','Април','Май','Юни',
@@ -160,15 +161,15 @@
         isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['bg'] =
-			$.calendars.calendars.gregorian.prototype.regional['bg'];
+		$.calendars.calendars.julian.prototype.regionalOptions['bg'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['bg'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Bosnian localisation for Gregorian/Julian calendars for jQuery.
    Kenan Konjo. */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['bs'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['bs'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Januar','Februar','Mart','April','Maj','Juni',
@@ -183,15 +184,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['bs'] =
-			$.calendars.calendars.gregorian.prototype.regional['bs'];
+		$.calendars.calendars.julian.prototype.regionalOptions['bs'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['bs'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Catalan localisation for Gregorian/Julian calendars for jQuery.
    Writers: (joan.leon@gmail.com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['ca'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['ca'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Gener','Febrer','Mar&ccedil;','Abril','Maig','Juny',
@@ -206,15 +207,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['ca'] =
-			$.calendars.calendars.gregorian.prototype.regional['ca'];
+		$.calendars.calendars.julian.prototype.regionalOptions['ca'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['ca'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Czech localisation for Gregorian/Julian calendars for jQuery.
    Written by Tomas Muller (tomas@tomas-muller.net). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['cs'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['cs'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['leden','únor','březen','duben','květen','červen',
@@ -229,15 +230,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['cs'] =
-			$.calendars.calendars.gregorian.prototype.regional['cs'];
+		$.calendars.calendars.julian.prototype.regionalOptions['cs'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['cs'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Danish localisation for Gregorian/Julian calendars for jQuery.
    Written by Jan Christensen ( deletestuff@gmail.com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['da'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['da'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
         monthNames: ['Januar','Februar','Marts','April','Maj','Juni',
@@ -252,15 +253,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['da'] =
-			$.calendars.calendars.gregorian.prototype.regional['da'];
+		$.calendars.calendars.julian.prototype.regionalOptions['da'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['da'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Swiss-German localisation for Gregorian/Julian calendars for jQuery.
    Written by Douglas Jose & Juerg Meier. */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['de-CH'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['de-CH'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Januar','Februar','März','April','Mai','Juni',
@@ -275,15 +276,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['de-CH'] =
-			$.calendars.calendars.gregorian.prototype.regional['de-CH'];
+		$.calendars.calendars.julian.prototype.regionalOptions['de-CH'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['de-CH'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    German localisation for Gregorian/Julian calendars for jQuery.
    Written by Milian Wolff (mail@milianw.de). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['de'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['de'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Januar','Februar','März','April','Mai','Juni',
@@ -298,15 +299,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['de'] =
-			$.calendars.calendars.gregorian.prototype.regional['de'];
+		$.calendars.calendars.julian.prototype.regionalOptions['de'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['de'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Greek localisation for Gregorian/Julian calendars for jQuery.
    Written by Alex Cicovic (http://www.alexcicovic.com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['el'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['el'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Ιανουάριος','Φεβρουάριος','Μάρτιος','Απρίλιος','Μάιος','Ιούνιος',
@@ -321,15 +322,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['el'] =
-			$.calendars.calendars.gregorian.prototype.regional['el'];
+		$.calendars.calendars.julian.prototype.regionalOptions['el'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['el'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    English/Australia localisation for Gregorian/Julian calendars for jQuery.
    Based on en-GB. */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['en-AU'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['en-AU'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['January','February','March','April','May','June',
@@ -344,15 +345,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['en-AU'] =
-			$.calendars.calendars.gregorian.prototype.regional['en-AU'];
+		$.calendars.calendars.julian.prototype.regionalOptions['en-AU'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['en-AU'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    English/UK localisation for Gregorian/Julian calendars for jQuery.
    Stuart. */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['en-GB'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['en-GB'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['January','February','March','April','May','June',
@@ -367,15 +368,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['en-GB'] =
-			$.calendars.calendars.gregorian.prototype.regional['en-GB'];
+		$.calendars.calendars.julian.prototype.regionalOptions['en-GB'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['en-GB'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    English/New Zealand localisation for Gregorian/Julian calendars for jQuery.
    Based on en-GB. */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['en-NZ'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['en-NZ'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['January','February','March','April','May','June',
@@ -390,15 +391,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['en-NZ'] =
-			$.calendars.calendars.gregorian.prototype.regional['en-NZ'];
+		$.calendars.calendars.julian.prototype.regionalOptions['en-NZ'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['en-NZ'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Esperanto localisation for Gregorian/Julian calendars for jQuery.
    Written by Olivier M. (olivierweb@ifrance.com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['eo'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['eo'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Januaro','Februaro','Marto','Aprilo','Majo','Junio',
@@ -413,15 +414,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['eo'] =
-			$.calendars.calendars.gregorian.prototype.regional['eo'];
+		$.calendars.calendars.julian.prototype.regionalOptions['eo'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['eo'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Spanish/Argentina localisation for Gregorian/Julian calendars for jQuery.
    Written by Esteban Acosta Villafane (esteban.acosta@globant.com) of Globant (http://www.globant.com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['es-AR'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['es-AR'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
@@ -436,15 +437,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['es-AR'] =
-			$.calendars.calendars.gregorian.prototype.regional['es-AR'];
+		$.calendars.calendars.julian.prototype.regionalOptions['es-AR'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['es-AR'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Spanish/Perú localisation for Gregorian/Julian calendars for jQuery.
    Written by Fischer Tirado (fishdev@globant.com) of ASIX (http://www.asixonline.com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['es-PE'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['es-PE'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
@@ -459,15 +460,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['es-PE'] =
-			$.calendars.calendars.gregorian.prototype.regional['es-PE'];
+		$.calendars.calendars.julian.prototype.regionalOptions['es-PE'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['es-PE'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Spanish localisation for Gregorian/Julian calendars for jQuery.
    Traducido por Vester (xvester@gmail.com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['es'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['es'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
@@ -482,15 +483,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['es'] =
-			$.calendars.calendars.gregorian.prototype.regional['es'];
+		$.calendars.calendars.julian.prototype.regionalOptions['es'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['es'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Estonian localisation for Gregorian/Julian calendars for jQuery.
    Written by Mart Sõmermaa (mrts.pydev at gmail com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['et'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['et'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Jaanuar','Veebruar','Märts','Aprill','Mai','Juuni', 
@@ -505,15 +506,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['et'] =
-			$.calendars.calendars.gregorian.prototype.regional['et'];
+		$.calendars.calendars.julian.prototype.regionalOptions['et'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['et'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Basque localisation for Gregorian/Julian calendars for jQuery.
    Karrikas-ek itzulia (karrikas@karrikas.com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['eu'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['eu'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Urtarrila','Otsaila','Martxoa','Apirila','Maiatza','Ekaina',
@@ -528,15 +529,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['eu'] =
-			$.calendars.calendars.gregorian.prototype.regional['eu'];
+		$.calendars.calendars.julian.prototype.regionalOptions['eu'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['eu'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Farsi/Persian localisation for Gregorian/Julian calendars for jQuery.
    Javad Mowlanezhad -- jmowla@gmail.com */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['fa'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['fa'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['فروردين','ارديبهشت','خرداد','تير','مرداد','شهريور',
@@ -550,15 +551,15 @@
 		isRTL: true
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['fa'] =
-			$.calendars.calendars.gregorian.prototype.regional['fa'];
+		$.calendars.calendars.julian.prototype.regionalOptions['fa'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['fa'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Finnish localisation for Gregorian/Julian calendars for jQuery.
    Written by Harri Kilpiö (harrikilpio@gmail.com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['fi'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['fi'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
         monthNames: ['Tammikuu','Helmikuu','Maaliskuu','Huhtikuu','Toukokuu','Kes&auml;kuu',
@@ -573,15 +574,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['fi'] =
-			$.calendars.calendars.gregorian.prototype.regional['fi'];
+		$.calendars.calendars.julian.prototype.regionalOptions['fi'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['fi'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Faroese localisation for Gregorian/Julian calendars for jQuery.
    Written by Sverri Mohr Olsen, sverrimo@gmail.com */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['fo'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['fo'] = {
 		name: 'Gregorianskur',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Januar','Februar','Mars','Apríl','Mei','Juni',
@@ -596,15 +597,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['fo'] =
-			$.calendars.calendars.gregorian.prototype.regional['fo'];
+		$.calendars.calendars.julian.prototype.regionalOptions['fo'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['fo'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Swiss French localisation for Gregorian/Julian calendars for jQuery.
    Written by Martin Voelkle (martin.voelkle@e-tc.ch). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['fr-CH'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['fr-CH'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Janvier','Février','Mars','Avril','Mai','Juin',
@@ -619,15 +620,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['fr-CH'] =
-			$.calendars.calendars.gregorian.prototype.regional['fr-CH'];
+		$.calendars.calendars.julian.prototype.regionalOptions['fr-CH'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['fr-CH'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    French localisation for Gregorian/Julian calendars for jQuery.
    Stéphane Nahmani (sholby@sholby.net). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['fr'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['fr'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Janvier','Février','Mars','Avril','Mai','Juin',
@@ -642,15 +643,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['fr'] =
-			$.calendars.calendars.gregorian.prototype.regional['fr'];
+		$.calendars.calendars.julian.prototype.regionalOptions['fr'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['fr'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Iniciacion en galego para a extensión 'UI date picker' para jQuery.
    Traducido por Manuel (McNuel@gmx.net). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['gl'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['gl'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Xaneiro','Febreiro','Marzo','Abril','Maio','Xuño',
@@ -665,15 +666,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['gl'] =
-			$.calendars.calendars.gregorian.prototype.regional['gl'];
+		$.calendars.calendars.julian.prototype.regionalOptions['gl'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['gl'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Gujarati (ગુજરાતી) localisation for Gregorian/Julian calendars for jQuery.
    Naymesh Mistry (naymesh@yahoo.com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['gu'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['gu'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['જાન્યુઆરી','ફેબ્રુઆરી','માર્ચ','એપ્રિલ','મે','જૂન',
@@ -688,15 +689,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['gu'] =
-			$.calendars.calendars.gregorian.prototype.regional['gu'];
+		$.calendars.calendars.julian.prototype.regionalOptions['gu'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['gu'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Hebrew localisation for Gregorian/Julian calendars for jQuery.
    Written by Amir Hardon (ahardon at gmail dot com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['he'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['he'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['ינואר','פברואר','מרץ','אפריל','מאי','יוני',
@@ -711,15 +712,15 @@
 		isRTL: true
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['he'] =
-			$.calendars.calendars.gregorian.prototype.regional['he'];
+		$.calendars.calendars.julian.prototype.regionalOptions['he'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['he'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Hindi INDIA localisation for Gregorian/Julian calendars for jQuery.
    Written by Pawan Kumar Singh. */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['hi-IN'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['hi-IN'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['जनवरी',' फरवरी', 'मार्च', 'अप्रैल', 'मई', 'जून','जुलाई', 'अगस्त', 'सितम्बर', 'अक्टूबर', 'नवम्बर', 'दिसम्बर'],
@@ -732,15 +733,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['hi-IN'] =
-			$.calendars.calendars.gregorian.prototype.regional['hi-IN'];
+		$.calendars.calendars.julian.prototype.regionalOptions['hi-IN'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['hi-IN'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Croatian localisation for Gregorian/Julian calendars for jQuery.
    Written by Vjekoslav Nesek. */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['hr'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['hr'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Siječanj','Veljača','Ožujak','Travanj','Svibanj','Lipanj',
@@ -755,15 +756,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['hr'] =
-			$.calendars.calendars.gregorian.prototype.regional['hr'];
+		$.calendars.calendars.julian.prototype.regionalOptions['hr'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['hr'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Hungarian localisation for Gregorian/Julian calendars for jQuery.
    Written by Istvan Karaszi (jquerycalendar@spam.raszi.hu). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['hu'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['hu'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Január', 'Február', 'Március', 'Április', 'Május', 'Június',
@@ -778,15 +779,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['hu'] =
-			$.calendars.calendars.gregorian.prototype.regional['hu'];
+		$.calendars.calendars.julian.prototype.regionalOptions['hu'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['hu'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Armenian localisation for Gregorian/Julian calendars for jQuery.
    Written by Levon Zakaryan (levon.zakaryan@gmail.com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['hy'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['hy'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Հունվար','Փետրվար','Մարտ','Ապրիլ','Մայիս','Հունիս',
@@ -801,15 +802,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['hy'] =
-			$.calendars.calendars.gregorian.prototype.regional['hy'];
+		$.calendars.calendars.julian.prototype.regionalOptions['hy'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['hy'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Indonesian localisation for Gregorian/Julian calendars for jQuery.
    Written by Deden Fathurahman (dedenf@gmail.com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['id'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['id'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Januari','Februari','Maret','April','Mei','Juni',
@@ -824,15 +825,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['id'] =
-			$.calendars.calendars.gregorian.prototype.regional['id'];
+		$.calendars.calendars.julian.prototype.regionalOptions['id'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['id'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Icelandic localisation for Gregorian/Julian calendars for jQuery.
    Written by Haukur H. Thorsson (haukur@eskill.is). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['is'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['is'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Janúar','Febrúar','Mars','Apríl','Maí','Júní',
@@ -847,15 +848,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['is'] =
-			$.calendars.calendars.gregorian.prototype.regional['is'];
+		$.calendars.calendars.julian.prototype.regionalOptions['is'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['is'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Italian localisation for Gregorian/Julian calendars for jQuery.
    Written by Apaella (apaella@gmail.com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['it'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['it'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno',
@@ -870,15 +871,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['it'] =
-			$.calendars.calendars.gregorian.prototype.regional['it'];
+		$.calendars.calendars.julian.prototype.regionalOptions['it'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['it'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Japanese localisation for Gregorian/Julian calendars for jQuery.
    Written by Kentaro SATO (kentaro@ranvis.com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['ja'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['ja'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['1月','2月','3月','4月','5月','6月',
@@ -893,15 +894,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['ja'] =
-			$.calendars.calendars.gregorian.prototype.regional['ja'];
+		$.calendars.calendars.julian.prototype.regionalOptions['ja'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['ja'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Georgian localisation for Gregorian/Julian calendars for jQuery.
    Andrei Gorbushkin. */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['ka'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['ka'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['იანვარი','თებერვალი','მარტი','აპრილი','მაისი','ივნისი',
@@ -916,15 +917,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['ka'] =
-			$.calendars.calendars.gregorian.prototype.regional['ka'];
+		$.calendars.calendars.julian.prototype.regionalOptions['ka'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['ka'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Khmer initialisation for Gregorian/Julian calendars for jQuery.
    Written by Sovichet Tep (sovichet.tep@gmail.com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['km'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['km'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['ខែ​មករា','ខែ​កុម្ភៈ','ខែ​មិនា','ខែ​មេសា','ខែ​ឧសភា','ខែ​មិថុនា',
@@ -939,15 +940,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['km'] =
-			$.calendars.calendars.gregorian.prototype.regional['km'];
+		$.calendars.calendars.julian.prototype.regionalOptions['km'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['km'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Korean localisation for Gregorian/Julian calendars for jQuery.
    Written by DaeKwon Kang (ncrash.dk@gmail.com), Edited by Genie. */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['ko'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['ko'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['1월','2월','3월','4월','5월','6월',
@@ -962,15 +963,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['ko'] =
-			$.calendars.calendars.gregorian.prototype.regional['ko'];
+		$.calendars.calendars.julian.prototype.regionalOptions['ko'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['ko'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Lithuanian localisation for Gregorian/Julian calendars for jQuery.
    Arturas Paleicikas <arturas@avalon.lt>. */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['lt'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['lt'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Sausis','Vasaris','Kovas','Balandis','Gegužė','Birželis',
@@ -985,15 +986,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['lt'] =
-			$.calendars.calendars.gregorian.prototype.regional['lt'];
+		$.calendars.calendars.julian.prototype.regionalOptions['lt'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['lt'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Latvian localisation for Gregorian/Julian calendars for jQuery.
    Arturas Paleicikas <arturas.paleicikas@metasite.net>. */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['lv'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['lv'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Janvāris','Februāris','Marts','Aprīlis','Maijs','Jūnijs',
@@ -1008,15 +1009,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['lv'] =
-			$.calendars.calendars.gregorian.prototype.regional['lv'];
+		$.calendars.calendars.julian.prototype.regionalOptions['lv'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['lv'];
 	}
 })(jQuery);
 /* http://keith-wood.name/calendars.html
    Montenegrin localisation for Gregorian/Julian calendars for jQuery.
    By Miloš Milošević - fleka d.o.o. */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['me-ME'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['me-ME'] = {
 		name: 'Gregorijanski',
 		epochs: ['pne', 'ne'],
 		monthNames: ['Januar','Februar','Mart','April','Maj','Jun',
@@ -1031,15 +1032,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['me-ME'] =
-			$.calendars.calendars.gregorian.prototype.regional['me-ME'];
+		$.calendars.calendars.julian.prototype.regionalOptions['me-ME'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['me-ME'];
 	}
 })(jQuery);
 /* http://keith-wood.name/calendars.html
    Montenegrin localisation for Gregorian/Julian calendars for jQuery.
    By Miloš Milošević - fleka d.o.o. */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['me'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['me'] = {
 		name: 'Грегоријански',
 		epochs: ['пне', 'не'],
 		monthNames: ['Јануар','Фебруар','Март','Април','Мај','Јун',
@@ -1054,15 +1055,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['me'] =
-			$.calendars.calendars.gregorian.prototype.regional['me'];
+		$.calendars.calendars.julian.prototype.regionalOptions['me'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['me'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Македонски MK localisation for Gregorian/Julian calendars for jQuery.
    Hajan Selmani (hajan [at] live [dot] com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['mk'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['mk'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Јануари','Февруари','Март','Април','Мај','Јуни',
@@ -1077,15 +1078,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['mk'] =
-			$.calendars.calendars.gregorian.prototype.regional['mk'];
+		$.calendars.calendars.julian.prototype.regionalOptions['mk'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['mk'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Malayalam localisation for Gregorian/Julian calendars for jQuery.
    Saji Nediyanchath (saji89@gmail.com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['ml'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['ml'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['ജനുവരി','ഫെബ്രുവരി','മാര്‍ച്ച്','ഏപ്രില്‍','മേയ്','ജൂണ്‍',
@@ -1100,15 +1101,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['ml'] =
-			$.calendars.calendars.gregorian.prototype.regional['ml'];
+		$.calendars.calendars.julian.prototype.regionalOptions['ml'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['ml'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Malaysian localisation for Gregorian/Julian calendars for jQuery.
    Written by Mohd Nawawi Mohamad Jamili (nawawi@ronggeng.net). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['ms'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['ms'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Januari','Februari','Mac','April','Mei','Jun',
@@ -1123,15 +1124,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['ms'] =
-			$.calendars.calendars.gregorian.prototype.regional['ms'];
+		$.calendars.calendars.julian.prototype.regionalOptions['ms'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['ms'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Maltese localisation for Gregorian/Julian calendars for jQuery.
    Written by Chritian Sciberras (uuf6429@gmail.com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['mt'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['mt'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Jannar','Frar','Marzu','April','Mejju','Ġunju',
@@ -1146,15 +1147,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['mt'] =
-			$.calendars.calendars.gregorian.prototype.regional['mt'];
+		$.calendars.calendars.julian.prototype.regionalOptions['mt'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['mt'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Dutch/Belgian localisation for Gregorian/Julian calendars for jQuery.
    Written by Mathias Bynens <http://mathiasbynens.be/>. */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['nl-BE'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['nl-BE'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['januari', 'februari', 'maart', 'april', 'mei', 'juni',
@@ -1169,15 +1170,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['nl-BE'] =
-			$.calendars.calendars.gregorian.prototype.regional['nl-BE'];
+		$.calendars.calendars.julian.prototype.regionalOptions['nl-BE'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['nl-BE'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Dutch localisation for Gregorian/Julian calendars for jQuery.
    Written by Mathias Bynens <http://mathiasbynens.be/>. */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['nl'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['nl'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['januari', 'februari', 'maart', 'april', 'mei', 'juni',
@@ -1192,15 +1193,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['nl'] =
-			$.calendars.calendars.gregorian.prototype.regional['nl'];
+		$.calendars.calendars.julian.prototype.regionalOptions['nl'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['nl'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Norwegian localisation for Gregorian/Julian calendars for jQuery.
    Written by Naimdjon Takhirov (naimdjon@gmail.com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['no'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['no'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Januar','Februar','Mars','April','Mai','Juni',
@@ -1215,15 +1216,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['no'] =
-			$.calendars.calendars.gregorian.prototype.regional['no'];
+		$.calendars.calendars.julian.prototype.regionalOptions['no'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['no'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Polish localisation for Gregorian/Julian calendars for jQuery.
    Written by Jacek Wysocki (jacek.wysocki@gmail.com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['pl'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['pl'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Styczeń','Luty','Marzec','Kwiecień','Maj','Czerwiec',
@@ -1238,15 +1239,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['pl'] =
-			$.calendars.calendars.gregorian.prototype.regional['pl'];
+		$.calendars.calendars.julian.prototype.regionalOptions['pl'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['pl'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Brazilian Portuguese localisation for Gregorian/Julian calendars for jQuery.
    Written by Leonildo Costa Silva (leocsilva@gmail.com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['pt-BR'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['pt-BR'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho',
@@ -1261,15 +1262,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['pt-BR'] =
-			$.calendars.calendars.gregorian.prototype.regional['pt-BR'];
+		$.calendars.calendars.julian.prototype.regionalOptions['pt-BR'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['pt-BR'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Romansh localisation for Gregorian/Julian calendars for jQuery.
    Yvonne Gienal (yvonne.gienal@educa.ch). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['rm'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['rm'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Schaner','Favrer','Mars','Avrigl','Matg','Zercladur',
@@ -1284,15 +1285,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['rm'] =
-			$.calendars.calendars.gregorian.prototype.regional['rm'];
+		$.calendars.calendars.julian.prototype.regionalOptions['rm'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['rm'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Romanian localisation for Gregorian/Julian calendars for jQuery.
    Written by Edmond L. (ll_edmond@walla.com) and Ionut G. Stan (ionut.g.stan@gmail.com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['ro'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['ro'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Ianuarie','Februarie','Martie','Aprilie','Mai','Iunie',
@@ -1307,15 +1308,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['ro'] =
-			$.calendars.calendars.gregorian.prototype.regional['ro'];
+		$.calendars.calendars.julian.prototype.regionalOptions['ro'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['ro'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Russian localisation for Gregorian/Julian calendars for jQuery.
    Written by Andrew Stromnov (stromnov@gmail.com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['ru'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['ru'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Январь','Февраль','Март','Апрель','Май','Июнь',
@@ -1330,15 +1331,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['ru'] =
-			$.calendars.calendars.gregorian.prototype.regional['ru'];
+		$.calendars.calendars.julian.prototype.regionalOptions['ru'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['ru'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Slovak localisation for Gregorian/Julian calendars for jQuery.
    Written by Vojtech Rinik (vojto@hmm.sk). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['sk'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['sk'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Január','Február','Marec','Apríl','Máj','Jún',
@@ -1353,8 +1354,8 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['sk'] =
-			$.calendars.calendars.gregorian.prototype.regional['sk'];
+		$.calendars.calendars.julian.prototype.regionalOptions['sk'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['sk'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
@@ -1362,7 +1363,7 @@
    Written by Jaka Jancar (jaka@kubje.org). */
 /* c = &#x10D;, s = &#x161; z = &#x17E; C = &#x10C; S = &#x160; Z = &#x17D; */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['sl'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['sl'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Januar','Februar','Marec','April','Maj','Junij',
@@ -1377,15 +1378,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['sl'] =
-			$.calendars.calendars.gregorian.prototype.regional['sl'];
+		$.calendars.calendars.julian.prototype.regionalOptions['sl'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['sl'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Albanian localisation for Gregorian/Julian calendars for jQuery.
    Written by Flakron Bytyqi (flakron@gmail.com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['sq'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['sq'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Janar','Shkurt','Mars','Prill','Maj','Qershor',
@@ -1400,15 +1401,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['sq'] =
-			$.calendars.calendars.gregorian.prototype.regional['sq'];
+		$.calendars.calendars.julian.prototype.regionalOptions['sq'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['sq'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Serbian localisation for Gregorian/Julian calendars for jQuery.
    Written by Dejan Dimić. */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['sr-SR'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['sr-SR'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Januar','Februar','Mart','April','Maj','Jun',
@@ -1422,15 +1423,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['sr-SR'] =
-			$.calendars.calendars.gregorian.prototype.regional['sr-SR'];
+		$.calendars.calendars.julian.prototype.regionalOptions['sr-SR'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['sr-SR'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Serbian localisation for Gregorian/Julian calendars for jQuery.
    Written by Dejan Dimić. */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['sr'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['sr'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Јануар','Фебруар','Март','Април','Мај','Јун',
@@ -1444,15 +1445,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['sr'] =
-			$.calendars.calendars.gregorian.prototype.regional['sr'];
+		$.calendars.calendars.julian.prototype.regionalOptions['sr'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['sr'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Swedish localisation for Gregorian/Julian calendars for jQuery.
    Written by Anders Ekdahl (anders@nomadiz.se). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['sv'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['sv'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
         monthNames: ['Januari','Februari','Mars','April','Maj','Juni',
@@ -1467,15 +1468,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['sv'] =
-			$.calendars.calendars.gregorian.prototype.regional['sv'];
+		$.calendars.calendars.julian.prototype.regionalOptions['sv'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['sv'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Tamil (UTF-8) localisation for Gregorian/Julian calendars for jQuery.
    Written by S A Sureshkumar (saskumar@live.com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['ta'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['ta'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['தை','மாசி','பங்குனி','சித்திரை','வைகாசி','ஆனி',
@@ -1490,15 +1491,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['ta'] =
-			$.calendars.calendars.gregorian.prototype.regional['ta'];
+		$.calendars.calendars.julian.prototype.regionalOptions['ta'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['ta'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Thai localisation for Gregorian/Julian calendars for jQuery.
    Written by pipo (pipo@sixhead.com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['th'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['th'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน',
@@ -1513,15 +1514,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['th'] =
-			$.calendars.calendars.gregorian.prototype.regional['th'];
+		$.calendars.calendars.julian.prototype.regionalOptions['th'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['th'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Turkish localisation for Gregorian/Julian calendars for jQuery.
    Written by Izzet Emre Erkan (kara@karalamalar.net). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['tr'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['tr'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran',
@@ -1536,15 +1537,38 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['tr'] =
-			$.calendars.calendars.gregorian.prototype.regional['tr'];
+		$.calendars.calendars.julian.prototype.regionalOptions['tr'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['tr'];
+	}
+})(jQuery);
+﻿/* http://keith-wood.name/calendars.html
+   Tatar localisation for Gregorian/Julian calendars for jQuery.
+   Written by Ирек Хаҗиев (khazirek@gmail.com). */
+(function($) {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['tt'] = {
+		name: 'Gregorian',
+		epochs: ['BCE', 'CE'],
+		monthNames: ['Гынвар','Февраль','Март','Апрель','Май','Июнь',
+		'Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],
+		monthNamesShort: ['Гыйн','Фев','Мар','Апр','Май','Июн',
+		'Июл','Авг','Сен','Окт','Ноя','Дек'],
+		dayNames: ['якшәмбе','дүшәмбе','сишәмбе','чәршәмбе','пәнҗешәмбе','җомга','шимбә'],
+		dayNamesShort: ['якш','дүш','сиш','чәр','пән','җом','шим'],
+		dayNamesMin: ['Як','Дү','Си','Чә','Пә','Җо','Ши'],
+		dateFormat: 'dd.mm.yyyy',
+		firstDay: 1,
+		isRTL: false
+	};
+	if ($.calendars.calendars.julian) {
+		$.calendars.calendars.julian.prototype.regionalOptions['tt'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['tt'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Ukrainian localisation for Gregorian/Julian calendars for jQuery.
    Written by Maxim Drogobitskiy (maxdao@gmail.com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['uk'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['uk'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Січень','Лютий','Березень','Квітень','Травень','Червень',
@@ -1559,8 +1583,8 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['uk'] =
-			$.calendars.calendars.gregorian.prototype.regional['uk'];
+		$.calendars.calendars.julian.prototype.regionalOptions['uk'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['uk'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
@@ -1568,7 +1592,7 @@
    Mansoor Munib -- mansoormunib@gmail.com <http://www.mansoor.co.nr/mansoor.html>
    Thanks to Habib Ahmed, ObaidUllah Anwar. */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['ur'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['ur'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['جنوری','فروری','مارچ','اپریل','مئی','جون',
@@ -1584,15 +1608,15 @@
 		isRTL: true
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['ur'] =
-			$.calendars.calendars.gregorian.prototype.regional['ur'];
+		$.calendars.calendars.julian.prototype.regionalOptions['ur'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['ur'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Vietnamese localisation for Gregorian/Julian calendars for jQuery.
    Translated by Le Thanh Huy (lthanhhuy@cit.ctu.edu.vn). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['vi'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['vi'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Tháng Một', 'Tháng Hai', 'Tháng Ba', 'Tháng Tư', 'Tháng Năm', 'Tháng Sáu',
@@ -1607,15 +1631,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['vi'] =
-			$.calendars.calendars.gregorian.prototype.regional['vi'];
+		$.calendars.calendars.julian.prototype.regionalOptions['vi'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['vi'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Simplified Chinese localisation for Gregorian/Julian calendars for jQuery.
    Written by Cloudream (cloudream@gmail.com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['zh-CN'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['zh-CN'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['一月','二月','三月','四月','五月','六月',
@@ -1630,15 +1654,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['zh-CN'] =
-			$.calendars.calendars.gregorian.prototype.regional['zh-CN'];
+		$.calendars.calendars.julian.prototype.regionalOptions['zh-CN'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['zh-CN'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Hong Kong  Chinese localisation for Gregorian/Julian calendars for jQuery.
    Written by SCCY (samuelcychan@gmail.com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['zh-HK'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['zh-HK'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['一月','二月','三月','四月','五月','六月',
@@ -1653,15 +1677,15 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['zh-HK'] =
-			$.calendars.calendars.gregorian.prototype.regional['zh-HK'];
+		$.calendars.calendars.julian.prototype.regionalOptions['zh-HK'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['zh-HK'];
 	}
 })(jQuery);
 ﻿/* http://keith-wood.name/calendars.html
    Traditional Chinese localisation for Gregorian/Julian calendars for jQuery.
    Written by Ressol (ressol@gmail.com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['zh-TW'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['zh-TW'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['一月','二月','三月','四月','五月','六月',
@@ -1676,7 +1700,7 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['zh-TW'] =
-			$.calendars.calendars.gregorian.prototype.regional['zh-TW'];
+		$.calendars.calendars.julian.prototype.regionalOptions['zh-TW'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['zh-TW'];
 	}
 })(jQuery);

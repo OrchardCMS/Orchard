@@ -1,0 +1,9 @@
+﻿@using Orchard.Layouts.Helpers
+@{
+    var tagBuilder = TagBuilderExtensions.CreateElementTagBuilder(Model, "label");
+    
+    tagBuilder.Attributes["for"] = Model.ProcessedFor;
+    tagBuilder.InnerHtml = Model.ProcessedText;
+}
+
+@tagBuilder.ToHtmlString(TagRenderMode.Normal)

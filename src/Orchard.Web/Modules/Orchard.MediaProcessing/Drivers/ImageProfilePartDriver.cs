@@ -85,6 +85,11 @@ namespace Orchard.MediaProcessing.Drivers {
         }
 
         protected override void Importing(ImageProfilePart part, ImportContentContext context) {
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
+            }
+
             var element = context.Data.Element(part.PartDefinition.Name);
 
             part.Name = element.Attribute("Name").Value;

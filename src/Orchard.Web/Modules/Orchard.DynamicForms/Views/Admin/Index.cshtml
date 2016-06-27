@@ -1,0 +1,34 @@
+﻿@model Orchard.DynamicForms.ViewModels.FormsIndexViewModel
+@{
+    Style.Require("DynamicForms.FormElements");
+    Layout.Title = T("Dynamic Forms");
+}
+<table class="items dynamic-forms">
+    <thead>
+        <tr>
+            <th>@T("Form")</th>
+            <th>@T("Submissions")</th>
+            <th></th>
+        </tr>
+    </thead>
+    @if (!Model.Forms.Any()) {
+        <tbody>
+            <tr>
+                <td colspan="3">@T("There are no submissions yet.")</td>
+            </tr>
+        </tbody>
+    }
+    else {
+        <tbody class="forms">
+            @foreach (var form in Model.Forms) {
+                var formName = form.Key;
+                var submissions = form.Count();
+                <tr>
+                    <td>@formName</td>
+                    <td>@submissions</td>
+                    <td>@Html.ActionLink(T("Submissions").Text, "Index", "SubmissionAdmin", new { id = formName, area = "Orchard.DynamicForms" }, null)</td>
+                </tr>
+            }
+        </tbody>
+    }
+</table>

@@ -73,11 +73,6 @@ namespace Orchard.Workflows.Services {
                 return;
             }
 
-            // if no activity record is matching the event, do nothing
-            if (!startedWorkflows.Any() && !awaitingActivities.Any()) {
-                return;
-            }
-
             // resume halted workflows
             foreach (var awaitingActivityRecord in awaitingActivities) {
                 var workflowContext = new WorkflowContext {

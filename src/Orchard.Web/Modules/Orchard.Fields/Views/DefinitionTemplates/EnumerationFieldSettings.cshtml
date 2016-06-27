@@ -28,3 +28,12 @@
     <span class="hint">@T("The help text is written under the field when users are selecting an option.")</span>
     @Html.ValidationMessageFor(m => m.Hint)
 </fieldset>
+<fieldset>
+    <div>
+        <label class="forpicker" for="@Html.FieldIdFor(m => m.DefaultValue)">@T("Default value")</label>
+        @Html.TextBoxFor(m => m.DefaultValue, new { @class = "text large" })
+        <span class="hint">@T("The default option proposed when creating a content item. If there is no equivalent choice among Options, it will not be used. (optional)")</span>
+        <span class="hint">@T("When using the Listbox or Checkbox List mode, you can define multiple options separated by a semicolon.")</span>
+        @Html.ValidationMessageFor(m => m.DefaultValue)
+    </div>
+</fieldset>

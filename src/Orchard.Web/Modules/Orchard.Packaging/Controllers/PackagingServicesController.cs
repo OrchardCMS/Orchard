@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Web.Hosting;
 using System.Web.Mvc;
 using System.Xml.Linq;
 using NuGet;
+using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.AppData;
@@ -33,6 +36,7 @@ namespace Orchard.Packaging.Controllers {
         private readonly IPackagingSourceManager _packagingSourceManager;
         private readonly IAppDataFolderRoot _appDataFolderRoot;
         private readonly IModuleService _moduleService;
+        private readonly IHostEnvironment _hostEnvironment;
         private readonly IRecipeHarvester _recipeHarvester;
         private readonly IRecipeManager _recipeManager;
 
@@ -42,8 +46,9 @@ namespace Orchard.Packaging.Controllers {
             IPackagingSourceManager packagingSourceManager,
             IAppDataFolderRoot appDataFolderRoot,
             IOrchardServices services,
-            IModuleService moduleService)
-            : this(shellSettings, packageManager, packagingSourceManager, appDataFolderRoot, services, moduleService, null, null) {
+            IModuleService moduleService,
+            IHostEnvironment hostEnvironment)
+            : this(shellSettings, packageManager, packagingSourceManager, appDataFolderRoot, services, moduleService, hostEnvironment, null, null) {
         }
 
         public PackagingServicesController(
@@ -53,6 +58,7 @@ namespace Orchard.Packaging.Controllers {
             IAppDataFolderRoot appDataFolderRoot,
             IOrchardServices services,
             IModuleService moduleService,
+            IHostEnvironment hostEnvironment,
             IRecipeHarvester recipeHarvester,
             IRecipeManager recipeManager) {
 
@@ -60,6 +66,7 @@ namespace Orchard.Packaging.Controllers {
             _packageManager = packageManager;
             _appDataFolderRoot = appDataFolderRoot;
             _moduleService = moduleService;
+            _hostEnvironment = hostEnvironment;
             _recipeHarvester = recipeHarvester;
             _recipeManager = recipeManager;
             _packagingSourceManager = packagingSourceManager;
@@ -80,12 +87,28 @@ namespace Orchard.Packaging.Controllers {
             return View();
         }
 
-        [HttpPost, ActionName("RemoveTheme")]
-        public ActionResult RemoveThemePOST(string themeId, string returnUrl, string retryUrl) {
+        [HttpPost, ActionName("UninstallTheme")]
+        public ActionResult UninstallThemePost(string themeId, string returnUrl, string retryUrl) {
+            if (String.IsNullOrEmpty(themeId)) {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
             if (_shellSettings.Name != ShellSettings.DefaultName || !Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to remove themes")))
                 return new HttpUnauthorizedResult();
 
             return UninstallPackage(PackageBuilder.BuildPackageId(themeId, DefaultExtensionTypes.Theme), returnUrl, retryUrl);
+        }
+
+        [HttpPost, ActionName("UninstallModule")]
+        public ActionResult UninstallModulePost(string moduleId, string returnUrl, string retryUrl) {
+            if (String.IsNullOrEmpty(moduleId)) {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            if (_shellSettings.Name != ShellSettings.DefaultName || !Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to remove modules")))
+                return new HttpUnauthorizedResult();
+
+            return UninstallPackage(PackageBuilder.BuildPackageId(moduleId, DefaultExtensionTypes.Module), returnUrl, retryUrl);
         }
 
         public ActionResult AddModule(string returnUrl) {
@@ -105,7 +128,7 @@ namespace Orchard.Packaging.Controllers {
             }
 
            try {
-                PackageInfo packageInfo = _packageManager.Install(packageId, version, source.FeedUrl, HostingEnvironment.MapPath("~/"));
+                PackageInfo packageInfo = _packageManager.Install(packageId, version, source.FeedUrl, MapAppRoot());
 
                 if (DefaultExtensionTypes.IsTheme(packageInfo.ExtensionType)) {
                     Services.Notifier.Information(T("The theme has been successfully installed. It can be enabled in the \"Themes\" page accessible from the menu."));
@@ -147,7 +170,7 @@ namespace Orchard.Packaging.Controllers {
                 string fullFileName = Path.Combine(_appDataFolderRoot.RootFolder, Path.GetFileName(httpPostedFileBase.FileName)).Replace(Path.DirectorySeparatorChar, '/');
                 httpPostedFileBase.SaveAs(fullFileName);
                 var package = new ZipPackage(fullFileName);
-                PackageInfo packageInfo = _packageManager.Install(package, _appDataFolderRoot.RootFolder, HostingEnvironment.MapPath("~/"));
+                PackageInfo packageInfo = _packageManager.Install(package, _appDataFolderRoot.RootFolder, MapAppRoot());
                 ExtensionDescriptor extensionDescriptor = package.GetExtensionDescriptor(packageInfo.ExtensionType);
                 System.IO.File.Delete(fullFileName);
 
@@ -161,7 +184,7 @@ namespace Orchard.Packaging.Controllers {
                 }
             }
             catch (OrchardException e) {
-                Services.Notifier.Error(T("Package uploading and installation failed: ", e.Message));
+                Services.Notifier.Error(T("Package uploading and installation failed: {0}", e.Message));
                 return View("InstallPackageFailed");
             }
             catch (Exception) {
@@ -231,11 +254,13 @@ namespace Orchard.Packaging.Controllers {
                     // Enable the features and its dependencies using recipes, so that they are run after the module's recipes
 
                     var recipe = new Recipe {
+                        Name = "Test",
                         RecipeSteps = featureIds.Select(
-                            x => new RecipeStep {
-                                Name = "Feature",
-                                Step = new XElement("Feature", new XAttribute("enable", x))
-                            })
+                            (i,x) => new RecipeStep(
+                                id: i.ToString(CultureInfo.InvariantCulture),
+                                recipeName: "Test",
+                                name: "Feature",
+                                step: new XElement("Feature", new XAttribute("enable", x))))
                     };
 
                     _recipeManager.Execute(recipe);
@@ -247,20 +272,21 @@ namespace Orchard.Packaging.Controllers {
             return Redirect(redirectUrl);
         }
 
-        public ActionResult UninstallPackage(string id, string returnUrl, string retryUrl) {
-            if (_shellSettings.Name != ShellSettings.DefaultName || !Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to uninstall packages")))
-                return new HttpUnauthorizedResult();
-
+        private ActionResult UninstallPackage(string id, string returnUrl, string retryUrl) {
             try {
-                _packageManager.Uninstall(id, HostingEnvironment.MapPath("~/"));
+                _packageManager.Uninstall(id, MapAppRoot());
             }
             catch (Exception exception) {
                 Services.Notifier.Error(T("Uninstall failed: {0}", exception.Message));
-                return Redirect(retryUrl);
+                return Redirect(!String.IsNullOrEmpty(retryUrl) ? retryUrl : returnUrl);
             }
 
             Services.Notifier.Information(T("Uninstalled package \"{0}\"", id));
             return this.RedirectLocal(returnUrl, "~/");
+        }
+
+        private string MapAppRoot() {
+            return _hostEnvironment.MapPath("~/");
         }
     }
 }

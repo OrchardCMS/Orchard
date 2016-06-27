@@ -1,0 +1,8 @@
+﻿@using Orchard.ContentManagement
+@using Orchard.MediaLibrary.Models
+@{
+    var mediaPart = ((ContentItem)Model.ContentItem).As<MediaPart>();
+}           
+<a href="@Url.Content(mediaPart.MediaUrl)">
+    <img width="200" height="200" alt="@mediaPart.AlternateText" src="@mediaPart.MediaUrl" />
+</a>

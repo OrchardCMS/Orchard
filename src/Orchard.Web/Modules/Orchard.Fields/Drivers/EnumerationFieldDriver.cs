@@ -1,9 +1,12 @@
 ﻿using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
-using Orchard.Fields.Settings;
 using Orchard.Fields.Fields;
+using Orchard.Fields.Settings;
 using Orchard.Localization;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Orchard.Fields.Drivers {
     public class EnumerationFieldDriver : ContentFieldDriver<EnumerationField> {
@@ -32,12 +35,21 @@ namespace Orchard.Fields.Drivers {
 
         protected override DriverResult Editor(ContentPart part, EnumerationField field, dynamic shapeHelper) {
             return ContentShape("Fields_Enumeration_Edit", GetDifferentiator(field, part),
-                () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: field, Prefix: GetPrefix(field, part)));
+                () => {
+                    if (part.IsNew()) {
+                        var settings = field.PartFieldDefinition.Settings.GetModel<EnumerationFieldSettings>();
+                        if (!String.IsNullOrWhiteSpace(settings.DefaultValue)) {
+                            field.Value = settings.DefaultValue;
+                        }
+                    }
+                    return shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: field, Prefix: GetPrefix(field, part));
+                });
         }
 
         protected override DriverResult Editor(ContentPart part, EnumerationField field, IUpdateModel updater, dynamic shapeHelper) {
             if (updater.TryUpdateModel(field, GetPrefix(field, part), null, null)) {
                 var settings = field.PartFieldDefinition.Settings.GetModel<EnumerationFieldSettings>();
+
                 if (settings.Required && field.SelectedValues.Length == 0) {
                     updater.AddModelError(field.Name, T("The field {0} is mandatory", T(field.DisplayName)));
                 }
@@ -51,7 +63,8 @@ namespace Orchard.Fields.Drivers {
         }
 
         protected override void Exporting(ContentPart part, EnumerationField field, ExportContentContext context) {
-            context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Value", field.Value);
+            if (!String.IsNullOrEmpty(field.Value))
+                context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Value", field.Value);
         }
 
         protected override void Describe(DescribeMembersContext context) {

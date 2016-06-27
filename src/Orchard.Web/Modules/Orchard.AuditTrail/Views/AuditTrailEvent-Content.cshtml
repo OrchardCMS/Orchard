@@ -1,0 +1,68 @@
+﻿@using Orchard.AuditTrail.Helpers
+@using Orchard.AuditTrail.Models
+@using Orchard.AuditTrail.Services.Models
+@using Orchard.ContentManagement
+@{
+    Style.Include("audittrail-content-event.css");
+}
+@{
+    var record = (AuditTrailEventRecord)Model.Record;
+    var eventData = (IDictionary<string, object>)Model.EventData;
+    var contentItemId = (int)Model.ContentItemId;
+    var contentItem = (ContentItem)Model.ContentItem;
+    var eventVersionNumber = eventData.Get<int>("VersionNumber");
+    var isPublishedEvent = eventData.Get<bool>("Published");
+    var diffNodes = (IList<DiffNode>)Model.DiffNodes;
+    var itemDisplayText = contentItem != null ? Html.ItemDisplayText(contentItem) : default(IHtmlString);
+    var title = itemDisplayText != null ? itemDisplayText.ToString() : eventData.Get<string>("Title") ?? "[untitled]";
+}
+<section class="audittrail-content-eventmetadata">
+    @T("ID:") <strong>@contentItemId</strong><br />
+    @if (contentItem != null) {
+        var isLatest = contentItem.VersionRecord.Number == eventVersionNumber;
+        var isRemoved = !contentItem.VersionRecord.Latest && !contentItem.VersionRecord.Published;
+        @(contentItem.ContentType)<text>: </text>if (isRemoved) {<strong>@title</strong>} else {@Html.ItemEditLink(title, contentItemId)}<br />
+        if (isPublishedEvent || isLatest) {
+            @Html.ActionLink(T("Version {0}", eventVersionNumber).Text, "Detail", "Content", new { area = "Orchard.AuditTrail", id = contentItem.Id, version = eventVersionNumber }, null)<br />
+        }
+    }
+    else {
+        @T("Version {0}", eventVersionNumber)<br />
+    }
+    @if (!String.IsNullOrWhiteSpace(record.Comment)) {
+        @T("Comment:")<br />
+        @Html.Raw(record.Comment.NewlinesToHtml())
+    }
+</section>
+
+<section class="audittrail-content-eventsummary">
+    @if (diffNodes != null) {
+        <table class="items">
+            <thead>
+                <tr>
+                    <th>@T("Action")</th>
+                    <th>@T("Context")</th>
+                    <th>@T("Before")</th>
+                    <th>@T("After")</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!diffNodes.Any()) {
+                    <tr>
+                        <td colspan="4">@T("")</td>
+                    </tr>
+                }
+                else {
+                    foreach (var node in diffNodes) {
+                        <tr>
+                            <td>@T(node.Type.ToString())</td>
+                            <td>@node.Context</td>
+                            <td>@node.Previous.OrIfEmpty(T("[Empty]"))</td>
+                            <td>@node.Current.OrIfEmpty(T("[Empty]"))</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    }
+</section>

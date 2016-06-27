@@ -180,3 +180,30 @@ div.grippie {
     margin-left: 10px !important;
    
 }
+
+
+/* RTL */
+
+.dir-rtl .wmd-button {
+    padding-left: 3px;
+    padding-right: 2px;
+}
+
+.dir-rtl .wmd-preview ol {
+    margin-left: inherit !important;
+    margin-right: 20px !important;
+}
+
+.dir-rtl .wmd-preview ul li {
+    margin-left: inherit !important;
+    margin-right: 10px !important;
+}
+
+.dir-rtl .wmd-preview pre {
+    margin: 0 9px 9px 0 !important;
+}
+
+.dir-rtl .wmd-preview dd {
+    margin-left: inherit !important;
+    margin-right: 10px !important;
+}

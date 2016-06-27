@@ -1,0 +1,9 @@
+﻿@using Orchard.Layouts.Helpers
+@{
+    var tagBuilder = TagBuilderExtensions.CreateElementTagBuilder(Model, "button");
+
+    tagBuilder.Attributes["type"] = "submit";
+    tagBuilder.Attributes["name"] = Model.ProcessedName;
+    tagBuilder.SetInnerText(Model.ProcessedText);
+}
+@tagBuilder.ToHtmlString()

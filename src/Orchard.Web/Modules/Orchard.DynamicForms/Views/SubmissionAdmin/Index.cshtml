@@ -1,0 +1,53 @@
+﻿@using System.Data
+@using Orchard.Utility.Extensions
+@model Orchard.DynamicForms.ViewModels.SubmissionsIndexViewModel
+@{
+    Style.Include("forms-admin.css", "forms-admin.min.css"); // TODO: Shouldn't this be a Style.Require()?
+    Script.Require("ShapesBase");
+    Layout.Title = T("Submissions for {0}", Model.FormName);
+}
+@{
+    var dataColumns = new List<DataColumn>();
+    var dataColumnCount = Model.Submissions.Columns.Count > 11 ? 11 : Model.Submissions.Columns.Count;
+
+    for (var i = 0; i < dataColumnCount; i++) {
+        dataColumns.Add(Model.Submissions.Columns[i]);
+    }
+}
+@using (Html.BeginFormAntiForgeryPost()) {
+    <fieldset class="bulk-actions">
+        <label for="publishActions">@T("Actions:")</label>
+        <select id="publishActions" name="Options.BulkAction">
+            @Html.SelectOption("", false, T("Choose action...").ToString())
+            @Html.SelectOption("Delete", false, T("Delete").ToString())
+        </select>
+        <button type="submit" name="submit.BulkEdit" value="yes">@T("Apply")</button>
+    </fieldset>
+    <table class="items dynamic-forms-submissions">
+        <thead>
+            <tr>
+                <th><input type="checkbox" class="check-all" /></th>
+                @foreach (var dataColumn in dataColumns) {
+                    <th>@dataColumn.ToString().CamelFriendly()</th>
+                }
+                <th></th>
+            </tr>
+        </thead>
+        <tbody class="submissions">
+            @foreach (DataRow dataRow in Model.Submissions.Rows) {
+                var id = dataRow["Id"];
+                <tr>
+                    <td><input type="checkbox" value="@id" name="submissionIds" /></td>
+                    @foreach (var dataColumn in dataColumns) {
+                        <td>@dataRow[dataColumn]</td>
+                    }
+                    <td>
+                        @Html.ActionLink(T("Details").Text, "Details", "SubmissionAdmin", new { id = id, area = "Orchard.DynamicForms" }, null) @T(" | ")
+                        @Html.ActionLink(T("Remove").Text, "Delete", "SubmissionAdmin", new { id = id, area = "Orchard.DynamicForms" }, new { itemprop = "RemoveUrl UnsafeUrl" })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    @Display(Model.Pager)
+}

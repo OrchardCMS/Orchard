@@ -1,3 +1,4 @@
+using System.Linq;
 using Orchard.ContentManagement.Records;
 using Orchard.Data;
 
@@ -11,7 +12,10 @@ namespace Orchard.ContentManagement.Handlers {
             return _repository.Get(versionRecord.Id);
         }
 
-        protected override TRecord CreateRecordCore(ContentItemVersionRecord versionRecord, TRecord record) {
+        protected override TRecord CreateRecordCore(ContentItemVersionRecord versionRecord, TRecord record = null) {
+            if (record == null) {
+                record = new TRecord();
+            }
             record.ContentItemRecord = versionRecord.ContentItemRecord;
             record.ContentItemVersionRecord = versionRecord;
             _repository.Create(record);
@@ -27,6 +31,19 @@ namespace Orchard.ContentManagement.Handlers {
 
             // push the new instance into the transaction and session
             _repository.Create(building.Record);
+        }
+
+        protected override void Destroying(DestroyContentContext context, ContentPart<TRecord> instance) {
+            // Get all content item version records.
+            var allVersions = context.ContentItem.Record.Versions.ToArray();
+
+            // For each version record, delete its part record (ID of versioned part records is the same as the ID of a version record).
+            foreach (var versionRecord in allVersions) {
+                var partRecord = _repository.Get(versionRecord.Id);
+
+                if (partRecord != null)
+                    _repository.Delete(partRecord);
+            }
         }
     }
 

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -9,21 +10,17 @@ using Orchard.Utility.Extensions;
 
 namespace Orchard.Data {
     public class Repository<T> : IRepository<T> where T : class {
-        private readonly ISessionLocator _sessionLocator;
+        private readonly ITransactionManager _transactionManager;
 
-        public Repository(ISessionLocator sessionLocator) {
-            _sessionLocator = sessionLocator;
+        public Repository(ITransactionManager transactionManager) {
+            _transactionManager = transactionManager;
             Logger = NullLogger.Instance;
         }
 
         public ILogger Logger { get; set; }
 
-        protected virtual ISessionLocator SessionLocator {
-            get { return _sessionLocator; }
-        }
-
         protected virtual ISession Session {
-            get { return SessionLocator.For(typeof (T)); }
+            get { return _transactionManager.GetSession(); }
         }
 
         public virtual IQueryable<T> Table {
@@ -111,6 +108,30 @@ namespace Orchard.Data {
             Logger.Debug("Copy {0} {1}", source, target);
             var metadata = Session.SessionFactory.GetClassMetadata(typeof (T));
             var values = metadata.GetPropertyValues(source, EntityMode.Poco);
+
+            //This method is currently only used by StorageVersionFilter<>.Versioning()
+            //In order to prevent shared references to the same collection instance
+            //Instances of IList<> need to be copied to a new collection instance
+            for (var index = 0; index < values.Length; index++) {
+                var value = values[index];
+                if (value == null)
+                    continue;
+                
+                var type = value.GetType();
+                var isGenericList = type.GetInterfaces()
+                    .Where(i => i.IsGenericType)
+                    .Any(i => i.GetGenericTypeDefinition() == typeof(IList<>));
+
+                if(!isGenericList)
+                    continue;
+
+                var genericArgument = type.GetGenericArguments().First();
+                var genericType = typeof(List<>).MakeGenericType(new[] { genericArgument });
+
+                var listValues = ((IList)value);
+                values[index] = Activator.CreateInstance(genericType, new[] { listValues });
+            }
+
             metadata.SetPropertyValues(target, values, EntityMode.Poco);
         }
 

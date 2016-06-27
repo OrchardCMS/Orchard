@@ -13,9 +13,18 @@ namespace Orchard.Indexing.Handlers {
         public CreateIndexingTaskHandler(IIndexingTaskManager indexingTaskManager) {
             _indexingTaskManager = indexingTaskManager;
 
+            OnCreated<ContentPart>(CreateIndexingTask);
+            OnUpdated<ContentPart>(CreateIndexingTask);
             OnPublished<ContentPart>(CreateIndexingTask);
             OnUnpublished<ContentPart>(CreateIndexingTask);
+            OnImported<ContentPart>(CreateIndexingTask);
+            OnRestored<ContentPart>(CreateIndexingTask);
             OnRemoved<ContentPart>(RemoveIndexingTask);
+            OnDestroyed<ContentPart>(RemoveIndexingTask);
+        }
+
+        void CreateIndexingTask(ContentContextBase context, ContentPart part) {
+            _indexingTaskManager.CreateUpdateIndexTask(context.ContentItem);
         }
 
         void CreateIndexingTask(PublishContentContext context, ContentPart part) {
@@ -28,7 +37,7 @@ namespace Orchard.Indexing.Handlers {
             _indexingTaskManager.CreateUpdateIndexTask(context.ContentItem);
         }
 
-        void RemoveIndexingTask(RemoveContentContext context, ContentPart part) {
+        void RemoveIndexingTask(ContentContextBase context, ContentPart part) {
             _indexingTaskManager.CreateDeleteIndexTask(context.ContentItem);
         }
     }

@@ -1,0 +1,31 @@
+﻿@model Orchard.Layouts.ViewModels.CreateElementBlueprintViewModel
+@{
+    Layout.Title = T("Create Element based on {0}", Model.BaseElement.DisplayText);
+}
+@using (Html.BeginFormAntiForgeryPost()) {
+    @Html.ValidationSummary()
+    <fieldset>
+        <div>
+            @Html.LabelFor(m => m.ElementDisplayName, T("Element Display Name"))
+            @Html.TextBoxFor(m => m.ElementDisplayName, new { @class = "text large" })
+            @Html.Hint(T("The friendly name of the specialized element. Example: Special {0}.", Model.BaseElement.Descriptor.DisplayText))
+        </div>
+        <div>
+            @Html.LabelFor(m => m.ElementTypeName, T("Element Type Name"))
+            @Html.TextBoxFor(m => m.ElementTypeName, new { @class = "text large" })
+            @Html.Hint(T("The technical type name of the specialized element. Example: Acme.Elements.Special{0}.", Model.BaseElement.Descriptor.DisplayText))
+        </div>
+        <div>
+            @Html.LabelFor(m => m.ElementDescription, T("Element Description"))
+            @Html.TextBoxFor(m => m.ElementDescription, new { @class = "text large" })
+            @Html.Hint(T("Optionally enter a description for this element."))
+        </div>
+        <div>
+            @Html.LabelFor(m => m.ElementCategory, T("Element Category"))
+            @Html.TextBoxFor(m => m.ElementCategory, new { @class = "text large" })
+            @Html.Hint(T("Optionally specify a category for this element."))
+        </div>
+    </fieldset>
+    <button type="submit">@T("Create")</button>
+    @Html.ActionLink(T("Cancel").Text, "Browse", new { area = "Orchard.Layouts" }, new { @class = "button" })
+}

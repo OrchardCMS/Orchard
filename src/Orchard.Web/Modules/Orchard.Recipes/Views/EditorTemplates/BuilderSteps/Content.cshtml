@@ -1,0 +1,51 @@
+﻿@model Orchard.Recipes.ViewModels.ContentBuilderStepViewModel
+@{
+    Style.Include("recipebuilderstep-content.css");
+    Script.Require("jQuery");
+    Script.Include("recipebuilderstep-data.js");
+}
+<div>
+    <table class="items">
+        <thead>
+            <tr>
+                <th>@T("Content Type")</th>
+                <th>
+                    <input type="checkbox" class="check-all-in-column" />
+                    @T("Content")
+                </th>
+                <th>
+                    <input type="checkbox" class="check-all-in-column" />
+                    @T("Content Definition")
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @{ var contentTypeIndex = 0;}
+            @foreach (var contentType in Model.ContentTypes) {
+                <tr>
+                    <td>@contentType.DisplayName</td>
+                    <td>
+                        <input type="hidden" name="@Html.NameFor(m => m.ContentTypes[contentTypeIndex].Name)" value="@Model.ContentTypes[contentTypeIndex].Name" />
+                        <input type="checkbox" class="check-data" name="@Html.NameFor(m => m.ContentTypes[contentTypeIndex].ExportData)" value="true" />
+                    </td>
+                    <td>
+                        <input type="checkbox" class="check-schema" name="@Html.NameFor(m => m.ContentTypes[contentTypeIndex].ExportSchema)" value="true" />
+                    </td>
+                </tr>
+                contentTypeIndex++;
+            }
+        </tbody>
+    </table>
+    @Html.Hint(T("Choose the types to include in the export file"))
+</div>
+<div>
+    <p>@T("Version History")</p>
+    @Html.RadioButtonFor(m => m.VersionHistoryOptions, "Published", new { id = "Published", Checked = "Checked" })
+    <label for="Published" class="forcheckbox">@T("Only Published Versions")</label>
+    <br />
+    @Html.RadioButtonFor(m => m.VersionHistoryOptions, "Draft", new { id = "Draft" })
+    <label for="Draft" class="forcheckbox">@T("Only Drafts")</label>
+    <br />
+    @Html.RadioButtonFor(m => m.VersionHistoryOptions, "Latest", new { id = "Latest" })
+    <label for="Latest" class="forcheckbox">@T("Latest Versions")</label>
+</div>

@@ -1,3 +1,15 @@
-﻿@(Model.Required != null && Model.Required
-         ? Html.TextBox("Text", (string)Model.Text, new { @class = "text medium", required = "required" })
-         : Html.TextBox("Text", (string)Model.Text, new { @class = "text medium" }))
+﻿@{
+    var htmlAttributes = new Dictionary<string, object> {
+        {"class", "text medium"}
+    };
+
+    if (Model.Required == true) {
+        htmlAttributes["required"] = "required";
+    }
+
+    if (Model.AutoFocus == true) {
+        htmlAttributes["autofocus"] = "autofocus";
+    }
+}
+
+@Html.TextBox("Text", (string)Model.Text, htmlAttributes)

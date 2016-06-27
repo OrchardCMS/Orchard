@@ -1,0 +1,66 @@
+﻿@using Orchard.Utility.Extensions
+@model Orchard.ImportExport.ViewModels.UploadRecipeViewModel
+@{
+    Script.Require("ShapesBase");
+}
+@{
+    var importOptions = new[] {
+        new SelectListItem { Text = T("Import the uploaded recipe").ToString(), Value = "false", Selected = !Model.ResetSite},
+        new SelectListItem { Text = T("Reset the site and run setup using the uploaded recipe").ToString(), Value = "true", Selected = Model.ResetSite},
+    };
+}
+<p>
+    @T("Choose a recipe file to import. Please consider {0} or backing up your data first.", @Html.Link(T("exporting").Text, Url.Action("Export", "Admin", new { area = "Orchard.ImportExport" })))
+</p>
+<fieldset>
+    <label for="RecipeFile">@T("Recipe File")</label>
+    <input type="file" id="RecipeFile" size="64" name="RecipeFile" value="@T("Browse...")"/>
+</fieldset>
+<fieldset>
+    <legend>
+        @T("Import Options")
+    </legend>
+    <ul>
+        @foreach (var option in importOptions) {
+                var importOptionId = String.Format("{0}_{1}", Html.FieldIdFor(m => m.ResetSite), option.Value);
+            <li>
+                <input type="radio" id="@importOptionId" name="@Html.FieldNameFor(m => m.ResetSite)" value="@option.Value" @if (option.Selected) { <text> checked="checked" </text> } />
+                <label for="@importOptionId" class="forradiobutton">@option.Text</label>
+            </li>
+        }
+    </ul>
+    @Html.Hint(T("Select whether you want to import the selected recipe into the current site or if you want to do a full site reset first."))
+    <div data-controllerid="@String.Format("{0}_{1}", Html.FieldIdFor(m => m.ResetSite), "true")" style="display: none;">
+        <div class="message message-Warning">@T("This will delete your database tables. Please consider creating a backup first.")</div>
+        <div>
+            @Html.LabelFor(m => m.SuperUserPassword, T("Site Owner Password"))
+            @Html.PasswordFor(m => m.SuperUserPassword, new {@class = "text"})
+            @Html.Hint(T("Specify a new password for the site owner in case your recipe doesn't contain the current site owner."))
+        </div>
+        <div>
+            @Html.LabelFor(m => m.SuperUserPasswordConfirmation, T("Confirm Site Owner Password"))
+            @Html.PasswordFor(m => m.SuperUserPasswordConfirmation, new {@class = "text"})
+            @Html.Hint(T("Repeat the password to make sure you didn't mistype anything."))
+        </div>
+    </div>
+</fieldset>
+@{
+    var stepIndex = 0;
+    foreach (var step in Model.RecipeExecutionSteps) {
+        var stepId = Html.FieldIdFor(m => m.RecipeExecutionSteps[stepIndex].IsSelected);
+        if (stepIndex <= Model.RecipeExecutionSteps.Count) {
+            <hr />
+        }
+        <fieldset class="recipe-builder-step recipe-builder-step-@step.Name.HtmlClassify()">
+            <legend>
+                <input type="hidden" name="@Html.FieldNameFor(m => m.RecipeExecutionSteps[stepIndex].Name)" value="@Model.RecipeExecutionSteps[stepIndex].Name" />
+                <label for="@stepId" class="forcheckbox">@step.DisplayName</label>
+            </legend>
+            @Html.Hint(step.Description)
+            <div data-controllerid="@stepId">
+                @Display(step.Editor)
+            </div>
+        </fieldset>
+        stepIndex++;
+    }
+}

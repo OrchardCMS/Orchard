@@ -1,0 +1,29 @@
+﻿@using System.Globalization
+@using Orchard.Localization
+@model Orchard.Localization.ViewModels.CreateTransliterationViewModel
+
+@{
+    Layout.Title = T("Create Transliteration").Text;
+
+    var value = Model.Rules;
+
+    if (string.IsNullOrWhiteSpace(value)) {
+        value = Constants.TransliterationDefaultValue;
+    }
+
+    var cultures = CultureInfo.GetCultures(CultureTypes.SpecificCultures);
+}
+
+@using(Html.BeginFormAntiForgeryPost()) {
+    @Html.ValidationSummary()
+    <fieldset>
+        <label for="CultureFrom">@T("From")</label>
+        @Html.DropDownList("CultureFrom", new SelectList(cultures, "Name", "DisplayName", Model.CultureFrom))
+        <label for="CultureTo">@T("To")</label>
+        @Html.DropDownList("CultureTo", new SelectList(cultures, "Name", "DisplayName", Model.CultureTo))
+
+        <textarea rows="25" cols="80" name="Rules" id="Rules">@value</textarea>
+    </fieldset>
+
+    <input class="button" type="submit" value="@T("Create")" />
+}

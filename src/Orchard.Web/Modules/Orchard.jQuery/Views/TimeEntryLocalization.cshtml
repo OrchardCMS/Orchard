@@ -27,7 +27,7 @@
 <script type="text/javascript">
     //<![CDATA[
     $(function() {
-        $.timeEntry.regional['@HttpUtility.JavaScriptStringEncode(currentCulture.Name)'] = {
+        $.timeEntry.regionalOptions['@HttpUtility.JavaScriptStringEncode(currentCulture.Name)'] = {
             show24Hours: @(dateTimeFormatProvider.Use24HourTime ? "true" : "false"),
             separator: '@HttpUtility.JavaScriptStringEncode(dateTimeFormatProvider.TimeSeparator)',
             ampmPrefix: '@HttpUtility.JavaScriptStringEncode(dateTimeFormatProvider.AmPmPrefix)',
@@ -40,7 +40,7 @@
                 '@HttpUtility.JavaScriptStringEncode(T("Decrement").Text)'
             ]
         };
-        $.timeEntry.setDefaults($.timeEntry.regional['@HttpUtility.JavaScriptStringEncode(currentCulture.Name)']);
+        $.timeEntry.setDefaults($.timeEntry.regionalOptions['@HttpUtility.JavaScriptStringEncode(currentCulture.Name)']);
         $.timeEntry.setDefaults({
             spinnerImage: '@HttpUtility.JavaScriptStringEncode(Url.Content("~/Modules/Orchard.jQuery/Styles/images/spinnerDefault.png"))'
         });

@@ -10,19 +10,13 @@ using Orchard.Security;
 namespace Orchard.Core.Common.Drivers {
     public class CommonPartDriver : ContentPartDriver<CommonPart> {
         private readonly IContentManager _contentManager;
-        private readonly IAuthenticationService _authenticationService;
-        private readonly IAuthorizationService _authorizationService;
         private readonly IMembershipService _membershipService;
 
         public CommonPartDriver(
             IOrchardServices services,
             IContentManager contentManager,
-            IAuthenticationService authenticationService,
-            IAuthorizationService authorizationService,
             IMembershipService membershipService) {
             _contentManager = contentManager;
-            _authenticationService = authenticationService;
-            _authorizationService = authorizationService;
             _membershipService = membershipService;
             T = NullLocalizer.Instance;
             Services = services;
@@ -51,11 +45,6 @@ namespace Orchard.Core.Common.Drivers {
         }
 
         protected override DriverResult Editor(CommonPart part, IUpdateModel updater, dynamic shapeHelper) {
-            var currentUser = _authenticationService.GetAuthenticatedUser();
-            if (!_authorizationService.TryCheckAccess(StandardPermissions.SiteOwner, currentUser, part)) {
-                return null;
-            }
-
             var model = new ContainerEditorViewModel();
             if (part.Container != null)
                 model.ContainerId = part.Container.ContentItem.Id;
@@ -79,35 +68,35 @@ namespace Orchard.Core.Common.Drivers {
         }
 
         protected override void Importing(CommonPart part, ImportContentContext context) {
-            var owner = context.Attribute(part.PartDefinition.Name, "Owner");
-            if (owner != null) {
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
+            }
+
+            context.ImportAttribute(part.PartDefinition.Name, "Owner", owner => {
                 var contentIdentity = new ContentIdentity(owner);
-                part.Owner = _membershipService.GetUser(contentIdentity.Get("User.UserName"));
-            }
-            // use the super user if the referenced one doesn't exist
-            else {
-                part.Owner = _membershipService.GetUser(Services.WorkContext.CurrentSite.SuperUser);
-            }
 
-            var container = context.Attribute(part.PartDefinition.Name, "Container");
-            if (container != null) {
-                part.Container = context.GetItemFromSession(container);
-            }
+                // use the super user if the referenced one doesn't exist;
+                part.Owner =
+                    _membershipService.GetUser(contentIdentity.Get("User.UserName"))
+                    ?? _membershipService.GetUser(Services.WorkContext.CurrentSite.SuperUser);
+            });
 
-            var createdUtc = context.Attribute(part.PartDefinition.Name, "CreatedUtc");
-            if (createdUtc != null) {
-                part.CreatedUtc = XmlConvert.ToDateTime(createdUtc, XmlDateTimeSerializationMode.Utc);
-            }
+            context.ImportAttribute(part.PartDefinition.Name, "Container", container =>
+                part.Container = context.GetItemFromSession(container)
+            );
 
-            var publishedUtc = context.Attribute(part.PartDefinition.Name, "PublishedUtc");
-            if (publishedUtc != null) {
-                part.PublishedUtc = XmlConvert.ToDateTime(publishedUtc, XmlDateTimeSerializationMode.Utc);
-            }
+            context.ImportAttribute(part.PartDefinition.Name, "CreatedUtc", createdUtc =>
+                part.CreatedUtc = XmlConvert.ToDateTime(createdUtc, XmlDateTimeSerializationMode.Utc)
+            );
 
-            var modifiedUtc = context.Attribute(part.PartDefinition.Name, "ModifiedUtc");
-            if (modifiedUtc != null) {
-                part.ModifiedUtc = XmlConvert.ToDateTime(modifiedUtc, XmlDateTimeSerializationMode.Utc);
-            }
+            context.ImportAttribute(part.PartDefinition.Name, "PublishedUtc", publishedUtc =>
+                part.PublishedUtc = XmlConvert.ToDateTime(publishedUtc, XmlDateTimeSerializationMode.Utc)
+            );
+
+            context.ImportAttribute(part.PartDefinition.Name, "ModifiedUtc", modifiedUtc =>
+                part.ModifiedUtc = XmlConvert.ToDateTime(modifiedUtc, XmlDateTimeSerializationMode.Utc)
+            );
         }
 
         protected override void Exporting(CommonPart part, ExportContentContext context) {

@@ -1,0 +1,16 @@
+﻿@using Orchard.AuditTrail.Helpers
+@{
+    var eventData = (IDictionary<string, object>)Model.EventData;
+    var oldRetentionPeriod = eventData.Get<int>("OldRetentionPeriod");
+    var newRetentionPeriod = eventData.Get<int>("NewRetentionPeriod");
+    var oldMinimumRunInterval = eventData.Get<int>("OldMinimumRunInterval");
+    var newMinimumRunInterval = eventData.Get<int>("NewMinimumRunInterval");
+}
+<section class="audittrail-settings-eventsummary">
+    @if (newRetentionPeriod != oldRetentionPeriod) {
+        <div>@T("The trimming retention period was changed from <strong>{0}</strong> to <strong>{1}</strong>.", T.Plural("1 day", "{0} days", oldRetentionPeriod), T.Plural("1 day", "{0} days", newRetentionPeriod))</div>
+    }
+    @if (newMinimumRunInterval != oldMinimumRunInterval) {
+        <div>@T("The minimum trimming run interval was changed from <strong>{0}</strong> to <strong>{1}</strong>.", T.Plural("1 hour", "{0} hours", oldMinimumRunInterval), T.Plural("1 hour", "{0} hours", newMinimumRunInterval))</div>
+    }
+</section>

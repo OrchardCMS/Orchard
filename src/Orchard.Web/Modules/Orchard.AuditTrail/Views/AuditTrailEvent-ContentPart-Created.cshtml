@@ -1,0 +1,8 @@
+﻿@using Orchard.AuditTrail.Helpers
+@{
+    var eventData = (IDictionary<string, object>) Model.EventData;
+    var contentPartName = eventData.Get<string>("ContentPartName");
+}
+<section class="audittrail-contentpart-eventsummary">
+    @T("The content part {0} was created.", Html.ContentPartEditLink(contentPartName))
+</section>

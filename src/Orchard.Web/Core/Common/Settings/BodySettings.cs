@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
@@ -9,6 +10,8 @@ namespace Orchard.Core.Common.Settings {
     public class BodyPartSettings {
         public const string FlavorDefaultDefault = "html";
         private string _flavorDefault;
+
+        [DataType("Flavor")]
         public string FlavorDefault {
             get { return !string.IsNullOrWhiteSpace(_flavorDefault)
                            ? _flavorDefault
@@ -18,6 +21,7 @@ namespace Orchard.Core.Common.Settings {
     }
 
     public class BodyTypePartSettings {
+        [DataType("Flavor")]
         public string Flavor { get; set; }
     }
 

@@ -6,6 +6,7 @@
   <PropertyGroup>
     <LibFolder>$(MSBuildProjectDirectory)\lib</LibFolder>
     <SrcFolder>$(MSBuildProjectDirectory)\src</SrcFolder>
+    <AzureSrcFolder>$(SrcFolder)\Orchard.Azure</AzureSrcFolder>
     <BuildFolder>$(MSBuildProjectDirectory)\build</BuildFolder>
     <MsBuildTasksFolder>$(MSBuildProjectDirectory)\buildtasks</MsBuildTasksFolder>
     <ArtifactsFolder>$(MSBuildProjectDirectory)\artifacts</ArtifactsFolder>
@@ -27,20 +28,33 @@
 
     <BuildPlatform Condition="$(ProgramW6432) != ''">x64</BuildPlatform>
     <BuildPlatform Condition="$(BuildPlatform) == ''">x86</BuildPlatform>
+    <Configuration Condition="$(Configuration) == ''">Release</Configuration>
+    
+    <OrchardSolution>$(SrcFolder)\Orchard.sln</OrchardSolution>
+    <OrchardAzureSolution>$(AzureSrcFolder)\Orchard.Azure.sln</OrchardAzureSolution>
+    <Solution Condition="$(Solution) == ''">$(OrchardSolution)</Solution>
 
     <!-- TeamCity build number -->
     <Version>$(BUILD_NUMBER)</Version>
   </PropertyGroup>
 
-  <Import Project="$(LibFolder)\msbuild\MSBuild.Community.Tasks.Targets"/>
+  <!-- Finding the restored NuGet package of NUnit (version number doesn't matter)
+       to be able to reference the test runner executable (http://stackoverflow.com/a/25617556). -->
+  <ItemGroup>
+    <NUnitPackageFiles Include="$(SrcFolder)\packages\NUnit*\tools\nunit-console.exe" />
+    <NUnitPackageToolsFolder Include="@(NUnitPackageFiles->'%(RootDir)%(Directory)'->Distinct())" />
+  </ItemGroup>
+
+  <Import Project="$(LibFolder)\msbuildtasks\MSBuild.Community.Tasks.Targets"/>
+  <Import Project="$(LibFolder)\slowcheetah\SlowCheetah.Transforms.targets"/>
 
   <!-- Coordinating Targets -->
 
-  <Target Name ="Build">
+  <Target Name="Build">
     <CallTarget Targets="Clean"/>
     <CallTarget Targets="Compile"/>
     <CallTarget Targets="Test"/>
-    <CallTarget Targets="Package"/> 
+    <CallTarget Targets="Package"/>
   </Target>
 
   <Target Name="FastBuild">
@@ -51,6 +65,7 @@
 
   <Target Name="FullBuild">
     <CallTarget Targets="Clean"/>
+    <CallTarget Targets="TypeScript"/>
     <CallTarget Targets="Compile"/>
     <CallTarget Targets="Test"/>
     <CallTarget Targets="Package"/>
@@ -92,80 +107,80 @@
   </Target>
 
   <Target Name="AzureBuild">
-    <MSBuild Projects="AzurePackage.proj" Targets="Build">
+    <MSBuild Projects="$(OrchardAzureSolution)" Targets="Build">
     </MSBuild>
   </Target>
 
   <Target Name="AzureCIBuild">
-    <MSBuild Projects="AzurePackage.proj" Targets="CIBuild">
+    <MSBuild Projects="$(OrchardAzureSolution)" Targets="CIBuild">
     </MSBuild>
   </Target>
 
   <!-- Building -->
 
   <Target Name="Clean">
-    <MSBuild Projects="$(SrcFolder)\Orchard.sln" Targets="Clean" />
+    <MSBuild Projects="$(Solution)" Targets="Clean" />
     <RemoveDir Directories="$(BuildFolder)" ContinueOnError="true"/>
     <RemoveDir Directories="$(ArtifactsFolder)" />
   </Target>
-
-  <Target Name ="Compile">
+  
+  <Target Name="Compile">
     <!-- Compile to "OutputFolder" -->
     <MSBuild
-      Projects="$(SrcFolder)\Orchard.sln"
+      Projects="$(Solution)"
       Targets="Build"
-      Properties="Configuration=Release;OutputPath=$(CompileFolder)" />
+      Properties="Configuration=$(Configuration);OutputPath=$(CompileFolder)" />
     <!-- Compile to "regular" output folder for devs using VS locally -->
     <MSBuild
-      Projects="$(SrcFolder)\Orchard.sln"
+      Projects="$(Solution)"
       Targets="Build"/>
   </Target>
 
-  <Target Name ="CompileMsBuildTasks">
+  <Target Name="CompileMsBuildTasks">
     <MSBuild
       Projects="$(SrcFolder)\Tools\MSBuild.Orchard.Tasks\MSBuild.Orchard.Tasks.csproj"
       Targets="Build"
-      Properties="Configuration=Release;OutputPath=$(MsBuildTasksFolder)" />
+      Properties="Configuration=$(Configuration);OutputPath=$(MsBuildTasksFolder)" />
+  </Target>
+
+  <Target Name="TypeScript" DependsOnTargets="CompileMsBuildTasks">
+    <ItemGroup>
+      <TypeScriptSources Include="$(SrcFolder)\**\Scripts\**\*.ts"/>
+    </ItemGroup>
+    <CompileTypeScriptFiles
+      InputFiles="@(TypeScriptSources)"
+      CompilerPath="$(LibFolder)\typescript\tsc.exe"
+      CompilerOptions="--target ES5">
+      <Output TaskParameter="OutputFiles" ItemName="Content" />
+    </CompileTypeScriptFiles>
   </Target>
 
   <!-- Testing -->
 
-  <Target Name ="Test">
-    <!-- TeamCity support -->
-    <ItemGroup>
-      <NUnitAddinFiles Include="$(teamcity_dotnet_nunitaddin)-2.5.2.*" />
-    </ItemGroup>
-    <Copy SourceFiles="@(NUnitAddinFiles)" DestinationFolder="$(LibFolder)\nunit\addins" />
-
+  <Target Name="Test">
     <!-- Run unit test assemblies -->
     <CreateItem Include="$(CompileFolder)\*.Tests.*dll">
       <Output TaskParameter="Include" ItemName="TestAssemblies" />
     </CreateItem>
 
-    <NUnit Assemblies="@(TestAssemblies)" ToolPath="$(LibFolder)\nunit" WorkingDirectory="$(CompileFolder)" OutputXmlFile="$(BuildFolder)\Orchard.Tests.xml" />
+    <NUnit Assemblies="@(TestAssemblies)" ToolPath="@(NUnitPackageToolsFolder)" WorkingDirectory="$(CompileFolder)" OutputXmlFile="$(BuildFolder)\Orchard.Tests.xml" ExcludeCategory="longrunning" />
   </Target>
 
-  <Target Name ="Spec" DependsOnTargets="Package-Stage">
-    <!-- TeamCity support -->
-    <ItemGroup>
-      <NUnitAddinFiles Include="$(teamcity_dotnet_nunitaddin)-2.5.2.*" />
-    </ItemGroup>
-    <Copy SourceFiles="@(NUnitAddinFiles)" DestinationFolder="$(LibFolder)\nunit\addins" />
+  <Target Name="Spec" DependsOnTargets="Package-Stage">
 
     <CreateItem Include="$(CompileFolder)\*.Specs.dll">
       <Output TaskParameter="Include" ItemName="SpecAssemblies" />
     </CreateItem>
-    <NUnit Assemblies="@(SpecAssemblies)" ToolPath="$(LibFolder)\nunit" />
+    <NUnit Assemblies="@(SpecAssemblies)" ToolPath="$(NUnitPackageToolsFolder)" />
   </Target>
 
   <!-- Packaging (Stage) -->
-
-  <UsingTask AssemblyFile="$(LibFolder)\slowcheetah\SlowCheetah.Xdt.dll" TaskName="SlowCheetah.Xdt.TransformXml" />
 
   <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.FilterModuleBinaries" />
   <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.FileUpdateLines" />
   <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.ValidateExtensionProjectFiles" />
   <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.XmlDelete" />
+  <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.CompileTypeScriptFiles" />
 
   <Target Name="Package-Stage" DependsOnTargets="Compile">
     <CallTarget Targets="CompileMsBuildTasks"/>
@@ -181,16 +196,43 @@
       <Stage-Media Include="$(SrcFolder)\Orchard.Web\Media\OrchardLogo.png" />
       <Stage-PoFiles Include="$(SrcFolder)\Orchard.Web\**\*.po" />
       <Stage-Core Include="$(WebSitesFolder)\Orchard.Core\**\*" Exclude="$(WebSitesFolder)\Orchard.Core\**\bin\**\*" />
-      <Stage-Themes Include="$(ThemesSrcFolder)\**\*" Exclude="@(Stage-Bin-Exclude);$(ThemesSrcFolder)\*.*;$(ThemesSrcFolder)\*.*;$(ThemesSrcFolder)\bin\**;$(ThemesSrcFolder)\obj\**;$(ThemesSrcFolder)\*.*;$(ThemesSrcFolder)\Properties\**" />
-      <Stage-Themes-Binaries Include="$(ThemesSrcFolder)\*\**\bin\*" />
-
-      <Stage-Module-Exclude Include="@(Stage-Web);@(Stage-Core);@(Stage-Themes);$(WebSitesFolder)\Themes\**\*;$(WebSitesFolder)\PackageIndexReferenceImplementation\**\*"/>
-
-      <Stage-Modules Include="$(WebSitesFolder)\**\*" Exclude="@(Stage-Bin-Exclude);@(Stage-Module-Exclude)" />
-      <Stage-Modules-Binaries Include="$(WebSitesFolder)\**\bin\**\*"  Exclude="@(Stage-Module-Exclude)"/>
-      <Stage-Modules-Sources Include="$(ModulesSrcFolder)\**\*.csproj;$(ModulesSrcFolder)\**\*.cs"/>
+     
+      <!-- Get list of module names from the module definition files within ModulesSrcFolder -->
+      <Stage-Modules-Definitions Include="$(ModulesSrcFolder)\**\Module.txt" />
+      <Stage-Modules-Directories Include="@(Stage-Modules-Definitions->DirectoryName())"  />
+      <Stage-Modules-Names Include="@(Stage-Modules-Directories->'%(Filename)%(Extension)')"  />
+     
+      <!-- Get list of theme names from the theme definition files within ThemesSrcFolder -->
+      <Stage-Themes-Definitions Include="$(ThemesSrcFolder)\**\Theme.txt" />
+      <Stage-Themes-Directories Include="@(Stage-Themes-Definitions->DirectoryName())"  />
+      <Stage-Themes-Names Include="@(Stage-Themes-Directories->'%(Filename)%(Extension)')"  />
+      	 
       <Stage-License Include="$(MSBuildProjectDirectory)\*.txt" />
       <Stage-Build Include="$(MSBuildProjectDirectory)\*.proj;$(MSBuildProjectDirectory)\*.cmd" />
+    </ItemGroup>
+    
+    <ItemGroup>
+	  <!-- Note. We could add recursion (\..\) before the module/theme name thus avoiding the need for custom metadata
+	       and simplifing the copy tasks further below. However this can result in folders being incorrectly copied if 
+		   a module or theme contains a subfolder with the same name as another module or theme. -->
+      <Stage-Modules Include="$(WebSitesFolder)\%(Stage-Modules-Names.Identity)\**\*" Exclude="@(Stage-Bin-Exclude)">
+        <ModuleName>%(Stage-Modules-Names.Identity)</ModuleName>	  
+      </Stage-Modules>
+      <Stage-Modules-Binaries Include="$(WebSitesFolder)\%(Stage-Modules-Names.Identity)\**\bin\**\*">
+        <ModuleName>%(Stage-Modules-Names.Identity)</ModuleName>	  
+      </Stage-Modules-Binaries>
+      <Stage-Modules-Sources Include="$(ModulesSrcFolder)\**\*.csproj;$(ModulesSrcFolder)\**\*.cs"/>
+      <Stage-Themes-Default Include="$(WebSitesFolder)\Themes\%(Stage-Themes-Names.Identity)\**\*">
+        <ThemeName>%(Stage-Themes-Names.Identity)</ThemeName>
+      </Stage-Themes-Default>
+      <Stage-Themes-Custom Include="$(WebSitesFolder)\%(Stage-Themes-Names.Identity)\**\*" Exclude="@(Stage-Bin-Exclude)">
+        <ThemeName>%(Stage-Themes-Names.Identity)</ThemeName>
+      </Stage-Themes-Custom>
+	  <!-- Note. Binaries are not copied for themes in the default Themes project. -->
+      <Stage-Themes-Binaries Include="$(WebSitesFolder)\%(Stage-Themes-Names.Identity)\**\bin\**\*">
+        <ThemeName>%(Stage-Themes-Names.Identity)</ThemeName>
+      </Stage-Themes-Binaries>
+      <Stage-Themes-Sources Include="$(ThemesSrcFolder)\**\*.csproj;$(ThemesSrcFolder)\**\*.cs" Exclude="$(ThemesSrcFolder)\*.*"/>
     </ItemGroup>
 
     <!-- Copying module binaries is somewhat tricky: From a module "bin" directory, we
@@ -218,31 +260,33 @@
     <Copy SourceFiles="@(SqlCe-Native-Binaries-x86)" DestinationFolder="$(StageFolder)\bin\x86\%(RecursiveDir)"/>
     <Copy SourceFiles="@(SqlCe-Native-Binaries-amd64)" DestinationFolder="$(StageFolder)\bin\amd64\%(RecursiveDir)"/>
     <Copy SourceFiles="@(Stage-Core)" DestinationFolder="$(StageFolder)\Core\%(RecursiveDir)"/>
-    <Copy SourceFiles="@(Stage-Modules)" DestinationFolder="$(StageFolder)\Modules\%(RecursiveDir)"/>
+    <Copy SourceFiles="@(Stage-Modules)" DestinationFiles="@(Stage-Modules->'$(StageFolder)\Modules\%(ModuleName)\%(RecursiveDir)%(Filename)%(Extension)')"/>
+    <Copy SourceFiles="@(Stage-Modules-Binaries-Unique)" DestinationFiles="@(Stage-Modules-Binaries-Unique->'$(StageFolder)\Modules\%(ModuleName)\%(RecursiveDir)%(Filename)%(Extension)')"/>
     <Copy SourceFiles="@(Stage-Modules-Sources)" DestinationFolder="$(StageFolder)\Modules\%(RecursiveDir)"/>
-    <Copy SourceFiles="@(Stage-Modules-Binaries-Unique)" DestinationFolder="$(StageFolder)\Modules\%(RecursiveDir)"/>
-    <Copy SourceFiles="@(Stage-Themes)" DestinationFolder="$(StageFolder)\Themes\%(RecursiveDir)"/>
-    <Copy SourceFiles="@(Stage-Themes-Binaries-Unique)" DestinationFolder="$(StageFolder)\Themes\%(RecursiveDir)"/>
+    <Copy SourceFiles="@(Stage-Themes-Default)" DestinationFiles="@(Stage-Themes-Default->'$(StageFolder)\Themes\%(ThemeName)\%(RecursiveDir)%(Filename)%(Extension)')"/>
+    <Copy SourceFiles="@(Stage-Themes-Custom)" DestinationFiles="@(Stage-Themes-Custom->'$(StageFolder)\Themes\%(ThemeName)\%(RecursiveDir)%(Filename)%(Extension)')"/>
+    <Copy SourceFiles="@(Stage-Themes-Binaries-Unique)" DestinationFiles="@(Stage-Themes-Binaries-Unique->'$(StageFolder)\Themes\%(ThemeName)\%(RecursiveDir)%(Filename)%(Extension)')"/>
+    <Copy SourceFiles="@(Stage-Themes-Sources)" DestinationFolder="$(StageFolder)\Themes\%(RecursiveDir)"/>
+
     <MakeDir Directories="$(StageFolder)\App_Data"/>
     <WriteLinesToFile File="$(StageFolder)\App_Data\_marker.txt" Lines="some_text" Overwrite="true"/>
-
 
     <!-- extra processing of the staged config files -->
     <TransformXml 
       Source="$(StageFolder)\Web.Config"
-      Transform="$(SrcFolder)\Orchard.Web\Web.Release.Config"
+      Transform="$(SrcFolder)\Orchard.Web\Web.$(Configuration).Config"
       Destination="$(StageFolder)\Web.Config"
     />
 
     <TransformXml 
       Source="$(StageFolder)\Config\HostComponents.Config"
-      Transform="$(SrcFolder)\Orchard.Web\Config\HostComponents.Release.Config"
+      Transform="$(SrcFolder)\Orchard.Web\Config\HostComponents.$(Configuration).Config"
       Destination="$(StageFolder)\Config\HostComponents.Config"
     />
 
     <TransformXml 
       Source="$(StageFolder)\Config\log4net.Config"
-      Transform="$(SrcFolder)\Orchard.Web\Config\log4net.Release.Config"
+      Transform="$(SrcFolder)\Orchard.Web\Config\log4net.$(Configuration).Config"
       Destination="$(StageFolder)\Config\log4net.Config"
     />
     
@@ -255,15 +299,17 @@
   <!-- Packaging (MsDeploy) -->
   <Target Name="Package-MsDeploy">
     <ItemGroup>
-      <!--<MsDeploy-Folder-Input Include="$(StageFolder)\**\*" Exclude="$(StageFolder)\**\bin\**\*.pdb;$(StageFolder)\**\bin\**\*.xml" />-->
 
       <MsDeploy-Exclude-Modules Include="
+        $(StageFolder)\**\Modules\Orchard.CustomForms\**;
+        $(StageFolder)\**\Modules\Orchard.jQuery\**;
         $(StageFolder)\**\Modules\Orchard.Media\**;
         $(StageFolder)\**\Modules\Orchard.MediaPicker\**;
         $(StageFolder)\**\Modules\Orchard.Rules\**;
+        $(StageFolder)\**\Modules\Orchard.TaskLease\**;
         " />
 
-      <MsDeploy-Folder-Input Include="$(StageFolder)\**\*" Exclude="$(StageFolder)\**\bin\**\*.xml;$(StageFolder)\**\obj\**\*;@(MsDeploy-Exclude-Modules)" />
+      <MsDeploy-Folder-Input Include="$(StageFolder)\**\*" Exclude="$(StageFolder)\**\bin\**\*.xml;$(StageFolder)\**\obj\**\*;$(StageFolder)\**\bin\**\*.pdb;$(StageFolder)\**\bin\**\*.dll.config;@(MsDeploy-Exclude-Modules)" />
       <MsDeploy-Parameters Include="$(LibFolder)\msdeploy\*.xml;$(LibFolder)\msdeploy\*.sql"/>
     </ItemGroup>
 
@@ -278,7 +324,7 @@
   <!-- Packaging (Precompiled) -->
   <Target Name="Package-Precompiled">
     <ItemGroup>
-      <Precompiled-Exclude-Source Include="$(StageFolder)\**\*.cs;$(StageFolder)\**\*.csproj" />
+      <Precompiled-Exclude-Source Include="$(StageFolder)\**\*.cs;$(StageFolder)\**\*.csproj;$(StageFolder)\**\*.csproj.user" />
       <Precompiled-Folder-Input Include="$(StageFolder)\**\*" Exclude="$(StageFolder)\**\bin\**\*.xml;$(StageFolder)\Modules\**\Tests\**;$(StageFolder)\Modules\**\Specs\**;$(StageFolder)\**\obj\**\*;@(Precompiled-Exclude-Source)" />
     </ItemGroup>
 
@@ -291,9 +337,11 @@
     <ItemGroup>
     
       <Zip-Exclude Include="
+        $(MSBuildProjectDirectory)\src\**\packages\**\*;
         $(MSBuildProjectDirectory)\src\**\bin\**\*;
         $(MSBuildProjectDirectory)\src\**\obj\**\*;
         $(MSBuildProjectDirectory)\**\App_Data\**\*;
+        $(MSBuildProjectDirectory)\**\node_modules\**\*;
         $(MSBuildProjectDirectory)\**\_ReSharper*\**\*;
         $(MSBuildProjectDirectory)\**\*.sln.cache;
         $(MSBuildProjectDirectory)\**\*.suo;
@@ -302,11 +350,11 @@
         $(MSBuildProjectDirectory)\**\*.hgignore;
         $(MSBuildProjectDirectory)\**\*.hg*\**\*;
         $(LibFolder)\nunit\addins\**\*;
-        " Exclude="$(MSBuildProjectDirectory)\src\Orchard.Azure\Orchard.Azure.CloudService\*Content\**\*" />
+        " Exclude="$(AzureSrcFolder)\Orchard.Azure.CloudService\*Content\**\*" />
 
       <Zip-Stage Include="$(StageFolder)\**\*" />
 
-      <Zip-MsDeploy Include="$(MsDeployFolder)\**\*" />
+      <Zip-MsDeploy Include="$(MsDeployFolder)\**\*" Exclude=""/>
 
       <Zip-Source Include="
         $(MSBuildProjectDirectory)\lib\**\*;

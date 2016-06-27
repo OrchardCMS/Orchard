@@ -3,38 +3,55 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
-using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.Localization;
 using Orchard.Settings;
 using Orchard.Taxonomies.Models;
 using Orchard.Taxonomies.ViewModels;
 using Orchard.Taxonomies.Services;
+using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
+using Orchard.DisplayManagement;
 
 namespace Orchard.Taxonomies.Controllers {
 
     [ValidateInput(false)]
     public class AdminController : Controller, IUpdateModel {
         private readonly ITaxonomyService _taxonomyService;
+        private readonly ISiteService _siteService;
 
         public AdminController(
             IOrchardServices services,
-            ITaxonomyService taxonomyService) {
+            ITaxonomyService taxonomyService,
+            ISiteService siteService,
+            IShapeFactory shapeFactory) {
             Services = services;
+            _siteService = siteService;
             _taxonomyService = taxonomyService;
+
             T = NullLocalizer.Instance;
+            Shape = shapeFactory;
         }
 
+        dynamic Shape { get; set; }
         public IOrchardServices Services { get; set; }
-        protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
+        protected virtual ISite CurrentSite { get; private set; }
 
         public Localizer T { get; set; }
 
-        public ActionResult Index() {
-            var taxonomies = _taxonomyService.GetTaxonomies();
-            var entries = taxonomies.Select(CreateTaxonomyEntry).ToList();
-            var model = new TaxonomyAdminIndexViewModel { Taxonomies = entries };
+        public ActionResult Index(PagerParameters pagerParameters) {
+            var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
+
+            var taxonomies = _taxonomyService.GetTaxonomiesQuery().Slice(pager.GetStartIndex(), pager.PageSize);
+
+            var pagerShape = Shape.Pager(pager).TotalItemCount(_taxonomyService.GetTaxonomiesQuery().Count());
+
+            var entries = taxonomies
+                    .Select(CreateTaxonomyEntry)
+                    .ToList();
+
+            var model = new TaxonomyAdminIndexViewModel { Taxonomies = entries, Pager = pagerShape };
+
             return View(model);
         }
 
@@ -66,8 +83,9 @@ namespace Orchard.Taxonomies.Controllers {
             return RedirectToAction("Index");
         }
 
+        [HttpPost]
         public ActionResult Delete(int id) {
-            if (!Services.Authorizer.Authorize(Permissions.CreateTaxonomy, T("Couldn't delete taxonomy")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageTaxonomies, T("Couldn't delete taxonomy")))
                 return new HttpUnauthorizedResult();
 
             var taxonomy = _taxonomyService.GetTaxonomy(id);
@@ -112,12 +130,12 @@ namespace Orchard.Taxonomies.Controllers {
                 var parents = new Stack<TermPosition>();
                 TermPosition parentTerm = null;
                 while (null != (line = reader.ReadLine())) {
-                    
+
                     // ignore empty lines
-                    if(String.IsNullOrWhiteSpace(line)) {
+                    if (String.IsNullOrWhiteSpace(line)) {
                         continue;
                     }
-                    
+
                     // compute level from tabs
                     var level = 0;
                     while (line[level] == '\t') level++; // number of tabs to know the level
@@ -129,20 +147,22 @@ namespace Orchard.Taxonomies.Controllers {
                     if (level == previousLevel + 1) {
                         parentTerm = parents.Peek();
                         parents.Push(new TermPosition { Term = term });
-                    } else if (level == previousLevel) {
+                    }
+                    else if (level == previousLevel) {
                         // same parent term
                         if (parents.Any())
                             parents.Pop();
 
                         parents.Push(new TermPosition { Term = term });
-                    } else if (level < previousLevel) {
+                    }
+                    else if (level < previousLevel) {
                         for (var i = previousLevel; i >= level; i--)
                             parents.Pop();
 
                         parentTerm = parents.Any() ? parents.Peek() : null;
                         parents.Push(new TermPosition { Term = term });
                     }
-                    
+
                     // increment number of children
                     if (parentTerm == null) {
                         parentTerm = topTerm;
@@ -160,7 +180,8 @@ namespace Orchard.Taxonomies.Controllers {
                     if (scIndex != -1) {
                         term.Name = line.Substring(0, scIndex);
                         term.Slug = line.Substring(scIndex + 1);
-                    } else {
+                    }
+                    else {
                         term.Name = line;
                     }
 
@@ -170,7 +191,7 @@ namespace Orchard.Taxonomies.Controllers {
                     if (existing != null && existing.Container.ContentItem.Record == term.Container.ContentItem.Record) {
                         Services.Notifier.Error(T("The term {0} already exists at this level", term.Name));
                         Services.TransactionManager.Cancel();
-                        return View(new ImportViewModel {Taxonomy = taxonomy, Terms = terms});
+                        return View(new ImportViewModel { Taxonomy = taxonomy, Terms = terms });
                     }
 
                     _taxonomyService.ProcessPath(term);

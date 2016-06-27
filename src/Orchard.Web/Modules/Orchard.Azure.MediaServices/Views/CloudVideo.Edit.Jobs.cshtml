@@ -2,7 +2,6 @@
 @using Orchard.Azure.MediaServices.Models
 @using Orchard.Azure.MediaServices.Models.Assets
 @using Orchard.Azure.MediaServices.Models.Jobs
-@using Orchard.Localization.Services
 @{
     Style.Include("cloudmedia-edit-jobs.css", "cloudmedia-edit-jobs.min.css");
     Style.Include("cloudmedia-progress.css", "cloudmedia-progress.min.css");
@@ -13,11 +12,10 @@
     var isUploaded = !isCreatingItem && cloudVideoPart.MezzanineAsset.UploadState.Status == AssetUploadStatus.Uploaded;
     var jobsToDisplay = cloudVideoPart != null ? cloudVideoPart.Jobs.Where(x => x.Status != JobStatus.Archived).ToArray() : Enumerable.Empty<Job>();
     var authorizedToManageJobs = AuthorizedFor(Permissions.ManageCloudMediaJobs);
-    var dateTimeFormatProvider = WorkContext.Resolve<IDateTimeFormatProvider>();
 }
-@helper ShortDateTime(DateTime? value, IDateTimeFormatProvider dateTimeFormatProvider) {
+@helper ShortDateTime(DateTime? value) {
     if (value != null) {
-        @Display.DateTime(DateTimeUtc: value, CustomFormat: T(dateTimeFormatProvider.ShortDateTimeFormat))
+        @Display.DateTime(DateTimeUtc: value)
     }
 }
 @if (!isCreatingItem && jobsToDisplay.Any()) {
@@ -41,7 +39,7 @@
                     <tr>
                         <td>@job.Name</td>
                         <td>@job.Description</td>
-                        <td>@ShortDateTime(job.CreatedUtc, dateTimeFormatProvider)</td>
+                        <td>@ShortDateTime(job.CreatedUtc)</td>
                         <td>
                             @if (job.Status == JobStatus.Processing) {
                                 var percentComplete = Convert.ToInt32(job.PercentComplete);
@@ -57,8 +55,8 @@
                             }
                         </td>
 
-                        <td>@ShortDateTime(job.StartedUtc, dateTimeFormatProvider)</td>
-                        <td>@ShortDateTime(job.FinishedUtc, dateTimeFormatProvider)</td>
+                        <td>@ShortDateTime(job.StartedUtc)</td>
+                        <td>@ShortDateTime(job.FinishedUtc)</td>
                         <td>@job.ErrorMessage</td>
                         <td>
                             @if (authorizedToManageJobs) {

@@ -11,6 +11,7 @@ using Orchard.Environment.ShellBuilders.Models;
 using Orchard.FileSystems.AppData;
 using Orchard.Logging;
 using Orchard.Utility;
+using Orchard.Exceptions;
 
 namespace Orchard.Data {
     public class SessionConfigurationCache : ISessionConfigurationCache {
@@ -71,9 +72,6 @@ namespace Orchard.Data {
         }
 
         private void StoreConfiguration(ConfigurationCache cache) {
-            if (!_hostEnvironment.IsFullTrust)
-                return;
-
             var pathName = GetPathName(_shellSettings.Name);
 
             try {
@@ -83,19 +81,16 @@ namespace Orchard.Data {
                     formatter.Serialize(stream, cache.Configuration);
                 }
             }
-            catch (SerializationException e) {
+            catch (SerializationException ex) {
                 //Note: This can happen when multiple processes/AppDomains try to save
                 //      the cached configuration at the same time. Only one concurrent
                 //      writer will win, and it's harmless for the other ones to fail.
-                for (Exception scan = e; scan != null; scan = scan.InnerException)
+                for (Exception scan = ex; scan != null; scan = scan.InnerException)
                     Logger.Warning("Error storing new NHibernate cache configuration: {0}", scan.Message);
             }
         }
 
         private ConfigurationCache ReadConfiguration(string hash) {
-            if (!_hostEnvironment.IsFullTrust)
-                return null;
-
             var pathName = GetPathName(_shellSettings.Name);
 
             if (!_appDataFolder.FileExists(pathName))
@@ -124,8 +119,11 @@ namespace Orchard.Data {
                     };
                 }
             }
-            catch (Exception e) {
-                for (var scan = e; scan != null; scan = scan.InnerException)
+            catch (Exception ex) {
+                if (ex.IsFatal()) {
+                    throw;
+                } 
+                for (var scan = ex; scan != null; scan = scan.InnerException)
                     Logger.Warning("Error reading the cached NHibernate configuration: {0}", scan.Message);
                 Logger.Information("A new one will be re-generated.");
                 return null;
@@ -141,6 +139,10 @@ namespace Orchard.Data {
             //   xcopy migrations work as expected.
             var pathName = GetPathName(_shellSettings.Name);
             hash.AddString(_appDataFolder.MapPath(pathName).ToLowerInvariant());
+
+            // Orchard version, to rebuild the mappings for each new version
+            var orchardVersion = new System.Reflection.AssemblyName(typeof(Orchard.ContentManagement.ContentItem).Assembly.FullName).Version.ToString();
+            hash.AddString(orchardVersion);
 
             // Shell settings data
             hash.AddString(_shellSettings.DataProvider);

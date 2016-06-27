@@ -1,0 +1,28 @@
+﻿@using Orchard.DisplayManagement.Shapes
+@using Orchard.DynamicForms.Elements
+@using Orchard.Layouts.Helpers
+@{
+    var element = (CheckBox)Model.Element;
+    var tagBuilder = (OrchardTagBuilder)TagBuilderExtensions.CreateElementTagBuilder(Model, "input");
+
+    tagBuilder.Attributes["type"] = "checkbox";
+    tagBuilder.Attributes["name"] = Model.ProcessedName;
+    tagBuilder.Attributes["value"] = Model.ProcessedValue;
+    tagBuilder.AddClientValidationAttributes((IDictionary<string, string>)Model.ClientValidationAttributes);
+
+    if (!String.IsNullOrWhiteSpace(element.PostedValue)) {
+        tagBuilder.Attributes["checked"] = "checked";
+    }
+}
+@if (element.ShowLabel) {
+    <label>
+        @tagBuilder.ToHtmlString(TagRenderMode.SelfClosing)
+        @Html.Raw(Model.ProcessedLabel)
+    </label>
+}
+else {
+    @tagBuilder.ToHtmlString(TagRenderMode.SelfClosing)
+}
+@if (element.ValidationSettings.ShowValidationMessage == true) {
+    @Html.ValidationMessage((string)Model.ProcessedName)
+}

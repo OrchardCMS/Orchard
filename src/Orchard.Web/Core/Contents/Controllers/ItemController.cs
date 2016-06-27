@@ -9,9 +9,14 @@ namespace Orchard.Core.Contents.Controllers {
     [Themed]
     public class ItemController : Controller {
         private readonly IContentManager _contentManager;
+        private readonly IHttpContextAccessor _hca;
 
-        public ItemController(IContentManager contentManager, IShapeFactory shapeFactory, IOrchardServices services) {
+        public ItemController(IContentManager contentManager,
+            IShapeFactory shapeFactory,
+            IOrchardServices services,
+            IHttpContextAccessor hca) {
             _contentManager = contentManager;
+            _hca = hca;
             Shape = shapeFactory;
             Services = services;
             T = NullLocalizer.Instance;
@@ -22,8 +27,14 @@ namespace Orchard.Core.Contents.Controllers {
         public Localizer T { get; set; }
 
         // /Contents/Item/Display/72
-        public ActionResult Display(int id) {
-            var contentItem = _contentManager.Get(id, VersionOptions.Published);
+        public ActionResult Display(int? id, int? version) {
+            if (id == null)
+                return HttpNotFound();
+
+            if (version.HasValue)
+                return Preview(id, version);
+
+            var contentItem = _contentManager.Get(id.Value, VersionOptions.Published);
 
             if (contentItem == null)
                 return HttpNotFound();
@@ -31,32 +42,39 @@ namespace Orchard.Core.Contents.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ViewContent, contentItem, T("Cannot view content"))) {
                 return new HttpUnauthorizedResult();
             }
-
+            
             var model = _contentManager.BuildDisplay(contentItem);
+            if (_hca.Current().Request.IsAjaxRequest()) {
+                return new ShapePartialResult(this,model);
+            }
+
             return View(model);
         }
 
         // /Contents/Item/Preview/72
         // /Contents/Item/Preview/72?version=5
-        public ActionResult Preview(int id, int? version) {
+        public ActionResult Preview(int? id, int? version) {
+            if (id == null)
+                return HttpNotFound();
+
             var versionOptions = VersionOptions.Latest;
 
             if (version != null)
                 versionOptions = VersionOptions.Number((int)version);
 
-            var contentItem = _contentManager.Get(id, versionOptions);
+            var contentItem = _contentManager.Get(id.Value, versionOptions);
             if (contentItem == null)
                 return HttpNotFound();
 
-            if (!Services.Authorizer.Authorize(Permissions.ViewContent, contentItem, T("Cannot preview content"))) {
-                return new HttpUnauthorizedResult();
-            }
-
-            if (!Services.Authorizer.Authorize(Permissions.EditContent, contentItem, T("Cannot preview content"))) {
+            if (!Services.Authorizer.Authorize(Permissions.PreviewContent, contentItem, T("Cannot preview content"))) {
                 return new HttpUnauthorizedResult();
             }
 
             var model = _contentManager.BuildDisplay(contentItem);
+            if (_hca.Current().Request.IsAjaxRequest()) {
+                return new ShapePartialResult(this, model);
+            }
+
             return View(model);
         }
     }

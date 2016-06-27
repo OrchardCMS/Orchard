@@ -1,0 +1,14 @@
+﻿<div class="layout-element-wrapper" ng-class="{'layout-container-empty': getShowChildrenPlaceholder()}">
+    <ul class="layout-panel layout-panel-main">
+        <li class="layout-panel-item layout-panel-label">@T("Canvas")</li>
+        @Display()
+        @Display(New.LayoutEditor_Template_Properties(ElementTypeName: "canvas"))
+        <li class="layout-panel-item layout-panel-action" title="@T("Delete canvas (Del)")" ng-click="delete(element)" ng-show="element.canDelete()"><i class="fa fa-remove"></i></li>
+        <li class="layout-panel-item layout-panel-action" title="@T("Move canvas up (Ctrl+Up)")" ng-click="element.moveUp()" ng-show="element.canMoveUp()"><i class="fa fa-chevron-up"></i></li>
+        <li class="layout-panel-item layout-panel-action" title="@T("Move canvas down (Ctrl+Down)")" ng-click="element.moveDown()" ng-show="element.canMoveDown()"><i class="fa fa-chevron-down"></i></li>
+    </ul>
+    <div class="layout-container-children-placeholder">
+        @T("This layout canvas is empty. To get started, drag a grid element from the toolbox and drop it here.")
+    </div>
+    @Display(New.LayoutEditor_Template_Children())
+</div>
