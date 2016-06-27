@@ -57,13 +57,13 @@
       <HintPath>..\..\..\..\lib\nhibernate\FluentNHibernate.dll</HintPath>
     </Reference>
     <Reference Include="Glimpse.Ado">
-      <HintPath>..\..\..\..\lib\glimpse\Ado 1.7.3\Glimpse.Ado.dll</HintPath>
+      <HintPath>..\..\..\..\lib\glimpse\Glimpse.Ado.dll</HintPath>
     </Reference>
     <Reference Include="Glimpse.AspNet">
-      <HintPath>..\..\..\..\lib\glimpse\AspNet 1.9.2\Glimpse.AspNet.dll</HintPath>
+      <HintPath>..\..\..\..\lib\glimpse\Glimpse.AspNet.dll</HintPath>
     </Reference>
     <Reference Include="Glimpse.Core">
-      <HintPath>..\..\..\..\lib\glimpse\Core 1.8.6\Glimpse.Core.dll</HintPath>
+      <HintPath>..\..\..\..\lib\glimpse\Glimpse.Core.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="NHibernate, Version=4.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
