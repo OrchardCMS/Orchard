@@ -1,26 +1,12 @@
 /*------------------------------------------------------------------
   [Footer]
 */
-.footer{
-	padding-left: @content-padding;
-	padding-right: @content-padding;
-	padding-top: @content-padding;
+.footer {
+    padding: 10px @content-padding;
+    background-color: rgba(0, 0, 0, 0.1);
+    min-height: 38px;
 
-	@media @tablet{
-		padding-left: @content-padding-tablet;
-		padding-right: @content-padding-tablet;
-		padding-top: @content-padding-tablet + 5px;
-	}
-
-	@media @phone{
-		padding-left: @content-padding-phone;
-		padding-right: @content-padding-phone;
-		padding-top: 20px;
-	}
-
-  #orchard-version {
-    float: right;
-    top: 36px;
-    right: 16px;
-  }
+    #orchard-version {
+        float: right;
+    }
 }

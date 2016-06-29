@@ -80,14 +80,14 @@
                 </div>
             </div>
         </div>
-        @if (Model.Footer != null) {
-            <div class="footer">
-                @Zone(Model.Footer)
-            </div>
-        }
     </div>
     @Display.Sidebar()
 </div>
+@if (Model.Footer != null) {
+    <div class="footer">
+        @Zone(Model.Footer)
+    </div>
+}
 
 @using (Script.Foot()) {
     <script type="text/javascript">
