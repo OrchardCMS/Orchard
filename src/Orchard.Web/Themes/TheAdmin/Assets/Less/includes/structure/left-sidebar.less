@@ -197,16 +197,20 @@
 				> a{
 					text-align: left;
 					position: relative;
+                    display: flex;
 
 					.icon{
 						display: inline-block;
 						font-size: 25px;
 						margin-right: 10px;
-						vertical-align: middle;
+                        align-self: center;
 					}
 
 					span{
 						display: inline-block;
+                        overflow: hidden;
+                        width: 69%;
+                        align-self: center;
 					}
 				}
 
@@ -219,6 +223,7 @@
 						font-size: 26px;
 						line-height: 28px;
 						color: darken(@left-sidebar-color, 25%);
+                        align-self: center;
 					}
 				}
 
