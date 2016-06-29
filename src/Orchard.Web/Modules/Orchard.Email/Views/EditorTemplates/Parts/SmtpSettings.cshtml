@@ -8,19 +8,19 @@
     <legend>@T("Email")</legend>
     <div>
         <label for="@Html.FieldIdFor(m => m.Address)">@T("Sender email address")</label>
-        @Html.TextBoxFor(m => m.Address, new { @class = "text medium", placeholder = Model.AddressPlaceholder })
+        @Html.TextBoxFor(m => m.Address, new { @class = "form-control", placeholder = Model.AddressPlaceholder })
         @Html.ValidationMessage("Address", "*")
         <span class="help-block">@T("The default email address to use as a sender.")</span>
     </div>
     <div>
         <label for="@Html.FieldIdFor(m => m.Host)">@T("Host name")</label>
-        @Html.TextBoxFor(m => m.Host, new { placeholder = smtpClient.Host, @class = "text medium" })
+        @Html.TextBoxFor(m => m.Host, new { placeholder = smtpClient.Host, @class = "form-control" })
         @Html.ValidationMessage("Host", "*")
         <span class="help-block">@T("The SMTP server domain, e.g. <i>smtp.mailprovider.com</i>.")</span>
     </div>
     <div>
         <label for="@Html.FieldIdFor(m => m.Port)">@T("Port number")</label>
-        @Html.TextBoxFor(m => m.Port, new { placeholder = smtpClient.Port, @class = "text small" })
+        @Html.TextBoxFor(m => m.Port, new { placeholder = smtpClient.Port, @class = "form-control" })
         @Html.ValidationMessage("Port", "*")
         <span class="help-block">@T("The SMTP server port, usually 25.")</span>
     </div>
@@ -53,13 +53,13 @@
         <div class="options">
             <span data-controllerid="customCredentialsOption">
                 <label for="@Html.FieldIdFor(m => m.UserName)">@T("User name")</label>
-                @Html.TextBoxFor(m => m.UserName, new { @class = "text" })
+                @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
                 @Html.ValidationMessage("UserName", "*")
                 <span class="help-block">@T("The username for authentication.")</span>
             </span>
             <span data-controllerid="customCredentialsOption">
                 <label for="@Html.FieldIdFor(m => m.Password)">@T("Password")</label>
-                @Html.TextBoxFor(m => m.Password, new { type = "password", @class = "text medium" })
+                @Html.TextBoxFor(m => m.Password, new { type = "password", @class = "form-control" })
                 @Html.ValidationMessage("Password", "*")
                 <span class="help-block">@T("The password for authentication.")</span>
             </span>
@@ -68,28 +68,29 @@
 </fieldset>
 <fieldset>
     <legend>@T("Test those settings:")</legend>
-    <div>
+    <div class="form-group">
         <label for="emailtestto">@T("To:")</label>
-        <input type="text" id="emailtestto" class="large text" />
+        <input type="text" id="emailtestto" class="form-control" />
     </div>
-    <div>
+    <div class="form-group">
         <label for="emailtestbcc">@T("Bcc:")</label>
-        <input type="text" id="emailtestbcc" class="large text" />
+        <input type="text" id="emailtestbcc" class="form-control" />
     </div>
-    <div>
+    <div class="form-group">
         <label for="emailtestcc">@T("CC:")</label>
-        <input type="text" id="emailtestcc" class="large text" />
+        <input type="text" id="emailtestcc" class="form-control" />
     </div>
-    <div>
+    <div class="form-group">
         <label for="emailtestreplyto">@T("Reply To:")</label>
-        <input type="text" id="emailtestreplyto" class="large text" />
+        <input type="text" id="emailtestreplyto" class="form-control" />
     </div>
-    <div>
+    <div class="form-group">
         <label for="emailtestsubject">@T("Subject:")</label>
-        <input type="text" id="emailtestsubject" class="large text" />
+        <input type="text" id="emailtestsubject" class="form-control" />
     </div>
-    <div>
-        <textarea id="emailtestbody"></textarea>
+    <div class="form-group">
+        <label for="emailtestbody">@T("Body:")</label>
+        <textarea class="form-control" id="emailtestbody"></textarea>
     </div>
     <div>
         <button type="button" id="emailtestsend" class="button grey">@T("Send")</button>
