@@ -8,12 +8,26 @@
 	left: 0;
     top:0;
     bottom:0;
-    padding-top:80px;
 	position: absolute;
 
 	.sidebar-elements{
 		margin: 0;
 		padding: 0;
+
+		//logo
+		.navbar-brand{
+			background: url("@{img-path}/logo.png") no-repeat 15px center @dark-color;
+			color: @light-color;
+			padding-top: 0;
+			padding-bottom: 0;
+			padding-left: 80px;
+			line-height: @top-header-height;
+			height: @top-header-height;
+			width: @left-sidebar-width;
+            margin-right: 20px;
+			border-bottom: 1px solid lighten(@dark-color, 4%);
+            font-size: 19px;
+		}
 
 		//First Level
 		> li{
@@ -181,7 +195,6 @@
 
 		width: @left-sidebar-width-phone;
 		height: 100%;
-		overflow: auto;
 		-webkit-overflow-scrolling: touch;
 		position: fixed;
              

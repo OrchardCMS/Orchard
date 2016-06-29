@@ -1,6 +1,9 @@
 ﻿@using Orchard.Utility.Extensions
 <nav>
     <ul class="sidebar-elements">
+        <li>
+            @Display.Branding()
+        </li>
         @foreach (var firstLevelMenuItem in Model.Items) {
                 IEnumerable<dynamic> secondLevelMenuItems = firstLevelMenuItem;
 
