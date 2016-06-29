@@ -20,7 +20,7 @@
     <legend>
         @T("Import Options")
     </legend>
-    <ul>
+    <ul class="list-unstyled">
         @foreach (var option in importOptions) {
                 var importOptionId = String.Format("{0}_{1}", Html.FieldIdFor(m => m.ResetSite), option.Value);
             <li>
