@@ -147,6 +147,10 @@ namespace Orchard.Environment {
             // Load all tenants, and activate their shell.
             if (allSettings.Any()) {
                 Parallel.ForEach(allSettings, settings => {
+
+                    _processingEngine.Initialize();
+                    ShellContext context = null;
+
                     for (var i = 0; i <= Retries; i++) {
 
                         // Not the first attempt, wait for a while ...
@@ -157,10 +161,10 @@ namespace Orchard.Environment {
                         }
 
                         try {
-                            var context = CreateShellContext(settings);
+                            context = CreateShellContext(settings);
                             ActivateShell(context);
 
-                            // If everything went well, return to stop the retry loop
+                            // If everything went well, break the retry loop
                             break;
                         }
                         catch (Exception ex) {
@@ -172,12 +176,18 @@ namespace Orchard.Environment {
                                 Logger.Error(ex, "A tenant could not be started: " + settings.Name + " Attempt number: " + i);
                             }
                         }
-                        
                     }
 
-                    while (_processingEngine.AreTasksPending()) {
-                        Logger.Debug("Processing pending task after activate Shell");
-                        _processingEngine.ExecuteNextTask();
+                    if (_processingEngine.AreTasksPending()) {
+
+                        context.Shell.Sweep.Terminate();
+
+                        while (_processingEngine.AreTasksPending()) {
+                            Logger.Debug("Processing pending task after activate Shell");
+                            _processingEngine.ExecuteNextTask();
+                        }
+
+                        context.Shell.Sweep.Activate();
                     }
                 });
             }

@@ -65,6 +65,10 @@ namespace Orchard.Fields.Drivers {
                 context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Value", field.Value);
         }
 
+        protected override void Cloning(ContentPart part, InputField originalField, InputField cloneField, CloneContentContext context) {
+            cloneField.Value = originalField.Value;
+        }
+
         protected override void Describe(DescribeMembersContext context) {
             context
                 .Member(null, typeof(string), T("Value"), T("The value of the field."))

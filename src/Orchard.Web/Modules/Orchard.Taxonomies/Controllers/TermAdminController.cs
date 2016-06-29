@@ -208,7 +208,7 @@ namespace Orchard.Taxonomies.Controllers {
             }
 
             Services.ContentManager.Publish(term.ContentItem);
-            Services.Notifier.Information(T("The {0} term has been created.", term.Name));
+            Services.Notifier.Success(T("The {0} term has been created.", term.Name));
 
             return RedirectToAction("Index", "TermAdmin", new { taxonomyId });
         }
@@ -246,7 +246,7 @@ namespace Orchard.Taxonomies.Controllers {
 
             Services.ContentManager.Publish(contentItem);
             _taxonomyService.ProcessPath(term);
-            Services.Notifier.Information(T("Term information updated"));
+            Services.Notifier.Success(T("Term information updated"));
 
             return RedirectToAction("Index", "TermAdmin", new { taxonomyId = term.TaxonomyId });
         }

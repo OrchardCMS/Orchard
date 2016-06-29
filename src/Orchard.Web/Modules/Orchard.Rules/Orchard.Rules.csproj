@@ -191,9 +191,7 @@
     <Compile Include="ViewModels\EditRuleViewModel.cs" />
     <Compile Include="ViewModels\RulesIndexViewModel.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Drivers\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="packages.config" />
   </ItemGroup>

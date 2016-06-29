@@ -63,7 +63,7 @@ namespace Orchard.MediaLibrary.Controllers {
 
             try {
                 _mediaLibraryService.CreateFolder(viewModel.FolderPath, viewModel.Name);
-                Services.Notifier.Information(T("Media folder created"));
+                Services.Notifier.Success(T("Media folder created"));
             }
             catch (ArgumentException argumentException) {
                 Services.Notifier.Error(T("Creating Folder failed: {0}", argumentException.Message));
@@ -117,7 +117,7 @@ namespace Orchard.MediaLibrary.Controllers {
 
             try {
                 _mediaLibraryService.RenameFolder(viewModel.FolderPath, viewModel.Name);
-                Services.Notifier.Information(T("Media folder renamed"));
+                Services.Notifier.Success(T("Media folder renamed"));
             }
             catch (Exception exception) {
                 Services.Notifier.Error(T("Editing Folder failed: {0}", exception.Message));
@@ -142,7 +142,7 @@ namespace Orchard.MediaLibrary.Controllers {
             }
             try {
                 _mediaLibraryService.DeleteFolder(viewModel.FolderPath);
-                Services.Notifier.Information(T("Media folder deleted"));
+                Services.Notifier.Success(T("Media folder deleted"));
             }
             catch (ArgumentException argumentException) {
                 Services.Notifier.Error(T("Deleting Folder failed: {0}", argumentException.Message));

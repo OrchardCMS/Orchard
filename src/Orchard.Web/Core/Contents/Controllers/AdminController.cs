@@ -193,7 +193,7 @@ namespace Orchard.Core.Contents.Controllers {
 
                             _contentManager.Publish(item);
                         }
-                        Services.Notifier.Information(T("Content successfully published."));
+                        Services.Notifier.Success(T("Content successfully published."));
                         break;
                     case ContentsBulkAction.Unpublish:
                         foreach (var item in checkedContentItems) {
@@ -204,7 +204,7 @@ namespace Orchard.Core.Contents.Controllers {
 
                             _contentManager.Unpublish(item);
                         }
-                        Services.Notifier.Information(T("Content successfully unpublished."));
+                        Services.Notifier.Success(T("Content successfully unpublished."));
                         break;
                     case ContentsBulkAction.Remove:
                         foreach (var item in checkedContentItems) {
@@ -215,7 +215,7 @@ namespace Orchard.Core.Contents.Controllers {
 
                             _contentManager.Remove(item);
                         }
-                        Services.Notifier.Information(T("Content successfully removed."));
+                        Services.Notifier.Success(T("Content successfully removed."));
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -296,7 +296,7 @@ namespace Orchard.Core.Contents.Controllers {
 
             conditionallyPublish(contentItem);
 
-            Services.Notifier.Information(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName)
+            Services.Notifier.Success(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName)
                 ? T("Your content has been created.")
                 : T("Your {0} has been created.", contentItem.TypeDefinition.DisplayName));
             if (!string.IsNullOrEmpty(returnUrl)) {
@@ -375,7 +375,7 @@ namespace Orchard.Core.Contents.Controllers {
                 returnUrl = Url.ItemDisplayUrl(contentItem);
             }
 
-            Services.Notifier.Information(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName)
+            Services.Notifier.Success(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName)
                 ? T("Your content has been saved.")
                 : T("Your {0} has been saved.", contentItem.TypeDefinition.DisplayName));
 
@@ -383,26 +383,24 @@ namespace Orchard.Core.Contents.Controllers {
         }
 
         [HttpPost]
-        public ActionResult Clone(int id, string returnUrl) {
-            var contentItem = _contentManager.GetLatest(id);
+        public ActionResult Clone(int id) {
+            var originalContentItem = _contentManager.GetLatest(id);
 
-            if (contentItem == null)
-                return HttpNotFound();
-
-            if (!Services.Authorizer.Authorize(Permissions.EditContent, contentItem, T("Couldn't clone content")))
+            if (!Services.Authorizer.Authorize(Permissions.ViewContent, originalContentItem, T("Couldn't open original content")))
                 return new HttpUnauthorizedResult();
 
-            try {
-                Services.ContentManager.Clone(contentItem);
-            }
-            catch (InvalidOperationException) {
-                Services.Notifier.Warning(T("Could not clone the content item."));
-                return this.RedirectLocal(returnUrl, () => RedirectToAction("List"));
-            }
+            // pass a dummy content to the authorization check to check for "own" variations
+            var dummyContent = _contentManager.New(originalContentItem.ContentType);
 
-            Services.Notifier.Information(T("Successfully cloned. The clone was saved as a draft."));
+            if (!Services.Authorizer.Authorize(Permissions.EditContent, dummyContent, T("Couldn't create clone content")))
+                return new HttpUnauthorizedResult();
 
-            return this.RedirectLocal(returnUrl, () => RedirectToAction("List"));
+            var cloneContentItem = _contentManager.Clone(originalContentItem);
+
+            Services.Notifier.Success(T("Successfully cloned. The clone was saved as a draft."));
+
+            var adminRouteValues = _contentManager.GetItemMetadata(cloneContentItem).AdminRouteValues;
+            return RedirectToRoute(adminRouteValues);
         }
 
         [HttpPost]
@@ -414,7 +412,7 @@ namespace Orchard.Core.Contents.Controllers {
 
             if (contentItem != null) {
                 _contentManager.Remove(contentItem);
-                Services.Notifier.Information(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName)
+                Services.Notifier.Success(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName)
                     ? T("That content has been removed.")
                     : T("That {0} has been removed.", contentItem.TypeDefinition.DisplayName));
             }
@@ -433,7 +431,7 @@ namespace Orchard.Core.Contents.Controllers {
 
             _contentManager.Publish(contentItem);
 
-            Services.Notifier.Information(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName) ? T("That content has been published.") : T("That {0} has been published.", contentItem.TypeDefinition.DisplayName));
+            Services.Notifier.Success(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName) ? T("That content has been published.") : T("That {0} has been published.", contentItem.TypeDefinition.DisplayName));
 
             return this.RedirectLocal(returnUrl, () => RedirectToAction("List"));
         }
@@ -449,7 +447,7 @@ namespace Orchard.Core.Contents.Controllers {
 
             _contentManager.Unpublish(contentItem);
 
-            Services.Notifier.Information(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName) ? T("That content has been unpublished.") : T("That {0} has been unpublished.", contentItem.TypeDefinition.DisplayName));
+            Services.Notifier.Success(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName) ? T("That content has been unpublished.") : T("That {0} has been unpublished.", contentItem.TypeDefinition.DisplayName));
 
             return this.RedirectLocal(returnUrl, () => RedirectToAction("List"));
         }

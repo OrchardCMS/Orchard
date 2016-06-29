@@ -64,6 +64,8 @@ namespace Orchard.Fields.Drivers {
                             Time = showTime ? DateLocalizationServices.ConvertToLocalizedTimeString(value, options) : null,
                             ShowDate = showDate,
                             ShowTime = showTime,
+                            DatePlaceholder = settings.DatePlaceholder,
+                            TimePlaceholder = settings.TimePlaceholder
                         }
                     };
 
@@ -101,6 +103,8 @@ namespace Orchard.Fields.Drivers {
                     Time = showTime ? DateLocalizationServices.ConvertToLocalizedTimeString(value, options) : null,
                     ShowDate = showDate,
                     ShowTime = showTime,
+                    DatePlaceholder = settings.DatePlaceholder,
+                    TimePlaceholder = settings.TimePlaceholder
                 }
             };
 
@@ -168,6 +172,10 @@ namespace Orchard.Fields.Drivers {
             var value = field.Storage.Get<DateTime>(null);
             if (value != DateTime.MinValue)
                 context.Element(GetPrefix(field, part)).SetAttributeValue("Value", XmlConvert.ToString(value, XmlDateTimeSerializationMode.Utc));
+        }
+
+        protected override void Cloning(ContentPart part, DateTimeField originalField, DateTimeField cloneField, CloneContentContext context) {
+            cloneField.DateTime = originalField.DateTime;
         }
 
         protected override void Describe(DescribeMembersContext context) {
