@@ -6,7 +6,7 @@ Orchard is a free, open source, community-focused Content Management System buil
 
 You can try it for free on [DotNest.com](https://dotnest.com) or on Microsoft Azure by clicking on this button.
 
-[![Deploy to Azure](https://azuredeploy.net/deploybutton.png)](https://portal.azure.com/#create/OutercurveFoundation.OrchardCMS.1.0.4)
+[![Deploy to Azure](https://azuredeploy.net/deploybutton.png)](https://portal.azure.com/#create/OutercurveFoundation.OrchardCMS)
 
 ## About The Orchard Project
 
@@ -22,7 +22,7 @@ Our mission is to empower our users and foster a dedicated and diverse community
 
 ## Project Status
 
-Orchard is currently in version **1.10** and **1.9.3**:
+Orchard is currently in version **[1.10.1](https://github.com/OrchardCMS/Orchard/releases/tag/1.10.1)** and **[1.9.3](https://github.com/OrchardCMS/Orchard/releases/tag/1.9.3)**:
 
 - *1.10* is the latest major version which introduces more impactful changes and new features as well. If you're new to Orchard, you should start with this version.
 - *1.9.3* contains further bugfixes in addition to *1.9.2* and these versions are based on the feature set of Orchard *1.9*.
