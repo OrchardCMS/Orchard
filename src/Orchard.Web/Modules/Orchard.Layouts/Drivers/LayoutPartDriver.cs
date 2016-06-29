@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
+using Newtonsoft.Json;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
@@ -146,21 +148,25 @@ namespace Orchard.Layouts.Drivers {
                 }
             }
 
-            context.Element(part.PartDefinition.Name).SetElementValue("LayoutData", part.LayoutData);
+            context.Element(part.PartDefinition.Name).Add(new XElement("LayoutData", new XCData(WriteFormattedLayoutData(part.LayoutData))));
         }
 
-        protected override void Exported(LayoutPart part, ExportContentContext context) {
+        protected override void Exported(LayoutPart part, ExportContentContext context)
+        {
             _layoutManager.Exported(new ExportLayoutContext { Layout = part });
-
-            context.Element(part.PartDefinition.Name).SetElementValue("LayoutData", part.LayoutData);
         }
 
         protected override void Importing(LayoutPart part, ImportContentContext context) {
-            HandleImportEvent(part, context, importLayoutContext => {
-                context.ImportChildEl(part.PartDefinition.Name, "LayoutData", s => {
-                    part.LayoutData = s;
-                    _layoutManager.Importing(importLayoutContext);
-                });
+            HandleImportEvent(part, context, importLayoutContext =>
+            {
+                var layoutDataElement = context.Data.Element(part.PartDefinition.Name).Element("LayoutData");
+
+                if (layoutDataElement.FirstNode is XCData)
+                    part.LayoutData = ReadFormattedLayoutData(((XCData)layoutDataElement.FirstNode).Value);
+                else
+                    part.LayoutData = layoutDataElement.Value;
+
+                _layoutManager.Importing(importLayoutContext);
 
                 context.ImportAttribute(part.PartDefinition.Name, "TemplateId", s => part.TemplateId = GetTemplateId(context, s));
             });
@@ -192,6 +198,25 @@ namespace Orchard.Layouts.Drivers {
 
             var template = context.GetItemFromSession(templateIdentity);
             return template != null ? template.Id : default(int?);
+        }
+
+        private string WriteFormattedLayoutData(string layoutDataString)
+        {
+            var layoutData = JsonConvert.DeserializeObject(layoutDataString);
+            var formattedLayoutData = JsonConvert.SerializeObject(layoutData, Formatting.Indented);
+            return $"\n{formattedLayoutData}\n";
+        }
+
+        private string ReadFormattedLayoutData(string formattedLayoutData)
+        {
+            var layoutData = JsonConvert.DeserializeObject(formattedLayoutData);
+            var layoutDataString = JsonConvert.SerializeObject(layoutData, Formatting.None);
+            return layoutDataString;
+        }
+
+        protected override void Cloning(LayoutPart originalPart, LayoutPart clonePart, CloneContentContext context) {
+            clonePart.LayoutData = originalPart.LayoutData;
+            clonePart.TemplateId = originalPart.TemplateId;
         }
     }
 }

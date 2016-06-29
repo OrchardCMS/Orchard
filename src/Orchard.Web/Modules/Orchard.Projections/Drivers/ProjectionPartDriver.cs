@@ -341,6 +341,17 @@ namespace Orchard.Projections.Drivers {
             }
         }
 
+        protected override void Cloning(ProjectionPart originalPart, ProjectionPart clonePart, CloneContentContext context) {
+            clonePart.Record.Items = originalPart.Record.Items;
+            clonePart.Record.ItemsPerPage = originalPart.Record.ItemsPerPage;
+            clonePart.Record.Skip = originalPart.Record.Skip;
+            clonePart.Record.PagerSuffix = originalPart.Record.PagerSuffix;
+            clonePart.Record.MaxItems = originalPart.Record.MaxItems;
+            clonePart.Record.DisplayPager = originalPart.Record.DisplayPager;
+            clonePart.Record.QueryPartRecord = originalPart.Record.QueryPartRecord;
+            clonePart.Record.LayoutRecord = originalPart.Record.LayoutRecord;
+        }
+
         private class ViewDataContainer : IViewDataContainer {
             public ViewDataDictionary ViewData { get; set; }
         }

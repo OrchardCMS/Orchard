@@ -69,6 +69,7 @@ namespace Orchard.Mvc.ViewEngines.Razor {
                 .SelectMany(x => new[] {
                                            x + "/Views/{0}.cshtml",
                                        })
+                .Concat(new[] { "~/Views/{1}/{0}.cshtml", "~/Views/{0}.cshtml" })
                 .ToArray();
 
             //Logger.Debug("UniversalFormats (module): \r\n\t-{0}", string.Join("\r\n\t-", universalFormats));

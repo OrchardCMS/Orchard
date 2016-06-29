@@ -201,7 +201,7 @@ namespace Orchard.Taxonomies.Controllers {
                 }
             }
 
-            Services.Notifier.Information(T("The terms have been imported successfully."));
+            Services.Notifier.Success(T("The terms have been imported successfully."));
 
             return RedirectToAction("Index", "TermAdmin", new { taxonomyId = id });
         }

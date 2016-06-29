@@ -136,9 +136,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Admin\Translate.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\EditorTemplates\Parts\Localization.ContentTranslations.Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>

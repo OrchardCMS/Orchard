@@ -13,14 +13,6 @@ namespace Orchard.Tasks.Locking.Services {
             _schemaBuilder = schemaBuilder;
         }
 
-        public bool EnsureSchema() {
-            if (SchemaExists())
-                return false;
-
-            CreateSchema();
-            return true;
-        }
-
         public void CreateSchema() {
             _schemaBuilder.CreateTable(TableName, table => table
                 .Column<int>("Id", column => column.PrimaryKey().Identity())

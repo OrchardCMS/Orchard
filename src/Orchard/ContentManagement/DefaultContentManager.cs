@@ -562,26 +562,19 @@ namespace Orchard.ContentManagement {
         }
 
         public virtual ContentItem Clone(ContentItem contentItem) {
-            // Mostly taken from: http://orchard.codeplex.com/discussions/396664
-            var element = Export(contentItem);
+            var cloneContentItem = New(contentItem.ContentType);
+            Create(cloneContentItem, VersionOptions.Draft);
 
-            // If a handler prevents this element from being exported, it can't be cloned.
-            if (element == null) {
-                throw new InvalidOperationException("The content item couldn't be cloned because a handler prevented it from being exported.");
+            var context = new CloneContentContext(contentItem, cloneContentItem);
+            foreach (var contentHandler in Handlers) {
+                contentHandler.Cloning(context);
             }
 
-            var elementId = element.Attribute("Id");
-            var copyId = elementId.Value + "-copy";
-            elementId.SetValue(copyId);
-            var status = element.Attribute("Status");
-            if (status != null) status.SetValue("Draft"); // So the copy is always a draft.
+            foreach (var contentHandler in Handlers) {
+                contentHandler.Cloned(context);
+            }
 
-            var importContentSession = new ImportContentSession(this);
-            importContentSession.Set(copyId, element.Name.LocalName);
-            Import(element, importContentSession);
-            CompleteImport(element, importContentSession);
-
-            return importContentSession.Get(copyId, element.Name.LocalName);
+            return cloneContentItem;
         }
 
         public virtual ContentItem Restore(ContentItem contentItem, VersionOptions options) {
