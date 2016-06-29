@@ -92,7 +92,7 @@ namespace Orchard.MultiTenancy.Controllers {
                         Modules = viewModel.Modules.Where(x => x.Checked).Select(x => x.ModuleId).ToArray()
                     });
 
-                Services.Notifier.Information(T("Tenant '{0}' was created successfully.", viewModel.Name));
+                Services.Notifier.Success(T("Tenant '{0}' was created successfully.", viewModel.Name));
                 return RedirectToAction("Index");
             }
             catch (ArgumentException ex) {

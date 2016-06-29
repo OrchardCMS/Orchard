@@ -155,7 +155,7 @@ namespace Orchard.Roles.Controllers {
             }
             _roleService.UpdateRole(viewModel.Id, viewModel.Name, rolePermissions);
 
-            Services.Notifier.Information(T("Your Role has been saved."));
+            Services.Notifier.Success(T("Your Role has been saved."));
             return RedirectToAction("Edit", new { id });
         }
 
@@ -171,7 +171,7 @@ namespace Orchard.Roles.Controllers {
                 return new HttpUnauthorizedResult();
 
             _roleService.DeleteRole(id);
-            Services.Notifier.Information(T("Role was successfully deleted."));
+            Services.Notifier.Success(T("Role was successfully deleted."));
 
             return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
         }

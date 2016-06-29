@@ -6,4 +6,10 @@ namespace Orchard.Mvc.Extensions {
             return httpContextBase == null || httpContextBase is MvcModule.HttpContextPlaceholder;
         }
     }
+
+    public static class HttpContextExtensions {
+        public static bool IsBackgroundHttpContext(this HttpContext httpContext) {
+            return HttpContextAccessor.IsBackgroundHttpContext(httpContext);
+        }
+    }
 }

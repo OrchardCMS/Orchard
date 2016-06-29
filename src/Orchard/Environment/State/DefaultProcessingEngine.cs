@@ -22,6 +22,10 @@ namespace Orchard.Environment.State {
             _entries = new ContextState<IList<Entry>>("DefaultProcessingEngine.Entries", () => new List<Entry>());
         }
 
+        public void Initialize() {
+            _entries.SetState(new List<Entry>());
+        }
+
         public string AddTask(ShellSettings shellSettings, ShellDescriptor shellDescriptor, string eventName, Dictionary<string, object> parameters) {
 
             var entry = new Entry {

@@ -11,9 +11,8 @@
 # Deleting bin and obj folders.
 $currentPath = (Get-Item -Path ".\").FullName
 # Add relative file paths here what you want to keep.
-$whiteList = @("\src\Orchard.Azure\Orchard.Azure.CloudService\Orchard.Azure.WebContent\Bin\Startup\SetIdleTimeout.cmd")
-# Also add the bin/obj folder's path of the paths in the whiteList here. This is needed for performance reasons, the script will run faster this way.
-$whiteListFolders = @("\src\Orchard.Azure\Orchard.Azure.CloudService\Orchard.Azure.WebContent\Bin")
+$whiteList = @()
+$whiteListFolders = @()
 
 Get-ChildItem -Path ($currentPath + "\src\") -Recurse | 
 Where-Object { $PSItem.PSIsContainer -and ( $PSItem.Name -eq "bin" -or $PSItem.Name -eq "obj") } | 

@@ -78,6 +78,12 @@ namespace Orchard.Fields.Drivers {
             }
         }
 
+        protected override void Cloning(ContentPart part, LinkField originalField, LinkField cloneField, CloneContentContext context) {
+            cloneField.Text = originalField.Text;
+            cloneField.Value = originalField.Value;
+            cloneField.Target = originalField.Target;
+        }
+
         protected override void Describe(DescribeMembersContext context) {
             context
                 .Member("Text", typeof(string), T("Text"), T("The text of the link."))

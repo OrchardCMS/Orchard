@@ -80,7 +80,7 @@ namespace Orchard.Warmup.Controllers {
 
             if (ModelState.IsValid) {
                 _warmupUpdater.Generate();
-                Services.Notifier.Information(T("Warmup updated successfully."));
+                Services.Notifier.Success(T("Warmup updated successfully."));
             }
             else {
                 Services.TransactionManager.Cancel();

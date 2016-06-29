@@ -139,6 +139,7 @@
     <Content Include="Module.txt" />
     <Content Include="Styles\images\menu.users.png" />
     <Content Include="Styles\menu.users-admin.css" />
+    <Content Include="Styles\workflows-activity-user-log-in-failed.css" />
     <Content Include="Styles\workflows-activity-verify-user-unicity.css" />
     <Content Include="Styles\workflows-activity-user-logged-in.css" />
     <Content Include="Styles\workflows-activity-user-sent-challenge-email.css" />

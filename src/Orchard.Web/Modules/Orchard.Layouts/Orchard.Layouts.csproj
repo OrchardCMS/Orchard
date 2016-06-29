@@ -344,6 +344,7 @@
     <Compile Include="Elements\Projection.cs" />
     <Compile Include="Filters\ControllerAccessorFilter.cs" />
     <Compile Include="Framework\Display\ElementCreatingDisplayShapeContext.cs" />
+    <Compile Include="Framework\Drivers\ImportContentSessionWrapper.cs" />
     <Compile Include="Framework\Drivers\ImportElementContext.cs" />
     <Compile Include="Framework\Drivers\ImportLayoutContext.cs" />
     <Compile Include="Framework\Elements\IElement.cs" />
