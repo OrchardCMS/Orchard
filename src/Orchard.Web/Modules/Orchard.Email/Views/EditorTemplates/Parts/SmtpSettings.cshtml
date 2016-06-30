@@ -24,13 +24,13 @@
         @Html.ValidationMessage("Port", "*")
         <span class="help-block">@T("The SMTP server port, usually 25.")</span>
     </div>
-    <div>
+    <div class="or-checkbox">
         @Html.EditorFor(m => m.EnableSsl)
         <label for="@Html.FieldIdFor(m => m.EnableSsl)" class="forcheckbox">@T("Enable SSL communications")</label>
         @Html.ValidationMessage("EnableSsl", "*")
         <span class="help-block">@T("Check if the SMTP server requires SSL communications.")</span>
     </div>
-    <div>
+    <div class="or-checkbox">
         @Html.EditorFor(m => m.RequireCredentials)
         <label for="@Html.FieldIdFor(m => m.RequireCredentials)" class="forcheckbox">@T("Require credentials")</label>
         @Html.ValidationMessage("RequireCredentials", "*")
