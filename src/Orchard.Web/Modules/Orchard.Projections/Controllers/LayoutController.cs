@@ -116,6 +116,7 @@ namespace Orchard.Projections.Controllers {
                 layoutRecord.Description = model.Description;
                 layoutRecord.Display = model.Display;
                 layoutRecord.DisplayType = model.DisplayType;
+                layoutRecord.Alias = Guid.NewGuid().ToString("n");
 
                 Services.Notifier.Information(T("Layout Created"));
 

@@ -241,7 +241,7 @@ namespace Orchard.Projections.Drivers {
                                     }
 
                                     if (part.Record.LayoutRecord != null) {
-                                        model.QueryLayoutRecordId += part.Record.LayoutRecord.Id.ToString();
+                                        model.QueryLayoutRecordId += part.Record.LayoutRecord.Alias.ToString();
                                     }
                                     else {
                                         model.QueryLayoutRecordId += "-1";
@@ -254,7 +254,7 @@ namespace Orchard.Projections.Drivers {
                                             Id = x.Id,
                                             Name = x.Name,
                                             LayoutRecordEntries = x.Layouts.Select( l => new LayoutRecordEntry {
-                                                Id = l.Id,
+                                                Alias = l.Alias,
                                                 Description = GetLayoutDescription(layouts, l)
                                             })
                                         });
@@ -283,7 +283,7 @@ namespace Orchard.Projections.Drivers {
                 part.Record.MaxItems = model.MaxItems;
                 part.Record.PagerSuffix = (model.PagerSuffix ?? String.Empty).Trim();
                 part.Record.QueryPartRecord = _queryRepository.Get(Int32.Parse(queryLayoutIds[0]));
-                part.Record.LayoutRecord = part.Record.QueryPartRecord.Layouts.FirstOrDefault(x => x.Id == Int32.Parse(queryLayoutIds[1]));
+                part.Record.LayoutRecord = part.Record.QueryPartRecord.Layouts.FirstOrDefault(x => x.Alias == (queryLayoutIds[1]));
 
                 if(!String.IsNullOrWhiteSpace(part.Record.PagerSuffix) && !String.Equals(part.Record.PagerSuffix.ToSafeName(), part.Record.PagerSuffix, StringComparison.OrdinalIgnoreCase)) {
                     updater.AddModelError("PagerSuffix", T("Suffix should not contain special characters."));
@@ -312,13 +312,10 @@ namespace Orchard.Projections.Drivers {
             var query = context.Attribute(part.PartDefinition.Name, "Query");
             if (query != null) {
                 part.Record.QueryPartRecord = context.GetItemFromSession(query).As<QueryPart>().Record;
-                var layoutIndex = context.Attribute(part.PartDefinition.Name, "LayoutIndex");
-                int layoutIndexValue;
-                if (layoutIndex != null
-                    && Int32.TryParse(layoutIndex, out layoutIndexValue)
-                    && layoutIndexValue >= 0
-                    && part.Record.QueryPartRecord.Layouts.Count > layoutIndexValue) {
-                    part.Record.LayoutRecord = part.Record.QueryPartRecord.Layouts[Int32.Parse(layoutIndex)];
+                var layoutAlias = context.Attribute(part.PartDefinition.Name, "LayoutAlias");                
+                if (!string.IsNullOrEmpty(layoutAlias)                    
+                    && part.Record.QueryPartRecord.Layouts.Any(l=>l.Alias==layoutAlias)){
+                    part.Record.LayoutRecord = part.Record.QueryPartRecord.Layouts.Where(l=>l.Alias==layoutAlias).FirstOrDefault();
                 }
             }
         }
@@ -336,7 +333,7 @@ namespace Orchard.Projections.Drivers {
                 if (queryPart != null) {
                     var queryIdentity = Services.ContentManager.GetItemMetadata(queryPart).Identity;
                     context.Element(part.PartDefinition.Name).SetAttributeValue("Query", queryIdentity.ToString());
-                    context.Element(part.PartDefinition.Name).SetAttributeValue("LayoutIndex", part.Record.QueryPartRecord.Layouts.IndexOf(part.Record.LayoutRecord));
+                    context.Element(part.PartDefinition.Name).SetAttributeValue("LayoutAlias", part.Record.LayoutRecord.Alias);
                 }
             }
         }

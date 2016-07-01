@@ -32,8 +32,8 @@ namespace Orchard.Projections.ViewModels {
         public IEnumerable<LayoutRecordEntry> LayoutRecordEntries { get; set; }
     }
 
-    public class LayoutRecordEntry {
-        public int Id { get; set; }
+    public class LayoutRecordEntry {        
+        public string Alias { get; set; }
         public string Description { get; set; }
     }
 }

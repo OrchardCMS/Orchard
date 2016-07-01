@@ -9,27 +9,27 @@ namespace Orchard.Layouts.Elements {
         public override string Category {
             get { return "Content"; }
         }
-
-        public string QueryLayoutId {
-            get { return ElementDataHelper.Retrieve(this, x => x.QueryLayoutId); }
-            set { this.Store(x => x.QueryLayoutId, value); }
+        
+        public string QueryLayoutAlias {
+            get { return ElementDataHelper.Retrieve(this, x => x.QueryLayoutAlias); }
+            set { this.Store(x => x.QueryLayoutAlias, value); }
         }
 
         public int? QueryId {
             get {
-                return String.IsNullOrWhiteSpace(QueryLayoutId) ? null : XmlHelper.Parse<int?>(QueryLayoutId.Split(new[] { ';' })[0]);
+                return String.IsNullOrWhiteSpace(QueryLayoutAlias) ? null : XmlHelper.Parse<int?>(QueryLayoutAlias.Split(new[] { ';' })[0]);
             }
             set {
-                QueryLayoutId = String.Format("{0};{1}", value, LayoutId);
+                QueryLayoutAlias = String.Format("{0};{1}", value, LayoutAlias);
             }
         }
 
-        public int? LayoutId {
+        public string LayoutAlias {
             get {
-                return String.IsNullOrWhiteSpace(QueryLayoutId) ? null : XmlHelper.Parse<int?>(QueryLayoutId.Split(new[] { ';' })[1]);
+                return QueryLayoutAlias.Split(new[] { ';' })[1];                
             }
             set {
-                QueryLayoutId = String.Format("{0};{1}", QueryId, value);
+                QueryLayoutAlias = String.Format("{0};{1}", QueryId, value);
             }
         }
 

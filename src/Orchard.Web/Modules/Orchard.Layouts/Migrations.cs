@@ -2,9 +2,24 @@
 using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
 using Orchard.Layouts.Helpers;
+using Orchard.Layouts.Models;
+using Orchard.ContentManagement;
+using Orchard.Layouts.Services;
+using Orchard.Layouts.Elements;
+using System.Linq;
+using System;
+using Orchard.Projections.Models;
+using System.Collections.Generic;
 
 namespace Orchard.Layouts {
     public class Migrations : DataMigrationImpl {
+        public virtual IContentManager _contentManager { get; set; }
+        private readonly ILayoutSerializer _serializer;
+        public Migrations(IContentManager contentManager, ILayoutSerializer layoutSerializer)
+        {
+            _contentManager = contentManager;
+            _serializer = layoutSerializer;
+        }
         public int Create() {
 
             SchemaBuilder.CreateTable("ElementBlueprint", table => table
@@ -72,7 +87,7 @@ namespace Orchard.Layouts {
 
         public int UpdateFrom2() {
             ContentDefinitionManager.AlterTypeDefinition("Layout", type => type
-                .WithIdentity());
+                .WithIdentity());       
 
             return 3;
         }
@@ -88,6 +103,38 @@ namespace Orchard.Layouts {
                     .WithSetting("ElementWrapperPartSettings.ElementTypeName", elementTypeName))
                 .WithSetting("Stereotype", "Widget")
                 .DisplayedAs(widgetDisplayedAs));
+        }
+        public int UpdateFrom3(){
+            Dictionary<int, string> idAliasDictionary = new Dictionary<int, string>();
+            var queryParts = _contentManager.Query<QueryPart, QueryPartRecord>().List();
+            foreach(var queryPart in queryParts)
+            {
+                foreach (var layout in queryPart.Layouts)
+                {
+                    layout.Alias = Guid.NewGuid().ToString("n");
+                    idAliasDictionary.Add(layout.Id, layout.Alias);
+                }
+            }
+            var layoutParts = _contentManager.Query<LayoutPart, LayoutPartRecord>().List();
+            foreach (var layoutPart in layoutParts)
+            {
+                var elements = _serializer.Deserialize(layoutPart.LayoutData, new DescribeElementsContext { Content = layoutPart });
+                var projectionElements= elements.Flatten().Where(x => x is Projection).Cast<Projection>();
+                
+                foreach (var projectionElement in projectionElements)
+                {
+                    var queryId = XmlHelper.Parse<int>(projectionElement.Data["QueryLayoutId"].Split(new[] { ';' })[0]);
+                    var layoutId=XmlHelper.Parse<int>(projectionElement.Data["QueryLayoutId"].Split(new[] { ';' })[1]);
+                    if(idAliasDictionary.ContainsKey(layoutId))
+                        projectionElement.QueryLayoutAlias= queryId + ";"+idAliasDictionary[layoutId];
+                    else
+                        projectionElement.QueryLayoutAlias = queryId + ";" + layoutId;
+                }
+                var modifiedData = _serializer.Serialize(elements);
+                layoutPart.LayoutData = modifiedData;                
+            }
+
+            return 4;
         }
     }
 }

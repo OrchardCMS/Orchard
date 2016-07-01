@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
+using System.Xml;
 using System.Xml.Linq;
+using NHibernate.Util;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
@@ -75,8 +77,7 @@ namespace Orchard.Projections.Drivers {
                 ),
                 new XElement("Layouts",
                     part.Layouts.Select(layout => {
-                        var descriptor = _projectionManager.GetFilter(layout.Category, layout.Type);
-
+                        var descriptor = _projectionManager.GetFilter(layout.Category, layout.Type);                        
                         var state = layout.State;
                         if (descriptor != null) {
                             state = _formManager.Export(descriptor.Form, layout.State, context);
@@ -90,6 +91,7 @@ namespace Orchard.Projections.Drivers {
                             new XAttribute("Display", layout.Display),
                             new XAttribute("DisplayType", layout.DisplayType ?? ""),
                             new XAttribute("Type", layout.Type ?? ""),
+                            new XAttribute("Alias", layout.Alias),
 
                             // Properties
                             new XElement("Properties", layout.Properties.Select(GetPropertyXml)),
@@ -164,13 +166,19 @@ namespace Orchard.Projections.Drivers {
                 var category = layout.Attribute("Category").Value;
                 var type = layout.Attribute("Type").Value;
                 var state = layout.Attribute("State").Value;
-
+                var alias = layout.Attribute("Alias").Value;
+                XmlDocument xml = new XmlDocument();
+                xml.LoadXml(state);
+                var queryId=xml.GetElementsByTagName("QueryId").First();
+                ((XmlElement) queryId).InnerXml = context.Id.ToString();
+                state = xml.InnerXml.ToString();
                 var descriptor = _projectionManager.GetFilter(category, type);
                 if (descriptor != null) {
                     state = _formManager.Import(descriptor.Form, state, context);
                 }
 
                 return new LayoutRecord {
+                    Alias = alias,
                     Category = category,
                     Description = layout.Attribute("Description").Value,
                     Display = int.Parse(layout.Attribute("Display").Value),

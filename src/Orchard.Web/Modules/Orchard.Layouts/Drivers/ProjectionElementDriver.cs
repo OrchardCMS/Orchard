@@ -57,14 +57,14 @@ namespace Orchard.Layouts.Drivers {
 
         protected override void OnDisplaying(Projection element, ElementDisplayingContext context) {
             var queryId = element.QueryId;
-            var layoutId = element.LayoutId;
+            var layoutAlias = element.LayoutAlias;
             var query = queryId != null ? _contentManager.Get<QueryPart>(queryId.Value) : default(QueryPart);
             var emptyContentItemsList = Enumerable.Empty<ContentManagement.ContentItem>();
 
             context.ElementShape.ContentItems = emptyContentItemsList;
             context.ElementShape.BuildShapes = (Func<string, IEnumerable<dynamic>>)(displayType => emptyContentItemsList.Select(x => _contentManager.BuildDisplay(x, displayType)));
 
-            if (query == null || layoutId == null) {
+            if (query == null || string.IsNullOrEmpty(layoutAlias)) {
                 return;
             }
 
@@ -117,7 +117,7 @@ namespace Orchard.Layouts.Drivers {
             //contentItems = contentItems.Where(x => !x.Has<ProjectionPart>()).ToList();
 
             // Applying layout.
-            var layout = layoutId != null ? _layoutRepository.Get(layoutId.Value) : default(LayoutRecord);
+            var layout = !string.IsNullOrEmpty(layoutAlias)? _layoutRepository.Get(l=>l.Alias==layoutAlias) : default(LayoutRecord);
             var layoutDescriptor = layout == null ? null : _projectionManager.DescribeLayouts().SelectMany(x => x.Descriptors).FirstOrDefault(x => x.Category == layout.Category && x.Type == layout.Type);
 
             // Create pager shape.
@@ -223,9 +223,9 @@ namespace Orchard.Layouts.Drivers {
                 var shape = (dynamic)factory;
                 var form = shape.Fieldset(
                     Id: "ProjectionForm",
-                    _QueryLayoutId: shape.SelectList(
-                        Id: "QueryLayoutId",
-                        Name: "QueryLayoutId",
+                    _QueryLayoutAlias: shape.SelectList(
+                        Id: "QueryLayoutAlias",
+                        Name: "QueryLayoutAlias",
                         Title: T("For Query"),
                         Description: T("The query to display.")),
                     _ItemsToDisplay: shape.Textbox(
@@ -268,18 +268,18 @@ namespace Orchard.Layouts.Drivers {
                     .Select(x => new QueryRecordEntry {
                         Id = x.Id,
                         Name = x.Name,
-                        LayoutRecordEntries = x.Layouts.Select(l => new LayoutRecordEntry {
-                            Id = l.Id,
+                        LayoutRecordEntries = x.Layouts.Select(l => new LayoutRecordEntry {                            
+                            Alias=l.Alias,
                             Description = GetLayoutDescription(layouts, l)
                         })
                     }).ToArray();
 
                 foreach (var queryRecord in queries.OrderBy(x => x.Name)) {
-                    form._QueryLayoutId.Add(new SelectListGroup { Name = queryRecord.Name });
-                    form._QueryLayoutId.Add(new SelectListItem { Text = queryRecord.Name + " " + T("(Default Layout)").Text, Value = queryRecord.Id + ";-1" });
+                    form._QueryLayoutAlias.Add(new SelectListGroup { Name = queryRecord.Name });
+                    form._QueryLayoutAlias.Add(new SelectListItem { Text = queryRecord.Name + " " + T("(Default Layout)").Text, Value = queryRecord.Id + ";-1" });
 
                     foreach (var layoutRecord in queryRecord.LayoutRecordEntries.OrderBy(x => x.Description)) {
-                        form._QueryLayoutId.Add(new SelectListItem { Text = queryRecord.Name + " " + T("({0})", layoutRecord.Description).Text, Value = queryRecord.Id + ";" + layoutRecord.Id });
+                        form._QueryLayoutAlias.Add(new SelectListItem { Text = queryRecord.Name + " " + T("({0})", layoutRecord.Description).Text, Value = queryRecord.Id + ";" + layoutRecord.Alias });
                     }
                 }
 
@@ -289,13 +289,13 @@ namespace Orchard.Layouts.Drivers {
 
         protected override void OnExporting(Projection element, ExportElementContext context) {
             var query = element.QueryId != null ? _contentManager.Get<QueryPart>(element.QueryId.Value) : default(QueryPart);
-            var layout = query != null && element.LayoutId != null ? _layoutRepository.Get(element.LayoutId.Value) : default(LayoutRecord);
+            var layout = query != null && !string.IsNullOrEmpty(element.LayoutAlias)? _layoutRepository.Get(l=>l.Alias==element.LayoutAlias) : default(LayoutRecord);
             var queryIdentity = query != null ? _contentManager.GetItemMetadata(query).Identity.ToString() : default(string);
             var layoutIndex = layout != null ? query.Layouts.IndexOf(layout) : -1; // -1 is the Default Layout.
 
             if (queryIdentity != null) {
-                context.ExportableData["QueryId"] = queryIdentity;
-                context.ExportableData["LayoutIndex"] = layoutIndex.ToString();
+                context.ExportableData["QueryId"] = queryIdentity;                
+                context.ExportableData["LayoutAlias"] = layout.Alias;
             }
         }
 
@@ -307,10 +307,10 @@ namespace Orchard.Layouts.Drivers {
                 return;
 
             var queryPart = query.As<QueryPart>();
-            var layoutIndex = XmlHelper.Parse<int>(context.ExportableData.Get("LayoutIndex"));
+            var layoutAlias = XmlHelper.Parse<string>(context.ExportableData.Get("LayoutAlias"));
 
-            element.QueryId = queryPart.Id;
-            element.LayoutId = layoutIndex != -1 ? queryPart.Layouts[layoutIndex].Id : -1;
+            element.QueryId = queryPart.Id;            
+            element.LayoutAlias = layoutAlias;
         }
 
         private static string GetLayoutDescription(IEnumerable<LayoutDescriptor> layouts, LayoutRecord l) {

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using System.Data;
+using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Contents.Extensions;
@@ -8,6 +10,7 @@ using Orchard.Data;
 using Orchard.Data.Migration;
 using Orchard.Localization;
 using Orchard.Projections.Models;
+using Orchard.Projections.Services;
 
 namespace Orchard.Projections {
     public class Migrations : DataMigrationImpl {
@@ -281,6 +284,12 @@ namespace Orchard.Projections {
                 );
 
             return 4;
+        }
+
+        public int UpdateFrom4()
+        {
+            SchemaBuilder.AlterTable("LayoutRecord", table => table.AddColumn<string>("Alias"));
+            return 5;
         }
     }
 }

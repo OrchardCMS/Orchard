@@ -9,6 +9,7 @@ namespace Orchard.Projections.Models {
         }
 
         public virtual int Id { get; set; }
+        public virtual string Alias { get; set; }
         public virtual string Description { get; set; }
         public virtual string Category { get; set; }
         public virtual string Type { get; set; }

@@ -15,7 +15,7 @@ namespace Orchard.Projections.Services {
 
             // look for the previous action in order in same rule
             var previous = _repository.Table
-                .Where(x => x.Position < property.Position && x.LayoutRecord.Id == property.LayoutRecord.Id)
+                .Where(x => x.Position < property.Position && x.LayoutRecord.Alias == property.LayoutRecord.Alias)
                 .OrderByDescending(x => x.Position)
                 .FirstOrDefault();
 
@@ -35,7 +35,7 @@ namespace Orchard.Projections.Services {
 
             // look for the next action in order in same rule
             var next = _repository.Table
-                .Where(x => x.Position > property.Position && x.LayoutRecord.Id == property.LayoutRecord.Id)
+                .Where(x => x.Position > property.Position && x.LayoutRecord.Alias == property.LayoutRecord.Alias)
                 .OrderBy(x => x.Position)
                 .FirstOrDefault();
 

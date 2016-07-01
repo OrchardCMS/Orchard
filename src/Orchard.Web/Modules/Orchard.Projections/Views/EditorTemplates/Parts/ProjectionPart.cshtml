@@ -17,8 +17,8 @@
                 }
 
                 @foreach (LayoutRecordEntry layoutRecord in queryRecord.LayoutRecordEntries.OrderBy(x => x.Description)) {
-                    @Html.SelectOption(Model.QueryLayoutRecordId, queryRecord.Id + ";" + layoutRecord.Id, queryRecord.Name + " " + T("({0})", layoutRecord.Description).Text)
-                    if (Model.QueryLayoutRecordId == queryRecord.Id + ";" + layoutRecord.Id) {
+                    @Html.SelectOption(Model.QueryLayoutRecordId, queryRecord.Id + ";" + layoutRecord.Alias, queryRecord.Name + " " + T("({0})", layoutRecord.Description).Text)
+                    if (Model.QueryLayoutRecordId == queryRecord.Id + ";" + layoutRecord.Alias) {
                         selectedQueryRecordId = queryRecord.Id;
                     }
                 }
