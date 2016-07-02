@@ -123,5 +123,9 @@ namespace Orchard.Core.Common.Drivers {
                     .SetAttributeValue("ModifiedUtc", XmlConvert.ToString(part.ModifiedUtc.Value, XmlDateTimeSerializationMode.Utc));
             }
         }
+
+        protected override void Cloning(CommonPart originalPart, CommonPart clonePart, CloneContentContext context) {
+            clonePart.Container = originalPart.Container;
+        }
     }
 }

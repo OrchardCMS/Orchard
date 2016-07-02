@@ -181,7 +181,7 @@
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
-    <Content Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
     <Content Include="Views\EditorTemplates\Parts.Layout.cshtml" />
     <Content Include="Views\Element\Edit.cshtml" />
@@ -312,7 +312,6 @@
     <Compile Include="Controllers\TemplateController.cs" />
     <Compile Include="Drivers\BreadcrumbsElementDriver.cs" />
     <Compile Include="Drivers\CanvasElementDriver.cs" />
-    <Compile Include="Drivers\BlockquoteElementDriver.cs" />
     <Compile Include="Drivers\MenuElementDriver.cs" />
     <Compile Include="Drivers\NotificationsElementDriver.cs" />
     <Compile Include="Drivers\HeadingElementDriver.cs" />
@@ -321,7 +320,6 @@
     <Compile Include="Elements\Breadcrumbs.cs" />
     <Compile Include="Elements\Canvas.cs" />
     <Compile Include="Elements\ContentElement.cs" />
-    <Compile Include="Elements\Blockquote.cs" />
     <Compile Include="Elements\Menu.cs" />
     <Compile Include="Elements\Notifications.cs" />
     <Compile Include="Elements\Heading.cs" />
@@ -370,7 +368,6 @@
     <Compile Include="Models\SnippetDescriptor.cs" />
     <Compile Include="Models\SnippetFieldDescriptor.cs" />
     <Compile Include="Services\IFormElementServices.cs" />
-    <Compile Include="ViewModels\BlockquoteEditorViewModel.cs" />
     <Compile Include="ViewModels\SnippetViewModel.cs" />
     <Compile Include="ViewModels\SnippetFieldViewModel.cs" />
     <Compile Include="ViewModels\PlaceableContentItemViewModel.cs" />
@@ -595,15 +592,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Elements\Blockquote.Design.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Elements\Blockquote.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\EditorTemplates\Elements.Blockquote.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -209,8 +209,9 @@ namespace Orchard.MediaProcessing.Services {
             }
 
             // http://blob.storage-provider.net/my-image.jpg
-            if (Uri.IsWellFormedUriString(path, UriKind.Absolute)) {
-                return new WebClient().OpenRead(new Uri(path));
+            Uri absoluteUri;
+            if (Uri.TryCreate(path, UriKind.Absolute, out absoluteUri)) {
+                return new WebClient().OpenRead(absoluteUri);
             }
 
             // ~/Media/Default/images/my-image.jpg

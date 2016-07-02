@@ -3,9 +3,6 @@
 @using Orchard.Fields.Settings;
 
 @{
-    var isRequired = Model.Settings.Required && String.IsNullOrWhiteSpace(Model.Settings.DefaultValue);
-    var hasValue = !String.IsNullOrWhiteSpace(Model.Value);
-
     var attributes = new Dictionary<string, object>();
     attributes.Add("class", "text-small"); attributes.Add("type", "text");
     attributes.Add("min", Model.Settings.Minimum.HasValue ? Model.Settings.Minimum.Value : 0);
@@ -13,11 +10,11 @@
     attributes.Add("step", Math.Pow(10, 0 - Model.Settings.Scale).ToString(CultureInfo.InvariantCulture));
     attributes.Add("placeholder", Model.Settings.Placeholder);
 
-    if (isRequired) {
+    if (Model.Settings.Required) {
         attributes.Add("required", "required");
     }
 
-    if (hasValue) {
+    if (!String.IsNullOrWhiteSpace(Model.Value)) {
         attributes.Add("Value", Model.Value);
     }
 }
@@ -28,8 +25,5 @@
     @Html.ValidationMessageFor(m => m.Value)
     @if (HasText(Model.Settings.Hint)) {
         <span class="hint">@Model.Settings.Hint</span>
-    }
-    @if (!String.IsNullOrWhiteSpace(Model.Settings.DefaultValue)) {
-        <span class="hint">@T("If the field is left empty then the default value will be used.")</span>
     }
 </fieldset>

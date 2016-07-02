@@ -1,5 +1,6 @@
 ﻿using Orchard.Environment.Extensions;
 using Orchard.Layouts.Framework.Elements;
+using Orchard.Localization;
 
 namespace Orchard.Layouts.Elements {
     [OrchardFeature("Orchard.Layouts.Snippets")]
@@ -14,6 +15,10 @@ namespace Orchard.Layouts.Elements {
 
         public override bool HasEditor {
             get { return false; }
+        }
+
+        public override string ToolboxIcon {
+            get { return "\uf10c"; }
         }
     }
 }

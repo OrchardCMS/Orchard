@@ -81,7 +81,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Web.config" />
-    <Content Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\RedisMessageBusNotificationProvider.cs" />
+    <Compile Include="Services\RedisOutputCacheNotificationProvider.cs" />
+    <Compile Include="Services\RedisCacheNotificationProvider.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
   </ItemGroup>
   <ItemGroup>
