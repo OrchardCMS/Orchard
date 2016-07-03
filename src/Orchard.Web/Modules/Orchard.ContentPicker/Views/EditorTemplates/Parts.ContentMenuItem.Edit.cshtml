@@ -20,8 +20,8 @@
         jQuery('#btn-@Html.FieldIdFor(m => m.ContentItemId)').trigger("orchard-admin-contentpicker-open", {
             callback: function(data) {
 
+                data = Array.isArray && Array.isArray(data) ? data[0] : data;
                 jQuery('#@Html.FieldIdFor(m => m.ContentItemId)').val(data.id);
-
                 jQuery('#title-@Html.FieldIdFor(m => m.ContentItemId)').text(data.displayText);
 
                 // define the menu text if it's empty

@@ -153,12 +153,16 @@ function buildCssPipeline(assetGroup, doConcat, doRebuild) {
                 }))))
         .pipe(plumber())
         .pipe(gulpif("*.less", less()))
-        .pipe(gulpif("*.scss", sass()))
+        .pipe(gulpif("*.scss", sass({
+            precision: 10
+        })))
         .pipe(gulpif(doConcat, concat(assetGroup.outputFileName)))
         .pipe(cssnano({
             autoprefixer: { browsers: ["last 2 versions"] },
             discardComments: { removeAll: true },
             discardUnused: false,
+            mergeIdents: false,
+            reduceIdents: false,
             zindex: false
         }))
         .pipe(rename({
@@ -177,7 +181,9 @@ function buildCssPipeline(assetGroup, doConcat, doRebuild) {
         .pipe(plumber())
         .pipe(gulpif(generateSourceMaps, sourcemaps.init()))
         .pipe(gulpif("*.less", less()))
-        .pipe(gulpif("*.scss", sass()))
+        .pipe(gulpif("*.scss", sass({
+            precision: 10
+        })))
         .pipe(gulpif(doConcat, concat(assetGroup.outputFileName)))
         .pipe(header(
             "/*\n" +

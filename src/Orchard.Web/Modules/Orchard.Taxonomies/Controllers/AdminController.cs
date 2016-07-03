@@ -85,7 +85,7 @@ namespace Orchard.Taxonomies.Controllers {
 
         [HttpPost]
         public ActionResult Delete(int id) {
-            if (!Services.Authorizer.Authorize(Permissions.CreateTaxonomy, T("Couldn't delete taxonomy")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageTaxonomies, T("Couldn't delete taxonomy")))
                 return new HttpUnauthorizedResult();
 
             var taxonomy = _taxonomyService.GetTaxonomy(id);
@@ -201,7 +201,7 @@ namespace Orchard.Taxonomies.Controllers {
                 }
             }
 
-            Services.Notifier.Information(T("The terms have been imported successfully."));
+            Services.Notifier.Success(T("The terms have been imported successfully."));
 
             return RedirectToAction("Index", "TermAdmin", new { taxonomyId = id });
         }

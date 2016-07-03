@@ -27,6 +27,10 @@ namespace Orchard.DynamicForms.Elements {
             get { return this.Retrieve(x => x.ValueExpression, () => "{Content.Id}"); }
         }
 
+        public string DefaultValue {
+            get { return this.Retrieve(x => x.DefaultValue); }
+        }
+
         public EnumerationValidationSettings ValidationSettings {
             get { return Data.GetModel<EnumerationValidationSettings>(""); }
         }

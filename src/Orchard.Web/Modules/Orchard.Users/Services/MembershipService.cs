@@ -118,7 +118,7 @@ namespace Orchard.Users.Services {
                         template.Metadata.Wrappers.Add("Template_User_Wrapper");
 
                         var parameters = new Dictionary<string, object> {
-                            {"Subject", T("New account").Text},
+                            {"Subject", T("New account on {0}.", _orchardServices.WorkContext.CurrentSite.SiteName).Text},
                             {"Body", _shapeDisplay.Display(template)},
                             {"Recipients", recipient.Email }
                         };

@@ -71,12 +71,6 @@ namespace Orchard.Core.Containers.Models {
             get { return Record.ItemCount; }
             set { Record.ItemCount = value; }
         }
-
-        public PagerParameters PagerParameters { get; set; }
-
-        public ContainerPart() {
-            PagerParameters = new PagerParameters();
-        }
     }
 
     public class ContainerPartRecord : ContentPartRecord {

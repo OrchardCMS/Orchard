@@ -68,7 +68,7 @@ namespace Orchard.Media.Controllers {
 
             try {
                 _mediaService.CreateFolder(viewModel.MediaPath, viewModel.Name);
-                Services.Notifier.Information(T("Media folder created"));
+                Services.Notifier.Success(T("Media folder created"));
             }
             catch(ArgumentException argumentException) {
                 Services.Notifier.Error(T("Creating Folder failed: {0}", argumentException.Message));
@@ -102,7 +102,7 @@ namespace Orchard.Media.Controllers {
 
                     try {
                         _mediaService.DeleteFile(folderName, fileName);
-                        Services.Notifier.Information(T("Media file deleted"));
+                        Services.Notifier.Success(T("Media file deleted"));
                     }
                     catch (ArgumentException argumentException) {
                         Services.Notifier.Error(T("Deleting failed: {0}", argumentException.Message));
@@ -116,7 +116,7 @@ namespace Orchard.Media.Controllers {
 
                     try {
                         _mediaService.DeleteFolder(folderPath);
-                        Services.Notifier.Information(T("Media folder deleted"));
+                        Services.Notifier.Success(T("Media folder deleted"));
                     }
                     catch(ArgumentException argumentException) {
                         Services.Notifier.Error(T("Deleting failed: {0}", argumentException.Message));
@@ -142,7 +142,7 @@ namespace Orchard.Media.Controllers {
             UpdateModel(viewModel);
             try {
                 _mediaService.DeleteFolder(viewModel.MediaPath);
-                Services.Notifier.Information(T("Media folder deleted"));
+                Services.Notifier.Success(T("Media folder deleted"));
             }
             catch(ArgumentException argumentException) {
                 Services.Notifier.Error(T("Deleting media folder failed: {0}", argumentException.Message));
@@ -162,7 +162,7 @@ namespace Orchard.Media.Controllers {
             UpdateModel(viewModel);
             try {
                 _mediaService.RenameFolder(viewModel.MediaPath, viewModel.Name);
-                Services.Notifier.Information(T("Media folder properties modified"));
+                Services.Notifier.Success(T("Media folder properties modified"));
             }
             catch(ArgumentException argumentException) {
                 Services.Notifier.Error(T("Modifying media folder properties failed: {0}", argumentException.Message));
@@ -217,7 +217,7 @@ namespace Orchard.Media.Controllers {
                 }
             }
 
-            Services.Notifier.Information(T("Media file(s) uploaded"));
+            Services.Notifier.Success(T("Media file(s) uploaded"));
             return RedirectToAction("Edit", new { name = viewModel.FolderName, mediaPath = viewModel.MediaPath });
         }
 
@@ -266,7 +266,7 @@ namespace Orchard.Media.Controllers {
             UpdateModel(viewModel);
             try {
                 _mediaService.DeleteFile(viewModel.Name, viewModel.MediaPath);
-                Services.Notifier.Information(T("Media deleted"));
+                Services.Notifier.Success(T("Media deleted"));
             }
             catch (ArgumentException argumentException) {
                 Services.Notifier.Error(T("Removing media file failed: {0}", argumentException.Message));
@@ -298,7 +298,7 @@ namespace Orchard.Media.Controllers {
                 viewModelName = input["NewName"];
             }
 
-            Services.Notifier.Information(T("Media information updated"));
+            Services.Notifier.Success(T("Media information updated"));
             return RedirectToAction("EditMedia", new { name = viewModelName, 
                                                         caption = viewModel.Caption, 
                                                         lastUpdated = viewModel.LastUpdated, 

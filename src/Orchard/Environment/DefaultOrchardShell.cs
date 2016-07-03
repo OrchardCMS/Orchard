@@ -50,6 +50,7 @@ namespace Orchard.Environment {
         }
 
         public ILogger Logger { get; set; }
+        public ISweepGenerator Sweep { get { return _sweepGenerator; } }
 
         public void Activate() {
             var appBuilder = new AppBuilder();
@@ -104,7 +105,7 @@ namespace Orchard.Environment {
                     throw;
                 }
 
-                Logger.Error(ex, "An unexcepted error occured while terminating the Shell");
+                Logger.Error(ex, "An unexpected error occured while terminating the Shell");
             }
         }
     }

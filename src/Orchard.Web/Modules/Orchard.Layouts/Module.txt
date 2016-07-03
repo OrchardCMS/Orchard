@@ -2,15 +2,15 @@
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
-Version: 1.0
+Version: 1.10.1
 OrchardVersion: 1.9
-# Category: Layout
-# Description: Provides tools to create layouts.
+Category: Layout
+Description: Provides tools to create layouts.
 Features:
     Orchard.Layouts:
         Name: Layouts
         Description: Provides tools to create layouts.
-        Dependencies: Common, Orchard.Forms, Orchard.Tokens, Orchard.MediaLibrary, Orchard.Conditions, Orchard.Resources
+        Dependencies: Common, Orchard.Alias, Orchard.Forms, Orchard.Tokens, Orchard.MediaLibrary, Orchard.Conditions, Orchard.Resources
         Category: Layout
     Orchard.Layouts.Snippets:
         Name: Layout Snippets

@@ -272,8 +272,8 @@ namespace Orchard.ContentTypes.Services {
             _contentDefinitionEventHandlers.ContentPartRemoved(new ContentPartRemovedContext {ContentPartDefinition = partDefinition});
         }
 
-        public IEnumerable<ContentFieldInfo> GetFields() {
-            return _contentFieldDrivers.SelectMany(d => d.GetFieldInfo());
+        public IEnumerable<ContentFieldInfo> GetFields() {            
+            return _contentFieldDrivers.SelectMany(d => d.GetFieldInfo()).GroupBy(x => x.FieldTypeName).Select(g => g.First());
         }
 
         public void AddFieldToPart(string fieldName, string fieldTypeName, string partName) {

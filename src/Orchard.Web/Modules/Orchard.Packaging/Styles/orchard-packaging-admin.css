@@ -11,7 +11,7 @@
     float:left;
 }
 .extensionName.installed {
-    background: url("images/installed.gif") no-repeat 0px 8px #fff;
+    background: url("images/installed.gif") no-repeat 0px 8px;
     padding:0 0 0 60px;
 }
 .contentItems .related {
