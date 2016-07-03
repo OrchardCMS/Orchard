@@ -10,8 +10,8 @@ var fs = require("fs"),
     plumber = require("gulp-plumber"),
     sourcemaps = require("gulp-sourcemaps"),
     less = require("gulp-less"),
-    cssnano = require("gulp-cssnano"),
     sass = require("gulp-sass"),
+    cssnano = require("gulp-cssnano"),
     typescript = require("gulp-typescript"),
     uglify = require("gulp-uglify"),
     rename = require("gulp-rename"),
@@ -136,8 +136,12 @@ function buildCssPipeline(assetGroup, doConcat, doRebuild) {
             throw "Input file '" + inputPath + "' is not of a valid type for output file '" + assetGroup.outputPath + "'.";
     });
     var generateSourceMaps = assetGroup.hasOwnProperty("generateSourceMaps") ? assetGroup.generateSourceMaps : true;
+    var containsLessOrScss = assetGroup.inputPaths.some(function (inputPath) {
+        var ext = path.extname(inputPath).toLowerCase();
+        return ext === ".less" || ext === ".scss";
+    });
     // Source maps are useless if neither concatenating nor transforming.
-    if ((!doConcat || assetGroup.inputPaths.length < 2) && !assetGroup.inputPaths.some(function (inputPath) { return path.extname(inputPath).toLowerCase() === ".less"; }))
+    if ((!doConcat || assetGroup.inputPaths.length < 2) && !containsLessOrScss)
         generateSourceMaps = false;
     var minifiedStream = gulp.src(assetGroup.inputPaths) // Minified output, source mapping completely disabled.
         .pipe(gulpif(!doRebuild,
@@ -150,7 +154,7 @@ function buildCssPipeline(assetGroup, doConcat, doRebuild) {
         .pipe(plumber())
         .pipe(gulpif("*.less", less()))
         .pipe(gulpif("*.scss", sass({
-        	precision: 10
+            precision: 10
         })))
         .pipe(gulpif(doConcat, concat(assetGroup.outputFileName)))
         .pipe(cssnano({
@@ -178,7 +182,7 @@ function buildCssPipeline(assetGroup, doConcat, doRebuild) {
         .pipe(gulpif(generateSourceMaps, sourcemaps.init()))
         .pipe(gulpif("*.less", less()))
         .pipe(gulpif("*.scss", sass({
-        	precision: 10
+            precision: 10
         })))
         .pipe(gulpif(doConcat, concat(assetGroup.outputFileName)))
         .pipe(header(
