@@ -286,8 +286,7 @@ namespace Orchard.Projections {
             return 4;
         }
 
-        public int UpdateFrom4()
-        {
+        public int UpdateFrom4() {
             SchemaBuilder.AlterTable("LayoutRecord", table => table.AddColumn<string>("Alias"));
             return 5;
         }

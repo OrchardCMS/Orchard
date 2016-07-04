@@ -15,8 +15,7 @@ namespace Orchard.Layouts {
     public class Migrations : DataMigrationImpl {
         public virtual IContentManager _contentManager { get; set; }
         private readonly ILayoutSerializer _serializer;
-        public Migrations(IContentManager contentManager, ILayoutSerializer layoutSerializer)
-        {
+        public Migrations(IContentManager contentManager, ILayoutSerializer layoutSerializer) {
             _contentManager = contentManager;
             _serializer = layoutSerializer;
         }
@@ -107,22 +106,18 @@ namespace Orchard.Layouts {
         public int UpdateFrom3(){
             Dictionary<int, string> idAliasDictionary = new Dictionary<int, string>();
             var queryParts = _contentManager.Query<QueryPart, QueryPartRecord>().List();
-            foreach(var queryPart in queryParts)
-            {
-                foreach (var layout in queryPart.Layouts)
-                {
+            foreach(var queryPart in queryParts) {
+                foreach (var layout in queryPart.Layouts) {
                     layout.Alias = Guid.NewGuid().ToString("n");
                     idAliasDictionary.Add(layout.Id, layout.Alias);
                 }
             }
             var layoutParts = _contentManager.Query<LayoutPart, LayoutPartRecord>().List();
-            foreach (var layoutPart in layoutParts)
-            {
+            foreach (var layoutPart in layoutParts) {
                 var elements = _serializer.Deserialize(layoutPart.LayoutData, new DescribeElementsContext { Content = layoutPart });
                 var projectionElements= elements.Flatten().Where(x => x is Projection).Cast<Projection>();
                 
-                foreach (var projectionElement in projectionElements)
-                {
+                foreach (var projectionElement in projectionElements) {
                     var queryId = XmlHelper.Parse<int>(projectionElement.Data["QueryLayoutId"].Split(new[] { ';' })[0]);
                     var layoutId=XmlHelper.Parse<int>(projectionElement.Data["QueryLayoutId"].Split(new[] { ';' })[1]);
                     if(idAliasDictionary.ContainsKey(layoutId))
@@ -133,7 +128,6 @@ namespace Orchard.Layouts {
                 var modifiedData = _serializer.Serialize(elements);
                 layoutPart.LayoutData = modifiedData;                
             }
-
             return 4;
         }
     }
