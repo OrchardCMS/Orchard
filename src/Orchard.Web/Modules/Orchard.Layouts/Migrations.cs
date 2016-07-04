@@ -88,7 +88,7 @@ namespace Orchard.Layouts {
             ContentDefinitionManager.AlterTypeDefinition("Layout", type => type
                 .WithIdentity());       
 
-            return 3;
+            return 4;
         }
 
         private void DefineElementWidget(string widgetTypeName, string widgetDisplayedAs, string elementTypeName) {
