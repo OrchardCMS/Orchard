@@ -4,6 +4,7 @@
 @{
     Layout.Title = T("Manage Taxonomies").ToString();
     int taxonomyIndex = 0, ti;
+    Layout.Tail.Add(New.ConfirmationDialog());
 }
 <div class="panel panel-default">
     @if (Model.Taxonomies.Any()) {
@@ -12,14 +13,14 @@
             <div class="panel-heading no-border">
                 <div class="panel-heading-primary-group">
                     <fieldset>
-                        <input id="publishActions" name="@Html.NameOf(m => m.BulkAction)" type="hidden" value="@TaxonomiesAdminIndexBulkAction.None" />
+                        <input id="bulkActions" name="@Html.NameOf(m => m.BulkAction)" type="hidden" value="@TaxonomiesAdminIndexBulkAction.None" />
                         <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
                         <div class="btn-group">
                             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                                <i class="fa fa-bolt"></i> Bulk Actions <span class="caret"></span>
+                                <i class="fa fa-bolt"></i> @T("Bulk Actions") <span class="caret"></span>
                             </button>&nbsp;
                             <ul class="dropdown-menu" role="menu">
-                                <li><a id="btn-bulk-delete" href="#" data-confirm="@T("Are you sure you want to delete these items?")" data-action="@TaxonomiesAdminIndexBulkAction.Delete">@T("Delete").ToString()</a></li>
+                                <li><a id="btn-bulk-delete" href="#" data-bulk-action-confirm="@T("Are you sure you want to delete these items?")" data-bulk-action="@TaxonomiesAdminIndexBulkAction.Delete">@T("Delete").ToString()</a></li>
                             </ul>
                         </div>
                     </fieldset>
@@ -95,4 +96,3 @@
         </div>
     }
 </div>
-@Display.Modal()

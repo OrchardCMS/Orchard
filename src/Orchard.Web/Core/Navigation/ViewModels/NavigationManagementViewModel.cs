@@ -12,8 +12,6 @@ namespace Orchard.Core.Navigation.ViewModels {
         public MenuItemEntry NewMenuItem { get; set; }
         public IList<MenuItemEntry> MenuItemEntries { get; set; }
         public IEnumerable<MenuItemDescriptor> MenuItemDescriptors { get; set; }
-
-        public IEnumerable<IContent> Menus { get; set; }
         public IContent CurrentMenu { get; set; }
     }
 }

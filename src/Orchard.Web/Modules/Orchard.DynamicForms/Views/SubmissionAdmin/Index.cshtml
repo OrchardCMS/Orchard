@@ -5,6 +5,7 @@
     Style.Include("forms-admin.css", "forms-admin.min.css"); // TODO: Shouldn't this be a Style.Require()?
     Script.Require("ShapesBase");
     Layout.Title = T("Submissions for {0}", Model.FormName);
+    Layout.Tail.Add(New.ConfirmationDialog());
 }
 @{
     var dataColumns = new List<DataColumn>();
@@ -18,14 +19,14 @@
     @using (Html.BeginFormAntiForgeryPost()) {
         <div class="panel-heading">
             <fieldset>
-                <input id="publishActions" name="Options.BulkAction" type="hidden" value="" />
+                <input id="bulkActions" name="Options.BulkAction" type="hidden" value="" />
                 <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
                 <div class="btn-group">
                     <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                        <i class="fa fa-bolt"></i> Bulk Actions <span class="caret"></span>
+                        <i class="fa fa-bolt"></i> @T("Bulk Actions") <span class="caret"></span>
                     </button>&nbsp;
                     <ul class="dropdown-menu" role="menu">
-                        <li><a href="#" data-confirm="@T("Are you sure you want to delete these items?")" data-action="Delete">@T("Delete").ToString()</a></li>
+                        <li><a href="#" data-bulk-action-confirm="@T("Are you sure you want to delete these items?")" data-bulk-action="Delete">@T("Delete").ToString()</a></li>
                     </ul>
                 </div>
             </fieldset>
@@ -79,4 +80,3 @@
         </div>
     }
 </div>
-@Display.Modal()

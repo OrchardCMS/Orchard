@@ -2,6 +2,7 @@
 @using Orchard.Localization.Models
 @{
     Layout.Title = T("Transliteration Settings");
+    Layout.Tail.Add(New.ConfirmationDialog());
 
     var currentSpecifications = (IEnumerable<TransliterationSpecificationRecord>)Model.Specifications;
 }
@@ -49,7 +50,6 @@
                     </div>
                 </div>
             </div>
-            @Display.Modal()
         } else {
             <div class="panel-body">
                 <h3 class="no-content">@T("There are no specifications registered. Why not <a href=\"{0}\">Create one</a>?", Url.Action("Create", "TransliterationAdmin"))</h3>

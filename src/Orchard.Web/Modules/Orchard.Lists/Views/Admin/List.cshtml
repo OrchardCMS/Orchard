@@ -17,9 +17,10 @@
     var itemContentTypes = (IList<ContentTypeDefinition>)Model.ItemContentTypes;
 
     Layout.Title = T("Manage {0}", Model.ContainerDisplayName);
+    Layout.Tail.Add(New.ConfirmationDialog());
 }
 <div class="panel panel-default">
-    <div id="listManagement" @if (container.EnablePositioning) { <text> class="sortable" </text>      }
+    <div id="listManagement" @if (container.EnablePositioning) { <text> class="sortable" </text> }
          data-baseurl="@WorkContext.CurrentSite.BaseUrl"
          data-itemtypes="@String.Join(",", itemContentTypes.Select(x => x.Name))"
          data-update-url="@Url.Action("UpdatePositions", "Admin", new { containerId = Model.ContainerId, page = Model.Pager.Page, pageSize = Model.Pager.PageSize })"
@@ -50,4 +51,3 @@
         }
     </div>
 </div>
-@Display.Modal()

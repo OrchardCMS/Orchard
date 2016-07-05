@@ -4,6 +4,7 @@ using System.Web.Routing;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.Core.Contents.Navigation;
+using Orchard.Core.Contents.Settings;
 using Orchard.Localization;
 using Orchard.UI.Navigation;
 
@@ -44,8 +45,15 @@ namespace Orchard.Core.Contents {
             AddContentTypeNodes(x => builder.Add(T("New {0}", x.DisplayName), item => item.Action("Create", "Admin", new { area = "Contents", id = x.Name })));
         }
 
-        private void AddContentTypeNodes(Action<ContentTypeDefinition> configure) {
-            var contentTypes = _orchardServices.ContentManager.GetContentTypeDefinitions().ToList();
+        private void AddContentTypeNodes(Action<ContentTypeDefinition> configure, Func<ContentTypeDefinition, ContentTypeSettings, bool> predicate = null) {
+            predicate = predicate ?? delegate { return true; };
+            var contentTypesQuery = 
+                from contentType in _orchardServices.ContentManager.GetContentTypeDefinitions()
+                let settings = contentType.Settings.GetModel<ContentTypeSettings>()
+                where predicate(contentType, settings)
+                select contentType;
+
+            var contentTypes = contentTypesQuery.ToList();
 
             foreach (var contentType in contentTypes) {
                 configure(contentType);

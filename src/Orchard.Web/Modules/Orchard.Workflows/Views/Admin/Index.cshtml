@@ -3,6 +3,8 @@
 
 @{
     Layout.Title = T("Manage Workflow Definitions").Text;
+    Layout.Tail.Add(New.ConfirmationDialog());
+
     var index = 0;
 
     var pageSizes = new List<int?>() { 10, 50, 100 };
@@ -23,14 +25,14 @@
             <div class="panel-heading-primary-group">
                 <div class="row">
                     <fieldset class="col-sm-4 form-group">
-                        <input id="publishActions" name="@Html.NameOf(m => m.Options.BulkAction)" type="hidden" value="@WorkflowDefinitionBulk.None" />
+                        <input id="bulkActions" name="@Html.NameOf(m => m.Options.BulkAction)" type="hidden" value="@WorkflowDefinitionBulk.None" />
                         <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
                         <div class="btn-group">
                             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                                <i class="fa fa-bolt"></i> Bulk Actions <span class="caret"></span>
+                                <i class="fa fa-bolt"></i> @T("Bulk Actions") <span class="caret"></span>
                             </button>&nbsp;
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="#" data-confirm="@T("Are you sure you want to delete these items?")" data-action="@WorkflowDefinitionBulk.Delete">@T("Delete").ToString()</a></li>
+                                <li><a href="#" data-bulk-action-confirm="@T("Are you sure you want to delete these items?")" data-bulk-action="@WorkflowDefinitionBulk.Delete">@T("Delete").ToString()</a></li>
                             </ul>
                         </div>
                     </fieldset>
@@ -108,4 +110,3 @@
         </div>
     }
 </div>
-@Display.Modal()

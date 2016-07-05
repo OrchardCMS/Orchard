@@ -1,5 +1,4 @@
-﻿@model Orchard.Users.ViewModels.UsersIndexViewModel
-@using Orchard.Core.Shapes;
+﻿@model UsersIndexViewModel
 @using Orchard.Users.Models;
 @using Orchard.Users.ViewModels;
 
@@ -7,6 +6,7 @@
     var userIndex = 0;
 
     Layout.Title = T("Users").ToString();
+    Layout.Tail.Add(New.ConfirmationDialog());
     Script.Require("UsersAdmin");
 }
 
@@ -19,17 +19,17 @@
             </div>
             <div class="panel-heading-primary-group">
                 <fieldset class="bulk-actions">
-                    <input id="publishActions" name="@Html.NameOf(m => m.Options.BulkAction)" type="hidden" value="@UsersBulkAction.None" />
+                    <input id="bulkActions" name="@Html.NameOf(m => m.Options.BulkAction)" type="hidden" value="@UsersBulkAction.None" />
                     <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
                     <div class="btn-group">
                         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-bolt"></i> Bulk Actions <span class="caret"></span>
+                            <i class="fa fa-bolt"></i> @T("Bulk Actions") <span class="caret"></span>
                         </button>&nbsp;
                         <ul class="dropdown-menu" role="menu">
-                            <li><a href="#" data-confirm="@T("Are you sure you want to approve these users?")" data-action="@UsersBulkAction.Approve">@T("Approve").ToString()</a></li>
-                            <li><a href="#" data-confirm="@T("Are you sure you want to disable these users?")" data-action="@UsersBulkAction.Disable">@T("Disable").ToString()</a></li>
-                            <li><a href="#" data-confirm="@T("Are you sure you want to send challenge email to these users?")" data-action="@UsersBulkAction.ChallengeEmail">@T("Send challenge E-mail").ToString()</a></li>
-                            <li><a href="#" data-confirm="@T("Are you sure you want to delete these users?")" data-action="@UsersBulkAction.Delete">@T("Delete").ToString()</a></li>
+                            <li><a href="#" data-bulk-action-confirm="@T("Are you sure you want to approve these users?")" data-bulk-action="@UsersBulkAction.Approve">@T("Approve").ToString()</a></li>
+                            <li><a href="#" data-bulk-action-confirm="@T("Are you sure you want to disable these users?")" data-bulk-action="@UsersBulkAction.Disable">@T("Disable").ToString()</a></li>
+                            <li><a href="#" data-bulk-action-confirm="@T("Are you sure you want to send challenge email to these users?")" data-bulk-action="@UsersBulkAction.ChallengeEmail">@T("Send challenge E-mail").ToString()</a></li>
+                            <li><a href="#" data-bulk-action-confirm="@T("Are you sure you want to delete these users?")" data-bulk-action="@UsersBulkAction.Delete">@T("Delete").ToString()</a></li>
                         </ul>
                     </div>
                 </fieldset>
@@ -134,4 +134,3 @@
         </div>
     </div>
 }
-@Display.Modal()

@@ -1,10 +1,11 @@
-﻿@model Orchard.Tags.ViewModels.TagsAdminIndexViewModel
+﻿@model TagsAdminIndexViewModel
 @using Orchard.Tags.ViewModels;
 @using Orchard.Utility.Extensions;
 @{
     Script.Require("ShapesBase");
     Style.Require("TagsAdmin");
     Layout.Title = T("Tags").ToString();
+    Layout.Tail.Add(New.ConfirmationDialog());
 }
 <div class="panel panel-default">
     @using (Html.BeginFormAntiForgeryPost()) {
@@ -15,14 +16,14 @@
             </div>
             <div class="panel-heading-primary-group">
                 <fieldset>
-                    <input id="publishActions" name="@Html.NameOf(m => m.BulkAction)" type="hidden" value="@TagAdminIndexBulkAction.None" />
+                    <input id="bulkActions" name="@Html.NameOf(m => m.BulkAction)" type="hidden" value="@TagAdminIndexBulkAction.None" />
                     <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
                     <div class="btn-group">
                         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-bolt"></i> Bulk Actions <span class="caret"></span>
+                            <i class="fa fa-bolt"></i> @T("Bulk Actions") <span class="caret"></span>
                         </button>&nbsp;
                         <ul class="dropdown-menu" role="menu">
-                            <li><a href="#" data-confirm="@T("Are you sure you want to delete these items?")" data-action="@TagAdminIndexBulkAction.Delete">@T("Delete").ToString()</a></li>
+                            <li><a href="#" data-bulk-action-confirm="@T("Are you sure you want to delete these items?")" data-bulk-action="@TagAdminIndexBulkAction.Delete">@T("Delete").ToString()</a></li>
                         </ul>
                     </div>
                 </fieldset>
@@ -83,4 +84,3 @@
         </div>
     }
 </div>
-@Display.Modal()

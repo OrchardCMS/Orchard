@@ -1,10 +1,10 @@
 ﻿@model TermAdminIndexViewModel
 @using Orchard.Taxonomies.ViewModels;
-
 @using Orchard.Taxonomies.Helpers;
 @{
     Style.Include("admin-taxonomy.css");
     Layout.Title = T("Manage terms for {0}", Model.Taxonomy.Name).ToString();
+    Layout.Tail.Add(New.ConfirmationDialog());
 
     var termIndex = 0;
 }
@@ -16,15 +16,15 @@
             <div class="panel-heading no-border">
                 <div class="panel-heading-primary-group">
                     <fieldset>
-                        <input id="publishActions" name="@Html.NameOf(m => m.BulkAction)" type="hidden" value="@TermsAdminIndexBulkAction.None" />
+                        <input id="bulkActions" name="@Html.NameOf(m => m.BulkAction)" type="hidden" value="@TermsAdminIndexBulkAction.None" />
                         <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
                         <div class="btn-group">
                             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                                <i class="fa fa-bolt"></i> Bulk Actions <span class="caret"></span>
+                                <i class="fa fa-bolt"></i> @T("Bulk Actions") <span class="caret"></span>
                             </button>&nbsp;
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="#" data-confirm="@T("Are you sure you want to move these items?")" data-action="@TermsAdminIndexBulkAction.Move">@T("Move").ToString()</a></li>
-                                <li><a href="#" data-confirm="@T("Are you sure you want to delete these items?")" data-action="@TermsAdminIndexBulkAction.Delete">@T("Delete").ToString()</a></li>
+                                <li><a href="#" data-bulk-action-confirm="@T("Are you sure you want to move these items?")" data-bulk-action="@TermsAdminIndexBulkAction.Move">@T("Move").ToString()</a></li>
+                                <li><a href="#" data-bulk-action-confirm="@T("Are you sure you want to delete these items?")" data-bulk-action="@TermsAdminIndexBulkAction.Delete">@T("Delete").ToString()</a></li>
                             </ul>
                         </div>
                     </fieldset>
@@ -79,9 +79,7 @@
                     </div>
                 </div>
             </div>
-
         }
-        @Display.Modal()
     } else {
         <div class="panel-body">
             <h3 class="no-content">

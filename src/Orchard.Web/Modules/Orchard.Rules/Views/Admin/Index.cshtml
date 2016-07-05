@@ -1,17 +1,15 @@
-@model Orchard.Rules.ViewModels.RulesIndexViewModel
-@using Orchard.Rules.Models;
+@model RulesIndexViewModel
 @using Orchard.Rules.ViewModels;
-
 @{
     Style.Include("admin-rules.css");
     
     var ruleIndex = 0;
 
-	var pageSizes = new List<int?>() { 10, 50, 100 };
-	var defaultPageSize = WorkContext.CurrentSite.PageSize;
-	if(!pageSizes.Contains(defaultPageSize)) { 
-		pageSizes.Add(defaultPageSize);
-	}
+    var pageSizes = new List<int?>() { 10, 50, 100 };
+    var defaultPageSize = WorkContext.CurrentSite.PageSize;
+    if(!pageSizes.Contains(defaultPageSize)) { 
+        pageSizes.Add(defaultPageSize);
+    }
 }
 
 <h1>@Html.TitleForPage(T("Manage Rules").ToString()) </h1>

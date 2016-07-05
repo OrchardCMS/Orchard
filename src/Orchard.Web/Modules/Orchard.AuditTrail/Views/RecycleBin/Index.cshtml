@@ -8,6 +8,7 @@
     Script.Require("ShapesBase");
     Script.Include(("audittrail-recyclebin.js"));
     Layout.Title = T("Audit Trail");
+    Layout.Tail.Add(New.ConfirmationDialog());
 
     var contentItems = Model.ContentItems;
     var dateLocalizationServices = WorkContext.Resolve<IDateLocalizationServices>();
@@ -17,15 +18,15 @@
         @Html.ValidationSummary()
         <div class="panel-heading">
             <fieldset>
-                <input id="publishActions" name="@Html.NameOf(m => m.Options.BulkAction)" type="hidden" value="@RecycleBinBulkAction.None" />
+                <input id="bulkActions" name="@Html.NameOf(m => m.Options.BulkAction)" type="hidden" value="@RecycleBinBulkAction.None" />
                 <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
                 <div class="btn-group">
                     <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                        <i class="fa fa-bolt"></i> Bulk Actions <span class="caret"></span>
+                        <i class="fa fa-bolt"></i> @T("Bulk Actions") <span class="caret"></span>
                     </button>&nbsp;
                     <ul class="dropdown-menu" role="menu">
-                        <li><a href="#" data-confirm="@T("Are you sure you want to restore the selected items?")" data-action="@RecycleBinBulkAction.Restore">@T("Restore").ToString()</a></li>
-                        <li><a href="#" data-confirm="@T("Are you sure you want to delete these items?")" data-action="@RecycleBinBulkAction.Destroy">@T("Delete").ToString()</a></li>
+                        <li><a href="#" data-bulk-action-confirm="@T("Are you sure you want to restore the selected items?")" data-bulk-action="@RecycleBinBulkAction.Restore">@T("Restore").ToString()</a></li>
+                        <li><a href="#" data-bulk-action-confirm="@T("Are you sure you want to delete these items?")" data-bulk-action="@RecycleBinBulkAction.Destroy">@T("Delete").ToString()</a></li>
                     </ul>
                 </div>
             </fieldset>
@@ -88,9 +89,8 @@
                             @Display(Model.Pager)
                         </div>
                     </div>
-                                    }
+                    }
             </div>
         </div>
-                                    }
+        }
 </div>
-@Display.Modal()

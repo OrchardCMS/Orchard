@@ -4,7 +4,7 @@
         App.init();
 
         // Pagers.
-        $('select.pager.selector').change(function () {
+        $("select.pager.selector").change(function () {
             window.location = $(this).attr("disabled", true).val();
         });
 
@@ -15,13 +15,13 @@
 
         // RemoveUrl and UnsafeUrl.
         $("body").on("click", "[itemprop~='RemoveUrl']", function () {
-            // Don't show the confirm dialog if the link is also UnsafeUrl, as it will already be handled in base.js.
+            // Don"t show the confirm dialog if the link is also UnsafeUrl, as it will already be handled in base.js.
             if ($(this).filter("[itemprop~='UnsafeUrl']").length === 1) {
                 return false;
             }
 
             // Use a custom message if its set in data-message.
-            var dataMessage = $(this).data('message');
+            var dataMessage = $(this).data("message");
             if (dataMessage === undefined) {
                 dataMessage = $("[data-default-remove-confirmation-prompt]").data("default-remove-confirmation-prompt");
             }
@@ -30,7 +30,7 @@
         });
 
         $(".check-all").change(function () {
-            $("input[type=checkbox]:not(:disabled)").prop('checked', $(this).prop("checked"));
+            $("input[type=checkbox]:not(:disabled)").prop("checked", $(this).prop("checked"));
         });
 
         // Handle keypress events in bulk action fieldsets that are part of a single form.
@@ -63,7 +63,7 @@
                     filter_b = -1;
                     return -1;
                 }
-                //console.log(filter_a + ' > ' + filter_b);
+                //console.log(filter_a + " > " + filter_b);
                 return filter_a > filter_b
                 ? -1
                 : (filter_a > filter_b ? 1 : 0);
@@ -76,59 +76,59 @@
             }).sort(sortBy(filter))
         }
         function last(array, n) {
-            if (array == null)
+            if (array === null)
                 return void 0;
-            if (n == null)
+            if (n === null)
                 return array[array.length - 1];
             return array.slice(Math.max(array.length - n, 0));
         };
         function init() {
-            var links = $('.content-items-with-actions li > a');
+            var links = $(".content-items-with-actions li > a");
             //sets the initial sort order
             $.each(links, function (i, el) {
-                $(el).attr('data-id', 'action-' + i);
+                $(el).attr("data-id", "action-" + i);
             });
         }
         init();
 
         function renderContentItemActions() {
-            var container = $('.content-items-with-actions li');
-            var containerWidth = $('.content-items').outerWidth(true);
+            var container = $(".content-items-with-actions li");
+            var containerWidth = $(".content-items").outerWidth(true);
             $.each(container, function (i, c) {
                 var dropdownToggleWidth = 37;// getElementMinWidth();
-                var mainActions = $(c).find('ul.main-actions');
-                var moreactions = $(c).find('ul.more-actions');
+                var mainActions = $(c).find("ul.main-actions");
+                var moreactions = $(c).find("ul.more-actions");
                 $.each(mainActions, function (i, el) {
                     var $el = $(el);
                     var loop = 1;
                     do {
                         var mainActionsWidth = dropdownToggleWidth;
-                        var links = $el.find('li:first-child > a:visible');
+                        var links = $el.find("li:first-child > a:visible");
                         $.each(links, function (i, a) {
                             mainActionsWidth += getElementMinWidth($(a));
                         });
                         if (mainActionsWidth >= containerWidth) {
-                            var last = $(sortDom('priority', links)).last();
+                            var last = $(sortDom("priority", links)).last();
                             if (last.length > 0) {
-                                var li = $('<li>');
+                                var li = $("<li>");
                                 li.append(last.clone())
                                 moreactions.prepend(li);
                                 last.hide();
                                 mainActionsWidth -= getElementMinWidth(last);
                             }
                         } else {
-                            var first = moreactions.find('li:first > a').first();
+                            var first = moreactions.find("li:first > a").first();
                             if (first.length > 0) {
-                                var actionId = first.attr('data-id');
+                                var actionId = first.attr("data-id");
                                 var mainAction = mainActions
-                                    .find('li a[data-id="' + actionId + '"]');
+                                    .find("li a[data-id='" + actionId + "']");
                                 mainAction.show()
-                                first.parent('li').remove();
+                                first.parent("li").remove();
                                 mainActionsWidth += getElementMinWidth(mainAction);
                             }
                         }
                         //var mainActionsWidth = dropdownToggleWidth;
-                        //var links = $el.find('li:first-child > a:visible');
+                        //var links = $el.find("li:first-child > a:visible");
                         //$.each(links, function (i, a) {
                         //    mainActionsWidth += getElementMinWidth($(a));
                         //});
@@ -138,11 +138,11 @@
 
                 $.each(moreactions, function (i, el) {
                     var $el = $(el);
-                    if ($el.find('li').length > 0) {
-                        $(c).find('.more-actions-dropdown').show();
+                    if ($el.find("li").length > 0) {
+                        $(c).find(".more-actions-dropdown").show();
                     }
                     else {
-                        $(c).find('.more-actions-dropdown').hide();
+                        $(c).find(".more-actions-dropdown").hide();
                     }
                 });
             });
@@ -151,7 +151,7 @@
         function getElementMinWidth(el) {
             var props = { position: "absolute", visibility: "hidden", display: "inline-block" };
             var itemWidth = 0;
-            if (el != undefined) {
+            if (el !== undefined) {
                 $.swap(el[0], props, function () {
                     itemWidth = el.outerWidth();
                 });
@@ -166,102 +166,61 @@
             clearTimeout(id);
             id = setTimeout(doneResizing, 200);
         });
+
         function doneResizing() {
             renderContentItemActions();
         }
 
-        // Bulk edit bootstrap dropdown button actions
-
         // Verify if object exist
         jQuery.fn.exists = function () { return this.length > 0; }
 
-        $("#dataConfirmOK").on("click", function () {
-            var _this = $(this);
-            var hrefParts = _this.attr("href").split("?");
+        // Bootstrap modal confirmation.
+        $("[data-confirm]").click(function (e) {
+            var href = $(this).attr("href");
+            var dialog = $("#confirmationDialog").clone();
 
-            //for single action
-            if ($('#publishActions').val() == 'None' || !$('#publishActions').val()) {
-                var magicToken = $("input[name=__RequestVerificationToken]").first();
-                if (!magicToken) { return; } // no sense in continuing if form POSTS will fail
+            $("body").append(dialog);
+            dialog.find(".modal-body").text($(this).data("confirm"));
+            dialog.find(".dialog-command-yes").attr("href", href);
+            dialog.modal({ show: true });
 
+            dialog.find(".dialog-command-yes").on("click", function (e) {
+                
+                var magicToken = $("input[name='__RequestVerificationToken']").first();
+                if (!magicToken) { return; } // No sense in continuing if form POSTS will fail.
 
-                var form = $("<form action=\"" + hrefParts[0] + "\" method=\"POST\" />");
+                var form = $("<form action=\"" + href + "\" method=\"POST\" />");
                 form.append(magicToken.clone());
-                if (hrefParts.length > 1) {
-                    var queryParts = hrefParts[1].split("&");
-                    for (var i = 0; i < queryParts.length; i++) {
-                        var queryPartKVP = queryParts[i].split("=");
-                        //trusting hrefs in the page here
-                        form.append($("<input type=\"hidden\" name=\"" + decodeURIComponent(queryPartKVP[0]) + "\" value=\"" + decodeURIComponent(queryPartKVP[1]) + "\" />"));
-                    }
-                }
                 form.css({ "position": "absolute", "left": "-9999em" });
                 $("body").append(form);
 
-                var unsafeUrlPrompt = _this.data("unsafe-url");
-
-                if (unsafeUrlPrompt && unsafeUrlPrompt.length > 0) {
-                    if (!confirm(unsafeUrlPrompt)) {
-                        return false;
-                    }
-                }
-
-                if (_this.filter("[itemprop~='RemoveUrl']").length == 1) {
-                    // use a custom message if its set in data-message
-                    var dataMessage = _this.data('message');
-                    if (dataMessage === undefined) {
-                        dataMessage = confirmRemoveMessage;
-                    }
-
-                    if (!confirm(dataMessage)) {
-                        return false;
-                    }
-                }
-
                 form.submit();
-                return false;
-            }
-            else {
-                //for bulk actions
-                submitForm($('#publishActions').val());
-            }
+                e.preventDefault();
+            });
+
+            e.preventDefault();
         });
 
-        //Bootstrap modal confirm
-        $('[data-confirm]').click(function (ev) {
-            var href = $(this).attr('href');
-            $('#publishActions').val('None');
+        // Bulk action confirmation.
+        $("[data-bulk-action]").click(function (e) {
+            var trigger = $(this);
+            var action = trigger.data("bulk-action");
+            $("#bulkActions").val(action);
 
-            $('#dataConfirmModal').find('.modal-body').text($(this).attr('data-confirm'));
-            $('#dataConfirmOK').attr('href', href);
-            $('#dataConfirmModal').modal({ show: true });
+            var dialog = $("#confirmationDialog").clone();
 
-            return false;
+            $("body").append(dialog);
+            dialog.find(".modal-body").text($(this).data("bulk-action-confirm"));
+            dialog.modal({ show: true });
+
+            dialog.find(".dialog-command-yes").on("click", function (e) {
+                trigger.closest("form").submit();
+                e.preventDefault();
+            });
+
+            e.preventDefault();
         });
 
-        $('[data-action]').click(function (ev) {
-            var action = $(this).attr("data-action");
-            $('#publishActions').val(action);
-
-            var href = $(this).attr('href');
-            $('#dataConfirmModal').find('.modal-body').text($(this).attr('data-confirm'));
-            $('#dataConfirmOK').attr('href', href);
-            $('#dataConfirmModal').modal({ show: true });
-
-            return false;
-        });
-
-        function submitForm(action) {
-            //verify the use of one name or the other
-            //TODO standardize name in all views
-            if ($('button[name="submit.BulkEdit"]').exists()) {
-                var button = $('button[name="submit.BulkEdit"]').click();
-            }
-            else if ($('button[name="submit.BulkExecute"]').exists()) {
-                var button = $('button[name="submit.BulkExecute"]').click();
-            }
-        }
         // End Bulk edit bootstrap dropdown button actions
-
     });
 })(jQuery);

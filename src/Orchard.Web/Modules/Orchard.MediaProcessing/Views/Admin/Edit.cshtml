@@ -1,6 +1,7 @@
 ﻿@model Orchard.MediaProcessing.ViewModels.AdminEditViewModel
 @{
     Layout.Title = T("Edit Media Profile - {0}", Model.Name).Text;
+    Layout.Tail.Add(New.ConfirmationDialog());
 }
 
 <div class="panel panel-default">
@@ -58,4 +59,3 @@
         </div>
     }
 </div>
-@Display.Modal()

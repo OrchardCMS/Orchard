@@ -1,7 +1,9 @@
 ﻿@model Orchard.Indexing.ViewModels.IndexViewModel
 @using Orchard.Indexing.Services;
-
-@{ Layout.Title = T("Indexes").Text; }
+@{
+    Layout.Title = T("Indexes").Text;
+    Layout.Tail.Add(New.ConfirmationDialog());
+}
 
 @if (Model.IndexEntries.Any()) {
     <div class="panel panel-default">
@@ -119,7 +121,6 @@
                 </div>*@
         }
     </div>
-    @Display.Modal()
 }
 else {
     <div class="panel panel-default">

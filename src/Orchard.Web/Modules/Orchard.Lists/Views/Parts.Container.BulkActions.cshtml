@@ -1,5 +1,4 @@
-﻿@using Orchard.ContentManagement
-@using Orchard.Core.Containers.Models
+﻿@using Orchard.Core.Containers.Models
 @using Orchard.Core.Containers.ViewModels
 @using Orchard.Lists.ViewModels
 @using SortDirection = Orchard.Core.Containers.ViewModels.SortDirection;
@@ -12,17 +11,17 @@
         <input id="checkAll" class="check-all" type="checkbox">
         <label class="check-all" for="checkAll" title="@T("Select All")"></label>
     </div>
-    <input id="publishActions" name="Options.BulkAction" type="hidden" value="@ContentsBulkAction.None" />
+    <input id="bulkActions" name="Options.BulkAction" type="hidden" value="@ContentsBulkAction.None" />
     <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
     <div class="btn-group">
         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-            <i class="fa fa-bolt"></i> Bulk Actions <span class="caret"></span>
+            <i class="fa fa-bolt"></i> @T("Bulk Actions") <span class="caret"></span>
         </button>&nbsp;
         <ul class="dropdown-menu" role="menu">
-            <li><a href="#" data-confirm="@T("Are you sure you want to publish these items?")" data-action="@ContentsBulkAction.PublishNow">@T("Publish Now").ToString()</a></li>
-            <li><a href="#" data-confirm="@T("Are you sure you want to unpublish these items?")" data-action="@ContentsBulkAction.Unpublish">@T("Unpublish").ToString()</a></li>
-            <li><a href="#" data-confirm="@T("Are you sure you want to delete these items?")" data-action="@ContentsBulkAction.Remove">@T("Delete").ToString()</a></li>
-            <li><a href="#" data-confirm="@T("Are you sure you want to remove these items from the list?")" data-action="@ContentsBulkAction.RemoveFromList">@T("Remove from List").ToString()</a></li>
+            <li><a href="#" data-bulk-action-confirm="@T("Are you sure you want to publish these items?")" data-bulk-action="@ContentsBulkAction.PublishNow">@T("Publish Now").ToString()</a></li>
+            <li><a href="#" data-bulk-action-confirm="@T("Are you sure you want to unpublish these items?")" data-bulk-action="@ContentsBulkAction.Unpublish">@T("Unpublish").ToString()</a></li>
+            <li><a href="#" data-bulk-action-confirm="@T("Are you sure you want to delete these items?")" data-bulk-action="@ContentsBulkAction.Remove">@T("Delete").ToString()</a></li>
+            <li><a href="#" data-bulk-action-confirm="@T("Are you sure you want to remove these items from the list?")" data-bulk-action="@ContentsBulkAction.RemoveFromList">@T("Remove from List").ToString()</a></li>
         </ul>
     </div>
 </fieldset>

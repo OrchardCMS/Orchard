@@ -9,6 +9,7 @@
     Script.Require("ShapesBase");
     int commentIndex = 0;
     Layout.Title = T("Comments").ToString();
+    Layout.Tail.Add(New.ConfirmationDialog());
 }
 <div class="panel panel-default">
     @if (Model.Comments.Any()) {
@@ -18,16 +19,16 @@
                 <div class="row">
                     <div class="col-sm-4">
                         <fieldset>
-                            <input id="publishActions" name="@Html.NameOf(m => m.Options.BulkAction)" type="hidden" value="@CommentIndexBulkAction.None" />
+                            <input id="bulkActions" name="@Html.NameOf(m => m.Options.BulkAction)" type="hidden" value="@CommentIndexBulkAction.None" />
                             <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
                             <div class="btn-group">
                                 <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                                    <i class="fa fa-bolt"></i> Bulk Actions <span class="caret"></span>
+                                    <i class="fa fa-bolt"></i> @T("Bulk Actions") <span class="caret"></span>
                                 </button>&nbsp;
                                 <ul class="dropdown-menu" role="menu">
-                                    <li><a href="#" data-confirm="@T("Are you sure you want to approve these items?")" data-action="@CommentIndexBulkAction.Approve">@T("Approve").ToString()</a></li>
-                                    <li><a href="#" data-confirm="@T("Are you sure you want to unapprove these items?")" data-action="@CommentIndexBulkAction.Unapprove">@T("Unapprove").ToString()</a></li>
-                                    <li><a href="#" data-confirm="@T("Are you sure you want to delete these items?")" data-action="@CommentIndexBulkAction.Delete">@T("Delete").ToString()</a></li>
+                                    <li><a href="#" data-bulk-action-confirm="@T("Are you sure you want to approve these items?")" data-bulk-action="@CommentIndexBulkAction.Approve">@T("Approve").ToString()</a></li>
+                                    <li><a href="#" data-bulk-action-confirm="@T("Are you sure you want to unapprove these items?")" data-bulk-action="@CommentIndexBulkAction.Unapprove">@T("Unapprove").ToString()</a></li>
+                                    <li><a href="#" data-bulk-action-confirm="@T("Are you sure you want to delete these items?")" data-bulk-action="@CommentIndexBulkAction.Delete">@T("Delete").ToString()</a></li>
                                 </ul>
                             </div>
                         </fieldset>
@@ -123,7 +124,6 @@
                     @Display(Model.Pager)
                 </div>
             </div>
-            @Display.Modal()
         }
     } else {
         <div class="panel-body">

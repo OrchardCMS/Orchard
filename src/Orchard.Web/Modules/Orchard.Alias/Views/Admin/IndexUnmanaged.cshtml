@@ -1,5 +1,4 @@
 @model AdminIndexViewModel
-
 @using Orchard.Alias
 @using Orchard.Alias.ViewModels
 @using Orchard.Environment.Configuration
@@ -7,17 +6,18 @@
 
 @{
     var urlPrefix = WorkContext.Resolve<ShellSettings>().RequestUrlPrefix;
-
-    Layout.Title = T("Manage Aliases").Text;
     var aliasService = WorkContext.Resolve<IAliasService>();
-    AdminIndexOptions options = Model.Options;
-    int index = 0;
-
+    var options = Model.Options;
+    var index = 0;
     var pageSizes = new List<int?>() { 10, 50, 100 };
     var defaultPageSize = WorkContext.CurrentSite.PageSize;
+
     if (!pageSizes.Contains(defaultPageSize)) {
         pageSizes.Add(defaultPageSize);
     }
+
+    Layout.Title = T("Manage Aliases").Text;
+    Layout.Tail.Add(New.ConfirmationDialog());
 }
 <div class="panel panel-default">
     @if (Model.AliasEntries.Any()) {
@@ -27,14 +27,14 @@
                 <div class="row">
                     <div class="col-sm-4">
                         <fieldset>
-                            <input id="publishActions" name="@Html.NameOf(m => m.Options.BulkAction)" type="hidden" value="@AliasBulkAction.None" />
+                            <input id="bulkActions" name="@Html.NameOf(m => m.Options.BulkAction)" type="hidden" value="@AliasBulkAction.None" />
                             <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
                             <div class="btn-group">
                                 <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                                    <i class="fa fa-bolt"></i> Bulk Actions <span class="caret"></span>
+                                    <i class="fa fa-bolt"></i> @T("Bulk Actions") <span class="caret"></span>
                                 </button>&nbsp;
                                 <ul class="dropdown-menu" role="menu">
-                                    <li><a href="#" data-confirm="@T("Are you sure you want to delete these items?")" data-action="@AliasBulkAction.Delete">@T("Delete").ToString()</a></li>
+                                    <li><a href="#" data-bulk-action-confirm="@T("Are you sure you want to delete these items?")" data-bulk-action="@AliasBulkAction.Delete">@T("Delete").ToString()</a></li>
                                 </ul>
                             </div>
                         </fieldset>
@@ -113,7 +113,6 @@
                     </div>
                 </div>
             </div>
-            @Display.Modal()
         }
     } else {
         <div class="panel-body">

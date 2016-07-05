@@ -2,6 +2,7 @@
 @{
     Style.Require("DynamicForms.FormElements");
     Layout.Title = T("Dynamic Forms");
+    Layout.Tail.Add(New.ConfirmationDialog());
 }
 <div class="panel panel-default">
     @if (Model.Forms.Any()) {
@@ -9,14 +10,14 @@
             <div class="row">
                 <div class="col-sm-4">
                     <fieldset>
-                        <input id="publishActions" name="Options.BulkAction" type="hidden" value="" />
+                        <input id="bulkActions" name="Options.BulkAction" type="hidden" value="" />
                         <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
                         <div class="btn-group">
                             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                                <i class="fa fa-bolt"></i> Bulk Actions <span class="caret"></span>
+                                <i class="fa fa-bolt"></i> @T("Bulk Actions") <span class="caret"></span>
                             </button>&nbsp;
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="#" data-confirm="@T("Are you sure you want to delete these items?")" data-action="delete">@T("Delete").ToString()</a></li>
+                                <li><a href="#" data-bulk-action-confirm="@T("Are you sure you want to delete these items?")" data-bulk-action="delete">@T("Delete").ToString()</a></li>
                             </ul>
                         </div>
                     </fieldset>
@@ -71,7 +72,6 @@
                 </div>
             </div>
         </div>
-        @Display.Modal()
         } else {
         <div class="panel-body">
             <h3 class="no-content">

@@ -2,9 +2,9 @@
 @using Orchard.OutputCache.ViewModels
 @using Orchard.OutputCache.Helpers
 @model StatisticsViewModel
-
 @{
     Layout.Title = T("Cache Statistics");
+    Layout.Tail.Add(New.ConfirmationDialog());
     Html.AdminBreadcrumbs();
     var dateTimeFormatProvider = WorkContext.Resolve<IDateTimeFormatProvider>();
 }
@@ -52,7 +52,6 @@
                     </div>
                 </div>
             </div>
-            @Display.Modal()
         }
     } else {
         <div class="panel-body">

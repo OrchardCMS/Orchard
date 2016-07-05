@@ -1,7 +1,7 @@
-﻿using Orchard.ContentManagement;
+﻿using System.Web.Routing;
+using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Core.Navigation.Services;
-using Orchard.Core.Title.Models;
 
 namespace Orchard.Core.Navigation.Handlers {
     public class MenuHandler : ContentHandler {
@@ -24,6 +24,14 @@ namespace Orchard.Core.Navigation.Handlers {
             foreach(var menuPart in menuParts) {
                 _contentManager.Remove(menuPart.ContentItem);
             }
+        }
+
+        protected override void GetItemMetadata(GetContentItemMetadataContext context) {
+            if (context.ContentItem.ContentType != "Menu") {
+                return;
+            }
+
+            context.Metadata.AdminRouteValues = new RouteValueDictionary(new { action = "Edit", controller = "Admin", area = "Navigation", id = context.ContentItem.Id });
         }
     }
 }

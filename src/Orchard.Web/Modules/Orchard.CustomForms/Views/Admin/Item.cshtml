@@ -1,8 +1,8 @@
 ﻿@using Orchard.Core.Contents.ViewModels;
 @using Orchard.Utility.Extensions;
-
 @{
     Layout.Title = T("Custom Form submissions").Text;
+    Layout.Tail.Add(New.ConfirmationDialog());
     Model.List.Classes.Add("content-items");
 }
 
@@ -18,17 +18,17 @@
                         </div>
                     </fieldset>
                     <fieldset class="bulk-actions">
-                        <input id="publishActions" name="Options.BulkAction" type="hidden" value="@ContentsBulkAction.None" />
+                        <input id="bulkActions" name="Options.BulkAction" type="hidden" value="@ContentsBulkAction.None" />
                         @Html.Hidden("returnUrl", ViewContext.RequestContext.HttpContext.Request.ToUrlString())
                         <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
                         <div class="btn-group">
                             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                                Bulk Actions <span class="caret"></span>
+                                @T("Bulk Actions") <span class="caret"></span>
                             </button>&nbsp;
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="#" data-confirm="@T("Are you sure you want to publish these items?")" data-action="@ContentsBulkAction.PublishNow">@T("Publish Now").ToString()</a></li>
-                                <li><a href="#" data-confirm="@T("Are you sure you want to unpublish these items?")" data-action="@ContentsBulkAction.Unpublish">@T("Unpublish").ToString()</a></li>
-                                <li><a href="#" data-confirm="@T("Are you sure you want to delete these items?")" data-action="@ContentsBulkAction.Remove">@T("Delete").ToString()</a></li>
+                                <li><a href="#" data-bulk-action-confirm="@T("Are you sure you want to publish these items?")" data-bulk-action="@ContentsBulkAction.PublishNow">@T("Publish Now").ToString()</a></li>
+                                <li><a href="#" data-bulk-action-confirm="@T("Are you sure you want to unpublish these items?")" data-bulk-action="@ContentsBulkAction.Unpublish">@T("Unpublish").ToString()</a></li>
+                                <li><a href="#" data-bulk-action-confirm="@T("Are you sure you want to delete these items?")" data-bulk-action="@ContentsBulkAction.Remove">@T("Delete").ToString()</a></li>
                             </ul>
                         </div>
                     </fieldset>
@@ -44,7 +44,6 @@
                     @Display(Model.Pager)
                 </div>
             </div>
-            @Display.Modal()
         } else {
             <div class="panel-body">
                 <h3 class="no-content">@T("There are no submissions for this form.")</h3>
@@ -52,5 +51,3 @@
         }
     }
 </div>
-
-

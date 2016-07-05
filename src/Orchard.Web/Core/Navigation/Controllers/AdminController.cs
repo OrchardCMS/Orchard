@@ -3,7 +3,6 @@ using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.Core.Navigation.Models;
-using Orchard.Core.Navigation.Services;
 using Orchard.Core.Navigation.ViewModels;
 using Orchard.Localization;
 using Orchard.Mvc.Extensions;
@@ -15,6 +14,7 @@ using System;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Logging;
 using Orchard.Exceptions;
+using Orchard.Core.Navigation.Services;
 
 namespace Orchard.Core.Navigation.Controllers {
     [ValidateInput(false)]
@@ -23,6 +23,7 @@ namespace Orchard.Core.Navigation.Controllers {
         private readonly INavigationManager _navigationManager;
         private readonly IEnumerable<IContentHandler> _handlers;
         private readonly IMenuManager _menuManager;
+        private readonly IOrchardServices _orchardServices;
 
         public AdminController(
             IOrchardServices orchardServices,
@@ -30,65 +31,108 @@ namespace Orchard.Core.Navigation.Controllers {
             IMenuManager menuManager,
             INavigationManager navigationManager,
             IEnumerable<IContentHandler> handlers) {
+
             _menuService = menuService;
             _menuManager = menuManager;
             _navigationManager = navigationManager;
             _handlers = handlers;
+            _orchardServices = orchardServices;
 
-            Services = orchardServices;
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
         }
 
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
-        public IOrchardServices Services { get; set; }
 
-        public ActionResult Index(NavigationManagementViewModel model, int? menuId) {
-            var menus = Services.ContentManager.Query("Menu").List().ToList()
-                .OrderBy(x => x.ContentManager.GetItemMetadata(x).DisplayText);
+        public ActionResult Index() {
+            var menus = GetMenus().ToList();
+            var lastMenu = menus.OrderByDescending(x => x.Id).FirstOrDefault();
+            var lastMenuId = lastMenu != null ? lastMenu.Id : default(int?);
 
             if (!menus.Any()) {
-                if (!Services.Authorizer.Authorize(Permissions.ManageMenus, T("Not allowed to manage menus"))) {
+                if (!_orchardServices.Authorizer.Authorize(Permissions.ManageMenus, T("Not allowed to manage menus")))
                     return new HttpUnauthorizedResult();
-                }
 
-                return RedirectToAction("Create", "Admin", new { area = "Contents", id = "Menu", returnUrl = Request.RawUrl });
+                return RedirectToAction("Create", "Admin", new { area = "Contents", id = "Menu", returnUrl = Url.Action("EditLastMenu", new { id = lastMenuId }) });
             }
 
-            var allowedMenus = menus.Where(menu => Services.Authorizer.Authorize(Permissions.ManageMenus, menu)).ToList();
+            var allowedMenus = menus.Where(menu => _orchardServices.Authorizer.Authorize(Permissions.ManageMenus, menu)).ToList();
 
-            if (!allowedMenus.Any()) {
+            if (!allowedMenus.Any())
                 return new HttpUnauthorizedResult();
-            }
 
-            IContent currentMenu = menuId == null
-                ? allowedMenus.FirstOrDefault()
-                : allowedMenus.FirstOrDefault(menu => menu.Id == menuId);
+            var viewModel = new NavigationIndexViewModel {
+                Menus = allowedMenus.Select(x => new MenuEntry {
+                    ContentItem = x,
+                    MenuId = x.Id,
+                    MenuName = _orchardServices.ContentManager.GetItemMetadata(x).DisplayText,
+                }).ToList(),
+                LastMenuId = lastMenuId
+            };
 
-            if (currentMenu == null && menuId != null) { // incorrect menu id passed
-                return RedirectToAction("Index");
-            }
-
-            if (model == null) {
-                model = new NavigationManagementViewModel();
-            }
-
-            if (model.MenuItemEntries == null || !model.MenuItemEntries.Any()) {
-                model.MenuItemEntries = _menuService.GetMenuParts(currentMenu.Id).Select(CreateMenuItemEntries).OrderBy(menuPartEntry => menuPartEntry.Position, new FlatPositionComparer()).ToList();
-            }
-
-            model.MenuItemDescriptors = _menuManager.GetMenuItemTypes();
-            model.Menus = allowedMenus;
-            model.CurrentMenu = currentMenu;
-
-            // need action name as this action is referenced from another action
-            return View(model);
+            return View(viewModel);
         }
 
-        [HttpPost, ActionName("Index")]
-        public ActionResult IndexPOST(IList<MenuItemEntry> menuItemEntries, int? menuId) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageMenus, T("Couldn't manage the main menu")))
+        [HttpPost]
+        [ActionName("Index")]
+        public ActionResult IndexPOST(NavigationIndexViewModel model) {
+            if (!_orchardServices.Authorizer.Authorize(Permissions.ManageMenus, T("Not allowed to manage menus")))
+                return new HttpUnauthorizedResult();
+
+            switch (model.BulkAction) {
+                case NavigationIndexBulkAction.Delete: {
+                    if (model.Menus == null)
+                        break;
+
+                    var selectedMenuIds = model.Menus.Where(x => x.IsSelected).Select(x => x.MenuId).ToList();
+                    var selectedMenus = _orchardServices.ContentManager.GetMany<ContentItem>(selectedMenuIds, VersionOptions.Latest, QueryHints.Empty);
+
+                    foreach (var menu in selectedMenus)
+                        _orchardServices.ContentManager.Remove(menu);
+
+                    _orchardServices.Notifier.Information(T("The selected menus have been deleted."));
+                }
+                break;
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult EditLastMenu(int? id) {
+            var lastMenu = _orchardServices.ContentManager.Query("Menu").List().OrderByDescending(x => x.Id).FirstOrDefault();
+            var lastMenuId = lastMenu != null ? lastMenu.Id : default(int?);
+
+            if (lastMenuId == null && id == null)
+                RedirectToAction("Index");
+
+            return lastMenuId != id ? RedirectToAction("Edit", new { id = lastMenu.Id }) : RedirectToAction("Index");
+        }
+
+        public ActionResult Edit(int id) {
+            if (!_orchardServices.Authorizer.Authorize(Permissions.ManageMenus, T("Not allowed to manage menus")))
+                return new HttpUnauthorizedResult();
+
+            var menu = GetMenu(id);
+
+            if (menu == null)
+                return RedirectToAction("Index");
+
+            if (!_orchardServices.Authorizer.Authorize(Permissions.ManageMenus, menu))
+                return new HttpUnauthorizedResult();
+
+            var viewModel = new NavigationManagementViewModel {
+                MenuItemEntries = _menuService.GetMenuParts(menu.Id).Select(CreateMenuItemEntries).OrderBy(menuPartEntry => menuPartEntry.Position, new FlatPositionComparer()).ToList(),
+                MenuItemDescriptors = _menuManager.GetMenuItemTypes(),
+                CurrentMenu = menu
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost, ActionName("Edit")]
+        public ActionResult EditPOST(IList<MenuItemEntry> menuItemEntries, int? menuId) {
+            if (!_orchardServices.Authorizer.Authorize(Permissions.ManageMenus, T("Not allowed to manage menus")))
                 return new HttpUnauthorizedResult();
 
             // See https://github.com/OrchardCMS/Orchard/issues/948
@@ -108,7 +152,7 @@ namespace Orchard.Core.Navigation.Controllers {
                 }
             }
 
-            return RedirectToAction("Index", new { menuId });
+            return RedirectToAction("Edit", new { menuId });
         }
 
         private MenuItemEntry CreateMenuItemEntries(MenuPart menuPart) {
@@ -119,18 +163,18 @@ namespace Orchard.Core.Navigation.Controllers {
                 Position = menuPart.MenuPosition,
                 Url = menuPart.Is<MenuItemPart>()
                               ? menuPart.As<MenuItemPart>().Url
-                              : _navigationManager.GetUrl(null, Services.ContentManager.GetItemMetadata(menuPart).DisplayRouteValues),
+                              : _navigationManager.GetUrl(null, _orchardServices.ContentManager.GetItemMetadata(menuPart).DisplayRouteValues),
                 ContentItem = menuPart.ContentItem,
             };
         }
 
         [HttpPost]
-        public ActionResult Delete(int id) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageMenus, T("Couldn't manage the main menu")))
+        public ActionResult DeleteMenuItem(int id) {
+            if (!_orchardServices.Authorizer.Authorize(Permissions.ManageMenus, T("Not allowed to manage menus")))
                 return new HttpUnauthorizedResult();
 
-            MenuPart menuPart = _menuService.Get(id);
-            int? menuId = null;
+            var menuPart = _menuService.Get(id);
+            var menuId = default(int?);
 
             if (menuPart != null) {
                 menuId = menuPart.Menu.Id;
@@ -141,7 +185,7 @@ namespace Orchard.Core.Navigation.Controllers {
                     .Select(x => x.As<MenuPart>())
                     .ToList();
 
-                foreach (var menuItem in menuItems.Concat(new [] {menuPart})) {
+                foreach (var menuItem in menuItems.Concat(new[] { menuPart })) {
                     // if the menu item is a concrete content item, don't delete it, just unreference the menu
                     if (!menuPart.ContentItem.TypeDefinition.Settings.ContainsKey("Stereotype") || menuPart.ContentItem.TypeDefinition.Settings["Stereotype"] != "MenuItem") {
                         menuPart.Menu = null;
@@ -151,9 +195,90 @@ namespace Orchard.Core.Navigation.Controllers {
                     }
                 }
 
+                _orchardServices.Notifier.Information(T("That menu item has been deleted."));
             }
 
-            return RedirectToAction("Index", new { menuId });
+            return menuId != null ? RedirectToAction("Edit", new { id = menuId }) : RedirectToAction("Index");
+        }
+
+        public ActionResult CreateMenuItem(string id, int menuId, string returnUrl) {
+            if (!_orchardServices.Authorizer.Authorize(Permissions.ManageMenus, _menuService.GetMenu(menuId), T("Not allowed to manage menus")))
+                return new HttpUnauthorizedResult();
+
+            // create a new temporary menu item
+            var menuPart = _orchardServices.ContentManager.New<MenuPart>(id);
+
+            if (menuPart == null)
+                return HttpNotFound();
+
+            // load the menu
+            var menu = _orchardServices.ContentManager.Get(menuId);
+
+            if (menu == null)
+                return HttpNotFound();
+
+            try {
+                // filter the content items for this specific menu
+                menuPart.MenuPosition = Position.GetNext(_navigationManager.BuildMenu(menu));
+
+                var model = _orchardServices.ContentManager.BuildEditor(menuPart);
+
+                return View(model);
+            }
+            catch (Exception exception) {
+                if (exception.IsFatal()) {
+                    throw;
+                }
+
+                Logger.Error(T("Creating menu item failed: {0}", exception.Message).Text);
+                _orchardServices.Notifier.Error(T("Creating menu item failed: {0}", exception.Message));
+                return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
+            }
+        }
+
+        [HttpPost, ActionName("CreateMenuItem")]
+        public ActionResult CreateMenuItemPost(string id, int menuId, string returnUrl) {
+            if (!_orchardServices.Authorizer.Authorize(Permissions.ManageMenus, _menuService.GetMenu(menuId), T("Not allowed to manage menus")))
+                return new HttpUnauthorizedResult();
+
+            var menuPart = _orchardServices.ContentManager.New<MenuPart>(id);
+
+            if (menuPart == null)
+                return HttpNotFound();
+
+            // load the menu
+            var menu = _orchardServices.ContentManager.Get(menuId);
+
+            if (menu == null)
+                return HttpNotFound();
+
+            var model = _orchardServices.ContentManager.UpdateEditor(menuPart, this);
+
+            menuPart.MenuPosition = Position.GetNext(_navigationManager.BuildMenu(menu));
+            menuPart.Menu = menu;
+
+            _orchardServices.ContentManager.Create(menuPart);
+
+            if (!ModelState.IsValid) {
+                _orchardServices.TransactionManager.Cancel();
+                return View(model);
+            }
+
+            _orchardServices.Notifier.Success(T("Your {0} has been added.", menuPart.TypeDefinition.DisplayName));
+
+            return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
+        }
+
+        private ContentItem GetMenu(int id) {
+            return _orchardServices.ContentManager.Get(id, VersionOptions.Latest);
+        }
+
+        private IEnumerable<ContentItem> GetMenus() {
+            return _orchardServices.ContentManager.Query("Menu").List().ToList().OrderBy(x => x.ContentManager.GetItemMetadata(x).DisplayText);
+        }
+
+        private IEnumerable<ContentItem> GetAllowedMenus(IEnumerable<ContentItem> menus) {
+            return menus.Where(menu => _orchardServices.Authorizer.Authorize(Permissions.ManageMenus, menu)).ToList();
         }
 
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
@@ -162,74 +287,6 @@ namespace Orchard.Core.Navigation.Controllers {
 
         void IUpdateModel.AddModelError(string key, LocalizedString errorMessage) {
             ModelState.AddModelError(key, errorMessage.ToString());
-        }
-
-        public ActionResult CreateMenuItem(string id, int menuId, string returnUrl) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageMenus, _menuService.GetMenu(menuId), T("Couldn't manage the main menu")))
-                return new HttpUnauthorizedResult();
-
-            // create a new temporary menu item
-            var menuPart = Services.ContentManager.New<MenuPart>(id);
-
-            if (menuPart == null)
-                return HttpNotFound();
-            
-            // load the menu
-            var menu = Services.ContentManager.Get(menuId);
-
-            if (menu == null)
-                return HttpNotFound();
-            
-            try {
-                // filter the content items for this specific menu
-                menuPart.MenuPosition = Position.GetNext(_navigationManager.BuildMenu(menu));
-                
-                var model = Services.ContentManager.BuildEditor(menuPart);
-                
-                return View(model);
-            }
-            catch (Exception exception) {
-                if (exception.IsFatal()) {
-                    throw;
-                } 
-
-                Logger.Error(T("Creating menu item failed: {0}", exception.Message).Text);
-                Services.Notifier.Error(T("Creating menu item failed: {0}", exception.Message));
-                return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
-            }
-        }
-
-        [HttpPost, ActionName("CreateMenuItem")]
-        public ActionResult CreateMenuItemPost(string id, int menuId, string returnUrl) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageMenus, _menuService.GetMenu(menuId), T("Couldn't manage the main menu")))
-                return new HttpUnauthorizedResult();
-
-            var menuPart = Services.ContentManager.New<MenuPart>(id);
-
-            if (menuPart == null)
-                return HttpNotFound();
-
-            // load the menu
-            var menu = Services.ContentManager.Get(menuId);
-
-            if (menu == null)
-                return HttpNotFound();
-            
-            var model = Services.ContentManager.UpdateEditor(menuPart, this);
-
-            menuPart.MenuPosition = Position.GetNext(_navigationManager.BuildMenu(menu));
-            menuPart.Menu = menu;
-
-            Services.ContentManager.Create(menuPart);
-
-            if (!ModelState.IsValid) {
-                Services.TransactionManager.Cancel();
-                return View(model);
-            }
-
-            Services.Notifier.Success(T("Your {0} has been added.", menuPart.TypeDefinition.DisplayName));
-
-            return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
         }
     }
 }

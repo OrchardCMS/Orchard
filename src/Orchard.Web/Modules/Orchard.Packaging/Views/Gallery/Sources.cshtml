@@ -1,6 +1,9 @@
 ﻿@model Orchard.Packaging.ViewModels.PackagingSourcesViewModel
 
-@{ Layout.Title = T("Settings").ToString(); }
+@{ 
+    Layout.Title = T("Settings").ToString();
+    Layout.Tail.Add(New.ConfirmationDialog());
+}
 <div class="panel panel-default">
     <div class="panel-heading no-border">
         <h2>@T("Gallery")</h2>
@@ -45,4 +48,3 @@
         </div>
     }
 </div>
-@Display.Modal()

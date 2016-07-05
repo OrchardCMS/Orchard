@@ -15,20 +15,29 @@ namespace Orchard.Core.Navigation {
         }
 
         public void GetNavigation(NavigationBuilder builder) {
-            // if the current user cannot manage menus, check if they can manage at least one
-            if (!Services.Authorizer.Authorize(Permissions.ManageMenus)) {
-                var menus = Services.ContentManager.Query("Menu").List();
+            var menus = Services.ContentManager.Query("Menu").List();
+            var allowedMenus = menus.Where(menu => Services.Authorizer.Authorize(Permissions.ManageMenus, menu)).ToList();
 
-                if (!menus.Any(x => Services.Authorizer.Authorize(Permissions.ManageMenus, x))) {
+            // If the current user cannot manage menus, check if they can manage at least one.
+            if (!Services.Authorizer.Authorize(Permissions.ManageMenus)) {
+                if (!allowedMenus.Any())
                     return;
-                }
             }
 
-            builder.AddImageSet("navigation")
-                .Add(T("Navigation"), "7",
-                    menu => menu
-                        .Add(T("Main Menu"), "0", item => item.Action("Index", "Admin", new {area = "Navigation"})),
-                    new[] {"menu"});
+            builder
+                .AddImageSet("navigation")
+                .Add(T("Navigation"), "7", navigation => {
+                    navigation.Action("Index", "Admin", new { area = "Navigation" });
+
+                    if (allowedMenus.Any()) {
+                        navigation.Add(T("All Menus"), allMenus => allMenus.Action("Index", "Admin", new { area = "Navigation" }));
+
+                        foreach (var menu in allowedMenus) {
+                            var menuMetadata = Services.ContentManager.GetItemMetadata(menu);
+                            navigation.Add(new LocalizedString(menuMetadata.DisplayText), x => x.Action(menuMetadata.AdminRouteValues));
+                        }
+                    }
+                });
         }
     }
 }

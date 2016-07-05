@@ -29,7 +29,7 @@ namespace Orchard.Core.Navigation.Handlers {
                     menuPart.Record.MenuId = 0;
                 }
                 else {
-                    menuPart.Record.MenuId = menu.ContentItem.Id;    
+                    menuPart.Record.MenuId = menu.ContentItem.Id;
                 }
                 
                 return menu;

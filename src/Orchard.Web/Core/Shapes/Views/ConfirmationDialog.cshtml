@@ -1,0 +1,16 @@
+﻿@{
+    var title = Model.Title ?? T("Are you sure?");
+    var message = Model.Message ?? T("Are you sure about this?");
+}
+<div id="confirmationDialog" role="dialog" aria-labelledby="confirmationDialogTitle" aria-hidden="true">
+    <div class="modal-header">
+        <h3 id="confirmationDialogTitle">@title</h3>
+    </div>
+    <div id="confirmationDialogMessage" class="modal-body">
+        @message
+    </div>
+    <div class="modal-footer">
+        <a class="dialog-command-yes">@T("Yes")</a>
+        <a class="dialog-command-no" data-dismiss="modal" aria-hidden="true">@T("No")</a>
+    </div>
+</div>
