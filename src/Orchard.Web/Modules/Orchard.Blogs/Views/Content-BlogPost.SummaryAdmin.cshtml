@@ -1,9 +1,12 @@
-﻿@using Orchard.ContentManagement;
-@using Orchard.Core.Contents
+﻿@using Orchard.Blogs;
+@using Orchard.Blogs.Extensions;
+@using Orchard.Blogs.Models;
+@using Orchard.ContentManagement;
 @using Orchard.Utility.Extensions;
 @{
     Script.Require("ShapesBase");
     ContentItem contentItem = Model.ContentItem;
+    BlogPostPart post = contentItem.As<BlogPostPart>();
     var returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString();
 }
 <div class="summary" itemscope="itemscope" itemid="@contentItem.Id" itemtype="http://orchardproject.net/data/ContentItem">
@@ -25,17 +28,17 @@
             @T(" | ")
 
             if (contentItem.HasDraft()) {
-                @Html.Link(T("Publish Draft").Text, Url.Action("Publish", "Admin", new { area = "Contents", id = contentItem.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "UnsafeUrl" })
+                @Html.Link(T("Publish Draft").Text, Url.BlogPostPublish(post), new { itemprop = "UnsafeUrl" })
                 @T(" | ")
 
-                if (Authorizer.Authorize(Orchard.Blogs.Permissions.PublishBlogPost, contentItem)) {
+                if (Authorizer.Authorize(Permissions.PublishBlogPost, contentItem)) {
                     @Html.ActionLink(T("Preview").Text, "Preview", "Item", new { area = "Contents", id = contentItem.Id }, new { })
                     @T(" | ")
                 }
             }
 
-            if (Authorizer.Authorize(Orchard.Blogs.Permissions.PublishBlogPost, contentItem)) {
-                @Html.Link(T("Unpublish").Text, Url.Action("Unpublish", "Admin", new { area = "Contents", id = contentItem.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "UnsafeUrl" })
+            if (Authorizer.Authorize(Permissions.PublishBlogPost, contentItem)) {
+                @Html.Link(T("Unpublish").Text, Url.BlogPostUnpublish(post), new { itemprop = "UnsafeUrl" })
                 @T(" | ")
             }
         } else {
@@ -44,16 +47,16 @@
                 @T(" | ")
             }
 
-            if (Authorizer.Authorize(Orchard.Blogs.Permissions.PublishBlogPost, contentItem)) {
-                @Html.Link(T("Publish").Text, Url.Action("Publish", "Admin", new { area = "Contents", id = contentItem.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "UnsafeUrl" })
+            if (Authorizer.Authorize(Permissions.PublishBlogPost, contentItem)) {
+                @Html.Link(T("Publish").Text, Url.BlogPostPublish(post), new { itemprop = "UnsafeUrl" })
                 @T(" | ")
             }
         }
-        @if (Authorizer.Authorize(Orchard.Blogs.Permissions.EditBlogPost, contentItem)) {
+        @if (Authorizer.Authorize(Permissions.EditBlogPost, contentItem)) {
             @Html.ItemEditLink(T("Edit").Text, contentItem)@T(" | ")
         }
-        @if (Authorizer.Authorize(Orchard.Blogs.Permissions.DeleteBlogPost, contentItem)) {
-            @Html.Link(T("Delete").Text, Url.ItemRemoveUrl(contentItem, new {returnUrl}), new {itemprop = "RemoveUrl UnsafeUrl"})
+        @if (Authorizer.Authorize(Permissions.DeleteBlogPost, contentItem)) {
+            @Html.Link(T("Delete").Text, Url.BlogPostDelete(post), new {itemprop = "RemoveUrl UnsafeUrl"})
         }
     </div>
     @if (Model.Content != null) {
