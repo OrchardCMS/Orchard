@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}"
 EndProject
@@ -182,7 +182,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Recipes", "Orchard.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.ImportExport", "Orchard.Web\Modules\Orchard.ImportExport\Orchard.ImportExport.csproj", "{FE5C5947-D2D5-42C5-992A-13D672946135}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Warmup", "Orchard.Web\Modules\Orchard.WarmUp\Orchard.Warmup.csproj", "{9CD5C81F-5828-4384-8474-2E2BE71D5EDD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Warmup", "Orchard.Web\Modules\Orchard.Warmup\Orchard.Warmup.csproj", "{9CD5C81F-5828-4384-8474-2E2BE71D5EDD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.WarmupStarter", "Orchard.WarmupStarter\Orchard.WarmupStarter.csproj", "{5C0D5249-AEF5-4BB6-8F5F-057B91AC2D7A}"
 EndProject

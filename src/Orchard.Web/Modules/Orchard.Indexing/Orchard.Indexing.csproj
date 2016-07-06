@@ -130,10 +130,6 @@
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Orchard.JobsQueue\Orchard.JobsQueue.csproj">
-      <Project>{085948ff-0e9b-4a9a-b564-f8b8b4bdddbc}</Project>
-      <Name>Orchard.JobsQueue</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Admin\Index.cshtml" />

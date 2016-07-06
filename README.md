@@ -6,7 +6,7 @@ Orchard is a free, open source, community-focused Content Management System buil
 
 You can try it for free on [DotNest.com](https://dotnest.com) or on Microsoft Azure by clicking on this button.
 
-[![Deploy to Azure](https://azuredeploy.net/deploybutton.png)](https://portal.azure.com/#create/OutercurveFoundation.OrchardCMS.1.0.4)
+[![Deploy to Azure](https://azuredeploy.net/deploybutton.png)](https://portal.azure.com/#create/OutercurveFoundation.OrchardCMS)
 
 ## About The Orchard Project
 
@@ -22,9 +22,9 @@ Our mission is to empower our users and foster a dedicated and diverse community
 
 ## Project Status
 
-Orchard is currently in version **1.10** and **1.9.3**:
+Orchard is currently in version **[1.10.1](https://github.com/OrchardCMS/Orchard/releases/tag/1.10.1)** and **[1.9.3](https://github.com/OrchardCMS/Orchard/releases/tag/1.9.3)**:
 
-- *1.10* is the latest major version which introduces more impactful changes and new features as well. If you're new to Orchard, you should start with this version.
+- *1.10.1* is the latest minor version that contains bugfixes and the more impactful changes and new features added in the latest major version (*1.10*). **If you're new to Orchard, you should use this version.**
 - *1.9.3* contains further bugfixes in addition to *1.9.2* and these versions are based on the feature set of Orchard *1.9*.
 
 We invite participation by the developer community in shaping the project’s direction, so that we can publicly validate our designs and development approach. 
@@ -56,4 +56,4 @@ There are many ways you can [contribute to Orchard](http://orchardproject.net/co
 
 ## The Future Of Orchard CMS: Orchard 2
 
-As the underlying frameworks (.NET, ASP.NET and ASP.NET MVC) are constantly evolving, Orchard of course keeps track of the changes and improvements of these: Orchard 2 is the next generation of Orchard releases that is based on [ASP.NET vNext](http://www.asp.net/vnext). Just like the current Orchard project, it's fully [open-source and is publicly available on GitHub](https://github.com/OrchardCMS/Orchard2). Orchard 2 (as a framework) is being built from scratch: it's still in development and does not share any of its code base (at least directly) with the current versions of Orchard.
+As the underlying frameworks (.NET, ASP.NET and ASP.NET MVC) are constantly evolving, Orchard of course keeps track of the changes and improvements of these: Orchard 2 is the next generation of Orchard releases that is based on [ASP.NET Core](http://www.asp.net/core). Just like the current Orchard project, it's fully [open-source and is publicly available on GitHub](https://github.com/OrchardCMS/Orchard2). Orchard 2 (as a framework) is being built from scratch: it's still in development and does not share any of its code base (at least directly) with the current versions of Orchard.

@@ -379,6 +379,8 @@ namespace Orchard.MediaLibrary.Services {
             Argument.ThrowIfNullOrEmpty(filename, "filename");
             Argument.ThrowIfNullOrEmpty(newFilename, "newFilename");
 
+            if (!_storageProvider.FolderExists(newPath))
+                _storageProvider.TryCreateFolder(newPath);
             _storageProvider.RenameFile(_storageProvider.Combine(currentPath, filename), _storageProvider.Combine(newPath, newFilename));
         }
 
@@ -440,6 +442,16 @@ namespace Orchard.MediaLibrary.Services {
             _storageProvider.SaveStream(filePath, inputStream);
 
             return _storageProvider.GetPublicUrl(filePath);
+        }
+
+        /// <summary>
+        /// Combines two paths.
+        /// </summary>
+        /// <param name="path1">The parent path.</param>
+        /// <param name="path2">The child path.</param>
+        /// <returns>The combined path.</returns>
+        public string Combine(string path1, string path2) {
+            return _storageProvider.Combine(path1, path2);
         }
     }
 }

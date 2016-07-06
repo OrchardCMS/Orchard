@@ -154,8 +154,6 @@ namespace Orchard.Layouts.Drivers {
         protected override void Exported(LayoutPart part, ExportContentContext context)
         {
             _layoutManager.Exported(new ExportLayoutContext { Layout = part });
-
-            context.Element(part.PartDefinition.Name).Add(new XElement("LayoutData", new XCData(WriteFormattedLayoutData(part.LayoutData))));
         }
 
         protected override void Importing(LayoutPart part, ImportContentContext context) {
@@ -214,6 +212,11 @@ namespace Orchard.Layouts.Drivers {
             var layoutData = JsonConvert.DeserializeObject(formattedLayoutData);
             var layoutDataString = JsonConvert.SerializeObject(layoutData, Formatting.None);
             return layoutDataString;
+        }
+
+        protected override void Cloning(LayoutPart originalPart, LayoutPart clonePart, CloneContentContext context) {
+            clonePart.LayoutData = originalPart.LayoutData;
+            clonePart.TemplateId = originalPart.TemplateId;
         }
     }
 }

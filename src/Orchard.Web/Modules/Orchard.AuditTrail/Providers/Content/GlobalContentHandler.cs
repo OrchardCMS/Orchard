@@ -34,7 +34,10 @@ namespace Orchard.AuditTrail.Providers.Content {
         protected override void Updating(UpdateContentContext context) {
             var contentItem = context.ContentItem;
 
-            _ignoreExportHandlerFor = contentItem;
+            if (contentItem.IsNew())
+                return;
+
+                _ignoreExportHandlerFor = contentItem;
             _previousVersionXml = _contentItemCreated 
                 ? default(XElement) // No need to do a diff on a newly created content item.
                 : _contentManager.Export(contentItem);
@@ -43,7 +46,10 @@ namespace Orchard.AuditTrail.Providers.Content {
 
         protected override void Updated(UpdateContentContext context) {
             var contentItem = context.ContentItem;
-           
+
+            if (contentItem.IsNew())
+                return;
+
             if (_contentItemCreated) {
                 RecordAuditTrailEvent(ContentAuditTrailEventProvider.Created, context.ContentItem);
             }
