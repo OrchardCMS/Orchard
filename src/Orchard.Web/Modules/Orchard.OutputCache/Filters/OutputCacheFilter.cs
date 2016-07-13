@@ -226,6 +226,10 @@ namespace Orchard.OutputCache.Filters {
                         // To prevent access to the original lifetime scope a new work context scope should be created here and dependencies
                         // should be resolved from it.
 
+                        // Recheck the response status code incase it was modified before the callback.
+                        if (response.StatusCode != 200)
+                            return;
+
                         using (var scope = _workContextAccessor.CreateWorkContextScope()) {
                             var cacheItem = new CacheItem() {
                                 CachedOnUtc = _now,
