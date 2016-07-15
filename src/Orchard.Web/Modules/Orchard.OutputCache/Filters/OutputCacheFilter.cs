@@ -227,8 +227,10 @@ namespace Orchard.OutputCache.Filters {
                         // should be resolved from it.
 
                         // Recheck the response status code incase it was modified before the callback.
-                        if (response.StatusCode != 200)
+                        if (response.StatusCode != 200) {
+                            Logger.Debug("Response for item '{0}' will not be cached because status code was set to {1} during rendering.", _cacheKey, response.StatusCode);
                             return;
+                        }
 
                         using (var scope = _workContextAccessor.CreateWorkContextScope()) {
                             var cacheItem = new CacheItem() {
