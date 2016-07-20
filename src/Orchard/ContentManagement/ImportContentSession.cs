@@ -28,7 +28,7 @@ namespace Orchard.ContentManagement {
             var identityComparer = new ContentIdentity.ContentIdentityEqualityComparer();
             _contentManager = contentManager;
 
-            _identities = new Dictionary<ContentIdentity, int>(_identityComparer);
+//            _identities = new Dictionary<ContentIdentity, int>(_identityComparer);
             _contentTypes = new Dictionary<ContentIdentity, string>(_identityComparer);
             _draftVersionRecordIds = new Dictionary<int, int>();
 

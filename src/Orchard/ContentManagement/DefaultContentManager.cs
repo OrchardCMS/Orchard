@@ -65,7 +65,6 @@ namespace Orchard.ContentManagement {
             _contentDefinitionManager = contentDefinitionManager;
             _cacheManager = cacheManager;
             _contentManagerSession = contentManagerSession;
-            _identityResolverSelectors = identityResolverSelectors;
             _sqlStatementProviders = sqlStatementProviders;
             _shellSettings = shellSettings;
             _signals = signals;
@@ -566,8 +565,8 @@ namespace Orchard.ContentManagement {
             foreach (var contentHandler in Handlers) {
                 contentHandler.Cloned(context);
             }
-            var importContext = new ImportContentContext(element, null, importContentSession);
-            Import(importContext);
+           // var importContext = new ImportContentContext(contentitem, element, null, importContentSession);
+           // Import(importContext);
 
 
             return cloneContentItem;
