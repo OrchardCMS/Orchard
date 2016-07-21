@@ -162,7 +162,21 @@ namespace Orchard.ContentManagement.Drivers {
         }
 
         private ContentShapeResult ContentShapeImplementation(string shapeType, string differentiator, Func<BuildShapeContext, object> shapeBuilder) {
-            return new ContentShapeResult(shapeType, Prefix, ctx => AddAlternates(shapeBuilder(ctx), ctx, differentiator)).Differentiator(differentiator);
+            var result = new ContentShapeResult(shapeType, Prefix, ctx => {
+                var shape = shapeBuilder(ctx);
+
+                if (shape == null) {
+                    return null;
+                }
+
+                return AddAlternates(shape, ctx, differentiator);
+            });
+
+            if (result == null) {
+                return null;
+            }
+
+            return result.Differentiator(differentiator);
         }
 
         private static object AddAlternates(dynamic shape, BuildShapeContext ctx, string differentiator) {
