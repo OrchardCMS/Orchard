@@ -5,10 +5,8 @@ using Orchard.Mvc.Extensions;
 namespace System.Web.Mvc {
     public static class ModelStateDictionaryExtensions {
         public static void AddModelErrors(this ModelStateDictionary modelStateDictionary, IDictionary<string, LocalizedString> validationErrors) {
-            if (validationErrors.Count > 0) {
-                foreach (var error in validationErrors) {
-                    modelStateDictionary.AddModelError(error.Key, error.Value);
-                }
+            foreach (var error in validationErrors) {
+                modelStateDictionary.AddModelError(error.Key, error.Value);
             }
         }
     }
