@@ -11,7 +11,6 @@ namespace Orchard.Users.ViewModels {
         public string Email { get; set; }
 
         [Required, DataType(DataType.Password)]
-        [StringLength(50, MinimumLength = 7)]
         public string Password { get; set; }
 
         [Required, DataType(DataType.Password)]
