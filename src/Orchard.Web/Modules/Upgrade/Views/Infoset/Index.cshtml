@@ -86,7 +86,7 @@
                     var antiForgeryToken = '@HttpUtility.JavaScriptStringEncode(Html.AntiForgeryTokenValueOrchard().ToString())';
                     var endMessage = '@HttpUtility.JavaScriptStringEncode(T("All items have been processed").Text)';
 
-                    $('.button-migrate').click(function () {
+                    $('[data-url]:not([data-url=""])').click(function () {
                         var importUrl = $(this).data('url');
 
                         var startId = 0;
