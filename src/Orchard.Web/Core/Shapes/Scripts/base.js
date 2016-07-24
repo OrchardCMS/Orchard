@@ -254,7 +254,7 @@
     });
 
     $(function () {
-        // Bootstrap modal confirmation.
+        // modal confirmation.
         $("[data-confirm]").click(function (e) {
             var magicToken = $("input[name=__RequestVerificationToken]").first();
             if (!magicToken) { return; } // no sense in continuing if form POSTS will fail
@@ -281,7 +281,7 @@
             e.preventDefault();
         });
 
-        // Bulk action confirmation.
+        // bulk action confirmation.
         $("[data-bulk-action]").click(function (e) {
             var magicToken = $("input[name=__RequestVerificationToken]").first();
             if (!magicToken) { return; } // no sense in continuing if form POSTS will fail
@@ -308,7 +308,6 @@
             e.preventDefault();
         });
 
-        // End Bulk edit bootstrap dropdown button actions
     });
 })(jQuery);
 

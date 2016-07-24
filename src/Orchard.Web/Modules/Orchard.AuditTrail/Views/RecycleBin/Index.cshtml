@@ -72,7 +72,7 @@
                                             </td>
                                             <td class="content-column"><a href="@contentDisplayUrl">@contentDisplayText</a></td>
                                             <td class="content-removed-column">@removedText</td>
-                                            <td class="actions-column">
+                                            <td class="actions-column text-right">
                                                 <a href="@contentDisplayUrl" class="btn btn-default"><i class="fa fa-eye"></i> @T("View")</a>
                                                 <a href="@Url.Action("Index", "Admin", new { content = contentItem.Id, area = "Orchard.AuditTrail" })" class="btn btn-default"><i class="icon s7-note2"></i> @T("View Audit Trail")</a>
                                                 <a class="btn btn-primary" href="@Url.Action("Restore", "RecycleBin", new {id = contentItem.Id, area = "Orchard.AuditTrail"})" data-confirm="@T("Are you sure you want to restore this item?")"><i class="fa fa-recycle"></i> @T("Restore")</a>

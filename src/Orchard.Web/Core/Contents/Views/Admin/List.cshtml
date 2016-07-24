@@ -14,85 +14,33 @@
     Html.AdminBreadcrumbs();
     Layout.Tail.Add(New.ConfirmationDialog());
 }
+
 <div class="panel panel-default">
     @if (Model.ContentItems.Items.Count > 0) {
         using (Html.BeginFormAntiForgeryPost()) {
             <div class="panel-heading no-border">
-                <div class="panel-heading-actions">
-                    <a href="@Url.Action("Create", new { Area = "Contents", Id = (string)Model.Options.SelectedFilter })" class="btn btn-primary"><i class="fa fa-plus"></i> @createLinkText.Text</a>
-                </div>
-                <div class="panel-heading-primary-group">
-                    <fieldset>
-                        <input id="bulkActions" name="Options.BulkAction" type="hidden" value="@ContentsBulkAction.None" />
-                        <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                                <i class="fa fa-bolt"></i> @T("Bulk Actions") <span class="caret"></span>
-                            </button>&nbsp;
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="#" data-bulk-action-confirm="@T("Are you sure you want to publish these items?")" data-bulk-action="@ContentsBulkAction.PublishNow">@T("Publish Now").ToString()</a></li>
-                                <li><a href="#" data-bulk-action-confirm="@T("Are you sure you want to unpublish these items?")" data-bulk-action="@ContentsBulkAction.Unpublish">@T("Unpublish").ToString()</a></li>
-                                <li><a href="#" data-bulk-action-confirm="@T("Are you sure you want to delete these items?")" data-bulk-action="@ContentsBulkAction.Remove">@T("Delete").ToString()</a></li>
-                            </ul>
-                        </div>
-                    </fieldset>
-                </div>
                 <div class="row">
-                    <div class="col-sm-12 form-group form-inline">
-
-                        <div class="btn-group">
-                            <input id="filterResults" name="Options.SelectedFilter" type="hidden" value="" />
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                <i class="fa fa-bars" aria-hidden="true"></i> @T("Show"): @T("any (show all)") <span class="caret"></span>
-                            </button>&nbsp;
-                            <ul class="dropdown-menu" role="menu">
-                                @foreach (var filterOption in Model.Options.FilterOptions) {
-
-                                    <li><a href="#" data-action="@filterOption.Key">@filterOption.Value</a></li>
-                                }
-                            </ul>
-                        </div>
-
-                        @if (cultures.Count() > 1) {
-
+                    <div class="col-sm-6">
+                        <fieldset>
+                            <input id="bulkActions" name="Options.BulkAction" type="hidden" value="@ContentsBulkAction.None" />
+                            <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
                             <div class="btn-group">
-                                <input id="filterCultures" name="Options.SelectedCulture" type="hidden" value="" />
-                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                    <i class="fa fa-language" aria-hidden="true"></i> @T("Culture"): @T("any (show all)") <span class="caret"></span>
+                                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                                    <i class="fa fa-bolt"></i> @T("Bulk Actions") <span class="caret"></span>
                                 </button>&nbsp;
                                 <ul class="dropdown-menu" role="menu">
-                                    @foreach (string culture in cultures) {
-                                        <li><a href="#" data-action="@Model.Options.SelectedCulture">@System.Globalization.CultureInfo.GetCultureInfo(culture).DisplayName</a></li>
-                                    }
+                                    <li><a href="#" data-bulk-action-confirm="@T("Are you sure you want to publish these items?")" data-bulk-action="@ContentsBulkAction.PublishNow">@T("Publish Now").ToString()</a></li>
+                                    <li><a href="#" data-bulk-action-confirm="@T("Are you sure you want to unpublish these items?")" data-bulk-action="@ContentsBulkAction.Unpublish">@T("Unpublish").ToString()</a></li>
+                                    <li><a href="#" data-bulk-action-confirm="@T("Are you sure you want to delete these items?")" data-bulk-action="@ContentsBulkAction.Remove">@T("Delete").ToString()</a></li>
                                 </ul>
                             </div>
-                        }
-
-                        <div class="btn-group">
-                            <input id="orderResults" name="Options.OrderBy" type="hidden" value="@ContentsStatus.Latest" />
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                <i class="fa fa-sort" aria-hidden="true"></i> @T("Ordered by") : @T("recently modified") <span class="caret"></span>
-                            </button>&nbsp;
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="#" data-action="@ContentsOrder.Created">@T("recently created").ToString()</a></li>
-                                <li><a href="#" data-action="@ContentsOrder.Modified">@T("recently modified").ToString()</a></li>
-                                <li><a href="#" data-action="@ContentsOrder.Published">@T("recently published").ToString()</a></li>
-                            </ul>
-                        </div>
-                        
-                        <div class="btn-group">
-                            <input id="contentResults" name="Options.ContentsStatus" type="hidden" value="@ContentsStatus.Latest" />
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                <i class="fa fa-filter" aria-hidden="true"></i> @T("Filter by") : @T("latest") <span class="caret"></span>
-                            </button>&nbsp;
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="#" data-action="@ContentsStatus.Owner">@T("owned by me").ToString()</a></li>
-                                <li><a href="#" data-action="@ContentsStatus.Latest">@T("latest").ToString()</a></li>
-                                <li><a href="#" data-action="@ContentsStatus.Published">@T("published").ToString()</a></li>
-                                <li><a href="#" data-action="@ContentsStatus.Draft">@T("unpublished").ToString()</a></li>
-                                <li><a href="#" data-action="@ContentsStatus.AllVersions">@T("all versions").ToString()</a></li>
-                            </ul>
-                        </div>
+                            <button type="button" class="btn btn-default">
+                                <i class="fa fa-filter"></i> @T("Filters")
+                            </button>
+                        </fieldset>
+                    </div>
+                    <div class="col-sm-6 text-right">
+                        <a href="@Url.Action("Create", new { Area = "Contents", Id = (string)Model.Options.SelectedFilter })" class="btn btn-primary"><i class="fa fa-plus"></i> @createLinkText.Text</a>
                     </div>
                 </div>
             </div>
@@ -105,8 +53,7 @@
                     <fieldset class="content-items bulk-items content-items-with-actions">
                         @Display(Model.ContentItems)
                     </fieldset>
-                }
-                else {
+                } else {
                     <div class="title">@T("No Content Items to display.") </div>
                 }
             </div>
@@ -114,8 +61,7 @@
                 @Display(Model.Pager)
             </div>
         }
-    }
-    else {
+    } else {
         <div class="panel-body">
             <h3 class="no-content">
                 @T("There are no content items yet.")
