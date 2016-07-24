@@ -1,6 +1,8 @@
 ﻿@using System.Net.Mail
 @model Orchard.Email.Models.SmtpSettingsPart
 @{
+    Script.Require("Toastr");
+    Style.Require("Toastr");
     var smtpClient = new SmtpClient();
 }
 
@@ -95,15 +97,10 @@
     <div>
         <button type="button" id="emailtestsend" class="button grey">@T("Send")</button>
     </div>
-    <div id="emailtesterror" class="message-Error" style="display:none;"></div>
-    <div id="emailtestinfo" class="message-Information" style="display:none;"></div>
-    @using (Script.Foot())
-    {
+    @using (Script.Foot()) {
         <script type="text/javascript">
             $(function () {
                 var url = "@Url.Action("TestSettings", "EmailAdmin", new {area = "Orchard.Email"})",
-                    error = $("#emailtesterror"),
-                    info = $("#emailtestinfo"),
                     from = $("#@Html.FieldIdFor(m => m.Address)"),
                     host = $("#@Html.FieldIdFor(m => m.Host)"),
                     port = $("#@Html.FieldIdFor(m => m.Port)"),
@@ -118,8 +115,35 @@
                     replyto = $("#emailtestreplyto"),
                     bcc = $("#emailtestbcc"),
                     cc = $("#emailtestcc");
+                var shortCutFunction = "info";
+                var title = "";
+
+                toastr.options = {
+                    closeButton: true,
+                    debug: false,
+                    newestOnTop: true,
+                    progressBar: true,
+                    positionClass: 'toast-bottom-right',
+                    preventDuplicates: false,
+                    onclick: null
+                };
 
                 $("#emailtestsend").click(function () {
+                    shortCutFunction = "info";
+                    if (to.val() == '') {
+                        var $toast = toastr[shortCutFunction]('Please provide a valid email', title);
+                        $('#emailtestto').focus();
+                        return;
+                    }
+                    if (subject.val() == '') {
+                        var $toast = toastr[shortCutFunction]('Please provide a valid subject', title);
+                        $('#emailtestsubject').focus();
+                        return;
+                    }
+
+                    var $toast = toastr[shortCutFunction]('Please wait while we are trying to reach your email server', title);
+
+
                     $.post(url, {
                         from: from.val(),
                         host: host.val(),
@@ -138,16 +162,16 @@
                         __RequestVerificationToken: to.closest("form").find("input[name=__RequestVerificationToken]").val()
                     })
                     .fail(function (data) {
-                        error.html(data.statusText).show();
-                        info.hide();
+                        shortCutFunction = "error";
+                        var $toast = toastr[shortCutFunction](data.statusText, title);
                     })
                     .done(function (data) {
                         if (data.error) {
-                            error.html(data.error).show();
-                            info.hide();
+                            shortCutFunction = "error";
+                            var $toast = toastr[shortCutFunction](data.error, title);
                         } else {
-                            info.html(data.status).show();
-                            error.hide();
+                            shortCutFunction = "success";
+                            var $toast = toastr[shortCutFunction](data.status, title);
                         }
                     });
                 });

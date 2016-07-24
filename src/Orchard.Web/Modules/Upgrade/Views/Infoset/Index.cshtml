@@ -1,10 +1,11 @@
 ﻿@{
     Script.Require("jQuery");
+    Script.Require("Toastr");
+    Style.Require("Toastr");
     Layout.Title = T("Migrate Infosets").ToString();
 }
 <div class="panel panel-default">
     <div class="panel-body">
-        <div class="alert alert-warning" id="message-progress" style="display: none"></div>
         <fieldset>
             @using (Html.BeginFormAntiForgeryPost(Url.Action("Index", "Infoset"))) {
                 <legend>@T("Migrating Site Settings:")</legend>
@@ -85,12 +86,23 @@
                 $(function () {
                     var antiForgeryToken = '@HttpUtility.JavaScriptStringEncode(Html.AntiForgeryTokenValueOrchard().ToString())';
                     var endMessage = '@HttpUtility.JavaScriptStringEncode(T("All items have been processed").Text)';
+                    var shortCutFunction = "info";
+                    var title = "";
+
+                    toastr.options = {
+                        closeButton: true,
+                        debug: false,
+                        newestOnTop: true,
+                        progressBar: true,
+                        positionClass: 'toast-bottom-right',
+                        preventDuplicates: false,
+                        onclick: null
+                    };
 
                     $('[data-url]:not([data-url=""])').click(function () {
                         var importUrl = $(this).data('url');
 
                         var startId = 0;
-                        $('#message-progress').show();
 
                         var iId = setInterval(function () {
 
@@ -105,15 +117,22 @@
                                 success: function (data) {
                                     if (Number(data) == startId) {
                                         clearInterval(iId);
-                                        $('#message-progress').text(endMessage);
+
+                                        shortCutFunction = "success";
+                                        var $toast = toastr[shortCutFunction](endMessage, title);
                                     }
                                     else {
                                         startId = Number(data);
-                                        $('#message-progress').text('Processing content item ' + startId);
+
+                                        shortCutFunction = "info";
+                                        var $toast = toastr[shortCutFunction]('Processing content item ' + startId, title);
                                     }
                                 },
                                 fail: function (result) {
                                     console.log("An error occured: " + result);
+
+                                    shortCutFunction = "error";
+                                    var $toast = toastr[shortCutFunction]("An error occured: " + result, title);
                                 }
                             });
 

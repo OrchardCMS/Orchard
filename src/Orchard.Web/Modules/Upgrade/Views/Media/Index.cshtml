@@ -2,6 +2,8 @@
 
 @{
     Script.Require("jQuery");
+    Script.Require("Toastr");
+    Style.Require("Toastr");
     Layout.Title = T("Migrate Media Files").ToString();
 }
 <div class="panel panel-default">
@@ -14,9 +16,15 @@
             }
             @if (ViewBag.CanMigrate) {
                 <button type="button" class="button" id="button-migrate">@T("Migrate")</button>
-
-                <div class="alert alert-warning" id="message-progress" style="display: none"></div>
             }
+
+        </fieldset>
+        <fieldset>
+            <div class="progress">
+                <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">
+                    <span class="sr-only">60% Complete</span>
+                </div>
+            </div>
         </fieldset>
         <fieldset>
             @using (Html.BeginFormAntiForgeryPost(Url.Action("MediaPicker", "Media"))) {
@@ -38,10 +46,21 @@
                     var importMediaUrl = '@HttpUtility.JavaScriptStringEncode(Url.Action("ImportMedia", "Media"))';
                     var antiForgeryToken = '@HttpUtility.JavaScriptStringEncode(Html.AntiForgeryTokenValueOrchard().ToString())';
                     var endMessage = '@HttpUtility.JavaScriptStringEncode(T("All media files have been processed").Text)';
+                    var shortCutFunction = "info";
+                    var title = "";
+
+                    toastr.options = {
+                        closeButton: true,
+                        debug: false,
+                        newestOnTop: true,
+                        progressBar: true,
+                        positionClass: 'toast-bottom-right',
+                        preventDuplicates: false,
+                        onclick: null
+                    };
 
                     $('#button-migrate').click(function () {
                         var remaining = 1;
-                        $('#message-progress').show();
 
                         var iID = setInterval(function () {
                             $.ajax({
@@ -52,22 +71,26 @@
                                     __RequestVerificationToken: antiForgeryToken
                                 },
                                 success: function (data) {
-                                    console.log('media remaining: ' + data);
                                     remaining = data;
+                                    console.log('media remaining: ' + remaining);
+                                    percent = ((@(ViewBag.MediaFilesToMigrate) - remaining) / @(ViewBag.MediaFilesToMigrate) * 100).toFixed(0) + '%';
+                                    $('.progress-bar').css('width', percent)
+                                    $('.progress-bar').text(percent);
                                 },
                                 fail: function (result) {
                                     remaining = 0;
                                     console.log("An error occured: " + result);
+                                    shortCutFunction = "error";
+                                    var $toast = toastr[shortCutFunction]("An error occured: " + result, title);
                                 }
                             });
 
-                            $('#message-progress').text('' + remaining + ' files remaining ...');
-
                             if (remaining == 0) {
                                 clearInterval(iID);
-                                $('#message-progress').text(endMessage);
+                                shortCutFunction = "success";
+                                var $toast = toastr[shortCutFunction](endMessage, title);
                             }
-                        }, 100);
+                        }, 200);
 
                     });
                 });

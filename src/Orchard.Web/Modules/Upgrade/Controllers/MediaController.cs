@@ -109,6 +109,7 @@ namespace Upgrade.Controllers {
             }
 
             ViewBag.CanMigrateFields = ViewBag.CanMigrate && !hasMore;
+            ViewBag.MediaFilesToMigrate = MediaList.Count;
 
             return View();
         }
