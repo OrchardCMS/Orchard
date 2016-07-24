@@ -175,6 +175,7 @@
         jQuery.fn.exists = function () { return this.length > 0; }
 
         // Bootstrap modal confirmation.
+        $("[data-confirm]").unbind('click');
         $("[data-confirm]").click(function (e) {
             var href = $(this).attr("href");
             var dialog = $("#confirmationDialog").clone();
@@ -202,6 +203,7 @@
         });
 
         // Bulk action confirmation.
+        $("[data-bulk-action]").unbind('click');
         $("[data-bulk-action]").click(function (e) {
             var trigger = $(this);
             var action = trigger.data("bulk-action");
