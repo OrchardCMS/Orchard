@@ -40,13 +40,13 @@
 
     <div data-controllerid="@Html.FieldIdFor(m => m.RequireCredentials)">
 
-        <div>
+        <div class="or-radio">
             @Html.RadioButtonFor(m => m.UseDefaultCredentials, false, new { id = "customCredentialsOption", name = "UseDefaultCredentials" })
             <label for="customCredentialsOption" class="forcheckbox">@T("Specify username/password")</label>
             @Html.ValidationMessage("UseDefaultCredentials", "*")
         </div>
 
-        <div>
+        <div class="or-radio">
             @Html.RadioButtonFor(m => m.UseDefaultCredentials, true, new { id = "defaultCredentialsOptions", name = "UseDefaultCredentials" })
             <label for="defaultCredentialsOptions" class="forcheckbox">@T("Use Windows authentication")</label>
             @Html.ValidationMessage("UseDefaultCredentials", "*")
