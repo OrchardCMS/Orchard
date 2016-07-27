@@ -21,7 +21,7 @@
         </fieldset>
         <fieldset>
             <div class="progress">
-                <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">
                     <span class="sr-only">60% Complete</span>
                 </div>
             </div>
@@ -61,6 +61,8 @@
 
                     $('#button-migrate').click(function () {
                         var remaining = 1;
+                        $('.progress-bar').css('width', '0%')
+                        $('.progress-bar').text('');
 
                         var iID = setInterval(function () {
                             $.ajax({
