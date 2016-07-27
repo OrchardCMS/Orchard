@@ -9,7 +9,7 @@ namespace Orchard.Packaging.Navigation {
         public Localizer T { get; set; }
 
         public string MenuName {
-            get { return "top_admin"; }
+            get { return "admin"; }
         }
 
         public void GetNavigation(NavigationBuilder builder) {

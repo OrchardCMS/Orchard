@@ -3,7 +3,7 @@
 namespace Orchard.Dashboards {
     public class AdminMenu : Component, INavigationProvider {
 
-        public string MenuName { get { return "top_admin"; } }
+        public string MenuName { get { return "admin"; } }
 
         public void GetNavigation(NavigationBuilder builder) {
             builder.Add(T("Settings"), settings => settings

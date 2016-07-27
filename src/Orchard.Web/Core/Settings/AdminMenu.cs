@@ -13,14 +13,14 @@ namespace Orchard.Core.Settings {
         }
 
         public Localizer T { get; set; }
-        public string MenuName { get { return "top_admin"; } }
+        public string MenuName { get { return "admin"; } }
         public IOrchardServices Services { get; private set; }
 
         public void GetNavigation(NavigationBuilder builder) {
             builder.AddImageSet("settings")
                 .Add(T("Settings"), "99",
                     menu => menu.Add(T("General"), "0", item => item.Action("Index", "Admin", new { area = "Settings", groupInfoId = "Index" })
-                        .Permission(Permissions.ManageSettings)), new [] {"collapsed"});
+                        .Permission(Permissions.ManageSettings)), new [] { "config" });
 
             var site = _siteService.GetSiteSettings();
             if (site == null)
