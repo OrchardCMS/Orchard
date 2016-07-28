@@ -221,6 +221,7 @@
     <Compile Include="Reports\Services\ReportsCoordinator.cs" />
     <Compile Include="Reports\Services\ReportsManager.cs" />
     <Compile Include="Reports\Services\ReportsPersister.cs" />
+    <Compile Include="Security\IMembershipSettings.cs" />
     <Compile Include="Security\IMembershipValidationService.cs" />
     <Compile Include="Localization\Services\ILocalizationStreamParser.cs" />
     <Compile Include="Localization\Services\LocalizationStreamParser.cs" />
@@ -953,7 +954,6 @@
     <Compile Include="Mvc\Wrappers\HttpResponseBaseWrapper.cs" />
     <Compile Include="OrchardException.cs" />
     <Compile Include="Security\IAuthorizationServiceEventHandler.cs" />
-    <Compile Include="Security\MembershipSettings.cs" />
     <Compile Include="Security\StandardPermissions.cs" />
     <Compile Include="Security\OrchardSecurityException.cs" />
     <Compile Include="Tasks\Scheduling\IPublishingTaskManager.cs" />
