@@ -17,7 +17,7 @@
 </fieldset>
 <fieldset>
         <label for="@Html.FieldIdFor(m => m.PageSizeDefault)">@T("Default Page Size")</label>
-        @Html.EditorFor(m => m.PageSizeDefault)
+        @Html.TextBoxFor(m => m.PageSizeDefault, new { @class = "text medium", type = "number" })
 </fieldset>
 <fieldset>
     <div class="or-checkbox">

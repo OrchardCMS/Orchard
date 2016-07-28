@@ -25,7 +25,7 @@
 
 <fieldset>
     <legend>@T("Dynamic packaging")</legend>
-    <div>
+    <div class="or-checkbox">
         @Html.CheckBoxFor(m => m.EnableDynamicPackaging) <label for="@Html.FieldIdFor(m => m.EnableDynamicPackaging)" class="forcheckbox">@T("Enable dynamic packaging")</label>
         @Html.ValidationMessageFor(m => m.EnableDynamicPackaging)
     </div>
