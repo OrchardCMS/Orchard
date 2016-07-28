@@ -2,7 +2,7 @@
 
 <fieldset>
     <legend>@T("Markdown")</legend>
-    <div>
+    <div class="or-checkbox">
         @Html.EditorFor(m => m.UseMarkdownForBlogs) 
         <label class="forcheckbox" for="@Html.FieldIdFor(m => m.UseMarkdownForBlogs)">@T("Use Markdown to write Blog Post")</label>
         <span class="help-block">@T("Enable to change the default editor for all blog posts to Markdown.")</span>

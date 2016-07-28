@@ -10,7 +10,7 @@
     <input id="search-box" class="text" type="text" autocomplete="off" />
 </fieldset>
 <!-- List of available activities -->
-<ul>
+<ul class="list-unstyled">
     @foreach (var activity in allActivities) {
         <li class="activity-toolbox-item toolbox-@(activity.IsEvent ? "event" : "task") toolbox-@activity.Name.HtmlClassify()" data-activity-name="@activity.Name" title="@activity.Description">
             <div>

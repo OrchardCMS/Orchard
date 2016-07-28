@@ -1,11 +1,15 @@
 ﻿@model Orchard.Core.Containers.Settings.ContainableTypePartSettings
 <fieldset>
-    @Html.CheckBoxFor(m => m.ShowContainerPicker)
-    @Html.LabelFor(m => m.ShowContainerPicker, @T("Show Container Picker").ToString(), new { @class = "forcheckbox" })
-    <span class="help-block">@T("Check this option to render a container picker on the content editor for this type.")</span>
+    <div class="or-checkbox">
+        @Html.CheckBoxFor(m => m.ShowContainerPicker)
+        @Html.LabelFor(m => m.ShowContainerPicker, @T("Show Container Picker").ToString(), new { @class = "forcheckbox" })
+        <span class="help-block">@T("Check this option to render a container picker on the content editor for this type.")</span>
+    </div>
 </fieldset>
 <fieldset>
-    @Html.CheckBoxFor(m => m.ShowPositionEditor)
-    @Html.LabelFor(m => m.ShowPositionEditor, @T("Show Position Editor").ToString(), new { @class = "forcheckbox" })
-    <span class="help-block">@T("Check this option to render a position editor on the content editor for this type.")</span>
+    <div class="or-checkbox">
+        @Html.CheckBoxFor(m => m.ShowPositionEditor)
+        @Html.LabelFor(m => m.ShowPositionEditor, @T("Show Position Editor").ToString(), new { @class = "forcheckbox" })
+        <span class="help-block">@T("Check this option to render a position editor on the content editor for this type.")</span>
+    </div>
 </fieldset>
