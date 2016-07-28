@@ -20,7 +20,7 @@
     };
 
     $(function() {
-        var browser = new ElementBrowser($("#main"));
+        var browser = new ElementBrowser($(".main-content"));
         browser.initialize();
     });
 })(jQuery);

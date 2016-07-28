@@ -52,6 +52,7 @@ namespace Orchard.Layouts.Controllers {
         public IOrchardServices Services { get; set; }
         public Localizer T { get; set; }
 
+        [HttpGet]
         public ActionResult Index() {
             if (!Services.Authorizer.Authorize(Permissions.ManageLayouts, T("Not authorized to manage layouts."))) {
                 return new HttpUnauthorizedResult();
@@ -59,7 +60,7 @@ namespace Orchard.Layouts.Controllers {
 
             var blueprints = _elementBlueprintService.GetBlueprints().ToArray();
             var viewModel = new BlueprintsIndexViewModel {
-                Blueprints = blueprints
+                Blueprints = blueprints.Select(x => new ElementEntry() { Blueprint = x, IsChecked = false }).ToList()
             };
             return View(viewModel);
         }
@@ -243,21 +244,37 @@ namespace Orchard.Layouts.Controllers {
             return Redirect(Request.UrlReferrer.ToString());
         }
 
-        [FormValueRequired("submit.BulkEdit")]
+        
         [ActionName("Index")]
         [HttpPost]
-        public ActionResult BulkDelete(IEnumerable<int> blueprintIds) {
+        public ActionResult BulkEdit(FormCollection input) {
             if (!Services.Authorizer.Authorize(Permissions.ManageLayouts, T("Not authorized to manage layouts."))) {
                 return new HttpUnauthorizedResult();
             }
 
-            if (blueprintIds == null || !blueprintIds.Any()) {
-                _notifier.Error(T("Please select the blueprints to delete."));
+            var viewModel = new BlueprintsIndexViewModel { Blueprints = new List<ElementEntry>(), Options = new AdminIndexOptions() };
+            UpdateModel(viewModel);
+
+            var checkedItems = viewModel.Blueprints.Where(c => c.IsChecked);
+
+            switch (viewModel.Options.BulkAction) {
+                case ElementsBulkAction.None:
+                    break;
+                case ElementsBulkAction.Delete:
+                    IEnumerable<int> blueprintIds = checkedItems.Select(x => x.Blueprint.Id);
+
+                    if (blueprintIds == null || !blueprintIds.Any()) {
+                        _notifier.Error(T("Please select the blueprints to delete."));
+                    } else {
+                        var numDeletedBlueprints = _elementBlueprintService.DeleteBlueprints(blueprintIds);
+                        _notifier.Success(T("{0} blueprints have been deleted.", numDeletedBlueprints));
+                    }
+
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
-            else {
-                var numDeletedBlueprints = _elementBlueprintService.DeleteBlueprints(blueprintIds);
-                _notifier.Success(T("{0} blueprints have been deleted.", numDeletedBlueprints));
-            }
+
 
             return Redirect(Request.UrlReferrer.ToString());
         }
