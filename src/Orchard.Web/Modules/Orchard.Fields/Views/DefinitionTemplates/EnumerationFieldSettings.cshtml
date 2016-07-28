@@ -16,7 +16,7 @@
 </fieldset>
 <fieldset>
     <label for="@Html.FieldIdFor(m => m.ListMode)">@T("List mode")</label>
-    <select id="@Html.FieldIdFor(m => m.ListMode)" name="@Html.FieldNameFor(m => m.ListMode)">
+    <select class="form-control" id="@Html.FieldIdFor(m => m.ListMode)" name="@Html.FieldNameFor(m => m.ListMode)">
         @Html.SelectOption(ListMode.Dropdown, Model.ListMode == ListMode.Dropdown, T("Dropdown list").ToString())
         @Html.SelectOption(ListMode.Radiobutton, Model.ListMode == ListMode.Radiobutton, T("Radio button list").ToString())
         @Html.SelectOption(ListMode.Listbox, Model.ListMode == ListMode.Listbox, T("Listbox").ToString())

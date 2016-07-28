@@ -3,7 +3,7 @@
 
 <fieldset>
     <label for="@Html.FieldIdFor(m => m.Display)" class="forcheckbox">@T("Display options")</label>  
-    <select id="@Html.FieldIdFor(m => m.Display)" name="@Html.FieldNameFor(m => m.Display)">
+    <select class="form-control" id="@Html.FieldIdFor(m => m.Display)" name="@Html.FieldNameFor(m => m.Display)">
         @Html.SelectOption(DateTimeFieldDisplays.DateAndTime, Model.Display == DateTimeFieldDisplays.DateAndTime, T("Date and time").ToString())
         @Html.SelectOption(DateTimeFieldDisplays.DateOnly, Model.Display == DateTimeFieldDisplays.DateOnly, T("Date only").ToString())
         @Html.SelectOption(DateTimeFieldDisplays.TimeOnly, Model.Display == DateTimeFieldDisplays.TimeOnly, T("Time only").ToString())

@@ -4,7 +4,7 @@
 <fieldset>
     <div>
         <label for="@Html.FieldIdFor(m => m.TargetMode)">@T("Target")</label>    
-        <select id="@Html.FieldIdFor(m => m.TargetMode)" name="@Html.FieldNameFor(m => m.TargetMode)">
+        <select class="form-control" id="@Html.FieldIdFor(m => m.TargetMode)" name="@Html.FieldNameFor(m => m.TargetMode)">
             @Html.SelectOption(TargetMode.None, Model.TargetMode == TargetMode.None, T("No target").ToString())
             @Html.SelectOption(TargetMode.NewWindow, Model.TargetMode == TargetMode.NewWindow, T("Open link in new window").ToString())
             @Html.SelectOption(TargetMode.Parent, Model.TargetMode == TargetMode.Parent, T("Open link in the parent frameset").ToString())
@@ -22,7 +22,7 @@
 <fieldset>
     <div>
         <label for="@Html.FieldIdFor(m => m.LinkTextMode)">@T("Link text")</label>    
-        <select id="@Html.FieldIdFor(m => m.LinkTextMode)" name="@Html.FieldNameFor(m => m.LinkTextMode)">
+        <select class="form-control" id="@Html.FieldIdFor(m => m.LinkTextMode)" name="@Html.FieldNameFor(m => m.LinkTextMode)">
             @Html.SelectOption(LinkTextMode.Optional, Model.LinkTextMode == LinkTextMode.Optional, T("Optional").ToString())
             @Html.SelectOption(LinkTextMode.Required, Model.LinkTextMode == LinkTextMode.Required, T("Required").ToString())
             @Html.SelectOption(LinkTextMode.Static, Model.LinkTextMode == LinkTextMode.Static, T("Static").ToString(), new { id = Html.FieldIdFor(m => m.LinkTextMode) + "-static" })

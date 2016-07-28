@@ -33,7 +33,7 @@
 </fieldset>
 <fieldset>
     <label for="@Html.FieldIdFor(m => m.SelectionMode)">@T("Selection mode")</label>    
-    <select id="@Html.FieldIdFor(m => m.SelectionMode)" name="@Html.FieldNameFor(m => m.SelectionMode)">
+    <select class="form-control" id="@Html.FieldIdFor(m => m.SelectionMode)" name="@Html.FieldNameFor(m => m.SelectionMode)">
         @Html.SelectOption(SelectionMode.Checkbox, Model.SelectionMode == SelectionMode.Checkbox, T("Checkbox").ToString())
         @Html.SelectOption(SelectionMode.Radiobutton, Model.SelectionMode == SelectionMode.Radiobutton, T("Radio buttons").ToString())
         @Html.SelectOption(SelectionMode.Dropdown, Model.SelectionMode == SelectionMode.Dropdown, T("Dropdown list").ToString())
@@ -42,7 +42,7 @@
 </fieldset>
 <fieldset>
 	<label for="@Html.FieldIdFor(m => m.DefaultValue)">@T("Default value")</label>    
-    <select id="@Html.FieldIdFor(m => m.DefaultValue)" name="@Html.FieldNameFor(m => m.DefaultValue)">
+    <select class="form-control" id="@Html.FieldIdFor(m => m.DefaultValue)" name="@Html.FieldNameFor(m => m.DefaultValue)">
         @Html.SelectOption((object)String.Empty, !Model.DefaultValue.HasValue, T("Neutral").ToString())
         @Html.SelectOption((object)true, Model.DefaultValue.HasValue && Model.DefaultValue == true, T("True").ToString())
         @Html.SelectOption((object)false, Model.DefaultValue.HasValue && Model.DefaultValue == false, T("False").ToString())

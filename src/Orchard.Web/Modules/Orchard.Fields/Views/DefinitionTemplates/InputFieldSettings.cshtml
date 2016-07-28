@@ -3,7 +3,7 @@
 <fieldset>
     <div>
     	<label for="@Html.FieldIdFor(m => m.Type)">@T("Input type")</label>    
-        <select id="@Html.FieldIdFor(m => m.Type)" name="@Html.FieldNameFor(m => m.Type)">
+        <select class="form-control" id="@Html.FieldIdFor(m => m.Type)" name="@Html.FieldNameFor(m => m.Type)">
             @Html.SelectOption(Orchard.Fields.Settings.InputType.Text, Model.Type == Orchard.Fields.Settings.InputType.Text, T("Text").ToString(), new { id = Html.FieldIdFor(m => m.Type) + "-text" })
             @Html.SelectOption(Orchard.Fields.Settings.InputType.Url, Model.Type == Orchard.Fields.Settings.InputType.Url, T("Url").ToString())
             @Html.SelectOption(Orchard.Fields.Settings.InputType.Tel, Model.Type == Orchard.Fields.Settings.InputType.Tel, T("Tel").ToString())
