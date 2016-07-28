@@ -7,7 +7,6 @@ namespace Orchard.Users.ViewModels
     [OrchardFeature("Orchard.Users.EditPasswordByAdmin")]
     public class UserEditPasswordViewModel {
         [DataType(DataType.Password)]
-        [StringLength(50, MinimumLength = 7)]
         public string Password { get; set; }
 
         [DataType(DataType.Password)]

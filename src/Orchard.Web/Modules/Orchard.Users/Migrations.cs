@@ -1,7 +1,7 @@
-﻿using System;
-using Orchard.ContentManagement.MetaData;
+﻿using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
+using System;
 
 namespace Orchard.Users {
     public class UsersDataMigration : DataMigrationImpl {
@@ -23,11 +23,12 @@ namespace Orchard.Users {
                     .Column<DateTime>("CreatedUtc")
                     .Column<DateTime>("LastLoginUtc")
                     .Column<DateTime>("LastLogoutUtc")
+                    .Column<DateTime>("LastPasswordChangeUtc")
                 );
 
             ContentDefinitionManager.AlterTypeDefinition("User", cfg => cfg.Creatable(false));
 
-            return 4;
+            return 5;
         }
 
         public int UpdateFrom1() {
@@ -53,6 +54,15 @@ namespace Orchard.Users {
                 });
 
             return 4;
+        }
+
+        public int UpdateFrom4() {
+            SchemaBuilder.AlterTable("UserPartRecord",
+                table => {
+                    table.AddColumn<DateTime>("LastPasswordChangeUtc");
+                });
+
+            return 5;
         }
     }
 }
