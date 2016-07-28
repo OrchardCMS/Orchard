@@ -15,91 +15,83 @@
 }
 
 <div class="panel panel-default">
-    @if (Model.WorkflowDefinitions.Any()) { 
-    using (Html.BeginFormAntiForgeryPost()) {
-        @Html.ValidationSummary()
-        <div class="panel-heading">
-            <div class="panel-heading-actions">
-                <a class="btn btn-primary" href="@Url.Action("EditProperties", new { Area = "Orchard.Workflows", returnurl = HttpContext.Current.Request.RawUrl })"><i class="fa fa-plus"></i> @T("Create new Workflow Definition").Text</a>
-            </div>
-            <div class="panel-heading-primary-group">
+    @if (Model.WorkflowDefinitions.Any()) {
+        using (Html.BeginFormAntiForgeryPost()) {
+            @Html.ValidationSummary()
+            <div class="panel-heading">
                 <div class="row">
-                    <fieldset class="col-sm-4 form-group">
-                        <input id="bulkActions" name="@Html.NameOf(m => m.Options.BulkAction)" type="hidden" value="@WorkflowDefinitionBulk.None" />
-                        <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                                <i class="fa fa-bolt"></i> @T("Bulk Actions") <span class="caret"></span>
-                            </button>&nbsp;
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="#" data-bulk-action-confirm="@T("Are you sure you want to delete these items?")" data-bulk-action="@WorkflowDefinitionBulk.Delete">@T("Delete").ToString()</a></li>
-                            </ul>
-                        </div>
-                    </fieldset>
-                    @* No need to filter if there is only one option in the dropdownlist *@
-                    @*<fieldset class="col-sm-4 form-group form-inline">
-                    <label for="filterResults">@T("Sort by:")</label>
-                    <select class="form-control" id="filterResults" name="@Html.NameOf(m => m.Options.Order)">
-                        @Html.SelectOption(Model.Options.Order, WorkflowDefinitionOrder.Name, T("Name").ToString())
-                    </select>
-                    <button type="submit" name="submit.Filter" value="@T("Filter")">@T("Filter")</button>
-                </fieldset>*@
-                </div>
-            </div>
-            </div>
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="table-responsive table-with-footer">
-                    <table class="table table-fw-widget data-table table-striped dataTable no-footer">
-                        <thead>
-                            <tr>
-                                <th scope="col">
-                                    <div class="or-checkbox or-select-all inline">
-                                        <input id="checkAll" class="check-all" type="checkbox">
-                                        <label class="check-all" title="@T("Select All")" for="checkAll"></label>
-                                    </div>
-                                </th>
-                                <th scope="col" width="100%">@T("Name")</th>
-                                <th scope="col">&nbsp;</th>
-                                <th scope="col" class="actions">&nbsp;</th>
-                            </tr>
-                        </thead>
-                        @foreach (var entry in Model.WorkflowDefinitions) {
-                            var checkboxId = Html.IdFor(m => m.WorkflowDefinitions[index].WokflowDefinitionId);
-                            <tr>
-                                <td>
-                                    <div class="or-checkbox">
-                                        <input type="hidden" value="@Model.WorkflowDefinitions[index].WokflowDefinitionId" name="@Html.NameOf(m => m.WorkflowDefinitions[index].WokflowDefinitionId)" />
-                                        <input id="@checkboxId" type="checkbox" value="true" name="@Html.NameOf(m => m.WorkflowDefinitions[index].IsChecked)" />
-                                        <label for="@checkboxId"></label>
-                                    </div>
-                                </td>
-                                <td>
-                                    @Html.ActionLink(entry.Name, "Edit", new { id = entry.WokflowDefinitionId })
-                                </td>
-                                <td>
-                                    @if (entry.WorkflowDefinitionRecord.WorkflowRecords.Any()) {
-                                        @T("{0} Running", entry.WorkflowDefinitionRecord.WorkflowRecords.Count)
-                                    }
-                                    &nbsp;
-                                </td>
-                                <td class="text-nowrap">
-                                    <a class="btn btn-default" href="@Url.Action("EditProperties",  new { Id = entry.WokflowDefinitionId, ReturnUrl = HttpContext.Current.Request.RawUrl })"><i class="fa fa-pencil-square-o"></i> @T("Properties")</a>
-                                    <a class="btn btn-primary" href="@Url.Action("Edit",  new { Id = entry.WokflowDefinitionId })"><i class="fa fa-pencil-square-o"></i> @T("Edit")</a>
-                                    <a class="btn btn-danger" href="@Url.Action("Delete", new { Id = entry.WokflowDefinitionId })" data-confirm="@T("Are you sure you want to delete this item?")"><i class="fa fa-trash"></i> @T("Delete")</a>
-                                </td>
-                            </tr>
-                            index++;
-                        }
-                    </table>
-                </div>
-                <div class="row or-datatable-footer">
-                    <div class="col-sm-12">
-                        @Display(Model.Pager)
+                    <div class="col-sm-6">
+                        <fieldset>
+                            <input id="bulkActions" name="@Html.NameOf(m => m.Options.BulkAction)" type="hidden" value="@WorkflowDefinitionBulk.None" />
+                            <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                                    <i class="fa fa-bolt"></i> @T("Bulk Actions") <span class="caret"></span>
+                                </button>&nbsp;
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="#" data-bulk-action-confirm="@T("Are you sure you want to delete these items?")" data-bulk-action="@WorkflowDefinitionBulk.Delete">@T("Delete").ToString()</a></li>
+                                </ul>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="col-sm-6 text-right">
+                        <a class="btn btn-primary" href="@Url.Action("EditProperties", new { Area = "Orchard.Workflows", returnurl = HttpContext.Current.Request.RawUrl })"><i class="fa fa-plus"></i> @T("Create new Workflow Definition").Text</a>
                     </div>
                 </div>
             </div>
-        </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="table-responsive table-with-footer">
+                        <table class="table table-fw-widget data-table table-striped dataTable no-footer">
+                            <thead>
+                                <tr>
+                                    <th scope="col">
+                                        <div class="or-checkbox or-select-all inline">
+                                            <input id="checkAll" class="check-all" type="checkbox">
+                                            <label class="check-all" title="@T("Select All")" for="checkAll"></label>
+                                        </div>
+                                    </th>
+                                    <th scope="col" width="100%">@T("Name")</th>
+                                    <th scope="col">&nbsp;</th>
+                                    <th scope="col" class="actions">&nbsp;</th>
+                                </tr>
+                            </thead>
+                            @foreach (var entry in Model.WorkflowDefinitions) {
+                                var checkboxId = Html.IdFor(m => m.WorkflowDefinitions[index].WokflowDefinitionId);
+                                <tr>
+                                    <td>
+                                        <div class="or-checkbox">
+                                            <input type="hidden" value="@Model.WorkflowDefinitions[index].WokflowDefinitionId" name="@Html.NameOf(m => m.WorkflowDefinitions[index].WokflowDefinitionId)" />
+                                            <input id="@checkboxId" type="checkbox" value="true" name="@Html.NameOf(m => m.WorkflowDefinitions[index].IsChecked)" />
+                                            <label for="@checkboxId"></label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        @Html.ActionLink(entry.Name, "Edit", new { id = entry.WokflowDefinitionId })
+                                    </td>
+                                    <td>
+                                        @if (entry.WorkflowDefinitionRecord.WorkflowRecords.Any()) {
+                                            @T("{0} Running", entry.WorkflowDefinitionRecord.WorkflowRecords.Count)
+                                        }
+                                        &nbsp;
+                                    </td>
+                                    <td class="text-nowrap">
+                                        <a class="btn btn-default" href="@Url.Action("EditProperties",  new { Id = entry.WokflowDefinitionId, ReturnUrl = HttpContext.Current.Request.RawUrl })"><i class="fa fa-pencil-square-o"></i> @T("Properties")</a>
+                                        <a class="btn btn-primary" href="@Url.Action("Edit",  new { Id = entry.WokflowDefinitionId })"><i class="fa fa-pencil-square-o"></i> @T("Edit")</a>
+                                        <a class="btn btn-danger" href="@Url.Action("Delete", new { Id = entry.WokflowDefinitionId })" data-confirm="@T("Are you sure you want to delete this item?")"><i class="fa fa-trash"></i> @T("Delete")</a>
+                                    </td>
+                                </tr>
+                                index++;
+                            }
+                        </table>
+                    </div>
+                    <div class="row or-datatable-footer">
+                        <div class="col-sm-12">
+                            @Display(Model.Pager)
+                        </div>
+                    </div>
+                </div>
+            </div>
         }
     } else {
         <div class="panel-body">
