@@ -63,8 +63,11 @@
             </fieldset>
 
             <fieldset class="available-extensions">
-                <label for="@Html.FieldIdFor(m => m.Themes)">@T("Available Themes")</label>
-                <div>
+                <label for="@Html.FieldIdFor(m => m.Themes)">
+                    <a data-toggle="collapse" href="#accordion-panel-themes" aria-expanded="true">
+                        <i class="icon fa fa-angle-down"></i> @T("Available Themes")
+                    </a></label>
+                <div id="accordion-panel-themes">
                     <span class="help-block">@T("Select the Themes which should be available for this tenant. If none is selected, they will all be available.")</span>
 
                     <ol class="list-unstyled">

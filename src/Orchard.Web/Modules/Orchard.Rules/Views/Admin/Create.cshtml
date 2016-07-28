@@ -3,16 +3,20 @@
     Layout.Title = T("Create New Rule").Text;
 }
 
-@using (Html.BeginFormAntiForgeryPost()) {
-    @Html.ValidationSummary()
+<div class="panel panel-default">
+    @using (Html.BeginFormAntiForgeryPost()) {
+        @Html.ValidationSummary()
 
-<fieldset>
-    @Html.LabelFor(m => m.Name)
-    @Html.TextBoxFor(m => m.Name, new { @class = "text medium" }) 
-    <span class="help-block">@T("The name of the Rule")</span>
-</fieldset>
+        <div class="panel-body">
+            <fieldset>
+                @Html.LabelFor(m => m.Name)
+                @Html.TextBoxFor(m => m.Name, new { @class = "text medium" })
+                <span class="help-block">@T("The name of the Rule")</span>
+            </fieldset>
 
-<fieldset>
-    <button class="btn btn-primary" type="submit">@T("Save")</button>
-</fieldset>
-}
+            <fieldset>
+                <button class="btn btn-primary" type="submit">@T("Save")</button>
+            </fieldset>
+        </div>
+    }
+    </div>

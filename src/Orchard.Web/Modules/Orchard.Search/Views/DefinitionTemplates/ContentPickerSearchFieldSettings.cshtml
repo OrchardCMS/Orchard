@@ -6,7 +6,7 @@
 }
 
 <fieldset>
-    <div>
+    <div class="or-checkbox">
         @Html.CheckBoxFor(m => m.ShowSearchTab) <label for="@Html.FieldIdFor(m => m.ShowSearchTab)" class="forcheckbox">@T("Show Search tab")</label>
         <span class="help-block">@T("Uncheck to hide the Search tab from the picker window.")</span>
     </div>
@@ -14,7 +14,7 @@
 <fieldset>
     <div>
         <label for="@Html.FieldIdFor(m => m.SearchIndex)">@T("Search index")</label>
-        <select class="form-control" name="@Html.FieldNameFor(m => m.SearchIndex)" >
+        <select class="form-control" name="@Html.FieldNameFor(m => m.SearchIndex)">
             @foreach (string index in indexProvider.List()) {
                 @Html.SelectOption(Model.SearchIndex, index, index) 
             }    
