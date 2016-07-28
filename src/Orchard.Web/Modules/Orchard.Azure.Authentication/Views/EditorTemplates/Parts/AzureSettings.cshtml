@@ -4,7 +4,7 @@
     <legend>Azure Active Directory Settings</legend>
     @Html.LabelFor(m => m.Tenant, T("Tenant"))
     @Html.TextBoxFor(m => m.Tenant)
-    <span class="hint">@T("Azure Active Directory tenant (Ex. mysite.com)")</span>
+    <span class="hint">@T("Azure Active Directory tenant (e.g. mysite.onmicrosoft.com)")</span>
 </fieldset>
 <fieldset>
     @Html.LabelFor(m => m.ADInstance, T("Active Directory Instance"))
@@ -36,4 +36,19 @@
 <fieldset>
     @Html.LabelFor(m => m.AzureWebSiteProtectionEnabled, T("Enable Machine Key Data Protection for Azure Web Site"))
     @Html.CheckBoxFor(m => m.AzureWebSiteProtectionEnabled)
+</fieldset>
+<fieldset>
+    @Html.LabelFor(m => m.GraphApiUrl)
+    @Html.TextBoxFor(m => m.GraphApiUrl)
+    <span class="hint">@T("Typically https://graph.windows.net")</span>
+</fieldset>
+<fieldset>
+    @Html.LabelFor(m => m.MinutesToCacheADGroupMembership)
+    @Html.TextBoxFor(m => m.MinutesToCacheADGroupMembership)
+    <span class="hint">@T("Syncing Orchard Role membership to Azure Graph API Group Membership data can be slow.  Recommended value = 1440")</span>
+</fieldset>
+<fieldset>
+    @Html.LabelFor(m => m.UseAzureGraphApi)
+    @Html.CheckBoxFor(m => m.UseAzureGraphApi)
+    <span class="hint">@T("Check this box to enable syncing Orchard Role membership to Azure Graph API Group Membership.  This module will not create new Orchard Roles for you, but it will sync up user membership of existing Orchard Roles with AD Group membership for Role names that match a group name")</span>
 </fieldset>

@@ -41,5 +41,20 @@ namespace Orchard.Azure.Authentication.Models {
             get { return this.Retrieve(x => x.AzureWebSiteProtectionEnabled); }
             set { this.Store(x => x.AzureWebSiteProtectionEnabled, value); }
         }
+
+        public string GraphApiUrl {
+            get { return this.Retrieve(x => x.GraphApiUrl); }
+            set { this.Store(x => x.GraphApiUrl, value); }
+        }
+
+        public int MinutesToCacheADGroupMembership {
+            get { return this.Retrieve(x => x.MinutesToCacheADGroupMembership); }
+            set { this.Store(x => x.MinutesToCacheADGroupMembership, value); }
+        }
+
+        public bool UseAzureGraphApi {
+            get { return this.Retrieve(x => x.UseAzureGraphApi); }
+            set { this.Store(x => x.UseAzureGraphApi, value); }
+        }
     }
 }
