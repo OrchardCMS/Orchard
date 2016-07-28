@@ -209,11 +209,12 @@ namespace Orchard.Users.Services {
                 return false;
             }
 
+            if (password.Length < settings.GetMinimumPasswordLength()) {
+                validationErrors.Add(UserPasswordValidationResults.PasswordIsTooShort,
+                    T("You must specify a password of {0} or more characters.", settings.MinimumPasswordLength));
+            }
+
             if (settings.EnableCustomPasswordPolicy) {
-                if (settings.EnableCustomPasswordLength && password.Length < settings.MinimumPasswordLength) {
-                    validationErrors.Add(UserPasswordValidationResults.PasswordIsTooShort,
-                        T("You must specify a password of {0} or more characters.", settings.MinimumPasswordLength));
-                }
                 if (settings.EnablePasswordNumberRequirement && !Regex.Match(password, "[0-9]").Success) {
                     validationErrors.Add(UserPasswordValidationResults.PasswordDoesNotContainNumbers,
                         T("The password must contain at least one number."));

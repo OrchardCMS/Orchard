@@ -11,7 +11,6 @@ namespace Orchard.Security {
         string NotificationsRecipients { get; set; }
         bool EnableLostPassword { get; set; }
         bool EnableCustomPasswordPolicy { get; set; }
-        bool EnableCustomPasswordLength { get; set; }
         int MinimumPasswordLength { get; set; }
         bool EnablePasswordUppercaseRequirement { get; set; }
         bool EnablePasswordLowercaseRequirement { get; set; }

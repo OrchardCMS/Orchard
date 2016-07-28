@@ -42,11 +42,6 @@
                 <label class="forcheckbox" for="@Html.FieldIdFor(m => m.EnablePasswordSpecialRequirement)">@T("Password must contain at least one special character")</label>
             </div>
             <div>
-                <input type="checkbox" value="true" class="check-box" id="@Html.FieldIdFor(m => m.EnableCustomPasswordLength)" name="@Html.FieldNameFor(m => m.EnableCustomPasswordLength)" @(Model.EnableCustomPasswordLength && Model.EnableCustomPasswordPolicy ? "checked=\"checked\"" : "") />
-                <input name="@Html.FieldNameFor(m => m.EnableCustomPasswordLength)" type="hidden" value="false">
-                <label class="forcheckbox" for="@Html.FieldIdFor(m => m.EnableCustomPasswordLength)">@T("Password must meet a minimum length (7 by default)")</label>
-            </div>
-            <div data-controllerid="@Html.FieldIdFor(m => m.EnableCustomPasswordLength)" style="margin-left: 30px;">
                 <label for="@Html.FieldIdFor(m => m.MinimumPasswordLength)">@T("Minimum Password length")</label>
                 @Html.TextBoxFor(m => m.MinimumPasswordLength, new { @class = "text medium", @Value = Model.MinimumPasswordLength })
                 @Html.ValidationMessage("MinimumPasswordLength", "*")

@@ -50,11 +50,6 @@ namespace Orchard.Users.Models {
             set { this.Store(x => x.EnableCustomPasswordPolicy, value); }
         }
 
-        public bool EnableCustomPasswordLength {
-            get { return this.Retrieve(x => x.EnableCustomPasswordLength); }
-            set { this.Store(x => x.EnableCustomPasswordLength, value); }
-        }
-
         [Range(1, int.MaxValue, ErrorMessage = "The minimum password length must be at least 1.")]
         public int MinimumPasswordLength {
             get { return this.Retrieve(x => x.MinimumPasswordLength, 7); }
