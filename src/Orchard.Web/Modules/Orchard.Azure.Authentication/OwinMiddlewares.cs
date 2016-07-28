@@ -68,12 +68,6 @@ namespace Orchard.Azure.Authentication {
 
             var cookieOptions = new CookieAuthenticationOptions();
 
-            var bearerAuthOptions = new WindowsAzureActiveDirectoryBearerAuthenticationOptions {
-                TokenValidationParameters = new TokenValidationParameters {
-                    ValidAudience = string.Format(_sslEnabled ? "https://{0}/{1}" : "http://{0}/{1}", _azureTenant, _azureAppName)
-                }
-            };
-
             if (_azureWebSiteProtectionEnabled) {
                 middlewares.Add(new OwinMiddlewareRegistration {
                     Priority = "9",
@@ -89,9 +83,6 @@ namespace Orchard.Azure.Authentication {
                     app.UseCookieAuthentication(cookieOptions);
 
                     app.UseOpenIdConnectAuthentication(openIdOptions);
-
-                    //This is throwing an XML DTD is prohibited error?
-                    //app.UseWindowsAzureActiveDirectoryBearerAuthentication(bearerAuthOptions);
                 }
             });
 
