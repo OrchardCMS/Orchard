@@ -171,8 +171,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Drivers\AzureActiveDirectorySyncPartDriver.cs" />
     <Compile Include="Drivers\AzureSettingsPartDriver.cs" />
     <Compile Include="Handlers\AzureSettingsPartHandler.cs" />
+    <Compile Include="Models\AzureActiveDirectorySyncPart.cs" />
+    <Compile Include="Models\AzureActiveDirectorySyncPartRecord.cs" />
     <Compile Include="Models\AzureSettingsPart.cs" />
     <Compile Include="OwinMiddlewares.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
