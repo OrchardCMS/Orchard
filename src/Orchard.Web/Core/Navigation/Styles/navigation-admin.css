@@ -61,7 +61,8 @@
 /* style for the dynamically created placeholder */
 .navigation-menu li.navigation-placeholder
 { 
-    background: #dadada; 
+    border: 1px dashed #CCC;
+    background-color: #fafafa;
 }
 
 
