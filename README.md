@@ -31,7 +31,7 @@ We invite participation by the developer community in shaping the project’s di
 All our releases are available on our [Releases](https://github.com/OrchardCMS/Orchard/releases) page, and it's easy to [Install Orchard using the Web Platform Installer](http://docs.orchardproject.net/Documentation/Installing-Orchard) as well. We encourage interested developers to check out the source code on the Orchard GitHub site and get involved with the project.
 
 * [Download the latest release](https://github.com/OrchardCMS/Orchard/releases)
-* [Feature roadmap](http://docs.orchardproject.net/Documentation/feature-roadmap)
+* [Feature roadmap](http://docs.orchardproject.net/Documentation/Feature-roadmap)
 * [Docs and designs/specs](http://www.orchardproject.net/docs)
 * [About us](http://www.orchardproject.net/about)
 * [Contact us](mailto:ofeedbk@microsoft.com)
