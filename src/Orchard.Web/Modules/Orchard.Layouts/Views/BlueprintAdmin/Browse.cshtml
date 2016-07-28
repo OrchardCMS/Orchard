@@ -17,7 +17,7 @@
         <div class="element-browser">
             @foreach (var category in categories) {
                 <div id="cat-@category.Name.HtmlClassify()" class="elements">
-                    <ul>
+                    <ul class="list-unstyled">
                         @foreach (var element in category.Elements) {
                     if (element.IsSystemElement) {
                         continue;
