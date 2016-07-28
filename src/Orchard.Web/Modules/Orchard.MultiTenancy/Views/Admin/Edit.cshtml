@@ -34,28 +34,29 @@
                 <legend>@T("Database Setup")</legend>
                 @if (Model.State != TenantState.Uninitialized) {
                     <div class="warning message">@T("Warning: If you don't know what you're doing you *will* (likely) send this tenant into a downward spiral of irrecoverable disrepair. Have a nice day.")</div>
-                } else {
-                    <div>
+                }
+                else {
+                    <div class="or-radio">
                         @Html.RadioButtonFor(svm => svm.DataProvider, "", new { id = "tenantDatabaseOption" })
                         <label for="tenantDatabaseOption" class="forcheckbox">@T("Allow the tenant to set up the database")</label>
                     </div>
                 }
-                <div>
+                <div class="or-radio">
                     @Html.RadioButtonFor(svm => svm.DataProvider, "SqlCe", new { id = "builtinDatabaseOption" })
                     <label for="builtinDatabaseOption" class="forcheckbox">@T("Use built-in data storage (SQL Server Compact)")</label>
                 </div>
-                <div>
+                <div class="or-radio">
                     @Html.RadioButtonFor(svm => svm.DataProvider, "SqlServer", new { id = "sqlDatabaseOption" })
                     <label for="sqlDatabaseOption" class="forcheckbox">@T("Use an existing SQL Server (or SQL Express) database")</label>
                     <div class="options">
                         <span data-controllerid="sqlDatabaseOption">
                             <label for="DatabaseConnectionString">@T("Connection string")</label>
-                            @Html.TextBoxFor(svm => svm.DatabaseConnectionString)
+                            @Html.TextBoxFor(svm => svm.DatabaseConnectionString, new { @class = "text large" })
                             <span class="help-block">@T("Example:") @T("Data Source=sqlServerName;Initial Catalog=dbName;Persist Security Info=True;User ID=userName;Password=password")</span>
                         </span>
                         <span data-controllerid="sqlDatabaseOption">
                             <label for="DatabaseTablePrefix">@T("Database table prefix")</label>
-                            @Html.EditorFor(svm => svm.DatabaseTablePrefix)
+                            @Html.TextBoxFor(svm => svm.DatabaseTablePrefix, new { @class = "text medium" })
                         </span>
                     </div>
                 </div>
@@ -66,19 +67,23 @@
                 <div>
                     <span class="help-block">@T("Select the Themes which should be available for this tenant. If none is selected, they will all be available.")</span>
 
-                    <ol>
+                    <ol class="list-unstyled">
                         <li>
-                            <input type="checkbox" class="select-all" id="select-all-themes" />
-                            <label class="forcheckbox" for="select-all-themes">@("Select all")</label>
+                            <div class="or-checkbox">
+                                <input type="checkbox" class="select-all" id="select-all-themes" />
+                                <label class="forcheckbox" for="select-all-themes">@("Select all")</label>
+                            </div>
                         </li>
 
                         @for (var i = 0; i < Model.Themes.Count; i++) {
                             var theme = Model.Themes[i];
                             <li>
-                                @Html.CheckBox(Html.FieldNameFor(m => m.Themes[i].Checked), Model.Themes[i].Checked, new { id = Html.FieldIdFor(x => x.Themes[i]) })
-                                <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Themes[i])">@Model.Themes[i].ThemeName</label>
-                                @Html.HiddenFor(m => m.Themes[i].ThemeId)
-                                @Html.HiddenFor(m => m.Themes[i].ThemeName)
+                                <div class="or-checkbox">
+                                    @Html.CheckBox(Html.FieldNameFor(m => m.Themes[i].Checked), Model.Themes[i].Checked, new { id = Html.FieldIdFor(x => x.Themes[i]) })
+                                    <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Themes[i])">@Model.Themes[i].ThemeName</label>
+                                    @Html.HiddenFor(m => m.Themes[i].ThemeId)
+                                    @Html.HiddenFor(m => m.Themes[i].ThemeName)
+                                </div>
                             </li>
                         }
                     </ol>
@@ -91,19 +96,23 @@
                 <div>
                     <span class="help-block">@T("Select the Modules which should be available for this tenant. If none is selected, they will all be available.")</span>
 
-                    <ol>
+                    <ol class="list-unstyled">
                         <li>
-                            <input type="checkbox" class="select-all" id="select-all-modules" />
-                            <label class="forcheckbox" for="select-all-modules">@("Select all")</label>
+                            <div class="or-checkbox">
+                                <input type="checkbox" class="select-all" id="select-all-modules" />
+                                <label class="forcheckbox" for="select-all-modules">@("Select all")</label>
+                            </div>
                         </li>
 
                         @for (var i = 0; i < Model.Modules.Count; i++) {
                             var theme = Model.Modules[i];
                             <li>
-                                @Html.CheckBox(Html.FieldNameFor(m => m.Modules[i].Checked), Model.Modules[i].Checked, new { id = Html.FieldIdFor(x => x.Modules[i]) })
-                                <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Modules[i])">@Model.Modules[i].ModuleName</label>
-                                @Html.HiddenFor(m => m.Modules[i].ModuleId)
-                                @Html.HiddenFor(m => m.Modules[i].ModuleName)
+                                <div class="or-checkbox">
+                                    @Html.CheckBox(Html.FieldNameFor(m => m.Modules[i].Checked), Model.Modules[i].Checked, new { id = Html.FieldIdFor(x => x.Modules[i]) })
+                                    <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Modules[i])">@Model.Modules[i].ModuleName</label>
+                                    @Html.HiddenFor(m => m.Modules[i].ModuleId)
+                                    @Html.HiddenFor(m => m.Modules[i].ModuleName)
+                                </div>
                             </li>
                         }
                     </ol>

@@ -5,7 +5,7 @@ using Orchard.UI.Navigation;
 namespace Orchard.Azure.MediaServices.Navigation {
     public class TopAdminMenu : INavigationProvider {
         public Localizer T { get; set; }
-        public string MenuName { get { return "top_admin"; } }
+        public string MenuName { get { return "admin"; } }
 
         public void GetNavigation(NavigationBuilder builder) {
 
