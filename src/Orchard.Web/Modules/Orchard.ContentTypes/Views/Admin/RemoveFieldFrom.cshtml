@@ -9,7 +9,7 @@
         <p>@T("Looks like you couldn't use the fancy way to remove the field. Try hitting the button below to force the issue.")</p>
         <fieldset>
             @Html.HiddenFor(m => m.Name)
-            <button class="btn btn-primary" type="submit">@T("Remove")</button>
+            <button class="btn btn-primary" type="submit"><i class="fa fa-trash"></i> @T("Remove")</button>
         </fieldset>
     }
 </div>
