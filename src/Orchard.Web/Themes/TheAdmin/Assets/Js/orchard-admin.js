@@ -216,12 +216,25 @@
             dialog.modal({ show: true });
 
             dialog.find(".dialog-command-yes").on("click", function (e) {
-                trigger.closest("form").submit();
+                submitForm(action); //replace trigger.closest("form").submit(); unless we remove the controller FormValueRequired everywhere
                 e.preventDefault();
             });
 
             e.preventDefault();
         });
+
+        //We need to click the hidden submit button to POST the form.
+        //It is needed for the controller action(s) to be hit
+        function submitForm(action) {
+            //verify the use of one name or the other
+            //TODO standardize name in all views and controllers
+            if ($('button[name="submit.BulkEdit"]').exists()) {
+                var button = $('button[name="submit.BulkEdit"]').click();
+            }
+            else if ($('button[name="submit.BulkExecute"]').exists()) {
+                var button = $('button[name="submit.BulkExecute"]').click();
+            }
+        }
 
         // End Bulk edit bootstrap dropdown button actions
     });
