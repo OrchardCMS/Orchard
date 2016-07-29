@@ -7,14 +7,17 @@
     Layout.Title = T("List of Site's Tenants").ToString();
 }
 
-<div class="manage">@Html.ActionLink(T("Add a Tenant").ToString(), "Add", new { area = "Orchard.MultiTenancy" }, new { @class = "btn btn-primary" })</div>
+<div class="manage">
+    <a class="btn btn-primary" href="@Url.Action("Add", new { area = "Orchard.MultiTenancy" })"><i class="fa fa-plus"></i> @T("Add a Tenant").Text</a>
+</div>
 <ul class="contentItems tenants">
     @foreach (var tenant in Model.TenantSettings) {
         <li class="tenant @tenant.State">
-            <div class="summary">
-                <div class="properties">
-                    <h3>@tenant.Name
-                            @if (!String.IsNullOrEmpty(tenant.RequestUrlHost)) {
+            <div class="row">
+                <div class="col-sm-6">
+                    <h3>
+                        @tenant.Name
+                        @if (!String.IsNullOrEmpty(tenant.RequestUrlHost)) {
                             var tenantClone = new ShellSettings(tenant);
                             foreach (var t in tenant.RequestUrlHost.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)) {
                                 tenantClone.RequestUrlHost = t;
@@ -24,12 +27,16 @@
                         }
                     </h3>
                 </div>
-                <div class="related">
-                    @if (!String.Equals(tenant.Name, "default", StringComparison.OrdinalIgnoreCase)) { //todo: (heskew) base this off the view model so logic on what can be removed and have its state changed stays in the controller
+                <div class="col-sm-6 text-right text-nowrap form-inline">
+                    <div class="form-group">
+                        @if (!String.Equals(tenant.Name, "default", StringComparison.OrdinalIgnoreCase)) { //todo: (heskew) base this off the view model so logic on what can be removed and have its state changed stays in the controller
                     var t = tenant;
-                        @Html.DisplayFor(m => t, String.Format("ActionsFor{0}", tenant.State.ToString()), "") 
-                    }
-                    @Html.ActionLink(T("Edit").ToString(), "Edit", new { name = tenant.Name, area = "Orchard.MultiTenancy" })
+                            @Html.DisplayFor(m => t, String.Format("ActionsFor{0}", tenant.State.ToString()), "")
+                        }
+                    </div>
+                    <div class="form-group">
+                        <a class="btn btn-primary" href="@Url.Action("Edit", new { name = tenant.Name, area = "Orchard.MultiTenancy" })"><i class="fa fa-pencil-square-o"></i> @T("Edit")</a>
+                    </div>
                 </div>
             </div>
         </li>

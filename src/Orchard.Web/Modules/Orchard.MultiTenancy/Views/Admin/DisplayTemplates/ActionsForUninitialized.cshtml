@@ -1,4 +1,4 @@
 ﻿@model Orchard.Environment.Configuration.ShellSettings
 @using Orchard.MultiTenancy.Extensions;
 
-@Html.Link(T("Set Up").ToString(), Url.Tenant(Model))
+<a class="btn btn-default" href="@Url.Tenant(Model)"><i class="fa fa-cog"></i> @T("Set Up")</a>

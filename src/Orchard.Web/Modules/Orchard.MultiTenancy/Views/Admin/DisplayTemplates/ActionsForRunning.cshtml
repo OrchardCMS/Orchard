@@ -1,7 +1,7 @@
 ﻿@model Orchard.Environment.Configuration.ShellSettings
 @using Orchard.MultiTenancy.Extensions;
 
-@using(Html.BeginFormAntiForgeryPost(Url.Action("Disable", new {area = "Orchard.MultiTenancy"}), FormMethod.Post, new {@class = "inline link"})) { 
+@using(Html.BeginFormAntiForgeryPost(Url.Action("Disable", new {area = "Orchard.MultiTenancy"}), FormMethod.Post)) {
     @Html.HiddenFor(ss => ss.Name)
-    <button type="submit">@T("Suspend")</button>
+    <button class="btn btn-danger" type="submit"><i class="fa fa-stop"></i> @T("Suspend")</button>
 }

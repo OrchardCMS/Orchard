@@ -1,8 +1,8 @@
 ﻿@model Orchard.Environment.Configuration.ShellSettings
 @using Orchard.MultiTenancy.Extensions;
 
-@using(Html.BeginFormAntiForgeryPost(Url.Action("Enable", new {area = "Orchard.MultiTenancy"}), FormMethod.Post, new {@class = "inline link"})) { 
+@using(Html.BeginFormAntiForgeryPost(Url.Action("Enable", new {area = "Orchard.MultiTenancy"}), FormMethod.Post)) { 
     @Html.HiddenFor(ss => ss.Name) 
-    <button type="submit">@T("Resume")</button>
-} 
-@Html.ActionLink(T("Reset").ToString(), "Reset", new { name = Model.Name, area = "Orchard.MultiTenancy" })
+    <button class="btn btn-primary" type="submit"><i class="fa fa-play"></i> @T("Resume")</button>
+    <a class="btn btn-warning" href="@Url.Action("Reset", new { name = Model.Name, area = "Orchard.MultiTenancy" })"><i class="fa fa-refresh"></i> @T("Reset")</a>
+}
