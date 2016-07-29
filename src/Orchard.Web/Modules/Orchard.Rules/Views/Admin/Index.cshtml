@@ -12,9 +12,9 @@
     }
     Layout.Title = T("Manage Rules").ToString();
 }
-
-@using (Html.BeginFormAntiForgeryPost()) {
-    <div class="panel panel-default">
+<div class="panel panel-default">
+@if (Model.Rules.Any()) {
+    using (Html.BeginFormAntiForgeryPost()) {
         @Html.ValidationSummary()
         <div class="panel-heading no-border form-inline">
             <div class="panel-heading-actions">
@@ -80,13 +80,12 @@
                                 <td>
                                     &nbsp;
                                 </td>
-                                <td>
+                                <td class="text-right text-nowrap">
                                     @Html.ActionLink(T("Edit").ToString(), "Edit", new { entry.Rule.Id }, new { @class = "btn btn-primary" })
                                     @Html.ActionLink(T("Delete").ToString(), "Delete", new { entry.Rule.Id }, new { itemprop = "RemoveUrl UnsafeUrl", @class = "btn btn-danger" })
                                     @if (entry.Rule.Enabled == false) {
                                         @Html.ActionLink(T("Enable").ToString(), "Enable", new { entry.Rule.Id }, new { @class = "btn btn-primary" })
-                                    }
-                                    else {
+                                    } else {
                                         @Html.ActionLink(T("Disable").ToString(), "Disable", new { entry.Rule.Id }, new { entry.Rule.Id, @class = "btn btn-warning" })
                                     }
                                 </td>
@@ -102,5 +101,13 @@
                 </div>
             </div>
         </div>
+    }
+} else {
+    <div class="panel-body">
+        <h3 class="no-content">
+            @T("There are no rules definitions yet.")
+            @Html.ActionLink(T("Add one now").Text, "Create", new { ReturnUrl = Request.RawUrl })
+        </h3>
     </div>
 }
+</div>
