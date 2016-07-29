@@ -14,6 +14,6 @@
         <Place Parts_Localization_ContentTranslations_Summary="Content:2"/>
     </Match>
     <Match DisplayType="SummaryAdmin">
-        <Place Parts_Localization_ContentTranslations_SummaryAdmin="Content:5"/>
+        <Place Parts_Localization_ContentTranslations_SummaryAdmin="Meta:6"/>
     </Match>
 </Placement>

@@ -50,13 +50,12 @@
                     @Display(Model.Lists)
                 </fieldset>
             </div>
-            <div class="row or-datatable-footer">
-                <div class="col-sm-12">
-                    @Display(Model.Pager)
-                </div>
+            <div class="panel-footer">
+                @Display(Model.Pager)
             </div>
         }
-    } else {
+    }
+    else {
         <div class="panel-body">
             <h3 class="no-content">@T("There are no list yet. <a href=\"{0}\">Create a List<a/>.", Url.Action("Create", "Admin", new { id = "", area = "Orchard.Lists" }))</h3>
         </div>

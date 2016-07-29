@@ -1,8 +1,8 @@
 ﻿(function ($) {
     $(function () {
-        $(".available-extensions")
-            .find("label")
-            .expandoControl(function (controller) { return controller.next("div"); }, { collapse: false, remember: true });
+        //$(".available-extensions")
+        //    .find("label")
+        //    .expandoControl(function (controller) { return controller.next("div"); }, { collapse: false, remember: true });
 
         $(".select-all").click(function () {
             var $checkbox = $(this);
