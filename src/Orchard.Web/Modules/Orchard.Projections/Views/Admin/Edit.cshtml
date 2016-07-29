@@ -34,8 +34,8 @@
 
                                     <thead>
                                         <tr>
-                                            <th scope="col">@T("Description")</th>
-                                            <th scope="col" class="actions">
+                                            <th scope="col" width="100%">@T("Description")</th>
+                                            <th scope="col" class="text-nowrap">
                                                 @Html.ActionLink(T("+ Add a new Filter").Text, "Add", new { controller = "Filter", id = group.Id })
                                                 @if (Model.FilterGroups.Count() > 1) {
                                                     <text> | </text>@Html.ActionLink(T("Delete group").Text, "DeleteGroup", new { controller = "Filter", id = group.Id }, new { itemprop = "RemoveUrl UnsafeUrl" })
@@ -46,7 +46,7 @@
                                     @foreach (var filter in group.Filters) {
                                         <tr>
                                             <td>@filter.DisplayText</td>
-                                            <td>
+                                            <td class="text-right text-nowrap">
                                                 @Html.ActionLink(T("Edit").Text, "Edit", new { controller = "Filter", id = group.Id, category = filter.Category, type = filter.Type, filterId = filter.FilterRecordId }) |
                                                 @Html.ActionLink(T("Delete").Text, "Delete", new { controller = "Filter", id = Model.Id, filterId = filter.FilterRecordId }, new { itemprop = "RemoveUrl UnsafeUrl" })
                                             </td>
@@ -72,17 +72,17 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="table-responsive table-with-footer or-xs-mb">
-                            <table class="table table-fw-widget data-table table-striped dataTable no-footer">
+                            <table class="table table-fw-widget data-table table-striped dataTable no-footer table-bordered">
                                 <thead>
                                     <tr>
-                                        <th scope="col">@T("Description")</th>
-                                        <th scope="col" class="actions">@Html.ActionLink(T("+ Add a new Sort Criteria").Text, "Add", new { controller = "SortCriterion", id = Model.Id })</th>
+                                        <th scope="col" width="100%">@T("Description")</th>
+                                        <th scope="col" class="text-nowrap">@Html.ActionLink(T("+ Add a new Sort Criteria").Text, "Add", new { controller = "SortCriterion", id = Model.Id })</th>
                                     </tr>
                                 </thead>
                                 @foreach (var sortCriterion in Model.SortCriteria) {
                                     <tr>
                                         <td>@sortCriterion.DisplayText</td>
-                                        <td>
+                                        <td class="text-right text-nowrap">
                                             @Html.ActionLink(T("Edit").Text, "Edit", new { controller = "SortCriterion", id = Model.Id, category = sortCriterion.Category, type = sortCriterion.Type, sortCriterionId = sortCriterion.SortCriterionRecordId }) |
                                             @Html.ActionLink(T("Delete").Text, "Delete", new { controller = "SortCriterion", id = Model.Id, sortCriterionId = sortCriterion.SortCriterionRecordId }, new { itemprop = "RemoveUrl UnsafeUrl" })
                                             @if (sortCriterion != Model.SortCriteria.First()) {
@@ -111,17 +111,17 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="table-responsive table-with-footer or-xs-mb">
-                            <table class="table table-fw-widget data-table table-striped dataTable no-footer">
+                            <table class="table table-fw-widget data-table table-striped dataTable no-footer table-bordered">
                                 <thead>
                                     <tr>
-                                        <th scope="col">@T("Description")</th>
-                                        <th scope="col" class="actions">@Html.ActionLink(T("+ Add a new Layout").Text, "Add", new { controller = "Layout", id = Model.Id })</th>
+                                        <th scope="col" width="100%">@T("Description")</th>
+                                        <th scope="col" class="text-nowrap">@Html.ActionLink(T("+ Add a new Layout").Text, "Add", new { controller = "Layout", id = Model.Id })</th>
                                     </tr>
                                 </thead>
                                 @foreach (var layout in Model.Layouts) {
                                     <tr>
                                         <td>@(layout.DisplayText)</td>
-                                        <td>
+                                        <td class="text-right text-nowrap">
                                             @Html.ActionLink(T("Edit").Text, "Edit", new { controller = "Layout", id = layout.LayoutRecordId }) |
                                             @Html.ActionLink(T("Delete").Text, "Delete", new { controller = "Layout", id = layout.LayoutRecordId }, new { itemprop = "RemoveUrl UnsafeUrl" })
                                         </td>

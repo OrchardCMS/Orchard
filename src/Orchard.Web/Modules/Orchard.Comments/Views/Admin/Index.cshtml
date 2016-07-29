@@ -12,7 +12,7 @@
     Layout.Tail.Add(New.ConfirmationDialog());
 }
 <div class="panel panel-default">
-    @if (Model.Comments.Any()) {
+    @if (Model.HasRecord) {
         using (Html.BeginFormAntiForgeryPost()) {
             @Html.ValidationSummary()
             <div class="panel-heading no-border form-inline">
@@ -50,73 +50,82 @@
 
             <div class="row">
                 <div class="col-sm-12">
-                    <div class="table-responsive table-with-footer">
-                        <table class="table table-fw-widget data-table table-striped dataTable no-footer" summary="@T("This is a table of the comments in your application")">
-                            <thead>
-                                <tr>
-                                    <th scope="col" class="text-nowrap">
-                                        <div class="or-checkbox inline">
-                                            <input id="checkAll" class="check-all" type="checkbox">
-                                            <label class="check-all" title="@T("Select All")" for="checkAll"></label>
-                                        </div>
-                                    </th>
-                                    <th scope="col">@T("Status")</th>
-                                    <th scope="col">@T("Author")</th>
-                                    <th scope="col" width="50%">@T("Comment")</th>
-                                    <th scope="col" class="text-nowrap">@T("Commented On")</th>
-                                    <th scope="col"></th>
-                                </tr>
-                            </thead>
-                            @foreach (var commentEntry in Model.Comments) {
-                                var commentClass = "";
-                                if (!HasText(commentEntry.Comment.UserName)) {
-                                    commentClass = "anonymous";
-                                }
-                            <tr itemscope="itemscope" itemid="@Model.Comments[commentIndex].Comment.Id" itemtype="http://orchardproject.net/data/Comment" class="@commentClass">
-                                <td>
-                                    <div class="or-checkbox">
-                                        <input type="hidden" value="@Model.Comments[commentIndex].Comment.Id" name="@Html.NameOf(m => m.Comments[commentIndex].Comment.Id)" />
-                                        <input type="checkbox" value="true" name="@Html.NameOf(m => m.Comments[commentIndex].IsChecked)" id="@Html.NameOf(m => m.Comments[commentIndex].IsChecked)" />
-                                        <label for="@Html.NameOf(m => m.Comments[commentIndex].IsChecked)"></label>
-                                    </div>
-                                </td>
-                                <td>
-                                    @if (commentEntry.Comment.Status == CommentStatus.Pending) { @T("Pending") } else { @T("Approved") }
-                                </td>
-                                <td>
-                                    <div>@commentEntry.Comment.Author</div>
-                                    @if (HasText(commentEntry.Comment.UserName) && commentEntry.Comment.Author != commentEntry.Comment.UserName) {
-                                        <div class="authenticated-commenter-id">@commentEntry.Comment.UserName</div>
-                                        }
-                                </td>
-                                <td>
-                                    @* would ideally have permalinks for individual comments *@
-                                    <p><a href="@Url.ItemDisplayUrl(commentEntry.CommentedOn)#comments"><time>@Display.DateTime(DateTimeUtc: commentEntry.Comment.CommentDateUtc.GetValueOrDefault())</time></a></p>
-                                    @if (commentEntry.Comment.CommentText != null) {
-                                            var ellipsized = Html.Ellipsize(commentEntry.Comment.CommentText, 500);
-                                            var paragraphed = new HtmlString(ellipsized.ToHtmlString().Replace("\r\n", "</p><p>"));
-                                        <p>@paragraphed</p>
-                                        } else {
-                                        @T("[Empty]")
-                                        }
-                                </td>
-                                <td>@Html.ItemDisplayLink(commentEntry.CommentedOn)</td>
-                                <td>
-                                    <div class="text-nowrap">
-                                        @if (commentEntry.Comment.Status != CommentStatus.Approved) {
-                                            <a class="btn btn-success" href="@Url.Action("Approve", new { commentEntry.Comment.Id, returnUrl = Request.ToUrlString() })" itemprop="ApproveUrl UnsafeUrl"><i class="fa fa-thumbs-o-up"></i> @T("Approve")</a>
-                                            } else {
-                                            <a class="btn btn-warning" href="@Url.Action("Unapprove", new { commentEntry.Comment.Id, returnUrl = Request.ToUrlString() })" itemprop="UnapproveUrl UnsafeUrl"><i class="fa fa-thumbs-o-down"></i> @T("Unapprove")</a>
+                    @if (Model.Comments.Any()) {
+                        <div class="table-responsive table-with-footer">
+                            <table class="table table-fw-widget data-table table-striped dataTable no-footer" summary="@T("This is a table of the comments in your application")">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" class="text-nowrap">
+                                            <div class="or-checkbox inline">
+                                                <input id="checkAll" class="check-all" type="checkbox">
+                                                <label class="check-all" title="@T("Select All")" for="checkAll"></label>
+                                            </div>
+                                        </th>
+                                        <th scope="col">@T("Status")</th>
+                                        <th scope="col">@T("Author")</th>
+                                        <th scope="col" width="50%">@T("Comment")</th>
+                                        <th scope="col" class="text-nowrap">@T("Commented On")</th>
+                                        <th scope="col"></th>
+                                    </tr>
+                                </thead>
+
+                                @foreach (var commentEntry in Model.Comments) {
+                                    var commentClass = "";
+                                    if (!HasText(commentEntry.Comment.UserName)) {
+                                        commentClass = "anonymous";
+                                    }
+                                    <tr itemscope="itemscope" itemid="@Model.Comments[commentIndex].Comment.Id" itemtype="http://orchardproject.net/data/Comment" class="@commentClass">
+                                        <td>
+                                            <div class="or-checkbox">
+                                                <input type="hidden" value="@Model.Comments[commentIndex].Comment.Id" name="@Html.NameOf(m => m.Comments[commentIndex].Comment.Id)" />
+                                                <input type="checkbox" value="true" name="@Html.NameOf(m => m.Comments[commentIndex].IsChecked)" id="@Html.NameOf(m => m.Comments[commentIndex].IsChecked)" />
+                                                <label for="@Html.NameOf(m => m.Comments[commentIndex].IsChecked)"></label>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            @if (commentEntry.Comment.Status == CommentStatus.Pending) { @T("Pending") } else { @T("Approved") }
+                                        </td>
+                                        <td>
+                                            <div>@commentEntry.Comment.Author</div>
+                                            @if (HasText(commentEntry.Comment.UserName) && commentEntry.Comment.Author != commentEntry.Comment.UserName) {
+                                                <div class="authenticated-commenter-id">@commentEntry.Comment.UserName</div>
                                             }
-                                        <a class="btn btn-primary" href="@Url.Action("Edit", new { commentEntry.Comment.Id })" title="@T("Edit")"><i class="fa fa-pencil-square-o"></i> @T("Edit")</a>
-                                        <a class="btn btn-danger" href="@Url.Action("Delete", new { commentEntry.Comment.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString() })" data-confirm="@T("Are you sure you want to delete this item?")"><i class="fa fa-trash"></i> @T("Delete")</a>
-                                    </div>
-                                </td>
-                            </tr>
-                                commentIndex++;
-                            }
-                        </table>
-                    </div>
+                                        </td>
+                                        <td>
+                                            @* would ideally have permalinks for individual comments *@
+                                            <p><a href="@Url.ItemDisplayUrl(commentEntry.CommentedOn)#comments"><time>@Display.DateTime(DateTimeUtc: commentEntry.Comment.CommentDateUtc.GetValueOrDefault())</time></a></p>
+                                            @if (commentEntry.Comment.CommentText != null) {
+                                                var ellipsized = Html.Ellipsize(commentEntry.Comment.CommentText, 500);
+                                                var paragraphed = new HtmlString(ellipsized.ToHtmlString().Replace("\r\n", "</p><p>"));
+                                                <p>@paragraphed</p>
+                                            } else {
+                                                @T("[Empty]")
+                                            }
+                                        </td>
+                                        <td>@Html.ItemDisplayLink(commentEntry.CommentedOn)</td>
+                                        <td>
+                                            <div class="text-nowrap">
+                                                @if (commentEntry.Comment.Status != CommentStatus.Approved) {
+                                                    <a class="btn btn-success" href="@Url.Action("Approve", new { commentEntry.Comment.Id, returnUrl = Request.ToUrlString() })" itemprop="ApproveUrl UnsafeUrl"><i class="fa fa-thumbs-o-up"></i> @T("Approve")</a>
+                                                } else {
+                                                    <a class="btn btn-warning" href="@Url.Action("Unapprove", new { commentEntry.Comment.Id, returnUrl = Request.ToUrlString() })" itemprop="UnapproveUrl UnsafeUrl"><i class="fa fa-thumbs-o-down"></i> @T("Unapprove")</a>
+                                                }
+                                                <a class="btn btn-primary" href="@Url.Action("Edit", new { commentEntry.Comment.Id })" title="@T("Edit")"><i class="fa fa-pencil-square-o"></i> @T("Edit")</a>
+                                                <a class="btn btn-danger" href="@Url.Action("Delete", new { commentEntry.Comment.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString() })" data-confirm="@T("Are you sure you want to delete this item?")"><i class="fa fa-trash"></i> @T("Delete")</a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    commentIndex++;
+                                }
+                            </table>
+                        </div>
+                    } else {
+                        <div class="panel-body">
+                            <h3 class="no-content">
+                                @T("There is no result.")
+                            </h3>
+                        </div>
+                    }
                 </div>
             </div>
             <div class="row or-datatable-footer">

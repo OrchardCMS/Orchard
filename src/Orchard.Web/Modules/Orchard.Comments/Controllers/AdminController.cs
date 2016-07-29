@@ -76,7 +76,8 @@ namespace Orchard.Comments.Controllers {
             var model = new CommentsIndexViewModel {
                 Comments = entries.ToList(),
                 Options = options,
-                Pager = pagerShape
+                Pager = pagerShape,
+                HasRecord = _commentService.GetComments().Count() > 0
             };
 
             return View(model);
