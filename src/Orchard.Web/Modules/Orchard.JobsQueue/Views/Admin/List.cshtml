@@ -21,11 +21,7 @@
         </div>
         <div class="row">
             <div class="col-sm-12">
-                @if (!jobs.Any()) {
-                    <div class="panel-body">
-                        <p class="job info">@T("The queue is empty.")</p>
-                    </div>
-                } else {
+                @if (jobs.Any()) {
                     <div class="table-responsive table-with-footer">
                         <table class="table table-fw-widget data-table table-striped dataTable no-footer">
                             <thead>
@@ -69,6 +65,12 @@
                         <div class="col-sm-12">
                             @Display(Model.Pager)
                         </div>
+                    </div>
+                } else {
+                    <div class="panel-body">
+                        <h3 class="no-content">
+                            @T("The queue is empty.")
+                        </h3>
                     </div>
                 }
             </div>
