@@ -8,6 +8,11 @@ using Orchard.ContentTypes.Extensions;
 
 namespace Orchard.ContentTypes.ViewModels {
     public class EditPartViewModel {
+        public EditPartViewModel() {
+            Fields = new List<EditPartFieldViewModel>();
+            Settings = new SettingsDictionary();
+        }
+
         public EditPartViewModel(ContentTypeDefinition typeDefinition = null) {
             Fields = new List<EditPartFieldViewModel>();
             Settings = new SettingsDictionary();
