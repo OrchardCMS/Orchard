@@ -1,7 +1,7 @@
 @using Orchard.Blogs.Extensions;
 @using Orchard.Core.Contents.ViewModels;
 @using Orchard.Utility.Extensions;
-@{ 
+@{
     Layout.Title = T("Manage Blogs").ToString();
     Layout.Tail.Add(New.ConfirmationDialog());
     Html.AdminBreadcrumbs();
@@ -33,16 +33,19 @@
                         </div>
                     </fieldset>
                 </div>
-
             </div>
             <div class="panel-body">
                 <fieldset class="content-items bulk-items content-items-with-actions">
                     @Display(Model.ContentItems)
                 </fieldset>
             </div>
+            <div class="panel-footer">
+                @Display(Model.Pager)
+            </div>
         </div>
     }
-} else {
+}
+else {
     <div class="panel panel-default">
         <div class="panel-body">
             <h3 class="no-content">@T("There are no blogs for you to see. Want to <a href=\"{0}\">add one</a>?", Url.BlogCreate())</h3>

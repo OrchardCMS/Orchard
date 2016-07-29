@@ -158,6 +158,7 @@ namespace Orchard.Blogs.Controllers {
 
             var viewModel = Services.New.ViewModel()
                 .ContentItems(list);
+
             return View(viewModel);
         }
 
@@ -175,10 +176,10 @@ namespace Orchard.Blogs.Controllers {
 
             var list = Shape.List();
             list.AddRange(blogPostsShapes);
-            blog.Content.Add(Shape.Parts_Blogs_BlogPost_ListAdmin(ContentItems: list), "5");
-
             var totalItemCount = _blogPostService.PostCount(blogPart, VersionOptions.Latest);
-            blog.Content.Add(Shape.Pager(pager).TotalItemCount(totalItemCount), "Content:after");
+            var shapePager = Shape.Pager(pager).TotalItemCount(totalItemCount);
+            var shapeList = Shape.Parts_Blogs_BlogPost_ListAdmin(ContentItems: list, Pager: shapePager);
+            blog.Content.Add(shapeList, "5");
 
             return View(blog);
         }

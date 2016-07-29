@@ -10,64 +10,66 @@
     // TODO: Amaretti: Replace Expando with Accordion.
     Script.Include("multi-tenancy.admin.js").AtFoot();
 }
-
-<div class="panel panel-default">
-    @using (Html.BeginFormAntiForgeryPost()) {
-        @Html.ValidationSummary()
-        <div class="panel-body">
-            <fieldset>
-                <div>
-                    <h2>@Model.Name</h2>
-                </div>
-                <div>
-                    <label for="@Html.FieldIdFor(m => m.RequestUrlHost)">@T("URL host")</label>
-                    @Html.TextBoxFor(m => m.RequestUrlHost, new { @class = "text medium" })
-                    <span class="help-block">@T("Example: If host is \"orchardproject.net\", the tenant site URL is \"http://orchardproject.net/\". Multiple hosts can be separated by a comma.")</span>
-                </div>
-                <div>
-                    <label for="@Html.FieldIdFor(m => m.RequestUrlPrefix)">@T("URL prefix")</label>
-                    @Html.TextBoxFor(m => m.RequestUrlPrefix, new { @class = "text medium" })
-                    <span class="help-block">@T("(Optional) Example: If prefix is \"site1\", the tenant URL prefix is \"http://orchardproject.net/site1\"")</span>
-                </div>
-            </fieldset>
-            <fieldset>
-                <legend>@T("Database Setup")</legend>
-                @if (Model.State != TenantState.Uninitialized) {
-                    <div class="warning message">@T("Warning: If you don't know what you're doing you *will* (likely) send this tenant into a downward spiral of irrecoverable disrepair. Have a nice day.")</div>
-                }
-                else {
+<div class="panel-group accordion accordion-semi">
+    <div class="panel panel-default">
+        @using (Html.BeginFormAntiForgeryPost()) {
+            @Html.ValidationSummary()
+            <div class="panel-body">
+                <fieldset>
+                    <div>
+                        <h2>@Model.Name</h2>
+                    </div>
+                    <div>
+                        <label for="@Html.FieldIdFor(m => m.RequestUrlHost)">@T("URL host")</label>
+                        @Html.TextBoxFor(m => m.RequestUrlHost, new { @class = "text medium" })
+                        <span class="help-block">@T("Example: If host is \"orchardproject.net\", the tenant site URL is \"http://orchardproject.net/\". Multiple hosts can be separated by a comma.")</span>
+                    </div>
+                    <div>
+                        <label for="@Html.FieldIdFor(m => m.RequestUrlPrefix)">@T("URL prefix")</label>
+                        @Html.TextBoxFor(m => m.RequestUrlPrefix, new { @class = "text medium" })
+                        <span class="help-block">@T("(Optional) Example: If prefix is \"site1\", the tenant URL prefix is \"http://orchardproject.net/site1\"")</span>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>@T("Database Setup")</legend>
+                    @if (Model.State != TenantState.Uninitialized) {
+                        <div class="warning message">@T("Warning: If you don't know what you're doing you *will* (likely) send this tenant into a downward spiral of irrecoverable disrepair. Have a nice day.")</div>
+                    }
+                    else {
+                        <div class="or-radio">
+                            @Html.RadioButtonFor(svm => svm.DataProvider, "", new { id = "tenantDatabaseOption" })
+                            <label for="tenantDatabaseOption" class="forcheckbox">@T("Allow the tenant to set up the database")</label>
+                        </div>
+                    }
                     <div class="or-radio">
-                        @Html.RadioButtonFor(svm => svm.DataProvider, "", new { id = "tenantDatabaseOption" })
-                        <label for="tenantDatabaseOption" class="forcheckbox">@T("Allow the tenant to set up the database")</label>
+                        @Html.RadioButtonFor(svm => svm.DataProvider, "SqlCe", new { id = "builtinDatabaseOption" })
+                        <label for="builtinDatabaseOption" class="forcheckbox">@T("Use built-in data storage (SQL Server Compact)")</label>
                     </div>
-                }
-                <div class="or-radio">
-                    @Html.RadioButtonFor(svm => svm.DataProvider, "SqlCe", new { id = "builtinDatabaseOption" })
-                    <label for="builtinDatabaseOption" class="forcheckbox">@T("Use built-in data storage (SQL Server Compact)")</label>
-                </div>
-                <div class="or-radio">
-                    @Html.RadioButtonFor(svm => svm.DataProvider, "SqlServer", new { id = "sqlDatabaseOption" })
-                    <label for="sqlDatabaseOption" class="forcheckbox">@T("Use an existing SQL Server (or SQL Express) database")</label>
-                    <div class="options">
-                        <span data-controllerid="sqlDatabaseOption">
-                            <label for="DatabaseConnectionString">@T("Connection string")</label>
-                            @Html.TextBoxFor(svm => svm.DatabaseConnectionString, new { @class = "text large" })
-                            <span class="help-block">@T("Example:") @T("Data Source=sqlServerName;Initial Catalog=dbName;Persist Security Info=True;User ID=userName;Password=password")</span>
-                        </span>
-                        <span data-controllerid="sqlDatabaseOption">
-                            <label for="DatabaseTablePrefix">@T("Database table prefix")</label>
-                            @Html.TextBoxFor(svm => svm.DatabaseTablePrefix, new { @class = "text medium" })
-                        </span>
+                    <div class="or-radio">
+                        @Html.RadioButtonFor(svm => svm.DataProvider, "SqlServer", new { id = "sqlDatabaseOption" })
+                        <label for="sqlDatabaseOption" class="forcheckbox">@T("Use an existing SQL Server (or SQL Express) database")</label>
+                        <div class="options">
+                            <span data-controllerid="sqlDatabaseOption">
+                                <label for="DatabaseConnectionString">@T("Connection string")</label>
+                                @Html.TextBoxFor(svm => svm.DatabaseConnectionString, new { @class = "text large" })
+                                <span class="help-block">@T("Example:") @T("Data Source=sqlServerName;Initial Catalog=dbName;Persist Security Info=True;User ID=userName;Password=password")</span>
+                            </span>
+                            <span data-controllerid="sqlDatabaseOption">
+                                <label for="DatabaseTablePrefix">@T("Database table prefix")</label>
+                                @Html.TextBoxFor(svm => svm.DatabaseTablePrefix, new { @class = "text medium" })
+                            </span>
+                        </div>
                     </div>
-                </div>
-            </fieldset>
+                </fieldset>
 
-            <fieldset class="available-extensions">
-                <label for="@Html.FieldIdFor(m => m.Themes)">
-                    <a data-toggle="collapse" href="#accordion-panel-themes" aria-expanded="true">
-                        <i class="icon fa fa-angle-down"></i> @T("Available Themes")
-                    </a></label>
-                <div id="accordion-panel-themes">
+                <div class="panel-heading informations">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" href="#accordion-panel-themes" aria-expanded="false" class="collapsed">
+                            <i class="icon fa fa-angle-down"></i> @T("Available Themes")
+                        </a>
+                    </h4>
+                </div>
+                <div id="accordion-panel-themes" aria-expanded="false" class="panel-collapse collapse">
                     <span class="help-block">@T("Select the Themes which should be available for this tenant. If none is selected, they will all be available.")</span>
 
                     <ol class="list-unstyled">
@@ -92,11 +94,15 @@
                     </ol>
 
                 </div>
-            </fieldset>
 
-            <fieldset class="available-extensions">
-                <label for="@Html.FieldIdFor(m => m.Modules)">@T("Available Modules")</label>
-                <div>
+                <div class="panel-heading informations">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" href="#accordion-panel-modules" aria-expanded="false" class="collapsed">
+                            <i class="icon fa fa-angle-down"></i> @T("Available Modules")
+                        </a>
+                    </h4>
+                </div>
+                <div id="accordion-panel-modules" aria-expanded="false" class="panel-collapse collapse">
                     <span class="help-block">@T("Select the Modules which should be available for this tenant. If none is selected, they will all be available.")</span>
 
                     <ol class="list-unstyled">
@@ -120,10 +126,10 @@
                         }
                     </ol>
                 </div>
+            </div>
+            <fieldset class="panel-footer">
+                <button class="btn btn-primary" type="submit">@T("Save")</button>
             </fieldset>
-        </div>
-        <fieldset class="panel-footer">
-            <button class="btn btn-primary" type="submit">@T("Save")</button>
-        </fieldset>
-    }
-</div>
+        }
+    </div>
+    </div>

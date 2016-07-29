@@ -130,6 +130,10 @@ namespace Orchard.Forms.Shapes {
 
             // surrounding div
             var div = new TagBuilder("div");
+            var isCheckbox = new[] { "checkbox", "radio" }.Any(x => x.Equals(Type, StringComparison.OrdinalIgnoreCase));
+            if(isCheckbox) {
+                div.MergeAttribute("class", "or-checkbox");
+            }
             if (TitleDisplay == "attribute") {
                 if (Title != null) {
                     div.MergeAttribute("title", Display(Title).ToString());
@@ -144,7 +148,6 @@ namespace Orchard.Forms.Shapes {
             }
             Output.WriteLine(div.ToString(TagRenderMode.StartTag));
 
-            var isCheckbox = new [] {"checkbox", "radio"}.Any(x => x.Equals(Type, StringComparison.OrdinalIgnoreCase));
 
             IHtmlString labelHtml = null;
             if (Title != null) {

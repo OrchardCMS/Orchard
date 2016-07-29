@@ -33,16 +33,19 @@
             <fieldset>
                 <div>
                     <h3>@T("Display mode")</h3>
-                    @Html.RadioButton(Html.FieldNameFor(m => m.Display), (int)LayoutRecord.Displays.Content, Model.Display == (int)LayoutRecord.Displays.Content, new { id = "display-content-radio" })
-                    <label for="display-content-radio" class="forcheckbox">@T("Content")</label>
-                    <br />
-                    @Html.RadioButton(Html.FieldNameFor(m => m.Display), (int)LayoutRecord.Displays.Properties, Model.Display == (int)LayoutRecord.Displays.Properties, new { id = "display-fields-radio" })
-                    <label for="display-fields-radio" class="forcheckbox">@T("Properties")</label>
-                    <span class="help-block">@T("You can choose to display each content item using specific properties only.")</span>
+                    <div class="or-radio">
+                        @Html.RadioButton(Html.FieldNameFor(m => m.Display), (int)LayoutRecord.Displays.Content, Model.Display == (int)LayoutRecord.Displays.Content, new { id = "display-content-radio" })
+                        <label for="display-content-radio" class="forcheckbox">@T("Content")</label>
+                    </div>
+                    <div class="or-radio">
+                        @Html.RadioButton(Html.FieldNameFor(m => m.Display), (int)LayoutRecord.Displays.Properties, Model.Display == (int)LayoutRecord.Displays.Properties, new { id = "display-fields-radio" })
+                        <label for="display-fields-radio" class="forcheckbox">@T("Properties")</label>
+                        <span class="help-block">@T("You can choose to display each content item using specific properties only.")</span>
+                    </div>
 
                     <div class="options">
                         <span data-controllerid="display-content-radio">
-                            <label for="DatabaseConnectionString">@T("Display Type")</label>
+                            <label for="DisplayType">@T("Display Type")</label>
                             @Html.TextBoxFor(m => m.DisplayType, new { @class = "text medium" })
                             <span class="help-block">@T("The display type determines how the content item should be formatted. e.g., Summary, SummaryAdmin, Detail, ...")</span>
                         </span>
@@ -87,22 +90,22 @@
                     </div>
                 </div>
             </fieldset>
-            
 
-        @* Group property *@
+
+            @* Group property *@
             <fieldset>
                 <h3>@T("Grouping property")</h3>
                 @if (Model.Properties.Any()) {
-                <select name="@Html.FieldNameFor(m => m.GroupPropertyId)" class="form-control auto-size">
-                    @Html.SelectOption(0, false, T("None").Text)
-                    @foreach (var property in Model.Properties) {
-                        @Html.SelectOption(Model.GroupPropertyId, property.PropertyRecordId, property.DisplayText)
-                    }
-                </select>
-                <span class="help-block">@T("Optionally, select a property which will be used to group content items.")</span>
+                    <select name="@Html.FieldNameFor(m => m.GroupPropertyId)" class="form-control auto-size">
+                        @Html.SelectOption(0, false, T("None").Text)
+                        @foreach (var property in Model.Properties) {
+                            @Html.SelectOption(Model.GroupPropertyId, property.PropertyRecordId, property.DisplayText)
+                        }
+                    </select>
+                    <span class="help-block">@T("Optionally, select a property which will be used to group content items.")</span>
                 }
                 else {
-                <span class="help-block">@T("No properties are currently available in order to group this view.")</span>
+                    <span class="help-block">@T("No properties are currently available in order to group this view.")</span>
                 }
 
                 @* Render the dynamic form *@
