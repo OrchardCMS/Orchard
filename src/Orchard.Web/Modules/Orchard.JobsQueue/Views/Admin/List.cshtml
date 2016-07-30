@@ -11,13 +11,21 @@
 <div class="panel panel-default">
     @using (Html.BeginFormAntiForgeryPost()) {
         <div class="panel-heading">
-            <span class="queue-status @String.Format("{0}", status.ToString().HtmlClassify())">@T("Status: {0}", status)</span>
-            @if (status == JobsQueueStatus.Paused) {
-                <button type="submit" name="submit.Resume" value="resume" class="button">@T("Resume")</button>
-            } else {
-                <button type="submit" name="submit.Pause" value="pause" class="button grey">@T("Pause")</button>
-                <button type="submit" name="submit.Process" value="process">@T("Process Now")</button>
-            }
+            <div class="row">
+                <div class="col-sm-4"><span class="queue-status @String.Format("{0}", status.ToString().HtmlClassify())">@T("Status: {0}", status)</span></div>
+                <div class="col-sm-4 text-center">
+                    @if (status == JobsQueueStatus.Paused) {
+                        <button class="btn btn-primary" type="submit" name="submit.Resume" value="resume"><i class="fa fa-play"></i> @T("Resume")</button>
+                    } else {
+                        <button class="btn btn-warning" type="submit" name="submit.Pause" value="pause"><i class="fa fa-pause"></i> @T("Pause")</button>
+                    }
+                </div>
+                <div class="col-sm-4 text-right">
+                    @if (status != JobsQueueStatus.Paused) {
+                        <button class="btn btn-primary" type="submit" name="submit.Process" value="process"><i class="fa fa-cogs"></i> @T("Process Now")</button>
+                    }
+                </div>
+            </div>
         </div>
         <div class="row">
             <div class="col-sm-12">
