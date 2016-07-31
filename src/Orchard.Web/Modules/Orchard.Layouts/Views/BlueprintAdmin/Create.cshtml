@@ -32,8 +32,8 @@
 
         </div>
         <div class="panel-footer">
-            <button class="btn btn-primary" type="submit">@T("Create")</button>
-            @Html.ActionLink(T("Cancel").Text, "Browse", new { area = "Orchard.Layouts" }, new { @class = "btn btn-default" })
+            <button class="btn btn-primary" type="submit"><i class="fa fa-floppy-o" aria-hidden="true"></i> @T("Create")</button>
+            <a class="btn btn-default" href="@Url.Action("Browse", new { area = "Orchard.Layouts" })">@T("Cancel")</a>
         </div>
     }
 </div>

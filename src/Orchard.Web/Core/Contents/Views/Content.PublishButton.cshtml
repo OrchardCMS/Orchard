@@ -3,6 +3,6 @@
 
 @if (Authorizer.Authorize(Permissions.PublishContent, (IContent)Model.ContentItem)) {
 <div class="content-action-group">
-    <button type="submit" name="submit.Publish" value="submit.Publish">@T("Publish Now")</button>
+    <button type="submit" name="submit.Publish" value="submit.Publish"><i class="fa fa-share" aria-hidden="true"></i> @T("Publish Now")</button>
 </div>
 }

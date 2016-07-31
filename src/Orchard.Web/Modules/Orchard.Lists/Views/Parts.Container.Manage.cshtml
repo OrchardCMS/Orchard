@@ -1,21 +1,16 @@
 ﻿@using Orchard.ContentManagement.MetaData.Models
 @{
-    var containerId = (int) Model.ContainerId;
+    var containerId = (int)Model.ContainerId;
     var itemContentTypes = (IList<ContentTypeDefinition>)Model.ItemContentTypes;
 }
-<div class="item-properties actions">
-    <p>
-        @Html.ActionLink(T("{0} Properties", (string)Model.ContainerDisplayName), "Edit", new { Area = "Contents", Id = (int)Model.ContainerId, ReturnUrl = Html.ViewContext.HttpContext.Request.RawUrl })
-    </p>
-</div>
-<div class="manage">
+<div class="col-sm-6 text-right">
+    <a class="btn btn-default" href="@Url.Action("Edit", new { Area = "Contents", Id = (int)Model.ContainerId, ReturnUrl = Html.ViewContext.HttpContext.Request.RawUrl })"><i class="fa fa-cog"></i> @T("{0} Properties", (string)Model.ContainerDisplayName)</a>
     @if (itemContentTypes.Any()) {
         foreach (var contentType in itemContentTypes) {
-        @Html.ActionLink(T("New {0}", contentType.DisplayName), "Create", "Admin", new { area = "Contents", id = contentType.Name, containerId }, new { @class = "button primaryAction create-content" })
+            @Html.ActionLink(T("New {0}", contentType.DisplayName), "Create", "Admin", new { area = "Contents", id = contentType.Name, containerId }, new { @class = "btn btn-primary create-content" })
         }
+    } else {
+        @Html.ActionLink(T("New Content"), "Create", "Admin", new { area = "Contents", containerId }, new { @class = "btn btn-primary create-content" })
     }
-    else {
-        @Html.ActionLink(T("New Content"), "Create", "Admin", new { area = "Contents", containerId }, new { @class = "button primaryAction create-content" })
-    }
-    <a id="chooseItems" href="#" class="button primaryAction">@T("Choose Items")</a>
+    <a id="chooseItems" href="#" class="btn btn-primary">@T("Choose Items")</a>
 </div>

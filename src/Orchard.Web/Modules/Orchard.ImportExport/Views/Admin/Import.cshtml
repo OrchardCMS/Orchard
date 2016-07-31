@@ -2,7 +2,7 @@
 @{
     Layout.Title = T("Import").ToString();
 }
-<div class="panel panel-default">
+<div class="or-panel-main panel-default">
     @using (Html.BeginFormAntiForgeryPost(Url.Action("Import", new { area = "Orchard.ImportExport" }), FormMethod.Post, new { enctype = "multipart/form-data" })) {
         @Html.ValidationSummary();
         <div class="panel-body">

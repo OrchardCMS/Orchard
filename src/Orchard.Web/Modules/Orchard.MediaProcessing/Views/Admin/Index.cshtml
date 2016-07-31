@@ -12,7 +12,7 @@
         pageSizes.Add(defaultPageSize);
     }
 }
-<div class="panel panel-default">
+<div class="or-panel-main panel-default">
     @if (Model.ImageProfiles.Any()) {
         using (Html.BeginFormAntiForgeryPost()) {
             @Html.ValidationSummary()
@@ -63,7 +63,7 @@
                                     @Html.ActionLink(entry.Name, "Edit", new { id = entry.ImageProfileId })
                                 </td>
                                 <td class="text-nowrap">
-                                    <a class="btn btn-primary" href="@Url.Action("Edit",  new { Area = "Contents", id = entry.ImageProfileId, returnurl = HttpContext.Current.Request.RawUrl })"><i class="fa fa-pencil-square-o"></i> @T("Properties")</a>
+                                    <a class="btn btn-primary" href="@Url.Action("Edit",  new { Area = "Contents", id = entry.ImageProfileId, returnurl = HttpContext.Current.Request.RawUrl })"><i class="fa fa-cog"></i> @T("Properties")</a>
                                     <a class="btn btn-primary" href="@Url.Action("Edit",  new { id = entry.ImageProfileId })"><i class="fa fa-pencil-square-o"></i> @T("Edit")</a>
                                     <a class="btn btn-danger" href="@Url.Action("Delete", new { id = entry.ImageProfileId })" data-confirm="@T("Are you sure you want to delete this item?")"><i class="fa fa-trash"></i> @T("Delete")</a>
                                     @*@Html.ActionLink(T("Preview").ToString(), "Preview", new { id = entry.ImageProfileId })*@

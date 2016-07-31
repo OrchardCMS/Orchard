@@ -30,8 +30,8 @@
             </fieldset>
         </div>
         <div class="panel-footer">
-            <button type="submit">@T("Save")</button>
-            @Html.ActionLink(T("Cancel").Text, "Index", new { area = "Orchard.Layouts" }, new { @class = "button" })
+            <button type="submit"><i class="fa fa-floppy-o" aria-hidden="true"></i> @T("Save")</button>
+            <a class="btn btn-default" href="@Url.Action("Index", new { area = "Orchard.Layouts" })"><i class="fa fa-ban" aria-hidden="true"></i> @T("Cancel")</a>
         </div>
     }
 </div>

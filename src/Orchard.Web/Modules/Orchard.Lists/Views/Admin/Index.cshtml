@@ -3,7 +3,7 @@
     Layout.Title = T("Manage Lists");
     Layout.Tail.Add(New.ConfirmationDialog());
 }
-<div class="panel panel-default">
+<div class="or-panel-main panel-default">
     @if (Model.Lists.Items.Count > 0) {
         using (Html.BeginFormAntiForgeryPost()) {
             <div class="panel-heading">

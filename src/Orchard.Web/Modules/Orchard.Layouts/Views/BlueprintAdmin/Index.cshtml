@@ -4,7 +4,7 @@
     Layout.Title = T("Elements");
     Layout.Tail.Add(New.ConfirmationDialog());
 }
-<div class="panel panel-default">
+<div class="or-panel-main panel-default">
     @if (Model.Blueprints.Any()) {
         using (Html.BeginFormAntiForgeryPost()) {
             <div class="panel-heading">

@@ -1,5 +1,10 @@
 @{ Layout.Title = T("Create New List").ToString(); }
 
-@foreach (var type in Model.ContainerTypes) {
-    <p>@Html.ActionLink((string)type.DisplayName, "Create", new { Area = "Contents", Id = (string)type.Name, ContainerId = Model.ContainerId, ReturnUrl = Request.QueryString["ReturnUrl"] })</p>
-}
+<div class="panel panel-default">
+    <div class="panel-body">
+        @foreach (var type in Model.ContainerTypes) {
+            <p>@Html.ActionLink((string)type.DisplayName, "Create", new { Area = "Contents", Id = (string)type.Name, ContainerId = Model.ContainerId, ReturnUrl = Request.QueryString["ReturnUrl"] })</p>
+        }
+    </div>
+    <div class="panel-footer"></div>
+</div>

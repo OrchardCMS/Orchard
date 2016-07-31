@@ -11,7 +11,7 @@
 }
 
 @using (Html.BeginFormAntiForgeryPost()) {
-    <div class="panel panel-default">
+    <div class="or-panel-main panel-default">
         @Html.ValidationSummary()
         <div class="panel-heading no-border form-inline">
             <div class="panel-heading-actions">
@@ -110,12 +110,13 @@
                                 </td>
                                 <td class="text-nowrap">
                                     @if (entry.User.RegistrationStatus == UserStatus.Pending) {
-                                        @Html.ActionLink(T("Approve").ToString(), "Approve", new { entry.User.Id }, new { itemprop = "UnsafeUrl", @class = "btn btn-warning" })
+                                        <a class="btn btn-success" href="@Url.Action("Approve", new { entry.User.Id })" itemprop="UnsafeUrl"><i class="fa fa-thumbs-up"></i> @T("Approve")</a>
+                                        <a class="btn btn-primary" href="@Url.Action("Edit",  new { entry.User.Id })"><i class="fa fa-pencil-square-o"></i> @T("Edit")</a>
                                     } else {
-                                        @Html.ActionLink(T("Disable").ToString(), "Moderate", new { entry.User.Id }, new { itemprop = "UnsafeUrl", @class = "btn btn-warning" })
+                                        <a class="btn btn-warning" href="@Url.Action("Moderate", new { entry.User.Id })" itemprop = "UnsafeUrl"><i class="fa fa-thumbs-down"></i> @T("Disable")</a>
                                     }
                                     @if (entry.User.EmailStatus == UserStatus.Pending) {
-                                        @Html.ActionLink(T("Send challenge E-mail").ToString(), "SendChallengeEmail", new { entry.User.Id }, new { itemprop = "UnsafeUrl", @class = "btn btn-primary" })
+                                        <a class="btn btn-primary" href="@Url.Action("SendChallengeEmail", new { entry.User.Id })" itemprop="UnsafeUrl"><i class="fa fa-envelope-o"></i> @T("Send challenge E-mail")</a>
                                     }
                                     <a class="btn btn-primary" href="@Url.Action("Edit",  new { entry.User.Id })"><i class="fa fa-pencil-square-o"></i> @T("Edit")</a>
                                     <a class="btn btn-danger" href="@Url.Action("Delete", new { entry.User.Id })" data-confirm="@T("Are you sure you want to delete this item?")"><i class="fa fa-trash"></i> @T("Delete")</a>

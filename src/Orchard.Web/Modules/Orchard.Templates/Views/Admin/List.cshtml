@@ -11,7 +11,7 @@
     Layout.Title = pageTitle;
     Layout.Tail.Add(New.ConfirmationDialog());
 }
-<div class="panel panel-default">
+<div class="or-panel-main panel-default">
     @if (Model.ContentItems.Items.Count > 0) {
         using (Html.BeginFormAntiForgeryPost()) {
             <div class="panel-heading">

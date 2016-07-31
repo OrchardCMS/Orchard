@@ -2,7 +2,7 @@
     var pageTitle = T("Search Content");
     Layout.Title = pageTitle;
 }
-<div class="panel panel-default">
+<div class="or-panel-main panel-default">
     @using (Html.BeginFormAntiForgeryPost(Url.Action("index", new { controller = "admin", area = "Orchard.Search" }), FormMethod.Get)) {
         <div class="panel-heading">
             <div class="panel-heading-primary-group">

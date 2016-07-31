@@ -1,6 +1,9 @@
-﻿@using Orchard.ContentManagement.MetaData.Models
+﻿@using Orchard.ContentManagement;
+@using Orchard.ContentManagement.MetaData.Models
 @using Orchard.Core.Containers.Models
-@using Orchard.ContentManagement;
+@using Orchard.Core.Containers.ViewModels
+@using Orchard.Lists.ViewModels
+@using SortDirection = Orchard.Core.Containers.ViewModels.SortDirection;
 @{
     Style.Require("jQueryColorBox");
     Style.Include("nprogress.css");
@@ -20,7 +23,7 @@
     Layout.Tail.Add(New.ConfirmationDialog());
 }
 <div class="panel panel-default">
-    <div id="listManagement" @if (container.EnablePositioning) { <text> class="sortable" </text> }
+    <div id="listManagement" @if (container.EnablePositioning) { <text> class="sortable" </text>        }
          data-baseurl="@WorkContext.CurrentSite.BaseUrl"
          data-itemtypes="@String.Join(",", itemContentTypes.Select(x => x.Name))"
          data-update-url="@Url.Action("UpdatePositions", "Admin", new { containerId = Model.ContainerId, page = Model.Pager.Page, pageSize = Model.Pager.PageSize })"
@@ -30,24 +33,64 @@
 
         @using (Html.BeginFormAntiForgeryPost()) {
             <div class="panel-heading">
-                @*@Display.Breadcrumbs_ContentItem(ContentItem: Model.Container, ContainerAccessor: Model.ContainerAccessor)*@
-
-                @Display.Parts_Container_BulkActions(Options: Model.Options, Container: container)
-                
-                @Display.Parts_Container_Manage(
-                ContainerDisplayName: Model.ContainerDisplayName,
-                ContainerContentType: Model.ContainerContentType,
-                ContainerId: containerId,
-                ItemContentTypes: itemContentTypes)
+                <div class="row">
+                    @*@Display.Breadcrumbs_ContentItem(ContentItem: Model.Container, ContainerAccessor: Model.ContainerAccessor)*@
+                    @Display.Parts_Container_BulkActions(Options: Model.Options, Container: container)
+                    @Display.Parts_Container_Manage(
+                        ContainerDisplayName: Model.ContainerDisplayName,
+                        ContainerContentType: Model.ContainerContentType,
+                        ContainerId: containerId,
+                        ItemContentTypes: itemContentTypes)
+                </div>
+                <hr />
+                <div class="row">
+                    <div class="col-sm-12">
+                        @if (container.EnablePositioning) {
+                            <fieldset class="form-group">
+                                <label for="listOperations" class="list-operation">@T("List Operations:")</label>
+                                <select class="form-control" id="listOperations" name="Operation">
+                                    @Html.SelectOption(ListOperation.None, false, T("Choose operation...").ToString())
+                                    @Html.SelectOption(ListOperation.Shuffle, false, T("Shuffle").ToString())
+                                    @Html.SelectOption(ListOperation.Reverse, false, T("Reverse").ToString())
+                                    @Html.SelectOption(ListOperation.Sort, false, T("Sort").ToString())
+                                </select>
+                                <select class="form-control" id="SortBy" name="SortBy">
+                                    @Html.SelectOption("", false, T("Sort by...").ToString())
+                                    @Html.SelectOption(SortBy.Created, false, T("Recently Created").ToString())
+                                    @Html.SelectOption(SortBy.Modified, false, T("Recently Modified").ToString())
+                                    @Html.SelectOption(SortBy.Published, false, T("Recently Published").ToString())
+                                    @Html.SelectOption(SortBy.DisplayText, false, T("Title").ToString())
+                                </select>
+                                <select class="form-control" id="SortByDirection" name="SortByDirection">
+                                    @Html.SelectOption(SortDirection.Ascending, false, T("Ascending").ToString())
+                                    @Html.SelectOption(SortDirection.Descending, false, T("Descending").ToString())
+                                </select>
+                            </fieldset>
+                            <button class="btn btn-primary" type="submit" name="submit.ListOp" value="yes please">@T("Apply")</button>
+                        } else {
+                            <fieldset class="form-group">
+                                <label for="orderResults" class="bulk-order">@T("Ordered by")</label>
+                                <select class="form-control" id="orderResults" name="Options.OrderBy">
+                                    @Html.SelectOption((SortBy)Model.Options.OrderBy, SortBy.Created, T("Recently Created").ToString())
+                                    @Html.SelectOption((SortBy)Model.Options.OrderBy, SortBy.Modified, T("Recently Modified").ToString())
+                                    @Html.SelectOption((SortBy)Model.Options.OrderBy, SortBy.Published, T("Recently Published").ToString())
+                                    @Html.SelectOption((SortBy)Model.Options.OrderBy, SortBy.DisplayText, T("Title").ToString())
+                                </select>
+                            </fieldset>
+                            <button class="btn btn-primary" type="submit" name="submit.Order" value="yes please">@T("Apply")</button>
+                        }
+                    </div>
+                </div>
+                <hr />
+                <div class="row">
+                    @Display.ListViewButtons(Providers: Model.ListViewProviders, ActiveProvider: Model.ListViewProvider)
+                </div>
             </div>
-
-            @Display.ListViewButtons(Providers: Model.ListViewProviders, ActiveProvider: Model.ListViewProvider)
             @Display(Model.ListView)
 
             if (Model.ListNavigation != null) {
                 @Display(Model.ListNavigation)
             }
-
         }
     </div>
 </div>

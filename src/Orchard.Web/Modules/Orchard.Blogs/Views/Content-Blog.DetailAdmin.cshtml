@@ -7,15 +7,5 @@
     var displayText = blog.ContentManager.GetItemMetadata(blog).DisplayText;
     Layout.Title = T("Manage {0}", displayText);
 }
-<div class="panel panel-default" style="margin-bottom:0;">
-    <div class="panel-heading no-border form-inline">
-        @Display(Model.Header)
-        <div class="panel-heading-primary-group">
-            <fieldset class="bulk-actions">
-                @Display(Model.Actions)
-            </fieldset>
-        </div>
-        <div class="panel-heading-actions"><a href="@Url.BlogPostCreate((BlogPart)Model.ContentItem.Get(typeof(BlogPart)))" class="btn btn-primary"><i class="fa fa-plus"></i> @T("New Post")</a></div>
-    </div>
-</div>
+
 @Display(Model.Content)

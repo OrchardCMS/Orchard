@@ -1,7 +1,7 @@
 ﻿.dyn #TargetContainerId,
 .dyn #SortBy,
 .dyn #SortByDirection {
-    display: none
+    display: none;
 }
 
 fieldset.contentItems {
@@ -12,16 +12,12 @@ table.content-list thead .summary {
     padding: 5px 17px;
 }
 
-table.content-list thead .summary input[type='checkbox'] {
-    margin-right: 7px;
-}
+    table.content-list thead .summary input[type='checkbox'] {
+        margin-right: 7px;
+    }
 
 .sortable table.content-list tbody tr td:nth-child(1) {
     cursor: move;
-}
-
-#Col1 {
-     width: 20px;
 }
 
 #ajaxError {
@@ -78,43 +74,51 @@ ul.switch-button-group {
     float: right;
 }
 
-ul.switch-button-group li.switch-button {
-    float: left;
-    width: 24px;
-    height: 24px;
-    display: block;
-    border: 1px solid #bcbcbc;
-    -ms-border-radius: 2px 0 0 2px;
-    border-radius: 2px 0 0 2px;
-    background:no-repeat;
-    cursor: pointer;
-}
+    ul.switch-button-group li.switch-button {
+        float: left;
+        width: 24px;
+        height: 24px;
+        display: block;
+        border: 1px solid #bcbcbc;
+        -ms-border-radius: 2px 0 0 2px;
+        border-radius: 2px 0 0 2px;
+        background: no-repeat;
+        cursor: pointer;
+    }
 
-ul.switch-button-group li.switch-button.active {
-    border-color: #487328;
-    background-position: 0 -24px;
-}
+        ul.switch-button-group li.switch-button.active {
+            border-color: #487328;
+            background-position: 0 -24px;
+        }
 
-ul.switch-button-group li.switch-button.default {
-    background-image: url(./images/view.default.png);
-}
+        ul.switch-button-group li.switch-button.default {
+            background-image: url(./images/view.default.png);
+        }
 
-ul.switch-button-group li.switch-button.condensed {
-    background-image: url(./images/view.condensed.png);
-}
+        ul.switch-button-group li.switch-button.condensed {
+            background-image: url(./images/view.condensed.png);
+        }
 
-ul.switch-button-group:after {
-    content: ".";
-    display: block;
-    height: 0;
-    clear: both;
-    visibility: hidden;
-}
+    ul.switch-button-group:after {
+        content: ".";
+        display: block;
+        height: 0;
+        clear: both;
+        visibility: hidden;
+    }
 
 .summary-condensed {
     padding: 0;
 }
 
-.summary-condensed h3 {
-    font-size: 1em;
+    .summary-condensed h3 {
+        font-size: 1em;
+    }
+
+.ui-sortable-placeholder {
+    display: block;
+    visibility: visible !important;
+    height: 150px;
+    border: 1px dashed #CCC;
+    background-color: #fafafa;
 }

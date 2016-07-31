@@ -24,31 +24,25 @@
         });
     }
 }
-<div class="panel panel-default">
+<div class="or-panel-main panel-default">
     <div class="panel-heading">
         <fieldset class="update-actions">
             <a class="button" href="@Url.Action("ReloadUpdates", new { returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString()})" title="@T("Most recent check for updates: {0}", Model.LastUpdateCheckUtc == null ? T("Unknown") : Display.DateTimeRelative(DateTimeUtc: Model.LastUpdateCheckUtc.Value))">@T("Check for Updates")</a>
         </fieldset>
     </div>
-    @if (Model.Entries.Count() <= 0) {
-        <div class="panel-body">
-            <p>@T("No theme updates available.").ToString()</p>
-        </div>
-    } else {
+    @if (Model.Entries.Any()) {
         <ul class="contentItems theme">
             @foreach (var theme in Model.Entries) {
+                string extensionClass = "iconThumbnail";
+                string iconUrl = theme.NewVersionToInstall.IconUrl;
+                if (!string.IsNullOrWhiteSpace(@theme.NewVersionToInstall.FirstScreenshot)) {
+                    iconUrl = theme.NewVersionToInstall.FirstScreenshot;
+                    extensionClass = "screenshotThumbnail";
+                } else if (string.IsNullOrWhiteSpace(iconUrl)) {
+                    iconUrl = Href("../../Content/Images/imagePlaceholder.png");
+                    extensionClass = "screenshotThumbnail";
+                }
                 <li>
-                    @{
-                        string extensionClass = "iconThumbnail";
-                        string iconUrl = theme.NewVersionToInstall.IconUrl;
-                        if (!string.IsNullOrWhiteSpace(@theme.NewVersionToInstall.FirstScreenshot)) {
-                            iconUrl = theme.NewVersionToInstall.FirstScreenshot;
-                            extensionClass = "screenshotThumbnail";
-                        } else if (string.IsNullOrWhiteSpace(iconUrl)) {
-                            iconUrl = Href("../../Content/Images/imagePlaceholder.png");
-                            extensionClass = "screenshotThumbnail";
-                        }
-                    }
                     <div class="@extensionClass">
                         <div class="extensionDetails column">
                             <div class="extensionName">
@@ -91,12 +85,18 @@
                         </div>
                     </div>
                 </li>
-                        }
+            }
         </ul>
         <div class="row or-datatable-footer">
             <div class="col-sm-12">
                 @Display(Model.Pager)
             </div>
         </div>
-                        }
+    } else {
+        <div class="panel-body">
+            <h3 class="no-content">
+                @T("No theme updates available.")
+            </h3>
+        </div>
+    }
 </div>

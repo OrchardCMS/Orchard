@@ -5,8 +5,7 @@
     Layout.Title = T("Manage Content Parts").ToString();
     Html.AdminBreadcrumbs();
 }
-<div class="panel panel-default">
-
+<div class="or-panel-main panel-default">
     <div class="panel-heading no-border form-inline">
         <div class="panel-heading-actions">
             @Html.ActionLink(T("Create new part").ToString(), "CreatePart", new { Controller = "Admin", Area = "Orchard.ContentTypes" }, new { @class = "btn btn-primary" })

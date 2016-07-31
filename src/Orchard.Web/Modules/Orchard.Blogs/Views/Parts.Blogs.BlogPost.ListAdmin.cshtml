@@ -1,5 +1,7 @@
 ﻿@using Orchard.Core.Contents.ViewModels;
 @using Orchard.Utility.Extensions;
+@using Orchard.Blogs.Extensions;
+@using Orchard.Blogs.Models;
 @{
     var pageSizes = new List<int?>() { 10, 50, 100 };
     var defaultPageSize = WorkContext.CurrentSite.PageSize;
@@ -7,12 +9,13 @@
         pageSizes.Add(defaultPageSize);
     }
 }
-@if (Model.ContentItems.Items.Count > 0) {
-    using (Html.BeginFormAntiForgeryPost(Url.Action("List", "Admin", new { area = "Contents", id = "" }))) {
-        <div class="panel panel-default">
+<div class="or-panel-main panel-default">
+    @if (Model.ContentItems.Items.Count > 0) {
+        using (Html.BeginFormAntiForgeryPost(Url.Action("List", "Admin", new { area = "Contents", id = "" }))) {
+
             <div class="panel-heading no-border form-inline">
-                <div class="panel-heading-primary-group">
-                    <fieldset class="bulk-actions">
+                <div class="row">
+                    <fieldset class="col-sm-6">
                         <div class="or-checkbox inline">
                             <input type="checkbox" class="check-all" id="blog-post-list-select-all" />
                             <label class="check-all" title="@T("Select All")" for="blog-post-list-select-all"></label>
@@ -31,6 +34,10 @@
                             </ul>
                         </div>
                     </fieldset>
+                    <fieldset class="col-sm-6 text-right">
+                        <a class="btn btn-default" href="@Url.BlogEdit((BlogPart)Model.ContentItems.Items[0].Blog)"><i class="fa fa-cog"></i> @T("Blog Properties")</a>
+                        <a class="btn btn-primary" href="@Url.BlogPostCreate((BlogPart)Model.ContentItems.Items[0].Blog)"><i class="fa fa-plus"></i> @T("New Post")</a>
+                    </fieldset>
                 </div>
             </div>
             <div class="panel-body">
@@ -41,13 +48,14 @@
             <div class="panel-footer">
                 @Display(Model.Pager)
             </div>
+
+            @Display.ConfirmationDialog()
+        }
+    } else {
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <h3 class="no-content">@T("There are no posts for this blog.")</h3>
+            </div>
         </div>
-        @Display.ConfirmationDialog()
     }
-} else {
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <h3 class="no-content">@T("There are no posts for this blog.")</h3>
-        </div>
-    </div>
-}
+</div>

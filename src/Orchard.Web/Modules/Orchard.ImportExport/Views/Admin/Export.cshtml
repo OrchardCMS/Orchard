@@ -1,6 +1,6 @@
 ﻿@model Orchard.ImportExport.ViewModels.ExportViewModel
 @{ Layout.Title = T("Export").ToString(); }
-<div class="panel panel-default">
+<div class="or-panel-main panel-default">
     @using (Html.BeginFormAntiForgeryPost(Url.Action("Export", new { area = "Orchard.ImportExport" }), FormMethod.Post, new { enctype = "multipart/form-data" })) {
         Html.ValidationSummary();
         <div class="panel-body">

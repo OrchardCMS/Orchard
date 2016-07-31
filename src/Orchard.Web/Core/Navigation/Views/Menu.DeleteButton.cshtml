@@ -9,6 +9,6 @@
 
 @if (Authorizer.Authorize(Permissions.DeleteContent, contentItem) && contentItem.Id > 0) {
     <fieldset class="delete-button">
-        @Html.Link(T("Delete").Text, Url.ItemRemoveUrl(contentItem, new {returnUrl}), new { @class = "btn btn-danger", itemprop = "RemoveUrl UnsafeUrl"})
+        <a class="btn btn-danger" href="@Url.Action(Url.ItemRemoveUrl(contentItem, new {returnUrl}))"><i class="fa fa-trash"></i> @T("Delete")</a>
     </fieldset>
 }

@@ -9,7 +9,7 @@
 
 @if (Model.ContentItems.Items.Count > 0) {
     using (Html.BeginFormAntiForgeryPost(Url.Action("List", "Admin", new { area = "Contents", id = "" }))) {
-        <div class="panel panel-default">
+        <div class="or-panel-main panel-default">
             <div class="panel-heading no-border form-inline">
                 <div class="panel-heading-actions">
                     <div class="actions"><a class="btn btn-primary" href="@Url.BlogCreate()"><i class="fa fa-plus"></i> @T("New Blog")</a></div>

@@ -35,7 +35,7 @@
                                 <tr>
                                     <td>@cultureInfoFrom.DisplayName</td>
                                     <td>@cultureInfoTo.DisplayName</td>
-                                    <td>
+                                    <td class="text-right text-nowrap">
                                         <a class="btn btn-primary" href="@Url.Action("Edit", "TransliterationAdmin", new { id = currentSpecification.Id})"><i class="fa fa-pencil-square-o"></i> @T("Edit")</a>
                                         <a class="btn btn-danger" href="@Url.Action("Remove", "TransliterationAdmin", new { id = currentSpecification.Id})" data-confirm="@T("Are you sure you want to delete this item?")"><i class="fa fa-trash"></i> @T("Remove")</a>
                                     </td>

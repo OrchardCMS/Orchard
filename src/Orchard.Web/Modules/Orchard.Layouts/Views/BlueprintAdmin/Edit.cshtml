@@ -6,8 +6,10 @@
     @using (Html.BeginFormAntiForgeryPost()) {
         <div class="panel-body">
             @Html.Partial("ElementBlueprintEditor", Model, ViewData)
-            <button type="submit">@T("Save")</button>
-            @Html.ActionLink(T("Back").Text, "Index", "BlueprintAdmin", new { area = "Orchard.Layouts" }, new { @class = "button" })
+        </div>
+        <div class="panel-footer">
+            <button class="btn btn-primary" type="submit"><i class="fa fa-floppy-o" aria-hidden="true"></i> @T("Save")</button>
+            <a class="btn btn-default" href="@Url.Action("Index", "BlueprintAdmin", new { area = "Orchard.Layouts" })"><i class="fa fa-chevron-left" aria-hidden="true"></i> @T("Back")</a>
         </div>
     }
 </div>

@@ -3,47 +3,32 @@
     var container = (ContainerPart) Model.Container;
     var contentItems = (IList<dynamic>)Model.ContentItems;
 }
-@if (!contentItems.Any()) {
-    <div class="message info">@T("'{0}' has no content items.", Model.ContainerDisplayName)</div>
-}
-else {
-    <div id="ajaxError" class="message error">@T("There was an error updating the positions. Please try again.")</div>
-    <fieldset class="contentItems content-items bulk-items content-items-with-actions">
-        <table class="items content-list" summary="List Content Items">
-            <colgroup>
-                @if (container.EnablePositioning) {
-                    <col id="Col1" />
-                }
-                <col id="Col2" />
-            </colgroup>
-            <thead>
-                <tr>
-                    @if (container.EnablePositioning) {
-                        <th scope="col">&nbsp;&darr;</th>
-                    }
-                    <th scope="col" class="summary">
-                        <label><input type="checkbox" class="toggle-all" />@T("Items")</label>
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
+<div class="panel-body">
+    @if (!contentItems.Any()) {
+        <div class="message info">@T("'{0}' has no content items.", Model.ContainerDisplayName)</div>
+    } else {
+        <div id="ajaxError" class="message error">@T("There was an error updating the positions. Please try again.")</div>
+        <fieldset class="contentItems content-items bulk-items content-items-with-actions">
+            <ul class="items content-list dd-list">
                 @foreach (var contentItem in contentItems) {
-                    <tr class="published" data-content-id="@contentItem.ContentItem.Id">
+                    <li class="published dd-item dd3-item" data-content-id="@contentItem.ContentItem.Id">
+
                         @if (container.EnablePositioning) {
-                            <td>&nbsp;</td>
+                            <div class="dd-handle dd3-handle"><i class="fa fa-arrows" aria-hidden="true"></i></div>
                         }
-                        <td>
+                        <div class="dd3-content">
                             @Display(contentItem)
-                        </td>
-                    </tr>
+                        </div>
+
+                    </li>
                 }
-            </tbody>
-        </table>
-    </fieldset>
-}
-<div class="edit-item-sidebar">
-    <fieldset class="pager">
-        @Display(Model.Pager)
-    </fieldset>
-    @Display.Dialog_CloseButton()
+            </ul>
+        </fieldset>
+    }
+    <div class="edit-item-sidebar">
+        <fieldset class="pager">
+            @Display(Model.Pager)
+        </fieldset>
+        @Display.Dialog_CloseButton()
+    </div>
 </div>

@@ -8,7 +8,7 @@
     Html.AdminBreadcrumbs(new { CurrentContentPart = Model.Definition });
 }
 @using (Html.BeginFormAntiForgeryPost()) {
-    <div class="panel panel-default panel-heading-fullwidth panel-borders">
+    <div class="or-panel-main panel-default panel-heading-fullwidth panel-borders">
         <div class="panel-heading">
             <div class="panel-heading-primary-group">
                 <span class="title">@T("Settings")</span>
@@ -25,7 +25,7 @@
         </div>
     </div>
 
-    <div class="panel panel-default panel-heading-fullwidth panel-borders">
+    <div class="or-panel-main panel-default panel-heading-fullwidth panel-borders">
         <div class="panel-heading">
             <div class="panel-heading-primary-group">
                 <span class="title">@T("Fields")</span>
@@ -39,7 +39,7 @@
         </div>
     </div>
 
-    <div class="panel panel-default">
+    <div class="or-panel-main panel-default">
         <div class="panel-body">
             <fieldset class="text-left">
                 <button class="btn btn-primary" type="submit" name="submit.Save" value="Save"><i class="fa fa-save"></i> @T("Save")</button>

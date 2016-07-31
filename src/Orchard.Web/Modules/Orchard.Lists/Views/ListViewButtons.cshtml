@@ -2,13 +2,17 @@
 @using Orchard.Utility.Extensions
 @{
     var providers = (IList<IListViewProvider>)Model.Providers;
-    var activeProvider = (IListViewProvider) Model.ActiveProvider;
+    var activeProvider = (IListViewProvider)Model.ActiveProvider;
+    string icon = "";
 }
-<div class="switch-button-group-wrapper group">
-    <input id="listViewName" name="listViewName" type="checkbox"/>
-    <ul class="switch-button-group">
+<div class="col-sm-12">
+    <div class="btn-group pull-right clear switch-for-switchable summary-switched" data-toggle="buttons">
+        <input id="listViewName" name="listViewName" type="checkbox" />
         @foreach (var provider in providers) {
-            <li class="switch-button @provider.Name.HtmlClassify() @if (activeProvider.Name == provider.Name) {<text>active</text>}" data-listviewname="@provider.Name"></li>
+            icon = provider.DisplayName == "Condensed" ? "fa-list" : "fa-th";
+            <label class="btn btn-default @provider.Name.HtmlClassify() @if (activeProvider.Name == provider.Name) {<text>active</text>}">
+                <input type="radio" name="option" autocomplete="off" data-listviewname="@provider.Name"><i class="fa @icon"></i>
+            </label>
         }
-    </ul>
+    </div>
 </div>

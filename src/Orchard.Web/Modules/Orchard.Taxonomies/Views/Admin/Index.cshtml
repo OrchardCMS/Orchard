@@ -6,7 +6,7 @@
     int taxonomyIndex = 0, ti;
     Layout.Tail.Add(New.ConfirmationDialog());
 }
-<div class="panel panel-default">
+<div class="or-panel-main panel-default">
     @if (Model.Taxonomies.Any()) {
         using (Html.BeginFormAntiForgeryPost()) {
             @Html.ValidationSummary()

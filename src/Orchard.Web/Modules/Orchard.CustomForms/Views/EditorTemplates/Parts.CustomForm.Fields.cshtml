@@ -5,7 +5,7 @@
 
 <fieldset>
     <label for="@Html.FieldIdFor(m => m.CustomFormPart.ContentType)">@T("Content Type")</label>
-    <select id="@Html.FieldIdFor(m => m.CustomFormPart.ContentType)" name="@Html.FieldNameFor(m => m.CustomFormPart.ContentType)">
+    <select class="form-control" id="@Html.FieldIdFor(m => m.CustomFormPart.ContentType)" name="@Html.FieldNameFor(m => m.CustomFormPart.ContentType)">
         @foreach (string contentType in Model.ContentTypes) {
             @Html.SelectOption(contentType, contentType.Equals(Model.CustomFormPart.ContentType, StringComparison.OrdinalIgnoreCase), contentType.CamelFriendly())
         }

@@ -139,11 +139,11 @@
 
         var startIndex = -1;
         var cancel = function() {
-            $("table.content-list tbody").sortable("cancel");
+            $(".content-list").sortable("cancel");
         };
 
-        $("table.content-list tbody").sortable({
-            handle: "td:first",
+        $(".content-list").sortable({
+            handle: "div:first",
             start: function(e, ui) { startIndex = ui.item.index(); },
             stop: function (e, ui) {
                 var newIndex = ui.item.index();
@@ -161,10 +161,8 @@
     };
 
     var initializeListViewButtons = function() {
-        $("#layout-content").on("click", ".switch-button", function() {
-            $(".switch-button").removeClass("active");
-            $(this).addClass("active");
-            $("#listViewName").prop("checked", true).val($(this).data("listviewname"));
+        $("#layout-content").on("click", ".switch-for-switchable > label", function () {
+            $("#listViewName").prop("checked", true).val($(this).find($('[name=option]')).data("listviewname"));
             $(this).parents("form:first").submit();
         });
     };
