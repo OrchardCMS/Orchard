@@ -107,18 +107,10 @@ ul.switch-button-group {
         visibility: hidden;
     }
 
-.summary-condensed {
-    padding: 0;
-}
-
-    .summary-condensed h3 {
-        font-size: 1em;
-    }
-
 .ui-sortable-placeholder {
     display: block;
     visibility: visible !important;
-    height: 150px;
+    height: 75px;
     border: 1px dashed #CCC;
     background-color: #fafafa;
 }

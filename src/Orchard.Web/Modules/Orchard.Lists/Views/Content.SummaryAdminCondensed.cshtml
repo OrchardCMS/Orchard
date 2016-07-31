@@ -8,8 +8,11 @@
 <div class="summary-condensed" itemscope="itemscope" itemid="@contentItem.Id" itemtype="http://orchardproject.net/data/ContentItem">
     <div class="properties">
         <div class="head">
-            <input type="checkbox" value="@contentItem.Id" name="itemIds" />
-            <h3>@Html.ItemAdminLink(contentItem)</h3> - <div class="contentType">@contentItem.TypeDefinition.DisplayName</div>
+            <div class="or-checkbox inline">
+                <input type="checkbox" value="@contentItem.Id" name="itemIds" id="content-summary-@contentItem.Id">
+                <label for="content-summary-@contentItem.Id"></label>
+            </div>&nbsp;
+            <h3>@Html.ItemAdminLink(contentItem)<span class="content-type"> - @contentItem.TypeDefinition.DisplayName</span></h3>
             @if (Model.Header != null) {
                 <div class="header">@Display(Model.Header)</div>
             }
