@@ -66,6 +66,23 @@
                     -webkit-align-self: auto;
                     -ms-flex-item-align: auto;
                     align-self: auto;
+
+                    .title {
+                        width: 68%;
+                    }
+
+                    .tools {
+                        width: 32%;
+                        text-align: right;
+
+                        .switch-button {
+                            text-align: left;
+                        }
+                    }
+
+                    .or-checkbox {
+                        padding: 0;
+                    }
                 }
 
                 .panel-body {
@@ -94,7 +111,7 @@
             }
         }
 
-        .disabled.feature{
+        .disabled.feature {
             background-color: transparent;
         }
 
@@ -214,6 +231,10 @@
 
 .features .feature .lifecycle-status {
     position: static;
-    padding:0;
-    line-height:normal;
+    padding: 0;
+    line-height: normal;
+}
+
+.features .feature .lifecycle-status.lifecycle-status-deprecated {
+    color: @danger-color;
 }
