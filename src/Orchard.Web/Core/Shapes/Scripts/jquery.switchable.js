@@ -2,7 +2,7 @@
     $.fn.extend({
         powerUpTheSwitch: function () {
             var _this = $(this);
-            var theSwitch = $("<div class=\"btn-group pull-right clear switch-for-switchable\" data-toggle=\"buttons\"><label class=\"btn btn-default active summary-view\"><input type=\"radio\" name=\"options\" id=\"option1\" autocomplete=\"off\" checked><i class=\"fa fa-th\"></i></label><label class=\"btn btn-default detail-view\"><input type=\"radio\" name=\"options\" id=\"option2\" autocomplete=\"off\"><i class=\"fa fa-list\"></i></label></div>");
+            var theSwitch = $("<div class=\"text-right clear switch-for-switchable\" data-toggle=\"buttons\"><label class=\"btn btn-default active summary-view\"><input type=\"radio\" name=\"options\" id=\"option1\" autocomplete=\"off\" checked><i class=\"fa fa-th\"></i></label><label class=\"btn btn-default detail-view\"><input type=\"radio\" name=\"options\" id=\"option2\" autocomplete=\"off\"><i class=\"fa fa-list\"></i></label></div>");
             
             var summarySwitch = theSwitch.find(".summary-view").click(function () { $(this).switchToSummaryView(_this); });
             var detailSwitch = theSwitch.find(".detail-view").click(function () { $(this).switchToDetailView(_this); });

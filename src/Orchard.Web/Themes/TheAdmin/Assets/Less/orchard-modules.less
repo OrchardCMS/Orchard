@@ -6,6 +6,7 @@
         ul, ol {
             list-style: none;
             padding: 0;
+
             li {
                 padding: 0;
             }
@@ -33,6 +34,68 @@
             .lifecycle-status {
                 height: auto;
             }
+
+            .panel {
+                display: -ms-flexbox;
+                display: -webkit-flex;
+                display: flex;
+                -webkit-flex-direction: column;
+                -ms-flex-direction: column;
+                flex-direction: column;
+                -webkit-flex-wrap: nowrap;
+                -ms-flex-wrap: nowrap;
+                flex-wrap: nowrap;
+                -webkit-justify-content: flex-start;
+                -ms-flex-pack: start;
+                justify-content: flex-start;
+                -webkit-align-content: stretch;
+                -ms-flex-line-pack: stretch;
+                align-content: stretch;
+                -webkit-align-items: stretch;
+                -ms-flex-align: stretch;
+                align-items: stretch;
+                height: 100%;
+
+                .panel-heading {
+                    -webkit-order: 0;
+                    -ms-flex-order: 0;
+                    order: 0;
+                    -webkit-flex: 0 1 auto;
+                    -ms-flex: 0 1 auto;
+                    flex: 0 1 auto;
+                    -webkit-align-self: auto;
+                    -ms-flex-item-align: auto;
+                    align-self: auto;
+                }
+
+                .panel-body {
+                    -webkit-order: 0;
+                    -ms-flex-order: 0;
+                    order: 0;
+                    -webkit-flex: 1 1 auto;
+                    -ms-flex: 1 1 auto;
+                    flex: 1 1 auto;
+                    -webkit-align-self: stretch;
+                    -ms-flex-item-align: stretch;
+                    align-self: stretch;
+                }
+
+                .panel-footer {
+                    -webkit-order: 0;
+                    -ms-flex-order: 0;
+                    order: 0;
+                    -webkit-flex: 0 1 auto;
+                    -ms-flex: 0 1 auto;
+                    flex: 0 1 auto;
+                    -webkit-align-self: auto;
+                    -ms-flex-item-align: auto;
+                    align-self: auto;
+                }
+            }
+        }
+
+        .disabled.feature{
+            background-color: transparent;
         }
 
         &.detail-view .feature,
@@ -47,18 +110,21 @@
         &.summary-view .feature {
 
             .summary {
-                display:flex;
-                flex-direction:column;
-                .properties{
-                    order:1;
+                display: flex;
+                flex-direction: column;
+
+                .properties {
+                    order: 1;
                 }
-                .actions{
+
+                .actions {
                     /*order:0;
                     position:relative;
                     display:flex;
                     justify-content:flex-end;*/
                 }
             }
+
             @media (max-width: @screen-sm-max) {
                 width: 49%;
             }
@@ -123,28 +189,31 @@
 }
 
 .features.detail-view .category > ul {
-    border:1px solid #EAEAEA;
-    margin-bottom:2em;
-	display: flex;
-	flex-direction: column;
+    border: none;
+    margin-bottom: 2em;
+    display: flex;
+    flex-direction: column;
 }
+
 .features.summary-view .category {
-    padding-bottom:1em;
+    padding-bottom: 1em;
 }
 
 .features.summary-view .category > ul {
-	display: flex;
-	flex-wrap: wrap;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .features.summary-view .feature {
-    border:1px solid #EAEAEA;
-    margin:0 .5% 1% .5%;
-    width:32%;
-    height:auto;
+    border: none;
+    background-color: transparent;
+    margin: 0 .5% 1% .5%;
+    width: 32%;
+    height: auto;
 }
-.features .feature .lifecycle-status{
-    position:relative;
-    display:flex;
-    justify-content:flex-end;
+
+.features .feature .lifecycle-status {
+    position: static;
+    padding:0;
+    line-height:normal;
 }

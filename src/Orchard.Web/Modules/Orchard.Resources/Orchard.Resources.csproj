@@ -769,6 +769,8 @@
     <Content Include="Scripts\moment.min.js" />
     <Content Include="Scripts\TimeEntry\jquery.timeentry.js" />
     <Content Include="Scripts\TimeEntry\jquery.timeentry.min.js" />
+    <Content Include="Scripts\toastr.js" />
+    <Content Include="Scripts\toastr.min.js" />
     <Content Include="Scripts\underscore.js" />
     <Content Include="Scripts\underscore.min.js" />
     <Content Include="Scripts\uri.js" />

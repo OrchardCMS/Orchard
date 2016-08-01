@@ -15,7 +15,7 @@
 
             $("li.feature").each(function() {
                 var elt = $(this);
-                var value = elt.find('h3:first').text();
+                var value = elt.find('.title label:first').text();
                 if (value.toLowerCase().indexOf(text.toLowerCase()) >= 0)
                     elt.show();
                 else
@@ -36,7 +36,7 @@
     };
 
     var initializeActionLinks = function() {
-        $("li.feature .actions").on("click", "a[data-feature-action]", function(e) {
+        $("li.feature .tools").on("click", "label[data-feature-action]", function(e) {
             var actionLink = $(this);
             var featureId = actionLink.data("feature-id");
             var action = actionLink.data("feature-action");
@@ -50,7 +50,7 @@
                 $("[name='bulkAction']").val(action);
                 $("[name='force']").val(force);
 
-                actionLink.parents("form:first").submit();
+                $("[name='submit.BulkExecute']").click();
             }
 
             e.preventDefault();
