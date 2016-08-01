@@ -10,11 +10,15 @@
     var themeClasses = theme.IsRecentlyInstalled ? "class=\"recentlyInstalledTheme\"" : String.Empty;
 }
 
-<div class="container-fluid">
-    <div class="row">
+<div class="panel panel-full-dark panel-heading-fullwidth">
+    <div class="panel-heading">
         <h3 @Html.Raw(themeClasses)>@theme.Name</h3>
-
-        @Html.Image(Href(Html.ThemePath((ExtensionDescriptor)theme.Descriptor, "/Theme.png")), Html.Encode((string)theme.Name), new { @class = "img-thumbnail" })
+    </div>
+    <div class="panel-body">
+        <div class="text-center">
+            @Html.Image(Href(Html.ThemePath((ExtensionDescriptor)theme.Descriptor, "/Theme.png")), Html.Encode((string)theme.Name), new { @class = "img-thumbnail" })
+        </div>
+        <hr />
         <div class="row">
             <div class="col-sm-12 form-group clearfix">
                 @using (Html.BeginFormAntiForgeryPost(Url.Action("Activate"), FormMethod.Post, new { @class = "pull-left" })) {
@@ -43,39 +47,36 @@
                     }
                 </ul>
             }
-            <div class="col-sm-12 row form-group">
-                <div class="col-xs-4 text-left">
-                    @if (theme.Enabled) {
+        </div>
+    </div>
+    <div class="panel-footer">
+        <div class="col-sm-12 row form-group">
+            <div class="col-xs-4 text-left">
+                @if (theme.Enabled) {
                 using (Html.BeginFormAntiForgeryPost(Url.Action("Disable"), FormMethod.Post, new { @class = "inline link" })) {
-                            @Html.Hidden("themeId", (string)theme.Descriptor.Id)
-                            <button type="submit" class="btn btn-danger" title="Disable">@T("Disable")</button>
-                        }
-                    } else {
-                        using (Html.BeginFormAntiForgeryPost(Url.Action("Enable"), FormMethod.Post, new { @class = "inline link" })) {
-                            @Html.Hidden("themeId", (string)theme.Descriptor.Id)
-                            <button type="submit" class="btn btn-primary" title="Enable">@T("Enable")</button>
-                        }
+                @Html.Hidden("themeId", (string)theme.Descriptor.Id)
+                <button type="submit" class="btn btn-danger" title="Disable">@T("Disable")</button>
                     }
-                </div>
-                <div class="col-xs-4 text-center">
-                    <button type="submit" class="btn btn-primary">@T("Update")</button>
-                    @if (theme.NeedsUpdate) {
+                } else {
+                    using (Html.BeginFormAntiForgeryPost(Url.Action("Enable"), FormMethod.Post, new { @class = "inline link" })) {
+                @Html.Hidden("themeId", (string)theme.Descriptor.Id)
+                <button type="submit" class="btn btn-primary" title="Enable">@T("Enable")</button>
+                    }
+                }
+            </div>
+            <div class="col-xs-4 text-center">
+                <button type="submit" class="btn btn-primary">@T("Update")</button>
+                @if (theme.NeedsUpdate) {
                 using (Html.BeginFormAntiForgeryPost(Url.Action("Update"), FormMethod.Post, new { @class = "inline link" })) {
-                            @Html.Hidden("themeId", (string)theme.Descriptor.Id)
-                            <button type="submit" class="btn btn-primary">@T("Update")</button>
-                        }
+                @Html.Hidden("themeId", (string)theme.Descriptor.Id)
+                <button type="submit" class="btn btn-primary">@T("Update")</button>
                     }
-                </div>
-                <div class="col-xs-4 text-right">
-                    @if (theme.CanUninstall) {
-                        @Html.ActionLink(
-            T("Uninstall").Text,
-            "UninstallTheme",
-            "PackagingServices",
-            new { ThemeId = theme.Descriptor.Id, ReturnUrl = Request.ToUrlString(), Area = "Orchard.Packaging" },
-            new { itemprop = "RemoveUrl UnsafeUrl", @class = "btn btn-danger" })
-                    }
-                </div>
+                }
+            </div>
+            <div class="col-xs-4 text-right">
+                @if (theme.CanUninstall) {
+                    <a class="btn btn-danger" href="@Url.Action("UninstallTheme", "PackagingServices", new { ThemeId = theme.Descriptor.Id, ReturnUrl = Request.ToUrlString(), Area = "Orchard.Packaging" })" data-confirm="@T("Are you sure you want to uninstall this item?")"><i class="fa fa-trash"></i> @T("Uninstall")</a>
+                }
             </div>
         </div>
     </div>

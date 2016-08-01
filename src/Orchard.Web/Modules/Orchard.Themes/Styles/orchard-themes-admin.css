@@ -48,8 +48,84 @@
 .themePreviewImage {
     height:300px;
 }
-#main .themeInfo {margin:12px 0 0 0;}
+.themeInfo { font-size: 0.8em;}
 /***Recently installed**/
-.recentlyInstalledTheme { }
 .recentlyInstalledTheme {background: url(images/new.gif) no-repeat 0px 5px;}
 h3.recentlyInstalledTheme {padding:0 0 0 40px;}
+.current-theme-title {
+    margin-bottom: 20px !important;
+    font-size: 33px !important;
+}
+
+.themes {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0;
+}
+
+    .themes .col-lg-4 {
+        margin-bottom: 20px;
+    }
+
+.themes .panel {
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-flex-wrap: nowrap;
+    -ms-flex-wrap: nowrap;
+    flex-wrap: nowrap;
+    -webkit-justify-content: flex-start;
+    -ms-flex-pack: start;
+    justify-content: flex-start;
+    -webkit-align-content: stretch;
+    -ms-flex-line-pack: stretch;
+    align-content: stretch;
+    -webkit-align-items: stretch;
+    -ms-flex-align: stretch;
+    align-items: stretch;
+    height:100%;
+}
+
+.themes .panel-heading {
+    -webkit-order: 0;
+    -ms-flex-order: 0;
+    order: 0;
+    -webkit-flex: 0 1 auto;
+    -ms-flex: 0 1 auto;
+    flex: 0 1 auto;
+    -webkit-align-self: stretch;
+    -ms-flex-item-align: stretch;
+    align-self: stretch;
+}
+
+.themes .panel-body {
+    -webkit-order: 0;
+    -ms-flex-order: 0;
+    order: 0;
+    -webkit-flex: 1 1 auto;
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    -webkit-align-self: stretch;
+    -ms-flex-item-align: stretch;
+    align-self: stretch;
+}
+
+.themes .panel-footer {
+    -webkit-order: 0;
+    -ms-flex-order: 0;
+    order: 0;
+    -webkit-flex: 0 1 auto;
+    -ms-flex: 0 1 auto;
+    flex: 0 1 auto;
+    -webkit-align-self: stretch;
+    -ms-flex-item-align: stretch;
+    align-self: stretch;
+}
+
+    .themes hr {
+       border-color: #333232;
+    }

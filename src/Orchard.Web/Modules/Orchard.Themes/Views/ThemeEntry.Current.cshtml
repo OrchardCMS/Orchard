@@ -6,20 +6,24 @@
     Orchard.Themes.Models.ThemeEntry theme = Model.Theme;
 }
 
-<div class="row vert-offset-top-1" id="currentTheme">
-    <div class="col-sm-4">
-        @Html.Image(Href(Html.ThemePath(theme.Descriptor, "/Theme.png")), Html.Encode(theme.Name), new { @class = "img-thumbnail" })
-    </div>
-    <div class="col-sm-8">
-        <h4 class="border-bottom">@theme.Name</h4>
-        <h5>
-            @T("By") @theme.Descriptor.Author<br />
-            @T("Version:") @theme.Descriptor.Version<br />
-            @if (theme.Descriptor.WebSite != null) {
-                <a href="@theme.Descriptor.WebSite">@theme.Descriptor.WebSite</a><br />
-            }
-        </h5>
+<div class="panel panel-full-dark panel-heading-fullwidth">
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="text-center">@Html.Image(Href(Html.ThemePath(theme.Descriptor, "/Theme.png")), Html.Encode(theme.Name), new { @class = "img-thumbnail" })</div>
+            </div>
+            <div class="col-sm-8">
+                <h4 class="border-bottom">@theme.Name</h4>
+                <h5>
+                    @T("By") @theme.Descriptor.Author<br />
+                    @T("Version:") @theme.Descriptor.Version<br />
+                    @if (theme.Descriptor.WebSite != null) {
+                        <a href="@theme.Descriptor.WebSite">@theme.Descriptor.WebSite</a><br />
+                    }
+                </h5>
 
-        <p class="themeInfo">@theme.Descriptor.Description</p>
+                <p class="themeInfo">@theme.Descriptor.Description</p>
+            </div>
+        </div>
     </div>
 </div>
