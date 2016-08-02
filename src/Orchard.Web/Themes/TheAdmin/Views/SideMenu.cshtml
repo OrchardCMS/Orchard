@@ -30,8 +30,8 @@
                 firstLevelHref = secondLevelMenuItems.First().Href;
             }
 
-            <a href="@firstLevelHref">
-                <i class="@itemClassName"></i>
+            <a href="javascript:">
+                <i onclick="location.href = '@firstLevelHref';" class="@itemClassName"></i>
                 <span>@sectionHeaderText</span>
             </a>
 
