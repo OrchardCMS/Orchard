@@ -620,11 +620,11 @@ legend span {
 .bulk-actions label, .bulk-items h3, label.sub {
     display:inline;
 }
+label.bulk-filter {
+}
 label.bulk-order {
-    text-transform:lowercase;
 }
 label.bulk-culture {
-    text-transform:lowercase;
 }
 label span {
     font-weight:normal;
