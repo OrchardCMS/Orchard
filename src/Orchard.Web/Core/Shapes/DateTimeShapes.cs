@@ -29,6 +29,9 @@ namespace Orchard.Core.Shapes {
         [Shape]
         public IHtmlString DateTimeRelative(dynamic Display, DateTime DateTimeUtc, DateTime dateTimeUtc) {
             DateTimeUtc = DateTimeUtc != System.DateTime.MinValue ? DateTimeUtc : dateTimeUtc; // Both capitalizations retained for compatibility.
+            if (DateTimeUtc == System.DateTime.MinValue)
+                return MvcHtmlString.Empty;
+
             var time = _clock.UtcNow - DateTimeUtc;
 
             if (time.TotalYears() > 1)
