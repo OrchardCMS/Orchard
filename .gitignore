@@ -186,5 +186,6 @@ src/Orchard.Web/Properties/PublishProfiles
 src/Orchard.Azure/Orchard.Azure.CloudService/Staging/
 
 #enable all /lib artifacts
-!lib/*/*.*
+!lib/**/*.*
 */.vs/*
+src/Rebracer.xml

@@ -17,7 +17,7 @@ namespace Orchard.Core.Settings.Services {
         }
 
         public ISite GetSiteSettings() {
-            var siteId = _cacheManager.Get("SiteId", ctx => {
+            var siteId = _cacheManager.Get("SiteId", true, ctx => {
                 var site = _contentManager.Query("Site")
                     .List()
                     .FirstOrDefault();

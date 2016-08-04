@@ -562,27 +562,19 @@ namespace Orchard.ContentManagement {
         }
 
         public virtual ContentItem Clone(ContentItem contentItem) {
-            // Mostly taken from: http://orchard.codeplex.com/discussions/396664
-            var importContentSession = new ImportContentSession(this);
+            var cloneContentItem = New(contentItem.ContentType);
+            Create(cloneContentItem, VersionOptions.Draft);
 
-            var element = Export(contentItem);
-
-            // If a handler prevents this element from being exported, it can't be cloned
-            if (element == null) {
-                throw new InvalidOperationException("The content item couldn't be cloned because a handler prevented it from being exported.");
+            var context = new CloneContentContext(contentItem, cloneContentItem);
+            foreach (var contentHandler in Handlers) {
+                contentHandler.Cloning(context);
             }
 
-            var elementId = element.Attribute("Id");
-            var copyId = elementId.Value + "-copy";
-            elementId.SetValue(copyId);
-            var status = element.Attribute("Status");
-            if (status != null) status.SetValue("Draft"); // So the copy is always a draft.
+            foreach (var contentHandler in Handlers) {
+                contentHandler.Cloned(context);
+            }
 
-            importContentSession.Set(copyId, element.Name.LocalName);
-
-            Import(element, importContentSession);
-
-            return importContentSession.Get(copyId, element.Name.LocalName);
+            return cloneContentItem;
         }
 
         public virtual ContentItem Restore(ContentItem contentItem, VersionOptions options) {
@@ -765,13 +757,9 @@ namespace Orchard.ContentManagement {
             }
 
             var context = new ImportContentContext(item, element, importContentSession);
-            foreach (var contentHandler in Handlers) {
-                contentHandler.Importing(context);
-            }
 
-            foreach (var contentHandler in Handlers) {
-                contentHandler.Imported(context);
-            }
+            Handlers.Invoke(contentHandler => contentHandler.Importing(context), Logger);
+            Handlers.Invoke(contentHandler => contentHandler.Imported(context), Logger);
 
             var savedItem = Get(item.Id, VersionOptions.Latest);
 
@@ -790,17 +778,30 @@ namespace Orchard.ContentManagement {
             }
         }
 
+        public void CompleteImport(XElement element, ImportContentSession importContentSession) {
+            var elementId = element.Attribute("Id");
+            if (elementId == null) {
+                return;
+            }
+
+            var identity = elementId.Value;
+
+            if (String.IsNullOrWhiteSpace(identity)) {
+                return;
+            }
+
+            var item = importContentSession.Get(identity, VersionOptions.Latest, XmlConvert.DecodeName(element.Name.LocalName));
+            var context = new ImportContentContext(item, element, importContentSession);
+
+            Handlers.Invoke(contentHandler => contentHandler.ImportCompleted(context), Logger);
+        }
+
         public XElement Export(ContentItem contentItem) {
             var context = new ExportContentContext(contentItem, new XElement(XmlConvert.EncodeLocalName(contentItem.ContentType)));
 
-            foreach (var contentHandler in Handlers) {
-                contentHandler.Exporting(context);
-            }
-
-            foreach (var contentHandler in Handlers) {
-                contentHandler.Exported(context);
-            }
-
+            Handlers.Invoke(contentHandler => contentHandler.Exporting(context), Logger);
+            Handlers.Invoke(contentHandler => contentHandler.Exported(context), Logger);
+            
             if (context.Exclude) {
                 return null;
             }
@@ -817,7 +818,7 @@ namespace Orchard.ContentManagement {
         }
 
         private ContentTypeRecord AcquireContentTypeRecord(string contentType) {
-            var contentTypeId = _cacheManager.Get(contentType + "_Record", ctx => {
+            var contentTypeId = _cacheManager.Get(contentType + "_Record", true, ctx => {
                 ctx.Monitor(_signals.When(contentType + "_Record"));
 
                 var contentTypeRecord = _contentTypeRepository.Get(x => x.Name == contentType);

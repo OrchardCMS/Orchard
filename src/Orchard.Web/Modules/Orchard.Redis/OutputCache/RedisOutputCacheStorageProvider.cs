@@ -54,7 +54,11 @@ namespace Orchard.Redis.OutputCache {
         }
 
         public void Set(string key, CacheItem cacheItem) {
-            if(cacheItem == null) {
+            if (_connectionMultiplexer == null) {
+                return;
+            }
+
+            if (cacheItem == null) {
                 throw new ArgumentNullException("cacheItem");
             }
 
@@ -70,14 +74,26 @@ namespace Orchard.Redis.OutputCache {
         }
 
         public void Remove(string key) {
+            if (_connectionMultiplexer == null) {
+                return;
+            }
+
             Database.KeyDelete(GetLocalizedKey(key));
         }
 
         public void RemoveAll() {
+            if (_connectionMultiplexer == null) {
+                return;
+            }
+
             Database.KeyDeleteWithPrefix(GetLocalizedKey("*"));
         }
 
         public CacheItem GetCacheItem(string key) {
+            if (_connectionMultiplexer == null) {
+                return null;
+            }
+
             var value = Database.StringGet(GetLocalizedKey(key));
 
             if (value.IsNullOrEmpty) {
@@ -85,11 +101,11 @@ namespace Orchard.Redis.OutputCache {
             }
 
             using (var compressedStream = new MemoryStream(value)) {
-                if(compressedStream.Length == 0) {
+                if (compressedStream.Length == 0) {
                     return null;
                 }
 
-                using(var decompressedStream = Decompress(compressedStream)) {
+                using (var decompressedStream = Decompress(compressedStream)) {
                     return Deserialize(decompressedStream);
                 }
             }
@@ -106,6 +122,10 @@ namespace Orchard.Redis.OutputCache {
         }
 
         public int GetCacheItemsCount() {
+            if (_connectionMultiplexer == null) {
+                return 0;
+            }
+
             return Database.KeyCount(GetLocalizedKey("*"));
         }
 
@@ -123,6 +143,10 @@ namespace Orchard.Redis.OutputCache {
         /// </summary>
         /// <returns>The keys for the current tenant.</returns>
         private IEnumerable<string> GetAllKeys() {
+            if (_connectionMultiplexer == null) {
+                return new string[0];
+            }
+
             // prevent the same request from computing the list twice (count + list)
             if (_keysCache == null) {
                 _keysCache = new HashSet<string>();

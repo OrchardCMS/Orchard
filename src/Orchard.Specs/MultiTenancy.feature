@@ -25,6 +25,7 @@ Scenario: A new tenant is created
         And I fill in 
             | name | value |
             | Name | Scott |
+            | RequestUrlPrefix | scott |
         And I hit "Save"
         And I am redirected
     Then I should see "<h3>Scott\s*</h3>"
@@ -37,6 +38,7 @@ Scenario: A new tenant is created with uninitialized state
         And I fill in 
             | name | value |
             | Name | Scott |
+            | RequestUrlPrefix | scott |
         And I hit "Save"
         And I am redirected
     Then I should see "<li class="tenant Uninitialized">"
@@ -168,7 +170,7 @@ Scenario: A running tenant can be disabled
         And I go to "/Admin/MultiTenancy" on host localhost
         And I hit "Suspend"
         And I am redirected
-    Then I should see "<form action="/Admin/MultiTenancy/enable""
+    Then I should see "<form action="/Admin/MultiTenancy/Enable""
 
 Scenario: A running tenant which is disabled can be enabled
     Given I have installed Orchard
@@ -191,7 +193,7 @@ Scenario: A running tenant which is disabled can be enabled
         And I am redirected
         And I hit "Resume"
         And I am redirected
-    Then I should see "<form action="/Admin/MultiTenancy/disable""
+    Then I should see "<form action="/Admin/MultiTenancy/Disable""
 
 Scenario: Listing tenants from command line
     Given I have installed Orchard
@@ -199,4 +201,4 @@ Scenario: Listing tenants from command line
         And I have tenant "Alpha" on "example.org" as "New-site-name"
     When I execute >tenant list
     Then I should see "Name: Alpha"
-        And I should see "Request Url Host: example.org"
+        And I should see "Request URL host: example.org"

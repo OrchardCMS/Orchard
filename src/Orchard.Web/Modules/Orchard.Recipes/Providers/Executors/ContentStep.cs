@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Xml.Linq;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Data;
 using Orchard.Localization;
 using Orchard.Logging;
@@ -13,14 +14,17 @@ namespace Orchard.Recipes.Providers.Executors {
     public class ContentStep : RecipeExecutionStep {
         private readonly IOrchardServices _orchardServices;
         private readonly ITransactionManager _transactionManager;
+        private readonly Lazy<IEnumerable<IContentHandler>> _handlers;
 
         public ContentStep(
             IOrchardServices orchardServices,
             ITransactionManager transactionManager,
+            Lazy<IEnumerable<IContentHandler>> handlers,
             RecipeExecutionLogger logger) : base(logger) {
 
             _orchardServices = orchardServices;
             _transactionManager = transactionManager;
+            _handlers = handlers;
             BatchSize = 64;
         }
 
@@ -71,6 +75,18 @@ namespace Orchard.Recipes.Providers.Executors {
         // <Data />
         // Import Data.
         public override void Execute(RecipeExecutionContext context) {
+            // Run the import.
+            BatchedInvoke(context, "Import", (itemId, nextIdentityValue, element, importContentSession, elementDictionary) => {
+                _orchardServices.ContentManager.Import(element, importContentSession);
+            });
+            
+            // Invoke ImportCompleted.
+            BatchedInvoke(context, "ImportCompleted", (itemId, nextIdentityValue, element, importContentSession, elementDictionary) => {
+                _orchardServices.ContentManager.CompleteImport(element, importContentSession);
+            });
+        }
+
+        private void BatchedInvoke(RecipeExecutionContext context, string batchLabel, Action<string, string, XElement, ImportContentSession, IDictionary<string, XElement>> contentItemAction) {
             var importContentSession = new ImportContentSession(_orchardServices.ContentManager);
 
             // Populate local dictionary with elements and their ids.
@@ -82,15 +98,15 @@ namespace Orchard.Recipes.Providers.Executors {
             }
 
             // Determine if the import is to be batched in multiple transactions.
+            var batchSize = GetBatchSizeForDataStep(context.RecipeStep.Step);
             var startIndex = 0;
             var itemIndex = 0;
-            var batchSize = GetBatchSizeForDataStep(context.RecipeStep.Step);
-            Logger.Debug("Using batch size {0}.", batchSize);
 
-            // Run the import.
+            Logger.Debug("Using batch size {0} for '{1}'.", batchSize, batchLabel);
+
             try {
                 while (startIndex < elementDictionary.Count) {
-                    Logger.Debug("Importing batch starting at index {0}.", startIndex);
+                    Logger.Debug("Batch '{0}' execution starting at index {1}.", batchLabel, startIndex);
                     importContentSession.InitializeBatch(startIndex, batchSize);
 
                     // The session determines which items are included in the current batch
@@ -98,17 +114,16 @@ namespace Orchard.Recipes.Providers.Executors {
                     var nextIdentity = importContentSession.GetNextInBatch();
                     while (nextIdentity != null) {
                         var itemId = "";
-                        if (elementDictionary[nextIdentity.ToString()].HasAttributes) {
-                            itemId = elementDictionary[nextIdentity.ToString()].FirstAttribute.Value;
+                        var nextIdentityValue = nextIdentity.ToString();
+                        if (elementDictionary[nextIdentityValue].HasAttributes) {
+                            itemId = elementDictionary[nextIdentityValue].FirstAttribute.Value;
                         }
-                        Logger.Information("Importing data item '{0}' (item {1}/{2}).", itemId, itemIndex + 1, elementDictionary.Count);
+                        Logger.Information("Handling content item '{0}' (item {1}/{2} of '{3}').", itemId, itemIndex + 1, elementDictionary.Count, batchLabel);
                         try {
-                            _orchardServices.ContentManager.Import(
-                                elementDictionary[nextIdentity.ToString()],
-                                importContentSession);
+                            contentItemAction(itemId, nextIdentityValue, elementDictionary[nextIdentityValue], importContentSession, elementDictionary);
                         }
                         catch (Exception ex) {
-                            Logger.Error(ex, "Error while importing data item '{0}'.", itemId);
+                            Logger.Error(ex, "Error while handling content item '{0}' (item {1}/{2} of '{3}').", itemId, itemIndex + 1, elementDictionary.Count, batchLabel);
                             throw;
                         }
                         itemIndex++;
@@ -122,7 +137,7 @@ namespace Orchard.Recipes.Providers.Executors {
                         _transactionManager.RequireNew();
                     }
 
-                    Logger.Debug("Finished importing batch starting at index {0}.", startIndex);
+                    Logger.Debug("Finished batch '{0}' starting at index {1}.", batchLabel, startIndex);
                 }
             }
             catch (Exception) {

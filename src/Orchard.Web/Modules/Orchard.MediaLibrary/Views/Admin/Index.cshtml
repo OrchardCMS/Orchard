@@ -7,8 +7,8 @@
     Style.Require("MediaManagerAdmin");
     Script.Require("jQuery").AtFoot();
     Script.Require("jQueryUI_Droppable").AtFoot();
-    Script.Include("knockout-2.3.0.js").AtFoot();
-    Script.Include("history.js").AtFoot();
+    Script.Require("Knockout").AtFoot();
+    Script.Require("History").AtFoot();
     Script.Include("media-library.js").AtFoot();
     Style.Require("FontAwesome");
 
@@ -96,8 +96,9 @@ var mediaLibrarySettings = {
     moveActionUrl: '@Url.Action("Move", "Folder", new {area = "Orchard.MediaLibrary"})',
     deleteActionUrl: '@Url.Action("Delete", "Admin", new {area = "Orchard.MediaLibrary"})',
     cloneActionUrl: '@Url.Action("Clone", "Admin", new {area = "Orchard.MediaLibrary"})',
-    hasFolderPath: @(viewModel.FolderPath != null ? "true" : "false"),
+    hasFolderPath: @(!string.IsNullOrEmpty(viewModel.FolderPath) ? "true" : "false"),
     folderPath: '@HttpUtility.JavaScriptStringEncode(viewModel.FolderPath)',
+    rootFolderPath: '@HttpUtility.JavaScriptStringEncode(viewModel.RootFolderPath ?? "")',
     deleteConfirmationMessage: '@HttpUtility.JavaScriptStringEncode(T("Are you sure you want to delete these media items ?").Text)',
     cloneConfirmationMessage: '@HttpUtility.JavaScriptStringEncode(T("Are you sure you want to clone this media item ?").Text)',
     errorMessage: '@HttpUtility.JavaScriptStringEncode(T("An unexpected error occured, please refresh the page and try again.").Text)',
@@ -110,7 +111,7 @@ var mediaLibrarySettings = {
     <li>
         <div class="media-library-folder" data-bind="css: { 'in-progress': $root.pendingRequest() }">
             <div class="media-library-folder-title" data-bind="click: folderClicked, attr: { 'data-media-path': folderPath() }, css: {selected: isSelected()}">
-                <a href="#" class="media-library-navigation-folder-link"><i data-bind="    css: {'icon-folder-open-alt': isExpanded(), 'icon-folder-close-alt': !isExpanded()}"></i><span data-bind="    text: name"></span></a>
+                <a href="#" class="media-library-navigation-folder-link"><i class="fa" data-bind="    css: {'fa-folder-open-o': isExpanded(), 'fa-folder-o': !isExpanded()}"></i><span data-bind="    text: name"></span></a>
             </div>
             <ul data-bind="template: { name: 'media-folder-template', foreach: childFolders, afterRender: afterRenderMediaFolderTemplate}, visible: isExpanded()">
             </ul>

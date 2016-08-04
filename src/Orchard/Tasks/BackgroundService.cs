@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Orchard.Data;
 using Orchard.Environment.Configuration;
 using Orchard.Logging;
+using Orchard.Exceptions;
 
 namespace Orchard.Tasks {
 
@@ -18,8 +19,7 @@ namespace Orchard.Tasks {
         public BackgroundService(
             IEnumerable<IBackgroundTask> tasks, 
             ITransactionManager transactionManager, 
-            ShellSettings shellSettings,
-            IBackgroundHttpContextFactory backgroundHttpContextFactory) {
+            ShellSettings shellSettings) {
 
             _tasks = tasks;
             _transactionManager = transactionManager;
@@ -39,9 +39,13 @@ namespace Orchard.Tasks {
                     task.Sweep();
                     Logger.Information("Finished processing background task \"{0}\" on tenant \"{1}\".", taskName, _shellName);
                 }
-                catch (Exception e) {
+                catch (Exception ex) {
+                    if (ex.IsFatal()) {
+                        throw;
+                    }
+
                     _transactionManager.Cancel();
-                    Logger.Error(e, "Error while processing background task \"{0}\" on tenant \"{1}\".", taskName, _shellName);
+                    Logger.Error(ex, "Error while processing background task \"{0}\" on tenant \"{1}\".", taskName, _shellName);
                 }
             }
         }

@@ -7,6 +7,7 @@ using Orchard.Logging;
 using Orchard.Setup.Services;
 using Orchard.Setup.ViewModels;
 using Orchard.Localization;
+using Orchard.Recipes.Services;
 using Orchard.Themes;
 using Orchard.UI.Notify;
 
@@ -32,10 +33,12 @@ namespace Orchard.Setup.Controllers {
 
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
+            RecipeExecutionTimeout = 600;
         }
 
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
+        public int RecipeExecutionTimeout { get; set; }
 
         private ActionResult IndexViewResult(SetupViewModel model) {
             return View(model);
@@ -43,13 +46,10 @@ namespace Orchard.Setup.Controllers {
 
         public ActionResult Index() {
             var initialSettings = _setupService.Prime();
-
-            if(initialSettings.State == TenantState.Initializing)
-                return View("Initializing");
-
             var recipes = _setupService.Recipes().ToList();
             string recipeDescription = null;
-            if (recipes.Count > 0) {
+
+            if (recipes.Any()) {
                 recipeDescription = recipes[0].Description;
             }
 
@@ -72,8 +72,8 @@ namespace Orchard.Setup.Controllers {
 
         [HttpPost, ActionName("Index")]
         public ActionResult IndexPOST(SetupViewModel model) {
-            // Sets the setup request timeout to 10 minutes to give enough time to execute custom recipes.
-            HttpContext.Server.ScriptTimeout = 600;
+            // Sets the setup request timeout to a configurable amount of seconds to give enough time to execute custom recipes.
+            HttpContext.Server.ScriptTimeout = RecipeExecutionTimeout;
 
             var recipes = _setupService.Recipes().ToList();
 
@@ -137,6 +137,7 @@ namespace Orchard.Setup.Controllers {
                         throw new ApplicationException("Unknown database type: " + model.DatabaseProvider);
                 }
 
+                var recipe = recipes.GetRecipeByName(model.Recipe);
                 var setupContext = new SetupContext {
                     SiteName = model.SiteName,
                     AdminUsername = model.AdminUsername,
@@ -145,7 +146,7 @@ namespace Orchard.Setup.Controllers {
                     DatabaseConnectionString = model.DatabaseConnectionString,
                     DatabaseTablePrefix = model.DatabaseTablePrefix,
                     EnabledFeatures = null, // Default list
-                    Recipe = model.Recipe
+                    Recipe = recipe
                 };
 
                 var executionId = _setupService.Setup(setupContext);

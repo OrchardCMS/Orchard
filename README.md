@@ -4,9 +4,9 @@ Orchard is a free, open source, community-focused Content Management System buil
 
 [![Join the chat at https://gitter.im/OrchardCMS/Orchard](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/OrchardCMS/Orchard?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-You can try it for free on [Dotnest.com](https://dotnest.com) or on Microsoft Azure by clicking on this button
+You can try it for free on [DotNest.com](https://dotnest.com) or on Microsoft Azure by clicking on this button.
 
-[![Deploy to Azure](https://azuredeploy.net/deploybutton.png)](https://ms.portal.azure.com/#create/OutercurveFoundation.OrchardCMS.0.5.9)
+[![Deploy to Azure](https://azuredeploy.net/deploybutton.png)](https://portal.azure.com/#create/OutercurveFoundation.OrchardCMS)
 
 ## About The Orchard Project
 
@@ -20,26 +20,40 @@ Orchard is delivered under the [.NET Foundation](http://www.dotnetfoundation.org
 
 Our mission is to empower our users and foster a dedicated and diverse community that builds the CMS that we all want to use.
 
-There are many ways you can [contribute to Orchard](http://orchardproject.net/contribution): you can [fix bugs](https://github.com/OrchardCMS/Orchard/issues), contribute modules and themes to [our gallery](http://gallery.orchardproject.net/), [write documentation](https://github.com/OrchardCMS/OrchardDoc), [translate Orchard](http://orchardproject.net/localize), or answer questions [on our forums](http://orchard.codeplex.com/discussions) and [on Stack Overflow](http://stackoverflow.com/questions/tagged/orchardcms).
-
 ## Project Status
-Orchard is currently in version 1.9.1. We invite participation by the developer community in shaping the project’s direction, so that we can publicly validate our designs and development approach. 
-Our 1.9.1 release is available from our Downloads page, and is easy to [Install Orchard using the Web Platform Installer](http://www.orchardproject.net/docs/Installing-Orchard.ashx). We encourage interested developers to check out the source code on the Orchard Github site and get involved with the project.
+
+Orchard is currently in version **[1.10.1](https://github.com/OrchardCMS/Orchard/releases/tag/1.10.1)** and **[1.9.3](https://github.com/OrchardCMS/Orchard/releases/tag/1.9.3)**:
+
+- *1.10.1* is the latest minor version that contains bugfixes and the more impactful changes and new features added in the latest major version (*1.10*). **If you're new to Orchard, you should use this version.**
+- *1.9.3* contains further bugfixes in addition to *1.9.2* and these versions are based on the feature set of Orchard *1.9*.
+
+We invite participation by the developer community in shaping the project’s direction, so that we can publicly validate our designs and development approach. 
+All our releases are available on our [Releases](https://github.com/OrchardCMS/Orchard/releases) page, and it's easy to [Install Orchard using the Web Platform Installer](http://docs.orchardproject.net/Documentation/Installing-Orchard) as well. We encourage interested developers to check out the source code on the Orchard GitHub site and get involved with the project.
 
 * [Download the latest release](https://github.com/OrchardCMS/Orchard/releases)
-* [Feature roadmap](http://www.orchardproject.net/docs/feature-roadmap.ashx)
+* [Feature roadmap](http://docs.orchardproject.net/Documentation/Feature-roadmap)
 * [Docs and designs/specs](http://www.orchardproject.net/docs)
 * [About us](http://www.orchardproject.net/about)
 * [Contact us](mailto:ofeedbk@microsoft.com)
 
 ## How To Get Involved
-We hope that by engaging with the community in the very early stages of the project that we will be able to shape Orchard into a valuable set of tools and applications for the community.  The Orchard team is committed to open community participation and accepts code contributions today.  We encourage community participation at all levels from general project feedback to bug fixes and patches.  
+
+We hope that by engaging with the community we will continue to shape Orchard into a valuable set of tools and applications. The Orchard team is committed to open community participation and accepts code contributions.  We encourage community participation at all levels from general project feedback to bug fixes and patches.  
+
+There are many ways you can [contribute to Orchard](http://orchardproject.net/contribution):
 
 * [Check out the code](https://github.com/OrchardCMS/Orchard)
-* [Check out the docs](http://orchardproject.net/docs)
+* [Write documentation](https://github.com/OrchardCMS/OrchardDoc)
 * [Find and file a bug](https://github.com/OrchardCMS/Orchard/issues)
 * [Propose a feature idea](http://orchard.uservoice.com)
-* [Ask and answer questions](http://www.orchardproject.net/discussions)
+* [Ask and answer questions in our forums](http://www.orchardproject.net/discussions) and [on Stack Overflow](http://stackoverflow.com/questions/tagged/orchardcms)
+* [Participate in our gitter.im chatroom](https://gitter.im/OrchardCMS/Orchard)
 * [Participate in forum discussions](http://orchard.codeplex.com/discussions)
-* [Submit a patch](http://www.orchardproject.net/docs/Contributing-patches.ashx)
+* [Submit a pull request](http://docs.orchardproject.net/Documentation/Contributing-patches)
+* [Translate Orchard](http://orchardproject.net/localization)
+* [Contribute modules and themes to our gallery](http://gallery.orchardproject.net/)
 * [Send us feedback](mailto:ofeedbk@microsoft.com)
+
+## The Future Of Orchard CMS: Orchard 2
+
+As the underlying frameworks (.NET, ASP.NET and ASP.NET MVC) are constantly evolving, Orchard of course keeps track of the changes and improvements of these: Orchard 2 is the next generation of Orchard releases that is based on [ASP.NET Core](http://www.asp.net/core). Just like the current Orchard project, it's fully [open-source and is publicly available on GitHub](https://github.com/OrchardCMS/Orchard2). Orchard 2 (as a framework) is being built from scratch: it's still in development and does not share any of its code base (at least directly) with the current versions of Orchard.

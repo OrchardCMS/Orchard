@@ -58,7 +58,7 @@ namespace Orchard.MediaProcessing.Services {
         }
 
         private IDictionary<string, string> GetProfileCache(string profile) {
-            return _cacheManager.Get("MediaProcessing_" + profile, ctx => {
+            return _cacheManager.Get("MediaProcessing_" + profile, true, ctx => {
                 ctx.Monitor(_signals.When("MediaProcessing_Saved_" + profile));
                 var dictionary = new Dictionary<string, string>();
 

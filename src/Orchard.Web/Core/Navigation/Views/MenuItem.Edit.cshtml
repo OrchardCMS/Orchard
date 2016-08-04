@@ -1,4 +1,9 @@
-﻿<div class="sections">
+@using Orchard.Core.Shapes
+@{
+    var tabs = (IEnumerable<string>)CoreShapes.HarvestAndSortTabs(Model.Content);
+    Display.LocalNavigation(Tabs: tabs);
+}
+<div class="sections">
     <div class="primary">
         @Display(Model.Content)
     </div>
@@ -6,3 +11,7 @@
         @Display(Model.Sidebar)
     </div>
 </div>
+
+@if (!String.IsNullOrWhiteSpace(Request.QueryString["returnUrl"])) {
+    @Html.Hidden("returnUrl", Request.QueryString["returnUrl"])
+}

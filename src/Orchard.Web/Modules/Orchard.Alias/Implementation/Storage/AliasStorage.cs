@@ -83,11 +83,24 @@ namespace Orchard.Alias.Implementation.Storage {
         }
 
         public IDictionary<string, string> Get(string path) {
-            return _aliasRepository
-                .Fetch(r => r.Path == path, o => o.Asc(r => r.Id), 0, 1)
-                .Select(ToDictionary)
-                .Select(item => item.Item3)
-                .SingleOrDefault();
+            
+            // All aliases are already in memory, and updated. We don't need to query the 
+            // database to lookup an alias by path.
+
+            AliasInfo alias;
+
+            // Optimized code path on Contents as it's the main provider of aliases
+            if (_aliasHolder.GetMap("Contents").TryGetAlias(path, out alias)) {
+                return alias.RouteValues;
+            }
+            
+            foreach (var map in _aliasHolder.GetMaps()) {
+                 if(map.TryGetAlias(path, out alias)) {
+                    return alias.RouteValues;
+                }
+            }
+
+            return null;
         }
 
         public void Remove(string path) {

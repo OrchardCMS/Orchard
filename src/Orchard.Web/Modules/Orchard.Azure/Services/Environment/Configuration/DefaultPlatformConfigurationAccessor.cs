@@ -1,6 +1,6 @@
-﻿using Microsoft.Azure;
-using System.Configuration;
+﻿using System.Configuration;
 using System;
+using Microsoft.Azure;
 
 namespace Orchard.Azure.Services.Environment.Configuration {
 

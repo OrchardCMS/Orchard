@@ -1,4 +1,5 @@
-﻿@{
+﻿@using System.Collections
+@{
     SetMeta("X-UA-Compatible", "IE=edge,chrome=1");
     Style.Include("admin-dialog.css");
     Script.Require("jQuery").AtFoot();
@@ -9,7 +10,6 @@
         Model.Header.Add(Display.Title(Title: Model.Title));
     }
 }
-@Display.TokenHint()
 <div id="layout-content">
     <div id="layout-main">
         <div id="main" role="main">
@@ -31,3 +31,11 @@
         </div>
     </div>
 </div>
+
+@*
+    Not rendering the Token Script prevents an issue with Edge when trying to load a resource via AJAX
+    while the window is being destroyed. This causes the JSON object to be undefined, causing jQuery to fail to parse the AJAX response.
+*@
+@if (Model.DialogClosing != true) {
+    @Display.TokenHint()
+}

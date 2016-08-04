@@ -47,9 +47,7 @@ namespace Orchard.Tags {
                 "TagCloud",
                 cfg => cfg
                            .WithPart("TagCloudPart")
-                           .WithPart("CommonPart")
-                           .WithPart("WidgetPart")
-                           .WithSetting("Stereotype", "Widget")
+                           .AsWidget()
                 );
 
             return 1;

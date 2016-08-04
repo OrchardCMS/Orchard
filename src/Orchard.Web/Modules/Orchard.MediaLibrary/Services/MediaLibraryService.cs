@@ -59,6 +59,11 @@ namespace Orchard.MediaLibrary.Services {
             return GetMediaContentItems(null, skip, count, order, mediaType, versionOptions);
         }
 
+        public IEnumerable<MediaPart> GetMediaContentItemsRecursive(string folderPath, int skip, int count, string order, string mediaType, VersionOptions versionOptions = null) {
+            return BuildGetMediaContentItemsQuery(_orchardServices.ContentManager, folderPath, true, order, mediaType, versionOptions)
+                .Slice(skip, count);
+        }
+
         public int GetMediaContentItemsCount(string folderPath, string mediaType, VersionOptions versionOptions = null) {
             return BuildGetMediaContentItemsQuery(_orchardServices.ContentManager, folderPath, mediaType: mediaType, versionOptions: versionOptions)
                 .Count();
@@ -66,6 +71,11 @@ namespace Orchard.MediaLibrary.Services {
 
         public int GetMediaContentItemsCount(string mediaType, VersionOptions versionOptions = null) {
             return GetMediaContentItemsCount(null, mediaType, versionOptions);
+        }
+
+        public int GetMediaContentItemsCountRecursive(string folderPath, string mediaType, VersionOptions versionOptions = null) {
+            return BuildGetMediaContentItemsQuery(_orchardServices.ContentManager, folderPath, true, mediaType: mediaType, versionOptions: versionOptions)
+                .Count();
         }
 
         private static IContentQuery<MediaPart> BuildGetMediaContentItemsQuery(
@@ -210,7 +220,21 @@ namespace Orchard.MediaLibrary.Services {
             return GetPublicUrl(Path.Combine(mediaPath, fileName));
         }
 
-        public MediaFolder GetRootMediaFolder() {
+        public IMediaFolder GetRootMediaFolder() {
+            if (_orchardServices.Authorizer.Authorize(Permissions.ManageMediaContent)) {
+                return null;
+            }
+
+            if (_orchardServices.Authorizer.Authorize(Permissions.ManageOwnMedia)) {
+                var currentUser = _orchardServices.WorkContext.CurrentUser;
+                var userPath = _storageProvider.Combine("Users", currentUser.UserName);
+
+                return new MediaFolder() {
+                    Name = currentUser.UserName,
+                    MediaPath = userPath
+                };
+            }
+
             return null;
         }
 
@@ -355,6 +379,8 @@ namespace Orchard.MediaLibrary.Services {
             Argument.ThrowIfNullOrEmpty(filename, "filename");
             Argument.ThrowIfNullOrEmpty(newFilename, "newFilename");
 
+            if (!_storageProvider.FolderExists(newPath))
+                _storageProvider.TryCreateFolder(newPath);
             _storageProvider.RenameFile(_storageProvider.Combine(currentPath, filename), _storageProvider.Combine(newPath, newFilename));
         }
 
@@ -416,6 +442,16 @@ namespace Orchard.MediaLibrary.Services {
             _storageProvider.SaveStream(filePath, inputStream);
 
             return _storageProvider.GetPublicUrl(filePath);
+        }
+
+        /// <summary>
+        /// Combines two paths.
+        /// </summary>
+        /// <param name="path1">The parent path.</param>
+        /// <param name="path2">The child path.</param>
+        /// <returns>The combined path.</returns>
+        public string Combine(string path1, string path2) {
+            return _storageProvider.Combine(path1, path2);
         }
     }
 }

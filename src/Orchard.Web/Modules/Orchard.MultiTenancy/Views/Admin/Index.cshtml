@@ -13,8 +13,8 @@
         <li class="tenant @tenant.State">
             <div class="summary">
                 <div class="properties">
-                    <h3>
-                        @tenant.Name @if (!string.IsNullOrEmpty(tenant.RequestUrlHost)) {
+                    <h3>@tenant.Name
+                            @if (!String.IsNullOrEmpty(tenant.RequestUrlHost)) {
                             var tenantClone = new ShellSettings(tenant);
                             foreach (var t in tenant.RequestUrlHost.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)) {
                                 tenantClone.RequestUrlHost = t;

@@ -5,7 +5,7 @@
 
 @{
     Style.Include("admin-taxonomy.css");
-    Script.Require("jQuery"); 
+    Script.Require("jQuery");
     Script.Include("~/Themes/TheAdmin/scripts/admin.js").AtFoot();
     Script.Include("admin-taxonomy-expando.js").AtFoot();
 
@@ -15,12 +15,12 @@
 
 <fieldset class="taxonomy-wrapper" data-name-prefix="@Html.FieldNameFor(m => m)" data-id-prefix="@Html.FieldIdFor(m => m)">
     <legend @if(settings.Required) { <text>class="required"</text> }>@Model.DisplayName</legend>
-    
+
     <div class="expando">
         @if (!String.IsNullOrWhiteSpace(Model.Settings.Hint)) {
             <span class="hint">@Model.Settings.Hint</span>
         }
-        
+
         <ul class="terms">
             @foreach (var entry in Model.Terms) {
                 var ti = termIndex;
@@ -41,12 +41,14 @@
                 termIndex++;
             }
         </ul>
-            
-        @if (!Model.Terms.Any()) {
+
+         @if (Model.TaxonomyId == 0) {
+            <p>@T("You haven't specified a taxonomy for {0}", Model.DisplayName)</p>
+        }else if (!Model.Terms.Any() && AuthorizedFor(Orchard.Taxonomies.Permissions.CreateTerm)) {
             <div class="no-terms">
                 @T("There are no terms defined for {0} yet.", Model.DisplayName)
                 <a href="@Url.Action("Index", "TermAdmin", new { taxonomyId = Model.TaxonomyId, area = "Orchard.Taxonomies" })">@T("Create some terms")</a>
-            </div>        
+            </div>
         }
     </div>
     @Html.HiddenFor(m => m.TaxonomyId)

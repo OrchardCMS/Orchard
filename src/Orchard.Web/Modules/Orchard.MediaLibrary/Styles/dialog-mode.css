@@ -6,6 +6,8 @@
 
 .media-library-modal-window #media-library-main-selection-select {
     display: inherit;
+    position: absolute;
+    top: 25px;
 }
 
 .media-library-modal-window #main {

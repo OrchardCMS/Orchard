@@ -12,10 +12,6 @@
             result.children = this.childrenToObject();
             return result;
         };
-
-        this.allowSealedFocus = function() {
-            return this.children.length === 0;
-        };
     };
 
     LayoutEditor.Canvas.from = function (value) {

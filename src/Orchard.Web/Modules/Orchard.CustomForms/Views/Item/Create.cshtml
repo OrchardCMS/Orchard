@@ -1,8 +1,11 @@
 @using Orchard.ContentManagement
 @using Orchard.Utility.Extensions
+@using Orchard.ContentManagement.Aspects;
 @{
     ContentItem customForm = Model.ContentItem;
     string returnUrl = Model.ReturnUrl;
+    var metadata = customForm.ContentManager.GetItemMetadata(customForm);
+    var displayText = metadata != null ? MvcHtmlString.Create(metadata.DisplayText) : null;
 
     Html.AddPageClassNames("edit-" + customForm.ContentType.HtmlClassify());
 
@@ -12,7 +15,7 @@
     var submitButtonText = String.IsNullOrEmpty(Model.ContentItem.CustomFormPart.SubmitButtonText) ? T("Submit").Text : Model.ContentItem.CustomFormPart.SubmitButtonText;
 }
 
-@Display(New.Parts_Title().Title(Html.ItemDisplayText(customForm)))
+@Display(New.Parts_Title().Title(displayText))
 
 @using (Html.BeginFormAntiForgeryPost(returnUrl)) {
     @Html.ValidationSummary()

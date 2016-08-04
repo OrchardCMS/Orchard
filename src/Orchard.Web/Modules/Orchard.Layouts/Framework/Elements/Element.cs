@@ -3,7 +3,7 @@ using Orchard.Localization;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.Layouts.Framework.Elements {
-    public abstract class Element {
+    public abstract class Element : IElement {
         protected Element() {
             T = NullLocalizer.Instance;
             Data = new ElementDataDictionary();

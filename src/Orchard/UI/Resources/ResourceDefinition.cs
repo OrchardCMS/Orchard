@@ -152,9 +152,16 @@ namespace Orchard.UI.Resources {
             if (cdnSupportsSsl.HasValue) {
                 CdnSupportsSsl = cdnSupportsSsl.Value;
             }
+            else {
+                CdnSupportsSsl = cdnUrl.StartsWith("https", StringComparison.OrdinalIgnoreCase);
+            }
             return this;
         }
 
+        /// <summary>
+        /// Sets the version of the resource.
+        /// </summary>
+        /// <param name="version">The version to set, in the form of <code>major.minor[.build[.revision]]</code></param>
         public ResourceDefinition SetVersion(string version) {
             Version = version;
             return this;
@@ -171,20 +178,31 @@ namespace Orchard.UI.Resources {
         }
 
         public string ResolveUrl(RequireSettings settings, string applicationPath) {
+            return ResolveUrl(settings, applicationPath, false);
+        }
+
+        public string ResolveUrl(RequireSettings settings, string applicationPath, bool ssl) {
             string url;
             if (_urlResolveCache.TryGetValue(settings, out url)) {
                 return url;
             }
             // Url priority:
-            if (settings.DebugMode) {
-                url = settings.CdnMode
-                    ? Coalesce(UrlCdnDebug, UrlDebug, UrlCdn, Url)
-                    : Coalesce(UrlDebug, Url, UrlCdnDebug, UrlCdn);
+            if (!ssl || (ssl && CdnSupportsSsl)) { //Not ssl or ssl and cdn supports it
+                if (settings.DebugMode) {
+                    url = settings.CdnMode
+                        ? Coalesce(UrlCdnDebug, UrlDebug, UrlCdn, Url)
+                        : Coalesce(UrlDebug, Url, UrlCdnDebug, UrlCdn);
+                }
+                else {
+                    url = settings.CdnMode
+                        ? Coalesce(UrlCdn, Url, UrlCdnDebug, UrlDebug)
+                        : Coalesce(Url, UrlDebug, UrlCdn, UrlCdnDebug);
+                }
             }
-            else {
-                url = settings.CdnMode
-                    ? Coalesce(UrlCdn, Url, UrlCdnDebug, UrlDebug)
-                    : Coalesce(Url, UrlDebug, UrlCdn, UrlCdnDebug);
+            else { //ssl and cdn does not support it, only evaluate non-cdn url's
+                url = settings.DebugMode
+                    ? Coalesce(UrlDebug, Url)
+                    : Coalesce(Url, UrlDebug);
             }
             if (String.IsNullOrEmpty(url)) {
                 return null;
@@ -200,7 +218,9 @@ namespace Orchard.UI.Resources {
                 url = VirtualPathUtility.Combine(BasePath, url);
             }
             if (VirtualPathUtility.IsAppRelative(url)) {
-                url = VirtualPathUtility.ToAbsolute(url, applicationPath);
+                url = applicationPath != null 
+                    ? VirtualPathUtility.ToAbsolute(url, applicationPath) 
+                    : VirtualPathUtility.ToAbsolute(url);
             }
             _urlResolveCache[settings] = url;
             return url;

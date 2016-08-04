@@ -22,9 +22,16 @@ namespace Orchard.Security.Providers {
         private IUser _signedInUser;
         private bool _isAuthenticated;
 
+        // This fixes a performance issue when the forms authentication cookie is set to a
+        // user name not mapped to an actual Orchard user content item. If the request is
+        // authenticated but a null user is returned, multiple calls to GetAuthenticatedUser
+        // will cause multiple DB invocations, slowing down the request. We therefore
+        // remember if the current user is a non-Orchard user between invocations.
+        private bool _isNonOrchardUser;
+
         public FormsAuthenticationService(
-            ShellSettings settings, 
-            IClock clock, 
+            ShellSettings settings,
+            IClock clock,
             IMembershipService membershipService,
             IHttpContextAccessor httpContextAccessor,
             ISslSettingsProvider sslSettingsProvider,
@@ -37,7 +44,7 @@ namespace Orchard.Security.Providers {
             _membershipValidationService = membershipValidationService;
 
             Logger = NullLogger.Instance;
-            
+
             ExpirationTimeSpan = TimeSpan.FromDays(30);
         }
 
@@ -82,10 +89,11 @@ namespace Orchard.Security.Providers {
             if (createPersistentCookie) {
                 cookie.Expires = ticket.Expiration;
             }
-            
+
             httpContext.Response.Cookies.Add(cookie);
 
             _isAuthenticated = true;
+            _isNonOrchardUser = false;
             _signedInUser = user;
         }
 
@@ -110,9 +118,14 @@ namespace Orchard.Security.Providers {
         public void SetAuthenticatedUserForRequest(IUser user) {
             _signedInUser = user;
             _isAuthenticated = true;
+            _isNonOrchardUser = false;
         }
 
         public IUser GetAuthenticatedUser() {
+
+            if (_isNonOrchardUser)
+                return null;
+
             if (_signedInUser != null || _isAuthenticated)
                 return _signedInUser;
 
@@ -126,7 +139,7 @@ namespace Orchard.Security.Providers {
 
             // The cookie user data is {userName.Base64};{tenant}.
             var userDataSegments = userData.Split(';');
-            
+
             if (userDataSegments.Length < 2) {
                 return null;
             }
@@ -147,6 +160,7 @@ namespace Orchard.Security.Providers {
 
             _signedInUser = _membershipService.GetUser(userDataName);
             if (_signedInUser == null || !_membershipValidationService.CanAuthenticateWithCookie(_signedInUser)) {
+                _isNonOrchardUser = true;
                 return null;
             }
 

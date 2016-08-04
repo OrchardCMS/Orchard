@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Orchard.Commands;
+﻿using Orchard.Commands;
 using Orchard.Environment.Extensions;
-using Orchard.Environment.Extensions.Models;
-using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
+using System;
+using System.Linq;
 
 namespace Orchard.Recipes.Commands {
     public class RecipesCommands : DefaultOrchardCommandHandler {
@@ -35,7 +32,7 @@ namespace Orchard.Recipes.Commands {
             }
 
             var recipes = _recipeHarvester.HarvestRecipes(extensionId);
-            if (recipes.Count() == 0) {
+            if (!recipes.Any()) {
                 Context.Output.WriteLine(T("No recipes found for extension '{0}'.", extensionId));
                 return;
             }

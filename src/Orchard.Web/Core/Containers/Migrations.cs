@@ -38,6 +38,7 @@ namespace Orchard.Core.Containers {
                 .WithPart("CommonPart")
                 .WithPart("WidgetPart")
                 .WithPart("ContainerWidgetPart")
+                .WithIdentity()
                 .WithSetting("Stereotype", "Widget"));
 
             ContentDefinitionManager.AlterPartDefinition("ContainerPart", part => part
@@ -48,7 +49,7 @@ namespace Orchard.Core.Containers {
                 .Attachable()
                 .WithDescription("Allows your content item to be contained by a content item that has the ContainerPart attached."));
 
-            return 6;
+            return 7;
         }
 
         public int UpdateFrom1() {
@@ -122,6 +123,13 @@ namespace Orchard.Core.Containers {
                 .AddColumn<string>("FilterByValue", c => c.WithLength(128)));
 
             return 6;
+        }
+
+        public int UpdateFrom6() {
+            ContentDefinitionManager.AlterTypeDefinition("ContainerWidget", type => type
+                .WithIdentity());
+
+            return 7;
         }
     }
 }

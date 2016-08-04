@@ -7,6 +7,7 @@ using Orchard.FileSystems.VirtualPath;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Validation;
+using Orchard.Exceptions;
 
 namespace Orchard.FileSystems.AppData {
     public class AppDataFolder : IAppDataFolder {
@@ -78,8 +79,11 @@ namespace Orchard.FileSystems.AppData {
             try {
                 File.Delete(destinationFileName);
             }
-            catch (Exception e) {
-                throw new OrchardCoreException(T("Unable to make room for file \"{0}\" in \"App_Data\" folder", destinationFileName), e);
+            catch (Exception ex) {
+                if (ex.IsFatal()) {
+                    throw;
+                } 
+                throw new OrchardCoreException(T("Unable to make room for file \"{0}\" in \"App_Data\" folder", destinationFileName), ex);
             }
         }
 

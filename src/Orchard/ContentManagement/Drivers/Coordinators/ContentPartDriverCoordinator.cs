@@ -78,6 +78,12 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
             }
         }
 
+        public override void ImportCompleted(ImportContentContext context) {
+            foreach (var contentPartDriver in _drivers) {
+                contentPartDriver.ImportCompleted(context);
+            }
+        }
+
         public override void Exporting(ExportContentContext context) {
             foreach (var contentPartDriver in _drivers.OrderBy(x => x.GetPartInfo().First().PartName)) {
                 contentPartDriver.Exporting(context);
@@ -87,6 +93,18 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
         public override void Exported(ExportContentContext context) {
             foreach (var contentPartDriver in _drivers.OrderBy(x => x.GetPartInfo().First().PartName)) {
                 contentPartDriver.Exported(context);
+            }
+        }
+
+        public override void Cloning(CloneContentContext context) {
+            foreach (var contentPartDriver in _drivers) {
+                contentPartDriver.Cloning(context);
+            }
+        }
+
+        public override void Cloned(CloneContentContext context) {
+            foreach (var contentPartDriver in _drivers) {
+                contentPartDriver.Cloned(context);
             }
         }
     }

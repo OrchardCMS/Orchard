@@ -34,7 +34,7 @@ namespace Orchard.FileSystems.Dependencies {
         }
 
         public IEnumerable<DependencyDescriptor> LoadDescriptors() {
-            return _cacheManager.Get(PersistencePath,
+            return _cacheManager.Get(PersistencePath, true,
                                      ctx => {
                                          _appDataFolder.CreateDirectory(BasePath);
 

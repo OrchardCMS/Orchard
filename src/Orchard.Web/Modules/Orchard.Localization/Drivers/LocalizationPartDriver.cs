@@ -2,6 +2,7 @@
 using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Localization.Models;
 using Orchard.Localization.Services;
 using Orchard.Localization.ViewModels;
@@ -89,25 +90,23 @@ namespace Orchard.Localization.Drivers {
 
         private IEnumerable<LocalizationPart> GetDisplayLocalizations(LocalizationPart part, VersionOptions versionOptions) {
             return _localizationService.GetLocalizations(part.ContentItem, versionOptions)
+                .Where(c => c.Culture != null)
                 .Select(c => {
                     var localized = c.ContentItem.As<LocalizationPart>();
-                    if (localized.Culture == null)
-                        localized.Culture = _cultureManager.GetCultureByName(_cultureManager.GetSiteCulture());
                     return c;
                 }).ToList();
         }
 
         private IEnumerable<LocalizationPart> GetEditorLocalizations(LocalizationPart part) {
             return _localizationService.GetLocalizations(part.ContentItem, VersionOptions.Latest)
+                .Where(c => c.Culture != null)
                 .Select(c => {
                     var localized = c.ContentItem.As<LocalizationPart>();
-                    if (localized.Culture == null)
-                        localized.Culture = _cultureManager.GetCultureByName(_cultureManager.GetSiteCulture());
                     return c;
                 }).ToList();
         }
 
-        protected override void Importing(LocalizationPart part, ContentManagement.Handlers.ImportContentContext context) {
+        protected override void Importing(LocalizationPart part, ImportContentContext context) {
             // Don't do anything if the tag is not specified.
             if (context.Data.Element(part.PartDefinition.Name) == null) {
                 return;
@@ -131,7 +130,7 @@ namespace Orchard.Localization.Drivers {
             });
         }
 
-        protected override void Exporting(LocalizationPart part, ContentManagement.Handlers.ExportContentContext context) {
+        protected override void Exporting(LocalizationPart part, ExportContentContext context) {
             if (part.MasterContentItem != null) {
                 var masterContentItemIdentity = _contentManager.GetItemMetadata(part.MasterContentItem).Identity;
                 context.Element(part.PartDefinition.Name).SetAttributeValue("MasterContentItem", masterContentItemIdentity.ToString());
@@ -140,6 +139,10 @@ namespace Orchard.Localization.Drivers {
             if (part.Culture != null) {
                 context.Element(part.PartDefinition.Name).SetAttributeValue("Culture", part.Culture.Culture);
             }
+        }
+
+        protected override void Cloned(LocalizationPart originalPart, LocalizationPart clonePart, CloneContentContext context) {
+            clonePart.Culture = originalPart.Culture;
         }
     }
 }

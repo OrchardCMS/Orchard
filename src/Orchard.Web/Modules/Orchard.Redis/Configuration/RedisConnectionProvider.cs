@@ -4,6 +4,8 @@ using System.Configuration;
 using Orchard.Environment.Configuration;
 using Orchard.Logging;
 using StackExchange.Redis;
+using Orchard.UI.Notify;
+using Orchard.Localization;
 
 namespace Orchard.Redis.Configuration {
 
@@ -16,6 +18,8 @@ namespace Orchard.Redis.Configuration {
             Logger = NullLogger.Instance;
         }
 
+        public Localizer T { get; set; }
+
         public ILogger Logger { get; set; }
 
         public string GetConnectionString(string service) {
@@ -25,7 +29,7 @@ namespace Orchard.Redis.Configuration {
             var connectionStringSettings = ConfigurationManager.ConnectionStrings[_tenantSettingsKey] ?? ConfigurationManager.ConnectionStrings[_defaultSettingsKey];
 
             if (connectionStringSettings == null) {
-                throw new ConfigurationErrorsException("A connection string is expected for " + service);
+                return null;
             }
 
             return connectionStringSettings.ConnectionString;
@@ -34,7 +38,7 @@ namespace Orchard.Redis.Configuration {
         public ConnectionMultiplexer GetConnection(string connectionString) {
 
             if (String.IsNullOrWhiteSpace(connectionString)) {
-                throw new ArgumentNullException("connectionString");
+                return null;
             }
 
             // when using ConcurrentDictionary, multiple threads can create the value

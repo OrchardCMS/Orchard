@@ -38,8 +38,9 @@ namespace Orchard.Autoroute.Handlers {
 
             OnPublished<AutoroutePart>((ctx, part) => PublishAlias(part));
 
-            // Remove alias if removed or unpublished
-            OnRemoved<AutoroutePart>((ctx, part) => RemoveAlias(part));
+            // Remove alias if destroyed, removed or unpublished
+            OnRemoving<AutoroutePart>((ctx, part) => RemoveAlias(part));
+            OnDestroyed<AutoroutePart>((ctx, part) => RemoveAlias(part));
             OnUnpublished<AutoroutePart>((ctx, part) => RemoveAlias(part));
 
             // Register alias as identity
@@ -73,7 +74,7 @@ namespace Orchard.Autoroute.Handlers {
                 // Update the home alias to point to this item being published.
                 _homeAliasService.PublishHomeAlias(part);
             }
-
+            
             _autorouteService.Value.PublishAlias(part);
         }
 
@@ -99,11 +100,11 @@ namespace Orchard.Autoroute.Handlers {
         }
 
         void RemoveAlias(AutoroutePart part) {
-            var homePageId = _homeAliasService.GetHomePageId();
+            var homePageId = _homeAliasService.GetHomePageId(VersionOptions.Latest);
 
             // Is this the current home page?
             if (part.ContentItem.Id == homePageId) {
-                _orchardServices.Notifier.Warning(T("You removed the content item that served as the site\'s home page. \nMost possibly this means that instead of the home page a \"404 Not Found\" error page will be displayed without a link to log in or access the dashboard. \n\nTo prevent this you can e.g. publish a content item that has the \"Set as home page\" checkbox ticked."));
+                _orchardServices.Notifier.Warning(T("You removed the content item that served as the site's home page. \nMost possibly this means that instead of the home page a \"404 Not Found\" page will be displayed. \n\nTo prevent this you can e.g. publish a content item that has the \"Set as home page\" checkbox ticked."));
             }
             _autorouteService.Value.RemoveAliases(part);
         }

@@ -39,3 +39,17 @@
         @Html.ValidationMessageFor(m => m.Hint)
     </div>
 </fieldset>
+<fieldset>
+    <div class="editor-field">
+        <label for="@Html.FieldIdFor(m => m.Placeholder)">@T("Watermark (placeholder)")</label>
+        @Html.TextBoxFor(m => m.Placeholder, new { @class = "text large" })
+        @Html.ValidationMessageFor(m => m.Placeholder)
+        <span class="hint">@T("A hint to display when the input is empty. (optional)")</span>
+    </div>
+</fieldset>
+<fieldset>
+    <div class="editor-field">
+        <label for="@Html.FieldIdFor(m => m.DefaultValue)">@T("Default value")</label>
+        @Html.ValidationMessageFor(m => m.DefaultValue)
+    </div>
+</fieldset>

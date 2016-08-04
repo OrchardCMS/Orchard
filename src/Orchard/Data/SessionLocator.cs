@@ -70,10 +70,14 @@ namespace Orchard.Data {
         }
 
         public void Cancel() {
-            // IsActive is true if the transaction hasn't been committed or rolled back
-            if (_session != null && _session.Transaction.IsActive) {
-                Logger.Debug("Rolling back transaction");
-                _session.Transaction.Rollback();
+            if (_session != null) {
+
+                // IsActive is true if the transaction hasn't been committed or rolled back
+                if (_session.Transaction != null && _session.Transaction.IsActive) {
+                    Logger.Debug("Rolling back transaction");
+                    _session.Transaction.Rollback();
+                }
+
                 DisposeSession();
             }
         }
@@ -87,13 +91,15 @@ namespace Orchard.Data {
 
                 try {
                     // IsActive is true if the transaction hasn't been committed or rolled back
-                    if (_session.Transaction.IsActive) {
+                    if (_session.Transaction != null && _session.Transaction.IsActive) {
                         Logger.Debug("Committing transaction");
                         _session.Transaction.Commit();
                     }
                 }
                 finally {
-                    _contentManagerSession.Clear();
+                    if (_contentManagerSession != null) {
+                        _contentManagerSession.Clear();
+                    }
 
                     Logger.Debug("Disposing session");
                     _session.Close();
@@ -111,6 +117,8 @@ namespace Orchard.Data {
             var sessionFactory = _sessionFactoryHolder.GetSessionFactory();
             Logger.Debug("Opening NHibernate session");
             _session = sessionFactory.OpenSession(new OrchardSessionInterceptor(_interceptors.ToArray(), Logger));
+            // When BeginTransaction fails, the exception will be propagated so that
+            // global exception handling code will dispose this session.
             _session.BeginTransaction(level);
             _contentManagerSession = _contentManagerSessionFactory();
         }

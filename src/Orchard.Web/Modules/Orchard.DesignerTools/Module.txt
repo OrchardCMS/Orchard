@@ -2,13 +2,13 @@
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
-Version: 1.9.1
+Version: 1.10.1
 OrchardVersion: 1.9
 Description: Contains designer tools to ease the Themes development process
 FeatureName: Shape Tracing
 Category: Designer
 FeatureDescription: Displays all currently displayed shapes and some information to customize them
-Dependencies: Orchard.jQuery
+Dependencies: Orchard.Resources
 Features:
     UrlAlternates:
         Name: Url Alternates

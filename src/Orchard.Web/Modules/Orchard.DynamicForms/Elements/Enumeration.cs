@@ -20,6 +20,10 @@ namespace Orchard.DynamicForms.Elements {
             get { return _options.Value; }
         }
 
+        public string DefaultValue {
+            get { return this.Retrieve(x => x.DefaultValue); }
+        }
+
         public IEnumerable<string> RuntimeValues {
             get { return _runtimeValues.Value; }
         }

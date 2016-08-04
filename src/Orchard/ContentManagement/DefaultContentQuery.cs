@@ -76,7 +76,7 @@ namespace Orchard.ContentManagement {
         }
 
         private int GetContentTypeRecordId(string contentType) {
-            return _cacheManager.Get(contentType + "_Record", ctx => {
+            return _cacheManager.Get(contentType + "_Record", true, ctx => {
                 ctx.Monitor(_signals.When(contentType + "_Record"));
 
                 var contentTypeRecord = _contentTypeRepository.Get(x => x.Name == contentType);
@@ -92,7 +92,7 @@ namespace Orchard.ContentManagement {
         }
 
         private void ForType(params string[] contentTypeNames) {
-            if (contentTypeNames != null && contentTypeNames.Length != 0) {
+            if (contentTypeNames != null) {
                 var contentTypeIds = contentTypeNames.Select(GetContentTypeRecordId).ToArray();
                 // don't use the IN operator if not needed for performance reasons
                 if (contentTypeNames.Length == 1) {

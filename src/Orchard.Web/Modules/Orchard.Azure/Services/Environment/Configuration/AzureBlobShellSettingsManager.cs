@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Microsoft.Azure;
 using Orchard.Azure.Services.FileSystems;
 using Orchard.Environment.Configuration;
 using Orchard.FileSystems.Media;
 using Orchard.Logging;
+using Microsoft.Azure;
 
 namespace Orchard.Azure.Services.Environment.Configuration
 {
@@ -21,13 +21,20 @@ namespace Orchard.Azure.Services.Environment.Configuration
         private readonly IShellSettingsManagerEventHandler _events;
 
         public AzureBlobShellSettingsManager(IMimeTypeProvider mimeTypeProvider, IShellSettingsManagerEventHandler events) {
+            _events = events;
+            Logger = NullLogger.Instance;
+
             var connectionString = CloudConfigurationManager.GetSetting(Constants.ShellSettingsStorageConnectionStringSettingName);
+
             var containerName = CloudConfigurationManager.GetSetting(Constants.ShellSettingsContainerNameSettingName);
             if (String.IsNullOrEmpty(containerName))
                 containerName = Constants.ShellSettingsDefaultContainerName;
+
             _fileSystem = new AzureFileSystem(connectionString, containerName, String.Empty, true, mimeTypeProvider);
-            _events = events;
-            Logger = NullLogger.Instance;
+
+            if (!_fileSystem.Container.Exists()) {
+                _fileSystem.Container.Create();
+            }
         }
 
         public ILogger Logger { get; set; }

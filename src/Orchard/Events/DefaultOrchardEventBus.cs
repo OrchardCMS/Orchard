@@ -53,6 +53,9 @@ namespace Orchard.Events {
                 return TryInvoke(eventHandler, messageName, interfaceName, methodName, eventData, out returnValue);
             }
             catch (Exception exception) {
+                if (exception.IsFatal()) {
+                    throw;
+                } 
                 if (!_exceptionPolicy.HandleException(this, exception)) {
                     throw;
                 }

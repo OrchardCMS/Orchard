@@ -99,7 +99,7 @@ namespace Orchard.OutputCache.Services {
         }
 
         public IEnumerable<CacheRouteConfig> GetRouteConfigs() {
-            return _cacheManager.Get(RouteConfigsCacheKey,
+            return _cacheManager.Get(RouteConfigsCacheKey, true,
                 ctx => {
                     ctx.Monitor(_signals.When(RouteConfigsCacheKey));
                     return _repository.Fetch(c => true).Select(c => new CacheRouteConfig { RouteKey = c.RouteKey, Duration = c.Duration, GraceTime = c.GraceTime }).ToReadOnlyCollection();

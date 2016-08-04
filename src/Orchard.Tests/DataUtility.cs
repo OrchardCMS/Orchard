@@ -23,7 +23,8 @@ namespace Orchard.Tests {
             //    .Conventions.AddFromAssemblyOf<DataModule>();
             var persistenceModel = AbstractDataServicesProvider.CreatePersistenceModel(types.Select(t => new RecordBlueprint { TableName = "Test_" + t.Name, Type = t }).ToList());
             var persistenceConfigurer = new SqlCeDataServicesProvider(fileName).GetPersistenceConfigurer(true/*createDatabase*/);
-            ((MsSqlCeConfiguration)persistenceConfigurer).ShowSql();
+            // Uncomment to display SQL while running tests
+            // ((MsSqlCeConfiguration)persistenceConfigurer).ShowSql();
 
             return Fluently.Configure()
                 .Database(persistenceConfigurer)

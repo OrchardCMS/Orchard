@@ -9,6 +9,7 @@ using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.ShellBuilders;
+using Orchard.Logging;
 using Orchard.Tests.Environment.TestDependencies;
 using Orchard.Utility.Extensions;
 
@@ -17,16 +18,22 @@ namespace Orchard.Tests.Environment.ShellBuilders {
     public class CompositionStrategyTests : ContainerTestBase {
         private CompositionStrategy _compositionStrategy;
         private Mock<IExtensionManager> _extensionManager;
+        private IEnumerable<ExtensionDescriptor> _availableExtensions;
+        private IEnumerable<Feature> _installedFeatures;
+        private Mock<ILogger> _loggerMock;
 
         protected override void Register(ContainerBuilder builder) {
-            _extensionManager = new Mock<IExtensionManager>(MockBehavior.Loose);
+            _extensionManager = new Mock<IExtensionManager>();
+            _loggerMock = new Mock<ILogger>();
 
             builder.RegisterType<CompositionStrategy>().AsSelf();
             builder.RegisterInstance(_extensionManager.Object);
+            builder.RegisterInstance(_loggerMock.Object);
         }
 
         protected override void Resolve(ILifetimeScope container) {
             _compositionStrategy = container.Resolve<CompositionStrategy>();
+            _compositionStrategy.Logger = container.Resolve<ILogger>();
 
             var alphaExtension = new ExtensionDescriptor {
                 Id = "Alpha",
@@ -54,7 +61,11 @@ namespace Orchard.Tests.Environment.ShellBuilders {
                 betaFeatureDescriptor
             };
 
-            var features = new List<Feature> {
+            _availableExtensions = new[] {
+                alphaExtension
+            };
+
+            _installedFeatures = new List<Feature> {
                 new Feature {
                     Descriptor = alphaFeatureDescriptor,
                     ExportedTypes = new List<Type> {
@@ -69,16 +80,16 @@ namespace Orchard.Tests.Environment.ShellBuilders {
                 }
             };
 
-            _extensionManager.Setup(x => x.AvailableExtensions()).Returns(new List<ExtensionDescriptor> {
-                alphaExtension
-            });
+            _loggerMock.Setup(x => x.IsEnabled(It.IsAny<LogLevel>())).Returns(true);
 
-            _extensionManager.Setup(x => x.AvailableFeatures()).Returns(
+            _extensionManager.Setup(x => x.AvailableExtensions()).Returns(() => _availableExtensions);
+
+            _extensionManager.Setup(x => x.AvailableFeatures()).Returns(() =>
                 _extensionManager.Object.AvailableExtensions()
                 .SelectMany(ext => ext.Features)
                 .ToReadOnlyCollection());
 
-            _extensionManager.Setup(x => x.LoadFeatures(It.IsAny<IEnumerable<FeatureDescriptor>>())).Returns(features);
+            _extensionManager.Setup(x => x.LoadFeatures(It.IsAny<IEnumerable<FeatureDescriptor>>())).Returns(() => _installedFeatures);
         }
 
         [Test]
@@ -87,7 +98,7 @@ namespace Orchard.Tests.Environment.ShellBuilders {
             var shellDescriptor = CreateShellDescriptor("Alpha", "Beta");
             var shellBlueprint = _compositionStrategy.Compose(shellSettings, shellDescriptor);
 
-            Assert.That(shellBlueprint.Dependencies.Count(x => x.Type == typeof (AlphaDependency)), Is.EqualTo(1));
+            Assert.That(shellBlueprint.Dependencies.Count(x => x.Type == typeof(AlphaDependency)), Is.EqualTo(1));
             Assert.That(shellBlueprint.Dependencies.Count(x => x.Type == typeof(BetaDependency)), Is.EqualTo(1));
         }
 
@@ -99,6 +110,34 @@ namespace Orchard.Tests.Environment.ShellBuilders {
 
             Assert.That(shellBlueprint.Dependencies.Count(x => x.Type == typeof(AlphaDependency)), Is.EqualTo(1));
             Assert.That(shellDescriptor.Features.Count(x => x.Name == "Alpha"), Is.EqualTo(1));
+        }
+
+        [Test]
+        public void ComposeDoesNotThrowWhenFeatureStateRecordDoesNotExist() {
+            var shellSettings = CreateShell();
+            var shellDescriptor = CreateShellDescriptor("MyFeature");
+
+            Assert.DoesNotThrow(() => _compositionStrategy.Compose(shellSettings, shellDescriptor));
+            _loggerMock.Verify(x => x.Log(LogLevel.Warning, null, It.IsAny<string>(), It.IsAny<object[]>()));
+        }
+
+        [Test]
+        public void ComposeThrowsWhenAutoEnabledDependencyDoesNotExist() {
+            var myModule = _availableExtensions.First();
+
+            myModule.Features = myModule.Features.Concat(new[] {
+                new FeatureDescriptor {
+                    Extension = myModule,
+                    Name = "MyFeature",
+                    Id = "MyFeature",
+                    Dependencies = new[] { "NonExistingFeature" }
+                }
+            });
+            
+            var shellSettings = CreateShell();
+            var shellDescriptor = CreateShellDescriptor("MyFeature");
+
+            Assert.Throws<OrchardException>(() => _compositionStrategy.Compose(shellSettings, shellDescriptor));
         }
 
         private ShellSettings CreateShell() {

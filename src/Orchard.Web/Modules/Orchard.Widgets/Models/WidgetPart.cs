@@ -6,7 +6,7 @@ using Orchard.ContentManagement.Aspects;
 
 namespace Orchard.Widgets.Models {
     public class WidgetPart : ContentPart<WidgetPartRecord>, ITitleAspect {
-        
+
         /// <summary>
         /// The widget's title.
         /// </summary>
@@ -25,7 +25,7 @@ namespace Orchard.Widgets.Models {
         }
 
         /// <summary>
-        /// Whether or not the Title should be rendered on the front-end
+        /// Whether or not the Title should be rendered on the front-end.
         /// </summary>
         public bool RenderTitle {
             get { return Retrieve(x => x.RenderTitle); }
@@ -36,8 +36,7 @@ namespace Orchard.Widgets.Models {
         /// The widget's position within the zone.
         /// </summary>
         [Required]
-        public string Position
-        {
+        public string Position {
             get { return Retrieve(x => x.Position); }
             set { Store(x => x.Position, value); }
         }
@@ -61,8 +60,11 @@ namespace Orchard.Widgets.Models {
         /// <summary>
         /// The layerPart identifier.
         /// </summary>
-        public int LayerId {
-            get { return this.As<ICommonPart>().Container.As<LayerPart>().Id; }
+        public int? LayerId {
+            get {
+                var layerPart = LayerPart;
+                return layerPart != null ? layerPart.Id : default(int?);
+            }
         }
 
         /// <summary>

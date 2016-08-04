@@ -2,11 +2,28 @@
 @using System.Globalization
 @using Orchard.Fields.Settings;
 
+@{
+    var attributes = new Dictionary<string, object>();
+    attributes.Add("class", "text-small"); attributes.Add("type", "text");
+    attributes.Add("min", Model.Settings.Minimum.HasValue ? Model.Settings.Minimum.Value : 0);
+    attributes.Add("max", Model.Settings.Maximum.HasValue ? Model.Settings.Maximum.Value : 1000000);
+    attributes.Add("step", Math.Pow(10, 0 - Model.Settings.Scale).ToString(CultureInfo.InvariantCulture));
+    attributes.Add("placeholder", Model.Settings.Placeholder);
+
+    if (Model.Settings.Required) {
+        attributes.Add("required", "required");
+    }
+
+    if (!String.IsNullOrWhiteSpace(Model.Value)) {
+        attributes.Add("Value", Model.Value);
+    }
+}
+
 <fieldset>
-    <label for="@Html.FieldIdFor(m => m.Value)" @if(Model.Settings.Required) { <text>class="required"</text> }>@Model.Field.DisplayName</label>
-    @Html.TextBoxFor(m => m.Value, new { @class = "text small", type = "text", min = (Model.Settings.Minimum.HasValue) ? Model.Settings.Minimum.Value : 0, max = (Model.Settings.Maximum.HasValue) ? Model.Settings.Maximum.Value : 1000000, step = Math.Pow(10, 0 - Model.Settings.Scale).ToString(CultureInfo.InvariantCulture) })
+    <label for="@Html.FieldIdFor(m => m.Value)" @if (Model.Settings.Required) { <text> class="required" </text>     }>@Model.Field.DisplayName</label>
+    @Html.TextBoxFor(m => m.Value, attributes)
     @Html.ValidationMessageFor(m => m.Value)
     @if (HasText(Model.Settings.Hint)) {
-    <span class="hint">@Model.Settings.Hint</span>
+        <span class="hint">@Model.Settings.Hint</span>
     }
 </fieldset>

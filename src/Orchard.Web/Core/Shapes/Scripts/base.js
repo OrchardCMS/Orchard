@@ -236,7 +236,13 @@
             }
 
             if (_this.filter("[itemprop~='RemoveUrl']").length == 1) {
-                if (!confirm(confirmRemoveMessage)) {
+            	// use a custom message if its set in data-message
+            	var dataMessage = _this.data('message');
+            	if (dataMessage === undefined) {
+            		dataMessage = confirmRemoveMessage;
+            	}
+
+                if (!confirm(dataMessage)) {
                     return false;
                 }
             }

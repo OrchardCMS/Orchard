@@ -3,7 +3,8 @@
 @{
     // Library dependencies.
     Style.Require("jQueryUI_Orchard");
-    Style.Include("Lib.css", "Lib.min.css");
+    Style.Require("Bootstrap");
+    Style.Require("FontAwesome");
 
     // We need these styles to properly render selected media items.
     // Ideally the MediaLibrary is refactored such that each media item type provides its own set of styles, enabling extensibility of the set of media item types.
@@ -11,13 +12,7 @@
     Style.Include("~/Modules/Orchard.MediaLibrary/Styles/media-library-picker-admin.css");
 
     Script.Require("jQueryCookie");
-    Script.Require("jQueryUI_Draggable");
-    Script.Require("jQueryUI_Droppable");
-    Script.Require("jQueryUI_Sortable");
-    Script.Require("jQueryUI_Resizable");
-    Script.Require("jQueryUI_Position");
-    Script.Require("jQueryUI_Dialog");
-    Script.Require("TinyMce");
+    Script.Require("jQueryUI");
     Script.Require("Layouts.LayoutEditor");
     Script.Include("jquery.deserialize.js");
 
@@ -31,8 +26,12 @@
     Style.Include("LayoutEditor.css", "LayoutEditor.min.css");
     Script.Include("LayoutDesignerHost.js");
 
+    // The grid system.
+    Style.Include("default-grid.css");
+
     using (Script.Foot()) {
         <script>
+
             angular
                 .module("LayoutEditor")
                 .constant("environment", {
@@ -40,12 +39,28 @@
                         return "@Url.Action("Get", "Template", new { area = "Orchard.Layouts" })" + "/" + templateName;
                     }
                 });
-            (function () {
+
+            angular.bootstrap($(".layout-editor-holder")[0], ["LayoutEditor"]);
+
+            $(function () {
                 var editorConfig = JSON.parse(LayoutEditor.decode("@Html.Raw(Url.Encode(Model.ConfigurationData))"));
                 var editorCanvasData = JSON.parse(LayoutEditor.decode("@Html.Raw(Url.Encode(Model.Data))"));
+                var layoutEditor = window.layoutEditor = new LayoutEditor.Editor(editorConfig, editorCanvasData);
 
-                window.layoutEditor = new LayoutEditor.Editor(editorConfig, editorCanvasData);
-            })(jQuery);
+                var host = new window.Orchard.Layouts.LayoutDesignerHost($(".layout-designer"), layoutEditor);
+                $(".layout-designer").each(function (e) {
+                    var designer = $(this);
+                    var dialog = designer.find(".layout-editor-help-dialog");
+                    designer.find(".layout-editor-help-link").click(function (e) {
+                        dialog.dialog({
+                            modal: true,
+                            width: 840
+                        });
+                        e.preventDefault();
+                    });
+                });
+            });
+
         </script>
     }
 
@@ -57,10 +72,8 @@
     <div class="layout-designer"
          data-modelstate-valid="@ViewData.ModelState.IsValid.ToString().ToLower()"
          data-display-type="Design"
-         data-edit-url="@Url.Action("Edit", "Element", new { session = Model.SessionKey, contentId = contentId, contentType = contentType, area = "Orchard.Layouts" })"
-         data-add-url="@Url.Action("Add", "Element", new {session = Model.SessionKey, contentId = contentId, contentType = contentType, area = "Orchard.Layouts"})"
-         data-add-direct-url="@Url.Action("CreateDirect", "Element", new { contentId = contentId, contentType = contentType, area = "Orchard.Layouts" })"
-         data-apply-template-url="@Url.Action("ApplyTemplate", "Layout", new { contentId = contentId, contentType = contentType, area = "Orchard.Layouts" })"
+         data-edit-url="@Url.Action("Edit", "Element", new { session = Model.SessionKey, contentId, contentType, area = "Orchard.Layouts" })"
+         data-apply-template-url="@Url.Action("ApplyTemplate", "Layout", new { contentId, contentType, area = "Orchard.Layouts" })"
          data-confirm-delete-prompt="@T("Are you sure you want to delete this element?")"
          data-editor-dialog-title-format="@T("$1 Properties")"
          data-editor-dialog-name="Layout"
@@ -69,6 +82,7 @@
 
         @Html.HiddenFor(m => m.SessionKey)
         @Html.HiddenFor(m => m.Data, new { @class = "layout-data-field" })
+        @Html.HiddenFor(m => m.RecycleBin, new { @class = "recycle-bin-data-field" })
         <div class="layout-editor-toolbar">
             <ol class="layout-editor-toolbar-group">
                 <li>
@@ -77,7 +91,7 @@
             </ol>
             <ol class="layout-editor-toolbar-group">
                 <li>
-                    <a class="layout-editor-help-link" href="#"><i class="fa fa-info-circle"></i> Clipboard, keyboard shortcuts, etc.</a>
+                    <a class="layout-editor-help-link" href="#"><i class="fa fa-info-circle"></i> @T("Clipboard, keyboard shortcuts, etc.")</a>
                 </li>
                 @if (Model.Templates.Any()) {
                     var options = Model.Templates.Select(x => new SelectListItem { Text = Html.ItemDisplayText(x).ToString(), Value = x.Id.ToString(CultureInfo.InvariantCulture), Selected = x.Id == Model.TemplateId });
@@ -93,128 +107,128 @@
             </ol>
         </div>
         <div class="layout-editor-holder">
-            <orc-layout-editor model="window.layoutEditor" ng-app="LayoutEditor" />
+            <orc-layout-editor model="window.layoutEditor" />
         </div>
         @Display.DialogTemplate(Name: "Layout")
-        <div class="layout-editor-help-dialog" title="Layout editor help">
+        <div class="layout-editor-help-dialog" title="@T("Layout editor help")">
             <div class="help-row">
-                <h3>Clipboard</h3>
+                <h3>@T("Clipboard")</h3>
                 <div class="help-column-full">
-                    <p>Elements (including containers) can be cut, copied and pasted using the standard clipboard shortcuts (<code>Ctrl+X</code> / <code>Ctrl+C</code> / <code>Ctrl-V</code> on Windows, <code>⌘+X</code> / <code>⌘+C</code> / <code>⌘+V</code> on Mac OS).</p>
-                    <p>On browsers that support native clipboard events, clipboard operations can be performed across different layout editor instances, in different tabs or browser windows. Text content can also be pasted into other applications.</p>
-                    <p>On other browsers, clipboard operations work only within the same layout editor instance.</p>
+                    <p>@T("Elements (including containers) can be cut, copied and pasted using the standard clipboard shortcuts (<code>Ctrl+X</code> / <code>Ctrl+C</code> / <code>Ctrl-V</code> on Windows, <code>⌘+X</code> / <code>⌘+C</code> / <code>⌘+V</code> on Mac OS).")</p>
+                    <p>@T("On browsers that support native clipboard events, clipboard operations can be performed across different layout editor instances, in different tabs or browser windows. Text content can also be pasted into other applications.")</p>
+                    <p>@T("On other browsers, clipboard operations work only within the same layout editor instance.")</p>
                 </div>
             </div>
             <div class="help-row">
-                <h3>Keyboard shortcuts</h3>
+                <h3>@T("Keyboard shortcuts")</h3>
                 <div class="help-column-half">
-                    <h4>Resizing columns</h4>
+                    <h4>@T("Resizing columns")</h4>
                     <table>
                         <tbody>
                             <tr>
-                                <td><code>Alt+Left</code></td>
-                                <td>Moves the left edge of the focused column left</td>
+                                <td><code>@T("Alt+Left")</code></td>
+                                <td>@T("Moves the left edge of the focused column left")</td>
                             </tr>
                             <tr>
-                                <td><code>Alt+Right</code></td>
-                                <td>Moves the left edge of the focused column right</td>
+                                <td><code>@T("Alt+Right")</code></td>
+                                <td>@T("Moves the left edge of the focused column right")</td>
                             </tr>
                             <tr>
-                                <td><code>Shift+Left</code></td>
-                                <td>Moves the right edge of the focused column left</td>
+                                <td><code>@T("Shift+Left")</code></td>
+                                <td>@T("Moves the right edge of the focused column left")</td>
                             </tr>
                             <tr>
-                                <td><code>Shift+Right</code></td>
-                                <td>Moves the right edge of the focused column right</td>
+                                <td><code>@T("Shift+Right")</code></td>
+                                <td>@T("Moves the right edge of the focused column right")</td>
                             </tr>
                         </tbody>
                     </table>
-                    <p>The <code>Alt</code> and <code>Shift</code> keys can also be combined to move both edges simultaneously.</p>
+                    <p>@T("The <code>Alt</code> and <code>Shift</code> keys can also be combined to move both edges simultaneously.")</p>
                 </div>
                 <div class="help-column-half">
-                    <h4>Focus</h4>
+                    <h4>@T("Focus")</h4>
                     <table>
                         <tbody>
                             <tr>
-                                <td><code>Up</code></td>
-                                <td>Moves focus to the previous element (above)</td>
+                                <td><code>@T("Up")</code></td>
+                                <td>@T("Moves focus to the previous element (above)")</td>
                             </tr>
                             <tr>
-                                <td><code>Down</code></td>
-                                <td>Moves focus to the next element (below)</td>
+                                <td><code>@T("Down")</code></td>
+                                <td>@T("Moves focus to the next element (below)")</td>
                             </tr>
                             <tr>
-                                <td><code>Left</code></td>
-                                <td>Moves focus to the previous column (to the left)</td>
+                                <td><code>@T("Left")</code></td>
+                                <td>@T("Moves focus to the previous column (to the left)")</td>
                             </tr>
                             <tr>
-                                <td><code>Right</code></td>
-                                <td>Moves focus to the next column (to the right)</td>
+                                <td><code>@T("Right")</code></td>
+                                <td>@T("Moves focus to the next column (to the right)")</td>
                             </tr>
                             <tr>
-                                <td><code>Alt+Up</code></td>
-                                <td>Moves focus to the parent element</td>
+                                <td><code>@T("Alt+Up")</code></td>
+                                <td>@T("Moves focus to the parent element")</td>
                             </tr>
                             <tr>
-                                <td><code>Alt+Down</code></td>
-                                <td>Moves focus to the first child element</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="help-column-half">
-                    <h4>Editing</h4>
-                    <table>
-                        <tbody>
-                            <tr>
-                                <td><code>Enter</code></td>
-                                <td>Opens the content editor of the focused element</td>
-                            </tr>
-                            <tr>
-                                <td><code>Space</code></td>
-                                <td>Opens the properties popup of the focused element</td>
-                            </tr>
-                            <tr>
-                                <td><code>Esc</code></td>
-                                <td>Closes the properties popup of the focused element</td>
-                            </tr>
-                            <tr>
-                                <td><code>Del</code></td>
-                                <td>Deletes the focused element</td>
+                                <td><code>@T("Alt+Down")</code></td>
+                                <td>@T("Moves focus to the first child element")</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
                 <div class="help-column-half">
-                    <h4>Moving</h4>
+                    <h4>@T("Editing")</h4>
                     <table>
                         <tbody>
                             <tr>
-                                <td><code>Ctrl+Up</code></td>
-                                <td>Moves (reorders) the focused element up</td>
+                                <td><code>@T("Enter")</code></td>
+                                <td>@T("Opens the content editor of the focused element")</td>
                             </tr>
                             <tr>
-                                <td><code>Ctrl+Down</code></td>
-                                <td>Moves (reorders) the focused element down</td>
+                                <td><code>@T("Space")</code></td>
+                                <td>@T("Opens the properties popup of the focused element")</td>
                             </tr>
                             <tr>
-                                <td><code>Ctrl+Left</code></td>
-                                <td>Moves (reorders) the focused column left</td>
+                                <td><code>@T("Esc")</code></td>
+                                <td>@T("Closes the properties popup of the focused element")</td>
                             </tr>
                             <tr>
-                                <td><code>Ctrl+Right</code></td>
-                                <td>Moves (reorders) the focused column right</td>
+                                <td><code>@T("Del")</code></td>
+                                <td>@T("Deletes the focused element")</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="help-column-half">
+                    <h4>@T("Moving")</h4>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td><code>@T("Ctrl+Up")</code></td>
+                                <td>@T("Moves (reorders) the focused element up")</td>
+                            </tr>
+                            <tr>
+                                <td><code>@T("Ctrl+Down")</code></td>
+                                <td>@T("Moves (reorders) the focused element down")</td>
+                            </tr>
+                            <tr>
+                                <td><code>@T("Ctrl+Left")</code></td>
+                                <td>@T("Moves (reorders) the focused column left")</td>
+                            </tr>
+                            <tr>
+                                <td><code>@T("Ctrl+Right")</code></td>
+                                <td>@T("Moves (reorders) the focused column right")</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
             <div class="help-row">
-                <h3>Drag and drop</h3>
+                <h3>@T("Drag and drop")</h3>
                 <section class="help-column-full">
-                    <p>Drag any existing element to reorder within its parent.</p>
-                    <p>Drag a new element from the toolbox and drop it within a compatible container.</p>
-                    <p>Drag the left and right edges of a focused column to resize the column. By default any adjacent column will be attached and resized accordingly; holding down the <code>Alt</code> key while resizing unattaches from the adjacent column and instead modifies the offset between.</p>
+                    <p>@T("Drag any existing element to reorder within its parent.")</p>
+                    <p>@T("Drag a new element from the toolbox and drop it within a compatible container.")</p>
+                    <p>@T("Drag the left and right edges of a focused column to resize the column. By default any adjacent column will be attached and resized accordingly; holding down the <code>Alt</code> key while resizing unattaches from the adjacent column and instead modifies the offset between.")</p>
                 </section>
             </div>
         </div>

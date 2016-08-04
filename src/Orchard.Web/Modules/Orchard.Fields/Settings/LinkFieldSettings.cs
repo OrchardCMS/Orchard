@@ -5,6 +5,10 @@
         public TargetMode TargetMode { get; set; }
         public LinkTextMode LinkTextMode { get; set; }
         public string StaticText { get; set; }
+        public string UrlPlaceholder { get; set; }
+        public string TextPlaceholder { get; set; }
+        public string DefaultValue { get; set; }
+        public string TextDefaultValue { get; set; }
 
         public LinkFieldSettings() {
             TargetMode = TargetMode.None;

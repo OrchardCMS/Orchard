@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Contents.Extensions;
@@ -63,7 +64,7 @@ namespace Orchard.Projections {
                 cfg => cfg
                     .WithPart("QueryPart")
                     .WithPart("TitlePart")
-                    .WithPart("IdentityPart")
+                    .WithIdentity()
                 );
 
             SchemaBuilder.CreateTable("QueryPartRecord",
@@ -178,7 +179,7 @@ namespace Orchard.Projections {
                 cfg => cfg
                     .WithPart("WidgetPart")
                     .WithPart("CommonPart")
-                    .WithPart("IdentityPart")
+                    .WithIdentity()
                     .WithPart("ProjectionPart")
                     .WithSetting("Stereotype", "Widget")
                 );
@@ -266,12 +267,20 @@ namespace Orchard.Projections {
         }
 
         public int UpdateFrom2() {
-            SchemaBuilder.AlterTable("ProjectionPartRecord",
-                            table => table
-                                .AlterColumn("PagerSuffix", c => c.WithType(DbType.String).WithLength(255))
-                            );
+            SchemaBuilder.AlterTable("ProjectionPartRecord", table => table
+                .AlterColumn("PagerSuffix", c => c.WithType(DbType.String).WithLength(255))
+            );
 
             return 3;
+        }
+
+        public int UpdateFrom3() {
+            ContentDefinitionManager.AlterTypeDefinition("NavigationQueryMenuItem",
+                cfg => cfg
+                    .WithIdentity()
+                );
+
+            return 4;
         }
     }
 }

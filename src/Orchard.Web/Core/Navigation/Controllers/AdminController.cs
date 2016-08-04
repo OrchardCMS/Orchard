@@ -1,14 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Web.Mvc;
-using System.Web.Routing;
 using Orchard.ContentManagement;
-using Orchard.Core.Common.Models;
 using Orchard.Core.Navigation.Models;
 using Orchard.Core.Navigation.Services;
 using Orchard.Core.Navigation.ViewModels;
-using Orchard.Core.Title.Models;
 using Orchard.Localization;
 using Orchard.Mvc.Extensions;
 using Orchard.UI;
@@ -16,24 +12,29 @@ using Orchard.UI.Notify;
 using Orchard.UI.Navigation;
 using Orchard.Utility;
 using System;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Logging;
+using Orchard.Exceptions;
 
 namespace Orchard.Core.Navigation.Controllers {
     [ValidateInput(false)]
     public class AdminController : Controller, IUpdateModel {
         private readonly IMenuService _menuService;
         private readonly INavigationManager _navigationManager;
+        private readonly IEnumerable<IContentHandler> _handlers;
         private readonly IMenuManager _menuManager;
 
         public AdminController(
             IOrchardServices orchardServices,
             IMenuService menuService,
             IMenuManager menuManager,
-            INavigationManager navigationManager) {
+            INavigationManager navigationManager,
+            IEnumerable<IContentHandler> handlers) {
             _menuService = menuService;
             _menuManager = menuManager;
             _navigationManager = navigationManager;
-            
+            _handlers = handlers;
+
             Services = orchardServices;
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
@@ -94,7 +95,16 @@ namespace Orchard.Core.Navigation.Controllers {
             if (menuItemEntries != null) {
                 foreach (var menuItemEntry in menuItemEntries) {
                     MenuPart menuPart = _menuService.Get(menuItemEntry.MenuItemId);
-                    menuPart.MenuPosition = menuItemEntry.Position;
+
+                    if (menuPart.MenuPosition != menuItemEntry.Position) {
+                        var context = new UpdateContentContext(menuPart.ContentItem);
+
+                        _handlers.Invoke(handler => handler.Updating(context), Logger);
+
+                        menuPart.MenuPosition = menuItemEntry.Position;
+
+                        _handlers.Invoke(handler => handler.Updated(context), Logger);
+                    }
                 }
             }
 
@@ -179,6 +189,10 @@ namespace Orchard.Core.Navigation.Controllers {
                 return View(model);
             }
             catch (Exception exception) {
+                if (exception.IsFatal()) {
+                    throw;
+                } 
+
                 Logger.Error(T("Creating menu item failed: {0}", exception.Message).Text);
                 Services.Notifier.Error(T("Creating menu item failed: {0}", exception.Message));
                 return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
@@ -213,7 +227,7 @@ namespace Orchard.Core.Navigation.Controllers {
                 return View(model);
             }
 
-            Services.Notifier.Information(T("Your {0} has been added.", menuPart.TypeDefinition.DisplayName));
+            Services.Notifier.Success(T("Your {0} has been added.", menuPart.TypeDefinition.DisplayName));
 
             return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
         }

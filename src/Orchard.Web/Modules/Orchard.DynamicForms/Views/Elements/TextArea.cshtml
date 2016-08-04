@@ -22,7 +22,9 @@
         tagBuilder.AddCssClass("input-validation-error");
     }
 
-    tagBuilder.SetInnerText(Model.ProcessedValue);
+    if (!String.IsNullOrWhiteSpace((string)Model.ProcessedValue)) {
+        tagBuilder.SetInnerText(Model.ProcessedValue);
+    }
 }
 @if (element.ShowLabel) {
     <label for="@element.HtmlId">@Model.ProcessedLabel</label>

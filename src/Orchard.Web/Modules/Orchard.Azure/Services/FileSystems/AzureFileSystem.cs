@@ -308,9 +308,9 @@ namespace Orchard.Azure.Services.FileSystems {
 
         public string GetPublicUrl(string path) {
             path = ConvertToRelativeUriPath(path);
-            var uri = new UriBuilder(Container.GetBlockBlobReference(String.Concat(_root, path)).Uri);
-            if (!string.IsNullOrEmpty(_publicHostName)) uri.Host = _publicHostName;
-            return uri.ToString();
+            var uriBuilder = new UriBuilder(Container.GetBlockBlobReference(String.Concat(_root, path)).Uri);
+            if (!string.IsNullOrEmpty(_publicHostName)) uriBuilder.Host = _publicHostName;
+            return uriBuilder.Uri.ToString();
         }
 
         private class AzureBlobFileStorage : IStorageFile {
@@ -355,7 +355,7 @@ namespace Orchard.Azure.Services.FileSystems {
                 // as opposed to the File System implementation, if nothing is done on the stream
                 // the file will be emptied, because Azure doesn't implement FileMode.Truncate
                 _blob.DeleteIfExists();
-                _blob = _blob.Container.GetBlockBlobReference(_blob.Uri.ToString());
+                _blob = _blob.Container.GetBlockBlobReference(_blob.Name);
                 _blob.UploadFromStream(new MemoryStream(new byte[0]));
                 return OpenWrite();
             }

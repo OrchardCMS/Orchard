@@ -13,7 +13,6 @@ using Orchard.Localization.Services;
 using Orchard.Mvc;
 using System.Web;
 using Orchard.ContentManagement.Aspects;
-using Orchard.Alias.Implementation.Storage;
 
 namespace Orchard.Autoroute.Services {
     public class AutorouteService : Component, IAutorouteService {
@@ -24,7 +23,6 @@ namespace Orchard.Autoroute.Services {
         private readonly IContentManager _contentManager;
         private readonly IRouteEvents _routeEvents;
         private readonly ICultureManager _cultureManager;
-        private readonly IAliasStorage _aliasStorage;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private const string AliasSource = "Autoroute:View";
 
@@ -35,15 +33,13 @@ namespace Orchard.Autoroute.Services {
             IContentManager contentManager,
             IRouteEvents routeEvents,
             ICultureManager cultureManager,
-            IHttpContextAccessor httpContextAccessor,
-            IAliasStorage aliasStorage) {
+            IHttpContextAccessor httpContextAccessor) {
 
             _aliasService = aliasService;
             _tokenizer = tokenizer;
             _contentDefinitionManager = contentDefinitionManager;
             _contentManager = contentManager;
             _routeEvents = routeEvents;
-            _aliasStorage = aliasStorage;
             _cultureManager = cultureManager;
             _httpContextAccessor = httpContextAccessor;
         }
@@ -69,13 +65,14 @@ namespace Orchard.Autoroute.Services {
             if (settings.UseCulturePattern) {
                 // TODO: Refactor the below so that we don't need to know about Request.Form["Localization.SelectedCulture"].
                 // If we are creating from a form post we use the form value for culture.
-                HttpContextBase context = _httpContextAccessor.Current();
-                if (!String.IsNullOrEmpty(context.Request.Form["Localization.SelectedCulture"])) {
-                    itemCulture = context.Request.Form["Localization.SelectedCulture"].ToString();
+                var context = _httpContextAccessor.Current();
+                var selectedCulture = context.Request.Form["Localization.SelectedCulture"];
+                if (!String.IsNullOrEmpty(selectedCulture)) {
+                    itemCulture = selectedCulture;
                 }
             }
 
-            string pattern = GetDefaultPattern(part.ContentItem.ContentType, itemCulture).Pattern;
+            var pattern = GetDefaultPattern(part.ContentItem.ContentType, itemCulture).Pattern;
 
             // String.Empty forces pattern based generation.
             if (part.UseCustomPattern && (!String.IsNullOrWhiteSpace(part.CustomPattern))) {
@@ -138,33 +135,37 @@ namespace Orchard.Autoroute.Services {
 
         public RoutePattern GetDefaultPattern(string contentType, string culture) {
             var settings = GetTypePartSettings(contentType).GetModel<AutorouteSettings>();
+            var defaultPattern = settings.DefaultPatterns.FirstOrDefault(x => x.Culture == culture);
+            var defaultPatternIndex = defaultPattern != null ? defaultPattern.PatternIndex : "0";
+
+            if (String.IsNullOrWhiteSpace(defaultPatternIndex))
+                defaultPatternIndex = "0";
 
             if (!settings.DefaultPatterns.Any(x => String.Equals(x.Culture, culture, StringComparison.OrdinalIgnoreCase))) {
-                var patternIndex = settings.DefaultPatternIndex;
+                var patternIndex = String.IsNullOrWhiteSpace(settings.DefaultPatternIndex) ? "0" : settings.DefaultPatternIndex;
                 // Lazy updating from old setting.
-                if (String.Equals(culture, _cultureManager.GetSiteCulture(), StringComparison.OrdinalIgnoreCase) && !String.IsNullOrWhiteSpace(patternIndex)) {
+                if (String.Equals(culture, _cultureManager.GetSiteCulture(), StringComparison.OrdinalIgnoreCase)) {
                     settings.DefaultPatterns.Add(new DefaultPattern { PatternIndex = patternIndex, Culture = culture });
-                    return settings.Patterns.Where(x => x.Culture == null).ElementAt(Convert.ToInt32(settings.DefaultPatterns.Where(x => x.Culture == culture).FirstOrDefault().PatternIndex));
+                    return settings.Patterns.Where(x => x.Culture == null).ElementAt(Convert.ToInt32(defaultPatternIndex));
                 }
                 else {
                     settings.DefaultPatterns.Add(new DefaultPattern { PatternIndex = "0", Culture = culture });
                     return new RoutePattern { Name = "Title", Description = "my-title", Pattern = "{Content.Slug}", Culture = culture };
+                }
             }
-        }
 
-            // return a default pattern if set
+            // Return a default pattern if set.
             var patternCultureSearch = settings.Patterns.Any(x => String.Equals(x.Culture, culture, StringComparison.OrdinalIgnoreCase)) ? culture : null;
-            var defaultPatternCultureSearch = settings.DefaultPatterns.Any(x => String.Equals(x.Culture, culture, StringComparison.OrdinalIgnoreCase)) ? culture : null;
 
             if (settings.Patterns.Any()) {
-                if (settings.Patterns.Where(x => x.Culture == patternCultureSearch).ElementAt(Convert.ToInt32(settings.DefaultPatterns.Where(x => x.Culture == defaultPatternCultureSearch).FirstOrDefault().PatternIndex)) != null) {
-                    return settings.Patterns.Where(x => x.Culture == patternCultureSearch).ElementAt(Convert.ToInt32(settings.DefaultPatterns.Where(x => x.Culture == defaultPatternCultureSearch).FirstOrDefault().PatternIndex));
+                if (settings.Patterns.Where(x => x.Culture == patternCultureSearch).ElementAt(Convert.ToInt32(defaultPatternIndex)) != null) {
+                    return settings.Patterns.Where(x => x.Culture == patternCultureSearch).ElementAt(Convert.ToInt32(defaultPatternIndex));
                 };
-                }
-
-            // return a default pattern if none is defined
-            return new RoutePattern { Name = "Title", Description = "my-title", Pattern = "{Content.Slug}", Culture = culture };
             }
+
+            // Return a default pattern if none is defined.
+            return new RoutePattern { Name = "Title", Description = "my-title", Pattern = "{Content.Slug}", Culture = culture };
+        }
 
         public void RemoveAliases(AutoroutePart part) {
             _aliasService.Delete(part.Path, AliasSource);

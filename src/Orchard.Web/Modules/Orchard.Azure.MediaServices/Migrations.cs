@@ -66,7 +66,7 @@ namespace Orchard.Azure.MediaServices {
 
             ContentDefinitionManager.AlterTypeDefinition("CloudVideo", type => type
                 .WithPart("CommonPart")
-                .WithPart("IdentityPart")
+                .WithIdentity()
                 .WithPart("MediaPart")
                 .WithPart("TitlePart")
                 .WithPart("PublishLaterPart")

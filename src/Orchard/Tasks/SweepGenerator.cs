@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Timers;
 using Orchard.Logging;
+using Orchard.Exceptions;
 
 namespace Orchard.Tasks {
 
@@ -51,6 +52,10 @@ namespace Orchard.Tasks {
                 }
             }
             catch (Exception ex) {
+                if (ex.IsFatal()) {
+                    throw;
+                }
+
                 Logger.Warning(ex, "Problem in background tasks");
             }
             finally {

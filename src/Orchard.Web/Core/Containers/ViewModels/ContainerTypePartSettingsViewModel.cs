@@ -16,5 +16,6 @@ namespace Orchard.Core.Containers.ViewModels {
 
         [UIHint("ListViewPicker")]
         public string AdminListViewName { get; set; }
+        public bool DisplayContainerEditor { get; set; }
     }
 }
