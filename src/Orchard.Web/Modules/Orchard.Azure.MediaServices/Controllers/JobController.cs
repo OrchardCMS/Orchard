@@ -164,7 +164,7 @@ namespace Orchard.Azure.MediaServices.Controllers {
                     _transactionManager.Cancel();
 
                     Logger.Error(ex, "Error while creating job with task of type {0} on cloud video item with ID {1}.", task, id);
-                    _notifier.Error(T("Ar error occurred while creating the job:\n{0}", ex.Message));
+                    _notifier.Error(T("An error occurred while creating the job:\n{0}", ex.Message));
                 }
             }
 
