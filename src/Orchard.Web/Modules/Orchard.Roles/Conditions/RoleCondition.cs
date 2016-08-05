@@ -24,9 +24,9 @@ namespace Orchard.Roles.Conditions {
 
             var roles = ((object[])evaluationContext.Arguments).Cast<string>();
             var user = _authenticationService.GetAuthenticatedUser();
-            if (user == null){
+            if (user == null) {
                 evaluationContext.Result = false;
-                evaluationContext.Result= roles.Contains("Anonymous");
+                evaluationContext.Result = !string.IsNullOrEmpty(roles.FirstOrDefault(s=>s.Contains("Anonymous")));
             }
             else {
                 var userRoles = user.As<IUserRoles>();
