@@ -56,7 +56,7 @@ namespace Orchard.Widgets.Layouts.Providers {
                 ? _contentManager.Value.Get(widgetId.Value, versionOptions)
                 : _contentManager.Value.New(contentTypeName);
 
-            var widgetShape = widget != null ? _contentManager.Value.BuildDisplay(widget) : default(dynamic);
+            var widgetShape = widget != null ? _contentManager.Value.BuildDisplay(widget, context.DisplayType) : default(dynamic);
             context.ElementShape.Widget = widget;
             context.ElementShape.WidgetShape = widgetShape;
         }
