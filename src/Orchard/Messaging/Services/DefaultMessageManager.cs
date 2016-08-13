@@ -45,7 +45,7 @@ namespace Orchard.Messaging.Services {
                 if (ex.IsFatal()) {
                     throw;
                 } 
-                Logger.Error(ex, "An error occured while sending the message {0}", type);
+                Logger.Error(ex, "An error occurred while sending the message {0}", type);
             }
         }
 
@@ -68,7 +68,7 @@ namespace Orchard.Messaging.Services {
                 if (ex.IsFatal()) {
                     throw;
                 } 
-                Logger.Error(ex, "An error occured while sending the message {0}", type);
+                Logger.Error(ex, "An error occurred while sending the message {0}", type);
             }
         }
 
