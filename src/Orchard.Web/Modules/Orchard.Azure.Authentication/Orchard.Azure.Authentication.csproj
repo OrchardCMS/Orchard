@@ -49,6 +49,14 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory, Version=3.13.1.846, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.IdentityModel.Clients.ActiveDirectory.3.13.1\lib\net45\Microsoft.IdentityModel.Clients.ActiveDirectory.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory.Platform, Version=3.13.1.846, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.IdentityModel.Clients.ActiveDirectory.3.13.1\lib\net45\Microsoft.IdentityModel.Clients.ActiveDirectory.Platform.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.IdentityModel.Logging, Version=1.0.0.127, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Microsoft.IdentityModel.Logging.1.0.0\lib\net451\Microsoft.IdentityModel.Logging.dll</HintPath>
       <Private>True</Private>
@@ -168,12 +176,29 @@
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Orchard.Roles\Orchard.Roles.csproj">
+      <Project>{d10ad48f-407d-4db5-a328-173ec7cb010f}</Project>
+      <Name>Orchard.Roles</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Users\Orchard.Users.csproj">
+      <Project>{79aed36e-abd0-4747-93d3-8722b042454b}</Project>
+      <Name>Orchard.Users</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constants\DefaultAzureSettings.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="CRUD\AzureGraphApiPersistence.cs" />
+    <Compile Include="CRUD\HttpContextPersistence.cs" />
+    <Compile Include="CRUD\IAzureGraphApiPersistence.cs" />
+    <Compile Include="CRUD\IHttpContextPersistence.cs" />
+    <Compile Include="CRUD\IOrchardUserRolesPersistence.cs" />
+    <Compile Include="CRUD\OrchardUserRolesPersistence.cs" />
     <Compile Include="Drivers\AzureActiveDirectorySyncPartDriver.cs" />
     <Compile Include="Drivers\AzureSettingsPartDriver.cs" />
+    <Compile Include="Handlers\AzureActiveDirectorySyncPartHandler.cs" />
     <Compile Include="Handlers\AzureSettingsPartHandler.cs" />
+    <Compile Include="Migrations\AzureActiveDirectorySyncPartMigrations.cs" />
     <Compile Include="Models\AzureActiveDirectorySyncPart.cs" />
     <Compile Include="Models\AzureActiveDirectorySyncPartRecord.cs" />
     <Compile Include="Models\AzureSettingsPart.cs" />
@@ -181,7 +206,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Routes.cs" />
     <Compile Include="Security\MachineKeyDataProtector.cs" />
+    <Compile Include="Services\Authorizer.cs" />
     <Compile Include="Services\AzureAuthenticationService.cs" />
+    <Compile Include="Services\IAzureAuthorizer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="placement.info" />

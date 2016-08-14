@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IdentityModel.Tokens;
+using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using System.Web.Helpers;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.ActiveDirectory;
@@ -13,71 +16,110 @@ using Orchard.Logging;
 using Orchard.Owin;
 using Orchard.Settings;
 using Owin;
+using Orchard.Azure.Authentication.Constants;
 using Orchard.Azure.Authentication.Models;
 using Orchard.Azure.Authentication.Security;
 
-namespace Orchard.Azure.Authentication {
-    public class OwinMiddlewares : IOwinMiddlewareProvider {
+namespace Orchard.Azure.Authentication
+{
+    public class OwinMiddlewares : IOwinMiddlewareProvider
+    {
         public ILogger Logger { get; set; }
-       
-        private readonly string _azureClientId;
-        private readonly string _azureTenant;
-        private readonly string _azureADInstance;
-        private readonly string _logoutRedirectUri;
-        private readonly string _azureAppName;
-        private readonly bool _sslEnabled;
-        private readonly bool _azureWebSiteProtectionEnabled;
 
-        public OwinMiddlewares(ISiteService siteService) {
+        private readonly string _azureClientId = DefaultAzureSettings.ClientId;
+        private readonly string _azureTenant = DefaultAzureSettings.Tenant;
+        private readonly string _logoutRedirectUri = DefaultAzureSettings.LogoutRedirectUri;
+        private readonly string _azureAdInstance = DefaultAzureSettings.ADInstance;
+        private readonly bool _azureWebSiteProtectionEnabled = DefaultAzureSettings.AzureWebSiteProtectionEnabled;
+        private readonly string _relativePostLoginCallBackUrl = "Orchard.Azure.Authentication/Account/LogOnCallBack";
+
+
+        public OwinMiddlewares(ISiteService siteService)
+        {
             Logger = NullLogger.Instance;
 
-            var site = siteService.GetSiteSettings();
-            var azureSettings = site.As<AzureSettingsPart>();
+            try
+            {
+                var settings = siteService.GetSiteSettings().As<AzureSettingsPart>();
 
-            _azureClientId = ((azureSettings.ClientId == null) || (azureSettings.ClientId == string.Empty)) ? 
-                "[example: 82692da5-a86f-44c9-9d53-2f88d52b478b]" : azureSettings.ClientId;
+                if (settings == null)
+                {
+                    return;
+                }
 
-            _azureTenant = ((azureSettings.Tenant == null) || (azureSettings.Tenant == string.Empty)) ? 
-                "faketenant.com" : azureSettings.Tenant;
-
-            _azureADInstance = ((azureSettings.ADInstance == null) || (azureSettings.ADInstance == string.Empty)) ? 
-                "https://login.microsoft.com/{0}" : azureSettings.ADInstance;
-
-            _logoutRedirectUri = ((azureSettings.LogoutRedirectUri == null) || (azureSettings.LogoutRedirectUri == string.Empty)) ? 
-                site.BaseUrl : azureSettings.LogoutRedirectUri;
-
-            _azureAppName = ((azureSettings.AppName == null) || (azureSettings.AppName == string.Empty)) ? 
-                "[example: MyAppName]" : azureSettings.AppName;
-
-            _sslEnabled = azureSettings.SSLEnabled;
-
-            _azureWebSiteProtectionEnabled = azureSettings.AzureWebSiteProtectionEnabled;
+                _azureClientId = settings.ClientId ?? _azureClientId;
+                _azureTenant = settings.Tenant ?? _azureTenant;
+                _azureAdInstance = settings.ADInstance ?? _azureAdInstance;
+                _logoutRedirectUri = settings.LogoutRedirectUri ?? _logoutRedirectUri;
+                _azureWebSiteProtectionEnabled = settings.AzureWebSiteProtectionEnabled;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(LogLevel.Debug, ex, "An error occured while accessing azure settings: {0}");
+            }
         }
 
-        public IEnumerable<OwinMiddlewareRegistration> GetOwinMiddlewares() {
+        public IEnumerable<OwinMiddlewareRegistration> GetOwinMiddlewares()
+        {
             var middlewares = new List<OwinMiddlewareRegistration>();
 
             AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimTypes.NameIdentifier;
 
-            var openIdOptions = new OpenIdConnectAuthenticationOptions {
+            var openIdOptions = new OpenIdConnectAuthenticationOptions
+            {
                 ClientId = _azureClientId,
-                Authority = string.Format(CultureInfo.InvariantCulture, _azureADInstance, _azureTenant),
+                Authority = string.Format(CultureInfo.InvariantCulture, _azureAdInstance, _azureTenant), // e.g. "https://login.windows.net/azurefridays.onmicrosoft.com/"
                 PostLogoutRedirectUri = _logoutRedirectUri,
-                Notifications = new OpenIdConnectAuthenticationNotifications ()
+                Notifications = new OpenIdConnectAuthenticationNotifications
+                {
+                    SecurityTokenValidated = (context) =>
+                    {
+                        try
+                        {
+                            //We should be able assign roles based on claims here.  However, some IT departments 
+                            //disable some Azure AD functionality for security reasons.  For example, AD Group 
+                            //membership data may not be included in these claims for your Azure directory.  
+                            //It is safest to read group membership data from the Azure graph API 
+                            //(see code in AzureAuthenticationService.cs)
+
+                            //Do consider processing JWT tokens here, to enable calls from this user to related 
+                            //Azure Web Services
+                            return Task.FromResult(0);
+                        }
+                        catch (SecurityTokenValidationException ex)
+                        {
+                            return Task.FromResult(0);
+                        }
+                    }
+                }
             };
+
+
+            if (false == string.IsNullOrWhiteSpace(_logoutRedirectUri))
+            {
+                openIdOptions.RedirectUri = _logoutRedirectUri;
+                char lastChar = openIdOptions.RedirectUri[openIdOptions.RedirectUri.Length - 1];
+                if ('/' != lastChar)
+                    openIdOptions.RedirectUri = openIdOptions.RedirectUri + "/";
+                openIdOptions.RedirectUri = openIdOptions.RedirectUri + _relativePostLoginCallBackUrl;
+            }
 
             var cookieOptions = new CookieAuthenticationOptions();
 
-            if (_azureWebSiteProtectionEnabled) {
-                middlewares.Add(new OwinMiddlewareRegistration {
+            if (_azureWebSiteProtectionEnabled)
+            {
+                middlewares.Add(new OwinMiddlewareRegistration
+                {
                     Priority = "9",
                     Configure = app => { app.SetDataProtectionProvider(new MachineKeyProtectionProvider()); }
                 });
             }
 
-            middlewares.Add(new OwinMiddlewareRegistration {
+            middlewares.Add(new OwinMiddlewareRegistration
+            {
                 Priority = "10",
-                Configure = app => {
+                Configure = app =>
+                {
                     app.SetDefaultSignInAsAuthenticationType(CookieAuthenticationDefaults.AuthenticationType);
 
                     app.UseCookieAuthentication(cookieOptions);
