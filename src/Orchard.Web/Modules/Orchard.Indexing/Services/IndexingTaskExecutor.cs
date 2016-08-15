@@ -288,7 +288,7 @@ namespace Orchard.Indexing.Services {
                 }
             }
             catch (Exception ex) {
-                Logger.Warning(ex, "An error occured while adding a document to the index");
+                Logger.Warning(ex, "An error occurred while adding a document to the index");
             }
 
             // removing documents from the index
@@ -299,7 +299,7 @@ namespace Orchard.Indexing.Services {
                 }
             }
             catch (Exception ex) {
-                Logger.Warning(ex, "An error occured while removing a document from the index");
+                Logger.Warning(ex, "An error occurred while removing a document from the index");
             }
 
             return true;

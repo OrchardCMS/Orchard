@@ -619,7 +619,7 @@ namespace Orchard.OutputCache.Filters {
                 return cacheItem;
             }
             catch (Exception e) {
-                Logger.Error(e, "An unexpected error occured while reading a cache entry");
+                Logger.Error(e, "An unexpected error occurred while reading a cache entry");
             }
 
             return null;

@@ -517,7 +517,7 @@ namespace Orchard.CodeGeneration.Commands {
                 File.SetLastWriteTime(solutionPath, DateTime.Now);
             }
             catch {
-                output.WriteLine(T("An unexpected error occured while trying to refresh the Visual Studio solution. Please reload it."));
+                output.WriteLine(T("An unexpected error occurred while trying to refresh the Visual Studio solution. Please reload it."));
             }
         }
     }
