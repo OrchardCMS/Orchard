@@ -63,78 +63,6 @@
             }
         </div>
         <div class="main-content">
-            @*<aside class="page-aside">
-                    <div class="am-scroller nano has-scrollbar">
-                        <div class="nano-content" tabindex="0" style="right: -17px;">
-
-
-                                <div id="accordion3" class="panel-group accordion accordion-semi">
-                                    <div class="panel panel-default">
-                                        <div class="panel-heading">
-                                            <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion3" href="#ac3-1" aria-expanded="true" class=""><i class="icon s7-angle-down"></i> Filters</a></h4>
-                                        </div>
-                                        <div id="ac3-1" class="panel-collapse collapse in" aria-expanded="true">
-                                            <div class="panel-body">
-                                                <div class="form-group btn-group">
-                                                    <input id="filterResults" name="Options.SelectedFilter" type="hidden" value="">
-                                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                                        <i class="fa fa-bars" aria-hidden="true"></i> Show: any (show all) <span class="caret"></span>
-                                                    </button>&nbsp;
-                                                    <ul class="dropdown-menu" role="menu">
-                                                        <li><a href="#" data-action="Acme1">Acme 1</a></li>
-                                                        <li><a href="#" data-action="Form">Form</a></li>
-                                                        <li><a href="#" data-action="Page">Page</a></li>
-                                                        <li><a href="#" data-action="ProjectionPage">Projection</a></li>
-                                                    </ul>
-                                                </div>
-
-                                                <div class="form-group btn-group">
-                                                    <input id="filterCultures" name="Options.SelectedCulture" type="hidden" value="">
-                                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                                        <i class="fa fa-language" aria-hidden="true"></i> Culture: any (show all) <span class="caret"></span>
-                                                    </button>&nbsp;
-                                                    <ul class="dropdown-menu" role="menu">
-                                                        <li><a href="#" data-action="">Anglais (États-Unis)</a></li>
-                                                        <li><a href="#" data-action="">Français (France)</a></li>
-                                                    </ul>
-                                                </div>
-
-                                                <div class="form-group btn-group">
-                                                    <input id="orderResults" name="Options.OrderBy" type="hidden" value="Latest">
-                                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                                        <i class="fa fa-sort" aria-hidden="true"></i> Ordered by : recently modified <span class="caret"></span>
-                                                    </button>&nbsp;
-                                                    <ul class="dropdown-menu" role="menu">
-                                                        <li><a href="#" data-action="Created">recently created</a></li>
-                                                        <li><a href="#" data-action="Modified">recently modified</a></li>
-                                                        <li><a href="#" data-action="Published">recently published</a></li>
-                                                    </ul>
-                                                </div>
-
-                                                <div class="form-group btn-group">
-                                                    <input id="contentResults" name="Options.ContentsStatus" type="hidden" value="Latest">
-                                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                                        <i class="fa fa-filter" aria-hidden="true"></i> Filter by : latest <span class="caret"></span>
-                                                    </button>&nbsp;
-                                                    <ul class="dropdown-menu" role="menu">
-                                                        <li><a href="#" data-action="Owner">owned by me</a></li>
-                                                        <li><a href="#" data-action="Latest">latest</a></li>
-                                                        <li><a href="#" data-action="Published">published</a></li>
-                                                        <li><a href="#" data-action="Draft">unpublished</a></li>
-                                                        <li><a href="#" data-action="AllVersions">all versions</a></li>
-                                                    </ul>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-
-                        </div>
-                        <div class="nano-pane" style="display: none;"><div class="nano-slider" style="height: 469px; transform: translate(0px, 0px);"></div></div>
-                    </div>
-                </aside>*@
             @if (Model.Aside != null) {
 
             }
@@ -160,7 +88,8 @@
             </div>
         </div>
     </div>
-    @Display.Sidebar()
+    @*Right sidebar for future use*@
+    @*@Display.Sidebar()*@
 </div>
 @if (Model.Footer != null) {
     <div class="footer">
