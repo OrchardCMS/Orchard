@@ -60,3 +60,24 @@ input[type="checkbox"]:disabled ~ label, input[type="radio"]:disabled ~ label
         white-space: normal;
     }
 }
+
+//for hiding items for media gallery picker
+.media-library-modal-window .or-top-header, 
+.media-library-modal-window .or-left-sidebar,
+.media-library-modal-window .footer {
+    display: none;
+}
+
+.media-library-modal-window #media-library-main-selection-select {
+    display: inherit;
+    position: absolute;
+    top: 25px;
+}
+
+.media-library-modal-window #layout-content {
+    background-image: none;
+    padding-top: 0;
+    .or-content{
+        margin-left: 0;
+    }
+}
