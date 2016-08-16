@@ -22,7 +22,7 @@
             @Html.ValidationSummary()
             <div class="panel-heading">
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-xs-6">
                         <fieldset>
                             <input id="bulkActions" name="@Html.NameOf(m => m.Options.BulkAction)" type="hidden" value="@BindingsBulkAction.None" />
                             <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
@@ -36,22 +36,13 @@
                             </div>
                         </fieldset>
                     </div>
-                    <div class="col-sm-4 text-center">
-                        <fieldset>
-                            @* No need to filter if there is only one option in the dropdownlist *@
-                            @*<label for="filterResults">@T("Sort by:")</label>
-                                <select id="filterResults" name="@Html.NameOf(m => m.Options.Order)" class="form-control auto-size">
-                                    @Html.SelectOption(Model.Options.Order, BindingsOrder.Name, T("Name").ToString())
-                                </select>*@
-                        </fieldset>
-                    </div>
-                    <div class="col-sm-4 text-right">
-                        <a class="btn btn-primary" href="@Url.Action("Select", new { })"><i class="fa fa-plus"></i> @T("Add a new Binding").Text</a>
+                    <div class="col-xs-6 text-right">
+                        <a class="btn btn-primary" href="@Url.Action("Select", new { })"><i class="fa fa-plus"></i> @T("Add Binding").Text</a>
                     </div>
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-12">
+                <div class="col-xs-12">
                     <div class="table-responsive table-with-footer">
                         <table class="table table-striped table-fw-widget table-hover">
                             <thead>

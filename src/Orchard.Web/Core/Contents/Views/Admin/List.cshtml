@@ -14,41 +14,60 @@
     Html.AdminBreadcrumbs();
     Layout.Tail.Add(New.ConfirmationDialog());
 }
-
 <div class="panel panel-default">
     @if (Model.ContentItems.Items.Count > 0) {
         using (Html.BeginFormAntiForgeryPost()) {
             <div class="panel-heading no-border">
                 <div class="row">
-                    <div class="col-sm-6">
+                    <div class="col-xs-7">
                         <fieldset>
+                            <div class="or-checkbox inline">
+                                <input id="checkAll" class="check-all" type="checkbox">
+                                <label class="check-all" for="checkAll" title="@T("Select all")"></label>
+                            </div>
                             <input id="bulkActions" name="Options.BulkAction" type="hidden" value="@ContentsBulkAction.None" />
                             <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
                             <div class="btn-group">
                                 <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
                                     <i class="fa fa-bolt"></i> @T("Bulk Actions") <span class="caret"></span>
-                                </button>&nbsp;
+                                </button>
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="#" data-bulk-action-confirm="@T("Are you sure you want to publish these items?")" data-bulk-action="@ContentsBulkAction.PublishNow">@T("Publish Now").ToString()</a></li>
                                     <li><a href="#" data-bulk-action-confirm="@T("Are you sure you want to unpublish these items?")" data-bulk-action="@ContentsBulkAction.Unpublish">@T("Unpublish").ToString()</a></li>
                                     <li><a href="#" data-bulk-action-confirm="@T("Are you sure you want to delete these items?")" data-bulk-action="@ContentsBulkAction.Remove">@T("Delete").ToString()</a></li>
                                 </ul>
                             </div>
-                            <button type="button" class="btn btn-default">
-                                <i class="fa fa-filter"></i> @T("Filters")
-                            </button>
+                            <div class="btn-group btn-filters">
+                                <input id="filterResults" name="Options.SelectedFilter" type="hidden" value="">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                    <i class="fa fa-filter" aria-hidden="true"></i> @T("Filters") <span class="caret"></span>
+                                </button>&nbsp;
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="#" data-action="Acme1">@T("recently created")</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="#" data-action="Acme1">@T("recently created")</a></li>
+                                    <li><a href="#" data-action="Acme1">@T("recently modified")</a></li>
+                                    <li><a href="#" data-action="Acme1">@T("recently published")</a></li>
+                                </ul>
+                            </div>
                         </fieldset>
                     </div>
-                    <div class="col-sm-6 text-right">
-                        <a href="@Url.Action("Create", new { Area = "Contents", Id = (string)Model.Options.SelectedFilter })" class="btn btn-primary"><i class="fa fa-plus"></i> @createLinkText.Text</a>
+                    <div class="col-xs-5 text-right">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                                <i class="fa fa-plus"></i> @T("New entry") <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu pull-right" role="menu">
+                                <li><a href="@Url.Action("Create", new { Area = "Contents", Id = (string)Model.Options.SelectedFilter })">New entry</a></li>
+                                <li><a href="#" data-bulk-action-confirm="@T("Are you sure you want to unpublish these items?")" data-bulk-action="@ContentsBulkAction.Unpublish">@T("Unpublish").ToString()</a></li>
+                                <li><a href="#" data-bulk-action-confirm="@T("Are you sure you want to delete these items?")" data-bulk-action="@ContentsBulkAction.Remove">@T("Delete").ToString()</a></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="panel-body">
-                <div class="or-checkbox">
-                    <input id="checkAll" class="check-all" type="checkbox">
-                    <label class="check-all" for="checkAll" title="@T("Select all")">@T("Select All")</label>
-                </div>
+
                 @if (Model.ContentItems.Items.Count > 0) {
                     <fieldset class="content-items bulk-items content-items-with-actions">
                         @Display(Model.ContentItems)

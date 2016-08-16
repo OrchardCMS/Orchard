@@ -20,7 +20,7 @@
             @Html.ValidationSummary()
             <div class="panel-heading">
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-xs-6">
                         <fieldset>
                             <input id="bulkActions" name="@Html.NameOf(m => m.Options.BulkAction)" type="hidden" value="@QueriesBulkAction.None" />
                             <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
@@ -34,23 +34,13 @@
                             </div>
                         </fieldset>
                     </div>
-                    <div class="col-md-4 text-center">
-                        @* No need to filter if there is only one option in the dropdownlist *@
-                        @*<fieldset class="bulk-actions">
-                                <label for="filterResults">@T("Sort by:")</label>
-                                <select id="filterResults" name="@Html.NameOf(m => m.Options.Order)" class="form-control auto-size">
-                                    @Html.SelectOption(Model.Options.Order, QueriesOrder.Name, T("Name").ToString())
-                                </select>
-                                <button class="btn btn-default" type="submit" name="submit.Filter" value="@T("Filter")">@T("Filter")</button>
-                            </fieldset>*@
-                    </div>
-                    <div class="col-md-4 text-right">
-                        <a class="btn btn-primary" href="@Url.Action("Create", new { Area = "Contents", id = "Query", returnurl = HttpContext.Current.Request.RawUrl })"><i class="fa fa-plus"></i> @T("Add new Query").Text</a>
+                    <div class="col-xs-6 text-right">
+                        <a class="btn btn-primary" href="@Url.Action("Create", new { Area = "Contents", id = "Query", returnurl = HttpContext.Current.Request.RawUrl })"><i class="fa fa-plus"></i> @T("Add Query").Text</a>
                     </div>
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-12">
+                <div class="col-xs-12">
                     <div class="table-responsive table-with-footer">
                         <table class="table table-fw-widget data-table table-striped dataTable no-footer">
                             <thead>

@@ -4,5 +4,5 @@ Author: The Orchard Team
 Tags: hidden, admin
 Description: The Orchard admin theme.
 Website: http://www.orchardproject.net
-Zones: TopHeader, Header, Breadcrumbs, Messages, BeforeContent, LocalNavigation, Content, AfterContent, Footer
+Zones: TopHeader, Header, Breadcrumbs, Messages, BeforeContent, LocalNavigation, Content, AfterContent, Footer, Filters
 Dependencies: Orchard.Resources

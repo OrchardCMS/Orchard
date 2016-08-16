@@ -2,7 +2,7 @@
 <ul class="nav navbar-nav navbar-right or-user-nav">
     <li class="dropdown">
         @if (Model.CurrentUser != null) {
-            <a href="#" data-toggle="dropdown" role="button" aria-expanded="false" class="dropdown-toggle"><img src="http://www.gravatar.com/avatar/bc39890670aa7453e97f613481eee489"><span class="user-name">@Html.ItemDisplayText((Orchard.ContentManagement.IContent)Model.CurrentUser)</span><span class="angle-down s7-angle-down"></span></a>
+            <a href="#" data-toggle="dropdown" role="button" aria-expanded="false" class="dropdown-toggle"><span class="icon s7-user"></span><span class="user-name">@Html.ItemDisplayText((Orchard.ContentManagement.IContent)Model.CurrentUser)</span><span class="angle-down s7-angle-down"></span></a>
             <ul role="menu" class="dropdown-menu">
                 <li><a href="@Url.Action("ChangePassword", new { area = "Orchard.Users", Controller = "Account" })"><span class="icon s7-lock"></span>@T("Change password").ToString()</a></li>
                 <li><a href="http://docs.orchardproject.net/" target="_blank"><span class="icon s7-help1"></span>@T("Help")</a></li>

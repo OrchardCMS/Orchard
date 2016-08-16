@@ -9,29 +9,31 @@
 
 @if (Model.ContentItems.Items.Count > 0) {
     using (Html.BeginFormAntiForgeryPost(Url.Action("List", "Admin", new { area = "Contents", id = "" }))) {
-        <div class="or-panel-main panel-default">
+        <div class="panel panel-default">
             <div class="panel-heading no-border form-inline">
-                <div class="panel-heading-actions">
-                    <div class="actions"><a class="btn btn-primary" href="@Url.BlogCreate()"><i class="fa fa-plus"></i> @T("New Blog")</a></div>
-                </div>
-                <div class="panel-heading-primary-group">
-                    <fieldset class="bulk-actions">
-                        <div class="or-checkbox inline">
-                            <input type="checkbox" class="check-all" id="blog-list-select-all" />
-                            <label class="check-all" title="@T("Select All")" for="blog-list-select-all"></label>
-                        </div>
-                        <input id="bulkActions" name="Options.BulkAction" type="hidden" value="@ContentsBulkAction.None" />
-                        @Html.Hidden("returnUrl", ViewContext.RequestContext.HttpContext.Request.ToUrlString())
-                        <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                                <i class="fa fa-bolt"></i> @T("Bulk Actions") <span class="caret"></span>
-                            </button>&nbsp;
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a id="btn-bulk-delete" href="#" data-bulk-action-confirm="@T("Are you sure you want to delete these items?")" data-bulk-action="@ContentsBulkAction.Remove">@T("Delete").ToString()</a></li>
-                            </ul>
-                        </div>
-                    </fieldset>
+                <div class="row">
+                    <div class="col-xs-7">
+                        <fieldset>
+                            <div class="or-checkbox inline">
+                                <input type="checkbox" class="check-all" id="blog-list-select-all" />
+                                <label class="check-all" title="@T("Select All")" for="blog-list-select-all"></label>
+                            </div>
+                            <input id="bulkActions" name="Options.BulkAction" type="hidden" value="@ContentsBulkAction.None" />
+                            @Html.Hidden("returnUrl", ViewContext.RequestContext.HttpContext.Request.ToUrlString())
+                            <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                                    <i class="fa fa-bolt"></i> @T("Bulk Actions") <span class="caret"></span>
+                                </button>&nbsp;
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a id="btn-bulk-delete" href="#" data-bulk-action-confirm="@T("Are you sure you want to delete these items?")" data-bulk-action="@ContentsBulkAction.Remove">@T("Delete").ToString()</a></li>
+                                </ul>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="col-xs-5 text-right">
+                        <a class="btn btn-primary" href="@Url.BlogCreate()"><i class="fa fa-plus"></i> @T("New Blog")</a>
+                    </div>
                 </div>
             </div>
             <div class="panel-body">

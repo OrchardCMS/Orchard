@@ -31,7 +31,6 @@ html.dyn #main ul.features button { display:none; }
 
 .features.detail-view .feature {
     padding:.25em 0;
-    border-bottom:1px solid #CCC;
 }
 .features .enabled.feature {
     background:#FFF;

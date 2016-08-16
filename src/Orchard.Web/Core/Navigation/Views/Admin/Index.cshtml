@@ -15,22 +15,24 @@
         using (Html.BeginFormAntiForgeryPost()) {
             @Html.ValidationSummary()
             <div class="panel-heading no-border">
-                <div class="panel-heading-primary-group">
-                    <fieldset>
-                        <input id="bulkActions" name="@Html.NameOf(m => m.BulkAction)" type="hidden" value="@NavigationIndexBulkAction.None" />
-                        <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                                <i class="fa fa-bolt"></i> @("Bulk Actions") <span class="caret"></span>
-                            </button>&nbsp;
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a id="btn-bulk-delete" href="#" data-bulk-action-confirm="@T("Are you sure you want to delete these items?")" data-bulk-action="@NavigationIndexBulkAction.Delete">@T("Delete")</a></li>
-                            </ul>
-                        </div>
-                    </fieldset>
-                </div>
-                <div class="panel-heading-actions">
-                    <a class="btn btn-primary" href="@Url.Action("Create", "Admin", new { area = "Contents", id = "Menu", ReturnUrl = Url.Action("EditLastMenu", new { id = Model.LastMenuId }) })"><i class="fa fa-plus"></i> @T("Add a menu").Text</a>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <fieldset>
+                            <input id="bulkActions" name="@Html.NameOf(m => m.BulkAction)" type="hidden" value="@NavigationIndexBulkAction.None" />
+                            <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                                    <i class="fa fa-bolt"></i> @("Bulk Actions") <span class="caret"></span>
+                                </button>&nbsp;
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a id="btn-bulk-delete" href="#" data-bulk-action-confirm="@T("Are you sure you want to delete these items?")" data-bulk-action="@NavigationIndexBulkAction.Delete">@T("Delete")</a></li>
+                                </ul>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="col-xs-6 text-right">
+                        <a class="btn btn-primary" href="@Url.Action("Create", "Admin", new { area = "Contents", id = "Menu", ReturnUrl = Url.Action("EditLastMenu", new { id = Model.LastMenuId }) })"><i class="fa fa-plus"></i> @T("Add a menu").Text</a>
+                    </div>
                 </div>
             </div>
 

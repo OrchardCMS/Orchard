@@ -13,7 +13,7 @@
 // Theme/Less/includes/structure/top-header.less
 .or-top-header
 {
-    z-index: 100;
+    z-index: 1001;
 }
 
 // Theme/Less/includes/bootstrap/forms.less
@@ -45,4 +45,18 @@ input[type="checkbox"]:disabled ~ label, input[type="radio"]:disabled ~ label
 .nav-tabs > li{
     float: none;
     display: inline-block;
+}
+.scrollable-menu {
+    height: auto;
+    max-height: 200px;
+    overflow-x: hidden;
+    width: 40vw;
+
+    a{
+        cursor: pointer;
+    }
+
+    .row > div{
+        white-space: normal;
+    }
 }

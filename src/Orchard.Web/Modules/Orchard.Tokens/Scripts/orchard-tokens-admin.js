@@ -70,6 +70,48 @@ jQuery.fn.extend({
     },
 });
 
+jQuery.fn.extend({
+    btnTokenized: function () {
+        return $(this).each(function () {
+            var _this = $(this);
+
+            $(this).each(function () {
+                var textbox = $('#' + _this.data('tokens'));
+                var btn = $('[data-tokens=\'' + _this.data('tokens') + '\']');
+                    //var tokens = ['United States', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia'];
+                    var cList = $('<ul></ul>');
+                    cList.addClass('dropdown-menu pull-right scrollable-menu');
+                    $.tokens.forEach(function (item) {
+                        var li = document.createElement('li');
+                        var anchor = document.createElement('a');
+                        var row = document.createElement('div');
+                        var col1 = document.createElement('div');
+                        var col2 = document.createElement('div');
+                        var col3 = document.createElement('div');
+                        row.className = "row";
+                        col1.className = 'col-xs-12 col-sm-4';
+                        col2.className = 'col-xs-12 col-sm-4';
+                        col3.className = 'col-xs-12 col-sm-4';
+                        col1.textContent = item.label;
+                        col2.textContent = item.desc;
+                        col3.textContent = item.value == '' ? item.label : item.value;
+                        row.appendChild(col1);
+                        row.appendChild(col2);
+                        row.appendChild(col3);
+                        anchor.appendChild(row);
+                        anchor.onclick = function () {
+                            $('#' + _this.data('tokens')).val(textbox.val() + item.value);
+                        };
+                        li.appendChild(anchor);
+                        cList.append(li);
+                    });
+
+                    cList.insertAfter(btn);
+            });
+        });
+    },
+});
+
 $(function () {
 
     $.tokens = {};
@@ -79,5 +121,6 @@ $(function () {
     $.get(tokensUrl, function (data) {
         $.tokens = data;
         $(".tokenized").tokenized();
+        $('[data-tokens]').btnTokenized();
     });
 });

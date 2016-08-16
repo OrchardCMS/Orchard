@@ -12,15 +12,15 @@
     @using (Html.BeginFormAntiForgeryPost()) {
         <div class="panel-heading">
             <div class="row">
-                <div class="col-sm-4"><span class="queue-status @String.Format("{0}", status.ToString().HtmlClassify())">@T("Status: {0}", status)</span></div>
-                <div class="col-sm-4 text-center">
+                <div class="col-xs-4"><span class="queue-status @String.Format("{0}", status.ToString().HtmlClassify())">@T("Status: {0}", status)</span></div>
+                <div class="col-xs-3 text-right">
                     @if (status == JobsQueueStatus.Paused) {
                         <button class="btn btn-primary" type="submit" name="submit.Resume" value="resume"><i class="fa fa-play"></i> @T("Resume")</button>
                     } else {
                         <button class="btn btn-warning" type="submit" name="submit.Pause" value="pause"><i class="fa fa-pause"></i> @T("Pause")</button>
                     }
                 </div>
-                <div class="col-sm-4 text-right">
+                <div class="col-xs-5 text-right">
                     @if (status != JobsQueueStatus.Paused) {
                         <button class="btn btn-primary" type="submit" name="submit.Process" value="process"><i class="fa fa-cogs"></i> @T("Process Now")</button>
                     }

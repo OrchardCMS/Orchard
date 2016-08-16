@@ -11,40 +11,35 @@
     Layout.Title = T("Comments").ToString();
     Layout.Tail.Add(New.ConfirmationDialog());
 }
-<div class="panel panel-default">
+<div class="or-panel-main panel-default">
     @if (Model.HasRecord) {
         using (Html.BeginFormAntiForgeryPost()) {
             @Html.ValidationSummary()
             <div class="panel-heading no-border form-inline">
-                <div class="row">
-                    <div class="col-sm-4">
-                        <fieldset>
-                            <input id="bulkActions" name="@Html.NameOf(m => m.Options.BulkAction)" type="hidden" value="@CommentIndexBulkAction.None" />
-                            <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                                    <i class="fa fa-bolt"></i> @T("Bulk Actions") <span class="caret"></span>
-                                </button>&nbsp;
-                                <ul class="dropdown-menu" role="menu">
-                                    <li><a href="#" data-bulk-action-confirm="@T("Are you sure you want to approve these items?")" data-bulk-action="@CommentIndexBulkAction.Approve">@T("Approve").ToString()</a></li>
-                                    <li><a href="#" data-bulk-action-confirm="@T("Are you sure you want to unapprove these items?")" data-bulk-action="@CommentIndexBulkAction.Unapprove">@T("Unapprove").ToString()</a></li>
-                                    <li><a href="#" data-bulk-action-confirm="@T("Are you sure you want to delete these items?")" data-bulk-action="@CommentIndexBulkAction.Delete">@T("Delete").ToString()</a></li>
-                                </ul>
-                            </div>
-                        </fieldset>
-                    </div>
-                    <div class="col-sm-4">
-                        <fieldset class="bulk-actions">
-                            <label for="filterResults">@T("Filter:")</label>
-                            <select id="filterResults" name="@Html.NameOf(m => m.Options.Filter)" class="form-control auto-size">
-                                @Html.SelectOption(Model.Options.Filter, CommentIndexFilter.All, T("All Comments").ToString())
-                                @Html.SelectOption(Model.Options.Filter, CommentIndexFilter.Approved, T("Approved Comments").ToString())
-                                @Html.SelectOption(Model.Options.Filter, CommentIndexFilter.Pending, T("Pending Comments").ToString())
-                            </select>
-                            <button class="btn btn-default" type="submit" name="submit.Filter" value="@T("Apply")">@T("Apply")</button>
-                        </fieldset>
-                    </div>
-                    <div class="col-sm-4">&nbsp;</div>
+                <div class="panel-heading-primary-group">
+                    <fieldset>
+                        <input id="bulkActions" name="@Html.NameOf(m => m.Options.BulkAction)" type="hidden" value="@CommentIndexBulkAction.None" />
+                        <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-primary dropdown-toggle auto-size" data-toggle="dropdown">
+                                <i class="fa fa-bolt"></i> @T("Bulk Actions") <span class="caret"></span>
+                            </button>&nbsp;
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="#" data-bulk-action-confirm="@T("Are you sure you want to approve these items?")" data-bulk-action="@CommentIndexBulkAction.Approve">@T("Approve").ToString()</a></li>
+                                <li><a href="#" data-bulk-action-confirm="@T("Are you sure you want to unapprove these items?")" data-bulk-action="@CommentIndexBulkAction.Unapprove">@T("Unapprove").ToString()</a></li>
+                                <li><a href="#" data-bulk-action-confirm="@T("Are you sure you want to delete these items?")" data-bulk-action="@CommentIndexBulkAction.Delete">@T("Delete").ToString()</a></li>
+                            </ul>
+                        </div>
+                    </fieldset>
+                    <fieldset class="bulk-actions">
+                        <label for="filterResults">@T("Filter:")</label>
+                        <select id="filterResults" name="@Html.NameOf(m => m.Options.Filter)" class="form-control auto-size">
+                            @Html.SelectOption(Model.Options.Filter, CommentIndexFilter.All, T("All Comments").ToString())
+                            @Html.SelectOption(Model.Options.Filter, CommentIndexFilter.Approved, T("Approved Comments").ToString())
+                            @Html.SelectOption(Model.Options.Filter, CommentIndexFilter.Pending, T("Pending Comments").ToString())
+                        </select>
+                        <button class="btn btn-default auto-size" type="submit" name="submit.Filter" value="@T("Apply")">@T("Apply")</button>
+                    </fieldset>
                 </div>
             </div>
 

@@ -20,7 +20,7 @@
             @Html.ValidationSummary()
             <div class="panel-heading">
                 <div class="row">
-                    <div class="col-sm-6">
+                    <div class="col-xs-6">
                         <fieldset>
                             <input id="bulkActions" name="@Html.NameOf(m => m.Options.BulkAction)" type="hidden" value="@WorkflowDefinitionBulk.None" />
                             <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
@@ -34,8 +34,8 @@
                             </div>
                         </fieldset>
                     </div>
-                    <div class="col-sm-6 text-right">
-                        <a class="btn btn-primary" href="@Url.Action("EditProperties", new { Area = "Orchard.Workflows", returnurl = HttpContext.Current.Request.RawUrl })"><i class="fa fa-plus"></i> @T("Create new Workflow Definition").Text</a>
+                    <div class="col-xs-6 text-right">
+                        <a class="btn btn-primary" href="@Url.Action("EditProperties", new { Area = "Orchard.Workflows", returnurl = HttpContext.Current.Request.RawUrl })"><i class="fa fa-plus"></i> @T("Create Workflow").Text</a>
                     </div>
                 </div>
             </div>

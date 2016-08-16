@@ -3,7 +3,7 @@
 @{
     Style.Require("ContentTypesAdmin");
     Layout.Title = T("Add Parts To \"{0}\"", Model.Type.DisplayName).ToString();
-    Html.AdminBreadcrumbs(new { CurrentContentType = Model.Type.Definition});
+    Html.AdminBreadcrumbs(new { CurrentContentType = Model.Type.Definition });
 
     var i = 0;
 }
@@ -16,28 +16,28 @@
         <div class="panel-body">
             <fieldset>
                 @foreach (var partSelection in Model.PartSelections) {
-                    <div class="or-checkbox">
-                        @{
-                            var fieldNameStart = "PartSelections[" + i + "].";
-                            var fieldName = fieldNameStart + "IsSelected";
-                            var fieldId = ViewData.TemplateInfo.GetFullHtmlFieldId(fieldNameStart + "IsSelected");
-                            i++;
-                        }
+                    var fieldNameStart = "PartSelections[" + i + "].";
+                    var fieldName = fieldNameStart + "IsSelected";
+                    var fieldId = ViewData.TemplateInfo.GetFullHtmlFieldId(fieldNameStart + "IsSelected");
+                    i++;
+                    <div class="form-group">
+                        <div class="or-checkbox">
 
-                        <input name="@fieldName" type="checkbox" id="@fieldId" value="true" />
-                        <label for="@fieldId">
-                            @partSelection.PartDisplayName
-                        </label>
-                        @if (!string.IsNullOrWhiteSpace(partSelection.PartDescription)) {
-                            <span class="part-hint" for="@fieldId">@partSelection.PartDescription</span>
-                        }
-                        @Html.Hidden(fieldNameStart + "PartName", partSelection.PartName)
-                    </div>
+                            <input name="@fieldName" type="checkbox" id="@fieldId" value="true" />
+                            <label for="@fieldId">
+                                @partSelection.PartDisplayName
+                            </label>
+                            @if (!string.IsNullOrWhiteSpace(partSelection.PartDescription)) {
+                                <span class="help-block" for="@fieldId">@partSelection.PartDescription</span>
                             }
+                            @Html.Hidden(fieldNameStart + "PartName", partSelection.PartName)
+                        </div>
+                    </div>
+                }
             </fieldset>
         </div>
         <div class="panel-footer">
             <button class="btn btn-primary" type="submit"><i class="fa fa-save"></i> @T("Save")</button>
         </div>
     </div>
-                            }
+}

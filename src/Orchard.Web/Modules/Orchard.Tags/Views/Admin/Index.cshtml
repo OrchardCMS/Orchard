@@ -10,12 +10,9 @@
 <div class="or-panel-main panel-default">
     @using (Html.BeginFormAntiForgeryPost()) {
         @Html.ValidationSummary()
-        <div class="panel-heading no-border">
-            <div class="panel-heading-actions">
-                @Display.EditorTemplate(TemplateName: "Parts/CreateTag", Model: ViewData["CreateTag"] != null ? ViewData["CreateTag"] : new TagsAdminCreateViewModel())
-            </div>
+        <div class="panel-heading no-border form-inline">
             <div class="panel-heading-primary-group">
-                <fieldset>
+                <fieldset class="bulk-actions">
                     <input id="bulkActions" name="@Html.NameOf(m => m.BulkAction)" type="hidden" value="@TagAdminIndexBulkAction.None" />
                     <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
                     <div class="btn-group">
@@ -27,6 +24,7 @@
                         </ul>
                     </div>
                 </fieldset>
+                @Display.EditorTemplate(TemplateName: "Parts/CreateTag", Model: ViewData["CreateTag"] != null ? ViewData["CreateTag"] : new TagsAdminCreateViewModel())
             </div>
         </div>
 

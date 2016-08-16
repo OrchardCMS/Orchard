@@ -1,6 +1,7 @@
 ﻿@{
     Layout.Title = @T("Edit Activity");
     Script.Include("orchard-workflows-serialize.js").AtFoot();
+    Style.Require("JqueryUI");
 }
 <div class="panel panel-default">
     @using (Html.BeginFormAntiForgeryPost()) {
@@ -14,11 +15,6 @@
             }
 
             @Display.TokenHint()
-
-            <fieldset>
-                <button class="btn btn-primary" type="submit" name="_submit.Save" value="@T("Save")">@T("Save")</button>
-                <button class="btn btn-default" type="submit" name="_submit.Cancel" value="@T("Cancel")">@T("Cancel")</button>
-            </fieldset>
 
             @using (Script.Head()) {
                 <script type="text/javascript">
@@ -34,6 +30,12 @@
                     loadForm('@Model.LocalId', '@Model.ClientId');
                 </script>
             }
+        </div>
+        <div class="panel-footer">
+            <fieldset>
+                <button class="btn btn-primary" type="submit" name="_submit.Save" value="@T("Save")">@T("Save")</button>
+                <button class="btn btn-default" type="submit" name="_submit.Cancel" value="@T("Cancel")">@T("Cancel")</button>
+            </fieldset>
         </div>
     }
 </div>

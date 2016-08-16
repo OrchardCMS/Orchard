@@ -4,5 +4,9 @@
 }
 @Display(Model.ContentItems)
 @if (Model.ContentItems.Items.Count < 1) {
-<p>@T("No blogs found.")</p>
+<div class="panel panel-default">
+    <div class="panel-body">
+        <h3 class="no-content">@T("No blogs found.")</h3>
+    </div>
+</div>
 }

@@ -3,7 +3,7 @@
     var containerId = (int)Model.ContainerId;
     var itemContentTypes = (IList<ContentTypeDefinition>)Model.ItemContentTypes;
 }
-<div class="col-sm-6 text-right">
+<div class="col-xs-12 col-md-7 text-right text-nowrap">
     <a class="btn btn-default" href="@Url.Action("Edit", new { Area = "Contents", Id = (int)Model.ContainerId, ReturnUrl = Html.ViewContext.HttpContext.Request.RawUrl })"><i class="fa fa-cog"></i> @T("{0} Properties", (string)Model.ContainerDisplayName)</a>
     @if (itemContentTypes.Any()) {
         foreach (var contentType in itemContentTypes) {

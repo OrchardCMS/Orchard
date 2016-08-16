@@ -2,7 +2,11 @@
 @{
     Style.Require("TagsAdmin");
 }
-<div class="form-inline">
-    @Html.TextBoxFor(m => m.TagName, new { @class = "form-control", placeholder = T("New Tag Name") })
-    <button class="btn btn-primary" type="submit" name="submit.Create" value="yes"><i class="fa fa-plus"></i> @T("Add Tag")</button>
-</div>
+<fieldset class="bulk-actions">
+    <div class="input-group">
+        @Html.TextBoxFor(m => m.TagName, new { @class = "form-control auto-size", placeholder = T("New Tag Name") })
+        <span class="input-group-btn">
+            <button class="btn btn-primary" type="submit" name="submit.Create" value="yes"><i class="fa fa-plus"></i> @T("Add Tag")</button>
+        </span>
+    </div>
+</fieldset>

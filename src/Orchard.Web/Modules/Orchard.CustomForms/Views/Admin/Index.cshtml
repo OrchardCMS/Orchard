@@ -19,7 +19,7 @@
             @Html.ValidationSummary()
             <div class="panel-heading">
                 <div class="row">
-                    <div class="col-sm-4">
+                    <div class="col-xs-6">
                         <fieldset>
                             <input id="bulkActions" name="@Html.NameOf(m => m.Options.BulkAction)" type="hidden" value="@CustomFormBulkAction.None" />
                             <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
@@ -33,18 +33,8 @@
                             </div>
                         </fieldset>
                     </div>
-                    <div class="col-sm-4">
-                        &nbsp;
-                        <fieldset class="bulk-actions">
-                            @* No need to filter if there is only one option in the dropdownlist *@
-                            @*<label for="filterResults">@T("Sort by:")</label>
-                                <select id="filterResults" name="@Html.NameOf(m => m.Options.Order)">
-                                    @Html.SelectOption(Model.Options.Order, CustomFormOrder.Creation, T("Creation date").ToString())
-                                </select>*@
-                        </fieldset>
-                    </div>
-                    <div class="col-sm-4 text-right">
-                        <a class="btn btn-primary" href="@Url.Action("Create", "Admin", new { area = "Contents", id = "CustomForm", returUrl = Request.RawUrl })"><i class="fa fa-plus"></i> @T("Add a new Custom Form").Text</a>
+                    <div class="col-xs-6 text-right">
+                        <a class="btn btn-primary" href="@Url.Action("Create", "Admin", new { area = "Contents", id = "CustomForm", returUrl = Request.RawUrl })"><i class="fa fa-plus"></i> @T("Add Custom Form").Text</a>
                     </div>
                 </div>
             </div>

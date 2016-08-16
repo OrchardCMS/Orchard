@@ -13,29 +13,24 @@
     <div class="or-panel-main panel-default">
         <div class="panel-heading no-border form-inline">
             @Html.ValidationSummary()
-            <div class="panel-heading-actions">
-                <a class="btn btn-primary" href="@Url.Action("Create", new { })"><i class="fa fa-plus"></i> @T("Add a role")</a>
-            </div>
-            <div class="panel-heading-primary-group">
-                @*<fieldset class="bulk-actions">
-                        <label class="control-label">Action: </label>
-                        <select id="Select1" name="roleActions" class="form-control">
-                            <option value="1">@T("Delete")</option>
-                        </select>
-                        <button type="submit" class="btn btn-primary">@T("Apply")</button>
-                    </fieldset>*@
-                <fieldset>
-                    <input id="bulkActions" name="@Html.NameOf(m => m.Options.BulkAction)" type="hidden" value="@RolesBulkAction.None" />
-                    <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-bolt"></i> @T("Bulk Actions") <span class="caret"></span>
-                        </button>&nbsp;
-                        <ul class="dropdown-menu" role="menu">
-                            <li><a href="#" data-bulk-action-confirm="@T("Are you sure you want to delete these items?")" data-bulk-action="@RolesBulkAction.Delete">@T("Delete").ToString()</a></li>
-                        </ul>
-                    </div>
-                </fieldset>
+            <div class="row">
+                <div class="col-xs-6">
+                    <fieldset>
+                        <input id="bulkActions" name="@Html.NameOf(m => m.Options.BulkAction)" type="hidden" value="@RolesBulkAction.None" />
+                        <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                                <i class="fa fa-bolt"></i> @T("Bulk Actions") <span class="caret"></span>
+                            </button>&nbsp;
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="#" data-bulk-action-confirm="@T("Are you sure you want to delete these items?")" data-bulk-action="@RolesBulkAction.Delete">@T("Delete").ToString()</a></li>
+                            </ul>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="col-xs-6 text-right">
+                    <a class="btn btn-primary" href="@Url.Action("Create", new { })"><i class="fa fa-plus"></i> @T("Add a role")</a>
+                </div>
             </div>
         </div>
         <div class="row">

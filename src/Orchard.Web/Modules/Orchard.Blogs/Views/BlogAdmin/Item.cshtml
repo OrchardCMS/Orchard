@@ -1,7 +1,51 @@
-@using Orchard.Blogs.Extensions
+@using Orchard.Core.Contents.ViewModels;
+@using Orchard.Utility.Extensions;
+@using Orchard.Blogs.Extensions;
+@using Orchard.Blogs.Models;
 @{
     Layout.Title = T("Manage Blog").ToString();
     Html.AdminBreadcrumbs(new { CurrentBlog = Model.ContentItem });
 }
-@* Model is a Shape, calling Display() so that it is rendered using the most specific template for its Shape type *@
-@Display(Model)
+
+<div class="or-panel-main panel-default">
+    <div class="panel-heading no-border form-inline">
+        <div class="row">
+            <fieldset class="col-sm-6">
+                <div class="or-checkbox inline">
+                    <input type="checkbox" class="check-all" id="blog-post-list-select-all" />
+                    <label class="check-all" title="@T("Select All")" for="blog-post-list-select-all"></label>
+                </div>
+                <input id="bulkActions" name="Options.BulkAction" type="hidden" value="@ContentsBulkAction.None" />
+                @Html.Hidden("returnUrl", ViewContext.RequestContext.HttpContext.Request.ToUrlString())
+                <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                        <i class="fa fa-bolt"></i> @T("Bulk Actions") <span class="caret"></span>
+                    </button>&nbsp;
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a id="btn-bulk-publish" href="#" data-bulk-action-confirm="@T("Are you sure you want to publish these items?")" data-bulk-action="@ContentsBulkAction.PublishNow">@T("Publish Now").ToString()</a></li>
+                        <li><a id="btn-bulk-unpublish" href="#" data-bulk-action-confirm="@T("Are you sure you want to unpublish these items?")" data-bulk-action="@ContentsBulkAction.Unpublish">@T("Unpublish").ToString()</a></li>
+                        <li><a id="btn-bulk-delete" href="#" data-bulk-action-confirm="@T("Are you sure you want to delete these items?")" data-bulk-action="@ContentsBulkAction.Remove">@T("Delete").ToString()</a></li>
+                    </ul>
+                </div>
+            </fieldset>
+            <fieldset class="col-sm-6 text-right">
+                <a class="btn btn-default" href="@Url.BlogEdit((BlogPart)Model.ContentItem.BlogPart)"><i class="fa fa-cog"></i> @T("Blog Properties")</a>
+                <a class="btn btn-primary" href="@Url.BlogPostCreate((BlogPart)Model.ContentItem.BlogPart)"><i class="fa fa-plus"></i> @T("New Post")</a>
+            </fieldset>
+        </div>
+    </div>
+    @if (Model.PostCount > 0)
+    {
+        @* Model is a Shape, calling Display() so that it is rendered using the most specific template for its Shape type *@
+        @Display(Model)
+    }
+    else
+    {
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <h3 class="no-content">@T("There are no posts for this blog.")</h3>
+            </div>
+        </div>
+    }
+</div>

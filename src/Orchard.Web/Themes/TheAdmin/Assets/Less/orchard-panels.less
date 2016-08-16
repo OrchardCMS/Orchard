@@ -29,7 +29,7 @@
             justify-content: flex-end;
             flex: 2 auto;
 
-            @media (max-width: @screen-xs-max) {
+            @media @phone, @tablet {
                 margin-bottom: 10px;
                 padding: 0;
             }
@@ -43,7 +43,7 @@
             justify-content: flex-start;
             flex: 3 auto;
 
-            @media (max-width: @screen-xs-max) {
+            @media @phone, @tablet {
                 flex-basis: 100%;
                 align-items: flex-start;
                 margin-bottom: 1em;
@@ -74,13 +74,14 @@
                     flex-grow: 2;
                 }
 
-                @media (max-width: @screen-xs-max) {
+                @media @phone, @tablet {
                     white-space: normal;
                     margin-right: 0;
                     padding-bottom: 1em;
                     border-bottom: 1px solid #ccc;
                     padding-right: 0;
                     border-right: 0;
+                    margin-bottom: 1em;
 
                     + .bulk-actions, + .bulk-actions-auto {
                         margin-left: 0;
@@ -91,7 +92,7 @@
 
                 > * {
 
-                    @media (max-width: @screen-xs-max) {
+                    @media @phone, @tablet {
                         margin-bottom: 5px;
                         width: 100%;
 
@@ -120,7 +121,7 @@
                 width: 100%;
                 white-space: normal;
 
-                @media (max-width: @screen-xs-max) {
+                @media @phone, @tablet {
                     white-space: normal;
                 }
             }
@@ -211,4 +212,14 @@
 
 .panel-alt1{
     border-color: #3d3c3c;
+}
+
+.panel-full-primary{
+    a{
+        color:#FFF;
+    }
+    .panel-footer{
+        background-color: #49AD70;
+        border-color: #3fa366;
+    }
 }

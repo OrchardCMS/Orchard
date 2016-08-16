@@ -2,10 +2,10 @@
 @{
     var typeDisplayName = Model.TypeDisplayName;
     var pageTitle = T("Manage Templates");
-    var createLinkText = T("Create New Template");
+    var createLinkText = T("Create Template");
     if (!string.IsNullOrWhiteSpace(typeDisplayName)) {
         pageTitle = T("Manage {0}s", typeDisplayName);
-        createLinkText = T("Create New {0}", typeDisplayName);
+        createLinkText = T("Create {0}", typeDisplayName);
     }
 
     Layout.Title = pageTitle;
@@ -32,8 +32,24 @@
                             <li><a href="#" data-bulk-action-confirm="@T("Are you sure you want to delete these items?")" data-bulk-action="@ContentsBulkAction.Remove">@T("Delete").ToString()</a></li>
                         </ul>
                     </div>
+                    <div class="btn-group btn-filters">
+                        <input id="filterResults" name="Options.SelectedFilter" type="hidden" value="">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa fa-filter" aria-hidden="true"></i> @T("Filters") <span class="caret"></span>
+                        </button>&nbsp;
+                        <ul class="dropdown-menu" role="menu">
+                            @foreach (var filterOption in Model.Options.FilterOptions) {
+                                //@Html.SelectOption((string)Model.Options.SelectedFilter, (string)filterOption.Key, (string)filterOption.Value)
+                                <li><a href="#" data-action="Acme1">@filterOption.Key</a></li>
+                            }
+                            <li role="separator" class="divider"></li>
+                            <li><a href="#" data-action="Acme1">@T("recently created")</a></li>
+                            <li><a href="#" data-action="Acme1">@T("recently modified")</a></li>
+                            <li><a href="#" data-action="Acme1">@T("recently published")</a></li>
+                        </ul>
+                    </div>
                 </fieldset>
-                <fieldset class="form-group form-inline">
+                @*<fieldset class="form-group form-inline">
                     <label for="filterResults" class="bulk-filter">@T("Show")</label>
                     <select class="form-control" id="filterResults" name="Options.SelectedFilter">
                         @Html.SelectOption((string)Model.Options.SelectedFilter, "", T("any (show all)").ToString())
@@ -48,7 +64,8 @@
                         @Html.SelectOption((ContentsOrder)Model.Options.OrderBy, ContentsOrder.Published, T("recently published").ToString())
                     </select>
                     <button class="btn btn-default" type="submit" name="submit.Filter" value="yes please">@T("Apply")</button>
-                </fieldset>
+
+                </fieldset>*@
                 <fieldset class="form-group pull-right">
                     <a href="@Url.Action("Create", new { Area = "Orchard.Templates", Id = (string)Model.Options.SelectedFilter })" class="btn btn-primary"><i class="fa fa-plus"></i> @createLinkText.Text</a>
                 </fieldset>

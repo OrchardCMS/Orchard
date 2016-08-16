@@ -132,8 +132,14 @@
             > li.dropdown {
 
                 > a {
-                    padding-left: 16px;
-                    padding-right: 4px;
+                    padding: 0 9px;
+                    position: relative;
+
+                    .icon {
+                        font-size: @top-header-icons-size;
+                        vertical-align: middle;
+                        color: fade(@light-color, 80%);
+                    }
 
                     @media @tablet {
                         padding-left: 10px;

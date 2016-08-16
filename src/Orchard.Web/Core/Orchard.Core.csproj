@@ -632,6 +632,9 @@
   <ItemGroup>
     <Content Include="Shapes\Views\ConfirmationDialog.cshtml" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Contents\Views\Filters.cshtml" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

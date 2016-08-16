@@ -127,7 +127,7 @@
                                             }
 
                                             <li class="@featureClassName" id="@featureId" title="@T(feature.IsEnabled ? "{0} is enabled" : "{0} is disabled", Html.AttributeEncode(featureName))">
-                                                <div class="panel panel-full-dark panel-heading-fullwidth panel-borders ">
+                                                <div class="panel panel-default panel-heading-fullwidth panel-borders">
                                                     <div class="panel-heading">
                                                         <div class="title">
                                                             @if ((showEnable && !feature.IsEnabled) || (showDisable && feature.IsEnabled)) {
