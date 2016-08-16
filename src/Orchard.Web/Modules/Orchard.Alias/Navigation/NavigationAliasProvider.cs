@@ -41,14 +41,14 @@ namespace Orchard.Alias.Navigation {
                     var urlLevel = endsWithSlash ? requestUrl.Count(l => l == '/') - 1 : requestUrl.Count(l => l == '/');
                     var menuLevel = menuPosition.Count(l => l == '.');
 
-                    // Checking menu item if it's the leaf element or it's an intermediate element
+                    // Checking the menu item whether it's the leaf element or it's an intermediate element
                     // or it's an unneccessary element according to the url.
                     RouteValueDictionary contentRoute;
                     if (menuLevel == urlLevel) {
                         contentRoute = request.RequestContext.RouteData.Values;
                     }
                     else {
-                        // If menuLevel doesn't equal with urlLevel it can mean that this menu item is
+                        // If menuLevel doesn't equal to urlLevel it can mean that this menu item is
                         // an intermediate element (the difference is a positive value) or this menu
                         // item is lower in the navigation hierarchy according to the url (negative
                         // value). If the value is negative, removing the menu item, if the value

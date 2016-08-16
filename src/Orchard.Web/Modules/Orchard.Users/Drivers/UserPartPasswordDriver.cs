@@ -4,18 +4,26 @@ using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.Security;
 using Orchard.Users.Models;
+using Orchard.Users.Services;
 using Orchard.Users.ViewModels;
+using System.Collections.Generic;
+using System.Web.Mvc;
 
 namespace Orchard.Users.Drivers{
 
     [OrchardFeature("Orchard.Users.PasswordEditor")]
     public class UserPartPasswordDriver : ContentPartDriver<UserPart> {
         private readonly IMembershipService _membershipService;
-        
+        private readonly IUserService _userService;
+
         public Localizer T { get; set; }
         
-        public UserPartPasswordDriver(IMembershipService membershipService) {
+        public UserPartPasswordDriver(
+            MembershipService membershipService,
+            IUserService userService) {
+
             _membershipService = membershipService;
+            _userService = userService;
             T = NullLocalizer.Instance;
         }
 
@@ -42,6 +50,11 @@ namespace Orchard.Users.Drivers{
                             var actUser = _membershipService.GetUser(part.UserName);
                             _membershipService.SetPassword(actUser, editModel.Password);
                         }
+                    }
+
+                    IDictionary<string, LocalizedString> validationErrors;
+                    if (!_userService.PasswordMeetsPolicies(editModel.Password, out validationErrors)) {
+                        updater.AddModelErrors(validationErrors);
                     }
                 }
             }
