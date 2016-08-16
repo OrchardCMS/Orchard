@@ -15,6 +15,10 @@
     padding: 10px;
 }
 
+#widgets-layers {
+    margin-top: 15px;
+}
+
 #widgets-layers-control label, #widgets-zones h2, #widgets-assistance h3 {
     font-size: 1.077em;
     padding: 2px 2px;
