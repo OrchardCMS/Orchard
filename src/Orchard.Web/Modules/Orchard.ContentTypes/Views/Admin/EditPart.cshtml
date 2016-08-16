@@ -7,11 +7,14 @@
     Layout.Title = T("Edit {0}", Model.Name.CamelFriendly()).ToString();
     Html.AdminBreadcrumbs(new { CurrentContentPart = Model.Definition });
 }
-@using (Html.BeginFormAntiForgeryPost()) {
-    <div class="or-panel-main panel-default panel-heading-fullwidth panel-borders">
+@using (Html.BeginFormAntiForgeryPost())
+{
+    <div class="panel panel-default panel-heading-fullwidth panel-borders">
         <div class="panel-heading">
-            <div class="panel-heading-primary-group">
-                <span class="title">@T("Settings")</span>
+            <div class="row">
+                <div class="col-xs-12">
+                    <span class="title">@T("Settings")</span>
+                </div>
             </div>
         </div>
         <div class="panel-body">
@@ -25,22 +28,21 @@
         </div>
     </div>
 
-    <div class="or-panel-main panel-default panel-heading-fullwidth panel-borders">
+    <div class="panel panel-default panel-heading-fullwidth panel-borders">
         <div class="panel-heading">
-            <div class="panel-heading-primary-group">
-                <span class="title">@T("Fields")</span>
-            </div>
-            <div class="panel-heading-actions">
-                <a class="icon s7-plus" href="@Url.Action("AddFieldTo", new {area = "Orchard.ContentTypes", id = Model.Name})" title="@T("Add Field")"></a>
+            <div class="row">
+                <div class="col-xs-6">
+                    <span class="title">@T("Fields")</span>
+                </div>
+                <div class="col-xs-6 text-right">
+                    <a class="icon s7-plus" href="@Url.Action("AddFieldTo", new { area = "Orchard.ContentTypes", id = Model.Name })" title="@T("Add Field")"></a>
+                </div>
             </div>
         </div>
         <div class="panel-body">
             @Html.EditorFor(m => m.Fields, "Fields", "")
         </div>
-    </div>
-
-    <div class="or-panel-main panel-default">
-        <div class="panel-body">
+        <div class="panel-footer">
             <fieldset class="text-left">
                 <button class="btn btn-primary" type="submit" name="submit.Save" value="Save"><i class="fa fa-save"></i> @T("Save")</button>
                 <button class="btn btn-danger" type="submit" name="submit.Delete" value="Delete" itemprop="RemoveUrl"><i class="fa fa-trash"></i> @T("Delete")</button>

@@ -8,14 +8,17 @@
     Html.AdminBreadcrumbs(new { CurrentContentType = Model.Definition });
 }
 
-@using (Html.BeginFormAntiForgeryPost()) {
-    <div class="or-panel-main panel-default panel-heading-fullwidth panel-borders">
+@using (Html.BeginFormAntiForgeryPost())
+{
+    <div class="panel panel-default panel-heading-fullwidth panel-borders">
         <div class="panel-heading">
-            <div class="panel-heading-primary-group">
-                <span class="title">@T("Settings")</span>
-            </div>
-            <div class="panel-heading-actions">
-                <a class="icon s7-display2" href="@Url.Action("EditPlacement", new {area = "Orchard.ContentTypes", id = Model.Name})" title="@T("Edit Placement")"></a>
+            <div class="row">
+                <div class="col-xs-6">
+                    <span class="title">@T("Settings")</span>
+                </div>
+                <div class="col-xs-6 text-right">
+                    <a class="icon s7-display2" href="@Url.Action("EditPlacement", new {area = "Orchard.ContentTypes", id = Model.Name})" title="@T("Edit Placement")"></a>
+                </div>
             </div>
         </div>
         <div class="panel-body">
@@ -31,13 +34,15 @@
         </div>
     </div>
 
-    <div class="or-panel-main panel-default panel-heading-fullwidth panel-borders">
+    <div class="panel panel-default panel-heading-fullwidth panel-borders">
         <div class="panel-heading">
-            <div class="panel-heading-primary-group">
-                <span class="title">@T("Fields")</span>
-            </div>
-            <div class="panel-heading-actions">
-                <a class="icon s7-plus" href="@Url.Action("AddFieldTo", new {area = "Orchard.ContentTypes", id = Model.Name})" title="@T("Add Field")"></a>
+            <div class="row">
+                <div class="col-xs-6">
+                    <span class="title">@T("Fields")</span>
+                </div>
+                <div class="col-xs-6 text-right">
+                    <a class="icon s7-plus" href="@Url.Action("AddFieldTo", new {area = "Orchard.ContentTypes", id = Model.Name})" title="@T("Add Field")"></a>
+                </div>
             </div>
         </div>
         <div class="panel-body manage-type">
@@ -45,22 +50,21 @@
         </div>
     </div>
 
-    <div class="or-panel-main panel-default panel-heading-fullwidth panel-borders">
+    <div class="panel panel-default panel-heading-fullwidth panel-borders">
         <div class="panel-heading">
-            <div class="panel-heading-primary-group">
-                <span class="title">@T("Parts")</span>
-            </div>
-            <div class="panel-heading-actions">
-                <a class="icon s7-plus" href="@Url.Action("AddPartsTo", new {area = "Orchard.ContentTypes", id = Model.Name})" title="@T("Add Field")"></a>
+            <div class="row">
+                <div class="col-xs-6">
+                    <span class="title">@T("Parts")</span>
+                </div>
+                <div class="col-xs-6 text-right">
+                    <a class="icon s7-plus" href="@Url.Action("AddPartsTo", new {area = "Orchard.ContentTypes", id = Model.Name})" title="@T("Add Field")"></a>
+                </div>
             </div>
         </div>
         <div class="panel-body manage-type">
             @Html.EditorFor(m => m.Parts, "TypeParts", "")
         </div>
-    </div>
-
-    <div class="or-panel-main panel-default panel-borders">
-        <div class="panel-body form-horizontal">
+        <div class="panel-footer form-horizontal">
             <button class="btn btn-primary" type="submit" name="submit.Save" value="Save"><i class="fa fa-save"></i> @T("Save")</button>
             <button class="btn btn-danger" type="submit" name="submit.Delete" value="Delete" itemprop="RemoveUrl"><i class="fa fa-trash"></i> @T("Delete")</button>
         </div>

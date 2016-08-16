@@ -8,7 +8,7 @@
 <div class="or-panel-main panel-default">
     <div class="panel-heading no-border form-inline">
         <div class="panel-heading-actions">
-            @Html.ActionLink(T("Create new part").ToString(), "CreatePart", new { Controller = "Admin", Area = "Orchard.ContentTypes" }, new { @class = "btn btn-primary" })
+            <a class="btn btn-primary" href="@Url.Action("CreatePart", new { Controller = "Admin", Area = "Orchard.ContentTypes" })"><i class="fa fa-plus"></i> @T("Create new part")</a>
         </div>
         <div class="panel-heading-primary-group">
             <fieldset class="bulk-actions">
