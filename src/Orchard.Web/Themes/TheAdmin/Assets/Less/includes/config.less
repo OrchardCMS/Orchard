@@ -1,6 +1,6 @@
 //Paths
-@img-path: 		"../images"; 
-@fonts-path: 	"../Fonts";
+@img-path: 		"../img"; 
+@fonts-path: 	"../lib"; 
 @lib-path: 		"../lib"; 
 
 //General colors palette
@@ -49,9 +49,9 @@
 
 //Left Sidebar
 @left-sidebar-bg: 									@dark-color;
-@left-sidebar-width: 								240px;
+@left-sidebar-width: 								100px;
 @left-sidebar-submenu-width: 				280px;
-@left-sidebar-width-phone: 					240px;
+@left-sidebar-width-phone: 					85%;
 @left-sidebar-color: 								darken(@light-color, 11.8%);
 @left-sidebar-color-sub-item: 			darken(@light-color, 30%);
 @left-sidebar-background-sub-item: 	lighten(@dark-color, 4.3%);
@@ -162,15 +162,25 @@
 @btn-link-disabled-color:        @gray-light;
 
 //Alerts
-@alert-icon-width: 			55px;
+@alert-icon-width: 						55px;
 
 //Progress bars
-@progress-bar-height: 	22px;	
+@progress-bar-height: 				22px;	
 
 //Status color
-@status-online: 		#00b777;
-@status-offline: 		#e65a5a;
-@status-away: 			#f2c329;
+@status-online: 							#00b777;
+@status-offline: 							#e65a5a;
+@status-away: 								#f2c329;
+
+//Chat component
+@chat-min-height: 						350px;
+@chat-messages-height: 				274px;
+
+// Plugins
+
+//Nifty Modals
+@modal-prefix: 								modal;
+@modal-zindex: 								@zindex-modal;
 
 //Gritter Notifications
 @notification-width: 					360px;

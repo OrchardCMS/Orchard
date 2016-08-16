@@ -1,0 +1,19 @@
+/* Effect 1: Fade in and scale up */
+.@{modal-prefix}-effect-1 .@{modal-prefix}-content {
+	-webkit-transform: scale(0.7);
+	-moz-transform: scale(0.7);
+	-ms-transform: scale(0.7);
+	transform: scale(0.7);
+	opacity: 0;
+	-webkit-transition: all 0.3s;
+	-moz-transition: all 0.3s;
+	transition: all 0.3s;
+}
+
+.@{modal-prefix}-show.@{modal-prefix}-effect-1 .@{modal-prefix}-content {
+	-webkit-transform: scale(1);
+	-moz-transform: scale(1);
+	-ms-transform: scale(1);
+	transform: scale(1);
+	opacity: 1;
+}

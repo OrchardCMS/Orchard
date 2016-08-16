@@ -105,12 +105,16 @@
 						display: inline-block;
 						margin-left: 7px;
 
-						input[type="checkbox"] + label:before{
-							border-color: lighten(@dark-color, 5%);
-						}
+						input[type="checkbox"] + label, input[type="radio"] + label{
+							
+							&:before{
+								border-color: lighten(@dark-color, 5%);
+								background-color: transparent;
+							}
 
-						input[type="checkbox"] + label:hover:before{
-							border-color: lighten(@dark-color, 10%);
+							&:hover:before{
+								border-color: lighten(@dark-color, 10%);
+							}
 						}
 					}
 				}

@@ -624,7 +624,7 @@
     <Content Include="Views\AdminCultureSelector.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\Less\includes\structure\footer.less" />
+    <Content Include="Assets\Less\orchard-footer.less" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Branding.cshtml" />
@@ -637,6 +637,30 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Less\orchard-filters.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\includes\structure\right-sidebar\chat-component.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\orchard-left-sidebar.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\orchard-main-content.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\orchard-main-wrapper.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\orchard-page-aside.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\orchard-top-header.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\orchard-tokens.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\orchard-general.less" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

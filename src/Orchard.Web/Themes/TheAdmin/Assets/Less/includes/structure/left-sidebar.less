@@ -6,28 +6,11 @@
 	width: @left-sidebar-width;
 	height: 100%;
 	left: 0;
-    top:0;
-    bottom:0;
 	position: absolute;
 
 	.sidebar-elements{
 		margin: 0;
 		padding: 0;
-
-		//logo
-		.navbar-brand{
-			background: url("@{img-path}/logo.png") no-repeat 15px center @dark-color;
-			color: @light-color;
-			padding-top: 0;
-			padding-bottom: 0;
-			padding-left: 80px;
-			line-height: @top-header-height;
-			height: @top-header-height;
-			width: @left-sidebar-width;
-            margin-right: 20px;
-			border-bottom: 1px solid lighten(@dark-color, 4%);
-            font-size: 19px;
-		}
 
 		//First Level
 		> li{
@@ -44,13 +27,25 @@
 				.icon{
 					display: block;
 					font-size: 33px;
-                    min-width: 25px;
-                    text-align: center;
 				}
 
 				span{
 					display: block;
 					margin-top: 5px;
+				}
+			}
+
+			@media @non-responsive{
+				&:hover, &.open{
+					background-color: @left-sidebar-hover-item;
+				}
+			}
+
+			&.active{
+				
+				> a{
+					border-left: 2px solid @primary-color;
+					padding-left: 13px;
 				}
 			}
 
@@ -67,16 +62,17 @@
 				table-layout: fixed;
 				list-style: none;
 				width: @left-sidebar-submenu-width;
-                z-index:0;
 
-				//Class helper for delay purposes
-				&.visible{
-					display: table;
-				}
+				@media @non-responsive{
+					//Class helper for delay purposes
+					&.visible{
+						display: table;
+					}
 
-				//Class helper for closeSubMenu method
-				&.hide{
-					display: none;
+					//Class helper for closeSubMenu method
+					&.hide{
+						display: none;
+					}
 				}
 
 				> li.title{
@@ -91,9 +87,10 @@
 				
 				> .nav-items{
 					display: table-row;
-    			    height: 100%;
+    			height: 100%;
 					
 					.or-scroller{
+						display: table-cell;
 						height: 100%;
 
 						@media @phone{
@@ -149,30 +146,12 @@
 					}
 				}
 			}
-
-			&:hover{
-				background-color: @left-sidebar-hover-item;
-
-				> ul{
-					display: table;
-				}
-			}
-
-			&.active{
-				
-				> a{
-					border-left: 2px solid @primary-color;
-					padding-left: 13px;
-				}
-			}
 		}
 	}
-    
-	@media @phone{
+
 	.or-logo{
 		display: none;
 	}
-    }
 
 	&:before{
 		content: "";
@@ -193,15 +172,15 @@
 		}
 	}
 
+	@media @phone{
 		width: @left-sidebar-width-phone;
 		height: 100%;
+		overflow: auto;
 		-webkit-overflow-scrolling: touch;
 		position: fixed;
-             
-	    @media @phone{
-		    top: 0;
-            transform: translate3d(-100%, 0, 0);
-	    }
+		top: 0;
+    transform: translate3d(-100%, 0, 0);
+		z-index: (@zindex-navbar-fixed + 1);
 
 		.sidebar-elements{
 
@@ -210,20 +189,16 @@
 				> a{
 					text-align: left;
 					position: relative;
-                    display: flex;
 
 					.icon{
 						display: inline-block;
 						font-size: 25px;
 						margin-right: 10px;
-                        align-self: center;
+						vertical-align: middle;
 					}
 
 					span{
 						display: inline-block;
-                        overflow: hidden;
-                        width: 69%;
-                        align-self: center;
 					}
 				}
 
@@ -236,7 +211,6 @@
 						font-size: 26px;
 						line-height: 28px;
 						color: darken(@left-sidebar-color, 25%);
-                        align-self: center;
 					}
 				}
 
@@ -286,17 +260,18 @@
 		}
 
 		.or-logo{
-			background: url("@{img-path}/logo.png") no-repeat 15px center;
+			background: url("@{img-path}/logo-full.png") no-repeat 15px center;
 			height: @top-header-height-phone;
 			background-color: @left-sidebar-logo-bg;
 			border-bottom: 1px solid darken(@left-sidebar-logo-bg, 1.5%);
 			display: block;
 
-			/*@media @retina{
+			@media @retina{
 				background-image: url("@{img-path}/logo-full-retina.png");
 				background-size: 150px 39px;
-			}*/
+			}
 		}
+	}
 
 	.or-animate & {
 		transition: @sidebars-push-effect;
@@ -312,6 +287,7 @@
 	
 		@media @phone{
 			margin-top: 0;
+			padding-bottom: 0;
 		}
 
 		&:before{
@@ -334,15 +310,4 @@ body.open-left-sidebar{
 	@media @phone{
 		.left-sidebar-animation(@sidebars-hardware-accelerated-animation);
 	}
-}
-
-.sidebar-minify-btn {
-    margin: 10px 0;
-    float: right;
-    padding: 4px 20px 5px 10px!important;
-    background: #1b1f24;
-    color: #fff;
-    -webkit-border-radius: 20px 0 0 20px;
-    -moz-border-radius: 20px 0 0 20px;
-    border-radius: 20px 0 0 20px;
 }

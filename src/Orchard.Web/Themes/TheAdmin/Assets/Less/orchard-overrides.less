@@ -1,3 +1,9 @@
+//** variables overrides
+@icon-font-path:    "../Fonts/";
+@img-path: 		    "../Images/";
+@fonts-path: 	    "../Assets/Lib";
+@lib-path: 		    "../Assets/Lib";
+
 // Lib/stroke-7/style.css
 @font-face {
 	font-family: 'Stroke 7';
@@ -8,12 +14,6 @@
 		url('../Fonts/Stroke-7.svg?21lgsr#Stroke-7') format('svg');
 	font-weight: normal;
 	font-style: normal;
-}
-
-// Theme/Less/includes/structure/top-header.less
-.or-top-header
-{
-    z-index: 1001;
 }
 
 // Theme/Less/includes/bootstrap/forms.less
@@ -33,32 +33,6 @@ input[type="checkbox"]:disabled ~ label, input[type="radio"]:disabled ~ label
 .nano > .nano-content
 {
     position: relative;
-}
-.or-left-sidebar > .nano > .nano-content
-{
-  position: absolute !important;
-}
-
-//** Load fonts from this directory.
-@icon-font-path:          "../Fonts/";
-
-.nav-tabs > li{
-    float: none;
-    display: inline-block;
-}
-.scrollable-menu {
-    height: auto;
-    max-height: 200px;
-    overflow-x: hidden;
-    width: 40vw;
-
-    a{
-        cursor: pointer;
-    }
-
-    .row > div{
-        white-space: normal;
-    }
 }
 
 //for hiding items for media gallery picker

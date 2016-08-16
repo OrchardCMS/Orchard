@@ -1,88 +1,88 @@
 //Sidebars push effect with HA enabled
-.sidebar-push-effect(@ha_animation) when (@ha_animation = true){
-  //This is making conflict with bootstrap modals due the position fixed inside main content
-  //transform: translate3d(0, 0, 0);
+.sidebar-push-effect(@ha_animation) when (@ha_animation = true) {
+    //This is making conflict with bootstrap modals due the position fixed inside main content
+    //transform: translate3d(0, 0, 0);
 }
 
 //Left sidebar animation
-	//Without HA
-	.left-sidebar-animation(@ha_animation) when (@ha_animation = false){
+//Without HA
+.left-sidebar-animation(@ha_animation) when (@ha_animation = false) {
 
-		.or-content{
-			left: @left-sidebar-width-phone;
-		}
+    .or-content {
+        left: @left-sidebar-width-phone;
+    }
 
-		.or-top-header{
-		  right: -@left-sidebar-width-phone;
-	   	left: @left-sidebar-width-phone;	
-		}
-	}
+    .or-top-header {
+        right: -@left-sidebar-width-phone;
+        left: @left-sidebar-width-phone;
+    }
+}
 
-	//With HA
-	.left-sidebar-animation(@ha_animation) when (@ha_animation = true){
-		
-		.or-wrapper{
-			overflow: hidden;
-		}
+//With HA
+.left-sidebar-animation(@ha_animation) when (@ha_animation = true) {
 
-		.or-content, .or-top-header{
-	    transform: translate3d(@left-sidebar-width-phone, 0, 0);
-		}
+    .or-wrapper {
+        overflow: hidden;
+    }
 
-		.or-left-sidebar{
-	    transform: translate3d(0%, 0, 0);
-		}
-	}
+    .or-content, .or-top-header {
+        transform: translate3d(@left-sidebar-width-phone, 0, 0);
+    }
+
+    .or-left-sidebar {
+        transform: translate3d(0%, 0, 0);
+    }
+}
 
 //Right sidebar animation
-	//Without HA
-	.right-sidebar-animation(@ha_animation) when (@ha_animation = false){
+//Without HA
+.right-sidebar-animation(@ha_animation) when (@ha_animation = false) {
 
-		.or-content{
-			left: -@right-sidebar-width;
-		}
+    .or-content {
+        left: -@right-sidebar-width;
+    }
 
-		.page-aside{
-			left: @left-sidebar-width - @right-sidebar-width;
-		}
+    .page-aside {
+        left: @left-sidebar-width - @right-sidebar-width;
+    }
 
-		.or-top-header{
-		  right: @right-sidebar-width;
-	   	left: -@right-sidebar-width;	
-		}
+    .or-top-header {
+        right: @right-sidebar-width;
+        left: -@right-sidebar-width;
+    }
 
-		.or-left-sidebar{
-			left: -@right-sidebar-width;
+    .or-left-sidebar {
+        left: -@right-sidebar-width;
 
-			&:before{
-				left: -@right-sidebar-width;
-			}
-		}
+        &:before {
+            left: -@right-sidebar-width;
+        }
+    }
 
-		.or-right-sidebar{
-			right: 0;
-		}
-	}
+    .or-right-sidebar {
+        right: 0;
+    }
+}
 
-	//With HA
-	.right-sidebar-animation(@ha_animation) when (@ha_animation = true){
+//With HA
+.right-sidebar-animation(@ha_animation) when (@ha_animation = true) {
 
-		.or-content, .or-top-header, .page-aside{
-	    transform: translate3d(-@right-sidebar-width, 0, 0);
+    .or-content, .or-top-header, .page-aside {
+        transform: translate3d(-@right-sidebar-width, 0, 0);
 
-	    @media @phone{
-	    	transform: translate3d(-@right-sidebar-width-phone, 0, 0);
-	    }
-		}
+        @media @phone {
+            transform: translate3d(-@right-sidebar-width-phone, 0, 0);
+        }
+    }
 
-		@media @phone{
+    @media @phone {
 
-			.or-wrapper{
-				overflow: hidden;
-			}
+        .or-wrapper {
+            overflow: hidden;
+        }
 
-			.or-right-sidebar{
-	    	transform: translate3d(0, 0, 0);
-			}
-		}
-	}
+        .or-right-sidebar {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+}

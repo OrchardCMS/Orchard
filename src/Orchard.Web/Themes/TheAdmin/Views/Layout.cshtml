@@ -28,11 +28,12 @@
         Model.Header.Add(Display.Title(Title: Model.Title));
     }
 }
-<div id="layout-content" class="or-wrapper @*or-fixed-sidebar*@" data-default-remove-confirmation-prompt="@T("Are you sure you want to remove this element?")'">
+<div id="layout-content" class="or-wrapper or-fixed-sidebar" data-default-remove-confirmation-prompt="@T("Are you sure you want to remove this element?")'">
     <nav class="navbar navbar-default navbar-fixed-top or-top-header">
         <div class="container-fluid">
             <div class="navbar-header">
                 <div class="page-title"><span>@Html.Title(title)</span></div><a href="#" class="or-toggle-left-sidebar navbar-toggle collapsed"><span class="icon-bar"><span></span><span></span><span></span></span></a>
+                @Display.Branding()
             </div>
             @*<a href="#" class="or-toggle-right-sidebar"><span class="icon s7-menu2"></span></a>*@
             <a href="#" data-toggle="collapse" data-target="#or-navbar-collapse" class="or-toggle-top-header-menu collapsed"><span class="icon s7-angle-down"></span></a>

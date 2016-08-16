@@ -57,9 +57,26 @@
 	  display: table;
 	  width: 100%;
 	  cursor: pointer;
+	  background-color: darken(@light-color, 2%);
+	  position: relative;
 
-	  &.active{
-	  	background-color: darken(@light-color, 2%);
+	  &.unread{
+	  	background-color: @light-color;
+
+	  	&:after{
+				content: '';
+				display: block;
+				position: absolute;
+				width: 3px;
+				top: -1px;
+				bottom: -1px;
+				left: 0;
+				background-color: @primary-color;
+	  	}
+
+	  	.from, .date{
+	  		font-weight: 600;
+	  	}
 	  }
 
 	  > div{

@@ -37,6 +37,7 @@ label{
   display: block;
   line-height: @input-check-component-size;
   margin: 0;
+  padding: 7px 0;
 
   .form-horizontal & {
     padding: 7px 0;
@@ -53,8 +54,7 @@ label{
     margin-bottom: 0;
   }
  
-  input[type="checkbox"] + label, input[type="radio"] + label, input[type="checkbox"].check-all + label,
-  input[type="checkbox"] + input[type="hidden"] + label, input[type="radio"] + input[type="hidden"] + label{
+  input[type="checkbox"] + label, input[type="radio"] + label{
    padding-left: 0;
     
     &:before{
@@ -70,7 +70,7 @@ label{
       line-height: @input-check-component-size - 3px;
       vertical-align: bottom;
       text-align: center;
-      background-color: transparent;
+      background-color: @light-color;
       cursor: pointer;
     } 
     
@@ -79,16 +79,14 @@ label{
     }
   }
 
-  input[type="checkbox"]:hover + label, input[type="radio"]:hover + label, input[type="checkbox"].check-all:hover + label, 
-  input[type="checkbox"]:hover + input[type="hidden"] + label, input[type="radio"]:hover + input[type="hidden"] + label {
+  input[type="checkbox"]:hover + label, input[type="radio"]:hover + label {
 
     &:before{
       border-color: darken(@input-border, 10%);
     }
   }
   
-  input[type="checkbox"]:checked + label, input[type="radio"]:checked + label, input[type="checkbox"].check-all:checked + label,
-  input[type="checkbox"]:checked + input[type="hidden"] + label, input[type="radio"]:checked + input[type="hidden"] + label{
+  input[type="checkbox"]:checked + label, input[type="radio"]:checked + label{
     
     &:before{
       content: "\e6cd";
@@ -97,8 +95,7 @@ label{
     } 
   }
 
-  input[type="checkbox"]:disabled + label, input[type="radio"]:disabled + label,
-  input[type="checkbox"]:disabled + input[type="hidden"] + label, input[type="radio"]:disabled + input[type="hidden"] + label{
+  input[type="checkbox"]:disabled + label, input[type="radio"]:disabled + label{
     opacity: .5;
     pointer-events: none;
 
@@ -108,8 +105,7 @@ label{
     }
   }
   
-  input[type="radio"] + label,
-  input[type="radio"] + input[type="hidden"] + label{
+  input[type="radio"] + label{
 
     &:before{
       border-radius: 50%;
@@ -118,7 +114,7 @@ label{
       font-size: 14px;
 
       @media @webkit{
-        line-height: 20px;
+        line-height: 18px;
       }
 
       @media @high-dpi{
@@ -127,8 +123,7 @@ label{
     }
   }
   
-  input[type="radio"]:checked + label,
-  input[type="radio"]:checked + input[type="hidden"] + label{
+  input[type="radio"]:checked + label{
 
     &:before{
       content: "\e6ce";
@@ -178,4 +173,24 @@ label{
   .btn{
     height: @input-height-base;
   }
+}
+
+//Input sizing
+.input-lg{
+  height: 54px;
+  padding: 12px 14px;
+  font-size: 16px;
+  font-weight: 300;
+}
+
+.input-sm{
+  height: 33px;
+  font-size: 12px;
+  padding: 4px 12px;
+}
+
+.input-xs{
+  height: 25px;
+  font-size: 12px;
+  padding: 1px 7px;
 }

@@ -1,0 +1,33 @@
+/* Effect 16:  Blur */
+.@{modal-prefix}-show.@{modal-prefix}-effect-16 ~ .@{modal-prefix}-overlay {
+	background: rgba(180,46,32,0.5);
+}
+
+.@{modal-prefix}-show.@{modal-prefix}-effect-16 ~ .container {
+	-webkit-filter: blur(3px);
+	-moz-filter: blur(3px);
+	filter: blur(3px);
+}
+
+.@{modal-prefix}-effect-16 .@{modal-prefix}-content {
+	-webkit-transform: translateY(-5%);
+	-moz-transform: translateY(-5%);
+	-ms-transform: translateY(-5%);
+	transform: translateY(-5%);
+	opacity: 0;
+}
+
+.@{modal-prefix}-show.@{modal-prefix}-effect-16 ~ .container,
+.@{modal-prefix}-effect-16 .@{modal-prefix}-content {
+	-webkit-transition: all 0.3s;
+	-moz-transition: all 0.3s;
+	transition: all 0.3s;
+}
+
+.@{modal-prefix}-show.@{modal-prefix}-effect-16 .@{modal-prefix}-content {
+	-webkit-transform: translateY(0);
+	-moz-transform: translateY(0);
+	-ms-transform: translateY(0);
+	transform: translateY(0);
+	opacity: 1;
+}

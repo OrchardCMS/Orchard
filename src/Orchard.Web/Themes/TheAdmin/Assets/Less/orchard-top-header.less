@@ -1,0 +1,330 @@
+﻿/*------------------------------------------------------------------
+	[Top header]
+*/
+.or-top-header {
+    z-index: 1001;
+    //logo and toggle button
+    .navbar-collapse {
+        .or-user-nav {
+            > li.dropdown {
+                > a {
+                    padding: 0 9px;
+                    position: relative;
+
+                    .icon {
+                        font-size: @top-header-icons-size;
+                        vertical-align: middle;
+                        color: fade(@light-color, 80%);
+                    }
+                }
+            }
+        }
+    }
+
+    @media @phone {
+        position: relative;
+        margin-left: 0;
+
+        .navbar-collapse {
+            background-color: @dark-color;
+            border-top-color: darken(@left-sidebar-logo-bg, 1.5%);
+            overflow: hidden;
+            padding: 0;
+            margin: 0;
+            max-height: none;
+            box-shadow: none;
+            position: relative;
+
+            .navbar-nav {
+                margin: 0;
+
+                > li {
+
+                    > a {
+                        padding: 0 12px;
+                        line-height: 50px;
+                        font-size: 13px;
+                        position: relative;
+                    }
+
+                    &.open {
+
+                        > a {
+                            background-color: transparent;
+                        }
+                    }
+
+                    &:hover {
+                        background-color: #424242;
+                        color: @light-color;
+                    }
+
+                    &:focus, &:active {
+                        background-color: #424242;
+                    }
+
+                    &.dropdown {
+
+                        > a {
+                        }
+
+                        .dropdown-menu {
+                            margin: 0;
+                            padding: 0;
+
+                            > li {
+
+                                > a {
+                                    color: #FFF;
+                                    padding-left: 30px;
+
+                                    &:hover {
+                                        background-color: #525252;
+                                    }
+
+                                    &:focus, &:active {
+                                        background-color: #525252;
+                                    }
+                                }
+                            }
+
+                            > li:first-child {
+                                border-top: 1px solid #393838;
+                            }
+
+                            > li:not(:last-child) {
+                                border-bottom: 1px solid #393838;
+                            }
+
+                            &:after {
+                                border-bottom: 8px solid white;
+                                border-left: 8px solid transparent;
+                                border-right: 8px solid transparent;
+                                top: -8px;
+                                content: "";
+                                display: inline-block;
+                                left: 42px;
+                                margin-left: -6px;
+                                position: absolute;
+                            }
+                        }
+                    }
+                }
+
+                > li:not(:last-child) {
+                    border-bottom: 2px solid #393838;
+                }
+
+                > li.dropdown {
+
+                    .dropdown-menu {
+                        background-color: @left-sidebar-background-sub-item;
+
+                        > li {
+
+                            > a {
+                                color: @light-color;
+                                padding-left: 26px;
+
+                                &:hover, &:active, &:focus {
+                                    background-color: @body-color;
+                                    color: @left-sidebar-color;
+                                }
+
+                                &:active {
+                                    background-color: @body-color;
+                                    color: @light-color;
+                                }
+                            }
+                        }
+
+                        &:after {
+                            content: "";
+                            display: none;
+                        }
+                    }
+                }
+
+            }
+
+            .or-user-nav {
+
+                > li.dropdown {
+                    border-bottom: 2px solid #393838;
+
+                    > a {
+                        
+                        padding: 0 15px;
+                        line-height: 65px;
+
+                        > img {
+                            max-height: 32px;
+                            max-width: 32px;
+                        }
+
+                        .user-name {
+                            display: inline;
+                        }
+                    }
+
+                    .dropdown-menu {
+                        > li {
+
+                            > a {
+
+                                &:hover {
+                                    color: @light-color;
+
+                                    @media (max-width: @screen-sm-min) {
+                                        background-color: #525252;
+                                    }
+                                }
+
+                                &:focus, &:active {
+                                    color: @light-color;
+
+                                    @media (max-width: @screen-sm-min) {
+                                        background-color: #525252;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            .or-icons-nav {
+                border-top: 1px solid darken(@left-sidebar-logo-bg, 1.5%);
+                background-color: @left-sidebar-logo-bg;
+                text-align: center;
+                display: none;
+
+                > li.dropdown {
+                    display: inline-block;
+                    position: static;
+
+                    > a {
+
+                        .icon {
+                            color: @left-sidebar-color;
+                        }
+
+                        .indicator {
+                            background-color: lighten(@primary-color, 5%);
+                        }
+                    }
+
+                    > ul.dropdown-menu {
+                        position: absolute;
+                        top: 0;
+                        bottom: 51px;
+                        left: 0;
+                        width: 100%;
+                        margin-top: 0;
+                        padding-top: 0;
+                        border-radius: 0;
+
+                        > li {
+                            height: 100%;
+                            display: table;
+                            table-layout: fixed;
+                            width: 100%;
+
+                            .title {
+                                display: none;
+                            }
+
+                            > .list {
+                                background-color: darken(@light-color, 6.5%);
+                                height: 100%;
+                                display: table-row;
+
+                                .or-scroller {
+                                    height: 100%;
+                                }
+                            }
+
+                            .content {
+                                background-color: darken(@light-color, 6.5%);
+
+                                > ul {
+
+                                    > li {
+                                        background-color: darken(@light-color, 6.5%);
+                                    }
+                                }
+                            }
+
+                            .footer {
+
+                                > a {
+                                    border-top-color: darken(@light-color, 12%);
+                                    background-color: darken(@light-color, 8%);
+
+                                    &:hover {
+                                        background-color: darken(@light-color, 10%);
+                                    }
+                                }
+                            }
+                        }
+
+                        &:after {
+                            display: none;
+                        }
+                    }
+
+                    .or-messages, .or-notifications {
+
+                        .or-scroller {
+
+                            > .content {
+
+                                > ul {
+
+                                    > li {
+                                        border-bottom-color: darken(@light-color, 12%);
+
+                                        &:hover {
+                                            background-color: darken(@light-color, 6.5%);
+
+                                            > a {
+                                                color: @link-color;
+
+                                                .user-content {
+
+                                                    .date, .text-content {
+                                                        color: darken(@light-color, 45.7%);
+                                                    }
+
+                                                    .circle {
+                                                        background-color: @primary-color;
+                                                    }
+                                                }
+
+                                                .logo {
+                                                    background-color: darken(@light-color, 10.5%);
+
+                                                    .icon {
+                                                        color: lighten(@dark-color, 35%);
+                                                    }
+                                                }
+                                            }
+                                        }
+
+                                        &.active {
+                                            border-bottom-color: darken(@light-color, 12%);
+
+                                            &:hover {
+                                                background-color: lighten(@primary-color, 30.5%);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

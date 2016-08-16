@@ -1,18 +1,20 @@
 {
-  "name": "jquery-niftymodals",
-  "version": "1.0.2",
+  "name": "foxythemes-niftymodals",
+  "version": "1.2.0",
   "authors": [
+    "Foxy Themes",
     "Codrops <www.codrops.com>"
   ],
-  "description": "A bower package for Codrop's Nifty Modal window effects.",
-  "main": "css/component.css",
+  "description": "A jQuery plugin for Codrops modal effects https://github.com/codrops/ModalWindowEffects",
+  "main": "dist/jquery.niftymodals.js",
   "keywords": [
     "modals",
     "modal",
+    "codrops",
     "jquery"
   ],
   "license": "MIT",
-  "homepage": "http://tympanus.net/codrops/2013/06/25/nifty-modal-window-effects/",
+  "homepage": "https://github.com/foxythemes/jquery-niftymodals",
   "ignore": [
     "**/.*",
     "node_modules",

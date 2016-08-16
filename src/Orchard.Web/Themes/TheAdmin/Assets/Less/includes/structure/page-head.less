@@ -25,8 +25,13 @@
 		}
 
 		//White header style
-		.or-white-header &{
+		.or-white-header & {
 			background-color: darken(@light-color, 2.8%);
+		}
+
+		//When using an aside
+		.or-aside & {
+			margin-left: @page-aside-width;
 		}
 
 		@media @tablet{

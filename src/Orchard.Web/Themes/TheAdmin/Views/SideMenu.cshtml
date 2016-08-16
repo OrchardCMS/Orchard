@@ -1,9 +1,6 @@
 ﻿@using Orchard.Utility.Extensions
 <nav>
     <ul class="sidebar-elements">
-        <li>
-            @Display.Branding()
-        </li>
         @foreach (var firstLevelMenuItem in Model.Items) {
                 IEnumerable<dynamic> secondLevelMenuItems = firstLevelMenuItem;
 
@@ -31,7 +28,7 @@
             }
 
             <a href="@(secondLevelMenuItems.Count() > 1 ? "javascript:" : firstLevelHref)">
-                <i onclick="location.href = '@firstLevelHref';" class="@itemClassName"></i>
+                <i class="@itemClassName"></i>
                 <span>@sectionHeaderText</span>
             </a>
 
