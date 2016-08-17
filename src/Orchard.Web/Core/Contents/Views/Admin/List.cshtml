@@ -4,7 +4,8 @@
     var typeDisplayName = (string)Model.TypeDisplayName;
     var pageTitle = T("Manage Content");
     var createLinkText = T("Create New Content");
-    if (!String.IsNullOrWhiteSpace(typeDisplayName)) {
+    if (!String.IsNullOrWhiteSpace(typeDisplayName))
+    {
         pageTitle = T("Manage {0} Content", Html.Raw(typeDisplayName));
         createLinkText = T("Create New {0}", Html.Raw(typeDisplayName));
     }
@@ -14,65 +15,86 @@
     Html.AdminBreadcrumbs();
     Layout.Tail.Add(New.ConfirmationDialog());
 }
-<div class="panel panel-default">
-    @if (Model.ContentItems.Items.Count > 0) {
-        using (Html.BeginFormAntiForgeryPost()) {
+<div class="panel">
+    @if (Model.ContentItems.Items.Count > 0)
+    {
+        using (Html.BeginFormAntiForgeryPost())
+        {
             <div class="panel-heading no-border">
                 <div class="row">
-                    <div class="col-xs-7">
-                        <fieldset>
-                            <div class="or-checkbox inline">
-                                <input id="checkAll" class="check-all" type="checkbox">
-                                <label class="check-all" for="checkAll" title="@T("Select all")"></label>
-                            </div>
-                            <input id="bulkActions" name="Options.BulkAction" type="hidden" value="@ContentsBulkAction.None" />
-                            <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                                    <i class="fa fa-bolt"></i> @T("Bulk Actions") <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li><a href="#" data-bulk-action-confirm="@T("Are you sure you want to publish these items?")" data-bulk-action="@ContentsBulkAction.PublishNow">@T("Publish Now").ToString()</a></li>
-                                    <li><a href="#" data-bulk-action-confirm="@T("Are you sure you want to unpublish these items?")" data-bulk-action="@ContentsBulkAction.Unpublish">@T("Unpublish").ToString()</a></li>
-                                    <li><a href="#" data-bulk-action-confirm="@T("Are you sure you want to delete these items?")" data-bulk-action="@ContentsBulkAction.Remove">@T("Delete").ToString()</a></li>
-                                </ul>
-                            </div>
-                            <div class="btn-group btn-filters">
-                                <input id="filterResults" name="Options.SelectedFilter" type="hidden" value="">
-                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                    <i class="fa fa-filter" aria-hidden="true"></i> @T("Filters") <span class="caret"></span>
-                                </button>&nbsp;
-                                <ul class="dropdown-menu" role="menu">
-                                    <li><a href="#" data-action="Acme1">@T("recently created")</a></li>
-                                    <li role="separator" class="divider"></li>
-                                    <li><a href="#" data-action="Acme1">@T("recently created")</a></li>
-                                    <li><a href="#" data-action="Acme1">@T("recently modified")</a></li>
-                                    <li><a href="#" data-action="Acme1">@T("recently published")</a></li>
-                                </ul>
-                            </div>
-                        </fieldset>
-                    </div>
-                    <div class="col-xs-5 text-right">
+                    <div class="col-xs-12 col-sm-12 col-md-3 form-group form-inline">
+
+                        <div class="or-checkbox inline">
+                            <input id="checkAll" class="check-all" type="checkbox">
+                            <label class="check-all" for="checkAll" title="@T("Select all")"></label>
+                        </div>
+
+                        <input id="publishActions" name="Options.BulkAction" type="hidden" value="@ContentsBulkAction.None" />
+                        <button name="submit.BulkEdit" type="submit" class="hidden" value="@T("Apply")">@T("Apply")</button>
                         <div class="btn-group">
                             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                                <i class="fa fa-plus"></i> @T("New entry") <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu pull-right" role="menu">
-                                <li><a href="@Url.Action("Create", new { Area = "Contents", Id = (string)Model.Options.SelectedFilter })">New entry</a></li>
-                                <li><a href="#" data-bulk-action-confirm="@T("Are you sure you want to unpublish these items?")" data-bulk-action="@ContentsBulkAction.Unpublish">@T("Unpublish").ToString()</a></li>
-                                <li><a href="#" data-bulk-action-confirm="@T("Are you sure you want to delete these items?")" data-bulk-action="@ContentsBulkAction.Remove">@T("Delete").ToString()</a></li>
+                                <i class="fa fa-bolt"></i> Bulk Actions <span class="caret"></span>
+                            </button>&nbsp;
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="#" data-confirm="@T("Are you sure you want to publish these items?")" data-action="@ContentsBulkAction.PublishNow">@T("Publish Now").ToString()</a></li>
+                                <li><a href="#" data-confirm="@T("Are you sure you want to unpublish these items?")" data-action="@ContentsBulkAction.Unpublish">@T("Unpublish").ToString()</a></li>
+                                <li><a href="#" data-confirm="@T("Are you sure you want to delete these items?")" data-action="@ContentsBulkAction.Remove">@T("Delete").ToString()</a></li>
                             </ul>
                         </div>
+
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-md-6 form-group form-inline">
+
+                        <label for="filterResults" class="bulk-filter">@T("Show")</label>
+                        <select id="filterResults" name="Options.SelectedFilter" class="form-control">
+                                @Html.SelectOption((string)Model.Options.SelectedFilter, "", T("any (show all)").ToString())
+                                @foreach (var filterOption in Model.Options.FilterOptions) {
+                                    @Html.SelectOption((string)Model.Options.SelectedFilter, (string)filterOption.Key, (string)filterOption.Value)
+                                }
+                            </select>
+
+                        @if (cultures.Count() > 1)
+                        {
+                            <label for="filterCultures" class="bulk-culture">@T("Culture")</label>
+                            <select id="filterCultures" name="Options.SelectedCulture" class="form-control">
+                                    @Html.SelectOption((string)Model.Options.SelectedCulture, "", T("any (show all)").ToString())
+                                    @foreach (string culture in cultures) {
+                                        @Html.SelectOption((string)Model.Options.SelectedCulture, culture, System.Globalization.CultureInfo.GetCultureInfo(culture).DisplayName)
+                                    }
+                                </select>
+                        }
+
+                        <label for="orderResults" class="bulk-order">@T("Ordered by")</label>
+                        <select id="orderResults" name="Options.OrderBy" class="form-control">
+                                @Html.SelectOption((ContentsOrder)Model.Options.OrderBy, ContentsOrder.Created, T("recently created").ToString())
+                                @Html.SelectOption((ContentsOrder)Model.Options.OrderBy, ContentsOrder.Modified, T("recently modified").ToString())
+                                @Html.SelectOption((ContentsOrder)Model.Options.OrderBy, ContentsOrder.Published, T("recently published").ToString())
+                            </select>
+
+                        <label for="contentResults" class="bulk-order">@T("Filter by")</label>
+                        <select id="contentResults" name="Options.ContentsStatus" class="form-control">
+                                @Html.SelectOption((ContentsStatus)Model.Options.ContentsStatus, ContentsStatus.Owner, T("owned by me").ToString())
+                                @Html.SelectOption((ContentsStatus)Model.Options.ContentsStatus, ContentsStatus.Latest, T("latest").ToString())
+                                @Html.SelectOption((ContentsStatus)Model.Options.ContentsStatus, ContentsStatus.Published, T("published").ToString())
+                                @Html.SelectOption((ContentsStatus)Model.Options.ContentsStatus, ContentsStatus.Draft, T("unpublished").ToString())
+                                @Html.SelectOption((ContentsStatus)Model.Options.ContentsStatus, ContentsStatus.AllVersions, T("all versions").ToString())
+                            </select>
+                            <button type="submit" name="submit.Filter" value="yes please" class="btn btn-default">@T("Filter")</button>
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-md-3 text-right form-group form-inline">
+                        <a href="@Url.Action("Create", new { Area = "Contents", Id = (string)Model.Options.SelectedFilter })" class="btn btn-primary"><i class="fa fa-plus"></i> @createLinkText.Text</a>
                     </div>
                 </div>
             </div>
             <div class="panel-body">
-
-                @if (Model.ContentItems.Items.Count > 0) {
+                @if (Model.ContentItems.Items.Count > 0)
+                {
                     <fieldset class="content-items bulk-items content-items-with-actions">
                         @Display(Model.ContentItems)
                     </fieldset>
-                } else {
+                }
+                else
+                {
                     <div class="title">@T("No Content Items to display.") </div>
                 }
             </div>
@@ -80,11 +102,13 @@
                 @Display(Model.Pager)
             </div>
         }
-    } else {
+    }
+    else
+    {
         <div class="panel-body">
             <h3 class="no-content">
-                @T("There are no content items yet.")
-                @Html.ActionLink(T("Create one").Text, "Create", new { Area = "Contents", Id = (string)Model.Options.SelectedFilter })
+                @T("There are no content items created yet. Why not ")
+                @Html.ActionLink(T("Create one").Text, "Create", new { Area = "Contents", Id = (string)Model.Options.SelectedFilter })?
             </h3>
         </div>
     }
