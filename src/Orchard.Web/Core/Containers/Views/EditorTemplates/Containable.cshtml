@@ -3,13 +3,13 @@
     @if (Model.ShowContainerPicker) {
         <span>
             @Html.LabelFor(m => m.ContainerId, T("Member of"))
-            @Html.DropDownListFor(m => m.ContainerId, Model.AvailableContainers)
+            @Html.DropDownListFor(m => m.ContainerId, Model.AvailableContainers, new { @class = "form-control" })
         </span>
     }
     @if (Model.ShowPositionEditor) {
         <span>
             @Html.LabelFor(m => m.Position, T("Position"))
-            @Html.TextBoxFor(m => m.Position, new {@class = "text text-small"})
+            @Html.TextBoxFor(m => m.Position, new {@class = "form-control" })
         </span>
     }
 </fieldset>

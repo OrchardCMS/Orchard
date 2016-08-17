@@ -9,7 +9,7 @@
 @if (indexProvider != null) {
     var i = 0;
     foreach (var index in indexProvider.List()) {
-        <fieldset>
+        <fieldset class="form-group">
             <legend>@T("{0} index", @index)</legend>
             <select class="form-control" size="0" name="@Html.FieldNameFor(m => m.List)">
                 <option value="" selected="@(!Model.List.Contains(index + ":latest") && !Model.List.Contains(index))">@T("Not indexed")</option>

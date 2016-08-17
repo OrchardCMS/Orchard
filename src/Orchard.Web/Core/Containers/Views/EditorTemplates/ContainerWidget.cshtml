@@ -4,12 +4,12 @@
 }
 <fieldset>
     @Html.LabelFor(m => m.Part.Record.ContainerId, T("Show items from"))
-    @Html.DropDownListFor(m => m.Part.Record.ContainerId, Model.AvailableContainers)
+    @Html.DropDownListFor(m => m.Part.Record.ContainerId, Model.AvailableContainers, new { @class = "form-control" })
 </fieldset>
 <fieldset>
     <span>
         @Html.LabelFor(m => m.Part.Record.PageSize, T("Maximum number of items to display"))
-        @Html.TextBoxFor(m => m.Part.Record.PageSize, new { @class = "text small" })
+        @Html.TextBoxFor(m => m.Part.Record.PageSize, new { @class = "form-control" })
     </span>
 </fieldset>
 <fieldset>

@@ -17,7 +17,7 @@
 </fieldset>
 <fieldset>
         <label for="@Html.FieldIdFor(m => m.PageSizeDefault)">@T("Default Page Size")</label>
-        @Html.TextBoxFor(m => m.PageSizeDefault, new { @class = "text medium", type = "number" })
+        @Html.TextBoxFor(m => m.PageSizeDefault, new { @class = "form-control", type = "number" })
 </fieldset>
 <fieldset>
     <div class="or-checkbox">
@@ -46,7 +46,7 @@
 
         <div data-controllerid="@Html.FieldIdFor(m => m.RestrictItemContentTypes)">
             @Html.LabelFor(m => m.RestrictedItemContentTypes, T("Supported Types"))
-            <select name="@Html.FieldNameFor(m => m.RestrictedItemContentTypes)" multiple="multiple" size="10" class="text-box">
+            <select name="@Html.FieldNameFor(m => m.RestrictedItemContentTypes)" multiple="multiple" size="10" class="form-control">
                 @Html.SelectOption("", !Model.RestrictedItemContentTypes.Any(), T("(Any)").ToString())
                 @foreach (var contentType in Model.AvailableItemContentTypes) {
                     @Html.SelectOption(contentType.Name, Model.RestrictedItemContentTypes.Contains(contentType.Name), contentType.DisplayName)

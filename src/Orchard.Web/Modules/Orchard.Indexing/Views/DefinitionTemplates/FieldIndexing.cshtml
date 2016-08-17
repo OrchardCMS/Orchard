@@ -1,6 +1,6 @@
 ﻿@model Orchard.Indexing.Settings.FieldIndexing
 
-<fieldset>
+<fieldset class="form-group">
     <div class="or-checkbox">
         @Html.EditorFor(m => m.Included)
         <label for="@Html.FieldIdFor(m => m.Included)" class="forcheckbox">@T("Include in the index")</label>
