@@ -66,3 +66,37 @@ input[type="radio"] + input[type="hidden"] + label {
     width: 350px;
     direction: ltr;
 }
+
+  input[type="checkbox"] ~ label, input[type="radio"] ~ label{
+   padding-left: 0;
+    
+    &:before{
+      content: ""; 
+      width: @input-check-component-size;
+      height: @input-check-component-size;
+      display: inline-block;
+      border: 2px solid @input-border;
+      margin-right: 5px;
+      font-size: @input-check-component-size - 4px;
+      font-family: @icons-font;
+      font-weight: normal;
+      line-height: @input-check-component-size - 3px;
+      vertical-align: bottom;
+      text-align: center;
+      background-color: @light-color;
+      cursor: pointer;
+    } 
+    
+    &:hover:before{
+      border-color: darken(@input-border, 10%);
+    }
+  }
+
+    input[type="checkbox"]:checked ~ label, input[type="radio"]:checked ~ label{
+    
+    &:before{
+      content: "\e6cd";
+      color: @primary-color;
+      border-color: @primary-color;
+    } 
+  }
