@@ -1,0 +1,43 @@
+﻿@using System.Globalization
+@using System.Linq
+@{
+    var currentCulture = WorkContext.CurrentCulture;
+    var supportedCultures = (IList<string>)Model.MenuItems.SupportedCultures;
+    Style.Require("Flags");
+}
+<ul class="nav navbar-nav navbar-right or-icons-nav">
+    <li class="dropdown">
+        <a href="#" data-toggle="dropdown" role="button" aria-expanded="true" class="dropdown-toggle"><span class="icon s7-flag"></span><span class="angle-down s7-angle-down"></span></a>
+        <ul id="culture-selection" class="dropdown-menu or-connections">
+            <li>
+                <div class="title">Cultures<span class="badge">2</span></div>
+                <div class="list">
+                    <div class="or-scroller nano">
+                        <div class="content nano-content">
+                            <ul>
+                                @foreach (var supportedCulture in supportedCultures)
+                                {
+                                    var url = Url.Action("ChangeCulture", "AdminCultureSelector", new { area = "Orchard.Localization", culture = supportedCulture, returnUrl = Html.ViewContext.HttpContext.Request.RawUrl });
+                                    var country = supportedCulture.Substring(3, 2).ToLower();
+                                    var culture = new CultureInfo(supportedCulture);
+                                    var liclass = (supportedCulture.Equals(currentCulture)) ? "active" : "";
+                                    <li class="@liclass">
+                                        <a href="@url">
+                                            <div class="logo"><img class="flag flag-@country" /></div>
+                                            <div class="field">
+                                                <span class="name">@culture.EnglishName</span>
+                                            </div>
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer">
+                    @Html.ActionLink(T("View all cultures"), "Culture", new { Controller = "Admin", area = "Settings" })
+                </div>
+            <li>
+        </ul>
+    </li>
+</ul>

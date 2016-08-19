@@ -20,7 +20,6 @@
     /* Inserting some ad hoc shapes
     ***************************************************************/
 
-    Model.TopHeader.Add(Model.TopMenu);
     //Model.Breadcrumbs.Add(Display.Breadcrumb());
     Model.Footer.Add(Display.OrchardVersion());
 
@@ -39,9 +38,11 @@
             <a href="#" data-toggle="collapse" data-target="#or-navbar-collapse" class="or-toggle-top-header-menu collapsed"><span class="icon s7-angle-down"></span></a>
             <div id="or-navbar-collapse" class="collapse navbar-collapse">
                 @Display.User(CurrentUser: WorkContext.CurrentUser)
-                @if (Model.TopHeader != null) {
-                    @Display(Model.TopHeader)
+                
+                @if (Model.TopMenu != null) {
+                    @Zone(Model.TopMenu)
                 }
+                @Zone(Model.TopHeader)
             </div>
         </div>
     </nav>
