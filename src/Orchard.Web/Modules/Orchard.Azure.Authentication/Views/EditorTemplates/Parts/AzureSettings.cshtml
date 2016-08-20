@@ -43,11 +43,6 @@
     <span class="hint">@T("Typically https://graph.windows.net")</span>
 </fieldset>
 <fieldset>
-    @Html.LabelFor(m => m.MinutesToCacheADGroupMembership)
-    @Html.TextBoxFor(m => m.MinutesToCacheADGroupMembership)
-    <span class="hint">@T("Syncing Orchard Role membership to Azure Graph API Group Membership data can be slow.  Recommended value = 1440")</span>
-</fieldset>
-<fieldset>
     @Html.LabelFor(m => m.UseAzureGraphApi)
     @Html.CheckBoxFor(m => m.UseAzureGraphApi)
     <span class="hint">@T("Check this box to enable syncing Orchard Role membership to Azure Graph API Group Membership.  This module will not create new Orchard Roles for you, but it will sync up user membership of existing Orchard Roles with AD Group membership for Role names that match a group name")</span>

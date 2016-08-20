@@ -188,27 +188,14 @@
   <ItemGroup>
     <Compile Include="Constants\DefaultAzureSettings.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="CRUD\AzureGraphApiPersistence.cs" />
-    <Compile Include="CRUD\HttpContextPersistence.cs" />
-    <Compile Include="CRUD\IAzureGraphApiPersistence.cs" />
-    <Compile Include="CRUD\IHttpContextPersistence.cs" />
-    <Compile Include="CRUD\IOrchardUserRolesPersistence.cs" />
-    <Compile Include="CRUD\OrchardUserRolesPersistence.cs" />
-    <Compile Include="Drivers\AzureActiveDirectorySyncPartDriver.cs" />
     <Compile Include="Drivers\AzureSettingsPartDriver.cs" />
-    <Compile Include="Handlers\AzureActiveDirectorySyncPartHandler.cs" />
     <Compile Include="Handlers\AzureSettingsPartHandler.cs" />
-    <Compile Include="Migrations\AzureActiveDirectorySyncPartMigrations.cs" />
-    <Compile Include="Models\AzureActiveDirectorySyncPart.cs" />
-    <Compile Include="Models\AzureActiveDirectorySyncPartRecord.cs" />
     <Compile Include="Models\AzureSettingsPart.cs" />
     <Compile Include="OwinMiddlewares.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Routes.cs" />
     <Compile Include="Security\MachineKeyDataProtector.cs" />
-    <Compile Include="Services\AzureAuthorizer.cs" />
     <Compile Include="Services\AzureAuthenticationService.cs" />
-    <Compile Include="Services\IAzureAuthorizer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="placement.info" />

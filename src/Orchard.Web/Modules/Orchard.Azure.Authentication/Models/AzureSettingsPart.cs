@@ -47,11 +47,6 @@ namespace Orchard.Azure.Authentication.Models {
             set { this.Store(x => x.GraphApiUrl, value); }
         }
 
-        public int MinutesToCacheADGroupMembership {
-            get { return this.Retrieve(x => x.MinutesToCacheADGroupMembership); }
-            set { this.Store(x => x.MinutesToCacheADGroupMembership, value); }
-        }
-
         public bool UseAzureGraphApi {
             get { return this.Retrieve(x => x.UseAzureGraphApi); }
             set { this.Store(x => x.UseAzureGraphApi, value); }
