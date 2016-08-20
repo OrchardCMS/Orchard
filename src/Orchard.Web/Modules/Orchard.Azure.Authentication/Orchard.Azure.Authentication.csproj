@@ -206,7 +206,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Routes.cs" />
     <Compile Include="Security\MachineKeyDataProtector.cs" />
-    <Compile Include="Services\Authorizer.cs" />
+    <Compile Include="Services\AzureAuthorizer.cs" />
     <Compile Include="Services\AzureAuthenticationService.cs" />
     <Compile Include="Services\IAzureAuthorizer.cs" />
   </ItemGroup>

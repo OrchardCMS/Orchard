@@ -27,7 +27,6 @@ using System.Web.Security;
 
 namespace Orchard.Azure.Authentication.Services
 {
-	[OrchardSuppressDependency("Orchard.Security.Authorizer")]
 	public class Authorizer : IAzureAuthorizer 
 	{
 		private static int _minutesToCacheADGroupMembership = -1;

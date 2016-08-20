@@ -5,7 +5,7 @@ using Orchard.Azure.Authentication.Models;
 
 namespace Orchard.Azure.Authentication.Services
 {
-	public interface IAzureAuthorizer : IAuthorizer
+	public interface IAzureAuthorizer : IDependency
 	{
 		IUser GetOrCreateOrchardUser(string userName, IRepository<AzureActiveDirectorySyncPartRecord> azureActiveDirectorySyncPartRepository, IClock clock);
 	}

@@ -49,7 +49,7 @@ namespace Orchard.Azure.Authentication
 
                 _azureClientId = settings.ClientId ?? _azureClientId;
                 _azureTenant = settings.Tenant ?? _azureTenant;
-                _azureAdInstance = settings.ADInstance ?? _azureAdInstance;
+                _azureAdInstance = string.IsNullOrEmpty(settings.ADInstance) ?  _azureAdInstance : settings.ADInstance;
                 _logoutRedirectUri = settings.LogoutRedirectUri ?? _logoutRedirectUri;
                 _azureWebSiteProtectionEnabled = settings.AzureWebSiteProtectionEnabled;
             }
