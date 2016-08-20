@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Security.Claims;
 using System.Web.Helpers;
+using System.Web.WebPages;
+using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.DataProtection;
@@ -15,6 +17,9 @@ using Owin;
 using Orchard.Azure.Authentication.Constants;
 using Orchard.Azure.Authentication.Models;
 using Orchard.Azure.Authentication.Security;
+using Orchard.Azure.Authentication.Services;
+using AuthenticationContext = Microsoft.IdentityModel.Clients.ActiveDirectory.AuthenticationContext;
+using LogLevel = Orchard.Logging.LogLevel;
 
 namespace Orchard.Azure.Authentication {
     public class OwinMiddlewares : IOwinMiddlewareProvider {
@@ -25,6 +30,8 @@ namespace Orchard.Azure.Authentication {
         private readonly string _logoutRedirectUri = DefaultAzureSettings.LogoutRedirectUri;
         private readonly string _azureAdInstance = DefaultAzureSettings.ADInstance;
         private readonly bool _azureWebSiteProtectionEnabled = DefaultAzureSettings.AzureWebSiteProtectionEnabled;
+        private readonly string _azureGraphiApiUri = DefaultAzureSettings.GraphiApiUri;
+        private readonly string _azureGraphApiKey = DefaultAzureSettings.GraphApiKey;
         private readonly string _relativePostLoginCallBackUrl = "Orchard.Azure.Authentication/Account/LogOnCallBack";
 
 
@@ -43,6 +50,7 @@ namespace Orchard.Azure.Authentication {
                 _azureAdInstance = string.IsNullOrEmpty(settings.ADInstance) ? _azureAdInstance : settings.ADInstance;
                 _logoutRedirectUri = settings.LogoutRedirectUri ?? _logoutRedirectUri;
                 _azureWebSiteProtectionEnabled = settings.AzureWebSiteProtectionEnabled;
+                _azureGraphiApiUri = settings.GraphApiUrl ?? _azureGraphiApiUri;
             }
             catch (Exception ex) {
                 Logger.Log(LogLevel.Debug, ex, "An error occured while accessing azure settings: {0}");
@@ -90,7 +98,47 @@ namespace Orchard.Azure.Authentication {
                 }
             });
 
+            middlewares.Add(new OwinMiddlewareRegistration {
+                Priority = "11",
+                Configure = app => app.Use(async (context, next) => {
+                    try {
+                        if (AzureActiveDirectoryService.token == null && AzureActiveDirectoryService.token.IsEmpty()) {
+                            RegenerateAzureGraphApiToken();
+                        }
+                        else {
+                            if (DateTimeOffset.Compare(DateTimeOffset.UtcNow, AzureActiveDirectoryService.tokenExpiresOn) > 0) {
+                                RegenerateAzureGraphApiToken();
+                            }
+                        }
+                    }
+                    catch (Exception ex) {
+                        Logger.Log(LogLevel.Error, ex, "An error occured generating azure api credential {0}", ex.Message);
+                    }
+
+                    await next.Invoke();
+                })
+            });
+
             return middlewares;
+        }
+
+        private void RegenerateAzureGraphApiToken() {
+            var result = GetAuthContext().AcquireToken("https://graph.windows.net/", GetClientCredential());
+
+            AzureActiveDirectoryService.tokenExpiresOn = result.ExpiresOn;
+            AzureActiveDirectoryService.token = result.AccessToken;
+            AzureActiveDirectoryService.azureGraphApiUri = "https://graph.windows.net/";
+            AzureActiveDirectoryService.azureTenant = _azureTenant;
+        }
+
+        private ClientCredential GetClientCredential() {
+            return new ClientCredential(_azureClientId, _azureGraphApiKey);
+        }
+
+        private AuthenticationContext GetAuthContext() {
+            var authority = string.Format(CultureInfo.InvariantCulture, _azureAdInstance, _azureTenant);
+
+            return new AuthenticationContext(authority, false);
         }
     }
 }
