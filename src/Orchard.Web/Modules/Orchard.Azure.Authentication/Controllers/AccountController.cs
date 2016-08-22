@@ -1,4 +1,5 @@
-﻿using Microsoft.Owin.Security;
+﻿using System;
+using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OpenIdConnect;
 using Orchard.Environment.Extensions;
@@ -8,15 +9,21 @@ using System.Web;
 using System.Web.Configuration;
 using System.Web.Mvc;
 using Orchard.Azure.Authentication.Services;
+using Orchard.Logging;
 
 namespace Orchard.Azure.Authentication.Controllers {
     [Themed]
     [OrchardSuppressDependency("Orchard.Users.Controllers.AccountController")]
     public class AccountController : Controller {
-        private readonly IAzureGraphiApiService _graphiApiService;
+        public ILogger Logger { get; set; }
 
-        public AccountController(IAzureGraphiApiService graphiApiService) {
+        private readonly IAzureGraphiApiService _graphiApiService;
+        private readonly IAzureRolesPersistence _azureRolesPersistence;
+
+        public AccountController(IAzureGraphiApiService graphiApiService, IAzureRolesPersistence azureRolesPersistence) {
+            Logger = NullLogger.Instance;
             _graphiApiService = graphiApiService;
+            _azureRolesPersistence = azureRolesPersistence;
         }
         public void LogOn() {
             if (Request.IsAuthenticated) {
@@ -37,7 +44,13 @@ namespace Orchard.Azure.Authentication.Controllers {
         public ActionResult LogonCallback() {
             var userName = HttpContext.GetOwinContext().Authentication.User.Identity.Name.Trim();
 
-            var groups = _graphiApiService.GetUserGroups(userName);
+            try {
+                var groups = _graphiApiService.GetUserGroups(userName);
+                _azureRolesPersistence.SyncAzureGroupsToOrchardRoles(userName, groups);
+            }
+            catch (Exception ex) {
+                Logger.Error(ex.Message, ex);
+            }
 
             return Redirect(Url.Content("~/"));
         }
