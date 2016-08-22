@@ -5,6 +5,7 @@ using Orchard.Environment.Extensions;
 using Orchard.Security;
 using Orchard.Themes;
 using System.Web;
+using System.Web.Configuration;
 using System.Web.Mvc;
 using Orchard.Azure.Authentication.Services;
 
@@ -19,10 +20,10 @@ namespace Orchard.Azure.Authentication.Controllers {
         }
         public void LogOn() {
             if (Request.IsAuthenticated) {
-                return; //TODO: redirect to home
+                return; //TODO: redirect to home if we can?
             }
 
-            var redirectUri = Url.Content("~/");
+            var redirectUri = Url.Content("~/users/account/logoncallback");
 
             HttpContext.GetOwinContext().Authentication.Challenge(new AuthenticationProperties {RedirectUri = redirectUri}, 
                 OpenIdConnectAuthenticationDefaults.AuthenticationType);
@@ -33,10 +34,12 @@ namespace Orchard.Azure.Authentication.Controllers {
                 OpenIdConnectAuthenticationDefaults.AuthenticationType, CookieAuthenticationDefaults.AuthenticationType); //OpenID Connect sign-out request.
         }
 
-        public void Test() {
+        public ActionResult LogonCallback() {
             var userName = HttpContext.GetOwinContext().Authentication.User.Identity.Name.Trim();
 
-            var user = _graphiApiService.GetAzureUser(userName);
+            var groups = _graphiApiService.GetUserGroups(userName);
+
+            return Redirect(Url.Content("~/"));
         }
 
         [AlwaysAccessible]

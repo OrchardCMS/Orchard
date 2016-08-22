@@ -32,7 +32,6 @@ namespace Orchard.Azure.Authentication {
         private readonly bool _azureWebSiteProtectionEnabled = DefaultAzureSettings.AzureWebSiteProtectionEnabled;
         private readonly string _azureGraphiApiUri = DefaultAzureSettings.GraphiApiUri;
         private readonly string _azureGraphApiKey = DefaultAzureSettings.GraphApiKey;
-        private readonly string _relativePostLoginCallBackUrl = "Orchard.Azure.Authentication/Account/LogOnCallBack";
 
 
         public OwinMiddlewares(ISiteService siteService) {
@@ -45,12 +44,12 @@ namespace Orchard.Azure.Authentication {
                     return;
                 }
 
-                _azureClientId = settings.ClientId ?? _azureClientId;
-                _azureTenant = settings.Tenant ?? _azureTenant;
+                _azureClientId = string.IsNullOrEmpty(settings.ClientId) ? _azureClientId : settings.ClientId;
+                _azureTenant = string.IsNullOrEmpty(settings.Tenant) ? _azureTenant : settings.Tenant;
                 _azureAdInstance = string.IsNullOrEmpty(settings.ADInstance) ? _azureAdInstance : settings.ADInstance;
-                _logoutRedirectUri = settings.LogoutRedirectUri ?? _logoutRedirectUri;
+                _logoutRedirectUri = string.IsNullOrEmpty(settings.LogoutRedirectUri) ? _logoutRedirectUri : settings.LogoutRedirectUri;
                 _azureWebSiteProtectionEnabled = settings.AzureWebSiteProtectionEnabled;
-                _azureGraphiApiUri = settings.GraphApiUrl ?? _azureGraphiApiUri;
+                _azureGraphiApiUri = string.IsNullOrEmpty(settings.GraphApiUrl) ? _azureGraphiApiUri : settings.GraphApiUrl;
             }
             catch (Exception ex) {
                 Logger.Log(LogLevel.Debug, ex, "An error occured while accessing azure settings: {0}");
@@ -68,15 +67,6 @@ namespace Orchard.Azure.Authentication {
                 PostLogoutRedirectUri = _logoutRedirectUri,
                 Notifications = new OpenIdConnectAuthenticationNotifications()
             };
-
-
-            if (false == string.IsNullOrWhiteSpace(_logoutRedirectUri)) {
-                openIdOptions.RedirectUri = _logoutRedirectUri;
-                char lastChar = openIdOptions.RedirectUri[openIdOptions.RedirectUri.Length - 1];
-                if ('/' != lastChar)
-                    openIdOptions.RedirectUri = openIdOptions.RedirectUri + "/";
-                openIdOptions.RedirectUri = openIdOptions.RedirectUri + _relativePostLoginCallBackUrl;
-            }
 
             var cookieOptions = new CookieAuthenticationOptions();
 
@@ -123,11 +113,11 @@ namespace Orchard.Azure.Authentication {
         }
 
         private void RegenerateAzureGraphApiToken() {
-            var result = GetAuthContext().AcquireToken("https://graph.windows.net/", GetClientCredential());
+            var result = GetAuthContext().AcquireToken(_azureGraphiApiUri, GetClientCredential());
 
             AzureActiveDirectoryService.tokenExpiresOn = result.ExpiresOn;
             AzureActiveDirectoryService.token = result.AccessToken;
-            AzureActiveDirectoryService.azureGraphApiUri = "https://graph.windows.net/";
+            AzureActiveDirectoryService.azureGraphApiUri = _azureGraphiApiUri;
             AzureActiveDirectoryService.azureTenant = _azureTenant;
         }
 

@@ -1,7 +1,9 @@
-﻿using Microsoft.Azure.ActiveDirectory.GraphClient;
+﻿using System.Collections.Generic;
+using Microsoft.Azure.ActiveDirectory.GraphClient;
 
 namespace Orchard.Azure.Authentication.Services {
     public interface IAzureGraphiApiService : IDependency {
-        IUser GetAzureUser(string userName);
+        IUser GetUser(string userName);
+        IList<Group> GetUserGroups(string userObjectId);
     }
 }
