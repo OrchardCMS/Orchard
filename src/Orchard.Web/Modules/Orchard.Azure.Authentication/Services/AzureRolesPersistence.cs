@@ -27,10 +27,15 @@ namespace Orchard.Azure.Authentication.Services {
                 .Where(orchardRole => orchardRole != null).ToList();
 
             foreach (var role in matchingOrchardRoles) {
-                _session.SaveOrUpdate(new UserRolesPartRecord {
-                    Role = role,
-                    UserId = user.Id
-                });
+                var existingUserRole = _session.QueryOver<UserRolesPartRecord>()
+                    .Where(x => x.UserId == user.Id).And(x => x.Role.Id == role.Id).List().FirstOrDefault();
+
+                if (existingUserRole == null) {
+                    _session.SaveOrUpdate(new UserRolesPartRecord {
+                        Role = role,
+                        UserId = user.Id
+                    });
+                }
             }
         }
     }
