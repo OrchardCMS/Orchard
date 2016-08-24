@@ -1,0 +1,49 @@
+﻿@model Orchard.Azure.Authentication.Models.AzureSettingsPart
+
+<fieldset>
+    <legend>Azure Active Directory Settings</legend>
+    @Html.LabelFor(m => m.Tenant, T("Tenant"))
+    @Html.TextBoxFor(m => m.Tenant)
+    <span class="hint">@T("Azure Active Directory tenant (e.g. mysite.onmicrosoft.com)")</span>
+</fieldset>
+<fieldset>
+    @Html.LabelFor(m => m.ADInstance, T("Active Directory Instance"))
+    @Html.TextBoxFor(m => m.ADInstance)
+    <span class="hint">@T("Default instance is https://login.microsoftonline.com/{your-tenant-name}")</span>
+</fieldset>
+<fieldset>
+    @Html.LabelFor(m => m.ClientId)
+    @Html.TextBoxFor(m => m.ClientId)
+</fieldset>
+<fieldset>
+    @Html.LabelFor(m => m.AppName)
+    @Html.TextBoxFor(m => m.AppName)
+    <span class="hint">@T("Application name you wish to give active directly login rights to")</span>
+</fieldset>
+<fieldset>
+    @Html.LabelFor(m => m.LogoutRedirectUri, T("Logout Redirect"))
+    @Html.TextBoxFor(m => m.LogoutRedirectUri)
+    <span class="hint">@T("Redirect url after azure logout, default is http://localhost:30321/OrchardLocal/")</span>
+</fieldset>
+<fieldset>
+    @Html.LabelFor(m => m.BearerAuthEnabled, T("Enable Bearer Token Authentication"))
+    @Html.CheckBoxFor(m => m.BearerAuthEnabled)
+</fieldset>
+<fieldset>
+    @Html.LabelFor(m => m.SSLEnabled, T("Use SSL Protocol for valid audience"))
+    @Html.CheckBoxFor(m => m.SSLEnabled)
+</fieldset>
+<fieldset>
+    @Html.LabelFor(m => m.AzureWebSiteProtectionEnabled, T("Enable Machine Key Data Protection for Azure Web Site"))
+    @Html.CheckBoxFor(m => m.AzureWebSiteProtectionEnabled)
+</fieldset>
+<fieldset>
+    @Html.LabelFor(m => m.GraphApiUrl)
+    @Html.TextBoxFor(m => m.GraphApiUrl)
+    <span class="hint">@T("Typically https://graph.windows.net")</span>
+</fieldset>
+<fieldset>
+    @Html.LabelFor(m => m.UseAzureGraphApi)
+    @Html.CheckBoxFor(m => m.UseAzureGraphApi)
+    <span class="hint">@T("Check this box to enable syncing Orchard Role membership to Azure Graph API Group Membership.  This module will not create new Orchard Roles for you, but it will sync up user membership of existing Orchard Roles with AD Group membership for Role names that match a group name")</span>
+</fieldset>
