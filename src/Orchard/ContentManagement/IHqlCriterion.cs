@@ -133,8 +133,8 @@ namespace Orchard.ContentManagement {
 
                     return EncodeQuotes(Convert.ToString(value, CultureInfo.InvariantCulture));
                 case TypeCode.DateTime:
-                    // convert the date time to a valid string representation for Hql
-                    var sortableDateTime = ((DateTime)value).ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+                    // convert the date time to a valid string representation for Hql (ISO 8601 format, which is language neutral)
+                    var sortableDateTime = ((DateTime)value).ToString("yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture);
                     return quoteStrings ? String.Concat("'", EncodeQuotes(sortableDateTime), "'") : sortableDateTime;
             }
 
