@@ -7,6 +7,7 @@
     var element = (VectorImage)Model.Element;
     var vectorImagePart = (VectorImagePart)Model.VectorImagePart;
     var mediaPart = vectorImagePart != null ? vectorImagePart.As<MediaPart>() : default(MediaPart);
+    string style = string.Empty;
 
     if (mediaPart != null) {
         tagBuilder.Attributes["src"] = mediaPart.MediaUrl;
@@ -16,12 +17,29 @@
         tagBuilder.Attributes["alt"] = T("Image not found").Text;
     }
 
-    if (element.Width != null) {
+    if (element.DesignWidth != null) {
+        tagBuilder.Attributes["width"] = element.DesignWidth.ToString();
+        style += "width:" + element.DesignWidth.ToString() + "px;";
+    }
+    else if(element.Width != null) {
         tagBuilder.Attributes["width"] = element.Width.ToString();
     }
 
-    if (element.Height != null) {
+    if (element.DesignHeight != null) {
+        tagBuilder.Attributes["height"] = element.DesignHeight.ToString();
+        style += "height:" + element.DesignHeight.ToString() + "px;";
+    }
+    else if (element.Height != null) {
         tagBuilder.Attributes["height"] = element.Height.ToString();
+    }
+
+    if(!string.IsNullOrWhiteSpace(style)) {
+        if (tagBuilder.Attributes.ContainsKey("style")) {
+            tagBuilder.Attributes["style"] += style;
+        }
+        else {
+            tagBuilder.Attributes["style"] = style;
+        }
     }
 }
 @tagBuilder.ToHtmlString(TagRenderMode.SelfClosing)

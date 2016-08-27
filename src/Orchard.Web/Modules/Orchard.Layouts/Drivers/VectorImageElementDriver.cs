@@ -22,7 +22,9 @@ namespace Orchard.Layouts.Drivers {
             var viewModel = new VectorImageEditorViewModel {
                 VectorImageId = element.MediaId.ToString(),
                 Width = element.Width,
-                Height = element.Height
+                Height = element.Height,
+                DesignWidth = element.DesignWidth,
+                DesignHeight = element.DesignHeight
             };
             var editor = context.ShapeFactory.EditorTemplate(TemplateName: "Elements.VectorImage", Model: viewModel);
 
@@ -31,6 +33,8 @@ namespace Orchard.Layouts.Drivers {
                 element.MediaId = ParseVectorImageId(viewModel.VectorImageId);
                 element.Width = viewModel.Width;
                 element.Height = viewModel.Height;
+                element.DesignWidth = viewModel.DesignWidth;
+                element.DesignHeight = viewModel.DesignHeight;
             }
 
             var mediaId = element.MediaId;
