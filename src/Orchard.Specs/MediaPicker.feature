@@ -63,7 +63,7 @@ Scenario: Creating and using media fields
             | name           | value |
             | Event.File.Url |       |
         And I hit "Save"
-    Then I should see "The field File is mandatory."
+    Then I should see "The File field is required."
 
     # The value should be bound
     When I go to "Admin/ContentTypes/Edit/Event"

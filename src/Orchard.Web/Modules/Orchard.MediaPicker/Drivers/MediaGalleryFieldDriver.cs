@@ -72,11 +72,11 @@ namespace Orchard.MediaPicker.Drivers {
             var allItems = _jsonConverter.Deserialize<MediaGalleryItem[]>(field.SelectedItems);
 
             if (settings.Required && allItems.Length == 0) {
-                updater.AddModelError("SelectedItems", T("The field {0} is mandatory", field.Name.CamelFriendly()));
+                updater.AddModelError("SelectedItems", T("The {0} field is required.", field.Name.CamelFriendly()));
             }
 
             if (!settings.Multiple && allItems.Length > 1) {
-                updater.AddModelError("SelectedItems", T("The field {0} doesn't accept multiple media items", field.Name.CamelFriendly()));
+                updater.AddModelError("SelectedItems", T("The {0} field doesn't accept multiple media items.", field.Name.CamelFriendly()));
             }
 
             return Editor(part, field, shapeHelper);
