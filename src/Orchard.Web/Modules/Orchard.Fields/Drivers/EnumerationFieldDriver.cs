@@ -51,7 +51,7 @@ namespace Orchard.Fields.Drivers {
                 var settings = field.PartFieldDefinition.Settings.GetModel<EnumerationFieldSettings>();
 
                 if (settings.Required && field.SelectedValues.Length == 0) {
-                    updater.AddModelError(field.Name, T("The field {0} is mandatory", T(field.DisplayName)));
+                    updater.AddModelError(field.Name, T("The {0} field is required.", T(field.DisplayName)));
                 }
             }
 
