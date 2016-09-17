@@ -77,4 +77,4 @@ Scenario: Creating and using media fields
             | name           | value                            |
             | Event.File.Url | ~/Media/Default/images/Image.png |
         And I hit "Save"
-    Then I should see "The field File must have one of these extensions: jpg"
+    Then I should see "The File field must have one of these extensions: jpg."
