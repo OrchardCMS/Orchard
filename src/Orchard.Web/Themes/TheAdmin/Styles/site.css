@@ -155,13 +155,10 @@ hr {border:0; height:1px; color:#e4e5e6; background-color:#e4e5e6;}
     overflow:hidden;
 }
 #layout-content {
-    /*overflow:auto;*/
     background:#f3f4f5 url(images/adminNavBackground.gif) repeat-y top left;
     min-height:100%;
 }
 #layout-main {
-    /*display:inline;
-    overflow:auto;*/
     float:right;
     margin-left:-240px;
     width:100%;
@@ -220,8 +217,7 @@ ul.disc {list-style:disc inside; margin:12px 0;}
     background:#f3f4f5;
 }
 #branding {
-    background:#323232;
-    /*width: 15.401%;*/
+    background:rgb(50,50,50);
     width: 240px;
     height:50px;
     float:left;
@@ -620,12 +616,7 @@ legend span {
 .bulk-actions label, .bulk-items h3, label.sub {
     display:inline;
 }
-label.bulk-filter {
-}
-label.bulk-order {
-}
-label.bulk-culture {
-}
+
 label span {
     font-weight:normal;
 }
@@ -1270,7 +1261,9 @@ html.dir-rtl {
 }
 
 /* Tables still need 'cellspacing="0"' in the markup */
-.dir-rtl caption, .dir-rtl th, .dir-rtl td { text-align: right; }
+.dir-rtl caption, .dir-rtl th, .dir-rtl td { 
+    text-align: right; 
+}
 
 /* end: reset */
 
@@ -1519,52 +1512,44 @@ html.dir-rtl {
 
 /* Dashboard */
 
-.dir-rtl .dashboard .help-item
-{
+.dir-rtl .dashboard .help-item {
     float: right;
     margin: 0 0 55px 55px;
 }
 
-.dir-rtl .dashboard .help-item h2.gallery
-{
+.dir-rtl .dashboard .help-item h2.gallery {
     padding-left: inherit;
     padding-right: 40px;
 }
 
-.dir-rtl .dashboard .help-item h2.friends
-{
+.dir-rtl .dashboard .help-item h2.friends {
     padding-left: inherit;
     padding-right: 40px;
 }
 
-.dir-rtl .dashboard .help-item h2.start
-{
+.dir-rtl .dashboard .help-item h2.start {
     padding-left: inherit;
     padding-right: 40px;
 }
 
-.dir-rtl .dashboard .help-item h2.docs
-{
+.dir-rtl .dashboard .help-item h2.docs {
     padding-left: inherit;
     padding-right: 38px;
 }
 
-.dir-rtl .dashboard .help-item h2.contribute
-{
+.dir-rtl .dashboard .help-item h2.contribute {
     padding-left: inherit;
     padding-right: 40px;
 }
 
-.dir-rtl .dashboard .help-item h2.advisory
-{
+.dir-rtl .dashboard .help-item h2.advisory {
     padding-left: inherit;
     padding-right: 40px;
 }
 
 /* RTL Fields
 ***************************************************************/
-.dir-rtl #orchard-version
-{
+.dir-rtl #orchard-version {
     float:left;
     right:inherit;
     left:16px;
