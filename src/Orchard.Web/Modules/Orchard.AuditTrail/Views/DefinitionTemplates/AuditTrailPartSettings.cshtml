@@ -1,22 +1,24 @@
 ﻿@model Orchard.AuditTrail.Settings.AuditTrailPartSettings
 <fieldset>
     <div>
-        @Html.CheckBoxFor(m => m.ShowAuditTrailLink)
-        @Html.LabelFor(m => m.ShowAuditTrailLink, T("Show audit trail link").Text, new { @class = "forcheckbox" })
-        <span class="help-block">@T("Renders a link to the audit trail of the content item.")</span>
+        <div class="or-checkbox inline">
+            @Html.CheckBoxFor(m => m.ShowAuditTrailLink)
+            @Html.LabelFor(m => m.ShowAuditTrailLink, T("Show audit trail link").Text, new { @class = "forcheckbox" })
+            <span class="help-block">@T("Renders a link to the audit trail of the content item.")</span>
+        </div>
     </div>
-</fieldset>
-<fieldset>
     <div>
-        @Html.CheckBoxFor(m => m.ShowAuditTrail)
-        @Html.LabelFor(m => m.ShowAuditTrail, T("Show inline audit trail").Text, new { @class = "forcheckbox" })
-        <span class="help-block">@T("Renders an inline view of the audit trail of the content item.")</span>
+        <div class="or-checkbox inline">
+            @Html.CheckBoxFor(m => m.ShowAuditTrail)
+            @Html.LabelFor(m => m.ShowAuditTrail, T("Show inline audit trail").Text, new { @class = "forcheckbox" })
+            <span class="help-block">@T("Renders an inline view of the audit trail of the content item.")</span>
+        </div>
     </div>
-</fieldset>
-<fieldset>
     <div>
-        @Html.CheckBoxFor(m => m.ShowAuditTrailCommentInput)
-        @Html.LabelFor(m => m.ShowAuditTrailCommentInput, T("Show comment input").Text, new { @class = "forcheckbox" })
-        <span class="help-block">@T("Renders a text field to allow the user to enter a comment about the changes they made.")</span>
+        <div class="or-checkbox inline">
+            @Html.CheckBoxFor(m => m.ShowAuditTrailCommentInput)
+            @Html.LabelFor(m => m.ShowAuditTrailCommentInput, T("Show comment input").Text, new { @class = "forcheckbox" })
+            <span class="help-block">@T("Renders a text field to allow the user to enter a comment about the changes they made.")</span>
+        </div>
     </div>
 </fieldset>
