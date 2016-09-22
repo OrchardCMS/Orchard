@@ -193,7 +193,6 @@
                     var self = $(this);
                     var toolbar = $('#activity-toolbar');
 
-
                     refreshToolbar(this);
 
                     toolbar.position({

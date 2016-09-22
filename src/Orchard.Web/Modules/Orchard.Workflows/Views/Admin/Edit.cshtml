@@ -1,7 +1,6 @@
 ﻿@model AdminEditViewModel
-@using Orchard.Forms.Services
+@using Orchard.UI.Notify
 @using Orchard.Workflows.ViewModels;
-
 @{
     Layout.Title = @T("Edit Workflow {0}", Model.WorkflowDefinition.Name);
     Style.Require("WorkflowsAdmin");
@@ -129,17 +128,16 @@
     }
 
     @using (Capture(Layout.Messages)) {
-        <div style="display:none" id="save-message" class="alert-info alert alert-icon alert-dismissible alert-border-color">
-            <div class="icon"><span class="s7-info"></span></div>
-            <div class="message">
-                <button class="close" aria-label="Close" data-dismiss="alert" type="button"><span class="s7-close" aria-hidden="true"></span></button>@T("You need to hit \"Save\" in order to save your changes.")
-            </div>
-        </div>
-        <div style="display:none" id="start-message" class="alert-info alert alert-icon alert-dismissible alert-border-color">
-            <div class="icon"><span class="s7-info"></span></div>
-            <div class="message">
-                <button class="close" aria-label="Close" data-dismiss="alert" type="button"><span class="s7-close" aria-hidden="true"></span></button>@T("The workflow needs at least one activity to be set as a starting state.")
-            </div>
-        </div>
+        var saveMessage = New.Message(Message: T("You need to hit \"Save\" in order to save your changes.").ToString(), Type: NotifyType.Warning);
+        var startMessage = New.Message(Message: T("The workflow needs at least one activity to be set as a starting state.").ToString(), Type: NotifyType.Warning);
+
+        saveMessage.Id = "save-message";
+        saveMessage.Attributes.Add("style", "display:none;");
+
+        startMessage.Id = "start-message";
+        startMessage.Attributes.Add("style", "display:none;");
+
+        @Display(saveMessage)
+        @Display(startMessage)
     }
 </div>

@@ -203,6 +203,15 @@
             background-position: center;
         }
 
+        /* Reset style applied by the admin theme. */
+        #activity-toolbar #activity-toolbar-start-checkbox + label:before {
+            content: none;
+            width: unset;
+            height: unset;
+            display: none;
+            margin: 0;
+        }
+
     /* Edit button */
     #activity-toolbar #activity-toolbar-edit > label {
         background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjEwMPRyoQAAAJFJREFUKFOVkLENAyEMRdmJBajoaakpkCgpmYAZGIoxmOAaJPQjLPmSiCN3KV6D3rOMBYAtYwyRUkIIAb13elskhmUpJcHRVi6loNZ6BpOc87XMk+fUz2gJWPbeI8b4FS0rXcnM8umnMgX/yBRM2TkHrfWtTIG1FsdxoLV2RjuZAmMMlFIUzdv/kicU3K3xBuIFb6p0auW2YMcAAAAASUVORK5CYII=');

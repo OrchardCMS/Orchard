@@ -6,7 +6,7 @@
 <div class="panel panel-default">
     @using (Html.BeginFormAntiForgeryPost()) {
         @Html.ValidationSummary()
-        <div class="panel-body">
+        <div class="panel-body edit-item">
             @* Render the dynamic form *@
             @if (Model.Form != null) {
             <fieldset>
