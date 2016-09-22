@@ -204,7 +204,7 @@ namespace Orchard.Layouts.Drivers {
         {
             var layoutData = JsonConvert.DeserializeObject(layoutDataString);
             var formattedLayoutData = JsonConvert.SerializeObject(layoutData, Formatting.Indented);
-            return $"\n{formattedLayoutData}\n";
+            return String.Format("\n{0}\n", formattedLayoutData);
         }
 
         private string ReadFormattedLayoutData(string formattedLayoutData)
