@@ -1,5 +1,11 @@
 ﻿@model Orchard.MediaLibrary.ViewModels.ImportMediaViewModel
-
+@{
+    var actionUrl = Url.Action("Upload", "ClientStorage");
+    if (Model.ReplaceId != null)
+    {
+        actionUrl = Url.Action("Replace", "ClientStorage");
+    }
+}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -25,7 +31,7 @@
     <div id="clientstorage-main">
         <div id="message">@T("Click here, Drop files or Paste images")</div>
         <div id="fileupload">
-            <input type="file" name="files[]" multiple="multiple">
+            <input type="file" name="files[]" @if(Model.ReplaceId == null) { <text>multiple="multiple"</text> } >
             <ul id="fileupload-transfers" data-bind="foreach: transfers">
                 <li data-bind="css: status()" class="transfer">
                     <div class="media-thumbnail" data-bind="html: thumbnail(), visible: status() == 'success'"></div>
@@ -84,11 +90,12 @@
 
             // Add drag-n-drop HTML5 support
             $('#fileupload').fileupload({
-                url: '@Url.Action("Upload", "ClientStorage")',
+            	url: '@actionUrl',
                 autoUpload: true,
                 formData: {
                     folderPath: '@Html.Raw(HttpUtility.JavaScriptStringEncode(Model.FolderPath))',
                     type: '@HttpUtility.JavaScriptStringEncode(Model.Type)',
+                    replaceId: '@Model.ReplaceId',
                     __RequestVerificationToken: '@Html.AntiForgeryTokenValueOrchard()'
                 },
                 done: function (e, data) {
@@ -135,11 +142,12 @@
                 done: function(e, data) {
                     var result = data.result[0];
 
-                    if (result.error) {
-                        data.context.label(result.error);
-                        return;
+                    if (result.id == -1) {
+                    	data.context.label(result.errorMessage);
+                        alert(result.errorMessage);
+                        location.reload();
                     }
-
+                    else {
                     data.context.label('@HttpUtility.JavaScriptStringEncode(T("Loading thumbnail...").Text)');
 
 
@@ -152,9 +160,10 @@
                         data.context.thumbnail(html);
                         data.context.status('success');
                     });
+                    }
                 },
                 fail: function(e, data) {
-                    data.context.status('error');
+                	data.context.status('error' + data);
                 }
             });
         })
