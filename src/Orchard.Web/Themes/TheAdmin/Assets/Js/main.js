@@ -170,7 +170,7 @@ var App = (function () {
                 if (!$.isXs()) {
                     //If mouse is over sub menu attach an additional mouseleave event to submenu
                     setTimeout(function () {
-                        if (subMenu.is(':hover')) {
+                        if (subMenu.filter(':hover').length > 0) {
                             subMenu.on('mouseleave', function () {
                                 setTimeout(function () {
                                     if (!_self.is(':hover')) {
