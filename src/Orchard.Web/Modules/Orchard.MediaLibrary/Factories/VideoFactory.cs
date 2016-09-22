@@ -44,9 +44,8 @@ namespace Orchard.MediaLibrary.Factories {
         }
 
         public MediaPart CreateMedia(Stream stream, string path, string mimeType, string contentType) {
-            if (String.IsNullOrEmpty(contentType)) {
-                contentType = "Video";
-            }
+            
+			contentType = GetContentType(contentType);
 
             var part = _contentManager.New<MediaPart>(contentType);
 
@@ -63,6 +62,14 @@ namespace Orchard.MediaLibrary.Factories {
             videoPart.Length = 0;
             
             return part;
+        }
+        public string GetContentType(string contentType)
+        {
+            if (String.IsNullOrEmpty(contentType))
+            {
+                contentType = "Video";
+            }
+            return contentType;
         }
     }
 }

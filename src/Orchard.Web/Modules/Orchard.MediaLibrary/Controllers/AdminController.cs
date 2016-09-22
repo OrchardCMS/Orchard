@@ -79,7 +79,7 @@ namespace Orchard.MediaLibrary.Controllers {
             return View(viewModel);
         }
 
-        public ActionResult Import(string folderPath) {
+        public ActionResult Import(string folderPath, int? replaceId = null) {
             if (!Services.Authorizer.Authorize(Permissions.ManageOwnMedia, T("Cannot import media")))
                 return new HttpUnauthorizedResult();
 
@@ -90,9 +90,14 @@ namespace Orchard.MediaLibrary.Controllers {
                 Menu = mediaProviderMenu,
                 ImageSets = imageSets,
                 FolderPath = folderPath,
-                MediaTypes = _mediaLibraryService.GetMediaTypes()
+                MediaTypes = _mediaLibraryService.GetMediaTypes(),
+                ReplaceId = replaceId
             };
-
+            if (replaceId != null)
+            {
+                var part = Services.ContentManager.Get(replaceId.Value).As<MediaPart>();
+                viewModel.ItemType = part.ContentItem.TypeDefinition.Name;
+            }
             return View(viewModel);
         }
 

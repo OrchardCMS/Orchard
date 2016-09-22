@@ -7,29 +7,35 @@ using Orchard.MediaLibrary.Services;
 using Orchard.MediaLibrary.ViewModels;
 using Orchard.Themes;
 using Orchard.UI.Admin;
+using Orchard.FileSystems.Media;
+using Orchard.MediaLibrary.Models;
 
 namespace Orchard.MediaLibrary.Controllers {
     [Admin, Themed(false)]
     public class WebSearchController : Controller {
         private readonly IMediaLibraryService _mediaLibraryService;
         private readonly IContentManager _contentManager;
+        private readonly IMimeTypeProvider _mimeTypeProvider;
         
         public WebSearchController(
             IMediaLibraryService mediaManagerService, 
             IContentManager contentManager,
-            IOrchardServices orchardServices) {
+            IOrchardServices orchardServices,
+            IMimeTypeProvider mimeTypeProvider) {
             _mediaLibraryService = mediaManagerService;
             _contentManager = contentManager;
+            _mimeTypeProvider = mimeTypeProvider;
 
             Services = orchardServices;
         }
 
         public IOrchardServices Services { get; set; }
 
-        public ActionResult Index(string folderPath, string type) {
+        public ActionResult Index(string folderPath, string type, int? replaceId = null) {
             var viewModel = new ImportMediaViewModel {
                 FolderPath = folderPath,
-                Type = type
+                Type = type,
+                ReplaceId = replaceId
             };
 
             return View(viewModel);
@@ -64,6 +70,59 @@ namespace Orchard.MediaLibrary.Controllers {
                 };
             }
             
+        }
+        [HttpPost]
+        public ActionResult ReplacePost(string folderPath, string type, string url, int? replaceId = null)
+        {
+            if (!Services.Authorizer.Authorize(Permissions.ManageOwnMedia))
+                return new HttpUnauthorizedResult();
+            var rootMediaFolder = _mediaLibraryService.GetRootMediaFolder();
+            if (!Services.Authorizer.Authorize(Permissions.ManageMediaContent) && !_mediaLibraryService.CanManageMediaFolder(folderPath))
+            {
+                return new HttpUnauthorizedResult();
+            }
+            try
+            {
+                if (replaceId != null)
+                {
+                    var replaceItem = Services.ContentManager.Get(replaceId.Value).As<MediaPart>();
+                    folderPath = replaceItem.FolderPath;
+                    var replaceItemType = replaceItem.TypeDefinition.Name;
+                    if (!Services.Authorizer.Authorize(Permissions.ManageMediaContent) && !_mediaLibraryService.CanManageMediaFolder(folderPath))
+                    {
+                        return new HttpUnauthorizedResult();
+                    }
+                    var buffer = new WebClient().DownloadData(url);
+                    var stream = new MemoryStream(buffer);
+                    var mimeType = _mimeTypeProvider.GetMimeType(Path.GetFileName(url));
+                    var mediaFactory = _mediaLibraryService.GetMediaFactory(stream, mimeType, "");
+                    if (replaceItemType.Equals(mediaFactory.GetContentType(type),StringComparison.OrdinalIgnoreCase))
+                    {
+                        _mediaLibraryService.DeleteFile(replaceItem.FolderPath, replaceItem.FileName);
+                        _mediaLibraryService.UploadMediaFile(replaceItem.FolderPath, replaceItem.FileName, stream);
+                        _contentManager.Publish(replaceItem.ContentItem);
+                        return new JsonResult
+                        {
+                            Data = new { folderPath, MediaPath = replaceItem.FileName, Success = true }
+                        };
+                    }
+                    return new JsonResult
+                    {
+                        Data = new { error = string.Format("Media Type Mismatch...Cannot replace {0} with {1}", replaceItemType, mediaFactory.GetContentType(type)) }
+                    };
+                }
+                return new JsonResult
+                {
+                    Data = new { error = "Media Id is null..." }
+                };
+            }
+            catch (Exception e)
+            {
+                return new JsonResult
+                {
+                    Data = new { error = e.Message }
+                };
+            }
         }
     }
 }

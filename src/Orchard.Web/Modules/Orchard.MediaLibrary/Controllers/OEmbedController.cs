@@ -25,10 +25,11 @@ namespace Orchard.MediaLibrary.Controllers {
 
         public IOrchardServices Services { get; set; }
 
-        public ActionResult Index(string folderPath, string type) {
+        public ActionResult Index(string folderPath, string type, int? replaceId = null) {
             var viewModel = new OEmbedViewModel {
                 FolderPath = folderPath,
-                Type = type
+                Type = type,
+                ReplaceId = replaceId
             };
 
             return View(viewModel);
@@ -37,7 +38,7 @@ namespace Orchard.MediaLibrary.Controllers {
         [HttpPost]
         [ActionName("Index")]
         [ValidateInput(false)]
-        public ActionResult IndexPOST(string folderPath, string url, string type, string title, string html, string thumbnail, string width, string height, string description) {
+        public ActionResult IndexPOST(string folderPath, string url, string type, string title, string html, string thumbnail, string width, string height, string description, int? replaceId = null) {
             if (!Services.Authorizer.Authorize(Permissions.ManageOwnMedia))
                 return new HttpUnauthorizedResult();
 
@@ -49,7 +50,9 @@ namespace Orchard.MediaLibrary.Controllers {
 
             var viewModel = new OEmbedViewModel {
                 Url = url,
-                FolderPath = folderPath
+                FolderPath = folderPath,
+                ReplaceId = replaceId,
+                Type = type
             };
 
             var webClient = new WebClient {Encoding = Encoding.UTF8};
@@ -157,6 +160,51 @@ namespace Orchard.MediaLibrary.Controllers {
                 FolderPath = folderPath
             };
 
+            return View("Index", viewModel);
+        }
+        [HttpPost, ValidateInput(false)]
+        public ActionResult ReplacePost(string folderPath, string url, string document, string type, int? replaceId = null)
+        {
+            var content = XDocument.Parse(document);
+            var oembed = content.Root;
+            var viewModel = new OEmbedViewModel();
+            if (replaceId != null)
+            {
+                var part = Services.ContentManager.Get(replaceId.Value).As<MediaPart>();
+                if (part.ContentItem.TypeDefinition.Name.Equals("OEmbed"))
+                {
+                    if (oembed.Element("title") != null)
+                    {
+                        part.Title = oembed.Element("title").Value;
+                    }
+                    else
+                    {
+                        part.Title = oembed.Element("url").Value;
+                    }
+                    if (oembed.Element("description") != null)
+                    {
+                        part.Caption = oembed.Element("description").Value;
+                    }
+                    var oembedPart = part.As<OEmbedPart>();
+                    if (oembedPart != null)
+                    {
+                        part.ContentItem.Record.Infoset.Element.Element("OEmbedPart").Remove();
+                        oembedPart.Source = url;
+                        foreach (var element in oembed.Elements())
+                        {
+                            oembedPart[element.Name.LocalName] = element.Value;
+                        }
+                        Services.ContentManager.Publish(oembedPart.ContentItem);
+                    }
+                    viewModel.Success = true;
+                    viewModel.FolderPath = folderPath;
+                }
+                else
+                {
+                    viewModel.Success = false;
+                    viewModel.FolderPath = folderPath;
+                }
+            }
             return View("Index", viewModel);
         }
     }

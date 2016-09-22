@@ -8,5 +8,7 @@ namespace Orchard.MediaLibrary.ViewModels {
         public IEnumerable<string> ImageSets { get; set; }
         public string FolderPath { get; set; }
         public IEnumerable<ContentTypeDefinition> MediaTypes { get; set; }
+        public int? ReplaceId { get; set; }
+        public string ItemType { get; set; }
     }
 }

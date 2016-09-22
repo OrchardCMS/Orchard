@@ -50,9 +50,8 @@ namespace Orchard.MediaLibrary.Factories {
         }
 
         public MediaPart CreateMedia(Stream stream, string path, string mimeType, string contentType) {
-            if (String.IsNullOrEmpty(contentType)) {
-                contentType = "Image";
-            }
+            
+			contentType = GetContentType(contentType);
 
             var part = _contentManager.New<MediaPart>(contentType);
 
@@ -84,6 +83,14 @@ namespace Orchard.MediaLibrary.Factories {
             return part;
         }
 
+        public string GetContentType(string contentType)
+        {
+            if (String.IsNullOrEmpty(contentType))
+            {
+                contentType = "Image";
+            }
+            return contentType;
+        }
         private void TryFillDimensionsForIco(Stream stream, ImagePart imagePart) {
             stream.Position = 0;
             using (var binaryReader = new BinaryReader(stream)) {

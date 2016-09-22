@@ -10,16 +10,20 @@ using Orchard.UI.Admin;
 using Orchard.MediaLibrary.Models;
 using Orchard.Localization;
 using System.Linq;
+using Orchard.FileSystems.Media;
 
 namespace Orchard.MediaLibrary.Controllers {
     [Admin, Themed(false)]
     public class ClientStorageController : Controller {
         private readonly IMediaLibraryService _mediaLibraryService;
+        private readonly IMimeTypeProvider _mimeTypeProvider;
 
         public ClientStorageController(
             IMediaLibraryService mediaManagerService, 
+            IMimeTypeProvider mimeTypeProvider,
             IContentManager contentManager,
             IOrchardServices orchardServices) {
+            _mimeTypeProvider = mimeTypeProvider;
             _mediaLibraryService = mediaManagerService;
             Services = orchardServices;
             Services = orchardServices;
@@ -29,7 +33,7 @@ namespace Orchard.MediaLibrary.Controllers {
         public IOrchardServices Services { get; set; }
         public Localizer T { get; set; }
 
-        public ActionResult Index(string folderPath, string type) {
+        public ActionResult Index(string folderPath, string type, int? replaceId = null) {
             if (!Services.Authorizer.Authorize(Permissions.ManageOwnMedia)) {
                 return new HttpUnauthorizedResult();
             }
@@ -43,7 +47,8 @@ namespace Orchard.MediaLibrary.Controllers {
 
             var viewModel = new ImportMediaViewModel {
                 FolderPath = folderPath,
-                Type = type
+                Type = type,
+                ReplaceId = replaceId
             };
 
             return View(viewModel);
@@ -103,6 +108,49 @@ namespace Orchard.MediaLibrary.Controllers {
             }
 
             // Return JSON
+            return Json(statuses, JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost]
+        public ActionResult Replace(string folderPath, string type, int? replaceId = null)
+        {
+            if (!Services.Authorizer.Authorize(Permissions.ManageOwnMedia))
+                return new HttpUnauthorizedResult();
+            var rootMediaFolder = _mediaLibraryService.GetRootMediaFolder();
+            var statuses = new List<object>();
+            if (replaceId != null)
+            {
+                var replaceItem = Services.ContentManager.Get(replaceId.Value).As<MediaPart>();
+                folderPath = replaceItem.FolderPath;
+                var replaceItemType = replaceItem.TypeDefinition.Name;
+                if (!Services.Authorizer.Authorize(Permissions.ManageMediaContent) && !_mediaLibraryService.CanManageMediaFolder(folderPath))
+                {
+                    return new HttpUnauthorizedResult();
+                }
+                var file = HttpContext.Request.Files[0];
+                var mimeType = _mimeTypeProvider.GetMimeType(file.FileName);
+                var mediaFactory = _mediaLibraryService.GetMediaFactory(file.InputStream, mimeType, "");
+                if (replaceItemType.Equals(mediaFactory.GetContentType(type),StringComparison.OrdinalIgnoreCase))
+                {
+                    _mediaLibraryService.DeleteFile(replaceItem.FolderPath, replaceItem.FileName);
+                    _mediaLibraryService.UploadMediaFile(replaceItem.FolderPath, replaceItem.FileName, file.InputStream);
+                    statuses.Add(new
+                    {
+                        id = replaceItem.Id,
+                        size = file.ContentLength,
+                        progress = 1.0,
+                    });
+                }
+                else
+                {
+                    statuses.Add(new
+                    {
+                        id = -1,
+                        size = -1,
+                        progress = 1.0,
+                        errorMessage = string.Format("Cannot replace {0} with {1}", replaceItemType, mediaFactory.GetContentType(type))
+                    });
+                }
+            }
             return Json(statuses, JsonRequestBehavior.AllowGet);
         }
     }

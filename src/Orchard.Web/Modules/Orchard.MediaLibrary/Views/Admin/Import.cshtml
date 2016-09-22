@@ -37,11 +37,18 @@
 
     <div id="media-library-main">
         <div id="media-library-main-navigation">
-            @foreach (var menuItem in Model.Menu) {
+            @foreach (var menuItem in Model.Menu) { 
                 string sectionHeaderTextHint = menuItem.Text.TextHint;
                 var itemClassName = "navicon-" + sectionHeaderTextHint.HtmlClassify();
-
-                <div class="import-provider"><a class="navicon @itemClassName" href="@menuItem.Href/Index?folderPath=@HttpUtility.UrlEncode(Model.FolderPath)">@menuItem.Text</a></div>
+                if (Model.ReplaceId != null)
+                {
+                    var replaceIdParam = "&replaceId=" + HttpUtility.UrlEncode(Model.ReplaceId.ToString());
+                    <div class="import-provider"><a class="navicon @itemClassName" href="@menuItem.Href/Index?folderPath=@HttpUtility.UrlEncode(Model.FolderPath)@replaceIdParam">@menuItem.Text</a></div>
+                }
+                else
+                {
+                    <div class="import-provider"><a class="navicon @itemClassName" href="@menuItem.Href/Index?folderPath=@HttpUtility.UrlEncode(Model.FolderPath)">@menuItem.Text</a></div>
+                }
             }
         </div>
         <div id="media-library-main-list-wrapper">

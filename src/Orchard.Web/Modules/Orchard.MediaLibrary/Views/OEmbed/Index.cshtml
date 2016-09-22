@@ -126,16 +126,39 @@
                 </div>
             }
 
+            if (Model.ReplaceId == null)
+            {
             using (Html.BeginFormAntiForgeryPost(Url.Action("MediaPost"))) {
                 @Html.Hidden("url", Model.Url)
                 @Html.Hidden("folderPath", Model.FolderPath)
                 @Html.Hidden("document", Model.Content.ToString())
+                    @Html.Hidden("replaceId", Model.ReplaceId)
                 <br/>
                 <button type="submit">@T("Import")</button>
+                }
+            }
+            else
+            {
+                using (Html.BeginFormAntiForgeryPost(Url.Action("ReplacePost")))
+                {
+                    @Html.Hidden("url", Model.Url)
+                    @Html.Hidden("folderPath", Model.FolderPath)
+                    @Html.Hidden("document", Model.Content.ToString())
+                    @Html.Hidden("replaceId", Model.ReplaceId)
+                    @Html.Hidden("type", Model.Type)
+                    <br />
+                    <button type="submit">@T("Replace")</button>
+                }
             }
         }
 
     </div>
     @Display.FootScripts()
 </body>
+@if (Model.ReplaceId != null && Model.Success == true)
+{
+    <script type="text/javascript">
+        alert("OEmbed replaced successfully!");
+    </script>
+}
 </html>
