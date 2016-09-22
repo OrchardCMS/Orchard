@@ -27,7 +27,7 @@
                 firstLevelHref = secondLevelMenuItems.First().Href;
             }
 
-            <a href="@(secondLevelMenuItems.Count() > 1 ? "javascript:" : firstLevelHref)">
+            <a href="@(String.IsNullOrWhiteSpace(firstLevelHref) ? "#" : firstLevelHref)">
                 <i class="@itemClassName"></i>
                 <span>@sectionHeaderText</span>
             </a>
