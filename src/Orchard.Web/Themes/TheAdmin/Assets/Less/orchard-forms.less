@@ -67,7 +67,11 @@ input[type="radio"] + input[type="hidden"] + label {
     direction: ltr;
 }
 
-  input[type="checkbox"] ~ label, input[type="radio"] ~ label{
+input[type="checkbox"], input[type="radio"] {
+    display: none;
+}
+
+  input[type="checkbox"] ~ label, input[type="radio"] ~ label {
    padding-left: 0;
     
     &:before{
