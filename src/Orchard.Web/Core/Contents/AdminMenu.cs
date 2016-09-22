@@ -19,13 +19,24 @@ namespace Orchard.Core.Contents {
         public string MenuName { get { return "admin"; } }
 
         public void GetNavigation(NavigationBuilder builder) {
-            var contentTypeDefinitions = _contentDefinitionManager.ListTypeDefinitions().OrderBy(d => d.Name);
-            builder.AddImageSet("content")
-                .Add(T("Content"), "1.4",
-                    menu => menu
-                        .Permission(Permissions.EditOwnContent)
-                        .Add(T("Content Items"), "1", item => item.Action("List", "Admin", new {area = "Contents", id = ""}).LocalNav()), new[] {"file"});
-            var contentTypes = contentTypeDefinitions.Where(ctd => ctd.Settings.GetModel<ContentTypeSettings>().Creatable).OrderBy(ctd => ctd.DisplayName);
+            var contentTypeDefinitions = _contentDefinitionManager.ListTypeDefinitions().OrderBy(d => d.Name).ToList();
+            var contentTypes = contentTypeDefinitions.Where(ctd => ctd.Settings.GetModel<ContentTypeSettings>().Creatable).OrderBy(ctd => ctd.DisplayName).ToList();
+
+            builder.Add(T("Content"), "1.4",
+                menu => {
+                    menu.Permission(Permissions.EditOwnContent);
+                    menu.LinkToFirstChild(true);
+                    menu.Add(T("All Content Items"), "1", item => item.Action("List", "Admin", new { area = "Contents", id = "" }));
+
+                    if (contentTypes.Any()) {
+                        var currentMenuItemPosition = 2;
+                        foreach (var contentTypeDefinition in contentTypes) {
+                            menu.Add(new LocalizedString(contentTypeDefinition.DisplayName), currentMenuItemPosition++.ToString(), item => item.Action("List", "Admin", new { area = "Contents", id = contentTypeDefinition.Name }));
+                        }
+                    }
+
+                }, new[] { "file" });
+
             if (contentTypes.Any()) {
                 builder.Add(T("New"), "-1",
                     menu => {
