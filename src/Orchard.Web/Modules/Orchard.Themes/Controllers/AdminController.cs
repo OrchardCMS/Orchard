@@ -249,8 +249,8 @@ namespace Orchard.Themes.Controllers {
                 Services.Notifier.Success(T("The theme {0} was updated successfully", themeId));
                 Logger.Information("The theme {0} was updated successfully.", themeId);
             } catch (Exception exception) {
-                Logger.Error(T("An error occured while updating the theme {0}: {1}", themeId, exception.Message).Text);
-                Services.Notifier.Error(T("An error occured while updating the theme {0}: {1}", themeId, exception.Message));
+                Logger.Error(T("An error occurred while updating the theme {0}: {1}", themeId, exception.Message).Text);
+                Services.Notifier.Error(T("An error occurred while updating the theme {0}: {1}", themeId, exception.Message));
             }
 
             return RedirectToAction("Index");

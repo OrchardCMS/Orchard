@@ -31,7 +31,7 @@ namespace Orchard.Exceptions.Filters {
         }
 
         public void OnActionExecuted(ActionExecutedContext filterContext) {
-            // for exceptions which occured during the action execution
+            // for exceptions which occurred during the action execution
 
             // don't provide custom errors if the action has some custom code to handle exceptions
             if (!filterContext.ActionDescriptor.GetCustomAttributes(typeof(HandleErrorAttribute), false).Any()) {
@@ -92,7 +92,7 @@ namespace Orchard.Exceptions.Filters {
         }
 
         public void OnResultExecuted(ResultExecutedContext filterContext) {
-            // for exceptions which occured during the action execution
+            // for exceptions which occurred during the action execution
 
             // don't provide custom errors if the action has some custom code to handle exceptions
             if (!filterContext.ExceptionHandled && filterContext.Exception != null) {
