@@ -82,7 +82,7 @@ namespace Orchard.Azure.Services.FileSystems {
         private static string ConvertToRelativeUriPath(string path) {
             var newPath = path.Replace(@"\", "/");
 
-            if (newPath.StartsWith("/") || newPath.StartsWith("http://") || newPath.StartsWith("https://")) {
+            if (newPath.StartsWith("/", StringComparison.OrdinalIgnoreCase) || newPath.StartsWith("http://", StringComparison.OrdinalIgnoreCase) || newPath.StartsWith("https://", StringComparison.OrdinalIgnoreCase)) {
                 throw new ArgumentException("Path must be relative");
             }
 
@@ -106,7 +106,7 @@ namespace Orchard.Azure.Services.FileSystems {
                 return path2;
             }
 
-            if (path2.StartsWith("http://") || path2.StartsWith("https://")) {
+            if (path2.StartsWith("http://", StringComparison.OrdinalIgnoreCase) || path2.StartsWith("https://", StringComparison.OrdinalIgnoreCase)) {
                 return path2;
             }
 

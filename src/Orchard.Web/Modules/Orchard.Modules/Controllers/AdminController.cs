@@ -232,7 +232,7 @@ namespace Orchard.Modules.Controllers {
                                 Services.Notifier.Success(T("The feature {0} was updated successfully", id));
                             }
                             catch (Exception exception) {
-                                Services.Notifier.Error(T("An error occured while updating the feature {0}: {1}", id, exception.Message));
+                                Services.Notifier.Error(T("An error occurred while updating the feature {0}: {1}", id, exception.Message));
                             }
                         }
                         break;

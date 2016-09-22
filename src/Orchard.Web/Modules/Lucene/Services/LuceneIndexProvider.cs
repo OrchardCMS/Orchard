@@ -168,7 +168,7 @@ namespace Lucene.Services {
                         writer.DeleteDocuments(query);
                     }
                     catch (Exception ex) {
-                        Logger.Error(ex, "An unexpected error occured while removing the documents [{0}] from the index [{1}].", String.Join(", ", documentIds), indexName);
+                        Logger.Error(ex, "An unexpected error occurred while removing the documents [{0}] from the index [{1}].", String.Join(", ", documentIds), indexName);
                     }
                 }
             }
