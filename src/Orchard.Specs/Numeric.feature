@@ -64,7 +64,7 @@ Scenario: Creating and using numeric fields
             | name               | value |
             | Event.Guests.Value |       |
         And I hit "Save"
-    Then I should see "The field Guests is mandatory."
+    Then I should see "The Guests field is required."
 
     # The value should be bound
     When I go to "Admin/ContentTypes/Edit/Event"

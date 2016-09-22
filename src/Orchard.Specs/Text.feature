@@ -51,7 +51,7 @@ Scenario: Creating and using Text fields
             | name               | value |
             | Event.Subject.Text |       |
         And I hit "Save"
-    Then I should see "The field Subject is mandatory."
+    Then I should see "The Subject field is required."
 
     # The hint should be displayed
     When I go to "Admin/ContentTypes/Edit/Event"

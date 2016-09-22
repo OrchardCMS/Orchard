@@ -143,7 +143,7 @@ namespace Orchard.Fields.Drivers {
                         value = DateLocalizationServices.ConvertFromLocalizedString(viewModel.Editor.Date, viewModel.Editor.Time, options);
                     }
                     catch {
-                        updater.AddModelError(GetPrefix(field, part), T("{0} could not be parsed as a valid date and time.", field.DisplayName));
+                        updater.AddModelError(GetPrefix(field, part), T("{0} could not be parsed as a valid date and time.", T(field.DisplayName)));
                     }
                 }
 
@@ -155,7 +155,7 @@ namespace Orchard.Fields.Drivers {
                 }
 
                 if (settings.Required && (!value.HasValue || (settings.Display != DateTimeFieldDisplays.TimeOnly && value.Value.Date == DateTime.MinValue))) {
-                    updater.AddModelError(GetPrefix(field, part), T("{0} is required.", field.DisplayName));
+                    updater.AddModelError(GetPrefix(field, part), T("{0} is required.", T(field.DisplayName)));
                 }
 
                 field.DateTime = value.HasValue ? value.Value : DateTime.MinValue;
