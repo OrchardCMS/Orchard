@@ -78,6 +78,9 @@ _TeamCity*
 *.ncrunch*
 .*crunch*.local.xml
 
+#CodeRush is a .NET coding add-in
+.cr
+
 # Installshield output folder
 [Ee]xpress/
 

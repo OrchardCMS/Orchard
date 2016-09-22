@@ -5,9 +5,6 @@
     Style.Include("audittrail-display.css");
     Style.Include("audittrail-part.css");
     Script.Require("ShapesBase");
-
-    // TODO: Amaretti: Replace Expando with Accordion.
-    Script.Include("audittrail-expando.js").AtFoot();
 }
 @{
     var records = (IEnumerable<AuditTrailEventSummaryViewModel>)Model.Records;
