@@ -47,27 +47,24 @@ namespace Orchard.MediaLibrary.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageMediaContent) && !_mediaLibraryService.CanManageMediaFolder(folderPath)) {
                 return new HttpUnauthorizedResult();
             }
-            if (replaceId != null)
-            {
-                var part = Services.ContentManager.Get(replaceId.Value).As<MediaPart>();
-                if (!part.ContentItem.TypeDefinition.Name.Equals("OEmbed"))
-                {
-                    var replaceViewModel = new OEmbedViewModel
-                    {
-                        Url = url,
-                        FolderPath = folderPath,
-                        ReplaceId = replaceId,
-                        Type = part.ContentItem.TypeDefinition.Name
-                    };
-                    return View(replaceViewModel);
-                }
-            }
+
             var viewModel = new OEmbedViewModel {
                 Url = url,
                 FolderPath = folderPath,
                 ReplaceId = replaceId,
                 Type = type
             };
+
+            if (replaceId != null)
+            {
+                var part = Services.ContentManager.Get(replaceId.Value).As<MediaPart>();
+                if (!part.ContentItem.TypeDefinition.Name.Equals("OEmbed"))
+                {
+                    viewModel.Type = part.ContentItem.TypeDefinition.Name;
+                    viewModel.ReplaceFailed = true;
+                    return View(viewModel);
+                }
+            }
 
             var webClient = new WebClient {Encoding = Encoding.UTF8};
             try {
@@ -211,11 +208,14 @@ namespace Orchard.MediaLibrary.Controllers {
                         Services.ContentManager.Publish(oembedPart.ContentItem);
                     }
                     viewModel.Success = true;
+                    viewModel.ReplaceFailed = false;
+                    viewModel.ReplaceId = replaceId;
                     viewModel.FolderPath = folderPath;
                 }
                 else
                 {
-                    viewModel.Success = false;
+                    viewModel.ReplaceFailed = true;
+                    viewModel.ReplaceId = replaceId;
                     viewModel.FolderPath = folderPath;
                     viewModel.Type = part.ContentItem.TypeDefinition.Name;
                 }
