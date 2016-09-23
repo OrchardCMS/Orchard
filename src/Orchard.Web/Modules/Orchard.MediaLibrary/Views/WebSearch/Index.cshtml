@@ -91,10 +91,17 @@
     </div>    
 
     @Html.Hidden("antiforgerytoken", Html.AntiForgeryTokenValueOrchard())
-    @Html.Hidden("action", Url.Action("ImagePost"))
     @Html.Hidden("folderPath", Model.FolderPath)
     @Html.Hidden("type", Model.Type)
     @Html.Hidden("replaceId", Model.ReplaceId)
+    @if (Model.ReplaceId != null)
+    {
+        @Html.Hidden("action", Url.Action("ReplacePost"))
+    }
+    else
+    {
+        @Html.Hidden("action", Url.Action("ImagePost"))
+    }
 
     @using(Script.Foot()) {
     <script type="text/javascript">
@@ -267,16 +274,18 @@
                         __RequestVerificationToken: antiForgeryToken,
                     })
                    .done(function (data) {
-                       if (data.error) {
-                           console.log(data);
-                           item.status('failure');
-                       } else {
+                       if (data.Success) {
                            item.status('success');
                            viewModel.selection.remove(item);
+                       } else {
+                           console.log(data);
+                           alert(data.error);
+                           item.status('failure');
                        }
                    })
                    .fail(function (jqXhr, data) {
                        console.log('failed: ' + JSON.stringify(textStatus));
+                       alert(data.error);
                        item.status('failure');
                    })
                    .always(function () {

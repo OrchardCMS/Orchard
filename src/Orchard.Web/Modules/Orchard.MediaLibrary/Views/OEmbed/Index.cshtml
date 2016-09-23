@@ -155,10 +155,16 @@
     </div>
     @Display.FootScripts()
 </body>
+</html>
 @if (Model.ReplaceId != null && Model.Success == true)
 {
     <script type="text/javascript">
         alert("OEmbed replaced successfully!");
     </script>
 }
-</html>
+else if (Model.ReplaceId != null && Model.Success == false && !string.IsNullOrEmpty(Model.Type))
+{
+    <script type="text/javascript">
+        alert("Media Type Mismatch...Cannot replace " + '@Model.Type' + " with OEmbed!");
+    </script>
+}

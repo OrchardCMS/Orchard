@@ -47,7 +47,21 @@ namespace Orchard.MediaLibrary.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageMediaContent) && !_mediaLibraryService.CanManageMediaFolder(folderPath)) {
                 return new HttpUnauthorizedResult();
             }
-
+            if (replaceId != null)
+            {
+                var part = Services.ContentManager.Get(replaceId.Value).As<MediaPart>();
+                if (!part.ContentItem.TypeDefinition.Name.Equals("OEmbed"))
+                {
+                    var replaceViewModel = new OEmbedViewModel
+                    {
+                        Url = url,
+                        FolderPath = folderPath,
+                        ReplaceId = replaceId,
+                        Type = part.ContentItem.TypeDefinition.Name
+                    };
+                    return View(replaceViewModel);
+                }
+            }
             var viewModel = new OEmbedViewModel {
                 Url = url,
                 FolderPath = folderPath,
@@ -203,6 +217,7 @@ namespace Orchard.MediaLibrary.Controllers {
                 {
                     viewModel.Success = false;
                     viewModel.FolderPath = folderPath;
+                    viewModel.Type = part.ContentItem.TypeDefinition.Name;
                 }
             }
             return View("Index", viewModel);

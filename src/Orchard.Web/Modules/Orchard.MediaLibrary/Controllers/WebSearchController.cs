@@ -108,19 +108,19 @@ namespace Orchard.MediaLibrary.Controllers {
                     }
                     return new JsonResult
                     {
-                        Data = new { error = string.Format("Media Type Mismatch...Cannot replace {0} with {1}", replaceItemType, mediaFactory.GetContentType(type)) }
+                        Data = new { Success = false, error = string.Format("Media Type Mismatch...Cannot replace {0} with {1}", replaceItemType, mediaFactory.GetContentType(type)) }
                     };
                 }
                 return new JsonResult
                 {
-                    Data = new { error = "Media Id is null..." }
+                    Data = new { Success = false, error = "Media Id is null..." }
                 };
             }
             catch (Exception e)
             {
                 return new JsonResult
                 {
-                    Data = new { error = e.Message }
+                    Data = new { Success = false, error = e.Message }
                 };
             }
         }
