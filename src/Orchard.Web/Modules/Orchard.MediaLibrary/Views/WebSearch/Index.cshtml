@@ -70,13 +70,11 @@
         
         <div id="websearch-properties-selection" data-bind="visible: selection().length">
             <h1>@T("SELECTION")</h1>
-            @if (Model.ReplaceId != null)
-            {
+            @if (Model.ReplaceId != null) {
                 <button id="button-replace">Replace</button>
             }
-            else
-            {
-            <button id="button-import">IMPORT</button>
+            else {
+                <button id="button-import">IMPORT</button>
             }
             <ul data-bind="foreach: selection">
                 <li>
@@ -94,12 +92,10 @@
     @Html.Hidden("folderPath", Model.FolderPath)
     @Html.Hidden("type", Model.Type)
     @Html.Hidden("replaceId", Model.ReplaceId)
-    @if (Model.ReplaceId != null)
-    {
+    @if (Model.ReplaceId != null) {
         @Html.Hidden("action", Url.Action("ReplacePost"))
     }
-    else
-    {
+    else {
         @Html.Hidden("action", Url.Action("ImagePost"))
     }
 
@@ -109,13 +105,13 @@
         $(function () {
             function SearchResult(data) {
                 var self = this;
-                
+
                 // values
                 self.data = data;
                 self.hasFocus = ko.observable();
                 self.selected = ko.observable();
                 self.status = ko.observable('');
-                
+
                 // operations
                 self.setData = function (value) {
                     self.data = value;
@@ -130,10 +126,10 @@
                     return Math.round(self.data.FileSize / 1024);
                 };
             }
-            
+
             function WebSearchViewModel() {
                 var self = this;
-                
+
                 // values
                 self.selection = ko.observableArray([]);
                 self.focus = ko.observable();
@@ -142,11 +138,11 @@
                 self.filename = function () {
                     return value.substr(value.lastIndexOf('/') + 1);
                 };
-                
+
                 self.doSearch = function () {
                     var query = $('#query > input').val();
                     var url = 'https://api.datamarket.azure.com/Bing/Search/Image?$format=json&Query=%27' + encodeURIComponent(query) + '%27';
-                    
+
                     $.ajax({
                         type: "POST",
                         url: url,
@@ -169,7 +165,7 @@
 
                     self.selection([]);
                 };
-                
+
                 self.focus.subscribe(function (oldValue) {
                     if (oldValue) {
                         oldValue.hasFocus(false);
@@ -181,7 +177,7 @@
                         newValue.hasFocus(true);
                     }
                 });
-                
+
                 self.toggleSelect = function (searchResult) {
                     var index = $.inArray(searchResult, self.selection());
                     if (index == -1) {
@@ -191,10 +187,10 @@
                         self.selection.remove(searchResult);
                         searchResult.selected(false);
                     }
-                    
+
                     self.focus(searchResult);
                 };
-                
+
                 self.select = function (searchResult) {
                     var index = $.inArray(searchResult, self.selection());
                     if (index == -1) {
@@ -202,7 +198,7 @@
                         self.selection([searchResult]);
                         searchResult.selected(true);
                     }
-                    
+
                     self.focus(searchResult);
                 };
 
@@ -213,9 +209,14 @@
 
             $("#websearch-results").on("click", "li", function (e) {
                 var searchResult = ko.dataFor(this);
-                if (e.ctrlKey) {
-                    viewModel.toggleSelect(searchResult);
-                } else {
+                if ('@Model.ReplaceId' == '') {
+                    if (e.ctrlKey) {
+                        viewModel.toggleSelect(searchResult);
+                    } else {
+                        viewModel.select(searchResult);
+                    }
+                }
+                else {
                     viewModel.select(searchResult);
                 }
             }).on("contextmenu", "li", function(e) {
@@ -223,7 +224,7 @@
                 viewModel.toggleSelect(searchResult);
                 return false;
             });
-            
+
             $("#button-import").on("click", function (e) {
                 var antiForgeryToken = $('[name=antiforgerytoken]').val();
                 var folderPath = $('[name=folderPath]').val();

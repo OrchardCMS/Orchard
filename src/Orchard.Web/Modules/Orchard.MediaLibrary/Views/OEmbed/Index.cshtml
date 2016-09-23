@@ -126,19 +126,16 @@
                 </div>
             }
 
-            if (Model.ReplaceId == null)
-            {
-            using (Html.BeginFormAntiForgeryPost(Url.Action("MediaPost"))) {
-                @Html.Hidden("url", Model.Url)
-                @Html.Hidden("folderPath", Model.FolderPath)
-                @Html.Hidden("document", Model.Content.ToString())
-                    @Html.Hidden("replaceId", Model.ReplaceId)
-                <br/>
-                <button type="submit">@T("Import")</button>
+            if (Model.ReplaceId == null) {
+                using (Html.BeginFormAntiForgeryPost(Url.Action("MediaPost"))) {
+                    @Html.Hidden("url", Model.Url)
+                    @Html.Hidden("folderPath", Model.FolderPath)
+                    @Html.Hidden("document", Model.Content.ToString())
+                    <br/>
+                    <button type="submit">@T("Import")</button>
                 }
             }
-            else
-            {
+            else {
                 using (Html.BeginFormAntiForgeryPost(Url.Action("ReplacePost")))
                 {
                     @Html.Hidden("url", Model.Url)
@@ -165,6 +162,6 @@
 else if (Model.ReplaceId != null && Model.Success == false && !string.IsNullOrEmpty(Model.Type))
 {
     <script type="text/javascript">
-        alert("Media Type Mismatch...Cannot replace " + '@Model.Type' + " with OEmbed!");
+        alert("Cannot replace " + '@Model.Type' + " with OEmbed");
     </script>
 }

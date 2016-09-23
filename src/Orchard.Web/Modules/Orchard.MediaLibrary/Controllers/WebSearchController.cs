@@ -108,7 +108,7 @@ namespace Orchard.MediaLibrary.Controllers {
                     }
                     return new JsonResult
                     {
-                        Data = new { Success = false, error = string.Format("Media Type Mismatch...Cannot replace {0} with {1}", replaceItemType, mediaFactory.GetContentType(type)) }
+                        Data = new { Success = false, error = string.Format("Cannot replace {0} with {1}", replaceItemType, mediaFactory.GetContentType(type)) }
                     };
                 }
                 return new JsonResult
