@@ -27,6 +27,7 @@ jQuery(function ($) {
     var shapeTracingTabsPlacement = $('#shape-tracing-tabs-placement');
     var shapeTracingTabsTemplate = $('#shape-tracing-tabs-template');
     var shapeTracingTabsHtml = $('#shape-tracing-tabs-html');
+    var shapeTracingTabsSettings = $('#shape-tracing-tabs-settings');
     var shapeTracingBreadcrumb = $('#shape-tracing-breadcrumb');
     var shapeTracingMetaContent = $('#shape-tracing-meta-content');
     var shapeTracingEnabled = false;
@@ -513,6 +514,27 @@ jQuery(function ($) {
 
     shapeTracingTabsHtml.click(function () {
         displayTabHtml();
+    });
+
+	// Settings tab
+    var displayTabSettings = function () {
+    	// toggle the selected class
+    	shapeTracingTabs.children('.selected').removeClass('selected');
+    	shapeTracingTabsSettings.addClass('selected');
+
+    	// remove old content
+    	shapeTracingMetaContent.children().remove();
+
+    	// render the template
+    	$("#shape-tracing-tabs-settings-template").tmpl().appendTo(shapeTracingMetaContent);
+
+    	shapeTracingBreadcrumb.text('');
+
+    	defaultTab = displayTabSettings;
+    };
+
+    shapeTracingTabsSettings.click(function () {
+    	displayTabSettings();
     });
 
     // activates codemirror on specific textareas
