@@ -65,7 +65,7 @@ namespace Orchard.MediaLibrary.Drivers {
             }
 
             if (settings.Required && field.Ids.Length == 0) {
-                updater.AddModelError("Id", T("The field {0} is mandatory", field.DisplayName));
+                updater.AddModelError("Id", T("The field {0} is mandatory", T(field.DisplayName)));
             }
 
             return Editor(part, field, shapeHelper);
