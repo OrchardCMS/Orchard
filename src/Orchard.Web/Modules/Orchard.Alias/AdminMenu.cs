@@ -11,7 +11,7 @@ namespace Orchard.Alias {
         public string MenuName { get { return "admin"; } }
 
         public void GetNavigation(NavigationBuilder builder) {
-            builder.Add(T("Aliases"), "1.4.1",
+            builder.Add(T("Aliases"), "1.6",
                 menu => {
                     menu.LinkToFirstChild(true);
                     menu.Add(T("Unmanaged"), "1", item => item.Action("IndexUnmanaged", "Admin", new {area = "Orchard.Alias"}).Permission(StandardPermissions.SiteOwner).LocalNav());
