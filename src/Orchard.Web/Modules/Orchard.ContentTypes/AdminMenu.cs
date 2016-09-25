@@ -13,7 +13,7 @@ namespace Orchard.ContentTypes {
 
                 menu.Add(T("Content Types"), "1", item => item.Action("Index", "Admin", new { area = "Orchard.ContentTypes" }).Permission(Permissions.ViewContentTypes).LocalNav());
                 menu.Add(T("Content Parts"), "2", item => item.Action("ListParts", "Admin", new { area = "Orchard.ContentTypes" }).Permission(Permissions.ViewContentTypes).LocalNav());
-            });
+            }, new[] { "config" });
         }
     }
 }
