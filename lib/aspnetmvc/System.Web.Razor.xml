@@ -294,7 +294,9 @@
       <summary>This type/member supports the .NET Framework infrastructure and is not intended to be used directly from your code.Gets or sets the instrumented source file path for the host.</summary>
       <returns>The instrumented source file path for the host.</returns>
     </member>
-    <member name="P:System.Web.Razor.RazorEngineHost.IsIndentingWithTabs"></member>
+    <member name="P:System.Web.Razor.RazorEngineHost.IsIndentingWithTabs">
+      <summary>Gets or sets whether the design time editor is using tabs or spaces for indentation.</summary>
+    </member>
     <member name="P:System.Web.Razor.RazorEngineHost.NamespaceImports">
       <summary>This type/member supports the .NET Framework infrastructure and is not intended to be used directly from your code.Gets the namespace imports for the host.</summary>
       <returns>The namespace imports for the host.</returns>
@@ -314,7 +316,9 @@
       <summary>This type/member supports the .NET Framework infrastructure and is not intended to be used directly from your code.Gets or sets the static helpers for the host.</summary>
       <returns>The static helpers for the host.</returns>
     </member>
-    <member name="P:System.Web.Razor.RazorEngineHost.TabSize"></member>
+    <member name="P:System.Web.Razor.RazorEngineHost.TabSize">
+      <summary>Tab size used by the hosting editor, when indenting with tabs.</summary>
+    </member>
     <member name="T:System.Web.Razor.RazorTemplateEngine">
       <summary>This type/member supports the .NET Framework infrastructure and is not intended to be used directly from your code.Represents an entry-point to the Razor Template Engine.</summary>
     </member>

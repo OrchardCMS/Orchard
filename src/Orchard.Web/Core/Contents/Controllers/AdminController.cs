@@ -22,6 +22,7 @@ using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
 using Orchard.Settings;
 using Orchard.Utility.Extensions;
+using Orchard.Localization.Services;
 
 namespace Orchard.Core.Contents.Controllers {
     [ValidateInput(false)]
@@ -30,6 +31,8 @@ namespace Orchard.Core.Contents.Controllers {
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly ITransactionManager _transactionManager;
         private readonly ISiteService _siteService;
+        private readonly ICultureManager _cultureManager;
+        private readonly ICultureFilter _cultureFilter;
 
         public AdminController(
             IOrchardServices orchardServices,
@@ -37,12 +40,17 @@ namespace Orchard.Core.Contents.Controllers {
             IContentDefinitionManager contentDefinitionManager,
             ITransactionManager transactionManager,
             ISiteService siteService,
-            IShapeFactory shapeFactory) {
+            IShapeFactory shapeFactory,
+            ICultureManager cultureManager,
+            ICultureFilter cultureFilter) {
             Services = orchardServices;
             _contentManager = contentManager;
             _contentDefinitionManager = contentDefinitionManager;
             _transactionManager = transactionManager;
             _siteService = siteService;
+            _cultureManager = cultureManager;
+            _cultureFilter = cultureFilter;
+
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
             Shape = shapeFactory;
@@ -73,7 +81,7 @@ namespace Orchard.Core.Contents.Controllers {
                     break;
             }
 
-            var query = _contentManager.Query(versionOptions, GetCreatableTypes(false).Select(ctd => ctd.Name).ToArray());
+            var query = _contentManager.Query(versionOptions, GetListableTypes(false).Select(ctd => ctd.Name).ToArray());
 
             if (!string.IsNullOrEmpty(model.TypeName)) {
                 var contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(model.TypeName);
@@ -100,12 +108,21 @@ namespace Orchard.Core.Contents.Controllers {
                     break;
             }
 
+            if(!String.IsNullOrWhiteSpace(model.Options.SelectedCulture)) {
+                query = _cultureFilter.FilterCulture(query, model.Options.SelectedCulture);
+            }
+
             model.Options.SelectedFilter = model.TypeName;
-            model.Options.FilterOptions = GetCreatableTypes(false)
+            model.Options.FilterOptions = GetListableTypes(false)
                 .Select(ctd => new KeyValuePair<string, string>(ctd.Name, ctd.DisplayName))
                 .ToList().OrderBy(kvp => kvp.Value);
 
-            var pagerShape = Shape.Pager(pager).TotalItemCount(query.Count());
+            model.Options.Cultures = _cultureManager.ListCultures();
+
+            var maxPagedCount = _siteService.GetSiteSettings().MaxPagedCount;
+            if (maxPagedCount > 0 && pager.PageSize > maxPagedCount)
+                pager.PageSize = maxPagedCount;
+            var pagerShape = Shape.Pager(pager).TotalItemCount(maxPagedCount > 0 ? maxPagedCount : query.Count());
             var pageOfContentItems = query.Slice(pager.GetStartIndex(), pager.PageSize).ToList();
 
             var list = Shape.List();
@@ -127,14 +144,22 @@ namespace Orchard.Core.Contents.Controllers {
                 (!andContainable || ctd.Parts.Any(p => p.PartDefinition.Name == "ContainablePart")));
         }
 
+        private IEnumerable<ContentTypeDefinition> GetListableTypes(bool andContainable) {
+            return _contentDefinitionManager.ListTypeDefinitions().Where(ctd =>
+                Services.Authorizer.Authorize(Permissions.EditContent, _contentManager.New(ctd.Name)) &&
+                ctd.Settings.GetModel<ContentTypeSettings>().Listable &&
+                (!andContainable || ctd.Parts.Any(p => p.PartDefinition.Name == "ContainablePart")));
+        }
+
         [HttpPost, ActionName("List")]
         [Mvc.FormValueRequired("submit.Filter")]
         public ActionResult ListFilterPOST(ContentOptions options) {
             var routeValues = ControllerContext.RouteData.Values;
             if (options != null) {
+                routeValues["Options.SelectedCulture"] = options.SelectedCulture; //todo: don't hard-code the key
                 routeValues["Options.OrderBy"] = options.OrderBy; //todo: don't hard-code the key
                 routeValues["Options.ContentsStatus"] = options.ContentsStatus; //todo: don't hard-code the key
-                if (GetCreatableTypes(false).Any(ctd => string.Equals(ctd.Name, options.SelectedFilter, StringComparison.OrdinalIgnoreCase))) {
+                if (GetListableTypes(false).Any(ctd => string.Equals(ctd.Name, options.SelectedFilter, StringComparison.OrdinalIgnoreCase))) {
                     routeValues["id"] = options.SelectedFilter;
                 }
                 else {
@@ -198,6 +223,12 @@ namespace Orchard.Core.Contents.Controllers {
             var viewModel = Shape.ViewModel(ContentTypes: GetCreatableTypes(containerId.HasValue), ContainerId: containerId);
 
             return View("CreatableTypeList", viewModel);
+        }
+
+        ActionResult ListableTypeList(int? containerId) {
+            var viewModel = Shape.ViewModel(ContentTypes: GetListableTypes(containerId.HasValue), ContainerId: containerId);
+
+            return View("ListableTypeList", viewModel);
         }
 
         public ActionResult Create(string id, int? containerId) {

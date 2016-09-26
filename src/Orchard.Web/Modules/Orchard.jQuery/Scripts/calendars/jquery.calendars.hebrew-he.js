@@ -1,9 +1,9 @@
 ﻿/* http://keith-wood.name/calendars.html
-   Hebrew localisation for Hebrew calendar for jQuery.
+   Hebrew localisation for Hebrew calendar for jQuery v2.0.0.
    Amir Hardon (ahardon at gmail dot com). */
 (function($) {
-	$.calendars.calendars.hebrew.prototype.regional['he'] = {
-		name: 'הלוח העברי', // The calendar name
+	$.calendars.calendars.hebrew.prototype.regionalOptions['he'] = {
+		name: 'הלוח העברי',
 		epochs: ['BAM', 'AM'],
 		monthNames: ['ינואר','פברואר','מרץ','אפריל','מאי','יוני',
 		'יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'],
@@ -12,8 +12,8 @@
 		dayNames: ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'],
 		dayNamesShort: ['א\'','ב\'','ג\'','ד\'','ה\'','ו\'','שבת'],
 		dayNamesMin: ['א\'','ב\'','ג\'','ד\'','ה\'','ו\'','שבת'],
-		dateFormat: 'dd/mm/yyyy', // See format options on BaseCalendar.formatDate
-		firstDay: 0, // The first day of the week, Sun = 0, Mon = 1, ...
-		isRTL: true // True if right-to-left language, false if left-to-right
+		dateFormat: 'dd/mm/yyyy',
+		firstDay: 0,
+		isRTL: true
 	};
 })(jQuery);

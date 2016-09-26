@@ -13,5 +13,11 @@ namespace Orchard.Comments.Models {
             get { return this.Retrieve(x => x.ClosedCommentsDelay); }
             set { this.Store(x => x.ClosedCommentsDelay, value); }
         }
+
+        public bool NotificationEmail {
+            get { return this.Retrieve(x => x.NotificationEmail); }
+            set { this.Store(x => x.NotificationEmail, value); }
+        }
+
     }
 }

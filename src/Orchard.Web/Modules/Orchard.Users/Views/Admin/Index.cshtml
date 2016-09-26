@@ -71,12 +71,12 @@
                     @Html.ActionLink(T("Edit").ToString(), "Edit", new { entry.User.Id }) |
                     @Html.ActionLink(T("Delete").ToString(), "Delete", new { entry.User.Id}, new { itemprop = "RemoveUrl UnsafeUrl" }) |
                     @if (entry.User.RegistrationStatus == UserStatus.Pending) {
-                        @Html.ActionLink(T("Approve").ToString(), "Approve", new { entry.User.Id })
+                        @Html.ActionLink(T("Approve").ToString(), "Approve", new { entry.User.Id }, new { itemprop = "UnsafeUrl" })
                     } else {
-                        @Html.ActionLink(T("Disable").ToString(), "Moderate", new { entry.User.Id })
+                        @Html.ActionLink(T("Disable").ToString(), "Moderate", new { entry.User.Id }, new { itemprop = "UnsafeUrl" })
                     }
                     @if (entry.User.EmailStatus == UserStatus.Pending) { <text>|</text>
-                        @Html.ActionLink(T("Send challenge E-mail").ToString(), "SendChallengeEmail", new { entry.User.Id })
+                        @Html.ActionLink(T("Send challenge E-mail").ToString(), "SendChallengeEmail", new { entry.User.Id }, new { itemprop = "UnsafeUrl" })
                     } 
                 </td>
             </tr>

@@ -2,8 +2,8 @@
    Croatian localisation for calendars datepicker for jQuery.
    Written by Vjekoslav Nesek. */
 (function($) {
-	$.calendars.picker.regional['hr'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['hr'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: '&#x3c;', prevStatus: 'Prikaži prethodni mjesec',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: '',
 		nextText: '&#x3e;', nextStatus: 'Prikaži slijedeći mjesec',
@@ -17,5 +17,5 @@
 		dayStatus: '\'Datum\' DD, M d', defaultStatus: 'Odaberi datum',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['hr']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['hr']);
 })(jQuery);

@@ -2,8 +2,8 @@
    Hungarian localisation for calendars datepicker for jQuery.
    Written by Istvan Karaszi (jquerycalendar@spam.raszi.hu). */
 (function($) {
-	$.calendars.picker.regional['hu'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['hu'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: '&laquo;&nbsp;vissza', prevStatus: '',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: '',
 		nextText: 'előre&nbsp;&raquo;', nextStatus: '',
@@ -17,5 +17,5 @@
 		dayStatus: 'DD, M d', defaultStatus: '',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['hu']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['hu']);
 })(jQuery);

@@ -2,8 +2,8 @@
    Danish localisation for calendars datepicker for jQuery.
    Written by Jan Christensen ( deletestuff@gmail.com). */
 (function($) {
-	$.calendars.picker.regional['da'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['da'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
         prevText: '&#x3c;Forrige', prevStatus: 'Vis forrige måned',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: '',
 		nextText: 'Næste&#x3e;', nextStatus: 'Vis næste måned',
@@ -17,5 +17,5 @@
 		dayStatus: 'Vælg D, M d', defaultStatus: 'Vælg en dato',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['da']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['da']);
 })(jQuery);

@@ -1,8 +1,8 @@
-﻿<div>
-    @if (Model.State.Url != null && !String.IsNullOrWhiteSpace(Model.State.Url.Value)) {
-        <div>@T("Redirect to {0}", Model.State.Url.Value)</div>
-    }
-    else {
-        <div>@T("Redirect")</div>
-    }
+﻿@{
+    var name = (string)Model.Name;
+    var url = (string) Model.State.Url;
+    var description = String.IsNullOrEmpty(url) ? T("Redirect") : T("Redirect to {0}", url);
+}
+<div class="activity-redirect" title="@description">
+    <div>@name</div>
 </div>

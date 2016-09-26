@@ -1,33 +1,29 @@
+FOR %%b in ( 
+       "%VS120COMNTOOLS%..\..\VC\vcvarsall.bat"
+       "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat"
+       "%ProgramFiles%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" 
 
-if "%WindowsSdkDir%" neq "" goto build
-if exist "%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat" goto initialize2k8on64Dev11
-if exist "%ProgramFiles%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat" goto initialize2k8Dev11
-if exist "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" goto initialize2k8on64Dev12
-if exist "%ProgramFiles%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" goto initialize2k8Dev12
+       "%VS110COMNTOOLS%..\..\VC\vcvarsall.bat"
+       "%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat"
+       "%ProgramFiles%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat" 
+    ) do (
+    if exist %%b ( 
+       call %%b x86
+       goto build
+    )
+)
+  
 echo "Unable to detect suitable environment. Build may not succeed."
-goto build
-
-
-:initialize2k8Dev12
-call "%ProgramFiles%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x86
-goto build
-
-:initialize2k8on64Dev12
-call "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x86
-goto build
-
-:initialize2k8Dev11
-call "%ProgramFiles%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat" x86
-goto build
-
-:initialize2k8on64Dev11
-call "%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat" x86
-goto build
 
 :build
-call build
+
+SET target=%1
+SET project=%2
+
+IF "%target%" == "" SET target=Build
+IF "%project%" =="" SET project=Orchard.proj
+
+msbuild /t:%target% %project%
+
 pause
-goto end
 
-
-:end

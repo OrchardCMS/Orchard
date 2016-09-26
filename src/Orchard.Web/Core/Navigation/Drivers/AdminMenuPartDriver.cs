@@ -38,7 +38,7 @@ namespace Orchard.Core.Navigation.Drivers {
 
         protected override DriverResult Editor(AdminMenuPart part, dynamic shapeHelper) {
             // todo: we need a 'ManageAdminMenu' too?
-            if (!_authorizationService.TryCheckAccess(Permissions.ManageMainMenu, _orchardServices.WorkContext.CurrentUser, part)) {
+            if (!_authorizationService.TryCheckAccess(Permissions.ManageMenus, _orchardServices.WorkContext.CurrentUser, part)) {
                 return null;
             }
 
@@ -51,7 +51,7 @@ namespace Orchard.Core.Navigation.Drivers {
         }
 
         protected override DriverResult Editor(AdminMenuPart part, IUpdateModel updater, dynamic shapeHelper) {
-            if (!_authorizationService.TryCheckAccess(Permissions.ManageMainMenu, _orchardServices.WorkContext.CurrentUser, part))
+            if (!_authorizationService.TryCheckAccess(Permissions.ManageMenus, _orchardServices.WorkContext.CurrentUser, part))
                 return null;
 
             updater.TryUpdateModel(part, Prefix, null, null);

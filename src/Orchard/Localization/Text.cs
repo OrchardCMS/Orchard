@@ -1,7 +1,5 @@
 using System;
 using System.Globalization;
-using System.Linq;
-using System.Web;
 using Orchard.Localization.Services;
 using Orchard.Logging;
 
@@ -39,7 +37,7 @@ namespace Orchard.Localization {
 
         private static IFormatProvider GetFormatProvider(string currentCulture) {
             try {
-                return CultureInfo.GetCultureInfoByIetfLanguageTag(currentCulture);
+                return CultureInfo.GetCultureInfo(currentCulture);
             }
             catch {
                 return null;

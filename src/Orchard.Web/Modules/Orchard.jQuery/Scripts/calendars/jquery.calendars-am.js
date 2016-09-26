@@ -2,7 +2,7 @@
    Amharic (አማርኛ) localisation for Gregorian/Julian calendars for jQuery.
    Leyu Sisay. */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['am'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['am'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['ጃንዋሪ','ፈብርዋሪ','ማርች','አፕሪል','ሜይ','ጁን',
@@ -17,7 +17,7 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['am'] =
-			$.calendars.calendars.gregorian.prototype.regional['am'];
+		$.calendars.calendars.julian.prototype.regionalOptions['am'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['am'];
 	}
 })(jQuery);

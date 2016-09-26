@@ -59,7 +59,9 @@ namespace Orchard.Tests.Modules.Indexing {
             Directory.CreateDirectory(_basePath);
             _contentDefinitionManager = new Mock<IContentDefinitionManager>();
             _appDataFolder = AppDataFolderTests.CreateAppDataFolder(_basePath);
-            
+
+            builder.RegisterType<DefaultLuceneAnalyzerProvider>().As<ILuceneAnalyzerProvider>();
+            builder.RegisterType<DefaultLuceneAnalyzerSelector>().As<ILuceneAnalyzerSelector>();
             builder.RegisterType<LuceneIndexProvider>().As<IIndexProvider>();
             builder.RegisterInstance(_appDataFolder).As<IAppDataFolder>();
             builder.RegisterType<IndexingTaskExecutor>().As<IIndexingTaskExecutor>();

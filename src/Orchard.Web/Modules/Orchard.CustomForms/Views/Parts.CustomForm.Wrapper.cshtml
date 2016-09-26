@@ -17,6 +17,6 @@
     @Html.Hidden("returnUrl", Request.RawUrl);
 
     <fieldset class="submit-button">
-        <button type="submit" name="submit.Save" value="submit.Save">@T("Submit")</button>
+        <button type="submit" name="submit.Save" value="submit.Save">@Model.ContentPart.SubmitButtonText</button>
     </fieldset>
 }

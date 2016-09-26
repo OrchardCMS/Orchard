@@ -93,6 +93,17 @@ namespace Orchard.Tests.Mvc {
             Assert.That(where, Is.EqualTo("after"));
             action.EndInvoke(asyncResult);
         }
+
+        [Test]
+        public void RouteDescriptorWithNameCreatesNamedRouteInCollection() {
+            _routes.MapRoute("foo", "{controller}");
+
+            var publisher = _container.Resolve<IRoutePublisher>();
+            var routeDescriptor = Desc("yarg", "bar");
+            publisher.Publish(new[] { routeDescriptor });
+
+            Assert.That(_routes["yarg"], Is.Not.Null);
+        }
     }
 }
 

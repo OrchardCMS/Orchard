@@ -3,7 +3,7 @@
    Mansoor Munib -- mansoormunib@gmail.com <http://www.mansoor.co.nr/mansoor.html>
    Thanks to Habib Ahmed, ObaidUllah Anwar. */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['ur'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['ur'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['جنوری','فروری','مارچ','اپریل','مئی','جون',
@@ -19,7 +19,7 @@
 		isRTL: true
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['ur'] =
-			$.calendars.calendars.gregorian.prototype.regional['ur'];
+		$.calendars.calendars.julian.prototype.regionalOptions['ur'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['ur'];
 	}
 })(jQuery);

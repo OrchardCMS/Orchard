@@ -11,9 +11,9 @@ namespace Orchard.Lists {
                     .WithPart("ContainerPart")
                     .WithPart("MenuPart")
                     .WithPart("AutoroutePart", builder => builder
-                        .WithSetting("AutorouteSettings.AllowCustomPattern", "true")
-                        .WithSetting("AutorouteSettings.AutomaticAdjustmentOnEdit", "false")
-                        .WithSetting("AutorouteSettings.PatternDefinitions", "[{Name:'Title', Pattern: '{Content.Slug}', Description: 'my-list'}]")
+                        .WithSetting("AutorouteSettings.AllowCustomPattern", "True")
+                        .WithSetting("AutorouteSettings.AutomaticAdjustmentOnEdit", "False")
+                        .WithSetting("AutorouteSettings.PatternDefinitions", "[{\"Name\":\"Title\",\"Pattern\":\"{Content.Slug}\",\"Description\":\"my-list\"}]")
                         .WithSetting("AutorouteSettings.DefaultPatternIndex", "0")));
             return 4;
         }

@@ -76,12 +76,22 @@ namespace Orchard.Tests.Stubs {
                     set { throw new NotImplementedException(); }
                 }
 
+                 public bool UseCdn {
+                     get { throw new NotImplementedException(); }
+                     set { throw new NotImplementedException(); }
+                 }
+
                 public int PageSize {
                     get { throw new NotImplementedException(); }
                     set { throw new NotImplementedException(); }
                 }
-                
+
                 public int MaxPageSize {
+                    get { throw new NotImplementedException(); }
+                    set { throw new NotImplementedException(); }
+                }
+                
+                public int MaxPagedCount {
                     get { throw new NotImplementedException(); }
                     set { throw new NotImplementedException(); }
                 }

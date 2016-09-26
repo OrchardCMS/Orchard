@@ -9,6 +9,7 @@ using Orchard.Indexing;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Mvc;
+using Orchard.Search.Helpers;
 using Orchard.Search.Models;
 using Orchard.Search.Settings;
 using Orchard.Settings;
@@ -44,11 +45,12 @@ namespace Orchard.Search.Controllers {
 
         [Themed(false)]
         public ActionResult Index(PagerParameters pagerParameters, string part, string field, string searchText = "") {
-            Pager pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
-            var searchFields = Services.WorkContext.CurrentSite.As<SearchSettingsPart>().SearchedFields;
-
-            int totalCount = 0;
-            int[] foundIds = new int[0];
+            var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
+            var searchSettingsPart = Services.WorkContext.CurrentSite.As<SearchSettingsPart>();
+            var searchIndex = searchSettingsPart.SearchIndex;
+            var searchFields = searchSettingsPart.GetSearchFields();
+            var totalCount = 0;
+            var foundIds = new int[0];
 
             if (!String.IsNullOrWhiteSpace(searchText)) {
                 ContentPickerSearchFieldSettings settings = null;
@@ -64,7 +66,7 @@ namespace Orchard.Search.Controllers {
                     return View("NoIndex");
                 }
 
-                var builder = _indexManager.GetSearchIndexProvider().CreateSearchBuilder(Services.WorkContext.CurrentSite.As<SearchSettingsPart>().SearchIndex);
+                var builder = _indexManager.GetSearchIndexProvider().CreateSearchBuilder(searchIndex);
 
                 try {
                     builder.Parse(searchFields, searchText);
@@ -106,7 +108,6 @@ namespace Orchard.Search.Controllers {
             }
 
             var pagerShape = Services.New.Pager(pager).TotalItemCount(totalCount);
-
 
             foreach(IShape item in list.Items) {
                 item.Metadata.Type = "ContentPicker";

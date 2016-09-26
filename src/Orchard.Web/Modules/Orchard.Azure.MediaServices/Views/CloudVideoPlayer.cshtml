@@ -21,8 +21,7 @@
     Script.Include("cloudmedia-videoplayer-injectors-alt.js").AtFoot();
     Script.Include("cloudmedia-videoplayer-main.js").AtFoot();
 
-    CloudVideoPart cloudVideoPart = Model.CloudVideoPart;
-    var altText = cloudVideoPart.As<MediaPart>().AlternateText;
+    var altText = Model.AlternateText;
     var assetData = Model.AssetData;
     var assetDataJson = JsonConvert.SerializeObject(assetData, Formatting.None);
     var renderId = Guid.NewGuid().ToString().Replace("-", "");

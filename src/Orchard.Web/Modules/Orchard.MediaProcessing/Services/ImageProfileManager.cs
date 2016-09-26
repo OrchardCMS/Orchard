@@ -137,7 +137,7 @@ namespace Orchard.MediaProcessing.Services {
                             descriptor.Filter(filterContext);
                         }
 
-                        _fileNameProvider.UpdateFileName(profileName, path, filterContext.FilePath);
+                        _fileNameProvider.UpdateFileName(profileName, System.Web.HttpUtility.UrlDecode(path), filterContext.FilePath);
 
                         if (!filterContext.Saved) {
                             try {

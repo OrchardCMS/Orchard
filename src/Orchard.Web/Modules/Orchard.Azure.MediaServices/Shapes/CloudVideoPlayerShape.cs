@@ -9,7 +9,7 @@ namespace Orchard.Azure.MediaServices.Shapes {
         public void Discover(ShapeTableBuilder builder) {
             builder.Describe("CloudVideoPlayer").OnDisplaying(context => {
                 var shape = context.Shape;
-                CloudVideoPart cloudVideoPart = shape.CloudVideoPart; // The cloud video item to render a player for.
+                CloudVideoPart cloudVideoPart = shape.ContentPart; // The cloud video item to render a player for.
                 int? assetId = shape.AssetId; // Set to limit the player to only one particular asset.
                 bool ignoreIncludeInPlayer = shape.IgnoreIncludeInPlayer; // True to ignore the IncludeInPlayer property of assets.
                 bool allowPrivateUrls = shape.AllowPrivateUrls; // True to allow private locator URLs to be used, otherwise false.

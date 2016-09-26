@@ -57,5 +57,9 @@ namespace Orchard.ContentManagement.Handlers {
         protected override void Versioning(VersionContentContext context, ContentPart<TRecord> existing, ContentPart<TRecord> building) {
             building.Record = existing.Record;
         }
+
+        protected override void Destroying(DestroyContentContext context, ContentPart<TRecord> instance) {
+            _repository.Delete(instance.Record);
+        }
     }
 }

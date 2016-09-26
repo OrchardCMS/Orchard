@@ -20,7 +20,7 @@ namespace Orchard.OutputCache.Services {
                 key,
                 cacheItem,
                 null,
-                cacheItem.ValidUntilUtc,
+                cacheItem.StoredUntilUtc,
                 System.Web.Caching.Cache.NoSlidingExpiration,
                 System.Web.Caching.CacheItemPriority.Normal,
                 null);

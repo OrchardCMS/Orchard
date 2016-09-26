@@ -1,0 +1,8 @@
+﻿@using Orchard.Layouts.Helpers
+@{
+    var tagBuilder = TagBuilderExtensions.CreateElementTagBuilder(Model);
+    tagBuilder.AddCssClass("row");
+}
+@tagBuilder.StartElement
+@DisplayChildren(Model)
+@tagBuilder.EndElement

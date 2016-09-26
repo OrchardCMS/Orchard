@@ -2,8 +2,8 @@
    Македонски MK localisation for calendars datepicker for jQuery.
    Hajan Selmani (hajan [at] live [dot] com). */
 (function($) {
-	$.calendars.picker.regional['mk'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['mk'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: 'Претх.', prevStatus: 'Прикажи го претходниот месец',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: 'Прикажи ја претходната година',
 		nextText: 'Следен', nextStatus: 'Прикажи го следниот месец',
@@ -17,5 +17,5 @@
 		dayStatus: 'Избери DD, M d', defaultStatus: 'Избери датум',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['mk']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['mk']);
 })(jQuery);

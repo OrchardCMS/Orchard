@@ -2,8 +2,8 @@
    Hindi INDIA localisation for calendars datepicker for jQuery.
    Written by Pawan Kumar Singh. */
 (function($) {
-	$.calendars.picker.regional['hi-IN'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['hi-IN'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: 'पिछला', prevStatus: 'पिछला महीना देखें',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: 'पिछला वर्ष देखें',
 		nextText: 'अगला', nextStatus: 'अगला महीना देखें',
@@ -17,5 +17,5 @@
 		dayStatus: 'चुने DD, M d', defaultStatus: 'एक तिथि का चयन करें',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['hi-IN']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['hi-IN']);
 })(jQuery);

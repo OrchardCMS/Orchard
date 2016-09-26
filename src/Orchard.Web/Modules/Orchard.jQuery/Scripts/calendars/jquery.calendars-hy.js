@@ -2,7 +2,7 @@
    Armenian localisation for Gregorian/Julian calendars for jQuery.
    Written by Levon Zakaryan (levon.zakaryan@gmail.com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['hy'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['hy'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Հունվար','Փետրվար','Մարտ','Ապրիլ','Մայիս','Հունիս',
@@ -17,7 +17,7 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['hy'] =
-			$.calendars.calendars.gregorian.prototype.regional['hy'];
+		$.calendars.calendars.julian.prototype.regionalOptions['hy'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['hy'];
 	}
 })(jQuery);

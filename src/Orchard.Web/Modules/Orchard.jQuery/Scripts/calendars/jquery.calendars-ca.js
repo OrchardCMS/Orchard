@@ -2,7 +2,7 @@
    Catalan localisation for Gregorian/Julian calendars for jQuery.
    Writers: (joan.leon@gmail.com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['ca'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['ca'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Gener','Febrer','Mar&ccedil;','Abril','Maig','Juny',
@@ -17,7 +17,7 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['ca'] =
-			$.calendars.calendars.gregorian.prototype.regional['ca'];
+		$.calendars.calendars.julian.prototype.regionalOptions['ca'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['ca'];
 	}
 })(jQuery);

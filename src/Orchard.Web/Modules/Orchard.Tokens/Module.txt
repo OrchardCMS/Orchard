@@ -15,3 +15,8 @@ Features:
 		Description: Provides a content part to customize RSS fields based on tokens.
 		Category: Content
 		Dependencies: Orchard.Tokens, Feeds
+	Orchard.Tokens.HtmlFilter:
+		Name: Tokens Html Filter
+		Description: Evaluates tokens in a body.
+		Category: Content
+		Dependencies: Orchard.Tokens

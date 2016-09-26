@@ -25,10 +25,10 @@ namespace Orchard.Roles {
         public ILogger Logger { get; set; }
 
         void IFeatureEventHandler.Installing(Feature feature) {
-            AddDefaultRolesForFeature(feature);
         }
 
         void IFeatureEventHandler.Installed(Feature feature) {
+            AddDefaultRolesForFeature(feature);
         }
 
         void IFeatureEventHandler.Enabling(Feature feature) {

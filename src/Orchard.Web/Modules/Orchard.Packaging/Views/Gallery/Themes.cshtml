@@ -74,7 +74,7 @@
 
                         <div class="properties">
                             @{
-                            var description = item.Description ?? T("(No description").Text;
+                            var description = item.Description ?? T("(No description)").Text;
                         }
                             <p>@Html.Raw(Html.Encode(description).Replace("\n", "<br />"))</p>
                             <p>

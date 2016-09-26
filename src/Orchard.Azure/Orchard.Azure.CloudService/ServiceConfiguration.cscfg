@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ServiceConfiguration serviceName="OrchardCloudService" osFamily="3" osVersion="*" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceConfiguration" schemaVersion="2013-10.2.2">
+<ServiceConfiguration serviceName="OrchardCloudService" osFamily="4" osVersion="*" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceConfiguration" schemaVersion="2014-06.2.4">
   <Role name="Orchard.Azure.Web">
     <Instances count="1" />
     <ConfigurationSettings>
@@ -11,7 +11,6 @@
       <Setting name="Orchard.Azure.DatabaseCache.HostIdentifier" value="Orchard.Azure.Web" />
       <Setting name="Orchard.Azure.DatabaseCache.CacheName" value="DatabaseCache" />
       <Setting name="Orchard.Azure.DatabaseCache.AuthorizationToken" value="" />
-      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="UseDevelopmentStorage=true" />
       <Setting name="Microsoft.WindowsAzure.Plugins.Caching.NamedCaches" value="{&quot;caches&quot;:[{&quot;name&quot;:&quot;default&quot;,&quot;policy&quot;:{&quot;eviction&quot;:{&quot;type&quot;:0},&quot;expiration&quot;:{&quot;defaultTTL&quot;:10,&quot;isExpirable&quot;:true,&quot;type&quot;:1},&quot;serverNotification&quot;:{&quot;isEnabled&quot;:false}},&quot;secondaries&quot;:0},{&quot;name&quot;:&quot;SessionStateCache&quot;,&quot;policy&quot;:{&quot;eviction&quot;:{&quot;type&quot;:0},&quot;expiration&quot;:{&quot;defaultTTL&quot;:60,&quot;isExpirable&quot;:true,&quot;type&quot;:2},&quot;serverNotification&quot;:{&quot;isEnabled&quot;:false}},&quot;secondaries&quot;:0},{&quot;name&quot;:&quot;OutputCache&quot;,&quot;policy&quot;:{&quot;eviction&quot;:{&quot;type&quot;:0},&quot;expiration&quot;:{&quot;defaultTTL&quot;:5,&quot;isExpirable&quot;:true,&quot;type&quot;:1},&quot;serverNotification&quot;:{&quot;isEnabled&quot;:false}},&quot;secondaries&quot;:0},{&quot;name&quot;:&quot;DatabaseCache&quot;,&quot;policy&quot;:{&quot;eviction&quot;:{&quot;type&quot;:0},&quot;expiration&quot;:{&quot;defaultTTL&quot;:5,&quot;isExpirable&quot;:true,&quot;type&quot;:1},&quot;serverNotification&quot;:{&quot;isEnabled&quot;:false}},&quot;secondaries&quot;:0}]}" />
       <Setting name="Microsoft.WindowsAzure.Plugins.Caching.DiagnosticLevel" value="1" />
       <Setting name="Microsoft.WindowsAzure.Plugins.Caching.CacheSizePercentage" value="30" />

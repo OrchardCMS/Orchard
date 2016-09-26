@@ -658,6 +658,34 @@
       <summary>Gets or sets the root path where the content of MIME multipart body parts are written to.</summary>
       <returns>The root path where the content of MIME multipart body parts are written to.</returns>
     </member>
+    <member name="T:System.Net.Http.MultipartFormDataRemoteStreamProvider">
+      <summary>A <see cref="T:System.Net.Http.MultipartStreamProvider" /> implementation suited for use with HTML file uploads for writing file content to a remote storage <see cref="T:System.IO.Stream" />. The stream provider looks at the Content-Disposition header field and determines an output remote <see cref="T:System.IO.Stream" /> based on the presence of a filename parameter. If a filename parameter is present in the Content-Disposition header field, then the body part is written to a remote <see cref="T:System.IO.Stream" /> provided by <see cref="M:System.Net.Http.MultipartFormDataRemoteStreamProvider.GetRemoteStream(System.Net.Http.HttpContent,System.Net.Http.Headers.HttpContentHeaders)" />. Otherwise it is written to a <see cref="T:System.IO.MemoryStream" />.</summary>
+    </member>
+    <member name="M:System.Net.Http.MultipartFormDataRemoteStreamProvider.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:System.Net.Http.MultipartFormDataRemoteStreamProvider" /> class.</summary>
+    </member>
+    <member name="M:System.Net.Http.MultipartFormDataRemoteStreamProvider.ExecutePostProcessingAsync">
+      <summary>Read the non-file contents as form data.</summary>
+      <returns>A <see cref="T:System.Threading.Tasks.Task" /> representing the post processing.</returns>
+    </member>
+    <member name="M:System.Net.Http.MultipartFormDataRemoteStreamProvider.ExecutePostProcessingAsync(System.Threading.CancellationToken)">
+      <summary>Read the non-file contents as form data.</summary>
+      <returns>A <see cref="T:System.Threading.Tasks.Task" /> representing the post processing.</returns>
+      <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+    </member>
+    <member name="P:System.Net.Http.MultipartFormDataRemoteStreamProvider.FileData">
+      <summary>Gets a collection of file data passed as part of the multipart form data.</summary>
+    </member>
+    <member name="P:System.Net.Http.MultipartFormDataRemoteStreamProvider.FormData">
+      <summary>Gets a <see cref="T:System.Collections.Specialized.NameValueCollection" /> of form data passed as part of the multipart form data.</summary>
+    </member>
+    <member name="M:System.Net.Http.MultipartFormDataRemoteStreamProvider.GetRemoteStream(System.Net.Http.HttpContent,System.Net.Http.Headers.HttpContentHeaders)">
+      <summary>Provides a <see cref="T:System.Net.Http.RemoteStreamInfo" /> for <see cref="M:System.Net.Http.MultipartFormDataRemoteStreamProvider.GetStream(System.Net.Http.HttpContent,System.Net.Http.Headers.HttpContentHeaders)" />. Override this method to provide a remote stream to which the data should be written.</summary>
+      <returns>A result specifying a remote stream where the file will be written to and a location where the file can be accessed. It cannot be null and the stream must be writable.</returns>
+      <param name="parent">The parent <see cref="T:System.Net.Http.HttpContent" /> MIME multipart instance.</param>
+      <param name="headers">The header fields describing the body part's content.</param>
+    </member>
+    <member name="M:System.Net.Http.MultipartFormDataRemoteStreamProvider.GetStream(System.Net.Http.HttpContent,System.Net.Http.Headers.HttpContentHeaders)"></member>
     <member name="T:System.Net.Http.MultipartFormDataStreamProvider">
       <summary>Represents an <see cref="T:System.Net.Http.IMultipartStreamProvider" /> suited for use with HTML file uploads for writing file  content to a <see cref="T:System.IO.FileStream" />.</summary>
     </member>
@@ -712,6 +740,24 @@
     <member name="P:System.Net.Http.MultipartRelatedStreamProvider.RootContent">
       <summary>Gets the root content of the <see cref="T:System.Net.Http.MultipartRelatedStreamProvider" />.</summary>
       <returns>The root content of the <see cref="T:System.Net.Http.MultipartRelatedStreamProvider" />.</returns>
+    </member>
+    <member name="T:System.Net.Http.MultipartRemoteFileData">
+      <summary>Represents a multipart file data for remote storage.</summary>
+    </member>
+    <member name="M:System.Net.Http.MultipartRemoteFileData.#ctor(System.Net.Http.Headers.HttpContentHeaders,System.String,System.String)">
+      <summary>Initializes a new instance of the <see cref="T:System.Net.Http.MultipartRemoteFileData" /> class.</summary>
+      <param name="headers">The headers of the multipart file data.</param>
+      <param name="location">The remote file's location.</param>
+      <param name="fileName">The remote file's name.</param>
+    </member>
+    <member name="P:System.Net.Http.MultipartRemoteFileData.FileName">
+      <summary>Gets the remote file's name.</summary>
+    </member>
+    <member name="P:System.Net.Http.MultipartRemoteFileData.Headers">
+      <summary>Gets the headers of the multipart file data.</summary>
+    </member>
+    <member name="P:System.Net.Http.MultipartRemoteFileData.Location">
+      <summary>Gets the remote file's location.</summary>
     </member>
     <member name="T:System.Net.Http.MultipartStreamProvider">
       <summary>Represents a stream provider that examines the headers provided by the MIME multipart parser as part of the MIME multipart extension methods (see <see cref="T:System.Net.Http.HttpContentMultipartExtensions" />) and decides what kind of stream to return for the body part to be written to.</summary>
@@ -846,6 +892,24 @@
       <summary>Determines whether the stream content has a valid length in bytes.</summary>
       <returns>true if length is a valid length; otherwise, false.</returns>
       <param name="length">The length in bytes of the stream content.</param>
+    </member>
+    <member name="T:System.Net.Http.RemoteStreamInfo">
+      <summary>Represents the result for <see cref="M:System.Net.Http.MultipartFormDataRemoteStreamProvider.GetRemoteStream(System.Net.Http.HttpContent,System.Net.Http.Headers.HttpContentHeaders)" />.</summary>
+    </member>
+    <member name="M:System.Net.Http.RemoteStreamInfo.#ctor(System.IO.Stream,System.String,System.String)">
+      <summary>Initializes a new instance of the <see cref="T:System.Net.Http.RemoteStreamInfo" /> class.</summary>
+      <param name="remoteStream">The remote stream instance where the file will be written to.</param>
+      <param name="location">The remote file's location.</param>
+      <param name="fileName">The remote file's name.</param>
+    </member>
+    <member name="P:System.Net.Http.RemoteStreamInfo.FileName">
+      <summary>Gets the remote file's location.</summary>
+    </member>
+    <member name="P:System.Net.Http.RemoteStreamInfo.Location">
+      <summary>Gets the remote file's location.</summary>
+    </member>
+    <member name="P:System.Net.Http.RemoteStreamInfo.RemoteStream">
+      <summary>Gets the remote stream instance where the file will be written to.</summary>
     </member>
     <member name="T:System.Net.Http.UnsupportedMediaTypeException">
       <summary> Defines an exception type for signalling that a request's media type was not supported. </summary>
@@ -1257,7 +1321,10 @@
       <returns>The values of the collection of form data.</returns>
       <param name="key">The key.</param>
     </member>
-    <member name="P:System.Net.Http.Formatting.FormDataCollection.Item(System.String)"></member>
+    <member name="P:System.Net.Http.Formatting.FormDataCollection.Item(System.String)">
+      <summary>Gets values associated with a given key. If there are multiple values, they're concatenated.</summary>
+      <returns>Values associated with a given key. If there are multiple values, they're concatenated.</returns>
+    </member>
     <member name="M:System.Net.Http.Formatting.FormDataCollection.ReadAsNameValueCollection">
       <summary>Reads the collection of form data as a collection of name value.</summary>
       <returns>The collection of form data as a collection of name value.</returns>
@@ -1543,6 +1610,10 @@
       <summary>Initializes a new instance of the <see cref="T:System.Net.Http.Formatting.MediaTypeFormatterCollection" /> class.</summary>
       <param name="formatters">A collection of <see cref="T:System.Net.Http.Formatting.MediaTypeFormatter" /> instances to place in the collection.</param>
     </member>
+    <member name="M:System.Net.Http.Formatting.MediaTypeFormatterCollection.AddRange(System.Collections.Generic.IEnumerable{System.Net.Http.Formatting.MediaTypeFormatter})">
+      <summary>Adds the elements of the specified collection to the end of the <see cref="T:System.Net.Http.Formatting.MediaTypeFormatterCollection" />.</summary>
+      <param name="items">The items that should be added to the end of the <see cref="T:System.Net.Http.Formatting.MediaTypeFormatterCollection" />. The items collection itself cannot be <see cref="null" />, but it can contain elements that are <see cref="null" />.</param>
+    </member>
     <member name="M:System.Net.Http.Formatting.MediaTypeFormatterCollection.ClearItems">
       <summary>Removes all items in the collection.</summary>
     </member>
@@ -1566,6 +1637,11 @@
       <summary>Inserts the specified item at the specified index in the collection.</summary>
       <param name="index">The index to insert at.</param>
       <param name="item">The item to insert.</param>
+    </member>
+    <member name="M:System.Net.Http.Formatting.MediaTypeFormatterCollection.InsertRange(System.Int32,System.Collections.Generic.IEnumerable{System.Net.Http.Formatting.MediaTypeFormatter})">
+      <summary>Inserts the elements of a collection into the <see cref="T:System.Net.Http.Formatting.MediaTypeFormatterCollection" /> at the specified index.</summary>
+      <param name="index">The zero-based index at which the new elements should be inserted.</param>
+      <param name="items">The items that should be inserted into the <see cref="T:System.Net.Http.Formatting.MediaTypeFormatterCollection" />. The items collection itself cannot be <see cref="null" />, but it can contain elements that are <see cref="null" />.</param>
     </member>
     <member name="M:System.Net.Http.Formatting.MediaTypeFormatterCollection.IsTypeExcludedFromValidation(System.Type)">
       <summary>Returns true if the type is one of those loosely defined types that should be excluded from validation.</summary>

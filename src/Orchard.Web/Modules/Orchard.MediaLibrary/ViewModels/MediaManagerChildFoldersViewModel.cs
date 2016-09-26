@@ -3,6 +3,6 @@ using Orchard.MediaLibrary.Models;
 
 namespace Orchard.MediaLibrary.ViewModels {
     public class MediaManagerChildFoldersViewModel {
-        public IEnumerable<MediaFolder> Children { get; set; }
+        public IEnumerable<IMediaFolder> Children { get; set; }
     }
 }

@@ -1,0 +1,8 @@
+﻿@using Orchard.Layouts.Elements
+@{
+    var element = (Shape) Model.Element;
+}
+<div class="element-snippet">
+    <strong>@T("Shape -")</strong>
+    @element.ShapeType
+</div>

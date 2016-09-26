@@ -12,5 +12,6 @@
 
         public ContentPartDefinition PartDefinition { get; private set; }
         public SettingsDictionary Settings { get; private set; }
+        public ContentTypeDefinition ContentTypeDefinition { get; set; }
     }
 }

@@ -1,0 +1,14 @@
+﻿@using Orchard.AuditTrail.ViewModels
+@{
+    var diff = (IList<AuditTrailEventDescriptorSettingViewModel>)Model.Diff;
+    var descriptions = String.Join("<br/>", diff.Select(x => {
+        var template = String.IsNullOrWhiteSpace(x.EventCategory)
+            ? "The <strong>{0}</strong> event was <strong>{2}</strong>."
+            : "The <strong>{0}</strong> event in category <strong>{1}</strong> was <strong>{2}</strong>.";
+
+        return T(template, x.EventDisplayName, T(x.EventCategory), x.Setting.IsEnabled ? "enabled" : "disabled").Text;
+    }));
+}
+<section class="audittrail-settings-eventsummary">
+    @Html.Raw(descriptions)
+</section>

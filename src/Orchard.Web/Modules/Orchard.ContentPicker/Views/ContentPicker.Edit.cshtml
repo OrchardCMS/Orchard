@@ -24,7 +24,8 @@
           data-base-url="@baseUrl"
           data-part-name="@HttpUtility.JavaScriptStringEncode(partName)"
           data-field-name="@HttpUtility.JavaScriptStringEncode(fieldName)"
-          data-remove-text="@T("Remove")">
+          data-remove-text="@T("Remove")"
+          data-not-published-text="@T("Not Published")">
     @if (!String.IsNullOrWhiteSpace(displayName)) {
         <label @if(required) { <text>class="required"</text> }>@displayName</label>
     }
@@ -47,7 +48,7 @@
                 <tr>
                     <td>&nbsp;</td>
                     <td>
-                        <span data-id="@contentItem.Id" data-fieldid="@idsFieldId" class="content-picker-item">@Html.ItemEditLink(contentItem)</span>
+                        <span data-id="@contentItem.Id" data-fieldid="@idsFieldId" class="content-picker-item">@Html.ItemEditLink(contentItem) @if(!contentItem.HasPublished()) {<text> - </text>@T("Not Published")}</span>
                     </td>
                     <td>
                         <span data-id="@contentItem.Id" class="content-picker-remove button grey">@T("Remove")</span>

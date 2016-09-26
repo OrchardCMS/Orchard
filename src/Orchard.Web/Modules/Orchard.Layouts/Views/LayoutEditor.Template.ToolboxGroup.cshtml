@@ -1,0 +1,6 @@
+﻿<li class="layout-toolbox-group" ng-class="{collapsed: isCollapsed}">
+    <a href="#" class="layout-toolbox-group-heading" ng-click="toggleIsCollapsed($event)">{{category.name}}</a>
+    <ul class="layout-toolbox-items" ng-model="category.elements" ui-sortable="$parent.getSortableOptions('Content')">
+        <li class="layout-toolbox-item layout-toolbox-item-content" title="{{item.toolboxDescription}}" ng-repeat="item in category.elements"><i>{{item.toolboxIcon}}</i> {{item.toolboxLabel}}</li>
+    </ul>
+</li>

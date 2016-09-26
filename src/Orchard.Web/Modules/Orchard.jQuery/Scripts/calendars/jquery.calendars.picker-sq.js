@@ -2,8 +2,8 @@
    Albanian localisation for calendars datepicker for jQuery.
    Written by Flakron Bytyqi (flakron@gmail.com). */
 (function($) {
-	$.calendars.picker.regional['sq'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['sq'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: '&#x3c;mbrapa', prevStatus: 'trego muajin e fundit',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: '',
 		nextText: 'Përpara&#x3e;', nextStatus: 'trego muajin tjetër',
@@ -17,5 +17,5 @@
 		dayStatus: '\'Zgjedh\' D, M d', defaultStatus: 'Zgjedhe një datë',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['sq']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['sq']);
 })(jQuery);

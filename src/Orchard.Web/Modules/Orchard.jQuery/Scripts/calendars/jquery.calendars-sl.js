@@ -3,7 +3,7 @@
    Written by Jaka Jancar (jaka@kubje.org). */
 /* c = &#x10D;, s = &#x161; z = &#x17E; C = &#x10C; S = &#x160; Z = &#x17D; */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['sl'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['sl'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Januar','Februar','Marec','April','Maj','Junij',
@@ -18,7 +18,7 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['sl'] =
-			$.calendars.calendars.gregorian.prototype.regional['sl'];
+		$.calendars.calendars.julian.prototype.regionalOptions['sl'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['sl'];
 	}
 })(jQuery);

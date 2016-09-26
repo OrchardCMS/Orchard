@@ -1,0 +1,8 @@
+﻿@using Orchard.AuditTrail.Services.Models
+@{
+    var categories = (IList<AuditTrailCategoryDescriptor>)Model.Categories;
+    var currentCategory = (string)Model.Category;
+    var listItems = categories.Select(x => new SelectListItem { Text = x.Name.Text, Value = x.Category, Selected = x.Category == currentCategory });
+}
+@Html.Label("category", T("Category:").Text)
+@Html.DropDownList("category", listItems, "")

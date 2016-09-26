@@ -1,14 +1,14 @@
 ﻿using System;
 using Orchard.TaskLease.Models;
 
-namespace Orchard.TaskLease.Services
-{
+namespace Orchard.TaskLease.Services {
+
     /// <summary>
     /// Describes a service to save and acquire task leases. A task lease can't be acquired by two different machines,
     /// for a specific amount of time. Optionnally a State can be saved along with the lease.
     /// </summary>
-    public interface ITaskLeaseService : IDependency
-    {
+    public interface ITaskLeaseService : IDependency {
+    
         /// <summary>
         /// Acquires a lease for the specified task name, and amount of time.
         /// </summary>

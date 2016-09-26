@@ -1,8 +1,8 @@
 ﻿/* http://keith-wood.name/calendars.html
-   Amharic localisation for Ethiopian calendar for jQuery.
+   Amharic localisation for Ethiopian calendar for jQuery v2.0.0.
    Written by Tewodros Zena February 2010. */
 (function($) {
-	$.calendars.calendars.ethiopian.prototype.regional['am'] = {
+	$.calendars.calendars.ethiopian.prototype.regionalOptions['am'] = {
 		name: 'የኢትዮጵያ ዘመን አቆጣጠር',
 		epochs: ['BEE', 'EE'],
 		monthNames: ['መስከረም', 'ጥቅምት', 'ኅዳር', 'ታህሣሥ', 'ጥር', 'የካቲት',

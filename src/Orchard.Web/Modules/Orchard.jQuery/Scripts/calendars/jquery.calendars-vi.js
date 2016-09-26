@@ -2,7 +2,7 @@
    Vietnamese localisation for Gregorian/Julian calendars for jQuery.
    Translated by Le Thanh Huy (lthanhhuy@cit.ctu.edu.vn). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['vi'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['vi'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Tháng Một', 'Tháng Hai', 'Tháng Ba', 'Tháng Tư', 'Tháng Năm', 'Tháng Sáu',
@@ -17,7 +17,7 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['vi'] =
-			$.calendars.calendars.gregorian.prototype.regional['vi'];
+		$.calendars.calendars.julian.prototype.regionalOptions['vi'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['vi'];
 	}
 })(jQuery);

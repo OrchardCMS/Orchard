@@ -1,5 +1,4 @@
 ﻿@using Orchard.Azure.MediaServices.Models.Jobs
-@using Orchard.Localization.Services
 @{
     Style.Include("cloudmedia-progress.css", "cloudmedia-progress.min.css");
     Script.Require("ShapesBase");
@@ -7,11 +6,10 @@
     Layout.Title = "Manage Microsoft Azure Media Jobs";
     
     var jobs = (IEnumerable<Job>)Model.Jobs;
-    var dateTimeFormatProvider = WorkContext.Resolve<IDateTimeFormatProvider>();
 }
-@helper ShortDateTime(DateTime? value, IDateTimeFormatProvider dateTimeFormatProvider) {
+@helper ShortDateTime(DateTime? value) {
     if (value != null) {
-        @Display.DateTime(DateTimeUtc: value, CustomFormat: T(dateTimeFormatProvider.ShortDateTimeFormat))
+        @Display.DateTime(DateTimeUtc: value)
     }
 }
 <table class="items" style="width: auto">
@@ -42,7 +40,7 @@
                     <td>@job.Name</td>
                     <td>@job.Description</td>
                     <td>@Html.ItemEditLinkWithReturnUrl(Html.ItemDisplayText(job.CloudVideoPart).ToString(), job.CloudVideoPart)</td>
-                    <td>@ShortDateTime(job.CreatedUtc, dateTimeFormatProvider)</td>
+                    <td>@ShortDateTime(job.CreatedUtc)</td>
                     <td>
                         @if (job.Status == JobStatus.Processing) {
                             var percentComplete = Convert.ToInt32(job.PercentComplete);
@@ -57,8 +55,8 @@
                             @T(job.Status.ToString())
                         }
                     </td>
-                    <td>@ShortDateTime(job.StartedUtc, dateTimeFormatProvider)</td>
-                    <td>@ShortDateTime(job.FinishedUtc, dateTimeFormatProvider)</td>
+                    <td>@ShortDateTime(job.StartedUtc)</td>
+                    <td>@ShortDateTime(job.FinishedUtc)</td>
                     <td>@job.ErrorMessage</td>
                     <td>
                         @if (job.CanArchive) {

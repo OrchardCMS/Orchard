@@ -32,6 +32,12 @@
 </fieldset>
 
 <fieldset>
+    @Html.LabelFor(m => m.CustomFormPart.SubmitButtonText)
+    @Html.TextBoxFor(m => m.CustomFormPart.SubmitButtonText, new { @class = "text large", @Value = (Model.CustomFormPart.SubmitButtonText ?? @T("Submit").Text) })
+    <span class="hint">@T("The text of the submit button.")</span>
+</fieldset>
+
+<fieldset>
     @Html.EditorFor(m => m.CustomFormPart.Redirect)
     <label for="@Html.FieldIdFor(m => m.CustomFormPart.Redirect)" class="forcheckbox">@T("Redirect the user once the form is submitted")</label>
 

@@ -2,8 +2,8 @@
    Greek localisation for calendars datepicker for jQuery.
    Written by Alex Cicovic (http://www.alexcicovic.com). */
 (function($) {
-	$.calendars.picker.regional['el'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['el'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: 'Προηγούμενος', prevStatus: 'Επισκόπηση προηγούμενου μήνα',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: '',
 		nextText: 'Επόμενος', nextStatus: 'Επισκόπηση επόμενου μήνα',
@@ -17,5 +17,5 @@
 		dayStatus: 'Επιλογή DD d MM', defaultStatus: 'Επιλέξτε μια ημερομηνία',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['el']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['el']);
 })(jQuery);

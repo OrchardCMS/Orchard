@@ -3,8 +3,8 @@
    Mansoor Munib -- mansoormunib@gmail.com <http://www.mansoor.co.nr/mansoor.html>
    Thanks to Habib Ahmed, ObaidUllah Anwar. */
 (function($) {
-	$.calendars.picker.regional['ur'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['ur'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: '&#x3c;گذشتہ', prevStatus: 'ماه گذشتہ',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: 'برس گذشتہ',
 		nextText: 'آئندہ&#x3e;', nextStatus: 'ماه آئندہ',
@@ -18,5 +18,5 @@
 		dayStatus: 'انتخاب D, M d', defaultStatus: 'کریں منتخب تاريخ',
 		isRTL: true
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['ur']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['ur']);
 })(jQuery);

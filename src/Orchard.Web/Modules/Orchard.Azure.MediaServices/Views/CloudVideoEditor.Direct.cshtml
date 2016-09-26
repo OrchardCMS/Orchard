@@ -13,7 +13,8 @@
     var acceptFileTypes = extensions != null && extensions.Any() ? String.Format(@"(\.|\/)({0})$", String.Join("|", extensions)) : null;
     var wamsAssetFieldName = String.Format("{0}.WamsAssetId", prefix);
 
-    <section class="async-upload" data-upload-accept-file-types="@acceptFileTypes"
+    <section class="async-upload"
+             data-upload-accept-file-types="@acceptFileTypes"
              data-generate-asset-url="@Url.Action("GenerateWamsAsset", "Asset", new { area = "Orchard.Azure.MediaServices" })"
              data-delete-asset-url="@Url.Action("DeleteWamsAsset", "Asset", new { area = "Orchard.Azure.MediaServices"})">
 
@@ -22,8 +23,16 @@
         <input type="hidden" name="@String.Format("{0}.AssetId", prefix)" value="@wamsAssetViewModel.AssetId" />
 
         @if (wamsAssetViewModel.WamsAssetId == null) {
+            
             <div class="file-upload-wrapper">
-                <input class="async-upload-input @if (isRequired) { <text> required-upload </text> }" name="@fileUploadName" type="file" @if (prompt != null) { <text> data-prompt="@prompt" </text> } />
+                <input class="async-upload-file-input @if (isRequired) { <text> required-upload </text> }" name="@fileUploadName" type="file" @if (prompt != null) { <text> data-prompt="@prompt" </text> } />
+            </div>
+            
+            <div class="selected-file-wrapper">
+                <div class="filename-text" data-text-template="@T("Ready to upload file '{filename}'.")"></div>
+                <input class="filename-input text medium" type="text" name="@(fileUploadName + "Name")" placeholder="@T("Optional: Enter a different name for the uploaded file")" />
+                <button class="reset-button button grey" type="button">@T("Reset")</button>
+                <button class="upload-button button grey" type="button">@T("Upload")</button>
             </div>
 
             <div class="status preparing">@T("Preparing to upload...")</div>
@@ -32,7 +41,7 @@
                     <div class="progress"></div>
                 </div>
                 <span class="progress-text" data-text-template="@T("Uploading ({percentage}%)...")"></span>
-                <a class="cancel-link" href="#" data-prompt="@T("Are you sure you want to cancel this upload?")">@T("Cancel")</a><br />
+                <a class="cancel-link" href="#" data-cancel-prompt="@T("Are you sure you want to cancel this upload?")">@T("Cancel")</a><br />
                 <span class="progress-details hint" data-text-template="@T("Uploaded {uploaded} KB / {total} KB | Speed: {kbps} KB/s | Elapsed: {elapsed} | Remaining: {remaining}")"></span>
             </div>
             <div class="status uploaded" data-text-template="@T("Successfully uploaded file '{filename}'.")"></div>

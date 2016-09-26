@@ -22,7 +22,7 @@ namespace Orchard.Data.Migration {
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly ITransactionManager _transactionManager;
 
-        private List<string> _processedFeatures;
+        private readonly List<string> _processedFeatures;
 
         public DataMigrationManager(
             IEnumerable<IDataMigration> dataMigrations,
@@ -40,6 +40,7 @@ namespace Orchard.Data.Migration {
 
             _processedFeatures = new List<string>();
             Logger = NullLogger.Instance;
+            T = NullLocalizer.Instance;
         }
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
@@ -90,6 +91,8 @@ namespace Orchard.Data.Migration {
 
             // apply update methods to each migration class for the module
             foreach (var migration in migrations) {
+                _transactionManager.RequireNew();
+
                 // copy the object for the Linq query
                 var tempMigration = migration;
 
@@ -102,8 +105,6 @@ namespace Orchard.Data.Migration {
                 }
 
                 try {
-                    _transactionManager.RequireNew();
-
                     // do we need to call Create() ?
                     if (current == 0) {
                         // try to resolve a Create method
@@ -118,11 +119,11 @@ namespace Orchard.Data.Migration {
 
                     while (lookupTable.ContainsKey(current)) {
                         try {
-                            Logger.Information("Applying migration for {0} from version {1}", feature, current);
+                            Logger.Information("Applying migration for {0} from version {1}.", feature, current);
                             current = (int)lookupTable[current].Invoke(migration, new object[0]);
                         }
                         catch (Exception ex) {
-                            Logger.Error(ex, "An unexpected error occurred while applying migration on {0} from version {1}", feature, current);
+                            Logger.Error(ex, "An unexpected error occurred while applying migration on {0} from version {1}.", feature, current);
                             throw;
                         }
                     }
@@ -139,15 +140,16 @@ namespace Orchard.Data.Migration {
                     }
                 }
                 catch (Exception e) {
-                    Logger.Error(e, "Error while running migration version {0} for {1}", current, feature);
+                    Logger.Error(e, "Error while running migration version {0} for {1}.", current, feature);
                     _transactionManager.Cancel();
+                    throw new OrchardException(T("Error while running migration version {0} for {1}.", current, feature), e);
                 }
 
             }
         }
 
         public void Uninstall(string feature) {
-            Logger.Information("Uninstalling feature: {0}", feature);
+            Logger.Information("Uninstalling feature: {0}.", feature);
 
             var migrations = GetDataMigrations(feature);
 

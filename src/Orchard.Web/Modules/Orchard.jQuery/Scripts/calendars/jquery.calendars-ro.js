@@ -2,7 +2,7 @@
    Romanian localisation for Gregorian/Julian calendars for jQuery.
    Written by Edmond L. (ll_edmond@walla.com) and Ionut G. Stan (ionut.g.stan@gmail.com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['ro'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['ro'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Ianuarie','Februarie','Martie','Aprilie','Mai','Iunie',
@@ -17,7 +17,7 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['ro'] =
-			$.calendars.calendars.gregorian.prototype.regional['ro'];
+		$.calendars.calendars.julian.prototype.regionalOptions['ro'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['ro'];
 	}
 })(jQuery);

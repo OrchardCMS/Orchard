@@ -5,10 +5,10 @@
 
 @using (Html.BeginFormAntiForgeryPost()) {
     Html.ValidationSummary();
-	<fieldset>
-		<legend>@T("Choose the types to include in the export file:")</legend>
-		<ol>
-		    @{var contentTypeIndex = 0;}
+    <fieldset>
+        <legend>@T("Choose the types to include in the export file:")</legend>
+        <ol>
+            @{var contentTypeIndex = 0;}
             @foreach (var contentTypeEntry in Model.ContentTypes) {
                 <li>
                     <input type="hidden" value="@Model.ContentTypes[contentTypeIndex].ContentTypeName" name="@Html.NameOf(m => m.ContentTypes[contentTypeIndex].ContentTypeName)"/>
@@ -17,7 +17,7 @@
                 </li>
                 contentTypeIndex = contentTypeIndex + 1;
             }
-		</ol>
+        </ol>
     </fieldset>
     <hr />
     <fieldset>

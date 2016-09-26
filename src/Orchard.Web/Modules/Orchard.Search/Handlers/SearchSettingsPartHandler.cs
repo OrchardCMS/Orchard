@@ -1,8 +1,8 @@
-﻿using JetBrains.Annotations;
+﻿using System.Collections.Generic;
+using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.Localization;
 using Orchard.Search.Models;
-using Orchard.Data;
 using Orchard.ContentManagement.Handlers;
 
 namespace Orchard.Search.Handlers {
@@ -11,15 +11,10 @@ namespace Orchard.Search.Handlers {
         public SearchSettingsPartHandler() {
             T = NullLocalizer.Instance;
             Filters.Add(new ActivatingFilter<SearchSettingsPart>("Site"));
-            
-            OnInitializing<SearchSettingsPart>((context, part) => {
-                part.FilterCulture = false;
-                part.SearchedFields = new [] {"body, title"};
-            });
         }
 
         public Localizer T { get; set; }
-
+         
         protected override void GetItemMetadata(GetContentItemMetadataContext context) {
             if (context.ContentItem.ContentType != "Site")
                 return;

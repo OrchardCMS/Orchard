@@ -36,7 +36,7 @@ namespace Orchard.OutputCache.Controllers {
         public Localizer T { get; set; }
 
         public ActionResult Index(PagerParameters pagerParameters) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not allowed to manage cache")))
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("You do not have permission to manage output cache.")))
                 return new HttpUnauthorizedResult();
 
             var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
@@ -53,7 +53,7 @@ namespace Orchard.OutputCache.Controllers {
         }
 
         public ActionResult Evict(string cacheKey) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not allowed to manage cache")))
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("You do not have permission to manage output cache.")))
                 return new HttpUnauthorizedResult();
 
             _cacheStorageProvider.Remove(cacheKey);
@@ -63,7 +63,7 @@ namespace Orchard.OutputCache.Controllers {
 
         [HttpPost]
         public ActionResult EvictAll() {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not allowed to manage cache")))
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("You do not have permission to manage output cache.")))
                 return new HttpUnauthorizedResult();
 
             _cacheStorageProvider.RemoveAll();

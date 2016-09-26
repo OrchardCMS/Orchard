@@ -2,7 +2,7 @@
    Japanese localisation for Gregorian/Julian calendars for jQuery.
    Written by Kentaro SATO (kentaro@ranvis.com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['ja'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['ja'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['1月','2月','3月','4月','5月','6月',
@@ -17,7 +17,7 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['ja'] =
-			$.calendars.calendars.gregorian.prototype.regional['ja'];
+		$.calendars.calendars.julian.prototype.regionalOptions['ja'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['ja'];
 	}
 })(jQuery);

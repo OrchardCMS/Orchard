@@ -2,8 +2,8 @@
    Ukrainian localisation for calendars datepicker for jQuery.
    Written by Maxim Drogobitskiy (maxdao@gmail.com). */
 (function($) {
-	$.calendars.picker.regional['uk'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['uk'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: '&#x3c;',  prevStatus: '',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: '',
 		nextText: '&#x3e;', nextStatus: '',
@@ -17,5 +17,5 @@
 		dayStatus: 'DD, M d', defaultStatus: '',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['uk']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['uk']);
 })(jQuery);

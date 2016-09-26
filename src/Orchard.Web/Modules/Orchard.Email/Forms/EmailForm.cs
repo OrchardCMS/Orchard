@@ -1,12 +1,16 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.DisplayManagement;
+using Orchard.Environment.Extensions;
 using Orchard.Environment.Features;
 using Orchard.Forms.Services;
 using Orchard.Localization;
 
 namespace Orchard.Email.Forms {
+
+    [OrchardSuppressDependency("Orchard.Email.Workflows")]
     public class EmailForm : Component, IFormProvider {
         private readonly IFeatureManager _featureManager;
         protected dynamic New { get; set; }
@@ -32,6 +36,24 @@ namespace Orchard.Email.Forms {
                                 Title: T("Email Addresses"),
                                 Description: T("Specify a comma-separated list of recipient email addresses. To include a display name, use the following format: John Doe &lt;john.doe@outlook.com&gt;"),
                                 Classes: new[] {"large", "text", "tokenized"}),
+                            _Bcc: New.TextBox(
+                                Id: "bcc",
+                                Name: "Bcc",
+                                Title: T("Bcc"),
+                                Description: T("Specify a comma-separated list of email addresses for a blind carbon copy"),
+                                Classes: new[]{"large","text","tokenized"}),
+                            _CC: New.TextBox(
+                                Id: "cc",
+                                Name: "CC",
+                                Title: T("CC"),
+                                Description: T("Specify a comma-separated list of email addresses for a carbon copy"),
+                                Classes: new[] { "large", "text", "tokenized" }),
+                            _ReplyTo: New.Textbox(
+                                Id: "reply-to",
+                                Name: "ReplyTo",
+                                Title: T("Reply To Address"),
+                                Description: T("If necessary, specify an email address for replies."),
+                                Classes: new [] {"large", "text", "tokenized"}),
                             _Subject: New.Textbox(
                                 Id: "Subject", Name: "Subject",
                                 Title: T("Subject"),
@@ -83,6 +105,7 @@ namespace Orchard.Email.Forms {
             var recipients = context.ValueProvider.GetValue("Recipients").AttemptedValue;
             var subject = context.ValueProvider.GetValue("Subject").AttemptedValue;
             var body = context.ValueProvider.GetValue("Body").AttemptedValue;
+            
 
             if (String.IsNullOrWhiteSpace(recipients)) {
                 context.ModelState.AddModelError("Recipients", T("You must specify at least one recipient.").Text);

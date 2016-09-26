@@ -2,8 +2,8 @@
    Montenegrin localisation for calendars datepicker for jQuery.
    Written by Miloš Milošević - fleka d.o.o. */
 (function($) {
-	$.calendars.picker.regional['me-ME'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['me-ME'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: '&#x3c;', prevStatus: 'Prikaži prethodni mjesec',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: 'Prikaži prethodnu godinu',
 		nextText: '&#x3e;', nextStatus: 'Prikaži sljedeći mjesec',
@@ -17,5 +17,5 @@
 		dayStatus: '\'Datum\' DD, M d', defaultStatus: 'Odaberi datum',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['me-ME']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['me-ME']);
 })(jQuery);

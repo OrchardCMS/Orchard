@@ -37,8 +37,9 @@ namespace Orchard.Tokens.Tests {
                     _initMethod(this);
                 }
 
-                _contextDictonary["CurrentTimeZone"] = TimeZoneInfo.Local;
+                _contextDictonary["CurrentTimeZone"] = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
                 _contextDictonary["CurrentCulture"] = "en-US";
+                _contextDictonary["CurrentCalendar"] = null;
             }
 
             public class StubSite : ContentPart, ISite {
@@ -70,12 +71,17 @@ namespace Orchard.Tokens.Tests {
                     set { throw new NotImplementedException(); }
                 }
 
-				public string SiteCalendar {
+                public string SiteCalendar {
                     get { throw new NotImplementedException(); }
                     set { throw new NotImplementedException(); }
                 }
 
                 public ResourceDebugMode ResourceDebugMode {
+                    get { throw new NotImplementedException(); }
+                    set { throw new NotImplementedException(); }
+                }
+                
+                public bool UseCdn {
                     get { throw new NotImplementedException(); }
                     set { throw new NotImplementedException(); }
                 }
@@ -86,6 +92,11 @@ namespace Orchard.Tokens.Tests {
                 }
 
                 public int MaxPageSize {
+                    get { throw new NotImplementedException(); }
+                    set { throw new NotImplementedException(); }
+                }
+
+                public int MaxPagedCount {
                     get { throw new NotImplementedException(); }
                     set { throw new NotImplementedException(); }
                 }

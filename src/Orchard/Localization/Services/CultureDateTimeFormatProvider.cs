@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 
 namespace Orchard.Localization.Services {
 
@@ -12,85 +13,140 @@ namespace Orchard.Localization.Services {
     /// </summary>
     public class CultureDateTimeFormatProvider : IDateTimeFormatProvider {
 
-        private readonly IOrchardServices _orchardServices;
+        private readonly IWorkContextAccessor _workContextAccessor;
+        private readonly ICalendarManager _calendarManager;
 
-        public CultureDateTimeFormatProvider(IOrchardServices orchardServices) {
-            _orchardServices = orchardServices;
+        public CultureDateTimeFormatProvider(
+            IWorkContextAccessor workContextAccessor,
+            ICalendarManager calendarManager) {
+            _workContextAccessor = workContextAccessor;
+            _calendarManager = calendarManager;
         }
 
-        public IEnumerable<string> MonthNames {
+        public virtual string[] MonthNames {
             get {
-                return CurrentCulture.DateTimeFormat.MonthNames;
+                return DateTimeFormat.MonthNames;
             }
         }
 
-        public IEnumerable<string> MonthNamesShort {
+        public virtual string[] MonthNamesGenitive {
             get {
-                return CurrentCulture.DateTimeFormat.AbbreviatedMonthNames;
+                return DateTimeFormat.MonthGenitiveNames;
             }
         }
 
-        public IEnumerable<string> DayNames {
+        public virtual string[] MonthNamesShort {
             get {
-                return CurrentCulture.DateTimeFormat.DayNames;
+                return DateTimeFormat.AbbreviatedMonthNames;
             }
         }
 
-        public IEnumerable<string> DayNamesShort {
+        public virtual string[] MonthNamesShortGenitive {
             get {
-                return CurrentCulture.DateTimeFormat.AbbreviatedDayNames;
+                return DateTimeFormat.AbbreviatedMonthGenitiveNames;
             }
         }
 
-        public IEnumerable<string> DayNamesMin {
+        public virtual string[] DayNames {
             get {
-                return CurrentCulture.DateTimeFormat.ShortestDayNames;
+                return DateTimeFormat.DayNames;
             }
         }
 
-        public string ShortDateFormat {
+        public virtual string[] DayNamesShort {
             get {
-                return CurrentCulture.DateTimeFormat.ShortDatePattern;
+                return DateTimeFormat.AbbreviatedDayNames;
             }
         }
 
-        public string ShortTimeFormat {
+        public virtual string[] DayNamesMin {
             get {
-                return CurrentCulture.DateTimeFormat.ShortTimePattern;
+                return DateTimeFormat.ShortestDayNames;
             }
         }
 
-        public string ShortDateTimeFormat {
+        public virtual string ShortDateFormat {
             get {
-                return String.Format("{0} {1}", ShortDateFormat, ShortTimeFormat);
+                return DateTimeFormat.ShortDatePattern;
             }
         }
 
-        public string LongDateFormat {
+        public virtual string ShortTimeFormat {
             get {
-                return CurrentCulture.DateTimeFormat.LongDatePattern;
+                return DateTimeFormat.ShortTimePattern;
             }
         }
 
-        public string LongTimeFormat {
+        public virtual string ShortDateTimeFormat {
             get {
-                return CurrentCulture.DateTimeFormat.LongTimePattern;
+                // From empirical testing I am fairly certain First() invariably evaluates to
+                // the pattern actually used when printing using the 'g' (i.e. general date/time
+                // pattern with short time) standard format string. /DS
+                return DateTimeFormat.GetAllDateTimePatterns('g').First();
             }
         }
 
-        public string LongDateTimeFormat {
+        public virtual string LongDateFormat {
             get {
-                return String.Format("{0} {1}", LongDateFormat, LongTimeFormat);
+                return DateTimeFormat.LongDatePattern;
             }
         }
 
-        public int FirstDay {
+        public virtual string LongTimeFormat {
             get {
-                return Convert.ToInt32(CurrentCulture.DateTimeFormat.FirstDayOfWeek);
+                return DateTimeFormat.LongTimePattern;
             }
         }
 
-        public bool Use24HourTime {
+        public virtual string LongDateTimeFormat {
+            get {
+                return DateTimeFormat.FullDateTimePattern;
+            }
+        }
+
+        public virtual IEnumerable<string> AllDateFormats {
+            get {
+                var patterns = new List<string>();
+                patterns.AddRange(DateTimeFormat.GetAllDateTimePatterns('d'));
+                patterns.AddRange(DateTimeFormat.GetAllDateTimePatterns('D'));
+                patterns.AddRange(DateTimeFormat.GetAllDateTimePatterns('m'));
+                patterns.AddRange(DateTimeFormat.GetAllDateTimePatterns('y'));
+                return patterns.Distinct();
+            }
+        }
+
+        public virtual IEnumerable<string> AllTimeFormats {
+            get {
+                var patterns = new List<string>();
+                patterns.AddRange(DateTimeFormat.GetAllDateTimePatterns('t'));
+                patterns.AddRange(DateTimeFormat.GetAllDateTimePatterns('T'));
+                return patterns.Distinct();
+            }
+        }
+
+        public virtual IEnumerable<string> AllDateTimeFormats {
+            get {
+                var patterns = new List<string>();
+                patterns.AddRange(DateTimeFormat.GetAllDateTimePatterns('f'));
+                patterns.AddRange(DateTimeFormat.GetAllDateTimePatterns('F'));
+                patterns.AddRange(DateTimeFormat.GetAllDateTimePatterns('g'));
+                patterns.AddRange(DateTimeFormat.GetAllDateTimePatterns('G'));
+                patterns.AddRange(DateTimeFormat.GetAllDateTimePatterns('o'));
+                patterns.AddRange(DateTimeFormat.GetAllDateTimePatterns('r'));
+                patterns.AddRange(DateTimeFormat.GetAllDateTimePatterns('s'));
+                patterns.AddRange(DateTimeFormat.GetAllDateTimePatterns('u'));
+                patterns.AddRange(DateTimeFormat.GetAllDateTimePatterns('U'));
+                return patterns.Distinct();
+            }
+        }
+
+        public virtual int FirstDay {
+            get {
+                return Convert.ToInt32(DateTimeFormat.FirstDayOfWeek);
+            }
+        }
+
+        public virtual bool Use24HourTime {
             get {
                 if (ShortTimeFormat.Contains("H")) // Capital H is the format specifier for the hour using a 24-hour clock.
                     return true;
@@ -98,27 +154,81 @@ namespace Orchard.Localization.Services {
             }
         }
 
-        public string TimeSeparator {
+        public virtual string DateSeparator {
             get {
-                return CurrentCulture.DateTimeFormat.TimeSeparator;
+                return DateTimeFormat.DateSeparator;
             }
         }
 
-        public string AmPmPrefix {
+        public virtual string TimeSeparator {
+            get {
+                return DateTimeFormat.TimeSeparator;
+            }
+        }
+
+        public virtual string AmPmPrefix {
             get {
                 return " "; // No way to get this from CultureInfo unfortunately, so assume a single space.
             }
         }
 
-        public IEnumerable<string> AmPmDesignators {
+        public virtual string[] AmPmDesignators {
             get {
-                return new string[] { CurrentCulture.DateTimeFormat.AMDesignator, CurrentCulture.DateTimeFormat.PMDesignator };
+                return new[] { DateTimeFormat.AMDesignator, DateTimeFormat.PMDesignator };
             }
         }
 
-        private CultureInfo CurrentCulture {
+        protected virtual DateTimeFormatInfo DateTimeFormat {
             get {
-                return CultureInfo.GetCultureInfo(_orchardServices.WorkContext.CurrentCulture);
+                var culture = CurrentCulture;
+                var calendar = CurrentCalendar;
+
+                var usingCultureCalendar = culture.DateTimeFormat.Calendar.GetType().IsInstanceOfType(calendar);
+                if (!usingCultureCalendar) {
+
+                    // The configured calendar affects the format strings provided by the DateTimeFormatInfo
+                    // class. Therefore, if the site is configured to use a calendar that is supported as an
+                    // optional calendar of the configured culture, use a customized DateTimeFormatInfo instance
+                    // configured with that calendar to get the correct formats.
+                    foreach (var optionalCalendar in culture.OptionalCalendars) {
+                        if (optionalCalendar.GetType().IsInstanceOfType(calendar)) {
+                            var calendarSpecificDateTimeFormat = (DateTimeFormatInfo)culture.DateTimeFormat.Clone();
+                            calendarSpecificDateTimeFormat.Calendar = optionalCalendar;
+                            return calendarSpecificDateTimeFormat;
+                        }
+                    }
+
+                    // If we are using a non-default calendar but it could not be found as one of the optional
+                    // ones for the culture, we will explicitly check for the combination of fa-IR culture and
+                    // the Persian calendar. The .NET Framework does not contain these localizations because for
+                    // some strange (probably political) reason, the PersianCalendar is not one of the optional
+                    // calendars for the fa-IR culture, or any other for that matter. Therefore in this case we
+                    // will return an overridden DateTimeFormatInfo instance with the correct localized month
+                    // names for the Persian calendar. Given that the Persian calendar is the only calendar to be
+                    // "orphaned" (i.e. not supported for any culture!) in the .NET Framework, something generally
+                    // considered a serious bug, I think it's justified to add this particular override
+                    if (culture.Name == "fa-IR" && calendar is PersianCalendar) {
+                        return PersianDateTimeFormatInfo.Build(culture.DateTimeFormat);
+                    }
+                }
+
+                return culture.DateTimeFormat;
+            }
+        }
+
+        protected virtual CultureInfo CurrentCulture {
+            get {
+                var workContext = _workContextAccessor.GetContext();
+                return CultureInfo.GetCultureInfo(workContext.CurrentCulture);
+            }
+        }
+
+        protected virtual Calendar CurrentCalendar {
+            get {
+                var workContext = _workContextAccessor.GetContext();
+                if (!String.IsNullOrEmpty(workContext.CurrentCalendar))
+                    return _calendarManager.GetCalendarByName(workContext.CurrentCalendar);
+                return CurrentCulture.Calendar;
             }
         }
     }

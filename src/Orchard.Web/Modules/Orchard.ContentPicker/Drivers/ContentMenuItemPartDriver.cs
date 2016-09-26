@@ -43,7 +43,7 @@ namespace Orchard.ContentPicker.Drivers {
 
         protected override DriverResult Editor(ContentMenuItemPart part, IUpdateModel updater, dynamic shapeHelper) {
             var currentUser = _workContextAccessor.GetContext().CurrentUser;
-            if (!_authorizationService.TryCheckAccess(Permissions.ManageMainMenu, currentUser, part))
+            if (!_authorizationService.TryCheckAccess(Permissions.ManageMenus, currentUser, part))
                 return null;
 
             var model = new ContentMenuItemEditViewModel();

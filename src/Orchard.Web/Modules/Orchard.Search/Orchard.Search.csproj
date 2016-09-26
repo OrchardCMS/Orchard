@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -13,7 +13,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Orchard.Search</RootNamespace>
     <AssemblyName>Orchard.Search</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>false</UseIISExpress>
     <FileUpgradeFlags>
@@ -72,7 +72,11 @@
     <Compile Include="Controllers\MediaController.cs" />
     <Compile Include="Drivers\MediaLibraryExplorerPartDriver.cs" />
     <Compile Include="Drivers\SearchFormPartDriver.cs" />
+    <Compile Include="Drivers\AdminSearchSettingsPartDriver.cs" />
+    <Compile Include="Handlers\AdminSearchSettingsPartHandler.cs" />
+    <Compile Include="Helpers\SearchSettingsHelper.cs" />
     <Compile Include="Models\SearchFormPart.cs" />
+    <Compile Include="Models\AdminSearchSettingsPart.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Migrations.cs" />
@@ -104,6 +108,7 @@
     <Content Include="Recipes\Search.recipe.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Scripts\orchard-search-settings.js" />
     <Content Include="Styles\orchard-search-admin.css" />
     <Content Include="Styles\orchard-search-search.css" />
   </ItemGroup>
@@ -123,7 +128,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="web.config" />
+    <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\SearchContentTab.cshtml" />
@@ -145,6 +150,14 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Media\MediaItems.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts\AdminSearch.SiteSettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

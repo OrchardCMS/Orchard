@@ -186,6 +186,11 @@ namespace Orchard.Setup {
                 set { throw new NotImplementedException(); }
             }
 
+            public bool UseCdn {
+                get { return false; }
+                set { throw new NotImplementedException(); }
+            }
+
             public int PageSize {
                 get { return SiteSettingsPart.DefaultPageSize; }
                 set { throw new NotImplementedException(); }
@@ -193,6 +198,11 @@ namespace Orchard.Setup {
 
             public int MaxPageSize {
                 get { return SiteSettingsPart.DefaultPageSize; }
+                set { throw new NotImplementedException(); }
+            }
+
+            public int MaxPagedCount {
+                get { return 0; }
                 set { throw new NotImplementedException(); }
             }
 

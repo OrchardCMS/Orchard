@@ -128,7 +128,14 @@ namespace Orchard.Taxonomies.Drivers {
         }
 
         private TermPart GetOrCreateTerm(TermEntry entry, int taxonomyId, TaxonomyField field) {
-            var term = entry.Id > 0 ? _taxonomyService.GetTerm(entry.Id) : default(TermPart);
+            var term = default(TermPart);
+
+            if (entry.Id > 0)            
+                term = _taxonomyService.GetTerm(entry.Id);            
+                 
+            //Prevents creation of existing term
+            if (term == null && !string.IsNullOrEmpty(entry.Name))
+                term = _taxonomyService.GetTermByName(taxonomyId, entry.Name.Trim());
 
             if (term == null) {
                 var settings = field.PartFieldDefinition.Settings.GetModel<TaxonomyFieldSettings>();
@@ -140,11 +147,9 @@ namespace Orchard.Taxonomies.Drivers {
 
                 var taxonomy = _taxonomyService.GetTaxonomy(taxonomyId);
                 term = _taxonomyService.NewTerm(taxonomy);
-                term.Container = taxonomy.ContentItem;
                 term.Name = entry.Name.Trim();
                 term.Selectable = true;
 
-                _taxonomyService.ProcessPath(term);
                 Services.ContentManager.Create(term, VersionOptions.Published);
                 Services.Notifier.Information(T("The {0} term has been created.", term.Name));
             }

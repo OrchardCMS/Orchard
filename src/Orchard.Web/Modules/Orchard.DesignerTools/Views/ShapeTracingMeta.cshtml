@@ -60,8 +60,8 @@ shapeTracingMetadataHost[@Model.ShapeId].shape = {
         </text>
         }
     ],
-    html: '@Html.Raw(ShapeTracingFactory.FormatJsonValue(RemoveEmptyLines(RemoveBeacons(Display(Model.ChildContent).ToString()))))',
-    templateContent: '@Html.Raw(ShapeTracingFactory.FormatJsonValue(String.IsNullOrWhiteSpace((string)Model.TemplateContent) ? @T("Content not available as coming from source code.").ToString() : (string)Model.TemplateContent))',
+    html: '@Html.Raw(ObjectDumper.FormatJsonValue(RemoveEmptyLines(RemoveBeacons(Display(Model.ChildContent).ToString()))))',
+    templateContent: '@Html.Raw(ObjectDumper.FormatJsonValue(String.IsNullOrWhiteSpace((string)Model.TemplateContent) ? @T("Content not available as coming from source code.").ToString() : (string)Model.TemplateContent))',
     model: { @(new MvcHtmlString((string)@Model.Dump)) }
 };
 

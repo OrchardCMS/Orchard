@@ -19,13 +19,13 @@ namespace Orchard.Environment.Configuration {
         }
 
         IEnumerable<ShellSettings> IShellSettingsManager.LoadSettings() {
-            Logger.Debug("Reading ShellSettings...");
+            Logger.Information("Reading ShellSettings...");
             var settingsList = LoadSettingsInternal().ToArray();
 
             var tenantNamesQuery =
                 from settings in settingsList
                 select settings.Name;
-            Logger.Debug("Returning {0} ShellSettings objects for tenants {1}.", tenantNamesQuery.Count(), String.Join(", ", tenantNamesQuery));
+            Logger.Information("Returning {0} ShellSettings objects for tenants {1}.", tenantNamesQuery.Count(), String.Join(", ", tenantNamesQuery));
             
             return settingsList;
         }
@@ -36,11 +36,11 @@ namespace Orchard.Environment.Configuration {
             if (String.IsNullOrEmpty(settings.Name))
                 throw new ArgumentException("The Name property of the supplied ShellSettings object is null or empty; the settings cannot be saved.", "settings");
 
-            Logger.Debug("Saving ShellSettings for tenant '{0}'...", settings.Name);
+            Logger.Information("Saving ShellSettings for tenant '{0}'...", settings.Name);
             var filePath = Path.Combine(Path.Combine("Sites", settings.Name), _settingsFileName);
             _appDataFolder.CreateFile(filePath, ShellSettingsSerializer.ComposeSettings(settings));
 
-            Logger.Debug("ShellSettings saved successfully; flagging tenant '{0}' for restart.", settings.Name);
+            Logger.Information("ShellSettings saved successfully; flagging tenant '{0}' for restart.", settings.Name);
             _events.Saved(settings);
         }
 

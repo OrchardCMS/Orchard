@@ -2,7 +2,7 @@
    Slovak localisation for Gregorian/Julian calendars for jQuery.
    Written by Vojtech Rinik (vojto@hmm.sk). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['sk'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['sk'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Január','Február','Marec','Apríl','Máj','Jún',
@@ -17,7 +17,7 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['sk'] =
-			$.calendars.calendars.gregorian.prototype.regional['sk'];
+		$.calendars.calendars.julian.prototype.regionalOptions['sk'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['sk'];
 	}
 })(jQuery);

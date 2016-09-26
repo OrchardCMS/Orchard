@@ -9,7 +9,7 @@
     Script.Require("ContentPicker").AtFoot();
     Script.Require("jQueryUI_Sortable").AtFoot();
     Script.Require("jQueryColorBox");
-    Script.Include("nprogress.js", "mprogress.min.js").AtFoot();
+    Script.Include("nprogress.js", "nprogress.min.js").AtFoot();
     Script.Include("orchard-lists-admin.js", "orchard-lists-admin.min.js").AtFoot();
 
     var containerId = ((int?)Model.ContainerId).GetValueOrDefault();
@@ -32,7 +32,7 @@
         ContainerId: containerId,
         ItemContentTypes: itemContentTypes)
     @using (Html.BeginFormAntiForgeryPost()) {
-        @Display.Parts_Container_BulkActions(Options: Model.Options, OtherLists: Model.OtherLists, Container: container)
+        @Display.Parts_Container_BulkActions(Options: Model.Options, Container: container)
         @Display.ListViewButtons(Providers: Model.ListViewProviders, ActiveProvider: Model.ListViewProvider)
         @Display(Model.ListView)
     }

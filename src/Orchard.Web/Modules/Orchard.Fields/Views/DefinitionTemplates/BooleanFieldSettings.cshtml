@@ -47,7 +47,7 @@
         @Html.SelectOption((object)true, Model.DefaultValue.HasValue && Model.DefaultValue == true, T("True").ToString())
         @Html.SelectOption((object)false, Model.DefaultValue.HasValue && Model.DefaultValue == false, T("False").ToString())
     </select> 
-    <span class="hint">@T("When Checkbox is selected, the label for 'on' will be used.")</span>
+    <span class="hint">@T("The default value to select.")</span>
 </fieldset>
 <fieldset>
     <div>

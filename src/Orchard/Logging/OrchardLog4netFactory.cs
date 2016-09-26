@@ -13,7 +13,7 @@ namespace Orchard.Logging {
             : this(ConfigurationManager.AppSettings["log4net.Config"], hostEnvironment) { }
 
         public OrchardLog4netFactory(string configFilename, IHostEnvironment hostEnvironment) {
-            if (!_isFileWatched && !string.IsNullOrWhiteSpace(configFilename) && hostEnvironment.IsFullTrust) {
+            if (!_isFileWatched && !string.IsNullOrWhiteSpace(configFilename)) {
                 // Only monitor configuration file in full trust
                 XmlConfigurator.ConfigureAndWatch(GetConfigFile(configFilename));
                 _isFileWatched = true;

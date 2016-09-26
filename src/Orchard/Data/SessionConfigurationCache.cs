@@ -71,9 +71,6 @@ namespace Orchard.Data {
         }
 
         private void StoreConfiguration(ConfigurationCache cache) {
-            if (!_hostEnvironment.IsFullTrust)
-                return;
-
             var pathName = GetPathName(_shellSettings.Name);
 
             try {
@@ -93,9 +90,6 @@ namespace Orchard.Data {
         }
 
         private ConfigurationCache ReadConfiguration(string hash) {
-            if (!_hostEnvironment.IsFullTrust)
-                return null;
-
             var pathName = GetPathName(_shellSettings.Name);
 
             if (!_appDataFolder.FileExists(pathName))
@@ -141,6 +135,10 @@ namespace Orchard.Data {
             //   xcopy migrations work as expected.
             var pathName = GetPathName(_shellSettings.Name);
             hash.AddString(_appDataFolder.MapPath(pathName).ToLowerInvariant());
+
+            // Orchard version, to rebuild the mappings for each new version
+            var orchardVersion = new System.Reflection.AssemblyName(typeof(Orchard.ContentManagement.ContentItem).Assembly.FullName).Version.ToString();
+            hash.AddString(orchardVersion);
 
             // Shell settings data
             hash.AddString(_shellSettings.DataProvider);

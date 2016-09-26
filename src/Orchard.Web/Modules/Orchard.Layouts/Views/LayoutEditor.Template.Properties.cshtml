@@ -1,0 +1,26 @@
+﻿@using Orchard.Layouts.ViewModels
+<li class="layout-panel-item layout-panel-action layout-panel-action-properties layout-popup-trigger" title="@T("Edit {0} properties (Space)", Model.ElementTypeName)">
+    <i class="fa fa-edit"></i>
+    <ul class="layout-popup layout-popup-edit" orc-layout-popup>
+        <li class="layout-popup-item layout-popup-input">
+            <label>@T("HTML ID:")</label>
+            <input type="text" ng-model="element.htmlId" />
+        </li>
+        <li class="layout-popup-item layout-popup-input">
+            <label>@T("CSS classes:")</label>
+            <input type="text" ng-model="element.htmlClass" />
+        </li>
+        <li class="layout-popup-item layout-popup-input">
+            <label>@T("CSS styles:")</label>
+            <input type="text" ng-model="element.htmlStyle" />
+        </li>
+        @if (Model.Items != null) {
+            foreach (LayoutEditorPropertiesItem item in Model.Items) {
+                <li class="layout-popup-item layout-popup-input">
+                    <label>@item.Label</label>
+                    <input type="text" ng-model="@item.Model" />
+                </li>
+            }
+        }
+    </ul>
+</li>

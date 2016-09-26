@@ -19,7 +19,4 @@ namespace Orchard.Localization.Services {
             return new CultureSelectorResult { Priority = -5, CultureName = currentCultureName };
         }
     }
-
-    public class CultureSettings {
-    }
 }

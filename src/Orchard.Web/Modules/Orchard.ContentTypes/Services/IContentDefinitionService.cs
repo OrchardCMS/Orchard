@@ -26,5 +26,6 @@ namespace Orchard.ContentTypes.Services {
         void AddFieldToPart(string fieldName, string fieldTypeName, string partName);
         void AddFieldToPart(string fieldName, string displayName, string fieldTypeName, string partName);
         void RemoveFieldFromPart(string fieldName, string partName);
+        void AlterField(EditPartViewModel partViewModel, EditFieldNameViewModel fieldViewModel);
     }
 }

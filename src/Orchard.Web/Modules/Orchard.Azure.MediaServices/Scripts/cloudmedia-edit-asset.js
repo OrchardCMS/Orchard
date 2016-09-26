@@ -2,8 +2,11 @@
 /// <reference path="typings/jqueryui.d.ts" />
 var Orchard;
 (function (Orchard) {
+    var Azure;
     (function (Azure) {
+        var MediaServices;
         (function (MediaServices) {
+            var AssetEdit;
             (function (AssetEdit) {
                 $(function () {
                     var localStorage = window["localStorage"];
@@ -15,11 +18,7 @@ var Orchard;
                         active: localStorage && localStorage.getItem ? localStorage.getItem("selectedAssetTab") : null
                     }).show();
                 });
-            })(MediaServices.AssetEdit || (MediaServices.AssetEdit = {}));
-            var AssetEdit = MediaServices.AssetEdit;
-        })(Azure.MediaServices || (Azure.MediaServices = {}));
-        var MediaServices = Azure.MediaServices;
-    })(Orchard.Azure || (Orchard.Azure = {}));
-    var Azure = Orchard.Azure;
+            })(AssetEdit = MediaServices.AssetEdit || (MediaServices.AssetEdit = {}));
+        })(MediaServices = Azure.MediaServices || (Azure.MediaServices = {}));
+    })(Azure = Orchard.Azure || (Orchard.Azure = {}));
 })(Orchard || (Orchard = {}));
-//# sourceMappingURL=cloudmedia-edit-asset.js.map

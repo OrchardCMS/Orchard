@@ -5,7 +5,7 @@ using Orchard.Environment.Configuration;
 
 namespace Orchard.Data.Migration.Interpreters {
     public class SqlCeCommandInterpreter : ICommandInterpreter<DropIndexCommand> {
-        private readonly Dialect _dialect;
+        private readonly Lazy<Dialect> _dialectLazy;
         private readonly ShellSettings _shellSettings;
 
         public string DataProvider {
@@ -16,15 +16,14 @@ namespace Orchard.Data.Migration.Interpreters {
             ShellSettings shellSettings,
             ISessionFactoryHolder sessionFactoryHolder) {
                 _shellSettings = shellSettings;
-                var configuration = sessionFactoryHolder.GetConfiguration();
-                _dialect = Dialect.GetDialect(configuration.Properties);
+                _dialectLazy = new Lazy<Dialect>(() => Dialect.GetDialect(sessionFactoryHolder.GetConfiguration().Properties));
         }
 
         public string[] CreateStatements(DropIndexCommand command) {
             
             return new [] { String.Format("drop index {0}.{1}",
-                _dialect.QuoteForTableName(PrefixTableName(command.TableName)),
-                _dialect.QuoteForColumnName(PrefixTableName(command.IndexName)))
+                _dialectLazy.Value.QuoteForTableName(PrefixTableName(command.TableName)),
+                _dialectLazy.Value.QuoteForColumnName(PrefixTableName(command.IndexName)))
             };
         }
 

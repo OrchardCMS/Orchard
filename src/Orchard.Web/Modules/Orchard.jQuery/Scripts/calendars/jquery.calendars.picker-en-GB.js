@@ -2,8 +2,8 @@
    English/UK localisation for calendars datepicker for jQuery.
    Stuart. */
 (function($) {
-	$.calendars.picker.regional['en-GB'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['en-GB'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: 'Prev', prevStatus: 'Show the previous month',
 		prevJumpText: '&lt;&lt;', prevJumpStatus: 'Show the previous year',
 		nextText: 'Next', nextStatus: 'Show the next month',
@@ -17,5 +17,5 @@
 		dayStatus: 'Select DD, M d, yyyy', defaultStatus: 'Select a date',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['en-GB']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['en-GB']);
 })(jQuery);

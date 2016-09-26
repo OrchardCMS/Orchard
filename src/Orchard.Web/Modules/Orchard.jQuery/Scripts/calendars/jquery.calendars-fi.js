@@ -2,7 +2,7 @@
    Finnish localisation for Gregorian/Julian calendars for jQuery.
    Written by Harri Kilpiö (harrikilpio@gmail.com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['fi'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['fi'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
         monthNames: ['Tammikuu','Helmikuu','Maaliskuu','Huhtikuu','Toukokuu','Kes&auml;kuu',
@@ -17,7 +17,7 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['fi'] =
-			$.calendars.calendars.gregorian.prototype.regional['fi'];
+		$.calendars.calendars.julian.prototype.regionalOptions['fi'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['fi'];
 	}
 })(jQuery);

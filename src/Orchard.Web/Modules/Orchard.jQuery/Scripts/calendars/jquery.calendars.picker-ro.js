@@ -2,8 +2,8 @@
    Romanian localisation for calendars datepicker for jQuery.
    Written by Edmond L. (ll_edmond@walla.com) and Ionut G. Stan (ionut.g.stan@gmail.com). */
 (function($) {
-	$.calendars.picker.regional['ro'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['ro'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: '&laquo;Precedenta', prevStatus: 'Arata luna precedenta',
 		prevJumpText: '&laquo;&laquo;', prevJumpStatus: '',
 		nextText: 'Urmatoare&raquo;', nextStatus: 'Arata luna urmatoare',
@@ -17,5 +17,5 @@
 		dayStatus: 'Selecteaza DD, M d', defaultStatus: 'Selecteaza o data',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['ro']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['ro']);
 })(jQuery);

@@ -2,8 +2,8 @@
    Italian localisation for calendars datepicker for jQuery.
    Written by Apaella (apaella@gmail.com). */
 (function($) {
-	$.calendars.picker.regional['it'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['it'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: '&#x3c;Prec', prevStatus: 'Mese precedente',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: 'Mostra l\'anno precedente',
 		nextText: 'Succ&#x3e;', nextStatus: 'Mese successivo',
@@ -17,5 +17,5 @@
 		dayStatus: '\'Seleziona\' DD, M d', defaultStatus: 'Scegliere una data',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['it']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['it']);
 })(jQuery);

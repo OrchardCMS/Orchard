@@ -1,5 +1,5 @@
 ﻿namespace Orchard.ContentTypes.Extensions {
-    public static class StrinExtensions {
+    public static class StringExtensions {
         public static string TrimEnd(this string rough, string trim = "") {
             if (rough == null)
                 return null;

@@ -16,6 +16,9 @@ using Orchard.UI.Admin;
 using Orchard.UI.Notify;
 using Orchard.Widgets.Models;
 using Orchard.Widgets.Services;
+using Orchard.ContentManagement.Aspects;
+using Orchard.Core.Contents.Settings;
+using Orchard.Localization.Services;
 
 namespace Orchard.Widgets.Controllers {
 
@@ -25,18 +28,21 @@ namespace Orchard.Widgets.Controllers {
         private readonly IWidgetsService _widgetsService;
         private readonly ISiteThemeService _siteThemeService;
         private readonly IVirtualPathProvider _virtualPathProvider;
+        private readonly ICultureManager _cultureManager;
 
         public AdminController(
             IOrchardServices services,
             IWidgetsService widgetsService,
             IShapeFactory shapeFactory,
             ISiteThemeService siteThemeService,
-            IVirtualPathProvider virtualPathProvider) {
+            IVirtualPathProvider virtualPathProvider,
+            ICultureManager cultureManager) {
 
             Services = services;
             _widgetsService = widgetsService;
             _siteThemeService = siteThemeService;
             _virtualPathProvider = virtualPathProvider;
+            _cultureManager = cultureManager;
 
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
@@ -48,7 +54,7 @@ namespace Orchard.Widgets.Controllers {
         public ILogger Logger { get; set; }
         dynamic Shape { get; set; }
 
-        public ActionResult Index(int? layerId) {
+        public ActionResult Index(int? layerId, string culture) {
             ExtensionDescriptor currentTheme = _siteThemeService.GetSiteTheme();
             if (currentTheme == null) {
                 Services.Notifier.Error(T("To manage widgets you must have a theme enabled."));
@@ -77,12 +83,26 @@ namespace Orchard.Widgets.Controllers {
             string zonePreviewImagePath = string.Format("{0}/{1}/ThemeZonePreview.png", currentTheme.Location, currentTheme.Id);
             string zonePreviewImage = _virtualPathProvider.FileExists(zonePreviewImagePath) ? zonePreviewImagePath : null;
 
+            var widgets = _widgetsService.GetWidgets();
+
+            if (!String.IsNullOrWhiteSpace(culture)) {
+                widgets = widgets.Where(x => {
+                    if(x.Has<ILocalizableAspect>()) {
+                        return String.Equals(x.As<ILocalizableAspect>().Culture, culture, StringComparison.InvariantCultureIgnoreCase);
+                    }
+                    
+                    return false;
+                }).ToList();
+            }
+
             var viewModel = Shape.ViewModel()
                 .CurrentTheme(currentTheme)
                 .CurrentLayer(currentLayer)
+                .CurrentCulture(culture)
                 .Layers(layers)
-                .Widgets(_widgetsService.GetWidgets())
+                .Widgets(widgets)
                 .Zones(currentThemesZones)
+                .Cultures(_cultureManager.ListCultures())
                 .OrphanZones(allZones.Except(currentThemesZones))
                 .OrphanWidgets(_widgetsService.GetOrphanedWidgets())
                 .ZonePreviewImage(zonePreviewImage);
@@ -168,11 +188,25 @@ namespace Orchard.Widgets.Controllers {
         }
 
         [HttpPost, ActionName("AddWidget")]
-        public ActionResult AddWidgetPOST([Bind(Prefix = "WidgetPart.LayerId")] int layerId, string widgetType, string returnUrl) {
+        [FormValueRequired("submit.Save")]
+        public ActionResult AddWidgetSavePOST([Bind(Prefix = "WidgetPart.LayerId")] int layerId, string widgetType, string returnUrl) {
+            return AddWidgetPOST(layerId, widgetType, returnUrl, contentItem => {
+                if (!contentItem.Has<IPublishingControlAspect>() && !contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
+                    Services.ContentManager.Publish(contentItem);
+            });
+        }
+
+        [HttpPost, ActionName("AddWidget")]
+        [FormValueRequired("submit.Publish")]
+        public ActionResult AddWidgetPublishPOST([Bind(Prefix = "WidgetPart.LayerId")] int layerId, string widgetType, string returnUrl) {
+            return AddWidgetPOST(layerId, widgetType, returnUrl, contentItem => Services.ContentManager.Publish(contentItem));
+        }
+
+        private ActionResult AddWidgetPOST([Bind(Prefix = "WidgetPart.LayerId")] int layerId, string widgetType, string returnUrl, Action<ContentItem> conditionallyPublish) {
             if (!IsAuthorizedToManageWidgets())
                 return new HttpUnauthorizedResult();
 
-            WidgetPart widgetPart = _widgetsService.CreateWidget(layerId, widgetType, "", "", "");
+            var widgetPart = _widgetsService.CreateWidget(layerId, widgetType, "", "", "");
             if (widgetPart == null)
                 return HttpNotFound();
 
@@ -180,6 +214,7 @@ namespace Orchard.Widgets.Controllers {
             try {
                 // override the CommonPart's persisting of the current container
                 widgetPart.LayerPart = _widgetsService.GetLayer(layerId);
+                conditionallyPublish(widgetPart.ContentItem);
             }
             catch (Exception exception) {
                 Logger.Error(T("Creating widget failed: {0}", exception.Message).Text);
@@ -316,11 +351,27 @@ namespace Orchard.Widgets.Controllers {
         [HttpPost, ActionName("EditWidget")]
         [FormValueRequired("submit.Save")]
         public ActionResult EditWidgetSavePOST(int id, [Bind(Prefix = "WidgetPart.LayerId")] int layerId, string returnUrl) {
+            return EditWidgetPOST(id, layerId, returnUrl, contentItem => {
+                if (!contentItem.Has<IPublishingControlAspect>() && !contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
+                    Services.ContentManager.Publish(contentItem);
+            });
+        }
+
+        [HttpPost, ActionName("EditWidget")]
+        [FormValueRequired("submit.Publish")]
+        public ActionResult EditWidgetPublishPOST(int id, [Bind(Prefix = "WidgetPart.LayerId")] int layerId, string returnUrl) {
+            return EditWidgetPOST(id, layerId, returnUrl, contentItem => {
+                Services.ContentManager.Publish(contentItem);
+            });
+        }
+
+        private ActionResult EditWidgetPOST(int id, int layerId, string returnUrl, Action<ContentItem> conditionallyPublish) {
             if (!IsAuthorizedToManageWidgets())
                 return new HttpUnauthorizedResult();
 
             WidgetPart widgetPart = null;
-            widgetPart = _widgetsService.GetWidget(id);
+            widgetPart = Services.ContentManager.Get<WidgetPart>(id, VersionOptions.DraftRequired);
+
             if (widgetPart == null)
                 return HttpNotFound();
             try {
@@ -332,8 +383,11 @@ namespace Orchard.Widgets.Controllers {
                     return View(model);
                 }
 
+                conditionallyPublish(widgetPart.ContentItem);
+
                 Services.Notifier.Information(T("Your {0} has been saved.", widgetPart.TypeDefinition.DisplayName));
-            } catch (Exception exception) {
+            }
+            catch (Exception exception) {
                 Logger.Error(T("Editing widget failed: {0}", exception.Message).Text);
                 Services.Notifier.Error(T("Editing widget failed: {0}", exception.Message));
             }

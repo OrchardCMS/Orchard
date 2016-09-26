@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -12,7 +12,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Orchard.Users</RootNamespace>
     <AssemblyName>Orchard.Users</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -49,10 +49,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\lib\newtonsoft.json\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -63,6 +59,10 @@
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.Helpers.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
@@ -71,10 +71,21 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Activities\SignInUserActivity.cs" />
+    <Compile Include="Activities\VerifyUserUnicityActivity.cs" />
+    <Compile Include="Activities\ApproveUserActivity.cs" />
+    <Compile Include="Activities\CreateUserActivity.cs" />
+    <Compile Include="Activities\UserActivity.cs" />
+    <Compile Include="Activities\UserIsApprovedActivity.cs" />
     <Compile Include="Commands\UserCommands.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Drivers\UserPartDriver.cs" />
+    <Compile Include="Drivers\UserPartPasswordDriver.cs" />
+    <Compile Include="Forms\SignInUserForm.cs" />
+    <Compile Include="Forms\VerifyUserUnicityForm.cs" />
+    <Compile Include="Forms\CreateUserForm.cs" />
+    <Compile Include="Handlers\WorkflowUserEventHandler.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Events\UserContext.cs" />
     <Compile Include="Handlers\RegistrationSettingsPartHandler.cs" />
@@ -95,6 +106,7 @@
     <Compile Include="Services\MissingSettingsBanner.cs" />
     <Compile Include="Services\UserService.cs" />
     <Compile Include="ViewModels\UserCreateViewModel.cs" />
+    <Compile Include="ViewModels\UserEditPasswordViewModel.cs" />
     <Compile Include="ViewModels\UserEditViewModel.cs" />
     <Compile Include="ViewModels\UsersIndexViewModel.cs" />
   </ItemGroup>
@@ -125,6 +137,14 @@
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Orchard.Forms\Orchard.Forms.csproj">
+      <Project>{642a49d7-8752-4177-80d6-bfbbcfad3de0}</Project>
+      <Name>Orchard.Forms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Workflows\Orchard.Workflows.csproj">
+      <Project>{7059493c-8251-4764-9c1e-2368b8b485bc}</Project>
+      <Name>Orchard.Workflows</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Items\Content-User.Edit.cshtml" />
@@ -138,6 +158,7 @@
     <Content Include="Views\Account\RegistrationPending.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\User.Edit.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\User.Create.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts\User.EditPassword.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Account\RequestLostPassword.cshtml" />
@@ -149,7 +170,7 @@
     <Content Include="Views\LogOn.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="web.config" />
+    <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Styles\Web.config">
@@ -167,6 +188,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Template.User.Wrapper.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Placement.info" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

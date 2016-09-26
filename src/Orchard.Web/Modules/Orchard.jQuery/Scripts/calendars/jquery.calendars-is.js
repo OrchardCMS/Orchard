@@ -2,7 +2,7 @@
    Icelandic localisation for Gregorian/Julian calendars for jQuery.
    Written by Haukur H. Thorsson (haukur@eskill.is). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['is'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['is'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Janúar','Febrúar','Mars','Apríl','Maí','Júní',
@@ -17,7 +17,7 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['is'] =
-			$.calendars.calendars.gregorian.prototype.regional['is'];
+		$.calendars.calendars.julian.prototype.regionalOptions['is'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['is'];
 	}
 })(jQuery);

@@ -2,7 +2,7 @@
    Hebrew localisation for Gregorian/Julian calendars for jQuery.
    Written by Amir Hardon (ahardon at gmail dot com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['he'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['he'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['ינואר','פברואר','מרץ','אפריל','מאי','יוני',
@@ -17,7 +17,7 @@
 		isRTL: true
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['he'] =
-			$.calendars.calendars.gregorian.prototype.regional['he'];
+		$.calendars.calendars.julian.prototype.regionalOptions['he'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['he'];
 	}
 })(jQuery);

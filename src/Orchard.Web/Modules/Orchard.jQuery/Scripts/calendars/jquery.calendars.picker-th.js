@@ -2,8 +2,8 @@
    Thai localisation for calendars datepicker for jQuery.
    Written by pipo (pipo@sixhead.com). */
 (function($) {
-	$.calendars.picker.regional['th'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['th'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: '&laquo;&nbsp;ย้อน', prevStatus: '',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: '',
 		nextText: 'ถัดไป&nbsp;&raquo;', nextStatus: '',
@@ -17,5 +17,5 @@
 		dayStatus: 'DD, M d', defaultStatus: '',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['th']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['th']);
 })(jQuery);

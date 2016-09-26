@@ -2,8 +2,8 @@
    Slovenian localisation for calendars datepicker for jQuery.
    Written by Jaka Jancar (jaka@kubje.org). */
 (function($) {
-	$.calendars.picker.regional['sl'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['sl'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: '&lt;Prej&#x161;nji', prevStatus: 'Prika&#x17E;i prej&#x161;nji mesec',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: '',
 		nextText: 'Naslednji&gt;', nextStatus: 'Prika&#x17E;i naslednji mesec',
@@ -17,5 +17,5 @@
 		dayStatus: 'Izberi DD, d MM yy', defaultStatus: 'Izbira datuma',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['sl']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['sl']);
 })(jQuery);

@@ -2,8 +2,8 @@
    Slovak localisation for calendars datepicker for jQuery.
    Written by Vojtech Rinik (vojto@hmm.sk). */
 (function($) {
-	$.calendars.picker.regional['sk'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['sk'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: '&#x3c;Predchádzajúci',  prevStatus: '',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: '',
 		nextText: 'Nasledujúci&#x3e;', nextStatus: '',
@@ -17,5 +17,5 @@
 		dayStatus: 'DD. M d', defaultStatus: '',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['sk']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['sk']);
 })(jQuery);

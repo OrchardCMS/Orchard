@@ -20,6 +20,8 @@ namespace Orchard.ContentPermissions.Settings {
         public string EditOwn { get; set; }
         public string Delete { get; set; }
         public string DeleteOwn { get; set; }
+        public string Preview { get; set; }
+        public string PreviewOwn { get; set; }
 
         public string DisplayedRoles { get; set; }
     }
@@ -63,6 +65,8 @@ namespace Orchard.ContentPermissions.Settings {
                     EditOwn = ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry { Role = x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.EditOwnContent, UserSimulation.Create(x), null) })),
                     Delete = ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry { Role = x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.DeleteContent, UserSimulation.Create(x), null) })),
                     DeleteOwn = ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry { Role = x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.DeleteOwnContent, UserSimulation.Create(x), null) })),
+                    Preview = ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry { Role = x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.PreviewContent, UserSimulation.Create(x), null) })),
+                    PreviewOwn = ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry { Role =x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.PreviewOwnContent, UserSimulation.Create(x), null) })),
                     DisplayedRoles = ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry { Role = x, Checked = true })),
                 };
             }
@@ -76,6 +80,8 @@ namespace Orchard.ContentPermissions.Settings {
                 EditOwnRoles = ContentPermissionsPartViewModel.ExtractRoleEntries(allRoles, settings.EditOwn),
                 DeleteRoles = ContentPermissionsPartViewModel.ExtractRoleEntries(allRoles, settings.Delete),
                 DeleteOwnRoles = ContentPermissionsPartViewModel.ExtractRoleEntries(allRoles, settings.DeleteOwn),
+                PreviewRoles = ContentPermissionsPartViewModel.ExtractRoleEntries(allRoles, settings.Preview),
+                PreviewOwnRoles = ContentPermissionsPartViewModel.ExtractRoleEntries(allRoles, settings.PreviewOwn),
                 AllRoles = ContentPermissionsPartViewModel.ExtractRoleEntries(allRoles, settings.DisplayedRoles)
             };
 
@@ -88,6 +94,8 @@ namespace Orchard.ContentPermissions.Settings {
             model.EditOwnRoles = model.EditOwnRoles.Select(x => new RoleEntry { Role = x.Role, Checked = x.Checked, Enabled = _authorizer.Authorize(Core.Contents.Permissions.EditOwnContent) }).ToList();
             model.DeleteRoles = model.DeleteRoles.Select(x => new RoleEntry { Role = x.Role, Checked = x.Checked, Enabled = _authorizer.Authorize(Core.Contents.Permissions.DeleteContent) }).ToList();
             model.DeleteOwnRoles = model.DeleteOwnRoles.Select(x => new RoleEntry { Role = x.Role, Checked = x.Checked, Enabled = _authorizer.Authorize(Core.Contents.Permissions.DeleteOwnContent) }).ToList();
+            model.PreviewRoles = model.PreviewRoles.Select(x => new RoleEntry { Role = x.Role, Checked = x.Checked, Enabled = _authorizer.Authorize(Core.Contents.Permissions.PreviewContent) }).ToList();
+            model.PreviewOwnRoles = model.PreviewOwnRoles.Select(x => new RoleEntry { Role = x.Role, Checked = x.Checked, Enabled = _authorizer.Authorize(Core.Contents.Permissions.PreviewOwnContent) }).ToList();
 
             // initialize default value
             model.ViewRoles = model.ViewRoles.Select(x => new RoleEntry { Role = x.Role, Checked = x.Checked, Enabled = x.Enabled, Default = _authorizationService.TryCheckAccess(Core.Contents.Permissions.ViewContent, UserSimulation.Create(x.Role), null) }).ToList();
@@ -98,6 +106,8 @@ namespace Orchard.ContentPermissions.Settings {
             model.EditOwnRoles = model.EditOwnRoles.Select(x => new RoleEntry { Role = x.Role, Checked = x.Checked, Enabled = x.Enabled, Default = _authorizationService.TryCheckAccess(Core.Contents.Permissions.EditOwnContent, UserSimulation.Create(x.Role), null) }).ToList();
             model.DeleteRoles = model.DeleteRoles.Select(x => new RoleEntry { Role = x.Role, Checked = x.Checked, Enabled = x.Enabled, Default = _authorizationService.TryCheckAccess(Core.Contents.Permissions.DeleteContent, UserSimulation.Create(x.Role), null) }).ToList();
             model.DeleteOwnRoles = model.DeleteOwnRoles.Select(x => new RoleEntry { Role = x.Role, Checked = x.Checked, Enabled = x.Enabled, Default = _authorizationService.TryCheckAccess(Core.Contents.Permissions.DeleteOwnContent, UserSimulation.Create(x.Role), null) }).ToList();
+            model.PreviewRoles = model.PreviewRoles.Select(x => new RoleEntry { Role = x.Role, Checked = x.Checked, Enabled = x.Enabled, Default = _authorizationService.TryCheckAccess(Core.Contents.Permissions.PreviewContent, UserSimulation.Create(x.Role), null) }).ToList();
+            model.PreviewOwnRoles = model.PreviewOwnRoles.Select(x => new RoleEntry { Role = x.Role, Checked = x.Checked, Enabled = x.Enabled, Default = _authorizationService.TryCheckAccess(Core.Contents.Permissions.PreviewOwnContent, UserSimulation.Create(x.Role), null) }).ToList();
 
             yield return DefinitionTemplate(model);
         }
@@ -149,6 +159,14 @@ namespace Orchard.ContentPermissions.Settings {
                 builder.WithSetting("ContentPermissionsPartSettings.DeleteOwn", ContentPermissionsPartViewModel.SerializePermissions(model.DeleteOwnRoles));
             }
 
+            if (_authorizer.Authorize(Core.Contents.Permissions.PreviewContent)) {
+                builder.WithSetting("ContentPermissionsPartSettings.Preview", ContentPermissionsPartViewModel.SerializePermissions(model.PreviewRoles));
+            }
+
+            if (_authorizer.Authorize(Core.Contents.Permissions.PreviewOwnContent)) {
+                builder.WithSetting("ContentPermissionsPartSettings.PreviewOwn", ContentPermissionsPartViewModel.SerializePermissions(model.PreviewOwnRoles));
+            }
+
             builder.WithSetting("ContentPermissionsPartSettings.DisplayedRoles", ContentPermissionsPartViewModel.SerializePermissions(model.AllRoles));
 
             // disable permissions the current user doesn't have
@@ -160,6 +178,8 @@ namespace Orchard.ContentPermissions.Settings {
             model.EditOwnRoles = model.EditOwnRoles.Select(x => new RoleEntry { Role = x.Role, Checked = x.Checked, Enabled = _authorizer.Authorize(Core.Contents.Permissions.EditOwnContent) }).ToList();
             model.DeleteRoles = model.DeleteRoles.Select(x => new RoleEntry { Role = x.Role, Checked = x.Checked, Enabled = _authorizer.Authorize(Core.Contents.Permissions.DeleteContent) }).ToList();
             model.DeleteOwnRoles = model.DeleteOwnRoles.Select(x => new RoleEntry { Role = x.Role, Checked = x.Checked, Enabled = _authorizer.Authorize(Core.Contents.Permissions.DeleteOwnContent) }).ToList();
+            model.PreviewRoles = model.PreviewRoles.Select(x => new RoleEntry { Role = x.Role, Checked = x.Checked, Enabled = _authorizer.Authorize(Core.Contents.Permissions.PreviewContent) }).ToList();
+            model.PreviewOwnRoles = model.PreviewOwnRoles.Select(x => new RoleEntry { Role = x.Role, Checked = x.Checked, Enabled = _authorizer.Authorize(Core.Contents.Permissions.PreviewOwnContent) }).ToList();
 
             // initialize default value
             model.ViewRoles = model.ViewRoles.Select(x => new RoleEntry { Role = x.Role, Checked = x.Checked, Enabled = x.Enabled, Default = _authorizationService.TryCheckAccess(Core.Contents.Permissions.ViewContent, UserSimulation.Create(x.Role), null) }).ToList();
@@ -170,6 +190,8 @@ namespace Orchard.ContentPermissions.Settings {
             model.EditOwnRoles = model.EditOwnRoles.Select(x => new RoleEntry { Role = x.Role, Checked = x.Checked, Enabled = x.Enabled, Default = _authorizationService.TryCheckAccess(Core.Contents.Permissions.EditOwnContent, UserSimulation.Create(x.Role), null) }).ToList();
             model.DeleteRoles = model.DeleteRoles.Select(x => new RoleEntry { Role = x.Role, Checked = x.Checked, Enabled = x.Enabled, Default = _authorizationService.TryCheckAccess(Core.Contents.Permissions.DeleteContent, UserSimulation.Create(x.Role), null) }).ToList();
             model.DeleteOwnRoles = model.DeleteOwnRoles.Select(x => new RoleEntry { Role = x.Role, Checked = x.Checked, Enabled = x.Enabled, Default = _authorizationService.TryCheckAccess(Core.Contents.Permissions.DeleteOwnContent, UserSimulation.Create(x.Role), null) }).ToList();
+            model.PreviewRoles = model.PreviewRoles.Select(x => new RoleEntry { Role = x.Role, Checked = x.Checked, Enabled = x.Enabled, Default = _authorizationService.TryCheckAccess(Core.Contents.Permissions.PreviewContent, UserSimulation.Create(x.Role), null) }).ToList();
+            model.PreviewOwnRoles = model.PreviewOwnRoles.Select(x => new RoleEntry { Role = x.Role, Checked = x.Checked, Enabled = x.Enabled, Default = _authorizationService.TryCheckAccess(Core.Contents.Permissions.PreviewOwnContent, UserSimulation.Create(x.Role), null) }).ToList();
 
             yield return DefinitionTemplate(model);
         }

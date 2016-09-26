@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -12,7 +12,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Orchard.Azure</RootNamespace>
     <AssemblyName>Orchard.Azure</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -51,54 +51,57 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\lib\log4net\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.ApplicationServer.Caching.AzureClientHelper, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.ApplicationServer.Caching.AzureClientHelper">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\lib\windowsazure\Microsoft.ApplicationServer.Caching.AzureClientHelper.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.ApplicationServer.Caching.Client, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.ApplicationServer.Caching.Client">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\lib\windowsazure\Microsoft.ApplicationServer.Caching.Client.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.ApplicationServer.Caching.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.ApplicationServer.Caching.Core">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\lib\windowsazure\Microsoft.ApplicationServer.Caching.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Data.Services.Client, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Data.Services.Client">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\lib\windowsazure\Microsoft.Data.Services.Client.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.WindowsAzure.Configuration, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.WindowsAzure.Configuration">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\lib\windowsazure\Microsoft.WindowsAzure.Configuration.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.WindowsAzure.Diagnostics.StorageUtility, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\lib\windowsazure\Microsoft.WindowsAzure.Diagnostics.StorageUtility.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.WindowsAzure.ServiceRuntime, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.WindowsAzure.ServiceRuntime">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\lib\windowsazure\Microsoft.WindowsAzure.ServiceRuntime.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.WindowsAzure.Storage, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.WindowsAzure.Storage">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\lib\windowsazure\Microsoft.WindowsAzure.Storage.dll</HintPath>
     </Reference>
-    <Reference Include="NHibernate, Version=3.3.1.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+    <Reference Include="Newtonsoft.Json">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\newtonsoft.json\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\lib\nhibernate\NHibernate.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
+    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.Extensions" />
-    <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Web.Mvc">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Services\Environment\Configuration\DefaultPlatformConfigurationAccessor.cs" />
@@ -116,10 +119,6 @@
     <ProjectReference Include="..\Orchard.OutputCache\Orchard.OutputCache.csproj">
       <Project>{6e444ff1-a47c-4cf6-bb3f-507c8ebd776d}</Project>
       <Name>Orchard.OutputCache</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Orchard.TaskLease\Orchard.TaskLease.csproj">
-      <Project>{3f72a4e9-7b72-4260-b010-c16ec54f9baf}</Project>
-      <Name>Orchard.TaskLease</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

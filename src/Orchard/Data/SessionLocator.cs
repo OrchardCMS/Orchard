@@ -6,6 +6,7 @@ using System.Linq;
 using NHibernate;
 using NHibernate.SqlCommand;
 using NHibernate.Type;
+using Orchard.ContentManagement;
 using Orchard.Exceptions;
 using Orchard.Logging;
 using Orchard.Security;
@@ -14,15 +15,19 @@ namespace Orchard.Data {
     public class SessionLocator : ISessionLocator, ITransactionManager, IDisposable {
         private readonly ISessionFactoryHolder _sessionFactoryHolder;
         private readonly IEnumerable<ISessionInterceptor> _interceptors;
+        private Func<IContentManagerSession> _contentManagerSessionFactory;
+
         private ISession _session;
-        private ITransaction _transaction;
-        private bool _cancelled;
+        private IContentManagerSession _contentManagerSession;
 
         public SessionLocator(
-            ISessionFactoryHolder sessionFactoryHolder, 
+            ISessionFactoryHolder sessionFactoryHolder,
+            Func<IContentManagerSession> contentManagerSessionFactory,
             IEnumerable<ISessionInterceptor> interceptors) {
             _sessionFactoryHolder = sessionFactoryHolder;
             _interceptors = interceptors;
+            _contentManagerSessionFactory = contentManagerSessionFactory;
+
             Logger = NullLogger.Instance;
             IsolationLevel = IsolationLevel.ReadCommitted;
         }
@@ -32,19 +37,13 @@ namespace Orchard.Data {
 
         public ISession For(Type entityType) {
             Logger.Debug("Acquiring session for {0}", entityType);
-
-            ((ITransactionManager)this).Demand();
+            Demand();
 
             return _session;
         }
 
         public void Demand() {
-            EnsureSession();
-
-            if (_transaction == null) {
-                Logger.Debug("Creating transaction on Demand");
-                _transaction = _session.BeginTransaction(IsolationLevel);
-            }
+            EnsureSession(IsolationLevel);
         }
 
         public void RequireNew() {
@@ -52,71 +51,51 @@ namespace Orchard.Data {
         }
 
         public void RequireNew(IsolationLevel level) {
-            EnsureSession();
-
-            if (_cancelled) {
-                if (_transaction != null) {
-                    _transaction.Rollback();
-                    _transaction.Dispose();
-                    _transaction = null;
-                }
-
-                _cancelled = false;
-            }
-            else {
-                if (_transaction != null) {
-                    _transaction.Commit();
-                }
-            }
-
-            Logger.Debug("Creating new transaction with isolation level {0}", level);
-            _transaction = _session.BeginTransaction(level);
+            DisposeSession();
+            EnsureSession(level);
         }
 
         public void Cancel() {
-            Logger.Debug("Transaction cancelled flag set");
-            _cancelled = true;
+            if (_session!= null && !_session.Transaction.WasRolledBack && _session.Transaction.IsActive) {
+                Logger.Debug("Rolling back transaction");
+                _session.Transaction.Rollback();
+            }
         }
 
         public void Dispose() {
-            if (_transaction != null) {
-                try {
-                    if (!_cancelled) {
-                        Logger.Debug("Marking transaction as complete");
-                        _transaction.Commit();
-                    }
-                    else {
-                        Logger.Debug("Reverting operations from transaction");
-                        _transaction.Rollback();
-                    }
-                }
-                catch (Exception e) {
-                    Logger.Error(e, "Error while disposing the transaction.");
-                }
-                finally {
-                    _transaction.Dispose();
-                    Logger.Debug("Transaction disposed");
-
-                    _transaction = null;
-                    _cancelled = false;
-                }
-            }
-
-            if (_session != null) {
-                _session.Dispose();
-                _session = null;
-            }
-
+            DisposeSession();
         }
 
-        private void EnsureSession() {
+        private void DisposeSession() {
+            if (_session != null) {
+
+                try {
+                    if (!_session.Transaction.WasRolledBack && _session.Transaction.IsActive) {
+                        Logger.Debug("Committing transaction");
+                        _session.Transaction.Commit();
+                    }
+                }
+                finally {
+                    _contentManagerSession.Clear();
+
+                    Logger.Debug("Disposing session");
+                    _session.Close();
+                    _session.Dispose();
+                    _session = null;
+                }
+            }
+        }
+
+        private void EnsureSession(IsolationLevel level) {
             if (_session != null) {
                 return;
             }
 
             var sessionFactory = _sessionFactoryHolder.GetSessionFactory();
-            Logger.Information("Opening database session");
+            Logger.Debug("Opening NHibernate session");
             _session = sessionFactory.OpenSession(new OrchardSessionInterceptor(_interceptors.ToArray(), Logger));
+            _session.BeginTransaction(level);
+            _contentManagerSession = _contentManagerSessionFactory();
         }
 
         class OrchardSessionInterceptor : IInterceptor {

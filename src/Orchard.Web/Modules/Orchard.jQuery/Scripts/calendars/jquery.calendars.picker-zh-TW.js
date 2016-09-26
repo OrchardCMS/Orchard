@@ -2,9 +2,9 @@
    Traditional Chinese localisation for calendars datepicker for jQuery.
    Written by Ressol (ressol@gmail.com). */
 (function($) {
-	$.calendars.picker.regional['zh-TW'] = {
-		renderer: $.extend({}, $.calendars.picker.defaultRenderer,
-			{month: $.calendars.picker.defaultRenderer.month.
+	$.calendarsPicker.regionalOptions['zh-TW'] = {
+		renderer: $.extend({}, $.calendarsPicker.defaultRenderer,
+			{month: $.calendarsPicker.defaultRenderer.month.
 				replace(/monthHeader/, 'monthHeader:MM yyyy年')}),
 		prevText: '&#x3c;上月', prevStatus: '顯示上月',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: '顯示上一年',
@@ -19,5 +19,5 @@
 		dayStatus: '選擇 m月 d日, DD', defaultStatus: '請選擇日期',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['zh-TW']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['zh-TW']);
 })(jQuery);

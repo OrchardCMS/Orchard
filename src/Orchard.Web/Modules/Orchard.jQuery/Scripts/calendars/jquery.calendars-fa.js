@@ -2,7 +2,7 @@
    Farsi/Persian localisation for Gregorian/Julian calendars for jQuery.
    Javad Mowlanezhad -- jmowla@gmail.com */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['fa'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['fa'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['فروردين','ارديبهشت','خرداد','تير','مرداد','شهريور',
@@ -16,7 +16,7 @@
 		isRTL: true
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['fa'] =
-			$.calendars.calendars.gregorian.prototype.regional['fa'];
+		$.calendars.calendars.julian.prototype.regionalOptions['fa'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['fa'];
 	}
 })(jQuery);

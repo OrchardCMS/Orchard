@@ -60,6 +60,8 @@ namespace Orchard.ContentPermissions.Drivers {
                         EditOwn = ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry { Role = x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.EditOwnContent, UserSimulation.Create(x), null) }).ToList()),
                         Delete = ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry { Role = x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.DeleteContent, UserSimulation.Create(x), null) }).ToList()),
                         DeleteOwn = ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry { Role = x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.DeleteOwnContent, UserSimulation.Create(x), null) }).ToList()),
+                        Preview = ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry { Role = x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.PreviewContent, UserSimulation.Create(x), null) }).ToList()),
+                        PreviewOwn = ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry { Role = x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.PreviewOwnContent, UserSimulation.Create(x), null) }).ToList()),
                         DisplayedRoles = ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry { Role = x, Checked = true }).ToList()),
                     };
                 }
@@ -77,6 +79,8 @@ namespace Orchard.ContentPermissions.Drivers {
                         EditOwnRoles= ContentPermissionsPartViewModel.ExtractRoleEntries(allRoles, settings.EditOwn),
                         DeleteRoles= ContentPermissionsPartViewModel.ExtractRoleEntries(allRoles, settings.Delete),
                         DeleteOwnRoles= ContentPermissionsPartViewModel.ExtractRoleEntries(allRoles, settings.DeleteOwn),
+                        PreviewRoles = ContentPermissionsPartViewModel.ExtractRoleEntries(allRoles, settings.Preview),
+                        PreviewOwnRoles = ContentPermissionsPartViewModel.ExtractRoleEntries(allRoles, settings.PreviewOwn),
                         AllRoles = ContentPermissionsPartViewModel.ExtractRoleEntries(allRoles, settings.DisplayedRoles)
                     };
                 }
@@ -90,6 +94,8 @@ namespace Orchard.ContentPermissions.Drivers {
                         EditOwnRoles = ContentPermissionsPartViewModel.ExtractRoleEntries(allRoles, part.EditOwnContent),
                         DeleteRoles = ContentPermissionsPartViewModel.ExtractRoleEntries(allRoles, part.DeleteContent),
                         DeleteOwnRoles = ContentPermissionsPartViewModel.ExtractRoleEntries(allRoles, part.DeleteOwnContent),
+                        PreviewRoles = ContentPermissionsPartViewModel.ExtractRoleEntries(allRoles, part.PreviewContent),
+                        PreviewOwnRoles = ContentPermissionsPartViewModel.ExtractRoleEntries(allRoles, part.PreviewOwnContent),
                         AllRoles = ContentPermissionsPartViewModel.ExtractRoleEntries(allRoles, settings.DisplayedRoles)
                     };
                 }
@@ -103,6 +109,8 @@ namespace Orchard.ContentPermissions.Drivers {
                 model.EditOwnRoles = model.EditOwnRoles.Select(x => new RoleEntry { Role = x.Role, Checked = x.Checked, Enabled = _authorizer.Authorize(Core.Contents.Permissions.EditOwnContent, part.ContentItem), Default = _authorizationService.TryCheckAccess(Core.Contents.Permissions.EditOwnContent, UserSimulation.Create(x.Role), null) }).ToList();
                 model.DeleteRoles = model.DeleteRoles.Select(x => new RoleEntry { Role = x.Role, Checked = x.Checked, Enabled = _authorizer.Authorize(Core.Contents.Permissions.DeleteContent, part.ContentItem), Default = _authorizationService.TryCheckAccess(Core.Contents.Permissions.DeleteContent, UserSimulation.Create(x.Role), null) }).ToList();
                 model.DeleteOwnRoles = model.DeleteOwnRoles.Select(x => new RoleEntry { Role = x.Role, Checked = x.Checked, Enabled = _authorizer.Authorize(Core.Contents.Permissions.DeleteOwnContent, part.ContentItem), Default = _authorizationService.TryCheckAccess(Core.Contents.Permissions.DeleteOwnContent, UserSimulation.Create(x.Role), null) }).ToList();
+                model.PreviewRoles = model.PreviewRoles.Select(x => new RoleEntry { Role = x.Role, Checked = x.Checked, Enabled = _authorizer.Authorize(Core.Contents.Permissions.PreviewContent, part.ContentItem), Default = _authorizationService.TryCheckAccess(Core.Contents.Permissions.PreviewContent, UserSimulation.Create(x.Role), null) }).ToList();
+                model.PreviewOwnRoles = model.PreviewOwnRoles.Select(x => new RoleEntry { Role = x.Role, Checked = x.Checked, Enabled = _authorizer.Authorize(Core.Contents.Permissions.PreviewOwnContent, part.ContentItem), Default = _authorizationService.TryCheckAccess(Core.Contents.Permissions.PreviewOwnContent, UserSimulation.Create(x.Role), null) }).ToList();
 
                 model.Enabled = part.Enabled;
 
@@ -129,6 +137,8 @@ namespace Orchard.ContentPermissions.Drivers {
                 part.EditOwnContent = ContentPermissionsPartViewModel.SerializePermissions(model.EditOwnRoles);
                 part.DeleteContent = ContentPermissionsPartViewModel.SerializePermissions(model.DeleteRoles);
                 part.DeleteOwnContent = ContentPermissionsPartViewModel.SerializePermissions(model.DeleteOwnRoles);
+                part.PreviewContent = ContentPermissionsPartViewModel.SerializePermissions(model.PreviewRoles);
+                part.PreviewOwnContent = ContentPermissionsPartViewModel.SerializePermissions(model.PreviewOwnRoles);
 
                 var settings = part.Settings.TryGetModel<ContentPermissionsPartSettings>();
 
@@ -144,10 +154,12 @@ namespace Orchard.ContentPermissions.Drivers {
             context.Element(part.PartDefinition.Name).SetAttributeValue("EditContent", part.EditContent);
             context.Element(part.PartDefinition.Name).SetAttributeValue("PublishContent", part.PublishContent);
             context.Element(part.PartDefinition.Name).SetAttributeValue("DeleteContent", part.DeleteContent);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("PreviewContent", part.PreviewContent);
             context.Element(part.PartDefinition.Name).SetAttributeValue("ViewOwnContent", part.ViewOwnContent);
             context.Element(part.PartDefinition.Name).SetAttributeValue("EditOwnContent", part.EditOwnContent);
             context.Element(part.PartDefinition.Name).SetAttributeValue("PublishOwnContent", part.PublishOwnContent);
             context.Element(part.PartDefinition.Name).SetAttributeValue("DeleteOwnContent", part.DeleteOwnContent);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("PreviewOwnContent", part.PreviewOwnContent);
         }
 
         protected override void Importing(ContentPermissionsPart part, ImportContentContext context) {
@@ -156,10 +168,12 @@ namespace Orchard.ContentPermissions.Drivers {
             context.ImportAttribute(part.PartDefinition.Name, "EditContent", s => part.EditContent = s);
             context.ImportAttribute(part.PartDefinition.Name, "PublishContent", s => part.PublishContent = s);
             context.ImportAttribute(part.PartDefinition.Name, "DeleteContent", s => part.DeleteContent = s);
+            context.ImportAttribute(part.PartDefinition.Name, "PreviewContent", s => part.PreviewContent = s);
             context.ImportAttribute(part.PartDefinition.Name, "ViewOwnContent", s => part.ViewOwnContent = s);
             context.ImportAttribute(part.PartDefinition.Name, "EditOwnContent", s => part.EditOwnContent = s);
             context.ImportAttribute(part.PartDefinition.Name, "PublishOwnContent", s => part.PublishOwnContent = s);
             context.ImportAttribute(part.PartDefinition.Name, "DeleteOwnContent", s => part.DeleteOwnContent = s);
+            context.ImportAttribute(part.PartDefinition.Name, "PreviewOwnContent", s => part.PreviewOwnContent = s);
         }
 
         private void OverrideDefaultPermissions(ContentPermissionsPart part, List<string> allRoles, ContentPermissionsPartSettings settings) {
@@ -194,6 +208,14 @@ namespace Orchard.ContentPermissions.Drivers {
 
             if (!_authorizer.Authorize(Core.Contents.Permissions.DeleteOwnContent, part.ContentItem)) {
                 part.DeleteOwnContent = settings == null ? ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry {Role = x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.DeleteOwnContent, UserSimulation.Create(x), null)})) : settings.DeleteOwn;
+            }
+
+            if (!_authorizer.Authorize(Core.Contents.Permissions.PreviewContent, part.ContentItem)) {
+                part.PreviewContent = settings == null ? ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry {Role = x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.PreviewContent, UserSimulation.Create(x), null)})) : settings.Preview;
+            }
+
+            if (!_authorizer.Authorize(Core.Contents.Permissions.PreviewOwnContent, part.ContentItem)) {
+                part.PreviewOwnContent = settings == null ? ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry {Role = x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.PreviewOwnContent, UserSimulation.Create(x), null)})) : settings.PreviewOwn;
             }
         }
     }

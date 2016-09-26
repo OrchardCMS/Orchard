@@ -666,3 +666,109 @@ button:focus, .button:focus {
 .tag-cloud-tag-5 {
     font-size: 1.5em;
 }
+
+
+/* RTL */
+
+/* General
+***************************************************************/
+/* Text elements */
+.dir-rtl p img.left  { float: right; margin: 0.923em 0 0.923em 0.923em; }
+.dir-rtl p img.right { float: left; margin: 0.923em 0.923em 0.923em 0; }
+
+.dir-rtl address     { margin: 0 0.923em 0.923em 0; }
+
+
+/* Structure
+***************************************************************/
+
+.dir-rtl nav ul 
+{
+}
+
+    .dir-rtl nav ul li
+    {
+        margin:0 0 -1px 2px ;
+    }
+
+
+/* first level */
+.dir-rtl nav > ul > li { float:right; }
+.dir-rtl nav > ul > li > a { float:right; }
+
+/* second level */
+.dir-rtl nav > ul > li > ul { margin: 24px -1px 0px 0; }
+
+/* third level */
+.dir-rtl nav > ul > li > ul > li > ul { margin: -20px 90% 0px -1px; }
+
+/* Breadcrumb */
+.dir-rtl nav ul.breadcrumb 
+{
+}
+
+    .dir-rtl nav ul.breadcrumb li
+    {
+        margin:0 0 -1px 2px;
+    }
+
+.dir-rtl .zone-header { padding: 30px 12px 30px 0; }
+
+
+/* Main
+***************************************************************/
+
+/* Metadata */
+.dir-rtl .metadata .published { display: inline; margin: 0 0 0 6px; }
+
+/* Comments */
+.dir-rtl .comment .reply { float: right;}
+
+/* Secondary
+***************************************************************/
+
+/* Aside Zones */
+/* If zone 1 is on */
+.dir-rtl .aside-1 #layout-content { float: left; }
+.dir-rtl .aside-1 .aside-first { float: right; }
+
+/* If zone 2 is on */
+.dir-rtl .aside-2 #layout-content { float: right; }
+.dir-rtl .aside-2 .aside-second { float: left; }
+
+/* If zones 1, 2 are on */
+.dir-rtl .aside-12 .aside-first, .aside-12 .aside-second, .aside-12 #layout-content { float:right; }
+
+/* Tripel Zones*/
+.dir-rtl #layout-tripel > div { float:right; }
+
+/* Quad Footer Zones */
+.dir-rtl #footer-quad > div { float:right; }
+
+
+/* Widgets
+***************************************************************/
+
+/* Edit Mode Widgets */
+/* These are the edit controls that appear when you're logged-in */
+.dir-rtl .widget-control .manage-actions { right: inherit;left: 0px; }
+
+/* Content Mode */
+.dir-rtl .content-control .manage-actions { right: inherit;left: 0px; }
+
+
+
+/* Pager
+***************************************************************/
+
+.dir-rtl .pager li { float: right; padding: 0 0 0 12px; }
+
+
+/* Misc
+***************************************************************/
+
+.dir-rtl .first      { margin-right:0; padding-right:0;margin-left:inherit; padding-left:inherit; }
+.dir-rtl .last       { margin-right:inherit; padding-right:inherit;margin-left:0; padding-left:0; }
+
+.dir-rtl .credits { float: right; }
+.dir-rtl .user-display { float: right; }

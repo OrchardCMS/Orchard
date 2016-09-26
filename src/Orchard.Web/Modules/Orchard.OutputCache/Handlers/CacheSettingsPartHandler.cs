@@ -1,9 +1,9 @@
 ﻿using System.Globalization;
+using Orchard.ContentManagement;
+using Orchard.ContentManagement.Handlers;
+using Orchard.Core.Common.Models;
 using Orchard.OutputCache.Models;
 using Orchard.OutputCache.Services;
-using Orchard.ContentManagement;
-using Orchard.Core.Common.Models;
-using Orchard.ContentManagement.Handlers;
 
 namespace Orchard.OutputCache.Handlers {
     public class CacheSettingsPartHandler : ContentHandler {
@@ -14,18 +14,21 @@ namespace Orchard.OutputCache.Handlers {
             _cacheService = cacheService;
             Filters.Add(new ActivatingFilter<CacheSettingsPart>("Site"));
 
-            // initializing default cache settings values
-            OnInitializing<CacheSettingsPart>((context, part) => { part.DefaultCacheDuration = 300; });
+            // Default cache settings values.
+            OnInitializing<CacheSettingsPart>((context, part) => {
+                part.DefaultCacheDuration = 300;
+                part.DefaultCacheGraceTime = 60;
+            });
 
-            // evict modified routable content when updated
+            // Evict modified routable content when updated.
             OnPublished<IContent>((context, part) => Invalidate(part));
         }
 
         private void Invalidate(IContent content) {
-            // remove any page tagged with this content item id
+            // Remove any item tagged with this content item ID.
             _cacheService.RemoveByTag(content.ContentItem.Id.ToString(CultureInfo.InvariantCulture));
 
-            // search the cache for containers too
+            // Search the cache for containers too.
             var commonPart = content.As<CommonPart>();
             if (commonPart != null) {
                 if (commonPart.Container != null) {

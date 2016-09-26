@@ -2,8 +2,8 @@
    French localisation for calendars datepicker for jQuery.
    Stéphane Nahmani (sholby@sholby.net). */
 (function($) {
-	$.calendars.picker.regional['fr'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['fr'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: '&#x3c;Préc', prevStatus: 'Voir le mois précédent',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: 'Voir l\'année précédent',
 		nextText: 'Suiv&#x3e;', nextStatus: 'Voir le mois suivant',
@@ -17,5 +17,5 @@
 		dayStatus: '\'Choisir\' le DD d MM', defaultStatus: 'Choisir la date',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['fr']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['fr']);
 })(jQuery);

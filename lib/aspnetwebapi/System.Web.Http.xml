@@ -4,9 +4,6 @@
     <name>System.Web.Http</name>
   </assembly>
   <members>
-    <member name="T:System.Net.Http.HttpRequestMessageExtensions">
-      <summary>Provides extension methods for <see cref="T:System.Net.Http.HttpRequestMessage" />.</summary>
-    </member>
     <member name="M:System.Net.Http.HttpRequestMessageExtensions.CreateErrorResponse(System.Net.Http.HttpRequestMessage,System.Net.Http.InvalidByteRangeException)"></member>
     <member name="M:System.Net.Http.HttpRequestMessageExtensions.CreateErrorResponse(System.Net.Http.HttpRequestMessage,System.Net.HttpStatusCode,System.Exception)">
       <summary>Creates an <see cref="T:System.Net.Http.HttpResponseMessage" /> that represents an exception.</summary>
@@ -608,10 +605,21 @@
     </member>
     <member name="M:System.Web.Http.HttpConfigurationExtensions.BindParameter(System.Web.Http.HttpConfiguration,System.Type,System.Web.Http.ModelBinding.IModelBinder)"></member>
     <member name="M:System.Web.Http.HttpConfigurationExtensions.MapHttpAttributeRoutes(System.Web.Http.HttpConfiguration)"></member>
+    <member name="M:System.Web.Http.HttpConfigurationExtensions.MapHttpAttributeRoutes(System.Web.Http.HttpConfiguration,System.Web.Http.Routing.IDirectRouteProvider)">
+      <summary>Maps the attribute-defined routes for the application.</summary>
+      <param name="configuration">The server configuration.</param>
+      <param name="directRouteProvider">The <see cref="T:System.Web.Http.Routing.IDirectRouteProvider" /> to use for discovering and building routes.</param>
+    </member>
     <member name="M:System.Web.Http.HttpConfigurationExtensions.MapHttpAttributeRoutes(System.Web.Http.HttpConfiguration,System.Web.Http.Routing.IInlineConstraintResolver)">
       <summary>Maps the attribute-defined routes for the application.</summary>
       <param name="configuration">The server configuration.</param>
       <param name="constraintResolver">The constraint resolver.</param>
+    </member>
+    <member name="M:System.Web.Http.HttpConfigurationExtensions.MapHttpAttributeRoutes(System.Web.Http.HttpConfiguration,System.Web.Http.Routing.IInlineConstraintResolver,System.Web.Http.Routing.IDirectRouteProvider)">
+      <summary>Maps the attribute-defined routes for the application.</summary>
+      <param name="configuration">The server configuration.</param>
+      <param name="constraintResolver">The <see cref="T:System.Web.Http.Routing.IInlineConstraintResolver" /> to use for resolving inline constraints.</param>
+      <param name="directRouteProvider">The <see cref="T:System.Web.Http.Routing.IDirectRouteProvider" /> to use for discovering and building routes.</param>
     </member>
     <member name="M:System.Web.Http.HttpConfigurationExtensions.SuppressHostPrincipal(System.Web.Http.HttpConfiguration)"></member>
     <member name="T:System.Web.Http.HttpDeleteAttribute">
@@ -1272,6 +1280,33 @@
       <returns>Returns a collection of <see cref="T:System.Web.Http.ValueProviders.ValueProviderFactory" /> objects.</returns>
       <param name="services">The services container.</param>
     </member>
+    <member name="T:System.Web.Http.SingleResult">
+      <summary>Represents an <see cref="T:System.Linq.IQueryable" /> containing zero or one entities. Use together with an [EnableQuery] from the System.Web.Http.OData or System.Web.OData namespace.</summary>
+    </member>
+    <member name="M:System.Web.Http.SingleResult.#ctor(System.Linq.IQueryable)">
+      <summary>Initializes a new instance of the <see cref="T:System.Web.Http.SingleResult" /> class.</summary>
+      <param name="queryable">The <see cref="T:System.Linq.IQueryable" /> containing zero or one entities.</param>
+    </member>
+    <member name="M:System.Web.Http.SingleResult.Create``1(System.Linq.IQueryable{``0})">
+      <summary>Creates a <see cref="T:System.Web.Http.SingleResult`1" /> from an <see cref="T:System.Linq.IQueryable`1" />. A helper method to instantiate a <see cref="T:System.Web.Http.SingleResult`1" /> object without having to explicitly specify the type <paramref name="T" />.</summary>
+      <returns>The created <see cref="T:System.Web.Http.SingleResult`1" />.</returns>
+      <param name="queryable">The <see cref="T:System.Linq.IQueryable`1" /> containing zero or one entities.</param>
+      <typeparam name="T">The type of the data in the data source.</typeparam>
+    </member>
+    <member name="P:System.Web.Http.SingleResult.Queryable">
+      <summary>The <see cref="T:System.Linq.IQueryable" /> containing zero or one entities.</summary>
+    </member>
+    <member name="T:System.Web.Http.SingleResult`1">
+      <summary>Represents an <see cref="T:System.Linq.IQueryable`1" /> containing zero or one entities. Use together with an [EnableQuery] from the System.Web.Http.OData or System.Web.OData namespace.</summary>
+      <typeparam name="T">The type of the data in the data source.</typeparam>
+    </member>
+    <member name="M:System.Web.Http.SingleResult`1.#ctor(System.Linq.IQueryable{`0})">
+      <summary>Initializes a new instance of the <see cref="T:System.Web.Http.SingleResult`1" /> class.</summary>
+      <param name="queryable">The <see cref="T:System.Linq.IQueryable`1" /> containing zero or one entities.</param>
+    </member>
+    <member name="P:System.Web.Http.SingleResult`1.Queryable">
+      <summary>The <see cref="T:System.Linq.IQueryable`1" /> containing zero or one entities.</summary>
+    </member>
     <member name="T:System.Web.Http.Batch.BatchExecutionOrder">
       <summary> Defines the order of execution for batch requests. </summary>
     </member>
@@ -1770,7 +1805,9 @@
     <member name="T:System.Web.Http.Controllers.HttpRequestContext">
       <summary>Represents the context associated with a request.</summary>
     </member>
-    <member name="M:System.Web.Http.Controllers.HttpRequestContext.#ctor"></member>
+    <member name="M:System.Web.Http.Controllers.HttpRequestContext.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:System.Web.Http.Controllers.HttpRequestContext" /> class.</summary>
+    </member>
     <member name="P:System.Web.Http.Controllers.HttpRequestContext.ClientCertificate">
       <summary>Gets or sets the client certificate.</summary>
       <returns>Returns <see cref="T:System.Security.Cryptography.X509Certificates.X509Certificate2" />.</returns>
@@ -2960,6 +2997,7 @@
       <summary>Adds an item at the end of the collection.</summary>
       <param name="filter">The item to add to the collection.</param>
     </member>
+    <member name="M:System.Web.Http.Filters.HttpFilterCollection.AddRange(System.Collections.Generic.IEnumerable{System.Web.Http.Filters.IFilter})"></member>
     <member name="M:System.Web.Http.Filters.HttpFilterCollection.Clear">
       <summary>Removes all item in the collection.</summary>
     </member>
@@ -3024,7 +3062,7 @@
       <param name="cancellationToken">The cancellation token.</param>
     </member>
     <member name="T:System.Web.Http.Filters.IFilter">
-      <summary>Specifies a server-side component that is used by the indexing system to index documents that have the file format associated with the IFilter.</summary>
+      <summary>Defines the methods that are used in a filter.</summary>
     </member>
     <member name="P:System.Web.Http.Filters.IFilter.AllowMultiple">
       <summary>Gets or sets a value indicating whether more than one instance of the indicated attribute can be specified for a single program element.</summary>
@@ -3528,6 +3566,16 @@
       <param name="requiredMemberSelector">The required member selector.</param>
       <param name="formatterLogger">The formatter logger.</param>
     </member>
+    <member name="M:System.Web.Http.ModelBinding.FormDataCollectionExtensions.ReadAs(System.Net.Http.Formatting.FormDataCollection,System.Type,System.String,System.Net.Http.Formatting.IRequiredMemberSelector,System.Net.Http.Formatting.IFormatterLogger,System.Web.Http.HttpConfiguration)">
+      <summary>Deserialize the form data to the given type, using model binding.</summary>
+      <returns>best attempt to bind the object. The best attempt may be null.</returns>
+      <param name="formData">collection with parsed form url data</param>
+      <param name="type">target type to read as</param>
+      <param name="modelName">null or empty to read the entire form as a single object. This is common for body data. Or the name of a model to do a partial binding against the form data. This is common for extracting individual fields.</param>
+      <param name="requiredMemberSelector">The <see cref="T:System.Net.Http.Formatting.IRequiredMemberSelector" /> used to determine required members.</param>
+      <param name="formatterLogger">The <see cref="T:System.Net.Http.Formatting.IFormatterLogger" /> to log events to.</param>
+      <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration" /> configuration to pick binder from. Can be null if the config was not created already. In that case a new config is created.</param>
+    </member>
     <member name="M:System.Web.Http.ModelBinding.FormDataCollectionExtensions.ReadAs(System.Net.Http.Formatting.FormDataCollection,System.Type,System.String,System.Web.Http.Controllers.HttpActionContext)"></member>
     <member name="M:System.Web.Http.ModelBinding.FormDataCollectionExtensions.ReadAs(System.Net.Http.Formatting.FormDataCollection,System.Type,System.Web.Http.Controllers.HttpActionContext)"></member>
     <member name="M:System.Web.Http.ModelBinding.FormDataCollectionExtensions.ReadAs``1(System.Net.Http.Formatting.FormDataCollection,System.Web.Http.Controllers.HttpActionContext)">
@@ -3579,7 +3627,7 @@
     </member>
     <member name="M:System.Web.Http.ModelBinding.IModelBinder.BindModel(System.Web.Http.Controllers.HttpActionContext,System.Web.Http.ModelBinding.ModelBindingContext)">
       <summary>Binds the model to a value by using the specified controller context and binding context.</summary>
-      <returns>The bound value.</returns>
+      <returns>true if model binding is successful; otherwise, false.</returns>
       <param name="actionContext">The action context.</param>
       <param name="bindingContext">The binding context.</param>
     </member>
@@ -3596,6 +3644,7 @@
     <member name="M:System.Web.Http.ModelBinding.JQueryMvcFormUrlEncodedFormatter.#ctor">
       <summary>Initializes a new instance of the <see cref="T:System.Web.Http.ModelBinding.JQueryMvcFormUrlEncodedFormatter" /> class.</summary>
     </member>
+    <member name="M:System.Web.Http.ModelBinding.JQueryMvcFormUrlEncodedFormatter.#ctor(System.Web.Http.HttpConfiguration)"></member>
     <member name="M:System.Web.Http.ModelBinding.JQueryMvcFormUrlEncodedFormatter.CanReadType(System.Type)">
       <summary> Determines whether this <see cref="T:System.Web.Http.ModelBinding.JQueryMvcFormUrlEncodedFormatter" /> can read objects of the specified <paramref name="type" />. </summary>
       <returns>true if objects of this type can be read; otherwise false.</returns>
@@ -4839,6 +4888,47 @@
       <summary>Gets the request message which led to this result.</summary>
       <returns>Returns <see cref="T:System.Net.Http.HttpRequestMessage" />.</returns>
     </member>
+    <member name="T:System.Web.Http.Routing.DefaultDirectRouteProvider">
+      <summary>A default implementation of <see cref="T:System.Web.Http.Routing.IDirectRouteProvider" />.</summary>
+    </member>
+    <member name="M:System.Web.Http.Routing.DefaultDirectRouteProvider.#ctor"></member>
+    <member name="M:System.Web.Http.Routing.DefaultDirectRouteProvider.GetActionDirectRoutes(System.Web.Http.Controllers.HttpActionDescriptor,System.Collections.Generic.IReadOnlyList{System.Web.Http.Routing.IDirectRouteFactory},System.Web.Http.Routing.IInlineConstraintResolver)">
+      <summary>Creates <see cref="T:System.Web.Http.Routing.RouteEntry" /> instances based on the provided factories and action. The route entries provide direct routing to the provided action.</summary>
+      <returns>A set of route entries.</returns>
+      <param name="actionDescriptor">The action descriptor.</param>
+      <param name="factories">The direct route factories.</param>
+      <param name="constraintResolver">The constraint resolver.</param>
+    </member>
+    <member name="M:System.Web.Http.Routing.DefaultDirectRouteProvider.GetActionRouteFactories(System.Web.Http.Controllers.HttpActionDescriptor)">
+      <summary>Gets a set of route factories for the given action descriptor.</summary>
+      <returns>A set of route factories.</returns>
+      <param name="actionDescriptor">The action descriptor.</param>
+    </member>
+    <member name="M:System.Web.Http.Routing.DefaultDirectRouteProvider.GetControllerDirectRoutes(System.Web.Http.Controllers.HttpControllerDescriptor,System.Collections.Generic.IReadOnlyList{System.Web.Http.Controllers.HttpActionDescriptor},System.Collections.Generic.IReadOnlyList{System.Web.Http.Routing.IDirectRouteFactory},System.Web.Http.Routing.IInlineConstraintResolver)">
+      <summary>Creates <see cref="T:System.Web.Http.Routing.RouteEntry" /> instances based on the provided factories, controller and actions. The route entries provided direct routing to the provided controller and can reach the set of provided actions.</summary>
+      <returns>A set of route entries.</returns>
+      <param name="controllerDescriptor">The controller descriptor.</param>
+      <param name="actionDescriptors">The action descriptors.</param>
+      <param name="factories">The direct route factories.</param>
+      <param name="constraintResolver">The constraint resolver.</param>
+    </member>
+    <member name="M:System.Web.Http.Routing.DefaultDirectRouteProvider.GetControllerRouteFactories(System.Web.Http.Controllers.HttpControllerDescriptor)">
+      <summary>Gets route factories for the given controller descriptor.</summary>
+      <returns>A set of route factories.</returns>
+      <param name="controllerDescriptor">The controller descriptor.</param>
+    </member>
+    <member name="M:System.Web.Http.Routing.DefaultDirectRouteProvider.GetDirectRoutes(System.Web.Http.Controllers.HttpControllerDescriptor,System.Collections.Generic.IReadOnlyList{System.Web.Http.Controllers.HttpActionDescriptor},System.Web.Http.Routing.IInlineConstraintResolver)">
+      <summary>Gets direct routes for the given controller descriptor and action descriptors based on <see cref="T:System.Web.Http.Routing.IDirectRouteFactory" /> attributes.</summary>
+      <returns>A set of route entries.</returns>
+      <param name="controllerDescriptor">The controller descriptor.</param>
+      <param name="actionDescriptors">The action descriptors for all actions.</param>
+      <param name="constraintResolver">The constraint resolver.</param>
+    </member>
+    <member name="M:System.Web.Http.Routing.DefaultDirectRouteProvider.GetRoutePrefix(System.Web.Http.Controllers.HttpControllerDescriptor)">
+      <summary>Gets the route prefix from the provided controller.</summary>
+      <returns>The route prefix or null.</returns>
+      <param name="controllerDescriptor">The controller descriptor.</param>
+    </member>
     <member name="T:System.Web.Http.Routing.DefaultInlineConstraintResolver">
       <summary> The default implementation of <see cref="T:System.Web.Http.Routing.IInlineConstraintResolver" />. Resolves constraints by parsing a constraint key and constraint arguments, using a map to resolve the constraint type, and calling an appropriate constructor for the constraint type. </summary>
     </member>
@@ -5121,6 +5211,16 @@
       <summary>Creates a direct route entry.</summary>
       <returns>The direct route entry.</returns>
       <param name="context">The context to use to create the route.</param>
+    </member>
+    <member name="T:System.Web.Http.Routing.IDirectRouteProvider">
+      <summary>Defines a provider for routes that directly target action descriptors (attribute routes).</summary>
+    </member>
+    <member name="M:System.Web.Http.Routing.IDirectRouteProvider.GetDirectRoutes(System.Web.Http.Controllers.HttpControllerDescriptor,System.Collections.Generic.IReadOnlyList{System.Web.Http.Controllers.HttpActionDescriptor},System.Web.Http.Routing.IInlineConstraintResolver)">
+      <summary>Gets the direct routes for a controller.</summary>
+      <returns>A set of route entries for the controller.</returns>
+      <param name="controllerDescriptor">The controller descriptor.</param>
+      <param name="actionDescriptors">The action descriptors.</param>
+      <param name="constraintResolver">The inline constraint resolver.</param>
     </member>
     <member name="T:System.Web.Http.Routing.IHttpRoute">
       <summary>
@@ -6377,7 +6477,7 @@
     </member>
     <member name="M:System.Web.Http.ValueProviders.IValueProvider.GetValue(System.String)">
       <summary>Retrieves a value object using the specified key.</summary>
-      <returns>The value object for the specified key.</returns>
+      <returns>The value object for the specified key, or null if the key is not found.</returns>
       <param name="key">The key of the value object to retrieve.</param>
     </member>
     <member name="T:System.Web.Http.ValueProviders.ValueProviderAttribute">

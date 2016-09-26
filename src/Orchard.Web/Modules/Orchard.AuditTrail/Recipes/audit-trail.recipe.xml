@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<Orchard>
+    <Recipe>
+        <Name>Audit Trail</Name>
+        <Description>Attaches the AuditTrailPart to the Page content type.</Description>
+        <Author>The Orchard Team</Author>
+        <WebSite>http://orchardproject.net</WebSite>
+        <Tags>developer</Tags>
+        <Version>1.0</Version>
+    </Recipe>
+    <Feature enable="Orchard.AuditTrail" />
+    <Metadata>
+        <Types>
+            <Page>
+                <AuditTrailPart />
+            </Page>
+        </Types>
+    </Metadata>
+</Orchard>

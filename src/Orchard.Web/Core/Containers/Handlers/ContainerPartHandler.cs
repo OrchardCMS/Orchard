@@ -26,7 +26,8 @@ namespace Orchard.Core.Containers.Handlers {
             _containerService = containerService;
             Filters.Add(StorageFilter.For(repository));
             OnInitializing<ContainerPart>((context, part) => {
-                part.Record.ItemsShown = true;
+                part.Record.ItemsShown = part.Settings.GetModel<ContainerTypePartSettings>().ItemsShownDefault
+                                        ?? part.PartDefinition.Settings.GetModel<ContainerPartSettings>().ItemsShownDefault;
                 part.Record.PageSize = part.Settings.GetModel<ContainerTypePartSettings>().PageSizeDefault
                                         ?? part.PartDefinition.Settings.GetModel<ContainerPartSettings>().PageSizeDefault;
                 part.Record.Paginated = part.Settings.GetModel<ContainerTypePartSettings>().PaginatedDefault
@@ -63,7 +64,7 @@ namespace Orchard.Core.Containers.Handlers {
                         ? part.Record.AdminListViewName
                         : !String.IsNullOrWhiteSpace(part.ContainerSettings.AdminListViewName)
                             ? part.ContainerSettings.AdminListViewName
-                            : providers.First().Name;
+                            : providers.Any() ? providers.First().Name : null;
 
                     return _listViewService.GetProvider(listViewProviderName) ?? _listViewService.GetDefaultProvider();
                 });

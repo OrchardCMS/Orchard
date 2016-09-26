@@ -1,0 +1,8 @@
+﻿@using Orchard.AuditTrail.Helpers
+@{
+    var eventData = (IDictionary<string, object>) Model.EventData;
+    var userName = eventData.Get<string>("UserName");
+}
+<section class="audittrail-user-eventsummary">
+    @T("Attempted user name: <strong>{0}</strong>", userName)
+</section>

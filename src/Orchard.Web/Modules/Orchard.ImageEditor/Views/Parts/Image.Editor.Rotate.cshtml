@@ -1,0 +1,70 @@
+﻿<button id="rotate">@T("Rotate")</button>
+
+@using (Script.Foot())
+{
+
+    <script type="text/javascript">
+        //<![CDATA[
+        jQuery(function ($) {
+            $.imageEditor.registerPlugin(function () {
+                console.log('initializing rotate');
+                var host = $.imageEditor;
+
+                // save rotate
+                $('#rotate-apply').on('click', function () {
+                    var image = new Image();
+
+                    image.onload = function () {
+                        var canvas = document.createElement('canvas');
+                        var degrees = $("#rotate-angle").val();
+
+                        if (degrees != "180") {
+                            canvas.width = host.image.height;
+                            canvas.height = host.image.width;
+                        } else {
+                            canvas.width = host.image.width;
+                            canvas.height = host.image.height;
+                        }
+
+                        $(host.image).css({
+                            width: canvas.width,
+                            height: canvas.height
+                        });
+
+                        var context = canvas.getContext('2d');
+
+                        context.translate(canvas.width / 2, canvas.height / 2);
+                        context.rotate(degrees * Math.PI / 180);
+                        context.drawImage(image, -image.width / 2, -image.height / 2, image.width, image.height);
+
+                        host.image.src = canvas.toDataURL("image/png");
+                    };
+
+                    image.src = host.image.src;
+
+                    $('#rotate-options').hide();
+                    host.hideOptions();
+                });
+
+                // cancel rotation
+                $('#rotate-cancel').on('click', function () {
+                    $('#rotate-options').hide();
+                    host.hideOptions();
+                });
+
+                $('#rotate').on("click", function () {
+                    console.log('rotate clicked');
+
+                    $('#rotate-options').show();
+                    host.showOptions();
+
+                    // focus and select current width
+                    $("#rotate-angle").focus();
+                    $("#rotate.angle").select();
+                });
+            });
+        });
+        //]]>
+
+    </script>
+}

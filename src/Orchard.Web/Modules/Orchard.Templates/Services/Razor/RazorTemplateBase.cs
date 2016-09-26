@@ -8,6 +8,7 @@ namespace Orchard.Templates.Compilation.Razor {
         WebPageContext WebPageContext { get; set; }
         ViewContext ViewContext { get; set; }
         ViewDataDictionary ViewData { get; set; }
+        WorkContext WorkContext { get; set; }
         string VirtualPath { get; set; }
         void Render(TextWriter writer);
         void InitHelpers();

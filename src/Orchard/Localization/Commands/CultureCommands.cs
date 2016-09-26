@@ -18,7 +18,7 @@ namespace Orchard.Localization.Commands {
         public void ListCultures() {
             Context.Output.WriteLine(T("Listing Cultures:"));
 
-            string cultures = _cultureManager.ListCultures().Aggregate<string, string>(null, (current, culture) => current + culture + " ");
+            var cultures = string.Join(" ", _cultureManager.ListCultures());
 
             Context.Output.WriteLine(cultures);
         }

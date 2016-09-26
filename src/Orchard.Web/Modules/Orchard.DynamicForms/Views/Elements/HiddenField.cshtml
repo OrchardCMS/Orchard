@@ -1,0 +1,13 @@
+﻿@using Orchard.DynamicForms.Elements
+@using Orchard.Layouts.Helpers
+@{
+    var element = (HiddenField) Model.Element;
+    var tagBuilder = TagBuilderExtensions.CreateElementTagBuilder(Model, "input");
+
+    tagBuilder.AddCssClass("text");
+    tagBuilder.Attributes["type"] = "hidden";
+    tagBuilder.Attributes["value"] = Model.TokenizedValue;
+    tagBuilder.Attributes["name"] = element.Name;
+}
+
+@tagBuilder.ToHtmlString(TagRenderMode.SelfClosing)

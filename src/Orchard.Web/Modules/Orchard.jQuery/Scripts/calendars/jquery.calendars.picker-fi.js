@@ -2,8 +2,8 @@
    Finnish localisation for calendars datepicker for jQuery.
    Written by Harri Kilpiö (harrikilpio@gmail.com). */
 (function($) {
-	$.calendars.picker.regional['fi'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['fi'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: '&laquo;Edellinen', prevStatus: '',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: '',
 		nextText: 'Seuraava&raquo;', nextStatus: '',
@@ -17,5 +17,5 @@
 		dayStatus: 'DD, M d', defaultStatus: '',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['fi']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['fi']);
 })(jQuery);

@@ -1,0 +1,27 @@
+﻿Name: Orchard.MessageBus
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardproject.net
+Version: 1.0
+OrchardVersion: 1.0
+Description: Provides communication APIs for server farms.
+Features:
+    Orchard.MessageBus:
+        Name: Message Bus
+        Description: Reusable API abstractions to communicate in a server farm.
+        Category: Hosting
+	Orchard.MessageBus.DistributedSignals:
+        Name: Distributed Signals
+        Description: Distribute signals cache invalidation calls.
+        Dependencies: Orchard.MessageBus
+        Category: Hosting
+	Orchard.MessageBus.SqlServerServiceBroker:
+        Name: SQL Server Service Broker
+        Description: A message bus implementation using SQL Server Service Broker.
+        Dependencies: Orchard.MessageBus
+        Category: Hosting
+	Orchard.MessageBus.DistributedShellRestart
+        Name: Distributed Shell Restart
+        Description: Distribute shell restarts.
+        Dependencies: Orchard.MessageBus
+        Category: Hosting

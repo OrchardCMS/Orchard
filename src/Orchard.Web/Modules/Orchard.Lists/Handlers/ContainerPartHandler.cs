@@ -11,7 +11,7 @@ namespace Orchard.Lists.Handlers {
             if (container == null)
                 return;
 
-            // containers link to their contents in admin screens
+            // Containers link to their contents in admin screens.
             context.Metadata.AdminRouteValues = new RouteValueDictionary {
                 {"Area", "Orchard.Lists"},
                 {"Controller", "Admin"},

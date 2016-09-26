@@ -2,7 +2,7 @@
    Afrikaans localisation for Gregorian/Julian calendars for jQuery.
    Written by Renier Pretorius and Ruediger Thiede. */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['af'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['af'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Januarie','Februarie','Maart','April','Mei','Junie',
@@ -17,7 +17,7 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['af'] =
-			$.calendars.calendars.gregorian.prototype.regional['af'];
+		$.calendars.calendars.julian.prototype.regionalOptions['af'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['af'];
 	}
 })(jQuery);

@@ -29,12 +29,12 @@ namespace Orchard.Users.Services {
                 return null;
             }
 
-            var comparer = new ContentIdentity.ContentIdentityEqualityComparer();
             return _contentManager
                 .Query<UserPart, UserPartRecord>()
                 .Where(p => p.UserName == identifier)
                 .List<ContentItem>()
-                .Where(c => comparer.Equals(identity, _contentManager.GetItemMetadata(c).Identity));
+                .Where(c => ContentIdentity.ContentIdentityEqualityComparer.AreEquivalent(
+                    identity, _contentManager.GetItemMetadata(c).Identity));
         }
     }
 }

@@ -2,8 +2,8 @@
    Amharic (አማርኛ) localisation for calendars datepicker for jQuery.
    Leyu Sisay. */
 (function($) {
-	$.calendars.picker.regional['am'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['am'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: 'ያለፈ', prevStatus: 'ያለፈውን ወር አሳይ',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: 'ያለፈውን ዓመት አሳይ',
 		nextText: 'ቀጣይ', nextStatus: 'ቀጣዩን ወር አሳይ',
@@ -17,5 +17,5 @@
 		dayStatus: 'DD, M d, yyyy ምረጥ', defaultStatus: 'ቀን ምረጥ',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['am']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['am']);
 })(jQuery);

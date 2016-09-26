@@ -18,6 +18,7 @@ namespace Orchard.DisplayManagement.Implementation {
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly IEnumerable<IShapeDisplayEvents> _shapeDisplayEvents;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IEnumerable<IShapeBindingResolver> _shapeBindingResolvers;
 
         // this need to be Shape instead of IShape - cast to interface throws error on clr types like HtmlString
         private static readonly CallSite<Func<CallSite, object, Shape>> _convertAsShapeCallsite = CallSite<Func<CallSite, object, Shape>>.Create(
@@ -30,12 +31,15 @@ namespace Orchard.DisplayManagement.Implementation {
         public DefaultDisplayManager(
             IWorkContextAccessor workContextAccessor,
             IEnumerable<IShapeDisplayEvents> shapeDisplayEvents,
+            IEnumerable<IShapeBindingResolver> shapeBindingResolvers,
             IHttpContextAccessor httpContextAccessor,
             Lazy<IShapeTableLocator> shapeTableLocator) {
             _shapeTableLocator = shapeTableLocator;
             _workContextAccessor = workContextAccessor;
             _shapeDisplayEvents = shapeDisplayEvents;
             _httpContextAccessor = httpContextAccessor;
+            _shapeBindingResolvers = shapeBindingResolvers;
+
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
         }
@@ -135,12 +139,19 @@ namespace Orchard.DisplayManagement.Implementation {
             return shape.Metadata.ChildContent;
         }
 
-        static bool TryGetDescriptorBinding(string shapeType, IEnumerable<string> shapeAlternates, ShapeTable shapeTable, out ShapeBinding shapeBinding) {
+        private bool TryGetDescriptorBinding(string shapeType, IEnumerable<string> shapeAlternates, ShapeTable shapeTable, out ShapeBinding shapeBinding) {
             // shape alternates are optional, fully qualified binding names
             // the earliest added alternates have the lowest priority
             // the descriptor returned is based on the binding that is matched, so it may be an entirely
             // different descriptor if the alternate has a different base name
             foreach (var shapeAlternate in shapeAlternates.Reverse()) {
+
+                foreach (var shapeBindingResolver in _shapeBindingResolvers) {
+                    if(shapeBindingResolver.TryGetDescriptorBinding(shapeAlternate, out shapeBinding)) {
+                        return true;
+                    }
+                }
+
                 if (shapeTable.Bindings.TryGetValue(shapeAlternate, out shapeBinding)) {
                     return true;
                 }
@@ -151,6 +162,12 @@ namespace Orchard.DisplayManagement.Implementation {
             // so the shapetype itself may contain a longer alternate forms that falls back to a shorter one
             var shapeTypeScan = shapeType;
             for (; ; ) {
+                foreach (var shapeBindingResolver in _shapeBindingResolvers) {
+                    if (shapeBindingResolver.TryGetDescriptorBinding(shapeTypeScan, out shapeBinding)) {
+                        return true;
+                    }
+                }
+
                 if (shapeTable.Bindings.TryGetValue(shapeTypeScan, out shapeBinding)) {
                     return true;
                 }

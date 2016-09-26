@@ -13,10 +13,11 @@ namespace Orchard.Search {
                     .WithPart("SearchFormPart")
                     .WithPart("CommonPart")
                     .WithPart("WidgetPart")
+                    .WithPart("IdentityPart")
                     .WithSetting("Stereotype", "Widget")
                 );
 
-            return 2;
+            return 3;
         }
 
         public int UpdateFrom1() {
@@ -25,6 +26,13 @@ namespace Orchard.Search {
             );
 
             return 2;
+        }
+
+        public int UpdateFrom2() {
+            ContentDefinitionManager.AlterTypeDefinition("SearchForm",
+                cfg => cfg.WithPart("IdentityPart"));
+           
+            return 3;
         }
     }
 
@@ -45,6 +53,25 @@ namespace Orchard.Search {
             ContentDefinitionManager.AlterTypeDefinition("Document", cfg => cfg.WithSetting("TypeIndexing.Indexes", "Media"));
             ContentDefinitionManager.AlterTypeDefinition("Audio", cfg => cfg.WithSetting("TypeIndexing.Indexes", "Media"));
             ContentDefinitionManager.AlterTypeDefinition("OEmbed", cfg => cfg.WithSetting("TypeIndexing.Indexes", "Media"));
+
+            return 1;
+        }
+    }
+
+
+    [OrchardFeature("Orchard.Search.Content")]
+    public class AdminSearchMigration : DataMigrationImpl {
+        private readonly IIndexManager _indexManager;
+
+        public AdminSearchMigration(IIndexManager indexManager) {
+            _indexManager = indexManager;
+        }
+
+        public int Create() {
+
+            _indexManager.GetSearchIndexProvider().CreateIndex("Admin");
+
+            ContentDefinitionManager.AlterTypeDefinition("Page", cfg => cfg.WithSetting("TypeIndexing.Indexes", "Page:latest"));
 
             return 1;
         }

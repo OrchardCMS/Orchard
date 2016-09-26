@@ -1,0 +1,53 @@
+﻿@using System.Xml.Linq
+@using Orchard.AuditTrail.Helpers
+@using Orchard.AuditTrail.Services.Models
+@{
+    Style.Include("audittrail-contentdefinition-event.css");
+}
+@{
+    var eventData = (IDictionary<string, object>) Model.EventData;
+    var contentPartName = eventData.Get<string>("ContentPartName");
+    var diffNodes = (IList<DiffNode>)Model.DiffNodes;
+    var newDefinitionXml = (XElement)Model.NewDefinitionXml;
+}
+<section class="audittrail-contentpart-eventsummary">
+    @T(diffNodes != null ? "The content part {0} was altered during an import." : "The content part {0} was added during an import.", Html.ContentPartEditLink(contentPartName))
+</section>
+
+@if (diffNodes != null) {
+    <section class="audittrail-contentpart-eventsummary">
+   
+        <table class="items">
+            <thead>
+                <tr>
+                    <th>@T("Action")</th>
+                    <th>@T("Context")</th>
+                    <th>@T("Before")</th>
+                    <th>@T("After")</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!diffNodes.Any()) {
+                    <tr>
+                        <td colspan="4">@T("")</td>
+                    </tr>
+                }
+                else {
+                    foreach (var node in diffNodes) {
+                        <tr>
+                            <td>@T(node.Type.ToString())</td>
+                            <td>@node.Context</td>
+                            <td>@node.Previous.OrIfEmpty(T("[Empty]"))</td>
+                            <td>@node.Current.OrIfEmpty(T("[Empty]"))</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </section>
+}
+else {
+    <p class="code">
+        @Html.Raw(Html.Encode(newDefinitionXml.ToString(SaveOptions.None)).Replace("\r\n", "<br/>"))
+    </p>
+}

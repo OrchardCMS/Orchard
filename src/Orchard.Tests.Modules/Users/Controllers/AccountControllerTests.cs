@@ -41,6 +41,7 @@ using Orchard.Core.Settings.Handlers;
 using System.Collections.Specialized;
 using Orchard.Mvc;
 using Orchard.Tests.Modules.Stubs;
+using Orchard.Environment.Configuration;
 
 namespace Orchard.Tests.Modules.Users.Controllers {
     [TestFixture]
@@ -63,6 +64,7 @@ namespace Orchard.Tests.Modules.Users.Controllers {
 
             builder.RegisterInstance(new Mock<IAuthenticationService>().Object);
             builder.RegisterInstance(new Mock<IUserEventHandler>().Object);
+            builder.RegisterInstance(new Mock<IAppConfigurationAccessor>().Object);
             builder.RegisterType<MembershipService>().As<IMembershipService>();
             builder.RegisterType<DefaultMessageService>().As<IMessageService>();
             builder.RegisterInstance(new MessageChannelSelectorStub(_channel)).As<IMessageChannelSelector>();
@@ -73,6 +75,7 @@ namespace Orchard.Tests.Modules.Users.Controllers {
             builder.RegisterType<OrchardServices>().As<IOrchardServices>();
 
             builder.RegisterInstance(new DefaultContentManagerTests.TestSessionLocator(_session)).As<ITransactionManager>();
+            builder.RegisterInstance(new Work<IEnumerable<IShapeTableEventHandler>>(resolve => _container.Resolve<IEnumerable<IShapeTableEventHandler>>())).AsSelf();
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();

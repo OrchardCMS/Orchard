@@ -18,7 +18,7 @@ namespace Orchard.Data.Migration.Interpreters {
         private readonly ShellSettings _shellSettings;
         private readonly ISessionLocator _sessionLocator;
         private readonly IEnumerable<ICommandInterpreter> _commandInterpreters;
-        private readonly Dialect _dialect;
+        private readonly Lazy<Dialect> _dialectLazy;
         private readonly List<string> _sqlStatements;
         private readonly ISessionFactoryHolder _sessionFactoryHolder;
         private readonly IReportsCoordinator _reportsCoordinator;
@@ -40,8 +40,7 @@ namespace Orchard.Data.Migration.Interpreters {
 
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
-            var configuration = _sessionFactoryHolder.GetConfiguration();
-            _dialect = Dialect.GetDialect(configuration.Properties);
+            _dialectLazy = new Lazy<Dialect>(() => Dialect.GetDialect(sessionFactoryHolder.GetConfiguration().Properties));
         }
 
         public ILogger Logger { get; set; }
@@ -59,9 +58,9 @@ namespace Orchard.Data.Migration.Interpreters {
 
             var builder = new StringBuilder();
 
-            builder.Append(_dialect.CreateMultisetTableString)
+            builder.Append(_dialectLazy.Value.CreateMultisetTableString)
                 .Append(' ')
-                .Append(_dialect.QuoteForTableName(PrefixTableName(command.Name)))
+                .Append(_dialectLazy.Value.QuoteForTableName(PrefixTableName(command.Name)))
                 .Append(" (");
 
             var appendComma = false;
@@ -80,7 +79,7 @@ namespace Orchard.Data.Migration.Interpreters {
                     builder.Append(", ");
                 }
 
-                builder.Append(_dialect.PrimaryKeyString)
+                builder.Append(_dialectLazy.Value.PrimaryKeyString)
                     .Append(" ( ")
                     .Append(String.Join(", ", primaryKeys.ToArray()))
                     .Append(" )");
@@ -105,7 +104,7 @@ namespace Orchard.Data.Migration.Interpreters {
 
             var builder = new StringBuilder();
 
-            builder.Append(_dialect.GetDropTableString(PrefixTableName(command.Name)));
+            builder.Append(_dialectLazy.Value.GetDropTableString(PrefixTableName(command.Name)));
             _sqlStatements.Add(builder.ToString());
 
             RunPendingStatements();
@@ -162,7 +161,7 @@ namespace Orchard.Data.Migration.Interpreters {
                 return;
             }
 
-            builder.AppendFormat("alter table {0} add ", _dialect.QuoteForTableName(PrefixTableName(command.TableName)));
+            builder.AppendFormat("alter table {0} add ", _dialectLazy.Value.QuoteForTableName(PrefixTableName(command.TableName)));
 
             Visit(builder, (CreateColumnCommand)command);
             _sqlStatements.Add(builder.ToString());
@@ -174,8 +173,8 @@ namespace Orchard.Data.Migration.Interpreters {
             }
 
             builder.AppendFormat("alter table {0} drop column {1}",
-                _dialect.QuoteForTableName(PrefixTableName(command.TableName)),
-                _dialect.QuoteForColumnName(command.ColumnName));
+                _dialectLazy.Value.QuoteForTableName(PrefixTableName(command.TableName)),
+                _dialectLazy.Value.QuoteForColumnName(command.ColumnName));
             _sqlStatements.Add(builder.ToString());
         }
 
@@ -185,12 +184,12 @@ namespace Orchard.Data.Migration.Interpreters {
             }
 
             builder.AppendFormat("alter table {0} alter column {1} ",
-                _dialect.QuoteForTableName(PrefixTableName(command.TableName)),
-                _dialect.QuoteForColumnName(command.ColumnName));
+                _dialectLazy.Value.QuoteForTableName(PrefixTableName(command.TableName)),
+                _dialectLazy.Value.QuoteForColumnName(command.ColumnName));
 
             // type
             if (command.DbType != DbType.Object) {
-                builder.Append(GetTypeName(_dialect, command.DbType, command.Length, command.Precision, command.Scale));
+                builder.Append(GetTypeName(_dialectLazy.Value, command.DbType, command.Length, command.Precision, command.Scale));
             }
             else {
                 if(command.Length > 0 || command.Precision > 0 || command.Scale > 0) {
@@ -212,8 +211,8 @@ namespace Orchard.Data.Migration.Interpreters {
             }
 
             builder.AppendFormat("create index {1} on {0} ({2}) ",
-                _dialect.QuoteForTableName(PrefixTableName(command.TableName)),
-                _dialect.QuoteForColumnName(PrefixTableName(command.IndexName)),
+                _dialectLazy.Value.QuoteForTableName(PrefixTableName(command.TableName)),
+                _dialectLazy.Value.QuoteForColumnName(PrefixTableName(command.IndexName)),
                 String.Join(", ", command.ColumnNames));
 
             _sqlStatements.Add(builder.ToString());
@@ -225,8 +224,8 @@ namespace Orchard.Data.Migration.Interpreters {
             }
 
             builder.AppendFormat("drop index {0} ON {1}",
-                _dialect.QuoteForColumnName(PrefixTableName(command.IndexName)),
-                _dialect.QuoteForTableName(PrefixTableName(command.TableName)));
+                _dialectLazy.Value.QuoteForColumnName(PrefixTableName(command.IndexName)),
+                _dialectLazy.Value.QuoteForTableName(PrefixTableName(command.TableName)));
             _sqlStatements.Add(builder.ToString());
         }
 
@@ -251,11 +250,11 @@ namespace Orchard.Data.Migration.Interpreters {
             var builder = new StringBuilder();
 
             builder.Append("alter table ")
-                .Append(_dialect.QuoteForTableName(PrefixTableName(command.SrcTable)));
+                .Append(_dialectLazy.Value.QuoteForTableName(PrefixTableName(command.SrcTable)));
 
-            builder.Append(_dialect.GetAddForeignKeyConstraintString(PrefixTableName(command.Name),
+            builder.Append(_dialectLazy.Value.GetAddForeignKeyConstraintString(PrefixTableName(command.Name),
                 command.SrcColumns,
-                _dialect.QuoteForTableName(PrefixTableName(command.DestTable)),
+                _dialectLazy.Value.QuoteForTableName(PrefixTableName(command.DestTable)),
                 command.DestColumns,
                 false));
 
@@ -271,7 +270,7 @@ namespace Orchard.Data.Migration.Interpreters {
 
             var builder = new StringBuilder();
 
-            builder.AppendFormat("alter table {0} drop constraint {1}", _dialect.QuoteForTableName(PrefixTableName(command.SrcTable)), PrefixTableName(command.Name));
+            builder.AppendFormat("alter table {0} drop constraint {1}", _dialectLazy.Value.QuoteForTableName(PrefixTableName(command.SrcTable)), PrefixTableName(command.Name));
             _sqlStatements.Add(builder.ToString());
 
             RunPendingStatements();
@@ -291,15 +290,15 @@ namespace Orchard.Data.Migration.Interpreters {
             }
 
             // name
-            builder.Append(_dialect.QuoteForColumnName(command.ColumnName)).Append(Space);
+            builder.Append(_dialectLazy.Value.QuoteForColumnName(command.ColumnName)).Append(Space);
 
-            if (!command.IsIdentity || _dialect.HasDataTypeInIdentityColumn) {
-                builder.Append(GetTypeName(_dialect, command.DbType, command.Length, command.Precision, command.Scale));
+            if (!command.IsIdentity || _dialectLazy.Value.HasDataTypeInIdentityColumn) {
+                builder.Append(GetTypeName(_dialectLazy.Value, command.DbType, command.Length, command.Precision, command.Scale));
             }
 
             // append identity if handled
-            if (command.IsIdentity && _dialect.SupportsIdentityColumns) {
-                builder.Append(Space).Append(_dialect.IdentityColumnString);
+            if (command.IsIdentity && _dialectLazy.Value.SupportsIdentityColumns) {
+                builder.Append(Space).Append(_dialectLazy.Value.IdentityColumnString);
             }
 
             // [default value]
@@ -311,11 +310,11 @@ namespace Orchard.Data.Migration.Interpreters {
             builder.Append(command.IsNotNull
                                ? " not null"
                                : !command.IsPrimaryKey && !command.IsUnique
-                                     ? _dialect.NullColumnString
+                                     ? _dialectLazy.Value.NullColumnString
                                      : string.Empty);
 
             // append unique if handled, otherwise at the end of the satement
-            if (command.IsUnique && _dialect.SupportsUnique) {
+            if (command.IsUnique && _dialectLazy.Value.SupportsUnique) {
                 builder.Append(" unique");
             }
 

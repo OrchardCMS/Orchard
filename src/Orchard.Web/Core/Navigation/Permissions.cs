@@ -4,13 +4,13 @@ using Orchard.Security.Permissions;
 
 namespace Orchard.Core.Navigation {
     public class Permissions : IPermissionProvider {
-        public static readonly Permission ManageMainMenu = new Permission { Name = "ManageMainMenu", Description = "Manage main menu" };
+        public static readonly Permission ManageMenus = new Permission { Name = "ManageMenus", Description = "Manage all menus" };
 
         public virtual Feature Feature { get; set; }
 
         public IEnumerable<Permission> GetPermissions() {
             return new[] {
-                ManageMainMenu
+                ManageMenus
              };
         }
 
@@ -18,7 +18,7 @@ namespace Orchard.Core.Navigation {
             return new[] {
                 new PermissionStereotype {
                     Name = "Administrator",
-                    Permissions = new[] {ManageMainMenu}
+                    Permissions = new[] {ManageMenus}
                 }
             };
         }

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -12,7 +12,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Markdown</RootNamespace>
     <AssemblyName>Markdown</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -48,11 +48,8 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MarkdownSharp">
-      <HintPath>..\..\..\..\lib\markdown\MarkdownSharp.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -113,13 +110,14 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="web.config" />
+    <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Body-Markdown.Editor.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Handlers\MarkdownSiteSettingsPartHandler.cs" />
+    <Compile Include="Markdown.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\MarkdownSiteSettingsPart.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -134,41 +132,6 @@
   <ItemGroup>
     <Content Include="Styles\Web.config">
       <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Scripts\jquery.textarearesizer.min.js.map">
-      <DependentUpon>jquery.textarearesizer.js</DependentUpon>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Scripts\Markdown.Converter.min.js.map">
-      <DependentUpon>Markdown.Converter.js</DependentUpon>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Scripts\Markdown.Editor.min.js.map">
-      <DependentUpon>Markdown.Editor.js</DependentUpon>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Scripts\Markdown.Sanitizer.min.js.map">
-      <DependentUpon>Markdown.Sanitizer.js</DependentUpon>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Scripts\orchard-markdown-media-library.min.js.map">
-      <DependentUpon>orchard-markdown-media-library.js</DependentUpon>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Scripts\orchard-markdown-media-picker.min.js.map">
-      <DependentUpon>orchard-markdown-media-picker.js</DependentUpon>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Scripts\orchard-markdown.min.js.map">
-      <DependentUpon>orchard-markdown.js</DependentUpon>
     </Content>
   </ItemGroup>
   <ItemGroup>

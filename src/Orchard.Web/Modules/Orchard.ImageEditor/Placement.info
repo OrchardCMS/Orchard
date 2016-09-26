@@ -10,6 +10,8 @@
     <Place Parts_Image_Editor_CropOptions="Options"/>
     <Place Parts_Image_Editor_Resize="Buttons:6"/>
     <Place Parts_Image_Editor_ResizeOptions="Options"/>
+    <Place Parts_Image_Editor_Rotate="Buttons:7"/>
+    <Place Parts_Image_Editor_RotateOptions="Options"/>
 
     <Place Parts_Image_Editor_Filter="Buttons:7"/>
     <Place Parts_Image_Editor_FilterOptions="Options"/>

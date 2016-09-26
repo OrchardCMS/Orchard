@@ -2,8 +2,8 @@
    Catalan localisation for calendars datepicker for jQuery.
    Writers: (joan.leon@gmail.com). */
 (function($) {
-	$.calendars.picker.regional['ca'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['ca'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: '&#x3c;Ant', prevStatus: '',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: '',
 		nextText: 'Seg&#x3e;', nextStatus: '',
@@ -17,5 +17,5 @@
 		dayStatus: 'DD, M d', defaultStatus: '',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['ca']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['ca']);
 })(jQuery);

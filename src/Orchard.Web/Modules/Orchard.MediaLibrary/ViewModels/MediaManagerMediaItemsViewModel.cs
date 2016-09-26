@@ -5,6 +5,7 @@ namespace Orchard.MediaLibrary.ViewModels {
     public class MediaManagerMediaItemsViewModel {
         public IList<MediaManagerMediaItemViewModel> MediaItems { get; set; }
         public int MediaItemsCount { get; set; }
+        public string FolderPath { get; set; }
     }
 
     public class MediaManagerMediaItemViewModel {

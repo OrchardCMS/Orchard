@@ -1,0 +1,25 @@
+﻿/* Forms
+***************************************************************/
+.dynamic-form input[type='text'],
+.dynamic-form input.text,
+.dynamic-form textarea.text {
+    width: 99%;
+    line-height: 1.5em;
+    margin-bottom: 0.8em;
+}
+
+/* Validation
+***************************************************************/
+.input-validation-error, input.text.input-validation-error {
+     border:1px solid #990808;
+}
+
+.field-validation-error {
+     color: #990808;
+}
+
+/* Elements
+***************************************************************/
+.form-field-element {
+    margin: 0.8em 0 0 0;
+}

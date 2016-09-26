@@ -6,7 +6,6 @@ namespace Orchard.ContentManagement.Handlers {
         public XElement Data { get; set; }
         private ImportContentSession Session { get; set; }
 
-
         public ImportContentContext(ContentItem contentItem, XElement data, ImportContentSession importContentSession)
             : base(contentItem) {
             Data = data;
@@ -21,6 +20,11 @@ namespace Orchard.ContentManagement.Handlers {
                     return attribute.Value;
             }
             return null;
+        }
+
+        public string ChildEl(string elementName, string childElementName) {
+            var element = Data.Element(elementName);
+            return element == null ? null : element.El(childElementName);
         }
 
         public void ImportAttribute(string elementName, string attributeName, Action<string> value) {
@@ -42,9 +46,27 @@ namespace Orchard.ContentManagement.Handlers {
             }
         }
 
+        public void ImportChildEl(string elementName, string childElementName, Action<string> value) {
+            ImportChildEl(elementName, childElementName, value, () => { });
+        }
+
+        public void ImportChildEl(string elementName, string childElementName, Action<string> value, Action empty) {
+            var importedText = ChildEl(elementName, childElementName);
+            if (importedText != null) {
+                try {
+                    value(importedText);
+                }
+                catch {
+                    empty();
+                }
+            }
+            else {
+                empty();
+            }
+        }
+
         public ContentItem GetItemFromSession(string id) {
             return Session.Get(id);
         }
-
     }
 }

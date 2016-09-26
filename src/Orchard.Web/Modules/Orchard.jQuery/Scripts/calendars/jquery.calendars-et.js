@@ -2,7 +2,7 @@
    Estonian localisation for Gregorian/Julian calendars for jQuery.
    Written by Mart Sõmermaa (mrts.pydev at gmail com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['et'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['et'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Jaanuar','Veebruar','Märts','Aprill','Mai','Juuni', 
@@ -17,7 +17,7 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['et'] =
-			$.calendars.calendars.gregorian.prototype.regional['et'];
+		$.calendars.calendars.julian.prototype.regionalOptions['et'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['et'];
 	}
 })(jQuery);

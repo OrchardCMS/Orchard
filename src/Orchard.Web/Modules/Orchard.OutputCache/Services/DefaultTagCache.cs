@@ -37,5 +37,10 @@ namespace Orchard.OutputCache.Services {
 
             return Enumerable.Empty<string>();
         }
+
+        public void RemoveTag(string tag) {
+            HashSet<string> set;
+            _dictionary.TryRemove(tag, out set);
+        }
     }
 }

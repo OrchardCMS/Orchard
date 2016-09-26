@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <link href="Styles/Lib/jquery-ui.css" rel="stylesheet" />
+    <link href="Styles/Lib/jquery-ui.structure.css" rel="stylesheet" />
+    <link href="Styles/Lib/bootstrap.css" rel="stylesheet" />
+    <link href="Styles/Lib/font-awesome.css" rel="stylesheet" />
+    <link href="Styles/Styles.css" rel="stylesheet" />
+</head>
+<body>
+
+    <style>
+        body {
+            padding: 36px;
+        }
+        #saveBtn {
+            margin-bottom: 2em;
+        }
+    </style>
+
+    <button id="saveBtn">Save</button>
+
+    <!-- Note the model attribute, initializes the canvas bound to a given model. -->
+    <orc-layout-canvas model="canvasModel1" ng-app="LayoutEditor" />
+
+    <!-- Library dependencies. -->
+    <script src="Scripts/Lib/jquery-2.1.1.js"></script>
+    <script src="Scripts/Lib/jquery-ui.js"></script>
+    <script src="Scripts/Lib/underscore.js"></script>
+    <script src="Scripts/Lib/angular.js"></script>
+    <script src="Scripts/Lib/angular-sanitize.js"></script>
+    <script src="Scripts/Lib/angular-resource.js"></script>
+    <script src="Scripts/Lib/bootstrap.js"></script>
+
+    <!-- The actual layout editor. -->
+    <script src="Scripts/Models.js"></script>
+    <script src="Scripts/LayoutEditor.js"></script>
+
+    <!-- Demo config and data. In a real application these will be provided by server. -->
+    <script src="Scripts/DemoConfig.js"></script>
+    <script src="Scripts/DemoData.js"></script>
+
+    <script>
+        // Create a model from demo config and data.
+        var canvasModel1 = LayoutEditor.Canvas.from(demoConfig, demoData);
+
+        $(function () {
+            $("#saveBtn").click(function () {
+                var canvasData = canvasModel1.toObject();
+                var canvasDataJson = JSON.stringify(canvasData, null, '\t');
+                // TODO: Do whatever to post the model JSON to server here.
+                console.log(canvasData);
+                console.log(canvasDataJson);
+            })
+        })
+    </script>
+
+</body>
+</html>

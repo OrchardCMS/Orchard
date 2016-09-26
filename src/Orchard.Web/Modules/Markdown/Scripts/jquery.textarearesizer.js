@@ -12,6 +12,7 @@
 	1.0.3 Further updates including removing the textarea.focus and moving private variables to top
 	1.0.4 Re-instated the blur/focus events, according to information supplied by dec
 
+    1.0.5 Nick Mayne - Fixing issue with RTL when using useParentWidth. Should be looking at MarginLeft, not ignoring it.
 	
 */
 (function ($) {
@@ -60,6 +61,8 @@
 
         if (!options.useParentWidth) {
             grippie[0].style.marginRight = (grippie[0].offsetWidth - resizable[0].offsetWidth) + 'px';
+        } else {
+            grippie[0].style.marginLeft = (grippie[0].offsetWidth - resizable[0].offsetWidth) + 'px';
         }
 
         if (options.initCallback && options.callback) {

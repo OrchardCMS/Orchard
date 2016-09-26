@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>2.2</ProductVersion>
+    <ProductVersion>2.5</ProductVersion>
     <ProjectGuid>{03c5327d-4e8e-45a7-acd1-e18e7caa3c4a}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -13,6 +13,8 @@
     <StartDevelopmentStorage>True</StartDevelopmentStorage>
     <Name>OrchardCloudService</Name>
     <UseIISExpressByDefault>False</UseIISExpressByDefault>
+    <UseEmulatorExpressByDefault>False</UseEmulatorExpressByDefault>
+    <PackageEnableRemoteDebugger>False</PackageEnableRemoteDebugger>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -56,14 +58,14 @@
     <Content Include="Orchard.Azure.WebContent\Bin\Startup\SetIdleTimeout.cmd">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Orchard.Azure.WebContent\diagnostics.wadcfg">
-      <SubType>Content</SubType>
-    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <DiagnosticsConfiguration Include="Orchard.Azure.WebContent\diagnostics.wadcfgx" />
   </ItemGroup>
   <!-- Import the target files for this project template -->
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
-    <CloudExtensionsDir Condition=" '$(CloudExtensionsDir)' == '' ">$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Windows Azure Tools\2.2\</CloudExtensionsDir>
+    <CloudExtensionsDir Condition=" '$(CloudExtensionsDir)' == '' ">$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Windows Azure Tools\2.5\</CloudExtensionsDir>
   </PropertyGroup>
   <Import Project="$(CloudExtensionsDir)Microsoft.WindowsAzure.targets" />
   <!-- The BeforeAddRoleContent override ensures that content in themes and modules get added

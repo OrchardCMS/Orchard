@@ -2,7 +2,7 @@
    Brazilian Portuguese localisation for Gregorian/Julian calendars for jQuery.
    Written by Leonildo Costa Silva (leocsilva@gmail.com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['pt-BR'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['pt-BR'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho',
@@ -17,7 +17,7 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['pt-BR'] =
-			$.calendars.calendars.gregorian.prototype.regional['pt-BR'];
+		$.calendars.calendars.julian.prototype.regionalOptions['pt-BR'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['pt-BR'];
 	}
 })(jQuery);

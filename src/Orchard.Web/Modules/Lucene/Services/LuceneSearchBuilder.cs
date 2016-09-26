@@ -12,6 +12,7 @@ using Orchard.Indexing;
 using Orchard.Logging;
 using Lucene.Net.Documents;
 using Lucene.Net.QueryParsers;
+using Lucene.Net.Analysis.Tokenattributes;
 
 namespace Lucene.Services {
     public class LuceneSearchBuilder : ISearchBuilder {
@@ -19,6 +20,8 @@ namespace Lucene.Services {
         private const int MaxResults = Int16.MaxValue;
 
         private readonly Directory _directory;
+        private string _indexName;
+        private Analyzer _analyzer;
 
         private readonly List<BooleanClause> _clauses;
         private readonly List<BooleanClause> _filters;
@@ -32,14 +35,20 @@ namespace Lucene.Services {
         // pending clause attributes
         private Occur _occur;
         private bool _exactMatch;
+        private bool _notAnalyzed;
         private float _boost;
         private Query _query;
-        private readonly Analyzer _analyzer = LuceneIndexProvider.CreateAnalyzer();
 
         public ILogger Logger { get; set; }
 
-        public LuceneSearchBuilder(Directory directory) {
+        public LuceneSearchBuilder(
+            Directory directory, 
+            ILuceneAnalyzerProvider analyzerProvider,
+            string indexName) {
             _directory = directory;
+            _indexName = indexName;
+            _analyzer = analyzerProvider.GetAnalyzer(_indexName);
+
             Logger = NullLogger.Instance;
 
             _count = MaxResults;
@@ -120,7 +129,7 @@ namespace Lucene.Services {
 
         public ISearchBuilder WithinRange(string field, string min, string max, bool includeMin = true, bool includeMax = true) {
             CreatePendingClause();
-            _query = new TermRangeQuery(field, min != null ? QueryParser.Escape(min.ToLower()) : null, max != null ? QueryParser.Escape(max.ToLower()) : null, includeMin, includeMax);
+            _query = new TermRangeQuery(field, min != null ? QueryParser.Escape(min) : null, max != null ? QueryParser.Escape(max) : null, includeMin, includeMax);
             return this;
         }
 
@@ -128,7 +137,7 @@ namespace Lucene.Services {
             CreatePendingClause();
 
             if (!String.IsNullOrWhiteSpace(value)) {
-                _query = new TermQuery(new Term(field, QueryParser.Escape(value.ToLower())));
+                _query = new TermQuery(new Term(field, QueryParser.Escape(value)));
             }
 
             return this;
@@ -149,6 +158,11 @@ namespace Lucene.Services {
             return this;
         }
 
+        public ISearchBuilder NotAnalyzed() {
+            _notAnalyzed = true;
+            return this;
+        }
+
         public ISearchBuilder Weighted(float weight) {
             _boost = weight;
             return this;
@@ -157,6 +171,7 @@ namespace Lucene.Services {
         private void InitPendingClause() {
             _occur = Occur.SHOULD;
             _exactMatch = false;
+            _notAnalyzed = false;
             _query = null;
             _boost = 0;
             _asFilter = false;
@@ -173,14 +188,32 @@ namespace Lucene.Services {
                 _query.Boost = _boost;
             }
 
+            if (!_notAnalyzed) {
+                var termQuery = _query as TermQuery;
+                if (termQuery != null) {
+                    var term = termQuery.Term;
+                    var analyzedText = AnalyzeText(_analyzer, term.Field, term.Text).FirstOrDefault();
+                    _query = new TermQuery(new Term(term.Field, analyzedText));
+                }
+
+                var termRangeQuery = _query as TermRangeQuery;
+                if (termRangeQuery != null) {
+                    var lowerTerm = AnalyzeText(_analyzer, termRangeQuery.Field, termRangeQuery.LowerTerm).FirstOrDefault();
+                    var upperTerm = AnalyzeText(_analyzer, termRangeQuery.Field, termRangeQuery.UpperTerm).FirstOrDefault();
+
+                    _query = new TermRangeQuery(termRangeQuery.Field, lowerTerm, upperTerm, termRangeQuery.IncludesLower, termRangeQuery.IncludesUpper);
+                }
+            }
+
             if (!_exactMatch) {
                 var termQuery = _query as TermQuery;
                 if (termQuery != null) {
                     var term = termQuery.Term;
-                    // prefixed queries are case sensitive
-                    _query = new PrefixQuery(term);
+                    _query = new PrefixQuery(new Term(term.Field, term.Text));
                 }
+
             }
+
             if (_asFilter) {
                 _filters.Add(new BooleanClause(_query, _occur));
             }
@@ -189,6 +222,27 @@ namespace Lucene.Services {
             }
 
             InitPendingClause();
+        }
+
+        private static List<string> AnalyzeText(Analyzer analyzer, string field, string text) {
+
+            if (String.IsNullOrEmpty(text)) {
+                return new List<string>();
+            }
+
+            var result = new List<string>();
+            using (var sr = new System.IO.StringReader(text)) {
+                using (TokenStream stream = analyzer.TokenStream(field, sr)) {
+                    while (stream.IncrementToken()) {
+                        var termAttribute = stream.GetAttribute<ITermAttribute>();
+                        if(termAttribute != null) {
+                            result.Add(termAttribute.Term);
+                        }
+                    }
+                }
+            }
+
+            return result;
         }
 
         public ISearchBuilder SortBy(string name) {

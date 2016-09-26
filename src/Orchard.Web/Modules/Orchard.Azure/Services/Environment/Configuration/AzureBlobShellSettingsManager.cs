@@ -14,12 +14,7 @@ namespace Orchard.Azure.Services.Environment.Configuration {
     /// Provides an IShellSettingsManager implementation that uses Microsoft Azure Blob Storage as the
     /// underlying storage system.
     /// </summary>
-    /// <remarks>
-    /// Additionally, this class handles role configuration change events when running in a Microsoft Azure Cloud
-    /// Service to ensure all Orchard tenents are notified whenever a role configuration setting is changed
-    /// through the management portal or API.
-    /// </remarks>
-    public class AzureBlobShellSettingsManager : Component, IShellSettingsManager {
+    public class AzureBlobShellSettingsManager : IShellSettingsManager {
 
         private readonly AzureFileSystem _fileSystem;
         private readonly IShellSettingsManagerEventHandler _events;
@@ -27,7 +22,10 @@ namespace Orchard.Azure.Services.Environment.Configuration {
         public AzureBlobShellSettingsManager(IMimeTypeProvider mimeTypeProvider, IShellSettingsManagerEventHandler events) {
             _fileSystem = new AzureFileSystem(CloudConfigurationManager.GetSetting(Constants.ShellSettingsStorageConnectionStringSettingName), Constants.ShellSettingsContainerName, String.Empty, true, mimeTypeProvider);
             _events = events;
+            Logger = NullLogger.Instance;
         }
+
+        public ILogger Logger { get; set; }
 
         public virtual IEnumerable<ShellSettings> LoadSettings() {
             Logger.Debug("Reading ShellSettings...");

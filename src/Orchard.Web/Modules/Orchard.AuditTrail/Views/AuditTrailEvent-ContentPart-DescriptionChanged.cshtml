@@ -1,0 +1,10 @@
+﻿@using Orchard.AuditTrail.Helpers
+@{
+    var eventData = (IDictionary<string, object>) Model.EventData;
+    var contentPartName = eventData.Get<string>("ContentPartName");
+    var oldDescription = eventData.Get<string>("OldDescription");
+    var newDescription = eventData.Get<string>("NewDescription");
+}
+<section class="audittrail-contentpart-eventsummary">
+    @T("The description of content part {0} was changed from <strong>{1}</strong> to <strong>{2}</strong>.", Html.ContentPartEditLink(contentPartName), oldDescription.OrIfEmpty(T("[Empty]")), newDescription.OrIfEmpty(T("[Empty]")))
+</section>

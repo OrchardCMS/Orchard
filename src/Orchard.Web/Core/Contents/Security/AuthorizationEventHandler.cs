@@ -25,7 +25,7 @@ namespace Orchard.Core.Contents.Security {
                 var typeDefinition = context.Content.ContentItem.TypeDefinition;
 
                 // replace permission if a content type specific version exists
-                if (typeDefinition.Settings.GetModel<ContentTypeSettings>().Creatable) {
+                if (typeDefinition.Settings.GetModel<ContentTypeSettings>().Securable) {
                     var permission = GetContentTypeVariation(context.Permission);
 
                     if (permission != null) {
@@ -60,6 +60,9 @@ namespace Orchard.Core.Contents.Security {
                 return Permissions.DeleteOwnContent;
             if (permission.Name == Permissions.ViewContent.Name)
                 return Permissions.ViewOwnContent;
+            if (permission.Name == Permissions.PreviewContent.Name)
+                return Permissions.PreviewOwnContent;
+
             return null;
         }
 

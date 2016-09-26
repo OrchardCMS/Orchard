@@ -1,0 +1,21 @@
+﻿@model Orchard.Layouts.ViewModels.ContentItemEditorViewModel
+<fieldset>
+    <div>
+        @Display.ContentPicker_Edit(
+            Required: false,
+            Multiple: true,
+            DisplayName: T("Content").Text,
+            IdsFieldId: Html.FieldIdFor(m => m.ContentItemIds),
+            SelectedItemsFieldName: Html.FieldNameFor(m => m.ContentItemIds),
+            ContentItems: Model.ContentItems,
+            Hint: "",
+            PartName: "",
+            FieldName: ""
+            )
+    </div>
+    <div>
+        @Html.LabelFor(m => m.DisplayType, T("Display Type"))
+        @Html.TextBoxFor(m => m.DisplayType, new { @class = "text medium" })
+        <span class="hint">@T("The display type to use when rendering the selected content items. The default Detail display type will be used when left empty.")</span>
+    </div>
+</fieldset>

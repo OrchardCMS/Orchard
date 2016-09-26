@@ -1,6 +1,6 @@
 ﻿(function($) {
     $(function() {
-        $("#search-box").focus().on("keyup", function (e) {
+        $("#search-box").on("keyup", function (e) {
             var text = $(this).val();
             
             if (e.keyCode == 13) {

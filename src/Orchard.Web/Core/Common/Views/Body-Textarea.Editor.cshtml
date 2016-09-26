@@ -1,3 +1,13 @@
-﻿@(Model.Required != null && Model.Required
-         ? Html.TextArea("Text", (string)Model.Text, 10, 80, new { required = "required" })
-         : Html.TextArea("Text", (string)Model.Text, 10, 80, new { }))
+﻿@{
+    var htmlAttributes = new Dictionary<string, object>();
+
+    if (Model.Required == true) {
+        htmlAttributes["required"] = "required";
+    }
+
+    if (Model.AutoFocus == true) {
+        htmlAttributes["autofocus"] = "autofocus";
+    }
+}
+
+@Html.TextArea("Text", (string)Model.Text, 25, 80, htmlAttributes)

@@ -2,8 +2,8 @@
    Maltese localisation for calendars datepicker for jQuery.
    Written by Chritian Sciberras (uuf6429@gmail.com). */
 (function($) {
-	$.calendars.picker.regional['mt'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['mt'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: 'Ta Qabel', prevStatus: 'Ix-xahar ta qabel',
  		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: 'Is-sena ta qabel',
  		nextText: 'Li Jmiss', nextStatus: 'Ix-xahar li jmiss',
@@ -17,5 +17,5 @@
 		dayStatus: 'Għazel DD, M d', defaultStatus: 'Għazel data',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['mt']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['mt']);
 })(jQuery);

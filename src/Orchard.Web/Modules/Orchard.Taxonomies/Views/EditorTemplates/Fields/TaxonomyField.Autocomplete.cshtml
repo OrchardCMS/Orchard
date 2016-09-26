@@ -26,8 +26,8 @@
     }
 }
 @{
-    var allTerms = string.Join(",", Model.Terms.Select(x => string.Format("{0}\t{1}\t{2}\t{3}", x.Name, x.Id, x.GetLevels(), IsTermDisabled(x))));
-    var selectedTerms = string.Join(",", Model.Terms.Where(x => x.IsChecked).Select(x => string.Format("{0}\t{1}", x.Name, x.Id)));
+    var allTerms = Newtonsoft.Json.JsonConvert.SerializeObject(Model.Terms.Select(x => new { label = x.Name, value = x.Id, levels = x.GetLevels(), disabled = IsTermDisabled(x)}));
+    var selectedTerms = Newtonsoft.Json.JsonConvert.SerializeObject(Model.Terms.Where(x => x.IsChecked).Select(x => new { label = x.Name, value = x.Id, levels = 0, disabled = true }));
 }
 <fieldset class="taxonomy-wrapper" data-name-prefix="@Html.FieldNameFor(m => m)" data-id-prefix="@Html.FieldIdFor(m => m)">
     <legend @if(Model.Settings.Required) { <text>class="required"</text> }>@Model.DisplayName.CamelFriendly()</legend>

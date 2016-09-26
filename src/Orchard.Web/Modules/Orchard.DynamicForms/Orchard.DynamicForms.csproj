@@ -1,0 +1,551 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{82190F52-2901-46D6-8A4C-34649959483F}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Orchard.DynamicForms</RootNamespace>
+    <AssemblyName>Orchard.DynamicForms</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <TargetFrameworkProfile />
+    <UseIISExpress>false</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\newtonsoft.json\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.ComponentModel.DataAnnotations">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Mvc, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\Forms.js">
+      <DependentUpon>Forms.js.bundle</DependentUpon>
+    </Content>
+    <Content Include="Scripts\Forms.min.js">
+      <DependentUpon>Forms.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\Layouts\Directives\Form.js" />
+    <Content Include="Scripts\Layouts\Models\Form.js" />
+    <Content Include="Scripts\Lib\jquery.validate.js" />
+    <Content Include="Scripts\Lib\jquery.validate.min.js">
+      <DependentUpon>jquery.validate.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\Lib\jquery.validate.unobtrusive.additional.js" />
+    <Content Include="Scripts\Lib\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\Lib\jquery.validate.unobtrusive.min.js">
+      <DependentUpon>jquery.validate.unobtrusive.js</DependentUpon>
+    </Content>
+    <Content Include="Styles\forms.css" />
+    <Content Include="Styles\forms-admin.css" />
+    <Content Include="Styles\menu.dynamicforms-admin.css" />
+    <Content Include="Styles\menu.dynamicforms.png" />
+    <Content Include="Web.config" />
+    <Content Include="Scripts\Web.config" />
+    <Content Include="Styles\Web.config" />
+    <Content Include="Properties\AssemblyInfo.cs" />
+    <Content Include="Module.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
+      <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
+      <Name>Orchard.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\Orchard.Core.csproj">
+      <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
+      <Name>Orchard.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.AntiSpam\Orchard.AntiSpam.csproj">
+      <Project>{91bc2e7f-da04-421c-98ef-76d37cec130c}</Project>
+      <Name>Orchard.AntiSpam</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Fields\Orchard.Fields.csproj">
+      <Project>{3787dde5-e5c8-4841-bda7-dcb325388064}</Project>
+      <Name>Orchard.Fields</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Forms\Orchard.Forms.csproj">
+      <Project>{642a49d7-8752-4177-80d6-bfbbcfad3de0}</Project>
+      <Name>Orchard.Forms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Layouts\Orchard.Layouts.csproj">
+      <Project>{6bd8b2fa-f2e3-4ac8-a4c3-2925a653889a}</Project>
+      <Name>Orchard.Layouts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Projections\Orchard.Projections.csproj">
+      <Project>{5531e894-d259-45a3-aa61-26dbe720c1ce}</Project>
+      <Name>Orchard.Projections</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Scripting.CSharp\Orchard.Scripting.CSharp.csproj">
+      <Project>{5d13ef34-8b39-4ec5-847f-e12892acf841}</Project>
+      <Name>Orchard.Scripting.CSharp</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Taxonomies\Orchard.Taxonomies.csproj">
+      <Project>{e649ea64-d213-461b-87f7-d67035801443}</Project>
+      <Name>Orchard.Taxonomies</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Tokens\Orchard.Tokens.csproj">
+      <Project>{6f759635-13d7-4e94-bcc9-80445d63f117}</Project>
+      <Name>Orchard.Tokens</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Users\Orchard.Users.csproj">
+      <Project>{79aed36e-abd0-4747-93d3-8722b042454b}</Project>
+      <Name>Orchard.Users</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Workflows\Orchard.Workflows.csproj">
+      <Project>{7059493c-8251-4764-9c1e-2368b8b485bc}</Project>
+      <Name>Orchard.Workflows</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Activities\DynamicFormActivity.cs" />
+    <Compile Include="Activities\AddModelErrorActivity.cs" />
+    <Compile Include="Activities\DynamicFormValidatingActivity.cs" />
+    <Compile Include="Activities\DynamicFormSubmittedActivity.cs" />
+    <Compile Include="Bindings\BooleanFieldBindings.cs" />
+    <Compile Include="Bindings\EnumerationFieldBindings.cs" />
+    <Compile Include="Bindings\InputFieldBindings.cs" />
+    <Compile Include="Bindings\TaxonomyFieldBindings.cs" />
+    <Compile Include="Forms\AddModelErrorForm.cs" />
+    <Compile Include="Forms\SelectDynamicForms.cs" />
+    <Compile Include="Bindings\TextFieldBindings.cs" />
+    <Compile Include="Bindings\BodyPartBindings.cs" />
+    <Compile Include="Bindings\UserPartBindings.cs" />
+    <Compile Include="Controllers\SubmissionAdminController.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\FormController.cs" />
+    <Compile Include="Drivers\EmailFieldElementDriver.cs" />
+    <Compile Include="Drivers\PasswordFieldElementDriver.cs" />
+    <Compile Include="Drivers\QueryElementDriver.cs" />
+    <Compile Include="Drivers\ReCaptchaElementDriver.cs" />
+    <Compile Include="Drivers\ValidationMessageElementDriver.cs" />
+    <Compile Include="Drivers\ValidationSummaryElementDriver.cs" />
+    <Compile Include="Elements\EmailField.cs" />
+    <Compile Include="Elements\PasswordField.cs" />
+    <Compile Include="Elements\Query.cs" />
+    <Compile Include="Elements\ReCaptcha.cs" />
+    <Compile Include="Elements\ValidationMessage.cs" />
+    <Compile Include="Elements\ValidationSummary.cs" />
+    <Compile Include="Forms\DynamicFormValidatingForm.cs" />
+    <Compile Include="Handlers\ClientValidationRegistrationCoordinator.cs" />
+    <Compile Include="Handlers\LayoutEditorShapeEventHandler.cs" />
+    <Compile Include="Handlers\WorkflowValidatorCoordinator.cs" />
+    <Compile Include="ResourceManifest.cs" />
+    <Compile Include="Services\FormModelMap.cs" />
+    <Compile Include="Services\Models\FormSubmissionTokenContext.cs" />
+    <Compile Include="Handlers\ValidatorsCoordinator.cs" />
+    <Compile Include="Handlers\FormSubmissionCoordinator.cs" />
+    <Compile Include="Helpers\FormControllerExtensions.cs" />
+    <Compile Include="Helpers\FieldValidatorsExtensions.cs" />
+    <Compile Include="Helpers\StringExtensions.cs" />
+    <Compile Include="Services\ElementValidator.cs" />
+    <Compile Include="Services\FormEventHandlerBase.cs" />
+    <Compile Include="Services\IValidationRuleFactory.cs" />
+    <Compile Include="Services\ITempDataAccessor.cs" />
+    <Compile Include="Services\IElementValidator.cs" />
+    <Compile Include="Services\Models\RegisterClientValidationAttributesContext.cs" />
+    <Compile Include="Services\Models\ValidationContext.cs" />
+    <Compile Include="Services\ValidationRuleFactory.cs" />
+    <Compile Include="Services\IValidationRule.cs" />
+    <Compile Include="Tokens\FormTokens.cs" />
+    <Compile Include="ValidationRules\OptionRequired.cs" />
+    <Compile Include="ValidationRules\Mandatory.cs" />
+    <Compile Include="ValidationRules\Compare.cs" />
+    <Compile Include="ValidationRules\EmailAddress.cs" />
+    <Compile Include="ValidationRules\RegularExpression.cs" />
+    <Compile Include="ValidationRules\StringLength.cs" />
+    <Compile Include="Validators\QueryValidator.cs" />
+    <Compile Include="Validators\TaxonomyValidator.cs" />
+    <Compile Include="Validators\EnumerationValidator.cs" />
+    <Compile Include="Validators\CheckBoxValidator.cs" />
+    <Compile Include="ValidationRules\Required.cs" />
+    <Compile Include="Services\ValidationRule.cs" />
+    <Compile Include="Validators\EmailFieldValidator.cs" />
+    <Compile Include="Validators\Settings\EnumerationValidationSettings.cs" />
+    <Compile Include="Validators\Settings\CheckBoxValidationSettings.cs" />
+    <Compile Include="Validators\Settings\EmailFieldValidationSettings.cs" />
+    <Compile Include="Validators\Settings\PasswordFieldValidationSettings.cs" />
+    <Compile Include="Validators\Settings\ReCaptchaValidationSettings.cs" />
+    <Compile Include="Validators\Settings\TextAreaValidationSettings.cs" />
+    <Compile Include="Validators\Settings\TextFieldValidationSettings.cs" />
+    <Compile Include="Services\Models\ValidationSettingsBase.cs" />
+    <Compile Include="Services\Models\FormEventContext.cs" />
+    <Compile Include="Drivers\ValidationElementDriver.cs" />
+    <Compile Include="Drivers\BindingsElementDriver.cs" />
+    <Compile Include="Drivers\TaxonomyElementDriver.cs" />
+    <Compile Include="Drivers\HiddenFieldElementDriver.cs" />
+    <Compile Include="Drivers\CheckboxElementDriver.cs" />
+    <Compile Include="Drivers\TextAreaElementDriver.cs" />
+    <Compile Include="Drivers\RadioButtonElementDriver.cs" />
+    <Compile Include="Drivers\EnumerationElementDriver.cs" />
+    <Compile Include="Drivers\UserNameFieldElementDriver.cs" />
+    <Compile Include="Elements\LabeledFormElement.cs" />
+    <Compile Include="Elements\Taxonomy.cs" />
+    <Compile Include="Elements\HiddenField.cs" />
+    <Compile Include="Elements\Checkbox.cs" />
+    <Compile Include="Elements\RadioButton.cs" />
+    <Compile Include="Elements\TextArea.cs" />
+    <Compile Include="Elements\Enumeration.cs" />
+    <Compile Include="Elements\UserNameField.cs" />
+    <Compile Include="Forms\AutoLabelForm.cs" />
+    <Compile Include="Handlers\UserNameFieldHandler.cs" />
+    <Compile Include="Helpers\StreamExtensions.cs" />
+    <Compile Include="Helpers\DataTableExtensions.cs" />
+    <Compile Include="Helpers\TokenizerExtensions.cs" />
+    <Compile Include="ImportExport\FormsExportStep.cs" />
+    <Compile Include="ImportExport\FormsExportHandler.cs" />
+    <Compile Include="ImportExport\FormsImportHandler.cs" />
+    <Compile Include="Services\IDynamicFormEventHandler.cs" />
+    <Compile Include="Services\Models\FieldValidatorDescriptor.cs" />
+    <Compile Include="Services\Models\FormSubmittedEventContext.cs" />
+    <Compile Include="Services\Models\FormValidatedEventContext.cs" />
+    <Compile Include="Services\Models\FormValidatingEventContext.cs" />
+    <Compile Include="Services\Models\BindingDescriptor.cs" />
+    <Compile Include="Services\Models\ContentFieldBindingDescriptor.cs" />
+    <Compile Include="Services\Models\ContentPartBindingDescriptor.cs" />
+    <Compile Include="Services\Models\ValidateInputContext.cs" />
+    <Compile Include="Validators\PasswordFieldValidator.cs" />
+    <Compile Include="Validators\ReCaptchaValidator.cs" />
+    <Compile Include="Validators\TextAreaValidator.cs" />
+    <Compile Include="Validators\TextFieldValidator.cs" />
+    <Compile Include="ViewModels\FieldValidationSettings.cs" />
+    <Compile Include="ViewModels\FormBindingSettings.cs" />
+    <Compile Include="Helpers\ContentTypeDefinitionExtensions.cs" />
+    <Compile Include="Services\BindingManager.cs" />
+    <Compile Include="Services\IBindingManager.cs" />
+    <Compile Include="Services\IBindingProvider.cs" />
+    <Compile Include="Services\Models\BindingDescribeContext.cs" />
+    <Compile Include="Services\Models\BindingContext.cs" />
+    <Compile Include="Bindings\TitlePartBindings.cs" />
+    <Compile Include="ViewModels\BindingSettings.cs" />
+    <Compile Include="ViewModels\FieldBindingSettings.cs" />
+    <Compile Include="ViewModels\PartBindingSettings.cs" />
+    <Compile Include="ViewModels\BlueprintsIndexViewModel.cs" />
+    <Compile Include="ViewModels\SubmissionViewModel.cs" />
+    <Compile Include="ViewModels\SubmissionsIndexViewModel.cs" />
+    <Compile Include="Helpers\SubmissionExtensions.cs" />
+    <Compile Include="ViewModels\FormsIndexViewModel.cs" />
+    <Compile Include="Drivers\CommonFormElementDriver.cs" />
+    <Compile Include="Drivers\FormElementDriver.cs" />
+    <Compile Include="Drivers\ButtonElementDriver.cs" />
+    <Compile Include="Drivers\IpAddressFieldElementDriver.cs" />
+    <Compile Include="Elements\IpAddressField.cs" />
+    <Compile Include="Handlers\IpAddressFieldHandler.cs" />
+    <Compile Include="AdminMenu.cs" />
+    <Compile Include="Migrations.cs" />
+    <Compile Include="Handlers\ReadFormValuesHandler.cs" />
+    <Compile Include="Services\FormElementEventHandlerBase.cs" />
+    <Compile Include="Helpers\NameValueCollectionExtensions.cs" />
+    <Compile Include="Models\Submission.cs" />
+    <Compile Include="Permissions.cs" />
+    <Compile Include="Services\FormService.cs" />
+    <Compile Include="Services\IFormElementEventHandler.cs" />
+    <Compile Include="Services\IFormService.cs" />
+    <Compile Include="Drivers\LabelElementDriver.cs" />
+    <Compile Include="Drivers\TextFieldElementDriver.cs" />
+    <Compile Include="Elements\FormCategoryProvider.cs" />
+    <Compile Include="Elements\FormElement.cs" />
+    <Compile Include="Elements\Form.cs" />
+    <Compile Include="Elements\Button.cs" />
+    <Compile Include="Elements\Label.cs" />
+    <Compile Include="Elements\TextField.cs" />
+    <Compile Include="Services\ReadElementValuesContext.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\SubmissionAdmin\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\TextField.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Button.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Form.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Label.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\TextField.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\IpAddressField.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\IpAddressField.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Admin\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\SubmissionAdmin\Details.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\FormBindings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\UserNameField.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\UserNameField.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\HiddenField.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\HiddenField.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\TextArea.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\TextArea.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\RadioButton.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\RadioButton.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Checkbox.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Checkbox.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Enumeration-SelectList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Enumeration-MultiSelectList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Enumeration-RadioList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Enumeration-CheckList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Taxonomy-SelectList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Taxonomy-RadioList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Taxonomy-MultiSelectList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Taxonomy-CheckList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Activity-DynamicFormSubmitted.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\BlueprintAdmin\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\ValidationSummary.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\ValidationSummary.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\ValidationMessage.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\ValidationMessage.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\FormElement.Wrapper.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\PasswordField.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\PasswordField.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Query-SelectList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Query-CheckList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Query-MultiSelectList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Query-RadioList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\EmailField.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\EmailField.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\ReCaptcha.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\ReCaptcha.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\Lib\jquery.validate.min.js.map">
+      <DependentUpon>jquery.validate.min.js</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\Lib\jquery.validate.unobtrusive.min.js.map">
+      <DependentUpon>jquery.validate.unobtrusive.min.js</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\Forms.js.bundle" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\LayoutEditor.Template.Form.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\Forms.min.js.map">
+      <DependentUpon>Forms.min.js</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Enumeration-RadioList.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Enumeration-CheckList.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Enumeration-SelectList.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Enumeration-MultiSelectList.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Taxonomy-CheckList.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Taxonomy-MultiSelectList.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Taxonomy-RadioList.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Taxonomy-SelectList.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Query-CheckList.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Query-MultiSelectList.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Query-RadioList.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Query-SelectList.Design.cshtml" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target> -->
+  <Target Name="AfterBuild" DependsOnTargets="AfterBuildCompiler">
+    <PropertyGroup>
+      <AreasManifestDir>$(ProjectDir)\..\Manifests</AreasManifestDir>
+    </PropertyGroup>
+    <!-- If this is an area child project, uncomment the following line:
+    <CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Child" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" />
+    -->
+    <!-- If this is an area parent project, uncomment the following lines:
+    <CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Parent" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" />
+    <CopyAreaManifests ManifestPath="$(AreasManifestDir)" CrossCopy="false" RenameViews="true" />
+    -->
+  </Target>
+  <Target Name="AfterBuildCompiler" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(ProjectDir)\..\$(ProjectName)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>45979</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>
+          </IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>True</UseCustomServer>
+          <CustomServerUrl>http://orchard.codeplex.com</CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

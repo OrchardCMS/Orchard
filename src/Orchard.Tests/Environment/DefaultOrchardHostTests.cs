@@ -19,11 +19,13 @@ using Orchard.FileSystems.AppData;
 using Orchard.FileSystems.VirtualPath;
 using Orchard.Mvc.ModelBinders;
 using Orchard.Mvc.Routes;
+using Orchard.Owin;
 using Orchard.Tests.Environment.TestDependencies;
 using Orchard.Tests.Stubs;
 using Orchard.Tests.Utility;
 using Orchard.WebApi.Routes;
 using IModelBinderProvider = Orchard.Mvc.ModelBinders.IModelBinderProvider;
+using Orchard.Tasks;
 
 namespace Orchard.Tests.Environment {
     [TestFixture]
@@ -62,7 +64,9 @@ namespace Orchard.Tests.Environment {
                         .Ignore<IExtensionFolders>()
                         .Ignore<IRouteProvider>()
                         .Ignore<IHttpRouteProvider>()
-                        .Ignore<IModelBinderProvider>();
+                        .Ignore<IModelBinderProvider>()
+                        .Ignore<IWorkContextEvents>()
+                        .Ignore<IOwinMiddlewareProvider>();
                 });
             _lifetime = _container.BeginLifetimeScope();
 
@@ -124,7 +128,7 @@ namespace Orchard.Tests.Environment {
         }
 
         public class StubShellSettingsLoader : IShellSettingsManager {
-            private readonly List<ShellSettings> _shellSettings = new List<ShellSettings> { new ShellSettings { Name = ShellSettings.DefaultName } };
+            private readonly List<ShellSettings> _shellSettings = new List<ShellSettings> { new ShellSettings { Name = ShellSettings.DefaultName, State = TenantState.Running } };
 
             public IEnumerable<ShellSettings> LoadSettings() {
                 return _shellSettings.AsEnumerable();

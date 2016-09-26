@@ -4,7 +4,7 @@
         var bulkActions = $(".bulk-actions-wrapper").addClass("visible");
         var theSwitch = $(".switch-for-switchable");
         theSwitch.prepend(bulkActions);
-        $("#search-box").focus().keyup(function() {
+        $("#search-box").keyup(function() {
             var text = $(this).val();
 
             if (text == '') {

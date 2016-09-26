@@ -257,6 +257,9 @@ namespace Orchard.Tests.Modules.Media.Services {
             public void RenameFile(string path, string newPath) {
             }
 
+            public void CopyFile(string originalPath, string duplicatePath) {
+            }
+
             public IStorageFile CreateFile(string path) {
                 throw new NotImplementedException();
             }

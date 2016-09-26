@@ -44,7 +44,7 @@ namespace Orchard.Environment.ShellBuilders {
             var features = _extensionManager.LoadFeatures(enabledFeatures);
 
             if (descriptor.Features.Any(feature => feature.Name == "Orchard.Framework"))
-                features = features.Concat(BuiltinFeatures());
+                features = BuiltinFeatures().Concat(features);
 
             var excludedTypes = GetExcludedTypes(features);
 

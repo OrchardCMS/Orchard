@@ -83,7 +83,7 @@ namespace Orchard.Mvc {
         }
 
         /// <summary>
-        /// standin context for background tasks.
+        /// Standin context for background tasks.
         /// </summary>
         class HttpContextPlaceholder : HttpContextBase {
             private readonly Lazy<string> _baseUrl;
@@ -124,6 +124,12 @@ namespace Orchard.Mvc {
             public override string ApplyAppPathModifier(string virtualPath) {
                 return virtualPath;
             }
+
+            public override HttpCookieCollection Cookies {
+                get {
+                    return new HttpCookieCollection();
+                }
+            }
         }
 
         /// <summary>
@@ -158,7 +164,7 @@ namespace Orchard.Mvc {
 
             public override NameValueCollection Headers {
                 get {
-                    return new NameValueCollection {{"Host", _uri.Authority}};
+                    return new NameValueCollection { { "Host", _uri.Authority } };
                 }
             }
 
@@ -184,10 +190,44 @@ namespace Orchard.Mvc {
                 }
             }
 
+            public override HttpCookieCollection Cookies {
+                get {
+                    return new HttpCookieCollection();
+                }
+            }
+
             public override bool IsLocal {
                 get { return true; }
             }
 
+            public override string Path {
+                get { return "/"; }
+            }
+
+            public override string UserAgent {
+                get {
+                    return "Placeholder";
+                }
+            }
+
+            public override HttpBrowserCapabilitiesBase Browser {
+                get {
+                    return new HttpBrowserCapabilitiesPlaceholder();
+                }
+            }
+        }
+
+        class HttpBrowserCapabilitiesPlaceholder : HttpBrowserCapabilitiesBase {
+            public override string this[string key] {
+                get {
+                    return "";
+                }
+            }
+
+            public override bool IsMobileDevice { get { return false; } }
+            public override string Browser { get { return "Placeholder"; } }
+            public override bool Cookies { get { return true; } }
+            public override ArrayList Browsers { get { return new ArrayList(); } }
         }
     }
 }

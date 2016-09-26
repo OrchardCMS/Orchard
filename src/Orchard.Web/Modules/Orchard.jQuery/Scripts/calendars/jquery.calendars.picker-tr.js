@@ -2,8 +2,8 @@
    Turkish localisation for calendars datepicker for jQuery.
    Written by Izzet Emre Erkan (kara@karalamalar.net). */
 (function($) {
-	$.calendars.picker.regional['tr'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['tr'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: '&#x3c;geri', prevStatus: 'önceki ayı göster',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: '',
 		nextText: 'ileri&#x3e', nextStatus: 'sonraki ayı göster',
@@ -17,5 +17,5 @@
 		dayStatus: 'D, M d seçiniz', defaultStatus: 'Bir tarih seçiniz',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['tr']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['tr']);
 })(jQuery);

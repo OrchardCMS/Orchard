@@ -2,8 +2,8 @@
    Georgian localisation for calendars datepicker for jQuery.
    Andrei Gorbushkin. */
 (function($) {
-	$.calendars.picker.regional['ka'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['ka'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: '<უკან', prevStatus: 'წინა თვე',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: 'წინა წელი',
 		nextText: 'წინ>', nextStatus: 'შემდეგი თვე',
@@ -17,5 +17,5 @@
 		dayStatus: 'აირჩიეთ DD, M d', defaultStatus: 'აიღჩიეთ თარიღი',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['ka']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['ka']);
 })(jQuery);

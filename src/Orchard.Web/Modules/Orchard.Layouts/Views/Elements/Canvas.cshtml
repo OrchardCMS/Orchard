@@ -1,0 +1,14 @@
+﻿@using Orchard.DisplayManagement.Shapes
+@using Orchard.Layouts.Helpers
+@{
+    // Only render the surrounding div if there are any attributes to be rendered.
+    var commonAttributes = (IDictionary<string, object>)TagBuilderExtensions.GetCommonElementAttributes(Model);
+    var tagBuilder = commonAttributes.Any() ? new OrchardTagBuilder("div") : default(OrchardTagBuilder);
+
+    if (tagBuilder != null) {
+        tagBuilder.MergeAttributes(commonAttributes);
+    }
+}
+@if (tagBuilder != null) { @tagBuilder.StartElement }
+@DisplayChildren(Model)
+@if (tagBuilder != null) { @tagBuilder.EndElement }

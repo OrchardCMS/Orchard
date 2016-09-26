@@ -1,0 +1,22 @@
+﻿@using Orchard.ContentManagement
+@model Orchard.Layouts.ViewModels.ImageEditorViewModel
+@{
+    var contentItems = new List<ContentItem>();
+
+    if (Model.CurrentImage != null) {
+        contentItems.Add(Model.CurrentImage.ContentItem);
+    }
+}
+<fieldset>
+    <div>
+        @Display.MediaLibraryPicker(
+            Required: false,
+            Multiple: false,
+            DisplayName: T("Image").Text,
+            FieldName: Html.FieldNameFor(m => m.ImageId),
+            ContentItems: contentItems.ToArray(),
+            Hint: "",
+            PromptOnNavigate: false,
+            ShowSaveWarning: false)
+    </div>
+</fieldset>

@@ -12,35 +12,49 @@ namespace Orchard.Localization.Services {
         /// <summary>
         /// Gets a list of month names.
         /// </summary>
-        IEnumerable<string> MonthNames {
+        string[] MonthNames {
+            get;
+        }
+
+        /// <summary>
+        /// Gets a list of genitive month names (used in contexts when a day is involved).
+        /// </summary>
+        string[] MonthNamesGenitive {
             get;
         }
 
         /// <summary>
         /// Gets a list of abbreviated month names.
         /// </summary>
-        IEnumerable<string> MonthNamesShort {
+        string[] MonthNamesShort {
+            get;
+        }
+
+        /// <summary>
+        /// Gets a list of abbreviated genivite month names (used in contexts when a day is involved).
+        /// </summary>
+        string[] MonthNamesShortGenitive {
             get;
         }
 
         /// <summary>
         /// Gets a list of weekday names.
         /// </summary>
-        IEnumerable<string> DayNames {
+        string[] DayNames {
             get;
         }
 
         /// <summary>
         /// Gets a list of abbreviated weekday names.
         /// </summary>
-        IEnumerable<string> DayNamesShort {
+        string[] DayNamesShort {
             get;
         }
 
         /// <summary>
         /// Gets a list of maximally abbreviated weekday names.
         /// </summary>
-        IEnumerable<string> DayNamesMin {
+        string[] DayNamesMin {
             get;
         }
 
@@ -72,7 +86,6 @@ namespace Orchard.Localization.Services {
             get;
         }
 
-
         /// <summary>
         /// Gets a custom DateTime format string used to format dates for long time display.
         /// </summary>
@@ -84,6 +97,27 @@ namespace Orchard.Localization.Services {
         /// Gets a custom DateTime format string used to format dates for full date and time display.
         /// </summary>
         string LongDateTimeFormat {
+            get;
+        }
+
+        /// <summary>
+        /// Gets the full list of custom DateTime format strings supported to format dates for date display.
+        /// </summary>
+        IEnumerable<string> AllDateFormats {
+            get;
+        }
+
+        /// <summary>
+        /// Gets the full list of custom DateTime format strings supported to format dates for time display.
+        /// </summary>
+        IEnumerable<string> AllTimeFormats {
+            get;
+        }
+
+        /// <summary>
+        /// Gets the full list of custom DateTime format strings supported to format dates for date and time display.
+        /// </summary>
+        IEnumerable<string> AllDateTimeFormats {
             get;
         }
 
@@ -102,7 +136,14 @@ namespace Orchard.Localization.Services {
         }
 
         /// <summary>
-        /// Gets the string that separates the components of time, that is, the hour, minutes, and seconds.
+        /// Gets the string that separates the components of date, that is, the year, month and day.
+        /// </summary>
+        string DateSeparator {
+            get;
+        }
+
+        /// <summary>
+        /// Gets the string that separates the components of time, that is, the hour, minute, and second.
         /// </summary>
         string TimeSeparator {
             get;
@@ -118,7 +159,7 @@ namespace Orchard.Localization.Services {
         /// <summary>
         /// Gets a list of strings used as display text for the AM and PM designators.
         /// </summary>
-        IEnumerable<string> AmPmDesignators {
+        string[] AmPmDesignators {
             get;
         }
     }

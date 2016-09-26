@@ -2,7 +2,7 @@
    Greek localisation for Gregorian/Julian calendars for jQuery.
    Written by Alex Cicovic (http://www.alexcicovic.com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['el'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['el'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Ιανουάριος','Φεβρουάριος','Μάρτιος','Απρίλιος','Μάιος','Ιούνιος',
@@ -17,7 +17,7 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['el'] =
-			$.calendars.calendars.gregorian.prototype.regional['el'];
+		$.calendars.calendars.julian.prototype.regionalOptions['el'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['el'];
 	}
 })(jQuery);

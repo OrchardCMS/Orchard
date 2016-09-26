@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Text.RegularExpressions;
 using Orchard.Commands;
 using Orchard.Environment.Configuration;
 using Orchard.MultiTenancy.Services;
@@ -42,6 +44,16 @@ namespace Orchard.MultiTenancy.Commands {
         [OrchardSwitches("Host,UrlPrefix")]
         public void Create(string tenantName) {
             Context.Output.WriteLine(T("Creating tenant"));
+
+            if (string.IsNullOrWhiteSpace(tenantName) || !Regex.IsMatch(tenantName, @"^\w+$")) {
+                Context.Output.WriteLine(T("Invalid tenant name. Must contain characters only and no spaces."));
+                return;
+            }
+            if (_tenantService.GetTenants().Any(tenant => string.Equals(tenant.Name, tenantName, StringComparison.OrdinalIgnoreCase))) {
+                Context.Output.WriteLine(T("Could not create tenant \"{0}\". A tenant with the same name already exists.", tenantName));
+                return;
+            }
+
             _tenantService.CreateTenant(
                     new ShellSettings {
                         Name = tenantName,

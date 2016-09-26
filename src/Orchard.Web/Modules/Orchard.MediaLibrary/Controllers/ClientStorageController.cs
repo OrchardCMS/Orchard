@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Dynamic;
 using System.IO;
 using System.Web.Mvc;
@@ -40,7 +41,7 @@ namespace Orchard.MediaLibrary.Controllers {
                 var filename = Path.GetFileName(file.FileName);
                 
                 // if the file has been pasted, provide a default name
-                if (filename == "blob") {
+                if (file.ContentType.Equals("image/png", StringComparison.InvariantCultureIgnoreCase) && !filename.EndsWith(".png", StringComparison.InvariantCultureIgnoreCase)) {
                     filename = "clipboard.png";
                 }
 

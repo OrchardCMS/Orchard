@@ -27,5 +27,10 @@ namespace Orchard.Blogs.Models {
             get { return this.Retrieve(x => x.EnableCommentsFeed, false); }
             set { this.Store(x => x.EnableCommentsFeed, value); }
         }
+
+        public int PostsPerPage {
+            get { return this.Retrieve(x => x.PostsPerPage, 10); }
+            set { this.Store(x => x.PostsPerPage, value); }
+        }
     }
 }

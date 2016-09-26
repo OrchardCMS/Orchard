@@ -2,8 +2,8 @@
    Spanish/Argentina localisation for calendars datepicker for jQuery.
    Written by Esteban Acosta Villafane (esteban.acosta@globant.com) of Globant (http://www.globant.com). */
 (function($) {
-	$.calendars.picker.regional['es-AR'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['es-AR'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: '&#x3c;Ant', prevStatus: '',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: '',
 		nextText: 'Sig&#x3e;', nextStatus: '',
@@ -17,5 +17,5 @@
 		dayStatus: 'DD, M d', defaultStatus: '',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['es-AR']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['es-AR']);
 })(jQuery);

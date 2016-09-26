@@ -51,7 +51,7 @@ namespace Orchard.MediaLibrary.Drivers {
         }
 
         protected override DriverResult Editor(ContentPart part, Fields.MediaLibraryPickerField field, IUpdateModel updater, dynamic shapeHelper) {
-            var model = new MediaLibraryPickerFieldViewModel();
+            var model = new MediaLibraryPickerFieldViewModel { SelectedIds = string.Join(",", field.Ids) };
 
             updater.TryUpdateModel(model, GetPrefix(field, part), null, null);
 

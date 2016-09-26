@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Web;
 using Autofac;
 using Moq;
 using NHibernate;
@@ -17,7 +16,6 @@ using Orchard.DisplayManagement.Implementation;
 using Orchard.Environment;
 using Orchard.Localization.Records;
 using Orchard.Localization.Services;
-using Orchard.Mvc;
 using Orchard.Security;
 using Orchard.Tests.ContentManagement;
 using Orchard.Tests.Stubs;
@@ -31,10 +29,11 @@ namespace Orchard.Tests.Localization {
         private ISessionFactory _sessionFactory;
         private ISession _session;
         private string _databaseFileName;
+        private StubWorkContext _stubWorkContext;
 
         [TestFixtureSetUp]
         public void InitFixture() {
-            _databaseFileName = System.IO.Path.GetTempFileName();
+            _databaseFileName = Path.GetTempFileName();
             _sessionFactory = DataUtility.CreateSessionFactory(
                 _databaseFileName,
                 typeof(CultureRecord));
@@ -43,6 +42,7 @@ namespace Orchard.Tests.Localization {
         [SetUp]
         public void Init() {
             var builder = new ContainerBuilder();
+            _stubWorkContext = new StubWorkContext();
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
             builder.RegisterInstance(new Mock<IContentDefinitionManager>().Object);
@@ -50,14 +50,14 @@ namespace Orchard.Tests.Localization {
             builder.RegisterInstance(new Mock<IAuthorizer>().Object);
             builder.RegisterInstance(new Mock<INotifier>().Object);
             builder.RegisterInstance(new Mock<IContentDisplay>().Object);
-            builder.RegisterType<StubHttpContextAccessor>().As<IHttpContextAccessor>();
-            builder.RegisterType<WorkContextAccessor>().As<IWorkContextAccessor>();
+            builder.RegisterInstance(_stubWorkContext);
+            builder.RegisterInstance(new StubWorkContextAccessor(_stubWorkContext)).As<IWorkContextAccessor>();
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
             builder.RegisterType<OrchardServices>().As<IOrchardServices>();
-            builder.RegisterType<TestCultureSelector>().As<ICultureSelector>();
             builder.RegisterType<DefaultCultureManager>().As<ICultureManager>();
             builder.RegisterType<Signals>().As<ISignals>();
+            builder.RegisterType<StubCacheManager>().As<ICacheManager>();
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
             _session = _sessionFactory.OpenSession();
             builder.RegisterInstance(new DefaultContentManagerTests.TestSessionLocator(_session)).As<ISessionLocator>();
@@ -105,15 +105,9 @@ namespace Orchard.Tests.Localization {
         }
 
         [Test]
-        public void CultureManagerReturnsCultureFromSelector() {
-            Assert.That(_cultureManager.GetCurrentCulture(null), Is.EqualTo("en-US"));
-        }
-    }
-
-    public class TestCultureSelector : ICultureSelector {
-        public CultureSelectorResult GetCulture(HttpContextBase context) {
-            return new CultureSelectorResult { Priority = 1, CultureName = "en-US" };
+        public void CultureManagerReturnsCultureFromWorkContext() {
+            _stubWorkContext.CultureName = "nl-NL";
+            Assert.That(_cultureManager.GetCurrentCulture(null), Is.EqualTo("nl-NL"));
         }
     }
 }
-

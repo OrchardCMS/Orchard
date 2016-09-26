@@ -1,0 +1,21 @@
+﻿@using Orchard.ImageEditor.Models
+
+<div id="rotate-options" style="display: none">
+    <fieldset>
+        <div>
+            <label for="rotate-angle">@T("Angle")</label>
+            <select id="rotate-angle" class="text small">
+                <option value="0" selected="selected">@T("None")</option>
+                <option value="90">@T("90 deg. CW")</option>
+                <option value="270">@T("90 deg. CCW")</option>
+                <option value="180">@T("180 deg.")</option>
+            </select>
+            <span class="hint">@T("Rotation angle.")</span>
+        </div>
+    </fieldset>
+
+    <button id="rotate-apply">@T("Apply")</button>
+    <button id="rotate-cancel">@T("Cancel")</button>
+
+</div>
+

@@ -48,7 +48,8 @@
             var multiple = $(self).data("multiple");
             var addButton = $(self).find(".button.add");
             var removeText = $(self).data("remove-text");
-            var template = '<tr><td>&nbsp;</td><td><span data-id="{contentItemId}" data-fieldid="@idsFieldId" class="content-picker-item">{edit-link}</span></td><td><span data-id="{contentItemId}" class="content-picker-remove button grey">' + removeText + '</span></td></tr>';
+            var notPublishedText = $(self).data("not-published-text");
+            var template = '<tr><td>&nbsp;</td><td><span data-id="{contentItemId}" data-fieldid="@idsFieldId" class="content-picker-item">{edit-link}{status-text}</span></td><td><span data-id="{contentItemId}" class="content-picker-remove button grey">' + removeText + '</span></td></tr>';
             var selectedItemsFieldname = $(self).data("selected-items-fieldname");
             var baseUrl = $(self).data("base-url");
             var partName = $(self).data("part-name");
@@ -78,7 +79,9 @@
             addButton.click(function() {
                 addButton.trigger("orchard-admin-contentpicker-open", {
                     callback: function(data) {
-                        var tmpl = template.replace( /\{contentItemId\}/g , data.id).replace( /\{edit-link\}/g , data.editLink);
+                        var tmpl = template.replace( /\{contentItemId\}/g , data.id)
+                            .replace( /\{edit-link\}/g , data.editLink)
+                            .replace( /\{status-text}/g , data.published? "" : " - " + notPublishedText);
                         var content = $(tmpl);
                         $(self).find('table.content-picker tbody').append(content);
 

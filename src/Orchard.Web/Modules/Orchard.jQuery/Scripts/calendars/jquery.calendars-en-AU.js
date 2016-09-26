@@ -2,7 +2,7 @@
    English/Australia localisation for Gregorian/Julian calendars for jQuery.
    Based on en-GB. */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['en-AU'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['en-AU'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['January','February','March','April','May','June',
@@ -17,7 +17,7 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['en-AU'] =
-			$.calendars.calendars.gregorian.prototype.regional['en-AU'];
+		$.calendars.calendars.julian.prototype.regionalOptions['en-AU'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['en-AU'];
 	}
 })(jQuery);

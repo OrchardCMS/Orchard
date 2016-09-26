@@ -2,7 +2,7 @@
    Tamil (UTF-8) localisation for Gregorian/Julian calendars for jQuery.
    Written by S A Sureshkumar (saskumar@live.com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['ta'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['ta'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['தை','மாசி','பங்குனி','சித்திரை','வைகாசி','ஆனி',
@@ -17,7 +17,7 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['ta'] =
-			$.calendars.calendars.gregorian.prototype.regional['ta'];
+		$.calendars.calendars.julian.prototype.regionalOptions['ta'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['ta'];
 	}
 })(jQuery);

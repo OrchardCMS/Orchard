@@ -25,21 +25,16 @@ namespace Orchard.Environment {
         public ILogger Logger { get; set; }
 
         public override void RestartAppDomain() {
-            if (IsFullTrust) {
-                HttpRuntime.UnloadAppDomain();
-            }
-            else {
-                bool success = TryWriteBinFolder() || TryWriteWebConfig();
+            bool success = TryWriteBinFolder() || TryWriteWebConfig();
 
-                if (!success) {
-                    throw new OrchardException(
-                        T("Orchard needs to be restarted due to a configuration change, but was unable to do so.\r\n" +
-                        "To prevent this issue in the future, a change to the web server configuration is required:\r\n" +
-                        "- run the application in a full trust environment, or\r\n" +
-                        "- give the application write access to the '{0}' folder, or\r\n" +
-                        "- give the application write access to the '{1}' file.",
-                        HostRestartPath, WebConfigPath));
-                }
+            if (!success) {
+                throw new OrchardException(
+                    T("Orchard needs to be restarted due to a configuration change, but was unable to do so.\r\n" +
+                    "To prevent this issue in the future, a change to the web server configuration is required:\r\n" +
+                    "- run the application in a full trust environment, or\r\n" +
+                    "- give the application write access to the '{0}' folder, or\r\n" +
+                    "- give the application write access to the '{1}' file.",
+                    HostRestartPath, WebConfigPath));
             }
 
             // If setting up extensions/modules requires an AppDomain restart, it's very unlikely the

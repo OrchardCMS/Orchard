@@ -2,8 +2,8 @@
    Algerian (and Tunisian) Arabic localisation for calendars datepicker for jQuery.
    Mohamed Cherif BOUCHELAGHEM -- cherifbouchelaghem@yahoo.fr */
 (function($) {
-	$.calendars.picker.regional['ar-DZ'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['ar-DZ'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: '&#x3c;السابق', prevStatus: 'عرض الشهر السابق',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: '',
 		nextText: 'التالي&#x3e;', nextStatus: 'عرض الشهر القادم',
@@ -17,5 +17,5 @@
 		dayStatus: 'اختر D, M d', defaultStatus: 'اختر يوم',
 		isRTL: true
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['ar-DZ']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['ar-DZ']);
 })(jQuery);

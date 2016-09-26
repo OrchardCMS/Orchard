@@ -2,8 +2,8 @@
    Tamil (UTF-8) localisation for calendars datepicker for jQuery.
    Written by S A Sureshkumar (saskumar@live.com). */
 (function($) {
-	$.calendars.picker.regional['ta'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['ta'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: 'முன்னையது',  prevStatus: '',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: '',
 		nextText: 'அடுத்தது', nextStatus: '',
@@ -17,5 +17,5 @@
 		dayStatus: 'D, M d', defaultStatus: '',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['ta']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['ta']);
 })(jQuery);

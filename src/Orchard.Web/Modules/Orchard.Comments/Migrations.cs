@@ -181,7 +181,7 @@ namespace Orchard.Comments {
                );
 
             // populate the CommentsPartRecord.CommentsCount property
-            foreach (var commentsPart in _contentManager.Query<CommentsPart>().List()) {
+            foreach (var commentsPart in _contentManager.Query<CommentsPart, CommentsPartRecord>().List()) {
                 _commentService.ProcessCommentsCount(commentsPart.Id);
             }
 

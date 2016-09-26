@@ -2,7 +2,7 @@
    Spanish/Perú localisation for Gregorian/Julian calendars for jQuery.
    Written by Fischer Tirado (fishdev@globant.com) of ASIX (http://www.asixonline.com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['es-PE'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['es-PE'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
@@ -17,7 +17,7 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['es-PE'] =
-			$.calendars.calendars.gregorian.prototype.regional['es-PE'];
+		$.calendars.calendars.julian.prototype.regionalOptions['es-PE'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['es-PE'];
 	}
 })(jQuery);

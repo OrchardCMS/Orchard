@@ -30,11 +30,11 @@ namespace Orchard.MediaLibrary.Controllers {
 
         [HttpPost]
         [ActionName("Index")]
-        public ActionResult IndexPOST(string folderPath, string url, string type) {
+        [ValidateInput(false)]
+        public ActionResult IndexPOST(string folderPath, string url, string type, string title, string html, string thumbnail, string width, string height, string description) {
             var viewModel = new OEmbedViewModel {
                 Url = url,
-                FolderPath = folderPath,
-                Type = type
+                FolderPath = folderPath
             };
 
             var webClient = new WebClient {Encoding = Encoding.UTF8};
@@ -64,6 +64,38 @@ namespace Orchard.MediaLibrary.Controllers {
                         }
                     }
                 }
+                if (viewModel.Content == null) {
+                    viewModel.Content = new XDocument(
+                        new XDeclaration("1.0", "utf-8", "yes"),
+                        new XElement("oembed")
+                        );
+                }
+                var root = viewModel.Content.Root;
+                if (!String.IsNullOrWhiteSpace(url)) {
+                    root.El("url", url);
+                }
+                if (!String.IsNullOrWhiteSpace(type)) {
+                    root.El("type", type.ToLowerInvariant());
+                }
+                if (!String.IsNullOrWhiteSpace(title)) {
+                    root.El("title", title);
+                }
+                if (!String.IsNullOrWhiteSpace(html)) {
+                    root.El("html", html);
+                }
+                if (!String.IsNullOrWhiteSpace(thumbnail)) {
+                    root.El("thumbnail", thumbnail);
+                }
+                if (!String.IsNullOrWhiteSpace(width)) {
+                    root.El("width", width);
+                }
+                if (!String.IsNullOrWhiteSpace(height)) {
+                    root.El("height", height);
+                }
+                if (!String.IsNullOrWhiteSpace(description)) {
+                    root.El("description", description);
+                }
+                Response.AddHeader("X-XSS-Protection", "0"); // Prevents Chrome from freaking out over embedded preview
             }
             catch {
                 return View(viewModel);
@@ -73,15 +105,11 @@ namespace Orchard.MediaLibrary.Controllers {
         }
 
         [HttpPost, ValidateInput(false)]
-        public ActionResult MediaPost(string folderPath, string url, string document, string type) {
+        public ActionResult MediaPost(string folderPath, string url, string document) {
             var content = XDocument.Parse(document);
             var oembed = content.Root;
 
-            if (String.IsNullOrEmpty(type)) {
-                type = "OEmbed";
-            }
-
-            var part = Services.ContentManager.New<MediaPart>(type);
+            var part = Services.ContentManager.New<MediaPart>("OEmbed");
                         
             part.MimeType = "text/html";
             part.FolderPath = folderPath;
@@ -111,8 +139,7 @@ namespace Orchard.MediaLibrary.Controllers {
             }
 
             var viewModel = new OEmbedViewModel {
-                FolderPath = folderPath,
-                Type = type
+                FolderPath = folderPath
             };
 
             return View("Index", viewModel);

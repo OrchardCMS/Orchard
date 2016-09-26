@@ -2,7 +2,7 @@
    Malaysian localisation for Gregorian/Julian calendars for jQuery.
    Written by Mohd Nawawi Mohamad Jamili (nawawi@ronggeng.net). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['ms'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['ms'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Januari','Februari','Mac','April','Mei','Jun',
@@ -17,7 +17,7 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['ms'] =
-			$.calendars.calendars.gregorian.prototype.regional['ms'];
+		$.calendars.calendars.julian.prototype.regionalOptions['ms'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['ms'];
 	}
 })(jQuery);

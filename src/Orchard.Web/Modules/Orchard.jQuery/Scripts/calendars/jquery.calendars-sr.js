@@ -2,7 +2,7 @@
    Serbian localisation for Gregorian/Julian calendars for jQuery.
    Written by Dejan Dimić. */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['sr'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['sr'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Јануар','Фебруар','Март','Април','Мај','Јун',
@@ -16,7 +16,7 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['sr'] =
-			$.calendars.calendars.gregorian.prototype.regional['sr'];
+		$.calendars.calendars.julian.prototype.regionalOptions['sr'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['sr'];
 	}
 })(jQuery);

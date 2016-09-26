@@ -2,8 +2,8 @@
    Malayalam localisation for calendars datepicker for jQuery.
    Saji Nediyanchath (saji89@gmail.com). */
 (function($) {
-	$.calendars.picker.regional['ml'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['ml'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: 'മുന്നത്തെ', prevStatus: '',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: '',
 		nextText: 'അടുത്തത് ', nextStatus: '',
@@ -17,5 +17,5 @@
 		dayStatus: 'DD d MM', defaultStatus: '',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['ml']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['ml']);
 })(jQuery);

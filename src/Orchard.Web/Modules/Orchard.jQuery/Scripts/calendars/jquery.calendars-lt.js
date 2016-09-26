@@ -2,7 +2,7 @@
    Lithuanian localisation for Gregorian/Julian calendars for jQuery.
    Arturas Paleicikas <arturas@avalon.lt>. */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['lt'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['lt'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Sausis','Vasaris','Kovas','Balandis','Gegužė','Birželis',
@@ -17,7 +17,7 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['lt'] =
-			$.calendars.calendars.gregorian.prototype.regional['lt'];
+		$.calendars.calendars.julian.prototype.regionalOptions['lt'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['lt'];
 	}
 })(jQuery);

@@ -7,15 +7,16 @@
 }
 
 @if (indexProvider != null) {
-    <fieldset>
-        <legend>@T("Index this content type in:")</legend>
-        @{ var i = 0;}
-        @foreach (var index in indexProvider.List()) {
-        <div>
-            <input type="checkbox" value="@index" class="check-box" id="@Html.FieldIdFor(m => m.List[i])" name="@Html.FieldNameFor(m => m.List)" checked="@(Model.List.Contains(index))"/>
-            <label for="@Html.FieldIdFor(m => m.List[i])" class="forcheckbox">@index</label>
-        </div>
+    var i = 0;
+    foreach (var index in indexProvider.List()) {
+        <fieldset>
+            <legend>@T("{0} index", @index)</legend>
+            <select size="0" name="@Html.FieldNameFor(m => m.List)">
+                <option value="" selected="@(!Model.List.Contains(index + ":latest") && !Model.List.Contains(index))">@T("Not indexed")</option>
+                <option value="@index" selected="@(Model.List.Contains(index))">@T("Published version")</option>
+                <option value="@(index):latest" selected="@(Model.List.Contains(index + ":latest"))">@T("Latest version")</option>
+            </select>
+        </fieldset>
         i++;
-        }
-    </fieldset>
+    }
 }

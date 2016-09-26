@@ -2,8 +2,8 @@
    Afrikaans localisation for calendars datepicker for jQuery.
    Written by Renier Pretorius and Ruediger Thiede. */
 (function($) {
-	$.calendars.picker.regional['af'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['af'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: 'Vorige', prevStatus: 'Vertoon vorige maand',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: 'Vertoon vorige jaar',
 		nextText: 'Volgende', nextStatus: 'Vertoon volgende maand',
@@ -17,5 +17,5 @@
 		dayStatus: 'Kies DD, M d', defaultStatus: 'Kies \'n datum',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['af']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['af']);
 })(jQuery);

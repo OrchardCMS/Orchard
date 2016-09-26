@@ -2,8 +2,8 @@
    Bosnian localisation for calendars datepicker for jQuery.
    Kenan Konjo. */
 (function($) {
-	$.calendars.picker.regional['bs'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['bs'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: '&#x3c;', prevStatus: '',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: '',
 		nextText: '&#x3e;', nextStatus: '',
@@ -17,5 +17,5 @@
 		dayStatus: '', defaultStatus: '',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['bs']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['bs']);
 })(jQuery);

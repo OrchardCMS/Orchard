@@ -13,3 +13,8 @@ Features:
         Description: Admin user interface for Orchard.Alias.
 		Dependencies: Orchard.Alias
 		Category: Content
+    Orchard.Alias.Updater:
+		Name: Alias Updater
+        Description: Synchronizes aliases when created from different servers.
+		Dependencies: Orchard.Alias
+		Category: Content

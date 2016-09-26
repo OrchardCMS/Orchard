@@ -1,5 +1,7 @@
-﻿using System.Web;
+﻿using System.IO;
+using System.Web;
 using System.Web.Mvc;
+using System.Web.Mvc.Html;
 using Moq;
 using NUnit.Framework;
 using Orchard.Mvc.Html;
@@ -161,5 +163,35 @@ namespace Orchard.Tests.Mvc.Html {
             //assert
             Assert.AreEqual(string.Empty, result.ToString());
         }
+
+        [Test]
+        public void HtmlHelperForEnablesLocalHelperMethods() {
+            //arrange
+            var controller = new FooController {
+                ControllerContext = new ControllerContext()
+            };
+            var viewContext = new ViewContext {
+                ViewData = new ViewDataDictionary {
+                    TemplateInfo = new TemplateInfo {
+                        HtmlFieldPrefix = "topprefix"
+                    }
+                },
+                Controller = controller,
+                View = new Mock<IView>().Object,
+                TempData = new TempDataDictionary(),
+                Writer = TextWriter.Null
+            };
+            var viewDataContainer = new Mock<IViewDataContainer>();
+            viewDataContainer.SetupGet(o => o.ViewData).Returns(() => new ViewDataDictionary());
+            var html = new HtmlHelper(viewContext, viewDataContainer.Object);
+            var localHelper = html.HtmlHelperFor(new {SomeString = "foo"}, "prefix");
+
+            //act
+            var result = localHelper.LabelFor(p => p.SomeString, "bar", null);
+
+            //assert
+            Assert.AreEqual(@"<label for=""prefix_SomeString"">bar</label>", result.ToString());
+        }
+        private class FooController : Controller { }
     }
 }

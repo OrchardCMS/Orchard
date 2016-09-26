@@ -2,8 +2,8 @@
    Swiss-German localisation for calendars datepicker for jQuery.
    Written by Douglas Jose & Juerg Meier. */
 (function($) {
-	$.calendars.picker.regional['de-CH'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['de-CH'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: '&#x3c;zurück', prevStatus: 'letzten Monat zeigen',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: '',
 		nextText: 'nächster&#x3e;', nextStatus: 'nächsten Monat zeigen',
@@ -17,5 +17,5 @@
 		dayStatus: 'Wähle D, M d', defaultStatus: 'Wähle ein Datum',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['de-CH']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['de-CH']);
 })(jQuery);

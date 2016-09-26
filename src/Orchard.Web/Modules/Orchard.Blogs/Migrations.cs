@@ -37,9 +37,9 @@ namespace Orchard.Blogs {
                     .WithPart("CommonPart")
                     .WithPart("TitlePart")
                     .WithPart("AutoroutePart", builder => builder
-                        .WithSetting("AutorouteSettings.AllowCustomPattern", "true")
-                        .WithSetting("AutorouteSettings.AutomaticAdjustmentOnEdit", "false")
-                        .WithSetting("AutorouteSettings.PatternDefinitions", "[{Name:'Title', Pattern: '{Content.Slug}', Description: 'my-blog'}]")
+                        .WithSetting("AutorouteSettings.AllowCustomPattern", "True")
+                        .WithSetting("AutorouteSettings.AutomaticAdjustmentOnEdit", "False")
+                        .WithSetting("AutorouteSettings.PatternDefinitions", "[{\"Name\":\"Title\",\"Pattern\":\"{Content.Slug}\",\"Description\":\"my-blog\"}]")
                         .WithSetting("AutorouteSettings.DefaultPatternIndex", "0"))
                     .WithPart("MenuPart")
                     .WithPart("AdminMenuPart", p => p.WithSetting("AdminMenuPartTypeSettings.DefaultPosition", "2"))
@@ -52,13 +52,13 @@ namespace Orchard.Blogs {
                 cfg => cfg
                     .WithPart("BlogPostPart")
                     .WithPart("CommonPart", p => p
-                        .WithSetting("DateEditorSettings.ShowDateEditor", "true"))
+                        .WithSetting("DateEditorSettings.ShowDateEditor", "True"))
                     .WithPart("PublishLaterPart")
                     .WithPart("TitlePart")
                     .WithPart("AutoroutePart", builder => builder
-                        .WithSetting("AutorouteSettings.AllowCustomPattern", "true")
-                        .WithSetting("AutorouteSettings.AutomaticAdjustmentOnEdit", "false")
-                        .WithSetting("AutorouteSettings.PatternDefinitions", "[{Name:'Blog and Title', Pattern: '{Content.Container.Path}/{Content.Slug}', Description: 'my-blog/my-post'}]")
+                        .WithSetting("AutorouteSettings.AllowCustomPattern", "True")
+                        .WithSetting("AutorouteSettings.AutomaticAdjustmentOnEdit", "False")
+                        .WithSetting("AutorouteSettings.PatternDefinitions", "[{\"Name\":\"Blog and Title\",\"Pattern\":\"{Content.Container.Path}/{Content.Slug}\",\"Description\":\"my-blog/my-post\"}]")
                         .WithSetting("AutorouteSettings.DefaultPatternIndex", "0"))
                     .WithPart("BodyPart")
                     .Draftable()

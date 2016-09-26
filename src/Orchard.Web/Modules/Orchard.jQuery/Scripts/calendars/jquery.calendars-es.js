@@ -2,7 +2,7 @@
    Spanish localisation for Gregorian/Julian calendars for jQuery.
    Traducido por Vester (xvester@gmail.com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['es'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['es'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
@@ -17,7 +17,7 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['es'] =
-			$.calendars.calendars.gregorian.prototype.regional['es'];
+		$.calendars.calendars.julian.prototype.regionalOptions['es'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['es'];
 	}
 })(jQuery);

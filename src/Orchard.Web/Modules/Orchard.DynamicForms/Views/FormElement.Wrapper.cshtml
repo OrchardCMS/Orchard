@@ -1,0 +1,10 @@
+﻿@using Orchard.DynamicForms.Elements
+@using Orchard.Utility.Extensions
+@{
+    var element = (FormElement) Model.Element;
+    var cssType = String.Format("form-field-element-{0}", element.Descriptor.DisplayText.Text.HtmlClassify());
+    var cssName = !String.IsNullOrWhiteSpace(element.Name) ? String.Format("form-field-element-{0}", element.Name.HtmlClassify()) : default(string);
+}
+<div class="form-field-element @cssType @cssName">
+    @Display(Model.Child)
+</div>

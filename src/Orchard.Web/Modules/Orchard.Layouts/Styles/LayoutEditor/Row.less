@@ -1,0 +1,21 @@
+﻿@import "Variables.less";
+
+.layout-editor {
+    .layout-row {
+        &.layout-element-focused:not(.layout-element-droptarget) > .layout-element-wrapper > .layout-children {
+            > .layout-element:not(.layout-element-active) {
+                border-top: 1px dashed fade(@gray-text, 60%) !important;
+                > .layout-element-wrapper {
+                    margin-top: -1px !important;
+                }
+            }
+
+            > .layout-element + .layout-element:not(.layout-element-active) {
+                border-left: 0 !important;
+                > .layout-element-wrapper {
+                    margin-left: 0 !important;
+                }
+            }
+        }
+    }
+}

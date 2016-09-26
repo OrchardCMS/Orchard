@@ -1,0 +1,1240 @@
+﻿/*
+Theme: Theme Admin
+Author: Orchard Team – http://www.orchardproject.net
+Copyright: 2010, Orchard. All Rights Reserved
+*/
+
+/* Color Palette
+**************************************************************
+
+Background: #f3f4f5
+Borders: 
+Text: #333333
+Secondary Text: 
+Main Accent: 
+Links: 1e5d7d
+New Links: #3a822e;
+*/
+
+/* Reset
+***************************************************************/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td, button, submit {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    font-weight: inherit;
+    font-style: inherit;
+    font-size: 100%;
+    font-family: inherit;
+    vertical-align: baseline;
+}
+
+/* Remember focus styles! */
+:focus { outline: 0; }
+
+body { line-height: 1; color: black; background: white; }
+ol, ul { list-style: none; }
+
+/* Tables still need 'cellspacing="0"' in the markup */
+table { border-collapse: separate; border-spacing: 0; }
+caption, th, td { text-align: left; font-weight: normal; }
+
+blockquote:before, blockquote:after,
+q:before, q:after { content: ""; }
+blockquote, q { quotes: "" ""; }
+
+/* HTML 5 elements as block */  
+header, footer, aside, nav, article { display: block; }
+/* end: reset */
+
+/* Clearing Floats
+***************************************************************/
+
+.group:after, .zone-content:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
+
+
+/* Dialog
+***************************************************************/
+.dialog-settings {
+    display: none;
+}
+
+.zone-content .edit-widget .primary .widget-props,
+.zone-content .edit-widget .secondary {
+    display: none;
+}
+
+/* General
+***************************************************************/
+
+/* Default font settings. 
+The font-size 81.3% sets the base font to 13px 
+
+Pixels   EMs         Percent    Points
+1px      0.077em     7.7%       1pt
+2px      0.154em     15.4%      2pt
+3px      0.231em     23.1%      3pt
+4px      0.308em     30.8%      3pt
+5px      0.385em     38.5%      4pt
+6px      0.462em     46.2%      5pt
+7px      0.538em     53.8%      5pt
+8px      0.615em     61.5%      6pt
+9px      0.692em     69.2%      7pt
+10px     0.769em     76.9%      8pt
+11px     0.846em     84.6%      8pt
+12px     0.923em     92.3%      9pt
+13px     1em         100%       10pt
+14px     1.077em     107.7%     11pt
+15px     1.154em     115.4%     11pt
+16px     1.231em     123.1%     12pt
+17px     1.308em     130.8%     13pt
+18px     1.385em     138.5%     14pt
+19px     1.462em     146.2%     14pt
+20px     1.538em     153.8%     15pt
+21px     1.615em     161.5%     16pt
+22px     1.692em     169.2%     17pt
+23px     1.769em     176.9%     17pt
+24px     1.846em     184.6%     18pt
+*/
+
+html, body { height:100%; }
+
+html {
+    background:#f3f4f5;  
+    color:#333;
+}
+
+body {
+    font-size: 81.3%;
+  color: #333; 
+  background:#f3f4f5;
+  font-family: Segoe UI,Trebuchet,Arial,Sans-Serif;
+  line-height:1.6em;
+  margin:0 auto;
+    -moz-min-width:61em;
+    -ms-min-width:61em;
+    -o-min-width:61em;
+    -webkit-min-width:61em;
+    min-width:61em;
+  padding:0;
+}
+
+/*Hide shape tracing*/
+#shape-tracing-container {display:none;}
+
+/* Headings */
+h1,h2,h3,h4,h5,h6 { font-weight: normal;}
+
+h1 { font-size: 1.769em; }
+h2 { font-size: 1.308em; }
+h3 { font-size: 1.231em; }
+h4 { font-size: 1.154em; }
+h5 { font-size: 1.077em; }
+h6 { font-size: 1em; }
+
+h1, h2, h3, h4, h5, legend {
+    padding:.6px 0;
+    font-style: normal;
+    font-weight:normal;
+}
+
+h1 img, h2 img, h3 img, 
+h4 img, h5 img, h6 img {
+  margin: 0;
+}
+
+strong {font-weight:600;}
+.smallText {font-size:1em; line-height:1.4em;}
+
+hr {border:0; height:1px; color:#e4e5e6; background-color:#e4e5e6;}
+    
+#header, #footer {
+    width:100%;
+}
+#header {
+    overflow:hidden;
+}
+#layout-content {
+    /*overflow:auto;*/
+    background:#f3f4f5;
+    min-height:100%;
+}
+#layout-main {
+    /*display:inline;
+    overflow:auto;*/
+    float:right;
+    margin-left:-240px;
+    width:100%;
+    padding:0 0 70px 0; /*Bottom padding set to footer height*/
+}
+#main {
+    margin-left:20px;
+    margin-right:20px;
+}
+#menu {
+    background:#323232;
+    display:inline;
+    float:left;
+    position:relative;
+    width:240px;
+}
+.wrapper, .sections {
+    overflow:hidden;
+}
+#footer {
+    clear:both;
+    height:70px;
+    margin-top:-70px; /*Top margin set negative px of footer height*/
+    background:url(images/vinesBackgroundBottom.gif) no-repeat bottom left;
+}
+
+/* Links
+***************************************************************/
+a, a:link, a:visited,
+form.link button, button.link, button.link:hover {
+    color:#1e5d7d;
+    text-decoration:none;
+}
+form.link button, button.link {
+    height:1.3em;
+}
+a:hover, a:active, a:focus {
+    color:#1e5d7d;
+    text-decoration:none;
+}
+form.link button:hover, button.link:hover {
+    border-bottom:1px solid #1e5d7d;
+}
+
+/* Lists
+***************************************************************/
+
+ol.decimal {list-style:decimal inside; margin:12px 0;}
+ul.disc {list-style:disc inside; margin:12px 0;}
+
+/* Header - Branding and Login  
+***************************************************************/
+#header {
+    height:50px;
+    margin:16px 0 0 0;
+    background:#f3f4f5;
+}
+#branding {
+    background:#323232;
+    /*width: 15.401%;*/
+    width: 240px;
+    height:50px;
+    float:left;
+}
+#header #app {
+    float:left;
+    font-size:2.4em;
+    padding:.4em 0;
+}
+#header #app a {
+    background:url(images/orchardLogo.gif) no-repeat;
+    display:block;
+    height:60px;
+    margin:-11px 0 0 14px;
+    text-indent:-9999px;
+    width:40px;
+}
+#site {
+    font-size: 1.385em; /*18px*/
+}
+#site a {
+    width: 186px;
+    white-space: nowrap;
+    overflow: hidden;
+    -ms-text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+}
+#site a, #site a:visited, #site a:active {
+    color:#fff;
+    float:left;
+    line-height:50px;
+    position:relative;  
+    text-shadow: rgba(0,0,0,.9) 0px 0px 2px;
+}
+#page-title {
+    /*position:relative;
+    top:12px;
+    left:24px;*/
+    padding:14px 0 0 260px;
+    text-shadow:rgba(0,0,0,.1) 0px 0px 1px;    
+}
+#login {
+    display:block;
+    float:right;
+    margin:14px 20px 0 0;
+    white-space:nowrap;
+}
+
+#login a, #login a:link, #login a:visited {
+    padding:0;
+}
+
+/* Navigation
+***************************************************************/
+#navshortcut {
+    height:0;
+    overflow:hidden;
+    width:0;
+}
+#menu .menu-admin li {
+    margin:8px 16px;
+}
+#menu .menu-admin ul li {
+    border:0;
+    margin:0 10px 0 10px;
+}
+#menu .expando-glyph-container .expando-glyph {
+    background:transparent no-repeat 0 -19px;
+    background-image:url(images/menu-glyph.png);
+    left:160px;
+}
+#menu .expando-glyph-container .expando-glyph:hover {
+    background-image:url(images/menu-glyph.png);
+}
+#menu .expando-glyph-container.closed .expando-glyph {
+    background-image:url(images/menu-glyph.png);
+    background-position:0 3px;
+}
+#menu .expando-glyph-container.closed .expando-glyph:hover {
+    background-image:url(images/menu-glyph.png);
+}
+#menu .expando-glyph-container.closing .expando-glyph {
+    -webkit-transition:all .2s ease-in-out;
+    -moz-transition:all .2s ease-in-out;
+    transition:all .2s ease-in-out;
+    -webkit-transform:rotate(-90deg) translate(3px, -3px);
+    -moz-transform:rotate(-90deg) translate(3px, -3px);
+    transform:rotate(-90deg) translate(3px, -3px);
+}
+#menu .expando-glyph-container.opening .expando-glyph {
+    -webkit-transition:all .2s ease-in-out;
+    -moz-transition:all .2s ease-in-out;
+    transition:all .2s ease-in-out;
+    -webkit-transform:rotate(90deg) translate(3px, 3px);
+    -moz-transform:rotate(90deg) translate(3px, 3px);
+    transform:rotate(90deg) translate(3px, 3px);
+}
+#menu .menu-admin li h3 {
+    font-size:14px;
+    padding:0 0 0 10px;
+}
+#menu .menu-admin a,
+#menu .menu-admin span {
+    background-position:0 2px;
+    background-repeat:no-repeat;
+}
+#menu .menu-admin li h3 a,
+#menu .menu-admin li h3 span { /* only the h3 gets an icon by default */
+    background-image:url(images/menu-default.png);
+    padding:0 0 0 20px;
+}
+#menu .menu-admin a:hover, #menu .menu-admin .selected a, #menu .menu-admin .selected h3 span {
+    color:#fff;
+}
+#menu .menu-admin a:hover, #menu .menu-admin .selected a {
+    background-position:0 -30px;
+}
+#menu .menu-admin li h3 a, #menu .menu-admin li h3 span {
+    line-height:16px;
+    color:#aec3ce;
+}
+#menu .menu-admin ul a, #menu .menu-admin ul a:link, #menu .menu-admin ul a:visited {
+    color:#aec3ce;
+    display:block;
+    line-height:1.2em;
+    padding:4px 0 6px 20px;
+    text-decoration:none;
+}
+#menu .menu-admin ul a:hover, #menu .menu-admin ul a:active, #menu .menu-admin ul a:focus, #menu .menu-admin ul .selected a {
+    background-color:rgba(101,107,85,1.0); /*#656b55 at 100%*/
+    color: #fff;
+    /*CSS3 properties*/
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+     border-radius: 2px;
+}
+#menu .menu-admin ul a:hover, #menu .menu-admin ul a:active {background-color:rgba(101,107,85,0.5);}
+#menu .menu-admin .section-new .navicon-new {
+    background-image: none;
+    padding: 0;
+}
+ul.menuItems {margin:6px 0 0 0;}
+
+/******Tabs******/
+#local-navigation {margin:8px 0 -8px 0;}
+
+.localmenu li {
+    display: inline;
+    font-size:15px;
+    line-height:32px;
+    z-index:10;
+    position:relative;
+    margin:0 2px;
+    padding: 8px 18px 7px 18px;
+}
+.localmenu li.middle, .localmenu li.first, .localmenu li.last {
+    border:1px solid #E4E5E6;
+    border-bottom:none;
+}
+.localmenu li.first {
+    margin-left:16px;
+}
+.localmenu li.selected {
+    background-color: #fff;
+}
+.localmenu li.selected, .localmenu li:hover {
+    background-color: #fff;
+}
+.localmenu li.selected a {
+    color: #3A822E;
+}
+#content {
+    background-color: #fff;
+    padding: 16px 24px;
+    margin:8px 0 0 0;
+    border: 1px solid #e4e5e6;
+    clear:both;
+   
+     /*CSS3 properties*/
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+     border-radius: 2px;
+}
+.section-dashboard, .section-new {
+    background:#2b2b2b;
+    border:1px solid #404040;
+    padding:6px 0;
+    
+     /*CSS3 properties*/
+     -webkit-border-radius: 2px;
+     -moz-border-radius: 2px;
+      border-radius: 2px;
+      box-shadow: inset 0px 0px 1px rgba(64, 64, 64, 1.0), 1px 1px 1px rgba(54, 54, 65, 1.0);
+     -webkit-box-shadow: inset 0px 0px 1px rgba(64, 64, 64, 1.0), 1px 1px 1px rgba(54, 54, 65, 1.0); 
+     -moz-box-shadow: inset 0px 0px 1px rgba(64, 64, 64, 1.0), 1px 1px 1px rgba(54, 54, 65, 1.0);
+}
+.section-dashboard h3, .section-new h3,
+.section-dashboard ul, .section-new ul {
+    margin-left:-1px;
+    margin-right:-1px;
+}
+/* todo: make generic so all toggles can use this and clean up jQuery */
+.expando-glyph-container {
+    display:inline !important;
+    line-height:.9em;
+    padding:0  !important;
+    position:relative;
+}
+.expando-glyph {
+    background:#fcfcfc no-repeat center center;
+    background-image:url(data:image/gif;base64,R0lGODlhCwALAKIFAPDz2/b70mhpREJEPjI0Lf///wAAAAAAACH/C1hNUCBEYXRhWE1QPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS4wLWMwNjAgNjEuMTM0Nzc3LCAyMDEwLzAyLzEyLTE3OjMyOjAwICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyIgeG1wTU06T3JpZ2luYWxEb2N1bWVudElEPSJ4bXAuZGlkOjJDNDlGNjgyMjg5NERGMTE4RUZGQkY0Q0JCRDA3OTc2IiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkQzQjUyNTNFOTQyODExREY5MDkxQ0U0MzJGRTdGNEExIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkQzQjUyNTNEOTQyODExREY5MDkxQ0U0MzJGRTdGNEExIiB4bXA6Q3JlYXRvclRvb2w9IkFkb2JlIFBob3Rvc2hvcCBDUzUgV2luZG93cyI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjJENDlGNjgyMjg5NERGMTE4RUZGQkY0Q0JCRDA3OTc2IiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjJDNDlGNjgyMjg5NERGMTE4RUZGQkY0Q0JCRDA3OTc2Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+Af/+/fz7+vn49/b19PPy8fDv7u3s6+rp6Ofm5eTj4uHg397d3Nva2djX1tXU09LR0M/OzczLysnIx8bFxMPCwcC/vr28u7q5uLe2tbSzsrGwr66trKuqqainpqWko6KhoJ+enZybmpmYl5aVlJOSkZCPjo2Mi4qJiIeGhYSDgoGAf359fHt6eXh3dnV0c3JxcG9ubWxramloZ2ZlZGNiYWBfXl1cW1pZWFdWVVRTUlFQT05NTEtKSUhHRkVEQ0JBQD8+PTw7Ojk4NzY1NDMyMTAvLi0sKyopKCcmJSQjIiEgHx4dHBsaGRgXFhUUExIREA8ODQwLCgkIBwYFBAMCAQAAIfkEAQAABQAsAAAAAAsACwAAAx1YutxeIbYIghBgWVwA4daQKZ4QjkspPsD6dG8sJwA7);
+    /*url("images/menuOpen.gif")*/
+    bottom:0;
+    cursor:pointer;
+    display:block;
+    height:17px;
+    left:-20px;
+    padding:0 !important;
+    position:absolute;
+    width:17px;
+    -webkit-transform:rotate(0deg);
+}
+.expando-glyph:hover {
+    background-image:url(data:image/gif;base64,R0lGODlhCwALAJEDAB5dfcbVyMvbwf///yH/C1hNUCBEYXRhWE1QPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS4wLWMwNjAgNjEuMTM0Nzc3LCAyMDEwLzAyLzEyLTE3OjMyOjAwICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyIgeG1wTU06T3JpZ2luYWxEb2N1bWVudElEPSJ4bXAuZGlkOjJDNDlGNjgyMjg5NERGMTE4RUZGQkY0Q0JCRDA3OTc2IiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkUxMUUzODE2OTQyODExREZBN0ZBOURGNEI3NDVDRkMxIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkUxMUUzODE1OTQyODExREZBN0ZBOURGNEI3NDVDRkMxIiB4bXA6Q3JlYXRvclRvb2w9IkFkb2JlIFBob3Rvc2hvcCBDUzUgV2luZG93cyI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjJENDlGNjgyMjg5NERGMTE4RUZGQkY0Q0JCRDA3OTc2IiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjJDNDlGNjgyMjg5NERGMTE4RUZGQkY0Q0JCRDA3OTc2Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+Af/+/fz7+vn49/b19PPy8fDv7u3s6+rp6Ofm5eTj4uHg397d3Nva2djX1tXU09LR0M/OzczLysnIx8bFxMPCwcC/vr28u7q5uLe2tbSzsrGwr66trKuqqainpqWko6KhoJ+enZybmpmYl5aVlJOSkZCPjo2Mi4qJiIeGhYSDgoGAf359fHt6eXh3dnV0c3JxcG9ubWxramloZ2ZlZGNiYWBfXl1cW1pZWFdWVVRTUlFQT05NTEtKSUhHRkVEQ0JBQD8+PTw7Ojk4NzY1NDMyMTAvLi0sKyopKCcmJSQjIiEgHx4dHBsaGRgXFhUUExIREA8ODQwLCgkIBwYFBAMCAQAAIfkEAQAAAwAsAAAAAAsACwAAAhqcj6kjnR0EAOFIOsKstxoNdAmIKZq3oMvKFgA7);
+    /*url("images/menuOpenHover.gif");*/
+}
+.expando-glyph-container.closed .expando-glyph {
+    background-image:url(data:image/gif;base64,R0lGODlhCwALAKIFAPDz2/b70mhpREJEPjI0Lf///wAAAAAAACH/C1hNUCBEYXRhWE1QPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS4wLWMwNjAgNjEuMTM0Nzc3LCAyMDEwLzAyLzEyLTE3OjMyOjAwICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyIgeG1wTU06T3JpZ2luYWxEb2N1bWVudElEPSJ4bXAuZGlkOjJDNDlGNjgyMjg5NERGMTE4RUZGQkY0Q0JCRDA3OTc2IiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkY2OEJCRkEyOTQyODExREY5ODMwQkQwQjI2MEMzREUwIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkY2OEJCRkExOTQyODExREY5ODMwQkQwQjI2MEMzREUwIiB4bXA6Q3JlYXRvclRvb2w9IkFkb2JlIFBob3Rvc2hvcCBDUzUgV2luZG93cyI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjJENDlGNjgyMjg5NERGMTE4RUZGQkY0Q0JCRDA3OTc2IiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjJDNDlGNjgyMjg5NERGMTE4RUZGQkY0Q0JCRDA3OTc2Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+Af/+/fz7+vn49/b19PPy8fDv7u3s6+rp6Ofm5eTj4uHg397d3Nva2djX1tXU09LR0M/OzczLysnIx8bFxMPCwcC/vr28u7q5uLe2tbSzsrGwr66trKuqqainpqWko6KhoJ+enZybmpmYl5aVlJOSkZCPjo2Mi4qJiIeGhYSDgoGAf359fHt6eXh3dnV0c3JxcG9ubWxramloZ2ZlZGNiYWBfXl1cW1pZWFdWVVRTUlFQT05NTEtKSUhHRkVEQ0JBQD8+PTw7Ojk4NzY1NDMyMTAvLi0sKyopKCcmJSQjIiEgHx4dHBsaGRgXFhUUExIREA8ODQwLCgkIBwYFBAMCAQAAIfkEAQAABQAsAAAAAAsACwAAAx1YBaD+QbTn4pi0WEx3Vh4FCASnjGUWpar0acGXAAA7);
+    /*url("images/menuClosed.gif");*/
+}
+.expando-glyph-container.closed .expando-glyph:hover {
+    background-image:url(data:image/gif;base64,R0lGODlhCwALAJEDAB5dfcbVyMvbwf///yH/C1hNUCBEYXRhWE1QPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS4wLWMwNjAgNjEuMTM0Nzc3LCAyMDEwLzAyLzEyLTE3OjMyOjAwICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyIgeG1wTU06T3JpZ2luYWxEb2N1bWVudElEPSJ4bXAuZGlkOjJDNDlGNjgyMjg5NERGMTE4RUZGQkY0Q0JCRDA3OTc2IiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjA1NTdBNkZFOTQyOTExREY4QjNERjI1RjMzMUYxRjk1IiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjA1NTdBNkZEOTQyOTExREY4QjNERjI1RjMzMUYxRjk1IiB4bXA6Q3JlYXRvclRvb2w9IkFkb2JlIFBob3Rvc2hvcCBDUzUgV2luZG93cyI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjJENDlGNjgyMjg5NERGMTE4RUZGQkY0Q0JCRDA3OTc2IiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjJDNDlGNjgyMjg5NERGMTE4RUZGQkY0Q0JCRDA3OTc2Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+Af/+/fz7+vn49/b19PPy8fDv7u3s6+rp6Ofm5eTj4uHg397d3Nva2djX1tXU09LR0M/OzczLysnIx8bFxMPCwcC/vr28u7q5uLe2tbSzsrGwr66trKuqqainpqWko6KhoJ+enZybmpmYl5aVlJOSkZCPjo2Mi4qJiIeGhYSDgoGAf359fHt6eXh3dnV0c3JxcG9ubWxramloZ2ZlZGNiYWBfXl1cW1pZWFdWVVRTUlFQT05NTEtKSUhHRkVEQ0JBQD8+PTw7Ojk4NzY1NDMyMTAvLi0sKyopKCcmJSQjIiEgHx4dHBsaGRgXFhUUExIREA8ODQwLCgkIBwYFBAMCAQAAIfkEAQAAAwAsAAAAAAsACwAAAhrcEqYrkKuagxFMOuSjmga7Kd/FgFgTMgJWAAA7);
+    /*url("images/menuClosedHover.gif");*/
+}
+.expando-glyph-container.closing .expando-glyph {
+    -webkit-transition:all .2s ease-in-out;
+    -moz-transition:all .2s ease-in-out;
+    transition:all .2s ease-in-out;
+    -webkit-transform:rotate(-90deg);
+    -moz-transform:rotate(-90deg);
+    transform:rotate(-90deg);
+}
+.expando-glyph-container.opening .expando-glyph {
+    -webkit-transition:all .2s ease-in-out;
+    -moz-transition:all .2s ease-in-out;
+    transition:all .2s ease-in-out;
+    -webkit-transform:rotate(90deg);
+    -moz-transform:rotate(90deg);
+    transform:rotate(90deg);
+}
+
+/* Content
+***************************************************************/
+#main #content h1 {
+    margin:0 0 1em;
+}
+#main h2, #main h3 {
+    margin:.5em 0;
+}
+#main .main.actions {
+    margin:0 0 1.4em;
+}
+#main .meta {
+    margin:-.4em 0 .4em;
+}
+#main form.inline {
+    margin:0;
+}
+#main ul h2 {
+    border-bottom:0;
+    margin:.2em 0;
+}
+#main ul h3 {
+    margin:0 0 .2em;
+}
+
+/* Confirmations, Messages and the like
+***************************************************************/
+.message, .validation-summary-errors {
+    margin:10px 0 4px 0;
+    padding:4px;
+    clear:both;
+}
+messages div.message {
+    clear:both;
+}
+span.message {
+    display:block;
+    margin:4px 0 4px 4px;
+}
+.messages a {
+    font-weight:bold;
+}
+/* todo: (heskew) what else (other inputs) needs this? */
+.critical.message, .validation-summary-errors,
+.input-validation-error.text-box, .input-validation-error.text {
+    border:1px solid #990808;
+}
+.critical.message, .validation-summary-errors {
+    background:#e68585; /* red */
+    color:#fff;
+}
+.info { 
+    background: url(images/info.gif) no-repeat 5px 5px #fff;
+    border:1px solid #e4e8ee;  /* blue */
+    padding-left:26px;
+}
+.error { 
+    background: url(images/error.gif) no-repeat 5px 5px #fff;
+    border:1px solid #e5cece;  /* red */
+    padding-left:26px;
+}
+.message-Information, .notifications {
+    background:#e6f1c9; /* green */
+    border:1px solid #cfe493;
+    color:#062232;
+}
+.message-Warning {
+    background:#fdf5bc; /* yellow */
+    border:1px solid #ffea9b;
+}
+.message-Error {
+    background:#e68585; /* red */
+    border:1px solid #990808;
+    color:#fff;
+}.debug.message {
+    background:#eee;
+    border:1px dashed #D2D6C6;
+    color:#7a7a7a;
+    margin:20px 0 14px 0;
+}
+.debug.message:before {
+    content:"DEBUG » ";
+}
+
+/* Forms
+***************************************************************/
+
+form              { margin: 0; padding: 0;}
+legend            { font-size: 1.231em; font-weight: normal; border:none;}
+fieldset          { padding:6px 0 0; margin:0 0 12px 0; border: 0px solid #dbdbdb; }
+label             { font-weight:normal; display:block; padding: 0 0 0.3em 0; }
+label.forcheckbox { margin:0 0 0 .4em; display:inline; }
+label.required:after {margin-left: 1ex; content: "*"; color: red; }
+legend.required:after {margin-left: 1ex; content: "*"; color: red; }    
+
+form.inline, form.inline fieldset { /* todo: (heskew) need something other than .inline ... */
+    display:inline;
+}
+form.inline fieldset {
+    margin:0;
+}
+.bulk-actions {
+    display:inline;
+    height:auto;
+    margin:0 4px 0 0;
+    padding:0 0 0 0;
+}
+
+input[type="checkbox"]:focus, input[type="radio"]:focus {
+    outline:1px dotted #666d51;
+}
+
+input[readonly] {
+    background-color: #EBEBE4;
+    color: #545454;
+}
+
+legend span {
+    font-weight:normal;
+}
+.bulk-actions label, .bulk-items h3, label.sub {
+    display:inline;
+}
+label.bulk-order {
+    text-transform:lowercase;
+}
+label span {
+    font-weight:normal;
+}
+label input {
+    vertical-align:text-top;
+}
+.hint {
+    display:block;
+    font-size:0.923em;
+    color:#7c7c7c;
+}
+/* todo: (heskew) try to get .text on stuff like .text-box */
+/* Official classes to use: 'text', 'text small', 'text medium', 'text large'. No more 'textMedium', 'text-medium', 'text-small', 'text-large' */
+select, textarea, input.text, input.textMedium, input.text-medium, input.text-small, input.text-box {
+    font-family:inherit;
+    padding:3px;
+    border:1px solid #bdbcbc;
+    font-size:inherit;
+}
+input.text, input.textMedium, input.text-medium, input.text-box {
+    line-height:1.2em;
+}
+input.text-small, input.text.small {
+    width:4em;
+}
+input.textMedium, input.text-medium, input.text.medium {
+    width:26em;
+}
+select {
+    padding:1px;	
+}
+select:focus, textarea:focus, input.text:focus, input.text-box:focus, input.text-small:focus, input.textMedium:focus, input.text-medium:focus  {
+    border-color:#666d51;
+}
+input.check-box, input[type=checkbox] {
+    margin-left:0;
+    vertical-align:-.1em;
+}
+input.large.text, textarea, fieldset {
+    clear:both;
+}
+
+textarea {
+    min-height:8em;
+}
+#main input.large.text, #main textarea {
+    width:99%;
+}
+#main .primary input.large.text, #main .primary textarea {
+    margin:0;
+    padding:4px;
+    width:98.8%;
+}
+/* todo: (heskew) move editor specific style elsewhere */
+.primary .mceEditor {
+    display:block;
+    margin:0;
+}
+
+/*----buttons----*/
+button.remove, .remove.button, .remove.button:link, .remove.button:visited {
+    background-color:#DECCCA;
+    background-image:url(images/tableHeaderBackgroundRed.gif);
+    border-color:#d6c9c7;
+    color:#5c3732;
+}
+button.remove:hover, .remove.button:hover,
+button.remove:active, .remove.button:active,
+button.remove:focus, .remove.button:focus {
+    background:#8f7c79;
+    border-color:#6e5551;
+    color:#faedeb;
+}
+button.remove:focus::-moz-focus-inner, .remove.button:focus::-moz-focus-inner {
+    border-color:#8f7c79;
+}
+.delete.button {
+    float:right;
+}
+.button.grey {
+        color:#5d615d;
+        background:#f5f5f5;
+        border:1px solid #999;
+
+        /*CSS3 properties*/
+        text-shadow:none;
+        
+        -webkit-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0); 
+        -moz-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0); 
+        box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0);
+        
+        /*----In ie the first couplet sets the alpha value so 00=transparent and ff=opaque)----*/    
+        filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#fff5f5f5',  endColorstr='#ffd9d9d9');
+        background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(245, 245, 245, 1.0)), to(rgba(217, 217, 217, 1.0)));   
+        background: -moz-linear-gradient(top, rgba(245, 245, 245, 1.0), rgba(217, 217, 217, 1.0));
+        
+        -webkit-border-radius: 2px;
+        -moz-border-radius: 2px;
+         border-radius: 2px;	
+}
+button, .button, a.button {
+    background:#6a7b42;
+    border:1px solid #487328;
+    color:#fff;
+    cursor: pointer;
+    display: inline-block;
+    font: 12px Arial,Helvetica,sans-serif;
+    padding: 5px 14px 5px 14px;
+    
+    /*position: relative;*/
+    text-align: center;
+    text-decoration: none;
+    
+    /*----CSS3 properties----*/
+     text-shadow: rgba(40,53,9,.2) 0px 0px 1px;
+    -webkit-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.2); 
+    -moz-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.2); 
+     box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.2);
+
+     
+    /*----In ie the first couplet sets the alpha value so 00=transparent and ff=opaque)----*/    
+     filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ff9bb36c',  endColorstr='#ff809f43');	
+     background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(155, 179, 108, 1.0)), to(rgba(128, 159, 67, 1.0)));    
+     background: -moz-linear-gradient(top, rgba(155, 179, 108, 1.0), rgba(128, 159, 67, 1.0));
+
+     /*test - base green in pallet is 155,179,108*/
+     background: -moz-linear-gradient(top, rgba(155, 179, 108, 1.0), rgba(133, 154, 93, 1.0));
+        
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+     border-radius: 2px;
+}
+
+.button, a.button /* For link buttons */
+{
+   padding: 5px 14px 5px 14px; 
+}
+
+button, input.button, x:-moz-any-link {
+    padding: 3px 14px 3px 14px;
+    }
+
+button:hover, .button:hover, a.button:hover {
+    border-color:#3a822e;
+    color:#eefcec;
+    text-decoration:none; 
+    background: #809f43;
+    
+    /*CSS3 properties*/  
+     filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ff6e7f45',  endColorstr='#ff6a7b42');
+     background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(110, 127, 69, 1.0)), to(rgba(106, 123, 66, 1.0)));    
+     background: -moz-linear-gradient(top, rgba(110, 127, 69, 1.0), rgba(106, 123, 66, 1.0));
+}
+
+button:active, .buton:active, a.button:active {
+    text-decoration:none; 
+    background:#6a7b42;
+    border:1px solid #487328;
+    color:#fff;
+
+    /*CSS3 properties*/
+    text-shadow: rgba(0,0,0,.5) 0px 0px 1px;
+     filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ff9bb36c',  endColorstr='#ff809f43');	
+     background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(155, 179, 108, 1.0)), to(rgba(128, 159, 67, 1.0)));   
+     background: -moz-linear-gradient(top, rgba(155, 179, 108, 1.0), rgba(128, 159, 67, 1.0));
+}
+button:focus::-moz-focus-inner, .button:focus::-moz-focus-inner {
+  border: 1px dotted transparent;
+}
+/*disabled*/
+.button.disabled, .button.disabled:visited, .button.disabled:hover, .button.disabled:active, .button.disabled:focus {
+    background-color:#eee;
+    border:1px solid #ababab;
+    color:#ababab;
+    cursor:default;
+    
+    filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ffeeeeee',  endColorstr='#ffeeeeee');
+    background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(238, 238, 238, 1.0)), to(rgba(238, 238, 238, 1.0)));   
+    background: -moz-linear-gradient(top, rgba(238, 238, 238, 1.0), rgba(238, 238, 238, 1.0));
+    
+    text-shadow: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+/* and allow all of that button style to be undone and beyond - to look like a link */
+button.link {
+    background:none;
+    border:0;
+    padding:inherit;
+    text-shadow:none;
+    -webkit-box-shadow:none; 
+    -moz-box-shadow:none; 
+    box-shadow:none;
+    filter:none;	
+    -webkit-border-radius:0;
+    -moz-border-radius:0;
+    border-radius:0;
+}
+.cancel {
+    margin:0 0 0 .93em;
+}
+.manage {
+    float:right;
+    margin-bottom: 16px;
+}
+.actions {
+    clear:right;
+    padding:0;
+    text-align:right;
+}
+.item-properties.actions {
+    margin: -10px 0 10px 0;
+}
+.contentItems .actions li {
+    background:inherit;
+    border:0;
+    padding:0;
+}
+.actions .construct {
+    float:left;
+}
+.actions .destruct {
+    float:right;
+}
+.manage a.button {
+    float:right;
+    height:inherit;
+    margin-left:4px;
+}
+
+.options 
+{
+    margin: 12px 0px 12px 0px;
+}
+
+.options span /* This is just a fix. We need to fix the base HTML */
+{
+    display: block;
+    margin: 12px 0 0 0;
+}
+
+.options span.hint /* This is just a fix. We need to fix the base HTML */
+{
+    display: block;
+    margin: 0 0 0 0;
+}
+
+.options input[type="text"] /* This is just a fix. We need to fix the base HTML */
+{
+    width:26em;
+}
+
+
+/* (Items) Tables
+***************************************************************/
+table.items {
+    margin:0 0 1.4em 0;
+    background:#fff;
+    border:1px solid #eaeaea;
+    border-bottom:none;
+    border-collapse:separate;
+    border-spacing:0;
+    width:100%;
+}
+table.items caption {
+    padding:8px 0;
+    text-indent:0;
+}
+table.items col {
+    border-spacing:0;
+    display:table-column;
+}
+table.items colgroup 
+{
+    border-spacing:0;
+    display:table-column-group;
+}
+table.items tbody {
+    border-spacing:0;
+    vertical-align:middle;
+}
+table.items thead, table.items th {
+    background:#f5f5f5;
+    overflow:hidden;
+    text-align:left;
+    white-space:nowrap;
+}
+table.items th.actions {
+    width:300px;
+    text-align:right;
+}
+table.items th.checkbox {
+    width:50px;
+}
+
+/* todo: (heskew) hook back up */
+table.items tr.hover {
+    background-color:#f0f3d6;
+}
+table.items tr.critical {background:#e68585; border:inherit;}
+table.items tr.warning {background:#fdf5bc; border:inherit;}
+table.items th, table.items td {
+    border-bottom:1px solid #eaeaea;
+    border-spacing:0px;
+    display:table-cell;
+    padding:8px 12px;
+}
+
+table.items td .add 
+{
+    float: right;
+}
+
+table.items tr.internal *{
+    background-color: #eee;
+    color: grey; 
+}
+
+/* Content item lists
+----------------------------------------------------------*/
+.contentItems {
+    border:1px solid #eaeaea;
+    border-bottom: none;
+    background:#FFF;
+    clear:both;
+    margin:1em 0;
+    padding:0;
+}
+.contentItems li {
+    margin:0;
+    overflow:hidden;
+    padding:0 1.4em .8em;
+    border-bottom:1px solid #eaeaea;
+}
+.contentItems.bulk-items li {
+    padding-bottom:.6em;
+    padding-left:.6em;
+}
+#main .contentItems li .actions {
+    color:#EAE9D9;
+    height:auto;
+    margin:-1.3em 0 0;
+    padding:0 0 .1em;
+}
+#main .contentItems li .actions .ibutton {
+    margin-right:6px;
+}
+#main .contentItems li .actions .destruct .ibutton {
+    margin-left:8px;
+    margin-right:0;
+}
+#main .contentItems li:hover .ibutton { background-position:0 0; }
+#main .contentItems li:hover .ibutton.remove { background-position:-20px 0; }
+#main .contentItems li:hover .ibutton.view { background-position:-40px 0; }
+#main .contentItems li:hover .ibutton.add.page { background-position:-60px 0; }
+#main .contentItems li:hover .ibutton.edit { background-position:-80px 0; }
+#main .contentItems li:hover .ibutton.publish { background-position:-100px 0; }
+#main .contentItems li:hover .ibutton.blog { background-position:-120px 0; }
+
+.contentItems .summary {
+    clear:both;
+    padding:1.2em .4em .5em;
+}
+.contentItems .properties {
+    float:left;
+}
+.contentItems .properties .contentType {
+    display: inline;
+    color: #333;
+}
+.contentItems h3 {
+    padding-top:0;
+}
+.contentItems .metadata ul {
+    display:inline;
+}
+.contentItems.bulk-items .metadata, .contentItems.bulk-items .primary {
+    margin:.7em 0 .7em 2em;
+    overflow:auto;
+}
+.contentItems.bulk-items .primary {
+    clear:both;
+    margin-top:0;
+}
+.contentItems .properties li {
+    border:0;
+    float:left;
+    padding:0 0 .1em 0;
+}
+.contentItems .properties .icon {
+    margin:0 .2em -.2em;
+}
+.contentItems .related {
+    text-align:right;
+}
+.contentItems .comment-count {
+    line-height:2em;
+}
+
+
+/* Alternating styles */
+#main .contentItems > ul > li:nth-child(odd),
+ul.contentItems > li:nth-child(odd) ,
+table.items tr:nth-child(odd) {
+    background-color: #fff;
+}
+
+#main .contentItems > ul > li:nth-child(even),
+ul.contentItems > li:nth-child(even) ,
+table.items tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+#main .contentItems > ul > li:hover,
+ul.contentItems > li:hover,
+table.items tbody tr:hover {
+    background-color: #EDF9F5;
+}
+
+/* Pager
+***************************************************************/
+
+.pager-footer { }
+.page-size-options {
+    float: left;
+    padding-right: 40px;
+    margin-left: auto;
+}
+html.dyn #submit-pager, html.dyn .apply-bulk-actions-auto { display:none; }
+.pager { list-style: none; padding: 0; margin: 2px 0 0 0; overflow: hidden; }
+.pager li {
+    float: left;
+    padding: 0 0 0 0;
+    margin:0 6px 0 0;
+    border: 1px solid #bdbcbc;
+    color: #333333;
+    cursor: pointer;
+    
+
+    /*CSS3 properties*/
+    text-shadow: rgba(0,0,0,.2) 0px 0px 1px;      
+    /*In ie the first couplet sets the alpha value so 00=transparent and ff=opaque)*/
+    filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#fff5f5f5',  endColorstr='#ffd9d9d9');
+    background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(245, 245, 245, 1.0)), to(rgba(217, 217, 217, 1.0)));    
+    background: -moz-linear-gradient(top, rgba(245, 245, 245, 1.0), rgba(217, 217, 217, 1.0));
+               
+    box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.1);
+    -webkit-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.1); 
+    -moz-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.1); 
+            
+    border-radius: 2px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;  
+    }
+
+
+.pager a, .pager span { font-size: 14px; display: block; background: #fff; padding: 2px 8px;}
+.pager a:hover { background-color: #eaeaea; color: #333; }
+.pager span { background-color:inherit; }
+
+
+/* Core Modules
+***************************************************************/
+/* Routable */
+.permalink input.text {
+    background:transparent;
+    border-color:#EAE9D9;
+    border-style:dashed;
+    margin-left:0;
+    margin-right:2em;
+    width:350px;
+}
+.permalink input.text:focus {
+    background:#FFF;
+    border-color:#666d51;
+    border-style:solid;
+}
+/* Routable and Containers (Core) */
+.with-checkbox .checkbox-and-label { /* todo: (heskew) routable should be changed to use this too */
+    margin-left:10px;
+}
+.checkbox-and-label {
+    white-space:nowrap;
+}
+/* Settings and Import/Export */
+.orchard-media fieldset div, .settings fieldset div, .settings .button, .orchard-importexport fieldset div {
+    margin:.5em 0;
+}
+.settings legend {
+    margin:0 0 0 0;
+    font-size:18px;
+}
+/* Core Contents and Orchard.PublishLater */
+
+.edit-item-sidebar fieldset {
+    margin:0;
+    padding:0;
+}
+
+fieldset.publish-button, fieldset.delete-button, fieldset.save-button { 
+    clear:none;
+    float:left;
+}
+fieldset.save-button {
+    clear:left;
+}
+fieldset.publish-button {
+    margin: 0 12px 0 0;
+    padding: 0 12px;
+    border-right:1px solid #ccc;
+}
+fieldset.delete-button {
+    margin: 0 0 0 12px;
+}
+
+/* Dashboard */
+
+.dashboard 
+{
+    padding: 10px 0 0 0;
+}
+
+.dashboard .help-item 
+{
+    width: 245px;
+    min-height: 180px;
+    float: left;
+    margin: 0 55px 55px 0;
+}
+
+.dashboard a:hover 
+{
+    text-decoration: underline;
+}
+
+.dashboard p 
+{
+     padding: 0 8px 0px 8px;
+}
+
+.dashboard .help-item h2
+{
+    padding: 6px;
+    font-size: 16px;
+}
+.dashboard .help-item h2.gallery
+{
+    background: #f1f1f2 url('images/icon-gallery.png') no-repeat 5px 50%;
+    padding-left: 40px;
+}
+
+.dashboard .help-item h2.friends
+{
+    background: #f1f1f2 url('images/icon-friends.png') no-repeat 5px 50%;
+    padding-left: 40px;
+}
+
+.dashboard .help-item h2.start
+{
+    background: #f1f1f2 url('images/icon-settings.png') no-repeat 5px 50%;
+    padding-left: 40px;
+}
+
+.dashboard .help-item h2.docs
+{
+    background: #f1f1f2 url('images/icon-docs.png') no-repeat 5px 50%;
+    padding-left: 38px;
+}
+
+.dashboard .help-item h2.contribute
+{
+    background: #f1f1f2 url('images/icon-contribute.png') no-repeat 5px 50%;
+    padding-left: 40px;
+}
+
+.dashboard .help-item h2.advisory
+{
+    background: #f1f1f2 url('images/icon-advisory.png') no-repeat 5px 50%;
+    padding-left: 40px;
+}
+
+
+
+/* Fields
+***************************************************************/
+/* TextField */
+#main .summary p.text-field {
+    margin:.5em 0;
+}
+
+/* ---------- Generic ---------- */
+/* todo: needed? */
+.clearBoth {
+    clear:both;
+}
+.placeholderd {
+    color:#ccc;
+    font-style:italic;
+}
+#orchard-version 
+{
+    position:relative;
+    float:right;
+    top:36px;
+    right:16px;
+}
+
+/* Print
+***************************************************************/
+@media print {
+    #menu, #branding, #login, .save-button, #footer {
+        display: none;
+    }
+    #main, #page-title {
+        margin-left: 20px;
+        padding-left: 20px;
+    }
+    html, body, #layout-content {
+        background: white;
+        height: auto;
+    }
+}

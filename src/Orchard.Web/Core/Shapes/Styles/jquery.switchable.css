@@ -41,3 +41,8 @@
 	border-color:#487328;
 	cursor:default;
 }
+
+/* RTL */
+.dir-rtl .switch-for-switchable .switch-button-group {
+    float: left;
+}

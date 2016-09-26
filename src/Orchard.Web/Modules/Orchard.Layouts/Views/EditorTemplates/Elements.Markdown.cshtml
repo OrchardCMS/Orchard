@@ -1,0 +1,8 @@
+﻿@model Orchard.Layouts.ViewModels.MarkdownEditorViewModel
+@{
+    Script.Include("AutoFocus.js");
+}
+<fieldset class="autofocus">
+    @Html.LabelFor(m => m.Text, T("Markdown"))
+    @Display.Body_Editor(EditorFlavor: "markdown", Text: Model.Text, AutoFocus: true)
+</fieldset>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Autofac.Features.Metadata;
 using Orchard.Caching;
+using Orchard.Environment;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Logging;
@@ -16,19 +17,19 @@ namespace Orchard.DisplayManagement.Descriptors {
         private readonly IExtensionManager _extensionManager;
         private readonly ICacheManager _cacheManager;
         private readonly IParallelCacheContext _parallelCacheContext;
-        private readonly IEnumerable<IShapeTableEventHandler> _shapeTableEventHandlers;
+        private readonly Work<IEnumerable<IShapeTableEventHandler>> _shapeTableEventHandlersWork;
 
         public DefaultShapeTableManager(
             IEnumerable<Meta<IShapeTableProvider>> bindingStrategies,
             IExtensionManager extensionManager,
             ICacheManager cacheManager,
             IParallelCacheContext parallelCacheContext,
-            IEnumerable<IShapeTableEventHandler> shapeTableEventHandlers
+            Work<IEnumerable<IShapeTableEventHandler>> shapeTableEventHandlersWork
             ) {
             _extensionManager = extensionManager;
             _cacheManager = cacheManager;
             _parallelCacheContext = parallelCacheContext;
-            _shapeTableEventHandlers = shapeTableEventHandlers;
+            _shapeTableEventHandlersWork = shapeTableEventHandlersWork;
             _bindingStrategies = bindingStrategies;
             Logger = NullLogger.Instance;
         }
@@ -76,7 +77,7 @@ namespace Orchard.DisplayManagement.Descriptors {
                     Bindings = descriptors.SelectMany(sd => sd.Bindings).ToDictionary(kv => kv.Key, kv => kv.Value, StringComparer.OrdinalIgnoreCase),
                 };
 
-                _shapeTableEventHandlers.Invoke(ctx => ctx.ShapeTableCreated(result), Logger);
+                _shapeTableEventHandlersWork.Value.Invoke(ctx => ctx.ShapeTableCreated(result), Logger);
 
                 Logger.Information("Done building shape table");
                 return result;

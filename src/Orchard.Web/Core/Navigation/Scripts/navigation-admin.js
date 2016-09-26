@@ -31,6 +31,7 @@
         placeholder: 'navigation-placeholder',
         revert: 50,
         tabSize: 30,
+        rtl: window.isRTL,
         tolerance: 'pointer',
         toleranceElement: '> div',
 

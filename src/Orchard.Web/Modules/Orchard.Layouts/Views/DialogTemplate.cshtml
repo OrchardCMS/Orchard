@@ -1,0 +1,29 @@
+﻿@using Orchard.Localization
+@using Orchard.Utility.Extensions
+@{
+    var name = (string)Model.Name;
+    var title = (LocalizedString)Model.Title ?? T("Dialog");
+    var buttons = (IEnumerable<LocalizedString>)Model.Buttons;
+}
+<div class="dialog-template @name">
+    <div class="dialog-wrapper">
+        <div class="overlay">
+            <article class="dialog">
+                <header class="drag-handle">
+                    <h1 class="title">@title</h1>
+                </header>
+                <div class="view">
+                    <iframe name="dialog-frame"></iframe>
+                    <div class="dialog-view"></div>
+                </div>
+                <footer>
+                    @if (buttons != null) {
+                        foreach (var button in buttons) {
+                            <a href="#" class="button @button.TextHint.HtmlClassify()">@button</a>
+                        }
+                    }
+                </footer>
+            </article>
+        </div>
+    </div>
+</div>

@@ -1,4 +1,5 @@
 ﻿<Placement>
+    <Place Parts_AdminSearch_SiteSettings="Content:1"/>
     <Place Parts_Search_SiteSettings="Content:1"/>
     <Place Parts_Search_SearchForm="Content:1"/>
 

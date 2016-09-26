@@ -7,6 +7,7 @@
 
         public const string MediaStorageFeatureName = "Orchard.Azure.Media";
         public const string MediaStorageStorageConnectionStringSettingName = "Orchard.Azure.Media.StorageConnectionString";
+        public const string MediaStorageRootFolderPathSettingName = "Orchard.Azure.Media.RootFolderPath";
         public const string MediaStorageContainerName = "media"; // Container names must be lower case.
         public const string MediaStoragePublicHostName = "Orchard.Azure.Media.StoragePublicHostName";
 

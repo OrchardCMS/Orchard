@@ -2,8 +2,8 @@
    Iniciacion en galego para a extensión 'UI date picker' para jQuery.
    Traducido por Manuel (McNuel@gmx.net). */
 (function($) {
-	$.calendars.picker.regional['gl'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['gl'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: '&#x3c;Ant', prevStatus: 'Amosar mes anterior',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: 'Amosar ano anterior',
 		nextText: 'Seg&#x3e;', nextStatus: 'Amosar mes seguinte',
@@ -17,5 +17,5 @@
 		dayStatus: 'D, M d', defaultStatus: 'Selecciona Data',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['gl']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['gl']);
 })(jQuery);

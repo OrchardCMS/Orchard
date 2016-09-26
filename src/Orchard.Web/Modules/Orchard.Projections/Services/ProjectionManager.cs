@@ -129,7 +129,7 @@ namespace Orchard.Projections.Services {
             var contentItems = new List<ContentItem>();
 
             // aggregate the result for each group query
-            foreach(var contentQuery in GetContentQueries(queryRecord, queryRecord.SortCriteria)) {
+            foreach(var contentQuery in GetContentQueries(queryRecord, queryRecord.SortCriteria.OrderBy(sc => sc.Position))) {
                 contentItems.AddRange(contentQuery.Slice(skip, count));
             }
 

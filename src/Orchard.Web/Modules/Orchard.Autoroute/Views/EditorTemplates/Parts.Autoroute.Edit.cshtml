@@ -21,14 +21,32 @@
     <fieldset class="permalink">
         <label>@T("Permalink")</label>
         @if (Model.Settings.AllowCustomPattern) {
-            <span>@Url.MakeAbsolute("/")@urlPrefix</span>
-            <span>@Html.TextBoxFor(m => m.CurrentUrl, new {@class = "text"})</span>
+            <span class="permalink-definition" dir="ltr">
+                <span>@Url.MakeAbsolute("/")@urlPrefix</span>
+                <span>@Html.TextBoxFor(m => m.CurrentUrl, new { @class = "text is-url" })</span>
+            </span>
+            <span class="hint">@T("Save the current item and leave the input empty to have it automatically generated using the pattern {0} e.g., {1}", defaultPattern.Name, defaultPattern.Description)</span>
         }
         else {
-            <span>@Url.MakeAbsolute("/")@urlPrefix</span>
-        }
+            var hintClass = string.Empty;
+            if (!string.IsNullOrEmpty(Model.CurrentUrl)) {
+                hintClass = "hint";
+                <span>@Url.MakeAbsolute("/")@urlPrefix@Model.CurrentUrl</span>
+            }
 
-        <span class="hint">@T("Save the current item and leave the input empty to have it automatically generated using the pattern {0} e.g., {1}", defaultPattern.Name, defaultPattern.Description)</span>
+            if (string.IsNullOrEmpty(Model.CurrentUrl)
+                || (!string.IsNullOrEmpty(Model.CurrentUrl) && Model.Settings.AutomaticAdjustmentOnEdit)) {
+                <span class="@hintClass">@T("Save the current item and the url will be generated using the pattern {0} e.g., {1}", defaultPattern.Name, defaultPattern.Description)</span>
+            }
+        }
+        @if (!String.IsNullOrEmpty(Model.CurrentUrl)) {
+            <span>
+                @Html.Link(
+                    T("View").Text,
+                    Url.MakeAbsolute("/") + urlPrefix + Model.CurrentUrl.TrimStart('/'),
+                    new { target = "_blank" })
+            </span>
+        }
 
     </fieldset>
     if (AuthorizedFor(Permissions.SetHomePage)) {

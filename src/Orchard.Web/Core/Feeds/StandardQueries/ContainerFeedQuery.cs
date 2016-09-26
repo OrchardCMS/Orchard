@@ -44,8 +44,11 @@ namespace Orchard.Core.Feeds.StandardQueries {
 
             var limitValue = context.ValueProvider.GetValue("limit");
             var limit = 20;
-            if (limitValue != null)
-                limit = (int)limitValue.ConvertTo(typeof(int));
+            if (limitValue != null) {
+                Int32.TryParse(Convert.ToString(limitValue), out limit);
+            }
+            
+            limit = Math.Min(limit, 100);
 
             var containerId = (int)containerIdValue.ConvertTo(typeof(int));
             var container = _contentManager.Get(containerId);

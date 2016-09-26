@@ -1,4 +1,4 @@
-html {
+﻿html {
   height: 100%;
 }
 body {
@@ -13,10 +13,13 @@ body {
 }
 .upload-direct .sync-upload-input,
 .upload-proxied .sync-upload-input,
-.upload-direct .async-upload-input,
-.upload-proxied .async-upload-input {
+.upload-direct .async-upload-file-input,
+.upload-proxied .async-upload-file-input {
   display: block;
+  margin-bottom: 4px;
 }
+.upload-direct .selected-file-wrapper,
+.upload-proxied .selected-file-wrapper,
 .upload-direct .progress-bar,
 .upload-proxied .progress-bar,
 .upload-direct .progress-text,
@@ -26,6 +29,10 @@ body {
 .upload-direct .cancel-upload,
 .upload-proxied .cancel-upload {
   display: none;
+}
+.upload-direct .selected-file-wrapper .filename-text,
+.upload-proxied .selected-file-wrapper .filename-text {
+  color: #809f43;
 }
 .upload-direct .progress-bar,
 .upload-proxied .progress-bar {
@@ -88,3 +95,4 @@ body {
 .status.uploaded {
   color: #809f43;
 }
+/*# sourceMappingURL=cloudmedia-edit-cloudvideopart.css.map */

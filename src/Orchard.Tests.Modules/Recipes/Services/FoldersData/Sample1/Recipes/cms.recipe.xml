@@ -7,6 +7,7 @@
     <WebSite>http://orchardproject.net</WebSite>
     <Tags>tag1, tag2</Tags>
     <Version>1.1</Version>
+    <IsSetupRecipe>true</IsSetupRecipe>
   </Recipe>
 
   <!-- Steps -->

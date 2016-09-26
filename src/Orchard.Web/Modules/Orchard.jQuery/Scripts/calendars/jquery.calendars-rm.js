@@ -2,7 +2,7 @@
    Romansh localisation for Gregorian/Julian calendars for jQuery.
    Yvonne Gienal (yvonne.gienal@educa.ch). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['rm'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['rm'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Schaner','Favrer','Mars','Avrigl','Matg','Zercladur',
@@ -17,7 +17,7 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['rm'] =
-			$.calendars.calendars.gregorian.prototype.regional['rm'];
+		$.calendars.calendars.julian.prototype.regionalOptions['rm'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['rm'];
 	}
 })(jQuery);

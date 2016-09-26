@@ -36,12 +36,14 @@ namespace Orchard.MediaLibrary.Services {
         /// <returns>The public URL for the media.</returns>
         string GetMediaPublicUrl(string mediaPath, string fileName);
 
+        MediaFolder GetRootMediaFolder();
+
         /// <summary>
         /// Retrieves the media folders within a given relative path.
         /// </summary>
         /// <param name="relativePath">The path where to retrieve the media folder from. null means root.</param>
         /// <returns>The media folder in the given path.</returns>
-        IEnumerable<MediaFolder> GetMediaFolders(string relativePath);
+        IEnumerable<IMediaFolder> GetMediaFolders(string relativePath);
 
         /// <summary>
         /// Retrieves the media files within a given relative path.
@@ -93,6 +95,15 @@ namespace Orchard.MediaLibrary.Services {
         /// <param name="newPath">The path where the file will be moved to.</param>
         /// <param name="newFilename">The new file name.</param>
         void MoveFile(string currentPath, string filename, string newPath, string newFilename);
+
+        /// <summary>
+        /// Moves a media file.
+        /// </summary>
+        /// <param name="currentPath">The path to the file's parent folder.</param>
+        /// <param name="filename">The file name.</param>
+        /// <param name="duplicatePath">The path where the file will be copied to.</param>
+        /// <param name="duplicateFilename">The new file name.</param>
+        void CopyFile(string currentPath, string filename, string duplicatePath, string duplicateFilename);
 
         /// <summary>
         /// Uploads a media file based on a posted file.

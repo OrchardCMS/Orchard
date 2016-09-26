@@ -1,8 +1,11 @@
 /// <reference path="typings/jquery.d.ts" />
 var Orchard;
 (function (Orchard) {
+    var Azure;
     (function (Azure) {
+        var MediaServices;
         (function (MediaServices) {
+            var AutoRefresh;
             (function (AutoRefresh) {
                 // Periodically refresh elements.
                 $(function () {
@@ -11,7 +14,6 @@ var Orchard;
                         var update = function () {
                             var container = self;
                             var url = container.data("refresh-url");
-
                             $.ajax({
                                 url: url,
                                 cache: false
@@ -20,15 +22,10 @@ var Orchard;
                                 setTimeout(update, 5000);
                             });
                         };
-
                         setTimeout(update, 5000);
                     });
                 });
-            })(MediaServices.AutoRefresh || (MediaServices.AutoRefresh = {}));
-            var AutoRefresh = MediaServices.AutoRefresh;
-        })(Azure.MediaServices || (Azure.MediaServices = {}));
-        var MediaServices = Azure.MediaServices;
-    })(Orchard.Azure || (Orchard.Azure = {}));
-    var Azure = Orchard.Azure;
+            })(AutoRefresh = MediaServices.AutoRefresh || (MediaServices.AutoRefresh = {}));
+        })(MediaServices = Azure.MediaServices || (Azure.MediaServices = {}));
+    })(Azure = Orchard.Azure || (Orchard.Azure = {}));
 })(Orchard || (Orchard = {}));
-//# sourceMappingURL=cloudmedia-autorefresh.js.map

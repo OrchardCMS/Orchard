@@ -39,6 +39,7 @@ Scenario: HTML markup in any given comment is encoded
         And I hit "Submit Comment"
         And I am redirected
         # because the ToUrlString extension method breaks in this specific (test) environment, the returnUrl is broken...
+		And I go to "my-blog/my-post"
         # And I go to "my-blog/my-post"
     Then I should see "This is&lt;br id=&quot;bad-anon-br&quot; /&gt;a &lt;a href"
         And I should not see "<br id="bad-anon-br" />"

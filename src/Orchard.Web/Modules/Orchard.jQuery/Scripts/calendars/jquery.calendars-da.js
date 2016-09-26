@@ -2,7 +2,7 @@
    Danish localisation for Gregorian/Julian calendars for jQuery.
    Written by Jan Christensen ( deletestuff@gmail.com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['da'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['da'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
         monthNames: ['Januar','Februar','Marts','April','Maj','Juni',
@@ -17,7 +17,7 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['da'] =
-			$.calendars.calendars.gregorian.prototype.regional['da'];
+		$.calendars.calendars.julian.prototype.regionalOptions['da'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['da'];
 	}
 })(jQuery);

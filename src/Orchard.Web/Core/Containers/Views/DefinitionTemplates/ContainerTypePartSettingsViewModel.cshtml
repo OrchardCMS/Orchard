@@ -3,6 +3,10 @@
     Script.Require("ShapesBase");
 }
 <fieldset>
+    <label for="@Html.FieldIdFor(m => m.ItemsShownDefault)">@T("Default Items Shown")</label>
+    @Html.EditorFor(m => m.ItemsShownDefault)
+</fieldset>
+<fieldset>
     <label for="@Html.FieldIdFor(m => m.PageSizeDefault)">@T("Default Page Size")</label>
     @Html.EditorFor(m => m.PageSizeDefault)
 </fieldset>

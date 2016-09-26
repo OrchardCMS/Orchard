@@ -2,8 +2,8 @@
    Armenian localisation for calendars datepicker for jQuery.
    Written by Levon Zakaryan (levon.zakaryan@gmail.com) */
 (function($) {
-	$.calendars.picker.regional['hy'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['hy'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: '&#x3c;Նախ.',  prevStatus: '',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: '',
 		nextText: 'Հաջ.&#x3e;', nextStatus: '',
@@ -17,5 +17,5 @@
 		dayStatus: 'DD, M d', defaultStatus: '',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['hy']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['hy']);
 })(jQuery);

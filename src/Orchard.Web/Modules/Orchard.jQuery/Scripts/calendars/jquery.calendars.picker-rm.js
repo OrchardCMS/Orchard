@@ -2,8 +2,8 @@
    Romansh localisation for calendars datepicker for jQuery.
    Yvonne Gienal (yvonne.gienal@educa.ch). */
 (function($) {
-	$.calendars.picker.regional['rm'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['rm'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: '&#x3c;Suandant', prevStatus: '',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: '',
 		nextText: 'Precedent&#x3e;', nextStatus: '',
@@ -17,5 +17,5 @@
 		dayStatus: 'DD d MM', defaultStatus: '',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['rm']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['rm']);
 })(jQuery);

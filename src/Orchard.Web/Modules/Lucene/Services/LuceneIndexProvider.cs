@@ -24,14 +24,18 @@ namespace Lucene.Services {
     /// </summary>
     public class LuceneIndexProvider : IIndexProvider {
         private readonly IAppDataFolder _appDataFolder;
-        public static readonly Version LuceneVersion = Version.LUCENE_29;
-        private readonly Analyzer _analyzer ;
         private readonly string _basePath;
-        public static readonly DateTime DefaultMinDateTime = new DateTime(1980, 1, 1);
+        private ILuceneAnalyzerProvider _analyzerProvider;
 
-        public LuceneIndexProvider(IAppDataFolder appDataFolder, ShellSettings shellSettings) {
+        public static readonly Version LuceneVersion = Version.LUCENE_29;
+        public static readonly DateTime DefaultMinDateTime = new DateTime(1980, 1, 1);
+        
+        public LuceneIndexProvider(
+            IAppDataFolder appDataFolder, 
+            ShellSettings shellSettings,
+            ILuceneAnalyzerProvider analyzerProvider) {
             _appDataFolder = appDataFolder;
-            _analyzer = CreateAnalyzer();
+            _analyzerProvider = analyzerProvider;
 
             // TODO: (sebros) Find a common way to get where tenant's specific files should go. "Sites/Tenant" is hard coded in multiple places
             _basePath = _appDataFolder.Combine("Sites", shellSettings.Name, "Indexes");
@@ -48,18 +52,13 @@ namespace Lucene.Services {
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
-        public static Analyzer CreateAnalyzer() {
-            // StandardAnalyzer does lower-case and stop-word filtering. It also removes punctuation
-            return new StandardAnalyzer(LuceneVersion);
-        }
-
         private void EnsureDirectoryExists() {
             var directory = new DirectoryInfo(_appDataFolder.MapPath(_basePath));
             if(!directory.Exists) {
                 directory.Create();
             }
         }
-
+        
         protected virtual Directory GetDirectory(string indexName) {
             var directoryInfo = new DirectoryInfo(_appDataFolder.MapPath(_appDataFolder.Combine(_basePath, indexName)));
             return FSDirectory.Open(directoryInfo);
@@ -104,7 +103,7 @@ namespace Lucene.Services {
         }
 
         public void CreateIndex(string indexName) {
-            using (new IndexWriter(GetDirectory(indexName), _analyzer, true, IndexWriter.MaxFieldLength.UNLIMITED)) {
+            using (new IndexWriter(GetDirectory(indexName), _analyzerProvider.GetAnalyzer(indexName), true, IndexWriter.MaxFieldLength.UNLIMITED)) {
             }
         }
 
@@ -131,7 +130,7 @@ namespace Lucene.Services {
             // Remove any previous document for these content items
             Delete(indexName, indexDocuments.Select(i => i.ContentItemId));
 
-            using(var writer = new IndexWriter(GetDirectory(indexName), _analyzer, false, IndexWriter.MaxFieldLength.UNLIMITED)) {
+            using (var writer = new IndexWriter(GetDirectory(indexName), _analyzerProvider.GetAnalyzer(indexName), false, IndexWriter.MaxFieldLength.UNLIMITED)) {
                 foreach (var indexDocument in indexDocuments) {
                     var doc = CreateDocument(indexDocument);
 
@@ -151,8 +150,8 @@ namespace Lucene.Services {
             if (!documentIds.Any()) {
                 return;
             }
-            
-            using(var writer = new IndexWriter(GetDirectory(indexName), _analyzer, false, IndexWriter.MaxFieldLength.UNLIMITED)) {
+
+            using (var writer = new IndexWriter(GetDirectory(indexName), _analyzerProvider.GetAnalyzer(indexName), false, IndexWriter.MaxFieldLength.UNLIMITED)) {
                 var query = new BooleanQuery();
 
                 try {
@@ -173,7 +172,7 @@ namespace Lucene.Services {
         }
 
         public ISearchBuilder CreateSearchBuilder(string indexName) {
-            return new LuceneSearchBuilder(GetDirectory(indexName)) { Logger = Logger };
+            return new LuceneSearchBuilder(GetDirectory(indexName), _analyzerProvider, indexName) { Logger = Logger };
         }
 
         public IEnumerable<string> GetFields(string indexName) {
