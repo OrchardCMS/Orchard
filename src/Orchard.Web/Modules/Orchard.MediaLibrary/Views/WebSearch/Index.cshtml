@@ -278,6 +278,7 @@
                        if (data.Success) {
                            item.status('success');
                            viewModel.selection.remove(item);
+                           window.parent.$("a.button.close")[0].click();
                        } else {
                            console.log(data);
                            alert(data.error);

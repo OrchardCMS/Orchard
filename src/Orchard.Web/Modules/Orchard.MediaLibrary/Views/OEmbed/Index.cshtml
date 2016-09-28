@@ -155,7 +155,7 @@
 </html>
 @if (Model.ReplaceId != null && Model.Success == true) {
     <script type="text/javascript">
-        $(function () { window.parent.$("a.button.close").trigger("click"); });
+        $(function () { window.parent.$("a.button.close")[0].click(); });
     </script>
 } 
 else if (Model.ReplaceId != null && Model.ReplaceFailed == true && !string.IsNullOrEmpty(Model.Type)) {
