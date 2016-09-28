@@ -8,7 +8,7 @@ Description: Contains designer tools to ease the Themes development process
 FeatureName: Shape Tracing
 Category: Designer
 FeatureDescription: Displays all currently displayed shapes and some information to customize them
-Dependencies: Orchard.Resources
+Dependencies: Orchard.Resources, Settings
 Features:
     UrlAlternates:
         Name: Url Alternates

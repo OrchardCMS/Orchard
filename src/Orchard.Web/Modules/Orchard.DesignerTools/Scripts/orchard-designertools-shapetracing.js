@@ -88,22 +88,26 @@ jQuery(function ($) {
 
     // expand/collapse behavior
     // ensure the container has always a valid size when expanded
-    shapeTracingToolbarSwitch.click(function () {
-        var _this = $(this);
-        _this.toggleClass('expanded');
-        if (_this.hasClass('expanded')) {
-            shapeTracingContainer.height(Math.max(previousSize, defaultHeight, shapeTracingContainer.height()));
-            enableShapeTracing();
-        }
-        else {
-            // save previous height
-            previousSize = shapeTracingContainer.height();
-            shapeTracingContainer.height(initialContainerSize);
-            disableShapeTracing();
-        }
+    var toggleShapeTracingVisibility = function () {
+    	var _this = $(this);
+    	_this.toggleClass('expanded');
+    	if (_this.hasClass('expanded')) {
+    		shapeTracingContainer.height(Math.max(previousSize, defaultHeight, shapeTracingContainer.height()));
+    		enableShapeTracing();
+    	}
+    	else {
+    		// save previous height
+    		previousSize = shapeTracingContainer.height();
+    		shapeTracingContainer.height(initialContainerSize);
+    		disableShapeTracing();
+    	}
 
-        syncResize();
-    });
+    	syncResize();
+    }
+
+    shapeTracingToolbar.click(toggleShapeTracingVisibility);
+    shapeTracingToolbarSwitch.click(toggleShapeTracingVisibility);
+
 
     var disableShapeTracing = function () {
         shapeTracingEnabled = false;
@@ -113,6 +117,11 @@ jQuery(function ($) {
     var enableShapeTracing = function () {
         shapeTracingEnabled = true;
     }
+
+	// make status act like normal div
+    $('#shape-tracing-toolbar-status').click(function (e) {
+    	e.stopPropagation();
+    })
 
     // add a resizable handle to the container
     $('#shape-tracing-resize-handle').addClass('ui-resizable-handle ui-resizable-n');

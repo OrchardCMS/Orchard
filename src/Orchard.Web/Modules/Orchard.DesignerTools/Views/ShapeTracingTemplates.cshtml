@@ -1,12 +1,18 @@
 ﻿@using Orchard.ContentManagement
 @using Orchard.DesignerTools.Models
+@{
+    var isShapeTracingActive = WorkContext.CurrentSite.As<ShapeTracingSiteSettingsPart>().IsShapeTracingActive;
+    var statusText = (isShapeTracingActive ? "Active" : "Inactive");
+    var statusCssClass = statusText.ToLowerInvariant();
+}
 <div id="shape-tracing-container"> 
     <div id="shape-tracing-resize-handle" ></div>
     <div id="shape-tracing-toolbar">
         <div id="shape-tracing-toolbar-switch"></div>
+        <div id="shape-tracing-toolbar-status" class="@statusCssClass">@T(statusText)</div>
     </div>
     <div id="shape-tracing-window">
-        @if (!WorkContext.CurrentSite.As<ShapeTracingSiteSettingsPart>().IsShapeTracingActive) {
+        @if (!isShapeTracingActive) {
             <div id="shape-tracing-window-content-deactivated">
                 <div class="deactivated-content">
                 @using (Html.BeginFormAntiForgeryPost(Url.Action("ActivateTracing", "ShapeTracing", new { Area = "Orchard.DesignerTools" }), FormMethod.Post, new { @class = "inline link" })) {
