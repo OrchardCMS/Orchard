@@ -83,14 +83,13 @@ namespace Orchard.MediaLibrary.Factories {
             return part;
         }
 
-        public string GetContentType(string contentType)
-        {
-            if (String.IsNullOrEmpty(contentType))
-            {
+        public string GetContentType(string contentType) {
+            if (String.IsNullOrEmpty(contentType)) {
                 contentType = "Image";
             }
             return contentType;
         }
+
         private void TryFillDimensionsForIco(Stream stream, ImagePart imagePart) {
             stream.Position = 0;
             using (var binaryReader = new BinaryReader(stream)) {

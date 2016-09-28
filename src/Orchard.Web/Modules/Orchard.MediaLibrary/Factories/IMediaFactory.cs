@@ -16,8 +16,8 @@ namespace Orchard.MediaLibrary.Factories {
         public MediaPart CreateMedia(Stream stream, string path, string mimeType, string contentType) {
             return null;
         }
-        public string GetContentType(string contentType)
-        {
+
+        public string GetContentType(string contentType) {
             return null;
         }
     }

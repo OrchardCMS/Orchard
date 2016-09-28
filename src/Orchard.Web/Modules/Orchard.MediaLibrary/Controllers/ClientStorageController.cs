@@ -110,40 +110,35 @@ namespace Orchard.MediaLibrary.Controllers {
             // Return JSON
             return Json(statuses, JsonRequestBehavior.AllowGet);
         }
+
         [HttpPost]
-        public ActionResult Replace(string folderPath, string type, int? replaceId = null)
-        {
+        public ActionResult Replace(string folderPath, string type, int? replaceId = null) {
             if (!Services.Authorizer.Authorize(Permissions.ManageOwnMedia))
                 return new HttpUnauthorizedResult();
             var rootMediaFolder = _mediaLibraryService.GetRootMediaFolder();
             var statuses = new List<object>();
-            if (replaceId != null)
-            {
+            if (replaceId != null) {
                 var replaceItem = Services.ContentManager.Get(replaceId.Value).As<MediaPart>();
                 folderPath = replaceItem.FolderPath;
                 var replaceItemType = replaceItem.TypeDefinition.Name;
-                if (!Services.Authorizer.Authorize(Permissions.ManageMediaContent) && !_mediaLibraryService.CanManageMediaFolder(folderPath))
-                {
+                if (!Services.Authorizer.Authorize(Permissions.ManageMediaContent) && !_mediaLibraryService.CanManageMediaFolder(folderPath)) {
                     return new HttpUnauthorizedResult();
                 }
+
                 var file = HttpContext.Request.Files[0];
                 var mimeType = _mimeTypeProvider.GetMimeType(file.FileName);
                 var mediaFactory = _mediaLibraryService.GetMediaFactory(file.InputStream, mimeType, "");
-                if (replaceItemType.Equals(mediaFactory.GetContentType(type),StringComparison.OrdinalIgnoreCase))
-                {
+                if (replaceItemType.Equals(mediaFactory.GetContentType(type),StringComparison.OrdinalIgnoreCase)) {
                     _mediaLibraryService.DeleteFile(replaceItem.FolderPath, replaceItem.FileName);
                     _mediaLibraryService.UploadMediaFile(replaceItem.FolderPath, replaceItem.FileName, file.InputStream);
-                    statuses.Add(new
-                    {
+                    statuses.Add(new {
                         id = replaceItem.Id,
                         size = file.ContentLength,
                         progress = 1.0,
                     });
                 }
-                else
-                {
-                    statuses.Add(new
-                    {
+                else {
+                    statuses.Add(new {
                         id = -1,
                         size = -1,
                         progress = 1.0,
@@ -151,6 +146,7 @@ namespace Orchard.MediaLibrary.Controllers {
                     });
                 }
             }
+
             return Json(statuses, JsonRequestBehavior.AllowGet);
         }
     }

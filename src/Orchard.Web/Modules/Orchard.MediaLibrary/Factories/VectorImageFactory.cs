@@ -61,10 +61,9 @@ namespace Orchard.MediaLibrary.Factories {
 
             return part;
         }
-        public string GetContentType(string contentType)
-        {
-            if (String.IsNullOrEmpty(contentType))
-            {
+
+        public string GetContentType(string contentType) {
+            if (String.IsNullOrEmpty(contentType)) {
                 contentType = "VectorImage";
             }
             return contentType;

@@ -55,11 +55,9 @@ namespace Orchard.MediaLibrary.Controllers {
                 Type = type
             };
 
-            if (replaceId != null)
-            {
+            if (replaceId != null) {
                 var part = Services.ContentManager.Get(replaceId.Value).As<MediaPart>();
-                if (!part.ContentItem.TypeDefinition.Name.Equals("OEmbed"))
-                {
+                if (!part.ContentItem.TypeDefinition.Name.Equals("OEmbed")) {
                     viewModel.Type = part.ContentItem.TypeDefinition.Name;
                     viewModel.ReplaceFailed = true;
                     return View(viewModel);
@@ -173,53 +171,53 @@ namespace Orchard.MediaLibrary.Controllers {
 
             return View("Index", viewModel);
         }
+
         [HttpPost, ValidateInput(false)]
-        public ActionResult ReplacePost(string folderPath, string url, string document, string type, int? replaceId = null)
-        {
+        public ActionResult ReplacePost(string folderPath, string url, string document, string type, int? replaceId = null) {
             var content = XDocument.Parse(document);
             var oembed = content.Root;
+
             var viewModel = new OEmbedViewModel();
-            if (replaceId != null)
-            {
+            if (replaceId != null) {
                 var part = Services.ContentManager.Get(replaceId.Value).As<MediaPart>();
-                if (part.ContentItem.TypeDefinition.Name.Equals("OEmbed"))
-                {
-                    if (oembed.Element("title") != null)
-                    {
+                if (part.ContentItem.TypeDefinition.Name.Equals("OEmbed")) {
+                    if (oembed.Element("title") != null) {
                         part.Title = oembed.Element("title").Value;
                     }
-                    else
-                    {
+                    else {
                         part.Title = oembed.Element("url").Value;
                     }
-                    if (oembed.Element("description") != null)
-                    {
+                    if (oembed.Element("description") != null) {
                         part.Caption = oembed.Element("description").Value;
                     }
+
                     var oembedPart = part.As<OEmbedPart>();
-                    if (oembedPart != null)
-                    {
+
+                    if (oembedPart != null) {
                         part.ContentItem.Record.Infoset.Element.Element("OEmbedPart").Remove();
+
                         oembedPart.Source = url;
-                        foreach (var element in oembed.Elements())
-                        {
+
+                        foreach (var element in oembed.Elements()) {
                             oembedPart[element.Name.LocalName] = element.Value;
                         }
+
                         Services.ContentManager.Publish(oembedPart.ContentItem);
                     }
+
                     viewModel.Success = true;
                     viewModel.ReplaceFailed = false;
                     viewModel.ReplaceId = replaceId;
                     viewModel.FolderPath = folderPath;
                 }
-                else
-                {
+                else {
                     viewModel.ReplaceFailed = true;
                     viewModel.ReplaceId = replaceId;
                     viewModel.FolderPath = folderPath;
                     viewModel.Type = part.ContentItem.TypeDefinition.Name;
                 }
             }
+
             return View("Index", viewModel);
         }
     }

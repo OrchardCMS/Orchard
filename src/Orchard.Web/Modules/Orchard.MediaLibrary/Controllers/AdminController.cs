@@ -93,11 +93,12 @@ namespace Orchard.MediaLibrary.Controllers {
                 MediaTypes = _mediaLibraryService.GetMediaTypes(),
                 ReplaceId = replaceId
             };
-            if (replaceId != null)
-            {
+
+            if (replaceId != null) {
                 var part = Services.ContentManager.Get(replaceId.Value).As<MediaPart>();
                 viewModel.ItemType = part.ContentItem.TypeDefinition.Name;
             }
+
             return View(viewModel);
         }
 

@@ -153,14 +153,12 @@
     @Display.FootScripts()
 </body>
 </html>
-@if (Model.ReplaceId != null && Model.Success == true)
-{
+@if (Model.ReplaceId != null && Model.Success == true) {
     <script type="text/javascript">
-        alert("OEmbed replaced successfully!");
+        $(function () { window.parent.$("a.button.close").trigger("click"); });
     </script>
-}
-else if (Model.ReplaceId != null && Model.ReplaceFailed == true && !string.IsNullOrEmpty(Model.Type))
-{
+} 
+else if (Model.ReplaceId != null && Model.ReplaceFailed == true && !string.IsNullOrEmpty(Model.Type)) {
     <script type="text/javascript">
         alert("Cannot replace " + '@Model.Type' + " with OEmbed");
     </script>

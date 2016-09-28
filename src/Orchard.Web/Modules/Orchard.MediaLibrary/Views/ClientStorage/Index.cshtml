@@ -1,8 +1,7 @@
 ﻿@model Orchard.MediaLibrary.ViewModels.ImportMediaViewModel
 @{
     var actionUrl = Url.Action("Upload", "ClientStorage");
-    if (Model.ReplaceId != null)
-    {
+    if (Model.ReplaceId != null) {
         actionUrl = Url.Action("Replace", "ClientStorage");
     }
 }
