@@ -68,7 +68,7 @@
                         </ul>
                         <div id="media-library-main-selection-actions">
                             <button id="delete-selection-button">@T("Delete")</button>
-                            <button href="#" data-bind="click: replaceMedia" class="button" id="replace-selection-button">@T("Replace")</button>
+                            <button href="#" data-bind="click: replaceMedia, visible: selection().length == 1" class="button" id="replace-selection-button">@T("Replace")</button>
                             <button id="clone-selection-button" data-bind="visible: selection().length == 1">@T("Clone")</button>
                         </div>
                     </div>

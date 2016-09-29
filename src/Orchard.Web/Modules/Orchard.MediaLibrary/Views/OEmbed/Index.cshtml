@@ -128,21 +128,17 @@
 
             if (Model.ReplaceId == null) {
                 using (Html.BeginFormAntiForgeryPost(Url.Action("MediaPost"))) {
-                    @Html.Hidden("url", Model.Url)
                     @Html.Hidden("folderPath", Model.FolderPath)
+                    @Html.Hidden("url", Model.Url)
                     @Html.Hidden("document", Model.Content.ToString())
                     <br/>
                     <button type="submit">@T("Import")</button>
                 }
-            }
-            else {
-                using (Html.BeginFormAntiForgeryPost(Url.Action("ReplacePost")))
-                {
-                    @Html.Hidden("url", Model.Url)
-                    @Html.Hidden("folderPath", Model.FolderPath)
-                    @Html.Hidden("document", Model.Content.ToString())
+            } else {
+                using (Html.BeginFormAntiForgeryPost(Url.Action("ReplacePost"))) {
                     @Html.Hidden("replaceId", Model.ReplaceId)
-                    @Html.Hidden("type", Model.Type)
+                    @Html.Hidden("url", Model.Url)
+                    @Html.Hidden("document", Model.Content.ToString())
                     <br />
                     <button type="submit">@T("Replace")</button>
                 }
@@ -153,12 +149,15 @@
     @Display.FootScripts()
 </body>
 </html>
-@if (Model.ReplaceId != null && Model.Success == true) {
-    <script type="text/javascript">
-        $(function () { window.parent.$("a.button.close")[0].click(); });
-    </script>
-} else if (Model.ReplaceId != null && Model.ReplaceFailed == true && !string.IsNullOrEmpty(Model.Type)) {
-    <script type="text/javascript">
-        alert("Cannot replace " + '@Model.Type' + " with OEmbed");
-    </script>
+@if (Model.ReplaceId != null) {
+    if (Model.Success == true) {
+        <script type="text/javascript">
+            $(function () { window.parent.$("a.button.close")[0].click(); });
+        </script>
+    }
+    else if (Model.ReplaceFailed == true) {
+        <script type="text/javascript">
+            alert("Cannot replace " + '@Model.Type' + " with OEmbed");
+        </script>
+    }
 }

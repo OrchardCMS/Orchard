@@ -158,7 +158,9 @@
                     }).done(function(html) {
                         data.context.thumbnail(html);
                         data.context.status('success');
-                        window.parent.$("a.button.close")[0].click();
+                        if ('@Model.ReplaceId' != '') {
+                            window.parent.$("a.button.close")[0].click();
+                        }
                     });
                     }
                 },

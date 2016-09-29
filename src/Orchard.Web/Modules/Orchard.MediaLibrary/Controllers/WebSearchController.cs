@@ -73,48 +73,42 @@ namespace Orchard.MediaLibrary.Controllers {
         }
 
         [HttpPost]
-        public ActionResult ReplacePost(string folderPath, string type, string url, int? replaceId = null) {
+        public ActionResult ReplacePost(int replaceId, string type, string url) {
             if (!Services.Authorizer.Authorize(Permissions.ManageOwnMedia))
                 return new HttpUnauthorizedResult();
 
-            var rootMediaFolder = _mediaLibraryService.GetRootMediaFolder();
-            if (!Services.Authorizer.Authorize(Permissions.ManageMediaContent) && !_mediaLibraryService.CanManageMediaFolder(folderPath)) {
+            var replaceItem = Services.ContentManager.Get<MediaPart>(replaceId);
+            if (!Services.Authorizer.Authorize(Permissions.ManageMediaContent) && !_mediaLibraryService.CanManageMediaFolder(replaceItem.FolderPath)) {
                 return new HttpUnauthorizedResult();
             }
 
             try {
-                if (replaceId != null) {
-                    var replaceItem = Services.ContentManager.Get(replaceId.Value).As<MediaPart>();
-                    folderPath = replaceItem.FolderPath;
-                    var replaceItemType = replaceItem.TypeDefinition.Name;
-                    if (!Services.Authorizer.Authorize(Permissions.ManageMediaContent) && !_mediaLibraryService.CanManageMediaFolder(folderPath)) {
-                        return new HttpUnauthorizedResult();
-                    }
-                    var buffer = new WebClient().DownloadData(url);
-                    var stream = new MemoryStream(buffer);
-                    var mimeType = _mimeTypeProvider.GetMimeType(Path.GetFileName(url));
-                    var mediaFactory = _mediaLibraryService.GetMediaFactory(stream, mimeType, "");
-                    if (replaceItemType.Equals(mediaFactory.GetContentType(type),StringComparison.OrdinalIgnoreCase)) {
-                        _mediaLibraryService.DeleteFile(replaceItem.FolderPath, replaceItem.FileName);
-                        _mediaLibraryService.UploadMediaFile(replaceItem.FolderPath, replaceItem.FileName, stream);
-                        _contentManager.Publish(replaceItem.ContentItem);
-                        return new JsonResult {
-                            Data = new { folderPath, MediaPath = replaceItem.FileName, Success = true }
-                        };
-                    }
+                var buffer = new WebClient().DownloadData(url);
+                var stream = new MemoryStream(buffer);
+                var mimeType = _mimeTypeProvider.GetMimeType(Path.GetFileName(url));
+                var mediaFactory = _mediaLibraryService.GetMediaFactory(stream, mimeType, type);
+
+                if(mediaFactory == null) {
+                    return new JsonResult {
+                        Data = new { Success = false, error = "No media factory available to handle this resource." }
+                    };
+                }
+
+                if (replaceItem.TypeDefinition.Name.Equals(mediaFactory.GetContentType(type), StringComparison.OrdinalIgnoreCase)) {
+                    _mediaLibraryService.DeleteFile(replaceItem.FolderPath, replaceItem.FileName);
+                    _mediaLibraryService.UploadMediaFile(replaceItem.FolderPath, replaceItem.FileName, stream);
+                    _contentManager.Publish(replaceItem.ContentItem);
 
                     return new JsonResult {
-                        Data = new { Success = false, error = string.Format("Cannot replace {0} with {1}", replaceItemType, mediaFactory.GetContentType(type)) }
+                        Data = new { replaceItem.FolderPath, MediaPath = replaceItem.FileName, Success = true }
                     };
                 }
 
                 return new JsonResult {
-                    Data = new { Success = false, error = "replaceId not specified" }
+                    Data = new { Success = false, error = string.Format("Cannot replace {0} with {1}", replaceItem.TypeDefinition.Name, mediaFactory.GetContentType(type)) }
                 };
-            }
-            catch (Exception e) {
-                return new JsonResult
-                {
+            } catch (Exception e) {
+                return new JsonResult {
                     Data = new { Success = false, error = e.Message }
                 };
             }

@@ -40,7 +40,6 @@ namespace Orchard.MediaLibrary.Controllers {
             
             // Check permission.
             var rootMediaFolder = _mediaLibraryService.GetRootMediaFolder();
-
             if (!Services.Authorizer.Authorize(Permissions.ManageMediaContent) && !_mediaLibraryService.CanManageMediaFolder(folderPath)) {
                 return new HttpUnauthorizedResult();
             }
@@ -61,7 +60,6 @@ namespace Orchard.MediaLibrary.Controllers {
             }
 
             // Check permission.
-            var rootMediaFolder = _mediaLibraryService.GetRootMediaFolder();
             if (!Services.Authorizer.Authorize(Permissions.ManageMediaContent) && !_mediaLibraryService.CanManageMediaFolder(folderPath)) {
                 return new HttpUnauthorizedResult();
             }
@@ -112,38 +110,51 @@ namespace Orchard.MediaLibrary.Controllers {
         }
 
         [HttpPost]
-        public ActionResult Replace(string folderPath, string type, int? replaceId = null) {
+        public ActionResult Replace(int replaceId, string type) {
             if (!Services.Authorizer.Authorize(Permissions.ManageOwnMedia))
                 return new HttpUnauthorizedResult();
-            var rootMediaFolder = _mediaLibraryService.GetRootMediaFolder();
-            var statuses = new List<object>();
-            if (replaceId != null) {
-                var replaceItem = Services.ContentManager.Get(replaceId.Value).As<MediaPart>();
-                folderPath = replaceItem.FolderPath;
-                var replaceItemType = replaceItem.TypeDefinition.Name;
-                if (!Services.Authorizer.Authorize(Permissions.ManageMediaContent) && !_mediaLibraryService.CanManageMediaFolder(folderPath)) {
-                    return new HttpUnauthorizedResult();
-                }
 
+            // Check permission.
+            var replaceItem = Services.ContentManager.Get<MediaPart>(replaceId);
+            if (!Services.Authorizer.Authorize(Permissions.ManageMediaContent) && !_mediaLibraryService.CanManageMediaFolder(replaceItem.FolderPath)) {
+                return new HttpUnauthorizedResult();
+            }
+
+            var statuses = new List<object>();
+
+            if(HttpContext.Request.Files.Count > 0) {
                 var file = HttpContext.Request.Files[0];
                 var mimeType = _mimeTypeProvider.GetMimeType(file.FileName);
-                var mediaFactory = _mediaLibraryService.GetMediaFactory(file.InputStream, mimeType, "");
-                if (replaceItemType.Equals(mediaFactory.GetContentType(type),StringComparison.OrdinalIgnoreCase)) {
-                    _mediaLibraryService.DeleteFile(replaceItem.FolderPath, replaceItem.FileName);
-                    _mediaLibraryService.UploadMediaFile(replaceItem.FolderPath, replaceItem.FileName, file.InputStream);
-                    statuses.Add(new {
-                        id = replaceItem.Id,
-                        size = file.ContentLength,
-                        progress = 1.0,
-                    });
-                }
-                else {
+                var mediaFactory = _mediaLibraryService.GetMediaFactory(file.InputStream, mimeType, type);
+
+                if(mediaFactory == null) {
                     statuses.Add(new {
                         id = -1,
                         size = -1,
                         progress = 1.0,
-                        errorMessage = string.Format("Cannot replace {0} with {1}", replaceItemType, mediaFactory.GetContentType(type))
+                        errorMessage = "No media factory available to handle this resource."
                     });
+                } else {
+                    //Each media factory is capable of handling a specific content type.
+                    //The content type of selected media factory should match the content type of item being replaced.
+                    if (replaceItem.TypeDefinition.Name.Equals(mediaFactory.GetContentType(type), StringComparison.OrdinalIgnoreCase)) {
+                        //Replace the physical file.
+                        _mediaLibraryService.DeleteFile(replaceItem.FolderPath, replaceItem.FileName);
+                        _mediaLibraryService.UploadMediaFile(replaceItem.FolderPath, replaceItem.FileName, file.InputStream);
+
+                        statuses.Add(new {
+                            id = replaceItem.Id,
+                            size = file.ContentLength,
+                            progress = 1.0,
+                        });
+                    } else {
+                        statuses.Add(new {
+                            id = -1,
+                            size = -1,
+                            progress = 1.0,
+                            errorMessage = string.Format("Cannot replace {0} with {1}", replaceItem.TypeDefinition.Name, mediaFactory.GetContentType(type))
+                        });
+                    }
                 }
             }
 
