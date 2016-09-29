@@ -92,17 +92,29 @@ namespace Orchard.MediaLibrary.Controllers {
                     }
                 }
 
-                var mediaPart = _mediaLibraryService.ImportMedia(file.InputStream, folderPath, filename, type);
-                Services.ContentManager.Create(mediaPart);
+                try {
+                    var mediaPart = _mediaLibraryService.ImportMedia(file.InputStream, folderPath, filename, type);
+                    Services.ContentManager.Create(mediaPart);
 
-                statuses.Add(new {
-                    id = mediaPart.Id,
-                    name = mediaPart.Title,
-                    type = mediaPart.MimeType,
-                    size = file.ContentLength,
-                    progress = 1.0,
-                    url= mediaPart.FileName,
-                });
+                    statuses.Add(new {
+                        id = mediaPart.Id,
+                        name = mediaPart.Title,
+                        type = mediaPart.MimeType,
+                        size = file.ContentLength,
+                        progress = 1.0,
+                        url = mediaPart.FileName,
+                    });
+                }
+                catch (Exception ex) {
+                    statuses.Add(new {
+                        id = -1,
+                        name = filename,
+                        type = type,
+                        size = file.ContentLength,
+                        progress = 1.0,
+                        errorMessage = ex.Message
+                    });
+                }
             }
 
             // Return JSON

@@ -242,8 +242,9 @@
                     })
                    .done(function (data) {
                        if (data.error) {
-                           console.log(data);
                            item.status('failure');
+                           console.log(data);
+                           alert(data.error);
                        } else {
                            item.status('success');
                            viewModel.selection.remove(item);
