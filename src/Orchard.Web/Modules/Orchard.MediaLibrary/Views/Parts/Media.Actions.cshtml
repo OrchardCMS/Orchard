@@ -8,14 +8,14 @@
 
 <div id="media-actions">
     @if (Authorizer.Authorize(Permissions.EditContent, contentItem)) {
-        @Html.Link(T("Edit").Text, Url.ItemEditUrl(contentItem), new { @class = "button", id = "edit-media-link" })
+        <a id="edit-media-link" href="@Url.ItemEditUrl(contentItem)" class="btn btn-primary"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> @T("Edit")</a>
     }
     @if (Authorizer.Authorize(Permissions.PublishContent, contentItem) && draftable) {        
         if (contentItem.HasPublished()) {
-            @Html.AntiForgeryTokenValueOrchardLink(T("Unpublish").Text, Url.Action("Unpublish", "Admin", new { Area = "Contents", contentItem.Id }), new { @class = "button", itemprop = "UnsafeUrl" })
+            @Html.AntiForgeryTokenValueOrchardLink(T("Unpublish").Text, Url.Action("Unpublish", "Admin", new { Area = "Contents", contentItem.Id }), new { @class = "btn btn-primary", itemprop = "UnsafeUrl" })
         }
         else {
-            @Html.AntiForgeryTokenValueOrchardLink(T("Publish").Text, Url.Action("Publish", "Admin", new { Area = "Contents", contentItem.Id }), new { @class = "button", itemprop = "UnsafeUrl" })
+            @Html.AntiForgeryTokenValueOrchardLink(T("Publish").Text, Url.Action("Publish", "Admin", new { Area = "Contents", contentItem.Id }), new { @class = "btn btn-primary", itemprop = "UnsafeUrl" })
         }
     }
 </div>

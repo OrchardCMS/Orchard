@@ -504,7 +504,7 @@ $(function () {
         	};
         }
 
-        $("#media-library-main-selection-select > .button-select").on('click', function () {
+        $("#media-library-main-selection-select > .js-button-select").on('click', function () {
         	pickAndClose();
         });
 
@@ -512,7 +512,7 @@ $(function () {
         	pickAndClose();
         });
 
-        $("#media-library-main-selection-select > .button-cancel").on('click', function() {
+        $("#media-library-main-selection-select > .js-button-cancel").on('click', function() {
             if (parent.$.colorbox) {
                 parent.$.colorbox.selectedData = null;
                 parent.$.colorbox.close();
