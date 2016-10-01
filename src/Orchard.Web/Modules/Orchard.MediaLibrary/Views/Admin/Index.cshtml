@@ -42,7 +42,7 @@
                         <div class="thumbnail" data-bind="html: data.thumbnail">
                         </div>
                         <div class="media-library-main-list-overlay">
-                            <p class="title" data-bind="text: data.title"></p>
+                            <p class="title" data-bind="text: data.title, attr: { title: data.title }"></p>
                             <p class="publication-status" data-bind="text: publicationStatus"></p>
                         </div>
                     </li>
