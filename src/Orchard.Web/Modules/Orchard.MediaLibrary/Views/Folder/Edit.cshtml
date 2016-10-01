@@ -22,9 +22,9 @@
         </div>
         <div class="panel-footer">
             <fieldset>
-                <button class="btn btn-primary" type="submit" name="submit.Save" value="@T("Save")">@T("Save")</button>
-                <button class="btn btn-primary" type="submit" name="submit.Delete" value="@T("Delete")" itemprop="RemoveUrl">@T("Delete")</button>
-                @Html.ActionLink(T("Cancel").ToString(), "Index", "Admin", new { area = "Orchard.MediaLibrary" }, new { @class = "button" })
+                <button class="btn btn-primary" type="submit" name="submit.Save" value="@T("Save")"><i class="fa fa-floppy-o" aria-hidden="true"></i> @T("Save")</button>
+                <a href="@Url.Action("Index", "Admin", new { area = "Orchard.MediaLibrary" })" class="btn btn-default"><i class="fa fa-ban" aria-hidden="true"></i> @T("Cancel")</a>                
+                <button class="btn btn-danger" type="submit" name="submit.Delete" value="@T("Delete")" itemprop="RemoveUrl">@T("Delete")</button>
             </fieldset>
         </div>
     </div>
