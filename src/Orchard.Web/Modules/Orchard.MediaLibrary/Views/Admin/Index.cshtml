@@ -35,7 +35,7 @@
                         @Display(Model.CustomNavigationShapes)
 
                         <li id="media-library-main-navigation-tree">
-                            <ul data-bind="template: { name: 'media-folder-template', foreach: mediaFolders, afterRender: afterRenderMediaFolderTemplate}"></ul>
+                            <ul class="list-unstyled" data-bind="template: { name: 'media-folder-template', foreach: mediaFolders, afterRender: afterRenderMediaFolderTemplate}"></ul>
                         </li>
                     </ul>
                 </div>
@@ -119,7 +119,7 @@ var mediaLibrarySettings = {
             <div class="media-library-folder-title" data-bind="click: folderClicked, attr: { 'data-media-path': folderPath() }, css: {selected: isSelected()}">
                 <a href="#" class="media-library-navigation-folder-link"><i class="fa" data-bind="    css: {'fa-folder-open-o': isExpanded(), 'fa-folder-o': !isExpanded()}"></i><span data-bind="    text: name"></span></a>
             </div>
-            <ul data-bind="template: { name: 'media-folder-template', foreach: childFolders, afterRender: afterRenderMediaFolderTemplate}, visible: isExpanded()">
+            <ul class="list-unstyled" data-bind="template: { name: 'media-folder-template', foreach: childFolders, afterRender: afterRenderMediaFolderTemplate}, visible: isExpanded()">
             </ul>
         </div>
     </li>
