@@ -91,7 +91,7 @@
         <div class="panel-body">
             <h3 class="no-content">
                 @T("There are currently no taxonomies.")
-                @Html.ActionLink(T("Add one now").Text, "Create", new { Area = "Contents", Id = "Taxonomy", ReturnUrl = Request.RawUrl }, new { @class = "" })
+                @Html.ActionLink(T("Add one now").Text, "Create", new { Area = "Contents", Id = "Taxonomy", ReturnUrl = Request.RawUrl }, new { @class = "" })<text>.</text>
             </h3>
         </div>
     }
