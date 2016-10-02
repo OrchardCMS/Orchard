@@ -18,9 +18,9 @@
     <div class="panel-heading no-border">
         <div class="panel-heading-primary-group">
             <fieldset class="bulk-actions">
-                <a href="#" data-bind="visible: displayed(), click: importMedia" class="button" id="button-import">@T("Import")</a>
-                <a href="#" data-bind="visible: displayed(), attr: { href: '@HttpUtility.JavaScriptStringEncode(Url.Action("Edit", "Folder", new { area = "Orchard.MediaLibrary"}))?folderPath=' + encodeURIComponent(displayed()) }" class="button" id="button-edit-folder">@T("Edit Folder")</a>
-                <a href="#" data-bind="attr: { href: '@HttpUtility.JavaScriptStringEncode(Url.Action("Create", "Folder", new { area = "Orchard.MediaLibrary"}))?folderPath=' + encodeURIComponent(displayed() ? displayed() : '') }" class="button" id="button-create-folder">@T("Create Folder")</a>
+                <a href="#" data-bind="visible: displayed(), click: importMedia" class="button" id="button-import"><i class="fa fa-download" aria-hidden="true"></i> @T("Import")</a>
+                <a href="#" data-bind="visible: displayed(), attr: { href: '@HttpUtility.JavaScriptStringEncode(Url.Action("Edit", "Folder", new { area = "Orchard.MediaLibrary"}))?folderPath=' + encodeURIComponent(displayed()) }" class="button" id="button-edit-folder"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> @T("Edit Folder")</a>
+                <a href="#" data-bind="attr: { href: '@HttpUtility.JavaScriptStringEncode(Url.Action("Create", "Folder", new { area = "Orchard.MediaLibrary"}))?folderPath=' + encodeURIComponent(displayed() ? displayed() : '') }" class="button" id="button-create-folder"><i class="fa fa-plus" aria-hidden="true"></i> @T("Create Folder")</a>
             </fieldset>
             <fieldset class="bulk-actions">
                 @Display(Model.CustomActionsShapes)
@@ -71,15 +71,15 @@
                                     </li>
                                 </ul>
                                 <div id="media-library-main-selection-actions">
-                                    <button id="delete-selection-button">@T("Delete")</button>
-                                    <button id="clone-selection-button" data-bind="visible: selection().length == 1">@T("Clone")</button>
+                                    <button id="delete-selection-button" class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true"></i> @T("Delete")</button>
+                                    <button id="clone-selection-button" class="btn btn-primary" data-bind="visible: selection().length == 1"><i class="fa fa-files-o" aria-hidden="true"></i> @T("Clone")</button>
                                 </div>
                             </div>
                         </header>
                         <footer>
                             <div id="media-library-main-selection-select">
-                                <button class="button-select" data-bind="visible: selection().length > 0">@T("Select")</button>
-                                <button class="button-cancel">@T("Cancel")</button>
+                                <button class="js-button-select btn btn-primary" data-bind="visible: selection().length > 0"><i class="fa fa-check" aria-hidden="true"></i> @T("Select")</button>
+                                <button class="js-button-cancel btn btn-default"><i class="fa fa-ban" aria-hidden="true"></i> @T("Cancel")</button>
                             </div>
                         </footer>
                     </article>
