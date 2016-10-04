@@ -345,7 +345,7 @@
         -ms-text-overflow: ellipsis;
         -o-text-overflow: ellipsis;
         text-overflow: ellipsis;
-        text-wrap: none;
+        white-space: nowrap;
     }
 
     .media-library-main-list-overlay .publication-status {
