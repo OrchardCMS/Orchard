@@ -45,8 +45,9 @@ namespace Orchard.MediaLibrary.Factories {
         }
 
         public MediaPart CreateMedia(Stream stream, string path, string mimeType, string contentType) {
-            
-			contentType = GetContentType(contentType);
+            if (String.IsNullOrEmpty(contentType)) {
+                contentType = "VectorImage";
+            }
 
             var part = _contentManager.New<MediaPart>(contentType);
 
@@ -60,13 +61,6 @@ namespace Orchard.MediaLibrary.Factories {
             }
 
             return part;
-        }
-
-        public string GetContentType(string contentType) {
-            if (String.IsNullOrEmpty(contentType)) {
-                contentType = "VectorImage";
-            }
-            return contentType;
         }
     }
 }

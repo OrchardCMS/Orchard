@@ -46,7 +46,12 @@
     @Display.StyleSheetLinks()
 </head>
 <body>
-
+    @if (Layout.Messages != null)
+    {
+        <div id="messages">
+            @Display(Layout.Messages)
+        </div>
+    }
     <div id="oembed-main">
         <div class="query-container">
             @using (Html.BeginFormAntiForgeryPost()) {
@@ -127,7 +132,7 @@
             }
 
             if (Model.ReplaceId == null) {
-                using (Html.BeginFormAntiForgeryPost(Url.Action("MediaPost"))) {
+                using (Html.BeginFormAntiForgeryPost(Url.Action("Import"))) {
                     @Html.Hidden("folderPath", Model.FolderPath)
                     @Html.Hidden("url", Model.Url)
                     @Html.Hidden("document", Model.Content.ToString())
@@ -135,7 +140,7 @@
                     <button type="submit">@T("Import")</button>
                 }
             } else {
-                using (Html.BeginFormAntiForgeryPost(Url.Action("ReplacePost"))) {
+                using (Html.BeginFormAntiForgeryPost(Url.Action("Replace"), FormMethod.Post, new { onsubmit = "window.parent.$('a.button.close')[0].click();" })) {
                     @Html.Hidden("replaceId", Model.ReplaceId)
                     @Html.Hidden("url", Model.Url)
                     @Html.Hidden("document", Model.Content.ToString())
@@ -144,20 +149,7 @@
                 }
             }
         }
-
     </div>
     @Display.FootScripts()
 </body>
 </html>
-@if (Model.ReplaceId != null) {
-    if (Model.Success == true) {
-        <script type="text/javascript">
-            $(function () { window.parent.$("a.button.close")[0].click(); });
-        </script>
-    }
-    else if (Model.ReplaceFailed == true) {
-        <script type="text/javascript">
-            alert("Cannot replace " + '@Model.Type' + " with OEmbed");
-        </script>
-    }
-}

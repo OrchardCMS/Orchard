@@ -60,6 +60,7 @@ namespace Orchard.MediaLibrary.Drivers {
             context.ImportAttribute(part.PartDefinition.Name, "FileName", fileName =>
                 part.FileName = fileName
             );
+
             context.ImportAttribute(part.PartDefinition.Name, "LogicalType", logicalType =>
                 part.LogicalType = logicalType
             );

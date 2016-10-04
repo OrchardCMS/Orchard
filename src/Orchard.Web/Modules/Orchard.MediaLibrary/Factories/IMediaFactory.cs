@@ -5,7 +5,6 @@ namespace Orchard.MediaLibrary.Factories {
 
     public interface IMediaFactory {
         MediaPart CreateMedia(Stream stream, string path, string mimeType, string contentType);
-        string GetContentType(string contentType);
     }
 
     public class NullMediaFactory : IMediaFactory {
@@ -14,10 +13,6 @@ namespace Orchard.MediaLibrary.Factories {
         }
 
         public MediaPart CreateMedia(Stream stream, string path, string mimeType, string contentType) {
-            return null;
-        }
-
-        public string GetContentType(string contentType) {
             return null;
         }
     }

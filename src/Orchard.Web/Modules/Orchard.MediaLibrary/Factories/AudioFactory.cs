@@ -46,7 +46,9 @@ namespace Orchard.MediaLibrary.Factories {
         }
 
         public MediaPart CreateMedia(Stream stream, string path, string mimeType, string contentType) {
-            contentType = GetContentType(contentType);
+            if (String.IsNullOrEmpty(contentType)) {
+                contentType = "Audio";
+            }
 
             var part = _contentManager.New<MediaPart>(contentType);
 
@@ -54,22 +56,12 @@ namespace Orchard.MediaLibrary.Factories {
             part.MimeType = mimeType;
             part.Title = Path.GetFileNameWithoutExtension(path);
 
-            var audioPart = part.As<AudioPart>();
-            
+            var audioPart = part.As<AudioPart>();            
             if (audioPart == null) {
                 return null;
             }
 
-            audioPart.Length = 0;
-
             return part;
-        }
-
-        public string GetContentType(string contentType) {
-            if (string.IsNullOrEmpty(contentType)) {
-                contentType = "Audio";
-            }
-            return contentType;
         }
     }
 }

@@ -18,15 +18,14 @@
     <div id="media-library-toolbar">
 
         <div id="media-library-toolbar-actions">
-
-            <label for="filterMediaType">@T("Create")</label>
+            <label for="filterMediaType">@if (Model.ReplaceId == null) { <text>@T("Create")</text> } else { <text>@T("Replace")</text> }</label>
             <select id="filterMediaType" name="FilteredMediaType">
                 @Html.SelectOption("", true, T("Any").ToString())
                 @foreach (var mediaType in Model.MediaTypes) {
                     @Html.SelectOption(mediaType.Name, false, mediaType.DisplayName)
                 }
             </select>
-
+            
             <a href="@Url.Action("Index", "Admin", new { folderPath = Model.FolderPath})" class="button close">@T("Close")</a>
         </div>
 
@@ -37,15 +36,14 @@
 
     <div id="media-library-main">
         <div id="media-library-main-navigation">
-            @foreach (var menuItem in Model.Menu) { 
+            @foreach (var menuItem in Model.Menu)
+            {
                 string sectionHeaderTextHint = menuItem.Text.TextHint;
                 var itemClassName = "navicon-" + sectionHeaderTextHint.HtmlClassify();
-                if (Model.ReplaceId != null) {
-                    var replaceIdParam = "&replaceId=" + HttpUtility.UrlEncode(Model.ReplaceId.ToString());
-                    <div class="import-provider"><a class="navicon @itemClassName" href="@menuItem.Href/Index?folderPath=@HttpUtility.UrlEncode(Model.FolderPath)@replaceIdParam">@menuItem.Text</a></div>
-                }
-                else {
+                if (Model.ReplaceId == null) {
                     <div class="import-provider"><a class="navicon @itemClassName" href="@menuItem.Href/Index?folderPath=@HttpUtility.UrlEncode(Model.FolderPath)">@menuItem.Text</a></div>
+                } else {
+                    <div class="import-provider"><a class="navicon @itemClassName" href="@menuItem.Href/Index?folderPath=@HttpUtility.UrlEncode(Model.FolderPath)&replaceId=@HttpUtility.UrlEncode(Model.ReplaceId.ToString())">@menuItem.Text</a></div>
                 }
             }
         </div>

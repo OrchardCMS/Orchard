@@ -9,6 +9,8 @@ using Orchard.Themes;
 using Orchard.UI.Admin;
 using Orchard.FileSystems.Media;
 using Orchard.MediaLibrary.Models;
+using System.Linq;
+using Orchard.Localization;
 
 namespace Orchard.MediaLibrary.Controllers {
     [Admin, Themed(false)]
@@ -25,11 +27,12 @@ namespace Orchard.MediaLibrary.Controllers {
             _mediaLibraryService = mediaManagerService;
             _contentManager = contentManager;
             _mimeTypeProvider = mimeTypeProvider;
-
             Services = orchardServices;
+            T = NullLocalizer.Instance;
         }
 
         public IOrchardServices Services { get; set; }
+        public Localizer T { get; set; }
 
         public ActionResult Index(string folderPath, string type, int? replaceId = null) {
             var viewModel = new ImportMediaViewModel {
@@ -43,74 +46,94 @@ namespace Orchard.MediaLibrary.Controllers {
 
 
         [HttpPost]
-        public ActionResult ImagePost(string folderPath, string type, string url) {
+        public ActionResult Import(string folderPath, string type, string url) {
             if (!Services.Authorizer.Authorize(Permissions.ManageOwnMedia))
                 return new HttpUnauthorizedResult();
 
-            // Check permission.
-            var rootMediaFolder = _mediaLibraryService.GetRootMediaFolder();
+            // Check permission
             if (!Services.Authorizer.Authorize(Permissions.ManageMediaContent) && !_mediaLibraryService.CanManageMediaFolder(folderPath)) {
                 return new HttpUnauthorizedResult();
             }
 
+            var settings = Services.WorkContext.CurrentSite.As<MediaLibrarySettingsPart>();
+            var allowedExtensions = (settings.UploadAllowedFileTypeWhitelist ?? "")
+                .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                .Where(x => x.StartsWith("."));
+
             try {
+                var filename = Path.GetFileName(url);
+
+                // skip file if the allowed extensions is defined and doesn't match
+                if (allowedExtensions.Any()) {
+                    if (!allowedExtensions.Any(e => filename.EndsWith(e, StringComparison.OrdinalIgnoreCase))) {
+                        throw new Exception(T("This file type is not allowed: {0}", Path.GetExtension(filename)).Text);
+                    }
+                }
+
                 var buffer = new WebClient().DownloadData(url);
                 var stream = new MemoryStream(buffer);
-                
-                var mediaPart = _mediaLibraryService.ImportMedia(stream, folderPath, Path.GetFileName(url), type);
+
+                var mediaPart = _mediaLibraryService.ImportMedia(stream, folderPath, filename, type);
                 _contentManager.Create(mediaPart);
 
-                return new JsonResult {
-                    Data = new {folderPath, MediaPath = mediaPart.FileName}
-                };
+                return new JsonResult { Data = new { folderPath, MediaPath = mediaPart.FileName } };
+
             }
-            catch(Exception e) {
-                return new JsonResult {
-                    Data = new { error= e.Message }
-                };
+            catch (Exception e) {
+                return new JsonResult { Data = new { error = e.Message } };
             }
-            
         }
 
         [HttpPost]
-        public ActionResult ReplacePost(int replaceId, string type, string url) {
+        public ActionResult Replace(int replaceId, string type, string url) {
             if (!Services.Authorizer.Authorize(Permissions.ManageOwnMedia))
                 return new HttpUnauthorizedResult();
 
-            var replaceItem = Services.ContentManager.Get<MediaPart>(replaceId);
-            if (!Services.Authorizer.Authorize(Permissions.ManageMediaContent) && !_mediaLibraryService.CanManageMediaFolder(replaceItem.FolderPath)) {
+            var replaceMedia = Services.ContentManager.Get<MediaPart>(replaceId);
+            if (replaceMedia == null)
+                return HttpNotFound();
+
+            // Check permission
+            if (!Services.Authorizer.Authorize(Permissions.ManageMediaContent) && !_mediaLibraryService.CanManageMediaFolder(replaceMedia.FolderPath)) {
                 return new HttpUnauthorizedResult();
             }
 
+            var settings = Services.WorkContext.CurrentSite.As<MediaLibrarySettingsPart>();
+            var allowedExtensions = (settings.UploadAllowedFileTypeWhitelist ?? "")
+                .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                .Where(x => x.StartsWith("."));
+
             try {
+                var filename = Path.GetFileName(url);
+
+                // skip file if the allowed extensions is defined and doesn't match
+                if (allowedExtensions.Any()) {
+                    if (!allowedExtensions.Any(e => filename.EndsWith(e, StringComparison.OrdinalIgnoreCase))) {
+                        throw new Exception(T("This file type is not allowed: {0}", Path.GetExtension(filename)).Text);
+                    }
+                }
+
                 var buffer = new WebClient().DownloadData(url);
                 var stream = new MemoryStream(buffer);
-                var mimeType = _mimeTypeProvider.GetMimeType(Path.GetFileName(url));
-                var mediaFactory = _mediaLibraryService.GetMediaFactory(stream, mimeType, type);
 
-                if(mediaFactory == null) {
-                    return new JsonResult {
-                        Data = new { Success = false, error = "No media factory available to handle this resource." }
-                    };
-                }
+                var mimeType = _mimeTypeProvider.GetMimeType(filename);
 
-                if (replaceItem.TypeDefinition.Name.Equals(mediaFactory.GetContentType(type), StringComparison.OrdinalIgnoreCase)) {
-                    _mediaLibraryService.DeleteFile(replaceItem.FolderPath, replaceItem.FileName);
-                    _mediaLibraryService.UploadMediaFile(replaceItem.FolderPath, replaceItem.FileName, stream);
-                    _contentManager.Publish(replaceItem.ContentItem);
+                string replaceContentType = _mediaLibraryService.MimeTypeToContentType(stream, mimeType, type) ?? type;
+                if (!replaceContentType.Equals(replaceMedia.TypeDefinition.Name, StringComparison.OrdinalIgnoreCase))
+                    throw new Exception(T("Cannot replace {0} with {1}", replaceMedia.TypeDefinition.Name, replaceContentType).Text);
 
-                    return new JsonResult {
-                        Data = new { replaceItem.FolderPath, MediaPath = replaceItem.FileName, Success = true }
-                    };
-                }
+                _mediaLibraryService.DeleteFile(replaceMedia.FolderPath, replaceMedia.FileName);
+                _mediaLibraryService.UploadMediaFile(replaceMedia.FolderPath, replaceMedia.FileName, stream);
+                replaceMedia.MimeType = mimeType;
 
-                return new JsonResult {
-                    Data = new { Success = false, error = string.Format("Cannot replace {0} with {1}", replaceItem.TypeDefinition.Name, mediaFactory.GetContentType(type)) }
-                };
-            } catch (Exception e) {
-                return new JsonResult {
-                    Data = new { Success = false, error = e.Message }
-                };
+                // Force a publish event which will update relevant Media properties
+                replaceMedia.ContentItem.VersionRecord.Published = false;
+                Services.ContentManager.Publish(replaceMedia.ContentItem);
+
+                return new JsonResult { Data = new { replaceMedia.FolderPath, MediaPath = replaceMedia.FileName } };
+            }
+            catch (Exception e) {
+                return new JsonResult { Data = new { Success = false, error = e.Message } };
             }
         }
     }

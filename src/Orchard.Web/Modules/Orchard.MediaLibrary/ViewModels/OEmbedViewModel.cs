@@ -5,9 +5,6 @@ namespace Orchard.MediaLibrary.ViewModels {
         public string FolderPath { get; set; }
         public string Url { get; set; }
         public XDocument Content { get; set; }
-        public bool Success { get; set; }
-        public string Type { get; set; }
         public int? ReplaceId { get; set; }
-        public bool ReplaceFailed { get; set; }
     }
 }

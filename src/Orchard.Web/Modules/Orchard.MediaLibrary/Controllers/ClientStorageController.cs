@@ -20,12 +20,10 @@ namespace Orchard.MediaLibrary.Controllers {
 
         public ClientStorageController(
             IMediaLibraryService mediaManagerService, 
-            IMimeTypeProvider mimeTypeProvider,
-            IContentManager contentManager,
-            IOrchardServices orchardServices) {
-            _mimeTypeProvider = mimeTypeProvider;
+            IOrchardServices orchardServices,
+            IMimeTypeProvider mimeTypeProvider) {
             _mediaLibraryService = mediaManagerService;
-            Services = orchardServices;
+            _mimeTypeProvider = mimeTypeProvider;
             Services = orchardServices;
             T = NullLocalizer.Instance;
         }
@@ -104,15 +102,10 @@ namespace Orchard.MediaLibrary.Controllers {
                         progress = 1.0,
                         url = mediaPart.FileName,
                     });
-                }
-                catch (Exception ex) {
+                } catch (Exception ex) {
                     statuses.Add(new {
-                        id = -1,
-                        name = filename,
-                        type = type,
-                        size = file.ContentLength,
+                        error = T(ex.Message).Text,
                         progress = 1.0,
-                        errorMessage = ex.Message
                     });
                 }
             }
@@ -126,47 +119,72 @@ namespace Orchard.MediaLibrary.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageOwnMedia))
                 return new HttpUnauthorizedResult();
 
+            var replaceMedia = Services.ContentManager.Get<MediaPart>(replaceId);
+            if (replaceMedia == null)
+                return HttpNotFound();
+
             // Check permission.
-            var replaceItem = Services.ContentManager.Get<MediaPart>(replaceId);
-            if (!Services.Authorizer.Authorize(Permissions.ManageMediaContent) && !_mediaLibraryService.CanManageMediaFolder(replaceItem.FolderPath)) {
+            if (!Services.Authorizer.Authorize(Permissions.ManageMediaContent) && !_mediaLibraryService.CanManageMediaFolder(replaceMedia.FolderPath)) {
                 return new HttpUnauthorizedResult();
             }
 
             var statuses = new List<object>();
 
-            if(HttpContext.Request.Files.Count > 0) {
-                var file = HttpContext.Request.Files[0];
-                var mimeType = _mimeTypeProvider.GetMimeType(file.FileName);
-                var mediaFactory = _mediaLibraryService.GetMediaFactory(file.InputStream, mimeType, type);
+            var settings = Services.WorkContext.CurrentSite.As<MediaLibrarySettingsPart>();
+            var allowedExtensions = (settings.UploadAllowedFileTypeWhitelist ?? "")
+                .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                .Where(x => x.StartsWith("."));
 
-                if(mediaFactory == null) {
-                    statuses.Add(new {
-                        id = -1,
-                        size = -1,
-                        progress = 1.0,
-                        errorMessage = "No media factory available to handle this resource."
-                    });
-                } else {
-                    //Each media factory is capable of handling a specific content type.
-                    //The content type of selected media factory should match the content type of item being replaced.
-                    if (replaceItem.TypeDefinition.Name.Equals(mediaFactory.GetContentType(type), StringComparison.OrdinalIgnoreCase)) {
-                        //Replace the physical file.
-                        _mediaLibraryService.DeleteFile(replaceItem.FolderPath, replaceItem.FileName);
-                        _mediaLibraryService.UploadMediaFile(replaceItem.FolderPath, replaceItem.FileName, file.InputStream);
+            // Loop through each file in the request
+            for (int i = 0; i < HttpContext.Request.Files.Count; i++) {
+                // Pointer to file
+                var file = HttpContext.Request.Files[i];
+                var filename = Path.GetFileName(file.FileName);
 
+                // if the file has been pasted, provide a default name
+                if (file.ContentType.Equals("image/png", StringComparison.InvariantCultureIgnoreCase) && !filename.EndsWith(".png", StringComparison.InvariantCultureIgnoreCase)) {
+                    filename = "clipboard.png";
+                }
+
+                // skip file if the allowed extensions is defined and doesn't match
+                if (allowedExtensions.Any()) {
+                    if (!allowedExtensions.Any(e => filename.EndsWith(e, StringComparison.OrdinalIgnoreCase))) {
                         statuses.Add(new {
-                            id = replaceItem.Id,
-                            size = file.ContentLength,
+                            error = T("This file type is not allowed: {0}", Path.GetExtension(filename)).Text,
                             progress = 1.0,
                         });
-                    } else {
-                        statuses.Add(new {
-                            id = -1,
-                            size = -1,
-                            progress = 1.0,
-                            errorMessage = string.Format("Cannot replace {0} with {1}", replaceItem.TypeDefinition.Name, mediaFactory.GetContentType(type))
-                        });
+                        continue;
                     }
+                }
+
+                try {
+                    var mimeType = _mimeTypeProvider.GetMimeType(filename);
+
+                    string replaceContentType = _mediaLibraryService.MimeTypeToContentType(file.InputStream, mimeType, type) ?? type;
+                    if (!replaceContentType.Equals(replaceMedia.TypeDefinition.Name, StringComparison.OrdinalIgnoreCase))
+                        throw new Exception(T("Cannot replace {0} with {1}", replaceMedia.TypeDefinition.Name, replaceContentType).Text);
+
+                    _mediaLibraryService.DeleteFile(replaceMedia.FolderPath, replaceMedia.FileName);
+                    _mediaLibraryService.UploadMediaFile(replaceMedia.FolderPath, replaceMedia.FileName, file.InputStream);
+                    replaceMedia.MimeType = mimeType;
+
+                    // Force a publish event which will update relevant Media properties
+                    replaceMedia.ContentItem.VersionRecord.Published = false;
+                    Services.ContentManager.Publish(replaceMedia.ContentItem);
+
+                    statuses.Add(new {
+                        id = replaceMedia.Id,
+                        name = replaceMedia.Title,
+                        type = replaceMedia.MimeType,
+                        size = file.ContentLength,
+                        progress = 1.0,
+                        url = replaceMedia.FileName,
+                    });
+                } catch (Exception ex) {
+                    statuses.Add(new {
+                        error = T(ex.Message).Text,
+                        progress = 1.0,
+                    });
                 }
             }
 
