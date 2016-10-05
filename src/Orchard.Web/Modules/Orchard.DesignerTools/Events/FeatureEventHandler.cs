@@ -28,7 +28,7 @@ namespace Orchard.DesignerTools.Events {
                 return;
             }
 
-            // reset it to active each time the module is turned back on - less confusing for users
+            // Reset to active each time the module is turned back on so it is less confusing for users.
             _services.WorkContext.CurrentSite.As<ShapeTracingSiteSettingsPart>().IsShapeTracingActive = true;
         }
 

@@ -7,6 +7,8 @@ using Orchard.Utility.Extensions;
 
 namespace Orchard.DesignerTools.Handlers {
     public class ShapeTracingSiteSettingsPartHandler : ContentHandler {
+        public Localizer T { get; set; }
+
         public ShapeTracingSiteSettingsPartHandler() {
             T = NullLocalizer.Instance;
             Filters.Add(new ActivatingFilter<ShapeTracingSiteSettingsPart>("Site"));
@@ -18,8 +20,6 @@ namespace Orchard.DesignerTools.Handlers {
         private void AssignDefaultValues(InitializingContentContext context, ShapeTracingSiteSettingsPart part) {
             part.IsShapeTracingActive = true;
         }
-
-        public Localizer T { get; set; }
 
         protected override void GetItemMetadata(GetContentItemMetadataContext context) {
             if (context.ContentItem.ContentType != "Site")
