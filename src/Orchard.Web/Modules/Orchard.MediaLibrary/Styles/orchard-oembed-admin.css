@@ -47,3 +47,16 @@
     border-bottom-left-radius: 0;
     font-size: 18px;
 }
+
+/* Error messages */
+.message {
+    margin:10px 0 4px 0;
+    padding:4px;
+    clear:both;
+}
+
+.message-Error {
+    background:#e68585; /* red */
+    border:1px solid #990808;
+    color:#fff;
+}

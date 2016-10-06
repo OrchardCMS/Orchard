@@ -46,13 +46,12 @@
     @Display.StyleSheetLinks()
 </head>
 <body>
-    @if (Layout.Messages != null)
-    {
-        <div id="messages">
-            @Display(Layout.Messages)
-        </div>
-    }
     <div id="oembed-main">
+        @if (Layout.Messages != null) {
+            <div id="messages">
+                @Display(Layout.Messages)
+            </div>
+        }
         <div class="query-container">
             @using (Html.BeginFormAntiForgeryPost()) {
                 <fieldset>
