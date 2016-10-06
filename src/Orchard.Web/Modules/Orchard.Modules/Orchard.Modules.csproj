@@ -120,7 +120,6 @@
       <DependentUpon>features.admin.js</DependentUpon>
     </Content>
     <Content Include="Styles\images\menu.modules.png" />
-    <Content Include="Styles\images\new.gif" />
     <Content Include="Styles\images\update.gif" />
     <Content Include="Styles\menu.modules-admin.css" />
     <Content Include="Views\Admin\Index.cshtml" />
