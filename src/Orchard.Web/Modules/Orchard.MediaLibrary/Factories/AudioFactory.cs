@@ -56,7 +56,7 @@ namespace Orchard.MediaLibrary.Factories {
             part.MimeType = mimeType;
             part.Title = Path.GetFileNameWithoutExtension(path);
 
-            var audioPart = part.As<AudioPart>();            
+            var audioPart = part.As<AudioPart>();
             if (audioPart == null) {
                 return null;
             }

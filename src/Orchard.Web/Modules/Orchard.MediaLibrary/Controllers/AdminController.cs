@@ -91,12 +91,14 @@ namespace Orchard.MediaLibrary.Controllers {
                 ImageSets = imageSets,
                 FolderPath = folderPath,
                 MediaTypes = _mediaLibraryService.GetMediaTypes(),
-                ReplaceId = replaceId
             };
 
             if (replaceId != null) {
-                var part = Services.ContentManager.Get(replaceId.Value).As<MediaPart>();
-                viewModel.ItemType = part.ContentItem.TypeDefinition.Name;
+                var replaceMedia = Services.ContentManager.Get(replaceId.Value).As<MediaPart>();
+                if (replaceMedia == null)
+                    return HttpNotFound();
+
+                viewModel.ReplaceId = replaceId;
             }
 
             return View(viewModel);
@@ -219,7 +221,8 @@ namespace Orchard.MediaLibrary.Controllers {
                 }
 
                 return Json(true);
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 Logger.Error(e, "Could not delete media items.");
                 return Json(false);
             }
@@ -253,7 +256,8 @@ namespace Orchard.MediaLibrary.Controllers {
                 Services.ContentManager.Publish(clonedContentItem);
 
                 return Json(true);
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 Logger.Error(e, "Could not clone media item.");
                 return Json(false);
             }

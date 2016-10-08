@@ -67,7 +67,7 @@ namespace Orchard.MediaLibrary.Controllers {
                 }
             }
 
-            var webClient = new WebClient {Encoding = Encoding.UTF8};
+            var webClient = new WebClient { Encoding = Encoding.UTF8 };
             try {
                 // <link rel="alternate" href="http://vimeo.com/api/oembed.xml?url=http%3A%2F%2Fvimeo.com%2F23608259" type="text/xml+oembed">
 
@@ -140,14 +140,15 @@ namespace Orchard.MediaLibrary.Controllers {
             var oembed = content.Root;
 
             var part = Services.ContentManager.New<MediaPart>("OEmbed");
-                        
+
             part.MimeType = "text/html";
             part.FolderPath = folderPath;
             part.LogicalType = "OEmbed";
 
             if (oembed.Element("title") != null) {
                 part.Title = oembed.Element("title").Value;
-            } else {
+            }
+            else {
                 part.Title = oembed.Element("url").Value;
             }
             if (oembed.Element("description") != null) {
@@ -165,13 +166,10 @@ namespace Orchard.MediaLibrary.Controllers {
                 }
 
                 Services.ContentManager.Create(oembedPart);
+                Services.Notifier.Information(T("Media imported successfully."));
             }
 
-            var viewModel = new OEmbedViewModel {
-                FolderPath = folderPath
-            };
-
-            return View("Index", viewModel);
+            return RedirectToAction("Index", new { folderPath = folderPath });
         }
 
         [HttpPost, ValidateInput(false)]
@@ -180,17 +178,13 @@ namespace Orchard.MediaLibrary.Controllers {
             if (replaceMedia == null)
                 return HttpNotFound();
 
-            var viewModel = new OEmbedViewModel {
-                ReplaceId = replaceId,
-                FolderPath = replaceMedia.FolderPath
-            };
-
             var content = XDocument.Parse(document);
             var oembed = content.Root;
 
             if (oembed.Element("title") != null) {
                 replaceMedia.Title = oembed.Element("title").Value;
-            } else {
+            }
+            else {
                 replaceMedia.Title = oembed.Element("url").Value;
             }
             if (oembed.Element("description") != null) {
@@ -209,9 +203,10 @@ namespace Orchard.MediaLibrary.Controllers {
                 }
 
                 Services.ContentManager.Publish(oembedPart.ContentItem);
+                Services.Notifier.Information(T("Media replaced successfully."));
             }
 
-            return View("Index", viewModel);
+            return RedirectToAction("Index", new { folderPath = replaceMedia.FolderPath, replaceId = replaceMedia.Id });
         }
     }
 }

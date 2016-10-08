@@ -27,7 +27,7 @@ namespace Orchard.MediaLibrary.Handlers {
                 }
             });
 
-            OnIndexing<MediaPart>((context, part) => 
+            OnIndexing<MediaPart>((context, part) =>
                 context.DocumentIndex
                     .Add("media-folderpath", Normalize(part.FolderPath)).Store()
                     .Add("media-filename", Normalize(part.FileName)).Store()
@@ -36,8 +36,7 @@ namespace Orchard.MediaLibrary.Handlers {
                     .Add("media-alternatetext", part.AlternateText).Analyze()
                 );
 
-            OnPublished<ImagePart>((context, part) =>
-            {
+            OnPublished<ImagePart>((context, part) => {
                 var mediaPart = part.As<MediaPart>();
                 var file = _storageProvider.GetFile(_storageProvider.Combine(mediaPart.FolderPath, mediaPart.FileName));
 
@@ -47,7 +46,8 @@ namespace Orchard.MediaLibrary.Handlers {
                             part.Width = image.Width;
                             part.Height = image.Height;
                         }
-                    } catch (ArgumentException) {
+                    }
+                    catch (ArgumentException) {
                         // Still trying to get .ico dimensions when it's blocked in System.Drawing, see: https://github.com/OrchardCMS/Orchard/issues/4473
                         if (mediaPart.MimeType != "image/x-icon" && mediaPart.MimeType != "image/vnd.microsoft.icon")
                             throw;
@@ -62,8 +62,7 @@ namespace Orchard.MediaLibrary.Handlers {
                     .Add("image-width", part.Width).Analyze().Store()
                 );
 
-            OnPublished<DocumentPart>((context, part) =>
-            {
+            OnPublished<DocumentPart>((context, part) => {
                 var mediaPart = part.As<MediaPart>();
                 var file = _storageProvider.GetFile(_storageProvider.Combine(mediaPart.FolderPath, mediaPart.FileName));
 

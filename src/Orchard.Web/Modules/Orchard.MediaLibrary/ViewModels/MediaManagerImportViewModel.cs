@@ -9,6 +9,5 @@ namespace Orchard.MediaLibrary.ViewModels {
         public string FolderPath { get; set; }
         public IEnumerable<ContentTypeDefinition> MediaTypes { get; set; }
         public int? ReplaceId { get; set; }
-        public string ItemType { get; set; }
     }
 }

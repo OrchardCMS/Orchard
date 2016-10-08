@@ -27,7 +27,7 @@ namespace Orchard.MediaLibrary.Factories {
                     return null;
                 }
             }
-            
+
             return new MediaFactorySelectorResult {
                 Priority = -10,
                 MediaFactory = new DocumentFactory(_contentManager)
@@ -57,7 +57,7 @@ namespace Orchard.MediaLibrary.Factories {
             if (documentPart == null) {
                 return null;
             }
-            
+
             return part;
         }
     }

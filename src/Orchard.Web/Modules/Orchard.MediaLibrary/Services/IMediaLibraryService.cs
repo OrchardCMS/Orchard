@@ -173,8 +173,7 @@ namespace Orchard.MediaLibrary.Services {
             if (mediaFactory == null)
                 return null;
 
-            switch (mediaFactory.GetType().Name)
-            {
+            switch (mediaFactory.GetType().Name) {
                 case "ImageFactory":
                     return "Image";
                 case "AudioFactory":

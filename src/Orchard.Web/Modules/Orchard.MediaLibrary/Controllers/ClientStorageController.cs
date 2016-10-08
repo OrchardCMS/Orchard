@@ -19,7 +19,7 @@ namespace Orchard.MediaLibrary.Controllers {
         private readonly IMimeTypeProvider _mimeTypeProvider;
 
         public ClientStorageController(
-            IMediaLibraryService mediaManagerService, 
+            IMediaLibraryService mediaManagerService,
             IOrchardServices orchardServices,
             IMimeTypeProvider mimeTypeProvider) {
             _mediaLibraryService = mediaManagerService;
@@ -35,7 +35,7 @@ namespace Orchard.MediaLibrary.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageOwnMedia)) {
                 return new HttpUnauthorizedResult();
             }
-            
+
             // Check permission.
             var rootMediaFolder = _mediaLibraryService.GetRootMediaFolder();
             if (!Services.Authorizer.Authorize(Permissions.ManageMediaContent) && !_mediaLibraryService.CanManageMediaFolder(folderPath)) {
@@ -50,10 +50,10 @@ namespace Orchard.MediaLibrary.Controllers {
 
             return View(viewModel);
         }
-        
+
         [HttpPost]
         public ActionResult Upload(string folderPath, string type) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageOwnMedia)) { 
+            if (!Services.Authorizer.Authorize(Permissions.ManageOwnMedia)) {
                 return new HttpUnauthorizedResult();
             }
 
@@ -65,7 +65,7 @@ namespace Orchard.MediaLibrary.Controllers {
             var statuses = new List<object>();
             var settings = Services.WorkContext.CurrentSite.As<MediaLibrarySettingsPart>();
             var allowedExtensions = (settings.UploadAllowedFileTypeWhitelist ?? "")
-                .Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                 .Where(x => x.StartsWith("."));
 
             // Loop through each file in the request
@@ -73,15 +73,15 @@ namespace Orchard.MediaLibrary.Controllers {
                 // Pointer to file
                 var file = HttpContext.Request.Files[i];
                 var filename = Path.GetFileName(file.FileName);
-                
+
                 // if the file has been pasted, provide a default name
                 if (file.ContentType.Equals("image/png", StringComparison.InvariantCultureIgnoreCase) && !filename.EndsWith(".png", StringComparison.InvariantCultureIgnoreCase)) {
                     filename = "clipboard.png";
                 }
 
                 // skip file if the allowed extensions is defined and doesn't match
-                if(allowedExtensions.Any()) {
-                    if(!allowedExtensions.Any(e => filename.EndsWith(e, StringComparison.OrdinalIgnoreCase))) {
+                if (allowedExtensions.Any()) {
+                    if (!allowedExtensions.Any(e => filename.EndsWith(e, StringComparison.OrdinalIgnoreCase))) {
                         statuses.Add(new {
                             error = T("This file type is not allowed: {0}", Path.GetExtension(filename)).Text,
                             progress = 1.0,
@@ -102,7 +102,8 @@ namespace Orchard.MediaLibrary.Controllers {
                         progress = 1.0,
                         url = mediaPart.FileName,
                     });
-                } catch (Exception ex) {
+                }
+                catch (Exception ex) {
                     statuses.Add(new {
                         error = T(ex.Message).Text,
                         progress = 1.0,
@@ -180,7 +181,8 @@ namespace Orchard.MediaLibrary.Controllers {
                         progress = 1.0,
                         url = replaceMedia.FileName,
                     });
-                } catch (Exception ex) {
+                }
+                catch (Exception ex) {
                     statuses.Add(new {
                         error = T(ex.Message).Text,
                         progress = 1.0,

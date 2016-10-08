@@ -240,7 +240,7 @@
                            item.tooltip(data.error);
                        } else {
                            item.status('success');
-                           viewModel.selection.remove(item);
+                           item.tooltip("Media imported successfully.");
                            if ('@Model.ReplaceId' != '') {
                                window.parent.$("a.button.close")[0].click();
                            }

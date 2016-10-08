@@ -18,9 +18,9 @@ namespace Orchard.MediaLibrary.Controllers {
         private readonly IMediaLibraryService _mediaLibraryService;
         private readonly IContentManager _contentManager;
         private readonly IMimeTypeProvider _mimeTypeProvider;
-        
+
         public WebSearchController(
-            IMediaLibraryService mediaManagerService, 
+            IMediaLibraryService mediaManagerService,
             IContentManager contentManager,
             IOrchardServices orchardServices,
             IMimeTypeProvider mimeTypeProvider) {
