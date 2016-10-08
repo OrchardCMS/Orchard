@@ -1,4 +1,22 @@
 (function ($) {
+    // Handle hashes when page loads to offset against fixed top navbar
+    // http://stackoverflow.com/a/39325205/156388
+    function adjustAnchor() {
+        const $anchor = $(':target');
+        const fixedElementHeight = $('.navbar-fixed-top').outerHeight() + 20;
+        if ($anchor.length > 0) {
+            $('html, body')
+                .stop()
+                .animate({ scrollTop: $anchor.offset().top - fixedElementHeight }, 0);
+        }
+    }
+    $(window).on('hashchange load', adjustAnchor);
+    $('body').on('click', "a[href^='#']", function (ev) {
+        if (window.location.hash === $(this).attr('href')) {
+            ev.preventDefault();
+            adjustAnchor();
+        }
+    });
 
     $(document).ready(function () {
         App.init();
@@ -29,6 +47,7 @@
             return confirm(dataMessage);
         });
 
+        // Check all
         $(".check-all").change(function () {
             $("input[type=checkbox]:not(:disabled)").prop("checked", $(this).prop("checked"));
         });
