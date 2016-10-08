@@ -277,7 +277,8 @@ namespace Orchard.ContentManagement {
             return _contentItemVersionRepository
                 .Fetch(x => x.ContentItemRecord.Id == id)
                 .OrderBy(x => x.Number)
-                .Select(x => Get(x.Id, VersionOptions.VersionRecord(x.Id)));
+                .Select(x => Get(x.Id, VersionOptions.VersionRecord(x.Id)))
+                .Where(ci => ci != null); 
         }
 
         public IEnumerable<T> GetMany<T>(IEnumerable<int> ids, VersionOptions options, QueryHints hints) where T : class, IContent {
@@ -301,6 +302,7 @@ namespace Orchard.ContentManagement {
 
             var itemsById = contentItemVersionRecords
                 .Select(r => Get(r.ContentItemRecord.Id, options.IsDraftRequired ? options : VersionOptions.VersionRecord(r.Id)))
+                .Where(ci => ci != null)
                 .GroupBy(ci => ci.Id)
                 .ToDictionary(g => g.Key);
 
@@ -317,6 +319,7 @@ namespace Orchard.ContentManagement {
 
             var itemsById = contentItemVersionRecords
                 .Select(r => Get(r.ContentItemRecord.Id, VersionOptions.VersionRecord(r.Id)))
+                .Where(ci => ci != null)
                 .GroupBy(ci => ci.VersionRecord.Id)
                 .ToDictionary(g => g.Key);
 
