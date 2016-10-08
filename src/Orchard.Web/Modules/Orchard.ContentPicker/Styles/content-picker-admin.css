@@ -10,3 +10,16 @@
 .ui-sortable-helper .content-picker-remove {
     display: none;
 }
+
+.content-picker-title {
+    display: inline-block;
+    margin-bottom: 0;
+    font-weight: normal;
+    text-align: center;
+    vertical-align: middle;
+    border: 1px solid transparent;
+    white-space: nowrap;
+    padding: 8px 12px;
+    font-size: 13px;
+    line-height: 1.42857143;
+}
