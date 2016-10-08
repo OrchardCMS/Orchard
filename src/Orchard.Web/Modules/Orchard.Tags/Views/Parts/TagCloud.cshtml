@@ -1,4 +1,4 @@
-﻿@using Orchard.Tags.Models
+@using Orchard.Tags.Models
 @if (((IEnumerable<object>)Model.TagCounts).Any()) {
     <ul class="tag-cloud">
         @foreach (TagCount tagCount in Model.TagCounts) {
