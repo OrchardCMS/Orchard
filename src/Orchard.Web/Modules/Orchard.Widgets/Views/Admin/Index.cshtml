@@ -7,14 +7,9 @@
     @Display.WidgetFiltersControl(Layers: Model.Layers, CurrentLayer: Model.CurrentLayer, Cultures: Model.Cultures, CurrentCulture: Model.CurrentCulture)
     <div class="panel-body">
         <div class="flex-2-column">
-            <div>
+            <div id="widgets-placement-flexcolumn">
                 @Display.WidgetPlacement(Widgets: Model.Widgets, Zones: Model.Zones, OrphanZones: Model.OrphanZones, CurrentLayer: Model.CurrentLayer)
             </div>
-
-            @*<div id="widgets-assistance">
-                    @Display.WidgetLayerVisibility(Layers: Model.Layers, CurrentLayer: Model.CurrentLayer)
-                    @Display.WidgetSimplePreview(ZonePreviewImage: Model.ZonePreviewImage, CurrentTheme: Model.CurrentTheme)
-                </div>*@
             <div>
                 <div id="widgets-assistance">
                     @Display.WidgetLayerVisibility(Layers: Model.Layers, CurrentLayer: Model.CurrentLayer)

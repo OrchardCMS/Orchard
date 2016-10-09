@@ -110,11 +110,11 @@ namespace Orchard.Core.Contents.Controllers {
                     break;
             }
 
-            if(!String.IsNullOrWhiteSpace(model.Options.SelectedCulture)) {
+            if (!String.IsNullOrWhiteSpace(model.Options.SelectedCulture)) {
                 query = _cultureFilter.FilterCulture(query, model.Options.SelectedCulture);
             }
 
-            if(model.Options.ContentsStatus == ContentsStatus.Owner) {
+            if (model.Options.ContentsStatus == ContentsStatus.Owner) {
                 query = query.Where<CommonPartRecord>(cr => cr.OwnerId == Services.WorkContext.CurrentUser.Id);
             }
 
