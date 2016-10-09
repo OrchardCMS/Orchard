@@ -1,35 +1,36 @@
-﻿@model Orchard.MediaProcessing.ViewModels.FilterEditViewModel          
+﻿@model Orchard.MediaProcessing.ViewModels.FilterEditViewModel
 @{
     Layout.Title = T("Edit Filter - {0}", Model.Filter.Name);
 }
+
 <div class="panel panel-default">
-    @Html.ValidationSummary()
-    <div class="panel-body">
-    <h2>@Model.Filter.Name</h2>
-    <span class="help-block">@Model.Filter.Description</span>
-
     @using (Html.BeginFormAntiForgeryPost()) {
+        @Html.ValidationSummary()
+        <div class="panel-body">
+            <h2>@Model.Filter.Name</h2>
+            <span class="help-block">@Model.Filter.Description</span>
 
-        <fieldset>
-            @Html.LabelFor(m => m.Description, T("Description"))
-            @Html.TextBoxFor(m => m.Description, new { @class = "text medium" })
-            <span class="help-block">@T("You may optionally give a description to this filter, to be used in the dashboard screens.")</span>
-        </fieldset>
+            <fieldset>
+                @Html.LabelFor(m => m.Description, T("Description"))
+                @Html.TextBoxFor(m => m.Description, new { @class = "text medium" })
+                <span class="help-block">@T("You may optionally give a description to this filter, to be used in the dashboard screens.")</span>
+            </fieldset>
 
-        @* Render the dynamic form *@
-    if (Model.Form != null) {
-        <fieldset>
-            @DisplayChildren(Model.Form)
-        </fieldset>
+            @* Render the dynamic form *@
+            if (Model.Form != null) {
+            <fieldset>
+                @DisplayChildren(Model.Form)
+            </fieldset>
+            }
+
+            @Display.TokenHint()
+
+
+        </div>
+        <div class="panel-footer">
+            <fieldset>
+                <button class="btn btn-primary" type="submit">@T("Save")</button>
+            </fieldset>
+        </div>
     }
-
-    @Display.TokenHint()
-
-    }
-    </div>
-    <div class="panel-footer">
-        <fieldset>
-            <button class="btn btn-primary" type="submit">@T("Save")</button>
-        </fieldset>
-    </div>
 </div>
