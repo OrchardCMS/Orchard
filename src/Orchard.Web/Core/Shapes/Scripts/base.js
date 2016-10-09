@@ -239,7 +239,7 @@
             	// use a custom message if its set in data-message
             	var dataMessage = _this.data('message');
             	if (dataMessage === undefined) {
-            		dataMessage = confirmRemoveMessage;
+            	    dataMessage = $("[data-default-remove-confirmation-prompt]").data("default-remove-confirmation-prompt");
             	}
 
                 if (!confirm(dataMessage)) {

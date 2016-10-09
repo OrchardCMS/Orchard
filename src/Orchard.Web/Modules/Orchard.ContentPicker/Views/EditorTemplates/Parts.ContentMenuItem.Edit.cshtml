@@ -2,12 +2,15 @@
 @model Orchard.ContentPicker.ViewModels.ContentMenuItemEditViewModel
 @{
     Script.Require("ContentPicker").AtFoot();
+    Style.Include("content-picker-admin.css");
     var title = Model.Part.Content == null ? new HtmlString(T("Empty").Text) : Html.ItemDisplayText(Model.Part.Content);
 }
 <fieldset>
     <label>@T("Content Item")</label>
-    <span id="title-@Html.FieldIdFor(m => m.ContentItemId)" class="content-picker-title">@title</span>
-    <span id="btn-@Html.FieldIdFor(m => m.ContentItemId)" class="button">@T("Browse")</span>
+    <div>
+        <span id="title-@Html.FieldIdFor(m => m.ContentItemId)" class="content-picker-title">@title</span>
+        <span id="btn-@Html.FieldIdFor(m => m.ContentItemId)" class="btn btn-primary">@T("Browse")</span>
+    </div>
 
     @Html.HiddenFor(m => m.ContentItemId)
     <span class="help-block">@T("Select the Content Item to display in the menu.")</span>

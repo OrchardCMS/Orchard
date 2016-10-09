@@ -8,7 +8,6 @@
     Script.Require("ShapesBase").AtFoot();
     
     Orchard.Modules.Models.ModuleEntry module = Model.Module;
-    var moduleClasses = module.IsRecentlyInstalled ? "class=\"recentlyInstalledModule\"" : String.Empty;
 }
 
 <div class="summary">
@@ -22,8 +21,11 @@
     <div class="properties">
         <div class="head">
             <div class="description">
-                <h2 @Html.Raw(moduleClasses)>
+                <h2>
                     @module.Descriptor.Name<span> - @T("Version: {0}", !String.IsNullOrEmpty(module.Descriptor.Version) ? module.Descriptor.Version : T("1.0").ToString())</span>
+                    @if (module.IsRecentlyInstalled) {
+                        <span class="recentlyInstalledModule">@T("New")</span>
+                    }
                 </h2>
                 @if (!String.IsNullOrEmpty(module.Descriptor.Description)) {
                     <p>@module.Descriptor.Description</p>
