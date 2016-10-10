@@ -289,3 +289,7 @@
 .dir-rtl .manage {
     float: left;
 }
+
+.dir-rtl ul.features .feature .panel .panel-heading .or-checkbox, .dir-rtl ul.contentItems .feature .panel .panel-heading .or-checkbox {
+    float: left;
+}
