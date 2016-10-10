@@ -174,3 +174,8 @@
         left:10px;
         right: inherit;
     }
+
+.dir-rtl .menu-items-zone div.menu-item-actions {
+    left:5px;
+    right: unset;
+}
