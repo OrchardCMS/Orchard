@@ -23,8 +23,10 @@ namespace Orchard.OutputCache.Handlers {
                 part.DefaultCacheGraceTime = 60;
             });
 
-            // Evict modified routable content when updated.
+            // Evict cached content when updated, removed or destroyed.
             OnPublished<IContent>((context, part) => Invalidate(part));
+            OnRemoved<IContent>((context, part) => Invalidate(part));
+            OnDestroyed<IContent>((context, part) => Invalidate(part));
 
             OnExporting<CacheSettingsPart>(ExportRouteSettings);
             OnImporting<CacheSettingsPart>(ImportRouteSettings);
