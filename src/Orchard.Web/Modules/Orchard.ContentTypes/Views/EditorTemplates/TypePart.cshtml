@@ -5,15 +5,21 @@
     var typeId = Model.PartDefinition.Name.HtmlClassify();
     var accordionId = String.Format("accordion-{0}", typeId);
     var accordionPanelId = String.Format("accordion-panel-{0}", typeId);
+    string hasSettings = "";
+    if (Model.Templates.Any())
+    {
+        hasSettings = "icon-bold";
+    }
 }
 <div id="@accordionId" class="panel-group accordion accordion-semi">
     <div class="panel panel-default">
         <div class="panel-heading information">
             <h4 class="panel-title">
                 <a data-toggle="collapse" data-parent="#@accordionId" href="#@accordionPanelId" aria-expanded="false" class="collapsed">
-                    <i class="icon fa fa-angle-down"></i> @Model.PartDefinition.DisplayName
+                    <i class="icon fa fa-angle-down @hasSettings"></i> @Model.PartDefinition.DisplayName
                 </a>
-                @if (Model.PartDefinition.Settings.GetModel<ContentPartSettings>().Attachable) {
+                @if (Model.PartDefinition.Settings.GetModel<ContentPartSettings>().Attachable)
+                {
                     <a href="@Url.Action("RemovePartFrom", new {area = "Orchard.ContentTypes", id = Model.Type.Name, name = Model.PartDefinition.Name})" class="btn-link btn-danger" itemprop="RemoveUrl UnsafeUrl">
                         <i class="fa fa-trash-o"></i>
                     </a>
@@ -22,7 +28,8 @@
         </div>
         <div id="@accordionPanelId" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
             <div class="panel-body">
-                @if (!String.IsNullOrWhiteSpace(Model.Description)) {
+                @if (!String.IsNullOrWhiteSpace(Model.Description))
+                {
                     <div role="alert" class="alert alert-info alert-icon alert-icon-color">
                         <div class="icon"><span class="s7-info"></span></div>
                         <div class="message">@Model.Description</div>
@@ -30,16 +37,17 @@
                 }
                 <div class="content-type-details">
                     @Html.EditorFor(m => m.PartDefinition.Fields, "TypePartFields", "PartDefinition")
-                    @if (Model.Templates.Any()) {
+                    @if (Model.Templates.Any())
+                    {
                         <div class="content-type-settings">
                             @{ Html.RenderTemplates(Model.Templates); }
                         </div>
-                    }
-                    @* don't show global part settings for now - @Html.DisplayFor(m => m.PartDefinition.Settings, "Settings", "PartDefinition") *@
-                    @Html.HiddenFor(m => m.PartDefinition.Name)
-                    @Html.HiddenFor(m => m.Index)
+                                }
+                                @* don't show global part settings for now - @Html.DisplayFor(m => m.PartDefinition.Settings, "Settings", "PartDefinition") *@
+                                @Html.HiddenFor(m => m.PartDefinition.Name)
+                                @Html.HiddenFor(m => m.Index)
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
