@@ -1,53 +1,47 @@
-.dir-rtl
-{
-    .navbar-brand
-    {
+.dir-rtl {
+    .text-right {
+        text-align: left;
+    }
+
+    .text-left {
+        text-align: right;
+    }
+
+    .navbar-brand {
         float: right;
 
-        @media (min-width: @grid-float-breakpoint)
-        {
+        @media (min-width: @grid-float-breakpoint) {
             .navbar > .container &,
-            .navbar > .container-fluid &
-            {
+            .navbar > .container-fluid & {
                 margin-left: unset;
                 margin-right: -@navbar-padding-horizontal;
             }
         }
     }
 
-    .or-top-header
-    {
-        .navbar-header
-        {
-            .navbar-brand
-            {
+    .or-top-header {
+        .navbar-header {
+            .navbar-brand {
                 margin-right: -@navbar-padding-horizontal;
                 margin-left: 20px;
             }
 
-            .or-toggle-left-sidebar
-            {
+            .or-toggle-left-sidebar {
                 left: unset;
                 right: 0;
             }
         }
 
-        .navbar-collapse
-        {
+        .navbar-collapse {
             padding-right: unset;
             padding-left: 20px;
 
-            .navbar-nav
-            {
+            .navbar-nav {
 
-                > li
-                {
-                    &.dropdown
-                    {
-                        .dropdown-menu
-                        {
-                            &:after
-                            {
+                > li {
+                    &.dropdown {
+                        .dropdown-menu {
+                            &:after {
                                 right: unset;
                                 left: 42px;
                                 margin-right: unset;
@@ -57,27 +51,20 @@
                     }
                 }
 
-                &.or-nav-right
-                {
+                &.or-nav-right {
 
-                    > li:first-child
-                    {
+                    > li:first-child {
 
-                        > a
-                        {
+                        > a {
                             padding-left: unset;
                             padding-right: 15px;
                         }
                     }
 
-                    > li
-                    {
-                        &.dropdown
-                        {
-                            .dropdown-menu
-                            {
-                                &:after
-                                {
+                    > li {
+                        &.dropdown {
+                            .dropdown-menu {
+                                &:after {
                                     left: unset;
                                     right: 42px;
                                     margin-left: unset;
@@ -91,23 +78,18 @@
         }
     }
 
-    @media (max-width: @grid-float-breakpoint)
-    {
-        .or-top-header
-        {
-            .navbar-collapse
-            {
+    @media (max-width: @grid-float-breakpoint) {
+        .or-top-header {
+            .navbar-collapse {
                 padding: 0;
                 margin: 0;
 
-                .navbar-nav
-                {
+                .navbar-nav {
                     padding: 0;
                     margin: 0;
 
                     .open {
-                        .dropdown-menu
-                        {
+                        .dropdown-menu {
                             float: none;
                             width: auto;
 
@@ -127,40 +109,30 @@
         }
     }
 
-    .or-left-sidebar
-    {
+    .or-left-sidebar {
         left: unset;
         right: 0;
 
-        .sidebar-elements
-        {
+        .sidebar-elements {
             // First Level.
-            > li
-            {
-                &.active
-                {
-                    > a
-                    {
+            > li {
+                &.active {
+                    > a {
                         border-right: 2px solid @primary-color;
                         padding-right: 13px;
                     }
                 }
                 // Second Level.
-                > ul
-                {
+                > ul {
                     right: @left-sidebar-width;
 
-                    > li.title
-                    {
+                    > li.title {
                         margin: 0 25px 0;
                     }
 
-                    > .nav-items
-                    {
-                        .or-scroller
-                        {
-                            .content
-                            {
+                    > .nav-items {
+                        .or-scroller {
+                            .content {
                                 margin-left: 0 !important;
                             }
                         }
@@ -169,62 +141,49 @@
             }
         }
 
-        &:before
-        {
+        &:before {
             left: unset;
             right: 0;
         }
 
-        @media @phone
-        {
+        @media @phone {
             transform: translate3d(100%, 0, 0);
         }
     }
 
-    @media (max-width: @grid-float-breakpoint)
-    {
-        .or-left-sidebar
-        {
+    @media (max-width: @grid-float-breakpoint) {
+        .or-left-sidebar {
             right: 0;
             left: unset;
 
-            .sidebar-elements
-            {
-                li
-                {
-                    > a
-                    {
+            .sidebar-elements {
+                li {
+                    > a {
                         text-align: right;
                         padding-right: 31px;
 
-                        .icon
-                        {
+                        .icon {
                             margin-right: unset;
                             margin-left: 10px;
                         }
                     }
 
-                    &.parent
-                    {
-                        > a:after
-                        {
+                    &.parent {
+                        > a:after {
                             float: left;
                         }
                     }
 
-                    ul
-                    {
+                    ul {
                         right: 17px;
                     }
                 }
             }
 
-            .nano-content
-            {
+            .nano-content {
                 left: -17px;
 
-                .nano-pane
-                {
+                .nano-pane {
                     right: unset;
                     left: 0;
                 }
@@ -232,50 +191,40 @@
         }
     }
 
-    @media (min-width: @grid-float-breakpoint)
-    {
-        .navbar-header
-        {
+    @media (min-width: @grid-float-breakpoint) {
+        .navbar-header {
             float: right;
         }
 
-        .navbar-left
-        {
+        .navbar-left {
             float: right !important;
         }
 
-        .navbar-right
-        {
+        .navbar-right {
             float: left !important;
             margin-left: @navbar-padding-horizontal;
         }
 
-        .navbar-nav
-        {
+        .navbar-nav {
             float: right;
         }
     }
 
-    @media (min-width: @grid-float-breakpoint)
-    {
-        .navbar-nav > li
-        {
+    @media (min-width: @grid-float-breakpoint) {
+        .navbar-nav > li {
             float: right;
         }
     }
     // The dropdown menu (ul).
-    .dropdown-menu
-    {
+    .dropdown-menu {
         left: unset;
         right: 0;
         float: right;
         text-align: right; // Ensures proper alignment if parent has it changed (e.g., modal footer).
     }
 
-    .navbar-right
-    {
-        .dropdown-menu
-        {
+    .navbar-right {
+        .dropdown-menu {
             right: unset;
             left: 0;
             float: left;
@@ -283,30 +232,42 @@
         }
     }
 
-    .or-content
-    {
+    .or-content {
         right: 0;
         margin-left: 0;
         margin-right: @left-sidebar-width;
         min-height: 100%;
 
-        @media @phone
-        {
+        @media @phone {
             margin-right: 0;
         }
 
-        .or-nosidebar-left &
-        {
+        .or-nosidebar-left & {
             margin-right: 0;
+        }
+
+        .panel-heading {
+            .row {
+                display: flex;
+                flex-direction: row;
+            }
+        }
+
+        .tab-container {
+            .nav-tabs {
+                padding: 0;
+            }
+
+            .nav-tabs > li {
+                margin-right: 0px;
+                margin-left: 2px;
+            }
         }
     }
 
-    @media (max-width: @grid-float-breakpoint)
-    {
-        body.open-left-sidebar
-        {
-            .or-content, .or-top-header
-            {
+    @media (max-width: @grid-float-breakpoint) {
+        body.open-left-sidebar {
+            .or-content, .or-top-header {
                 transform: translate3d(-85%, 0, 0);
             }
         }
