@@ -243,7 +243,6 @@
 
     .dir-rtl .features.summary-view .feature:nth-child(3n) {
         margin-left: inherit;
-        margin-right: 0;
     }
 
 .dir-rtl #main .features.detail-view .feature {

@@ -117,8 +117,8 @@
             background-color: transparent;
         }
 
-        &.detail-view .feature{
-            .description:before{
+        &.detail-view .feature {
+            .description:before {
                 content: none;
             }
         }
@@ -245,4 +245,34 @@
 
 .features .feature .lifecycle-status.lifecycle-status-deprecated {
     color: @danger-color;
+}
+
+.dir-rtl {
+    ul {
+        &.features, &.contentItems {
+
+            .feature {
+
+                .panel {
+
+                    .panel-heading {
+
+                        .title {
+                            width: 68%;
+                            .pull-right;
+
+                            .or-checkbox {
+                                .pull-right;
+                            }
+                        }
+
+                        .tools {
+                            .pull-left;
+                            text-align: left;
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
