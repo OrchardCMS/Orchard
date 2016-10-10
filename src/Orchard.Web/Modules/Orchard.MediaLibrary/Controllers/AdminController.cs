@@ -83,6 +83,11 @@ namespace Orchard.MediaLibrary.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageOwnMedia, T("Cannot import media")))
                 return new HttpUnauthorizedResult();
 
+            // Check permission
+            if (!Services.Authorizer.Authorize(Permissions.ManageMediaContent) && !_mediaLibraryService.CanManageMediaFolder(folderPath)) {
+                return new HttpUnauthorizedResult();
+            }
+
             var mediaProviderMenu = _navigationManager.BuildMenu("mediaproviders");
             var imageSets = _navigationManager.BuildImageSets("mediaproviders");
 
@@ -98,7 +103,7 @@ namespace Orchard.MediaLibrary.Controllers {
                 if (replaceMedia == null)
                     return HttpNotFound();
 
-                viewModel.ReplaceId = replaceId;
+                viewModel.Replace = replaceMedia;
             }
 
             return View(viewModel);
@@ -109,7 +114,7 @@ namespace Orchard.MediaLibrary.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageOwnMedia, T("Cannot view media")))
                 return new HttpUnauthorizedResult();
 
-            // Check permission.var rootMediaFolder = _mediaLibraryService.GetRootMediaFolder();
+            // Check permission
             if (!Services.Authorizer.Authorize(Permissions.ManageMediaContent) && !_mediaLibraryService.CanManageMediaFolder(folderPath)) {
                 var model = new MediaManagerMediaItemsViewModel {
                     MediaItems = new List<MediaManagerMediaItemViewModel>(),
@@ -142,7 +147,7 @@ namespace Orchard.MediaLibrary.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageOwnMedia, T("Cannot get child folder listing")))
                 return new HttpUnauthorizedResult();
 
-            // Check permission.
+            // Check permission
             var rootMediaFolder = _mediaLibraryService.GetRootMediaFolder();
             if (!Services.Authorizer.Authorize(Permissions.ManageMediaContent) && !_mediaLibraryService.CanManageMediaFolder(folderPath)) {
                 var model = new MediaManagerChildFoldersViewModel {

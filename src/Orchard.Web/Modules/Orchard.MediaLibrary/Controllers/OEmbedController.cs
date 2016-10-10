@@ -30,18 +30,6 @@ namespace Orchard.MediaLibrary.Controllers {
         public Localizer T { get; set; }
 
         public ActionResult Index(string folderPath, string type, int? replaceId) {
-            var viewModel = new OEmbedViewModel {
-                FolderPath = folderPath,
-                ReplaceId = replaceId
-            };
-
-            return View(viewModel);
-        }
-
-        [HttpPost]
-        [ActionName("Index")]
-        [ValidateInput(false)]
-        public ActionResult IndexPOST(string folderPath, string url, string type, string title, string html, string thumbnail, string width, string height, string description, int? replaceId) {
             if (!Services.Authorizer.Authorize(Permissions.ManageOwnMedia))
                 return new HttpUnauthorizedResult();
 
@@ -51,15 +39,38 @@ namespace Orchard.MediaLibrary.Controllers {
             }
 
             var viewModel = new OEmbedViewModel {
-                Url = url,
                 FolderPath = folderPath,
-                ReplaceId = replaceId
             };
 
             if (replaceId != null) {
                 var replaceMedia = Services.ContentManager.Get<MediaPart>(replaceId.Value);
                 if (replaceMedia == null)
                     return HttpNotFound();
+
+                viewModel.Replace = replaceMedia;
+
+                if (!replaceMedia.TypeDefinition.Name.Equals("OEmbed"))
+                    Services.Notifier.Error(T("Cannot replace {0} with OEmbed", replaceMedia.ContentItem.TypeDefinition.Name));
+            }
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [ActionName("Index")]
+        [ValidateInput(false)]
+        public ActionResult IndexPOST(string folderPath, string url, string type, string title, string html, string thumbnail, string width, string height, string description, int? replaceId) {
+            var viewModel = new OEmbedViewModel {
+                Url = url,
+                FolderPath = folderPath,
+            };
+
+            if (replaceId != null) {
+                var replaceMedia = Services.ContentManager.Get<MediaPart>(replaceId.Value);
+                if (replaceMedia == null)
+                    return HttpNotFound();
+
+                viewModel.Replace = replaceMedia;
 
                 if (!replaceMedia.ContentItem.TypeDefinition.Name.Equals("OEmbed")) {
                     Services.Notifier.Error(T("Cannot replace {0} with OEmbed", replaceMedia.ContentItem.TypeDefinition.Name));
@@ -136,6 +147,15 @@ namespace Orchard.MediaLibrary.Controllers {
 
         [HttpPost, ValidateInput(false)]
         public ActionResult Import(string folderPath, string url, string document) {
+            if (!Services.Authorizer.Authorize(Permissions.ManageOwnMedia)) {
+                return new HttpUnauthorizedResult();
+            }
+
+            // Check permission
+            if (!Services.Authorizer.Authorize(Permissions.ManageMediaContent) && !_mediaLibraryService.CanManageMediaFolder(folderPath)) {
+                return new HttpUnauthorizedResult();
+            }
+
             var content = XDocument.Parse(document);
             var oembed = content.Root;
 
@@ -174,9 +194,18 @@ namespace Orchard.MediaLibrary.Controllers {
 
         [HttpPost, ValidateInput(false)]
         public ActionResult Replace(int replaceId, string url, string document) {
+            if (!Services.Authorizer.Authorize(Permissions.ManageOwnMedia)) {
+                return new HttpUnauthorizedResult();
+            }
+
             var replaceMedia = Services.ContentManager.Get<MediaPart>(replaceId);
             if (replaceMedia == null)
                 return HttpNotFound();
+
+            // Check permission
+            if (!Services.Authorizer.Authorize(Permissions.ManageMediaContent) && !_mediaLibraryService.CanManageMediaFolder(replaceMedia.FolderPath)) {
+                return new HttpUnauthorizedResult();
+            }
 
             var content = XDocument.Parse(document);
             var oembed = content.Root;

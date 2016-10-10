@@ -20,11 +20,10 @@
     @Display.StyleSheetLinks()
 </head>
 <body>
-    
     <div id="clientstorage-main">
         <div id="message">@T("Click here, Drop files or Paste images")</div>
         <div id="fileupload">
-            <input type="file" name="files[]" @if(Model.ReplaceId == null) { <text>multiple="multiple"</text> } >
+            <input type="file" name="files[]" @if(Model.Replace == null) { <text>multiple="multiple"</text> } >
             <ul id="fileupload-transfers" data-bind="foreach: transfers">
                 <li data-bind="css: status()" class="transfer">
                     <div class="media-thumbnail" data-bind="html: thumbnail(), visible: status() == 'success'"></div>
@@ -35,13 +34,10 @@
                     </div>
                 </li>
             </ul>
-
         </div>
-
     </div>
-    
-    
-    @using(Script.Foot()) {
+        
+    @using (Script.Foot()) {
     <script type="text/javascript">
         //<![CDATA[
         $(function () {
@@ -73,7 +69,7 @@
             ko.applyBindings(viewModel);
 
             $('#fileupload').click(function () {
-                console.log('click');
+                //console.log('click');
                 $('#fileupload > input').trigger('click');
             });
 
@@ -84,7 +80,7 @@
             // Add drag-n-drop HTML5 support
             $('#fileupload').fileupload({
                 autoUpload: true,
-                @if(Model.ReplaceId == null) {
+                @if(Model.Replace == null) {
                 <text>
                 url: '@Url.Action("Upload")',
                 formData: {
@@ -97,7 +93,7 @@
                 <text>
                 url: '@Url.Action("Replace")',
                 formData: {
-                    replaceId: '@HttpUtility.JavaScriptStringEncode(Model.ReplaceId.ToString())',
+                    replaceId: '@HttpUtility.JavaScriptStringEncode(Model.Replace.Id.ToString())',
                     type: '@HttpUtility.JavaScriptStringEncode(Model.Type)',
                     __RequestVerificationToken: '@Html.AntiForgeryTokenValueOrchard()'
                 },
@@ -139,7 +135,7 @@
                 pasteZone: window.parent.document,
                 paste: function (e, data) {
                     $.each(data.files, function (index, file) {
-                        //console.log('Pasted file type: ' + file.type);
+                        console.log('Pasted file type: ' + file.type);
                     });
                     return true;
                 },
@@ -161,8 +157,10 @@
                     }).done(function (html) {
                         data.context.thumbnail(html);
                         data.context.status('success');
-                        if ('@Model.ReplaceId' != '') {
-                            window.parent.$("a.button.close")[0].click();
+                        @if(Model.Replace != null) {
+                        <text>
+                        window.parent.$("a.button.close")[0].click();
+                        </text>
                         }
                     });
                 },

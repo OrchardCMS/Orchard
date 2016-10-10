@@ -36,8 +36,7 @@ namespace Orchard.MediaLibrary.Controllers {
                 return new HttpUnauthorizedResult();
             }
 
-            // Check permission.
-            var rootMediaFolder = _mediaLibraryService.GetRootMediaFolder();
+            // Check permission
             if (!Services.Authorizer.Authorize(Permissions.ManageMediaContent) && !_mediaLibraryService.CanManageMediaFolder(folderPath)) {
                 return new HttpUnauthorizedResult();
             }
@@ -45,8 +44,15 @@ namespace Orchard.MediaLibrary.Controllers {
             var viewModel = new ImportMediaViewModel {
                 FolderPath = folderPath,
                 Type = type,
-                ReplaceId = replaceId
             };
+
+            if (replaceId != null) {
+                var replaceMedia = Services.ContentManager.Get<MediaPart>(replaceId.Value);
+                if (replaceMedia == null)
+                    return HttpNotFound();
+
+                viewModel.Replace = replaceMedia;
+            }
 
             return View(viewModel);
         }
@@ -57,7 +63,7 @@ namespace Orchard.MediaLibrary.Controllers {
                 return new HttpUnauthorizedResult();
             }
 
-            // Check permission.
+            // Check permission
             if (!Services.Authorizer.Authorize(Permissions.ManageMediaContent) && !_mediaLibraryService.CanManageMediaFolder(folderPath)) {
                 return new HttpUnauthorizedResult();
             }
@@ -124,7 +130,7 @@ namespace Orchard.MediaLibrary.Controllers {
             if (replaceMedia == null)
                 return HttpNotFound();
 
-            // Check permission.
+            // Check permission
             if (!Services.Authorizer.Authorize(Permissions.ManageMediaContent) && !_mediaLibraryService.CanManageMediaFolder(replaceMedia.FolderPath)) {
                 return new HttpUnauthorizedResult();
             }

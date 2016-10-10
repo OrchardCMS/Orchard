@@ -35,15 +35,30 @@ namespace Orchard.MediaLibrary.Controllers {
         public Localizer T { get; set; }
 
         public ActionResult Index(string folderPath, string type, int? replaceId = null) {
+            if (!Services.Authorizer.Authorize(Permissions.ManageOwnMedia)) {
+                return new HttpUnauthorizedResult();
+            }
+
+            // Check permission
+            if (!Services.Authorizer.Authorize(Permissions.ManageMediaContent) && !_mediaLibraryService.CanManageMediaFolder(folderPath)) {
+                return new HttpUnauthorizedResult();
+            }
+
             var viewModel = new ImportMediaViewModel {
                 FolderPath = folderPath,
                 Type = type,
-                ReplaceId = replaceId
             };
+
+            if (replaceId != null) {
+                var replaceMedia = Services.ContentManager.Get<MediaPart>(replaceId.Value);
+                if (replaceMedia == null)
+                    return HttpNotFound();
+
+                viewModel.Replace = replaceMedia;
+            }
 
             return View(viewModel);
         }
-
 
         [HttpPost]
         public ActionResult Import(string folderPath, string type, string url) {

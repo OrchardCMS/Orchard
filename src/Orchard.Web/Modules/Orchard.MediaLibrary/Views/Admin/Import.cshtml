@@ -18,7 +18,7 @@
     <div id="media-library-toolbar">
 
         <div id="media-library-toolbar-actions">
-            <label for="filterMediaType">@if (Model.ReplaceId == null) { <text>@T("Create")</text> } else { <text>@T("Replace")</text> }</label>
+            <label for="filterMediaType">@if (Model.Replace == null) { <text>@T("Create")</text> } else { <text>@T("Replace")</text> }</label>
             <select id="filterMediaType" name="FilteredMediaType">
                 @Html.SelectOption("", true, T("Any").ToString())
                 @foreach (var mediaType in Model.MediaTypes) {
@@ -40,10 +40,10 @@
             {
                 string sectionHeaderTextHint = menuItem.Text.TextHint;
                 var itemClassName = "navicon-" + sectionHeaderTextHint.HtmlClassify();
-                if (Model.ReplaceId == null) {
+                if (Model.Replace == null) {
                     <div class="import-provider"><a class="navicon @itemClassName" href="@menuItem.Href/Index?folderPath=@HttpUtility.UrlEncode(Model.FolderPath)">@menuItem.Text</a></div>
                 } else {
-                    <div class="import-provider"><a class="navicon @itemClassName" href="@menuItem.Href/Index?folderPath=@HttpUtility.UrlEncode(Model.FolderPath)&replaceId=@HttpUtility.UrlEncode(Model.ReplaceId.ToString())">@menuItem.Text</a></div>
+                    <div class="import-provider"><a class="navicon @itemClassName" href="@menuItem.Href/Index?folderPath=@HttpUtility.UrlEncode(Model.FolderPath)&replaceId=@HttpUtility.UrlEncode(Model.Replace.Id.ToString())">@menuItem.Text</a></div>
                 }
             }
         </div>

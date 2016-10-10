@@ -130,7 +130,7 @@
                 </div>
             }
 
-            if (Model.ReplaceId == null) {
+            if (Model.Replace == null) {
                 using (Html.BeginFormAntiForgeryPost(Url.Action("Import"))) {
                     @Html.Hidden("folderPath", Model.FolderPath)
                     @Html.Hidden("url", Model.Url)
@@ -140,7 +140,7 @@
                 }
             } else {
                 using (Html.BeginFormAntiForgeryPost(Url.Action("Replace"), FormMethod.Post, new { onsubmit = "window.parent.$('a.button.close')[0].click();" })) {
-                    @Html.Hidden("replaceId", Model.ReplaceId)
+                    @Html.Hidden("replaceId", Model.Replace)
                     @Html.Hidden("url", Model.Url)
                     @Html.Hidden("document", Model.Content.ToString())
                     <br />

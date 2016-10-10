@@ -70,7 +70,7 @@
         
         <div id="websearch-properties-selection" data-bind="visible: selection().length">
             <h1>@T("SELECTION")</h1>
-            <button id="button-import">@if (Model.ReplaceId == null) { <text>@T("Import")</text> } else { <text>@T("Replace")</text> } </button>
+            <button id="button-import">@if (Model.Replace == null) { <text>@T("Import")</text> } else { <text>@T("Replace")</text> } </button>
             <ul data-bind="foreach: selection">
                 <li>
                     <div class="selection" data-bind="click: $parent.focus, style: { backgroundImage: 'url(' + data.Thumbnail.MediaUrl + ')' }">
@@ -194,15 +194,18 @@
 
             $("#websearch-results").on("click", "li", function (e) {
                 var searchResult = ko.dataFor(this);
-                if ('@Model.ReplaceId' == '') {
+                @if(Model.Replace == null) {
+                    <text>
                     if (e.ctrlKey) {
                         viewModel.toggleSelect(searchResult);
                     } else {
                         viewModel.select(searchResult);
                     }
-                }
-                else {
+                    </text>
+                } else {
+                    <text>
                     viewModel.select(searchResult);
+                    </text>
                 }
             }).on("contextmenu", "li", function (e) {
                 var searchResult = ko.dataFor(this);
@@ -215,24 +218,24 @@
                     var url = item.data.MediaUrl;
                     item.status('uploading');
                     item.tooltip('');
-                    @if (Model.ReplaceId == null) {
-                    <text>
-                    $.post('@Url.Action("Import")', {
-                        folderPath: '@Html.Raw(HttpUtility.JavaScriptStringEncode(Model.FolderPath))',
-                        type: '@HttpUtility.JavaScriptStringEncode(Model.Type)',
-                        url: url,
-                        __RequestVerificationToken: '@Html.AntiForgeryTokenValueOrchard()'
-                    })
-                    </text>
+                    @if (Model.Replace == null) {
+                        <text>
+                        $.post('@Url.Action("Import")', {
+                            folderPath: '@Html.Raw(HttpUtility.JavaScriptStringEncode(Model.FolderPath))',
+                            type: '@HttpUtility.JavaScriptStringEncode(Model.Type)',
+                            url: url,
+                            __RequestVerificationToken: '@Html.AntiForgeryTokenValueOrchard()'
+                        })
+                        </text>
                     } else {
-                    <text>
-                    $.post('@Url.Action("Replace")', {
-                        replaceId: '@HttpUtility.JavaScriptStringEncode(Model.ReplaceId.ToString())',
-                        type: '@HttpUtility.JavaScriptStringEncode(Model.Type)',
-                        url: url,
-                        __RequestVerificationToken: '@Html.AntiForgeryTokenValueOrchard()'
-                    })
-                    </text>
+                        <text>
+                        $.post('@Url.Action("Replace")', {
+                            replaceId: '@HttpUtility.JavaScriptStringEncode(Model.Replace.Id.ToString())',
+                            type: '@HttpUtility.JavaScriptStringEncode(Model.Type)',
+                            url: url,
+                            __RequestVerificationToken: '@Html.AntiForgeryTokenValueOrchard()'
+                        })
+                        </text>
                     }
                    .done(function (data) {
                        if (data.error) {
@@ -241,8 +244,10 @@
                        } else {
                            item.status('success');
                            item.tooltip("Media imported successfully.");
-                           if ('@Model.ReplaceId' != '') {
+                           @if(Model.Replace != null) {
+                               <text>
                                window.parent.$("a.button.close")[0].click();
+                               </text>
                            }
                        }
                    })
