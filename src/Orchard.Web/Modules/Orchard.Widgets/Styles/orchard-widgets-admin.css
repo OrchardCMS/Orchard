@@ -370,3 +370,15 @@ list-style:decimal inside;
 .dir-rtl #widgets-placement .switch-for-switchable {
     margin: -32px 0 -2px 10px;
 }
+
+.dir-rtl.orchard-widgets .widgets-listed li .widgets-actions, .dir-rtl.orchard-widgets #widgets-available li .widgets-actions {
+    float: left !important;
+}
+
+.dir-rtl.orchard-widgets .widgets-listed ul.widgets-zone-widgets h3, .dir-rtl.orchard-widgets #widgets-available ul.widgets-zone-widgets h3 {
+    float: right !important;
+}
+
+.dir-rtl.orchard-widgets .widgets-listed ul.widgets-zone-widgets li, .dir-rtl.orchard-widgets #widgets-available ul.widgets-zone-widgets li {
+    padding: 5px 30px 5px 5px;
+}
