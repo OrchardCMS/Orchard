@@ -35,7 +35,7 @@
             using (Html.BeginForm("index", "admin", FormMethod.Get, new { area = "Orchard.Widgets" })) {
                 <fieldset class="bulk-actions-auto">
                     <label for="culture">@T("Current Culture:")</label>
-                    <select id="culture" name="culture" class="form-control">
+                    <select id="culture" name="culture" class="form-control ltr">
                         @Html.SelectOption((string)Model.CurrentCulture, "", T("any (show all)").ToString())
                         @foreach (var culture in cultures) {
                             @Html.SelectOption((string)Model.CurrentCulture, (string)culture, System.Globalization.CultureInfo.GetCultureInfo(culture).DisplayName)

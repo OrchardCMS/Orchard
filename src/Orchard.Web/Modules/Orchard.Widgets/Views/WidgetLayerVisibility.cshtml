@@ -37,13 +37,13 @@
             var layer = "";
 
             if (layersWidgets.length > 0) {
-                layer = $("<li title=\"" + layers[i].description + "\" class=\"widgets-" + ((layers[i].id == currentLayerId && "this") || "other") + "-layer\">" + layers[i].name + "</li>");
+                layer = $("<li title=\"" + layers[i].description + "\" class=\"widgets-" + ((layers[i].id == currentLayerId && "this") || "other") + "-layer ltr\">" + layers[i].name + "</li>");
                 layer.data("widgets", layersWidgets);
                 layersWidgets.each(function() {
                     $(this).data("widgets-vis-control", layer);
                 });
             } else {
-                layer = $("<li title=\"" + layers[i].description + "\" class=\"widgets-empty-layer" + ((layers[i].id == currentLayerId && " widgets-this-layer") || "") + "\">" + layers[i].name + " <span>[empty]</span></li>");
+                layer = $("<li title=\"" + layers[i].description + "\" class=\"widgets-empty-layer ltr" + ((layers[i].id == currentLayerId && " widgets-this-layer") || "") + "\">" + layers[i].name + " <span>[empty]</span></li>");
             }
 
             visContainer.append(layer);
