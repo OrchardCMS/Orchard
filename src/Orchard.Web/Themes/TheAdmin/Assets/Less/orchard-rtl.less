@@ -1,4 +1,11 @@
 .dir-rtl {
+
+    //for text that is written in LTR inside a RTL context
+    .ltr{
+        direction: ltr;
+        unicode-bidi: bidi-override;
+    }
+
     .text-right {
         text-align: left;
     }
