@@ -16,14 +16,20 @@
     }
 }
 
-.dropdown-menu {
-    > li > span {
-    display: block;
-    padding: 3px 20px;
-    clear: both;
-    font-weight: normal;
-    white-space: nowrap; // prevent spans from randomly breaking onto new lines
-  }
+.tokens-dropdown {
+    &.dropdown-menu {
+        left: unset;
+        right: 0;
+        float: right;
+
+        > li > span {
+        display: block;
+        padding: 3px 20px;
+        clear: both;
+        font-weight: normal;
+        white-space: nowrap; // prevent spans from randomly breaking onto new lines
+      }
+    }
 }
 
 input.tokenized, input.text.tokenized, input.medium.tokenized, input.small.tokenized {

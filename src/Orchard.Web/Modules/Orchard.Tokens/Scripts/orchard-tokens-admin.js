@@ -37,7 +37,7 @@ jQuery.fn.extend({
             var btn = textbox.parent().find("button");
             var cList = $('<ul></ul>');
             var i = 0;
-            cList.addClass('dropdown-menu pull-right scrollable-menu');
+            cList.addClass('tokens-dropdown dropdown-menu scrollable-menu');
             $.tokens.forEach(function (item) {
                 var li = document.createElement('li');
                 var anchor = i == 0 ? $("<span></span>") : $("<a title=\"" + item.label + "\" href=\"" + item.value + "\"></a>");

@@ -1,7 +1,7 @@
 .dir-rtl {
 
-    //for text that is written in LTR inside a RTL context
-    .ltr{
+    // For text that is written in LTR inside a RTL context.
+    .ltr {
         direction: ltr;
         unicode-bidi: bidi-override;
     }
@@ -60,7 +60,7 @@
     }
 
     .close {
-        .pull-left;
+        .pull-left();
     }
 
     .alert .icon {
@@ -313,6 +313,7 @@
             float: right;
         }
     }
+
     // The dropdown menu (ul).
     .dropdown-menu {
         left: unset;
@@ -374,5 +375,15 @@
     .or-scroll-top {
         right: unset;
         left: 10px;
+    }
+
+    // Tokens.
+    .tokens-dropdown {
+        &.dropdown-menu {
+            left: 0;
+            right: unset;
+            float: left;
+            text-align: right; // Ensures proper alignment if parent has it changed (e.g., modal footer).
+        }
     }
 }
