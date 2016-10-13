@@ -295,7 +295,7 @@ namespace Orchard.Indexing.Services {
             try {
                 if (deleteFromIndex.Count > 0) {
                     _indexProvider.Delete(indexName, deleteFromIndex);
-					Logger.Information("Deleted content items from index: {0}",  deleteFromIndex.Count);
+			    Logger.Information("Deleted content items from index: {0}",  deleteFromIndex.Count);
                 }
             }
             catch (Exception ex) {
