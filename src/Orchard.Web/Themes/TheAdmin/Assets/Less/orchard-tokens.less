@@ -3,9 +3,9 @@
 */
 .scrollable-menu {
     height: auto;
-    max-height: 200px;
+    max-height: 250px;
     overflow-x: hidden;
-    width: 40vw;
+    width: 45vw;
 
     a{
         cursor: pointer;
@@ -14,4 +14,18 @@
     .row > div{
         white-space: normal;
     }
+}
+
+.dropdown-menu {
+    > li > span {
+    display: block;
+    padding: 3px 20px;
+    clear: both;
+    font-weight: normal;
+    white-space: nowrap; // prevent spans from randomly breaking onto new lines
+  }
+}
+
+input.tokenized, input.text.tokenized, input.medium.tokenized, input.small.tokenized {
+    width: 100%;
 }

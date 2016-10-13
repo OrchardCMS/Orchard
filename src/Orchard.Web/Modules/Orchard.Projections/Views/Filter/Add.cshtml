@@ -1,33 +1,33 @@
 ﻿@model FilterAddViewModel
-@using Orchard.Projections.Models;
 @using Orchard.Projections.ViewModels;
-
 @{
     Layout.Title = T("Add a Filter");
 }
 <div class="panel panel-default">
     <div class="panel-body">
-        @if (!Model.Filters.Any()) {
-            <h3 class="no-content">@T("There are currently no available filters")</h3>
-        }
-        @foreach (var filter in Model.Filters.OrderBy(x => x.Name.Text)) {
+        <div class="edit-item">
+            @if (!Model.Filters.Any()) {
+                <h3 class="no-content">@T("There are currently no available filters")</h3>
+            }
+            @foreach (var filter in Model.Filters.OrderBy(x => x.Name.Text)) {
 
-            <h4>@filter.Name</h4>
+                <h4>@filter.Name</h4>
 
-            <table class="table table-condensed table-hover table-bordered table-striped">
-                <thead>
-                    <tr>
-                        <th scope="col" style="width:300px">@T("Name")</th>
-                        <th scope="col">@T("Description")</th>
-                    </tr>
-                </thead>
-                @foreach (var descriptor in filter.Descriptors) {
-                    <tr>
-                        <td>@Html.ActionLink(descriptor.Name.Text, "Edit", new { id = Model.Id, category = descriptor.Category, type = descriptor.Type })</td>
-                        <td class="left-align">@descriptor.Description</td>
-                    </tr>
-                }
-            </table>
-        }
+                <table class="table table-condensed table-hover table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col" style="width:300px">@T("Name")</th>
+                            <th scope="col">@T("Description")</th>
+                        </tr>
+                    </thead>
+                    @foreach (var descriptor in filter.Descriptors) {
+                        <tr>
+                            <td>@Html.ActionLink(descriptor.Name.Text, "Edit", new { id = Model.Id, category = descriptor.Category, type = descriptor.Type })</td>
+                            <td class="left-align">@descriptor.Description</td>
+                        </tr>
+                    }
+                </table>
+            }
+        </div>
     </div>
 </div>

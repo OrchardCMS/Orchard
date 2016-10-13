@@ -29,85 +29,49 @@ jQuery.fn.extend({
     tokenized: function () {
         return $(this).each(function () {
             var _this = $(this);
+            var textbox = _this;
+            
+            textbox.wrap("<div class=\"input-group\">");
+            textbox.parent().append("<span class=\"input-group-btn\"><button data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\" class=\"btn btn-default\" type=\"button\"><i class=\"fa fa-leaf\" aria-hidden=\"true\"></i></button></span>");
 
-            // Add an icon to tokenized inputs.
-            _this.wrap("<span class='token-wrapper'></span>");
-            var popup = $("<div><span class='tokenized-popup'>&nbsp;</span></div>");
-            _this.parent().prepend(popup);
+            var btn = textbox.parent().find("button");
+            var cList = $('<ul></ul>');
+            var i = 0;
+            cList.addClass('dropdown-menu pull-right scrollable-menu');
+            $.tokens.forEach(function (item) {
+                var li = document.createElement('li');
+                var anchor = i == 0 ? $("<span></span>") : $("<a title=\"" + item.label + "\" href=\"" + item.value + "\"></a>");
+                var row = document.createElement('div');
+                var col1 = document.createElement('div');
+                var col2 = document.createElement('div');
+                var col3 = document.createElement('div');
+                row.className = "row";
+                col1.className = 'col-xs-12 col-sm-4';
+                col2.className = 'col-xs-12 col-sm-4';
+                col3.className = 'col-xs-12 col-sm-4';
+                col1.innerHTML =  i == 0 ? "<strong>" + item.label + "</strong>" : item.label;
+                col2.innerHTML = i == 0 ? "<strong>" + item.desc + "</strong>" : item.desc;
+                col3.innerHTML = item.value == '' ? item.label : item.value;
 
-            // Show the full list of tokens when the icon is clicked.
-            popup.children(".tokenized-popup").click(function () {
-                var input = $(this).parent().next();
-                // Pass empty string as value to search for, displaying all results.
-                input.autocomplete("search", "");
-                input.focus();
-            });
-
-            $(this).autocomplete({
-                minLength: 0,
-                source: $.tokens,
-                select: function (event, ui) {
-                    $(this).insertAtCaret(ui.item.value);
-                    return false;
+                if (i == 0) {
+                    col3.innerHTML = "<strong>" + col3.innerHTML + "</strong>";
                 }
-            }).each(function () {
-                $(this).data("ui-autocomplete")._renderItem = function (ul, item) {
-                    var result = item.value === "" ? $("<li class='accategory'></li>") : $("<li></li>");
 
-                    // Place invisible space characters inside long strings to prevent word-wrap to split words.
-                    var value = item.value.replace(/\./g, "\.\u200B");
-                    var label = item.label.replace(/,/g, ",\u200B");
+                row.appendChild(col1);
+                row.appendChild(col2);
+                row.appendChild(col3);
 
-                    return result
-                        .data("ui-autocomplete-item", item)
-                        .append("<a><div class='listitemtext aclabelmod'>" + $("<div/>").text(label).html()
-                        + "</div><div class='listitemtext acvaluemod'>" + $("<div/>").text(value).html()
-                        + "</div><div class='listitemtext acdescmod'>" + $("<div/>").text(item.desc).html() + "</div></a>")
-                        .appendTo(ul);
-                };
+                anchor.append(row);
+                li.appendChild(anchor.get(0));
+                cList.append(li);
+                i++;
             });
-        });
-    },
-});
 
-jQuery.fn.extend({
-    btnTokenized: function () {
-        return $(this).each(function () {
-            var _this = $(this);
-
-            $(this).each(function () {
-                var textbox = $('#' + _this.data('tokens'));
-                var btn = $('[data-tokens=\'' + _this.data('tokens') + '\']');
-                    //var tokens = ['United States', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia', 'Canada', 'Argentina', 'Armenia'];
-                    var cList = $('<ul></ul>');
-                    cList.addClass('dropdown-menu pull-right scrollable-menu');
-                    $.tokens.forEach(function (item) {
-                        var li = document.createElement('li');
-                        var anchor = document.createElement('a');
-                        var row = document.createElement('div');
-                        var col1 = document.createElement('div');
-                        var col2 = document.createElement('div');
-                        var col3 = document.createElement('div');
-                        row.className = "row";
-                        col1.className = 'col-xs-12 col-sm-4';
-                        col2.className = 'col-xs-12 col-sm-4';
-                        col3.className = 'col-xs-12 col-sm-4';
-                        col1.textContent = item.label;
-                        col2.textContent = item.desc;
-                        col3.textContent = item.value == '' ? item.label : item.value;
-                        row.appendChild(col1);
-                        row.appendChild(col2);
-                        row.appendChild(col3);
-                        anchor.appendChild(row);
-                        anchor.onclick = function () {
-                            $('#' + _this.data('tokens')).val(textbox.val() + item.value);
-                        };
-                        li.appendChild(anchor);
-                        cList.append(li);
-                    });
-
-                    cList.insertAfter(btn);
+            cList.on("click", "a", function (e) {
+                e.preventDefault();
+                textbox.val(textbox.val() + $(this).attr("href"));
             });
+            cList.insertAfter(btn);
         });
     },
 });
@@ -121,6 +85,5 @@ $(function () {
     $.get(tokensUrl, function (data) {
         $.tokens = data;
         $(".tokenized").tokenized();
-        $('[data-tokens]').btnTokenized();
     });
 });

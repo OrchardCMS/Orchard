@@ -73,14 +73,7 @@
                                         </div>
                                     </td>
                                     <td>@Html.TextBoxFor(m => m.Patterns[patternCount].Name, new { @class = "text" })</td>
-                                    <td>
-                                        <div class="input-group">
-                                            @Html.TextBoxFor(m => m.Patterns[patternCount].Pattern, new { @class = "text" })
-                                            <span class="input-group-btn">
-                                                <button data-toggle="dropdown" data-tokens="@Html.FieldIdFor(m => m.Patterns[patternCount].Pattern)" aria-haspopup="true" aria-expanded="false" class="btn btn-default" type="button"><i class="fa fa-leaf" aria-hidden="true"></i></button>
-                                            </span>
-                                        </div>
-                                    </td>
+                                    <td>@Html.TextBoxFor(m => m.Patterns[patternCount].Pattern, new { @class = "text tokenized" })</td>
                                     <td>@Html.TextBoxFor(m => m.Patterns[patternCount].Description, new { @class = "text" })</td>
                                     <td>@Html.HiddenFor(m => m.Patterns[patternCount].Culture)&nbsp;</td>
                                 </tr>

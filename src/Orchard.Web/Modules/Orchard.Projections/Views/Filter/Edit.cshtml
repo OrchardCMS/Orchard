@@ -20,28 +20,29 @@
         </div>
     </div>
     <div class="panel-body">
+        <div class="edit-item">
+            @using (Html.BeginFormAntiForgeryPost()) {
 
-        @using (Html.BeginFormAntiForgeryPost()) {
+                <fieldset>
+                    @Html.LabelFor(m => m.Description, T("Description"))
+                    @Html.TextBoxFor(m => m.Description, new { @class = "text large" })
+                    <span class="help-block">@T("You may optionally give a description to this filter, to be used in the dashboard screens.")</span>
+                </fieldset>
 
-            <fieldset>
-                @Html.LabelFor(m => m.Description, T("Description"))
-                @Html.TextBoxFor(m => m.Description, new { @class = "text medium" })
-                <span class="help-block">@T("You may optionally give a description to this filter, to be used in the dashboard screens.")</span>
-            </fieldset>
+                @* Render the dynamic form *@
+            if (Model.Form != null) {
+                <fieldset>
+                    @DisplayChildren(Model.Form)
+                </fieldset>
+            }
 
-            @* Render the dynamic form *@
-        if (Model.Form != null) {
-            <fieldset>
-                @DisplayChildren(Model.Form)
-            </fieldset>
-        }
-
-        @Display.TokenHint()
-            <hr />
-            <fieldset>
-                <button class="btn btn-primary" type="submit">@T("Save")</button>
-            </fieldset>
-        }
+            @Display.TokenHint()
+                <hr />
+                <fieldset>
+                    <button class="btn btn-primary" type="submit">@T("Save")</button>
+                </fieldset>
+            }
+        </div>
     </div>
 
 </div>
