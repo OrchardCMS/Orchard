@@ -27,7 +27,7 @@ namespace Orchard.MediaLibrary.Factories {
                     return null;
                 }
             }
-            
+
             return new MediaFactorySelectorResult {
                 Priority = -10,
                 MediaFactory = new DocumentFactory(_contentManager)
@@ -43,7 +43,6 @@ namespace Orchard.MediaLibrary.Factories {
         }
 
         public MediaPart CreateMedia(Stream stream, string path, string mimeType, string contentType) {
-
             if (String.IsNullOrEmpty(contentType)) {
                 contentType = "Document";
             }
@@ -55,12 +54,9 @@ namespace Orchard.MediaLibrary.Factories {
             part.Title = Path.GetFileNameWithoutExtension(path);
 
             var documentPart = part.As<DocumentPart>();
-
             if (documentPart == null) {
                 return null;
             }
-            
-            documentPart.Length = stream.Length;
 
             return part;
         }
