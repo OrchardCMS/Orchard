@@ -241,6 +241,10 @@ namespace Orchard.Core.Contents.Controllers {
             if (string.IsNullOrEmpty(id))
                 return CreatableTypeList(containerId);
 
+            if (_contentDefinitionManager.GetTypeDefinition(id) == null) {
+                return RedirectToAction("Create", new { id = "" });
+            }
+
             var contentItem = _contentManager.New(id);
 
             if (!Services.Authorizer.Authorize(Permissions.EditContent, contentItem, T("Cannot create content")))
