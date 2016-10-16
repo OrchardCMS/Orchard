@@ -135,6 +135,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
+    <Content Include="Scripts\Orchard.Comments.Threaded.js" />
     <Content Include="Styles\images\menu.comments.png" />
     <Content Include="Styles\menu.comments-admin.css" />
     <Content Include="Styles\orchard-comments-admin.css" />
@@ -210,6 +211,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

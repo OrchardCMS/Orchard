@@ -1,9 +1,7 @@
 ﻿@model Orchard.Comments.Models.CommentPart
-
-
 @if (WorkContext.CurrentUser == null) {
     <fieldset class="who">
-        <legend id="add-comment">@T("Add a Comment")</legend>
+        <legend class="add-comment">@T("Add a Comment")</legend>
         <ol>
             <li>
                 @Html.LabelFor(m => m.Author, T("Name"))
@@ -34,5 +32,8 @@ else {
         </li>
     </ol>
     @Html.HiddenFor(m => m.CommentedOn)
-    @Html.HiddenFor(m => m.RepliedOn)
+    @Html.HiddenFor(m => m.RepliedOn, new {
+       @class = "comments-repliedon",
+       data_contentitem_id = Model.CommentedOn)
+   })
 </fieldset>
