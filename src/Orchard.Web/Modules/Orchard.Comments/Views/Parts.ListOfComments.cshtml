@@ -12,6 +12,5 @@
 
 @* render reply button if threaded comments enabled *@
 @if(commentsPart.ThreadedComments) {
-    Script.Require("jQuery");
-    Script.Include("Orchard.Comments.Threaded.js").AtFoot();
+    Script.Require("Comments.Threaded").AtFoot();
 }
