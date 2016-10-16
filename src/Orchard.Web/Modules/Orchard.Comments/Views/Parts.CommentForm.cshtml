@@ -19,7 +19,7 @@
 }
 else if ((settings.MustBeAuthenticated || !isAuthorized) && WorkContext.CurrentUser == null) {
     <p class="info message">@T("You must {0} to comment.", Html.ActionLink(T("log on").ToString(), "LogOn",
-                            new { Controller = "Account", Area = "Orchard.Users", ReturnUrl = string.Format("{0}#addacomment", Context.Request.RawUrl) }))</p>
+                            new { Controller = "Account", Area = "Orchard.Users", ReturnUrl = string.Format("{0}#comments_{1}", Context.Request.RawUrl, commentsPart.ContentItem.Id) }))</p>
 }
 else if (WorkContext.CurrentUser != null && !isAuthorized) {
     <div class="comments-disabled">
