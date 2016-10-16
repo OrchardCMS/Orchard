@@ -486,7 +486,7 @@ nav ul.breadcrumb
 .comment .reply { float: right;}
 .comment #add-comment {}
 .comment-form #comment-by { font-size: 1.231em; font-weight: normal; margin: 0 0 1.2em 0; border:none; }
-.comment-form .comment-text { width: 33.2em; }
+.comment-form .comment-text { width: 97%; max-width: 33.2em; }
 .comment-form input[type="text"] { width: 32em; }
 .comment-form li { border: inherit; margin: inherit; padding: inherit}
 .comment-disabled {}
