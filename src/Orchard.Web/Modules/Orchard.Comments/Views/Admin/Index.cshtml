@@ -74,8 +74,7 @@
                     }
                 </td>
                 <td>
-                    @* would ideally have permalinks for individual comments *@
-                    <p><a href="@Url.ItemDisplayUrl(commentEntry.CommentedOn)#comments"><time>@Display.DateTime(DateTimeUtc: commentEntry.Comment.CommentDateUtc.GetValueOrDefault())</time></a></p>
+                    <p><a href="@Url.ItemDisplayUrl(commentEntry.CommentedOn)#comment-@commentEntry.Comment.Id"><time>@Display.DateTime(DateTimeUtc: commentEntry.Comment.CommentDateUtc.GetValueOrDefault())</time></a></p>
                     @if (commentEntry.Comment.CommentText != null) {
                         var ellipsized = Html.Ellipsize(commentEntry.Comment.CommentText, 500);
                         var paragraphed = new HtmlString(ellipsized.ToHtmlString().Replace("\r\n", "</p><p>"));
