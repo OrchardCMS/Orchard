@@ -80,7 +80,8 @@ namespace Orchard.Data.Migration {
         /// <summary>
         /// This ensures that the framework migrations have run for the distributed locking feature, as existing Orchard installations will not have the required tables when upgrading.
         /// </summary>
-        private void EnsureDistributedLockSchemaExists() {
+        private void EnsureDistributedLockSchemaExists()
+        {
             // Ensure the distributed lock record schema exists.
             var schemaBuilder = new SchemaBuilder(_dataMigrationInterpreter);
             var distributedLockSchemaBuilder = new DistributedLockSchemaBuilder(_shellSettings, schemaBuilder);
@@ -92,6 +93,8 @@ namespace Orchard.Data.Migration {
                     distributedLockSchemaBuilder.CreateSchema();
                     return;
                 }
+
+                distributedLockSchemaBuilder.CreateSchema();
 
                 distributedLockSchemaBuilder.CreateSchema();
                 _transactionManager.RequireNew();
