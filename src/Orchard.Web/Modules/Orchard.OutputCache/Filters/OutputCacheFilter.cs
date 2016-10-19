@@ -41,7 +41,7 @@ namespace Orchard.OutputCache.Filters {
         private readonly ICacheService _cacheService;
         private readonly ISignals _signals;
         private readonly ShellSettings _shellSettings;
-        private readonly ICachingEventHandler _chachingEvents;
+        private readonly ICachingEventHandler _cachingEvents;
         private bool _isDisposed = false;
 
         public ILogger Logger { get; set; }
@@ -57,7 +57,7 @@ namespace Orchard.OutputCache.Filters {
             ICacheService cacheService,
             ISignals signals,
             ShellSettings shellSettings,
-            ICachingEventHandler chachingEvents) {
+            ICachingEventHandler cachingEvents) {
 
             _cacheManager = cacheManager;
             _cacheStorageProvider = cacheStorageProvider;
@@ -69,7 +69,7 @@ namespace Orchard.OutputCache.Filters {
             _cacheService = cacheService;
             _signals = signals;
             _shellSettings = shellSettings;
-            _chachingEvents = chachingEvents;
+            _cachingEvents = cachingEvents;
 
             Logger = NullLogger.Instance;
         }
@@ -615,7 +615,7 @@ namespace Orchard.OutputCache.Filters {
 
             //make CacheKey morphable by external modules
             try {
-                keyBuilder = _chachingEvents.ParticipateInCacheKey(keyBuilder);
+                keyBuilder = _cachingEvents.ParticipateInCacheKey(keyBuilder);
             } catch (UnauthorizedAccessException ex) {
                 throw new UnauthorizedAccessException();
             } catch { }
