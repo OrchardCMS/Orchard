@@ -198,10 +198,20 @@
     <Compile Include="Constants.cs" />
     <Compile Include="Controllers\IdentityProviderController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Drivers\AzureActiveDirectorySettingsPartDriver.cs" />
+    <Compile Include="Handlers\ActiveDirectoryFederationServicesSettingsPartHandler.cs" />
     <Compile Include="Handlers\AzureActiveDirectorySettingsPartHandler.cs" />
+    <Compile Include="Handlers\FacebookSettingsPartHandler.cs" />
+    <Compile Include="Handlers\GoogleSettingsPartHandler.cs" />
+    <Compile Include="Handlers\OpenIdSettingsPartHandler.cs" />
+    <Compile Include="Handlers\TwitterSettingsPartHandler.cs" />
+    <Compile Include="Models\ActiveDirectoryFederationServicesSettingsPart.cs" />
     <Compile Include="Models\AzureActiveDirectorySettingsPart.cs" />
+    <Compile Include="Models\FacebookSettingsPart.cs" />
+    <Compile Include="Models\GoogleSettingsPart.cs" />
+    <Compile Include="Models\TwitterSettingsPart.cs" />
     <Compile Include="OwinMiddlewares\OpenId.cs" />
+    <Compile Include="Permissions.cs" />
+    <Compile Include="Services\ActiveDirectoryFederationServices\MissingSettingsBanner.cs" />
     <Compile Include="Services\AzureActiveDirectory\MissingSettingsBanner.cs" />
     <Compile Include="InMemoryCache.cs" />
     <Compile Include="OwinMiddlewares\ActiveDirectoryFederationServices.cs" />
@@ -215,6 +225,9 @@
     <Compile Include="Security\MachineKeyDataProtector.cs" />
     <Compile Include="Services\AzureActiveDirectory\AzureActiveDirectoryService.cs" />
     <Compile Include="Services\AzureActiveDirectory\AzureAuthenticationService.cs" />
+    <Compile Include="Services\Facebook\MissingSettingsBanner.cs" />
+    <Compile Include="Services\Google\MissingSettingsBanner.cs" />
+    <Compile Include="Services\Twitter\MissingSettingsBanner.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Web.config" />

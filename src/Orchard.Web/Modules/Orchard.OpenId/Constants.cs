@@ -1,7 +1,7 @@
 ﻿namespace Orchard.OpenId {
     public class Constants {
         public const string AuthenticationErrorUrl = "/Authentication/Error";
-        public const string LogonCallbackUrl = "/Users/Account/Logoncallback";
+        public const string LogonCallbackUrl = "/Users/Account/Callback";
         public const string OpenIdOwinMiddlewarePriority = "10";
 
         public const string AzureActiveDirectoryObjectIdentifierKey = "http://schemas.microsoft.com/identity/claims/objectidentifier";
@@ -13,5 +13,22 @@
         public const string SymantecClass3SecureServerCA_G4 = "39A55D933676616E73A761DFA16A7E59CDE66FAD";
         public const string DigiCertSHA2HighAssuranceServerCA = "5168FF90AF0207753CCCD9656462A212B859723B";
         public const string DigiCertHighAssuranceEVRootCA = "B13EC36903F8BF4701D498261A0802EF63642BC3";
+
+        // Google Defaults
+        public const string DefaultGoogleClientId = "000-000.apps.googleusercontent.com";
+        public const string DefaultGoogleClientSecret = "x-xXxXxXxXxXxXxXxXxXxXxX";
+
+        // Facebook Defaults
+        public const string DefaultFacebookAppId = "0000000000000000";
+        public const string DefaultFacebookAppSecret = "xXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxX";
+
+        // Twitter Defaults
+        public const string DefaultTwitterConsumerKey = "xXxXxXxXxXxXxXxXxXxXxXxXx";
+        public const string DefaultTwitterConsumerSecret = "xXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxX";
+
+        // ActiveDirectoryFederationServices Defaults
+        public const string DefaultAdfsClientId = "xXxXxXxX-xXxX-xXxX-xXxX-xXxXxXxXxXxX";
+        public const string DefaultAdfsMetadataAddress = "https://your-adfs-domain/adfs/.well-known/openid-configuration";
+        public const string DefaultAdfsPostLogoutRedirectUri = "https://your-website/";
     }
 }

@@ -1,7 +1,7 @@
 ﻿@model Orchard.OpenId.Models.AzureActiveDirectorySettingsPart
 
+<h2>Azure Active Directory Settings</h2>
 <fieldset>
-    <legend>Azure Active Directory Settings</legend>
     @Html.LabelFor(m => m.Tenant, T("Tenant"))
     @Html.TextBoxFor(m => m.Tenant, new { @class = "text large" })
     <span class="hint">@T("Azure Active Directory tenant (e.g. yoursite.onmicrosoft.com).")</span>
@@ -60,3 +60,4 @@
     @Html.TextBoxFor(m => m.GraphApiUrl, new { @class = "text large" })
     <span class="hint">@T("Typically https://graph.windows.net")</span>
 </fieldset>
+<hr />
