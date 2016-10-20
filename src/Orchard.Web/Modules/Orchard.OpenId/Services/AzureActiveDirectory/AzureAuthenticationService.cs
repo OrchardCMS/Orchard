@@ -10,7 +10,7 @@ using Orchard.Security.Providers;
 using Orchard.Services;
 using Orchard.Settings;
 
-namespace Orchard.OpenId.Services {
+namespace Orchard.OpenId.Services.AzureActiveDirectory {
     [OrchardFeature("Orchard.OpenId.AzureActiveDirectory")]
     public class AzureAuthenticationService : IAuthenticationService {
         private readonly IHttpContextAccessor _httpContextAccessor;
