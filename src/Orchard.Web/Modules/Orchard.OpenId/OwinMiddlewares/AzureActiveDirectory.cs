@@ -15,7 +15,7 @@ using Orchard.Environment.Extensions;
 using Orchard.Logging;
 using Orchard.OpenId.Models;
 using Orchard.OpenId.Security;
-using Orchard.OpenId.Services;
+using Orchard.OpenId.Services.AzureActiveDirectory;
 using Orchard.Owin;
 using Owin;
 using LogLevel = Orchard.Logging.LogLevel;

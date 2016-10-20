@@ -1,24 +1,33 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Google;
+using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
+using Orchard.OpenId.Models;
 using Orchard.Owin;
 using Owin;
 
 namespace Orchard.OpenId.OwinMiddlewares {
     [OrchardFeature("Orchard.OpenId.Google")]
     public class Google : IOwinMiddlewareProvider {
+        private readonly IWorkContextAccessor _workContextAccessor;
+
+        public Google(IWorkContextAccessor workContextAccessor) {
+            _workContextAccessor = workContextAccessor;
+        }
+
         public IEnumerable<OwinMiddlewareRegistration> GetOwinMiddlewares() {
-            // TODO: change these into site settings
-            // Placeholders needed because Google's OwinMiddleware will throws an error if empty
-            var clientId = "000-000.apps.googleusercontent.com";
-            var clientSecret = "a-aaaaaaaaaaaaaaaaaaaaaa";
-            var callbackPath = new PathString(Constants.LogonCallbackUrl);
+            var settings = _workContextAccessor.GetContext().CurrentSite.As<GoogleSettingsPart>();
+
+            if (settings == null || !settings.IsValid) {
+                return Enumerable.Empty<OwinMiddlewareRegistration>();
+            }
 
             var authenticationOptions = new GoogleOAuth2AuthenticationOptions {
-                ClientId = clientId,
-                ClientSecret = clientSecret,
-                CallbackPath = callbackPath
+                ClientId = settings.ClientId,
+                ClientSecret = settings.ClientSecret,
+                CallbackPath = new PathString(settings.CallbackPath)
             };
 
             return new List<OwinMiddlewareRegistration> {

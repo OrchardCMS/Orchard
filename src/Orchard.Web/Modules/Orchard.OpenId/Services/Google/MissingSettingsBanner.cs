@@ -7,8 +7,8 @@ using Orchard.OpenId.Models;
 using Orchard.UI.Admin.Notification;
 using Orchard.UI.Notify;
 
-namespace Orchard.Azure.Authentication.Services.AzureActiveDirectory {
-    [OrchardFeature("Orchard.OpenId.AzureActiveDirectory")]
+namespace Orchard.Azure.Authentication.Services.Google {
+    [OrchardFeature("Orchard.OpenId.Google")]
     public class MissingSettingsBanner : INotificationProvider {
         private readonly IOrchardServices _orchardServices;
 
@@ -21,12 +21,12 @@ namespace Orchard.Azure.Authentication.Services.AzureActiveDirectory {
 
         public IEnumerable<NotifyEntry> GetNotifications() {
             var workContext = _orchardServices.WorkContext;
-            var azureSettings = workContext.CurrentSite.As<AzureActiveDirectorySettingsPart>();
+            var settings = workContext.CurrentSite.As<GoogleSettingsPart>();
 
-            if (azureSettings == null || !azureSettings.IsValid) {
+            if (settings == null || !settings.IsValid) {
                 var urlHelper = new UrlHelper(workContext.HttpContext.Request.RequestContext);
                 var url = urlHelper.Action("OpenId", "Admin", new { Area = "Settings" });
-                yield return new NotifyEntry { Message = T("The <a href=\"{0}\">Azure AD Authentication settings</a> need to be configured.", url), Type = NotifyType.Warning };
+                yield return new NotifyEntry { Message = T("The <a href=\"{0}\">Google settings</a> need to be configured.", url), Type = NotifyType.Warning };
             }
         }
     }
