@@ -15,3 +15,28 @@ Features:
         Description: Turns Orchard into an identity provider
 		Category: Authentication
 		Name: Identity Provider
+    Orchard.OpenId.Facebook:
+        Description: Enables Orchard to authenticate users using thier Facebook Accounts
+		Category: OpenId Providers
+		Name: Facebook
+		Dependencies: Orchard.OpenId
+    Orchard.OpenId.Google:
+        Description: Enables Orchard to authenticate users using thier Google Accounts
+		Category: OpenId Providers
+		Name: Google
+		Dependencies: Orchard.OpenId
+    Orchard.OpenId.Twitter:
+        Description: Enables Orchard to authenticate users using thier Twitter Accounts
+		Category: OpenId Providers
+		Name: Twitter
+		Dependencies: Orchard.OpenId
+    Orchard.OpenId.AzureActiveDirectory:
+        Description: Enables Orchard to authenticate users using thier Azure AD Accounts
+		Category: OpenId Providers
+		Name: Azure Active Directory (AAD)
+		Dependencies: Orchard.OpenId
+    Orchard.OpenId.ActiveDirectoryFederationServices:
+        Description: Enables Orchard to authenticate users using thier ADFS Accounts
+		Category: OpenId Providers
+		Name: Active Directory Federation Services (ADFS)
+		Dependencies: Orchard.OpenId
