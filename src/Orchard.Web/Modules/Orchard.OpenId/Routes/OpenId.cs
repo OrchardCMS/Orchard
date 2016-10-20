@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -16,14 +17,7 @@ namespace Orchard.Azure.Authentication {
         }
 
         public IEnumerable<RouteDescriptor> GetRoutes() {
-            AzureActiveDirectorySettingsPart azureSettings;
-
-            using (var scope = _workContextAccessor.CreateWorkContextScope()) {
-                azureSettings = scope.Resolve<ISiteService>().GetSiteSettings().As<AzureActiveDirectorySettingsPart>();
-            }
-
-            // TODO: Check against other providers after adding site settings for each
-            if (azureSettings == null || !azureSettings.IsValid)
+            if (IsAnyProviderSettingsValid() == false)
                 return Enumerable.Empty<RouteDescriptor>();
 
             return new[] {
@@ -57,6 +51,32 @@ namespace Orchard.Azure.Authentication {
                         new MvcRouteHandler())
                 }
             };
+        }
+
+        private bool IsAnyProviderSettingsValid() {
+            ActiveDirectoryFederationServicesSettingsPart adfsSettings;
+            AzureActiveDirectorySettingsPart azureSettings;
+            FacebookSettingsPart facebookSettings;
+            GoogleSettingsPart googleSettings;
+            TwitterSettingsPart twitterSettings;
+
+            using (var scope = _workContextAccessor.CreateWorkContextScope()) {
+                var siteSettings = scope.Resolve<ISiteService>().GetSiteSettings();
+
+                adfsSettings = siteSettings.As<ActiveDirectoryFederationServicesSettingsPart>();
+                azureSettings = siteSettings.As<AzureActiveDirectorySettingsPart>();
+                facebookSettings = siteSettings.As<FacebookSettingsPart>();
+                googleSettings = siteSettings.As<GoogleSettingsPart>();
+                twitterSettings = siteSettings.As<TwitterSettingsPart>();
+            }
+
+            return (
+                (adfsSettings != null && adfsSettings.IsValid) ||
+                (azureSettings != null && azureSettings.IsValid) ||
+                (facebookSettings != null && facebookSettings.IsValid) ||
+                (googleSettings != null && googleSettings.IsValid) ||
+                (twitterSettings != null && twitterSettings.IsValid)
+            );
         }
 
         public void GetRoutes(ICollection<RouteDescriptor> routes) {

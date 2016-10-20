@@ -1,22 +1,32 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Twitter;
+using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
+using Orchard.OpenId.Models;
 using Orchard.Owin;
 using Owin;
 
 namespace Orchard.OpenId.OwinMiddlewares {
     [OrchardFeature("Orchard.OpenId.Twitter")]
     public class Twitter : IOwinMiddlewareProvider {
+        private readonly IWorkContextAccessor _workContextAccessor;
+
+        public Twitter(IWorkContextAccessor workContextAccessor) {
+            _workContextAccessor = workContextAccessor;
+        }
 
         public IEnumerable<OwinMiddlewareRegistration> GetOwinMiddlewares() {
-            // TODO: change these into site settings
-            var consumerKey = "";
-            var consumerSecret = "";
+            var settings = _workContextAccessor.GetContext().CurrentSite.As<TwitterSettingsPart>();
+
+            if (settings == null || !settings.IsValid) {
+                return Enumerable.Empty<OwinMiddlewareRegistration>();
+            }
 
             var twitterOptions = new TwitterAuthenticationOptions {
-                ConsumerKey = consumerKey,
-                ConsumerSecret = consumerSecret,
+                ConsumerKey = settings.ConsumerKey,
+                ConsumerSecret = settings.ConsumerSecret,
                 BackchannelCertificateValidator = new CertificateSubjectKeyIdentifierValidator(new[]
                 {
                     Constants.VeriSignClass3SecureServerCA_G2,

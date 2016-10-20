@@ -12,6 +12,10 @@ namespace Orchard.OpenId.Controllers {
     [OrchardFeature("Orchard.OpenId")]
     public class AccountController : Controller {
 
+        public AccountController() {
+
+        }
+
         public void LogOn(string openIdProvider) {
             if (string.IsNullOrWhiteSpace(openIdProvider))
                 openIdProvider = OpenIdConnectAuthenticationDefaults.AuthenticationType;
@@ -35,7 +39,7 @@ namespace Orchard.OpenId.Controllers {
             return Redirect(Url.Content("~/"));
         }
 
-        public ActionResult LogonCallback(string openIdProvider) {
+        public RedirectResult Callback() {
             return Redirect(Url.Content("~/"));
         }
 

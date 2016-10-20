@@ -4,7 +4,7 @@ using System.Web.WebPages;
 using Microsoft.Azure.ActiveDirectory.GraphClient;
 using Orchard.Environment.Extensions;
 
-namespace Orchard.OpenId.Services {
+namespace Orchard.OpenId.Services.AzureActiveDirectory {
     [OrchardFeature("Orchard.OpenId.AzureActiveDirectory")]
     public class AzureActiveDirectoryService {
         public static string Token;
