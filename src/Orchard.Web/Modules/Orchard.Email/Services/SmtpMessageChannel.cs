@@ -54,7 +54,7 @@ namespace Orchard.Email.Services {
                 From = Read(parameters, "From"),
                 Bcc = Read(parameters, "Bcc"),
                 Cc = Read(parameters, "CC"),
-                Attachments = (IEnumerable<string>)parameters["Attachments"]
+                Attachments = (IEnumerable<string>)(parameters.ContainsKey("Attachments") ? parameters["Attachments"] : new List<string>())
             };
 
             if (emailMessage.Recipients.Length == 0) {
