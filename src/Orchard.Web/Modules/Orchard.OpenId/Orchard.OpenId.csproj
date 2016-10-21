@@ -211,6 +211,11 @@
     <Compile Include="Models\TwitterSettingsPart.cs" />
     <Compile Include="OwinMiddlewares\OpenId.cs" />
     <Compile Include="Permissions.cs" />
+    <Compile Include="Providers\ActiveDirectoryFederationServices.cs" />
+    <Compile Include="Providers\AzureActiveDirectory.cs" />
+    <Compile Include="Providers\Twitter.cs" />
+    <Compile Include="Providers\Facebook.cs" />
+    <Compile Include="Providers\Google.cs" />
     <Compile Include="Services\ActiveDirectoryFederationServices\MissingSettingsBanner.cs" />
     <Compile Include="Services\AzureActiveDirectory\MissingSettingsBanner.cs" />
     <Compile Include="InMemoryCache.cs" />
@@ -224,9 +229,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\MachineKeyDataProtector.cs" />
     <Compile Include="Services\AzureActiveDirectory\AzureActiveDirectoryService.cs" />
-    <Compile Include="Services\AzureActiveDirectory\AzureAuthenticationService.cs" />
+    <Compile Include="Services\OpenIdAuthenticationService.cs" />
     <Compile Include="Services\Facebook\MissingSettingsBanner.cs" />
     <Compile Include="Services\Google\MissingSettingsBanner.cs" />
+    <Compile Include="Services\IOpenIdProvider.cs" />
     <Compile Include="Services\Twitter\MissingSettingsBanner.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -259,6 +265,12 @@
     <Content Include="Views\Account\AccessDenied.cshtml" />
     <Content Include="Views\Account\Error.cshtml" />
     <Content Include="Views\EditorTemplates\Parts.AzureActiveDirectorySettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Account\Logon.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\User.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
