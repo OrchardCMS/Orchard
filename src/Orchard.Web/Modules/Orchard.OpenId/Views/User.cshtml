@@ -1,0 +1,16 @@
+﻿<div class="user-display">
+    @if (WorkContext.CurrentUser != null) {
+        <span class="user-actions welcome">
+            @T("Welcome, <strong>{0}</strong>!", Html.ItemDisplayText(WorkContext.CurrentUser))
+        </span>
+        <span class="user-actions">
+            @Html.ActionLink(T("Sign Out").ToString(), "LogOff", new { Controller = "Account", Area = "Orchard.Users", ReturnUrl = Context.Request.RawUrl }, new { rel = "nofollow" })
+            @if (AuthorizedFor(Orchard.Security.StandardPermissions.AccessAdminPanel)) {
+                @Html.ActionLink(T("Dashboard").ToString(), "Index", new { Area = "Dashboard", Controller = "Admin" })
+            }
+        </span>
+    }
+    else {
+        <span class="user-actions">@Html.ActionLink(T("Sign In").ToString(), "LogOn", new { Controller = "Account", Area = "Orchard.Users", ReturnUrl = (Request.QueryString["ReturnUrl"] ?? Request.RawUrl) }, new { rel = "nofollow" })</span>
+    }
+</div>

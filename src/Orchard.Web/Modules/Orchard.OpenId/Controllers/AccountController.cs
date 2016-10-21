@@ -1,22 +1,77 @@
-﻿using System;
+﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OpenIdConnect;
 using Orchard.Environment.Extensions;
+using Orchard.Localization;
+using Orchard.Mvc.Extensions;
+using Orchard.OpenId.Services;
+using Orchard.Security;
 using Orchard.Themes;
 
 namespace Orchard.OpenId.Controllers {
     [Themed]
     [OrchardFeature("Orchard.OpenId")]
+    [OutputCache(NoStore=true, Duration = 0)]
     public class AccountController : Controller {
+        private readonly IEnumerable<IOpenIdProvider> _openIdProviders;
+        private readonly IAuthenticationService _authenticationService;
+        private readonly IMembershipService _membershipService;
+        private readonly IOrchardServices _orchardServices;
 
-        public AccountController() {
+        public AccountController(
+            IEnumerable<IOpenIdProvider> openIdProviders,
+            IAuthenticationService authenticationService,
+            IMembershipService membershipService,
+            IOrchardServices orchardServices) {
 
+            _openIdProviders = openIdProviders;
+            _authenticationService = authenticationService;
+            _membershipService = membershipService;
+            _orchardServices = orchardServices;
+
+            T = NullLocalizer.Instance;
         }
 
-        public void LogOn(string openIdProvider) {
+        public Localizer T { get; set; }
+
+        [HttpGet]
+        public ActionResult LogOn() {
+            if (Request.IsAuthenticated) {
+                return Redirect(Url.Content("~/"));
+            }
+
+            return View(_openIdProviders);
+        }
+
+        [HttpPost]
+        [AlwaysAccessible]
+        [ValidateInput(false)]
+        [SuppressMessage("Microsoft.Design", "CA1054:UriParametersShouldNotBeStrings", Justification = "Needs to take same parameter type as Controller.Redirect()")]
+        public ActionResult LogOn(string userNameOrEmail, string password, string returnUrl, bool rememberMe = false) {
+
+            var user = ValidateLogOn(userNameOrEmail, password);
+            if (!ModelState.IsValid) {
+                return View(_openIdProviders);
+            }
+
+            var membershipSettings = _membershipService.GetSettings();
+            if (user != null &&
+                membershipSettings.EnableCustomPasswordPolicy &&
+                membershipSettings.EnablePasswordExpiration &&
+                _membershipService.PasswordIsExpired(user, membershipSettings.PasswordExpirationTimeInDays)) {
+                return RedirectToAction("ChangeExpiredPassword", new { username = user.UserName });
+            }
+
+            _authenticationService.SignIn(user, rememberMe);
+
+            return this.RedirectLocal(returnUrl);
+        }
+
+        public void Challenge(string openIdProvider) {
             if (string.IsNullOrWhiteSpace(openIdProvider))
                 openIdProvider = OpenIdConnectAuthenticationDefaults.AuthenticationType;
 
@@ -35,11 +90,12 @@ namespace Orchard.OpenId.Controllers {
                 openIdProvider = OpenIdConnectAuthenticationDefaults.AuthenticationType;
 
             HttpContext.GetOwinContext().Authentication.SignOut(openIdProvider, CookieAuthenticationDefaults.AuthenticationType);
+            _authenticationService.SignOut();
 
             return Redirect(Url.Content("~/"));
         }
 
-        public RedirectResult Callback() {
+        public RedirectResult LogonCallback() {
             return Redirect(Url.Content("~/"));
         }
 
@@ -56,6 +112,29 @@ namespace Orchard.OpenId.Controllers {
             var userName = HttpContext.GetOwinContext().Authentication.User.Identity.Name.Trim();
 
             return Json(new { Message = "Logged In as: " + userName }, JsonRequestBehavior.AllowGet);
+        }
+
+        private IUser ValidateLogOn(string userNameOrEmail, string password) {
+            bool validate = true;
+
+            if (string.IsNullOrEmpty(userNameOrEmail)) {
+                ModelState.AddModelError("userNameOrEmail", T("You must specify a username or e-mail."));
+                validate = false;
+            }
+            if (string.IsNullOrEmpty(password)) {
+                ModelState.AddModelError("password", T("You must specify a password."));
+                validate = false;
+            }
+
+            if (!validate)
+                return null;
+
+            var user = _membershipService.ValidateUser(userNameOrEmail, password);
+            if (user == null) {
+                ModelState.AddModelError("password", T("The username or e-mail or password provided is incorrect."));
+            }
+
+            return user;
         }
     }
 }

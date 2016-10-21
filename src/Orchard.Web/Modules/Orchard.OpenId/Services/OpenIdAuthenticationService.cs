@@ -1,25 +1,24 @@
-﻿using System.Web;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Web;
 using System.Web.Security;
-using Orchard.ContentManagement;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.Mvc;
-using Orchard.OpenId.Models;
 using Orchard.Security;
 using Orchard.Security.Providers;
 using Orchard.Services;
-using Orchard.Settings;
 
-namespace Orchard.OpenId.Services.AzureActiveDirectory {
-    [OrchardFeature("Orchard.OpenId.AzureActiveDirectory")]
-    public class AzureAuthenticationService : IAuthenticationService {
+namespace Orchard.OpenId.Services {
+    [OrchardFeature("Orchard.OpenId")]
+    public class OpenIdAuthenticationService : IAuthenticationService {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMembershipService _membershipService;
-        private readonly IWorkContextAccessor _workContextAccessor;
         private readonly ShellSettings _settings;
         private readonly IClock _clock;
         private readonly ISslSettingsProvider _sslSettingsProvider;
         private readonly IMembershipValidationService _membershipValidationService;
+        private readonly IEnumerable<IOpenIdProvider> _openIdProviders;
 
         private IUser _localAuthenticationUser;
 
@@ -33,49 +32,50 @@ namespace Orchard.OpenId.Services.AzureActiveDirectory {
             }
         }
 
-        public AzureAuthenticationService(
+        public OpenIdAuthenticationService(
             IHttpContextAccessor httpContextAccessor,
             IMembershipService membershipService,
             ShellSettings settings,
             IClock clock,
             ISslSettingsProvider sslSettingsProvider,
             IMembershipValidationService membershipValidationService,
-            IWorkContextAccessor workContextAccessor) {
+            IEnumerable<IOpenIdProvider> openIdProviders) {
 
             _httpContextAccessor = httpContextAccessor;
             _membershipService = membershipService;
-            _workContextAccessor = workContextAccessor;
             _settings = settings;
             _clock = clock;
             _sslSettingsProvider = sslSettingsProvider;
             _membershipValidationService = membershipValidationService;
+            _openIdProviders = openIdProviders;
         }
 
         public void SignIn(IUser user, bool createPersistentCookie) {
-            if (!IsAzureSettingsValid()) {
+            if (IsLocalUser() || !IsAnyProviderSettingsValid()) {
                 FallbackAuthenticationService.SignIn(user, createPersistentCookie);
             }
         }
 
         public void SignOut() {
-            if (!IsAzureSettingsValid()) {
+            if (IsLocalUser() || !IsAnyProviderSettingsValid()) {
                 FallbackAuthenticationService.SignOut();
             }
         }
 
         public void SetAuthenticatedUserForRequest(IUser user) {
-            if (!IsAzureSettingsValid()) {
+            if (IsLocalUser() || !IsAnyProviderSettingsValid()) {
                 FallbackAuthenticationService.SetAuthenticatedUserForRequest(user);
             }
         }
 
         public IUser GetAuthenticatedUser() {
-            if (!IsAzureSettingsValid())
+            if (IsLocalUser() || !IsAnyProviderSettingsValid()) {
                 return FallbackAuthenticationService.GetAuthenticatedUser();
+            }
 
-            var azureUser = _httpContextAccessor.Current().GetOwinContext().Authentication.User;
+            var user = _httpContextAccessor.Current().GetOwinContext().Authentication.User;
 
-            if (!azureUser.Identity.IsAuthenticated) {
+            if (!user.Identity.IsAuthenticated) {
                 return null;
             }
 
@@ -84,7 +84,7 @@ namespace Orchard.OpenId.Services.AzureActiveDirectory {
                 return _localAuthenticationUser;
             }
 
-            var userName = azureUser.Identity.Name.Trim();
+            var userName = user.Identity.Name.Trim();
 
             //Get the local user, if local user account doesn't exist, create it 
             var localUser =
@@ -95,16 +95,18 @@ namespace Orchard.OpenId.Services.AzureActiveDirectory {
             return _localAuthenticationUser = localUser;
         }
 
-        private bool IsAzureSettingsValid() {
-            try {
-                WorkContext scope = _workContextAccessor.GetContext();
-                AzureActiveDirectorySettingsPart azureSettings = scope.Resolve<ISiteService>().GetSiteSettings().As<AzureActiveDirectorySettingsPart>();
+        private bool IsLocalUser() {
+            var anyCliam = _httpContextAccessor.Current().GetOwinContext().Authentication.User.Claims.FirstOrDefault();
 
-                return (azureSettings != null && azureSettings.IsValid);
+            if (anyCliam == null || anyCliam.Issuer == Constants.LocalIssuer || anyCliam.Issuer == Constants.FormsIssuer) {
+                return true;
             }
-            catch {
-                return false;
-            }
+
+            return false;
+        }
+
+        private bool IsAnyProviderSettingsValid() {
+            return _openIdProviders.Any(provider => provider.IsValid);
         }
     }
 }
