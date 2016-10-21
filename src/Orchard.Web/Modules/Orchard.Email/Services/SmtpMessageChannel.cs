@@ -124,6 +124,8 @@ namespace Orchard.Email.Services {
                 foreach (var attachmentPath in emailMessage.Attachments) {
                     if (File.Exists(attachmentPath)) {
                         mailMessage.Attachments.Add(new Attachment(attachmentPath));
+                    } else {
+                        throw new FileNotFoundException(T("One or more attachments not found.").Text);
                     }
                 }
                 _smtpClientField.Value.Send(mailMessage);
