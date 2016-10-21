@@ -7,6 +7,6 @@ using System.Web;
 
 namespace Orchard.OutputCache {
     public interface ICachingEventHandler : IEventHandler {
-        StringBuilder ParticipateInCacheKey(StringBuilder key);
+        void KeyGenerated(StringBuilder key);
     }
 }

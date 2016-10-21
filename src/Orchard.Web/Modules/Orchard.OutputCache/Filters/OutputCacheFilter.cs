@@ -614,12 +614,7 @@ namespace Orchard.OutputCache.Filters {
             }
 
             //make CacheKey morphable by external modules
-            try {
-                keyBuilder = _cachingEvents.ParticipateInCacheKey(keyBuilder);
-            } catch (UnauthorizedAccessException ex) {
-                throw new UnauthorizedAccessException();
-            } catch { }
-
+            _cachingEvents.KeyGenerated(keyBuilder);
 
             return keyBuilder.ToString();
         }
