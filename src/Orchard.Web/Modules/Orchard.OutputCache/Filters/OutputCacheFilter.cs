@@ -397,6 +397,12 @@ namespace Orchard.OutputCache.Filters {
                     result["HEADER:" + varyByRequestHeader] = requestHeaders[varyByRequestHeader];
             }
 
+            // Vary by configured cookies.
+            var requestCookies = filterContext.RequestContext.HttpContext.Request.Cookies;
+            foreach (var varyByRequestCookies in CacheSettings.VaryByRequestCookies) {
+                if (requestCookies[varyByRequestCookies] != null)
+                    result["COOKIE:" + varyByRequestCookies] = requestCookies[varyByRequestCookies].Value;
+            }
 
             // Vary by request culture if configured.
             if (CacheSettings.VaryByCulture) {
