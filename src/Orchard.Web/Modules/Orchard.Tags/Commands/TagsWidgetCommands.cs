@@ -1,31 +1,16 @@
 ﻿using System;
-using System.Linq;
 using Orchard.Commands;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Aspects;
-using Orchard.Core.Common.Models;
-using Orchard.Security;
-using Orchard.Settings;
 using Orchard.Tags.Models;
-using Orchard.Widgets.Models;
 using Orchard.Widgets.Services;
 
 namespace Orchard.Tags.Commands {
     public class TagWidgetCommands : DefaultOrchardCommandHandler {
-        private readonly IWidgetsService _widgetsService;
-        private readonly ISiteService _siteService;
-        private readonly IMembershipService _membershipService;
-        private readonly IContentManager _contentManager;
+        private readonly IWidgetCommandsService _widgetCommandsService;
 
         public TagWidgetCommands(
-            IWidgetsService widgetsService, 
-            ISiteService siteService, 
-            IMembershipService membershipService,
-            IContentManager contentManager) {
-            _widgetsService = widgetsService;
-            _siteService = siteService;
-            _membershipService = membershipService;
-            _contentManager = contentManager;
+            IWidgetCommandsService widgetCommandsService) {
+            _widgetCommandsService = widgetCommandsService;
 
             RenderTitle = true;
         }
@@ -66,34 +51,18 @@ namespace Orchard.Tags.Commands {
         public void CreateTagsCloudWidget() {
             var type = "TagCloud";
 
-            var layer = GetLayer(Layer);
-            if (layer == null) {
-                Context.Output.WriteLine(T("Creating {0} widget failed: layer {1} was not found.", type, Layer));
-                return;
-            }
+            // Check any custom parameters that could cause creating the widget to fail.
+            // Nothing to check in this widget, see BlogWidgetCommands.cs for an example.
 
-            var widget = _widgetsService.CreateWidget(layer.ContentItem.Id, type, T(Title).Text, Position, Zone);
-
-            if (!String.IsNullOrWhiteSpace(Name)) {
-                widget.Name = Name.Trim();
-            }
-
-            widget.RenderTitle = RenderTitle;
-
-            if (String.IsNullOrEmpty(Owner)) {
-                Owner = _siteService.GetSiteSettings().SuperUser;
-            }
-            var owner = _membershipService.GetUser(Owner);
-            widget.As<ICommonPart>().Owner = owner;
-
-            if (widget.Has<IdentityPart>() && !String.IsNullOrEmpty(Identity)) {
-                widget.As<IdentityPart>().Identifier = Identity;
-            }
+            // Create the widget using the standard parameters.
+            var widget = _widgetCommandsService.CreateBaseWidget(
+                Context, type, Title, Name, Zone, Position, Layer, Identity, RenderTitle, Owner, null, false, null);
 
             if (widget == null) {
                 return;
             }
 
+            // Set the custom parameters.
             widget.As<TagCloudPart>().Slug = Slug;
 
             // It's an optional parameter and defaults to 5.
@@ -104,13 +73,9 @@ namespace Orchard.Tags.Commands {
                 }
             }
 
-            _contentManager.Publish(widget.ContentItem);
+            // Publish the successfully created widget.
+            _widgetCommandsService.Publish(widget);
             Context.Output.WriteLine(T("{0} widget created successfully.", type).Text);
         }
-
-        private LayerPart GetLayer(string layer) {
-            var layers = _widgetsService.GetLayers();
-            return layers.FirstOrDefault(layerPart => String.Equals(layerPart.Name, layer, StringComparison.OrdinalIgnoreCase));
-        }        
     }
 }
