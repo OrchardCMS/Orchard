@@ -37,7 +37,7 @@
             url += "&field=" + encodeURIComponent(data.field);
         }
 
-        var w = window.open(url, "_blank", data.windowFeatures || "width=685,height=700,status=no,toolbar=no,location=no,menubar=no,resizable=no,scrollbars=yes");
+        var w = window.open(url, "_blank", data.windowFeatures || "width=768,height=700,status=no,toolbar=no,location=no,menubar=no,resizable=no,scrollbars=yes");
     });
     
     // Render content items table and initialize controls.
