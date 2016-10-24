@@ -48,9 +48,9 @@
     </fieldset>
 
     <fieldset>
-        <label>@T("Vary Cookie String Parameters")</label>
+        <label>@T("Vary by Request Cookies")</label>
         @Html.TextBoxFor(m => m.VaryByRequestCookies, new { @class = "text medium" })
-        <span class="hint">@T("When defined, using comma separated values, sets caching to vary via specified cookie string parameters")</span>
+        <span class="hint">@T("When defined, using comma separated values, sets caching to vary by the specified request cookies.")</span>
     </fieldset>
 
     <fieldset>
