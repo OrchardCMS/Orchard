@@ -1,4 +1,6 @@
-﻿namespace Orchard.Email.Models {
+﻿using System.Collections.Generic;
+
+namespace Orchard.Email.Models {
     public class EmailMessage {
         public string Subject { get; set; }
         public string Body { get; set; }
@@ -7,5 +9,9 @@
         public string From { get; set; }
         public string Bcc { get; set; }
         public string Cc { get; set; }
+        /// <summary>
+        /// IEnumerable of strings representing attachments paths
+        /// </summary>
+        public IEnumerable<string> Attachments { get; set; }
     }
 }
