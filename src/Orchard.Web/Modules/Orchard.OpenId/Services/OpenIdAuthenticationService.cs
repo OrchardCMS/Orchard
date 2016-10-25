@@ -12,11 +12,11 @@ using Orchard.Services;
 namespace Orchard.OpenId.Services {
     [OrchardFeature("Orchard.OpenId")]
     public class OpenIdAuthenticationService : IAuthenticationService {
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IMembershipService _membershipService;
         private readonly ShellSettings _settings;
         private readonly IClock _clock;
+        private readonly IMembershipService _membershipService;
         private readonly ISslSettingsProvider _sslSettingsProvider;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMembershipValidationService _membershipValidationService;
         private readonly IEnumerable<IOpenIdProvider> _openIdProviders;
 
@@ -33,11 +33,11 @@ namespace Orchard.OpenId.Services {
         }
 
         public OpenIdAuthenticationService(
-            IHttpContextAccessor httpContextAccessor,
-            IMembershipService membershipService,
             ShellSettings settings,
             IClock clock,
+            IMembershipService membershipService,
             ISslSettingsProvider sslSettingsProvider,
+            IHttpContextAccessor httpContextAccessor,
             IMembershipValidationService membershipValidationService,
             IEnumerable<IOpenIdProvider> openIdProviders) {
 
@@ -51,25 +51,25 @@ namespace Orchard.OpenId.Services {
         }
 
         public void SignIn(IUser user, bool createPersistentCookie) {
-            if (IsLocalUser() || !IsAnyProviderSettingsValid()) {
+            if (IsFallbackNeeded()) {
                 FallbackAuthenticationService.SignIn(user, createPersistentCookie);
             }
         }
 
         public void SignOut() {
-            if (IsLocalUser() || !IsAnyProviderSettingsValid()) {
+            if (IsFallbackNeeded()) {
                 FallbackAuthenticationService.SignOut();
             }
         }
 
         public void SetAuthenticatedUserForRequest(IUser user) {
-            if (IsLocalUser() || !IsAnyProviderSettingsValid()) {
+            if (IsFallbackNeeded()) {
                 FallbackAuthenticationService.SetAuthenticatedUserForRequest(user);
             }
         }
 
         public IUser GetAuthenticatedUser() {
-            if (IsLocalUser() || !IsAnyProviderSettingsValid()) {
+            if (IsFallbackNeeded()) {
                 return FallbackAuthenticationService.GetAuthenticatedUser();
             }
 
@@ -88,7 +88,8 @@ namespace Orchard.OpenId.Services {
 
             //Get the local user, if local user account doesn't exist, create it 
             var localUser =
-                _membershipService.GetUser(userName) ?? _membershipService.CreateUser(new CreateUserParams(
+                _membershipService.GetUser(userName) ??
+                _membershipService.CreateUser(new CreateUserParams(
                     userName, Membership.GeneratePassword(16, 1), userName, string.Empty, string.Empty, true
                 ));
 
@@ -107,6 +108,10 @@ namespace Orchard.OpenId.Services {
 
         private bool IsAnyProviderSettingsValid() {
             return _openIdProviders.Any(provider => provider.IsValid);
+        }
+
+        private bool IsFallbackNeeded() {
+            return IsLocalUser() || !IsAnyProviderSettingsValid();
         }
     }
 }
