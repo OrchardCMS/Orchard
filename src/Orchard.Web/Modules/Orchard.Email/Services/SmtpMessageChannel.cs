@@ -108,7 +108,8 @@ namespace Orchard.Email.Services {
 
                 if (!String.IsNullOrWhiteSpace(emailMessage.From)) {
                     mailMessage.From = new MailAddress(emailMessage.From);
-                } else {
+                }
+                else {
                     // Take 'From' address from site settings or web.config.
                     mailMessage.From = !String.IsNullOrWhiteSpace(_smtpSettings.Address)
                         ? new MailAddress(_smtpSettings.Address)
@@ -124,12 +125,14 @@ namespace Orchard.Email.Services {
                 foreach (var attachmentPath in emailMessage.Attachments) {
                     if (File.Exists(attachmentPath)) {
                         mailMessage.Attachments.Add(new Attachment(attachmentPath));
-                    } else {
+                    }
+                    else {
                         throw new FileNotFoundException(T("One or more attachments not found.").Text);
                     }
                 }
                 _smtpClientField.Value.Send(mailMessage);
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 Logger.Error(e, "Could not send email");
             }
         }
