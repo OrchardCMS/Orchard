@@ -9,14 +9,12 @@ namespace Orchard.OpenId.Providers {
     [OrchardFeature("Orchard.OpenId.Google")]
     public class Google : IOpenIdProvider {
         private readonly IWorkContextAccessor _workContextAccessor;
-        private readonly ISiteService _siteService;
 
         public Google(
             IWorkContextAccessor workContextAccessor,
             ISiteService siteService) {
 
             _workContextAccessor = workContextAccessor;
-            _siteService = siteService;
         }
 
         public string AuthenticationType {
@@ -40,13 +38,8 @@ namespace Orchard.OpenId.Providers {
                 GoogleSettingsPart settings;
                 ISite site;
 
-                if (_siteService == null) { // happens if the provider was called early in the pipeline
-                    var scope = _workContextAccessor.GetContext() ?? _workContextAccessor.CreateWorkContextScope().WorkContext;
-                    site = scope.Resolve<ISiteService>().GetSiteSettings();
-                }
-                else {
-                    site = _siteService.GetSiteSettings();
-                }
+                var scope = _workContextAccessor.GetContext() ?? _workContextAccessor.CreateWorkContextScope().WorkContext;
+                site = scope.Resolve<ISiteService>().GetSiteSettings();
 
                 settings = site.As<GoogleSettingsPart>();
 
