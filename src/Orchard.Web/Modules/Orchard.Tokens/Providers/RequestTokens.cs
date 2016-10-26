@@ -23,8 +23,8 @@ namespace Orchard.Tokens.Providers {
 
         public void Describe(DescribeContext context) {
             context.For("Request", T("Http Request"), T("Current Http Request tokens."))
-                .Token("QueryString:*", T("QueryString:<element>"), T("The Query String value for the specified element. If you want ot chain text, surround the <element> with brackets [e.g. QueryString:(param1)]."))
-                .Token("Form:*", T("Form:<element>"), T("The Form value for the specified element. If you want ot chain text, surround the <element> with brackets [e.g. Form:(param1)]."))
+                .Token("QueryString:*", T("QueryString:<element>"), T("The Query String value for the specified element. If you want to chain text, surround the <element> with brackets [e.g. QueryString:(param1)]."))
+                .Token("Form:*", T("Form:<element>"), T("The Form value for the specified element. If you want to chain text, surround the <element> with brackets [e.g. Form:(param1)]."))
                 .Token("Route:*", T("Route:<key>"), T("The Route value for the specified key."))
                 .Token("Content", T("Content"), T("The request routed Content Item."), "Content")
             ;
