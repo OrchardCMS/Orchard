@@ -1,16 +1,21 @@
 ﻿using System;
+using System.Linq;
 using System.Web;
 using Orchard.ContentManagement;
 using Orchard.Localization;
+using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace Orchard.Tokens.Providers {
     public class RequestTokens : ITokenProvider {
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly IContentManager _contentManager;
+        private static string[] _textChainableTokens;
 
         public RequestTokens(IWorkContextAccessor workContextAccessor, IContentManager contentManager) {
             _workContextAccessor = workContextAccessor;
             _contentManager = contentManager;
+            _textChainableTokens = new string[] { "QueryString", "Form" };
             T = NullLocalizer.Instance;
         }
 
@@ -18,8 +23,8 @@ namespace Orchard.Tokens.Providers {
 
         public void Describe(DescribeContext context) {
             context.For("Request", T("Http Request"), T("Current Http Request tokens."))
-                .Token("QueryString:*", T("QueryString:<element>"), T("The Query String value for the specified element."))
-                .Token("Form:*", T("Form:<element>"), T("The Form value for the specified element."))
+                .Token("QueryString:*", T("QueryString:<element>"), T("The Query String value for the specified element. If you want ot chain text, surround the <element> with brackets [e.g. QueryString:(param1)]."))
+                .Token("Form:*", T("Form:<element>"), T("The Form value for the specified element. If you want ot chain text, surround the <element> with brackets [e.g. Form:(param1)]."))
                 .Token("Route:*", T("Route:<key>"), T("The Route value for the specified key."))
                 .Token("Content", T("Content"), T("The request routed Content Item."), "Content")
             ;
@@ -29,20 +34,30 @@ namespace Orchard.Tokens.Providers {
             if (_workContextAccessor.GetContext().HttpContext == null) {
                 return;
             }
-
+            /* Supported Syntaxes for Request and Form tokens are:
+             * 1. QueryString:(param1) or Form:(param1) 
+             * 2. QueryString:param1 or Form:param1
+             * 3. QueryString:(param1).SomeOtherTextToken or Form:(param1).SomeOtherTextToken
+             * 
+             * If you want to Chain TextTokens you have to use 3rd syntax
+             * the element (here param1) has been surrounded with brackets in order to preserve backward compatibility.
+             */
             context.For("Request", _workContextAccessor.GetContext().HttpContext.Request)
                 .Token(
-                    token => token.StartsWith("QueryString:", StringComparison.OrdinalIgnoreCase) ? token.Substring("QueryString:".Length) : null,
-                    (token, request) => request.QueryString.Get(token)
+                    FilterTokenParam,
+                    (token, request) => {
+                        return request.QueryString.Get(token);
+                    }
                 )
                 .Token(
-                    token => token.StartsWith("Form:", StringComparison.OrdinalIgnoreCase) ? token.Substring("Form:".Length) : null,
+                    FilterTokenParam,
                     (token, request) => request.Form.Get(token)
                 )
                 .Token(
                     token => token.StartsWith("Route:", StringComparison.OrdinalIgnoreCase) ? token.Substring("Route:".Length) : null,
                     (token, request) => GetRouteValue(token, request)
                 )
+                .Chain(FilterChainParam, "Text", (token, request) => request.QueryString.Get(token))
                 .Token("Content",
                     (request) => DisplayText(GetRoutedContentItem(request))
                 )
@@ -98,5 +113,53 @@ namespace Orchard.Tokens.Providers {
 
             return _contentManager.GetItemMetadata(content).DisplayText;
         }
+
+        private static string FilterTokenParam(string token) {
+            string tokenPrefix;
+            int chainIndex, tokenLength;
+            if (token.IndexOf(":") == -1) {
+                return null;
+            }
+            tokenPrefix = token.Substring(0, token.IndexOf(":"));
+            if (!_textChainableTokens.Contains(tokenPrefix, StringComparer.OrdinalIgnoreCase)) {
+                return null;
+            }
+
+            // use ")." as chars combination to discover the end of the parameter
+            chainIndex = token.IndexOf(").") + 1;
+            tokenLength = (tokenPrefix + ":").Length;
+            if (chainIndex == 0) {// ")." has not be found
+                return Regex.Replace(token.Substring(tokenLength), @"[\(|\)]", "");
+            }
+            if (!token.StartsWith((tokenPrefix + ":"), StringComparison.OrdinalIgnoreCase) || chainIndex <= tokenLength) {
+                return null;
+            }
+            return Regex.Replace(token.Substring(tokenLength, chainIndex - tokenLength), @"[\(|\)]", "");
+        }
+        private static Tuple<string, string> FilterChainParam(string token) {
+            string tokenPrefix;
+            int chainIndex, tokenLength;
+
+            if (token.IndexOf(":") == -1) {
+                return null;
+            }
+            tokenPrefix = token.Substring(0, token.IndexOf(":"));
+            if (!_textChainableTokens.Contains(tokenPrefix, StringComparer.OrdinalIgnoreCase)) {
+                return null;
+            }
+
+            // use ")." as chars combination to discover the end of the parameter
+            chainIndex = token.IndexOf(").") + 1;
+            tokenLength = (tokenPrefix + ":").Length;
+            if (chainIndex == 0) { // ")." has not be found
+                return new Tuple<string, string>(Regex.Replace(token.Substring(tokenLength), @"[\(|\)]", ""), token.Length.ToString());
+            }
+            if (!token.StartsWith((tokenPrefix + ":"), StringComparison.OrdinalIgnoreCase) || chainIndex <= tokenLength) {
+                return null;
+            }
+            return new Tuple<string, string>(Regex.Replace(token.Substring(tokenLength, chainIndex - tokenLength), @"[\(|\)]", ""), token.Substring(chainIndex + 1));
+
+        }
     }
+
 }
