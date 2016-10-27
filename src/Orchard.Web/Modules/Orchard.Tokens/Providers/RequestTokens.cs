@@ -23,8 +23,8 @@ namespace Orchard.Tokens.Providers {
 
         public void Describe(DescribeContext context) {
             context.For("Request", T("Http Request"), T("Current Http Request tokens."))
-                .Token("QueryString:*", T("QueryString:<element>"), T("The Query String value for the specified element. If you want to chain text, surround the <element> with brackets [e.g. QueryString:(param1)]."))
-                .Token("Form:*", T("Form:<element>"), T("The Form value for the specified element. If you want to chain text, surround the <element> with brackets [e.g. Form:(param1)]."))
+                .Token("QueryString:*", T("QueryString:<element>"), T("The Query String value for the specified element. To chain text, surround the <element> with parentheses, e.g. 'QueryString:(param1)'."))
+                .Token("Form:*", T("Form:<element>"), T("The Form value for the specified element. To chain text, surround the <element> with parentheses, e.g. 'Form:(param1)'."))
                 .Token("Route:*", T("Route:<key>"), T("The Route value for the specified key."))
                 .Token("Content", T("Content"), T("The request routed Content Item."), "Content")
             ;
@@ -39,8 +39,8 @@ namespace Orchard.Tokens.Providers {
              * 2. QueryString:param1 or Form:param1
              * 3. QueryString:(param1).SomeOtherTextToken or Form:(param1).SomeOtherTextToken
              * 
-             * If you want to Chain TextTokens you have to use 3rd syntax
-             * the element (here param1) has been surrounded with brackets in order to preserve backward compatibility.
+             * If you want to Chain TextTokens you have to use the 3rd syntax
+             * the element, here param1, has been surrounded with parentheses in order to preserve backward compatibility.
              */
             context.For("Request", _workContextAccessor.GetContext().HttpContext.Request)
                 .Token(
