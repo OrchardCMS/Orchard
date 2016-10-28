@@ -6,10 +6,13 @@
 }
 <ul class="nav navbar-nav navbar-right or-icons-nav">
     <li class="dropdown">
-        <a href="#" data-toggle="dropdown" role="button" aria-expanded="true" class="dropdown-toggle"><span class="icon s7-flag"></span><span class="angle-down s7-angle-down"></span></a>
+        <a href="#" data-toggle="dropdown" role="button" aria-expanded="true" class="dropdown-toggle">
+            <span>@currentCulture</span>
+            <span class="angle-down s7-angle-down"></span>
+        </a>
         <ul id="culture-selection" class="dropdown-menu or-connections">
             <li>
-                <div class="title">Cultures<span class="badge">2</span></div>
+                <div class="title">Cultures<span class="badge">@supportedCultures.Count</span></div>
                 <div class="list">
                     <div class="or-scroller nano">
                         <div class="content nano-content">
@@ -33,7 +36,7 @@
                     </div>
                 </div>
                 <div class="footer">
-                    @Html.ActionLink(T("View all cultures"), "Culture", new { Controller = "Admin", area = "Settings" })
+                    @Html.ActionLink(T("Manage cultures"), "Culture", new { Controller = "Admin", area = "Settings" })
                 </div>
             <li>
         </ul>
