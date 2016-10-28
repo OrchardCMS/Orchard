@@ -6,6 +6,11 @@
         unicode-bidi: bidi-override;
     }
 
+    .flag {
+        margin-right: unset;
+        margin-left: 3px;
+    }
+
     .text-right {
         text-align: left;
     }
@@ -129,15 +134,16 @@
             padding-left: 20px;
 
             .navbar-nav {
-
-                > li {
-                    &.dropdown {
-                        .dropdown-menu {
-                            &:after {
-                                right: unset;
-                                left: 42px;
-                                margin-right: unset;
-                                margin-left: -6px;
+                &.navbar-first {
+                    > li {
+                        &.dropdown {
+                            .dropdown-menu {
+                                &:after {
+                                    right: unset;
+                                    left: 42px;
+                                    margin-right: unset;
+                                    margin-left: -6px;
+                                }
                             }
                         }
                     }
@@ -162,6 +168,24 @@
                                     margin-left: unset;
                                     margin-right: -6px;
                                 }
+                            }
+                        }
+                    }
+                }
+            }
+
+            .or-user-nav > li.dropdown .dropdown-menu li a .icon
+            {
+                margin-right: unset;
+                margin-left: 6px;
+            }
+
+            .or-icons-nav {
+                > li.dropdown {
+                    .or-connections {
+                        .nano-content {
+                            ul {
+                                padding-right: 17px; // Some issue with nano scroller in RTL causes a wrong offset of 17px, so compensating here.
                             }
                         }
                     }

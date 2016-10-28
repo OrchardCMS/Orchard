@@ -1,7 +1,9 @@
 .flag {
-	width: 16px;
-	height: 11px;
-	background:url(images/flags.png) no-repeat
+    width: 16px;
+    height: 11px;
+    display: inline-block;
+    margin-right: 3px;
+    background:url(images/flags.png) no-repeat;
 }
 
 .flag.flag-ad {background-position: -16px 0}

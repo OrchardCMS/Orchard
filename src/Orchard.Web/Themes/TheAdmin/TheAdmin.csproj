@@ -621,9 +621,6 @@
     <Content Include="Fonts\Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\AdminCultureSelector.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Assets\Less\orchard-footer.less" />
   </ItemGroup>
   <ItemGroup>

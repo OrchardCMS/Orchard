@@ -5,17 +5,17 @@
 <ul class="nav navbar-nav or-nav-right">
     @foreach (var firstLevelMenuItem in Model.Items) {
 
-                IEnumerable<dynamic> secondLevelMenuItems = firstLevelMenuItem;
-                string sectionHeaderText = firstLevelMenuItem.Text.Text;
+        IEnumerable<dynamic> secondLevelMenuItems = firstLevelMenuItem;
+        string sectionHeaderText = firstLevelMenuItem.Text.Text;
 
-                if (firstLevelMenuItem.Selected) {
-                    firstLevelMenuItem.Classes.Add("active");
-                }
-                if (firstLevelMenuItem.Items.Count > 0) {
-                    firstLevelMenuItem.Classes.Add("dropdown");
-                }
+        if (firstLevelMenuItem.Selected) {
+            firstLevelMenuItem.Classes.Add("active");
+        }
+        if (firstLevelMenuItem.Items.Count > 0) {
+            firstLevelMenuItem.Classes.Add("dropdown");
+        }
 
-                var firstLevelTag = Tag(firstLevelMenuItem, "li");
+        var firstLevelTag = Tag(firstLevelMenuItem, "li");
         @firstLevelTag.StartElement
 
         if (secondLevelMenuItems.Any()) {
@@ -26,8 +26,8 @@
                     var secondLevelUrl = secondLevelMenuItem.Href;
 
                     @secondLevelTag.StartElement
-                    <a href="@secondLevelUrl">@secondLevelMenuItem.Text.Text</a>
-                            @secondLevelTag.EndElement
+                        <a href="@secondLevelUrl">@secondLevelMenuItem.Text</a>
+                    @secondLevelTag.EndElement
                 }
             </ul>
         }
