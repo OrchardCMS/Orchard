@@ -174,6 +174,8 @@ namespace Orchard.MediaLibrary.Services {
 
             using (var stream = storageFile.OpenRead()) {
                 var mediaFactory = GetMediaFactory(stream, mimeType, contentType);
+                if (mediaFactory == null)
+                    throw new Exception(T("No media factory available to handle this resource.").Text);
                 var mediaPart = mediaFactory.CreateMedia(stream, mediaFile.Name, mimeType, contentType);
                 if (mediaPart != null) {
                     mediaPart.FolderPath = relativePath;
@@ -379,6 +381,8 @@ namespace Orchard.MediaLibrary.Services {
             Argument.ThrowIfNullOrEmpty(filename, "filename");
             Argument.ThrowIfNullOrEmpty(newFilename, "newFilename");
 
+            if (!_storageProvider.FolderExists(newPath))
+                _storageProvider.TryCreateFolder(newPath);
             _storageProvider.RenameFile(_storageProvider.Combine(currentPath, filename), _storageProvider.Combine(newPath, newFilename));
         }
 

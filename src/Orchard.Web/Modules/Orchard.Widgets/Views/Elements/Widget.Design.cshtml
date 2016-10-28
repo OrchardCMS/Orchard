@@ -4,7 +4,7 @@
 }
 <div class="layout-placeholder">
     @if (widget != null) {
-        @String.Format("{0} - {1}", Html.ItemDisplayText(widget), widget.TypeDefinition.DisplayName)
+        @T("{0} - {1}", Html.ItemDisplayText(widget), widget.TypeDefinition.DisplayName)
     }
     else {
         @T("Widget Not Found");
