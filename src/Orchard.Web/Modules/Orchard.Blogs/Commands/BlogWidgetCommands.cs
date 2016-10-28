@@ -1,36 +1,24 @@
 ﻿using System;
-using System.Linq;
 using Orchard.Blogs.Models;
 using Orchard.Blogs.Services;
 using Orchard.Commands;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Aspects;
-using Orchard.Core.Common.Models;
-using Orchard.Security;
-using Orchard.Settings;
-using Orchard.Widgets.Models;
 using Orchard.Widgets.Services;
 
 namespace Orchard.Blogs.Commands {
     public class BlogWidgetCommands : DefaultOrchardCommandHandler {
-        private readonly IWidgetsService _widgetsService;
+        private readonly IWidgetCommandsService _widgetCommandsService;
         private readonly IBlogService _blogService;
-        private readonly ISiteService _siteService;
-        private readonly IMembershipService _membershipService;
         private readonly IContentManager _contentManager;
 
         private BlogPart blog;
 
         public BlogWidgetCommands(
-            IWidgetsService widgetsService, 
+            IWidgetCommandsService widgetCommandsService, 
             IBlogService blogService,
-            ISiteService siteService, 
-            IMembershipService membershipService,
             IContentManager contentManager) {
-            _widgetsService = widgetsService;
+            _widgetCommandsService = widgetCommandsService;
             _blogService = blogService;
-            _siteService = siteService;
-            _membershipService = membershipService;
             _contentManager = contentManager;
 
             RenderTitle = true;
@@ -75,11 +63,21 @@ namespace Orchard.Blogs.Commands {
         public void CreateRecentBlogPostsWidget() {
             var type = "RecentBlogPosts";
 
-            var widget = CreateStandardWidget(type);
+            // Check any custom parameters that could cause creating the widget to fail.
+            blog = GetBlog(BlogId, BlogPath);
+            if (blog == null) {
+                Context.Output.WriteLine(T("Creating {0} widget failed: blog was not found.", type));
+                return;
+            }
+
+            // Create the widget using the standard parameters.
+            var widget = _widgetCommandsService.CreateBaseWidget(
+                Context, type, Title, Name, Zone, Position, Layer, Identity, RenderTitle, Owner, null, false, null);
             if (widget == null) {
                 return;
             }
 
+            // Publish the successfully created widget.
             widget.As<RecentBlogPostsPart>().BlogId = blog.Id;
 
             // Setting count to 0 means all posts. It's an optional parameter and defaults to 5.
@@ -90,7 +88,8 @@ namespace Orchard.Blogs.Commands {
                 }
             }
 
-            _contentManager.Publish(widget.ContentItem);
+            // Publish the successfully created widget.
+            _widgetCommandsService.Publish(widget);
             Context.Output.WriteLine(T("{0} widget created successfully.", type).Text);
         }
 
@@ -100,62 +99,26 @@ namespace Orchard.Blogs.Commands {
         public void CreateBlogArchivesWidget() {
             var type = "BlogArchives";
 
-            var widget = CreateStandardWidget(type);
+            // Check any custom parameters that could cause creating the widget to fail.
+            blog = GetBlog(BlogId, BlogPath);
+            if (blog == null) {
+                Context.Output.WriteLine(T("Creating {0} widget failed: blog was not found.", type));
+                return;
+            }
+
+            // Create the widget using the standard parameters.
+            var widget = _widgetCommandsService.CreateBaseWidget(
+                Context, type, Title, Name, Zone, Position, Layer, Identity, RenderTitle, Owner, null, false, null);
             if (widget == null) {
                 return;
             }
 
+            // Set the custom parameters.
             widget.As<BlogArchivesPart>().BlogId = blog.Id;
 
-            _contentManager.Publish(widget.ContentItem);
+            // Publish the successfully created widget.
+            _widgetCommandsService.Publish(widget);
             Context.Output.WriteLine(T("{0} widget created successfully.", type).Text);
-        }
-
-        private WidgetPart CreateStandardWidget(string type) {
-            var widgetTypeNames = _widgetsService.GetWidgetTypeNames().ToList();
-            if (!widgetTypeNames.Contains(type)) {
-                Context.Output.WriteLine(T("Creating widget failed: type {0} was not found. Supported widget types are: {1}.",
-                    type,
-                    string.Join(" ", widgetTypeNames)));
-                return null;
-            }
-
-            var layer = GetLayer(Layer);
-            if (layer == null) {
-                Context.Output.WriteLine(T("Creating {0} widget failed: layer {1} was not found.", type, Layer));
-                return null;
-            }
-
-            blog = GetBlog(BlogId, BlogPath);
-            if (blog == null) {
-                Context.Output.WriteLine(T("Creating {0} widget failed: blog was not found.", type));
-                return null;
-            }
-
-            var widget = _widgetsService.CreateWidget(layer.ContentItem.Id, type, T(Title).Text, Position, Zone);
-
-            if (!String.IsNullOrWhiteSpace(Name)) {
-                widget.Name = Name.Trim();
-            }
-
-            widget.RenderTitle = RenderTitle;
-
-            if (String.IsNullOrEmpty(Owner)) {
-                Owner = _siteService.GetSiteSettings().SuperUser;
-            }
-            var owner = _membershipService.GetUser(Owner);
-            widget.As<ICommonPart>().Owner = owner;
-
-            if (widget.Has<IdentityPart>() && !String.IsNullOrEmpty(Identity)) {
-                widget.As<IdentityPart>().Identifier = Identity;
-            }
-
-            return widget;
-        }
-
-        private LayerPart GetLayer(string layer) {
-            var layers = _widgetsService.GetLayers();
-            return layers.FirstOrDefault(layerPart => String.Equals(layerPart.Name, layer, StringComparison.OrdinalIgnoreCase));
         }
 
         private BlogPart GetBlog(int blogId, string blogPath) {
