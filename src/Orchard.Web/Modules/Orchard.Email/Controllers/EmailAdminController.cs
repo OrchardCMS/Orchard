@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Web.Hosting;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.Email.Models;
@@ -56,7 +57,8 @@ namespace Orchard.Email.Controllers {
                         {"Body", testSettings.Body},
                         {"ReplyTo", testSettings.ReplyTo},
                         {"Bcc", testSettings.Bcc},
-                        {"CC", testSettings.Cc}
+                        {"CC", testSettings.Cc},
+                        { "Attachments", new List<string>() { HostingEnvironment.MapPath("~/Media/OrchardLogo.png") } }
                     });
                 }
 
@@ -64,10 +66,10 @@ namespace Orchard.Email.Controllers {
                     return Json(new { error = fakeLogger.Message });
                 }
 
-                return Json(new {status = T("Message sent.").Text});
+                return Json(new { status = T("Message sent.").Text });
             }
             catch (Exception e) {
-                return Json(new {error = e.Message});
+                return Json(new { error = e.Message });
             }
             finally {
                 var smtpChannelComponent = _smtpChannel as Component;
