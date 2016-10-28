@@ -22,6 +22,10 @@
     margin-right: 4px;
 }
 
+.dir-rtl .media-library-picker ul li {
+    float: right;
+}
+
 .media-library-picker {
     margin-bottom: 10px;
 }
