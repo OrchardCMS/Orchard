@@ -69,7 +69,7 @@ namespace Orchard.Core.Common.Drivers {
                 field.Value = viewModel.Text;
 
                 if (settings.Required && String.IsNullOrWhiteSpace(field.Value)) {
-                    updater.AddModelError("Text", T("The field {0} is mandatory", T(field.DisplayName)));
+                    updater.AddModelError("Text", T("The {0} field is required.", T(field.DisplayName)));
                 }
             }
 

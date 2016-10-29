@@ -51,13 +51,13 @@ namespace Orchard.Fields.Drivers {
                 var settings = field.PartFieldDefinition.Settings.GetModel<LinkFieldSettings>();
 
                 if (settings.Required && String.IsNullOrWhiteSpace(field.Value)) {
-                    updater.AddModelError(GetPrefix(field, part), T("Url is required for {0}", field.DisplayName));
+                    updater.AddModelError(GetPrefix(field, part), T("Url is required for {0}.", T(field.DisplayName)));
                 }
                 else if (!String.IsNullOrWhiteSpace(field.Value) && !Uri.IsWellFormedUriString(field.Value, UriKind.RelativeOrAbsolute)) {
                     updater.AddModelError(GetPrefix(field, part), T("{0} is an invalid url.", field.Value));
                 }
                 else if (settings.LinkTextMode == LinkTextMode.Required && String.IsNullOrWhiteSpace(field.Text)) {
-                    updater.AddModelError(GetPrefix(field, part), T("Text is required for {0}.", field.DisplayName));
+                    updater.AddModelError(GetPrefix(field, part), T("Text is required for {0}.", T(field.DisplayName)));
                 }
             }
 

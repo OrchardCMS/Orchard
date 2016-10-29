@@ -17,7 +17,7 @@ namespace Orchard.MediaLibrary.Controllers {
         private readonly IMediaLibraryService _mediaLibraryService;
 
         public FolderController(
-            IOrchardServices services, 
+            IOrchardServices services,
             IMediaLibraryService mediaManagerService
             ) {
             _mediaLibraryService = mediaManagerService;
@@ -111,7 +111,7 @@ namespace Orchard.MediaLibrary.Controllers {
             }
 
             // Shouldn't be able to rename the root folder
-            if(IsRootFolder(viewModel.FolderPath)) {
+            if (IsRootFolder(viewModel.FolderPath)) {
                 return new HttpUnauthorizedResult();
             }
 
@@ -179,7 +179,7 @@ namespace Orchard.MediaLibrary.Controllers {
 
         private bool IsRootFolder(string folderPath) {
             var rootMediaFolder = _mediaLibraryService.GetRootMediaFolder();
-            
+
             return rootMediaFolder == null ?
                 string.IsNullOrEmpty(folderPath) :
                 string.Equals(rootMediaFolder.MediaPath, folderPath, StringComparison.OrdinalIgnoreCase);

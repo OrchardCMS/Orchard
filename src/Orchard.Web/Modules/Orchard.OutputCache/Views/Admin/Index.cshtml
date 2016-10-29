@@ -46,7 +46,13 @@
         @Html.TextBoxFor(m => m.VaryByRequestHeaders, new { @class = "text medium" })
         <span class="hint">@T("When defined, using comma separated values, sets caching to vary by the specified request headers.")</span>
     </fieldset>
-    
+
+    <fieldset>
+        <label>@T("Vary by Request Cookies")</label>
+        @Html.TextBoxFor(m => m.VaryByRequestCookies, new { @class = "text medium" })
+        <span class="hint">@T("When defined, using comma separated values, sets caching to vary by the specified request cookies.")</span>
+    </fieldset>
+
     <fieldset>
         <label>@T("Ignored URLs")</label>
         @Html.TextAreaFor(m => m.IgnoredUrls, new { @class = "text medium" })

@@ -110,11 +110,11 @@ namespace Orchard.Core.Contents.Controllers {
                     break;
             }
 
-            if(!String.IsNullOrWhiteSpace(model.Options.SelectedCulture)) {
+            if (!String.IsNullOrWhiteSpace(model.Options.SelectedCulture)) {
                 query = _cultureFilter.FilterCulture(query, model.Options.SelectedCulture);
             }
 
-            if(model.Options.ContentsStatus == ContentsStatus.Owner) {
+            if (model.Options.ContentsStatus == ContentsStatus.Owner) {
                 query = query.Where<CommonPartRecord>(cr => cr.OwnerId == Services.WorkContext.CurrentUser.Id);
             }
 
@@ -240,6 +240,10 @@ namespace Orchard.Core.Contents.Controllers {
         public ActionResult Create(string id, int? containerId) {
             if (string.IsNullOrEmpty(id))
                 return CreatableTypeList(containerId);
+
+            if (_contentDefinitionManager.GetTypeDefinition(id) == null) {
+                return RedirectToAction("Create", new { id = "" });
+            }
 
             var contentItem = _contentManager.New(id);
 
@@ -413,8 +417,8 @@ namespace Orchard.Core.Contents.Controllers {
             if (contentItem != null) {
                 _contentManager.Remove(contentItem);
                 Services.Notifier.Success(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName)
-                    ? T("That content has been removed.")
-                    : T("That {0} has been removed.", contentItem.TypeDefinition.DisplayName));
+                    ? T("The content has been removed.")
+                    : T("The {0} has been removed.", contentItem.TypeDefinition.DisplayName));
             }
 
             return this.RedirectLocal(returnUrl, () => RedirectToAction("List"));
@@ -431,7 +435,7 @@ namespace Orchard.Core.Contents.Controllers {
 
             _contentManager.Publish(contentItem);
 
-            Services.Notifier.Success(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName) ? T("That content has been published.") : T("That {0} has been published.", contentItem.TypeDefinition.DisplayName));
+            Services.Notifier.Success(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName) ? T("The content has been published.") : T("The {0} has been published.", contentItem.TypeDefinition.DisplayName));
 
             return this.RedirectLocal(returnUrl, () => RedirectToAction("List"));
         }
@@ -447,7 +451,7 @@ namespace Orchard.Core.Contents.Controllers {
 
             _contentManager.Unpublish(contentItem);
 
-            Services.Notifier.Success(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName) ? T("That content has been unpublished.") : T("That {0} has been unpublished.", contentItem.TypeDefinition.DisplayName));
+            Services.Notifier.Success(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName) ? T("The content has been unpublished.") : T("The {0} has been unpublished.", contentItem.TypeDefinition.DisplayName));
 
             return this.RedirectLocal(returnUrl, () => RedirectToAction("List"));
         }
