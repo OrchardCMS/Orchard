@@ -86,6 +86,20 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="SimpleBlog\Assets.json" />
+    <Content Include="SimpleBlog\Assets\Styles.less" />
+    <Content Include="SimpleBlog\Styles\default.css" />
+    <Content Include="SimpleBlog\Styles\orchard.css" />
+    <Content Include="SimpleBlog\Styles\site.css" />
+    <Content Include="SimpleBlog\Web.config" />
+    <Content Include="SimpleBlog\Scripts\Web.config" />
+    <Content Include="SimpleBlog\Styles\Web.config" />
+    <Content Include="SimpleBlog\Content\Web.config" />
+    <Content Include="SimpleBlog\Theme.txt" />
+    <Content Include="SimpleBlog\Theme.png" />
+    <Content Include="SimpleBlog\Placement.info" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -206,6 +220,16 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="SimpleBlog\Views\Content-BlogPost.cshtml" />
+    <Content Include="SimpleBlog\Views\Content-BlogPost.Summary.cshtml" />
+    <Content Include="SimpleBlog\Views\Content-Link.cshtml" />
+    <Content Include="SimpleBlog\Views\Layout.cshtml" />
+    <Content Include="SimpleBlog\Views\Parts.Common.Body.Summary.cshtml" />
+    <Content Include="SimpleBlog\Views\Parts.Common.Metadata.cshtml" />
+    <Content Include="SimpleBlog\Views\Parts.Common.Metadata.Summary.cshtml" />
+    <Content Include="SimpleBlog\Views\Parts.Tags.ShowTags.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

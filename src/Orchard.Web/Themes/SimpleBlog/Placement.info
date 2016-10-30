@@ -1,0 +1,28 @@
+<Placement>
+
+  <!-- hide the blog description, title and metadata -->
+  <Match ContentType="Blog">
+      <Place Parts_RoutableTitle="-" Parts_Common_Metadata="-" Parts_Tags_ShowTags="Body:after.7" />
+  </Match>
+
+  <!-- hide page metadata -->
+  <Match ContentType="Page">
+      <Place Parts_RoutableTitle="-" Parts_Common_Metadata="-" />
+  </Match>
+
+  <!-- hide tags from summary view -->
+  <Match DisplayType="Summary">
+    <Place Parts_Tags_ShowTags="-" Parts_Comments_Count="-" Parts_Common_Metadata="-" Parts_ImageGallery="-" />
+  </Match>
+
+  <Match DisplayType="Detail">
+    <Place Parts_Tags_ShowTags="Content:before" Parts_ImageGallery="Content:9" />
+  </Match>
+
+  <!-- hide linkmetadata -->
+  <Match ContentType="Link">
+      <Place Parts_RoutableTitle="-" Parts_Common_Metadata="-" Parts_Common_Metadata_Summary="-"  />
+  </Match>
+
+</Placement>
+

@@ -1,0 +1,242 @@
+/*  Color Palette
+**************************************************************
+
+Background: #FFFFFF
+Borders: #333333
+Text: #434343
+Secondary Text: #999999
+Main Accent: #3399CC
+Links: #3399CC
+*/
+
+
+
+/* reset styles
+***************************************************************/
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td
+{
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    font-weight: inherit;
+    font-style: inherit;
+    font-size: 100%;
+    font-family: inherit;
+    vertical-align: baseline;
+}
+
+:focus { outline: 0; }
+
+body
+{
+	line-height: 1;
+	color: black;
+	background: white;
+}
+
+ol, ul { list-style: none; }
+
+table
+{
+	border-collapse: separate;
+	border-spacing: 0; 
+}
+
+caption, th, td 
+{
+	text-align: left;
+	font-weight: normal; 
+}
+
+blockquote:before, blockquote:after, q:before, q:after { content: ""; }
+
+blockquote, q { quotes: "" ""; }
+
+
+
+
+body
+{ 
+	font-size: 15px;
+  	color: #434343; 
+  	background: #FFFFFF;
+  	font-family: Georgia,Times,'Times New Roman',serif;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6
+{
+	font-family: Tahoma, "Helvetica Neue", Arial, Helvetica, sans-serif;
+	font-weight: normal;
+	margin: 10px 0;
+	padding: 10px 0;
+}
+
+h1 { font-size: 300%; }
+h2 { font-size: 185%; }
+h3 { font-size: 165%; }
+h4 { font-size: 150%; }
+h5 { font-size: 130%; }
+h6 { font-size: 120%; }
+
+h1 img, h2 img, h3 img, h4 img, h5 img, h6 img { margin: 0; }
+
+h1.highlight, h2.highlight, h3.highlight, h4.highlight, h5.highlight, h6.highlight
+{
+	display: inline-block;
+	padding: 10px 5px; 
+}
+
+p
+{
+	margin: 0 0 10px;
+	line-height: 25px; 
+}
+
+a:focus, a:hover { text-decoration: underline; }
+
+a
+{
+	color: #5F97AF;
+	text-decoration: none; 
+}
+
+blockquote
+{
+	margin: 25px;
+	color: #666666;
+	font-style: italic; 
+}
+
+strong { font-weight: bold; }
+
+em, i {font-style: italic; }
+
+li ul, li ol { margin:0 25px; }
+
+ul, ol
+{
+	margin: 25px; 
+	line-height: 30px; 
+}
+
+ul { list-style-type: disc; }
+ol { list-style-type: decimal; }
+
+
+/* Form elements
+***************************************************************/
+
+form
+{
+	margin: 0; 
+	padding: 0; 
+}
+
+legend 
+{
+	font-size: 20px;
+	font-weight: bold;
+	border:none; 
+}
+
+fieldset {
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #E4E4E4;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+}
+
+fieldset p
+{
+	clear: both;
+}
+
+label
+{
+	font-weight: normal;
+	display: block;
+	float: left;
+	width: 150px;
+	padding: 0 10px 0 0;
+}
+
+input[type="text"], input[type="password"] 
+{
+	display: block;
+	padding: 0.3em;
+}
+
+input[type="submit"], input[type="button"], button, .button, .button:link, .button:visited
+{
+	padding: 2px 15px;
+	text-align:center;
+	border: 1px solid #999999;
+	color:#333333;
+	cursor:pointer;
+	background: #F5F5F5;
+	background: -webkit-gradient(linear, left top, left bottom, from(#F5F5F5), to(#CBCBCB));
+	background: -moz-linear-gradient(top , #F5F5F5, #CBCBCB);
+	border-radius: 4px;
+	margin: 0 0 0 160px;
+}
+
+input[type="submit"]:hover, input[type="button"]:hover, input[type="submit"]:active, input[type="button"]:active, input[type="submit"]:focus, input[type="button"]:focus, button:hover, .button:hover, button:active, .button:active, button:focus, .button:focus
+{
+	text-decoration:none; 
+	background: #EBEBEB;
+	background: -webkit-gradient(linear, left top, left bottom, from(#E1E1E1), to(#EBEBEB));
+	background:-moz-linear-gradient(top , #E1E1E1, #EBEBEB);
+	border-radius: 4px;
+}
+
+fieldset ol
+{
+	list-style-type: none; 
+	padding: 0; 
+	margin: 0; 
+}
+
+fieldset ol li  { margin: 0 0 6px 0; }
+
+/* utility classes
+***************************************************************/
+
+.small
+{ 
+	font-size: 50%; 
+}
+
+.large
+{ 
+	font-size: 125%; 
+}
+
+.hide{ display: none; }
+
+.quiet { color: #999999; }
+
+.loud { color:  #DF591E;; }
+
+.highlight
+{
+	background: #3399CC;
+	color: #ffffff;
+}
+
+.removed
+{
+	text-decoration: line-through;
+}
+
+.emphasis { font-style: italic; }
+
+
+/* HTML5 elements
+***************************************************************/
+
+header, footer, aside, nav, article { display: block; }

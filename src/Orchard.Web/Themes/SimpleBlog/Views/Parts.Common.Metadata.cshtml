@@ -1,0 +1,17 @@
+﻿@{
+
+var date = Model.ContentPart.PublishedUtc.Date;
+
+}
+
+<div class="published">
+    <span class="month">
+        @date.ToString("MMM")
+    </span>
+    <span class="day">
+        @date.ToString("dd")
+    </span>
+    <span class="year">
+        @date.ToString("yyyy")
+    </span>
+</div>
