@@ -64,20 +64,18 @@ namespace Orchard.Environment {
                 foreach (var middleware in orderedMiddlewares) {
                     middleware.Configure(appBuilder);
                 }
-            }
 
-            // Register the Orchard middleware after all others.
-            appBuilder.UseOrchard();
+                // Register the Orchard middleware after all others.
+                appBuilder.UseOrchard();
 
-            var pipeline = appBuilder.Build();
-            var allRoutes = new List<RouteDescriptor>();
-            allRoutes.AddRange(_routeProviders.SelectMany(provider => provider.GetRoutes()));
-            allRoutes.AddRange(_httpRouteProviders.SelectMany(provider => provider.GetRoutes()));
+                var pipeline = appBuilder.Build();
+                var allRoutes = new List<RouteDescriptor>();
+                allRoutes.AddRange(_routeProviders.SelectMany(provider => provider.GetRoutes()));
+                allRoutes.AddRange(_httpRouteProviders.SelectMany(provider => provider.GetRoutes()));
 
-            _routePublisher.Publish(allRoutes, pipeline);
-            _modelBinderPublisher.Publish(_modelBinderProviders.SelectMany(provider => provider.GetModelBinders()));
+                _routePublisher.Publish(allRoutes, pipeline);
+                _modelBinderPublisher.Publish(_modelBinderProviders.SelectMany(provider => provider.GetModelBinders()));
 
-            using (var scope = _workContextAccessor.CreateWorkContextScope()) {
                 using (var events = scope.Resolve<Owned<IOrchardShellEvents>>()) {
                     events.Value.Activated();
                 }
