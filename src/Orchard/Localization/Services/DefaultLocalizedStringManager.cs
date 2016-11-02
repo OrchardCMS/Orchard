@@ -18,6 +18,7 @@ namespace Orchard.Localization.Services {
         private readonly ShellSettings _shellSettings;
         private readonly ISignals _signals;
         private readonly ShellDescriptor _shellDescriptor;
+        private readonly IWorkContextAccessor _workContextAccessor;
 
         const string CoreLocalizationFilePathFormat = "~/Core/App_Data/Localization/{0}/orchard.core.po";
         const string ModulesLocalizationFilePathFormat = "{0}/App_Data/Localization/{1}/orchard.module.po";
@@ -32,7 +33,8 @@ namespace Orchard.Localization.Services {
             ILocalizationStreamParser locationStreamParser,
             ShellSettings shellSettings,
             ISignals signals,
-            ShellDescriptor shellDescriptor) {
+            ShellDescriptor shellDescriptor,
+            IWorkContextAccessor workContextAccessor) {
             _webSiteFolder = webSiteFolder;
             _extensionManager = extensionManager;
             _cacheManager = cacheManager;
@@ -40,6 +42,7 @@ namespace Orchard.Localization.Services {
             _shellSettings = shellSettings;
             _signals = signals;
             _shellDescriptor = shellDescriptor;
+            _workContextAccessor = workContextAccessor;
 
             Logger = NullLogger.Instance;
         }
@@ -118,68 +121,47 @@ namespace Orchard.Localization.Services {
         private IDictionary<string, string> LoadTranslationsForCulture(string culture, AcquireContext<string> context) {
             IDictionary<string, string> translations = new Dictionary<string, string>();
             string corePath = string.Format(CoreLocalizationFilePathFormat, culture);
-            string text = _webSiteFolder.ReadFile(corePath);
-            if (text != null) {
-                _localizationStreamParser.ParseLocalizationStream(text, translations, false);
-                if (!DisableMonitoring) {
-                    Logger.Debug("Monitoring virtual path \"{0}\"", corePath);
-                    context.Monitor(_webSiteFolder.WhenPathChanges(corePath));
-                }
-            }
+            LoadTranslationsFromLanguageFilePath(corePath, translations, context, false);
 
             foreach (var module in _extensionManager.AvailableExtensions()) {
                 if (DefaultExtensionTypes.IsModule(module.ExtensionType)) {
                     string modulePath = string.Format(ModulesLocalizationFilePathFormat, module.VirtualPath, culture);
-                    text = _webSiteFolder.ReadFile(modulePath);
-                    if (text != null) {
-                        _localizationStreamParser.ParseLocalizationStream(text, translations, true);
-
-                        if (!DisableMonitoring) {
-                            Logger.Debug("Monitoring virtual path \"{0}\"", modulePath);
-                            context.Monitor(_webSiteFolder.WhenPathChanges(modulePath));
-                        }
-                    }
+                    LoadTranslationsFromLanguageFilePath(modulePath, translations, context, true);
                 }
             }
 
-            foreach (var theme in _extensionManager.AvailableExtensions()) {
-                if (DefaultExtensionTypes.IsTheme(theme.ExtensionType) && _shellDescriptor.Features.Any(x => x.Name == theme.Id))
-                {
-
+            var currentTheme = _workContextAccessor.GetContext().CurrentTheme;
+            var inactiveThemes = _extensionManager.AvailableExtensions().Where(theme=> theme != currentTheme);
+            foreach (var theme in inactiveThemes) {
+                if (DefaultExtensionTypes.IsTheme(theme.ExtensionType) && _shellDescriptor.Features.Any(x => x.Name == theme.Id)){
                     string themePath = string.Format(ThemesLocalizationFilePathFormat, theme.VirtualPath, culture);
-                    text = _webSiteFolder.ReadFile(themePath);
-                    if (text != null) {
-                        _localizationStreamParser.ParseLocalizationStream(text, translations, true);
-
-                        if (!DisableMonitoring) {
-                            Logger.Debug("Monitoring virtual path \"{0}\"", themePath);
-                            context.Monitor(_webSiteFolder.WhenPathChanges(themePath));
-                        }
-                    }
+                    LoadTranslationsFromLanguageFilePath(themePath, translations, context, true);
                 }
             }
+
+            string currentThemePath = string.Format(ThemesLocalizationFilePathFormat, currentTheme.VirtualPath, culture);
+            LoadTranslationsFromLanguageFilePath(currentThemePath, translations, context, true);
 
             string rootPath = string.Format(RootLocalizationFilePathFormat, culture);
-            text = _webSiteFolder.ReadFile(rootPath);
-            if (text != null) {
-                _localizationStreamParser.ParseLocalizationStream(text, translations, true);
-                if (!DisableMonitoring) {
-                    Logger.Debug("Monitoring virtual path \"{0}\"", rootPath);
-                    context.Monitor(_webSiteFolder.WhenPathChanges(rootPath));
-                }
-            }
+            LoadTranslationsFromLanguageFilePath(rootPath, translations, context, true);
 
             string tenantPath = string.Format(TenantLocalizationFilePathFormat, _shellSettings.Name, culture);
-            text = _webSiteFolder.ReadFile(tenantPath);
-            if (text != null) {
-                _localizationStreamParser.ParseLocalizationStream(text, translations, true);
-                if (!DisableMonitoring) {
-                    Logger.Debug("Monitoring virtual path \"{0}\"", tenantPath);
-                    context.Monitor(_webSiteFolder.WhenPathChanges(tenantPath));
-                }
-            }
+            LoadTranslationsFromLanguageFilePath(tenantPath, translations, context, true);
 
             return translations;
+        }
+
+        private void LoadTranslationsFromLanguageFilePath(string languageFilePath, IDictionary<string,string> translations, AcquireContext<string> context, bool overwriteExistingKeys) {
+            var text = _webSiteFolder.ReadFile(languageFilePath);
+
+            if (text != null){
+                _localizationStreamParser.ParseLocalizationStream(text, translations, overwriteExistingKeys);
+
+                if (!DisableMonitoring){
+                    Logger.Debug("Monitoring virtual path \"{0}\"", languageFilePath);
+                    context.Monitor(_webSiteFolder.WhenPathChanges(languageFilePath));
+                }
+            }
         }
 
         class CultureDictionary {
