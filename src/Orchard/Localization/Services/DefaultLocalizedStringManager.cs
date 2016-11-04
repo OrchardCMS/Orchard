@@ -8,6 +8,7 @@ using Orchard.FileSystems.WebSite;
 using Orchard.Logging;
 using Orchard.Environment.Descriptor.Models;
 using System.Linq;
+using Orchard.ContentManagement;
 
 namespace Orchard.Localization.Services {
     public class DefaultLocalizedStringManager : ILocalizedStringManager {
@@ -130,8 +131,11 @@ namespace Orchard.Localization.Services {
                 }
             }
 
-            var currentTheme = _workContextAccessor.GetContext().CurrentTheme;
-            var inactiveThemes = _extensionManager.AvailableExtensions().Where(theme=> theme != currentTheme);
+            var sitePart = _workContextAccessor.GetContext().CurrentSite as IContent;
+            var themePart = sitePart.ContentItem.Parts.FirstOrDefault(e => e.PartDefinition.Name == "ThemeSiteSettingsPart");
+            var currentThemeName = themePart?.Retrieve<string>("CurrentThemeName");
+
+            var inactiveThemes = _extensionManager.AvailableExtensions().Where(theme=> theme.Id != currentThemeName);
             foreach (var theme in inactiveThemes) {
                 if (DefaultExtensionTypes.IsTheme(theme.ExtensionType) && _shellDescriptor.Features.Any(x => x.Name == theme.Id)){
                     string themePath = string.Format(ThemesLocalizationFilePathFormat, theme.VirtualPath, culture);
@@ -139,6 +143,7 @@ namespace Orchard.Localization.Services {
                 }
             }
 
+            var currentTheme = _extensionManager.AvailableExtensions().First(theme => theme.Id == currentThemeName && DefaultExtensionTypes.IsTheme(theme.ExtensionType));
             string currentThemePath = string.Format(ThemesLocalizationFilePathFormat, currentTheme.VirtualPath, culture);
             LoadTranslationsFromLanguageFilePath(currentThemePath, translations, context, true);
 
