@@ -129,12 +129,12 @@ namespace Orchard.Tokens.Providers {
             chainIndex = token.IndexOf(").") + 1;
             tokenLength = (tokenPrefix + ":").Length;
             if (chainIndex == 0) {// ")." has not be found
-                return Regex.Replace(token.Substring(tokenLength), @"[\(|\)]", "");
+                return token.Substring(tokenLength).Trim(new char[] { '(', ')' });
             }
             if (!token.StartsWith((tokenPrefix + ":"), StringComparison.OrdinalIgnoreCase) || chainIndex <= tokenLength) {
                 return null;
             }
-            return Regex.Replace(token.Substring(tokenLength, chainIndex - tokenLength), @"[\(|\)]", "");
+            return token.Substring(tokenLength, chainIndex - tokenLength).Trim(new char[] { '(', ')' });
         }
         private static Tuple<string, string> FilterChainParam(string token) {
             string tokenPrefix;
@@ -152,12 +152,12 @@ namespace Orchard.Tokens.Providers {
             chainIndex = token.IndexOf(").") + 1;
             tokenLength = (tokenPrefix + ":").Length;
             if (chainIndex == 0) { // ")." has not be found
-                return new Tuple<string, string>(Regex.Replace(token.Substring(tokenLength), @"[\(|\)]", ""), token.Length.ToString());
+                return new Tuple<string, string>(token.Substring(tokenLength).Trim(new char[] { '(', ')' }), token.Length.ToString());
             }
             if (!token.StartsWith((tokenPrefix + ":"), StringComparison.OrdinalIgnoreCase) || chainIndex <= tokenLength) {
                 return null;
             }
-            return new Tuple<string, string>(Regex.Replace(token.Substring(tokenLength, chainIndex - tokenLength), @"[\(|\)]", ""), token.Substring(chainIndex + 1));
+            return new Tuple<string, string>(token.Substring(tokenLength, chainIndex - tokenLength).Trim(new char[] { '(', ')' }), token.Substring(chainIndex + 1));
 
         }
     }
