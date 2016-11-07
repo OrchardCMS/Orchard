@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using Orchard.DisplayManagement.Shapes;
 using Orchard.Layouts.Framework.Elements;
@@ -13,9 +14,10 @@ namespace Orchard.Layouts.Helpers {
         public static OrchardTagBuilder CreateElementTagBuilder(dynamic shape, string tag = "div") {
             return AddCommonElementAttributes(new OrchardTagBuilder(tag), shape);
         }
-        
+
         public static OrchardTagBuilder AddCommonElementAttributes(this OrchardTagBuilder tagBuilder, dynamic shape) {
             var attributes = GetCommonElementAttributes(shape);
+            tagBuilder.MergeAttributes(shape.Attributes);
             tagBuilder.MergeAttributes(attributes);
             return tagBuilder;
         }
@@ -37,10 +39,16 @@ namespace Orchard.Layouts.Helpers {
                 attributes["style"] = Regex.Replace(tokenize(), @"(?:\r\n|[\r\n])", "");
             }
 
+            IList<string> classes = shape.Classes;
+
             if (!String.IsNullOrWhiteSpace(htmlClass)) {
                 var tokenize = (Func<string>)shape.TokenizeHtmlClass;
-                attributes["class"] = tokenize();
+                var cssClass = tokenize();
+                classes.Add(cssClass);
             }
+
+            if (classes.Any())
+                attributes["class"] = String.Join(" ", classes);
 
             return attributes;
         }

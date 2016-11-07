@@ -12,8 +12,8 @@
             self._wasInvoked = true;
         };
         this.getData = function (contentType) {
-            return self._clipboardData[contentType];
             self._wasInvoked = true;
+            return self._clipboardData[contentType];
         };
         this.disable = function() {
             self._isDisabled = true;

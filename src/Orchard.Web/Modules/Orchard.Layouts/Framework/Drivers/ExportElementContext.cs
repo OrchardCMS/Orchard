@@ -3,12 +3,14 @@ using Orchard.Layouts.Models;
 
 namespace Orchard.Layouts.Framework.Drivers {
     public class ExportElementContext {
-        public ExportElementContext() {
-            ExportableData = new ElementDataDictionary();
+        public ExportElementContext(Element element, ILayoutAspect layout, ElementDataDictionary exportableData) {
+            Element = element;
+            Layout = layout;
+            ExportableData = exportableData;
         }
 
-        public ILayoutAspect Layout { get; set; }
-        public Element Element { get; set; }
-        public ElementDataDictionary ExportableData { get; set; }
+        public ILayoutAspect Layout { get; private set; }
+        public Element Element { get; private set; }
+        public ElementDataDictionary ExportableData { get; private set; }
     }
 }

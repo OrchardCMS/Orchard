@@ -6,7 +6,6 @@ using Orchard.ContentManagement.FieldStorage.InfosetStorage;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.DisplayManagement;
-using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Shapes;
 using System.Linq;
 
@@ -59,44 +58,12 @@ namespace Orchard.ContentManagement.Drivers {
                 return null;
             }
 
-            // checking if the editor needs to be updated (e.g. if any of the shapes were not hidden)
+            // Checking if the editor needs to be updated (e.g. if any of the shapes were not hidden).
             DriverResult editor = Editor(part, context.New);
-            IEnumerable<ContentShapeResult> contentShapeResults = GetShapeResults(editor);
+            IEnumerable<ContentShapeResult> contentShapeResults = editor.GetShapeResults();
 
-            if (contentShapeResults.Any(contentShapeResult => {
-                if (contentShapeResult == null) return true;
-
-                ShapeDescriptor descriptor;
-                if (context.ShapeTable.Descriptors.TryGetValue(contentShapeResult.GetShapeType(), out descriptor)) {
-                    var placementContext = new ShapePlacementContext {
-                        Content = part.ContentItem,
-                        ContentType = part.ContentItem.ContentType,
-                        Differentiator = contentShapeResult.GetDifferentiator(),
-                        DisplayType = null,
-                        Path = context.Path
-                    };
-
-                    var placementInfo = descriptor.Placement(placementContext);
-
-                    var location = placementInfo.Location;
-
-                    if (String.IsNullOrEmpty(location) || location == "-") {
-                        return false;
-                    }
-
-                    var editorGroup = contentShapeResult.GetGroup();
-                    if (string.IsNullOrEmpty(editorGroup)) {
-                        editorGroup = placementInfo.GetGroup() ?? "";
-                    }
-                    var contextGroup = context.GroupId ?? "";
-
-                    if (!String.Equals(editorGroup, contextGroup, StringComparison.OrdinalIgnoreCase)) {
-                        return false;
-                    }
-                }
-
-                return true;
-            })) {
+            if (contentShapeResults.Any(contentShapeResult =>
+                contentShapeResult == null || contentShapeResult.WasDisplayed(context))) {
                 DriverResult result = Editor(part, context.Updater, context.New);
 
                 if (result != null) {
@@ -107,14 +74,6 @@ namespace Orchard.ContentManagement.Drivers {
             }
 
             return editor;
-        }
-
-        private static IEnumerable<ContentShapeResult> GetShapeResults(DriverResult driverResult) {
-            if (driverResult is CombinedResult) {
-                return ((CombinedResult)driverResult).GetResults().Select(result => result as ContentShapeResult);
-            }
-
-            return new[] { driverResult as ContentShapeResult };
         }
 
         void IContentPartDriver.Importing(ImportContentContext context) {
@@ -145,6 +104,20 @@ namespace Orchard.ContentManagement.Drivers {
             var part = context.ContentItem.As<TContent>();
             if (part != null)
                 Exported(part, context);
+        }
+
+        void IContentPartDriver.Cloning(CloneContentContext context) {
+            var originalPart = context.ContentItem.As<TContent>();
+            var clonePart = context.CloneContentItem.As<TContent>();
+            if (originalPart != null && clonePart != null)
+                Cloning(originalPart, clonePart, context);
+        }
+
+        void IContentPartDriver.Cloned(CloneContentContext context) {
+            var originalPart = context.ContentItem.As<TContent>();
+            var clonePart = context.CloneContentItem.As<TContent>();
+            if (originalPart != null && clonePart != null)
+                Cloned(originalPart, clonePart, context);
         }
 
         protected virtual void GetContentItemMetadata(TContent context, ContentItemMetadata metadata) { }
@@ -215,6 +188,10 @@ namespace Orchard.ContentManagement.Drivers {
             return part.PartDefinition.Name + "-" + (versioned ? "VersionInfoset" : "Infoset");
         }
 
+        protected virtual void Cloning(TContent originalPart, TContent clonePart, CloneContentContext context) { }
+
+        protected virtual void Cloned(TContent originalPart, TContent clonePart, CloneContentContext context) { }
+
         [Obsolete("Provided while transitioning to factory variations")]
         public ContentShapeResult ContentShape(IShape shape) {
             return ContentShapeImplementation(shape.Metadata.Type, ctx => shape).Location("Content");
@@ -278,6 +255,5 @@ namespace Orchard.ContentManagement.Drivers {
 
             return contentPartInfo;
         }
-
     }
 }

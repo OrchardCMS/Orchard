@@ -71,6 +71,14 @@ namespace Orchard.Mvc.Routes {
 
 
         public override VirtualPathData GetVirtualPath(RequestContext requestContext, RouteValueDictionary values) {
+            // only if MVC or WebApi match for this route
+            object httpRouteValue;
+            if (values.TryGetValue("httproute", out httpRouteValue)) {
+                if (httpRouteValue is bool && (bool)httpRouteValue != IsHttpRoute) {
+                    return null;
+                }
+            }
+
             // locate appropriate shell settings for request
             var settings = _runningShellTable.Match(requestContext.HttpContext);
 

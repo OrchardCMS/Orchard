@@ -16,7 +16,7 @@ namespace Orchard.ContentPicker {
             ContentDefinitionManager.AlterTypeDefinition("ContentMenuItem", cfg => cfg
                 .WithPart("MenuPart")
                 .WithPart("CommonPart")
-                .WithPart("IdentityPart")
+                .WithIdentity()
                 .WithPart("ContentMenuItemPart")
                 .DisplayedAs("Content Menu Item")
                 .WithSetting("Description", "Adds a Content Item to the menu.")

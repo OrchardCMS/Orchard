@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Orchard.Alias;
 using Orchard.Autoroute.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Data;
 using Orchard.DisplayManagement;
+using Orchard.Layouts.Framework.Elements;
 using Orchard.Layouts.Models;
 using Orchard.Layouts.Services;
 using Orchard.Utility.Extensions;
@@ -17,13 +20,15 @@ namespace Orchard.Layouts.Handlers {
         private readonly IShapeDisplay _shapeDisplay;
         private readonly ILayoutSerializer _serializer;
         private readonly IAliasService _aliasService;
+        private readonly IElementManager _elementManager;
 
         public LayoutPartHandler(
-            IRepository<LayoutPartRecord> repository, 
-            ILayoutManager layoutManager, 
-            IContentManager contentManager, 
-            IContentPartDisplay contentPartDisplay, 
-            IShapeDisplay shapeDisplay, 
+            IRepository<LayoutPartRecord> repository,
+            ILayoutManager layoutManager,
+            IElementManager elementManager,
+            IContentManager contentManager,
+            IContentPartDisplay contentPartDisplay,
+            IShapeDisplay shapeDisplay,
             ILayoutSerializer serializer,
             IAliasService aliasService) {
 
@@ -33,10 +38,12 @@ namespace Orchard.Layouts.Handlers {
             _shapeDisplay = shapeDisplay;
             _serializer = serializer;
             _aliasService = aliasService;
+            _elementManager = elementManager;
 
             Filters.Add(StorageFilter.For(repository));
             OnPublished<LayoutPart>(UpdateTemplateClients);
             OnIndexing<LayoutPart>(IndexLayout);
+            OnRemoved<LayoutPart>(RemoveElements);
         }
 
         private void IndexLayout(IndexContentContext context, LayoutPart part) {
@@ -85,6 +92,16 @@ namespace Orchard.Layouts.Handlers {
                     UpdateTemplateClients(draft);
                 }
             }
+        }
+
+        private void RemoveElements(RemoveContentContext context, LayoutPart part) {
+            var elements = _layoutManager.LoadElements(part).ToList();
+            var savingContext = new LayoutSavingContext {
+                Content = part,
+                Elements = new List<Element>(),
+                RemovedElements = elements
+            };
+            _elementManager.Removing(savingContext);
         }
 
         private bool IsHomePage(IContent content) {

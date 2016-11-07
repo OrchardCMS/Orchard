@@ -114,7 +114,7 @@ Scenario: Creating and using Input fields
             | name                | value |
             | Event.Contact.Value |       |
         And I hit "Save"
-    Then I should see "The field Contact is mandatory."
+    Then I should see "The Contact field is required."
     
     # Creating an Event content item
     When I go to "Admin/Contents/Create/Event"
@@ -128,3 +128,30 @@ Scenario: Creating and using Input fields
     When I go to "Admin/Contents/List"
     Then I should see "Contact:" 
         And I should see "contact@orchardproject.net"
+
+    # The default value should be proposed on creation
+    When I go to "Admin/ContentTypes/Edit/Event"
+        And I fill in 
+            | name                                      | value                       |
+            | Fields[0].InputFieldSettings.DefaultValue | contact@orchardproject.net |
+        And I hit "Save"
+        And I go to "Admin/Contents/Create/Event"
+    Then I should see "value=\"contact@orchardproject.net\""
+
+    # The required attribute should be used
+    When I go to "Admin/ContentTypes/Edit/Event"
+        And I fill in 
+            | name                                      | value |
+            | Fields[0].InputFieldSettings.Required     | true  |
+        And I hit "Save"
+        And I go to "Admin/Contents/Create/Event"
+    Then I should see "required=\"required\""
+
+    # The required attribute should not be used
+    When I go to "Admin/ContentTypes/Edit/Event"
+        And I fill in 
+            | name                                      | value |
+            | Fields[0].InputFieldSettings.Required     | false |
+        And I hit "Save"
+        And I go to "Admin/Contents/Create/Event"
+    Then I should not see "required=\"required\""

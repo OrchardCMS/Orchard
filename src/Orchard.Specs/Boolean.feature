@@ -53,7 +53,7 @@ Scenario: Creating and using Boolean fields
         And I go to "Admin/Contents/Create/Event"
     Then I should see "Check if the event is active"
     
-    # The default value should be selected
+    # The default value should be proposed on creation
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                                        | value |
@@ -65,18 +65,12 @@ Scenario: Creating and using Boolean fields
     # The value should be required
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
-            | name                                    | value |
-            | Fields[0].BooleanFieldSettings.Optional | false |
-        And I fill in 
-            | name                                       | value  |
-            | Fields[0].BooleanFieldSettings.NotSetLabel | May be |
-        And I fill in 
-            | name                                         | value       |
-            | Fields[0].BooleanFieldSettings.SelectionMode | Radiobutton |
+            | name                                        | value |
+            | Fields[0].BooleanFieldSettings.Optional     | false |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
         And I fill in 
             | name               | value |
             | Event.Active.Value |       |
         And I hit "Save"
-    Then I should see "The field Active is mandatory."
+    Then I should see "The Active field is required."

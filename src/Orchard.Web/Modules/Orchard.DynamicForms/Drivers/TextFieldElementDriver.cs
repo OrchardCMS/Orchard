@@ -1,8 +1,8 @@
 ﻿using Orchard.DynamicForms.Elements;
-using Orchard.Forms.Services;
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
 using Orchard.Layouts.Helpers;
+using Orchard.Layouts.Services;
 using Orchard.Tokens;
 using DescribeContext = Orchard.Forms.Services.DescribeContext;
 
@@ -10,7 +10,7 @@ namespace Orchard.DynamicForms.Drivers {
     public class TextFieldElementDriver : FormsElementDriver<TextField>{
         private readonly ITokenizer _tokenizer;
 
-        public TextFieldElementDriver(IFormManager formManager, ITokenizer tokenizer) : base(formManager) {
+        public TextFieldElementDriver(IFormsBasedElementServices formsServices, ITokenizer tokenizer) : base(formsServices) {
             _tokenizer = tokenizer;
         }
 
@@ -31,7 +31,7 @@ namespace Orchard.DynamicForms.Drivers {
                         Id: "Value",
                         Name: "Value",
                         Title: "Value",
-                        Classes: new[] { "text", "medium", "tokenized" },
+                        Classes: new[] { "text", "medium" },
                         Description: T("The value of this text field.")));
 
                 return form;
@@ -59,6 +59,12 @@ namespace Orchard.DynamicForms.Drivers {
                         Title: "Maximum Length",
                         Classes: new[] { "text", "medium" },
                         Description: T("The maximum length allowed.")),
+                    _ValidationExpression: shape.Textbox(
+                        Id: "ValidationExpression",
+                        Name: "ValidationExpression",
+                        Title: "Validation Expression",
+                        Classes: new[] { "text", "large" },
+                        Description: T("The regular expression the text must match with.")),
                     _CustomValidationMessage: shape.Textbox(
                         Id: "CustomValidationMessage",
                         Name: "CustomValidationMessage",
@@ -77,9 +83,13 @@ namespace Orchard.DynamicForms.Drivers {
         }
 
         protected override void OnDisplaying(TextField element, ElementDisplayingContext context) {
-            context.ElementShape.ProcessedName = _tokenizer.Replace(element.Name, context.GetTokenData());
-            context.ElementShape.ProcessedLabel = _tokenizer.Replace(element.Label, context.GetTokenData());
-            context.ElementShape.ProcessedValue = _tokenizer.Replace(element.RuntimeValue, context.GetTokenData());
+            var tokenData = context.GetTokenData();
+            context.ElementShape.ProcessedName = _tokenizer.Replace(element.Name, tokenData);
+            context.ElementShape.ProcessedLabel = _tokenizer.Replace(element.Label, tokenData, new ReplaceOptions {Encoding = ReplaceOptions.NoEncode});
+
+            // Allow the initial value to be tokenized.
+            // If a value was posted, use that value instead (without tokenizing it).
+            context.ElementShape.ProcessedValue = element.PostedValue != null ? element.PostedValue : _tokenizer.Replace(element.RuntimeValue, tokenData, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
         }
     }
 }

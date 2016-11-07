@@ -62,8 +62,7 @@ namespace Orchard.Taxonomies.Drivers {
 
         protected override DriverResult Editor(ContentPart part, TaxonomyField field, IUpdateModel updater, dynamic shapeHelper) {
             // Initializing viewmodel using the terms that are already selected to prevent loosing them when updating an editor group this field isn't displayed in.
-            // Get all the selected, published terms of all the TaxonomyFields of the content item.
-            var appliedTerms = GetAppliedTerms(part).ToList();
+            var appliedTerms = GetAppliedTerms(part, field, VersionOptions.Latest).ToList();
             var viewModel = new TaxonomyFieldViewModel { Terms = appliedTerms.Select(t => t.CreateTermEntry()).ToList() };
             foreach (var item in viewModel.Terms) item.IsChecked = true;
             
@@ -75,7 +74,7 @@ namespace Orchard.Taxonomies.Drivers {
 
                 var settings = field.PartFieldDefinition.Settings.GetModel<TaxonomyFieldSettings>();
                 if (settings.Required && !checkedTerms.Any()) {
-                    updater.AddModelError(GetPrefix(field, part), T("The field {0} is mandatory.", T(field.DisplayName)));
+                    updater.AddModelError(GetPrefix(field, part), T("The {0} field is required.", T(field.DisplayName)));
                 }
                 else
                     _taxonomyService.UpdateTerms(part.ContentItem, checkedTerms, field.Name);
@@ -142,6 +141,10 @@ namespace Orchard.Taxonomies.Drivers {
             _taxonomyService.UpdateTerms(part.ContentItem, terms.Select(x => x.As<TermPart>()), field.Name);
         }
 
+        protected override void Cloning(ContentPart part, TaxonomyField originalField, TaxonomyField cloneField, CloneContentContext context) {
+            _taxonomyService.UpdateTerms(context.CloneContentItem, originalField.Terms, cloneField.Name);
+        }
+
         private TermPart GetOrCreateTerm(TermEntry entry, int taxonomyId, TaxonomyField field) {
             var term = default(TermPart);
 
@@ -166,7 +169,7 @@ namespace Orchard.Taxonomies.Drivers {
                 term.Selectable = true;
 
                 Services.ContentManager.Create(term, VersionOptions.Published);
-                Services.Notifier.Information(T("The {0} term has been created.", term.Name));
+                Services.Notifier.Success(T("The {0} term has been created.", term.Name));
             }
 
             return term;

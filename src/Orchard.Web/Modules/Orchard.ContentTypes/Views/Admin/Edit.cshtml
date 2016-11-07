@@ -1,8 +1,10 @@
+@using Orchard.Utility.Extensions;
 @model Orchard.ContentTypes.ViewModels.EditTypeViewModel
 @{
     Style.Require("ContentTypesAdmin");
     Script.Require("jQuery");
     Layout.Title = T("Edit Content Type - {0}", Html.Raw(Model.DisplayName)).Text;
+    var returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString();
 }
 
 <div class="manage">
@@ -27,7 +29,7 @@
         <div class="manage-type">
             <h2>@T("Fields")</h2>
             <div class="manage add-to-type">
-                @Html.ActionLink(T("Add Field").Text, "AddFieldTo", new { area = "Orchard.ContentTypes", id = Model.Name }, new { @class = "button" })
+                @Html.ActionLink(T("Add Field").Text, "AddFieldTo", new { area = "Orchard.ContentTypes", id = Model.Name, returnUrl }, new { @class = "button" })
             </div>
                 @Html.EditorFor(m => m.Fields, "Fields", "")
             <h2>@T("Parts")</h2>

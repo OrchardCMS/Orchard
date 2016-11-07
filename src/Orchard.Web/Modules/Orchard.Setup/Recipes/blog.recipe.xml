@@ -11,13 +11,14 @@
         <IsSetupRecipe>true</IsSetupRecipe>
     </Recipe>
 
-    <Feature enable="Orchard.Blogs,Orchard.Comments,Orchard.Tags,Orchard.Alias,Orchard.Autoroute,
+    <Feature enable="Orchard.Blogs,Orchard.Comments,Orchard.Tags,Orchard.Tags.TagCloud,Orchard.Alias,Orchard.Autoroute,
                    XmlRpc,Orchard.Blogs.RemotePublishing,Orchard.ContentPicker, 
                    TinyMce,Orchard.MediaLibrary,Orchard.PublishLater,
-                   Orchard.jQuery,Orchard.Widgets,
+                   Orchard.Resources,Orchard.Widgets,Orchard.ContentTypes,
                    Orchard.Scripting,Orchard.Scripting.Lightweight,
                    PackagingServices,Orchard.Packaging,Orchard.Warmup,Orchard.OutputCache,
                    Orchard.Taxonomies,Orchard.Workflows,
+				   Orchard.Layouts,Orchard.Fields,
                    TheThemeMachine" />
 
     <ContentDefinition>
@@ -55,13 +56,13 @@
         layer create Anonymous /LayerRule:"not authenticated" /Description:"The widgets in this layer are displayed when the user is anonymous"
         layer create Disabled /LayerRule:"false" /Description:"The widgets in this layer are never displayed"
         layer create TheHomepage /LayerRule:"url '~/'" /Description:"The widgets in this layer are displayed on the home page"
-        widget create HtmlWidget /Title:"First Leader Aside" /Zone:"TripelFirst" /Position:"5" /Layer:"TheHomepage" /Identity:"SetupHtmlWidget1" /UseLoremIpsumText:true
-        widget create HtmlWidget /Title:"Second Leader Aside" /Zone:"TripelSecond" /Position:"5" /Layer:"TheHomepage" /Identity:"SetupHtmlWidget2" /UseLoremIpsumText:true
-        widget create HtmlWidget /Title:"Third Leader Aside" /Zone:"TripelThird" /Position:"5" /Layer:"TheHomepage" /Identity:"SetupHtmlWidget3" /UseLoremIpsumText:true
+        blog create /Title:"Blog" /Homepage:true /Description:"This is your Orchard Blog."
+        blog widget create RecentBlogPosts /Title:"Recent Blog Posts" /Zone:"AsideSecond" /Position:"5" /Layer:"TheHomepage" /Identity:"RecentBlogPosts1" /BlogPath:""
+        blog widget create BlogArchives /Title:"Blog Archives" /Zone:"AsideSecond" /Position:"60" /Layer:"TheHomepage" /Identity:"BlogArchives1" /BlogPath:""
+        tags widget create TagCloud /Title:"Blog Post Tags" /Zone:"AsideSecond" /Position:"70" /Layer:"TheHomepage" /Identity:"TagCloud1" /Slug:"/"
         site setting set baseurl
         theme activate "The Theme Machine"
         menu create /MenuName:"Main Menu"
-        blog create /Title:"Blog" /Homepage:true /Description:"This is your Orchard Blog."
         menuitem create /MenuPosition:"0" /MenuText:"Home" /Url:"~/" /MenuName:"Main Menu"
         widget create MenuWidget /Title:"Main Menu" /RenderTitle:false /Zone:"Navigation" /Position:"1" /Layer:"Default" /Identity:"MenuWidget1" /MenuName:"Main Menu"
     </Command>

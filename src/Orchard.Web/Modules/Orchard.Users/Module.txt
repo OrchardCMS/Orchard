@@ -2,21 +2,21 @@
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
-Version: 1.9.2
+Version: 1.10.1
 OrchardVersion: 1.9
 Description: The users module enables user management.
 Features:
-	Orchard.Users:
-		Description: Standard users.
-		Category: Core
-		Dependencies: Settings
-	Orchard.Users.Workflows:
-		Name: Users Workflows Activities
-		Description: Provides User based Workflow Activites.
-		Category: Workflows
-		Dependencies: Orchard.Workflows
-	Orchard.Users.PasswordEditor:
-		Name: User Password Editor
-		Description: Adds the ability for admins to edit users' passwords.
-		Category: Security
-		Dependencies: Orchard.Users
+    Orchard.Users:
+        Description: Standard users.
+        Category: Core
+        Dependencies: Settings
+    Orchard.Users.Workflows:
+        Name: Users Workflows Activities
+        Description: Provides User based Workflow Activites.
+        Category: Workflows
+        Dependencies: Orchard.Workflows
+    Orchard.Users.PasswordEditor:
+        Name: User Password Editor
+        Description: Adds the ability for admins to edit users' passwords.
+        Category: Security
+        Dependencies: Orchard.Users

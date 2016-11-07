@@ -2,12 +2,12 @@
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
-Version: 1.9.2
+Version: 1.10.1
 OrchardVersion: 1.9
 Description: An implementation of widgets for Orchard.
 FeatureDescription: An implementation of widgets.
 Category: Widget
-Dependencies: Orchard.Scripting, Orchard.Themes
+Dependencies: Orchard.Conditions, Orchard.Scripting, Orchard.Themes
 Features:
     Orchard.Widgets.PageLayerHinting:
         Name: Page Layer Hinting
@@ -19,3 +19,8 @@ Features:
         Description: Add an Edit button on the front-end for authenticated users
         Category: Widget
         Dependencies: Orchard.Widgets
+    Orchard.Widgets.Elements
+        Name: Widget Elements
+        Description: Enables widgets to be added as elements to layouts.
+        Category: Layout
+        Dependencies: Orchard.Layouts

@@ -68,13 +68,11 @@ IF NOT DEFINED MSBUILD_PATH (
 echo Handling .NET Web Application deployment.
 
 :: 1. Restore NuGet packages
-IF /I "" NEQ "" (
-  call :ExecuteCmd nuget restore "%DEPLOYMENT_SOURCE%\"
-  IF !ERRORLEVEL! NEQ 0 goto error
-)
+call :ExecuteCmd nuget restore "%DEPLOYMENT_SOURCE%\src\Orchard.sln"
+IF !ERRORLEVEL! NEQ 0 goto error
 
 :: 2. Build to the temporary path
-call :ExecuteCmd "%MSBUILD_PATH%" "%DEPLOYMENT_SOURCE%\Orchard.proj" /t:Precompiled /v:m
+call :ExecuteCmd "%MSBUILD_PATH%" "%DEPLOYMENT_SOURCE%\Orchard.proj" /t:Precompiled /v:m /m
 IF !ERRORLEVEL! NEQ 0 goto error
 
 :: 3. KuduSync

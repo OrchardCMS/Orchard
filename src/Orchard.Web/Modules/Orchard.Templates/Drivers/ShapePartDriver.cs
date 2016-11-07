@@ -81,7 +81,7 @@ namespace Orchard.Templates.Drivers {
                 return true;
             }
 
-            updater.AddModelError("Title", T("{0} names can only contain alphanumerical or underscore (_) characters and have to start with a letter.", part.ContentItem.TypeDefinition.DisplayName));
+            updater.AddModelError("Title", T("{0} names can only contain alphanumerical or underscore (_) characters and have to start with a letter.", T(part.ContentItem.TypeDefinition.DisplayName)));
             return false;
         }
 

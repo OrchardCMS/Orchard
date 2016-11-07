@@ -75,10 +75,18 @@
     $('#activity-editor').droppable({ drop: function(event, ui) {
         var activityName = ui.draggable.data('activity-name');
         if (activityName && activityName.length) {
-            createActivity(activityName, event.pageY, event.pageX);
+            var offset = $(this).offset();
+            if (displaySaveMessage()) {
+                createActivity(activityName, event.pageY - offset.top - 40, event.pageX - offset.left); /* The displaySaveMessage's height is 40px */
+            }
+            else {
+                createActivity(activityName, event.pageY - offset.top, event.pageX - offset.left);
+            }
         }
-
-        displaySaveMessage();
+        if (displaySaveMessage()) {
+            var activityPosition = ui.position;
+            activityPosition.top += 40; /* The displaySaveMessage's height is 40px */
+        }
     }
     });
 
@@ -89,7 +97,7 @@
         } else {
             var lowerCaseText = text.toLowerCase();
             $(".activity-toolbox-item").each(function () {
-                var recordText = $(this).data("activity-text").toLowerCase();
+                var recordText = $(this).data("activity-name").toLowerCase();
                 $(this).toggle(recordText.indexOf(lowerCaseText) >= 0);
             });
         }
@@ -174,8 +182,11 @@
                     elt.viewModel.edit = edit;
                 }
 
+                var canvasWidth = $('#activity-editor').width();
+                var domWidth = $('#' + clientId).width() + 25; /* width + padding */
+
                 dom.css('top', top + 'px');
-                dom.css('left', left + 'px');
+                dom.css('left', left + domWidth > canvasWidth ? canvasWidth - domWidth : left + 'px');
                 jsPlumb.repaint(elt.viewModel.clientId);
                 
                 dom.on("click", function () {
@@ -246,7 +257,15 @@
     }
     
     function displaySaveMessage() {
-        $("#save-message").show();
+        var saveMessage = $("#save-message");
+
+        if (saveMessage.css('display') === "none") {
+            saveMessage.show();
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     var refreshToolbar = function(target) {

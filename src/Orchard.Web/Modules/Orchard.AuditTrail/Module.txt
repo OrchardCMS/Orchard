@@ -2,7 +2,7 @@
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
-Version: 1.9.2
+Version: 1.10.1
 OrchardVersion: 1.9
 Description: Provides a log for recording and viewing back-end changes.
 Features:
@@ -19,7 +19,7 @@ Features:
         Name: Audit Trail Trimming
         Description: Provides a background task that regularly deletes old audit trail records.
         Category: Security
-        Dependencies: Orchard.AuditTrail, Orchard.TaskLease
+        Dependencies: Orchard.AuditTrail
     Orchard.AuditTrail.Users:
         Name: Audit Trail User Events
         Description: Provides audit trail support for user related events.

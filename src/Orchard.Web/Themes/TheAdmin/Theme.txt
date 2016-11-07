@@ -1,7 +1,7 @@
 ﻿Name: The Admin
-Version: 1.9.2
+Version: 1.10.1
 Author: Jon Wall
 Tags: hidden, admin
-Description: An admin theme not to be used for the site so don't click "Activate" (or "Uninstall"). In the near future admin themes won't be mixed in with site themes.
+Description: The Orchard admin theme.
 Website: http://www.orchardproject.net
 Zones: Header, Messages, BeforeContent, LocalNavigation, Content, AfterContent, Footer

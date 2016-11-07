@@ -6,6 +6,7 @@
         this.allowedChildTypes = allowedChildTypes;
         this.children = children;
         this.isContainer = true;
+        this.containerTemplateStyles = {};
 
         var self = this;
 
@@ -46,6 +47,7 @@
             var index = _(this.children).indexOf(child);
             if (index >= 0) {
                 this.children.splice(index, 1);
+                this.editor.recycleBin.add(child);
                 if (child.getIsActive())
                     this.editor.activeElement = null;
                 if (child.getIsFocused()) {
@@ -137,6 +139,17 @@
             }
             else if (!!this.parent)
                 this.parent.pasteChild(child);
+        }
+
+        this.getContainerTemplateStyles = function () {
+            var styles = this.containerTemplateStyles || {};
+            var css = "";
+
+            for (var property in styles) {
+                css += property + ":" + styles[property] + ";";
+            }
+
+            return css;
         }
     };
 

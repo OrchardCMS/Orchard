@@ -35,6 +35,8 @@ namespace Orchard.Themes.Controllers {
         private readonly IThemeService _themeService;
         private readonly ShellSettings _shellSettings;
 
+        private const string AlreadyEnabledFeatures = "Orchard.Themes.AlreadyEnabledFeatures";
+
         public AdminController(
             IEnumerable<IExtensionDisplayEventHandler> extensionDisplayEventHandlers,
             IOrchardServices services,
@@ -132,8 +134,11 @@ namespace Orchard.Themes.Controllers {
 
                 Services.Notifier.Error(T("Theme {0} was not found", themeId));
             } else {
+                var alreadyEnabledFeatures = GetEnabledFeatures();
                 _themeService.EnableThemeFeatures(themeId);
                 _previewTheme.SetPreviewTheme(themeId);
+                alreadyEnabledFeatures.Except(new[] { themeId });
+                TempData[AlreadyEnabledFeatures] = alreadyEnabledFeatures;
             }
 
             return this.RedirectLocal(returnUrl, "~/");
@@ -160,6 +165,18 @@ namespace Orchard.Themes.Controllers {
         public ActionResult CancelPreview(string returnUrl) {
             if (!Services.Authorizer.Authorize(Permissions.ApplyTheme, T("Couldn't preview the current theme")))
                 return new HttpUnauthorizedResult();
+
+            if (TempData.ContainsKey(AlreadyEnabledFeatures)) {
+
+                var alreadyEnabledFeatures = TempData[AlreadyEnabledFeatures] as IEnumerable<string>;
+                if (alreadyEnabledFeatures != null) {
+                    var afterEnabledFeatures = GetEnabledFeatures();
+                    if (afterEnabledFeatures.Count() > alreadyEnabledFeatures.Count()) {
+                        var disableFeatures = afterEnabledFeatures.Except(alreadyEnabledFeatures);
+                        _themeService.DisablePreviewFeatures(disableFeatures);
+                    }
+                }
+            }
 
             _previewTheme.SetPreviewTheme(null);
 
@@ -229,11 +246,11 @@ namespace Orchard.Themes.Controllers {
 
             try {
                 _dataMigrationManager.Update(themeId);
-                Services.Notifier.Information(T("The theme {0} was updated successfully.", themeId));
+                Services.Notifier.Success(T("The theme {0} was updated successfully", themeId));
                 Logger.Information("The theme {0} was updated successfully.", themeId);
             } catch (Exception exception) {
-                Logger.Error(T("An error occured while updating the theme {0}: {1}", themeId, exception.Message).Text);
-                Services.Notifier.Error(T("An error occured while updating the theme {0}: {1}", themeId, exception.Message));
+                Logger.Error(T("An error occurred while updating the theme {0}: {1}", themeId, exception.Message).Text);
+                Services.Notifier.Error(T("An error occurred while updating the theme {0}: {1}", themeId, exception.Message));
             }
 
             return RedirectToAction("Index");
@@ -251,6 +268,10 @@ namespace Orchard.Themes.Controllers {
                 var value = controllerContext.HttpContext.Request.Form[_submitButtonName];
                 return string.IsNullOrEmpty(value);
             }
+        }
+
+        public IEnumerable<string> GetEnabledFeatures() {
+            return _featureManager.GetEnabledFeatures().Select(f => f.Id);
         }
     }
 }

@@ -2,10 +2,10 @@
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
-Version: 1.9.2
+Version: 1.10.1
 OrchardVersion: 1.9
 Description: Enables database caching using the SysCache provider.
 Features:
     SysCache:
         Description: Enables database caching using the SysCache provider.
-		Category: Performance
+        Category: Performance

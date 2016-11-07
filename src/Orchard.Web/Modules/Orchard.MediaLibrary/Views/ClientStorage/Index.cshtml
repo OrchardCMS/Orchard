@@ -1,5 +1,4 @@
 ﻿@model Orchard.MediaLibrary.ViewModels.ImportMediaViewModel
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -12,7 +11,7 @@
         Style.Include("orchard-clientstorage-admin.css");
 
         Script.Require("jQueryFileUpload").AtFoot();
-        Script.Include("knockout-2.3.0.js").AtFoot();
+        Script.Require("Knockout").AtFoot();
     }
 
     @Display.Metas()
@@ -21,11 +20,10 @@
     @Display.StyleSheetLinks()
 </head>
 <body>
-    
     <div id="clientstorage-main">
         <div id="message">@T("Click here, Drop files or Paste images")</div>
         <div id="fileupload">
-            <input type="file" name="files[]" multiple="multiple">
+            <input type="file" name="files[]" @if(Model.Replace == null) { <text>multiple="multiple"</text> } >
             <ul id="fileupload-transfers" data-bind="foreach: transfers">
                 <li data-bind="css: status()" class="transfer">
                     <div class="media-thumbnail" data-bind="html: thumbnail(), visible: status() == 'success'"></div>
@@ -36,15 +34,12 @@
                     </div>
                 </li>
             </ul>
-
         </div>
-
     </div>
-    
-    
-    @using(Script.Foot()) {
+        
+    @using (Script.Foot()) {
     <script type="text/javascript">
-    //<![CDATA[
+        //<![CDATA[
         $(function () {
 
             function transferViewModel(filename, size) {
@@ -63,7 +58,7 @@
 
                 self.transfers = ko.observableArray([]);
 
-                self.upload = function(file) {
+                self.upload = function (file) {
                     var transfer = new transferViewModel(file.name, file.size);
                     self.transfers.push(transfer);
                     return transfer;
@@ -73,24 +68,37 @@
             var viewModel = new clientStorageViewModel();
             ko.applyBindings(viewModel);
 
-            $('#fileupload').click(function() {
-                console.log('click');
+            $('#fileupload').click(function () {
+                //console.log('click');
                 $('#fileupload > input').trigger('click');
             });
 
-            $('#fileupload > input').click(function(event) {
+            $('#fileupload > input').click(function (event) {
                 event.stopPropagation();
             });
 
             // Add drag-n-drop HTML5 support
             $('#fileupload').fileupload({
-                url: '@Url.Action("Upload", "ClientStorage")',
                 autoUpload: true,
+                @if(Model.Replace == null) {
+                <text>
+                url: '@Url.Action("Upload")',
                 formData: {
                     folderPath: '@Html.Raw(HttpUtility.JavaScriptStringEncode(Model.FolderPath))',
                     type: '@HttpUtility.JavaScriptStringEncode(Model.Type)',
                     __RequestVerificationToken: '@Html.AntiForgeryTokenValueOrchard()'
                 },
+                </text>
+                } else {
+                <text>
+                url: '@Url.Action("Replace")',
+                formData: {
+                    replaceId: '@HttpUtility.JavaScriptStringEncode(Model.Replace.Id.ToString())',
+                    type: '@HttpUtility.JavaScriptStringEncode(Model.Type)',
+                    __RequestVerificationToken: '@Html.AntiForgeryTokenValueOrchard()'
+                },
+                </text>
+                }
                 done: function (e, data) {
                     console.log(data.result);
                 },
@@ -114,7 +122,6 @@
                         data.context = viewModel.upload(file);
                     }
 
-
                     data.submit();
                 },
                 // Callback for upload progress events:
@@ -128,11 +135,11 @@
                 pasteZone: window.parent.document,
                 paste: function (e, data) {
                     $.each(data.files, function (index, file) {
-                        //console.log('Pasted file type: ' + file.type);
+                        console.log('Pasted file type: ' + file.type);
                     });
                     return true;
                 },
-                done: function(e, data) {
+                done: function (e, data) {
                     var result = data.result[0];
 
                     if (result.error) {
@@ -142,23 +149,27 @@
 
                     data.context.label('@HttpUtility.JavaScriptStringEncode(T("Loading thumbnail...").Text)');
 
-
                     var url = '@HttpUtility.JavaScriptStringEncode(Url.Action("MediaItem", "Admin"))/' + result.id + '?displayType=Thumbnail';
 
                     $.ajax({
                         type: "GET",
                         url: url,
-                    }).done(function(html) {
+                    }).done(function (html) {
                         data.context.thumbnail(html);
                         data.context.status('success');
+                        @if(Model.Replace != null) {
+                        <text>
+                        window.parent.$("a.button.close")[0].click();
+                        </text>
+                        }
                     });
                 },
-                fail: function(e, data) {
+                fail: function (e, data) {
                     data.context.status('error');
                 }
             });
         })
-    //]]>
+        //]]>
     </script>
     }
     

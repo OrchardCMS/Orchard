@@ -272,7 +272,70 @@ this.ScenarioSetup(scenarioInfo);
 #line 108
         testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 109
-    testRunner.Then("I should see \"The field Location is mandatory.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+    testRunner.Then("I should see \"The Location field is required.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 112
+    testRunner.When("I go to \"Admin/ContentTypes/Edit/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+            TechTalk.SpecFlow.Table table11 = new TechTalk.SpecFlow.Table(new string[] {
+                        "name",
+                        "value"});
+            table11.AddRow(new string[] {
+                        "Fields[0].EnumerationFieldSettings.Options",
+                        "Seattle"});
+            table11.AddRow(new string[] {
+                        "Fields[0].EnumerationFieldSettings.ListMode",
+                        "Dropdown"});
+            table11.AddRow(new string[] {
+                        "Fields[0].EnumerationFieldSettings.DefaultValue",
+                        "Seattle"});
+#line 113
+        testRunner.And("I fill in", ((string)(null)), table11, "And ");
+#line 118
+        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 119
+        testRunner.And("I go to \"Admin/Contents/Create/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 120
+    testRunner.Then("I should see \"selected=\\\"selected\">Seattle\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 123
+    testRunner.When("I go to \"Admin/ContentTypes/Edit/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+            TechTalk.SpecFlow.Table table12 = new TechTalk.SpecFlow.Table(new string[] {
+                        "name",
+                        "value"});
+            table12.AddRow(new string[] {
+                        "Fields[0].EnumerationFieldSettings.Required",
+                        "true"});
+            table12.AddRow(new string[] {
+                        "Fields[0].EnumerationFieldSettings.ListMode",
+                        "Listbox"});
+#line 124
+        testRunner.And("I fill in", ((string)(null)), table12, "And ");
+#line 128
+        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 129
+        testRunner.And("I go to \"Admin/Contents/Create/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 130
+    testRunner.Then("I should see \"required=\\\"required\\\"\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 133
+    testRunner.When("I go to \"Admin/ContentTypes/Edit/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+            TechTalk.SpecFlow.Table table13 = new TechTalk.SpecFlow.Table(new string[] {
+                        "name",
+                        "value"});
+            table13.AddRow(new string[] {
+                        "Fields[0].EnumerationFieldSettings.Required",
+                        "false"});
+            table13.AddRow(new string[] {
+                        "Fields[0].EnumerationFieldSettings.ListMode",
+                        "Listbox"});
+#line 134
+        testRunner.And("I fill in", ((string)(null)), table13, "And ");
+#line 138
+        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 139
+        testRunner.And("I go to \"Admin/Contents/Create/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 140
+    testRunner.Then("I should not see \"required=\\\"required\\\"\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
         }

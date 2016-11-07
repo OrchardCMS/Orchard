@@ -172,8 +172,8 @@ namespace Orchard.Alias.Controllers {
             }
             catch (Exception ex) {
                 Services.TransactionManager.Cancel();
-                Services.Notifier.Error(T("An error occured while creating the alias {0}: {1}. Please check the values are correct.", aliasPath, ex.Message));
-                Logger.Error(ex, T("An error occured while creating the alias {0}", aliasPath).Text);
+                Services.Notifier.Error(T("An error occurred while creating the alias {0}: {1}. Please check the values are correct.", aliasPath, ex.Message));
+                Logger.Error(ex, T("An error occurred while creating the alias {0}", aliasPath).Text);
 
                 ViewBag.Path = aliasPath;
                 ViewBag.Route = routePath;
@@ -181,7 +181,7 @@ namespace Orchard.Alias.Controllers {
                 return View();
             }
 
-            Services.Notifier.Information(T("Alias {0} created", aliasPath));
+            Services.Notifier.Success(T("Alias {0} created", aliasPath));
 
             return RedirectToAction("IndexUnmanaged");
         }
@@ -236,8 +236,8 @@ namespace Orchard.Alias.Controllers {
             }
             catch (Exception ex) {
                 Services.TransactionManager.Cancel();
-                Services.Notifier.Error(T("An error occured while editing the alias '{0}': {1}. Please check the values are correct.", aliasPath, ex.Message));
-                Logger.Error(ex, T("An error occured while creating the alias '{0}'", aliasPath).Text);
+                Services.Notifier.Error(T("An error occurred while editing the alias '{0}': {1}. Please check the values are correct.", aliasPath, ex.Message));
+                Logger.Error(ex, T("An error occurred while creating the alias '{0}'", aliasPath).Text);
 
                 ViewBag.Path = aliasPath;
                 ViewBag.Route = routePath;
@@ -251,7 +251,7 @@ namespace Orchard.Alias.Controllers {
                 _aliasService.Delete(path == "/" ? String.Empty : path);
             }
 
-            Services.Notifier.Information(T("Alias {0} updated", path));
+            Services.Notifier.Success(T("Alias {0} updated", path));
 
             return RedirectToAction("IndexUnmanaged");
         }
@@ -267,7 +267,7 @@ namespace Orchard.Alias.Controllers {
 
             _aliasService.Delete(path);
 
-            Services.Notifier.Information(T("Alias {0} deleted", path));
+            Services.Notifier.Success(T("Alias {0} deleted", path));
 
             return this.RedirectLocal(returnUrl, Url.Action("IndexUnmanaged"));
         }

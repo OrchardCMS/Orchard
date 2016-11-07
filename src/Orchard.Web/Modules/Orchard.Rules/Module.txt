@@ -1,7 +1,7 @@
 Name: Rules
 AntiForgery: enabled
 Author: The Orchard Team
-Website: http://orchardrules.codeplex.com
+Website: http://www.orchardproject.net
 Version: 1.8
 OrchardVersion: 1.9
 LifecycleStatus: Deprecated

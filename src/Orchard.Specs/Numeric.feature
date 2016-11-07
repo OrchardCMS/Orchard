@@ -64,7 +64,7 @@ Scenario: Creating and using numeric fields
             | name               | value |
             | Event.Guests.Value |       |
         And I hit "Save"
-    Then I should see "The field Guests is mandatory."
+    Then I should see "The Guests field is required."
 
     # The value should be bound
     When I go to "Admin/ContentTypes/Edit/Event"
@@ -97,3 +97,38 @@ Scenario: Creating and using numeric fields
         And I hit "Save"
     Then I should see "The value &#39;a&#39; is not valid for Minimum."
         And I should see "The value &#39;b&#39; is not valid for Maximum."
+
+    # The value should be validated
+    When I go to "Admin/Contents/Create/Event"
+        And I fill in 
+            | name               | value |
+            | Event.Guests.Value |   a   |
+        And I hit "Save"
+    Then I should see "Guests is an invalid number"
+
+    # The default value should be proposed on creation
+    When I go to "Admin/ContentTypes/Edit/Event"
+        And I fill in 
+            | name                                        | value |
+            | Fields[0].NumericFieldSettings.DefaultValue | 1234  |
+        And I hit "Save"
+        And I go to "Admin/Contents/Create/Event"
+    Then I should see "value=\"1234\""
+
+    # The required attribute should be used
+    When I go to "Admin/ContentTypes/Edit/Event"
+        And I fill in 
+            | name                                        | value |
+            | Fields[0].NumericFieldSettings.Required     | true  |
+        And I hit "Save"
+        And I go to "Admin/Contents/Create/Event"
+    Then I should see "required=\"required\""
+
+    # The required attribute should not be used
+    When I go to "Admin/ContentTypes/Edit/Event"
+        And I fill in 
+            | name                                        | value |
+            | Fields[0].NumericFieldSettings.Required     | false |
+        And I hit "Save"
+        And I go to "Admin/Contents/Create/Event"
+    Then I should not see "required=\"required\""

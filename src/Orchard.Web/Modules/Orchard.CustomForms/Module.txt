@@ -1,8 +1,8 @@
 Name: Custom Forms
 AntiForgery: enabled
 Author: The Orchard Team
-Website: http://orchardcustomforms.codeplex.com
-Version: 1.9.2
+Website: http://www.orchardproject.net
+Version: 1.10.1
 OrchardVersion: 1.9
 LifecycleStatus: Deprecated
 Description: Create custom forms like contact forms or content contributions.

@@ -56,7 +56,7 @@ namespace Orchard.DynamicForms.Controllers {
                 return HttpNotFound();
 
             _formService.DeleteSubmission(submission);
-            _services.Notifier.Information(T("That submission has been deleted."));
+            _services.Notifier.Success(T("That submission has been deleted."));
             return Redirect(Request.UrlReferrer.ToString());
         }
 
@@ -69,7 +69,7 @@ namespace Orchard.DynamicForms.Controllers {
             }
             else {
                 var numDeletedSubmissions = _formService.DeleteSubmissions(submissionIds);
-                _services.Notifier.Information(T("{0} submissions have been deleted.", numDeletedSubmissions));
+                _services.Notifier.Success(T("{0} submissions have been deleted.", numDeletedSubmissions));
             }
 
             return Redirect(Request.UrlReferrer.ToString());

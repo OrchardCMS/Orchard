@@ -87,10 +87,12 @@
     $(".terms-editor").each(function () {
         var selectedTerms = $(this).data("selected-terms");
 
+        var autocompleteUrl = $(this).data("autocomplete-url");
+
         var $tagit = $("> ul", this).tagit({
             tagSource: function (request, response) {
                 var termsEditor = $(this.element).parents(".terms-editor");
-                $.getJSON("/api/taxonomies/tags", { taxonomyId: termsEditor.data("taxonomy-id"), leavesOnly: termsEditor.data("leaves-only"), query: request.term }, function (data, status, xhr) {
+                $.getJSON(autocompleteUrl, { taxonomyId: termsEditor.data("taxonomy-id"), leavesOnly: termsEditor.data("leaves-only"), query: request.term }, function (data, status, xhr) {
                     response(data);
                 });
             },

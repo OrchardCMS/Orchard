@@ -227,7 +227,7 @@ namespace Orchard.Widgets.Controllers {
                 return View(model);
             }
 
-            Services.Notifier.Information(T("Your {0} has been added.", widgetPart.TypeDefinition.DisplayName));
+            Services.Notifier.Success(T("Your {0} has been added.", widgetPart.TypeDefinition.DisplayName));
 
             return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
         }
@@ -269,7 +269,7 @@ namespace Orchard.Widgets.Controllers {
                 return View(model);
             }
 
-            Services.Notifier.Information(T("Your {0} has been created.", layerPart.TypeDefinition.DisplayName));
+            Services.Notifier.Success(T("Your {0} has been created.", layerPart.TypeDefinition.DisplayName));
             return RedirectToAction("Index", "Admin", new { layerId = layerPart.Id });
         }
 
@@ -302,7 +302,7 @@ namespace Orchard.Widgets.Controllers {
                 return View(model);
             }
 
-            Services.Notifier.Information(T("Your {0} has been saved.", layerPart.TypeDefinition.DisplayName));
+            Services.Notifier.Success(T("Your {0} has been saved.", layerPart.TypeDefinition.DisplayName));
 
             return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
         }
@@ -315,7 +315,7 @@ namespace Orchard.Widgets.Controllers {
 
             try {
                 _widgetsService.DeleteLayer(id);
-                Services.Notifier.Information(T("Layer was successfully deleted"));
+                Services.Notifier.Success(T("Layer was successfully deleted"));
             }
             catch (Exception exception) {
                 Logger.Error(T("Removing Layer failed: {0}", exception.Message).Text);
@@ -387,7 +387,7 @@ namespace Orchard.Widgets.Controllers {
 
                 conditionallyPublish(widgetPart.ContentItem);
 
-                Services.Notifier.Information(T("Your {0} has been saved.", widgetPart.TypeDefinition.DisplayName));
+                Services.Notifier.Success(T("Your {0} has been saved.", widgetPart.TypeDefinition.DisplayName));
             }
             catch (Exception exception) {
                 Logger.Error(T("Editing widget failed: {0}", exception.Message).Text);
@@ -412,7 +412,7 @@ namespace Orchard.Widgets.Controllers {
                 return HttpNotFound();
             try {
                 _widgetsService.DeleteWidget(widgetPart.Id);
-                Services.Notifier.Information(T("Widget was successfully deleted"));
+                Services.Notifier.Success(T("Widget was successfully deleted"));
             }
             catch (Exception exception) {
                 Logger.Error(T("Removing Widget failed: {0}", exception.Message).Text);

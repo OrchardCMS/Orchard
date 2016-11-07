@@ -47,7 +47,7 @@
                             handled = true;
                         }
 
-                        if (element.type == "Content") { // This is a content element.
+                        if (!!element.hasEditor) { // This element has an editor dialog.
                             if (!e.ctrlKey && !e.shiftKey && !e.altKey && e.which == 13) { // Enter
                                 $element.find(".layout-panel-action-edit").first().click();
                                 handled = true;
@@ -149,6 +149,23 @@
 
                     $scope.delete = function (element) {
                         element.delete();
+                    }
+
+                    if ($scope.element.hasEditor) {
+                        $scope.edit = function () {
+                            $scope.$root.editElement($scope.element).then(function (args) {
+                                $scope.$apply(function () {
+                                    if (args.cancel)
+                                        return;
+
+                                    $scope.element.data = args.element.data;
+                                    $scope.element.applyElementEditorModel(args.elementEditorModel);
+
+                                    if (!!$scope.element.setHtml)
+                                        $scope.element.setHtml(args.element.html);
+                                });
+                            });
+                        };
                     }
                 },
 

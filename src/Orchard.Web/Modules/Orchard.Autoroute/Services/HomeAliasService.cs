@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Routing;
 using Orchard.Alias;
@@ -14,6 +15,8 @@ namespace Orchard.Autoroute.Services {
         private const string AliasSource = "Autoroute:Home";
         private const string HomeAlias = "";
 
+        private RouteValueDictionary _homeAliasRoute;
+
         public HomeAliasService(IAliasService aliasService, IAliasHolder aliasHolder, IContentManager contentManager) {
             _aliasService = aliasService;
             _aliasHolder = aliasHolder;
@@ -21,7 +24,11 @@ namespace Orchard.Autoroute.Services {
         }
 
         public RouteValueDictionary GetHomeRoute() {
-            return _aliasService.Get(HomeAlias);
+            if(_homeAliasRoute == null) {
+                _homeAliasRoute = _aliasService.Get(HomeAlias);
+            }
+
+            return _homeAliasRoute;
         }
 
         public int? GetHomePageId(VersionOptions version = null) {
@@ -31,12 +38,16 @@ namespace Orchard.Autoroute.Services {
 
         public IContent GetHomePage(VersionOptions version = null) {
             var homePageRoute = GetHomeRoute();
+            
+            if (homePageRoute == null)
+                return null;
+            
             var alias = LookupAlias(homePageRoute);
 
             if (alias == null)
                 return null;
 
-            var homePage = _contentManager.Query<AutoroutePart, AutoroutePartRecord>(version).Where(x => x.DisplayAlias == alias).Slice(0, 1).SingleOrDefault();
+            var homePage = _contentManager.Query<AutoroutePart, AutoroutePartRecord>(version).Where(x => x.DisplayAlias == alias).Slice(0, 1).FirstOrDefault();
             return homePage;
         }
 
@@ -56,6 +67,7 @@ namespace Orchard.Autoroute.Services {
         }
 
         public void PublishHomeAlias(RouteValueDictionary route) {
+            _homeAliasRoute = route;
             _aliasService.DeleteBySource(AliasSource);
             _aliasService.Set(HomeAlias, route, AliasSource);
         }
@@ -70,8 +82,16 @@ namespace Orchard.Autoroute.Services {
             if (map == null)
                 return null;
 
-            var alias = map.GetAliases().FirstOrDefault(x => !String.IsNullOrWhiteSpace(x.Path));
+            var alias = map.GetAliases().FirstOrDefault(x => IsSameRoute(x.RouteValues, routeValues) && !String.IsNullOrWhiteSpace(x.Path));
             return alias != null ? alias.Path : null;
+        }
+
+        private bool IsSameRoute(IDictionary<string,string> a, RouteValueDictionary b) {
+            if(a.Count != b.Count) {
+                return false;
+            }
+
+            return a.Keys.All(x => String.Equals(a[x], b[x].ToString(), StringComparison.OrdinalIgnoreCase));
         }
     }
 }

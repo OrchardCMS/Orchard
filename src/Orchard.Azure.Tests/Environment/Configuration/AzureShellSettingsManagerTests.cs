@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using Microsoft.WindowsAzure;
+using Microsoft.WindowsAzure.Storage;
 using NUnit.Framework;
 using Orchard.Azure.Services.Environment.Configuration;
 using Orchard.Environment.Configuration;
@@ -21,13 +21,13 @@ namespace Orchard.Azure.Tests.Environment.Configuration {
         [SetUp]
         public void Setup() {
             // ensure default container is empty before running any test
-            DeleteAllBlobs(Constants.ShellSettingsContainerName, DevAccount);
+            DeleteAllBlobs(Constants.ShellSettingsDefaultContainerName, DevAccount);
         }
 
         [TearDown]
         public void TearDown() {
             // ensure default container is empty after running tests
-            DeleteAllBlobs(Constants.ShellSettingsContainerName, DevAccount);
+            DeleteAllBlobs(Constants.ShellSettingsDefaultContainerName, DevAccount);
         }
 
         [Test]

@@ -45,10 +45,13 @@ namespace Orchard.Core.Common.Drivers {
         protected override DriverResult Editor(ContentPart part, TextField field, dynamic shapeHelper) {
             return ContentShape("Fields_Common_Text_Edit", GetDifferentiator(field, part),
                 () => {
+                    var settings = field.PartFieldDefinition.Settings.GetModel<TextFieldSettings>();
+                    var text = part.IsNew() ? settings.DefaultValue : field.Value;
+
                     var viewModel = new TextFieldDriverViewModel {
                         Field = field,
-                        Text = field.Value,
-                        Settings = field.PartFieldDefinition.Settings.GetModel<TextFieldSettings>(),
+                        Text = text,
+                        Settings = settings,
                         ContentItem = part.ContentItem
                     };
 
@@ -58,21 +61,16 @@ namespace Orchard.Core.Common.Drivers {
 
         protected override DriverResult Editor(ContentPart part, TextField field, IUpdateModel updater, dynamic shapeHelper) {
 
-            var viewModel = new TextFieldDriverViewModel {
-                Field = field,
-                Text = field.Value,
-                Settings = field.PartFieldDefinition.Settings.GetModel<TextFieldSettings>(),
-                ContentItem = part.ContentItem
-            };
+            var viewModel = new TextFieldDriverViewModel();
 
             if (updater.TryUpdateModel(viewModel, GetPrefix(field, part), null, null)) {
-                if (viewModel.Settings.Required && string.IsNullOrWhiteSpace(viewModel.Text)) {
-                    updater.AddModelError("Text", T("The field {0} is mandatory", T(field.DisplayName)));
-                    return ContentShape("Fields_Common_Text_Edit", GetDifferentiator(field, part),
-                                        () => shapeHelper.EditorTemplate(TemplateName: "Fields.Common.Text.Edit", Model: viewModel, Prefix: GetPrefix(field, part)));
-                }
+                var settings = field.PartFieldDefinition.Settings.GetModel<TextFieldSettings>();
 
                 field.Value = viewModel.Text;
+
+                if (settings.Required && String.IsNullOrWhiteSpace(field.Value)) {
+                    updater.AddModelError("Text", T("The {0} field is required.", T(field.DisplayName)));
+                }
             }
 
             return Editor(part, field, shapeHelper);
@@ -88,6 +86,10 @@ namespace Orchard.Core.Common.Drivers {
         protected override void Exporting(ContentPart part, TextField field, ExportContentContext context) {
             if (!String.IsNullOrEmpty(field.Value))
                 context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Text", field.Value);
+        }
+
+        protected override void Cloning(ContentPart part, TextField originalField, TextField cloneField, CloneContentContext context) {
+            cloneField.Value = originalField.Value;
         }
 
         protected override void Describe(DescribeMembersContext context) {

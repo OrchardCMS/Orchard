@@ -194,7 +194,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 66
         testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 67
-    testRunner.Then("I should see \"The field Guests is mandatory.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+    testRunner.Then("I should see \"The Guests field is required.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 70
     testRunner.When("I go to \"Admin/ContentTypes/Edit/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
@@ -265,6 +265,72 @@ this.ScenarioSetup(scenarioInfo);
     testRunner.Then("I should see \"The value &#39;a&#39; is not valid for Minimum.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 99
         testRunner.And("I should see \"The value &#39;b&#39; is not valid for Maximum.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 102
+    testRunner.When("I go to \"Admin/Contents/Create/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+            TechTalk.SpecFlow.Table table11 = new TechTalk.SpecFlow.Table(new string[] {
+                        "name",
+                        "value"});
+            table11.AddRow(new string[] {
+                        "Event.Guests.Value",
+                        "a"});
+#line 103
+        testRunner.And("I fill in", ((string)(null)), table11, "And ");
+#line 106
+        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 107
+    testRunner.Then("I should see \"Guests is an invalid number\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 110
+    testRunner.When("I go to \"Admin/ContentTypes/Edit/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+            TechTalk.SpecFlow.Table table12 = new TechTalk.SpecFlow.Table(new string[] {
+                        "name",
+                        "value"});
+            table12.AddRow(new string[] {
+                        "Fields[0].NumericFieldSettings.DefaultValue",
+                        "1234"});
+#line 111
+        testRunner.And("I fill in", ((string)(null)), table12, "And ");
+#line 114
+        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 115
+        testRunner.And("I go to \"Admin/Contents/Create/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 116
+    testRunner.Then("I should see \"value=\\\"1234\\\"\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 119
+    testRunner.When("I go to \"Admin/ContentTypes/Edit/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+            TechTalk.SpecFlow.Table table13 = new TechTalk.SpecFlow.Table(new string[] {
+                        "name",
+                        "value"});
+            table13.AddRow(new string[] {
+                        "Fields[0].NumericFieldSettings.Required",
+                        "true"});
+#line 120
+        testRunner.And("I fill in", ((string)(null)), table13, "And ");
+#line 123
+        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 124
+        testRunner.And("I go to \"Admin/Contents/Create/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 125
+    testRunner.Then("I should see \"required=\\\"required\\\"\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 128
+    testRunner.When("I go to \"Admin/ContentTypes/Edit/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+            TechTalk.SpecFlow.Table table14 = new TechTalk.SpecFlow.Table(new string[] {
+                        "name",
+                        "value"});
+            table14.AddRow(new string[] {
+                        "Fields[0].NumericFieldSettings.Required",
+                        "false"});
+#line 129
+        testRunner.And("I fill in", ((string)(null)), table14, "And ");
+#line 132
+        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 133
+        testRunner.And("I go to \"Admin/Contents/Create/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 134
+    testRunner.Then("I should not see \"required=\\\"required\\\"\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
         }

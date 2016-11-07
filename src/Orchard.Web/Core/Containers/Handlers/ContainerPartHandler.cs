@@ -7,7 +7,6 @@ using Orchard.Core.Containers.Models;
 using Orchard.Core.Containers.Services;
 using Orchard.Core.Containers.Settings;
 using Orchard.Data;
-using System.Web.Routing;
 
 namespace Orchard.Core.Containers.Handlers {
     public class ContainerPartHandler : ContentHandler {
@@ -35,14 +34,6 @@ namespace Orchard.Core.Containers.Handlers {
 
             });
 
-            OnGetContentItemMetadata<ContainerPart>((context, part) => {
-                    context.Metadata.DisplayRouteValues = new RouteValueDictionary {
-                    {"Area", "Containers"},
-                    {"Controller", "Item"},
-                    {"Action", "Display"},
-                    {"id", context.ContentItem.Id}
-                };
-            });
 
             OnActivated<ContainerPart>((context, part) => {
                 part.ContainerSettingsField.Loader(() => part.Settings.GetModel<ContainerTypePartSettings>());

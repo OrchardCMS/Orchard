@@ -6,16 +6,14 @@ using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.Core.Title.Models;
 using Orchard.DynamicForms.Elements;
-using Orchard.DynamicForms.Helpers;
 using Orchard.Environment.Extensions;
-using Orchard.Forms.Services;
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
 using Orchard.Layouts.Helpers;
+using Orchard.Layouts.Services;
 using Orchard.Projections.Models;
 using Orchard.Projections.Services;
 using Orchard.Tokens;
-using Orchard.Utility.Extensions;
 using DescribeContext = Orchard.Forms.Services.DescribeContext;
 
 namespace Orchard.DynamicForms.Drivers {
@@ -25,8 +23,8 @@ namespace Orchard.DynamicForms.Drivers {
         private readonly IContentManager _contentManager;
         private readonly ITokenizer _tokenizer;
 
-        public QueryElementDriver(IFormManager formManager, IProjectionManager projectionManager, IContentManager contentManager, ITokenizer tokenizer)
-            : base(formManager) {
+        public QueryElementDriver(IFormsBasedElementServices formsServices, IProjectionManager projectionManager, IContentManager contentManager, ITokenizer tokenizer)
+            : base(formsServices) {
             _projectionManager = projectionManager;
             _contentManager = contentManager;
             _tokenizer = tokenizer;
@@ -70,6 +68,12 @@ namespace Orchard.DynamicForms.Drivers {
                         Value: "{Content.Id}",
                         Description: T("Specify the expression to get the value of each option."),
                         Classes: new[]{"text", "large", "tokenized"}),
+                    _DefaultValue: shape.Textbox(
+                        Id: "DefaultValue",
+                        Name: "DefaultValue",
+                        Title: "Default Value",
+                        Classes: new[] { "text", "large", "tokenized" },
+                        Description: T("The default value of this query field.")),
                     _InputType: shape.SelectList(
                         Id: "InputType",
                         Name: "InputType",
@@ -124,6 +128,13 @@ namespace Orchard.DynamicForms.Drivers {
             var displayType = context.DisplayType;
             var tokenData = context.GetTokenData();
 
+            // Allow the initially selected value to be tokenized.
+            // If a value was posted, use that value instead (without tokenizing it).
+            if (element.PostedValue == null) {
+                var defaultValue = _tokenizer.Replace(element.DefaultValue, tokenData, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
+                element.RuntimeValue = defaultValue;
+            }
+
             context.ElementShape.ProcessedName = _tokenizer.Replace(element.Name, tokenData);
             context.ElementShape.ProcessedLabel = _tokenizer.Replace(element.Label, tokenData);
             context.ElementShape.Options = GetOptions(element, context.DisplayType, queryId, tokenData).ToArray();
@@ -149,7 +160,7 @@ namespace Orchard.DynamicForms.Drivers {
             foreach (var contentItem in contentItems) {
                 var data = new {Content = contentItem};
                 var value = _tokenizer.Replace(valueExpression, data);
-                var text = _tokenizer.Replace(textExpression, data);
+                var text = _tokenizer.Replace(textExpression, data, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
 
                 yield return new SelectListItem {
                     Text = text,

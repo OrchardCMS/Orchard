@@ -12,13 +12,18 @@ using Orchard.Environment.State;
 using Orchard.Environment.Descriptor;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Events;
+using Orchard.Caching;
+using Orchard.Core.Settings.State.Records;
 
 namespace Orchard.Tests.Modules.Settings.Blueprint {
     [TestFixture]
     public class ShellDescriptorManagerTests : DatabaseEnabledTestsBase {
         public override void Register(ContainerBuilder builder) {
             builder.RegisterInstance(new ShellSettings { Name = "Default" });
-
+            builder.RegisterModule(new CacheModule());
+            builder.RegisterType<DefaultCacheManager>().As<ICacheManager>();
+            builder.RegisterType<DefaultCacheHolder>().As<ICacheHolder>().SingleInstance();
+            builder.RegisterType<DefaultCacheContextAccessor>().As<ICacheContextAccessor>();
             builder.RegisterType<ShellDescriptorManager>().As<IShellDescriptorManager>().SingleInstance();
             builder.RegisterType<ShellStateManager>().As<IShellStateManager>().SingleInstance();
             builder.RegisterType<StubEventBus>().As<IEventBus>().SingleInstance();
@@ -39,6 +44,8 @@ namespace Orchard.Tests.Modules.Settings.Blueprint {
         protected override IEnumerable<Type> DatabaseTypes {
             get {
                 return new[] {
+                                typeof (ShellStateRecord),
+                                typeof (ShellFeatureStateRecord),
                                  typeof (ShellDescriptorRecord),
                                  typeof (ShellFeatureRecord),
                                  typeof (ShellParameterRecord),

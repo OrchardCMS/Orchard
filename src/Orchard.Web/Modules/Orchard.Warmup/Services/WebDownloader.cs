@@ -41,7 +41,7 @@ namespace Orchard.Warmup.Services {
                 return null;
             }
             catch(Exception e) {
-                Logger.Error(e, "An error occured while downloading url: {0}", url);
+                Logger.Error(e, "An error occurred while downloading url: {0}", url);
                 return null;
             }
         }

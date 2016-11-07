@@ -82,7 +82,7 @@ namespace Orchard.Azure.Services.FileSystems {
         private static string ConvertToRelativeUriPath(string path) {
             var newPath = path.Replace(@"\", "/");
 
-            if (newPath.StartsWith("/") || newPath.StartsWith("http://") || newPath.StartsWith("https://")) {
+            if (newPath.StartsWith("/", StringComparison.OrdinalIgnoreCase) || newPath.StartsWith("http://", StringComparison.OrdinalIgnoreCase) || newPath.StartsWith("https://", StringComparison.OrdinalIgnoreCase)) {
                 throw new ArgumentException("Path must be relative");
             }
 
@@ -106,7 +106,7 @@ namespace Orchard.Azure.Services.FileSystems {
                 return path2;
             }
 
-            if (path2.StartsWith("http://") || path2.StartsWith("https://")) {
+            if (path2.StartsWith("http://", StringComparison.OrdinalIgnoreCase) || path2.StartsWith("https://", StringComparison.OrdinalIgnoreCase)) {
                 return path2;
             }
 
@@ -308,9 +308,9 @@ namespace Orchard.Azure.Services.FileSystems {
 
         public string GetPublicUrl(string path) {
             path = ConvertToRelativeUriPath(path);
-            var uri = new UriBuilder(Container.GetBlockBlobReference(String.Concat(_root, path)).Uri);
-            if (!string.IsNullOrEmpty(_publicHostName)) uri.Host = _publicHostName;
-            return uri.ToString();
+            var uriBuilder = new UriBuilder(Container.GetBlockBlobReference(String.Concat(_root, path)).Uri);
+            if (!string.IsNullOrEmpty(_publicHostName)) uriBuilder.Host = _publicHostName;
+            return uriBuilder.Uri.ToString();
         }
 
         private class AzureBlobFileStorage : IStorageFile {

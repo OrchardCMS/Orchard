@@ -49,7 +49,7 @@ namespace Orchard.Indexing.Commands {
             else {
                 var indexProvider = _indexManager.GetSearchIndexProvider();
                 if(indexProvider == null) {
-                    Context.Output.WriteLine(T("New indexing service was found. Please enable a module like Lucene."));
+                    Context.Output.WriteLine(T("No indexing service was found. Please enable a module like Lucene."));
                 }
                 else {
                     if (indexProvider.Exists(index)) {

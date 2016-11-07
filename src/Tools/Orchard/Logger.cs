@@ -17,5 +17,10 @@ namespace Orchard {
                 _output.WriteLine(format, args);
             }
         }
+
+        public override object InitializeLifetimeService() {
+            // never expire the cross-AppDomain lease on this object
+            return null;
+        }
     }
 }

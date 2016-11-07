@@ -128,7 +128,7 @@ namespace Orchard.Projections.FilterEditors.Forms {
                 case NumericOperator.LessThan:
                     return T("{0} is less than {1}", fieldName, value);
                 case NumericOperator.LessThanEquals:
-                    return T("{0} is less or equal than {1}", fieldName, value);
+                    return T("{0} is less than or equal to {1}", fieldName, value);
                 case NumericOperator.Equals:
                     return T("{0} equals {1}", fieldName, value);
                 case NumericOperator.NotEquals:
@@ -136,7 +136,7 @@ namespace Orchard.Projections.FilterEditors.Forms {
                 case NumericOperator.GreaterThan:
                     return T("{0} is greater than {1}", fieldName, value);
                 case NumericOperator.GreaterThanEquals:
-                    return T("{0} is greater or equal than {1}", fieldName, value);
+                    return T("{0} is greater than or equal to {1}", fieldName, value);
                 case NumericOperator.Between:
                     return T("{0} is between {1} and {2}", fieldName, min, max);
                 case NumericOperator.NotBetween:

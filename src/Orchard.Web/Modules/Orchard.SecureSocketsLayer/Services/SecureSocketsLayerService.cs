@@ -97,7 +97,7 @@ namespace Orchard.SecureSocketsLayer.Services {
             if (!settings.CustomEnabled) return false;
 
             var urlHelper = new UrlHelper(requestContext);
-            var url = urlHelper.Action(actionName, controllerName, requestContext.RouteData);
+            var url = urlHelper.Action(actionName, controllerName, requestContext.RouteData.Values);
 
             if (String.IsNullOrWhiteSpace(url)) {
                 return false;

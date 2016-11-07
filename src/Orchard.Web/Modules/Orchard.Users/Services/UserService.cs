@@ -1,19 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
+using Orchard.Environment.Configuration;
 using Orchard.Localization;
 using Orchard.Logging;
-using Orchard.ContentManagement;
-using Orchard.Settings;
-using Orchard.Users.Models;
-using Orchard.Security;
-using System.Xml.Linq;
-using Orchard.Services;
-using System.Globalization;
-using System.Text;
 using Orchard.Messaging.Services;
-using Orchard.Environment.Configuration;
+using Orchard.Security;
+using Orchard.Services;
+using Orchard.Settings;
+using Orchard.Users.Constants;
+using Orchard.Users.Models;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Xml.Linq;
 
 namespace Orchard.Users.Services {
     public class UserService : IUserService {
@@ -38,8 +40,8 @@ namespace Orchard.Users.Services {
             IEncryptionService encryptionService,
             IShapeFactory shapeFactory,
             IShapeDisplay shapeDisplay,
-            ISiteService siteService
-            ) {
+            ISiteService siteService) {
+
             _contentManager = contentManager;
             _membershipService = membershipService;
             _clock = clock;
@@ -48,7 +50,9 @@ namespace Orchard.Users.Services {
             _shapeFactory = shapeFactory;
             _shapeDisplay = shapeDisplay;
             _siteService = siteService;
+
             Logger = NullLogger.Instance;
+            T = NullLocalizer.Instance;
         }
 
         public ILogger Logger { get; set; }
@@ -193,6 +197,43 @@ namespace Orchard.Users.Services {
                 return null;
 
             return user;
+        }
+
+        public bool PasswordMeetsPolicies(string password, out IDictionary<string, LocalizedString> validationErrors) {
+            validationErrors = new Dictionary<string, LocalizedString>();
+            var settings = _siteService.GetSiteSettings().As<RegistrationSettingsPart>();
+
+            if (string.IsNullOrEmpty(password)) {
+                validationErrors.Add(UserPasswordValidationResults.PasswordIsTooShort,
+                    T("The password can't be empty."));
+                return false;
+            }
+
+            if (password.Length < settings.GetMinimumPasswordLength()) {
+                validationErrors.Add(UserPasswordValidationResults.PasswordIsTooShort,
+                    T("You must specify a password of {0} or more characters.", settings.MinimumPasswordLength));
+            }
+
+            if (settings.EnableCustomPasswordPolicy) {
+                if (settings.EnablePasswordNumberRequirement && !Regex.Match(password, "[0-9]").Success) {
+                    validationErrors.Add(UserPasswordValidationResults.PasswordDoesNotContainNumbers,
+                        T("The password must contain at least one number."));
+                }
+                if (settings.EnablePasswordUppercaseRequirement && !password.Any(c => char.IsUpper(c))) {
+                    validationErrors.Add(UserPasswordValidationResults.PasswordDoesNotContainUppercase,
+                        T("The password must contain at least one uppercase letter."));
+                }
+                if (settings.EnablePasswordLowercaseRequirement && !password.Any(c => char.IsLower(c))) {
+                    validationErrors.Add(UserPasswordValidationResults.PasswordDoesNotContainLowercase,
+                        T("The password must contain at least one lowercase letter."));
+                }
+                if (settings.EnablePasswordSpecialRequirement && !Regex.Match(password, "[^a-zA-Z0-9]").Success) {
+                    validationErrors.Add(UserPasswordValidationResults.PasswordDoesNotContainSpecialCharacters,
+                        T("The password must contain at least one special character."));
+                }
+            }
+
+            return validationErrors.Count == 0;
         }
     }
 }

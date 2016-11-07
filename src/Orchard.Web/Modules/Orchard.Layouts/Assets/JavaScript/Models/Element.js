@@ -5,6 +5,7 @@
         if (!type)
             throw new Error("Parameter 'type' is required.");
 
+        var self = this;
         this.type = type;
         this.data = data;
         this.htmlId = htmlId;
@@ -13,6 +14,7 @@
         this.isTemplated = isTemplated;
         this.rule = rule;
 
+        this.templateStyles = {};
         this.editor = null;
         this.parent = null;
         this.setIsFocusedEventHandlers = [];
@@ -163,12 +165,18 @@
                 htmlClass: this.htmlClass,
                 htmlStyle: this.htmlStyle,
                 isTemplated: this.isTemplated,
-                rule: this.rule
+                rule: this.rule,
+                contentType: this.contentType,
+                hasEditor: this.hasEditor
             };
         };
 
         this.getEditorObject = function() {
             return {};
+        };
+
+        this.toObject = function () {
+            return self.elementToObject();
         };
 
         this.copy = function (clipboardData) {
@@ -191,6 +199,17 @@
             if (!!this.parent)
                 this.parent.paste(clipboardData);
         };
+
+        this.getTemplateStyles = function () {
+            var styles = this.templateStyles || {};
+            var css = "";
+
+            for (var property in styles) {
+                css += property + ":" + styles[property] + ";";
+            }
+
+            return css;
+        }
     };
 
 })(LayoutEditor || (LayoutEditor = {}));

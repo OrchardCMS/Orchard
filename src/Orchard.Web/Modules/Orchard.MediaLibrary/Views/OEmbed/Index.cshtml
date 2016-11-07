@@ -46,17 +46,21 @@
     @Display.StyleSheetLinks()
 </head>
 <body>
-
     <div id="oembed-main">
+        @if (Layout.Messages != null) {
+            <div id="messages">
+                @Display(Layout.Messages)
+            </div>
+        }
         <div class="query-container">
             @using (Html.BeginFormAntiForgeryPost()) {
                 <fieldset>
                     <legend>@T("Please enter the URL of the embeddable media you want to integrate (requires an oEmbed compatible media provider such as YouTube):")</legend>
                     <div id="icon">
-                        <button type="submit" class="icon-download">@T("Preview")</button>
+                        <button type="submit" class="fa fa-download"></button>
                     </div>
                     <div id="query">
-                        <input name="url" type="text" autofocus=autofocus autofocus=autofocus placeholder="@T("media url")" value="@Model.Url" />
+                        <input name="url" type="text" autofocus placeholder="@T("media url")" value="@Model.Url" />
                     </div>
                 </fieldset>
                 <fieldset>
@@ -126,15 +130,24 @@
                 </div>
             }
 
-            using (Html.BeginFormAntiForgeryPost(Url.Action("MediaPost"))) {
-                @Html.Hidden("url", Model.Url)
-                @Html.Hidden("folderPath", Model.FolderPath)
-                @Html.Hidden("document", Model.Content.ToString())
-                <br/>
-                <button type="submit">@T("Import")</button>
+            if (Model.Replace == null) {
+                using (Html.BeginFormAntiForgeryPost(Url.Action("Import"))) {
+                    @Html.Hidden("folderPath", Model.FolderPath)
+                    @Html.Hidden("url", Model.Url)
+                    @Html.Hidden("document", Model.Content.ToString())
+                    <br/>
+                    <button type="submit">@T("Import")</button>
+                }
+            } else {
+                using (Html.BeginFormAntiForgeryPost(Url.Action("Replace"), FormMethod.Post, new { onsubmit = "window.parent.$('a.button.close')[0].click();" })) {
+                    @Html.Hidden("replaceId", Model.Replace)
+                    @Html.Hidden("url", Model.Url)
+                    @Html.Hidden("document", Model.Content.ToString())
+                    <br />
+                    <button type="submit">@T("Replace")</button>
+                }
             }
         }
-
     </div>
     @Display.FootScripts()
 </body>

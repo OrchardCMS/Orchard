@@ -12,7 +12,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Orchard.Core</RootNamespace>
     <AssemblyName>Orchard.Core</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -51,6 +51,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -61,14 +65,28 @@
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.Extensions" />
-    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Web.WebPages, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\lib\aspnetmvc\System.Web.WebPages.dll</HintPath>
+    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Xml" />
@@ -77,6 +95,7 @@
   <ItemGroup>
     <Compile Include="Common\Controllers\ErrorController.cs" />
     <Compile Include="Common\DateEditor\DateEditorSettings.cs" />
+    <Compile Include="Common\Extensions\CommonMetaDataExtensions.cs" />
     <Compile Include="Common\OwnerEditor\OwnerEditorSettings.cs" />
     <Compile Include="Common\OwnerEditor\OwnerEditorDriver.cs" />
     <Compile Include="Common\DateEditor\DateEditorDriver.cs" />
@@ -100,7 +119,6 @@
     <Compile Include="Common\ViewModels\DateTimeEditor.cs" />
     <Compile Include="Common\ViewModels\TextFieldDriverViewModel.cs" />
     <Compile Include="Common\ViewModels\TextFieldSettingsEventsViewModel.cs" />
-    <Compile Include="Containers\Controllers\ItemController.cs" />
     <Compile Include="Containers\Drivers\ContainablePartDriver.cs" />
     <Compile Include="Containers\Drivers\ContainerPartDriver.cs" />
     <Compile Include="Common\Migrations.cs" />
@@ -153,6 +171,7 @@
     <Compile Include="Dashboard\Services\CompilationErrorBanner.cs" />
     <Compile Include="Navigation\Commands\MenuCommands.cs" />
     <Compile Include="Navigation\Drivers\AdminMenuPartDriver.cs" />
+    <Compile Include="Navigation\Drivers\BreadcrumbMenuItemPartDriver.cs" />
     <Compile Include="Navigation\Drivers\MenuItemPartDriver.cs" />
     <Compile Include="Navigation\Drivers\MenuWidgetPartDriver.cs" />
     <Compile Include="Navigation\Drivers\ShapeMenuItemPartDriver.cs" />
@@ -163,6 +182,7 @@
     <Compile Include="Navigation\Handlers\MenuWidgetPartHandler.cs" />
     <Compile Include="Navigation\Models\AdminMenuPart.cs" />
     <Compile Include="Navigation\Models\AdminMenuPartRecord.cs" />
+    <Compile Include="Navigation\Models\BreadcrumbMenuItemPart.cs" />
     <Compile Include="Navigation\Models\MenuWidgetPart.cs" />
     <Compile Include="Navigation\Models\ShapeMenuItemPart.cs" />
     <Compile Include="Navigation\Security\AuthorizationEventHandler.cs" />
@@ -374,10 +394,7 @@
   <ItemGroup>
     <Content Include="Common\Views\Parts.Common.Body.Summary.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Data\" />
-    <Folder Include="Views\Gamma\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="Contents\Views\Content.cshtml" />
     <Content Include="Contents\Views\Content.SummaryAdmin.cshtml" />
@@ -445,7 +462,9 @@
     <Content Include="Navigation\Views\DefinitionTemplates\AdminMenuPartTypeSettings.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Common\Views\Parts.Common.Date.Edit.cshtml" />
@@ -577,6 +596,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Shapes\Views\AdminTabs.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Common\Views\DefinitionTemplates\TextFieldDefaultValueEditor.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

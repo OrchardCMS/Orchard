@@ -64,7 +64,7 @@ namespace Orchard.Projections {
                 cfg => cfg
                     .WithPart("QueryPart")
                     .WithPart("TitlePart")
-                    .WithPart("IdentityPart")
+                    .WithIdentity()
                 );
 
             SchemaBuilder.CreateTable("QueryPartRecord",
@@ -179,7 +179,7 @@ namespace Orchard.Projections {
                 cfg => cfg
                     .WithPart("WidgetPart")
                     .WithPart("CommonPart")
-                    .WithPart("IdentityPart")
+                    .WithIdentity()
                     .WithPart("ProjectionPart")
                     .WithSetting("Stereotype", "Widget")
                 );
@@ -272,6 +272,15 @@ namespace Orchard.Projections {
             );
 
             return 3;
+        }
+
+        public int UpdateFrom3() {
+            ContentDefinitionManager.AlterTypeDefinition("NavigationQueryMenuItem",
+                cfg => cfg
+                    .WithIdentity()
+                );
+
+            return 4;
         }
     }
 }

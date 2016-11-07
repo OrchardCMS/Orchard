@@ -50,17 +50,20 @@ namespace Orchard.Environment {
         }
 
         public ILogger Logger { get; set; }
+        public ISweepGenerator Sweep { get { return _sweepGenerator; } }
 
         public void Activate() {
             var appBuilder = new AppBuilder();
             appBuilder.Properties["host.AppName"] = _shellSettings.Name;
 
-            var orderedMiddlewares = _owinMiddlewareProviders
-                .SelectMany(p => p.GetOwinMiddlewares())
-                .OrderBy(obj => obj.Priority, new FlatPositionComparer());
+            using (var scope = _workContextAccessor.CreateWorkContextScope()) {
+                var orderedMiddlewares = _owinMiddlewareProviders
+                    .SelectMany(p => p.GetOwinMiddlewares())
+                    .OrderBy(obj => obj.Priority, new FlatPositionComparer());
 
-            foreach (var middleware in orderedMiddlewares) {
-                middleware.Configure(appBuilder);
+                foreach (var middleware in orderedMiddlewares) {
+                    middleware.Configure(appBuilder);
+                }
             }
 
             // Register the Orchard middleware after all others.
@@ -104,7 +107,7 @@ namespace Orchard.Environment {
                     throw;
                 }
 
-                Logger.Error(ex, "An unexcepted error occured while terminating the Shell");
+                Logger.Error(ex, "An unexpected error occurred while terminating the Shell");
             }
         }
     }

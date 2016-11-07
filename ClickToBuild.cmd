@@ -23,11 +23,14 @@ echo "Unable to detect suitable environment. Build may not succeed."
 
 SET target=%1
 SET project=%2
+SET solution=%3
 
 IF "%target%" == "" SET target=Build
-IF "%project%" =="" SET project=Orchard.proj
+IF "%project%" == "" SET project=Orchard.proj
+IF "%solution%" == "" SET solution=src\Orchard.sln
 
-msbuild /t:%target% %project%
+lib\nuget\nuget.exe restore %solution%
+
+msbuild /t:%target% %project% /p:Solution=%solution% /m
 
 pause
-

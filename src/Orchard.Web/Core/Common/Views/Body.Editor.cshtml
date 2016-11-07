@@ -1,5 +1,7 @@
 ﻿@using Orchard.Utility.Extensions;
 @{
+    var propertyName = Model.PropertyName != null ? (string)Model.PropertyName : "Text";
+
     string editorFlavor = Model.EditorFlavor;
 
     var htmlAttributes = new Dictionary<string, object> {
@@ -13,6 +15,10 @@
     if (Model.AutoFocus == true) {
         htmlAttributes["autofocus"] = "autofocus";
     }
+
+    if (!String.IsNullOrEmpty(Model.Placeholder)) {
+        htmlAttributes["placeholder"] = Model.Placeholder;
+    }
 }
 
-@Html.TextArea("Text", (string)Model.Text, 25, 80, htmlAttributes)
+@Html.TextArea(propertyName, (string)Model.Text, 25, 80, htmlAttributes)

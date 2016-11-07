@@ -1,10 +1,9 @@
 ﻿(function ($) {
-    var LayoutDesignerHost = function (element) {
+    var LayoutDesignerHost = function (element, layoutEditor) {
         var self = this;
         this.element = element;
         this.element.data("layout-designer-host", this);
-        this.editor = window.layoutEditor;
-        this.isFormSubmitting = false;
+        this.editor = layoutEditor;
         this.settings = {
             antiForgeryToken: self.element.data("anti-forgery-token"),
             editorDialogTitleFormat: self.element.data("editor-dialog-title-format"),
@@ -62,6 +61,11 @@
             return JSON.stringify(layoutData, null, "\t");
         };
 
+        var serializeRecycleBin = function () {
+            var recycleBinData = self.editor.recycleBin.toObject();
+            return JSON.stringify(recycleBinData, null, "\t");
+        };
+
         var applyTemplate = function (templateId) {
             var layoutData = serializeCanvas();
 
@@ -79,21 +83,23 @@
             });
         };
 
-        var monitorForm = function() {
-            var layoutDesigner = self.element;
-            var form = layoutDesigner.closest("form");
-            
+        var monitorForm = function () {
+            var form = $(".zone-content form:first");
+
             form.on("submit", function (e) {
-                self.isFormSubmitting = true;
+                form.attr("isSubmitting", true);
                 serializeLayout();
             });
         };
 
         var serializeLayout = function () {
             var layoutDataField = self.element.find(".layout-data-field");
+            var recycleBinDataField = self.element.find(".recycle-bin-data-field");
             var layoutDataDataJson = serializeCanvas();
+            var recycleBinDataJson = serializeRecycleBin();
 
             layoutDataField.val(layoutDataDataJson);
+            recycleBinDataField.val(recycleBinDataJson);
         };
 
         this.element.on("change", ".template-picker select", function (e) {
@@ -103,7 +109,10 @@
         });
 
         $(window).on("beforeunload", function () {
-            if (!self.isFormSubmitting && self.editor.isDirty())
+
+            var form = $(".zone-content form:first");
+            var isFormSubmitting = form.attr("isSubmitting");
+            if (!isFormSubmitting && self.editor.isDirty())
                 return "You have unsaved changes.";
 
             return undefined;
@@ -115,20 +124,6 @@
     // Export types.
     window.Orchard = window.Orchard || {};
     window.Orchard.Layouts = window.Orchard.Layouts || {};
-    window.Orchard.Layouts.LayoutEditorHost = window.Orchard.Layouts.LayoutEditorHost || {};
+    window.Orchard.Layouts.LayoutDesignerHost = LayoutDesignerHost;
 
-    $(function () {
-        var host = new LayoutDesignerHost($(".layout-designer"));
-        $(".layout-designer").each(function (e) {
-            var designer = $(this);
-            var dialog = designer.find(".layout-editor-help-dialog");
-            designer.find(".layout-editor-help-link").click(function (e) {
-                dialog.dialog({
-                    modal: true,
-                    width: 840
-                });
-                e.preventDefault();
-            });
-        });
-    });
 })(jQuery);
