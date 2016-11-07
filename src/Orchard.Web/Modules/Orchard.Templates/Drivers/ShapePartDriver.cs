@@ -72,7 +72,7 @@ namespace Orchard.Templates.Drivers {
 
                 var existingShapes = _contentManager
                     .Query(VersionOptions.Latest, contentTypesWithShapePart.ToArray())
-                    .Where<TitlePartRecord>(record => record.Title == part.As< TitlePart>().Title && record.ContentItemRecord.Id != part.ContentItem.Id);
+                    .Where<TitlePartRecord>(record => record.Title == part.As<TitlePart>().Title && record.ContentItemRecord.Id != part.ContentItem.Id);
 
                 if (existingShapes.List().Any(x => x.As<ShapePart>().RenderingMode == part.RenderingMode)) {
                     updater.AddModelError("ShapeNameAlreadyExists", T("A template with the given name and rendering mode already exists."));
@@ -82,7 +82,9 @@ namespace Orchard.Templates.Drivers {
         }
 
         protected override void Exporting(ShapePart part, ExportContentContext context) {
-            context.Element(part.PartDefinition.Name).Add(new XCData(part.Template));
+            var element = context.Element(part.PartDefinition.Name);
+            element.Add(new XCData(part.Template));
+            element.SetAttributeValue("RenderingMode", part.RenderingMode.ToString());
         }
 
         protected override void Importing(ShapePart part, ImportContentContext context) {
@@ -93,8 +95,10 @@ namespace Orchard.Templates.Drivers {
 
             var shapeElement = context.Data.Element(part.PartDefinition.Name);
 
-            if (shapeElement != null)
+            if (shapeElement != null) {
                 part.Template = shapeElement.Value;
+                context.ImportAttribute(part.PartDefinition.Name, "RenderingMode", value => part.RenderingMode = (RenderingMode)Enum.Parse(typeof(RenderingMode), value));
+            }
         }
 
         private bool ValidateShapeName(ShapePart part, IUpdateModel updater) {
