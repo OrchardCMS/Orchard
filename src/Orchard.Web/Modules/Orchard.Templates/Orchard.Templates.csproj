@@ -180,7 +180,6 @@
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
-    <Compile Include="Drivers\TitlePartDriver.cs" />
     <Compile Include="Helpers\StringExtensions.cs" />
     <Compile Include="Handlers\ShapePartHandler.cs" />
     <Compile Include="Drivers\ShapePartDriver.cs" />
@@ -226,6 +225,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts.Shape.SummaryAdmin.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
