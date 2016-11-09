@@ -8,15 +8,18 @@ using Orchard.Localization;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using Orchard.Tokens;
 
 namespace Orchard.Fields.Drivers {
     public class NumericFieldDriver : ContentFieldDriver<NumericField> {
         public IOrchardServices Services { get; set; }
         private const string TemplateName = "Fields/Numeric.Edit";
         private readonly Lazy<CultureInfo> _cultureInfo;
+        private readonly ITokenizer _tokenizer;
 
-        public NumericFieldDriver(IOrchardServices services) {
+        public NumericFieldDriver(IOrchardServices services, ITokenizer tokenizer) {
             Services = services;
+            _tokenizer = tokenizer;
             T = NullLocalizer.Instance;
 
             _cultureInfo = new Lazy<CultureInfo>(() => CultureInfo.GetCultureInfo(Services.WorkContext.CurrentCulture));
@@ -64,6 +67,10 @@ namespace Orchard.Fields.Drivers {
 
                 var settings = field.PartFieldDefinition.Settings.GetModel<NumericFieldSettings>();
 
+                if (String.IsNullOrWhiteSpace(viewModel.Value) && !String.IsNullOrWhiteSpace(settings.DefaultValue)) {
+                    viewModel.Value = _tokenizer.Replace(settings.DefaultValue, new Dictionary<string, object> { { "Content", part.ContentItem } });
+                }
+
                 field.Value = null;
 
                 if (String.IsNullOrWhiteSpace(viewModel.Value)) {
@@ -72,7 +79,7 @@ namespace Orchard.Fields.Drivers {
                     }
                 }
                 else if (!Decimal.TryParse(viewModel.Value, NumberStyles.Any, _cultureInfo.Value, out value)) {
-                    updater.AddModelError(GetPrefix(field, part), T("{0} is an invalid number", T(field.DisplayName)));
+                    updater.AddModelError(GetPrefix(field, part), T("{0} or its default value is an invalid number", field.DisplayName));
                 }
                 else {
 
@@ -113,7 +120,7 @@ namespace Orchard.Fields.Drivers {
         protected override void Describe(DescribeMembersContext context) {
             context
                 .Member(null, typeof(decimal), T("Value"), T("The value of the field."))
-                .Enumerate<NumericField> (() => field => new[] { field.Value });
+                .Enumerate<NumericField>(() => field => new[] { field.Value });
         }
     }
 }

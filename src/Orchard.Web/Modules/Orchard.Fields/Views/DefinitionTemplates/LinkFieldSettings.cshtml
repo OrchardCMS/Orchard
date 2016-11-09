@@ -3,14 +3,14 @@
 
 <fieldset>
     <div>
-        <label for="@Html.FieldIdFor(m => m.TargetMode)">@T("Target")</label>    
+        <label for="@Html.FieldIdFor(m => m.TargetMode)">@T("Target")</label>
         <select id="@Html.FieldIdFor(m => m.TargetMode)" name="@Html.FieldNameFor(m => m.TargetMode)">
             @Html.SelectOption(TargetMode.None, Model.TargetMode == TargetMode.None, T("No target").ToString())
             @Html.SelectOption(TargetMode.NewWindow, Model.TargetMode == TargetMode.NewWindow, T("Open link in new window").ToString())
             @Html.SelectOption(TargetMode.Parent, Model.TargetMode == TargetMode.Parent, T("Open link in the parent frameset").ToString())
             @Html.SelectOption(TargetMode.Top, Model.TargetMode == TargetMode.Top, T("Open link in the full body of the window").ToString())
             @Html.SelectOption(TargetMode.UserChoice, Model.TargetMode == TargetMode.UserChoice, T("Allow the user to choose").ToString())
-        </select> 
+        </select>
     </div>
 </fieldset>
 <fieldset>
@@ -21,13 +21,13 @@
 </fieldset>
 <fieldset>
     <div>
-        <label for="@Html.FieldIdFor(m => m.LinkTextMode)">@T("Link text")</label>    
+        <label for="@Html.FieldIdFor(m => m.LinkTextMode)">@T("Link text")</label>
         <select id="@Html.FieldIdFor(m => m.LinkTextMode)" name="@Html.FieldNameFor(m => m.LinkTextMode)">
             @Html.SelectOption(LinkTextMode.Optional, Model.LinkTextMode == LinkTextMode.Optional, T("Optional").ToString())
             @Html.SelectOption(LinkTextMode.Required, Model.LinkTextMode == LinkTextMode.Required, T("Required").ToString())
             @Html.SelectOption(LinkTextMode.Static, Model.LinkTextMode == LinkTextMode.Static, T("Static").ToString(), new { id = Html.FieldIdFor(m => m.LinkTextMode) + "-static" })
             @Html.SelectOption(LinkTextMode.Url, Model.LinkTextMode == LinkTextMode.Url, T("Url").ToString())
-        </select> 
+        </select>
         <span class="hint">@T("Define how the title field should behave in the editor.")</span>
     </div>
     <div class="editor-field" data-controllerid="@(Html.FieldIdFor(m => m.LinkTextMode) + "-static")">
@@ -39,7 +39,7 @@
 <fieldset>
     <div>
         <label for="@Html.FieldIdFor(m => m.Hint)">@T("Help text")</label>
-        @Html.TextAreaFor(m => m.Hint, new { @class = "text medium", rows = "5" } )
+        @Html.TextAreaFor(m => m.Hint, new { @class = "text medium", rows = "5" })
         <span class="hint">@T("The help text is written under the field.")</span>
         @Html.ValidationMessageFor(m => m.Hint)
     </div>
@@ -47,16 +47,16 @@
 <fieldset>
     <div>
         <label for="@Html.FieldIdFor(m => m.DefaultValue)">@T("Default value")</label>
-        @Html.TextBoxFor(m => m.DefaultValue, new { @class = "text large" })
-        <span class="hint">@T("A valid url proposed  when creating a content item, i.e. http://orchardproject.net, /content/file.pdf, ... (optional)")</span>
+        @Html.TextBoxFor(m => m.DefaultValue, new { @class = "text large tokenized ui-autocomplete-input" })
+        <span class="hint">@T("A valid url as a default value, i.e. http://orchardproject.net, /content/file.pdf ... You can use tokens in this field. (optional)")</span>
         @Html.ValidationMessageFor(m => m.DefaultValue)
     </div>
 </fieldset>
 <fieldset>
     <div>
         <label for="@Html.FieldIdFor(m => m.TextDefaultValue)">@T("Link text default value")</label>
-        @Html.TextBoxFor(m => m.TextDefaultValue, new { @class = "text large" })
-        <span class="hint">@T("The default link text proposed when creating a content item. (optional)")</span>
+        @Html.TextBoxFor(m => m.TextDefaultValue, new { @class = "text large tokenized ui-autocomplete-input" })
+        <span class="hint">@T("If the Link text is set to Optional or Required, a default value can be set for it. You can use tokens in this field. (optional)")</span>
         @Html.ValidationMessageFor(m => m.TextDefaultValue)
     </div>
 </fieldset>

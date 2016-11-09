@@ -96,6 +96,7 @@ namespace Orchard.Fields.Drivers {
                 Name = field.DisplayName,
                 Hint = settings.Hint,
                 IsRequired = settings.Required,
+                HasDefaultValue = settings.DefaultValue.HasValue,
                 Editor = new DateTimeEditor() {
                     Date = showDate ? DateLocalizationServices.ConvertToLocalizedDateString(value, options) : null,
                     Time = showTime ? DateLocalizationServices.ConvertToLocalizedTimeString(value, options) : null,

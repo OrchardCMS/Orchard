@@ -49,7 +49,12 @@ namespace Orchard.Fields.Drivers {
                 var settings = field.PartFieldDefinition.Settings.GetModel<BooleanFieldSettings>();
 
                 if (!settings.Optional && !field.Value.HasValue) {
-                    updater.AddModelError(field.Name, T("The field {0} is mandatory.", T(field.DisplayName)));
+                    if (settings.DefaultValue.HasValue) {
+                        field.Value = settings.DefaultValue;
+                    }
+                    else {
+                        updater.AddModelError(field.Name, T("The field {0} is mandatory.", T(field.DisplayName)));
+                    }
                 }
             }
 
@@ -62,14 +67,14 @@ namespace Orchard.Fields.Drivers {
         }
 
         protected override void Exporting(ContentPart part, BooleanField field, ExportContentContext context) {
-			if (field.Value.HasValue)
-				context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Value", field.Value);
+            if (field.Value.HasValue)
+                context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Value", field.Value);
         }
 
         protected override void Describe(DescribeMembersContext context) {
             context
                 .Member(null, typeof(Boolean), T("Value"), T("The boolean value of the field."))
-                .Enumerate<BooleanField>(() => field => new [] { field.Value })
+                .Enumerate<BooleanField>(() => field => new[] { field.Value })
                 ;
         }
     }
