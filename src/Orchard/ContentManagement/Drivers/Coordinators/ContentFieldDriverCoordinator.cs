@@ -109,5 +109,19 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
                 contentFieldDriver.Exported(context);
             }
         }
+
+        public override void Cloning(CloneContentContext context) {
+            context.Logger = Logger;
+            foreach (var contentFieldDriver in _drivers) {
+                contentFieldDriver.Cloning(context);
+            }
+        }
+
+        public override void Cloned(CloneContentContext context) {
+            context.Logger = Logger;
+            foreach (var contentFieldDriver in _drivers) {
+                contentFieldDriver.Cloned(context);
+            }
+        }
     }
 }
