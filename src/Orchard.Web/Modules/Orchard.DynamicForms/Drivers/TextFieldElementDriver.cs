@@ -31,7 +31,7 @@ namespace Orchard.DynamicForms.Drivers {
                         Id: "Value",
                         Name: "Value",
                         Title: "Value",
-                        Classes: new[] { "text", "medium", "tokenized" },
+                        Classes: new[] { "text", "medium" },
                         Description: T("The value of this text field.")));
 
                 return form;
@@ -59,6 +59,12 @@ namespace Orchard.DynamicForms.Drivers {
                         Title: "Maximum Length",
                         Classes: new[] { "text", "medium" },
                         Description: T("The maximum length allowed.")),
+                    _ValidationExpression: shape.Textbox(
+                        Id: "ValidationExpression",
+                        Name: "ValidationExpression",
+                        Title: "Validation Expression",
+                        Classes: new[] { "text", "large" },
+                        Description: T("The regular expression the text must match with.")),
                     _CustomValidationMessage: shape.Textbox(
                         Id: "CustomValidationMessage",
                         Name: "CustomValidationMessage",

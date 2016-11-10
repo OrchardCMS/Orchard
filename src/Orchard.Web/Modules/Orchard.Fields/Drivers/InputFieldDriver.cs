@@ -49,7 +49,7 @@ namespace Orchard.Fields.Drivers {
                 var settings = field.PartFieldDefinition.Settings.GetModel<InputFieldSettings>();
 
                 if (settings.Required && String.IsNullOrWhiteSpace(field.Value)) {
-                    updater.AddModelError(GetPrefix(field, part), T("The field {0} is mandatory.", T(field.DisplayName)));
+                    updater.AddModelError(GetPrefix(field, part), T("The {0} field is required.", T(field.DisplayName)));
                 }
             }
 

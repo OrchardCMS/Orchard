@@ -1,14 +1,21 @@
-﻿@{
+﻿@using Orchard.ContentManagement
+@using Orchard.DesignerTools.Models
+@{
     if (Model.IgnoreShapeTracer != null && (bool)Model.IgnoreShapeTracer) {
         @Display(Model.Metadata.ChildContent)
         return;
     }
-    
+
     Script.Require("jQueryUI").AtHead();
     Script.Include("orchard-designertools-shapetracing.js").AtHead();
     Script.Include("jquery.scrollTo-1.4.4.min.js").AtHead();
     Style.Include("orchard-designertools-shapetracing.css");
-    
+
+    if (!WorkContext.CurrentSite.As<ShapeTracingSiteSettingsPart>().IsShapeTracingActive) {
+        @Display(Model.Metadata.ChildContent)
+        return;
+    }
+
     // Code Mirror
     Script.Include("CodeMirror/codemirror.js");
     Style.Include("CodeMirror/codemirror.css");
@@ -19,7 +26,7 @@
     Script.Include("CodeMirror/css.js");
     Style.Include("CodeMirror/css.css");
     Script.Include("CodeMirror/htmlmixed.js");
-    
+
     Script.Include("jquery.tmpl.min.js");
 }
 

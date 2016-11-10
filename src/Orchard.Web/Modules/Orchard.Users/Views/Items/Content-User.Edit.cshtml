@@ -6,3 +6,6 @@
         @Display(Model.Sidebar)
     </div>
 </div>
+@if (!String.IsNullOrWhiteSpace(Request.QueryString["returnUrl"])) {
+    @Html.Hidden("returnUrl", Request.QueryString["returnUrl"])
+}

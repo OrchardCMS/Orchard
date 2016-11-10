@@ -5,7 +5,7 @@
     var settings = Model.PartFieldDefinition.Settings.GetModel<BooleanFieldSettings>();
 }
 <fieldset>
-    <label for="@Html.FieldIdFor(m => m.Value)">@Model.DisplayName</label>
+    <label for="@Html.FieldIdFor(m => m.Value)" @if (!settings.Optional) { <text> class="required" </text>  }>@Model.DisplayName</label>
     @switch (settings.SelectionMode) {
         case SelectionMode.Checkbox:
             <input type="checkbox" id="@(Html.FieldIdFor(m => m.Value))" value="true" name="@Html.FieldNameFor(m => m.Value)" @if(Model.Value.HasValue && Model.Value.Value) { <text>checked="checked"</text> } /><input name="@Html.FieldNameFor(m => m.Value)" type="hidden" value="false" /> 

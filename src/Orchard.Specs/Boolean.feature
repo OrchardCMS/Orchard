@@ -73,4 +73,4 @@ Scenario: Creating and using Boolean fields
             | name               | value |
             | Event.Active.Value |       |
         And I hit "Save"
-    Then I should see "The field Active is mandatory."
+    Then I should see "The Active field is required."

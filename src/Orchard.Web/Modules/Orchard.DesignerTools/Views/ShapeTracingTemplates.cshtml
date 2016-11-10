@@ -1,21 +1,42 @@
-﻿<div id="shape-tracing-container"> 
+﻿@using Orchard.ContentManagement
+@using Orchard.DesignerTools.Models
+@{
+    var isShapeTracingActive = WorkContext.CurrentSite.As<ShapeTracingSiteSettingsPart>().IsShapeTracingActive;
+    var statusText = (isShapeTracingActive ? "Active" : "Inactive");
+    var statusCssClass = statusText.ToLowerInvariant();
+}
+<div id="shape-tracing-container"> 
     <div id="shape-tracing-resize-handle" ></div>
     <div id="shape-tracing-toolbar">
         <div id="shape-tracing-toolbar-switch"></div>
+        <div id="shape-tracing-toolbar-status" class="@statusCssClass">@T(statusText)</div>
     </div>
     <div id="shape-tracing-window">
-        <div id="shape-tracing-window-tree"></div>
-        <div id="shape-tracing-window-content">
-            <ul id="shape-tracing-tabs">
-                <li id="shape-tracing-tabs-shape" class="selected first">@T("Shape")</li>
-                <li id="shape-tracing-tabs-model" class="middle">@T("Model")</li>
-                <li id="shape-tracing-tabs-placement" class="middle">@T("Placement")</li>
-                <li id="shape-tracing-tabs-template" class="middle">@T("Template")</li>
-                <li id="shape-tracing-tabs-html" class="last">@T("HTML")</li>
-            </ul>
-            <div id="shape-tracing-breadcrumb"></div>
-            <div id="shape-tracing-meta-content"></div>
-        </div>
+        @if (!isShapeTracingActive) {
+            <div id="shape-tracing-window-content-deactivated">
+                <div class="deactivated-content">
+                @using (Html.BeginFormAntiForgeryPost(Url.Action("ActivateTracing", "ShapeTracing", new { Area = "Orchard.DesignerTools" }), FormMethod.Post, new { @class = "inline link" })) {
+                    @Html.Hidden("ReturnUrl", Context.Request.RawUrl)
+                    <button type="submit" class="primaryAction">@T("Activate Shape Tracing").Text</button>
+                }
+                </div>
+            </div>
+        }
+        else {
+            <div id="shape-tracing-window-tree"></div>
+            <div id="shape-tracing-window-content">
+                <ul id="shape-tracing-tabs">
+                    <li id="shape-tracing-tabs-shape" class="selected first">@T("Shape")</li>
+                    <li id="shape-tracing-tabs-model" class="middle">@T("Model")</li>
+                    <li id="shape-tracing-tabs-placement" class="middle">@T("Placement")</li>
+                    <li id="shape-tracing-tabs-template" class="middle">@T("Template")</li>
+                    <li id="shape-tracing-tabs-html" class="middle">@T("HTML")</li>
+                    <li id="shape-tracing-tabs-settings" class="last">@T("Settings")</li>
+                </ul>
+                <div id="shape-tracing-breadcrumb"></div>
+                <div id="shape-tracing-meta-content"></div>
+            </div>
+        }
     </div>
 </div>
 <div id="shape-tracing-container-ghost"></div>
@@ -94,5 +115,14 @@
 <script id="shape-tracing-tabs-html-template" type="text/x-jquery-tmpl">
     <div class="html">
         <textarea>${$data}</textarea>
+    </div>
+</script>
+
+<script id="shape-tracing-tabs-settings-template" type="text/x-jquery-tmpl">
+    <div class="settings">
+        @using (Html.BeginFormAntiForgeryPost(Url.Action("DeactivateTracing", "ShapeTracing", new { Area = "Orchard.DesignerTools" }), FormMethod.Post, new { @class = "inline link" })) {
+            @Html.Hidden("ReturnUrl", Context.Request.RawUrl)
+            <button type="submit" class="primaryAction">@T("Deactivate Shape Tracing").Text</button>
+        }
     </div>
 </script>

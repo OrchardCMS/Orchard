@@ -69,7 +69,7 @@ namespace Orchard.ContentPicker.Drivers {
             }
 
             if (settings.Required && field.Ids.Length == 0) {
-                updater.AddModelError("Id", T("The field {0} is mandatory", field.Name.CamelFriendly()));
+                updater.AddModelError("Id", T("The {0} field is required.", field.Name.CamelFriendly()));
             }
 
             return Editor(part, field, shapeHelper);

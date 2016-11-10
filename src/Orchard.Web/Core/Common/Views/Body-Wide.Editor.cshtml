@@ -1,4 +1,6 @@
 ﻿@{
+    var propertyName = Model.PropertyName != null ? (string)Model.PropertyName : "Text";
+
     var htmlAttributes = new Dictionary<string, object> {
         {"class", "text medium"}
     };
@@ -12,4 +14,4 @@
     }
 }
 
-@Html.TextBox("Text", (string)Model.Text, htmlAttributes)
+@Html.TextBox(propertyName, (string)Model.Text, htmlAttributes)

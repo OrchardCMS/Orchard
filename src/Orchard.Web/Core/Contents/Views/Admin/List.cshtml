@@ -54,7 +54,7 @@
             @Html.SelectOption((ContentsOrder)Model.Options.OrderBy, ContentsOrder.Modified, T("recently modified").ToString())
             @Html.SelectOption((ContentsOrder)Model.Options.OrderBy, ContentsOrder.Published, T("recently published").ToString())
         </select>
-        <label for="contentResults" class="bulk-order">@T("Filter by")</label>
+        <label for="contentResults" class="bulk-filter">@T("Filter by")</label>
         <select id="contentResults" name="Options.ContentsStatus">
             @Html.SelectOption((ContentsStatus)Model.Options.ContentsStatus, ContentsStatus.Owner, T("owned by me").ToString())
             @Html.SelectOption((ContentsStatus)Model.Options.ContentsStatus, ContentsStatus.Latest, T("latest").ToString())

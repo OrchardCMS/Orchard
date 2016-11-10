@@ -45,11 +45,11 @@ namespace Orchard.MediaPicker.Drivers {
                         : settings.AllowedExtensions.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries);
 
                 if (extensions.Any() && field.Url != null && !extensions.Any(x => field.Url.EndsWith(x, StringComparison.OrdinalIgnoreCase))) {
-                    updater.AddModelError("Url", T("The field {0} must have one of these extensions: {1}", field.Name.CamelFriendly(), settings.AllowedExtensions));
+                    updater.AddModelError("Url", T("The {0} field must have one of these extensions: {1}.", field.Name.CamelFriendly(), settings.AllowedExtensions));
                 }
 
                 if (settings.Required && String.IsNullOrWhiteSpace(field.Url)) {
-                    updater.AddModelError("Url", T("The field {0} is mandatory", field.Name.CamelFriendly()));
+                    updater.AddModelError("Url", T("The {0} field is required.", field.Name.CamelFriendly()));
                 }
             }
 

@@ -5,7 +5,6 @@ using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.MediaLibrary.Models;
-using Image = System.Drawing.Image;
 
 namespace Orchard.MediaLibrary.Factories {
 
@@ -17,7 +16,6 @@ namespace Orchard.MediaLibrary.Factories {
             _contentManager = contentManager;
             _contentDefinitionManager = contentDefinitionManager;
         }
-
 
         public MediaFactorySelectorResult GetMediaFactory(Stream stream, string mimeType, string contentType) {
             if (!mimeType.StartsWith("image/")) {
@@ -38,7 +36,6 @@ namespace Orchard.MediaLibrary.Factories {
                 Priority = -5,
                 MediaFactory = new ImageFactory(_contentManager)
             };
-
         }
     }
 
@@ -65,36 +62,7 @@ namespace Orchard.MediaLibrary.Factories {
                 return null;
             }
 
-            try {
-                using (var image = Image.FromStream(stream)) {
-                    imagePart.Width = image.Width;
-                    imagePart.Height = image.Height;
-                }
-            }
-            catch (ArgumentException) {
-                // Still trying to get .ico dimensions when it's blocked in System.Drawing, see: https://github.com/OrchardCMS/Orchard/issues/4473
-
-                if (mimeType != "image/x-icon" && mimeType != "image/vnd.microsoft.icon") {
-                    throw;
-                }
-
-                TryFillDimensionsForIco(stream, imagePart);
-            }
-
             return part;
-        }
-
-        private void TryFillDimensionsForIco(Stream stream, ImagePart imagePart) {
-            stream.Position = 0;
-            using (var binaryReader = new BinaryReader(stream)) {
-                // Reading out the necessary bytes that indicate the image dimensions. For the file format see:
-                // http://en.wikipedia.org/wiki/ICO_%28file_format%29
-                // Reading out leading bytes containing unneded information.
-                binaryReader.ReadBytes(6);
-                // Reading out dimensions. If there are multiple icons bundled in the same file then this is the first image.
-                imagePart.Width = binaryReader.ReadByte();
-                imagePart.Height = binaryReader.ReadByte();
-            }
         }
     }
 }

@@ -49,7 +49,7 @@ namespace Orchard.Fields.Drivers {
                 var settings = field.PartFieldDefinition.Settings.GetModel<BooleanFieldSettings>();
 
                 if (!settings.Optional && !field.Value.HasValue) {
-                    updater.AddModelError(field.Name, T("The field {0} is mandatory.", T(field.DisplayName)));
+                    updater.AddModelError(field.Name, T("The {0} field is required.", T(field.DisplayName)));
                 }
             }
 

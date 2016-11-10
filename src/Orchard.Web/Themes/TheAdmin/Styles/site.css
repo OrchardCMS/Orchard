@@ -620,11 +620,11 @@ legend span {
 .bulk-actions label, .bulk-items h3, label.sub {
     display:inline;
 }
+label.bulk-filter {
+}
 label.bulk-order {
-    text-transform:lowercase;
 }
 label.bulk-culture {
-    text-transform:lowercase;
 }
 label span {
     font-weight:normal;
@@ -780,7 +780,7 @@ button:hover, .button:hover, a.button:hover {
      background: -moz-linear-gradient(top, rgba(110, 127, 69, 1.0), rgba(106, 123, 66, 1.0));
 }
 
-button:active, .buton:active, a.button:active {
+button:active, .button:active, a.button:active {
     text-decoration:none;
     background:#6a7b42;
     border:1px solid #487328;
