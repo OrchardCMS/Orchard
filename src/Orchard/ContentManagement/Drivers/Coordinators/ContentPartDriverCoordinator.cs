@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Logging;
@@ -97,9 +99,39 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
         }
 
         public override void Cloning(CloneContentContext context) {
-            foreach (var contentPartDriver in _drivers) {
-                contentPartDriver.Cloning(context);
+            var dGroups = _drivers.GroupBy(cpd => cpd.GetPartInfo().FirstOrDefault().PartName);
+            Type contentPartDriverType = typeof(ContentPartDriver<>);
+            foreach (var driverGroup in dGroups) {
+                //if no driver implements Cloning, run the fallback for the part
+                //otherwise, invoke Cloning for all these drivers.
+
+                //get baseType of driver (this is ContentPartDriver<TContent>)
+                Type baseDriverType = driverGroup.First().GetType().BaseType;
+                //find the definition of the virtual Cloning method (we know it's there because we put it in the base abstract class)
+                var cloningMethodInfo = baseDriverType.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly).Where(mi => mi.Name == "Cloning").FirstOrDefault();
+
+                bool noCloningImplementation = true;
+                foreach (var contentPartDriver in driverGroup) {
+                    //if we find an implementation of cloning, break
+                    if (contentPartDriver.GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.DeclaredOnly).Where(mi => mi.Name == "Cloning").FirstOrDefault() != null) {
+                        noCloningImplementation = false;
+                        break;
+                    }
+                }
+                if (noCloningImplementation) {
+                    //fallback
+                    //invoke a private method we defined in ContentPartDriver. The CloneFallBack method is not in the IContentPartDriver interface and private to avoid overrides
+                    //baseDriverType.GetMethod("CloneFallBack", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(driverGroup.First(), new object[] { context });
+                }
+                else {
+                    foreach (var contentPartDriver in driverGroup) {
+                        contentPartDriver.Cloning(context);
+                    }
+                }
             }
+            //foreach (var contentPartDriver in _drivers) {
+            //    contentPartDriver.Cloning(context);
+            //}
         }
 
         public override void Cloned(CloneContentContext context) {
