@@ -33,8 +33,8 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
             foreach (var typePartDefinition in contentTypeDefinition.Parts) {
                 var partName = typePartDefinition.PartDefinition.Name;
                 var partInfo = partInfos.FirstOrDefault(pi => pi.PartName == partName);
-                var part = partInfo != null 
-                    ? partInfo.Factory(typePartDefinition) 
+                var part = partInfo != null
+                    ? partInfo.Factory(typePartDefinition)
                     : new ContentPart { TypePartDefinition = typePartDefinition };
                 context.Builder.Weld(part);
             }
@@ -100,15 +100,12 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
 
         public override void Cloning(CloneContentContext context) {
             var dGroups = _drivers.GroupBy(cpd => cpd.GetPartInfo().FirstOrDefault().PartName);
-            Type contentPartDriverType = typeof(ContentPartDriver<>);
             foreach (var driverGroup in dGroups) {
                 //if no driver implements Cloning, run the fallback for the part
                 //otherwise, invoke Cloning for all these drivers.
 
                 //get baseType of driver (this is ContentPartDriver<TContent>)
                 Type baseDriverType = driverGroup.First().GetType().BaseType;
-                //find the definition of the virtual Cloning method (we know it's there because we put it in the base abstract class)
-                var cloningMethodInfo = baseDriverType.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly).Where(mi => mi.Name == "Cloning").FirstOrDefault();
 
                 bool noCloningImplementation = true;
                 foreach (var contentPartDriver in driverGroup) {
@@ -120,8 +117,26 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
                 }
                 if (noCloningImplementation) {
                     //fallback
-                    //invoke a private method we defined in ContentPartDriver. The CloneFallBack method is not in the IContentPartDriver interface and private to avoid overrides
-                    //baseDriverType.GetMethod("CloneFallBack", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(driverGroup.First(), new object[] { context });
+                    var ecc = new ExportContentContext(context.ContentItem, new System.Xml.Linq.XElement(System.Xml.XmlConvert.EncodeLocalName(context.ContentItem.ContentType)));
+                    foreach (var contentPartDriver in driverGroup) {
+                        contentPartDriver.Exporting(ecc);
+                    }
+                    foreach (var contentPartDriver in driverGroup) {
+                        contentPartDriver.Exported(ecc);
+                    }
+                    var importContentSession = new ImportContentSession(context.ContentManager);
+                    var copyId = context.CloneContentItem.Id.ToString();
+                    importContentSession.Set(copyId, ecc.Data.Name.LocalName);
+                    var icc = new ImportContentContext(context.CloneContentItem, ecc.Data, importContentSession);
+                    foreach (var contentPartDriver in driverGroup) {
+                        contentPartDriver.Importing(icc);
+                    }
+                    foreach (var contentPartDriver in driverGroup) {
+                        contentPartDriver.Imported(icc);
+                    }
+                    foreach (var contentPartDriver in driverGroup) {
+                        contentPartDriver.ImportCompleted(icc);
+                    }
                 }
                 else {
                     foreach (var contentPartDriver in driverGroup) {
@@ -129,9 +144,6 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
                     }
                 }
             }
-            //foreach (var contentPartDriver in _drivers) {
-            //    contentPartDriver.Cloning(context);
-            //}
         }
 
         public override void Cloned(CloneContentContext context) {

@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Orchard.ContentManagement.FieldStorage;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Logging;
@@ -112,8 +114,52 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
 
         public override void Cloning(CloneContentContext context) {
             context.Logger = Logger;
-            foreach (var contentFieldDriver in _drivers) {
-                contentFieldDriver.Cloning(context);
+            var dGroups = _drivers.GroupBy(cfd => cfd.GetFieldInfo().FirstOrDefault().FieldTypeName);
+            foreach (var driverGroup in dGroups) {
+                //if no driver implements Cloning, run the fallback for the field
+                //otherwise, invoke Cloning for all these drivers.
+
+                //get baseType of driver (this is ContentFieldDriver<TField>)
+                Type baseDriverType = driverGroup.First().GetType().BaseType;
+
+                bool noCloningImplementation = true;
+                foreach (var contentFieldDriver in driverGroup) {
+                    //if we find an implementation of cloning, break
+                    if (contentFieldDriver.GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.DeclaredOnly).Where(mi => mi.Name == "Cloning").FirstOrDefault() != null) {
+                        noCloningImplementation = false;
+                        break;
+                    }
+                }
+                if (noCloningImplementation) {
+                    //fallback
+                    var ecc = new ExportContentContext(context.ContentItem, new System.Xml.Linq.XElement(System.Xml.XmlConvert.EncodeLocalName(context.ContentItem.ContentType)));
+                    ecc.Logger = Logger;
+                    foreach (var contentFieldDriver in driverGroup) {
+                        contentFieldDriver.Exporting(ecc);
+                    }
+                    foreach (var contentFieldDriver in driverGroup) {
+                        contentFieldDriver.Exported(ecc);
+                    }
+                    var importContentSession = new ImportContentSession(context.ContentManager);
+                    var copyId = context.CloneContentItem.Id.ToString();
+                    importContentSession.Set(copyId, ecc.Data.Name.LocalName);
+                    var icc = new ImportContentContext(context.CloneContentItem, ecc.Data, importContentSession);
+                    icc.Logger = Logger;
+                    foreach(var contentFieldDriver in driverGroup) {
+                        contentFieldDriver.Importing(icc);
+                    }
+                    foreach (var contentFieldDriver in driverGroup) {
+                        contentFieldDriver.Imported(icc);
+                    }
+                    foreach (var contentFieldDriver in driverGroup) {
+                        contentFieldDriver.ImportCompleted(icc);
+                    }
+                }
+                else {
+                    foreach (var contentFieldDriver in driverGroup) {
+                        contentFieldDriver.Cloning(context);
+                    }
+                }
             }
         }
 

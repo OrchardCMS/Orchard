@@ -192,6 +192,7 @@ namespace Orchard.ContentManagement.Drivers {
 
         protected virtual void Cloned(TContent originalPart, TContent clonePart, CloneContentContext context) { }
 
+
         [Obsolete("Provided while transitioning to factory variations")]
         public ContentShapeResult ContentShape(IShape shape) {
             return ContentShapeImplementation(shape.Metadata.Type, ctx => shape).Location("Content");
