@@ -229,10 +229,9 @@ namespace Orchard.MediaLibrary.Services {
 
             if (_orchardServices.Authorizer.Authorize(Permissions.ManageOwnMedia)) {
                 var currentUser = _orchardServices.WorkContext.CurrentUser;
-                var userPath = _storageProvider.Combine("Users", currentUser.UserName);
-
+                var userPath = _storageProvider.Combine("CustomMedia", currentUser.Id.ToString());
                 return new MediaFolder() {
-                    Name = currentUser.UserName,
+                    Name = currentUser.Id.ToString(),
                     MediaPath = userPath
                 };
             }
