@@ -1,5 +1,7 @@
 ﻿@model Orchard.ContentPicker.ViewModels.ContentPickerFieldViewModel
 @using Orchard.ContentPicker.Settings;
+@using Orchard.Localization.Models;
+@using Orchard.ContentManagement;
 
 @{
     Script.Require("jQuery").AtFoot();
@@ -23,5 +25,15 @@
         $(function () {
             $("fieldset[data-part-name='@dataPartName'][data-field-name='@dataFieldName']").find("span.hint")[0].innerText += "@tryTranslateMsg";
         });
+        @foreach (var contentItem in Model.ContentItems) {
+            var loc = contentItem.As<LocalizationPart>();
+            if (loc != null && loc.Culture!=null && !string.IsNullOrWhiteSpace(loc.Culture.Culture)) {
+                <text>
+        $(function () {
+            $("span[data-id='@contentItem.Id'][data-fieldid='@Html.FieldIdFor(m => m.Field.Ids)'].content-picker-item")[0].append(" (@loc.Culture.Culture)");
+        })
+        </text>
+            }
+        }
     </script>
 }
