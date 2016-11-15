@@ -91,19 +91,13 @@ namespace Orchard.Localization.Drivers {
         private IEnumerable<LocalizationPart> GetDisplayLocalizations(LocalizationPart part, VersionOptions versionOptions) {
             return _localizationService.GetLocalizations(part.ContentItem, versionOptions)
                 .Where(c => c.Culture != null)
-                .Select(c => {
-                    var localized = c.ContentItem.As<LocalizationPart>();
-                    return c;
-                }).ToList();
+                .ToList();
         }
 
         private IEnumerable<LocalizationPart> GetEditorLocalizations(LocalizationPart part) {
             return _localizationService.GetLocalizations(part.ContentItem, VersionOptions.Latest)
                 .Where(c => c.Culture != null)
-                .Select(c => {
-                    var localized = c.ContentItem.As<LocalizationPart>();
-                    return c;
-                }).ToList();
+                .ToList();
         }
 
         protected override void Importing(LocalizationPart part, ImportContentContext context) {
@@ -141,6 +135,7 @@ namespace Orchard.Localization.Drivers {
             }
         }
 
+        protected override void Cloning(LocalizationPart originalPart, LocalizationPart clonePart, CloneContentContext context) { }
         protected override void Cloned(LocalizationPart originalPart, LocalizationPart clonePart, CloneContentContext context) {
             clonePart.Culture = originalPart.Culture;
         }
