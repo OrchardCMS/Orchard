@@ -92,7 +92,7 @@ namespace Orchard.ContentPicker.Handlers {
                         //verify that the items in the ContentPickerField are all in the culture of the ContentItem whose editor we are updating
                         var itemsInField = _contentManager.GetMany<ContentItem>(field.Ids, VersionOptions.Published, QueryHints.Empty);
                         var itemsWithoutLocalizationPart = itemsInField.Where(ci => !ci.Parts.Any(part => part is LocalizationPart));
-                        List<int> badItemIds = itemsInField.Where(ci => ci.Parts.Any(part => part is LocalizationPart && ((LocalizationPart)part).Culture == lPart.Culture)).Select(ci => ci.Id).ToList();
+                        List<int> badItemIds = itemsInField.Where(ci => ci.Parts.Any(part => part is LocalizationPart && ((LocalizationPart)part).Culture != lPart.Culture)).Select(ci => ci.Id).ToList();
                         if (itemsWithoutLocalizationPart.Count() > 0) {
                             //Verify items from the ContentPickerField that cannot be localized
                             _orchardServices.Notifier.Warning(T("{0}: Some of the selected items cannot be localized. Ids: {1}", field.DisplayName, string.Join(", ", itemsWithoutLocalizationPart.Select(ci => ci.Id))));
