@@ -1,4 +1,5 @@
-﻿using Orchard.ContentManagement;
+﻿using System;
+using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
 
 namespace Orchard.OpenId.Models {
@@ -22,11 +23,11 @@ namespace Orchard.OpenId.Models {
 
         public bool IsValid {
             get {
-                if (string.IsNullOrWhiteSpace(ClientId) ||
-                    string.Compare(ClientId, Constants.DefaultGoogleClientId) == 0 ||
-                    string.IsNullOrWhiteSpace(ClientSecret) ||
-                    string.Compare(ClientId, Constants.DefaultGoogleClientSecret) == 0 ||
-                    string.IsNullOrWhiteSpace(CallbackPath)) {
+                if (String.IsNullOrWhiteSpace(ClientId) ||
+                    String.CompareOrdinal(ClientId, Constants.DefaultGoogleClientId) == 0 ||
+                    String.IsNullOrWhiteSpace(ClientSecret) ||
+                    String.CompareOrdinal(ClientId, Constants.DefaultGoogleClientSecret) == 0 ||
+                    String.IsNullOrWhiteSpace(CallbackPath)) {
 
                     return false;
                 }

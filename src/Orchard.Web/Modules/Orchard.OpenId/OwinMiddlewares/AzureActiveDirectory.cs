@@ -26,14 +26,19 @@ namespace Orchard.OpenId.OwinMiddlewares {
         public ILogger Logger { get; set; }
 
         private readonly IWorkContextAccessor _workContextAccessor;
+        private readonly IAzureActiveDirectoryService _azureActiveDirectoryService;
         private string _azureGraphApiUri;
         private string _azureGraphApiKey;
         private string _azureClientId;
         private string _azureTenant;
         private string _azureAdInstance;
 
-        public AzureActiveDirectory(IWorkContextAccessor workContextAccessor) {
+        public AzureActiveDirectory(
+            IWorkContextAccessor workContextAccessor,
+            IAzureActiveDirectoryService azureActiveDirectoryService) {
             _workContextAccessor = workContextAccessor;
+            _azureActiveDirectoryService = azureActiveDirectoryService;
+
             Logger = NullLogger.Instance;
         }
 
@@ -105,11 +110,11 @@ namespace Orchard.OpenId.OwinMiddlewares {
                     Priority = "11",
                     Configure = app => app.Use(async (context, next) => {
                         try {
-                            if (AzureActiveDirectoryService.Token == null && AzureActiveDirectoryService.Token.IsEmpty()) {
+                            if (_azureActiveDirectoryService.Token == null && _azureActiveDirectoryService.Token.IsEmpty()) {
                                 RegenerateAzureGraphApiToken();
                             }
                             else {
-                                if (DateTimeOffset.Compare(DateTimeOffset.UtcNow, AzureActiveDirectoryService.TokenExpiresOn) > 0) {
+                                if (DateTimeOffset.Compare(DateTimeOffset.UtcNow, _azureActiveDirectoryService.TokenExpiresOn) > 0) {
                                     RegenerateAzureGraphApiToken();
                                 }
                             }
@@ -129,9 +134,9 @@ namespace Orchard.OpenId.OwinMiddlewares {
         private void RegenerateAzureGraphApiToken() {
             var result = GetAuthContext().AcquireTokenAsync(_azureGraphApiUri, GetClientCredential()).Result;
 
-            AzureActiveDirectoryService.TokenExpiresOn = result.ExpiresOn;
-            AzureActiveDirectoryService.Token = result.AccessToken;
-            AzureActiveDirectoryService.AzureTenant = _azureTenant;
+            _azureActiveDirectoryService.TokenExpiresOn = result.ExpiresOn;
+            _azureActiveDirectoryService.Token = result.AccessToken;
+            _azureActiveDirectoryService.AzureTenant = _azureTenant;
         }
 
         private ClientCredential GetClientCredential() {

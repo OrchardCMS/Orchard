@@ -73,11 +73,11 @@ namespace Orchard.OpenId.Models {
 
         public bool IsValid {
             get {
-                if (string.IsNullOrWhiteSpace(Tenant) ||
-                    string.IsNullOrWhiteSpace(ClientId) ||
-                    string.IsNullOrWhiteSpace(LogoutRedirectUri) ||
-                    string.IsNullOrWhiteSpace(ServiceResourceID) ||
-                    string.IsNullOrWhiteSpace(AppKey)) {
+                if (String.IsNullOrWhiteSpace(Tenant) ||
+                    String.IsNullOrWhiteSpace(ClientId) ||
+                    String.IsNullOrWhiteSpace(LogoutRedirectUri) ||
+                    String.IsNullOrWhiteSpace(ServiceResourceID) ||
+                    String.IsNullOrWhiteSpace(AppKey)) {
 
                     return false;
                 }

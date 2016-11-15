@@ -1,4 +1,5 @@
-﻿using Orchard.ContentManagement;
+﻿using System;
+using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
 
 namespace Orchard.OpenId.Models {
@@ -17,10 +18,10 @@ namespace Orchard.OpenId.Models {
 
         public bool IsValid {
             get {
-                if (string.IsNullOrWhiteSpace(AppId) ||
-                    string.Compare(AppId, Constants.DefaultFacebookAppId) == 0 ||
-                    string.IsNullOrWhiteSpace(AppSecret) ||
-                    string.Compare(AppSecret, Constants.DefaultFacebookAppSecret) == 0) {
+                if (String.IsNullOrWhiteSpace(AppId) ||
+                    String.CompareOrdinal(AppId, Constants.DefaultFacebookAppId) == 0 ||
+                    String.IsNullOrWhiteSpace(AppSecret) ||
+                    String.CompareOrdinal(AppSecret, Constants.DefaultFacebookAppSecret) == 0) {
 
                     return false;
                 }

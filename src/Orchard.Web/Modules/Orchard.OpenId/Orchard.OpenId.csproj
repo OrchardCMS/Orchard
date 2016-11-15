@@ -196,7 +196,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
-    <Compile Include="Controllers\IdentityProviderController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Handlers\ActiveDirectoryFederationServicesSettingsPartHandler.cs" />
     <Compile Include="Handlers\AzureActiveDirectorySettingsPartHandler.cs" />
@@ -216,7 +215,8 @@
     <Compile Include="Providers\Twitter.cs" />
     <Compile Include="Providers\Facebook.cs" />
     <Compile Include="Providers\Google.cs" />
-    <Compile Include="Services\ActiveDirectoryFederationServices\MissingSettingsBanner.cs" />
+    <Compile Include="Services\AzureActiveDirectory\IAzureActiveDirectoryService.cs" />
+    <Compile Include="Services\Twitter\MissingSettingsBanner.cs" />
     <Compile Include="Services\AzureActiveDirectory\MissingSettingsBanner.cs" />
     <Compile Include="InMemoryCache.cs" />
     <Compile Include="OwinMiddlewares\ActiveDirectoryFederationServices.cs" />
@@ -224,7 +224,6 @@
     <Compile Include="OwinMiddlewares\Twitter.cs" />
     <Compile Include="OwinMiddlewares\Facebook.cs" />
     <Compile Include="OwinMiddlewares\Google.cs" />
-    <Compile Include="Routes\IdentityProvider.cs" />
     <Compile Include="Routes\OpenId.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\MachineKeyDataProtector.cs" />
@@ -233,7 +232,7 @@
     <Compile Include="Services\Facebook\MissingSettingsBanner.cs" />
     <Compile Include="Services\Google\MissingSettingsBanner.cs" />
     <Compile Include="Services\IOpenIdProvider.cs" />
-    <Compile Include="Services\Twitter\MissingSettingsBanner.cs" />
+    <Compile Include="Services\ActiveDirectoryFederationServices\MissingSettingsBanner.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Web.config" />
@@ -275,6 +274,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\User.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts.ActiveDirectoryFederationServicesSettings.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts.FacebookSettings.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts.GoogleSettings.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts.TwitterSettings.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

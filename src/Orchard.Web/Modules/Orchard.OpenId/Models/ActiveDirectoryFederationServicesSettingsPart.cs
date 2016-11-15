@@ -1,4 +1,5 @@
-﻿using Orchard.ContentManagement;
+﻿using System;
+using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
 
 namespace Orchard.OpenId.Models {
@@ -22,11 +23,11 @@ namespace Orchard.OpenId.Models {
 
         public bool IsValid {
             get {
-                if (string.IsNullOrWhiteSpace(ClientId) ||
-                    string.Compare(ClientId, Constants.DefaultAdfsClientId) == 0 ||
-                    string.IsNullOrWhiteSpace(MetadataAddress) ||
-                    string.Compare(MetadataAddress, Constants.DefaultAdfsMetadataAddress) == 0 ||
-                    string.IsNullOrWhiteSpace(PostLogoutRedirectUri)) {
+                if (String.IsNullOrWhiteSpace(ClientId) ||
+                    String.CompareOrdinal(ClientId, Constants.DefaultAdfsClientId) == 0 ||
+                    String.IsNullOrWhiteSpace(MetadataAddress) ||
+                    String.CompareOrdinal(MetadataAddress, Constants.DefaultAdfsMetadataAddress) == 0 ||
+                    String.IsNullOrWhiteSpace(PostLogoutRedirectUri)) {
 
                     return false;
                 }

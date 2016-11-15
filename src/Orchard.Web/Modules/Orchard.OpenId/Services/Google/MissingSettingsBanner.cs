@@ -11,9 +11,13 @@ namespace Orchard.Azure.Authentication.Services.Google {
     [OrchardFeature("Orchard.OpenId.Google")]
     public class MissingSettingsBanner : INotificationProvider {
         private readonly IOrchardServices _orchardServices;
+        private readonly UrlHelper _urlHelper;
 
-        public MissingSettingsBanner(IOrchardServices orchardServices) {
+        public MissingSettingsBanner(IOrchardServices orchardServices, UrlHelper urlHelper)
+        {
             _orchardServices = orchardServices;
+            _urlHelper = urlHelper;
+
             T = NullLocalizer.Instance;
         }
 
@@ -24,8 +28,7 @@ namespace Orchard.Azure.Authentication.Services.Google {
             var settings = workContext.CurrentSite.As<GoogleSettingsPart>();
 
             if (settings == null || !settings.IsValid) {
-                var urlHelper = new UrlHelper(workContext.HttpContext.Request.RequestContext);
-                var url = urlHelper.Action("OpenId", "Admin", new { Area = "Settings" });
+                var url = _urlHelper.Action("OpenId", "Admin", new { Area = "Settings" });
                 yield return new NotifyEntry { Message = T("The <a href=\"{0}\">Google settings</a> need to be configured.", url), Type = NotifyType.Warning };
             }
         }

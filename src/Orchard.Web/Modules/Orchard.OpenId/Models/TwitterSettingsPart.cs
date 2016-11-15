@@ -1,4 +1,5 @@
-﻿using Orchard.ContentManagement;
+﻿using System;
+using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
 
 namespace Orchard.OpenId.Models {
@@ -17,10 +18,10 @@ namespace Orchard.OpenId.Models {
 
         public bool IsValid {
             get {
-                if (string.IsNullOrWhiteSpace(ConsumerKey) ||
-                    string.Compare(ConsumerKey, Constants.DefaultTwitterConsumerKey) == 0 ||
-                    string.IsNullOrWhiteSpace(ConsumerSecret) ||
-                    string.Compare(ConsumerSecret, Constants.DefaultTwitterConsumerSecret) == 0) {
+                if (String.IsNullOrWhiteSpace(ConsumerKey) ||
+                    String.CompareOrdinal(ConsumerKey, Constants.DefaultTwitterConsumerKey) == 0 ||
+                    String.IsNullOrWhiteSpace(ConsumerSecret) ||
+                    String.CompareOrdinal(ConsumerSecret, Constants.DefaultTwitterConsumerSecret) == 0) {
 
                     return false;
                 }

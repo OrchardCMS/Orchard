@@ -37,9 +37,11 @@ namespace Orchard.OpenId.Providers {
                 AzureActiveDirectorySettingsPart settings;
                 ISite site;
 
+                // TODO: Revise code after issue https://github.com/OrchardCMS/Orchard/issues/7362 has been solved
                 var scope =
                     _workContextAccessor.GetContext() ?? // happens if the provider was called early in the pipeline
                     _workContextAccessor.CreateWorkContextScope().WorkContext;
+
                 site = scope.Resolve<ISiteService>().GetSiteSettings();
 
                 settings = site.As<AzureActiveDirectorySettingsPart>();

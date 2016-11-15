@@ -4,7 +4,7 @@ using Orchard.Security.Permissions;
 
 namespace Orchard.OpenId {
     public class Permissions : IPermissionProvider {
-        public static readonly Permission ManageOpenId = new Permission { Description = "Managing OpenId", Name = "ManageOpenId" };
+        public static readonly Permission ManageOpenId = new Permission { Description = "Manage OpenId settings", Name = "ManageOpenId" };
 
         public virtual Feature Feature { get; set; }
 

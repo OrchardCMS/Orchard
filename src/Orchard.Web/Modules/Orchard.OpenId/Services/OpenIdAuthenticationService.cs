@@ -97,9 +97,9 @@ namespace Orchard.OpenId.Services {
         }
 
         private bool IsLocalUser() {
-            var anyCliam = _httpContextAccessor.Current().GetOwinContext().Authentication.User.Claims.FirstOrDefault();
+            var anyClaim = _httpContextAccessor.Current().GetOwinContext().Authentication.User.Claims.FirstOrDefault();
 
-            if (anyCliam == null || anyCliam.Issuer == Constants.LocalIssuer || anyCliam.Issuer == Constants.FormsIssuer) {
+            if (anyClaim == null || anyClaim.Issuer == Constants.LocalIssuer || anyClaim.Issuer == Constants.FormsIssuer) {
                 return true;
             }
 

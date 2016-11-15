@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
@@ -6,14 +7,14 @@ using Microsoft.IdentityModel.Clients.ActiveDirectory;
 namespace Orchard.OpenId {
     public class InMemoryCache : TokenCache {
         private static Dictionary<string, byte[]> _inMemoryTokenCache;
-        private static ReaderWriterLockSlim SessionLock = new ReaderWriterLockSlim(LockRecursionPolicy.NoRecursion);
+        private static ReaderWriterLockSlim _sessionLock = new ReaderWriterLockSlim(LockRecursionPolicy.NoRecursion);
 
-        private string _UserObjectId;
-        private string _CacheId;
+        private string _userObjectId;
+        private string _cacheId;
 
         public InMemoryCache(string userId) {
-            _UserObjectId = userId;
-            _CacheId = _UserObjectId + "_TokenCache";
+            _userObjectId = userId;
+            _cacheId = _userObjectId + "_TokenCache";
 
             AfterAccess = AfterAccessNotification;
             BeforeAccess = BeforeAccessNotification;
@@ -31,30 +32,34 @@ namespace Orchard.OpenId {
         }
 
         public void Load() {
-            SessionLock.EnterReadLock();
-
-            if (InMemoryTokenCache.Any(x => x.Key == _CacheId))
-                Deserialize(InMemoryTokenCache.Where(x => x.Key == _CacheId).First().Value);
-
-            SessionLock.ExitReadLock();
+            _sessionLock.EnterReadLock();
+            try
+            {
+                if (InMemoryTokenCache.ContainsKey(_cacheId))
+                    Deserialize(InMemoryTokenCache.Where(x => x.Key == _cacheId).First().Value);
+            }
+            catch (Exception) { /* TODO: Log the error */ }
+            _sessionLock.ExitReadLock();
         }
 
         public void Persist() {
-            SessionLock.EnterWriteLock();
+            _sessionLock.EnterWriteLock();
+            try
+            {
+                HasStateChanged = false;
 
-            HasStateChanged = false;
+                if (InMemoryTokenCache.ContainsKey(_cacheId))
+                    InMemoryTokenCache.Remove(_cacheId);
 
-            if (InMemoryTokenCache.Any(x => x.Key == _CacheId))
-                InMemoryTokenCache.Remove(_CacheId);
-
-            InMemoryTokenCache.Add(_CacheId, Serialize());
-
-            SessionLock.ExitWriteLock();
+                InMemoryTokenCache.Add(_cacheId, Serialize());
+            }
+            catch (Exception) { /* TODO: Log the error */ }
+            _sessionLock.ExitWriteLock();
         }
 
         public override void Clear() {
             base.Clear();
-            InMemoryTokenCache.Remove(_CacheId);
+            InMemoryTokenCache.Remove(_cacheId);
         }
 
         void BeforeAccessNotification(TokenCacheNotificationArgs args) {

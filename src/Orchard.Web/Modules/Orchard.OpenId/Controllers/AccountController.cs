@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Web;
 using System.Web.Mvc;
@@ -8,17 +9,16 @@ using Microsoft.Owin.Security.OpenIdConnect;
 using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.Logging;
-using Orchard.Mvc;
 using Orchard.Mvc.Extensions;
 using Orchard.OpenId.Services;
 using Orchard.Security;
 using Orchard.Themes;
 using Orchard.Users.Events;
 
-namespace Orchard.OpenId.Controllers {
+namespace Orchard.OpenId.Controllers
+{
     [Themed]
     [OrchardFeature("Orchard.OpenId")]
-    [OutputCache(NoStore=true, Duration = 0)]
     public class AccountController : Controller {
         private readonly IEnumerable<IOpenIdProvider> _openIdProviders;
         private readonly IAuthenticationService _authenticationService;
@@ -82,9 +82,9 @@ namespace Orchard.OpenId.Controllers {
         }
 
         public void Challenge(string openIdProvider) {
-            _userEventHandler.LoggingIn(openIdProvider, string.Empty);
+            _userEventHandler.LoggingIn(openIdProvider, String.Empty);
 
-            if (string.IsNullOrWhiteSpace(openIdProvider))
+            if (String.IsNullOrWhiteSpace(openIdProvider))
                 openIdProvider = OpenIdConnectAuthenticationDefaults.AuthenticationType;
 
             if (Request.IsAuthenticated) {
@@ -92,13 +92,13 @@ namespace Orchard.OpenId.Controllers {
                 return;
             }
 
-            var redirectUri = Url.Content(string.Concat("~", Constants.LogonCallbackUrl));
+            var redirectUri = Url.Content(String.Concat(Constants.LogonCallbackUrl));
 
             HttpContext.GetOwinContext().Authentication.Challenge(new AuthenticationProperties { RedirectUri = redirectUri }, openIdProvider);
         }
 
         public RedirectResult LogOff(string openIdProvider) {
-            if (string.IsNullOrWhiteSpace(openIdProvider))
+            if (String.IsNullOrWhiteSpace(openIdProvider))
                 openIdProvider = OpenIdConnectAuthenticationDefaults.AuthenticationType;
 
             HttpContext.GetOwinContext().Authentication.SignOut(openIdProvider, CookieAuthenticationDefaults.AuthenticationType);
@@ -136,21 +136,14 @@ namespace Orchard.OpenId.Controllers {
             return View();
         }
 
-        [Authorize]
-        public JsonResult Test() {
-            var userName = HttpContext.GetOwinContext().Authentication.User.Identity.Name.Trim();
-
-            return Json(new { Message = "Logged In as: " + userName }, JsonRequestBehavior.AllowGet);
-        }
-
         private IUser ValidateLogOn(string userNameOrEmail, string password) {
             bool validate = true;
 
-            if (string.IsNullOrEmpty(userNameOrEmail)) {
+            if (String.IsNullOrEmpty(userNameOrEmail)) {
                 ModelState.AddModelError("userNameOrEmail", T("You must specify a username or e-mail."));
                 validate = false;
             }
-            if (string.IsNullOrEmpty(password)) {
+            if (String.IsNullOrEmpty(password)) {
                 ModelState.AddModelError("password", T("You must specify a password."));
                 validate = false;
             }

@@ -6,19 +6,20 @@ using Orchard.Environment.Extensions;
 
 namespace Orchard.OpenId.Services.AzureActiveDirectory {
     [OrchardFeature("Orchard.OpenId.AzureActiveDirectory")]
-    public class AzureActiveDirectoryService {
-        public static string Token;
-        public static DateTimeOffset TokenExpiresOn;
-        public static string AzureTenant = string.Empty;
+    public class AzureActiveDirectoryService : IAzureActiveDirectoryService {
+        public string Token { get; set; }
+        public DateTimeOffset TokenExpiresOn { get; set; }
+        public string AzureTenant { get; set; }
 
-        public static async Task<string> AcquireTokenAsync() {
-            if (Token == null || Token.IsEmpty()) {
+        public async Task<string> AcquireTokenAsync() {
+            if (Token == null || Token.IsEmpty())
+            {
                 throw new Exception("Authorization Required.");
             }
-            return Token;
+            return await Task.FromResult(Token);
         }
 
-        public static ActiveDirectoryClient GetActiveDirectoryClient() {
+        public ActiveDirectoryClient GetActiveDirectoryClient() {
             var baseServiceUri = new Uri("https://graph.windows.net/");
 
             var activeDirectoryClient = new ActiveDirectoryClient(new Uri(baseServiceUri, AzureTenant),

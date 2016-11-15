@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Owin.Security.OpenIdConnect;
 using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
@@ -27,7 +28,16 @@ namespace Orchard.OpenId.OwinMiddlewares {
                 ClientId = settings.ClientId,
                 MetadataAddress = settings.MetadataAddress,
                 RedirectUri = settings.PostLogoutRedirectUri,
-                PostLogoutRedirectUri = settings.PostLogoutRedirectUri
+                PostLogoutRedirectUri = settings.PostLogoutRedirectUri,
+                Notifications = new OpenIdConnectAuthenticationNotifications()
+                {
+                   AuthenticationFailed = context => {
+                        context.HandleResponse();
+                        context.Response.Redirect(Constants.AuthenticationErrorUrl);
+
+                       return Task.FromResult(0);
+                    }
+                }
             };
 
             return new List<OwinMiddlewareRegistration> {
