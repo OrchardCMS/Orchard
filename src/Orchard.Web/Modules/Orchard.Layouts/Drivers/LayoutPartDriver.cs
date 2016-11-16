@@ -151,15 +151,13 @@ namespace Orchard.Layouts.Drivers {
 
         protected override void Exported(LayoutPart part, ExportContentContext context) {
             _layoutManager.Exported(new ExportLayoutContext { Layout = part });
-
-            context.Element(part.PartDefinition.Name).SetElementValue("LayoutData", part.LayoutData);
         }
 
         protected override void Importing(LayoutPart part, ImportContentContext context) {
             HandleImportEvent(part, context, importLayoutContext => {
                 context.ImportChildEl(part.PartDefinition.Name, "LayoutData", s => {
                     part.LayoutData = s;
-                    _layoutManager.Importing(importLayoutContext);
+                _layoutManager.Importing(importLayoutContext);
                 });
 
                 context.ImportAttribute(part.PartDefinition.Name, "TemplateId", s => part.TemplateId = GetTemplateId(context, s));
@@ -192,6 +190,12 @@ namespace Orchard.Layouts.Drivers {
 
             var template = context.GetItemFromSession(templateIdentity);
             return template != null ? template.Id : default(int?);
+        }
+
+
+        protected override void Cloning(LayoutPart originalPart, LayoutPart clonePart, CloneContentContext context) {
+            clonePart.LayoutData = originalPart.LayoutData;
+            clonePart.TemplateId = originalPart.TemplateId;
         }
     }
 }

@@ -5,6 +5,7 @@ using Orchard.Comments.Services;
 using Orchard.Comments.Settings;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using System.Collections.Generic;
 
 namespace Orchard.Comments.Drivers {
@@ -97,7 +98,7 @@ namespace Orchard.Comments.Drivers {
             return ContentShape("Parts_Comments_Enable",
                                 () => {
                                     // if the part is new, then apply threaded comments defaults
-                                    if(!part.ContentItem.HasDraft() && !part.ContentItem.HasPublished()) {
+                                    if (!part.ContentItem.HasDraft() && !part.ContentItem.HasPublished()) {
                                         var settings = part.TypePartDefinition.Settings.GetModel<CommentsPartSettings>();
                                         part.ThreadedComments = settings.DefaultThreadedComments;
                                     }
@@ -110,7 +111,7 @@ namespace Orchard.Comments.Drivers {
             return Editor(part, shapeHelper);
         }
 
-        protected override void Importing(CommentsPart part, ContentManagement.Handlers.ImportContentContext context) {
+        protected override void Importing(CommentsPart part, ImportContentContext context) {
             // Don't do anything if the tag is not specified.
             if (context.Data.Element(part.PartDefinition.Name) == null) {
                 return;
@@ -129,10 +130,16 @@ namespace Orchard.Comments.Drivers {
             );
         }
 
-        protected override void Exporting(CommentsPart part, ContentManagement.Handlers.ExportContentContext context) {
+        protected override void Exporting(CommentsPart part, ExportContentContext context) {
             context.Element(part.PartDefinition.Name).SetAttributeValue("CommentsShown", part.CommentsShown);
             context.Element(part.PartDefinition.Name).SetAttributeValue("CommentsActive", part.CommentsActive);
             context.Element(part.PartDefinition.Name).SetAttributeValue("ThreadedComments", part.ThreadedComments);
+        }
+
+        protected override void Cloning(CommentsPart originalPart, CommentsPart clonePart, CloneContentContext context) {
+            clonePart.CommentsShown = originalPart.CommentsShown;
+            clonePart.CommentsActive = originalPart.CommentsActive;
+            // ThreadedComments will be overrided with settings default
         }
     }
 }
