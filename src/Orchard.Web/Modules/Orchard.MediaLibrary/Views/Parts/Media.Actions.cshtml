@@ -27,7 +27,9 @@
         var self = $(this);
         var href = self.attr('href');
         var containsQueryString = href.indexOf("?") >= 0;
+        if (href.indexOf("returnUrl") == -1) {
         var returnUrl = href + (containsQueryString ? "&" : "?") + "returnUrl=" + encodeURIComponent(window.location);
+        }
         self.attr('href', returnUrl);
     });
     //]]>

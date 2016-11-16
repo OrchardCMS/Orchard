@@ -28,7 +28,6 @@ namespace Orchard.DesignerTools.Handlers {
             base.GetItemMetadata(context);
 
             var groupInfo = new GroupInfo(T("Shape Tracing"));
-            groupInfo.Id = "ShapeTracing";
 
             context.Metadata.EditorGroupInfo.Add(groupInfo);
         }

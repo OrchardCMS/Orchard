@@ -167,5 +167,26 @@ namespace Orchard.MediaLibrary.Services {
 
             return folderPath;
         }
+
+        public static string MimeTypeToContentType(this IMediaLibraryService service, Stream stream, string mimeType, string contentType) {
+            var mediaFactory = service.GetMediaFactory(stream, mimeType, contentType);
+            if (mediaFactory == null)
+                return null;
+
+            switch (mediaFactory.GetType().Name) {
+                case "ImageFactory":
+                    return "Image";
+                case "AudioFactory":
+                    return "Audio";
+                case "DocumentFactory":
+                    return "Document";
+                case "VectorImageFactory":
+                    return "VectorImage";
+                case "VideoFactory":
+                    return "Video";
+                default:
+                    return null;
+            }
+        }
     }
 }

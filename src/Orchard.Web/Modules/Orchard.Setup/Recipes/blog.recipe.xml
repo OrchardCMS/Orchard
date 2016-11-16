@@ -56,13 +56,13 @@
         layer create Anonymous /LayerRule:"not authenticated" /Description:"The widgets in this layer are displayed when the user is anonymous"
         layer create Disabled /LayerRule:"false" /Description:"The widgets in this layer are never displayed"
         layer create TheHomepage /LayerRule:"url '~/'" /Description:"The widgets in this layer are displayed on the home page"
-        widget create RecentBlogPosts /Title:"Recent Blog Posts" /Zone:"AsideSecond" /Position:"5" /Layer:"TheHomepage" /Identity:"RecentBlogPosts1"
-        widget create BlogArchives /Title:"Blog Archives" /Zone:"AsideSecond" /Position:"6" /Layer:"TheHomepage" /Identity:"BlogArchives1"
-        widget create TagCloud /Title:"Blog Post Tags" /Zone:"AsideSecond" /Position:"7" /Layer:"TheHomepage" /Identity:"TagCloud1"
+        blog create /Title:"Blog" /Homepage:true /Description:"This is your Orchard Blog."
+        blog widget create RecentBlogPosts /Title:"Recent Blog Posts" /Zone:"AsideSecond" /Position:"5" /Layer:"TheHomepage" /Identity:"RecentBlogPosts1" /BlogPath:""
+        blog widget create BlogArchives /Title:"Blog Archives" /Zone:"AsideSecond" /Position:"60" /Layer:"TheHomepage" /Identity:"BlogArchives1" /BlogPath:""
+        tags widget create TagCloud /Title:"Blog Post Tags" /Zone:"AsideSecond" /Position:"70" /Layer:"TheHomepage" /Identity:"TagCloud1" /Slug:"/"
         site setting set baseurl
         theme activate "The Theme Machine"
         menu create /MenuName:"Main Menu"
-        blog create /Title:"Blog" /Homepage:true /Description:"This is your Orchard Blog."
         menuitem create /MenuPosition:"0" /MenuText:"Home" /Url:"~/" /MenuName:"Main Menu"
         widget create MenuWidget /Title:"Main Menu" /RenderTitle:false /Zone:"Navigation" /Position:"1" /Layer:"Default" /Identity:"MenuWidget1" /MenuName:"Main Menu"
     </Command>
