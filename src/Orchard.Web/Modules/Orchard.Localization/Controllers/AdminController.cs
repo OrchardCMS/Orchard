@@ -71,8 +71,10 @@ namespace Orchard.Localization.Controllers
 
             Services.Notifier.Information(T("Successfully cloned. The translated content was saved as a draft."));
 
-            var adminRouteValues = _contentManager.GetItemMetadata(contentItemTranslation).AdminRouteValues;
-            return RedirectToRoute(adminRouteValues);
+            //var adminRouteValues = _contentManager.GetItemMetadata(contentItemTranslation).AdminRouteValues;
+            //return RedirectToRoute(adminRouteValues);
+            var editorRouteValues = _contentManager.GetItemMetadata(contentItemTranslation).EditorRouteValues;
+            return RedirectToRoute(editorRouteValues);
         }
     }
 }
