@@ -11,16 +11,22 @@ namespace Orchard.OutputCache.Services {
     /// Tenant wide case insensitive reverse index for <see cref="CacheItem"/> tags.
     /// </summary>
     public class DefaultTagCache : ITagCache {
-        private readonly string _tenantName;
-        private readonly WorkContext _workContext;
+        private readonly ConcurrentDictionary<string, HashSet<string>> _dictionary;
 
         public DefaultTagCache(IWorkContextAccessor workContextAccessor, ShellSettings shellSettings) {
-            _workContext = workContextAccessor.GetContext();
-            _tenantName = shellSettings.Name;
+            var key = shellSettings.Name + ":TagCache";
+            var workContext = workContextAccessor.GetContext();
+
+            _dictionary = workContext.HttpContext.Cache.Get(key) as ConcurrentDictionary<string, HashSet<string>>;
+
+            if (_dictionary == null) {
+                _dictionary = new ConcurrentDictionary<string, HashSet<string>>(StringComparer.OrdinalIgnoreCase);
+                workContext.HttpContext.Cache.Add(key, _dictionary, null, Cache.NoAbsoluteExpiration, Cache.NoSlidingExpiration, CacheItemPriority.Normal, null);
+            }
         }
 
         public void Tag(string tag, params string[] keys) {
-            var set = Dictionary.GetOrAdd(tag, x => new HashSet<string>());
+            var set = _dictionary.GetOrAdd(tag, x => new HashSet<string>());
 
             lock (set) {
                 foreach (var key in keys) {
@@ -31,7 +37,7 @@ namespace Orchard.OutputCache.Services {
 
         public IEnumerable<string> GetTaggedItems(string tag) {
             HashSet<string> set;
-            if (Dictionary.TryGetValue(tag, out set)) {
+            if (_dictionary.TryGetValue(tag, out set)) {
                 lock (set) {
                     return set.ToReadOnlyCollection();
                 }
@@ -42,21 +48,7 @@ namespace Orchard.OutputCache.Services {
 
         public void RemoveTag(string tag) {
             HashSet<string> set;
-            Dictionary.TryRemove(tag, out set);
-        }
-
-        private ConcurrentDictionary<string, HashSet<string>> Dictionary {
-            get {
-                var key = _tenantName + ":TagCache";
-                var dictionary = _workContext.HttpContext.Cache.Get(key) as ConcurrentDictionary<string, HashSet<string>>;
-
-                if (dictionary == null) {
-                    dictionary = new ConcurrentDictionary<string, HashSet<string>>(StringComparer.OrdinalIgnoreCase);
-                    _workContext.HttpContext.Cache.Add(key, dictionary, null, Cache.NoAbsoluteExpiration, Cache.NoSlidingExpiration, CacheItemPriority.Normal, null);
-                }
-
-                return dictionary;
-            }
+            _dictionary.TryRemove(tag, out set);
         }
     }
 }
