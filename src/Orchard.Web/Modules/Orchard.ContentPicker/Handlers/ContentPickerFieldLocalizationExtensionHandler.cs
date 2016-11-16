@@ -48,7 +48,6 @@ namespace Orchard.ContentPicker.Handlers {
                             _orchardServices.Notifier.Warning(T(
                                 "{0}: The following items could have no localization, so they were removed: {1}",
                                 field.DisplayName,
-                                //string.Join(", ", itemsInField.Where(ci => !ci.Parts.Any(part => part is LocalizationPart)).Select(ci => ci.Id.ToString()))
                                 string.Join(", ", itemsInField.Where(ci => !ci.Parts.Any(part => part is LocalizationPart)).Select(ci => _contentManager.GetItemMetadata(ci).DisplayText))
                                 ));
                             itemsInField = itemsInField.Where(ci => ci.Parts.Any(part => part is LocalizationPart));
@@ -72,7 +71,6 @@ namespace Orchard.ContentPicker.Handlers {
                                 _orchardServices.Notifier.Warning(T(
                                     "{0}: We could not find a localization for the following items, so they were removed: {1}",
                                     field.DisplayName,
-                                    //string.Join(", ", newIds.Where(tup => tup.Item2 < 0).Select(tup => tup.Item1.ToString()))
                                     string.Join(", ", newIds.Where(tup => tup.Item2 < 0).Select(tup => _contentManager.GetItemMetadata(_contentManager.GetLatest(tup.Item1)).DisplayText))
                                     ));
                                 newIds = newIds.Where(tup => tup.Item2 > 0);
@@ -86,7 +84,6 @@ namespace Orchard.ContentPicker.Handlers {
                             _orchardServices.Notifier.Warning(T(
                                 "{0}: The following items were replaced by their correct localization: {1}",
                                 field.DisplayName,
-                                //string.Join(", ", newIds.Where(tup => tup.Item1 != tup.Item2).Select(tup => tup.Item1.ToString()))
                                 string.Join(", ", newIds.Where(tup => tup.Item1 != tup.Item2).Select(tup => _contentManager.GetItemMetadata(_contentManager.GetLatest(tup.Item1)).DisplayText))
                                 ));
                         }
@@ -100,9 +97,8 @@ namespace Orchard.ContentPicker.Handlers {
                         List<int> badItemIds = itemsInField.Where(ci => ci.Parts.Any(part => part is LocalizationPart && ((LocalizationPart)part).Culture != lPart.Culture)).Select(ci => ci.Id).ToList();
                         if (itemsWithoutLocalizationPart.Count() > 0) {
                             //Verify items from the ContentPickerField that cannot be localized
-                            _orchardServices.Notifier.Warning(T("{0}: Some of the selected items cannot be localized. Ids: {1}",
+                            _orchardServices.Notifier.Warning(T("{0}: Some of the selected items cannot be localized: {1}",
                                 field.DisplayName,
-                                //string.Join(", ", itemsWithoutLocalizationPart.Select(ci => ci.Id))
                                 string.Join(", ", itemsWithoutLocalizationPart.Select(ci => _contentManager.GetItemMetadata(ci).DisplayText))
                                 ));
                             if (settings.BlockForItemsWithNoLocalizationPart) {
@@ -110,8 +106,7 @@ namespace Orchard.ContentPicker.Handlers {
                             }
                         }
                         if (badItemIds.Count > 0) {
-                            context.Updater.AddModelError(field.DisplayName, T("Some of the items selected have the wrong localization. Ids: {0}",
-                                //string.Join(", ", badItemIds.Select(id => id.ToString()))
+                            context.Updater.AddModelError(field.DisplayName, T("Some of the items selected have the wrong localization: {0}",
                                 string.Join(", ", badItemIds.Select(id => _contentManager.GetItemMetadata(_contentManager.GetLatest(id)).DisplayText))
                                 ));
                         }

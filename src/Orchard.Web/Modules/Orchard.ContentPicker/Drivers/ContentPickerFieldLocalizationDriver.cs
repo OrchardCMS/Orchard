@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentPicker.Fields;
 using Orchard.ContentPicker.ViewModels;
 using Orchard.Environment.Extensions;
 
@@ -34,6 +35,10 @@ namespace Orchard.ContentPicker.Drivers {
 
                     return shapeHelper.EditorTemplate(TemplateName: "Fields/ContentPickerLocalization.Edit", Model: model, Prefix: GetPrefix(field, part));
                 });
+        }
+
+        protected override DriverResult Editor(ContentPart part, ContentPickerField field, IUpdateModel updater, dynamic shapeHelper) {
+            return Editor(part, field, shapeHelper);
         }
     }
 }
