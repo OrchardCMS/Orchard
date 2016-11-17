@@ -8,7 +8,7 @@ using Orchard.DisplayManagement.Shapes;
 using Orchard.Logging;
 
 namespace Orchard.ContentManagement.Drivers {
-    public abstract class ContentFieldDriver<TField> : IContentFieldDriver where TField : ContentField, new() {
+    public abstract class ContentFieldDriver<TField> : IContentFieldCloningDriver where TField : ContentField, new() {
         protected virtual string Prefix { get { return ""; } }
         protected virtual string Zone { get { return "Content"; } }
 
@@ -84,11 +84,11 @@ namespace Orchard.ContentManagement.Drivers {
             Process(context.ContentItem, (part, field) => Exported(part, field, context), context.Logger);
         }
 
-        void IContentFieldDriver.Cloning(CloneContentContext context) {
+        void IContentFieldCloningDriver.Cloning(CloneContentContext context) {
             ProcessClone(context.ContentItem, context.CloneContentItem, (part, originalField, cloneField) => Cloning(part, originalField, cloneField, context), context.Logger);
         }
 
-        void IContentFieldDriver.Cloned(CloneContentContext context) {
+        void IContentFieldCloningDriver.Cloned(CloneContentContext context) {
             ProcessClone(context.ContentItem, context.CloneContentItem, (part, originalField, cloneField) => Cloned(part, originalField, cloneField, context), context.Logger);
         }
 

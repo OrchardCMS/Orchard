@@ -10,7 +10,7 @@ using Orchard.DisplayManagement.Shapes;
 using System.Linq;
 
 namespace Orchard.ContentManagement.Drivers {
-    public abstract class ContentPartDriver<TContent> : IContentPartDriver where TContent : ContentPart, new() {
+    public abstract class ContentPartDriver<TContent> : IContentPartCloningDriver where TContent : ContentPart, new() {
         protected virtual string Prefix { get { return typeof(TContent).Name; } }
 
         void IContentPartDriver.GetContentItemMetadata(GetContentItemMetadataContext context) {
@@ -106,14 +106,14 @@ namespace Orchard.ContentManagement.Drivers {
                 Exported(part, context);
         }
 
-        void IContentPartDriver.Cloning(CloneContentContext context) {
+        void IContentPartCloningDriver.Cloning(CloneContentContext context) {
             var originalPart = context.ContentItem.As<TContent>();
             var clonePart = context.CloneContentItem.As<TContent>();
             if (originalPart != null && clonePart != null)
                 Cloning(originalPart, clonePart, context);
         }
 
-        void IContentPartDriver.Cloned(CloneContentContext context) {
+        void IContentPartCloningDriver.Cloned(CloneContentContext context) {
             var originalPart = context.ContentItem.As<TContent>();
             var clonePart = context.CloneContentItem.As<TContent>();
             if (originalPart != null && clonePart != null)

@@ -8,12 +8,12 @@ using Orchard.Logging;
 
 namespace Orchard.ContentManagement.Drivers.Coordinators {
     public class ContentFieldDriverCoordinator : ContentHandlerBase {
-        private readonly IEnumerable<IContentFieldDriver> _drivers;
+        private readonly IEnumerable<IContentFieldCloningDriver> _drivers;
         private readonly IFieldStorageProviderSelector _fieldStorageProviderSelector;
         private readonly IEnumerable<IFieldStorageEvents> _fieldStorageEvents;
 
         public ContentFieldDriverCoordinator(
-            IEnumerable<IContentFieldDriver> drivers,
+            IEnumerable<IContentFieldCloningDriver> drivers,
             IFieldStorageProviderSelector fieldStorageProviderSelector,
             IEnumerable<IFieldStorageEvents> fieldStorageEvents) {
             _drivers = drivers;

@@ -12,10 +12,10 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
     /// It will dispatch BuildDisplay/BuildEditor to all <see cref="IContentPartDriver"/> implementations.
     /// </summary>
     public class ContentPartDriverCoordinator : ContentHandlerBase {
-        private readonly IEnumerable<IContentPartDriver> _drivers;
+        private readonly IEnumerable<IContentPartCloningDriver> _drivers;
         private readonly IContentDefinitionManager _contentDefinitionManager;
 
-        public ContentPartDriverCoordinator(IEnumerable<IContentPartDriver> drivers, IContentDefinitionManager contentDefinitionManager) {
+        public ContentPartDriverCoordinator(IEnumerable<IContentPartCloningDriver> drivers, IContentDefinitionManager contentDefinitionManager) {
             _drivers = drivers;
             _contentDefinitionManager = contentDefinitionManager;
             Logger = NullLogger.Instance;
