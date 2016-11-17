@@ -1,0 +1,15 @@
+﻿@model Orchard.Taxonomies.ViewModels.AssociateTermTypeViewModel
+@using Orchard.Taxonomies.ViewModels;
+
+<fieldset class="term-selector">
+    <label for="termSelector">@T("Term type:")</label>
+    <select id="termSelector" name="@Html.NameOf(m => m.SelectedTermTypeId)">
+        @Html.SelectOption(Model.SelectedTermTypeId, TermCreationAction.CreateLocalized.ToString(), T("Create new localized Term type").ToString())
+        @Html.SelectOption(Model.SelectedTermTypeId, TermCreationAction.CreateCultureNeutral.ToString(), T("Create new culture neutral Term type").ToString())
+        @{
+            foreach (var termType in Model.TermTypes) {
+                @Html.SelectOption(Model.SelectedTermTypeId, termType.Name, termType.DisplayName);
+            }
+        }
+    </select>
+</fieldset>

@@ -109,6 +109,10 @@
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Drivers\LocalizedTaxonomyPartDriver.cs" />
+    <Compile Include="Services\ITaxonomyExtensionsService.cs" />
+    <Compile Include="Services\TaxonomyExtensionsService.cs" />
+    <Compile Include="ViewModels\AssociateTermTypeViewModel.cs" />
     <Compile Include="ViewModels\Tag.cs" />
     <Compile Include="Controllers\TagsController.cs" />
     <Compile Include="Controllers\TermAdminController.cs" />
@@ -256,6 +260,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts\TaxonomyTermSelector.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

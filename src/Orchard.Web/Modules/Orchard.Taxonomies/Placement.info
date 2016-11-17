@@ -20,6 +20,9 @@
   <!-- Display in admin -->
   <Place Parts_Taxonomies_Term_Fields="Content:2"/>
   
+  <!-- Display term selector in admin -->
+  <Place Parts_TaxonomyTermSelector="Content:1"/>
+  
   <!-- New Shapes -->
   <Place Parts_TaxonomyPart="Content:5" />
   <Place Parts_TermPart="Content:5" />
