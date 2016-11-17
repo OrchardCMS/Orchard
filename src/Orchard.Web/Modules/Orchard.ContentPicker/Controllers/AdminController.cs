@@ -12,6 +12,7 @@ using Orchard.Core.Contents.Settings;
 using Orchard.Core.Contents.ViewModels;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
+using Orchard.Localization.Services;
 using Orchard.Mvc;
 using Orchard.Settings;
 using Orchard.Themes;
@@ -22,16 +23,22 @@ namespace Orchard.ContentPicker.Controllers {
         private readonly ISiteService _siteService;
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly INavigationManager _navigationManager;
+        private readonly ICultureManager _cultureManager;
+        private readonly ICultureFilter _cultureFilter;
 
         public AdminController(
             IOrchardServices orchardServices,
             ISiteService siteService,
             IContentDefinitionManager contentDefinitionManager,
-            INavigationManager navigationManager) {
+            INavigationManager navigationManager,
+            ICultureManager cultureManager,
+            ICultureFilter cultureFilter) {
             _siteService = siteService;
             _contentDefinitionManager = contentDefinitionManager;
             _navigationManager = navigationManager;
             Services = orchardServices;
+            _cultureManager = cultureManager;
+            _cultureFilter = cultureFilter;
 
             T = NullLocalizer.Instance;
         }
@@ -123,9 +130,15 @@ namespace Orchard.ContentPicker.Controllers {
                     break;
             }
 
+            if (!String.IsNullOrWhiteSpace(model.Options.SelectedCulture)) {
+                query = _cultureFilter.FilterCulture(query, model.Options.SelectedCulture);
+            }
+
             model.Options.FilterOptions = contentTypes
                 .Select(ctd => new KeyValuePair<string, string>(ctd.Name, ctd.DisplayName))
                 .ToList().OrderBy(kvp => kvp.Value);
+
+            model.Options.Cultures = _cultureManager.ListCultures();
 
             var pagerShape = Services.New.Pager(pager).TotalItemCount(query.Count());
             var pageOfContentItems = query.Slice(pager.GetStartIndex(), pager.PageSize).ToList();
