@@ -9,69 +9,69 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Core.Common.Models;
+using Orchard.Core.Title.Models;
 using Orchard.Environment.Extensions;
+using Orchard.Localization;
 using Orchard.Localization.Models;
+using Orchard.Localization.Services;
+using Orchard.UI.Notify;
 
 namespace Orchard.Blogs.BlogsLocalizationExtensions.Handlers {
     [OrchardFeature("Orchard.Blogs.LocalizationExtensions")]
     public class BlogPostPartHandler : ContentHandler {
         private readonly IContentManager _contentManager;
         private readonly IAutorouteService _routeService;
+        private readonly ILocalizationService _localizationService;
 
-        public BlogPostPartHandler(RequestContext requestContext, IContentManager contentManager, IAutorouteService routeService) {
+        public BlogPostPartHandler(RequestContext requestContext, IContentManager contentManager, IAutorouteService routeService, ILocalizationService localizationService, INotifier notifier) {
             _contentManager = contentManager;
             _routeService = routeService;
-
+            _localizationService = localizationService;
+            Notifier = notifier;
+            T = NullLocalizer.Instance;
             //move posts when created, updated or published
             OnCreating<BlogPostPart>((context, part) => MigrateBlogPost(context.ContentItem));
             OnUpdating<BlogPostPart>((context, part) => MigrateBlogPost(context.ContentItem));
             OnPublishing<BlogPostPart>((context, part) => MigrateBlogPost(context.ContentItem));
         }
 
+        public INotifier Notifier {get;set;}
+
+        public Localizer T { get; set; }
+
         //This Method checks the blog post's culture and it's parent blog's culture and moves it to the correct blog if they aren't equal.
-        private void MigrateBlogPost(ContentItem item) {
-            if (!item.Has<LocalizationPart>() || !item.Has<BlogPostPart>()) {
+        private void MigrateBlogPost(ContentItem blogPost) {
+            if (!blogPost.Has<LocalizationPart>() || !blogPost.Has<BlogPostPart>()) {
                 return;
             }
-            var blogItem = _contentManager.Get(item.As<CommonPart>().Container.Id);
-            if (!blogItem.Has<LocalizationPart>() || blogItem.As<LocalizationPart>().Culture == null) {
+            var blog = _contentManager.Get(blogPost.As<CommonPart>().Container.Id);
+            if (!blog.Has<LocalizationPart>() || blog.As<LocalizationPart>().Culture == null) {
                 return;
             }
 
             //get our 2 cultures for comparison
-            var blogCulture = blogItem.As<LocalizationPart>().Culture;
-            var postCulture = item.As<LocalizationPart>().Culture;
+            var blogCulture = blog.As<LocalizationPart>().Culture;
+            var blogPostCulture = blogPost.As<LocalizationPart>().Culture;
 
             //if the post is a different culture than the parent blog change the post's parent blog to the right localization...
-            if (postCulture != null && (postCulture.Id != blogCulture.Id)) {
+            if (blogPostCulture != null && (blogPostCulture.Id != blogCulture.Id)) {
                 //Get the id of the current blog
-                var blogids = new HashSet<int> { blogItem.As<BlogPart>().ContentItem.Id };
+                var blogids = new HashSet<int> { blog.As<BlogPart>().ContentItem.Id };
 
-                //Add master blog id if current blog is a translation (child of the master blog)
-                _contentManager.Query("Blog")
-                               .Join<LocalizationPartRecord>()
-                               .Where(x => x.MasterContentItemId == blogItem.As<BlogPart>().ContentItem.Id)
-                               .List().ToList().ForEach(x => blogids.Add(x.Id));
-
-                //and look in all master blog's translations
-                if (blogItem.As<LocalizationPart>() != null && blogItem.As<LocalizationPart>().MasterContentItem != null) {
-                    _contentManager.Query("Blog").Join<CommonPartRecord>().Where(x => x.Id == blogItem.As<LocalizationPart>().MasterContentItem.Id).List().ToList().ForEach(x => blogids.Add(x.Id));
-                }
-
-                foreach (var blogid in blogids) {
-                    var thisBlog = _contentManager.Get(blogid);
-
-                    //find this poor, orphaned, blogpost a new daddy
-                    if (thisBlog.Has<LocalizationPart>() && thisBlog.As<LocalizationPart>().Culture.Id == postCulture.Id) {
-                        item.As<ICommonPart>().Container = thisBlog;
-                        if (item.Has<AutoroutePart>()) {
-                            _routeService.RemoveAliases(item.As<AutoroutePart>());
-                            item.As<AutoroutePart>().DisplayAlias = _routeService.GenerateAlias(item.As<AutoroutePart>());
-                            _routeService.PublishAlias(item.As<AutoroutePart>());
-                        }
-                        return;
+                //seek for same culture blog
+                var realBlog = _localizationService.GetLocalizations(blog).SingleOrDefault(w=>w.As<LocalizationPart>().Culture == blogPostCulture);
+                if (realBlog.Has<LocalizationPart>() && realBlog.As<LocalizationPart>().Culture.Id == blogPostCulture.Id) {
+                    blogPost.As<ICommonPart>().Container = realBlog;
+                    if (blogPost.Has<AutoroutePart>()) {
+                        _routeService.RemoveAliases(blogPost.As<AutoroutePart>());
+                        blogPost.As<AutoroutePart>().DisplayAlias = _routeService.GenerateAlias(blogPost.As<AutoroutePart>());
+                        _routeService.PublishAlias(blogPost.As<AutoroutePart>());
                     }
+                    Notifier.Information(T("Your Post has been moved under the \"{0}\" Blog", realBlog.As<TitlePart>().Title));
+                    return;
                 }
+
+                return;
             }
         }
     }
