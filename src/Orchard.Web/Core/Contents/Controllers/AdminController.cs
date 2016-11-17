@@ -110,11 +110,11 @@ namespace Orchard.Core.Contents.Controllers {
                     break;
             }
 
-            if(!String.IsNullOrWhiteSpace(model.Options.SelectedCulture)) {
+            if (!String.IsNullOrWhiteSpace(model.Options.SelectedCulture)) {
                 query = _cultureFilter.FilterCulture(query, model.Options.SelectedCulture);
             }
 
-            if(model.Options.ContentsStatus == ContentsStatus.Owner) {
+            if (model.Options.ContentsStatus == ContentsStatus.Owner) {
                 query = query.Where<CommonPartRecord>(cr => cr.OwnerId == Services.WorkContext.CurrentUser.Id);
             }
 
@@ -388,25 +388,27 @@ namespace Orchard.Core.Contents.Controllers {
 
         [HttpPost]
         public ActionResult Clone(int id, string returnUrl) {
-            var contentItem = _contentManager.GetLatest(id);
+            var originalContentItem = _contentManager.GetLatest(id);
 
-            if (contentItem == null)
-                return HttpNotFound();
-
-            if (!Services.Authorizer.Authorize(Permissions.EditContent, contentItem, T("Couldn't clone content")))
+            if (!Services.Authorizer.Authorize(Permissions.ViewContent, originalContentItem, T("Couldn't open original content")))
                 return new HttpUnauthorizedResult();
 
-            try {
-                Services.ContentManager.Clone(contentItem);
-            }
-            catch (InvalidOperationException) {
-                Services.Notifier.Warning(T("Could not clone the content item."));
-                return this.RedirectLocal(returnUrl, () => RedirectToAction("List"));
-            }
+            // pass a dummy content to the authorization check to check for "own" variations
+            var dummyContent = _contentManager.New(originalContentItem.ContentType);
+
+            if (!Services.Authorizer.Authorize(Permissions.EditContent, dummyContent, T("Couldn't create clone content")))
+                return new HttpUnauthorizedResult();
+
+            var cloneContentItem = _contentManager.Clone(originalContentItem);
 
             Services.Notifier.Information(T("Successfully cloned. The clone was saved as a draft."));
-
-            return this.RedirectLocal(returnUrl, () => RedirectToAction("List"));
+            if (string.IsNullOrWhiteSpace(returnUrl)) {
+                var adminRouteValues = _contentManager.GetItemMetadata(cloneContentItem).AdminRouteValues;
+                return RedirectToRoute(adminRouteValues);
+            }
+            else {
+                return this.RedirectLocal(returnUrl, () => RedirectToAction("List"));
+            }
         }
 
         [HttpPost]

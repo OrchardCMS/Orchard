@@ -66,6 +66,10 @@ namespace Orchard.Fields.Drivers {
 				context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Value", field.Value);
         }
 
+        protected override void Cloning(ContentPart part, BooleanField originalField, BooleanField cloneField, CloneContentContext context) {
+            cloneField.Value = originalField.Value;
+        }
+
         protected override void Describe(DescribeMembersContext context) {
             context
                 .Member(null, typeof(Boolean), T("Value"), T("The boolean value of the field."))
