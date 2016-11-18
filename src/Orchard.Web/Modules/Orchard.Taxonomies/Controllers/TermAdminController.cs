@@ -42,11 +42,13 @@ namespace Orchard.Taxonomies.Controllers {
 
             var taxonomy = _taxonomyService.GetTaxonomy(taxonomyId);
 
-            var terms = TermPart.Sort(_taxonomyService.GetTermsQuery(taxonomyId).Slice(pager.GetStartIndex(), pager.PageSize));
+            var allTerms = TermPart.Sort(_taxonomyService.GetTermsQuery(taxonomyId).List());
 
-            var pagerShape = Shape.Pager(pager).TotalItemCount(_taxonomyService.GetTermsQuery(taxonomyId).Count());
+            var termsPage = pager.PageSize > 0 ? allTerms.Skip(pager.GetStartIndex()).Take(pager.PageSize) : allTerms;
 
-            var entries = terms
+            var pagerShape = Shape.Pager(pager).TotalItemCount(allTerms.Count());
+
+            var entries = termsPage
                     .Select(term => term.CreateTermEntry())
                     .ToList();
 
