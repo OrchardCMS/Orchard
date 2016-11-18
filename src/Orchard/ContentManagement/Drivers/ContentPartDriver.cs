@@ -10,7 +10,7 @@ using Orchard.DisplayManagement.Shapes;
 using System.Linq;
 
 namespace Orchard.ContentManagement.Drivers {
-    public abstract class ContentPartDriver<TContent> : IContentPartDriver where TContent : ContentPart, new() {
+    public abstract class ContentPartDriver<TContent> : IContentPartCloningDriver where TContent : ContentPart, new() {
         protected virtual string Prefix { get { return typeof(TContent).Name; } }
 
         void IContentPartDriver.GetContentItemMetadata(GetContentItemMetadataContext context) {
@@ -106,6 +106,20 @@ namespace Orchard.ContentManagement.Drivers {
                 Exported(part, context);
         }
 
+        void IContentPartCloningDriver.Cloning(CloneContentContext context) {
+            var originalPart = context.ContentItem.As<TContent>();
+            var clonePart = context.CloneContentItem.As<TContent>();
+            if (originalPart != null && clonePart != null)
+                Cloning(originalPart, clonePart, context);
+        }
+
+        void IContentPartCloningDriver.Cloned(CloneContentContext context) {
+            var originalPart = context.ContentItem.As<TContent>();
+            var clonePart = context.CloneContentItem.As<TContent>();
+            if (originalPart != null && clonePart != null)
+                Cloned(originalPart, clonePart, context);
+        }
+
         protected virtual void GetContentItemMetadata(TContent context, ContentItemMetadata metadata) { }
 
         protected virtual DriverResult Display(TContent part, string displayType, dynamic shapeHelper) { return null; }
@@ -174,6 +188,11 @@ namespace Orchard.ContentManagement.Drivers {
             return part.PartDefinition.Name + "-" + (versioned ? "VersionInfoset" : "Infoset");
         }
 
+        protected virtual void Cloning(TContent originalPart, TContent clonePart, CloneContentContext context) { }
+
+        protected virtual void Cloned(TContent originalPart, TContent clonePart, CloneContentContext context) { }
+
+
         [Obsolete("Provided while transitioning to factory variations")]
         public ContentShapeResult ContentShape(IShape shape) {
             return ContentShapeImplementation(shape.Metadata.Type, ctx => shape).Location("Content");
@@ -237,6 +256,5 @@ namespace Orchard.ContentManagement.Drivers {
 
             return contentPartInfo;
         }
-
     }
 }
