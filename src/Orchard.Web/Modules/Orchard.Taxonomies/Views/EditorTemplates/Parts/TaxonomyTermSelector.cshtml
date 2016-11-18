@@ -22,12 +22,7 @@
 <div class="options">
     <span data-controllerid="existingTerm">
         <label>@T("Term type")</label>
-        @if (Model.ContentItem.ContentItem.Id == 0) {
-            @Html.DropDownListFor(m => m.SelectedTermTypeId, new SelectList(Model.TermTypes.OrderBy(o => o.DisplayName), "Name", "DisplayName"))
-        }
-        else {
-            @Html.DropDownListFor(m => m.SelectedTermTypeId, new SelectList(Model.TermTypes.OrderBy(o => o.DisplayName), "Name", "DisplayName"), new { @disabled = "disabled" })
-        }
+        @Html.DropDownListFor(m => m.SelectedTermTypeId, new SelectList(Model.TermTypes.OrderBy(o => o.DisplayName), "Name", "DisplayName"), Model.ContentItem.ContentItem.Id != 0 ? new { @disabled = "disabled" } as object : new { } as object)
         <span class="hint">@T("The content type of the terms used by this Taxonomy")</span>
     </span>
 </div>
