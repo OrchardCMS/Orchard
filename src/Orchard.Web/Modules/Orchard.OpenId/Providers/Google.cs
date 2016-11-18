@@ -38,13 +38,9 @@ namespace Orchard.OpenId.Providers {
                 GoogleSettingsPart settings;
                 ISite site;
 
-                // TODO: Revise code after issue https://github.com/OrchardCMS/Orchard/issues/7362 has been solved
-                var scope =
-                    _workContextAccessor.GetContext() ?? // happens if the provider was called early in the pipeline
-                    _workContextAccessor.CreateWorkContextScope().WorkContext;
+                var scope = _workContextAccessor.GetContext();
 
                 site = scope.Resolve<ISiteService>().GetSiteSettings();
-
                 settings = site.As<GoogleSettingsPart>();
 
                 return (settings != null && settings.IsValid);

@@ -5,34 +5,34 @@ Website: http://orchardproject.net
 Version: 1.0
 OrchardVersion: 1.10.1
 Description: Enables Orchard to authenticate users using OpenId
-Category: Authentication
+Category: OpenId Providers
 Features:
     Orchard.OpenId:
         Description: Enables Orchard to authenticate users using OpenId
 		Category: Authentication
 		Name: OpenId
     Orchard.OpenId.Facebook:
-        Description: Enables Orchard to authenticate users using thier Facebook Accounts
+        Description: Enables Orchard to authenticate users using their Facebook Accounts
 		Category: OpenId Providers
 		Name: Facebook
 		Dependencies: Orchard.OpenId
     Orchard.OpenId.Google:
-        Description: Enables Orchard to authenticate users using thier Google Accounts
+        Description: Enables Orchard to authenticate users using their Google Accounts
 		Category: OpenId Providers
 		Name: Google
 		Dependencies: Orchard.OpenId
     Orchard.OpenId.Twitter:
-        Description: Enables Orchard to authenticate users using thier Twitter Accounts
+        Description: Enables Orchard to authenticate users using their Twitter Accounts
 		Category: OpenId Providers
 		Name: Twitter
 		Dependencies: Orchard.OpenId
     Orchard.OpenId.AzureActiveDirectory:
-        Description: Enables Orchard to authenticate users using thier Azure AD Accounts
+        Description: Enables Orchard to authenticate users using their Azure AD Accounts
 		Category: OpenId Providers
 		Name: Azure Active Directory (AAD)
 		Dependencies: Orchard.OpenId
     Orchard.OpenId.ActiveDirectoryFederationServices:
-        Description: Enables Orchard to authenticate users using thier ADFS Accounts
+        Description: Enables Orchard to authenticate users using their ADFS Accounts
 		Category: OpenId Providers
 		Name: Active Directory Federation Services (ADFS)
 		Dependencies: Orchard.OpenId
