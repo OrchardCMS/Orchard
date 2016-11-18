@@ -12,7 +12,7 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
     /// It will dispatch BuildDisplay/BuildEditor to all <see cref="IContentPartDriver"/> implementations.
     /// </summary>
     public class ContentPartDriverCoordinator : ContentHandlerBase {
-        private readonly IEnumerable<IContentPartCloningDriver> _drivers;
+        private readonly IEnumerable<IContentPartDriver> _drivers;
         private readonly IContentDefinitionManager _contentDefinitionManager;
 
         public ContentPartDriverCoordinator(IEnumerable<IContentPartCloningDriver> drivers, IContentDefinitionManager contentDefinitionManager) {
@@ -104,11 +104,8 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
                 //if no driver implements Cloning, run the fallback for the part
                 //otherwise, invoke Cloning for all these drivers.
 
-                //get baseType of driver (this is ContentPartDriver<TContent>)
-                Type baseDriverType = driverGroup.First().GetType().BaseType;
-
                 bool noCloningImplementation = true;
-                foreach (var contentPartDriver in driverGroup) {
+                foreach (var contentPartDriver in driverGroup.Where(cpd => cpd is IContentPartCloningDriver)) {
                     //if we find an implementation of cloning, break
                     if (contentPartDriver.GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.DeclaredOnly).Where(mi => mi.Name == "Cloning").FirstOrDefault() != null) {
                         noCloningImplementation = false;
@@ -139,7 +136,7 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
                     }
                 }
                 else {
-                    foreach (var contentPartDriver in driverGroup) {
+                    foreach (var contentPartDriver in driverGroup.Select(cpd => cpd as IContentPartCloningDriver).Where(cpd => cpd != null)) {
                         contentPartDriver.Cloning(context);
                     }
                 }
@@ -147,7 +144,7 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
         }
 
         public override void Cloned(CloneContentContext context) {
-            foreach (var contentPartDriver in _drivers) {
+            foreach (var contentPartDriver in _drivers.Select(cpd => cpd as IContentPartCloningDriver).Where(cpd => cpd != null)) {
                 contentPartDriver.Cloned(context);
             }
         }
