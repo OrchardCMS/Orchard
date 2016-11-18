@@ -19,6 +19,12 @@ namespace Orchard.Localization.Handlers {
 
             OnActivated<LocalizationPart>(PropertySetHandlers);
 
+            OnCreated<LocalizationPart>((context, part) => {
+                if (part.Record.LocalizationSetId == 0) {
+                    part.Record.LocalizationSetId = part.Id;
+                }
+            });
+
             OnLoading<LocalizationPart>((context, part) => LazyLoadHandlers(part));
             OnVersioning<LocalizationPart>((context, part, versionedPart) => LazyLoadHandlers(versionedPart));
 
@@ -37,6 +43,7 @@ namespace Orchard.Localization.Handlers {
             
             localizationPart.MasterContentItemField.Setter(masterContentItem => {
                 localizationPart.Record.MasterContentItemId = masterContentItem.ContentItem.Id;
+                localizationPart.Record.LocalizationSetId = masterContentItem.As<LocalizationPart>().LocalizationSetId;
                 return masterContentItem;
             });            
         }

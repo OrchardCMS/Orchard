@@ -10,29 +10,30 @@ namespace Orchard.Localization.Drivers {
     public class LocalizationPartDriver : ContentPartDriver<LocalizationPart> {
         private const string TemplatePrefix = "Localization";
         private readonly ICultureManager _cultureManager;
-        private readonly ILocalizationService _localizationService;
+        private readonly ILocalizationSetService _localizationService;
         private readonly IContentManager _contentManager;
 
-        public LocalizationPartDriver(ICultureManager cultureManager, ILocalizationService localizationService, IContentManager contentManager) {
+        public LocalizationPartDriver(ICultureManager cultureManager, ILocalizationSetService localizationService, IContentManager contentManager) {
             _cultureManager = cultureManager;
             _localizationService = localizationService;
             _contentManager = contentManager;
         }
 
         protected override DriverResult Display(LocalizationPart part, string displayType, dynamic shapeHelper) {
-            var masterId = part.HasTranslationGroup
-                               ? part.Record.MasterContentItemId
-                               : part.Id;
+            //var masterId = 
+            //    part.HasTranslationGroup
+            //                   ? part.Record.MasterContentItemId
+            //                   : part.Id;
 
             return Combined(
                 ContentShape("Parts_Localization_ContentTranslations",
-                             () => shapeHelper.Parts_Localization_ContentTranslations(Id: part.ContentItem.Id, MasterId: masterId, Culture: GetCulture(part), Localizations: GetDisplayLocalizations(part, VersionOptions.Published))),
+                             () => shapeHelper.Parts_Localization_ContentTranslations(Id: part.ContentItem.Id, MasterId: part.LocalizationSetId, Culture: GetCulture(part), Localizations: GetDisplayLocalizations(part, VersionOptions.Published))),
                 ContentShape("Parts_Localization_ContentTranslations_Summary",
-                             () => shapeHelper.Parts_Localization_ContentTranslations_Summary(Id: part.ContentItem.Id, MasterId: masterId, Culture: GetCulture(part), Localizations: GetDisplayLocalizations(part, VersionOptions.Published))),
+                             () => shapeHelper.Parts_Localization_ContentTranslations_Summary(Id: part.ContentItem.Id, MasterId: part.LocalizationSetId, Culture: GetCulture(part), Localizations: GetDisplayLocalizations(part, VersionOptions.Published))),
                 ContentShape("Parts_Localization_ContentTranslations_SummaryAdmin", () => {
                     var siteCultures = _cultureManager.ListCultures();
 
-                    return shapeHelper.Parts_Localization_ContentTranslations_SummaryAdmin(Id: part.ContentItem.Id, MasterId: masterId, Culture: GetCulture(part), Localizations: GetDisplayLocalizations(part, VersionOptions.Latest), SiteCultures: siteCultures);
+                    return shapeHelper.Parts_Localization_ContentTranslations_SummaryAdmin(Id: part.ContentItem.Id, MasterId: part.LocalizationSetId, Culture: GetCulture(part), Localizations: GetDisplayLocalizations(part, VersionOptions.Latest), SiteCultures: siteCultures);
                 })
                 );
         }
