@@ -13,12 +13,12 @@ using Orchard.Workflows.Services;
 
 namespace Orchard.Roles.Activities {
     [OrchardFeature("Orchard.Roles.Workflows")]
-    public class AssignRoleActivity : Task {
+    public class UnssignRoleActivity : Task {
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly IRepository<UserRolesPartRecord> _repository;
         private readonly IRoleService _roleService;
 
-        public AssignRoleActivity(
+        public UnssignRoleActivity(
             IWorkContextAccessor workContextAccessor,
             IRepository<UserRolesPartRecord> repository,
             IRoleService roleService) {
@@ -32,24 +32,28 @@ namespace Orchard.Roles.Activities {
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
-        public override string Name {
-            get { return "AssignRole"; }
+        public override string Name
+        {
+            get { return "UnassignRole"; }
         }
 
-        public override LocalizedString Category {
+        public override LocalizedString Category
+        {
             get { return T("User"); }
         }
 
-        public override LocalizedString Description {
-            get { return T("Assign specific roles to the current content item if it's a user.");  }
+        public override LocalizedString Description
+        {
+            get { return T("Unassign specific roles to the current content item if it's a user."); }
         }
 
-        public override string Form {
+        public override string Form
+        {
             get { return "SelectRoles"; }
         }
 
         public override IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext workflowContext, ActivityContext activityContext) {
-            return new[] {T("Done")};
+            return new[] { T("Done") };
         }
 
         public override IEnumerable<LocalizedString> Execute(WorkflowContext workflowContext, ActivityContext activityContext) {
@@ -59,15 +63,18 @@ namespace Orchard.Roles.Activities {
             if (user == null) {
                 user = _workContextAccessor.GetContext().CurrentUser.As<IUserRoles>();
             }
-            
+
             var roles = Commons.GetRoles(activityContext);
 
             if (user != null) {
                 foreach (var role in roles) {
-                    if (!user.Roles.Contains(role)) {
+                    if (user.Roles.Contains(role)) {
                         var roleRecord = _roleService.GetRoleByName(role);
                         if (roleRecord != null) {
-                            _repository.Create(new UserRolesPartRecord {UserId = user.Id, Role = roleRecord});
+                            var currentUserRoleRecord = _repository.Fetch(x => x.UserId == user.Id && x.Role.Id == roleRecord.Id).SingleOrDefault();
+                            if (currentUserRoleRecord != null) {
+                                _repository.Delete(currentUserRoleRecord);
+                            }
                         }
                         else {
                             Logger.Debug("Role not found: {0}", role);
