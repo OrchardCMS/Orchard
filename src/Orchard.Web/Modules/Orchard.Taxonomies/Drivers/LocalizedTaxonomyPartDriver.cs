@@ -4,7 +4,6 @@ using Orchard.Environment.Extensions;
 using Orchard.Taxonomies.Models;
 using Orchard.Taxonomies.Services;
 using Orchard.Taxonomies.ViewModels;
-using System.Linq;
 
 namespace Orchard.Taxonomies.Drivers {
     [OrchardFeature("Orchard.Taxonomies.LocalizationExtensions")]
@@ -18,10 +17,11 @@ namespace Orchard.Taxonomies.Drivers {
         protected override string Prefix { get { return "LocalizedTaxonomy"; } }
 
         protected override DriverResult Editor(TaxonomyPart part, dynamic shapeHelper) {
-            var model = new AssociateTermTypeViewModel();
+            AssociateTermTypeViewModel model = new AssociateTermTypeViewModel();
             model.TermTypes = _taxonomyExtensionsService.GetAllTermTypes();
-
-            model.SelectedTermTypeId = part.TermTypeName != null ? part.TermTypeName : TermCreationAction.CreateLocalized.ToString();
+            model.TermCreationAction = TermCreationOptions.CreateLocalized;
+            model.SelectedTermTypeId = part.TermTypeName;
+            model.ContentItem = part;
 
             return ContentShape("Parts_TaxonomyTermSelector",
                                 () => shapeHelper.EditorTemplate(
@@ -31,6 +31,23 @@ namespace Orchard.Taxonomies.Drivers {
         }
 
         protected override DriverResult Editor(TaxonomyPart part, IUpdateModel updater, dynamic shapeHelper) {
+            if (string.IsNullOrWhiteSpace(part.TermTypeName)) {
+                AssociateTermTypeViewModel model = new AssociateTermTypeViewModel();
+                if (updater.TryUpdateModel(model, Prefix, null, null)) {
+                    switch (model.TermCreationAction) {
+                        case TermCreationOptions.CreateLocalized:
+                            _taxonomyExtensionsService.CreateLocalizedTermContentType(part);
+                            break;
+                        case TermCreationOptions.UseExisting:
+                            part.TermTypeName = model.SelectedTermTypeId;
+                            break;
+                        default:
+                            part.TermTypeName = null;
+                            break;
+                    }
+                }
+            }
+
             return Editor(part, shapeHelper);
         }
     }

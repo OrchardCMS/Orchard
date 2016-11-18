@@ -15,4 +15,4 @@ Features:
 		Name: Taxonomies Localization Extensions
         Description: Adds localization support to taxonomies
         Category: Content
-		Dependencies: Orchard.Taxonomies
+		Dependencies: Orchard.Taxonomies, Orchard.Localization
