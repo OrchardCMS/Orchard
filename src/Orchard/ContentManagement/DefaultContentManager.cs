@@ -569,13 +569,10 @@ namespace Orchard.ContentManagement {
             Create(cloneContentItem, VersionOptions.Draft);
 
             var context = new CloneContentContext(contentItem, cloneContentItem);
-            foreach (var contentHandler in Handlers) {
-                contentHandler.Cloning(context);
-            }
 
-            foreach (var contentHandler in Handlers) {
-                contentHandler.Cloned(context);
-            }
+            Handlers.Invoke(handler => handler.Cloning(context), Logger);
+
+            Handlers.Invoke(handler => handler.Cloned(context), Logger);
 
             return cloneContentItem;
         }
