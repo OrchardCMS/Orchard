@@ -110,6 +110,10 @@ namespace Orchard.Fields.Drivers {
                 context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Value", field.Value.Value.ToString(CultureInfo.InvariantCulture));
         }
 
+        protected override void Cloning(ContentPart part, NumericField originalField, NumericField cloneField, CloneContentContext context) {
+            cloneField.Value = originalField.Value;
+        }
+
         protected override void Describe(DescribeMembersContext context) {
             context
                 .Member(null, typeof(decimal), T("Value"), T("The value of the field."))

@@ -88,6 +88,10 @@ namespace Orchard.Core.Common.Drivers {
                 context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Text", field.Value);
         }
 
+        protected override void Cloning(ContentPart part, TextField originalField, TextField cloneField, CloneContentContext context) {
+            cloneField.Value = originalField.Value;
+        }
+
         protected override void Describe(DescribeMembersContext context) {
             context
                 .Member(null, typeof(string), T("Value"), T("The text associated with the field."))
