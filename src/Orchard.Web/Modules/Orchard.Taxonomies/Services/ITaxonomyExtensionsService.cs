@@ -21,16 +21,16 @@ namespace Orchard.Taxonomies.Services {
         /// <summary>
         /// Returns the parent Taxonomy of the specified ContentItem, if it exists
         /// </summary>
-        /// <param name="container">The <see cref="ContentItem"/> for which to search the parent Taxonomy.</param>
+        /// <param name="part">The <see cref="TermPart"/> for which to search the parent Taxonomy.</param>
         /// <returns>The parent Taxonomy as a <see cref="ContentItem"/> if it exists, otherwise null.</returns>
-        ContentItem GetParentTaxonomy(ContentItem container);
+        ContentItem GetParentTaxonomy(TermPart part);
 
         /// <summary>
         /// Returns the parent Term of the specified ContentItem, if it exists
         /// </summary>
-        /// <param name="container">The <see cref="ContentItem"/> for which to search the parent Term.</param>
+        /// <param name="part">The <see cref="TermPart"/> for which to search the parent Term.</param>
         /// <returns>The parent Term as a <see cref="ContentItem"/> if it exists, otherwise null.</returns>
-        ContentItem GetParentTerm(ContentItem container);
+        ContentItem GetParentTerm(TermPart part);
 
         /// <summary>
         /// Returns the master item of the specified Content Item, if it exists.
@@ -38,5 +38,11 @@ namespace Orchard.Taxonomies.Services {
         /// <param name="item">The item for which to search the master.</param>
         /// <returns>The master item if it exists, otherwise null.</returns>
         IContent GetMasterItem(IContent item);
+
+        /// <summary>
+        /// Regenerates the autoroute for the specified <see cref="ContentItem"/>
+        /// </summary>
+        /// <param name="item">The item for which to regenerate the autoroute.</param>
+        void RegenerateAutoroute(ContentItem item);
     }
 }

@@ -40,16 +40,18 @@ namespace Orchard.Taxonomies.Services {
                 );
         }
 
-        public ContentItem GetParentTaxonomy(ContentItem container) {
-            ContentItem parentTaxonomy = container;
+        public ContentItem GetParentTaxonomy(TermPart part) {
+            var container = _contentManager.Get(part.Container.Id);
 
+            ContentItem parentTaxonomy = container;
             while (parentTaxonomy != null && parentTaxonomy.ContentType != "Taxonomy")
                 parentTaxonomy = _contentManager.Get(parentTaxonomy.As<TermPart>().Container.Id);
 
             return parentTaxonomy;
         }
 
-        public ContentItem GetParentTerm(ContentItem container) {
+        public ContentItem GetParentTerm(TermPart part) {
+            var container = _contentManager.Get(part.Container.Id);
             if (container.ContentType != "Taxonomy")
                 return container;
             else
@@ -69,6 +71,14 @@ namespace Orchard.Taxonomies.Services {
                     masterParentTerm = item;
 
                 return masterParentTerm;
+            }
+        }
+
+        public void RegenerateAutoroute(ContentItem item) {
+            if (item.Has<AutoroutePart>()) {
+                _autorouteService.RemoveAliases(item.As<AutoroutePart>());
+                item.As<AutoroutePart>().DisplayAlias = _autorouteService.GenerateAlias(item.As<AutoroutePart>());
+                _autorouteService.PublishAlias(item.As<AutoroutePart>());
             }
         }
     }

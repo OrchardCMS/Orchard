@@ -41,9 +41,8 @@ namespace Orchard.Taxonomies.Drivers {
                 if (termPart.Has<LocalizationPart>()) {
                     if (IsParentLocalized(termPart, updater)) {
                         //Retrieving the parent taxonomy and the parent term
-                        var container = _contentManager.Get(termPart.Container.Id);
-                        ContentItem parentTerm = _taxonomyExtensionsService.GetParentTerm(container);
-                        ContentItem parentTaxonomy = _taxonomyExtensionsService.GetParentTaxonomy(container);
+                        ContentItem parentTerm = _taxonomyExtensionsService.GetParentTerm(termPart);
+                        ContentItem parentTaxonomy = _taxonomyExtensionsService.GetParentTaxonomy(termPart);
 
                         if (termPart.As<LocalizationPart>().Culture != null) {
                             var termCulture = termPart.As<LocalizationPart>().Culture;

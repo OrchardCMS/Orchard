@@ -113,6 +113,7 @@
     <Compile Include="Drivers\LocalizedTermPartDriver.cs" />
     <Compile Include="EventHandlers\TermMovingEventHandler.cs" />
     <Compile Include="Events\ITermLocalizationEventHandler.cs" />
+    <Compile Include="Handlers\LocalizedTaxonomyPartHandler.cs" />
     <Compile Include="Models\MoveTermsContext.cs" />
     <Compile Include="Services\ITaxonomyExtensionsService.cs" />
     <Compile Include="Services\TaxonomyExtensionsService.cs" />
