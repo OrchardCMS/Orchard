@@ -1,19 +1,28 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Orchard.Autoroute.Models;
+using Orchard.Autoroute.Services;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.Environment.Extensions;
+using Orchard.Localization.Models;
 using Orchard.Taxonomies.Models;
 
 namespace Orchard.Taxonomies.Services {
     [OrchardFeature("Orchard.Taxonomies.LocalizationExtensions")]
     public class TaxonomyExtensionsService : ITaxonomyExtensionsService {
+        private readonly IAutorouteService _autorouteService;
         private readonly IContentManager _contentManager;
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly ITaxonomyService _taxonomyService;
 
-        public TaxonomyExtensionsService(IContentManager contentManager, IContentDefinitionManager contentDefinitionManager, ITaxonomyService taxonomyService) {
+        public TaxonomyExtensionsService(
+            IAutorouteService autorouteService,
+            IContentManager contentManager,
+            IContentDefinitionManager contentDefinitionManager,
+            ITaxonomyService taxonomyService) {
+            _autorouteService = autorouteService;
             _contentManager = contentManager;
             _contentDefinitionManager = contentDefinitionManager;
             _taxonomyService = taxonomyService;
@@ -29,6 +38,38 @@ namespace Orchard.Taxonomies.Services {
                 cfg => cfg
                     .WithPart("LocalizationPart")
                 );
+        }
+
+        public ContentItem GetParentTaxonomy(ContentItem container) {
+            ContentItem parentTaxonomy = container;
+
+            while (parentTaxonomy != null && parentTaxonomy.ContentType != "Taxonomy")
+                parentTaxonomy = _contentManager.Get(parentTaxonomy.As<TermPart>().Container.Id);
+
+            return parentTaxonomy;
+        }
+
+        public ContentItem GetParentTerm(ContentItem container) {
+            if (container.ContentType != "Taxonomy")
+                return container;
+            else
+                return null;
+        }
+
+        public IContent GetMasterItem(IContent item) {
+            if (item == null)
+                return null;
+
+            var itemLocalization = item.As<LocalizationPart>();
+            if (itemLocalization == null)
+                return item;
+            else {
+                IContent masterParentTerm = itemLocalization.MasterContentItem;
+                if (masterParentTerm == null)
+                    masterParentTerm = item;
+
+                return masterParentTerm;
+            }
         }
     }
 }

@@ -29,7 +29,7 @@
                 <div class="add-localization">@Html.ActionLink(T("+ New translation").Text, "Translate", "Admin", new { area = "Orchard.Localization", id = contentItemId }, new { itemprop = "UnsafeUrl" })</div>
             }
 
-            @Html.Hidden(Html.FieldNameFor(m => m.SelectedCulture), Model.SelectedCulture)
+            @Html.HiddenFor(m => m.SelectedCulture)
         }
         else if (Model.MasterContentItem != null)
         {
