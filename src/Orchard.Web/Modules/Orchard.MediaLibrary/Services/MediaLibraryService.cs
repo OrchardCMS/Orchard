@@ -232,7 +232,7 @@ namespace Orchard.MediaLibrary.Services {
 
             if (_orchardServices.Authorizer.Authorize(Permissions.ManageOwnMedia)) {
                 var currentUser = _orchardServices.WorkContext.CurrentUser;
-                var userPath = _storageProvider.Combine("Users", _mediaFolderProvider.GetFolderName(currentUser.ContentItem));
+                var userPath = _storageProvider.Combine("Users", _mediaFolderProvider.GetFolderName(currentUser));
                 return new MediaFolder() {
                     Name = currentUser.UserName,
                     MediaPath = userPath

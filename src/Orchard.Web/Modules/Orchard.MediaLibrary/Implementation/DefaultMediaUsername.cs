@@ -1,14 +1,13 @@
 ﻿using System;
 using Orchard.ContentManagement;
 using Orchard.MediaLibrary.Providers;
-using Orchard.Users.Models;
+using Orchard.Security;
 
 namespace Orchard.MediaLibrary.Implementation {
     public class DefaultMediaUsername : IMediaFolderProvider {
-        public virtual string GetFolderName(ContentItem content) {
-            if (content.As<UserPart>() != null) {
+        public virtual string GetFolderName(IUser content) {
                 string folder = "";
-                foreach (char c in content.As<UserPart>().UserName) {
+                foreach (char c in content.UserName) {
                     if (char.IsLetterOrDigit(c)) {
                         folder += c;
                     }
@@ -16,10 +15,6 @@ namespace Orchard.MediaLibrary.Implementation {
                         folder += "_" + String.Format("{0:X}", Convert.ToInt32(c));
                 }
                 return folder;
-            }
-            else {
-                return null;
-            }
         }
     }
 }

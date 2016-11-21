@@ -1,7 +1,7 @@
-﻿using Orchard.ContentManagement;
+﻿using Orchard.Security;
 
 namespace Orchard.MediaLibrary.Providers {
     public interface IMediaFolderProvider : IDependency {
-        string GetFolderName(ContentItem content);
+        string GetFolderName(IUser content);
     }
 }
