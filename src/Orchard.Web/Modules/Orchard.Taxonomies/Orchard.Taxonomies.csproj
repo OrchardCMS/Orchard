@@ -113,10 +113,12 @@
     <Compile Include="Drivers\LocalizedTermPartDriver.cs" />
     <Compile Include="EventHandlers\TermMovingEventHandler.cs" />
     <Compile Include="Events\ITermLocalizationEventHandler.cs" />
+    <Compile Include="Settings\TaxonomyFieldLocalizationEditorEvents.cs" />
     <Compile Include="Handlers\LocalizedTaxonomyPartHandler.cs" />
     <Compile Include="Models\MoveTermsContext.cs" />
     <Compile Include="Services\ITaxonomyExtensionsService.cs" />
     <Compile Include="Services\TaxonomyExtensionsService.cs" />
+    <Compile Include="Settings\TaxonomyFieldLocalizationSettings.cs" />
     <Compile Include="ViewModels\AssociateTermTypeViewModel.cs" />
     <Compile Include="ViewModels\Tag.cs" />
     <Compile Include="Controllers\TagsController.cs" />
