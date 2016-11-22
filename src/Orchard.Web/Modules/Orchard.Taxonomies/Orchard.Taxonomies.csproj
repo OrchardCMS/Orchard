@@ -275,6 +275,9 @@
   <ItemGroup>
     <Content Include="Views\EditorTemplates\Parts\TaxonomyTermSelector.cshtml" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\DefinitionTemplates\TaxonomyFieldLocalizationSettings.cshtml" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
