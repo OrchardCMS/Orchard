@@ -124,7 +124,7 @@
     <Compile Include="Services\LocalizationSetService.cs" />
     <Compile Include="Services\TransliterationService.cs" />
     <Compile Include="Events\TransliterationSlugEventHandler.cs" />
-    <Compile Include="Settings\LocaliaztionCultureNeutralityEditorEvents.cs" />
+    <Compile Include="Settings\LocalizationCultureNeutralityEditorEvents.cs" />
     <Compile Include="Settings\LocalizationCultureNeutralitySettings.cs" />
     <Compile Include="ViewModels\ContentLocalizationsViewModel.cs" />
     <Compile Include="ViewModels\EditLocalizationViewModel.cs" />
@@ -206,6 +206,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\DefinitionTemplates\LocalizationCultureNeutralitySettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\DefinitionTemplates\LocalizationCultureNeutralitySettings.PartDefinition.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

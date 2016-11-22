@@ -5,13 +5,7 @@ using Orchard.Environment.Extensions;
 namespace Orchard.Localization.Settings {
     [OrchardFeature("Orchard.Localization.CultureNeutralPartsAndFields")]
     public class LocalizationCultureNeutralitySettings {
-        public bool CultureNeutral { get; set; }
-
-        public void BuildSettings(ContentPartFieldDefinitionBuilder builder) {
-            builder.WithSetting("LocalizationCultureNeutralitySettings.CultureNeutral", CultureNeutral.ToString(CultureInfo.InvariantCulture));
-        }
-        public void BuildSettings(ContentTypePartDefinitionBuilder builder) {
-            builder.WithSetting("LocalizationCultureNeutralitySettings.CultureNeutral", CultureNeutral.ToString(CultureInfo.InvariantCulture));
-        }
+        public bool CultureNeutral { get; set; } //this setting applies to bath parts and fields, and can be controlled during type definition
+        public bool AllowSynchronization { get; set; } //this setting applies to parts only, and can be controlled during part definition
     }
 }
