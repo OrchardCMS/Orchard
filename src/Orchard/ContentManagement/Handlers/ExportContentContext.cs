@@ -1,9 +1,7 @@
 using System.Xml.Linq;
 
 namespace Orchard.ContentManagement.Handlers {
-    public class ExportContentContext : ContentContextBase {
-        public XElement Data { get; set; }
-
+    public class ExportContentContext : ExportImportContentContextBase {
         /// <summary>
         /// Wether the content item should be exclude from the export or not
         /// </summary>

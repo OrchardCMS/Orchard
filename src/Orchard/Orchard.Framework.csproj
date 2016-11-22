@@ -176,6 +176,7 @@
     <Compile Include="ContentManagement\Drivers\IContentPartCloningDriver.cs" />
     <Compile Include="ContentManagement\Extensions\DriverResultExtensions.cs" />
     <Compile Include="ContentManagement\Handlers\CloneContentContext.cs" />
+    <Compile Include="ContentManagement\Handlers\ExportImportContentContextBase.cs" />
     <Compile Include="Environment\Configuration\ExtensionLocations.cs" />
     <Compile Include="DisplayManagement\IPositioned.cs" />
     <Compile Include="DisplayManagement\PositionWrapper.cs" />

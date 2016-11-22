@@ -2,10 +2,9 @@ using System;
 using System.Xml.Linq;
 
 namespace Orchard.ContentManagement.Handlers {
-    public class ImportContentContext : ContentContextBase {
-        public XElement Data { get; set; }
+    public class ImportContentContext : ExportImportContentContextBase {
         private ImportContentSession Session { get; set; }
-
+        
         public ImportContentContext(ContentItem contentItem, XElement data, ImportContentSession importContentSession)
             : base(contentItem) {
             Data = data;
