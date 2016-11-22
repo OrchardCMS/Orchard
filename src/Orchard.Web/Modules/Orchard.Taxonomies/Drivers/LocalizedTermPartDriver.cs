@@ -3,10 +3,12 @@ using Orchard.ContentManagement.Drivers;
 using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.Localization.Models;
+using Orchard.Localization.Records;
 using Orchard.Localization.Services;
 using Orchard.Taxonomies.Models;
 using Orchard.Taxonomies.Services;
 using Orchard.UI.Notify;
+using System.Linq;
 
 namespace Orchard.Taxonomies.Drivers {
     [OrchardFeature("Orchard.Taxonomies.LocalizationExtensions")]
@@ -45,13 +47,14 @@ namespace Orchard.Taxonomies.Drivers {
                         ContentItem parentTaxonomy = _taxonomyExtensionsService.GetParentTaxonomy(termPart);
 
                         if (termPart.As<LocalizationPart>().Culture != null) {
-                            var termCulture = termPart.As<LocalizationPart>().Culture;
+                            CultureRecord termCulture = termPart.As<LocalizationPart>().Culture;
+                            CultureRecord taxonomyCulture = null;
 
                             //If a parent term exists I retrieve its localized version.
                             ContentItem localizedParentTerm = parentTerm;
                             if (parentTerm != null) {
                                 if (parentTerm.Has<LocalizationPart>()) {
-                                    var parentTermCulture = parentTerm.As<LocalizationPart>().Culture;
+                                    CultureRecord parentTermCulture = parentTerm.As<LocalizationPart>().Culture;
 
                                     if (parentTermCulture != null && termCulture.Id != parentTermCulture.Id) {
                                         IContent masterParentTerm = _taxonomyExtensionsService.GetMasterItem(parentTerm);
@@ -66,7 +69,7 @@ namespace Orchard.Taxonomies.Drivers {
                             ContentItem localizedParentTaxonomy = parentTaxonomy;
                             if (parentTaxonomy.Has<LocalizationPart>()) {
                                 if (parentTaxonomy.As<LocalizationPart>().Culture != null) {
-                                    var taxonomyCulture = parentTaxonomy.As<LocalizationPart>().Culture;
+                                    taxonomyCulture = parentTaxonomy.As<LocalizationPart>().Culture;
 
                                     if (termCulture.Id != taxonomyCulture.Id) {
                                         IContent masterTaxonomy = _taxonomyExtensionsService.GetMasterItem(parentTaxonomy);
@@ -91,6 +94,10 @@ namespace Orchard.Taxonomies.Drivers {
 
                                 if (localizedParentTerm != null && localizedParentTerm != parentTerm)
                                     _notifier.Add(NotifyType.Information, T("The parent term has been changed to its localized version associated to the culture {0}.", localizedParentTerm.As<LocalizationPart>().Culture.Culture));
+                            }
+                            else if (termCulture != taxonomyCulture && taxonomyCulture != null && _localizationService.GetLocalizations(parentTaxonomy).Count() > 0) {
+                                //I can associate to a taxonomy a term of a different culture only if the taxonomy is unlocalized or has no translations
+                                updater.AddModelError("WrongTaxonomyLocalization", T("A localization of the taxonomy in the specified language does not exist. Please create it first."));
                             }
                         }
                     }
@@ -118,7 +125,7 @@ namespace Orchard.Taxonomies.Drivers {
                         //If the parent is not localized it must be localized first
                         if (parentTermCulture == null) {
                             isLocalized = false;
-                            updater.AddModelError("MissingParentLocalization", T("The parent term is not localized. Please localize it first."));
+                            updater.AddModelError("MissingParentTermLocalization", T("The parent term is not localized. Please localize it first."));
                         }
                         else {
                             //If the two cultures are different, I check if the parent has a translation with the same culture of the new term
@@ -126,7 +133,7 @@ namespace Orchard.Taxonomies.Drivers {
                                 //If it doesn't exists the term cannot be saved
                                 if (_localizationService.GetLocalizedContentItem(parentTerm, termCulture.Culture) == null) {
                                     isLocalized = false;
-                                    updater.AddModelError("WrongParentLocalization", T("A localization of the parent term in the specified language does not exist. Please create it first."));
+                                    updater.AddModelError("WrongParentTermLocalization", T("A localization of the parent term in the specified language does not exist. Please create it first."));
                                 }
                             }
                         }
