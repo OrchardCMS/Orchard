@@ -40,11 +40,8 @@ namespace Orchard.Localization.Settings {
         public override IEnumerable<TemplateViewModel> TypePartEditor(ContentTypePartDefinition definition) {
             if (_typeHasLocalizationPart || definition.ContentTypeDefinition.Parts.Any(ctpd => ctpd.PartDefinition.Name == "LocalizationPart")) {
                 _typeHasLocalizationPart = true;
-                var partSettings = definition.PartDefinition.Settings.GetModel<LocalizationCultureNeutralitySettings>();
-                if (partSettings.AllowSynchronization) {
-                    var settings = definition.Settings.GetModel<LocalizationCultureNeutralitySettings>();
-                    yield return DefinitionTemplate(settings);
-                }
+                var settings = definition.Settings.GetModel<LocalizationCultureNeutralitySettings>();
+                yield return DefinitionTemplate(settings);
             }
         }
 
@@ -52,27 +49,13 @@ namespace Orchard.Localization.Settings {
             var typeDefinition = _contentDefinitionManager.GetTypeDefinition(builder.TypeName);
             if (_typeHasLocalizationPart || typeDefinition.Parts.Any(ctpd => ctpd.PartDefinition.Name == "LocalizationPart")) {
                 _typeHasLocalizationPart = true;
-                var partSettings = typeDefinition.Parts.Single(ctpd => ctpd.PartDefinition.Name == builder.Name).PartDefinition.Settings.GetModel<LocalizationCultureNeutralitySettings>();
-                if (partSettings.AllowSynchronization) {
-                    var settings = new LocalizationCultureNeutralitySettings();
-                    if (updateModel.TryUpdateModel(settings, "LocalizationCultureNeutralitySettings", null, null)) {
-                        builder.WithSetting("LocalizationCultureNeutralitySettings.CultureNeutral", settings.CultureNeutral.ToString(CultureInfo.InvariantCulture));
-                    }
-                    yield return DefinitionTemplate(settings);
+                var settings = new LocalizationCultureNeutralitySettings();
+                if (updateModel.TryUpdateModel(settings, "LocalizationCultureNeutralitySettings", null, null)) {
+                    builder.WithSetting("LocalizationCultureNeutralitySettings.CultureNeutral", settings.CultureNeutral.ToString(CultureInfo.InvariantCulture));
                 }
+                yield return DefinitionTemplate(settings);
             }
         }
-        //The AllowSynchronization setting can be changed during Part definition
-        public override IEnumerable<TemplateViewModel> PartEditor(ContentPartDefinition definition) {
-            var settings = definition.Settings.GetModel<LocalizationCultureNeutralitySettings>();
-            yield return DefinitionTemplate(settings, "LocalizationCultureNeutralitySettings.PartDefinition", "");
-        }
-        public override IEnumerable<TemplateViewModel> PartEditorUpdate(ContentPartDefinitionBuilder builder, IUpdateModel updateModel) {
-            var settings = new LocalizationCultureNeutralitySettings();
-            if (updateModel.TryUpdateModel(settings, "LocalizationCultureNeutralitySettings", null, null)) {
-                builder.WithSetting("LocalizationCultureNeutralitySettings.AllowSynchronization", settings.AllowSynchronization.ToString(CultureInfo.InvariantCulture));
-            }
-            yield return DefinitionTemplate(settings, "LocalizationCultureNeutralitySettings.PartDefinition", "");
-        }
+
     }
 }

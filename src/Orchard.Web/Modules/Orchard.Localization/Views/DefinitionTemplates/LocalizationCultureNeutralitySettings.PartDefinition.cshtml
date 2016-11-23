@@ -1,7 +1,0 @@
-﻿@model Orchard.Localization.Settings.LocalizationCultureNeutralitySettings
-
-<fieldset>
-    @Html.CheckBoxFor(m => m.AllowSynchronization)
-    <label for="@Html.FieldIdFor(m => m.AllowSynchronization)" class="forcheckbox">@T("Allow Synchronization")</label>
-    <span class="hint">@T("Check to enable the Culture Neutral setting on instances of this part, to allow synchronization across localization sets.")</span>
-</fieldset>

@@ -207,9 +207,6 @@
   <ItemGroup>
     <Content Include="Views\DefinitionTemplates\LocalizationCultureNeutralitySettings.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\DefinitionTemplates\LocalizationCultureNeutralitySettings.PartDefinition.cshtml" />
-  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

@@ -23,15 +23,5 @@ namespace Orchard.Localization.Extensions {
         public static ContentTypePartDefinitionBuilder CultureNeutral(this ContentTypePartDefinitionBuilder builder, bool cultureNeutral = true) {
             return builder.WithSetting("LocalizationCultureNeutralitySettings.CultureNeutral", cultureNeutral.ToString(CultureInfo.InvariantCulture));
         }
-        /// <summary>
-        /// Enables synchronization of this type of ContentPart across elements of a localization set. If this is not enabled, the CultureNeutral setting
-        /// for parts of this type will be ignored.
-        /// </summary>
-        /// <param name="builder"></param>
-        /// <param name="allowSynchronization"></param>
-        /// <returns></returns>
-        public static ContentPartDefinitionBuilder AllowSynchronization(this ContentPartDefinitionBuilder builder, bool allowSynchronization = true) {
-            return builder.WithSetting("LocalizationCultureNeutralitySettings.AllowSynchronization", allowSynchronization.ToString(CultureInfo.InvariantCulture));
-        }
     }
 }

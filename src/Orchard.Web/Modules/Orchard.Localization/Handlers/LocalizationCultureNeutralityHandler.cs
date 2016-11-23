@@ -37,8 +37,7 @@ namespace Orchard.Localization.Handlers {
             if (locPart != null) {
                 //cycle through all parts
                 foreach (var pa in part.ContentItem.Parts) {
-                    if (pa.PartDefinition.Settings.GetModel<LocalizationCultureNeutralitySettings>().AllowSynchronization
-                        && pa.Settings.GetModel<LocalizationCultureNeutralitySettings>().CultureNeutral) {
+                    if (pa.Settings.GetModel<LocalizationCultureNeutralitySettings>().CultureNeutral) {
                         Synchronize(pa, locPart);
                     }
                     foreach (var field in pa.Fields.Where(fi => fi.PartFieldDefinition.Settings.GetModel<LocalizationCultureNeutralitySettings>().CultureNeutral)) {
