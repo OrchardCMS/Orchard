@@ -38,7 +38,10 @@ namespace Orchard.OpenId {
                 if (InMemoryTokenCache.ContainsKey(_cacheId))
                     Deserialize(InMemoryTokenCache.Where(x => x.Key == _cacheId).First().Value);
             }
-            catch (Exception) { /* TODO: Log the error */ }
+            catch (Exception) {
+                _sessionLock.ExitReadLock();
+                throw;
+            }
             _sessionLock.ExitReadLock();
         }
 
@@ -53,7 +56,11 @@ namespace Orchard.OpenId {
 
                 InMemoryTokenCache.Add(_cacheId, Serialize());
             }
-            catch (Exception) { /* TODO: Log the error */ }
+            catch (Exception)
+            {
+                _sessionLock.ExitReadLock();
+                throw;
+            }
             _sessionLock.ExitWriteLock();
         }
 

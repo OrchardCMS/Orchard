@@ -40,19 +40,19 @@
 </fieldset>
 <fieldset>
     @Html.CheckBoxFor(m => m.BearerAuthEnabled)
-    @Html.LabelFor(m => m.BearerAuthEnabled, T("Enable Bearer Token Authentication").ToString(), new { @class = "forcheckbox" })
+    <label class="forcheckbox" for="AzureActiveDirectorySettings_BearerAuthEnabled">@T("Enable Bearer Token Authentication")</label>
 </fieldset>
 <fieldset>
     @Html.CheckBoxFor(m => m.SSLEnabled)
-    @Html.LabelFor(m => m.SSLEnabled, T("Use SSL Protocol for valid audience").ToString(), new { @class = "forcheckbox" })
+    <label class="forcheckbox" for="AzureActiveDirectorySettings_SSLEnabled">@T("Use SSL Protocol for valid audience")</label>
 </fieldset>
 <fieldset>
     @Html.CheckBoxFor(m => m.AzureWebSiteProtectionEnabled)
-    @Html.LabelFor(m => m.AzureWebSiteProtectionEnabled, T("Enable Machine Key Data Protection for Azure Web Site").ToString(), new { @class = "forcheckbox" })
+    <label class="forcheckbox" for="AzureActiveDirectorySettings_AzureWebSiteProtectionEnabled">@T("Enable Machine Key Data Protection for Azure Web Site")</label>
 </fieldset>
 <fieldset>
     @Html.CheckBoxFor(m => m.UseAzureGraphApi)
-    @Html.LabelFor(m => m.UseAzureGraphApi, T("Enable Graph API").ToString(), new { @class = "forcheckbox" })
+    <label class="forcheckbox" for="AzureActiveDirectorySettings_UseAzureGraphApi">@T("Enable Graph API")</label>
     <span class="hint">@T("Check this box to enable syncing Orchard Role membership to Azure Graph API Group Membership.  This module will not create new Orchard Roles for you, but it will sync up user membership of existing Orchard Roles with AD Group membership for Role names that match a group name")</span>
 </fieldset>
 <fieldset>
