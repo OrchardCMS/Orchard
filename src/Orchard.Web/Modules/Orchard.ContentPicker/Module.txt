@@ -10,3 +10,8 @@ Features:
         Description: UI for selecting Content Items.
         Dependencies: Contents, Navigation
         Category: Input Editor
+	Orchard.ContentPicker.LocalizationExtensions:
+		Name: Orchard.ContentPicker.LocalizationExtensions
+		Description: Provides settings to enable advanced localization behaviours for ContentPickerFields.
+		Dependencies: Orchard.ContentPicker, Orchard.Localization, Orchard.Resources
+		Category: Input Editor

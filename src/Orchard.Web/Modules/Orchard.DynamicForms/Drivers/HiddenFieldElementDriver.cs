@@ -27,7 +27,7 @@ namespace Orchard.DynamicForms.Drivers {
                         Id: "Value",
                         Name: "Value",
                         Title: "Value",
-                        Classes: new[] { "text", "medium" },
+                        Classes: new[] { "text", "medium", "tokenized" },
                         Description: T("The value of this hidden field.")));
 
                 return form;
