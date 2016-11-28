@@ -1,13 +1,12 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
 
 namespace Orchard.OpenId {
     public class InMemoryCache : TokenCache {
-        private static Dictionary<string, byte[]> _inMemoryTokenCache;
-        private static ReaderWriterLockSlim _sessionLock = new ReaderWriterLockSlim(LockRecursionPolicy.NoRecursion);
+        private static ConcurrentDictionary<string, byte[]> _inMemoryTokenCache;
 
         private string _userObjectId;
         private string _cacheId;
@@ -22,51 +21,30 @@ namespace Orchard.OpenId {
             Load();
         }
 
-        public static Dictionary<string, byte[]> InMemoryTokenCache {
+        public static ConcurrentDictionary<string, byte[]> InMemoryTokenCache {
             get {
                 if (_inMemoryTokenCache == null)
-                    _inMemoryTokenCache = new Dictionary<string, byte[]>();
+                    _inMemoryTokenCache = new ConcurrentDictionary<string, byte[]>();
 
                 return _inMemoryTokenCache;
             }
         }
 
         public void Load() {
-            _sessionLock.EnterReadLock();
-            try
-            {
-                if (InMemoryTokenCache.ContainsKey(_cacheId))
-                    Deserialize(InMemoryTokenCache.Where(x => x.Key == _cacheId).First().Value);
-            }
-            catch (Exception) {
-                _sessionLock.ExitReadLock();
-                throw;
-            }
-            _sessionLock.ExitReadLock();
+            if (InMemoryTokenCache.ContainsKey(_cacheId))
+                Deserialize(InMemoryTokenCache.Where(x => x.Key == _cacheId).First().Value);
         }
 
         public void Persist() {
-            _sessionLock.EnterWriteLock();
-            try
-            {
-                HasStateChanged = false;
+            HasStateChanged = false;
 
-                if (InMemoryTokenCache.ContainsKey(_cacheId))
-                    InMemoryTokenCache.Remove(_cacheId);
-
-                InMemoryTokenCache.Add(_cacheId, Serialize());
-            }
-            catch (Exception)
-            {
-                _sessionLock.ExitReadLock();
-                throw;
-            }
-            _sessionLock.ExitWriteLock();
+            InMemoryTokenCache.AddOrUpdate(_cacheId, Serialize(), (key, current) => { return Serialize(); });
         }
 
         public override void Clear() {
+            byte[] oldData;
             base.Clear();
-            InMemoryTokenCache.Remove(_cacheId);
+            InMemoryTokenCache.TryRemove(_cacheId, out oldData);
         }
 
         void BeforeAccessNotification(TokenCacheNotificationArgs args) {
