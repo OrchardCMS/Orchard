@@ -29,12 +29,12 @@ namespace Orchard.OpenId.OwinMiddlewares {
                 ConsumerSecret = settings.ConsumerSecret,
                 BackchannelCertificateValidator = new CertificateSubjectKeyIdentifierValidator(new[]
                 {
-                    Constants.VeriSignClass3SecureServerCA_G2,
-                    Constants.VeriSignClass3SecureServerCA_G3,
-                    Constants.VeriSignClass3PublicPrimaryCA_G5,
-                    Constants.SymantecClass3SecureServerCA_G4,
-                    Constants.DigiCertSHA2HighAssuranceServerCA,
-                    Constants.DigiCertHighAssuranceEVRootCA 
+                    settings.VeriSignClass3SecureServerCA_G2,
+                    settings.VeriSignClass3SecureServerCA_G3,
+                    settings.VeriSignClass3PublicPrimaryCA_G5,
+                    settings.SymantecClass3SecureServerCA_G4,
+                    settings.DigiCertSHA2HighAssuranceServerCA,
+                    settings.DigiCertHighAssuranceEVRootCA 
                 })
             };
 

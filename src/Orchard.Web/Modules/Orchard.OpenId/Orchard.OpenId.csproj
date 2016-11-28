@@ -215,6 +215,7 @@
     <Compile Include="Providers\Twitter.cs" />
     <Compile Include="Providers\Facebook.cs" />
     <Compile Include="Providers\Google.cs" />
+    <Compile Include="ResourceManifest.cs" />
     <Compile Include="Services\AzureActiveDirectory\IAzureActiveDirectoryService.cs" />
     <Compile Include="Services\Twitter\MissingSettingsBanner.cs" />
     <Compile Include="Services\AzureActiveDirectory\MissingSettingsBanner.cs" />
@@ -235,6 +236,8 @@
     <Compile Include="Services\ActiveDirectoryFederationServices\MissingSettingsBanner.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Scripts\twitter-admin.js" />
+    <Content Include="Styles\twitter-admin.css" />
     <Content Include="Web.config" />
     <Content Include="Module.txt" />
   </ItemGroup>
@@ -280,6 +283,12 @@
     <Content Include="Views\EditorTemplates\Parts.FacebookSettings.cshtml" />
     <Content Include="Views\EditorTemplates\Parts.GoogleSettings.cshtml" />
     <Content Include="Views\EditorTemplates\Parts.TwitterSettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\Web.config" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

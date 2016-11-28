@@ -29,5 +29,41 @@ namespace Orchard.OpenId.Models {
                 return true;
             }
         }
+
+        public string VeriSignClass3SecureServerCA_G2
+        {
+            get { return this.Retrieve(x => x.VeriSignClass3SecureServerCA_G2, () => Constants.DefaultVeriSignClass3SecureServerCA_G2); }
+            set { this.Store(x => x.VeriSignClass3SecureServerCA_G2, value); }
+        }
+
+        public string VeriSignClass3SecureServerCA_G3
+        {
+            get { return this.Retrieve(x => x.VeriSignClass3SecureServerCA_G3, () => Constants.DefaultVeriSignClass3SecureServerCA_G3); }
+            set { this.Store(x => x.VeriSignClass3SecureServerCA_G3, value); }
+        }
+
+        public string VeriSignClass3PublicPrimaryCA_G5
+        {
+            get { return this.Retrieve(x => x.VeriSignClass3PublicPrimaryCA_G5, () => Constants.DefaultVeriSignClass3PublicPrimaryCA_G5); }
+            set { this.Store(x => x.VeriSignClass3PublicPrimaryCA_G5, value); }
+        }
+
+        public string SymantecClass3SecureServerCA_G4
+        {
+            get { return this.Retrieve(x => x.SymantecClass3SecureServerCA_G4, () => Constants.DefaultSymantecClass3SecureServerCA_G4); }
+            set { this.Store(x => x.SymantecClass3SecureServerCA_G4, value); }
+        }
+
+        public string DigiCertSHA2HighAssuranceServerCA
+        {
+            get { return this.Retrieve(x => x.DigiCertSHA2HighAssuranceServerCA, () => Constants.DefaultDigiCertSHA2HighAssuranceServerCA); }
+            set { this.Store(x => x.DigiCertSHA2HighAssuranceServerCA, value); }
+        }
+
+        public string DigiCertHighAssuranceEVRootCA
+        {
+            get { return this.Retrieve(x => x.DigiCertHighAssuranceEVRootCA, () => Constants.DefaultDigiCertHighAssuranceEVRootCA); }
+            set { this.Store(x => x.DigiCertHighAssuranceEVRootCA, value); }
+        }
     }
 }
