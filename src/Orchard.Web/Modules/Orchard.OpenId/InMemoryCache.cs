@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Clients.ActiveDirectory;
 
 namespace Orchard.OpenId {
     public class InMemoryCache : TokenCache {
+        private const string CacheIdSuffix = "_TokenCache";
         private static ConcurrentDictionary<string, byte[]> _inMemoryTokenCache;
 
         private string _userObjectId;
@@ -13,7 +14,10 @@ namespace Orchard.OpenId {
 
         public InMemoryCache(string userId) {
             _userObjectId = userId;
-            _cacheId = _userObjectId + "_TokenCache";
+            _cacheId = String.Concat(_userObjectId, CacheIdSuffix);
+
+            if (_inMemoryTokenCache == null)
+                _inMemoryTokenCache = new ConcurrentDictionary<string, byte[]>();
 
             AfterAccess = AfterAccessNotification;
             BeforeAccess = BeforeAccessNotification;
@@ -21,37 +25,35 @@ namespace Orchard.OpenId {
             Load();
         }
 
-        public static ConcurrentDictionary<string, byte[]> InMemoryTokenCache {
-            get {
-                if (_inMemoryTokenCache == null)
-                    _inMemoryTokenCache = new ConcurrentDictionary<string, byte[]>();
+        public override void Clear()
+        {
+            base.Clear();
 
-                return _inMemoryTokenCache;
+            byte[] oldData;
+            _inMemoryTokenCache.TryRemove(_cacheId, out oldData);
+        }
+
+        private void Load() {
+            if (_inMemoryTokenCache.ContainsKey(_cacheId)) {
+                byte[] data;
+                _inMemoryTokenCache.TryGetValue(_cacheId, out data);
+
+                if (data != default(byte[]))
+                    Deserialize(data);
             }
         }
 
-        public void Load() {
-            if (InMemoryTokenCache.ContainsKey(_cacheId))
-                Deserialize(InMemoryTokenCache.Where(x => x.Key == _cacheId).First().Value);
-        }
-
-        public void Persist() {
+        private void Persist() {
             HasStateChanged = false;
 
-            InMemoryTokenCache.AddOrUpdate(_cacheId, Serialize(), (key, current) => { return Serialize(); });
+            _inMemoryTokenCache.AddOrUpdate(_cacheId, Serialize(), (key, current) => { return Serialize(); });
         }
 
-        public override void Clear() {
-            byte[] oldData;
-            base.Clear();
-            InMemoryTokenCache.TryRemove(_cacheId, out oldData);
-        }
-
-        void BeforeAccessNotification(TokenCacheNotificationArgs args) {
+        private void BeforeAccessNotification(TokenCacheNotificationArgs args) {
             Load();
         }
 
-        void AfterAccessNotification(TokenCacheNotificationArgs args) {
+        private void AfterAccessNotification(TokenCacheNotificationArgs args) {
             if (HasStateChanged) {
                 Persist();
             }
