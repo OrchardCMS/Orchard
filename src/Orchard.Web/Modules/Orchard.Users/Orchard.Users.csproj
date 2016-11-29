@@ -111,7 +111,7 @@
     <Compile Include="Forms\VerifyUserUnicityForm.cs" />
     <Compile Include="Forms\CreateUserForm.cs" />
     <Compile Include="Handlers\WorkflowUserEventHandler.cs" />
-    <Compile Include="Extensions\ModelStateDistionaryExtensions.cs" />
+    <Compile Include="Extensions\ModelStateDictionaryExtensions.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Events\UserContext.cs" />
     <Compile Include="Handlers\RegistrationSettingsPartHandler.cs" />

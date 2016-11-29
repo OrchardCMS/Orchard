@@ -5,11 +5,13 @@
     Script.Require("jQuery");
     Style.Require("jQueryUI");
     Layout.Title = T("Edit {0} Definition", Html.Raw(Model.DisplayName)).Text;
+    var returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString();
     Html.AdminBreadcrumbs(new { CurrentContentType = Model.Definition });
 }
 
 @using (Html.BeginFormAntiForgeryPost())
 {
+// todo: come up with real itemtype definitions and locations for said definitions
     <div class="panel panel-default panel-heading-fullwidth panel-borders">
         <div class="panel-heading">
             <div class="row">
@@ -27,6 +29,11 @@
                 <div class="form-group">
                     <label class="control-label" for="DisplayName">@T("Display Name")</label>
                     @Html.TextBoxFor(m => m.DisplayName, new { @class = "text large", placeholder = T("Content Type Id: {0}", Model.Name) })
+                    <span class="hint">@T("Content Type Id: {0}", Model.Name)</span>
+                    @* todo: if we continue to go down the microdata route, some helpers would be nice *@
+                    <meta itemprop="DisplayName" content="@Model.DisplayName" />
+                    @* has unintended consequences (renaming the type) - changing the name creates a new type of that name *@
+                    <meta itemprop="Id" content="@Model.Name" />
                     @Html.HiddenFor(m => m.Name)
                 </div>
                 @{ Html.RenderTemplates(Model.Templates); }
@@ -70,3 +77,14 @@
         </div>
     </div>
                     }
+
+@using(Script.Foot()){
+<script type="text/javascript">
+//<![CDATA[
+    (function ($) {
+        $(".manage-field h3,.manage-part h3").expandoControl(function (controller) { return controller.nextAll(".details"); }, { collapse: true, remember: false });
+        $(".manage-field h4").expandoControl(function (controller) { return controller.nextAll(".settings"); }, { collapse: true, remember: false });
+    })(jQuery);
+//]]>
+</script>
+}

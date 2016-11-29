@@ -65,7 +65,7 @@
     <fieldset class="form-group">
         <div class="or-checkbox">
             @Html.CheckBoxFor(m => m.UseCdn)
-            @Html.LabelFor(m => m.UseCdn, T("Use CDN"))
+        @Html.LabelFor(m => m.UseCdn, T("Use CDN").Text, new { @class = "forcheckbox" })
         </div>
         <span class="help-block">@T("Determines whether the defined CDN value is used for scripts and stylesheets, or their local version", new { @class = "form-control auto-size" })</span>
     </fieldset>

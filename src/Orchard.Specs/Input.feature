@@ -114,7 +114,7 @@ Scenario: Creating and using Input fields
             | name                | value |
             | Event.Contact.Value |       |
         And I hit "Save"
-    Then I should see "The field Contact is mandatory."
+    Then I should see "The Contact field is required."
     
     # Creating an Event content item
     When I go to "Admin/Contents/Create/Event"

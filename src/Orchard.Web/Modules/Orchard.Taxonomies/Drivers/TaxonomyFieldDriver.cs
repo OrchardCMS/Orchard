@@ -74,7 +74,7 @@ namespace Orchard.Taxonomies.Drivers {
 
                 var settings = field.PartFieldDefinition.Settings.GetModel<TaxonomyFieldSettings>();
                 if (settings.Required && !checkedTerms.Any()) {
-                    updater.AddModelError(GetPrefix(field, part), T("The field {0} is mandatory.", T(field.DisplayName)));
+                    updater.AddModelError(GetPrefix(field, part), T("The {0} field is required.", T(field.DisplayName)));
                 }
                 else
                     _taxonomyService.UpdateTerms(part.ContentItem, checkedTerms, field.Name);

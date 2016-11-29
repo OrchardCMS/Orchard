@@ -98,6 +98,7 @@ namespace Orchard.OutputCache.Controllers {
                 DefaultMaxAge = settings.DefaultMaxAge,
                 VaryByQueryStringParameters = settings.VaryByQueryStringParameters,
                 VaryByRequestHeaders = settings.VaryByRequestHeaders,
+                VaryByRequestCookies = settings.VaryByRequestCookies,
                 IgnoredUrls = settings.IgnoredUrls,
                 IgnoreNoCache = settings.IgnoreNoCache,
                 VaryByCulture = settings.VaryByCulture,
@@ -125,6 +126,7 @@ namespace Orchard.OutputCache.Controllers {
                 settings.DefaultMaxAge = model.DefaultMaxAge;
                 settings.VaryByQueryStringParameters = model.VaryByQueryStringParameters;
                 settings.VaryByRequestHeaders = model.VaryByRequestHeaders;
+                settings.VaryByRequestCookies = model.VaryByRequestCookies;
                 settings.IgnoredUrls = model.IgnoredUrls;
                 settings.IgnoreNoCache = model.IgnoreNoCache;
                 settings.VaryByCulture = model.VaryByCulture;

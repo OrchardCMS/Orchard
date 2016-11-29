@@ -5,6 +5,8 @@
     Style.Require("ContentTypesAdmin");
     Layout.Title = T("Edit {0} Field", Model.Name.CamelFriendly()).ToString();
     Html.AdminBreadcrumbs(new { CurrentContentType = Model.TypeDefinition, CurrentContentPart = Model.PartDefinition });
+
+    var returnUrl = Request.QueryString["returnUrl"];
 }
 @using (Html.BeginFormAntiForgeryPost()) {
     <div class="panel panel-default panel-heading-fullwidth panel-borders">
@@ -17,6 +19,7 @@
                 <label class="col-sm-2 control-label" for="@Html.FieldIdFor(m => m.DisplayName)">@T("Display Name")</label>
                 <div class="col-sm-6">
                     @Html.TextBoxFor(m => m.DisplayName, new {@class = "text large", placeholder = T("Name of the field as it will be displayed in screens.")})
+                    <span class="hint">@T("Name of the field as it will be displayed in screens.")</span>
                     @Html.HiddenFor(m => m.Name)
                 </div>
             </div>
@@ -26,6 +29,9 @@
     <div class="panel panel-default panel-borders">
         <div class="panel-body form-horizontal">
             <button class="btn btn-primary" type="submit" name="submit.Save" value="Save"><i class="fa fa-save"></i> @T("Save")</button>
+            @if (!String.IsNullOrWhiteSpace(returnUrl) && Request.IsLocalUrl(returnUrl)) {
+            <a id="button-cancel" href="@returnUrl" class="btn btn-default">@T("Cancel")</a>
+            }
         </div>
     </div>
 }

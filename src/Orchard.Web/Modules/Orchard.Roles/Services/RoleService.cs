@@ -46,7 +46,7 @@ namespace Orchard.Roles.Services {
 
         public IEnumerable<RoleRecord> GetRoles() {
             var roles = from role in _roleRepository.Table select role;
-            return roles.ToList();
+            return roles;
         }
 
         public RoleRecord GetRole(int id) {

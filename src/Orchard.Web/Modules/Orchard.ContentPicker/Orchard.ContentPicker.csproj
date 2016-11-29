@@ -98,6 +98,10 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Drivers\ContentPickerFieldLocalizationDriver.cs" />
+    <Compile Include="Handlers\ContentPickerFieldLocalizationExtensionHandler.cs" />
+    <Compile Include="Settings\ContentPickerFieldLocalizationEditorEvents.cs" />
+    <Compile Include="Settings\ContentPickerFieldLocalizationSettings.cs" />
     <Compile Include="ViewModels\NavigationPartViewModel.cs" />
     <Content Include="Scripts\ContentPicker.js" />
     <Content Include="Scripts\SelectableContentTab.js" />
@@ -180,12 +184,22 @@
       <Name>Orchard.Core</Name>
       <Private>false</Private>
     </ProjectReference>
+    <ProjectReference Include="..\Orchard.Localization\Orchard.Localization.csproj">
+      <Project>{fbc8b571-ed50-49d8-8d9d-64ab7454a0d6}</Project>
+      <Name>Orchard.Localization</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\ContentPicker.Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\DefinitionTemplates\ContentPickerFieldLocalizationSettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Fields\ContentPickerLocalization.Edit.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

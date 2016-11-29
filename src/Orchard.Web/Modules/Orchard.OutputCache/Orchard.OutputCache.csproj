@@ -104,6 +104,7 @@
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
     <Compile Include="AdminBreadcrumbs.cs" />
+    <Compile Include="ICachingEventHandler.cs" />
     <Compile Include="Helpers\AdminBreadcrumbsHtmlHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
@@ -123,6 +124,7 @@
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\StatisticsController.cs" />
     <Compile Include="Filters\CaptureStream.cs" />
     <Compile Include="Filters\OutputCacheFilter.cs" />
     <Compile Include="Handlers\CacheSettingsPartHandler.cs" />
@@ -151,6 +153,9 @@
     <Compile Include="ViewModels\StatisticsViewModel.cs" />
     <Compile Include="ViewModels\IndexViewModel.cs" />
     <Compile Include="Models\CacheRouteConfig.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Statistics\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Admin\Index.cshtml" />

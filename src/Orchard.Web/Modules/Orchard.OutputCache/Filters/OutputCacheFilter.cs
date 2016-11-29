@@ -41,6 +41,7 @@ namespace Orchard.OutputCache.Filters {
         private readonly ICacheService _cacheService;
         private readonly ISignals _signals;
         private readonly ShellSettings _shellSettings;
+        private readonly ICachingEventHandler _cachingEvents;
         private bool _isDisposed = false;
 
         public ILogger Logger { get; set; }
@@ -55,7 +56,8 @@ namespace Orchard.OutputCache.Filters {
             IClock clock,
             ICacheService cacheService,
             ISignals signals,
-            ShellSettings shellSettings) {
+            ShellSettings shellSettings,
+            ICachingEventHandler cachingEvents) {
 
             _cacheManager = cacheManager;
             _cacheStorageProvider = cacheStorageProvider;
@@ -67,6 +69,7 @@ namespace Orchard.OutputCache.Filters {
             _cacheService = cacheService;
             _signals = signals;
             _shellSettings = shellSettings;
+            _cachingEvents = cachingEvents;
 
             Logger = NullLogger.Instance;
         }
@@ -397,6 +400,12 @@ namespace Orchard.OutputCache.Filters {
                     result["HEADER:" + varyByRequestHeader] = requestHeaders[varyByRequestHeader];
             }
 
+            // Vary by configured cookies.
+            var requestCookies = filterContext.RequestContext.HttpContext.Request.Cookies;
+            foreach (var varyByRequestCookies in CacheSettings.VaryByRequestCookies) {
+                if (requestCookies[varyByRequestCookies] != null)
+                    result["COOKIE:" + varyByRequestCookies] = requestCookies[varyByRequestCookies].Value;
+            }
 
             // Vary by request culture if configured.
             if (CacheSettings.VaryByCulture) {
@@ -609,6 +618,9 @@ namespace Orchard.OutputCache.Filters {
                     keyBuilder.AppendFormat("{0}={1};", pair.Key.ToLowerInvariant(), Convert.ToString(pair.Value).ToLowerInvariant());
                 }
             }
+
+            //make CacheKey morphable by external modules
+            _cachingEvents.KeyGenerated(keyBuilder);
 
             return keyBuilder.ToString();
         }

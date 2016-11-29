@@ -1,4 +1,4 @@
-﻿/* Reset
+/* Reset
 ***************************************************************/
 
 html, body, div, span, applet, object, iframe,
@@ -335,7 +335,7 @@ button:hover, .button:hover, a.button:hover {
      background: -moz-linear-gradient(top, rgba(110, 127, 69, 1.0), rgba(106, 123, 66, 1.0));
 }
 
-button:active, .buton:active, a.button:active {
+button:active, .button:active, a.button:active {
     text-decoration:none; 
     background:#6a7b42;
     border:1px solid #487328;

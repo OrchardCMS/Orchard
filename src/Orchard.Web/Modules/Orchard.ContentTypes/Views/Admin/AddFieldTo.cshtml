@@ -5,6 +5,7 @@
     Style.Require("ContentTypesAdmin");
     Layout.Title = T("Add New Field To \"{0}\"", Model.Part.DisplayName).ToString();
     Html.AdminBreadcrumbs(new { CurrentContentType = Model.Part.TypeDefinition, CurrentContentPart = Model.Part.Definition });
+    var returnUrl = Request.QueryString["returnUrl"];
 }
 @using (Html.BeginFormAntiForgeryPost()) {
     @Html.ValidationSummary()
@@ -27,6 +28,9 @@
         </div>
         <div class="panel-footer">
             <button class="btn btn-primary" type="submit"><i class="fa fa-save"></i> @T("Save")</button>
+            @if (!String.IsNullOrWhiteSpace(returnUrl) && Request.IsLocalUrl(returnUrl)) {
+            <a id="button-cancel" href="@returnUrl" class="btn btn-default">@T("Cancel")</a>
+            }
         </div>
     </div>
 }

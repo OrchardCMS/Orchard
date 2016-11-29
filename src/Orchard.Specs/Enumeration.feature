@@ -106,7 +106,7 @@ Scenario: Creating and using Enumeration fields
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
         And I hit "Save"
-    Then I should see "The field Location is mandatory."
+    Then I should see "The Location field is required."
     
     # The default value should be proposed on creation
     When I go to "Admin/ContentTypes/Edit/Event"

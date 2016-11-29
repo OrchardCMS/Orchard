@@ -98,17 +98,18 @@
     <Content Include="Styles\CodeMirror\razor.css" />
     <Content Include="Styles\CodeMirror\css.css" />
     <Content Include="Styles\CodeMirror\javascript.css" />
-    <Content Include="Styles\Images\collapse.png" />
-    <Content Include="Styles\Images\expand.png" />
     <Content Include="Styles\Images\menu-glyph.png" />
     <Content Include="Scripts\orchard-designertools-shapetracing.js" />
-    <Content Include="Styles\Images\toolbar-bg.png" />
     <Content Include="Styles\orchard-designertools-shapetracing.css" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
+    <Compile Include="Controllers\ShapeTracingController.cs" />
+    <Compile Include="Events\FeatureEventHandler.cs" />
+    <Compile Include="Handlers\ShapeTracingSiteSettingsPartHandler.cs" />
+    <Compile Include="Models\ShapeTracingSiteSettingsPart.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
   </ItemGroup>
@@ -123,7 +124,6 @@
   <ItemGroup>
     <Content Include="Views\ShapeTracingWrapper.cshtml" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <Content Include="Views\ShapeTracingMeta.cshtml" />
   </ItemGroup>
@@ -143,6 +143,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts\ShapeTracing.ShapeTracingSiteSettings.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

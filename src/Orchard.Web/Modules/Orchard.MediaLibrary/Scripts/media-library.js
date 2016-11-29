@@ -327,6 +327,17 @@ $(function () {
                 window.location = url;
             };
 
+            self.replaceMedia = function (item) {
+                var url = settings.replaceUrl;
+                var ids = [];
+                var folder = "";
+                if (self.displayed()) {
+                    folder = self.displayed();
+                }
+                viewModel.selection().forEach(function (item) { ids.push(item.data.id); });
+                var actionurl = url + '?folderPath=' + encodeURIComponent(folder) + "&replaceId=" + encodeURIComponent(ids[0]);
+                window.location = actionurl;
+            }
             var selectFolderOrRecent = function () {
                 if (self.displayed()) {
                     self.selectFolder(self.displayed());

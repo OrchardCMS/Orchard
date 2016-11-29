@@ -30,6 +30,7 @@
                 </fieldset>
             }
         }
+        if (cultures.Count() > 1) {
 
         @if (cultures.Count() > 1) {
             using (Html.BeginForm("index", "admin", FormMethod.Get, new { area = "Orchard.Widgets" })) {
@@ -54,3 +55,10 @@
 </div>
 
 
+    @if (!String.IsNullOrEmpty(Model.CurrentLayer.Description)) {
+        <div>
+            <span class="hint" id="widgets-layer-description">@Model.CurrentLayer.Description</span>
+            <br />
+        </div>
+    }
+</div>

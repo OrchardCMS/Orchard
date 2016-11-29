@@ -46,7 +46,7 @@
                                 <div class="thumbnail" data-bind="html: data.thumbnail">
                                 </div>
                                 <div class="media-library-main-list-overlay">
-                                    <p class="title" data-bind="text: data.title"></p>
+                            <p class="title" data-bind="text: data.title, attr: { title: data.title }"></p>
                                     <p class="publication-status" data-bind="text: publicationStatus"></p>
                                 </div>
                             </li>
@@ -73,6 +73,7 @@
                                 <div id="media-library-main-selection-actions">
                                     <button id="delete-selection-button" class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true"></i> @T("Delete")</button>
                                     <button id="clone-selection-button" class="btn btn-primary" data-bind="visible: selection().length == 1"><i class="fa fa-files-o" aria-hidden="true"></i> @T("Clone")</button>
+                                    <button href="#" data-bind="click: replaceMedia, visible: selection().length == 1" class="button" id="replace-selection-button">@T("Replace")</button>
                                 </div>
                             </div>
                         </header>
@@ -102,11 +103,13 @@ var mediaLibrarySettings = {
     moveActionUrl: '@Url.Action("Move", "Folder", new {area = "Orchard.MediaLibrary"})',
     deleteActionUrl: '@Url.Action("Delete", "Admin", new {area = "Orchard.MediaLibrary"})',
     cloneActionUrl: '@Url.Action("Clone", "Admin", new {area = "Orchard.MediaLibrary"})',
+    replaceUrl: '@Url.Action("Import", "Admin", new {area = "Orchard.MediaLibrary" })' ,
     hasFolderPath: @(!string.IsNullOrEmpty(viewModel.FolderPath) ? "true" : "false"),
     folderPath: '@HttpUtility.JavaScriptStringEncode(viewModel.FolderPath)',
     rootFolderPath: '@HttpUtility.JavaScriptStringEncode(viewModel.RootFolderPath ?? "")',
     deleteConfirmationMessage: '@HttpUtility.JavaScriptStringEncode(T("Are you sure you want to delete these media items?").Text)',
     cloneConfirmationMessage: '@HttpUtility.JavaScriptStringEncode(T("Are you sure you want to clone this media item?").Text)',
+    replaceConfirmationMessage: '@HttpUtility.JavaScriptStringEncode(T("Are you sure you want to replace this media item?").Text)',
     errorMessage: '@HttpUtility.JavaScriptStringEncode(T("An unexpected error occured, please refresh the page and try again.").Text)',
     antiForgeryToken: '@Html.AntiForgeryTokenValueOrchard()',
     childFolders: (@Display.Partial(TemplateName: "ChildFolders", Model: viewModel.ChildFoldersViewModel))['childFolders']
