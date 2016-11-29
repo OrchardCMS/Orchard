@@ -1,7 +1,7 @@
 ﻿@using Orchard.Core.Contents.ViewModels;
 @{
     Script.Require("SelectableContentTab");
-    
+
     var typeDisplayName = Model.TypeDisplayName;
     var pageTitle = T("Recent Content");
 
@@ -10,33 +10,42 @@
     }
 
     Layout.Title = pageTitle;
-    
+
 }
-
-<div class="manage">
-</div>
-
 @using (Html.BeginFormAntiForgeryPost()) {
-    <fieldset class="bulk-actions">
-        <label for="filterResults" class="bulk-filter">@T("Show")</label>
-        <select id="filterResults" name="Options.SelectedFilter">
-            @Html.SelectOption((string)Model.Options.SelectedFilter, "", T("any (show all)").ToString())
-            @foreach(var filterOption in Model.Options.FilterOptions) {
-                @Html.SelectOption((string)Model.Options.SelectedFilter, (string)filterOption.Key, (string)T(filterOption.Value).Text)
-            }
-        </select>
-        <label for="orderResults" class="bulk-order">@T("Ordered by")</label>
-        <select id="orderResults" name="Options.OrderBy">
-            @Html.SelectOption((ContentsOrder)Model.Options.OrderBy, ContentsOrder.Created, T("recently created").ToString())
-            @Html.SelectOption((ContentsOrder)Model.Options.OrderBy, ContentsOrder.Modified, T("recently modified").ToString())
-            @Html.SelectOption((ContentsOrder)Model.Options.OrderBy, ContentsOrder.Published, T("recently published").ToString())
-        </select>
-        <button type="submit" name="submit.Filter" value="yes please">@T("Apply")</button>
-    </fieldset>
-    <fieldset class="content-items bulk-items">
-@Display(Model.ContentItems)
-    </fieldset>
-    @Html.Link(T("Add Selected").Text, "#", new { @class = "button addSelected"})
-@Display(Model.Pager)
-}
+    <div class="panel-body">
+        <div class="manage">
+        </div>
 
+        <fieldset class="bulk-actions">
+            <label for="filterResults" class="bulk-filter">@T("Show")</label>
+            <select id="filterResults" name="Options.SelectedFilter">
+                @Html.SelectOption((string)Model.Options.SelectedFilter, "", T("any (show all)").ToString())
+                @foreach (var filterOption in Model.Options.FilterOptions) {
+                    @Html.SelectOption((string)Model.Options.SelectedFilter, (string)filterOption.Key, (string)T(filterOption.Value).Text)
+                }
+            </select>
+            <label for="orderResults" class="bulk-order">@T("Ordered by")</label>
+            <select id="orderResults" name="Options.OrderBy">
+                @Html.SelectOption((ContentsOrder)Model.Options.OrderBy, ContentsOrder.Created, T("recently created").ToString())
+                @Html.SelectOption((ContentsOrder)Model.Options.OrderBy, ContentsOrder.Modified, T("recently modified").ToString())
+                @Html.SelectOption((ContentsOrder)Model.Options.OrderBy, ContentsOrder.Published, T("recently published").ToString())
+            </select>
+            <button type="submit" name="submit.Filter" value="yes please">@T("Apply")</button>
+        </fieldset>
+        <fieldset class="content-items bulk-items">
+            @Display(Model.ContentItems)
+        </fieldset>
+
+    </div>
+    <div class="row or-datatable-footer">
+        <div class="col-sm-12">
+            <a href="#" class="btn btn-primary addSelected"><i class="fa fa-plus" aria-hidden="true"></i> @T("Add Selected")</a>
+        </div>
+    </div>
+    <div class="row or-datatable-footer">
+        <div class="col-sm-12">
+            @Display(Model.Pager)
+        </div>
+    </div>
+}

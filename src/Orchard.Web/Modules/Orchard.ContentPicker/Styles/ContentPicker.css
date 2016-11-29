@@ -1,17 +1,10 @@
 ﻿html { background:none !important }
 
 body {
-  color: #333; 
-  background:#f3f4f5;
-  font-family: Segoe UI,Trebuchet,Arial,Sans-Serif;
-  line-height:1.6em;
-  padding:12px;
-  width:640px;
-  min-width:640px;
+  padding-top:15px;
+  padding-bottom:15px;
   margin: 0 auto;
 }
-
-#orchard-content-picker * { font:100% normal Segoe UI,Trebuchet,Arial,Sans-Serif; }
 
 .content-picker-tab 
 {

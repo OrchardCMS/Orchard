@@ -48,7 +48,7 @@
 @if (Model.TotalItemCount > 1) {
     <div class="pager-footer row">
         @if (totalPageCount > 1 || Model.PageSize == 0 || Model.PageSize > pageSizes.First()) {
-            <div class="col-md-4">
+            <div class="col-xs-12 col-xs-6 col-md-5">
                 @if ((int)Model.PageSize >= 1) {
                     <span class="page-results">@T("Showing items {0} - {1} of {2}", (Model.Page - 1) * (int)Model.PageSize + 1, Model.PageSize == 0 ? Model.TotalItemCount : Math.Min(Model.TotalItemCount, (Model.Page) * (int)Model.PageSize), Model.TotalItemCount)</span>
 
@@ -56,33 +56,39 @@
                     <span class="page-results">@T("Showing all {0} items", Model.TotalItemCount)</span>
                 }
             </div>
-            <div class="col-md-4 form-inline text-center">
-                @T("Show:")
-                @pageSizeTag.StartElement
-                @{
-                    var pageId = String.IsNullOrEmpty(Model.PagerId) ? "page" : Model.PagerId;
-                    var nPage = Math.Max(1, Convert.ToInt32(routeData[pageId]));
-                    var firstItem = (nPage - 1) * Model.PageSize + 1;
-                    var selected = (int)Model.PageSize == 0;
-                    routeData["pageSize"] = 0;
-                    routeData[pageId] = 1;
-                }
-                <option value="@Url.Action((string)routeData["action"], (string)routeData["controller"], routeData)" @if (selected) { <text> selected</text>}>@T("All")</option>
-                @foreach (int size in pageSizes.OrderBy(p => p)) {
+            <div class="col-xs-12 col-sm-6 col-md-2 form-inline text-center">
+
+                <div class="form-group pull-right-sm">
+                    <label>@T("Show:")</label>
+                    @pageSizeTag.StartElement
+                    @{
+                        var pageId = String.IsNullOrEmpty(Model.PagerId) ? "page" : Model.PagerId;
+                        var nPage = Math.Max(1, Convert.ToInt32(routeData[pageId]));
+                        var firstItem = (nPage - 1) * Model.PageSize + 1;
+                        var selected = (int)Model.PageSize == 0;
+                        routeData["pageSize"] = 0;
+                        routeData[pageId] = 1;
+                    }
+                    <option value="@Url.Action((string) routeData["action"], (string) routeData["controller"], routeData)" @if (selected) { <text> selected</text>}>@T("All")</option>
+                    @foreach (int size in pageSizes.OrderBy(p => p))
+                    {
                         selected = (int)Model.PageSize == size;
                         routeData["pageSize"] = size;
                         routeData[pageId] = size > 0 ? Math.Ceiling((double)firstItem / size) : 1;
-                    <option value="@Url.Action((string) routeData["action"], (string) routeData["controller"], routeData)" @if (selected) { <text> selected</text>}>@size</option>
-                }
-                @pageSizeTag.EndElement
+                        <option value="@Url.Action((string) routeData["action"], (string) routeData["controller"], routeData)" @if (selected) { <text> selected</text>}>@size</option>
+                    }
+                    @pageSizeTag.EndElement
+                </div>
+
             </div>
-            <div class="col-md-4">
-                @if ((int)Model.PageSize >= 1) {
-                    <div class="pull-right">
+            <div class="col-xs-12 col-sm-12 col-md-5">
+                @if ((int)Model.PageSize >= 1)
+                {
+                    <div class="pull-right-md pull-right-lg">
                         @pagerLinks
                     </div>
                 }
             </div>
-                    }
+                        }
     </div>
-                    }
+                        }

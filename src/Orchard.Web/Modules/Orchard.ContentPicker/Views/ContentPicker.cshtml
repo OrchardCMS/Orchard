@@ -4,15 +4,17 @@
     Style.Require("jQueryUI_Orchard").AtHead();
     Script.Require("jQueryUI_Tabs").AtHead();
 
+    SetMeta("viewport", "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no");
     SetMeta("IE=edge,chrome=1", httpEquiv: "X-UA-Compatible");
-    Style.Include("~/themes/theadmin/styles/lib.css");
-    Style.Include("~/themes/theadmin/styles/theadmin.css");
+    Style.Include("~/themes/theadmin/styles/lib.css", "~/themes/theadmin/styles/lib.min.css");
+    Style.Include("FontAwesome");
+    Style.Include("~/themes/theadmin/styles/theadmin.css", "~/themes/theadmin/styles/theadmin.min.css");
     Style.Include("~/themes/theadmin/styles/ie.css").UseCondition("gte IE 9").SetAttribute("media", "screen, projection");
     Style.Include("~/themes/theadmin/styles/ie8.css").UseCondition("IE 8").SetAttribute("media", "screen, projection");
     Style.Include("~/themes/theadmin/styles/ie7.css").UseCondition("lte IE 7").SetAttribute("media", "screen, projection");
 
-    Script.Include("ContentPicker.js");
     Style.Include("ContentPicker.css");
+    Script.Include("ContentPicker.js");
 
 }
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -37,11 +39,11 @@
     </script>
 
     @Display.ContentPickerNavigation()
-    
-    <div class="content-picker-tab">
-    @Display(Model.Tab)
+    <div class="container">
+        <div class="panel panel-default">
+            @Display(Model.Tab)
+        </div>
     </div>
-
 @using(Script.Foot()) {
 <script type="text/javascript">
 //<![CDATA[
