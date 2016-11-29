@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using Orchard.Logging;
 
 namespace Orchard.Localization.Services {
     
@@ -12,6 +13,12 @@ namespace Orchard.Localization.Services {
             { 'r', '\r' },
             { 't', '\t' }
         };
+
+        public LocalizationStreamParser() {
+            Logger = NullLogger.Instance;
+        }
+
+        public ILogger Logger { get; }
 
         public void ParseLocalizationStream(string text, IDictionary<string, string> translations, bool merge) {
             var reader = new StringReader(text);
@@ -96,27 +103,33 @@ namespace Orchard.Localization.Services {
             return sb == null ? str : sb.ToString();
         }
 
-        private static string TrimQuote(string str) {
+        private string TrimQuote(string str) {
             if (str.StartsWith("\"") && str.EndsWith("\"")) {
+                if (str.Length == 1) {
+                    // Handle corner case - string containing single quote
+                    Logger.Warning("Invalid localization string detected: " + str);
+                    return "";
+                }
+
                 return str.Substring(1, str.Length - 2);
             }
 
             return str;
         }
 
-        private static string ParseTranslation(string poLine) {
+        private string ParseTranslation(string poLine) {
             return Unescape(TrimQuote(poLine.Substring(6).Trim()));
         }
 
-        private static string ParseId(string poLine) {
+        private string ParseId(string poLine) {
             return Unescape(TrimQuote(poLine.Substring(5).Trim()));
         }
 
-        private static string ParseScope(string poLine) {
+        private string ParseScope(string poLine) {
             return Unescape(TrimQuote(poLine.Substring(2).Trim()));
         }
 
-        private static string ParseContext(string poLine) {
+        private string ParseContext(string poLine) {
             return Unescape(TrimQuote(poLine.Substring(7).Trim()));
         }
     }

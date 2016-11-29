@@ -69,6 +69,8 @@ namespace Orchard.Projections.FilterEditors.Forms {
                 case StringOperator.Contains:
                     return x => x.Like(property, Convert.ToString(value), HqlMatchMode.Anywhere);
                 case StringOperator.ContainsAny:
+                    if (string.IsNullOrEmpty((string)value))
+                        return x => x.Eq("Id", "0");
                     var values1 = Convert.ToString(value).Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                     var predicates1 = values1.Skip(1).Select<string, Action<IHqlExpressionFactory>>(x => y => y.Like(property, x, HqlMatchMode.Anywhere)).ToArray();
                     return x => x.Disjunction(y => y.Like(property, values1[0], HqlMatchMode.Anywhere), predicates1);
