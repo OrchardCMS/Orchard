@@ -7,57 +7,57 @@
     var emailEnabled = messageManager.GetAvailableChannelServices().Contains("email");
 }
 
-<fieldset>
+<fieldset class="user-settings">
     <legend>@T("Users")</legend>
     <div class="or-checkbox">
         @Html.EditorFor(m => m.UsersCanRegister)
         <label class="forcheckbox" for="@Html.FieldIdFor(m => m.UsersCanRegister)">@T("Users can create new accounts on the site")</label>
     </div>
-    <div>
+    <div class="or-checkbox">
         @Html.EditorFor(m => m.EnableCustomPasswordPolicy)
         <label class="forcheckbox" for="@Html.FieldIdFor(m => m.EnableCustomPasswordPolicy)">@T("Passwords must meet custom requirements")</label>
-        <div data-controllerid="@Html.FieldIdFor(m => m.EnableCustomPasswordPolicy)" style="margin-left: 30px;">
-            <div>
+        <div data-controllerid="@Html.FieldIdFor(m => m.EnableCustomPasswordPolicy)" style="margin: 20px 0 0 30px;">
+            <div class="form-group">
                 <input type="checkbox" value="true" class="check-box" id="@Html.FieldIdFor(m => m.EnablePasswordLowercaseRequirement)"
                        name="@Html.FieldNameFor(m => m.EnablePasswordLowercaseRequirement)" @(Model.EnablePasswordLowercaseRequirement && Model.EnableCustomPasswordPolicy ? "checked=\"checked\"" : "") />
                 <input name="@Html.FieldNameFor(m => m.EnablePasswordLowercaseRequirement)" type="hidden" value="false">
                 <label class="forcheckbox" for="@Html.FieldIdFor(m => m.EnablePasswordLowercaseRequirement)">@T("Password must contain at least one lower case letter (a-z)")</label>
             </div>
-            <div>
+            <div class="form-group">
                 <input type="checkbox" value="true" class="check-box" id="@Html.FieldIdFor(m => m.EnablePasswordUppercaseRequirement)"
                        name="@Html.FieldNameFor(m => m.EnablePasswordUppercaseRequirement)" @(Model.EnablePasswordUppercaseRequirement && Model.EnableCustomPasswordPolicy ? "checked=\"checked\"" : "") />
                 <input name="@Html.FieldNameFor(m => m.EnablePasswordUppercaseRequirement)" type="hidden" value="false">
                 <label class="forcheckbox" for="@Html.FieldIdFor(m => m.EnablePasswordUppercaseRequirement)">@T("Password must contain at least one upper case letter (A-Z)")</label>
             </div>
-            <div>
+            <div class="form-group">
                 <input type="checkbox" value="true" class="check-box" id="@Html.FieldIdFor(m => m.EnablePasswordNumberRequirement)"
                        name="@Html.FieldNameFor(m => m.EnablePasswordNumberRequirement)" @(Model.EnablePasswordNumberRequirement && Model.EnableCustomPasswordPolicy ? "checked=\"checked\"" : "") />
                 <input name="@Html.FieldNameFor(m => m.EnablePasswordNumberRequirement)" type="hidden" value="false">
                 <label class="forcheckbox" for="@Html.FieldIdFor(m => m.EnablePasswordNumberRequirement)">@T("Password must contain at least one number (0-9)")</label>
             </div>
-            <div>
+            <div class="form-group">
                 <input type="checkbox" value="true" class="check-box" id="@Html.FieldIdFor(m => m.EnablePasswordSpecialRequirement)"
                        name="@Html.FieldNameFor(m => m.EnablePasswordSpecialRequirement)" @(Model.EnablePasswordSpecialRequirement && Model.EnableCustomPasswordPolicy ? "checked=\"checked\"" : "") />
                 <input name="@Html.FieldNameFor(m => m.EnablePasswordSpecialRequirement)" type="hidden" value="false">
                 <label class="forcheckbox" for="@Html.FieldIdFor(m => m.EnablePasswordSpecialRequirement)">@T("Password must contain at least one special character")</label>
             </div>
-            <div>
+            <div class="form-group">
                 <label for="@Html.FieldIdFor(m => m.MinimumPasswordLength)">@T("Minimum Password length")</label>
                 @Html.TextBoxFor(m => m.MinimumPasswordLength, new { @class = "text medium", @Value = Model.MinimumPasswordLength })
                 @Html.ValidationMessage("MinimumPasswordLength", "*")
             </div>
-            <div>
+            <div class="form-group">
                 <input type="checkbox" value="true" class="check-box" id="@Html.FieldIdFor(m => m.EnablePasswordExpiration)"
                        name="@Html.FieldNameFor(m => m.EnablePasswordExpiration)" @(Model.EnablePasswordExpiration && Model.EnableCustomPasswordPolicy ? "checked=\"checked\"" : "") />
                 <input name="@Html.FieldNameFor(m => m.EnablePasswordExpiration)" type="hidden" value="false">
                 <label class="forcheckbox" for="@Html.FieldIdFor(m => m.EnablePasswordExpiration)">@T("Password expires after a time period (30 days by default)")</label>
             </div>
-            <div data-controllerid="@Html.FieldIdFor(m => m.EnablePasswordExpiration)" style="margin-left: 30px;">
+            <div class="form-group" data-controllerid="@Html.FieldIdFor(m => m.EnablePasswordExpiration)" style="margin-left: 30px;">
                 <label for="@Html.FieldIdFor(m => m.PasswordExpirationTimeInDays)">@T("Password expiration period in days")</label>
                 @Html.TextBoxFor(m => m.PasswordExpirationTimeInDays, new { @class = "text medium", @Value = Model.PasswordExpirationTimeInDays })
                 @Html.ValidationMessage("PasswordExpirationTimeInDays", "*")
             </div>
-            <div>
+            <div class="form-group">
                 <label for="@Html.FieldIdFor(m => m.PasswordFormat)">@T("Password format")</label>
                 @Html.DropDownListFor(m => m.PasswordFormat, new SelectList(new[]
                 {
