@@ -53,12 +53,7 @@ namespace Orchard.Email.Controllers {
                 else {
                     _smtpChannel.Process(new Dictionary<string, object> {
                         {"Recipients", testSettings.To},
-                        {"Subject", testSettings.Subject},
-                        {"Body", testSettings.Body},
-                        {"ReplyTo", testSettings.ReplyTo},
-                        {"Bcc", testSettings.Bcc},
-                        {"CC", testSettings.Cc},
-                        { "Attachments", new List<string>() { HostingEnvironment.MapPath("~/Media/OrchardLogo.png") } }
+                        {"Subject", T("Orchard CMS - SMTP settings test email").Text}
                     });
                 }
 
@@ -96,7 +91,6 @@ namespace Orchard.Email.Controllers {
 
         public class TestSmtpSettings {
             public string From { get; set; }
-            public string ReplyTo { get; set; }
             public string Host { get; set; }
             public int Port { get; set; }
             public bool EnableSsl { get; set; }
@@ -105,10 +99,6 @@ namespace Orchard.Email.Controllers {
             public string UserName { get; set; }
             public string Password { get; set; }
             public string To { get; set; }
-            public string Cc { get; set; }
-            public string Bcc { get; set; }
-            public string Subject { get; set; }
-            public string Body { get; set; }
         }
     }
 }
