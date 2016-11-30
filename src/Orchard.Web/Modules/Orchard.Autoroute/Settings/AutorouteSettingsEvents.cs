@@ -43,21 +43,21 @@ namespace Orchard.Autoroute.Settings {
 
             int current = 0;
             foreach (string culture in cultures) {
-                // We add all existing patterns for the culture
+                // Adding all existing patterns for the culture
                 foreach (RoutePattern routePattern in settings.Patterns.Where(x => String.Equals(x.Culture, culture, StringComparison.OrdinalIgnoreCase))) {
                     newPatterns.Add(settings.Patterns[current]);
                     current++;
                 }
 
-                // We add a pattern for each culture if there is none
+                // Adding a pattern for each culture if there is none
                 if (!settings.Patterns.Where(x => String.Equals(x.Culture, culture, StringComparison.OrdinalIgnoreCase)).Any()) {
                     newPatterns.Add(new RoutePattern { Culture = culture, Name = "Title", Description = "my-title", Pattern = "{Content.Slug}" });
                 }
 
-                // We add a new empty line for each culture
+                // Adding a new empty line for each culture
                 newPatterns.Add(new RoutePattern { Culture = culture, Name = null, Description = null, Pattern = null });
 
-                // If the content type has no defaultPattern for autoroute, then we assign one
+                // If the content type has no defaultPattern for autoroute, assign one
                 bool defaultPatternExists = false;
                 if (String.IsNullOrEmpty(culture))
                     defaultPatternExists = settings.DefaultPatterns.Any(x => String.IsNullOrEmpty(x.Culture));
@@ -65,7 +65,7 @@ namespace Orchard.Autoroute.Settings {
                     defaultPatternExists = settings.DefaultPatterns.Any(x => String.Equals(x.Culture, culture, StringComparison.OrdinalIgnoreCase));
 
                 if (!defaultPatternExists) {
-                    // If we are in the default culture check the old setting
+                    // If in the default culture check the old setting
                     if (String.Equals(culture, _cultureManager.GetSiteCulture(), StringComparison.OrdinalIgnoreCase)) {
                         var defaultPatternIndex = settings.DefaultPatternIndex;
                         if (!String.IsNullOrWhiteSpace(defaultPatternIndex)) {
@@ -95,13 +95,13 @@ namespace Orchard.Autoroute.Settings {
                 Patterns = new List<RoutePattern>()
             };
 
-            //get cultures
+            // Get cultures
             settings.SiteCultures = _cultureManager.ListCultures().ToList();
 
             if (updateModel.TryUpdateModel(settings, "AutorouteSettings", null, null)) {
                 //TODO need to add validations client and/or server side here
 
-                // If some default pattern is an empty pattern I set it to the first pattern for the language
+                // If some default pattern is an empty pattern set it to the first pattern for the language
                 List<DefaultPattern> newDefaultPatterns = new List<DefaultPattern>();
 
                 foreach (var defaultPattern in settings.DefaultPatterns) {
@@ -129,7 +129,7 @@ namespace Orchard.Autoroute.Settings {
                 cultures.Add(null);
                 cultures.AddRange(settings.SiteCultures);
 
-                //If there is no pattern for some culture we create a default ones
+                //If there is no pattern for some culture create a default one
                 List<RoutePattern> newPatterns = new List<RoutePattern>();
                 int current = 0;
                 foreach (string culture in cultures) {
@@ -153,7 +153,7 @@ namespace Orchard.Autoroute.Settings {
 
                 settings.Patterns = newPatterns;
 
-                // update the settings builder
+                // Update the settings builder
                 settings.Build(builder);
             }
 

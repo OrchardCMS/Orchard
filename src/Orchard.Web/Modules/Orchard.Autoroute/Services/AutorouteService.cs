@@ -140,7 +140,7 @@ namespace Orchard.Autoroute.Services {
                 var defaultPatternIndex = "0";
 
                 if (!settings.DefaultPatterns.Any(x => String.Equals(x.Culture, culture, StringComparison.OrdinalIgnoreCase))) {
-                    // If no default pattern exist for the language I return the default culture neutral pattern if it exists, else a generic pattern
+                    // If no default pattern exists for the language return the default culture neutral pattern if it exists, else a generic pattern
                     if (settings.Patterns.Any(x => String.IsNullOrEmpty(x.Culture))) {
                         defaultPatternIndex = GetDefaultPatternIndex(contentType, null);
                         return settings.Patterns.Where(x => String.IsNullOrEmpty(x.Culture)).ElementAt(Convert.ToInt32(defaultPatternIndex));
@@ -150,7 +150,7 @@ namespace Orchard.Autoroute.Services {
                     }
                 }
 
-                // If patterns for the specified culture exist I search one of them, else I search a culture neutral pattern.
+                // If patterns for the specified culture exist search one of them, else search a culture neutral pattern
                 var patternCultureSearch = settings.Patterns.Any(x => String.Equals(x.Culture, culture, StringComparison.OrdinalIgnoreCase)) ? culture : null;
                 defaultPatternIndex = GetDefaultPatternIndex(contentType, patternCultureSearch);
 
@@ -161,11 +161,11 @@ namespace Orchard.Autoroute.Services {
                 }
             }
             else {
-                // I use the culture neutral pattern
+                // Using the culture neutral pattern
                 if (settings.Patterns.Any(x => String.IsNullOrEmpty(x.Culture))) {
                     var defaultPatternIndex = GetDefaultPatternIndex(contentType, null);
 
-                    // If no default culture neutral pattern exist I set my pattern as the default pattern
+                    // If no default culture neutral pattern exist use the default pattern
                     if (!settings.DefaultPatterns.Any(x => String.IsNullOrEmpty(x.Culture))) {
                         var patternIndex = String.IsNullOrWhiteSpace(settings.DefaultPatternIndex) ? "0" : settings.DefaultPatternIndex;
                         settings.DefaultPatterns.Add(new DefaultPattern { PatternIndex = patternIndex, Culture = null });
@@ -175,7 +175,7 @@ namespace Orchard.Autoroute.Services {
                 }
             }
 
-            // Return a default pattern if none is defined.
+            // Return a default pattern if none is defined
             return new RoutePattern { Name = "Title", Description = "my-title", Pattern = "{Content.Slug}", Culture = culture };
         }
 
