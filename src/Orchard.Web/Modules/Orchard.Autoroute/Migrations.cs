@@ -69,7 +69,8 @@ namespace Orchard.Autoroute {
             foreach (var type in types) {
                 var typeDefinition = ContentDefinitionManager.GetTypeDefinition((type.Name));
                 if (typeDefinition != null) {
-                    var settings = typeDefinition.Parts.First(x => x.PartDefinition.Name == "AutoroutePart").Settings.GetModel<AutorouteSettings>();
+                    var settingsDictionary = typeDefinition.Parts.First(x => x.PartDefinition.Name == "AutoroutePart").Settings;
+                    var settings = settingsDictionary.GetModel<AutorouteSettings>();
                     if (!settings.Patterns.Any(x => String.IsNullOrWhiteSpace(x.Culture))) {
                         string siteCulture = _cultureManager.GetSiteCulture();
                         List<string> newPatterns = new List<string>();
@@ -85,9 +86,11 @@ namespace Orchard.Autoroute {
                             newPatterns.Add(String.Format("{{\"Name\":\"{0}\",\"Pattern\":\"{1}\",\"Description\":\"{2}\"}}", "Title", "{Content.Slug}", "my-title"));
                         }
 
-                        string oldPatterns = typeDefinition.Parts.First(x => x.PartDefinition.Name == "AutoroutePart").Settings["AutorouteSettings.PatternDefinitions"];
-                        if (oldPatterns.StartsWith("[") && oldPatterns.EndsWith("]"))
-                            newPatterns.Add(oldPatterns.Substring(1, oldPatterns.Length - 2));
+                        if (settingsDictionary.ContainsKey("AutorouteSettings.PatternDefinitions")) {
+                            string oldPatterns = settingsDictionary["AutorouteSettings.PatternDefinitions"];
+                            if (oldPatterns.StartsWith("[") && oldPatterns.EndsWith("]"))
+                                newPatterns.Add(oldPatterns.Substring(1, oldPatterns.Length - 2));
+                        }
 
                         ContentDefinitionManager.AlterTypeDefinition(type.Name, cfg => cfg
                         .WithPart("AutoroutePart", builder => builder
