@@ -138,7 +138,7 @@
   <ItemGroup>
     <Content Include="Module.txt" />
     <Content Include="Styles\admin-usertask.css" />
-    <Content Include="Styles\workflows-activity-unassign-role .css" />
+    <Content Include="Styles\workflows-activity-unassign-role.css" />
     <Content Include="Styles\workflows-activity-assign-role.css" />
     <Content Include="Styles\workflows-activity-isinrole.css" />
     <Content Include="Styles\workflows-activity-usertask.css" />
