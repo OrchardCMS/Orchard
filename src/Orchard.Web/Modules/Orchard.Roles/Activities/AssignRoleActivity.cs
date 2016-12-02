@@ -32,24 +32,28 @@ namespace Orchard.Roles.Activities {
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
-        public override string Name {
+        public override string Name
+        {
             get { return "AssignRole"; }
         }
 
-        public override LocalizedString Category {
+        public override LocalizedString Category
+        {
             get { return T("User"); }
         }
 
-        public override LocalizedString Description {
-            get { return T("Assign specific roles to the current content item if it's a user.");  }
+        public override LocalizedString Description
+        {
+            get { return T("Assign specific roles to the current content item if it's a user."); }
         }
 
-        public override string Form {
+        public override string Form
+        {
             get { return "SelectRoles"; }
         }
 
         public override IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext workflowContext, ActivityContext activityContext) {
-            return new[] {T("Done")};
+            return new[] { T("Done") };
         }
 
         public override IEnumerable<LocalizedString> Execute(WorkflowContext workflowContext, ActivityContext activityContext) {
@@ -59,15 +63,15 @@ namespace Orchard.Roles.Activities {
             if (user == null) {
                 user = _workContextAccessor.GetContext().CurrentUser.As<IUserRoles>();
             }
-            
-            var roles = Commons.GetRoles(activityContext);
+
+            var roles = GetRoles(activityContext);
 
             if (user != null) {
                 foreach (var role in roles) {
                     if (!user.Roles.Contains(role)) {
                         var roleRecord = _roleService.GetRoleByName(role);
                         if (roleRecord != null) {
-                            _repository.Create(new UserRolesPartRecord {UserId = user.Id, Role = roleRecord});
+                            _repository.Create(new UserRolesPartRecord { UserId = user.Id, Role = roleRecord });
                         }
                         else {
                             Logger.Debug("Role not found: {0}", role);
@@ -78,5 +82,16 @@ namespace Orchard.Roles.Activities {
 
             yield return T("Done");
         }
+
+        private IEnumerable<string> GetRoles(ActivityContext context) {
+            var roles = context.GetState<string>("Roles");
+
+            if (String.IsNullOrEmpty(roles)) {
+                return Enumerable.Empty<string>();
+            }
+
+            return roles.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToList();
+        }
     }
+
 }

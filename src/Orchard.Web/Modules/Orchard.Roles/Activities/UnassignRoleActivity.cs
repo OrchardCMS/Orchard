@@ -64,7 +64,7 @@ namespace Orchard.Roles.Activities {
                 user = _workContextAccessor.GetContext().CurrentUser.As<IUserRoles>();
             }
 
-            var roles = Commons.GetRoles(activityContext);
+            var roles = GetRoles(activityContext);
 
             if (user != null) {
                 foreach (var role in roles) {
@@ -84,6 +84,16 @@ namespace Orchard.Roles.Activities {
             }
 
             yield return T("Done");
+        }
+
+        private IEnumerable<string> GetRoles(ActivityContext context) {
+            var roles = context.GetState<string>("Roles");
+
+            if (String.IsNullOrEmpty(roles)) {
+                return Enumerable.Empty<string>();
+            }
+
+            return roles.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToList();
         }
     }
 }
