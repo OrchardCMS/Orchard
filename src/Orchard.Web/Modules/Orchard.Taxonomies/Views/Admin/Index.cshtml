@@ -39,12 +39,12 @@
                 <tr class="@(taxonomyEntry.IsInternal ? "internal" : null)">
                     <td>
                         <input type="hidden" value="@Model.Taxonomies[taxonomyIndex].Id" name="@Html.NameOf(m => m.Taxonomies[ti].Id)" />
-                        @if (!taxonomyEntry.IsInternal || Authorizer.Authorize(Orchard.Security.StandardPermissions.SiteOwner) || Authorizer.Authorize(Permissions.ManageTaxonomies)) {
+                        @if (!taxonomyEntry.IsInternal || Authorizer.Authorize(Permissions.ManageTaxonomies)) {
                             <input type="checkbox" value="true" name="@Html.NameOf(m => m.Taxonomies[ti].IsChecked)" />
                         }
                     </td>
                     <td>
-                        @if (!taxonomyEntry.IsInternal || Authorizer.Authorize(Orchard.Security.StandardPermissions.SiteOwner) || Authorizer.Authorize(Permissions.CreateTaxonomy)) {
+                        @if (!taxonomyEntry.IsInternal || Authorizer.Authorize(Permissions.CreateTaxonomy)) {
                             @Html.ActionLink(taxonomyEntry.Name, "Index", "TermAdmin", new { taxonomyId = taxonomyEntry.Id }, new object { })
                         }
                         else {
@@ -52,15 +52,15 @@
                         }
                     </td>
                     <td>
-                        @if (!taxonomyEntry.IsInternal || Authorizer.Authorize(Orchard.Security.StandardPermissions.SiteOwner)) {
-                            if (Authorizer.Authorize(Permissions.CreateTaxonomy) || Authorizer.Authorize(Orchard.Security.StandardPermissions.SiteOwner)) {
+                        @if (!taxonomyEntry.IsInternal) {
+                            if (Authorizer.Authorize(Permissions.CreateTaxonomy)) {
                                 @Html.ItemEditLink(T("Edit").Text, taxonomyEntry.ContentItem, new { ReturnUrl = Request.RawUrl }) <text>|</text>
                             }
                             @Html.ActionLink(T("Terms").Text, "Index", "TermAdmin", new { taxonomyId = taxonomyEntry.Id }, new object { }) <text>|</text>
-                            if (Authorizer.Authorize(Permissions.ManageTaxonomies) || Authorizer.Authorize(Orchard.Security.StandardPermissions.SiteOwner)) {
+                            if (Authorizer.Authorize(Permissions.ManageTaxonomies)) {
                                 @Html.ActionLink(T("Delete").Text, "Delete", new { id = taxonomyEntry.Id }, new { itemprop = "RemoveUrl UnsafeUrl" }) <text>|</text>
                             }
-                            if (Authorizer.Authorize(Permissions.CreateTaxonomy) || Authorizer.Authorize(Orchard.Security.StandardPermissions.SiteOwner)) {
+                            if (Authorizer.Authorize(Permissions.CreateTaxonomy)) {
                                 @Html.ActionLink(T("Import").Text, "Import", new { id = taxonomyEntry.Id }, new object { })
                             }
                         }
