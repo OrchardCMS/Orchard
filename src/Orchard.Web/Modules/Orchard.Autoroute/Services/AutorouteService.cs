@@ -135,35 +135,47 @@ namespace Orchard.Autoroute.Services {
 
         public RoutePattern GetDefaultPattern(string contentType, string culture) {
             var settings = GetTypePartSettings(contentType).GetModel<AutorouteSettings>();
-            var defaultPattern = settings.DefaultPatterns.FirstOrDefault(x => x.Culture == culture);
-            var defaultPatternIndex = defaultPattern != null ? defaultPattern.PatternIndex : "0";
 
-            if (String.IsNullOrWhiteSpace(defaultPatternIndex))
-                defaultPatternIndex = "0";
+            if (settings.UseCulturePattern) {
+                var defaultPatternIndex = "0";
 
-            if (!settings.DefaultPatterns.Any(x => String.Equals(x.Culture, culture, StringComparison.OrdinalIgnoreCase))) {
-                var patternIndex = String.IsNullOrWhiteSpace(settings.DefaultPatternIndex) ? "0" : settings.DefaultPatternIndex;
-                // Lazy updating from old setting.
-                if (String.Equals(culture, _cultureManager.GetSiteCulture(), StringComparison.OrdinalIgnoreCase)) {
-                    settings.DefaultPatterns.Add(new DefaultPattern { PatternIndex = patternIndex, Culture = culture });
-                    return settings.Patterns.Where(x => x.Culture == null).ElementAt(Convert.ToInt32(defaultPatternIndex));
+                if (!settings.DefaultPatterns.Any(x => String.Equals(x.Culture, culture, StringComparison.OrdinalIgnoreCase))) {
+                    // If no default pattern exists for the language return the default culture neutral pattern if it exists, else a generic pattern
+                    if (settings.Patterns.Any(x => String.IsNullOrEmpty(x.Culture))) {
+                        defaultPatternIndex = GetDefaultPatternIndex(contentType, null);
+                        return settings.Patterns.Where(x => String.IsNullOrEmpty(x.Culture)).ElementAt(Convert.ToInt32(defaultPatternIndex));
+                    }
+                    else {
+                        return new RoutePattern { Name = "Title", Description = "my-title", Pattern = "{Content.Slug}", Culture = culture };
+                    }
                 }
-                else {
-                    settings.DefaultPatterns.Add(new DefaultPattern { PatternIndex = "0", Culture = culture });
-                    return new RoutePattern { Name = "Title", Description = "my-title", Pattern = "{Content.Slug}", Culture = culture };
+
+                // If patterns for the specified culture exist search one of them, else search a culture neutral pattern
+                var patternCultureSearch = settings.Patterns.Any(x => String.Equals(x.Culture, culture, StringComparison.OrdinalIgnoreCase)) ? culture : null;
+                defaultPatternIndex = GetDefaultPatternIndex(contentType, patternCultureSearch);
+
+                if (settings.Patterns.Any()) {
+                    if (settings.Patterns.Where(x => x.Culture == patternCultureSearch).ElementAt(Convert.ToInt32(defaultPatternIndex)) != null) {
+                        return settings.Patterns.Where(x => x.Culture == patternCultureSearch).ElementAt(Convert.ToInt32(defaultPatternIndex));
+                    }
+                }
+            }
+            else {
+                // Using the culture neutral pattern
+                if (settings.Patterns.Any(x => String.IsNullOrEmpty(x.Culture))) {
+                    var defaultPatternIndex = GetDefaultPatternIndex(contentType, null);
+
+                    // If no default culture neutral pattern exist use the default pattern
+                    if (!settings.DefaultPatterns.Any(x => String.IsNullOrEmpty(x.Culture))) {
+                        var patternIndex = String.IsNullOrWhiteSpace(settings.DefaultPatternIndex) ? "0" : settings.DefaultPatternIndex;
+                        settings.DefaultPatterns.Add(new DefaultPattern { PatternIndex = patternIndex, Culture = null });
+                    }
+
+                    return settings.Patterns.Where(x => String.IsNullOrEmpty(x.Culture)).ElementAt(Convert.ToInt32(defaultPatternIndex));
                 }
             }
 
-            // Return a default pattern if set.
-            var patternCultureSearch = settings.Patterns.Any(x => String.Equals(x.Culture, culture, StringComparison.OrdinalIgnoreCase)) ? culture : null;
-
-            if (settings.Patterns.Any()) {
-                if (settings.Patterns.Where(x => x.Culture == patternCultureSearch).ElementAt(Convert.ToInt32(defaultPatternIndex)) != null) {
-                    return settings.Patterns.Where(x => x.Culture == patternCultureSearch).ElementAt(Convert.ToInt32(defaultPatternIndex));
-                };
-            }
-
-            // Return a default pattern if none is defined.
+            // Return a default pattern if none is defined
             return new RoutePattern { Name = "Title", Description = "my-title", Pattern = "{Content.Slug}", Culture = culture };
         }
 
@@ -220,6 +232,23 @@ namespace Orchard.Autoroute.Services {
             }
 
             return contentDefinition.Parts.First(x => x.PartDefinition.Name == "AutoroutePart").Settings;
+        }
+
+        private string GetDefaultPatternIndex(string contentType, string culture) {
+            var settings = GetTypePartSettings(contentType).GetModel<AutorouteSettings>();
+
+            DefaultPattern defaultPattern = null;
+            if (String.IsNullOrEmpty(culture))
+                defaultPattern = settings.DefaultPatterns.FirstOrDefault(x => String.IsNullOrEmpty(x.Culture));
+            else
+                defaultPattern = settings.DefaultPatterns.FirstOrDefault(x => String.Equals(x.Culture, culture, StringComparison.OrdinalIgnoreCase));
+
+            var defaultPatternIndex = defaultPattern != null ? defaultPattern.PatternIndex : "0";
+
+            if (String.IsNullOrWhiteSpace(defaultPatternIndex))
+                defaultPatternIndex = "0";
+
+            return defaultPatternIndex;
         }
 
         private static int? GetSlugVersion(string path, string potentialConflictingPath) {
