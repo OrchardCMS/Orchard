@@ -55,11 +55,16 @@ namespace Orchard.Localization {
                 //TODO: to handle very large dbs, we need to do Skip() Take() both for masters and children. The masters should also be stored
                 //      differently for when we use them for the children. Maybe a List<Tuple<int,List<int>>>.
                 //First we do the items that are their own masters
-                var masters = _repositoryLocalizationPart.Table.Where(lpr => lpr.MasterContentItemId == 0).ToList();
+                //These ones have MasterContentItemId equals 0 or equals their Id value
+                var masters = _repositoryLocalizationPart.Table.Where(lpr => lpr.MasterContentItemId == 0 || lpr.MasterContentItemId == lpr.Id).ToList();
                 masters.ForEach(ma => ma.LocalizationSetId = ma.Id);
                 //Then we do the rest of the items in each localization set
-                var children = _repositoryLocalizationPart.Table.Where(lpr => lpr.MasterContentItemId != 0).ToList();
-                while (children.Count > 0) {
+                //These ones have MasterContentItemId greater than zero and different from their own Id value
+                //Unmanaging items having MasterContentItemId equals their own Id value may result in an infinite loop
+                var children = _repositoryLocalizationPart.Table.Where(lpr => lpr.MasterContentItemId != 0 && lpr.MasterContentItemId != lpr.Id).ToList();
+                var previousChildrenCount = 0;
+                while (previousChildrenCount != children.Count) { //exit loop if no children was removed during last iteration (condition to avoid infinite loop)
+                    previousChildrenCount = children.Count;
                     if (masters.Count >= children.Count) {
                         masters.ForEach(ma => {
                             children.Where(ch => ch.MasterContentItemId == ma.Id).ToList().ForEach(ch => ch.LocalizationSetId = ma.LocalizationSetId);
@@ -75,6 +80,11 @@ namespace Orchard.Localization {
                     }
                     masters.AddRange(children.Where(ch => ch.LocalizationSetId != 0));
                     children.RemoveAll(lpr => lpr.LocalizationSetId != 0);
+                }
+
+                //remaining children are considered as masters
+                if(children.Count > 0) {
+                    children.ForEach(ch => ch.LocalizationSetId = ch.Id);
                 }
             }
 
