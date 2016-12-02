@@ -32,23 +32,19 @@ namespace Orchard.Roles.Activities {
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
-        public override string Name
-        {
+        public override string Name {
             get { return "UnassignRole"; }
         }
 
-        public override LocalizedString Category
-        {
+        public override LocalizedString Category {
             get { return T("User"); }
         }
 
-        public override LocalizedString Description
-        {
+        public override LocalizedString Description {
             get { return T("Unassign specific roles to the current content item if it's a user."); }
         }
 
-        public override string Form
-        {
+        public override string Form {
             get { return "SelectRoles"; }
         }
 

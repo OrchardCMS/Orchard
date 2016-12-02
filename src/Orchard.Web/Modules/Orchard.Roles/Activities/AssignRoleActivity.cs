@@ -15,8 +15,7 @@ namespace Orchard.Roles.Activities {
     [OrchardFeature("Orchard.Roles.Workflows")]
     public class AssignRoleActivity : Task {
         private readonly IWorkContextAccessor _workContextAccessor;
-        private readonly IRepository<UserRolesPartRecord> _repository;
-        private readonly IRoleService _roleService;
+        private readonly IRepository<UserRolesPartRecord> _repository; private readonly IRoleService _roleService;
 
         public AssignRoleActivity(
             IWorkContextAccessor workContextAccessor,
@@ -32,23 +31,19 @@ namespace Orchard.Roles.Activities {
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
-        public override string Name
-        {
+        public override string Name {
             get { return "AssignRole"; }
         }
 
-        public override LocalizedString Category
-        {
+        public override LocalizedString Category {
             get { return T("User"); }
         }
 
-        public override LocalizedString Description
-        {
+        public override LocalizedString Description {
             get { return T("Assign specific roles to the current content item if it's a user."); }
         }
 
-        public override string Form
-        {
+        public override string Form {
             get { return "SelectRoles"; }
         }
 
