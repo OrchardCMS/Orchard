@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Orchard.Autoroute.Models;
 using Orchard.Autoroute.Settings;
-using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
@@ -11,11 +10,9 @@ using Orchard.Localization.Services;
 
 namespace Orchard.Autoroute {
     public class Migrations : DataMigrationImpl {
-        private readonly IContentManager _contentManager;
         private readonly ICultureManager _cultureManager;
 
-        public Migrations(IContentManager contentManager, ICultureManager cultureManager) {
-            _contentManager = contentManager;
+        public Migrations(ICultureManager cultureManager) {
             _cultureManager = cultureManager;
         }
 
@@ -65,38 +62,39 @@ namespace Orchard.Autoroute {
 
         public int UpdateFrom4() {
             // Adding some culture neutral patterns if they don't exist
-            var types = _contentManager.GetContentTypeDefinitions().Where(t => t.Parts.Any(p => p.PartDefinition.Name.Equals(typeof(AutoroutePart).Name)));
-            foreach (var type in types) {
-                var typeDefinition = ContentDefinitionManager.GetTypeDefinition((type.Name));
-                if (typeDefinition != null) {
-                    var settingsDictionary = typeDefinition.Parts.First(x => x.PartDefinition.Name == "AutoroutePart").Settings;
-                    var settings = settingsDictionary.GetModel<AutorouteSettings>();
-                    if (!settings.Patterns.Any(x => String.IsNullOrWhiteSpace(x.Culture))) {
-                        string siteCulture = _cultureManager.GetSiteCulture();
-                        List<string> newPatterns = new List<string>();
+            var autoroutePartDefinitions = ContentDefinitionManager.ListTypeDefinitions()
+                                            .Where(t => t.Parts.Any(p => p.PartDefinition.Name.Equals(typeof(AutoroutePart).Name)))
+                                            .Select(s => new { contentTypeName = s.Name, autoroutePart = s.Parts.First(x => x.PartDefinition.Name == "AutoroutePart") });
 
-                        if (settings.Patterns.Any(x => String.Equals(x.Culture, siteCulture, StringComparison.OrdinalIgnoreCase))) {
-                            var siteCulturePatterns = settings.Patterns.Where(x => String.Equals(x.Culture, siteCulture, StringComparison.OrdinalIgnoreCase)).ToList();
+            foreach (var partDefinition in autoroutePartDefinitions) {
+                var settingsDictionary = partDefinition.autoroutePart.Settings;
+                var settings = settingsDictionary.GetModel<AutorouteSettings>();
 
-                            foreach (RoutePattern pattern in siteCulturePatterns) {
-                                newPatterns.Add(String.Format("{{\"Name\":\"{0}\",\"Pattern\":\"{1}\",\"Description\":\"{2}\"}}", pattern.Name, pattern.Pattern, pattern.Description));
-                            }
+                if (!settings.Patterns.Any(x => String.IsNullOrWhiteSpace(x.Culture))) {
+                    string siteCulture = _cultureManager.GetSiteCulture();
+                    List<string> newPatterns = new List<string>();
+
+                    if (settings.Patterns.Any(x => String.Equals(x.Culture, siteCulture, StringComparison.OrdinalIgnoreCase))) {
+                        var siteCulturePatterns = settings.Patterns.Where(x => String.Equals(x.Culture, siteCulture, StringComparison.OrdinalIgnoreCase)).ToList();
+
+                        foreach (RoutePattern pattern in siteCulturePatterns) {
+                            newPatterns.Add(String.Format("{{\"Name\":\"{0}\",\"Pattern\":\"{1}\",\"Description\":\"{2}\"}}", pattern.Name, pattern.Pattern, pattern.Description));
                         }
-                        else {
-                            newPatterns.Add(String.Format("{{\"Name\":\"{0}\",\"Pattern\":\"{1}\",\"Description\":\"{2}\"}}", "Title", "{Content.Slug}", "my-title"));
-                        }
-
-                        if (settingsDictionary.ContainsKey("AutorouteSettings.PatternDefinitions")) {
-                            string oldPatterns = settingsDictionary["AutorouteSettings.PatternDefinitions"];
-                            if (oldPatterns.StartsWith("[") && oldPatterns.EndsWith("]"))
-                                newPatterns.Add(oldPatterns.Substring(1, oldPatterns.Length - 2));
-                        }
-
-                        ContentDefinitionManager.AlterTypeDefinition(type.Name, cfg => cfg
-                        .WithPart("AutoroutePart", builder => builder
-                            .WithSetting("AutorouteSettings.PatternDefinitions", "[" + String.Join(",", newPatterns) + "]")
-                        ));
                     }
+                    else {
+                        newPatterns.Add(String.Format("{{\"Name\":\"{0}\",\"Pattern\":\"{1}\",\"Description\":\"{2}\"}}", "Title", "{Content.Slug}", "my-title"));
+                    }
+
+                    if (settingsDictionary.ContainsKey("AutorouteSettings.PatternDefinitions")) {
+                        string oldPatterns = settingsDictionary["AutorouteSettings.PatternDefinitions"];
+                        if (oldPatterns.StartsWith("[") && oldPatterns.EndsWith("]"))
+                            newPatterns.Add(oldPatterns.Substring(1, oldPatterns.Length - 2));
+                    }
+
+                    ContentDefinitionManager.AlterTypeDefinition(partDefinition.contentTypeName, cfg => cfg
+                    .WithPart("AutoroutePart", builder => builder
+                        .WithSetting("AutorouteSettings.PatternDefinitions", "[" + String.Join(",", newPatterns) + "]")
+                    ));
                 }
             }
 
