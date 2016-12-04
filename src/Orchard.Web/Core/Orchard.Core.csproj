@@ -559,9 +559,6 @@
     <Content Include="Navigation\Views\MenuItemLink-ShapeMenuItem.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Contents\Views\Parts.Contents.Clone.SummaryAdmin.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Contents\Views\Item\Display.cshtml" />
   </ItemGroup>
   <ItemGroup>

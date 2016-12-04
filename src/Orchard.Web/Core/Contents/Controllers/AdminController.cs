@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -420,6 +421,33 @@ namespace Orchard.Core.Contents.Controllers {
                     ? T("The content has been removed.")
                     : T("The {0} has been removed.", contentItem.TypeDefinition.DisplayName));
             }
+
+            return this.RedirectLocal(returnUrl, () => RedirectToAction("List"));
+        }
+
+        [HttpPost]
+        public ActionResult DiscardDraft(int id, string returnUrl) {
+            var contentItem = _contentManager.Get(id, VersionOptions.Latest);
+
+            if (contentItem == null) {
+                return HttpNotFound();
+            }
+
+            if (!contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable
+                || !contentItem.HasPublished()
+                || contentItem.IsPublished()) {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            if (!Services.Authorizer.Authorize(Permissions.DeleteContent, contentItem, T("Couldn't remove draft"))) {
+                return new HttpUnauthorizedResult();
+            }
+
+            _contentManager.DiscardDraft(contentItem);
+
+            Services.Notifier.Information(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName)
+                ? T("That draft has been removed.")
+                : T("That {0} draft has been removed.", contentItem.TypeDefinition.DisplayName));
 
             return this.RedirectLocal(returnUrl, () => RedirectToAction("List"));
         }

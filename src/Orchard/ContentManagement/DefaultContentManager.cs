@@ -445,6 +445,21 @@ namespace Orchard.ContentManagement {
             Handlers.Invoke(handler => handler.Removed(context), Logger);
         }
 
+        public virtual void DiscardDraft(ContentItem contentItem) {
+            var session = _transactionManager.Value.GetSession();
+
+            // Delete the draft content item version record.
+            session
+                .CreateQuery("delete from Orchard.ContentManagement.Records.ContentItemVersionRecord civ where civ.ContentItemRecord.Id = (:id) and civ.Published = false and civ.Latest = true")
+                .SetParameter("id", contentItem.Id)
+                .ExecuteUpdate();
+
+            // After deleting the draft, get the published version. If for any reason there would be more than one,
+            // get the last one and set the Latest property to true.
+            var publishedVersionRecord = contentItem.Record.Versions.OrderBy(x => x.Number).ToArray().Last();
+            publishedVersionRecord.Latest = true;
+        }
+
         public virtual void Destroy(ContentItem contentItem) {
             var session = _transactionManager.Value.GetSession();
             var context = new DestroyContentContext(contentItem);
