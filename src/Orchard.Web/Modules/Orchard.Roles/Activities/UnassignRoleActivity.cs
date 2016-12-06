@@ -41,7 +41,7 @@ namespace Orchard.Roles.Activities {
         }
 
         public override LocalizedString Description {
-            get { return T("Unassign specific roles to the current content item if it's a user."); }
+            get { return T("Unassign specific roles from the current content item if it's a user."); }
         }
 
         public override string Form {
