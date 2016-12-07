@@ -15,7 +15,8 @@ namespace Orchard.Roles.Activities {
     [OrchardFeature("Orchard.Roles.Workflows")]
     public class AssignRoleActivity : Task {
         private readonly IWorkContextAccessor _workContextAccessor;
-        private readonly IRepository<UserRolesPartRecord> _repository; private readonly IRoleService _roleService;
+        private readonly IRepository<UserRolesPartRecord> _repository;
+        private readonly IRoleService _roleService;
 
         public AssignRoleActivity(
             IWorkContextAccessor workContextAccessor,
