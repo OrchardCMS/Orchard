@@ -1,0 +1,64 @@
+﻿@model LocalizationTaxonomiesViewModel
+@using Orchard.Taxonomies.ViewModels;
+@{
+    Script.Require("jQuery");
+}
+<fieldset>
+    @{ IEnumerable<string> cultures = Model.Cultures;
+        if (cultures.Count() > 1) {
+            <label for="filterCultures_@Model.Prefix" class="bulk-culture">@T("Culture")</label>
+            @Html.DropDownListFor(m => m.SelectedCulture, Model.Cultures.Select(x => new SelectListItem {
+           Selected = Model.SelectedCulture.Equals(x),
+           Value = x,
+           Text = System.Globalization.CultureInfo.GetCultureInfo(x).DisplayName
+       }))
+            @*<select id="filterCultures_@Model.Prefix.Replace('.','_')" name="Options.SelectedCulture">
+                }
+                @Html.SelectOption((string)Model.SelectedCulture, "", T("any (show all)").ToString())
+                @foreach (string culture in cultures) {
+                    @Html.SelectOption((string)Model.SelectedCulture, culture, System.Globalization.CultureInfo.GetCultureInfo(culture).DisplayName)
+                }
+            </select>*@
+        }
+    }
+</fieldset>
+@using (Script.Foot()) {
+    <script type="text/javascript">
+        //<![CDATA[
+        $(document).ready(function () {
+            var pageurl = '@Url.Action("GetTaxonomy", "LocalizationTaxonomy", new { area = "Orchard.Taxonomies" })';
+            function filterTaxonomyCulture(culture) {
+                $.ajax({
+                    url: pageurl,
+                    data: { contentTypeName: '@Model.ContentType', contentPartName: '@Model.ContentPart', fieldName: '@Model.FieldName', culture: culture,
+                        Taxonomy : '@Model.Settings.Taxonomy',
+                        Hint : '@Model.Settings.Hint',
+                        LeavesOnly : @Model.Settings.LeavesOnly.ToString().ToLower(),
+                        Required : @Model.Settings.Required.ToString().ToLower(),
+                        SingleChoice : @Model.Settings.SingleChoice.ToString().ToLower(),
+                        Autocomplete : @Model.Settings.Autocomplete.ToString().ToLower()
+                        },
+                    success:function(html){
+                        @{
+                            var Taxonomyprefix = ((System.Web.Mvc.ViewDataDictionary)(ViewData)).TemplateInfo.HtmlFieldPrefix.Replace('.','_');
+                        }
+                        $(".taxonomy-wrapper[data-id-prefix='@Taxonomyprefix']").html(html);
+                    }
+                }).fail(function () {
+
+                    alert("Loading taxonomy fail, Retry");
+                });
+            }
+            $("#@Html.IdFor(m => m.SelectedCulture)").on('change', function () {
+                var optionSelected = $("option:selected", this);
+                filterTaxonomyCulture($("#@Html.IdFor(m => m.SelectedCulture)").val());
+
+            });
+            @*$("#filterCultures_@Model.Prefix.Replace('.', '_')").on('change', function () {
+                var optionSelected = $("option:selected", this);
+                filterTaxonomyCulture( $("#filterCultures_@Model.Prefix.Replace('.', '_')").val());
+            });*@
+        });
+        //]]>
+    </script>
+}

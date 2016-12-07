@@ -1,12 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Orchard.Autoroute.Models;
 using Orchard.Autoroute.Services;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Models;
+using Orchard.Core.Title.Models;
 using Orchard.Environment.Extensions;
 using Orchard.Localization.Models;
+using Orchard.Localization.Services;
 using Orchard.Taxonomies.Models;
 
 namespace Orchard.Taxonomies.Services {
@@ -16,16 +19,19 @@ namespace Orchard.Taxonomies.Services {
         private readonly IContentManager _contentManager;
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly ITaxonomyService _taxonomyService;
+        private readonly ILocalizationService _localizationService;
 
         public TaxonomyExtensionsService(
             IAutorouteService autorouteService,
             IContentManager contentManager,
             IContentDefinitionManager contentDefinitionManager,
-            ITaxonomyService taxonomyService) {
+            ITaxonomyService taxonomyService,
+            ILocalizationService localizationService) {
             _autorouteService = autorouteService;
             _contentManager = contentManager;
             _contentDefinitionManager = contentDefinitionManager;
             _taxonomyService = taxonomyService;
+            _localizationService = localizationService;
         }
 
         public IEnumerable<ContentTypeDefinition> GetAllTermTypes() {
@@ -81,5 +87,25 @@ namespace Orchard.Taxonomies.Services {
                 _autorouteService.PublishAlias(item.As<AutoroutePart>());
             }
         }
+        public TaxonomyPart GetTaxonomy(string name, ContentItem currentcontent) {
+            if (String.IsNullOrWhiteSpace(name)) {
+                throw new ArgumentNullException("name");
+            }
+            string culture = null;
+            if (currentcontent.As<LocalizationPart>() != null && currentcontent.As<LocalizationPart>().Culture != null)
+                culture = currentcontent.As<LocalizationPart>().Culture.Culture;
+            var taxonomyPart = _contentManager.Query<TaxonomyPart, TaxonomyPartRecord>()
+                .Join<TitlePartRecord>()
+                .Where(r => r.Title == name)
+                .List()
+                .FirstOrDefault();
+            if (String.IsNullOrWhiteSpace(culture) || _localizationService.GetContentCulture(taxonomyPart.ContentItem) == culture)
+                return taxonomyPart;
+            else {
+                var contentItem = _localizationService.GetLocalizedContentItem(taxonomyPart.ContentItem, culture).ContentItem;
+                return contentItem.As<TaxonomyPart>();
+            }
+        }
+      
     }
 }

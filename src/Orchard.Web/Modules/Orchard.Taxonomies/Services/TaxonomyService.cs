@@ -29,6 +29,7 @@ namespace Orchard.Taxonomies.Services {
         private readonly IProcessingEngine _processingEngine;
         private readonly ShellSettings _shellSettings;
         private readonly IShellDescriptorManager _shellDescriptorManager;
+     
 
         private readonly HashSet<int> _processedTermParts = new HashSet<int>(); 
 
@@ -51,7 +52,7 @@ namespace Orchard.Taxonomies.Services {
             _processingEngine = processingEngine;
             _shellSettings = shellSettings;
             _shellDescriptorManager = shellDescriptorManager;
-
+           
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
@@ -68,6 +69,7 @@ namespace Orchard.Taxonomies.Services {
         }
 
         public TaxonomyPart GetTaxonomyByName(string name) {
+
             if (String.IsNullOrWhiteSpace(name)) {
                 throw new ArgumentNullException("name");
             }

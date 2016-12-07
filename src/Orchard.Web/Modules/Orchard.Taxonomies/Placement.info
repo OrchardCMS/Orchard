@@ -1,7 +1,7 @@
 ﻿<Placement>
   <!-- Location of field edition -->
-  <Place Fields_TaxonomyField_Edit="Content:9"/>
-  
+   <Place Fields_TaxonomyField_Edit="Content:9"/>
+   <Place Fields_TaxonomyFieldList_Edit="Content:9"/>
   <!-- Display terms in front-end summaries -->
   <Match DisplayType="Summary">
     <Place Fields_TaxonomyField="Content:after"/>
@@ -11,7 +11,6 @@
   <Match DisplayType="Detail">
     <Place Fields_TaxonomyField="Content:5"/>
   </Match>
-
   <!-- Display terms in admin summaries -->
   <Match DisplayType="SummaryAdmin">
     <Place Fields_TaxonomyField="Content:5"/>
@@ -30,5 +29,4 @@
 
   <!-- Navigation -->
   <Place Parts_Navigation_Taxonomy_Edit="Content:5"/>
-  
 </Placement>

@@ -109,9 +109,14 @@
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\LocalizationTaxonomyController.cs" />
+    <Compile Include="Drivers\LocalizedTaxonomyFieldDriver.cs" />
     <Compile Include="Drivers\LocalizedTaxonomyPartDriver.cs" />
     <Compile Include="Drivers\LocalizedTermPartDriver.cs" />
+    <Compile Include="Services\LocalizedTaxonomySource.cs" />
+    <Compile Include="Services\TaxonomySource.cs" />
     <Compile Include="EventHandlers\TermMovingEventHandler.cs" />
+    <Compile Include="Services\ITaxonomySource.cs" />
     <Compile Include="Events\ITermLocalizationEventHandler.cs" />
     <Compile Include="Settings\TaxonomyFieldLocalizationEditorEvents.cs" />
     <Compile Include="Handlers\LocalizedTaxonomyPartHandler.cs" />
@@ -120,6 +125,8 @@
     <Compile Include="Services\TaxonomyExtensionsService.cs" />
     <Compile Include="Settings\TaxonomyFieldLocalizationSettings.cs" />
     <Compile Include="ViewModels\AssociateTermTypeViewModel.cs" />
+    <Compile Include="ViewModels\LocalizationTaxonomyFieldSettings.cs" />
+    <Compile Include="ViewModels\LocalizationTaxonomiesViewModel.cs" />
     <Compile Include="ViewModels\Tag.cs" />
     <Compile Include="Controllers\TagsController.cs" />
     <Compile Include="Controllers\TermAdminController.cs" />
@@ -169,6 +176,7 @@
     <Compile Include="ViewModels\TermAdminIndexViewModel.cs" />
     <Compile Include="ViewModels\TaxonomyAdminIndexViewModel.cs" />
     <Compile Include="ViewModels\TaxonomyNavigationViewModel.cs" />
+    <None Include="Views\LocalizationTaxonomy\TaxonomyField.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\admin-taxonomy-expando.js" />
@@ -277,6 +285,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\DefinitionTemplates\TaxonomyFieldLocalizationSettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Fields\TaxonomyFieldList.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
