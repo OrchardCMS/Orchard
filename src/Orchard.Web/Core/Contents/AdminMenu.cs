@@ -20,7 +20,7 @@ namespace Orchard.Core.Contents {
 
         public void GetNavigation(NavigationBuilder builder) {
             var contentTypeDefinitions = _contentDefinitionManager.ListTypeDefinitions().OrderBy(d => d.Name);
-            var contentMenuItem = builder.AddImageSet("content")
+            builder.AddImageSet("content")
                 .Add(T("Content"), "1.4", menu => {
                     menu.Permission(Permissions.EditOwnContent)
                     .Add(T("Content Items"), "1", item => item.Action("List", "Admin", new { area = "Contents", id = "" }).LocalNav());
