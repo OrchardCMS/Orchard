@@ -53,7 +53,7 @@
                 if (Model.MissingCultures.Any()) {
                     var contentItemId = Model.MasterContentItem != null ? Model.MasterContentItem.Id : Model.ContentItem.Id;
 
-                    <div class="add-localization">@Html.ActionLink(T("+ New translation").Text, "Translate", "Admin", new {area = "Orchard.Localization", id = contentItemId}, null)</div>
+                    <div class="add-localization">@Html.ActionLink(T("+ New translation").Text, "Translate", "Admin", new { area = "Orchard.Localization", id = contentItemId }, null)</div>
                 }
 
                 @Html.Hidden(Html.FieldNameFor(m => m.SelectedCulture), Model.SelectedCulture)

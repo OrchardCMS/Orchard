@@ -11,6 +11,7 @@ using Orchard.Core.Common.ViewModels;
 using Orchard.Services;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Orchard.ContentManagement.Handlers;
 
 namespace Orchard.Core.Common.Drivers {
     public class BodyPartDriver : ContentPartDriver<BodyPart> {
@@ -73,6 +74,10 @@ namespace Orchard.Core.Common.Drivers {
 
         protected override void Exporting(BodyPart part, ContentManagement.Handlers.ExportContentContext context) {
             context.Element(part.PartDefinition.Name).SetAttributeValue("Text", part.Text);
+        }
+
+        protected override void Cloning(BodyPart originalPart, BodyPart clonePart, CloneContentContext context) {
+            clonePart.Text = originalPart.Text;
         }
 
         private static BodyEditorViewModel BuildEditorViewModel(BodyPart part,RequestContext requestContext) {
