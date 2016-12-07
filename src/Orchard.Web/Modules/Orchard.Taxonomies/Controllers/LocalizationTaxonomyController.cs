@@ -39,42 +39,46 @@ namespace Orchard.Taxonomies.Controllers {
             return _taxonomyService.GetTermsForContentItem(part.ContentItem.Id, fieldName, versionOptions ?? VersionOptions.Published).Distinct(new TermPartComparer());
         }
 
-        public ActionResult GetTaxonomy(string contentTypeName, string culture) {
+        public ActionResult GetTaxonomy(string contentTypeName, string taxonomyFieldName, string culture) {
 
             var viewModel = new TaxonomyFieldViewModel();
             var contentDefinition = _contentDefinitionManager.GetTypeDefinition(contentTypeName);
 
             if (contentDefinition != null) {
                 // Getting the TaxonomyField
-                var taxonomyField = contentDefinition.Parts.SelectMany(p => p.PartDefinition.Fields).Where(x => x.FieldDefinition.Name == "TaxonomyField").FirstOrDefault();
-                var taxonomySettings = taxonomyField.Settings.GetModel<TaxonomyFieldSettings>();
+                var taxonomyFields = contentDefinition.Parts.SelectMany(p => p.PartDefinition.Fields).Where(x => x.FieldDefinition.Name == "TaxonomyField");
+                var taxonomyField = taxonomyFields.Where(x => x.Name == taxonomyFieldName).FirstOrDefault();
 
-                // Getting the translated taxonomy and its terms
-                var masterTaxonomy = _taxonomyExtensionsService.GetMasterItem(_taxonomyService.GetTaxonomyByName(taxonomySettings.Taxonomy));
-                var taxonomy = _localizationService.GetLocalizedContentItem(masterTaxonomy, culture);
-                var terms = taxonomy != null && !taxonomySettings.Autocomplete
-                    ? _taxonomyService.GetTerms(taxonomy.Id).Where(t => !string.IsNullOrWhiteSpace(t.Name)).Select(t => t.CreateTermEntry()).ToList()
-                    : new List<TermEntry>(0);
+                if (taxonomyField != null) {
+                    var taxonomySettings = taxonomyField.Settings.GetModel<TaxonomyFieldSettings>();
 
-                TaxonomyFieldSettings tfs = new TaxonomyFieldSettings {
-                    Taxonomy = taxonomySettings.Taxonomy,
-                    Hint = taxonomySettings.Hint,
-                    LeavesOnly = taxonomySettings.LeavesOnly,
-                    Required = taxonomySettings.Required,
-                    SingleChoice = taxonomySettings.SingleChoice,
-                    Autocomplete = taxonomySettings.Autocomplete
-                };
+                    // Getting the translated taxonomy and its terms
+                    var masterTaxonomy = _taxonomyExtensionsService.GetMasterItem(_taxonomyService.GetTaxonomyByName(taxonomySettings.Taxonomy));
+                    var taxonomy = _localizationService.GetLocalizedContentItem(masterTaxonomy, culture);
+                    var terms = taxonomy != null && !taxonomySettings.Autocomplete
+                        ? _taxonomyService.GetTerms(taxonomy.Id).Where(t => !string.IsNullOrWhiteSpace(t.Name)).Select(t => t.CreateTermEntry()).ToList()
+                        : new List<TermEntry>(0);
 
-                viewModel = new TaxonomyFieldViewModel {
-                    DisplayName = taxonomySettings.Taxonomy,
-                    Name = taxonomyField.Name,
-                    Terms = terms,
-                    SelectedTerms = new List<TermPart>(),
-                    Settings = tfs,
-                    SingleTermId = 0,
-                    TaxonomyId = taxonomy != null ? taxonomy.Id : 0,
-                    HasTerms = taxonomy != null && _taxonomyService.GetTermsCount(taxonomy.Id) > 0
-                };
+                    TaxonomyFieldSettings tfs = new TaxonomyFieldSettings {
+                        Taxonomy = taxonomySettings.Taxonomy,
+                        Hint = taxonomySettings.Hint,
+                        LeavesOnly = taxonomySettings.LeavesOnly,
+                        Required = taxonomySettings.Required,
+                        SingleChoice = taxonomySettings.SingleChoice,
+                        Autocomplete = taxonomySettings.Autocomplete
+                    };
+
+                    viewModel = new TaxonomyFieldViewModel {
+                        DisplayName = taxonomySettings.Taxonomy,
+                        Name = taxonomyField.Name,
+                        Terms = terms,
+                        SelectedTerms = new List<TermPart>(),
+                        Settings = tfs,
+                        SingleTermId = 0,
+                        TaxonomyId = taxonomy != null ? taxonomy.Id : 0,
+                        HasTerms = taxonomy != null && _taxonomyService.GetTermsCount(taxonomy.Id) > 0
+                    };
+                }
             }
 
             return View("TaxonomyField", viewModel);

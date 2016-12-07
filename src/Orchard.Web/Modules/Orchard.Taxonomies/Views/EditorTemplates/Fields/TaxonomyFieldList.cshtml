@@ -25,7 +25,7 @@
             function filterTaxonomyCulture(culture) {
                 $.ajax({
                     url: pageurl,
-                    data: { contentTypeName: '@Model.ContentType', culture: culture },
+                    data: { contentTypeName: '@Model.ContentType', taxonomyFieldName: '@Model.FieldName', culture: culture },
                     success: function (html) {
                         @{
                             var Taxonomyprefix = ((ViewData)).TemplateInfo.HtmlFieldPrefix.Replace('.','_');
