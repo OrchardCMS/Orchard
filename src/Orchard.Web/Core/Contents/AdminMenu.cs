@@ -20,10 +20,18 @@ namespace Orchard.Core.Contents {
 
         public void GetNavigation(NavigationBuilder builder) {
             var contentTypeDefinitions = _contentDefinitionManager.ListTypeDefinitions().OrderBy(d => d.Name);
-            builder.AddImageSet("content")
-                .Add(T("Content"), "1.4", menu => menu
-                    .Permission(Permissions.EditOwnContent)
-                    .Add(T("Content Items"), "1", item => item.Action("List", "Admin", new { area = "Contents", id = "" }).LocalNav()));
+            var contentMenuItem = builder.AddImageSet("content")
+                .Add(T("Content"), "1.4", menu => {
+                    menu.Permission(Permissions.EditOwnContent)
+                    .Add(T("Content Items"), "1", item => item.Action("List", "Admin", new { area = "Contents", id = "" }).LocalNav());
+                    // Add permission check for Edit permission on each securable content type
+                    var editableContentTypes = contentTypeDefinitions.Where(ctd => ctd.Settings.GetModel<ContentTypeSettings>().Securable);
+                    if (editableContentTypes.Any()) {
+                        foreach (var contentTypeDefinition in editableContentTypes) {
+                            menu.Permission(DynamicPermissions.CreateDynamicPermission(DynamicPermissions.PermissionTemplates[Permissions.EditOwnContent.Name], contentTypeDefinition));
+                        }
+                    }
+                });
             var contentTypes = contentTypeDefinitions.Where(ctd => ctd.Settings.GetModel<ContentTypeSettings>().Creatable).OrderBy(ctd => ctd.DisplayName);
             if (contentTypes.Any()) {
                 builder.Add(T("New"), "-1", menu => {
