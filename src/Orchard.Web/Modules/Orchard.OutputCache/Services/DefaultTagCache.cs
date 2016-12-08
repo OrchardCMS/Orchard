@@ -17,12 +17,10 @@ namespace Orchard.OutputCache.Services {
             var key = shellSettings.Name + ":TagCache";
             var workContext = workContextAccessor.GetContext();
 
-            if ( workContext != null )
-            {
+            if ( workContext != null ) {
                 _dictionary = workContext.HttpContext.Cache.Get(key) as ConcurrentDictionary<string, HashSet<string>>;
 
-                if ( _dictionary == null )
-                {
+                if ( _dictionary == null ) {
                     _dictionary = new ConcurrentDictionary<string, HashSet<string>>(StringComparer.OrdinalIgnoreCase);
                     workContext.HttpContext.Cache.Add(key, _dictionary, null, Cache.NoAbsoluteExpiration, Cache.NoSlidingExpiration, CacheItemPriority.Normal, null);
                 }
