@@ -114,6 +114,10 @@ namespace Orchard.Tests.Environment.Extensions {
                 throw new NotImplementedException();
             }
 
+            public bool LoaderIsSuitable(ExtensionDescriptor descriptor) {
+                throw new NotImplementedException();
+            }
+
             #endregion
         }
 
