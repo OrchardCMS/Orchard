@@ -19,9 +19,9 @@ namespace Orchard.OpenId.Models {
         public bool IsValid {
             get {
                 if (String.IsNullOrWhiteSpace(AppId) ||
-                    String.CompareOrdinal(AppId, Constants.DefaultFacebookAppId) == 0 ||
+                    String.CompareOrdinal(AppId, Constants.Facebook.DefaultAppId) == 0 ||
                     String.IsNullOrWhiteSpace(AppSecret) ||
-                    String.CompareOrdinal(AppSecret, Constants.DefaultFacebookAppSecret) == 0) {
+                    String.CompareOrdinal(AppSecret, Constants.Facebook.DefaultAppSecret) == 0) {
 
                     return false;
                 }

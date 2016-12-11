@@ -92,7 +92,7 @@ namespace Orchard.OpenId.Controllers
                 return;
             }
 
-            var redirectUri = Url.Content(String.Concat(Constants.LogonCallbackUrl));
+            var redirectUri = Url.Content(String.Concat(Constants.General.LogonCallbackUrl));
 
             HttpContext.GetOwinContext().Authentication.Challenge(new AuthenticationProperties { RedirectUri = redirectUri }, openIdProvider);
         }

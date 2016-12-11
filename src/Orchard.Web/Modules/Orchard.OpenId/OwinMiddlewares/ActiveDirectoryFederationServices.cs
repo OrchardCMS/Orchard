@@ -33,7 +33,7 @@ namespace Orchard.OpenId.OwinMiddlewares {
                 {
                    AuthenticationFailed = context => {
                         context.HandleResponse();
-                        context.Response.Redirect(Constants.AuthenticationErrorUrl);
+                        context.Response.Redirect(Constants.General.AuthenticationErrorUrl);
 
                        return Task.FromResult(0);
                     }
@@ -42,7 +42,7 @@ namespace Orchard.OpenId.OwinMiddlewares {
 
             return new List<OwinMiddlewareRegistration> {
                 new OwinMiddlewareRegistration {
-                    Priority = Constants.OpenIdOwinMiddlewarePriority,
+                    Priority = Constants.General.OpenIdOwinMiddlewarePriority,
                     Configure = app => {
                         app.UseOpenIdConnectAuthentication(openIdOptions);
                     }

@@ -32,7 +32,7 @@ namespace Orchard.OpenId.OwinMiddlewares {
 
             return new List<OwinMiddlewareRegistration> {
                 new OwinMiddlewareRegistration {
-                    Priority = Constants.OpenIdOwinMiddlewarePriority,
+                    Priority = Constants.General.OpenIdOwinMiddlewarePriority,
                     Configure = app => {
                         app.UseGoogleAuthentication(authenticationOptions);
                     }

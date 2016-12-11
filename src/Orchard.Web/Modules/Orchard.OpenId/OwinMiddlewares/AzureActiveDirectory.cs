@@ -75,7 +75,7 @@ namespace Orchard.OpenId.OwinMiddlewares {
                     AuthorizationCodeReceived = (context) => {
                         var code = context.Code;
                         var credential = new ClientCredential(_azureClientId, azureAppKey);
-                        var userObjectID = context.AuthenticationTicket.Identity.FindFirst(Constants.AzureActiveDirectoryObjectIdentifierKey).Value;
+                        var userObjectID = context.AuthenticationTicket.Identity.FindFirst(Constants.AzureActiveDirectory.ObjectIdentifierKey).Value;
                         var authContext = new AuthenticationContext(authority, new InMemoryCache(userObjectID));
                         var result = authContext.AcquireTokenByAuthorizationCodeAsync(code, new Uri(HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Path)), credential, _azureGraphApiUri).Result;
 
@@ -83,7 +83,7 @@ namespace Orchard.OpenId.OwinMiddlewares {
                     },
                     AuthenticationFailed = context => {
                         context.HandleResponse();
-                        context.Response.Redirect(Constants.AuthenticationErrorUrl);
+                        context.Response.Redirect(Constants.General.AuthenticationErrorUrl);
 
                         return Task.FromResult(0);
                     }
@@ -99,7 +99,7 @@ namespace Orchard.OpenId.OwinMiddlewares {
             }
 
             middlewares.Add(new OwinMiddlewareRegistration {
-                Priority = Constants.OpenIdOwinMiddlewarePriority,
+                Priority = Constants.General.OpenIdOwinMiddlewarePriority,
                 Configure = app => {
                     app.UseOpenIdConnectAuthentication(openIdOptions);
                 }

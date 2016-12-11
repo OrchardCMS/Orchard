@@ -7,12 +7,12 @@ namespace Orchard.OpenId.Models {
     public class ActiveDirectoryFederationServicesSettingsPart : ContentPart {
 
         public string ClientId {
-            get { return this.Retrieve(x => x.ClientId, () => Constants.DefaultAdfsClientId); }
+            get { return this.Retrieve(x => x.ClientId, () => Constants.ActiveDirectoryFederationServices.DefaultClientId); }
             set { this.Store(x => x.ClientId, value); }
         }
 
         public string MetadataAddress {
-            get { return this.Retrieve(x => x.MetadataAddress, () => Constants.DefaultAdfsMetadataAddress); }
+            get { return this.Retrieve(x => x.MetadataAddress, () => Constants.ActiveDirectoryFederationServices.DefaultMetadataAddress); }
             set { this.Store(x => x.MetadataAddress, value); }
         }
 
@@ -24,9 +24,9 @@ namespace Orchard.OpenId.Models {
         public bool IsValid {
             get {
                 if (String.IsNullOrWhiteSpace(ClientId) ||
-                    String.CompareOrdinal(ClientId, Constants.DefaultAdfsClientId) == 0 ||
+                    String.CompareOrdinal(ClientId, Constants.ActiveDirectoryFederationServices.DefaultClientId) == 0 ||
                     String.IsNullOrWhiteSpace(MetadataAddress) ||
-                    String.CompareOrdinal(MetadataAddress, Constants.DefaultAdfsMetadataAddress) == 0 ||
+                    String.CompareOrdinal(MetadataAddress, Constants.ActiveDirectoryFederationServices.DefaultMetadataAddress) == 0 ||
                     String.IsNullOrWhiteSpace(PostLogoutRedirectUri)) {
 
                     return false;
