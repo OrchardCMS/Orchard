@@ -34,11 +34,6 @@ namespace Orchard.Taxonomies.Controllers {
         }
         public Localizer T { get; set; }
 
-        private IEnumerable<TermPart> GetAppliedTerms(ContentPart part, TaxonomyField field = null, VersionOptions versionOptions = null) {
-            string fieldName = field != null ? field.Name : string.Empty;
-            return _taxonomyService.GetTermsForContentItem(part.ContentItem.Id, fieldName, versionOptions ?? VersionOptions.Published).Distinct(new TermPartComparer());
-        }
-
         public ActionResult GetTaxonomy(string contentTypeName, string taxonomyFieldName, string culture) {
 
             var viewModel = new TaxonomyFieldViewModel();
@@ -48,6 +43,9 @@ namespace Orchard.Taxonomies.Controllers {
                 // Getting the TaxonomyField
                 var taxonomyFields = contentDefinition.Parts.SelectMany(p => p.PartDefinition.Fields).Where(x => x.FieldDefinition.Name == "TaxonomyField");
                 var taxonomyField = taxonomyFields.Where(x => x.Name == taxonomyFieldName).FirstOrDefault();
+
+                var contentPart = contentDefinition.Parts.Where(x => x.PartDefinition.Fields.Any(a => a.FieldDefinition.Name == "TaxonomyField" && a.Name == taxonomyFieldName)).FirstOrDefault();
+                ViewData.TemplateInfo.HtmlFieldPrefix = contentPart.PartDefinition.Name + "." + taxonomyField.Name;
 
                 if (taxonomyField != null) {
                     var taxonomySettings = taxonomyField.Settings.GetModel<TaxonomyFieldSettings>();
@@ -69,7 +67,7 @@ namespace Orchard.Taxonomies.Controllers {
                     };
 
                     viewModel = new TaxonomyFieldViewModel {
-                        DisplayName = taxonomySettings.Taxonomy,
+                        DisplayName = taxonomyField.Name,
                         Name = taxonomyField.Name,
                         Terms = terms,
                         SelectedTerms = new List<TermPart>(),

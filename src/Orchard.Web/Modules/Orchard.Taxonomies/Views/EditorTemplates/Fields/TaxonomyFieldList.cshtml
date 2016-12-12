@@ -30,7 +30,8 @@
                         @{
                             var Taxonomyprefix = ((ViewData)).TemplateInfo.HtmlFieldPrefix.Replace('.','_');
                         }
-                        $(".taxonomy-wrapper[data-id-prefix='@Taxonomyprefix']").html(html);
+                        $(".taxonomy-wrapper[data-id-prefix='@Taxonomyprefix']").replaceWith(html);
+                        $(".taxonomy-wrapper[data-id-prefix='@Taxonomyprefix'] legend").expandoControl(function (controller) { return controller.nextAll(".expando"); }, { collapse: true, remember: false });
                     }
                 }).fail(function () {
 
