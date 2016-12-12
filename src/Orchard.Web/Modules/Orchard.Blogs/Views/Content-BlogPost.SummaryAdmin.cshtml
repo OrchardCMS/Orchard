@@ -25,10 +25,12 @@
             @T(" | ")
 
             if (contentItem.HasDraft()) {
-                @Html.Link(T("Publish Draft").Text, Url.Action("Publish", "Admin", new { area = "Contents", id = contentItem.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "UnsafeUrl" })
-                @T(" | ")
-
                 if (Authorizer.Authorize(Orchard.Blogs.Permissions.PublishBlogPost, contentItem)) {
+                    @Html.Link(T("Publish Draft").Text, Url.Action("Publish", "Admin", new { area = "Contents", id = contentItem.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "UnsafeUrl" })
+                    @T(" | ")
+                }
+
+                if (Authorizer.Authorize(Permissions.PreviewContent, contentItem)) {
                     @Html.ActionLink(T("Preview").Text, "Preview", "Item", new { area = "Contents", id = contentItem.Id }, new { })
                     @T(" | ")
                 }
@@ -39,9 +41,11 @@
                 @T(" | ")
             }
         } else {
-            if (contentItem.HasDraft()) {    
-                @Html.ActionLink(T("Preview").Text, "Preview", "Item", new { area = "Contents", id = contentItem.Id }, new { })
-                @T(" | ")
+            if (contentItem.HasDraft()) {
+                if (Authorizer.Authorize(Permissions.PreviewContent, contentItem)) {
+                    @Html.ActionLink(T("Preview").Text, "Preview", "Item", new { area = "Contents", id = contentItem.Id }, new { })
+                    @T(" | ")
+                }
             }
 
             if (Authorizer.Authorize(Orchard.Blogs.Permissions.PublishBlogPost, contentItem)) {

@@ -50,19 +50,24 @@ namespace Orchard.Autoroute.Providers.ContentDefinition {
 
         public void ContentPartAttached(ContentPartAttachedContext context) {
             if (context.ContentPartName == "AutoroutePart") {
-                //Create pattern and default pattern for each culture installed
+                // Create pattern and default pattern for each culture installed and for the neutral culture
 
-                //get cultures
+                // Get cultures
                 var SiteCultures = _cultureManager.ListCultures().ToList();
 
-                //Create Patterns and DefaultPatterns
+                // Adding a null culture for the culture neutral pattern
+                List<string> cultures = new List<string>();
+                cultures.Add(null);
+                cultures.AddRange(SiteCultures);
+
+                // Create Patterns and DefaultPatterns
                 var settings = new AutorouteSettings {
                     Patterns = new List<RoutePattern>()
                 };
 
                 List<RoutePattern> newPatterns = new List<RoutePattern>();
                 List<DefaultPattern> newDefaultPatterns = new List<DefaultPattern>();
-                foreach (string culture in SiteCultures) {
+                foreach (string culture in cultures) {
                     newPatterns.Add(new RoutePattern {
                         Name = "Title",
                         Description = "my-title",
