@@ -25,7 +25,7 @@ namespace Orchard.Taxonomies.Settings {
 
             var model = new TaxonomyFieldLocalizationSettings();
             if (updateModel.TryUpdateModel(model, "TaxonomyFieldLocalizationSettings", null, null)) {
-                builder.WithSetting("TaxonomyFieldLocalizationSettings.AssertSameCulture", model.AssertSameCulture.ToString(CultureInfo.InvariantCulture));
+ //               builder.WithSetting("TaxonomyFieldLocalizationSettings.AssertSameCulture", model.AssertSameCulture.ToString(CultureInfo.InvariantCulture));
                 builder.WithSetting("TaxonomyFieldLocalizationSettings.TryToLocalize", model.TryToLocalize.ToString(CultureInfo.InvariantCulture));
                 builder.WithSetting("TaxonomyFieldLocalizationSettings.RemoveItemsWithoutLocalization", model.RemoveItemsWithoutLocalization.ToString(CultureInfo.InvariantCulture));
             }

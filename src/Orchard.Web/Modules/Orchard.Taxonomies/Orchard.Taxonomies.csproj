@@ -113,6 +113,7 @@
     <Compile Include="Drivers\LocalizedTaxonomyFieldDriver.cs" />
     <Compile Include="Drivers\LocalizedTaxonomyPartDriver.cs" />
     <Compile Include="Drivers\LocalizedTermPartDriver.cs" />
+    <Compile Include="Handlers\LocalizationTaxonomyFieldHandler.cs" />
     <Compile Include="Services\LocalizedTaxonomySource.cs" />
     <Compile Include="Services\TaxonomySource.cs" />
     <Compile Include="EventHandlers\TermMovingEventHandler.cs" />
@@ -176,7 +177,6 @@
     <Compile Include="ViewModels\TermAdminIndexViewModel.cs" />
     <Compile Include="ViewModels\TaxonomyAdminIndexViewModel.cs" />
     <Compile Include="ViewModels\TaxonomyNavigationViewModel.cs" />
-    <None Include="Views\LocalizationTaxonomy\TaxonomyField.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\admin-taxonomy-expando.js" />

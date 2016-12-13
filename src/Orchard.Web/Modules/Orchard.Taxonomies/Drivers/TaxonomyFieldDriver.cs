@@ -14,15 +14,11 @@ using Orchard.Taxonomies.ViewModels;
 using Orchard.Taxonomies.Helpers;
 using Orchard.UI.Notify;
 
-
 namespace Orchard.Taxonomies.Drivers {
     public class TaxonomyFieldDriver : ContentFieldDriver<TaxonomyField> {
         private readonly ITaxonomyService _taxonomyService;
         private readonly ITaxonomySource _taxonomySource;
         public IOrchardServices Services { get; set; }
-
-
-
         public TaxonomyFieldDriver(
             IOrchardServices services,
             ITaxonomyService taxonomyService,

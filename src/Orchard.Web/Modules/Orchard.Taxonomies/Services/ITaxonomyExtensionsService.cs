@@ -45,6 +45,6 @@ namespace Orchard.Taxonomies.Services {
         /// <param name="item">The item for which to regenerate the autoroute.</param>
         void RegenerateAutoroute(ContentItem item);
 
-        TaxonomyPart GetTaxonomy(string name, ContentItem item);
+       
     }
 }

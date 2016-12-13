@@ -13,5 +13,6 @@ namespace Orchard.Taxonomies.ViewModels {
         public string FieldName { get; set; }
         public LocalizationTaxonomyFieldSettings Settings { get; set; }
         public string Prefix { get; set; }
+        public int Id { get; set; }
     }
 }

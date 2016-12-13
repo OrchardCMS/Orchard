@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
-using Orchard.Localization;
 using Orchard.Localization.Services;
 using Orchard.Taxonomies.Drivers;
 using Orchard.Taxonomies.Fields;
@@ -22,7 +22,7 @@ namespace Orchard.Taxonomies.Controllers {
         private readonly ITaxonomyExtensionsService _taxonomyExtensionsService;
 
         public LocalizationTaxonomyController(
-            IContentDefinitionManager contentDefinitionManager,
+                IContentDefinitionManager contentDefinitionManager,
                 ILocalizationService localizationService,
                 ITaxonomyService taxonomyService,
                 ITaxonomyExtensionsService taxonomyExtensionsService) {
@@ -30,22 +30,15 @@ namespace Orchard.Taxonomies.Controllers {
             _taxonomyExtensionsService = taxonomyExtensionsService;
             _contentDefinitionManager = contentDefinitionManager;
             _localizationService = localizationService;
-            T = NullLocalizer.Instance;
         }
-        public Localizer T { get; set; }
 
-        public ActionResult GetTaxonomy(string contentTypeName, string taxonomyFieldName, string culture) {
-
+        public ActionResult GetTaxonomy(string contentTypeName, string taxonomyFieldName, int contentId, string culture) {
             var viewModel = new TaxonomyFieldViewModel();
             var contentDefinition = _contentDefinitionManager.GetTypeDefinition(contentTypeName);
-
             if (contentDefinition != null) {
-                // Getting the TaxonomyField
-                var taxonomyFields = contentDefinition.Parts.SelectMany(p => p.PartDefinition.Fields).Where(x => x.FieldDefinition.Name == "TaxonomyField");
-                var taxonomyField = taxonomyFields.Where(x => x.Name == taxonomyFieldName).FirstOrDefault();
-
-                var contentPart = contentDefinition.Parts.Where(x => x.PartDefinition.Fields.Any(a => a.FieldDefinition.Name == "TaxonomyField" && a.Name == taxonomyFieldName)).FirstOrDefault();
-                ViewData.TemplateInfo.HtmlFieldPrefix = contentPart.PartDefinition.Name + "." + taxonomyField.Name;
+                var taxonomyField = contentDefinition.Parts.SelectMany(p => p.PartDefinition.Fields).Where(x => x.FieldDefinition.Name == "TaxonomyField" && x.Name == taxonomyFieldName).FirstOrDefault();
+                var contentTypePartDefinition = contentDefinition.Parts.Where(x => x.PartDefinition.Fields.Any(a => a.FieldDefinition.Name == "TaxonomyField" && a.Name == taxonomyFieldName)).FirstOrDefault();
+                ViewData.TemplateInfo.HtmlFieldPrefix = contentTypePartDefinition.PartDefinition.Name + "." + taxonomyField.Name;
 
                 if (taxonomyField != null) {
                     var taxonomySettings = taxonomyField.Settings.GetModel<TaxonomyFieldSettings>();
@@ -56,30 +49,29 @@ namespace Orchard.Taxonomies.Controllers {
                     var terms = taxonomy != null && !taxonomySettings.Autocomplete
                         ? _taxonomyService.GetTerms(taxonomy.Id).Where(t => !string.IsNullOrWhiteSpace(t.Name)).Select(t => t.CreateTermEntry()).ToList()
                         : new List<TermEntry>(0);
-
-                    TaxonomyFieldSettings tfs = new TaxonomyFieldSettings {
-                        Taxonomy = taxonomySettings.Taxonomy,
-                        Hint = taxonomySettings.Hint,
-                        LeavesOnly = taxonomySettings.LeavesOnly,
-                        Required = taxonomySettings.Required,
-                        SingleChoice = taxonomySettings.SingleChoice,
-                        Autocomplete = taxonomySettings.Autocomplete
-                    };
-
+                    List<TermPart> appliedTerms = new List<TermPart>();
+                    if (contentId > 0) {
+                        appliedTerms = _taxonomyService.GetTermsForContentItem(contentId, taxonomyFieldName, VersionOptions.Published).Distinct(new TermPartComparer()).ToList();
+                        terms.ForEach(t => t.IsChecked = appliedTerms.Select(x => x.Id).Contains(t.Id));
+                    }
                     viewModel = new TaxonomyFieldViewModel {
-                        DisplayName = taxonomyField.Name,
+                        DisplayName = taxonomyField.DisplayName,
                         Name = taxonomyField.Name,
                         Terms = terms,
-                        SelectedTerms = new List<TermPart>(),
-                        Settings = tfs,
+                        SelectedTerms = appliedTerms,
+                        Settings = taxonomySettings,
                         SingleTermId = 0,
                         TaxonomyId = taxonomy != null ? taxonomy.Id : 0,
                         HasTerms = taxonomy != null && _taxonomyService.GetTermsCount(taxonomy.Id) > 0
                     };
                 }
             }
+            return View("../EditorTemplates/Fields/TaxonomyField", viewModel);
+        }
+        private IEnumerable<TermPart> GetAppliedTerms(ContentPart part, TaxonomyField field = null, VersionOptions versionOptions = null) {
+            string fieldName = field != null ? field.Name : string.Empty;
 
-            return View("TaxonomyField", viewModel);
+            return _taxonomyService.GetTermsForContentItem(part.ContentItem.Id, fieldName, versionOptions ?? VersionOptions.Published).Distinct(new TermPartComparer());
         }
     }
 }

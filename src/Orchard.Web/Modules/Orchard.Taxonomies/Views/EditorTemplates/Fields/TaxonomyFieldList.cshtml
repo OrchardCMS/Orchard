@@ -6,7 +6,7 @@
 <fieldset>
     @{ IEnumerable<string> cultures = Model.Cultures;
         if (cultures.Count() > 1) {
-            <label for="filterCultures_@Model.Prefix" class="bulk-culture">@T("Culture")</label>
+            @*<label for="filterCultures_@Model.Prefix" class="bulk-culture">@T("Culture")</label>*@
             @Html.DropDownListFor(m => m.SelectedCulture, Model.Cultures.Select(x => new SelectListItem
             {
                 Selected = Model.SelectedCulture.Equals(x),
@@ -21,27 +21,27 @@
     <script type="text/javascript">
         //<![CDATA[
         $(document).ready(function () {
+                @{
+                    var Taxonomyprefix = ((ViewData)).TemplateInfo.HtmlFieldPrefix.Replace('.','_');
+                }
+             $("#@Html.IdFor(m => m.SelectedCulture)").insertAfter(".taxonomy-wrapper[data-id-prefix='@Taxonomyprefix']");
+
             var pageurl = '@Url.Action("GetTaxonomy", "LocalizationTaxonomy", new { area = "Orchard.Taxonomies" })';
             function filterTaxonomyCulture(culture) {
                 $.ajax({
                     url: pageurl,
-                    data: { contentTypeName: '@Model.ContentType', taxonomyFieldName: '@Model.FieldName', culture: culture },
+                    data: { contentTypeName: '@Model.ContentType', taxonomyFieldName: '@Model.FieldName', contentId: @Model.Id, culture: culture },
                     success: function (html) {
-                        @{
-                            var Taxonomyprefix = ((ViewData)).TemplateInfo.HtmlFieldPrefix.Replace('.','_');
-                        }
                         $(".taxonomy-wrapper[data-id-prefix='@Taxonomyprefix']").replaceWith(html);
                         $(".taxonomy-wrapper[data-id-prefix='@Taxonomyprefix'] legend").expandoControl(function (controller) { return controller.nextAll(".expando"); }, { collapse: true, remember: false });
                     }
                 }).fail(function () {
-
-                    alert("Loading taxonomy fail, Retry");
+                    alert("@T("Loading taxonomy fail, Retry")");
                 });
             }
             $("#@Html.IdFor(m => m.SelectedCulture)").on('change', function () {
                 var optionSelected = $("option:selected", this);
                 filterTaxonomyCulture($("#@Html.IdFor(m => m.SelectedCulture)").val());
-
             });
         });
         //]]>

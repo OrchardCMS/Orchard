@@ -11,7 +11,6 @@ namespace Orchard.Taxonomies.Services {
     public class TaxonomySource : ITaxonomySource {
         private readonly IContentManager _contentManager;
         private readonly ITaxonomyService _taxonomyService;
-        
         public TaxonomySource(ITaxonomyService taxonomyService, IContentManager contentManager) {
             _taxonomyService = taxonomyService;
             _contentManager = contentManager;
