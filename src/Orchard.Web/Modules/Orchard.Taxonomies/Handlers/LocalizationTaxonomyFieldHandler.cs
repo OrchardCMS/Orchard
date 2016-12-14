@@ -3,15 +3,18 @@ using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Core.Title.Models;
+using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.Localization.Models;
 using Orchard.Localization.Services;
+using Orchard.Taxonomies.Drivers;
 using Orchard.Taxonomies.Models;
 using Orchard.Taxonomies.Services;
 using Orchard.Taxonomies.Settings;
 using Orchard.UI.Notify;
 
 namespace Orchard.Taxonomies.Handlers {
+    [OrchardFeature("Orchard.Taxonomies.LocalizationExtensions")]
     public class LocalizationTaxonomyFieldHandler : ContentHandler {
 
         private readonly INotifier _notifier;
@@ -19,6 +22,8 @@ namespace Orchard.Taxonomies.Handlers {
         private readonly ITaxonomyService _taxonomyService;
         private readonly ITaxonomyExtensionsService _taxonomyExtensionsService;
         private readonly IContentManager _contentManager;
+        private readonly ICultureManager _cultureManager;
+
 
         public Localizer T { get; set; }
 
@@ -26,57 +31,109 @@ namespace Orchard.Taxonomies.Handlers {
                 ILocalizationService localizationService,
                 INotifier notifier,
                 ITaxonomyService taxonomyService,
-                    ITaxonomyExtensionsService taxonomyExtensionsService,
-                IContentManager contentManager
+                ITaxonomyExtensionsService taxonomyExtensionsService,
+                IContentManager contentManager,
+                ICultureManager cultureManager
             ) {
             _notifier = notifier;
             _localizationService = localizationService;
             _taxonomyService = taxonomyService;
             _taxonomyExtensionsService = taxonomyExtensionsService;
             _contentManager = contentManager;
+            _cultureManager = cultureManager;
             T = NullLocalizer.Instance;
         }
 
-        protected override void UpdateEditorShape(UpdateEditorContext context) {
-            base.UpdateEditorShape(context);
-            var contentItemCulture = _localizationService.GetContentCulture(context.ContentItem);
-            var taxonomyIds = _taxonomyService.GetTermsForContentItem(context.ContentItem.Id).Select(x => x.TaxonomyId).Distinct<int>();
-            foreach (var taxonomyId in taxonomyIds) {
-                var taxonomyofTerm = _contentManager.Get(taxonomyId);
-                var mastertaxonomy = _taxonomyExtensionsService.GetMasterItem(taxonomyofTerm);
-                var localizedTaxonomies = _localizationService.GetLocalizations(mastertaxonomy);
-                List<string> TitlesTaxonomy = new List<string>();
-                TitlesTaxonomy.Add(mastertaxonomy.As<TitlePart>().Title);
-                foreach (var tax in localizedTaxonomies) {
-                    TitlesTaxonomy.Add(tax.As<TitlePart>().Title);
+        private IEnumerable<LocalizationPart> GetEditorLocalizations(LocalizationPart part) {
+            return _localizationService.GetLocalizations(part.ContentItem, VersionOptions.Latest)
+                .Where(c => c.Culture != null)
+                .ToList();
+        }
+        private List<string> RetrieveMissingCultures(LocalizationPart part, bool excludePartCulture) {
+            var editorLocalizations = GetEditorLocalizations(part);
+
+            var cultures = _cultureManager
+                .ListCultures()
+                .Where(s => editorLocalizations.All(l => l.Culture.Culture != s))
+                .ToList();
+
+            if (excludePartCulture) {
+                cultures.Remove(part.Culture.Culture);
+            }
+
+            return cultures;
+        }
+
+        protected override void BuildEditorShape(BuildEditorContext context) {
+            // case new translation of contentitem
+            var localizationPart = context.ContentItem.As<LocalizationPart>();
+            if (localizationPart == null || localizationPart.Culture != null || context.ContentItem.As<LocalizationPart>().MasterContentItem == null || context.ContentItem.As<LocalizationPart>().MasterContentItem.Id == 0) {
+                return;
+            }
+            var partFieldDefinitions = context.ContentItem.Parts.SelectMany(p => p.PartDefinition.Fields).Where(x => x.FieldDefinition.Name == "TaxonomyField");
+            if (partFieldDefinitions == null)
+                return; // contentitem without taxonomy
+            base.BuildEditorShape(context);
+            var missingCultures = localizationPart.HasTranslationGroup ?
+                RetrieveMissingCultures(localizationPart.MasterContentItem.As<LocalizationPart>(), true) :
+                RetrieveMissingCultures(localizationPart, localizationPart.Culture != null);
+            foreach (var partFieldDefinition in partFieldDefinitions) {
+                if (partFieldDefinition.Settings.GetModel<TaxonomyFieldLocalizationSettings>().TryToLocalize) {
+                    var originalTermParts = _taxonomyService.GetTermsForContentItem(context.ContentItem.As<LocalizationPart>().MasterContentItem.Id, partFieldDefinition.Name, VersionOptions.Latest).Distinct(new TermPartComparer()).ToList();
+                    var newTermParts = new List<TermPart>();
+                    foreach (var originalTermPart in originalTermParts) {
+                        var masterTermPart = _taxonomyExtensionsService.GetMasterItem(originalTermPart.ContentItem);
+                        if (masterTermPart != null) {
+                            foreach (var missingCulture in missingCultures) {
+                                var newTerm = _localizationService.GetLocalizedContentItem(masterTermPart, missingCulture);
+                                if (newTerm != null)
+                                    newTermParts.Add(newTerm.ContentItem.As<TermPart>());
+                                else
+                                    _notifier.Add(NotifyType.Warning, T("Term {0} can't be localized on {1}, term has been removed on this language", originalTermPart.ContentItem.As<TitlePart>().Title, missingCulture));
+                            }
+                        }
+                        else
+                            _notifier.Add(NotifyType.Warning, T("Term {0} can't be localized, term has been removed", originalTermPart.ContentItem.As<TitlePart>().Title));
+                    }
+                    _taxonomyService.UpdateTerms(context.ContentItem, newTermParts, partFieldDefinition.Name);
                 }
-                if (contentItemCulture != _localizationService.GetContentCulture(taxonomyofTerm)) {
-                    var taxonomyField = context.ContentItem.Parts.SelectMany(p => p.PartDefinition.Fields).Where(x => x.FieldDefinition.Name == "TaxonomyField" && TitlesTaxonomy.Contains(x.Settings["TaxonomyFieldSettings.Taxonomy"])).FirstOrDefault();
-                    var taxonomyLocalizationSettings = taxonomyField.Settings.GetModel<TaxonomyFieldLocalizationSettings>();
-                    if (taxonomyLocalizationSettings.TryToLocalize) {
-                        var termsParts = _taxonomyService.GetTermsForContentItem(context.ContentItem.Id).Where(x => x.TaxonomyId == taxonomyId);
-                        List<TermPart> checkedTerms = new List<TermPart>();
-                        foreach (var termPart in termsParts) {
-                            if (termPart.ContentItem.As<LocalizationPart>() != null) {
-                                var termPartLocalized = _localizationService.GetLocalizedContentItem(_taxonomyExtensionsService.GetMasterItem(termPart.ContentItem), contentItemCulture).As<TermPart>();
-                                if (termPartLocalized != null) {
-                                    checkedTerms.Add(termPartLocalized);
-                                    _notifier.Add(NotifyType.Warning, T("Term {0} has been localized to {1}", termPart.ContentItem.As<TitlePart>().Title, termPartLocalized.ContentItem.As<TitlePart>().Title));
-                                }
-                                else {
-                                    if (taxonomyLocalizationSettings.RemoveItemsWithoutLocalization)
-                                        _notifier.Add(NotifyType.Warning, T("Term {0} has been removed because localized version is missing", termPart.ContentItem.As<TitlePart>().Title));
+            }
+        }
+
+        protected override void UpdateEditorShape(UpdateEditorContext context) {
+            // case contentitem without localization and taxonomyfield localized
+            if (context.ContentItem.As<LocalizationPart>() != null) {
+                return;
+            }
+            var partFieldDefinitions = context.ContentItem.Parts.SelectMany(p => p.PartDefinition.Fields).Where(x => x.FieldDefinition.Name == "TaxonomyField");
+            if (partFieldDefinitions == null) {
+                return;
+            }
+            base.UpdateEditorShape(context);
+            var allCultures = _cultureManager.ListCultures();
+            if (allCultures.Count() > 1) {
+                foreach (var partFieldDefinition in partFieldDefinitions) {
+                    if (partFieldDefinition.Settings.GetModel<TaxonomyFieldLocalizationSettings>().TryToLocalize) {
+                        var taxonomyUsed = _taxonomyService.GetTaxonomyByName(partFieldDefinition.Settings.GetModel<TaxonomyFieldSettings>().Taxonomy);
+                        var originalTermParts = _taxonomyService.GetTermsForContentItem(context.ContentItem.Id, partFieldDefinition.Name, VersionOptions.Latest).Distinct(new TermPartComparer()).ToList();
+                        var newTermParts = new List<TermPart>();
+                        foreach (var originalTermPart in originalTermParts) {
+                            newTermParts.Add(originalTermPart);
+                            var masterTermPart = _taxonomyExtensionsService.GetMasterItem(originalTermPart.ContentItem);
+                            if (masterTermPart != null) {
+                                foreach (var missingCulture in allCultures) {
+                                    var newTerm = _localizationService.GetLocalizedContentItem(masterTermPart, missingCulture);
+                                    if (newTerm != null)
+                                        newTermParts.Add(newTerm.As<TermPart>());
                                     else
-                                        context.Updater.AddModelError("Localization error", T("Term {0} isn't in the same culture of content", termPart.ContentItem.As<TitlePart>().Title));
+                                        _notifier.Add(NotifyType.Warning, T("Term {0} can't be localized on {1}, term has been removed on this language", originalTermPart.ContentItem.As<TitlePart>().Title, missingCulture));
                                 }
                             }
                             else
-                                checkedTerms.Add(termPart);
+                                _notifier.Add(NotifyType.Warning, T("Term {0} can't be localized", originalTermPart.ContentItem.As<TitlePart>().Title));
                         }
-                        _taxonomyService.UpdateTerms(context.ContentItem, checkedTerms, taxonomyField.Name);
+                        _taxonomyService.UpdateTerms(context.ContentItem, newTermParts.Distinct(new TermPartComparer()), partFieldDefinition.Name);
                     }
-                    else
-                        context.Updater.AddModelError("Localization error", T("The taxonomy {0} isn't in the same culture of content", taxonomyofTerm.As<TitlePart>().Title));
                 }
             }
         }

@@ -21,11 +21,14 @@ namespace Orchard.Taxonomies.Handlers {
         }
 
         protected override void UpdateEditorShape(UpdateEditorContext context) {
+            var part = context.ContentItem.As<TermPart>();
+            if (part == null) {
+                return;
+            }
             base.UpdateEditorShape(context);
-            TermPart termPart = context.ContentItem.As<TermPart>();
-            var existing = _taxonomyService.GetTermByName(termPart.TaxonomyId, termPart.Name);
-            if (existing != null && existing.Record != termPart.Record && existing.Container.ContentItem.Record == termPart.Container.ContentItem.Record) {
-                context.Updater.AddModelError("Name", T("The term {0} already exists at this level", termPart.Name));
+            var existing = _taxonomyService.GetTermByName(part.TaxonomyId, part.Name);
+            if (existing != null && existing.Record != part.Record && existing.Container.ContentItem.Record == part.Container.ContentItem.Record) {
+                context.Updater.AddModelError("Name", T("The term {0} already exists at this level", part.Name));
             }
         }
     }

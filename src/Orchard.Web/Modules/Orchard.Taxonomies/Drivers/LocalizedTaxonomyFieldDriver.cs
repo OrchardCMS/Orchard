@@ -36,6 +36,7 @@ namespace Orchard.Taxonomies.Drivers {
         private static string GetPrefix(ContentField field, ContentPart part) {
             return part.PartDefinition.Name + "." + field.Name;
         }
+
         protected override DriverResult Editor(ContentPart part, TaxonomyField field, dynamic shapeHelper) {
             return ContentShape("Fields_TaxonomyFieldList_Edit", GetDifferentiator(field, part), () => {
                 string selectedCulture;

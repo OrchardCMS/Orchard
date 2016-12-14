@@ -3,19 +3,7 @@
 @{
     Script.Require("jQuery");
 }
-<fieldset>
-    @{ IEnumerable<string> cultures = Model.Cultures;
-        if (cultures.Count() > 1) {
-            @*<label for="filterCultures_@Model.Prefix" class="bulk-culture">@T("Culture")</label>*@
-            @Html.DropDownListFor(m => m.SelectedCulture, Model.Cultures.Select(x => new SelectListItem
-            {
-                Selected = Model.SelectedCulture.Equals(x),
-                Value = x,
-                Text = System.Globalization.CultureInfo.GetCultureInfo(x).DisplayName
-            }))
-        }
-    }
-</fieldset>
+
 
 @using (Script.Foot()) {
     <script type="text/javascript">
@@ -24,7 +12,7 @@
                 @{
                     var Taxonomyprefix = ((ViewData)).TemplateInfo.HtmlFieldPrefix.Replace('.','_');
                 }
-             $("#@Html.IdFor(m => m.SelectedCulture)").insertAfter(".taxonomy-wrapper[data-id-prefix='@Taxonomyprefix']");
+            // $("#@Html.IdFor(m => m.SelectedCulture)").insertAfter(".taxonomy-wrapper[data-id-prefix='@Taxonomyprefix']");
 
             var pageurl = '@Url.Action("GetTaxonomy", "LocalizationTaxonomy", new { area = "Orchard.Taxonomies" })';
             function filterTaxonomyCulture(culture) {
@@ -39,10 +27,12 @@
                     alert("@T("Loading taxonomy fail, Retry")");
                 });
             }
-            $("#@Html.IdFor(m => m.SelectedCulture)").on('change', function () {
+
+            $("#Localization_SelectedCulture").on('change', function () {
                 var optionSelected = $("option:selected", this);
-                filterTaxonomyCulture($("#@Html.IdFor(m => m.SelectedCulture)").val());
+                filterTaxonomyCulture($("#Localization_SelectedCulture").val());
             });
+            $("#Localization_SelectedCulture").trigger("change");
         });
         //]]>
     </script>

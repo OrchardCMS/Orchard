@@ -3,6 +3,7 @@ using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.Core.Title.Models;
 using Orchard.Environment.Extensions;
+using Orchard.Localization.Models;
 using Orchard.Localization.Services;
 using Orchard.Taxonomies.Models;
 
@@ -35,7 +36,8 @@ namespace Orchard.Taxonomies.Services {
             if (String.IsNullOrWhiteSpace(culture) || _localizationService.GetContentCulture(taxonomyPart.ContentItem) == culture)
                 return taxonomyPart;
             else {
-                var contentItem = _localizationService.GetLocalizedContentItem(taxonomyPart.ContentItem, culture).ContentItem;
+                
+                var contentItem = _localizationService.GetLocalizedContentItem(taxonomyPart.ContentItem.As<LocalizationPart>().MasterContentItem.ContentItem, culture).ContentItem;
                 return contentItem.As<TaxonomyPart>();
             }
         }      
