@@ -11,18 +11,13 @@ namespace Orchard.Taxonomies.EventHandlers {
     [OrchardFeature("Orchard.Taxonomies.LocalizationExtensions")]
     public class TermMovingEventHandler : ITermLocalizationEventHandler {
         private readonly INotifier _notifier;
-
         public TermMovingEventHandler(INotifier notifier) {
             _notifier = notifier;
-
             T = NullLocalizer.Instance;
         }
-
         public Localizer T { get; set; }
-
         public void MovingTerms(MoveTermsContext context) {
             bool termsRemoved = false;
-
             if (context.ParentTerm != null) {
                 if (context.ParentTerm.Has<LocalizationPart>()) {
                     var parentTermCulture = context.ParentTerm.As<LocalizationPart>().Culture;
@@ -37,7 +32,6 @@ namespace Orchard.Taxonomies.EventHandlers {
                     }
                 }
             }
-
             if (termsRemoved)
                 _notifier.Warning(T("Some terms were not moved because their culture was different from the culture of the selected parent."));
         }

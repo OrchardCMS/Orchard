@@ -14,23 +14,19 @@ namespace Orchard.Taxonomies.Drivers {
     [OrchardFeature("Orchard.Taxonomies.LocalizationExtensions")]
     public class LocalizedTermPartDriver : ContentPartDriver<TermPart> {
         private readonly IContentManager _contentManager;
-        private readonly ICultureManager _cultureManager;
         private readonly ILocalizationService _localizationService;
         private readonly INotifier _notifier;
         private readonly ITaxonomyExtensionsService _taxonomyExtensionsService;
 
         public LocalizedTermPartDriver(
             IContentManager contentManager,
-            ICultureManager cultureManager,
             ILocalizationService localizationService,
             INotifier notifier,
             ITaxonomyExtensionsService taxonomyExtensionsService) {
             _contentManager = contentManager;
-            _cultureManager = cultureManager;
             _localizationService = localizationService;
             _notifier = notifier;
             _taxonomyExtensionsService = taxonomyExtensionsService;
-
             T = NullLocalizer.Instance;
         }
 
@@ -70,7 +66,6 @@ namespace Orchard.Taxonomies.Drivers {
                             if (parentTaxonomy.Has<LocalizationPart>()) {
                                 if (parentTaxonomy.As<LocalizationPart>().Culture != null) {
                                     taxonomyCulture = parentTaxonomy.As<LocalizationPart>().Culture;
-
                                     if (termCulture.Id != taxonomyCulture.Id) {
                                         IContent masterTaxonomy = _taxonomyExtensionsService.GetMasterItem(parentTaxonomy);
                                         var localizedTaxonomy = _localizationService.GetLocalizedContentItem(masterTaxonomy, termCulture.Culture);

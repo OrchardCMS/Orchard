@@ -19,7 +19,6 @@ namespace Orchard.Taxonomies.Services {
         private readonly IContentManager _contentManager;
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly ITaxonomyService _taxonomyService;
-        private readonly ILocalizationService _localizationService;
 
         public TaxonomyExtensionsService(
             IAutorouteService autorouteService,
@@ -31,7 +30,6 @@ namespace Orchard.Taxonomies.Services {
             _contentManager = contentManager;
             _contentDefinitionManager = contentDefinitionManager;
             _taxonomyService = taxonomyService;
-            _localizationService = localizationService;
         }
 
         public IEnumerable<ContentTypeDefinition> GetAllTermTypes() {
@@ -48,7 +46,6 @@ namespace Orchard.Taxonomies.Services {
 
         public ContentItem GetParentTaxonomy(TermPart part) {
             var container = _contentManager.Get(part.Container.Id);
-
             ContentItem parentTaxonomy = container;
             while (parentTaxonomy != null && parentTaxonomy.ContentType != "Taxonomy")
                 parentTaxonomy = _contentManager.Get(parentTaxonomy.As<TermPart>().Container.Id);
@@ -87,25 +84,5 @@ namespace Orchard.Taxonomies.Services {
                 _autorouteService.PublishAlias(item.As<AutoroutePart>());
             }
         }
-        //public TaxonomyPart GetTaxonomy(string name, ContentItem currentcontent) {
-        //    if (String.IsNullOrWhiteSpace(name)) {
-        //        throw new ArgumentNullException("name");
-        //    }
-        //    string culture = null;
-        //    if (currentcontent.As<LocalizationPart>() != null && currentcontent.As<LocalizationPart>().Culture != null)
-        //        culture = currentcontent.As<LocalizationPart>().Culture.Culture;
-        //    var taxonomyPart = _contentManager.Query<TaxonomyPart, TaxonomyPartRecord>()
-        //        .Join<TitlePartRecord>()
-        //        .Where(r => r.Title == name)
-        //        .List()
-        //        .FirstOrDefault();
-        //    if (String.IsNullOrWhiteSpace(culture) || _localizationService.GetContentCulture(taxonomyPart.ContentItem) == culture)
-        //        return taxonomyPart;
-        //    else {
-        //        var contentItem = _localizationService.GetLocalizedContentItem(taxonomyPart.ContentItem, culture).ContentItem;
-        //        return contentItem.As<TaxonomyPart>();
-        //    }
-        //}
-      
     }
 }

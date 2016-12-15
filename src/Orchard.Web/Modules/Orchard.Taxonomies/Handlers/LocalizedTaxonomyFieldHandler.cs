@@ -15,7 +15,7 @@ using Orchard.UI.Notify;
 
 namespace Orchard.Taxonomies.Handlers {
     [OrchardFeature("Orchard.Taxonomies.LocalizationExtensions")]
-    public class LocalizationTaxonomyFieldHandler : ContentHandler {
+    public class LocalizedTaxonomyFieldHandler : ContentHandler {
 
         private readonly INotifier _notifier;
         private readonly ILocalizationService _localizationService;
@@ -24,10 +24,9 @@ namespace Orchard.Taxonomies.Handlers {
         private readonly IContentManager _contentManager;
         private readonly ICultureManager _cultureManager;
 
-
         public Localizer T { get; set; }
 
-        public LocalizationTaxonomyFieldHandler(
+        public LocalizedTaxonomyFieldHandler(
                 ILocalizationService localizationService,
                 INotifier notifier,
                 ITaxonomyService taxonomyService,
@@ -51,16 +50,13 @@ namespace Orchard.Taxonomies.Handlers {
         }
         private List<string> RetrieveMissingCultures(LocalizationPart part, bool excludePartCulture) {
             var editorLocalizations = GetEditorLocalizations(part);
-
             var cultures = _cultureManager
                 .ListCultures()
                 .Where(s => editorLocalizations.All(l => l.Culture.Culture != s))
                 .ToList();
-
             if (excludePartCulture) {
                 cultures.Remove(part.Culture.Culture);
             }
-
             return cultures;
         }
 

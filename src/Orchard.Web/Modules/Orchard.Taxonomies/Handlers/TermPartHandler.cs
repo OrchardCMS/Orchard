@@ -8,12 +8,10 @@ using Orchard.Localization;
 
 namespace Orchard.Taxonomies.Handlers {
     public class TermPartHandler : ContentHandler {
-        private readonly INotifier _notifier;
         private readonly ITaxonomyService _taxonomyService;
         public Localizer T { get; set; }
 
         public TermPartHandler(IRepository<TermPartRecord> repository, INotifier notifier, ITaxonomyService taxonomyService) {
-            _notifier = notifier;
             _taxonomyService = taxonomyService;
             T = NullLocalizer.Instance;
             Filters.Add(StorageFilter.For(repository));

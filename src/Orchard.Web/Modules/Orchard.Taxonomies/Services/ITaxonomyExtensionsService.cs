@@ -4,6 +4,7 @@ using Orchard.ContentManagement.MetaData.Models;
 using Orchard.Taxonomies.Models;
 
 namespace Orchard.Taxonomies.Services {
+
     public interface ITaxonomyExtensionsService : IDependency {
 
         /// <summary>

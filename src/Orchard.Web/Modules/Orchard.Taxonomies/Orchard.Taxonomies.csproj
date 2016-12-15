@@ -109,11 +109,12 @@
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
-    <Compile Include="Controllers\LocalizationTaxonomyController.cs" />
+    <Compile Include="Controllers\LocalizedTaxonomyController.cs" />
     <Compile Include="Drivers\LocalizedTaxonomyFieldDriver.cs" />
     <Compile Include="Drivers\LocalizedTaxonomyPartDriver.cs" />
     <Compile Include="Drivers\LocalizedTermPartDriver.cs" />
-    <Compile Include="Handlers\LocalizationTaxonomyFieldHandler.cs" />
+    <Compile Include="Handlers\LocalizedTaxonomyFieldHandler.cs" />
+    <Compile Include="LocalizedTaxonomyMigration.cs" />
     <Compile Include="Services\LocalizedTaxonomySource.cs" />
     <Compile Include="Services\TaxonomySource.cs" />
     <Compile Include="EventHandlers\TermMovingEventHandler.cs" />
@@ -126,8 +127,7 @@
     <Compile Include="Services\TaxonomyExtensionsService.cs" />
     <Compile Include="Settings\TaxonomyFieldLocalizationSettings.cs" />
     <Compile Include="ViewModels\AssociateTermTypeViewModel.cs" />
-    <Compile Include="ViewModels\LocalizationTaxonomyFieldSettings.cs" />
-    <Compile Include="ViewModels\LocalizationTaxonomiesViewModel.cs" />
+    <Compile Include="ViewModels\LocalizedTaxonomiesViewModel.cs" />
     <Compile Include="ViewModels\Tag.cs" />
     <Compile Include="Controllers\TagsController.cs" />
     <Compile Include="Controllers\TermAdminController.cs" />
