@@ -75,7 +75,14 @@ namespace Orchard.Azure.Services.FileSystems {
             // Get and create the container if it does not exist
             // The container is named with DNS naming restrictions (i.e. all lower case)
             _container = _blobClient.GetContainerReference(ContainerName);
-
+ 
+            ////Set the default service version to the current version "2015-12-11" so that newer features and optimizations are enabled on the images and videos stored in the blob storage.
+            var properties = _blobClient.GetServiceProperties();
+            if (properties.DefaultServiceVersion == null) {
+                properties.DefaultServiceVersion = "2015-12-11";
+                _blobClient.SetServiceProperties(properties);
+            }
+            
             _container.CreateIfNotExists(_isPrivate ? BlobContainerPublicAccessType.Off : BlobContainerPublicAccessType.Blob);
         }
 
