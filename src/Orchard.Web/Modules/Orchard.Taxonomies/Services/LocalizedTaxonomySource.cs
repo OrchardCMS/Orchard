@@ -33,8 +33,15 @@ namespace Orchard.Taxonomies.Services {
             if (String.IsNullOrWhiteSpace(culture) || _localizationService.GetContentCulture(taxonomyPart.ContentItem) == culture)
                 return taxonomyPart;
             else {
-                var contentItem = _localizationService.GetLocalizedContentItem(taxonomyPart.ContentItem.As<LocalizationPart>().MasterContentItem.ContentItem, culture).ContentItem;
-                return contentItem.As<TaxonomyPart>();
+                // correction for property MasterContentItem=null for contentitem master
+                var masterCorrection = taxonomyPart.ContentItem.As<LocalizationPart>().MasterContentItem;
+                if (masterCorrection == null)
+                    masterCorrection = taxonomyPart;
+                var localizedLocalizationPart = _localizationService.GetLocalizedContentItem(masterCorrection.ContentItem, culture);
+                if (localizedLocalizationPart == null)
+                    return taxonomyPart;
+                else
+                    return localizedLocalizationPart.ContentItem.As<TaxonomyPart>();
             }
         }
     }
