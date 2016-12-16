@@ -1,23 +1,15 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
+using Orchard.Environment.Extensions;
 
-namespace Orchard.OpenId {
-    public class InMemoryCache : TokenCache {
-        private const string CacheIdSuffix = "_TokenCache";
-        private static ConcurrentDictionary<string, byte[]> _inMemoryTokenCache;
-
-        private string _userObjectId;
-        private string _cacheId;
-
-        public InMemoryCache(string userId) {
-            _userObjectId = userId;
-            _cacheId = String.Concat(_userObjectId, CacheIdSuffix);
-
-            if (_inMemoryTokenCache == null)
-                _inMemoryTokenCache = new ConcurrentDictionary<string, byte[]>();
+namespace Orchard.OpenId.Services.AzureActiveDirectory {
+    [OrchardFeature("Orchard.OpenId.AzureActiveDirectory")]
+    public class InMemoryCache : TokenCache, ISingletonDependency {
+        public InMemoryCache() {
+            // On tenant start clear cache.
+            Clear();
+            _inMemoryTokenCache = new ConcurrentDictionary<string, byte[]>();
 
             AfterAccess = AfterAccessNotification;
             BeforeAccess = BeforeAccessNotification;
@@ -25,15 +17,35 @@ namespace Orchard.OpenId {
             Load();
         }
 
-        public override void Clear()
-        {
+        private const string CacheIdSuffix = "_TokenCache";
+        private static ConcurrentDictionary<string, byte[]> _inMemoryTokenCache;
+        private string _cacheId;
+        private string _userObjectId;
+
+        public string UserObjectId {
+            get {
+                return _userObjectId;
+            }
+            set {
+                _userObjectId = value;
+                _cacheId = String.Concat(_userObjectId, CacheIdSuffix);
+            }
+        }
+
+        public override void Clear() {
             base.Clear();
+
+            if (String.IsNullOrWhiteSpace(_cacheId))
+                return;
 
             byte[] oldData;
             _inMemoryTokenCache.TryRemove(_cacheId, out oldData);
         }
 
         private void Load() {
+            if (String.IsNullOrWhiteSpace(_cacheId))
+                return;
+
             if (_inMemoryTokenCache.ContainsKey(_cacheId)) {
                 byte[] data;
                 _inMemoryTokenCache.TryGetValue(_cacheId, out data);
@@ -44,6 +56,9 @@ namespace Orchard.OpenId {
         }
 
         private void Persist() {
+            if (String.IsNullOrWhiteSpace(_cacheId))
+                return;
+
             HasStateChanged = false;
 
             _inMemoryTokenCache.AddOrUpdate(_cacheId, Serialize(), (key, current) => { return Serialize(); });

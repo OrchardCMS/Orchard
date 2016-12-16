@@ -26,6 +26,7 @@ namespace Orchard.OpenId.OwinMiddlewares {
         public ILogger Logger { get; set; }
 
         private readonly IWorkContextAccessor _workContextAccessor;
+        private readonly InMemoryCache _inMemoryCache;
         private readonly IAzureActiveDirectoryService _azureActiveDirectoryService;
         private string _azureGraphApiUri;
         private string _azureGraphApiKey;
@@ -35,9 +36,11 @@ namespace Orchard.OpenId.OwinMiddlewares {
 
         public AzureActiveDirectory(
             IWorkContextAccessor workContextAccessor,
-            IAzureActiveDirectoryService azureActiveDirectoryService) {
+            IAzureActiveDirectoryService azureActiveDirectoryService,
+            InMemoryCache inMemoryCache) {
             _workContextAccessor = workContextAccessor;
             _azureActiveDirectoryService = azureActiveDirectoryService;
+            _inMemoryCache = inMemoryCache;
 
             Logger = NullLogger.Instance;
         }
@@ -75,8 +78,8 @@ namespace Orchard.OpenId.OwinMiddlewares {
                     AuthorizationCodeReceived = (context) => {
                         var code = context.Code;
                         var credential = new ClientCredential(_azureClientId, azureAppKey);
-                        var userObjectID = context.AuthenticationTicket.Identity.FindFirst(Constants.AzureActiveDirectory.ObjectIdentifierKey).Value;
-                        var authContext = new AuthenticationContext(authority, new InMemoryCache(userObjectID));
+                        _inMemoryCache.UserObjectId = context.AuthenticationTicket.Identity.FindFirst(Constants.AzureActiveDirectory.ObjectIdentifierKey).Value;
+                        var authContext = new AuthenticationContext(authority, _inMemoryCache);
                         var result = authContext.AcquireTokenByAuthorizationCodeAsync(code, new Uri(HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Path)), credential, _azureGraphApiUri).Result;
 
                         return Task.FromResult(0);
