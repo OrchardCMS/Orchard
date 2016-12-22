@@ -90,6 +90,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Activities\UnassignRoleActivity.cs" />
     <Compile Include="Activities\AssignRoleActivity.cs" />
     <Compile Include="Activities\IsInRoleActivity.cs" />
     <Compile Include="Activities\UserTaskActivity.cs" />
@@ -137,6 +138,7 @@
   <ItemGroup>
     <Content Include="Module.txt" />
     <Content Include="Styles\admin-usertask.css" />
+    <Content Include="Styles\workflows-activity-unassign-role.css" />
     <Content Include="Styles\workflows-activity-assign-role.css" />
     <Content Include="Styles\workflows-activity-isinrole.css" />
     <Content Include="Styles\workflows-activity-usertask.css" />
@@ -194,6 +196,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Activity-UnassignRole.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
