@@ -9,7 +9,7 @@ Features:
     Orchard.Comments:
         Name: Comments
         Description: Standard content item comments.
-        Dependencies: Settings, Orchard.Tokens
+        Dependencies: Settings, Orchard.Tokens, Orchard.Resources
         Category: Social
     Orchard.Comments.Workflows:
         Name: Comments Workflows Activities
