@@ -7,8 +7,6 @@ namespace Orchard.OpenId.Services.AzureActiveDirectory {
     [OrchardFeature("Orchard.OpenId.AzureActiveDirectory")]
     public class InMemoryCache : TokenCache, ISingletonDependency {
         public InMemoryCache() {
-            // On tenant start clear cache.
-            Clear();
             _inMemoryTokenCache = new ConcurrentDictionary<string, byte[]>();
 
             AfterAccess = AfterAccessNotification;
