@@ -1,0 +1,35 @@
+﻿@model Orchard.DynamicForms.ViewModels.FormSubmissionsBuilderStepViewModel
+@{
+    Style.Include("recipebuilderstep-submissions.css");
+    Script.Require("jQuery");
+    Script.Include("recipebuilderstep-data.js");
+}
+<div>
+    <table class="items">
+        <thead>
+            <tr>
+                <th>@T("Form Name")</th>
+                <th>
+                    <input type="checkbox" class="check-all-in-column" />
+                    @T("Export Form Data")
+                </th>
+              
+            </tr>
+        </thead>
+        <tbody>
+            @{ var submissionIndex = 0;}
+            @foreach (var submission in Model.Submissions) {
+                <tr>
+                    <td>@submission.Name</td>
+                    <td>
+                        <input type="hidden" name="@Html.NameFor(m => m.Submissions[submissionIndex].Name)" value="@Model.Submissions[submissionIndex].Name" />
+                        <input type="checkbox" class="check-data" name="@Html.NameFor(m => m.Submissions[submissionIndex].ExportFormData)" value="true" />
+                    </td>
+                   
+                </tr>
+                submissionIndex++;
+            }
+        </tbody>
+    </table>
+    @Html.Hint(T("Choose the types to include in the export file"))
+</div>

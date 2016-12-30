@@ -1,0 +1,9 @@
+﻿fieldset.recipe-builder-step-form-submissions table.items {
+    width: 500px;
+    margin: 0px 0px 5px 0px;
+}
+
+fieldset.recipe-builder-step-form-submissions table.items td,
+fieldset.recipe-builder-step-form-submissions table.items thead tr.sub th {
+    padding: 0 12px;
+}
