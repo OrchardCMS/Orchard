@@ -112,14 +112,13 @@
     <Content Include="Assets\JavaScript\Lib\jquery.validate.js" />
     <Content Include="Assets\JavaScript\Lib\jquery.validate.unobtrusive.additional.js" />
     <Content Include="Assets\JavaScript\Lib\jquery.validate.unobtrusive.js" />
-    <Content Include="Scripts\recipebuilderstep-data.js" />
     <Content Include="Styles\DynamicForms-Admin.css" />
     <Content Include="Styles\DynamicForms-Admin.min.css" />
     <Content Include="Styles\DynamicForms.css" />
     <Content Include="Styles\DynamicForms.min.css" />
     <Content Include="Styles\menu.dynamicforms-admin.css" />
     <Content Include="Styles\menu.dynamicforms.png" />
-    <Content Include="Styles\recipebuilderstep-submissions.css" />
+    <Content Include="Styles\recipebuilderstep-forms.css" />
     <Content Include="Styles\workflows-activity-add-model-error.css" />
     <Content Include="Styles\workflows-activity-dynamic-form-submitted.css" />
     <Content Include="Styles\workflows-activity-dynamic-form-validating.css" />
