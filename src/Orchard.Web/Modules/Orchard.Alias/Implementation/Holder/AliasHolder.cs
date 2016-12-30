@@ -15,14 +15,13 @@ namespace Orchard.Alias.Implementation.Holder {
             _aliasMaps = new ConcurrentDictionary<string, AliasMap>(StringComparer.OrdinalIgnoreCase);
         }
 
-        private ConcurrentDictionary<string, AliasMap> aliasMaps {
-            get {
-                lock (_aliasMaps) {
-                    if (_aliasMaps.Count == 0)
-                        _aliasHolderUpdater.Value.Refresh();
-                }
-                return _aliasMaps;
+        private ConcurrentDictionary<string, AliasMap> GetOrRefreshAliasMaps() {
+            lock (_aliasMaps) {
+                if (_aliasMaps.Count == 0)
+                    _aliasHolderUpdater.Value.Refresh();
             }
+
+            return _aliasMaps;
         }
 
         public void SetAliases(IEnumerable<AliasInfo> aliases) {
@@ -38,7 +37,7 @@ namespace Orchard.Alias.Implementation.Holder {
         }
 
         public void SetAlias(AliasInfo alias) {
-            foreach (var map in aliasMaps.Values) {
+            foreach (var map in GetOrRefreshAliasMaps().Values) {
                 map.Remove(alias);
             }
 
@@ -46,11 +45,11 @@ namespace Orchard.Alias.Implementation.Holder {
         }
 
         public IEnumerable<AliasMap> GetMaps() {
-            return aliasMaps.Values;
+            return GetOrRefreshAliasMaps().Values;
         }
 
         public AliasMap GetMap(string areaName) {
-            return aliasMaps.GetOrAdd(areaName ?? String.Empty, key => new AliasMap(key));
+            return GetOrRefreshAliasMaps().GetOrAdd(areaName ?? String.Empty, key => new AliasMap(key));
         }
 
         public void RemoveAlias(AliasInfo aliasInfo) {
