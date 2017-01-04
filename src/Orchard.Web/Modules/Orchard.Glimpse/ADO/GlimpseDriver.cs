@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using Glimpse.Ado.AlternateType;
@@ -20,7 +21,7 @@ namespace Orchard.Glimpse.ADO {
         }
 
         public IDbConnection CreateConnection() {
-            return _decoratedService.CreateConnection();
+            return new GlimpseDbConnection(_decoratedService.CreateConnection() as DbConnection);
         }
 
         public IDbCommand GenerateCommand(CommandType type, SqlString sqlString, SqlType[] parameterTypes) {
