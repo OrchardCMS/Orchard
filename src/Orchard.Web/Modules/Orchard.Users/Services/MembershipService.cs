@@ -56,9 +56,9 @@ namespace Orchard.Users.Services {
         public ILogger Logger { get; set; }
         public Localizer T { get; set; }
 
-        public IMembershipSettings GetSettings(){
+        public IMembershipSettings GetSettings() {
             return _orchardServices.WorkContext.CurrentSite.As<RegistrationSettingsPart>();
-         }
+        }
 
         public IUser CreateUser(CreateUserParams createUserParams) {
             Logger.Information("CreateUser {0} {1}", createUserParams.Username, createUserParams.Email);
