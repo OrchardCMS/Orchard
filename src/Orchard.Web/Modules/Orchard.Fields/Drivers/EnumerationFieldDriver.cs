@@ -36,7 +36,7 @@ namespace Orchard.Fields.Drivers {
         protected override DriverResult Editor(ContentPart part, EnumerationField field, dynamic shapeHelper) {
             return ContentShape("Fields_Enumeration_Edit", GetDifferentiator(field, part),
                 () => {
-                    if (part.IsNew()) {
+                    if (part.IsNew() && String.IsNullOrEmpty(field.Value)) {
                         var settings = field.PartFieldDefinition.Settings.GetModel<EnumerationFieldSettings>();
                         if (!String.IsNullOrWhiteSpace(settings.DefaultValue)) {
                             field.Value = settings.DefaultValue;
