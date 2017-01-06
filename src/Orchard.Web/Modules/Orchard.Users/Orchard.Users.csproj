@@ -103,6 +103,7 @@
     <Compile Include="Services\AuthenticationRedirectionFilter.cs" />
     <Compile Include="Services\IUserService.cs" />
     <Compile Include="Services\MembershipValidationService.cs" />
+    <Compile Include="Services\SecurityFilter.cs" />
     <Compile Include="Services\UserResolverSelector.cs" />
     <Compile Include="Services\MembershipService.cs" />
     <Compile Include="AdminMenu.cs" />
