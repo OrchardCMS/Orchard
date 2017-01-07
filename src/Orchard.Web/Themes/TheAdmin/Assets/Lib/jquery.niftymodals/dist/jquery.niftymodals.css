@@ -1,5 +1,5 @@
 /*!
- * jquery.niftymodals v1.1.1 (https://github.com/foxythemes/jquery-niftymodals)
+ * jquery.niftymodals v1.3.1 (https://github.com/foxythemes/jquery-niftymodals)
  * Copyright 2016 Codrops <www.codrops.com> and Foxy Themes 
  * Licensed under Codrops license http://tympanus.net/codrops/licensing/ 
  */
@@ -9,6 +9,9 @@ Styles for the html/body for special modal where we want 3d effects
 Note that we need a container wrapping all content on the page for the 
 perspective effects (not including the modals and the overlay).
 */
+.md-open {
+  overflow: hidden;
+}
 .md-perspective,
 .md-perspective body {
   height: 100%;
@@ -22,24 +25,21 @@ perspective effects (not including the modals and the overlay).
 }
 .md-container {
   position: fixed;
-  top: 50%;
-  left: 50%;
-  width: 50%;
-  max-width: 630px;
-  min-width: 320px;
-  height: auto;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   z-index: 2000;
   visibility: hidden;
   -webkit-backface-visibility: hidden;
   -moz-backface-visibility: hidden;
   backface-visibility: hidden;
-  -webkit-transform: translateX(-50%) translateY(-50%);
-  -moz-transform: translateX(-50%) translateY(-50%);
-  -ms-transform: translateX(-50%) translateY(-50%);
-  transform: translateX(-50%) translateY(-50%);
 }
 .md-show {
   visibility: visible;
+  overflow-x: hidden;
+  overflow-y: auto;
+  z-index: 2001;
 }
 .md-overlay {
   position: fixed;
@@ -59,13 +59,22 @@ perspective effects (not including the modals and the overlay).
   opacity: 1;
   visibility: visible;
 }
+.md-scrollbar-measure {
+  position: absolute;
+  top: -9999px;
+  width: 50px;
+  height: 50px;
+  overflow: scroll;
+}
 /* Content styles */
 .md-content {
   color: #fff;
   background: #e74c3c;
   position: relative;
   border-radius: 3px;
-  margin: 0 auto;
+  margin: 30px auto;
+  max-width: 630px;
+  min-width: 320px;
 }
 .md-content h3 {
   margin: 0;
@@ -229,12 +238,9 @@ perspective effects (not including the modals and the overlay).
 /* Effect 7:  slide and stick to top */
 .md-effect-7 {
   top: 0;
-  -webkit-transform: translateX(-50%);
-  -moz-transform: translateX(-50%);
-  -ms-transform: translateX(-50%);
-  transform: translateX(-50%);
 }
 .md-effect-7 .md-content {
+  margin-top: 0;
   -webkit-transform: translateY(-200%);
   -moz-transform: translateY(-200%);
   -ms-transform: translateY(-200%);

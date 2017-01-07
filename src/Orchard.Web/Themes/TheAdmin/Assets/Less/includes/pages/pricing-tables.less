@@ -1,0 +1,116 @@
+/*------------------------------------------------------------------
+  [Pricing tables]
+*/
+
+//Pricing tables container
+.pricing-tables {
+	margin: @pricing-tables-margin;
+
+	> div {
+		padding-left: @pricing-table-horizontal-space;
+		padding-right: @pricing-table-horizontal-space;
+	}
+}
+
+//Individual element
+.pricing-table {
+	box-shadow: 0px 0px 4px 0px rgba(0,0,0,0.04);
+	border-radius: @pricing-table-border-radius;
+	border-top: 3px solid darken(@light-color, 21%);
+	padding: @pricing-table-padding;
+	background: @light-color;
+	text-align: center;
+	margin: @pricing-table-margin;
+
+	&-title {
+		font-size: 16px;
+		font-weight: 600;
+		text-transform: uppercase;
+		margin-bottom: 30px;
+	}
+
+	&-price {
+		padding: 0 0 20px;
+		color: hsl(0, 0%, 32%);
+
+		.currency{
+			vertical-align: top;
+			font-size: 18px;
+			line-height: 1;
+		}
+
+		.value{
+			font-size: @pricing-table-value-size;
+			line-height: @pricing-table-price-line-height;
+			letter-spacing: -3px;
+		}
+
+		.frecuency{
+			font-size: @pricing-table-frecuency-size;
+			font-weight: 300;
+			margin-left: 5px;
+		}
+	}
+
+	&-description {
+		color: hsl(0, 0%, 52%);
+		margin-bottom: 10px;
+	}
+
+	&-features {
+		margin: 0 0 30px;
+		padding: 0;
+		list-style: none;
+
+		> li {
+			font-size: 14px;
+			line-height: 25px;
+			font-weight: 300;
+			line-height: @pricing-table-fatures-line-height;
+		}
+	}
+
+	.btn {
+		line-height: @pricing-table-button-height;
+		min-width: @pricing-table-button-min-width;
+		margin-bottom: 10px;
+	}
+
+	.panel-divider {
+		padding-top: @pricing-table-divider-size;
+		margin-bottom: @pricing-table-divider-size;
+	}
+}
+
+//Styles
+.pricing-table-primary {
+	border-color: @primary-color;
+}
+
+.pricing-table-warning {
+	border-color: @warning-color;
+}
+
+.pricing-table-success {
+	border-color: @success-color;
+}
+
+.pricing-table-danger {
+	border-color: @danger-color;
+}
+
+.pricing-table-alt1 {
+	border-color: @alt-color1;
+}
+
+.pricing-table-alt2 {
+	border-color: @alt-color2;
+}
+
+.pricing-table-alt3 {
+	border-color: @alt-color3;
+}
+
+.pricing-table-alt4 {
+	border-color: @alt-color4;
+}

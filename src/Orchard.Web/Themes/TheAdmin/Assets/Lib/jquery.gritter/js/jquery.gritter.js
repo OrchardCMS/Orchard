@@ -264,18 +264,12 @@
 			if(type == 'mouseenter'){
 				
 				e.addClass('hover');
-				
-				// Show close button
-				e.find('.gritter-close').show();
 						
 			}
 			// Remove the border styles and hide (X) close button when you mouse out
 			else {
 				
 				e.removeClass('hover');
-				
-				// Hide close button
-				e.find('.gritter-close').hide();
 				
 			}
 			

@@ -21,6 +21,11 @@
 		.tools{
 			float: right;
 
+			//RTL support
+			.rtl & {
+				float: left;
+			}
+
 			> .icon{
 				display: inline-block;
 				margin-left: 5px;
@@ -79,6 +84,11 @@
 			> .counter{
 				min-height: auto;
 				left: 20px;
+
+				//RTL support
+				.rtl & {
+					right: 20px;
+				}
 			}
 		}
 	}

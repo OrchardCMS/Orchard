@@ -1,0 +1,321 @@
+/*------------------------------------------------------------------
+  [Invoice]
+*/
+
+.invoice {
+	background-color: @light-color;
+	padding: @invoice-page-padding;
+	color: darken(@light-color, 45%);
+
+	@media @tablet, @phone {
+		padding: @invoice-tablet-padding;
+	}
+
+	@media @small-phone {
+		padding: @invoice-small-phone-padding;
+	}
+}
+
+.invoice-header {
+	margin-bottom: @invoice-header-margin;
+	
+	@media @tablet, @phone {
+		margin-bottom: @invoice-header-margin / 2;
+	}
+
+	@media @small-phone {
+		> div {
+			float: none;
+			width: 100%;
+		}
+	}
+}
+
+.invoice-logo {
+	line-height: @top-header-height;
+	height: @invoice-logo-height;
+	min-width: @invoice-logo-width;
+	background-image: url("@{img-path}/logo-invoice-big.png");
+	background-repeat: no-repeat;
+	background-position: 0 ;
+
+	@media @tablet, @phone {
+		height: @invoice-logo-tablet-height;
+		min-width: @invoice-logo-tablet-width;
+		background-image: url("@{img-path}/logo-invoice.png");
+	}	
+
+	@media @small-phone {
+		margin: 0 auto 20px;
+		float: none;
+	}
+}
+
+.invoice-order {
+	text-align: right;
+
+	@media @small-phone{
+		text-align: center;
+	}
+}
+
+.invoice-id {
+	display: block;
+	font-size: @invoice-id-fontsize;
+	line-height: @invoice-id-lineheight;
+
+	@media @tablet, @phone{
+		font-size: @invoice-id-fontsize / 2;
+		line-height: @invoice-id-lineheight - 12;
+	}
+}
+
+.incoice-date {
+	display: block;
+	font-size: 18px;
+
+	@media @tablet, @phone {
+		font-size: @font-size-base;
+	}
+}
+
+.invoice-data {
+	margin-bottom: @invoice-data-margin;
+
+	@media @tablet, @phone {
+		margin-bottom: @invoice-data-margin / 2;
+	}
+}
+
+.invoice-person {
+
+	@media @small-phone {
+		text-align: center;
+	}
+
+	span {
+		font-size: @invoice-person-fontsize;
+		line-height: @invoice-person-lineheight;
+		display: block;
+
+		@media @tablet, @phone {
+			font-size: @invoice-person-fontsize - 5;
+			line-height: @invoice-person-lineheight - 6;
+		}
+	}
+
+	.name {
+		font-weight: @font-weight-medium;
+	}
+
+	&:last-child {
+		text-align: right;
+
+		@media @small-phone {
+			text-align: center;
+		}
+	}
+}
+
+.invoice-payment-direction {
+	text-align: center;
+	position: relative;
+	padding-top: 20px;
+
+	@media @small-phone {
+		padding: 20px;
+	}
+
+	.icon {
+		width: @invoice-direction-bubble-size;
+		height: @invoice-direction-bubble-size; 
+		border-radius: 50%;
+		background-color: darken(@light-color, 3%);
+		font-size: 50px;
+		color: darken(@light-color, 24%);
+		line-height: 80px;
+
+		@media @tablet, @phone {
+			width: @invoice-direction-bubble-size / 2;
+			height: @invoice-direction-bubble-size / 2; 
+			line-height: 40px;
+			font-size: 25px;
+		}
+
+		@media @small-phone {
+			transform: rotate(90deg);
+		}
+	}
+}
+
+.invoice-details {
+	width: 100%;
+	font-size: @invoice-details-fontsize;
+
+	@media @tablet, @phone {
+			font-size: @invoice-details-fontsize - 5;
+	}
+
+
+	tr > td {
+		padding: 20px 0;
+
+		@media @tablet, @phone {
+			padding: 15px 0;
+		}
+	}
+
+	th {
+		text-align: right;
+		padding-bottom: 8px;
+		border-bottom: 1px solid darken(@light-color, 6%);
+
+		&:first-child {
+			text-align: left;
+		}
+	}
+
+	td {
+
+		&.description,
+		&.hours,
+		&.amount,
+		&.summary {
+			border-bottom: 1px solid darken(@light-color, 6%);
+		}
+
+		&.description {
+			
+		}
+
+		&.hours {
+			text-align: right;
+		}
+
+		&.amount {
+			text-align: right;
+		}
+
+		&.summary {
+			color: darken(@light-color, 23%);
+		}
+
+		&.total {
+			color: darken(@light-color, 45%);
+			font-weight: @font-weight-medium;
+		}
+
+		&.total-value {
+			font-size: 22px;
+			color: @primary-color;
+
+			@media @tablet, @phone {
+				font-size: @invoice-details-fontsize - 5;
+			}
+		}
+	}
+}
+
+.invoice-payment-method {
+	margin-bottom: @invoice-payment-margin;
+
+	@media @tablet, @phone {
+		margin-bottom: floor(@invoice-payment-margin / 2);
+	}
+
+	span {
+		font-size: @invoice-payment-fontsize;
+		line-height: @invoice-payment-lineheight;
+		display: block;
+
+		@media @tablet, @phone {
+			font-size: @invoice-payment-fontsize - 5;
+			line-height: @invoice-payment-lineheight - 6;
+		}
+	}
+
+	.title {
+		font-weight: @font-weight-medium;
+	}
+}
+
+.invoice-message {
+	font-size: @invoice-message-fontsize;
+	margin-bottom: @invoice-message-margin;
+
+	@media @tablet, @phone {
+		font-size: @font-size-base;
+	}
+
+	@media @small-phone {
+		margin-bottom: @invoice-message-margin / 2;
+	}
+	
+	.title {
+		font-weight: @font-weight-medium;
+		text-transform: uppercase;
+		display: block;
+		margin-bottom: 12px;
+	}
+
+	p {
+		line-height: @invoice-message-lineheight;
+
+		@media @tablet, @phone {
+			line-height: @invoice-message-lineheight - 6;
+		}
+	}
+}
+
+.invoice-company-info {
+	margin-bottom: @invoice-company-info-margin;
+
+		@media @phone, @small-phone {
+			margin-bottom: @invoice-company-info-margin / 2;
+		}
+
+
+	> div {
+		border-left: 1px solid darken(@light-color, 6%);
+		padding: 8px 40px;
+
+		@media @phone, @small-phone {
+			border: none;
+			padding: 8px 15px;
+		}
+
+		&:first-child {
+			border-left: none;
+		}
+	}
+
+	.summary {
+		padding: 0 40px 0;
+		line-height: 16px;
+
+		@media @phone, @small-phone {
+			padding: 8px 15px;
+		}
+
+		.title {
+			color: darken(@light-color, 45%);
+			font-size: 14px;
+			line-height: 21px;
+			font-weight: @font-weight-medium;
+		}
+
+		p {
+			line-height: 16px;
+		}
+	}
+}
+
+.invoice-footer {
+	text-align: center;
+
+	.btn {
+		min-width: 96px;
+		font-size: 14px;
+		font-weight: @font-weight-bold;
+	}
+}

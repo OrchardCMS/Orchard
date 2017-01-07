@@ -1,5 +1,5 @@
 ﻿@model dynamic
-<ul class="nav navbar-nav navbar-right or-user-nav navbar-first">
+<ul class="nav navbar-nav navbar-first navbar-right or-user-nav">
     <li class="dropdown">
         @if (Model.CurrentUser != null) {
             <a href="#" data-toggle="dropdown" role="button" aria-expanded="false" class="dropdown-toggle"><span class="icon s7-user"></span><span class="user-name">@Html.ItemDisplayText((Orchard.ContentManagement.IContent)Model.CurrentUser)</span><span class="angle-down s7-angle-down"></span></a>

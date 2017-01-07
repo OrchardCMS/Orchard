@@ -33,3 +33,37 @@
 .text-alt4 {
   .text-emphasis-variant(@alt-color4);
 }
+
+/*------------------------------------------------------------------
+  [List]
+*/
+
+.list-inline, 
+.list-unstyled {
+
+	//RTL support
+	.rtl & {
+		padding-right: 0;
+	}
+}
+
+/*------------------------------------------------------------------
+  [Blockquotes]
+*/
+
+blockquote {
+
+	//RTL support
+	.rtl & {
+		border-left-width: 0;
+		border-right: 5px solid @blockquote-border-color;
+
+		&.blockquote-reverse {
+			text-align: left;
+			padding-right: 0;
+			padding-left: 15px;
+			border-right-width: 0;
+			border-left: 5px solid @blockquote-border-color;
+		}
+	}
+}

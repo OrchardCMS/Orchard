@@ -2,9 +2,11 @@
   'use strict';
 
   var defaults = {
-    overlaySelector: '.md-overlay',
     closeSelector: '.md-close',
+    contentSelector: '.md-content',
     classAddAfterOpen: 'md-show',
+    classScrollbarMeasure: 'md-scrollbar-measure',
+    classModalOpen: 'md-open',
     data: false,
     buttons: false,
     beforeOpen: false,
@@ -17,6 +19,8 @@
 
     var config = {};
     var modal = {};
+    var body = $('body');
+    var bodyIsOverflowing, scrollbarWidth, originalBodyPad;
 
     var helpers = {
 
@@ -24,11 +28,14 @@
         var mod = $( m );
         mod.removeClass( config.classAddAfterOpen );
         mod.css({'perspective':'1300px'});
+        //Remove body open modal class
+        body.removeClass(config.classModalOpen);
+        //Reset body scrollbar padding
+        helpers.resetScrollbar();
         mod.trigger('hide');
       },    
-      showModal: function( m ){
+      showModal: function( m ) {
         var mod = $(m);
-        var overlay = $(config.overlaySelector);
         var close = $(config.closeSelector, m);
 
         //beforeOpen event
@@ -38,46 +45,48 @@
           }
         }
 
+        //Calculate scrollbar width
+        helpers.checkScrollbar();
+        helpers.setScrollbar();
+
         //Make the modal visible
-        mod.addClass(config.classAddAfterOpen, function( m ){
+        mod.addClass( config.classAddAfterOpen );
+
+        //Add body open modal class
+        body.addClass( config.classModalOpen );
+
+        //Close on click outside the modal
+        $( mod ).on('click', function ( e ) {
           
-          //After open event
-          if( typeof config.afterOpen === 'function' ){
-            config.afterOpen( modal );
-          }
-        });
-        
-        //Overlay Click Event
-        overlay.on('click', function ( e ) {
+          var _mContent = $(config.contentSelector, mod);
+          var close = $(config.closeSelector, mod);
 
-          modal.closeEl = overlay.get( 0 );
+          if ( !$( e.target ).closest( _mContent ).length && body.hasClass( config.classModalOpen ) ) {
 
-          //Before close event
-          if( typeof config.beforeClose === 'function' ){
-            if( config.beforeClose(modal, e) === false ){
-              return false;
+            //Before close event
+            if( typeof config.beforeClose === 'function' ){
+              if( config.beforeClose(modal, e) === false ){
+                return false;
+              }
+            }
+            
+            helpers.removeModal(mod);
+            close.off('click');
+
+            //After close event
+            if( typeof config.afterClose === 'function' ){
+              config.afterClose(modal, e);
             }
           }
-          
-          helpers.removeModal(m);
-          overlay.off('click');
-          close.off('click');
-
-          //After close event
-          if( typeof config.afterClose === 'function' ){
-            config.afterClose(modal, e);
-          }
-
         });
+
+        //After open event
+        if( typeof config.afterOpen === 'function' ){
+          config.afterOpen( modal );
+        }
 
         setTimeout( function() {
           mod.css({'perspective':'none'});
-          
-          //3D Blur Bug Fix
-          if( mod.height() % 2 !== 0){
-            mod.css({ 'height' : mod.height() + 1 });
-          }
-
         }, 500 ); 
         
         //Close Event
@@ -119,6 +128,33 @@
         });
         
         mod.trigger('show');
+      },
+      measureScrollbar: function() {
+        var scrollDiv = document.createElement('div');
+        scrollDiv.className = config.classScrollbarMeasure;
+        body.append(scrollDiv);
+        var scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth;
+        body[0].removeChild(scrollDiv);
+        return scrollbarWidth;
+      },
+      checkScrollbar: function() {
+        var fullWindowWidth = window.innerWidth;
+        if (!fullWindowWidth) { // workaround for missing window.innerWidth in IE8
+          var documentElementRect = document.documentElement.getBoundingClientRect();
+          fullWindowWidth = documentElementRect.right - Math.abs(documentElementRect.left);
+        }
+        bodyIsOverflowing = document.body.clientWidth < fullWindowWidth;
+        scrollbarWidth = helpers.measureScrollbar();
+      },
+      setScrollbar: function() {
+        var bodyPad = parseInt((body.css('padding-right') || 0), 10);
+        originalBodyPad = document.body.style.paddingRight || '';
+        if (bodyIsOverflowing){
+          body.css('padding-right', bodyPad + scrollbarWidth);
+        }
+      },
+      resetScrollbar: function() {
+        body.css('padding-right', originalBodyPad);
       }
 
     };

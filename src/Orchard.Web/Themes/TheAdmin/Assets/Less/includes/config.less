@@ -20,6 +20,7 @@
 @warning-color: #FFC870;
 @danger-color: 	#EF6262;
 @info-color: 		#8dcadf;
+@grey-color: 		#cccccc;
 
 //Color variations
 @import "colors.less";
@@ -40,6 +41,11 @@
 @page-aside-width: 			280px;
 @page-aside-padding: 		20px;
 
+//Sticky footer
+@footer-height: 				50px;	
+@footer-padding-h: 			@content-padding;	
+@footer-padding-v: 			15px;	
+
 //Top Header
 @top-header-height: 									80px;
 @top-header-height-phone: 						70px;
@@ -49,7 +55,7 @@
 
 //Left Sidebar
 @left-sidebar-bg: 									@dark-color;
-@left-sidebar-width: 								100px;
+@left-sidebar-width: 								240px;
 @left-sidebar-submenu-width: 				280px;
 @left-sidebar-width-phone: 					85%;
 @left-sidebar-color: 								darken(@light-color, 11.8%);
@@ -80,6 +86,13 @@
 @font-size-small:         ceil((@font-size-base * 0.85)); // ~12px
 @font-size-extra-small:   ceil((@font-size-base * 0.8)); // ~12px
 
+@font-weight-thin: 					100;
+@font-weight-light: 				300;
+@font-weight-regular: 			400;
+@font-weight-medium: 				500;
+@font-weight-bold: 					700;
+@font-weight-black: 				900;
+
 @font-size-h1:            floor((@font-size-base * 2.6)); // ~36px
 @font-size-h2:            floor((@font-size-base * 2.15)); // ~30px
 @font-size-h3:            ceil((@font-size-base * 1.7)); // ~24px
@@ -95,7 +108,10 @@
 @sidebars-push-effect: all .35s ease;
 
 //Forms
-@input-check-component-size: 22px;
+@input-check-component-size: 				22px;
+
+//Form validation states
+@form-validation-icon-size: 		 		21px;
 
 //Dropdowns
 @dropdown-text-color: lighten(@dark-color, 7.2%);
@@ -110,6 +126,12 @@
 @panel-heading-font-weight: 				300;
 @widget-heading-font-size: 					16px;
 @widget-heading-font-weight: 				300;
+
+//Dividers
+@divider-border: 								 1px solid darken(@light-color, 5%);
+@divider-margin: 								 10px;
+@divider-lg-margin: 						 15px;
+@divider-xl-margin: 						 20px;
 
 //Buttons
 @btn-font-weight:                normal;
@@ -175,6 +197,67 @@
 //Chat component
 @chat-min-height: 						350px;
 @chat-messages-height: 				274px;
+
+// Pages
+
+//Timeline
+@timeline-max-width: 					840px;
+@timeline-left-padding: 			210px;
+@timeline-vbar-position: 			@timeline-left-padding - 40px;// From timeline-item element to left
+@timeline-margin-helper:			10px; //Helper to thumbnails whitout damage timeline content size
+@timeline-avatar-size: 				35px;
+@timeline-content-min-height: 85px;
+@timeline-header-line-height: 21px;
+@timeline-header-padding-top: (@timeline-avatar-size - @timeline-header-line-height) / 2;
+@timeline-content-vpadding: 	25px;
+@timeline-date-width: 				@timeline-vbar-position - 25px;
+@timeline-date-position: 			ceil(@timeline-content-vpadding + @timeline-header-padding-top) + 2px;
+@timeline-tail-size: 					10px;
+@timeline-tail-position:			ceil(@timeline-content-min-height - @timeline-tail-size) / 2;
+@timeline-bubble-size:				16px;
+@timeline-bubble-position:		ceil(@timeline-content-min-height - @timeline-bubble-size) / 2;
+@timeline-icon-size:					44px;
+@timeline-icon-border-width:	2px;
+@timeline-icon-position:			floor((@timeline-content-min-height - @timeline-icon-size) / 2);
+
+//Invoice
+@invoice-page-padding:									100px 100px 70px;
+@invoice-tablet-padding:								50px 50px 35px;
+@invoice-small-phone-padding:						35px 25px 15px;
+@invoice-logo-height:										54px;
+@invoice-logo-width:										206px;
+@invoice-logo-tablet-height:						34px;
+@invoice-logo-tablet-width:							144px;
+@invoice-header-margin:									100px;
+@invoice-id-fontsize:										30px; 
+@invoice-id-lineheight:									@invoice-id-fontsize;
+@invoice-data-margin:										110px;
+@invoice-person-fontsize:								18px;
+@invoice-person-lineheight:							26px;
+@invoice-direction-height:							130px;
+@invoice-direction-bubble-size:					80px;
+@invoice-details-fontsize:							16px;
+@invoice-payment-fontsize:							18px;
+@invoice-payment-lineheight:						26px;
+@invoice-payment-margin:								75px;
+@invoice-message-fontsize:							16px;
+@invoice-message-lineheight:						26px;
+@invoice-message-margin:								62px;
+@invoice-company-info-margin:						70px;
+
+//Pricing tables
+@pricing-tables-margin: 						30px 0 20px;
+@pricing-table-border-radius: 			@panel-border-radius;
+@pricing-table-horizontal-space: 		10px;
+@pricing-table-padding: 						35px 20px;
+@pricing-table-margin: 							0 0 20px;
+@pricing-table-divider-size: 				30px;
+@pricing-table-value-size: 					60px;
+@pricing-table-price-line-height: 	40px;
+@pricing-table-frecuency-size: 			20px;
+@pricing-table-fatures-line-height: 33px;
+@pricing-table-button-height: 			23px;
+@pricing-table-button-min-width: 		120px;
 
 // Plugins
 

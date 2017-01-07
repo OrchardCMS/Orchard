@@ -16,7 +16,7 @@ Include css & js file in your html head:
 ### Modal Markup
 Modals have a required markup in order to apply the necessary styles:
 ```html
-<div class="md-dialog md-effect-1 md-show" id="your-modal-id">
+<div class="md-container md-effect-1" id="your-modal-id">
 	<div class="md-content">
 		<!-- your content -->
 	</div>

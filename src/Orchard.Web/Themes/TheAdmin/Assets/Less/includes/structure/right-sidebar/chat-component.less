@@ -56,11 +56,22 @@
           height: 30px;
           border-radius: 50%;
           float: left;
+
+          //RTL Support
+          .rtl & {
+            float: right;
+          }
         }
 
         .user-data, .user-data2{
           padding-left: 40px;
           line-height: 16px;
+
+          //RTL Support
+          .rtl & {
+            padding-left: 0;
+            padding-right: 40px;
+          }
 
           .status{
             background-color: @status-online;
@@ -70,6 +81,11 @@
             height: 7px;
             position: relative;
             top: 5px;
+
+            //RTL Support
+            .rtl & {
+              float: left;
+            }
 
             &.offline{
               background-color: @status-offline;
@@ -231,6 +247,13 @@
             text-align: left;
             margin-left: 40px;
 
+            //RTL Support
+            .rtl & {
+              text-align: right;
+              margin-left: 0;
+              margin-right: 40px;
+            }
+
             &:after{
               content: "";
               position: absolute;
@@ -239,6 +262,14 @@
               border-bottom: 6px solid transparent;
               border-left: 6px solid lighten(@primary-color, 2%);
               border-top: 6px solid transparent;
+
+              //RTL Support
+              .rtl & {
+                left: -5px;
+                right: auto;
+                border-right: 6px solid lighten(@primary-color, 2%);
+                border-left-width: 0;
+              }
             }
 
             .or-right-sidebar & {
@@ -254,11 +285,25 @@
               margin-left: 0;
               margin-right: 40px;
 
+              //RTL Support
+              .rtl & {
+                margin-right: 0;
+                margin-left: 40px;
+              }
+
               &:after{
                 right: auto;
                 left: -5px;
                 border-left-width: 0;
                 border-right: 5px solid hsl(0, 0%, 96%);
+
+                //RTL Support
+                .rtl & {
+                  right: -5px;
+                  left: auto;
+                  border-left: 5px solid hsl(0, 0%, 100%);
+                  border-right-width: 0;
+                }
               }
 
               .or-right-sidebar & {
@@ -273,6 +318,11 @@
 
           &.self{
             text-align: right;
+
+            //RTL Support
+            .rtl & {
+              text-align: left;
+            }
           }
         }
       }
@@ -324,6 +374,12 @@
     margin-top: -10px;
     cursor: pointer;
 
+    //RTL support
+    .rtl & {
+      left: 15px;
+      right: auto;
+    }
+
     &:hover{
       color: lighten(@right-sidebar-icons-color, 15%);
     }
@@ -364,6 +420,12 @@
       margin-top: -10px;
       cursor: pointer;
 
+      //RTL support
+      .rtl & {
+        left: 15px;
+        right: auto;
+      }
+
       &:hover{
         color: lighten(@right-sidebar-icons-color, 15%);
       }
@@ -374,6 +436,12 @@
       font-size: 22px;
       top: 47%;
       right: auto;
+
+      //RTL support
+      .rtl & {
+        right: 15px;
+        left: auto;
+      }
     }
   }
 }

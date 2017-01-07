@@ -1,0 +1,36 @@
+/*------------------------------------------------------------------
+	[Sticky Footer]
+*/
+.or-sticky-footer {
+	padding-bottom: @footer-height;
+
+	@media @phone {
+		padding-bottom: 0;
+	}
+
+	footer {
+		position: fixed;
+		left: 0;
+		bottom: 0;
+		right: 0;
+		height: @footer-height;
+		background-color: @light-color;
+		margin-left: @left-sidebar-width;
+		border-top: 1px solid darken(@light-color, 10%);
+		padding: @footer-padding-v @footer-padding-h;
+
+		// Responsive style for small devices
+		@media @phone {
+			position: static;
+			margin-left: 0;
+		}
+	}
+
+	// Padding when aside is present
+	&.or-aside {
+
+		footer {
+			padding: @footer-padding-v @page-aside-padding;
+		}
+	}
+}

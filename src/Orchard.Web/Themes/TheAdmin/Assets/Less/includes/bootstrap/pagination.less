@@ -1,0 +1,27 @@
+// Pagination
+
+.pagination {
+
+	//RTL support
+	.rtl & {
+		padding-right: 0;
+	}
+	
+	>li {
+		> a,
+		> span {
+
+			//RTL support
+			.rtl & {
+				float: right;
+			}
+		}
+
+		&:first-child {
+      > a,
+      > span {
+        margin-left: -1px;
+      }
+    }
+	}
+}

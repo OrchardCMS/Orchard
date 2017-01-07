@@ -1,9 +1,10 @@
 /*------------------------------------------------------------------
   [nanoScroller]
 */
-/*Nano Scroller*/
+
 .nano {
-  > .nano-pane{
+
+  > .nano-pane {
       width: @scroller-width;
       border-radius: 3px;
       background-color: rgba(0,0,0, 0.1);
@@ -13,6 +14,22 @@
        width: 100%;
        border-radius: 3px;
        margin: 0;
+    }
+  }
+
+  > .nano-content > ul {
+    padding: 0;
+  }
+
+  //RTL Support
+  .rtl & {
+    
+    > .nano-content {
+      direction: ltr;
+
+      > * {
+        direction: rtl;
+      }
     }
   }
 }

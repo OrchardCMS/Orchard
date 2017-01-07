@@ -2,6 +2,13 @@
   [Modals]
 */
 
+// This is the main niftyModals container
+.modal-container {
+	@media @phone{
+		padding: 0 15px;
+	}
+}
+
 .modal-content{
 	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 	border-radius: 3px;
@@ -24,6 +31,11 @@
 		font-size: 26px;
 		opacity: 0.4;
 		text-shadow: none;
+
+		//RTL support
+		.rtl & {
+			float: left;
+		}
 
 		&:hover{
 			opacity: 0.8;
@@ -53,6 +65,11 @@
 //Modal footer
 .modal-footer{
 	background-color: darken(@light-color, 1%);
+
+	.btn + .btn {
+		margin-left: 0;
+		margin-right: 5px;
+	}
 }
 
 //Full Color Alerts
@@ -311,6 +328,7 @@
 	.modal-dialog{
 		min-width: 100%;
 		padding: 0 15px;
+		margin: 0;
 	}
 }
 

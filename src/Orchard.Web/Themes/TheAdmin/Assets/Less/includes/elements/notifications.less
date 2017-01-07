@@ -52,6 +52,11 @@
 				width: 267px;
 				display: table-cell;
 
+				//RTL support
+				.rtl & {
+					padding: 15px 15px 17px 35px;
+				}
+
 				.gritter-close{
 					display: block !important;
 					top: 0;
@@ -63,6 +68,12 @@
 					background: transparent;
 					text-indent: inherit;
 					opacity: 0.4;
+
+					//RTL support
+					.rtl & {
+						left: 0;
+						right: auto;
+					}
 
 					&:hover{
 						opacity: 0.8;

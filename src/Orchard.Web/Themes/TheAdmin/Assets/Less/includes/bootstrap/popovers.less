@@ -1,0 +1,17 @@
+// Popovers
+
+.popover {
+
+  &.top > .arrow, 
+  &.bottom > .arrow {
+
+    &:after {
+
+    	//RTL suport
+    	.rtl & {
+	      margin-right: -@popover-arrow-width;
+	      margin-left: 0;
+    	}
+    }
+  }
+}

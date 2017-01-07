@@ -357,3 +357,109 @@
 .btn-group.open .dropdown-toggle {
 	box-shadow: none;
 }
+
+// Button Groups
+
+.btn-group,
+.btn-group-vertical {
+  > .btn {
+
+  	//RTL support
+  	.rtl & {
+    float: right;
+  	}
+  }
+}
+
+.btn-group {
+  .btn + .btn,
+  .btn + .btn-group,
+  .btn-group + .btn,
+  .btn-group + .btn-group {
+
+  	//RTL support
+  	.rtl & {
+    	margin-right: -1px;
+  	}
+  }
+}
+
+.btn-toolbar {
+
+  .btn,
+  .btn-group,
+  .input-group {
+
+    //RTL support
+  	.rtl & {
+    	float: right;
+  	}
+  }
+
+  > .btn,
+  > .btn-group,
+  > .input-group {
+
+    //RTL support
+  	.rtl & {
+    	margin-right: 5px;
+  	}
+  }
+}
+
+// Justified button groups
+// ----------------------
+
+.btn-group-justified {
+  > .btn,
+  > .btn-group {
+    //RTL support
+    .rtl & {
+    	float: none;
+    }
+  }
+
+  > .btn-group .dropdown-menu {
+
+    //RTL support
+    .rtl & {
+    	right: auto;
+    }
+  }
+}
+
+// Vertical button groups
+// ----------------------
+
+.btn-group-vertical {
+  > .btn,
+  > .btn-group,
+  > .btn-group > .btn {
+
+  	//RTL support
+  	.rtl & {
+    float: none;
+  	}
+  }
+
+  // Clear floats so dropdown menus can be properly placed
+  > .btn-group {
+    &:extend(.clearfix all);
+    > .btn {
+      //RTL support
+	  	.rtl & {
+	    	float: none;
+	  	}
+    }
+  }
+
+  > .btn + .btn,
+  > .btn + .btn-group,
+  > .btn-group + .btn,
+  > .btn-group + .btn-group {
+    //RTL support
+  	.rtl & {
+    	margin-right: 0;
+  	}
+  }
+}

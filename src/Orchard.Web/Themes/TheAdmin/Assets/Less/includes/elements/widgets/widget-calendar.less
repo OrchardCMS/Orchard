@@ -37,6 +37,11 @@
 						font-size: 19px;
 						line-height: 22px;
 						cursor: pointer;
+
+						//RTL support
+						.rtl & {
+							float: left;
+						}
 					}
 				}
 			}
@@ -55,9 +60,12 @@
 
 						&.hour{
 							float: right;
-						}
 
-						&.event-name{}
+							//RTL support
+							.rtl & {
+								float: left;
+							}
+						}
 					}
 
 					&:last-child{

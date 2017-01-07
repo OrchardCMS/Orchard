@@ -13,6 +13,12 @@
 	transition: background-color .2s ease;
 	border-radius: 4px;
 
+	//RTL Support
+	.rtl & {
+		left: 10px;
+		right: auto;
+	}
+
 	&:hover{
 		background-color: rgba(0,0,0, 0.8);
 	}

@@ -7,8 +7,20 @@
 	margin-left: @left-sidebar-width;
 	min-height: 100%;
 
-	@media @phone{
+	//RTL Support
+	.rtl & {
+		left: auto;
+		right: 0;
+		margin-right: @left-sidebar-width;
 		margin-left: 0;
+
+		@media @phone {
+			margin: 0;
+		}
+	}
+
+	@media @phone{
+		margin: 0;
 		.sidebar-push-effect(@sidebars-hardware-accelerated-animation);
 	}
 

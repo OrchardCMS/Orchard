@@ -1,0 +1,457 @@
+/*------------------------------------------------------------------
+  [Timeline]
+*/
+
+.timeline {
+	margin: 0 auto 40px;
+	padding: 0;
+	padding-bottom: 20px;
+	max-width: @timeline-max-width;
+	position: relative;
+
+	@media @phone {
+   padding: 0;
+	}
+
+	&:before {
+		content: '';
+    position: absolute;
+    top: 40px;
+    bottom: 0;
+    width: 2px;
+    background: darken(@light-color, 14%);
+    left: @timeline-vbar-position;
+    margin-left: -1px;
+
+    @media @phone {
+    	left: 50%;
+    	margin-left: -1px;
+    	top: -35px;
+    }
+	}
+}
+
+.timeline-item {
+	position: relative;
+	padding-left: @timeline-left-padding;
+	list-style: none;
+	margin-bottom: 30px;
+
+	@media @phone {
+		padding-left: 0;
+		margin-top: 60px;
+		margin-bottom: 0;
+	}
+
+	&:before {
+		content: '';
+		position: absolute;
+		top: @timeline-bubble-position;
+		left: 162px;
+		border: 2px solid @grey-color;
+		width: @timeline-bubble-size;
+		height: @timeline-bubble-size;
+		background-color: darken(@light-color, 7%);
+		border-radius: 50px;
+
+		@media @phone {
+			display: none;
+		}
+	}
+
+	&:nth-child(4n+1) {
+		&:before {
+			border-color: @primary-color;
+		}
+	}		
+
+	&:nth-child(4n+2) {
+		&:before {
+			border-color: @info-color;
+		}
+	}
+
+	&:nth-child(4n+3) {
+		&:before {
+			border-color: @warning-color;
+		}
+	}
+
+	&:nth-child(4n+4) {
+		&:before {	
+			border-color: @success-color;
+		}
+	}
+
+	// Styles for timeline variant
+	.timeline-variant & {
+		padding-left: 0;
+		margin: 30px 0 0;
+
+		@media @phone {
+			margin-top: 60px;
+		}
+			
+		&.right {
+			right: 0;
+	    padding-left: ~"calc(50% + 45px)";
+
+	    @media @phone {
+	    	padding: 0;
+	    }
+
+		}
+
+		&.left {
+			left: 0;
+	    padding-right: ~"calc(50% + 45px)";
+
+	    @media @phone {
+	    	padding: 0;
+	    } 
+
+	    .timeline-content {
+
+	    	&:after {
+	    		right: -5px;
+	    		left: inherit;
+	    	}
+
+	    	&:before {
+	    		right: -5px;
+	    		left: inherit;
+	    	}
+	    }
+
+	    .timeline-icon {
+	    	left: initial;
+	    	right: -(@timeline-icon-size + 23px);
+
+	    	@media @phone {
+					left: 50%;
+					margin-left: -18px;
+					top: -48px;
+				}
+	    }
+		}
+
+		&:before {
+			display: none;
+		}
+	}
+}
+
+.timeline-date {
+	position: absolute;
+	display: block;
+	left: 0;
+	top: @timeline-date-position;
+	width: @timeline-date-width;
+	text-align: right;
+	white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+	@media @phone {
+    width: 100%;
+    left: 0;
+    top: -40px;
+    text-align: center;
+
+    span {
+    	background-color: darken(@light-color, 12%);
+    	padding: 5px 8px;
+    	border-radius: 4px;
+    	line-height: 25px;
+    }
+	}
+}
+
+.timeline-content {
+	position: relative;
+	background-color: @light-color;
+	padding: 25px 30px 25px 28px;
+	border-radius: 3px;
+	min-height: @timeline-content-min-height;
+
+	.timeline-item-gallery & {
+		padding-bottom: @timeline-content-vpadding - @timeline-margin-helper;
+	}
+
+	@media @small-phone {
+		padding: 15px 18px;
+	}
+
+	&:before {
+    content: "";
+    position: absolute;
+    width: @timeline-tail-size;
+    height: @timeline-tail-size;
+    background-color: #fff;
+    transform: rotate(45deg);
+    top: @timeline-tail-position;
+    left: -(@timeline-tail-size / 2);
+
+    @media @phone {
+    	display: none
+    }
+	}
+}
+
+.timeline-avatar {
+	width: @timeline-avatar-size;
+	height: @timeline-avatar-size;
+	display: block;
+  border-radius: 50px;
+  overflow: hidden;
+  vertical-align: middle;
+  float: left;
+
+  img {
+		width: 100%;
+		height: 100%;
+	}
+}
+
+.timeline-header {
+	display: block;
+	padding: @timeline-header-padding-top 0 0 46px;
+
+	@media @phone {
+		padding-top: 0;
+	}
+
+	// Styles for timeline variant
+	.timeline-variant & {
+		padding-top: 0;
+		line-height: @timeline-header-line-height - 5px;
+	}
+}
+
+.timeline-autor {
+	display: inline-block;
+	font-weight: @font-weight-bold;
+}
+
+.timeline-activity {
+	display: inline-block;
+	margin: 0;
+
+	// Styles for timeline variant
+	.timeline-variant & {
+		display: inline;
+		line-height: @timeline-header-line-height - 5px;
+	}
+}
+
+.timeline-time {
+	float: right;
+	color: darken(@light-color, 33%);
+
+	// Custom styles for timeline variant
+	.timeline-variant & {
+		float: none;
+		display: block;
+		line-height: @timeline-header-line-height;
+	}
+}
+
+.timeline-summary {
+	color: darken(@light-color, 46%);
+	margin-top: 4px;
+
+	p {
+		margin-bottom: 0;
+	}
+
+	// Styles for timeline variant
+	.timeline-variant & {
+		margin-top: 20px;
+		
+		p {
+			line-height: 16px;
+		}
+	}
+}
+
+// Timeline gallery item component
+.timeline-gallery {
+	margin-top: 12px; 
+
+	// Styles for timeline variant
+	.timeline-variant & {
+		margin-top: 20px;
+	}
+
+	.gallery-thumbnail {
+		display: inline-block;
+		max-width: 100px;
+		margin-right: 10px;
+		margin-bottom: @timeline-margin-helper;
+	}
+}
+
+.timeline-blockquote {
+	margin: 10px 0 0 5px;
+	padding: 4px 10px;
+	border-left: 4px solid darken(@light-color, 12%);
+	color: darken(@light-color, 46%);
+
+	// Styles for timeline variant
+	.timeline-variant & {
+		margin-top: 20px;
+	}
+
+	p {
+		font-size: 13px;
+	}
+
+	footer {
+		color: darken(@light-color, 46%);
+	}
+}
+
+/*Load more button*/
+
+.timeline-loadmore {
+
+	@media @phone {
+  	text-align: center;
+  	padding: 0;
+  	margin-bottom: 40px;
+  	margin-top: 40px;
+  }
+
+	.load-more-btn {
+		background-color: darken(@light-color, 14%);
+		border-radius: 2px;
+		padding: 5px 9px;
+		color: darken(@light-color, 74%);
+		outline: none;
+		font-size: @font-size-base - 1;
+		font-weight: @font-weight-medium;
+		position: absolute;
+		left: 131px;
+
+		@media @phone {
+			position: relative;
+			left: 0;
+		}
+	}
+
+	&:before {
+		display: none;
+	}
+
+	.timeline-variant & {
+		text-align: center;
+		margin-bottom: 40px;
+
+		.load-more-btn {
+			position: relative;
+			left: initial; 
+		}
+	}
+}
+
+/*------------------------------------------------------------------
+  [Detailed items content like gallery & blockquote]
+*/
+.timeline-item-detailed {
+
+	.timeline-time {
+		line-height: @timeline-header-line-height;
+	}
+
+	.timeline-header {
+		line-height: @timeline-header-line-height;
+
+		// Styles for timeline variant
+		.timeline-variant & {
+			border-bottom: 1px solid @body-background;
+			padding-bottom: 15px;
+		}
+	}
+
+	.timeline-avatar {
+		vertical-align: top;
+	}
+}
+
+// Time line variant (AKA Timeline 2)
+.timeline-variant {
+	max-width: none;
+	padding-bottom: 0;
+
+	&:before {
+		left: 50%;
+		z-index: -1;
+		top: 70px;
+	}
+}
+
+// Month divider in timeline-variant
+.timeline-month {
+  width: 100%;
+  text-align: center;
+  list-style: none;
+  margin: 30px 0 15px; 
+  padding: 11px 0 12px; 
+  font-size: 18px;
+  background-color: @body-background;
+  font-weight: @font-weight-light;
+
+  &:first-child {
+  	margin-top: 0;
+  	padding-bottom: 5px;
+  }
+}
+
+// Timeline type icon
+.timeline-icon {
+	position: absolute;
+	color: @light-color;
+	top: @timeline-icon-position;
+	left: -(@timeline-icon-size + 23px);
+	width: @timeline-icon-size;
+	height: @timeline-icon-size;
+	font-size: 23px;
+	border: @timeline-icon-border-width solid @light-color;
+	text-align: center;
+	background-color: darken(@light-color, 7%);
+	border-radius: 50%;
+
+	@media @phone {
+		left: 50%;
+		margin-left: -18px;
+		top: -48px;
+		width: @timeline-icon-size - 6px;
+		height: @timeline-icon-size - 6px;
+		font-size: 18px
+	}
+
+	> .icon {
+		line-height: @timeline-icon-size - (@timeline-icon-border-width * 2);
+		vertical-align: middle;
+		
+		@media @phone {
+			line-height: (@timeline-icon-size - (@timeline-icon-border-width * 2)) - 6;
+		}
+	}
+
+	.file & {
+		background-color: @info-color;
+	}
+
+	.comment & {
+		background-color: @warning-color;
+	}
+
+	.gallery & {
+		background-color: @success-color;
+	}
+
+	.quote & {
+		background-color: @primary-color;
+	}
+}

@@ -10,6 +10,13 @@
 		vertical-align: middle;
 		margin-right: 9px;
 		line-height: 22px;
+
+		//RTL support 
+		.rtl &{
+			float: right;
+			margin-left: 9px;
+			margin-right: 0;
+		}
 	}
 
 	.close{
@@ -27,14 +34,34 @@
 	  > p + p {
 	    margin-top: 5px;
 	  }
+
+	  //RTL support 
+	  .rtl & {
+	  	border-left-width: 1px;
+	  	border-right-width: 0;
+	  }
 	}
 }
 
 .alert-dismissible{
 
+	//RTL support
+	.rtl & {
+		padding-left: 38px;
+		padding-right: inherit; 
+	}
+
 	.close{
 		top: -4px;
 		right: -30px;
+
+		//RTL support
+
+		.rtl & {
+			float: left;
+			left: -30px;
+			right: 30px;
+		}
 	}
 }
 
@@ -94,6 +121,11 @@
 	display: table;
 	table-layout: fixed;
 
+	//RTL support
+	.rtl & {
+		padding: 0;
+	}
+
 	> .icon{
 		display: table-cell;
 		width: @alert-icon-width;
@@ -101,12 +133,25 @@
 		vertical-align: middle;
 		cursor: default;
 
+		//RTL supp
+		.rtl & {
+			float: none;
+		}
+
 		&:after{
 			position: absolute;
 			margin-left: @alert-icon-width - 1px;
 			top: 50%;
 			margin-top: -11px;
 			.triangle(right, 11px, @light-color);
+
+			//RTL support
+			.rtl & {
+				margin-left: 0;
+				margin-right: @alert-icon-width - 1px;
+				.triangle(left, 11px, @light-color);
+				border-left: 0;
+			}
 		}
 	}
 
@@ -126,6 +171,11 @@
 			top: 14px;
 			color: @text-color;
 			text-shadow: 0 1px 0 @text-color;
+
+			//RTL support
+			.rtl & {
+				left: 11px;
+			}
 		}
 	}
 
@@ -137,6 +187,11 @@
 
 			&:after{
 				border-left-color: @alert-primary-bg;
+
+				//RTL support 
+				.rtl & {
+					border-right-color: @alert-primary-bg;
+				}
 			}
 		}
 	}
@@ -148,6 +203,11 @@
 
 			&:after{
 				border-left-color: @alert-success-bg;
+
+				//RTL support 
+				.rtl & {
+					border-right-color: @alert-success-bg;
+				}
 			}
 		}
 	}
@@ -159,6 +219,11 @@
 
 			&:after{
 				border-left-color: @alert-info-bg;
+
+				//RTL support 
+				.rtl & {
+					border-right-color: @alert-info-bg;
+				}
 			}
 		}
 	}
@@ -170,6 +235,11 @@
 
 			&:after{
 				border-left-color: @alert-warning-bg;
+
+				//RTL support 
+				.rtl & {
+					border-right-color: @alert-warning-bg;
+				}
 			}
 		}
 	}
@@ -181,6 +251,11 @@
 
 			&:after{
 				border-left-color: @alert-danger-bg;
+
+				//RTL support 
+				.rtl & {
+					border-right-color: @alert-danger-bg;
+				}
 			}
 		}
 	}
@@ -234,11 +309,22 @@
 		&:after{
 			border-left-color: @light-color !important;
 			display: none;
+
+			//RTL support
+			.rtl & {
+				border-right-color: @light-color;
+				display: none;
+			}
 		}
 	}
 
 	> .message{
 		border-width: 0;
+
+		//RTL support
+		.rtl & {
+			border-width: 0;
+		}
 	}
 
 	&.alert-primary{

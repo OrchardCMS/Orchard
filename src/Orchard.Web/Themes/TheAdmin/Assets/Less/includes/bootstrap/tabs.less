@@ -5,8 +5,20 @@
 	background-color: darken(@light-color, 4%);
 	border-bottom-width: 0;
 
+	//RTL support
+	.rtl & {
+		padding: 0;
+	}
+
 	> li{
 		margin-right: 2px;
+
+		//RTL support
+		.rtl & {
+			float: right;
+			margin-right: 0;
+			margin-left: 2px;
+		}
 
 		a{
 			padding: 18px 20px;
@@ -79,6 +91,11 @@
 			margin-right: 0;
 			margin-bottom: 0;
 
+			//RTL support
+			.rtl & {
+				margin-left: 0;
+			}
+
 			> a{
 				text-align: left;
 				min-width: 38px;
@@ -104,4 +121,20 @@
 	.nav-tabs{
 		float:right;
 	}
+}
+
+// Nav variations
+// --------------------------------------------------
+
+// Justified nav links
+// -------------------------
+
+.nav-justified {
+
+  > li {
+  	//RTL support
+  	.rtl &{	
+    float: none;
+  	}
+  }
 }

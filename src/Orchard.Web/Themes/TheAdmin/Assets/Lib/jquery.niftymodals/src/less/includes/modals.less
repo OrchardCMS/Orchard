@@ -5,6 +5,12 @@ Styles for the html/body for special modal where we want 3d effects
 Note that we need a container wrapping all content on the page for the 
 perspective effects (not including the modals and the overlay).
 */
+
+//Body styles to allow verticall scrolling
+.@{modal-prefix}-open {
+	overflow: hidden;
+}
+
 .@{modal-prefix}-perspective,
 .@{modal-prefix}-perspective body {
 	height: 100%;
@@ -20,25 +26,22 @@ perspective effects (not including the modals and the overlay).
 
 .@{modal-prefix}-container {
 	position: fixed;
-	top: 50%;
-	left: 50%;
-	width: 50%;
-	max-width: 630px;
-	min-width: 320px;
-	height: auto;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
 	z-index: @modal-zindex;
 	visibility: hidden;
 	-webkit-backface-visibility: hidden;
 	-moz-backface-visibility: hidden;
 	backface-visibility: hidden;
-	-webkit-transform: translateX(-50%) translateY(-50%);
-	-moz-transform: translateX(-50%) translateY(-50%);
-	-ms-transform: translateX(-50%) translateY(-50%);
-	transform: translateX(-50%) translateY(-50%);
 }
 
 .@{modal-prefix}-show {
 	visibility: visible;
+	overflow-x: hidden;
+	overflow-y: auto;
+	z-index: @modal-zindex + 1;
 }
 
 .@{modal-prefix}-overlay {
@@ -61,13 +64,24 @@ perspective effects (not including the modals and the overlay).
 	visibility: visible;
 }
 
+// Measure scrollbar width for padding body during modal show/hide
+.@{modal-prefix}-scrollbar-measure {
+  position: absolute;
+  top: -9999px;
+  width: 50px;
+  height: 50px;
+  overflow: scroll;
+}
+
 /* Content styles */
 .@{modal-prefix}-content {
 	color: #fff;
 	background: #e74c3c;
 	position: relative;
 	border-radius: 3px;
-	margin: 0 auto;
+	margin: 30px auto;
+	max-width: 630px;
+	min-width: 320px;
 }
 
 .@{modal-prefix}-content h3 {

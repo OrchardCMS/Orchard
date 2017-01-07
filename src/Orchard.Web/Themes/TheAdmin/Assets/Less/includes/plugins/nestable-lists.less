@@ -30,6 +30,11 @@
 			border: 1px solid darken(@light-color, 13%);
 			background: @light-color;
 
+			//RTL support
+			.rtl & {
+				right: 0;
+			}
+
 			&:hover{
 				color: @light-color; 
 				background: @primary-color; 
@@ -38,9 +43,9 @@
 		}
 
 		> button{
+			position: relative; 
 			font-family: FontAwesome;
 			display: block; 
-			position: relative; 
 			cursor: pointer; 
 			float: left; 
 			width: 25px; 
@@ -56,6 +61,11 @@
 			font-size: 10px; 
 			line-height: 1; 
 			text-align: center;
+
+			//RTL support
+			.rtl & {
+				float: right;
+			} 
 
 			&:before{
 				content: '\f067'; 
@@ -78,6 +88,12 @@
 			text-decoration: none;
 			background: none repeat scroll 0 0 @light-color;
 			border: 1px solid darken(@light-color, 13%);
+
+			//RTL support
+			.rtl & {
+				padding-left: 10px;
+				padding-right: 40px;
+			}
 
 			&:hover{
 				background: @light-color;
@@ -123,6 +139,12 @@
 		
 		> button{
 			margin-left: 35px;
+
+			//RTL support
+			.rtl & {
+				margin-right: 35px;
+				margin-left: 0;
+			}
 		}
 	}
 
@@ -184,5 +206,11 @@
 
 	.dd-list{
 		padding-left: 30px;
+
+		//RTL support
+		.rtl & {
+			padding-right: 30px;
+			padding-left: 0;
+		}
 	}
 }

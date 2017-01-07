@@ -1,0 +1,21 @@
+.float-grid-columns-rtl(@class) {
+  .col(@index) { // initial
+    @item: ~".rtl .col-@{class}-@{index}";
+    .col((@index + 1), @item);
+  }
+  .col(@index, @list) when (@index =< @grid-columns) { // general
+    @item: ~".rtl .col-@{class}-@{index}";
+    .col((@index + 1), ~"@{list}, @{item}");
+  }
+  .col(@index, @list) when (@index > @grid-columns) { // terminal
+    @{list} {
+      float: right;
+    }
+  }
+  .col(1); // kickstart it
+}
+
+// Create grid for specific class
+.make-grid-rtl(@class) {
+  .float-grid-columns-rtl(@class);
+}

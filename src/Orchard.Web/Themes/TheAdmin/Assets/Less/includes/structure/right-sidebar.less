@@ -10,11 +10,16 @@
   top: 0;
   right: -@right-sidebar-width;
 
+  //RTL Support
+  .rtl & {
+    right: auto;
+    left: -@right-sidebar-width;
+  }
+
   .or-animate & {
     transition: @sidebars-push-effect;
   }
 }
-
 
 //Push sidebar animation
 body.open-right-sidebar{
@@ -70,6 +75,12 @@ body.open-right-sidebar{
           margin-left: 8px;
           position: relative;
           top: -1px;
+
+          //RTL Support
+          .rtl & {
+            margin-left: 0;
+            margin-right: 8px;
+          }
         }
       }
 
@@ -85,15 +96,31 @@ body.open-right-sidebar{
       text-align: left;
       padding: 17px 22px 21px;
 
+      //RTL Support
+      .rtl & {
+        text-align: right;
+      }
+
       img{
         height: 36px;
         width: 36px;
         margin-bottom: 0;
         float: left;
+
+        //RTL Support
+        .rtl & {
+          float: right;
+        }
       }
       
       > span{
         padding-left: 46px;
+
+        //RTL Support
+        .rtl & {
+          padding-left: 0;
+          padding-right: 46px;
+        }
 
         &.position{
           font-size: 12px;
@@ -129,8 +156,14 @@ body.open-right-sidebar{
       width: 100%;
       font-size: 13px;
       font-weight: 300;
-      padding: 15px 20px;
+      padding: 15px 40px 15px 20px;
       outline: none;
+
+      //RTL Support
+      .rtl & {
+        padding-right: 20px;
+        padding-left: 40px;
+      }
     }
 
     > span{
@@ -141,6 +174,12 @@ body.open-right-sidebar{
       font-size: 20px;
       margin-top: -10px;
       cursor: pointer;
+
+      //RTL Support
+      .rtl & {
+        right: auto;
+        left: 15px;
+      }
 
       &:hover{
         color: lighten(@right-sidebar-icons-color, 15%);
@@ -252,12 +291,18 @@ body.open-right-sidebar{
 
         ul{
           list-style: none;
-          padding-left: 0;
+          padding: 0;
 
           > li{
             position: relative;
             padding-left: 30px;
             margin-bottom: 25px;
+
+            //RTL Support
+            .rtl & {
+              padding-left: 0;
+              padding-right: 30px;
+            }
 
             > .icon{
               position: absolute;
@@ -271,6 +316,12 @@ body.open-right-sidebar{
               text-align: center;
               line-height: 20px;
 
+              //RTL Support
+              .rtl & {
+                left: auto;
+                right: 0;
+              }
+
               span.icon{
                 vertical-align: middle;
               }
@@ -278,6 +329,12 @@ body.open-right-sidebar{
 
             .content{
               margin-left: 5px;
+
+              //RTL Support
+              .rtl & {
+                margin-left: 0;
+                margin-right: 5px;
+              }
 
               a{
                 display: block;
@@ -337,6 +394,12 @@ body.open-right-sidebar{
                   line-height: 24px;
                   display: block;
 
+                  //RTL Support
+                  .rtl & {
+                    padding-left: 0;
+                    padding-right: 35px;
+                  }
+
                   .icon{
                     background-color: @right-sidebar-dark-color;
                     height: 26px;
@@ -347,6 +410,12 @@ body.open-right-sidebar{
                     border-radius: 50%;
                     text-align: center;
                     line-height: 25px;
+
+                    //RTL Support
+                    .rtl & {
+                      left: auto;
+                      right: 0;
+                    }
                     
                     > span{
                       font-size: 26px; 
@@ -443,6 +512,12 @@ body.open-right-sidebar{
     right: 0;
     transform: translate3d(100%, 0, 0);
 
+    //RTL Support
+    .rtl & {
+      left: 0;
+      transform: translate3d(-100%, 0, 0);
+    }
+
     .tab-panel{
 
       .tab-content{
@@ -460,6 +535,10 @@ body.open-right-sidebar{
 
           &.chat-opened{
             
+            .chat-window{
+              left: 0;
+            }
+
             .chat-contacts{
               left: -100%;
             }
