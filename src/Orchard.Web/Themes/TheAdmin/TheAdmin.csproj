@@ -674,6 +674,19 @@
   <ItemGroup>
     <Content Include="Assets\Less\orchard-utilities.less" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Less\includes\bootstrap\grid.less" />
+    <Content Include="Assets\Less\includes\bootstrap\mixins\forms.less" />
+    <Content Include="Assets\Less\includes\bootstrap\mixins\grid-framework.less" />
+    <Content Include="Assets\Less\includes\bootstrap\pagination.less" />
+    <Content Include="Assets\Less\includes\bootstrap\popovers.less" />
+    <Content Include="Assets\Less\includes\elements\divider.less" />
+    <Content Include="Assets\Less\includes\elements\invoice.less" />
+    <Content Include="Assets\Less\includes\elements\timeline.less" />
+    <Content Include="Assets\Less\includes\pages\pricing-tables.less" />
+    <Content Include="Assets\Less\includes\plugins\bootstrap-touchspin.less" />
+    <Content Include="Assets\Less\includes\structure\sticky-footer.less" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
