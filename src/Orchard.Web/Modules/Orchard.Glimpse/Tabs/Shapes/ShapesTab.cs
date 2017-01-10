@@ -8,7 +8,7 @@ namespace Orchard.Glimpse.Tabs.Shapes {
             var messages = context.GetMessages<ShapeMessage>().ToList();
 
             if (!messages.Any()) {
-                return "There have been no Shape events recorded. If you think there should have been, check that the 'Glimpse for Orchard Shapes' feature is enabled.";
+                return null;
             }
 
             return messages;

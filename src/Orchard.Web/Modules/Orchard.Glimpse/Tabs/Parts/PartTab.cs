@@ -8,7 +8,7 @@ namespace Orchard.Glimpse.Tabs.Parts {
             var messages = context.GetMessages<PartMessage>().ToList();
 
             if (!messages.Any()) {
-                return "There have been no Content Part events recorded. If you think there should have been, check that the 'Glimpse for Orchard Content Parts' feature is enabled.";
+                return null;
             }
 
             return messages;

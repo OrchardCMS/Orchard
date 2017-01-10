@@ -8,7 +8,7 @@ namespace Orchard.Glimpse.Tabs.Cache {
             var messages = context.GetMessages<CacheMessage>().ToList();
 
             if (!messages.Any()) {
-                return "There have been no Cache events recorded. If you think there should have been, check that the 'Glimpse for Orchard Cache Service' feature is enabled.";
+                return null;
             }
 
             return messages;

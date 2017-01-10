@@ -8,7 +8,7 @@ namespace Orchard.Glimpse.Tabs.Authorizer {
             var messages = context.GetMessages<AuthorizerMessage>().ToList();
 
             if (!messages.Any()) {
-                return "There have been no Authorizer events recorded. If you think there should have been, check that the 'Glimpse for Orchard Authorizer' feature is enabled.";
+                return null;
             }
 
             return messages;

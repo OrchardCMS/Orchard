@@ -8,7 +8,7 @@ namespace Orchard.Glimpse.Tabs.Layers {
             var messages = context.GetMessages<LayerMessage>().ToList();
 
             if (!messages.Any()) {
-                return "There have been no Layer events recorded. If you think there should have been, check that the 'Glimpse for Orchard Layers' feature is enabled.";
+                return null;
             }
 
             return messages;
