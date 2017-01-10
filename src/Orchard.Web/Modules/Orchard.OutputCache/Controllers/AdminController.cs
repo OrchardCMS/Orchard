@@ -87,6 +87,7 @@ namespace Orchard.OutputCache.Controllers {
                 DefaultCacheDuration = settings.DefaultCacheDuration,
                 DefaultCacheGraceTime = settings.DefaultCacheGraceTime,
                 DefaultMaxAge = settings.DefaultMaxAge,
+                VaryByQueryStringIsExclusive = settings.VaryByQueryStringIsExclusive,
                 VaryByQueryStringParameters = settings.VaryByQueryStringParameters,
                 VaryByRequestHeaders = settings.VaryByRequestHeaders,
                 VaryByRequestCookies = settings.VaryByRequestCookies,
@@ -115,6 +116,7 @@ namespace Orchard.OutputCache.Controllers {
                 settings.DefaultCacheDuration = model.DefaultCacheDuration;
                 settings.DefaultCacheGraceTime = model.DefaultCacheGraceTime;
                 settings.DefaultMaxAge = model.DefaultMaxAge;
+                settings.VaryByQueryStringIsExclusive = model.VaryByQueryStringIsExclusive;
                 settings.VaryByQueryStringParameters = model.VaryByQueryStringParameters;
                 settings.VaryByRequestHeaders = model.VaryByRequestHeaders;
                 settings.VaryByRequestCookies = model.VaryByRequestCookies;
