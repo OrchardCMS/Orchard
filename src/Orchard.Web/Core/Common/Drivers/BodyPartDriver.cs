@@ -72,7 +72,7 @@ namespace Orchard.Core.Common.Drivers {
         }
 
         protected override void Exporting(BodyPart part, ContentManagement.Handlers.ExportContentContext context) {
-            context.Element(part.PartDefinition.Name).SetAttributeValue("Text", part.Text);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Text", part.Text ?? string.Empty);
         }
 
         private static BodyEditorViewModel BuildEditorViewModel(BodyPart part,RequestContext requestContext) {
