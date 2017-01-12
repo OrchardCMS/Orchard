@@ -1,4 +1,5 @@
 ﻿@model Orchard.Localization.ViewModels.EditLocalizationViewModel
+@using Orchard.ContentManagement
 @using System.Globalization
 @{
     Style.Require("LocalizationAdmin");
@@ -51,7 +52,8 @@
                 }
 
                 if (Model.MissingCultures.Any()) {
-                    var contentItemId = Model.MasterContentItem != null ? Model.MasterContentItem.Id : Model.ContentItem.Id;
+                    var masterContentItem = WorkContext.Resolve<IContentManager>().Get(((dynamic)Model.ContentItem).Record.MasterContentItemId, VersionOptions.Latest);
+                    var contentItemId = masterContentItem != null ? masterContentItem.Id : Model.ContentItem.Id;
 
                     <div class="add-localization">@Html.ActionLink(T("+ New translation").Text, "Translate", "Admin", new {area = "Orchard.Localization", id = contentItemId}, null)</div>
                 }

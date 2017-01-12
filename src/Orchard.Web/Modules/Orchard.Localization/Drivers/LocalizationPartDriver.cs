@@ -23,7 +23,10 @@ namespace Orchard.Localization.Drivers {
             var masterId = part.HasTranslationGroup
                                ? part.Record.MasterContentItemId
                                : part.Id;
-
+            if (_contentManager.Get(masterId, VersionOptions.Latest) == null) {
+                //the original MasterContentItem has been deleted
+                masterId = part.Id;
+            }
             return Combined(
                 ContentShape("Parts_Localization_ContentTranslations",
                              () => shapeHelper.Parts_Localization_ContentTranslations(Id: part.ContentItem.Id, MasterId: masterId, Culture: GetCulture(part), Localizations: GetDisplayLocalizations(part, VersionOptions.Published))),
@@ -48,7 +51,7 @@ namespace Orchard.Localization.Drivers {
                 SelectedCulture = GetCulture(part),
                 MissingCultures = missingCultures,
                 ContentItem = part,
-                MasterContentItem = part.HasTranslationGroup ? part.MasterContentItem : null,
+                MasterContentItem = _contentManager.Get(part.Record.MasterContentItemId, VersionOptions.Latest),//part.HasTranslationGroup ? part.MasterContentItem : null,
                 ContentLocalizations = new ContentLocalizationsViewModel(part) { Localizations = localizations }
             };
 

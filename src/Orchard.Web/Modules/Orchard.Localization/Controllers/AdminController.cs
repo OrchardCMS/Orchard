@@ -51,7 +51,7 @@ namespace Orchard.Localization.Controllers {
             }
 
             var contentItemTranslation = _contentManager.New<LocalizationPart>(masterContentItem.ContentType);
-            contentItemTranslation.MasterContentItem = masterContentItem;
+            contentItemTranslation.MasterContentItem = masterLocalizationPart.MasterContentItem == null ? masterContentItem : masterLocalizationPart.MasterContentItem;
 
             var content = _contentManager.BuildEditor(contentItemTranslation);
             
