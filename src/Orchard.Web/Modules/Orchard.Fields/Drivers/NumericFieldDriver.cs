@@ -44,7 +44,7 @@ namespace Orchard.Fields.Drivers {
             return ContentShape("Fields_Numeric_Edit", GetDifferentiator(field, part),
                 () => {
                     var settings = field.PartFieldDefinition.Settings.GetModel<NumericFieldSettings>();
-                    var value = part.IsNew() ? settings.DefaultValue : Convert.ToString(field.Value, _cultureInfo.Value);
+                    var value = part.IsNew() && field.Value == null ? settings.DefaultValue : Convert.ToString(field.Value, _cultureInfo.Value);
 
                     var model = new NumericFieldViewModel {
                         Field = field,

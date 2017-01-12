@@ -36,7 +36,7 @@ namespace Orchard.Fields.Drivers {
         protected override DriverResult Editor(ContentPart part, BooleanField field, dynamic shapeHelper) {
             return ContentShape("Fields_Boolean_Edit", GetDifferentiator(field, part),
                 () => {
-                    if (part.IsNew()) {
+                    if (part.IsNew() && field.Value == null) {
                         var settings = field.PartFieldDefinition.Settings.GetModel<BooleanFieldSettings>();
                         field.Value = settings.DefaultValue;
                     }

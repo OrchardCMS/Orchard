@@ -77,7 +77,7 @@ namespace Orchard.Fields.Drivers {
 
         protected override DriverResult Editor(ContentPart part, DateTimeField field, dynamic shapeHelper) {
             var settings = field.PartFieldDefinition.Settings.GetModel<DateTimeFieldSettings>();
-            var value = part.IsNew() ? settings.DefaultValue : field.DateTime;
+            var value = part.IsNew() && field.DateTime == default(DateTime) ? settings.DefaultValue : field.DateTime;
             var options = new DateLocalizationOptions();
 
             // Don't do any time zone conversion if field is semantically a date-only field, because that might mutate the date component.
