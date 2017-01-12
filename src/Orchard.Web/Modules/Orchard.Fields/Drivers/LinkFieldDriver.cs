@@ -39,8 +39,12 @@ namespace Orchard.Fields.Drivers {
                 () => {
                     if (part.IsNew()) {
                         var settings = field.PartFieldDefinition.Settings.GetModel<LinkFieldSettings>();
-                        field.Value = settings.DefaultValue;
-                        field.Text = settings.TextDefaultValue;
+                        if (String.IsNullOrEmpty(field.Value)) {
+                            field.Value = settings.DefaultValue;
+                        }
+                        if (String.IsNullOrEmpty(field.Text)) {
+                            field.Text = settings.TextDefaultValue;
+                        }
                     }
                     return shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: field, Prefix: GetPrefix(field, part));
                 });
