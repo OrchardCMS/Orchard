@@ -18,12 +18,13 @@
         "autoprefixer": "6.6.1",
         "cssnano": "3.10.0",
         "gulp-sass": "3.1.0",
-        "gulp-typescript": "2.11.0",
+        "typescript": "2.1.5",
+        "gulp-typescript": "3.1.4",
         "gulp-uglify": "2.0.0",
         "gulp-rename": "1.2.2",
         "gulp-concat": "2.6.1",
         "gulp-header": "1.8.8",
         "gulp-eol": "0.1.2"
     },
-    "dependencies": { }
+    "dependencies": {}
 }

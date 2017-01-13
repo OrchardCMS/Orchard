@@ -221,7 +221,6 @@
     <Content Include="Scripts\cloudmedia-videoplayer-main.js" />
     <Content Include="Scripts\cloudmedia-videoplayer-main.min.js" />
     <Content Include="Assets\JavaScript\Lib\console-shim.js" />
-    <Content Include="Assets\JavaScript\Lib\dash.all.js" />
     <Content Include="Assets\TypeScript\cloudmedia-admin-job.ts" />
     <Content Include="Assets\TypeScript\cloudmedia-admin-common.ts" />
     <Content Include="Assets\TypeScript\cloudmedia-autorefresh.ts" />
@@ -232,15 +231,12 @@
     <Content Include="Assets\TypeScript\cloudmedia-edit-cloudvideopart-proxied.ts" />
     <Content Include="Assets\TypeScript\cloudmedia-metadata-cloudvideopart.ts" />
     <Content Include="Assets\JavaScript\Lib\jstree.js" />
-    <Content Include="Assets\JavaScript\Lib\swfobject.js" />
     <Content Include="Scripts\Lib\console-shim.js" />
     <Content Include="Scripts\Lib\console-shim.min.js" />
     <Content Include="Scripts\Lib\dash.all.js" />
-    <Content Include="Scripts\Lib\dash.all.min.js" />
     <Content Include="Scripts\Lib\jstree.js" />
     <Content Include="Scripts\Lib\jstree.min.js" />
     <Content Include="Scripts\Lib\swfobject.js" />
-    <Content Include="Scripts\Lib\swfobject.min.js" />
     <Content Include="Styles\cloudmedia-admin-asset.css" />
     <Content Include="Styles\cloudmedia-admin-asset.min.css" />
     <Content Include="Styles\cloudmedia-admin-job.css" />
@@ -543,7 +539,6 @@
     <Content Include="Content\Strobe Media Playback Notice.docx" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\JavaScript\Lib\MPEG Dash Notice.docx" />
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -552,6 +547,9 @@
   <ItemGroup>
     <Content Include="Assets\TypeScript\Typings\moment-node.d.ts" />
     <Content Include="Assets\TypeScript\Typings\URIjs.d.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\Lib\MPEG Dash Notice.docx" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
