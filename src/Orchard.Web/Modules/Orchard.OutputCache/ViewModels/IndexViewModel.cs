@@ -9,6 +9,7 @@ namespace Orchard.OutputCache.ViewModels {
         [Range(0, Int32.MaxValue), Required] public int DefaultCacheDuration { get; set; }
         [Range(0, Int32.MaxValue), Required] public int DefaultCacheGraceTime { get; set; }
         [Range(0, Int32.MaxValue), Required] public int DefaultMaxAge { get; set; }
+        public bool VaryByQueryStringIsExclusive { get; set; }
         public string VaryByQueryStringParameters { get; set; }
         public string VaryByRequestHeaders { get; set; }
         public string VaryByRequestCookies { get; set; }

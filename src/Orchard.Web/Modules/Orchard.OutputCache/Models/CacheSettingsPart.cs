@@ -18,6 +18,11 @@ namespace Orchard.OutputCache.Models {
             set { this.Store(x => x.DefaultMaxAge, value); }
         }
 
+        public bool VaryByQueryStringIsExclusive {
+            get { return this.Retrieve(x => x.VaryByQueryStringIsExclusive); }
+            set { this.Store(x => x.VaryByQueryStringIsExclusive, value); }
+        }
+
         public string VaryByQueryStringParameters {
             get {
                 return this.Retrieve(

@@ -11,6 +11,7 @@ namespace Orchard.OutputCache.Models {
             DefaultCacheDuration = part.DefaultCacheDuration;
             DefaultCacheGraceTime = part.DefaultCacheGraceTime;
             DefaultMaxAge = part.DefaultMaxAge;
+            VaryByQueryStringIsExclusive = part.VaryByQueryStringIsExclusive;
             VaryByQueryStringParameters = String.IsNullOrWhiteSpace(part.VaryByQueryStringParameters) ? null : part.VaryByQueryStringParameters.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim()).ToArray();
             VaryByRequestHeaders = String.IsNullOrWhiteSpace(part.VaryByRequestHeaders) ? new HashSet<string>() : new HashSet<string>(part.VaryByRequestHeaders.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim()).ToArray());
             VaryByRequestHeaders.Add("HOST"); // Always vary by host name/tenant.
@@ -26,6 +27,7 @@ namespace Orchard.OutputCache.Models {
         public int DefaultCacheDuration { get; private set; }
         public int DefaultCacheGraceTime { get; private set; }
         public int DefaultMaxAge { get; private set; }
+        public bool VaryByQueryStringIsExclusive { get; private set; }
         public IEnumerable<string> VaryByQueryStringParameters { get; private set; }
         public ISet<string> VaryByRequestHeaders { get; private set; }
         public ISet<string> VaryByRequestCookies { get; private set; }
