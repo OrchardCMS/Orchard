@@ -190,5 +190,5 @@ src/Orchard.Azure/Orchard.Azure.CloudService/Staging/
 
 #enable all /lib artifacts
 !lib/**/*.*
-*/.vs/*
+**/.vs/*
 src/Rebracer.xml
