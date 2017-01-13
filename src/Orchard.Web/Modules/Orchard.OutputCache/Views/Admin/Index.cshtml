@@ -37,10 +37,20 @@
 
     <fieldset>
         <label>@T("Vary by Query String Parameters")</label>
-        @Html.TextBoxFor(m => m.VaryByQueryStringParameters, new { @class = "text medium" })
-        <span class="hint">@T("When defined, using comma separated values, sets caching to vary by the specified query string parameters. Leave empty to vary by all query string parameters.")</span>
+        <div>
+            @Html.RadioButtonFor(m => m.VaryByQueryStringIsExclusive, "False", new { Id = "varyByQueryStringExclusiveMode" })
+            <label for="varyByQueryStringExclusiveMode" class="forcheckbox">@T("Vary by only the following query string parameters")</label>
+        </div>
+        <div>
+            @Html.RadioButtonFor(m => m.VaryByQueryStringIsExclusive, "True", new { Id = "varyByQueryStringInclusiveMode" })
+            <label for="varyByQueryStringInclusiveMode" class="forcheckbox">@T("Vary by all except the following query string parameters")</label>
+        </div>
+        <div>
+            @Html.TextBoxFor(m => m.VaryByQueryStringParameters, new { @class = "text medium" })
+            <span class="hint">@T("Separate multiple query string parameters with a comma.")</span>
+        </div>
     </fieldset>
-    
+
     <fieldset>
         <label>@T("Vary by Request Headers")</label>
         @Html.TextBoxFor(m => m.VaryByRequestHeaders, new { @class = "text medium" })
