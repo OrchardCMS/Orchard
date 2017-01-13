@@ -100,7 +100,7 @@ function resolveAssetGroupPaths(assetGroup, assetManifestPath) {
         return path.resolve(path.join(assetGroup.basePath, inputPath));
     });
     assetGroup.watchPaths = [];
-    if (!!assetGroup.watch) {
+    if (assetGroup.watch) {
         assetGroup.watchPaths = assetGroup.watch.map(function (watchPath) {
             return path.resolve(path.join(assetGroup.basePath, watchPath));
         });
