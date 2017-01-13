@@ -43,15 +43,17 @@ namespace Orchard.Localization.Drivers {
         protected override DriverResult Editor(LocalizationPart part, dynamic shapeHelper) {
             var localizations = GetEditorLocalizations(part).ToList();
 
-            var missingCultures = part.HasTranslationGroup ?
-                RetrieveMissingCultures(part.MasterContentItem.As<LocalizationPart>(), true) :
+            var masterContentItem = _contentManager.Get(part.Record.MasterContentItemId, VersionOptions.Latest);
+
+            var missingCultures = part.HasTranslationGroup && masterContentItem != null?
+                RetrieveMissingCultures(masterContentItem.As<LocalizationPart>(), true) :
                 RetrieveMissingCultures(part, part.Culture != null);
 
             var model = new EditLocalizationViewModel {
                 SelectedCulture = GetCulture(part),
                 MissingCultures = missingCultures,
                 ContentItem = part,
-                MasterContentItem = _contentManager.Get(part.Record.MasterContentItemId, VersionOptions.Latest),//part.HasTranslationGroup ? part.MasterContentItem : null,
+                MasterContentItem = masterContentItem,
                 ContentLocalizations = new ContentLocalizationsViewModel(part) { Localizations = localizations }
             };
 
@@ -72,7 +74,7 @@ namespace Orchard.Localization.Drivers {
         }
 
         private List<string> RetrieveMissingCultures(LocalizationPart part, bool excludePartCulture) {
-            var editorLocalizations = GetEditorLocalizations(part);
+            var editorLocalizations = GetEditorLocalizations(part.MasterContentItem != null ? part.MasterContentItem.As<LocalizationPart>() : part);
 
             var cultures = _cultureManager
                 .ListCultures()
