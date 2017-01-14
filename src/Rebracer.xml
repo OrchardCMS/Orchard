@@ -22,8 +22,8 @@
     </ToolsOptionsCategory>
     <ToolsOptionsCategory name="TextEditor">
       <ToolsOptionsSubCategory name="CSharp-Specific">
-        <PropertyValue name="AddImport_SuggestForTypesInNuGetPackages">0</PropertyValue>
-        <PropertyValue name="AddImport_SuggestForTypesInReferenceAssemblies">0</PropertyValue>
+        <PropertyValue name="AddImport_SuggestForTypesInNuGetPackages">1</PropertyValue>
+        <PropertyValue name="AddImport_SuggestForTypesInReferenceAssemblies">1</PropertyValue>
         <PropertyValue name="AutoComment">1</PropertyValue>
         <PropertyValue name="AutoInsertAsteriskForNewLinesOfBlockComments">1</PropertyValue>
         <PropertyValue name="CSharpClosedFileDiagnostics">-1</PropertyValue>

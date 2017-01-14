@@ -14,12 +14,12 @@ namespace Orchard.Localization.Controllers {
     [ValidateInput(false)]
     public class AdminController : Controller, IUpdateModel {
         private readonly IContentManager _contentManager;
-        private readonly ILocalizationService _localizationService;
+        private readonly ILocalizationSetService _localizationService;
 
         public AdminController(
             IOrchardServices orchardServices,
             IContentManager contentManager,
-            ILocalizationService localizationService,
+            ILocalizationSetService localizationService,
             IShapeFactory shapeFactory) {
             _contentManager = contentManager;
             _localizationService = localizationService;
