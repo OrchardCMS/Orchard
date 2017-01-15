@@ -163,10 +163,15 @@ function buildCssPipeline(assetGroup, doConcat, doRebuild) {
                 zindex: false
             })
         ]))
-        .pipe(rename({
-            suffix: ".min"
-        }))
         .pipe(eol())
+        .pipe(rename(function (path) {
+            if (assetGroup.flatten)
+                path.dirname = "";
+            if (assetGroup.separateMinified)
+                path.dirname += "/min";
+            else
+                path.basename += ".min";
+        }))
         .pipe(gulp.dest(assetGroup.outputDir));
     var devStream = gulp.src(assetGroup.inputPaths) // Non-minified output, with source mapping.
         .pipe(gulpif(!doRebuild,
@@ -193,6 +198,10 @@ function buildCssPipeline(assetGroup, doConcat, doRebuild) {
             "*/\n\n"))
         .pipe(gulpif(generateSourceMaps, sourcemaps.write()))
         .pipe(eol())
+        .pipe(rename(function (path) {
+            if (assetGroup.flatten)
+                path.dirname = "";
+        }))
         .pipe(gulp.dest(assetGroup.outputDir));
     return merge([minifiedStream, devStream]);
 }
@@ -229,11 +238,19 @@ function buildJsPipeline(assetGroup, doConcat, doRebuild) {
             "** Any changes made directly to this file will be overwritten next time its asset group is processed by Gulp.\n" +
             "*/\n\n"))
         .pipe(gulpif(generateSourceMaps, sourcemaps.write()))
+        .pipe(eol())
+        .pipe(rename(function (path) {
+            if (assetGroup.flatten)
+                path.dirname = "";
+        }))
         .pipe(gulp.dest(assetGroup.outputDir))
         .pipe(uglify())
-        .pipe(rename({
-            suffix: ".min"
-        }))
         .pipe(eol())
+        .pipe(rename(function (path) {
+            if (assetGroup.separateMinified)
+                path.dirname += "/min";
+            else
+                path.basename += ".min";
+        }))
         .pipe(gulp.dest(assetGroup.outputDir));
 }
