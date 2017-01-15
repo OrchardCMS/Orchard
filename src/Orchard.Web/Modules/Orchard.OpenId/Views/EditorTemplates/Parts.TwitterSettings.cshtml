@@ -1,5 +1,5 @@
 ﻿@model Orchard.OpenId.Models.TwitterSettingsPart
-@using Orchard.OpenId;
+@using Orchard.OpenId.Constants
 @{
     Style.Include("TwitterAdmin").AtHead();
 
@@ -11,12 +11,12 @@
 <fieldset>
     @Html.LabelFor(m => m.ConsumerKey, T("Consumer Key"))
     @Html.TextBoxFor(m => m.ConsumerKey, new { @class = "text large" })
-    <span class="hint">@T("Twitter's Consumer Key obtained from your twitter dashboard (e.g. {0})", Constants.DefaultTwitterConsumerKey)</span>
+    <span class="hint">@T("Twitter's Consumer Key obtained from your twitter dashboard (e.g. {0})", Twitter.DefaultConsumerKey)</span>
 </fieldset>
 <fieldset>
     @Html.LabelFor(m => m.ConsumerSecret, T("Consumer Secret"))
     @Html.TextBoxFor(m => m.ConsumerSecret, new { @class = "text large" })
-    <span class="hint">@T("Twitter's Consumer Secret obtained from your twitter dashboard (e.g. {0})", Constants.DefaultTwitterConsumerSecret)</span>
+    <span class="hint">@T("Twitter's Consumer Secret obtained from your twitter dashboard (e.g. {0})", Twitter.DefaultConsumerSecret)</span>
 </fieldset>
 <fieldset>
     <h6 id="colExpControl" class="coll-exp-control" title="@T("Click to toggle view")">
