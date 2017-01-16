@@ -172,6 +172,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ContentManagement\Drivers\ContentFieldCloningDriver.cs" />
+    <Compile Include="ContentManagement\Drivers\ContentPartCloningDriver.cs" />
+    <Compile Include="ContentManagement\Drivers\IContentFieldCloningDriver.cs" />
+    <Compile Include="ContentManagement\Drivers\IContentPartCloningDriver.cs" />
     <Compile Include="ContentManagement\Extensions\DriverResultExtensions.cs" />
     <Compile Include="ContentManagement\Handlers\CloneContentContext.cs" />
     <Compile Include="Environment\Configuration\ExtensionLocations.cs" />

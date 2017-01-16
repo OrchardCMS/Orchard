@@ -174,6 +174,7 @@ namespace Orchard.ContentManagement.Drivers {
             return part.PartDefinition.Name + "-" + (versioned ? "VersionInfoset" : "Infoset");
         }
 
+
         [Obsolete("Provided while transitioning to factory variations")]
         public ContentShapeResult ContentShape(IShape shape) {
             return ContentShapeImplementation(shape.Metadata.Type, ctx => shape).Location("Content");
@@ -237,6 +238,5 @@ namespace Orchard.ContentManagement.Drivers {
 
             return contentPartInfo;
         }
-
     }
 }

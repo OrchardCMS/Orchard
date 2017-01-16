@@ -126,7 +126,6 @@ namespace Orchard.ContentManagement.Drivers {
         protected virtual void ImportCompleted(ContentPart part, TField field, ImportContentContext context) { }
         protected virtual void Exporting(ContentPart part, TField field, ExportContentContext context) { }
         protected virtual void Exported(ContentPart part, TField field, ExportContentContext context) { }
-
         protected virtual void Describe(DescribeMembersContext context) { }
 
         public ContentShapeResult ContentShape(string shapeType, Func<dynamic> factory) {

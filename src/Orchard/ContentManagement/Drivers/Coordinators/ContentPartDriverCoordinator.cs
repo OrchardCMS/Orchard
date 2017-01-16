@@ -31,8 +31,8 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
             foreach (var typePartDefinition in contentTypeDefinition.Parts) {
                 var partName = typePartDefinition.PartDefinition.Name;
                 var partInfo = partInfos.FirstOrDefault(pi => pi.PartName == partName);
-                var part = partInfo != null 
-                    ? partInfo.Factory(typePartDefinition) 
+                var part = partInfo != null
+                    ? partInfo.Factory(typePartDefinition)
                     : new ContentPart { TypePartDefinition = typePartDefinition };
                 context.Builder.Weld(part);
             }
@@ -93,6 +93,48 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
         public override void Exported(ExportContentContext context) {
             foreach (var contentPartDriver in _drivers.OrderBy(x => x.GetPartInfo().First().PartName)) {
                 contentPartDriver.Exported(context);
+            }
+        }
+
+        public override void Cloning(CloneContentContext context) {
+            var dGroups = _drivers.GroupBy(cpd => cpd.GetPartInfo().FirstOrDefault().PartName);
+            foreach (var driverGroup in dGroups) {
+                //if no driver implements Cloning, run the fallback for the part
+                var cloningDrivers = driverGroup.Select(cpd => cpd as IContentPartCloningDriver).Where(cpd => cpd != null);
+                if (cloningDrivers.Any()) {
+                    foreach (var contentPartDriver in cloningDrivers) {
+                        contentPartDriver.Cloning(context);
+                    }
+                }
+                else {
+                    //fallback
+                    var ecc = new ExportContentContext(context.ContentItem, new System.Xml.Linq.XElement(System.Xml.XmlConvert.EncodeLocalName(context.ContentItem.ContentType)));
+                    foreach (var contentPartDriver in driverGroup) {
+                        contentPartDriver.Exporting(ecc);
+                    }
+                    foreach (var contentPartDriver in driverGroup) {
+                        contentPartDriver.Exported(ecc);
+                    }
+                    var importContentSession = new ImportContentSession(context.ContentManager);
+                    var copyId = context.CloneContentItem.Id.ToString();
+                    importContentSession.Set(copyId, ecc.Data.Name.LocalName);
+                    var icc = new ImportContentContext(context.CloneContentItem, ecc.Data, importContentSession);
+                    foreach (var contentPartDriver in driverGroup) {
+                        contentPartDriver.Importing(icc);
+                    }
+                    foreach (var contentPartDriver in driverGroup) {
+                        contentPartDriver.Imported(icc);
+                    }
+                    foreach (var contentPartDriver in driverGroup) {
+                        contentPartDriver.ImportCompleted(icc);
+                    }
+                }
+            }
+        }
+
+        public override void Cloned(CloneContentContext context) {
+            foreach (var contentPartDriver in _drivers.Select(cpd => cpd as IContentPartCloningDriver).Where(cpd => cpd != null)) {
+                contentPartDriver.Cloned(context);
             }
         }
     }
