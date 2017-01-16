@@ -105,6 +105,9 @@ namespace Orchard.PublishLater.Drivers {
                 }
             }
 
+            if (httpContext.Request.Form["submit.Save"] == "submit.RemovePublishLaterTasks") {
+                _publishLaterService.RemovePublishLaterTasks(model.ContentItem);
+            }
             return ContentShape("Parts_PublishLater_Edit",
                                 () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix));
         }
