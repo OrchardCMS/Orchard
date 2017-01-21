@@ -5,7 +5,7 @@
 <h1 class="title">Logon</h1>
 <hr />
 <h5></h5>
-@using (Html.BeginFormAntiForgeryPost(Url.Action("LogOn", "Account", new { Area = "Orchard.Users", ReturnUrl = Request.QueryString["ReturnUrl"] }))) {
+@using (Html.BeginFormAntiForgeryPost(Url.Action("LogOn", "Account", new { Area = "Orchard.OpenId", ReturnUrl = Request.QueryString["ReturnUrl"] }))) {
     <fieldset class="login-form group">
         <legend>@T("Account Information")</legend>
         <ol>
