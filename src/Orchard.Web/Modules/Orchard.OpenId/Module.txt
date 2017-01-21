@@ -5,6 +5,7 @@ Website: http://orchardproject.net
 Version: 1.0
 OrchardVersion: 1.10.1
 Description: Enables Orchard to authenticate users using OpenId
+Dependencies: Orchard.Users
 Category: OpenId Providers
 Features:
     Orchard.OpenId:
@@ -25,7 +26,7 @@ Features:
         Description: Enables Orchard to authenticate users using their Twitter Accounts
 		Category: Authentication
 		Name: Twitter
-		Dependencies: Orchard.OpenId
+		Dependencies: Orchard.OpenId, Orchard.Resources
     Orchard.OpenId.AzureActiveDirectory:
         Description: Enables Orchard to authenticate users using their Azure AD Accounts
 		Category: Authentication
