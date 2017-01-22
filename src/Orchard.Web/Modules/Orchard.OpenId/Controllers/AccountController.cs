@@ -46,6 +46,7 @@ namespace Orchard.OpenId.Controllers
         public ILogger Logger { get; set; }
         public Localizer T { get; set; }
 
+        [AlwaysAccessible]
         [HttpGet]
         public ActionResult LogOn() {
             if (Request.IsAuthenticated) {
@@ -68,11 +69,13 @@ namespace Orchard.OpenId.Controllers
             }
 
             var membershipSettings = _membershipService.GetSettings();
+
             if (user != null &&
                 membershipSettings.EnableCustomPasswordPolicy &&
                 membershipSettings.EnablePasswordExpiration &&
-                _membershipService.PasswordIsExpired(user, membershipSettings.PasswordExpirationTimeInDays)) {
-                return RedirectToAction("ChangeExpiredPassword", new { username = user.UserName });
+                _membershipService.PasswordIsExpired(user, membershipSettings.PasswordExpirationTimeInDays))
+            {
+                return RedirectToAction("ChangeExpiredPassword", "Account", new { Area = "Orchard.Users", username = user.UserName });
             }
 
             _authenticationService.SignIn(user, rememberMe);

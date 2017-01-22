@@ -5,21 +5,27 @@ using System.Web.Routing;
 using Orchard.Mvc.Routes;
 using Orchard.OpenId.Services;
 
-namespace Orchard.Azure.Authentication {
-    public class OpenIdRoutes : IRouteProvider {
+namespace Orchard.OpenId.Routes
+{
+    public class OpenIdRoutes : IRouteProvider
+    {
         private readonly IEnumerable<IOpenIdProvider> _openIdProviders;
 
-        public OpenIdRoutes(IEnumerable<IOpenIdProvider> openIdProviders) {
+        public OpenIdRoutes(IEnumerable<IOpenIdProvider> openIdProviders)
+        {
             _openIdProviders = openIdProviders;
         }
 
-        public void GetRoutes(ICollection<RouteDescriptor> routes) {
-            foreach (var route in GetRoutes()) {
+        public void GetRoutes(ICollection<RouteDescriptor> routes)
+        {
+            foreach (var route in GetRoutes())
+            {
                 routes.Add(route);
             }
         }
 
-        public IEnumerable<RouteDescriptor> GetRoutes() {
+        public IEnumerable<RouteDescriptor> GetRoutes()
+        {
             if (IsAnyProviderSettingsValid() == false)
                 return Enumerable.Empty<RouteDescriptor>();
 
@@ -44,6 +50,57 @@ namespace Orchard.Azure.Authentication {
                 new RouteDescriptor {
                     Priority = 10,
                     Route = new Route(
+                        "Users/Account/LogOn",
+                        new RouteValueDictionary {
+                            {"area", "Orchard.OpenId"},
+                            {"controller", "Account"},
+                            {"action","LogOn" }
+                        },
+                        new RouteValueDictionary(),
+                        new RouteValueDictionary {
+                            {"area", "Orchard.OpenId"},
+                            {"controller", "Account"},
+                            {"action","LogOn" }
+                        },
+                        new MvcRouteHandler())
+                },
+                 new RouteDescriptor {
+                    Priority = 10,
+                    Route = new Route(
+                        "Users/Account/LogOff",
+                        new RouteValueDictionary {
+                            {"area", "Orchard.OpenId"},
+                            {"controller", "Account"},
+                            {"action","LogOff" }
+                        },
+                        new RouteValueDictionary(),
+                        new RouteValueDictionary {
+                            {"area", "Orchard.OpenId"},
+                            {"controller", "Account"},
+                            {"action","LogOff" }
+                        },
+                        new MvcRouteHandler())
+                },
+                  new RouteDescriptor {
+                    Priority = 10,
+                    Route = new Route(
+                        "Users/Account/AccessDenied",
+                        new RouteValueDictionary {
+                            {"area", "Orchard.OpenId"},
+                            {"controller", "Account"},
+                            {"action","AccessDenied" }
+                        },
+                        new RouteValueDictionary(),
+                        new RouteValueDictionary {
+                            {"area", "Orchard.OpenId"},
+                            {"controller", "Account"},
+                            {"action","AccessDenied" }
+                        },
+                        new MvcRouteHandler())
+                },
+                new RouteDescriptor {
+                    Priority = -20,
+                    Route = new Route(
                         "Users/Account/{action}",
                         new RouteValueDictionary {
                             {"area", "Orchard.OpenId"},
@@ -56,6 +113,7 @@ namespace Orchard.Azure.Authentication {
                         },
                         new MvcRouteHandler())
                 },
+
                 new RouteDescriptor {
                     Priority = 10,
                     Route = new Route(
@@ -76,7 +134,8 @@ namespace Orchard.Azure.Authentication {
             };
         }
 
-        private bool IsAnyProviderSettingsValid() {
+        private bool IsAnyProviderSettingsValid()
+        {
             return _openIdProviders.Any(provider => provider.IsValid);
         }
     }
