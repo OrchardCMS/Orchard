@@ -5,27 +5,21 @@ using System.Web.Routing;
 using Orchard.Mvc.Routes;
 using Orchard.OpenId.Services;
 
-namespace Orchard.OpenId.Routes
-{
-    public class OpenIdRoutes : IRouteProvider
-    {
+namespace Orchard.OpenId.Routes {
+    public class OpenIdRoutes : IRouteProvider {
         private readonly IEnumerable<IOpenIdProvider> _openIdProviders;
 
-        public OpenIdRoutes(IEnumerable<IOpenIdProvider> openIdProviders)
-        {
+        public OpenIdRoutes(IEnumerable<IOpenIdProvider> openIdProviders) {
             _openIdProviders = openIdProviders;
         }
 
-        public void GetRoutes(ICollection<RouteDescriptor> routes)
-        {
-            foreach (var route in GetRoutes())
-            {
+        public void GetRoutes(ICollection<RouteDescriptor> routes) {
+            foreach (var route in GetRoutes()) {
                 routes.Add(route);
             }
         }
 
-        public IEnumerable<RouteDescriptor> GetRoutes()
-        {
+        public IEnumerable<RouteDescriptor> GetRoutes() {
             if (IsAnyProviderSettingsValid() == false)
                 return Enumerable.Empty<RouteDescriptor>();
 
@@ -64,7 +58,7 @@ namespace Orchard.OpenId.Routes
                         },
                         new MvcRouteHandler())
                 },
-                 new RouteDescriptor {
+                new RouteDescriptor {
                     Priority = 10,
                     Route = new Route(
                         "Users/Account/LogOff",
@@ -81,7 +75,7 @@ namespace Orchard.OpenId.Routes
                         },
                         new MvcRouteHandler())
                 },
-                  new RouteDescriptor {
+                new RouteDescriptor {
                     Priority = 10,
                     Route = new Route(
                         "Users/Account/AccessDenied",
@@ -134,8 +128,7 @@ namespace Orchard.OpenId.Routes
             };
         }
 
-        private bool IsAnyProviderSettingsValid()
-        {
+        private bool IsAnyProviderSettingsValid() {
             return _openIdProviders.Any(provider => provider.IsValid);
         }
     }
