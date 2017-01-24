@@ -49,6 +49,7 @@ namespace Orchard.Tests.Utility.Extensions {
             request.Headers.Add("Host", "localhost");
 
             Assert.That(request.IsLocalUrl("http://localhost"), Is.True);
+            Assert.That(request.IsLocalUrl("https://localhost"), Is.True);
         }
 
         [Test]
@@ -56,12 +57,10 @@ namespace Orchard.Tests.Utility.Extensions {
             var request = new StubHttpRequest();
             request.Headers.Add("Host", "localhost");
 
-            Assert.That(request.IsLocalUrl("http://localhost"), Is.True);
-            Assert.That(request.IsLocalUrl("https://localhost"), Is.True);
-            Assert.That(request.IsLocalUrl("httpx://localhost"), Is.True);
-            Assert.That(request.IsLocalUrl("foo://localhost"), Is.True);
-            Assert.That(request.IsLocalUrl("data://localhost"), Is.True);
-            Assert.That(request.IsLocalUrl("data://localhost"), Is.True);
+            Assert.That(request.IsLocalUrl("httpx://localhost"), Is.False);
+            Assert.That(request.IsLocalUrl("foo://localhost"), Is.False);
+            Assert.That(request.IsLocalUrl("data://localhost"), Is.False);
+            Assert.That(request.IsLocalUrl("mailto://localhost"), Is.False);
         }
 
         [Test]
