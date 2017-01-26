@@ -5,13 +5,13 @@ Website: http://orchardproject.net
 Version: 1.0
 OrchardVersion: 1.10.1
 Description: Enables Orchard to authenticate users using OpenId
-Dependencies: Orchard.Users
 Category: OpenId Providers
 Features:
     Orchard.OpenId:
         Description: Enables Orchard to authenticate users using OpenId
 		Category: Authentication
 		Name: OpenId
+		Dependencies: Orchard.Users
     Orchard.OpenId.Facebook:
         Description: Enables Orchard to authenticate users using their Facebook Accounts
 		Category: Authentication
