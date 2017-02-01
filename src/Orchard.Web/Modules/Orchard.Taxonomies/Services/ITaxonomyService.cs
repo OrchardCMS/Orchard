@@ -41,6 +41,7 @@ namespace Orchard.Taxonomies.Services {
 
 
         IEnumerable<TermPart> GetTerms(int taxonomyId);
+        IEnumerable<TermPart> GetRootTerms(int taxonomyId);
         int GetTermsCount(int taxonomyId);
         TermPart GetTerm(int id);
         TermPart GetTermByName(int taxonomyId, string name);
