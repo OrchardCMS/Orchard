@@ -70,7 +70,7 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeAttributeStrategy {
             catch(TargetInvocationException e) {
                 // Throwing a TIE here will probably kill the web process
                 // in Azure. For unknown reasons.
-                throw e.InnerException;
+                throw new Exception(string.Concat("TargetInvocationException ", methodInfo.Name), e.InnerException);
             }
         }
 
