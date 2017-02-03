@@ -31,9 +31,5 @@ namespace Orchard.PublishLater.Services {
             IScheduledTask task = _publishingTaskManager.GetPublishTask(publishLaterPart.ContentItem);
             return (task == null ? null : task.ScheduledUtc);
         }
-
-        public void RemovePublishLaterTasks(ContentItem contentItem) {
-            _publishingTaskManager.DeleteTasks(contentItem);
-        }
     }
 }
