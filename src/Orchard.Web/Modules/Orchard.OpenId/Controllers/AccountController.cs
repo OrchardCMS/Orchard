@@ -18,6 +18,7 @@ using Orchard.Users.Events;
 namespace Orchard.OpenId.Controllers
 {
     [Themed]
+    [AlwaysAccessible]
     [OrchardFeature("Orchard.OpenId")]
     public class AccountController : Controller {
         private readonly IEnumerable<IOpenIdProvider> _openIdProviders;
@@ -47,16 +48,17 @@ namespace Orchard.OpenId.Controllers
         public Localizer T { get; set; }
 
         [HttpGet]
-        public ActionResult LogOn() {
+        public ActionResult LogOn(string returnUrl) {
             if (Request.IsAuthenticated) {
                 return Redirect(Url.Content("~/"));
             }
+
+            ViewData["ReturnUrl"] = returnUrl;
 
             return View(_openIdProviders);
         }
 
         [HttpPost]
-        [AlwaysAccessible]
         [ValidateInput(false)]
         [SuppressMessage("Microsoft.Design", "CA1054:UriParametersShouldNotBeStrings", Justification = "Needs to take same parameter type as Controller.Redirect()")]
         public ActionResult LogOn(string userNameOrEmail, string password, string returnUrl, bool rememberMe = false) {
@@ -81,15 +83,19 @@ namespace Orchard.OpenId.Controllers
             return this.RedirectLocal(returnUrl);
         }
 
-        public void Challenge(string openIdProvider) {
+        [SuppressMessage("Microsoft.Design", "CA1054:UriParametersShouldNotBeStrings", Justification = "Needs to take same parameter type as Controller.Redirect()")]
+        public void Challenge(string openIdProvider, string returnUrl) {
             _userEventHandler.LoggingIn(openIdProvider, String.Empty);
 
             if (String.IsNullOrWhiteSpace(openIdProvider))
                 openIdProvider = OpenIdConnectAuthenticationDefaults.AuthenticationType;
 
             if (Request.IsAuthenticated) {
-                Redirect(Url.Content("~/"));
+                Redirect(returnUrl);
                 return;
+            }
+            else {
+                TempData["ReturnUrl"] = returnUrl;
             }
 
             var redirectUri = Url.Content(String.Concat(Constants.General.LogonCallbackUrl));
@@ -116,7 +122,10 @@ namespace Orchard.OpenId.Controllers
             var user = _authenticationService.GetAuthenticatedUser();
             _userEventHandler.LoggedIn(user);
 
-            return Redirect(Url.Content("~/"));
+            if (TempData.ContainsKey("ReturnUrl"))
+                return Redirect((String)TempData["ReturnUrl"]);
+            else
+                return Redirect(Url.Content("~/"));
         }
 
         public ActionResult AccessDenied() {
@@ -124,7 +133,7 @@ namespace Orchard.OpenId.Controllers
             var currentUser = _authenticationService.GetAuthenticatedUser();
 
             if (currentUser == null) {
-                return RedirectToAction("Logon");
+                return RedirectToAction("Logon", new { returnUrl = returnUrl });
             }
 
             _userEventHandler.AccessDenied(currentUser);

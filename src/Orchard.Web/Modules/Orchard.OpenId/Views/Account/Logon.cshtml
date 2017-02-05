@@ -32,7 +32,7 @@
 
 @foreach (var provider in Model) {
     if (provider.IsValid) {
-        <a class="button @provider.Name.HtmlClassify()" href="@Url.Action("Challenge", "Account", new { Area = "Orchard.OpenId", openIdProvider = provider.AuthenticationType })">
+        <a class="button @provider.Name.HtmlClassify()" href="@Url.Action("Challenge", "Account", new { Area = "Orchard.OpenId", openIdProvider = provider.AuthenticationType, returnUrl = ViewData["ReturnUrl"] })">
             @provider.DisplayName
         </a>
     }
