@@ -9,14 +9,8 @@ using Orchard.Mvc.Routes;
 namespace Orchard.Core.Settings {
     public class Routes : IRouteProvider {
         public void GetRoutes(ICollection<RouteDescriptor> routes) {
-            foreach (var routeDescriptor in GetRoutes())
-                routes.Add(routeDescriptor);
-        }
-
-        public IEnumerable<RouteDescriptor> GetRoutes() {
-            return new[] {
-                new RouteDescriptor {
-                    Route = new Route(
+            var routeDescriptor = new RouteDescriptor {
+                Route = new Route(
                         "Admin/Settings/{groupInfoId}",
                         new RouteValueDictionary {
                             {"area", "Settings"},
@@ -31,11 +25,11 @@ namespace Orchard.Core.Settings {
                             {"groupInfoId", ""}
                         },
                         new MvcRouteHandler())
-                }
             };
-        }
 
-   }
+            routes.Add(routeDescriptor);
+        }
+    }
 
     public class SettingsActionConstraint : IRouteConstraint {
         public bool Match(HttpContextBase httpContext, Route route, string parameterName, RouteValueDictionary values, RouteDirection routeDirection) {
@@ -44,7 +38,7 @@ namespace Orchard.Core.Settings {
 
             if (!values.ContainsKey(parameterName))
                 return false;
-            
+
             // just hard-coding to know action name strings for now
             var potentialActionName = values[parameterName] as string;
             return !string.IsNullOrWhiteSpace(potentialActionName)
