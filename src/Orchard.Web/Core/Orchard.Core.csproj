@@ -397,7 +397,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Gamma\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Contents\Views\Content.cshtml" />
