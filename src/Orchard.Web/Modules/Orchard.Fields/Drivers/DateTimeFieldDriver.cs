@@ -165,9 +165,7 @@ namespace Orchard.Fields.Drivers {
         }
 
         protected override void Exporting(ContentPart part, DateTimeField field, ExportContentContext context) {
-            var value = field.Storage.Get<DateTime>(null);
-            if (value != DateTime.MinValue)
-                context.Element(GetPrefix(field, part)).SetAttributeValue("Value", XmlConvert.ToString(value, XmlDateTimeSerializationMode.Utc));
+            context.Element(GetPrefix(field, part)).SetAttributeValue("Value", XmlConvert.ToString(field.Storage.Get<DateTime>(null), XmlDateTimeSerializationMode.Utc));
         }
 
         protected override void Describe(DescribeMembersContext context) {
