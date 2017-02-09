@@ -62,8 +62,7 @@ namespace Orchard.Fields.Drivers {
         }
 
         protected override void Exporting(ContentPart part, BooleanField field, ExportContentContext context) {
-			if (field.Value.HasValue)
-				context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Value", field.Value);
+            context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Value", field.Value);
         }
 
         protected override void Cloning(ContentPart part, BooleanField originalField, BooleanField cloneField, CloneContentContext context) {

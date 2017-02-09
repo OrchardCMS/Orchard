@@ -151,11 +151,12 @@
   </Target>
 
   <Target Name="Spec" DependsOnTargets="Package-Stage">
-
-    <CreateItem Include="$(CompileFolder)\*.Specs.dll">
+    <!-- Running SpecFlow tests -->
+    <CreateItem Include="$(CompileFolder)\*.Specs.*dll">
       <Output TaskParameter="Include" ItemName="SpecAssemblies" />
     </CreateItem>
-    <NUnit Assemblies="@(SpecAssemblies)" ToolPath="$(NUnitPackageToolsFolder)" />
+    
+    <NUnit Assemblies="@(SpecAssemblies)" ToolPath="@(NUnitPackageToolsFolder)" WorkingDirectory="$(CompileFolder)" OutputXmlFile="$(BuildFolder)\Orchard.Specs.xml" />
   </Target>
 
   <!-- Packaging (Stage) -->

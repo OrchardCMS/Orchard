@@ -58,7 +58,7 @@ namespace Orchard.Redis.Caching {
         }
 
         public void Clear() {
-            Database.KeyDeleteWithPrefix(GetLocalizedKey("*"));
+            _connectionMultiplexer.KeyDeleteWithPrefix(GetLocalizedKey("*"));
         }
 
         private string GetLocalizedKey(string key) {
