@@ -208,6 +208,7 @@ namespace Orchard.ContentManagement {
         public int Count() {
             ApplyHqlVersionOptionsRestrictions(_versionOptions);
             var hql = ToHql(true);
+            hql = "select count(Id) from Orchard.ContentManagement.Records.ContentItemVersionRecord where Id in ( " + hql + " )";
             return Convert.ToInt32(_session.CreateQuery(hql)
                            .SetCacheable(true)
                            .UniqueResult())
@@ -218,7 +219,7 @@ namespace Orchard.ContentManagement {
             var sb = new StringBuilder();
 
             if (count) {
-                sb.Append("select count(distinct civ.Id)").AppendLine();
+                sb.Append("select distinct civ.Id as Id").AppendLine();
             }
             else {
                 sb.Append("select distinct civ.Id as Id");
