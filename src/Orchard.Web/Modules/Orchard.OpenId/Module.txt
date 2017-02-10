@@ -11,6 +11,7 @@ Features:
         Description: Enables Orchard to authenticate users using OpenId
 		Category: Authentication
 		Name: OpenId
+		Dependencies: Orchard.Users
     Orchard.OpenId.Facebook:
         Description: Enables Orchard to authenticate users using their Facebook Accounts
 		Category: Authentication
@@ -25,7 +26,7 @@ Features:
         Description: Enables Orchard to authenticate users using their Twitter Accounts
 		Category: Authentication
 		Name: Twitter
-		Dependencies: Orchard.OpenId
+		Dependencies: Orchard.OpenId, Orchard.Resources
     Orchard.OpenId.AzureActiveDirectory:
         Description: Enables Orchard to authenticate users using their Azure AD Accounts
 		Category: Authentication
