@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Web;
+using System.Web.Hosting;
 using System.Web.Mvc;
 using Autofac.Features.Metadata;
 using Orchard.Environment.Extensions.Models;
@@ -27,14 +28,14 @@ namespace Orchard.UI.Resources {
         private const string NotIE = "!IE";
 
         private static string ToAppRelativePath(string resourcePath) {
-            if (!String.IsNullOrEmpty(resourcePath) && !Uri.IsWellFormedUriString(resourcePath, UriKind.Absolute)) {
+            if (!String.IsNullOrEmpty(resourcePath) && !Uri.IsWellFormedUriString(resourcePath, UriKind.Absolute) && !resourcePath.StartsWith("//")) {
                 resourcePath = VirtualPathUtility.ToAppRelative(resourcePath);
             }
             return resourcePath;
         }
 
-        private static string FixPath(string resourcePath, string relativeFromPath) {
-            if (!String.IsNullOrEmpty(resourcePath) && !VirtualPathUtility.IsAbsolute(resourcePath) && !Uri.IsWellFormedUriString(resourcePath, UriKind.Absolute)) {
+        private static string ToAbsolutePath(string resourcePath, string relativeFromPath) {
+            if (!String.IsNullOrEmpty(resourcePath) && !VirtualPathUtility.IsAbsolute(resourcePath) && !Uri.IsWellFormedUriString(resourcePath, UriKind.Absolute) && !resourcePath.StartsWith("//")) {
                 // appears to be a relative path (e.g. 'foo.js' or '../foo.js', not "/foo.js" or "http://..")
                 if (String.IsNullOrEmpty(relativeFromPath)) {
                     throw new InvalidOperationException("ResourcePath cannot be relative unless a base relative path is also provided.");
@@ -42,6 +43,13 @@ namespace Orchard.UI.Resources {
                 resourcePath = VirtualPathUtility.ToAbsolute(VirtualPathUtility.Combine(relativeFromPath, resourcePath));
             }
             return resourcePath;
+        }
+
+        private static string ToPhysicalPath(string resourcePath) {
+            if (!String.IsNullOrEmpty(resourcePath) && (VirtualPathUtility.IsAppRelative(resourcePath) || VirtualPathUtility.IsAbsolute(resourcePath)) && !Uri.IsWellFormedUriString(resourcePath, UriKind.Absolute) && !resourcePath.StartsWith("//")) {
+                return HostingEnvironment.MapPath(resourcePath);
+            }
+            return null;
         }
 
         private static TagBuilder GetTagBuilder(ResourceDefinition resource, string url) {
@@ -142,17 +150,27 @@ namespace Orchard.UI.Resources {
                 throw new ArgumentNullException("resourcePath");
             }
 
-            // ~/ ==> convert to absolute path (e.g. /orchard/..)
+            // Convert app-relative paths (~/) to absolute paths (e.g. /orchard/..)
             if (VirtualPathUtility.IsAppRelative(resourcePath)) {
                 resourcePath = VirtualPathUtility.ToAbsolute(resourcePath);
             }
             if (resourceDebugPath != null && VirtualPathUtility.IsAppRelative(resourceDebugPath)) {
                 resourceDebugPath = VirtualPathUtility.ToAbsolute(resourceDebugPath);
             }
+            
+            // Convert relative paths (e.g. dir/file.css) to absolute paths.
+            resourcePath = ToAbsolutePath(resourcePath, relativeFromPath);
+            resourceDebugPath = ToAbsolutePath(resourceDebugPath, relativeFromPath);
 
-            resourcePath = FixPath(resourcePath, relativeFromPath);
-            resourceDebugPath = FixPath(resourceDebugPath, relativeFromPath);
-            return Require(resourceType, ToAppRelativePath(resourcePath)).Define(d => d.SetUrl(resourcePath, resourceDebugPath));
+            // Resolve absolute paths (not full URLs) to physical file paths.
+            var resourcePhysicalPath = ToPhysicalPath(resourcePath);
+            var resourceDebugPhysicalPath = ToPhysicalPath(resourceDebugPath);
+
+            return Require(resourceType, ToAppRelativePath(resourcePath)).Define(d => {
+                d.SetUrl(resourcePath, resourceDebugPath);
+                if (resourcePhysicalPath != null)
+                    d.SetPhysicalPath(resourcePhysicalPath, resourceDebugPhysicalPath);
+            });
         }
 
         public virtual void RegisterHeadScript(string script) {
@@ -266,8 +284,13 @@ namespace Orchard.UI.Resources {
                 }
                 ExpandDependencies(resource, settings, allResources);
             }
-            requiredResources = (from DictionaryEntry entry in allResources
-                                 select new ResourceRequiredContext { Resource = (ResourceDefinition)entry.Key, Settings = (RequireSettings)entry.Value }).ToList();
+            requiredResources = (
+                    from DictionaryEntry entry in allResources
+                    select new ResourceRequiredContext() {
+                        Resource = (ResourceDefinition)entry.Key,
+                        Settings = (RequireSettings)entry.Value
+                    }
+                ).ToList();
             _builtResources[resourceType] = requiredResources;
             return requiredResources;
         }
@@ -285,8 +308,9 @@ namespace Orchard.UI.Resources {
                 ? ((RequireSettings)allResources[resource]).Combine(settings)
                 : new RequireSettings { Type = resource.Type, Name = resource.Name }.Combine(settings);
             if (resource.Dependencies != null) {
-                var dependencies = from d in resource.Dependencies
-                                   select FindResource(new RequireSettings { Type = resource.Type, Name = d });
+                var dependencies = 
+                    from d in resource.Dependencies
+                    select FindResource(new RequireSettings { Type = resource.Type, Name = d });
                 foreach (var dependency in dependencies) {
                     if (dependency == null) {
                         continue;

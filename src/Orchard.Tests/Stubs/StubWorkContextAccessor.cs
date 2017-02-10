@@ -66,7 +66,7 @@ namespace Orchard.Tests.Stubs {
                     set { throw new NotImplementedException(); }
                 }
 
-				public string SiteCalendar {
+                public string SiteCalendar {
                     get { throw new NotImplementedException(); }
                     set { throw new NotImplementedException(); }
                 }
@@ -80,6 +80,11 @@ namespace Orchard.Tests.Stubs {
                      get { throw new NotImplementedException(); }
                      set { throw new NotImplementedException(); }
                  }
+
+                public bool UseFileHash {
+                    get { throw new NotImplementedException(); }
+                    set { throw new NotImplementedException(); }
+                }
 
                 public int PageSize {
                     get { throw new NotImplementedException(); }

@@ -192,6 +192,11 @@ namespace Orchard.Setup {
                 set { throw new NotImplementedException(); }
             }
 
+            public bool UseFileHash {
+                get { return false; }
+                set { throw new NotImplementedException(); }
+            }
+
             public int PageSize {
                 get { return SiteSettingsPart.DefaultPageSize; }
                 set { throw new NotImplementedException(); }
