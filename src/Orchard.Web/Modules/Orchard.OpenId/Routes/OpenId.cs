@@ -14,16 +14,10 @@ namespace Orchard.Azure.Authentication {
         }
 
         public void GetRoutes(ICollection<RouteDescriptor> routes) {
-            foreach (var route in GetRoutes()) {
-                routes.Add(route);
-            }
-        }
-
-        public IEnumerable<RouteDescriptor> GetRoutes() {
             if (IsAnyProviderSettingsValid() == false)
-                return Enumerable.Empty<RouteDescriptor>();
+                return;
 
-            return new[] {
+            var routeDescriptors = new[] {
                 new RouteDescriptor {
                     Priority = 11,
                     Route = new Route(
@@ -74,6 +68,10 @@ namespace Orchard.Azure.Authentication {
                         new MvcRouteHandler())
                 }
             };
+
+            foreach (var routeDescriptor in routeDescriptors) {
+                routes.Add(routeDescriptor);
+            }
         }
 
         private bool IsAnyProviderSettingsValid() {

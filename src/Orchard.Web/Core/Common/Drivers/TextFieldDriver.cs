@@ -84,8 +84,7 @@ namespace Orchard.Core.Common.Drivers {
         }
 
         protected override void Exporting(ContentPart part, TextField field, ExportContentContext context) {
-            if (!String.IsNullOrEmpty(field.Value))
-                context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Text", field.Value);
+            context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Text", field.Value);
         }
 
         protected override void Cloning(ContentPart part, TextField originalField, TextField cloneField, CloneContentContext context) {

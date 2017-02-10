@@ -1,0 +1,35 @@
+﻿@model List<FormExportEntry>
+@using Orchard.DynamicForms.ViewModels;
+
+@{
+    Style.Include("recipebuilderstep-forms.css");
+}
+
+<div>
+    <table class="items">
+        <thead>
+            <tr>
+                <th>@T("Form")</th>
+                <th>
+                    <input type="checkbox" class="check-all-in-column" />
+                    @T("Select All")
+                </th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @for (int index = 0; index < Model.Count(); index++) {
+                var entry = Model.ElementAt(index);
+                <tr>
+                    <td>@entry.FormName</td>
+                    <td>
+                        <input type="hidden" name="@Html.NameFor(m => m[index].FormName)" value="@entry.FormName" />
+                        <input type="checkbox" class="check-data" name="@Html.NameFor(m => m[index].Export)" value="true" />
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+    @Html.Hint(T("Choose the forms to include in the export file"))
+</div>

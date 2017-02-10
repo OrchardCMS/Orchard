@@ -47,7 +47,8 @@ namespace Orchard.OutputCache.Controllers {
                 // Right now, ignore generic routes.
                 if (routeProvider.Value is StandardExtensionRouteProvider) continue;
 
-                var routes = routeProvider.Value.GetRoutes();
+                var routes = new List<RouteDescriptor>();
+                routeProvider.Value.GetRoutes(routes);
                 var feature = routeProvider.Metadata["Feature"] as Orchard.Environment.Extensions.Models.Feature;
 
                 // If there is no feature, skip route.
