@@ -23,7 +23,7 @@ namespace Orchard.Users {
                     .Column<DateTime>("CreatedUtc")
                     .Column<DateTime>("LastLoginUtc")
                     .Column<DateTime>("LastLogoutUtc")
-                    .Column<DateTime>("LastPasswordChangeUtc", c => c.WithDefault(new DateTime(1990, 1, 1)))
+                    .Column<DateTime>("LastPasswordChangeUtc", c => c.WithDefault(new DateTime(1990, 1, 1).ToString("yyyy-MM-dd")))
                 );
 
             ContentDefinitionManager.AlterTypeDefinition("User", cfg => cfg.Creatable(false));
@@ -59,7 +59,7 @@ namespace Orchard.Users {
         public int UpdateFrom4() {
             SchemaBuilder.AlterTable("UserPartRecord",
                 table => {
-                    table.AddColumn<DateTime>("LastPasswordChangeUtc", c => c.WithDefault(new DateTime(1990, 1, 1)));
+                    table.AddColumn<DateTime>("LastPasswordChangeUtc", c => c.WithDefault(new DateTime(1990, 1, 1).ToString("yyyy-MM-dd")));
                 });
 
             return 5;
