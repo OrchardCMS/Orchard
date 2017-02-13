@@ -66,7 +66,7 @@ namespace Orchard.MultiTenancy.Controllers {
             }
 
             // Ensure tenants name are valid.
-            if (!String.IsNullOrEmpty(viewModel.Name) && !Regex.IsMatch(viewModel.Name, @"^\w+$")) {
+            if (!String.IsNullOrEmpty(viewModel.Name) && !Regex.IsMatch(viewModel.Name, @"^[a-zA-Z]\w*$")) {
                 ModelState.AddModelError("Name", T("Invalid tenant name. Must contain characters only and no spaces.").Text);
             }
 

@@ -36,7 +36,7 @@ namespace Orchard.Fields.Drivers {
         protected override DriverResult Editor(ContentPart part, InputField field, dynamic shapeHelper) {
             return ContentShape("Fields_Input_Edit", GetDifferentiator(field, part),
                 () => {
-                    if (part.IsNew()) {
+                    if (part.IsNew() && String.IsNullOrEmpty(field.Value)) {
                         var settings = field.PartFieldDefinition.Settings.GetModel<InputFieldSettings>();
                         field.Value = settings.DefaultValue;
                     }
@@ -61,8 +61,7 @@ namespace Orchard.Fields.Drivers {
         }
 
         protected override void Exporting(ContentPart part, InputField field, ExportContentContext context) {
-            if (!String.IsNullOrEmpty(field.Value))
-                context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Value", field.Value);
+            context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Value", field.Value);
         }
 
         protected override void Cloning(ContentPart part, InputField originalField, InputField cloneField, CloneContentContext context) {

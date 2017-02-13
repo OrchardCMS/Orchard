@@ -54,7 +54,7 @@ namespace Orchard.Redis.OutputCache {
         }
 
         public void Set(string key, CacheItem cacheItem) {
-            if(cacheItem == null) {
+            if (cacheItem == null) {
                 throw new ArgumentNullException("cacheItem");
             }
 
@@ -74,7 +74,7 @@ namespace Orchard.Redis.OutputCache {
         }
 
         public void RemoveAll() {
-            Database.KeyDeleteWithPrefix(GetLocalizedKey("*"));
+            Database.KeyDelete(GetPrefixedKeys().Select(key => (RedisKey)key).ToArray());
         }
 
         public CacheItem GetCacheItem(string key) {
@@ -85,11 +85,11 @@ namespace Orchard.Redis.OutputCache {
             }
 
             using (var compressedStream = new MemoryStream(value)) {
-                if(compressedStream.Length == 0) {
+                if (compressedStream.Length == 0) {
                     return null;
                 }
 
-                using(var decompressedStream = Decompress(compressedStream)) {
+                using (var decompressedStream = Decompress(compressedStream)) {
                     return Deserialize(decompressedStream);
                 }
             }
@@ -106,7 +106,7 @@ namespace Orchard.Redis.OutputCache {
         }
 
         public int GetCacheItemsCount() {
-            return Database.KeyCount(GetLocalizedKey("*"));
+            return GetPrefixedKeys().Count();
         }
 
         /// <summary>
@@ -123,19 +123,19 @@ namespace Orchard.Redis.OutputCache {
         /// </summary>
         /// <returns>The keys for the current tenant.</returns>
         private IEnumerable<string> GetAllKeys() {
+            var prefix = GetLocalizedKey("");
+            return GetPrefixedKeys().Select(x => x.Substring(prefix.Length));
+        }
+
+        private IEnumerable<string> GetPrefixedKeys() {
             // prevent the same request from computing the list twice (count + list)
             if (_keysCache == null) {
                 _keysCache = new HashSet<string>();
-                var prefix = GetLocalizedKey("");
-
-                foreach (var endPoint in _connectionMultiplexer.GetEndPoints()) {
-                    var server = _connectionMultiplexer.GetServer(endPoint);
-                    foreach (var key in server.Keys(pattern: GetLocalizedKey("*"))) {
-                        _keysCache.Add(key.ToString().Substring(prefix.Length));
-                    }
+                var keys = _connectionMultiplexer.GetKeys(GetLocalizedKey("*"));
+                foreach (var key in keys) {
+                    _keysCache.Add(key);
                 }
             }
-
             return _keysCache;
         }
 

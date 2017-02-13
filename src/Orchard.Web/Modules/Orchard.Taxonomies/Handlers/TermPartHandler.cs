@@ -5,6 +5,7 @@ using Orchard.ContentManagement;
 using Orchard.UI.Notify;
 using Orchard.Taxonomies.Services;
 using Orchard.Localization;
+using System.Web.Routing;
 
 namespace Orchard.Taxonomies.Handlers {
     public class TermPartHandler : ContentHandler {
@@ -16,6 +17,20 @@ namespace Orchard.Taxonomies.Handlers {
             T = NullLocalizer.Instance;
             Filters.Add(StorageFilter.For(repository));
             OnInitializing<TermPart>((context, part) => part.Selectable = true);
+        }
+        protected override void GetItemMetadata(GetContentItemMetadataContext context) {
+            var term = context.ContentItem.As<TermPart>();
+
+            if (term == null)
+                return;
+
+            context.Metadata.EditorRouteValues = new RouteValueDictionary {
+                {"Area", "Orchard.Taxonomies"},
+                {"Controller", "TermAdmin"},
+                {"Action", "Edit"},
+                {"Id", term.Id}
+            };
+
         }
 
         protected override void UpdateEditorShape(UpdateEditorContext context) {

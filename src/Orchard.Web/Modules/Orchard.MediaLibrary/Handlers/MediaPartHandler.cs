@@ -1,25 +1,40 @@
 ﻿using System;
-using Orchard.ContentManagement.Handlers;
-using Orchard.Data;
-using Orchard.MediaLibrary.Services;
-using Orchard.MediaLibrary.Models;
 using System.IO;
-using Orchard.FileSystems.Media;
+using System.Linq;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.Handlers;
+using Orchard.ContentManagement.MetaData;
+using Orchard.Core.Title.Models;
+using Orchard.Data;
+using Orchard.FileSystems.Media;
+using Orchard.MediaLibrary.Models;
+using Orchard.MediaLibrary.Services;
 
 namespace Orchard.MediaLibrary.Handlers {
     public class MediaPartHandler : ContentHandler {
         private readonly IMediaLibraryService _mediaLibraryService;
         private readonly IStorageProvider _storageProvider;
+        private readonly IContentDefinitionManager _contentDefinitionManager;
 
         public MediaPartHandler(
             IStorageProvider storageProvider,
             IMediaLibraryService mediaLibraryService,
-            IRepository<MediaPartRecord> repository) {
+            IRepository<MediaPartRecord> repository,
+            IContentDefinitionManager contentDefinitionManager) {
             _storageProvider = storageProvider;
             _mediaLibraryService = mediaLibraryService;
+            _contentDefinitionManager = contentDefinitionManager;
 
             Filters.Add(StorageFilter.For(repository));
+            Filters.Add(new ActivatingFilter<TitlePart>(contentType => {
+                var typeDefinition = _contentDefinitionManager.GetTypeDefinition(contentType);
+                // To avoid NRE when the handler runs for ad-hoc content types, e.g. MediaLibraryExplorer.
+                return typeDefinition == null ?
+                    false :
+                    typeDefinition.Parts.Any(contentTypePartDefinition =>
+                        contentTypePartDefinition.PartDefinition.Name == typeof(MediaPart).Name);
+            }));
+
             OnRemoving<MediaPart>((context, part) => RemoveMedia(part));
             OnLoaded<MediaPart>((context, part) => {
                 if (!String.IsNullOrEmpty(part.FileName)) {

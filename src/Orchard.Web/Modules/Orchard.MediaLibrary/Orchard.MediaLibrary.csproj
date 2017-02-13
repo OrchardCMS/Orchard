@@ -128,6 +128,7 @@
     <Compile Include="Extensions\MediaMetaDataExtensions.cs" />
     <Compile Include="Factories\VectorImageFactory.cs" />
     <Compile Include="Handlers\MediaLibrarySettingsPartHandler.cs" />
+    <Compile Include="Implementation\DefaultMediaUsername.cs" />
     <Compile Include="Models\MediaLibrarySettingsPart.cs" />
     <Compile Include="Models\VectorImagePart.cs" />
     <Compile Include="Models\IMediaFolder.cs" />
@@ -200,6 +201,7 @@
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Security\MediaAuthorizationEventHandler.cs" />
     <Compile Include="Services\IMediaLibraryService.cs" />
+    <Compile Include="Providers\IMediaFolderProvider.cs" />
     <Compile Include="Services\MediaLibraryService.cs" />
     <Compile Include="Services\Shapes.cs" />
     <Compile Include="Services\XmlRpcHandler.cs" />

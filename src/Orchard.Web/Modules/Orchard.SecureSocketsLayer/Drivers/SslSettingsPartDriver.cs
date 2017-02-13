@@ -30,6 +30,9 @@ namespace Orchard.SecureSocketsLayer.Drivers {
         protected override DriverResult Editor(SslSettingsPart part, IUpdateModel updater, dynamic shapeHelper) {
             if (updater.TryUpdateModel(part, Prefix, null, null)) {
                 _signals.Trigger(SslSettingsPart.CacheKey);
+                if (!part.Enabled) part.SecureEverything = false;
+                if (!part.SecureEverything) part.SendStrictTransportSecurityHeaders = false;
+                if (!part.StrictTransportSecurityIncludeSubdomains) part.StrictTransportSecurityPreload = false;
             }
 
             return Editor(part, shapeHelper);

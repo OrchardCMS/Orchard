@@ -116,6 +116,7 @@
     <Compile Include="Handlers\LocalizedTaxonomyFieldHandler.cs" />
     <Compile Include="LocalizedTaxonomyMigration.cs" />
     <Compile Include="Services\LocalizedTaxonomySource.cs" />
+    <Compile Include="Services\TaxonomyServiceDraftable.cs" />
     <Compile Include="Services\TaxonomySource.cs" />
     <Compile Include="EventHandlers\TermMovingEventHandler.cs" />
     <Compile Include="Services\ITaxonomySource.cs" />

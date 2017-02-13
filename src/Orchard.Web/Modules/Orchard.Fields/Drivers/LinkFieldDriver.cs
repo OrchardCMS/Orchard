@@ -39,8 +39,12 @@ namespace Orchard.Fields.Drivers {
                 () => {
                     if (part.IsNew()) {
                         var settings = field.PartFieldDefinition.Settings.GetModel<LinkFieldSettings>();
-                        field.Value = settings.DefaultValue;
-                        field.Text = settings.TextDefaultValue;
+                        if (String.IsNullOrEmpty(field.Value)) {
+                            field.Value = settings.DefaultValue;
+                        }
+                        if (String.IsNullOrEmpty(field.Text)) {
+                            field.Text = settings.TextDefaultValue;
+                        }
                     }
                     return shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: field, Prefix: GetPrefix(field, part));
                 });
@@ -71,11 +75,9 @@ namespace Orchard.Fields.Drivers {
         }
 
         protected override void Exporting(ContentPart part, LinkField field, ExportContentContext context) {
-            if (!String.IsNullOrEmpty(field.Text) || !String.IsNullOrEmpty(field.Value) || !String.IsNullOrEmpty(field.Target)) {
-                context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Text", field.Text);
-                context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Url", field.Value);
-                context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Target", field.Target);
-            }
+            context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Text", field.Text);
+            context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Url", field.Value);
+            context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Target", field.Target);
         }
 
         protected override void Cloning(ContentPart part, LinkField originalField, LinkField cloneField, CloneContentContext context) {
