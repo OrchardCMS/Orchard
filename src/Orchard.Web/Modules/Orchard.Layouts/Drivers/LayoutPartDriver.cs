@@ -193,9 +193,5 @@ namespace Orchard.Layouts.Drivers {
         }
 
 
-        protected override void Cloning(LayoutPart originalPart, LayoutPart clonePart, CloneContentContext context) {
-            clonePart.LayoutData = originalPart.LayoutData;
-            clonePart.TemplateId = originalPart.TemplateId;
-        }
     }
 }

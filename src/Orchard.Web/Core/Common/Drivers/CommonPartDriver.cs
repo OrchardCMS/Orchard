@@ -124,8 +124,5 @@ namespace Orchard.Core.Common.Drivers {
             }
         }
 
-        protected override void Cloning(CommonPart originalPart, CommonPart clonePart, CloneContentContext context) {
-            clonePart.Container = originalPart.Container;
-        }
     }
 }

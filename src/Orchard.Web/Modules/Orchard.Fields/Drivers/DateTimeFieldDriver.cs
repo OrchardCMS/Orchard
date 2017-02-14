@@ -75,7 +75,7 @@ namespace Orchard.Fields.Drivers {
 
         protected override DriverResult Editor(ContentPart part, DateTimeField field, dynamic shapeHelper) {
             var settings = field.PartFieldDefinition.Settings.GetModel<DateTimeFieldSettings>();
-            var value = part.IsNew() ? settings.DefaultValue : field.DateTime;
+            var value = part.IsNew() && field.DateTime == default(DateTime) ? settings.DefaultValue : field.DateTime;
             var options = new DateLocalizationOptions();
 
             // Don't do any time zone conversion if field is semantically a date-only field, because that might mutate the date component.
@@ -168,10 +168,6 @@ namespace Orchard.Fields.Drivers {
             var value = field.Storage.Get<DateTime>(null);
             if (value != DateTime.MinValue)
                 context.Element(GetPrefix(field, part)).SetAttributeValue("Value", XmlConvert.ToString(value, XmlDateTimeSerializationMode.Utc));
-        }
-
-        protected override void Cloning(ContentPart part, DateTimeField originalField, DateTimeField cloneField, CloneContentContext context) {
-            cloneField.DateTime = originalField.DateTime;
         }
 
         protected override void Describe(DescribeMembersContext context) {

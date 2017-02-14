@@ -22,8 +22,8 @@
     </ToolsOptionsCategory>
     <ToolsOptionsCategory name="TextEditor">
       <ToolsOptionsSubCategory name="CSharp-Specific">
-        <PropertyValue name="AddImport_SuggestForTypesInNuGetPackages">0</PropertyValue>
-        <PropertyValue name="AddImport_SuggestForTypesInReferenceAssemblies">0</PropertyValue>
+        <PropertyValue name="AddImport_SuggestForTypesInNuGetPackages">1</PropertyValue>
+        <PropertyValue name="AddImport_SuggestForTypesInReferenceAssemblies">1</PropertyValue>
         <PropertyValue name="AutoComment">1</PropertyValue>
         <PropertyValue name="AutoInsertAsteriskForNewLinesOfBlockComments">1</PropertyValue>
         <PropertyValue name="CSharpClosedFileDiagnostics">-1</PropertyValue>
@@ -46,7 +46,7 @@
         <PropertyValue name="Indent_FlushLabelsLeft">0</PropertyValue>
         <PropertyValue name="Indent_UnindentLabels">1</PropertyValue>
         <PropertyValue name="NewLines_AnonymousTypeInitializer_EachMember">1</PropertyValue>
-        <PropertyValue name="NewLines_Braces_Accessor">1</PropertyValue>
+        <PropertyValue name="NewLines_Braces_Accessor">0</PropertyValue>
         <PropertyValue name="NewLines_Braces_AnonymousMethod">0</PropertyValue>
         <PropertyValue name="NewLines_Braces_AnonymousTypeInitializer">0</PropertyValue>
         <PropertyValue name="NewLines_Braces_ArrayInitializer">0</PropertyValue>
@@ -55,7 +55,7 @@
         <PropertyValue name="NewLines_Braces_LambdaExpressionBody">0</PropertyValue>
         <PropertyValue name="NewLines_Braces_Method">0</PropertyValue>
         <PropertyValue name="NewLines_Braces_ObjectInitializer">0</PropertyValue>
-        <PropertyValue name="NewLines_Braces_Property">1</PropertyValue>
+        <PropertyValue name="NewLines_Braces_Property">0</PropertyValue>
         <PropertyValue name="NewLines_Braces_Type">0</PropertyValue>
         <PropertyValue name="NewLines_Keywords_Catch">1</PropertyValue>
         <PropertyValue name="NewLines_Keywords_Else">1</PropertyValue>
@@ -141,10 +141,10 @@
         <PropertyValue name="EnableExpandPrecedence">false</PropertyValue>
         <PropertyValue name="EnableExpandScopes">false</PropertyValue>
         <PropertyValue name="EnableExtractFunction">false</PropertyValue>
-        <PropertyValue name="EnableSQLiteStoreEngine">false</PropertyValue>
+        <PropertyValue name="EnableSQLiteStoreEngine">true</PropertyValue>
         <PropertyValue name="EnableSingleFileISense">true</PropertyValue>
         <PropertyValue name="EnableSingleFileISenseSquiggles">false</PropertyValue>
-        <PropertyValue name="EnumerateCommentTasks">false</PropertyValue>
+        <PropertyValue name="EnumerateCommentTasks">true</PropertyValue>
         <PropertyValue name="GroupBrackets">true</PropertyValue>
         <PropertyValue name="HideExperimentalAd">true</PropertyValue>
         <PropertyValue name="HighlightMatchingTokens">true</PropertyValue>

@@ -53,8 +53,5 @@ namespace Orchard.Core.Title.Drivers {
             context.Element(part.PartDefinition.Name).SetAttributeValue("Title", part.Title);
         }
 
-        protected override void Cloning(TitlePart originalPart, TitlePart clonePart, CloneContentContext context) {
-            clonePart.Title = originalPart.Title;
-        }
     }
 }

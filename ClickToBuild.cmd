@@ -17,6 +17,17 @@ FOR %%b in (
     )
 )
   
+FOR %%b in (
+       "%VS140COMNTOOLS%\vsvars32.bat"
+       "%VS120COMNTOOLS%\vsvars32.bat"
+       "%VS110COMNTOOLS%\vsvars32.bat"
+    ) do (
+    if exist %%b ( 
+       call %%b
+       goto build
+    )
+)
+
 echo "Unable to detect suitable environment. Build may not succeed."
 
 :build

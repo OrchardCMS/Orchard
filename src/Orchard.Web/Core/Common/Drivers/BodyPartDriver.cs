@@ -76,10 +76,6 @@ namespace Orchard.Core.Common.Drivers {
             context.Element(part.PartDefinition.Name).SetAttributeValue("Text", part.Text);
         }
 
-        protected override void Cloning(BodyPart originalPart, BodyPart clonePart, CloneContentContext context) {
-            clonePart.Text = originalPart.Text;
-        }
-
         private static BodyEditorViewModel BuildEditorViewModel(BodyPart part,RequestContext requestContext) {
             return new BodyEditorViewModel {
                 BodyPart = part,

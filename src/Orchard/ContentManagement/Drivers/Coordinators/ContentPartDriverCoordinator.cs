@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Logging;
@@ -15,7 +13,7 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
         private readonly IEnumerable<IContentPartDriver> _drivers;
         private readonly IContentDefinitionManager _contentDefinitionManager;
 
-        public ContentPartDriverCoordinator(IEnumerable<IContentPartCloningDriver> drivers, IContentDefinitionManager contentDefinitionManager) {
+        public ContentPartDriverCoordinator(IEnumerable<IContentPartDriver> drivers, IContentDefinitionManager contentDefinitionManager) {
             _drivers = drivers;
             _contentDefinitionManager = contentDefinitionManager;
             Logger = NullLogger.Instance;
@@ -102,17 +100,13 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
             var dGroups = _drivers.GroupBy(cpd => cpd.GetPartInfo().FirstOrDefault().PartName);
             foreach (var driverGroup in dGroups) {
                 //if no driver implements Cloning, run the fallback for the part
-                //otherwise, invoke Cloning for all these drivers.
-
-                bool noCloningImplementation = true;
-                foreach (var contentPartDriver in driverGroup.Where(cpd => cpd is IContentPartCloningDriver)) {
-                    //if we find an implementation of cloning, break
-                    if (contentPartDriver.GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.DeclaredOnly).Where(mi => mi.Name == "Cloning").FirstOrDefault() != null) {
-                        noCloningImplementation = false;
-                        break;
+                var cloningDrivers = driverGroup.Select(cpd => cpd as IContentPartCloningDriver).Where(cpd => cpd != null);
+                if (cloningDrivers.Any()) {
+                    foreach (var contentPartDriver in cloningDrivers) {
+                        contentPartDriver.Cloning(context);
                     }
                 }
-                if (noCloningImplementation) {
+                else {
                     //fallback
                     var ecc = new ExportContentContext(context.ContentItem, new System.Xml.Linq.XElement(System.Xml.XmlConvert.EncodeLocalName(context.ContentItem.ContentType)));
                     foreach (var contentPartDriver in driverGroup) {
@@ -133,11 +127,6 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
                     }
                     foreach (var contentPartDriver in driverGroup) {
                         contentPartDriver.ImportCompleted(icc);
-                    }
-                }
-                else {
-                    foreach (var contentPartDriver in driverGroup.Select(cpd => cpd as IContentPartCloningDriver).Where(cpd => cpd != null)) {
-                        contentPartDriver.Cloning(context);
                     }
                 }
             }

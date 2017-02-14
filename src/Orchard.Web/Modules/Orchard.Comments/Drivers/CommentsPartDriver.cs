@@ -136,10 +136,5 @@ namespace Orchard.Comments.Drivers {
             context.Element(part.PartDefinition.Name).SetAttributeValue("ThreadedComments", part.ThreadedComments);
         }
 
-        protected override void Cloning(CommentsPart originalPart, CommentsPart clonePart, CloneContentContext context) {
-            clonePart.CommentsShown = originalPart.CommentsShown;
-            clonePart.CommentsActive = originalPart.CommentsActive;
-            // ThreadedComments will be overrided with settings default
-        }
     }
 }

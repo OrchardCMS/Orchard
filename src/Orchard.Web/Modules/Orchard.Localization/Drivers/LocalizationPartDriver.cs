@@ -144,9 +144,5 @@ namespace Orchard.Localization.Drivers {
             }
         }
 
-        protected override void Cloning(LocalizationPart originalPart, LocalizationPart clonePart, CloneContentContext context) { }
-        protected override void Cloned(LocalizationPart originalPart, LocalizationPart clonePart, CloneContentContext context) {
-            clonePart.Culture = originalPart.Culture;
-        }
     }
 }

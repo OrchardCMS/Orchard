@@ -96,10 +96,6 @@ namespace Orchard.MediaLibrary.Drivers {
             }
         }
 
-        protected override void Cloning(ContentPart part, MediaLibraryPickerField originalField, MediaLibraryPickerField cloneField, CloneContentContext context) {
-            cloneField.Ids = originalField.Ids;
-        }
-
         protected override void Describe(DescribeMembersContext context) {
             context
                 .Member(null, typeof(string), T("Ids"), T("A formatted list of the ids, e.g., {1},{42}"));

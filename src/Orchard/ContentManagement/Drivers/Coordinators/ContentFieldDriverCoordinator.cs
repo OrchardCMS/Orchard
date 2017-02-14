@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Orchard.ContentManagement.FieldStorage;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Logging;
@@ -12,7 +11,7 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
         private readonly IEnumerable<IFieldStorageEvents> _fieldStorageEvents;
 
         public ContentFieldDriverCoordinator(
-            IEnumerable<IContentFieldCloningDriver> drivers,
+            IEnumerable<IContentFieldDriver> drivers,
             IFieldStorageProviderSelector fieldStorageProviderSelector,
             IEnumerable<IFieldStorageEvents> fieldStorageEvents) {
             _drivers = drivers;
@@ -116,17 +115,13 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
             var dGroups = _drivers.GroupBy(cfd => cfd.GetFieldInfo().FirstOrDefault().FieldTypeName);
             foreach (var driverGroup in dGroups) {
                 //if no driver implements Cloning, run the fallback for the field
-                //otherwise, invoke Cloning for all these drivers.
-
-                bool noCloningImplementation = true;
-                foreach (var contentFieldDriver in driverGroup.Where(cfd => cfd is IContentFieldCloningDriver)) {
-                    //if we find an implementation of cloning, break
-                    if (contentFieldDriver.GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.DeclaredOnly).Where(mi => mi.Name == "Cloning").FirstOrDefault() != null) {
-                        noCloningImplementation = false;
-                        break;
+                var cloningDrivers = driverGroup.Select(cfd => cfd as IContentFieldCloningDriver).Where(cfd => cfd != null);
+                if (cloningDrivers.Any()) {
+                    foreach (var contentFieldDriver in cloningDrivers) {
+                        contentFieldDriver.Cloning(context);
                     }
                 }
-                if (noCloningImplementation) {
+                else {
                     //fallback
                     var ecc = new ExportContentContext(context.ContentItem, new System.Xml.Linq.XElement(System.Xml.XmlConvert.EncodeLocalName(context.ContentItem.ContentType)));
                     ecc.Logger = Logger;
@@ -149,11 +144,6 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
                     }
                     foreach (var contentFieldDriver in driverGroup) {
                         contentFieldDriver.ImportCompleted(icc);
-                    }
-                }
-                else {
-                    foreach (var contentFieldDriver in driverGroup.Select(cfd => cfd as IContentFieldCloningDriver).Where(cfd => cfd != null)) {
-                        contentFieldDriver.Cloning(context);
                     }
                 }
             }

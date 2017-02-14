@@ -8,7 +8,7 @@ using Orchard.DisplayManagement.Shapes;
 using Orchard.Logging;
 
 namespace Orchard.ContentManagement.Drivers {
-    public abstract class ContentFieldDriver<TField> : IContentFieldCloningDriver where TField : ContentField, new() {
+    public abstract class ContentFieldDriver<TField> : IContentFieldDriver where TField : ContentField, new() {
         protected virtual string Prefix { get { return ""; } }
         protected virtual string Zone { get { return "Content"; } }
 
@@ -84,14 +84,6 @@ namespace Orchard.ContentManagement.Drivers {
             Process(context.ContentItem, (part, field) => Exported(part, field, context), context);
         }
 
-        void IContentFieldCloningDriver.Cloning(CloneContentContext context) {
-            ProcessClone(context.ContentItem, context.CloneContentItem, (part, originalField, cloneField) => Cloning(part, originalField, cloneField, context), context);
-        }
-
-        void IContentFieldCloningDriver.Cloned(CloneContentContext context) {
-            ProcessClone(context.ContentItem, context.CloneContentItem, (part, originalField, cloneField) => Cloned(part, originalField, cloneField, context), context);
-        }
-
         void IContentFieldDriver.Describe(DescribeMembersContext context) {
             Describe(context);
         }
@@ -103,12 +95,6 @@ namespace Orchard.ContentManagement.Drivers {
         void Process(ContentItem item, Action<ContentPart, TField> effort, ExportImportContentContextBase context) {
             var occurences = item.Parts.SelectMany(part => part.Fields.OfType<TField>().Where(fi => string.IsNullOrWhiteSpace(context.FieldName) || context.FieldName == fi.Name).Select(field => new { part, field }));
             occurences.Invoke(pf => effort(pf.part, pf.field), context.Logger);
-        }
-
-        void ProcessClone(ContentItem originalItem, ContentItem cloneItem, Action<ContentPart, TField, TField> effort, CloneContentContext context) {
-            var occurences = originalItem.Parts.SelectMany(part => part.Fields.OfType<TField>().Where(fi => string.IsNullOrWhiteSpace(context.FieldName) || context.FieldName == fi.Name).Select(field => new { part, field }))
-                .Join(cloneItem.Parts.SelectMany(part => part.Fields.OfType<TField>().Where(fi => string.IsNullOrWhiteSpace(context.FieldName) || context.FieldName == fi.Name)), original => original.field.Name, cloneField => cloneField.Name, (original, cloneField) => new { original, cloneField } );
-            occurences.Invoke(pf => effort(pf.original.part, pf.original.field, pf.cloneField), context.Logger);
         }
 
         DriverResult Process(ContentItem item, Func<ContentPart, TField, DriverResult> effort, ILogger logger) {
@@ -144,8 +130,6 @@ namespace Orchard.ContentManagement.Drivers {
         protected virtual void ImportCompleted(ContentPart part, TField field, ImportContentContext context) { }
         protected virtual void Exporting(ContentPart part, TField field, ExportContentContext context) { }
         protected virtual void Exported(ContentPart part, TField field, ExportContentContext context) { }
-        protected virtual void Cloning(ContentPart part, TField originalField, TField cloneField, CloneContentContext context) { }
-        protected virtual void Cloned(ContentPart part, TField originalField, TField cloneField, CloneContentContext context) { }
         protected virtual void Describe(DescribeMembersContext context) { }
 
         public ContentShapeResult ContentShape(string shapeType, Func<dynamic> factory) {
