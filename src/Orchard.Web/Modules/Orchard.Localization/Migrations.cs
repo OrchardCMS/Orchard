@@ -8,13 +8,6 @@ using System.Linq;
 
 namespace Orchard.Localization {
     public class Migrations : DataMigrationImpl {
-
-        private readonly IRepository<LocalizationPartRecord> _repositoryLocalizationPart;
-
-        public Migrations(IRepository<LocalizationPartRecord> repositoryLocalizationPart) {
-            _repositoryLocalizationPart = repositoryLocalizationPart;
-        }
-
         public int Create() {
             SchemaBuilder.CreateTable("LocalizationPartRecord",
                 table => table
