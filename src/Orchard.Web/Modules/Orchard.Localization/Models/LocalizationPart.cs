@@ -36,10 +36,6 @@ namespace Orchard.Localization.Models {
             get { return Culture == null ? null : Culture.Culture; }
         }
 
-        public int LocalizationSetId
-        {
-            get { return Record.LocalizationSetId; }
-        }
 
     }
 }

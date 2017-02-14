@@ -14,12 +14,12 @@ namespace Orchard.Localization.Controllers {
     [ValidateInput(false)]
     public class AdminController : Controller, IUpdateModel {
         private readonly IContentManager _contentManager;
-        private readonly ILocalizationSetService _localizationService;
+        private readonly ILocalizationService _localizationService;
 
         public AdminController(
             IOrchardServices orchardServices,
             IContentManager contentManager,
-            ILocalizationSetService localizationService,
+            ILocalizationService localizationService,
             IShapeFactory shapeFactory) {
             _contentManager = contentManager;
             _localizationService = localizationService;
@@ -51,7 +51,7 @@ namespace Orchard.Localization.Controllers {
             }
 
             var contentItemTranslation = _contentManager.New<LocalizationPart>(masterContentItem.ContentType);
-            contentItemTranslation.MasterContentItem = masterContentItem;
+            contentItemTranslation.MasterContentItem = masterLocalizationPart.MasterContentItem == null ? masterContentItem : masterLocalizationPart.MasterContentItem;
 
             var content = _contentManager.BuildEditor(contentItemTranslation);
 
@@ -95,7 +95,7 @@ namespace Orchard.Localization.Controllers {
 
             var contentItemTranslation = _contentManager
                 .Create<LocalizationPart>(masterContentItem.ContentType, VersionOptions.Draft, part => {
-                    part.MasterContentItem = masterContentItem;
+                    part.MasterContentItem = masterLocalizationPart.MasterContentItem == null ? masterContentItem : masterLocalizationPart.MasterContentItem;
                 });
 
             var content = _contentManager.UpdateEditor(contentItemTranslation, this);

@@ -106,7 +106,6 @@
     <Compile Include="Conditions\CultureConditionProvider.cs" />
     <Compile Include="Services\AdminDirectionalityFactory.cs" />
     <Compile Include="Services\AdminCultureSelectorFactory.cs" />
-    <Compile Include="Services\ILocalizationSetService.cs" />
     <Compile Include="Services\LocalizationCultureFilter.cs" />
     <Compile Include="Selectors\CookieCultureSelector.cs" />
     <Compile Include="Drivers\LocalizationPartDriver.cs" />
@@ -121,7 +120,6 @@
     <Compile Include="Services\ITransliterationService.cs" />
     <Compile Include="Providers\LocalizationDateTimeFormatProvider.cs" />
     <Compile Include="Services\LocalizationService.cs" />
-    <Compile Include="Services\LocalizationSetService.cs" />
     <Compile Include="Services\TransliterationService.cs" />
     <Compile Include="Events\TransliterationSlugEventHandler.cs" />
     <Compile Include="Settings\LocalizationCultureNeutralityEditorEvents.cs" />
