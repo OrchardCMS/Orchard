@@ -65,7 +65,7 @@ namespace Orchard.Taxonomies.Controllers {
                         Terms = terms,
                         SelectedTerms = appliedTerms,
                         Settings = taxonomySettings,
-                        SingleTermId = 0,
+                        SingleTermId = appliedTerms.Select(t => t.Id).FirstOrDefault(),
                         TaxonomyId = taxonomy != null ? taxonomy.Id : 0,
                         HasTerms = taxonomy != null && _taxonomyService.GetTermsCount(taxonomy.Id) > 0
                     };
