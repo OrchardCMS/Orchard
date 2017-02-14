@@ -29,6 +29,7 @@ namespace Orchard.Taxonomies.Services {
         private readonly IProcessingEngine _processingEngine;
         private readonly ShellSettings _shellSettings;
         private readonly IShellDescriptorManager _shellDescriptorManager;
+     
 
         private readonly HashSet<int> _processedTermParts = new HashSet<int>(); 
 
@@ -51,7 +52,7 @@ namespace Orchard.Taxonomies.Services {
             _processingEngine = processingEngine;
             _shellSettings = shellSettings;
             _shellDescriptorManager = shellDescriptorManager;
-
+           
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
@@ -68,6 +69,7 @@ namespace Orchard.Taxonomies.Services {
         }
 
         public TaxonomyPart GetTaxonomyByName(string name) {
+
             if (String.IsNullOrWhiteSpace(name)) {
                 throw new ArgumentNullException("name");
             }
@@ -121,7 +123,8 @@ namespace Orchard.Taxonomies.Services {
                 DeleteTerm(term);
             }
 
-            _contentDefinitionManager.DeleteTypeDefinition(taxonomy.TermTypeName);
+            if (_contentManager.Query<TaxonomyPart, TaxonomyPartRecord>().Where(x => x.Id != taxonomy.Id && x.TermTypeName == taxonomy.TermTypeName).Count() == 0)
+                _contentDefinitionManager.DeleteTypeDefinition(taxonomy.TermTypeName);
         }
 
         public string GenerateTermTypeName(string taxonomyName) {
