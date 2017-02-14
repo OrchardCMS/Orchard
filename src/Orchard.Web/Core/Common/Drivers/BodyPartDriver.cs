@@ -11,6 +11,7 @@ using Orchard.Core.Common.ViewModels;
 using Orchard.Services;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Orchard.ContentManagement.Handlers;
 
 namespace Orchard.Core.Common.Drivers {
     public class BodyPartDriver : ContentPartDriver<BodyPart> {

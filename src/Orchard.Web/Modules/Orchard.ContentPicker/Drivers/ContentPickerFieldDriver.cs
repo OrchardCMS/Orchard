@@ -7,6 +7,7 @@ using Orchard.ContentManagement.Handlers;
 using Orchard.ContentPicker.ViewModels;
 using Orchard.Localization;
 using Orchard.Utility.Extensions;
+using Orchard.ContentPicker.Fields;
 
 namespace Orchard.ContentPicker.Drivers {
     public class ContentPickerFieldDriver : ContentFieldDriver<Fields.ContentPickerField> {

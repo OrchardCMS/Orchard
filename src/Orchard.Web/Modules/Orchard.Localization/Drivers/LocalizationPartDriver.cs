@@ -144,5 +144,6 @@ namespace Orchard.Localization.Drivers {
                 context.Element(part.PartDefinition.Name).SetAttributeValue("Culture", part.Culture.Culture);
             }
         }
+
     }
 }

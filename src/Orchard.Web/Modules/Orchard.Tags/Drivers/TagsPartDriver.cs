@@ -89,5 +89,6 @@ namespace Orchard.Tags.Drivers {
         protected override void Exporting(TagsPart part, ExportContentContext context) {
             context.Element(part.PartDefinition.Name).SetAttributeValue("Tags", String.Join(",", part.CurrentTags));
         }
+
     }
 }

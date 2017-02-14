@@ -65,23 +65,23 @@ namespace Orchard.ContentManagement.Drivers {
         }
 
         void IContentFieldDriver.Importing(ImportContentContext context) {
-            Process(context.ContentItem, (part, field) => Importing(part, field, context), context.Logger);
+            Process(context.ContentItem, (part, field) => Importing(part, field, context), context);
         }
 
         void IContentFieldDriver.Imported(ImportContentContext context) {
-            Process(context.ContentItem, (part, field) => Imported(part, field, context), context.Logger);
+            Process(context.ContentItem, (part, field) => Imported(part, field, context), context);
         }
 
         void IContentFieldDriver.ImportCompleted(ImportContentContext context) {
-            Process(context.ContentItem, (part, field) => ImportCompleted(part, field, context), context.Logger);
+            Process(context.ContentItem, (part, field) => ImportCompleted(part, field, context), context);
         }
 
         void IContentFieldDriver.Exporting(ExportContentContext context) {
-            Process(context.ContentItem, (part, field) => Exporting(part, field, context), context.Logger);
+            Process(context.ContentItem, (part, field) => Exporting(part, field, context), context);
         }
 
         void IContentFieldDriver.Exported(ExportContentContext context) {
-            Process(context.ContentItem, (part, field) => Exported(part, field, context), context.Logger);
+            Process(context.ContentItem, (part, field) => Exported(part, field, context), context);
         }
 
         void IContentFieldDriver.Describe(DescribeMembersContext context) {
@@ -91,6 +91,10 @@ namespace Orchard.ContentManagement.Drivers {
         void Process(ContentItem item, Action<ContentPart, TField> effort, ILogger logger) {
             var occurences = item.Parts.SelectMany(part => part.Fields.OfType<TField>().Select(field => new { part, field }));
             occurences.Invoke(pf => effort(pf.part, pf.field), logger);
+        }
+        void Process(ContentItem item, Action<ContentPart, TField> effort, ExportImportContentContextBase context) {
+            var occurences = item.Parts.SelectMany(part => part.Fields.OfType<TField>().Where(fi => string.IsNullOrWhiteSpace(context.FieldName) || context.FieldName == fi.Name).Select(field => new { part, field }));
+            occurences.Invoke(pf => effort(pf.part, pf.field), context.Logger);
         }
 
         DriverResult Process(ContentItem item, Func<ContentPart, TField, DriverResult> effort, ILogger logger) {

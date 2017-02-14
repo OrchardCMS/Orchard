@@ -7,6 +7,7 @@ using Orchard.ContentManagement.Handlers;
 using Orchard.MediaLibrary.ViewModels;
 using Orchard.Localization;
 using Orchard.Utility.Extensions;
+using Orchard.MediaLibrary.Fields;
 
 namespace Orchard.MediaLibrary.Drivers {
     public class MediaLibraryPickerFieldDriver : ContentFieldDriver<Fields.MediaLibraryPickerField> {
