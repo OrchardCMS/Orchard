@@ -125,6 +125,7 @@ namespace Orchard.Layouts.Providers {
             var shape = (dynamic)_shapeFactory.Value.Create(shapeType);
 
             shape.Element = context.Element;
+            shape.SnippetDescriptor = snippetDescriptor;
 
             if (snippetDescriptor != null) {
                 foreach (var fieldDescriptor in snippetDescriptor.Fields) {
