@@ -198,6 +198,9 @@ namespace Orchard.FileSystems.Media {
         /// <param name="path">The relative path to the folder to be created.</param>
         /// <exception cref="ArgumentException">If the folder already exists.</exception>
         public void CreateFolder(string path) {
+            if (path.Contains("&")) {
+                throw new ArgumentException(T("The folder name cannot contain the '&' character").ToString());
+            }
             DirectoryInfo directoryInfo = new DirectoryInfo(MapStorage(path));
             if (directoryInfo.Exists) {
                 throw new ArgumentException(T("Directory {0} already exists", path).ToString());
@@ -226,6 +229,9 @@ namespace Orchard.FileSystems.Media {
         /// <param name="oldPath">The relative path to the folder to be renamed.</param>
         /// <param name="newPath">The relative path to the new folder.</param>
         public void RenameFolder(string oldPath, string newPath) {
+            if (newPath.Contains("&")) {
+                throw new ArgumentException(T("The folder name cannot contain the '&' character").ToString());
+            }
             DirectoryInfo sourceDirectory = new DirectoryInfo(MapStorage(oldPath));
             if (!sourceDirectory.Exists) {
                 throw new ArgumentException(T("Directory {0} does not exist", oldPath).ToString());

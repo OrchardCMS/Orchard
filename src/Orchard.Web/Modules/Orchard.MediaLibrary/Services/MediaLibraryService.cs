@@ -292,6 +292,7 @@ namespace Orchard.MediaLibrary.Services {
         /// <param name="folderName">The name of the folder to be created.</param>
         public void CreateFolder(string relativePath, string folderName) {
             Argument.ThrowIfNullOrEmpty(folderName, "folderName");
+            Argument.Validate(!folderName.Contains("&"), "newFolderName", T("The folder name cannot contain the '&' character").ToString());
 
             _storageProvider.CreateFolder(relativePath == null ? folderName : _storageProvider.Combine(relativePath, folderName));
         }
@@ -326,6 +327,7 @@ namespace Orchard.MediaLibrary.Services {
         public void RenameFolder(string folderPath, string newFolderName) {
             Argument.ThrowIfNullOrEmpty(folderPath, "folderPath");
             Argument.ThrowIfNullOrEmpty(newFolderName, "newFolderName");
+            Argument.Validate(!newFolderName.Contains("&"), "newFolderName", T("The folder name cannot contain the '&' character").ToString());
 
             try {
                 var segments = folderPath.Split(new char[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries).ToArray();

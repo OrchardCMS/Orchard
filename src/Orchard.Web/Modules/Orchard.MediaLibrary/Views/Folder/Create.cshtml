@@ -22,7 +22,7 @@
     @Html.ValidationSummary()
     <fieldset>
         <label for="Name">@T("Folder Name")</label>
-        <input id="Name" class="text medium" name="Name" type="text" autofocus="autofocus"/>
+        <input id="Name" class="text medium" name="Name" type="text" autofocus="autofocus" pattern="[^&]+" title=@T("Cannot contain the & character")/>
         @Html.HiddenFor(m => m.FolderPath)
     </fieldset>
     <fieldset>
