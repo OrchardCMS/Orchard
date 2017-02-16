@@ -196,10 +196,11 @@ namespace Orchard.FileSystems.Media {
         private void ValidatePathCharacters(string path) {
             //get the invalid characters from the web.config
             string invalidChars = ((SystemWebSectionGroup)WebConfigurationManager.OpenWebConfiguration(null).GetSectionGroup("system.web")).HttpRuntime.RequestPathInvalidCharacters;
-            List<string> invalidCharacters = new List<string>() { "/", @"\" };
+            List<string> invalidCharacters = new List<string>();
             invalidCharacters.AddRange(invalidChars.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries));
+            string cleanPath = string.Join("", path.Split(new string[] { Path.DirectorySeparatorChar.ToString(), "/" }, StringSplitOptions.RemoveEmptyEntries));
             foreach (string c in invalidCharacters) {
-                if (path.Contains(c)) {
+                if (cleanPath.Contains(c)) {
                     throw new ArgumentException(T("The folder name cannot contain the '{0}' character.", c).ToString());
                 }
             }
