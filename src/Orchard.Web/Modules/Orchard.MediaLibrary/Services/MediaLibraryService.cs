@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web;
+using System.Web.Configuration;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.Core.Common.Models;
+using Orchard.Core.Title.Models;
 using Orchard.FileSystems.Media;
 using Orchard.Localization;
 using Orchard.MediaLibrary.Factories;
 using Orchard.MediaLibrary.Models;
-using Orchard.Core.Title.Models;
-using Orchard.Validation;
 using Orchard.MediaLibrary.Providers;
+using Orchard.Validation;
 
 namespace Orchard.MediaLibrary.Services {
     public class MediaLibraryService : IMediaLibraryService {
@@ -285,6 +286,16 @@ namespace Orchard.MediaLibrary.Services {
             };
         }
 
+        private void ValidatePathCharacters(string path, string paramName) {
+            //get the invalid characters from the web.config
+            string invalidChars = ((SystemWebSectionGroup)WebConfigurationManager.OpenWebConfiguration(null).GetSectionGroup("system.web")).HttpRuntime.RequestPathInvalidCharacters;
+            List<string> invalidCharacters = new List<string>() { "/" };
+            invalidCharacters.AddRange(invalidChars.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries));
+            foreach (string c in invalidCharacters) {
+                Argument.Validate(!path.Contains(c), paramName, T("The folder name cannot contain the '{0}' character.", c).ToString());
+            }
+        }
+
         /// <summary>
         /// Creates a media folder.
         /// </summary>
@@ -292,7 +303,7 @@ namespace Orchard.MediaLibrary.Services {
         /// <param name="folderName">The name of the folder to be created.</param>
         public void CreateFolder(string relativePath, string folderName) {
             Argument.ThrowIfNullOrEmpty(folderName, "folderName");
-            Argument.Validate(!folderName.Contains("&"), "newFolderName", T("The folder name cannot contain the '&' character").ToString());
+            ValidatePathCharacters(folderName, "folderName");
 
             _storageProvider.CreateFolder(relativePath == null ? folderName : _storageProvider.Combine(relativePath, folderName));
         }
@@ -327,7 +338,7 @@ namespace Orchard.MediaLibrary.Services {
         public void RenameFolder(string folderPath, string newFolderName) {
             Argument.ThrowIfNullOrEmpty(folderPath, "folderPath");
             Argument.ThrowIfNullOrEmpty(newFolderName, "newFolderName");
-            Argument.Validate(!newFolderName.Contains("&"), "newFolderName", T("The folder name cannot contain the '&' character").ToString());
+            ValidatePathCharacters(newFolderName, "newFolderName");
 
             try {
                 var segments = folderPath.Split(new char[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries).ToArray();
