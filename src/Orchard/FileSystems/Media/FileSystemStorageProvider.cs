@@ -196,7 +196,7 @@ namespace Orchard.FileSystems.Media {
         private void ValidatePathCharacters(string path) {
             //get the invalid characters from the web.config
             string invalidChars = ((SystemWebSectionGroup)WebConfigurationManager.OpenWebConfiguration(null).GetSectionGroup("system.web")).HttpRuntime.RequestPathInvalidCharacters;
-            List<string> invalidCharacters = new List<string>() { "/" };
+            List<string> invalidCharacters = new List<string>() { "/", @"\" };
             invalidCharacters.AddRange(invalidChars.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries));
             foreach (string c in invalidCharacters) {
                 if (path.Contains(c)) {

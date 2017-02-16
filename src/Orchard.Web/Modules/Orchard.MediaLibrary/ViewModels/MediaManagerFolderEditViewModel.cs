@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Configuration;
 
@@ -10,8 +11,9 @@ namespace Orchard.MediaLibrary.ViewModels {
         public string InvalidCharactersPattern {
             get {
                 string invalidChars = ((SystemWebSectionGroup)WebConfigurationManager.OpenWebConfiguration(null).GetSectionGroup("system.web")).HttpRuntime.RequestPathInvalidCharacters;
-                string[] invalidCharacters = invalidChars.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
-                string pattern = @"[^/" + string.Join("", invalidCharacters) + @"]+";
+                List<string> invalidCharacters = new List<string>() { "/", @"\" };
+                invalidCharacters.AddRange(invalidChars.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries));
+                string pattern = @"[^" + string.Join("", invalidCharacters) + @"]+";
                 return pattern.Replace(@"\", @"\\");
             }
         }
