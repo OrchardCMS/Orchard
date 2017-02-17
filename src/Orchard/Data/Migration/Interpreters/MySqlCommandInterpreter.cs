@@ -92,22 +92,27 @@ namespace Orchard.Data.Migration.Interpreters {
                 var columnNames = String.Join(", ", command.ColumnNames.Select(c => string.Format("'{0}'", c)));
                 var tableName = PrefixTableName(command.TableName);
                 // check whether the index contains big nvarchar columns or text fields
-                string sql = @"SELECT  Count(*)  FROM INFORMATION_SCHEMA.COLUMNS 
+                string sql = @"SELECT  COLUMN_NAME  FROM INFORMATION_SCHEMA.COLUMNS 
                                WHERE table_name = '{1}' AND COLUMN_NAME in  ({0}) AND TABLE_SCHEMA = '{2}' AND
-                                     ((Data_type = 'varchar' and CHARACTER_MAXIMUM_LENGTH > 500) OR data_type= 'text');";
+                                     ((Data_type = 'varchar' and CHARACTER_MAXIMUM_LENGTH > 767) OR data_type= 'text');";
 
                 sql = string.Format(sql, columnNames, tableName, session.Connection.Database);
                 sqlCommand.CommandText = sql;
-                long count = (long)sqlCommand.ExecuteScalar();
 
-                if (count == 0) {
-                    return new[] {string.Format("create index {1} on {0} ({2}) ",
-                            _dialectLazy.Value.QuoteForTableName(tableName),
-                            _dialectLazy.Value.QuoteForTableName(PrefixTableName(command.IndexName)),
-                            String.Join(", ", command.ColumnNames.Select(c => _dialectLazy.Value.QuoteForTableName(c))))};
+                var columnList = command.ColumnNames.ToList();
+                using (var reader = sqlCommand.ExecuteReader()) {
+                    // Provide prefix for string columns with length longer than 767
+                    while (reader.Read()) {
+                        var columnName = reader.GetString(0);
+                        columnList[columnList.IndexOf(columnName)] = string.Format("{0}(767)", columnName);
+                    }
                 }
 
-                return new string[] { };
+                return new[] {string.Format("create index {1} on {0} ({2}) ",
+                            _dialectLazy.Value.QuoteForTableName(tableName),
+                            _dialectLazy.Value.QuoteForTableName(PrefixTableName(command.IndexName)),
+                            String.Join(", ", columnList))};
+
             }
         }
     }
