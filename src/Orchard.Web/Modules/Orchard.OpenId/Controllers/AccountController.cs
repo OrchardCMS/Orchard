@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OpenIdConnect;
+using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.Logging;
@@ -92,7 +93,7 @@ namespace Orchard.OpenId.Controllers
                 return;
             }
 
-            var redirectUri = Url.Content(String.Concat(Constants.General.LogonCallbackUrl));
+            var redirectUri = Url.Content(GetCallbackPath(_orchardServices.WorkContext));
 
             HttpContext.GetOwinContext().Authentication.Challenge(new AuthenticationProperties { RedirectUri = redirectUri }, openIdProvider);
         }
@@ -157,6 +158,18 @@ namespace Orchard.OpenId.Controllers
             }
 
             return user;
+        }
+
+        private string GetCallbackPath(WorkContext workContext)
+        {
+            var shellSettings = workContext.Resolve<ShellSettings>();
+            var tenantPrefix = shellSettings.RequestUrlPrefix;
+
+            var callbackUrl = string.IsNullOrWhiteSpace(tenantPrefix) ?
+                Constants.General.LogonCallbackUrl :
+                string.Format("/{0}{1}", tenantPrefix, Constants.General.LogonCallbackUrl);
+
+            return callbackUrl;
         }
     }
 }

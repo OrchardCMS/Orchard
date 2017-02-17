@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Google;
 using Orchard.ContentManagement;
+using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.OpenId.Models;
 using Orchard.Owin;
@@ -18,7 +19,8 @@ namespace Orchard.OpenId.OwinMiddlewares {
         }
 
         public IEnumerable<OwinMiddlewareRegistration> GetOwinMiddlewares() {
-            var settings = _workContextAccessor.GetContext().CurrentSite.As<GoogleSettingsPart>();
+            var workContext = _workContextAccessor.GetContext();
+            var settings = workContext.CurrentSite.As<GoogleSettingsPart>();
 
             if (settings == null || !settings.IsValid) {
                 return Enumerable.Empty<OwinMiddlewareRegistration>();
@@ -27,7 +29,7 @@ namespace Orchard.OpenId.OwinMiddlewares {
             var authenticationOptions = new GoogleOAuth2AuthenticationOptions {
                 ClientId = settings.ClientId,
                 ClientSecret = settings.ClientSecret,
-                CallbackPath = new PathString(settings.CallbackPath)
+                CallbackPath = new PathString(GetCallbackPath(workContext, settings))
             };
 
             return new List<OwinMiddlewareRegistration> {
@@ -38,6 +40,17 @@ namespace Orchard.OpenId.OwinMiddlewares {
                     }
                 }
             };
+        }
+
+        private string GetCallbackPath(WorkContext workContext, GoogleSettingsPart settings) {
+            var shellSettings = workContext.Resolve<ShellSettings>();
+            var tenantPrefix = shellSettings.RequestUrlPrefix;
+
+            var callbackUrl = string.IsNullOrWhiteSpace(tenantPrefix) ?
+                settings.CallbackPath :
+                string.Format("/{0}{1}", tenantPrefix, settings.CallbackPath);
+
+            return callbackUrl;
         }
     }
 }
