@@ -50,7 +50,7 @@ namespace Orchard.OpenId.Controllers
         [HttpGet]
         public ActionResult LogOn(string returnUrl) {
             if (Request.IsAuthenticated) {
-                return Redirect(Url.Content("~/"));
+                return Redirect("~/");
             }
 
             ViewData["ReturnUrl"] = returnUrl;
@@ -91,7 +91,7 @@ namespace Orchard.OpenId.Controllers
                 openIdProvider = OpenIdConnectAuthenticationDefaults.AuthenticationType;
 
             if (Request.IsAuthenticated) {
-                Redirect(returnUrl);
+                this.RedirectLocal(returnUrl);
                 return;
             }
             else {
@@ -103,7 +103,7 @@ namespace Orchard.OpenId.Controllers
             HttpContext.GetOwinContext().Authentication.Challenge(new AuthenticationProperties { RedirectUri = redirectUri }, openIdProvider);
         }
 
-        public RedirectResult LogOff(string openIdProvider) {
+        public ActionResult LogOff(string openIdProvider) {
             if (String.IsNullOrWhiteSpace(openIdProvider))
                 openIdProvider = OpenIdConnectAuthenticationDefaults.AuthenticationType;
 
@@ -115,17 +115,17 @@ namespace Orchard.OpenId.Controllers
                 _userEventHandler.LoggedOut(loggedUser);
             }
 
-            return Redirect(Url.Content("~/"));
+            return Redirect("~/");
         }
 
-        public RedirectResult LogonCallback() {
+        public ActionResult LogonCallback() {
             var user = _authenticationService.GetAuthenticatedUser();
             _userEventHandler.LoggedIn(user);
 
             if (TempData.ContainsKey("ReturnUrl"))
-                return Redirect((String)TempData["ReturnUrl"]);
+                return this.RedirectLocal((String)TempData["ReturnUrl"]);
             else
-                return Redirect(Url.Content("~/"));
+                return Redirect("~/");
         }
 
         public ActionResult AccessDenied() {
