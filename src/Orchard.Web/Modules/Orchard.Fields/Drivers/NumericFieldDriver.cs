@@ -106,8 +106,7 @@ namespace Orchard.Fields.Drivers {
         }
 
         protected override void Exporting(ContentPart part, NumericField field, ExportContentContext context) {
-            if (field.Value.HasValue)
-                context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Value", field.Value.Value.ToString(CultureInfo.InvariantCulture));
+            context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Value", !field.Value.HasValue ? String.Empty : field.Value.Value.ToString(CultureInfo.InvariantCulture));
         }
 
         protected override void Cloning(ContentPart part, NumericField originalField, NumericField cloneField, CloneContentContext context) {

@@ -118,6 +118,7 @@
     <Content Include="Styles\DynamicForms.min.css" />
     <Content Include="Styles\menu.dynamicforms-admin.css" />
     <Content Include="Styles\menu.dynamicforms.png" />
+    <Content Include="Styles\recipebuilderstep-forms.css" />
     <Content Include="Styles\workflows-activity-add-model-error.css" />
     <Content Include="Styles\workflows-activity-dynamic-form-submitted.css" />
     <Content Include="Styles\workflows-activity-dynamic-form-validating.css" />
@@ -304,6 +305,7 @@
     <Compile Include="Validators\TextAreaValidator.cs" />
     <Compile Include="Validators\TextFieldValidator.cs" />
     <Compile Include="Validators\UrlFieldValidator.cs" />
+    <Compile Include="ViewModels\FormExportEntry.cs" />
     <Compile Include="ViewModels\FieldValidationSettings.cs" />
     <Compile Include="ViewModels\FormBindingSettings.cs" />
     <Compile Include="Helpers\ContentTypeDefinitionExtensions.cs" />
@@ -548,6 +550,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\BuilderSteps\FormSubmissions.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -113,7 +113,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Caching\RedisCacheStorageProvider.cs" />
-    <Compile Include="Extensions\RedisDatabaseExtensions.cs" />
+    <Compile Include="Extensions\RedisConnectionExtensions.cs" />
     <Compile Include="Configuration\IRedisConnectionProvider.cs" />
     <Compile Include="Configuration\RedisConnectionProvider.cs" />
     <Compile Include="MessageBus\RedisMessageBusBroker.cs" />

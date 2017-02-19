@@ -7,15 +7,9 @@ using Orchard.Mvc.Routes;
 namespace Orchard.Core.Common {
     public class Routes : IRouteProvider {
         public void GetRoutes(ICollection<RouteDescriptor> routes) {
-            foreach (var routeDescriptor in GetRoutes())
-                routes.Add(routeDescriptor);
-        }
-
-        public IEnumerable<RouteDescriptor> GetRoutes() {
-            return new[] {
-                new RouteDescriptor {
-                    Priority = -9999,
-                    Route = new Route(
+            var routeDescriptor = new RouteDescriptor {
+                Priority = -9999,
+                Route = new Route(
                         "{*path}",
                         new RouteValueDictionary {
                             {"area", "Common"},
@@ -28,9 +22,9 @@ namespace Orchard.Core.Common {
                             {"area", "Common"}
                         },
                         new MvcRouteHandler())
-                }
             };
-        }
 
-   }
+            routes.Add(routeDescriptor);
+        }
+    }
 }

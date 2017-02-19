@@ -40,7 +40,8 @@ namespace Orchard.Layouts.Services {
             var cacheKey = String.Format("LayoutElementTypes-{0}-{1}", contentType ?? "AnyType", context.CacheVaryParam);
             return _cacheManager.Get(cacheKey, true, acquireContext => {
                 var harvesterContext = new HarvestElementsContext {
-                    Content = context.Content
+                    Content = context.Content,
+                    IsHarvesting = context.IsHarvesting
                 };
                 var query =
                     from harvester in _elementHarvesters.Value
