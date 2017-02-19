@@ -46,6 +46,7 @@ namespace Orchard.OpenId.Controllers
         public ILogger Logger { get; set; }
         public Localizer T { get; set; }
 
+        [AlwaysAccessible]
         [HttpGet]
         public ActionResult LogOn() {
             if (Request.IsAuthenticated) {
