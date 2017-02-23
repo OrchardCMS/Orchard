@@ -1,0 +1,3 @@
+﻿When updating the theme from Foxythemes' Orchard version of amaretti:
+
+- Change Themes\TheAdmin\Views\Layout.cshtml : <div class="or-left-sidebar or-left-sidebar--click"> to open the sidebar sub menus on click, not on hover.

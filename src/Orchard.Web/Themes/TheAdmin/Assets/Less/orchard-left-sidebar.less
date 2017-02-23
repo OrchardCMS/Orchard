@@ -1,7 +1,101 @@
 ﻿/*------------------------------------------------------------------
 	[Left sidebar]
 */
-.or-left-sidebar > .nano > .nano-content
-{
-  position: absolute !important;
+.sidebar-elements {
+
+    > li {
+
+        > a {
+            text-align: left;
+            position: relative;
+            //RTL Support
+            .rtl & {
+                text-align: right;
+            }
+
+            .icon {
+                display: inline-block;
+                font-size: 25px;
+                margin-right: 10px;
+                vertical-align: middle;
+                //RTL Support
+                .rtl & {
+                    margin-right: 0;
+                    margin-left: 10px;
+                }
+            }
+
+            span {
+                display: inline-block;
+            }
+        }
+
+        &.parent {
+
+            > a:after {
+                content: '\e688';
+                float: right;
+                font-family: @icons-font;
+                font-size: 26px;
+                line-height: 28px;
+                color: darken(@left-sidebar-color, 25%);
+                //RTL Support
+                .rtl & {
+                    float: left;
+                }
+            }
+        }
+        //Second level style
+        > ul {
+            position: relative;
+            height: auto;
+            width: 100%;
+            left: 0;
+
+            > li.title {
+                display: none;
+            }
+
+            > li.nav-items {
+                display: block;
+                height: auto;
+
+                > .or-scroller {
+                    height: auto;
+                    overflow: visible;
+
+                    > .content {
+                        padding-top: 0;
+                        overflow: visible;
+                        position: relative;
+                    }
+                }
+            }
+        }
+
+        &:hover {
+            background-color: inherit;
+
+            > ul {
+                display: none;
+            }
+        }
+    }
+
+    li.open {
+
+        > ul {
+            display: block;
+        }
+    }
+}
+
+.or-left-sidebar {
+    .sidebar-elements > li > ul > .nav-items .or-scroller {
+        display: block;
+    }
+
+    & > .nano > .nano-content {
+        position: absolute !important;
+    }
 }
