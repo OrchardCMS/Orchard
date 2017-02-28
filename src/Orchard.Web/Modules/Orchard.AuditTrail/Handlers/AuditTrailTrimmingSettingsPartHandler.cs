@@ -28,7 +28,7 @@ namespace Orchard.AuditTrail.Handlers {
         public Localizer T { get; set; }
 
         private void GetMetadata(GetContentItemMetadataContext context, AuditTrailTrimmingSettingsPart part) {
-            context.Metadata.EditorGroupInfo.Add(new GroupInfo(T("Audit Trail")));
+            context.Metadata.EditorGroupInfo.Add(new GroupInfo(T("AuditTrail")));
         }
 
         private void BeginUpdateEvent(UpdateContentContext context, AuditTrailTrimmingSettingsPart part) {
