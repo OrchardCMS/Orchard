@@ -115,7 +115,6 @@
     <Compile Include="Caching\RedisCacheStorageProvider.cs" />
     <Compile Include="Extensions\RedisConnectionExtensions.cs" />
     <Compile Include="Configuration\RedisNotificationProvider.cs" />
-    <Compile Include="Extensions\RedisDatabaseExtensions.cs" />
     <Compile Include="Configuration\IRedisConnectionProvider.cs" />
     <Compile Include="Configuration\RedisConnectionProvider.cs" />
     <Compile Include="MessageBus\RedisMessageBusBroker.cs" />

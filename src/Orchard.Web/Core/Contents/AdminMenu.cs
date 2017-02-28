@@ -24,6 +24,8 @@ namespace Orchard.Core.Contents {
         public void GetNavigation(NavigationBuilder builder) {
             var contentTypeDefinitions = _contentDefinitionManager.ListTypeDefinitions().OrderBy(d => d.Name).ToList();
             var contentTypes = contentTypeDefinitions.Where(ctd => ctd.Settings.GetModel<ContentTypeSettings>().Creatable).OrderBy(ctd => ctd.DisplayName).ToList();
+            var listableContentTypes = contentTypeDefinitions.Where(ctd => ctd.Settings.GetModel<ContentTypeSettings>().Listable);
+            ContentItem listableCi = null;
 
             builder.Add(T("Content"), "1.4",
                 menu => {
@@ -34,6 +36,7 @@ namespace Orchard.Core.Contents {
                     if (contentTypes.Any()) {
                         var currentMenuItemPosition = 2;
                         foreach (var contentTypeDefinition in contentTypes) {
+                            listableCi = _contentManager.New(contentTypeDefinition.Name);
                             if (_authorizer.Authorize(Permissions.EditContent, listableCi)) {
                                 menu.Add(new LocalizedString(contentTypeDefinition.DisplayName), currentMenuItemPosition++.ToString(), item => item.Action("List", "Admin", new { area = "Contents", id = contentTypeDefinition.Name }));
                             }
