@@ -127,11 +127,13 @@ namespace Orchard.Environment {
 
         void StartUpdatedShells() {
             while (_tenantsToRestart.GetState().Any()) {
-                var settings = _tenantsToRestart.GetState().First();
-                _tenantsToRestart.GetState().Remove(settings);
-                Logger.Debug("Updating shell: " + settings.Name);
                 lock (_syncLock) {
-                    ActivateShell(settings);
+                    var state = _tenantsToRestart.GetState();
+                    foreach (var settings in state) {
+                        Logger.Debug("Updating shell: " + settings.Name);
+                        ActivateShell(settings);
+                    }
+                    state.Clear();
                 }
             }
         }

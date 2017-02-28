@@ -12,7 +12,6 @@
         <Place Parts_Contents_Publish="Content:5"/>
     </Match>
     <Match DisplayType="SummaryAdmin">
-        <Place Parts_Contents_Publish_SummaryAdmin="Actions:5"
-               Parts_Contents_Clone_SummaryAdmin="Actions:6"/>
+        <Place Parts_Contents_Publish_SummaryAdmin="Actions:5"/>
     </Match>
 </Placement>

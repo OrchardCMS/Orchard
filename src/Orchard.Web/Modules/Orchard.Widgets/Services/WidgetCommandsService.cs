@@ -77,7 +77,6 @@ namespace Orchard.Widgets.Services {
                 var menu = _menuService.GetMenu(menuName);
 
                 if (menu != null) {
-                    widget.RenderTitle = false;
                     widget.As<MenuWidgetPart>().MenuContentItemId = menu.ContentItem.Id;
                 }
             }

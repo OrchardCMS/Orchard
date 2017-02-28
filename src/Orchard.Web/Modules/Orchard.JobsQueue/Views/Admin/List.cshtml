@@ -7,6 +7,7 @@
 
     Layout.Title = T("Jobs Queue");
     Style.Include("admin-jobsqueue.css");
+    Script.Require("jQuery");
 }
 <div class="panel panel-default">
     @using (Html.BeginFormAntiForgeryPost()) {
@@ -83,5 +84,15 @@
                 }
             </div>
         </div>
+    }
+
+    @if (Model.ProcessQueue) {
+        using (Script.Foot()) {
+        <script type="text/javascript">
+                $(function () {
+                    $("[name='submit.Process']").trigger("click");
+                });
+        </script>
+        }
     }
 </div>

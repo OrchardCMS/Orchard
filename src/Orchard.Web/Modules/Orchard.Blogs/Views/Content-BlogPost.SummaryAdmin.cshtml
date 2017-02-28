@@ -50,26 +50,30 @@
             @if (contentItem.HasPublished()) {
                 @Html.ItemDisplayLink(T("View").Text, contentItem)
 
-                if (contentItem.HasDraft()) {
+            if (contentItem.HasDraft()) {
+                if (Authorizer.Authorize(Orchard.Blogs.Permissions.PublishBlogPost, contentItem)) {
                     @Html.Link(T("Publish Draft").Text, Url.Action("Publish", "Admin", new { area = "Contents", id = contentItem.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "UnsafeUrl" })
-
-
-                    if (Authorizer.Authorize(Orchard.Blogs.Permissions.PublishBlogPost, contentItem)) {
-                        @Html.ActionLink(T("Preview").Text, "Preview", "Item", new { area = "Contents", id = contentItem.Id }, new { })
-
-                    }
+                    @T(" | ")
                 }
+
+                if (Authorizer.Authorize(Permissions.PreviewContent, contentItem)) {
+                    @Html.ActionLink(T("Preview").Text, "Preview", "Item", new { area = "Contents", id = contentItem.Id }, new { })
+                    @T(" | ")
+                }
+            }
 
                 if (Authorizer.Authorize(Orchard.Blogs.Permissions.PublishBlogPost, contentItem)) {
                     @Html.Link(T("Unpublish").Text, Url.Action("Unpublish", "Admin", new { area = "Contents", id = contentItem.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "UnsafeUrl" })
 
                 }
             }
-            else {
-                if (contentItem.HasDraft()) {
+        } else {
+            if (contentItem.HasDraft()) {
+                if (Authorizer.Authorize(Permissions.PreviewContent, contentItem)) {
                     @Html.ActionLink(T("Preview").Text, "Preview", "Item", new { area = "Contents", id = contentItem.Id }, new { })
-
+                    @T(" | ")
                 }
+            }
 
                 if (Authorizer.Authorize(Orchard.Blogs.Permissions.PublishBlogPost, contentItem)) {
                     @Html.Link(T("Publish").Text, Url.Action("Publish", "Admin", new { area = "Contents", id = contentItem.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "UnsafeUrl" })

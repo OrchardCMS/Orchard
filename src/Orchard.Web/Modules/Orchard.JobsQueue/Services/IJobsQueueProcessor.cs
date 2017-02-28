@@ -1,5 +1,5 @@
 namespace Orchard.JobsQueue.Services {
     public interface IJobsQueueProcessor : ISingletonDependency {
-        void ProcessQueue();
+        void ProcessQueue(int batchSize, uint batchCount);
     }
 }

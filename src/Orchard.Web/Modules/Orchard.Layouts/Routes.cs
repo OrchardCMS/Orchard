@@ -6,13 +6,7 @@ using Orchard.Mvc.Routes;
 namespace Orchard.Layouts {
     public class Routes : IRouteProvider {
         public void GetRoutes(ICollection<RouteDescriptor> routes) {
-            foreach (var route in GetRoutes()) {
-                routes.Add(route);
-            }
-        }
-        
-        public IEnumerable<RouteDescriptor> GetRoutes() {
-            yield return new RouteDescriptor {
+            var routeDescriptor = new RouteDescriptor {
                 Route = new Route(
                     "Admin/Layouts/{controller}/{action}/{id}",
                     new RouteValueDictionary {
@@ -25,6 +19,8 @@ namespace Orchard.Layouts {
                     },
                     new MvcRouteHandler())
             };
+
+            routes.Add(routeDescriptor);
         }
     }
 }

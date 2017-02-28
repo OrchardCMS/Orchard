@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Placement>
+  <Place Parts_ActiveDirectoryFederationServicesSettings_Edit="Content:after"/>
+  <Place Parts_AzureActiveDirectorySettings_Edit="Content:after"/>
+  <Place Parts_FacebookSettings_Edit="Content:after"/>
+  <Place Parts_GoogleSettings_Edit="Content:after"/>
+  <Place Parts_TwitterSettings_Edit="Content:after"/>
+</Placement>

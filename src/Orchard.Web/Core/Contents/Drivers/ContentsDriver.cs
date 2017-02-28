@@ -12,9 +12,7 @@ namespace Orchard.Core.Contents.Drivers {
                 ContentShape("Parts_Contents_Publish_Summary",
                              () => shapeHelper.Parts_Contents_Publish_Summary()),
                 ContentShape("Parts_Contents_Publish_SummaryAdmin",
-                             () => shapeHelper.Parts_Contents_Publish_SummaryAdmin()),
-                ContentShape("Parts_Contents_Clone_SummaryAdmin",
-                             () => shapeHelper.Parts_Contents_Clone_SummaryAdmin())
+                             () => shapeHelper.Parts_Contents_Publish_SummaryAdmin())
                 );
         }
 

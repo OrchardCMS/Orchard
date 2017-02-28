@@ -44,7 +44,7 @@ namespace Orchard.Fields.Drivers {
             return ContentShape("Fields_Numeric_Edit", GetDifferentiator(field, part),
                 () => {
                     var settings = field.PartFieldDefinition.Settings.GetModel<NumericFieldSettings>();
-                    var value = part.IsNew() ? settings.DefaultValue : Convert.ToString(field.Value, _cultureInfo.Value);
+                    var value = part.IsNew() && field.Value == null ? settings.DefaultValue : Convert.ToString(field.Value, _cultureInfo.Value);
 
                     var model = new NumericFieldViewModel {
                         Field = field,
@@ -106,8 +106,7 @@ namespace Orchard.Fields.Drivers {
         }
 
         protected override void Exporting(ContentPart part, NumericField field, ExportContentContext context) {
-            if (field.Value.HasValue)
-                context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Value", field.Value.Value.ToString(CultureInfo.InvariantCulture));
+            context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Value", !field.Value.HasValue ? String.Empty : field.Value.Value.ToString(CultureInfo.InvariantCulture));
         }
 
         protected override void Cloning(ContentPart part, NumericField originalField, NumericField cloneField, CloneContentContext context) {

@@ -1,0 +1,20 @@
+﻿@model Orchard.OpenId.Models.GoogleSettingsPart
+@using Orchard.OpenId.Constants
+
+<h2>Google Settings</h2>
+<fieldset>
+    @Html.LabelFor(m => m.ClientId, T("Client Id"))
+    @Html.TextBoxFor(m => m.ClientId, new { @class = "text large" })
+    <span class="hint">@T("Google's Client Id obtained from your google dashboard (e.g. {0})", Google.DefaultClientId)</span>
+</fieldset>
+<fieldset>
+    @Html.LabelFor(m => m.ClientSecret, T("Client Secret"))
+    @Html.TextBoxFor(m => m.ClientSecret, new { @class = "text large" })
+    <span class="hint">@T("Google's Client Secret obtained from your google dashboard (e.g. {0})", Google.DefaultClientSecret)</span>
+</fieldset>
+<fieldset>
+    @Html.LabelFor(m => m.CallbackPath, T("Callback Path"))
+    @Html.TextBoxFor(m => m.CallbackPath, new { @class = "text large" })
+    <span class="hint">@T("Google's Callback Path obtained from your google dashboard (case sensitive). Recommended: {0}", General.LogonCallbackUrl)</span>
+</fieldset>
+<hr />

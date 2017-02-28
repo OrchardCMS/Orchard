@@ -46,7 +46,7 @@ namespace Orchard.Core.Common.Drivers {
             return ContentShape("Fields_Common_Text_Edit", GetDifferentiator(field, part),
                 () => {
                     var settings = field.PartFieldDefinition.Settings.GetModel<TextFieldSettings>();
-                    var text = part.IsNew() ? settings.DefaultValue : field.Value;
+                    var text = part.IsNew() && String.IsNullOrEmpty(field.Value) ? settings.DefaultValue : field.Value;
 
                     var viewModel = new TextFieldDriverViewModel {
                         Field = field,
@@ -84,8 +84,7 @@ namespace Orchard.Core.Common.Drivers {
         }
 
         protected override void Exporting(ContentPart part, TextField field, ExportContentContext context) {
-            if (!String.IsNullOrEmpty(field.Value))
-                context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Text", field.Value);
+            context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Text", field.Value);
         }
 
         protected override void Cloning(ContentPart part, TextField originalField, TextField cloneField, CloneContentContext context) {

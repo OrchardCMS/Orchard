@@ -12,7 +12,7 @@ namespace Orchard.WebApi.Routes {
             _blueprint = blueprint;
         }
 
-        public IEnumerable<RouteDescriptor> GetRoutes() {
+        public void GetRoutes(ICollection<RouteDescriptor> routes) {
             var displayPathsPerArea = _blueprint.HttpControllers.GroupBy(
                 x => x.AreaName,
                 x => x.Feature.Descriptor.Extension.Path);
@@ -21,18 +21,14 @@ namespace Orchard.WebApi.Routes {
                 var areaName = item.Key;
                 var displayPath = item.Distinct().Single();
 
-                yield return new HttpRouteDescriptor {
+                var routeDescriptor = new HttpRouteDescriptor {
                     Priority = -10,
                     RouteTemplate = "api/" + displayPath + "/{controller}/{id}",
-                    Defaults = new {area = areaName, controller = "api", id = RouteParameter.Optional}
+                    Defaults = new { area = areaName, controller = "api", id = RouteParameter.Optional }
                 };
-            }
-        }
 
-
-        public void GetRoutes(ICollection<RouteDescriptor> routes) {
-            foreach (var routeDescriptor in GetRoutes())
                 routes.Add(routeDescriptor);
+            }
         }
     }
 }

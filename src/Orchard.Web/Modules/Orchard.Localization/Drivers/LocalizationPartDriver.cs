@@ -21,35 +21,45 @@ namespace Orchard.Localization.Drivers {
         }
 
         protected override DriverResult Display(LocalizationPart part, string displayType, dynamic shapeHelper) {
-            var masterId = part.HasTranslationGroup
-                               ? part.Record.MasterContentItemId
-                               : part.Id;
 
             return Combined(
                 ContentShape("Parts_Localization_ContentTranslations",
-                             () => shapeHelper.Parts_Localization_ContentTranslations(Id: part.ContentItem.Id, MasterId: masterId, Culture: GetCulture(part), Localizations: GetDisplayLocalizations(part, VersionOptions.Published))),
+                             () => shapeHelper.Parts_Localization_ContentTranslations(Id: part.ContentItem.Id, MasterId: ActualMasterId(part), Culture: GetCulture(part), Localizations: GetDisplayLocalizations(part, VersionOptions.Published))),
                 ContentShape("Parts_Localization_ContentTranslations_Summary",
-                             () => shapeHelper.Parts_Localization_ContentTranslations_Summary(Id: part.ContentItem.Id, MasterId: masterId, Culture: GetCulture(part), Localizations: GetDisplayLocalizations(part, VersionOptions.Published))),
+                             () => shapeHelper.Parts_Localization_ContentTranslations_Summary(Id: part.ContentItem.Id, MasterId: ActualMasterId(part), Culture: GetCulture(part), Localizations: GetDisplayLocalizations(part, VersionOptions.Published))),
                 ContentShape("Parts_Localization_ContentTranslations_SummaryAdmin", () => {
                     var siteCultures = _cultureManager.ListCultures();
 
-                    return shapeHelper.Parts_Localization_ContentTranslations_SummaryAdmin(Id: part.ContentItem.Id, MasterId: masterId, Culture: GetCulture(part), Localizations: GetDisplayLocalizations(part, VersionOptions.Latest), SiteCultures: siteCultures);
+                    return shapeHelper.Parts_Localization_ContentTranslations_SummaryAdmin(Id: part.ContentItem.Id, MasterId: ActualMasterId(part), Culture: GetCulture(part), Localizations: GetDisplayLocalizations(part, VersionOptions.Latest), SiteCultures: siteCultures);
                 })
                 );
+        }
+
+        private int ActualMasterId(LocalizationPart part) {
+            var masterId = part.HasTranslationGroup
+                               ? part.Record.MasterContentItemId
+                               : part.Id;
+            if (_contentManager.Get(masterId, VersionOptions.Latest) == null) {
+                //the original MasterContentItem has been deleted
+                masterId = part.Id;
+            }
+            return masterId;
         }
 
         protected override DriverResult Editor(LocalizationPart part, dynamic shapeHelper) {
             var localizations = GetEditorLocalizations(part).ToList();
 
-            var missingCultures = part.HasTranslationGroup ?
-                RetrieveMissingCultures(part.MasterContentItem.As<LocalizationPart>(), true) :
+            var masterContentItem = _contentManager.Get(part.Record.MasterContentItemId, VersionOptions.Latest);
+
+            var missingCultures = part.HasTranslationGroup && masterContentItem != null ?
+                RetrieveMissingCultures(masterContentItem.As<LocalizationPart>(), true) :
                 RetrieveMissingCultures(part, part.Culture != null);
 
             var model = new EditLocalizationViewModel {
                 SelectedCulture = GetCulture(part),
                 MissingCultures = missingCultures,
                 ContentItem = part,
-                MasterContentItem = part.HasTranslationGroup ? part.MasterContentItem : null,
+                MasterContentItem = masterContentItem,
                 ContentLocalizations = new ContentLocalizationsViewModel(part) { Localizations = localizations }
             };
 
@@ -70,7 +80,7 @@ namespace Orchard.Localization.Drivers {
         }
 
         private List<string> RetrieveMissingCultures(LocalizationPart part, bool excludePartCulture) {
-            var editorLocalizations = GetEditorLocalizations(part);
+            var editorLocalizations = GetEditorLocalizations(part.MasterContentItem != null ? part.MasterContentItem.As<LocalizationPart>() : part);
 
             var cultures = _cultureManager
                 .ListCultures()

@@ -117,7 +117,7 @@ namespace Orchard.Taxonomies.Services {
             _contentManager.Remove(taxonomy.ContentItem);
 
             // Removing terms
-            foreach (var term in GetTerms(taxonomy.Id)) {
+            foreach (var term in GetRootTerms(taxonomy.Id)) {
                 DeleteTerm(term);
             }
 
@@ -166,6 +166,14 @@ namespace Orchard.Taxonomies.Services {
         public IEnumerable<TermPart> GetTerms(int taxonomyId) {
             var result = _contentManager.Query<TermPart, TermPartRecord>()
                 .Where(x => x.TaxonomyId == taxonomyId)
+                .List();
+
+            return TermPart.Sort(result);
+        }
+
+        public IEnumerable<TermPart> GetRootTerms(int taxonomyId) {
+            var result = _contentManager.Query<TermPart, TermPartRecord>()
+                .Where(x => x.TaxonomyId == taxonomyId && x.Path == "/")
                 .List();
 
             return TermPart.Sort(result);

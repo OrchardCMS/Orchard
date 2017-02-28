@@ -163,8 +163,8 @@ namespace Orchard.DynamicForms.Drivers {
 
             var projection = terms.Select(x => {
                 var data = new {Content = x};
-                var value = _tokenizer.Replace(valueExpression, data);
-                var text = _tokenizer.Replace(textExpression, data);
+                var value = _tokenizer.Replace(valueExpression, data, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
+                var text = _tokenizer.Replace(textExpression, data, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
 
                 return new SelectListItem {
                     Text = text,

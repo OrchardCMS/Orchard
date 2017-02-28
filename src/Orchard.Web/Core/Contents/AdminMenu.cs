@@ -3,16 +3,19 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Settings;
 using Orchard.Localization;
+using Orchard.Security;
 using Orchard.UI.Navigation;
 
 namespace Orchard.Core.Contents {
     public class AdminMenu : INavigationProvider {
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly IContentManager _contentManager;
+        private readonly IAuthorizer _authorizer;
 
-        public AdminMenu(IContentDefinitionManager contentDefinitionManager, IContentManager contentManager) {
+        public AdminMenu(IContentDefinitionManager contentDefinitionManager, IContentManager contentManager, IAuthorizer authorizer) {
             _contentDefinitionManager = contentDefinitionManager;
             _contentManager = contentManager;
+            _authorizer = authorizer;
         }
 
         public Localizer T { get; set; }
@@ -31,7 +34,9 @@ namespace Orchard.Core.Contents {
                     if (contentTypes.Any()) {
                         var currentMenuItemPosition = 2;
                         foreach (var contentTypeDefinition in contentTypes) {
-                            menu.Add(new LocalizedString(contentTypeDefinition.DisplayName), currentMenuItemPosition++.ToString(), item => item.Action("List", "Admin", new { area = "Contents", id = contentTypeDefinition.Name }));
+                            if (_authorizer.Authorize(Permissions.EditContent, listableCi)) {
+                                menu.Add(new LocalizedString(contentTypeDefinition.DisplayName), currentMenuItemPosition++.ToString(), item => item.Action("List", "Admin", new { area = "Contents", id = contentTypeDefinition.Name }));
+                            }
                         }
                     }
 

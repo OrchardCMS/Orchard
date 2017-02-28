@@ -74,26 +74,6 @@
         <label for="emailtestto">@T("To:")</label>
         <input type="text" id="emailtestto" class="form-control" />
     </div>
-    <div class="form-group">
-        <label for="emailtestbcc">@T("Bcc:")</label>
-        <input type="text" id="emailtestbcc" class="form-control" />
-    </div>
-    <div class="form-group">
-        <label for="emailtestcc">@T("CC:")</label>
-        <input type="text" id="emailtestcc" class="form-control" />
-    </div>
-    <div class="form-group">
-        <label for="emailtestreplyto">@T("Reply To:")</label>
-        <input type="text" id="emailtestreplyto" class="form-control" />
-    </div>
-    <div class="form-group">
-        <label for="emailtestsubject">@T("Subject:")</label>
-        <input type="text" id="emailtestsubject" class="form-control" />
-    </div>
-    <div class="form-group">
-        <label for="emailtestbody">@T("Body:")</label>
-        <textarea class="form-control" id="emailtestbody"></textarea>
-    </div>
     <div>
         <button type="button" id="emailtestsend" class="button grey">@T("Send")</button>
     </div>
@@ -110,11 +90,6 @@
                     userName = $("#@Html.FieldIdFor(m => m.UserName)"),
                     password = $("#@Html.FieldIdFor(m => m.Password)"),
                     to = $("#emailtestto"),
-                    subject = $("#emailtestsubject"),
-                    body = $("#emailtestbody"),
-                    replyto = $("#emailtestreplyto"),
-                    bcc = $("#emailtestbcc"),
-                    cc = $("#emailtestcc");
                 var shortCutFunction = "info";
                 var title = "";
 
@@ -154,11 +129,6 @@
                         userName: userName.val(),
                         password: password.val(),
                         to: to.val(),
-                        subject: subject.val(),
-                        body: body.val(),
-                        replyto: replyto.val(),
-                        bcc: bcc.val(),
-                        cc: cc.val(),
                         __RequestVerificationToken: to.closest("form").find("input[name=__RequestVerificationToken]").val()
                     })
                     .fail(function (data) {

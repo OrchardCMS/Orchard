@@ -13,12 +13,14 @@ namespace Orchard.Environment.Extensions.Loaders {
     public class ReferencedExtensionLoader : ExtensionLoaderBase {
         private readonly IVirtualPathProvider _virtualPathProvider;
         private readonly IBuildManager _buildManager;
+        private readonly IDependenciesFolder _dependenciesFolder;
 
         public ReferencedExtensionLoader(IDependenciesFolder dependenciesFolder, IVirtualPathProvider virtualPathProvider, IBuildManager buildManager)
             : base(dependenciesFolder) {
 
             _virtualPathProvider = virtualPathProvider;
             _buildManager = buildManager;
+            _dependenciesFolder = dependenciesFolder;
             Logger = NullLogger.Instance;
         }
 
@@ -81,6 +83,15 @@ namespace Orchard.Environment.Extensions.Loaders {
                 Assembly = assembly,
                 ExportedTypes = assembly.GetExportedTypes()
             };
+        }
+
+        public override bool LoaderIsSuitable(ExtensionDescriptor descriptor) {
+            var dependency = _dependenciesFolder.GetDescriptor(descriptor.Id);
+            if (dependency != null && dependency.LoaderName == this.Name) {
+                return _buildManager.GetReferencedAssembly(descriptor.Id) != null;
+            }
+
+            return false;
         }
     }
 }

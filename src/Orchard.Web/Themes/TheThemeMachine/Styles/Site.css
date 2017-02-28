@@ -474,18 +474,17 @@ nav ul.breadcrumb
 .meta {}
 
 /* Comments */
-#comments { margin: 24px 0 0 0; padding: 0; }
+.comments-disabled { margin: 24px 0 0 0; padding: 0; }
 .comment-form { margin: 24px 0 0 0; padding: 0; }
-.comments { margin: 0; padding: 0; list-style: none; }
+.comments { margin: 0 0 1em 0; padding: 0; list-style: none; }
 .comments li { margin: 12px 0 0 0; padding: 12px; border: 1px solid #dbdbdb; }
+.comments .comments { margin-bottom: 0; }
 .comment { margin: 0; padding: 0; }
 .comment h4 { font-size: 1.077em; }
 .comment .who {}
 .comment .what {}
 .comment .reply { float: right;}
-.comment #add-comment {}
-.comment-form #comment-by { font-size: 1.231em; font-weight: normal; margin: 0 0 1.2em 0; border:none; }
-.comment-form .comment-text { width: 33.2em; }
+.comment-form .comment-text { width: 97%; max-width: 33.2em; }
 .comment-form input[type="text"] { width: 32em; }
 .comment-form li { border: inherit; margin: inherit; padding: inherit}
 .comment-disabled {}

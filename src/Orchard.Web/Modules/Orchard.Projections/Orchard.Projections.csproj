@@ -175,6 +175,7 @@
     <Compile Include="Providers\Layouts\ShapeLayoutForms.cs" />
     <Compile Include="Providers\Properties\CustomValueProperties.cs" />
     <Compile Include="Navigation\NavigationQueryProvider.cs" />
+    <Compile Include="Services\IProjectionManagerExtension.cs" />
     <Compile Include="Shapes.cs" />
     <Compile Include="Descriptors\Layout\LayoutComponentResult.cs" />
     <Compile Include="Descriptors\Layout\LayoutContext.cs" />

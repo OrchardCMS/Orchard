@@ -293,7 +293,7 @@ namespace Orchard.OutputCache.Filters {
                 var action = filterContext.ActionDescriptor.ActionName;
                 var culture = _workContext.CurrentCulture.ToLowerInvariant();
                 var auth = filterContext.HttpContext.User.Identity.IsAuthenticated.ToString().ToLowerInvariant();
-                var theme = _themeManager.GetRequestTheme(filterContext.RequestContext).Id.ToLowerInvariant();
+                var theme = _workContext.CurrentTheme.Id.ToLowerInvariant();
 
                 itemDescriptor = string.Format("{0} (Area: {1}, Controller: {2}, Action: {3}, Culture: {4}, Theme: {5}, Auth: {6})", url, area, controller, action, culture, theme, auth);
             }
@@ -383,13 +383,22 @@ namespace Orchard.OutputCache.Filters {
             result.Add("scheme", filterContext.RequestContext.HttpContext.Request.Url.Scheme);
 
             // Vary by theme.
-            result.Add("theme", _themeManager.GetRequestTheme(filterContext.RequestContext).Id.ToLowerInvariant());
+            result.Add("theme", _workContext.CurrentTheme.Id.ToLowerInvariant());
 
             // Vary by configured query string parameters.
             var queryString = filterContext.RequestContext.HttpContext.Request.QueryString;
             foreach (var key in queryString.AllKeys) {
-                if (key == null || (CacheSettings.VaryByQueryStringParameters != null && !CacheSettings.VaryByQueryStringParameters.Contains(key)))
+                if (key == null)
                     continue;
+
+                // In exclusive mode, don't vary if the key matches
+                if (CacheSettings.VaryByQueryStringIsExclusive && (CacheSettings.VaryByQueryStringParameters != null && CacheSettings.VaryByQueryStringParameters.Contains(key)))
+                    continue;
+
+                // In inclusive mode, don't vary if the key doesn't match
+                if(!CacheSettings.VaryByQueryStringIsExclusive && (CacheSettings.VaryByQueryStringParameters == null || !CacheSettings.VaryByQueryStringParameters.Contains(key)))
+                    continue;
+
                 result[key] = queryString[key];
             }
 

@@ -127,7 +127,9 @@
     <Compile Include="Drivers\VectorImagePartDriver.cs" />
     <Compile Include="Extensions\MediaMetaDataExtensions.cs" />
     <Compile Include="Factories\VectorImageFactory.cs" />
+    <Compile Include="Handlers\MediaItemHandler.cs" />
     <Compile Include="Handlers\MediaLibrarySettingsPartHandler.cs" />
+    <Compile Include="Implementation\DefaultMediaUsername.cs" />
     <Compile Include="Models\MediaLibrarySettingsPart.cs" />
     <Compile Include="Models\VectorImagePart.cs" />
     <Compile Include="Models\IMediaFolder.cs" />
@@ -147,6 +149,10 @@
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
       <Private>false</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.ContentTypes\Orchard.ContentTypes.csproj">
+      <Project>{0E7646E8-FE8F-43C1-8799-D97860925EC4}</Project>
+      <Name>Orchard.ContentTypes</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Tokens\Orchard.Tokens.csproj">
       <Project>{6f759635-13d7-4e94-bcc9-80445d63f117}</Project>
@@ -200,6 +206,7 @@
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Security\MediaAuthorizationEventHandler.cs" />
     <Compile Include="Services\IMediaLibraryService.cs" />
+    <Compile Include="Providers\IMediaFolderProvider.cs" />
     <Compile Include="Services\MediaLibraryService.cs" />
     <Compile Include="Services\Shapes.cs" />
     <Compile Include="Services\XmlRpcHandler.cs" />
