@@ -29,7 +29,7 @@ namespace Orchard.AuditTrail.Handlers {
         public Localizer T { get; set; }
 
         private void GetMetadata(GetContentItemMetadataContext context, AuditTrailSettingsPart part) {
-            context.Metadata.EditorGroupInfo.Add(new GroupInfo(T("AuditTrail")));
+            context.Metadata.EditorGroupInfo.Add(new GroupInfo(T("Audit Trail")));
         }
 
         private void SetupLazyFields(ActivatedContentContext context, AuditTrailSettingsPart part) {

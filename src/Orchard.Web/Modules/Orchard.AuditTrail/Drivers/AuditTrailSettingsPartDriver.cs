@@ -70,7 +70,7 @@ namespace Orchard.AuditTrail.Drivers {
                 }
 
                 return shapeHelper.EditorTemplate(TemplateName: "Parts.AuditTrailSettings", Model: viewModel, Prefix: Prefix);
-            }).OnGroup("AuditTrail");
+            }).OnGroup("Audit Trail");
         }
 
         /// <summary>
