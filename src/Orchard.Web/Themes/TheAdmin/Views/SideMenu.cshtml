@@ -2,27 +2,30 @@
 <nav>
     <ul class="sidebar-elements">
         @foreach (var firstLevelMenuItem in Model.Items) {
-                IEnumerable<dynamic> secondLevelMenuItems = firstLevelMenuItem;
+            var secondLevelMenuItems = (IEnumerable<dynamic>)firstLevelMenuItem;
 
-                string iconClass = string.Join(" ", firstLevelMenuItem.Classes);
-                var itemClassName = HasText(iconClass)
-                    ? "icon s7-" + iconClass.HtmlClassify()
-                    : "icon s7-link";
+            if (!secondLevelMenuItems.Any()){
+                continue;
+            }
 
-                if (secondLevelMenuItems.Count() > 1) {
-                    firstLevelMenuItem.Classes.Add("parent");
-                }
-                if (firstLevelMenuItem.Item.Selected) {
-                    firstLevelMenuItem.Classes.Add("active");
-                }
+            var iconClass = (string)String.Join(" ", firstLevelMenuItem.Classes);
+            var itemClassName = HasText(iconClass)
+                ? "icon s7-" + iconClass.HtmlClassify()
+                : "icon s7-link";
 
-                var firstLevelTag = Tag(firstLevelMenuItem, "li");
-                var firstLevelHref = firstLevelMenuItem.Href;
+            if (secondLevelMenuItems.Count() > 1) {
+                firstLevelMenuItem.Classes.Add("parent");
+            }
+            if (firstLevelMenuItem.Item.Selected) {
+                firstLevelMenuItem.Classes.Add("active");
+            }
 
-                string sectionHeaderText = firstLevelMenuItem.Text.Text;
+            var firstLevelTag = Tag(firstLevelMenuItem, "li");
+            var firstLevelHref = firstLevelMenuItem.Href;
+
+            var sectionHeaderText = firstLevelMenuItem.Text.Text;
             @firstLevelTag.StartElement
-
-
+            
             if (secondLevelMenuItems.Any()) {
                 firstLevelHref = secondLevelMenuItems.First().Href;
             }
