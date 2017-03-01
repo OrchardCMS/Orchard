@@ -25,7 +25,7 @@
         }
         @Html.ItemEditLink(T("Edit").Text, contentItem);
         @T(" | ")
-        @Html.ActionLink(T(" Clone").Text, "Clone", "Admin", new { Id = contentItem.Id, ReturnUrl = Request.ToUrlString(), Area = "Contents" }, new { itemprop = "UnsafeUrl" });
+        @Html.ActionLink(T(" Clone").Text, "Clone", "Admin", new { Id = contentItem.Id, Area = "Contents" }, new { itemprop = "UnsafeUrl" });
     }
 
     @if (hasPublished && authorizedToPublish) {

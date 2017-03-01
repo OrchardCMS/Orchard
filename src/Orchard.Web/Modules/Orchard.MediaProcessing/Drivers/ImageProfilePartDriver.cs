@@ -106,5 +106,12 @@ namespace Orchard.MediaProcessing.Drivers {
                 part.Record.Filters.Add(result);
             }
         }
+
+        protected override void Cloning(ImageProfilePart originalPart, ImageProfilePart clonePart, CloneContentContext context) {
+            clonePart.Name = originalPart.Name;
+            clonePart.ModifiedUtc = originalPart.ModifiedUtc;
+            clonePart.Record.Filters = originalPart.Filters;
+            clonePart.Record.FileNames = originalPart.FileNames;
+        }
     }
 }

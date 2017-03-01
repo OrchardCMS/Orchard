@@ -150,5 +150,13 @@ namespace Orchard.Taxonomies.Drivers {
                 part.Path += pathContentItem.Id + "/";
             }
         }
+
+        protected override void Cloning(TermPart originalPart, TermPart clonePart, CloneContentContext context) {
+            clonePart.Count = originalPart.Count;
+            clonePart.Selectable = originalPart.Selectable;
+            clonePart.Weight = originalPart.Weight;
+            clonePart.TaxonomyId = originalPart.TaxonomyId;
+            clonePart.Path = originalPart.Path;
+        }
     }
 }

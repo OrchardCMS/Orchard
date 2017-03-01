@@ -4,6 +4,7 @@ using Orchard.ContentManagement.FieldStorage.InfosetStorage;
 using Orchard.MediaLibrary.Models;
 using System.Xml;
 using System.Xml.Linq;
+using Orchard.ContentManagement.Handlers;
 
 namespace Orchard.MediaLibrary.Drivers
 {
@@ -54,6 +55,6 @@ namespace Orchard.MediaLibrary.Drivers
                 element.Add(partElement);
                 partElement.Add(xmlElement.Elements());
             }
-        }
+        }        
     }
 }

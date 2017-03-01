@@ -83,5 +83,9 @@ namespace Orchard.ContentPicker.Drivers {
                 }
             }
         }
+
+        protected override void Cloning(ContentMenuItemPart originalPart, ContentMenuItemPart clonePart, CloneContentContext context) {
+            clonePart.Content = originalPart.Content;
+        }
     }
 }

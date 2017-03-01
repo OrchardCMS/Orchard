@@ -48,5 +48,9 @@ namespace Orchard.Core.Navigation.Drivers {
         protected override void Exporting(ShapeMenuItemPart part, ExportContentContext context) {
             context.Element(part.PartDefinition.Name).SetAttributeValue("ShapeType", part.ShapeType);
         }
+
+        protected override void Cloning(ShapeMenuItemPart originalPart, ShapeMenuItemPart clonePart, CloneContentContext context) {
+            clonePart.ShapeType = originalPart.ShapeType;
+        }
     }
 }

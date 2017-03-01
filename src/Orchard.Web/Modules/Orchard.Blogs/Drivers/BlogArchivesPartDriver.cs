@@ -13,7 +13,7 @@ namespace Orchard.Blogs.Drivers {
         private readonly IContentManager _contentManager;
 
         public BlogArchivesPartDriver(
-            IBlogService blogService, 
+            IBlogService blogService,
             IBlogPostService blogPostService,
             IContentManager contentManager) {
             _blogService = blogService;
@@ -37,7 +37,7 @@ namespace Orchard.Blogs.Drivers {
             var viewModel = new BlogArchivesViewModel {
                 BlogId = part.BlogId,
                 Blogs = _blogService.Get().ToList().OrderBy(b => _contentManager.GetItemMetadata(b).DisplayText)
-                };
+            };
 
             return ContentShape("Parts_Blogs_BlogArchives_Edit",
                                 () => shapeHelper.EditorTemplate(TemplateName: "Parts.Blogs.BlogArchives", Model: viewModel, Prefix: Prefix));
@@ -69,5 +69,8 @@ namespace Orchard.Blogs.Drivers {
             context.Element(part.PartDefinition.Name).SetAttributeValue("Blog", blogIdentity);
         }
 
+        protected override void Cloning(BlogArchivesPart originalPart, BlogArchivesPart clonePart, CloneContentContext context) {
+            clonePart.BlogId = originalPart.BlogId;
+        }
     }
 }

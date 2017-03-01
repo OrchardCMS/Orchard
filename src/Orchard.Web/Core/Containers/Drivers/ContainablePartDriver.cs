@@ -96,5 +96,9 @@ namespace Orchard.Core.Containers.Drivers {
         protected override void Exporting(ContainablePart part, ExportContentContext context) {
             context.Element(part.PartDefinition.Name).SetAttributeValue("Position", part.Position);
         }
+
+        protected override void Cloning(ContainablePart originalPart, ContainablePart clonePart, CloneContentContext context) {
+            clonePart.Position = originalPart.Position;
+        }
     }
 }

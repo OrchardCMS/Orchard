@@ -1,5 +1,6 @@
 ﻿using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
 using Orchard.MediaLibrary.Models;
 
@@ -73,6 +74,15 @@ namespace Orchard.MediaLibrary.Drivers {
             context.Element(part.PartDefinition.Name).SetAttributeValue("FolderPath", part.FolderPath);
             context.Element(part.PartDefinition.Name).SetAttributeValue("FileName", part.FileName);
             context.Element(part.PartDefinition.Name).SetAttributeValue("LogicalType", part.LogicalType);
+        }
+
+        protected override void Cloning(MediaPart originalPart, MediaPart clonePart, CloneContentContext context) {
+            clonePart.MimeType = originalPart.MimeType;
+            clonePart.Caption = originalPart.Caption;
+            clonePart.AlternateText = originalPart.AlternateText;
+            clonePart.FolderPath = originalPart.FolderPath;
+            clonePart.FileName = originalPart.FileName;
+            clonePart.LogicalType = originalPart.LogicalType;
         }
     }
 }

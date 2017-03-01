@@ -134,5 +134,9 @@ namespace Orchard.PublishLater.Drivers {
                     .SetAttributeValue("ScheduledPublishUtc", XmlConvert.ToString(scheduled.Value, XmlDateTimeSerializationMode.Utc));
             }
         }
+
+        protected override void Cloning(PublishLaterPart originalPart, PublishLaterPart clonePart, CloneContentContext context) {
+            clonePart.ScheduledPublishUtc.Value = originalPart.ScheduledPublishUtc.Value;
+        }
     }
 }

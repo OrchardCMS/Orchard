@@ -87,5 +87,10 @@ namespace Orchard.Blogs.Drivers {
             context.Element(part.PartDefinition.Name).SetAttributeValue("Blog", blogIdentity);
             context.Element(part.PartDefinition.Name).SetAttributeValue("Count", part.Count);
         }
+
+        protected override void Cloning(RecentBlogPostsPart originalPart, RecentBlogPostsPart clonePart, CloneContentContext context) {
+            clonePart.BlogId = originalPart.BlogId;
+            clonePart.Count = originalPart.Count;
+        }
     }
 }

@@ -91,5 +91,11 @@ namespace Orchard.Widgets.Drivers {
             context.Element(part.PartDefinition.Name).SetAttributeValue("Description", part.Description);
             context.Element(part.PartDefinition.Name).SetAttributeValue("LayerRule", part.LayerRule);
         }
+
+        protected override void Cloning(LayerPart originalPart, LayerPart clonePart, CloneContentContext context) {
+            clonePart.Name = originalPart.Name;
+            clonePart.Description = originalPart.Description;
+            clonePart.LayerRule = originalPart.LayerRule;
+        }
     }
 }
