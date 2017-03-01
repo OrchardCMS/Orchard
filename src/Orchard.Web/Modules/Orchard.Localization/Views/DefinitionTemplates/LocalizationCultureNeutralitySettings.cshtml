@@ -1,0 +1,7 @@
+﻿@model Orchard.Localization.Settings.LocalizationCultureNeutralitySettings
+
+<fieldset>
+    @Html.CheckBoxFor(m => m.CultureNeutral)
+    <label for="@Html.FieldIdFor(m => m.CultureNeutral)" class="forcheckbox">@T("Culture Neutral")</label>
+    <span class="hint">@T("Check to mark this part/field as Culture Neutral. The values of Culture Neutral components will be synchronized across elements of a localization set whenever one of them is published.")</span>
+</fieldset>
