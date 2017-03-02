@@ -10,17 +10,17 @@ namespace Orchard.ContentManagement.Drivers {
     public abstract class ContentFieldCloningDriver<TField> : ContentFieldDriver<TField>, IContentFieldCloningDriver where TField : ContentField, new() {
 
         void IContentFieldCloningDriver.Cloning(CloneContentContext context) {
-            ProcessClone(context.ContentItem, context.CloneContentItem, (part, originalField, cloneField) => Cloning(part, originalField, cloneField, context), context.Logger);
+            ProcessClone(context.ContentItem, context.CloneContentItem, (part, originalField, cloneField) => Cloning(part, originalField, cloneField, context), context);
         }
 
         void IContentFieldCloningDriver.Cloned(CloneContentContext context) {
-            ProcessClone(context.ContentItem, context.CloneContentItem, (part, originalField, cloneField) => Cloned(part, originalField, cloneField, context), context.Logger);
+            ProcessClone(context.ContentItem, context.CloneContentItem, (part, originalField, cloneField) => Cloned(part, originalField, cloneField, context), context);
         }
 
-        void ProcessClone(ContentItem originalItem, ContentItem cloneItem, Action<ContentPart, TField, TField> effort, ILogger logger) {
+        void ProcessClone(ContentItem originalItem, ContentItem cloneItem, Action<ContentPart, TField, TField> effort, CloneContentContext context) {
             var occurences = originalItem.Parts.SelectMany(part => part.Fields.OfType<TField>().Select(field => new { part, field }))
-                .Join(cloneItem.Parts.SelectMany(part => part.Fields.OfType<TField>()), original => original.field.Name, cloneField => cloneField.Name, (original, cloneField) => new { original, cloneField });
-            occurences.Invoke(pf => effort(pf.original.part, pf.original.field, pf.cloneField), logger);
+                .Join(cloneItem.Parts.SelectMany(part => part.Fields.OfType<TField>().Where(fi => string.IsNullOrWhiteSpace(context.FieldName) || context.FieldName == fi.Name)), original => original.field.Name, cloneField => cloneField.Name, (original, cloneField) => new { original, cloneField });
+            occurences.Invoke(pf => effort(pf.original.part, pf.original.field, pf.cloneField), context.Logger);
         }
 
 
