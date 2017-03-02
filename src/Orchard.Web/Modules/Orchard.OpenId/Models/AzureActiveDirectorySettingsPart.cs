@@ -71,6 +71,12 @@ namespace Orchard.OpenId.Models {
             set { this.Store(x => x.AppKey, value); }
         }
 
+        public string GraphApiKey
+        {
+            get { return this.Retrieve(x => x.GraphApiKey); }
+            set { this.Store(x => x.GraphApiKey, value); }
+        }
+
         public bool IsValid {
             get {
                 if (String.IsNullOrWhiteSpace(Tenant) ||
