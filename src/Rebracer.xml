@@ -141,10 +141,10 @@
         <PropertyValue name="EnableExpandPrecedence">false</PropertyValue>
         <PropertyValue name="EnableExpandScopes">false</PropertyValue>
         <PropertyValue name="EnableExtractFunction">false</PropertyValue>
-        <PropertyValue name="EnableSQLiteStoreEngine">true</PropertyValue>
+        <PropertyValue name="EnableSQLiteStoreEngine">false</PropertyValue>
         <PropertyValue name="EnableSingleFileISense">true</PropertyValue>
         <PropertyValue name="EnableSingleFileISenseSquiggles">false</PropertyValue>
-        <PropertyValue name="EnumerateCommentTasks">true</PropertyValue>
+        <PropertyValue name="EnumerateCommentTasks">false</PropertyValue>
         <PropertyValue name="GroupBrackets">true</PropertyValue>
         <PropertyValue name="HideExperimentalAd">true</PropertyValue>
         <PropertyValue name="HighlightMatchingTokens">true</PropertyValue>
