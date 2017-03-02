@@ -44,7 +44,7 @@ namespace Orchard.Taxonomies.Drivers {
             return ContentShape("Fields_TaxonomyField", GetDifferentiator(field, part),
                 () => {
                     var settings = field.PartFieldDefinition.Settings.GetModel<TaxonomyFieldSettings>();
-                    var terms = _taxonomyService.GetTermsForContentItem(part.ContentItem.Id, field.Name).ToList();
+                    var terms = _taxonomyService.GetTermsForContentItem(part.ContentItem.Id, field.Name).Where(te => !te.ContentItem.HasDraft()).ToList();
                     var taxonomy = _taxonomyService.GetTaxonomyByName(settings.Taxonomy);
 
                     return shapeHelper.Fields_TaxonomyField(
@@ -63,7 +63,7 @@ namespace Orchard.Taxonomies.Drivers {
         protected override DriverResult Editor(ContentPart part, TaxonomyField field, IUpdateModel updater, dynamic shapeHelper) {
             // Initializing viewmodel using the terms that are already selected to prevent loosing them when updating an editor group this field isn't displayed in.
             var appliedTerms = GetAppliedTerms(part, field, VersionOptions.Latest).ToList();
-            var viewModel = new TaxonomyFieldViewModel { Terms = appliedTerms.Select(t => t.CreateTermEntry()).ToList() };
+            var viewModel = new TaxonomyFieldViewModel { Terms = appliedTerms.Select(t => t.CreateTermEntry()).Where(te => !te.HasDraft).ToList() };
             foreach (var item in viewModel.Terms) item.IsChecked = true;
 
             if (updater.TryUpdateModel(viewModel, GetPrefix(field, part), null, null)) {
@@ -91,7 +91,7 @@ namespace Orchard.Taxonomies.Drivers {
                 var taxonomy = _taxonomySource.GetTaxonomy(settings.Taxonomy, part.ContentItem);
 
                 var terms = taxonomy != null && !settings.Autocomplete
-                    ? _taxonomyService.GetTerms(taxonomy.Id).Where(t => !string.IsNullOrWhiteSpace(t.Name)).Select(t => t.CreateTermEntry()).ToList()
+                    ? _taxonomyService.GetTerms(taxonomy.Id).Where(t => !string.IsNullOrWhiteSpace(t.Name)).Select(t => t.CreateTermEntry()).Where(te => !te.HasDraft).ToList()
                     : new List<TermEntry>(0);
 
                 // Ensure the modified taxonomy items are not lost if a model validation error occurs
