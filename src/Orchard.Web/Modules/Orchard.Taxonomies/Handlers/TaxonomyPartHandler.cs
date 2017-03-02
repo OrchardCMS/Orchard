@@ -22,7 +22,7 @@ namespace Orchard.Taxonomies.Handlers {
             Filters.Add(StorageFilter.For(repository));
             OnPublished<TaxonomyPart>((context, part) => {
 
-                if (part.TermTypeName == null) {
+                if (String.IsNullOrWhiteSpace(part.TermTypeName)) {
                     // is it a new taxonomy ?
                     taxonomyService.CreateTermContentType(part);
                 }

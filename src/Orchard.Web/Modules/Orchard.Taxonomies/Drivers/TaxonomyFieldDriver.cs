@@ -19,13 +19,16 @@ using Orchard.UI.Notify;
 namespace Orchard.Taxonomies.Drivers {
     public class TaxonomyFieldDriver : ContentFieldDriver<TaxonomyField> {
         private readonly ITaxonomyService _taxonomyService;
+        private readonly ITaxonomySource _taxonomySource;
         public IOrchardServices Services { get; set; }
 
         public TaxonomyFieldDriver(
             IOrchardServices services, 
             ITaxonomyService taxonomyService,
-            IRepository<TermContentItem> repository) {
+            IRepository<TermContentItem> repository,
+             ITaxonomySource taxonomySource) {
             _taxonomyService = taxonomyService;
+            _taxonomySource = taxonomySource;
             Services = services;
             T = NullLocalizer.Instance;
         }
@@ -63,7 +66,7 @@ namespace Orchard.Taxonomies.Drivers {
         protected override DriverResult Editor(ContentPart part, TaxonomyField field, IUpdateModel updater, dynamic shapeHelper) {
             // Initializing viewmodel using the terms that are already selected to prevent loosing them when updating an editor group this field isn't displayed in.
             var appliedTerms = GetAppliedTerms(part, field, VersionOptions.Latest).ToList();
-            var viewModel = new TaxonomyFieldViewModel { Terms = appliedTerms.Select(t => t.CreateTermEntry()).ToList() };
+            var viewModel = new TaxonomyFieldViewModel { Terms = appliedTerms.Select(t => t.CreateTermEntry()).Where(te => !te.HasDraft).ToList() };
             foreach (var item in viewModel.Terms) item.IsChecked = true;
             
             if (updater.TryUpdateModel(viewModel, GetPrefix(field, part), null, null)) {
@@ -87,9 +90,9 @@ namespace Orchard.Taxonomies.Drivers {
             return ContentShape("Fields_TaxonomyField_Edit", GetDifferentiator(field, part), () => {
                 var settings = field.PartFieldDefinition.Settings.GetModel<TaxonomyFieldSettings>();
                 var appliedTerms = GetAppliedTerms(part, field, VersionOptions.Latest).ToDictionary(t => t.Id, t => t);
-                var taxonomy = _taxonomyService.GetTaxonomyByName(settings.Taxonomy);
+                var taxonomy = _taxonomySource.GetTaxonomy(settings.Taxonomy, part.ContentItem);
                 var terms = taxonomy != null && !settings.Autocomplete
-                    ? _taxonomyService.GetTerms(taxonomy.Id).Where(t => !string.IsNullOrWhiteSpace(t.Name)).Select(t => t.CreateTermEntry()).ToList()
+                    ? _taxonomyService.GetTerms(taxonomy.Id).Where(t => !string.IsNullOrWhiteSpace(t.Name)).Select(t => t.CreateTermEntry()).Where(te => !te.HasDraft).ToList()
                     : new List<TermEntry>(0);
 
                 // Ensure the modified taxonomy items are not lost if a model validation error occurs
