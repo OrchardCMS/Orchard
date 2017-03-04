@@ -25,9 +25,11 @@
     }
     @if (authorizedToEdit) {
         if (hasPublished) {
-            <li class="action-link">
-                @Html.ItemEditLink(T("Edit").Text, contentItem)
-            </li>
+            if (!hasDraft) { 
+                <li class="action-link">
+                    @Html.ItemEditLink(T("Edit").Text, contentItem)
+                </li>
+            }
             <li class="action-link">
                 @Html.ActionLink(T("Clone").Text, "Clone", "Admin", new { Id = contentItem.Id, ReturnUrl = Request.ToUrlString(), Area = "Contents" }, new { itemprop = "UnsafeUrl" })
             </li>
@@ -57,6 +59,10 @@
                 @Html.ActionLink(T("View").Text, "Display", "Item", new { area = "Contents", id = contentItem.Id, version = contentItem.Version }, new { })
             </li>
         }
+
+        <li class="action-link">
+            @Html.ItemEditLink(T("Edit").Text, contentItem)
+        </li>
 
         @if (hasDraft && authorizedToPublish) {
             <li class="action-link">
