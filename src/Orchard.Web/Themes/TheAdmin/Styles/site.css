@@ -1157,25 +1157,24 @@ html.dyn #submit-pager, html.dyn .apply-bulk-actions-auto { display:none; }
 }
 /* Core Contents and Orchard.PublishLater */
 
-.edit-item-sidebar fieldset {
-    margin:0;
-    padding:0;
+.edit-item-secondary {
+    margin-top: 2em;
 }
 
-fieldset.publish-button, fieldset.delete-button, fieldset.save-button {
-    clear:none;
-    float:left;
+.edit-item-sidebar fieldset {
+    float: left;
+    clear: none;
+    margin: 0;
+    padding: 0;
 }
-fieldset.save-button {
-    clear:left;
+
+.edit-item-sidebar fieldset + fieldset {
+    margin-left: 12px;
 }
-fieldset.publish-button {
-    margin: 0 12px 0 0;
-    padding: 0 12px;
-    border-right:1px solid #ccc;
-}
-fieldset.delete-button {
-    margin: 0 0 0 12px;
+
+fieldset.cancel-button {
+    padding-left: 12px;
+    border-left: 1px solid #ccc;
 }
 
 /* Dashboard */
