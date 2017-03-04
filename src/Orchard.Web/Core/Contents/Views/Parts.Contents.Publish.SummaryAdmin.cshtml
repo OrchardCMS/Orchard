@@ -29,7 +29,7 @@
                 @Html.ItemEditLink(T("Edit").Text, contentItem)
             </li>
             <li class="action-link">
-                @Html.ActionLink(T(" Clone").Text, "Clone", "Admin", new { Id = contentItem.Id, ReturnUrl = Request.ToUrlString(), Area = "Contents" }, new { itemprop = "UnsafeUrl" })
+                @Html.ActionLink(T("Clone").Text, "Clone", "Admin", new { Id = contentItem.Id, ReturnUrl = Request.ToUrlString(), Area = "Contents" }, new { itemprop = "UnsafeUrl" })
             </li>
         }
 
@@ -41,7 +41,7 @@
 
         if (authorizedToDelete) {
             <li class="action-link">
-                @Html.Link(T("Remove").Text, Url.ItemRemoveUrl(contentItem, new { returnUrl }), new { itemprop = "RemoveUrl UnsafeUrl" })
+                @Html.Link(T("Delete").Text, Url.ItemRemoveUrl(contentItem, new { returnUrl }), new { itemprop = "RemoveUrl UnsafeUrl" })
             </li>
         }
     }
