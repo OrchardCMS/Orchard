@@ -59,9 +59,17 @@
                                     <td class="content-column"><a href="@contentDisplayUrl">@contentDisplayText</a></td>
                                     <td class="content-removed-column">@removedText</td>
                                     <td class="actions-column">
-                                        <a href="@contentDisplayUrl">@T("View")</a> @T(" | ")
-                                        @Html.ActionLink(T("View Audit Trail").Text, "Index", "Admin", new {content = contentItem.Id, area = "Orchard.AuditTrail"}, null) @T(" | ")
-                                        <a href="@Url.Action("Restore", "RecycleBin", new {id = contentItem.Id, area = "Orchard.AuditTrail"})" data-unsafe-url="@T("Are you sure you want to restore this item?")">@T("Restore")</a>
+                                        <ul class="action-links">
+                                            <li class="action-link">
+                                                <a href="@contentDisplayUrl">@T("View")</a>
+                                            </li>
+                                            <li class="action-link">
+                                                @Html.ActionLink(T("View Audit Trail").Text, "Index", "Admin", new { content = contentItem.Id, area = "Orchard.AuditTrail" }, null)
+                                            </li>
+                                            <li class="action-link">
+                                                <a href="@Url.Action("Restore", "RecycleBin", new {id = contentItem.Id, area = "Orchard.AuditTrail"})" data-unsafe-url="@T("Are you sure you want to restore this item?")">@T("Restore")</a>
+                                            </li>
+                                        </ul>
                                     </td>
                                 </tr>
                                 index++;

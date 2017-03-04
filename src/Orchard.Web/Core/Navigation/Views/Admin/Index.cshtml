@@ -113,11 +113,15 @@
                     <h2>@menuPartEntry.Text</h2>
                     <span class="navigation-type">(@menuPartEntry.ContentItem.TypeDefinition.DisplayName)</span>
                     <span class="navigation-position"><input type="text" class="text" name="@Html.NameOf(m => m.MenuItemEntries[i].Position)" value="@menuPartEntry.Position" /></span>
-                    <span class="navigation-actions">
+                    <ul class="navigation-actions action-links">
                         <input type="hidden" name="@Html.NameOf(m => m.MenuItemEntries[i].MenuItemId)" value="@menuPartEntry.MenuItemId" />
-                        @Html.ItemEditLink(T("Edit").Text, menuPartEntry.ContentItem, new { returnUrl = Request.RawUrl })@T(" | ")
-                        @Html.ActionLink(T("Delete").Text, "Delete", new { id = menuPartEntry.MenuItemId }, new { @class = "remove", itemprop = "RemoveUrl UnsafeUrl" })
-                    </span>
+                        <li class="action-link">
+                            @Html.ItemEditLink(T("Edit").Text, menuPartEntry.ContentItem, new { returnUrl = Request.RawUrl })
+                        </li>
+                        <li class="action-link">
+                            @Html.ActionLink(T("Delete").Text, "Delete", new { id = menuPartEntry.MenuItemId }, new { @class = "remove", itemprop = "RemoveUrl UnsafeUrl" })
+                        </li>
+                    </ul>
                 </div>
             
             continue;

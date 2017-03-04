@@ -7,8 +7,13 @@
     var versionNumber = eventData.Get<int>("VersionNumber");
     var contentItem = (ContentItem) Model.ContentItem;
 }
-@Html.ActionLink(T("Details").Text, "Detail", "Admin", new { id = record.Id, area = "Orchard.AuditTrail" }, null)
-@if (contentItem != null) {
-    @T(" | ")
-    @Html.ActionLink(T("Restore").Text, "Restore", "Content", new {id = contentItem.Id, version = versionNumber, area = "Orchard.AuditTrail"}, new { data_unsafe_url = T("Are you sure you want to restore this content item?", versionNumber) })
-}
+<ul class="action-links">
+    <li class="action-link">
+        @Html.ActionLink(T("Details").Text, "Detail", "Admin", new { id = record.Id, area = "Orchard.AuditTrail" }, null)
+    </li>
+    @if (contentItem != null) {
+        <li class="action-link">
+            @Html.ActionLink(T("Restore").Text, "Restore", "Content", new { id = contentItem.Id, version = versionNumber, area = "Orchard.AuditTrail" }, new { data_unsafe_url = T("Are you sure you want to restore this content item?", versionNumber) })
+        </li>
+    }
+</ul>
