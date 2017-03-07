@@ -35,7 +35,7 @@ namespace Orchard.Core.Settings.Models {
             set { this.Store(x => x.SiteCulture, value); }
         }
 
-		public string SiteCalendar {
+        public string SiteCalendar {
             get { return this.Retrieve(x => x.SiteCalendar); }
             set { this.Store(x => x.SiteCalendar, value); }
         }
@@ -48,6 +48,11 @@ namespace Orchard.Core.Settings.Models {
         public bool UseCdn {
             get { return this.Retrieve(x => x.UseCdn); }
             set { this.Store(x=> x.UseCdn, value); }
+        }
+
+        public bool UseFileHash {
+            get { return this.Retrieve(x => x.UseFileHash); }
+            set { this.Store(x => x.UseFileHash, value); }
         }
 
         public int PageSize {
