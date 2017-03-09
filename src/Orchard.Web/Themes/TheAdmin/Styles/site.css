@@ -1526,8 +1526,8 @@ html.dir-rtl {
     margin-left:inherit;
     margin-right:10px;
 }
-.dir-rtl fieldset.publish-button, fieldset.delete-button, .dir-rtl fieldset.save-button {
-    float:right;
+.dir-rtl fieldset.publish-button, .dir-rtl fieldset.delete-button, .dir-rtl fieldset.save-button {
+    float: right;
 }
 .dir-rtl fieldset.save-button {
     clear:right;
