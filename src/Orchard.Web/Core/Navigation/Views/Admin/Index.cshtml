@@ -104,41 +104,37 @@ for (int i = index; i < Model.MenuItemEntries.Count; i++) {
 
     if (level == currentLevel) {
         if (!first) {
-                @:</li>
-            }
+            @:</li>
+        }
 
         first = false;
 
-            @:
-            <li class="navigation-menu-item" data-index="@i">
-
-                <div>
-                    <h2>@menuPartEntry.Text</h2>
-                    <span class="navigation-type">(@menuPartEntry.ContentItem.TypeDefinition.DisplayName)</span>
-                    <span class="navigation-position"><input type="text" class="text" name="@Html.NameOf(m => m.MenuItemEntries[i].Position)" value="@menuPartEntry.Position" /></span>
-                    <span class="navigation-actions action-links">
-                        <input type="hidden" name="@Html.NameOf(m => m.MenuItemEntries[i].MenuItemId)" value="@menuPartEntry.MenuItemId" />
-                        <span class="action-link">
-                            @Html.ItemEditLink(T("Edit").Text, menuPartEntry.ContentItem, new { returnUrl = Request.RawUrl })
-                        </span>
-                        <span class="action-link">
-                            @Html.ActionLink(T("Delete").Text, "Delete", new { id = menuPartEntry.MenuItemId }, new { @class = "remove", itemprop = "RemoveUrl UnsafeUrl" })
-                        </span>
+        @:<li class="navigation-menu-item" data-index="@i">
+            <div>
+                <h2>@menuPartEntry.Text</h2>
+                <span class="navigation-type">(@menuPartEntry.ContentItem.TypeDefinition.DisplayName)</span>
+                <span class="navigation-position"><input type="text" class="text" name="@Html.NameOf(m => m.MenuItemEntries[i].Position)" value="@menuPartEntry.Position" /></span>
+                <span class="navigation-actions action-links">
+                    <input type="hidden" name="@Html.NameOf(m => m.MenuItemEntries[i].MenuItemId)" value="@menuPartEntry.MenuItemId" />
+                    <span class="action-link">
+                        @Html.ItemEditLink(T("Edit").Text, menuPartEntry.ContentItem, new { returnUrl = Request.RawUrl })
                     </span>
-                </div>
+                    <span class="action-link">
+                        @Html.ActionLink(T("Delete").Text, "Delete", new { id = menuPartEntry.MenuItemId }, new { @class = "remove", itemprop = "RemoveUrl UnsafeUrl" })
+                    </span>
+                </span>
+            </div>
 
         continue;
     }
 
     // done with current level
     if (level < currentLevel) {
-            @:
-        </li>
+            @:</li>
             break;
         }
     }
-    @:
-</ol>
+    @:</ol>
 }
 
 @using (Script.Foot()) {
