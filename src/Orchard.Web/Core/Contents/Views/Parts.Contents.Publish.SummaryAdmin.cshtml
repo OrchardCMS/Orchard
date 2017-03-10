@@ -14,45 +14,66 @@
     var authorizedToPublish = Authorizer.Authorize(Permissions.PublishContent, contentItem);
 }
 
-<div class="item-action-links">
-    <strong>@T("Item:")</strong>
+<ul class="action-links action-links-item">
+    <li class="action-label">
+        @T("Item:")
+    </li>
     @if (hasPublished) {
-        @Html.ItemDisplayLink(T("View").Text, contentItem);
+        <li class="action-link">
+            @Html.ItemDisplayLink(T("View").Text, contentItem)
+        </li>
     }
     @if (authorizedToEdit) {
         if (hasPublished) {
-            @T(" | ")
+            if (!hasDraft) { 
+                <li class="action-link">
+                    @Html.ItemEditLink(T("Edit").Text, contentItem)
+                </li>
+            }
+            <li class="action-link">
+                @Html.ActionLink(T("Clone").Text, "Clone", "Admin", new { Id = contentItem.Id, ReturnUrl = Request.ToUrlString(), Area = "Contents" }, new { itemprop = "UnsafeUrl" })
+            </li>
         }
-        @Html.ItemEditLink(T("Edit").Text, contentItem);
-        @T(" | ")
-        @Html.ActionLink(T(" Clone").Text, "Clone", "Admin", new { Id = contentItem.Id, ReturnUrl = Request.ToUrlString(), Area = "Contents" }, new { itemprop = "UnsafeUrl" });
-    }
 
-    @if (hasPublished && authorizedToPublish) {
-        @T(" | ")
-        @Html.ActionLink(T("Unpublish").Text, "Unpublish", "Admin", new { area = "Contents", id = contentItem.Id, returnUrl = Request.ToUrlString() }, new { itemprop = "UnsafeUrl" });
-    }
+        if (hasPublished && authorizedToPublish) {
+            <li class="action-link">
+                @Html.ActionLink(T("Unpublish").Text, "Unpublish", "Admin", new { area = "Contents", id = contentItem.Id, returnUrl = Request.ToUrlString() }, new { itemprop = "UnsafeUrl" })
+            </li>
+        }
 
-    @if (authorizedToDelete) {
-        @T(" | ")
-        @Html.Link(T("Remove").Text, Url.ItemRemoveUrl(contentItem, new { returnUrl }), new { itemprop = "RemoveUrl UnsafeUrl" });
+        if (authorizedToDelete) {
+            <li class="action-link">
+                @Html.Link(T("Delete").Text, Url.ItemRemoveUrl(contentItem, new { returnUrl }), new { itemprop = "RemoveUrl UnsafeUrl" })
+            </li>
+        }
     }
-</div>
+</ul>
+
 @if ((!isPublished || hasDraft) && authorizedToEdit) {
-    <div class="draft-action-links">
-        <strong>@T("Draft:")</strong>
+    <ul class="action-links action-links-draft">
+        <li class="action-label">
+            @T("Draft:")
+        </li>
         @if (!isPublished && Authorizer.Authorize(Permissions.PreviewContent, contentItem)) {
-            @Html.ActionLink(T("View").Text, "Display", "Item", new { area = "Contents", id = contentItem.Id, version = contentItem.Version }, new { });
+            <li class="action-link">
+                @Html.ActionLink(T("View").Text, "Display", "Item", new { area = "Contents", id = contentItem.Id, version = contentItem.Version }, new { })
+            </li>
         }
+
+        <li class="action-link">
+            @Html.ItemEditLink(T("Edit").Text, contentItem)
+        </li>
 
         @if (hasDraft && authorizedToPublish) {
-            @T(" | ")
-            @Html.ActionLink(T("Publish").Text, "Publish", "Admin", new { area = "Contents", id = contentItem.Id, returnUrl = Request.ToUrlString() }, new { itemprop = "UnsafeUrl" });
+            <li class="action-link">
+                @Html.ActionLink(T("Publish").Text, "Publish", "Admin", new { area = "Contents", id = contentItem.Id, returnUrl = Request.ToUrlString() }, new { itemprop = "UnsafeUrl" })
+            </li>
         }
 
         @if (!isPublished && hasPublished && authorizedToDelete) {
-            @T(" | ")
-            @Html.ActionLink(T("Discard").Text, "DiscardDraft", "Admin", new { area = "Contents", id = contentItem.Id, returnUrl = Request.ToUrlString() }, new { itemprop = "RemoveUrl UnsafeUrl" });
+            <li class="action-link">
+                @Html.ActionLink(T("Discard").Text, "DiscardDraft", "Admin", new { area = "Contents", id = contentItem.Id, returnUrl = Request.ToUrlString() }, new { itemprop = "RemoveUrl UnsafeUrl" })
+            </li>
         }
-    </div>
+    </ul>
 }

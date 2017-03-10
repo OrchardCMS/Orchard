@@ -28,17 +28,20 @@ namespace Orchard.Core.Shapes {
         private readonly Work<IResourceManager> _resourceManager;
         private readonly Work<IHttpContextAccessor> _httpContextAccessor;
         private readonly Work<IShapeFactory> _shapeFactory;
+        private readonly IResourceFileHashProvider _resourceFileHashProvider;
 
         public CoreShapes(
             Work<WorkContext> workContext, 
             Work<IResourceManager> resourceManager,
             Work<IHttpContextAccessor> httpContextAccessor,
-            Work<IShapeFactory> shapeFactory
+            Work<IShapeFactory> shapeFactory,
+            IResourceFileHashProvider resourceHashProvider
             ) {
             _workContext = workContext;
             _resourceManager = resourceManager;
             _httpContextAccessor = httpContextAccessor;
             _shapeFactory = shapeFactory;
+            _resourceFileHashProvider = resourceHashProvider;
 
             T = NullLocalizer.Instance;
         }
@@ -448,6 +451,7 @@ namespace Orchard.Core.Shapes {
             var defaultSettings = new RequireSettings {
                 DebugMode = debugMode,
                 CdnMode = site.UseCdn,
+                FileHashMode = site.UseFileHash,
                 Culture = _workContext.Value.CurrentCulture,
             };
             var requiredResources = _resourceManager.Value.BuildRequiredResources(resourceType);
@@ -460,18 +464,18 @@ namespace Orchard.Core.Shapes {
                 (includeLocation.HasValue ? r.Settings.Location == includeLocation.Value : true) &&
                 (excludeLocation.HasValue ? r.Settings.Location != excludeLocation.Value : true))) {
 
-                var path = context.GetResourceUrl(defaultSettings, appPath, ssl);
+                var url = context.GetResourceUrl(defaultSettings, appPath, ssl, _resourceFileHashProvider);
                 var condition = context.Settings.Condition;
                 var attributes = context.Settings.HasAttributes ? context.Settings.Attributes : null;
                 IHtmlString result;
                 if (resourceType == "stylesheet") {
-                    result = Display.Style(Url: path, Condition: condition, Resource: context.Resource, TagAttributes: attributes);
+                    result = Display.Style(Url: url, Condition: condition, Resource: context.Resource, TagAttributes: attributes);
                 }
                 else if (resourceType == "script") { 
-                    result = Display.Script(Url: path, Condition: condition, Resource: context.Resource, TagAttributes: attributes);
+                    result = Display.Script(Url: url, Condition: condition, Resource: context.Resource, TagAttributes: attributes);
                 }
                 else {
-                    result = Display.Resource(Url: path, Condition: condition, Resource: context.Resource, TagAttributes: attributes);
+                    result = Display.Resource(Url: url, Condition: condition, Resource: context.Resource, TagAttributes: attributes);
                 }
                 Output.Write(result);
             }

@@ -6,14 +6,9 @@ using Orchard.Mvc.Routes;
 namespace Orchard.Recipes {
     public class Routes : IRouteProvider {
         public void GetRoutes(ICollection<RouteDescriptor> routes) {
-            foreach (var routeDescriptor in GetRoutes())
-                routes.Add(routeDescriptor);
-        }
-
-        public IEnumerable<RouteDescriptor> GetRoutes() {
-            return new[] {
-                             new RouteDescriptor {   Priority = 5,
-                                                     Route = new Route(
+            var routeDescriptor = new RouteDescriptor {
+                Priority = 5,
+                Route = new Route(
                                                          "Recipes/Status/{executionId}",
                                                          new RouteValueDictionary {
                                                                                       {"area", "Orchard.Recipes"},
@@ -25,8 +20,9 @@ namespace Orchard.Recipes {
                                                                                       {"area", "Orchard.Recipes"}
                                                          },
                                                          new MvcRouteHandler())
-                             }
-                         };
+            };
+
+            routes.Add(routeDescriptor);
         }
     }
 }

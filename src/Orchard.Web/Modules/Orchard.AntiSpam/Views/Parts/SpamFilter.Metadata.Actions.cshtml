@@ -10,5 +10,3 @@
 else {
     @Html.Link(@T("Spam").Text, Url.Action("ReportSpam", "Admin", new {area = "Orchard.AntiSpam", part.Id, returnUrl = Request.ToUrlString()}), new {itemprop = "UnsafeUrl"})
 }
-
-@T(" | ")

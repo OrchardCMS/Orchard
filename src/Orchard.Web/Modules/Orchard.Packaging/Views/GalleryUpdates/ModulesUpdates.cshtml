@@ -55,8 +55,14 @@
                     </div>
 
                     <div class="related">
-                        @Html.Link(T("Install Latest").Text, InstallAction(module.NewVersionToInstall))@T(" | ")
-                        <a href="@module.NewVersionToInstall.PackageStreamUri">@T("Download")</a>
+                        <ul class="action-links">
+                            <li class="action-link">
+                                @Html.Link(T("Install Latest").Text, InstallAction(module.NewVersionToInstall))
+                            </li>
+                            <li class="action-link">
+                                <a href="@module.NewVersionToInstall.PackageStreamUri">@T("Download")</a>
+                            </li>
+                        </ul>
                     </div>
 
                     <div class="properties">

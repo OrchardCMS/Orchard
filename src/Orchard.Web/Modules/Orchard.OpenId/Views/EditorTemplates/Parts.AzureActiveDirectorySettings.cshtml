@@ -59,5 +59,8 @@
     @Html.LabelFor(m => m.GraphApiUrl, T("Graph API URL"))
     @Html.TextBoxFor(m => m.GraphApiUrl, new { @class = "text large" })
     <span class="hint">@T("Typically https://graph.windows.net")</span>
+
+    @Html.LabelFor(m => m.GraphApiKey, T("Graph API Key"))
+    @Html.TextBoxFor(m => m.GraphApiKey, new { @class = "text large" })
 </fieldset>
 <hr />
