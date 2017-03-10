@@ -27,7 +27,7 @@ namespace Orchard.Azure.Authentication.Services.AzureActiveDirectory {
             var workContext = _orchardServices.WorkContext;
             var azureSettings = workContext.CurrentSite.As<AzureActiveDirectorySettingsPart>();
 
-            if (azureSettings == null || !azureSettings.IsValid) {
+            if (azureSettings == null || !azureSettings.IsValid()) {
                 var url = _urlHelper.Action("OpenId", "Admin", new { Area = "Settings" });
                 yield return new NotifyEntry { Message = T("The <a href=\"{0}\">Azure AD Authentication settings</a> need to be configured.", url), Type = NotifyType.Warning };
             }

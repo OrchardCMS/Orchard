@@ -24,21 +24,19 @@ namespace Orchard.OpenId.Models
             set { this.Store(x => x.CallbackPath, value); }
         }
 
-        public bool IsValid {
-            get {
-                if (String.IsNullOrWhiteSpace(ClientId) ||
-                    String.CompareOrdinal(ClientId, Constants.Google.DefaultClientId) == 0 ||
-                    String.IsNullOrWhiteSpace(ClientSecret) ||
-                    String.CompareOrdinal(ClientId, Constants.Google.DefaultClientSecret) == 0 ||
-                    String.IsNullOrWhiteSpace(CallbackPath) ||
-                    CallbackPath.StartsWith("/") == false ||
-                    CallbackPath.Length < 2) {
+        public bool IsValid() {
+            if (String.IsNullOrWhiteSpace(ClientId) ||
+                String.CompareOrdinal(ClientId, Constants.Google.DefaultClientId) == 0 ||
+                String.IsNullOrWhiteSpace(ClientSecret) ||
+                String.CompareOrdinal(ClientId, Constants.Google.DefaultClientSecret) == 0 ||
+                String.IsNullOrWhiteSpace(CallbackPath) ||
+                CallbackPath.StartsWith("/") == false ||
+                CallbackPath.Length < 2) {
 
-                    return false;
-                }
-
-                return true;
+                return false;
             }
+
+            return true;
         }
     }
 }

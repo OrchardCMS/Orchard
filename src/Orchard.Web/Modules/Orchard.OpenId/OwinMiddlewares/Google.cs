@@ -22,7 +22,7 @@ namespace Orchard.OpenId.OwinMiddlewares {
             var workContext = _workContextAccessor.GetContext();
             var settings = workContext.CurrentSite.As<GoogleSettingsPart>();
 
-            if (settings == null || !settings.IsValid) {
+            if (settings == null || !settings.IsValid()) {
                 return Enumerable.Empty<OwinMiddlewareRegistration>();
             }
 
