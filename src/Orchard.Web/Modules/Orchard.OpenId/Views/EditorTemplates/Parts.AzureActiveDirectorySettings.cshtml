@@ -2,31 +2,31 @@
 
 <h2>Azure Active Directory Settings</h2>
 <fieldset>
-    @Html.LabelFor(m => m.Tenant, T("Tenant"))
+    <label for="AzureActiveDirectorySettings_Tenant">@T("Tenant")</label>
     @Html.TextBoxFor(m => m.Tenant, new { @class = "text large" })
     <span class="hint">@T("Azure Active Directory tenant (e.g. yoursite.onmicrosoft.com).")</span>
 </fieldset>
 <fieldset>
-    @Html.LabelFor(m => m.ADInstance, T("Active Directory Instance"))
+    <label for="AzureActiveDirectorySettings_ADInstance">@T("Active Directory Instance")</label>
     @Html.TextBoxFor(m => m.ADInstance, new { @class = "text large" })
     <span class="hint">@T("Default instance is https://login.microsoftonline.com/{your-tenant-name}")</span>
 </fieldset>
 <fieldset>
-    @Html.LabelFor(m => m.ClientId, T("App ID"))
+    <label for="AzureActiveDirectorySettings_ClientId">@T("App ID")</label>
     @Html.TextBoxFor(m => m.ClientId, new { @class = "text large" })
 </fieldset>
 <fieldset>
-    @Html.LabelFor(m => m.AppName, T("App Name"))
+    <label for="AzureActiveDirectorySettings_AppName">@T("App Name")</label>
     @Html.TextBoxFor(m => m.AppName, new { @class = "text large" })
     <span class="hint">@T("The application name you wish to give active directory login rights to.")</span>
 </fieldset>
 <fieldset>
-    @Html.LabelFor(m => m.LogoutRedirectUri, T("Logout Redirect"))
+    <label for="AzureActiveDirectorySettings_LogoutRedirectUri">@T("Logout Redirect")</label>
     @Html.TextBoxFor(m => m.LogoutRedirectUri, new { @class = "text large" })
     <span class="hint">@T("Redirect url after azure logout, default is http://localhost:30321/OrchardLocal/")</span>
 </fieldset>
 <fieldset>
-    @Html.LabelFor(m => m.ServiceResourceID, T("Service Resource ID"))
+    <label for="AzureActiveDirectorySettings_ServiceResourceID">@T("Service Resource ID")</label>
     @Html.TextAreaFor(m => m.ServiceResourceID, new { @class = "text large" })
     <span class="hint">
         @T(@"If you have a single 'Service Resource ID' just write it down directly.
@@ -35,7 +35,7 @@
     </span>
 </fieldset>
 <fieldset>
-    @Html.LabelFor(m => m.AppKey, T("App Key"))
+    <label for="AzureActiveDirectorySettings_AppKey">@T("App Key")</label>
     @Html.TextBoxFor(m => m.AppKey, new { @class = "text large" })
 </fieldset>
 <fieldset>
@@ -56,11 +56,11 @@
     <span class="hint">@T("Check this box to enable syncing Orchard Role membership to Azure Graph API Group Membership.  This module will not create new Orchard Roles for you, but it will sync up user membership of existing Orchard Roles with AD Group membership for Role names that match a group name")</span>
 </fieldset>
 <fieldset>
-    @Html.LabelFor(m => m.GraphApiUrl, T("Graph API URL"))
+    <label for="AzureActiveDirectorySettings_GraphApiUrl">@T("Graph Api Url")</label>
     @Html.TextBoxFor(m => m.GraphApiUrl, new { @class = "text large" })
     <span class="hint">@T("Typically https://graph.windows.net")</span>
 
-    @Html.LabelFor(m => m.GraphApiKey, T("Graph API Key"))
+    <label for="AzureActiveDirectorySettings_GraphApiKey">@T("Graph Api Key")</label>
     @Html.TextBoxFor(m => m.GraphApiKey, new { @class = "text large" })
 </fieldset>
 <hr />
