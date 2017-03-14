@@ -80,5 +80,8 @@ namespace Orchard.MediaLibrary.Models {
             get { return Convert.ToString(this.As<InfosetPart>().Get<MediaPart>("LogicalType")); }
             set { this.As<InfosetPart>().Set<MediaPart>("LogicalType", value); }
         }
+
+        public static string[] InvalidNameCharacters = { "/", "\\", "<", ">", "*", "%", "&", ":", "?" };
+        public static string InvalidNameCharactersPattern = @"[^/\<>*%&:\?]+"; //generated offline using the array above
     }
 }

@@ -10,11 +10,7 @@ namespace Orchard.MediaLibrary.ViewModels {
         public IEnumerable<IMediaFolder> Hierarchy { get; set; }
         public string InvalidCharactersPattern {
             get {
-                string invalidChars = ((SystemWebSectionGroup)WebConfigurationManager.OpenWebConfiguration(null).GetSectionGroup("system.web")).HttpRuntime.RequestPathInvalidCharacters;
-                List<string> invalidCharacters = new List<string>() { "/", @"\" };
-                invalidCharacters.AddRange(invalidChars.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries));
-                string pattern = @"[^/" + string.Join("", invalidCharacters) + @"]+";
-                return pattern.Replace(@"\", @"\\");
+                return Models.MediaPart.InvalidNameCharactersPattern.Replace(@"\", @"\\");
             }
         }
     }
