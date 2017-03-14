@@ -287,7 +287,7 @@ namespace Orchard.MediaLibrary.Services {
         }
 
         private void ValidatePathCharacters(string path, string paramName) {
-            foreach (string c in MediaPart.InvalidNameCharacters) {
+            foreach (string c in MediaFolder.InvalidNameCharacters) {
                 Argument.Validate(!path.Contains(c), paramName, T("The folder name cannot contain the '{0}' character.", c).ToString());
             }
         }

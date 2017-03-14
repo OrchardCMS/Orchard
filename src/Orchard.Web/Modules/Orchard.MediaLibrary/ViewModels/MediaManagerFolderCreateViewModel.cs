@@ -10,7 +10,7 @@ namespace Orchard.MediaLibrary.ViewModels {
         public IEnumerable<IMediaFolder> Hierarchy { get; set; }
         public string InvalidCharactersPattern {
             get {
-                return Models.MediaPart.InvalidNameCharactersPattern.Replace(@"\", @"\\");
+                return Models.MediaFolder.InvalidNameCharactersPattern.Replace(@"\", @"\\");
             }
         }
     }

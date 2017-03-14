@@ -16,5 +16,8 @@ namespace Orchard.MediaLibrary.Models {
         public long Size {
             get { return _size.Value; }
         }
+
+        public static string[] InvalidNameCharacters = { "/", "\\", "<", ">", "*", "%", "&", ":", "?" };
+        public static string InvalidNameCharactersPattern = @"[^/\<>*%&:\?]+"; //generated offline using the array above
     }
 }
