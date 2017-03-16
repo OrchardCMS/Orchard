@@ -34,8 +34,7 @@ namespace Orchard.Reports.Services {
                 LoadReports();
                 _isDirty = true;
                 var reportId = _reports.Count == 0 ? 1 : _reports.Max(r => r.ReportId) + 1;
-                var report = new Report {ActivityName = activityName, ReportId = reportId, Title = title, Utc = DateTime.UtcNow};
-                _reports.Add(report);
+                _reports.Add(new Report {ActivityName = activityName, ReportId = reportId, Title = title, Utc = DateTime.UtcNow});
                 return reportId;
             }
         }

@@ -11,6 +11,7 @@ namespace Orchard.Reports.Services {
             _reportsManager = reportsManager;
             Logger = NullLogger.Instance;
             _reports = new Dictionary<string, int>();
+            GenerateReports();
         }
 
         public ILogger Logger { get; set; }
@@ -18,10 +19,20 @@ namespace Orchard.Reports.Services {
             _reportsManager.Flush();
         }
 
-        public void Add(string reportKey, ReportEntryType type, string message) {
+        private void GenerateReports()
+        {
+            dynamic reportData = _reportsManager.GetReports();
+            foreach(var report in reportData)
+            {
+                _reports[report.ActivityName] = report.ReportId;
+            }
+        }
+
+        public void Add(string reportKey, ReportEntryType type, string message, string reportDescription = null) {
             if(!_reports.ContainsKey(reportKey)) {
-                // ignore message if no corresponding report
-                return;
+                //Create new report
+                Register(reportKey, reportKey, reportDescription);
+                GenerateReports();
             }
 
             _reportsManager.Add(_reports[reportKey], type, message);
