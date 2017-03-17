@@ -52,7 +52,7 @@ namespace Orchard.Taxonomies.Controllers {
                     else
                         taxonomy = _localizationService.GetLocalizedContentItem(masterTaxonomy, culture).ContentItem;
                     var terms = taxonomy != null && !taxonomySettings.Autocomplete
-                        ? _taxonomyService.GetTerms(taxonomy.Id).Where(t => !string.IsNullOrWhiteSpace(t.Name)).Select(t => t.CreateTermEntry()).ToList()
+                        ? _taxonomyService.GetTerms(taxonomy.Id).Where(t => !string.IsNullOrWhiteSpace(t.Name)).Select(t => t.CreateTermEntry()).Where(te => !te.HasDraft).ToList()
                         : new List<TermEntry>(0);
                     List<TermPart> appliedTerms = new List<TermPart>();
                     if (contentId > 0) {

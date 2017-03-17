@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
@@ -21,7 +22,7 @@ namespace Orchard.Taxonomies.Settings {
         public override IEnumerable<TemplateViewModel> PartFieldEditor(ContentPartFieldDefinition definition) {
             if (definition.FieldDefinition.Name == "TaxonomyField") {
                 var model = definition.Settings.GetModel<TaxonomyFieldSettings>();
-                model.Taxonomies = _taxonomyService.GetTaxonomies();
+                model.Taxonomies = _taxonomyService.GetTaxonomies().Where(tax => !tax.ContentItem.HasDraft());
                 yield return DefinitionTemplate(model);
             }
         }
