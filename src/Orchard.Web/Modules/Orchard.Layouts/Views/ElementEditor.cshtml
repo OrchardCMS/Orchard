@@ -16,15 +16,15 @@
 @* Only render the editor shapes if the dialog is not closing. *@
 @if (Model.Submitted != true) {
     @Html.ValidationSummary()
-using (Html.BeginFormAntiForgeryPost(Url.Action("Update", "Element", new {session = Model.SessionKey, area = "Orchard.Layouts"}))) {
-     foreach (var tab in Model.Tabs) {
-         var id = String.Format("element-{0}", tab.ToLowerInvariant());
+    using (Html.BeginFormAntiForgeryPost(Url.Action("Update", "Element", new {session = Model.SessionKey, area = "Orchard.Layouts"}))) {
+        foreach (var tab in Model.Tabs) {
+            var orderedEditorsInTab = Model.EditorResult.Editors
+                .Where(editor => ShapePosition.Parse((String)editor.Metadata.Position).Name == tab)
+                .OrderBy(editor => ShapePosition.Parse((String)editor.Metadata.Position).Position);
+            var id = String.Format("element-{0}", tab.ToLowerInvariant());
          <div id="@id" class="tab-view">
-             @foreach (var editor in Model.EditorResult.Editors) {
-                 var position = ShapePosition.Parse((String) editor.Metadata.Position);
-                 if (position.Name == tab) {
-                     @Display(editor)
-                 }
+             @foreach (var editor in orderedEditorsInTab) {
+                @Display(editor)
              }
          </div>
      }

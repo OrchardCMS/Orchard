@@ -15,7 +15,7 @@ namespace Orchard.DynamicForms.Drivers {
         }
 
         protected override EditorResult OnBuildEditor(PasswordField element, ElementEditorContext context) {
-            var autoLabelEditor = BuildForm(context, "AutoLabel");
+            var autoLabelEditor = BuildForm(context, "AutoLabel", "Properties:1");
             var passwordFieldValidation = BuildForm(context, "PasswordFieldValidation", "Validation:10");
 
             return Editor(context, autoLabelEditor, passwordFieldValidation);
