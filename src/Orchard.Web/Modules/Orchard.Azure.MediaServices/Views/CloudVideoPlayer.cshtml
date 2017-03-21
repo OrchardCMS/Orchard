@@ -73,6 +73,9 @@
             if (posterUrl) {
                 options.poster = posterUrl;
             }
+            
+            // protocol relative url
+            videoUrl = videoUrl.replace(/^https?\:/i, "");
 
             var player = amp(id, options, function () {
                 this.src([{ src: videoUrl, type: videoType }], subtitlesUrls);
