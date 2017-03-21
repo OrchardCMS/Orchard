@@ -14,7 +14,7 @@
 @helper RenderRecipeOptions(IEnumerable<Recipe> recipes) {
         foreach (var recipe in recipes) {
         var optionAttributes = new RouteValueDictionary {{ "data-recipe-description", recipe.Description }};
-            if (Model.Recipe == null && recipe.Name == "Default") {
+            if (Model.Recipe == null && recipe.Name == Model.DefaultRecipe) {
                 optionAttributes["selected"] = "selected";
             }
             @Html.SelectOption(Model.Recipe, recipe.Name, recipe.Name, optionAttributes)
