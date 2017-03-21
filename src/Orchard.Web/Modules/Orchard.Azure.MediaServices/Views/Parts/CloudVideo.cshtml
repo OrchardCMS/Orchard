@@ -1,9 +1,21 @@
 ﻿@using Orchard.ContentManagement;
 
+@{
+    string alternateText = string.Empty;
+    try
+    {
+        alternateText = Model.ContentPart.As<Orchard.MediaLibrary.Models.MediaPart>().AlternateText;
+    }
+    catch (Exception)
+    {
+        // silently ignored
+    }
+}
+
 @Display.CloudVideoPlayer(
     ContentPart: Model.ContentPart,
     ContentItem: Model.ContentPart.ContentItem,
-    AlternateText: Model.ContentPart.As<Orchard.MediaLibrary.Models.MediaPart>().AlternateText,
+    AlternateText: alternateText,
     AssetId: null,
     IgnoreIncludeInPlayer: false,
     AllowPrivateUrls: false,

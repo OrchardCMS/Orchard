@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 18.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="16px"
+	 height="16px" viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+<g id="icons">
+	<rect x="-100" y="-436" display="none" fill="#3C454F" width="1200" height="934"/>
+	<g id="settings">
+	</g>
+	<g id="audio_track_2_">
+		<g>
+			<path fill="#FFFFFF" d="M2,5v9h12V5H2z M8,13l-3-2H4V8h1l3-2V13z M9.623,11.936c-0.127,0-0.25-0.046-0.345-0.128
+				c-0.099-0.091-0.152-0.21-0.152-0.337c0-0.128,0.053-0.247,0.149-0.336c0.473-0.438,0.734-1.018,0.734-1.632
+				c0-0.618-0.26-1.2-0.734-1.638C9.179,7.776,9.126,7.657,9.126,7.532s0.053-0.244,0.149-0.333
+				c0.094-0.087,0.217-0.135,0.348-0.135s0.254,0.048,0.348,0.135c0.67,0.62,1.035,1.438,1.029,2.304
+				c0.006,0.852-0.368,1.692-1.029,2.302C9.881,11.889,9.758,11.936,9.623,11.936z M11.448,12.969
+				c-0.1,0.085-0.222,0.131-0.348,0.131c-0.132,0-0.253-0.044-0.351-0.128c-0.096-0.092-0.147-0.211-0.147-0.337
+				c0-0.127,0.051-0.246,0.143-0.335c0.812-0.746,1.258-1.741,1.258-2.803c0-1.053-0.446-2.047-1.257-2.796
+				c-0.094-0.09-0.144-0.208-0.144-0.333s0.051-0.243,0.143-0.331C10.84,5.948,10.965,5.9,11.097,5.9
+				c0.133,0,0.257,0.048,0.351,0.135C12.449,6.961,13,8.19,13,9.497C13,10.81,12.449,12.044,11.448,12.969z"/>
+		</g>
+		<rect x="3" y="3" fill="#FFFFFF" width="10" height="1"/>
+		<rect x="4" y="1" fill="#FFFFFF" width="8" height="1"/>
+		<rect fill="none" width="16" height="16"/>
+	</g>
+	<g id="live_edge_hover">
+		<g>
+			<defs>
+				<rect id="SVGID_1_" x="630" y="2" width="36" height="12"/>
+			</defs>
+			<clipPath id="SVGID_2_">
+				<use xlink:href="#SVGID_1_"  overflow="visible"/>
+			</clipPath>
+			<g clip-path="url(#SVGID_2_)">
+				
+					<rect x="9.029" y="4.586" transform="matrix(0.7071 -0.7071 0.7071 0.7071 3.3726 20.1421)" opacity="0.5" fill="#DAF0FA" width="33.941" height="2.828"/>
+			</g>
+			<g clip-path="url(#SVGID_2_)">
+				
+					<rect x="1.029" y="4.586" transform="matrix(0.7071 -0.7071 0.7071 0.7071 1.0294 14.4853)" opacity="0.5" fill="#DAF0FA" width="33.941" height="2.828"/>
+			</g>
+			<g clip-path="url(#SVGID_2_)">
+				
+					<rect x="-6.971" y="4.586" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -1.3137 8.8284)" opacity="0.5" fill="#DAF0FA" width="33.941" height="2.828"/>
+			</g>
+			<g clip-path="url(#SVGID_2_)">
+				
+					<rect x="-14.971" y="4.586" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -3.6569 3.1716)" opacity="0.5" fill="#DAF0FA" width="33.941" height="2.828"/>
+			</g>
+			<g clip-path="url(#SVGID_2_)">
+				
+					<rect x="-22.971" y="4.586" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -6 -2.4853)" opacity="0.5" fill="#DAF0FA" width="33.941" height="2.828"/>
+			</g>
+		</g>
+	</g>
+</g>
+<g id="quality_click">
+	<g id="check_copy_17_2_">
+	</g>
+</g>
+</svg>

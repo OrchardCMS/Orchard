@@ -1,7 +1,7 @@
 ﻿@model Orchard.Azure.MediaServices.ViewModels.Settings.SubtitleLanguagesSettingsViewModel
 @using (Script.Head()) {
     <script type="text/javascript">
-        var initSubtitleLanguages = [ @(Model.Languages != null && Model.Languages.Any() ? Html.Raw(String.Join(", ", from s in Model.Languages select String.Format("'{0}'", s))) : Html.Raw(""))];
+        var initSubtitleLanguages = [ @(Model != null && Model.Languages != null && Model.Languages.Any() ? Html.Raw(String.Join(", ", from s in Model.Languages select String.Format("'{0}'", s))) : Html.Raw(""))];
     </script>
 }
 

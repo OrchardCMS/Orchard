@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 18.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="16px"
+	 height="16px" viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+<g id="icons">
+	<rect x="-100" y="-380" display="none" fill="#3C454F" width="1200" height="934"/>
+	<g id="settings">
+	</g>
+	<g id="closed_captioning_2_">
+		<path fill="#FFFFFF" d="M1,2v10h5.5l3.5,3.5V12h5V2H1z M12.645,9.856c-0.09,0.367-0.277,0.523-0.633,0.646
+			c-0.568,0.196-1.778,0.499-4.011,0.499s-3.443-0.303-4.011-0.499c-0.357-0.123-0.543-0.279-0.633-0.646
+			C3.132,8.943,3,7.933,3,7.001c0-0.932,0.132-1.942,0.355-2.855C3.445,3.779,3.632,3.623,3.989,3.5
+			C4.557,3.304,5.766,3.001,8,3.001s3.443,0.303,4.011,0.499c0.357,0.123,0.543,0.279,0.633,0.646C12.868,5.059,13,6.069,13,7.001
+			C13,7.933,12.868,8.943,12.645,9.856z"/>
+		<rect fill="none" width="16" height="16"/>
+	</g>
+	<g id="live_edge_5_">
+		<g>
+			<defs>
+				<rect id="SVGID_3_" x="630" y="12" width="36" height="4"/>
+			</defs>
+			<clipPath id="SVGID_2_">
+				<use xlink:href="#SVGID_3_"  overflow="visible"/>
+			</clipPath>
+			<g clip-path="url(#SVGID_2_)">
+				
+					<rect x="9.029" y="10.586" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -0.8701 21.8995)" opacity="0.5" fill="#DAF0FA" width="33.941" height="2.828"/>
+			</g>
+			<g clip-path="url(#SVGID_2_)">
+				
+					<rect x="1.029" y="10.586" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -3.2132 16.2426)" opacity="0.5" fill="#DAF0FA" width="33.941" height="2.828"/>
+			</g>
+			<g clip-path="url(#SVGID_2_)">
+				
+					<rect x="-6.971" y="10.586" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -5.5563 10.5858)" opacity="0.5" fill="#DAF0FA" width="33.941" height="2.828"/>
+			</g>
+			<g clip-path="url(#SVGID_2_)">
+				
+					<rect x="-14.971" y="10.586" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -7.8995 4.9289)" opacity="0.5" fill="#DAF0FA" width="33.941" height="2.828"/>
+			</g>
+			<g clip-path="url(#SVGID_2_)">
+				
+					<rect x="-22.971" y="10.586" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -10.2426 -0.7279)" opacity="0.5" fill="#DAF0FA" width="33.941" height="2.828"/>
+			</g>
+		</g>
+	</g>
+</g>
+<g id="quality_click">
+	<g id="check_copy_17_2_">
+	</g>
+</g>
+</svg>

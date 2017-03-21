@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 18.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="icons" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="16px" height="16px" viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+<rect x="-100" y="-240" fill="#3C454F" width="1200" height="934"/>
+<g id="settings">
+</g>
+<g id="volume_3_">
+	<g id="Volume_1_">
+		<path fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" d="M2,6v4h2l4,3V3L4,6H2z"/>
+	</g>
+	<g>
+		
+			<line fill-rule="evenodd" clip-rule="evenodd" fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-miterlimit="10" x1="10.8" y1="10.3" x2="15" y2="6.2"/>
+		
+			<line fill-rule="evenodd" clip-rule="evenodd" fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-miterlimit="10" x1="10.8" y1="6.2" x2="15" y2="10.3"/>
+	</g>
+	<rect fill-rule="evenodd" clip-rule="evenodd" fill="none" width="16" height="16"/>
+</g>
+</svg>

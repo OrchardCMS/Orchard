@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 18.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="16px"
+	 height="16px" viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+<g id="icons">
+	<rect x="-400" y="-578" display="none" fill="#3C454F" width="1200" height="934"/>
+	<g id="settings">
+	</g>
+	<g id="audio-only">
+		<g>
+			<path fill="#FFFFFF" d="M4,8c0-2.206,1.794-4,4-4s4,1.794,4,4v0h1c0-2.761-2.239-5-5-5S3,5.239,3,8L4,8L4,8z"/>
+			<path fill="#FFFFFF" d="M12,8v5c1.657,0,3-1.119,3-2.5S13.657,8,12,8z"/>
+			<path fill="#FFFFFF" d="M4,8v5c-1.657,0-3-1.119-3-2.5S2.343,8,4,8z"/>
+			<rect x="12" y="8" fill="#FFFFFF" width="1" height="3.153"/>
+			<rect x="3" y="8" fill="#FFFFFF" width="1" height="3.153"/>
+		</g>
+		<rect fill="none" width="16" height="16"/>
+	</g>
+</g>
+<g id="quality_click">
+	<g id="check_copy_17_2_">
+	</g>
+</g>
+</svg>

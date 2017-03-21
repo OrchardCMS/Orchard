@@ -1,6 +1,6 @@
-﻿using System.Linq;
+﻿using System.Configuration;
+using System.Linq;
 using Orchard.Azure.MediaServices.Models;
-using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Environment;
 using Orchard.Environment.Extensions.Models;
@@ -8,6 +8,9 @@ using Orchard.Environment.Extensions.Models;
 namespace Orchard.Azure.MediaServices.Events {
     public class FeatureEventHandler : IFeatureEventHandler {
 
+        private const string AppSettingsKeyAccountName = "Azure.MediaServices.AccountName";
+        private const string AppSettingsKeyAccountKey = "Azure.MediaServices.AccountKey";
+        private const string AppSettingsKeyStorageAccountKey = "Azure.MediaServices.StorageAccountKey";
         private readonly IOrchardServices _orchardServices;
 
         public FeatureEventHandler(IOrchardServices orchardServices) {
@@ -25,6 +28,22 @@ namespace Orchard.Azure.MediaServices.Events {
             var settings = _orchardServices.WorkContext.CurrentSite.As<CloudMediaSettingsPart>();
             settings.AllowedVideoFilenameExtensions = "asf;avi;m2ts;m2v;mp4;mpeg;mpg;mts;ts;wmv;3gp;3g2;3gp2;mod;dv;vob;ismv;m4a".Split(';');
             settings.EnableDynamicPackaging = true;
+
+            if (ConfigurationManager.AppSettings[AppSettingsKeyAccountName] != null)
+            {
+                settings.WamsAccountName = ConfigurationManager.AppSettings[AppSettingsKeyAccountName];
+            }
+
+            if (ConfigurationManager.AppSettings[AppSettingsKeyAccountKey] != null)
+            {
+                settings.WamsAccountKey = ConfigurationManager.AppSettings[AppSettingsKeyAccountKey];
+            }
+
+            if (ConfigurationManager.AppSettings[AppSettingsKeyStorageAccountKey] != null)
+            {
+                settings.StorageAccountKey = ConfigurationManager.AppSettings[AppSettingsKeyStorageAccountKey];
+            }
+
             settings.DefaultWamsEncodingPresetIndex = 0;
             settings.WamsEncodingPresets = new[] {
                 "Adaptive Streaming",

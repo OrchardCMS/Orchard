@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 18.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="icons" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="16px" height="16px" viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+<rect x="-400" y="-718" fill="#3C454F" width="1200" height="934"/>
+<g id="settings">
+</g>
+<g id="pip_2_">
+	<rect x="0" fill="none" width="16" height="16"/>
+	<path fill="#FFFFFF" d="M13,2H4C2.9,2,2,2.9,2,4v2.2C2.3,6.1,2.6,6,3,6V4c0-0.6,0.4-1,1-1h9c0.6,0,1,0.4,1,1v6c0,0.6-0.4,1-1,1h-3
+		c0,0.4-0.1,0.7-0.2,1H13c1.1,0,2-0.9,2-2V4C15,2.9,14.1,2,13,2z"/>
+	<path fill="#FFFFFF" d="M7,7L7,7C7,7,7,7,7,7L3,7c0,0,0,0,0,0h0C1.9,7,1,7.9,1,9v0.2V11c0,1.1,0.9,2,2,2h4c1.1,0,2-0.9,2-2V9.2V9
+		C9,7.9,8.1,7,7,7z"/>
+	<polygon fill="#FFFFFF" points="9,4 8,5 11.3,5 6.6,8.6 7.4,9.4 12,5.7 12,9 13,8 13,4 	"/>
+</g>
+</svg>
