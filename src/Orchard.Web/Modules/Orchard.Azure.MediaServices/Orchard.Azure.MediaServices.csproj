@@ -268,7 +268,6 @@
     <Compile Include="Infrastructure\Assets\AssetDriver.cs" />
     <Compile Include="Helpers\NamespaceHelper.cs" />
     <Content Include="Assets.json" />
-    <Content Include="Drivers\azuremediaplayer.js" />
     <Content Include="Images\Loader1.GIF" />
     <Content Include="Images\Thumbnail-Placeholder2.png" />
     <Content Include="Images\Thumbnail-Placeholder1.png" />
