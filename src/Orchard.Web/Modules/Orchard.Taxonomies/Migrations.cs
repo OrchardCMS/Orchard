@@ -94,5 +94,11 @@ namespace Orchard.Taxonomies {
             );
             return 6;
         }
+        public int UpdateFrom6() {
+            SchemaBuilder.AlterTable("TermContentItem", table => table
+                .CreateIndex("IDX_TermsPartRecord_id_Field", "TermsPartRecord_id", "Field")
+            );
+            return 7;
+        }
     }
 }
