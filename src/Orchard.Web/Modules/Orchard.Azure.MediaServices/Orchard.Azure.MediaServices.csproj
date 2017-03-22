@@ -254,6 +254,7 @@
     <Content Include="Content\amp\assets\icons\zoom.svg" />
     <Content Include="Content\amp\azuremediaplayer.min.js" />
     <Content Include="Content\amp\azuremediaplayer.min.css" />
+    <Content Include="Content\amp\stylefix.css" />
     <Content Include="Content\amp\techs\SmoothStreamingPlayer.xap" />
     <Content Include="Content\amp\techs\StrobeMediaPlayback.2.0.swf" />
     <Content Include="Content\expressInstall.swf" />

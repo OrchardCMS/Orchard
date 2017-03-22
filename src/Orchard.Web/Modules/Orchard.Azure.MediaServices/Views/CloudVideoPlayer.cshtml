@@ -1,6 +1,7 @@
 ﻿@using Newtonsoft.Json;
 
 @{
+    Style.Include("~/Modules/Orchard.Azure.MediaServices/Content/amp/stylefix.css");
     Style.Include("~/Modules/Orchard.Azure.MediaServices/Content/amp/azuremediaplayer.min.css");
     Script.Include("~/Modules/Orchard.Azure.MediaServices/Content/amp/azuremediaplayer.min.js").AtHead();
 
@@ -67,13 +68,15 @@
         if (videoUrl) {
             var options = {
                 logo: { enabled: false },
-                autoplay: @autoPlay.ToString().ToLower()
+                autoplay: @autoPlay.ToString().ToLower(),
+                width: @playerWidth,
+                height: @playerHeight
             };
 
             if (posterUrl) {
                 options.poster = posterUrl;
             }
-            
+
             // protocol relative url
             videoUrl = videoUrl.replace(/^https?\:/i, "");
 
