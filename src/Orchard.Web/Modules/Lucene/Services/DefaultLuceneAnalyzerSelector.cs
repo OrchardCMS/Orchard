@@ -12,5 +12,7 @@ namespace Lucene.Services {
                 Analyzer = new StandardAnalyzer(LuceneIndexProvider.LuceneVersion)
             };
         }
+
+        public string Name { get { return "Default"; } }
     }
 }
