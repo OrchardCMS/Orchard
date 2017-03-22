@@ -35,6 +35,7 @@ namespace Orchard.Taxonomies.Controllers {
 
         public ActionResult GetTaxonomy(string contentTypeName, string taxonomyFieldName, int contentId, string culture) {
             var viewModel = new TaxonomyFieldViewModel();
+            bool autocomplete = false;
             var contentDefinition = _contentDefinitionManager.GetTypeDefinition(contentTypeName);
             if (contentDefinition != null) {
                 var taxonomyField = contentDefinition.Parts.SelectMany(p => p.PartDefinition.Fields).Where(x => x.FieldDefinition.Name == "TaxonomyField" && x.Name == taxonomyFieldName).FirstOrDefault();
@@ -51,7 +52,7 @@ namespace Orchard.Taxonomies.Controllers {
                         taxonomy = masterTaxonomy;
                     else
                         taxonomy = _localizationService.GetLocalizedContentItem(masterTaxonomy, culture).ContentItem;
-                    var terms = taxonomy != null && !taxonomySettings.Autocomplete
+                    var terms = taxonomy != null // && !taxonomySettings.Autocomplete
                         ? _taxonomyService.GetTerms(taxonomy.Id).Where(t => !string.IsNullOrWhiteSpace(t.Name)).Select(t => t.CreateTermEntry()).Where(te => !te.HasDraft).ToList()
                         : new List<TermEntry>(0);
                     List<TermPart> appliedTerms = new List<TermPart>();
@@ -69,9 +70,12 @@ namespace Orchard.Taxonomies.Controllers {
                         TaxonomyId = taxonomy != null ? taxonomy.Id : 0,
                         HasTerms = taxonomy != null && _taxonomyService.GetTermsCount(taxonomy.Id) > 0
                     };
+                    if (taxonomySettings.Autocomplete)
+                        autocomplete = true;
                 }
             }
-            return View("../EditorTemplates/Fields/TaxonomyField", viewModel);
+            var templateName = autocomplete ? "../EditorTemplates/Fields/TaxonomyField.Autocomplete" : "../EditorTemplates/Fields/TaxonomyField";
+            return View(templateName, viewModel);
         }
         private IEnumerable<TermPart> GetAppliedTerms(ContentPart part, TaxonomyField field = null, VersionOptions versionOptions = null) {
             string fieldName = field != null ? field.Name : string.Empty;
