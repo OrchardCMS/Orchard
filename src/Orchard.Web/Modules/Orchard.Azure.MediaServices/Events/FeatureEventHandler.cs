@@ -1,5 +1,8 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
+using Orchard.Azure.MediaServices.Helpers;
 using Orchard.Azure.MediaServices.Models;
 using Orchard.ContentManagement;
 using Orchard.Environment;
@@ -105,6 +108,22 @@ namespace Orchard.Azure.MediaServices.Events {
                 "es-ES",
                 "sv-SE"
             };
+
+            try
+            {
+                var originsToAdd = new List<string>();
+                var baseUrlOrigin = new Uri(_orchardServices.WorkContext.CurrentSite.BaseUrl).GetLeftPart(UriPartial.Authority);
+                originsToAdd.Add(baseUrlOrigin);
+
+                var currentUrlOrigin = _orchardServices.WorkContext.HttpContext.Request.Url.GetLeftPart(UriPartial.Authority);
+                if (!originsToAdd.Contains(currentUrlOrigin))
+                    originsToAdd.Add(currentUrlOrigin);
+
+                StorageHelper.EnsureCorsIsEnabledAsync(settings.WamsAccountName, settings.WamsAccountKey, settings.StorageAccountKey, originsToAdd.ToArray()).Wait();
+            }
+            catch
+            {
+            }
         }
 
         public void Enabling(Feature feature) {

@@ -128,7 +128,7 @@ namespace Orchard.Azure.MediaServices.Controllers {
                         if (!originsToAdd.Contains(currentUrlOrigin))
                             originsToAdd.Add(currentUrlOrigin);
 
-                        var addedOrigins = _wamsClient.EnsureCorsIsEnabledAsync(originsToAdd.ToArray()).Result;
+                        var addedOrigins = StorageHelper.EnsureCorsIsEnabledAsync(settings.WamsAccountName, settings.WamsAccountKey, settings.StorageAccountKey, originsToAdd.ToArray()).Result;
 
                         if (addedOrigins.Any()) {
                             Logger.Information("CORS rules were added to the configured storage account for the following URLs: {0}.", String.Join("; ", addedOrigins));
