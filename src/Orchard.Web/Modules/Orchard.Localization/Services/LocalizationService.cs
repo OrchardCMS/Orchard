@@ -15,7 +15,7 @@ namespace Orchard.Localization.Services {
 
         LocalizationPart ILocalizationService.GetLocalizedContentItem(IContent content, string culture) {
             // Warning: Returns only the first of same culture localizations.
-            return ((ILocalizationService) this).GetLocalizedContentItem(content, culture, null);
+            return ((ILocalizationService)this).GetLocalizedContentItem(content, culture, null);
         }
 
         LocalizationPart ILocalizationService.GetLocalizedContentItem(IContent content, string culture, VersionOptions versionOptions) {
@@ -56,18 +56,24 @@ namespace Orchard.Localization.Services {
 
         IEnumerable<LocalizationPart> ILocalizationService.GetLocalizations(IContent content) {
             // Warning: May contain more than one localization of the same culture.
-            return ((ILocalizationService) this).GetLocalizations(content, null);
+            return ((ILocalizationService)this).GetLocalizations(content, null);
         }
 
         IEnumerable<LocalizationPart> ILocalizationService.GetLocalizations(IContent content, VersionOptions versionOptions) {
             if (content.ContentItem.Id == 0)
                 return Enumerable.Empty<LocalizationPart>();
-
             var localized = content.As<LocalizationPart>();
-
-            var query = versionOptions == null
-                ? _contentManager.Query<LocalizationPart>(localized.ContentItem.ContentType)
-                : _contentManager.Query<LocalizationPart>(versionOptions, localized.ContentItem.ContentType);
+            IContentQuery<LocalizationPart> query;
+            if (content.ContentItem.TypeDefinition.Parts.Any(x => x.PartDefinition.Name == "TermPart")) { // terms translations can be contained on different TermContentType linked to taxonomies translations
+                query = versionOptions == null
+                 ? _contentManager.Query<LocalizationPart>()
+                 : _contentManager.Query<LocalizationPart>(versionOptions);
+            }
+            else {
+                query = versionOptions == null
+                  ? _contentManager.Query<LocalizationPart>(localized.ContentItem.ContentType)
+                  : _contentManager.Query<LocalizationPart>(versionOptions, localized.ContentItem.ContentType);
+            }
 
             int contentItemId = localized.ContentItem.Id;
 
