@@ -207,12 +207,18 @@ namespace Orchard.ContentManagement {
 
         public int Count() {
             ApplyHqlVersionOptionsRestrictions(_versionOptions);
-            var hql = ToHql(true);
-            hql = "select count(Id) from Orchard.ContentManagement.Records.ContentItemVersionRecord where Id in ( " + hql + " )";
-            return Convert.ToInt32(_session.CreateQuery(hql)
-                           .SetCacheable(true)
-                           .UniqueResult())
-                ;
+            var sql = ToSql(true);
+            sql = "SELECT count(*) as totalCount from (" + sql + ") t";
+            return Convert.ToInt32(_session.CreateSQLQuery(sql)
+                    .AddScalar("totalCount", NHibernateUtil.Int32)
+                    .UniqueResult());
+        }
+
+        public string ToSql(bool count) {
+            var sessionImp = (ISessionImplementor)_session;
+            var translatorFactory = new ASTQueryTranslatorFactory();
+            var translators = translatorFactory.CreateQueryTranslators(ToHql(count), null, false, sessionImp.EnabledFilters, sessionImp.Factory);
+            return translators[0].SQLString;
         }
 
         public string ToHql(bool count) {
