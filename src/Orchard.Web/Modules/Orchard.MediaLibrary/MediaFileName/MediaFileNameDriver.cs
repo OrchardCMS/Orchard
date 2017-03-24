@@ -39,7 +39,7 @@ namespace Orchard.MediaLibrary.MediaFileName
                 "Parts_Media_Edit_FileName",
                 () => {
                     var currentUser = _authenticationService.GetAuthenticatedUser();
-                    if (!_authorizationService.TryCheckAccess(Permissions.ManageMediaContent, currentUser, part)) {
+                    if (!_authorizationService.TryCheckAccess(Permissions.EditMediaContent, currentUser, part)) {
                         return null;
                     }
 
