@@ -383,7 +383,8 @@ $(function () {
                 $.ajax({
                     type: "GET",
                     url: url,
-                    cache: false
+                    cache: false,
+                    dataType: 'json'
                 }).done(function (data) {
                     var newChildFolders = data.childFolders;
 
@@ -586,6 +587,7 @@ $(function () {
                     viewModel.clearSelection();
                 } else {
                     console.log('failed to delete media items');
+                    alert(settings.unauthorizedMessage);
                 }
                 return false;
             });
@@ -620,6 +622,7 @@ $(function () {
                     viewModel.getMediaItems(viewModel.pageCount);
                 } else {
                     console.log('failed to clone media items');
+                    alert(settings.unauthorizedMessage);
                 }
                 return false;
             });
