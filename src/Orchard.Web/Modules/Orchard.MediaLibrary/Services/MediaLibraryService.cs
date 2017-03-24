@@ -257,7 +257,7 @@ namespace Orchard.MediaLibrary.Services {
             }
 
             // determines the folder type: public, user own folder (my), folder of another user (private)
-            var rootedFolderPath = this.GetRootedFolderPath(folderPath);
+            var rootedFolderPath = this.GetRootedFolderPath(folderPath) ?? "";
             var userFolderPath = GetUserMediaFolder().MediaPath;
             bool isMyfolder = false;
             if(folderPath == "Users") {
