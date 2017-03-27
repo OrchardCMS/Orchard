@@ -14,7 +14,6 @@ using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.ContentManagement.Records;
 using Orchard.Core.Common.Handlers;
 using Orchard.Core.Common.Models;
-using Orchard.Data;
 using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
@@ -69,6 +68,7 @@ namespace Orchard.Tests.Modules.Indexing {
             builder.RegisterType<IndexingTaskManager>().As<IIndexingTaskManager>();
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
+            builder.RegisterType<StubWorkContextAccessor>().As<IWorkContextAccessor>();
             builder.RegisterType<Signals>().As<ISignals>();
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
             builder.RegisterInstance(_contentDefinitionManager.Object);
