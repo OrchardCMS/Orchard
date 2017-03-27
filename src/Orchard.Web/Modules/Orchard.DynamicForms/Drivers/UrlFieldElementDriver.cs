@@ -15,8 +15,8 @@ namespace Orchard.DynamicForms.Drivers {
         }
 
         protected override EditorResult OnBuildEditor(UrlField element, ElementEditorContext context) {
-            var autoLabelEditor = BuildForm(context, "AutoLabel");
-            var webAddressFieldEditor = BuildForm(context, "UrlField");
+            var autoLabelEditor = BuildForm(context, "AutoLabel", "Properties:1");
+            var webAddressFieldEditor = BuildForm(context, "UrlField", "Properties:15");
             var webAddressFieldValidation = BuildForm(context, "UrlFieldValidation", "Validation:10");
 
             return Editor(context, autoLabelEditor, webAddressFieldEditor, webAddressFieldValidation);
