@@ -423,7 +423,7 @@ namespace Orchard.OutputCache.Filters {
 
             // Vary by authentication state if configured.
             if (CacheSettings.VaryByAuthenticationState) {
-                result["auth"] = filterContext.HttpContext.User.Identity.IsAuthenticated.ToString().ToLowerInvariant();
+                result["auth"] = _workContext.CurrentUser != null;
             }
 
             return result;
