@@ -136,7 +136,7 @@
     <Content Include="Placement.info" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Views\EditorTemplates\Parts.LuceneSettings.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts.LuceneSettings.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>
