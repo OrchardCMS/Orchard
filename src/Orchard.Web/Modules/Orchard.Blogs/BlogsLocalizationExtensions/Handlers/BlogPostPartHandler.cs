@@ -44,6 +44,10 @@ namespace Orchard.Blogs.BlogsLocalizationExtensions.Handlers {
             if (!blogPost.Has<LocalizationPart>() || !blogPost.Has<BlogPostPart>()) {
                 return;
             }
+            //bolgPost just cloned, never saved
+            if(blogPost.As<CommonPart>().Container == null) {
+                return;
+            }
             var blog = _contentManager.Get(blogPost.As<CommonPart>().Container.Id);
             if (!blog.Has<LocalizationPart>() || blog.As<LocalizationPart>().Culture == null) {
                 return;
@@ -61,7 +65,8 @@ namespace Orchard.Blogs.BlogsLocalizationExtensions.Handlers {
                 //seek for same culture blog
                 var realBlog = _localizationService.GetLocalizations(blog).SingleOrDefault(w => w.As<LocalizationPart>().Culture == blogPostCulture);
                 if (realBlog.Has<LocalizationPart>() && realBlog.As<LocalizationPart>().Culture.Id == blogPostCulture.Id) {
-                    blogPost.As<ICommonPart>().Container = realBlog;
+                    //blogPost.As<ICommonPart>().Container = realBlog;
+                    blogPost.As<CommonPart>().Record.Container = realBlog.ContentItem.Record;
                     if (blogPost.Has<AutoroutePart>()) {
                         _routeService.RemoveAliases(blogPost.As<AutoroutePart>());
                         blogPost.As<AutoroutePart>().DisplayAlias = _routeService.GenerateAlias(blogPost.As<AutoroutePart>());
