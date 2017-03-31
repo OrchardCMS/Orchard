@@ -9,12 +9,12 @@ namespace Orchard.AuditTrail.Models {
         public virtual int Id { get; set; }
 
         /// <summary>
-        /// The happend time of the event.
+        /// The time when the event occurred.
         /// </summary>
         public virtual DateTime CreatedUtc { get; set; }
 
         /// <summary>
-        /// The user name of the user who made the event..
+        /// The user name of the user who caused the event to occur.
         /// </summary>
         public virtual string UserName { get; set; }
 
@@ -58,7 +58,7 @@ namespace Orchard.AuditTrail.Models {
         public virtual string Comment { get; set; }
 
         /// <summary>
-        /// The ip address of the user who made the event.
+        /// The IP address of the user who caused the event to occur.
         /// </summary>
         public virtual string ClientIpAddress { get; set; }
     }

@@ -6,7 +6,7 @@ using Orchard.Logging;
 
 namespace Orchard.AuditTrail.Services {
     /// <summary>
-    /// Serialize or deserialize event data.
+    /// A service responsible for serializing and deserializing audit trail event data.
     /// </summary>
     public class EventDataSerializer : Component, IEventDataSerializer {
         /// <summary>
