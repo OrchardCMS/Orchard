@@ -2,6 +2,7 @@
 using Orchard.Data.Conventions;
 
 namespace Orchard.AuditTrail.Models {
+
     /// <summary>
     /// Audit Trail Event Record in the database.
     /// </summary>
@@ -36,7 +37,6 @@ namespace Orchard.AuditTrail.Models {
         /// <summary>
         /// The data of the event.
         /// </summary>
-
         [StringLengthMax]
         public virtual string EventData { get; set; }
 
@@ -53,7 +53,6 @@ namespace Orchard.AuditTrail.Models {
         /// <summary>
         /// The comment of the event.
         /// </summary>
-
         [StringLengthMax]
         public virtual string Comment { get; set; }
 

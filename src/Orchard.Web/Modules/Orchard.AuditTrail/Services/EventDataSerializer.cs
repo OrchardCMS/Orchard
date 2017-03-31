@@ -5,10 +5,12 @@ using Newtonsoft.Json;
 using Orchard.Logging;
 
 namespace Orchard.AuditTrail.Services {
+
     /// <summary>
     /// A service responsible for serializing and deserializing audit trail event data.
     /// </summary>
     public class EventDataSerializer : Component, IEventDataSerializer {
+
         /// <summary>
         /// Serialize event data.
         /// </summary>

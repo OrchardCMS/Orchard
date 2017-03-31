@@ -1,8 +1,10 @@
 namespace Orchard.AuditTrail.Models {
+
     /// <summary>
     /// The created audit trail event result
     /// </summary>
     public class AuditTrailEventRecordResult {
+
         /// <summary>
         /// The created <see cref="AuditTrailEventRecord"/> 
         /// </summary>
