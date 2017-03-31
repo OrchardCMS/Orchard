@@ -30,8 +30,9 @@ namespace Orchard.Blogs.BlogsLocalizationExtensions.Handlers {
             Notifier = notifier;
             T = NullLocalizer.Instance;
             //move posts when created, updated or published
-            OnCreating<BlogPostPart>((context, part) => MigrateBlogPost(context.ContentItem));
-            OnUpdating<BlogPostPart>((context, part) => MigrateBlogPost(context.ContentItem));
+            //changed OnCreating and OnUpdating in OnCreated and OnUpdated so LocalizationPart is already populated
+            OnCreated<BlogPostPart>((context, part) => MigrateBlogPost(context.ContentItem));
+            OnUpdated<BlogPostPart>((context, part) => MigrateBlogPost(context.ContentItem));
             OnPublishing<BlogPostPart>((context, part) => MigrateBlogPost(context.ContentItem));
         }
 
@@ -44,7 +45,7 @@ namespace Orchard.Blogs.BlogsLocalizationExtensions.Handlers {
             if (!blogPost.Has<LocalizationPart>() || !blogPost.Has<BlogPostPart>()) {
                 return;
             }
-            //bolgPost just cloned, never saved
+            //bolgPost just cloned for translation, never saved
             if(blogPost.As<CommonPart>().Container == null) {
                 return;
             }
@@ -65,8 +66,7 @@ namespace Orchard.Blogs.BlogsLocalizationExtensions.Handlers {
                 //seek for same culture blog
                 var realBlog = _localizationService.GetLocalizations(blog).SingleOrDefault(w=>w.As<LocalizationPart>().Culture == blogPostCulture);
                 if (realBlog.Has<LocalizationPart>() && realBlog.As<LocalizationPart>().Culture.Id == blogPostCulture.Id) {
-                    //blogPost.As<ICommonPart>().Container = realBlog;
-                    blogPost.As<CommonPart>().Record.Container = realBlog.ContentItem.Record;
+                    blogPost.As<ICommonPart>().Container = realBlog;
                     if (blogPost.Has<AutoroutePart>()) {
                         _routeService.RemoveAliases(blogPost.As<AutoroutePart>());
                         blogPost.As<AutoroutePart>().DisplayAlias = _routeService.GenerateAlias(blogPost.As<AutoroutePart>());
