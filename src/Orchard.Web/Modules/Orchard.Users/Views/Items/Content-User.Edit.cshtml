@@ -1,11 +1,17 @@
 ﻿<div class="edit-item">
     <div class="edit-item-primary">
-        @Display(Model.Content)
+        @if (Model.Content != null) {
+            <div class="edit-item-content">
+                @Display(Model.Content)
+            </div>
+        }
     </div>
     <div class="edit-item-secondary group">
-        <div class="edit-item-sidebar group">
-            @Display(Model.Sidebar)
-        </div>
+        @if (Model.Sidebar != null) {
+            <div class="edit-item-sidebar group">
+                @Display(Model.Sidebar)
+            </div>
+        }
     </div>
 </div>
 @if (!String.IsNullOrWhiteSpace(Request.QueryString["returnUrl"])) {
