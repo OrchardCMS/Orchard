@@ -8,9 +8,9 @@
 
     var settings = Model.Field.PartFieldDefinition.Settings.GetModel<ContentPickerFieldLocalizationSettings>();
 
-    var tryTranslateMsg = T("Selected items with a localization different than the current one will be localized.");
-    var removeMissingMsg = T("Selected items for which there is no correct localization will be removed.");
-    var removeUnlocalizableMsg = T("Selected items that cannot have localizations will be removed.");
+    var tryTranslateMsg = T("Selected items with a localization different than the current one will be localized.").Text.Replace("\"", "&quot;");
+    var removeMissingMsg = T("Selected items for which there is no correct localization will be removed.").Text.Replace("\"", "&quot;");
+    var removeUnlocalizableMsg = T("Selected items that cannot have localizations will be removed.").Text.Replace("\"", "&quot;");
     
     //We will use a script to find the fieldset for the field we are currently processing.
     //The fieldset contains a span of class "hint". We will add tryTranslateMsg to it.
@@ -18,7 +18,7 @@
     string dataPartName = HttpUtility.JavaScriptStringEncode(Model.Part.PartDefinition.Name);
     string dataFieldName = HttpUtility.JavaScriptStringEncode(Model.Field.PartFieldDefinition.Name);
 }
-<input type="hidden" id="@dataPartName-@dataFieldName-tryTranslateMsg" value="@tryTranslateMsg @(settings.RemoveItemsWithoutLocalization? removeMissingMsg : null) @(settings.RemoveItemsWithNoLocalizationPart? removeUnlocalizableMsg : null)" />
+<input type="hidden" id="@dataPartName-@dataFieldName-tryTranslateMsg" value="@Html.Raw(tryTranslateMsg) @(settings.RemoveItemsWithoutLocalization? Html.Raw(removeMissingMsg) : null) @(settings.RemoveItemsWithNoLocalizationPart? Html.Raw(removeUnlocalizableMsg) : null)" />
 @using (Script.Foot()) {
     <script type="text/javascript">
         $(function () {
