@@ -50,6 +50,9 @@
                         else {
                             @Html.ItemDisplayText(taxonomyEntry.ContentItem)
                         }
+                        @if (taxonomyEntry.HasDraft) {
+                            <text>@T(" (Draft)")</text>
+                        }
                     </td>
                     <td>
                         @if (!taxonomyEntry.IsInternal) {
