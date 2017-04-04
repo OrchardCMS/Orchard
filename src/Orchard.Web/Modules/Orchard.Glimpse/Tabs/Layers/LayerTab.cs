@@ -14,12 +14,12 @@ namespace Orchard.Glimpse.Tabs.Layers {
             return messages;
         }
 
-        public override string Name => "Layers";
+        public override string Name { get { return "Layers"; } }
 
         public void Setup(ITabSetupContext context) {
             context.PersistMessages<LayerMessage>();
         }
 
-        public string Key => "glimpse_orchard_layers";
+        public string Key { get { return "glimpse_orchard_layers"; } }
     }
 }

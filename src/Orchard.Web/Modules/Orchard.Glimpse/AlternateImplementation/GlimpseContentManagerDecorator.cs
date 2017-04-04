@@ -177,7 +177,7 @@ namespace Orchard.Glimpse.AlternateImplementation {
                 return "Unknown content type.";
             }
 
-            return options.VersionRecordId == 0 ? $"Content item: {id} is not published." : "Unknown content type.";
+            return options.VersionRecordId == 0 ? string.Format("Content item: {0} is not published.", id): "Unknown content type.";
         }
 
         public void CompleteImport(XElement element, ImportContentSession importContentSession) {

@@ -14,14 +14,14 @@ namespace Orchard.Glimpse.Tabs.Authorizer {
             return messages;
         }
 
-        public override string Name => "Authorizer";
+        public override string Name { get { return "Authorizer"; } }
 
         public void Setup(ITabSetupContext context) {
             context.PersistMessages<AuthorizerMessage>();
         }
 
-        public string Key => "glimpse_orchard_authorizer";
+        public string Key { get { return "glimpse_orchard_authorizer"; } }
 
-        public bool KeysHeadings => false;
+        public bool KeysHeadings { get { return false; } }
     }
 }

@@ -14,12 +14,12 @@ namespace Orchard.Glimpse.Tabs.Widgets {
             return messages;
         }
 
-        public override string Name => "Widgets";
+        public override string Name { get { return "Widgets"; } }
 
         public void Setup(ITabSetupContext context) {
             context.PersistMessages<WidgetMessage>();
         }
 
-        public string Key => "glimpse_orchard_widgets";
+        public string Key { get { return "glimpse_orchard_widgets"; } }
     }
 }
