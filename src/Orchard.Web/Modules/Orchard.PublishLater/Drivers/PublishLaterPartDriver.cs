@@ -105,7 +105,7 @@ namespace Orchard.PublishLater.Drivers {
                     }
                 }
                 else {
-                    updater.AddModelError(Prefix, T("Both the date and time need to be specified for when this is to be published. If you don't want to schedule publishing then click Save Draft or Publish Now."));
+                    updater.AddModelError(Prefix, T("Both the date and time need to be specified for when this is to be published. If you don't want to schedule publishing then click Save Draft or Publish."));
                 }
             }
 

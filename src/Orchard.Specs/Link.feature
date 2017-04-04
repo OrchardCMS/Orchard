@@ -40,9 +40,9 @@ Scenario: Creating and using Link fields
         And I fill in
             | name               | value   |
             | Event.SiteUrl.Text | Orchard |
-        And I hit "Save"
+        And I hit "Save Draft"
         And I am redirected
-    Then I should see "Your Event has been created."
+    Then I should see "The Event has been created as Draft."
     When I go to "Admin/Contents/List"
     Then I should see "Site Url:" 
         And I should see "<a href=\"http://www.orchardproject.net\">Orchard</a>"
@@ -66,7 +66,7 @@ Scenario: Creating and using Link fields
         And I fill in 
             | name                | value |
             | Event.SiteUrl.Value |       |
-        And I hit "Save"
+        And I hit "Save Draft"
     Then I should see "Url is required for Site Url."
 
     # The default value should be proposed on creation

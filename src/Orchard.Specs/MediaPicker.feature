@@ -39,9 +39,9 @@ Scenario: Creating and using media fields
     When I fill in 
             | name           | value |
             | Event.File.Url |       |
-        And I hit "Save"
+        And I hit "Save Draft"
         And I am redirected
-    Then I should see "Your Event has been created."
+    Then I should see "The Event has been created as draft."
 
     # The hint should be displayed
     When I go to "Admin/ContentTypes/Edit/Event"
@@ -62,7 +62,7 @@ Scenario: Creating and using media fields
         And I fill in 
             | name           | value |
             | Event.File.Url |       |
-        And I hit "Save"
+        And I hit "Save Draft"
     Then I should see "The File field is required."
 
     # The value should be bound
@@ -76,5 +76,5 @@ Scenario: Creating and using media fields
     And I fill in 
             | name           | value                            |
             | Event.File.Url | ~/Media/Default/images/Image.png |
-        And I hit "Save"
+        And I hit "Save Draft"
     Then I should see "The File field must have one of these extensions: jpg."

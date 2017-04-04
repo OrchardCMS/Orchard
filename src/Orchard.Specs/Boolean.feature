@@ -37,9 +37,9 @@ Scenario: Creating and using Boolean fields
     When I fill in 
             | name				 | value |
             | Event.Active.Value | true  |
-        And I hit "Save"
+        And I hit "Save Draft"
         And I am redirected
-    Then I should see "Your Event has been created."
+    Then I should see "The Event has been created as draft."
     When I go to "Admin/Contents/List"
     Then I should see "Active:" 
         And I should see "Yes"
@@ -72,5 +72,5 @@ Scenario: Creating and using Boolean fields
         And I fill in 
             | name               | value |
             | Event.Active.Value |       |
-        And I hit "Save"
+        And I hit "Save Draft"
     Then I should see "The Active field is required."

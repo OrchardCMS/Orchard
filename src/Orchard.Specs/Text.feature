@@ -50,7 +50,7 @@ Scenario: Creating and using Text fields
         And I fill in 
             | name               | value |
             | Event.Subject.Text |       |
-        And I hit "Save"
+        And I hit "Save Draft"
     Then I should see "The Subject field is required."
 
     # The hint should be displayed
@@ -68,9 +68,9 @@ Scenario: Creating and using Text fields
     When I fill in 
             | name               | value                |
             | Event.Subject.Text | Orchard Harvest 2015 |
-        And I hit "Save"
+        And I hit "Save Draft"
         And I am redirected
-    Then I should see "Your Event has been created."
+    Then I should see "The Event has been created as draft."
         And I should see "Orchard Harvest 2015"
 
     # The default value should be proposed on creation
