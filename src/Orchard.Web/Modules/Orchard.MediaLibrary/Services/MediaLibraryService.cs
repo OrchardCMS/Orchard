@@ -226,7 +226,7 @@ namespace Orchard.MediaLibrary.Services {
         }
 
         public IMediaFolder GetRootMediaFolder() {
-            if (_orchardServices.Authorizer.Authorize(Permissions.ViewMediaContent)) {
+            if (_orchardServices.Authorizer.Authorize(Permissions.SelectMediaContent)) {
                 return null;
             }
 

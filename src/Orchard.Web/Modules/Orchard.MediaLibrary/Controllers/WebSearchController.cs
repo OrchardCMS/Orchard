@@ -35,7 +35,7 @@ namespace Orchard.MediaLibrary.Controllers {
         public Localizer T { get; set; }
 
         public ActionResult Index(string folderPath, string type, int? replaceId = null) {
-            if (!_mediaLibraryService.CheckMediaFolderPermission(Permissions.ViewMediaContent, folderPath)) {
+            if (!_mediaLibraryService.CheckMediaFolderPermission(Permissions.SelectMediaContent, folderPath)) {
                 return new HttpUnauthorizedResult();
             }
 
