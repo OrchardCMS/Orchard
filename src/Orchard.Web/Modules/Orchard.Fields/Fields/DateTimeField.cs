@@ -6,23 +6,30 @@ using Orchard.Fields.Settings;
 namespace Orchard.Fields.Fields {
     public class DateTimeField : ContentField {
 
-        public DateTime DateTime {
+        public DateTime? DateTime {
             get {
                 var settings = this.PartFieldDefinition.Settings.GetModel<DateTimeFieldSettings>();
-                var value = Storage.Get<DateTime>();
-                if (settings.Display == DateTimeFieldDisplays.DateOnly) {
-                    return new DateTime(value.Year, value.Month, value.Day);
+                var value = Storage.Get<DateTime?>();
+                if (value.HasValue) {
+                  if (settings.Display == DateTimeFieldDisplays.DateOnly) {
+                      return new DateTime(value.Value.Year, value.Value.Month, value.Value.Day);
+                  }
                 }
                 return value;
             }
 
             set {
-                var settings = this.PartFieldDefinition.Settings.GetModel<DateTimeFieldSettings>();
-                if (settings.Display == DateTimeFieldDisplays.DateOnly) {
-                    Storage.Set(new DateTime(value.Year, value.Month, value.Day));
+                if (value.HasValue) {
+                  var settings = this.PartFieldDefinition.Settings.GetModel<DateTimeFieldSettings>();
+                  if (settings.Display == DateTimeFieldDisplays.DateOnly) {
+                      Storage.Set(new DateTime(value.Value.Year, value.Value.Month, value.Value.Day));
+                  }
+                  else {
+                      Storage.Set(value.Value);
+                  }
                 }
                 else {
-                    Storage.Set(value);
+                  Storage.Set<System.DateTime?>(null);
                 }
             }
         }
