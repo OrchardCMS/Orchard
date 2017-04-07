@@ -8,7 +8,7 @@ namespace Orchard.MediaLibrary {
         public static readonly Permission ImportMediaContent = new Permission { Description = "Import All Media", Name = "ImportMedia", ImpliedBy = new[] { ManageMediaContent } };
         public static readonly Permission EditMediaContent = new Permission { Description = "Edit All Media", Name = "EditMedia", ImpliedBy = new[] { ManageMediaContent } };
         public static readonly Permission DeleteMediaContent = new Permission { Description = "Delete All Media", Name = "DeleteMedia", ImpliedBy = new[] { ManageMediaContent } };
-        public static readonly Permission SelectMediaContent = new Permission { Description = "View All Media", Name = "ViewMedia", ImpliedBy = new[] { ManageMediaContent, ImportMediaContent, EditMediaContent, DeleteMediaContent } };
+        public static readonly Permission SelectMediaContent = new Permission { Description = "Select All Media", Name = "SelectMedia", ImpliedBy = new[] { ManageMediaContent, ImportMediaContent, EditMediaContent, DeleteMediaContent } };
         public static readonly Permission ManageOwnMedia = new Permission { Description = "Manage Own Media", Name = "ManageOwnMedia", ImpliedBy = new[] { ManageMediaContent, SelectMediaContent, ImportMediaContent, EditMediaContent, DeleteMediaContent } };
 
         public virtual Feature Feature { get; set; }
