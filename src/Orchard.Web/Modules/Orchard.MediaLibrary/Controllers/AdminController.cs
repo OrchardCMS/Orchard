@@ -42,14 +42,14 @@ namespace Orchard.MediaLibrary.Controllers {
         public ILogger Logger { get; set; }
 
         public ActionResult Index(string folderPath = "", bool dialog = false) {
-            if (!_mediaLibraryService.CheckMediaFolderPermission(Permissions.ViewMediaContent, folderPath)) {
-                Services.Notifier.Add(UI.Notify.NotifyType.Error, T("Cannot view media"));
+            if (!_mediaLibraryService.CheckMediaFolderPermission(Permissions.SelectMediaContent, folderPath)) {
+                Services.Notifier.Add(UI.Notify.NotifyType.Error, T("Cannot select media"));
                 return new HttpUnauthorizedResult();
             }
 
             // If the user is trying to access a folder above his boundaries, redirect him to his home folder
             var rootMediaFolder = _mediaLibraryService.GetRootMediaFolder();
-            if (!_mediaLibraryService.CheckMediaFolderPermission(Permissions.ViewMediaContent, folderPath) && !_mediaLibraryService.CanManageMediaFolder(folderPath)) {
+            if (!_mediaLibraryService.CheckMediaFolderPermission(Permissions.SelectMediaContent, folderPath) && !_mediaLibraryService.CanManageMediaFolder(folderPath)) {
                 return RedirectToAction("Index", new { folderPath = rootMediaFolder.MediaPath, dialog });
             }
 
@@ -121,8 +121,8 @@ namespace Orchard.MediaLibrary.Controllers {
 
         [Themed(false)]
         public ActionResult MediaItems(string folderPath, int skip = 0, int count = 0, string order = "created", string mediaType = "") {
-            if (!_mediaLibraryService.CheckMediaFolderPermission(Permissions.ViewMediaContent, folderPath)) {
-                Services.Notifier.Add(UI.Notify.NotifyType.Error, T("Cannot view media"));
+            if (!_mediaLibraryService.CheckMediaFolderPermission(Permissions.SelectMediaContent, folderPath)) {
+                Services.Notifier.Add(UI.Notify.NotifyType.Error, T("Cannot select media"));
                 var model = new MediaManagerMediaItemsViewModel {
                     MediaItems = new List<MediaManagerMediaItemViewModel>(),
                     MediaItemsCount = 0,
@@ -133,7 +133,7 @@ namespace Orchard.MediaLibrary.Controllers {
             }
 
             // Check permission
-            if (!_mediaLibraryService.CheckMediaFolderPermission(Permissions.ViewMediaContent, folderPath) && !_mediaLibraryService.CanManageMediaFolder(folderPath)) {
+            if (!_mediaLibraryService.CheckMediaFolderPermission(Permissions.SelectMediaContent, folderPath) && !_mediaLibraryService.CanManageMediaFolder(folderPath)) {
                 var model = new MediaManagerMediaItemsViewModel {
                     MediaItems = new List<MediaManagerMediaItemViewModel>(),
                     MediaItemsCount = 0,
@@ -162,7 +162,7 @@ namespace Orchard.MediaLibrary.Controllers {
 
         [Themed(false)]
         public ActionResult ChildFolders(string folderPath = null) {
-            if (!_mediaLibraryService.CheckMediaFolderPermission(Permissions.ViewMediaContent, folderPath)) {
+            if (!_mediaLibraryService.CheckMediaFolderPermission(Permissions.SelectMediaContent, folderPath)) {
                 Services.Notifier.Add(UI.Notify.NotifyType.Error, T("Cannot get child folder listing"));
                 var model = new MediaManagerChildFoldersViewModel {
                     Children = new IMediaFolder[0]
@@ -223,8 +223,8 @@ namespace Orchard.MediaLibrary.Controllers {
             if (contentItem == null)
                 return HttpNotFound();
 
-            if (!_mediaLibraryService.CheckMediaFolderPermission(Permissions.ViewMediaContent, contentItem.FolderPath)) {
-                Services.Notifier.Add(UI.Notify.NotifyType.Error, T("Cannot view media"));
+            if (!_mediaLibraryService.CheckMediaFolderPermission(Permissions.SelectMediaContent, contentItem.FolderPath)) {
+                Services.Notifier.Add(UI.Notify.NotifyType.Error, T("Cannot select media"));
                 return new HttpUnauthorizedResult();
             }
 
