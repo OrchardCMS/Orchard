@@ -79,12 +79,12 @@ namespace Orchard.ContentManagement.Handlers {
         }
 
         void IContentStorageFilter.Versioning(VersionContentContext context) {
-            if (context.ExistingContentItem.Is<TPart>() || context.BuildingContentItem.Is<TPart>())
+            if (context.ExistingContentItem.Is<TPart>() && context.BuildingContentItem.Is<TPart>())
                 Versioning(context, context.ExistingContentItem.As<TPart>(), context.BuildingContentItem.As<TPart>());
         }
 
         void IContentStorageFilter.Versioned(VersionContentContext context) {
-            if (context.ExistingContentItem.Is<TPart>() || context.BuildingContentItem.Is<TPart>())
+            if (context.ExistingContentItem.Is<TPart>() && context.BuildingContentItem.Is<TPart>())
                 Versioned(context, context.ExistingContentItem.As<TPart>(), context.BuildingContentItem.As<TPart>());
         }
 
