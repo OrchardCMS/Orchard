@@ -32,7 +32,7 @@ else {
 else {
     <ul class="templates">
         @foreach (var themeEntry in Model.Themes) {
-            <li>@Display.ThemeEntry(Theme: themeEntry)</li>
+            <li>@Display.ThemeEntry(Theme: themeEntry,Name:Model.Name)</li>
         }
     </ul>
 }

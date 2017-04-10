@@ -92,6 +92,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
+    <Compile Include="Services\AdminThemeSelector.cs" />
     <Compile Include="Commands\ThemeCommands.cs" />
     <Compile Include="Drivers\DisableThemePartDriver.cs" />
     <Compile Include="Events\ThemeDisableEventHandler.cs" />
@@ -115,6 +116,7 @@
     <Compile Include="Services\IThemeService.cs" />
     <Compile Include="Services\SafeModeThemeSelector.cs" />
     <Compile Include="Services\SiteThemeSelector.cs" />
+    <Compile Include="Services\AdminThemeService.cs" />
     <Compile Include="Services\SiteThemeService.cs" />
     <Compile Include="Services\ThemeService.cs" />
     <Compile Include="ViewModels\ThemesIndexViewModel.cs" />

@@ -5,7 +5,7 @@
 
 @{
     Script.Require("ShapesBase").AtFoot();
-    
+    string name = Model.Name;
     Orchard.Themes.Models.ThemeEntry theme = Model.Theme;
     var themeClasses = theme.IsRecentlyInstalled ? "class=\"recentlyInstalledTheme\"" : String.Empty;
 }
@@ -16,11 +16,13 @@
     @Html.Image(Href(Html.ThemePath((ExtensionDescriptor)theme.Descriptor, "/Theme.png")), Html.Encode((string)theme.Name), null)
     @using (Html.BeginFormAntiForgeryPost(Url.Action("Activate"), FormMethod.Post, new { @class = "inline" })) {
         @Html.Hidden("themeId", (string)theme.Descriptor.Id)
+        @Html.Hidden("name", (string)name)
         <button type="submit" title="@T("Activate")">@T("Set Current")</button>
     }
 
     @using (Html.BeginFormAntiForgeryPost(Url.Action("Preview"), FormMethod.Post, new { @class = "inline" })) {
         @Html.Hidden("themeId", (string)theme.Descriptor.Id)
+        @Html.Hidden("name", (string)name)
         <button type="submit" title="@T("Preview")">@T("Preview")</button>
     }
 
@@ -44,12 +46,14 @@
     @if (theme.Enabled) {
         using (Html.BeginFormAntiForgeryPost(Url.Action("Disable"), FormMethod.Post, new { @class = "inline link" })) {
             @Html.Hidden("themeId", (string)theme.Descriptor.Id)
+            @Html.Hidden("name", (string)name)
             <button type="submit" class="disable" title="Disable">@T("Disable")</button>
         }
     }
     else {
         using (Html.BeginFormAntiForgeryPost(Url.Action("Enable"), FormMethod.Post, new { @class = "inline link" })) {
             @Html.Hidden("themeId", (string)theme.Descriptor.Id)
+            @Html.Hidden("name", (string)name)
             <button type="submit" class="enable" title="Enable">@T("Enable")</button>
         }
     }
@@ -58,6 +62,7 @@
         <span> | </span>
         using (Html.BeginFormAntiForgeryPost(Url.Action("Update"), FormMethod.Post, new { @class = "inline link" })) {
             @Html.Hidden("themeId", (string)theme.Descriptor.Id)
+            @Html.Hidden("name", (string)name)
             <button type="submit" class="update">@T("Update")</button> <br />
         }
     }

@@ -6,5 +6,6 @@ namespace Orchard.Themes.ViewModels {
         public bool InstallThemes { get; set; }
         public ThemeEntry CurrentTheme { get; set; }
         public IEnumerable<ThemeEntry> Themes { get; set; }
+        public string Name { get; set; }
     }
 }

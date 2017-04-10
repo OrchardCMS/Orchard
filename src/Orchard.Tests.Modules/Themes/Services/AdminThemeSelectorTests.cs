@@ -2,10 +2,31 @@
 using NUnit.Framework;
 using Orchard.Tests.Stubs;
 using Orchard.UI.Admin;
-
-namespace Orchard.Tests.UI.Admin {
+using Orchard.Themes.Services;
+using Autofac;
+using Moq;
+using Orchard.Tests.Utility;
+namespace Orchard.Tests.Modules.Themes.Services
+{
     [TestFixture]
-    public class AdminThemeSelectorTests {
+    public class AdminThemeSelectorTests : DatabaseEnabledTestsBase
+    {
+        private IAdminThemeService _adminThemeService;
+        public override void Register(ContainerBuilder builder)
+        { 
+
+            builder.RegisterAutoMocking(MockBehavior.Loose);
+        
+            builder.RegisterType<AdminThemeService>().As<IAdminThemeService>();
+           
+        }
+        public override void Init()
+        {
+            base.Init();
+
+            _adminThemeService = _container.Resolve<IAdminThemeService>();
+ 
+        }
         [Test]
         public void IsAppliedShouldBeFalseByDefault() {
             var context = new RequestContext(new StubHttpContext(), new RouteData());
@@ -36,7 +57,7 @@ namespace Orchard.Tests.UI.Admin {
         public void ThemeResultShouldBeNullNormally() {
             var context = new RequestContext(new StubHttpContext(), new RouteData());
 
-            var selector = new AdminThemeSelector();
+            var selector = new AdminThemeSelector(_adminThemeService);
             var result = selector.GetTheme(context);
             Assert.That(result, Is.Null);
         }
@@ -48,7 +69,7 @@ namespace Orchard.Tests.UI.Admin {
 
             AdminFilter.Apply(context);
 
-            var selector = new AdminThemeSelector();
+            var selector = new AdminThemeSelector(_adminThemeService);
             var result = selector.GetTheme(context);
             Assert.That(result, Is.Not.Null);
             Assert.That(result.ThemeName, Is.EqualTo("TheAdmin"));

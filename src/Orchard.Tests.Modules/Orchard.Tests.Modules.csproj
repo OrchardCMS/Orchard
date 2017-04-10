@@ -233,6 +233,7 @@
     <Compile Include="Stubs\MessageChannelSelectorStub.cs" />
     <Compile Include="Stubs\ShapeDisplayStub.cs" />
     <Compile Include="Tags\Services\TagsServiceTests.cs" />
+    <Compile Include="Themes\Services\AdminThemeSelectorTests.cs" />
     <Compile Include="Themes\Services\ThemeServiceTests.cs" />
     <Compile Include="Users\Controllers\AccountControllerTests.cs" />
     <Compile Include="Users\Services\UserServiceTests.cs" />

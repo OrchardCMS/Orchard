@@ -6,5 +6,10 @@ namespace Orchard.Themes.Models {
             get { return this.Retrieve(x => x.CurrentThemeName); }
             set { this.Store(x => x.CurrentThemeName, value); }
         }
+        public string CurrentAdminThemeName
+        {
+            get { return this.Retrieve(x => x.CurrentAdminThemeName); }
+            set { this.Store(x => x.CurrentAdminThemeName, value); }
+        }
     }
 }

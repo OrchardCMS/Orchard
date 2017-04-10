@@ -34,7 +34,7 @@ namespace Orchard.Themes.Controllers {
         private readonly IPreviewTheme _previewTheme;
         private readonly IThemeService _themeService;
         private readonly ShellSettings _shellSettings;
-
+        private readonly IEnumerable<IThemeSelector> _themeSelectors;
         private const string AlreadyEnabledFeatures = "Orchard.Themes.AlreadyEnabledFeatures";
 
         public AdminController(
@@ -47,6 +47,7 @@ namespace Orchard.Themes.Controllers {
             ShellDescriptor shellDescriptor,
             IPreviewTheme previewTheme, 
             IThemeService themeService,
+            IEnumerable<IThemeSelector> themeSelectors,
             ShellSettings shellSettings) {
             Services = services;
 
@@ -59,7 +60,7 @@ namespace Orchard.Themes.Controllers {
             _previewTheme = previewTheme;
             _themeService = themeService;
             _shellSettings = shellSettings;
-            
+            _themeSelectors = themeSelectors;
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
         }
@@ -68,36 +69,44 @@ namespace Orchard.Themes.Controllers {
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
-        public ActionResult Index() {
+        public ActionResult Index(string name) {
             bool installThemes = 
                 _featureManager.GetEnabledFeatures().FirstOrDefault(f => f.Id == "PackagingServices") != null 
                 && Services.Authorizer.Authorize(StandardPermissions.SiteOwner) // only site owners
                 && _shellSettings.Name == ShellSettings.DefaultName; // of the default tenant
 
             var featuresThatNeedUpdate = _dataMigrationManager.GetFeaturesThatNeedUpdate();
-
+            var selector = _themeSelectors.FirstOrDefault(x => x.Name == name);
+            if (selector == null)
+                return HttpNotFound("Can't found the name");
             ThemeEntry currentTheme = null;
-            ExtensionDescriptor currentThemeDescriptor = _siteThemeService.GetSiteTheme();
+            ExtensionDescriptor currentThemeDescriptor = _extensionManager.GetExtension(selector.GetTheme());// _siteThemeService.GetSiteTheme();
             if (currentThemeDescriptor != null) {
                 currentTheme = new ThemeEntry(currentThemeDescriptor);
             }
 
             IEnumerable<ThemeEntry> themes = _extensionManager.AvailableExtensions()
                 .Where(extensionDescriptor => {
-                        bool hidden = false;
+                       // bool hidden = false;
                         string tags = extensionDescriptor.Tags;
-                        if (tags != null) {
-                            hidden = tags.Split(',').Any(t => t.Trim().Equals("hidden", StringComparison.OrdinalIgnoreCase));
-                        }
+                       // if (tags != null) {
+                       //     hidden = tags.Split(',').Any(t => t.Trim().Equals("hidden", StringComparison.OrdinalIgnoreCase));
+                        //}
 
                         // is the theme allowed for this tenant ?
                         bool allowed = _shellSettings.Themes.Length == 0 || _shellSettings.Themes.Contains(extensionDescriptor.Id);
 
-                        return !hidden && allowed &&
-                                DefaultExtensionTypes.IsTheme(extensionDescriptor.ExtensionType) &&
-                                (currentTheme == null ||
-                                !currentTheme.Descriptor.Id.Equals(extensionDescriptor.Id));
-                    })
+                    bool isTheme = DefaultExtensionTypes.IsTheme(extensionDescriptor.ExtensionType);
+                    bool notCuurent=  (currentTheme == null ||!currentTheme.Descriptor.Id.Equals(extensionDescriptor.Id));
+                    if (string.IsNullOrEmpty(selector.Tag))
+                    {
+                        return isTheme&&notCuurent;
+                    }
+                    else
+                    {
+                        return isTheme&&notCuurent && tags.Split(',').Any(x => string.Equals(x.Trim(), selector.Tag, StringComparison.OrdinalIgnoreCase));
+                    }
+                })
                 .Select(extensionDescriptor => {
                         ThemeEntry themeEntry = new ThemeEntry(extensionDescriptor) {
                             NeedsUpdate = featuresThatNeedUpdate.Contains(extensionDescriptor.Id),
@@ -120,7 +129,7 @@ namespace Orchard.Themes.Controllers {
             return View(new ThemesIndexViewModel {
                 CurrentTheme = currentTheme,
                 InstallThemes = installThemes,
-                Themes = themes
+                Themes = themes, Name=name
             });
         }
 
@@ -158,7 +167,7 @@ namespace Orchard.Themes.Controllers {
                 _siteThemeService.SetSiteTheme(themeId);
             }
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Admin", new { name = "site" });
         }
 
         [HttpPost, ActionName("Preview"), FormValueRequired("submit.Cancel")]
@@ -180,11 +189,11 @@ namespace Orchard.Themes.Controllers {
 
             _previewTheme.SetPreviewTheme(null);
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Admin", new { name = "site" });
         }
 
         [HttpPost]
-        public ActionResult Enable(string themeId) {
+        public ActionResult Enable(string name,string themeId) {
             if (!Services.Authorizer.Authorize(Permissions.ApplyTheme, T("Couldn't enable the theme")))
                 return new HttpUnauthorizedResult();
 
@@ -196,11 +205,11 @@ namespace Orchard.Themes.Controllers {
                 _themeService.EnableThemeFeatures(themeId);
             }
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Admin", new { name = name });
         }
 
         [HttpPost]
-        public ActionResult Disable(string themeId) {
+        public ActionResult Disable(string name,string themeId) {
             if (!Services.Authorizer.Authorize(Permissions.ApplyTheme, T("Couldn't disable the current theme")))
                 return new HttpUnauthorizedResult();
 
@@ -212,14 +221,15 @@ namespace Orchard.Themes.Controllers {
                 _themeService.DisableThemeFeatures(themeId);
             }
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Index","Admin", new { name = name });
         }
 
         [HttpPost]
-        public ActionResult Activate(string themeId) {
+        public ActionResult Activate(string name,string themeId) {
             if (!Services.Authorizer.Authorize(Permissions.ApplyTheme, T("Couldn't set the current theme")))
                 return new HttpUnauthorizedResult();
-
+            if (string.IsNullOrEmpty(name))
+                return HttpNotFound();
             if (_extensionManager.AvailableExtensions()
                 .FirstOrDefault(extension => DefaultExtensionTypes.IsTheme(extension.ExtensionType) && extension.Id.Equals(themeId)) == null) {
 
@@ -230,14 +240,18 @@ namespace Orchard.Themes.Controllers {
             }
             else {
                 _themeService.EnableThemeFeatures(themeId);
-                _siteThemeService.SetSiteTheme(themeId);
+                // _siteThemeService.SetSiteTheme(themeId);
+                var selector = _themeSelectors.FirstOrDefault(x => x.Name == name);
+                if (selector == null)
+                    return HttpNotFound("Can't found the name");
+                selector.SetTheme(themeId);
             }
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Index","Admin", new { name = name });
         }
 
         [HttpPost]
-        public ActionResult Update(string themeId) {
+        public ActionResult Update(string name,string themeId) {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Couldn't update theme")))
                 return new HttpUnauthorizedResult();
 
@@ -253,7 +267,7 @@ namespace Orchard.Themes.Controllers {
                 Services.Notifier.Error(T("An error occurred while updating the theme {0}: {1}", themeId, exception.Message));
             }
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Admin", new { name = name });
         }
 
         [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
