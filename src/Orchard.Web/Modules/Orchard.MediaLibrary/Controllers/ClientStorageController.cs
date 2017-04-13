@@ -11,6 +11,7 @@ using Orchard.MediaLibrary.Models;
 using Orchard.Localization;
 using System.Linq;
 using Orchard.FileSystems.Media;
+using Orchard.Logging;
 
 namespace Orchard.MediaLibrary.Controllers {
     [Admin, Themed(false)]
@@ -26,10 +27,12 @@ namespace Orchard.MediaLibrary.Controllers {
             _mimeTypeProvider = mimeTypeProvider;
             Services = orchardServices;
             T = NullLocalizer.Instance;
+            Logger = NullLogger.Instance;
         }
 
         public IOrchardServices Services { get; set; }
         public Localizer T { get; set; }
+        public ILogger Logger { get; set; }
 
         public ActionResult Index(string folderPath, string type, int? replaceId = null) {
             if (!Services.Authorizer.Authorize(Permissions.ManageOwnMedia)) {
@@ -110,6 +113,7 @@ namespace Orchard.MediaLibrary.Controllers {
                     });
                 }
                 catch (Exception ex) {
+                    Logger.Error(ex, "Unexpected exception when uploading a media.");
                     statuses.Add(new {
                         error = T(ex.Message).Text,
                         progress = 1.0,
@@ -189,6 +193,8 @@ namespace Orchard.MediaLibrary.Controllers {
                     });
                 }
                 catch (Exception ex) {
+                    Logger.Error(ex, "Unexpected exception when uploading a media.");
+
                     statuses.Add(new {
                         error = T(ex.Message).Text,
                         progress = 1.0,
