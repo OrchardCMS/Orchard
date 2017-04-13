@@ -18,7 +18,7 @@ namespace Orchard.OpenId.OwinMiddlewares {
         public IEnumerable<OwinMiddlewareRegistration> GetOwinMiddlewares() {
             var settings = _workContextAccessor.GetContext().CurrentSite.As<FacebookSettingsPart>();
 
-            if (settings == null || !settings.IsValid) {
+            if (settings == null || !settings.IsValid()) {
                 return Enumerable.Empty<OwinMiddlewareRegistration>();
             }
 

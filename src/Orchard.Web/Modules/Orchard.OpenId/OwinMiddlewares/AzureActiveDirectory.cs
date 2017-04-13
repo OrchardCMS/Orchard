@@ -52,7 +52,7 @@ namespace Orchard.OpenId.OwinMiddlewares {
             var azureWebSiteProtectionEnabled = false;
             var azureUseAzureGraphApi = false;
 
-            if (settings == null || !settings.IsValid) {
+            if (settings == null || !settings.IsValid()) {
                 return Enumerable.Empty<OwinMiddlewareRegistration>();
             }
 

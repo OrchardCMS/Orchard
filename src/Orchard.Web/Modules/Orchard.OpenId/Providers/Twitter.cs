@@ -42,7 +42,7 @@ namespace Orchard.OpenId.Providers {
                 site = scope.Resolve<ISiteService>().GetSiteSettings();
                 settings = site.As<TwitterSettingsPart>();
 
-                return (settings != null && settings.IsValid);
+                return (settings != null && settings.IsValid());
             }
             catch (Exception) {
                 return false;
