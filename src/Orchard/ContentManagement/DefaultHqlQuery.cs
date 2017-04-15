@@ -5,6 +5,8 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using NHibernate;
+using NHibernate.Engine;
+using NHibernate.Hql.Ast.ANTLR;
 using NHibernate.Transform;
 using Orchard.ContentManagement.Records;
 using Orchard.Data.Providers;
@@ -27,6 +29,8 @@ namespace Orchard.ContentManagement {
         protected readonly List<Tuple<IAlias, Action<IHqlSortFactory>>> _sortings = new List<Tuple<IAlias, Action<IHqlSortFactory>>>();
 
         public IContentManager ContentManager { get; private set; }
+
+        static readonly private ASTQueryTranslatorFactory TranslatorFactory = new ASTQueryTranslatorFactory();
 
         public DefaultHqlQuery(
             IContentManager contentManager, 
@@ -216,8 +220,7 @@ namespace Orchard.ContentManagement {
 
         public string ToSql(bool count) {
             var sessionImp = (ISessionImplementor)_session;
-            var translatorFactory = new ASTQueryTranslatorFactory();
-            var translators = translatorFactory.CreateQueryTranslators(ToHql(count), null, false, sessionImp.EnabledFilters, sessionImp.Factory);
+            var translators = TranslatorFactory.CreateQueryTranslators(ToHql(count), null, false, sessionImp.EnabledFilters, sessionImp.Factory);
             return translators[0].SQLString;
         }
 
