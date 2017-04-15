@@ -121,7 +121,8 @@ namespace Orchard.Taxonomies.Services {
                 DeleteTerm(term);
             }
 
-            _contentDefinitionManager.DeleteTypeDefinition(taxonomy.TermTypeName);
+            if (_contentManager.Query<TaxonomyPart, TaxonomyPartRecord>().Where(x => x.Id != taxonomy.Id && x.TermTypeName == taxonomy.TermTypeName).Count() == 0)
+                _contentDefinitionManager.DeleteTypeDefinition(taxonomy.TermTypeName);
         }
 
         public string GenerateTermTypeName(string taxonomyName) {

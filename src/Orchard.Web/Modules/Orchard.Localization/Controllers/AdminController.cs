@@ -58,21 +58,21 @@ namespace Orchard.Localization.Controllers
             // pass a dummy content to the authorization check to check for "own" variations
             var dummyContent = _contentManager.New(masterContentItem.ContentType);
 
-            var contentItemTranslation = _contentManager.Clone(masterContentItem);
-
-            if (!Services.Authorizer.Authorize(Permissions.EditContent, contentItemTranslation, T("Couldn't create translated content")))
+            if (!Services.Authorizer.Authorize(Permissions.EditContent, dummyContent, T("Couldn't create translated content")))
                 return new HttpUnauthorizedResult();
+
+            var contentItemTranslation = _contentManager.Clone(masterContentItem);
 
             var localizationPart = contentItemTranslation.As<LocalizationPart>();
             if(localizationPart != null) {
-                localizationPart.MasterContentItem = masterContentItem;
+                localizationPart.MasterContentItem = masterLocalizationPart.MasterContentItem == null ? masterContentItem : masterLocalizationPart.MasterContentItem;
                 localizationPart.Culture = string.IsNullOrWhiteSpace(to) ? null : _cultureManager.GetCultureByName(to);
             }
 
             Services.Notifier.Success(T("Successfully cloned. The translated content was saved as a draft."));
 
-            var adminRouteValues = _contentManager.GetItemMetadata(contentItemTranslation).AdminRouteValues;
-            return RedirectToRoute(adminRouteValues);
+            var editorRouteValues = _contentManager.GetItemMetadata(contentItemTranslation).EditorRouteValues;
+            return RedirectToRoute(editorRouteValues);
         }
     }
 }

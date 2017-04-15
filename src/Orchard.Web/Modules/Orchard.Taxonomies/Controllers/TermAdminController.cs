@@ -14,20 +14,24 @@ using Orchard.Taxonomies.Helpers;
 using Orchard.UI.Navigation;
 using Orchard.Settings;
 using Orchard.DisplayManagement;
+using Orchard.Taxonomies.Events;
 
 namespace Orchard.Taxonomies.Controllers {
     [ValidateInput(false), Admin]
     public class TermAdminController : Controller, IUpdateModel {
         private readonly ITaxonomyService _taxonomyService;
         private readonly ISiteService _siteService;
+        private readonly ITermLocalizationEventHandler _termLocalizationEventHandler;
 
         public TermAdminController(IOrchardServices services,
             ITaxonomyService taxonomyService,
             ISiteService siteService,
-            IShapeFactory shapeFactory) {
+            IShapeFactory shapeFactory,
+            ITermLocalizationEventHandler termLocalizationEventHandler) {
             Services = services;
             _siteService = siteService;
             _taxonomyService = taxonomyService;
+            _termLocalizationEventHandler = termLocalizationEventHandler;
 
             T = NullLocalizer.Instance;
             Shape = shapeFactory;
@@ -167,9 +171,14 @@ namespace Orchard.Taxonomies.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.EditTerm, T("Not allowed to move terms")))
                 return new HttpUnauthorizedResult();
 
+            MoveTermsContext context = new MoveTermsContext();
+            context.Terms = ResolveTermIds(termIds);
+            context.ParentTerm = _taxonomyService.GetTerm(selectedTermId);
+            _termLocalizationEventHandler.MovingTerms(context);
+
             var taxonomy = _taxonomyService.GetTaxonomy(taxonomyId);
             var parentTerm = _taxonomyService.GetTerm(selectedTermId);
-            var terms = ResolveTermIds(termIds);
+            var terms = context.Terms;
 
             foreach (var term in terms) {
                 _taxonomyService.MoveTerm(taxonomy, term, parentTerm);

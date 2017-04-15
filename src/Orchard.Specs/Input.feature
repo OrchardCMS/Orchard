@@ -113,7 +113,7 @@ Scenario: Creating and using Input fields
         And I fill in 
             | name                | value |
             | Event.Contact.Value |       |
-        And I hit "Save"
+        And I hit "Save Draft"
     Then I should see "The Contact field is required."
     
     # Creating an Event content item
@@ -122,9 +122,9 @@ Scenario: Creating and using Input fields
     When I fill in 
             | name                | value                      |
             | Event.Contact.Value | contact@orchardproject.net |
-        And I hit "Save"
+        And I hit "Save Draft"
         And I am redirected
-    Then I should see "Your Event has been created."
+    Then I should see "The Event has been created as draft."
     When I go to "Admin/Contents/List"
     Then I should see "Contact:" 
         And I should see "contact@orchardproject.net"

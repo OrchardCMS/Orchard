@@ -37,9 +37,9 @@ Scenario: Creating and using numeric fields
     When I fill in 
             | name               | value |
             | Event.Guests.Value | 3     |
-        And I hit "Save"
+        And I hit "Save Draft"
         And I am redirected
-    Then I should see "Your Event has been created."
+    Then I should see "The Event has been created as draft."
     When I go to "Admin/Contents/List"
     Then I should see "Guests:" 
         And I should see "3"
@@ -63,7 +63,7 @@ Scenario: Creating and using numeric fields
         And I fill in 
             | name               | value |
             | Event.Guests.Value |       |
-        And I hit "Save"
+        And I hit "Save Draft"
     Then I should see "The Guests field is required."
 
     # The value should be bound
@@ -79,13 +79,13 @@ Scenario: Creating and using numeric fields
     When I fill in 
             | name               | value |
             | Event.Guests.Value | -20   |
-        And I hit "Save"
+        And I hit "Save Draft"
     Then I should see "The value must be greater than -10"
     When I go to "Admin/Contents/Create/Event"
         And I fill in 
             | name               | value |
             | Event.Guests.Value | 101   |
-        And I hit "Save"
+        And I hit "Save Draft"
     Then I should see "The value must be less than 100"
     
     # Settings should be validated
@@ -94,7 +94,7 @@ Scenario: Creating and using numeric fields
             | name                                   | value |
             | Fields[0].NumericFieldSettings.Minimum | a     |
             | Fields[0].NumericFieldSettings.Maximum | b     |
-        And I hit "Save"
+        And I hit "Save Draft"
     Then I should see "The value &#39;a&#39; is not valid for Minimum."
         And I should see "The value &#39;b&#39; is not valid for Maximum."
 
@@ -103,7 +103,7 @@ Scenario: Creating and using numeric fields
         And I fill in 
             | name               | value |
             | Event.Guests.Value |   a   |
-        And I hit "Save"
+        And I hit "Save Draft"
     Then I should see "Guests is an invalid number"
 
     # The default value should be proposed on creation

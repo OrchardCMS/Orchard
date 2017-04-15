@@ -18,7 +18,7 @@ namespace Orchard.Localization.Services {
             Logger = NullLogger.Instance;
         }
 
-        public ILogger Logger { get; }
+        public ILogger Logger { get; private set; }
 
         public void ParseLocalizationStream(string text, IDictionary<string, string> translations, bool merge) {
             var reader = new StringReader(text);

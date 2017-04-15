@@ -86,7 +86,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 9
         testRunner.And("I fill in", ((string)(null)), table1, "And ");
 #line 12
-        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I hit \"Publish\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 13
         testRunner.And("I go to \"admin/blogs\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 14
@@ -106,7 +106,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 16
         testRunner.And("I fill in", ((string)(null)), table2, "And ");
 #line 20
-        testRunner.And("I hit \"Publish Now\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I hit \"Publish\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 21
         testRunner.And("I go to \"my-blog/my-post\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden

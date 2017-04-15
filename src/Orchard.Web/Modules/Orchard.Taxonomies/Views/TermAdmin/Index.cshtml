@@ -44,6 +44,9 @@
                         @* Tabs for levels *@ @for (var i = 1; i <= termEntry.GetLevels(); i++) { <span class="gap">&nbsp;</span> }
                         <input type="checkbox" value="true" name="@Html.NameOf(m => m.Terms[ti].IsChecked)" />
                         @Html.ItemDisplayLink(termEntry.Name, termEntry.ContentItem)
+                        @if (termEntry.HasDraft) {
+                            <text>@T(" (Draft)")</text>
+                        }
                     </td>
                     <td>
                         @if (Authorizer.Authorize(Permissions.EditTerm)) {

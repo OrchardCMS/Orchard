@@ -38,7 +38,7 @@ Scenario: Creating and using Date fields
             | name                        | value      |
             | Event.EventDate.Editor.Date | 31/01/2012 |
             | Event.EventDate.Editor.Time | 12:00 AM   |
-        And I hit "Save"
+        And I hit "Save Draft"
     Then I should see "Date of the event could not be parsed as a valid date and time"
 
     # Creating an Event content item
@@ -50,9 +50,9 @@ Scenario: Creating and using Date fields
         And I fill in 
             | name                        | value    |
             | Event.EventDate.Editor.Time | 12:00 AM |
-        And I hit "Save"
+        And I hit "Save Draft"
         And I am redirected
-    Then I should see "Your Event has been created."
+    Then I should see "The Event has been created as draft."
     When I go to "Admin/Contents/List"
     Then I should see "Date of the event" 
         And I should see "1/31/2012 12:00"
@@ -99,20 +99,20 @@ Scenario: Creating and using Date fields
             | name                        | value      |
             | Event.EventDate.Editor.Date | 01/31/2012 |
             | Event.EventDate.Editor.Time | 12:00 AM   |
-        And I hit "Save"
+        And I hit "Save Draft"
         And I am redirected
-    Then I should see "Your Event has been created."
+    Then I should see "The Event has been created as draft."
     When I go to "Admin/Contents/Create/Event"
      And I fill in 
             | name                        | value      |
             | Event.EventDate.Editor.Date | 01/31/2012 |
-        And I hit "Save"
+        And I hit "Save Draft"
     Then I should see "Date of the event is required."
     When I go to "Admin/Contents/Create/Event"
      And I fill in 
             | name                        | value    |
             | Event.EventDate.Editor.Time | 12:00 AM |
-        And I hit "Save"
+        And I hit "Save Draft"
     Then I should see "Date of the event is required."
 
     # Required & Date only
@@ -124,7 +124,7 @@ Scenario: Creating and using Date fields
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "Event.EventDate.Editor.Date"
-    When  I hit "Save"
+    When  I hit "Save Draft"
     Then I should see "Date of the event is required."
 
     # Required & Time only
@@ -136,7 +136,7 @@ Scenario: Creating and using Date fields
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "Event.EventDate.Editor.Date"
-    When I hit "Save"
+    When I hit "Save Draft"
     Then I should see "Date of the event is required."
 
     # The default value should be proposed on creation
@@ -149,9 +149,9 @@ Scenario: Creating and using Date fields
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "Event.EventDate.Editor.Date"
-    When I hit "Save"
+    When I hit "Save Draft"
         And I am redirected
-    Then I should see "Your Event has been created."
+    Then I should see "The Event has been created."
     When I go to "Admin/Contents/List"
     Then I should see "Date of the event" 
         And I should see "1/31/2016 10:00"
@@ -198,13 +198,13 @@ Scenario: Creating and using date time fields in another culture
             | name                        | value      |
             | Event.EventDate.Editor.Date | 01/31/2012 |
             | Event.EventDate.Editor.Time | 12:00 AM   |
-        And I hit "Save"
+        And I hit "Save Draft"
     Then I should see "Date of the event could not be parsed as a valid date and time"
     When I go to "Admin/Contents/Create/Event"
         And I fill in 
             | name                        | value      |
             | Event.EventDate.Editor.Date | 31/01/2012 |
             | Event.EventDate.Editor.Time | 18:00      |
-        And I hit "Save"
+        And I hit "Save Draft"
         And I am redirected
-    Then I should see "Your Event has been created."
+    Then I should see "The Event has been created as draft."

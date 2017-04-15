@@ -93,12 +93,7 @@ namespace Orchard.Taxonomies.Drivers {
         }
 
         protected override DriverResult Editor(TermPart termPart, IUpdateModel updater, dynamic shapeHelper) {
-            if (updater.TryUpdateModel(termPart, Prefix, null, null)) {
-                var existing = _taxonomyService.GetTermByName(termPart.TaxonomyId, termPart.Name);
-                if (existing != null && existing.Record != termPart.Record && existing.Container.ContentItem.Record == termPart.Container.ContentItem.Record) {
-                    updater.AddModelError("Name", T("The term {0} already exists at this level", termPart.Name));
-                }
-            }
+            //Moved to TermPartHandler to work also with Taxonomy Localization feature
 
             return Editor(termPart, shapeHelper);
         }
@@ -149,6 +144,14 @@ namespace Orchard.Taxonomies.Drivers {
                 var pathContentItem = context.GetItemFromSession(identityPath);
                 part.Path += pathContentItem.Id + "/";
             }
+        }
+
+        protected override void Cloning(TermPart originalPart, TermPart clonePart, CloneContentContext context) {
+            clonePart.Count = originalPart.Count;
+            clonePart.Selectable = originalPart.Selectable;
+            clonePart.Weight = originalPart.Weight;
+            clonePart.TaxonomyId = originalPart.TaxonomyId;
+            clonePart.Path = originalPart.Path;
         }
     }
 }

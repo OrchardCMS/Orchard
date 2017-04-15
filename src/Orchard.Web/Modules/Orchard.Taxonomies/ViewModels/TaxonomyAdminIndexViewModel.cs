@@ -14,6 +14,7 @@ namespace Orchard.Taxonomies.ViewModels {
         public string Name { get; set; }
         public ContentItem ContentItem { get; set; }
         public bool IsChecked { get; set; }
+        public bool HasDraft { get; set; }
     }
 
     public enum TaxonomiesAdminIndexBulkAction {
