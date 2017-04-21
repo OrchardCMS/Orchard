@@ -29,5 +29,10 @@ namespace Orchard.Search.Models {
             get { return this.Retrieve(x => x.DisplayType, "Summary"); }
             set { this.Store(x => x.DisplayType, value); }
         }
+
+        public bool DoNotAllowAnonymousSearch {
+            get { return this.Retrieve(x => x.DoNotAllowAnonymousSearch); }
+            set { this.Store(x => x.DoNotAllowAnonymousSearch, value); }
+        }
     }
 }
