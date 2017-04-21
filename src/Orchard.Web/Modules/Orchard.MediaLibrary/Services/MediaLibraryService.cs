@@ -328,15 +328,16 @@ namespace Orchard.MediaLibrary.Services {
             Argument.ThrowIfNullOrEmpty(newFolderName, "newFolderName");
 
             try {
-                var segments = folderPath.Split(new char[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-                var newFolderPath = String.Join(Path.DirectorySeparatorChar.ToString(), segments.Take(segments.Length - 1).Union(new[] { newFolderName }));
+                var parentIndex = folderPath.LastIndexOfAny(new char[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar });
+                var parentPath = parentIndex > 0 ? folderPath.Substring(0, parentIndex) : String.Empty;
+                var newFolderPath = _storageProvider.Combine(parentPath, newFolderName);
 
                 var mediaParts = BuildGetMediaContentItemsQuery(_orchardServices.ContentManager, folderPath, true).List();
                 foreach (var mediaPart in mediaParts) {
                     mediaPart.FolderPath = newFolderPath + mediaPart.FolderPath.Substring(folderPath.Length);
                 }
 
-                _storageProvider.RenameFolder(folderPath, _storageProvider.Combine(Path.GetDirectoryName(folderPath), newFolderName));
+                _storageProvider.RenameFolder(folderPath, _storageProvider.Combine(parentPath, newFolderName));
             }
             catch (Exception) {
                 _orchardServices.TransactionManager.Cancel();
