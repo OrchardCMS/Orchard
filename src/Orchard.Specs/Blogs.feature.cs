@@ -748,7 +748,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 266
         testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 267
-    testRunner.Then("I should see \"The Blog Post has been created and published.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+    testRunner.Then("I should see \"Your Blog Post has been created.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 268
     testRunner.When("I go to \"my-blog\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 269
