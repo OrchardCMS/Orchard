@@ -247,7 +247,8 @@ namespace Orchard.Environment.Extensions.Folders {
                 Description = GetValue(manifest, FeatureDescriptionSection) ?? GetValue(manifest, DescriptionSection) ?? string.Empty,
                 Dependencies = ParseFeatureDependenciesEntry(GetValue(manifest, DependenciesSection)),
                 Extension = extensionDescriptor,
-                Category = GetValue(manifest, CategorySection)
+                Category = GetValue(manifest, CategorySection),
+                LifecycleStatus = GetValue(manifest, LifecycleStatusSection, extensionDescriptor.LifecycleStatus)
             };
 
             featureDescriptors.Add(defaultFeature);
@@ -306,6 +307,12 @@ namespace Orchard.Environment.Extensions.Folders {
                                         break;
                                     case DependenciesSection:
                                         featureDescriptor.Dependencies = ParseFeatureDependenciesEntry(featureField[1]);
+                                        break;
+                                    case LifecycleStatusSection:
+                                        LifecycleStatus lifecycleStatus;
+                                        featureDescriptor.LifecycleStatus = Enum.TryParse(featureField[1], out lifecycleStatus)
+                                            ? lifecycleStatus
+                                            : extensionDescriptor.LifecycleStatus;
                                         break;
                                 }
                             }
