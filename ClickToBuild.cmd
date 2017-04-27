@@ -1,15 +1,26 @@
-for /f "usebackq tokens=*" %%i in (`lib\vswhere\vswhere -latest -version "[15.0,16.0)" -requires Microsoft.Component.MSBuild -property installationPath`) do (
-  set InstallDir=%%i
+@echo off
+
+for /f "usebackq tokens=1* delims=: " %%i in (`lib\vswhere\vswhere -latest -version "[15.0,16.0)" -requires Microsoft.Component.MSBuild`) do (
+  if /i "%%i"=="installationPath" (
+	set InstallDir=%%j
+	if exist "%InstallDir%\MSBuild\15.0\Bin\MSBuild.exe" (
+		echo "Using MSBuild from Visual Studio 2017"
+		set msbuild="%InstallDir%\MSBuild\15.0\Bin\MSBuild.exe"
+		goto build
+	)
+  )
 )
 
-
 FOR %%b in (
-       "%InstallDir%\Common7\Tools\VsMSBuildCmd.bat"
-       "%VS140COMNTOOLS%\Common7\Tools\vsvars32.bat"
+       "%VS140COMNTOOLS%\vsvars32.bat"
+       "%VS120COMNTOOLS%\vsvars32.bat"
+       "%VS110COMNTOOLS%\vsvars32.bat"
     ) do (
     if exist %%b ( 
-       call %%b
-       goto build
+		echo "Using MSBuild from %%b"
+		call %%b
+		set msbuild="msbuild"
+		goto build
     )
 )
 
@@ -27,6 +38,8 @@ IF "%solution%" == "" SET solution=src\Orchard.sln
 
 lib\nuget\nuget.exe restore %solution%
 
-msbuild /t:%target% %project% /p:Solution=%solution% /m
+%msbuild% /t:%target% %project% /p:Solution=%solution% /m
+
+:end
 
 pause
