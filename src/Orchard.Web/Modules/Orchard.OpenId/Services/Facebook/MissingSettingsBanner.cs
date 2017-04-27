@@ -27,7 +27,7 @@ namespace Orchard.Azure.Authentication.Services.Facebook {
             var workContext = _orchardServices.WorkContext;
             var settings = workContext.CurrentSite.As<FacebookSettingsPart>();
 
-            if (settings == null || !settings.IsValid) {
+            if (settings == null || !settings.IsValid()) {
                 var url = _urlHelper.Action("OpenId", "Admin", new { Area = "Settings" });
                 yield return new NotifyEntry { Message = T("The <a href=\"{0}\">Facebook settings</a> need to be configured.", url), Type = NotifyType.Warning };
             }

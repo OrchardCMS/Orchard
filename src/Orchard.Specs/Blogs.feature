@@ -7,7 +7,7 @@ Scenario: In the admin (menu) there is a link to create a Blog
     Given I have installed Orchard
     When I go to "admin"
     Then I should see "<a[^>]*href="/Admin/Blogs/Create"[^>]*>Blog</a>"
-    
+
 Scenario: I can create a new blog and blog post
     Given I have installed Orchard
     When I go to "admin/blogs/create"
@@ -92,7 +92,7 @@ Scenario: When viewing a blog the user agent is given an RSS feed of the blog's 
         And I am redirected
         And I go to "my-blog/my-post"
     Then I should see "<link rel="alternate" type="application/rss\+xml" title="My Blog" href="/rss\?containerid=\d+" />"
-    
+
 Scenario: Enabling remote blog publishing inserts the appropriate metaweblogapi markup into the blog's page
     Given I have installed Orchard
         And I have enabled "XmlRpc"
@@ -264,7 +264,7 @@ Scenario: I can create browse blog posts on several pages
             | Title.Title | My Post 12 |
         And I hit "Publish"
         And I am redirected
-    Then I should see "The Blog Post has been created and published."
+    Then I should see "Your Blog Post has been created."
     When I go to "my-blog"
     Then I should see "<h1[^>]*>.*?My Blog.*?</h1>"
         And I should see "<h1[^>]*>.*?My Post 12.*?</h1>"

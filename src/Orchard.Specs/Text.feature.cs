@@ -205,7 +205,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 72
         testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 73
-    testRunner.Then("I should see \"The Event has been created as draft.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+    testRunner.Then("I should see \"The Event has been created as a draft.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 74
         testRunner.And("I should see \"Orchard Harvest 2015\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 77

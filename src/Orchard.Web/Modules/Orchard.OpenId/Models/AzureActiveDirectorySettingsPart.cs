@@ -71,25 +71,22 @@ namespace Orchard.OpenId.Models {
             set { this.Store(x => x.AppKey, value); }
         }
 
-        public string GraphApiKey
-        {
+        public string GraphApiKey {
             get { return this.Retrieve(x => x.GraphApiKey); }
             set { this.Store(x => x.GraphApiKey, value); }
         }
 
-        public bool IsValid {
-            get {
-                if (String.IsNullOrWhiteSpace(Tenant) ||
-                    String.IsNullOrWhiteSpace(ClientId) ||
-                    String.IsNullOrWhiteSpace(LogoutRedirectUri) ||
-                    String.IsNullOrWhiteSpace(ServiceResourceID) ||
-                    String.IsNullOrWhiteSpace(AppKey)) {
+        public bool IsValid() {
+            if (String.IsNullOrWhiteSpace(Tenant) ||
+                String.IsNullOrWhiteSpace(ClientId) ||
+                String.IsNullOrWhiteSpace(LogoutRedirectUri) ||
+                String.IsNullOrWhiteSpace(ServiceResourceID) ||
+                String.IsNullOrWhiteSpace(AppKey)) {
 
-                    return false;
-                }
-
-                return true;
+                return false;
             }
+
+            return true;
         }
 
         public Dictionary<string, string> ServiceResourceIDs {

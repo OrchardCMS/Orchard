@@ -16,18 +16,16 @@ namespace Orchard.OpenId.Models {
             set { this.Store(x => x.AppSecret, value); }
         }
 
-        public bool IsValid {
-            get {
-                if (String.IsNullOrWhiteSpace(AppId) ||
-                    String.CompareOrdinal(AppId, Constants.Facebook.DefaultAppId) == 0 ||
-                    String.IsNullOrWhiteSpace(AppSecret) ||
-                    String.CompareOrdinal(AppSecret, Constants.Facebook.DefaultAppSecret) == 0) {
+        public bool IsValid() {
+            if (String.IsNullOrWhiteSpace(AppId) ||
+                String.CompareOrdinal(AppId, Constants.Facebook.DefaultAppId) == 0 ||
+                String.IsNullOrWhiteSpace(AppSecret) ||
+                String.CompareOrdinal(AppSecret, Constants.Facebook.DefaultAppSecret) == 0) {
 
-                    return false;
-                }
-
-                return true;
+                return false;
             }
+
+            return true;
         }
     }
 }

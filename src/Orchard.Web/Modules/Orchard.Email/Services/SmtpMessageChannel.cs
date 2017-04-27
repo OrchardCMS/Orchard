@@ -121,7 +121,6 @@ namespace Orchard.Email.Services {
                         mailMessage.ReplyToList.Add(new MailAddress(recipient));
                     }
                 }
-
                 foreach (var attachmentPath in emailMessage.Attachments) {
                     if (File.Exists(attachmentPath)) {
                         mailMessage.Attachments.Add(new Attachment(attachmentPath));
@@ -130,6 +129,15 @@ namespace Orchard.Email.Services {
                         throw new FileNotFoundException(T("One or more attachments not found.").Text);
                     }
                 }
+
+                if (parameters.ContainsKey("NotifyReadEmail")) {
+                    if (parameters["NotifyReadEmail"] is bool) {
+                        if ((bool)(parameters["NotifyReadEmail"])) {
+                            mailMessage.Headers.Add("Disposition-Notification-To", mailMessage.From.ToString());
+                        }
+                    }
+                }
+
                 _smtpClientField.Value.Send(mailMessage);
             }
             catch (Exception e) {

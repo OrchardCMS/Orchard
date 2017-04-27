@@ -43,7 +43,7 @@ namespace Orchard.OpenId.Providers {
                 site = scope.Resolve<ISiteService>().GetSiteSettings();
                 settings = site.As<GoogleSettingsPart>();
 
-                return (settings != null && settings.IsValid);
+                return (settings != null && settings.IsValid());
             }
             catch (Exception) {
                 return false;
