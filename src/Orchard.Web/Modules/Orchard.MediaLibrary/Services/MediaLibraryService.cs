@@ -337,7 +337,7 @@ namespace Orchard.MediaLibrary.Services {
                     mediaPart.FolderPath = newFolderPath + mediaPart.FolderPath.Substring(folderPath.Length);
                 }
 
-                _storageProvider.RenameFolder(folderPath, _storageProvider.Combine(parentPath, newFolderName));
+                _storageProvider.RenameFolder(folderPath, newFolderPath);
             }
             catch (Exception) {
                 _orchardServices.TransactionManager.Cancel();
