@@ -44,10 +44,17 @@ namespace Orchard.Tokens.Providers {
                 .Chain("HtmlEncode", "Text", HttpUtility.HtmlEncode)
                 .Token("JavaScriptEncode", HttpUtility.JavaScriptStringEncode)
                 .Chain("JavaScriptEncode", "Text", HttpUtility.JavaScriptStringEncode)
-                .Token("LineEncode", text => text.Replace(System.Environment.NewLine, "<br />"))
-                .Chain("LineEncode", "Text", text => text.Replace(System.Environment.NewLine, "<br />"))
+                .Token("LineEncode", text => ReplaceNewLineCharacters(text))
+                .Chain("LineEncode", "Text", text => ReplaceNewLineCharacters(text))
                 ;
 
+        }
+
+        private static string ReplaceNewLineCharacters(string text) {
+            return text
+                    .Replace("\r\n", "<br />")
+                    .Replace("\r", "<br />")
+                    .Replace("\n", "<br />");
         }
 
         private static string FilterTokenParam(string tokenName, string token) {
@@ -69,7 +76,7 @@ namespace Orchard.Tokens.Providers {
         }
 
         private static string Limit(string token, string param) {
-            if(String.IsNullOrEmpty(token)) {
+            if (String.IsNullOrEmpty(token)) {
                 return String.Empty;
             }
 
