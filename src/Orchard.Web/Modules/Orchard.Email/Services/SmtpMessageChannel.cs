@@ -57,7 +57,7 @@ namespace Orchard.Email.Services {
                 Attachments = (IEnumerable<string>)(parameters.ContainsKey("Attachments") ? parameters["Attachments"] : new List<string>())
             };
 
-            if (emailMessage.Recipients.Length == 0) {
+            if (string.IsNullOrWhiteSpace(emailMessage.Recipients) || emailMessage.Recipients.Length == 0) {
                 Logger.Error("Email message doesn't have any recipient");
                 return;
             }
