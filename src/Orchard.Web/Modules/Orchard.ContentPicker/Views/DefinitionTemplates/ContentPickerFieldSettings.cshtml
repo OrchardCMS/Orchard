@@ -31,3 +31,9 @@
         <span class="hint">@T("A comma separated value of all the content types or content parts to display.")</span>
     </div>
 </fieldset>
+<fieldset>
+    <div>
+        @Html.CheckBoxFor(m => m.ShowOnlyOwnContent) <label for="@Html.FieldIdFor(m => m.ShowOnlyOwnContent)" class="forcheckbox">@T("Only display current users content items.")</label>
+        <span class="hint">@T("Check to display only the current users content items.")</span>
+    </div>
+</fieldset>
