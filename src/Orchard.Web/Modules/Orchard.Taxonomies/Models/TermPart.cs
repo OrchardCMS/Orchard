@@ -51,6 +51,11 @@ namespace Orchard.Taxonomies.Models {
             set { Store(x => x.Weight, value); }
         }
 
+        public string FullWeight {
+            get { return Retrieve(x => x.FullWeight,""); }
+            set { Store(x => x.FullWeight, value); }
+        }
+
         public string FullPath { get { return String.Concat(Path, Id); } }
 
         public static IEnumerable<TermPart> Sort(IEnumerable<TermPart> terms) {

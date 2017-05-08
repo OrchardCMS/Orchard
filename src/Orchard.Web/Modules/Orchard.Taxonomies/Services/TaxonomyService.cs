@@ -167,6 +167,7 @@ namespace Orchard.Taxonomies.Services {
         public IEnumerable<TermPart> GetTerms(int taxonomyId) {
             var result = _contentManager.Query<TermPart, TermPartRecord>()
                 .Where(x => x.TaxonomyId == taxonomyId)
+                .OrderBy(x => x.FullWeight)
                 .List();
 
             return TermPart.Sort(result);
@@ -362,16 +363,28 @@ namespace Orchard.Taxonomies.Services {
             var children = GetChildren(term);
             term.Container = parentTerm == null ? taxonomy.ContentItem : parentTerm.ContentItem;
             ProcessPath(term);
+            string olfFullWeight = term.FullWeight;
+            ProcessFullWeight(term, parentTerm);
 
             var contentItem = _contentManager.Get(term.ContentItem.Id, VersionOptions.DraftRequired);
             _contentManager.Publish(contentItem);
 
             foreach (var childTerm in children) {
                 ProcessPath(childTerm);
-
+                childTerm.FullWeight = ProcessChildrenFullWeight(childTerm.FullWeight, term.FullWeight, olfFullWeight);
                 contentItem = _contentManager.Get(childTerm.ContentItem.Id, VersionOptions.DraftRequired);
                 _contentManager.Publish(contentItem);
             }
+        }
+
+        public void ProcessFullWeight(TermPart term, TermPart parentTerm) {
+            term.FullWeight = (parentTerm != null ? parentTerm.FullWeight : "") + term.Weight.ToString("D6") + "/";
+        }
+
+        public string ProcessChildrenFullWeight(string childrenFullWeight, string parentFullWeight, string parentOldFullWeight) {
+            int pos = childrenFullWeight.IndexOf(parentOldFullWeight);
+
+            return childrenFullWeight.Substring(0, pos) + parentFullWeight + childrenFullWeight.Substring(pos + parentOldFullWeight.Length);
         }
 
         public void ProcessPath(TermPart term) {
