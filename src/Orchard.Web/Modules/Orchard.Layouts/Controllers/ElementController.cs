@@ -151,7 +151,7 @@ namespace Orchard.Layouts.Controllers {
             if (contentId == null && contentType == null)
                 return DescribeElementsContext.Empty;
 
-            var part = contentId != null && contentId != 0 ? _contentManager.Get<ILayoutAspect>(contentId.Value)
+            var part = contentId != null && contentId != 0 ? _contentManager.Get<ILayoutAspect>(contentId.Value, VersionOptions.Latest)
                 ?? _contentManager.New<ILayoutAspect>(contentType)
                 : _contentManager.New<ILayoutAspect>(contentType);
 
