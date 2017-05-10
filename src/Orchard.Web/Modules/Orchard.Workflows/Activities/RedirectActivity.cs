@@ -26,7 +26,11 @@ namespace Orchard.Workflows.Activities {
 
         public override IEnumerable<LocalizedString> Execute(WorkflowContext workflowContext, ActivityContext activityContext) {
             var url = activityContext.GetState<string>("Url");
-            _wca.GetContext().HttpContext.Response.Redirect(url);
+            // See https://msdn.microsoft.com/en-us/library/t9dwyts4(v=vs.110).aspx and https://msdn.microsoft.com/en-us/library/a8wa7sdt(v=vs.110).aspx
+            // Redirect(url) forces a thread abort which forcibly ends page processing.
+            // This in turn causes NHibernate to rollback any pending transactions.
+            // Redirect(url, false) allows page processing to finish before returning the redirect response
+            _wca.GetContext().HttpContext.Response.Redirect(url, false);
             yield return T("Done");
         }
 
