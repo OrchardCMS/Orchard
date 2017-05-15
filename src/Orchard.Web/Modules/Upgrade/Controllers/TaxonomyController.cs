@@ -80,7 +80,8 @@ namespace Upgrade.Controllers {
         }
 
         [HttpPost]
-        public ActionResult MigrateTerms() {
+        public JsonResult MigrateTerms(int id) {
+            var lastContentItemId = id;
             foreach (var taxonomy in _taxonomyService.GetTaxonomies()) {
                 foreach (var term in _taxonomyService.GetTerms(taxonomy.Id)) {
                     term.FullWeight = "";
@@ -89,9 +90,10 @@ namespace Upgrade.Controllers {
                         term.FullWeight = container.Weight.ToString("D6") + "/" + term.FullWeight;
                     }
                     term.FullWeight = term.FullWeight + term.Weight.ToString("D6") + "/";
+                    lastContentItemId = term.Id;
                 }
             }
-            return new HttpStatusCodeResult(HttpStatusCode.OK);
+            return new JsonResult { Data = lastContentItemId };
         }
 
     }
