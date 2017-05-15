@@ -102,9 +102,10 @@ namespace Orchard.Taxonomies {
             return 7;
         }
         public int UpdateFrom7() {
-            SchemaBuilder.AlterTable("TermPartRecord", table => table
-                .AddColumn("FullWeight", DbType.String)
-            );
+            SchemaBuilder.AlterTable("TermPartRecord", table => {
+                table.AddColumn("FullWeight", DbType.String);
+                table.CreateIndex("IDX_FullWeight", "FullWeight");
+            });
             return 8;
         }
     }

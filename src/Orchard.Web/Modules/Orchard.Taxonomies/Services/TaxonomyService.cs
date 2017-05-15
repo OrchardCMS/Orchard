@@ -382,6 +382,9 @@ namespace Orchard.Taxonomies.Services {
         }
 
         public string ProcessChildrenFullWeight(string childrenFullWeight, string parentFullWeight, string parentOldFullWeight) {
+            if (string.IsNullOrWhiteSpace(childrenFullWeight)){
+                childrenFullWeight = parentFullWeight;
+            }
             int pos = childrenFullWeight.IndexOf(parentOldFullWeight);
 
             return childrenFullWeight.Substring(0, pos) + parentFullWeight + childrenFullWeight.Substring(pos + parentOldFullWeight.Length);
