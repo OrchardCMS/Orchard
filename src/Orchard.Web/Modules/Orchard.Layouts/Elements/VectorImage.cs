@@ -25,5 +25,17 @@ namespace Orchard.Layouts.Elements {
             get { return this.Retrieve(x => x.Height); }
             set { this.Store(x => x.Height, value); }
         }
+
+        public int? DesignWidth
+        {
+            get { return this.Retrieve(x => x.DesignWidth); }
+            set { this.Store(x => x.DesignWidth, value); }
+        }
+
+        public int? DesignHeight
+        {
+            get { return this.Retrieve(x => x.DesignHeight); }
+            set { this.Store(x => x.DesignHeight, value); }
+        }
     }
 }
