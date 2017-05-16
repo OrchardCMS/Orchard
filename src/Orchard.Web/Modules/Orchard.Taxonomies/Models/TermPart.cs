@@ -64,6 +64,7 @@ namespace Orchard.Taxonomies.Models {
             return list.OrderBy(x => x, new TermsComparer(index));
         }
 
+        [Obsolete]
         private class TermsComparer : IComparer<TermPart> {
             private readonly IDictionary<string, TermPart> _index;
 

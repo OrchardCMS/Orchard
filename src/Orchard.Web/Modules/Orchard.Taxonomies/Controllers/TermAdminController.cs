@@ -89,7 +89,9 @@ namespace Orchard.Taxonomies.Controllers {
 
                     foreach (var entry in checkedEntries) {
                         var term = _taxonomyService.GetTerm(entry.Id);
-                        _taxonomyService.DeleteTerm(term);
+                        if (term != null) {
+                            _taxonomyService.DeleteTerm(term);
+                        }
                     }
 
                     Services.Notifier.Information(T.Plural("{0} term has been removed.", "{0} terms have been removed.", checkedEntries.Count));

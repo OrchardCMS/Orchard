@@ -170,7 +170,7 @@ namespace Orchard.Taxonomies.Services {
                 .OrderBy(x => x.FullWeight)
                 .List();
 
-            return TermPart.Sort(result);
+            return result;
         }
 
         public IEnumerable<TermPart> GetRootTerms(int taxonomyId) {
@@ -178,7 +178,7 @@ namespace Orchard.Taxonomies.Services {
                 .Where(x => x.TaxonomyId == taxonomyId && x.Path == "/")
                 .List();
 
-            return TermPart.Sort(result);
+            return result;
         }
 
         public TermPart GetTermByPath(string path) {
@@ -192,8 +192,10 @@ namespace Orchard.Taxonomies.Services {
         public IEnumerable<TermPart> GetAllTerms() {
             var result = _contentManager
                 .Query<TermPart, TermPartRecord>()
+                .OrderBy(x=>x.TaxonomyId)
+                .OrderBy(x=>x.FullWeight)
                 .List();
-            return TermPart.Sort(result);
+            return result;
         }
 
         public int GetTermsCount(int taxonomyId) {
@@ -332,13 +334,14 @@ namespace Orchard.Taxonomies.Services {
 
             var result = _contentManager.Query<TermPart, TermPartRecord>()
                 .Where(x => x.Path.StartsWith(rootPath))
+                .OrderBy(x=>x.FullWeight)
                 .List();
 
             if (includeParent) {
                 result = result.Concat(new[] { term });
             }
 
-            return TermPart.Sort(result);
+            return result;
         }
 
         public IEnumerable<TermPart> GetParents(TermPart term) {
@@ -363,7 +366,7 @@ namespace Orchard.Taxonomies.Services {
             var children = GetChildren(term);
             term.Container = parentTerm == null ? taxonomy.ContentItem : parentTerm.ContentItem;
             ProcessPath(term);
-            string olfFullWeight = term.FullWeight;
+            string previousFullWeight = term.FullWeight;
             ProcessFullWeight(term, parentTerm);
 
             var contentItem = _contentManager.Get(term.ContentItem.Id, VersionOptions.DraftRequired);
@@ -371,7 +374,7 @@ namespace Orchard.Taxonomies.Services {
 
             foreach (var childTerm in children) {
                 ProcessPath(childTerm);
-                childTerm.FullWeight = ProcessChildrenFullWeight(childTerm.FullWeight, term.FullWeight, olfFullWeight);
+                childTerm.FullWeight = ProcessChildrenFullWeight(childTerm.FullWeight, term.FullWeight, previousFullWeight);
                 contentItem = _contentManager.Get(childTerm.ContentItem.Id, VersionOptions.DraftRequired);
                 _contentManager.Publish(contentItem);
             }
