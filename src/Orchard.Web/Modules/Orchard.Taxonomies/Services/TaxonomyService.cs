@@ -381,7 +381,7 @@ namespace Orchard.Taxonomies.Services {
         }
 
         public void ProcessFullWeight(TermPart term, TermPart parentTerm) {
-            term.FullWeight = (parentTerm != null ? parentTerm.FullWeight : "") + term.Weight.ToString("D6") + "/";
+            term.FullWeight = (parentTerm != null ? parentTerm.FullWeight : "") + term.Weight.ToString("D6") + "." + term.Id + "/";
         }
 
         public string ProcessChildrenFullWeight(string childrenFullWeight, string parentFullWeight, string parentOldFullWeight) {

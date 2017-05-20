@@ -96,19 +96,20 @@ namespace Orchard.Taxonomies.Drivers {
         protected override DriverResult Editor(TermPart termPart, IUpdateModel updater, dynamic shapeHelper) {
             updater.TryUpdateModel(termPart, Prefix, null, null);
             StringBuilder fullWeightBuilder = new StringBuilder();
-            string parentOldFullWeight = termPart.FullWeight == null?termPart.FullWeight: "";
+            string parentOldFullWeight = termPart.FullWeight == null ? termPart.FullWeight : "";
             TermPart containerTerm = termPart;
 
             for (int i = 0; i < termPart.Path.Count(x => x == '/') - 1; i++) {
                 containerTerm = containerTerm.Container.As<TermPart>();
-                fullWeightBuilder.Insert(0, "/" + containerTerm.Weight.ToString("D6"));
+                fullWeightBuilder.Insert(0, containerTerm.Weight.ToString("D6") + "." + containerTerm.Id.ToString() + "/");
             }
-
-            foreach(var childTerm in _taxonomyService.GetChildren(termPart)) {
-                childTerm.FullWeight = _taxonomyService.ProcessChildrenFullWeight(childTerm.FullWeight, termPart.FullWeight, parentOldFullWeight);
-            }
+            fullWeightBuilder.Append(termPart.Weight.ToString("D6") + "." + "/");
 
             termPart.FullWeight = fullWeightBuilder.ToString();
+
+            foreach (var childTerm in _taxonomyService.GetChildren(termPart)) {
+                childTerm.FullWeight = _taxonomyService.ProcessChildrenFullWeight(childTerm.FullWeight, termPart.FullWeight, parentOldFullWeight);
+            }
 
             return Editor(termPart, shapeHelper);
         }
@@ -162,11 +163,11 @@ namespace Orchard.Taxonomies.Drivers {
                 var pathContentItem = context.GetItemFromSession(identityPath);
                 part.Path += pathContentItem.Id + "/";
                 if (createFullWeigth) {
-                    part.FullWeight = part.FullWeight + pathContentItem.As<TermPart>().Weight.ToString("D6") + "/";
+                    part.FullWeight = part.FullWeight + pathContentItem.As<TermPart>().Weight.ToString("D6") + "." + pathContentItem.Id.ToString() + "/";
                 }
             }
             if (createFullWeigth) {
-                part.FullWeight = part.FullWeight + part.Weight.ToString("D6") + "/";
+                part.FullWeight = part.FullWeight + part.Weight.ToString("D6") + "." + part.Id + "/";
             }
         }
 
