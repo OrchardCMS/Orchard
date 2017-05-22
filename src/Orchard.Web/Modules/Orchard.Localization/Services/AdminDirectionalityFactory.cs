@@ -7,17 +7,19 @@ using Orchard.UI.Admin;
 namespace Orchard.Localization.Services {
     [OrchardFeature("Orchard.Localization.CultureSelector")]
     public class AdminDirectionalityFactory : ShapeDisplayEvents {
-        private readonly WorkContext _workContext;
+        private readonly IWorkContextAccessor _workContextAccessor;
 
         public AdminDirectionalityFactory(
             IWorkContextAccessor workContextAccessor) {
-            _workContext = workContextAccessor.GetContext();
+            _workContextAccessor = workContextAccessor;
         }
 
 
         private bool IsActivable() {
+            var workContext = _workContextAccessor.GetContext();
+
             // activate on admin screen only
-            if (AdminFilter.IsApplied(new RequestContext(_workContext.HttpContext, new RouteData())))
+            if (AdminFilter.IsApplied(new RequestContext(workContext.HttpContext, new RouteData())))
                 return true;
 
             return false;
@@ -43,10 +45,11 @@ namespace Orchard.Localization.Services {
                     }
                 }
 
-                var className = "content-" + _workContext.GetTextDirection(contentItem);
+                var workContext = _workContextAccessor.GetContext();
+                var className = "content-" + workContext.GetTextDirection(contentItem);
 
-                if (!_workContext.Layout.Content.Classes.Contains(className))
-                    _workContext.Layout.Content.Classes.Add(className);
+                if (!workContext.Layout.Content.Classes.Contains(className))
+                    workContext.Layout.Content.Classes.Add(className);
             });
         }
 
