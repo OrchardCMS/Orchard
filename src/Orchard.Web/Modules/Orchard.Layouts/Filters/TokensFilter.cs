@@ -15,7 +15,7 @@ namespace Orchard.Layouts.Filters {
         }
 
         public string ProcessContent(string text, string flavor) {
-            return ProcessContent(text, flavor, new Dictionary<string, object>());
+            return text;
         }
 
         public string ProcessContent(string text, string flavor, IDictionary<string, object> context) {
