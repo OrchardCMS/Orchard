@@ -282,7 +282,12 @@ namespace Orchard.Forms.Shapes {
             }
             if (Value != null) {
                 Value = Value is string ? Value : Display(Value);
-                tag.MergeAttribute("value", Convert.ToString(Value), false);
+                string value = Convert.ToString(Value);
+                tag.MergeAttribute("value", value, false);
+
+                if (Type == "checkbox" && value.ToLower() == "true") {
+                    tag.MergeAttribute("data-boolean", "true");
+                }
             }
             if (Checked.GetValueOrDefault()) {
                 tag.MergeAttribute("checked", "checked");
