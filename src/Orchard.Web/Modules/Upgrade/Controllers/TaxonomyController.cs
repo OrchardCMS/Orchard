@@ -64,13 +64,13 @@ namespace Upgrade.Controllers {
                 return new HttpUnauthorizedResult();
             try {
                 _upgradeService.CopyTable("Contrib_Taxonomies_TaxonomyPartRecord", "Orchard_Taxonomies_TaxonomyPartRecord", new string[0]);
-                _upgradeService.CopyTable("Contrib_Taxonomies_TermContentItem", "Orchard_Taxonomies_TermContentItem", new[] { "Id" });
+                _upgradeService.CopyTable("Contrib_Taxonomies_TermContentItem", "Orchard_Taxonomies_TermContentItem", new[] {"Id"});
                 _upgradeService.CopyTable("Contrib_Taxonomies_TermPartRecord", "Orchard_Taxonomies_TermPartRecord", new string[0]);
                 _upgradeService.CopyTable("Contrib_Taxonomies_TermsPartRecord", "Orchard_Taxonomies_TermsPartRecord", new string[0]);
 
                 _orchardServices.Notifier.Success(T("Taxonomies were migrated successfully."));
             }
-            catch (Exception e) {
+            catch(Exception e) {
                 Logger.Error(e, "Unexpected error while migrating to Orchard.Taxonomies. Please check the log.");
                 _orchardServices.Notifier.Error(T("Unexpected error while migrating to Orchard.Taxonomies. Please check the log."));
 

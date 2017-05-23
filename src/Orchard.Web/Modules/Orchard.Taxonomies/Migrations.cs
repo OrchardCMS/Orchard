@@ -1,5 +1,5 @@
-﻿using System.Data;
-using Orchard.ContentManagement.MetaData;
+﻿using Orchard.ContentManagement.MetaData;
+using System.Data;
 using Orchard.Data.Migration;
 
 namespace Orchard.Taxonomies {
