@@ -176,6 +176,7 @@ namespace Orchard.Taxonomies.Services {
         public IEnumerable<TermPart> GetRootTerms(int taxonomyId) {
             var result = _contentManager.Query<TermPart, TermPartRecord>()
                 .Where(x => x.TaxonomyId == taxonomyId && x.Path == "/")
+                .OrderBy(x => x.FullWeight)
                 .List();
 
             return result;

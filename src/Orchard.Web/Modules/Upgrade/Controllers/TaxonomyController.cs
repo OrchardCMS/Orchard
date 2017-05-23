@@ -39,7 +39,7 @@ namespace Upgrade.Controllers {
         public ActionResult Index() {
             ViewBag.CanMigrate = false;
 
-            if (_featureManager.GetEnabledFeatures().All(x => x.Id != "Orchard.Taxonomies")) {
+            if(_featureManager.GetEnabledFeatures().All(x => x.Id != "Orchard.Taxonomies")) {
                 _orchardServices.Notifier.Warning(T("You need to enable Orchard.Taxonomies in order to migrate Contrib.Taxonomies to Orchard.Taxonomies."));
             }
             else {
