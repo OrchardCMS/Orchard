@@ -41,6 +41,7 @@ namespace Orchard.Themes.Services {
             site.As<ThemeSiteSettingsPart>().CurrentThemeName = themeName;
 
             _signals.Trigger(CurrentThemeSignal);
+            _signals.Trigger("culturesChanged");
         }
 
         public string GetCurrentThemeName() {
