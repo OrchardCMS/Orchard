@@ -2,15 +2,29 @@
     // show/hide Min/Max fields
     $("#operator option:selected").each(function () {
         var val = $(this).val();
-        if (val == 'Between' || val == 'NotBetween') {
+        
+        if (val == 'IsNull' || val == 'IsNotNull') {
+            $('#value-type-date').closest('div').hide();
+            $('#value-type-timespan').closest('div').hide();
+
             $('#fieldset-single').hide();
-            $('#fieldset-min').show();
-            $('#fieldset-max').show();
-        }
-        else {
-            $('#fieldset-single').show();
             $('#fieldset-min').hide();
             $('#fieldset-max').hide();
+        }
+        else {
+            $('#value-type-date').closest('div').show();
+            $('#value-type-timespan').closest('div').show();
+
+            if (val == 'Between' || val == 'NotBetween') {
+                $('#fieldset-single').hide();
+                $('#fieldset-min').show();
+                $('#fieldset-max').show();
+            }
+            else {
+                $('#fieldset-single').show();
+                $('#fieldset-min').hide();
+                $('#fieldset-max').hide();
+            }
         }
     });
 

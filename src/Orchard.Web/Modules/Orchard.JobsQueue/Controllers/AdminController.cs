@@ -87,7 +87,7 @@ namespace Orchard.JobsQueue.Controllers {
             if (_jobsQueueManager.GetJobsCount() > 0) {
                 _services.Notifier.Information(T("Processing is in progress."));
                 processQueue = true;
-                _jobsQueueProcessor.ProcessQueue(10, 1);
+                _jobsQueueProcessor.ProcessQueue(1, 1);
             }
             else {
                 _services.Notifier.Information(T("Processing has been completed."));
