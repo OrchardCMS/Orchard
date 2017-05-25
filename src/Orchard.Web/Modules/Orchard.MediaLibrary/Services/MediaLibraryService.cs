@@ -260,11 +260,8 @@ namespace Orchard.MediaLibrary.Services {
             var rootedFolderPath = this.GetRootedFolderPath(folderPath) ?? "";
             var userFolderPath = GetUserMediaFolder().MediaPath;
             bool isMyfolder = false;
-            if(folderPath == "Users") {
-                // the folder is the starting path of the user's private path (eg. "Users")
-                isMyfolder = true;
-            }
-            else if (rootedFolderPath.StartsWith(userFolderPath)) {
+
+            if (rootedFolderPath.StartsWith(userFolderPath)) {
                 // the folder is the user's private path or one of its subfolders
                 isMyfolder = true;
             }
