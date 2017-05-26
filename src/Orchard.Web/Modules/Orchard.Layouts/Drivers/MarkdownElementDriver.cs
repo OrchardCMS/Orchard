@@ -2,15 +2,16 @@
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
 using Orchard.Layouts.Helpers;
-using Orchard.Layouts.Services;
 using Orchard.Layouts.ViewModels;
+using Orchard.Services;
 using MarkdownElement = Orchard.Layouts.Elements.Markdown;
 
-namespace Orchard.Layouts.Drivers {
+namespace Orchard.Layouts.Drivers
+{
     [OrchardFeature("Orchard.Layouts.Markdown")]
     public class MarkdownElementDriver : ElementDriver<MarkdownElement> {
-        private readonly IElementFilterProcessor _processor;
-        public MarkdownElementDriver(IElementFilterProcessor processor) {
+        private readonly IHtmlFilterProcessor _processor;
+        public MarkdownElementDriver(IHtmlFilterProcessor processor) {
             _processor = processor;
         }
 
@@ -29,7 +30,7 @@ namespace Orchard.Layouts.Drivers {
         }
 
         protected override void OnDisplaying(MarkdownElement element, ElementDisplayingContext context) {
-            context.ElementShape.ProcessedContent = _processor.ProcessContent(element.Content, "markdown", context.GetTokenData());
+            context.ElementShape.ProcessedContent = _processor.ProcessContent(element.Content, new HtmlFilterContext { Flavor = "markdown", Data = context.GetTokenData() });
         }
     }
 }
