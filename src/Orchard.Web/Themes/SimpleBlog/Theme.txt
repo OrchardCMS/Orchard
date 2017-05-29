@@ -1,0 +1,6 @@
+Name: SimpleBlog
+Author: Adrian Booth
+Website: http://adrianbooth.com
+Description: Description for the theme
+Version: 1.0
+Tags: Simple,Blog,Personal

@@ -1,0 +1,11 @@
+﻿@using Orchard.Utility.Extensions;
+@{
+    if (Model.Title != null) {
+        Layout.Title = Model.Title;
+    }
+    
+    var contentTypeClassName = ((string)Model.ContentItem.ContentType).HtmlClassify();
+}
+<article class="content-item @contentTypeClassName">
+        <a href="@Model.ContentItem.Link.Address.Value" title="@Model.ContentItem.Link.Title.Value">@Model.ContentItem.Link.Title.Value</a>
+</article>

@@ -1,0 +1,73 @@
+﻿@{
+    /* Global includes for the theme
+    ***************************************************************/
+    
+    SetMeta("X-UA-Compatible", "IE=edge,chrome=1");
+    
+    Style.Include("http://fonts.googleapis.com/css?family=Raleway:100");
+    
+    Style.Include("default.css");
+    Style.Include("site.css");
+    Style.Include("orchard.css");
+
+    var homeUrl = Href("~/");
+}
+
+<div id="header">
+			
+	<div class="container">
+		
+		<div class="column">
+			<h1><a href="@homeUrl" title="@WorkContext.CurrentSite.SiteName">@WorkContext.CurrentSite.SiteName</a></h1>
+		</div>
+		
+		<div class="column double">
+			@Display(Model.Navigation)
+		</div>
+		
+	</div>
+	
+</div>
+		
+<div id="content">
+
+
+	@if (Model.Messages != null)
+	{
+		<div class="container">
+       			<div class="column triple">
+       				@Display(Model.Messages)
+       			</div>
+		</div>
+       	}
+
+	<div class="container">
+
+		<div class="column triple">
+			
+			@Display(Model.BeforeContent)
+			@Display(Model.Content)
+			@Display(Model.AfterContent)
+			
+		</div>
+		
+	</div>
+	
+</div>
+
+<div id="footer">	
+	
+
+	<div class="container">
+		
+		<div class="column triple">
+			<p>
+                &#169  @WorkContext.CurrentSite.SiteName - @T("Powered by: <a href=\"{0}\" target=\"_blank\">Orchard Project</a>", "http://www.orchardproject.net")
+			</p>
+		</div>
+	
+	</div>
+
+</div>
+
+    	
