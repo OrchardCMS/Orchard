@@ -79,6 +79,7 @@ namespace Orchard.Taxonomies.Services {
             if (item.Has<AutoroutePart>()) {
                 _autorouteService.RemoveAliases(item.As<AutoroutePart>());
                 item.As<AutoroutePart>().DisplayAlias = _autorouteService.GenerateAlias(item.As<AutoroutePart>());
+                _autorouteService.ProcessPath(item.As<AutoroutePart>());
                 _autorouteService.PublishAlias(item.As<AutoroutePart>());
             }
         }
