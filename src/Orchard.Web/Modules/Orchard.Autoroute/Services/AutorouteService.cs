@@ -27,7 +27,8 @@ namespace Orchard.Autoroute.Services {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private const string AliasSource = "Autoroute:View";
 
-        private readonly ConcurrentDictionary<string, List<int>> _displayAliasVersions;
+        //This object is used to synchronize concurrent calls in the ProcessPath method
+        private static readonly ConcurrentDictionary<string, List<int>> _displayAliasVersions = new ConcurrentDictionary<string, List<int>>();
 
         public AutorouteService(
             IAliasService aliasService,
@@ -46,7 +47,7 @@ namespace Orchard.Autoroute.Services {
             _cultureManager = cultureManager;
             _httpContextAccessor = httpContextAccessor;
 
-            _displayAliasVersions = new ConcurrentDictionary<string, List<int>>();
+            
         }
 
         public string GenerateAlias(AutoroutePart part) {
@@ -214,7 +215,6 @@ namespace Orchard.Autoroute.Services {
             bool returnValue = true;
             
             var baseAlias = GenerateAlias(part);
-
             lock (_displayAliasVersions) {
                 if (_displayAliasVersions.TryAdd(baseAlias, new List<int>())) {
                     //we had not searched for this path yet
@@ -227,6 +227,9 @@ namespace Orchard.Autoroute.Services {
                         .Select(tup => tup.Item1) //get the Ids
                     );
                 }
+            }
+
+            lock (_displayAliasVersions[baseAlias]) {
                 if (_displayAliasVersions[baseAlias].Count == 0) {
                     _displayAliasVersions[baseAlias].Add(part.ContentItem.Id); //first ever part with this Alias
                     returnValue = true;
