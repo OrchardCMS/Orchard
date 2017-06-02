@@ -26,6 +26,10 @@ IF NOT DEFINED DEPLOYMENT_SOURCE (
   SET DEPLOYMENT_SOURCE=%~dp0%.
 )
 
+IF NOT DEFINED NUGET_PATH (
+  SET NUGET_PATH=%~dp0%lib\nuget\nuget.exe
+)
+
 IF NOT DEFINED DEPLOYMENT_TARGET (
   SET DEPLOYMENT_TARGET=%ARTIFACTS%\wwwroot
 )
@@ -68,7 +72,7 @@ IF NOT DEFINED MSBUILD_PATH (
 echo Handling .NET Web Application deployment.
 
 :: 1. Restore NuGet packages
-call :ExecuteCmd nuget restore "%DEPLOYMENT_SOURCE%\src\Orchard.sln"
+call :ExecuteCmd "%NUGET_PATH%" restore "%DEPLOYMENT_SOURCE%\src\Orchard.sln"
 IF !ERRORLEVEL! NEQ 0 goto error
 
 :: 2. Build to the temporary path
