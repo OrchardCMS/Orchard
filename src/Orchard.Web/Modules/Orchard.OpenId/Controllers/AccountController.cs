@@ -16,8 +16,7 @@ using Orchard.Security;
 using Orchard.Themes;
 using Orchard.Users.Events;
 
-namespace Orchard.OpenId.Controllers
-{
+namespace Orchard.OpenId.Controllers {
     [Themed]
     [AlwaysAccessible]
     [OrchardFeature("Orchard.OpenId")]
@@ -75,12 +74,12 @@ namespace Orchard.OpenId.Controllers
             if (user != null &&
                 membershipSettings.EnableCustomPasswordPolicy &&
                 membershipSettings.EnablePasswordExpiration &&
-                _membershipService.PasswordIsExpired(user, membershipSettings.PasswordExpirationTimeInDays)) {
-                return RedirectToAction("ChangeExpiredPassword", new { username = user.UserName });
+                _membershipService.PasswordIsExpired(user.User, membershipSettings.PasswordExpirationTimeInDays)) {
+                return RedirectToAction("ChangeExpiredPassword", new { username = user.User.UserName });
             }
 
-            _authenticationService.SignIn(user, rememberMe);
-            _userEventHandler.LoggedIn(user);
+            _authenticationService.SignIn(user.User, rememberMe);
+            _userEventHandler.LoggedIn(user.User);
 
             return this.RedirectLocal(returnUrl);
         }
@@ -147,7 +146,7 @@ namespace Orchard.OpenId.Controllers
             return View();
         }
 
-        private IUser ValidateLogOn(string userNameOrEmail, string password) {
+        private IUserIdentityResult ValidateLogOn(string userNameOrEmail, string password) {
             bool validate = true;
 
             if (String.IsNullOrEmpty(userNameOrEmail)) {
@@ -170,8 +169,7 @@ namespace Orchard.OpenId.Controllers
             return user;
         }
 
-        private string GetCallbackPath(WorkContext workContext)
-        {
+        private string GetCallbackPath(WorkContext workContext) {
             var shellSettings = workContext.Resolve<ShellSettings>();
             var tenantPrefix = shellSettings.RequestUrlPrefix;
 

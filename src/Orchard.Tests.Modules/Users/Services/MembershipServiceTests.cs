@@ -32,8 +32,7 @@ using Orchard.Users.Handlers;
 using Orchard.Users.Models;
 using Orchard.Users.Services;
 
-namespace Orchard.Tests.Modules.Users.Services
-{
+namespace Orchard.Tests.Modules.Users.Services {
     [TestFixture]
     public class MembershipServiceTests {
         private IMembershipValidationService _membershipValidationService;
@@ -160,15 +159,15 @@ namespace Orchard.Tests.Modules.Users.Services
             var validate2 = _membershipService.ValidateUser("bad-user", "test-password");
             var validate3 = _membershipService.ValidateUser("test-user", "test-password");
 
-            Assert.That(validate1, Is.Null);
-            Assert.That(validate2, Is.Null);
-            Assert.That(validate3, Is.Not.Null);
+            Assert.That(validate1.User, Is.Null);
+            Assert.That(validate2.User, Is.Null);
+            Assert.That(validate3.User, Is.Not.Null);
         }
 
         [Test]
         public void UsersWhoHaveNeverLoggedInCanBeAuthenticated() {
             var user = (UserPart)_membershipService.CreateUser(new CreateUserParams("a", "b", "c", null, null, true));
-            
+
             Assert.That(_membershipValidationService.CanAuthenticateWithCookie(user), Is.True);
         }
 

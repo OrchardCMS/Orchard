@@ -23,7 +23,7 @@ namespace Orchard.Security {
             throw new NotImplementedException();
         }
 
-        public IUser ValidateUser(string userNameOrEmail, string password) {
+        public IUserIdentityResult ValidateUser(string userNameOrEmail, string password) {
             throw new NotImplementedException();
         }
 

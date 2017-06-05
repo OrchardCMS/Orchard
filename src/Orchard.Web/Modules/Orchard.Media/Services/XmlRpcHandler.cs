@@ -56,7 +56,7 @@ namespace Orchard.Media.Services {
             UrlHelper url) {
 
             var user = _membershipService.ValidateUser(userName, password);
-            if (!_authorizationService.TryCheckAccess(Permissions.ManageMedia, user, null)) {
+            if (!_authorizationService.TryCheckAccess(Permissions.ManageMedia, user.User, null)) {
                 throw new OrchardCoreException(T("Access denied"));
             }
 

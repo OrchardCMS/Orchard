@@ -89,7 +89,7 @@ namespace Orchard.Tags.Services {
                 return;
 
             var user = _membershipService.ValidateUser(userName, password);
-            _authorizationService.CheckAccess(StandardPermissions.AccessAdminPanel, user, null);
+            _authorizationService.CheckAccess(StandardPermissions.AccessAdminPanel, user.User, null);
 
             var driver = new XmlRpcDriver(item => {
                 var post = item as XRpcStruct;
@@ -118,7 +118,7 @@ namespace Orchard.Tags.Services {
 
         private XRpcArray MetaWeblogGetTags(string appKey, string userName, string password) {
             var user = _membershipService.ValidateUser(userName, password);
-            _authorizationService.CheckAccess(StandardPermissions.AccessAdminPanel, user, null);
+            _authorizationService.CheckAccess(StandardPermissions.AccessAdminPanel, user.User, null);
 
             var array = new XRpcArray();
             foreach (var tag in _tagService.GetTags()) {
@@ -127,10 +127,10 @@ namespace Orchard.Tags.Services {
                               .Set("tag_id", thisTag.TagName)
                               .Set("name", thisTag.TagName));
                 // nyi - not yet implemented
-                              //.Set("count", "")
-                              //.Set("slug", "")
-                              //.Set("html_url", "")
-                              //.Set("rss_url", ""));
+                //.Set("count", "")
+                //.Set("slug", "")
+                //.Set("html_url", "")
+                //.Set("rss_url", ""));
             }
 
             return array;
@@ -153,7 +153,7 @@ namespace Orchard.Tags.Services {
                 if (contentItem == null)
                     return;
 
-                _orchardServices.WorkContext.CurrentUser = user;
+                _orchardServices.WorkContext.CurrentUser = user.User;
                 _tagService.UpdateTagsForContentItem(contentItem, tags);
             });
 
@@ -166,7 +166,7 @@ namespace Orchard.Tags.Services {
         public class XmlRpcDriver : IXmlRpcDriver {
             private readonly Action<object> _process;
 
-            public XmlRpcDriver(Action<object > process) {
+            public XmlRpcDriver(Action<object> process) {
                 _process = process;
             }
 

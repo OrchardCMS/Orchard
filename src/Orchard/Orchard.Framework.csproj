@@ -217,6 +217,7 @@
     <Compile Include="Reports\Services\ReportsCoordinator.cs" />
     <Compile Include="Reports\Services\ReportsManager.cs" />
     <Compile Include="Reports\Services\ReportsPersister.cs" />
+    <Compile Include="Security\IUSerIdentityResult.cs" />
     <Compile Include="Security\IMembershipSettings.cs" />
     <Compile Include="Security\IMembershipValidationService.cs" />
     <Compile Include="Localization\Services\ILocalizationStreamParser.cs" />

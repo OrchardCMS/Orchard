@@ -147,12 +147,12 @@ namespace Orchard.PublishLater.Services {
         }
 
         private IUser ValidateUser(string userName, string password) {
-            IUser user = _membershipService.ValidateUser(userName, password);
+            IUserIdentityResult user = _membershipService.ValidateUser(userName, password);
             if (user == null) {
                 throw new OrchardCoreException(T("The username or e-mail or password provided is incorrect."));
             }
 
-            return user;
+            return user.User;
         }
 
         public class XmlRpcDriver : IXmlRpcDriver {
