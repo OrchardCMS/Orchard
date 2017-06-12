@@ -143,6 +143,7 @@ namespace Orchard.MediaLibrary.Services {
         string Combine(string path1, string path2);
     }
 
+    [Obsolete("Use MediaLibraryServiceExtensions instead")]
     public static class MediaLibrayServiceExtensions {
         public static bool CanManageMediaFolder(this IMediaLibraryService service, string folderPath) {
             // The current user can manage a media if he has access to the whole hierarchy
@@ -174,6 +175,60 @@ namespace Orchard.MediaLibrary.Services {
                 return null;
 
             switch (mediaFactory.GetType().Name) {
+                case "ImageFactory":
+                    return "Image";
+                case "AudioFactory":
+                    return "Audio";
+                case "DocumentFactory":
+                    return "Document";
+                case "VectorImageFactory":
+                    return "VectorImage";
+                case "VideoFactory":
+                    return "Video";
+                default:
+                    return null;
+            }
+        }
+    }
+
+    public static class MediaLibraryServiceExtensions
+    {
+        public static bool CanManageMediaFolder(this IMediaLibraryService service, string folderPath)
+        {
+            // The current user can manage a media if he has access to the whole hierarchy
+            // or the media is under his personal storage folder.
+
+            var rootMediaFolder = service.GetRootMediaFolder();
+            if (rootMediaFolder == null)
+            {
+                return true;
+            }
+
+            var mediaPath = service.Combine(folderPath, " ").Trim();
+            var rootPath = service.Combine(rootMediaFolder.MediaPath, " ").Trim();
+
+            return mediaPath.StartsWith(rootPath, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public static string GetRootedFolderPath(this IMediaLibraryService service, string folderPath)
+        {
+            var rootMediaFolder = service.GetRootMediaFolder();
+            if (rootMediaFolder != null)
+            {
+                return service.Combine(rootMediaFolder.MediaPath, folderPath ?? "");
+            }
+
+            return folderPath;
+        }
+
+        public static string MimeTypeToContentType(this IMediaLibraryService service, Stream stream, string mimeType, string contentType)
+        {
+            var mediaFactory = service.GetMediaFactory(stream, mimeType, contentType);
+            if (mediaFactory == null)
+                return null;
+
+            switch (mediaFactory.GetType().Name)
+            {
                 case "ImageFactory":
                     return "Image";
                 case "AudioFactory":
