@@ -143,16 +143,13 @@ namespace Orchard.MediaLibrary.Services {
         string Combine(string path1, string path2);
     }
 
-    public static class MediaLibraryServiceExtensions
-    {
-        public static bool CanManageMediaFolder(this IMediaLibraryService service, string folderPath)
-        {
+    public static class MediaLibraryServiceExtensions {
+        public static bool CanManageMediaFolder(this IMediaLibraryService service, string folderPath) {
             // The current user can manage a media if he has access to the whole hierarchy
             // or the media is under his personal storage folder.
 
             var rootMediaFolder = service.GetRootMediaFolder();
-            if (rootMediaFolder == null)
-            {
+            if (rootMediaFolder == null) {
                 return true;
             }
 
@@ -162,25 +159,21 @@ namespace Orchard.MediaLibrary.Services {
             return mediaPath.StartsWith(rootPath, StringComparison.OrdinalIgnoreCase);
         }
 
-        public static string GetRootedFolderPath(this IMediaLibraryService service, string folderPath)
-        {
+        public static string GetRootedFolderPath(this IMediaLibraryService service, string folderPath) {
             var rootMediaFolder = service.GetRootMediaFolder();
-            if (rootMediaFolder != null)
-            {
+            if (rootMediaFolder != null) {
                 return service.Combine(rootMediaFolder.MediaPath, folderPath ?? "");
             }
 
             return folderPath;
         }
 
-        public static string MimeTypeToContentType(this IMediaLibraryService service, Stream stream, string mimeType, string contentType)
-        {
+        public static string MimeTypeToContentType(this IMediaLibraryService service, Stream stream, string mimeType, string contentType) {
             var mediaFactory = service.GetMediaFactory(stream, mimeType, contentType);
             if (mediaFactory == null)
                 return null;
 
-            switch (mediaFactory.GetType().Name)
-            {
+            switch (mediaFactory.GetType().Name) {
                 case "ImageFactory":
                     return "Image";
                 case "AudioFactory":
