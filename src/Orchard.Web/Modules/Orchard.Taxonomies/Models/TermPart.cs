@@ -52,8 +52,8 @@ namespace Orchard.Taxonomies.Models {
         }
 
         public string FullWeight {
-            get { return Retrieve(x => x.FullWeight,""); }
-            set { Store(x => x.FullWeight, value); }
+            get { return Record.FullWeight; }
+            set { Record.FullWeight = value; }
         }
 
         public string FullPath { get { return String.Concat(Path, Id); } }
