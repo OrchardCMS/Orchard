@@ -1,26 +1,11 @@
-FOR %%b in (
-       "%VS140COMNTOOLS%..\..\VC\vcvarsall.bat"
-       "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat"
-       "%ProgramFiles%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" 
-
-       "%VS120COMNTOOLS%..\..\VC\vcvarsall.bat"
-       "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat"
-       "%ProgramFiles%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" 
-
-       "%VS110COMNTOOLS%..\..\VC\vcvarsall.bat"
-       "%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat"
-       "%ProgramFiles%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat" 
-    ) do (
-    if exist %%b ( 
-       call %%b x86
-       goto build
-    )
+for /f "usebackq tokens=*" %%i in (`lib\vswhere\vswhere -latest -version "[15.0,16.0)" -requires Microsoft.Component.MSBuild -property installationPath`) do (
+  set InstallDir=%%i
 )
-  
+
+
 FOR %%b in (
-       "%VS140COMNTOOLS%\vsvars32.bat"
-       "%VS120COMNTOOLS%\vsvars32.bat"
-       "%VS110COMNTOOLS%\vsvars32.bat"
+       "%InstallDir%\Common7\Tools\VsMSBuildCmd.bat"
+       "%VS140COMNTOOLS%\Common7\Tools\vsvars32.bat"
     ) do (
     if exist %%b ( 
        call %%b

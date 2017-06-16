@@ -22,7 +22,7 @@ Our mission is to empower our users and foster a dedicated and diverse community
 
 ## Project Status
 
-Orchard is currently in version **[1.10.1](https://github.com/OrchardCMS/Orchard/releases/tag/1.10.1)**: It contains bugfixes and the more impactful changes and new features added in the latest major version (*1.10*).
+Orchard is currently in version **[1.10.2](https://github.com/OrchardCMS/Orchard/releases/tag/1.10.2)**: It contains bugfixes and the more impactful changes and new features added in the latest major version (*1.10*).
 
 We invite participation by the developer community in shaping the project’s direction, so that we can publicly validate our designs and development approach. 
 All our releases are available on our [Releases](https://github.com/OrchardCMS/Orchard/releases) page, and it's easy to [Install Orchard using the Web Platform Installer](http://docs.orchardproject.net/Documentation/Installing-Orchard) as well. We encourage interested developers to check out the source code on the Orchard GitHub site and get involved with the project.
