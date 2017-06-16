@@ -154,10 +154,6 @@
       <Name>Orchard.Core</Name>
       <Private>false</Private>
     </ProjectReference>
-    <ProjectReference Include="..\Orchard.MultiTenancy\Orchard.MultiTenancy.csproj">
-      <Project>{72457126-e118-4171-a08f-9a709ee4b7fc}</Project>
-      <Name>Orchard.MultiTenancy</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Orchard.Recipes\Orchard.Recipes.csproj">
       <Project>{fc1d74e8-7a4d-48f4-83de-95c6173780c4}</Project>
       <Name>Orchard.Recipes</Name>
