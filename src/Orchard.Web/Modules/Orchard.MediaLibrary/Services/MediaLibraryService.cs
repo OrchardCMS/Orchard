@@ -255,16 +255,14 @@ namespace Orchard.MediaLibrary.Services {
             if (_orchardServices.Authorizer.Authorize(Permissions.ManageMediaContent)) {
                 return true;
             }
-
+            if (_orchardServices.WorkContext.CurrentUser==null)
+                return _orchardServices.Authorizer.Authorize(permission);
             // determines the folder type: public, user own folder (my), folder of another user (private)
             var rootedFolderPath = this.GetRootedFolderPath(folderPath) ?? "";
             var userFolderPath = GetUserMediaFolder().MediaPath;
             bool isMyfolder = false;
-            if(folderPath == "Users") {
-                // the folder is the starting path of the user's private path (eg. "Users")
-                isMyfolder = true;
-            }
-            else if (rootedFolderPath.StartsWith(userFolderPath)) {
+
+            if (rootedFolderPath.StartsWith(userFolderPath)) {
                 // the folder is the user's private path or one of its subfolders
                 isMyfolder = true;
             }

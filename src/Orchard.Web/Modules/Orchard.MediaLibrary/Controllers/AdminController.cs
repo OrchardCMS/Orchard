@@ -1,9 +1,11 @@
 ﻿using System;
-using System.IO;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Title.Models;
+using Orchard.FileSystems.Media;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.MediaLibrary.Models;
@@ -12,9 +14,7 @@ using Orchard.MediaLibrary.ViewModels;
 using Orchard.Mvc;
 using Orchard.Themes;
 using Orchard.UI.Navigation;
-using Orchard.ContentManagement.MetaData;
 using Orchard.Validation;
-using System.Collections.Generic;
 
 namespace Orchard.MediaLibrary.Controllers {
     [ValidateInput(false)]
@@ -22,15 +22,18 @@ namespace Orchard.MediaLibrary.Controllers {
         private readonly IMediaLibraryService _mediaLibraryService;
         private readonly INavigationManager _navigationManager;
         private readonly IContentDefinitionManager _contentDefinitionManager;
+        private readonly IStorageProvider _storageProvider;
 
         public AdminController(
             IOrchardServices services,
             IMediaLibraryService mediaLibraryService,
             INavigationManager navigationManager,
-            IContentDefinitionManager contentDefinitionManager) {
+            IContentDefinitionManager contentDefinitionManager,
+            IStorageProvider storageProvider) {
             _mediaLibraryService = mediaLibraryService;
             _navigationManager = navigationManager;
             _contentDefinitionManager = contentDefinitionManager;
+            _storageProvider = storageProvider;
             Services = services;
 
             T = NullLocalizer.Instance;
@@ -46,6 +49,10 @@ namespace Orchard.MediaLibrary.Controllers {
                 Services.Notifier.Add(UI.Notify.NotifyType.Error, T("Cannot select media"));
                 return new HttpUnauthorizedResult();
             }
+
+            var userMediaFolder = _mediaLibraryService.GetUserMediaFolder();
+            if (Services.Authorizer.Authorize(Permissions.ManageOwnMedia) && !Services.Authorizer.Authorize(Permissions.ManageMediaContent))
+                _storageProvider.TryCreateFolder(userMediaFolder.MediaPath);
 
             // If the user is trying to access a folder above his boundaries, redirect him to his home folder
             var rootMediaFolder = _mediaLibraryService.GetRootMediaFolder();
