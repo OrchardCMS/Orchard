@@ -135,6 +135,13 @@
       Projects="$(Solution)"
       Targets="Build"/>
   </Target>
+  
+  <Target Name="BuildViews">
+    <MSBuild
+      Projects="$(Solution)"
+      Targets="Build"
+      Properties="Configuration=$(Configuration);MvcBuildViews=true" />
+  </Target>
 
   <Target Name="CompileMsBuildTasks">
     <MSBuild
