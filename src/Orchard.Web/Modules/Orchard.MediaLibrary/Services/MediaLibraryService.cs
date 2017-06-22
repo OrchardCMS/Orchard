@@ -226,7 +226,7 @@ namespace Orchard.MediaLibrary.Services {
         }
 
         public IMediaFolder GetRootMediaFolder() {
-            if (_orchardServices.Authorizer.Authorize(Permissions.ManageMediaContent)) {
+            if (_orchardServices.Authorizer.Authorize(Permissions.SelectMediaContent)) {
                 return null;
             }
 
@@ -240,6 +240,39 @@ namespace Orchard.MediaLibrary.Services {
             }
 
             return null;
+        }
+
+        public IMediaFolder GetUserMediaFolder() {
+            var currentUser = _orchardServices.WorkContext.CurrentUser;
+            var userPath = _storageProvider.Combine("Users", _mediaFolderProvider.GetFolderName(currentUser));
+            return new MediaFolder() {
+                Name = currentUser.UserName,
+                MediaPath = userPath
+            };
+        }
+
+        public bool CheckMediaFolderPermission(Orchard.Security.Permissions.Permission permission, string folderPath) {
+            if (_orchardServices.Authorizer.Authorize(Permissions.ManageMediaContent)) {
+                return true;
+            }
+            if (_orchardServices.WorkContext.CurrentUser==null)
+                return _orchardServices.Authorizer.Authorize(permission);
+            // determines the folder type: public, user own folder (my), folder of another user (private)
+            var rootedFolderPath = this.GetRootedFolderPath(folderPath) ?? "";
+            var userFolderPath = GetUserMediaFolder().MediaPath;
+            bool isMyfolder = false;
+
+            if (rootedFolderPath.StartsWith(userFolderPath)) {
+                // the folder is the user's private path or one of its subfolders
+                isMyfolder = true;
+            }
+
+            if(isMyfolder) {
+                return _orchardServices.Authorizer.Authorize(Permissions.ManageOwnMedia);
+            }
+            else { // other
+                return _orchardServices.Authorizer.Authorize(permission);
+            }
         }
 
         /// <summary>
