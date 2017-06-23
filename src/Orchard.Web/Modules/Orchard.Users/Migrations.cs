@@ -28,7 +28,12 @@ namespace Orchard.Users {
 
             ContentDefinitionManager.AlterTypeDefinition("User", cfg => cfg.Creatable(false));
 
-            return 5;
+            SchemaBuilder.AlterTable("UserPartRecord",
+                table => table
+                    .CreateIndex("IDX_UserPartRecord_NormalizedUserName", "NormalizedUserName")
+            );
+
+            return 6;
         }
 
         public int UpdateFrom1() {
@@ -63,6 +68,15 @@ namespace Orchard.Users {
                 });
 
             return 5;
+        }
+
+        public int UpdateFrom5() {
+            SchemaBuilder.AlterTable("UserPartRecord",
+                table => table
+                    .CreateIndex("IDX_UserPartRecord_NormalizedUserName", "NormalizedUserName")
+            );
+
+            return 6;
         }
     }
 }

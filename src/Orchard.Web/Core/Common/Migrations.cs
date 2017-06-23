@@ -59,7 +59,12 @@ namespace Orchard.Core.Common {
                 .Attachable()
                 .WithDescription("Automatically generates a unique identity for the content item, which is required in import/export scenarios where one content item references another."));
 
-            return 5;
+            SchemaBuilder.AlterTable("IdentityPartRecord",
+                table => table
+                    .CreateIndex("IDX_IdentityPartRecord_Identifier", "Identifier")
+            );
+
+            return 6;
         }
 
         public int UpdateFrom1() {
@@ -111,6 +116,15 @@ namespace Orchard.Core.Common {
         public int UpdateFrom4() {
             SchemaBuilder.AlterTable("CommonPartVersionRecord", table => table.AddColumn<string>("ModifiedBy", command => command.Nullable()));
             return 5;
+        }
+
+        public int UpdateFrom5() {
+            SchemaBuilder.AlterTable("IdentityPartRecord",
+                table => table
+                    .CreateIndex("IDX_IdentityPartRecord_Identifier", "Identifier")
+            );
+
+            return 6;
         }
     }
 }
