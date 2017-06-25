@@ -47,7 +47,6 @@ namespace Orchard.Comments.Controllers {
 
             if (ModelState.IsValid) {
                 Services.ContentManager.Create(comment, VersionOptions.Draft);
-                Services.ContentManager.UpdateEditor(comment, this);
                 Services.ContentManager.Publish(comment.ContentItem);
 
                 var commentPart = comment.As<CommentPart>();
