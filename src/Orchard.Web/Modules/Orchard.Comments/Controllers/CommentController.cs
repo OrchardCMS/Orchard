@@ -65,7 +65,7 @@ namespace Orchard.Comments.Controllers {
                     if(replied != null) {
                         var repliedPart = replied.As<CommentPart>();
                             
-                        // what is the next position after the anwered comment
+                        // what is the next position after the answered comment
                         if(repliedPart != null) {
                             // the next comment is the one right after the RepliedOn one, at the same level
                             var nextComment = _commentService.GetCommentsForCommentedContent(commentPart.CommentedOn)
