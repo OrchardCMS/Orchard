@@ -27,6 +27,7 @@ namespace Orchard.Comments.Controllers {
                 return this.RedirectLocal(returnUrl, "~/");
 
             var comment = Services.ContentManager.New<CommentPart>("Comment");
+            Services.ContentManager.Create(comment, VersionOptions.Draft);
             var editorShape = Services.ContentManager.UpdateEditor(comment, this);
 
             if (!ModelState.IsValidField("Comments.Author")) {
@@ -46,7 +47,7 @@ namespace Orchard.Comments.Controllers {
             }
 
             if (ModelState.IsValid) {
-                Services.ContentManager.Create(comment, VersionOptions.Draft);
+                
                 Services.ContentManager.Publish(comment.ContentItem);
 
                 var commentPart = comment.As<CommentPart>();
@@ -121,7 +122,6 @@ namespace Orchard.Comments.Controllers {
                 if (siteSettings.NotificationEmail) {
                     _commentService.SendNotificationEmail(commentPart);
                 }
-
             }
             else {
                 Services.TransactionManager.Cancel();
